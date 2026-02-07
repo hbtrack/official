@@ -1,0 +1,19 @@
+# Block destructive commands outside sandbox
+prefix_rule(
+  pattern = ["rm", "-rf"],
+  decision = "forbidden",
+  justification = "Perigoso. Use operações pontuais e apenas em arquivos referenciados."
+)
+
+prefix_rule(
+  pattern = ["powershell", "Remove-Item"],
+  decision = "prompt",
+  justification = "Requer aprovação explícita (risco de apagar árvore inteira)."
+)
+
+# Block obvious secret-dumping commands outside sandbox
+prefix_rule(
+  pattern = ["printenv"],
+  decision = "forbidden",
+  justification = "Risco de vazar segredos via env."
+)

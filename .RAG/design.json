@@ -1,0 +1,1420 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HB Track — Mini Design System (APP)",
+  "version": "1.0.0",
+  "lastUpdated": "2026-01-07",
+  "description": "Sistema de design canônico do HB Track para aplicações internas (dashboard/app)",
+  
+  "principles": {
+    "core": [
+      {
+        "name": "Densidade > Impacto",
+        "description": "Priorizar informação e funcionalidade sobre elementos visuais decorativos"
+      },
+      {
+        "name": "Consistência > Liberdade",
+        "description": "Seguir padrões estabelecidos ao invés de criar variações"
+      },
+      {
+        "name": "Dados Primeiro",
+        "description": "O conteúdo e os dados são mais importantes que o design"
+      },
+      {
+        "name": "Nada cresce sem permissão",
+        "description": "Elementos não podem ultrapassar limites estabelecidos sem justificativa forte"
+      }
+    ],
+    "philosophy": "O design não chama atenção. Ele entrega controle."
+  },
+
+  "typography": {
+    "description": "Nunca usar tokens de marketing no app. Hierarquia por peso e cor, não por tamanho.",
+    "maxTitleSize": "18px",
+    "scale": {
+      "xs": {
+        "token": "--app-text-xs",
+        "size": "12px",
+        "lineHeight": "16px",
+        "use": "Texto secundário, labels, meta informações"
+      },
+      "sm": {
+        "token": "--app-text-sm",
+        "size": "14px",
+        "lineHeight": "20px",
+        "use": "Texto base do aplicativo"
+      },
+      "base": {
+        "token": "--app-text-base",
+        "size": "16px",
+        "lineHeight": "22px",
+        "use": "Título de seção"
+      },
+      "lg": {
+        "token": "--app-text-lg",
+        "size": "18px",
+        "lineHeight": "24px",
+        "use": "Título de página (máximo permitido)"
+      }
+    },
+    "rules": [
+      "Nenhum título interno > 18px",
+      "Hierarquia por peso e cor, não por tamanho",
+      "Nunca usar text-title-* (reservado para landing)",
+      "Nunca usar text-2xl+ no app"
+    ],
+    "classes": {
+      "appTitle": {
+        "className": "app-title",
+        "fontSize": "var(--app-text-lg)",
+        "lineHeight": "var(--app-text-lg-lh)",
+        "fontWeight": "600",
+        "use": "Títulos de página/tela"
+      },
+      "appSubtitle": {
+        "className": "app-subtitle",
+        "fontSize": "var(--app-text-sm)",
+        "lineHeight": "var(--app-text-sm-lh)",
+        "color": "var(--color-gray-500)",
+        "use": "Subtítulos e descrições"
+      }
+    }
+  },
+
+  "spacing": {
+    "description": "Vertical < Horizontal. Proibido p-6 em telas internas.",
+    "scale": {
+      "xs": {
+        "token": "--app-space-xs",
+        "value": "4px"
+      },
+      "sm": {
+        "token": "--app-space-sm",
+        "value": "8px"
+      },
+      "md": {
+        "token": "--app-space-md",
+        "value": "12px"
+      },
+      "lg": {
+        "token": "--app-space-lg",
+        "value": "16px"
+      },
+      "xl": {
+        "token": "--app-space-xl",
+        "value": "20px"
+      }
+    },
+    "rules": [
+      "Vertical < Horizontal",
+      "Proibido p-6 em telas internas",
+      "Usar --app-space-lg (16px) como padding padrão de cards"
+    ]
+  },
+
+  "components": {
+    "Button": {
+      "path": "src/components/ui/Button.tsx",
+      "specs": {
+        "height": "h-9",
+        "fontSize": "text-sm",
+        "iconSize": "h-4 w-4",
+        "variants": ["primary", "secondary", "ghost", "outline", "danger", "success"]
+      },
+      "rules": [
+        "Nunca text-base+",
+        "Nunca h-11+",
+        "Input não pode ser maior que botão"
+      ]
+    },
+    "AppCard": {
+      "path": "src/components/app/AppCard.tsx",
+      "description": "Container de informação padronizado",
+      "specs": {
+        "className": "app-card",
+        "padding": "var(--app-space-lg) (16px)",
+        "titleSize": "text-sm",
+        "metaSize": "text-xs",
+        "densities": ["compact", "default"]
+      },
+      "rules": [
+        "Sempre usar <AppCard />",
+        "Padding controlado via componente",
+        "Título text-sm",
+        "Meta text-xs",
+        "Card nunca é hero",
+        "Proibido p-* direto no JSX",
+        "Proibido títulos grandes"
+      ],
+      "usage": {
+        "props": ["title", "meta", "actions", "footer", "density"],
+        "example": "<AppCard title=\"Equipe Sub-16\" meta=\"12 atletas\" actions={<Button size=\"sm\">Abrir</Button>}>Conteúdo</AppCard>"
+      }
+    },
+    "AppEmptyState": {
+      "path": "src/components/app/AppEmptyState.tsx",
+      "description": "Estado inicial / ausência de dados",
+      "specs": {
+        "titleSize": "text-sm",
+        "descriptionSize": "text-xs",
+        "iconSize": "h-5 w-5",
+        "maxCTA": 1
+      },
+      "rules": [
+        "Compacto",
+        "Ícone pequeno ou ilustração leve",
+        "1 CTA no máximo",
+        "Nunca ocupar tela inteira",
+        "Não usar py-16, text-2xl",
+        "Não centralizar página inteira sem critério"
+      ],
+      "usage": {
+        "props": ["icon", "title", "description", "action", "align"],
+        "example": "<AppEmptyState icon={<Users className=\"h-5 w-5\" />} title=\"Nenhuma equipe\" description=\"Crie sua primeira equipe\" action={<Button>Criar</Button>} />"
+      }
+    },
+    "AppInput": {
+      "path": "src/components/app/AppInput.tsx",
+      "description": "Input padronizado com mesma altura do botão",
+      "specs": {
+        "height": "h-9",
+        "fontSize": "text-sm",
+        "labelSize": "text-xs",
+        "helperSize": "text-xs",
+        "errorSize": "text-xs"
+      },
+      "rules": [
+        "h-9 (mesma altura do Button)",
+        "text-sm",
+        "Label text-xs",
+        "Helper/Error text-xs",
+        "Input maior que botão = erro",
+        "Não usar h-11, py-3, text-base",
+        "Não criar label manual em cada tela",
+        "Não misturar alturas de input e botão"
+      ],
+      "usage": {
+        "props": ["label", "helperText", "error", "fullWidth"],
+        "example": "<AppInput label=\"Nome da equipe\" placeholder=\"Ex: Sub-16\" helperText=\"Identificação da equipe\" />"
+      }
+    }
+  },
+
+  "patterns": {
+    "pageTitle": {
+      "description": "Padrão único para títulos de página",
+      "template": "<h1 className=\"text-lg font-semibold\">Título</h1>\n<p className=\"text-sm text-muted-foreground\">Descrição opcional</p>",
+      "forbidden": ["text-title-*", "text-2xl+"]
+    },
+    "tables": {
+      "rowHeight": "h-10 máx",
+      "headerSize": "text-xs uppercase",
+      "actions": "ícone, não botão grande",
+      "principle": "Mais colunas > menos espaçamento"
+    },
+    "visualStates": {
+      "primary": "ação",
+      "success": "verde/vermelho = feedback",
+      "forbidden": ["gradiente decorativo", "sombra pesada"]
+    }
+  },
+
+  "codeOrganization": {
+    "structure": {
+      "ui": {
+        "path": "src/components/ui/",
+        "description": "Átomos (Button, Input, Dialog)"
+      },
+      "app": {
+        "path": "src/components/app/",
+        "description": "Contratos do produto (AppCard, AppEmptyState, AppInput)"
+      }
+    },
+    "principle": "UI = peças, APP = regras"
+  },
+
+  "cssTokens": {
+    "typography": {
+      "--app-text-xs": "12px",
+      "--app-text-xs-lh": "16px",
+      "--app-text-sm": "14px",
+      "--app-text-sm-lh": "20px",
+      "--app-text-base": "16px",
+      "--app-text-base-lh": "22px",
+      "--app-text-lg": "18px",
+      "--app-text-lg-lh": "24px"
+    },
+    "spacing": {
+      "--app-space-xs": "4px",
+      "--app-space-sm": "8px",
+      "--app-space-md": "12px",
+      "--app-space-lg": "16px",
+      "--app-space-xl": "20px"
+    }
+  },
+
+  "cssClasses": {
+    "app-title": {
+      "fontSize": "var(--app-text-lg)",
+      "lineHeight": "var(--app-text-lg-lh)",
+      "fontWeight": "600"
+    },
+    "app-subtitle": {
+      "fontSize": "var(--app-text-sm)",
+      "lineHeight": "var(--app-text-sm-lh)",
+      "color": "var(--color-gray-500)"
+    },
+    "app-card": {
+      "padding": "var(--app-space-lg)",
+      "borderRadius": "0.75rem"
+    },
+    "app-card-header": {
+      "display": "flex",
+      "alignItems": "flex-start",
+      "justifyContent": "space-between",
+      "gap": "var(--app-space-md)",
+      "marginBottom": "var(--app-space-md)"
+    },
+    "app-card-title": {
+      "fontSize": "var(--app-text-sm)",
+      "fontWeight": "600",
+      "lineHeight": "var(--app-text-sm-lh)"
+    },
+    "app-card-meta": {
+      "fontSize": "var(--app-text-xs)",
+      "color": "var(--color-gray-500)",
+      "lineHeight": "var(--app-text-xs-lh)"
+    },
+    "app-card-body": {
+      "fontSize": "var(--app-text-sm)"
+    },
+    "app-card-footer": {
+      "marginTop": "var(--app-space-md)",
+      "paddingTop": "var(--app-space-md)",
+      "borderTop": "1px solid var(--color-gray-200)"
+    }
+  },
+
+  "globalCSS": {
+    "body": {
+      "fontFamily": "var(--font-sans)",
+      "fontSize": "var(--app-text-sm)",
+      "lineHeight": "var(--app-text-sm-lh)",
+      "description": "Define 14px como texto base do app"
+    }
+  },
+
+  "checklist": {
+    "beforeCommit": [
+      {
+        "question": "Algum texto > 18px?",
+        "action": "Corrigir para escala app"
+      },
+      {
+        "question": "Algum p-6?",
+        "action": "Usar AppCard ou padding menor"
+      },
+      {
+        "question": "Card sem AppCard?",
+        "action": "Refatorar para usar AppCard"
+      },
+      {
+        "question": "Estado vazio custom?",
+        "action": "Usar AppEmptyState"
+      },
+      {
+        "question": "Input maior que botão?",
+        "action": "Forçar h-9 em ambos"
+      }
+    ]
+  },
+
+  "antiPatterns": {
+    "forbidden": [
+      {
+        "pattern": "text-title-* no app",
+        "reason": "Reservado para landing pages"
+      },
+      {
+        "pattern": "text-2xl+ no app",
+        "reason": "Quebra densidade"
+      },
+      {
+        "pattern": "p-6 em telas internas",
+        "reason": "Padding muito grande, usar p-4 (--app-space-lg)"
+      },
+      {
+        "pattern": "h-11+ em botões",
+        "reason": "Padrão é h-9"
+      },
+      {
+        "pattern": "text-base+ em botões",
+        "reason": "Padrão é text-sm"
+      },
+      {
+        "pattern": "Card sem AppCard",
+        "reason": "Perde consistência"
+      },
+      {
+        "pattern": "Estado vazio custom",
+        "reason": "Usar AppEmptyState"
+      },
+      {
+        "pattern": "Input maior que botão",
+        "reason": "Quebra alinhamento visual"
+      },
+      {
+        "pattern": "Gradiente decorativo",
+        "reason": "App não é landing"
+      },
+      {
+        "pattern": "Sombra pesada",
+        "reason": "Densidade > impacto"
+      },
+      {
+        "pattern": "py-16 em estado vazio",
+        "reason": "Ocupa tela inteira desnecessariamente"
+      },
+      {
+        "pattern": "label manual em cada tela",
+        "reason": "Usar AppInput com prop label"
+      }
+    ]
+  },
+
+  "migrationGuide": {
+    "fromOldToNew": {
+      "Button": {
+        "before": "h-11 text-base",
+        "after": "h-9 text-sm"
+      },
+      "Card": {
+        "before": "<div className=\"p-6\">",
+        "after": "<AppCard>"
+      },
+      "Title": {
+        "before": "text-2xl",
+        "after": "text-lg (app-title)"
+      },
+      "Input": {
+        "before": "h-11 py-3",
+        "after": "<AppInput /> (h-9)"
+      },
+      "EmptyState": {
+        "before": "custom com py-16",
+        "after": "<AppEmptyState />"
+      }
+    }
+  },
+
+  "designDecisions": {
+    "whyDensity": "Profissionais de esporte precisam de informação rápida, não de elementos decorativos grandes",
+    "why14px": "14px é o tamanho ideal para leitura de dados em dashboards profissionais",
+    "why18pxMax": "Títulos maiores roubam atenção dos dados. No app, dados > hierarquia visual",
+    "whyNoP6": "p-6 (24px) é excessivo para densidade. p-4 (16px) é suficiente",
+    "whyH9": "h-9 (36px) é a altura ideal para densidade sem comprometer acessibilidade"
+  },
+
+  "accessibility": {
+    "notes": [
+      "14px base mantém legibilidade",
+      "h-9 mantém área de toque adequada (36px)",
+      "Contraste mantido via cores do design system",
+      "Line-height calculado para legibilidade"
+    ]
+  },
+
+  "implementation": {
+    "globalCSSPath": "src/styles/globals.css",
+    "componentsPath": "src/components/app/",
+    "requiredFiles": [
+      "src/components/app/AppCard.tsx",
+      "src/components/app/AppEmptyState.tsx",
+      "src/components/app/AppInput.tsx",
+      "src/components/ui/Button.tsx"
+    ]
+  },
+
+  "validation": {
+    "automated": {
+      "eslint": "Adicionar regras para detectar text-2xl+, h-11+, p-6 em app",
+      "typescript": "Tipos forçam uso de AppCard, AppEmptyState, AppInput"
+    },
+    "manual": "Checklist de revisão antes de cada commit"
+  },
+
+  "examples": {
+    "goodPatterns": [
+      {
+        "name": "Card de Equipe",
+        "code": "<AppCard title=\"Sub-16 Feminino\" meta=\"18 atletas\" actions={<Button size=\"sm\">Abrir</Button>}><p className=\"text-sm\">Última atualização: hoje</p></AppCard>"
+      },
+      {
+        "name": "Formulário de Cadastro",
+        "code": "<form className=\"space-y-4\">\n  <AppInput label=\"Nome\" placeholder=\"Digite o nome\" />\n  <AppInput label=\"Email\" type=\"email\" helperText=\"Será usado para login\" />\n  <Button className=\"w-full\">Cadastrar</Button>\n</form>"
+      },
+      {
+        "name": "Lista Vazia",
+        "code": "<AppEmptyState icon={<Users className=\"h-5 w-5\" />} title=\"Nenhum atleta cadastrado\" description=\"Adicione atletas para começar\" action={<Button size=\"sm\">Adicionar Atleta</Button>} />"
+      },
+      {
+        "name": "Título de Página",
+        "code": "<div className=\"space-y-1 mb-6\">\n  <h1 className=\"app-title\">Estatísticas da Equipe</h1>\n  <p className=\"app-subtitle\">Acompanhe o desempenho dos atletas</p>\n</div>"
+      }
+    ],
+    "badPatterns": [
+      {
+        "name": "Card Customizado (EVITAR)",
+        "code": "<div className=\"p-6 rounded-lg border\">\n  <h3 className=\"text-2xl font-bold\">Título Grande</h3>\n</div>",
+        "reason": "Usar AppCard, não p-6, não text-2xl"
+      },
+      {
+        "name": "Input Grande (EVITAR)",
+        "code": "<input className=\"h-11 py-3 text-base\" />",
+        "reason": "Usar AppInput com h-9"
+      },
+      {
+        "name": "Botão Grande (EVITAR)",
+        "code": "<button className=\"h-12 text-lg\">Salvar</button>",
+        "reason": "Usar Button com h-9 text-sm"
+      }
+    ]
+  },
+
+  "modules": {
+    "training": {
+      "route": "/training",
+      "title": "Planejamento, Execução e Avaliação de Treinos",
+      "description": "Centro estratégico para o treinador, unificando planejamento tático e físico, execução de sessões e avaliação qualitativa/quantitativa",
+      
+      "objectives": [
+        "Planejamento tático e físico",
+        "Execução de sessões",
+        "Avaliação qualitativa e quantitativa",
+        "Organização de micro/meso/trimestres",
+        "Acesso rápido a recursos técnicos",
+        "Feedback e comunicação com atletas"
+      ],
+
+      "layoutStructure": {
+        "header": {
+          "description": "Header fixo no topo",
+          "elements": [
+            "Título: 'Planejamento de Treinos'",
+            "Dropdown de equipe atual",
+            "Botão '+ Novo Treino' com destaque visual",
+            "Filtro rápido (por atleta ou período)"
+          ]
+        },
+        "sidebar": {
+          "description": "Sidebar esquerda fixa e colapsável integrada ao sistema",
+          "behavior": "Expande submenu ao clicar em 'Treinos'",
+          "activeState": "Item ativo com destaque visual (cor ou ícone)",
+          "navigation": [
+            {
+              "icon": "📅",
+              "label": "Agenda Semanal",
+              "route": "/training/agenda",
+              "isDefault": true
+            },
+            {
+              "icon": "🗓️",
+              "label": "Calendário Mensal",
+              "route": "/training/calendario"
+            },
+            {
+              "icon": "📊",
+              "label": "Planejamento",
+              "route": "/training/planejamento"
+            },
+            {
+              "icon": "🏋️",
+              "label": "Banco de Exercícios",
+              "route": "/training/banco"
+            },
+            {
+              "icon": "📈",
+              "label": "Avaliações",
+              "route": "/training/avaliacoes"
+            }
+          ]
+        },
+        "mainArea": {
+          "description": "Área principal dinâmica à direita da sidebar",
+          "behavior": "Conteúdo adaptativo por subrota sem recarregar página completa",
+          "transitions": "Fade ou slide horizontal entre subrotas"
+        }
+      },
+
+      "subroutes": {
+        "agenda": {
+          "route": "/training/agenda",
+          "title": "Agenda Semanal",
+          "layout": "Calendário horizontal (segunda a domingo)",
+          "features": [
+            "Cada bloco: sessão com cor por tipo",
+            "Hover: resumo do treino (equipe, horário, local, foco)",
+            "Modal ao clicar: detalhes completos + ações rápidas",
+            "Arrastar sessões entre dias (drag & drop)",
+            "Duplicar sessão",
+            "Fechar sessão (bloqueia edição, gera estatística)",
+            "Filtro por atleta, tipo de treino, foco"
+          ],
+          "interactions": {
+            "dragAndDrop": {
+              "description": "Arrastar sessões entre dias",
+              "animation": "scale leve + sombra + snapping visual",
+              "feedback": "Toast: 'Sessão movida para {dia}'"
+            },
+            "duplicate": {
+              "description": "Duplicar sessão existente",
+              "action": "Criar cópia com modal de confirmação"
+            },
+            "closeSession": {
+              "description": "Fechar sessão para análise",
+              "warning": "Ação irreversível, requer confirmação dupla",
+              "result": "Gera estatística automaticamente"
+            }
+          },
+          "animations": {
+            "weekChange": "slide horizontal + fade",
+            "cardAppear": "fade-in com leve delay em cascata",
+            "tooltips": "fade-in suave com 200ms delay"
+          },
+          "modals": {
+            "createEdit": {
+              "title": "Criar/Editar Sessão",
+              "animation": "fade + scale leve (pop-up)",
+              "fields": [
+                "Título",
+                "Equipe",
+                "Data e hora",
+                "Tipo de treino",
+                "Foco principal",
+                "Exercícios",
+                "Observações"
+              ],
+              "actions": ["Salvar", "Salvar e continuar", "Cancelar"]
+            },
+            "viewDetails": {
+              "title": "Ver Detalhes de Sessão",
+              "animation": "drawer lateral",
+              "content": "Visualização somente leitura com botão de editar"
+            }
+          },
+          "toasts": {
+            "sessionCreated": "✅ Sessão adicionada ao dia X",
+            "sessionEdited": "✏️ Sessão atualizada",
+            "sessionDeleted": "🗑️ Sessão removida (com Desfazer 5s)",
+            "sessionMoved": "🔄 Sessão movida para {dia}",
+            "error": "❌ Algo deu errado. Tente novamente."
+          },
+          "emptyState": {
+            "title": "Nenhum treino agendado esta semana",
+            "description": "Crie seu primeiro treino para começar",
+            "action": "Botão 'Criar Treino'"
+          }
+        },
+
+        "calendario": {
+          "route": "/training/calendario",
+          "title": "Calendário Mensal",
+          "layout": "Visualização Gantt-like por dia",
+          "features": [
+            "Destaque visual para eventos (treino, jogo, avaliação)",
+            "Badges com ícones: 🏋️, ⚽, 📊, 🧘",
+            "Hover com resumo e indicadores de carga",
+            "Modal ao clicar em dia para adicionar/editar",
+            "Sugestão automática de foco baseada no ciclo atual"
+          ],
+          "interactions": {
+            "dayHover": "leve destaque com sombra ou borda",
+            "dayClick": "Modal compacto com data pré-preenchida",
+            "eventTypes": ["training", "game", "evaluation", "recovery"]
+          },
+          "animations": {
+            "monthChange": "slide horizontal + fade",
+            "eventAppear": "fade-in progressivo"
+          },
+          "modals": {
+            "addEvent": {
+              "title": "Adicionar Evento",
+              "animation": "fade-in",
+              "fields": ["Tipo de evento", "Horário", "Equipe", "Foco", "Observações"],
+              "smartSuggestions": true
+            }
+          }
+        },
+
+        "planejamento": {
+          "route": "/training/planejamento",
+          "title": "Planejamento Estrutural",
+          "layout": "Timeline ou cards colapsáveis com hierarquia",
+          "hierarchy": ["Trimestre", "Mesociclo", "Microciclo"],
+          "features": [
+            "Visão interativa de 3 camadas (Trimestre → Meso → Micro)",
+            "Microciclos dentro dos mesociclos",
+            "Destaques com foco técnico (ícones ou cores)",
+            "Alertas automáticos por desvios de foco",
+            "Criar/editar/clonar ciclos",
+            "Inserir treinos diretamente em ciclos",
+            "Visualização de carga semanal",
+            "Alertas de microciclos com foco repetido",
+            "Alerta de ausência de treinos por X dias"
+          ],
+          "interactions": {
+            "expandCollapse": "accordion vertical suave",
+            "createCycle": "Drawer lateral para não sobrepor calendário",
+            "cloneMicrocycle": "Duplicar com confirmação",
+            "dragSessions": "Arrastar sessões para ciclos"
+          },
+          "animations": {
+            "cycleSwitch": "slide horizontal com fade",
+            "expandMeso": "accordion vertical suave",
+            "modifiedHighlight": "pulsar discreto no contorno"
+          },
+          "modals": {
+            "createEditMicrocycle": {
+              "type": "drawer lateral",
+              "fields": ["Nome", "Foco", "Período", "Sessões vinculadas"]
+            },
+            "evaluateMicrocycle": {
+              "type": "modal",
+              "fields": [
+                "Slider de intensidade",
+                "Foco mantido? (sim/não)",
+                "Observações"
+              ],
+              "trigger": "Ao fechar microciclo"
+            }
+          },
+          "alerts": {
+            "focusDeviation": {
+              "message": "⚠️ 3 microciclos seguidos fora do foco planejado",
+              "style": "Toast amarelo com link 'ver detalhe'"
+            },
+            "noTraining": {
+              "message": "Nenhum treino há {X} dias",
+              "style": "Badge vermelho"
+            }
+          },
+          "toasts": {
+            "microcycleCreated": "Microciclo salvo com sucesso",
+            "evaluationSent": "Obrigado! Avaliação registrada.",
+            "autoSave": "✔️ Alterações salvas (auto-hide 2s)"
+          }
+        },
+
+        "banco": {
+          "route": "/training/banco",
+          "title": "Banco de Exercícios",
+          "layout": "Lista pesquisável com filtros avançados",
+          "features": [
+            "Filtros: tipo, objetivo, duração, materiais",
+            "Miniatura (imagem ou GIF)",
+            "Descrição e instruções",
+            "Tag de foco principal",
+            "Drag & drop para sessões",
+            "Favoritar para acesso rápido",
+            "Criar modelos de treino com exercícios pré-definidos"
+          ],
+          "filters": {
+            "type": ["técnico", "físico", "regenerativo", "tático"],
+            "objective": ["força", "resistência", "velocidade", "coordenação"],
+            "duration": ["5-15min", "15-30min", "30-60min", "60min+"],
+            "materials": ["bola", "cone", "colchonete", "elástico", "sem material"]
+          },
+          "interactions": {
+            "preview": "Hover scale + sombra",
+            "addToSession": "Drag and drop com encaixe animado",
+            "favorite": "Toggle estrela com animação"
+          },
+          "animations": {
+            "drawerOpen": "Drawer lateral com scroll independente",
+            "exercisePreview": "hover scale + sombra"
+          },
+          "toasts": {
+            "exerciseAdded": "🏋️ Exercício inserido na sessão de {dia}",
+            "loadError": "Erro ao carregar banco. Tentar novamente? (com botão Retry)",
+            "noResults": "Nenhum exercício encontrado com esse filtro (sugestão de limpar filtros)"
+          }
+        },
+
+        "avaliacoes": {
+          "route": "/training/avaliacoes",
+          "title": "Avaliação e Relatórios",
+          "layout": "Painel com indicadores e gráficos",
+          "features": [
+            "Frequência de participação por atleta",
+            "Intensidade média por semana",
+            "Comparativo planejado vs executado",
+            "Relatórios por equipe, foco ou ciclo",
+            "Gráficos: barras, linha, heatmaps",
+            "Exportação em PDF",
+            "Tooltips com métricas adicionais",
+            "Campos de observações por treino/micro/meso",
+            "Avaliação automática ao fechar microciclo"
+          ],
+          "metrics": [
+            "Taxa de presença",
+            "Sessões completadas",
+            "Duração média",
+            "Carga média",
+            "Taxa de desvio de foco",
+            "Taxa de conclusão"
+          ],
+          "visualizations": [
+            "Gráficos de barras (planejado vs executado)",
+            "Gráficos de linha (evolução temporal)",
+            "Heatmaps (distribuição de foco)",
+            "Comparativos semanais"
+          ],
+          "animations": {
+            "chartLoad": "Chart animate from zero",
+            "periodChange": "fade-in progressivo por seção"
+          },
+          "modals": {
+            "exportReport": {
+              "title": "Exportar Relatório",
+              "fields": ["Período", "Tipo de saída (PDF, CSV)"]
+            },
+            "athleteEvaluation": {
+              "type": "drawer lateral",
+              "content": "Timeline de treinos, respostas e desempenho"
+            }
+          },
+          "exports": {
+            "formats": ["PDF", "CSV", "Excel"],
+            "templates": ["Semanal", "Mensal", "Por ciclo", "Por atleta", "Comparativo"]
+          }
+        }
+      },
+
+      "integrations": {
+        "teams": {
+          "description": "Sincronização com /teams - equipe selecionada afeta toda a rota /training",
+          "behavior": "Filtros e dados carregados baseados na equipe ativa"
+        },
+        "statistics": {
+          "description": "Acesso direto ao painel analítico após fechamento do treino",
+          "trigger": "Botão 'Ver Estatísticas' em sessões fechadas"
+        },
+        "messages": {
+          "description": "Envio de mensagem para atletas direto do modal de treino",
+          "action": "Botão 'Enviar Mensagem' em modais de sessão"
+        },
+        "players": {
+          "description": "Detalhamento da resposta individual a treinos",
+          "route": "/players/:id com histórico de participação"
+        }
+      },
+
+      "microinteractions": {
+        "buttonLoading": "Spinner discreto durante envio",
+        "confirmationToast": "Fade-in + auto-hide após 3s",
+        "dragAndDrop": "Animação de encaixe suave com feedback visual",
+        "hover": "Tooltips com 200ms delay para evitar flickering",
+        "cardHighlight": "Highlight leve em cards modificados recentemente",
+        "alertPulse": "Ícones de alerta com pulso sutil",
+        "skeletonLoaders": "Durante carregamento de sessões/relatórios",
+        "errorRetry": "Botão 'Tentar novamente' em estados de erro"
+      },
+
+      "uxDecisions": {
+        "contextFocus": "Toda ação ocorre com equipe atual já definida",
+        "persistentFilters": "Filtros mantidos entre subrotas",
+        "quickActions": "Ações frequentes em 2 cliques ou menos",
+        "templates": "Criação rápida via modais e modelos prontos",
+        "cloning": "Reutilização com clonagem de ciclos",
+        "feedback": "Feedback visual para todas as ações",
+        "visualStates": "Estados bem definidos: planejado, em andamento, fechado",
+        "editRestrictions": "Restrições visuais claras (só edita se não fechado)",
+        "smoothTransitions": "Transições suaves, nada abrupto",
+        "fallbacks": "Fallbacks visuais e retry para falhas",
+        "autoSave": "Treinos auto-salvos durante edição"
+      },
+
+      "userFlow": {
+        "onAccess": [
+          "Vê visão da semana atual com treinos",
+          "Se nenhum treino hoje: empty state com sugestão de criação"
+        ],
+        "onCreate": [
+          "Modal de criação com seleção de equipe",
+          "Data e hora",
+          "Foco do treino",
+          "Adição de exercícios do banco",
+          "Observações rápidas"
+        ],
+        "onPlan": [
+          "Acessa visão trimestral",
+          "Define metas → mesociclos → microciclos",
+          "Usa histórico e alertas para ajustar carga"
+        ],
+        "onExecute": [
+          "Abre treino do dia",
+          "Marca presença, observa foco",
+          "Fecha sessão → gera estatística → envia feedback"
+        ],
+        "onReview": [
+          "Acessa relatórios",
+          "Analisa comparativos e evolução",
+          "Ajusta plano se necessário"
+        ]
+      },
+
+      "improvements": {
+        "highPriority": [
+          {
+            "feature": "Busca rápida global por sessão",
+            "impact": "Muito alto",
+            "complexity": "Médio",
+            "description": "Campo de busca fixo pesquisando por nome, foco, data, atleta",
+            "benefit": "Localiza sessões específicas em segundos"
+          },
+          {
+            "feature": "Notificações inteligentes",
+            "impact": "Alto",
+            "complexity": "Médio",
+            "description": "Alertas discretos sobre treinos não fechados, focos indefinidos, ausências",
+            "benefit": "Gestão proativa sem checagens manuais"
+          },
+          {
+            "feature": "Registro de diário do treinador",
+            "impact": "Médio",
+            "complexity": "Baixa",
+            "description": "Campo de anotações privadas por dia/semana",
+            "benefit": "Contexto qualitativo complementar"
+          },
+          {
+            "feature": "Exportação e impressão semanal",
+            "impact": "Médio",
+            "complexity": "Baixa",
+            "description": "Layout otimizado para papel/PDF com resumo por dia",
+            "benefit": "Útil em quadras, viagens, reuniões offline"
+          }
+        ],
+        "mediumPriority": [
+          {
+            "feature": "Acesso rápido ao último treino editado",
+            "impact": "Médio",
+            "complexity": "Médio",
+            "description": "Mini-card fixado com link para última sessão editada",
+            "benefit": "Evita navegação repetitiva"
+          },
+          {
+            "feature": "Personalização visual de sessões",
+            "impact": "Médio",
+            "complexity": "Médio",
+            "description": "Cores pessoais, emojis/tags, ícones por foco",
+            "benefit": "Melhora identificação visual e engajamento"
+          },
+          {
+            "feature": "Importação via planilha/modelo",
+            "impact": "Alto",
+            "complexity": "Alto",
+            "description": "Upload de sessões pré-definidas via Excel",
+            "benefit": "Agilidade em planejamentos repetitivos"
+          }
+        ],
+        "lowPriority": [
+          {
+            "feature": "Integração com calendário externo",
+            "impact": "Médio",
+            "complexity": "Alto",
+            "description": "Sincronização com Google Calendar, Outlook",
+            "benefit": "Útil mas complexo tecnicamente"
+          }
+        ]
+      },
+
+      "testCases": {
+        "ux": [
+          "Sidebar ativa com submenu persistente ao navegar entre subrotas",
+          "Feedback visual consistente ao trocar subrotas",
+          "Modal de criação não interfere na posição da agenda",
+          "Transições não causam flicker ou quebra de layout",
+          "Links diretos abrem as telas corretas com filtros aplicados",
+          "Botões primários sempre visíveis em telas de ação"
+        ],
+        "functionality": [
+          "Drag & drop de sessões funciona entre dias",
+          "Fechar sessão bloqueia edição corretamente",
+          "Filtros aplicados persistem entre navegações",
+          "Busca retorna resultados relevantes",
+          "Exportação de PDF gera arquivo correto",
+          "Notificações aparecem no momento certo"
+        ],
+        "performance": [
+          "Calendário mensal carrega em < 1s",
+          "Drag & drop responde em < 100ms",
+          "Auto-save não causa lag visível",
+          "Gráficos renderizam sem delay perceptível"
+        ]
+      },
+
+      "accessibility": {
+        "keyboard": [
+          "Navegação completa via teclado",
+          "Tab order lógico em modais",
+          "Atalhos: Ctrl+N (novo treino), Ctrl+F (buscar)",
+          "Escape fecha modais"
+        ],
+        "screenReader": [
+          "Labels descritivos em todos os campos",
+          "Estados anunciados (carregando, erro, sucesso)",
+          "Tooltips acessíveis via aria-label",
+          "Foco visível em elementos interativos"
+        ],
+        "visual": [
+          "Contraste mínimo WCAG AA",
+          "Textos não dependem apenas de cor",
+          "Ícones acompanhados de texto quando crítico",
+          "Tamanho mínimo de toque: 44x44px"
+        ]
+      }
+    }
+  },
+
+  "navigation": {
+    "sidebar": {
+      "description": "Sidebar esquerda fixa e colapsável para navegação principal do sistema",
+      "path": "src/components/Layout/ProfessionalSidebar.tsx",
+      "behavior": {
+        "collapsible": true,
+        "persistState": true,
+        "activeHighlight": "Cor/ícone destacado para item ativo",
+        "submenuExpansion": "Accordion com animação suave"
+      },
+      "structure": {
+        "header": {
+          "collapsed": "Logo icon apenas",
+          "expanded": "Logo completo + botão collapse"
+        },
+        "navigation": [
+          {
+            "name": "Página Inicial",
+            "href": "/inicio",
+            "icon": "Home",
+            "type": "simple"
+          },
+          {
+            "name": "Mensagens",
+            "href": "/messages",
+            "icon": "MessageSquare",
+            "type": "simple"
+          },
+          {
+            "name": "Dashboard",
+            "href": "/dashboard",
+            "icon": "LayoutDashboard",
+            "type": "simple"
+          },
+          {
+            "name": "Cadastro",
+            "href": "/admin/cadastro",
+            "icon": "UserPlus",
+            "type": "simple"
+          },
+          {
+            "name": "Equipes",
+            "href": "/teams",
+            "icon": "UsersRound",
+            "type": "smart",
+            "behavior": "Verifica se usuário tem equipes antes de navegar. Se não tem, abre modal de criar equipe",
+            "loading": "Mostra spinner durante verificação",
+            "modal": "CreateTeamModal"
+          },
+          {
+            "name": "Atletas",
+            "href": "/admin/athletes",
+            "icon": "Users",
+            "type": "simple"
+          },
+          {
+            "name": "Scout ao Vivo",
+            "href": "/scout/live",
+            "icon": "Video",
+            "type": "simple"
+          }
+        ],
+        "submenus": {
+          "eventos": {
+            "name": "Eventos",
+            "icon": "Calendar",
+            "items": [
+              {
+                "name": "Calendário",
+                "href": "/calendar",
+                "icon": "CalendarDays"
+              },
+              {
+                "name": "Competições",
+                "href": "/eventos/competicoes",
+                "icon": "Trophy"
+              }
+            ]
+          },
+          "treinos": {
+            "name": "Treinos",
+            "icon": "Dumbbell",
+            "items": [
+              {
+                "name": "Agenda Semanal",
+                "href": "/training/agenda",
+                "icon": "CalendarDays",
+                "tooltip": "Visão semanal dos treinos planejados",
+                "isDefault": true
+              },
+              {
+                "name": "Calendário",
+                "href": "/training/calendario",
+                "icon": "Calendar",
+                "tooltip": "Visão mensal com todos os eventos"
+              },
+              {
+                "name": "Planejamento",
+                "href": "/training/planejamento",
+                "icon": "ClipboardList",
+                "tooltip": "Estrutura de ciclos e microciclos"
+              },
+              {
+                "name": "Banco de Exercícios",
+                "href": "/training/banco",
+                "icon": "ListChecks",
+                "tooltip": "Biblioteca de exercícios para treinos"
+              },
+              {
+                "name": "Avaliações",
+                "href": "/training/avaliacoes",
+                "icon": "Target",
+                "tooltip": "Métricas e relatórios de desempenho"
+              }
+            ]
+          },
+          "estatisticas": {
+            "name": "Estatísticas",
+            "icon": "BarChart3",
+            "rbac": true,
+            "description": "Submenu com permissões RBAC baseadas no papel do usuário",
+            "roles": {
+              "atleta": [
+                {
+                  "name": "Minhas Estatísticas",
+                  "href": "/statistics/me",
+                  "icon": "TrendingUp",
+                  "tooltip": "Seu acompanhamento pessoal"
+                }
+              ],
+              "comissaoTecnica": [
+                {
+                  "name": "Operacional",
+                  "href": "/statistics",
+                  "icon": "BarChart3",
+                  "tooltip": "Controle do treino ou jogo do dia"
+                },
+                {
+                  "name": "Equipes",
+                  "href": "/statistics/teams",
+                  "icon": "UsersRound",
+                  "tooltip": "Análise de desempenho coletivo"
+                },
+                {
+                  "name": "Atletas",
+                  "href": "/statistics/athletes",
+                  "icon": "Users",
+                  "tooltip": "Análise individual para a comissão técnica"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "states": {
+        "collapsed": "w-16 (64px)",
+        "expanded": "w-55 (220px)",
+        "transition": "duration-200ms ease",
+        "activeItem": "bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-400",
+        "hoverItem": "bg-gray-100 dark:bg-gray-800"
+      },
+      "logoStrategy": {
+        "light": {
+          "collapsed": "/images/logo/logo-icon.svg",
+          "expanded": "/images/logo/logo.svg"
+        },
+        "dark": {
+          "collapsed": "/images/logo/logo-icon-dark.svg",
+          "expanded": "/images/logo/logo-dark.svg"
+        }
+      }
+    }
+  },
+
+  "modules": {
+    "teams": {
+      "route": "/teams",
+      "title": "Gerenciamento de Equipes",
+      "description": "Módulo completo para criação, configuração e gerenciamento de equipes esportivas com membros, treinos e estatísticas",
+      
+      "architecture": {
+        "pattern": "Dashboard → Detail",
+        "urlStrategy": "Query params para estado (teamId, tab, isNew)",
+        "persistence": "URL mantém estado para F5/compartilhamento"
+      },
+
+      "views": {
+        "dashboard": {
+          "component": "DashboardV2",
+          "description": "Visão geral de todas as equipes do usuário",
+          "features": [
+            "Grid de cards de equipes",
+            "Busca e filtros",
+            "Botão 'Criar Nova Equipe'",
+            "Status visual (ativo/arquivado)",
+            "Última atividade de cada equipe"
+          ],
+          "layout": "Grid responsivo com cards",
+          "emptyState": {
+            "title": "Nenhuma equipe criada",
+            "description": "Crie sua primeira equipe para começar",
+            "action": "Botão 'Criar Equipe'"
+          }
+        },
+        "teamDetail": {
+          "component": "TeamDetail",
+          "description": "Detalhes completos de uma equipe específica",
+          "navigation": "Breadcrumb: 'Painel de equipes > [Nome da Equipe]'",
+          "tabs": [
+            {
+              "id": "OVERVIEW",
+              "label": "Visão Geral",
+              "component": "OverviewTab",
+              "permissions": "all",
+              "features": [
+                "Boas-vindas para equipes novas",
+                "Cards de ações rápidas (Convidar, Adicionar Atletas, Configurar)",
+                "Informações da equipe",
+                "Atividade recente",
+                "Próximo treino",
+                "Contadores (membros, treinos)"
+              ]
+            },
+            {
+              "id": "MEMBERS",
+              "label": "Membros",
+              "component": "MembersTab",
+              "permissions": "all",
+              "features": [
+                "Lista de membros com filtros",
+                "Badges de papel (ADMIN, MEMBRO, OWNER)",
+                "Status (Ativo, Pendente)",
+                "Ações: Editar papel, Remover",
+                "Convidar novos membros",
+                "Separação visual: Comissão vs Atletas"
+              ]
+            },
+            {
+              "id": "TRAININGS",
+              "label": "Treinos",
+              "component": "TrainingsTab",
+              "permissions": "all",
+              "features": [
+                "Lista de treinos da equipe",
+                "Filtros por tipo e status",
+                "Criar novo treino",
+                "Detalhes do treino"
+              ]
+            },
+            {
+              "id": "STATS",
+              "label": "Estatísticas",
+              "component": "StatsTab",
+              "permissions": "all",
+              "features": [
+                "Métricas da equipe",
+                "Gráficos de desempenho",
+                "Análises comparativas"
+              ]
+            },
+            {
+              "id": "SETTINGS",
+              "label": "Configurações",
+              "component": "SettingsTab",
+              "permissions": "admin",
+              "icon": "Settings",
+              "features": [
+                "Editar informações da equipe",
+                "Gerenciar permissões",
+                "Arquivar/Deletar equipe",
+                "Configurações avançadas"
+              ]
+            }
+          ]
+        }
+      },
+
+      "dataModel": {
+        "Team": {
+          "id": "string",
+          "name": "string",
+          "code": "string (identificador único)",
+          "role": "string (papel do usuário atual)",
+          "lastActivity": "string",
+          "activityTime": "string",
+          "status": "'active' | 'archived'",
+          "initial": "string (primeira letra para avatar)",
+          "category": "string (opcional)",
+          "category_id": "number (opcional)",
+          "gender": "string (opcional)",
+          "club": "string (opcional)",
+          "season": "string (opcional)",
+          "description": "string | null",
+          "organization_id": "string (opcional)"
+        },
+        "Member": {
+          "id": "string",
+          "name": "string",
+          "email": "string",
+          "role": "'ADMIN' | 'MEMBRO' | 'OWNER'",
+          "status": "'Ativo' | 'Pendente'",
+          "initials": "string"
+        },
+        "Training": {
+          "id": "string",
+          "name": "string",
+          "date": "string",
+          "time": "string",
+          "type": "'Tático' | 'Físico' | 'Técnico' | 'Jogo-Treino'",
+          "status": "'Agendado' | 'Concluído' | 'Cancelado'"
+        }
+      },
+
+      "modals": {
+        "createTeam": {
+          "component": "CreateTeamModal",
+          "trigger": "Sidebar (se sem equipes) ou Dashboard",
+          "fields": [
+            "Nome da equipe (obrigatório)",
+            "Categoria",
+            "Gênero",
+            "Temporada"
+          ],
+          "validation": "Nome mínimo 3 caracteres",
+          "onSuccess": "Navega para /teams?teamId={id}&isNew=true&tab=MEMBERS"
+        },
+        "inviteMember": {
+          "component": "InviteMemberModal",
+          "trigger": "Tab Members ou Overview",
+          "fields": [
+            "Email (obrigatório)",
+            "Papel (ADMIN/MEMBRO)",
+            "Mensagem personalizada (opcional)"
+          ],
+          "behavior": "Envia convite por email",
+          "feedback": "Lista de convites pendentes"
+        },
+        "addAthletes": {
+          "component": "AddAthletesToTeamModal",
+          "trigger": "Overview ou Members tab",
+          "features": [
+            "Busca de atletas cadastrados",
+            "Seleção múltipla",
+            "Preview dos selecionados"
+          ]
+        },
+        "configureTeam": {
+          "component": "ConfigureTeamModal",
+          "trigger": "Overview (equipes novas)",
+          "fields": [
+            "Categoria",
+            "Gênero",
+            "Temporada",
+            "Descrição"
+          ]
+        },
+        "editMemberRole": {
+          "component": "EditMemberRoleModal",
+          "trigger": "Ação em membro",
+          "permissions": "Apenas ADMIN/OWNER",
+          "options": ["ADMIN", "MEMBRO"]
+        },
+        "removeMember": {
+          "component": "RemoveMemberModal",
+          "trigger": "Ação em membro",
+          "permissions": "Apenas ADMIN/OWNER",
+          "warning": "Confirmação dupla para remoção"
+        }
+      },
+
+      "permissions": {
+        "system": "RBAC - Role Based Access Control",
+        "roles": ["OWNER", "ADMIN", "MEMBRO"],
+        "matrix": {
+          "OWNER": [
+            "Todas as permissões",
+            "Deletar equipe",
+            "Transferir ownership"
+          ],
+          "ADMIN": [
+            "Gerenciar membros",
+            "Editar configurações",
+            "Criar/editar treinos",
+            "Ver todas as tabs"
+          ],
+          "MEMBRO": [
+            "Ver informações",
+            "Participar de treinos",
+            "Ver estatísticas próprias"
+          ]
+        },
+        "implementation": "useTeamPermissions hook",
+        "uiAdaptation": "Tabs/ações renderizadas condicionalmente"
+      },
+
+      "smartFeatures": {
+        "newTeamOnboarding": {
+          "description": "Fluxo guiado para equipes recém-criadas",
+          "steps": [
+            "1. Criar equipe",
+            "2. Redirecionar para tab MEMBERS",
+            "3. Mostrar welcome block com ações rápidas",
+            "4. Sugerir: Convidar membros → Adicionar atletas → Configurar detalhes"
+          ],
+          "visualization": "Banner de boas-vindas com ícone PartyPopper"
+        },
+        "checkBeforeNavigate": {
+          "description": "Sidebar verifica se usuário tem equipes antes de navegar",
+          "behavior": "Se não tem equipes, abre CreateTeamModal em vez de navegar",
+          "loading": "Spinner durante verificação"
+        },
+        "urlState": {
+          "description": "Estado preservado na URL para F5 e compartilhamento",
+          "params": ["teamId", "tab", "isNew"],
+          "example": "/teams?teamId=abc123&tab=MEMBERS&isNew=true"
+        }
+      },
+
+      "integrations": {
+        "training": "Link direto para criar treino dessa equipe",
+        "statistics": "Métricas específicas da equipe",
+        "athletes": "Lista de atletas vinculados à equipe",
+        "messages": "Envio de mensagens para membros da equipe"
+      },
+
+      "uxPatterns": {
+        "breadcrumb": "Sempre visível no topo para voltar ao dashboard",
+        "editInPlace": "Nome da equipe editável inline com Enter/Esc",
+        "skeletons": "Loading states com skeleton screens",
+        "emptyStates": "Estados vazios com ações claras",
+        "toasts": "Feedback para todas as ações (sucesso/erro)",
+        "confirmations": "Ações destrutivas com confirmação dupla"
+      },
+
+      "animations": {
+        "pageTransition": "slide-in-from-bottom-2 duration-500ms",
+        "cardHover": "scale + sombra",
+        "tabSwitch": "fade entre conteúdos",
+        "modalAppear": "fade + scale"
+      }
+    },
+
+    "training": {

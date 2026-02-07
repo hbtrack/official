@@ -1,0 +1,5 @@
+"id","code","name","description","created_at","updated_at"
+"1","dirigente","Dirigente","R4: Gestor máximo da organização. Gerencia clubes, equipes, temporadas, dirigentes e coordenadores. Não tem hierarquia sobre treinadores técnicos.","2025-12-28 08:02:38.244454+00","2025-12-30 06:16:37.701647+00"
+"2","coordenador","Coordenador","R4: Gestor de equipes específicas. Intermedia dirigente e treinadores. Não tem autoridade sobre aspectos técnicos de treino e jogo.","2025-12-28 08:02:38.244454+00","2025-12-30 06:16:37.701647+00"
+"3","treinador","Treinador","R4: Responsável técnico de equipe(s). Gerencia treinos, jogos, convocações e análises táticas. Não gerencia atletas de outras equipes.","2025-12-28 08:02:38.244454+00","2025-12-30 06:16:37.701647+00"
+"4","atleta","Atleta","R4: Praticante do esporte. Pode ter vínculos com múltiplas equipes simultaneamente (V1.2). Acesso opcional ao sistema para consulta de wellness e estatísticas.","2025-12-28 08:02:38.244454+00","2025-12-30 06:16:37.701647+00"

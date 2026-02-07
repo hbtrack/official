@@ -1,0 +1,1425 @@
+openapi: 3.1.0
+info:
+  title: HandLab API - Match Subresources
+  description: |
+    Contrato da API para gestão de subrecursos de jogos (match_teams, match_roster, match_events).
+    
+    ## Regras de Negócio Aplicáveis
+    - **R25/R26**: Permissões por papel e escopo (Treinador: suas equipes; Coordenador: total; Dirigente: administrativo)
+    - **R29/R33**: Exclusão lógica obrigatória; histórico com rastro
+    - **R42**: Modo somente leitura sem vínculo ativo
+    - **RDB13/RF15**: Jogo finalizado é somente leitura; reabertura auditável
+    - **RF5.2/R37**: Temporada interrompida bloqueia criação/edição de novos eventos
+    - **RD18**: Limite máximo de 16 atletas relacionadas por jogo
+    - **RD4/RD7**: Participação oficial exige convocação/lista
+    - **RD13/RD22**: Regras de goleira e goleiro-linha
+    
+    ## Escopo e Segurança
+    - Dirigente/Coordenador: acesso administrativo/total
+    - Treinador: escopo às suas equipes/competições na temporada
+    - Atleta: somente leitura aos próprios dados
+    
+    ## Campo `event_type`
+    O campo `event_type` é TEXT livre na V1. Exemplos sugeridos:
+    - `goal` - Gol
+    - `7m_shot` - Tiro de 7 metros
+    - `2min_exclusion` - Exclusão de 2 minutos
+    - `red_card` - Cartão vermelho
+    - `yellow_card` - Cartão amarelo
+    - `assist` - Assistência
+    - `blocked_shot` - Arremesso bloqueado
+    - `goalkeeper_save` - Defesa de goleira
+    - `turnover` - Bola perdida
+    - `interception` - Recuperação de bola
+    - `timeout` - Pedido de tempo
+    - `substitution` - Substituição
+  version: 1.0.0
+  contact:
+    name: HandLab Team
+
+servers:
+  - url: /v1
+    description: API v1
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: match_teams
+    description: Gestão de equipes participantes do jogo (home/away)
+  - name: match_roster
+    description: Gestão da lista oficial de atletas convocadas para o jogo
+  - name: match_events
+    description: Gestão de eventos do jogo (gols, faltas, etc.)
+
+paths:
+  # =============================================================================
+  # MATCH TEAMS
+  # =============================================================================
+  /matches/{match_id}/teams:
+    get:
+      tags:
+        - match_teams
+      summary: Listar equipes do jogo
+      description: |
+        Lista equipes (home/away) e placar do jogo.
+        
+        **Regras aplicáveis:** R25/R26 (permissões e escopo)
+      operationId: listMatchTeams
+      x-rule-ids:
+        - R25
+        - R26
+      parameters:
+        - $ref: '#/components/parameters/matchIdParam'
+      responses:
+        '200':
+          description: Lista de equipes do jogo
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MatchTeam'
+              example:
+                - id: "aa0e8400-e29b-41d4-a716-446655440001"
+                  match_id: "bb0e8400-e29b-41d4-a716-446655440000"
+                  team_id: "cc0e8400-e29b-41d4-a716-446655440002"
+                  side: "home"
+                  score: 25
+                  created_at: "2024-03-15T14:00:00Z"
+                  updated_at: "2024-03-15T16:30:00Z"
+                - id: "aa0e8400-e29b-41d4-a716-446655440003"
+                  match_id: "bb0e8400-e29b-41d4-a716-446655440000"
+                  team_id: "cc0e8400-e29b-41d4-a716-446655440004"
+                  side: "away"
+                  score: 22
+                  created_at: "2024-03-15T14:00:00Z"
+                  updated_at: "2024-03-15T16:30:00Z"
+        '401':
+          description: Token inválido ou ausente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "unauthorized"
+                message: "Token inválido ou ausente"
+                details: null
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "permission_denied"
+                message: "Permissão insuficiente"
+                details:
+                  regra: "R25"
+        '404':
+          description: Jogo não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "not_found"
+                message: "Jogo não encontrado"
+                details: null
+
+    post:
+      tags:
+        - match_teams
+      summary: Adicionar equipe ao jogo
+      description: |
+        Adiciona uma equipe ao jogo (home ou away).
+        
+        **Regras aplicáveis:**
+        - R25/R26: Permissões por papel e escopo
+        - R29: Exclusão lógica (sem delete físico)
+        - RDB13: Bloquear se jogo finalizado
+        
+        **Constraints:**
+        - UNIQUE (match_id, side) — não pode haver duas equipes "home" ou duas "away"
+        - UNIQUE (match_id, team_id) — mesma equipe não pode estar dos dois lados
+      operationId: addTeamToMatch
+      x-rule-ids:
+        - R25
+        - R26
+        - R29
+        - RDB13
+      parameters:
+        - $ref: '#/components/parameters/matchIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MatchTeamCreate'
+            example:
+              team_id: "cc0e8400-e29b-41d4-a716-446655440002"
+              side: "home"
+              score: 0
+      responses:
+        '201':
+          description: Equipe adicionada ao jogo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchTeam'
+              example:
+                id: "aa0e8400-e29b-41d4-a716-446655440001"
+                match_id: "bb0e8400-e29b-41d4-a716-446655440000"
+                team_id: "cc0e8400-e29b-41d4-a716-446655440002"
+                side: "home"
+                score: 0
+                created_at: "2024-03-15T14:00:00Z"
+                updated_at: "2024-03-15T14:00:00Z"
+        '401':
+          description: Token inválido ou ausente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "unauthorized"
+                message: "Token inválido ou ausente"
+                details: null
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "permission_denied"
+                message: "Permissão insuficiente"
+                details:
+                  regra: "R25"
+        '404':
+          description: Jogo ou equipe não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "not_found"
+                message: "Jogo não encontrado"
+                details: null
+        '409':
+          description: Conflito (jogo finalizado ou violação de unicidade)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                edit_finalized_game:
+                  summary: Jogo finalizado
+                  value:
+                    code: "edit_finalized_game"
+                    message: "Jogo finalizado é somente leitura"
+                    details:
+                      regra: "RDB13"
+                conflict_unique:
+                  summary: Violação de unicidade
+                  value:
+                    code: "conflict_unique"
+                    message: "Violação de unicidade"
+                    details:
+                      constraint: "match_id+side"
+        '422':
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "validation_error"
+                message: "Payload inválido"
+                details:
+                  errors:
+                    - field: "side"
+                      message: "Valor deve ser 'home' ou 'away'"
+
+  /match_teams/{match_team_id}:
+    patch:
+      tags:
+        - match_teams
+      summary: Atualizar equipe do jogo
+      description: |
+        Atualiza o placar da equipe no jogo.
+        
+        **Campos editáveis:** score
+        **Campos NÃO editáveis:** team_id, side
+        
+        **Regras aplicáveis:**
+        - RDB13/RF15: Bloquear se jogo finalizado
+        - R25/R26: Permissões por papel e escopo
+      operationId: updateMatchTeam
+      x-rule-ids:
+        - RDB13
+        - RF15
+        - R25
+        - R26
+      parameters:
+        - $ref: '#/components/parameters/matchTeamIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MatchTeamUpdate'
+            example:
+              score: 25
+      responses:
+        '200':
+          description: Equipe atualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchTeam'
+              example:
+                id: "aa0e8400-e29b-41d4-a716-446655440001"
+                match_id: "bb0e8400-e29b-41d4-a716-446655440000"
+                team_id: "cc0e8400-e29b-41d4-a716-446655440002"
+                side: "home"
+                score: 25
+                created_at: "2024-03-15T14:00:00Z"
+                updated_at: "2024-03-15T16:30:00Z"
+        '401':
+          description: Token inválido ou ausente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "unauthorized"
+                message: "Token inválido ou ausente"
+                details: null
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "permission_denied"
+                message: "Permissão insuficiente"
+                details:
+                  regra: "R25"
+        '404':
+          description: Registro não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "not_found"
+                message: "Match team não encontrado"
+                details: null
+        '409':
+          description: Jogo finalizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "edit_finalized_game"
+                message: "Jogo finalizado é somente leitura"
+                details:
+                  regra: "RDB13"
+        '422':
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "validation_error"
+                message: "Payload inválido"
+                details:
+                  errors:
+                    - field: "score"
+                      message: "Score deve ser um número inteiro não negativo"
+
+  # =============================================================================
+  # MATCH ROSTER
+  # =============================================================================
+  /matches/{match_id}/roster:
+    get:
+      tags:
+        - match_roster
+      summary: Listar roster do jogo
+      description: |
+        Lista a relação oficial de atletas convocadas para o jogo.
+        
+        **Regras aplicáveis:**
+        - RD4/RD7: Participação oficial exige convocação/lista
+        - R25/R26: Permissões por papel e escopo
+      operationId: listMatchRoster
+      x-rule-ids:
+        - RD4
+        - RD7
+        - R25
+        - R26
+      parameters:
+        - $ref: '#/components/parameters/matchIdParam'
+      responses:
+        '200':
+          description: Lista de atletas do jogo
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MatchRoster'
+              example:
+                - id: "dd0e8400-e29b-41d4-a716-446655440001"
+                  match_id: "bb0e8400-e29b-41d4-a716-446655440000"
+                  team_id: "cc0e8400-e29b-41d4-a716-446655440002"
+                  athlete_id: "ee0e8400-e29b-41d4-a716-446655440005"
+                  is_starter: true
+                  played: true
+                  created_at: "2024-03-15T14:00:00Z"
+                  updated_at: "2024-03-15T16:30:00Z"
+        '401':
+          description: Token inválido ou ausente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "unauthorized"
+                message: "Token inválido ou ausente"
+                details: null
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "permission_denied"
+                message: "Permissão insuficiente"
+                details:
+                  regra: "R25"
+        '404':
+          description: Jogo não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "not_found"
+                message: "Jogo não encontrado"
+                details: null
+
+    post:
+      tags:
+        - match_roster
+      summary: Adicionar atleta ao roster
+      description: |
+        Adiciona uma atleta à lista oficial do jogo.
+        
+        **Regras aplicáveis:**
+        - RD18: Limite máximo de 16 atletas por jogo
+        - RD4: Participação exige convocação
+        - RDB13: Bloquear se jogo finalizado
+        - R25/R26: Permissões por papel e escopo
+        
+        **Constraints:**
+        - UNIQUE (match_id, athlete_id) — atleta não pode ser adicionada duas vezes
+        - Limite de 16 atletas por equipe no jogo (RD18)
+      operationId: addAthleteToMatch
+      x-rule-ids:
+        - RD18
+        - RD4
+        - RDB13
+        - R25
+        - R26
+      parameters:
+        - $ref: '#/components/parameters/matchIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MatchRosterCreate'
+            example:
+              team_id: "cc0e8400-e29b-41d4-a716-446655440002"
+              athlete_id: "ee0e8400-e29b-41d4-a716-446655440005"
+              is_starter: true
+              played: true
+      responses:
+        '201':
+          description: Atleta adicionada ao roster
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchRoster'
+              example:
+                id: "dd0e8400-e29b-41d4-a716-446655440001"
+                match_id: "bb0e8400-e29b-41d4-a716-446655440000"
+                team_id: "cc0e8400-e29b-41d4-a716-446655440002"
+                athlete_id: "ee0e8400-e29b-41d4-a716-446655440005"
+                is_starter: true
+                played: true
+                created_at: "2024-03-15T14:00:00Z"
+                updated_at: "2024-03-15T14:00:00Z"
+        '401':
+          description: Token inválido ou ausente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "unauthorized"
+                message: "Token inválido ou ausente"
+                details: null
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "permission_denied"
+                message: "Permissão insuficiente"
+                details:
+                  regra: "R25"
+        '404':
+          description: Jogo, equipe ou atleta não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "not_found"
+                message: "Jogo não encontrado"
+                details: null
+        '409':
+          description: Conflito (jogo finalizado ou violação de unicidade)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                edit_finalized_game:
+                  summary: Jogo finalizado
+                  value:
+                    code: "edit_finalized_game"
+                    message: "Jogo finalizado é somente leitura"
+                    details:
+                      regra: "RDB13"
+                conflict_unique:
+                  summary: Atleta já no roster
+                  value:
+                    code: "conflict_unique"
+                    message: "Violação de unicidade"
+                    details:
+                      constraint: "match_id+athlete_id"
+        '422':
+          description: Erro de validação ou limite excedido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                roster_limit_exceeded:
+                  summary: Limite de atletas excedido
+                  value:
+                    code: "roster_limit_exceeded"
+                    message: "Limite de 16 atletas por jogo excedido"
+                    details:
+                      regra: "RD18"
+                validation_error:
+                  summary: Payload inválido
+                  value:
+                    code: "validation_error"
+                    message: "Payload inválido"
+                    details:
+                      errors:
+                        - field: "athlete_id"
+                          message: "Campo obrigatório"
+
+  /match_roster/{match_roster_id}:
+    patch:
+      tags:
+        - match_roster
+      summary: Atualizar roster entry
+      description: |
+        Atualiza informações de uma atleta no roster.
+        
+        **Campos editáveis:** is_starter, played
+        **Campos NÃO editáveis:** team_id, athlete_id
+        
+        **Regras aplicáveis:**
+        - RDB13/RF15: Bloquear se jogo finalizado
+        - R25/R26: Permissões por papel e escopo
+      operationId: updateMatchRoster
+      x-rule-ids:
+        - RDB13
+        - RF15
+        - R25
+        - R26
+      parameters:
+        - $ref: '#/components/parameters/matchRosterIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MatchRosterUpdate'
+            example:
+              is_starter: false
+              played: true
+      responses:
+        '200':
+          description: Roster entry atualizada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchRoster'
+              example:
+                id: "dd0e8400-e29b-41d4-a716-446655440001"
+                match_id: "bb0e8400-e29b-41d4-a716-446655440000"
+                team_id: "cc0e8400-e29b-41d4-a716-446655440002"
+                athlete_id: "ee0e8400-e29b-41d4-a716-446655440005"
+                is_starter: false
+                played: true
+                created_at: "2024-03-15T14:00:00Z"
+                updated_at: "2024-03-15T16:45:00Z"
+        '401':
+          description: Token inválido ou ausente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "unauthorized"
+                message: "Token inválido ou ausente"
+                details: null
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "permission_denied"
+                message: "Permissão insuficiente"
+                details:
+                  regra: "R25"
+        '404':
+          description: Registro não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "not_found"
+                message: "Match roster não encontrado"
+                details: null
+        '409':
+          description: Jogo finalizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "edit_finalized_game"
+                message: "Jogo finalizado é somente leitura"
+                details:
+                  regra: "RDB13"
+        '422':
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "validation_error"
+                message: "Payload inválido"
+                details:
+                  errors:
+                    - field: "is_starter"
+                      message: "Deve ser um valor booleano"
+
+  # =============================================================================
+  # MATCH EVENTS
+  # =============================================================================
+  /matches/{match_id}/events:
+    get:
+      tags:
+        - match_events
+      summary: Listar eventos do jogo
+      description: |
+        Lista eventos do jogo (gols, faltas, etc.) de forma paginada.
+        
+        **Regras aplicáveis:** R25/R26 (permissões e escopo)
+      operationId: listMatchEvents
+      x-rule-ids:
+        - R25
+        - R26
+      parameters:
+        - $ref: '#/components/parameters/matchIdParam'
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+      responses:
+        '200':
+          description: Lista paginada de eventos do jogo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchEventPaginatedResponse'
+              example:
+                items:
+                  - id: "ff0e8400-e29b-41d4-a716-446655440001"
+                    match_id: "bb0e8400-e29b-41d4-a716-446655440000"
+                    team_id: "cc0e8400-e29b-41d4-a716-446655440002"
+                    athlete_id: "ee0e8400-e29b-41d4-a716-446655440005"
+                    period: 1
+                    second_in_match: 300
+                    event_type: "goal"
+                    points: 1
+                    notes: null
+                    created_at: "2024-03-15T14:05:00Z"
+                page: 1
+                limit: 50
+                total: 45
+        '401':
+          description: Token inválido ou ausente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "unauthorized"
+                message: "Token inválido ou ausente"
+                details: null
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "permission_denied"
+                message: "Permissão insuficiente"
+                details:
+                  regra: "R25"
+        '404':
+          description: Jogo não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "not_found"
+                message: "Jogo não encontrado"
+                details: null
+
+    post:
+      tags:
+        - match_events
+      summary: Adicionar evento ao jogo
+      description: |
+        Adiciona um novo evento ao jogo (gol, falta, etc.).
+        
+        **Regras aplicáveis:**
+        - RDB13: Bloquear se jogo finalizado
+        - RF5.2/R37: Temporada interrompida bloqueia criação
+        - RD13/RD22: Validar eventos incompatíveis com goleira/goleiro-linha
+        - R25/R26: Permissões por papel e escopo
+        
+        **Campo event_type (TEXT livre):**
+        Exemplos: goal, 7m_shot, 2min_exclusion, red_card, assist, blocked_shot,
+        goalkeeper_save, turnover, interception, timeout, substitution
+      operationId: addEventToMatch
+      x-rule-ids:
+        - RDB13
+        - RF5.2
+        - R37
+        - RD13
+        - RD22
+        - R25
+        - R26
+      parameters:
+        - $ref: '#/components/parameters/matchIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MatchEventCreate'
+            example:
+              team_id: "cc0e8400-e29b-41d4-a716-446655440002"
+              athlete_id: "ee0e8400-e29b-41d4-a716-446655440005"
+              period: 1
+              second_in_match: 300
+              event_type: "goal"
+              points: 1
+              notes: "Gol de contra-ataque"
+      responses:
+        '201':
+          description: Evento criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchEvent'
+              example:
+                id: "ff0e8400-e29b-41d4-a716-446655440001"
+                match_id: "bb0e8400-e29b-41d4-a716-446655440000"
+                team_id: "cc0e8400-e29b-41d4-a716-446655440002"
+                athlete_id: "ee0e8400-e29b-41d4-a716-446655440005"
+                period: 1
+                second_in_match: 300
+                event_type: "goal"
+                points: 1
+                notes: "Gol de contra-ataque"
+                created_at: "2024-03-15T14:05:00Z"
+        '401':
+          description: Token inválido ou ausente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "unauthorized"
+                message: "Token inválido ou ausente"
+                details: null
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "permission_denied"
+                message: "Permissão insuficiente"
+                details:
+                  regra: "R25"
+        '404':
+          description: Jogo, equipe ou atleta não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "not_found"
+                message: "Jogo não encontrado"
+                details: null
+        '409':
+          description: Conflito (jogo finalizado ou temporada bloqueada)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                edit_finalized_game:
+                  summary: Jogo finalizado
+                  value:
+                    code: "edit_finalized_game"
+                    message: "Jogo finalizado é somente leitura"
+                    details:
+                      regra: "RDB13"
+                season_locked:
+                  summary: Temporada interrompida
+                  value:
+                    code: "season_locked"
+                    message: "Temporada interrompida: criação/edição bloqueada"
+                    details:
+                      regra: "RF5.2"
+        '422':
+          description: Erro de validação ou regra de goleira
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalid_goalkeeper_stat:
+                  summary: Evento incompatível com goleira
+                  value:
+                    code: "invalid_goalkeeper_stat"
+                    message: "Evento incompatível com regra de goleira/goleiro-linha"
+                    details:
+                      regra: "RD13"
+                validation_error:
+                  summary: Payload inválido
+                  value:
+                    code: "validation_error"
+                    message: "Payload inválido"
+                    details:
+                      errors:
+                        - field: "event_type"
+                          message: "Campo obrigatório"
+
+  /match_events/{match_event_id}:
+    patch:
+      tags:
+        - match_events
+      summary: Atualizar evento do jogo
+      description: |
+        Atualiza atributos de um evento do jogo.
+        
+        **Campos editáveis:** period, second_in_match, event_type, points, notes
+        **Campos NÃO editáveis:** match_id, team_id, athlete_id
+        
+        **Regras aplicáveis:**
+        - RDB13/RF15: Bloquear se jogo finalizado
+        - R25/R26: Permissões por papel e escopo
+      operationId: updateMatchEvent
+      x-rule-ids:
+        - RDB13
+        - RF15
+        - R25
+        - R26
+      parameters:
+        - $ref: '#/components/parameters/matchEventIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MatchEventUpdate'
+            example:
+              event_type: "7m_shot"
+              points: 1
+              notes: "Convertido"
+      responses:
+        '200':
+          description: Evento atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchEvent'
+              example:
+                id: "ff0e8400-e29b-41d4-a716-446655440001"
+                match_id: "bb0e8400-e29b-41d4-a716-446655440000"
+                team_id: "cc0e8400-e29b-41d4-a716-446655440002"
+                athlete_id: "ee0e8400-e29b-41d4-a716-446655440005"
+                period: 1
+                second_in_match: 300
+                event_type: "7m_shot"
+                points: 1
+                notes: "Convertido"
+                created_at: "2024-03-15T14:05:00Z"
+        '401':
+          description: Token inválido ou ausente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "unauthorized"
+                message: "Token inválido ou ausente"
+                details: null
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "permission_denied"
+                message: "Permissão insuficiente"
+                details:
+                  regra: "R25"
+        '404':
+          description: Evento não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "not_found"
+                message: "Match event não encontrado"
+                details: null
+        '409':
+          description: Jogo finalizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "edit_finalized_game"
+                message: "Jogo finalizado é somente leitura"
+                details:
+                  regra: "RDB13"
+        '422':
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "validation_error"
+                message: "Payload inválido"
+                details:
+                  errors:
+                    - field: "period"
+                      message: "Deve ser um número inteiro positivo"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Token JWT para autenticação
+
+  parameters:
+    matchIdParam:
+      name: match_id
+      in: path
+      required: true
+      description: ID único do jogo (UUID)
+      schema:
+        type: string
+        format: uuid
+      example: "bb0e8400-e29b-41d4-a716-446655440000"
+
+    matchTeamIdParam:
+      name: match_team_id
+      in: path
+      required: true
+      description: ID único do match_team (UUID)
+      schema:
+        type: string
+        format: uuid
+      example: "aa0e8400-e29b-41d4-a716-446655440001"
+
+    matchRosterIdParam:
+      name: match_roster_id
+      in: path
+      required: true
+      description: ID único do match_roster (UUID)
+      schema:
+        type: string
+        format: uuid
+      example: "dd0e8400-e29b-41d4-a716-446655440001"
+
+    matchEventIdParam:
+      name: match_event_id
+      in: path
+      required: true
+      description: ID único do match_event (UUID)
+      schema:
+        type: string
+        format: uuid
+      example: "ff0e8400-e29b-41d4-a716-446655440001"
+
+    pageParam:
+      name: page
+      in: query
+      required: false
+      description: Número da página (1-indexed)
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+      example: 1
+
+    limitParam:
+      name: limit
+      in: query
+      required: false
+      description: Itens por página (máximo 100)
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 50
+      example: 50
+
+  schemas:
+    # =========================================================================
+    # MATCH TEAMS
+    # =========================================================================
+    MatchTeam:
+      type: object
+      description: Representação de uma equipe participante do jogo
+      required:
+        - id
+        - match_id
+        - team_id
+        - side
+        - score
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: ID único do match_team
+          example: "aa0e8400-e29b-41d4-a716-446655440001"
+        match_id:
+          type: string
+          format: uuid
+          description: ID do jogo
+          example: "bb0e8400-e29b-41d4-a716-446655440000"
+        team_id:
+          type: string
+          format: uuid
+          description: ID da equipe
+          example: "cc0e8400-e29b-41d4-a716-446655440002"
+        side:
+          type: string
+          enum: [home, away]
+          description: Lado da equipe no jogo
+          example: "home"
+        score:
+          type: integer
+          minimum: 0
+          description: Placar da equipe
+          example: 25
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Data/hora de criação
+          example: "2024-03-15T14:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Data/hora da última atualização
+          example: "2024-03-15T16:30:00Z"
+
+    MatchTeamCreate:
+      type: object
+      description: Payload para adicionar equipe ao jogo
+      required:
+        - team_id
+        - side
+      properties:
+        team_id:
+          type: string
+          format: uuid
+          description: ID da equipe (obrigatório)
+          example: "cc0e8400-e29b-41d4-a716-446655440002"
+        side:
+          type: string
+          enum: [home, away]
+          description: Lado da equipe no jogo (obrigatório)
+          example: "home"
+        score:
+          type: integer
+          minimum: 0
+          default: 0
+          description: Placar inicial (opcional, default 0)
+          example: 0
+
+    MatchTeamUpdate:
+      type: object
+      description: Payload para atualizar equipe do jogo
+      properties:
+        score:
+          type: integer
+          minimum: 0
+          description: Placar da equipe
+          example: 25
+
+    # =========================================================================
+    # MATCH ROSTER
+    # =========================================================================
+    MatchRoster:
+      type: object
+      description: Representação de uma atleta na lista oficial do jogo
+      required:
+        - id
+        - match_id
+        - team_id
+        - athlete_id
+        - is_starter
+        - played
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: ID único do match_roster
+          example: "dd0e8400-e29b-41d4-a716-446655440001"
+        match_id:
+          type: string
+          format: uuid
+          description: ID do jogo
+          example: "bb0e8400-e29b-41d4-a716-446655440000"
+        team_id:
+          type: string
+          format: uuid
+          description: ID da equipe
+          example: "cc0e8400-e29b-41d4-a716-446655440002"
+        athlete_id:
+          type: string
+          format: uuid
+          description: ID da atleta
+          example: "ee0e8400-e29b-41d4-a716-446655440005"
+        is_starter:
+          type: boolean
+          description: Indica se é titular
+          example: true
+        played:
+          type: boolean
+          description: Indica se jogou
+          example: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Data/hora de criação
+          example: "2024-03-15T14:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Data/hora da última atualização
+          example: "2024-03-15T16:30:00Z"
+
+    MatchRosterCreate:
+      type: object
+      description: Payload para adicionar atleta ao roster
+      required:
+        - team_id
+        - athlete_id
+      properties:
+        team_id:
+          type: string
+          format: uuid
+          description: ID da equipe (obrigatório)
+          example: "cc0e8400-e29b-41d4-a716-446655440002"
+        athlete_id:
+          type: string
+          format: uuid
+          description: ID da atleta (obrigatório)
+          example: "ee0e8400-e29b-41d4-a716-446655440005"
+        is_starter:
+          type: boolean
+          default: false
+          description: Indica se é titular (opcional)
+          example: true
+        played:
+          type: boolean
+          default: true
+          description: Indica se jogou (opcional)
+          example: true
+
+    MatchRosterUpdate:
+      type: object
+      description: Payload para atualizar roster entry
+      properties:
+        is_starter:
+          type: boolean
+          description: Indica se é titular
+          example: false
+        played:
+          type: boolean
+          description: Indica se jogou
+          example: true
+
+    # =========================================================================
+    # MATCH EVENTS
+    # =========================================================================
+    MatchEvent:
+      type: object
+      description: |
+        Representação de um evento do jogo.
+        
+        O campo event_type é TEXT livre. Exemplos:
+        goal, 7m_shot, 2min_exclusion, red_card, assist, blocked_shot,
+        goalkeeper_save, turnover, interception, timeout, substitution
+      required:
+        - id
+        - match_id
+        - period
+        - second_in_match
+        - event_type
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: ID único do evento
+          example: "ff0e8400-e29b-41d4-a716-446655440001"
+        match_id:
+          type: string
+          format: uuid
+          description: ID do jogo
+          example: "bb0e8400-e29b-41d4-a716-446655440000"
+        team_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: ID da equipe (opcional)
+          example: "cc0e8400-e29b-41d4-a716-446655440002"
+        athlete_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: ID da atleta (opcional)
+          example: "ee0e8400-e29b-41d4-a716-446655440005"
+        period:
+          type: integer
+          minimum: 1
+          description: Período do jogo (1, 2, ou prorrogação)
+          example: 1
+        second_in_match:
+          type: integer
+          minimum: 0
+          description: Segundo no jogo em que ocorreu o evento
+          example: 300
+        event_type:
+          type: string
+          description: |
+            Tipo do evento (TEXT livre).
+            Exemplos: goal, 7m_shot, 2min_exclusion, red_card, assist
+          example: "goal"
+        points:
+          type: integer
+          default: 1
+          description: Pontos associados ao evento (default 1)
+          example: 1
+        notes:
+          type: string
+          nullable: true
+          description: Observações adicionais
+          example: "Gol de contra-ataque"
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Data/hora de criação
+          example: "2024-03-15T14:05:00Z"
+
+    MatchEventCreate:
+      type: object
+      description: Payload para criar evento do jogo
+      required:
+        - period
+        - second_in_match
+        - event_type
+      properties:
+        team_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: ID da equipe (opcional)
+          example: "cc0e8400-e29b-41d4-a716-446655440002"
+        athlete_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: ID da atleta (opcional)
+          example: "ee0e8400-e29b-41d4-a716-446655440005"
+        period:
+          type: integer
+          minimum: 1
+          description: Período do jogo (obrigatório)
+          example: 1
+        second_in_match:
+          type: integer
+          minimum: 0
+          description: Segundo no jogo (obrigatório)
+          example: 300
+        event_type:
+          type: string
+          description: Tipo do evento (obrigatório)
+          example: "goal"
+        points:
+          type: integer
+          default: 1
+          description: Pontos (opcional, default 1)
+          example: 1
+        notes:
+          type: string
+          nullable: true
+          description: Observações (opcional)
+          example: "Gol de contra-ataque"
+
+    MatchEventUpdate:
+      type: object
+      description: Payload para atualizar evento do jogo
+      properties:
+        period:
+          type: integer
+          minimum: 1
+          description: Período do jogo
+          example: 1
+        second_in_match:
+          type: integer
+          minimum: 0
+          description: Segundo no jogo
+          example: 300
+        event_type:
+          type: string
+          description: Tipo do evento
+          example: "7m_shot"
+        points:
+          type: integer
+          description: Pontos
+          example: 1
+        notes:
+          type: string
+          nullable: true
+          description: Observações
+          example: "Convertido"
+
+    MatchEventPaginatedResponse:
+      type: object
+      description: Resposta paginada de eventos do jogo
+      required:
+        - items
+        - page
+        - limit
+        - total
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/MatchEvent'
+          description: Lista de eventos na página atual
+        page:
+          type: integer
+          minimum: 1
+          description: Página atual
+          example: 1
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+          description: Itens por página
+          example: 50
+        total:
+          type: integer
+          minimum: 0
+          description: Total de itens (todas as páginas)
+          example: 45
+
+    # =========================================================================
+    # ERROR RESPONSE
+    # =========================================================================
+    ErrorResponse:
+      type: object
+      description: Resposta padrão de erro
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          description: Código identificador do erro
+          example: "permission_denied"
+        message:
+          type: string
+          description: Mensagem descritiva do erro
+          example: "Permissão insuficiente"
+        details:
+          type: object
+          nullable: true
+          description: Detalhes adicionais (ex. regra violada, campos com erro)
+          example:
+            regra: "R25"

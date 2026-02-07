@@ -1,0 +1,14 @@
+﻿# Gate Run Metadata
+inv_id: INV-TRAIN-043
+timestamp: 20260203_195657
+root: C:\HB TRACK
+backend: C:\HB TRACK\Hb Track - Backend
+python: Python 3.14.2
+test_file: C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_043_microcycle_dates_check.py
+test_node: TestInvTrain043MicrocycleDatesCheck
+verify_exit: 0
+pytest_exit: 0
+exit_code: 3
+primary_class: A
+golden_drift: YES
+golden_missing: NO

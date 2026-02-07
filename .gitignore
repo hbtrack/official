@@ -1,0 +1,51 @@
+# Generated reports (DO NOT VERSION)
+report*.json
+report*.txt
+validation_report.txt
+docs/scripts/consolidated_report.json
+
+# Build/test artifacts
+build/
+dist/
+.reports/
+*.egg-info/
+__pycache__/
+.pytest_cache/
+.coverage
+
+# Python virtualenvs
+venv/
+.venv/
+
+# Node/Frontend dependencies
+node_modules/
+Hb Track - Fronted/node_modules/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+id_ed25519
+id_ed25519.*
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Logs and caches
+*.log
+.cache/
+
+# Local runtime/generated dirs
+.hb_guard/
+.hb_backups/
+
+# Local/invalid placeholders on Windows
+nul
+*/nul
+
+# Separate local repo (do not vendor inside mono repo)
+brain-gist/

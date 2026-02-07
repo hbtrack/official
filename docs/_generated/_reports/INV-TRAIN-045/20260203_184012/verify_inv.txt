@@ -1,0 +1,7 @@
+﻿
+docs\_generated\_reports\INV-TRAIN-045\20260203_184012\verify.txt:1:C:\HB TRACK\Hb Track - 
+Backend\tests\training\invariants\test_inv_train_045_session_exercises_order_unique.py:0:0: ERROR 
+[OBLIG_B_NO_CONSTRAINT]: ObrigaþÒo B missing constraint_name (ex: ck_*, uq_*) - add constraint_name reference (ex: 
+ck_training_sessions_dates)
+
+

@@ -1,0 +1,603 @@
+HB Track — Mini Design System (APP)
+1. Princípios
+
+Densidade > impacto
+
+Consistência > liberdade
+
+Dados primeiro
+
+Nada cresce sem permissão
+
+2. Escala tipográfica (APP)
+
+Nunca usar tokens de marketing no app.
+
+Uso	Token	Tamanho
+Texto base	--app-text-sm	14px
+Texto secundário	--app-text-xs	12px
+Título de seção	--app-text-base	16px
+Título de página	--app-text-lg	18px
+
+Regras:
+
+Nenhum título interno > 18px
+
+Hierarquia por peso e cor, não por tamanho
+
+3. Espaçamento (APP)
+Token	Valor
+--app-space-xs	4px
+--app-space-sm	8px
+--app-space-md	12px
+--app-space-lg	16px
+--app-space-xl	20px
+
+Regras:
+
+Vertical < Horizontal
+
+Proibido p-6 em telas internas
+
+4. Componentes canônicos
+4.1 Button
+
+Altura base: h-9
+
+Fonte: text-sm
+
+Ícones: h-4 w-4
+
+Variantes: primary | secondary | ghost | outline | danger | success
+
+Nunca:
+
+text-base+
+
+h-11+
+
+4.2 AppCard
+
+Função: container de informação.
+
+Regras:
+
+Sempre usar <AppCard />
+
+Padding controlado
+
+Título text-sm
+
+Meta text-xs
+
+Card nunca é hero
+
+Proibido:
+
+p-* direto no JSX
+
+títulos grandes
+
+4.3 AppEmptyState
+Função: estado inicial / ausência de dados.
+Regras:
+Compacto
+Ícone pequeno ou ilustração leve
+
+1 CTA no máximo
+Nunca ocupar tela inteira
+
+4.4 Inputs (regra)
+h-9
+text-sm
+Label text-xs
+Helper/Error text-xs
+
+Input maior que botão = erro.
+
+5. Títulos de página
+Usar padrão único:
+<h1 className="text-lg font-semibold">Título</h1>
+<p className="text-sm text-muted-foreground">Descrição opcional</p>
+
+
+Nunca usar:
+text-title-*
+text-2xl+
+
+6. Tabelas e listas
+Linha: h-10 máx
+Header: text-xs uppercase
+Ações: ícone, não botão grande
+Mais colunas > menos espaçamento
+
+7. Estados visuais
+Cor primária = ação
+Verde/vermelho = feedback
+Sem gradiente decorativo
+Sem sombra pesada
+
+8. Organização de código
+src/components/
+  ui/        // átomos (Button, Input, Dialog)
+  app/       // contratos do produto (AppCard, AppEmptyState)
+
+
+Regra:
+UI = peças
+APP = regras
+
+9. Checklist de revisão (rápido)
+Antes de subir uma tela:
+algum texto > 18px?
+algum p-6?
+card sem AppCard?
+estado vazio custom?
+
+input maior que botão?
+Se sim, corrigir.
+
+10. Frase canônica do HB Track
+
+O design não chama atenção. Ele entrega controle.
+
+O problema do seu global.css atual não é excesso de código, é mistura de responsabilidades.
+Você precisa de 3 camadas claras:
+Tokens (cores, fontes, z-index)
+Escala do APP (dashboard)
+Componentes base (menu, modal, etc.)
+Abaixo está como deve ser o globals.css canônico do HB Track para APP, mantendo compatibilidade com o que você já tem.
+
+1. Princípio do HB Track (guarde isso)
+Landing ≠ App
+O APP usa densidade, não impacto visual
+Escala base: 14px
+Nada no app passa de 18px sem motivo forte
+
+2. Estrutura correta do globals.css
+2.1 Base Tailwind (igual ao seu)
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+3. Tokens globais (cores, fontes, z-index)
+Você pode manter quase tudo que já tem.
+O ajuste começa depois.
+
+4. ESCALA DO APP (ESSENCIAL)
+Adicione isso logo após seus tokens atuais:
+@layer base {
+  :root {
+    /* =========================
+       HB TRACK – APP SCALE
+       ========================= */
+
+    --app-text-xs: 12px;
+    --app-text-xs-lh: 16px;
+
+    --app-text-sm: 14px;
+    --app-text-sm-lh: 20px;
+
+    --app-text-base: 16px;
+    --app-text-base-lh: 22px;
+
+    --app-text-lg: 18px;
+    --app-text-lg-lh: 24px;
+
+    /* Espaçamentos do app */
+    --app-space-xs: 4px;
+    --app-space-sm: 8px;
+    --app-space-md: 12px;
+    --app-space-lg: 16px;
+    --app-space-xl: 20px;
+  }
+}
+
+
+Isso não quebra nada. Só cria a base correta.
+
+5. FORÇAR O APP A USAR ESSA ESCALA
+No body (isso é o divisor de águas):
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    font-size: var(--app-text-sm);
+    line-height: var(--app-text-sm-lh);
+
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+
+A partir daqui:
+textos diminuem
+botões parecem menores
+cards ficam mais densos
+a vontade de “diminuir o zoom” desaparece
+
+6. REGRAS OBRIGATÓRIAS PARA TELAS INTERNAS
+Títulos de tela
+.app-title {
+  font-size: var(--app-text-lg);
+  line-height: var(--app-text-lg-lh);
+  font-weight: 600;
+}
+
+
+Nunca use:
+text-title-sm
+text-title-md
+text-title-lg
+no app.
+
+Esses ficam só para landing.
+Subtítulos
+.app-subtitle {
+  font-size: var(--app-text-sm);
+  line-height: var(--app-text-sm-lh);
+  color: var(--color-gray-500);
+}
+
+7. Cards (o outro vilão do “layout grande”)
+
+Crie um padrão base:
+
+.app-card {
+  padding: var(--app-space-lg);
+  border-radius: 0.75rem;
+}
+
+
+E nunca mais use p-6 em telas internas.
+
+8. Inputs e formulários (alinhado ao Button)
+
+Regra:
+
+h-9
+text-sm
+labels text-xs
+
+Se o input for maior que o botão, o layout sempre parece errado.
+
+9. O que NÃO fazer
+
+Não apagar tokens antigos
+Não reduzir tudo “no olho”
+Não misturar escala de marketing com app
+
+Resultado esperado
+Depois desse global.css:
+
+o HB Track deixa de parecer template
+vira ferramenta profissional
+mais informação por tela
+leitura mais rápida
+atletas e treinadores sentem controle, não cansaço
+
+completo, canônico do HB Track, pronto para colar e usar.
+Ele trava a escala, padroniza densidade e não quebra layout.
+
+📁 Local
+src/components/app/AppCard.tsx
+
+✅ AppCard.tsx (completo)
+'use client';
+
+import * as React from 'react';
+import { cn } from '@/lib/utils';
+
+interface AppCardProps extends React.HTMLAttributes<HTMLDivElement> {
+  title?: string;
+  meta?: string;
+  actions?: React.ReactNode;
+  footer?: React.ReactNode;
+  density?: 'compact' | 'default';
+}
+
+export function AppCard({
+  title,
+  meta,
+  actions,
+  footer,
+  density = 'default',
+  className,
+  children,
+  ...props
+}: AppCardProps) {
+  return (
+    <div
+      className={cn(
+        'app-card',
+        density === 'compact' && 'p-3',
+        className
+      )}
+      {...props}
+    >
+      {(title || meta || actions) && (
+        <div className="app-card-header">
+          <div className="flex min-w-0 flex-col">
+            {title && (
+              <h3 className="app-card-title truncate">
+                {title}
+              </h3>
+            )}
+            {meta && (
+              <span className="app-card-meta">
+                {meta}
+              </span>
+            )}
+          </div>
+
+          {actions && (
+            <div className="flex shrink-0 items-center gap-2">
+              {actions}
+            </div>
+          )}
+        </div>
+      )}
+
+      <div className="app-card-body">
+        {children}
+      </div>
+
+      {footer && (
+        <div className="app-card-footer">
+          {footer}
+        </div>
+      )}
+    </div>
+  );
+}
+
+🧠 O que esse AppCard garante
+
+Padding controlado (nunca mais p-6 perdido)
+Título sempre pequeno (text-sm, via .app-card-title)
+Meta discreta (text-xs)
+Altura previsível
+Densidade consistente em todo o app
+Nada aqui depende de Tailwind “no olho”.
+
+🎯 Como usar (exemplo real)
+<AppCard
+  title="Equipe Sub-16"
+  meta="12 atletas"
+  actions={<Button size="sm">Abrir</Button>}
+>
+  Conteúdo do card
+</AppCard>
+
+
+Versão mais densa:
+<AppCard
+  title="Equipe Sub-14"
+  density="compact"
+>
+  Conteúdo
+</AppCard>
+
+❌ O que você NÃO faz mais
+
+Não usa p-4, p-6 em cards
+Não usa text-title-*
+Não cria card “especial” fora do padrão
+Tudo passa pelo AppCard.
+
+Abaixo está o AppEmptyState.tsx completo, canônico do HB Track, pronto para uso.
+Ele mantém densidade, escala correta e nunca vira hero.
+
+📁 Local
+src/components/app/AppEmptyState.tsx
+
+✅ AppEmptyState.tsx (completo)
+'use client';
+
+import * as React from 'react';
+import { cn } from '@/lib/utils';
+
+interface AppEmptyStateProps extends React.HTMLAttributes<HTMLDivElement> {
+  icon?: React.ReactNode;
+  title: string;
+  description?: string;
+  action?: React.ReactNode;
+  align?: 'left' | 'center';
+}
+
+export function AppEmptyState({
+  icon,
+  title,
+  description,
+  action,
+  align = 'center',
+  className,
+  ...props
+}: AppEmptyStateProps) {
+  return (
+    <div
+      className={cn(
+        'flex w-full rounded-lg border border-dashed border-gray-200 bg-transparent',
+        align === 'center' ? 'items-center justify-center' : 'items-start',
+        className
+      )}
+      {...props}
+    >
+      <div
+        className={cn(
+          'flex max-w-md flex-col gap-2 px-4 py-6',
+          align === 'center' ? 'items-center text-center' : 'items-start text-left'
+        )}
+      >
+        {icon && (
+          <div className="text-gray-400">
+            {icon}
+          </div>
+        )}
+
+        <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
+          {title}
+        </h3>
+
+        {description && (
+          <p className="text-xs leading-4 text-gray-500 dark:text-gray-400">
+            {description}
+          </p>
+        )}
+
+        {action && (
+          <div className="mt-2">
+            {action}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+🎯 Como usar (exemplos reais)
+Lista vazia de equipes
+<AppEmptyState
+  icon={<Users className="h-5 w-5" />}
+  title="Nenhuma equipe cadastrada"
+  description="Crie sua primeira equipe para começar a acompanhar treinos e desempenho."
+  action={<Button size="sm">Criar equipe</Button>}
+/>
+
+Estatísticas sem dados
+<AppEmptyState
+  title="Sem dados suficientes"
+  description="Finalize ao menos um treino para liberar as estatísticas."
+/>
+
+🔒 O que esse componente garante
+
+tipografia sempre pequena
+espaçamento controlado
+CTA único e compacto
+vazio não ocupa a tela inteira
+aparência consistente em todo o app
+
+❌ O que você não faz mais
+
+não cria “estado vazio custom”
+não usa py-16, text-2xl
+não centraliza página inteira sem critério
+
+Aqui está o AppInput.tsx canônico do HB Track, pensado para fechar formulários de vez: mesma altura do botão, tipografia correta, zero “inchaço”.
+
+📁 Local
+src/components/app/AppInput.tsx
+
+✅ AppInput.tsx (completo)
+'use client';
+
+import * as React from 'react';
+import { cn } from '@/lib/utils';
+
+interface AppInputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+  helperText?: string;
+  error?: string;
+  fullWidth?: boolean;
+}
+
+export function AppInput({
+  label,
+  helperText,
+  error,
+  fullWidth = true,
+  className,
+  id,
+  ...props
+}: AppInputProps) {
+  const inputId = id ?? React.useId();
+
+  return (
+    <div className={cn('flex flex-col gap-1.5', fullWidth && 'w-full')}>
+      {label && (
+        <label
+          htmlFor={inputId}
+          className="text-xs font-medium text-gray-700 dark:text-gray-300"
+        >
+          {label}
+        </label>
+      )}
+
+      <input
+        id={inputId}
+        className={cn(
+          'h-9 rounded-md border px-3 text-sm',
+          'border-gray-300 dark:border-gray-700',
+          'bg-white dark:bg-gray-900',
+          'text-gray-900 dark:text-gray-100',
+          'placeholder:text-gray-400',
+          'focus:outline-none focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500',
+          'disabled:opacity-50 disabled:cursor-not-allowed',
+          error && 'border-error-500 focus:ring-error-500/30 focus:border-error-500',
+          className
+        )}
+        {...props}
+      />
+
+      {error ? (
+        <span className="text-xs text-error-600">
+          {error}
+        </span>
+      ) : helperText ? (
+        <span className="text-xs text-gray-500">
+          {helperText}
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
+🎯 Regras que este componente impõe
+
+Altura fixa: h-9 (igual ao Button)
+
+Texto: text-sm
+
+Label: text-xs
+
+Mensagens: text-xs
+
+Espaçamento vertical mínimo
+
+Nada de py-3, h-11, text-base
+
+Formulário fica denso, alinhado e profissional.
+
+🧠 Como usar (exemplos)
+Input simples
+<AppInput
+  label="Nome da equipe"
+  placeholder="Ex: Sub-16 Feminino"
+/>
+
+Input com ajuda
+<AppInput
+  label="Email"
+  type="email"
+  helperText="Será usado para login."
+/>
+
+Input com erro
+<AppInput
+  label="Nome"
+  error="Campo obrigatório"
+/>
+
+❌ O que você NÃO faz mais
+
+não usa <input className="h-11 py-3 text-base" />
+
+não cria label manual em cada tela
+
+não mistura alturas de input e botão

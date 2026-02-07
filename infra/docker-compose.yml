@@ -1,0 +1,41 @@
+services:
+  postgres:
+    image: postgres:12
+    container_name: hbtrack-postgres-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: hb_track_dev
+      POSTGRES_USER: hbtrack_dev
+      POSTGRES_PASSWORD: hbtrack_dev_pwd
+    ports:
+      - "5433:5432"
+    volumes:
+      - hbtrack_pgdata:/var/lib/postgresql/data
+    networks:
+      - hbtrack_network
+
+  # Redis - Message broker para Celery (Step 18)
+  redis:
+    image: redis:7-alpine
+    container_name: hbtrack-redis-dev
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - hbtrack_redis:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - hbtrack_network
+
+volumes:
+  hbtrack_pgdata:
+  hbtrack_redis:
+
+networks:
+  hbtrack_network:
+    driver: bridge

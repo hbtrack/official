@@ -1,0 +1,33 @@
+﻿
+
+Algorithm : SHA256
+Hash      : 2AE48B5B47F00FFF569D274BA889B4DF53E4F16856858E015DB24205D29B8284
+Path      : C:\HB TRACK\docs\02-modulos\training\INVARIANTS_TRAINING.md
+
+
+
+
+
+Algorithm : SHA256
+Hash      : 76ABDC3C12D1B7F0D4888FFAA3696A9B7F32CCCA5DA2826853FC1F45700B0B26
+Path      : C:\HB TRACK\docs\scripts\verify_invariants_tests.py
+
+
+
+
+
+Algorithm : SHA256
+Hash      : CDA7FFBC2960574E10AE865111E7FD24D109D8598F3DE55EE30906F51DA73239
+Path      : C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_
+            002_wellness_pre_deadline.py
+
+
+
+
+
+Algorithm : SHA256
+Hash      : 6ED585DAC245022F3E8238F3999532D96C6542B3FA34FC531F4315E68948EBDE
+Path      : C:\HB TRACK\Hb Track - Backend\tests\training\invariants\conftest.py
+
+
+

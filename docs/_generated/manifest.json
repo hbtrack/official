@@ -1,0 +1,23 @@
+{
+  "git_commit": "unknown",
+  "generated_at": "2026-02-07T16:57:11.194444+00:00Z",
+  "backend_root": "C:\\HB TRACK\\Hb Track - Backend",
+  "generator_script": "scripts/generate_docs.py",
+  "files": [
+    {
+      "filename": "openapi.json",
+      "checksum": "aaf8ec0960ea2a37ce01e414d34d648b560c0d0b9ede4b317d49835bc9c91455",
+      "size_bytes": 1632017
+    },
+    {
+      "filename": "schema.sql",
+      "checksum": "26f852ba75e846c3492f46cde28837dc9afa2783f00bc91f5af2a08509ef6906",
+      "size_bytes": 223624
+    },
+    {
+      "filename": "alembic_state.txt",
+      "checksum": "cb8903cd9bf5218115a16054ee40b91614d0d9c3357162cd59534a0d8594ecd3",
+      "size_bytes": 122
+    }
+  ]
+}

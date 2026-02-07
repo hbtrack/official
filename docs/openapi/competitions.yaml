@@ -1,0 +1,1057 @@
+openapi: 3.1.0
+info:
+  title: HandLab API - Competitions
+  description: |
+    Contrato da API para gestão de Competitions e Competition Seasons.
+    
+    ## Regras de Negócio Aplicáveis
+    - **R25/R26**: Permissões por papel e escopo (Treinador: suas equipes; Coordenador: total; Dirigente: administrativo)
+    - **R29**: Exclusão lógica obrigatória — não há DELETE físico
+    - **R33**: Regra de ouro (nada fora de vínculo, nada relevante apagado, histórico com rastro)
+    - **R34**: Clube único na V1; contexto organizacional implícito via token
+    - **R42**: Modo somente leitura sem vínculo ativo
+    - **RF4**: Criação de temporadas (referência para competition_seasons)
+    
+    ## Escopo e Segurança
+    - Dirigente/Coordenador: acesso administrativo/total
+    - Treinador: escopo às suas equipes/competições na temporada
+    - Atleta: somente leitura aos próprios dados
+    
+    ## Campo `kind`
+    O campo `kind` é TEXT livre na V1. Exemplos sugeridos:
+    - `"official"` - Competição oficial
+    - `"friendly"` - Amistoso
+    - `"training-game"` - Jogo-treino
+  version: 1.0.0
+  contact:
+    name: HandLab Team
+
+servers:
+  - url: /v1
+    description: API v1
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: competitions
+    description: Gestão de competições
+  - name: competition_seasons
+    description: Gestão de vínculos competição ↔ temporada
+
+paths:
+  /competitions:
+    get:
+      tags:
+        - competitions
+      summary: Listar competições
+      description: |
+        Lista paginada de competições da organização.
+        
+        **Regras aplicáveis:** R25/R26 (permissões), R34 (clube único), R42 (modo somente leitura)
+        
+        **Filtros:**
+        - `name`: filtro por nome (case-insensitive, ilike)
+        - `kind`: filtro por tipo de competição
+      operationId: listCompetitions
+      x-rule-ids:
+        - R25
+        - R26
+        - R34
+        - R42
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - name: order_by
+          in: query
+          required: false
+          description: Campo para ordenação
+          schema:
+            type: string
+            enum: [created_at, name, updated_at]
+            default: created_at
+        - name: order_dir
+          in: query
+          required: false
+          description: Direção da ordenação
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+        - name: name
+          in: query
+          required: false
+          description: Filtro por nome (case-insensitive)
+          schema:
+            type: string
+          example: "Campeonato Estadual"
+        - name: kind
+          in: query
+          required: false
+          description: Filtro por tipo de competição
+          schema:
+            type: string
+          example: "official"
+      responses:
+        '200':
+          description: Lista paginada de competições
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompetitionPaginatedResponse'
+              example:
+                items:
+                  - id: "550e8400-e29b-41d4-a716-446655440000"
+                    organization_id: "660e8400-e29b-41d4-a716-446655440001"
+                    name: "Campeonato Estadual Sub-17"
+                    kind: "official"
+                    created_at: "2024-01-15T10:30:00Z"
+                    updated_at: "2024-01-15T10:30:00Z"
+                page: 1
+                limit: 50
+                total: 1
+        '401':
+          description: Token inválido ou ausente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "unauthorized"
+                message: "Token inválido ou ausente"
+                details: null
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "permission_denied"
+                message: "Permissão insuficiente"
+                details:
+                  regra: "R25"
+
+    post:
+      tags:
+        - competitions
+      summary: Criar competição
+      description: |
+        Cria uma nova competição (registro base).
+        
+        **Regras aplicáveis:** R25/R26 (permissões), R29 (exclusão lógica), R34 (clube único)
+        
+        **Campos obrigatórios:**
+        - `organization_id`: UUID da organização
+        - `name`: Nome da competição
+        
+        **Campo `kind`:**
+        Texto livre. Exemplos: "official", "friendly", "training-game"
+      operationId: createCompetition
+      x-rule-ids:
+        - R25
+        - R26
+        - R29
+        - R34
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompetitionCreate'
+            example:
+              organization_id: "660e8400-e29b-41d4-a716-446655440001"
+              name: "Campeonato Estadual Sub-17"
+              kind: "official"
+      responses:
+        '201':
+          description: Competição criada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Competition'
+              example:
+                id: "550e8400-e29b-41d4-a716-446655440000"
+                organization_id: "660e8400-e29b-41d4-a716-446655440001"
+                name: "Campeonato Estadual Sub-17"
+                kind: "official"
+                created_at: "2024-01-15T10:30:00Z"
+                updated_at: "2024-01-15T10:30:00Z"
+        '401':
+          description: Token inválido ou ausente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "unauthorized"
+                message: "Token inválido ou ausente"
+                details: null
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "permission_denied"
+                message: "Permissão insuficiente"
+                details:
+                  regra: "R25"
+        '422':
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "validation_error"
+                message: "Payload inválido"
+                details:
+                  errors:
+                    - field: "name"
+                      message: "Campo obrigatório"
+
+  /competitions/{competition_id}:
+    get:
+      tags:
+        - competitions
+      summary: Obter competição por ID
+      description: |
+        Retorna os detalhes de uma competição específica.
+        
+        **Regras aplicáveis:** R25/R26 (permissões e escopo)
+      operationId: getCompetitionById
+      x-rule-ids:
+        - R25
+        - R26
+      parameters:
+        - $ref: '#/components/parameters/competitionIdParam'
+      responses:
+        '200':
+          description: Detalhes da competição
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Competition'
+              example:
+                id: "550e8400-e29b-41d4-a716-446655440000"
+                organization_id: "660e8400-e29b-41d4-a716-446655440001"
+                name: "Campeonato Estadual Sub-17"
+                kind: "official"
+                created_at: "2024-01-15T10:30:00Z"
+                updated_at: "2024-01-15T10:30:00Z"
+        '401':
+          description: Token inválido ou ausente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "unauthorized"
+                message: "Token inválido ou ausente"
+                details: null
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "permission_denied"
+                message: "Permissão insuficiente"
+                details:
+                  regra: "R25"
+        '404':
+          description: Competição não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "not_found"
+                message: "Competição não encontrada"
+                details: null
+
+    patch:
+      tags:
+        - competitions
+      summary: Atualizar competição
+      description: |
+        Atualiza campos permitidos de uma competição existente.
+        
+        **Campos editáveis:**
+        - `name`: Nome da competição
+        - `kind`: Tipo da competição
+        
+        **Campos NÃO editáveis:**
+        - `organization_id` (imutável após criação)
+        
+        **Regras aplicáveis:** R25/R26 (permissões), R29 (sem delete físico)
+      operationId: updateCompetition
+      x-rule-ids:
+        - R25
+        - R26
+        - R29
+      parameters:
+        - $ref: '#/components/parameters/competitionIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompetitionUpdate'
+            example:
+              name: "Campeonato Estadual Sub-17 - Edição 2024"
+              kind: "official"
+      responses:
+        '200':
+          description: Competição atualizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Competition'
+              example:
+                id: "550e8400-e29b-41d4-a716-446655440000"
+                organization_id: "660e8400-e29b-41d4-a716-446655440001"
+                name: "Campeonato Estadual Sub-17 - Edição 2024"
+                kind: "official"
+                created_at: "2024-01-15T10:30:00Z"
+                updated_at: "2024-06-01T14:00:00Z"
+        '401':
+          description: Token inválido ou ausente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "unauthorized"
+                message: "Token inválido ou ausente"
+                details: null
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "permission_denied"
+                message: "Permissão insuficiente"
+                details:
+                  regra: "R25"
+        '404':
+          description: Competição não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "not_found"
+                message: "Competição não encontrada"
+                details: null
+        '422':
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "validation_error"
+                message: "Payload inválido"
+                details:
+                  errors:
+                    - field: "name"
+                      message: "Nome não pode ser vazio"
+
+  /competitions/{competition_id}/seasons:
+    get:
+      tags:
+        - competition_seasons
+      summary: Listar seasons de uma competição
+      description: |
+        Lista temporadas vinculadas a uma competição específica.
+        
+        **Regras aplicáveis:** R25/R26 (permissões), RF4 (referência a temporadas)
+      operationId: listCompetitionSeasonsByCompetition
+      x-rule-ids:
+        - R25
+        - R26
+        - RF4
+      parameters:
+        - $ref: '#/components/parameters/competitionIdParam'
+        - $ref: '#/components/parameters/seasonIdQueryParam'
+      responses:
+        '200':
+          description: Lista de temporadas da competição
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CompetitionSeason'
+              example:
+                - id: "770e8400-e29b-41d4-a716-446655440002"
+                  competition_id: "550e8400-e29b-41d4-a716-446655440000"
+                  season_id: "880e8400-e29b-41d4-a716-446655440003"
+                  name: "Fase Regional 2024"
+                  created_at: "2024-01-20T09:00:00Z"
+                  updated_at: "2024-01-20T09:00:00Z"
+        '401':
+          description: Token inválido ou ausente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "unauthorized"
+                message: "Token inválido ou ausente"
+                details: null
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "permission_denied"
+                message: "Permissão insuficiente"
+                details:
+                  regra: "R25"
+        '404':
+          description: Competição não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "not_found"
+                message: "Competição não encontrada"
+                details: null
+
+    post:
+      tags:
+        - competition_seasons
+      summary: Criar vínculo competição ↔ temporada
+      description: |
+        Cria um novo vínculo entre competição e temporada.
+        
+        **Regras aplicáveis:** R25/R26 (permissões), RF4 (temporadas), R29 (exclusão lógica)
+        
+        **Constraint:** UNIQUE (competition_id, season_id)
+        - Violação retorna 409 conflict_unique
+        
+        **Campos obrigatórios:**
+        - `season_id`: UUID da temporada a vincular
+      operationId: createCompetitionSeasonForCompetition
+      x-rule-ids:
+        - R25
+        - R26
+        - RF4
+        - R29
+      parameters:
+        - $ref: '#/components/parameters/competitionIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompetitionSeasonCreate'
+            example:
+              season_id: "880e8400-e29b-41d4-a716-446655440003"
+              name: "Fase Regional 2024"
+      responses:
+        '201':
+          description: Vínculo criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompetitionSeason'
+              example:
+                id: "770e8400-e29b-41d4-a716-446655440002"
+                competition_id: "550e8400-e29b-41d4-a716-446655440000"
+                season_id: "880e8400-e29b-41d4-a716-446655440003"
+                name: "Fase Regional 2024"
+                created_at: "2024-01-20T09:00:00Z"
+                updated_at: "2024-01-20T09:00:00Z"
+        '401':
+          description: Token inválido ou ausente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "unauthorized"
+                message: "Token inválido ou ausente"
+                details: null
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "permission_denied"
+                message: "Permissão insuficiente"
+                details:
+                  regra: "R25"
+        '404':
+          description: Competição ou temporada não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "not_found"
+                message: "Competição não encontrada"
+                details: null
+        '409':
+          description: Violação de unicidade (competition_id + season_id)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "conflict_unique"
+                message: "Violação de unicidade"
+                details:
+                  constraint: "competition_id+season_id"
+        '422':
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "validation_error"
+                message: "Payload inválido"
+                details:
+                  errors:
+                    - field: "season_id"
+                      message: "Campo obrigatório"
+
+  /competition_seasons/{competition_season_id}:
+    get:
+      tags:
+        - competition_seasons
+      summary: Obter competition_season por ID
+      description: |
+        Retorna os detalhes de um vínculo competição ↔ temporada específico.
+        
+        **Regras aplicáveis:** R25/R26 (permissões e escopo)
+      operationId: getCompetitionSeasonById
+      x-rule-ids:
+        - R25
+        - R26
+      parameters:
+        - $ref: '#/components/parameters/competitionSeasonIdParam'
+      responses:
+        '200':
+          description: Detalhes do vínculo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompetitionSeason'
+              example:
+                id: "770e8400-e29b-41d4-a716-446655440002"
+                competition_id: "550e8400-e29b-41d4-a716-446655440000"
+                season_id: "880e8400-e29b-41d4-a716-446655440003"
+                name: "Fase Regional 2024"
+                created_at: "2024-01-20T09:00:00Z"
+                updated_at: "2024-01-20T09:00:00Z"
+        '401':
+          description: Token inválido ou ausente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "unauthorized"
+                message: "Token inválido ou ausente"
+                details: null
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "permission_denied"
+                message: "Permissão insuficiente"
+                details:
+                  regra: "R25"
+        '404':
+          description: Vínculo não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "not_found"
+                message: "Competition season não encontrada"
+                details: null
+
+    patch:
+      tags:
+        - competition_seasons
+      summary: Atualizar competition_season
+      description: |
+        Atualiza campos permitidos de um vínculo competição ↔ temporada.
+        
+        **Campos editáveis:**
+        - `name`: Nome/descrição do vínculo
+        
+        **Campos NÃO editáveis:**
+        - `competition_id` (imutável)
+        - `season_id` (imutável)
+        
+        **Regras aplicáveis:** R25/R26 (permissões), R29 (sem delete físico)
+      operationId: updateCompetitionSeason
+      x-rule-ids:
+        - R25
+        - R26
+        - R29
+      parameters:
+        - $ref: '#/components/parameters/competitionSeasonIdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompetitionSeasonUpdate'
+            example:
+              name: "Fase Regional 2024 - Atualizado"
+      responses:
+        '200':
+          description: Vínculo atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompetitionSeason'
+              example:
+                id: "770e8400-e29b-41d4-a716-446655440002"
+                competition_id: "550e8400-e29b-41d4-a716-446655440000"
+                season_id: "880e8400-e29b-41d4-a716-446655440003"
+                name: "Fase Regional 2024 - Atualizado"
+                created_at: "2024-01-20T09:00:00Z"
+                updated_at: "2024-06-15T11:30:00Z"
+        '401':
+          description: Token inválido ou ausente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "unauthorized"
+                message: "Token inválido ou ausente"
+                details: null
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "permission_denied"
+                message: "Permissão insuficiente"
+                details:
+                  regra: "R25"
+        '404':
+          description: Vínculo não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "not_found"
+                message: "Competition season não encontrada"
+                details: null
+        '422':
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "validation_error"
+                message: "Payload inválido"
+                details:
+                  errors:
+                    - field: "name"
+                      message: "Nome não pode ser vazio"
+
+  /competition_seasons:
+    get:
+      tags:
+        - competition_seasons
+      summary: Listar competition_seasons (admin)
+      description: |
+        Lista paginada de todos os vínculos competição ↔ temporada.
+        Acesso administrativo (Coordenador/Dirigente).
+        
+        **Regras aplicáveis:** R25/R26 (permissões)
+      operationId: listCompetitionSeasons
+      x-rule-ids:
+        - R25
+        - R26
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - name: competition_id
+          in: query
+          required: false
+          description: Filtrar por competição (UUID)
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/seasonIdQueryParam'
+        - name: name
+          in: query
+          required: false
+          description: Filtro por nome (case-insensitive)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista paginada de vínculos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompetitionSeasonPaginatedResponse'
+              example:
+                items:
+                  - id: "770e8400-e29b-41d4-a716-446655440002"
+                    competition_id: "550e8400-e29b-41d4-a716-446655440000"
+                    season_id: "880e8400-e29b-41d4-a716-446655440003"
+                    name: "Fase Regional 2024"
+                    created_at: "2024-01-20T09:00:00Z"
+                    updated_at: "2024-01-20T09:00:00Z"
+                page: 1
+                limit: 50
+                total: 1
+        '401':
+          description: Token inválido ou ausente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "unauthorized"
+                message: "Token inválido ou ausente"
+                details: null
+        '403':
+          description: Permissão insuficiente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "permission_denied"
+                message: "Permissão insuficiente"
+                details:
+                  regra: "R25"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Token JWT para autenticação
+
+  parameters:
+    competitionIdParam:
+      name: competition_id
+      in: path
+      required: true
+      description: ID único da competição (UUID)
+      schema:
+        type: string
+        format: uuid
+      example: "550e8400-e29b-41d4-a716-446655440000"
+
+    competitionSeasonIdParam:
+      name: competition_season_id
+      in: path
+      required: true
+      description: ID único do vínculo competição ↔ temporada (UUID)
+      schema:
+        type: string
+        format: uuid
+      example: "770e8400-e29b-41d4-a716-446655440002"
+
+    seasonIdQueryParam:
+      name: season_id
+      in: query
+      required: false
+      description: Filtrar por temporada (UUID)
+      schema:
+        type: string
+        format: uuid
+      example: "880e8400-e29b-41d4-a716-446655440003"
+
+    pageParam:
+      name: page
+      in: query
+      required: false
+      description: Número da página (1-indexed)
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+      example: 1
+
+    limitParam:
+      name: limit
+      in: query
+      required: false
+      description: Itens por página (máximo 100)
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 50
+      example: 50
+
+  schemas:
+    Competition:
+      type: object
+      description: Representação completa de uma competição
+      required:
+        - id
+        - organization_id
+        - name
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: ID único da competição
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        organization_id:
+          type: string
+          format: uuid
+          description: ID da organização
+          example: "660e8400-e29b-41d4-a716-446655440001"
+        name:
+          type: string
+          description: Nome da competição
+          example: "Campeonato Estadual Sub-17"
+        kind:
+          type: string
+          nullable: true
+          description: |
+            Tipo da competição (texto livre).
+            Exemplos: "official", "friendly", "training-game"
+          example: "official"
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Data/hora de criação
+          example: "2024-01-15T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Data/hora da última atualização
+          example: "2024-01-15T10:30:00Z"
+
+    CompetitionCreate:
+      type: object
+      description: Payload para criação de competição
+      required:
+        - organization_id
+        - name
+      properties:
+        organization_id:
+          type: string
+          format: uuid
+          description: ID da organização (obrigatório)
+          example: "660e8400-e29b-41d4-a716-446655440001"
+        name:
+          type: string
+          description: Nome da competição (obrigatório)
+          example: "Campeonato Estadual Sub-17"
+        kind:
+          type: string
+          nullable: true
+          description: |
+            Tipo da competição (opcional, texto livre).
+            Exemplos: "official", "friendly", "training-game"
+          example: "official"
+
+    CompetitionUpdate:
+      type: object
+      description: |
+        Payload para atualização de competição.
+        Campos não informados não são alterados.
+      properties:
+        name:
+          type: string
+          description: Nome da competição
+          example: "Campeonato Estadual Sub-17 - Edição 2024"
+        kind:
+          type: string
+          nullable: true
+          description: Tipo da competição
+          example: "official"
+
+    CompetitionPaginatedResponse:
+      type: object
+      description: Resposta paginada de competições
+      required:
+        - items
+        - page
+        - limit
+        - total
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Competition'
+          description: Lista de competições na página atual
+        page:
+          type: integer
+          minimum: 1
+          description: Página atual
+          example: 1
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+          description: Itens por página
+          example: 50
+        total:
+          type: integer
+          minimum: 0
+          description: Total de itens (todas as páginas)
+          example: 25
+
+    CompetitionSeason:
+      type: object
+      description: Representação de um vínculo competição ↔ temporada
+      required:
+        - id
+        - competition_id
+        - season_id
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: ID único do vínculo
+          example: "770e8400-e29b-41d4-a716-446655440002"
+        competition_id:
+          type: string
+          format: uuid
+          description: ID da competição
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        season_id:
+          type: string
+          format: uuid
+          description: ID da temporada
+          example: "880e8400-e29b-41d4-a716-446655440003"
+        name:
+          type: string
+          nullable: true
+          description: Nome/descrição do vínculo (ex. fase, edição)
+          example: "Fase Regional 2024"
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Data/hora de criação
+          example: "2024-01-20T09:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Data/hora da última atualização
+          example: "2024-01-20T09:00:00Z"
+
+    CompetitionSeasonCreate:
+      type: object
+      description: Payload para criação de vínculo competição ↔ temporada
+      required:
+        - season_id
+      properties:
+        season_id:
+          type: string
+          format: uuid
+          description: ID da temporada a vincular (obrigatório)
+          example: "880e8400-e29b-41d4-a716-446655440003"
+        name:
+          type: string
+          nullable: true
+          description: Nome/descrição do vínculo (opcional)
+          example: "Fase Regional 2024"
+
+    CompetitionSeasonUpdate:
+      type: object
+      description: |
+        Payload para atualização de vínculo competição ↔ temporada.
+        Campos não informados não são alterados.
+        Não é possível alterar competition_id ou season_id.
+      properties:
+        name:
+          type: string
+          nullable: true
+          description: Nome/descrição do vínculo
+          example: "Fase Regional 2024 - Atualizado"
+
+    CompetitionSeasonPaginatedResponse:
+      type: object
+      description: Resposta paginada de vínculos competição ↔ temporada
+      required:
+        - items
+        - page
+        - limit
+        - total
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompetitionSeason'
+          description: Lista de vínculos na página atual
+        page:
+          type: integer
+          minimum: 1
+          description: Página atual
+          example: 1
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+          description: Itens por página
+          example: 50
+        total:
+          type: integer
+          minimum: 0
+          description: Total de itens (todas as páginas)
+          example: 10
+
+    ErrorResponse:
+      type: object
+      description: Resposta padrão de erro
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          description: Código identificador do erro
+          example: "permission_denied"
+        message:
+          type: string
+          description: Mensagem descritiva do erro
+          example: "Permissão insuficiente"
+        details:
+          type: object
+          nullable: true
+          description: Detalhes adicionais (ex. regra violada, campos com erro)
+          example:
+            regra: "R25"

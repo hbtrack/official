@@ -1,0 +1,30 @@
+<CANARY: HBTRACK_DOCS_LOADED_v1>
+
+# ENFORCEMENT (MANDATORY)
+
+Fontes obrigatórias (ler e seguir):
+- `docs/_ai/INVARIANTS_AGENT_GUARDRAILS.md`
+- `docs/_ai/EXEC_PROTOCOL.md` (guia para executar as tarefas)
+- `docs/_ai/INV_TASK_TEMPLATE.md`
+- `docs/_ai/INVARIANTS_AGENT_PROTOCOL.md`
+- `docs/02-modulos/training/INVARIANTS_TRAINING.md`
+- `docs/02-modulos/training/INVARIANTS_TESTING_CANON.md`
+- `docs/02-modulos/training/training_invariants_candidates.md` (worklist de promoção)
+
+
+Autoridade / Artefatos canônicos:
+- `Hb Track - Backend/docs/_generated/openapi.json (contrato FastAPI)`
+- `Hb Track - Backend/docs/_generated/schema.sql (DDL + COMMENT ON COLUMN)`
+- `Hb Track - Backend/docs/_generated/alembic_state.txt (estado de migrações)`
+
+
+Regras:
+1) PASSO 0 obrigatório (SSOT): .\scripts\inv.ps1 refresh
+2) Toda INV exige gate:         .\scripts\inv.ps1 gate INV-TRAIN-XXX
+3) Se EXIT=3 (DRIFT/MISSING):   .\scripts\inv.ps1 promote  → depois gate/all
+4) PROIBIDO finalizar sem evidência (colar output completo do GATE VERDICT, e do promote/all quando aplicável).
+5) Valide suas respostas com logs curtos e claros, outputs, focados em evidências (ex.: `parity_report.json`), e sempre que possível, inclua trechos de código ou comandos usados para chegar às conclusões.
+
+
+**Nota**: constraint_name aceito: ck_, uq_, fk_, tr_, fn_, idx_ (UNIQUE INDEX parcial).
+

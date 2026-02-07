@@ -1,0 +1,7 @@
+﻿
+docs\_generated\_reports\INV-TRAIN-043\20260203_085626\verify.txt:1:C:\HB TRACK\Hb Track - 
+Backend\tests\training\invariants\test_inv_train_043_microcycle_dates_check.py:0:0: ERROR 
+[OBLIG_A_INSUFFICIENT_ANCHORS]: found 1 anchors, expected >=2 - add table.column references (ex: 
+training_sessions.status)
+
+

@@ -1,0 +1,76 @@
+VERIFY_INVARIANTS_TESTS.PY - PATCH V2
+=====================================
+Data: 2026-02-02 14:20
+Autor: Agent (via GitHub Copilot)
+
+MOTIVAÇÃO:
+----------
+MUT-A2 (mutation test) não foi detectado pelo verifier: trocar constraint_name 
+no docstring (ck_wellness_pre_sleep_hours → ck_WRONG_NAME) deveria gerar violação,
+mas verificador exit 0 (ou apenas erros globais, sem detecção específica).
+
+Problema: Verificador validava apenas PRESENÇA de pattern genérico (ck_*, uq_*),
+mas NÃO validava CONSTRAINT_NAME EXATO contra SPEC anchors.db.constraint.
+
+MUDANÇAS IMPLEMENTADAS:
+-----------------------
+Arquivo: c:\HB TRACK\docs\scripts\verify_invariants_tests.py
+Linha: ~890 (após validação de SQLSTATE genérico 23xxx)
+
+1. CONSTRAINT_NAME EXATO (Classe A):
+   - Extrair expected_constraints de todos os units com:
+     * class_type == 'A' (DB constraint)
+     * required == True
+     * anchors.db.constraint não vazio
+   - Para cada constraint esperado:
+     * Verificar se está LITERALMENTE presente no docstring
+     * Se ausente: emitir OBLIG_B_NO_CONSTRAINT_NAME
+   - Exemplo: SPEC tem "ck_wellness_pre_sleep_hours" → docstring DEVE conter exatamente esse texto
+
+2. SQLSTATE EXATO (Classe A):
+   - Extrair expected_sqlstates de units com class A e required=True
+   - anchors.db.sqlstate (ex: "23514")
+   - Para cada SQLSTATE esperado:
+     * Verificar se está LITERALMENTE presente no docstring
+     * Se ausente: emitir OBLIG_B_SQLSTATE_MISMATCH
+   - Exemplo: SPEC tem "23514" → docstring DEVE conter "23514", não apenas "23xxx"
+
+3. CONDIÇÕES DE ATIVAÇÃO:
+   - has_db_constraint: pelo menos uma classe A nos primary_classes
+   - inv.has_spec: INV tem bloco SPEC parseado com units
+   - Se ambas condições TRUE → validação ativa
+
+CÓDIGOS DE ERRO NOVOS:
+----------------------
+- OBLIG_B_NO_CONSTRAINT_NAME: constraint_name do SPEC ausente no docstring
+- OBLIG_B_SQLSTATE_MISMATCH: SQLSTATE exato do SPEC ausente no docstring
+
+COMPATIBILIDADE:
+----------------
+- Validação genérica antiga mantida (pattern ck_*, 23xxx)
+- Validação exata ADICIONAL quando SPEC disponível
+- Não afeta INVs sem SPEC ou sem classe A
+- INVs com SPEC devem agora ter constraint_name e SQLSTATE EXATOS
+
+TESTE DE VALIDAÇÃO:
+-------------------
+MUT-A2 repetido após patch:
+- INV-TRAIN-033: ck_wellness_pre_sleep_hours → ck_WRONG_NAME no docstring
+- Expectativa: OBLIG_B_NO_CONSTRAINT_NAME detectado
+- Comando: python docs\scripts\verify_invariants_tests.py --level strict
+
+BACKUP:
+-------
+Arquivo original: c:\HB TRACK\docs\scripts\verify_invariants_tests.py.bak_20260202_141915
+
+IMPACTO:
+--------
+- Testes EXISTENTES com SPEC correto: SEM IMPACTO (já conformes)
+- Testes FUTUROS: DEVEM incluir constraint_name e SQLSTATE exatos do SPEC
+- Mutation tests: Agora detectam inconsistências docstring vs SPEC
+
+REFERÊNCIAS:
+------------
+- historico.md: Step 5.2 MUT-A2
+- INV-TRAIN-033: Golden bundle 20260202_140531
+- SPEC: docs/02-modulos/training/INVARIANTS_TRAINING.md

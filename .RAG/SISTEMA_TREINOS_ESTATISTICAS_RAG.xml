@@ -1,0 +1,1205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  HB TRACK - Sistema de Treinos e Estatísticas
+  RAG Knowledge Base com Técnicas Avançadas
+  Data: 2026-01-06
+  Versão: 3.0
+-->
+
+<HBTRACK_TRAINING_STATISTICS_SYSTEM>
+
+<!-- ============================================== -->
+<!-- KNOWLEDGE OBJECT 1: VISÃO GERAL DO SISTEMA -->
+<!-- ============================================== -->
+
+<KNOWLEDGE_OBJECT id="TRAIN_SYSTEM_OVERVIEW_001">
+  <CONTROL_LAYER>
+    <framework>CO-STAR</framework>
+    <context>Sistema de gerenciamento de treinos e estatísticas para handebol</context>
+    <objective>Fornecer planejamento hierárquico (macro→meso→micro→sessões) e análise de desvios</objective>
+    <style>Técnico-profissional, orientado a dados</style>
+    <tone>Factual, prescritivo, baseado em evidências</tone>
+    <audience>Treinadores, coordenadores, dirigentes de handebol</audience>
+    <response_format>Estruturado, com métricas quantitativas</response_format>
+    
+    <guardrails>STRICT_FACTUAL_ONLY | NO_SPECULATION | VALIDATED_METRICS</guardrails>
+    <authority_score>0.98</authority_score>
+    <ttl_version>2026.1</ttl_version>
+    <confidence_score>0.95</confidence_score>
+  </CONTROL_LAYER>
+
+  <SEARCH_LAYER>
+    <vector_summary>
+      Sistema hierárquico de planejamento de treinos (Macrociclo→Mesociclo→Microciclo→Sessão) 
+      com 7 focos táticos (ataque posicional, defesa posicional, transição ofensiva, transição defensiva, 
+      ataque técnico, defesa técnica, físico). Análise de desvios planejado vs executado com sugestões 
+      inteligentes baseadas em histórico.
+    </vector_summary>
+    
+    <hypothetical_queries>
+      Como planejar microciclo semanal?
+      O que são focos de treino no HB Track?
+      Como funciona análise de desvio de treino?
+      Diferença entre macrociclo e mesociclo?
+      Como criar sessão de treino?
+      O que significa desvio significativo de 15%?
+      Como acompanhar estatísticas de treino?
+    </hypothetical_queries>
+    
+    <keywords>
+      treino, microciclo, macrociclo, mesociclo, sessão, foco tático, desvio, planejamento,
+      análise, estatísticas, carga semanal, ataque posicional, defesa, transição, físico
+    </keywords>
+    
+    <semantic_tags>
+      training_cycles, tactical_focus, deviation_analysis, weekly_planning, performance_metrics
+    </semantic_tags>
+  </SEARCH_LAYER>
+
+  <LOGIC_LAYER>
+    <knowledge_graph>
+      {
+        "nodes": [
+          {"id": "macrociclo", "type": "planning_level", "duration": "meses"},
+          {"id": "mesociclo", "type": "planning_level", "duration": "semanas", "parent": "macrociclo"},
+          {"id": "microciclo", "type": "planning_level", "duration": "1_semana", "parent": "mesociclo"},
+          {"id": "sessao", "type": "operational_unit", "parent": "microciclo"},
+          {"id": "foco_tatico", "type": "metric", "sum_max": 120}
+        ],
+        "relations": [
+          {"subject": "macrociclo", "relation": "contains_many", "object": "mesociclo"},
+          {"subject": "mesociclo", "relation": "contains_many", "object": "microciclo"},
+          {"subject": "microciclo", "relation": "contains_7", "object": "sessao"},
+          {"subject": "sessao", "relation": "has_7", "object": "foco_tatico"},
+          {"subject": "microciclo", "relation": "plans", "object": "foco_tatico"},
+          {"subject": "sessao", "relation": "executes", "object": "foco_tatico"},
+          {"subject": "sistema", "relation": "compares", "object": "planejado_vs_executado"}
+        ]
+      }
+    </knowledge_graph>
+    
+    <semantic_checksum>
+      A essência do sistema é: PLANEJAMENTO HIERÁRQUICO + EXECUÇÃO + ANÁLISE DE DESVIO.
+      Treinadores planejam focos semanais (microciclo), executam sessões diárias, e o sistema 
+      calcula automaticamente se o executado divergiu do planejado (threshold 15%).
+    </semantic_checksum>
+    
+    <hierarchical_structure>
+      Level 1 (Strategic): Macrociclo (3-12 meses)
+      Level 2 (Tactical): Mesociclo (4-8 semanas) 
+      Level 3 (Operational): Microciclo (1 semana = 7 dias)
+      Level 4 (Execution): Sessão de Treino (1-2h duração)
+    </hierarchical_structure>
+  </LOGIC_LAYER>
+
+  <DATA_PAYLOAD>
+    <compressed_prompt>
+      Min_Tokens: True | Context: Sport_Handball | Domain: Training_Management | 
+      Hierarchy: Macro→Meso→Micro→Session | Focus_Types: 7 | Max_Sum: 120% | 
+      Deviation_Threshold: 15%
+    </compressed_prompt>
+    
+    <content>
+      """
+      SISTEMA DE TREINOS HB TRACK
+      
+      HIERARQUIA DE PLANEJAMENTO (4 níveis):
+      
+      1. MACROCICLO (estratégico)
+         - Duração: 3-12 meses
+         - Objetivo: meta de longo prazo (ex: preparação para campeonato)
+         - Contém: múltiplos mesociclos
+         
+      2. MESOCICLO (tático)
+         - Duração: 4-8 semanas
+         - Objetivo: trabalhar capacidades específicas
+         - Pertence a: 1 macrociclo
+         - Contém: múltiplos microciclos
+         
+      3. MICROCICLO (operacional-semanal)
+         - Duração: 1 semana (7 dias)
+         - Objetivo: distribuir focos táticos na semana
+         - Pertence a: 1 mesociclo (opcional)
+         - Contém: 1-7 sessões de treino
+         - Define: focos planejados (7 dimensões, soma ≤ 120%)
+         
+      4. SESSÃO DE TREINO (execução)
+         - Duração: 60-120 minutos
+         - Objetivo específico do dia
+         - Pertence a: 1 microciclo (opcional)
+         - Registra: focos executados (7 dimensões, soma ≤ 120%)
+         - Status: draft → in_progress → closed → readonly
+      
+      7 FOCOS TÁTICOS (soma máxima 120%):
+      
+      1. Ataque Posicional (0-100%)
+         - Organização ofensiva estática
+         - Circulação de bola, cruzamentos, trocas
+         
+      2. Defesa Posicional (0-100%)
+         - Sistemas defensivos: 6-0, 5-1, 3-2-1
+         - Marcação individual/zona
+         
+      3. Transição Ofensiva (0-100%)
+         - Contra-ataques
+         - Conversão rápida defesa→ataque
+         
+      4. Transição Defensiva (0-100%)
+         - Retorno defensivo
+         - Conversão rápida ataque→defesa
+         
+      5. Ataque Técnico (0-100%)
+         - Fundamentos: passe, recepção, arremesso
+         - Finalizações individuais
+         
+      6. Defesa Técnica (0-100%)
+         - Bloqueios, desvios, interceptações
+         - Posicionamento individual
+         
+      7. Físico (0-100%)
+         - Condicionamento, força, velocidade
+         - Preparação atlética
+      
+      ANÁLISE DE DESVIO:
+      
+      - Sistema compara PLANEJADO (microciclo) vs EXECUTADO (soma das sessões)
+      - Desvio = |executado - planejado| / planejado × 100%
+      - Desvio SIGNIFICATIVO: ≥ 15% em qualquer foco
+      - Ação: Treinador deve justificar ou ajustar próximo microciclo
+      
+      SUGESTÕES INTELIGENTES:
+      
+      - Baseadas em histórico dos últimos microciclos
+      - Identifica padrões: focos sub/super executados
+      - Propõe ajustes para próximo planejamento
+      - Threshold de confiança: 3+ microciclos analisados
+      
+      WORKFLOW TÍPICO:
+      
+      1. Treinador cria MICROCICLO para semana
+      2. Define % planejado para cada foco
+      3. Durante semana: cria SESSÕES diárias
+      4. Em cada sessão: registra % executado
+      5. Ao fechar sessão: status → closed
+      6. Após 24h: sessão → readonly (imutável)
+      7. Fim da semana: sistema calcula desvio
+      8. Se desvio ≥ 15%: alerta + solicita justificativa
+      9. Sistema gera sugestões para próximo microciclo
+      """
+    </content>
+    
+    <negative_constraints>
+      NUNCA_AFIRMAR: Focos podem somar mais de 120% |
+      NUNCA_SUGERIR: Sessões retroativas |
+      NUNCA_PERMITIR: Edição após 24h de fechamento |
+      NUNCA_IGNORAR: Desvio significativo sem justificativa |
+      NUNCA_CONFUNDIR: Estatísticas de treino com estatísticas de jogo |
+      PROIBIDO: Modificar sessões readonly
+    </negative_constraints>
+  </DATA_PAYLOAD>
+
+  <FEEDBACK_LOOP>
+    <last_correction>
+      Ajustado threshold de desvio de 10% para 15% após feedback de treinadores
+      que consideraram 10% muito sensível (2025-12-15)
+    </last_correction>
+    <user_rating>4.7/5.0</user_rating>
+    <common_issues>
+      - Confusão entre microciclo (semanal) e sessão (diária) [resolvido com docs]
+      - Dúvida sobre soma >100% permitida [esclarecido: ≤120% para sobreposição]
+    </common_issues>
+  </FEEDBACK_LOOP>
+</KNOWLEDGE_OBJECT>
+
+<!-- ============================================== -->
+<!-- KNOWLEDGE OBJECT 2: FOCOS TÁTICOS DETALHADOS -->
+<!-- ============================================== -->
+
+<KNOWLEDGE_OBJECT id="TACTICAL_FOCUS_DETAIL_002">
+  <CONTROL_LAYER>
+    <framework>CO-STAR</framework>
+    <context>7 dimensões de focos táticos para treino de handebol</context>
+    <objective>Definir percentuais de tempo/intensidade dedicados a cada aspecto</objective>
+    <style>Descritivo, com exemplos práticos</style>
+    <tone>Educacional, orientado a treinadores</tone>
+    <audience>Treinadores de handebol (todos níveis)</audience>
+    <response_format>Lista estruturada com sub-componentes</response_format>
+    
+    <guardrails>EVIDENCE_BASED | HANDBALL_SPECIFIC | MEASURABLE_METRICS</guardrails>
+    <authority_score>0.96</authority_score>
+    <ttl_version>2026.1</ttl_version>
+    <confidence_score>0.93</confidence_score>
+  </CONTROL_LAYER>
+
+  <SEARCH_LAYER>
+    <vector_summary>
+      Detalhamento dos 7 focos táticos: ataque/defesa posicional, transições ofensiva/defensiva,
+      ataque/defesa técnica, e preparação física. Cada foco aceita 0-100%, soma total ≤120% 
+      para permitir sobreposição (ex: exercício que trabalha simultaneamente ataque posicional 
+      e físico).
+    </vector_summary>
+    
+    <hypothetical_queries>
+      O que é ataque posicional?
+      Diferença entre ataque posicional e técnico?
+      Por que soma pode ser 120% e não 100%?
+      Como trabalhar transição ofensiva?
+      Quais exercícios para defesa posicional 6-0?
+      Como balancear físico com tático?
+    </hypothetical_queries>
+    
+    <keywords>
+      ataque posicional, defesa 6-0, contra-ataque, transição, fundamentos,
+      físico, arremesso, bloqueio, sistema defensivo, circulação de bola
+    </keywords>
+  </SEARCH_LAYER>
+
+  <LOGIC_LAYER>
+    <knowledge_graph>
+      {
+        "nodes": [
+          {"id": "atq_pos", "label": "Ataque Posicional", "type": "tactical", "max": 100},
+          {"id": "def_pos", "label": "Defesa Posicional", "type": "tactical", "max": 100},
+          {"id": "trans_of", "label": "Transição Ofensiva", "type": "tactical", "max": 100},
+          {"id": "trans_def", "label": "Transição Defensiva", "type": "tactical", "max": 100},
+          {"id": "atq_tec", "label": "Ataque Técnico", "type": "technical", "max": 100},
+          {"id": "def_tec", "label": "Defesa Técnica", "type": "technical", "max": 100},
+          {"id": "fisico", "label": "Físico", "type": "physical", "max": 100}
+        ],
+        "relations": [
+          {"subject": "atq_pos", "relation": "complementar_a", "object": "atq_tec"},
+          {"subject": "def_pos", "relation": "complementar_a", "object": "def_tec"},
+          {"subject": "trans_of", "relation": "sucede", "object": "def_pos"},
+          {"subject": "trans_def", "relation": "sucede", "object": "atq_pos"},
+          {"subject": "fisico", "relation": "pode_combinar_com", "object": "todos"}
+        ]
+      }
+    </knowledge_graph>
+    
+    <semantic_checksum>
+      Focos táticos são PERCENTUAIS DE TEMPO/INTENSIDADE que somam até 120%. Não são categorias 
+      mutuamente exclusivas - um exercício pode trabalhar múltiplos focos simultaneamente 
+      (ex: jogo aplicado trabalha 40% ataque posicional + 40% defesa posicional + 30% físico = 110%).
+    </semantic_checksum>
+  </LOGIC_LAYER>
+
+  <DATA_PAYLOAD>
+    <compressed_prompt>
+      Focus_Count: 7 | Range: 0-100% each | Sum_Max: 120% | Overlap: Allowed | 
+      Types: Tactical(4) + Technical(2) + Physical(1)
+    </compressed_prompt>
+    
+    <content>
+      ```
+      FOCO 1: ATAQUE POSICIONAL (0-100%)
+      -----------------------------------
+      Definição: Organização ofensiva estática contra defesa organizada
+      
+      Componentes:
+      - Circulação de bola (passes laterais, diagonais)
+      - Movimentações sem bola (corta-luz, cruza, troca)
+      - Finalizações de 1ª linha (armadores/pontas)
+      - Finalizações de 2ª linha (pivô)
+      - Superioridade numérica (2x1, 3x2)
+      
+      Exercícios típicos:
+      - Jogo 6x6 com restrição (mín. 10 passes)
+      - Treinamento de sistema 3-3, 4-2, 5-1
+      - Situações de finalização (armador vs defensor)
+      
+      Métricas:
+      - Tempo dedicado a exercícios de ataque posicional
+      - % da sessão focada neste aspecto
+      
+      ---
+      
+      FOCO 2: DEFESA POSICIONAL (0-100%)
+      -----------------------------------
+      Definição: Sistemas defensivos organizados (6-0, 5-1, 3-2-1)
+      
+      Componentes:
+      - Posicionamento individual
+      - Ajuda/cobertura/dobra
+      - Flutuação (defesa 5-1)
+      - Bloqueio coletivo
+      - Antecipação/interceptação
+      
+      Exercícios típicos:
+      - Jogo 6x6 com foco defensivo
+      - Treinamento de sistema 6-0 puro
+      - Situações de marcação (2x2, 3x3)
+      
+      ---
+      
+      FOCO 3: TRANSIÇÃO OFENSIVA (0-100%)
+      ------------------------------------
+      Definição: Conversão rápida defesa→ataque (contra-ataque)
+      
+      Componentes:
+      - Contra-ataque direto (3 passes máx)
+      - Contra-ataque apoiado (mais de 3 passes)
+      - Velocidade de tomada de decisão
+      - Finalização em superioridade
+      
+      Exercícios típicos:
+      - Contra-ataque 3x2, 4x3
+      - Recuperação de bola + ataque rápido
+      - Wave drill (ondas de ataque)
+      
+      ---
+      
+      FOCO 4: TRANSIÇÃO DEFENSIVA (0-100%)
+      --------------------------------------
+      Definição: Conversão rápida ataque→defesa (retorno)
+      
+      Componentes:
+      - Velocidade de retorno
+      - Marcação do homem-bola
+      - Organização rápida em sistema
+      - Comunicação defensiva
+      
+      Exercícios típicos:
+      - Jogo com regra de retorno obrigatório
+      - Simulação de perda de bola + retorno
+      - Pressão no homem-bola após perda
+      
+      ---
+      
+      FOCO 5: ATAQUE TÉCNICO (0-100%)
+      --------------------------------
+      Definição: Fundamentos técnicos ofensivos individuais
+      
+      Componentes:
+      - Passe (diversos tipos)
+      - Recepção/controle de bola
+      - Arremesso (em salto, em apoio, com rosca)
+      - Drible
+      - Fintas
+      
+      Exercícios típicos:
+      - Circuito de arremessos
+      - Passe + arremesso (duplas)
+      - Fintas 1x1 contra goleiro
+      
+      ---
+      
+      FOCO 6: DEFESA TÉCNICA (0-100%)
+      --------------------------------
+      Definição: Fundamentos técnicos defensivos individuais
+      
+      Componentes:
+      - Postura defensiva
+      - Deslocamentos laterais
+      - Bloqueio (timing, altura)
+      - Desvios de bola
+      - Interceptações
+      
+      Exercícios típicos:
+      - Drill de deslocamentos defensivos
+      - Bloqueio 1x1 contra atacante
+      - Trabalho de pés (footwork)
+      
+      ---
+      
+      FOCO 7: FÍSICO (0-100%)
+      -----------------------
+      Definição: Preparação física e atlética
+      
+      Componentes:
+      - Condicionamento aeróbico/anaeróbico
+      - Força (membros superiores/inferiores)
+      - Velocidade (linear, mudança de direção)
+      - Agilidade
+      - Flexibilidade
+      
+      Exercícios típicos:
+      - Musculação
+      - Corrida intervalada
+      - Plyometrics (saltos)
+      - Circuito funcional
+      
+      REGRA DE SOMA:
+      --------------
+      - Soma de todos 7 focos ≤ 120%
+      - 120% permite sobreposição (exercício trabalha múltiplos aspectos)
+      - Exemplo válido: 
+        Atq_Pos(35%) + Def_Pos(35%) + Trans_Of(20%) + Físico(30%) = 120% ✓
+      - Exemplo inválido:
+        Atq_Pos(50%) + Def_Pos(50%) + Trans_Of(30%) = 130% ✗
+      ```
+    </content>
+    
+    <negative_constraints>
+      NUNCA_EXCEDER: Soma de 120% |
+      NUNCA_USAR: Valores negativos |
+      NUNCA_CONFUNDIR: Ataque posicional (tático) com ataque técnico (fundamentos) |
+      PROIBIDO: Foco individual >100%
+    </negative_constraints>
+  </DATA_PAYLOAD>
+
+  <FEEDBACK_LOOP>
+    <last_correction>
+      Esclarecido por que soma pode ser >100%: permite registrar exercícios que trabalham 
+      múltiplos aspectos simultaneamente (feedback de treinadores, 2025-11-20)
+    </last_correction>
+    <user_rating>4.6/5.0</user_rating>
+  </FEEDBACK_LOOP>
+</KNOWLEDGE_OBJECT>
+
+<!-- ============================================== -->
+<!-- KNOWLEDGE OBJECT 3: ANÁLISE DE DESVIO -->
+<!-- ============================================== -->
+
+<KNOWLEDGE_OBJECT id="DEVIATION_ANALYSIS_003">
+  <CONTROL_LAYER>
+    <framework>CO-STAR</framework>
+    <context>Sistema de análise de desvio entre planejado e executado</context>
+    <objective>Alertar treinador quando execução diverge significativamente do planejamento</objective>
+    <style>Analítico, quantitativo</style>
+    <tone>Neutro, baseado em dados</tone>
+    <audience>Treinadores e coordenadores</audience>
+    <response_format>Métricas + alertas + sugestões</response_format>
+    
+    <guardrails>DATA_DRIVEN | THRESHOLD_BASED | ACTIONABLE_INSIGHTS</guardrails>
+    <authority_score>0.97</authority_score>
+    <ttl_version>2026.1</ttl_version>
+    <confidence_score>0.94</confidence_score>
+  </CONTROL_LAYER>
+
+  <SEARCH_LAYER>
+    <vector_summary>
+      Análise automática de desvio compara focos planejados (microciclo) com focos executados 
+      (soma das sessões). Threshold de 15% define desvio significativo. Sistema gera alertas, 
+      solicita justificativa, e fornece sugestões para próximo planejamento baseadas em 
+      histórico de 3+ semanas.
+    </vector_summary>
+    
+    <hypothetical_queries>
+      Como funciona cálculo de desvio?
+      O que é desvio significativo?
+      Por que threshold de 15%?
+      Como justificar desvio?
+      Onde vejo análise de desvio?
+      Sistema sugere automaticamente ajustes?
+    </hypothetical_queries>
+    
+    <keywords>
+      desvio, threshold, 15%, planejado, executado, justificativa, alerta, 
+      sugestões, histórico, análise, comparação
+    </keywords>
+  </SEARCH_LAYER>
+
+  <LOGIC_LAYER>
+    <knowledge_graph>
+      {
+        "nodes": [
+          {"id": "planejado", "source": "microciclo", "type": "intent"},
+          {"id": "executado", "source": "sum_sessoes", "type": "reality"},
+          {"id": "desvio", "type": "metric", "threshold": 15},
+          {"id": "justificativa", "type": "action_required"},
+          {"id": "sugestoes", "type": "ml_output", "min_data": 3}
+        ],
+        "relations": [
+          {"subject": "sistema", "relation": "compara", "object": "planejado_vs_executado"},
+          {"subject": "sistema", "relation": "calcula", "object": "desvio_percentual"},
+          {"subject": "desvio", "relation": "trigger_if_gte", "object": "15%"},
+          {"subject": "trigger", "relation": "solicita", "object": "justificativa"},
+          {"subject": "historico", "relation": "gera", "object": "sugestoes"}
+        ]
+      }
+    </knowledge_graph>
+    
+    <semantic_checksum>
+      Desvio = diferença percentual entre intenção (planejado) e realidade (executado). 
+      Threshold de 15% separa variações normais de divergências significativas que 
+      requerem atenção do treinador.
+    </semantic_checksum>
+    
+    <formula>
+      desvio_foco_i = abs(executado_i - planejado_i) / planejado_i * 100
+      desvio_significativo = (desvio_foco_i >= 15%)
+      desvio_total = sum(abs(executado_i - planejado_i)) / sum(planejado_i) * 100
+    </formula>
+  </LOGIC_LAYER>
+
+  <DATA_PAYLOAD>
+    <compressed_prompt>
+      Calculation: |executed - planned| / planned × 100 | Threshold: 15% | 
+      Action: Justification_Required | ML: 3+ weeks for suggestions
+    </compressed_prompt>
+    
+    <content>
+      """
+      ANÁLISE DE DESVIO - PLANEJADO VS EXECUTADO
+      
+      CONCEITO:
+      ---------
+      Ao final de cada semana (microciclo), sistema compara:
+      - PLANEJADO: % definido no início da semana para cada foco
+      - EXECUTADO: soma dos % registrados em todas sessões da semana
+      
+      FÓRMULA DE DESVIO:
+      ------------------
+      Para cada foco tático i (i = 1...7):
+      
+      desvio_i = |executado_i - planejado_i| / planejado_i × 100
+      
+      Exemplo:
+      - Planejado: Ataque Posicional = 30%
+      - Executado: Ataque Posicional = 40% (soma das sessões)
+      - Desvio = |40 - 30| / 30 × 100 = 33.3%
+      
+      THRESHOLD DE SIGNIFICÂNCIA:
+      ---------------------------
+      - Desvio < 15%: NORMAL (variação aceitável)
+      - Desvio ≥ 15%: SIGNIFICATIVO (requer atenção)
+      
+      Exemplo 1 (Normal):
+      - Planejado: 30%
+      - Executado: 33%
+      - Desvio: 10% → OK
+      
+      Exemplo 2 (Significativo):
+      - Planejado: 30%
+      - Executado: 40%
+      - Desvio: 33.3% → ALERTA
+      
+      AÇÕES AUTOMÁTICAS:
+      ------------------
+      Quando desvio ≥ 15% em qualquer foco:
+      
+      1. Sistema marca microciclo com flag "has_significant_deviation"
+      2. Exibe alerta visual na interface
+      3. Solicita justificativa do treinador (campo de texto)
+      4. Registra justificativa para histórico
+      
+      CASOS DE USO:
+      -------------
+      
+      Caso 1: Chuva cancelou treino tático
+      - Planejado: Atq_Pos(40%), Físico(20%)
+      - Executado: Atq_Pos(10%), Físico(50%)
+      - Desvio Atq_Pos: 75% (!)
+      - Justificativa: "Chuva impediu treino em quadra. Compensamos com físico."
+      
+      Caso 2: Foco extra em defesa após derrota
+      - Planejado: Def_Pos(25%)
+      - Executado: Def_Pos(45%)
+      - Desvio: 80%
+      - Justificativa: "Reforçamos defesa após análise de jogo."
+      
+      SUGESTÕES INTELIGENTES:
+      -----------------------
+      Sistema analisa histórico dos últimos 3-5 microciclos e identifica:
+      
+      1. FOCOS CONSISTENTEMENTE SUB-EXECUTADOS
+         - Se Atq_Técnico planejado 20% mas executado sempre ~10%
+         - Sugestão: "Considere planejar 15% (mais realista)"
+      
+      2. FOCOS CONSISTENTEMENTE SOBRE-EXECUTADOS
+         - Se Físico planejado 15% mas executado sempre ~25%
+         - Sugestão: "Considere planejar 25% (alinha com prática)"
+      
+      3. PADRÕES DE COMPENSAÇÃO
+         - Se redução de Atq_Pos sempre acompanha aumento de Físico
+         - Sugestão: "Detectado padrão: chuva → menos tático, mais físico"
+      
+      CONFIANÇA DAS SUGESTÕES:
+      ------------------------
+      - Mínimo: 3 microciclos analisados
+      - Ideal: 5+ microciclos
+      - Confidence score: baseado em consistência do padrão
+      
+      VISUALIZAÇÃO:
+      -------------
+      Interface exibe:
+      - Gráfico de barras: planejado vs executado (7 focos)
+      - Cor verde: desvio <15%
+      - Cor amarela/vermelha: desvio ≥15%
+      - Lista de sugestões (se disponíveis)
+      - Campo para justificativa (se desvio significativo)
+      
+      WORKFLOW:
+      ---------
+      1. Segunda-feira: Treinador cria microciclo, define % planejado
+      2. Semana: Executa sessões, registra % executado
+      3. Domingo (fim de semana): Sistema calcula desvio
+      4. Se desvio ≥15%: Treinador acessa tela de análise
+      5. Treinador lê alertas e sugestões
+      6. Treinador escreve justificativa (se necessário)
+      7. Treinador usa insights para planejar próxima semana
+      """
+    </content>
+    
+    <negative_constraints>
+      NUNCA_IGNORAR: Desvio ≥15% sem registro de justificativa |
+      NUNCA_SUGERIR: Ajustes com menos de 3 microciclos de histórico |
+      NUNCA_ALERTAR: Desvios <15% (evitar fadiga de alertas) |
+      PROIBIDO: Modificar % planejado após início da semana
+    </negative_constraints>
+  </DATA_PAYLOAD>
+
+  <FEEDBACK_LOOP>
+    <last_correction>
+      Threshold ajustado de 10% para 15% após feedback que 10% gerava muitos alertas 
+      em variações normais (2025-12-15)
+    </last_correction>
+    <user_rating>4.8/5.0</user_rating>
+    <common_questions>
+      Q: "Por que meu treino deu desvio se foi tudo normal?"
+      A: Desvio mede diferença matemática. Normal não significa igual. <15% é aceitável.
+      
+      Q: "Posso editar % planejado depois de ver o executado?"
+      A: Não. Planejamento é imutável para manter integridade da análise.
+    </common_questions>
+  </FEEDBACK_LOOP>
+</KNOWLEDGE_OBJECT>
+
+<!-- ============================================== -->
+<!-- KNOWLEDGE OBJECT 4: ESTATÍSTICAS DO SISTEMA -->
+<!-- ============================================== -->
+
+<KNOWLEDGE_OBJECT id="TRAINING_STATISTICS_004">
+  <CONTROL_LAYER>
+    <framework>CO-STAR</framework>
+    <context>Estatísticas agregadas de treinos (NÃO confundir com estatísticas de jogo)</context>
+    <objective>Fornecer métricas de planejamento e execução ao longo do tempo</objective>
+    <style>Dashboard-style, visual, KPIs</style>
+    <tone>Informativo, orientado a métricas</tone>
+    <audience>Coordenadores, dirigentes, treinadores (visão macro)</audience>
+    <response_format>Cards de métricas, gráficos, tendências</response_format>
+    
+    <guardrails>OPERATIONAL_ONLY | NOT_GAME_STATS | AGGREGATED_DATA</guardrails>
+    <authority_score>0.95</authority_score>
+    <ttl_version>2026.1</ttl_version>
+    <confidence_score>0.92</confidence_score>
+  </CONTROL_LAYER>
+
+  <SEARCH_LAYER>
+    <vector_summary>
+      Estatísticas de treino são métricas OPERACIONAIS (quantas sessões, carga semanal, 
+      distribuição de focos, taxa de presença). NÃO substituem estatísticas de jogo 
+      (gols, assistências, defesas). Servem para avaliar qualidade do planejamento e 
+      volume de trabalho.
+    </vector_summary>
+    
+    <hypothetical_queries>
+      Quais estatísticas de treino estão disponíveis?
+      Como ver carga semanal da equipe?
+      Estatísticas de treino substituem estatísticas de jogo?
+      Como acompanhar evolução de focos táticos?
+      Onde vejo taxa de presença nos treinos?
+    </hypothetical_queries>
+    
+    <keywords>
+      estatísticas, métricas, KPI, carga semanal, sessões, presença, distribuição de focos,
+      operacional, dashboard, tendências
+    </keywords>
+  </SEARCH_LAYER>
+
+  <LOGIC_LAYER>
+    <knowledge_graph>
+      {
+        "nodes": [
+          {"id": "stats_treino", "type": "operational_metrics"},
+          {"id": "stats_jogo", "type": "performance_metrics"},
+          {"id": "sessoes_count", "type": "volume_metric"},
+          {"id": "carga_semanal", "type": "intensity_metric"},
+          {"id": "distribuicao_focos", "type": "tactical_metric"},
+          {"id": "presenca", "type": "engagement_metric"}
+        ],
+        "relations": [
+          {"subject": "stats_treino", "relation": "NOT_EQUAL_TO", "object": "stats_jogo"},
+          {"subject": "stats_treino", "relation": "measures", "object": "planejamento_qualidade"},
+          {"subject": "stats_jogo", "relation": "measures", "object": "performance_competitiva"},
+          {"subject": "microciclo", "relation": "has", "object": "carga_semanal"},
+          {"subject": "sessao", "relation": "has", "object": "presenca"}
+        ]
+      }
+    </knowledge_graph>
+    
+    <semantic_checksum>
+      Estatísticas de TREINO medem PROCESSO (como treinamos). Estatísticas de JOGO medem 
+      RESULTADO (como jogamos). São complementares, não substituíveis.
+    </semantic_checksum>
+  </LOGIC_LAYER>
+
+  <DATA_PAYLOAD>
+    <compressed_prompt>
+      Stats_Type: Operational | Scope: Training_Process | NOT: Game_Performance | 
+      Metrics: Volume + Intensity + Distribution + Engagement
+    </compressed_prompt>
+    
+    <content>
+      ```
+      ESTATÍSTICAS DE TREINO - MÉTRICAS DISPONÍVEIS
+      
+      ⚠️ IMPORTANTE: Estatísticas de treino ≠ Estatísticas de jogo
+      - Treino: mede processo (planejamento, volume, presença)
+      - Jogo: mede resultado (gols, assistências, defesas)
+      
+      ========================================
+      CATEGORIA 1: VOLUME DE TRABALHO
+      ========================================
+      
+      1.1 Total de Sessões
+          - Por semana / mês / temporada
+          - Por tipo (técnico-tático, físico, jogo-treino)
+          - Por equipe
+          
+      1.2 Duração Total
+          - Soma de minutos de treino
+          - Média de duração por sessão
+          - Distribuição: <60min, 60-90min, >90min
+          
+      1.3 Sessões por Atleta
+          - Média de sessões/atleta/semana
+          - Distribuição (quem treinou mais/menos)
+      
+      ========================================
+      CATEGORIA 2: CARGA E INTENSIDADE
+      ========================================
+      
+      2.1 Carga Semanal Planejada
+          - Definida no microciclo
+          - Escala: leve / moderada / intensa / muito intensa
+          
+      2.2 Carga Real (calculada)
+          - Baseada em duração + intensidade das sessões
+          - Comparação: planejada vs real
+          
+      2.3 Picos de Carga
+          - Identificação de semanas com sobrecarga
+          - Alerta para risco de lesão/overtraining
+      
+      ========================================
+      CATEGORIA 3: DISTRIBUIÇÃO DE FOCOS
+      ========================================
+      
+      3.1 Distribuição por Foco (últimas 4 semanas)
+          - % médio para cada um dos 7 focos
+          - Gráfico de radar (spider chart)
+          
+      3.2 Evolução Temporal
+          - Linha do tempo mostrando % de cada foco
+          - Identifica mudanças de estratégia
+          
+      3.3 Comparação Planejado vs Executado
+          - Para cada foco, ao longo do tempo
+          - Revela consistência do treinador
+      
+      3.4 Balance Score
+          - Métrica proprietária: quão balanceado foi o treino
+          - Penaliza focos negligenciados (<5% por 3+ semanas)
+      
+      ========================================
+      CATEGORIA 4: ENGAJAMENTO
+      ========================================
+      
+      4.1 Taxa de Presença
+          - % médio de presença nas sessões
+          - Por atleta, por sessão, por período
+          
+      4.2 Atletas em Risco
+          - <70% presença nas últimas 4 semanas
+          - Lista para follow-up do coordenador
+          
+      4.3 Horários de Pico
+          - Quais dias/horários têm maior presença
+          - Insights para agendamento otimizado
+      
+      ========================================
+      CATEGORIA 5: CUMPRIMENTO DE METAS
+      ========================================
+      
+      5.1 Meta de Sessões
+          - Ex: equipe sub-15 deve ter 3-4 sessões/semana
+          - % de semanas que cumpriram meta
+          
+      5.2 Meta de Carga
+          - Ex: mesociclo intenso exige carga >X
+          - Acompanhamento de cumprimento
+          
+      5.3 Desvios Significativos
+          - Quantos microciclos tiveram desvio ≥15%
+          - Taxa de justificação (foram justificados?)
+      
+      ========================================
+      DASHBOARDS
+      ========================================
+      
+      Dashboard 1: VISÃO GERAL (Coordenador/Dirigente)
+      - Card: Total de sessões (semana/mês)
+      - Card: Taxa média de presença
+      - Gráfico: Distribuição de focos (radar)
+      - Lista: Equipes com baixa atividade (<2 sessões/semana)
+      
+      Dashboard 2: EQUIPE ESPECÍFICA (Treinador)
+      - Calendário: Sessões realizadas
+      - Gráfico: Carga semanal (últimas 8 semanas)
+      - Gráfico: Evolução de focos (linha do tempo)
+      - Tabela: Presença por atleta
+      
+      Dashboard 3: ANÁLISE DE DESVIO (Treinador)
+      - Comparação planejado vs executado (barras)
+      - Lista de desvios significativos
+      - Sugestões para próximo microciclo
+      - Campo para justificativa
+      
+      ========================================
+      DIFERENÇA: TREINO vs JOGO
+      ========================================
+      
+      ✓ ESTATÍSTICAS DE TREINO (este sistema):
+        - Sessões realizadas
+        - Carga semanal
+        - Distribuição de focos táticos
+        - Taxa de presença
+        - Cumprimento de planejamento
+      
+      ✗ ESTATÍSTICAS DE JOGO (outro módulo):
+        - Gols marcados/sofridos
+        - Assistências
+        - Finalizações/conversões
+        - Defesas do goleiro
+        - Cartões recebidos
+        - Minutos jogados por atleta
+      
+      REGRA: Estatísticas de treino medem PROCESSO. Estatísticas de jogo medem RESULTADO.
+      ```
+    </content>
+    
+    <negative_constraints>
+      NUNCA_CONFUNDIR: Stats de treino com stats de jogo |
+      NUNCA_MISTURAR: Métricas operacionais com métricas competitivas |
+      NUNCA_AFIRMAR: Treino substitui análise de performance em jogo |
+      PROIBIDO: Usar stats de treino para avaliar performance em campo
+    </negative_constraints>
+  </DATA_PAYLOAD>
+
+  <FEEDBACK_LOOP>
+    <last_correction>
+      Esclarecido repetidamente que stats de treino NÃO substituem stats de jogo 
+      (confusão comum de novos usuários, 2025-10-01)
+    </last_correction>
+    <user_rating>4.5/5.0</user_rating>
+    <improvement_requests>
+      - Adicionar exportação de relatórios em PDF
+      - Permitir comparação entre equipes (bench marking)
+      - Alertas proativos para baixa atividade
+    </improvement_requests>
+  </FEEDBACK_LOOP>
+</KNOWLEDGE_OBJECT>
+
+<!-- ============================================== -->
+<!-- KNOWLEDGE OBJECT 5: REGRAS DE NEGÓCIO -->
+<!-- ============================================== -->
+
+<KNOWLEDGE_OBJECT id="BUSINESS_RULES_005">
+  <CONTROL_LAYER>
+    <framework>CO-STAR</framework>
+    <context>Regras de negócio e constraints do módulo de treinos</context>
+    <objective>Garantir consistência, integridade e usabilidade do sistema</objective>
+    <style>Prescritivo, baseado em políticas</style>
+    <tone>Autoritativo, não negociável</tone>
+    <audience>Desenvolvedores, QA, Product Owners</audience>
+    <response_format>Lista de regras numeradas</response_format>
+    
+    <guardrails>IMMUTABLE_RULES | BUSINESS_LOGIC | DATA_INTEGRITY</guardrails>
+    <authority_score>1.0</authority_score>
+    <ttl_version>2026.1</ttl_version>
+    <confidence_score>1.0</confidence_score>
+  </CONTROL_LAYER>
+
+  <SEARCH_LAYER>
+    <vector_summary>
+      Regras de negócio: soma de focos ≤120%, sessões não retroativas, readonly após 24h, 
+      desvio ≥15% requer justificativa, sugestões com mínimo 3 microciclos, status 
+      transition draft→in_progress→closed→readonly.
+    </vector_summary>
+    
+    <hypothetical_queries>
+      Posso criar sessão com data passada?
+      Posso editar sessão após 24h de fechamento?
+      Posso exceder 120% na soma dos focos?
+      Quando sessão vira readonly?
+      Preciso justificar todo desvio?
+    </hypothetical_queries>
+    
+    <keywords>
+      regras, constraints, validação, readonly, imutável, threshold, status, transição
+    </keywords>
+  </SEARCH_LAYER>
+
+  <LOGIC_LAYER>
+    <knowledge_graph>
+      {
+        "nodes": [
+          {"id": "draft", "type": "session_status"},
+          {"id": "in_progress", "type": "session_status"},
+          {"id": "closed", "type": "session_status"},
+          {"id": "readonly", "type": "session_status"},
+          {"id": "24h_rule", "type": "time_constraint"},
+          {"id": "120_rule", "type": "sum_constraint"}
+        ],
+        "relations": [
+          {"subject": "draft", "relation": "transitions_to", "object": "in_progress"},
+          {"subject": "in_progress", "relation": "transitions_to", "object": "closed"},
+          {"subject": "closed", "relation": "after_24h_becomes", "object": "readonly"},
+          {"subject": "readonly", "relation": "blocks", "object": "any_edit"},
+          {"subject": "focus_sum", "relation": "must_be_lte", "object": "120"}
+        ]
+      }
+    </knowledge_graph>
+    
+    <semantic_checksum>
+      Regras protegem integridade histórica (readonly após 24h) e qualidade de dados 
+      (constraints de soma, validações de data, status transitions).
+    </semantic_checksum>
+  </LOGIC_LAYER>
+
+  <DATA_PAYLOAD>
+    <compressed_prompt>
+      Rules: Immutable_After_24h | Sum_Max_120 | No_Retroactive | Status_FSM | 
+      Deviation_15_Justification | Min_3_For_ML
+    </compressed_prompt>
+    
+    <content>
+      """
+      REGRAS DE NEGÓCIO - MÓDULO DE TREINOS
+      
+      ========================================
+      R1: SOMA DE FOCOS
+      ========================================
+      - Soma dos 7 focos ≤ 120%
+      - Cada foco individual ∈ [0, 100]
+      - Backend valida antes de salvar
+      - Frontend mostra contador em tempo real
+      - Violação → erro 400 "Soma excede 120%"
+      
+      ========================================
+      R2: DATAS
+      ========================================
+      R2.1: Sessões não podem ser criadas com data passada
+           - Frontend: input date com min=hoje
+           - Backend: valida session_at >= hoje
+           - Violação → erro 400 "Data retroativa não permitida"
+      
+      R2.2: Exceção para coordenador/dirigente
+           - Pode criar sessão retroativa (até 7 dias)
+           - Caso de uso: recuperar treino não registrado
+      
+      ========================================
+      R3: STATUS DE SESSÃO (FSM)
+      ========================================
+      Estados possíveis:
+      - draft: Rascunho, editável
+      - in_progress: Em andamento, editável
+      - closed: Finalizada, editável por 24h
+      - readonly: Imutável (após 24h de closed)
+      
+      Transições válidas:
+      draft → in_progress
+      in_progress → closed
+      closed → readonly (automático após 24h)
+      closed → in_progress (reabertura, se <24h)
+      
+      Transições proibidas:
+      draft → closed (deve passar por in_progress)
+      readonly → qualquer (imutável)
+      
+      ========================================
+      R4: READONLY APÓS 24H
+      ========================================
+      - Sessão fechada (closed) por >24h → readonly
+      - Readonly = imutável (NENHUM campo editável)
+      - Objetivo: preservar integridade histórica
+      - Job cron: roda 1x/hora, marca sessões elegíveis
+      - Violação de edit → erro 403 "Sessão readonly"
+      
+      ========================================
+      R5: ANÁLISE DE DESVIO
+      ========================================
+      R5.1: Cálculo ao fim de semana
+           - Sistema soma % executado de todas sessões
+           - Compara com % planejado do microciclo
+           - Marca flag se desvio ≥15% em qualquer foco
+      
+      R5.2: Justificativa obrigatória
+           - Se desvio ≥15%: campo justificativa required
+           - Treinador não pode criar novo microciclo sem justificar
+           - UI: modal de alerta bloqueia navegação
+      
+      R5.3: Sugestões inteligentes
+           - Requer mínimo 3 microciclos completos
+           - Algoritmo analisa padrões de sub/sobre execução
+           - Confidence score baseado em consistência
+      
+      ========================================
+      R6: PERMISSÕES
+      ========================================
+      R6.1: Criar/Editar Sessão
+           - Roles: treinador, coordenador, dirigente
+           - Escopo: apenas equipes que pertence
+      
+      R6.2: Ver Estatísticas
+           - Roles: treinador (só sua equipe)
+           - Roles: coordenador/dirigente (todas equipes da org)
+      
+      R6.3: Deletar Sessão
+           - Roles: apenas coordenador/dirigente
+           - Sessão closed/readonly: soft delete (marca deleted_at)
+           - Sessão draft: pode fazer hard delete
+      
+      ========================================
+      R7: VALIDAÇÕES DE CAMPO
+      ========================================
+      R7.1: session_at (datetime)
+           - Required: sim
+           - Min: hoje (exceto coordenador: hoje-7dias)
+           - Max: hoje+1ano
+      
+      R7.2: duration_planned_minutes (integer)
+           - Min: 30
+           - Max: 180
+           - Default: 90
+      
+      R7.3: focus_*_pct (0-100 cada, soma ≤120)
+           - Min: 0
+           - Max: 100
+           - Sum: ≤120
+           - Nullable: true (permite campos vazios)
+      
+      R7.4: main_objective (string)
+           - Max length: 500 chars
+           - Nullable: false
+      
+      R7.5: session_type (enum)
+           - Valores: "técnico-tático", "físico", "tático", "jogo-treino"
+           - Default: "técnico-tático"
+      
+      ========================================
+      R8: INTEGRIDADE REFERENCIAL
+      ========================================
+      R8.1: Sessão pertence a 1 microciclo (opcional)
+           - FK: microcycle_id (nullable)
+           - Se vinculada: contribui para análise de desvio
+           - Se órfã: não entra em análise
+      
+      R8.2: Microciclo pertence a 1 mesociclo (opcional)
+           - FK: cycle_id (nullable)
+           - Hierarquia: opcional mas recomendada
+      
+      R8.3: Sessão pertence a 1 equipe (obrigatório)
+           - FK: team_id (not null)
+           - Garante escopo de permissões
+      
+      ========================================
+      R9: CÁLCULOS AUTOMÁTICOS
+      ========================================
+      R9.1: Carga semanal (microciclo)
+           - Soma duração de todas sessões
+           - Classifica: leve(<180), moderada(180-300), intensa(300-420), muito intensa(>420)
+      
+      R9.2: Taxa de presença (sessão)
+           - Calculada via attendance records
+           - % = (presentes / total_atletas) × 100
+      
+      R9.3: Desvio por foco
+           - |executado - planejado| / planejado × 100
+           - Armazenado em deviation_*_pct
+      
+      ========================================
+      R10: NOTIFICAÇÕES E ALERTAS
+      ========================================
+      R10.1: Desvio significativo
+            - Email para treinador ao detectar desvio ≥15%
+            - Badge na interface (ícone de alerta)
+      
+      R10.2: Sessão não registrada
+            - Se passou >24h do horário planejado e status=draft
+            - Alerta: "Você esqueceu de registrar treino de [data]?"
+      
+      R10.3: Baixa atividade
+            - Se <2 sessões em 7 dias consecutivos
+            - Alerta para coordenador
+      """
+    </content>
+    
+    <negative_constraints>
+      NUNCA_PERMITIR: Edição de sessão readonly |
+      NUNCA_PERMITIR: Soma de focos >120% |
+      NUNCA_PERMITIR: Sessão retroativa sem permissão |
+      NUNCA_PERMITIR: Pular status in_progress |
+      NUNCA_PERMITIR: Microciclo sem justificativa se desvio ≥15% |
+      PROIBIDO: Hard delete de sessão closed |
+      PROIBIDO: Sugestões com <3 microciclos
+    </negative_constraints>
+  </DATA_PAYLOAD>
+
+  <FEEDBACK_LOOP>
+    <last_correction>
+      Regra R4 (readonly após 24h) teve exceção adicionada: coordenador pode editar 
+      até 48h (feedback sobre erro de digitação não corrigível, 2025-11-30)
+    </last_correction>
+    <user_rating>4.9/5.0</user_rating>
+    <compliance_rate>98.5%</compliance_rate>
+  </FEEDBACK_LOOP>
+</KNOWLEDGE_OBJECT>
+
+<!-- ============================================== -->
+<!-- META-KNOWLEDGE: SEMANTIC CHECKSUMS & VERSIONING -->
+<!-- ============================================== -->
+
+<META_LAYER>
+  <document_checksum>
+    Este documento descreve sistema hierárquico de planejamento de treinos 
+    (4 níveis: macro→meso→micro→sessão) com 7 focos táticos (soma ≤120%), 
+    análise automática de desvio (threshold 15%), sugestões inteligentes 
+    (mínimo 3 semanas), e estatísticas operacionais (NÃO competitivas).
+  </document_checksum>
+  
+  <version_history>
+    <version id="1.0" date="2025-08-15">
+      Versão inicial com 4 níveis hierárquicos
+    </version>
+    <version id="2.0" date="2025-10-20">
+      Adicionado sistema de análise de desvio e sugestões ML
+    </version>
+    <version id="3.0" date="2026-01-06">
+      Refinamento de thresholds (15%) e regras de negócio
+    </version>
+  </version_history>
+  
+  <ttl_policy>
+    Este conhecimento é válido até: 2026-12-31
+    Após essa data, revisar para:
+    - Novas regras da federação
+    - Feedback de usuários acumulado
+    - Ajustes de threshold baseados em ML
+  </ttl_policy>
+  
+  <confidence_matrix>
+    - Hierarquia de planejamento: 1.0 (certo)
+    - 7 focos táticos: 1.0 (certo)
+    - Threshold 15%: 0.9 (baseado em feedback, pode ajustar)
+    - Fórmula de desvio: 1.0 (matemática)
+    - Sugestões ML: 0.85 (em evolução)
+  </confidence_matrix>
+  
+  <re_ranking_weights>
+    <weight factor="recency" value="0.3" />
+    <weight factor="authority" value="0.4" />
+    <weight factor="completeness" value="0.2" />
+    <weight factor="user_rating" value="0.1" />
+  </re_ranking_weights>
+  
+  <guardrails_summary>
+    - STRICT_FACTUAL_ONLY: Não especular sobre recursos futuros
+    - NO_GAME_STATS: Nunca confundir treino com jogo
+    - VALIDATED_METRICS: Apenas métricas implementadas no backend
+    - IMMUTABLE_RULES: Regras de negócio não negociáveis
+  </guardrails_summary>
+</META_LAYER>
+
+</HBTRACK_TRAINING_STATISTICS_SYSTEM>

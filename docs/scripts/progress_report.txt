@@ -1,0 +1,151 @@
+================================================================================
+VALIDATION REPORT: verify_invariants_tests.py
+================================================================================
+Timestamp: 2026-02-01T21:40:29.849150
+Level: basic
+Status: ❌ FAIL
+
+SUMMARY:
+  Total Invariants: 37
+  Covered: 36
+  Errors: 88
+  Warnings: 0
+
+VIOLATIONS:
+--------------------------------------------------------------------------------
+
+INV-TRAIN-001:
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_001_focus_sum_constraint.py:0:0: ERROR [A_MIN_INVALID]: found 0 invalid tests, expected >=2 — add test_invalid_case_N__* methods with pytest.raises(IntegrityError)
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_001_focus_sum_constraint.py:0:0: ERROR [A_MIN_INVALID]: found 0 invalid tests, expected >=2 — add test_invalid_case_N__* methods with pytest.raises(IntegrityError)
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_001_focus_sum_constraint.py:0:0: ERROR [A_MIN_VALID]: found 0 valid tests, expected >=1 — add test_valid_case__* method without pytest.raises
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_001_focus_sum_constraint.py:0:0: ERROR [A_MIN_VALID]: found 0 valid tests, expected >=1 — add test_valid_case__* method without pytest.raises
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_001_focus_sum_constraint.py:0:0: ERROR [A_REQUIRES_ASYNC_DB]: Classe A requires async_db fixture — add async_db parameter to test methods
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_001_focus_sum_constraint.py:0:0: ERROR [A_REQUIRES_ASYNC_DB]: Classe A requires async_db fixture — add async_db parameter to test methods
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_001_focus_sum_constraint.py:0:0: ERROR [A_REQUIRES_CONSTRAINT_ATTR]: use diag.constraint_name not string matching — add: diag = exc.value.orig.diag; assert diag.constraint_name == "ck_*"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_001_focus_sum_constraint.py:0:0: ERROR [A_REQUIRES_CONSTRAINT_ATTR]: use diag.constraint_name not string matching — add: diag = exc.value.orig.diag; assert diag.constraint_name == "ck_*"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_001_focus_sum_constraint.py:0:0: ERROR [A_REQUIRES_PGCODE_ATTR]: use orig.pgcode not str(exc) — replace string matching with: orig = exc.value.orig; assert orig.pgcode == "23514"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_001_focus_sum_constraint.py:0:0: ERROR [A_REQUIRES_PGCODE_ATTR]: use orig.pgcode not str(exc) — replace string matching with: orig = exc.value.orig; assert orig.pgcode == "23514"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_001_focus_sum_constraint.py:0:0: ERROR [DOD0_NO_TESTS]: no test_* methods found — add test methods to class
+
+INV-TRAIN-002:
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_002_wellness_pre_deadline.py:0:0: ERROR [DOD0_NO_TESTS]: no test_* methods found — add test methods to class
+
+INV-TRAIN-003:
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_003_wellness_post_deadline.py:0:0: ERROR [DOD0_NO_TESTS]: no test_* methods found — add test methods to class
+
+INV-TRAIN-006:
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_006_lifecycle_status.py:0:0: ERROR [D_REQUIRES_CLIENT]: Classe D requires auth_client or client fixture — add auth_client or client parameter to test methods
+
+INV-TRAIN-008:
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_008_soft_delete_reason_pair.py:0:0: ERROR [A_MIN_INVALID]: found 0 invalid tests, expected >=2 — add test_invalid_case_N__* methods with pytest.raises(IntegrityError)
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_008_soft_delete_reason_pair.py:0:0: ERROR [A_REQUIRES_ASYNC_DB]: Classe A requires async_db fixture — add async_db parameter to test methods
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_008_soft_delete_reason_pair.py:0:0: ERROR [A_REQUIRES_CONSTRAINT_ATTR]: use diag.constraint_name not string matching — add: diag = exc.value.orig.diag; assert diag.constraint_name == "ck_*"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_008_soft_delete_reason_pair.py:0:0: ERROR [A_REQUIRES_PGCODE_ATTR]: use orig.pgcode not str(exc) — replace string matching with: orig = exc.value.orig; assert orig.pgcode == "23514"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_008_soft_delete_reason_pair.py:0:0: ERROR [A_REQUIRES_ROLLBACK]: add await async_db.rollback() after IntegrityError — add rollback after pytest.raises block
+
+INV-TRAIN-009:
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_009_wellness_pre_uniqueness.py:0:0: ERROR [A_MIN_INVALID]: found 0 invalid tests, expected >=2 — add test_invalid_case_N__* methods with pytest.raises(IntegrityError)
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_009_wellness_pre_uniqueness.py:0:0: ERROR [A_REQUIRES_ASYNC_DB]: Classe A requires async_db fixture — add async_db parameter to test methods
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_009_wellness_pre_uniqueness.py:0:0: ERROR [A_REQUIRES_CONSTRAINT_ATTR]: use diag.constraint_name not string matching — add: diag = exc.value.orig.diag; assert diag.constraint_name == "ck_*"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_009_wellness_pre_uniqueness.py:0:0: ERROR [A_REQUIRES_PGCODE_ATTR]: use orig.pgcode not str(exc) — replace string matching with: orig = exc.value.orig; assert orig.pgcode == "23514"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_009_wellness_pre_uniqueness.py:0:0: ERROR [A_REQUIRES_ROLLBACK]: add await async_db.rollback() after IntegrityError — add rollback after pytest.raises block
+
+INV-TRAIN-010:
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_010_wellness_post_uniqueness.py:0:0: ERROR [A_MIN_INVALID]: found 0 invalid tests, expected >=2 — add test_invalid_case_N__* methods with pytest.raises(IntegrityError)
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_010_wellness_post_uniqueness.py:0:0: ERROR [A_REQUIRES_ASYNC_DB]: Classe A requires async_db fixture — add async_db parameter to test methods
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_010_wellness_post_uniqueness.py:0:0: ERROR [A_REQUIRES_CONSTRAINT_ATTR]: use diag.constraint_name not string matching — add: diag = exc.value.orig.diag; assert diag.constraint_name == "ck_*"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_010_wellness_post_uniqueness.py:0:0: ERROR [A_REQUIRES_PGCODE_ATTR]: use orig.pgcode not str(exc) — replace string matching with: orig = exc.value.orig; assert orig.pgcode == "23514"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_010_wellness_post_uniqueness.py:0:0: ERROR [A_REQUIRES_ROLLBACK]: add await async_db.rollback() after IntegrityError — add rollback after pytest.raises block
+
+INV-TRAIN-018:
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_018_training_session_microcycle_status.py:0:0: ERROR [COVERAGE_DUPLICATE]: multiple main files for INV-TRAIN-018: test_inv_train_018_training_session_microcycle_status.py, test_inv_train_018_training_session_microcycle_status_route.py — keep only 1 principal file, move others to *_runtime.py or remove
+
+INV-TRAIN-019:
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_019_training_session_audit_logs.py:0:0: ERROR [DOD0_NO_CLASS]: no class TestInvTrain* found — add class TestInvTrain019
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_019_training_session_audit_logs.py:0:0: ERROR [DOD0_NO_TESTS]: no test_* methods found — add test methods to class
+
+INV-TRAIN-020:
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_020_cache_invalidation_trigger.py:0:0: ERROR [A_MIN_INVALID]: found 0 invalid tests, expected >=2 — add test_invalid_case_N__* methods with pytest.raises(IntegrityError)
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_020_cache_invalidation_trigger.py:0:0: ERROR [A_REQUIRES_ASYNC_DB]: Classe A requires async_db fixture — add async_db parameter to test methods
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_020_cache_invalidation_trigger.py:0:0: ERROR [A_REQUIRES_CONSTRAINT_ATTR]: use diag.constraint_name not string matching — add: diag = exc.value.orig.diag; assert diag.constraint_name == "ck_*"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_020_cache_invalidation_trigger.py:0:0: ERROR [A_REQUIRES_PGCODE_ATTR]: use orig.pgcode not str(exc) — replace string matching with: orig = exc.value.orig; assert orig.pgcode == "23514"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_020_cache_invalidation_trigger.py:0:0: ERROR [A_REQUIRES_ROLLBACK]: add await async_db.rollback() after IntegrityError — add rollback after pytest.raises block
+
+INV-TRAIN-021:
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_021_internal_load_trigger.py:0:0: ERROR [A_MIN_INVALID]: found 0 invalid tests, expected >=2 — add test_invalid_case_N__* methods with pytest.raises(IntegrityError)
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_021_internal_load_trigger.py:0:0: ERROR [A_REQUIRES_ASYNC_DB]: Classe A requires async_db fixture — add async_db parameter to test methods
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_021_internal_load_trigger.py:0:0: ERROR [A_REQUIRES_CONSTRAINT_ATTR]: use diag.constraint_name not string matching — add: diag = exc.value.orig.diag; assert diag.constraint_name == "ck_*"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_021_internal_load_trigger.py:0:0: ERROR [A_REQUIRES_PGCODE_ATTR]: use orig.pgcode not str(exc) — replace string matching with: orig = exc.value.orig; assert orig.pgcode == "23514"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_021_internal_load_trigger.py:0:0: ERROR [A_REQUIRES_ROLLBACK]: add await async_db.rollback() after IntegrityError — add rollback after pytest.raises block
+
+INV-TRAIN-022:
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_022_wellness_post_cache_invalidation.py:0:0: ERROR [DOD0_NO_CLASS]: no class TestInvTrain* found — add class TestInvTrain022
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_022_wellness_post_cache_invalidation.py:0:0: ERROR [DOD0_NO_TESTS]: no test_* methods found — add test methods to class
+
+INV-TRAIN-023:
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_023_wellness_post_overload_alert_trigger.py:0:0: ERROR [DOD0_NO_CLASS]: no class TestInvTrain* found — add class TestInvTrain023
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_023_wellness_post_overload_alert_trigger.py:0:0: ERROR [DOD0_NO_TESTS]: no test_* methods found — add test methods to class
+
+INV-TRAIN-027:
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_027_refresh_training_rankings_task.py:0:0: ERROR [DOD0_NO_CLASS]: no class TestInvTrain* found — add class TestInvTrain027
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_027_refresh_training_rankings_task.py:0:0: ERROR [D_REQUIRES_CLIENT]: Classe D requires auth_client or client fixture — add auth_client or client parameter to test methods
+
+INV-TRAIN-030:
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_030_attendance_correction_fields.py:0:0: ERROR [A_MIN_INVALID]: found 0 invalid tests, expected >=2 — add test_invalid_case_N__* methods with pytest.raises(IntegrityError)
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_030_attendance_correction_fields.py:0:0: ERROR [A_REQUIRES_ASYNC_DB]: Classe A requires async_db fixture — add async_db parameter to test methods
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_030_attendance_correction_fields.py:0:0: ERROR [A_REQUIRES_CONSTRAINT_ATTR]: use diag.constraint_name not string matching — add: diag = exc.value.orig.diag; assert diag.constraint_name == "ck_*"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_030_attendance_correction_fields.py:0:0: ERROR [A_REQUIRES_PGCODE_ATTR]: use orig.pgcode not str(exc) — replace string matching with: orig = exc.value.orig; assert orig.pgcode == "23514"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_030_attendance_correction_fields.py:0:0: ERROR [A_REQUIRES_ROLLBACK]: add await async_db.rollback() after IntegrityError — add rollback after pytest.raises block
+
+INV-TRAIN-031:
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_031_derive_phase_focus.py:0:0: ERROR [A_MIN_INVALID]: found 0 invalid tests, expected >=2 — add test_invalid_case_N__* methods with pytest.raises(IntegrityError)
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_031_derive_phase_focus.py:0:0: ERROR [A_REQUIRES_ASYNC_DB]: Classe A requires async_db fixture — add async_db parameter to test methods
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_031_derive_phase_focus.py:0:0: ERROR [A_REQUIRES_CONSTRAINT_ATTR]: use diag.constraint_name not string matching — add: diag = exc.value.orig.diag; assert diag.constraint_name == "ck_*"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_031_derive_phase_focus.py:0:0: ERROR [A_REQUIRES_PGCODE_ATTR]: use orig.pgcode not str(exc) — replace string matching with: orig = exc.value.orig; assert orig.pgcode == "23514"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_031_derive_phase_focus.py:0:0: ERROR [A_REQUIRES_ROLLBACK]: add await async_db.rollback() after IntegrityError — add rollback after pytest.raises block
+
+INV-TRAIN-032:
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_032_wellness_post_rpe.py:0:0: ERROR [A_MIN_INVALID]: found 0 invalid tests, expected >=2 — add test_invalid_case_N__* methods with pytest.raises(IntegrityError)
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_032_wellness_post_rpe.py:0:0: ERROR [A_REQUIRES_ASYNC_DB]: Classe A requires async_db fixture — add async_db parameter to test methods
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_032_wellness_post_rpe.py:0:0: ERROR [A_REQUIRES_CONSTRAINT_ATTR]: use diag.constraint_name not string matching — add: diag = exc.value.orig.diag; assert diag.constraint_name == "ck_*"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_032_wellness_post_rpe.py:0:0: ERROR [A_REQUIRES_PGCODE_ATTR]: use orig.pgcode not str(exc) — replace string matching with: orig = exc.value.orig; assert orig.pgcode == "23514"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_032_wellness_post_rpe.py:0:0: ERROR [A_REQUIRES_ROLLBACK]: add await async_db.rollback() after IntegrityError — add rollback after pytest.raises block
+
+INV-TRAIN-033:
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_033_wellness_pre_sleep_hours.py:0:0: ERROR [A_MIN_INVALID]: found 0 invalid tests, expected >=2 — add test_invalid_case_N__* methods with pytest.raises(IntegrityError)
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_033_wellness_pre_sleep_hours.py:0:0: ERROR [A_REQUIRES_ASYNC_DB]: Classe A requires async_db fixture — add async_db parameter to test methods
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_033_wellness_pre_sleep_hours.py:0:0: ERROR [A_REQUIRES_CONSTRAINT_ATTR]: use diag.constraint_name not string matching — add: diag = exc.value.orig.diag; assert diag.constraint_name == "ck_*"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_033_wellness_pre_sleep_hours.py:0:0: ERROR [A_REQUIRES_PGCODE_ATTR]: use orig.pgcode not str(exc) — replace string matching with: orig = exc.value.orig; assert orig.pgcode == "23514"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_033_wellness_pre_sleep_hours.py:0:0: ERROR [A_REQUIRES_ROLLBACK]: add await async_db.rollback() after IntegrityError — add rollback after pytest.raises block
+
+INV-TRAIN-034:
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_034_wellness_pre_sleep_quality.py:0:0: ERROR [A_MIN_INVALID]: found 0 invalid tests, expected >=2 — add test_invalid_case_N__* methods with pytest.raises(IntegrityError)
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_034_wellness_pre_sleep_quality.py:0:0: ERROR [A_REQUIRES_ASYNC_DB]: Classe A requires async_db fixture — add async_db parameter to test methods
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_034_wellness_pre_sleep_quality.py:0:0: ERROR [A_REQUIRES_CONSTRAINT_ATTR]: use diag.constraint_name not string matching — add: diag = exc.value.orig.diag; assert diag.constraint_name == "ck_*"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_034_wellness_pre_sleep_quality.py:0:0: ERROR [A_REQUIRES_PGCODE_ATTR]: use orig.pgcode not str(exc) — replace string matching with: orig = exc.value.orig; assert orig.pgcode == "23514"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_034_wellness_pre_sleep_quality.py:0:0: ERROR [A_REQUIRES_ROLLBACK]: add await async_db.rollback() after IntegrityError — add rollback after pytest.raises block
+
+INV-TRAIN-035:
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_035_session_templates_unique_name.py:0:0: ERROR [A_MIN_INVALID]: found 0 invalid tests, expected >=2 — add test_invalid_case_N__* methods with pytest.raises(IntegrityError)
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_035_session_templates_unique_name.py:0:0: ERROR [A_REQUIRES_ASYNC_DB]: Classe A requires async_db fixture — add async_db parameter to test methods
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_035_session_templates_unique_name.py:0:0: ERROR [A_REQUIRES_CONSTRAINT_ATTR]: use diag.constraint_name not string matching — add: diag = exc.value.orig.diag; assert diag.constraint_name == "ck_*"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_035_session_templates_unique_name.py:0:0: ERROR [A_REQUIRES_PGCODE_ATTR]: use orig.pgcode not str(exc) — replace string matching with: orig = exc.value.orig; assert orig.pgcode == "23514"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_035_session_templates_unique_name.py:0:0: ERROR [A_REQUIRES_ROLLBACK]: add await async_db.rollback() after IntegrityError — add rollback after pytest.raises block
+
+INV-TRAIN-036:
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_036_wellness_rankings_unique.py:0:0: ERROR [A_MIN_INVALID]: found 0 invalid tests, expected >=2 — add test_invalid_case_N__* methods with pytest.raises(IntegrityError)
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_036_wellness_rankings_unique.py:0:0: ERROR [A_REQUIRES_ASYNC_DB]: Classe A requires async_db fixture — add async_db parameter to test methods
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_036_wellness_rankings_unique.py:0:0: ERROR [A_REQUIRES_CONSTRAINT_ATTR]: use diag.constraint_name not string matching — add: diag = exc.value.orig.diag; assert diag.constraint_name == "ck_*"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_036_wellness_rankings_unique.py:0:0: ERROR [A_REQUIRES_PGCODE_ATTR]: use orig.pgcode not str(exc) — replace string matching with: orig = exc.value.orig; assert orig.pgcode == "23514"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_036_wellness_rankings_unique.py:0:0: ERROR [A_REQUIRES_ROLLBACK]: add await async_db.rollback() after IntegrityError — add rollback after pytest.raises block
+
+INV-TRAIN-037:
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_037_cycle_dates.py:0:0: ERROR [A_MIN_INVALID]: found 0 invalid tests, expected >=2 — add test_invalid_case_N__* methods with pytest.raises(IntegrityError)
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_037_cycle_dates.py:0:0: ERROR [A_REQUIRES_ASYNC_DB]: Classe A requires async_db fixture — add async_db parameter to test methods
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_037_cycle_dates.py:0:0: ERROR [A_REQUIRES_CONSTRAINT_ATTR]: use diag.constraint_name not string matching — add: diag = exc.value.orig.diag; assert diag.constraint_name == "ck_*"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_037_cycle_dates.py:0:0: ERROR [A_REQUIRES_PGCODE_ATTR]: use orig.pgcode not str(exc) — replace string matching with: orig = exc.value.orig; assert orig.pgcode == "23514"
+  ❌ C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_037_cycle_dates.py:0:0: ERROR [A_REQUIRES_ROLLBACK]: add await async_db.rollback() after IntegrityError — add rollback after pytest.raises block
+
+================================================================================
+EXIT CODE: 2 (fail)
+================================================================================

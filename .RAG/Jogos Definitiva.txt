@@ -1,0 +1,812 @@
+Jogos
+
+---
+
+Vamos definir agora como deve funcionar a **`ProfessionalSideBar`** (o menu lateral do sistema HB Track) especificamente para a **rota `/games`**, mantendo todos os padrões do design system e garantindo uma **experiência fluida, eficiente e contextualizada para o usuário profissional**.
+
+---
+
+## 🎯 **Objetivo da `ProfessionalSideBar` na rota `/games`**
+
+A `ProfessionalSideBar` deve:
+
+* Servir como ponto de orientação persistente.
+* Reforçar o contexto da equipe ativa.
+* Permitir navegação rápida entre módulos complementares.
+* Adaptar-se visualmente ao conteúdo da rota de jogos.
+
+---
+
+## 🧭 **UX: Passo a passo da experiência ao clicar em "Jogos"**
+
+### 🔹 **1. Usuário entra no sistema**
+
+* A `ProfessionalSideBar` é carregada com a equipe ativa (usando `useActiveTeam()`).
+* O botão “Jogos” já aparece na seção `Eventos`, com o ícone `Gamepad`.
+
+---
+
+### 🔹 **2. Usuário clica em “Jogos” na sidebar**
+
+**Comportamento esperado:**
+
+1. O sistema **verifica se há uma equipe ativa**:
+
+   * Se **não houver equipe ativa**:
+
+     * Abre imediatamente o `TeamSelectModal`.
+     * Após a escolha, redireciona para `/games?teamId=...`.
+2. Se houver equipe ativa:
+
+   * A rota muda para `/games`.
+   * A `ProfessionalSideBar` **destaca** o ícone de Jogos com `AppHighlight`.
+   * A aba “Jogos” é marcada como **ativa visualmente**.
+
+---
+
+### 🔹 **3. Sidebar expandida com submenu (se necessário)**
+
+A rota `/games` **não precisa de submenu interno fixo**, pois sua navegação é controlada por abas no conteúdo.
+
+Entretanto, a `ProfessionalSideBar` pode:
+
+* Expandir a seção "Eventos" para mostrar:
+
+  * `Calendário`
+  * `Competições`
+  * `Jogos` (ativo)
+* Exibir tooltip ao hover em estados colapsados.
+
+---
+
+## 🖼️ **Design da `ProfessionalSideBar` na rota /games**
+
+### 📐 Layout:
+
+* Altura 100%
+* Padding interno: `--app-space-md`
+* Tipografia: `--app-font-body`
+* Ícones alinhados à esquerda, com rótulo visível se expandida
+
+### 🎨 Cores e estados:
+
+* Item ativo com:
+
+  * Background leve (`app-sidebar-active-bg`)
+  * Ícone e texto em `--color-primary`
+* Hover com leve `AppPulse` ou `AppHighlight`
+
+### 🔔 Feedback visual:
+
+* Ao entrar em `/games`, efeito de foco automático no item
+* Se usuário voltar para `/training`, “Treinos” fica ativo sem delay
+
+---
+
+## 🧠 **Aprimoramentos de UX adicionais**
+
+| Comportamento                      | Resultado esperado UX                                |
+| ---------------------------------- | ---------------------------------------------------- |
+| Hover no ícone de Jogos            | Tooltip: “Gerencie seus jogos e partidas”            |
+| Clique com botão direito (desktop) | Context menu: “Abrir em nova aba”                    |
+| Clique repetido em "Jogos"         | Reinicia rota: limpa filtros e reseta scroll         |
+| Barra de rolagem (muitas opções)   | Sticky para time ativo e bloco de navegação primária |
+
+---
+
+### 📦 **BLOCO 1: Estrutura Geral da Rota**
+
+#### 📍 Rota: `/games`
+
+* **Nome no menu:** Jogos
+* **URL base:** `/games`
+* **Controle de estado por URL:** `gameId`, `tab`, `isNew`
+* **Componente base:** `<GamesModule />`
+
+#### 📁 Estrutura Arquitetural
+
+* `GamesDashboard`: lista de jogos (tipo index)
+* `GameDetail`: detalhe do jogo, tabs via query (`?tab=escalação`)
+* `CreateGameModal`: modal de criação rápida
+* `EditGameDrawer`: edição inline via drawer
+* `GameEventModal`: adicionar evento
+* `GameLineupBoard`: escalação visual (componente drag & drop)
+
+#### 📌 Tabs no detalhe do jogo
+
+| Tab          | URL Param  | Componente            |
+| ------------ | ---------- | --------------------- |
+| Resumo       | `overview` | `<GameOverviewTab />` |
+| Escalação    | `lineup`   | `<GameLineupTab />`   |
+| Eventos      | `events`   | `<GameEventsTab />`   |
+| Estatísticas | `stats`    | `<GameStatsTab />`    |
+| Relatório    | `report`   | `<GameReportTab />`   |
+
+---
+
+### 🎨 **BLOCO 2: Design UI (Tokens e Componentes)**
+
+#### 🔤 Tipografia
+
+* Fonte mínima: 14px (`--app-font-body`)
+* Títulos com `--app-font-title-md` ou `lg`, sem decorativo
+* Peso: 600 para seções, 700 para títulos
+
+#### 📐 Layout
+
+* Padding padrão: `--app-space-lg` (16px)
+* Cards com `AppCard` (uso obrigatório)
+* Layout denso, responsivo, com suporte a múltiplas telas
+
+#### 🎨 Cores e Estados
+
+* Status visual por tipo:
+
+  * `success`: Finalizado
+  * `warning`: Agendado
+  * `danger`: Cancelado
+* Borda lateral por tipo de evento (gol, cartão, etc)
+
+#### 🧩 Componentes obrigatórios
+
+* `<AppCard>`, `<AppTable>`, `<AppTabs>`, `<AppEmptyState>`, `<AppSkeleton>`, `<AppToast>`, `<AppTooltip>`, `<AppModal>`, `<AppDrawer>`, `<AppTag>`, `<AppHighlight>`
+
+#### 🚫 Padrões proibidos
+
+* Nenhum `p-*`, `label` manual ou botão sem `AppButton`
+* Nada flutuante sem contexto (ex: modal fora de contexto da rota)
+* Nenhuma cor fora do sistema de tokens
+
+---
+
+### 🧭 **BLOCO 3: Navegação e Integração com Outras Rotas**
+
+#### 🌐 Integrações principais:
+
+* **/teams**: jogos são sempre filtrados pela equipe ativa (`useActiveTeam()`)
+* **/training**: eventos do tipo "jogo" também aparecem no calendário mensal
+* **/athletes**: ao escalar, lista vem de atletas da equipe
+* **/statistics**: jogos alimentam dashboards de desempenho
+* **/messages**: botão “enviar convocação” para todos os escalados
+
+#### 🔁 Reuso de lógica:
+
+* Persistência de `teamId`, `tab` e `gameId` na URL
+* Toasts, modais e estados seguem mesma lógica de `/training`
+
+#### 🧠 Regras inteligentes
+
+* Se não houver jogos, mostrar `<AppEmptyState>` com botão de criar
+* Se `teamId` estiver ausente, forçar seleção de equipe com `<TeamSelectModal>`
+* Se `isNew=true` na URL, abrir modal de criação automaticamente
+
+---
+
+
+### 📂 **BLOCO 4: Dashboard de Jogos (`/games`)**
+
+#### 🧱 Componente: `<GamesDashboard />`
+
+Exibição dos jogos da equipe ativa, com foco em **densidade informacional**, **ação rápida** e **visão gerencial**.
+
+---
+
+#### 🔍 **Filtros Superiores**
+
+Componente: `<AppFilterBar>`
+
+* **Período**: Últimos 30 dias, Mês atual, Intervalo personalizado
+* **Status**: Agendado, Finalizado, Cancelado
+* **Competição**: Dropdown com `competitions.name`
+* **Adversário**: `opponents.name` (auto-complete)
+
+> Sempre com botão "Limpar Filtros" no final.
+
+---
+
+#### 📊 **Lista de Jogos**
+
+Dois modos de exibição, comutáveis:
+
+1. **Modo Card (default)** — `AppCard` por jogo
+2. **Modo Tabela (opcional)** — `AppTable` com colunas densas
+
+##### 🔹 Exemplo de Card:
+
+```tsx
+<AppCard
+  icon="Trophy"
+  title="Sub-17 vs Palmeiras"
+  meta="Campeonato Estadual • 21/08/2026 — 10h"
+  tags={[
+    { label: "Finalizado", variant: "success" },
+    { label: "Placar: 2x1", variant: "neutral" }
+  ]}
+  onClick={() => navigateToGame("xyz123")}
+>
+  <AppHighlight text="Local: Estádio ABC" />
+</AppCard>
+```
+
+---
+
+#### 🧰 **Ações por Jogo**
+
+Botões com `<AppTooltip>` em canto superior direito do card:
+
+* ✏️ Editar (`EditGameDrawer`)
+* 📊 Ver Estatísticas
+* 🧾 Relatório PDF
+* 🗑️ Cancelar Jogo (com modal de confirmação)
+
+---
+
+#### ➕ **Botão "Novo Jogo"**
+
+Componente: `<AppButton size="lg" icon="Plus">Novo Jogo</AppButton>`
+
+* Abre modal `CreateGameModal`
+* Se `isNew=true` na URL, modal abre automaticamente
+* Toast após criação: `✅ Jogo criado com sucesso`
+
+---
+
+#### 📭 **Estado Vazio**
+
+Componente: `<AppEmptyState>`
+
+* Ícone: `Gamepad`
+* Título: "Sem jogos ainda"
+* Subtítulo: "Crie jogos para acompanhar sua temporada"
+* CTA: "Criar novo jogo" (abre modal)
+
+---
+
+### 📘 **BLOCO 5: Detalhe do Jogo (`/games?gameId=xyz&tab=overview`)**
+
+Componente principal: `<GameDetail />`
+Navegação interna por `<AppTabs>` controlada via query param `tab`.
+
+---
+
+## 🗂️ **Tab 1: Resumo (`tab=overview`)**
+
+### 🔍 Informações exibidas:
+
+* Equipes: **[Time Ativo] vs [Adversário]**
+* Data e hora: `"21/08/2026 - 10h"`
+* Local: `match.location`
+* Competição: `competition.name`
+* Status: Tag com cor (`Agendado`, `Finalizado`, `Cancelado`)
+* Placar (se finalizado): `score_home x score_away`
+
+### 📝 Observações:
+
+* Campo de descrição longa: `match.notes`
+* Pode ser editado inline com `AppTextarea`
+
+### 📥 Ações
+
+* `Editar`: abre `EditGameDrawer`
+* `Cancelar`: confirma via modal (`AppModal`)
+* `Exportar PDF`: botão com ícone `Download`
+
+---
+
+## 🧍‍♂️ **Tab 2: Escalação (`tab=lineup`)**
+
+### 🧱 Layout:
+
+Componente: `<GameLineupBoard />`
+Interface drag-and-drop com cards de atletas.
+
+### 📋 Dados:
+
+* Lista de atletas da equipe (via `athletes` da equipe ativa)
+* Marcação de `Titular` ou `Reserva`
+* Campo `posição` por atleta (`match_participants.position`)
+* Campo `observações` por atleta (`notes`)
+
+### ➕ Ações:
+
+* Botão “Adicionar Atleta” (abre popover)
+* Drag para reordenar titulares
+* Alteração de posição inline
+* Confirmação com `<AppToast>`: "Escalação salva com sucesso"
+
+---
+
+## 🎯 **Tab 3: Eventos (`tab=events`)**
+
+### 📋 Lista:
+
+* Exibição cronológica
+* `minute` + `type` + `athlete.name`
+
+  * Ex: **12' - Gol - João Silva**
+
+### 🎨 Ícones por tipo:
+
+* Gol ⚽
+* Cartão 🟨/🟥
+* Substituição 🔁
+* Outros 📌
+
+### ➕ Ações:
+
+* Botão “Adicionar Evento” → abre `GameEventModal`
+* Modal com:
+
+  * Atleta
+  * Minuto
+  * Tipo de evento
+  * Campo opcional de descrição
+
+### 🗑️ Remoção:
+
+* Ícone de lixeira ao lado
+* Confirmação inline
+
+---
+
+## 📈 **Tab 4: Estatísticas (`tab=stats`)**
+
+### 📊 Dados gerados a partir de `match_events`:
+
+* Gols por atleta
+* Cartões por atleta
+* Substituições
+* Gráficos:
+
+  * Tabela simples
+  * Radar (usando `<AppChart>`)
+
+### 📦 Exportação:
+
+* Botão: "Exportar CSV"
+* Toast: "Estatísticas exportadas"
+
+---
+
+## 📑 **Tab 5: Relatório (`tab=report`)**
+
+### 📝 Conteúdo:
+
+* Campo de análise técnica (`AppTextarea`)
+* Upload de materiais (vídeos, PDFs, imagens) com `<AppUpload>`
+* Campo de assinatura (dropdown com `staff.name`)
+
+### 📤 Botão: "Gerar Relatório Final"
+
+* Gera PDF com logo, informações do jogo, escalação e análise
+* Toast: `📄 Relatório gerado com sucesso`
+
+---
+
+### ⚙️ Funcionalidades Adicionais Comuns em Todas as Tabs
+
+* Tabs são controladas por URL (`?tab=...`)
+* Skeleton loaders com `<AppSkeleton>` até os dados carregarem
+* Toasts após qualquer ação
+* Navegação protegida: se `gameId` inválido, redireciona para `/games`
+
+---
+
+Perfeito. Vamos ao:
+
+---
+
+### 🎛️ **BLOCO 6: Modais, Toasts, Microinterações e Feedbacks**
+
+Esta seção define **todas as interações e respostas do sistema** durante o uso da rota `/games`, com base nos padrões rígidos de UX definidos no `design.json`.
+
+---
+
+## 🧩 **Modais**
+
+### 📌 `CreateGameModal`
+
+* **Quando aparece:** Ao clicar em "Novo Jogo" ou `?isNew=true` na URL
+* **Campos:**
+
+  * Adversário (`opponent_id`) — auto-complete com botão “+ Adversário”
+  * Competição (`competition_id`) — dropdown
+  * Data / Hora (`date`)
+  * Local
+  * Tipo de Jogo (`Amistoso`, `Oficial`)
+* **Validações:**
+
+  * Todos os campos obrigatórios
+* **Botões:**
+
+  * [Cancelar] [Salvar e Ir para Detalhe]
+* **Feedback:**
+
+  * Toast: `✅ Jogo criado com sucesso`
+  * Redireciona para `/games?gameId=xyz`
+
+---
+
+### 🧾 `GameEventModal`
+
+* **Aparece:** ao clicar em "Adicionar Evento" em `tab=events`
+* **Campos:**
+
+  * Tipo de Evento (`Gol`, `Cartão`, etc)
+  * Minuto (numeric, obrigatório)
+  * Atleta (dropdown dos escalados)
+  * Descrição (opcional)
+* **Validações:**
+
+  * Nenhum campo pode estar vazio, exceto descrição
+* **Feedback:**
+
+  * Toast: `⚽ Evento adicionado`
+  * Atualiza lista instantaneamente
+
+---
+
+### 🧠 `CancelGameModal`
+
+* **Aparece:** ao clicar em "Cancelar Jogo"
+* **Mensagem:**
+
+  > “Tem certeza de que deseja cancelar este jogo? Essa ação não pode ser desfeita.”
+* **Botões:**
+
+  * [Voltar] [Confirmar Cancelamento]
+* **Feedback:**
+
+  * Toast: `❌ Jogo cancelado`
+  * Card atualizado com status `Cancelado` e cor `danger`
+
+---
+
+## 🖼️ **Drawers**
+
+### ✏️ `EditGameDrawer`
+
+* Edição rápida dos dados principais do jogo
+* Abre lateralmente, sem sair da tela
+* Campos: mesmo do modal de criação
+* Botões: [Cancelar] [Salvar Alterações]
+* Feedback:
+
+  * Toast: `✅ Alterações salvas`
+  * Atualização local sem recarregar a página
+
+---
+
+## 🔔 **Toasts Padrão (`<AppToast>`)**
+
+| Ação                      | Mensagem                                 | Tipo    |
+| ------------------------- | ---------------------------------------- | ------- |
+| Criar jogo                | ✅ Jogo criado com sucesso                | success |
+| Editar jogo               | ✅ Alterações salvas                      | success |
+| Cancelar jogo             | ❌ Jogo cancelado                         | warning |
+| Adicionar evento          | ⚽ Evento adicionado                      | success |
+| Remover evento            | 🗑️ Evento removido                      | neutral |
+| Erro de validação         | ⚠️ Preencha todos os campos obrigatórios | error   |
+| Falha de rede ou servidor | ❌ Erro ao salvar dados                   | error   |
+| Geração de relatório      | 📄 Relatório gerado com sucesso          | success |
+| Exportação                | 📁 Dados exportados                      | success |
+
+---
+
+## 🌀 **Microinterações e Feedback Visual**
+
+| Ação                   | Comportamento visual                              |
+| ---------------------- | ------------------------------------------------- |
+| Clicar em card de jogo | Card destaca com `AppHighlight`                   |
+| Salvar escalação       | Botão mostra spinner → Toast                      |
+| Trocar de tab          | Skeleton loader de 0.3s no conteúdo               |
+| Adicionar evento       | Item pisca em amarelo por 1s ao entrar            |
+| Arrastar atleta        | Atleta com sombra leve, placeholder ocupa posição |
+| Upload em relatório    | `AppUpload` mostra preview + barra de progresso   |
+| Cancelar jogo          | Card muda cor com transição suave (`danger`)      |
+
+---
+
+## 📌 **Outros padrões de UX respeitados**
+
+* Foco automático no primeiro campo ao abrir modal
+* Fechamento de modal com `Esc` ou fora da área clicável
+* Acessibilidade total por teclado (tabindex, aria-label)
+* Todas ações com rollback visual (otimista) e fallback em caso de erro
+
+---
+
+Excelente. Vamos ao bloco final:
+
+---
+
+### 🧬 **BLOCO 7: Modelagem de Dados e Integrações Backend (API)**
+
+Este bloco define **a estrutura dos dados**, **as operações necessárias via API**, e **como cada interação da rota `/games` se comunica com o backend**, em conformidade com os esquemas encontrados no `database.json`.
+
+---
+
+## 🗃️ **Tabelas principais envolvidas**
+
+### 1. `matches` (jogos)
+
+Campos:
+
+```ts
+{
+  id: string
+  team_id: string
+  opponent_id: string
+  competition_id?: string
+  date: string
+  location: string
+  score_home?: number
+  score_away?: number
+  status: 'Agendado' | 'Finalizado' | 'Cancelado'
+  notes?: string
+  created_at: string
+  updated_at: string
+}
+```
+
+---
+
+### 2. `match_participants` (escalação)
+
+```ts
+{
+  id: string
+  match_id: string
+  athlete_id: string
+  is_starting: boolean
+  position?: string
+  notes?: string
+}
+```
+
+---
+
+### 3. `match_events` (eventos do jogo)
+
+```ts
+{
+  id: string
+  match_id: string
+  athlete_id: string
+  minute: number
+  type: 'Gol' | 'Cartão Amarelo' | 'Cartão Vermelho' | 'Substituição' | 'Outro'
+  description?: string
+}
+```
+
+---
+
+### 4. `opponents` e `competitions`
+
+* Usadas em joins para nomes e metadados.
+
+---
+
+## 🔌 **Endpoints REST (ou GraphQL equivalente)**
+
+### 🔹 Criar Jogo
+
+`POST /matches`
+
+* Body: campos principais do jogo
+* Retorno: jogo criado (`match.id`)
+* Validações: `team_id`, `opponent_id`, `date`, `location` obrigatórios
+
+### 🔹 Buscar Lista de Jogos
+
+`GET /matches?team_id=xyz&status=Finalizado&date_gte=...&date_lte=...`
+
+### 🔹 Buscar Jogo por ID
+
+`GET /matches/:id`
+
+* Retorna dados completos do jogo + joins
+
+### 🔹 Editar Jogo
+
+`PUT /matches/:id`
+
+* Campos: qualquer um editável
+
+### 🔹 Cancelar Jogo
+
+`PATCH /matches/:id`
+
+* Body: `{ status: "Cancelado" }`
+
+---
+
+### 🔹 Escalação
+
+* `GET /match_participants?match_id=xyz`
+* `POST /match_participants`: adicionar atleta
+* `PUT /match_participants/:id`: editar atleta
+* `DELETE /match_participants/:id`: remover atleta
+
+---
+
+### 🔹 Eventos
+
+* `GET /match_events?match_id=xyz`
+* `POST /match_events`: criar
+* `PUT /match_events/:id`: editar
+* `DELETE /match_events/:id`: excluir
+
+---
+
+### 🔹 Relatórios e Exportações
+
+* `POST /matches/:id/report`: gera PDF
+* `GET /matches/:id/stats`: retorna estatísticas agregadas
+* `GET /matches/:id/export.csv`: gera CSV
+
+---
+
+## 🔄 **Integrações Cross-Rota**
+
+| Módulo                 | Integração com `/games`                                        |
+| ---------------------- | -------------------------------------------------------------- |
+| `/teams`               | Define `team_id` ativo, persistido via context                 |
+| `/athletes`            | Participantes são escolhidos dos atletas da equipe             |
+| `/statistics`          | Dados de `match_events` alimentam dashboards                   |
+| `/messages`            | Botão “Enviar Convocação” dispara envio para atletas escalados |
+| `/training/calendario` | Jogos aparecem como eventos no calendário mensal               |
+
+---
+
+### 📦 **Validações e Regras de Negócio**
+
+* Um atleta só pode ser escalado 1x por jogo
+* Minuto de evento deve ser entre 0 e 130
+* Partida finalizada não pode ser editada, apenas visualizada
+* Não é permitido excluir jogo já finalizado (apenas cancelar)
+* Apenas `staff` com permissão `can_edit_matches` pode editar jogos
+
+---
+
+### 🎯 **1. Contexto e Personalização**
+
+#### 🔄 **Histórico do Adversário**
+
+* No detalhe do jogo, mostrar resumo de confrontos anteriores com o mesmo adversário:
+
+  > “Últimos 5 jogos contra Palmeiras: 2V, 2E, 1D”
+* Ajuda o técnico a se contextualizar rapidamente antes do jogo.
+
+#### 🧠 **Insights automáticos**
+
+* Exibir alertas no topo como:
+
+  > “⚠️ Este adversário marcou 10 gols nos últimos 3 jogos”
+  > “📊 Atleta João Silva tem 3 gols contra este time”
+* Geração automática com base no histórico e dados da base.
+
+---
+
+### 🧭 **2. Navegação Rápida e Ações Inteligentes**
+
+#### 🔀 **Link cruzado entre Treinos e Jogos**
+
+* Em `/training`, se um treino tiver tipo `jogo`, colocar botão: “Ver detalhes do jogo”
+* Em `/games`, link para ver treinos da semana da partida
+
+#### 💬 **Ação rápida: Enviar convocação**
+
+* Botão direto em `tab=lineup`: “Enviar lista para atletas”
+* Integra com `/messages`, pré-preenchendo nomes dos convocados
+
+#### 📅 **Adicionar ao calendário externo**
+
+* Botão "Adicionar ao Google Calendar / Apple Calendar" no resumo do jogo
+* Facilita integração para técnicos e atletas
+
+---
+
+### 📱 **3. Mobile-first UX (Responsividade real)**
+
+* Escalação com drag-and-drop vira dropdown com botões em mobile
+* Lista de eventos mostra ícones grandes em formato de linha vertical (timeline)
+* Cards de jogo compactam para 2 linhas com overflow bem controlado
+
+---
+
+### 🧩 **4. Componentes Visuais Avançados**
+
+#### 🗺️ **Mini Mapa do Campo**
+
+* No `tab=events`, mostrar posição aproximada de eventos em um campo estilizado (se posição estiver disponível)
+* Ajuda na análise técnica pós-jogo
+
+#### 🔎 **Busca por atleta dentro da escalação e eventos**
+
+* Campo de busca para filtrar por atleta e ver todos os eventos dele
+
+---
+
+### 🧪 **5. Testes, Feedbacks e Adaptação**
+
+#### 🧪 **Modo Replay**
+
+* Botão: “Rever jogo” → destaca eventos em sequência com delay (tipo timeline simulada)
+* Permite análises qualitativas rápidas
+
+#### 📣 **Comentários internos**
+
+* Área em cada aba para anotações da comissão (visíveis apenas internamente)
+
+---
+
+### 📈 **6. Evolução futura possível**
+
+* Suporte para **estatísticas ao vivo (scout online)** — via tablet ou celular
+* **Comparativo entre jogos**: gráficos de desempenho entre partidas
+* **Módulo de arbitragem e observadores**: registro de quem apitou, quem assistiu
+
+---
+
+Implementação da Rota /games Concluída
+Arquivos Criados:
+Rota e Contexto:
+
+src/context/GamesContext.tsx - Contexto global com equipes, filtros, tabs
+src/app/(admin)/games/page.tsx/games/page.tsx) - Server Component com metadata
+src/app/(admin)/games/layout.tsx/games/layout.tsx) - Layout com autenticação
+src/app/(admin)/games/GamesLayoutWrapper.tsx/games/GamesLayoutWrapper.tsx) - Client wrapper
+src/app/(admin)/games/GamesClient.tsx/games/GamesClient.tsx) - Componente principal
+Componentes Principais:
+
+src/components/games/GamesHeader.tsx - Header com breadcrumb e tabs
+src/components/games/GamesFilterBar.tsx - Filtros e toggle de view
+src/components/games/GameCard.tsx - Card de jogo
+src/components/games/GamesDashboard.tsx - Dashboard com estatísticas
+src/components/games/GameDetail.tsx - Detalhe do jogo
+Tabs:
+
+src/components/games/tabs/GameOverviewTab.tsx - Resumo
+src/components/games/tabs/GameLineupTab.tsx - Escalação
+src/components/games/tabs/GameEventsTab.tsx - Eventos
+src/components/games/tabs/GameStatsTab.tsx - Estatísticas
+src/components/games/tabs/GameReportTab.tsx - Relatório
+Modais:
+
+src/components/games/modals/CreateGameModal.tsx - Criar jogo
+src/components/games/modals/EditGameDrawer.tsx - Editar jogo
+src/components/games/modals/GameEventModal.tsx - Adicionar evento
+src/components/games/modals/CancelGameModal.tsx - Cancelar jogo
+UI Components (reutilizáveis):
+
+src/components/ui/AppCard.tsx
+src/components/ui/AppTag.tsx
+src/components/ui/AppTabs.tsx
+src/components/ui/AppSkeleton.tsx
+src/components/ui/AppEmptyState.tsx
+src/components/ui/AppTable.tsx
+src/components/ui/AppModal.tsx
+src/components/ui/AppDrawer.tsx
+src/components/ui/AppHighlight.tsx
+src/components/ui/AppToast.tsx
+src/components/ui/AppTooltip.tsx
+Outros:
+
+src/components/teams-v2/TeamSelectModal.tsx - Modal para seleção de equipe
+Modificações:
+
+src/components/Layout/ProfessionalSidebar.tsx - Adicionado menu Jogos
+Funcionalidades:
+✅ Dashboard com estatísticas e cards/tabela de jogos
+✅ Sistema de filtros (status, data, local, busca)
+✅ Detalhe do jogo com 5 tabs (Resumo, Escalação, Eventos, Estatísticas, Relatório)
+✅ URL state sync com query params (gameId, tab, isNew)
+✅ Seleção de equipe persistente (localStorage)
+✅ Modal de criação de jogo
+✅ Drawer de edição
+✅ Modal de eventos
+✅ Modal de cancelamento
+✅ Sidebar atualizado com submenu de Jogos
+
+

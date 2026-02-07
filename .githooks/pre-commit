@@ -1,0 +1,90 @@
+#!/usr/bin/env pwsh
+#
+# Git pre-commit hook: Validate invariants before commit
+#
+# This hook runs the invariant gate for all invariants with golden baselines.
+# If any invariant fails verification or has drift, the commit is blocked.
+#
+# To install this hook:
+#   git config core.hooksPath .githooks
+#
+# To bypass temporarily (NOT RECOMMENDED):
+#   git commit --no-verify
+#
+
+$ErrorActionPreference = "Stop"
+
+Write-Host ""
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "PRE-COMMIT HOOK: Invariants Gate" -ForegroundColor Cyan
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host ""
+
+# Get repository root (where .git/ lives)
+$RepoRoot = git rev-parse --show-toplevel
+if (-not $RepoRoot) {
+    Write-Host "ERROR: Could not determine repository root" -ForegroundColor Red
+    exit 1
+}
+
+# Convert to Windows path if needed
+$RepoRoot = $RepoRoot -replace '/', '\'
+
+Write-Host "Repository root: $RepoRoot" -ForegroundColor Gray
+Write-Host ""
+
+# Path to gate_all script
+$GateAllScript = Join-Path $RepoRoot "scripts\run_invariant_gate_all.ps1"
+
+if (-not (Test-Path $GateAllScript)) {
+    Write-Host "ERROR: Gate script not found: $GateAllScript" -ForegroundColor Red
+    exit 1
+}
+
+# Run gate_all
+Write-Host "Running invariant gate for all golden baselines..." -ForegroundColor Yellow
+Write-Host ""
+
+try {
+    & $GateAllScript
+    $ExitCode = $LASTEXITCODE
+    
+    Write-Host ""
+    Write-Host "========================================" -ForegroundColor Cyan
+    Write-Host "PRE-COMMIT HOOK RESULT" -ForegroundColor Cyan
+    Write-Host "========================================" -ForegroundColor Cyan
+    
+    if ($ExitCode -eq 0) {
+        Write-Host "✅ ALL PASS - Commit allowed" -ForegroundColor Green
+        Write-Host ""
+        exit 0
+    } elseif ($ExitCode -eq 3) {
+        Write-Host "❌ DRIFT DETECTED - Commit blocked" -ForegroundColor Yellow
+        Write-Host ""
+        Write-Host "Golden baselines are outdated or SPEC has changed." -ForegroundColor Yellow
+        Write-Host "Action required:" -ForegroundColor Yellow
+        Write-Host "  1. Review the drift report above" -ForegroundColor White
+        Write-Host "  2. If changes are legitimate, promote new golden baselines" -ForegroundColor White
+        Write-Host "  3. Re-run: git commit" -ForegroundColor White
+        Write-Host ""
+        Write-Host "To bypass this hook (NOT RECOMMENDED):" -ForegroundColor DarkGray
+        Write-Host "  git commit --no-verify" -ForegroundColor DarkGray
+        Write-Host ""
+        exit 1
+    } else {
+        Write-Host "❌ FAILURES - Commit blocked" -ForegroundColor Red
+        Write-Host ""
+        Write-Host "One or more invariants failed verification." -ForegroundColor Red
+        Write-Host "Action required:" -ForegroundColor Yellow
+        Write-Host "  1. Fix the failing tests or SPEC issues" -ForegroundColor White
+        Write-Host "  2. Re-run: git commit" -ForegroundColor White
+        Write-Host ""
+        Write-Host "To bypass this hook (NOT RECOMMENDED):" -ForegroundColor DarkGray
+        Write-Host "  git commit --no-verify" -ForegroundColor DarkGray
+        Write-Host ""
+        exit 1
+    }
+} catch {
+    Write-Host "ERROR: Gate script failed to execute: $_" -ForegroundColor Red
+    exit 1
+}

@@ -1,0 +1,15 @@
+﻿
+docs\_generated\_reports\INV-TRAIN-043\20260203_085325\verify.txt:1:C:\HB TRACK\Hb Track - 
+Backend\tests\training\invariants\test_inv_train_043_microcycle_dates_check.py:0:0: ERROR [A_REQUIRES_PGCODE_ATTR]: 
+use orig.pgcode not str(exc) - replace string matching with: orig = exc.value.orig; assert orig.pgcode == "23514"
+docs\_generated\_reports\INV-TRAIN-043\20260203_085325\verify.txt:2:C:\HB TRACK\Hb Track - 
+Backend\tests\training\invariants\test_inv_train_043_microcycle_dates_check.py:0:0: ERROR [A_REQUIRES_ROLLBACK]: add 
+await async_db.rollback() after IntegrityError - add rollback after pytest.raises block
+docs\_generated\_reports\INV-TRAIN-043\20260203_085325\verify.txt:3:C:\HB TRACK\Hb Track - 
+Backend\tests\training\invariants\test_inv_train_043_microcycle_dates_check.py:0:0: ERROR [OBLIG_A_MISSING]: docstring 
+missing literal "ObrigaþÒo A" - add ObrigaþÒo A section with table.column anchors and keywords (FK, NOT NULL, CHECK)
+docs\_generated\_reports\INV-TRAIN-043\20260203_085325\verify.txt:4:C:\HB TRACK\Hb Track - 
+Backend\tests\training\invariants\test_inv_train_043_microcycle_dates_check.py:0:0: ERROR [OBLIG_B_MISSING]: docstring 
+missing literal "ObrigaþÒo B" - add ObrigaþÒo B section with SQLSTATE and constraint_name/operationId
+
+

@@ -1,0 +1,11 @@
+﻿
+docs\_generated\_reports\INV-TRAIN-044\20260203_153214\verify.txt:1:C:\HB TRACK\Hb Track - 
+Backend\tests\training\invariants\test_inv_train_044_analytics_cache_unique.py:0:0: ERROR 
+[A_REQUIRES_CONSTRAINT_ATTR]: use diag.constraint_name not string matching - add: diag = exc.value.orig.diag; 
+assert diag.constraint_name == "ck_*"
+docs\_generated\_reports\INV-TRAIN-044\20260203_153214\verify.txt:2:C:\HB TRACK\Hb Track - 
+Backend\tests\training\invariants\test_inv_train_044_analytics_cache_unique.py:0:0: ERROR 
+[A_REQUIRES_PGCODE_ATTR]: use orig.pgcode not str(exc) - replace string matching with: orig = exc.value.orig; 
+assert orig.pgcode == "23514"
+
+

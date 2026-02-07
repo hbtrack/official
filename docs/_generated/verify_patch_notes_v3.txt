@@ -1,0 +1,107 @@
+VERIFY_INVARIANTS_TESTS.PY - PATCH V3
+=====================================
+Data: 2026-02-02 14:35
+Autor: Agent (via GitHub Copilot)
+
+MOTIVAÇÃO:
+----------
+MUT-A2 não foi detectado porque anchors estavam vazios (anchors={}).
+
+Diagnóstico do Patch V2:
+- Patch V2 implementou validação de constraint_name e SQLSTATE exatos
+- Mas `unit.anchors['db']` estava vazio, então `expected_constraints = []`
+- Debug revelou: parser não extraía anchors do SPEC YAML corretamente
+
+Root cause: SPEC usa formato flat keys:
+```yaml
+anchors:
+  db.table: "wellness_pre"
+  db.constraint: "ck_wellness_pre_sleep_hours"
+  db.sqlstate: "23514"
+```
+
+Parser esperava formato nested:
+```yaml
+anchors:
+  db:
+    table: "wellness_pre"
+    constraint: "ck_wellness_pre_sleep_hours"
+    sqlstate: "23514"
+```
+
+MUDANÇAS IMPLEMENTADAS:
+-----------------------
+Arquivo: c:\HB TRACK\docs\scripts\verify_invariants_tests.py
+
+1. FUNÇÃO normalize_anchors (linhas ~36-75):
+   - Input: raw dict de anchors do YAML
+   - Output: normalized dict com estrutura nested
+   - Suporta AMBOS os formatos:
+     * Flat keys: "db.constraint" → {db: {constraint: value}}
+     * Nested keys: {db: {constraint: value}} → mantém nested
+   - Algoritmo:
+     * Para cada key com '.', divide em namespace.subkey
+     * Cria dict nested: normalized[namespace][subkey] = value
+     * Para keys sem '.', copia diretamente (preserva nested existente)
+   - Genérico: funciona para db.*, code.*, api.*, etc.
+
+2. APLICAÇÃO NO PARSING (linha ~324):
+   - Antes: anchors=unit_data.get('anchors', {})
+   - Depois: anchors=normalize_anchors(raw_anchors)
+   - Garante que unit.anchors sempre tem estrutura nested
+   - Permite código downstream (patch v2) acessar unit.anchors['db']['constraint']
+
+EXEMPLO DE TRANSFORMAÇÃO:
+--------------------------
+Input YAML:
+```yaml
+anchors:
+  db.table: "wellness_pre"
+  db.constraint: "ck_wellness_pre_sleep_hours"
+  db.sqlstate: "23514"
+```
+
+Parsed (antes do patch v3):
+```python
+unit.anchors = {
+  "db.table": "wellness_pre",
+  "db.constraint": "ck_wellness_pre_sleep_hours",
+  "db.sqlstate": "23514"
+}
+# unit.anchors['db'] → KeyError!
+```
+
+Parsed (depois do patch v3):
+```python
+unit.anchors = {
+  "db": {
+    "table": "wellness_pre",
+    "constraint": "ck_wellness_pre_sleep_hours",
+    "sqlstate": "23514"
+  }
+}
+# unit.anchors['db']['constraint'] → "ck_wellness_pre_sleep_hours" ✅
+```
+
+IMPACTO:
+--------
+- Patch V2 agora funciona corretamente (expected_constraints preenchido)
+- SPEC não precisa ser alterado (suporta formato atual flat keys)
+- Compatível com formato nested se alguém preferir usar no futuro
+- INV-TRAIN-033 agora detectará constraint_name incorreto em MUT-A2
+
+VALIDAÇÃO:
+----------
+1. Debug run deve mostrar: anchors={'db': {...}} (não vazio)
+2. Debug run deve mostrar: Expected constraints: ['ck_wellness_pre_sleep_hours']
+3. MUT-A2 deve gerar: OBLIG_B_NO_CONSTRAINT_NAME para INV-TRAIN-033
+
+BACKUP:
+-------
+Arquivo original: c:\HB TRACK\docs\scripts\verify_invariants_tests.py.bak_20260202_143514
+
+REFERÊNCIAS:
+------------
+- Patch V2: verify_patch_notes_v2.txt
+- Debug output: docs\_generated\mutA2_verify_v2_single.txt (linha 38: Expected constraints: [])
+- SPEC: docs/02-modulos/training/INVARIANTS_TRAINING.md (linha 1377-1379)

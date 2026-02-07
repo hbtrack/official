@@ -1,0 +1,4 @@
+"code","delta_players","description"
+"even","0","Igualdade numérica (6x6)"
+"numerical_inferiority","-1","Inferioridade numérica (-1 jogadora)"
+"numerical_superiority","1","Superioridade numérica (+1 jogadora)"

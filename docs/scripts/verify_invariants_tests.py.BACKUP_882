@@ -1,0 +1,2080 @@
+#!/usr/bin/env python3
+"""
+Script de Validação Binária de Testes de Invariantes
+
+Valida conformidade dos testes de invariantes com INVARIANTS_TESTING_CANON.md.
+Retorna exit code binário: 0 (pass), 2 (fail).
+
+CONTRATO DE IDs SUPORTADOS:
+- Formato base: INV-TRAIN-XXX (ex: INV-TRAIN-001)
+- Formato split: INV-TRAIN-XXX-<classe><subclasse opcional> (ex: INV-TRAIN-001-A, INV-TRAIN-001-C2)
+- Regra de precedência: se existir qualquer split para XXX, o ID base não pode coexistir
+- Cobertura 1:1: cada INV exige exatamente 1 arquivo principal test_inv_train_XXX_*.py
+
+USAGE:
+    python verify_invariants_tests.py [--level {basic,standard,strict}] [--verbose]
+    python verify_invariants_tests.py --files-changed file1.py file2.py
+    python verify_invariants_tests.py --report-json report.json --report-txt report.txt
+
+EXIT CODES:
+    0: Todas validações passaram
+    1: Erro de execução (parsing, filesystem)
+    2: Violações ERROR encontradas (bloqueia CI/commit)
+
+OUTPUT FORMAT (compatível com VS Code problemMatcher):
+    path:line:col: LEVEL [CODE]: message — action
+"""
+
+import argparse
+import ast
+import json
+import re
+import sys
+from dataclasses import dataclass, field
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, List, Optional, Set, Tuple
+
+
+# ============================================================================
+# UTILITY FUNCTIONS
+# ============================================================================
+
+def extract_obrigacao_b(docstring_text: str) -> str:
+    """
+    Extrai o texto da seção 'Obrigação B' do docstring.
+    
+    Retorna o conteúdo entre o cabeçalho "Obrigação B" e o próximo
+    "Obrigação" (A/C/D...) ou fim do texto.
+    
+    Args:
+        docstring_text: Texto do docstring (pode ser concatenação de múltiplos)
+    
+    Returns:
+        Texto da seção Obrigação B, ou string vazia se não encontrado
+    """
+    # Regex para encontrar "Obrigação B:" seguido de qualquer coisa até:
+    # - próxima "Obrigação X:" (onde X é qualquer letra)
+    # - fim da string
+    pattern = r'Obrigação B:(.*?)(?:Obrigação [A-Z]:|$)'
+    match = re.search(pattern, docstring_text, re.DOTALL | re.IGNORECASE)
+    
+    if match:
+        return match.group(1).strip()
+    return ""
+
+
+def pick_primary_docstring(docstrings_dict: Dict[str, str], inv_id: str, test_node: Optional[str]) -> str:
+    """
+    Seleciona o docstring primário para uma invariante específica.
+    
+    Regras de precedência:
+    1. Docstring que contém o inv_id (ex: "INV-TRAIN-033")
+    2. Docstring que contém o test_node do SPEC (ex: "TestInvTrain033WellnessPreSleepHours")
+    3. Docstring da classe (chave 'class')
+    4. Primeiro docstring disponível
+    
+    Args:
+        docstrings_dict: Dict com docstrings do arquivo ('module', 'class', etc)
+        inv_id: ID da invariante (ex: INV-TRAIN-033)
+        test_node: Nome da classe de teste do SPEC (opcional)
+    
+    Returns:
+        Docstring primário ou string vazia
+    """
+    if not docstrings_dict:
+        return ""
+    
+    # Regra 1: procurar inv_id em qualquer docstring
+    for key, docstring in docstrings_dict.items():
+        if inv_id in docstring:
+            return docstring
+    
+    # Regra 2: procurar test_node (nome da classe de teste)
+    if test_node:
+        for key, docstring in docstrings_dict.items():
+            if test_node in docstring:
+                return docstring
+    
+    # Regra 3: docstring da classe
+    if 'class' in docstrings_dict:
+        return docstrings_dict['class']
+    
+    # Regra 4: primeiro disponível
+    return next(iter(docstrings_dict.values()))
+
+
+# ============================================================================
+# DATA STRUCTURES
+# ============================================================================
+
+def normalize_anchors(raw: dict, inv_id: str = None) -> dict:
+    """
+    Normaliza anchors para formato nested, suportando tanto flat keys quanto nested.
+    
+    Formato flat (entrada): {"db.table": "x", "db.constraint": "y"}
+    Formato nested (entrada): {"db": {"table": "x", "constraint": "y"}}
+    Formato nested (saída): {"db": {"table": "x", "constraint": "y"}}
+    
+    Suporta namespaces: db.*, code.*, api.*, etc.
+    """
+    if not raw:
+        return {}
+    
+    normalized = {}
+    
+    for key, value in raw.items():
+        if '.' in key:
+            # Flat key: dividir em namespace.subkey
+            parts = key.split('.', 1)
+            namespace = parts[0]
+            subkey = parts[1] if len(parts) > 1 else key
+            
+            if namespace not in normalized:
+                normalized[namespace] = {}
+            normalized[namespace][subkey] = value
+        else:
+            # Nested key: copiar diretamente
+            if isinstance(value, dict):
+                # Mesclar com existente se houver
+                if key not in normalized:
+                    normalized[key] = {}
+                normalized[key].update(value)
+            else:
+                normalized[key] = value
+    
+    return normalized
+
+
+def load_openapi_operation_ids(openapi_path: Path) -> Set[str]:
+    """
+    Carrega todos os operationIds do openapi.json.
+    
+    Args:
+        openapi_path: Path para o arquivo openapi.json
+        
+    Returns:
+        Set de operationIds encontrados
+    """
+    operation_ids = set()
+    
+    if not openapi_path.exists():
+        return operation_ids
+    
+    try:
+        with open(openapi_path, 'r', encoding='utf-8') as f:
+            openapi_spec = json.load(f)
+        
+        paths = openapi_spec.get('paths', {})
+        for path, methods in paths.items():
+            for method, details in methods.items():
+                if method in ['get', 'post', 'put', 'patch', 'delete'] and isinstance(details, dict):
+                    op_id = details.get('operationId')
+                    if op_id:
+                        operation_ids.add(op_id)
+    except (json.JSONDecodeError, IOError) as e:
+        # Se falhar ao carregar, retorna set vazio
+        pass
+    
+    return operation_ids
+
+
+def load_openapi_index(openapi_path: Path) -> Dict[str, Dict[str, Any]]:
+    """
+    Carrega índice completo do OpenAPI para validação de Classe F.
+    
+    Args:
+        openapi_path: Path para o arquivo openapi.json
+        
+    Returns:
+        Dict mapeando operationId -> {path, method, responses, security_present}
+    """
+    index = {}
+    
+    if not openapi_path.exists():
+        return index
+    
+    try:
+        with open(openapi_path, 'r', encoding='utf-8') as f:
+            openapi_spec = json.load(f)
+        
+        paths = openapi_spec.get('paths', {})
+        for path, methods in paths.items():
+            for method, details in methods.items():
+                if method in ['get', 'post', 'put', 'patch', 'delete'] and isinstance(details, dict):
+                    op_id = details.get('operationId')
+                    if op_id:
+                        responses = set(details.get('responses', {}).keys())
+                        security = details.get('security')
+                        security_present = security is not None and len(security) > 0
+                        
+                        index[op_id] = {
+                            'path': path,
+                            'method': method.upper(),
+                            'responses': responses,
+                            'security_present': security_present
+                        }
+    except (json.JSONDecodeError, IOError) as e:
+        # Se falhar ao carregar, retorna dict vazio
+        pass
+    
+    return index
+
+
+@dataclass
+class ProofUnit:
+    """Unidade de prova normativa de uma invariante"""
+    unit_key: str
+    class_type: str  # A, B, C1, C2, D, E1, E2, F
+    required: bool
+    description: str
+    anchors: Dict[str, any]
+
+
+@dataclass
+class InvariantSpec:
+    """Especificação de uma invariante extraída de INVARIANTS_TRAINING.md"""
+    id: str  # INV-TRAIN-XXX ou INV-TRAIN-XXX-A
+    status: str  # CONFIRMADA, INATIVA
+    test_required: bool
+    units: List[ProofUnit]  # Proof units (podem ser múltiplas)
+    tests: Dict[str, any]  # primary, node, coverage, runtime_optional
+    canonical_id: Optional[str] = None  # Se for alias de outro INV
+    legacy_reason: Optional[str] = None
+    has_spec: bool = False  # Se tem bloco SPEC parseado
+    
+    # Legacy fields (quando SPEC não disponível)
+    class_type: Optional[str] = None  # Classe única (fallback)
+    scope: Optional[str] = None
+    evidence: Optional[List[str]] = None
+    
+    @property
+    def base_id(self) -> str:
+        """Retorna ID base sem sufixo (INV-TRAIN-001-A -> INV-TRAIN-001)"""
+        match = re.match(r'(INV-TRAIN-\d{3})', self.id)
+        return match.group(1) if match else self.id
+    
+    @property
+    def is_split(self) -> bool:
+        """Verifica se é um split normativo (tem sufixo -A, -C2, etc)"""
+        return bool(re.match(r'INV-TRAIN-\d{3}-[A-Z]\d*$', self.id))
+    
+    @property
+    def is_alias(self) -> bool:
+        """Verifica se é um alias de outro INV"""
+        return self.canonical_id is not None
+    
+    @property
+    def primary_classes(self) -> List[str]:
+        """Retorna lista de classes requeridas"""
+        if self.has_spec:
+            return [unit.class_type for unit in self.units if unit.required]
+        elif self.class_type:
+            return [self.class_type]
+        return []
+
+
+@dataclass
+class TestFile:
+    """Arquivo de teste identificado"""
+    path: Path
+    inv_id: str  # INV-TRAIN-XXX detectado do nome do arquivo
+    is_runtime: bool  # True se for *_runtime.py
+    
+    @property
+    def is_principal(self) -> bool:
+        return not self.is_runtime
+
+
+@dataclass
+class ASTAnalysis:
+    """Resultado da análise AST de um arquivo de teste"""
+    inv_id: str
+    class_name: Optional[str]
+    fixtures_used: Set[str]
+    valid_test_count: int
+    invalid_test_count: int  # testes com pytest.raises
+    patterns_found: Dict[str, bool]  # pgcode_structured, constraint_structured, rollback, etc
+    docstrings: Dict[str, str]  # 'module', 'class'
+    anti_patterns: List[str]  # string_match_error, hardcoded_id, engine_creation
+
+
+@dataclass
+class Violation:
+    """Violação de regra detectada"""
+    inv_id: str
+    file: str
+    line: int
+    col: int
+    level: str  # ERROR, WARN
+    code: str  # A_MIN_INVALID, COVERAGE_MISSING, etc
+    message: str
+    action: str  # ação sugerida em 1 linha
+
+
+@dataclass
+class ValidationReport:
+    """Relatório final de validação"""
+    pass_status: bool
+    level: str
+    timestamp: str
+    summary: Dict[str, int]
+    violations: List[Violation]
+
+
+# ============================================================================
+# PARSER: INVARIANTS_TRAINING.md
+# ============================================================================
+
+class InvariantsParser:
+    """Parser de INVARIANTS_TRAINING.md com suporte a blocos SPEC e fallback legacy"""
+    
+    # Regex para detectar IDs: INV-TRAIN-XXX ou INV-TRAIN-XXX-A
+    ID_PATTERN = re.compile(r'INV-TRAIN-\d{3}(?:-[A-Z]\d*)?')
+    
+    def parse(self, md_path: Path, strict_spec: bool = False) -> Tuple[List[InvariantSpec], List[Violation]]:
+        """Parseia arquivo markdown e extrai especificações de invariantes
+        
+        Args:
+            md_path: Path to INVARIANTS_TRAINING.md
+            strict_spec: If True, SPEC invalid/missing becomes ERROR violation (no legacy fallback)
+        
+        Returns:
+            (invariants, spec_violations): List of invariants and parsing violations
+        """
+        if not md_path.exists():
+            raise FileNotFoundError(f"INVARIANTS_TRAINING.md not found: {md_path}")
+        
+        content = md_path.read_text(encoding='utf-8')
+        invariants = []
+        spec_violations = []
+        base_ids_with_splits = set()
+        
+        # Store state for _parse_spec_block
+        self.strict_spec = strict_spec
+        self.spec_violations = spec_violations
+        self.md_path = md_path
+        
+        # Primeiro passe: detectar splits para identificar IDs base que não devem coexistir
+        for match in self.ID_PATTERN.finditer(content):
+            inv_id = match.group(0)
+            if '-' in inv_id.split('-', 2)[-1]:  # tem sufixo
+                base = re.match(r'(INV-TRAIN-\d{3})', inv_id).group(1)
+                base_ids_with_splits.add(base)
+        
+        # Segundo passe: extrair todas as invariantes
+        sections = re.split(r'^### (INV-TRAIN-\d{3}(?:-[A-Z]\d*)?)', content, flags=re.MULTILINE)
+        
+        for i in range(1, len(sections), 2):
+            if i + 1 >= len(sections):
+                break
+            
+            inv_id = sections[i]
+            section_content = sections[i + 1]
+            
+            # Verificar regra de precedência: base não pode coexistir com splits
+            base_id = re.match(r'(INV-TRAIN-\d{3})', inv_id).group(1)
+            is_base = (inv_id == base_id)
+            
+            if is_base and base_id in base_ids_with_splits:
+                raise ValueError(
+                    f"ID_SPLIT_MIXED: base and split coexist for {base_id}. "
+                    f"Remove base section or remove split sections."
+                )
+            
+            # Tentar parsear bloco SPEC primeiro
+            spec_inv = self._parse_spec_block(inv_id, section_content)
+            
+            if spec_inv:
+                invariants.append(spec_inv)
+            else:
+                # Fallback: parser legacy
+                legacy_inv = self._parse_legacy(inv_id, section_content)
+                invariants.append(legacy_inv)
+        
+        return invariants, spec_violations
+    
+    def _parse_spec_block(self, inv_id: str, section_content: str) -> Optional[InvariantSpec]:
+        """
+        Parseia bloco SPEC estruturado (YAML-like)
+        
+        Formato esperado:
+        **SPEC**:
+        ```yaml
+        spec_version: "1.0"
+        id: "INV-TRAIN-XXX"
+        status: "CONFIRMADA"
+        test_required: true
+        units: [...]
+        tests: {...}
+        ```
+        """
+        # Detectar bloco SPEC
+        spec_match = re.search(
+            r'\*\*SPEC\*\*:\s*```(?:yaml)?\s*\n(.*?)\n```',
+            section_content,
+            re.DOTALL
+        )
+        
+        if not spec_match:
+            return None
+        
+        yaml_content = spec_match.group(1)
+        
+        try:
+            # Parse YAML manualmente (evitar dependência PyYAML)
+            spec_data = self._parse_yaml_simple(yaml_content)
+            
+            # Validar campos obrigatórios
+            required_fields = ['spec_version', 'id', 'status', 'units', 'tests']
+            for field in required_fields:
+                if field not in spec_data:
+                    if self.strict_spec:
+                        self.spec_violations.append(Violation(
+                            inv_id=inv_id,
+                            file=str(self.md_path),
+                            line=0,
+                            col=0,
+                            level='ERROR',
+                            code='SPEC_INVALID',
+                            message=f'missing required field "{field}"',
+                            action=f'add {field} to SPEC block'
+                        ))
+                        return None  # Skip this INV but continue parsing
+                    else:
+                        print(f"WARNING: SPEC_INVALID for {inv_id}: missing field '{field}'")
+                        return None  # Fallback to legacy
+            
+            # Extrair status e test_required
+            status = spec_data.get('status', 'CONFIRMADA')
+            test_required = spec_data.get('test_required', True)
+            
+            # Ignorar invariantes inativas
+            if status == 'INATIVA':
+                return None
+            
+            # Parsear units
+            units = []
+            units_data = spec_data.get('units', [])
+            if isinstance(units_data, list):
+                for unit_data in units_data:
+                    if isinstance(unit_data, dict):
+                        raw_anchors = unit_data.get('anchors', {})
+                        units.append(ProofUnit(
+                            unit_key=unit_data.get('unit_key', ''),
+                            class_type=unit_data.get('class', 'UNKNOWN'),
+                            required=unit_data.get('required', True),
+                            description=unit_data.get('description', ''),
+                            anchors=normalize_anchors(raw_anchors, inv_id)
+                        ))
+            
+            # Parsear tests
+            tests_data = spec_data.get('tests', {})
+            
+            return InvariantSpec(
+                id=inv_id,
+                status=status,
+                test_required=test_required,
+                units=units,
+                tests=tests_data,
+                canonical_id=spec_data.get('canonical_id'),
+                legacy_reason=spec_data.get('legacy_reason'),
+                has_spec=True
+            )
+        
+        except Exception as e:
+            if self.strict_spec:
+                self.spec_violations.append(Violation(
+                    inv_id=inv_id,
+                    file=str(self.md_path),
+                    line=0,
+                    col=0,
+                    level='ERROR',
+                    code='SPEC_INVALID',
+                    message=f'YAML parsing failed: {str(e)}',
+                    action='fix SPEC block YAML syntax'
+                ))
+                return None  # Skip this INV but continue parsing
+            else:
+                print(f"WARNING: Failed to parse SPEC block for {inv_id}: {e}")
+                return None  # Fallback to legacy
+    
+    def _parse_yaml_simple(self, yaml_text: str) -> Dict:
+        """
+        Parser YAML simplificado para blocos SPEC
+        Suporta apenas subset usado nos blocos SPEC
+        Com suporte a "pending key" para listas/dicts aninhados
+        """
+        data = {}
+        current_key = None
+        current_list = None
+        current_dict = None
+        current_nested_dict = None  # Para anchors dentro de dict
+        pending = None  # (target_dict, key, indent) para key: seguido de lista/dict
+        
+        lines = yaml_text.strip().split('\n')
+        
+        for line in lines:
+            stripped = line.strip()
+            
+            # Skip empty lines and comments
+            if not stripped or stripped.startswith('#'):
+                continue
+            
+            # Detect indentation
+            indent = len(line) - len(line.lstrip())
+            
+            # List item
+            if stripped.startswith('-'):
+                item_content = stripped[1:].strip()
+                
+                # Check if we have a pending key waiting for list
+                if pending and indent > pending[2]:
+                    # Initialize pending key as list
+                    pending[0][pending[1]] = []
+                    current_list = pending[0][pending[1]]
+                    pending = None
+                
+                # If current_key has None placeholder, convert to list
+                if current_key and data.get(current_key) is None:
+                    data[current_key] = []
+                    current_list = data[current_key]
+                
+                if current_list is not None:
+                    if ':' in item_content:
+                        # Dictionary item
+                        new_dict = {}
+                        key, sep, value = item_content.partition(':')
+                        key = key.strip()
+                        value = value.strip()
+                        if value:
+                            new_dict[key] = self._parse_yaml_value(value)
+                        current_list.append(new_dict)
+                        current_dict = new_dict
+                        current_nested_dict = None
+                    else:
+                        # Simple item
+                        current_list.append(self._parse_yaml_value(item_content))
+                        current_dict = None
+                        current_nested_dict = None
+                continue
+            
+            # Key-value pair
+            if ':' in stripped:
+                key, sep, value = stripped.partition(':')
+                key = key.strip()
+                value = value.strip()
+                
+                # Check if we have a pending key waiting for dict
+                if pending and indent > pending[2]:
+                    # Initialize pending key as dict
+                    pending[0][pending[1]] = {}
+                    current_nested_dict = pending[0][pending[1]]
+                    pending = None
+                    # Now process current line in the new dict
+                    current_nested_dict[key] = self._parse_yaml_value(value) if value else None
+                    if not value:
+                        # This key itself might start a nested structure
+                        pending = (current_nested_dict, key, indent)
+                    continue
+                
+                # Handle root level
+                if indent == 0:
+                    current_key = key
+                    if value:
+                        # Simple value
+                        data[key] = self._parse_yaml_value(value)
+                        current_list = None
+                        current_dict = None
+                        current_nested_dict = None
+                        pending = None
+                    else:
+                        # Empty value - mark as pending (will be list or dict)
+                        data[key] = None
+                        pending = (data, key, indent)
+                        current_list = None
+                        current_dict = None
+                        current_nested_dict = None
+                # Handle double nested (ex: db.table dentro de anchors)
+                elif current_nested_dict is not None:
+                    current_nested_dict[key] = self._parse_yaml_value(value) if value else None
+                    if not value:
+                        # Nested key might start another level
+                        pending = (current_nested_dict, key, indent)
+                # Handle nested at root level (ex: primary/node dentro de tests)
+                elif current_key and isinstance(data.get(current_key), dict):
+                    # Already a dict, just add new key
+                    data[current_key][key] = self._parse_yaml_value(value) if value else None
+                    if not value:
+                        pending = (data[current_key], key, indent)
+                elif current_key and data.get(current_key) is None:
+                    # First child of root-level key - it's a dict
+                    data[current_key] = {}
+                    data[current_key][key] = self._parse_yaml_value(value) if value else None
+                    pending = None
+                    if not value:
+                        pending = (data[current_key], key, indent)
+                # Handle nested dict in list (ex: anchors dentro de unit)
+                elif current_dict is not None:
+                    if value:
+                        # Simple nested value
+                        current_dict[key] = self._parse_yaml_value(value)
+                        current_nested_dict = None
+                        pending = None
+                    else:
+                        # Nested dict (ex: anchors:)
+                        current_dict[key] = {}
+                        current_nested_dict = current_dict[key]
+                        pending = None
+        
+        return data
+    
+    def _parse_yaml_value(self, value: str):
+        """Parseia valor YAML (string, number, bool, quoted string)"""
+        value = value.strip()
+        
+        # Remove quotes
+        if (value.startswith('"') and value.endswith('"')) or \
+           (value.startswith("'") and value.endswith("'")):
+            return value[1:-1]
+        
+        # Boolean
+        if value.lower() in ['true', 'yes']:
+            return True
+        if value.lower() in ['false', 'no']:
+            return False
+        
+        # Number
+        try:
+            if '.' in value:
+                return float(value)
+            return int(value)
+        except ValueError:
+            pass
+        
+        # String (unquoted)
+        return value
+    
+    def _parse_legacy(self, inv_id: str, section_content: str) -> InvariantSpec:
+        """Parser legacy para invariantes sem bloco SPEC"""
+        # Extrair status
+        status_match = re.search(r'\*\*Status\*\*:\s*(\w+)', section_content)
+        status = status_match.group(1) if status_match else 'CONFIRMADA'
+        
+        # Ignorar invariantes inativas
+        if status == 'INATIVA':
+            return InvariantSpec(
+                id=inv_id,
+                status=status,
+                test_required=False,
+                units=[],
+                tests={},
+                has_spec=False
+            )
+        
+        # Extrair classe (procurar em múltiplos formatos)
+        class_match = re.search(r'\*\*Classe\*\*:\s*([A-F]\d?)', section_content)
+        if not class_match:
+            class_match = re.search(r'Classe:\s*([A-F]\d?)', section_content)
+        class_type = class_match.group(1) if class_match else 'UNKNOWN'
+        
+        # Extrair escopo
+        scope_match = re.search(r'\*\*Escopo\*\*:\s*`?([^`\n]+)`?', section_content)
+        scope = scope_match.group(1).strip() if scope_match else ''
+        
+        # Extrair evidências (constraint names, file:line, operationIds)
+        evidence = []
+        # Constraints: ck_*, uq_*, fk_*, tr_*, fn_*
+        evidence.extend(re.findall(r'`((?:ck|uq|fk|tr|fn|ux)_[\w]+)`', section_content))
+        # File:line references
+        evidence.extend(re.findall(r'`([^`]+\.py:\d+)`', section_content))
+        # OperationIds (OpenAPI)
+        evidence.extend(re.findall(r'`([a-z_]+_api_v\d_[^`]+)`', section_content))
+        
+        return InvariantSpec(
+            id=inv_id,
+            status=status,
+            test_required=True,
+            units=[],  # Empty for legacy
+            tests={},
+            has_spec=False,
+            class_type=class_type,
+            scope=scope,
+            evidence=evidence
+        )
+
+
+# ============================================================================
+# FILE CLASSIFIER
+# ============================================================================
+
+class FileClassifier:
+    """Classifica arquivos de teste em principal/suplementar"""
+    
+    def __init__(self, tests_dir: Path):
+        self.tests_dir = tests_dir
+    
+    def find_test_files(self) -> Dict[str, List[TestFile]]:
+        """
+        Encontra todos arquivos de teste e agrupa por INV-ID
+        
+        Returns:
+            Dict[inv_id -> List[TestFile]]
+        """
+        files_by_inv = {}
+        
+        if not self.tests_dir.exists():
+            return files_by_inv
+        
+        for file_path in self.tests_dir.glob('test_inv_train_*.py'):
+            # Extrair INV-ID do nome do arquivo
+            # Padrão: test_inv_train_001_*.py ou test_inv_train_001-A_*.py (splits)
+            match = re.match(r'test_inv_train_(\d{3}(?:-[A-Z]\d*)?)(?:_.*)?\.py', file_path.name)
+            if not match:
+                continue
+            
+            inv_num = match.group(1)
+            inv_id = f"INV-TRAIN-{inv_num}"
+            
+            # Detectar se é runtime suplementar
+            is_runtime = '_runtime.py' in file_path.name
+            
+            test_file = TestFile(
+                path=file_path,
+                inv_id=inv_id,
+                is_runtime=is_runtime
+            )
+            
+            if inv_id not in files_by_inv:
+                files_by_inv[inv_id] = []
+            files_by_inv[inv_id].append(test_file)
+        
+        return files_by_inv
+
+
+# ============================================================================
+# AST ANALYZER
+# ============================================================================
+
+class ASTAnalyzer(ast.NodeVisitor):
+    """Analisa AST de arquivo de teste para detectar padrões e anti-patterns"""
+    
+    def __init__(self, file_path: Path):
+        self.file_path = file_path
+        self.class_name = None
+        self.fixtures_used = set()
+        self.valid_test_count = 0
+        self.invalid_test_count = 0
+        self.patterns_found = {
+            'pytest_raises_integrity': False,
+            'pgcode_structured': False,
+            'constraint_structured': False,
+            'rollback_called': False,
+            'flush_called': False,
+            'uuid4_used': False,
+        }
+        self.anti_patterns = []
+        self.docstrings = {}
+        self.current_function = None
+    
+    def analyze(self) -> ASTAnalysis:
+        """Executa análise AST completa"""
+        try:
+            content = self.file_path.read_text(encoding='utf-8')
+            tree = ast.parse(content, filename=str(self.file_path))
+            self._assign_parents(tree)
+            
+            # Capturar docstring do módulo
+            if ast.get_docstring(tree):
+                self.docstrings['module'] = ast.get_docstring(tree)
+            
+            self.visit(tree)
+            
+            # Extrair INV-ID do nome do arquivo
+            match = re.match(r'test_inv_train_(\d{3})', self.file_path.name)
+            inv_id = f"INV-TRAIN-{match.group(1)}" if match else "UNKNOWN"
+            
+            return ASTAnalysis(
+                inv_id=inv_id,
+                class_name=self.class_name,
+                fixtures_used=self.fixtures_used,
+                valid_test_count=self.valid_test_count,
+                invalid_test_count=self.invalid_test_count,
+                patterns_found=self.patterns_found.copy(),
+                docstrings=self.docstrings.copy(),
+                anti_patterns=self.anti_patterns.copy()
+            )
+        
+        except Exception as e:
+            raise RuntimeError(f"Failed to parse {self.file_path}: {e}")
+    
+    def _assign_parents(self, node: ast.AST) -> None:
+        """Attach _parent pointers so Constant/keyword checks can be stable."""
+        for parent in ast.walk(node):
+            for child in ast.iter_child_nodes(parent):
+                setattr(child, "_parent", parent)
+    
+    def visit_ClassDef(self, node: ast.ClassDef):
+        """Detecta classe de teste TestInvTrainXXX"""
+        if node.name.startswith('TestInvTrain'):
+            self.class_name = node.name
+            if ast.get_docstring(node):
+                self.docstrings['class'] = ast.get_docstring(node)
+        self.generic_visit(node)
+    
+    def visit_FunctionDef(self, node: ast.FunctionDef):
+        """Analisa funcoes sync (inclui helpers) e metodos de teste."""
+        prev_function = self.current_function
+        self.current_function = node.name
+        self._handle_function_node(node)
+        self.generic_visit(node)
+        self.current_function = prev_function
+
+    def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef):
+        """Analisa funcoes async (pytest.mark.asyncio / async def test_*)."""
+        prev_function = self.current_function
+        self.current_function = node.name
+        self._handle_function_node(node)
+        self.generic_visit(node)
+        self.current_function = prev_function
+
+    def _handle_function_node(self, node: ast.AST) -> None:
+        """Processa nós de função (sync ou async)"""
+        # Detectar fixtures usados na assinatura
+        args = getattr(getattr(node, "args", None), "args", []) or []
+        for arg in args:
+            if arg.arg in ['async_db', 'auth_client', 'client', 'db']:
+                self.fixtures_used.add(arg.arg)
+
+        # Contar testes validos vs invalidos (por presenca de pytest.raises)
+        name = getattr(node, "name", "") or ""
+        if name.startswith('test_'):
+            has_pytest_raises = self._has_pytest_raises(node)
+            if has_pytest_raises:
+                self.invalid_test_count += 1
+                self.patterns_found['pytest_raises_integrity'] = True
+            else:
+                self.valid_test_count += 1
+    
+    def visit_Attribute(self, node: ast.Attribute):
+        """Detecta padrões de atributos estruturados"""
+        # orig.pgcode (atributo direto)
+        if node.attr == 'pgcode':
+            self.patterns_found['pgcode_structured'] = True
+
+        # diag.constraint_name (atributo direto)
+        if node.attr == 'constraint_name':
+            self.patterns_found['constraint_structured'] = True
+        
+        # rollback()
+        if node.attr == 'rollback':
+            self.patterns_found['rollback_called'] = True
+        
+        # flush()
+        if node.attr == 'flush':
+            self.patterns_found['flush_called'] = True
+        
+        self.generic_visit(node)
+    
+    def visit_Call(self, node: ast.Call):
+        """Detecta chamadas de funções importantes e anti-patterns"""
+        func_name = self._get_func_name(node.func)
+        
+        # uuid4() usage
+        if func_name == 'uuid4':
+            self.patterns_found['uuid4_used'] = True
+
+        # getattr(orig, 'pgcode', ...) / getattr(diag, 'constraint_name', ...)
+        if func_name == 'getattr' and len(node.args) >= 2 and isinstance(node.args[1], ast.Constant):
+            key = node.args[1].value
+            if key == 'pgcode':
+                self.patterns_found['pgcode_structured'] = True
+            if key == 'constraint_name':
+                self.patterns_found['constraint_structured'] = True
+
+        # rollback()/flush() calls (more precise than Attribute access)
+        if func_name == 'rollback':
+            self.patterns_found['rollback_called'] = True
+        if func_name == 'flush':
+            self.patterns_found['flush_called'] = True
+        
+        # Anti-pattern: str(exc...), repr(exc...)  (fragil: matches human text)
+        if func_name in ['str', 'repr'] and node.args:
+            arg0 = node.args[0]
+            name0 = self._get_expr_name(arg0)
+            if name0 and ('exc' in name0 or 'error' in name0):
+                self.anti_patterns.append('string_match_error')
+        
+        # Anti-pattern: create_engine, sessionmaker
+        if func_name in ['create_engine', 'sessionmaker', 'Session']:
+            self.anti_patterns.append('engine_creation')
+        
+        # Anti-pattern: UUID("literal")
+        if func_name == 'UUID' and node.args:
+            if isinstance(node.args[0], ast.Constant) and isinstance(node.args[0].value, str):
+                self.anti_patterns.append('hardcoded_uuid')
+        
+        self.generic_visit(node)
+    
+    def visit_Constant(self, node: ast.Constant):
+        """Detecta IDs hardcoded"""
+        if isinstance(node.value, (int, str)):
+            # Detectar padrões como id=123 ou athlete_id="fixed-value"
+            parent = getattr(node, '_parent', None)
+            if isinstance(parent, ast.keyword):
+                if '_id' in parent.arg and isinstance(node.value, (int, str)):
+                    if isinstance(node.value, int) or (isinstance(node.value, str) and len(node.value) > 10):
+                        self.anti_patterns.append('hardcoded_id')
+        
+        self.generic_visit(node)
+    
+    def _has_pytest_raises(self, node: ast.AST) -> bool:
+        """Detecta uso de pytest.raises em um método"""
+        for child in ast.walk(node):
+            if isinstance(child, ast.With):
+                for item in child.items:
+                    ctx = item.context_expr
+                    if isinstance(ctx, ast.Call):
+                        func_name = self._get_func_name(ctx.func)
+                        if func_name and 'raises' in func_name:
+                            return True
+        return False
+
+    def _get_expr_name(self, node: ast.AST) -> str:
+        """Best-effort name for expressions (Name/Attribute chains)."""
+        if isinstance(node, ast.Name):
+            return node.id.lower()
+        if isinstance(node, ast.Attribute):
+            base = self._get_expr_name(node.value)
+            if base:
+                return f"{base}.{node.attr.lower()}"
+            return node.attr.lower()
+        return ""
+    
+    def _get_func_name(self, node) -> str:
+        """Extrai nome da função de um nó Call"""
+        if isinstance(node, ast.Name):
+            return node.id
+        elif isinstance(node, ast.Attribute):
+            return node.attr
+        return ''
+
+
+# ============================================================================
+# RULE VALIDATORS
+# ============================================================================
+
+class RuleValidator:
+    """Valida regras por nível (basic/standard/strict) e classe"""
+    
+    def __init__(
+        self, 
+        level: str = 'strict', 
+        verbose: bool = False, 
+        openapi_ids: Optional[Set[str]] = None,
+        openapi_index: Optional[Dict[str, Dict[str, Any]]] = None
+    ):
+        self.level = level
+        self.verbose = verbose
+        self.openapi_ids = openapi_ids or set()
+        self.openapi_index = openapi_index or {}
+    
+    def validate_coverage(
+        self,
+        invariants: List[InvariantSpec],
+        files_by_inv: Dict[str, List[TestFile]]
+    ) -> List[Violation]:
+        """Valida cobertura 1:1 obrigatória"""
+        violations = []
+        
+        for inv in invariants:
+            # Skip aliases (test_required=false)
+            if inv.is_alias or not inv.test_required:
+                # Se é alias, verificar que o canonical existe
+                if inv.is_alias and inv.canonical_id:
+                    canonical_files = files_by_inv.get(inv.canonical_id, [])
+                    canonical_principal = [f for f in canonical_files if f.is_principal]
+                    if len(canonical_principal) == 0:
+                        violations.append(Violation(
+                            inv_id=inv.id,
+                            file='',
+                            line=0,
+                            col=0,
+                            level='ERROR',
+                            code='ALIAS_CANONICAL_MISSING',
+                            message=f'{inv.id} is alias of {inv.canonical_id}, but canonical test not found',
+                            action=f'create test for canonical {inv.canonical_id} or fix alias reference'
+                        ))
+                continue
+            
+            files = files_by_inv.get(inv.id, [])
+            principal_files = [f for f in files if f.is_principal]
+            
+            if len(principal_files) == 0:
+                violations.append(Violation(
+                    inv_id=inv.id,
+                    file='',
+                    line=0,
+                    col=0,
+                    level='ERROR',
+                    code='COVERAGE_MISSING',
+                    message=f'no test file for {inv.id}',
+                    action=f'create tests/training/invariants/test_inv_train_{inv.id.split("-")[-1].lower()}_*.py'
+                ))
+            elif len(principal_files) > 1:
+                file_list = ', '.join(f.path.name for f in principal_files)
+                violations.append(Violation(
+                    inv_id=inv.id,
+                    file=str(principal_files[0].path),
+                    line=0,
+                    col=0,
+                    level='ERROR',
+                    code='COVERAGE_DUPLICATE',
+                    message=f'multiple main files for {inv.id}: {file_list}',
+                    action=f'keep only 1 principal file, move others to *_runtime.py or remove'
+                ))
+        
+        return violations
+    
+    def validate_dod0(self, analysis: ASTAnalysis, file_path: Path) -> List[Violation]:
+        """Valida DoD-0: nomenclatura de classe e métodos"""
+        violations = []
+        
+        if not analysis.class_name:
+            violations.append(Violation(
+                inv_id=analysis.inv_id,
+                file=str(file_path),
+                line=0,
+                col=0,
+                level='ERROR',
+                code='DOD0_NO_CLASS',
+                message=f'no class TestInvTrain* found',
+                action=f'add class TestInvTrain{analysis.inv_id.replace("INV-TRAIN-", "").replace("-", "")}'
+            ))
+        
+        if analysis.valid_test_count == 0 and analysis.invalid_test_count == 0:
+            violations.append(Violation(
+                inv_id=analysis.inv_id,
+                file=str(file_path),
+                line=0,
+                col=0,
+                level='ERROR',
+                code='DOD0_NO_TESTS',
+                message='no test_* methods found',
+                action='add test methods to class'
+            ))
+        
+        return violations
+    
+    def validate_obligations(
+        self,
+        analysis: ASTAnalysis,
+        file_path: Path,
+        inv: InvariantSpec,
+        verbose: bool = False
+    ) -> List[Violation]:
+        """Valida Obrigação A e B em modo strict"""
+        violations = []
+        
+        # Apenas em modo strict
+        if self.level != 'strict':
+            return violations
+        
+        # Classe F (OpenAPI Contract): Obrigação A não obrigatória, Obrigação B obrigatória
+        is_class_f = 'F' in inv.primary_classes
+        
+        # Selecionar docstring primário (não concatenar todos)
+        test_node = inv.tests.get('node') if inv.tests else None
+        primary_docstring = pick_primary_docstring(analysis.docstrings, inv.id, test_node)
+        
+        # Fallback: concatenar todos se não houver primário
+        all_docstrings = primary_docstring if primary_docstring else ' '.join(analysis.docstrings.values())
+        
+        # Obrigação A (não obrigatória para Classe F)
+        if not is_class_f and 'obrigação a' not in all_docstrings.lower():
+            violations.append(Violation(
+                inv_id=analysis.inv_id,
+                file=str(file_path),
+                line=0,
+                col=0,
+                level='ERROR',
+                code='OBLIG_A_MISSING',
+                message='docstring missing literal "Obrigação A"',
+                action='add Obrigação A section with table.column anchors and keywords (FK, NOT NULL, CHECK)'
+            ))
+        elif not is_class_f:
+            # Verificar anchors (mínimo 2) - apenas para classes que não sejam F
+            anchors = re.findall(r'\b\w+\.\w+\b', all_docstrings)
+            if len(anchors) < 2:
+                violations.append(Violation(
+                    inv_id=analysis.inv_id,
+                    file=str(file_path),
+                    line=0,
+                    col=0,
+                    level='ERROR',
+                    code='OBLIG_A_INSUFFICIENT_ANCHORS',
+                    message=f'found {len(anchors)} anchors, expected >=2',
+                    action='add table.column references (ex: training_sessions.status)'
+                ))
+        
+        # Obrigação B
+        if 'obrigação b' not in all_docstrings.lower():
+            violations.append(Violation(
+                inv_id=analysis.inv_id,
+                file=str(file_path),
+                line=0,
+                col=0,
+                level='ERROR',
+                code='OBLIG_B_MISSING',
+                message='docstring missing literal "Obrigação B"',
+                action='add Obrigação B section with SQLSTATE and constraint_name/operationId'
+            ))
+        else:
+            # Determinar quais validações de Obrigação B são obrigatórias baseado na classe
+            # Prioridade: C2 > A/B > D (service validation tem precedência sobre DB column documentation)
+            db_constraint_classes = {'A'}  # Apenas A (DB constraints com enforcement ativo)
+            service_classes = {'C1', 'C2'}
+            api_classes = {'D'}
+            
+            # Se tem C2/C1 (service validation), não exigir SQLSTATE mesmo que tenha B
+            has_service = any(cls in service_classes for cls in inv.primary_classes)
+            has_db_constraint = any(cls in db_constraint_classes for cls in inv.primary_classes)
+            has_api = any(cls in api_classes for cls in inv.primary_classes)
+            
+            # SQLSTATE obrigatório apenas para A (DB constraint), não para B (coluna documenta regra)
+            requires_sqlstate = has_db_constraint and not has_service
+            requires_error_type = has_service
+            requires_operation_id = has_api and not has_service
+            
+            # Verificar SQLSTATE (23xxx) - APENAS para classes A/B (DB)
+            if requires_sqlstate and not re.search(r'23\d{3}', all_docstrings):
+                violations.append(Violation(
+                    inv_id=analysis.inv_id,
+                    file=str(file_path),
+                    line=0,
+                    col=0,
+                    level='ERROR',
+                    code='OBLIG_B_NO_SQLSTATE',
+                    message='Obrigação B missing SQLSTATE (23xxx)',
+                    action='add expected SQLSTATE (23514 for CHECK, 23505 for UNIQUE, etc)'
+                ))
+            
+            # PATCH V2: Validar constraint_name e SQLSTATE exatos do SPEC para Classe A
+            if has_db_constraint and inv.has_spec:
+                # Extrair apenas a seção "Obrigação B" para validação precisa
+                obrigacao_b_text = extract_obrigacao_b(all_docstrings)
+                
+                if not obrigacao_b_text:
+                    # Se não conseguir extrair Obrigação B, usar all_docstrings como fallback
+                    # (a validação OBLIG_B_MISSING já foi feita acima)
+                    obrigacao_b_text = all_docstrings
+                
+                # Debug output (verbose only, INV-TRAIN-033 only)
+                if verbose and inv.id == "INV-TRAIN-033":
+                    # Count all_docstrings for diagnostic
+                    all_concat = ' '.join(analysis.docstrings.values())
+                    obrig_b_count = all_concat.count('Obrigação B')
+                    print(f"[DBG] INV-TRAIN-033: obrigacao_b_count_in_all_concat={obrig_b_count}")
+                    print(f"[DBG] INV-TRAIN-033: primary_docstring_length={len(primary_docstring)}")
+                    print(f"[DBG] INV-TRAIN-033: all_docstrings (after pick)={all_docstrings[:200]!r}...")
+                    print(f"[DBG] INV-TRAIN-033: obrigacao_b_text_snip={obrigacao_b_text[:200]!r}")
+                
+                # Extrair constraints esperados de units com class A e required=True
+                expected_constraints = []
+                expected_sqlstates = []
+                
+                for unit in inv.units:
+                    if unit.class_type == 'A' and unit.required:
+                        # Extrair db.constraint
+                        if unit.anchors and 'db' in unit.anchors:
+                            db_anchors = unit.anchors['db']
+                            if 'constraint' in db_anchors:
+                                constraint_name = db_anchors['constraint']
+                                if constraint_name:  # não vazio
+                                    expected_constraints.append(constraint_name)
+                            # Extrair db.sqlstate
+                            if 'sqlstate' in db_anchors:
+                                sqlstate = db_anchors['sqlstate']
+                                if sqlstate:  # não vazio
+                                    expected_sqlstates.append(str(sqlstate))
+                
+                # Debug output (verbose only, INV-TRAIN-033 only)
+                if verbose and inv.id == "INV-TRAIN-033":
+                    print(f"[DBG] INV-TRAIN-033: expected_constraints={expected_constraints}")
+                    print(f"[DBG] INV-TRAIN-033: expected_sqlstates={expected_sqlstates}")
+                
+                # Validar constraint_name exato dentro da Obrigação B
+                for constraint_name in expected_constraints:
+                    contains_constraint = constraint_name in obrigacao_b_text
+                    if verbose and inv.id == "INV-TRAIN-033":
+                        print(f"[DBG] INV-TRAIN-033: contains '{constraint_name}'? {contains_constraint}")
+                    if constraint_name not in obrigacao_b_text:
+                        violations.append(Violation(
+                            inv_id=analysis.inv_id,
+                            file=str(file_path),
+                            line=0,
+                            col=0,
+                            level='ERROR',
+                            code='OBLIG_B_NO_CONSTRAINT_NAME',
+                            message=f'Obrigação B missing constraint_name from SPEC: {constraint_name}',
+                            action=f'add constraint_name ({constraint_name}) to Obrigação B'
+                        ))
+                
+                # Validar SQLSTATE exato dentro da Obrigação B
+                for sqlstate in expected_sqlstates:
+                    contains_sqlstate = sqlstate in obrigacao_b_text
+                    if verbose and inv.id == "INV-TRAIN-033":
+                        print(f"[DBG] INV-TRAIN-033: contains SQLSTATE '{sqlstate}'? {contains_sqlstate}")
+                    
+                    if sqlstate not in obrigacao_b_text:
+                        violations.append(Violation(
+                            inv_id=analysis.inv_id,
+                            file=str(file_path),
+                            line=0,
+                            col=0,
+                            level='ERROR',
+                            code='OBLIG_B_SQLSTATE_MISMATCH',
+                            message=f'Obrigação B missing exact SQLSTATE from SPEC: {sqlstate}',
+                            action=f'add SQLSTATE {sqlstate} to Obrigação B (not just 23xxx pattern)'
+                        ))
+            
+            # Verificar error_type (ValidationError, PermissionError) - para classes C1/C2 (Service)
+            if requires_error_type:
+                has_error_type = bool(re.search(r'ValidationError|PermissionError|BusinessError', all_docstrings, re.IGNORECASE))
+                if not has_error_type:
+                    violations.append(Violation(
+                        inv_id=analysis.inv_id,
+                        file=str(file_path),
+                        line=0,
+                        col=0,
+                        level='ERROR',
+                        code='OBLIG_B_NO_ERROR_TYPE',
+                        message='Obrigação B missing error_type (ex: ValidationError)',
+                        action='add error_type reference to Obrigação B (ValidationError, PermissionError, etc)'
+                    ))
+            
+            # Verificar símbolo (constraint_name ou operationId)
+            has_constraint = bool(re.search(r'(?:ck|uq|fk|tr|fn|ux)_\w+', all_docstrings))
+            has_operation_id = bool(re.search(r'\w+_api_v\d', all_docstrings))
+            
+            # constraint_name obrigatório para DB (A/B), operationId obrigatório para API (D)
+            if requires_sqlstate and not has_constraint:
+                violations.append(Violation(
+                    inv_id=analysis.inv_id,
+                    file=str(file_path),
+                    line=0,
+                    col=0,
+                    level='ERROR',
+                    code='OBLIG_B_NO_CONSTRAINT',
+                    message='Obrigação B missing constraint_name (ex: ck_*, uq_*)',
+                    action='add constraint_name reference (ex: ck_training_sessions_dates)'
+                ))
+            
+            if requires_operation_id and not has_operation_id:
+                violations.append(Violation(
+                    inv_id=analysis.inv_id,
+                    file=str(file_path),
+                    line=0,
+                    col=0,
+                    level='ERROR',
+                    code='OBLIG_B_NO_OPERATION_ID',
+                    message='Obrigação B missing operationId',
+                    action='add operationId reference (ex: create_training_session_api_v1)'
+                ))
+        
+        return violations
+    
+    def validate_class_a(
+        self,
+        analysis: ASTAnalysis,
+        file_path: Path
+    ) -> List[Violation]:
+        """Valida regras de Classe A (DB constraint)"""
+        violations = []
+        
+        # Mínimo de testes válidos e inválidos
+        if analysis.valid_test_count < 1:
+            violations.append(Violation(
+                inv_id=analysis.inv_id,
+                file=str(file_path),
+                line=0,
+                col=0,
+                level='ERROR',
+                code='A_MIN_VALID',
+                message=f'found {analysis.valid_test_count} valid tests, expected >=1',
+                action='add test_valid_case__* method without pytest.raises'
+            ))
+        
+        if analysis.invalid_test_count < 2:
+            violations.append(Violation(
+                inv_id=analysis.inv_id,
+                file=str(file_path),
+                line=0,
+                col=0,
+                level='ERROR',
+                code='A_MIN_INVALID',
+                message=f'found {analysis.invalid_test_count} invalid tests, expected >=2',
+                action='add test_invalid_case_N__* methods with pytest.raises(IntegrityError)'
+            ))
+        
+        # Requer async_db
+        if 'async_db' not in analysis.fixtures_used:
+            violations.append(Violation(
+                inv_id=analysis.inv_id,
+                file=str(file_path),
+                line=0,
+                col=0,
+                level='ERROR',
+                code='A_REQUIRES_ASYNC_DB',
+                message='Classe A requires async_db fixture',
+                action='add async_db parameter to test methods'
+            ))
+        
+        # Requer SQLSTATE estruturado
+        if not analysis.patterns_found['pgcode_structured']:
+            violations.append(Violation(
+                inv_id=analysis.inv_id,
+                file=str(file_path),
+                line=0,
+                col=0,
+                level='ERROR',
+                code='A_REQUIRES_PGCODE_ATTR',
+                message='use orig.pgcode not str(exc)',
+                action='replace string matching with: orig = exc.value.orig; assert orig.pgcode == "23514"'
+            ))
+        
+        # Requer constraint_name estruturado
+        if not analysis.patterns_found['constraint_structured']:
+            violations.append(Violation(
+                inv_id=analysis.inv_id,
+                file=str(file_path),
+                line=0,
+                col=0,
+                level='ERROR',
+                code='A_REQUIRES_CONSTRAINT_ATTR',
+                message='use diag.constraint_name not string matching',
+                action='add: diag = exc.value.orig.diag; assert diag.constraint_name == "ck_*"'
+            ))
+        
+        # Requer rollback
+        if not analysis.patterns_found['rollback_called']:
+            violations.append(Violation(
+                inv_id=analysis.inv_id,
+                file=str(file_path),
+                line=0,
+                col=0,
+                level='ERROR',
+                code='A_REQUIRES_ROLLBACK',
+                message='add await async_db.rollback() after IntegrityError',
+                action='add rollback after pytest.raises block'
+            ))
+        
+        # Proibir string matching
+        if 'string_match_error' in analysis.anti_patterns:
+            violations.append(Violation(
+                inv_id=analysis.inv_id,
+                file=str(file_path),
+                line=0,
+                col=0,
+                level='ERROR',
+                code='A_FORBIDS_STRING_MATCH',
+                message='remove str(exc) from assert',
+                action='use structured attributes: orig.pgcode, diag.constraint_name'
+            ))
+        
+        return violations
+    
+    def validate_class_f(
+        self,
+        analysis: ASTAnalysis,
+        file_path: Path,
+        inv: Optional['InvariantSpec'] = None
+    ) -> List[Violation]:
+        """Valida regras de Classe F (OpenAPI Contract) com coerência SPEC ↔ OpenAPI"""
+        violations = []
+        
+        # Classe F não deve usar fixtures de DB
+        forbidden_fixtures = {'db', 'async_db'}
+        used_forbidden = forbidden_fixtures.intersection(analysis.fixtures_used)
+        if used_forbidden:
+            violations.append(Violation(
+                inv_id=analysis.inv_id,
+                file=str(file_path),
+                line=0,
+                col=0,
+                level='ERROR',
+                code='F_FORBIDS_DB_FIXTURES',
+                message=f'Classe F forbids DB fixtures: {used_forbidden}',
+                action='remove DB fixtures (contract tests validate against openapi.json only)'
+            ))
+        
+        # Validar coerência SPEC ↔ OpenAPI (F1-F4)
+        if inv and self.openapi_index and inv.units:
+            for unit in inv.units:
+                if unit.anchors and 'api' in unit.anchors:
+                    api_anchors = unit.anchors['api']
+                    
+                    # Extrair anchors do SPEC
+                    op_id = api_anchors.get('operation_id')
+                    expected_method = api_anchors.get('method', '').upper()
+                    expected_path = api_anchors.get('path', '')
+                    expected_responses = api_anchors.get('responses', [])
+                    expected_security = api_anchors.get('security')  # "none", "bearer", []
+                    
+                    if not op_id:
+                        continue
+                    
+                    # Normalizar operation_id para lista
+                    if isinstance(op_id, str):
+                        op_ids_to_check = [op_id]
+                    else:
+                        op_ids_to_check = op_id
+                    
+                    for oid in op_ids_to_check:
+                        # (F1) Validar que operationId existe no OpenAPI
+                        if oid not in self.openapi_index:
+                            violations.append(Violation(
+                                inv_id=analysis.inv_id,
+                                file=str(file_path),
+                                line=0,
+                                col=0,
+                                level='ERROR',
+                                code='F_OPERATION_ID_NOT_IN_OPENAPI',
+                                message=f'operationId not found in openapi.json: {oid}',
+                                action='use exact operationId from openapi.json (docs/_generated/openapi.json)'
+                            ))
+                            continue
+                        
+                        openapi_entry = self.openapi_index[oid]
+                        
+                        # (F2) Validar method+path
+                        openapi_method = openapi_entry['method']
+                        openapi_path = openapi_entry['path']
+                        
+                        if expected_method and expected_method != openapi_method:
+                            violations.append(Violation(
+                                inv_id=analysis.inv_id,
+                                file=str(file_path),
+                                line=0,
+                                col=0,
+                                level='ERROR',
+                                code='F_METHOD_MISMATCH',
+                                message=f'method mismatch for {oid}: SPEC={expected_method}, OpenAPI={openapi_method}',
+                                action=f'update SPEC api.method to "{openapi_method.lower()}"'
+                            ))
+                        
+                        if expected_path and expected_path != openapi_path:
+                            violations.append(Violation(
+                                inv_id=analysis.inv_id,
+                                file=str(file_path),
+                                line=0,
+                                col=0,
+                                level='ERROR',
+                                code='F_PATH_MISMATCH',
+                                message=f'path mismatch for {oid}: SPEC={expected_path}, OpenAPI={openapi_path}',
+                                action=f'update SPEC api.path to "{openapi_path}"'
+                            ))
+                        
+                        # (F3) Validar responses (bidirecional: extras e missing)
+                        if expected_responses is not None:
+                            # Normalizar tudo para strings
+                            if isinstance(expected_responses, list):
+                                expected = set(str(x) for x in expected_responses)
+                            else:
+                                expected = set()
+                            
+                            openapi_responses = openapi_entry['responses']
+                            # Remover 'default' se existir (não é código específico)
+                            openapi_clean = openapi_responses - {'default'}
+                            
+                            # Verbose logging
+                            if self.verbose and analysis.inv_id == "INV-TRAIN-040":
+                                print(f"[F3] {oid}: expected={expected}, openapi={openapi_clean}")
+                            
+                            # Validar: SPEC vazio é erro
+                            if len(expected) == 0:
+                                violations.append(Violation(
+                                    inv_id=analysis.inv_id,
+                                    file=str(file_path),
+                                    line=0,
+                                    col=0,
+                                    level='ERROR',
+                                    code='F_RESPONSES_EMPTY',
+                                    message=f'api.responses is empty for {oid}. OpenAPI has: {sorted(openapi_clean)}',
+                                    action=f'add response codes to SPEC api.responses: {sorted(openapi_clean)}'
+                                ))
+                            else:
+                                # Validar: códigos extras no SPEC que não existem no OpenAPI
+                                extras = expected - openapi_clean
+                                if extras:
+                                    violations.append(Violation(
+                                        inv_id=analysis.inv_id,
+                                        file=str(file_path),
+                                        line=0,
+                                        col=0,
+                                        level='ERROR',
+                                        code='F_RESPONSES_NOT_IN_OPENAPI',
+                                        message=f'responses in SPEC not found in OpenAPI for {oid}: {sorted(extras)}. OpenAPI has: {sorted(openapi_clean)}',
+                                        action=f'remove invalid response codes from SPEC: {sorted(extras)}'
+                                    ))
+                                
+                                # Validar: códigos no OpenAPI que faltam no SPEC
+                                missing = openapi_clean - expected
+                                if missing:
+                                    violations.append(Violation(
+                                        inv_id=analysis.inv_id,
+                                        file=str(file_path),
+                                        line=0,
+                                        col=0,
+                                        level='ERROR',
+                                        code='F_RESPONSES_MISSING_FROM_SPEC',
+                                        message=f'OpenAPI has response codes not in SPEC for {oid}: {sorted(missing)}. SPEC has: {sorted(expected)}',
+                                        action=f'add missing response codes to SPEC: {sorted(missing)}'
+                                    ))
+                        
+                        # (F4) Validar security (opcional)
+                        if expected_security is not None:
+                            openapi_has_security = openapi_entry['security_present']
+                            
+                            # "none" ou [] → não deve ter security no OpenAPI
+                            spec_expects_no_security = (
+                                expected_security == "none" or 
+                                (isinstance(expected_security, list) and len(expected_security) == 0)
+                            )
+                            
+                            if spec_expects_no_security and openapi_has_security:
+                                violations.append(Violation(
+                                    inv_id=analysis.inv_id,
+                                    file=str(file_path),
+                                    line=0,
+                                    col=0,
+                                    level='ERROR',
+                                    code='F_SECURITY_MISMATCH',
+                                    message=f'SPEC declares api.security="none" but OpenAPI has security for {oid}',
+                                    action='update SPEC api.security or check OpenAPI security definition'
+                                ))
+                            elif not spec_expects_no_security and not openapi_has_security:
+                                violations.append(Violation(
+                                    inv_id=analysis.inv_id,
+                                    file=str(file_path),
+                                    line=0,
+                                    col=0,
+                                    level='ERROR',
+                                    code='F_SECURITY_MISMATCH',
+                                    message=f'SPEC declares api.security but OpenAPI has no security for {oid}',
+                                    action='update SPEC api.security to "none" or check OpenAPI security definition'
+                                ))
+        
+        return violations
+    
+    def validate_class_d(
+        self,
+        analysis: ASTAnalysis,
+        file_path: Path,
+        inv: Optional['InvariantSpec'] = None
+    ) -> List[Violation]:
+        """Valida regras de Classe D (Router/RBAC)"""
+        violations = []
+        
+        total_tests = analysis.valid_test_count + analysis.invalid_test_count
+        if total_tests < 3:
+            violations.append(Violation(
+                inv_id=analysis.inv_id,
+                file=str(file_path),
+                line=0,
+                col=0,
+                level='ERROR',
+                code='D_MIN_TESTS',
+                message=f'found {total_tests} tests, expected >=3 (401/403/200)',
+                action='add tests: test_without_auth_401, test_without_permission_403, test_with_permission_200'
+            ))
+        
+        # Requer auth_client ou client
+        if not ('auth_client' in analysis.fixtures_used or 'client' in analysis.fixtures_used):
+            violations.append(Violation(
+                inv_id=analysis.inv_id,
+                file=str(file_path),
+                line=0,
+                col=0,
+                level='ERROR',
+                code='D_REQUIRES_CLIENT',
+                message='Classe D requires auth_client or client fixture',
+                action='add auth_client or client parameter to test methods'
+            ))
+        
+        # Proibir async_db
+        if 'async_db' in analysis.fixtures_used:
+            violations.append(Violation(
+                inv_id=analysis.inv_id,
+                file=str(file_path),
+                line=0,
+                col=0,
+                level='ERROR',
+                code='D_FORBIDS_ASYNC_DB',
+                message='Classe D forbids async_db fixture',
+                action='remove async_db fixture (Router tests should not access DB directly)'
+            ))
+        
+        # Validar operationId contra OpenAPI spec (se inv e openapi_ids disponíveis)
+        if inv and self.openapi_ids and inv.units:
+            # Buscar operation_id em todos os units
+            expected_operation_ids = []
+            for unit in inv.units:
+                if unit.anchors and 'api' in unit.anchors:
+                    api_anchors = unit.anchors['api']
+                    op_id = api_anchors.get('operation_id')
+                    if op_id:
+                        # Normalizar para lista
+                        if isinstance(op_id, str):
+                            expected_operation_ids.append(op_id)
+                        elif isinstance(op_id, list):
+                            expected_operation_ids.extend(op_id)
+            
+            if expected_operation_ids:
+                # Extrair operationIds do docstring
+                module_docstring = analysis.docstrings.get('module', '')
+                class_docstring = analysis.docstrings.get('class', '')
+                all_docstrings = module_docstring + ' ' + class_docstring
+                obrigacao_b_text = extract_obrigacao_b(all_docstrings)
+                
+                # Procurar padrões de operationId no docstring
+                found_operation_ids = re.findall(r'\w+_api_v\d+[_\w]*', obrigacao_b_text)
+                
+                # Validar se algum operationId encontrado existe no OpenAPI
+                for found_id in found_operation_ids:
+                    if found_id not in self.openapi_ids:
+                        violations.append(Violation(
+                            inv_id=analysis.inv_id,
+                            file=str(file_path),
+                            line=0,
+                            col=0,
+                            level='ERROR',
+                            code='D_OPERATION_ID_NOT_IN_OPENAPI',
+                            message=f'operationId not found in openapi.json: {found_id}',
+                            action='use exact operationId from openapi.json (docs/_generated/openapi.json)'
+                        ))
+        
+        return violations
+    
+    def validate_anti_patterns(
+        self,
+        analysis: ASTAnalysis,
+        file_path: Path
+    ) -> List[Violation]:
+        """Valida anti-patterns críticos (todos os arquivos)"""
+        violations = []
+        
+        if 'engine_creation' in analysis.anti_patterns:
+            violations.append(Violation(
+                inv_id=analysis.inv_id,
+                file=str(file_path),
+                line=0,
+                col=0,
+                level='ERROR',
+                code='ENGINE_CREATION',
+                message='forbidden: create_engine/sessionmaker/Session',
+                action='remove custom engine creation, use async_db fixture'
+            ))
+        
+        if 'hardcoded_uuid' in analysis.anti_patterns:
+            violations.append(Violation(
+                inv_id=analysis.inv_id,
+                file=str(file_path),
+                line=0,
+                col=0,
+                level='ERROR',
+                code='HARDCODED_UUID',
+                message='forbidden: UUID("literal")',
+                action='replace with uuid4() for dynamic generation'
+            ))
+        
+        if 'hardcoded_id' in analysis.anti_patterns:
+            violations.append(Violation(
+                inv_id=analysis.inv_id,
+                file=str(file_path),
+                line=0,
+                col=0,
+                level='ERROR',
+                code='HARDCODED_ID',
+                message='forbidden: hardcoded IDs (id=123, athlete_id="fixed")',
+                action='use uuid4() or factory for dynamic ID generation'
+            ))
+        
+        return violations
+
+
+# ============================================================================
+# REPORT GENERATOR
+# ============================================================================
+
+class ReportGenerator:
+    """Gera relatórios JSON e TXT"""
+    
+    @staticmethod
+    def generate(
+        violations: List[Violation],
+        level: str,
+        total_invariants: int,
+        covered_invariants: int
+    ) -> ValidationReport:
+        """Gera relatório completo"""
+        # Sort violations deterministically: (inv_id, file, line, col, code)
+        # This ensures consistent output across runs for the same violations
+        sorted_violations = sorted(
+            violations,
+            key=lambda v: (v.inv_id, v.file, v.line, v.col, v.code)
+        )
+        
+        error_count = sum(1 for v in sorted_violations if v.level == 'ERROR')
+        warn_count = sum(1 for v in sorted_violations if v.level == 'WARN')
+        
+        return ValidationReport(
+            pass_status=(error_count == 0),
+            level=level,
+            timestamp=datetime.now().isoformat(),
+            summary={
+                'total_invariants': total_invariants,
+                'covered': covered_invariants,
+                'error_count': error_count,
+                'warning_count': warn_count
+            },
+            violations=sorted_violations
+        )
+    
+    @staticmethod
+    def write_json(report: ValidationReport, path: Path):
+        """Escreve relatório JSON"""
+        data = {
+            'pass': report.pass_status,
+            'level': report.level,
+            'timestamp': report.timestamp,
+            'summary': report.summary,
+            'violations': [
+                {
+                    'inv_id': v.inv_id,
+                    'file': v.file,
+                    'line': v.line,
+                    'col': v.col,
+                    'level': v.level,
+                    'code': v.code,
+                    'message': v.message,
+                    'action': v.action
+                }
+                for v in report.violations
+            ]
+        }
+        path.write_text(json.dumps(data, indent=2), encoding='utf-8')
+    
+    @staticmethod
+    def write_txt(report: ValidationReport, path: Path):
+        """Escreve relatório TXT legível"""
+        lines = []
+        lines.append("=" * 80)
+        lines.append("VALIDATION REPORT: verify_invariants_tests.py")
+        lines.append("=" * 80)
+        lines.append(f"Timestamp: {report.timestamp}")
+        lines.append(f"Level: {report.level}")
+        lines.append(f"Status: {'✅ PASS' if report.pass_status else '❌ FAIL'}")
+        lines.append("")
+        
+        # Summary
+        lines.append("SUMMARY:")
+        lines.append(f"  Total Invariants: {report.summary['total_invariants']}")
+        lines.append(f"  Covered: {report.summary['covered']}")
+        lines.append(f"  Errors: {report.summary['error_count']}")
+        lines.append(f"  Warnings: {report.summary['warning_count']}")
+        lines.append("")
+        
+        # Group violations by INV-ID
+        if report.violations:
+            lines.append("VIOLATIONS:")
+            lines.append("-" * 80)
+            
+            violations_by_inv = {}
+            for v in report.violations:
+                if v.inv_id not in violations_by_inv:
+                    violations_by_inv[v.inv_id] = []
+                violations_by_inv[v.inv_id].append(v)
+            
+            for inv_id in sorted(violations_by_inv.keys()):
+                lines.append(f"\n{inv_id}:")
+                for v in violations_by_inv[inv_id]:
+                    icon = "❌" if v.level == "ERROR" else "⚠️"
+                    location = f"{v.file}:{v.line}:{v.col}" if v.file else "(coverage)"
+                    lines.append(f"  {icon} {location}: {v.level} [{v.code}]: {v.message} — {v.action}")
+        else:
+            lines.append("✅ No violations found!")
+        
+        lines.append("")
+        lines.append("=" * 80)
+        lines.append(f"EXIT CODE: {'0 (pass)' if report.pass_status else '2 (fail)'}")
+        lines.append("=" * 80)
+        
+        path.write_text('\n'.join(lines), encoding='utf-8')
+    
+    @staticmethod
+    def print_console(report: ValidationReport):
+        """Imprime relatório no console (formato problemMatcher)"""
+        for v in report.violations:
+            location = f"{v.file}:{v.line}:{v.col}" if v.file else "coverage:0:0"
+            # Usar ASCII em vez de emojis para compatibilidade Windows console
+            print(f"{location}: {v.level} [{v.code}]: {v.message} - {v.action}")
+        
+        # Summary
+        print(f"\n{'='*80}")
+        print(f"Summary: {report.summary['error_count']} errors, {report.summary['warning_count']} warnings")
+        status_text = "PASS" if report.pass_status else "FAIL"
+        print(f"Status: {status_text}")
+        print(f"{'='*80}")
+
+
+# ============================================================================
+# MAIN ORCHESTRATOR
+# ============================================================================
+
+def main():
+    parser = argparse.ArgumentParser(
+        description='Validate invariants tests against INVARIANTS_TESTING_CANON.md'
+    )
+    parser.add_argument(
+        '--level',
+        choices=['basic', 'standard', 'strict'],
+        default='strict',
+        help='Validation level (default: strict)'
+    )
+    parser.add_argument(
+        '--files-changed',
+        nargs='*',
+        help='Validate only specific files (pre-commit optimization)'
+    )
+    parser.add_argument(
+        '--report-json',
+        type=Path,
+        help='Write JSON report to file'
+    )
+    parser.add_argument(
+        '--report-txt',
+        type=Path,
+        help='Write TXT report to file'
+    )
+    parser.add_argument(
+        '--verbose',
+        action='store_true',
+        help='Verbose output'
+    )
+    parser.add_argument(
+        '--strict-spec',
+        action='store_true',
+        help='Strict SPEC mode: SPEC_INVALID/SPEC_MISSING are violations (exit 2), not warnings'
+    )
+    
+    args = parser.parse_args()
+    
+    try:
+        # Determine project root
+        script_dir = Path(__file__).parent.resolve()
+        project_root = script_dir.parent.parent
+        
+        # Paths
+        invariants_md = project_root / 'docs' / '02-modulos' / 'training' / 'INVARIANTS_TRAINING.md'
+        tests_dir = project_root / 'Hb Track - Backend' / 'tests' / 'training' / 'invariants'
+        
+        # Parse invariants
+        if args.verbose:
+            print(f"Parsing {invariants_md}...")
+        parser_obj = InvariantsParser()
+        invariants, spec_violations = parser_obj.parse(invariants_md, strict_spec=args.strict_spec)
+        
+        if args.verbose:
+            print(f"Found {len(invariants)} confirmed invariants")
+        
+        # Find test files
+        if args.verbose:
+            print(f"Scanning {tests_dir}...")
+        classifier = FileClassifier(tests_dir)
+        files_by_inv = classifier.find_test_files()
+        
+        # Derive target_inv_ids from --files-changed (scope optimization)
+        target_inv_ids = None
+        if args.files_changed:
+            # Build map: normalized_path(tests.primary) -> inv_id
+            inv_by_primary_path = {}
+            for inv in invariants:
+                if inv.tests and 'primary' in inv.tests:
+                    primary_path = inv.tests['primary']
+                    # Resolve relative to project_root
+                    abs_path = (project_root / primary_path).resolve()
+                    # Normalize for Windows case-insensitive comparison
+                    normalized_key = str(abs_path).lower()
+                    inv_by_primary_path[normalized_key] = inv.id
+            
+            # Normalize target files
+            target_files = []
+            for file_arg in args.files_changed:
+                # Try relative to project_root
+                candidate = project_root / file_arg
+                if candidate.exists():
+                    target_files.append(str(candidate.resolve()).lower())
+                else:
+                    # Try as absolute path
+                    candidate = Path(file_arg)
+                    if candidate.exists():
+                        target_files.append(str(candidate.resolve()).lower())
+            
+            # Match files to inv_ids
+            target_inv_ids = set()
+            for target_file in target_files:
+                if target_file in inv_by_primary_path:
+                    target_inv_ids.add(inv_by_primary_path[target_file])
+            
+            # Fallback: extract INV-ID from filename
+            if not target_inv_ids:
+                for file_arg in args.files_changed:
+                    match = re.search(r'test_inv_train_(\d{3})', file_arg)
+                    if match:
+                        inv_id = f"INV-TRAIN-{match.group(1)}"
+                        # Check if exists in specs
+                        if any(inv.id == inv_id for inv in invariants):
+                            target_inv_ids.add(inv_id)
+            
+            if args.verbose and target_inv_ids:
+                print(f"Scope: validating {len(target_inv_ids)} invariant(s): {sorted(target_inv_ids)}")
+        
+        # Initialize violations list with SPEC violations from parse
+        violations = list(spec_violations)
+        
+        # Detect UNOWNED_TEST (orphaned test files) in strict-spec mode
+        if args.strict_spec:
+            owned_inv_ids = {inv.id for inv in invariants}
+            unowned_inv_ids = set(files_by_inv.keys()) - owned_inv_ids
+            
+            # Apply scope if --files-changed
+            if target_inv_ids is not None:
+                unowned_inv_ids = unowned_inv_ids & target_inv_ids
+            
+            for unowned_id in sorted(unowned_inv_ids):
+                for test_file in files_by_inv[unowned_id]:
+                    violations.append(Violation(
+                        inv_id=unowned_id,
+                        file=str(test_file.path.relative_to(tests_dir.parent.parent.parent)),
+                        line=1,
+                        col=1,
+                        level=args.level,
+                        code='UNOWNED_TEST',
+                        message=f"Test file for {unowned_id} exists but invariant not found in INVARIANTS_TRAINING.md (orphaned test)",
+                        action="Remove file or add invariant to markdown"
+                    ))
+            
+            # Detect SPEC_MISSING (invariants without SPEC blocks) in strict-spec mode
+            for inv in invariants:
+                # Apply scope if --files-changed
+                if target_inv_ids is not None and inv.id not in target_inv_ids:
+                    continue
+                
+                if not inv.is_alias and inv.test_required and not inv.has_spec:
+                    violations.append(Violation(
+                        inv_id=inv.id,
+                        file='docs/02-modulos/training/INVARIANTS_TRAINING.md',
+                        line=1,
+                        col=1,
+                        level=args.level,
+                        code='SPEC_MISSING',
+                        message=f"{inv.id} requires SPEC block (strict-spec mode enabled)",
+                        action="Add SPEC block following documented patterns"
+                    ))
+        
+        # Validate coverage (with scope if --files-changed)
+        openapi_path = project_root / 'docs' / '_generated' / 'openapi.json'
+        openapi_ids = load_openapi_operation_ids(openapi_path)
+        openapi_index = load_openapi_index(openapi_path)
+        
+        if args.verbose and openapi_ids:
+            print(f"Loaded {len(openapi_ids)} operationIds from openapi.json")
+        
+        validator = RuleValidator(
+            level=args.level, 
+            verbose=args.verbose, 
+            openapi_ids=openapi_ids,
+            openapi_index=openapi_index
+        )
+        if target_inv_ids is not None:
+            # Filter invariants and files_by_inv to scope
+            scoped_invariants = [inv for inv in invariants if inv.id in target_inv_ids]
+            scoped_files_by_inv = {inv_id: files for inv_id, files in files_by_inv.items() if inv_id in target_inv_ids}
+            violations.extend(validator.validate_coverage(scoped_invariants, scoped_files_by_inv))
+        else:
+            violations.extend(validator.validate_coverage(invariants, files_by_inv))
+        
+        # Analyze each principal file
+        for inv in invariants:
+            # Skip aliases
+            if inv.is_alias or not inv.test_required:
+                continue
+            
+            # Apply scope if --files-changed (use target_inv_ids, not files_to_analyze)
+            if target_inv_ids is not None and inv.id not in target_inv_ids:
+                continue
+            
+            files = files_by_inv.get(inv.id, [])
+            principal_files = [f for f in files if f.is_principal]
+            
+            if len(principal_files) == 1:
+                file_path = principal_files[0].path
+                
+                if args.verbose:
+                    print(f"Analyzing {file_path.name}...")
+                
+                # AST analysis
+                analyzer = ASTAnalyzer(file_path)
+                analysis = analyzer.analyze()
+                
+                # DoD-0
+                violations.extend(validator.validate_dod0(analysis, file_path))
+                
+                # Obligations (strict only)
+                violations.extend(validator.validate_obligations(analysis, file_path, inv, verbose=args.verbose))
+                
+                # Class-specific rules
+                # Determinar classes a validar (SPEC ou legacy)
+                classes_to_validate = inv.primary_classes
+                
+                for class_type in classes_to_validate:
+                    if class_type == 'A':
+                        violations.extend(validator.validate_class_a(analysis, file_path))
+                    elif class_type == 'D':
+                        violations.extend(validator.validate_class_d(analysis, file_path, inv))
+                    elif class_type == 'F':
+                        violations.extend(validator.validate_class_f(analysis, file_path, inv))
+                    # Adicionar outras classes conforme necessário
+                
+                # Anti-patterns (all files)
+                violations.extend(validator.validate_anti_patterns(analysis, file_path))
+        
+        # Generate report
+        covered = len([inv for inv in invariants if inv.id in files_by_inv and any(f.is_principal for f in files_by_inv[inv.id])])
+        report = ReportGenerator.generate(violations, args.level, len(invariants), covered)
+        
+        # Write reports
+        if args.report_json:
+            ReportGenerator.write_json(report, args.report_json)
+            if args.verbose:
+                print(f"JSON report written to {args.report_json}")
+        
+        if args.report_txt:
+            ReportGenerator.write_txt(report, args.report_txt)
+            if args.verbose:
+                print(f"TXT report written to {args.report_txt}")
+        
+        # Print to console
+        ReportGenerator.print_console(report)
+        
+        # Exit code
+        sys.exit(0 if report.pass_status else 2)
+    
+    except Exception as e:
+        print(f"ERROR: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+if __name__ == '__main__':
+    main()

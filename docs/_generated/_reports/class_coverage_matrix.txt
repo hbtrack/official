@@ -1,0 +1,268 @@
+================================================================================
+INVARIANTS CLASS COVERAGE AUDIT
+================================================================================
+Generated: 2026-02-03T05:27:06.942848
+Source: C:\HB TRACK\docs\02-modulos\training\INVARIANTS_TRAINING.md
+
+SUMMARY
+--------------------------------------------------------------------------------
+Total invariants: 39
+Test required: 37
+Test optional: 2
+
+By Status:
+  CONFIRMADA          :  38
+  INATIVA             :   1
+
+By Class:
+  A                   :  16  [YES]
+  B                   :   2  [YES]
+  C1                  :   2  [YES]
+  C2                  :  15  [YES]
+  D                   :   3  [YES]
+  E1                  :   1  [YES]
+  F                   :   2  [YES]
+
+================================================================================
+DETAILED INVENTORY BY CLASS
+================================================================================
+
+CLASS A (16 invariants)
+--------------------------------------------------------------------------------
+Validator status: [YES]
+
+  INV-TRAIN-001        | Status: CONFIRMADA   | Test: True
+    Primary: tests/training/invariants/test_inv_train_001_focus_sum_constraint.py
+    Node:    TestInvTrain001FocusSumConstraint
+    Desc:    CHECK constraint on training_sessions table...
+
+  INV-TRAIN-001        | Status: CONFIRMADA   | Test: True
+    Primary: tests/training/invariants/test_inv_train_001_focus_sum_constraint.py
+    Node:    TestInvTrain001FocusSumConstraint
+    Desc:    CHECK constraint on session_templates table...
+
+  INV-TRAIN-008        | Status: CONFIRMADA   | Test: True
+    Primary: tests/training/invariants/test_inv_train_008_soft_delete_reason_pair.py
+    Node:    TestInvTrain008SoftDeleteReasonPair
+    Desc:    CHECK constraint pattern across multiple tables (deleted_at/...
+
+  INV-TRAIN-009        | Status: CONFIRMADA   | Test: True
+    Primary: tests/unit/test_inv_train_009_wellness_pre_uniqueness.py
+    Node:    TestInvTrain009
+    Desc:    Unicidade: 1 wellness_pre por athlete×session...
+
+  INV-TRAIN-010        | Status: CONFIRMADA   | Test: True
+    Primary: tests/unit/test_inv_train_010_wellness_post_uniqueness.py
+    Node:    TestInvTrain010
+    Desc:    Unicidade: 1 wellness_post por athlete×session...
+
+  INV-TRAIN-028        | Status: CONFIRMADA   | Test: False
+    Primary: tests/training/invariants/test_inv_train_001_focus_sum_constraint.py
+    Node:    None
+    Desc:    References same constraint as INV-TRAIN-001 unit 'db-constra...
+
+  INV-TRAIN-020        | Status: CONFIRMADA   | Test: True
+    Primary: tests/unit/test_inv_train_020_cache_invalidation_trigger.py
+    Node:    TestInvTrain020
+    Desc:    Cache invalidation automático após mudanças em sessões...
+
+  INV-TRAIN-021        | Status: CONFIRMADA   | Test: True
+    Primary: tests/unit/test_inv_train_021_internal_load_trigger.py
+    Node:    TestInvTrain021
+    Desc:    Internal load calculado por trigger no DB...
+
+  INV-TRAIN-030        | Status: CONFIRMADA   | Test: True
+    Primary: tests/unit/test_inv_train_030_attendance_correction_fields.py
+    Node:    TestInvTrain030
+    Desc:    Correção de attendance exige campos de auditoria...
+
+  INV-TRAIN-031        | Status: CONFIRMADA   | Test: True
+    Primary: tests/unit/test_inv_train_031_derive_phase_focus.py
+    Node:    TestInvTrain031
+    Desc:    Derivação automática de phase_focus a partir dos percentuais...
+
+  INV-TRAIN-032        | Status: CONFIRMADA   | Test: True
+    Primary: tests/training/invariants/test_inv_train_032_*.py
+    Node:    TestInvTrain032
+    Desc:    RPE da sessão deve estar entre 0 e 10...
+
+  INV-TRAIN-033        | Status: CONFIRMADA   | Test: True
+    Primary: tests/training/invariants/test_inv_train_033_wellness_pre_sleep_hours.py
+    Node:    TestInvTrain033WellnessPreSleepHours
+    Desc:    Horas de sono deve estar entre 0 e 24...
+
+  INV-TRAIN-034        | Status: CONFIRMADA   | Test: True
+    Primary: tests/unit/test_inv_train_034_wellness_pre_sleep_quality.py
+    Node:    TestInvTrain034
+    Desc:    Qualidade do sono deve estar entre 1 e 5...
+
+  INV-TRAIN-035        | Status: CONFIRMADA   | Test: True
+    Primary: tests/unit/test_inv_train_035_session_templates_unique_name.py
+    Node:    TestInvTrain035
+    Desc:    Nome de template de sessão é único por organização...
+
+  INV-TRAIN-036        | Status: CONFIRMADA   | Test: True
+    Primary: tests/unit/test_inv_train_036_wellness_rankings_unique.py
+    Node:    TestInvTrain036
+    Desc:    Ranking de wellness é único por time e mês...
+
+  INV-TRAIN-037        | Status: CONFIRMADA   | Test: True
+    Primary: tests/training/invariants/test_inv_train_037_*.py
+    Node:    TestInvTrain037
+    Desc:    Data de início do ciclo deve ser anterior à data de término...
+
+
+CLASS B (2 invariants)
+--------------------------------------------------------------------------------
+Validator status: [YES]
+
+  INV-TRAIN-002        | Status: CONFIRMADA   | Test: True
+    Primary: tests/training/invariants/test_inv_train_002_wellness_pre_deadline.py
+    Node:    TestInvTrain002WellnessPreDeadline
+    Desc:    Database column locked_at documents the rule...
+
+  INV-TRAIN-003        | Status: CONFIRMADA   | Test: True
+    Primary: tests/training/invariants/test_inv_train_003_wellness_post_deadline.py
+    Node:    TestInvTrain003WellnessPostDeadline
+    Desc:    Database column locked_at documents the rule...
+
+
+CLASS C1 (2 invariants)
+--------------------------------------------------------------------------------
+Validator status: [YES]
+
+  INV-TRAIN-015        | Status: CONFIRMADA   | Test: True
+    Primary: tests/training/invariants/test_inv_train_015_training_analytics_exposure.py
+    Node:    TestInvTrain015TrainingAnalyticsExposure
+    Desc:    Training Analytics (FR-012) exposto e ancorado em router/ser...
+
+  INV-TRAIN-025        | Status: CONFIRMADA   | Test: True
+    Primary: tests/unit/test_inv_train_025_export_lgpd_endpoints.py
+    Node:    TestInvTrain025
+    Desc:    Export LGPD via endpoints OpenAPI + Celery async + cleanup d...
+
+
+CLASS C2 (15 invariants)
+--------------------------------------------------------------------------------
+Validator status: [YES]
+
+  INV-TRAIN-002        | Status: CONFIRMADA   | Test: True
+    Primary: tests/training/invariants/test_inv_train_002_wellness_pre_deadline.py
+    Node:    TestInvTrain002WellnessPreDeadline
+    Desc:    Service enforces 2h deadline with ValidationError...
+
+  INV-TRAIN-003        | Status: CONFIRMADA   | Test: True
+    Primary: tests/training/invariants/test_inv_train_003_wellness_post_deadline.py
+    Node:    TestInvTrain003WellnessPostDeadline
+    Desc:    Service enforces 24h deadline with ValidationError (not yet ...
+
+  INV-TRAIN-004        | Status: CONFIRMADA   | Test: True
+    Primary: tests/unit/test_inv_train_004_edit_window_time.py
+    Node:    TestInvTrain004
+    Desc:    Janela de edição por autoria/hierarquia e estado...
+
+  INV-TRAIN-005        | Status: CONFIRMADA   | Test: True
+    Primary: tests/unit/test_inv_train_005_immutability_60_days.py
+    Node:    TestInvTrain005
+    Desc:    Sessão > 60 dias vira readonly (imutabilidade)...
+
+  INV-TRAIN-011        | Status: CONFIRMADA   | Test: True
+    Primary: tests/unit/test_inv_train_011_deviation_rules.py
+    Node:    TestInvTrain011
+    Desc:    Regras de desvio e justificativa mínima...
+
+  INV-TRAIN-012        | Status: CONFIRMADA   | Test: True
+    Primary: tests/unit/test_inv_train_012_export_rate_limit.py
+    Node:    TestInvTrain012
+    Desc:    Rate limiting de export LGPD...
+
+  INV-TRAIN-013        | Status: CONFIRMADA   | Test: True
+    Primary: tests/unit/test_inv_train_013_gamification_badge_rules.py
+    Node:    TestInvTrain013
+    Desc:    Gamificação: critérios de badge (regras de elegibilidade)...
+
+  INV-TRAIN-014        | Status: CONFIRMADA   | Test: True
+    Primary: tests/unit/test_inv_train_014_overload_alert_threshold.py
+    Node:    TestInvTrain014
+    Desc:    Alertas: sobrecarga por multiplicador (>= 1.5× threshold)...
+
+  INV-TRAIN-022        | Status: CONFIRMADA   | Test: True
+    Primary: tests/unit/test_wellness_post_cache_invalidation.py
+    Node:    TestInvTrain022
+    Desc:    Atualização automática de performance cache ao registrar wel...
+
+  INV-TRAIN-024        | Status: CONFIRMADA   | Test: True
+    Primary: tests/unit/test_inv_train_024_websocket_broadcast.py
+    Node:    TestInvTrain024
+    Desc:    WebSocket broadcast e NotificationService para alerts/badges...
+
+  INV-TRAIN-026        | Status: CONFIRMADA   | Test: True
+    Primary: tests/unit/test_inv_train_026_lgpd_access_logging.py
+    Node:    TestInvTrain026
+    Desc:    LGPD access logging (staff lendo dados de outros atletas)...
+
+  INV-TRAIN-018        | Status: CONFIRMADA   | Test: True
+    Primary: Hb Track - Backend/tests/unit/test_training_session_microcycle_status.py
+    Node:    TestInvTrain018
+    Desc:    Sessões criadas via microciclo: draft se incompleta, schedul...
+
+  INV-TRAIN-019        | Status: CONFIRMADA   | Test: True
+    Primary: Hb Track - Backend/tests/integration/test_training_session_audit_logs.py
+    Node:    TestInvTrain019
+    Desc:    Audit log para ações de sessão (create/edit/publish/close)...
+
+  INV-TRAIN-023        | Status: CONFIRMADA   | Test: True
+    Primary: Hb Track - Backend/tests/unit/test_wellness_post_overload_alert_trigger.py
+    Node:    TestInvTrain023
+    Desc:    Overload alerts disparados automaticamente por wellness_post...
+
+  INV-TRAIN-029        | Status: CONFIRMADA   | Test: True
+    Primary: tests/unit/test_inv_train_029_edit_blocked_after_in_progress.py
+    Node:    TestInvTrain029
+    Desc:    Edição bloqueada após início da sessão...
+
+
+CLASS D (3 invariants)
+--------------------------------------------------------------------------------
+Validator status: [YES]
+
+  INV-TRAIN-006        | Status: CONFIRMADA   | Test: True
+    Primary: tests/unit/test_inv_train_006_lifecycle_status.py
+    Node:    TestInvTrain006
+    Desc:    Lifecycle de status (DB enum + transições operacionais)...
+
+  INV-TRAIN-016        | Status: CONFIRMADA   | Test: True
+    Primary: tests/training/invariants/test_inv_train_016_attendance_auth_scoped.py
+    Node:    TestInvTrain016AttendanceAuthScoped
+    Desc:    Attendance: rota base exige auth; rota scoped não exposta...
+
+  INV-TRAIN-027        | Status: CONFIRMADA   | Test: True
+    Primary: tests/unit/test_refresh_training_rankings_task.py
+    Node:    TestInvTrain027
+    Desc:    Cache refresh daily para rankings/métricas...
+
+
+CLASS E1 (1 invariants)
+--------------------------------------------------------------------------------
+Validator status: [YES]
+
+  INV-TRAIN-007        | Status: CONFIRMADA   | Test: True
+    Primary: tests/training/invariants/test_inv_train_007_celery_utc_timezone.py
+    Node:    TestInvTrain007CeleryUtcTimezone
+    Desc:    Timezone operacional (Celery usa UTC)...
+
+
+CLASS F (2 invariants)
+--------------------------------------------------------------------------------
+Validator status: [YES]
+
+  INV-TRAIN-040        | Status: CONFIRMADA   | Test: True
+    Primary: tests/training/invariants/test_inv_train_040_health_contract.py
+    Node:    TestInvTrain040HealthContract
+    Desc:    Contrato OpenAPI para endpoint health - validação contra ope...
+
+  INV-TRAIN-041        | Status: CONFIRMADA   | Test: True
+    Primary: tests/training/invariants/test_inv_train_041_teams_contract.py
+    Node:    TestInvTrain041TeamsContract
+    Desc:    Contrato OpenAPI para endpoint teams - validação com securit...
+

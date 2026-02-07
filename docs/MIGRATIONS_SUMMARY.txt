@@ -1,0 +1,130 @@
+================================================================================
+RESUMO DAS MIGRATIONS DE RELATÓRIOS - HB TRACKING BACKEND
+================================================================================
+
+Data: 2025-12-25
+Autor: Claude Code
+Status: COMPLETO - 4/4 migrations implementadas
+
+================================================================================
+MIGRATIONS IMPLEMENTADAS
+================================================================================
+
+R1: create_mv_training_performance
+   - File: 92365c111182_create_mv_training_performance.py
+   - View: mv_training_performance
+   - Objetivo: Agregados de Performance de Treinos
+   - Tabelas: training_sessions, attendance, wellness_post
+   - Métricas: 
+     * Presença (total_athletes, presentes, ausentes, dm, lesionadas)
+     * Carga (avg_minutes, avg_rpe, avg_internal_load, stddev_internal_load)
+     * Completude (load_ok_count, data_completeness_pct)
+     * Wellness pós (avg_fatigue_after, avg_mood_after)
+   - Índices: 3 (session_id, org+season, team, date)
+   - Referências RAG: R18, R22, RP5, RP6
+
+R2: create_mv_athlete_training_summary
+   - File: 6086f19465e1_create_mv_athlete_training_summary.py
+   - View: mv_athlete_training_summary
+   - Objetivo: Resumo Individual de Atleta em Treinos
+   - Tabelas: athletes, attendance, training_sessions, wellness_pre, wellness_post,
+              team_registrations, medical_cases, categories
+   - Métricas:
+     * Participação (total_sessions, sessions_presente, sessions_ausente, etc)
+     * Taxa de presença (attendance_rate)
+     * Carga (avg_internal_load, avg_rpe, avg_minutes, load_7d, load_28d)
+     * Wellness pré (avg_sleep_hours, avg_sleep_quality, avg_fatigue_pre, etc)
+     * Wellness pós (avg_fatigue_after, avg_mood_after)
+     * Últimos valores (last_sleep_hours, last_fatigue, last_internal_load)
+     * Casos médicos ativos (active_medical_cases)
+     * Idade e categoria (current_age, expected_category_code)
+   - Índices: 4 (athlete_id, organization_id, season_id, team_id, state)
+   - Referências RAG: R12, R13, R14, RP4, RP5, RP6
+
+R3: create_mv_wellness_summary
+   - File: bb97d068b643_create_mv_wellness_summary.py
+   - View: mv_wellness_summary
+   - Objetivo: Resumo de Wellness Agregado por Período/Equipe
+   - Tabelas: wellness_pre, wellness_post, training_sessions, team_registrations
+   - Métricas:
+     * Por período (semanal/mensal)
+     * Contadores (athletes_count, sessions_count)
+     * Wellness pré (avg_sleep_hours, avg_sleep_quality, avg_fatigue_pre,
+                     avg_stress, avg_muscle_soreness)
+     * Wellness pós (avg_fatigue_after, avg_mood_after)
+     * Variabilidade (stddev_fatigue_pre, stddev_stress)
+   - Índices: 4 (org+season, team, period, composite)
+   - Referências RAG: RP6, RP7, RP8
+
+R4: create_mv_medical_cases_summary
+   - File: 8fba6a22b58c_create_mv_medical_cases_summary.py
+   - View: mv_medical_cases_summary
+   - Objetivo: Resumo de Casos Médicos e Lesões
+   - Tabelas: athletes, medical_cases, athlete_states, team_registrations
+   - Métricas (nível atleta):
+     * Lesões (total_injuries, active_injuries, avg_days_out, total_days_out)
+     * Tipos (injury_types_count, recurrence_count)
+     * Temporal (last_injury_date)
+     * Comum (most_common_injury_type)
+   - Métricas (nível equipe):
+     * Atletas (total_athletes, athletes_with_injuries, athletes_currently_injured)
+     * Lesões (total_team_injuries, active_team_injuries, avg_team_days_out)
+     * Taxa (injury_rate)
+     * Comum (common_injury_type)
+   - Índices: 5 (athlete_id, org, team, season, composite)
+   - Referências RAG: R13, R14, RP7
+
+================================================================================
+PADRÃO SEGUIDO
+================================================================================
+
+Todas as migrations seguem o padrão estabelecido:
+
+1. ✓ Uso de op.execute(sa.text("""...""")) para SQL
+2. ✓ CREATE MATERIALIZED VIEW IF NOT EXISTS
+3. ✓ Estrutura com CTEs (Common Table Expressions) para clareza
+4. ✓ Índices apropriados com IF NOT EXISTS
+5. ✓ COMMENT ON MATERIALIZED VIEW com referências RAG
+6. ✓ Função downgrade() com DROP MATERIALIZED VIEW IF EXISTS CASCADE
+7. ✓ Sem criação de novas tabelas (apenas views materializadas)
+8. ✓ Conformidade com schema existente (initial_schema.sql)
+
+================================================================================
+CHAIN DE DEPENDÊNCIAS
+================================================================================
+
+4af09f9d46a0 (initial_schema_consolidated)
+    ↓
+92365c111182 (create_mv_training_performance) [R1]
+    ↓
+6086f19465e1 (create_mv_athlete_training_summary) [R2]
+    ↓
+bb97d068b643 (create_mv_wellness_summary) [R3]
+    ↓
+8fba6a22b58c (create_mv_medical_cases_summary) [R4]
+
+================================================================================
+COMANDOS DE REFRESH
+================================================================================
+
+Para atualizar as views materializadas:
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY mv_training_performance;
+REFRESH MATERIALIZED VIEW CONCURRENTLY mv_athlete_training_summary;
+REFRESH MATERIALIZED VIEW CONCURRENTLY mv_wellness_summary;
+REFRESH MATERIALIZED VIEW CONCURRENTLY mv_medical_cases_summary;
+
+Nota: CONCURRENTLY requer índice único. Para R3 e R4 que não têm índice único,
+      usar sem CONCURRENTLY ou criar índice único adicional se necessário.
+
+================================================================================
+PRÓXIMOS PASSOS
+================================================================================
+
+1. Executar migrations: alembic upgrade head
+2. Testar queries nas views materializadas
+3. Configurar refresh automático (cron job ou trigger)
+4. Implementar endpoints API para consumo dos relatórios
+5. Documentar queries de exemplo no manual
+
+================================================================================

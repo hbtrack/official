@@ -1,0 +1,14 @@
+﻿# Gate Run Metadata
+inv_id: INV-TRAIN-002
+timestamp: 20260203_224252
+root: C:\HB TRACK
+backend: C:\HB TRACK\Hb Track - Backend
+python: Python 3.14.2
+test_file: C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_002_wellness_pre_deadline.py
+test_node: TestInvTrain002WellnessPreDeadline
+verify_exit: 0
+pytest_exit: 0
+exit_code: 3
+primary_class: C2
+golden_drift: YES
+golden_missing: NO

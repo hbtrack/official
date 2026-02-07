@@ -1,0 +1,1514 @@
+Ao clicar em **“Competições”** na sidebar, a melhor UX é levar o usuário diretamente para a **tela principal da rota `/competitions`**, com a seguinte lógica de exibição:
+
+---
+
+## ✅ **Cenários possíveis e telas correspondentes**
+
+### 🟢 **Cenário 1: Já existem competições cadastradas**
+
+➡️ **Abrir lista de competições existentes** para a equipe e temporada ativa
+
+**Tela exibida:**
+
+* Componente `<CompetitionList />`
+* Mostra cards ou tabela com competições
+* Ações rápidas: `Ver`, `Editar`, `Duplicar`, `Excluir`
+* Botão flutuante: `+ Nova Competição`
+
+---
+
+### 🔴 **Cenário 2: Nenhuma competição cadastrada ainda**
+
+➡️ **Abrir diretamente um estado vazio com call-to-action**
+
+**Tela exibida:**
+
+* Mensagem como:
+
+  > “Nenhuma competição cadastrada para esta equipe”
+* Botão central: `📂 Importar por PDF` ou `+ Nova Competição`
+* Tooltip: “Você pode importar uma tabela completa via PDF para poupar tempo”
+
+---
+
+### 🔁 **Cenário 3: Competição em andamento detectada**
+
+➡️ Opcional: abrir **a Visão Geral da competição ativa mais recente**
+
+**Tela exibida:**
+
+* `<CompetitionOverview />` daquela competição
+* Breadcrumbs: `Competições > Copa Estadual 2026`
+* Tabs internas já visíveis (Visão Geral, Tabela, Fases)
+
+Essa lógica pode ser controlada por uma flag, como:
+
+```ts
+autoOpenLastCompetition: true
+```
+
+---
+
+## 🧠 Melhor prática de UX
+
+> Comece **pela lista**, mesmo que só tenha 1 item.
+> Isso garante clareza, permite múltiplas competições e evita surpresas.
+
+---
+
+## 📌 Conclusão
+
+A **primeira tela padrão deve ser a lista de competições (`<CompetitionList />`)**, com botão claro para iniciar nova, e opções para importar ou duplicar.
+
+Se desejar, posso prototipar essa lista com os estados principais (vazia, com uma competição, com múltiplas). Deseja?
+
+---
+
+## 🧩 **Página principal: `/competitions`**
+
+Componente raiz: `<CompetitionsPage />`
+
+---
+
+### ✅ **📂 1. `<CompetitionList />`**
+
+Lista visual de todas as competições da **equipe ativa** e da **temporada atual**.
+
+* Layout: cards ou tabela
+* Cada item exibe:
+
+  * 🏆 Nome da competição
+  * 📅 Temporada
+  * 🟢 Status (badge colorido)
+  * 👥 Nº de equipes participantes
+  * 📍 Tipo de disputa (turno, grupos, etc.)
+  * Última atualização
+* Ações por item:
+
+  * 👁️ Ver detalhes
+  * ✏️ Editar
+  * 📑 Duplicar
+  * 🗑️ Excluir (com confirmação)
+
+---
+
+### 🛑 **2. `<EmptyState />`** *(se não houver competições)*
+
+* Mensagem clara:
+
+  > “Nenhuma competição cadastrada ainda para esta equipe”
+
+* Ações principais:
+
+  * `📂 Importar PDF com Tabela`
+  * `+ Nova Competição` (abre modal ou leva para `/competitions/new`)
+  * Tooltip explicativo para ambos
+
+---
+
+### ➕ **3. `<FloatingActionButton />` (FAB flutuante)**
+
+* Fixo no canto inferior direito
+* Opções:
+
+  * `+ Nova Competição`
+  * `📂 Importar por PDF`
+  * `📝 Duplicar Competição`
+
+---
+
+### 📍 **4. `<CompetitionFilters />`** *(opcional, se volume alto)*
+
+* Filtros por:
+
+  * Temporada (dropdown, oculto se só houver uma)
+  * Status (ativa, finalizada)
+  * Equipes participantes (auto-complete)
+
+---
+
+### 🧠 **5. `<CompetitionSearch />`**
+
+* Campo de busca por nome da competição
+* Atualiza lista em tempo real
+* Debounce + highlight de termos
+
+---
+
+### 📢 **6. Toasts e feedbacks**
+
+* Toast ao importar PDF:
+
+  * “PDF analisado com sucesso. 1 competição criada.”
+  * “Erro: 2 jogos não puderam ser reconhecidos.”
+* Toast ao excluir:
+
+  * “Competição removida com sucesso.”
+
+---
+
+## ✅ Fluxo UX completo
+
+1. Abre a lista
+2. Vê imediatamente o contexto (temporada + equipe ativa)
+3. Vê as competições já existentes
+4. Pode criar nova ou importar por PDF sem sair da tela
+5. Pode visualizar, editar ou duplicar cada item
+
+---
+
+✅ 📋 Checklist Completo – Página /competitions (tela inicial da rota)
+🔹 1. Cabeçalho da Página
+
+📘 Título: "Competições da Equipe Sub-18 Feminino" (puxado da equipe ativa)
+
+📅 Temporada: “2026” (fixado visualmente)
+
+🟢 Status da temporada: “Ativa” ou “Encerrada”
+
+Ação: Botão + Nova Competição (ou 📂 Importar por PDF)
+
+🔹 2. Lista de Competições
+
+Componente: <CompetitionList />
+
+Exibir em cards com preview, ou tabela responsiva
+
+Cada item mostra:
+
+🏆 Nome da competição
+
+📅 Temporada
+
+👥 Nº de equipes
+
+🔁 Status (andamento, finalizada, etc.)
+
+⚙️ Ações rápidas: Ver, Editar, Duplicar, Excluir
+
+🔹 3. Estado Vazio (Empty State UX)
+
+Se não houver competições:
+
+Ilustração com título:
+"Nenhuma competição cadastrada para esta equipe ainda"
+
+Botão central:
++ Nova Competição ou 📂 Importar PDF de Tabela
+
+Dica em tooltip ou texto:
+"Você pode importar uma tabela em PDF para cadastrar toda a competição em segundos."
+
+🔹 4. Toast Messages UX (feedback visual)
+Ação realizada	Toast Esperado
+Criou nova competição	✅ “Competição criada com sucesso”
+Editou dados	📝 “Alterações salvas”
+Apagou uma competição	🗑️ “Competição excluída”
+Erro ao salvar ou importar	❌ “Erro ao processar dados do PDF”
+PDF carregado mas incompleto	⚠️ “Alguns dados não foram identificados”
+🔹 5. Atalhos UX visíveis
+
+Filtro rápido por temporada (se múltiplas)
+
+Filtro por status: Todos | Em andamento | Finalizadas
+
+Ícone de pin 🧷 para marcar competição como principal
+
+Campo de busca 🔍 por nome
+
+🔹 6. Integrações e contexto
+
+Cada competição tem botão:
+
+📈 “Ver classificação”
+
+📅 “Ver próximos jogos” (leva para rota /games)
+
+Dados sincronizados: exibe alerta se estiver desatualizado
+
+🔹 7. Ações avançadas (opcional futuro)
+
+Botão: 📥 Importar do Excel
+
+Botão: 📤 Exportar dados da competição
+
+Duplicar estrutura de outra competição anterior
+
+🔹 8. Animações e UX refinado
+
+Fade-in dos cards
+
+Skeletons enquanto carrega
+
+Popover para ações rápidas (3 pontinhos ou menu suspenso)
+
+✅ Resultado Final de UX:
+
+Acesso rápido ao que interessa
+
+Caminho claro para cadastrar nova competição
+
+Contexto sempre visível (equipe, temporada)
+
+Zero ruído
+
+Leveza, clareza e velocidade
+
+Sim — aqui vão **7 melhorias UX/UI avançadas e realistas** para a página inicial de **“Competições”** que elevam a experiência do HB Track sem complicar o fluxo:
+
+---
+
+## 💡 **Melhorias avançadas para UX/UI da página `/competitions`**
+
+---
+
+### 1. **🧠 Sugestões inteligentes ao criar nova competição**
+
+* Exibir:
+
+  * “Copa Estadual Sub-18 2026” *(baseado em padrões anteriores)*
+  * “Clonar estrutura da última competição?”
+* Evita que o usuário comece do zero, acelera o processo
+
+---
+
+### 2. **📌 Fixar competição como principal**
+
+* Ícone de pin 🧷 visível no card
+* Se marcado, essa competição aparece primeiro, ou vai direto para “Visão Geral” ao entrar na rota
+* Ajuda equipes com múltiplas competições em paralelo
+
+---
+
+### 3. **🎯 Destaques de próximos jogos**
+
+* Mostrar no card da competição (mini-ícone):
+
+  > “🎮 2 jogos esta semana”
+
+  * Tooltip mostra as datas
+* Aumenta o senso de urgência/atualidade
+
+---
+
+### 4. **🔁 Status dinâmico no card**
+
+* Badge com cor e ícone:
+
+  * 🟢 Em andamento
+  * 🔴 Finalizada
+  * ⏳ Aguardando início
+* Alterável com clique (menu suspenso)
+
+---
+
+### 5. **💬 Tooltip com resumo da competição**
+
+* Ao passar o mouse no nome da competição:
+
+  > “Formato: Turno único com semifinal”
+  > “Times: 12 | Jogos: 66 | Regulamento: OK”
+
+---
+
+### 6. **🧾 Histórico de edição ou criação**
+
+* Texto discreto no rodapé do card:
+
+  > “Criada por João em 03/01”
+  > “Última edição: há 2 dias”
+
+---
+
+### 7. **💡 Atalho inteligente flutuante (FAB contextual)**
+
+* Se a equipe já tem 3+ competições:
+
+  * FAB flutuante muda de `+ Nova` para:
+
+    * 📂 “Importar PDF”
+    * 🧬 “Clonar competição anterior”
+    * 🏗️ “Nova do zero”
+
+---
+
+Esses refinamentos aumentam a **velocidade de ação**, **diminuem atrito cognitivo** e deixam a interface **mais proativa e personalizada**.
+
+Para garantir a **melhor UX possível**, os botões e ações da página `/competitions` devem seguir princípios de **clareza, previsibilidade, contexto e velocidade**. Aqui está a descrição ideal de **comportamento para cada botão e ação principal** na página:
+
+---
+
+## ✅ **Comportamento UX Ideal – Ações e Botões em `/competitions`**
+
+---
+
+### 🔹 **1. `+ Nova Competição` (botão flutuante ou no header)**
+
+* 🧠 **Comportamento Inteligente**:
+
+  * Se o usuário **tem PDF em mãos**, sugerir imediatamente `📂 Importar por PDF`
+  * Se ele **já criou competições antes**, sugerir clonar uma anterior
+* ➕ **Animação suave** ao abrir modal ou wizard
+* ⏱️ **Salva rascunho automático** a cada etapa (auto-save local)
+* 🧩 **Fallback**: botão "Preencher manualmente"
+
+---
+
+### 🔹 **2. 📂 Importar PDF**
+
+* 🧲 Arrastar e soltar o arquivo
+* 🧠 Mostrar progresso de leitura
+* ✅ Após o upload, abrir uma **tela de revisão** com:
+
+  * Campos detectados ✔️
+  * Campos ausentes ⚠️
+  * Preview dos jogos lidos 🏟️
+* 🔁 Opção: “Reprocessar arquivo” ou “Substituir arquivo”
+
+---
+
+### 🔹 **3. Card da competição**
+
+Cada card deve ter:
+
+#### A. 🏁 Clicável no nome/título
+
+* Leva direto à aba **“Visão Geral”** da competição
+
+#### B. ⋮ Menu suspenso (ações)
+
+* **Editar** → Abre modal ou tela para ajustes básicos
+* **Duplicar** → Cria novo com mesmo formato e dados-base
+* **Excluir** → Confirmação via modal com mensagem:
+  *“Isso removerá os jogos, fases e tabela associados”*
+
+#### C. 📌 Botão “Fixar como principal”
+
+* Se fixado, ao entrar na rota `/competitions`, o usuário é redirecionado para esta competição
+* Tooltip: *“Fixar no topo / tornar principal”*
+
+---
+
+### 🔹 **4. Filtros e busca**
+
+* 🔍 Campo de busca (nome da competição, ano, cidade)
+
+  * Com debounce
+  * Suporte a tecla Enter
+* 📅 Filtro por temporada → dropdown com anos disponíveis
+* 🟢 Filtro por status → “Todos | Em andamento | Finalizadas”
+
+💡 *Filtros devem ser persistentes via `localStorage`*
+
+---
+
+### 🔹 **5. Toasts e feedback visual**
+
+| Ação do usuário              | Toast exibido                             |
+| ---------------------------- | ----------------------------------------- |
+| Criou competição com sucesso | ✅ “Competição criada com sucesso”         |
+| PDF processado               | ✅ “Dados importados. Revise e confirme”   |
+| Campo não detectado          | ⚠️ “Equipe 'São Roque' não reconhecida”   |
+| Exclusão                     | 🗑️ “Competição removida permanentemente” |
+| Erro de importação           | ❌ “Falha ao processar o arquivo PDF”      |
+
+---
+
+### 🔹 **6. Interação responsiva**
+
+* 🖱️ Hover nos cards destaca sombra e mostra mini preview
+* 📱 Mobile:
+
+  * Cards em lista
+  * Ações em botão de menu vertical (⋮)
+  * FAB sempre visível, mas reduzido
+
+---
+
+## ✨ Resumo da Experiência UX:
+
+* Nenhuma ação deve exigir mais de **2 cliques** para iniciar
+* Feedback **instantâneo e claro** para todas as ações
+* Interface se adapta ao **nível de experiência do usuário**
+* Opções de fallback manual sempre disponíveis
+
+---
+
+Aqui está o **protótipo UX da tela de upload e revisão de competição via PDF** — pensado para máxima eficiência, clareza e velocidade no HB Track:
+
+---
+
+## 🖼️ **Protótipo de Tela: Importar Competição via PDF**
+
+```
+📁 Importar Competição via PDF
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🗂️ Arraste ou selecione seu arquivo PDF
+[ Escolher arquivo ]
+
+📌 Requisitos:
+✓ Deve conter tabela de jogos
+✓ Pode conter regulamento
+✓ Formatos suportados: .pdf
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📤 [ Enviar e Analisar ]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 Resultado da Extração
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📝 Nome da Competição: ▣ Copa Estadual 2026          ✅ Detectado
+📆 Temporada:           ▣ 2026                        ✅ Detectado
+👥 Equipes (16):        ▣ Lista expandida             ✅ Detectado
+🏁 Formato:             ▣ Grupos + Eliminatórias      ✅ Detectado
+📄 Regulamento:         ▣ PDF anexado                 ✅ Detectado
+
+🕹️ Jogos Detectados:    ▣ 24 jogos                   ✅ Detectado
+📍 Locais de Jogo:      ▣ 18 locais                   ⚠️ Parcial
+📅 Datas:               ▣ 20 datas                    ⚠️ Alguns ausentes
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠️ Campos não identificados:
+- 4 jogos sem data
+- 2 jogos sem local
+- 1 equipe não reconhecida (“A.D. Alvorada?”)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[ Revisar Detalhes ]   [ Corrigir Manualmente ]   [ Confirmar Importação ]
+```
+
+---
+
+## ✅ Padrões de UX aplicados:
+
+| Item                         | Por que está presente                      |
+| ---------------------------- | ------------------------------------------ |
+| 📥 Upload simples            | Ação central, visual limpo e direto        |
+| 🧠 Detecção automática       | Reduz esforço manual                       |
+| ✅ Feedback linha a linha     | Usuário confia no que foi detectado        |
+| ⚠️ Campos problemáticos      | Transparência total de falhas              |
+| ✏️ Botões de correção direta | Flexibilidade máxima: usuário pode ajustar |
+| 📦 Resumo validável          | Tela confirma tudo antes de salvar         |
+
+---
+
+### 💡 Componente base recomendado: `<CompetitionImportReview />`
+
+Aqui está o **esqueleto JSX do componente `<CompetitionImportReview />`**, estruturado para fácil extensão com lógica de OCR, NLP e estado de revisão:
+
+```tsx
+// components/competitions/CompetitionImportReview.tsx
+
+import {
+  Box,
+  Button,
+  Divider,
+  FileInput,
+  Text,
+  Badge,
+  Table,
+  Tooltip,
+  VStack,
+} from "@/components/ui";
+import { useState } from "react";
+
+export function CompetitionImportReview() {
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
+  const [parsedData, setParsedData] = useState(null);
+
+  function handleFileUpload(file: File) {
+    setPdfFile(file);
+    // TODO: enviar para backend/OCR e obter dados parseados
+  }
+
+  return (
+    <Box p="6" borderRadius="md" bg="white" shadow="md">
+      <Text fontSize="xl" fontWeight="bold">📁 Importar Competição via PDF</Text>
+
+      <Divider my="4" />
+
+      <FileInput
+        label="Arraste ou selecione seu arquivo PDF"
+        accept=".pdf"
+        onChange={handleFileUpload}
+      />
+
+      <Text fontSize="sm" color="gray.500" mt="2">
+        ✓ Deve conter tabela de jogos • ✓ Pode conter regulamento
+      </Text>
+
+      <Button mt="4" onClick={() => {/* TODO: parse file */}}>
+        📤 Enviar e Analisar
+      </Button>
+
+      {parsedData && (
+        <Box mt="6">
+          <Text fontSize="lg" fontWeight="medium">📊 Resultado da Extração</Text>
+
+          <VStack spacing="3" align="stretch" mt="3">
+            <FieldStatus label="Nome da Competição" value={parsedData.name} status="success" />
+            <FieldStatus label="Temporada" value={parsedData.season} status="success" />
+            <FieldStatus label="Equipes" value={`${parsedData.teams.length} detectadas`} status="success" />
+            <FieldStatus label="Formato" value={parsedData.format} status="success" />
+            <FieldStatus label="Regulamento" value="Anexado" status="success" />
+            <FieldStatus label="Jogos Detectados" value={`${parsedData.matches.length}`} status="success" />
+            <FieldStatus label="Locais" value="Parcial" status="warning" />
+            <FieldStatus label="Datas" value="Alguns ausentes" status="warning" />
+          </VStack>
+
+          <Box mt="4" bg="yellow.50" p="3" borderRadius="md">
+            <Text fontWeight="medium">⚠️ Campos com problema:</Text>
+            <ul>
+              <li>4 jogos sem data</li>
+              <li>2 jogos sem local</li>
+              <li>1 equipe não reconhecida (“A.D. Alvorada?”)</li>
+            </ul>
+          </Box>
+
+          <Box display="flex" justifyContent="space-between" mt="6">
+            <Button variant="outline">Revisar Detalhes</Button>
+            <Button variant="outline" colorScheme="yellow">Corrigir Manualmente</Button>
+            <Button colorScheme="green">✅ Confirmar Importação</Button>
+          </Box>
+        </Box>
+      )}
+    </Box>
+  );
+}
+
+function FieldStatus({ label, value, status }: { label: string; value: string; status: "success" | "warning" }) {
+  const badgeColor = status === "success" ? "green" : "yellow";
+  const icon = status === "success" ? "✅" : "⚠️";
+
+  return (
+    <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Text>{label}: <strong>{value}</strong></Text>
+      <Badge colorScheme={badgeColor}>{icon} {status === "success" ? "Detectado" : "Parcial"}</Badge>
+    </Box>
+  );
+}
+```
+
+---
+
+Esse componente é totalmente funcional como layout, e pronto para integração com:
+
+* Backend que faz o OCR/NLP
+* Tela de correção manual (`/competitions/new/manual`)
+* Rotas dinâmicas e feedback real-time com `toast` ou `status indicator`
+
+Aqui está o **checklist técnico completo** para implementar o fluxo **OCR → parser → preenchimento → confirmação**, visando o padrão HB Track: **cadastro completo em < 1 minuto**, mesmo com competições complexas:
+
+---
+
+## ✅ **1. Upload do PDF**
+
+* [ ] Componente de upload (`<PDFDropzone />`) com suporte a:
+
+  * Drag & drop
+  * Seleção manual
+  * Multiarquivos: `regulamento.pdf`, `tabela_jogos.pdf`
+
+* [ ] Validação inicial do arquivo:
+
+  * Tipo MIME (PDF)
+  * Tamanho máximo permitido
+  * Exibição de nome e preview rápido
+
+---
+
+## 🧠 **2. OCR e extração de texto**
+
+* [ ] Pipeline de OCR (client ou server)
+
+  * OCR com **Tesseract.js**, **AWS Textract**, **Google Vision**, ou **PDF.js**
+  * Suporte a páginas múltiplas
+  * Otimização para textos esportivos: nomes de times, datas, placares
+
+* [ ] Output estruturado:
+
+  ```json
+  {
+    "type": "table",
+    "data": [
+      ["Data", "Hora", "Equipe A", "Equipe B", "Local"],
+      ["02/03", "18:00", "Sub-18 Masc", "C. Esportivo A", "Ginásio 1"],
+      ...
+    ]
+  }
+  ```
+
+---
+
+## 🧩 **3. Parser semântico (Regra + Jogos)**
+
+* [ ] Parser de tabelas esportivas:
+
+  * Reconhece colunas mesmo com variações (“Time A” x “Equipe A”)
+  * Gera objetos `match`, `team`, `venue`
+
+* [ ] Parser de regulamento:
+
+  * Regex + NLP para reconhecer:
+
+    * Critérios de desempate
+    * Pontuação
+    * Número de fases
+    * Tipo de disputa (turno único, ida-volta, mata-mata)
+
+* [ ] Output em formato padronizado:
+
+  ```json
+  {
+    "competition": {...},
+    "teams": [...],
+    "matches": [...],
+    "rules": {...}
+  }
+  ```
+
+---
+
+## ✅ **4. Pré-preenchimento automático do formulário**
+
+* [ ] Componente `<CompetitionAutoFillForm />`
+
+  * Recebe os dados extraídos
+  * Mapeia campos do formulário
+  * Preenche automaticamente (modo “sugestão”)
+
+* [ ] UI visual clara:
+
+  * Campos com ícone ✅ (detectado com sucesso)
+  * Campos com ⚠️ (parcialmente lido)
+  * Campos com ❌ (não detectado)
+
+* [ ] Tooltip de origem para cada campo (ex: “extraído da linha 8 do PDF”)
+
+---
+
+## 🔄 **5. Edição e Confirmação Final**
+
+* [ ] Todos os campos podem ser ajustados manualmente
+* [ ] Botão “Validar Dados” para destacar pendências
+* [ ] Botão “Confirmar e Criar Competição”
+
+  * Gatilho de criação da competição + geração de jogos
+  * Toast de sucesso + redirecionamento para Visão Geral
+
+---
+
+## 🧪 **6. Fallback & Logs**
+
+* [ ] Log de OCR com erros comuns (para melhorar o parser)
+* [ ] Botão “Preencher Manualmente” se parser falhar
+* [ ] Armazenar PDF original vinculado à competição
+
+---
+
+## 🚀 Pronto para escalar:
+
+Com esse fluxo, seu sistema será capaz de:
+
+* Processar regulamentos e tabelas reais com autonomia
+* Reduzir atrito no onboarding de competições
+* Manter qualidade de dados e segurança
+
+Perfeito — aqui está o **plano de fallback + interface mínima** para quando a leitura do PDF de competição **falhar total ou parcialmente**.
+
+---
+
+## ✅ **Objetivo do Fallback UX**
+
+> Garantir que o usuário **não perca tempo** mesmo quando o sistema não conseguir interpretar corretamente o PDF.
+
+---
+
+## 🔁 **Cenários de falha**
+
+| Situação                                       | Solução UX                                                  |
+| ---------------------------------------------- | ----------------------------------------------------------- |
+| ❌ PDF ilegível (OCR falha)                     | Mensagem clara + botão “Preencher manualmente”              |
+| ⚠️ Dados parciais lidos                        | Mostrar campos preenchidos + destacar os vazios para edição |
+| ❓ Dados ambíguos (ex: nome de equipe estranho) | Campo com aviso “Verifique este dado”                       |
+| 🛑 Tabela de jogos não reconhecida             | Botão: “Importar tabela manualmente” (ex: colar em CSV)     |
+
+---
+
+## 🧱 **Interface Mínima – fallback inteligente**
+
+### 🔹 Tela: `ReviewImportResult`
+
+```jsx
+<FormReview>
+  <ImportSummary status="partial" />  // ou "fail", "success"
+  
+  <FieldGroup title="Competição">
+    <Input label="Nome" value="Copa Estadual" status="ok" />
+    <Input label="Temporada" value="2026" status="ok" />
+    <Select label="Formato" options={...} status="missing" />
+  </FieldGroup>
+
+  <FieldGroup title="Equipes">
+    <TagList values={['Sub-18 A', 'Sub-18 B']} status="partial" />
+    <Warning message="2 equipes não reconhecidas. Adicione manualmente." />
+  </FieldGroup>
+
+  <FieldGroup title="Tabela de Jogos">
+    <Warning message="Tabela não foi detectada." />
+    <Button icon="upload">Importar manualmente</Button>
+    <Helper>Você pode colar os jogos no formato CSV ou preencher manualmente depois.</Helper>
+  </FieldGroup>
+
+  <Button variant="primary">Confirmar e Ajustar</Button>
+</FormReview>
+```
+
+---
+
+## ✅ **Checklist técnico de fallback**
+
+| Etapa                                                                             | Ação |
+| --------------------------------------------------------------------------------- | ---- |
+| 🧠 Detectar falhas por tipo (OCR, parser, semântica)                              |      |
+| 🖼️ Exibir status visual: `✅ Detectado`, `⚠️ Incompleto`, `❌ Não lido`            |      |
+| 🎯 Mostrar apenas campos essenciais para continuar                                |      |
+| 🛠️ Oferecer botões de ação rápida (ex: “Adicionar equipe”)                       |      |
+| 📝 Deixar campos editáveis com placeholders extraídos ou vazios                   |      |
+| 🚨 Adicionar tooltips ou avisos “O sistema não reconheceu este campo”             |      |
+| ⛔ Nunca travar o fluxo — sempre permitir salvar como rascunho ou continuar manual |      |
+
+---
+
+## 💡 Melhor UX = transparência + controle
+
+> O usuário **sabe o que deu errado**, vê o que foi preenchido, **edita apenas o necessário** e **continua sem perder tempo**.
+
+---
+
+Perfeito. Vamos construir agora o **formulário completo de cadastro de competição**, projetado para:
+
+* Ser compatível com preenchimento manual **ou automático via PDF**
+* Ser **rápido, validável e editável**
+* Ter **interface clara e modular**
+* Ser compatível com as regras de UX do HB Track
+
+---
+
+## ✅ **Estrutura do Formulário de Cadastro de Competição (UX + JSX)**
+
+### 🔷 Bloco 1: Informações Gerais
+
+| Campo              | Tipo     | Detalhes                                                   |
+| ------------------ | -------- | ---------------------------------------------------------- |
+| Nome da Competição | Text     | Obrigatório                                                |
+| Temporada          | Dropdown | Pré-selecionada pela temporada ativa                       |
+| Tipo               | Select   | ["Grupos", "Mata-mata", "Turno único", "Triangular", etc.] |
+| Organização        | Text     | Ex: Federação, Liga                                        |
+| Modalidade         | Select   | ["Masculino", "Feminino", "Misto"]                         |
+
+---
+
+### 🔷 Bloco 2: Equipes Participantes
+
+| Campo               | Tipo                        | Detalhes                             |
+| ------------------- | --------------------------- | ------------------------------------ |
+| Equipes             | MultiSelect + Adição Manual | Buscar existentes ou adicionar novas |
+| Categoria da equipe | Text ou Select              | Sub-18, Sub-21, etc.                 |
+
+✅ **UX smart**: Se o nome de equipe não for encontrado, já cria rascunho automaticamente.
+
+---
+
+### 🔷 Bloco 3: Forma de Disputa
+
+| Campo                     | Tipo              | Detalhes                                               |
+| ------------------------- | ----------------- | ------------------------------------------------------ |
+| Estrutura das Fases       | Cards com Preview | Ex: "Turno único", "Ida e volta", "Grupos + mata-mata" |
+| Número de Grupos / Fases  | NumInput          | Quantidade configurável                                |
+| Critério de Classificação | Select            | [Pontos, Saldo de Gols, Confronto Direto, Gols Pró]    |
+| Quantos se classificam    | NumInput          | Por grupo ou total                                     |
+
+---
+
+### 🔷 Bloco 4: Tabela de Jogos (opcional ou gerada)
+
+| Campo                       | Tipo          | Detalhes                                       |
+| --------------------------- | ------------- | ---------------------------------------------- |
+| Gerar Tabela                | Toggle        | Gera jogos automaticamente com base em equipes |
+| Adicionar Jogos Manualmente | Modal Tabela  | Upload, preenchimento manual ou via PDF        |
+| Local dos Jogos             | Text / Select | Campo padrão para aplicar em todos             |
+
+---
+
+### 🔷 Bloco 5: Regulamento (opcional)
+
+| Campo              | Tipo     | Detalhes                           |
+| ------------------ | -------- | ---------------------------------- |
+| Upload Regulamento | File PDF | Visualização via PDF Viewer        |
+| Observações        | TextArea | Regras extras, observações manuais |
+
+---
+
+### 🔷 Bloco 6: Confirmação e Ações
+
+| Item             | Tipo      | UX                                |
+| ---------------- | --------- | --------------------------------- |
+| Resumo Visual    | Preview   | Mostra equipes, fases e tabela    |
+| Validar Campos   | AutoCheck | Campos com erro ficam em vermelho |
+| Botão Criar      | Primary   | Cria competição e redireciona     |
+| Toast de Sucesso | Feedback  | "Competição criada com sucesso ✅" |
+
+---
+
+## ✅ Exemplo JSX simplificado da estrutura principal
+
+```jsx
+<AppLayout title="Nova Competição">
+  <CompetitionForm>
+    <CompetitionGeneralInfo />
+    <CompetitionTeamsSelector />
+    <CompetitionFormatSelector />
+    <CompetitionMatchTableGenerator />
+    <CompetitionRegulationUploader />
+    <CompetitionSummaryAndSubmit />
+  </CompetitionForm>
+</AppLayout>
+```
+
+---
+
+Ótimo. Vamos detalhar a **experiência completa de UX para preenchimento do cadastro de competição via PDF** — com foco em automação, validação e controle pelo usuário.
+
+---
+
+## ✅ **Objetivo UX**
+
+> Reduzir o esforço manual do usuário, aproveitando dados que ele **já tem em PDF**, sem comprometer a **confiabilidade e clareza**.
+
+---
+
+## 🔁 **Fluxo UX: Do upload à confirmação**
+
+### 🔷 1. 🗂️ Upload do PDF
+
+* Botão claro: **“Importar PDF da Competição”**
+* Aceita **tabela de jogos** e/ou **regulamento**
+* UI amigável com drag-and-drop
+* Tooltip: “Aceita formatos padrão da federação”
+
+> ✅ UX: **Início simples** e conhecido para o usuário
+
+---
+
+### 🔷 2. 🤖 Leitura Automática e Interpretação
+
+Após upload:
+
+* Sistema inicia análise com loading: **“Lendo estrutura…”**
+* Mostra progresso por partes:
+  ✅ Equipes identificadas
+  ✅ Fases encontradas
+  ⚠️ 2 jogos com datas incompletas
+  ❌ Regulamento não reconhecido
+
+> ✅ UX: **Transparência** — o usuário vê o que foi extraído e o que precisa de ajuda
+
+---
+
+### 🔷 3. 📋 Formulário Pré-Preenchido
+
+Sistema **preenche automaticamente** o formulário completo com os dados extraídos:
+
+* Nome, tipo, temporada, equipes, fases, jogos, local, etc.
+* Campos reconhecidos ficam com selo: 🟢 “Detectado”
+* Campos incompletos ganham: 🔶 “Revisar” ou 🔴 “Obrigatório”
+
+> ✅ UX: usuário **revisa e corrige rapidamente**, sem digitar tudo
+
+---
+
+### 🔷 4. 🧠 Validação Final Assistida
+
+No final do formulário:
+
+* Bloco **Resumo Interativo**
+
+  * Lista de equipes
+  * Estrutura da competição
+  * Prévia da tabela de jogos
+* Badge de status por seção (✅ OK, ⚠️ Incompleto)
+* Botão “**Concluir Cadastro**” só habilita quando tudo está válido
+
+> ✅ UX: **Confirmação clara e segura**, sem medo de dados incompletos
+
+---
+
+### 🔷 5. ✅ Confirmação e Feedback
+
+* Toast de sucesso: `"Competição Copa Estadual criada com sucesso."`
+* Sugestões de próximos passos:
+
+  * [ ] Cadastrar resultados dos jogos
+  * [ ] Associar atletas à equipe
+  * [ ] Compartilhar com comissão técnica
+
+---
+
+## 🧠 UX Inteligente
+
+* **Reconhecimento parcial é esperado**: sempre haverá campos não lidos
+* **Controle sempre com o usuário**: ele aprova o que entra no sistema
+* **Erros sinalizados suavemente**: sem bloqueios bruscos
+
+---
+Aqui está o **checklist completo de ações para validar e garantir o funcionamento correto da configuração de cadastro de competição via PDF com validação assistida pelo usuário**, cobrindo backend, frontend, UX e integração:
+
+---
+
+## ✅ **1. Upload e Interpretação de PDF**
+
+| Item                       | Ação                                                                             |
+| -------------------------- | -------------------------------------------------------------------------------- |
+| 📎 Upload PDF ativo        | Componente de upload funcionando com validação de extensão                       |
+| 📄 Leitura de conteúdo     | OCR ou parsing de texto funcional (Tesseract, Textract, etc.)                    |
+| 🧠 Interpretação de dados  | Parser identifica corretamente: nome, equipes, datas, jogos, fases               |
+| 🟡 Erros parciais tratados | Dados incompletos (ex: locais ausentes) são sinalizados                          |
+| 📊 Logs de parsing         | Registro de sucesso/falha por campo (ex: "7 equipes lidas", "2 datas inválidas") |
+
+---
+
+## ✅ **2. Pré-preenchimento do Formulário**
+
+| Item                                       | Ação                                                                    |
+| ------------------------------------------ | ----------------------------------------------------------------------- |
+| ✍️ Campos preenchidos automaticamente      | Nome, temporada, equipes, fases, jogos, regulamento                     |
+| 🟢 Indicação visual dos campos preenchidos | Badge ou cor verde para campos detectados                               |
+| 🔶 Indicação de campos incompletos         | Badge laranja para revisar, vermelho se obrigatório                     |
+| 📦 Dados estruturados corretamente         | Equipes como array, fases como objetos, jogos com data/local/adversário |
+| 🔄 Campos editáveis manualmente            | Usuário pode corrigir ou substituir valores                             |
+
+---
+
+## ✅ **3. Validação e Resumo Final**
+
+| Item                                                                 | Ação                                                  |
+| -------------------------------------------------------------------- | ----------------------------------------------------- |
+| 📋 Resumo interativo da competição                                   | Preview de jogos, equipes, estrutura de fases         |
+| ✅ Validação automática por seção                                     | Badge de status: OK, Incompleto, Revisar              |
+| 🔒 Botão “Concluir” só ativa quando todos obrigatórios estão válidos |                                                       |
+| 🧠 Feedback contextual por erro                                      | Tooltip: “Local do jogo ausente – clique para editar” |
+| 🧪 Teste com múltiplos formatos de regulamento/tabela                | Federativa, escola, regional                          |
+
+---
+
+## ✅ **4. Persistência no Banco de Dados**
+
+| Entidade      | Campos esperados a serem salvos corretamente  |
+| ------------- | --------------------------------------------- |
+| `competition` | nome, temporada, formato, fases, status       |
+| `team`        | nome, categoria, link com competição          |
+| `phase`       | nome, tipo (grupo, mata-mata), ordem          |
+| `match`       | data, hora, local, equipe A/B, fase vinculada |
+| `regulation`  | PDF ou texto processado, link no sistema      |
+
+---
+
+## ✅ **5. Feedback e Pós-criação**
+
+| Item                                                         | Ação                                             |
+| ------------------------------------------------------------ | ------------------------------------------------ |
+| 🔔 Toast de sucesso claro                                    | “Competição criada com sucesso ✅”                |
+| 📍 Redirecionamento para a tela de Visão Geral da competição |                                                  |
+| 🧭 Sugestões de próximos passos (QuickLinks)                 | “Cadastrar resultados”, “Associar atletas”, etc. |
+| 📝 Registro de histórico de criação                          | Para fins de auditoria/admin                     |
+
+---
+
+## ✅ **6. UX/UI Final**
+
+| Item                            | Ação                                                    |
+| ------------------------------- | ------------------------------------------------------- |
+| 🚥 Fluxo sem bloqueios          | Usuário pode sair e voltar sem perder dados             |
+| 🔄 Confirmação clara ao salvar  | Animação leve ou ícone de check                         |
+| 📑 Interface responsiva         | Mobile, tablet, notebook                                |
+| 📚 Ajuda e tooltips disponíveis | Especialmente nos campos estruturais (fases, critérios) |
+
+---
+Aqui está a lista completa de **tabelas novas e tabelas auxiliares** que precisam existir (ou ser adaptadas) no banco de dados para suportar a funcionalidade de **cadastro completo de competições com fases, jogos e regulamento**, como descrito:
+
+---
+
+## ✅ **Tabelas Novas Necessárias**
+
+### 1. `competitions`
+
+| Campo           | Tipo       | Descrição                           |
+| --------------- | ---------- | ----------------------------------- |
+| `id`            | UUID       | Identificador único                 |
+| `name`          | string     | Nome da competição                  |
+| `season`        | string/int | Temporada (ex: 2026)                |
+| `type`          | string     | Ex: "Grupos + mata-mata", "Turno"   |
+| `organization`  | string     | Federação ou entidade organizadora  |
+| `modality`      | string     | Masculino, Feminino, Misto          |
+| `regulation_id` | UUID (FK)  | Relaciona ao regulamento (opcional) |
+| `status`        | string     | ["draft", "active", "finished"]     |
+| `created_at`    | timestamp  |                                     |
+| `updated_at`    | timestamp  |                                     |
+
+---
+
+### 2. `competition_teams`
+
+| Campo            | Tipo        | Descrição                          |
+| ---------------- | ----------- | ---------------------------------- |
+| `id`             | UUID        |                                    |
+| `competition_id` | UUID (FK)   | Ref. à competição                  |
+| `team_id`        | UUID (FK)   | Ref. à equipe                      |
+| `group`          | string/null | Grupo A, Grupo B, etc. (se houver) |
+| `ranking_points` | int         | Pontos atualizados automaticamente |
+| `goals_for`      | int         |                                    |
+| `goals_against`  | int         |                                    |
+| `status`         | string      | Ativo, Eliminado, Classificado     |
+
+---
+
+### 3. `competition_phases`
+
+| Campo            | Tipo      | Descrição                         |
+| ---------------- | --------- | --------------------------------- |
+| `id`             | UUID      |                                   |
+| `competition_id` | UUID (FK) |                                   |
+| `name`           | string    | Ex: "Grupo A", "Quartas de final" |
+| `type`           | string    | ["group", "knockout", "custom"]   |
+| `order`          | int       | Ordem da fase                     |
+
+---
+
+### 4. `competition_matches` (ou adaptação de `matches`)
+
+| Campo            | Tipo      | Descrição                            |
+| ---------------- | --------- | ------------------------------------ |
+| `id`             | UUID      |                                      |
+| `competition_id` | UUID (FK) |                                      |
+| `phase_id`       | UUID (FK) |                                      |
+| `team_a_id`      | UUID (FK) |                                      |
+| `team_b_id`      | UUID (FK) |                                      |
+| `location`       | string    | Local do jogo                        |
+| `datetime`       | timestamp |                                      |
+| `score_a`        | int/null  |                                      |
+| `score_b`        | int/null  |                                      |
+| `status`         | string    | ["scheduled", "finished", "pending"] |
+
+---
+
+### 5. `regulations`
+
+| Campo            | Tipo      | Descrição                      |
+| ---------------- | --------- | ------------------------------ |
+| `id`             | UUID      |                                |
+| `competition_id` | UUID (FK) |                                |
+| `source_file`    | string    | URL ou path para o PDF         |
+| `parsed_content` | text/null | Conteúdo processado (opcional) |
+| `summary`        | text/null | Resumo manual (opcional)       |
+| `created_at`     | timestamp |                                |
+
+---
+
+## 🛠️ **Tabelas Auxiliares e Relacionadas**
+
+| Tabela           | Função                                      |
+| ---------------- | ------------------------------------------- |
+| `teams`          | Usada para relacionar equipes existentes    |
+| `matches`        | Pode ser adaptada para reutilizar estrutura |
+| `users`, `roles` | Controle de permissão para criação e edição |
+| `notifications`  | Para alertas pós-jogo, próximas fases etc.  |
+
+---
+
+Vamos organizar uma **configuração completa do backend + frontend + IA (Gemini ou similar)** para suportar o cadastro inteligente de competições, com base no seu padrão de rapidez (≤ 1 min), robustez e integração com PDF:
+
+---
+
+## ✅ **1. Configuração Backend**
+
+### 🔧 a. **API REST ou GraphQL**
+
+* Endpoints principais:
+
+  * `POST /competitions` – cria competição
+  * `POST /competitions/upload` – upload de PDF de regulamento/tabela
+  * `GET /competitions/:id` – busca por competição
+  * `POST /competitions/:id/validate` – confirmação final
+  * `GET /teams/search` – autocomplete de equipes
+  * `POST /matches/batch` – salva jogos em lote
+
+### 🧠 b. **Integração com IA via Google Gemini / OpenAI**
+
+* Fluxo:
+
+  1. PDF é enviado ao backend (`/upload`)
+  2. Texto extraído (OCR + parsing via Tesseract/AWS Textract)
+  3. Enviado ao Gemini com prompt especializado:
+
+     > "Extraia competições, equipes, jogos, datas, formato, e regulamento deste texto..."
+  4. Gemini responde com estrutura JSON:
+
+     ```json
+     {
+       "competition": { "name": "...", "season": 2026, "type": "grupos" },
+       "teams": [ { "name": "Sub-18 Masculino" }, ... ],
+       "matches": [ { "teamA": "...", "teamB": "...", "date": "...", "location": "..." }, ... ],
+       "regulation": "texto resumido..."
+     }
+     ```
+  5. Backend retorna esse JSON pré-processado para o frontend
+
+---
+
+## ✅ **2. Configuração Frontend (React + TS)**
+
+### 🧩 a. **Componentes principais**
+
+| Componente                   | Função                                    |
+| ---------------------------- | ----------------------------------------- |
+| `CompetitionForm.tsx`        | Interface completa para cadastro          |
+| `PDFUploadModal.tsx`         | Modal de envio + pré-visualização do PDF  |
+| `AIReviewDrawer.tsx`         | Resumo interativo dos dados interpretados |
+| `TeamsAutoSelect.tsx`        | Campo inteligente de múltiplas equipes    |
+| `PhaseConfigurator.tsx`      | Interface de criação de fases e estrutura |
+| `MatchTablePreview.tsx`      | Preview editável da tabela de jogos       |
+| `RegulationPreview.tsx`      | Leitor de PDF/Markdown com edições        |
+| `SmartValidationSummary.tsx` | Mostra campos pendentes e status geral    |
+
+### 🌐 b. **Integração com API + Gemini**
+
+* `useCompetitionAIImport()` hook:
+
+  * Chama API `/upload`
+  * Recebe JSON do Gemini
+  * Preenche o formulário via context
+  * Aplica estados `detected`, `needs_review`, `missing`
+
+---
+
+## 🤖 **3. Configuração Gemini (ou LLM)**
+
+### Prompt-base para extração
+
+```txt
+Você é um sistema que recebe textos de regulamentos esportivos e tabelas de jogos. Sua função é extrair dados estruturados como nome da competição, equipes, datas de jogos, local e regras.
+
+Formato esperado:
+
+- Competition: nome, temporada, tipo
+- Teams: nomes e categorias
+- Matches: time A, time B, data, local
+- Regulation Summary: texto breve
+
+Responda em JSON.
+```
+
+* Função implementada no backend (`/gemini/parseCompetition`)
+* Pode usar OpenAI function calling, Gemini Pro ou Claude
+
+---
+
+## 🧪 **4. Validação e Confirmação Final**
+
+* Após preenchimento automático:
+
+  * Campos revisados pelo usuário
+  * Sinais visuais:
+
+    * 🟢 Detectado
+    * 🟠 Precisa revisão
+    * 🔴 Faltando
+* Toasts de feedback:
+
+  * "PDF importado com sucesso"
+  * "3 campos precisam ser revisados"
+  * "Competição criada com sucesso ✅"
+
+---
+
+Deseja que eu gere:
+
+* O esqueleto de `CompetitionForm.tsx`?
+* O prompt completo para o Gemini com exemplos reais?
+* As rotas e schemas backend (Express, NestJS ou GraphQL)?
+
+Com base na estrutura que você já construiu e nas prioridades lógicas de uso no HBTrack, **as próximas abas (rotas internas)** a serem desenvolvidas após **Competitions** devem seguir a continuidade natural das **jornadas de usuários técnicos e administrativos**.
+
+Aqui está a ordem ideal com foco em **melhor UX**, **fluidez operacional** e **valor entregue rapidamente**:
+
+---
+
+## ✅ **Próximas Abas (Rotas Internas) para Desenvolver**
+
+### 1. **Competições > Visão Geral**
+
+* 📌 Painel resumo da competição (classificação, rodada atual, próximos jogos)
+* ⚠️ Alertas de rodadas pendentes, jogos sem resultado
+* 🧠 Sugestões de ação (ex: “Preencher resultado do jogo de ontem”)
+
+> **UX Motivo:** resolve a confusão que surgiu com múltiplas abas. Centraliza tudo e reduz cliques.
+
+---
+
+### 2. **Competições > Classificação (Tabela)**
+
+* 🏆 Exibe a tabela com destaque à sua equipe
+* 🔁 Atualiza dinamicamente após resultado de jogo
+* 📉 Mostra cenários: “se empatar, ainda classifica”
+
+> **UX Motivo:** é o que o usuário mais quer ver. A informação mais buscada.
+
+---
+
+### 3. **Competições > Jogos**
+
+* 📅 Lista de jogos filtrados por fase
+* ✏️ Permite registrar resultado de cada jogo
+* 🔔 Notifica se faltam jogos da rodada atual
+
+> **UX Motivo:** parte operacional essencial (preencher resultado)
+
+---
+
+### 4. **Competições > Fases**
+
+* 🔧 Criação e visualização de fases (grupos, mata-mata)
+* 🧩 Organização de jogos por fase
+* 🔄 Ligações automáticas com a tabela e classificação
+
+> **UX Motivo:** backend técnico da competição, mas necessário.
+
+---
+
+### 5. **Competições > Regulamento**
+
+* 📄 Upload do PDF
+* 🧠 Leitura assistida com resumo e regras detectadas
+* 💬 Campo de observações manuais
+
+> **UX Motivo:** referencial administrativo, acessado pontualmente.
+
+---
+
+### ⚠️ Atenção: Reduzir Confusão na Sidebar
+
+Evite listar todas essas abas diretamente na sidebar.
+➡️ Use **tabs internas** dentro da rota `/competitions/:id`.
+
+---
+
+Aqui está o **checklist final e completo** para implementar **todas as abas internas de `/competitions/:id`**, incluindo:
+
+* Criação de componentes
+* Comportamentos UX esperados
+* Toasts e feedbacks visuais
+* Modais e ações principais
+* Animações e efeitos UI
+
+---
+
+## ✅ 1. **Abas internas principais**
+
+| Abas             | Descrição rápida                                             |
+| ---------------- | ------------------------------------------------------------ |
+| 📊 Visão Geral   | Painel com cards resumo, próximos jogos e ações sugeridas    |
+| 🏆 Classificação | Tabela dinâmica com posição, pontos, saldo, etc.             |
+| 🎯 Jogos         | Lista de jogos por fase, com preenchimento de resultados     |
+| 🧩 Fases         | Editor visual de fases, drag-and-drop e organização          |
+| 📄 Regulamento   | Upload de PDF + preview + extração automática (AI assistida) |
+
+---
+
+## 🧩 Estrutura Comum das Abas (Tabs)
+
+* Usar `<Tabs />` persistentes em rota `/competitions/:id`
+* A URL deve refletir a aba ativa (`/competitions/:id?tab=standings`)
+* Armazenar última aba acessada no `localStorage`
+
+---
+
+## 🔹 2. **Ações e Componentes por Aba**
+
+### 📊 **Visão Geral**
+
+| Recurso                   | Ação esperada                                           |
+| ------------------------- | ------------------------------------------------------- |
+| `<CompetitionOverview />` | Renderiza cards de status (rodada, classificação, etc.) |
+| Botões sugeridos          | “Preencher jogo de ontem”, “Ver tabela completa”        |
+| Toast                     | ✅ “Dados atualizados”                                   |
+| UI extra                  | Badge de alerta se houver jogo atrasado                 |
+
+---
+
+### 🏆 **Classificação (Tabela)**
+
+| Recurso              | Ação esperada                                              |
+| -------------------- | ---------------------------------------------------------- |
+| `<StandingsTable />` | Exibe a classificação com destaques por equipe             |
+| Tooltip              | Critérios de desempate ao passar mouse sobre “P” “GP” “SG” |
+| Animação             | Linha da equipe do usuário pisca suavemente ao atualizar   |
+| Toast                | ✅ “Tabela atualizada com sucesso”                          |
+| Efeito visual        | Transição suave entre fases ao trocar de aba               |
+
+---
+
+### 🎯 **Jogos**
+
+| Recurso                  | Ação esperada                                         |
+| ------------------------ | ----------------------------------------------------- |
+| `<CompetitionMatches />` | Lista de jogos por fase                               |
+| Filtro de fase           | Dropdown ou tabs laterais                             |
+| Botão                    | ✏️ “Preencher resultado” abre modal contextual        |
+| Modal                    | `<MatchResultModal />` com input de placares          |
+| Toasts                   | ✅ Resultado salvo / ❌ Campo inválido                  |
+| Efeitos                  | Ícone de status do jogo muda em tempo real (“⏳”, “✅”) |
+
+---
+
+### 🧩 **Fases**
+
+| Recurso                       | Ação esperada                          |
+| ----------------------------- | -------------------------------------- |
+| `<CompetitionPhasesEditor />` | Lista e edição das fases               |
+| Ação                          | ➕ “Nova fase” (modal com nome e tipo)  |
+| Drag & drop                   | Para ordenar fases                     |
+| Toast                         | ✅ “Fase criada” / ✅ “Ordem atualizada” |
+| Validação                     | ❌ Impedir fase sem nome ou jogos       |
+
+---
+
+### 📄 **Regulamento**
+
+| Recurso                 | Ação esperada                                           |
+| ----------------------- | ------------------------------------------------------- |
+| `<RegulationUpload />`  | Upload com dropzone                                     |
+| IA                      | Chamar Gemini e retornar JSON estruturado               |
+| `<RegulationPreview />` | Mostrar conteúdo + highlights                           |
+| Toast                   | ✅ Regulamento salvo / ⚠️ Não foi possível extrair dados |
+| Validação               | ❌ “Arquivo inválido” se não for PDF                     |
+
+---
+
+## 🔧 3. Componentes a Criar
+
+| Componente                    | Função                           |
+| ----------------------------- | -------------------------------- |
+| `CompetitionTabs.tsx`         | Tabs internas persistentes       |
+| `StandingsTable.tsx`          | Tabela dinâmica de classificação |
+| `CompetitionMatches.tsx`      | Lista de jogos com ações         |
+| `MatchResultModal.tsx`        | Modal para preencher placar      |
+| `CompetitionPhasesEditor.tsx` | Organizador de fases             |
+| `RegulationUpload.tsx`        | Upload e preview com IA          |
+| `RegulationPreview.tsx`       | Visualizador de PDF/texto        |
+
+---
+
+## 🧠 4. UX Avançada
+
+| Recurso               | Descrição                                         |
+| --------------------- | ------------------------------------------------- |
+| ⏳ Loading granular    | Spinners por seção, não geral                     |
+| 🧠 IA assistida       | Preenchimento automático com revisão humana       |
+| ✅ Toasts contextuais  | Sempre incluir nome da competição/fase            |
+| 🧭 Navegação fluida   | Redirecionar para aba certa após criação de item  |
+| 🧪 Feedback pré-envio | Validação ativa antes de botão “Salvar” funcionar |
+
+---
+
+## 🧪 5. Testes Esperados
+
+* ✅ Criação de competição do zero
+* ✅ Importação via PDF e IA
+* ✅ Criação manual de fases
+* ✅ Adição e resultado de jogos
+* ✅ Tabela atualiza após resultados
+* ✅ Upload e preview de regulamento
+
+---
+
+Sim — aqui estão as **últimas sugestões opcionais** para refinar e **fechar o módulo “Competitions” com excelência em UX/UI**:
+
+---
+
+## ✅ **Melhorias Finais para “Competições” (avançadas, opcionais)**
+
+### 1. 📌 **Filtro por Equipe ou Categoria**
+
+* Na aba “Classificação” e “Jogos”
+* Dropdown para filtrar por:
+
+  * Sub-15 / Sub-18 / Adulto
+  * Masculino / Feminino
+* **UX ganho**: clareza em competições com múltiplas categorias
+
+---
+
+### 2. 🧠 **Sugestões Inteligentes de Escalação**
+
+* Ao cadastrar resultado, sistema sugere:
+
+  * Escalação usada mais recentemente
+  * Última escalação contra o mesmo adversário
+* **UX ganho**: acelera o pós-jogo
+
+---
+
+### 3. 🧮 **Simulador de Classificação**
+
+* Botão “Simular Resultados” dentro da tabela
+* Usuário altera placares futuros e vê impacto imediato
+* **UX ganho**: planejamento estratégico para finais de fase
+
+---
+
+### 4. 🔐 **Permissões Avançadas**
+
+* Ex: Apenas coordenadores podem cadastrar jogos
+* Scouts só podem ver aba “Jogos”, não “Fases” nem “Regulamento”
+* **UX ganho**: segurança e foco
+
+---
+
+### 5. 🔁 **Sincronização com Calendário**
+
+* Jogos da competição aparecem automaticamente no `/calendar`
+* Ao editar um jogo em “Competições”, reflete no calendário
+* **UX ganho**: evita duplicidade de ações
+
+---
+
+### 6. 📤 **Exportação Rápida**
+
+* Botão: “Exportar Tabela” / “Exportar Jogos”
+* Formatos: PDF, XLSX
+* **UX ganho**: comunicação externa com federação ou clubes
+
+---
+
+### 7. 🗂️ **Histórico de Edições**
+
+* Quem alterou o regulamento? Quando mudou o placar?
+* Exibir via tooltip ou modal de histórico
+* **UX ganho**: rastreabilidade
+
+---
+
+### 8. 📱 **Mobile-first para Técnico**
+
+* Versão simplificada com foco em:
+
+  * Ver classificação
+  * Preencher resultado
+  * Ver próximo jogo
+* **UX ganho**: uso fácil em dia de jogo
+
+---
+
+Se essas melhorias forem relevantes para sua realidade, posso priorizar um checklist para cada uma — ou gerar protótipos rápidos de UI/UX.

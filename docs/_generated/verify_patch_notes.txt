@@ -1,0 +1,104 @@
+PATCH NOTES: verify_invariants_tests.py
+========================================
+
+Data/Hora: 2026-02-02 (executado via Agent)
+Arquivo: C:\HB TRACK\docs\scripts\verify_invariants_tests.py
+
+MOTIVO DO PATCH:
+----------------
+Desalinhamento entre o verificador e o SPEC/CANON para classes C2 (Service + DB).
+
+Problema identificado:
+- O verificador exigia SQLSTATE (23xxx) incondicionalmente para qualquer INV com "Obrigação B"
+- Porém, classes C2 (Service + DB) têm oráculo ValidationError (não SQLSTATE)
+- Segundo o CANON (INVARIANTS_TESTING_CANON.md), SQLSTATE só é obrigatório para classes A/B (DB constraints)
+
+Exemplo afetado: INV-TRAIN-002
+- SPEC declara 2 units: B (db-column) + C2 (service-validation)
+- Unit C2 tem oráculo "error_type: ValidationError" (sem SQLSTATE)
+- Verificador rejeitava com OBLIG_B_NO_SQLSTATE erroneamente
+
+ALTERAÇÕES IMPLEMENTADAS:
+--------------------------
+
+1. Função: validate_obligations()
+   - Assinatura alterada: adicionado parâmetro 'inv: InvariantSpec'
+   - Antes: validate_obligations(self, analysis, file_path)
+   - Depois: validate_obligations(self, analysis, file_path, inv)
+
+2. Lógica de validação SQLSTATE (CONDICIONADA):
+   - ANTES: SQLSTATE obrigatório sempre que "Obrigação B" existir
+   - DEPOIS: SQLSTATE obrigatório APENAS para classes A/B (db_classes)
+   - Código: requires_sqlstate = any(cls in {'A', 'B'} for cls in inv.primary_classes)
+
+3. Nova validação para classes C1/C2 (Service):
+   - Código novo: OBLIG_B_NO_ERROR_TYPE
+   - Valida presença de error_type (ValidationError, PermissionError, BusinessError)
+   - Não exige SQLSTATE para estas classes
+   - Código: requires_error_type = any(cls in {'C1', 'C2'} for cls in inv.primary_classes)
+
+4. Validação de símbolos refinada:
+   - ANTES: constraint_name OU operationId (genérico)
+   - DEPOIS:
+     * constraint_name obrigatório apenas para A/B (db_classes)
+     * operationId obrigatório apenas para D (api_classes)
+   - Códigos novos: OBLIG_B_NO_CONSTRAINT, OBLIG_B_NO_OPERATION_ID
+
+5. Chamada no main():
+   - Linha ~1352: validate_obligations() agora recebe 'inv' como 4º parâmetro
+
+CÓDIGOS DE VIOLAÇÃO ALTERADOS/ADICIONADOS:
+-------------------------------------------
+- OBLIG_B_NO_SQLSTATE: agora condicional (apenas A/B)
+- OBLIG_B_NO_ERROR_TYPE: novo (C1/C2)
+- OBLIG_B_NO_CONSTRAINT: novo (A/B)
+- OBLIG_B_NO_OPERATION_ID: novo (D)
+- OBLIG_B_NO_SYMBOL: removido (substituído pelos acima)
+
+BACKUP E REVERSÃO:
+------------------
+Backup criado em: verify_invariants_tests.py.bak_<timestamp>
+Para reverter:
+  Copy-Item verify_invariants_tests.py.bak_YYYYMMDD_HHMMSS verify_invariants_tests.py
+
+TESTES DE VALIDAÇÃO:
+--------------------
+Após aplicar o patch, executar:
+1. python docs\scripts\verify_invariants_tests.py 2>&1 | Tee-Object -FilePath docs\_generated\verify_last.txt
+2. Select-String -Path docs\_generated\verify_last.txt -Pattern "INV-TRAIN-002"
+3. Critério de aceite: OBLIG_B_NO_SQLSTATE não deve aparecer para INV-TRAIN-002
+4. Se surgir OBLIG_B_NO_ERROR_TYPE, corrigir docstring do teste para incluir "ValidationError"
+
+CONFORMIDADE COM CANON:
+------------------------
+✅ SQLSTATE obrigatório apenas para classes A/B (DB constraints)
+✅ ValidationError obrigatório para classes C1/C2 (Service)
+✅ operationId obrigatório para classe D (Router/API)
+✅ Alinhado com INVARIANTS_TESTING_CANON.md seção 3 (Matriz Canônica)
+
+FIM DO PATCH NOTES
+
+
+===============================================================================
+PATCH ADICIONAL: Corre��o do SPEC INV-TRAIN-002 (Passo 3.9)
+===============================================================================
+
+Data/Hora: 2026-02-02
+
+MOTIVO:
+- Ap�s patch do verificador, INV-TRAIN-002 ainda gerava OBLIG_B_NO_SQLSTATE
+- Causa: SPEC tinha unit 'db-column' (classe B) com required: true
+- Mas esse unit � evid�ncia documental, N�O enforcement
+- primary_classes inclu�a 'B' incorretamente
+
+SOLU��O:
+Arquivo: C:\HB TRACK\docs\02-modulos\training\INVARIANTS_TRAINING.md
+Bloco SPEC INV-TRAIN-002, unit 'db-column': required: true  required: false
+
+RESULTADO:
+- primary_classes agora retorna apenas ['C2']
+- Verificador n�o exige mais SQLSTATE para INV-TRAIN-002
+- Filtro 'Select-String INV-TRAIN-002' no verify output: NENHUMA VIOLATION 
+
+CRIT�RIO DE ACEITE: PASSOU
+===============================================================================

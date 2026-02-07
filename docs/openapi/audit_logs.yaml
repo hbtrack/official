@@ -1,0 +1,510 @@
+openapi: 3.1.0
+info:
+  title: Hb Tracking API - Audit Logs
+  description: |
+    Contrato da API para Audit Logs (Auditoria — somente leitura).
+    
+    ## Regras Aplicadas
+    - **R25/R26**: Permissões por papel e escopo; acesso conforme vínculo/escopo do ator.
+    - **R29**: Sem DELETE físico de registros relevantes.
+    - **R31/R32**: Ações críticas auditadas; log obrigatório com quem/quando/o quê/contexto.
+    - **R33**: Regra de ouro — nada relevante apagado; histórico com rastro.
+    - **R34**: Clube único na V1 — contexto organizacional obrigatório.
+    - **R42**: Usuários sem vínculo ativo têm somente leitura restrita ou acesso negado.
+    
+    ## Imutabilidade
+    Logs de auditoria são **imutáveis**. Não há endpoints POST/PATCH/DELETE públicos.
+    A criação de logs ocorre internamente via triggers/serviços nas operações auditadas.
+  version: 1.0.0
+  contact:
+    name: Hb Tracking Team
+
+servers:
+  - url: /v1
+    description: API v1
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: audit_logs
+    description: Logs de auditoria (somente leitura)
+
+paths:
+  /audit_logs:
+    get:
+      operationId: listAuditLogs
+      summary: Lista paginada de logs de auditoria
+      description: |
+        Retorna logs de auditoria com filtros por recurso, ação, ator e período.
+        
+        **Regras**: R25/R26 (permissões), R42 (vínculo ativo), R31/R32 (auditoria), R33 (histórico), R29 (imutável).
+      tags:
+        - audit_logs
+      x-rule-ids:
+        - R25
+        - R26
+        - R29
+        - R31
+        - R32
+        - R33
+        - R42
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/orderByParam'
+        - $ref: '#/components/parameters/orderDirParam'
+        - $ref: '#/components/parameters/resourceTypeParam'
+        - $ref: '#/components/parameters/resourceIdParam'
+        - $ref: '#/components/parameters/actionParam'
+        - $ref: '#/components/parameters/actorMembershipIdParam'
+        - $ref: '#/components/parameters/actorRoleCodeParam'
+        - $ref: '#/components/parameters/seasonIdParam'
+        - $ref: '#/components/parameters/dateRangeStartParam'
+        - $ref: '#/components/parameters/dateRangeEndParam'
+      responses:
+        '200':
+          description: Lista paginada de logs de auditoria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLogPaginatedResponse'
+              example:
+                items:
+                  - id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                    organization_id: "org-uuid-here"
+                    season_id: "season-uuid-here"
+                    resource_type: "match"
+                    resource_id: "match-uuid-here"
+                    action: "game_finalize"
+                    actor_membership_id: "membership-uuid-here"
+                    actor_role_code: "coordenador"
+                    occurred_at: "2025-12-23T14:30:00Z"
+                    request_id: "req-12345"
+                    ip_address: "192.168.1.100"
+                    metadata:
+                      old_values:
+                        status: "scheduled"
+                      new_values:
+                        status: "finished"
+                      reason: "Jogo finalizado pelo coordenador"
+                    created_at: "2025-12-23T14:30:00Z"
+                page: 1
+                limit: 50
+                total: 150
+        '401':
+          $ref: '#/components/responses/401_unauthorized'
+        '403':
+          $ref: '#/components/responses/403_permission_denied'
+        '422':
+          $ref: '#/components/responses/422_validation_error'
+
+  /audit_logs/{audit_log_id}:
+    get:
+      operationId: getAuditLogById
+      summary: Obtém um log de auditoria por ID
+      description: |
+        Retorna detalhes de um log de auditoria específico.
+        
+        **Regras**: R25/R26 (permissões), R42 (vínculo ativo), R31/R32 (auditoria).
+      tags:
+        - audit_logs
+      x-rule-ids:
+        - R25
+        - R26
+        - R31
+        - R32
+        - R42
+      parameters:
+        - $ref: '#/components/parameters/auditLogIdParam'
+      responses:
+        '200':
+          description: Log de auditoria encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLog'
+              example:
+                id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+                organization_id: "org-uuid-here"
+                season_id: "season-uuid-here"
+                resource_type: "wellness_post"
+                resource_id: "wellness-post-uuid-here"
+                action: "wellness_post_update"
+                actor_membership_id: "membership-uuid-here"
+                actor_role_code: "treinador"
+                occurred_at: "2025-12-23T10:15:00Z"
+                request_id: "req-67890"
+                ip_address: "10.0.0.50"
+                metadata:
+                  old_values:
+                    rpe: 5
+                    minutes: 60
+                  new_values:
+                    rpe: 7
+                    minutes: 75
+                  edit_window: "within_10min"
+                created_at: "2025-12-23T10:15:00Z"
+        '401':
+          $ref: '#/components/responses/401_unauthorized'
+        '403':
+          $ref: '#/components/responses/403_permission_denied'
+        '404':
+          $ref: '#/components/responses/404_not_found'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token de autenticação
+
+  parameters:
+    auditLogIdParam:
+      name: audit_log_id
+      in: path
+      required: true
+      description: UUID do log de auditoria
+      schema:
+        type: string
+        format: uuid
+
+    pageParam:
+      name: page
+      in: query
+      required: false
+      description: Número da página (1-indexed)
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+
+    limitParam:
+      name: limit
+      in: query
+      required: false
+      description: Itens por página (máx 100)
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 50
+
+    orderByParam:
+      name: order_by
+      in: query
+      required: false
+      description: Campo para ordenação
+      schema:
+        type: string
+        enum:
+          - occurred_at
+          - created_at
+        default: occurred_at
+
+    orderDirParam:
+      name: order_dir
+      in: query
+      required: false
+      description: Direção da ordenação
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+        default: desc
+
+    resourceTypeParam:
+      name: resource_type
+      in: query
+      required: false
+      description: |
+        Tipo do recurso auditado.
+        Exemplos: match, training_session, attendance, wellness_pre, wellness_post, 
+        membership, competition, competition_season, athlete, team, season
+      schema:
+        type: string
+      examples:
+        match:
+          value: match
+        training_session:
+          value: training_session
+        wellness_post:
+          value: wellness_post
+        membership:
+          value: membership
+
+    resourceIdParam:
+      name: resource_id
+      in: query
+      required: false
+      description: UUID do recurso específico
+      schema:
+        type: string
+        format: uuid
+
+    actionParam:
+      name: action
+      in: query
+      required: false
+      description: |
+        Ação executada.
+        Exemplos: game_finalize, game_reopen, attendance_create, wellness_post_update, 
+        membership_create, membership_update, athlete_state_change
+      schema:
+        type: string
+      examples:
+        game_finalize:
+          value: game_finalize
+        game_reopen:
+          value: game_reopen
+        wellness_post_update:
+          value: wellness_post_update
+        membership_update:
+          value: membership_update
+
+    actorMembershipIdParam:
+      name: actor_membership_id
+      in: query
+      required: false
+      description: UUID do vínculo (membership) do ator que executou a ação
+      schema:
+        type: string
+        format: uuid
+
+    actorRoleCodeParam:
+      name: actor_role_code
+      in: query
+      required: false
+      description: Papel do ator no momento da ação
+      schema:
+        type: string
+        enum:
+          - superadmin
+          - dirigente
+          - coordenador
+          - treinador
+          - atleta
+
+    seasonIdParam:
+      name: season_id
+      in: query
+      required: false
+      description: UUID da temporada relacionada
+      schema:
+        type: string
+        format: uuid
+
+    dateRangeStartParam:
+      name: date_range_start
+      in: query
+      required: false
+      description: Data inicial do período (inclusive)
+      schema:
+        type: string
+        format: date
+
+    dateRangeEndParam:
+      name: date_range_end
+      in: query
+      required: false
+      description: Data final do período (inclusive)
+      schema:
+        type: string
+        format: date
+
+  schemas:
+    AuditLog:
+      type: object
+      description: Log de auditoria de ação crítica
+      required:
+        - id
+        - organization_id
+        - resource_type
+        - resource_id
+        - action
+        - actor_membership_id
+        - actor_role_code
+        - occurred_at
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          description: Identificador único do log
+        organization_id:
+          type: string
+          format: uuid
+          description: UUID da organização (R34 - clube único V1)
+        season_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: UUID da temporada relacionada (quando aplicável)
+        resource_type:
+          type: string
+          description: |
+            Tipo do recurso auditado (TEXT livre na V1).
+            Exemplos: match, training_session, attendance, wellness_pre, wellness_post, 
+            membership, competition, competition_season, athlete, team, season
+          examples:
+            - match
+            - training_session
+            - wellness_post
+            - membership
+            - athlete
+        resource_id:
+          type: string
+          format: uuid
+          description: UUID do recurso afetado
+        action:
+          type: string
+          description: |
+            Ação executada (TEXT livre na V1).
+            Exemplos: game_finalize, game_reopen, attendance_create, wellness_post_update, 
+            membership_create, membership_update, athlete_state_change, team_registration_create
+          examples:
+            - game_finalize
+            - game_reopen
+            - wellness_post_update
+            - membership_update
+            - athlete_state_change
+        actor_membership_id:
+          type: string
+          format: uuid
+          description: UUID do vínculo (membership) do ator que executou a ação
+        actor_role_code:
+          type: string
+          enum:
+            - superadmin
+            - dirigente
+            - coordenador
+            - treinador
+            - atleta
+          description: Papel do ator no momento da ação
+        occurred_at:
+          type: string
+          format: date-time
+          description: Momento em que a ação ocorreu
+        request_id:
+          type: string
+          nullable: true
+          description: ID de correlação da requisição (para rastreabilidade)
+        ip_address:
+          type: string
+          nullable: true
+          description: Endereço IP do cliente (quando disponível)
+        metadata:
+          type: object
+          nullable: true
+          description: |
+            Detalhes adicionais da ação (objeto livre).
+            Pode incluir old_values, new_values, reason, context, etc.
+          additionalProperties: true
+          example:
+            old_values:
+              status: scheduled
+            new_values:
+              status: finished
+            reason: Jogo finalizado pelo coordenador
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: Timestamp de criação do registro
+
+    AuditLogPaginatedResponse:
+      type: object
+      description: Resposta paginada de logs de auditoria
+      required:
+        - items
+        - page
+        - limit
+        - total
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditLog'
+        page:
+          type: integer
+          minimum: 1
+          description: Página atual
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+          description: Itens por página
+        total:
+          type: integer
+          minimum: 0
+          description: Total de registros
+
+    ErrorResponse:
+      type: object
+      description: Resposta de erro padronizada
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          description: Código do erro
+        message:
+          type: string
+          description: Mensagem descritiva
+        details:
+          type: object
+          nullable: true
+          description: Detalhes adicionais do erro
+          additionalProperties: true
+
+  responses:
+    401_unauthorized:
+      description: Token inválido ou ausente
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: unauthorized
+            message: Token inválido ou ausente
+            details: null
+
+    403_permission_denied:
+      description: Permissão insuficiente (R25/R26)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: permission_denied
+            message: Permissão insuficiente para acessar logs de auditoria
+            details:
+              regra: R25
+
+    404_not_found:
+      description: Log de auditoria não encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: not_found
+            message: Log de auditoria não encontrado
+            details: null
+
+    422_validation_error:
+      description: Parâmetros de consulta inválidos
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: validation_error
+            message: Parâmetros de consulta inválidos
+            details:
+              fields:
+                date_range_start: Formato de data inválido

@@ -1,0 +1,460 @@
+{
+  "metadata": {
+    "generated": "2026-02-03T05:27:06.944024",
+    "source": "C:\\HB TRACK\\docs\\02-modulos\\training\\INVARIANTS_TRAINING.md",
+    "total_invariants": 39
+  },
+  "summary": {
+    "by_status": {
+      "CONFIRMADA": 38,
+      "INATIVA": 1
+    },
+    "by_class": {
+      "A": 16,
+      "B": 2,
+      "C2": 15,
+      "D": 3,
+      "E1": 1,
+      "C1": 2,
+      "F": 2
+    },
+    "test_required": 37,
+    "test_optional": 2
+  },
+  "supported_classes": [
+    "A",
+    "B",
+    "C1",
+    "C2",
+    "D",
+    "E1",
+    "F"
+  ],
+  "classes_without_validator": [],
+  "inventory": {
+    "A": [
+      {
+        "id": "INV-TRAIN-001",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/training/invariants/test_inv_train_001_focus_sum_constraint.py",
+        "tests_node": "TestInvTrain001FocusSumConstraint",
+        "unit_key": "db-constraint-training-sessions",
+        "unit_required": true,
+        "description": "CHECK constraint on training_sessions table"
+      },
+      {
+        "id": "INV-TRAIN-001",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/training/invariants/test_inv_train_001_focus_sum_constraint.py",
+        "tests_node": "TestInvTrain001FocusSumConstraint",
+        "unit_key": "db-constraint-session-templates",
+        "unit_required": true,
+        "description": "CHECK constraint on session_templates table"
+      },
+      {
+        "id": "INV-TRAIN-008",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/training/invariants/test_inv_train_008_soft_delete_reason_pair.py",
+        "tests_node": "TestInvTrain008SoftDeleteReasonPair",
+        "unit_key": "db-constraint-multi-table",
+        "unit_required": true,
+        "description": "CHECK constraint pattern across multiple tables (deleted_at/deleted_reason pair)"
+      },
+      {
+        "id": "INV-TRAIN-009",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/unit/test_inv_train_009_wellness_pre_uniqueness.py",
+        "tests_node": "TestInvTrain009",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Unicidade: 1 wellness_pre por athlete×session"
+      },
+      {
+        "id": "INV-TRAIN-010",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/unit/test_inv_train_010_wellness_post_uniqueness.py",
+        "tests_node": "TestInvTrain010",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Unicidade: 1 wellness_post por athlete×session"
+      },
+      {
+        "id": "INV-TRAIN-028",
+        "status": "CONFIRMADA",
+        "test_required": false,
+        "tests_primary": "tests/training/invariants/test_inv_train_001_focus_sum_constraint.py",
+        "tests_node": null,
+        "unit_key": "reference-to-canonical",
+        "unit_required": false,
+        "description": "References same constraint as INV-TRAIN-001 unit 'db-constraint-training-sessions'"
+      },
+      {
+        "id": "INV-TRAIN-020",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/unit/test_inv_train_020_cache_invalidation_trigger.py",
+        "tests_node": "TestInvTrain020",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Cache invalidation automático após mudanças em sessões"
+      },
+      {
+        "id": "INV-TRAIN-021",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/unit/test_inv_train_021_internal_load_trigger.py",
+        "tests_node": "TestInvTrain021",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Internal load calculado por trigger no DB"
+      },
+      {
+        "id": "INV-TRAIN-030",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/unit/test_inv_train_030_attendance_correction_fields.py",
+        "tests_node": "TestInvTrain030",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Correção de attendance exige campos de auditoria"
+      },
+      {
+        "id": "INV-TRAIN-031",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/unit/test_inv_train_031_derive_phase_focus.py",
+        "tests_node": "TestInvTrain031",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Derivação automática de phase_focus a partir dos percentuais"
+      },
+      {
+        "id": "INV-TRAIN-032",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/training/invariants/test_inv_train_032_*.py",
+        "tests_node": "TestInvTrain032",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "RPE da sessão deve estar entre 0 e 10"
+      },
+      {
+        "id": "INV-TRAIN-033",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/training/invariants/test_inv_train_033_wellness_pre_sleep_hours.py",
+        "tests_node": "TestInvTrain033WellnessPreSleepHours",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Horas de sono deve estar entre 0 e 24"
+      },
+      {
+        "id": "INV-TRAIN-034",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/unit/test_inv_train_034_wellness_pre_sleep_quality.py",
+        "tests_node": "TestInvTrain034",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Qualidade do sono deve estar entre 1 e 5"
+      },
+      {
+        "id": "INV-TRAIN-035",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/unit/test_inv_train_035_session_templates_unique_name.py",
+        "tests_node": "TestInvTrain035",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Nome de template de sessão é único por organização"
+      },
+      {
+        "id": "INV-TRAIN-036",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/unit/test_inv_train_036_wellness_rankings_unique.py",
+        "tests_node": "TestInvTrain036",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Ranking de wellness é único por time e mês"
+      },
+      {
+        "id": "INV-TRAIN-037",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/training/invariants/test_inv_train_037_*.py",
+        "tests_node": "TestInvTrain037",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Data de início do ciclo deve ser anterior à data de término"
+      }
+    ],
+    "B": [
+      {
+        "id": "INV-TRAIN-002",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/training/invariants/test_inv_train_002_wellness_pre_deadline.py",
+        "tests_node": "TestInvTrain002WellnessPreDeadline",
+        "unit_key": "db-column",
+        "unit_required": false,
+        "description": "Database column locked_at documents the rule"
+      },
+      {
+        "id": "INV-TRAIN-003",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/training/invariants/test_inv_train_003_wellness_post_deadline.py",
+        "tests_node": "TestInvTrain003WellnessPostDeadline",
+        "unit_key": "db-column",
+        "unit_required": true,
+        "description": "Database column locked_at documents the rule"
+      }
+    ],
+    "C2": [
+      {
+        "id": "INV-TRAIN-002",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/training/invariants/test_inv_train_002_wellness_pre_deadline.py",
+        "tests_node": "TestInvTrain002WellnessPreDeadline",
+        "unit_key": "service-validation",
+        "unit_required": true,
+        "description": "Service enforces 2h deadline with ValidationError"
+      },
+      {
+        "id": "INV-TRAIN-003",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/training/invariants/test_inv_train_003_wellness_post_deadline.py",
+        "tests_node": "TestInvTrain003WellnessPostDeadline",
+        "unit_key": "service-validation",
+        "unit_required": false,
+        "description": "Service enforces 24h deadline with ValidationError (not yet implemented for edit)"
+      },
+      {
+        "id": "INV-TRAIN-004",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/unit/test_inv_train_004_edit_window_time.py",
+        "tests_node": "TestInvTrain004",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Janela de edição por autoria/hierarquia e estado"
+      },
+      {
+        "id": "INV-TRAIN-005",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/unit/test_inv_train_005_immutability_60_days.py",
+        "tests_node": "TestInvTrain005",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Sessão > 60 dias vira readonly (imutabilidade)"
+      },
+      {
+        "id": "INV-TRAIN-011",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/unit/test_inv_train_011_deviation_rules.py",
+        "tests_node": "TestInvTrain011",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Regras de desvio e justificativa mínima"
+      },
+      {
+        "id": "INV-TRAIN-012",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/unit/test_inv_train_012_export_rate_limit.py",
+        "tests_node": "TestInvTrain012",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Rate limiting de export LGPD"
+      },
+      {
+        "id": "INV-TRAIN-013",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/unit/test_inv_train_013_gamification_badge_rules.py",
+        "tests_node": "TestInvTrain013",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Gamificação: critérios de badge (regras de elegibilidade)"
+      },
+      {
+        "id": "INV-TRAIN-014",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/unit/test_inv_train_014_overload_alert_threshold.py",
+        "tests_node": "TestInvTrain014",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Alertas: sobrecarga por multiplicador (>= 1.5× threshold)"
+      },
+      {
+        "id": "INV-TRAIN-022",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/unit/test_wellness_post_cache_invalidation.py",
+        "tests_node": "TestInvTrain022",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Atualização automática de performance cache ao registrar wellness_post"
+      },
+      {
+        "id": "INV-TRAIN-024",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/unit/test_inv_train_024_websocket_broadcast.py",
+        "tests_node": "TestInvTrain024",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "WebSocket broadcast e NotificationService para alerts/badges"
+      },
+      {
+        "id": "INV-TRAIN-026",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/unit/test_inv_train_026_lgpd_access_logging.py",
+        "tests_node": "TestInvTrain026",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "LGPD access logging (staff lendo dados de outros atletas)"
+      },
+      {
+        "id": "INV-TRAIN-018",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "Hb Track - Backend/tests/unit/test_training_session_microcycle_status.py",
+        "tests_node": "TestInvTrain018",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Sessões criadas via microciclo: draft se incompleta, scheduled se completa"
+      },
+      {
+        "id": "INV-TRAIN-019",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "Hb Track - Backend/tests/integration/test_training_session_audit_logs.py",
+        "tests_node": "TestInvTrain019",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Audit log para ações de sessão (create/edit/publish/close)"
+      },
+      {
+        "id": "INV-TRAIN-023",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "Hb Track - Backend/tests/unit/test_wellness_post_overload_alert_trigger.py",
+        "tests_node": "TestInvTrain023",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Overload alerts disparados automaticamente por wellness_post"
+      },
+      {
+        "id": "INV-TRAIN-029",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/unit/test_inv_train_029_edit_blocked_after_in_progress.py",
+        "tests_node": "TestInvTrain029",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Edição bloqueada após início da sessão"
+      }
+    ],
+    "D": [
+      {
+        "id": "INV-TRAIN-006",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/unit/test_inv_train_006_lifecycle_status.py",
+        "tests_node": "TestInvTrain006",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Lifecycle de status (DB enum + transições operacionais)"
+      },
+      {
+        "id": "INV-TRAIN-016",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/training/invariants/test_inv_train_016_attendance_auth_scoped.py",
+        "tests_node": "TestInvTrain016AttendanceAuthScoped",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Attendance: rota base exige auth; rota scoped não exposta"
+      },
+      {
+        "id": "INV-TRAIN-027",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/unit/test_refresh_training_rankings_task.py",
+        "tests_node": "TestInvTrain027",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Cache refresh daily para rankings/métricas"
+      }
+    ],
+    "E1": [
+      {
+        "id": "INV-TRAIN-007",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/training/invariants/test_inv_train_007_celery_utc_timezone.py",
+        "tests_node": "TestInvTrain007CeleryUtcTimezone",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Timezone operacional (Celery usa UTC)"
+      }
+    ],
+    "C1": [
+      {
+        "id": "INV-TRAIN-015",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/training/invariants/test_inv_train_015_training_analytics_exposure.py",
+        "tests_node": "TestInvTrain015TrainingAnalyticsExposure",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Training Analytics (FR-012) exposto e ancorado em router/service"
+      },
+      {
+        "id": "INV-TRAIN-025",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/unit/test_inv_train_025_export_lgpd_endpoints.py",
+        "tests_node": "TestInvTrain025",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Export LGPD via endpoints OpenAPI + Celery async + cleanup de jobs"
+      }
+    ],
+    "F": [
+      {
+        "id": "INV-TRAIN-040",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/training/invariants/test_inv_train_040_health_contract.py",
+        "tests_node": "TestInvTrain040HealthContract",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Contrato OpenAPI para endpoint health - validação contra openapi.json"
+      },
+      {
+        "id": "INV-TRAIN-041",
+        "status": "CONFIRMADA",
+        "test_required": true,
+        "tests_primary": "tests/training/invariants/test_inv_train_041_teams_contract.py",
+        "tests_node": "TestInvTrain041TeamsContract",
+        "unit_key": "main",
+        "unit_required": true,
+        "description": "Contrato OpenAPI para endpoint teams - validação com security"
+      }
+    ]
+  }
+}

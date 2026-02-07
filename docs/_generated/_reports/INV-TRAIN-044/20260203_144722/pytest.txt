@@ -1,0 +1,325 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.14.2, pytest-9.0.2, pluggy-1.6.0 -- C:\HB TRACK\Hb Track - Backend\venv\Scripts\python.exe
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: C:\HB TRACK\Hb Track - Backend
+configfile: pytest.ini
+plugins: anyio-4.12.0, hypothesis-6.151.2, asyncio-1.3.0, cov-7.0.0, schemathesis-4.9.4
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 3 items
+
+tests/training/invariants/test_inv_train_044_analytics_cache_unique.py::TestInvTrain044AnalyticsCacheUnique::test_valid_case__unique_combination_accepted PASSED [ 33%]
+tests/training/invariants/test_inv_train_044_analytics_cache_unique.py::TestInvTrain044AnalyticsCacheUnique::test_invalid_case_1__duplicate_monthly_cache FAILED [ 66%]
+tests/training/invariants/test_inv_train_044_analytics_cache_unique.py::TestInvTrain044AnalyticsCacheUnique::test_invalid_case_2__duplicate_weekly_cache_with_microcycle FAILED [100%]
+
+================================== FAILURES ===================================
+_ TestInvTrain044AnalyticsCacheUnique.test_invalid_case_1__duplicate_monthly_cache _
+tests\training\invariants\test_inv_train_044_analytics_cache_unique.py:175: in test_invalid_case_1__duplicate_monthly_cache
+    with pytest.raises(IntegrityError) as exc_info:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE <class 'sqlalchemy.exc.IntegrityError'>
+_ TestInvTrain044AnalyticsCacheUnique.test_invalid_case_2__duplicate_weekly_cache_with_microcycle _
+venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py:550: in _prepare_and_execute
+    self._rows = deque(await prepared_stmt.fetch(*parameters))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\asyncpg\prepared_stmt.py:177: in fetch
+    data = await self.__bind_execute(args, 0, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\asyncpg\prepared_stmt.py:268: in __bind_execute
+    data, status, _ = await self.__do_execute(
+venv\Lib\site-packages\asyncpg\prepared_stmt.py:257: in __do_execute
+    return await executor(protocol)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+asyncpg/protocol/protocol.pyx:205: in bind_execute
+    ???
+E   asyncpg.exceptions.ForeignKeyViolationError: insert or update on table "training_analytics_cache" violates foreign key constraint "training_analytics_cache_microcycle_id_fkey"
+E   DETAIL:  Key (microcycle_id)=(b367a1fc-75d9-4368-8422-655c69eb0e68) is not present in table "training_microcycles".
+
+The above exception was the direct cause of the following exception:
+venv\Lib\site-packages\sqlalchemy\engine\base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py:585: in execute
+    self._adapt_connection.await_(
+venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py:132: in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py:196: in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py:563: in _prepare_and_execute
+    self._handle_exception(error)
+venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py:513: in _handle_exception
+    self._adapt_connection._handle_exception(error)
+venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py:797: in _handle_exception
+    raise translated_error from error
+E   sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.IntegrityError: <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "training_analytics_cache" violates foreign key constraint "training_analytics_cache_microcycle_id_fkey"
+E   DETAIL:  Key (microcycle_id)=(b367a1fc-75d9-4368-8422-655c69eb0e68) is not present in table "training_microcycles".
+
+The above exception was the direct cause of the following exception:
+tests\training\invariants\test_inv_train_044_analytics_cache_unique.py:208: in test_invalid_case_2__duplicate_weekly_cache_with_microcycle
+    await async_db.flush()
+venv\Lib\site-packages\sqlalchemy\ext\asyncio\session.py:787: in flush
+    await greenlet_spawn(self.sync_session.flush, objects=objects)
+venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py:203: in greenlet_spawn
+    result = context.switch(value)
+             ^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\sqlalchemy\orm\session.py:4331: in flush
+    self._flush(objects)
+venv\Lib\site-packages\sqlalchemy\orm\session.py:4466: in _flush
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:224: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+venv\Lib\site-packages\sqlalchemy\orm\session.py:4427: in _flush
+    flush_context.execute()
+venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:466: in execute
+    rec.execute(self)
+venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+venv\Lib\site-packages\sqlalchemy\orm\persistence.py:93: in save_obj
+    _emit_insert_statements(
+venv\Lib\site-packages\sqlalchemy\orm\persistence.py:1233: in _emit_insert_statements
+    result = connection.execute(
+venv\Lib\site-packages\sqlalchemy\engine\base.py:1419: in execute
+    return meth(
+venv\Lib\site-packages\sqlalchemy\sql\elements.py:527: in _execute_on_connection
+    return connection._execute_clauseelement(
+venv\Lib\site-packages\sqlalchemy\engine\base.py:1641: in _execute_clauseelement
+    ret = self._execute_context(
+venv\Lib\site-packages\sqlalchemy\engine\base.py:1846: in _execute_context
+    return self._exec_single_context(
+venv\Lib\site-packages\sqlalchemy\engine\base.py:1986: in _exec_single_context
+    self._handle_dbapi_exception(
+venv\Lib\site-packages\sqlalchemy\engine\base.py:2363: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+venv\Lib\site-packages\sqlalchemy\engine\base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py:585: in execute
+    self._adapt_connection.await_(
+venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py:132: in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv\Lib\site-packages\sqlalchemy\util\_concurrency_py3k.py:196: in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py:563: in _prepare_and_execute
+    self._handle_exception(error)
+venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py:513: in _handle_exception
+    self._adapt_connection._handle_exception(error)
+venv\Lib\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py:797: in _handle_exception
+    raise translated_error from error
+E   sqlalchemy.exc.IntegrityError: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "training_analytics_cache" violates foreign key constraint "training_analytics_cache_microcycle_id_fkey"
+E   DETAIL:  Key (microcycle_id)=(b367a1fc-75d9-4368-8422-655c69eb0e68) is not present in table "training_microcycles".
+E   [SQL: INSERT INTO training_analytics_cache (id, team_id, microcycle_id, month, granularity, total_sessions, avg_focus_attack_positional_pct, avg_focus_defense_positional_pct, avg_focus_transition_offense_pct, avg_focus_transition_defense_pct, avg_focus_attack_technical_pct, avg_focus_defense_technical_pct, avg_focus_physical_pct, avg_rpe, avg_internal_load, total_internal_load, attendance_rate, wellness_response_rate_pre, wellness_response_rate_post, athletes_with_badges_count, deviation_count, threshold_mean, threshold_stddev, calculated_at) VALUES ($1::UUID, $2::UUID, $3::UUID, $4::DATE, $5::VARCHAR, $6::INTEGER, $7::NUMERIC(5, 2), $8::NUMERIC(5, 2), $9::NUMERIC(5, 2), $10::NUMERIC(5, 2), $11::NUMERIC(5, 2), $12::NUMERIC(5, 2), $13::NUMERIC(5, 2), $14::NUMERIC(5, 2), $15::NUMERIC(10, 2), $16::NUMERIC(12, 2), $17::NUMERIC(5, 2), $18::NUMERIC(5, 2), $19::NUMERIC(5, 2), $20::INTEGER, $21::INTEGER, $22::NUMERIC(10, 2), $23::NUMERIC(10, 2), $24::TIMESTAMP WITH TIME ZONE) RETURNING training_analytics_cache.cache_dirty]
+E   [parameters: (UUID('2d8599c9-152a-446c-a58a-3db50b44e8e0'), UUID('dff6aba6-6c64-4de9-86df-d5424e89a463'), UUID('b367a1fc-75d9-4368-8422-655c69eb0e68'), None, 'weekly', None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)
+============================== warnings summary ===============================
+tests\conftest.py:19
+  C:\HB TRACK\Hb Track - Backend\tests\conftest.py:19: DeprecationWarning: 'asyncio.WindowsSelectorEventLoopPolicy' is deprecated and slated for removal in Python 3.16
+    if sys.platform.startswith("win") and hasattr(asyncio, "WindowsSelectorEventLoopPolicy"):
+
+tests\conftest.py:20
+  C:\HB TRACK\Hb Track - Backend\tests\conftest.py:20: DeprecationWarning: 'asyncio.WindowsSelectorEventLoopPolicy' is deprecated and slated for removal in Python 3.16
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
+tests\conftest.py:20
+  C:\HB TRACK\Hb Track - Backend\tests\conftest.py:20: DeprecationWarning: 'asyncio.set_event_loop_policy' is deprecated and slated for removal in Python 3.16
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
+app\main.py:22
+app\main.py:22
+app\main.py:22
+app\main.py:22
+app\main.py:22
+app\main.py:22
+app\main.py:22
+  C:\HB TRACK\Hb Track - Backend\app\main.py:22: DeprecationWarning: 'HTTP_422_UNPROCESSABLE_ENTITY' is deprecated. Use 'HTTP_422_UNPROCESSABLE_CONTENT' instead.
+    from app.core.exceptions import NotFoundError, ForbiddenError, ValidationError, ConflictError
+
+app\schemas\training_alerts_step18.py:26
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts_step18.py:26: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SuggestionCreate(BaseModel):
+
+app\schemas\training_alerts_step18.py:56
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts_step18.py:56: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SuggestionApply(BaseModel):
+
+app\schemas\training_alerts_step18.py:76
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts_step18.py:76: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SuggestionDismiss(BaseModel):
+
+app\schemas\training_alerts_step18.py:88
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts_step18.py:88: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SuggestionResponse(BaseModel):
+
+app\schemas\training_alerts_step18.py:133
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts_step18.py:133: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SuggestionListResponse(BaseModel):
+
+app\schemas\training_alerts_step18.py:153
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts_step18.py:153: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SuggestionStatsResponse(BaseModel):
+
+app\schemas\training_alerts_step18.py:180
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts_step18.py:180: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SuggestionFilters(BaseModel):
+
+app\schemas\person.py:275
+  C:\HB TRACK\Hb Track - Backend\app\schemas\person.py:275: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class PersonResponse(PersonBase, BaseResponseSchema, SoftDeleteMixin):
+
+app\schemas\person.py:298
+  C:\HB TRACK\Hb Track - Backend\app\schemas\person.py:298: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class PersonListResponse(BaseModel):
+
+app\schemas\intake\ficha_unica.py:457
+  C:\HB TRACK\Hb Track - Backend\app\schemas\intake\ficha_unica.py:457: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class FichaUnicaResponse(BaseModel):
+
+app\schemas\intake\ficha_unica.py:551
+  C:\HB TRACK\Hb Track - Backend\app\schemas\intake\ficha_unica.py:551: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class OrganizationAutocompleteItem(BaseModel):
+
+app\schemas\intake\ficha_unica.py:567
+  C:\HB TRACK\Hb Track - Backend\app\schemas\intake\ficha_unica.py:567: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class TeamAutocompleteItem(BaseModel):
+
+app\api\v1\routers\lookup.py:29
+  C:\HB TRACK\Hb Track - Backend\app\api\v1\routers\lookup.py:29: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class PositionResponse(BaseModel):
+
+app\api\v1\routers\lookup.py:37
+  C:\HB TRACK\Hb Track - Backend\app\api\v1\routers\lookup.py:37: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CategoryResponse(BaseModel):
+
+app\api\v1\routers\lookup.py:47
+  C:\HB TRACK\Hb Track - Backend\app\api\v1\routers\lookup.py:47: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SchoolingLevelResponse(BaseModel):
+
+app\api\v1\routers\lookup.py:54
+  C:\HB TRACK\Hb Track - Backend\app\api\v1\routers\lookup.py:54: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class OrganizationResponse(BaseModel):
+
+app\api\v1\routers\lookup.py:61
+  C:\HB TRACK\Hb Track - Backend\app\api\v1\routers\lookup.py:61: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class TeamResponse(BaseModel):
+
+app\api\v1\routers\lookup.py:71
+  C:\HB TRACK\Hb Track - Backend\app\api\v1\routers\lookup.py:71: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SeasonResponse(BaseModel):
+
+venv\Lib\site-packages\slowapi\extension.py:717
+venv\Lib\site-packages\slowapi\extension.py:717
+venv\Lib\site-packages\slowapi\extension.py:717
+  C:\HB TRACK\Hb Track - Backend\venv\Lib\site-packages\slowapi\extension.py:717: DeprecationWarning: 'asyncio.iscoroutinefunction' is deprecated and slated for removal in Python 3.16; use inspect.iscoroutinefunction() instead
+    if asyncio.iscoroutinefunction(func):
+
+app\api\v1\routers\media.py:37
+  C:\HB TRACK\Hb Track - Backend\app\api\v1\routers\media.py:37: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CloudinarySignatureResponse(BaseModel):
+
+app\schemas\exercise_tags.py:19
+  C:\HB TRACK\Hb Track - Backend\app\schemas\exercise_tags.py:19: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class ExerciseTagResponse(ExerciseTagBase):
+
+app\schemas\exercise_tags.py:29
+  C:\HB TRACK\Hb Track - Backend\app\schemas\exercise_tags.py:29: PydanticDeprecatedSince20: The `update_forward_refs` method is deprecated; use `model_rebuild` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    ExerciseTagResponse.update_forward_refs()
+
+app\schemas\exercises.py:38
+  C:\HB TRACK\Hb Track - Backend\app\schemas\exercises.py:38: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class ExerciseResponse(ExerciseBase):
+
+app\schemas\exercise_favorites.py:8
+  C:\HB TRACK\Hb Track - Backend\app\schemas\exercise_favorites.py:8: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class ExerciseFavoriteResponse(BaseModel):
+
+app\schemas\athletes_v2.py:198
+  C:\HB TRACK\Hb Track - Backend\app\schemas\athletes_v2.py:198: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class AthleteResponse(BaseModel):
+
+app\schemas\athletes_v2.py:279
+  C:\HB TRACK\Hb Track - Backend\app\schemas\athletes_v2.py:279: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class AthleteStateHistoryResponse(BaseModel):
+
+venv\Lib\site-packages\google\genai\types.py:43
+  C:\HB TRACK\Hb Track - Backend\venv\Lib\site-packages\google\genai\types.py:43: DeprecationWarning: '_UnionGenericAlias' is deprecated and slated for removal in Python 3.17
+    VersionedUnionType = Union[builtin_types.UnionType, _UnionGenericAlias]
+
+app\schemas\training_alerts.py:25
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts.py:25: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class AlertCreate(BaseModel):
+
+app\schemas\training_alerts.py:50
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts.py:50: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class AlertUpdate(BaseModel):
+
+app\schemas\training_alerts.py:62
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts.py:62: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class AlertResponse(BaseModel):
+
+app\schemas\training_alerts.py:103
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts.py:103: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class AlertListResponse(BaseModel):
+
+app\schemas\training_alerts.py:123
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts.py:123: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class AlertStatsResponse(BaseModel):
+
+app\schemas\training_alerts.py:150
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts.py:150: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class AlertFilters(BaseModel):
+
+app\schemas\training_analytics.py:54
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_analytics.py:54: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class TeamSummaryResponse(BaseModel):
+
+app\schemas\training_analytics.py:95
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_analytics.py:95: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class WeeklyLoadResponse(BaseModel):
+
+app\schemas\training_analytics.py:131
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_analytics.py:131: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class DeviationAnalysisResponse(BaseModel):
+
+app\schemas\dashboard.py:157
+  C:\HB TRACK\Hb Track - Backend\app\schemas\dashboard.py:157: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class DashboardSummaryResponse(BaseModel):
+
+app\main.py:311
+  C:\HB TRACK\Hb Track - Backend\app\main.py:311: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("startup")
+
+venv\Lib\site-packages\fastapi\applications.py:4576
+venv\Lib\site-packages\fastapi\applications.py:4576
+  C:\HB TRACK\Hb Track - Backend\venv\Lib\site-packages\fastapi\applications.py:4576: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)
+
+app\main.py:354
+  C:\HB TRACK\Hb Track - Backend\app\main.py:354: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("shutdown")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/training/invariants/test_inv_train_044_analytics_cache_unique.py::TestInvTrain044AnalyticsCacheUnique::test_invalid_case_1__duplicate_monthly_cache
+FAILED tests/training/invariants/test_inv_train_044_analytics_cache_unique.py::TestInvTrain044AnalyticsCacheUnique::test_invalid_case_2__duplicate_weekly_cache_with_microcycle
+================== 2 failed, 1 passed, 53 warnings in 1.64s ===================
