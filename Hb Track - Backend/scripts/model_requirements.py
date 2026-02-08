@@ -23,6 +23,7 @@ class ForeignKeySpec:
 class ColumnSpec:
     name: str
     nullable: bool
+    nullable_explicit: bool
     is_primary_key: bool
     type_key: str | None
     default_kind: str | None = None
@@ -151,6 +152,13 @@ def _extract_kw_int(call: ast.Call, key: str) -> int | None:
     for kw in call.keywords:
         if kw.arg == key and isinstance(kw.value, ast.Constant) and isinstance(kw.value.value, int):
             return kw.value.value
+    return None
+
+
+def _extract_kw_node(call: ast.Call, key: str) -> ast.AST | None:
+    for kw in call.keywords:
+        if kw.arg == key:
+            return kw.value
     return None
 
 
@@ -331,6 +339,53 @@ def _classify_default(default_expr: str | None) -> tuple[str | None, str | None]
     return "default_literal", raw
 
 
+def _extract_default_from_ast(node: ast.AST | None) -> tuple[str | None, str | None]:
+    if node is None:
+        return None, None
+
+    if isinstance(node, ast.Constant):
+        if node.value is None:
+            return "default_literal", "null"
+        if isinstance(node.value, bool):
+            return "default_literal", "true" if node.value else "false"
+        if isinstance(node.value, (int, float)):
+            return "default_literal", str(node.value)
+        if isinstance(node.value, str):
+            return "default_literal", repr(node.value)
+
+    if isinstance(node, ast.Call):
+        fn_name = _extract_call_name(node.func)
+        if fn_name == "text" and node.args:
+            txt = _extract_str(node.args[0])
+            if txt is not None:
+                kind, value = _classify_default(txt.strip())
+                if kind is not None:
+                    return kind, value
+                return "default_function", txt.strip()
+        # default=uuid4 style and similar function defaults
+        if fn_name:
+            return "default_function", fn_name
+
+    if isinstance(node, ast.Name):
+        return "default_function", node.id
+
+    if isinstance(node, ast.Attribute):
+        return "default_function", node.attr
+
+    return None, None
+
+
+def _norm_default_value(v: str | None) -> str | None:
+    if v is None:
+        return None
+    vv = v.strip().strip("'").strip('"').lower()
+    vv = re.sub(r"\s+", " ", vv)
+    vv = vv.replace("public.", "")
+    # normalize explicit casts in pg_dump output, keep semantic core
+    vv = re.sub(r"::[a-z_ ]+", "", vv)
+    return vv
+
+
 def _get_create_table_body(schema_text: str, table: str) -> str:
     table_pattern = re.compile(
         rf"CREATE\s+TABLE\s+public\.{re.escape(table)}\s*\((?P<body>.*?)\);",
@@ -431,10 +486,18 @@ def _parse_model_constraints(model_path: Path, table: str) -> dict[str, _SpecsMa
             if not idx_name:
                 return
             unique = _extract_kw_bool(call, "unique") is True
+
+            where: str | None = None
+            where_node = _extract_kw_node(call, "postgresql_where")
+            if isinstance(where_node, ast.Call):
+                where_fn = _extract_call_name(where_node.func)
+                if where_fn == "text" and where_node.args:
+                    where = _extract_str(where_node.args[0])
+
             indexes[_normalize_ident(idx_name)] = IndexSpec(
                 name=_normalize_ident(idx_name),
                 unique=unique,
-                where=None,
+                where=re.sub(r"\s+", " ", where.strip()) if where else None,
             )
 
     # __table_args__ static tuple/list constraints
@@ -504,16 +567,23 @@ def _parse_model_columns(model_path: Path, table: str) -> dict[str, ColumnSpec]:
             return
         primary_key = _extract_kw_bool(call, "primary_key") is True
         nullable_kw = _extract_kw_bool(call, "nullable")
+        nullable_explicit = nullable_kw is not None
         type_node = _extract_column_type_arg(call)
         type_key = _model_type_to_key(type_node)
+
+        server_default_node = _extract_kw_node(call, "server_default")
+        default_kind, default_value = _extract_default_from_ast(server_default_node)
 
         # Policy: nullable must be explicit (except PK); if missing, keep as non-null marker for later violation.
         nullable = bool(nullable_kw) if nullable_kw is not None else False
         columns[col_name] = ColumnSpec(
             name=col_name,
             nullable=nullable,
+            nullable_explicit=nullable_explicit,
             is_primary_key=primary_key,
             type_key=type_key,
+            default_kind=default_kind,
+            default_value=default_value,
         )
 
     for stmt in target_class.body:
@@ -547,6 +617,16 @@ def _parse_schema_columns(schema_text: str, table: str) -> dict[str, ColumnSpec]
                 pk_cols = [c.strip().strip('"') for c in pk_m.group(1).split(",")]
                 pk_columns.update(_normalize_ident(c) for c in pk_cols if c)
 
+    # collect PK columns from ALTER TABLE ... ADD CONSTRAINT ... PRIMARY KEY (...) statements
+    alter_pk_re = re.compile(
+        rf"ALTER\s+TABLE\s+ONLY\s+public\.{re.escape(table)}\s+"
+        r"ADD\s+CONSTRAINT\s+[\w\"]+\s+PRIMARY\s+KEY\s*\((?P<cols>[^)]+)\)",
+        flags=re.IGNORECASE,
+    )
+    for m in alter_pk_re.finditer(schema_text):
+        pk_cols = [c.strip().strip('"') for c in m.group("cols").split(",")]
+        pk_columns.update(_normalize_ident(c) for c in pk_cols if c)
+
     for ln in lines:
         up = ln.upper()
         if up.startswith("CONSTRAINT ") or up.startswith("PRIMARY KEY") or up.startswith("UNIQUE ") or up.startswith("CHECK ") or up.startswith("FOREIGN KEY"):
@@ -569,6 +649,7 @@ def _parse_schema_columns(schema_text: str, table: str) -> dict[str, ColumnSpec]
         columns[name] = ColumnSpec(
             name=name,
             nullable=not not_null,
+            nullable_explicit=True,
             is_primary_key=is_pk,
             type_key=type_key,
             default_kind=default_kind,
@@ -781,6 +862,10 @@ def _validate_columns_nullable_profile(root: Path, table: str) -> tuple[list[str
         # Ignore nullability check on PKs
         if exp.is_primary_key:
             continue
+        if not got.nullable_explicit:
+            violations.append(
+                f"NULLABLE_IMPLICIT: {col} expected_nullable={exp.nullable} got_nullable_implicit"
+            )
         if exp.nullable != got.nullable:
             violations.append(
                 f"NULLABLE_MISMATCH: {col} expected_nullable={exp.nullable} got_nullable={got.nullable}"
@@ -791,19 +876,87 @@ def _validate_columns_nullable_profile(root: Path, table: str) -> tuple[list[str
                 f"TYPE_MISMATCH: {col} expected={exp.type_key} got={got.type_key}"
             )
 
+        # Server defaults (strict, best-effort): compare when schema declares one
+        if exp.default_kind:
+            if not got.default_kind:
+                violations.append(
+                    f"MISSING_SERVER_DEFAULT: {col} expected_default={exp.default_kind}:{exp.default_value}"
+                )
+            else:
+                if exp.default_kind != got.default_kind:
+                    violations.append(
+                        f"DEFAULT_KIND_MISMATCH: {col} expected={exp.default_kind} got={got.default_kind}"
+                    )
+                exp_v = _norm_default_value(exp.default_value)
+                got_v = _norm_default_value(got.default_value)
+                if exp_v and got_v and exp_v != got_v:
+                    violations.append(
+                        f"DEFAULT_VALUE_MISMATCH: {col} expected={exp.default_value} got={got.default_value}"
+                    )
+
     return violations, model_path, expected_cols, model_cols
 
 
+def _validate_constraints_profile(root: Path, table: str) -> tuple[list[str], Path]:
+    schema_path = root / "docs" / "_generated" / "schema.sql"
+    model_path = _find_model_path(root, table)
+    schema_text = schema_path.read_text(encoding="utf-8", errors="replace")
+
+    expected_checks = _parse_checks(schema_text, table)
+    expected_uniques = _parse_unique_constraints(schema_text, table)
+    expected_indexes = _parse_indexes(schema_text, table)
+
+    parsed = _parse_model_constraints(model_path, table)
+    model_checks = parsed["checks"]
+    model_uniques = parsed["uniques"]
+    model_indexes = parsed["indexes"]
+
+    violations: list[str] = []
+
+    def _missing_extra(prefix: str, expected_map: dict, model_map: dict) -> None:
+        expected_names = set(expected_map.keys())
+        model_names = set(model_map.keys())
+        for name in sorted(expected_names - model_names):
+            violations.append(f"MISSING_{prefix}: {name}")
+        for name in sorted(model_names - expected_names):
+            violations.append(f"EXTRA_{prefix}: {name}")
+
+    _missing_extra("CHECK", expected_checks, model_checks)
+    _missing_extra("UNIQUE", expected_uniques, model_uniques)
+    _missing_extra("INDEX", expected_indexes, model_indexes)
+
+    for name in sorted(set(expected_indexes.keys()) & set(model_indexes.keys())):
+        exp = expected_indexes[name]
+        got = model_indexes[name]
+        if exp.unique != got.unique:
+            violations.append(
+                f"INDEX_UNIQUE_MISMATCH: {name} expected_unique={exp.unique} got_unique={got.unique}"
+            )
+        exp_where = re.sub(r"\s+", " ", (exp.where or "").strip()) or None
+        got_where = re.sub(r"\s+", " ", (got.where or "").strip()) or None
+        if exp_where != got_where:
+            violations.append(
+                f"INDEX_WHERE_MISMATCH: {name} expected_where={exp_where} got_where={got_where}"
+            )
+
+    return violations, model_path
+
+
 def _validate_strict_profile(root: Path, table: str) -> int:
-    # Wave A: fk + columns + nullable (types pending)
+    # Strict profile: fk + columns/types/nullable + constraints/defaults
     fk_exit = _validate_fk_profile(root, table)
     if fk_exit != 0:
         return fk_exit
 
     violations, model_path, expected_cols, model_cols = _validate_columns_nullable_profile(root, table)
+    constraint_violations, constraint_model_path = _validate_constraints_profile(root, table)
+    violations.extend(constraint_violations)
+
     if violations:
         print(f"[FAIL] model_requirements strict profile violations (table={table})")
         print(f"[INFO] model_path={model_path}")
+        if constraint_model_path != model_path:
+            print(f"[INFO] constraints_model_path={constraint_model_path}")
         for v in violations:
             print(f"  - {v}")
         return EXIT_REQUIREMENTS_VIOLATION

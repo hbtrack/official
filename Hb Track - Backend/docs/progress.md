@@ -427,7 +427,7 @@ Ex.:
   - parser AST/DDL já extrai os artefatos necessários para a checagem;
   - os `exit=4` acima representam **mismatch estrutural real** (FK ausente no model vs presente no SSOT), portanto avanço imediato é correção de model/enforcement, não parser.
 - [x] Higiene de ambiente para evitar drift recorrente de teste temporário:
-  - `.hb_tmp_tests/` adicionado em `.gitignore` (root) e `Hb Track - Backend/.gitignore`.
+  - `.hb_tmp_tests/` adicionado em `.gitignore` (root). Observação: `Hb Track - Backend/.gitignore` foi removido do versionamento neste branch.
 
 - [x] Execução do gate canônico para correção de models (2026-02-07 23:20 BRT):
   - `.\scripts\models_autogen_gate.ps1 -Table "exercise_tags" -Profile strict` → `exercise_tags_gate_exit=2`
@@ -450,27 +450,110 @@ Ex.:
   - etapa de FK está funcional após autogen (mismatch de FK foi removido);
   - gaps remanescentes em `strict` agora são de **tipo/nullable** (exercise_tags, data_access_logs), mantendo o diagnóstico de mismatch real Model↔SSOT.
 
+**Revisão e validação dos itens [x] — rodada adicional (2026-02-08 00:18 BRT):**
+
+- [x] Reexecução PASSO 0 (SSOT):
+  - comando: `powershell -NoProfile -ExecutionPolicy Bypass -File ".\scripts\inv.ps1" refresh`
+  - evidência objetiva: `schema.sql`, `alembic_state.txt`, `manifest.json` regenerados em `Hb Track - Backend/docs/_generated/`.
+  - ressalva histórica (rodada anterior): OpenAPI falhou (`sqlalchemy.INET` + backend offline no fallback HTTP), mantendo `refresh` com saída não-zero no wrapper.
+
+- [x] Correção de causa-raiz OpenAPI (`sqlalchemy.INET`) validada (2026-02-08 01:34 BRT):
+  - causa confirmada por histórico: commit `e20eac8` introduziu `sa.INET()` no bloco autogerado de `app/models/data_access_log.py`.
+  - correção aplicada:
+    - `Hb Track - Backend/scripts/autogen_model_from_db.py`: mapeamento de tipo PostgreSQL `INET` para `PG_INET()` + import `INET as PG_INET` no bloco `HB-AUTOGEN-IMPORTS`.
+    - `Hb Track - Backend/app/models/data_access_log.py`: `ip_address` no bloco autogerado alterado de `sa.INET()` para `PG_INET()`.
+  - evidência de não-regressão de símbolo:
+    - `Select-String ... "sa\.INET\("` em `app/models/*.py` e `scripts/*.py` → **sem ocorrências**.
+  - revalidação PASSO 0 após patch:
+    - `powershell -NoProfile -ExecutionPolicy Bypass -File ".\scripts\inv.ps1" refresh`
+    - resultado: **`WRAPPER EXIT CODE: 0`** com `[OK] OpenAPI`, `[OK] Schema SQL`, `[OK] Alembic State`, `[OK] Manifest`.
+
+- [x] Revalidação de `strict` em tabela baseline alinhada:
+  - comando: `python .\Hb Track - Backend\scripts\model_requirements.py --table athlete_badges --profile strict`
+  - saída: `[OK] ... strict profile passed` + `column_count=5` / `model_column_count=5`.
+
+- [x] Revalidação de `strict` nas tabelas alvo da Fase 2.1.3:
+  - `exercise_tags`:
+    - comando: `python .\Hb Track - Backend\scripts\model_requirements.py --table exercise_tags --profile strict`
+    - resultado: `exercise_tags_strict_exit=4`
+    - evidência: FKs em estado OK (`fk_count=3`), restando `TYPE/NULLABLE` em `description` e `display_order`.
+  - `data_access_logs`:
+    - comando: `python .\Hb Track - Backend\scripts\model_requirements.py --table data_access_logs --profile strict`
+    - resultado: `data_access_logs_strict_exit=4`
+    - evidência: FKs em estado OK (`fk_count=2`), restando `TYPE_MISMATCH` em `entity_type`.
+
+- [x] Revalidação de higiene de ignore para artefato temporário:
+  - comando: `Select-String -Path ".gitignore" -Pattern "\.hb_tmp_tests"`
+  - evidência: entradas presentes na raiz (`.gitignore:45` e `.gitignore:90`).
+  - observação: `Test-Path "Hb Track - Backend/.gitignore"` retornou `False` (arquivo não existe mais no branch atual).
+
+- [x] Conclusão da revisão dos [x] da 2.1.3:
+  - progresso confirmado: mismatch de FK foi removido nas duas tabelas alvo;
+  - bloqueio atual confirmado por evidência reproduzível: **apenas TYPE/NULLABLE** em `exercise_tags` e `data_access_logs`.
+
+- [x] Rodada de evolução do `strict` (A-H) com evidências (2026-02-08 01:58 BRT):
+  - PASSO 0 obrigatório executado:
+    - `powershell -NoProfile -ExecutionPolicy Bypass -File ".\scripts\inv.ps1" refresh`
+    - resultado: `WRAPPER EXIT CODE: 0` com `[OK] OpenAPI`, `[OK] Schema SQL`, `[OK] Alembic State`, `[OK] Manifest`.
+  - evolução implementada em `scripts/model_requirements.py` (strict):
+    - validação de `nullable` explícito (`NULLABLE_IMPLICIT`) para colunas não-PK;
+    - validação de `server_default` (kind/value, best-effort) com violações `MISSING_SERVER_DEFAULT`, `DEFAULT_KIND_MISMATCH`, `DEFAULT_VALUE_MISMATCH`;
+    - validação estrutural de constraints por nome em strict:
+      - `CHECK` (`MISSING_CHECK`/`EXTRA_CHECK`),
+      - `UNIQUE` (`MISSING_UNIQUE`/`EXTRA_UNIQUE`),
+      - `INDEX` (`MISSING_INDEX`/`EXTRA_INDEX`) + comparação de `unique` e `where` (`INDEX_UNIQUE_MISMATCH`, `INDEX_WHERE_MISMATCH`).
+    - parser de PK robustecido para `PRIMARY KEY` em `CREATE TABLE` e também em `ALTER TABLE ... ADD CONSTRAINT ... PRIMARY KEY`.
+    - normalização de defaults ajustada para equivalência `public.gen_random_uuid()` == `gen_random_uuid()`.
+  - testes unitários do parser/AST revalidados no diretório backend:
+    - `Set-Location "Hb Track - Backend"; python -m pytest tests/unit/test_model_requirements_schema_parser.py tests/unit/test_model_requirements_model_ast_parser.py -q`
+    - resultado: `6 passed` (warnings não bloqueantes).
+  - revalidação strict nas tabelas-alvo:
+    - `python .\Hb Track - Backend\scripts\model_requirements.py --table exercise_tags --profile strict`
+      - `exercise_tags_strict_exit=4`
+      - violações atuais: `description` (TYPE/NULLABLE), `display_order` (NULLABLE), e `MISSING_SERVER_DEFAULT` em `is_active`.
+    - `python .\Hb Track - Backend\scripts\model_requirements.py --table data_access_logs --profile strict`
+      - `data_access_logs_strict_exit=4`
+      - violação atual: `TYPE_MISMATCH` em `entity_type` (`varchar|50` vs `varchar|64`).
+  - conclusão objetiva da rodada:
+    - o validador strict agora cobre blocos adicionais de 2.1.3 (nullable explícito + defaults + constraints E-H);
+    - as falhas remanescentes são **mismatchs reais de model** nas tabelas alvo, não crash/falha de parser.
+
+- [x] Fechamento final das tabelas-alvo em `strict` + gate canônico (2026-02-08 02:18 BRT):
+  - ajustes finais em models:
+    - `app/models/exercise_tag.py`: removidas definições legacy duplicadas (`Column(...)`) que sobrescreviam bloco autogerado.
+    - `app/models/data_access_log.py`: removidas definições legacy duplicadas (`mapped_column` manual com `String(64)` etc.) que sobrescreviam bloco autogerado.
+  - ajuste final no validador:
+    - `scripts/model_requirements.py`: `server_default=sa.text('false')` agora classificado como `default_literal` (evita falso `DEFAULT_KIND_MISMATCH`).
+  - evidência requirements strict:
+    - `python .\Hb Track - Backend\scripts\model_requirements.py --table exercise_tags --profile strict` → **passou** (`column_count=10`, `model_column_count=10`).
+    - `python .\Hb Track - Backend\scripts\model_requirements.py --table data_access_logs --profile strict` → **passou** (`column_count=8`, `model_column_count=8`).
+  - evidência gate canônico strict:
+    - `.\scripts\models_autogen_gate.ps1 -Table "exercise_tags" -Profile strict ...` → `exercise_tags_gate_exit=0`.
+    - `.\scripts\models_autogen_gate.ps1 -Table "data_access_logs" -Profile strict ...` → `data_access_logs_gate_exit=0`.
+
+
+
 **A. Colunas (crítico — GAP #1 eliminado)**
 
 - [x] `_validate_columns_exact_match()` (implementado em `_validate_columns_nullable_profile`):
-  - [ ] Extrai **todas** as colunas do model via AST (parsing completo do arquivo)
-  - [ ] Compara com **todas** as colunas do `schema.sql`
-  - [ ] Detecta **colunas extras** no model:
+  - [x] Extrai **todas** as colunas do model via AST (parsing completo do arquivo) — Evidência: `scripts/model_requirements.py::_parse_model_columns` percorre classe inteira e `model_column_count` bateu com schema (`exercise_tags=10`, `data_access_logs=8`, 2026-02-08 02:18 BRT).
+  - [x] Compara com **todas** as colunas do `schema.sql` — Evidência: comparação por conjunto em `_validate_columns_nullable_profile` (`expected_names` vs `model_names`) + execução strict verde nas duas tabelas-alvo.
+  - [x] Detecta **colunas extras** no model — Evidência: regra `EXTRA_COLUMN` ativa no validador; antes da limpeza dos blocos legacy houve divergências estruturais e após remoção das duplicidades as tabelas passaram em strict.
     ```python
     # Violation: EXTRA_COLUMN: nickname (exists in model line 42, not in schema.sql)
     ```
-  - [ ] Detecta **colunas faltantes** no model:
+  - [x] Detecta **colunas faltantes** no model — Evidência: regra `MISSING_COLUMN` ativa em `_validate_columns_nullable_profile` e usada no mesmo fluxo de comparação set-diff.
     ```python
     # Violation: MISSING_COLUMN: legacy_id (exists in schema.sql, missing in model)
     ```
-  - [ ] **NÃO ignora** blocos `HB-AUTOGEN-COLUMNS` — valida resultado final do arquivo
+  - [x] **NÃO ignora** blocos `HB-AUTOGEN-COLUMNS` — valida resultado final do arquivo — Evidência: parser AST lê classe completa; falhas anteriores vieram justamente de declarações duplicadas fora do bloco autogen (corrigidas em `exercise_tag.py` e `data_access_log.py`).
   - [ ] Ignora colunas em seções marcadas `# LENIENT: dynamic columns` (perfil lenient)
 
 **B. Tipos (crítico — GAP #2 eliminado)**
 
 - [x] `_validate_column_types()` (implementado no subset inicial):
-  - [ ] Mapeamento correto PostgreSQL → SQLAlchemy (ver ANEXO A)
-  - [ ] Detecta tipo incompatível:
+  - [x] Mapeamento correto PostgreSQL → SQLAlchemy (ver ANEXO A) — Evidência: `_schema_type_to_key` + `_model_type_to_key` cobrindo `uuid/int/date/datetime/text/varchar/numeric`; detecção corrigiu mismatch real `entity_type varchar|50 vs varchar|64` até strict passar em `data_access_logs`.
+  - [x] Detecta tipo incompatível — Evidência: violação `TYPE_MISMATCH` reproduzida e depois eliminada (`data_access_logs.entity_type`) com reexecução strict em 2026-02-08 02:18 BRT.
     ```python
     # Violation: TYPE_MISMATCH: birth_date expected=Date (from DATE) got=DateTime (model line 45)
     ```
@@ -480,10 +563,10 @@ Ex.:
 **C. Nullable (crítico — GAP #2.1 eliminado)**
 
 - [x] `_validate_nullability()`:
-  - [ ] DB `NOT NULL` → model deve ter `nullable=False` explícito
-  - [ ] DB nullable → model deve ter `nullable=True` explícito
-  - [ ] Primary Keys ignoradas (implicitamente NOT NULL)
-  - [ ] Detecta mismatch:
+  - [x] DB `NOT NULL` → model deve ter `nullable=False` explícito — Evidência: regra `NULLABLE_IMPLICIT` + `NULLABLE_MISMATCH` ativa e usada no diagnóstico anterior de `exercise_tags`.
+  - [x] DB nullable → model deve ter `nullable=True` explícito — Evidência: mesmas regras validando colunas nullable; após limpeza do model `exercise_tags` passou em strict.
+  - [x] Primary Keys ignoradas (implicitamente NOT NULL) — Evidência: `if exp.is_primary_key: continue` em `_validate_columns_nullable_profile`.
+  - [x] Detecta mismatch — Evidência: violações `NULLABLE_MISMATCH` reproduzidas em `exercise_tags` (rodadas anteriores) e removidas no fechamento final.
     ```python
     # Violation: NULLABLE_MISMATCH: email expected=NOT NULL got=nullable=True (model line 48)
     # Violation: NULLABLE_MISMATCH: phone expected=nullable got=missing/implicit False (model line 51)
@@ -492,19 +575,32 @@ Ex.:
 **D. Foreign Keys (já implementado)**
 
 - [ ] `_fk_present()` valida:
-  - [ ] Nome exato da FK (ex: `fk_teams_season_id`)
-  - [ ] Referência correta (`ref_table.ref_column`)
-  - [ ] `ondelete` correto (RESTRICT, CASCADE, SET NULL, etc.)
+  - [x] Nome exato da FK (ex: `fk_teams_season_id`) — Evidência: matching por `constraint_name` em `_validate_fk_profile`; `fk_count=3` (`exercise_tags`) e `fk_count=2` (`data_access_logs`) com strict final verde.
+  - [x] Referência correta (`ref_table.ref_column`) — Evidência: `_validate_fk_profile` compara `c.reference == exp.reference` e falharia com `FK_MISMATCH`.
+  - [x] `ondelete` correto (RESTRICT, CASCADE, SET NULL, etc.) — Evidência: `_fk_ondelete_equivalent` aplicado na comparação; FKs validadas com profile `fk` e strict nas duas tabelas.
   - [ ] `use_alter=True` aceito (requerido para ciclos)
-  - [ ] Detecta FKs extras:
+  - [x] Detecta FKs extras — Evidência: regra `EXTRA_FK` em `_validate_fk_profile` para nomes presentes no model e ausentes no schema.
     ```python
     # Violation: EXTRA_FK_NAME: fk_teams_season_id_invented (model line 55, not in schema.sql)
     ```
 
 **E-H. CHECK constraints, Indexes, Unique Constraints, Server Defaults**
 
-- [ ] Validações análogas às anteriores (já descritas na versão anterior)
-- [ ] Exit code **4** quando qualquer violação detectada
+- [x] Validações análogas às anteriores (já descritas na versão anterior) — Evidência: `strict` passou nas tabelas-alvo e baseline (`exercise_tags`, `data_access_logs`, `athlete_badges`) com validação ativa de `MISSING/EXTRA_CHECK`, `MISSING/EXTRA_UNIQUE`, `MISSING/EXTRA_INDEX`, `INDEX_UNIQUE_MISMATCH`, `INDEX_WHERE_MISMATCH`, `MISSING_SERVER_DEFAULT`, `DEFAULT_KIND_MISMATCH`, `DEFAULT_VALUE_MISMATCH` em `scripts/model_requirements.py`.
+- [x] Exit code **4** quando qualquer violação detectada — Evidência: múltiplas rodadas retornaram `exit=4` para mismatches reais (`exercise_tags`/`data_access_logs`) antes do fechamento; comportamento mantido.
+
+**Status consolidado da Fase 2.1.3 (revisado/validado em 2026-02-08 02:42 BRT):**
+
+- [x] Revalidação SSOT (PASSO 0): `powershell -NoProfile -ExecutionPolicy Bypass -File ".\scripts\inv.ps1" refresh` → `WRAPPER EXIT CODE: 0`.
+- [x] Revalidação strict de referência: `python .\Hb Track - Backend\scripts\model_requirements.py --table athlete_badges --profile strict` → `strict passed` (`column_count=5`, `model_column_count=5`).
+- [x] Evidência mantida do fechamento das tabelas alvo em strict + gate canônico: `exercise_tags_gate_exit=0` e `data_access_logs_gate_exit=0` (rodada 2026-02-08 02:18 BRT).
+
+**Ações que faltam para concluir completamente a Fase 2.1.3 (gap remanescente):**
+
+1. [ ] Implementar e evidenciar suporte de `lenient` para ignorar colunas marcadas (`# LENIENT: dynamic columns`) com teste de prova (`strict` falha sem exceção e `lenient` passa com exceção explícita).
+2. [ ] Implementar e evidenciar política explícita de equivalências de tipo (`ACCEPTABLE_EQUIVALENCES` e `REJECTED_EQUIVALENCES`) no comparador de tipos do `strict`.
+3. [ ] Implementar e evidenciar validação de `use_alter=True` no contrato de FK quando aplicável (especialmente casos de ciclo), com violação explícita no requirements.
+4. [ ] Consolidar checklist de fechamento com evidência reproduzível desses 3 pontos e promover os itens pendentes de 2.1.3 para `[x]`.
 
 #### 2.1.4 Perfis de validação
 

@@ -23,7 +23,7 @@ from uuid import UUID
 import sqlalchemy as sa
 from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET
 # HB-AUTOGEN-IMPORTS:END
 """.rstrip() + "\n"
 
@@ -142,6 +142,8 @@ def _sa_type_expr(coltype: sa.types.TypeEngine) -> str:
         return "PG_UUID(as_uuid=True)"
     if hasattr(sa.dialects.postgresql, "JSONB") and isinstance(t, sa.dialects.postgresql.JSONB):
         return "PG_JSONB()"
+    if hasattr(sa.dialects.postgresql, "INET") and isinstance(t, sa.dialects.postgresql.INET):
+        return "PG_INET()"
     # string types
     if isinstance(t, sa.Text):
         return "sa.Text()"
