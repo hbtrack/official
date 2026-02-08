@@ -1,6 +1,7 @@
 param(
   [Parameter(Mandatory=$true)][string]$Table,
   [switch]$Create,
+  [ValidateSet("fk", "strict", "lenient")][string]$Profile = "strict",
   [string]$ModelFile = "",
   [string]$ClassName = "",
   [string[]]$Allow = @(),
@@ -25,7 +26,7 @@ function Invoke-External {
   }
 
   if ($exitCode -ne 0) {
-    Write-Error "[$Step] exited with code $exitCode"
+    Write-Host "[FAIL] [$Step] exited with code $exitCode" -ForegroundColor Red
     exit $exitCode
   }
 }
@@ -103,6 +104,7 @@ try {
   $autogenScript = Join-Path $SCRIPT_ROOT "autogen_model_from_db.py"
   $agentGuardScript = Join-Path $SCRIPT_ROOT "agent_guard.py"
   $parityGateScript = Join-Path $SCRIPT_ROOT "parity_gate.ps1"
+  $modelRequirementsScript = Join-Path $SCRIPT_ROOT "model_requirements.py"
 
   Push-Location $ROOT
   try {
@@ -144,8 +146,20 @@ try {
       throw "[parity_gate] failed to execute parity gate"
     }
     if ($parityExit -ne 0) {
-      Write-Error "[parity_gate] exited with code $parityExit"
+      Write-Host "[FAIL] [parity_gate] exited with code $parityExit" -ForegroundColor Red
       exit $parityExit
+    }
+
+    # STEP 4: model requirements validation (must propagate exact exit code)
+    $requirementsArgs = @($modelRequirementsScript, "--table", $Table, "--profile", $Profile)
+    & $py @requirementsArgs
+    $requirementsExit = $LASTEXITCODE
+    if (-not $?) {
+      throw "[model_requirements] failed to execute requirements validator"
+    }
+    if ($requirementsExit -ne 0) {
+      Write-Host "[FAIL] [model_requirements] exited with code $requirementsExit" -ForegroundColor Red
+      exit $requirementsExit
     }
   }
   finally {
@@ -155,6 +169,6 @@ try {
   exit 0
 }
 catch {
-  Write-Error "models_autogen_gate failed: $($_.Exception.Message)"
+  Write-Host "[FAIL] models_autogen_gate failed: $($_.Exception.Message)" -ForegroundColor Red
   exit 1
 }

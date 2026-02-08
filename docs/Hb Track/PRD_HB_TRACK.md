@@ -152,6 +152,24 @@ Transformar o HB Track na **"Comissão Técnica Virtual"** de referência para h
 
 **Dependências técnicas:** Competições → Partidas → Scout (sequencial). Notificações e Relatórios são independentes.
 
+**Grafo de Dependências V1.1:**
+
+```
+Notificações (P0)              [independente, alto valor, baixo esforço]
+Relatórios PDF (P1)            [independente, médio valor, baixo esforço]
+Banco de Exercícios (P2)       [independente, backend já implementado]
+
+Competições (P1)
+  └── Partidas e Scout (P0)    [requer schema de competição]
+
+Ordem sugerida de entrega:
+  1. Notificações         → independente, desbloqueável imediato
+  2. Relatórios PDF       → independente, valor percebido
+  3. Competições          → fundação para scout
+  4. Partidas e Scout     → depende de #3
+  5. Banco de Exercícios  → backend pronto, pendente UI polish
+```
+
 ### 4.3 Out Scope (V2.0+ - 🔮 Futuro)
 
 - 🔮 **IA de Análise de Vídeo:** Clipping automático por jogador/lance
@@ -354,10 +372,31 @@ Transformar o HB Track na **"Comissão Técnica Virtual"** de referência para h
 **Descrição:** Dashboards gerenciais para coordenadores e dirigentes.
 
 **Critérios de Aceitação:**
-- ✅ Carga semanal por atleta (training_analytics_cache)
-- ✅ Taxa de resposta wellness por equipe
-- ✅ Taxa de presença em treinos
 - ✅ Cache híbrido: weekly (corrente), monthly (histórico)
+- ✅ 17 métricas implementadas via `training_analytics_cache` (evidência: `schema.sql` tabela `training_analytics_cache`)
+
+**17 Métricas Detalhadas:**
+
+| # | Métrica | Coluna | Grupo |
+|---|---------|--------|-------|
+| 1 | Total de sessões | `total_sessions` | Volume |
+| 2 | Foco médio: Ataque Posicional | `avg_focus_attack_positional_pct` | Foco |
+| 3 | Foco médio: Defesa Posicional | `avg_focus_defense_positional_pct` | Foco |
+| 4 | Foco médio: Transição Ofensiva | `avg_focus_transition_offense_pct` | Foco |
+| 5 | Foco médio: Transição Defensiva | `avg_focus_transition_defense_pct` | Foco |
+| 6 | Foco médio: Técnico Ataque | `avg_focus_attack_technical_pct` | Foco |
+| 7 | Foco médio: Técnico Defesa | `avg_focus_defense_technical_pct` | Foco |
+| 8 | Foco médio: Físico | `avg_focus_physical_pct` | Foco |
+| 9 | RPE médio | `avg_rpe` | Carga |
+| 10 | Carga interna média | `avg_internal_load` | Carga |
+| 11 | Carga interna total | `total_internal_load` | Carga |
+| 12 | Taxa de presença | `attendance_rate` | Engajamento |
+| 13 | Taxa resposta wellness pré | `wellness_response_rate_pre` | Engajamento |
+| 14 | Taxa resposta wellness pós | `wellness_response_rate_post` | Engajamento |
+| 15 | Atletas com badges | `athletes_with_badges_count` | Gamificação |
+| 16 | Contagem de desvios | `deviation_count` | Desvios |
+| 17 | Threshold médio | `threshold_mean` | Desvios |
+| 18 | Threshold desvio-padrão | `threshold_stddev` | Desvios |
 
 ---
 
@@ -748,7 +787,13 @@ erDiagram
 - Verifica imutabilidade da tabela audit_logs
 - Roda em: CI/CD
 
-### 13.4 Testes de Performance
+### 13.4 Testes de Aceitação (UAT)
+
+Plano detalhado de User Acceptance Testing com 25 cenários (20 positivos + 5 negativos) cobrindo 9 PRD-FRs e 4 personas:
+
+> **Referência**: `docs/02-modulos/training/UAT_PLAN_TRAINING.md`
+
+### 13.5 Testes de Performance
 
 - **Load Test:** 100 req/s por 5 min (K6 ou Locust)
 - **Stress Test:** Identificar limite de ruptura (500+ req/s)

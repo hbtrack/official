@@ -1,28 +1,72 @@
 {
   "summary": {
-    "total": 2,
-    "structural_count": 0,
-    "non_structural_count": 2,
+    "total": 8,
+    "structural_count": 8,
+    "non_structural_count": 0,
     "by_category": {
-      "comment": 2
+      "column": 1,
+      "constraint_fk": 6,
+      "type": 1
     },
     "warnings_count": 0
   },
   "warnings": [],
   "items": [
     {
-      "category": "comment",
-      "structural": false,
-      "message": "column comment 'seasons.canceled_at'",
-      "table": "seasons",
-      "column": "canceled_at"
+      "category": "type",
+      "structural": true,
+      "message": "type change from TEXT() to String(length=255) on 'exercise_tags.description'",
+      "table": "exercise_tags",
+      "column": "description"
     },
     {
-      "category": "comment",
-      "structural": false,
-      "message": "column comment 'seasons.interrupted_at'",
-      "table": "seasons",
-      "column": "interrupted_at"
+      "category": "constraint_fk",
+      "structural": true,
+      "message": "removed foreign key (parent_tag_id)(id) on table exercise_tags",
+      "table": "exercise_tags",
+      "column": null
+    },
+    {
+      "category": "constraint_fk",
+      "structural": true,
+      "message": "removed foreign key (approved_by_admin_id)(id) on table exercise_tags",
+      "table": "exercise_tags",
+      "column": null
+    },
+    {
+      "category": "constraint_fk",
+      "structural": true,
+      "message": "removed foreign key (suggested_by_user_id)(id) on table exercise_tags",
+      "table": "exercise_tags",
+      "column": null
+    },
+    {
+      "category": "constraint_fk",
+      "structural": true,
+      "message": "added foreign key (approved_by_admin_id)(id) on table exercise_tags",
+      "table": "exercise_tags",
+      "column": null
+    },
+    {
+      "category": "constraint_fk",
+      "structural": true,
+      "message": "added foreign key (suggested_by_user_id)(id) on table exercise_tags",
+      "table": "exercise_tags",
+      "column": null
+    },
+    {
+      "category": "constraint_fk",
+      "structural": true,
+      "message": "added foreign key (parent_tag_id)(id) on table exercise_tags",
+      "table": "exercise_tags",
+      "column": null
+    },
+    {
+      "category": "column",
+      "structural": true,
+      "message": "removed column 'exercise_tags.created_at'",
+      "table": "exercise_tags",
+      "column": "created_at"
     }
   ]
 }

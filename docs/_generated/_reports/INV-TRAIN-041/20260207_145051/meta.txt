@@ -1,0 +1,14 @@
+﻿# Gate Run Metadata
+inv_id: INV-TRAIN-041
+timestamp: 20260207_145051
+root: C:\HB TRACK
+backend: C:\HB TRACK\Hb Track - Backend
+python: Python 3.14.2
+test_file: C:\HB TRACK\Hb Track - Backend\tests\training\invariants\test_inv_train_041_teams_contract.py
+test_node: TestInvTrain041TeamsContract
+verify_exit: 0
+pytest_exit: 0
+exit_code: 0
+primary_class: F
+golden_drift: NO
+golden_missing: NO

@@ -25,12 +25,15 @@ Regras:
 # HB-AUTOGEN-IMPORTS:BEGIN
 from __future__ import annotations
 
+from datetime import date, datetime
+from typing import Optional
+from uuid import UUID
+
 import sqlalchemy as sa
 from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy.dialects.postgresql import UUID as PG_UUID
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB
 # HB-AUTOGEN-IMPORTS:END
-
 from datetime import datetime
 from typing import Optional
 from uuid import uuid4
@@ -84,20 +87,20 @@ class Attendance(Base):
     training_session_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('training_sessions.id', name='fk_attendance_training_session_id', ondelete='RESTRICT'), nullable=False)
     team_registration_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('team_registrations.id', name='fk_attendance_team_registration_id', ondelete='RESTRICT'), nullable=False)
     athlete_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('athletes.id', name='fk_attendance_athlete_id', ondelete='RESTRICT'), nullable=False)
-    presence_status: Mapped[str] = mapped_column(sa.String(32), nullable=False)
-    minutes_effective: Mapped[int] = mapped_column(sa.SmallInteger())
-    comment: Mapped[str] = mapped_column(sa.String())
-    source: Mapped[str] = mapped_column(sa.String(32), nullable=False, server_default=sa.text("'manual'::character varying"))
-    participation_type: Mapped[str] = mapped_column(sa.String(32))
-    reason_absence: Mapped[str] = mapped_column(sa.String(32))
-    is_medical_restriction: Mapped[bool] = mapped_column(sa.Boolean(), server_default=sa.text('false'))
+    presence_status: Mapped[str] = mapped_column(sa.String(length=32), nullable=False)
+    minutes_effective: Mapped[Optional[int]] = mapped_column(sa.SmallInteger(), nullable=True)
+    comment: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+    source: Mapped[str] = mapped_column(sa.String(length=32), nullable=False, server_default=sa.text("'manual'::character varying"))
+    participation_type: Mapped[Optional[str]] = mapped_column(sa.String(length=32), nullable=True)
+    reason_absence: Mapped[Optional[str]] = mapped_column(sa.String(length=32), nullable=True)
+    is_medical_restriction: Mapped[Optional[bool]] = mapped_column(sa.Boolean(), nullable=True, server_default=sa.text('false'))
     created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
     created_by_user_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('users.id', name='fk_attendance_created_by_user_id', ondelete='RESTRICT'), nullable=False)
     updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
-    deleted_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True))
-    deleted_reason: Mapped[str] = mapped_column(sa.String())
-    correction_by_user_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('users.id', name='attendance_correction_by_user_id_fkey', ondelete='SET NULL'))
-    correction_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True))
+    deleted_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+    deleted_reason: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+    correction_by_user_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('users.id', name='attendance_correction_by_user_id_fkey', ondelete='SET NULL'), nullable=True)
+    correction_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
     # HB-AUTOGEN:END
     # PK
     id: Mapped[UUID] = mapped_column(

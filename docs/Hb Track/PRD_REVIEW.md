@@ -175,6 +175,18 @@ Antes de investir em IA de video, validar viabilidade:
 8. Analise competitiva (Hudl, TeamSnap, etc.)
 9. Roadmap de parcerias (CBHb, federacoes estaduais)
 
+
+---
+
+## Sugestões de Melhoria (Gap Analysis)
+Para chegar à "perfeição absoluta", considere adicionar:
+
+1. Dicionário de Dados de IA (Pre-V2.0): Como a V2 envolve IA conversacional, seria útil definir no PRD quais campos de texto bruto (conversas) não podem ser usados para treinamento de modelos globais, visando a privacidade total do atleta.
+
+2. Fluxo de "Justificativa de Falta": O RF-003 cita "Justified" na presença. O PRD poderia definir se a justificativa requer obrigatoriamente um anexo (atestado) ou apenas texto, pois isso impacta a entidade Attendance.
+
+3. Diagrama de Fluxo de Estados (State Machine): Para MedicalCase e Match, um diagrama de estados (ex: Aberto → Em Tratamento → Liberado) ajudaria a IA a não criar transições inválidas.
+
 ---
 
 > Fonte: Analise baseada em `PRD_HB_TRACK.md` v2.0 e codigo-fonte do backend.

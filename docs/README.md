@@ -8,6 +8,18 @@
 
 > **IMPORTANTE:** Antes de confiar em qualquer doc, verifique a fonte canonica.
 
+### Documentos Canônicos (Módulo Training)
+
+| Documento | Caminho | Descrição |
+|-----------|---------|-----------|
+| **PRD** | [docs/Hb Track/PRD_HB_TRACK.md](Hb%20Track/PRD_HB_TRACK.md) | Requisitos do produto (SSOT) |
+| **TRD** | [docs/02-modulos/training/TRD_TRAINING.md](02-modulos/training/TRD_TRAINING.md) | Referência técnica (contratos, evidências) |
+| **PRD Baseline** | [docs/02-modulos/training/PRD_BASELINE_ASIS_TRAINING.md](02-modulos/training/PRD_BASELINE_ASIS_TRAINING.md) | Estado atual documentado |
+| **Invariantes** | [docs/02-modulos/training/INVARIANTS_TRAINING.md](02-modulos/training/INVARIANTS_TRAINING.md) | 36 invariantes confirmadas |
+| **Canon de Testes** | [docs/02-modulos/training/INVARIANTS_TESTING_CANON.md](02-modulos/training/INVARIANTS_TESTING_CANON.md) | Protocolo de testes |
+| **UAT Plan** | [docs/02-modulos/training/UAT_PLAN_TRAINING.md](02-modulos/training/UAT_PLAN_TRAINING.md) | Plano de testes de aceitação |
+| **Índice AI** | [docs/_ai/_INDEX.md](_ai/_INDEX.md) | Mapa para agentes IA |
+
 ### Artefatos Gerados (Fonte Canonica)
 - **[_generated/](_generated/)** - OpenAPI, Schema SQL, Alembic State
 
@@ -16,8 +28,8 @@
 
 ---
 
-**Projeto:** Sistema de Relatórios HB Tracking
-**Versão:** 1.0.0
+**Projeto:** Sistema HB Track
+**Versão:** 2.1
 **Data:** 2025-12-25
 
 ---

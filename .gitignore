@@ -42,6 +42,7 @@ Thumbs.db
 # Local runtime/generated dirs
 .hb_guard/
 .hb_backups/
+.hb_tmp_tests/
 
 # Local/invalid placeholders on Windows
 nul
@@ -49,3 +50,137 @@ nul
 
 # Separate local repo (do not vendor inside mono repo)
 brain-gist/
+
+# Generated reports (DO NOT VERSION)
+report*.json
+report*.txt
+validation_report.txt
+docs/scripts/consolidated_report.json
+
+# Build/test artifacts
+build/
+dist/
+.reports/
+*.egg-info/
+__pycache__/
+.pytest_cache/
+.coverage
+
+# Python bytecode / artifacts
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Python virtualenvs
+venv/
+.venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# Node/Frontend dependencies
+node_modules/
+Hb Track - Fronted/node_modules/
+
+# Local settings / test artifacts
+.hypothesis/
+celerybeat-schedule*
+.hb_tmp_tests/
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+*.pem
+*.key
+id_ed25519
+id_ed25519.*
+
+# Packaging / wheels
+pip-wheel-metadata/
+
+# Alembic / SQL review artifacts
+review.sql
+review_*.sql
+
+# Coverage / reports
+coverage.xml
+htmlcov/
+
+# Databases / local files
+*.sqlite3
+
+# Logs and caches
+*.log
+logs/
+.cache/
+
+# Testing tools / tox
+.tox/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Misc local/runtime dirs
+.hb_guard/
+.hb_backups/
+
+# Local/invalid placeholders on Windows
+nul
+*/nul
+
+# Agents / local agent files
+agents/
+*.agent
+
+# Ruff / other caches
+/.ruff_cache/
+
+# Archived e2e
+_archived_e2e/
+_archived_e2e
+
+# Other
+coverage.xml
+
+# Backend-specific files and folders (kept with relative path to root)
+# These were only present in Hb Track - Backend/.gitignore
+Hb Track - Backend/review.sql
+Hb Track - Backend/review_*.sql
+Hb Track - Backend/celerybeat-schedule*
+Hb Track - Backend/pip-wheel-metadata/
+Hb Track - Backend/htmlcov/
+Hb Track - Backend/.tox/
+Hb Track - Backend/_archived_e2e/
+Hb Track - Backend/.ruff_cache/
+Hb Track - Backend/.hypothesis/
+Hb Track - Backend/.claude
+Hb Track - Backend/.vscode/
+Hb Track - Backend/.idea/
+Hb Track - Backend/agents/
+Hb Track - Backend/*.agent
+Hb Track - Backend/coverage.xml
+Hb Track - Backend/*.sqlite3
+Hb Track - Backend/*.py[cod]
+Hb Track - Backend/*$py.class
+Hb Track - Backend/*.so
+Hb Track - Backend/.Python
+Hb Track - Backend/ENV/
+Hb Track - Backend/env/
+Hb Track - Backend/env.bak/
+Hb Track - Backend/venv.bak/
+Hb Track - Backend/.env.local
+Hb Track - Backend/.env.*.local
+Hb Track - Backend/*.swp
+Hb Track - Backend/*.swo

@@ -1,38 +1,29 @@
 # ENFORCEMENT (MANDATORY)
 
 Fontes obrigatórias (ler e seguir):
-- `docs/_ai/INVARIANTS_AGENT_GUARDRAILS.md`
+- `C:\HB TRACK\docs\_ai\_INDEX.md`
+- `docs/_ai/EXEC_PROTOCOL.md`
+-`C:\HB TRACK\Hb Track - Backend\docs\_ai\SYSTEM_DESIGN.md`
 
-## PROTOCOLO DE EXECUÇÃO TAREFAS OBRIGATÓRIO: `docs/_ai/EXEC_PROTOCOL.md`
+**Antes de criar qualquer migration ou model**
+- Consulte as regras de integridade (RDB) na Seção 8.3 do `C:\HB TRACK\docs\Hb Track\PRD_HB_TRACK.md`
 
-- `docs/_ai/INV_TASK_TEMPLATE.md`
-- `docs/_ai/INVARIANTS_AGENT_PROTOCOL.md`
-- `docs/02-modulos/training/INVARIANTS_TRAINING.md`
-- `docs/02-modulos/training/INVARIANTS_TESTING_CANON.md`
-- `docs/02-modulos/training/training_invariants_candidates.md` (worklist de promoção)
-
-## PARA ESCREVER CÓDIGO, leia `C:\HB TRACK\Hb Track - Backend\docs\_ai\SYSTEM_DESIGN.md`
-
-
-Autoridade / Artefatos canônicos:
+**Autoridade / Artefatos canônicos:**
 - `Hb Track - Backend/docs/_generated/openapi.json (contrato FastAPI)`
 - `Hb Track - Backend/docs/_generated/schema.sql (DDL + COMMENT ON COLUMN)`
 - `Hb Track - Backend/docs/_generated/alembic_state.txt (estado de migrações)`
 
+**FOCO ATUAL:** Estamos implementando um **pipeline determinístico de integridade Model↔DB**, usando Alembic para detectar divergências entre o modelo de dados (SQLAlchemy) e o estado atual do banco (migrations aplicadas). O processo é detalhado em `C:\HB TRACK\Hb Track - Backend\docs\progress.md` e envolve geração de logs, classificação de diffs, e geração de relatórios estruturados (`parity_report.json`) para orientar as ações corretivas.
 
+- **ANTES DE ESCREVER QUALQUER CÓDIGO**, leia: `C:\HB TRACK\Hb Track - Backend\docs\_ai\SYSTEM_DESIGN.md`
 
-## REMEMBER RULES
+- **TRABALHAR NO FOCO ATUAL**, leia: `C:\HB TRACK\Hb Track - Backend\docs\progress.md`
 
-## 1) PASSO 0 obrigatório (SSOT): .\scripts\inv.ps1 refresh
+1) ## PASSO 0 obrigatório (SSOT): 
+- - .\scripts\inv.ps1 refresh
 
-## 2) Toda INV exige gate:         .\scripts\inv.ps1 gate INV-TRAIN-XXX
+2) ## DELIVERABLE AO FINALIZAR AS TAREFAS -  PROIBIDO finalizar sem evidência 
+- RESPOSTA FINAL SEMPRE DEVE TER RESUMO COM ALTERAÇÕES (DIFFS CURTOS), AÇÕES (RASTREÁVEIS), CORREÇÕES, EVIDÊNCIAS DE VALIDAÇÃO E O RESULTADO FINAL. 
 
-## 3) Se EXIT=3 (DRIFT/MISSING):   .\scripts\inv.ps1 promote  → depois gate/all
-
-## 4) PROIBIDO finalizar sem evidência (colar output completo do GATE VERDICT, e do promote/all quando aplicável).
-
-## 5) DELIVERABLE AO FINALIZAZR AS TAREFAS: RESUMO COM ALTERAÇÕES, AÇÕES, CORREÇÕES, EVIDÊNCIAS DE VALIDAÇÃO E O RESULTADO FINAL.
-
-## 6) ## ATUALIZAR A CHECKLIST NO ARQUIVO
-
-- Atualize o arquivo [Hb Track - Backend/docs/progress.md](Hb Track - Backend/docs/progress.md) com o status atual da implementação do fluxo automático de criação/edição de módulos.
+3) ## ATUALIZAR A CHECKLIST NO ARQUIVO
+- - Leia e atualize o arquivo [Hb Track - Backend/docs/progress.md](Hb Track - Backend/docs/progress.md) com as evidencias de validações obtidas para que ele reflita o status atual da implementação do fluxo automático de criação/edição de módulos do sistema.

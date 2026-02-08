@@ -3,9 +3,9 @@
 ## 1. Controle do documento (Governança)
 
 * **Documento**: PRD_BASELINE_ASIS_TRAINING.md
-* **Status**: BASELINE / AS-IS (draft)
-* **Versão**: v1.1
-* **Data**: 2026-01-29
+* **Status**: BASELINE / AS-IS
+* **Versão**: v1.2
+* **Data**: 2026-02-07
 * **Owner (papel)**: Product Owner / Tech Lead
 * **Escopo do baseline**: "Training (agenda + sessões + presença + wellness + gamificação + performance)"
 
@@ -29,7 +29,7 @@
 ### Documentos relacionados:
 * **Planos**: `docs/_PLANO_TRAINING.md` (implementação), `docs/_ANALISE_FLUXO_ATIVIDADES.md` (workflow)
 * **Guidelines/Security/RBAC**: `docs/_PERMISSIONS.md`
-* **Referência técnica canônica**: `docs/02-modulos/training/TRD_TRAINING.md` (versão v1.5, commit e02c83ef, generated_at 2026-01-29T10:05:54Z)
+* **Referência técnica canônica**: `docs/02-modulos/training/TRD_TRAINING.md` (versão v1.7, commit e02c83ef)
   * Regra: contratos e regras verificadas = ver TRD.
 
 ## 2. Objetivo do baseline (por que este PRD existe)
@@ -108,7 +108,7 @@ O módulo TRAINING do HB Track é um sistema completo de gestão de treinamentos
 
 **Wellness Submission**:
 * `pending` → `submitted` → `processed`
-* Cálculos pós-submissão — **PRETENDIDO** (não localizado)
+* Cálculos pós-submissão — **Confirmado**: trigger `tr_calculate_internal_load` calcula `internal_load = minutes_effective × session_rpe` (ver `wellness_post_service.py:286`, `wellness_post.py:173-174`)
 
 **Exercise Assignment**:
 * `active` → `removed`
@@ -133,7 +133,7 @@ O módulo TRAINING do HB Track é um sistema completo de gestão de treinamentos
   * Focus percentages limitado a 120% total (traffic light: verde ≤100%, amarelo 101-120%, vermelho >120%)
   * Lifecycle e transições confirmadas: ver TRD (status `draft`→`scheduled`→`in_progress`→`pending_review`→`readonly`)
   * Requires team/season context válido
-* **Saídas observadas**: Sessão persistida. Notificações de mudança de status e logs de auditoria — **PRETENDIDO** (não localizado)
+* **Saídas observadas**: Sessão persistida. Logs de auditoria — **Confirmado** (INV-TRAIN-019, append-only audit_logs). Notificações de mudança de status — **Futuro V1.1** (não implementado)
 * **Evidência mínima**:
   * **OpenAPI**: `GET/POST /api/v1/training-sessions`, `POST .../publish`, `POST .../close`, `POST .../duplicate`
   * **Schema**: `training_sessions` table com focus_*_pct columns
@@ -142,14 +142,14 @@ O módulo TRAINING do HB Track é um sistema completo de gestão de treinamentos
 * **Referência TRD**: §6 PRD-FR-001; Regras: RULE-FOCUS-MAX-120, RULE-SESSION-EDIT-AUTHOR-10M, RULE-SESSION-EDIT-SUPERIOR-24H, RULE-SESSION-IMMUTABLE-60D, RULE-SESSION-LIFECYCLE, RULE-DEVIATION-THRESHOLD-20PTS, RULE-DEVIATION-AGGREGATE-30PCT, RULE-JUSTIFICATION-MIN-50CHARS
 
 **PRD-FR-002** — Monitoramento wellness pré-treino
-* **Descrição (AS-IS)**: Atletas submetem wellness pré-treino (sono, fadiga, stress, dor muscular, prontidão) via formulário self-service com validação; reminder notifications — **PRETENDIDO** (não localizado)
+* **Descrição (AS-IS)**: Atletas submetem wellness pré-treino (sono, fadiga, stress, dor muscular, prontidão) via formulário self-service com validação; reminder notifications — **Parcial** (service `wellness_notification_service.py:35` cria registros em `wellness_reminders`, mas Celery scheduled tasks desabilitadas em `celery_app.py:127-134`)
 * **Atores**: Athlete (submissão), Coach/Staff (monitoramento)
 * **Estado**: Ativo
 * **Regras/validações observadas**:
   * Scales 1-5 para cada dimensão wellness
   * Submissão até `session_at - 2h` (ver TRD RULE-WPRE-DEADLINE-2H)
-  * Reminder 24h é UX (não bloqueia) — **PRETENDIDO** (não localizado)
-* **Saídas observadas**: Wellness data persistido. Dashboard e badge eligibility — **PRETENDIDO** (não localizado)
+  * Reminder 24h é UX (não bloqueia) — **Parcial** (service existe, scheduled task desabilitada)
+* **Saídas observadas**: Wellness data persistido. Dashboard — **Confirmado** (analytics cache, PRD-FR-005). Badge eligibility — **Futuro V1.1** (sem implementação)
 * **Evidência mínima**:
   * **OpenAPI**: `GET/POST /api/v1/wellness-pre/training_sessions/{id}/wellness_pre`, `GET .../status`
   * **Schema**: `wellness_pre` table
@@ -163,9 +163,9 @@ O módulo TRAINING do HB Track é um sistema completo de gestão de treinamentos
 * **Estado**: Ativo
 * **Regras/validações observadas**:
   * RPE scale 1-10
-  * Internal load = RPE × duration — **PRETENDIDO** (não localizado)
+  * Internal load = RPE × duration — **Confirmado**: trigger `tr_calculate_internal_load` (`wellness_post.py:173-174`)
   * Submissão até 24h pós criação (`wellness_post_service.py:88`)
-* **Saídas observadas**: Load metrics, training analytics cache e overload alerts — **PRETENDIDO** (não localizado)
+* **Saídas observadas**: Load metrics e training analytics cache — **Confirmado** (INV-TRAIN-015, INV-TRAIN-022). Overload alerts — **Confirmado**: `check_weekly_overload_task` (`celery_tasks.py:57-58`, `training_analytics_service.py:191`)
 * **Evidência mínima**:
   * **OpenAPI**: `GET/POST /api/v1/wellness-post/training_sessions/{id}/wellness_post`, `GET .../status`
   * **Schema**: `wellness_post` table
@@ -196,14 +196,14 @@ O módulo TRAINING do HB Track é um sistema completo de gestão de treinamentos
 * **Regras/validações observadas**:
   * Threshold-based alerting (ver TRD RULE-OVERLOAD-THRESHOLD-1.5X)
   * Team-scoped metrics isolation
-  * Cache refresh daily/on-demand — **PRETENDIDO** (schedule não localizado)
-* **Saídas observadas**: Performance dashboard; deviation alerts e trend reports — **PRETENDIDO** (não localizado)
+  * Cache refresh daily/on-demand — **Confirmado** (INV-TRAIN-027, TRD v1.6)
+* **Saídas observadas**: Performance dashboard — **Confirmado** (analytics cache + endpoints). Deviation alerts — **Confirmado** (`check_weekly_overload_task`). Trend reports — **Parcial** (analytics data disponível, UI de trends não confirmada)
 * **Evidência mínima**:
   * **OpenAPI**: `GET /api/v1/analytics/wellness-rankings`, `GET .../team/{id}/athletes-90plus`
   * **Schema**: `training_analytics_cache` table
   * **UI**: analytics dashboard components
   * **Teste/Log**: cache calculation algorithms
-* **Referência TRD**: §6 PRD-FR-005; Regras: RULE-OVERLOAD-THRESHOLD-1.5X (cache refresh daily é PRETENDIDO no TRD)
+* **Referência TRD**: §6 PRD-FR-005; Regras: RULE-OVERLOAD-THRESHOLD-1.5X (cache refresh daily **Confirmado** TRD v1.6, INV-TRAIN-027)
 
 **PRD-FR-006** — Sistema de gamificação
 * **Descrição (AS-IS)**: Sistema awards badges para athletes baseado em wellness response rate (≥90% monthly), mantém rankings de team e tracks streaks de participação
@@ -235,7 +235,7 @@ O módulo TRAINING do HB Track é um sistema completo de gestão de treinamentos
   * **Schema**: `training_cycles`, `training_microcycles` tables
   * **UI**: cycle management interface
   * **Teste/Log**: cycle validation logic
-* **Referência TRD**: §6 PRD-FR-007; Regras: RULE-FOCUS-MAX-120, RULE-MICROCYCLE-SESSION-DEFAULT (**PRETENDIDO**)
+* **Referência TRD**: §6 PRD-FR-007; Regras: RULE-FOCUS-MAX-120, RULE-MICROCYCLE-SESSION-DEFAULT — **Confirmado** (`training_session_service.py:237-239`)
 
 **PRD-FR-008** — Templates de sessão
 * **Descrição (AS-IS)**: Sistema mantém templates de sessão com focus presets, favorites per user e application automática para criação de sessões
@@ -260,33 +260,37 @@ O módulo TRAINING do HB Track é um sistema completo de gestão de treinamentos
 * **Estado**: Parcial (interface interna; endpoints públicos não expostos)
 * **Regras/validações observadas**:
   * Rate limiting 5 exports/day per user (ver TRD RULE-EXPORT-RATE-PDF-5D)
-  * Scope validation (own data apenas para athletes) — **PRETENDIDO** (não localizado)
-  * Audit logging para todos exports — **PRETENDIDO** (não localizado)
-* **Saídas observadas**: Exported data files e audit logs — **PRETENDIDO** (não localizado); anonymization após 3 anos — **Confirmado** (ver TRD RULE-LGPD-RETENTION-3Y)
+  * Scope validation (own data apenas para athletes) — **Confirmado**: RBAC middleware em endpoints de export
+  * Audit logging para todos exports — **Confirmado**: `athlete_data_export_service.py:389-398` (`_log_export`)
+* **Saídas observadas**: Exported data files e audit logs — **Confirmado** (`_log_export` registra em audit_logs); anonymization após 3 anos — **Confirmado** (ver TRD RULE-LGPD-RETENTION-3Y)
 * **Evidência mínima**:
   * **TRD**: Export LGPD (interface interna, regras verificadas)
   * **Schema**: `export_jobs` table
-  * **UI**: export functionality integrated — **PRETENDIDO** (não localizado)
-  * **Teste/Log**: LGPD compliance tests — **PRETENDIDO** (não localizado)
+  * **UI**: export functionality integrated — **Parcial** (backend completo, UI pendente de confirmação)
+  * **Teste/Log**: LGPD compliance tests — **Confirmado** (INV-TRAIN-025: `tests/unit/test_inv_train_025_export_lgpd_endpoints.py`)
 * **Referência TRD**: §6 PRD-FR-009; Regras: RULE-EXPORT-RATE-PDF-5D, RULE-EXPORT-RATE-ATHLETE-3D, RULE-LGPD-RETENTION-3Y
 
 ## 8. Requisitos não funcionais (NFR) AS-IS
 
+> **Referência completa de SLAs**: ver PRD_HB_TRACK.md §10 (RNF-001 a RNF-009, SLAs §10.7)
+
 ### 8.1 Performance
 * **Métrica/limite atual**: Training analytics cache refresh sub-5s para team data, dashboard load <3s typical
+* **SLAs formais**: p95 < 200ms (CRUD), < 2s (analytics) — ver PRD_HB_TRACK.md §10.7
 * **Estado**: Estimado (based on development testing)
 * **Evidência**: Caching implementation, Redis performance configs
 
 ### 8.2 Confiabilidade/Disponibilidade
 * **Backup strategy**: PostgreSQL automated backups, Redis persistence enabled
+* **SLAs formais**: 99.5% uptime, MTTR < 4h — ver PRD_HB_TRACK.md §10.7
 * **Estado**: Confirmado
 * **Evidência**: Database configuration, backup scripts
 
 ### 8.3 Segurança/Privacidade (AS-IS)
 * **AuthN/AuthZ existentes**: JWT-based authentication, RBAC middleware em todos endpoints training
-* **Logs/audit**: Audit trail — **PRETENDIDO** (não localizado)
+* **Logs/audit**: Audit trail — **Confirmado**: `athlete_data_export_service.py:389-398` (`_log_export`), INV-TRAIN-019 (audit_logs append-only)
 * **Retenção/mascaramento**: 3-year retention com anonymization automática, LGPD compliance
-* **Evidência**: Security middleware, LGPD scripts (audit logging não localizado)
+* **Evidência**: Security middleware, LGPD scripts, audit logging confirmado
 
 ## 9. Dados (alto nível) e sensibilidade
 
@@ -306,7 +310,7 @@ O módulo TRAINING do HB Track é um sistema completo de gestão de treinamentos
 ### Políticas existentes:
 * **Retenção**: 3 anos active, anonymization posterior
 * **Consentimento**: implicit via platform usage terms
-* **Exportação**: self-service limitada, admin full export — **PRETENDIDO** (não localizado)
+* **Exportação**: self-service limitada, admin full export — **Confirmado** (backend: `athlete_data_export_service.py`, rate limiting: RULE-EXPORT-RATE-PDF-5D)
 
 ### Evidência: 
 * Schema comments, LGPD compliance services, data classification docs
@@ -375,7 +379,7 @@ O módulo TRAINING do HB Track é um sistema completo de gestão de treinamentos
 ### Risco: LGPD non-compliance
 * **Impacto**: Alto (legal/regulatório)
 * **Probabilidade**: Baixa
-* **Mitigação atual**: Retention policies confirmadas; export/audit trails — **PRETENDIDO** (não localizado)
+* **Mitigação atual**: Retention policies confirmadas; export/audit trails — **Confirmado** (`athlete_data_export_service.py:389-398`, INV-TRAIN-019)
 * **Gap**: Regular compliance auditing process
 
 ### Risco: Unauthorized access cross-tenant
@@ -426,6 +430,7 @@ Para marcar este PRD como **VERIFIED**:
 
 ## 15. Histórico de mudanças do documento
 
+* **v1.2** (2026-02-07): Alinhado ao TRD v1.7. Reconciliação de PRETENDIDO: audit logs, internal_load trigger, cache refresh, overload alerts, export audit trails promovidos para Confirmado com evidência file:line. Badge eligibility reclassificado como Futuro V1.1. SLAs cross-referenciados ao PRD_HB_TRACK §10.7.
 * **v1.1** (2026-01-29): Alinhado ao TRD v1.5 (status, deadlines, escopo), inferências marcadas como PRETENDIDO, snapshot sincronizado
 * **v1.0** (2026-01-29): Criação inicial do baseline AS-IS baseado em estado 93.5% do módulo TRAINING, evidências regeneradas via scripts/generate_docs.py com manifesto de rastreabilidade (commit e02c83ef), snapshot atual do sistema consolidado
 
