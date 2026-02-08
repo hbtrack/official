@@ -38,15 +38,21 @@ CAMPOS REMOVIDOS (usar tabelas normalizadas):
 - athlete_phone, athlete_email → person_contacts
 - zip_code, street, neighborhood, city, state_address, address_number, address_complement → person_addresses
 """
-from datetime import datetime, timezone, date
-from typing import Optional, TYPE_CHECKING
-from uuid import uuid4
-from enum import Enum
 
-from sqlalchemy import String, Date, DateTime, ForeignKey, Text, CheckConstraint, Integer, Boolean, text
-from sqlalchemy.schema import FetchedValue
-from sqlalchemy.dialects.postgresql import UUID, TIMESTAMP
+# HB-AUTOGEN-IMPORTS:BEGIN
+from __future__ import annotations
+
+from datetime import date, datetime
+from typing import Optional
+from uuid import UUID
+
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+from typing import TYPE_CHECKING
+from enum import Enum
 
 from app.models.base import Base
 
@@ -75,149 +81,53 @@ class Athlete(Base):
     """
     __tablename__ = "athletes"
 
+
+# HB-AUTOGEN:BEGIN
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+    # Table: public.athletes
     __table_args__ = (
-        CheckConstraint(
-            "((state)::text = ANY ((ARRAY['ativa'::character varying,"
-            "'dispensada'::character varying,"
-            "'arquivada'::character varying])::text[]))",
-            name="ck_athletes_state"
-        ),
-        CheckConstraint(
-            "((shirt_number IS NULL) OR ((shirt_number >= 1) AND (shirt_number <= 99)))",
-            name="ck_athletes_shirt_number"
-        ),
-        CheckConstraint(
-            "(((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR "
-            "((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL)))",
-            name="ck_athletes_deleted_reason",
-        ),
+        CheckConstraint('deleted_at IS NULL AND deleted_reason IS NULL OR deleted_at IS NOT NULL AND deleted_reason IS NOT NULL', name='ck_athletes_deleted_reason'),
+        CheckConstraint('shirt_number IS NULL OR shirt_number >= 1 AND shirt_number <= 99', name='ck_athletes_shirt_number'),
+        CheckConstraint("state::text = ANY (ARRAY['ativa'::character varying, 'dispensada'::character varying, 'arquivada'::character varying]::text[])", name='ck_athletes_state'),
+        Index('idx_athletes_person_deleted', 'person_id', 'deleted_at', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
+        Index('ix_athletes_birth_date', 'birth_date', unique=False),
+        Index('ix_athletes_medical_flags', 'state', unique=False, postgresql_where=sa.text('((deleted_at IS NULL) AND ((injured = true) OR (medical_restriction = true) OR (load_restricted = true)))')),
+        Index('ix_athletes_organization_id', 'organization_id', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
+        Index('ix_athletes_person_id', 'person_id', unique=False),
+        Index('ix_athletes_person_id_active', 'person_id', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
+        Index('ix_athletes_state', 'state', unique=False),
+        Index('ix_athletes_state_active', 'state', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
     )
 
-    # ==================== IDENTIFICAÇÃO (SISTEMA) ====================
-    id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True),
-        primary_key=True,
-        default=uuid4,
-        server_default=text("public.gen_random_uuid()"),
-    )
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
 
-    person_id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("persons.id", name="fk_athletes_person_id", ondelete="RESTRICT"),
-        nullable=False
-    )
-    
-    # CANÔNICO: organization_id é DERIVADO automaticamente de team_registrations
-    # - Quando atleta tem vínculo ativo: organization_id = teams.organization_id
-    # - Quando atleta sem vínculo ativo: organization_id = NULL
-    # - Campo desnormalizado intencionalmente para facilitar queries
-    # - NUNCA editar manualmente; sempre atualizado por lógica de negócio
-    organization_id: Mapped[Optional[UUID]] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("organizations.id", name="fk_athletes_organization_id", ondelete="RESTRICT"),
-        nullable=True
-    )
-
-    # ==================== STATUS E CONDIÇÃO ====================
-    state: Mapped[str] = mapped_column(
-        String(20),
-        default=AthleteState.ATIVA.value,
-        server_default=text("'ativa'::character varying"),
-        nullable=False
-    )
-    
-    injured: Mapped[bool] = mapped_column(Boolean, default=False, server_default=text("false"), nullable=False)
-    medical_restriction: Mapped[bool] = mapped_column(Boolean, default=False, server_default=text("false"), nullable=False)
-    suspended_until: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
-    load_restricted: Mapped[bool] = mapped_column(Boolean, default=False, server_default=text("false"), nullable=False)
-
-    # ==================== DADOS PESSOAIS ====================
-    athlete_name: Mapped[str] = mapped_column(String(100), nullable=False)
-    athlete_nickname: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
-    birth_date: Mapped[date] = mapped_column(Date, nullable=False)
-
-    # ==================== NÚMERO DA CAMISA ====================
-    shirt_number: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
-
-    # NOTA: Documentos (RG, CPF) estão em person_documents
-    # NOTA: Contatos (telefone, email) estão em person_contacts
-
-    # ==================== POSIÇÕES (FK PARA TABELAS AUXILIARES) ====================
-    main_defensive_position_id: Mapped[Optional[int]] = mapped_column(
-        Integer,
-        ForeignKey("defensive_positions.id", name="fk_athletes_main_defensive_position_id", ondelete="SET NULL"),
-        nullable=True
-    )
-
-    secondary_defensive_position_id: Mapped[Optional[int]] = mapped_column(
-        Integer,
-        ForeignKey("defensive_positions.id", name="fk_athletes_secondary_defensive_position_id", ondelete="SET NULL"),
-        nullable=True
-    )
-
-    main_offensive_position_id: Mapped[Optional[int]] = mapped_column(
-        Integer,
-        ForeignKey("offensive_positions.id", name="fk_athletes_main_offensive_position_id", ondelete="SET NULL"),
-        nullable=True
-    )
-
-    secondary_offensive_position_id: Mapped[Optional[int]] = mapped_column(
-        Integer,
-        ForeignKey("offensive_positions.id", name="fk_athletes_secondary_offensive_position_id", ondelete="SET NULL"),
-        nullable=True
-    )
-
-    # ==================== ESCOLARIDADE ====================
-    schooling_id: Mapped[Optional[int]] = mapped_column(
-        Integer,
-        ForeignKey("schooling_levels.id", name="fk_athletes_schooling_id", ondelete="SET NULL"),
-        nullable=True
-    )
-
-    # ==================== RESPONSÁVEL ====================
-    guardian_name: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
-    guardian_phone: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
-
-    # NOTA: Endereços estão em person_addresses
-
-    # ==================== FOTO ====================
-    athlete_photo_path: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
-
-    # ==================== TIMESTAMPS E REGISTRO ====================
-    registered_at: Mapped[datetime] = mapped_column(
-        TIMESTAMP(timezone=True),
-        server_default=text("now()"),
-        nullable=False
-    )
-
-    athlete_age_at_registration: Mapped[Optional[int]] = mapped_column(
-        Integer,
-        nullable=True,
-        doc="Idade no momento do registro (calculado automaticamente por trigger)"
-        # trigger preenche em INSERT/UPDATE
-        , server_default=FetchedValue()
-        , server_onupdate=FetchedValue()
-    )
-
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=text("now()"),
-        nullable=False
-    )
-
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=text("now()"),
-        server_onupdate=FetchedValue(),  # trigger trg_set_updated_at
-        nullable=False
-    )
-
-    # ==================== SOFT DELETE ====================
-    deleted_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(timezone=True),
-        nullable=True
-    )
-    deleted_reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+    person_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('persons.id', name='fk_athletes_person_id', ondelete='RESTRICT'), nullable=False)
+    state: Mapped[str] = mapped_column(sa.String(length=20), nullable=False, server_default=sa.text("'ativa'::character varying"))
+    injured: Mapped[bool] = mapped_column(sa.Boolean(), nullable=False, server_default=sa.text('false'))
+    medical_restriction: Mapped[bool] = mapped_column(sa.Boolean(), nullable=False, server_default=sa.text('false'))
+    suspended_until: Mapped[Optional[date]] = mapped_column(sa.Date(), nullable=True)
+    load_restricted: Mapped[bool] = mapped_column(sa.Boolean(), nullable=False, server_default=sa.text('false'))
+    athlete_name: Mapped[str] = mapped_column(sa.String(length=100), nullable=False)
+    birth_date: Mapped[date] = mapped_column(sa.Date(), nullable=False)
+    athlete_nickname: Mapped[Optional[str]] = mapped_column(sa.String(length=50), nullable=True)
+    shirt_number: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True)
+    main_defensive_position_id: Mapped[Optional[int]] = mapped_column(sa.Integer(), ForeignKey('defensive_positions.id', name='fk_athletes_main_defensive_position_id', ondelete='SET NULL'), nullable=True)
+    secondary_defensive_position_id: Mapped[Optional[int]] = mapped_column(sa.Integer(), ForeignKey('defensive_positions.id', name='fk_athletes_secondary_defensive_position_id', ondelete='SET NULL'), nullable=True)
+    main_offensive_position_id: Mapped[Optional[int]] = mapped_column(sa.Integer(), ForeignKey('offensive_positions.id', name='fk_athletes_main_offensive_position_id', ondelete='SET NULL'), nullable=True)
+    secondary_offensive_position_id: Mapped[Optional[int]] = mapped_column(sa.Integer(), ForeignKey('offensive_positions.id', name='fk_athletes_secondary_offensive_position_id', ondelete='SET NULL'), nullable=True)
+    schooling_id: Mapped[Optional[int]] = mapped_column(sa.Integer(), ForeignKey('schooling_levels.id', name='fk_athletes_schooling_id', ondelete='SET NULL'), nullable=True)
+    guardian_name: Mapped[Optional[str]] = mapped_column(sa.String(length=100), nullable=True)
+    guardian_phone: Mapped[Optional[str]] = mapped_column(sa.String(length=20), nullable=True)
+    athlete_photo_path: Mapped[Optional[str]] = mapped_column(sa.String(length=500), nullable=True)
+    registered_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    athlete_age_at_registration: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    deleted_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+    deleted_reason: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+    organization_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('organizations.id', name='fk_athletes_organization_id', ondelete='RESTRICT'), nullable=True)
+    # HB-AUTOGEN:END
 
     # ==================== RELATIONSHIPS ====================
     team_registrations: Mapped[list["TeamRegistration"]] = relationship(

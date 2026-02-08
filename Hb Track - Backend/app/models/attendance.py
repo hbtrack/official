@@ -31,19 +31,12 @@ from uuid import UUID
 
 import sqlalchemy as sa
 from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB
-# HB-AUTOGEN-IMPORTS:END
-from datetime import datetime
-from typing import Optional
-from uuid import uuid4
-
-from sqlalchemy import DateTime, ForeignKey, Text, text, Boolean, SmallInteger, String
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+from typing import TYPE_CHECKING
 
 from app.models.base import Base
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from app.models.training_session import TrainingSession
@@ -102,125 +95,6 @@ class Attendance(Base):
     correction_by_user_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('users.id', name='attendance_correction_by_user_id_fkey', ondelete='SET NULL'), nullable=True)
     correction_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
     # HB-AUTOGEN:END
-    # PK
-    id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True),
-        primary_key=True,
-        default=uuid4,
-        server_default=text("gen_random_uuid()")
-    )
-    
-    # FK para sessão de treino
-    training_session_id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("training_sessions.id", name="fk_attendance_training_session_id", ondelete="RESTRICT"),
-        nullable=False,
-        index=True
-    )
-    
-    # FK para team_registration (vínculo ativo no momento)
-    team_registration_id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("team_registrations.id", name="fk_attendance_team_registration_id", ondelete="RESTRICT"),
-        nullable=False
-    )
-    
-    # FK para atleta
-    athlete_id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("athletes.id", name="fk_attendance_athlete_id", ondelete="RESTRICT"),
-        nullable=False,
-        index=True
-    )
-    
-    # Status de presença: 'present' ou 'absent'
-    presence_status: Mapped[str] = mapped_column(
-        String(32),
-        nullable=False
-    )
-    
-    # Minutos efetivos de participação
-    minutes_effective: Mapped[Optional[int]] = mapped_column(
-        SmallInteger,
-        nullable=True
-    )
-    
-    # Comentário/observação
-    comment: Mapped[Optional[str]] = mapped_column(
-        Text,
-        nullable=True
-    )
-    
-    # Fonte do registro: 'manual', 'import', 'correction'
-    source: Mapped[str] = mapped_column(
-        String(32),
-        nullable=False,
-        default='manual'
-    )
-    
-    # Tipo de participação: 'full', 'partial', 'adapted', 'did_not_train'
-    participation_type: Mapped[Optional[str]] = mapped_column(
-        String(32),
-        nullable=True
-    )
-    
-    # Motivo de ausência: 'medico', 'escola', 'familiar', 'opcional', 'outro'
-    reason_absence: Mapped[Optional[str]] = mapped_column(
-        String(32),
-        nullable=True
-    )
-    
-    # Flag de restrição médica
-    is_medical_restriction: Mapped[Optional[bool]] = mapped_column(
-        Boolean,
-        nullable=True,
-        default=False
-    )
-    
-    # Auditoria
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        nullable=False,
-        server_default=text("now()")
-    )
-    
-    created_by_user_id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("users.id", name="fk_attendance_created_by_user_id", ondelete="RESTRICT"),
-        nullable=False
-    )
-    
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        nullable=False,
-        server_default=text("now()")
-    )
-    
-    # Campos de auditoria para correções (Step 5 - Plano Refatoração)
-    # Quando source='correction', estes campos são preenchidos
-    correction_by_user_id: Mapped[Optional[UUID]] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("users.id", name="attendance_correction_by_user_id_fkey", ondelete="SET NULL"),
-        nullable=True,
-        comment="ID do usuário que realizou a correção (quando source=correction)"
-    )
-
-    correction_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(timezone=True),
-        nullable=True,
-        comment="Timestamp da correção (quando source=correction)"
-    )
-
-    # Soft delete
-    deleted_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(timezone=True),
-        nullable=True
-    )
-
-    deleted_reason: Mapped[Optional[str]] = mapped_column(
-        Text,
-        nullable=True
-    )
 
     # Relationships
     training_session: Mapped[Optional["TrainingSession"]] = relationship(
