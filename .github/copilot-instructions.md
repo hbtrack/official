@@ -1,6 +1,22 @@
 Execute a tarefa exatamente como definida no arquivo `C:\HB TRACK\docs\_ai\EXEC_TASK_ADR_MODELS_001.md`. Não desvie do escopo, ordem, ou regras definidas. Siga todas as instruções rigorosamente.
 
-Regras obrigatórias:
+---
+
+## 🔴 PORTA ÚNICA: Camada Canônica Docs
+
+**Para QUALQUER consulta técnica, comece AQUI:** `docs/_canon/00_START_HERE.md`
+
+Esta camada orienta para documentação correta conforme sua intenção:
+- **O que confiar (precedência):** → `docs/_canon/01_AUTHORITY_SSOT.md` (DB > Service > OpenAPI > Docs)
+- **Quero fazer X, por onde?: → `docs/_canon/02_CONTEXT_MAP.md` (intenção → docs → evidência)
+- **Workflow/checklist:** → `docs/_canon/03_WORKFLOWS.md` (passo-a-passo operacional)
+- **Arquivos gerados:** → `docs/_canon/04_SOURCES_GENERATED.md` (schema.sql, openapi.json, reports)
+
+**Regra obrigatória:** Toda resposta técnica deve citar (a) um documento canônico e (b) uma evidência (código, schema.sql, openapi.json, parity_report.json ou ADR).
+
+---
+
+## Execução de Tarefas ADR/EXEC_TASK
 1. PREENCHER PRÉ-REQUISITOS: rode TODOS os checklist de pré-requisitos definidos em .clinerules seção "EXEC_TASK PREREQUISITES VALIDATION" e ABORTE se qualquer um falhar
 2. ORDEM ESTRITA: siga as Fases em ordem sequencial conforme documento
 3. ESCOPO RESTRITO: não altere arquivos fora da lista do checklist do EXEC_TASK
