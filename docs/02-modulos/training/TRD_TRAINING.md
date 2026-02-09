@@ -7,7 +7,7 @@
 | **TRD válido para** | commit `e02c83ef` |
 | **Manifest** | `Hb Track - Backend/docs/_generated/manifest.json` |
 | **Generated at** | 2026-01-29T10:05:54Z |
-| **Versão** | v1.6 |
+| **Versão** | v1.8 |
 
 ---
 
@@ -290,7 +290,7 @@ Nota: no front/UI o estado pode aparecer como **closed**; no DB o valor é `read
 
 **Side Effects**:
 - LGPD: registra acesso quando staff lê dados de outros atletas — **Confirmado** (INV-TRAIN-026): `wellness_pre_service.py:69-173` (data_access_logs). Teste: `tests/unit/test_inv_train_026_lgpd_access_logging.py::TestInvTrain026LgpdAccessLogging`
-- Badge eligibility atualizado — **PRETENDIDO** (sem evidência localizada no INVARIANTS)
+- Badge eligibility atualizado — **Futuro V1.1** (sem implementação localizada no commit e02c83ef; será implementado junto com NotificationService V1.1)
 
 ---
 
@@ -404,7 +404,7 @@ Nota: no front/UI o estado pode aparecer como **closed**; no DB o valor é `read
 
 **Side Effects**:
 - WebSocket broadcast para notificação de badge — **Confirmado** (INV-TRAIN-024): `wellness_gamification_service.py:328-387` (badges → NotificationService + broadcast). Teste: `tests/unit/test_inv_train_024_websocket_broadcast.py::TestInvTrain024WebsocketBroadcast`
-- Relatório Top 5 performers — **PRETENDIDO** (sem evidência localizada no INVARIANTS)
+- Relatório Top 5 performers — **Confirmado**: `wellness_gamification_service.py:604-737` (scheduled job mensal, calcula top 5 por response_rate) e `teams.py:878-1047` (endpoint Top 5 atletas)
 
 ---
 
@@ -473,7 +473,7 @@ Nota: no front/UI o estado pode aparecer como **closed**; no DB o valor é `read
 
 **Data Contracts**:
 - Tabela: `export_jobs` (status, params_hash, file_url, expires_at)
-- Audit logs para todos exports — **PRETENDIDO** (sem evidência localizada no INVARIANTS)
+- Audit logs para todos exports — **Confirmado**: `athlete_data_export_service.py:10,60,168,389-398` (`_log_export` registra em audit_logs) e `athlete_export.py:54` (docstring confirma registro)
 
 **Regras Aplicáveis**: RULE-EXPORT-RATE-PDF-5D, RULE-EXPORT-RATE-ATHLETE-3D, RULE-LGPD-RETENTION-3Y
 
@@ -514,6 +514,29 @@ Nota: no front/UI o estado pode aparecer como **closed**; no DB o valor é `read
 - Notificação via NotificationService — **Confirmado** (INV-TRAIN-024): `training_alerts_service.py:364-413` (alertas → NotificationService). Teste: `tests/unit/test_inv_train_024_websocket_broadcast.py::TestInvTrain024WebsocketBroadcast`
 
 **Erros Relevantes**: 422, 404
+
+**Algoritmo de Sugestões de Carga** (detalhamento técnico):
+
+| Parâmetro | Valor | Evidência |
+|-----------|-------|-----------|
+| `LOOKBACK_DAYS` | 90 | `training_suggestion_service.py:41` |
+| `MIN_MICROCYCLES_FOR_SUGGESTION` | 3 | `training_suggestion_service.py:39` |
+| `MIN_DEVIATION_THRESHOLD` | 10.0 pts | `training_suggestion_service.py:40` |
+| Consistência para confiança alta | ≥70% | `training_suggestion_service.py:210+` |
+
+Fluxo do algoritmo:
+1. Busca microciclos dos últimos 90 dias (`cutoff_date = utcnow() - 90 days`)
+2. Filtra microciclos similares (mesmo `microcycle_type` se informado)
+3. Se `< 3 microciclos` → retorna `has_suggestions: false` com mensagem informativa
+4. Para cada foco (7 áreas): calcula desvio médio entre planejado e executado
+5. Considera apenas desvios `≥ 10 pts` como relevantes
+6. Calcula consistência: `ocorrências_na_mesma_direção / total_analisados`
+7. Classifica confiança: `high` (≥70%), `medium` (50-70%), `low` (<50%)
+8. Gera sugestões do tipo:
+   - `compensation`: redistribuir foco que está sistematicamente acima
+   - `reduce_next_week`: reduzir intensidade geral se padrão de sobrecarga
+
+**Evidência completa**: `Hb Track - Backend/app/services/training_suggestion_service.py:35-230`
 
 ---
 
@@ -749,11 +772,38 @@ Fonte de verdade por tabela: `schema.sql`.
 | `update_training_session_statuses_task` | A cada minuto | `celery_app.py:99-105` |
 | `anonymize_old_training_data_task` | Diário 4h | `celery_app.py:107-113` |
 | `calculate_monthly_badges_task` | 1º dia mês 1h | `celery_app.py:136-139` **(COMENTADO)** |
+| `generate_analytics_pdf_task` | On-demand (via ExportService) | `celery_tasks.py:400-556` |
+| `cleanup_expired_export_jobs_task` | Periódico | `celery_tasks.py:400-556` |
+| `refresh_training_rankings_task` | Agendado | `celery_tasks.py:768`, `celery_app.py:117` |
 
 ### 10.3 Redis
 - **Confirmado**: Broker/backend Celery em `celery_app.py:28-30`
 - **Uso**: Cache de performance, sessions
 - **Evidência**: `start-celery-*.ps1`, libs instaladas
+
+### 10.4 Requisitos Não-Funcionais (Referência)
+
+Os RNFs e SLAs do sistema estão definidos no **PRD_HB_TRACK.md §10.1-10.7** (SSOT). Resumo dos limites relevantes ao módulo Training:
+
+| Requisito | Valor | Referência PRD |
+|-----------|-------|----------------|
+| Latência API (p95) | < 200ms CRUD, < 2s analytics | §10.1, §10.7 |
+| Usuários simultâneos | 500 | §10.2 |
+| Sessões/mês | 10.000 | §10.2 |
+| Uptime | 99.5% | §10.3, §10.7 |
+| MTTR | < 4h | §10.7 |
+
+> **Referência completa**: `docs/Hb Track/PRD_HB_TRACK.md` §10 (RNF-001 a RNF-009, SLAs §10.7)
+
+**Limites Operacionais do Módulo Training:**
+
+| Limite | Valor | Evidência |
+|--------|-------|-----------|
+| Sessions por org/ano | 10.000 | PRD_HB_TRACK §10.2 |
+| Wellness submissions/mês | 100.000 (estimado) | PRD_HB_TRACK §10.2 |
+| Analytics cache rows/team | ~52/ano (weekly) + 12 (monthly) | Schema: `ck_training_analytics_cache_granularity` |
+| Export jobs por user/dia | 5 (rate limited) | RULE-EXPORT-RATE-PDF-5D |
+| Celery tasks periódicas | 9 tasks (6 scheduladas + 1 comentada + 2 on-demand) | `celery_app.py` beat_schedule + `celery_tasks.py` |
 
 ---
 
@@ -813,6 +863,8 @@ Hb Track - Backend/tests/
 
 | Versão | Data | Autor | Descrição |
 |--------|------|-------|-----------|
+| v1.8 | 2026-02-08 | Claude Opus 4.6 | Eliminação de dívida técnica de documentação: detalhamento do algoritmo de sugestões de carga em FR-010 (parâmetros, fluxo, evidência). Celery tasks faltantes adicionadas em §10.2 (generate_analytics_pdf_task, cleanup_expired_export_jobs_task, refresh_training_rankings_task). Versão do header corrigida (era v1.6, deveria ser v1.7). |
+| v1.7 | 2026-02-07 | Claude Opus 4.6 | Últimos 3 PRETENDIDO resolvidos: "Top 5 performers" e "Audit logs exports" promovidos a Confirmado com evidência file:line; "Badge eligibility" reclassificado como Futuro V1.1. Adicionada §10.4 RNFs (referência PRD §10.7). Zero PRETENDIDO restantes no corpo do documento. |
 | v1.6 | 2026-01-31 | Claude Opus 4.5 | Side effects promovidos PRETENDIDO→Confirmado via INVARIANTS (audit log, cache invalidation, internal load trigger, websocket broadcast, export async/cleanup, LGPD access logging, overload alerts, cache refresh daily). Seção 11 atualizada com testes confirmados (INV-TRAIN-001 a INV-TRAIN-029) |
 | v1.5 | 2026-01-29 | Codex | Routers sem duplicidade no grafo, OpenAPI regenerado sem warnings, pipeline gera relatório de permissões, status readonly padronizado |
 | v1.4 | 2026-01-29 | Codex | Status readonly padronizado, OpenAPI regenerado (80/80), FR-012 com evidências file:line, relatório de autorização com formato/script |

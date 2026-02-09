@@ -1,6 +1,8 @@
 param(
   [Parameter(Mandatory=$true)][string]$Table,
   [switch]$Create,
+  [ValidateSet("fk", "strict", "lenient")][string]$Profile = "strict",
+  [switch]$AllowCycleWarning,
   [string]$ModelFile = "",
   [string]$ClassName = "",
   [string[]]$Allow = @(),
@@ -25,7 +27,7 @@ function Invoke-External {
   }
 
   if ($exitCode -ne 0) {
-    Write-Error "[$Step] exited with code $exitCode"
+    Write-Host "[FAIL] [$Step] exited with code $exitCode" -ForegroundColor Red
     exit $exitCode
   }
 }
@@ -103,6 +105,7 @@ try {
   $autogenScript = Join-Path $SCRIPT_ROOT "autogen_model_from_db.py"
   $agentGuardScript = Join-Path $SCRIPT_ROOT "agent_guard.py"
   $parityGateScript = Join-Path $SCRIPT_ROOT "parity_gate.ps1"
+  $modelRequirementsScript = Join-Path $SCRIPT_ROOT "model_requirements.py"
 
   Push-Location $ROOT
   try {
@@ -116,7 +119,28 @@ try {
     $allowFinal = @($Allow + @($modelPath) | Select-Object -Unique)
 
     # pre-check: parity can fail before autogen; do not abort here
-    & $parityGateScript -Table $Table -Allow $allowFinal
+    # Normalize allowlist to CSV string to avoid PowerShell binding issues with string[] on script calls.
+    $allowCsv = $null
+    if ($allowFinal.Count -gt 0) {
+      $allowCsv = ($allowFinal -join ",")
+    }
+
+    if ($allowCsv) {
+      if ($AllowCycleWarning) {
+        & $parityGateScript -Table $Table -Allow $allowCsv -AllowCycleWarning
+      }
+      else {
+        & $parityGateScript -Table $Table -Allow $allowCsv
+      }
+    }
+    else {
+      if ($AllowCycleWarning) {
+        & $parityGateScript -Table $Table -AllowCycleWarning
+      }
+      else {
+        & $parityGateScript -Table $Table
+      }
+    }
     $preExit = $LASTEXITCODE
     if (-not $?) {
       Write-Host "[WARN] pre parity_gate execution had errors; continuing to autogen." -ForegroundColor Yellow
@@ -138,14 +162,41 @@ try {
     }
 
     # post-check: this one defines final gate result
-    & $parityGateScript -Table $Table -Allow $allowFinal
+    if ($allowCsv) {
+      if ($AllowCycleWarning) {
+        & $parityGateScript -Table $Table -Allow $allowCsv -AllowCycleWarning
+      }
+      else {
+        & $parityGateScript -Table $Table -Allow $allowCsv
+      }
+    }
+    else {
+      if ($AllowCycleWarning) {
+        & $parityGateScript -Table $Table -AllowCycleWarning
+      }
+      else {
+        & $parityGateScript -Table $Table
+      }
+    }
     $parityExit = $LASTEXITCODE
     if (-not $?) {
       throw "[parity_gate] failed to execute parity gate"
     }
     if ($parityExit -ne 0) {
-      Write-Error "[parity_gate] exited with code $parityExit"
+      Write-Host "[FAIL] [parity_gate] exited with code $parityExit" -ForegroundColor Red
       exit $parityExit
+    }
+
+    # STEP 4: model requirements validation (must propagate exact exit code)
+    $requirementsArgs = @($modelRequirementsScript, "--table", $Table, "--profile", $Profile)
+    & $py @requirementsArgs
+    $requirementsExit = $LASTEXITCODE
+    if (-not $?) {
+      throw "[model_requirements] failed to execute requirements validator"
+    }
+    if ($requirementsExit -ne 0) {
+      Write-Host "[FAIL] [model_requirements] exited with code $requirementsExit" -ForegroundColor Red
+      exit $requirementsExit
     }
   }
   finally {
@@ -155,6 +206,6 @@ try {
   exit 0
 }
 catch {
-  Write-Error "models_autogen_gate failed: $($_.Exception.Message)"
+  Write-Host "[FAIL] models_autogen_gate failed: $($_.Exception.Message)" -ForegroundColor Red
   exit 1
 }

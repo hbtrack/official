@@ -13,16 +13,16 @@
     {
       "category": "comment",
       "structural": false,
-      "message": "column comment 'seasons.canceled_at'",
-      "table": "seasons",
-      "column": "canceled_at"
+      "message": "column comment 'attendance.correction_by_user_id'",
+      "table": "attendance",
+      "column": "correction_by_user_id"
     },
     {
       "category": "comment",
       "structural": false,
-      "message": "column comment 'seasons.interrupted_at'",
-      "table": "seasons",
-      "column": "interrupted_at"
+      "message": "column comment 'attendance.correction_at'",
+      "table": "attendance",
+      "column": "correction_at"
     }
   ]
 }

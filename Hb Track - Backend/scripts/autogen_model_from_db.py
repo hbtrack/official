@@ -23,7 +23,7 @@ from uuid import UUID
 import sqlalchemy as sa
 from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
 # HB-AUTOGEN-IMPORTS:END
 """.rstrip() + "\n"
 
@@ -45,19 +45,20 @@ def _normalize_constraint_name(name: str) -> str:
     return (name or "").strip().strip('"')
 
 
-def _fk_ondelete_map_from_schema_sql(path: Path) -> Dict[str, str]:
+def _fk_ondelete_map_from_schema_sql(path: Path) -> Dict[str, Optional[str]]:
     if not path.exists():
         return {}
     text_src = path.read_text(encoding="utf-8", errors="replace")
     pattern = re.compile(
-        r"ADD\s+CONSTRAINT\s+(\S+)\s+FOREIGN\s+KEY.*?ON\s+DELETE\s+"
-        r"(RESTRICT|CASCADE|SET\s+NULL|SET\s+DEFAULT|NO\s+ACTION)\s*;",
+        r"ADD\s+CONSTRAINT\s+(\S+)\s+FOREIGN\s+KEY.*?REFERENCES\s+.*?"
+        r"(?:ON\s+DELETE\s+(RESTRICT|CASCADE|SET\s+NULL|SET\s+DEFAULT|NO\s+ACTION))?\s*;",
         re.IGNORECASE | re.DOTALL,
     )
-    out: Dict[str, str] = {}
+    out: Dict[str, Optional[str]] = {}
     for m in pattern.finditer(text_src):
         name = _normalize_constraint_name(m.group(1))
-        action = re.sub(r"\s+", " ", m.group(2).upper()).strip()
+        action_raw = m.group(2)
+        action = re.sub(r"\s+", " ", action_raw.upper()).strip() if action_raw else None
         if name:
             out[name] = action
     return out
@@ -72,11 +73,33 @@ def _find_module_docstring_span(src: str) -> Tuple[int, int]:
 
 
 def _ensure_imports_block(src: str) -> str:
+    # Detect if file uses relationship() (outside HB-AUTOGEN blocks)
+    has_relationship = bool(re.search(r'\brelationship\s*\(', src))
+    
+    # Build imports block dynamically
+    orm_imports = "Mapped, mapped_column"
+    if has_relationship:
+        orm_imports += ", relationship"
+    
+    imports_block_dynamic = f"""# HB-AUTOGEN-IMPORTS:BEGIN
+from __future__ import annotations
+
+from datetime import date, datetime
+from typing import Optional
+from uuid import UUID
+
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
+from sqlalchemy.orm import {orm_imports}
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+""".rstrip() + "\n"
+    
     if "HB-AUTOGEN-IMPORTS:BEGIN" in src and "HB-AUTOGEN-IMPORTS:END" in src:
         # replace existing imports block
         src = re.sub(
             r"# HB-AUTOGEN-IMPORTS:BEGIN.*?# HB-AUTOGEN-IMPORTS:END\s*\n",
-            IMPORTS_BLOCK,
+            imports_block_dynamic,
             src,
             flags=re.DOTALL,
         )
@@ -87,8 +110,8 @@ def _ensure_imports_block(src: str) -> str:
     prefix = src[:insert_at]
     suffix = src[insert_at:]
     if insert_at > 0:
-        return prefix + "\n\n" + IMPORTS_BLOCK + "\n" + suffix.lstrip("\n")
-    return IMPORTS_BLOCK + "\n" + src.lstrip("\n")
+        return prefix + "\n\n" + imports_block_dynamic + "\n" + suffix.lstrip("\n")
+    return imports_block_dynamic + "\n" + src.lstrip("\n")
 
 
 def _camel(name: str) -> str:
@@ -142,6 +165,17 @@ def _sa_type_expr(coltype: sa.types.TypeEngine) -> str:
         return "PG_UUID(as_uuid=True)"
     if hasattr(sa.dialects.postgresql, "JSONB") and isinstance(t, sa.dialects.postgresql.JSONB):
         return "PG_JSONB()"
+    if hasattr(sa.dialects.postgresql, "INET") and isinstance(t, sa.dialects.postgresql.INET):
+        return "PG_INET()"
+    if hasattr(sa.dialects.postgresql, "ENUM") and isinstance(t, sa.dialects.postgresql.ENUM):
+        enum_values = list(getattr(t, "enums", []) or [])
+        enum_name = getattr(t, "name", None)
+        values_expr = ", ".join(repr(v) for v in enum_values)
+        if enum_name and values_expr:
+            return f"PG_ENUM({values_expr}, name={enum_name!r}, create_type=False)"
+        if enum_name:
+            return f"PG_ENUM(name={enum_name!r}, create_type=False)"
+        return "sa.Enum()"
     # string types
     if isinstance(t, sa.Text):
         return "sa.Text()"
@@ -233,7 +267,7 @@ def _fk_for_col(fks: List[FKSpec], col: str) -> Optional[FKSpec]:
     return None
 
 
-def _render_class_block(table: str, cols: List[dict], pk_cols: List[str], fks: List[FKSpec], checks: List[dict], uniques: List[dict], indexes: List[dict], fk_ondelete_by_name: Optional[Dict[str, str]] = None, indent: str = "    ") -> str:
+def _render_class_block(table: str, cols: List[dict], pk_cols: List[str], fks: List[FKSpec], checks: List[dict], uniques: List[dict], indexes: List[dict], fk_ondelete_by_name: Optional[Dict[str, Optional[str]]] = None, indent: str = "    ") -> str:
     lines: List[str] = []
     fk_ondelete_by_name = fk_ondelete_by_name or {}
     lines.append(f"{indent}{CLASS_BLOCK_BEGIN}")
@@ -329,8 +363,10 @@ def _render_class_block(table: str, cols: List[dict], pk_cols: List[str], fks: L
             fk_kwargs: List[str] = []
             if fk.name:
                 fk_kwargs.append(f"name={fk.name!r}")
-            ssot_ondelete = fk_ondelete_by_name.get(_normalize_constraint_name(fk.name)) if fk.name else None
-            effective_ondelete = ssot_ondelete or (str(fk.ondelete).upper() if fk.ondelete else None)
+            normalized_fk_name = _normalize_constraint_name(fk.name)
+            has_ssot_fk = bool(normalized_fk_name and normalized_fk_name in fk_ondelete_by_name)
+            ssot_ondelete = fk_ondelete_by_name.get(normalized_fk_name) if has_ssot_fk else None
+            effective_ondelete = ssot_ondelete if has_ssot_fk else (str(fk.ondelete).upper() if fk.ondelete else None)
             if effective_ondelete:
                 fk_kwargs.append(f"ondelete={effective_ondelete!r}")
             if fk.name and fk.name in FORCE_USE_ALTER_FK_NAMES:

@@ -4,7 +4,6 @@ CANARY: HBTRACK_DOCS_LOADED_v1_AGENT
 
 Fontes obrigatórias (ler e seguir):
 - `docs/_ai/INVARIANTS_AGENT_GUARDRAILS.md`
-- `docs/_ai/EXEC_PROTOCOL.md`
 - `docs/_ai/INV_TASK_TEMPLATE.md`
 - `docs/_ai/INVARIANTS_AGENT_PROTOCOL.md`
 - `docs/02-modulos/training/INVARIANTS_TRAINING.md`

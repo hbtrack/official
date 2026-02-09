@@ -26,5 +26,6 @@ Regras:
 5) Valide suas respostas com logs curtos e claros, outputs, focados em evidências (ex.: `parity_report.json`), e sempre que possível, inclua trechos de código ou comandos usados para chegar às conclusões.
 
 
+
 **Nota**: constraint_name aceito: ck_, uq_, fk_, tr_, fn_, idx_ (UNIQUE INDEX parcial).
 
