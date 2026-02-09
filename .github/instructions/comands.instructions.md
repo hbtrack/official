@@ -20,7 +20,7 @@ Fontes obrigatórias (ler e seguir):
 
 ---
 
-# .clinerules — HB Track — Windows — PowerShell 5.1 — Repo: C:\HB TRACK
+# HB Track — Windows — PowerShell 5.1 — Repo: C:\HB TRACK
 
 ## SHELL / AMBIENTE (OBRIGATÓRIO)
 
