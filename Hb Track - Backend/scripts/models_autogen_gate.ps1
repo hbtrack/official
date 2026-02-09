@@ -179,6 +179,7 @@ try {
       }
     }
     $parityExit = $LASTEXITCODE
+    Write-Host "[POST] parity_exit=$parityExit"
     if (-not $?) {
       throw "[parity_gate] failed to execute parity gate"
     }

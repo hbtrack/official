@@ -275,6 +275,8 @@ if ($exitCode -ne 0) {
 
 Write-Host "[SUCCESS] Comando executado com sucesso" -ForegroundColor Green
 ```
+ 
+Nota: capture sempre `$LASTEXITCODE` imediatamente em uma variável logo após a execução do comando, sem pipelines ou encadeamentos que possam mascarar o valor. Por exemplo, não use `|` ou outros wrappers entre o comando e a leitura do exit code.
 
 **Anti-Pattern (NÃO fazer):**
 ```powershell
