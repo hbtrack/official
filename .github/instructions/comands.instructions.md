@@ -10,6 +10,9 @@ Fontes obrigatórias (ler e seguir):
 - `C:\HB TRACK\docs\_ai\SYSTEM_DESIGN.md` (seguir as diretrizes de design de sistema para decisões arquiteturais)
 - `C:\HB TRACK\docs\_canon\00_START_HERE.md` (porta única de entrada para documentação canônica)
 
+## PROIBIDO CRIAR ARQUIVOS TEMPORARIOS OU DE BACKUP
+- Proibido criar arquivos temporários, de backup, ou de teste no repo (ex: `temp.txt`, `backup.sql`, `test_output.json`).
+
 **Antes de criar qualquer migration ou model**
 - Consulte as regras de integridade (RDB) na Seção 8.3 do `C:\HB TRACK\docs\_Hb Track\PRD_HB_TRACK.md`
 
