@@ -1,10 +1,8 @@
-Execute a tarefa exatamente como definida no arquivo `C:\HB TRACK\docs\_ai\EXEC_TASK_ADR_MODELS_001.md`. Não desvie do escopo, ordem, ou regras definidas. Siga todas as instruções rigorosamente.
-
----
-
-## 🔴 PORTA ÚNICA: Camada Canônica Docs
+## PORTA ÚNICA: Camada Canônica Docs
 
 **Para QUALQUER consulta técnica, comece AQUI:** `docs/_canon/00_START_HERE.md`
+
+Execute a tarefa exatamente como definida no arquivo `C:\HB TRACK\docs\_ai\EXEC_TASK_ADR_MODELS_001.md`. Não desvie do escopo, ordem, ou regras definidas. Siga todas as instruções rigorosamente.
 
 Esta camada orienta para documentação correta conforme sua intenção:
 - **O que confiar (precedência):** → `docs/_canon/01_AUTHORITY_SSOT.md` (DB > Service > OpenAPI > Docs)
