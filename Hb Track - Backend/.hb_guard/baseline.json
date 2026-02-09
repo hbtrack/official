@@ -1610,6 +1610,10 @@
       "sha256": "29e51a6d3ec86c09bf58f431f9195088b0d53890305826fab09da1457f4a4069",
       "size": 8745
     },
+    "run_snapshot_commit_push.ps1": {
+      "sha256": "a78f2dc3d8555605d9bd6a319e96964441426c505ea23eb83cb27487381ba681",
+      "size": 1007
+    },
     "scripts\\_load_env.ps1": {
       "sha256": "67e473cc6b1a3a7841ec722a86643cbd5b7ffef3f1e7ebfb7d8285634e4c3e8d",
       "size": 733
@@ -1731,8 +1735,8 @@
       "size": 42637
     },
     "scripts\\models_autogen_gate.ps1": {
-      "sha256": "34180d3559c594082c69ea5c661df7f29e03908ef7c7fb4dd3ef122c3d164391",
-      "size": 7533
+      "sha256": "be626c9797525c1d8acc74e18e67b2985c6f9dcda1e92c1d70f18dc23c15fa13",
+      "size": 7582
     },
     "scripts\\new_table_workflow.ps1": {
       "sha256": "f2f639cd6b35b8812c8bc4c557b111e977eb1d220cf061e79f1cbc5f03bdef7f",
