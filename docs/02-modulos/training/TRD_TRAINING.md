@@ -7,7 +7,7 @@
 | **TRD válido para** | commit `e02c83ef` |
 | **Manifest** | `Hb Track - Backend/docs/_generated/manifest.json` |
 | **Generated at** | 2026-01-29T10:05:54Z |
-| **Versão** | v1.6 |
+| **Versão** | v1.8 |
 
 ---
 
@@ -515,6 +515,29 @@ Nota: no front/UI o estado pode aparecer como **closed**; no DB o valor é `read
 
 **Erros Relevantes**: 422, 404
 
+**Algoritmo de Sugestões de Carga** (detalhamento técnico):
+
+| Parâmetro | Valor | Evidência |
+|-----------|-------|-----------|
+| `LOOKBACK_DAYS` | 90 | `training_suggestion_service.py:41` |
+| `MIN_MICROCYCLES_FOR_SUGGESTION` | 3 | `training_suggestion_service.py:39` |
+| `MIN_DEVIATION_THRESHOLD` | 10.0 pts | `training_suggestion_service.py:40` |
+| Consistência para confiança alta | ≥70% | `training_suggestion_service.py:210+` |
+
+Fluxo do algoritmo:
+1. Busca microciclos dos últimos 90 dias (`cutoff_date = utcnow() - 90 days`)
+2. Filtra microciclos similares (mesmo `microcycle_type` se informado)
+3. Se `< 3 microciclos` → retorna `has_suggestions: false` com mensagem informativa
+4. Para cada foco (7 áreas): calcula desvio médio entre planejado e executado
+5. Considera apenas desvios `≥ 10 pts` como relevantes
+6. Calcula consistência: `ocorrências_na_mesma_direção / total_analisados`
+7. Classifica confiança: `high` (≥70%), `medium` (50-70%), `low` (<50%)
+8. Gera sugestões do tipo:
+   - `compensation`: redistribuir foco que está sistematicamente acima
+   - `reduce_next_week`: reduzir intensidade geral se padrão de sobrecarga
+
+**Evidência completa**: `Hb Track - Backend/app/services/training_suggestion_service.py:35-230`
+
 ---
 
 ### PRD-FR-011 — Attendance (NOVO)
@@ -749,6 +772,9 @@ Fonte de verdade por tabela: `schema.sql`.
 | `update_training_session_statuses_task` | A cada minuto | `celery_app.py:99-105` |
 | `anonymize_old_training_data_task` | Diário 4h | `celery_app.py:107-113` |
 | `calculate_monthly_badges_task` | 1º dia mês 1h | `celery_app.py:136-139` **(COMENTADO)** |
+| `generate_analytics_pdf_task` | On-demand (via ExportService) | `celery_tasks.py:400-556` |
+| `cleanup_expired_export_jobs_task` | Periódico | `celery_tasks.py:400-556` |
+| `refresh_training_rankings_task` | Agendado | `celery_tasks.py:768`, `celery_app.py:117` |
 
 ### 10.3 Redis
 - **Confirmado**: Broker/backend Celery em `celery_app.py:28-30`
@@ -777,7 +803,7 @@ Os RNFs e SLAs do sistema estão definidos no **PRD_HB_TRACK.md §10.1-10.7** (S
 | Wellness submissions/mês | 100.000 (estimado) | PRD_HB_TRACK §10.2 |
 | Analytics cache rows/team | ~52/ano (weekly) + 12 (monthly) | Schema: `ck_training_analytics_cache_granularity` |
 | Export jobs por user/dia | 5 (rate limited) | RULE-EXPORT-RATE-PDF-5D |
-| Celery tasks periódicas | 6 tasks scheduladas | `celery_app.py` beat_schedule |
+| Celery tasks periódicas | 9 tasks (6 scheduladas + 1 comentada + 2 on-demand) | `celery_app.py` beat_schedule + `celery_tasks.py` |
 
 ---
 
@@ -837,6 +863,7 @@ Hb Track - Backend/tests/
 
 | Versão | Data | Autor | Descrição |
 |--------|------|-------|-----------|
+| v1.8 | 2026-02-08 | Claude Opus 4.6 | Eliminação de dívida técnica de documentação: detalhamento do algoritmo de sugestões de carga em FR-010 (parâmetros, fluxo, evidência). Celery tasks faltantes adicionadas em §10.2 (generate_analytics_pdf_task, cleanup_expired_export_jobs_task, refresh_training_rankings_task). Versão do header corrigida (era v1.6, deveria ser v1.7). |
 | v1.7 | 2026-02-07 | Claude Opus 4.6 | Últimos 3 PRETENDIDO resolvidos: "Top 5 performers" e "Audit logs exports" promovidos a Confirmado com evidência file:line; "Badge eligibility" reclassificado como Futuro V1.1. Adicionada §10.4 RNFs (referência PRD §10.7). Zero PRETENDIDO restantes no corpo do documento. |
 | v1.6 | 2026-01-31 | Claude Opus 4.5 | Side effects promovidos PRETENDIDO→Confirmado via INVARIANTS (audit log, cache invalidation, internal load trigger, websocket broadcast, export async/cleanup, LGPD access logging, overload alerts, cache refresh daily). Seção 11 atualizada com testes confirmados (INV-TRAIN-001 a INV-TRAIN-029) |
 | v1.5 | 2026-01-29 | Codex | Routers sem duplicidade no grafo, OpenAPI regenerado sem warnings, pipeline gera relatório de permissões, status readonly padronizado |

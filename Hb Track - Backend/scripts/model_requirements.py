@@ -2,6 +2,7 @@
 
 import argparse
 import ast
+import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -17,6 +18,7 @@ class ForeignKeySpec:
     ondelete: str | None = None
     onupdate: str | None = None
     use_alter: bool | None = None
+    line_no: int | None = None
 
 
 @dataclass(frozen=True)
@@ -28,16 +30,19 @@ class ColumnSpec:
     type_key: str | None
     default_kind: str | None = None
     default_value: str | None = None
+    line_no: int | None = None
 
 
 @dataclass(frozen=True)
 class CheckSpec:
     name: str
+    line_no: int | None = None
 
 
 @dataclass(frozen=True)
 class UniqueConstraintSpec:
     name: str
+    line_no: int | None = None
 
 
 @dataclass(frozen=True)
@@ -45,6 +50,27 @@ class IndexSpec:
     name: str
     unique: bool
     where: str | None
+    line_no: int | None = None
+
+
+CYCLE_FK_NAMES: set[str] = {
+    "fk_teams_season_id",
+    "fk_seasons_team_id",
+}
+
+ACCEPTABLE_EQUIVALENCES: set[tuple[str, str]] = {
+    ("varchar|None", "text"),
+    ("text", "varchar|None"),
+}
+
+REJECTED_EQUIVALENCES: set[tuple[str, str]] = {
+    ("text", "varchar|255"),
+    ("varchar|255", "text"),
+    ("varchar|50", "varchar|64"),
+    ("varchar|64", "varchar|50"),
+}
+
+DEFAULT_EXCEPTIONS_FILE = Path(".hb_guard") / "model_requirements_exceptions.json"
 
 
 class _SpecsMap(dict):
@@ -129,6 +155,7 @@ def _extract_fk_call(node: ast.Call) -> ForeignKeySpec | None:
         ondelete=ondelete.upper() if ondelete else None,
         onupdate=None,
         use_alter=use_alter,
+        line_no=getattr(node, "lineno", None),
     )
 
 
@@ -412,6 +439,80 @@ def _fk_ondelete_equivalent(expected: str | None, got: str | None) -> bool:
     return norm_expected == norm_got
 
 
+def _line_suffix(line_no: int | None) -> str:
+    return f" line={line_no}" if line_no is not None else ""
+
+
+def _types_equivalent(expected: str, got: str) -> bool:
+    if expected == got:
+        return True
+
+    pair = (expected, got)
+    if pair in REJECTED_EQUIVALENCES:
+        return False
+    if pair in ACCEPTABLE_EQUIVALENCES:
+        return True
+    return False
+
+
+def _load_lenient_exceptions(root: Path) -> list[dict]:
+    p = root / DEFAULT_EXCEPTIONS_FILE
+    if not p.exists():
+        return []
+    data = json.loads(p.read_text(encoding="utf-8"))
+    if isinstance(data, list):
+        return [x for x in data if isinstance(x, dict)]
+    if isinstance(data, dict):
+        items = data.get("exceptions", [])
+        if isinstance(items, list):
+            return [x for x in items if isinstance(x, dict)]
+    return []
+
+
+def _violation_code(v: str) -> str:
+    return v.split(":", 1)[0].strip()
+
+
+def _apply_lenient_exceptions(
+    violations: list[str],
+    table: str,
+    model_path: Path,
+    exceptions: list[dict],
+) -> tuple[list[str], list[tuple[str, dict]]]:
+    remaining: list[str] = []
+    applied: list[tuple[str, dict]] = []
+    model_path_norm = str(model_path).replace("\\", "/").lower()
+
+    for v in violations:
+        code = _violation_code(v)
+        matched_exc: dict | None = None
+        for exc in exceptions:
+            exc_table = str(exc.get("table", "")).strip().lower()
+            if exc_table and exc_table != table.lower():
+                continue
+
+            exc_model_path = str(exc.get("model_path", "")).strip().replace("\\", "/").lower()
+            if exc_model_path and exc_model_path not in model_path_norm:
+                continue
+
+            ignore = exc.get("ignore", [])
+            if not isinstance(ignore, list):
+                continue
+            ignore_codes = {str(x).strip() for x in ignore}
+            if code not in ignore_codes:
+                continue
+
+            matched_exc = exc
+            break
+
+        if matched_exc:
+            applied.append((v, matched_exc))
+        else:
+            remaining.append(v)
+
+    return remaining, applied
+
+
 def _parse_model_fks(model_path: Path) -> dict[str, set[ForeignKeySpec]]:
     tree = ast.parse(model_path.read_text(encoding="utf-8"), filename=str(model_path))
     by_name: dict[str, set[ForeignKeySpec]] = {}
@@ -468,7 +569,10 @@ def _parse_model_constraints(model_path: Path, table: str) -> dict[str, _SpecsMa
                     name = _extract_str(kw.value)
                     break
             if name:
-                checks[_normalize_ident(name)] = CheckSpec(name=_normalize_ident(name))
+                checks[_normalize_ident(name)] = CheckSpec(
+                    name=_normalize_ident(name),
+                    line_no=getattr(call, "lineno", None),
+                )
             return
 
         if fn_name == "UniqueConstraint":
@@ -478,7 +582,10 @@ def _parse_model_constraints(model_path: Path, table: str) -> dict[str, _SpecsMa
                     name = _extract_str(kw.value)
                     break
             if name:
-                uniques[_normalize_ident(name)] = UniqueConstraintSpec(name=_normalize_ident(name))
+                uniques[_normalize_ident(name)] = UniqueConstraintSpec(
+                    name=_normalize_ident(name),
+                    line_no=getattr(call, "lineno", None),
+                )
             return
 
         if fn_name == "Index":
@@ -498,6 +605,7 @@ def _parse_model_constraints(model_path: Path, table: str) -> dict[str, _SpecsMa
                 name=_normalize_ident(idx_name),
                 unique=unique,
                 where=re.sub(r"\s+", " ", where.strip()) if where else None,
+                line_no=getattr(call, "lineno", None),
             )
 
     # __table_args__ static tuple/list constraints
@@ -546,6 +654,7 @@ def _parse_model_constraints(model_path: Path, table: str) -> dict[str, _SpecsMa
                         ondelete=fk.ondelete,
                         onupdate=fk.onupdate,
                         use_alter=fk.use_alter,
+                        line_no=fk.line_no,
                     )
 
     return {
@@ -584,6 +693,7 @@ def _parse_model_columns(model_path: Path, table: str) -> dict[str, ColumnSpec]:
             type_key=type_key,
             default_kind=default_kind,
             default_value=default_value,
+            line_no=getattr(call, "lineno", None),
         )
 
     for stmt in target_class.body:
@@ -790,40 +900,7 @@ def _find_model_path(root: Path, table: str) -> Path:
 
 
 def _validate_fk_profile(root: Path, table: str) -> int:
-    schema_path = root / "docs" / "_generated" / "schema.sql"
-    if not schema_path.exists():
-        print(f"[FAIL] schema not found: {schema_path}")
-        return EXIT_REQUIREMENTS_VIOLATION
-
-    model_path = _find_model_path(root, table)
-    schema_text = schema_path.read_text(encoding="utf-8", errors="replace")
-
-    expected = _parse_schema_fks(schema_text, table)
-    found_by_name = _parse_model_fks(model_path)
-
-    violations: list[str] = []
-
-    for name, exp in sorted(expected.items()):
-        candidates = found_by_name.get(name)
-        if not candidates:
-            violations.append(f"MISSING_FK: {name}")
-            continue
-
-        matched = any(
-            c.reference == exp.reference and _fk_ondelete_equivalent(exp.ondelete, c.ondelete)
-            for c in candidates
-        )
-        if not matched:
-            got = ", ".join(
-                f"ref={c.reference} ondelete={c.ondelete}" for c in sorted(candidates, key=lambda x: (x.reference, str(x.ondelete)))
-            )
-            violations.append(
-                f"FK_MISMATCH: {name} expected(ref={exp.reference}, ondelete={exp.ondelete}) got({got})"
-            )
-
-    for name in sorted(found_by_name.keys()):
-        if name not in expected:
-            violations.append(f"EXTRA_FK: {name}")
+    violations, model_path, fk_count = _collect_fk_violations(root, table)
 
     if violations:
         print(f"[FAIL] model_requirements fk profile violations (table={table})")
@@ -834,8 +911,54 @@ def _validate_fk_profile(root: Path, table: str) -> int:
 
     print(f"[OK] model_requirements fk profile passed (table={table})")
     print(f"[INFO] model_path={model_path}")
-    print(f"[INFO] fk_count={len(expected)}")
+    print(f"[INFO] fk_count={fk_count}")
     return 0
+
+
+def _collect_fk_violations(root: Path, table: str) -> tuple[list[str], Path, int]:
+    schema_path = root / "docs" / "_generated" / "schema.sql"
+    if not schema_path.exists():
+        return [f"SCHEMA_NOT_FOUND: {schema_path}"], root / "app" / "models", 0
+
+    model_path = _find_model_path(root, table)
+    schema_text = schema_path.read_text(encoding="utf-8", errors="replace")
+
+    expected = _parse_schema_fks(schema_text, table)
+    found_by_name = _parse_model_fks(model_path)
+    violations: list[str] = []
+
+    for name, exp in sorted(expected.items()):
+        candidates = found_by_name.get(name)
+        if not candidates:
+            violations.append(f"MISSING_FK: {name} model_line=None")
+            continue
+
+        matched = any(
+            c.reference == exp.reference and _fk_ondelete_equivalent(exp.ondelete, c.ondelete)
+            for c in candidates
+        )
+        if not matched:
+            got = ", ".join(
+                f"ref={c.reference} ondelete={c.ondelete} line={c.line_no}" for c in sorted(candidates, key=lambda x: (x.reference, str(x.ondelete)))
+            )
+            violations.append(
+                f"FK_MISMATCH: {name} expected(ref={exp.reference}, ondelete={exp.ondelete}) got({got})"
+            )
+
+        if name in CYCLE_FK_NAMES:
+            missing_use_alter = [c for c in candidates if c.use_alter is not True]
+            if missing_use_alter:
+                got_lines = ",".join(str(c.line_no) for c in missing_use_alter)
+                violations.append(
+                    f"CYCLE_USE_ALTER_MISSING: {name} expected_use_alter=True model_line={got_lines}"
+                )
+
+    for name in sorted(found_by_name.keys()):
+        if name not in expected:
+            sample = sorted(found_by_name[name], key=lambda x: (x.reference, str(x.ondelete)))[0]
+            violations.append(f"EXTRA_FK: {name} model_line={sample.line_no}")
+
+    return violations, model_path, len(expected)
 
 
 def _validate_columns_nullable_profile(root: Path, table: str) -> tuple[list[str], Path, dict[str, ColumnSpec], dict[str, ColumnSpec]]:
@@ -852,9 +975,10 @@ def _validate_columns_nullable_profile(root: Path, table: str) -> tuple[list[str
     model_names = set(model_cols.keys())
 
     for col in sorted(expected_names - model_names):
-        violations.append(f"MISSING_COLUMN: {col}")
+        violations.append(f"MISSING_COLUMN: {col} model_line=None")
     for col in sorted(model_names - expected_names):
-        violations.append(f"EXTRA_COLUMN: {col}")
+        got = model_cols[col]
+        violations.append(f"EXTRA_COLUMN: {col} model_line={got.line_no}")
 
     for col in sorted(expected_names & model_names):
         exp = expected_cols[col]
@@ -864,34 +988,34 @@ def _validate_columns_nullable_profile(root: Path, table: str) -> tuple[list[str
             continue
         if not got.nullable_explicit:
             violations.append(
-                f"NULLABLE_IMPLICIT: {col} expected_nullable={exp.nullable} got_nullable_implicit"
+                f"NULLABLE_IMPLICIT: {col} expected_nullable={exp.nullable} got_nullable_implicit model_line={got.line_no}"
             )
         if exp.nullable != got.nullable:
             violations.append(
-                f"NULLABLE_MISMATCH: {col} expected_nullable={exp.nullable} got_nullable={got.nullable}"
+                f"NULLABLE_MISMATCH: {col} expected_nullable={exp.nullable} got_nullable={got.nullable} model_line={got.line_no}"
             )
 
-        if exp.type_key and got.type_key and exp.type_key != got.type_key:
+        if exp.type_key and got.type_key and not _types_equivalent(exp.type_key, got.type_key):
             violations.append(
-                f"TYPE_MISMATCH: {col} expected={exp.type_key} got={got.type_key}"
+                f"TYPE_MISMATCH: {col} expected={exp.type_key} got={got.type_key} model_line={got.line_no}"
             )
 
         # Server defaults (strict, best-effort): compare when schema declares one
         if exp.default_kind:
             if not got.default_kind:
                 violations.append(
-                    f"MISSING_SERVER_DEFAULT: {col} expected_default={exp.default_kind}:{exp.default_value}"
+                    f"MISSING_SERVER_DEFAULT: {col} expected_default={exp.default_kind}:{exp.default_value} model_line={got.line_no}"
                 )
             else:
                 if exp.default_kind != got.default_kind:
                     violations.append(
-                        f"DEFAULT_KIND_MISMATCH: {col} expected={exp.default_kind} got={got.default_kind}"
+                        f"DEFAULT_KIND_MISMATCH: {col} expected={exp.default_kind} got={got.default_kind} model_line={got.line_no}"
                     )
                 exp_v = _norm_default_value(exp.default_value)
                 got_v = _norm_default_value(got.default_value)
                 if exp_v and got_v and exp_v != got_v:
                     violations.append(
-                        f"DEFAULT_VALUE_MISMATCH: {col} expected={exp.default_value} got={got.default_value}"
+                        f"DEFAULT_VALUE_MISMATCH: {col} expected={exp.default_value} got={got.default_value} model_line={got.line_no}"
                     )
 
     return violations, model_path, expected_cols, model_cols
@@ -917,9 +1041,10 @@ def _validate_constraints_profile(root: Path, table: str) -> tuple[list[str], Pa
         expected_names = set(expected_map.keys())
         model_names = set(model_map.keys())
         for name in sorted(expected_names - model_names):
-            violations.append(f"MISSING_{prefix}: {name}")
+            violations.append(f"MISSING_{prefix}: {name} model_line=None")
         for name in sorted(model_names - expected_names):
-            violations.append(f"EXTRA_{prefix}: {name}")
+            line_no = getattr(model_map[name], "line_no", None)
+            violations.append(f"EXTRA_{prefix}: {name} model_line={line_no}")
 
     _missing_extra("CHECK", expected_checks, model_checks)
     _missing_extra("UNIQUE", expected_uniques, model_uniques)
@@ -930,13 +1055,13 @@ def _validate_constraints_profile(root: Path, table: str) -> tuple[list[str], Pa
         got = model_indexes[name]
         if exp.unique != got.unique:
             violations.append(
-                f"INDEX_UNIQUE_MISMATCH: {name} expected_unique={exp.unique} got_unique={got.unique}"
+                f"INDEX_UNIQUE_MISMATCH: {name} expected_unique={exp.unique} got_unique={got.unique} model_line={got.line_no}"
             )
         exp_where = re.sub(r"\s+", " ", (exp.where or "").strip()) or None
         got_where = re.sub(r"\s+", " ", (got.where or "").strip()) or None
         if exp_where != got_where:
             violations.append(
-                f"INDEX_WHERE_MISMATCH: {name} expected_where={exp_where} got_where={got_where}"
+                f"INDEX_WHERE_MISMATCH: {name} expected_where={exp_where} got_where={got_where} model_line={got.line_no}"
             )
 
     return violations, model_path
@@ -968,6 +1093,37 @@ def _validate_strict_profile(root: Path, table: str) -> int:
     return 0
 
 
+def _validate_lenient_profile(root: Path, table: str) -> int:
+    fk_violations, model_path, fk_count = _collect_fk_violations(root, table)
+    col_violations, _, expected_cols, model_cols = _validate_columns_nullable_profile(root, table)
+    constraint_violations, _ = _validate_constraints_profile(root, table)
+
+    all_violations = fk_violations + col_violations + constraint_violations
+    exceptions = _load_lenient_exceptions(root)
+    remaining, applied = _apply_lenient_exceptions(all_violations, table, model_path, exceptions)
+
+    if remaining:
+        print(f"[FAIL] model_requirements lenient profile violations (table={table})")
+        print(f"[INFO] model_path={model_path}")
+        print(f"[INFO] exceptions_loaded={len(exceptions)} applied={len(applied)}")
+        for v in remaining:
+            print(f"  - {v}")
+        return EXIT_REQUIREMENTS_VIOLATION
+
+    print(f"[OK] model_requirements lenient profile passed (table={table})")
+    print(f"[INFO] model_path={model_path}")
+    print(f"[INFO] fk_count={fk_count}")
+    print(f"[INFO] column_count={len(expected_cols)}")
+    print(f"[INFO] model_column_count={len(model_cols)}")
+    print(f"[INFO] exceptions_loaded={len(exceptions)} applied={len(applied)}")
+    if applied:
+        print("[INFO] lenient_exceptions_applied:")
+        for v, exc in applied:
+            reason = str(exc.get("reason", "")).strip() or "(no reason)"
+            print(f"  - {v} | reason={reason}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(
         description="HB Track: validate model vs schema.sql (SSOT)."
@@ -983,6 +1139,9 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.profile == "strict":
         return _validate_strict_profile(root, args.table)
+
+    if args.profile == "lenient":
+        return _validate_lenient_profile(root, args.table)
 
     print(
         f"[FAIL] model_requirements profile not implemented yet "

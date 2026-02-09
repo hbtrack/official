@@ -2,6 +2,7 @@ param(
   [Parameter(Mandatory=$true)][string]$Table,
   [switch]$Create,
   [ValidateSet("fk", "strict", "lenient")][string]$Profile = "strict",
+  [switch]$AllowCycleWarning,
   [string]$ModelFile = "",
   [string]$ClassName = "",
   [string[]]$Allow = @(),
@@ -118,7 +119,28 @@ try {
     $allowFinal = @($Allow + @($modelPath) | Select-Object -Unique)
 
     # pre-check: parity can fail before autogen; do not abort here
-    & $parityGateScript -Table $Table -Allow $allowFinal
+    # Normalize allowlist to CSV string to avoid PowerShell binding issues with string[] on script calls.
+    $allowCsv = $null
+    if ($allowFinal.Count -gt 0) {
+      $allowCsv = ($allowFinal -join ",")
+    }
+
+    if ($allowCsv) {
+      if ($AllowCycleWarning) {
+        & $parityGateScript -Table $Table -Allow $allowCsv -AllowCycleWarning
+      }
+      else {
+        & $parityGateScript -Table $Table -Allow $allowCsv
+      }
+    }
+    else {
+      if ($AllowCycleWarning) {
+        & $parityGateScript -Table $Table -AllowCycleWarning
+      }
+      else {
+        & $parityGateScript -Table $Table
+      }
+    }
     $preExit = $LASTEXITCODE
     if (-not $?) {
       Write-Host "[WARN] pre parity_gate execution had errors; continuing to autogen." -ForegroundColor Yellow
@@ -140,7 +162,22 @@ try {
     }
 
     # post-check: this one defines final gate result
-    & $parityGateScript -Table $Table -Allow $allowFinal
+    if ($allowCsv) {
+      if ($AllowCycleWarning) {
+        & $parityGateScript -Table $Table -Allow $allowCsv -AllowCycleWarning
+      }
+      else {
+        & $parityGateScript -Table $Table -Allow $allowCsv
+      }
+    }
+    else {
+      if ($AllowCycleWarning) {
+        & $parityGateScript -Table $Table -AllowCycleWarning
+      }
+      else {
+        & $parityGateScript -Table $Table
+      }
+    }
     $parityExit = $LASTEXITCODE
     if (-not $?) {
       throw "[parity_gate] failed to execute parity gate"

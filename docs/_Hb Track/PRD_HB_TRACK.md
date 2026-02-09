@@ -137,8 +137,8 @@ Transformar o HB Track na **"Comissão Técnica Virtual"** de referência para h
 - 🚧 **Módulo de Competições:** Campeonatos, adversários, classificações
 - 🚧 **Partidas e Scout:** Registro de eventos de jogo (gols, assistências, faltas, defesas)
 - 🚧 **Relatórios Avançados:** Exportação PDF, analytics de match events
-- 🚧 **Banco de Exercícios:** Catálogo de atividades com tags e busca
-- 🚧 **Notificações:** Alertas automáticos (sobrecarga, baixa resposta wellness)
+- ✅ **Banco de Exercícios:** Catálogo de atividades com tags hierárquicas, favoritos, drag-and-drop para sessões (backend + frontend completos)
+- ⚠️ **Notificações:** Alertas automáticos de sobrecarga e baixa resposta wellness implementados (backend + frontend); badges monthly job INATIVO (comentado em `celery_app.py:136-139`)
 
 **Matriz de Priorização V1.1:**
 
@@ -157,7 +157,7 @@ Transformar o HB Track na **"Comissão Técnica Virtual"** de referência para h
 ```
 Notificações (P0)              [independente, alto valor, baixo esforço]
 Relatórios PDF (P1)            [independente, médio valor, baixo esforço]
-Banco de Exercícios (P2)       [independente, backend já implementado]
+Banco de Exercícios (P2)       [✅ COMPLETO — backend + frontend + tags + favoritos]
 
 Competições (P1)
   └── Partidas e Scout (P0)    [requer schema de competição]
@@ -167,7 +167,7 @@ Ordem sugerida de entrega:
   2. Relatórios PDF       → independente, valor percebido
   3. Competições          → fundação para scout
   4. Partidas e Scout     → depende de #3
-  5. Banco de Exercícios  → backend pronto, pendente UI polish
+  5. ~~Banco de Exercícios~~  → ✅ COMPLETO (backend + frontend + tags + favoritos + drag-and-drop)
 ```
 
 ### 4.3 Out Scope (V2.0+ - 🔮 Futuro)

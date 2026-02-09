@@ -3,7 +3,8 @@
 ## Change control
 
 * **Válido para**: commit `e02c83ef`
-* **Fonte canônica**: `TRD_TRAINING.md` v1.5 (Generated at: `2026-01-29T10:05:54Z`)
+* **Fonte canônica**: `TRD_TRAINING.md` v1.8 (Generated at: `2026-01-29T10:05:54Z`)
+* **Última atualização**: 2026-02-08 (adicionadas INV-TRAIN-047 a INV-TRAIN-051)
 * **Fontes de verdade**:
 
   * `Hb Track - Backend/docs/_generated/openapi.json`
@@ -1736,6 +1737,167 @@ tests:
   * `schema.sql:5222` (trigger `tr_update_wellness_post_response`)
   * `schema.sql:287` (function `fn_update_wellness_response_timestamp`)
 * **Teste**: `tests/training/invariants/test_inv_train_046_wellness_post_response_trigger.py`
+
+### INV-TRAIN-047 — Bulk add session exercises limitado a 50 itens
+
+**SPEC**:
+```yaml
+spec_version: "1.0"
+id: "INV-TRAIN-047"
+status: "CONFIRMADA"
+test_required: true
+
+units:
+  - unit_key: "main"
+    class: "C2"
+    required: true
+    description: "Bulk add de exercícios a sessão limitado a 50 itens via schema Pydantic"
+    anchors:
+      code.file: "Hb Track - Backend/app/schemas/session_exercises.py"
+      code.symbol: "SessionExerciseBulkCreate.exercises"
+      code.constraint: "Field(..., min_length=1, max_length=50)"
+
+tests:
+  primary: "tests/training/invariants/test_inv_train_047_bulk_add_limit.py"
+  node: "TestInvTrain047BulkAddLimit"
+```
+
+* **Status**: CONFIRMADA
+* **Enunciado**: O endpoint de bulk add de exercícios a uma sessão aceita no mínimo 1 e no máximo 50 exercícios por request
+* **Escopo**: `training_session_exercises` (via endpoint bulk add)
+* **Onde é imposto**: Schema Pydantic (`SessionExerciseBulkCreate.exercises: list[SessionExerciseCreate] = Field(..., min_length=1, max_length=50)`)
+* **Evidência**: `Hb Track - Backend/app/schemas/session_exercises.py:48`
+* **Teste**: Pendente criação
+
+### INV-TRAIN-048 — Limite de 50 templates por organização
+
+**SPEC**:
+```yaml
+spec_version: "1.0"
+id: "INV-TRAIN-048"
+status: "CONFIRMADA"
+test_required: true
+
+units:
+  - unit_key: "main"
+    class: "C2"
+    required: true
+    description: "Limite de 50 templates por organização, imposto no router"
+    anchors:
+      code.file: "Hb Track - Backend/app/api/v1/routers/session_templates.py"
+      code.function: "create_session_template"
+      code.line: "110-122"
+      code.constraint: "count >= 50 → HTTPException 422"
+
+tests:
+  primary: "tests/training/invariants/test_inv_train_048_template_org_limit.py"
+  node: "TestInvTrain048TemplateOrgLimit"
+```
+
+* **Status**: CONFIRMADA
+* **Enunciado**: Uma organização não pode ter mais de 50 session templates; ao atingir o limite, criação retorna 422
+* **Escopo**: `session_templates`
+* **Onde é imposto**: Router (`session_templates.py:110-122` — `count >= 50` → HTTPException 422 com mensagem "Limite de 50 templates por organização atingido")
+* **Evidência**: `Hb Track - Backend/app/api/v1/routers/session_templates.py:117`
+* **Teste**: Pendente criação
+
+### INV-TRAIN-049 — Constantes do algoritmo de sugestões de carga
+
+**SPEC**:
+```yaml
+spec_version: "1.0"
+id: "INV-TRAIN-049"
+status: "CONFIRMADA"
+test_required: true
+
+units:
+  - unit_key: "main"
+    class: "C1"
+    required: true
+    description: "Algoritmo de sugestões requer mínimo 3 microciclos, desvio ≥10pts, lookback 90 dias"
+    anchors:
+      code.file: "Hb Track - Backend/app/services/training_suggestion_service.py"
+      code.class: "TrainingSuggestionService"
+      code.constants:
+        MIN_MICROCYCLES_FOR_SUGGESTION: 3
+        MIN_DEVIATION_THRESHOLD: 10.0
+        LOOKBACK_DAYS: 90
+
+tests:
+  primary: "tests/training/invariants/test_inv_train_049_suggestion_constraints.py"
+  node: "TestInvTrain049SuggestionConstraints"
+```
+
+* **Status**: CONFIRMADA
+* **Enunciado**: O algoritmo de sugestões de carga só gera sugestões quando: (a) existem ≥3 microciclos similares no período, (b) o desvio é ≥10 pontos percentuais, (c) o lookback cobre os últimos 90 dias
+* **Escopo**: `training_suggestions` (geração via service)
+* **Onde é imposto**: Service (`training_suggestion_service.py:39-41` — constants `MIN_MICROCYCLES_FOR_SUGGESTION=3`, `MIN_DEVIATION_THRESHOLD=10.0`, `LOOKBACK_DAYS=90`)
+* **Evidência**: `Hb Track - Backend/app/services/training_suggestion_service.py:39-41,70,121,210`
+* **Teste**: Pendente criação
+
+### INV-TRAIN-050 — Validação anti-ciclo em tags de exercícios
+
+**SPEC**:
+```yaml
+spec_version: "1.0"
+id: "INV-TRAIN-050"
+status: "CONFIRMADA"
+test_required: true
+
+units:
+  - unit_key: "main"
+    class: "C2"
+    required: true
+    description: "Atribuição de parent_tag_id a uma tag não pode criar ciclo na hierarquia"
+    anchors:
+      code.file: "Hb Track - Backend/app/services/exercise_service.py"
+      code.function: "_validate_no_cycle"
+      code.line: "29-69"
+      code.algorithm: "Depth-first traversal dos ancestrais; se encontrar tag_id → HTTPException 400"
+
+tests:
+  primary: "tests/training/invariants/test_inv_train_050_tag_anti_cycle.py"
+  node: "TestInvTrain050TagAntiCycle"
+```
+
+* **Status**: CONFIRMADA
+* **Enunciado**: Ao atualizar `parent_tag_id` de uma exercise_tag, o sistema percorre a árvore de ancestrais e rejeita (HTTP 400) se a operação criaria um ciclo na hierarquia
+* **Escopo**: `exercise_tags` (via update tag)
+* **Onde é imposto**: Service (`exercise_service.py:29-69` — `_validate_no_cycle()`: self-reference check + DFS traversal + visited set para detectar ciclos pré-existentes)
+* **Evidência**: `Hb Track - Backend/app/services/exercise_service.py:29,46,64,190`
+* **Teste**: Pendente criação
+
+### INV-TRAIN-051 — Exercícios duplicados permitidos em sessão (circuitos)
+
+**SPEC**:
+```yaml
+spec_version: "1.0"
+id: "INV-TRAIN-051"
+status: "CONFIRMADA"
+test_required: true
+
+units:
+  - unit_key: "main"
+    class: "A"
+    required: true
+    description: "Tabela training_session_exercises não possui UNIQUE em (session_id, exercise_id), permitindo duplicatas para circuitos"
+    anchors:
+      db.table: "training_session_exercises"
+      db.absence: "Sem UNIQUE constraint em (session_id, exercise_id)"
+      code.file: "Hb Track - Backend/app/models/session_exercise.py"
+      code.comment: "Allows DUPLICATES: same exercise can appear multiple times"
+
+tests:
+  primary: "tests/training/invariants/test_inv_train_051_exercise_duplicates.py"
+  node: "TestInvTrain051ExerciseDuplicates"
+```
+
+* **Status**: CONFIRMADA
+* **Enunciado**: Uma sessão de treino pode conter o mesmo exercício múltiplas vezes (ex: circuitos), pois a tabela `training_session_exercises` não possui constraint UNIQUE em `(session_id, exercise_id)`
+* **Escopo**: `training_session_exercises`
+* **Onde é imposto**: Ausência intencional de UNIQUE constraint na combinação (session_id, exercise_id)
+* **Evidência**: `Hb Track - Backend/app/models/session_exercise.py` (docstring confirma "Allows DUPLICATES"); `schema.sql` (sem UNIQUE em session_id+exercise_id)
+* **Teste**: Pendente criação
 
 ---
 

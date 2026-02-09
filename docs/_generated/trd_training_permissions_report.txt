@@ -1,5 +1,5 @@
 # TRD Training Permissions Report
-Generated: 2026-02-08T05:56:59.269795+00:00Z
+Generated: 2026-02-09T01:35:47.630654+00:00Z
 
 Nota: permission_dep é role-based; chaves de permissão só aparecem quando há ctx.requires/ctx.can explícito.
 
