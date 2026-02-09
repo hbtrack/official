@@ -483,8 +483,8 @@
       "size": 7622
     },
     "app\\models\\audit_logs.py": {
-      "sha256": "16bc200e0c10229d9887433a03a4f68f0760b02b70251bf574db30864c97f863",
-      "size": 2033
+      "sha256": "4eaf89fb6177d719a41436a277657f1ded741f9979fff7dd75de859bc699862d",
+      "size": 2260
     },
     "app\\models\\base.py": {
       "sha256": "3f18557f6f3b7ebe81682d8e0ed52df1c58773e98d12e20397675fa2761d1d3e",
