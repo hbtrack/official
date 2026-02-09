@@ -12,7 +12,7 @@ Fontes obrigatórias (ler e seguir):
 - `Hb Track - Backend/docs/_generated/schema.sql (DDL + COMMENT ON COLUMN)`
 - `Hb Track - Backend/docs/_generated/alembic_state.txt (estado de migrações)`
 
-# .clinerules — Windows + VS Code + PowerShell (HB Track)
+# — Windows + VS Code + PowerShell (HB Track)
 
 # 0) Shell obrigatório
 - Use EXCLUSIVAMENTE PowerShell no Windows.
@@ -21,7 +21,7 @@ Fontes obrigatórias (ler e seguir):
 - Se precisar de "cat": use Get-Content.
 - Se precisar de "find files": use Get-ChildItem.
 
-# .clinerules — HB Track — Windows — PowerShell 5.1 — Repo: C:\HB TRACK
+# — HB Track — Windows — PowerShell 5.1 — Repo: C:\HB TRACK
 
 # SHELL / AMBIENTE (OBRIGATÓRIO)
 - Você está em Windows com PowerShell 5.1. Use EXCLUSIVAMENTE powershell.exe.
