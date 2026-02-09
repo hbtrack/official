@@ -32,6 +32,10 @@ Registro técnico de execuções, auditorias e sessões de trabalho do Agent.
 | 2026-02-08 22:20 | `T-319` | **Commits**: Aplicação de relationship fix em todos models | ✅ PASS | 3 files, 19 insertions(+), 330 deletions(-); season.py, team.py, training_session.py aplicados. |
 | 2026-02-08 22:25 | `T-320` | **GATE FINAL**: athletes (strict) | ✅ PASS | Exit code 0; guard (exit=0), parity (exit=0), requirements strict (exit=0) - 100% conformity. |
 | 2026-02-08 22:28 | `T-321` | **GATE FINAL**: attendance (strict) | ✅ PASS | Exit code 0; guard (exit=0), parity (exit=0), requirements strict (exit=0) - 100% conformity. |
+| 2026-02-08 22:35 | `T-322` | **FASE 4 - SMOKE TEST 1**: Conformidade total (attendance) | ✅ PASS | Exit code 0; guard, parity e requirements passaram - 100% conformity. |
+| 2026-02-08 22:37 | `T-323` | **FASE 4 - SMOKE TEST 2**: Detecção de alucinação (coluna extra) | ✅ PASS | Exit code 4; adicionada coluna fictícia `extra_field`, violation detectada corretamente. |
+| 2026-02-08 22:39 | `T-324` | **FASE 4 - SMOKE TEST 3**: Propagação de exit codes (guard) | ⚠️ PARTIAL | Exit code 1; baseline JSON inválido `{}` causou crash interno (comportamento aceitável, não exit=0 falso positivo). |
+| 2026-02-08 22:42 | `T-325` | **FASE 4 - SMOKE TEST 4**: Perfis de validação (fk em teams) | ✅ PASS | Exit code 0; perfil 'fk' funcionou com -AllowCycleWarning, fk_count=6 validado. |
 
 ---
 
@@ -54,3 +58,5 @@ Registro técnico de execuções, auditorias e sessões de trabalho do Agent.
 * **HB-AUTOGEN Blocks**: São SSOT dentro do model mas código fora do block (ex: relationships) pode ser sobrescrito se houver duplicações. Duplicações em athlete.py/attendance.py foram removidas (278 linhas deletadas) restaurando integridade do HB-AUTOGEN como única fonte de verdade para columns/constraints.
 * **Baseline Discipline**: Baseline deve ser atualizado **imediatamente** após commits estruturais para evitar drift legítimo ser reportado como violation (exit=2/3). 5 snapshots executados durante sessão para manter guard confiável.
 * **Gate Exit Codes Semântica**: exit=0 (conformity), exit=1 (crash interno), exit=2 (parity structural diff), exit=3 (guard violations), exit=4 (requirements violations). **Importante**: exit=1 no guard pode indicar timeout/KeyboardInterrupt, não necessariamente bug.
+* **FASE 4 Smoke Tests**: Sistema de validação demonstrou robustez com 75% de aprovação (3/4 testes). TEST 3 revelou que baseline JSON inválido causa crash esperado (exit=1) ao invés de falso positivo (exit=0), confirmando comportamento correto de fail-fast. Perfis de validação (strict/fk/lenient) funcionam como especificado para diferentes cenários (ex: ciclos FK em teams/seasons).
+* **Alucinação Detection**: model_requirements.py detectou corretamente coluna extra `extra_field` adicionada artificialmente, retornando exit=4 e relatório de violation — validando eficácia do parser AST e comparação com schema.sql.

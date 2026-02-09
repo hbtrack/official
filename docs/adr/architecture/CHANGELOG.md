@@ -10,6 +10,7 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
   - **FASE 1:** `model_requirements.py` (1155 linhas) com parsers DDL/AST, validador (3 perfis: strict/fk/lenient), e CLI wrapper
   - **FASE 2:** Integração STEP 4 no `models_autogen_gate.ps1` com propagação correta de exit code 4
   - **FASE 3:** Verificação e correção de propagação de exit codes específicos (0/2/3/4)
+  - **FASE 4:** Smoke tests executados (4 cenários): conformidade total (exit=0), detecção de alucinação (exit=4), propagação de exit codes, perfis de validação (strict/fk) — resultado: 3/4 testes passaram (75%)
   - **FASE 5:** Documentação executável criada:
     - `docs/references/exit_codes.md` (guia completo de exit codes 0/1/2/3/4)
     - `docs/workflows/model_requirements_guide.md` (guia de uso, troubleshooting, perfis)
