@@ -20,7 +20,7 @@ from uuid import UUID
 import sqlalchemy as sa
 from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
 # HB-AUTOGEN-IMPORTS:END
 from datetime import datetime, timezone
 from decimal import Decimal
@@ -61,7 +61,8 @@ class TrainingSession(Base):
     # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
     # Table: public.training_sessions
     __table_args__ = (
-        CheckConstraint("status::text = ANY (ARRAY['draft'::character varying, 'scheduled'::character varying, 'in_progress'::character varying, 'closed'::character varying, 'readonly'::character varying]::text[])", name='check_training_session_status'),
+        CheckConstraint("status::text = ANY (ARRAY['draft'::character varying, 'scheduled'::character varying, 'in_progress'::character varying, 'pending_review'::character varying, 'readonly'::character varying]::text[])", name='check_training_session_status'),
+        CheckConstraint("execution_outcome = 'on_time'::training_execution_outcome_enum AND delay_minutes IS NULL AND cancellation_reason IS NULL AND duration_actual_minutes IS NULL OR execution_outcome = 'delayed'::training_execution_outcome_enum AND delay_minutes IS NOT NULL AND delay_minutes > 0 AND cancellation_reason IS NULL OR execution_outcome = 'canceled'::training_execution_outcome_enum AND cancellation_reason IS NOT NULL AND delay_minutes IS NULL AND duration_actual_minutes IS NULL OR (execution_outcome = ANY (ARRAY['shortened'::training_execution_outcome_enum, 'extended'::training_execution_outcome_enum])) AND duration_actual_minutes IS NOT NULL AND duration_actual_minutes > 0 AND delay_minutes IS NULL AND cancellation_reason IS NULL", name='check_training_sessions_execution_outcome'),
         CheckConstraint('phase_focus_attack = ((COALESCE(focus_attack_positional_pct, 0::numeric) + COALESCE(focus_attack_technical_pct, 0::numeric)) >= 5::numeric)', name='ck_phase_focus_attack_consistency'),
         CheckConstraint('phase_focus_defense = ((COALESCE(focus_defense_positional_pct, 0::numeric) + COALESCE(focus_defense_technical_pct, 0::numeric)) >= 5::numeric)', name='ck_phase_focus_defense_consistency'),
         CheckConstraint('phase_focus_transition_defense = (COALESCE(focus_transition_defense_pct, 0::numeric) >= 5::numeric)', name='ck_phase_focus_transition_defense_consistency'),
@@ -80,8 +81,11 @@ class TrainingSession(Base):
         CheckConstraint("session_type::text = ANY (ARRAY['quadra'::character varying, 'fisico'::character varying, 'video'::character varying, 'reuniao'::character varying, 'teste'::character varying]::text[])", name='ck_training_sessions_type'),
         Index('idx_sessions_team_date', 'team_id', 'session_at', unique=False),
         Index('idx_training_sessions_deviation_flag', 'planning_deviation_flag', unique=False),
+        Index('idx_training_sessions_in_progress_at', 'session_at', unique=False, postgresql_where=sa.text("(((status)::text = 'in_progress'::text) AND (deleted_at IS NULL))")),
         Index('idx_training_sessions_microcycle', 'microcycle_id', unique=False),
         Index('idx_training_sessions_org', 'organization_id', 'deleted_at', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
+        Index('idx_training_sessions_pending_review_deadline', 'post_review_deadline_at', unique=False, postgresql_where=sa.text("(((status)::text = 'pending_review'::text) AND (deleted_at IS NULL))")),
+        Index('idx_training_sessions_scheduled_at', 'session_at', unique=False, postgresql_where=sa.text("(((status)::text = 'scheduled'::text) AND (deleted_at IS NULL))")),
         Index('idx_training_sessions_status', 'status', unique=False),
         Index('idx_training_sessions_team_date', 'team_id', 'session_at', 'deleted_at', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
         Index('ix_training_sessions_organization_id', 'organization_id', unique=False),
@@ -125,239 +129,22 @@ class TrainingSession(Base):
     focus_attack_technical_pct: Mapped[Optional[object]] = mapped_column(sa.Numeric(5, 2), nullable=True)
     focus_defense_technical_pct: Mapped[Optional[object]] = mapped_column(sa.Numeric(5, 2), nullable=True)
     focus_physical_pct: Mapped[Optional[object]] = mapped_column(sa.Numeric(5, 2), nullable=True)
-    microcycle_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('training_microcycles.id', name='fk_training_sessions_microcycle', ondelete='RESTRICT'), nullable=True)
+    microcycle_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('training_microcycles.id', name='fk_training_sessions_microcycle'), nullable=True)
     status: Mapped[str] = mapped_column(sa.String(), nullable=False, server_default=sa.text("'''draft'''::character varying"))
     closed_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
-    closed_by_user_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('users.id', name='fk_training_sessions_closed_by', ondelete='RESTRICT'), nullable=True)
+    closed_by_user_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('users.id', name='fk_training_sessions_closed_by'), nullable=True)
     deviation_justification: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
     planning_deviation_flag: Mapped[bool] = mapped_column(sa.Boolean(), nullable=False, server_default=sa.text('false'))
+    started_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+    ended_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+    duration_actual_minutes: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True)
+    execution_outcome: Mapped[str] = mapped_column(PG_ENUM('on_time', 'delayed', 'canceled', 'shortened', 'extended', name='training_execution_outcome_enum', create_type=False), nullable=False, server_default=sa.text("'on_time'::training_execution_outcome_enum"))
+    delay_minutes: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True)
+    cancellation_reason: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+    post_review_completed_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+    post_review_completed_by_user_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('users.id', name='training_sessions_post_review_completed_by_user_id_fkey'), nullable=True)
+    post_review_deadline_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
     # HB-AUTOGEN:END
-    # PK (RDB2)
-    id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True),
-        primary_key=True,
-        default=uuid4,
-        server_default=text("gen_random_uuid()")
-    )
-
-    # Organization scope (R34)
-    organization_id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("organizations.id", ondelete="RESTRICT"),
-        nullable=False,
-        index=True
-    )
-
-    # Team context (opcional - pode ser treino geral)
-    team_id: Mapped[Optional[UUID]] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("teams.id", ondelete="RESTRICT"),
-        nullable=True,
-        index=True
-    )
-
-    # Season context
-    season_id: Mapped[Optional[UUID]] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("seasons.id", ondelete="RESTRICT"),
-        nullable=True,
-        index=True
-    )
-
-    # Data/hora do treino
-    session_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        nullable=False,
-        index=True
-    )
-
-    # Duração planejada em minutos
-    duration_planned_minutes: Mapped[Optional[int]] = mapped_column(
-        SmallInteger,
-        nullable=True
-    )
-
-    # Local do treino
-    location: Mapped[Optional[str]] = mapped_column(
-        String(120),
-        nullable=True
-    )
-
-    # Tipo de sessão (obrigatório: quadra, fisico, video, reuniao, teste)
-    session_type: Mapped[str] = mapped_column(
-        String(32),
-        nullable=False
-    )
-
-    # Objetivo principal
-    main_objective: Mapped[Optional[str]] = mapped_column(
-        String(255),
-        nullable=True
-    )
-
-    # Objetivo secundário
-    secondary_objective: Mapped[Optional[str]] = mapped_column(
-        Text,
-        nullable=True
-    )
-
-    # Carga planejada
-    planned_load: Mapped[Optional[int]] = mapped_column(
-        SmallInteger,
-        nullable=True
-    )
-
-    # Clima do grupo (1-5)
-    group_climate: Mapped[Optional[int]] = mapped_column(
-        SmallInteger,
-        nullable=True
-    )
-
-    # Notas
-    notes: Mapped[Optional[str]] = mapped_column(
-        Text,
-        nullable=True
-    )
-
-    # Fases de foco (booleanos derivados)
-    phase_focus_defense: Mapped[bool] = mapped_column(
-        Boolean,
-        nullable=False,
-        default=False,
-        server_default=text("false")
-    )
-    phase_focus_attack: Mapped[bool] = mapped_column(
-        Boolean,
-        nullable=False,
-        default=False,
-        server_default=text("false")
-    )
-    phase_focus_transition_offense: Mapped[bool] = mapped_column(
-        Boolean,
-        nullable=False,
-        default=False,
-        server_default=text("false")
-    )
-    phase_focus_transition_defense: Mapped[bool] = mapped_column(
-        Boolean,
-        nullable=False,
-        default=False,
-        server_default=text("false")
-    )
-
-    # Intensidade alvo (1-5)
-    intensity_target: Mapped[Optional[int]] = mapped_column(
-        SmallInteger,
-        nullable=True
-    )
-
-    # Bloco da sessão
-    session_block: Mapped[Optional[str]] = mapped_column(
-        String(32),
-        nullable=True
-    )
-
-    # Timestamps (RDB3)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        default=lambda: datetime.now(timezone.utc),
-        server_default=text("now()"),
-        nullable=False
-    )
-
-    # Criador (auditoria) - FK para users
-    created_by_user_id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("users.id", ondelete="RESTRICT"),
-        nullable=False
-    )
-
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        default=lambda: datetime.now(timezone.utc),
-        onupdate=lambda: datetime.now(timezone.utc),
-        server_default=text("now()"),
-        nullable=False
-    )
-
-    # Soft delete (RDB4)
-    deleted_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(timezone=True),
-        nullable=True
-    )
-    deleted_reason: Mapped[Optional[str]] = mapped_column(
-        Text,
-        nullable=True
-    )
-
-    # Focos de treino (percentuais 0-100) - Análise estratégica /statistics/teams
-    focus_attack_positional_pct: Mapped[Optional[Decimal]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True
-    )
-    focus_defense_positional_pct: Mapped[Optional[Decimal]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True
-    )
-    focus_transition_offense_pct: Mapped[Optional[Decimal]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True
-    )
-    focus_transition_defense_pct: Mapped[Optional[Decimal]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True
-    )
-    focus_attack_technical_pct: Mapped[Optional[Decimal]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True
-    )
-    focus_defense_technical_pct: Mapped[Optional[Decimal]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True
-    )
-    focus_physical_pct: Mapped[Optional[Decimal]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True
-    )
-
-    # Relacionamento com microciclo (planejamento semanal)
-    microcycle_id: Mapped[Optional[UUID]] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("training_microcycles.id"),
-        nullable=True,
-        index=True
-    )
-
-    # Estado da sessão (draft, scheduled, in_progress, closed, readonly)
-    status: Mapped[str] = mapped_column(
-        String,
-        nullable=False,
-        default='draft',
-        server_default=text("'draft'")
-    )
-
-    # Revisão concluída (congelamento)
-    closed_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(timezone=True),
-        nullable=True
-    )
-    closed_by_user_id: Mapped[Optional[UUID]] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("users.id"),
-        nullable=True
-    )
-
-    # Desvio de planejamento
-    deviation_justification: Mapped[Optional[str]] = mapped_column(
-        Text,
-        nullable=True
-    )
-    planning_deviation_flag: Mapped[bool] = mapped_column(
-        Boolean,
-        nullable=False,
-        default=False,
-        server_default=text("false")
-    )
 
     @property
     def total_focus_pct(self) -> Optional[float]:
@@ -379,104 +166,6 @@ class TrainingSession(Base):
     @total_focus_pct.setter
     def total_focus_pct(self, value: Optional[float]) -> None:
         self.__dict__["_total_focus_pct_override"] = value
-
-    # Check constraints (conforme DB)
-    __table_args__ = (
-        CheckConstraint(
-            "(COALESCE(focus_attack_positional_pct, 0::numeric) + "
-            "COALESCE(focus_defense_positional_pct, 0::numeric) + "
-            "COALESCE(focus_transition_offense_pct, 0::numeric) + "
-            "COALESCE(focus_transition_defense_pct, 0::numeric) + "
-            "COALESCE(focus_attack_technical_pct, 0::numeric) + "
-            "COALESCE(focus_defense_technical_pct, 0::numeric) + "
-            "COALESCE(focus_physical_pct, 0::numeric)) <= 120::numeric",
-            name="ck_training_sessions_focus_total_sum"
-        ),
-        CheckConstraint(
-            "deleted_at IS NULL AND deleted_reason IS NULL OR "
-            "deleted_at IS NOT NULL AND deleted_reason IS NOT NULL",
-            name="ck_training_sessions_deleted_reason"
-        ),
-        CheckConstraint(
-            "focus_attack_positional_pct IS NULL OR "
-            "focus_attack_positional_pct >= 0::numeric AND focus_attack_positional_pct <= 100::numeric",
-            name="ck_training_sessions_focus_attack_positional_range"
-        ),
-        CheckConstraint(
-            "focus_attack_technical_pct IS NULL OR "
-            "focus_attack_technical_pct >= 0::numeric AND focus_attack_technical_pct <= 100::numeric",
-            name="ck_training_sessions_focus_attack_technical_range"
-        ),
-        CheckConstraint(
-            "focus_defense_positional_pct IS NULL OR "
-            "focus_defense_positional_pct >= 0::numeric AND focus_defense_positional_pct <= 100::numeric",
-            name="ck_training_sessions_focus_defense_positional_range"
-        ),
-        CheckConstraint(
-            "focus_defense_technical_pct IS NULL OR "
-            "focus_defense_technical_pct >= 0::numeric AND focus_defense_technical_pct <= 100::numeric",
-            name="ck_training_sessions_focus_defense_technical_range"
-        ),
-        CheckConstraint(
-            "focus_physical_pct IS NULL OR "
-            "focus_physical_pct >= 0::numeric AND focus_physical_pct <= 100::numeric",
-            name="ck_training_sessions_focus_physical_range"
-        ),
-        CheckConstraint(
-            "focus_transition_defense_pct IS NULL OR "
-            "focus_transition_defense_pct >= 0::numeric AND focus_transition_defense_pct <= 100::numeric",
-            name="ck_training_sessions_focus_transition_defense_range"
-        ),
-        CheckConstraint(
-            "focus_transition_offense_pct IS NULL OR "
-            "focus_transition_offense_pct >= 0::numeric AND focus_transition_offense_pct <= 100::numeric",
-            name="ck_training_sessions_focus_transition_offense_range"
-        ),
-        CheckConstraint(
-            "group_climate IS NULL OR group_climate >= 1 AND group_climate <= 5",
-            name="ck_training_sessions_climate"
-        ),
-        CheckConstraint(
-            "intensity_target IS NULL OR intensity_target >= 1 AND intensity_target <= 5",
-            name="ck_training_sessions_intensity"
-        ),
-        CheckConstraint(
-            "phase_focus_attack = ((COALESCE(focus_attack_positional_pct, 0::numeric) + "
-            "COALESCE(focus_attack_technical_pct, 0::numeric)) >= 5::numeric)",
-            name="ck_phase_focus_attack_consistency"
-        ),
-        CheckConstraint(
-            "phase_focus_defense = ((COALESCE(focus_defense_positional_pct, 0::numeric) + "
-            "COALESCE(focus_defense_technical_pct, 0::numeric)) >= 5::numeric)",
-            name="ck_phase_focus_defense_consistency"
-        ),
-        CheckConstraint(
-            "phase_focus_transition_defense = (COALESCE(focus_transition_defense_pct, 0::numeric) >= 5::numeric)",
-            name="ck_phase_focus_transition_defense_consistency"
-        ),
-        CheckConstraint(
-            "phase_focus_transition_offense = (COALESCE(focus_transition_offense_pct, 0::numeric) >= 5::numeric)",
-            name="ck_phase_focus_transition_offense_consistency"
-        ),
-        CheckConstraint(
-            "session_type::text = ANY (ARRAY['quadra'::character varying, 'fisico'::character varying, "
-            "'video'::character varying, 'reuniao'::character varying, 'teste'::character varying]::text[])",
-            name="ck_training_sessions_type"
-        ),
-        CheckConstraint(
-            "status::text = ANY (ARRAY['draft'::character varying, 'scheduled'::character varying, "
-            "'in_progress'::character varying, 'closed'::character varying, 'readonly'::character varying]::text[])",
-            name="check_training_session_status"
-        ),
-        Index("idx_sessions_team_date", "team_id", "session_at"),
-        Index("idx_training_sessions_deviation_flag", "planning_deviation_flag"),
-        Index("idx_training_sessions_microcycle", "microcycle_id"),
-        Index("idx_training_sessions_org", "organization_id", "deleted_at"),
-        Index("idx_training_sessions_status", "status"),
-        Index("idx_training_sessions_team_date", "team_id", "session_at", "deleted_at"),
-        Index("ix_training_sessions_team_date_active", "team_id", "session_at"),
-        Index("ix_training_sessions_team_season_date", "team_id", "season_id", "session_at"),
-    )
 
     # Relationships
     wellness_posts = relationship(
