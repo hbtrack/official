@@ -4,7 +4,7 @@ applyTo: C:/Hb Track/docs/scripts/**, C:/Hb Track/docs/workflows/, **/docs/_cano
 ---
 
 ## TAREFA:
-Escrever a documentação completa e executável do funcionamento do script **<SCRIPT_PATH>** (ex.: `Hb Track - Backend/scripts/models_autogen_gate.ps1`), cobrindo: objetivo, entradas/flags, fluxo passo-a-passo, arquivos gerados/modificados, exit codes, exemplos e troubleshooting.
+Escrever a documentação completa e executável do funcionamento do script **<SCRIPTPATH>** (ex.: `Hb Track - Backend/scripts/models_autogen_gate.ps1`), cobrindo: objetivo, entradas/flags, fluxo passo-a-passo, arquivos gerados/modificados, exit codes, exemplos e troubleshooting.
 
 ESCOPO (NÃO SAIR):
 - Documentar APENAS o script alvo e as dependências diretas que ele chama.
