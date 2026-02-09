@@ -1,5 +1,5 @@
 ---
-description: Carregar estas instruções sempre que eu pedir “varrer tabelas” / “checar models” / “requirements scan” no Hb Track - Backend.
+description: Carregar estas instruções sempre que eu pedir “varrer tabelas” / “checar models” / “requirements scan” no Hb Track - Backend.Carregar estas instruções sempre que eu pedir “corrigir models que falharam” / “rodar autogen/gate nas FAIL” no Hb Track - Backend.
 applyTo: '**' 
 ---
 OBJETIVO:
@@ -99,3 +99,108 @@ ENTREGA (o que retornar pra mim):
 - Lista separada de FAIL (exit=4)
 - Lista de SKIP_NO_MODEL (se houver)
 - Se CRASH: output completo do crash + tabela onde parou
+
+
+
+OBJETIVO:
+Corrigir somente as tabelas listadas em FAIL (triagem anterior), usando o gate canônico por tabela até obter exit=0 (“model perfeito”), sem sair do escopo e parando na 1ª falha real.
+
+INPUT OBRIGATÓRIO (preencher antes de executar):
+- Lista de tabelas FAIL: GERADA PELA VARREDURA ANTERIOR (ex: teams, seasons)
+- Profile padrão: strict (exceto teams/seasons → fk + AllowCycleWarning se necessário)
+
+REGRAS (NÃO NEGOCIÁVEIS):
+- Rodar em `C:\HB TRACK\Hb Track - Backend`
+- Não criar arquivos temporários/backups no repo.
+- Não rodar `agent_guard snapshot` (baseline update) sem o usuário pedir explicitamente.
+- Não “corrigir em massa”: sempre 1 tabela por vez.
+- PARAR IMEDIATAMENTE se qualquer comando retornar exit != 0.
+- Capturar `$LASTEXITCODE` imediatamente após cada comando (sem pipeline).
+
+PIPELINE POR TABELA (executar em loop, 1 por 1):
+
+PASSO 0 — Pré-check do repo (ANTES de começar e antes de cada tabela)
+1) `Set-Location "C:\HB TRACK\Hb Track - Backend"`
+2) `git status --porcelain`
+   - Se houver qualquer saída: PARE e reporte (não limpe automaticamente).
+
+PASSO 1 — SSOT refresh (uma vez no início)
+Execute:
+- `powershell -NoProfile -ExecutionPolicy Bypass -File "C:\HB TRACK\scripts\inv.ps1" refresh`
+Capture:
+- `$ec = $LASTEXITCODE; Write-Host "EXIT(inv_refresh)=$ec"`
+Se $ec != 0: PARE.
+
+PASSO 2 — Gate por tabela (corrigir + validar)
+Para cada tabela $t:
+- Definir profile:
+  - Se $t for "teams" ou "seasons": usar `-Profile fk -AllowCycleWarning`
+  - Caso contrário: `-Profile strict`
+
+Executar:
+A) Para tabelas normais:
+- `.\scripts\models_autogen_gate.ps1 -Table "$t" -Profile strict`
+B) Para teams/seasons:
+- `.\scripts\models_autogen_gate.ps1 -Table "$t" -Profile fk -AllowCycleWarning`
+
+Capturar imediatamente:
+- `$ec = $LASTEXITCODE; Write-Host "EXIT(models_autogen_gate:$t)=$ec"`
+
+Se $ec != 0:
+- PARE e reporte:
+  - comando
+  - output (últimas 120 linhas)
+  - $LASTEXITCODE
+  - `git status --porcelain`
+  - `Get-Location`
+
+PASSO 3 — Limpar artefatos gerados (para não sujar o repo)
+Execute SEMPRE após um gate que retornou 0:
+No backend root:
+- `git restore -- "docs/_generated/alembic_state.txt" "docs/_generated/manifest.json" "docs/_generated/parity_report.json" "docs/_generated/schema.sql"`
+No repo root (um nível acima):
+- `git restore -- "..\docs/_generated/alembic_state.txt" "..\docs/_generated/manifest.json" "..\docs/_generated/schema.sql" "..\docs/_generated/trd_training_permissions_report.txt"`
+
+Se algum restore falhar: PARE e reporte.
+
+PASSO 4 — Evidência por tabela (obrigatório)
+Execute:
+- `git status --porcelain`
+- `git --no-pager diff --stat`
+
+Critério:
+- Só pode sobrar mudança intencional em `app/models/...` da tabela atual (ou arquivos explicitamente esperados pelo gate).
+- Se sobrar qualquer lixo (docs/_generated ou untracked): PARE e reporte.
+
+COMO REPORTAR RESULTADO FINAL:
+- Tabela com colunas: table | profile | exit
+- Lista “OK (exit=0)”
+- Se parou em falha: qual tabela, exit code, e logs.
+
+OBSERVAÇÃO:
+- Não commitar automaticamente. Apenas reportar os arquivos modificados e o diff stat.
+- Eu decido quando commitar e quando (se necessário) atualizar baseline.
+
+SCRIPT SUGERIDO (PowerShell, sem criar arquivo no repo):
+$tables = @(<COLAR_AQUI_A_LISTA_COM_ASPAS>)
+foreach ($t in $tables) {
+  Write-Host "`n===== FIX TABLE: $t =====" -ForegroundColor Cyan
+
+  $dirty = git status --porcelain
+  if ($dirty) { Write-Host "[ABORT] working tree not clean"; $dirty; exit 1 }
+
+  if ($t -in @("teams","seasons")) {
+    .\scripts\models_autogen_gate.ps1 -Table $t -Profile fk -AllowCycleWarning
+  } else {
+    .\scripts\models_autogen_gate.ps1 -Table $t -Profile strict
+  }
+  $ec = $LASTEXITCODE
+  Write-Host "EXIT(models_autogen_gate:$t)=$ec"
+  if ($ec -ne 0) { exit $ec }
+
+  git restore -- "docs/_generated/alembic_state.txt" "docs/_generated/manifest.json" "docs/_generated/parity_report.json" "docs/_generated/schema.sql"
+  git restore -- "..\docs/_generated/alembic_state.txt" "..\docs/_generated/manifest.json" "..\docs/_generated/schema.sql" "..\docs/_generated/trd_training_permissions_report.txt"
+
+  git status --porcelain
+  git --no-pager diff --stat
+}
