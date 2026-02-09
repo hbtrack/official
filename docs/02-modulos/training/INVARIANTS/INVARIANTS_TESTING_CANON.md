@@ -1,5 +1,19 @@
 ## Protocolo Canônico para Testes de Invariantes no Hb Track
 
+---
+
+**Authority Block**
+
+| Propriedade | Valor |
+|---|---|
+| Authority | Canon (Canonical Protocol) |
+| Scope | training/invariants/testing — Padrão obrigatório para testes |
+| Last Verified | 2026-02-08 |
+| Depends On | [001-ADR-TRAIN-ssot-precedencia.md](../../ADR/architecture/001-ADR-TRAIN-ssot-precedencia.md), INVARIANTS_TRAINING.md, `schema.sql` |
+| Produces | Test files following DoD (Definition of Done), validation results |
+
+---
+
 ## 1. Objetivo e Autoridade
 
 Este documento define o **Protocolo Canônico** para validação de invariantes no sistema Hb Track. Ele atua como uma "Rule of Law": testes que não seguem este padrão são, por definição, reprovados.

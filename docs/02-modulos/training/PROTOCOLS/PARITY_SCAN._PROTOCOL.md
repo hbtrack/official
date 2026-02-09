@@ -1,5 +1,19 @@
 # Overview
 
+---
+
+**Authority Block**
+
+| Propriedade | Valor |
+|---|---|
+| Authority | Canon (Canonical Protocol) |
+| Scope | training/parity — Validação de alinhamento model ↔ schema |
+| Last Verified | 2026-02-08 |
+| Depends On | [001-ADR-TRAIN-ssot-precedencia.md](../../ADR/architecture/001-ADR-TRAIN-ssot-precedencia.md), `schema.sql`, `alembic_state.txt` |
+| Produces | `parity_report.json`, divergence lists, migration recommendations |
+
+---
+
 **Arquivo:** Hb Track - Backend/scripts/parity_scan.ps1
 
 Este documento descreve o objetivo, pré-requisitos e uso do script de "parity scan" que:

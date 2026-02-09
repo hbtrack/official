@@ -1,5 +1,19 @@
 # INVARIANTS_TRAINING.md — Invariantes do Módulo TRAINING (HB Track)
 
+---
+
+**Authority Block**
+
+| Propriedade | Valor |
+|---|---|
+| Authority | SSOT (Single Source of Truth) |
+| Scope | training/invariants — Catálogo de Invariantes |
+| Last Verified | 2026-02-08 |
+| Depends On | [001-ADR-TRAIN-ssot-precedencia.md](../../ADR/architecture/001-ADR-TRAIN-ssot-precedencia.md), `schema.sql`, `openapi.json` |
+| Produces | Test cases, migration strategies, enforcement rules |
+
+---
+
 ## Change control
 
 * **Válido para**: commit `e02c83ef`
