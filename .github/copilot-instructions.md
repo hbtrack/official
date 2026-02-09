@@ -1,3 +1,8 @@
+---
+description: HB Track project context and mandatory execution rules for Agent/Copilot
+applyTo: '.github/'
+---
+
 ## PORTA ÚNICA: Camada Canônica Docs
 
 **Para QUALQUER consulta técnica, comece AQUI:** `docs/_canon/00_START_HERE.md`
@@ -37,7 +42,6 @@ Esta camada orienta para documentação correta conforme sua intenção:
 - Dependências (sqlalchemy/alembic) não instaladas
 - Baseline (.hb_guard/baseline.json) não existe
 - Schema.sql desatualizado ou ausente
-
 
 # Guia de Requisitos para Modelos
 C:\HB TRACK\docs\workflows\model_requirements_guide.md

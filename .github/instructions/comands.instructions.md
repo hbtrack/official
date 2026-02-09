@@ -1,8 +1,7 @@
 ---
 description: HB Track project context and mandatory execution rules for Agent/Copilot
-applyTo: '.github/'
+applyTo: HB TRACK/**
 ---
-
 # ENFORCEMENT (MANDATORY)
 
 Fontes obrigatórias (ler e seguir):
