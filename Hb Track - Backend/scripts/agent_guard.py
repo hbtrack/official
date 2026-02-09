@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Tuple
 
-INTERNAL_EXCLUDES = [".hb_guard", ".git"]
+INTERNAL_EXCLUDES = [".hb_guard", ".git", "docs/_generated"]
 EXCLUDED_DIRS = {".git", ".hb_guard", "__pycache__"}
 EXCLUDED_SUFFIXES = {".pyc"}
 
@@ -223,7 +223,7 @@ def cmd_check(args: argparse.Namespace) -> int:
             print("  -", v)
         if len(violations) > 200:
             print(f"  ... ({len(violations) - 200} more)")
-        return 2
+        return 3
 
     print("[OK] guard check passed")
     if base_root and str(root) != str(base_root):

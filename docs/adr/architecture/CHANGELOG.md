@@ -10,18 +10,20 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
   - **FASE 1:** `model_requirements.py` (1155 linhas) com parsers DDL/AST, validador (3 perfis: strict/fk/lenient), e CLI wrapper
   - **FASE 2:** Integração STEP 4 no `models_autogen_gate.ps1` com propagação correta de exit code 4
   - **FASE 3:** Verificação e correção de propagação de exit codes específicos (0/2/3/4)
-  - **FASE 4:** Smoke tests executados (5 cenários): conformidade total (exit=0), detecção de alucinação (exit=4), crash path (exit=1), guard violation real (exit=2), perfis de validação (fk) — resultado: 5/5 testes passaram (100%)
+  - **FASE 4:** Smoke tests executados (5 cenários): conformidade total (exit=0), detecção de alucinação (exit=4), crash path (exit=1), guard violation real (exit=3), perfis de validação (fk) — resultado: 5/5 testes passaram (100%)
   - **FASE 5:** Documentação executável criada:
     - `docs/references/exit_codes.md` (guia completo de exit codes 0/1/2/3/4)
     - `docs/workflows/model_requirements_guide.md` (guia de uso, troubleshooting, perfis)
     - `docs/architecture/CHECKLIST-CANONICA-MODELS.md` (checklist passo-a-passo)
 
 ### Corrigido
-* **Exit Codes Documentação**: Corrigida a documentação de exit codes em `docs/references/exit_codes.md` para refletir implementação real:
-  - **Exit Code 2**: Agora documenta corretamente que é usado para AMBOS violations (Caso 2A: Parity structural diffs + Caso 2B: Guard violations de arquivos protegidos)
-  - **Exit Code 3**: Marcado como "(Não utilizado)" — código nunca foi implementado no sistema
-  - **Evidência**: `agent_guard.py` linha 225 retorna `exit=2` para violations, não `exit=3` como especificação original assumia
-  - **Impacto**: TEST 3B (guard violation) validou comportamento correto com exit=2
+* **Exit Code 3 Implementation**: Restaurada semântica canônica dos exit codes para desambiguar parity de guard violations:
+  - **agent_guard.py linha 225**: Alterado `return 2` → `return 3` para violations (baseline mismatches)
+  - **Exit Code 2**: Agora usado EXCLUSIVAMENTE para parity violations (structural diffs DB ↔ Model via alembic)
+  - **Exit Code 3**: Agora usado EXCLUSIVAMENTE para guard violations (baseline drift via agent_guard.py)
+  - **Motivação de engenharia**: Exit=2 estava ambíguo (parity OR guard), dificultando debugging em CI/CD
+  - **Smoke Test validado**: TEST 3B confirmou exit=3 para guard violation após patch
+  - **Impacto**: Melhoria em debuggabilidade do gate; cada camada agora tem exit code específico (guard=3, parity=2, requirements=4)
 * **Terminal/PowerShell**: Ajustada a abordagem de execução para comandos incrementais (1 check por comando) após `ParserError` de quoting no wrapper canônico.
 * **Pré-requisitos EXEC_TASK**: Documentado bloqueio por ausência de `.hb_guard/baseline.json` no CHECK 5, mantendo política fail-fast sem auto-correção.
 * **Exit Code Propagation**: Confirmada propagação correta de exit codes específicos (0/2/3/4) em `models_autogen_gate.ps1` e `model_requirements.py`.
