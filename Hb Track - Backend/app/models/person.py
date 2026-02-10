@@ -27,7 +27,6 @@ from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
 # HB-AUTOGEN-IMPORTS:END
-
 from datetime import date, datetime
 from typing import TYPE_CHECKING, Optional, List
 
@@ -89,11 +88,6 @@ class Person(Base):
     notes: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
     # HB-AUTOGEN:END
     # PK (RDB2)
-    id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
-        primary_key=True,
-        server_default=text("gen_random_uuid()")
-    )
 
     # Dados básicos (R1) - V1.2 Normalizado
 
