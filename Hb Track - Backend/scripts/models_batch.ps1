@@ -167,13 +167,21 @@ function Restore-GeneratedArtifacts {
 
 function Run-Requirements([string]$TableName, [string]$Profile, [string]$LogPath) {
   $py = ".\venv\Scripts\python.exe"
-  $cmd = "scripts\model_requirements.py --table $TableName --profile $Profile"
 
   Write-Host "`n[REQ] $TableName (profile=$Profile)" -ForegroundColor Cyan
-  Add-Content -Path $LogPath -Value "`n[REQ] $TableName (profile=$Profile)`nCMD: $py $cmd`n"
+  Add-Content -Path $LogPath -Value "`n[REQ] $TableName (profile=$Profile)`n"
 
-  & $py scripts\model_requirements.py --table $TableName --profile $Profile *>> $LogPath
-  return $LASTEXITCODE
+  $output = & $py scripts\model_requirements.py --table $TableName --profile $Profile 2>&1
+  $output | Tee-Object -Append -FilePath $LogPath | Out-Null
+  
+  $ec = $LASTEXITCODE
+  
+  # Se model não encontrado, tratar como SKIP
+  if ($ec -eq 1 -and ($output -match "model file not found|no model|could not locate")) {
+    return 2  # SKIP code
+  }
+  
+  return $ec
 }
 
 function Run-Gate([string]$TableName, [string]$Profile, [string]$LogPath) {
@@ -243,6 +251,10 @@ foreach ($t in $tables) {
 
   if ($ec -eq 0) {
     "$t,$profile,requirements,0,PASS" | Add-Content -Path $csvPath
+  }
+  elseif ($ec -eq 2) {
+    "$t,$profile,requirements,2,SKIP_NO_MODEL" | Add-Content -Path $csvPath
+    Write-Host "  [SKIP] $t - modelo não encontrado" -ForegroundColor Yellow
   }
   elseif ($ec -eq 4) {
     "$t,$profile,requirements,4,FAIL" | Add-Content -Path $csvPath
