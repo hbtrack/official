@@ -44,9 +44,11 @@ env_path = BACKEND_ROOT / '.env'
 load_dotenv(dotenv_path=env_path)
 
 # Output to backend repo: Hb Track - Backend/docs/_generated/
-OUTPUT_DIR = BACKEND_ROOT / "docs" / "_generated"
+# Use env var HB_DOCS_GENERATED_DIR if set, else default to docs/_generated
+GENERATED_DIR_NAME = os.getenv("HB_DOCS_GENERATED_DIR", "_generated")
+OUTPUT_DIR = BACKEND_ROOT / "docs" / GENERATED_DIR_NAME
 # Secondary output: repo-level docs/_generated
-REPO_OUTPUT_DIR = BACKEND_ROOT.parent / "docs" / "_generated"
+REPO_OUTPUT_DIR = BACKEND_ROOT.parent / "docs" / GENERATED_DIR_NAME
 
 
 # =============================================================================

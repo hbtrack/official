@@ -48,8 +48,9 @@ try {
   $env:ALEMBIC_SCAN_ONLY = "1"
   if ($TableFilter) { $env:ALEMBIC_COMPARE_TABLES = $TableFilter }
 
-  # Configuração de Paths
-  $backendOut = Join-Path $RepoRoot "docs\_generated"
+  # Configuração de Paths (use env vars if set, else default)
+  $generatedDirName = if ($env:HB_DOCS_GENERATED_DIR) { $env:HB_DOCS_GENERATED_DIR } else { "_generated" }
+  $backendOut = Join-Path $RepoRoot "docs" $generatedDirName
   $logPathBackend = Join-Path $backendOut "parity-scan.log"
   $reportPathBackend = Join-Path $backendOut "parity_report.json"
 

@@ -58,13 +58,17 @@ try {
   Pop-Location
 }
 
-$reportPath = "docs\_generated\parity_report.json"
-if (-not [string]::IsNullOrWhiteSpace($ParityReportPath)) {
-  $reportPath = $ParityReportPath
+# Use env var HB_PARITY_REPORT_PATH if set, else default path
+if ([string]::IsNullOrWhiteSpace($ParityReportPath)) {
+  $ParityReportPath = $env:HB_PARITY_REPORT_PATH
 }
-if (-not (Test-Path $reportPath)) {
-  throw "Missing $reportPath after parity scan"
+if ([string]::IsNullOrWhiteSpace($ParityReportPath)) {
+  $ParityReportPath = "docs\_generated\parity_report.json"
 }
+if (-not (Test-Path $ParityReportPath)) {
+  throw "Missing $ParityReportPath after parity scan"
+}
+$reportPath = $ParityReportPath
 
 $report = Get-Content $reportPath -Raw | ConvertFrom-Json
 $warnings = @($report.warnings)

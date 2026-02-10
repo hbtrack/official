@@ -10,7 +10,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Tuple
 
-INTERNAL_EXCLUDES = [".hb_guard", ".git", "docs/_generated"]
+# Use env var HB_DOCS_GENERATED_DIR if set, else default to _generated
+GENERATED_DIR_NAME = os.getenv("HB_DOCS_GENERATED_DIR", "_generated")
+INTERNAL_EXCLUDES = [".hb_guard", ".git", f"docs/{GENERATED_DIR_NAME}"]
 EXCLUDED_DIRS = {".git", ".hb_guard", "__pycache__"}
 EXCLUDED_SUFFIXES = {".pyc"}
 
