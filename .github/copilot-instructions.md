@@ -51,3 +51,39 @@ C:\HB TRACK\Hb Track - Backend\docs\architecture\CHECKLIST-CANONICA-MODELS.md
 
 # Guia de referência para os códigos de saída dos script de validação
 C:\HB TRACK\docs\references\exit_codes.md
+
+---
+
+## Workspace Prompts & Docs Organization
+
+### Prompt Files (Slash Commands)
+
+Use `/` no Copilot Chat para acessar prompts acionáveis:
+
+- `/parity-fix` — Corrigir divergências Model↔DB (parity_report.json + schema.sql)
+- `/models-gate` — Avaliar gate de modelos e guiar correção
+- `/install-invariant` — Instalar invariante de training com SSOT
+- `/generate-exec-task` — Gerar EXEC_TASK de ADR/workflow
+
+Todos em: `.github/prompts/*.prompt.md`
+
+### Docs Organization
+
+**Canonical Authority:**
+- `docs/_canon/` — autoridade + navegação (START_HERE, SSOT, workflows, troubleshooting)
+- `docs/_ai/` — guidelines operacionais para agente + protocol + guardrails
+
+**SSOT Artifacts (Protected):**
+- `docs/_generated/_core/` — schema.sql, openapi.json, parity_report.json, alembic_state.txt, manifest.json
+- **Use env var:** `HB_DOCS_GENERATED_DIR` para customizar (default: `_generated`)
+
+**Debug/Scratch (Excluded from Index):**
+- `docs/_generated/_scratch/` — debug artifacts (excluded via .gitignore)
+- `docs/scripts/_archive/` — archived/legacy scripts (excluded via .gitignore)
+
+**Reference:**
+- `docs/ADR/` — architecture decisions (decisões importantes, não executáveis)
+- `docs/execution_tasks/` — EXEC_TASK files (tarefas executáveis com gates)
+- `docs/02_modulos/` — módulos por feature (athletes, training, teams, etc)
+
+**Observação:** VS Code workspace context (`@workspace #codebase`) automaticamente exclui arquivos em `.gitignore`. Isso melhora busca e reduz ruído para Copilot (~50% menos artefatos debug indexados).
