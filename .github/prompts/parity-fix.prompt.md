@@ -10,11 +10,11 @@ Objetivo: reduzir divergências estruturais Model↔DB com base em evidência do
 
 ## Contexto Canônico (Leia/Consulte)
 
-- [START HERE](C:/HB TRACK/docs/_canon/00_START_HERE.md)
-- [AUTHORITY/SSOT](C:/HB TRACK/docs/_canon/01_AUTHORITY_SSOT.md)
-- [MODELS PIPELINE](C:/HB TRACK/docs/_canon/05_MODELS_PIPELINE.md)
-- [TROUBLESHOOTING parity/guard](C:/HB TRACK/docs/_canon/09_TROUBLESHOOTING_GUARD_PARITY.md)
-- ADR: [013-ADR-MODELS](C:/HB TRACK/docs/ADR/architecture/013-ADR-MODELS.md)
+- [START HERE](docs/_canon/00_START_HERE.md)
+- [AUTHORITY/SSOT](docs/_canon/01_AUTHORITY_SSOT.md)
+- [MODELS PIPELINE](docs/_canon/05_MODELS_PIPELINE.md)
+- [TROUBLESHOOTING parity/guard](docs/_canon/09_TROUBLESHOOTING_GUARD_PARITY.md)
+- ADR: [013-ADR-MODELS](docs/ADR/013-ADR-MODELS.md)
 
 ## Evidência Obrigatória (Use Sempre)
 

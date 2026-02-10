@@ -1,13 +1,13 @@
 ---
-description: HB Track project context and mandatory execution rules for Agent/Copilot
-applyTo: HB TRACK/**
+description: "HB Track project context and mandatory execution rules for Agent/Copilot."
+applyTo: "**"
 ---
 # ENFORCEMENT (MANDATORY)
 
 Fontes obrigatórias (ler e seguir):
-- `C:\HB TRACK\docs\_ai\_INDEX.md`
-- `C:\HB TRACK\docs\_ai\SYSTEM_DESIGN.md` (seguir as diretrizes de design de sistema para decisões arquiteturais)
-- `C:\HB TRACK\docs\_canon\00_START_HERE.md` (porta única de entrada para documentação canônica)
+- `docs/_ai/_INDEX.md`
+- `docs/_ai/SYSTEM_DESIGN.md` (seguir as diretrizes de design de sistema para decisões arquiteturais)
+- `docs/_canon/00_START_HERE.md` (porta única de entrada para documentação canônica)
 
 ## PROIBIDO CRIAR ARQUIVOS TEMPORARIOS OU DE BACKUP
 - Proibido criar arquivos temporários, de backup, ou de teste no repo (ex: `temp.txt`, `backup.sql`, `test_output.json`).

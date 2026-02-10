@@ -1,7 +1,6 @@
 ---
-description: Carregar este prompt sempre que a tarefa envolver criar/corrigir models SQLAlchemy, rodar gates (guard/parity/requirements), atualizar SSOT (schema.sql) ou qualquer comando em Hb Track - Backend.
-# applyTo: **/Hb Track - Backend/**, **/docs/_canon/**, **/docs/workflows/model_requirements_guide.md**, **/docs/references/exit_codes.md**, **/docs/ADR/008-ADR-TRAIN-governanca-por-artefatos.md**
-applyTo: **/Hb Track - Backend/**, **/docs/_canon/**, **/docs/workflows/model_requirements_guide.md**, **/docs/references/exit_codes.md**, **/docs/ADR/_INDEX_ADR.md**
+description: "Carregar este prompt sempre que a tarefa envolver criar/corrigir models SQLAlchemy, rodar gates (guard/parity/requirements), atualizar SSOT (schema.sql) ou qualquer comando em Hb Track - Backend."
+applyTo: "Hb Track - Backend/**,docs/_canon/**,docs/references/exit_codes.md,docs/ADR/008-ADR-TRAIN-governanca-por-artefatos.md,docs/ADR/_INDEX_ADR.md"
 ---
 PROMPT PARA O AGENT — PIPELINE CANÔNICO (STOP ON FIRST FAILURE)
 
