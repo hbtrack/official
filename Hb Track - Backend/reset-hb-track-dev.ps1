@@ -117,7 +117,7 @@ try {
     
     # Rodar alembic da raiz do backend (onde esta alembic.ini)
     Write-Info "Executando: python -m alembic upgrade head"
-    $alembicOutput = python -m alembic upgrade head 2>&1
+    $alembicOutput = & ".\venv\Scripts\python.exe" -m alembic upgrade head 2>&1
     
     $alembicOutput | ForEach-Object {
         Write-Host "  $_" -ForegroundColor Gray
@@ -125,7 +125,7 @@ try {
     
     if ($LASTEXITCODE -ne 0 -and ($alembicOutput -match "Multiple head revisions")) {
         Write-Info "Detectado multiplos heads. Executando: python -m alembic upgrade heads"
-        $alembicOutput = python -m alembic upgrade heads 2>&1
+        $alembicOutput = & ".\venv\Scripts\python.exe" -m alembic upgrade heads 2>&1
         
         $alembicOutput | ForEach-Object {
             Write-Host "  $_" -ForegroundColor Gray

@@ -9,5 +9,15 @@ Regras globais:
 - Não inventar: decisões devem citar paths/outputs reais.
 - Não criar arquivos temporários/backups dentro do repo.
 - Capturar `$LASTEXITCODE` imediatamente após comandos (sem pipeline antes).
+- Antes de criar snapshots, obter autorização (para evitar poluição de histórico).
+- Antes de alterar arquivos, verificar se há mudanças não commitadas (para evitar conflitos).
+- Antes de corrigir erros, entender a causa raiz (para evitar correções superficiais).
+- Antes de adicionar dependências, avaliar o impacto (para evitar bloat).
+- Ao revisar código, focar em legibilidade e manutenibilidade (para evitar dívidas técnicas).
+- Antes de remover código, verificar se há referências (para evitar quebras).
+- Antes de adicionar código, considerar a simplicidade (para evitar complexidade desnecessária).
+- Antes de alterar a estrutura do projeto, avaliar a consistência (para evitar confusão).
+- Antes de alterar a configuração, entender o contexto (para evitar efeitos colaterais).
+- Anpós identificar uma causa de um problema, apresentar a solução e pedir confirmação antes de implementar (para evitar mudanças indesejadas).
 
 Regras críticas: CWD, stop-on-first-failure, sem temporários, capturar $LASTEXITCODE, snapshot só com autorização.
