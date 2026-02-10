@@ -511,8 +511,8 @@
       "size": 4689
     },
     "app\\models\\competition_season.py": {
-      "sha256": "2e344cb8e38d4ca76d213e0164e1ee92be026f7229f918616700005551f667c4",
-      "size": 3833
+      "sha256": "333db43de4a0452f83fea9aa35aa67359901029468165e70277108d5cfb11838",
+      "size": 3644
     },
     "app\\models\\competition_standing.py": {
       "sha256": "a6d3e6197e2b9e4b3520e61d92782502b08818de0f8fe484d65cedf5420e793f",
@@ -1579,8 +1579,8 @@
       "size": 4567
     },
     "scripts\\autogen_model_from_db.py": {
-      "sha256": "6677b4ffe0675a38ecfce70bebb17254ddb0f6e4d51b68cad900c1032d12cdf3",
-      "size": 26057
+      "sha256": "d09aae6d1b985da7de202323b1ffdf2ca9e34ccab0d21b23d79bc6ed57569084",
+      "size": 27612
     },
     "scripts\\check_and_fix_matches.sql": {
       "sha256": "06505dfb81cf1fcee77c8f3ef86a5fd1c7facb13b609538ca9a55716cb92cbb3",
@@ -2445,6 +2445,14 @@
     "tmp_batch_loop.ps1": {
       "sha256": "763ce304b8239f8342cd0afed53a29b367d9873541ac9f9993ffb3132be23744",
       "size": 4389
+    },
+    "tmp_check_parity.ps1": {
+      "sha256": "f76b993dfd300ab940d66f33be170b804dc0bc1ce3c503a15c1c23eea2f73c43",
+      "size": 739
+    },
+    "tmp_test_gate_season.ps1": {
+      "sha256": "6eaa93748a81a1ca8b740bf1c3a0820405e19bbe054c4c6cefb16e426c2282d5",
+      "size": 452
     },
     "tmp_test_idem.ps1": {
       "sha256": "783768ebfc66c6abede5a4d4770d64b55dee8f180c5b503829b68cda4c779a50",
