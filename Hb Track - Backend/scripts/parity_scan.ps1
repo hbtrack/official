@@ -68,8 +68,16 @@ try {
   $logDir = Split-Path -Parent $logPathBackend
   if (-not (Test-Path $logDir)) { New-Item -ItemType Directory -Path $logDir -Force | Out-Null }
   
-  # Roda alembic e captura stdout+stderr no log (e também no console)
-  & $pythonExe -m alembic revision --autogenerate -m $Message 2>&1 | Tee-Object -FilePath $logPathBackend -Append
+  # Temporariamente Continue para não explodir com stderr do alembic
+  $oldEap = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+  try {
+    & $pythonExe -m alembic revision --autogenerate -m $Message 2>&1 |
+      Tee-Object -FilePath $logPathBackend -Append
+  }
+  finally {
+    $ErrorActionPreference = $oldEap
+  }
 
   $ec = $LASTEXITCODE
   Write-Host "[ALEMBIC_EXIT]=$ec" -ForegroundColor Gray
