@@ -28,6 +28,19 @@ Regras:
 - R34: Clube único na V1
 """
 
+# HB-AUTOGEN-IMPORTS:BEGIN
+from __future__ import annotations
+
+from datetime import date, datetime
+from typing import Optional
+from uuid import UUID
+
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+
 from datetime import datetime
 from typing import Optional, TYPE_CHECKING, List, Any
 from uuid import uuid4
@@ -57,158 +70,106 @@ class Competition(Base):
 
     __tablename__ = "competitions"
 
-    # Primary key
-    id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
-        primary_key=True,
-        default=lambda: str(uuid4()),
-        server_default=text("gen_random_uuid()"),
+
+# HB-AUTOGEN:BEGIN
+
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+
+    # Table: public.competitions
+
+    __table_args__ = (
+
+        CheckConstraint('deleted_at IS NULL AND deleted_reason IS NULL OR deleted_at IS NOT NULL AND deleted_reason IS NOT NULL', name='ck_competitions_deleted_reason'),
+
+        Index('ix_competitions_created_by', 'created_by', unique=False),
+
+        Index('ix_competitions_organization_id', 'organization_id', unique=False),
+
+        Index('ix_competitions_season', 'season', unique=False),
+
+        Index('ix_competitions_status', 'status', unique=False),
+
+        Index('ix_competitions_team_id', 'team_id', unique=False),
+
     )
+
+
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
+
+
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+
+    organization_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('organizations.id', name='fk_competitions_organization_id', ondelete='RESTRICT'), nullable=False)
+
+    name: Mapped[str] = mapped_column(sa.String(length=200), nullable=False)
+
+    kind: Mapped[Optional[str]] = mapped_column(sa.String(length=50), nullable=True)
+
+    team_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('teams.id', name='fk_competitions_team_id', ondelete='SET NULL'), nullable=True)
+
+    season: Mapped[Optional[str]] = mapped_column(sa.String(length=50), nullable=True)
+
+    modality: Mapped[Optional[str]] = mapped_column(sa.String(length=50), nullable=True, server_default=sa.text("'masculino'::character varying"))
+
+    competition_type: Mapped[Optional[str]] = mapped_column(sa.String(length=50), nullable=True)
+
+    format_details: Mapped[Optional[object]] = mapped_column(PG_JSONB(), nullable=True, server_default=sa.text("'{}'::jsonb"))
+
+    tiebreaker_criteria: Mapped[Optional[object]] = mapped_column(PG_JSONB(), nullable=True, server_default=sa.text('\'["pontos", "saldo_gols", "gols_pro", "confronto_direto"]\'::jsonb'))
+
+    points_per_win: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True, server_default=sa.text('2'))
+
+    status: Mapped[Optional[str]] = mapped_column(sa.String(length=50), nullable=True, server_default=sa.text("'draft'::character varying"))
+
+    current_phase_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('competition_phases.id', name='fk_competitions_current_phase_id', ondelete='SET NULL'), nullable=True)
+
+    regulation_file_url: Mapped[Optional[str]] = mapped_column(sa.String(length=500), nullable=True)
+
+    regulation_notes: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+
+    created_by: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('users.id', name='fk_competitions_created_by', ondelete='SET NULL'), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    deleted_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+
+    deleted_reason: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+
+    # HB-AUTOGEN:END
+    # Primary key
 
     # Organization scope
-    organization_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
-        ForeignKey("organizations.id"),
-        nullable=False,
-        index=True,
-    )
 
     # Core fields
-    name: Mapped[str] = mapped_column(
-        String(200),
-        nullable=False,
-        comment="Nome da competição",
-    )
 
-    kind: Mapped[Optional[str]] = mapped_column(
-        String(50),
-        nullable=True,
-        comment="Tipo legado: official, friendly, training-game",
-    )
 
     # V2: Nossa equipe participante
-    team_id: Mapped[Optional[str]] = mapped_column(
-        UUID(as_uuid=False),
-        ForeignKey("teams.id", ondelete="SET NULL"),
-        nullable=True,
-        index=True,
-        comment="Nossa equipe que participa desta competição",
-    )
 
     # V2: Temporada e modalidade
-    season: Mapped[Optional[str]] = mapped_column(
-        String(50),
-        nullable=True,
-        index=True,
-        comment="Temporada (ex: 2025, 2025/2026)",
-    )
 
-    modality: Mapped[Optional[str]] = mapped_column(
-        String(50),
-        nullable=True,
-        default="masculino",
-        comment="Modalidade: masculino, feminino, misto",
-    )
 
     # V2: Formato da competição
-    competition_type: Mapped[Optional[str]] = mapped_column(
-        String(50),
-        nullable=True,
-        comment="Tipo: turno_unico, turno_returno, grupos, grupos_mata_mata, mata_mata, triangular, quadrangular, custom",
-    )
 
-    format_details: Mapped[Optional[dict]] = mapped_column(
-        JSONB,
-        nullable=True,
-        default=dict,
-        server_default=text("'{}'::jsonb"),
-        comment="Detalhes do formato (num_grupos, classificados_por_grupo, etc.)",
-    )
 
     # V2: Critérios de desempate
-    tiebreaker_criteria: Mapped[Optional[list]] = mapped_column(
-        JSONB,
-        nullable=True,
-        default=lambda: ["pontos", "saldo_gols", "gols_pro", "confronto_direto"],
-        server_default=text("'[\"pontos\", \"saldo_gols\", \"gols_pro\", \"confronto_direto\"]'::jsonb"),
-        comment="Critérios de desempate em ordem de prioridade",
-    )
 
     # V2: Pontuação (padrão handebol: 2 pontos por vitória)
-    points_per_win: Mapped[Optional[int]] = mapped_column(
-        Integer,
-        nullable=True,
-        default=2,
-        server_default=text("2"),
-        comment="Pontos por vitória. Padrão handebol: 2. Algumas ligas usam 3.",
-    )
 
     # V2: Status
-    status: Mapped[Optional[str]] = mapped_column(
-        String(50),
-        nullable=True,
-        default="draft",
-        server_default=text("'draft'"),
-        index=True,
-        comment="Status: draft, active, finished, cancelled",
-    )
 
-    current_phase_id: Mapped[Optional[str]] = mapped_column(
-        UUID(as_uuid=False),
-        ForeignKey("competition_phases.id", ondelete="SET NULL", use_alter=True),
-        nullable=True,
-        comment="Fase atual da competição",
-    )
 
     # V2: Regulamento
-    regulation_file_url: Mapped[Optional[str]] = mapped_column(
-        String(500),
-        nullable=True,
-        comment="URL do arquivo de regulamento (PDF)",
-    )
 
-    regulation_notes: Mapped[Optional[str]] = mapped_column(
-        Text,
-        nullable=True,
-        comment="Anotações sobre o regulamento",
-    )
 
     # V2: Auditoria
-    created_by: Mapped[Optional[str]] = mapped_column(
-        UUID(as_uuid=False),
-        ForeignKey("users.id", ondelete="SET NULL"),
-        nullable=True,
-        comment="Usuário que criou",
-    )
 
     # Timestamps
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        default=datetime.utcnow,
-        server_default=text("now()"),
-        nullable=False,
-    )
 
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
-        server_default=text("now()"),
-        nullable=False,
-    )
 
     # V2: Soft delete
-    deleted_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(timezone=True),
-        nullable=True,
-        comment="Data de exclusão lógica",
-    )
 
-    deleted_reason: Mapped[Optional[str]] = mapped_column(
-        Text,
-        nullable=True,
-        comment="Motivo da exclusão",
-    )
 
     # Relationships
     organization: Mapped["Organization"] = relationship(
