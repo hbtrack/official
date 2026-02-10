@@ -466,11 +466,24 @@ def _remove_duplicate_column_definitions_impl(src: str) -> str:
 
     Removes:
     - Duplicate mapped_column() definitions outside HB-AUTOGEN
+    - Duplicate __table_args__ definitions outside HB-AUTOGEN (when autogen has one)
     """
     lines = src.split('\n')
     result_lines = []
     in_autogen_block = False
+    autogen_has_table_args = False
     i = 0
+
+    # First pass: detect if HB-AUTOGEN block contains __table_args__
+    temp_in_autogen = False
+    for line in lines:
+        if ('HB-AUTOGEN-IMPORTS:BEGIN' in line) or ('HB-AUTOGEN:BEGIN' in line):
+            temp_in_autogen = True
+        if ('HB-AUTOGEN-IMPORTS:END' in line) or ('HB-AUTOGEN:END' in line):
+            temp_in_autogen = False
+        if temp_in_autogen and re.match(r'^\s+__table_args__\s*=', line):
+            autogen_has_table_args = True
+            break
 
     while i < len(lines):
         line = lines[i]
@@ -517,6 +530,28 @@ def _remove_duplicate_column_definitions_impl(src: str) -> str:
 
             # Remove ALL duplicate column definitions outside HB-AUTOGEN
             # (including PKs - autogen will regenerate them inside the block)
+            i = j
+            continue
+
+        # Detect duplicate __table_args__ (outside HB-AUTOGEN, when autogen has one)
+        is_duplicate_table_args = (autogen_has_table_args and
+                                    re.match(r'^\s+__table_args__\s*=', line))
+
+        if is_duplicate_table_args:
+            # Collect ALL lines of this __table_args__ definition (count parens)
+            open_count = line.count('(')
+            close_count = line.count(')')
+
+            j = i + 1
+            while j < len(lines) and open_count > close_count:
+                open_count += lines[j].count('(')
+                close_count += lines[j].count(')')
+                j += 1
+
+            # Warning: duplicate __table_args__ found and removed
+            print(f"[WARN] duplicate __table_args__ found outside HB-AUTOGEN; removed to preserve autogen SSOT")
+
+            # Skip all lines of this duplicate definition
             i = j
             continue
 
