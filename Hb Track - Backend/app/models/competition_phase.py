@@ -18,6 +18,19 @@ Regras:
 - Cada fase pode ter configuração específica em config
 """
 
+# HB-AUTOGEN-IMPORTS:BEGIN
+from __future__ import annotations
+
+from datetime import date, datetime
+from typing import Optional
+from uuid import UUID
+
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+
 from datetime import datetime
 from typing import Optional, TYPE_CHECKING, List, Any
 from uuid import uuid4
@@ -46,6 +59,46 @@ class CompetitionPhase(Base):
 
     __tablename__ = "competition_phases"
 
+
+# HB-AUTOGEN:BEGIN
+
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+
+    # Table: public.competition_phases
+
+    __table_args__ = (
+
+        Index('ix_competition_phases_competition_id', 'competition_id', unique=False),
+
+        Index('ix_competition_phases_order', 'competition_id', 'order_index', unique=False),
+
+    )
+
+
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
+
+
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+
+    competition_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('competitions.id', name='fk_competition_phases_competition_id', ondelete='CASCADE'), nullable=False)
+
+    name: Mapped[str] = mapped_column(sa.String(length=100), nullable=False)
+
+    phase_type: Mapped[str] = mapped_column(sa.String(length=50), nullable=False)
+
+    order_index: Mapped[int] = mapped_column(sa.Integer(), nullable=False, server_default=sa.text('0'))
+
+    is_olympic_cross: Mapped[Optional[bool]] = mapped_column(sa.Boolean(), nullable=True, server_default=sa.text('false'))
+
+    config: Mapped[Optional[object]] = mapped_column(PG_JSONB(), nullable=True, server_default=sa.text("'{}'::jsonb"))
+
+    status: Mapped[Optional[str]] = mapped_column(sa.String(length=50), nullable=True, server_default=sa.text("'pending'::character varying"))
+
+    created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    # HB-AUTOGEN:END
     # Primary key
     id: Mapped[str] = mapped_column(
         UUID(as_uuid=False),
@@ -55,76 +108,19 @@ class CompetitionPhase(Base):
     )
 
     # Competition FK
-    competition_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
-        ForeignKey("competitions.id", ondelete="CASCADE"),
-        nullable=False,
-        index=True,
-    )
 
     # Core fields
-    name: Mapped[str] = mapped_column(
-        String(100),
-        nullable=False,
-        comment="Nome da fase (ex: 'Fase de Grupos', 'Semifinal')",
-    )
 
-    phase_type: Mapped[str] = mapped_column(
-        String(50),
-        nullable=False,
-        comment="Tipo: group, knockout, round_robin, semifinal, final, third_place, quarterfinal, round_of_16, custom",
-    )
 
-    order_index: Mapped[int] = mapped_column(
-        Integer,
-        nullable=False,
-        default=0,
-        server_default=text("0"),
-        comment="Ordem da fase na competição",
-    )
 
     # Cruzamento olímpico
-    is_olympic_cross: Mapped[bool] = mapped_column(
-        Boolean,
-        nullable=True,
-        default=False,
-        server_default=text("false"),
-        comment="Se é cruzamento olímpico (1ºA x 2ºB)",
-    )
 
     # Configuração específica da fase
-    config: Mapped[Optional[dict]] = mapped_column(
-        JSONB,
-        nullable=True,
-        default=dict,
-        server_default=text("'{}'::jsonb"),
-        comment="Configuração específica da fase",
-    )
 
     # Status
-    status: Mapped[str] = mapped_column(
-        String(50),
-        nullable=True,
-        default="pending",
-        server_default=text("'pending'"),
-        comment="Status: pending, in_progress, finished",
-    )
 
     # Timestamps
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        default=datetime.utcnow,
-        server_default=text("now()"),
-        nullable=True,
-    )
 
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
-        server_default=text("now()"),
-        nullable=True,
-    )
 
     # Relationships
     competition: Mapped["Competition"] = relationship(
