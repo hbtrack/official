@@ -523,8 +523,8 @@
       "size": 3289
     },
     "app\\models\\data_retention_log.py": {
-      "sha256": "e480bb477910f6e1fb449e548588578e57f6685c7c7cd3109601cd68128dae4a",
-      "size": 1277
+      "sha256": "72eb929e56398ff0fd37da85c43077901e1f70aa256ef5e0c77860f5cf2633cb",
+      "size": 2110
     },
     "app\\models\\defensive_position.py": {
       "sha256": "e6cf06ecb3a7fd924235de2ba60e177466d60114366cfe1ebce4481c139c24cc",
