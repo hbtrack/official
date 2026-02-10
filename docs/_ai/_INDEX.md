@@ -1,7 +1,7 @@
 # AI Agent Documentation Index (Canônico)
 
 > **Autoridade**: este arquivo é o mapa central para agents (humanos ou IA) no monorepo HB Track.
-> Todos os paths são relativos à raiz do monorepo (`C:\HB TRACK\`).
+> Todos os paths são absolutos (começam com `C:/HB TRACK/docs/` ou `C:/HB TRACK/Hb Track - Backend/`).
 > Se um path não existir no disco, o documento NÃO deve ser referenciado — marcar PENDENTE.
 
 ---
@@ -13,11 +13,11 @@ Mirrors existem em `docs/_generated/`, mas a **fonte primária** é o backend.
 
 | Artefato | Path canônico | Descrição |
 |----------|---------------|-----------|
-| OpenAPI | `Hb Track - Backend/docs/_generated/openapi.json` | Especificação OpenAPI 3.1 da API FastAPI (operationIds, schemas, paths) |
-| Schema SQL | `Hb Track - Backend/docs/_generated/schema.sql` | DDL PostgreSQL completo (tabelas, constraints, enums, COMMENT ON COLUMN) |
-| Alembic State | `Hb Track - Backend/docs/_generated/alembic_state.txt` | Estado atual das migrations (head + versão corrente) |
-| Manifest | `Hb Track - Backend/docs/_generated/manifest.json` | Rastreabilidade: git commit, checksums, timestamps dos artefatos |
-| Parity Report | `Hb Track - Backend/docs/_generated/parity_report.json` | Relatório de paridade model↔schema (scan automático) |
+| OpenAPI | `C:/HB TRACK/Hb Track - Backend/docs/_generated/openapi.json` | Especificação OpenAPI 3.1 da API FastAPI (operationIds, schemas, paths) |
+| Schema SQL | `C:/HB TRACK/Hb Track - Backend/docs/_generated/schema.sql` | DDL PostgreSQL completo (tabelas, constraints, enums, COMMENT ON COLUMN) |
+| Alembic State | `C:/HB TRACK/Hb Track - Backend/docs/_generated/alembic_state.txt` | Estado atual das migrations (head + versão corrente) |
+| Manifest | `C:/HB TRACK/Hb Track - Backend/docs/_generated/manifest.json` | Rastreabilidade: git commit, checksums, timestamps dos artefatos |
+| Parity Report | `C:/HB TRACK/Hb Track - Backend/docs/_generated/parity_report.json` | Relatório de paridade model↔schema (scan automático) |
 
 **Comando para atualizar SSOT** (executar na raiz do monorepo):
 ```powershell
@@ -30,29 +30,29 @@ Mirrors existem em `docs/_generated/`, mas a **fonte primária** é o backend.
 
 | Documento | Path | Descrição |
 |-----------|------|-----------|
-| PRD | `docs/00_product/PRD_HB_TRACK.md` | PRD v2.1 — Requisitos do produto, user stories, MoSCoW, SLAs, modelo de negócio |
-| PRD Review | `docs/00_product/PRD_REVIEW.md` | Revisão técnica do PRD — score card, lacunas, oportunidades de melhoria |
-| Análise de Coerência | `docs/00_product/analise_coerencia_documentacao.md` | Análise de coerência PRD↔TRD↔INVARIANTS (escopo Training) |
+| PRD | `C:/HB TRACK/docs/00_product/PRD_HB_TRACK.md` | PRD v2.1 — Requisitos do produto, user stories, MoSCoW, SLAs, modelo de negócio |
+| PRD Review | `C:/HB TRACK/docs/00_product/PRD_REVIEW.md` | Revisão técnica do PRD — score card, lacunas, oportunidades de melhoria |
+| Análise de Coerência | `C:/HB TRACK/docs/00_product/analise_coerencia_documentacao.md` | Análise de coerência PRD↔TRD↔INVARIANTS (escopo Training) |
 
 ---
 
 ## 3. Hierarquia Documental
 
 ```
-docs/00_product/PRD_HB_TRACK.md                              (SSOT — requisitos do produto, v2.1)
-├── docs/02_modulos/training/PRD_BASELINE_ASIS_TRAINING.md  (estado implementado, v1.2)
-│   ├── docs/02_modulos/training/TRD_TRAINING.md            (referência técnica, v1.6)
-│   │   ├── docs/02_modulos/training/INVARIANTS_TRAINING.md (invariantes confirmadas/pretendidas/inativas)
-│   │   └── docs/02_modulos/training/INVARIANTS_TESTING_CANON.md (protocolo canônico de testes)
-│   └── docs/02_modulos/training/UAT_PLAN_TRAINING.md       (25 cenários de aceitação, v1.0)
-├── docs/00_product/analise_coerencia_documentacao.md         (análise de coerência documental)
-└── docs/00_product/PRD_REVIEW.md                             (revisão técnica e recomendações)
+C:/HB TRACK/docs/00_product/PRD_HB_TRACK.md                                      (SSOT — requisitos do produto, v2.1)
+├── C:/HB TRACK/docs/02_modulos/training/PRD_BASELINE_ASIS_TRAINING.md           (estado implementado, v1.2)
+│   ├── C:/HB TRACK/docs/02_modulos/training/TRD_TRAINING.md                     (referência técnica, v1.6)
+│   │   ├── C:/HB TRACK/docs/02_modulos/training/INVARIANTS_TRAINING.md          (invariantes confirmadas/pretendidas/inativas)
+│   │   └── C:/HB TRACK/docs/02_modulos/training/INVARIANTS_TESTING_CANON.md    (protocolo canônico de testes)
+│   └── C:/HB TRACK/docs/02_modulos/training/UAT_PLAN_TRAINING.md               (25 cenários de aceitação, v1.0)
+├── C:/HB TRACK/docs/00_product/analise_coerencia_documentacao.md                (análise de coerência documental)
+└── C:/HB TRACK/docs/00_product/PRD_REVIEW.md                                    (revisão técnica e recomendações)
 
 Artefatos gerados (fontes canônicas):
-  Hb Track - Backend/docs/_generated/openapi.json
-  Hb Track - Backend/docs/_generated/schema.sql
-  Hb Track - Backend/docs/_generated/alembic_state.txt
-  Hb Track - Backend/docs/_generated/manifest.json
+  C:/HB TRACK/Hb Track - Backend/docs/_generated/openapi.json
+  C:/HB TRACK/Hb Track - Backend/docs/_generated/schema.sql
+  C:/HB TRACK/Hb Track - Backend/docs/_generated/alembic_state.txt
+  C:/HB TRACK/Hb Track - Backend/docs/_generated/manifest.json
 ```
 
 ---
@@ -61,26 +61,26 @@ Artefatos gerados (fontes canônicas):
 
 | Documento | Path | Descrição |
 |-----------|------|-----------|
-| Index (este arquivo) | `docs/_ai/_INDEX.md` | Mapa canônico de toda a documentação relevante para agents |
-| Agent Protocol | `docs/_ai/INVARIANTS_AGENT_PROTOCOL.md` | Protocolo local-first — SSOT refresh, validação, workflow obrigatório |
-| Agent Guardrails | `docs/_ai/INVARIANTS_AGENT_GUARDRAILS.md` | Guardrails anti-alucinação — fontes canônicas, gates, regras de parada |
-| Task Template | `docs/_ai/INV_TASK_TEMPLATE.md` | Template para instalar 1 invariante com zero alucinação |
-| System Design | `docs/_ai/SYSTEM_DESIGN.md` | Arquitetura unificada do backend (stack, camadas, padrões, convenções) |
-| Exec Protocol | `docs/_ai/EXEC_PROTOCOL.md` | *(PENDENTE — conteúdo vazio, aguardando preenchimento)* |
+| Index (este arquivo) | `C:/HB TRACK/docs/_ai/_INDEX.md` | Mapa canônico de toda a documentação relevante para agents |
+| Agent Protocol | `C:/HB TRACK/docs/_ai/INVARIANTS_AGENT_PROTOCOL.md` | Protocolo local-first — SSOT refresh, validação, workflow obrigatório |
+| Agent Guardrails | `C:/HB TRACK/docs/_ai/INVARIANTS_AGENT_GUARDRAILS.md` | Guardrails anti-alucinação — fontes canônicas, gates, regras de parada |
+| Task Template | `C:/HB TRACK/docs/_ai/INV_TASK_TEMPLATE.md` | Template para instalar 1 invariante com zero alucinação |
+| System Design | `C:/HB TRACK/docs/_ai/SYSTEM_DESIGN.md` | Arquitetura unificada do backend (stack, camadas, padrões, convenções) |
+| Exec Protocol | `C:/HB TRACK/docs/_ai/EXEC_PROTOCOL.md` | *(PENDENTE — conteúdo vazio, aguardando preenchimento)* |
 
 ---
 
-## 5. Governança AI — Backend (`Hb Track - Backend/docs/_ai/`)
+## 5. Governança AI — Backend (`C:/HB TRACK/Hb Track - Backend/docs/_ai/`)
 
 | Documento | Path | Descrição |
-|-----------|------|-----------|
-| Canon | `Hb Track - Backend/docs/_ai/CANON.md` | Fontes de verdade, stack, invariantes — filosofia retrieve-then-reason |
-| Router | `Hb Track - Backend/docs/_ai/ROUTER.md` | Classificação de tarefas (bugfix/endpoint/refactor) e sequência de recuperação de contexto |
-| Checks | `Hb Track - Backend/docs/_ai/CHECKS.md` | Verificação objetiva local (lint, test, type-check, migration) |
-| System Design | `Hb Track - Backend/docs/_ai/SYSTEM_DESIGN.md` | Arquitetura e padrões do backend (FastAPI, SQLAlchemy 2.0, Pydantic v2) |
-| Playbook Bugfix | `Hb Track - Backend/docs/_ai/PLAYBOOK_bugfix.md` | Playbook para bugfixes |
-| Playbook Endpoint | `Hb Track - Backend/docs/_ai/PLAYBOOK_endpoint.md` | Playbook para criação de novos endpoints |
-| Playbook Refactor | `Hb Track - Backend/docs/_ai/PLAYBOOK_refactor.md` | Playbook para refactoring |
+|-----------|------|----------|
+| Canon | `C:/HB TRACK/Hb Track - Backend/docs/_ai/CANON.md` | Fontes de verdade, stack, invariantes — filosofia retrieve-then-reason |
+| Router | `C:/HB TRACK/Hb Track - Backend/docs/_ai/ROUTER.md` | Classificação de tarefas (bugfix/endpoint/refactor) e sequência de recuperação de contexto |
+| Checks | `C:/HB TRACK/Hb Track - Backend/docs/_ai/CHECKS.md` | Verificação objetiva local (lint, test, type-check, migration) |
+| System Design | `C:/HB TRACK/Hb Track - Backend/docs/_ai/SYSTEM_DESIGN.md` | Arquitetura e padrões do backend (FastAPI, SQLAlchemy 2.0, Pydantic v2) |
+| Playbook Bugfix | `C:/HB TRACK/Hb Track - Backend/docs/_ai/PLAYBOOK_bugfix.md` | Playbook para bugfixes |
+| Playbook Endpoint | `C:/HB TRACK/Hb Track - Backend/docs/_ai/PLAYBOOK_endpoint.md` | Playbook para criação de novos endpoints |
+| Playbook Refactor | `C:/HB TRACK/Hb Track - Backend/docs/_ai/PLAYBOOK_refactor.md` | Playbook para refactoring |
 
 ---
 
@@ -100,18 +100,18 @@ Artefatos gerados (fontes canônicas):
 
 | Documento | Path | Descrição |
 |-----------|------|-----------|
-| Anchor Map | `C:/HB TRACK/docs/02_modulos/training/ANCHOR_MAP.md` | Mapa de âncoras: fluxos UI → operationIds → tabelas/colunas → invariantes |
-| Candidates | `C:/HB TRACK/docs/02_modulos/training/training_invariants_candidates.md` | Worklist de promoção — candidatas a invariantes |
-| Backlog | `C:/HB TRACK/docs/02_modulos/training/training_invariants_backlog.md` | Backlog de invariantes pendentes de análise |
-| Parity Scan Protocol | `C:/HB TRACK/docs/02_modulos/training/PARITY_SCAN._PROTOCOL.md` | Protocolo de verificação de paridade model↔schema |
-| Canon AS-IS | `C:/HB TRACK/docs/02_modulos/training/_CANON_AS_IS.md` | Estado canônico atual do módulo |
-| Validação de Testes | `C:/HB TRACK/docs/02_modulos/training/VALIDAR_INVARIANTS_TESTS.md` | Checklist de validação dos testes de invariantes |
+| Anchor Map | `C:/HB TRACK/docs/02_modulos/training/ANCHOR_MAP.md` | *(PENDENTE — arquivo não encontrado)* |
+| Candidates | `C:/HB TRACK/docs/02_modulos/training/INVARIANTS/training_invariants_candidates.md` | Worklist de promoção — candidatas a invariantes |
+| Backlog | `C:/HB TRACK/docs/02_modulos/training/INVARIANTS/training_invariants_backlog.md` | Backlog de invariantes pendentes de análise |
+| Parity Scan Protocol | `C:/HB TRACK/docs/02_modulos/training/PROTOCOLS/PARITY_SCAN._PROTOCOL.md` | Protocolo de verificação de paridade model↔schema |
+| Canon AS-IS | `C:/HB TRACK/docs/02_modulos/training/_CANON_AS_IS.md` | *(PENDENTE — arquivo não encontrado)* |
+| Validação de Testes | `C:/HB TRACK/docs/02_modulos/training/INVARIANTS/VALIDAR_INVARIANTS_TESTS.md` | Checklist de validação dos testes de invariantes |
 
 ---
 
 ## 8. Comandos de Validação
 
-Todos os comandos abaixo devem ser executados a partir da **raiz do monorepo** (`C:\HB TRACK\`):
+| Todos os comandos abaixo devem ser executados a partir da **raiz do monorepo** (`C:/HB TRACK`):|
 
 | Comando | Finalidade |
 |---------|-----------|
