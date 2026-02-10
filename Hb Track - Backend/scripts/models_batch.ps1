@@ -156,11 +156,10 @@ function Find-ModelFile([string]$TableName) {
   $modelsDir = "app/models"
   if (-not (Test-Path $modelsDir)) { return $null }
   
-  $tableName = [regex]::Escape($TableName)
   foreach ($modelFile in Get-ChildItem "$modelsDir/*.py" -ErrorAction SilentlyContinue) {
     $content = Get-Content $modelFile -Raw -ErrorAction SilentlyContinue
-    $pattern = "__tablename__\s*=\s*['\"]$tableName['\"]"
-    if ($content -match $pattern) {
+    # Procurar por __tablename__ = 'tablename' ou __tablename__ = "tablename"
+    if (($content -like "*__tablename__ = '$TableName'*") -or ($content -like "*__tablename__ = `"$TableName`"*")) {
       return $modelFile.FullName
     }
   }
