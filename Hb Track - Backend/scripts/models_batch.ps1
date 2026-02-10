@@ -166,12 +166,10 @@ function Restore-GeneratedArtifacts {
 }
 
 function Run-Requirements([string]$TableName, [string]$Profile, [string]$LogPath) {
-  $py = ".\venv\Scripts\python.exe"
-
   Write-Host "`n[REQ] $TableName (profile=$Profile)" -ForegroundColor Cyan
   Add-Content -Path $LogPath -Value "`n[REQ] $TableName (profile=$Profile)`n"
 
-  $output = & $py scripts\model_requirements.py --table $TableName --profile $Profile 2>&1
+  $output = & ".\venv\Scripts\python.exe" scripts\model_requirements.py --table $TableName --profile $Profile 2>&1
   $output | Tee-Object -Append -FilePath $LogPath | Out-Null
   
   $ec = $LASTEXITCODE
