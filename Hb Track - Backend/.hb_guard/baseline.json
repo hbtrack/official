@@ -495,8 +495,8 @@
       "size": 3260
     },
     "app\\models\\competition.py": {
-      "sha256": "fdaa6c39abf3bbe14ec3625126a8819ffcaf0714610f77ebcebbf27b5f3eb813",
-      "size": 9068
+      "sha256": "19f0919fea6c6d7b8094328f23a13032a0263018b4c1eb7b951b3d3570a68118",
+      "size": 8752
     },
     "app\\models\\competition_match.py": {
       "sha256": "401a46a8c1e38c8879e1c0beb361e536e465e09bebb688cdb451ab8cd82aa0b5",
@@ -607,8 +607,8 @@
       "size": 1580
     },
     "app\\models\\person.py": {
-      "sha256": "d0d01457cb75e3703b0007e897b7dee0e001c838b40cb4e8edd9be770d2ea275",
-      "size": 15469
+      "sha256": "ed3319385ba1ebe022342edbb402cd2d261f06ba57b689976a309326fa025a73",
+      "size": 11513
     },
     "app\\models\\role.py": {
       "sha256": "2dede7f0227de7860028379b227a424d46bdbde6dfdcf89046e56dce7915d2a2",
