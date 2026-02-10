@@ -50,7 +50,11 @@ try {
 
   # Configuração de Paths (use env vars if set, else default)
   $generatedDirName = if ($env:HB_DOCS_GENERATED_DIR) { $env:HB_DOCS_GENERATED_DIR } else { "_generated" }
-  $backendOut = Join-Path $RepoRoot "docs" $generatedDirName
+  Write-Host "[DEBUG] generatedDirName=$generatedDirName" -ForegroundColor Magenta
+  # Join-Path com 3 argumentos causa problemas em PS5.1 - usar nested Join-Path
+  $docsDir = Join-Path $RepoRoot "docs"
+  $backendOut = Join-Path $docsDir $generatedDirName
+  Write-Host "[DEBUG] backendOut=$backendOut" -ForegroundColor Magenta
   $logPathBackend = Join-Path $backendOut "parity-scan.log"
   $reportPathBackend = Join-Path $backendOut "parity_report.json"
 
@@ -59,24 +63,14 @@ try {
 
   # Executa Alembic via módulo python para evitar erros de PATH do binário alembic
   # Importante: Alembic pode escrever INFO/WARN no stderr.
-  # Usamos Start-Process com redirecionamento para evitar NativeCommandError espúrio.
+  # Usamos call operator & com redirecionamento para compatibilidade PS5.1
   Write-Host "Executando Alembic..." -ForegroundColor Yellow
 
-  $alembicArgs = @("-m", "alembic", "revision", "--autogenerate", "-m", $Message)
-  $logPathBackendErr = Join-Path $backendOut "parity-scan.stderr.log"
   if (Test-Path $logPathBackend) { Remove-Item $logPathBackend -Force }
-  if (Test-Path $logPathBackendErr) { Remove-Item $logPathBackendErr -Force }
-
-  $proc = Start-Process -FilePath $pythonExe -ArgumentList $alembicArgs -NoNewWindow -Wait -PassThru -RedirectStandardOutput $logPathBackend -RedirectStandardError $logPathBackendErr
-  $alembicExit = $proc.ExitCode
-
-  if (Test-Path $logPathBackendErr) {
-    $stderrLines = Get-Content $logPathBackendErr
-    if ($stderrLines) {
-      Add-Content -Path $logPathBackend -Value $stderrLines
-      $stderrLines | ForEach-Object { Write-Host $_ }
-    }
-  }
+  
+  # Executar alembic e capturar output (stderr vai para $logPathBackend junto com stdout)
+  & $pythonExe -m alembic revision --autogenerate -m $Message *>&1 | Tee-Object -FilePath $logPathBackend | Out-Null
+  $alembicExit = $LASTEXITCODE
 
   if ($alembicExit -ne 0) { throw "alembic revision falhou (exit $alembicExit)" }
 
