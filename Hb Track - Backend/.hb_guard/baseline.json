@@ -499,8 +499,8 @@
       "size": 9068
     },
     "app\\models\\competition_match.py": {
-      "sha256": "a25bd4e840e41b71d9748bc51c27b168c15b2053b67b3cebd29d3a625ab8d83d",
-      "size": 8465
+      "sha256": "ea0fdd339f16499a5740d4e531a96f7da6d591d35cc70053ddd5cb58083d6daf",
+      "size": 12670
     },
     "app\\models\\competition_opponent_team.py": {
       "sha256": "9f03d816bb19cf1490a0722b555c45128fce9efea9936c2bfd43f31ee359f6a3",
@@ -1703,8 +1703,8 @@
       "size": 4010
     },
     "scripts\\parity_scan.ps1": {
-      "sha256": "ec1b23ae6945a2a89c8ae1c0b38c70ef1ac176efd4347ce408a17bda65d7160f",
-      "size": 4653
+      "sha256": "1e5259810a6140737b11fa2454b15b6929f611c6b56d629f73aec59403d214be",
+      "size": 4676
     },
     "scripts\\process_email_queue.py": {
       "sha256": "48283e4f5f732932705359a082fcddde32a4d2dae514e30c019c2ec118aeda4f",
