@@ -435,6 +435,13 @@ def find_class_span_for_tablename(src: str, table: str) -> tuple[int, int, str]:
     m_next = re.search(r'(?m)^class\s+\w+.*?:\s*$', after)
     class_end = (class_start + 1 + m_next.start()) if m_next else len(src)
 
+    # Sanity check: class_end must be after __tablename__
+    if class_end <= tablename_pos:
+        raise SystemExit(
+            f"[ERROR] class_end ({class_end}) <= tablename_pos ({tablename_pos}). "
+            f"Possible false positive in class boundary detection."
+        )
+
     return (class_start, class_end, base_indent)
 
 
