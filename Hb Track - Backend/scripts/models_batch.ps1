@@ -156,9 +156,11 @@ function Find-ModelFile([string]$TableName) {
   $modelsDir = "app/models"
   if (-not (Test-Path $modelsDir)) { return $null }
   
+  $tableName = [regex]::Escape($TableName)
   foreach ($modelFile in Get-ChildItem "$modelsDir/*.py" -ErrorAction SilentlyContinue) {
     $content = Get-Content $modelFile -Raw -ErrorAction SilentlyContinue
-    if ($content -match "__tablename__\s*=\s*['\"]$([regex]::Escape($TableName))['\"]") {
+    $pattern = "__tablename__\s*=\s*['\"]$tableName['\"]"
+    if ($content -match $pattern) {
       return $modelFile.FullName
     }
   }
