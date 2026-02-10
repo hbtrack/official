@@ -430,10 +430,10 @@ def find_class_span_for_tablename(src: str, table: str) -> tuple[int, int, str]:
 
     class_start = class_matches[-1].start()
 
-    # Find end: next line at indent 0 or EOF
-    after = src[tablename_pos:]
-    end_match = re.search(r'\n(?=^[^\s#])', after, re.MULTILINE)
-    class_end = tablename_pos + end_match.start() if end_match else len(src)
+    # Find end: next top-level class or EOF
+    after = src[class_start+1:]
+    m_next = re.search(r'(?m)^class\s+\w+.*?:\s*$', after)
+    class_end = (class_start + 1 + m_next.start()) if m_next else len(src)
 
     return (class_start, class_end, base_indent)
 
@@ -563,8 +563,11 @@ def _patch_class_body(src: str, table: str, new_block: str) -> str:
     # Reconstruct source with updated class
     src = src[:class_start] + class_body + src[class_end:]
 
-    # Remove duplicate column definitions ONLY within target class
-    src = remove_duplicate_columns_in_span(src, class_start, class_start + len(class_body))
+    # Recalculate span after reconstruction (class boundaries may have shifted)
+    class_start2, class_end2, _ = find_class_span_for_tablename(src, table)
+
+    # Remove duplicate column definitions ONLY within target class (updated span)
+    src = remove_duplicate_columns_in_span(src, class_start2, class_end2)
 
     return src
 
