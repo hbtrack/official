@@ -42,7 +42,6 @@ from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
 # HB-AUTOGEN-IMPORTS:END
-
 from datetime import datetime, date, time
 from typing import Optional, TYPE_CHECKING
 from uuid import uuid4
@@ -147,171 +146,44 @@ class CompetitionMatch(Base):
 
     # HB-AUTOGEN:END
     # Primary key
-    id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
-        primary_key=True,
-        default=lambda: str(uuid4()),
-        server_default=text("gen_random_uuid()"),
-    )
 
     # Competition FK
-    competition_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
-        ForeignKey("competitions.id", ondelete="CASCADE"),
-        nullable=False,
-        index=True,
-    )
 
     # Phase FK
-    phase_id: Mapped[Optional[str]] = mapped_column(
-        UUID(as_uuid=False),
-        ForeignKey("competition_phases.id", ondelete="SET NULL"),
-        nullable=True,
-        index=True,
-    )
 
     # External reference (para upsert - evita duplicação ao reimportar PDF)
-    external_reference_id: Mapped[Optional[str]] = mapped_column(
-        String(100),
-        nullable=True,
-        comment="ID externo para upsert (evita duplicação ao reimportar)",
-    )
 
     # Teams
-    home_team_id: Mapped[Optional[str]] = mapped_column(
-        UUID(as_uuid=False),
-        ForeignKey("competition_opponent_teams.id", ondelete="SET NULL"),
-        nullable=True,
-    )
 
-    away_team_id: Mapped[Optional[str]] = mapped_column(
-        UUID(as_uuid=False),
-        ForeignKey("competition_opponent_teams.id", ondelete="SET NULL"),
-        nullable=True,
-    )
 
     # Flags para identificar nossos jogos
-    is_our_match: Mapped[bool] = mapped_column(
-        Boolean,
-        nullable=True,
-        default=False,
-        server_default=text("false"),
-        index=True,
-        comment="Se é jogo da nossa equipe",
-    )
 
-    our_team_is_home: Mapped[Optional[bool]] = mapped_column(
-        Boolean,
-        nullable=True,
-        comment="Se nossa equipe é mandante",
-    )
 
     # Vínculo com tabela matches (para detalhes do jogo)
-    linked_match_id: Mapped[Optional[str]] = mapped_column(
-        UUID(as_uuid=False),
-        ForeignKey("matches.id", ondelete="SET NULL"),
-        nullable=True,
-        index=True,
-        comment="Vínculo com tabela matches para detalhes",
-    )
 
     # Data e local
-    match_date: Mapped[Optional[date]] = mapped_column(
-        Date,
-        nullable=True,
-        index=True,
-    )
 
-    match_time: Mapped[Optional[time]] = mapped_column(
-        Time,
-        nullable=True,
-    )
 
-    match_datetime: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(timezone=True),
-        nullable=True,
-    )
 
-    location: Mapped[Optional[str]] = mapped_column(
-        String(255),
-        nullable=True,
-    )
 
     # Rodada
-    round_number: Mapped[Optional[int]] = mapped_column(
-        Integer,
-        nullable=True,
-    )
 
-    round_name: Mapped[Optional[str]] = mapped_column(
-        String(100),
-        nullable=True,
-    )
 
     # Resultado
-    home_score: Mapped[Optional[int]] = mapped_column(
-        Integer,
-        nullable=True,
-    )
 
-    away_score: Mapped[Optional[int]] = mapped_column(
-        Integer,
-        nullable=True,
-    )
 
     # Prorrogação
-    home_score_extra: Mapped[Optional[int]] = mapped_column(
-        Integer,
-        nullable=True,
-    )
 
-    away_score_extra: Mapped[Optional[int]] = mapped_column(
-        Integer,
-        nullable=True,
-    )
 
     # Pênaltis
-    home_score_penalties: Mapped[Optional[int]] = mapped_column(
-        Integer,
-        nullable=True,
-    )
 
-    away_score_penalties: Mapped[Optional[int]] = mapped_column(
-        Integer,
-        nullable=True,
-    )
 
     # Status
-    status: Mapped[str] = mapped_column(
-        String(50),
-        nullable=True,
-        default="scheduled",
-        server_default=text("'scheduled'"),
-        index=True,
-        comment="Status: scheduled, in_progress, finished, postponed, cancelled",
-    )
 
     # Observações
-    notes: Mapped[Optional[str]] = mapped_column(
-        Text,
-        nullable=True,
-    )
 
     # Timestamps
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        default=datetime.utcnow,
-        server_default=text("now()"),
-        nullable=True,
-    )
 
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
-        server_default=text("now()"),
-        nullable=True,
-    )
 
     # Relationships
     competition: Mapped["Competition"] = relationship(

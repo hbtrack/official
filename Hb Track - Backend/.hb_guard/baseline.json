@@ -499,8 +499,8 @@
       "size": 9068
     },
     "app\\models\\competition_match.py": {
-      "sha256": "ea0fdd339f16499a5740d4e531a96f7da6d591d35cc70053ddd5cb58083d6daf",
-      "size": 12670
+      "sha256": "401a46a8c1e38c8879e1c0beb361e536e465e09bebb688cdb451ab8cd82aa0b5",
+      "size": 8719
     },
     "app\\models\\competition_opponent_team.py": {
       "sha256": "9f03d816bb19cf1490a0722b555c45128fce9efea9936c2bfd43f31ee359f6a3",
@@ -1579,8 +1579,8 @@
       "size": 4567
     },
     "scripts\\autogen_model_from_db.py": {
-      "sha256": "bf0c8aa89ec0fb8bae4795e2ec3823fc657e08504517011b68d72a5c79c80d8f",
-      "size": 20983
+      "sha256": "38413213412ace144ca61bb691a2f244c3e5c8bbd2c4695b6a88581b92dc0b72",
+      "size": 23124
     },
     "scripts\\check_and_fix_matches.sql": {
       "sha256": "06505dfb81cf1fcee77c8f3ef86a5fd1c7facb13b609538ca9a55716cb92cbb3",
