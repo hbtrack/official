@@ -11,17 +11,16 @@ Objetivo: instalar 1 invariante de training com rastreabilidade total. Não infe
 
 ## Leia Primeiro
 
-- [AI INDEX](../../docs/_ai/_INDEX.md)
-- [AGENT PROTOCOL](../../docs/_ai/INVARIANTS_AGENT_PROTOCOL.md)
-- [AGENT GUARDRAILS](../../docs/_ai/INVARIANTS_AGENT_GUARDRAILS.md)
-- SSOT catálogo: [INVARIANTS_TRAINING](../../docs/02_modulos/training/INVARIANTS/INVARIANTS_TRAINING.md)
-- Testes canônicos: [INVARIANTS_TESTING_CANON](../../docs/02_modulos/training/INVARIANTS/INVARIANTS_TESTING_CANON.md)
-- Backlog/candidates: [candidates](../../docs/02_modulos/training/INVARIANTS/training_invariants_candidates.md) e [backlog](../../docs/02_modulos/training/INVARIANTS/training_invariants_backlog.md)
+- [AI INDEX](../../../docs/_ai/_INDEX.md)
+- [AGENT PROTOCOL](../../../docs/_ai/INVARIANTS_AGENT_PROTOCOL.md)
+- [AGENT GUARDRAILS](../../../docs/_ai/INVARIANTS_AGENT_GUARDRAILS.md)
+- SSOT catálogo: [INVARIANTS_TRAINING](../../../docs/02_modulos/training/INVARIANTS/INVARIANTS_TRAINING.md)
+- Testes canônicos: [INVARIANTS_TESTING_CANON](../../../docs/02_modulos/training/INVARIANTS/INVARIANTS_TESTING_CANON.md)
+- Backlog/candidates: [candidates](../../../docs/02_modulos/training/INVARIANTS/training_invariants_candidates.md) e [backlog](../../../docs/02_modulos/training/INVARIANTS/training_invariants_backlog.md)
 
 ## Evidência/Artefatos
 
-- status gerado: `docs/_generated/training_invariants_status.md` (se existir)
-- verificador: `docs/scripts/verify_invariants_tests.py`
+- verificador: [verify_invariants_tests.py](../../../docs/scripts/verify_invariants_tests.py)
 - logs/relatórios relevantes em `docs/_generated/_core/`
 
 ## Tarefa

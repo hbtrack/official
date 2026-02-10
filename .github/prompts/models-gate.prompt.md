@@ -11,10 +11,10 @@ Objetivo: executar ou guiar execução do gate Model↔DB e produzir decisão ob
 
 ## Autoridade e Guias
 
-- [MODELS PIPELINE](../../docs/_canon/05_MODELS_PIPELINE.md)
-- [APPROVED COMMANDS](../../docs/_canon/08_APPROVED_COMMANDS.md)
-- [TROUBLESHOOTING parity/guard](../../docs/_canon/09_TROUBLESHOOTING_GUARD_PARITY.md)
-- ADR: [013-ADR-MODELS](../../docs/ADR/013-ADR-MODELS.md)
+- [MODELS PIPELINE](../../../docs/_canon/05_MODELS_PIPELINE.md)
+- [APPROVED COMMANDS](../../../docs/_canon/08_APPROVED_COMMANDS.md)
+- [TROUBLESHOOTING parity/guard](../../../docs/_canon/09_TROUBLESHOOTING_GUARD_PARITY.md)
+- ADR: [013-ADR-MODELS](../../../docs/ADR/013-ADR-MODELS.md)
 
 ## Evidência Atual
 
@@ -34,4 +34,4 @@ Objetivo: executar ou guiar execução do gate Model↔DB e produzir decisão ob
 2) **Próxima ação recomendada** — com arquivos e diffs esperados
 3) **Comandos aprovados para validar** — e critério "pronto suficiente"
 
-**Regra:** Não inventar comandos. Se um comando não estiver em `APPROVED_COMMANDS`, marque como PENDENTE e diga onde adicionar (`docs/_canon/08`).
+**Regra:** Não inventar comandos. Se um comando não estiver em [APPROVED_COMMANDS](../../../docs/_canon/08_APPROVED_COMMANDS.md), marque como PENDENTE e diga onde adicionar.

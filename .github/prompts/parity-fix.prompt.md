@@ -11,17 +11,17 @@ Objetivo: reduzir divergências estruturais Model↔DB com base em evidência do
 
 ## Contexto Canônico (Leia/Consulte)
 
-- [START HERE](../../docs/_canon/00_START_HERE.md)
-- [AUTHORITY/SSOT](../../docs/_canon/01_AUTHORITY_SSOT.md)
-- [MODELS PIPELINE](../../docs/_canon/05_MODELS_PIPELINE.md)
-- [TROUBLESHOOTING parity/guard](../../docs/_canon/09_TROUBLESHOOTING_GUARD_PARITY.md)
-- ADR: [013-ADR-MODELS](../../docs/ADR/013-ADR-MODELS.md)
+- [START HERE](../../../docs/_canon/00_START_HERE.md)
+- [AUTHORITY/SSOT](../../../docs/_canon/01_AUTHORITY_SSOT.md)
+- [MODELS PIPELINE](../../../docs/_canon/05_MODELS_PIPELINE.md)
+- [TROUBLESHOOTING parity/guard](../../../docs/_canon/09_TROUBLESHOOTING_GUARD_PARITY.md)
+- ADR: [013-ADR-MODELS](../../../docs/ADR/013-ADR-MODELS.md)
 
 ## Evidência Obrigatória (Use Sempre)
 
-- parity report: `docs/_generated/_core/parity_report.json`
-- schema: `docs/_generated/_core/schema.sql`
-- alembic state: `docs/_generated/_core/alembic_state.txt`
+- parity report: `Hb Track - Backend/docs/_generated/_core/parity_report.json`
+- schema: `Hb Track - Backend/docs/_generated/_core/schema.sql`
+- alembic state: `Hb Track - Backend/docs/_generated/_core/alembic_state.txt`
 
 ## Tarefa
 
@@ -36,7 +36,7 @@ Objetivo: reduzir divergências estruturais Model↔DB com base em evidência do
 
 4) **Proponha o patch mínimo** (1 tabela por vez), mantendo precedência/SSOT do projeto
 
-5) **Defina o comando exato para revalidar** (use apenas comandos aprovados em `docs/_canon/08_APPROVED_COMMANDS.md`). Inclua o output esperado (ex.: `structural_count` diminui)
+5) **Defina o comando exato para revalidar** (use apenas comandos aprovados em [APPROVED_COMMANDS](../../../docs/_canon/08_APPROVED_COMMANDS.md)). Inclua o output esperado (ex.: `structural_count` diminui)
 
 ## Entrega
 
