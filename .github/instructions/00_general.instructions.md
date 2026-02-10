@@ -1,5 +1,5 @@
 ---
-description: "Carregar para qualquer tarefa no repositório HB Track. Sempre iniciar pela documentação canônica (00_START_HERE.md) e respeitar SSOT/Authority."
+description: Carregar para qualquer tarefa no repositório HB Track. Sempre iniciar pela documentação canônica (00_START_HERE.md) e respeitar SSOT/Authority.
 applyTo: "**"
 ---
 

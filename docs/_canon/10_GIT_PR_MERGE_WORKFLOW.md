@@ -1,10 +1,3 @@
-Sim — dá pra documentar isso de forma canônica e **segura** (sem o agente “sair fazendo merge” errado). Abaixo vai um arquivo pronto para você copiar/colar como:
-
-`docs/_canon/10_GIT_PR_MERGE_WORKFLOW.md`
-
-Ele assume que você já tem `gh` funcionando (você tem) e que o fluxo padrão é PR → review → merge.
-
-````markdown
 # docs/_canon/10_GIT_PR_MERGE_WORKFLOW.md
 
 | Propriedade | Valor |
