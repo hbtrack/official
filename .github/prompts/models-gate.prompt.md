@@ -34,3 +34,4 @@ Objetivo: executar ou guiar execução do gate Model↔DB e produzir decisão ob
 3) **Comandos aprovados para validar** — e critério "pronto suficiente"
 
 **Regra:** Não inventar comandos. Se um comando não estiver em [APPROVED_COMMANDS](C:/HB TRACK/docs/_canon/08_APPROVED_COMMANDS.md)
+
