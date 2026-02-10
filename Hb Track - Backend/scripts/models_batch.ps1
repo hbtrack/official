@@ -3,7 +3,7 @@ models_batch.ps1 (SSOT-AUTO)
 Batch runner determinístico: refresh SSOT (1x) -> tabelas do schema.sql -> requirements scan -> gate nas FAIL (1 por vez) -> stop-on-first-failure.
 
 Uso:
-  # automático via SSOT (default)
+  # automático via SSOT (default, fail-fast ON)
   .\scripts\models_batch.ps1
 
   # automático via SSOT, excluindo algumas tabelas
@@ -14,6 +14,9 @@ Uso:
 
   # só varredura (requirements), sem gate
   .\scripts\models_batch.ps1 -SkipGate
+
+  # desabilitar fail-fast (continuar mesmo com erro)
+  .\scripts\models_batch.ps1 -NoFailFast
 
   # autorizar snapshot baseline (não commita)
   .\scripts\models_batch.ps1 -AllowBaselineSnapshot
@@ -36,9 +39,11 @@ param(
 
   [switch]$SkipRefresh,
   [switch]$SkipGate,
-  [switch]$FailFast = $true,
+  [switch]$NoFailFast,
   [switch]$AllowBaselineSnapshot = $false
 )
+
+$FailFast = -not $NoFailFast
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
@@ -169,6 +174,14 @@ function Run-Requirements([string]$TableName, [string]$Profile, [string]$LogPath
   Write-Host "`n[REQ] $TableName (profile=$Profile)" -ForegroundColor Cyan
   Add-Content -Path $LogPath -Value "`n[REQ] $TableName (profile=$Profile)`n"
 
+  # Detectar SKIP_NO_MODEL via Test-Path antes de rodar Python
+  $modelFile = "app/models/$($TableName.ToLower()).py"
+  if (-not (Test-Path $modelFile)) {
+    Write-Host "  [SKIP] $TableName - modelo não encontrado ($modelFile)" -ForegroundColor Yellow
+    Add-Content -Path $LogPath -Value "[SKIP] $TableName - modelo não encontrado ($modelFile)`n"
+    return 100  # Código interno para SKIP_NO_MODEL
+  }
+
   # Executar Python sem parar em erro (mesmo que falhe)
   $ErrorActionPreference = "Continue"
   $output = & ".\venv\Scripts\python.exe" scripts\model_requirements.py --table $TableName --profile $Profile 2>&1
@@ -177,13 +190,6 @@ function Run-Requirements([string]$TableName, [string]$Profile, [string]$LogPath
   
   # Log output
   $output | Add-Content -Path $LogPath
-  
-  # Se model não encontrado, tratar como SKIP
-  $fullOutput = ($output | Out-String)
-  if ($ec -eq 1 -and ($fullOutput -like "*model file not found*")) {
-    Write-Host "  [SKIP] $TableName - modelo não encontrado" -ForegroundColor Yellow
-    return 2  # SKIP code
-  }
   
   return $ec
 }
@@ -256,8 +262,8 @@ foreach ($t in $tables) {
   if ($ec -eq 0) {
     "$t,$profile,requirements,0,PASS" | Add-Content -Path $csvPath
   }
-  elseif ($ec -eq 2) {
-    "$t,$profile,requirements,2,SKIP_NO_MODEL" | Add-Content -Path $csvPath
+  elseif ($ec -eq 100) {
+    "$t,$profile,requirements,100,SKIP_NO_MODEL" | Add-Content -Path $csvPath
     Write-Host "  [SKIP] $t - modelo não encontrado" -ForegroundColor Yellow
   }
   elseif ($ec -eq 4) {
