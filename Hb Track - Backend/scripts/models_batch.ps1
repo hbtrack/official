@@ -150,6 +150,21 @@ function Get-ProfileForTable([string]$TableName) {
   return $DefaultProfile
 }
 
+function Find-ModelFile([string]$TableName) {
+  # Procura dinamicamente por arquivo que contenha __tablename__ = '<table>'
+  # Retorna o caminho ou $null se não encontado
+  $modelsDir = "app/models"
+  if (-not (Test-Path $modelsDir)) { return $null }
+  
+  foreach ($modelFile in Get-ChildItem "$modelsDir/*.py" -ErrorAction SilentlyContinue) {
+    $content = Get-Content $modelFile -Raw -ErrorAction SilentlyContinue
+    if ($content -match "__tablename__\s*=\s*['\"]$([regex]::Escape($TableName))['\"]") {
+      return $modelFile.FullName
+    }
+  }
+  return $null
+}
+
 function Restore-GeneratedArtifacts {
   # Backend docs/_generated
   try {
@@ -174,11 +189,11 @@ function Run-Requirements([string]$TableName, [string]$Profile, [string]$LogPath
   Write-Host "`n[REQ] $TableName (profile=$Profile)" -ForegroundColor Cyan
   Add-Content -Path $LogPath -Value "`n[REQ] $TableName (profile=$Profile)`n"
 
-  # Detectar SKIP_NO_MODEL via Test-Path antes de rodar Python
-  $modelFile = "app/models/$($TableName.ToLower()).py"
-  if (-not (Test-Path $modelFile)) {
-    Write-Host "  [SKIP] $TableName - modelo não encontrado ($modelFile)" -ForegroundColor Yellow
-    Add-Content -Path $LogPath -Value "[SKIP] $TableName - modelo não encontrado ($modelFile)`n"
+  # Detectar SKIP_NO_MODEL via Find-ModelFile (busca dinâmica)
+  $modelPath = Find-ModelFile $TableName
+  if (-not $modelPath) {
+    Write-Host "  [SKIP] $TableName - modelo não encontrado" -ForegroundColor Yellow
+    Add-Content -Path $LogPath -Value "[SKIP] $TableName - modelo não encontrado`n"
     return 100  # Código interno para SKIP_NO_MODEL
   }
 
