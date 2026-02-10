@@ -515,8 +515,8 @@
       "size": 3644
     },
     "app\\models\\competition_standing.py": {
-      "sha256": "a6d3e6197e2b9e4b3520e61d92782502b08818de0f8fe484d65cedf5420e793f",
-      "size": 5967
+      "sha256": "a3ed774bdd0e4ed73c479fe89e1ac06c129775aab54482073b486c81dc81bda5",
+      "size": 5750
     },
     "app\\models\\data_access_log.py": {
       "sha256": "16f7df4c1b6aac9f84ca033529d7f3d644631e0202f1e95ac5bc4254d1446233",
@@ -1683,28 +1683,28 @@
       "size": 42637
     },
     "scripts\\models_autogen_gate.ps1": {
-      "sha256": "be626c9797525c1d8acc74e18e67b2985c6f9dcda1e92c1d70f18dc23c15fa13",
-      "size": 7582
+      "sha256": "5691c9e0e0c0d9570d16da67e8c6d2fa4158c0eed235113bb6b7d7dfd9ad1825",
+      "size": 7118
     },
     "scripts\\models_batch.ps1": {
-      "sha256": "59a57e0edabdca9d5419025b28f73af88bb25ec4b01b880d521a35ca0664520f",
-      "size": 11534
+      "sha256": "38afbdf82e7afe57c88f5a7a5a743f646a0dfa42729896b228fcfb5638e540e6",
+      "size": 12853
     },
     "scripts\\new_table_workflow.ps1": {
       "sha256": "f2f639cd6b35b8812c8bc4c557b111e977eb1d220cf061e79f1cbc5f03bdef7f",
       "size": 1257
     },
     "scripts\\parity_classify.py": {
-      "sha256": "c6107f8428d73fb864c338d30f5848d125a395d45ed28027d9b9cb01c5ad5e56",
-      "size": 5241
+      "sha256": "9200067b8af8e8ceddd4e321a14a04b9adf9a3d5c61a5ea313951cb565e0252c",
+      "size": 6927
     },
     "scripts\\parity_gate.ps1": {
-      "sha256": "e991a01ea22f3091dab02644520143bb68a140860af85a2615287b60080b7be7",
-      "size": 4010
+      "sha256": "505e3ba5811e132e928c4710d6ea20060599835977a2fdadbe325224dc7b1a25",
+      "size": 4184
     },
     "scripts\\parity_scan.ps1": {
-      "sha256": "1e5259810a6140737b11fa2454b15b6929f611c6b56d629f73aec59403d214be",
-      "size": 4676
+      "sha256": "cb41544f49447c1426f65c58d6671f2fc3c75029802624fd522e29012a826fa9",
+      "size": 5546
     },
     "scripts\\process_email_queue.py": {
       "sha256": "48283e4f5f732932705359a082fcddde32a4d2dae514e30c019c2ec118aeda4f",

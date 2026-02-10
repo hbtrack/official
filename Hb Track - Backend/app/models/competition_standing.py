@@ -115,12 +115,6 @@ class CompetitionStanding(Base):
 
     # HB-AUTOGEN:END
     # Unique constraint
-    __table_args__ = (
-        UniqueConstraint(
-            "competition_id", "phase_id", "opponent_team_id",
-            name="competition_standings_competition_id_phase_id_opponent_team_key"
-        ),
-    )
 
     # Primary key
 
