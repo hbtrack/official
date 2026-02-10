@@ -511,8 +511,8 @@
       "size": 4689
     },
     "app\\models\\competition_season.py": {
-      "sha256": "7a0f4fa37c6d726389743b424c99bd6ce613a0219b1949edb986fa7591c706b8",
-      "size": 4025
+      "sha256": "2e344cb8e38d4ca76d213e0164e1ee92be026f7229f918616700005551f667c4",
+      "size": 3833
     },
     "app\\models\\competition_standing.py": {
       "sha256": "394298f7290c85f1d6a6bf6761ce03b8850460615f47f75f7c7c016df96afda3",
