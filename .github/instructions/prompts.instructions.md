@@ -1,7 +1,7 @@
 ---
 description: Carregar este prompt sempre que a tarefa envolver criar/corrigir models SQLAlchemy, rodar gates (guard/parity/requirements), atualizar SSOT (schema.sql) ou qualquer comando em Hb Track - Backend.
-# applyTo: **/Hb Track - Backend/**, **/docs/_canon/**, **/docs/workflows/model_requirements_guide.md**, **/docs/references/exit_codes.md**, **/docs/ADR/architecture/008-ADR-TRAIN-governanca-por-artefatos.md**
-applyTo: **/Hb Track - Backend/**, **/docs/_canon/**, **/docs/workflows/model_requirements_guide.md**, **/docs/references/exit_codes.md**, **/docs/ADR/architecture/_INDEX_ADR.md**
+# applyTo: **/Hb Track - Backend/**, **/docs/_canon/**, **/docs/workflows/model_requirements_guide.md**, **/docs/references/exit_codes.md**, **/docs/ADR/008-ADR-TRAIN-governanca-por-artefatos.md**
+applyTo: **/Hb Track - Backend/**, **/docs/_canon/**, **/docs/workflows/model_requirements_guide.md**, **/docs/references/exit_codes.md**, **/docs/ADR/_INDEX_ADR.md**
 ---
 PROMPT PARA O AGENT — PIPELINE CANÔNICO (STOP ON FIRST FAILURE)
 
@@ -57,7 +57,7 @@ Se $ec != 0: PARE e reporte.
 PASSO 5 — LIMPAR ARTEFATOS GERADOS (para não sujar repo)
 Ainda no backend root, execute:
 - `git restore -- "docs/_generated/alembic_state.txt" "docs/_generated/manifest.json" "docs/_generated/parity_report.json" "docs/_generated/schema.sql"`
-- `git restore -- "..\docs/_generated/alembic_state.txt" "..\docs/_generated/manifest.json" "..\docs/_generated/schema.sql" "..\docs/_generated/trd_training_permissions_report.txt"`
+- `git restore -- "C:/HB TRACK/Hb Track - Backend/docs/_generated/alembic_state.txt" "C:/HB TRACK/Hb Track - Backend/docs/_generated/manifest.json" "C:/HB TRACK/Hb Track - Backend/docs/_generated/schema.sql" "C:/HB TRACK/Hb Track - Backend/docs/_generated/trd_training_permissions_report.txt"`
 Se algum restore falhar: PARE e reporte.
 
 PASSO 6 — PORCELAIN FINAL + EVIDÊNCIA

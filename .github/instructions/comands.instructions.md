@@ -13,7 +13,7 @@ Fontes obrigatórias (ler e seguir):
 - Proibido criar arquivos temporários, de backup, ou de teste no repo (ex: `temp.txt`, `backup.sql`, `test_output.json`).
 
 **Antes de criar qualquer migration ou model**
-- Consulte as regras de integridade (RDB) na Seção 8.3 do `C:\HB TRACK\docs\_Hb Track\PRD_HB_TRACK.md`
+- Consulte as regras de integridade (RDB) na Seção 8.3 do `C:/HB TRACK/docs/00_product/PRD_HB_TRACK.md`
 
 **Autoridade / Artefatos canônicos:**
 - `Hb Track - Backend/docs/_generated/openapi.json (contrato FastAPI)`

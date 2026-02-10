@@ -1,6 +1,6 @@
 ---
 description: Carregar estas instruções sempre que a tarefa envolver documentar scripts do gate (models_autogen_gate.ps1, parity_gate.ps1, agent_guard.py, model_requirements.py) ou explicar o pipeline SSOT/guard/parity/requirements no Hb Track - Backend.
-applyTo: C:/Hb Track/docs/scripts/**, C:/Hb Track/docs/workflows/, **/docs/_canon/**, **/docs/references/exit_codes.md, /docs/ADR/architecture/_INDEX_ADR.md, C:/Hb Track - Backend/scripts/models_autogen_gate.ps1, Hb Track - Backend/scripts/parity_gate.ps1, Hb Track - Backend/scripts/agent_guard.py, Hb Track - Backend/scripts/model_requirements.py
+applyTo: C:/HB TRACK/docs/scripts/**, C:/HB TRACK/docs/workflows/, **/docs/_canon/**, **/docs/references/exit_codes.md, C:/HB TRACK/docs/ADR/_INDEX_ADR.md, C:/HB TRACK/Hb Track - Backend/scripts/models_autogen_gate.ps1, C:/HB TRACK/Hb Track - Backend/scripts/parity_gate.ps1, C:/HB TRACK/Hb Track - Backend/scripts/agent_guard.py, C:/HB TRACK/Hb Track - Backend/scripts/model_requirements.py
 ---
 
 ## TAREFA:
