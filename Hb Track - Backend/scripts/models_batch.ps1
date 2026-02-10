@@ -219,12 +219,15 @@ function Run-Gate([string]$TableName, [string]$Profile, [string]$LogPath) {
   Write-Host "`n[GATE] $TableName (profile=$Profile)" -ForegroundColor Cyan
   Add-Content -Path $LogPath -Value "`n[GATE] $TableName (profile=$Profile)`n"
 
-  # FIX: Capturar output em variável (Tee-Object em PS5.1 mascara $LASTEXITCODE via pipeline)
-  $gateArgs = @("-Table", $TableName, "-Profile", $Profile)
-  if ($Profile -eq "fk") { $gateArgs += "-AllowCycleWarning" }
+  # FIX: Hashtable splatting (array splatting falha em PS5.1 para named params)
+  $gateParams = @{
+    Table   = $TableName
+    Profile = $Profile
+  }
+  if ($Profile -eq "fk") { $gateParams.AllowCycleWarning = $true }
 
   $ErrorActionPreference = "Continue"
-  $gateOutput = & $gate @gateArgs 2>&1
+  $gateOutput = & $gate @gateParams 2>&1
   $ec = $LASTEXITCODE
   $ErrorActionPreference = "Stop"
 
