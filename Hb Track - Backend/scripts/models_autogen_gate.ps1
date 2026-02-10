@@ -118,37 +118,24 @@ try {
     if ([string]::IsNullOrWhiteSpace($modelPath)) { $modelPath = "app/models/$Table.py" }
     $allowFinal = @($Allow + @($modelPath) | Select-Object -Unique)
 
-    # pre-check: parity can fail before autogen; do not abort here
-    # Normalize allowlist to CSV string to avoid PowerShell binding issues with string[] on script calls.
+    # --- Build parity gate params (hashtable splatting = binding confiável) ---
     $allowCsv = $null
     if ($allowFinal.Count -gt 0) {
       $allowCsv = ($allowFinal -join ",")
     }
 
-    if ($allowCsv) {
-      if ($AllowCycleWarning) {
-        & $parityGateScript -Table $Table -Allow $allowCsv -AllowCycleWarning
-      }
-      else {
-        & $parityGateScript -Table $Table -Allow $allowCsv
-      }
-    }
-    else {
-      if ($AllowCycleWarning) {
-        & $parityGateScript -Table $Table -AllowCycleWarning
-      }
-      else {
-        & $parityGateScript -Table $Table
-      }
-    }
+    $parityParams = @{ Table = $Table }
+    if ($allowCsv) { $parityParams.Allow = $allowCsv }
+    if ($AllowCycleWarning) { $parityParams.AllowCycleWarning = $true }
+
+    # PRE parity: pode falhar antes do autogen; não aborta
+    & $parityGateScript @parityParams
     $preExit = $LASTEXITCODE
-    if (-not $?) {
-      Write-Host "[WARN] pre parity_gate execution had errors; continuing to autogen." -ForegroundColor Yellow
-    }
     if ($preExit -ne 0) {
       Write-Host "[WARN] pre parity_gate failed (exit=$preExit); continuing to autogen to attempt fix." -ForegroundColor Yellow
     }
 
+    # AUTOGEN: corrige model a partir do BD
     $autogenArgs = @($autogenScript, "apply", "--table", $Table, "--db-env", $dbEnvName)
     if ($Create) { $autogenArgs += "--create" }
     if (-not [string]::IsNullOrWhiteSpace($resolvedModelFile)) { $autogenArgs += @("--model-file", $resolvedModelFile) }
@@ -161,23 +148,12 @@ try {
       Invoke-External -Command $py -Arguments $snapshotArgs -Step "agent_guard snapshot"
     }
 
-    # post-check: this one defines final gate result
-    if ($allowCsv) {
-      if ($AllowCycleWarning) {
-        & $parityGateScript -Table $Table -Allow $allowCsv -AllowCycleWarning
-      }
-      else {
-        & $parityGateScript -Table $Table -Allow $allowCsv
-      }
-    }
-    else {
-      if ($AllowCycleWarning) {
-        & $parityGateScript -Table $Table -AllowCycleWarning
-      }
-      else {
-        & $parityGateScript -Table $Table
-      }
-    }
+    # POST parity: define resultado final do gate
+    # -SkipDocsRegeneration: SSOT já foi gerado no PRE parity (evita double refresh)
+    $postParityParams = @{}
+    foreach ($k in $parityParams.Keys) { $postParityParams[$k] = $parityParams[$k] }
+    $postParityParams.SkipDocsRegeneration = $true
+    & $parityGateScript @postParityParams
     $parityExit = $LASTEXITCODE
     Write-Host "[POST] parity_exit=$parityExit"
     if (-not $?) {

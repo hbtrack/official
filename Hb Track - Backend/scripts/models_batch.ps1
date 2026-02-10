@@ -39,11 +39,13 @@ param(
 
   [switch]$SkipRefresh,
   [switch]$SkipGate,
+  [switch]$DryRun,
   [switch]$NoFailFast,
   [switch]$AllowBaselineSnapshot = $false
 )
 
 $FailFast = -not $NoFailFast
+if ($DryRun) { $SkipGate = $true }  # DryRun = apenas varredura requirements
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
@@ -144,9 +146,9 @@ function Load-TablesFromSSOT([string[]]$Exclude) {
 }
 
 function Get-ProfileForTable([string]$TableName) {
-  # Ajuste aqui se houver outras tabelas com ciclo FK/edge-case.
-  $fkTables = @("teams","seasons")
-  if ($fkTables -contains $TableName) { return "fk" }
+  # Tabelas com ciclo FK conhecido. Adicionar aqui se surgir novo ciclo.
+  $script:FkTables = @("teams","seasons")
+  if ($script:FkTables -contains $TableName) { return "fk" }
   return $DefaultProfile
 }
 
@@ -173,6 +175,7 @@ function Restore-GeneratedArtifacts {
       "docs/_generated/alembic_state.txt" `
       "docs/_generated/manifest.json" `
       "docs/_generated/parity_report.json" `
+      "docs/_generated/parity-scan.log" `
       "docs/_generated/schema.sql" 2>$null | Out-Null
   } catch {}
 
@@ -216,13 +219,21 @@ function Run-Gate([string]$TableName, [string]$Profile, [string]$LogPath) {
   Write-Host "`n[GATE] $TableName (profile=$Profile)" -ForegroundColor Cyan
   Add-Content -Path $LogPath -Value "`n[GATE] $TableName (profile=$Profile)`n"
 
-  if ($Profile -eq "fk") {
-    & $gate -Table $TableName -Profile $Profile -AllowCycleWarning 2>&1 | Tee-Object -Append -FilePath $LogPath | Out-Null
-  } else {
-    & $gate -Table $TableName -Profile $Profile 2>&1 | Tee-Object -Append -FilePath $LogPath | Out-Null
-  }
+  # FIX: Capturar output em variável (Tee-Object em PS5.1 mascara $LASTEXITCODE via pipeline)
+  $gateArgs = @("-Table", $TableName, "-Profile", $Profile)
+  if ($Profile -eq "fk") { $gateArgs += "-AllowCycleWarning" }
 
-  return $LASTEXITCODE
+  $ErrorActionPreference = "Continue"
+  $gateOutput = & $gate @gateArgs 2>&1
+  $ec = $LASTEXITCODE
+  $ErrorActionPreference = "Stop"
+
+  # Log + console
+  $gateText = ($gateOutput | ForEach-Object { $_.ToString() }) -join "`r`n"
+  Add-Content -Path $LogPath -Value $gateText
+  foreach ($line in $gateOutput) { Write-Host $line }
+
+  return $ec
 }
 
 function Maybe-SnapshotBaseline([string]$LogPath) {
@@ -248,6 +259,7 @@ function Maybe-SnapshotBaseline([string]$LogPath) {
 }
 
 # -------------------- MAIN --------------------
+$batchStartTime = Get-Date
 Ensure-BackendRoot
 Ensure-CleanRepo
 
@@ -334,7 +346,19 @@ foreach ($t in $failReq) {
 
 Maybe-SnapshotBaseline $logPath
 
-Write-Host "`n[COMPLETE] Batch finalizado." -ForegroundColor Green
-Write-Host "LOG: $logPath"
-Write-Host "CSV: $csvPath"
+# --- Summary Stats ---
+$batchElapsed = (Get-Date) - $batchStartTime
+$csvContent = Import-Csv $csvPath -ErrorAction SilentlyContinue
+$countPass = @($csvContent | Where-Object { $_.status -eq "PASS" }).Count
+$countFail = @($csvContent | Where-Object { $_.status -eq "FAIL" }).Count
+$countSkip = @($csvContent | Where-Object { $_.status -eq "SKIP_NO_MODEL" }).Count
+$countCrash = @($csvContent | Where-Object { $_.status -eq "CRASH" }).Count
+
+Write-Host "`n==================== BATCH SUMMARY ====================" -ForegroundColor Cyan
+Write-Host "Tables: $($tables.Count)  |  PASS: $countPass  |  FAIL: $countFail  |  SKIP: $countSkip  |  CRASH: $countCrash" -ForegroundColor White
+Write-Host "Elapsed: $($batchElapsed.ToString('hh\:mm\:ss'))" -ForegroundColor Gray
+Write-Host "LOG: $logPath" -ForegroundColor Gray
+Write-Host "CSV: $csvPath" -ForegroundColor Gray
+Write-Host "========================================================" -ForegroundColor Cyan
+
 exit 0

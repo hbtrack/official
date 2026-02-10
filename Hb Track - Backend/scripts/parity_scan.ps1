@@ -2,7 +2,8 @@ param(
   [string]$RepoRoot = "C:\HB TRACK\Hb Track - Backend",
   [string]$Message = "parity-scan",
   [string]$TableFilter = "",
-  [switch]$FailOnStructuralDiffs
+  [switch]$FailOnStructuralDiffs,
+  [switch]$SkipDocsRegeneration
 )
 
 $ErrorActionPreference = "Stop" # Mudado para Stop para o Agent detectar falhas imediatamente
@@ -38,10 +39,14 @@ try {
   Write-Host "--- [INICIANDO PARITY SCAN] ---" -ForegroundColor Cyan
 
   # 1) Build SSOT (schema.sql)
-  # Usamos o operador & com aspas simples para caminhos com espaços
-  $genDocs = Join-Path $RepoRoot "scripts\generate_docs.py"
-  & $pythonExe $genDocs
-  if ($LASTEXITCODE -ne 0) { throw "generate_docs.py falhou (exit $LASTEXITCODE)" }
+  if ($SkipDocsRegeneration) {
+    Write-Host "[SKIP] generate_docs.py (SSOT já gerado pelo chamador)" -ForegroundColor DarkGray
+  } else {
+    # Usamos o operador & com aspas simples para caminhos com espaços
+    $genDocs = Join-Path $RepoRoot "scripts\generate_docs.py"
+    & $pythonExe $genDocs
+    if ($LASTEXITCODE -ne 0) { throw "generate_docs.py falhou (exit $LASTEXITCODE)" }
+  }
 
   # 2) Scan-only (Alembic)
   Write-Host "--- [ALEMBIC SCAN] ---" -ForegroundColor Cyan
@@ -72,14 +77,24 @@ try {
   $oldEap = $ErrorActionPreference
   $ErrorActionPreference = "Continue"
   try {
-    & $pythonExe -m alembic revision --autogenerate -m $Message 2>&1 |
-      Tee-Object -FilePath $logPathBackend -Append
+    # FIX: Captura output em variável ao invés de Tee-Object.
+    # Tee-Object em PS 5.1 escreve UTF-16LE, o que truncava mensagens
+    # em parity_classify.py (causando table=null em todo parity_report.json).
+    $alembicOutput = & $pythonExe -m alembic revision --autogenerate -m $Message 2>&1
+    $ec = $LASTEXITCODE  # Captura IMEDIATAMENTE após comando nativo (antes de qualquer pipeline)
   }
   finally {
     $ErrorActionPreference = $oldEap
   }
 
-  $ec = $LASTEXITCODE
+  # Escreve log como UTF-8 (sem BOM) — sobrescreve ao invés de append
+  $outputLines = $alembicOutput | ForEach-Object { $_.ToString() }
+  $outputText = $outputLines -join "`r`n"
+  [System.IO.File]::WriteAllText($logPathBackend, $outputText, (New-Object System.Text.UTF8Encoding $false))
+
+  # Exibe no console (equivalente funcional ao antigo Tee-Object)
+  foreach ($line in $alembicOutput) { Write-Host $line }
+
   Write-Host "[ALEMBIC_EXIT]=$ec" -ForegroundColor Gray
 
   if ($ec -ne 0) {

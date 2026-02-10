@@ -3,7 +3,8 @@ param(
   [string[]]$Allow = @(),
   [switch]$AllowEnvPy,
   [switch]$AllowCycleWarning,
-  [string]$ParityReportPath = ""
+  [string]$ParityReportPath = "",
+  [switch]$SkipDocsRegeneration
 )
 
 $ErrorActionPreference = "Stop"
@@ -48,7 +49,12 @@ try {
   if ($useInjectedReport) {
     Write-Host "[PARITY] using injected report: $ParityReportPath"
   } else {
-    .\scripts\parity_scan.ps1 -TableFilter $Table -FailOnStructuralDiffs
+    $scanParams = @{
+      TableFilter = $Table
+      FailOnStructuralDiffs = $true
+    }
+    if ($SkipDocsRegeneration) { $scanParams.SkipDocsRegeneration = $true }
+    .\scripts\parity_scan.ps1 @scanParams
     $parityExit = $LASTEXITCODE
     if ($parityExit -ne 0) {
       exit $parityExit

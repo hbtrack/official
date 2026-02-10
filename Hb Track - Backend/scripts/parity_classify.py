@@ -26,41 +26,83 @@ def read_log_lines(path: Path) -> List[str]:
 
     # remove ANSI colors, se existirem
     s = ANSI_RE.sub("", s)
+
+    # FIX: strip NUL bytes residuais (defesa contra encoding issues do PS 5.1)
+    if "\x00" in s:
+        import sys
+        print(
+            f"[parity_classify] WARNING: NUL bytes detectados em {path} "
+            f"(provavel encoding UTF-16LE do PowerShell 5.1). Removendo.",
+            file=sys.stderr,
+        )
+        s = s.replace("\x00", "")
+
     return s.splitlines()
+
+# Regex para extrair table do nome de sequence (ex: 'athletes_id_seq' -> 'athletes')
+_SEQ_NAME_RE = re.compile(r"^(\w+?)_(?:id|pk)_seq$")
+
 
 def extract_table_col(msg: str) -> Dict[str, Optional[str]]:
     """
-    Heurísticas:
-      - 'table.column' aparece em: "column comment 'table.column'"
-      - "on table X" aparece em várias mensagens
-      - "on 'table.col'" em type change
+    Extrai table/column de mensagens Alembic "Detected ...".
+    Patterns são aplicados do mais específico para o mais genérico;
+    o último match ganha (overwrite intencional).
     """
-    table = None
-    col = None
+    table: Optional[str] = None
+    col: Optional[str] = None
 
-    m = re.search(r"on table ([a-zA-Z0-9_\.]+)", msg)
+    # --- Patterns específicos (do menos para mais específico) ---
+
+    # "on table X" / "on table 'X'"
+    m = re.search(r"on table ['\"]?([a-zA-Z0-9_]+)['\"]?", msg)
     if m:
-        table = m.group(1).strip("'\"")
+        table = m.group(1)
 
+    # "for '(table).(column)'" (type change)
+    m = re.search(r"for ['\"]([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)['\"]?", msg)
+    if m:
+        table = m.group(1)
+        col = m.group(2)
+
+    # Genérico: 'table.column' entre aspas simples
     m = re.search(r"'([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)'", msg)
     if m:
         table = m.group(1)
         col = m.group(2)
 
-    m = re.search(r"column comment '([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)'", msg)
+    # "column comment on column 'table.column'"
+    m = re.search(r"column comment (?:on column )?'([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)'", msg)
     if m:
         table = m.group(1)
         col = m.group(2)
 
-    m = re.search(r"added column '([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)'", msg)
+    # "added/removed column 'table.column'"
+    m = re.search(r"(?:added|removed) column '([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)'", msg)
     if m:
         table = m.group(1)
         col = m.group(2)
 
-    m = re.search(r"removed column '([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)'", msg)
+    # "NULL on column 'table.column'" / "NOT NULL on column 'table.column'"
+    m = re.search(r"NULL on column '([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)'", msg)
     if m:
         table = m.group(1)
         col = m.group(2)
+
+    # "server_default on column 'table.column'" / "server default change on 'table.column'"
+    m = re.search(r"server[_ ]default[^']*'([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)'", msg)
+    if m:
+        table = m.group(1)
+        col = m.group(2)
+
+    # Sequence: "sequence named 'athletes_id_seq'" -> extrair table do nome
+    if table is None:
+        m = re.search(r"sequence named '([a-zA-Z0-9_]+)'", msg)
+        if m:
+            seq_name = m.group(1)
+            sm = _SEQ_NAME_RE.match(seq_name)
+            if sm:
+                table = sm.group(1)
 
     return {"table": table, "column": col}
 
@@ -94,7 +136,7 @@ def classify(msg: str) -> str:
         return "type"
     if "null on column" in s or "not null on column" in s:
         return "nullability"
-    if "server default" in s:
+    if "server default" in s or "server_default" in s:
         return "default"
 
     # sequences (normalmente ruído)
