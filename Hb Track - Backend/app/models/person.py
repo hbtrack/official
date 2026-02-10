@@ -14,6 +14,20 @@ V1.2: Estrutura normalizada
 - person_documents: CPF, RG, CNH, passaporte (1:N)
 - person_media: fotos de perfil e documentos (1:N)
 """
+
+# HB-AUTOGEN-IMPORTS:BEGIN
+from __future__ import annotations
+
+from datetime import date, datetime
+from typing import Optional
+from uuid import UUID
+
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+
 from datetime import date, datetime
 from typing import TYPE_CHECKING, Optional, List
 
@@ -43,6 +57,37 @@ class Person(Base):
     """
     __tablename__ = "persons"
 
+
+# HB-AUTOGEN:BEGIN
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+    # Table: public.persons
+    __table_args__ = (
+        CheckConstraint('deleted_at IS NULL AND deleted_reason IS NULL OR deleted_at IS NOT NULL AND deleted_reason IS NOT NULL', name='ck_persons_deleted_reason'),
+        CheckConstraint("gender IS NULL OR (gender::text = ANY (ARRAY['masculino'::character varying, 'feminino'::character varying, 'outro'::character varying, 'prefiro_nao_dizer'::character varying]::text[]))", name='ck_persons_gender'),
+        Index('ix_persons_birth_date', 'birth_date', unique=False),
+        Index('ix_persons_deleted_at', 'deleted_at', unique=False),
+        Index('ix_persons_first_name', 'first_name', unique=False),
+        Index('ix_persons_first_name_trgm', 'first_name', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
+        Index('ix_persons_full_name_trgm', 'full_name', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
+        Index('ix_persons_last_name', 'last_name', unique=False),
+        Index('ix_persons_last_name_trgm', 'last_name', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
+    )
+
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
+
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+    full_name: Mapped[str] = mapped_column(sa.Text(), nullable=False)
+    birth_date: Mapped[Optional[date]] = mapped_column(sa.Date(), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    deleted_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+    deleted_reason: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+    first_name: Mapped[str] = mapped_column(sa.String(length=100), nullable=False)
+    last_name: Mapped[str] = mapped_column(sa.String(length=100), nullable=False)
+    gender: Mapped[Optional[str]] = mapped_column(sa.String(length=20), nullable=True)
+    nationality: Mapped[Optional[str]] = mapped_column(sa.String(length=100), nullable=True, server_default=sa.text("'brasileira'::character varying"))
+    notes: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+    # HB-AUTOGEN:END
     # PK (RDB2)
     id: Mapped[str] = mapped_column(
         UUID(as_uuid=False),
@@ -51,30 +96,10 @@ class Person(Base):
     )
 
     # Dados básicos (R1) - V1.2 Normalizado
-    full_name: Mapped[str] = mapped_column(Text, nullable=False)
-    first_name: Mapped[str] = mapped_column(String(100), nullable=False)
-    last_name: Mapped[str] = mapped_column(String(100), nullable=False)
-    birth_date: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
-    gender: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
-    nationality: Mapped[Optional[str]] = mapped_column(String(100), server_default="brasileira", nullable=True)
-    notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
     # Soft delete (RDB4)
-    deleted_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
-    deleted_reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
     # Timestamps (RDB3)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        nullable=False
-    )
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        onupdate=func.now(),
-        nullable=False
-    )
 
     # Relationships - User
     user: Mapped[Optional["User"]] = relationship(
@@ -190,34 +215,11 @@ class PersonContact(Base):
         server_default=text("gen_random_uuid()")
     )
     
-    person_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
-        ForeignKey("persons.id", ondelete="CASCADE"),
-        nullable=False
-    )
     
-    contact_type: Mapped[str] = mapped_column(String(50), nullable=False)
-    contact_value: Mapped[str] = mapped_column(String(200), nullable=False)
-    is_primary: Mapped[bool] = mapped_column(Boolean, server_default="false", nullable=False)
-    is_verified: Mapped[bool] = mapped_column(Boolean, server_default="false", nullable=False)
-    notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     
     # Timestamps
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        nullable=False
-    )
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        onupdate=func.now(),
-        nullable=False
-    )
     
     # Soft delete
-    deleted_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
-    deleted_reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     
     # Relationships
     person: Mapped["Person"] = relationship("Person", back_populates="contacts")
@@ -255,39 +257,11 @@ class PersonAddress(Base):
         server_default=text("gen_random_uuid()")
     )
     
-    person_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
-        ForeignKey("persons.id", ondelete="CASCADE"),
-        nullable=False
-    )
     
-    address_type: Mapped[str] = mapped_column(String(50), nullable=False)
-    street: Mapped[str] = mapped_column(String(200), nullable=False)
-    number: Mapped[Optional[str]] = mapped_column(String(20), nullable=True)
-    complement: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
-    neighborhood: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
-    city: Mapped[str] = mapped_column(String(100), nullable=False)
-    state: Mapped[str] = mapped_column(String(2), nullable=False)
-    postal_code: Mapped[Optional[str]] = mapped_column(String(10), nullable=True)
-    country: Mapped[str] = mapped_column(String(100), server_default="Brasil", nullable=False)
-    is_primary: Mapped[bool] = mapped_column(Boolean, server_default="false", nullable=False)
     
     # Timestamps
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        nullable=False
-    )
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        onupdate=func.now(),
-        nullable=False
-    )
     
     # Soft delete
-    deleted_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
-    deleted_reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     
     # Relationships
     person: Mapped["Person"] = relationship("Person", back_populates="addresses")
@@ -328,37 +302,11 @@ class PersonDocument(Base):
         server_default=text("gen_random_uuid()")
     )
     
-    person_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
-        ForeignKey("persons.id", ondelete="CASCADE"),
-        nullable=False
-    )
     
-    document_type: Mapped[str] = mapped_column(String(50), nullable=False)
-    document_number: Mapped[str] = mapped_column(String(100), nullable=False)
-    issuing_authority: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
-    issue_date: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
-    expiry_date: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
-    document_file_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    is_verified: Mapped[bool] = mapped_column(Boolean, server_default="false", nullable=False)
-    notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     
     # Timestamps
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        nullable=False
-    )
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        onupdate=func.now(),
-        nullable=False
-    )
     
     # Soft delete
-    deleted_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
-    deleted_reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     
     # Relationships
     person: Mapped["Person"] = relationship("Person", back_populates="documents")
@@ -396,36 +344,11 @@ class PersonMedia(Base):
         server_default=text("gen_random_uuid()")
     )
     
-    person_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
-        ForeignKey("persons.id", ondelete="CASCADE"),
-        nullable=False
-    )
     
-    media_type: Mapped[str] = mapped_column(String(50), nullable=False)
-    file_url: Mapped[str] = mapped_column(Text, nullable=False)
-    file_name: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
-    file_size: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
-    mime_type: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
-    is_primary: Mapped[bool] = mapped_column(Boolean, server_default="false", nullable=False)
-    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     
     # Timestamps
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        nullable=False
-    )
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        onupdate=func.now(),
-        nullable=False
-    )
     
     # Soft delete
-    deleted_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
-    deleted_reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     
     # Relationships
     person: Mapped["Person"] = relationship("Person", back_populates="media")

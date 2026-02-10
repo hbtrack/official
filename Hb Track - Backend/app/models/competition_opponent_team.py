@@ -21,6 +21,19 @@ Regras:
 - Estatísticas são atualizadas automaticamente por trigger
 """
 
+# HB-AUTOGEN-IMPORTS:BEGIN
+from __future__ import annotations
+
+from datetime import date, datetime
+from typing import Optional
+from uuid import UUID
+
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+
 from datetime import datetime
 from typing import Optional, TYPE_CHECKING, List, Any
 from uuid import uuid4
@@ -61,6 +74,54 @@ class CompetitionOpponentTeam(Base):
 
     __tablename__ = "competition_opponent_teams"
 
+
+# HB-AUTOGEN:BEGIN
+
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+
+    # Table: public.competition_opponent_teams
+
+    __table_args__ = (
+
+        Index('ix_competition_opponent_teams_competition_id', 'competition_id', unique=False),
+
+        Index('ix_competition_opponent_teams_group', 'competition_id', 'group_name', unique=False),
+
+        Index('ix_competition_opponent_teams_linked_team_id', 'linked_team_id', unique=False),
+
+    )
+
+
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
+
+
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+
+    competition_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('competitions.id', name='fk_competition_opponent_teams_competition_id', ondelete='CASCADE'), nullable=False)
+
+    name: Mapped[str] = mapped_column(sa.String(length=255), nullable=False)
+
+    short_name: Mapped[Optional[str]] = mapped_column(sa.String(length=50), nullable=True)
+
+    category: Mapped[Optional[str]] = mapped_column(sa.String(length=50), nullable=True)
+
+    city: Mapped[Optional[str]] = mapped_column(sa.String(length=100), nullable=True)
+
+    logo_url: Mapped[Optional[str]] = mapped_column(sa.String(length=500), nullable=True)
+
+    linked_team_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('teams.id', name='fk_competition_opponent_teams_linked_team_id', ondelete='SET NULL'), nullable=True)
+
+    group_name: Mapped[Optional[str]] = mapped_column(sa.String(length=50), nullable=True)
+
+    stats: Mapped[Optional[object]] = mapped_column(PG_JSONB(), nullable=True, server_default=sa.text('\'{"wins": 0, "draws": 0, "losses": 0, "played": 0, "points": 0, "goals_for": 0, "goals_against": 0, "goal_difference": 0}\'::jsonb'))
+
+    status: Mapped[Optional[str]] = mapped_column(sa.String(length=50), nullable=True, server_default=sa.text("'active'::character varying"))
+
+    created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    # HB-AUTOGEN:END
     # Primary key
     id: Mapped[str] = mapped_column(
         UUID(as_uuid=False),
@@ -70,97 +131,23 @@ class CompetitionOpponentTeam(Base):
     )
 
     # Competition FK
-    competition_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
-        ForeignKey("competitions.id", ondelete="CASCADE"),
-        nullable=False,
-        index=True,
-    )
 
     # Core fields
-    name: Mapped[str] = mapped_column(
-        String(255),
-        nullable=False,
-        comment="Nome da equipe adversária",
-    )
 
-    short_name: Mapped[Optional[str]] = mapped_column(
-        String(50),
-        nullable=True,
-        comment="Nome curto/sigla",
-    )
 
-    category: Mapped[Optional[str]] = mapped_column(
-        String(50),
-        nullable=True,
-        comment="Categoria (ex: Sub-17)",
-    )
 
-    city: Mapped[Optional[str]] = mapped_column(
-        String(100),
-        nullable=True,
-        comment="Cidade da equipe",
-    )
 
-    logo_url: Mapped[Optional[str]] = mapped_column(
-        String(500),
-        nullable=True,
-        comment="URL do logo da equipe",
-    )
 
     # Vínculo com equipe do sistema (fuzzy match)
-    linked_team_id: Mapped[Optional[str]] = mapped_column(
-        UUID(as_uuid=False),
-        ForeignKey("teams.id", ondelete="SET NULL"),
-        nullable=True,
-        index=True,
-        comment="Vínculo com equipe cadastrada no sistema",
-    )
 
     # Grupo na competição
-    group_name: Mapped[Optional[str]] = mapped_column(
-        String(50),
-        nullable=True,
-        index=True,
-        comment="Grupo na competição (ex: A, B)",
-    )
 
     # Estatísticas calculadas
-    stats: Mapped[Optional[dict]] = mapped_column(
-        JSONB,
-        nullable=True,
-        default=lambda: DEFAULT_STATS.copy(),
-        server_default=text(
-            "'{\"wins\": 0, \"draws\": 0, \"losses\": 0, \"played\": 0, "
-            "\"points\": 0, \"goals_for\": 0, \"goals_against\": 0, \"goal_difference\": 0}'::jsonb"
-        ),
-        comment="Estatísticas calculadas automaticamente",
-    )
 
     # Status
-    status: Mapped[str] = mapped_column(
-        String(50),
-        nullable=True,
-        default="active",
-        server_default=text("'active'"),
-        comment="Status: active, eliminated, qualified, withdrawn",
-    )
 
     # Timestamps
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        default=datetime.utcnow,
-        server_default=text("now()"),
-        nullable=True,
-    )
 
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
-        server_default=text("now()"),
-        nullable=True,
-    )
 
     # Relationships
     competition: Mapped["Competition"] = relationship(
