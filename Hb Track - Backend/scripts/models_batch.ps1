@@ -169,28 +169,22 @@ function Run-Requirements([string]$TableName, [string]$Profile, [string]$LogPath
   Write-Host "`n[REQ] $TableName (profile=$Profile)" -ForegroundColor Cyan
   Add-Content -Path $LogPath -Value "`n[REQ] $TableName (profile=$Profile)`n"
 
-  # Capturar output completo em array para evitar perda de informação
-  $outputLines = @()
-  try {
-    $outputLines = @(& ".\venv\Scripts\python.exe" scripts\model_requirements.py --table $TableName --profile $Profile 2>&1)
-  } catch {
-    $outputLines = @($_.Exception.Message)
-  }
-  
+  # Executar Python sem parar em erro (mesmo que falhe)
+  $ErrorActionPreference = "Continue"
+  $output = & ".\venv\Scripts\python.exe" scripts\model_requirements.py --table $TableName --profile $Profile 2>&1
   $ec = $LASTEXITCODE
+  $ErrorActionPreference = "Stop"
   
-  # Converter para string para matching
-  $fullOutput = $outputLines -join "`n"
+  # Log output
+  $output | Add-Content -Path $LogPath
   
   # Se model não encontrado, tratar como SKIP
-  if ($ec -eq 1 -and ($fullOutput -like "*model file not found*" -or $fullOutput -like "*no model*" -or $fullOutput -like "*could not locate*")) {
+  $fullOutput = ($output | Out-String)
+  if ($ec -eq 1 -and ($fullOutput -like "*model file not found*")) {
     Write-Host "  [SKIP] $TableName - modelo não encontrado" -ForegroundColor Yellow
-    $outputLines | Add-Content -Path $LogPath
     return 2  # SKIP code
   }
   
-  # Log output
-  $outputLines | Add-Content -Path $LogPath
   return $ec
 }
 
