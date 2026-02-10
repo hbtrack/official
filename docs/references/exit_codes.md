@@ -12,6 +12,8 @@ Guia de referência para os códigos de saída dos scripts de validação do HB 
 - `model_requirements.py` (quando model está 100% conforme)
 - `models_autogen_gate.ps1` (quando todos os gates passam)
 - `parity_gate.ps1` (quando estrutura DB ↔ Model está sincronizada)
+- `parity_scan.ps1` (quando Alembic não detecta diffs estruturais)
+- `parity_classify.py` (quando classificação conclui sem diffs impeditivos)
 - `agent_guard.py` (quando nenhum arquivo protegido foi modificado)
 
 **Exemplo:**
@@ -232,6 +234,19 @@ if ($exitCode -ne 0) { exit 1 }
 if ($exitCode -ne 0) { exit $exitCode }
 ```
 
+### Q: `parity_report.json` mostra `table: null` e `column: null`
+
+**A:** Isso era um bug crítico corrigido em 2026-02-10 (P0-A/P0-B).
+Causa raiz: `Tee-Object` do PowerShell 5.1 escrevia o log Alembic em UTF-16LE,
+causando truncamento no parser Python (`parity_classify.py`).
+
+**Se persistir:**
+1. Verificar encoding do log: `[System.IO.File]::ReadAllBytes("parity-scan.log")[0..3]`
+   - UTF-8 correto: `35 35 35` (### em ASCII)
+   - UTF-16LE problemático: `FF FE` (BOM) ou bytes `00` intercalados
+2. Confirmar que `parity_scan.ps1` usa `WriteAllText` (não `Tee-Object`)
+3. Confirmar que `parity_classify.py` tem strip de NUL bytes em `read_log_lines()`
+
 ### Q: Exit code 4 mas nenhuma violation listada
 
 **A:** 
@@ -309,6 +324,6 @@ git restore app/routes/seasons.py
 
 ---
 
-**Última atualização:** 2026-02-08  
+**Última atualização:** 2026-02-10  
 **Responsável:** Tech Lead + AI Assistant  
 **Referências:** ADR-MODELS-001, EXEC_TASK_ADR_MODELS_001.md

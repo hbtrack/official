@@ -4,7 +4,7 @@
 |---|---|
 | ID | CANON-MODELS-PIPELINE-005 |
 | Status | CANÔNICO |
-| Última verificação | 2026-02-09 (America/Sao_Paulo) |
+| Última verificação | 2026-02-10 (America/Sao_Paulo) |
 | Porta de entrada | docs/_canon/00_START_HERE.md |
 | SSOT estrutural | Hb Track - Backend/docs/_generated/schema.sql |
 | Objetivo | Garantir 100% de conformidade estrutural Model↔DB (anti-drift / anti-alucinação) |
@@ -15,11 +15,15 @@ Este pipeline valida e corrige models SQLAlchemy para refletirem **exatamente** 
 
 Camadas (ordem):
 1) **Guard**: impede drift fora da baseline/allowlist.
-2) **Parity**: compara Model↔DB via Alembic (diferenças estruturais).
+2) **Parity**: compara Model↔DB via Alembic (diferenças estruturais). Usa `parity_scan.ps1` → `parity_classify.py` → `parity_report.json`.
 3) **Requirements**: compara Model↔SSOT (`schema.sql`) via parser DDL + AST (juiz final).
 
 Princípio: **SSOT é o juiz, autogen é corretor**.  
-O autogen pode “arrumar”, mas a aprovação final vem de parity + requirements.
+O autogen pode "arrumar", mas a aprovação final vem de parity + requirements.
+
+> **Nota técnica (2026-02-10):** O log do Alembic é escrito em UTF-8 (sem BOM) via
+> `[System.IO.File]::WriteAllText()`. Nunca usar `Tee-Object` para gravar o log
+> (causa UTF-16LE no PowerShell 5.1, corrompendo o parser Python).
 
 ## SSOT e geração canônica
 
@@ -124,7 +128,8 @@ git restore -- `
   "docs/_generated/alembic_state.txt" `
   "docs/_generated/manifest.json" `
   "docs/_generated/parity_report.json" `
-  "docs/_generated/schema.sql"
+  "docs/_generated/schema.sql" `
+  "docs/_generated/parity-scan.log"
 
 git restore -- `
   "..\docs/_generated/alembic_state.txt" `
@@ -157,16 +162,17 @@ git status --porcelain
 $LASTEXITCODE
 ```
 
+### Somente varredura (sem correção)
+
+```powershell
+.\scripts\models_batch.ps1 -DryRun
+# Alias: -SkipGate (compatível com versões anteriores)
+```
+
 ### Excluir tabelas (ex.: alembic_version)
 
 ```powershell
 .\scripts\models_batch.ps1 -ExcludeTables "alembic_version"
-```
-
-### Somente varredura (sem correção)
-
-```powershell
-.\scripts\models_batch.ps1 -SkipGate
 ```
 
 ## Política de baseline (Guard)
@@ -217,11 +223,14 @@ Para uma tabela estar OK:
 * Exit=2 (parity): divergência estrutural real DB↔model (alembic compare).
 * Exit=4 (requirements): model não reflete SSOT (coluna extra/faltante, tipo, nullable, constraints).
 * Exit=1: crash (ambiente, import, bug no script).
+* `parity_report.json` com `table: null`: encoding UTF-16LE no log Alembic (corrigido em P0-A; ver [exit_codes.md](C:/HB TRACK/docs/references/exit_codes.md)).
 
 Detalhado em:
 
-* `docs/references/exit_codes.md`
-* `docs/workflows/model_requirements_guide.md`
-* `docs/architecture/CHECKLIST-CANONICA-MODELS.md`
+* [exit_codes.md](C:/HB TRACK/docs/references/exit_codes.md)
+* [model_requirements_guide.md](C:/HB TRACK/docs/references/model_requirements_guide.md)
+* [CHECKLIST-CANONICA-MODELS.md](C:/HB TRACK/Hb Track - Backend/docs/architecture/CHECKLIST-CANONICA-MODELS.md)
+* [CHANGELOG.md](C:/HB TRACK/docs/execution_tasks/CHANGELOG.md)
+* [EXECUTIONLOG.md](C:/HB TRACK/docs/execution_tasks/EXECUTIONLOG.md)
 
 ```

@@ -4,7 +4,7 @@ applyTo: "**"
 ---
 
 Regras globais:
-- Porta única: ler primeiro `docs/_canon/00_START_HERE.md`.
+- Porta única: ler primeiro `docs/_canon/00_START_HERE.md` e `docs/_ai/_INDEX.md` para entender a organização documental e os próximos passos recomendados.
 - SSOT estrutural de DB: `Hb Track - Backend/docs/_generated/schema.sql` (gerado por `scripts/inv.ps1 refresh`).
 - Não inventar: decisões devem citar paths/outputs reais.
 - Não criar arquivos temporários/backups dentro do repo.
