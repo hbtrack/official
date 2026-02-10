@@ -14,6 +14,7 @@ Objetivo: criar/atualizar um documento de execução (EXEC_TASK) derivado de uma
 - Template: [INV_TASK_TEMPLATE](../../../docs/_ai/INV_TASK_TEMPLATE.md)
 - Workflows canônicos: [WORKFLOWS](../../../docs/_canon/03_WORKFLOWS.md)
 - Approved commands: [APPROVED_COMMANDS](../../../docs/_canon/08_APPROVED_COMMANDS.md)
+- ADR Models: [013-ADR-MODELS](../../../docs/ADR/architecture/013-ADR-MODELS.md)
 - Pasta de execução: `docs/execution_tasks/`
 
 ## Entrada

@@ -15,7 +15,7 @@ Objetivo: reduzir divergências estruturais Model↔DB com base em evidência do
 - [AUTHORITY/SSOT](../../../docs/_canon/01_AUTHORITY_SSOT.md)
 - [MODELS PIPELINE](../../../docs/_canon/05_MODELS_PIPELINE.md)
 - [TROUBLESHOOTING parity/guard](../../../docs/_canon/09_TROUBLESHOOTING_GUARD_PARITY.md)
-- ADR: [013-ADR-MODELS](../../../docs/ADR/013-ADR-MODELS.md)
+- ADR: [013-ADR-MODELS](../../../docs/ADR/architecture/013-ADR-MODELS.md)
 
 ## Evidência Obrigatória (Use Sempre)
 

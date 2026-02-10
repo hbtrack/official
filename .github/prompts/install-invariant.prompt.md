@@ -14,9 +14,9 @@ Objetivo: instalar 1 invariante de training com rastreabilidade total. Não infe
 - [AI INDEX](../../../docs/_ai/_INDEX.md)
 - [AGENT PROTOCOL](../../../docs/_ai/INVARIANTS_AGENT_PROTOCOL.md)
 - [AGENT GUARDRAILS](../../../docs/_ai/INVARIANTS_AGENT_GUARDRAILS.md)
-- SSOT catálogo: [INVARIANTS_TRAINING](../../../docs/02_modulos/training/INVARIANTS/INVARIANTS_TRAINING.md)
-- Testes canônicos: [INVARIANTS_TESTING_CANON](../../../docs/02_modulos/training/INVARIANTS/INVARIANTS_TESTING_CANON.md)
-- Backlog/candidates: [candidates](../../../docs/02_modulos/training/INVARIANTS/training_invariants_candidates.md) e [backlog](../../../docs/02_modulos/training/INVARIANTS/training_invariants_backlog.md)
+- SSOT catálogo: [INVARIANTS_TRAINING](../../../docs/02-modulos/training/INVARIANTS/INVARIANTS_TRAINING.md)
+- Testes canônicos: [INVARIANTS_TESTING_CANON](../../../docs/02-modulos/training/INVARIANTS/INVARIANTS_TESTING_CANON.md)
+- Backlog/candidates: [candidates](../../../docs/02-modulos/training/INVARIANTS/training_invariants_candidates.md) e [backlog](../../../docs/02-modulos/training/INVARIANTS/training_invariants_backlog.md)
 
 ## Evidência/Artefatos
 
