@@ -100,11 +100,9 @@ Artefatos gerados (fontes canônicas):
 
 | Documento | Path | Descrição |
 |-----------|------|-----------|
-| Anchor Map | `C:/HB TRACK/docs/02_modulos/training/ANCHOR_MAP.md` | *(PENDENTE — arquivo não encontrado)* |
 | Candidates | `C:/HB TRACK/docs/02_modulos/training/INVARIANTS/training_invariants_candidates.md` | Worklist de promoção — candidatas a invariantes |
 | Backlog | `C:/HB TRACK/docs/02_modulos/training/INVARIANTS/training_invariants_backlog.md` | Backlog de invariantes pendentes de análise |
 | Parity Scan Protocol | `C:/HB TRACK/docs/02_modulos/training/PROTOCOLS/PARITY_SCAN._PROTOCOL.md` | Protocolo de verificação de paridade model↔schema |
-| Canon AS-IS | `C:/HB TRACK/docs/02_modulos/training/_CANON_AS_IS.md` | *(PENDENTE — arquivo não encontrado)* |
 | Validação de Testes | `C:/HB TRACK/docs/02_modulos/training/INVARIANTS/VALIDAR_INVARIANTS_TESTS.md` | Checklist de validação dos testes de invariantes |
 
 ---
