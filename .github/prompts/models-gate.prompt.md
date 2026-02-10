@@ -10,10 +10,10 @@ Objetivo: executar ou guiar execução do gate Model↔DB e produzir decisão ob
 
 ## Autoridade e Guias
 
-- [MODELS PIPELINE](docs/_canon/05_MODELS_PIPELINE.md)
-- [APPROVED COMMANDS](docs/_canon/08_APPROVED_COMMANDS.md)
-- [TROUBLESHOOTING parity/guard](docs/_canon/09_TROUBLESHOOTING_GUARD_PARITY.md)
-- ADR: [013-ADR-MODELS](docs/ADR/013-ADR-MODELS.md)
+- [MODELS PIPELINE](../../docs/_canon/05_MODELS_PIPELINE.md)
+- [APPROVED COMMANDS](../../docs/_canon/08_APPROVED_COMMANDS.md)
+- [TROUBLESHOOTING parity/guard](../../docs/_canon/09_TROUBLESHOOTING_GUARD_PARITY.md)
+- ADR: [013-ADR-MODELS](../../docs/ADR/013-ADR-MODELS.md)
 
 ## Evidência Atual
 
