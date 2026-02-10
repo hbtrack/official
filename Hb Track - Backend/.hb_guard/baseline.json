@@ -607,8 +607,8 @@
       "size": 1580
     },
     "app\\models\\person.py": {
-      "sha256": "ed3319385ba1ebe022342edbb402cd2d261f06ba57b689976a309326fa025a73",
-      "size": 11513
+      "sha256": "d0d01457cb75e3703b0007e897b7dee0e001c838b40cb4e8edd9be770d2ea275",
+      "size": 15469
     },
     "app\\models\\role.py": {
       "sha256": "2dede7f0227de7860028379b227a424d46bdbde6dfdcf89046e56dce7915d2a2",
@@ -1579,8 +1579,8 @@
       "size": 4567
     },
     "scripts\\autogen_model_from_db.py": {
-      "sha256": "38413213412ace144ca61bb691a2f244c3e5c8bbd2c4695b6a88581b92dc0b72",
-      "size": 23124
+      "sha256": "b605a3edebb850f02860731fcce89cb12cd7701de7487d91adb11bf4257a862a",
+      "size": 23613
     },
     "scripts\\check_and_fix_matches.sql": {
       "sha256": "06505dfb81cf1fcee77c8f3ef86a5fd1c7facb13b609538ca9a55716cb92cbb3",
