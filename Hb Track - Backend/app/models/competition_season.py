@@ -94,12 +94,6 @@ class CompetitionSeason(Base):
     )
 
     # Primary key
-    id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
-        primary_key=True,
-        default=lambda: str(uuid4()),
-        server_default=text("gen_random_uuid()"),
-    )
 
     # Foreign keys
 
