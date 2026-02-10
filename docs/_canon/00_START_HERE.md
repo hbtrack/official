@@ -24,7 +24,7 @@
 
 4. **Quais são as restrições, constraints e invariantes do sistema?**  
    → Leia: [INVARIANTS_TRAINING](C:/HB TRACK/docs/02_modulos/training/INVARIANTS/INVARIANTS_TRAINING.md)  
-   → Evidência: `schema.sql`, ADRs em [arquitetura](C:/HB TRACK/docs/ADR/architecture/)
+   → Evidência: `schema.sql`, ADRs em [arquitetura](C:/HB TRACK/docs/ADR/)
 
 5. **Como estão os arquivos gerados (schema, API, reports)?**  
    → Leia: [04_SOURCES_GENERATED.md](C:/HB TRACK/docs/_canon/04_SOURCES_GENERATED.md)  

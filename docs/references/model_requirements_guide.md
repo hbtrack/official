@@ -512,10 +512,10 @@ $LASTEXITCODE
 
 ## Referências
 
-- **ADR:** [ADR-MODELS-001](../adr/architecture/ADR-MODELS-001.md)
-- **Exit Codes:** [exit_codes.md](../references/exit_codes.md)
-- **EXEC_TASK:** [EXEC_TASK_ADR_MODELS_001.md](../_ai/EXEC_TASK_ADR_MODELS_001.md)
-- **Source:** [model_requirements.py](../../scripts/model_requirements.py)
+- **ADR:** [ADR-MODELS-001](C:/HB TRACK/docs/ADR/013-ADR-MODELS.md)
+- **Exit Codes:** [exit_codes.md](C:/HB TRACK/docs/references/exit_codes.md)
+- **EXEC_TASK:** [EXEC_TASK_ADR_MODELS_001.md](C:/HB TRACK/docs/execution_tasks/EXEC_TASK_ADR_MODELS_001.md)
+- **Source:** [model_requirements.py](C:/HB TRACK/Hb Track - Backend/scripts/model_requirements.py)
 
 ---
 
