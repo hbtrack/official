@@ -439,16 +439,27 @@ def _remove_duplicate_column_definitions(src: str) -> str:
         is_duplicate_column = re.match(r'^\s+\w+:\s*Mapped\[.*\]\s*=\s*mapped_column\s*\(', line)
 
         if is_duplicate_column:
-            # Count parentheses to find where definition ends
+            # Collect ALL lines of this definition (including continuations)
+            definition_lines = [line]
             open_count = line.count('(')
             close_count = line.count(')')
 
-            # Skip this line and all continuation lines
-            i += 1
-            while i < len(lines) and open_count > close_count:
-                open_count += lines[i].count('(')
-                close_count += lines[i].count(')')
-                i += 1
+            j = i + 1
+            while j < len(lines) and open_count > close_count:
+                definition_lines.append(lines[j])
+                open_count += lines[j].count('(')
+                close_count += lines[j].count(')')
+                j += 1
+
+            # Check if ANY line in the definition contains primary_key
+            full_definition = '\n'.join(definition_lines)
+            if 'primary_key' in full_definition:
+                # Keep this definition (it's a PK, might be intentional)
+                result_lines.extend(definition_lines)
+                i = j
+            else:
+                # Remove this definition (it's a duplicate)
+                i = j
             continue
 
         # Keep everything else (relationships, properties, methods, etc.)
