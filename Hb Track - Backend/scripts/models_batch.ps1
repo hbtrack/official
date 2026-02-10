@@ -186,12 +186,12 @@ function Run-Gate([string]$TableName, [string]$Profile, [string]$LogPath) {
   $gate = ".\scripts\models_autogen_gate.ps1"
 
   Write-Host "`n[GATE] $TableName (profile=$Profile)" -ForegroundColor Cyan
-  Add-Content -Path $LogPath -Value "`n[GATE] $TableName (profile=$Profile)`nCMD: $gate -Table $TableName -Profile $Profile`n"
+  Add-Content -Path $LogPath -Value "`n[GATE] $TableName (profile=$Profile)`n"
 
   if ($Profile -eq "fk") {
-    & $gate -Table $TableName -Profile $Profile -AllowCycleWarning *>> $LogPath
+    & $gate -Table $TableName -Profile $Profile -AllowCycleWarning 2>&1 | Tee-Object -Append -FilePath $LogPath | Out-Null
   } else {
-    & $gate -Table $TableName -Profile $Profile *>> $LogPath
+    & $gate -Table $TableName -Profile $Profile 2>&1 | Tee-Object -Append -FilePath $LogPath | Out-Null
   }
 
   return $LASTEXITCODE
@@ -210,7 +210,7 @@ function Maybe-SnapshotBaseline([string]$LogPath) {
   & ".\venv\Scripts\python.exe" scripts\agent_guard.py snapshot `
     --root "." `
     --out ".hb_guard/baseline.json" `
-    --exclude "venv,.venv,__pycache__,.pytest_cache,docs\_generated" *>> $LogPath
+    --exclude "venv,.venv,__pycache__,.pytest_cache,docs\_generated" 2>&1 | Tee-Object -Append -FilePath $LogPath | Out-Null
 
   $ec = $LASTEXITCODE
   if ($ec -ne 0) { Abort "snapshot baseline falhou (exit=$ec)" $ec }
