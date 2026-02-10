@@ -32,7 +32,6 @@ from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
 # HB-AUTOGEN-IMPORTS:END
-
 from datetime import datetime
 from typing import Optional, TYPE_CHECKING
 from uuid import uuid4
@@ -124,12 +123,6 @@ class CompetitionStanding(Base):
     )
 
     # Primary key
-    id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
-        primary_key=True,
-        default=lambda: str(uuid4()),
-        server_default=text("gen_random_uuid()"),
-    )
 
     # Competition FK
 
