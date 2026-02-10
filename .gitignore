@@ -3,6 +3,7 @@ report*.json
 report*.txt
 validation_report.txt
 docs/scripts/consolidated_report.json
+docs/_generated/
 
 # Build/test artifacts
 build/
@@ -56,6 +57,7 @@ report*.json
 report*.txt
 validation_report.txt
 docs/scripts/consolidated_report.json
+docs/_generated/
 
 # Build/test artifacts
 build/
