@@ -507,12 +507,12 @@
       "size": 7387
     },
     "app\\models\\competition_phase.py": {
-      "sha256": "56f7d2c412d02181ad24da19d103687e671a8f1b8c544b8ec9dd6143b9fb8a2c",
-      "size": 4375
+      "sha256": "1bb19405e0075c06be080d8c95e0ffe3e38af437a190a911346cc690adbac3e9",
+      "size": 4689
     },
     "app\\models\\competition_season.py": {
-      "sha256": "afb2e45bf48d968cc65b587a5cd255d62b6b2e1026726fb27061e5dfe475edd4",
-      "size": 3076
+      "sha256": "7a0f4fa37c6d726389743b424c99bd6ce613a0219b1949edb986fa7591c706b8",
+      "size": 4025
     },
     "app\\models\\competition_standing.py": {
       "sha256": "8e8f5f912b1723c49a0e32b1fa3c9f4dc0c5fe2cf2ae9da899e28f0465246106",
@@ -2441,6 +2441,10 @@
     "tests\\users\\test_user_service.py": {
       "sha256": "2bf25dbb84adf74cbf1531ff090c9d3a828b9bdf429dd60fa4ce9855295e91dc",
       "size": 2317
+    },
+    "tmp_batch_loop.ps1": {
+      "sha256": "763ce304b8239f8342cd0afed53a29b367d9873541ac9f9993ffb3132be23744",
+      "size": 4389
     },
     "validate_and_fix_hash.py": {
       "sha256": "47968c9fe425c1474ed3b1d3c8bc7aa1704e037e36d83774a3ea5ec09b95153b",
