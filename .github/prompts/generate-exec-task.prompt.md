@@ -11,10 +11,10 @@ Objetivo: criar/atualizar um documento de execução (EXEC_TASK) derivado de uma
 
 ## Fontes
 
-- Template: [INV_TASK_TEMPLATE](../../../docs/_ai/INV_TASK_TEMPLATE.md)
-- Workflows canônicos: [WORKFLOWS](../../../docs/_canon/03_WORKFLOWS.md)
-- Approved commands: [APPROVED_COMMANDS](../../../docs/_canon/08_APPROVED_COMMANDS.md)
-- ADR Models: [013-ADR-MODELS](../../../docs/ADR/architecture/013-ADR-MODELS.md)
+- Template: [INV_TASK_TEMPLATE](C:\HB TRACK/docs/_ai/INV_TASK_TEMPLATE.md)
+- Workflows canônicos: [WORKFLOWS](C:\HB TRACK/docs/_canon/03_WORKFLOWS.md)
+- Approved commands: [APPROVED_COMMANDS](C:\HB TRACK/docs/_canon/08_APPROVED_COMMANDS.md)
+- ADR Models: [013-ADR-MODELS](C:\HB TRACK/docs/ADR/architecture/013-ADR-MODELS.md)
 - Pasta de execução: `docs/execution_tasks/`
 
 ## Entrada
@@ -42,4 +42,4 @@ Exemplos: `"docs/ADR/013-ADR-MODELS.md"` ou um identificador equivalente
 - Lista de arquivos tocados
 - Critérios de aceitação e evidências
 
-**Regra:** Use apenas comandos de [APPROVED_COMMANDS](../../../docs/_canon/08_APPROVED_COMMANDS.md). Se precisar de novo comando, documente em ADR ou marque como PENDENTE.
+**Regra:** Use apenas comandos de [APPROVED_COMMANDS](C:\HB TRACK/docs/_canon/08_APPROVED_COMMANDS.md). Se precisar de novo comando, documente em ADR ou marque como PENDENTE.

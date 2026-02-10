@@ -1,4 +1,4 @@
-Execute a tarefa exatamente como definida no arquivo [EXEC_TASK_ADR_MODELS_001.md](../../../docs/_ai/EXEC_TASK_ADR_MODELS_001.md). 
+Execute a tarefa exatamente como definida no arquivo [EXEC_TASK_ADR_MODELS_001.md](C:\HB TRACK/docs/_ai/EXEC_TASK_ADR_MODELS_001.md). 
 
 Regras obrigatórias:
 
