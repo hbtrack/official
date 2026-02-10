@@ -57,7 +57,7 @@ O pipeline de validação de models garante **conformidade 100%** entre:
    - Conteúdo: SHA256 + size de todos os arquivos rastreados (exceto excludes)
 
 3. **Regras de Integridade (RDB)**
-   - Documento: `docs/_Hb Track/PRD_HB_TRACK.md` (Seção 8.3)
+   - Documento: `docs/00_product/PRD_HB_TRACK.md` (Seção 8.3)
    - Regras: FK obrigatórios, CHECK constraints, nullable explícito, validações de negócio
 
 ### 2.2 Dependências Externas
@@ -442,10 +442,10 @@ git restore -- `
 
 # No repo root (se necessário)
 git restore -- `
-  "..\docs\_generated\alembic_state.txt" `
-  "..\docs\_generated\manifest.json" `
-  "..\docs\_generated\schema.sql" `
-  "..\docs\_generated\trd_training_permissions_report.txt"
+  "C:/HB TRACK/Hb Track - Backend/docs/_generated/alembic_state.txt" `
+  "C:/HB TRACK/Hb Track - Backend/docs/_generated/manifest.json" `
+  "C:/HB TRACK/Hb Track - Backend/docs/_generated/schema.sql" `
+  "C:/HB TRACK/Hb Track - Backend/docs/_generated/trd_training_permissions_report.txt"
 ```
 
 ---
@@ -997,20 +997,20 @@ Se cycle warning presente, usar `-AllowCycleWarning`.
 
 ### 11.1 Documentos Relacionados
 
-- **ADR-MODELS-001**: [docs/ADR/architecture/_INDEX_ADR.md](../../ADR/architecture/_INDEX_ADR.md)
-- **CHECKLIST-CANONICA-MODELS**: [Hb Track - Backend/docs/architecture/CHECKLIST-CANONICA-MODELS.md](../../Hb%20Track%20-%20Backend/docs/architecture/CHECKLIST-CANONICA-MODELS.md)
-- **Exit Codes Reference**: [docs/references/exit_codes.md](../references/exit_codes.md)
-- **PRD (Seção 8.3 - RDB)**: [docs/_Hb Track/PRD_HB_TRACK.md](../../docs/_Hb%20Track/PRD_HB_TRACK.md)
-- **Canonical Sources**: [docs/_canon/00_START_HERE.md](../canon/00_START_HERE.md)
+- **ADR-MODELS-001**: [docs/ADR/_INDEX_ADR.md](C:/HB TRACK/docs/ADR/_INDEX_ADR.md)
+- **CHECKLIST-CANONICA-MODELS**: [docs/execution_tasks/CHECKLIST-CANONICA-MODELS.md](C:/HB TRACK/docs/execution_tasks/CHECKLIST-CANONICA-MODELS.md)
+- **Exit Codes Reference**: [docs/references/exit_codes.md](C:/HB TRACK/docs/references/exit_codes.md)
+- **PRD (Seção 8.3 - RDB)**: [docs/00_product/PRD_HB_TRACK.md](C:/HB TRACK/docs/00_product/PRD_HB_TRACK.md)
+- **Canonical Sources**: [docs/_canon/00_START_HERE.md](C:/HB TRACK/docs/_canon/00_START_HERE.md)
 
 ### 11.2 Scripts Relacionados
 
-- **models_autogen_gate.ps1**: [Hb Track - Backend/scripts/models_autogen_gate.ps1](../../Hb%20Track%20-%20Backend/scripts/models_autogen_gate.ps1)
-- **parity_gate.ps1**: [Hb Track - Backend/scripts/parity_gate.ps1](../../Hb%20Track%20-%20Backend/scripts/parity_gate.ps1)
-- **parity_scan.ps1**: [Hb Track - Backend/scripts/parity_scan.ps1](../../Hb%20Track%20-%20Backend/scripts/parity_scan.ps1)
-- **autogen_model_from_db.py**: [Hb Track - Backend/scripts/autogen_model_from_db.py](../../Hb%20Track%20-%20Backend/scripts/autogen_model_from_db.py)
-- **agent_guard.py**: [Hb Track - Backend/scripts/agent_guard.py](../../Hb%20Track%20-%20Backend/scripts/agent_guard.py)
-- **model_requirements.py**: [Hb Track - Backend/scripts/model_requirements.py](../../Hb%20Track%20-%20Backend/scripts/model_requirements.py)
+- **models_autogen_gate.ps1**: [Hb Track - Backend/scripts/models_autogen_gate.ps1](C:/HB TRACK/Hb Track - Backend/scripts/models_autogen_gate.ps1)
+- **parity_gate.ps1**: [Hb Track - Backend/scripts/parity_gate.ps1](C:/HB TRACK/Hb Track - Backend/scripts/parity_gate.ps1)
+- **parity_scan.ps1**: [Hb Track - Backend/scripts/parity_scan.ps1](C:/HB TRACK/Hb Track - Backend/scripts/parity_scan.ps1)
+- **autogen_model_from_db.py**: [Hb Track - Backend/scripts/autogen_model_from_db.py](C:/HB TRACK/Hb Track - Backend/scripts/autogen_model_from_db.py)
+- **agent_guard.py**: [Hb Track - Backend/scripts/agent_guard.py](C:/HB TRACK/Hb Track - Backend/scripts/agent_guard.py)
+- **model_requirements.py**: [Hb Track - Backend/scripts/model_requirements.py](C:/HB TRACK/Hb Track - Backend/scripts/model_requirements.py)
 
 ---
 
