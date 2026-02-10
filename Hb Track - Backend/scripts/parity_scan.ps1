@@ -62,15 +62,20 @@ try {
   if (-not (Test-Path $backendOut)) { New-Item -ItemType Directory -Path $backendOut -Force | Out-Null }
 
   # Executa Alembic via módulo python para evitar erros de PATH do binário alembic
-  # Importante: Alembic pode escrever INFO/WARN no stderr.
-  # Usamos call operator & com redirecionamento para compatibilidade PS5.1
+  # Importante: Alembic pode escrever INFO/WARN no stderr (é normal).
+  # Redirect stderr to stdout e capture tudo no log, mas não propague como erro.
   Write-Host "Executando Alembic..." -ForegroundColor Yellow
 
   if (Test-Path $logPathBackend) { Remove-Item $logPathBackend -Force }
   
-  # Executar alembic e capturar output (stderr vai para $logPathBackend junto com stdout)
-  & $pythonExe -m alembic revision --autogenerate -m $Message *>&1 | Tee-Object -FilePath $logPathBackend | Out-Null
+  # Usar redirecionamento clássico (>) para evitar ErrorActionPreference.Stop trigger
+  $ErrorActionPreference_backup = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"  # permite stderr sem crash
+  
+  & $pythonExe -m alembic revision --autogenerate -m $Message 2>&1 > $logPathBackend
   $alembicExit = $LASTEXITCODE
+  
+  $ErrorActionPreference = $ErrorActionPreference_backup
 
   if ($alembicExit -ne 0) { throw "alembic revision falhou (exit $alembicExit)" }
 
