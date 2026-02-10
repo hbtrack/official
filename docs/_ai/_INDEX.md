@@ -30,23 +30,23 @@ Mirrors existem em `docs/_generated/`, mas a **fonte primária** é o backend.
 
 | Documento | Path | Descrição |
 |-----------|------|-----------|
-| PRD | `docs/Hb Track/PRD_HB_TRACK.md` | PRD v2.1 — Requisitos do produto, user stories, MoSCoW, SLAs, modelo de negócio |
-| PRD Review | `docs/Hb Track/PRD_REVIEW.md` | Revisão técnica do PRD — score card, lacunas, oportunidades de melhoria |
-| Análise de Coerência | `docs/Hb Track/analise_coerencia_documentacao.md` | Análise de coerência PRD↔TRD↔INVARIANTS (escopo Training) |
+| PRD | `docs/00_product/PRD_HB_TRACK.md` | PRD v2.1 — Requisitos do produto, user stories, MoSCoW, SLAs, modelo de negócio |
+| PRD Review | `docs/00_product/PRD_REVIEW.md` | Revisão técnica do PRD — score card, lacunas, oportunidades de melhoria |
+| Análise de Coerência | `docs/00_product/analise_coerencia_documentacao.md` | Análise de coerência PRD↔TRD↔INVARIANTS (escopo Training) |
 
 ---
 
 ## 3. Hierarquia Documental
 
 ```
-docs/Hb Track/PRD_HB_TRACK.md                              (SSOT — requisitos do produto, v2.1)
-├── docs/02-modulos/training/PRD_BASELINE_ASIS_TRAINING.md  (estado implementado, v1.2)
-│   ├── docs/02-modulos/training/TRD_TRAINING.md            (referência técnica, v1.6)
-│   │   ├── docs/02-modulos/training/INVARIANTS_TRAINING.md (invariantes confirmadas/pretendidas/inativas)
-│   │   └── docs/02-modulos/training/INVARIANTS_TESTING_CANON.md (protocolo canônico de testes)
-│   └── docs/02-modulos/training/UAT_PLAN_TRAINING.md       (25 cenários de aceitação, v1.0)
-├── docs/Hb Track/analise_coerencia_documentacao.md         (análise de coerência documental)
-└── docs/Hb Track/PRD_REVIEW.md                             (revisão técnica e recomendações)
+docs/00_product/PRD_HB_TRACK.md                              (SSOT — requisitos do produto, v2.1)
+├── docs/02_modulos/training/PRD_BASELINE_ASIS_TRAINING.md  (estado implementado, v1.2)
+│   ├── docs/02_modulos/training/TRD_TRAINING.md            (referência técnica, v1.6)
+│   │   ├── docs/02_modulos/training/INVARIANTS_TRAINING.md (invariantes confirmadas/pretendidas/inativas)
+│   │   └── docs/02_modulos/training/INVARIANTS_TESTING_CANON.md (protocolo canônico de testes)
+│   └── docs/02_modulos/training/UAT_PLAN_TRAINING.md       (25 cenários de aceitação, v1.0)
+├── docs/00_product/analise_coerencia_documentacao.md         (análise de coerência documental)
+└── docs/00_product/PRD_REVIEW.md                             (revisão técnica e recomendações)
 
 Artefatos gerados (fontes canônicas):
   Hb Track - Backend/docs/_generated/openapi.json

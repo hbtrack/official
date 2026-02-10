@@ -12,7 +12,7 @@
 
 1. **O que governa as decisões neste projeto?**  
    → Leia: [01_AUTHORITY_SSOT.md](C:/HB TRACK/docs/_canon/01_AUTHORITY_SSOT.md)  
-   → Evidência: [001-ADR-TRAIN-ssot-precedencia.md](C:/HB TRACK/docs/ADR/architecture/001-ADR-TRAIN-ssot-precedencia.md)
+   → Evidência: [001-ADR-TRAIN-ssot-precedencia.md](C:/HB TRACK/docs/ADR/001-ADR-TRAIN-ssot-precedencia.md)
 
 2. **Quero fazer X, por onde começo?**  
    → Leia: [02_CONTEXT_MAP.md](C:/HB TRACK/docs/_canon/02_CONTEXT_MAP.md)  
@@ -27,12 +27,12 @@
    → Evidência: `schema.sql`, ADRs em [arquitetura](C:/HB TRACK/docs/ADR/architecture/)
 
 5. **Como estão os arquivos gerados (schema, API, reports)?**  
-   → Leia: [04_SOURCES_GENERATED.md](C:\HB TRACK/docs/_canon/04_SOURCES_GENERATED.md)  
+   → Leia: [04_SOURCES_GENERATED.md](C:/HB TRACK/docs/_canon/04_SOURCES_GENERATED.md)  
    → Evidência: [gerados](C:/HB TRACK/docs/_generated/)
 
 6. **Qual protocolo devo seguir para adicionar features/fixes?**  
    → Leia: [INVARIANTS_AGENT_PROTOCOL.md](C:/HB TRACK/docs/_ai/INVARIANTS_AGENT_PROTOCOL.md)  
-   → Referência: [EXEC_TASK_ADR_MODELS_001.md](C:/HB TRACK/docs/ADR/architecture/EXEC_TASK_ADR_MODELS_001.md)
+   → Referência: [EXEC_TASK_ADR_MODELS_001.md](C:/HB TRACK/docs/execution_tasks/EXEC_TASK_ADR_MODELS_001.md)
 
 ---
 
@@ -52,9 +52,10 @@ docs/
   _ai/             ← Protocolos de agentes, guardrails
   _generated/      ← Outputs de tools (schema.sql, openapi.json, etc)
   ADR/             ← Decisões arquiteturais (001-013)
+  execution_tasks/ ← EXEC_TASK para workflows
   references/      ← exit_codes.md, model_requirements_guide.md
   02_modulos/      ← Modelos e invariantes por domínio
-  _Hb Track/       ← PRD e documentação de produto
+  00_product/      ← PRD e documentação de produto
 ```
 
 ---
@@ -64,7 +65,7 @@ docs/
 1. Se é sua **primeira vez**, leia [02_CONTEXT_MAP.md](C:/HB TRACK/docs/_canon/02_CONTEXT_MAP.md) para entender fluxos
 2. Se precisa **fazer algo imediatamente**, vá direto para [03_WORKFLOWS.md](C:/HB TRACK/docs/_canon/03_WORKFLOWS.md)
 3. Se tem dúvida sobre **o quê confiar**, consulte [01_AUTHORITY_SSOT.md](C:/HB TRACK/docs/_canon/01_AUTHORITY_SSOT.md)
-4. Se precisa **entender uma decisão**, busque no [_INDEX_ADR.md](C:/HB TRACK/docs/ADR/architecture/_INDEX_ADR.md)
+4. Se precisa **entender uma decisão**, busque no [_INDEX_ADR.md](C:/HB TRACK/docs/ADR/_INDEX_ADR.md)
 
 ---
 

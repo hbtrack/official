@@ -22,7 +22,7 @@ Estes arquivos são **derivados** de SSOT (schema.sql, código, ADRs). Consulte 
 
 - **Sempre que:** mudar `schema.sql` diretamente, commitar novo código de modelo, adicionar/remover endpoint
 - **Teste:** regenerate → integre no CI/CD (pull sempre antes de merge)
-- **Dúvida:** vá para [001-ADR-TRAIN-ssot-precedencia.md](C:/HB TRACK/docs/ADR/architecture/001-ADR-TRAIN-ssot-precedencia.md) (SSOT wins)
+- **Dúvida:** vá para [001-ADR-TRAIN-ssot-precedencia.md](C:/HB TRACK/docs/ADR/001-ADR-TRAIN-ssot-precedencia.md) (SSOT wins)
 
 ---
 

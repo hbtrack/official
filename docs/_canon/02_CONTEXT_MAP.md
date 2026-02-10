@@ -24,7 +24,7 @@ Use este mapa: **Tenho intenção de X** → leia Y → gero evidência Z → sa
 **Intenção:** Há conflito entre `app/models/SessionType.py` e `schema.sql`
 
 **Ler Primeiro:**
-- [013-ADR-MODELS.md](C:/HB TRACK/docs/ADR/architecture/013-ADR-MODELS.md)
+- [013-ADR-MODELS.md](C:/HB TRACK/docs/ADR/013-ADR-MODELS.md)
 - [model_requirements_guide.md](C:/HB TRACK/docs/references/model_requirements_guide.md)
 - Arquivo: [schema.sql](C:/HB TRACK/docs/_generated/schema.sql)
 - Arquivo: [alembic_state.txt](C:/HB TRACK/docs/_generated/alembic_state.txt) (estado atual)
@@ -54,7 +54,7 @@ Use este mapa: **Tenho intenção de X** → leia Y → gero evidência Z → sa
 **Intenção:** Adicionar novo exit code (ex: exit=5 para "feature flag off")
 
 **Ler Primeiro:**
-- [001-ADR-TRAIN-ssot-precedencia.md](C:/HB TRACK/docs/ADR/architecture/001-ADR-TRAIN-ssot-precedencia.md)
+- [001-ADR-TRAIN-ssot-precedencia.md](C:/HB TRACK/docs/ADR/001-ADR-TRAIN-ssot-precedencia.md)
 - [exit_codes.md](C:/HB TRACK/docs/references/exit_codes.md)
 
 **Evidência Gerada:** Scripts alterados, docs atualizadas
@@ -83,7 +83,7 @@ Use este mapa: **Tenho intenção de X** → leia Y → gero evidência Z → sa
 
 **Ler Primeiro:**
 - [INVARIANTS_TRAINING.md](C:/HB TRACK/docs/02_modulos/training/INVARIANTS/INVARIANTS_TRAINING.md)
-- [_INDEX_ADR.md](C:/HB TRACK/docs/ADR/architecture/_INDEX_ADR.md) (busque por "training")
+- [_INDEX_ADR.md](C:/HB TRACK/docs/ADR/_INDEX_ADR.md) (busque por "training")
 
 **Evidência Gerada:** Diagrama, schema.sql (tabelas: training_cycles, training_microcycles, etc)
 
@@ -97,7 +97,7 @@ Use este mapa: **Tenho intenção de X** → leia Y → gero evidência Z → sa
 
 **Ler Primeiro:**
 - Arquivo: [schema.sql](C:/HB TRACK/docs/_generated/schema.sql) (tabelas `defensive_positions`, `offensive_positions`)
-- [002-ADR-TRAIN-dominio-treino.md](C:/HB TRACK/docs/ADR/architecture/002-ADR-TRAIN-dominio-treino.md)
+- [002-ADR-TRAIN-dominio-treino.md](C:/HB TRACK/docs/ADR/002-ADR-TRAIN-dominio-treino.md)
 - [INVARIANTS_TRAINING.md](C:/HB TRACK/docs/02_modulos/training/INVARIANTS/INVARIANTS_TRAINING.md) (busque por "posição")
 
 **Evidência Gerada:** Schema alterado, migration file gerada, testes passando
@@ -128,7 +128,7 @@ Use este mapa: **Tenho intenção de X** → leia Y → gero evidência Z → sa
 **Ler Primeiro:**
 - Arquivo: [schema.sql](C:/HB TRACK/docs/_generated/schema.sql) (tabelas `roles`, `permissions`, `role_permissions`)
 - Arquivo: [trd_training_permissions_report.txt](C:/HB TRACK/docs/_generated/trd_training_permissions_report.txt) (análise de permissões vigentes)
-- [010-ADR-TRAIN-rbac.md](C:/HB TRACK/docs/ADR/architecture/010-ADR-TRAIN-rbac.md)
+- [010-ADR-TRAIN-rbac.md](C:/HB TRACK/docs/ADR/010-ADR-TRAIN-rbac.md)
 
 **Evidência Gerada:** Permissão no BD, policy/middleware no serviço, tests de RBAC
 
@@ -142,7 +142,7 @@ Use este mapa: **Tenho intenção de X** → leia Y → gero evidência Z → sa
 
 **Ler Primeiro:**
 - Arquivo: [schema.sql](C:/HB TRACK/docs/_generated/schema.sql) (tabelas `matches`, `match_periods`, `match_events`, `match_possessions`)
-- [004-ADR-TRAIN-match-modeling.md](C:/HB TRACK/docs/ADR/architecture/004-ADR-TRAIN-match-modeling.md)
+- [004-ADR-TRAIN-match-modeling.md](C:/HB TRACK/docs/ADR/004-ADR-TRAIN-match-modeling.md)
 - [INVARIANTS_TRAINING.md](C:/HB TRACK/docs/02_modulos/training/INVARIANTS/INVARIANTS_TRAINING.md) (invariantes de match)
 
 **Evidência Gerada:** alembic migration ou data correction script, parity_report.json, validation queries
@@ -158,7 +158,7 @@ Use este mapa: **Tenho intenção de X** → leia Y → gero evidência Z → sa
 **Ler Primeiro:**
 - Arquivo: [openapi.json](C:/HB TRACK/docs/_generated/openapi.json) (endpoints de reports disponíveis)
 - [model_requirements_guide.md](C:/HB TRACK/docs/references/model_requirements_guide.md)
-- [009-ADR-TRAIN-analytics.md](C:/HB TRACK/docs/ADR/architecture/009-ADR-TRAIN-analytics.md)
+- [009-ADR-TRAIN-analytics.md](C:/HB TRACK/docs/ADR/009-ADR-TRAIN-analytics.md)
 
 **Evidência Gerada:** Nova view SQL, endpoint REST, testes de cálculo, dashboard data
 
