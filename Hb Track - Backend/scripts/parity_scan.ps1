@@ -50,11 +50,9 @@ try {
 
   # Configuração de Paths (use env vars if set, else default)
   $generatedDirName = if ($env:HB_DOCS_GENERATED_DIR) { $env:HB_DOCS_GENERATED_DIR } else { "_generated" }
-  Write-Host "[DEBUG] generatedDirName=$generatedDirName" -ForegroundColor Magenta
   # Join-Path com 3 argumentos causa problemas em PS5.1 - usar nested Join-Path
   $docsDir = Join-Path $RepoRoot "docs"
   $backendOut = Join-Path $docsDir $generatedDirName
-  Write-Host "[DEBUG] backendOut=$backendOut" -ForegroundColor Magenta
   $logPathBackend = Join-Path $backendOut "parity-scan.log"
   $reportPathBackend = Join-Path $backendOut "parity_report.json"
 
@@ -63,21 +61,24 @@ try {
 
   # Executa Alembic via módulo python para evitar erros de PATH do binário alembic
   # Importante: Alembic pode escrever INFO/WARN no stderr (é normal).
-  # Redirect stderr to stdout e capture tudo no log, mas não propague como erro.
+  # Sucesso/falha determinado SOMENTE por $LASTEXITCODE, não por texto.
   Write-Host "Executando Alembic..." -ForegroundColor Yellow
 
-  if (Test-Path $logPathBackend) { Remove-Item $logPathBackend -Force }
+  # Garante diretório do log
+  $logDir = Split-Path -Parent $logPathBackend
+  if (-not (Test-Path $logDir)) { New-Item -ItemType Directory -Path $logDir -Force | Out-Null }
   
-  # Usar redirecionamento clássico (>) para evitar ErrorActionPreference.Stop trigger
-  $ErrorActionPreference_backup = $ErrorActionPreference
-  $ErrorActionPreference = "Continue"  # permite stderr sem crash
-  
-  & $pythonExe -m alembic revision --autogenerate -m $Message 2>&1 > $logPathBackend
-  $alembicExit = $LASTEXITCODE
-  
-  $ErrorActionPreference = $ErrorActionPreference_backup
+  # Roda alembic e captura stdout+stderr no log (e também no console)
+  & $pythonExe -m alembic revision --autogenerate -m $Message 2>&1 | Tee-Object -FilePath $logPathBackend -Append
 
-  if ($alembicExit -ne 0) { throw "alembic revision falhou (exit $alembicExit)" }
+  $ec = $LASTEXITCODE
+  Write-Host "[ALEMBIC_EXIT]=$ec" -ForegroundColor Gray
+
+  if ($ec -ne 0) {
+    throw "alembic falhou (exit=$ec). Veja log: $logPathBackend"
+  }
+
+  Write-Host "[OK] Alembic scan concluído" -ForegroundColor Green
 
   # 3) Classifica log em JSON
   Write-Host "Classificando discrepancias..." -ForegroundColor Yellow
