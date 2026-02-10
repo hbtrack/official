@@ -88,11 +88,11 @@ Artefatos gerados (fontes canônicas):
 
 | Documento | Path | Descrição |
 |-----------|------|-----------|
-| PRD Baseline AS-IS | `docs/02-modulos/training/PRD_BASELINE_ASIS_TRAINING.md` | Estado implementado do módulo Training (v1.2, baseline evidence snapshot) |
-| TRD | `docs/02-modulos/training/TRD_TRAINING.md` | Referência técnica — contratos API, regras de negócio, evidências, gaps |
-| Invariantes | `docs/02-modulos/training/INVARIANTS_TRAINING.md` | Invariantes do módulo Training — confirmadas, pretendidas e inativas |
-| Canon de Testes | `docs/02-modulos/training/INVARIANTS_TESTING_CANON.md` | Protocolo canônico (Rule of Law) para testes de invariantes — DoD, classes A-F, anti-alucinação |
-| UAT Plan | `docs/02-modulos/training/UAT_PLAN_TRAINING.md` | Plano de User Acceptance Testing v1.0 — 25 cenários de aceitação |
+| PRD Baseline AS-IS | `C:/HB TRACK/docs/02_modulos/training/PRD_BASELINE_ASIS_TRAINING.md` | Estado implementado do módulo Training (v1.2, baseline evidence snapshot) |
+| TRD | `C:/HB TRACK/docs/02_modulos/training/TRD_TRAINING.md` | Referência técnica — contratos API, regras de negócio, evidências, gaps |
+| Invariantes | `C:/HB TRACK/docs/02_modulos/training/INVARIANTS_TRAINING.md` | Invariantes do módulo Training — confirmadas, pretendidas e inativas |
+| Canon de Testes | `C:/HB TRACK/docs/02_modulos/training/INVARIANTS_TESTING_CANON.md` | Protocolo canônico (Rule of Law) para testes de invariantes — DoD, classes A-F, anti-alucinação |
+| UAT Plan | `C:/HB TRACK/docs/02_modulos/training/UAT_PLAN_TRAINING.md` | Plano de User Acceptance Testing v1.0 — 25 cenários de aceitação |
 
 ---
 
@@ -100,12 +100,12 @@ Artefatos gerados (fontes canônicas):
 
 | Documento | Path | Descrição |
 |-----------|------|-----------|
-| Anchor Map | `docs/02-modulos/training/ANCHOR_MAP.md` | Mapa de âncoras: fluxos UI → operationIds → tabelas/colunas → invariantes |
-| Candidates | `docs/02-modulos/training/training_invariants_candidates.md` | Worklist de promoção — candidatas a invariantes |
-| Backlog | `docs/02-modulos/training/training_invariants_backlog.md` | Backlog de invariantes pendentes de análise |
-| Parity Scan Protocol | `docs/02-modulos/training/PARITY_SCAN._PROTOCOL.md` | Protocolo de verificação de paridade model↔schema |
-| Canon AS-IS | `docs/02-modulos/training/_CANON_AS_IS.md` | Estado canônico atual do módulo |
-| Validação de Testes | `docs/02-modulos/training/VALIDAR_INVARIANTS_TESTS.md` | Checklist de validação dos testes de invariantes |
+| Anchor Map | `C:/HB TRACK/docs/02_modulos/training/ANCHOR_MAP.md` | Mapa de âncoras: fluxos UI → operationIds → tabelas/colunas → invariantes |
+| Candidates | `C:/HB TRACK/docs/02_modulos/training/training_invariants_candidates.md` | Worklist de promoção — candidatas a invariantes |
+| Backlog | `C:/HB TRACK/docs/02_modulos/training/training_invariants_backlog.md` | Backlog de invariantes pendentes de análise |
+| Parity Scan Protocol | `C:/HB TRACK/docs/02_modulos/training/PARITY_SCAN._PROTOCOL.md` | Protocolo de verificação de paridade model↔schema |
+| Canon AS-IS | `C:/HB TRACK/docs/02_modulos/training/_CANON_AS_IS.md` | Estado canônico atual do módulo |
+| Validação de Testes | `C:/HB TRACK/docs/02_modulos/training/VALIDAR_INVARIANTS_TESTS.md` | Checklist de validação dos testes de invariantes |
 
 ---
 

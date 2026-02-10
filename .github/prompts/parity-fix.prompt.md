@@ -11,11 +11,11 @@ Objetivo: reduzir divergências estruturais Model↔DB com base em evidência do
 
 ## Contexto Canônico (Leia/Consulte)
 
-- [START HERE](C:\HB TRACK/docs/_canon/00_START_HERE.md)
-- [AUTHORITY/SSOT](C:\HB TRACK/docs/_canon/01_AUTHORITY_SSOT.md)
-- [MODELS PIPELINE](C:\HB TRACK/docs/_canon/05_MODELS_PIPELINE.md)
-- [TROUBLESHOOTING parity/guard](C:\HB TRACK/docs/_canon/09_TROUBLESHOOTING_GUARD_PARITY.md)
-- ADR: [013-ADR-MODELS](C:\HB TRACK/docs/ADR/architecture/013-ADR-MODELS.md)
+- [START HERE](C:/HB TRACK/docs/_canon/00_START_HERE.md)
+- [AUTHORITY/SSOT](C:/HB TRACK/docs/_canon/01_AUTHORITY_SSOT.md)
+- [MODELS PIPELINE](C:/HB TRACK/docs/_canon/05_MODELS_PIPELINE.md)
+- [TROUBLESHOOTING parity/guard](C:/HB TRACK/docs/_canon/09_TROUBLESHOOTING_GUARD_PARITY.md)
+- ADR: [013-ADR-MODELS](C:/HB TRACK/docs/ADR/architecture/013-ADR-MODELS.md)
 
 ## Evidência Obrigatória (Use Sempre)
 
@@ -36,7 +36,7 @@ Objetivo: reduzir divergências estruturais Model↔DB com base em evidência do
 
 4) **Proponha o patch mínimo** (1 tabela por vez), mantendo precedência/SSOT do projeto
 
-5) **Defina o comando exato para revalidar** (use apenas comandos aprovados em [APPROVED_COMMANDS](C:\HB TRACK/docs/_canon/08_APPROVED_COMMANDS.md)). Inclua o output esperado (ex.: `structural_count` diminui)
+5) **Defina o comando exato para revalidar** (use apenas comandos aprovados em [APPROVED_COMMANDS](C:/HB TRACK/docs/_canon/08_APPROVED_COMMANDS.md)). Inclua o output esperado (ex.: `structural_count` diminui)
 
 ## Entrega
 

@@ -11,10 +11,10 @@ Objetivo: executar ou guiar execução do gate Model↔DB e produzir decisão ob
 
 ## Autoridade e Guias
 
-- [MODELS PIPELINE](C:\HB TRACK/docs/_canon/05_MODELS_PIPELINE.md)
-- [APPROVED COMMANDS](C:\HB TRACK/docs/_canon/08_APPROVED_COMMANDS.md)
-- [TROUBLESHOOTING parity/guard](C:\HB TRACK/docs/_canon/09_TROUBLESHOOTING_GUARD_PARITY.md)
-- ADR: [013-ADR-MODELS](C:\HB TRACK/docs/ADR/architecture/013-ADR-MODELS.md)
+- [MODELS PIPELINE](C:/HB TRACK/docs/_canon/05_MODELS_PIPELINE.md)
+- [APPROVED COMMANDS](C:/HB TRACK/docs/_canon/08_APPROVED_COMMANDS.md)
+- [TROUBLESHOOTING parity/guard](C:/HB TRACK/docs/_canon/09_TROUBLESHOOTING_GUARD_PARITY.md)
+- ADR: [013-ADR-MODELS](C:/HB TRACK/docs/ADR/architecture/013-ADR-MODELS.md)
 
 ## Evidência Atual
 
@@ -34,4 +34,4 @@ Objetivo: executar ou guiar execução do gate Model↔DB e produzir decisão ob
 2) **Próxima ação recomendada** — com arquivos e diffs esperados
 3) **Comandos aprovados para validar** — e critério "pronto suficiente"
 
-**Regra:** Não inventar comandos. Se um comando não estiver em [APPROVED_COMMANDS](C:\HB TRACK/docs/_canon/08_APPROVED_COMMANDS.md)
+**Regra:** Não inventar comandos. Se um comando não estiver em [APPROVED_COMMANDS](C:/HB TRACK/docs/_canon/08_APPROVED_COMMANDS.md)
