@@ -515,8 +515,8 @@
       "size": 4025
     },
     "app\\models\\competition_standing.py": {
-      "sha256": "8e8f5f912b1723c49a0e32b1fa3c9f4dc0c5fe2cf2ae9da899e28f0465246106",
-      "size": 5527
+      "sha256": "394298f7290c85f1d6a6bf6761ce03b8850460615f47f75f7c7c016df96afda3",
+      "size": 6161
     },
     "app\\models\\data_access_log.py": {
       "sha256": "16f7df4c1b6aac9f84ca033529d7f3d644631e0202f1e95ac5bc4254d1446233",
