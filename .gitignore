@@ -45,6 +45,9 @@ Thumbs.db
 .hb_backups/
 .hb_tmp_tests/
 
+# Temporary batch scripts
+tmp_*.ps1
+
 # Local/invalid placeholders on Windows
 nul
 */nul
