@@ -85,13 +85,6 @@ class CompetitionSeason(Base):
     updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
 
     # HB-AUTOGEN:END
-    __table_args__ = (
-        UniqueConstraint(
-            "competition_id",
-            "season_id",
-            name="uq_competition_seasons_competition_season"
-        ),
-    )
 
     # Primary key
 
