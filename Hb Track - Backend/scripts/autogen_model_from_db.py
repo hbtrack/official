@@ -512,8 +512,12 @@ def _remove_duplicate_column_definitions_impl(src: str) -> str:
             continue
 
         # Detect duplicate column definition patterns (outside HB-AUTOGEN)
-        # Pattern: "    name: Mapped[...] = mapped_column(...)"
-        is_duplicate_column = re.match(r'^\s+\w+:\s*Mapped\[.*\]\s*=\s*mapped_column\s*\(', line)
+        # Pattern 1 (new style): "    name: Mapped[...] = mapped_column(...)"
+        # Pattern 2 (legacy):    "    name = Column(...)"
+        is_duplicate_column = (
+            re.match(r'^\s+\w+:\s*Mapped\[.*\]\s*=\s*mapped_column\s*\(', line)
+            or re.match(r'^\s+\w+\s*=\s*Column\s*\(', line)
+        )
 
         if is_duplicate_column:
             # Collect ALL lines of this definition (including continuations)
