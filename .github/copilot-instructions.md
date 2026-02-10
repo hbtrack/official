@@ -1,6 +1,6 @@
 ---
 description: HB Track project context and mandatory execution rules for Agent/Copilot
-applyTo: '.github/'
+applyTo: 'Hb Track/**'
 ---
 
 ## PORTA ÚNICA: Camada Canônica Docs

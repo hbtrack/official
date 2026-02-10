@@ -2,7 +2,6 @@
 name: install-invariant
 description: Instalar nova invariante de training seguindo protocolo/guardrails e atualizando SSOT + testes + evidência.
 argument-hint: "opcional: INV-ID (ex: INV-TRAIN-041) ou 'next'"
-agent: copilot
 ---
 
 # Install Invariant Protocol

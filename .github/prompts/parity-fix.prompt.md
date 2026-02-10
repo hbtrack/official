@@ -2,7 +2,6 @@
 name: parity-fix
 description: Corrigir divergências Model↔DB guiado por parity_report.json, schema.sql e ADR-MODELS. Produz plano + patch + evidências.
 argument-hint: "opcional: nome da tabela alvo (ex: categories) ou 'next'"
-agent: copilot
 ---
 
 # Parity Fix Protocol

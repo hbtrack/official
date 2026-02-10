@@ -2,7 +2,6 @@
 name: generate-exec-task
 description: Gerar um EXEC_TASK a partir de ADR/SSOT seguindo template e incluindo gates, evidências e checklist de PR.
 argument-hint: "obrigatório: ADR alvo (ex: ADR-MODELS-001 ou caminho do arquivo)"
-agent: copilot
 ---
 
 # Generate Exec Task Protocol

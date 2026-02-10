@@ -2,7 +2,6 @@
 name: models-gate
 description: Rodar/avaliar o gate de modelos (Model↔DB) e orientar correção com evidências e critérios de pronto.
 argument-hint: "opcional: 'scan', 'fix-next', ou nome da tabela"
-agent: copilot
 ---
 
 # Models Gate Protocol
