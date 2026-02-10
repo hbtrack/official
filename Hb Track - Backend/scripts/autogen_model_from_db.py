@@ -407,16 +407,55 @@ def _find_model_file(models_dir: Path, table: str) -> Path:
     return hits[0]
 
 
-def _remove_duplicate_column_definitions(src: str) -> str:
+def find_class_span_for_tablename(src: str, table: str) -> tuple[int, int, str]:
     """
-    Remove column definitions (mapped_column) that are OUTSIDE HB-AUTOGEN blocks.
+    Find the span (start, end) of the class containing __tablename__ = '<table>'.
+
+    Returns:
+        (start_idx, end_idx, base_indent)
+    """
+    tab_m = re.search(rf"^(\s*)__tablename__\s*=\s*['\"]{re.escape(table)}['\"]\s*$",
+                      src, flags=re.MULTILINE)
+    if not tab_m:
+        raise SystemExit(f"[ERROR] __tablename__='{table}' not found")
+
+    base_indent = tab_m.group(1)
+    tablename_pos = tab_m.start()
+
+    # Find 'class ...:' before __tablename__
+    before = src[:tablename_pos]
+    class_matches = list(re.finditer(r'^class\s+\w+.*?:\s*$', before, re.MULTILINE))
+    if not class_matches:
+        raise SystemExit(f"[ERROR] No class found before __tablename__='{table}'")
+
+    class_start = class_matches[-1].start()
+
+    # Find end: next line at indent 0 or EOF
+    after = src[tablename_pos:]
+    end_match = re.search(r'\n(?=^[^\s#])', after, re.MULTILINE)
+    class_end = tablename_pos + end_match.start() if end_match else len(src)
+
+    return (class_start, class_end, base_indent)
+
+
+def remove_duplicate_columns_in_span(src: str, span_start: int, span_end: int) -> str:
+    """Remove duplicate mapped_column ONLY within span (target class)."""
+    prefix = src[:span_start]
+    span = src[span_start:span_end]
+    suffix = src[span_end:]
+    span_cleaned = _remove_duplicate_column_definitions_impl(span)
+    return prefix + span_cleaned + suffix
+
+
+def _remove_duplicate_column_definitions_impl(src: str) -> str:
+    """
+    Implementation of duplicate removal.
+    Operates on a single class body (span).
 
     Preserves:
     - Everything inside HB-AUTOGEN blocks
     - relationship() definitions
     - @property decorators and methods
-    - Comments and docstrings
-    - __table_args__
 
     Removes:
     - Duplicate mapped_column() definitions outside HB-AUTOGEN
@@ -482,48 +521,50 @@ def _remove_duplicate_column_definitions(src: str) -> str:
 
 
 def _patch_class_body(src: str, table: str, new_block: str) -> str:
-    # Find class that contains __tablename__ = "<table>"
-    # Strategy:
-    # - locate the __tablename__ line
-    # - find indentation of class body
-    # - ensure HB-AUTOGEN markers exist (insert if missing)
-    # - replace content between markers at that indent
-    # - remove duplicate column definitions outside HB-AUTOGEN
+    # Find class span for target table
+    class_start, class_end, base_indent = find_class_span_for_tablename(src, table)
 
-    tab_m = re.search(rf"^(\s*)__tablename__\s*=\s*['\"]{re.escape(table)}['\"]\s*$", src, flags=re.MULTILINE)
+    # Extract class body
+    class_body = src[class_start:class_end]
+
+    # Check if markers exist WITHIN this class (not globally)
+    markers_exist_in_class = (CLASS_BLOCK_BEGIN in class_body and
+                              CLASS_BLOCK_END in class_body)
+
+    # Find __tablename__ position within the class
+    tab_m = re.search(rf"^(\s*)__tablename__\s*=\s*['\"]{re.escape(table)}['\"]\s*$",
+                      class_body, flags=re.MULTILINE)
     if not tab_m:
-        raise SystemExit(f"[ERROR] __tablename__='{table}' not found in model source")
+        raise SystemExit(f"[ERROR] __tablename__='{table}' not found in class body")
 
-    base_indent = tab_m.group(1)  # indentation inside class
-
-    # Check if markers exist AFTER __tablename__ (in this class, not globally)
-    src_after_tablename = src[tab_m.end():]
-    markers_exist_in_class = (CLASS_BLOCK_BEGIN in src_after_tablename and
-                              CLASS_BLOCK_END in src_after_tablename)
-
-    # Insert markers if missing in class (at that indent)
+    # Insert markers if missing in THIS class
     if not markers_exist_in_class:
-        # insert right after __tablename__ line
-        insert_pos = tab_m.end()
+        insert_pos = class_start + tab_m.end()
         src = src[:insert_pos] + "\n\n" + new_block + "\n" + src[insert_pos:]
+        # Re-calculate class_end after insertion
+        class_start, class_end, base_indent = find_class_span_for_tablename(src, table)
+        class_body = src[class_start:class_end]
 
-        # after inserting, we will replace again (idempotent)
-    # Now replace between markers with new_block, respecting indent
+    # Replace between markers WITHIN this class only
     pattern = re.compile(
         rf"^{re.escape(base_indent)}{re.escape(CLASS_BLOCK_BEGIN)}.*?^{re.escape(base_indent)}{re.escape(CLASS_BLOCK_END)}\s*$",
         flags=re.MULTILINE | re.DOTALL,
     )
-    if not pattern.search(src):
-        # markers exist but indentation mismatch; fallback: simple replace without indent anchors
-        pattern2 = re.compile(rf"{re.escape(CLASS_BLOCK_BEGIN)}.*?{re.escape(CLASS_BLOCK_END)}", flags=re.DOTALL)
-        if not pattern2.search(src):
-            raise SystemExit("[ERROR] could not locate HB-AUTOGEN block for replacement")
-        src = pattern2.sub(new_block.strip(), src)
-    else:
-        src = pattern.sub(new_block.strip(), src)
 
-    # NEW: Remove duplicate column definitions outside HB-AUTOGEN
-    src = _remove_duplicate_column_definitions(src)
+    if not pattern.search(class_body):
+        # Fallback: simple replace without indent anchors (within class)
+        pattern2 = re.compile(rf"{re.escape(CLASS_BLOCK_BEGIN)}.*?{re.escape(CLASS_BLOCK_END)}", flags=re.DOTALL)
+        if not pattern2.search(class_body):
+            raise SystemExit("[ERROR] could not locate HB-AUTOGEN block in target class")
+        class_body = pattern2.sub(new_block.strip(), class_body)
+    else:
+        class_body = pattern.sub(new_block.strip(), class_body)
+
+    # Reconstruct source with updated class
+    src = src[:class_start] + class_body + src[class_end:]
+
+    # Remove duplicate column definitions ONLY within target class
+    src = remove_duplicate_columns_in_span(src, class_start, class_start + len(class_body))
 
     return src
 
