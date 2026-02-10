@@ -30,6 +30,19 @@ Regras:
 - linked_match_id conecta com tabela matches para detalhes
 """
 
+# HB-AUTOGEN-IMPORTS:BEGIN
+from __future__ import annotations
+
+from datetime import date, datetime
+from typing import Optional
+from uuid import UUID
+
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+
 from datetime import datetime, date, time
 from typing import Optional, TYPE_CHECKING
 from uuid import uuid4
@@ -57,6 +70,82 @@ class CompetitionMatch(Base):
 
     __tablename__ = "competition_matches"
 
+
+# HB-AUTOGEN:BEGIN
+
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+
+    # Table: public.competition_matches
+
+    __table_args__ = (
+
+        Index('ix_competition_matches_competition_id', 'competition_id', unique=False),
+
+        Index('ix_competition_matches_date', 'match_date', unique=False),
+
+        Index('ix_competition_matches_linked_match_id', 'linked_match_id', unique=False),
+
+        Index('ix_competition_matches_our_match', 'is_our_match', unique=False),
+
+        Index('ix_competition_matches_phase_id', 'phase_id', unique=False),
+
+    )
+
+
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
+
+
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+
+    competition_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('competitions.id', name='fk_competition_matches_competition_id', ondelete='CASCADE'), nullable=False)
+
+    phase_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('competition_phases.id', name='fk_competition_matches_phase_id', ondelete='SET NULL'), nullable=True)
+
+    external_reference_id: Mapped[Optional[str]] = mapped_column(sa.String(length=100), nullable=True)
+
+    home_team_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('competition_opponent_teams.id', name='fk_competition_matches_home_team_id', ondelete='SET NULL'), nullable=True)
+
+    away_team_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('competition_opponent_teams.id', name='fk_competition_matches_away_team_id', ondelete='SET NULL'), nullable=True)
+
+    is_our_match: Mapped[Optional[bool]] = mapped_column(sa.Boolean(), nullable=True, server_default=sa.text('false'))
+
+    our_team_is_home: Mapped[Optional[bool]] = mapped_column(sa.Boolean(), nullable=True)
+
+    linked_match_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('matches.id', name='fk_competition_matches_linked_match_id', ondelete='SET NULL'), nullable=True)
+
+    match_date: Mapped[Optional[date]] = mapped_column(sa.Date(), nullable=True)
+
+    match_time: Mapped[Optional[object]] = mapped_column(sa.TIME(), nullable=True)
+
+    match_datetime: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+
+    location: Mapped[Optional[str]] = mapped_column(sa.String(length=255), nullable=True)
+
+    round_number: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True)
+
+    round_name: Mapped[Optional[str]] = mapped_column(sa.String(length=100), nullable=True)
+
+    home_score: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True)
+
+    away_score: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True)
+
+    home_score_extra: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True)
+
+    away_score_extra: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True)
+
+    home_score_penalties: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True)
+
+    away_score_penalties: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True)
+
+    status: Mapped[Optional[str]] = mapped_column(sa.String(length=50), nullable=True, server_default=sa.text("'scheduled'::character varying"))
+
+    notes: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    # HB-AUTOGEN:END
     # Primary key
     id: Mapped[str] = mapped_column(
         UUID(as_uuid=False),

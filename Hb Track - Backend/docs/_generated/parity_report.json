@@ -1,41 +1,238 @@
 {
   "summary": {
-    "total": 4,
-    "structural_count": 1,
-    "non_structural_count": 3,
+    "total": 32,
+    "structural_count": 8,
+    "non_structural_count": 24,
     "by_category": {
-      "comment": 3,
-      "constraint_unique": 1
+      "comment": 20,
+      "nullability": 8,
+      "other": 4
     },
     "warnings_count": 0
   },
   "warnings": [],
   "items": [
     {
-      "category": "comment",
+      "category": "other",
       "structural": false,
-      "message": "column comment 'categories.name'",
-      "table": "categories",
-      "column": "name"
+      "message": "sequence named",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "other",
+      "structural": false,
+      "message": "sequence named",
+      "table": null,
+      "column": null
     },
     {
       "category": "comment",
       "structural": false,
-      "message": "column comment 'categories.max_age'",
-      "table": "categories",
-      "column": "max_age"
+      "message": "column comment",
+      "table": null,
+      "column": null
     },
     {
       "category": "comment",
       "structural": false,
-      "message": "column comment 'categories.is_active'",
-      "table": "categories",
-      "column": "is_active"
+      "message": "column comment",
+      "table": null,
+      "column": null
     },
     {
-      "category": "constraint_unique",
+      "category": "comment",
+      "structural": false,
+      "message": "column comment",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "comment",
+      "structural": false,
+      "message": "column comment",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "comment",
+      "structural": false,
+      "message": "column comment",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "nullability",
       "structural": true,
-      "message": "removed unique constraint 'ux_categories_name' on 'categories'",
+      "message": "NULL on column",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "nullability",
+      "structural": true,
+      "message": "NULL on column",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "comment",
+      "structural": false,
+      "message": "column comment",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "comment",
+      "structural": false,
+      "message": "column comment",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "comment",
+      "structural": false,
+      "message": "column comment",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "comment",
+      "structural": false,
+      "message": "column comment",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "comment",
+      "structural": false,
+      "message": "column comment",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "nullability",
+      "structural": true,
+      "message": "NULL on column",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "nullability",
+      "structural": true,
+      "message": "NULL on column",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "other",
+      "structural": false,
+      "message": "sequence named",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "other",
+      "structural": false,
+      "message": "sequence named",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "comment",
+      "structural": false,
+      "message": "column comment",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "comment",
+      "structural": false,
+      "message": "column comment",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "comment",
+      "structural": false,
+      "message": "column comment",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "comment",
+      "structural": false,
+      "message": "column comment",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "comment",
+      "structural": false,
+      "message": "column comment",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "nullability",
+      "structural": true,
+      "message": "NULL on column",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "nullability",
+      "structural": true,
+      "message": "NULL on column",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "comment",
+      "structural": false,
+      "message": "column comment",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "comment",
+      "structural": false,
+      "message": "column comment",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "comment",
+      "structural": false,
+      "message": "column comment",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "comment",
+      "structural": false,
+      "message": "column comment",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "comment",
+      "structural": false,
+      "message": "column comment",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "nullability",
+      "structural": true,
+      "message": "NULL on column",
+      "table": null,
+      "column": null
+    },
+    {
+      "category": "nullability",
+      "structural": true,
+      "message": "NULL on column",
       "table": null,
       "column": null
     }

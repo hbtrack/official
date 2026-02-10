@@ -1,6 +1,6 @@
 {
-  "git_commit": "83bcbaa6d951d11400255d3a1849a7bf95305ae5",
-  "generated_at": "2026-02-10T01:11:40.573319+00:00Z",
+  "git_commit": "089ceed864303ed8e22bc2666c6b3698a8ef7b55",
+  "generated_at": "2026-02-10T10:45:45.652155+00:00Z",
   "backend_root": "C:\\HB TRACK\\Hb Track - Backend",
   "generator_script": "scripts/generate_docs.py",
   "files": [
@@ -11,12 +11,12 @@
     },
     {
       "filename": "schema.sql",
-      "checksum": "d444c82f9bae8b778c12b85253176b2f1af0b5c2db6c01bf6d8043d4e3ddf3f2",
-      "size_bytes": 223624
+      "checksum": "359c32be281d6ad8d7cb228d2d6cda4131256755ca3e2daab53f3dccc24969b5",
+      "size_bytes": 226412
     },
     {
       "filename": "alembic_state.txt",
-      "checksum": "d52276f724b68be0c6dbe2e5f9f5fb9a08717c62affb0854fc45d51b3faffdaf",
+      "checksum": "387845da9abe582dc1a73bc8c84152b7a25aa5cdb67a092593b706a552ea09f2",
       "size_bytes": 122
     }
   ]
