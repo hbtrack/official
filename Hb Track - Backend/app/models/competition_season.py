@@ -14,6 +14,19 @@ Representa a vinculação entre uma competição e uma temporada específica.
 Exemplo: "Campeonato Estadual Sub-17" + "Temporada 2025" = "Edição 2025"
 """
 
+# HB-AUTOGEN-IMPORTS:BEGIN
+from __future__ import annotations
+
+from datetime import date, datetime
+from typing import Optional
+from uuid import UUID
+
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+
 from datetime import datetime
 from typing import Optional, TYPE_CHECKING, List
 from uuid import uuid4
@@ -39,6 +52,40 @@ class CompetitionSeason(Base):
 
     __tablename__ = "competition_seasons"
 
+
+# HB-AUTOGEN:BEGIN
+
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+
+    # Table: public.competition_seasons
+
+    __table_args__ = (
+
+        UniqueConstraint('competition_id', 'season_id', name='uk_competition_seasons_competition_season'),
+
+        Index('ix_competition_seasons_competition_id', 'competition_id', unique=False),
+
+        Index('ix_competition_seasons_season_id', 'season_id', unique=False),
+
+    )
+
+
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
+
+
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+
+    competition_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('competitions.id', name='fk_competition_seasons_competition_id', ondelete='CASCADE'), nullable=False)
+
+    season_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('seasons.id', name='fk_competition_seasons_season_id', ondelete='CASCADE'), nullable=False)
+
+    name: Mapped[Optional[str]] = mapped_column(sa.String(length=100), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    # HB-AUTOGEN:END
     __table_args__ = (
         UniqueConstraint(
             "competition_id",
@@ -56,42 +103,12 @@ class CompetitionSeason(Base):
     )
 
     # Foreign keys
-    competition_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
-        ForeignKey("competitions.id"),
-        nullable=False,
-        index=True,
-    )
 
-    season_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
-        ForeignKey("seasons.id"),
-        nullable=False,
-        index=True,
-    )
 
     # Optional name/description
-    name: Mapped[Optional[str]] = mapped_column(
-        Text,
-        nullable=True,
-        comment="Nome/descrição da edição (ex: Fase Regional 2024)",
-    )
 
     # Timestamps
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        default=datetime.utcnow,
-        server_default=text("now()"),
-        nullable=False,
-    )
 
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
-        server_default=text("now()"),
-        nullable=False,
-    )
 
     # Relationships
     competition: Mapped["Competition"] = relationship(
