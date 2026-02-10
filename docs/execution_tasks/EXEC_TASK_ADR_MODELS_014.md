@@ -1,9 +1,18 @@
 ## EXEC_TASK — Batch determinístico para varredura e correção de Models (14-ADR-MODELS)
 
-Status: READY TO EXECUTE
+Status: ✅ DONE (2026-02-10)
 Prioridade: P0
 Assignee: Você + Cline
 Escopo: Backend (`Hb Track - Backend/`)
+
+**Resultado:** Script `models_batch.ps1` já estava implementado e funcional. Todos os 5 smoke tests passaram com sucesso.
+
+Smoke Tests Executados:
+1. ✅ Repo sujo aborta com exit=3
+2. ✅ Scan completo sem gate (exit=0, LOG e CSV gerados)
+3. ✅ SKIP_NO_MODEL funciona (advantage_states)
+4. ✅ Gate fail-fast para no primeiro erro (competition_matches, exit=2)
+5. ✅ Guard violation detectado (exit=3)
 
 ---
 
