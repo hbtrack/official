@@ -73,8 +73,15 @@ def _find_module_docstring_span(src: str) -> Tuple[int, int]:
 
 
 def _ensure_imports_block(src: str) -> str:
-    # Detect if file uses relationship() (outside HB-AUTOGEN blocks)
-    has_relationship = bool(re.search(r'\brelationship\s*\(', src))
+    # Detect if file uses relationship() OUTSIDE HB-AUTOGEN blocks
+    # Remove HB-AUTOGEN blocks before searching
+    src_without_autogen = re.sub(
+        r'# HB-AUTOGEN(?:-IMPORTS)?:BEGIN.*?# HB-AUTOGEN(?:-IMPORTS)?:END',
+        '',
+        src,
+        flags=re.DOTALL
+    )
+    has_relationship = bool(re.search(r'\brelationship\s*\(', src_without_autogen))
     
     # Build imports block dynamically
     orm_imports = "Mapped, mapped_column"
@@ -423,10 +430,21 @@ def _remove_duplicate_column_definitions(src: str) -> str:
         line = lines[i]
 
         # Track HB-AUTOGEN blocks (both IMPORTS and main block)
-        if 'HB-AUTOGEN-IMPORTS:BEGIN' in line or 'HB-AUTOGEN:BEGIN' in line:
+        is_begin = ('HB-AUTOGEN-IMPORTS:BEGIN' in line) or ('HB-AUTOGEN:BEGIN' in line)
+        is_end   = ('HB-AUTOGEN-IMPORTS:END' in line) or ('HB-AUTOGEN:END' in line)
+
+        if is_begin:
             in_autogen_block = True
-        elif 'HB-AUTOGEN-IMPORTS:END' in line or 'HB-AUTOGEN:END' in line:
+            result_lines.append(line)
+            i += 1
+            continue
+
+        if is_end:
+            # Preserve END line (still part of the block)
+            result_lines.append(line)
             in_autogen_block = False
+            i += 1
+            continue
 
         # Always keep lines inside HB-AUTOGEN blocks
         if in_autogen_block:
@@ -451,15 +469,9 @@ def _remove_duplicate_column_definitions(src: str) -> str:
                 close_count += lines[j].count(')')
                 j += 1
 
-            # Check if ANY line in the definition contains primary_key
-            full_definition = '\n'.join(definition_lines)
-            if 'primary_key' in full_definition:
-                # Keep this definition (it's a PK, might be intentional)
-                result_lines.extend(definition_lines)
-                i = j
-            else:
-                # Remove this definition (it's a duplicate)
-                i = j
+            # Remove ALL duplicate column definitions outside HB-AUTOGEN
+            # (including PKs - autogen will regenerate them inside the block)
+            i = j
             continue
 
         # Keep everything else (relationships, properties, methods, etc.)
@@ -483,8 +495,14 @@ def _patch_class_body(src: str, table: str, new_block: str) -> str:
         raise SystemExit(f"[ERROR] __tablename__='{table}' not found in model source")
 
     base_indent = tab_m.group(1)  # indentation inside class
+
+    # Check if markers exist AFTER __tablename__ (in this class, not globally)
+    src_after_tablename = src[tab_m.end():]
+    markers_exist_in_class = (CLASS_BLOCK_BEGIN in src_after_tablename and
+                              CLASS_BLOCK_END in src_after_tablename)
+
     # Insert markers if missing in class (at that indent)
-    if CLASS_BLOCK_BEGIN not in src or CLASS_BLOCK_END not in src:
+    if not markers_exist_in_class:
         # insert right after __tablename__ line
         insert_pos = tab_m.end()
         src = src[:insert_pos] + "\n\n" + new_block + "\n" + src[insert_pos:]
