@@ -20,6 +20,19 @@ Regras:
 - Única por (competition_id, phase_id, opponent_team_id)
 """
 
+# HB-AUTOGEN-IMPORTS:BEGIN
+from __future__ import annotations
+
+from datetime import date, datetime
+from typing import Optional
+from uuid import UUID
+
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+
 from datetime import datetime
 from typing import Optional, TYPE_CHECKING
 from uuid import uuid4
@@ -46,6 +59,62 @@ class CompetitionStanding(Base):
 
     __tablename__ = "competition_standings"
 
+
+# HB-AUTOGEN:BEGIN
+
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+
+    # Table: public.competition_standings
+
+    __table_args__ = (
+
+        UniqueConstraint('competition_id', 'phase_id', 'opponent_team_id', name='uk_competition_standings_team_phase'),
+
+        Index('ix_competition_standings_competition_id', 'competition_id', unique=False),
+
+        Index('ix_competition_standings_position', 'competition_id', 'phase_id', 'position', unique=False),
+
+    )
+
+
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
+
+
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+
+    competition_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('competitions.id', name='fk_competition_standings_competition_id', ondelete='CASCADE'), nullable=False)
+
+    phase_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('competition_phases.id', name='fk_competition_standings_phase_id', ondelete='CASCADE'), nullable=True)
+
+    opponent_team_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('competition_opponent_teams.id', name='fk_competition_standings_opponent_team_id', ondelete='CASCADE'), nullable=False)
+
+    position: Mapped[int] = mapped_column(sa.Integer(), nullable=False)
+
+    group_name: Mapped[Optional[str]] = mapped_column(sa.String(length=50), nullable=True)
+
+    points: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True, server_default=sa.text('0'))
+
+    played: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True, server_default=sa.text('0'))
+
+    wins: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True, server_default=sa.text('0'))
+
+    draws: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True, server_default=sa.text('0'))
+
+    losses: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True, server_default=sa.text('0'))
+
+    goals_for: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True, server_default=sa.text('0'))
+
+    goals_against: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True, server_default=sa.text('0'))
+
+    goal_difference: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True, server_default=sa.text('0'))
+
+    recent_form: Mapped[Optional[str]] = mapped_column(sa.String(length=10), nullable=True)
+
+    qualification_status: Mapped[Optional[str]] = mapped_column(sa.String(length=50), nullable=True)
+
+    updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    # HB-AUTOGEN:END
     # Unique constraint
     __table_args__ = (
         UniqueConstraint(
@@ -63,119 +132,29 @@ class CompetitionStanding(Base):
     )
 
     # Competition FK
-    competition_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
-        ForeignKey("competitions.id", ondelete="CASCADE"),
-        nullable=False,
-        index=True,
-    )
 
     # Phase FK (opcional - pode ser classificação geral)
-    phase_id: Mapped[Optional[str]] = mapped_column(
-        UUID(as_uuid=False),
-        ForeignKey("competition_phases.id", ondelete="CASCADE"),
-        nullable=True,
-    )
 
     # Team FK
-    opponent_team_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
-        ForeignKey("competition_opponent_teams.id", ondelete="CASCADE"),
-        nullable=False,
-    )
 
     # Position
-    position: Mapped[int] = mapped_column(
-        Integer,
-        nullable=False,
-        comment="Posição na classificação",
-    )
 
     # Group (se houver)
-    group_name: Mapped[Optional[str]] = mapped_column(
-        String(50),
-        nullable=True,
-    )
 
     # Statistics
-    points: Mapped[int] = mapped_column(
-        Integer,
-        nullable=True,
-        default=0,
-        server_default=text("0"),
-    )
 
-    played: Mapped[int] = mapped_column(
-        Integer,
-        nullable=True,
-        default=0,
-        server_default=text("0"),
-    )
 
-    wins: Mapped[int] = mapped_column(
-        Integer,
-        nullable=True,
-        default=0,
-        server_default=text("0"),
-    )
 
-    draws: Mapped[int] = mapped_column(
-        Integer,
-        nullable=True,
-        default=0,
-        server_default=text("0"),
-    )
 
-    losses: Mapped[int] = mapped_column(
-        Integer,
-        nullable=True,
-        default=0,
-        server_default=text("0"),
-    )
 
-    goals_for: Mapped[int] = mapped_column(
-        Integer,
-        nullable=True,
-        default=0,
-        server_default=text("0"),
-    )
 
-    goals_against: Mapped[int] = mapped_column(
-        Integer,
-        nullable=True,
-        default=0,
-        server_default=text("0"),
-    )
 
-    goal_difference: Mapped[int] = mapped_column(
-        Integer,
-        nullable=True,
-        default=0,
-        server_default=text("0"),
-    )
 
     # Recent form (últimos 5 jogos: W, D, L)
-    recent_form: Mapped[Optional[str]] = mapped_column(
-        String(10),
-        nullable=True,
-        comment="Últimos 5 jogos (ex: WWDLL)",
-    )
 
     # Qualification status
-    qualification_status: Mapped[Optional[str]] = mapped_column(
-        String(50),
-        nullable=True,
-        comment="Status: qualified, playoffs, relegation, eliminated",
-    )
 
     # Timestamp
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
-        server_default=text("now()"),
-        nullable=True,
-    )
 
     # Relationships
     competition: Mapped["Competition"] = relationship(
