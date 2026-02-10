@@ -400,6 +400,64 @@ def _find_model_file(models_dir: Path, table: str) -> Path:
     return hits[0]
 
 
+def _remove_duplicate_column_definitions(src: str) -> str:
+    """
+    Remove column definitions (mapped_column) that are OUTSIDE HB-AUTOGEN blocks.
+
+    Preserves:
+    - Everything inside HB-AUTOGEN blocks
+    - relationship() definitions
+    - @property decorators and methods
+    - Comments and docstrings
+    - __table_args__
+
+    Removes:
+    - Duplicate mapped_column() definitions outside HB-AUTOGEN
+    """
+    lines = src.split('\n')
+    result_lines = []
+    in_autogen_block = False
+    i = 0
+
+    while i < len(lines):
+        line = lines[i]
+
+        # Track HB-AUTOGEN blocks (both IMPORTS and main block)
+        if 'HB-AUTOGEN-IMPORTS:BEGIN' in line or 'HB-AUTOGEN:BEGIN' in line:
+            in_autogen_block = True
+        elif 'HB-AUTOGEN-IMPORTS:END' in line or 'HB-AUTOGEN:END' in line:
+            in_autogen_block = False
+
+        # Always keep lines inside HB-AUTOGEN blocks
+        if in_autogen_block:
+            result_lines.append(line)
+            i += 1
+            continue
+
+        # Detect duplicate column definition patterns (outside HB-AUTOGEN)
+        # Pattern: "    name: Mapped[...] = mapped_column(...)"
+        is_duplicate_column = re.match(r'^\s+\w+:\s*Mapped\[.*\]\s*=\s*mapped_column\s*\(', line)
+
+        if is_duplicate_column:
+            # Count parentheses to find where definition ends
+            open_count = line.count('(')
+            close_count = line.count(')')
+
+            # Skip this line and all continuation lines
+            i += 1
+            while i < len(lines) and open_count > close_count:
+                open_count += lines[i].count('(')
+                close_count += lines[i].count(')')
+                i += 1
+            continue
+
+        # Keep everything else (relationships, properties, methods, etc.)
+        result_lines.append(line)
+        i += 1
+
+    return '\n'.join(result_lines)
+
+
 def _patch_class_body(src: str, table: str, new_block: str) -> str:
     # Find class that contains __tablename__ = "<table>"
     # Strategy:
@@ -407,6 +465,7 @@ def _patch_class_body(src: str, table: str, new_block: str) -> str:
     # - find indentation of class body
     # - ensure HB-AUTOGEN markers exist (insert if missing)
     # - replace content between markers at that indent
+    # - remove duplicate column definitions outside HB-AUTOGEN
 
     tab_m = re.search(rf"^(\s*)__tablename__\s*=\s*['\"]{re.escape(table)}['\"]\s*$", src, flags=re.MULTILINE)
     if not tab_m:
@@ -430,9 +489,14 @@ def _patch_class_body(src: str, table: str, new_block: str) -> str:
         pattern2 = re.compile(rf"{re.escape(CLASS_BLOCK_BEGIN)}.*?{re.escape(CLASS_BLOCK_END)}", flags=re.DOTALL)
         if not pattern2.search(src):
             raise SystemExit("[ERROR] could not locate HB-AUTOGEN block for replacement")
-        return pattern2.sub(new_block.strip(), src)
+        src = pattern2.sub(new_block.strip(), src)
+    else:
+        src = pattern.sub(new_block.strip(), src)
 
-    return pattern.sub(new_block.strip(), src)
+    # NEW: Remove duplicate column definitions outside HB-AUTOGEN
+    src = _remove_duplicate_column_definitions(src)
+
+    return src
 
 
 def cmd_apply(args: argparse.Namespace) -> int:
