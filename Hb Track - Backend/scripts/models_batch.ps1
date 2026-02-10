@@ -330,7 +330,8 @@ Write-Host "`n[INFO] Tabelas FAIL (requirements): $($failReq -join ', ')" -Foreg
 Add-Content -Path $logPath -Value "`n[INFO] FAIL (requirements): $($failReq -join ', ')`n"
 
 foreach ($t in $failReq) {
-  Ensure-CleanRepo
+  # Design 1: repo limpo só no início; entre tabelas, models modificados são esperados.
+  # Ensure-CleanRepo removido daqui — o gate altera app/models/*.py e não commita.
   $profile = Get-ProfileForTable $t
 
   $ec = Run-Gate $t $profile $logPath
