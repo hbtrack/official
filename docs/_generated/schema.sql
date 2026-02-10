@@ -1,11 +1,11 @@
--- Schema dump generated: 2026-02-09T01:35:47.880407+00:00Z
+-- Schema dump generated: 2026-02-10T01:11:40.515370+00:00Z
 -- Source: localhost
 
 --
 -- PostgreSQL database dump
 --
 
-\restrict dpIfnfVGPtEfDauNNU929BfuvtoG9Q64ifkbbl1BgiEmYGTX8JeFQmObBTcmZcs
+\restrict gmL42eME4rrPE6flf4H5snuyVgp59u9rSN6g4dafXG0C5lyDH9FQo5IonPB7SMK
 
 -- Dumped from database version 12.22 (Debian 12.22-1.pgdg120+1)
 -- Dumped by pg_dump version 18.1
@@ -69,19 +69,6 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 --
 
 COMMENT ON EXTENSION pgcrypto IS 'RDB1: Extensão para funções criptográficas, incluindo gen_random_uuid() usado em PKs UUID.';
-
-
---
--- Name: training_execution_outcome_enum; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.training_execution_outcome_enum AS ENUM (
-    'on_time',
-    'delayed',
-    'canceled',
-    'shortened',
-    'extended'
-);
 
 
 --
@@ -2615,17 +2602,7 @@ CREATE TABLE public.training_sessions (
     closed_by_user_id uuid,
     deviation_justification text,
     planning_deviation_flag boolean DEFAULT false NOT NULL,
-    started_at timestamp with time zone,
-    ended_at timestamp with time zone,
-    duration_actual_minutes integer,
-    execution_outcome public.training_execution_outcome_enum DEFAULT 'on_time'::public.training_execution_outcome_enum NOT NULL,
-    delay_minutes integer,
-    cancellation_reason text,
-    post_review_completed_at timestamp with time zone,
-    post_review_completed_by_user_id uuid,
-    post_review_deadline_at timestamp with time zone,
-    CONSTRAINT check_training_session_status CHECK (((status)::text = ANY ((ARRAY['draft'::character varying, 'scheduled'::character varying, 'in_progress'::character varying, 'pending_review'::character varying, 'readonly'::character varying])::text[]))),
-    CONSTRAINT check_training_sessions_execution_outcome CHECK ((((execution_outcome = 'on_time'::public.training_execution_outcome_enum) AND (delay_minutes IS NULL) AND (cancellation_reason IS NULL) AND (duration_actual_minutes IS NULL)) OR ((execution_outcome = 'delayed'::public.training_execution_outcome_enum) AND (delay_minutes IS NOT NULL) AND (delay_minutes > 0) AND (cancellation_reason IS NULL)) OR ((execution_outcome = 'canceled'::public.training_execution_outcome_enum) AND (cancellation_reason IS NOT NULL) AND (delay_minutes IS NULL) AND (duration_actual_minutes IS NULL)) OR ((execution_outcome = ANY (ARRAY['shortened'::public.training_execution_outcome_enum, 'extended'::public.training_execution_outcome_enum])) AND (duration_actual_minutes IS NOT NULL) AND (duration_actual_minutes > 0) AND (delay_minutes IS NULL) AND (cancellation_reason IS NULL)))),
+    CONSTRAINT check_training_session_status CHECK (((status)::text = ANY ((ARRAY['draft'::character varying, 'scheduled'::character varying, 'in_progress'::character varying, 'closed'::character varying, 'readonly'::character varying])::text[]))),
     CONSTRAINT ck_phase_focus_attack_consistency CHECK ((phase_focus_attack = ((COALESCE(focus_attack_positional_pct, (0)::numeric) + COALESCE(focus_attack_technical_pct, (0)::numeric)) >= (5)::numeric))),
     CONSTRAINT ck_phase_focus_defense_consistency CHECK ((phase_focus_defense = ((COALESCE(focus_defense_positional_pct, (0)::numeric) + COALESCE(focus_defense_technical_pct, (0)::numeric)) >= (5)::numeric))),
     CONSTRAINT ck_phase_focus_transition_defense_consistency CHECK ((phase_focus_transition_defense = (COALESCE(focus_transition_defense_pct, (0)::numeric) >= (5)::numeric))),
@@ -4094,13 +4071,6 @@ CREATE INDEX idx_training_sessions_deviation_flag ON public.training_sessions US
 
 
 --
--- Name: idx_training_sessions_in_progress_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_training_sessions_in_progress_at ON public.training_sessions USING btree (session_at) WHERE (((status)::text = 'in_progress'::text) AND (deleted_at IS NULL));
-
-
---
 -- Name: idx_training_sessions_microcycle; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4112,20 +4082,6 @@ CREATE INDEX idx_training_sessions_microcycle ON public.training_sessions USING 
 --
 
 CREATE INDEX idx_training_sessions_org ON public.training_sessions USING btree (organization_id, deleted_at) WHERE (deleted_at IS NULL);
-
-
---
--- Name: idx_training_sessions_pending_review_deadline; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_training_sessions_pending_review_deadline ON public.training_sessions USING btree (post_review_deadline_at) WHERE (((status)::text = 'pending_review'::text) AND (deleted_at IS NULL));
-
-
---
--- Name: idx_training_sessions_scheduled_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_training_sessions_scheduled_at ON public.training_sessions USING btree (session_at) WHERE (((status)::text = 'scheduled'::text) AND (deleted_at IS NULL));
 
 
 --
@@ -6653,14 +6609,6 @@ ALTER TABLE ONLY public.training_session_exercises
 
 
 --
--- Name: training_sessions training_sessions_post_review_completed_by_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.training_sessions
-    ADD CONSTRAINT training_sessions_post_review_completed_by_user_id_fkey FOREIGN KEY (post_review_completed_by_user_id) REFERENCES public.users(id);
-
-
---
 -- Name: training_suggestions training_suggestions_origin_session_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6696,5 +6644,5 @@ ALTER TABLE ONLY public.wellness_reminders
 -- PostgreSQL database dump complete
 --
 
-\unrestrict dpIfnfVGPtEfDauNNU929BfuvtoG9Q64ifkbbl1BgiEmYGTX8JeFQmObBTcmZcs
+\unrestrict gmL42eME4rrPE6flf4H5snuyVgp59u9rSN6g4dafXG0C5lyDH9FQo5IonPB7SMK
 

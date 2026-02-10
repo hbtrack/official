@@ -1,10 +1,11 @@
 {
   "summary": {
-    "total": 2,
-    "structural_count": 0,
-    "non_structural_count": 2,
+    "total": 4,
+    "structural_count": 1,
+    "non_structural_count": 3,
     "by_category": {
-      "comment": 2
+      "comment": 3,
+      "constraint_unique": 1
     },
     "warnings_count": 0
   },
@@ -13,16 +14,30 @@
     {
       "category": "comment",
       "structural": false,
-      "message": "column comment 'attendance.correction_by_user_id'",
-      "table": "attendance",
-      "column": "correction_by_user_id"
+      "message": "column comment 'categories.name'",
+      "table": "categories",
+      "column": "name"
     },
     {
       "category": "comment",
       "structural": false,
-      "message": "column comment 'attendance.correction_at'",
-      "table": "attendance",
-      "column": "correction_at"
+      "message": "column comment 'categories.max_age'",
+      "table": "categories",
+      "column": "max_age"
+    },
+    {
+      "category": "comment",
+      "structural": false,
+      "message": "column comment 'categories.is_active'",
+      "table": "categories",
+      "column": "is_active"
+    },
+    {
+      "category": "constraint_unique",
+      "structural": true,
+      "message": "removed unique constraint 'ux_categories_name' on 'categories'",
+      "table": null,
+      "column": null
     }
   ]
 }

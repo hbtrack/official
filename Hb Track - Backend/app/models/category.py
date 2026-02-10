@@ -10,6 +10,19 @@ Tabela categories define faixas etárias baseadas apenas em max_age.
 ID é INTEGER (lookup table - allowlist RDB2.1).
 """
 
+# HB-AUTOGEN-IMPORTS:BEGIN
+from __future__ import annotations
+
+from datetime import date, datetime
+from typing import Optional
+from uuid import UUID
+
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+
 from __future__ import annotations
 
 from sqlalchemy import Boolean, Integer, String
@@ -40,6 +53,31 @@ class Category(Base):
 
     __tablename__ = "categories"
 
+
+# HB-AUTOGEN:BEGIN
+
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+
+    # Table: public.categories
+
+    __table_args__ = (
+
+        CheckConstraint('max_age > 0', name='ck_categories_max_age_positive'),
+
+        UniqueConstraint('name', name='ux_categories_name'),
+
+    )
+
+
+    id: Mapped[int] = mapped_column(sa.Integer(), primary_key=True, server_default=sa.text('nextval(\'"public".categories_id_seq\'::regclass)'))
+
+    name: Mapped[str] = mapped_column(sa.String(length=50), nullable=False)
+
+    max_age: Mapped[int] = mapped_column(sa.Integer(), nullable=False)
+
+    is_active: Mapped[bool] = mapped_column(sa.Boolean(), nullable=False, server_default=sa.text('true'))
+
+    # HB-AUTOGEN:END
     # PK (Integer - lookup table, RDB2.1)
     id: Mapped[int] = mapped_column(
         Integer,
