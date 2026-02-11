@@ -1687,8 +1687,8 @@
       "size": 7118
     },
     "scripts\\models_batch.ps1": {
-      "sha256": "38afbdf82e7afe57c88f5a7a5a743f646a0dfa42729896b228fcfb5638e540e6",
-      "size": 12853
+      "sha256": "bcdd86ff50c150a6ca34003f93eae30e6f38a2e7970d244d85eaa22a37a5bba4",
+      "size": 13012
     },
     "scripts\\new_table_workflow.ps1": {
       "sha256": "f2f639cd6b35b8812c8bc4c557b111e977eb1d220cf061e79f1cbc5f03bdef7f",
