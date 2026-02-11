@@ -3,6 +3,11 @@ Registro técnico de execuções, auditorias e sessões de trabalho do Agent.
 
 | Data/Hora | Task ID | Ação/Comando | Status | Observação |
 | :--- | :--- | :--- | :--- | :--- |
+| 2026-02-11 15:30 | `T-521` | Criação de 7 subdirectórios em `docs/_ai/` | ✅ PASS | `_context/`, `_specs/`, `_prompts/`, `_maps/`, `_guardrails/`, `_checklists/`, `_docs_arch/` criados com sucesso. |
+| 2026-02-11 15:31 | `T-522` | Criação de 20 arquivos com placeholders estruturados | ✅ PASS | Todos os arquivos criados com descrições embedded, estrutura de conteúdo, e seções TODO. Total: 4+4+3+3+3+3+1=21 arquivos (incluindo DOCS_ARCH_MASTER.md). |
+| 2026-02-11 15:32 | `T-523` | Validação de arquivos criados | ✅ PASS | Verificado: todas as 7 pastas existem com arquivos esperados (git status --porcelain conforme). |
+| 2026-02-11 15:33 | `T-524` | Atualização de `docs/execution_tasks/CHANGELOG.md` | ✅ PASS | Adicionada seção "Reorganização docs/_ai/" com detalhamento de 7th subdirs + 20 files. |
+| 2026-02-11 15:34 | `T-525` | Preparação de commit para reorganização | ⏳ IN-PROGRESS | Aguardando git add + git commit. |
 | 2026-02-08 17:20 | `T-201` | `CHECK 1: PowerShell 5.1` via wrapper canônico | ✅ PASS | Versão confirmada: `5.1.26100.7462`. |
 | 2026-02-08 17:20 | `T-202` | `CHECK 2: Test-Path C:\HB TRACK\Hb Track - Backend\venv\Scripts\python.exe` | ✅ PASS | Venv obrigatória encontrada e funcional. |
 | 2026-02-08 17:20 | `T-203` | `CHECK 3: & venv\python.exe --version` | ✅ PASS | Retorno `Python 3.14.2` (>= 3.11). |

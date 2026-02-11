@@ -5,6 +5,19 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 ### Adicionado
+* **Reorganização docs/_ai/** (2026-02-11): Estruturação sistemática de documentação para agentes:
+  - **7 Subdirectórios Temáticos**: `_context/`, `_specs/`, `_prompts/`, `_maps/`, `_guardrails/`, `_checklists/`, `_docs_arch/`
+  - **20 Arquivos Novos com Placeholders**:
+    - **_context/** (4 files): AGENT_INITIAL_CONTEXT, AGENT_RULES_ENGINE, AGENT_GUARDRAILS, AGENT_CONSTRAINTS
+    - **_specs/** (4 files): SPEC_AGENT_MODELS.json, SPEC_AGENT_GATES.yaml, SPEC_AGENT_GUARDRAILS.xml, SPEC_AGENT_ROUTING.json
+    - **_prompts/** (3 files): PROMPT_TEMPLATE_CODE_REVIEW, PROMPT_TEMPLATE_DOCUMENTATION, PROMPT_TEMPLATE_TESTING
+    - **_maps/** (3 files): MAP_ROUTING_AGENT_MODELS, MAP_ROUTING_AGENT_GATES, MAP_ROUTING_AGENT_DOCUMENTATION
+    - **_guardrails/** (3 files): GUARDRAIL_POLICY_BASELINE, GUARDRAIL_POLICY_PARITY, GUARDRAIL_POLICY_REQUIREMENTS
+    - **_checklists/** (3 files): CHECKLIST_AGENT_DEPLOYMENT, CHECKLIST_AGENT_VALIDATION, CHECKLIST_AGENT_DOCUMENTATION
+    - **_docs_arch/** (1 file): DOCS_ARCH_MASTER.md
+  - **Padrão Embedded**: Cada arquivo contém descrição no header + estrutura de placeholder + TODO sections
+  - **Integração de Documentação**: Nova arquitetura melhora navegação e acesso a guardrails/specs/prompts para agentes AI
+
 * **Canon Baseline Alignment** (2026-02-11): Alinhamento da documentação canônica com a realidade do repositório:
   - **Baseline é Local**: Removidas todas as instruções "commit baseline" do canon. `.hb_guard/baseline.json` está em `.gitignore:141` (nunca versionado).
   - **Phase 0: Bootstrap Baseline**: Adicionada seção obrigatória em `05_MODELS_PIPELINE.md` para regenerar baseline antes de gates (garante comparação válida).

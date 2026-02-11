@@ -1,0 +1,35 @@
+{
+  "description": "Especificação de validação para modelos SQLAlchemy: constraints, relationships, validations.",
+  "version": "1.0",
+  "agent": "hb_track_models_validator",
+  "specifications": {
+    "modelValidation": {
+      "required_fields": ["table_name", "relationships", "constraints"],
+      "constraint_types": ["UNIQUE", "CHECK", "FK", "DEFAULT", "NOT_NULL"],
+      "validation_profile": ["strict", "fk", "lenient"],
+      "markers": {
+        "autogen_begin": "# HB-AUTOGEN:BEGIN",
+        "autogen_end": "# HB-AUTOGEN:END",
+        "autogen_imports": "# HB-AUTOGEN-IMPORTS:BEGIN/END"
+      }
+    },
+    "schemaAlignment": {
+      "source_of_truth": "docs/_generated/schema.sql",
+      "comparison_modes": ["structural", "functional", "metadata"],
+      "acceptable_drift": ["docstrings", "comments", "type hints"]
+    },
+    "gateExitCodes": {
+      "0": "PASS",
+      "1": "CRASH",
+      "2": "PARITY_VIOLATION",
+      "3": "GUARD_VIOLATION",
+      "4": "REQUIREMENTS_VIOLATION"
+    }
+  },
+  "TODO": [
+    "Adicionar validação de circular dependencies",
+    "Documentar comportamento de soft deletes",
+    "Especificar handling de JSONB fields",
+    "Criar lookup para profile-específicos (fk vs strict)"
+  ]
+}
