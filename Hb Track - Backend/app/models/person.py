@@ -218,7 +218,6 @@ class PersonContact(Base):
     # HB-AUTOGEN:END
 
     
-    
     # Timestamps
     
     # Soft delete
@@ -304,23 +303,43 @@ class PersonDocument(Base):
     """
     __tablename__ = "person_documents"
     
+
+# HB-AUTOGEN:BEGIN
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+    # Table: public.person_documents
     __table_args__ = (
-        CheckConstraint(
-            "document_type IN ('cpf', 'rg', 'cnh', 'passaporte', 'certidao_nascimento', 'titulo_eleitor', 'outro')",
-            name='ck_person_documents_type'
-        ),
-        CheckConstraint(
-            "(deleted_at IS NULL AND deleted_reason IS NULL) OR (deleted_at IS NOT NULL AND deleted_reason IS NOT NULL)",
-            name='ck_person_documents_deleted_reason'
-        ),
+        CheckConstraint('deleted_at IS NULL AND deleted_reason IS NULL OR deleted_at IS NOT NULL AND deleted_reason IS NOT NULL', name='ck_person_documents_deleted_reason'),
+        CheckConstraint("document_type::text = ANY (ARRAY['cpf'::character varying, 'rg'::character varying, 'cnh'::character varying, 'passaporte'::character varying, 'certidao_nascimento'::character varying, 'titulo_eleitor'::character varying, 'outro'::character varying]::text[])", name='ck_person_documents_type'),
+        Index('ix_person_documents_cpf_active', 'document_number', unique=False, postgresql_where=sa.text("(((document_type)::text = 'cpf'::text) AND (deleted_at IS NULL))")),
+        Index('ix_person_documents_created_by_user_id', 'created_by_user_id', unique=False),
+        Index('ix_person_documents_deleted_at', 'deleted_at', unique=False),
+        Index('ix_person_documents_number', 'document_number', unique=False),
+        Index('ix_person_documents_person_id', 'person_id', unique=False),
+        Index('ix_person_documents_rg_active', 'document_number', unique=False, postgresql_where=sa.text("(((document_type)::text = 'rg'::text) AND (deleted_at IS NULL))")),
+        Index('ix_person_documents_type', 'document_type', unique=False),
+        Index('ix_person_documents_type_number', 'document_type', 'document_number', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
+        Index('uq_person_documents_per_type', 'person_id', 'document_type', 'document_number', unique=True, postgresql_where=sa.text('(deleted_at IS NULL)')),
     )
 
-    id: Mapped[str] = mapped_column(
-        PG_UUID(as_uuid=False),
-        primary_key=True,
-        server_default=text("gen_random_uuid()")
-    )
-    
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
+
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+    person_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('persons.id', name='person_documents_person_id_fkey', ondelete='CASCADE'), nullable=False)
+    document_type: Mapped[str] = mapped_column(sa.String(length=50), nullable=False)
+    document_number: Mapped[str] = mapped_column(sa.String(length=100), nullable=False)
+    issuing_authority: Mapped[Optional[str]] = mapped_column(sa.String(length=100), nullable=True)
+    issue_date: Mapped[Optional[date]] = mapped_column(sa.Date(), nullable=True)
+    expiry_date: Mapped[Optional[date]] = mapped_column(sa.Date(), nullable=True)
+    document_file_url: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+    is_verified: Mapped[bool] = mapped_column(sa.Boolean(), nullable=False, server_default=sa.text('false'))
+    notes: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    deleted_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+    deleted_reason: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+    created_by_user_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('users.id', name='fk_person_documents_created_by_user', ondelete='SET NULL'), nullable=True)
+    # HB-AUTOGEN:END
+
     
     # Timestamps
     
@@ -345,22 +364,39 @@ class PersonMedia(Base):
     """
     __tablename__ = "person_media"
     
+
+# HB-AUTOGEN:BEGIN
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+    # Table: public.person_media
     __table_args__ = (
-        CheckConstraint(
-            "media_type IN ('foto_perfil', 'foto_documento', 'video', 'outro')",
-            name='ck_person_media_type'
-        ),
-        CheckConstraint(
-            "(deleted_at IS NULL AND deleted_reason IS NULL) OR (deleted_at IS NOT NULL AND deleted_reason IS NOT NULL)",
-            name='ck_person_media_deleted_reason'
-        ),
+        CheckConstraint('deleted_at IS NULL AND deleted_reason IS NULL OR deleted_at IS NOT NULL AND deleted_reason IS NOT NULL', name='ck_person_media_deleted_reason'),
+        CheckConstraint("media_type::text = ANY (ARRAY['foto_perfil'::character varying, 'foto_documento'::character varying, 'video'::character varying, 'outro'::character varying]::text[])", name='ck_person_media_type'),
+        Index('ix_person_media_created_by_user_id', 'created_by_user_id', unique=False),
+        Index('ix_person_media_deleted_at', 'deleted_at', unique=False),
+        Index('ix_person_media_person_id', 'person_id', unique=False),
+        Index('ix_person_media_person_type', 'person_id', 'media_type', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
+        Index('ix_person_media_type', 'media_type', unique=False),
+        Index('uq_person_media_primary_per_type', 'person_id', 'media_type', unique=True, postgresql_where=sa.text('((is_primary = true) AND (deleted_at IS NULL))')),
     )
 
-    id: Mapped[str] = mapped_column(
-        PG_UUID(as_uuid=False),
-        primary_key=True,
-        server_default=text("gen_random_uuid()")
-    )
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
+
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+    person_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('persons.id', name='person_media_person_id_fkey', ondelete='CASCADE'), nullable=False)
+    media_type: Mapped[str] = mapped_column(sa.String(length=50), nullable=False)
+    file_url: Mapped[str] = mapped_column(sa.Text(), nullable=False)
+    file_name: Mapped[Optional[str]] = mapped_column(sa.String(length=255), nullable=True)
+    file_size: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True)
+    mime_type: Mapped[Optional[str]] = mapped_column(sa.String(length=100), nullable=True)
+    is_primary: Mapped[bool] = mapped_column(sa.Boolean(), nullable=False, server_default=sa.text('false'))
+    description: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    deleted_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+    deleted_reason: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+    created_by_user_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('users.id', name='fk_person_media_created_by_user', ondelete='SET NULL'), nullable=True)
+    # HB-AUTOGEN:END
+
     
     
     # Timestamps
