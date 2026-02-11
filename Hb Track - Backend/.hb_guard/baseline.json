@@ -1699,8 +1699,8 @@
       "size": 6927
     },
     "scripts\\parity_gate.ps1": {
-      "sha256": "505e3ba5811e132e928c4710d6ea20060599835977a2fdadbe325224dc7b1a25",
-      "size": 4184
+      "sha256": "ac56e18ce8ddffbf78a2afbec2114ab7a6fa76833a7cbb30d2d7cf5043f6f33b",
+      "size": 4208
     },
     "scripts\\parity_scan.ps1": {
       "sha256": "cb41544f49447c1426f65c58d6671f2fc3c75029802624fd522e29012a826fa9",
