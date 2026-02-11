@@ -527,68 +527,68 @@
       "size": 2110
     },
     "app\\models\\defensive_position.py": {
-      "sha256": "e6cf06ecb3a7fd924235de2ba60e177466d60114366cfe1ebce4481c139c24cc",
-      "size": 1152
+      "sha256": "bf86ac1f5684d0f4da4f39099da4dcb9c6ffb0036dc164ac5744e54414ffbfcd",
+      "size": 1749
     },
     "app\\models\\email_queue.py": {
-      "sha256": "ce6d25b1fcf19c7142c469bd91d358ae4dddace10f5f7f2307d2037f4484799a",
-      "size": 2000
+      "sha256": "7ce59ac28ccdc0ad19b5c4a1e82dac0329bdbf5d6a1434197115b26b9109b7d3",
+      "size": 3206
     },
     "app\\models\\exercise.py": {
-      "sha256": "f6e4cec52cb930adf95c6a44f1d2408c9efd39f645ff8c9115e78d8c6a3c37d7",
-      "size": 1781
+      "sha256": "e0efd0cc762374b239f2f90402559bf68204e551ce778962f6783f1de3d26ccf",
+      "size": 2732
     },
     "app\\models\\exercise_favorite.py": {
-      "sha256": "4872a8b7c4ad0406fc7e6b1b16097e52b1149b24b65fe84e8551c21d288c2517",
-      "size": 624
+      "sha256": "2b21ff5bf96e46963c2c7ff542437321cd6f610c47b2c24cf701e6035f452874",
+      "size": 1424
     },
     "app\\models\\exercise_tag.py": {
       "sha256": "5a5aa3b499042ef05c445477ae90a968e243937364d7f09441897fb224340a14",
       "size": 2605
     },
     "app\\models\\export_job.py": {
-      "sha256": "e39b04971634ee85baf6a6e5291be11419999440e804f212f28c23e5880a1cc9",
-      "size": 3872
+      "sha256": "2e067f3ca276eb3d51bf5b42e7f245d823d71102a34de038b828833b065e7073",
+      "size": 3790
     },
     "app\\models\\export_rate_limit.py": {
-      "sha256": "2d7e36d79c72cdfaf00b8a85ef9a0eca477fe90296eec771bf8da14b39906565",
-      "size": 2078
+      "sha256": "60dec44d3aadf9d2a9d478e7926e113f0335da90313f6f3a716a14b3619a41ac",
+      "size": 1888
     },
     "app\\models\\idempotency_key.py": {
-      "sha256": "fa9dd6efd4ab8f4a5d3e3db3a1a035a333ff9dd5523935e86325df1699e5d2e9",
-      "size": 3486
+      "sha256": "64e4ca852fd1d05f36822ca3f6cdeff813ea9df9d83b848aed68b8816337d20c",
+      "size": 3588
     },
     "app\\models\\match.py": {
-      "sha256": "2a03501cec48c3b4c09c6094a8ccd9558dff18b5be2cadc242f169801f20764c",
-      "size": 6383
+      "sha256": "ce4f7160d36b05a0eddf4467360bb98f78c724daae840def34a291f833d75702",
+      "size": 6187
     },
     "app\\models\\match_event.py": {
-      "sha256": "101476a023d236c65b7e1f36c55085b59dd3ccf20f33054d2de4d45d7d7d12db",
-      "size": 7084
+      "sha256": "0ad77890b57db9de8267945bebf468137aead5a2fc9edd608b15d3bd2b0ec2de",
+      "size": 7120
     },
     "app\\models\\match_period.py": {
       "sha256": "921ec782b8b84ae8563fed84e638b571f01f2f178cc08ad8e091671ef6fc364c",
       "size": 1876
     },
     "app\\models\\match_roster.py": {
-      "sha256": "257834bb602e1c8145e166712ed4a96e969708b34d3205027f5f3231b31a5b08",
-      "size": 2281
+      "sha256": "89e916977d7bd4b65e2dd6eb221d7f3dbca92ec9b4ed99592a5ecb78c8376aa3",
+      "size": 2868
     },
     "app\\models\\match_teams.py": {
-      "sha256": "bae2b4e60fbb11f18a2c4db2543bdf80f5aba5ab053f3702e638c798c33e6a1a",
-      "size": 1510
+      "sha256": "53af89c02b3b24cf0165c4d632bf58ce2d8266a6ac34036c7340adc161c3d414",
+      "size": 2103
     },
     "app\\models\\medical_case.py": {
-      "sha256": "22a4682ab167ca278264398ac4794d4215eba038cac873ad8ef4ef5c9ae7a042",
-      "size": 2749
+      "sha256": "761b53937de6e65a3b79902c107f6898a94d8395debab7c43c477d88fd173c39",
+      "size": 4091
     },
     "app\\models\\membership.py": {
       "sha256": "d6a8ddb3e40ec183b73a10a0ff14263f8758e44c5fe5b036b0cb3863b9ae39af",
       "size": 4694
     },
     "app\\models\\notification.py": {
-      "sha256": "3b20568173461e5d142ade7c4a5f6d0db8ab8ba463678d1f788e6d53970a9997",
-      "size": 3127
+      "sha256": "5f517287dcd2725ae2d86aa7383043a4f55381151eb501984bb409552e3c6a53",
+      "size": 3442
     },
     "app\\models\\offensive_position.py": {
       "sha256": "3b4e1899f2c1310ced9596873141056c0a93224cf494820bcd5f62126f051b15",
@@ -1579,8 +1579,8 @@
       "size": 4567
     },
     "scripts\\autogen_model_from_db.py": {
-      "sha256": "5edbe526d3745a21a34f73c1772f4acdb5cff5d820df0d46a7b6a191e6d58b63",
-      "size": 32871
+      "sha256": "52760a5592640e3f1339fa9a95fc6b18edf582d0fd5ab79979c5e678005eb219",
+      "size": 33178
     },
     "scripts\\check_and_fix_matches.sql": {
       "sha256": "06505dfb81cf1fcee77c8f3ef86a5fd1c7facb13b609538ca9a55716cb92cbb3",
