@@ -320,6 +320,58 @@ SSOT Artifacts:
 | **System Design** | `docs\_ai\SYSTEM_DESIGN.md` | Arquitetura backend (stack, camadas, padrões, convenções) |
 | **Agent Routing Map** | `docs\_ai\07_AGENT_ROUTING_MAP.md` | Mapa: ação → instruções → docs canônicos → comandos |
 
+### 5.1 Subdiretórios `docs\_ai\` (Machine-Readable — ADR-016)
+
+> **ADR fonte:** `docs\ADR\016-ADR-machine-readable-ai-quality-gates.md`
+> **EXEC_TASK:** `docs\execution_tasks\EXEC_TASK_machine-readable-ai-quality-gates.md`
+
+| Subdiretório | Path | Propósito | Ficheiros |
+|--------------|------|-----------|-----------|
+| **_context** | `docs\_ai\_context\` | Entry points compactos para agentes | `AGENT_INITIAL_CONTEXT.md`, `AGENT_CONSTRAINTS.md`, `AGENT_GUARDRAILS.md`, `AGENT_RULES_ENGINE.md` |
+| **_specs** | `docs\_ai\_specs\` | Specs formais parseáveis (YAML/JSON) | `SPEC_AGENT_GATES.yaml`, `SPEC_AGENT_ROUTING.json`, `SPEC_AGENT_MODELS.json` |
+| **_schemas** | `docs\_ai\_schemas\` | JSON Schemas para validação automática | `agent-spec.schema.json`, `quality-gates.schema.json`, `invocation.schema.json` |
+| **_prompts** | `docs\_ai\_prompts\` | Templates de prompt (system messages) | `PROMPT_TEMPLATE_CODE_REVIEW.md`, `PROMPT_TEMPLATE_DOCUMENTATION.md`, `PROMPT_TEMPLATE_TESTING.md` |
+| **_maps** | `docs\_ai\_maps\` | Índices e mapas de roteamento | `agent-routing-map.md`, `MAP_ROUTING_AGENT_DOCUMENTATION.md`, `MAP_ROUTING_AGENT_GATES.md`, `MAP_ROUTING_AGENT_MODELS.md` |
+| **_guardrails** | `docs\_ai\_guardrails\` | Políticas hard (security, edit) | `GUARDRAIL_POLICY_BASELINE.md`, `GUARDRAIL_POLICY_PARITY.md`, `GUARDRAIL_POLICY_REQUIREMENTS.md` |
+| **_checklists** | `docs\_ai\_checklists\` | Checklists executáveis | `CHECKLIST_AGENT_DEPLOYMENT.md`, `CHECKLIST_AGENT_VALIDATION.md`, `CHECKLIST_AGENT_DOCUMENTATION.md` |
+| **_docs_arch** | `docs\_ai\_docs_arch\` | Arquitetura documental | `DOCS_ARCH_MASTER.md` |
+
+### 5.2 Infraestrutura de Scripts IA (`scripts\_ia\`)
+
+> **Documentação:** `scripts\_ia\README.md`
+> **Dependências:** `scripts\_ia\requirements.txt` (radon, lizard, pyyaml, jsonschema)
+
+| Categoria | Path | Ferramentas |
+|-----------|------|-------------|
+| **Extractors** | `scripts\_ia\extractors\` | `extract-quality-gates.py`, `extract-ai-context.py`, `extract-workflows.py`, `extract-adr-index.py`, `extract-approved-commands.py`, `extract-troubleshooting.py` |
+| **Validators** | `scripts\_ia\validators\` | `validate-ai-docs-sync.py`, `validate-quality-gates.py`, `validate-agent-spec.py`, `validate-approved-commands.py`, `validate-yaml-json.py` |
+| **Generators** | `scripts\_ia\generators\` | `generate-ai-index.py`, `generate-checklist-yml.py`, `generate-handshake-template.py`, `generate-invocation-examples.py` |
+| **Agents** | `scripts\_ia\agents\` | `code-review-agent.py`, `parity-check-agent.py`, `invariant-validator-agent.py` |
+| **Utils** | `scripts\_ia\utils\` | `yaml_loader.py`, `json_loader.py`, `file_reader.py`, `git_diff_parser.py` |
+
+### 5.3 CI/CD Workflows IA (`.github\workflows\`)
+
+| Workflow | Path | Trigger | Propósito |
+|----------|------|---------|-----------|
+| **Quality Gates** | `.github\workflows\quality-gates.yml` | PR (scripts, backend) | Valida código contra thresholds de `quality-gates.yml` |
+| **AI Docs Validation** | `.github\workflows\ai-docs-validation.yml` | Push/PR (docs/_canon, docs/_ai) | Valida sincronização SSOT ↔ AI docs |
+| **Approved Commands** | `.github\workflows\approved-commands-check.yml` | PR (scripts, workflows) | Valida comandos contra whitelist |
+| **Agent Spec** | `.github\workflows\agent-spec-validation.yml` | PR (docs/_ai) | Valida agent-spec.json contra schema |
+| **Generate Artifacts** | `.github\workflows\generate-ai-artifacts.yml` | Push (docs/_canon) | Regenera artefatos AI automaticamente |
+
+### 5.4 ADRs de Governança Documental
+
+| ADR | Path | Propósito |
+|-----|------|-----------|
+| **ADR-016** | `docs\ADR\016-ADR-machine-readable-ai-quality-gates.md` | Machine-readable docs + AI quality gates ("músculo") |
+| **ADR-017** | `docs\ADR\017-ADR-DOCS-documentacao-humana.md` | Governança de documentação humana ("alma") |
+
+### 5.5 Execution Tasks (Implementação)
+
+| EXEC_TASK | Path | ADR | Estado |
+|-----------|------|-----|--------|
+| **Machine-Readable AI Quality Gates** | `docs\execution_tasks\EXEC_TASK_machine-readable-ai-quality-gates.md` | ADR-016 | PENDENTE |
+
 ---
 
 ## 6. Documentação Canônica para Governança AI (`docs\_canon\`)
