@@ -505,7 +505,8 @@ def _render_class_block(table: str, cols: List[dict], pk_cols: List[str], fks: L
     for ix in indexes:
         name = ix.get("name")
         col_names = ix.get("column_names") or []
-        if not name or not col_names:
+        # Functional indexes may have None in column list - skip if any None
+        if not name or not col_names or None in col_names:
             continue
         unique = bool(ix.get("unique", False))
         if unique and name in unique_constraint_names:
