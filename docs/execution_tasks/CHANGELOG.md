@@ -12,6 +12,11 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
   - **Bare Mapped[] Removal**: Pattern 3 para detectar e remover anotações `Mapped[...]` sem atribuição (`= mapped_column(...)` ou `= relationship(...)`).
   - **__table_args__ Unconditional Removal**: Sempre remove `__table_args__` fora do HB-AUTOGEN block (não apenas quando autogen tem um), evitando duplicações.
   - **Import Dedup Function**: Nova função `_remove_duplicate_imports_outside_autogen()` para remover imports redundantes fora do bloco HB-AUTOGEN-IMPORTS.
+  - **TYPE_CHECKING Detection**: Detecta uso de `TYPE_CHECKING` no arquivo e adiciona ao import `from typing import TYPE_CHECKING`.
+  - **Typing Extras Detection**: Detecta uso de `List[`, `Dict[`, `Set[`, `Tuple[`, `Any` e adiciona aos imports de typing.
+  - **UUID→PG_UUID Legacy Fix**: Nova função `_fix_legacy_patterns()` converte `UUID(as_uuid=` para `PG_UUID(as_uuid=` fora do HB-AUTOGEN.
+  - **text() Import Detection**: Detecta uso de `text()` e adiciona ao import `from sqlalchemy import text`.
+  - **Functional Index Skip**: Skip de indexes com `None` em `col_names` (índices funcionais sem colunas explícitas).
 
 * **Pipeline P0-P5 Hardening** (2026-02-10): Conjunto de melhorias no pipeline de integrid. Model ↔ DB:
   - **P0-A**: Fix crítico de encoding em `parity_scan.ps1` — substituído `Tee-Object` (UTF-16LE) por captura em variável + escrita UTF-8 via `[System.IO.File]::WriteAllText`. Corrige bug onde **todos** os items do `parity_report.json` tinham `table: null, column: null`.
@@ -29,6 +34,11 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 * **Duplicação de __table_args__**: Autogen só removia `__table_args__` fora do HB-AUTOGEN quando o bloco autogen também tinha um. Agora remove incondicionalmente.
 * **Bare Mapped annotations**: Linhas como `    athlete_id: Mapped[int]` (sem `= mapped_column()`) não eram detectadas/removidas, causando erros de sintaxe.
 * **SyntaxError from __future__**: Imports `from __future__` duplicados (dentro e fora do HB-AUTOGEN) causavam SyntaxError. Corrigido via `_remove_duplicate_imports_outside_autogen()`.
+* **NameError TYPE_CHECKING**: Uso de `TYPE_CHECKING` em models sem import correspondente causava `NameError`. Corrigido com detecção automática.
+* **NameError List/Dict/Set/Tuple/Any**: Uso de typing extras sem import causava `NameError`. Corrigido com detecção automática.
+* **TypeError UUID(as_uuid=)**: Código legado usando `UUID(as_uuid=True)` falhava porque `UUID` do SQLAlchemy 2.x não aceita esse kwarg. Corrigido convertendo para `PG_UUID`.
+* **NameError text**: Uso de `text()` sem import causava `NameError`. Corrigido com detecção de `sa_extras`.
+* **ArgumentError functional indexes**: Indexes funcionais (ex: `lower(email)`) tinham `None` em `col_names`, causando crash. Corrigido com skip.
 
 * **Bug Crítico `table: null`**: O `parity_report.json` gerado pelo pipeline tinha **todas** as entradas com `table: null` e `column: null` devido a `Tee-Object` do PowerShell 5.1 escrevendo o log Alembic em UTF-16LE sem BOM explícito, causando truncamento de mensagens no parser Python.
 * **`$LASTEXITCODE` mascarado**: Em `models_batch.ps1`, `Run-Gate` usava pipeline com `Tee-Object | Out-Null`, o que podia mascarar o exit code real do gate. Corrigido para captura em variável.

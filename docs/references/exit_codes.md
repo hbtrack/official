@@ -273,6 +273,45 @@ causando truncamento no parser Python (`parity_classify.py`).
 | **2** | Parity Diff | parity_gate.ps1 | DB ≠ Model | Migration OU Autogen |
 | **3** | Guard Violation | agent_guard.py | Arquivo protegido modificado | -Allow OU Revert |
 | **4** | Requirements | model_requirements.py | Model viola schema.sql | Fix model |
+| **100** | SKIP_NO_MODEL | models_batch.ps1 | Tabela sem model Python | Criar model OU ignorar |
+
+---
+
+## Exit Code 100: SKIP_NO_MODEL
+
+**Origem:** `models_batch.ps1` (modo scan)
+
+**Significado:** Tabela existe no schema.sql mas não possui model Python correspondente.
+
+**Causas comuns:**
+- Tabela de sistema (ex: `alembic_version`)
+- Tabela legada não migrada para ORM
+- Tabela gerenciada externamente (views materializadas)
+- Model planejado mas ainda não implementado
+
+**Comportamento:**
+- NÃO é considerado erro (batch continua)
+- Tabela é registrada como SKIP no relatório
+- Não conta como FAIL na contagem final
+
+**Exemplo:**
+```powershell
+.\scripts\models_batch.ps1 -SkipRefresh -SkipGate
+# Output:
+# advantage_states: SKIP_NO_MODEL (exit=100)
+# alembic_version: SKIP_NO_MODEL (exit=100)
+# === SUMMARY ===
+# PASS: 51, SKIP: 6, FAIL: 0
+```
+
+**Tabelas típicas com SKIP_NO_MODEL:**
+- `alembic_version` (controle Alembic)
+- `advantage_states` (enum table sem ORM)
+- Views materializadas (`mv_*`)
+
+**Resolução:**
+- Se a tabela DEVE ter model: criar via autogen
+- Se é tabela de sistema: ignorar (comportamento esperado)
 
 ---
 

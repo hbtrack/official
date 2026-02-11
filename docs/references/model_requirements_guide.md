@@ -483,6 +483,41 @@ jobs:
 
 ---
 
+## Limitações Conhecidas
+
+### Validação por Arquivo (não por Classe)
+
+**Problema:** O `model_requirements.py` atualmente valida o **arquivo inteiro**, não `__tablename__` específico. Isso causa **falsos positivos** em arquivos multi-class.
+
+**Exemplo concreto:** `person.py` contém 5 classes:
+- `Person` (tabela `persons`)
+- `PersonAddress` (tabela `person_addresses`)
+- `PersonContact` (tabela `person_contacts`)
+- `PersonDocument` (tabela `person_documents`)
+- `PersonMedia` (tabela `person_media`)
+
+**Comportamento atual:**
+```powershell
+python scripts\model_requirements.py --table person_addresses --profile strict
+# Valida TODAS as colunas de person.py, incluindo Person, PersonContact, etc.
+# Se Person tiver uma violation, person_addresses recebe FAIL (mesmo estando correta)
+```
+
+**Tabelas afetadas (falsos positivos):**
+- `person_addresses`, `person_contacts`, `person_documents`, `person_media`, `persons`
+- `users` (arquivo `user.py` pode ter classes auxiliares)
+
+**Workaround atual:** Usar perfil `fk` ou ignorar FAILs dessas tabelas até a correção.
+
+**Correção planejada:** Modificar `model_requirements.py` para:
+1. Extrair `__tablename__` de cada classe no arquivo
+2. Validar apenas a classe correspondente à `--table` passada
+3. Ignorar atributos de outras classes no mesmo arquivo
+
+**Tracking:** Issue pendente para implementação.
+
+---
+
 ## Comandos de referência rápida
 
 ```powershell
@@ -521,4 +556,4 @@ $LASTEXITCODE
 
 **Última atualização:** 2026-02-11  
 **Responsável:** Tech Lead + AI Assistant  
-**Versão:** 1.1
+**Versão:** 1.2

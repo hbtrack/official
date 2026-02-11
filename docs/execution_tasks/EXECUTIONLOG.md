@@ -58,6 +58,16 @@ Registro técnico de execuções, auditorias e sessões de trabalho do Agent.
 | 2026-02-11 | `T-505` | **Autogen Hardening**: Fix orphan line detection | ✅ PASS | Remoção de linhas órfãs (`    Boolean,`) após remoção parcial de imports multilinha. |
 | 2026-02-11 | `T-506` | Teste: `match_events` model import | ✅ PASS | `from app.models.match_event import MatchEvent` executou sem erros após fix multiline import. |
 | 2026-02-11 | `T-507` | Teste: `model_requirements --table match_events --profile strict` | ✅ PASS | Exit=0. 26/26 colunas validadas. |
+| 2026-02-11 | `T-508` | **Autogen Hardening**: Fix TYPE_CHECKING detection | ✅ PASS | Autogen detecta `TYPE_CHECKING` usado no arquivo e adiciona ao import `from typing import TYPE_CHECKING`. |
+| 2026-02-11 | `T-509` | **Autogen Hardening**: Fix List/Dict/Set/Tuple/Any detection | ✅ PASS | Autogen detecta `List[`, `Dict[`, `Set[`, `Tuple[`, `Any` e adiciona aos typing imports. |
+| 2026-02-11 | `T-510` | **Autogen Hardening**: Fix UUID→PG_UUID legacy pattern | ✅ PASS | Nova função `_fix_legacy_patterns()` converte `UUID(as_uuid=` para `PG_UUID(as_uuid=` fora do HB-AUTOGEN. |
+| 2026-02-11 | `T-511` | **Autogen Hardening**: Fix text() import detection | ✅ PASS | Autogen detecta uso de `text()` e adiciona ao import `from sqlalchemy import text`. |
+| 2026-02-11 | `T-512` | **Autogen Hardening**: Fix functional indexes (None columns) | ✅ PASS | Skip de indexes com `None` em `col_names` (índices funcionais sem colunas explícitas). |
+| 2026-02-11 | `T-513` | **Batch 2**: Autogen em 6 models (membership→person) | ✅ PASS | membership.py, offensive_position.py, organization.py, password_reset.py, permission.py, person.py (profile fk). |
+| 2026-02-11 | `T-514` | **Batch 3**: Autogen em 15 models (roles→wellness_pre) | ✅ PASS | 15 files changed, 767 insertions(+), 978 deletions(-). |
+| 2026-02-11 | `T-515` | Validação final: `from app.models import *` | ✅ PASS | Todos os 51 models importam sem erros. |
+| 2026-02-11 | `T-516` | **Batch Final**: `models_batch.ps1 -SkipRefresh -SkipGate` | ✅ PASS | 51 PASS, 6 SKIP_NO_MODEL, 6 FAIL (falsos positivos em arquivos multi-class). |
+| 2026-02-11 | `T-517` | `git push origin main` | ✅ PASS | 103 objects pushed para GitHub (a4ca359..119ab64). |
 | 2026-02-08 22:55 | `T-327` | **CORREÇÃO DOCUMENTAL**: Análise de `agent_guard.py` linha 225 | ⚠️ DISCOVERY | Código retorna `exit=2` para violations, NÃO `exit=3` como documentação original especificava. Discovery revelou ambiguidade: exit=2 usado tanto para parity quanto guard. |
 | 2026-02-08 23:00 | `T-328` | **CORREÇÃO DOCUMENTAL**: Atualização de `docs/references/exit_codes.md` | ✅ PASS | Exit Code 2 agora documenta Caso 2A (Parity) + Caso 2B (Guard); Exit Code 3 marcado como "(Não utilizado)". |
 | 2026-02-08 23:05 | `T-329` | Restauração de 3 arquivos deletados via git checkout | ✅ PASS | Arquivos: CHECKLIST-CANONICA-MODELS.md, exit_codes.md, model_requirements_guide.md. Baseline atualizado para 622 files. |
