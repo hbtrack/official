@@ -505,16 +505,36 @@ def _render_class_block(table: str, cols: List[dict], pk_cols: List[str], fks: L
     for ix in indexes:
         name = ix.get("name")
         col_names = ix.get("column_names") or []
-        # Functional indexes may have None in column list - skip if any None
-        if not name or not col_names or None in col_names:
-            continue
+        expressions = ix.get("expressions") or []
         unique = bool(ix.get("unique", False))
+
+        # Skip indexes without name
+        if not name:
+            continue
+
+        # Skip if already emitted as UniqueConstraint
         if unique and name in unique_constraint_names:
             continue
+
         dialect_opts = ix.get("dialect_options") or {}
-        pg_where = None
-        # best-effort key used by SQLAlchemy for partial indexes
         pg_where = dialect_opts.get("postgresql_where") or dialect_opts.get("where") or None
+
+        # Functional indexes: column_names contains None, use expressions instead
+        if None in col_names and expressions:
+            # Filter out None values from expressions (some may be column refs)
+            exprs = [e for e in expressions if e is not None]
+            if not exprs:
+                continue
+            exprs_code = ", ".join([f"sa.text({e!r})" for e in exprs])
+            if pg_where:
+                ta.append(f"Index({name!r}, {exprs_code}, unique={unique}, postgresql_where=sa.text({str(pg_where)!r}))")
+            else:
+                ta.append(f"Index({name!r}, {exprs_code}, unique={unique})")
+            continue
+
+        # Regular column-based indexes
+        if not col_names:
+            continue
         cols_expr = ", ".join([repr(c) for c in col_names])
         if pg_where:
             ta.append(f"Index({name!r}, {cols_expr}, unique={unique}, postgresql_where=sa.text({str(pg_where)!r}))")
