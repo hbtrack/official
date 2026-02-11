@@ -6,11 +6,19 @@ Ref: R4 - Papéis do sistema (Dirigente, Coordenador, Treinador, Atleta)
 Ref: RDB2.1 - Roles usa integer como PK (tabela lookup)
 """
 
-from datetime import datetime
-from typing import Optional
+# HB-AUTOGEN-IMPORTS:BEGIN
+from __future__ import annotations
 
-from sqlalchemy import DateTime, SmallInteger, String, Text, text
+from datetime import date, datetime
+from typing import Optional
+from uuid import UUID
+
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint, text
 from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+
 
 from app.models.base import Base
 
@@ -25,40 +33,43 @@ class Role(Base):
 
     __tablename__ = "roles"
 
-    id: Mapped[int] = mapped_column(
-        SmallInteger,
-        primary_key=True,
-        autoincrement=True,
+
+# HB-AUTOGEN:BEGIN
+
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+
+    # Table: public.roles
+
+    __table_args__ = (
+
+        UniqueConstraint('code', name='ux_roles_code'),
+
+        UniqueConstraint('name', name='ux_roles_name'),
+
     )
 
-    code: Mapped[str] = mapped_column(
-        String(50),
-        nullable=False,
-        unique=True,
-    )
 
-    name: Mapped[str] = mapped_column(
-        String(100),
-        nullable=False,
-        unique=True,
-    )
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
 
-    description: Mapped[Optional[str]] = mapped_column(
-        Text,
-        nullable=True,
-    )
 
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=text("now()"),
-        nullable=False,
-    )
+    id: Mapped[int] = mapped_column(sa.SmallInteger(), primary_key=True, server_default=sa.text('nextval(\'"public".roles_id_seq\'::regclass)'))
 
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=text("now()"),
-        nullable=False,
-    )
+    code: Mapped[str] = mapped_column(sa.String(length=32), nullable=False)
+
+    name: Mapped[str] = mapped_column(sa.String(length=64), nullable=False)
+
+    description: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    # HB-AUTOGEN:END
+
+
+
+
+
 
     def __repr__(self) -> str:
         return f"<Role(id={self.id}, code={self.code!r}, name={self.name!r})>"

@@ -8,16 +8,20 @@ Cache híbrido de analytics de treino:
 Trigger fn_invalidate_analytics_cache marca cache_dirty=true automaticamente
 quando training_sessions são modificadas.
 """
-from datetime import datetime, timezone, date
-from typing import Optional
-from uuid import uuid4
 
-from sqlalchemy import (
-    DateTime, ForeignKey, Integer, Numeric, Boolean, 
-    CheckConstraint, UniqueConstraint, Index, Date, String, text
-)
-from sqlalchemy.dialects.postgresql import UUID
+# HB-AUTOGEN-IMPORTS:BEGIN
+from __future__ import annotations
+
+from datetime import date, datetime
+from typing import Optional
+from uuid import UUID
+
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+
 
 from app.models.base import Base
 
@@ -36,173 +40,82 @@ class TrainingAnalyticsCache(Base):
     """
     __tablename__ = "training_analytics_cache"
     
-    # PK
-    id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True),
-        primary_key=True,
-        default=uuid4,
-        server_default=text("gen_random_uuid()")
+
+# HB-AUTOGEN:BEGIN
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+    # Table: public.training_analytics_cache
+    __table_args__ = (
+        CheckConstraint("granularity::text = ANY (ARRAY['weekly'::character varying, 'monthly'::character varying]::text[])", name='ck_training_analytics_cache_granularity'),
+        UniqueConstraint('team_id', 'microcycle_id', 'month', 'granularity', name='uq_training_analytics_cache_lookup'),
+        Index('idx_analytics_lookup', 'team_id', 'granularity', 'cache_dirty', unique=False, postgresql_where=sa.text('(cache_dirty = false)')),
     )
+
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
+
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+    team_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('teams.id', name='training_analytics_cache_team_id_fkey', ondelete='CASCADE'), nullable=False)
+    microcycle_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('training_microcycles.id', name='training_analytics_cache_microcycle_id_fkey', ondelete='CASCADE'), nullable=True)
+    month: Mapped[Optional[date]] = mapped_column(sa.Date(), nullable=True)
+    granularity: Mapped[str] = mapped_column(sa.String(length=20), nullable=False)
+    total_sessions: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True)
+    avg_focus_attack_positional_pct: Mapped[Optional[object]] = mapped_column(sa.Numeric(5, 2), nullable=True)
+    avg_focus_defense_positional_pct: Mapped[Optional[object]] = mapped_column(sa.Numeric(5, 2), nullable=True)
+    avg_focus_transition_offense_pct: Mapped[Optional[object]] = mapped_column(sa.Numeric(5, 2), nullable=True)
+    avg_focus_transition_defense_pct: Mapped[Optional[object]] = mapped_column(sa.Numeric(5, 2), nullable=True)
+    avg_focus_attack_technical_pct: Mapped[Optional[object]] = mapped_column(sa.Numeric(5, 2), nullable=True)
+    avg_focus_defense_technical_pct: Mapped[Optional[object]] = mapped_column(sa.Numeric(5, 2), nullable=True)
+    avg_focus_physical_pct: Mapped[Optional[object]] = mapped_column(sa.Numeric(5, 2), nullable=True)
+    avg_rpe: Mapped[Optional[object]] = mapped_column(sa.Numeric(5, 2), nullable=True)
+    avg_internal_load: Mapped[Optional[object]] = mapped_column(sa.Numeric(10, 2), nullable=True)
+    total_internal_load: Mapped[Optional[object]] = mapped_column(sa.Numeric(12, 2), nullable=True)
+    attendance_rate: Mapped[Optional[object]] = mapped_column(sa.Numeric(5, 2), nullable=True)
+    wellness_response_rate_pre: Mapped[Optional[object]] = mapped_column(sa.Numeric(5, 2), nullable=True)
+    wellness_response_rate_post: Mapped[Optional[object]] = mapped_column(sa.Numeric(5, 2), nullable=True)
+    athletes_with_badges_count: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True)
+    deviation_count: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True)
+    threshold_mean: Mapped[Optional[object]] = mapped_column(sa.Numeric(10, 2), nullable=True)
+    threshold_stddev: Mapped[Optional[object]] = mapped_column(sa.Numeric(10, 2), nullable=True)
+    cache_dirty: Mapped[bool] = mapped_column(sa.Boolean(), nullable=False, server_default=sa.text('true'))
+    calculated_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+    # HB-AUTOGEN:END
+    # PK
     
     # Lookup keys
-    team_id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("teams.id", ondelete="CASCADE"),
-        nullable=False,
-        index=True
-    )
     
-    microcycle_id: Mapped[Optional[UUID]] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("training_microcycles.id", ondelete="CASCADE"),
-        nullable=True,
-        comment="Para granularity='weekly', identifica o microciclo"
-    )
     
-    month: Mapped[Optional[date]] = mapped_column(
-        Date,
-        nullable=True,
-        comment="Para granularity='monthly', primeiro dia do mês (YYYY-MM-01)"
-    )
     
-    granularity: Mapped[str] = mapped_column(
-        String(20),
-        nullable=False,
-        comment="'weekly' (microcycle_id) ou 'monthly' (month)"
-    )
     
     # =========================================================================
     # MÉTRICAS AGREGADAS (17 campos)
     # =========================================================================
     
-    total_sessions: Mapped[Optional[int]] = mapped_column(
-        Integer,
-        nullable=True,
-        comment="Total de sessões no período"
-    )
     
     # Focos de treino (7 médias percentuais)
-    avg_focus_attack_positional_pct: Mapped[Optional[float]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True,
-        comment="Média % ataque posicional"
-    )
     
-    avg_focus_defense_positional_pct: Mapped[Optional[float]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True,
-        comment="Média % defesa posicional"
-    )
     
-    avg_focus_transition_offense_pct: Mapped[Optional[float]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True,
-        comment="Média % transição ofensiva"
-    )
     
-    avg_focus_transition_defense_pct: Mapped[Optional[float]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True,
-        comment="Média % transição defensiva"
-    )
     
-    avg_focus_attack_technical_pct: Mapped[Optional[float]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True,
-        comment="Média % técnica ofensiva"
-    )
     
-    avg_focus_defense_technical_pct: Mapped[Optional[float]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True,
-        comment="Média % técnica defensiva"
-    )
     
-    avg_focus_physical_pct: Mapped[Optional[float]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True,
-        comment="Média % físico"
-    )
     
     # Carga de treino
-    avg_rpe: Mapped[Optional[float]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True,
-        comment="Média RPE (Rating of Perceived Exertion)"
-    )
     
-    avg_internal_load: Mapped[Optional[float]] = mapped_column(
-        Numeric(10, 2),
-        nullable=True,
-        comment="Média de carga interna (RPE × duration)"
-    )
     
-    total_internal_load: Mapped[Optional[float]] = mapped_column(
-        Numeric(12, 2),
-        nullable=True,
-        comment="Soma total de carga interna"
-    )
     
-    attendance_rate: Mapped[Optional[float]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True,
-        comment="Taxa de assiduidade média (%)"
-    )
     
     # Wellness metrics (Step 16 novo)
-    wellness_response_rate_pre: Mapped[Optional[float]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True,
-        comment="Taxa de resposta wellness pré-treino (%)"
-    )
     
-    wellness_response_rate_post: Mapped[Optional[float]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True,
-        comment="Taxa de resposta wellness pós-treino (%)"
-    )
     
-    athletes_with_badges_count: Mapped[Optional[int]] = mapped_column(
-        Integer,
-        nullable=True,
-        comment="Quantidade de atletas com badges no período"
-    )
     
     # Métricas threshold (Step 15/16)
-    deviation_count: Mapped[Optional[int]] = mapped_column(
-        Integer,
-        nullable=True,
-        comment="Quantidade de sessões com desvio acima do threshold"
-    )
     
-    threshold_mean: Mapped[Optional[float]] = mapped_column(
-        Numeric(10, 2),
-        nullable=True,
-        comment="Média dos desvios calculados com alert_threshold_multiplier"
-    )
     
-    threshold_stddev: Mapped[Optional[float]] = mapped_column(
-        Numeric(10, 2),
-        nullable=True,
-        comment="Desvio padrão dos desvios calculados"
-    )
     
     # =========================================================================
     # CONTROLE DE CACHE
     # =========================================================================
     
-    cache_dirty: Mapped[bool] = mapped_column(
-        Boolean,
-        nullable=False,
-        server_default=text("true"),
-        comment="true = recalcular; false = válido. Trigger marca automaticamente."
-    )
     
-    calculated_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(timezone=True),
-        nullable=True,
-        comment="UTC timestamp da última recalculação"
-    )
     
     # =========================================================================
     # RELATIONSHIPS
@@ -218,21 +131,6 @@ class TrainingAnalyticsCache(Base):
     # CONSTRAINTS
     # =========================================================================
     
-    __table_args__ = (
-        CheckConstraint(
-            "granularity IN ('weekly', 'monthly')",
-            name='ck_training_analytics_cache_granularity'
-        ),
-        UniqueConstraint(
-            'team_id', 'microcycle_id', 'month', 'granularity',
-            name='uq_training_analytics_cache_lookup'
-        ),
-        Index(
-            'idx_analytics_lookup',
-            'team_id', 'granularity', 'cache_dirty',
-            postgresql_where=text('cache_dirty = false')
-        ),
-    )
     
     def __repr__(self) -> str:
         return (

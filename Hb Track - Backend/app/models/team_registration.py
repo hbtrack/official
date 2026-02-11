@@ -21,22 +21,19 @@ Estrutura REAL do banco (verificada via information_schema):
 NOTA: NÃO tem season_id, category_id, organization_id (V1.2)
 """
 
+# HB-AUTOGEN-IMPORTS:BEGIN
 from __future__ import annotations
 
-from datetime import datetime
-from typing import TYPE_CHECKING, Optional
+from datetime import date, datetime
+from typing import Optional, TYPE_CHECKING
 from uuid import UUID
 
-from sqlalchemy import (
-    CheckConstraint,
-    DateTime,
-    ForeignKey,
-    Index,
-    Text,
-    text,
-)
-from sqlalchemy.dialects.postgresql import UUID as PgUUID, TIMESTAMP
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+
 
 from app.models.base import Base
 
@@ -66,63 +63,71 @@ class TeamRegistration(Base):
 
     __tablename__ = "team_registrations"
 
-    # PK
-    id: Mapped[UUID] = mapped_column(
-        PgUUID(as_uuid=True),
-        primary_key=True,
-        server_default=text("gen_random_uuid()"),
+
+# HB-AUTOGEN:BEGIN
+
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+
+    # Table: public.team_registrations
+
+    __table_args__ = (
+
+        CheckConstraint('deleted_at IS NULL AND deleted_reason IS NULL OR deleted_at IS NOT NULL AND deleted_reason IS NOT NULL', name='ck_team_registrations_deleted_reason'),
+
+        Index('idx_team_registrations_athlete_active', 'athlete_id', 'deleted_at', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
+
+        Index('idx_team_registrations_team_active', 'team_id', 'deleted_at', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
+
+        Index('ix_team_registrations_athlete_active', 'athlete_id', unique=False, postgresql_where=sa.text('((end_at IS NULL) AND (deleted_at IS NULL))')),
+
+        Index('ix_team_registrations_athlete_id', 'athlete_id', unique=False),
+
+        Index('ix_team_registrations_period', 'start_at', 'end_at', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
+
+        Index('ix_team_registrations_team_active', 'team_id', unique=False, postgresql_where=sa.text('((end_at IS NULL) AND (deleted_at IS NULL))')),
+
+        Index('ix_team_registrations_team_athlete_active', 'team_id', 'athlete_id', unique=False, postgresql_where=sa.text('((end_at IS NULL) AND (deleted_at IS NULL))')),
+
+        Index('ix_team_registrations_team_id', 'team_id', unique=False),
+
+        Index('ux_team_registrations_active', 'athlete_id', 'team_id', unique=True, postgresql_where=sa.text('((end_at IS NULL) AND (deleted_at IS NULL))')),
+
     )
+
+
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
+
+
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+
+    athlete_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('athletes.id', name='fk_team_registrations_athlete_id', ondelete='RESTRICT'), nullable=False)
+
+    team_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('teams.id', name='fk_team_registrations_team_id', ondelete='RESTRICT'), nullable=False)
+
+    start_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    end_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    deleted_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+
+    deleted_reason: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+
+    created_by_user_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('users.id', name='fk_team_registrations_created_by_user'), nullable=True)
+
+    # HB-AUTOGEN:END
+    # PK
 
     # FKs (V1.2: apenas athlete_id e team_id)
-    athlete_id: Mapped[UUID] = mapped_column(
-        PgUUID(as_uuid=True),
-        ForeignKey("athletes.id", ondelete="CASCADE"),
-        nullable=False,
-        index=True,
-    )
-    team_id: Mapped[UUID] = mapped_column(
-        PgUUID(as_uuid=True),
-        ForeignKey("teams.id", ondelete="RESTRICT"),
-        nullable=False,
-        index=True,
-    )
 
     # Períodos de vínculo (RDB10)
-    start_at: Mapped[datetime] = mapped_column(
-        TIMESTAMP(timezone=True),
-        nullable=False,
-        server_default=text("now()"),
-        comment="Data de início do vínculo (RDB10)",
-    )
-    end_at: Mapped[Optional[datetime]] = mapped_column(
-        TIMESTAMP(timezone=True),
-        nullable=True,
-        comment="Data de término; NULL = ativo (RDB10)",
-    )
 
     # Timestamps
-    created_at: Mapped[datetime] = mapped_column(
-        TIMESTAMP(timezone=True),
-        nullable=False,
-        server_default=text("now()"),
-    )
-    updated_at: Mapped[datetime] = mapped_column(
-        TIMESTAMP(timezone=True),
-        nullable=False,
-        server_default=text("now()"),
-    )
 
     # Soft delete (RDB4)
-    deleted_at: Mapped[Optional[datetime]] = mapped_column(
-        TIMESTAMP(timezone=True),
-        nullable=True,
-        comment="Soft delete timestamp (RDB4)",
-    )
-    deleted_reason: Mapped[Optional[str]] = mapped_column(
-        Text,
-        nullable=True,
-        comment="Motivo da exclusão (obrigatório se deleted_at NOT NULL)",
-    )
 
     # Relationships
     athlete: Mapped["Athlete"] = relationship(
@@ -137,14 +142,6 @@ class TeamRegistration(Base):
     )
 
     # Constraints
-    __table_args__ = (
-        CheckConstraint(
-            "end_at IS NULL OR end_at >= start_at",
-            name="ck_team_reg_date_order",
-        ),
-        Index("idx_team_reg_athlete", "athlete_id"),
-        Index("idx_team_reg_team", "team_id"),
-    )
 
     # Properties
     @property

@@ -22,12 +22,19 @@ Schema DB:
 Nota: Relação user ↔ organization é via membership (não há FK direta).
 """
 
-from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Optional
+# HB-AUTOGEN-IMPORTS:BEGIN
+from __future__ import annotations
 
-from sqlalchemy import Boolean, CheckConstraint, DateTime, ForeignKey, String, Text, text
-from sqlalchemy.dialects.postgresql import UUID
+from datetime import date, datetime
+from typing import Optional, TYPE_CHECKING
+from uuid import UUID
+
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+
 
 from app.models.base import Base
 
@@ -54,26 +61,59 @@ class User(Base):
 
     __tablename__ = "users"
 
-    # PK
-    id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
-        primary_key=True,
-        server_default=text("gen_random_uuid()"),
+
+# HB-AUTOGEN:BEGIN
+
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+
+    # Table: public.users
+
+    __table_args__ = (
+
+        CheckConstraint('deleted_at IS NULL AND deleted_reason IS NULL OR deleted_at IS NOT NULL AND deleted_reason IS NOT NULL', name='ck_users_deleted_reason'),
+
+        CheckConstraint("status::text = ANY (ARRAY['ativo'::character varying, 'inativo'::character varying, 'arquivado'::character varying]::text[])", name='ck_users_status'),
+
+        Index('ix_users_person_id', 'person_id', unique=False),
+
+        Index('ux_users_superadmin', 'is_superadmin', unique=True, postgresql_where=sa.text('((is_superadmin = true) AND (deleted_at IS NULL))')),
+
     )
+
+
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
+
+
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+
+    person_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('persons.id', name='fk_users_person_id', ondelete='RESTRICT'), nullable=False)
+
+    email: Mapped[str] = mapped_column(sa.String(length=255), nullable=False)
+
+    password_hash: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+
+    is_superadmin: Mapped[bool] = mapped_column(sa.Boolean(), nullable=False, server_default=sa.text('false'))
+
+    is_locked: Mapped[bool] = mapped_column(sa.Boolean(), nullable=False, server_default=sa.text('false'))
+
+    status: Mapped[str] = mapped_column(sa.String(length=20), nullable=False, server_default=sa.text("'ativo'::character varying"))
+
+    expired_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    deleted_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+
+    deleted_reason: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+
+    # HB-AUTOGEN:END
+    # PK
 
     # FK Person (obrigatório conforme DB)
-    person_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
-        ForeignKey("persons.id"),
-        nullable=False,
-    )
 
     # Email (único)
-    email: Mapped[str] = mapped_column(
-        String(255),
-        nullable=False,
-        unique=True,
-    )
 
     # Relationship
     person: Mapped[Optional["Person"]] = relationship(
@@ -124,51 +164,12 @@ class User(Base):
     )
 
     # Autenticação
-    password_hash: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
     # Status e controle
-    status: Mapped[str] = mapped_column(
-        Text,
-        nullable=False,
-        server_default="ativo",
-    )
-    is_locked: Mapped[bool] = mapped_column(
-        Boolean,
-        nullable=False,
-        server_default=text("false"),
-    )
-    is_superadmin: Mapped[bool] = mapped_column(
-        Boolean,
-        nullable=False,
-        server_default=text("false"),
-    )
-    expired_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(timezone=True),
-        nullable=True,
-    )
 
     # Timestamps — RDB3
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=text("now()"),
-        nullable=False,
-    )
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=text("now()"),
-        onupdate=lambda: datetime.now(timezone.utc),
-        nullable=False,
-    )
 
     # Soft delete — RDB4
-    deleted_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(timezone=True),
-        nullable=True,
-    )
-    deleted_reason: Mapped[Optional[str]] = mapped_column(
-        Text,
-        nullable=True,
-    )
 
     @property
     def is_deleted(self) -> bool:

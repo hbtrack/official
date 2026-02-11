@@ -4,13 +4,19 @@ TeamMembership model - Vínculo de staff (coordenadores/treinadores) com equipes
 Análogo a TeamRegistration (atletas), mas para staff.
 """
 
-from datetime import datetime
-from typing import TYPE_CHECKING, Optional
-from uuid import UUID, uuid4
+# HB-AUTOGEN-IMPORTS:BEGIN
+from __future__ import annotations
 
-from sqlalchemy import DateTime, ForeignKey, Text, text
-from sqlalchemy.dialects.postgresql import UUID as PgUUID, TIMESTAMP
+from datetime import date, datetime
+from typing import Optional, TYPE_CHECKING
+from uuid import UUID
+
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+
 
 from app.models.base import Base
 
@@ -41,89 +47,80 @@ class TeamMembership(Base):
 
     __tablename__ = "team_memberships"
 
-    # PK
-    id: Mapped[UUID] = mapped_column(
-        PgUUID(as_uuid=True),
-        primary_key=True,
-        default=uuid4,
+
+# HB-AUTOGEN:BEGIN
+
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+
+    # Table: public.team_memberships
+
+    __table_args__ = (
+
+        CheckConstraint("status = ANY (ARRAY['pendente'::text, 'ativo'::text, 'inativo'::text])", name='check_team_memberships_status'),
+
+        Index('idx_team_memberships_active', 'team_id', 'status', 'end_at', unique=False),
+
+        Index('idx_team_memberships_org_membership_id', 'org_membership_id', unique=False),
+
+        Index('idx_team_memberships_person_id', 'person_id', unique=False),
+
+        Index('idx_team_memberships_person_team_active', 'person_id', 'team_id', unique=True, postgresql_where=sa.text("((deleted_at IS NULL) AND (end_at IS NULL) AND (status = ANY (ARRAY['pendente'::text, 'ativo'::text])))")),
+
+        Index('idx_team_memberships_status', 'status', unique=False),
+
+        Index('idx_team_memberships_team_active', 'team_id', 'status', unique=False, postgresql_where=sa.text('((deleted_at IS NULL) AND (end_at IS NULL))')),
+
+        Index('idx_team_memberships_team_id', 'team_id', unique=False),
+
     )
+
+
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
+
+
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+
+    person_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('persons.id', name='team_memberships_person_id_fkey', ondelete='CASCADE'), nullable=False)
+
+    team_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('teams.id', name='team_memberships_team_id_fkey', ondelete='CASCADE'), nullable=False)
+
+    org_membership_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('org_memberships.id', name='team_memberships_org_membership_id_fkey', ondelete='SET NULL'), nullable=True)
+
+    start_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    end_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+
+    status: Mapped[str] = mapped_column(sa.Text(), nullable=False, server_default=sa.text("'pendente'::text"))
+
+    created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    deleted_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+
+    deleted_reason: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+
+    resend_count: Mapped[int] = mapped_column(sa.Integer(), nullable=False, server_default=sa.text('0'))
+
+    # HB-AUTOGEN:END
+    # PK
 
     # FKs
-    person_id: Mapped[UUID] = mapped_column(
-        PgUUID(as_uuid=True),
-        ForeignKey("persons.id", ondelete="CASCADE"),
-        nullable=False,
-        index=True,
-    )
     
-    team_id: Mapped[UUID] = mapped_column(
-        PgUUID(as_uuid=True),
-        ForeignKey("teams.id", ondelete="CASCADE"),
-        nullable=False,
-        index=True,
-    )
     
-    org_membership_id: Mapped[Optional[UUID]] = mapped_column(
-        PgUUID(as_uuid=True),
-        ForeignKey("org_memberships.id", ondelete="SET NULL"),
-        nullable=True,
-        index=True,
-        comment="Referência ao vínculo organizacional (cargo)",
-    )
 
     # Períodos de vínculo
-    start_at: Mapped[datetime] = mapped_column(
-        TIMESTAMP(timezone=True),
-        nullable=False,
-        server_default=text("now()"),
-        comment="Data de início do vínculo",
-    )
     
-    end_at: Mapped[Optional[datetime]] = mapped_column(
-        TIMESTAMP(timezone=True),
-        nullable=True,
-        comment="Data de término; NULL = ativo",
-    )
     
     # Status: pendente (aguardando aceitação), ativo, inativo
-    status: Mapped[str] = mapped_column(
-        Text,
-        nullable=False,
-        default="pendente",
-        comment="Status: 'pendente', 'ativo', 'inativo'",
-    )
     
     # Contador de reenvios de convite (para membros pendentes)
-    resend_count: Mapped[int] = mapped_column(
-        nullable=False,
-        default=0,
-        server_default="0",
-        comment="Contador de reenvios de convite (máximo 3)",
-    )
 
     # Timestamps
-    created_at: Mapped[datetime] = mapped_column(
-        TIMESTAMP(timezone=True),
-        nullable=False,
-        server_default=text("now()"),
-    )
     
-    updated_at: Mapped[datetime] = mapped_column(
-        TIMESTAMP(timezone=True),
-        nullable=False,
-        server_default=text("now()"),
-    )
 
     # Soft delete
-    deleted_at: Mapped[Optional[datetime]] = mapped_column(
-        TIMESTAMP(timezone=True),
-        nullable=True,
-    )
     
-    deleted_reason: Mapped[Optional[str]] = mapped_column(
-        Text,
-        nullable=True,
-    )
 
     # Relationships
     person: Mapped["Person"] = relationship("Person", lazy="selectin")

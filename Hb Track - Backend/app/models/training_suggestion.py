@@ -23,16 +23,21 @@ Usage:
         target_session_ids=[uuid1, uuid2, uuid3],
         recommended_adjustment_pct=20.0,
         reason="Sessão origem com 115% de foco total. Compensar nas próximas 3 sessões."
-    )
 """
 
-from datetime import datetime
-from typing import Optional, List
-from uuid import UUID, uuid4
+# HB-AUTOGEN-IMPORTS:BEGIN
+from __future__ import annotations
 
-from sqlalchemy import Column, String, Text, DateTime, ForeignKey, CheckConstraint, ARRAY
-from sqlalchemy.dialects.postgresql import UUID as PGUUID, NUMERIC
+from datetime import date, datetime
+from typing import Optional, List
+from uuid import UUID
+
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+
 
 from app.models.base import Base
 
@@ -51,88 +56,66 @@ class TrainingSuggestion(Base):
     
     __tablename__ = "training_suggestions"
     
-    # Primary Key
-    id: Mapped[UUID] = mapped_column(
-        PGUUID(as_uuid=True),
-        primary_key=True,
-        default=uuid4,
-        comment="UUID da sugestão"
+
+# HB-AUTOGEN:BEGIN
+    
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+    
+    # Table: public.training_suggestions
+    
+    __table_args__ = (
+    
+        CheckConstraint("status::text = ANY (ARRAY['pending'::character varying, 'applied'::character varying, 'dismissed'::character varying]::text[])", name='ck_training_suggestions_status'),
+    
+        CheckConstraint("type::text = ANY (ARRAY['compensation'::character varying, 'reduce_next_week'::character varying]::text[])", name='ck_training_suggestions_type'),
+    
     )
+
+    
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
+
+    
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+    
+    team_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('teams.id', name='training_suggestions_team_id_fkey', ondelete='CASCADE'), nullable=False)
+    
+    type: Mapped[str] = mapped_column(sa.String(length=50), nullable=False)
+    
+    origin_session_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('training_sessions.id', name='training_suggestions_origin_session_id_fkey', ondelete='CASCADE'), nullable=True)
+    
+    target_session_ids: Mapped[Optional[object]] = mapped_column(sa.ARRAY(PG_UUID(as_uuid=True)), nullable=True)
+    
+    recommended_adjustment_pct: Mapped[Optional[object]] = mapped_column(sa.Numeric(5, 2), nullable=True)
+    
+    reason: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+    
+    status: Mapped[str] = mapped_column(sa.String(length=20), nullable=False, server_default=sa.text("'pending'::character varying"))
+    
+    applied_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+    
+    dismissed_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+    
+    dismissal_reason: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+    
+    created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    
+    # HB-AUTOGEN:END
+    # Primary Key
     
     # Foreign Keys
-    team_id: Mapped[UUID] = mapped_column(
-        PGUUID(as_uuid=True),
-        ForeignKey("teams.id", ondelete="CASCADE"),
-        nullable=False,
-        index=True,
-        comment="UUID do team"
-    )
     
-    origin_session_id: Mapped[Optional[UUID]] = mapped_column(
-        PGUUID(as_uuid=True),
-        ForeignKey("training_sessions.id", ondelete="CASCADE"),
-        nullable=True,
-        comment="UUID da sessão origem (pode ser NULL para sugestões semanais)"
-    )
     
     # Dados da Sugestão
-    type: Mapped[str] = mapped_column(
-        String(50),
-        nullable=False,
-        comment="Tipo: compensation | reduce_next_week"
-    )
     
-    target_session_ids: Mapped[Optional[List[UUID]]] = mapped_column(
-        ARRAY(PGUUID(as_uuid=True)),
-        nullable=True,
-        comment="UUIDs das sessões alvo onde aplicar ajuste"
-    )
     
-    recommended_adjustment_pct: Mapped[Optional[float]] = mapped_column(
-        NUMERIC(5, 2),
-        nullable=True,
-        comment="Ajuste recomendado em % (ex: 20.00 = reduzir 20%)"
-    )
     
-    reason: Mapped[Optional[str]] = mapped_column(
-        Text,
-        nullable=True,
-        comment="Explicação da sugestão"
-    )
     
     # Status
-    status: Mapped[str] = mapped_column(
-        String(20),
-        nullable=False,
-        default="pending",
-        comment="Status: pending | applied | dismissed"
-    )
     
     # Timestamps
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        nullable=False,
-        default=datetime.utcnow,
-        comment="Timestamp da criação"
-    )
     
-    applied_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(timezone=True),
-        nullable=True,
-        comment="Timestamp da aplicação"
-    )
     
-    dismissed_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(timezone=True),
-        nullable=True,
-        comment="Timestamp do dismissal"
-    )
     
-    dismissal_reason: Mapped[Optional[str]] = mapped_column(
-        Text,
-        nullable=True,
-        comment="Motivo do dismissal (50-500 chars)"
-    )
     
     # Relacionamentos
     team: Mapped["Team"] = relationship(
@@ -148,16 +131,6 @@ class TrainingSuggestion(Base):
     )
     
     # Constraints (já definidos na migration 0036)
-    __table_args__ = (
-        CheckConstraint(
-            type.in_(["compensation", "reduce_next_week"]),
-            name="ck_training_suggestions_type"
-        ),
-        CheckConstraint(
-            status.in_(["pending", "applied", "dismissed"]),
-            name="ck_training_suggestions_status"
-        ),
-    )
     
     # Properties
     @property

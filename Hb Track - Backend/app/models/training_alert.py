@@ -21,16 +21,21 @@ Usage:
         severity="critical",
         message="Sobrecarga detectada: 115% do threshold",
         alert_metadata={"weekly_load": 3500, "threshold": 3000}
-    )
 """
 
-from datetime import datetime
-from typing import Optional
-from uuid import UUID, uuid4
+# HB-AUTOGEN-IMPORTS:BEGIN
+from __future__ import annotations
 
-from sqlalchemy import Column, String, Text, DateTime, ForeignKey, CheckConstraint
-from sqlalchemy.dialects.postgresql import UUID as PGUUID, JSONB
+from datetime import date, datetime
+from typing import Optional
+from uuid import UUID
+
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+
 
 from app.models.base import Base
 
@@ -49,68 +54,58 @@ class TrainingAlert(Base):
     
     __tablename__ = "training_alerts"
     
-    # Primary Key
-    id: Mapped[UUID] = mapped_column(
-        PGUUID(as_uuid=True),
-        primary_key=True,
-        default=uuid4,
-        comment="UUID do alerta"
+
+# HB-AUTOGEN:BEGIN
+    
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+    
+    # Table: public.training_alerts
+    
+    __table_args__ = (
+    
+        CheckConstraint("severity::text = ANY (ARRAY['warning'::character varying, 'critical'::character varying]::text[])", name='ck_training_alerts_severity'),
+    
+        CheckConstraint("alert_type::text = ANY (ARRAY['weekly_overload'::character varying, 'low_wellness_response'::character varying]::text[])", name='ck_training_alerts_type'),
+    
+        Index('idx_alerts_active', 'team_id', 'triggered_at', unique=False, postgresql_where=sa.text('(dismissed_at IS NULL)')),
+    
     )
+
+    
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
+
+    
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+    
+    team_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('teams.id', name='training_alerts_team_id_fkey', ondelete='CASCADE'), nullable=False)
+    
+    alert_type: Mapped[str] = mapped_column(sa.String(length=50), nullable=False)
+    
+    severity: Mapped[str] = mapped_column(sa.String(length=20), nullable=False)
+    
+    message: Mapped[str] = mapped_column(sa.Text(), nullable=False)
+    
+    alert_metadata: Mapped[Optional[object]] = mapped_column(PG_JSONB(), nullable=True)
+    
+    triggered_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    
+    dismissed_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+    
+    dismissed_by_user_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('users.id', name='training_alerts_dismissed_by_user_id_fkey', ondelete='SET NULL'), nullable=True)
+    
+    # HB-AUTOGEN:END
+    # Primary Key
     
     # Foreign Keys
-    team_id: Mapped[UUID] = mapped_column(
-        PGUUID(as_uuid=True),
-        ForeignKey("teams.id", ondelete="CASCADE"),
-        nullable=False,
-        index=True,
-        comment="UUID do team"
-    )
     
-    dismissed_by_user_id: Mapped[Optional[UUID]] = mapped_column(
-        PGUUID(as_uuid=True),
-        ForeignKey("users.id", ondelete="SET NULL"),
-        nullable=True,
-        comment="UUID do usuário que dismissou o alerta"
-    )
     
     # Dados do Alerta
-    alert_type: Mapped[str] = mapped_column(
-        String(50),
-        nullable=False,
-        comment="Tipo: weekly_overload | low_wellness_response"
-    )
     
-    severity: Mapped[str] = mapped_column(
-        String(20),
-        nullable=False,
-        comment="Severidade: warning | critical"
-    )
     
-    message: Mapped[str] = mapped_column(
-        Text,
-        nullable=False,
-        comment="Mensagem descritiva do alerta"
-    )
     
-    alert_metadata: Mapped[Optional[dict]] = mapped_column(
-        JSONB,
-        nullable=True,
-        comment="Dados adicionais (weekly_load, threshold, response_rate, etc.)"
-    )
     
     # Timestamps
-    triggered_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        nullable=False,
-        default=datetime.utcnow,
-        comment="Timestamp da criação do alerta"
-    )
     
-    dismissed_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(timezone=True),
-        nullable=True,
-        comment="Timestamp do dismissal (NULL = ativo)"
-    )
     
     # Relacionamentos
     team: Mapped["Team"] = relationship(
@@ -126,16 +121,6 @@ class TrainingAlert(Base):
     )
     
     # Constraints (já definidos na migration 0036)
-    __table_args__ = (
-        CheckConstraint(
-            alert_type.in_(["weekly_overload", "low_wellness_response"]),
-            name="ck_training_alerts_type"
-        ),
-        CheckConstraint(
-            severity.in_(["warning", "critical"]),
-            name="ck_training_alerts_severity"
-        ),
-    )
     
     # Properties
     @property

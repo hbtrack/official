@@ -3,11 +3,20 @@ Model para vínculo entre sessões de treino e exercícios.
 Permite adicionar exercícios ao planejamento de uma sessão com ordem, duração e notas.
 ⚠️ PERMITE DUPLICATAS - Mesmo exercício pode aparecer múltiplas vezes (útil para circuitos).
 """
-from datetime import datetime
+
+# HB-AUTOGEN-IMPORTS:BEGIN
+from __future__ import annotations
+
+from datetime import date, datetime
 from typing import Optional
-from sqlalchemy import Column, Integer, SmallInteger, Text, DateTime, ForeignKey, CheckConstraint
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship, Mapped, mapped_column
+from uuid import UUID
+
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+
 from app.models.base import Base
 import uuid
 
@@ -25,71 +34,43 @@ class SessionExercise(Base):
     """
     __tablename__ = 'training_session_exercises'
     
-    # Primary Key
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        primary_key=True,
-        default=uuid.uuid4,
-        comment="UUID único do vínculo"
+
+# HB-AUTOGEN:BEGIN
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+    # Table: public.training_session_exercises
+    __table_args__ = (
+        CheckConstraint('duration_minutes IS NULL OR duration_minutes >= 0', name='ck_session_exercises_duration_positive'),
+        CheckConstraint('order_index >= 0', name='ck_session_exercises_order_positive'),
+        Index('idx_session_exercises_exercise', 'exercise_id', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
+        Index('idx_session_exercises_session_order', 'session_id', 'order_index', 'deleted_at', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
+        Index('idx_session_exercises_session_order_unique', 'session_id', 'order_index', unique=True, postgresql_where=sa.text('(deleted_at IS NULL)')),
     )
+
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
+
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+    session_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('training_sessions.id', name='training_session_exercises_session_id_fkey', ondelete='CASCADE'), nullable=False)
+    exercise_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('exercises.id', name='training_session_exercises_exercise_id_fkey', ondelete='RESTRICT'), nullable=False)
+    order_index: Mapped[int] = mapped_column(sa.Integer(), nullable=False, server_default=sa.text('0'))
+    duration_minutes: Mapped[Optional[int]] = mapped_column(sa.SmallInteger(), nullable=True)
+    notes: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    deleted_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+    # HB-AUTOGEN:END
+    # Primary Key
     
     # Foreign Keys
-    session_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey('training_sessions.id', ondelete='CASCADE'),
-        nullable=False,
-        comment="UUID da sessão de treino"
-    )
     
-    exercise_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey('exercises.id', ondelete='RESTRICT'),
-        nullable=False,
-        comment="UUID do exercício"
-    )
     
     # Ordering
-    order_index: Mapped[int] = mapped_column(
-        Integer,
-        nullable=False,
-        default=0,
-        comment="Ordem do exercício na sessão (0-based, permite reordenação)"
-    )
     
     # Optional metadata per exercise instance
-    duration_minutes: Mapped[Optional[int]] = mapped_column(
-        SmallInteger,
-        nullable=True,
-        comment="Duração planejada deste exercício em minutos (opcional)"
-    )
     
-    notes: Mapped[Optional[str]] = mapped_column(
-        Text,
-        nullable=True,
-        comment="Notas específicas desta instância do exercício (ex: '3 séries de 10 repetições')"
-    )
     
     # Timestamps
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        nullable=False,
-        default=datetime.utcnow,
-        comment="Data/hora de adição do exercício à sessão"
-    )
     
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        nullable=False,
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
-        comment="Data/hora da última atualização"
-    )
     
-    deleted_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(timezone=True),
-        nullable=True,
-        comment="Soft delete timestamp"
-    )
     
     # Relationships
     session: Mapped["TrainingSession"] = relationship(
@@ -105,14 +86,6 @@ class SessionExercise(Base):
     )
     
     # Table arguments (constraints)
-    __table_args__ = (
-        CheckConstraint('order_index >= 0', name='ck_session_exercises_order_positive'),
-        CheckConstraint(
-            'duration_minutes IS NULL OR duration_minutes >= 0',
-            name='ck_session_exercises_duration_positive'
-        ),
-        {'comment': 'Vínculo entre sessões de treino e exercícios. ⚠️ Permite DUPLICATAS do mesmo exercício.'}
-    )
     
     def __repr__(self) -> str:
         return f"<SessionExercise(session={self.session_id}, exercise={self.exercise_id}, order={self.order_index})>"

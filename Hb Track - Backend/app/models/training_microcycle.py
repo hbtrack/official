@@ -6,14 +6,20 @@ Referências TRAINNIG.MD:
 - Armazena focos planejados (intenção)
 - Relaciona-se com mesociclo (opcional mas recomendado)
 """
-from datetime import datetime, timezone
-from typing import Optional
-from uuid import uuid4
 
-from sqlalchemy import DateTime, ForeignKey, Text, Integer, CheckConstraint, Date, Numeric
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+# HB-AUTOGEN-IMPORTS:BEGIN
+from __future__ import annotations
+
+from datetime import date, datetime
+from typing import Optional
+from uuid import UUID
+
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import text
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+
 
 from app.models.base import Base
 
@@ -22,117 +28,63 @@ class TrainingMicrocycle(Base):
     """Microciclo (planejamento semanal)."""
     __tablename__ = "training_microcycles"
 
-    # PK
-    id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True),
-        primary_key=True,
-        default=uuid4,
-        server_default=text("gen_random_uuid()")
+
+# HB-AUTOGEN:BEGIN
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+    # Table: public.training_microcycles
+    __table_args__ = (
+        CheckConstraint('week_start < week_end', name='check_microcycle_dates'),
+        Index('idx_training_microcycles_cycle', 'cycle_id', unique=False),
+        Index('idx_training_microcycles_dates', 'week_start', 'week_end', unique=False),
+        Index('idx_training_microcycles_org', 'organization_id', unique=False),
+        Index('idx_training_microcycles_team', 'team_id', unique=False),
     )
+
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
+
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+    organization_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('organizations.id', name='training_microcycles_organization_id_fkey'), nullable=False)
+    team_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('teams.id', name='training_microcycles_team_id_fkey'), nullable=False)
+    week_start: Mapped[date] = mapped_column(sa.Date(), nullable=False)
+    week_end: Mapped[date] = mapped_column(sa.Date(), nullable=False)
+    cycle_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('training_cycles.id', name='training_microcycles_cycle_id_fkey'), nullable=True)
+    planned_focus_attack_positional_pct: Mapped[Optional[object]] = mapped_column(sa.Numeric(5, 2), nullable=True)
+    planned_focus_defense_positional_pct: Mapped[Optional[object]] = mapped_column(sa.Numeric(5, 2), nullable=True)
+    planned_focus_transition_offense_pct: Mapped[Optional[object]] = mapped_column(sa.Numeric(5, 2), nullable=True)
+    planned_focus_transition_defense_pct: Mapped[Optional[object]] = mapped_column(sa.Numeric(5, 2), nullable=True)
+    planned_focus_attack_technical_pct: Mapped[Optional[object]] = mapped_column(sa.Numeric(5, 2), nullable=True)
+    planned_focus_defense_technical_pct: Mapped[Optional[object]] = mapped_column(sa.Numeric(5, 2), nullable=True)
+    planned_focus_physical_pct: Mapped[Optional[object]] = mapped_column(sa.Numeric(5, 2), nullable=True)
+    planned_weekly_load: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True)
+    microcycle_type: Mapped[Optional[str]] = mapped_column(sa.String(), nullable=True)
+    notes: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+    created_by_user_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('users.id', name='training_microcycles_created_by_user_id_fkey'), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    deleted_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+    deleted_reason: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+    # HB-AUTOGEN:END
+    # PK
 
     # Organization scope
-    organization_id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("organizations.id"),
-        nullable=False,
-        index=True
-    )
 
     # Team context
-    team_id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("teams.id"),
-        nullable=False,
-        index=True
-    )
 
     # Período (semana)
-    week_start: Mapped[Date] = mapped_column(Date, nullable=False, index=True)
-    week_end: Mapped[Date] = mapped_column(Date, nullable=False, index=True)
 
     # Relacionamento com mesociclo
-    cycle_id: Mapped[Optional[UUID]] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("training_cycles.id"),
-        nullable=True,
-        index=True
-    )
 
     # Focos planejados (percentuais 0-100)
-    planned_focus_attack_positional_pct: Mapped[Optional[float]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True,
-        comment="Percentual de foco planejado em ataque posicionado (0-100)"
-    )
-    planned_focus_defense_positional_pct: Mapped[Optional[float]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True,
-        comment="Percentual de foco planejado em defesa posicionada (0-100)"
-    )
-    planned_focus_transition_offense_pct: Mapped[Optional[float]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True,
-        comment="Percentual de foco planejado em transição ofensiva (0-100)"
-    )
-    planned_focus_transition_defense_pct: Mapped[Optional[float]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True,
-        comment="Percentual de foco planejado em transição defensiva (0-100)"
-    )
-    planned_focus_attack_technical_pct: Mapped[Optional[float]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True,
-        comment="Percentual de foco planejado em ataque técnico (0-100)"
-    )
-    planned_focus_defense_technical_pct: Mapped[Optional[float]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True,
-        comment="Percentual de foco planejado em defesa técnica (0-100)"
-    )
-    planned_focus_physical_pct: Mapped[Optional[float]] = mapped_column(
-        Numeric(5, 2),
-        nullable=True,
-        comment="Percentual de foco planejado em treino físico (0-100)"
-    )
 
     # Carga planejada da semana
-    planned_weekly_load: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
 
     # Tipo de microciclo
-    microcycle_type: Mapped[Optional[str]] = mapped_column(
-        nullable=True,
-        comment="Tipo de microciclo: carga_alta, recuperacao, pre_jogo, etc."
-    )
 
     # Observações
-    notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
     # Auditoria
-    created_by_user_id: Mapped[UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("users.id"),
-        nullable=False
-    )
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        default=lambda: datetime.now(timezone.utc),
-        server_default=text("now()"),
-        nullable=False
-    )
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        default=lambda: datetime.now(timezone.utc),
-        onupdate=lambda: datetime.now(timezone.utc),
-        server_default=text("now()"),
-        nullable=False
-    )
 
     # Soft delete
-    deleted_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(timezone=True),
-        nullable=True
-    )
-    deleted_reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
     # Relationships
     cycle = relationship(
@@ -155,9 +107,6 @@ class TrainingMicrocycle(Base):
     )
 
     # Check constraints
-    __table_args__ = (
-        CheckConstraint("week_start < week_end", name="check_microcycle_dates"),
-    )
 
     @property
     def planned_focus_total(self) -> float:
