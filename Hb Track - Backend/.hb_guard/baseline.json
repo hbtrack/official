@@ -611,80 +611,80 @@
       "size": 21770
     },
     "app\\models\\role.py": {
-      "sha256": "2dede7f0227de7860028379b227a424d46bdbde6dfdcf89046e56dce7915d2a2",
-      "size": 1502
+      "sha256": "c76765411f50e778aed37f91dc682da23ea61ff697e731b2a0cfe0b3c37d1604",
+      "size": 2053
     },
     "app\\models\\role_permission.py": {
       "sha256": "73d669bec3bcc1a675e7262f6b4d64ae105bc975dc3fc5635bde60695c9abfd7",
       "size": 1144
     },
     "app\\models\\schooling_level.py": {
-      "sha256": "29b0ad926efb0162f54c36b2df8eb791c0963b89844329701ad386fcc69d69de",
-      "size": 948
+      "sha256": "efdeab526014e9269f09665afea68a208d70ab5beb7b2e4aa8338e99e8af6ec3",
+      "size": 1557
     },
     "app\\models\\season.py": {
       "sha256": "ad6302b838a4af0b04ded8f78cce6c3943a6959cd991c893dcc582e2a3647146",
       "size": 6874
     },
     "app\\models\\session_exercise.py": {
-      "sha256": "c639ecc206d96d9bde12a13694aa3a875acb1debdacebba578189d78eb453534",
-      "size": 3958
+      "sha256": "ea574062b72767ed7f9f69174dfb25e18172dd3ba88489850119f21214c2f29e",
+      "size": 3999
     },
     "app\\models\\session_template.py": {
-      "sha256": "9800a77a056421f5258d0cc2f622a34d899e7ae474c0ba72683818361c071ee0",
-      "size": 4283
+      "sha256": "496facef4003c705ae2620c40f93e0bb09f8420e2193b6ceaf6c3e7ed8da9214",
+      "size": 4639
     },
     "app\\models\\team.py": {
       "sha256": "b86978a235ab84671e8ad3b24bcd8608fda7881f0807cab85dd303c7c45f1fce",
       "size": 10288
     },
     "app\\models\\team_membership.py": {
-      "sha256": "94579778344b0d2d7e314bd61257f45e02b145067666a8cc99da5d0b14622ae2",
-      "size": 4651
+      "sha256": "db11999517cb932c3a093e011844c9a2df655c863542e519888da5f8bc84c2e3",
+      "size": 5580
     },
     "app\\models\\team_registration.py": {
-      "sha256": "5e8694dadea9ba23a96c98ee846ac0c5bcbed86e4ff623f65eb60974407ea974",
-      "size": 4789
+      "sha256": "fefcabc276c5b2197542b1bed3699887e2045fb6640b4707015e100c659edbe2",
+      "size": 6055
     },
     "app\\models\\team_wellness_ranking.py": {
-      "sha256": "146dbfd50d2cd8548221da54efc01f9366bc5540caa379b3cc6b18485ccd1849",
-      "size": 2210
+      "sha256": "faeeedbef4b467f1fb16d97604a905b986d8f78f292a8ceebcb41e7d7adc1dc5",
+      "size": 2274
     },
     "app\\models\\training_alert.py": {
-      "sha256": "93f9c31aeceffbde00ab63ce612092ec949e9413136d458d73be2afeb5015643",
-      "size": 4652
+      "sha256": "6af72e9fb5e58143a6fcd68ee64845e34e6dcd466c14d3e5f837ac7accc7e83f",
+      "size": 4731
     },
     "app\\models\\training_analytics_cache.py": {
-      "sha256": "6626a97221e19b12512749a91430795e0e6636bb5ba51df8b77fce77c1abc789",
-      "size": 7862
+      "sha256": "b77b8182762d8a5dc8c5eb7911b9ed5eb32fe050f2bda5cb3e6c0c48486b1a72",
+      "size": 6318
     },
     "app\\models\\training_cycle.py": {
-      "sha256": "1aad65c15490e4575ff7ca8c683854017641c3509bfd366527095f4d6a2604f5",
-      "size": 3788
+      "sha256": "c7c0df2e97ebcd1632a0f2f64e62df65c23b33a2eec28cec55955392987635d2",
+      "size": 4505
     },
     "app\\models\\training_microcycle.py": {
-      "sha256": "c074f469e041209002c8a1d41490af40008083a6b30299d6fe19f3630028671f",
-      "size": 6247
+      "sha256": "fce2623fc537ed40b49a36739912fecc4d35ed1a77efa338b87d7b23dc663c91",
+      "size": 5887
     },
     "app\\models\\training_session.py": {
       "sha256": "fa51c3083266f3f069c6dc3eabcee05a1988473b4dbce808ef89eb71dbd1c200",
       "size": 16913
     },
     "app\\models\\training_suggestion.py": {
-      "sha256": "bd6f9b6dae5c9fb7708e277f345d03173b64849c36d5d53b2a736d4b5c226a2f",
-      "size": 5647
+      "sha256": "f52e20c988640488e3108ac77dc3e293505dcf99cddace1bce885b4ff57c72fe",
+      "size": 5440
     },
     "app\\models\\user.py": {
-      "sha256": "f1bc6509edd1d061fb89026dda9a5d5df6f6d513390889925c018f5dadba5eca",
-      "size": 5561
+      "sha256": "d4debb1745de7b052b2b789a68eb5584b6a5f477b46969ff951f464d8fcc61e9",
+      "size": 6352
     },
     "app\\models\\wellness_post.py": {
-      "sha256": "320eec5e4f07d3a0cd499bb2e10cd4ac349fb27360ceca0c06844c399f6f7d2d",
-      "size": 4127
+      "sha256": "9b1e0340164fbfa3ab183b26a53659e3c153604e55c05438f874d21f3e2e11e7",
+      "size": 5991
     },
     "app\\models\\wellness_pre.py": {
-      "sha256": "63148e10b558648f695c41802c899bf30345b1173f537d4d1ac6fa4c537bafa6",
-      "size": 3919
+      "sha256": "4cef37324e652e66c0df57c2e56ad12fd438dbf6be30c2157fe493d5cced3c4d",
+      "size": 5835
     },
     "app\\models\\wellness_reminder.py": {
       "sha256": "eb3a4704cad0b166017141a07c0b19505cbfe7d366ba3ddc80af10fde357ab2d",
