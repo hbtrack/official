@@ -1579,8 +1579,8 @@
       "size": 4567
     },
     "scripts\\autogen_model_from_db.py": {
-      "sha256": "f8bf9ef277664b571ef1ec13dbe3d4ea76d3c0d48bda93ffc4c0636f1cf46bbc",
-      "size": 27772
+      "sha256": "b40b563efc6c594dd199d873f803f6da5d9f099ea6cfc823736e437bfa90aaa4",
+      "size": 30069
     },
     "scripts\\check_and_fix_matches.sql": {
       "sha256": "06505dfb81cf1fcee77c8f3ef86a5fd1c7facb13b609538ca9a55716cb92cbb3",
