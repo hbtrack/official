@@ -6,6 +6,24 @@ param(
   [switch]$SkipDocsRegeneration
 )
 
+function Write-Utf8Log {
+  <#
+  .SYNOPSIS
+  Escreve log como UTF-8 sem BOM, evitando UTF-16LE do Tee-Object em PS5.1.
+  
+  .NOTES
+  NEVER use Tee-Object for log writing in PowerShell 5.1.
+  Tee-Object reverts to UTF-16LE encoding, causing parity_classify.py to fail
+  with table=null due to NUL byte truncation in JSON parser.
+  #>
+  param(
+    [Parameter(Mandatory=$true)][string]$Path,
+    [Parameter(Mandatory=$true)][string[]]$Lines
+  )
+  $text = $Lines -join "`r`n"
+  [System.IO.File]::WriteAllText($Path, $text, (New-Object System.Text.UTF8Encoding $false))
+}
+
 $ErrorActionPreference = "Stop" # Mudado para Stop para o Agent detectar falhas imediatamente
 
 # Garante que o RepoRoot seja tratado como caminho absoluto
@@ -87,10 +105,8 @@ try {
     $ErrorActionPreference = $oldEap
   }
 
-  # Escreve log como UTF-8 (sem BOM) — sobrescreve ao invés de append
-  $outputLines = $alembicOutput | ForEach-Object { $_.ToString() }
-  $outputText = $outputLines -join "`r`n"
-  [System.IO.File]::WriteAllText($logPathBackend, $outputText, (New-Object System.Text.UTF8Encoding $false))
+  # Escreve log como UTF-8 (sem BOM) usando helper function
+  Write-Utf8Log -Path $logPathBackend -Lines $alembicOutput
 
   # Exibe no console (equivalente funcional ao antigo Tee-Object)
   foreach ($line in $alembicOutput) { Write-Host $line }
