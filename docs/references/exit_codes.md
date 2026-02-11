@@ -324,6 +324,6 @@ git restore app/routes/seasons.py
 
 ---
 
-**Última atualização:** 2026-02-10  
+**Última atualização:** 2026-02-11  
 **Responsável:** Tech Lead + AI Assistant  
 **Referências:** ADR-MODELS-001, EXEC_TASK_ADR_MODELS_001.md

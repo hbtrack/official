@@ -850,4 +850,6 @@ Esta ADR deve ser revisitada quando:
 ---
 
 **Changelog:**
+- `2026-02-11`: Autogen hardening (multiline imports, ARRAY type, bare Mapped[], __table_args__ unconditional)
+- `2026-02-10`: Pipeline P0-P5 hardening (encoding fix, splatting, DryRun)
 - `2024-02-08`: Versão inicial (baseada em análise de `progress.md` e checklist canônica)

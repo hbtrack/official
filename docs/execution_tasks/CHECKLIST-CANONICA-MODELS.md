@@ -3,8 +3,9 @@
 Guia passo-a-passo para criação, modificação e validação de models SQLAlchemy no HB Track, garantindo conformidade 100% com schema.sql (SSOT).
 
 **Referência:** ADR-MODELS-001  
-**Versão:** 1.0  
-**Data:** 2026-02-08
+**Versão:** 1.1  
+**Data:** 2026-02-11
+**Última Atualização:** Autogen hardening (multiline imports, ARRAY types, bare Mapped[])
 
 ---
 

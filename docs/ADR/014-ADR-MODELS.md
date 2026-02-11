@@ -1746,6 +1746,7 @@ seasons,FIXED,0,fk,2026-02-10T14:35:22
 
 **Changelog:**
 
+- `2026-02-11`: Autogen hardening (multiline imports, ARRAY types, bare Mapped[], orphan lines)
 - `2026-02-10`: Versão inicial (baseada em ADR-MODELS-001 e evidências de ineficiência operacional)
 - `2026-02-10`: Adição de seções detalhadas (Arquitetura, Componentes, Critérios, Cenários de Validação)
 - `2026-02-10`: Adição de Alternativas Consideradas, Implementação em Fases, Métricas de Sucesso

@@ -519,6 +519,6 @@ $LASTEXITCODE
 
 ---
 
-**Última atualização:** 2026-02-08  
+**Última atualização:** 2026-02-11  
 **Responsável:** Tech Lead + AI Assistant  
-**Versão:** 1.0
+**Versão:** 1.1

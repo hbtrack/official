@@ -5,6 +5,14 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 ### Adicionado
+* **Autogen Model Hardening** (2026-02-11): Melhorias críticas no `autogen_model_from_db.py` para correção automática de models:
+  - **Multiline Import Removal**: Detecção e remoção de imports multilinha (`from sqlalchemy import (\n    Boolean,\n    ...)`). Implementado tracking de `open_parens` para identificar continuação de imports.
+  - **Orphan Line Detection**: Remoção de linhas órfãs de import (ex: `    Boolean,`) que ficavam após remoção parcial de imports multilinha.
+  - **ARRAY Type Handling**: Geração correta de `sa.ARRAY(item_type)` para colunas PostgreSQL do tipo ARRAY. Adicionado check `isinstance(t, sa.ARRAY)` com recursão para `item_type`.
+  - **Bare Mapped[] Removal**: Pattern 3 para detectar e remover anotações `Mapped[...]` sem atribuição (`= mapped_column(...)` ou `= relationship(...)`).
+  - **__table_args__ Unconditional Removal**: Sempre remove `__table_args__` fora do HB-AUTOGEN block (não apenas quando autogen tem um), evitando duplicações.
+  - **Import Dedup Function**: Nova função `_remove_duplicate_imports_outside_autogen()` para remover imports redundantes fora do bloco HB-AUTOGEN-IMPORTS.
+
 * **Pipeline P0-P5 Hardening** (2026-02-10): Conjunto de melhorias no pipeline de integrid. Model ↔ DB:
   - **P0-A**: Fix crítico de encoding em `parity_scan.ps1` — substituído `Tee-Object` (UTF-16LE) por captura em variável + escrita UTF-8 via `[System.IO.File]::WriteAllText`. Corrige bug onde **todos** os items do `parity_report.json` tinham `table: null, column: null`.
   - **P0-B**: Defesa em profundidade em `parity_classify.py` — strip de NUL bytes residuais + warning no stderr.
@@ -16,6 +24,12 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
   - **P5**: `parity-scan.log` adicionado ao `Restore-GeneratedArtifacts`.
 
 ### Corrigido
+* **IndentationError após autogen**: Imports multilinha (`from sqlalchemy import (...)`) não eram removidos completamente, deixando linhas órfãs indentadas que causavam `IndentationError` ao importar o model.
+* **TypeError em ARRAY columns**: `_sa_type_expr()` não tratava `sa.ARRAY` corretamente, causando `TypeError` durante autogen. Corrigido com recursão para extrair `item_type`.
+* **Duplicação de __table_args__**: Autogen só removia `__table_args__` fora do HB-AUTOGEN quando o bloco autogen também tinha um. Agora remove incondicionalmente.
+* **Bare Mapped annotations**: Linhas como `    athlete_id: Mapped[int]` (sem `= mapped_column()`) não eram detectadas/removidas, causando erros de sintaxe.
+* **SyntaxError from __future__**: Imports `from __future__` duplicados (dentro e fora do HB-AUTOGEN) causavam SyntaxError. Corrigido via `_remove_duplicate_imports_outside_autogen()`.
+
 * **Bug Crítico `table: null`**: O `parity_report.json` gerado pelo pipeline tinha **todas** as entradas com `table: null` e `column: null` devido a `Tee-Object` do PowerShell 5.1 escrevendo o log Alembic em UTF-16LE sem BOM explícito, causando truncamento de mensagens no parser Python.
 * **`$LASTEXITCODE` mascarado**: Em `models_batch.ps1`, `Run-Gate` usava pipeline com `Tee-Object | Out-Null`, o que podia mascarar o exit code real do gate. Corrigido para captura em variável.
 * **`classify()` server_default**: A função `classify()` não reconhecia mensagens com `server_default` (underscore), apenas `server default` (espaço). Corrigido.
