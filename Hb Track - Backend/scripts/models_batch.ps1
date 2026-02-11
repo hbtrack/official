@@ -78,6 +78,13 @@ function Ensure-CleanRepo {
   }
 }
 
+function Ensure-BaselineExists {
+  if (-not (Test-Path ".\.hb_guard\baseline.json")) {
+    Abort "Baseline não encontrado (.hb_guard\baseline.json). Rode: python scripts\agent_guard.py snapshot --root . --out .hb_guard\baseline.json" 1
+  }
+  Write-Host "[OK] Baseline exists" -ForegroundColor Green
+}
+
 function Run-RefreshSSOT {
   if ($SkipRefresh) {
     Write-Host "[SKIP] inv.ps1 refresh" -ForegroundColor Yellow
@@ -283,7 +290,7 @@ $tables =
 
 Write-Host "`n[INFO] Tabelas selecionadas: $($tables.Count)" -ForegroundColor Yellow
 Add-Content -Path $logPath -Value "[INFO] Tabelas selecionadas: $($tables.Count)`n"
-
+Ensure-BaselineExists
 # 1) Requirements scan em lote
 $failReq = New-Object System.Collections.Generic.List[string]
 foreach ($t in $tables) {
