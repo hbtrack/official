@@ -184,22 +184,39 @@ class PersonContact(Base):
     """
     __tablename__ = "person_contacts"
     
+
+# HB-AUTOGEN:BEGIN
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+    # Table: public.person_contacts
     __table_args__ = (
-        CheckConstraint(
-            "contact_type IN ('telefone', 'email', 'whatsapp', 'outro')",
-            name='ck_person_contacts_type'
-        ),
-        CheckConstraint(
-            "(deleted_at IS NULL AND deleted_reason IS NULL) OR (deleted_at IS NOT NULL AND deleted_reason IS NOT NULL)",
-            name='ck_person_contacts_deleted_reason'
-        ),
+        CheckConstraint('deleted_at IS NULL AND deleted_reason IS NULL OR deleted_at IS NOT NULL AND deleted_reason IS NOT NULL', name='ck_person_contacts_deleted_reason'),
+        CheckConstraint("contact_type::text = ANY (ARRAY['telefone'::character varying, 'email'::character varying, 'whatsapp'::character varying, 'outro'::character varying]::text[])", name='ck_person_contacts_type'),
+        Index('ix_person_contacts_created_by_user_id', 'created_by_user_id', unique=False),
+        Index('ix_person_contacts_deleted_at', 'deleted_at', unique=False),
+        Index('ix_person_contacts_person_id', 'person_id', unique=False),
+        Index('ix_person_contacts_type_value', 'contact_type', 'contact_value', unique=False),
+        Index('ix_person_contacts_type_value_active', 'contact_type', 'contact_value', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
+        Index('ix_person_contacts_value', 'contact_value', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
+        Index('ix_person_contacts_value_active', 'contact_value', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
+        Index('uq_person_contacts_primary_per_type', 'person_id', 'contact_type', unique=True, postgresql_where=sa.text('((is_primary = true) AND (deleted_at IS NULL))')),
     )
 
-    id: Mapped[str] = mapped_column(
-        PG_UUID(as_uuid=False),
-        primary_key=True,
-        server_default=text("gen_random_uuid()")
-    )
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
+
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+    person_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('persons.id', name='person_contacts_person_id_fkey', ondelete='CASCADE'), nullable=False)
+    contact_type: Mapped[str] = mapped_column(sa.String(length=50), nullable=False)
+    contact_value: Mapped[str] = mapped_column(sa.String(length=200), nullable=False)
+    is_primary: Mapped[bool] = mapped_column(sa.Boolean(), nullable=False, server_default=sa.text('false'))
+    is_verified: Mapped[bool] = mapped_column(sa.Boolean(), nullable=False, server_default=sa.text('false'))
+    notes: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    deleted_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+    deleted_reason: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+    created_by_user_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('users.id', name='fk_person_contacts_created_by_user', ondelete='SET NULL'), nullable=True)
+    # HB-AUTOGEN:END
+
     
     
     # Timestamps
