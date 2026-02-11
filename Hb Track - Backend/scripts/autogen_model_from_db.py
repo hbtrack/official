@@ -72,6 +72,71 @@ def _find_module_docstring_span(src: str) -> Tuple[int, int]:
     return (m.start(1), m.end(1))
 
 
+def _remove_duplicate_imports_outside_autogen(src: str) -> str:
+    """Remove import lines outside HB-AUTOGEN-IMPORTS that are already covered by the block.
+
+    Specifically handles:
+    - from __future__ import ... (MUST be removed to avoid SyntaxError)
+    - from sqlalchemy import/from sqlalchemy.orm/from sqlalchemy.dialects ...
+    - from typing import ...
+    - from datetime import ...
+    - from uuid import ...
+    - import sqlalchemy as sa
+    - Bare 'from app.models.base import Base' is KEPT (not in autogen imports).
+
+    Lines inside any HB-AUTOGEN block are never touched.
+    """
+    if "HB-AUTOGEN-IMPORTS:BEGIN" not in src:
+        return src
+
+    # Patterns that are covered by the HB-AUTOGEN-IMPORTS block
+    _covered_patterns = [
+        re.compile(r'^\s*from\s+__future__\s+import\s+'),
+        re.compile(r'^\s*from\s+sqlalchemy\b'),
+        re.compile(r'^\s*import\s+sqlalchemy\b'),
+        re.compile(r'^\s*from\s+typing\s+import\s+'),
+        re.compile(r'^\s*from\s+datetime\s+import\s+'),
+        re.compile(r'^\s*from\s+uuid\s+import\s+'),
+    ]
+
+    lines = src.split('\n')
+    result = []
+    in_autogen = False
+
+    for line in lines:
+        if 'HB-AUTOGEN-IMPORTS:BEGIN' in line or 'HB-AUTOGEN:BEGIN' in line:
+            in_autogen = True
+        if 'HB-AUTOGEN-IMPORTS:END' in line or 'HB-AUTOGEN:END' in line:
+            result.append(line)
+            in_autogen = False
+            continue
+
+        if in_autogen:
+            result.append(line)
+            continue
+
+        # Outside autogen: check if this import is redundant
+        is_redundant = any(p.match(line) for p in _covered_patterns)
+        if is_redundant:
+            continue  # skip
+
+        result.append(line)
+
+    # Clean up excessive blank lines left by removals (max 2 consecutive)
+    cleaned = []
+    blank_count = 0
+    for line in result:
+        if line.strip() == '':
+            blank_count += 1
+            if blank_count <= 2:
+                cleaned.append(line)
+        else:
+            blank_count = 0
+            cleaned.append(line)
+
+    return '\n'.join(cleaned)
+
+
 def _ensure_imports_block(src: str) -> str:
     # Detect if file uses relationship() OUTSIDE HB-AUTOGEN blocks
     # Remove HB-AUTOGEN blocks before searching
@@ -674,6 +739,8 @@ def cmd_apply(args: argparse.Namespace) -> int:
 
     # ensure imports marker exists and replace it
     src1 = _ensure_imports_block(src0)
+    # remove original imports that are now covered by HB-AUTOGEN-IMPORTS
+    src1 = _remove_duplicate_imports_outside_autogen(src1)
     src2 = _patch_class_body(src1, table, new_block)
 
     if out_file:
