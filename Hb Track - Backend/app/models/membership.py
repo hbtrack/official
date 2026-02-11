@@ -23,13 +23,21 @@ V1.2 Mudanças:
 - Coordenador/Treinador criam vínculo automático com org do criador
 """
 
+# HB-AUTOGEN-IMPORTS:BEGIN
+from __future__ import annotations
+
 from datetime import date, datetime
 from typing import Optional, TYPE_CHECKING
+from uuid import UUID
+
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+
 from enum import Enum
 
-from sqlalchemy import DateTime, ForeignKey, Integer, Text, text
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base
 
@@ -54,67 +62,71 @@ class OrgMembership(Base):
 
     __tablename__ = "org_memberships"
 
-    id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
-        primary_key=True,
-        server_default=text("gen_random_uuid()"),
+
+# HB-AUTOGEN:BEGIN
+
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+
+    # Table: public.org_memberships
+
+    __table_args__ = (
+
+        CheckConstraint('deleted_at IS NULL AND deleted_reason IS NULL OR deleted_at IS NOT NULL AND deleted_reason IS NOT NULL', name='ck_org_memberships_deleted_reason'),
+
+        Index('ix_org_memberships_org_active', 'organization_id', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
+
+        Index('ix_org_memberships_organization_id', 'organization_id', unique=False),
+
+        Index('ix_org_memberships_person_active', 'person_id', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
+
+        Index('ix_org_memberships_person_id', 'person_id', unique=False),
+
+        Index('ix_org_memberships_person_org_active', 'person_id', 'organization_id', unique=False, postgresql_where=sa.text('((deleted_at IS NULL) AND (end_at IS NULL))')),
+
+        Index('ix_org_memberships_role_id', 'role_id', unique=False),
+
+        Index('ux_org_memberships_active', 'person_id', 'organization_id', 'role_id', unique=True, postgresql_where=sa.text('((end_at IS NULL) AND (deleted_at IS NULL))')),
+
     )
 
-    person_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
-        ForeignKey("persons.id", ondelete="RESTRICT"),
-        nullable=False,
-        index=True,
-    )
 
-    role_id: Mapped[int] = mapped_column(
-        Integer,
-        ForeignKey("roles.id", ondelete="RESTRICT"),
-        nullable=False,
-        index=True,
-    )
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
 
-    organization_id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
-        ForeignKey("organizations.id", ondelete="RESTRICT"),
-        nullable=False,
-        index=True,
-    )
 
-    start_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=text("now()"),
-        nullable=False,
-    )
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
 
-    end_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(timezone=True),
-        nullable=True,
-    )
+    person_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('persons.id', name='fk_org_memberships_person_id', ondelete='RESTRICT'), nullable=False)
+
+    role_id: Mapped[int] = mapped_column(sa.Integer(), ForeignKey('roles.id', name='fk_org_memberships_role_id', ondelete='RESTRICT'), nullable=False)
+
+    organization_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('organizations.id', name='fk_org_memberships_organization_id', ondelete='RESTRICT'), nullable=False)
+
+    start_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    end_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    deleted_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+
+    deleted_reason: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+
+    created_by_user_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('users.id', name='fk_org_memberships_created_by_user'), nullable=True)
+
+    # HB-AUTOGEN:END
+
+
+
+
+
 
     # Soft delete (RDB4)
-    deleted_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(timezone=True),
-        nullable=True,
-    )
 
-    deleted_reason: Mapped[Optional[str]] = mapped_column(
-        Text,
-        nullable=True,
-    )
 
     # Timestamps (RDB3)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=text("now()"),
-        nullable=False,
-    )
 
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=text("now()"),
-        nullable=False,
-    )
 
     # Relationships
     organization: Mapped["Organization"] = relationship(

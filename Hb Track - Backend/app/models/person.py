@@ -19,22 +19,14 @@ V1.2: Estrutura normalizada
 from __future__ import annotations
 
 from datetime import date, datetime
-from typing import Optional
+from typing import Optional, List, TYPE_CHECKING
 from uuid import UUID
 
 import sqlalchemy as sa
-from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
 # HB-AUTOGEN-IMPORTS:END
-from datetime import date, datetime
-from typing import TYPE_CHECKING, Optional, List
-
-from sqlalchemy import Column, String, Date, Text, DateTime, Boolean, Integer, ForeignKey, CheckConstraint
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.sql import func, text
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 from app.models.base import Base
 
 if TYPE_CHECKING:
@@ -204,11 +196,10 @@ class PersonContact(Base):
     )
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
+        PG_UUID(as_uuid=False),
         primary_key=True,
         server_default=text("gen_random_uuid()")
     )
-    
     
     
     # Timestamps
@@ -234,24 +225,41 @@ class PersonAddress(Base):
     """
     __tablename__ = "person_addresses"
     
+
+# HB-AUTOGEN:BEGIN
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+    # Table: public.person_addresses
     __table_args__ = (
-        CheckConstraint(
-            "address_type IN ('residencial_1', 'residencial_2', 'comercial', 'outro')",
-            name='ck_person_addresses_type'
-        ),
-        CheckConstraint(
-            "(deleted_at IS NULL AND deleted_reason IS NULL) OR (deleted_at IS NOT NULL AND deleted_reason IS NOT NULL)",
-            name='ck_person_addresses_deleted_reason'
-        ),
+        CheckConstraint('deleted_at IS NULL AND deleted_reason IS NULL OR deleted_at IS NOT NULL AND deleted_reason IS NOT NULL', name='ck_person_addresses_deleted_reason'),
+        CheckConstraint("address_type::text = ANY (ARRAY['residencial_1'::character varying, 'residencial_2'::character varying, 'comercial'::character varying, 'outro'::character varying]::text[])", name='ck_person_addresses_type'),
+        Index('ix_person_addresses_city_state', 'city', 'state', unique=False),
+        Index('ix_person_addresses_created_by_user_id', 'created_by_user_id', unique=False),
+        Index('ix_person_addresses_deleted_at', 'deleted_at', unique=False),
+        Index('ix_person_addresses_person_id', 'person_id', unique=False),
+        Index('uq_person_addresses_primary', 'person_id', unique=True, postgresql_where=sa.text('((is_primary = true) AND (deleted_at IS NULL))')),
     )
 
-    id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
-        primary_key=True,
-        server_default=text("gen_random_uuid()")
-    )
-    
-    
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
+
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+    person_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('persons.id', name='person_addresses_person_id_fkey', ondelete='CASCADE'), nullable=False)
+    address_type: Mapped[str] = mapped_column(sa.String(length=50), nullable=False)
+    street: Mapped[str] = mapped_column(sa.String(length=200), nullable=False)
+    number: Mapped[Optional[str]] = mapped_column(sa.String(length=20), nullable=True)
+    complement: Mapped[Optional[str]] = mapped_column(sa.String(length=100), nullable=True)
+    neighborhood: Mapped[Optional[str]] = mapped_column(sa.String(length=100), nullable=True)
+    city: Mapped[str] = mapped_column(sa.String(length=100), nullable=False)
+    state: Mapped[str] = mapped_column(sa.String(length=2), nullable=False)
+    postal_code: Mapped[Optional[str]] = mapped_column(sa.String(length=10), nullable=True)
+    country: Mapped[str] = mapped_column(sa.String(length=100), nullable=False, server_default=sa.text("'Brasil'::character varying"))
+    is_primary: Mapped[bool] = mapped_column(sa.Boolean(), nullable=False, server_default=sa.text('false'))
+    created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    deleted_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+    deleted_reason: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+    created_by_user_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('users.id', name='fk_person_addresses_created_by_user', ondelete='SET NULL'), nullable=True)
+    # HB-AUTOGEN:END
+
     
     # Timestamps
     
@@ -291,11 +299,10 @@ class PersonDocument(Base):
     )
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
+        PG_UUID(as_uuid=False),
         primary_key=True,
         server_default=text("gen_random_uuid()")
     )
-    
     
     
     # Timestamps
@@ -333,11 +340,10 @@ class PersonMedia(Base):
     )
 
     id: Mapped[str] = mapped_column(
-        UUID(as_uuid=False),
+        PG_UUID(as_uuid=False),
         primary_key=True,
         server_default=text("gen_random_uuid()")
     )
-    
     
     
     # Timestamps
