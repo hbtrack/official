@@ -232,6 +232,13 @@ def _pytype_for(coltype: sa.types.TypeEngine) -> str:
 
 def _sa_type_expr(coltype: sa.types.TypeEngine) -> str:
     t = coltype
+    # PostgreSQL ARRAY — must come before scalar type checks
+    if isinstance(t, sa.ARRAY) or (hasattr(sa.dialects.postgresql, 'ARRAY') and isinstance(t, sa.dialects.postgresql.ARRAY)):
+        item_type = getattr(t, 'item_type', None)
+        if item_type is not None:
+            inner = _sa_type_expr(item_type)
+            return f"sa.ARRAY({inner})"
+        return "sa.ARRAY(sa.Text())"  # fallback if item_type unknown
     # PostgreSQL UUID
     if hasattr(sa.dialects.postgresql, "UUID") and isinstance(t, sa.dialects.postgresql.UUID):
         return "PG_UUID(as_uuid=True)"
