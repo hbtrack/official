@@ -30,12 +30,10 @@ from typing import Optional, TYPE_CHECKING
 from uuid import UUID
 
 import sqlalchemy as sa
-from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint, text
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
 # HB-AUTOGEN-IMPORTS:END
-
-
 from app.models.base import Base
 
 if TYPE_CHECKING:
@@ -75,6 +73,8 @@ class User(Base):
         CheckConstraint("status::text = ANY (ARRAY['ativo'::character varying, 'inativo'::character varying, 'arquivado'::character varying]::text[])", name='ck_users_status'),
 
         Index('ix_users_person_id', 'person_id', unique=False),
+
+        Index('ux_users_email', sa.text('lower(email::text)'), unique=True),
 
         Index('ux_users_superadmin', 'is_superadmin', unique=True, postgresql_where=sa.text('((is_superadmin = true) AND (deleted_at IS NULL))')),
 

@@ -23,7 +23,7 @@ from typing import Optional, List, TYPE_CHECKING
 from uuid import UUID
 
 import sqlalchemy as sa
-from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint, text
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
 # HB-AUTOGEN-IMPORTS:END
@@ -193,6 +193,7 @@ class PersonContact(Base):
         CheckConstraint("contact_type::text = ANY (ARRAY['telefone'::character varying, 'email'::character varying, 'whatsapp'::character varying, 'outro'::character varying]::text[])", name='ck_person_contacts_type'),
         Index('ix_person_contacts_created_by_user_id', 'created_by_user_id', unique=False),
         Index('ix_person_contacts_deleted_at', 'deleted_at', unique=False),
+        Index('ix_person_contacts_email_lower', sa.text('lower(contact_value::text)'), unique=False, postgresql_where=sa.text("(((contact_type)::text = 'email'::text) AND (deleted_at IS NULL))")),
         Index('ix_person_contacts_person_id', 'person_id', unique=False),
         Index('ix_person_contacts_type_value', 'contact_type', 'contact_value', unique=False),
         Index('ix_person_contacts_type_value_active', 'contact_type', 'contact_value', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
@@ -397,7 +398,6 @@ class PersonMedia(Base):
     created_by_user_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('users.id', name='fk_person_media_created_by_user', ondelete='SET NULL'), nullable=True)
     # HB-AUTOGEN:END
 
-    
     
     # Timestamps
     
