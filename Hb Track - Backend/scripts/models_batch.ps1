@@ -340,6 +340,18 @@ foreach ($t in $failReq) {
   if ($ec -eq 0) {
     "$t,$profile,gate,0,PASS" | Add-Content -Path $csvPath
     Write-Host "[OK] Gate PASS para $t" -ForegroundColor Green
+
+    # Refresh baseline after each successful gate so next table's guard
+    # doesn't flag previously fixed models as unauthorized modifications.
+    Write-Host "[INFO] Refreshing baseline after $t fix..." -ForegroundColor DarkGray
+    & ".\venv\Scripts\python.exe" scripts\agent_guard.py snapshot `
+      --root "." `
+      --out ".hb_guard/baseline.json" `
+      --exclude "venv,.venv,__pycache__,.pytest_cache,docs\_generated" 2>&1 | Out-Null
+    $snapEc = $LASTEXITCODE
+    if ($snapEc -ne 0) {
+      Write-Host "[WARN] baseline refresh failed (exit=$snapEc), next gate may fail with guard violations" -ForegroundColor Yellow
+    }
   }
   else {
     "$t,$profile,gate,$ec,FAIL" | Add-Content -Path $csvPath
