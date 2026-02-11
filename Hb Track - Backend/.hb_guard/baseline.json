@@ -583,32 +583,32 @@
       "size": 4091
     },
     "app\\models\\membership.py": {
-      "sha256": "d6a8ddb3e40ec183b73a10a0ff14263f8758e44c5fe5b036b0cb3863b9ae39af",
-      "size": 4694
+      "sha256": "b140e4355214e1d6c77e9fb08e840e216172669bd83a06ed85e409a26e2e65ea",
+      "size": 6200
     },
     "app\\models\\notification.py": {
       "sha256": "5f517287dcd2725ae2d86aa7383043a4f55381151eb501984bb409552e3c6a53",
       "size": 3442
     },
     "app\\models\\offensive_position.py": {
-      "sha256": "3b4e1899f2c1310ced9596873141056c0a93224cf494820bcd5f62126f051b15",
-      "size": 1144
+      "sha256": "5e43916a65d1359baf7b1aee875b4d7a9aa333133ddd9a4ed916e1edb7a55e39",
+      "size": 1741
     },
     "app\\models\\organization.py": {
-      "sha256": "cb70e79c685f24222aba39bd7f3b9f5babe25207a000d69c5aca0d0cc0475206",
-      "size": 3293
+      "sha256": "397d6f055b991c64ed64c7b4f847f597b758c351e0c77de15986aa704a5eab73",
+      "size": 4004
     },
     "app\\models\\password_reset.py": {
-      "sha256": "a29a76b6b67ede085c62238fee3a578c358f26fd72e01a0f6043039ef45bffb9",
-      "size": 3182
+      "sha256": "aa49eee89992ed85706e254046b67109d4cb902d964496ee3ba1baab8a7806f6",
+      "size": 3998
     },
     "app\\models\\permission.py": {
-      "sha256": "b0a76a7114cd009c356e781971580d9661d34b2fa1fa9bdc681fcaab2a9bafad",
-      "size": 1580
+      "sha256": "20cc96934eadccf1052922e07e0ba9934f92e367d00cc2f05c53073d94fa29ad",
+      "size": 1615
     },
     "app\\models\\person.py": {
-      "sha256": "5318fd5e2f578b87d1da7748deea599cafb9625b3c271bce6f4ce62eb96c2892",
-      "size": 12119
+      "sha256": "668f6704fc2ef0b5c42b543c183313092d96d5ffd5912fed6dbd56f963ec697a",
+      "size": 14229
     },
     "app\\models\\role.py": {
       "sha256": "2dede7f0227de7860028379b227a424d46bdbde6dfdcf89046e56dce7915d2a2",
@@ -1579,8 +1579,8 @@
       "size": 4567
     },
     "scripts\\autogen_model_from_db.py": {
-      "sha256": "52760a5592640e3f1339fa9a95fc6b18edf582d0fd5ab79979c5e678005eb219",
-      "size": 33178
+      "sha256": "3879758696c50ec75570bbbdad9619d222042f927343bd0db3a1bc1c64237aa6",
+      "size": 35409
     },
     "scripts\\check_and_fix_matches.sql": {
       "sha256": "06505dfb81cf1fcee77c8f3ef86a5fd1c7facb13b609538ca9a55716cb92cbb3",
