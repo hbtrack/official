@@ -1574,29 +1574,6 @@ if (Test-Path $baselinePath) {
 
 ---
 
-### Passo 4: Commit Baseline (Se Mudou)
-
-```powershell
-# [VALIDAÇÃO] Verificar se baseline mudou
-git status --porcelain .hb_guard\baseline.json
-
-# [CMD] Commit baseline (se modificado)
-if ((git status --porcelain .hb_guard\baseline.json).Length -gt 0) {
-    git add .hb_guard\baseline.json
-    git commit -m "chore(guard): refresh baseline after conformance validation
-
-- Parity: exit=0 (clean)
-- Requirements: exit=0 (clean)
-- Models: teams.py updated
-
-Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>"
-} else {
-    Write-Host "[INFO] Baseline não mudou (nenhum commit necessário)"
-}
-```
-
----
-
 ## Validação Final (DoD)
 
 **Definition of Done para WF-7:**

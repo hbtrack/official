@@ -5,6 +5,17 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 ### Adicionado
+* **Canon Baseline Alignment** (2026-02-11): Alinhamento da documentação canônica com a realidade do repositório:
+  - **Baseline é Local**: Removidas todas as instruções "commit baseline" do canon. `.hb_guard/baseline.json` está em `.gitignore:141` (nunca versionado).
+  - **Phase 0: Bootstrap Baseline**: Adicionada seção obrigatória em `05_MODELS_PIPELINE.md` para regenerar baseline antes de gates (garante comparação válida).
+  - **Documentação Atualizada**: 5 arquivos canônicos corrigidos:
+    1. `08_APPROVED_COMMANDS.md` CMD-6.1: Baseline marcado "LOCAL" com regra de ouro + justificativa (multi-env risks)
+    2. `05_MODELS_PIPELINE.md`: Phase 0 Bootstrap + remoção de "commit separado"
+    3. `03_WORKFLOWS.md`: Removido "Passo 4: Commit Baseline" completo
+    4. `09_TROUBLESHOOTING_GUARD_PARITY.md`: Removidas linhas `git add/commit baseline`
+    5. `10_GIT_PR_MERGE_WORKFLOW.md`: Mudado para "Baseline é local (não versionado)"
+  - **Design 1.5 (Allowlist Acumulativa)**: Confirmado plano para implementação em `models_batch.ps1` — guard protege, batch acumula paths de modelos já corrigidos, reduz re-validação.
+
 * **Autogen Model Hardening** (2026-02-11): Melhorias críticas no `autogen_model_from_db.py` para correção automática de models:
   - **Multiline Import Removal**: Detecção e remoção de imports multilinha (`from sqlalchemy import (\n    Boolean,\n    ...)`). Implementado tracking de `open_parens` para identificar continuação de imports.
   - **Orphan Line Detection**: Remoção de linhas órfãs de import (ex: `    Boolean,`) que ficavam após remoção parcial de imports multilinha.

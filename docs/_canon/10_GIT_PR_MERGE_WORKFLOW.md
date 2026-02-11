@@ -189,7 +189,7 @@ if ($ec -ne 0) { Write-Host "ABORT: exit=$ec"; exit $ec }
   * `fix(models): ...`
   * `chore(guard): refresh baseline ...`
   * `docs: ...`
-* Baseline em commit separado.
+* Baseline é local (regenerado por `agent_guard.py snapshot`, nunca versionado).
 * Docs (CHANGELOG/EXECUTIONLOG) em commit separado.
 
 ```

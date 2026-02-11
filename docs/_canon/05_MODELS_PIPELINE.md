@@ -80,6 +80,31 @@ Proibido:
 
 Use quando você quer corrigir uma tabela específica ou trabalhar incrementalmente.
 
+### Phase 0: Bootstrap Baseline (Uma vez por sessão)
+
+Antes de executar qualquer gate, regenere a baseline local para garantir que a comparação seja válida:
+
+```powershell
+Set-Location "C:\HB TRACK\Hb Track - Backend"
+& "venv\Scripts\python.exe" scripts\agent_guard.py snapshot baseline
+$LASTEXITCODE  # esperado: 0
+```
+
+**Propósito**: Criar `baseline.json` local refletindo arquivos protegidos no estado atual. Guard compara contra este snapshot, então se estiver desatualizado, gates falham com exit=3.
+
+**Validação**: 
+```powershell
+& "venv\Scripts\python.exe" scripts\agent_guard.py check baseline
+$LASTEXITCODE  # esperado: 0
+```
+
+**Regra**: Baseline é LOCAL (nunca commitado). Regenere sempre que:
+- Arquivos protegidos mudarem (modelos, migrations)
+- Gates passarem (exit=0)
+- Você trocar de branch/máquina
+
+---
+
 ### 0) Pré-check
 
 ```powershell
@@ -196,9 +221,11 @@ Comando canônico:
 $LASTEXITCODE
 ```
 
-Depois:
+Validação pós-snapshot:
 
-* commit separado do baseline (`chore(guard): refresh baseline ...`)
+* `agent_guard.py check` deve retornar exit=0 (nenhum drift)
+* **Baseline é LOCAL**: não fazer `git add/commit baseline.json` (está em .gitignore)
+* Commitar apenas os modelos/docs que mudaram realmente
 
 ## Como tratar sujeira de execução (gerados)
 

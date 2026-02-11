@@ -917,7 +917,20 @@ M .hb_guard/baseline.json
 - Se baseline não muda → verificar se arquivos protegidos realmente mudaram
 
 **Regra de Ouro:**
-**Snapshot = "registrar estado conformante e testado"; nunca snapshot de repo quebrado.**
+**Baseline é artefato LOCAL (não versionado via git). Nunca fazer git add/commit baseline.json.**
+
+Razão: baseline.json está em `.gitignore` (linha 141) e é regenerado por `agent_guard.py snapshot` em cada sessão de validação. É guardrail de conformidade local, não SSOT. Commitá-lo causaria:
+- Conflitos em PRs/merges (ambiente-específico)
+- Falsos positivos de guard em outros worktrees
+- Ruído de apenas regenerações sem mudança real
+
+Fluxo correto:
+1. `agent_guard.py snapshot` (após gates OK) → baseline.json atualizado localmente
+2. Validar com `agent_guard.py check` (deve retornar exit=0)
+3. Commitar apenas os modelos/esquema que mudaram realmente
+4. Baseline fica na máquina do desenvolvedor (nunca no VCS)
+
+**Snapshot = "registrar estado conformante e testado"; nunca snapshot de repo quebrado. Baseline NUNCA é versionado.**
 
 ---
 

@@ -269,20 +269,17 @@ git status --porcelain
 # 2. Snapshot baseline
 python scripts\agent_guard.py snapshot --root . --out .hb_guard/baseline.json
 
-# 3. Verificar mudança
-git diff .hb_guard/baseline.json
-
-# 4. Commitar baseline (se aprovado)
-git add .hb_guard/baseline.json
-git commit -m "chore(guard): update baseline after teams model fix"
-```
-
-### Validação
+# 3. Validar guard (baseline é local, nunca commitar)
 
 ```powershell
-# 1. Guard deve passar
+# Baseline é LOCAL (não fazer git add/commit)
+git status --porcelain | Select-String -Pattern "baseline" 
+# Esperado: blank (baseline.json nunca é versionado)
+
+# Verificar conformidade local
 python scripts\agent_guard.py check --root . --baseline .hb_guard\baseline.json
-$LASTEXITCODE  # 0
+$LASTEXITCODE  # 0 = pass
+```
 
 # 2. Gate completo deve passar
 .\scripts\models_autogen_gate.ps1 -Table "teams" -Profile strict
