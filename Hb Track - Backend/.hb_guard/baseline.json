@@ -563,8 +563,8 @@
       "size": 6383
     },
     "app\\models\\match_event.py": {
-      "sha256": "0ad77890b57db9de8267945bebf468137aead5a2fc9edd608b15d3bd2b0ec2de",
-      "size": 7120
+      "sha256": "101476a023d236c65b7e1f36c55085b59dd3ccf20f33054d2de4d45d7d7d12db",
+      "size": 7084
     },
     "app\\models\\match_period.py": {
       "sha256": "921ec782b8b84ae8563fed84e638b571f01f2f178cc08ad8e091671ef6fc364c",
@@ -1162,10 +1162,6 @@
       "sha256": "966fc194805ace61464c1daae8243c6d968d6144ad247a7e12bfab1a5482e1e7",
       "size": 1130
     },
-    "check_table.py": {
-      "sha256": "83a909252308cab0f54ebc46c62d318706f73712d0e117b3456ef32cfb6e49ef",
-      "size": 1142
-    },
     "check_team_registrations_columns.py": {
       "sha256": "39fa6b49690e9d0f92aeff8143b79141eb84f38a748ece2f3f85c365c3837505",
       "size": 550
@@ -1583,8 +1579,8 @@
       "size": 4567
     },
     "scripts\\autogen_model_from_db.py": {
-      "sha256": "ccc5c8205298e395e9c0e412fbaa21921ab2af6fa43b8f0b1f783fe79ef88d50",
-      "size": 31062
+      "sha256": "5edbe526d3745a21a34f73c1772f4acdb5cff5d820df0d46a7b6a191e6d58b63",
+      "size": 32871
     },
     "scripts\\check_and_fix_matches.sql": {
       "sha256": "06505dfb81cf1fcee77c8f3ef86a5fd1c7facb13b609538ca9a55716cb92cbb3",
