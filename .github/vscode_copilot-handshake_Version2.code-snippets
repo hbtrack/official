@@ -1,0 +1,12 @@
+{
+  "Copilot Handshake": {
+    "prefix": "copilot-handshake",
+    "body": [
+      "Leia o arquivo .github/copilot-role.md e os arquivos abertos deste workspace.",
+      "Faça o handshake obrigatório e apresente as 3 regras que encontrou.",
+      "Liste também até 5 arquivos/trechos que você leu.",
+      "Aguarde meu OK antes de gerar o review."
+    ],
+    "description": "Mensagem de handshake para forçar leitura e ACK do Copilot Chat"
+  }
+}

@@ -43,7 +43,7 @@ CAMPOS REMOVIDOS (usar tabelas normalizadas):
 from __future__ import annotations
 
 from datetime import date, datetime
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 from uuid import UUID
 
 import sqlalchemy as sa
@@ -51,7 +51,6 @@ from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
 # HB-AUTOGEN-IMPORTS:END
-from typing import TYPE_CHECKING
 from enum import Enum
 
 from app.models.base import Base
