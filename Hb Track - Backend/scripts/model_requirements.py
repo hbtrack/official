@@ -513,11 +513,24 @@ def _apply_lenient_exceptions(
     return remaining, applied
 
 
-def _parse_model_fks(model_path: Path) -> dict[str, set[ForeignKeySpec]]:
+def _parse_model_fks(model_path: Path, table: str) -> dict[str, set[ForeignKeySpec]]:
+    """Parse FKs from the specific class matching __tablename__=table.
+    
+    NOTE: This function now filters by class to avoid false positives
+    when multiple classes exist in the same file (e.g., person.py with
+    Person, PersonAddress, PersonContact, PersonDocument, PersonMedia).
+    """
     tree = ast.parse(model_path.read_text(encoding="utf-8"), filename=str(model_path))
+    try:
+        target_class = _find_model_class_node(tree, table, model_path)
+    except RuntimeError:
+        # Class not found - return empty (will cause MISSING_FK violations)
+        return {}
+    
     by_name: dict[str, set[ForeignKeySpec]] = {}
 
-    for node in ast.walk(tree):
+    # Only walk the target class, not the entire file
+    for node in ast.walk(target_class):
         if not isinstance(node, ast.Call):
             continue
         fk = _extract_fk_call(node)
@@ -924,7 +937,7 @@ def _collect_fk_violations(root: Path, table: str) -> tuple[list[str], Path, int
     schema_text = schema_path.read_text(encoding="utf-8", errors="replace")
 
     expected = _parse_schema_fks(schema_text, table)
-    found_by_name = _parse_model_fks(model_path)
+    found_by_name = _parse_model_fks(model_path, table)
     violations: list[str] = []
 
     for name, exp in sorted(expected.items()):
