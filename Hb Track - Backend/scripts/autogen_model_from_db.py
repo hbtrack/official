@@ -538,6 +538,7 @@ def _remove_duplicate_column_definitions_impl(src: str) -> str:
 
     Removes:
     - Duplicate mapped_column() definitions outside HB-AUTOGEN
+    - Bare Mapped[...] annotations without = assignment (implicit columns)
     - Duplicate __table_args__ definitions outside HB-AUTOGEN (when autogen has one)
     """
     lines = src.split('\n')
@@ -586,9 +587,11 @@ def _remove_duplicate_column_definitions_impl(src: str) -> str:
         # Detect duplicate column definition patterns (outside HB-AUTOGEN)
         # Pattern 1 (new style): "    name: Mapped[...] = mapped_column(...)"
         # Pattern 2 (legacy):    "    name = Column(...)"
+        # Pattern 3 (bare):      "    name: Mapped[...]" (without = assignment, implicit column)
         is_duplicate_column = (
             re.match(r'^\s+\w+:\s*Mapped\[.*\]\s*=\s*mapped_column\s*\(', line)
             or re.match(r'^\s+\w+\s*=\s*Column\s*\(', line)
+            or re.match(r'^\s+\w+:\s*Mapped\[.*\]\s*$', line)
         )
 
         if is_duplicate_column:
