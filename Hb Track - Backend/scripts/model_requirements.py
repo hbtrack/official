@@ -1141,9 +1141,13 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(
         description="HB Track: validate model vs schema.sql (SSOT)."
     )
-    p.add_argument("--table", required=True)
+    p.add_argument("--table", required=True, help="Table name (required, non-empty)")
     p.add_argument("--profile", choices=["fk", "strict", "lenient"], default="strict")
     args = p.parse_args(argv)
+    
+    # Validate --table is non-empty string (argparse doesn't enforce this)
+    if not args.table or not args.table.strip():
+        p.error("--table must be a non-empty string")
 
     root = Path(__file__).resolve().parents[1]
 
