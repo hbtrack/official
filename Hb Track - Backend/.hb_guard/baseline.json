@@ -675,8 +675,8 @@
       "size": 5440
     },
     "app\\models\\user.py": {
-      "sha256": "d4debb1745de7b052b2b789a68eb5584b6a5f477b46969ff951f464d8fcc61e9",
-      "size": 6352
+      "sha256": "07bdcb62fc44ead30152ff619af9a9b9b2cc3c6a1eab6a1b911867a4cbbb46db",
+      "size": 6422
     },
     "app\\models\\wellness_post.py": {
       "sha256": "9b1e0340164fbfa3ab183b26a53659e3c153604e55c05438f874d21f3e2e11e7",
