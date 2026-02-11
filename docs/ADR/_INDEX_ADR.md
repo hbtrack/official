@@ -107,6 +107,24 @@ Define o modelo RBAC com tabelas `roles`, `permissions`, `role_permissions` e vi
 
 ---
 
+## ADRs de Governança (Cross-Module)
+
+### 016-ADR-DOCS — Machine-Readable Documentation & AI Quality Gates
+**Arquivo**: [`016-ADR-DOCS.md`](C:/HB TRACK/docs/ADR/016-ADR-DOCS.md)
+**Status**: PROPOSTA
+**Resumo**:
+Estabelece documentação machine-readable (`docs/_ai/`) como SSOT para agentes de IA — quality gates, contratos de agentes, guardrails automatizados. O "músculo" do sistema documental.
+
+---
+
+### 017-ADR-DOCS — Governança de Documentação Humana
+**Arquivo**: [`017-ADR-DOCS-documentacao-humana.md`](C:/HB TRACK/docs/ADR/017-ADR-DOCS-documentacao-humana.md)
+**Status**: PROPOSTA
+**Resumo**:
+Governa a documentação humana (`docs/_canon/`, `docs/02_modulos/`, ADRs) — taxonomia de pastas, nível de abstração (negócio, não código), sincronia obrigatória humano ↔ IA, onboarding por módulo. A "alma" do sistema documental, complemento da ADR-016.
+
+---
+
 ## Template
 
 **Arquivo**: [`_TEMPLATE_ADR.md`](C:/HB TRACK/docs/ADR/_TEMPLATE_ADR.md)
