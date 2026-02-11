@@ -102,25 +102,49 @@ def _remove_duplicate_imports_outside_autogen(src: str) -> str:
     lines = src.split('\n')
     result = []
     in_autogen = False
+    in_multiline_import = False  # Track multiline imports with (...)
+    paren_count = 0
 
-    for line in lines:
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        
         if 'HB-AUTOGEN-IMPORTS:BEGIN' in line or 'HB-AUTOGEN:BEGIN' in line:
             in_autogen = True
         if 'HB-AUTOGEN-IMPORTS:END' in line or 'HB-AUTOGEN:END' in line:
             result.append(line)
             in_autogen = False
+            i += 1
             continue
 
         if in_autogen:
             result.append(line)
+            i += 1
             continue
+
+        # If we're inside a multiline import being removed, skip until closed
+        if in_multiline_import:
+            paren_count += line.count('(') - line.count(')')
+            if paren_count <= 0:
+                in_multiline_import = False
+                paren_count = 0
+            i += 1
+            continue  # skip this line (part of multiline import)
 
         # Outside autogen: check if this import is redundant
         is_redundant = any(p.match(line) for p in _covered_patterns)
         if is_redundant:
-            continue  # skip
+            # Check if this is a multiline import (opens parenthesis)
+            if '(' in line and ')' not in line:
+                # Start tracking multiline import
+                paren_count = line.count('(') - line.count(')')
+                if paren_count > 0:
+                    in_multiline_import = True
+            i += 1
+            continue  # skip this line
 
         result.append(line)
+        i += 1
 
     # Clean up excessive blank lines left by removals (max 2 consecutive)
     cleaned = []
