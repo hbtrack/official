@@ -83,6 +83,7 @@ def _remove_duplicate_imports_outside_autogen(src: str) -> str:
     - from uuid import ...
     - import sqlalchemy as sa
     - Bare 'from app.models.base import Base' is KEPT (not in autogen imports).
+    - Orphan import continuation lines (e.g., "    Boolean," left from incomplete removal)
 
     Lines inside any HB-AUTOGEN block are never touched.
     """
@@ -99,9 +100,26 @@ def _remove_duplicate_imports_outside_autogen(src: str) -> str:
         re.compile(r'^\s*from\s+uuid\s+import\s+'),
     ]
 
+    # Known SQLAlchemy symbols that may appear as orphan import continuation lines
+    _sqlalchemy_symbols = {
+        'Boolean', 'Integer', 'SmallInteger', 'BigInteger', 'Float', 'Numeric', 'Decimal',
+        'String', 'Text', 'Unicode', 'UnicodeText', 'LargeBinary', 'PickleType',
+        'Date', 'DateTime', 'Time', 'Interval', 'Enum',
+        'ForeignKey', 'CheckConstraint', 'UniqueConstraint', 'PrimaryKeyConstraint',
+        'Index', 'Column', 'Table', 'MetaData',
+        'relationship', 'backref', 'Mapped', 'mapped_column',
+        'text', 'func', 'and_', 'or_', 'not_', 'select', 'insert', 'update', 'delete',
+        'ARRAY', 'UUID', 'JSONB', 'JSON', 'INET', 'ENUM',
+    }
+
+    # Pattern to detect orphan import continuation lines like "    Boolean," or ")"
+    _orphan_pattern = re.compile(r'^\s+(\w+)\s*,?\s*$')
+    _closing_paren_pattern = re.compile(r'^\s*\)\s*$')
+
     lines = src.split('\n')
     result = []
     in_autogen = False
+    in_class = False
     in_multiline_import = False  # Track multiline imports with (...)
     paren_count = 0
 
@@ -116,6 +134,10 @@ def _remove_duplicate_imports_outside_autogen(src: str) -> str:
             in_autogen = False
             i += 1
             continue
+
+        # Track if we've entered a class definition (orphans only before classes)
+        if re.match(r'^class\s+\w+', line):
+            in_class = True
 
         if in_autogen:
             result.append(line)
@@ -142,6 +164,21 @@ def _remove_duplicate_imports_outside_autogen(src: str) -> str:
                     in_multiline_import = True
             i += 1
             continue  # skip this line
+
+        # Detect orphan import continuation lines (only at module level, before classes)
+        if not in_class:
+            # Check for closing parenthesis orphan
+            if _closing_paren_pattern.match(line):
+                i += 1
+                continue  # skip orphan closing paren
+
+            # Check for symbol-only lines like "    Boolean,"
+            orphan_match = _orphan_pattern.match(line)
+            if orphan_match:
+                symbol = orphan_match.group(1)
+                if symbol in _sqlalchemy_symbols:
+                    i += 1
+                    continue  # skip orphan import symbol
 
         result.append(line)
         i += 1
