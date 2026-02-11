@@ -41,6 +41,21 @@ FORCE_USE_ALTER_FK_NAMES: set[str] = {
 SCHEMA_SQL = Path("docs/_generated/schema.sql")
 
 
+def exit_with_code(code: int, msg: str) -> None:
+    """
+    Centraliza saída do script com exit code consistente para PowerShell.
+    
+    SEMPRE use esta função ao invés de sys.exit() ou raise SystemExit().
+    Garante propagação correta de $LASTEXITCODE para scripts PowerShell.
+    
+    Args:
+        code: 0=success, 1=error
+        msg: Mensagem (já deve incluir [ERROR] ou [OK])
+    """
+    print(msg, file=sys.stderr if code != 0 else sys.stdout)
+    sys.exit(code)
+
+
 def _normalize_constraint_name(name: str) -> str:
     return (name or "").strip().strip('"')
 
@@ -418,7 +433,7 @@ def _sa_type_expr(coltype: sa.types.TypeEngine) -> str:
 def _get_db_url(env_key: str) -> str:
     v = os.getenv(env_key)
     if not v or not v.strip():
-        raise SystemExit(f"[ERROR] env var not set: {env_key}")
+        exit_with_code(1, f"[ERROR] env var not set: {env_key}")
     return v.strip()
 
 
@@ -618,7 +633,7 @@ def _find_model_file(models_dir: Path, table: str) -> Path:
         if pat.search(txt):
             hits.append(p)
     if not hits:
-        raise SystemExit(f"[ERROR] model file not found for __tablename__='{table}' under {models_dir}")
+        exit_with_code(1, f"[ERROR] model file not found for __tablename__='{table}' under {models_dir}")
     # deterministic: first by name
     hits.sort(key=lambda x: str(x))
     return hits[0]
@@ -634,7 +649,7 @@ def find_class_span_for_tablename(src: str, table: str) -> tuple[int, int, str]:
     tab_m = re.search(rf"^(\s*)__tablename__\s*=\s*['\"]{re.escape(table)}['\"]\s*$",
                       src, flags=re.MULTILINE)
     if not tab_m:
-        raise SystemExit(f"[ERROR] __tablename__='{table}' not found")
+        exit_with_code(1, f"[ERROR] __tablename__='{table}' not found")
 
     base_indent = tab_m.group(1)
     tablename_pos = tab_m.start()
@@ -643,7 +658,7 @@ def find_class_span_for_tablename(src: str, table: str) -> tuple[int, int, str]:
     before = src[:tablename_pos]
     class_matches = list(re.finditer(r'^class\s+\w+.*?:\s*$', before, re.MULTILINE))
     if not class_matches:
-        raise SystemExit(f"[ERROR] No class found before __tablename__='{table}'")
+        exit_with_code(1, f"[ERROR] No class found before __tablename__='{table}'")
 
     class_start = class_matches[-1].start()
 
@@ -654,7 +669,8 @@ def find_class_span_for_tablename(src: str, table: str) -> tuple[int, int, str]:
 
     # Sanity check: class_end must be after __tablename__
     if class_end <= tablename_pos:
-        raise SystemExit(
+        exit_with_code(
+            1,
             f"[ERROR] class_end ({class_end}) <= tablename_pos ({tablename_pos}). "
             f"Possible false positive in class boundary detection."
         )
@@ -788,7 +804,7 @@ def _patch_class_body(src: str, table: str, new_block: str) -> str:
     tab_m = re.search(rf"^(\s*)__tablename__\s*=\s*['\"]{re.escape(table)}['\"]\s*$",
                       class_body, flags=re.MULTILINE)
     if not tab_m:
-        raise SystemExit(f"[ERROR] __tablename__='{table}' not found in class body")
+        exit_with_code(1, f"[ERROR] __tablename__='{table}' not found in class body")
 
     # Insert markers if missing in THIS class
     if not markers_exist_in_class:
@@ -808,7 +824,7 @@ def _patch_class_body(src: str, table: str, new_block: str) -> str:
         # Fallback: simple replace without indent anchors (within class)
         pattern2 = re.compile(rf"{re.escape(CLASS_BLOCK_BEGIN)}.*?{re.escape(CLASS_BLOCK_END)}", flags=re.DOTALL)
         if not pattern2.search(class_body):
-            raise SystemExit("[ERROR] could not locate HB-AUTOGEN block in target class")
+            exit_with_code(1, "[ERROR] could not locate HB-AUTOGEN block in target class")
         class_body = pattern2.sub(new_block.strip(), class_body)
     else:
         class_body = pattern.sub(new_block.strip(), class_body)
@@ -847,7 +863,7 @@ def cmd_apply(args: argparse.Namespace) -> int:
         model_path = model_path.resolve()
         if not model_path.exists():
             if not args.create:
-                raise SystemExit(f"[ERROR] model file not found: {model_path} (use --create)")
+                exit_with_code(1, f"[ERROR] model file not found: {model_path} (use --create)")
             class_name = (args.class_name or _camel(table)).strip()
             _create_model_skeleton(model_path, table, class_name)
     else:
