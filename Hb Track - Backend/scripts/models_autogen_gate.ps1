@@ -40,8 +40,15 @@ function Resolve-ModelFileForTable {
 
   $escapedTable = [regex]::Escape($Table)
   $pattern = "__tablename__\s*=\s*['`"]$escapedTable['`"]"
-  $hit = Select-String -Path "app\models\*.py" -Pattern $pattern -ErrorAction SilentlyContinue | Select-Object -First 1
+  $hits = @(Select-String -Path "app\models\*.py" -Pattern $pattern -ErrorAction SilentlyContinue)
 
+  # BLOCKER: Validate exactly 1 match; non-determinism if duplicates exist
+  if ($hits.Count -gt 1) {
+    $hitPaths = $hits | ForEach-Object { $_.Path } | Join-String -Separator "`n"
+    throw "BLOCKER: Ambiguous __tablename__='$Table' found in $($hits.Count) files (determinism lost):`n$hitPaths"
+  }
+
+  $hit = $hits[0]
   if ($hit) {
     $resolvedPath = $hit.Path
     if ($resolvedPath.StartsWith($RootPath, [System.StringComparison]::OrdinalIgnoreCase)) {
