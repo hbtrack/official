@@ -198,6 +198,39 @@ def _remove_duplicate_imports_outside_autogen(src: str) -> str:
     return '\n'.join(cleaned)
 
 
+def _fix_legacy_patterns(src: str) -> str:
+    """
+    Fix known legacy patterns outside HB-AUTOGEN blocks.
+    
+    Patterns fixed:
+    - UUID(as_uuid=...) -> PG_UUID(as_uuid=...) 
+      because 'from uuid import UUID' is used for typing, not SQLAlchemy columns
+    """
+    # Remove HB-AUTOGEN blocks to avoid modifying them
+    src_without_autogen = re.sub(
+        r'# HB-AUTOGEN(?:-IMPORTS)?:BEGIN.*?# HB-AUTOGEN(?:-IMPORTS)?:END',
+        lambda m: '\x00AUTOGEN_BLOCK\x00' + str(len(m.group(0))) + '\x00',
+        src,
+        flags=re.DOTALL
+    )
+    
+    # Fix UUID(as_uuid= to PG_UUID(as_uuid= (PostgreSQL dialect)
+    # This pattern is used in mapped_column() for UUID primary keys
+    fixed = re.sub(
+        r'\bUUID\s*\(\s*as_uuid\s*=',
+        'PG_UUID(as_uuid=',
+        src_without_autogen
+    )
+    
+    # Restore HB-AUTOGEN blocks
+    autogen_blocks = list(re.finditer(r'# HB-AUTOGEN(?:-IMPORTS)?:BEGIN.*?# HB-AUTOGEN(?:-IMPORTS)?:END', src, flags=re.DOTALL))
+    result = fixed
+    for match in autogen_blocks:
+        placeholder = '\x00AUTOGEN_BLOCK\x00' + str(len(match.group(0))) + '\x00'
+        result = result.replace(placeholder, match.group(0), 1)
+    
+    return result
+
 def _ensure_imports_block(src: str) -> str:
     # Detect if file uses relationship() OUTSIDE HB-AUTOGEN blocks
     # Remove HB-AUTOGEN blocks before searching
@@ -209,8 +242,25 @@ def _ensure_imports_block(src: str) -> str:
     )
     has_relationship = bool(re.search(r'\brelationship\s*\(', src_without_autogen))
     
-    # Detect if file uses TYPE_CHECKING (for circular import guards)
-    has_type_checking = bool(re.search(r'\bTYPE_CHECKING\b', src_without_autogen))
+    # Detect typing imports needed (for circular import guards, collections, etc.)
+    typing_extras = []
+    if re.search(r'\bTYPE_CHECKING\b', src_without_autogen):
+        typing_extras.append('TYPE_CHECKING')
+    if re.search(r'\bList\[', src_without_autogen):
+        typing_extras.append('List')
+    if re.search(r'\bDict\[', src_without_autogen):
+        typing_extras.append('Dict')
+    if re.search(r'\bSet\[', src_without_autogen):
+        typing_extras.append('Set')
+    if re.search(r'\bTuple\[', src_without_autogen):
+        typing_extras.append('Tuple')
+    if re.search(r'\bAny\b', src_without_autogen):
+        typing_extras.append('Any')
+    
+    # Detect sqlalchemy extras needed outside HB-AUTOGEN
+    sa_extras = []
+    if re.search(r'\btext\s*\(', src_without_autogen):
+        sa_extras.append('text')
     
     # Build imports block dynamically
     orm_imports = "Mapped, mapped_column"
@@ -219,8 +269,13 @@ def _ensure_imports_block(src: str) -> str:
     
     # Build typing imports
     typing_imports = "Optional"
-    if has_type_checking:
-        typing_imports += ", TYPE_CHECKING"
+    if typing_extras:
+        typing_imports += ", " + ", ".join(sorted(set(typing_extras)))
+    
+    # Build sqlalchemy imports
+    sa_core_imports = "ForeignKey, CheckConstraint, Index, UniqueConstraint"
+    if sa_extras:
+        sa_core_imports += ", " + ", ".join(sorted(set(sa_extras)))
     
     imports_block_dynamic = f"""# HB-AUTOGEN-IMPORTS:BEGIN
 from __future__ import annotations
@@ -230,7 +285,7 @@ from typing import {typing_imports}
 from uuid import UUID
 
 import sqlalchemy as sa
-from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
+from sqlalchemy import {sa_core_imports}
 from sqlalchemy.orm import {orm_imports}
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
 # HB-AUTOGEN-IMPORTS:END
@@ -807,6 +862,8 @@ def cmd_apply(args: argparse.Namespace) -> int:
     src1 = _ensure_imports_block(src0)
     # remove original imports that are now covered by HB-AUTOGEN-IMPORTS
     src1 = _remove_duplicate_imports_outside_autogen(src1)
+    # fix legacy patterns outside HB-AUTOGEN blocks (e.g., UUID -> PG_UUID)
+    src1 = _fix_legacy_patterns(src1)
     src2 = _patch_class_body(src1, table, new_block)
 
     if out_file:
