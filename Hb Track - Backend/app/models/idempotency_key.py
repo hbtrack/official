@@ -16,9 +16,20 @@ Exemplo de uso:
 Limpeza:
     - Registros são automaticamente limpos após 24h via scheduled job
 """
-from sqlalchemy import Column, String, Integer, DateTime, UniqueConstraint, Index
-from sqlalchemy.dialects.postgresql import UUID, JSONB
-from sqlalchemy.sql import func
+
+# HB-AUTOGEN-IMPORTS:BEGIN
+from __future__ import annotations
+
+from datetime import date, datetime
+from typing import Optional
+from uuid import UUID
+
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+
 import uuid
 
 from app.models.base import Base
@@ -48,57 +59,34 @@ class IdempotencyKey(Base):
     """
     __tablename__ = "idempotency_keys"
     
-    id = Column(
-        UUID(as_uuid=True), 
-        primary_key=True, 
-        default=uuid.uuid4,
-        comment="ID único do registro de idempotência"
-    )
-    
-    key = Column(
-        String(255), 
-        nullable=False, 
-        index=True,
-        comment="Chave de idempotência fornecida pelo cliente"
-    )
-    
-    endpoint = Column(
-        String(255), 
-        nullable=False,
-        comment="Endpoint da requisição (ex: /api/v1/intake/ficha-unica)"
-    )
-    
-    request_hash = Column(
-        String(64), 
-        nullable=False,
-        comment="SHA256 do body da requisição para validação de payload idêntico"
-    )
-    
-    response_json = Column(
-        JSONB, 
-        nullable=True,
-        comment="Response completo armazenado em JSON"
-    )
-    
-    status_code = Column(
-        Integer, 
-        nullable=True,
-        comment="HTTP status code da response original"
-    )
-    
-    created_at = Column(
-        DateTime(timezone=True), 
-        server_default=func.now(), 
-        nullable=False, 
-        index=True,
-        comment="Timestamp de criação para expiração automática"
-    )
-    
+
+# HB-AUTOGEN:BEGIN
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+    # Table: public.idempotency_keys
     __table_args__ = (
         UniqueConstraint('key', 'endpoint', name='uq_idempotency_key_endpoint'),
-        Index('ix_idempotency_keys_key_endpoint', 'key', 'endpoint'),
-        {'comment': 'Chaves de idempotência para evitar processamento duplicado de requisições'}
+        Index('ix_idempotency_keys_created_at', 'created_at', unique=False),
+        Index('ix_idempotency_keys_key', 'key', unique=False),
+        Index('ix_idempotency_keys_key_endpoint', 'key', 'endpoint', unique=False),
     )
+
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
+
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+    key: Mapped[str] = mapped_column(sa.String(length=255), nullable=False)
+    endpoint: Mapped[str] = mapped_column(sa.String(length=255), nullable=False)
+    request_hash: Mapped[str] = mapped_column(sa.String(length=64), nullable=False)
+    response_json: Mapped[Optional[object]] = mapped_column(PG_JSONB(), nullable=True)
+    status_code: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    # HB-AUTOGEN:END
+    
+    
+    
+    
+    
+    
+    
     
     def __repr__(self):
         return f"<IdempotencyKey(key='{self.key}', endpoint='{self.endpoint}', status={self.status_code})>"

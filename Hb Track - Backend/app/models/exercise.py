@@ -1,8 +1,17 @@
-from sqlalchemy import Column, String, Text, DateTime, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID, ARRAY
-from sqlalchemy.orm import relationship
+# HB-AUTOGEN-IMPORTS:BEGIN
+from __future__ import annotations
+
+from datetime import date, datetime
+from typing import Optional
+from uuid import UUID
+
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+
 import uuid
-from datetime import datetime
 from app.models.base import Base
 
 
@@ -18,24 +27,27 @@ class Exercise(Base):
     """
     __tablename__ = 'exercises'
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    organization_id = Column(
-        UUID(as_uuid=True),
-        ForeignKey('organizations.id', ondelete='CASCADE'),
-        nullable=False
+
+# HB-AUTOGEN:BEGIN
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+    # Table: public.exercises
+    __table_args__ = (
+        Index('idx_exercises_tags', 'tag_ids', unique=False),
     )
-    name = Column(String(200), nullable=False)
-    description = Column(Text, nullable=True)
-    tag_ids = Column(ARRAY(UUID(as_uuid=True)), nullable=False, server_default='{}')
-    category = Column(String(100), nullable=True)
-    media_url = Column(String(500), nullable=True)
-    created_by_user_id = Column(
-        UUID(as_uuid=True),
-        ForeignKey('users.id', ondelete='CASCADE'),
-        nullable=False
-    )
-    created_at = Column(DateTime(timezone=True), nullable=False, default=datetime.utcnow)
-    updated_at = Column(DateTime(timezone=True), nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
+
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+    organization_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('organizations.id', name='exercises_organization_id_fkey', ondelete='CASCADE'), nullable=False)
+    name: Mapped[str] = mapped_column(sa.String(length=200), nullable=False)
+    description: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+    tag_ids: Mapped[object] = mapped_column(sa.ARRAY(PG_UUID(as_uuid=True)), nullable=False, server_default=sa.text("'{}'::uuid[]"))
+    category: Mapped[Optional[str]] = mapped_column(sa.String(length=100), nullable=True)
+    media_url: Mapped[Optional[str]] = mapped_column(sa.String(length=500), nullable=True)
+    created_by_user_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('users.id', name='exercises_created_by_user_id_fkey', ondelete='CASCADE'), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    # HB-AUTOGEN:END
 
     # Relationships
     creator = relationship('User', backref='created_exercises', foreign_keys=[created_by_user_id])

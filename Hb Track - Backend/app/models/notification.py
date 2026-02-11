@@ -4,15 +4,18 @@ Notification model - Notificações para usuários do sistema.
 Step 9: Model para notificações em tempo real via WebSocket e REST.
 """
 
-from datetime import datetime
-from typing import TYPE_CHECKING, Optional
-from uuid import UUID, uuid4
+# HB-AUTOGEN-IMPORTS:BEGIN
+from __future__ import annotations
 
-from sqlalchemy import DateTime, ForeignKey, String, Text
-from sqlalchemy.dialects.postgresql import JSONB, UUID as PgUUID
+from datetime import date, datetime
+from typing import Optional, TYPE_CHECKING
+from uuid import UUID
+
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy.sql import text
-
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
 from app.models.base import Base
 
 if TYPE_CHECKING:
@@ -43,54 +46,53 @@ class Notification(Base):
 
     __tablename__ = "notifications"
 
-    # PK
-    id: Mapped[UUID] = mapped_column(
-        PgUUID(as_uuid=True),
-        primary_key=True,
-        default=uuid4,
-        server_default=text("gen_random_uuid()"),
+
+# HB-AUTOGEN:BEGIN
+
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+
+    # Table: public.notifications
+
+    __table_args__ = (
+
+        Index('idx_notifications_cleanup', 'read_at', 'created_at', unique=False),
+
+        Index('idx_notifications_created', 'created_at', unique=False),
+
+        Index('idx_notifications_unread', 'user_id', 'created_at', unique=False, postgresql_where=sa.text('(read_at IS NULL)')),
+
+        Index('idx_notifications_user_read', 'user_id', 'read_at', unique=False),
+
     )
+
+
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
+
+
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+
+    user_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('users.id', name='notifications_user_id_fkey', ondelete='CASCADE'), nullable=False)
+
+    type: Mapped[str] = mapped_column(sa.String(length=50), nullable=False)
+
+    message: Mapped[str] = mapped_column(sa.Text(), nullable=False)
+
+    notification_data: Mapped[Optional[object]] = mapped_column(PG_JSONB(), nullable=True)
+
+    read_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    # HB-AUTOGEN:END
+    # PK
 
     # FK
-    user_id: Mapped[UUID] = mapped_column(
-        PgUUID(as_uuid=True),
-        ForeignKey("users.id", ondelete="CASCADE"),
-        nullable=False,
-        index=True,
-    )
 
     # Tipo e conteúdo
-    type: Mapped[str] = mapped_column(
-        String(50),
-        nullable=False,
-        comment="Tipo: team_assignment, coach_removal, member_added, invite, game, training",
-    )
     
-    message: Mapped[str] = mapped_column(
-        Text,
-        nullable=False,
-        comment="Mensagem de texto da notificação",
-    )
     
-    notification_data: Mapped[Optional[dict]] = mapped_column(
-        JSONB,
-        nullable=True,
-        comment="Dados adicionais em JSON (team_id, team_name, etc)",
-    )
-
     # Timestamps
-    read_at: Mapped[Optional[datetime]] = mapped_column(
-        DateTime(timezone=True),
-        nullable=True,
-        comment="Timestamp de leitura, NULL se não lida",
-    )
     
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        nullable=False,
-        server_default=text("now()"),
-        comment="Timestamp de criação",
-    )
 
     # Relacionamento
     user: Mapped["User"] = relationship("User", back_populates="notifications")

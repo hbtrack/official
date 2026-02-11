@@ -4,13 +4,20 @@ Export Job Model - Step 23
 Tracks asynchronous export jobs (PDF analytics, athlete data JSON/CSV)
 with status tracking, cache via params_hash, and automatic cleanup.
 """
-from datetime import datetime, timedelta
+
+# HB-AUTOGEN-IMPORTS:BEGIN
+from __future__ import annotations
+
+from datetime import date, datetime
 from typing import Optional
 from uuid import UUID
 
-from sqlalchemy import BigInteger, CheckConstraint, ForeignKey, Index, String, Text, func
-from sqlalchemy.dialects.postgresql import JSONB
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+
 
 from app.models.base import Base
 
@@ -18,62 +25,53 @@ from app.models.base import Base
 class ExportJob(Base):
     __tablename__ = "export_jobs"
     
+
+# HB-AUTOGEN:BEGIN
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+    # Table: public.export_jobs
+    __table_args__ = (
+        CheckConstraint("status::text = ANY (ARRAY['pending'::character varying, 'processing'::character varying, 'completed'::character varying, 'failed'::character varying]::text[])", name='ck_export_jobs_status'),
+        Index('idx_export_cache', 'params_hash', 'status', unique=False, postgresql_where=sa.text("((status)::text = 'completed'::text)")),
+    )
+
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
+
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+    user_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('users.id', name='export_jobs_user_id_fkey', ondelete='CASCADE'), nullable=False)
+    export_type: Mapped[str] = mapped_column(sa.String(length=50), nullable=False)
+    params: Mapped[object] = mapped_column(PG_JSONB(), nullable=False)
+    params_hash: Mapped[str] = mapped_column(sa.String(length=64), nullable=False)
+    status: Mapped[str] = mapped_column(sa.String(length=20), nullable=False, server_default=sa.text("'pending'::character varying"))
+    file_url: Mapped[Optional[str]] = mapped_column(sa.String(length=500), nullable=True)
+    error_message: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    completed_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+    # HB-AUTOGEN:END
     # Primary Key
-    id: Mapped[UUID] = mapped_column(primary_key=True, server_default=func.gen_random_uuid())
     
     # Foreign Keys
-    user_id: Mapped[UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     
     # Export Details
-    export_type: Mapped[str] = mapped_column(String(50), nullable=False)
     """Type: analytics_pdf, athlete_data_json, athlete_data_csv"""
     
-    status: Mapped[str] = mapped_column(String(20), nullable=False, server_default="pending")
     """Status: pending, processing, completed, failed"""
     
-    params: Mapped[dict] = mapped_column(JSONB, nullable=False)
     """Export parameters (team_id, start_date, end_date, include_wellness, etc)"""
     
-    params_hash: Mapped[str] = mapped_column(String(64), nullable=False)
     """SHA256 hash of params for cache lookup"""
     
     # Result
-    file_url: Mapped[Optional[str]] = mapped_column(String(500))
     """S3/local URL when completed"""
     
-    file_size_bytes: Mapped[Optional[int]] = mapped_column(BigInteger)
     
-    error_message: Mapped[Optional[str]] = mapped_column(Text)
     
     # Timestamps
-    started_at: Mapped[Optional[datetime]]
-    completed_at: Mapped[Optional[datetime]]
-    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
-    expires_at: Mapped[Optional[datetime]]
     """Auto-delete file after 7 days (set on completion)"""
     
     # Relationships
     user: Mapped["User"] = relationship("User", back_populates="export_jobs")
     
     # Constraints
-    __table_args__ = (
-        CheckConstraint(
-            "export_type IN ('analytics_pdf', 'athlete_data_json', 'athlete_data_csv')",
-            name='ck_export_jobs_valid_type'
-        ),
-        CheckConstraint(
-            "status IN ('pending', 'processing', 'completed', 'failed')",
-            name='ck_export_jobs_valid_status'
-        ),
-        CheckConstraint(
-            "file_size_bytes IS NULL OR file_size_bytes > 0",
-            name='ck_export_jobs_positive_file_size'
-        ),
-        Index('idx_export_jobs_user', 'user_id', 'created_at', postgresql_ops={'created_at': 'DESC'}),
-        Index('idx_export_jobs_status', 'status', 'created_at', postgresql_where="status IN ('pending', 'processing')"),
-        Index('idx_export_jobs_cache_lookup', 'export_type', 'params_hash', 'status', postgresql_where="status = 'completed' AND expires_at > NOW()"),
-        Index('idx_export_jobs_cleanup', 'expires_at', postgresql_where="expires_at IS NOT NULL AND status = 'completed'"),
-    )
     
     def mark_processing(self) -> None:
         """Mark job as processing"""

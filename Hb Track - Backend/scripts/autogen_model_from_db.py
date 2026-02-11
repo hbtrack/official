@@ -209,16 +209,24 @@ def _ensure_imports_block(src: str) -> str:
     )
     has_relationship = bool(re.search(r'\brelationship\s*\(', src_without_autogen))
     
+    # Detect if file uses TYPE_CHECKING (for circular import guards)
+    has_type_checking = bool(re.search(r'\bTYPE_CHECKING\b', src_without_autogen))
+    
     # Build imports block dynamically
     orm_imports = "Mapped, mapped_column"
     if has_relationship:
         orm_imports += ", relationship"
     
+    # Build typing imports
+    typing_imports = "Optional"
+    if has_type_checking:
+        typing_imports += ", TYPE_CHECKING"
+    
     imports_block_dynamic = f"""# HB-AUTOGEN-IMPORTS:BEGIN
 from __future__ import annotations
 
 from datetime import date, datetime
-from typing import Optional
+from typing import {typing_imports}
 from uuid import UUID
 
 import sqlalchemy as sa

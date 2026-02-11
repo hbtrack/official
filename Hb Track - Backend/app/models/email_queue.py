@@ -1,9 +1,20 @@
 """
 Modelo para fila de emails com retry automático
 """
-from sqlalchemy import Column, String, Integer, Text, DateTime, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID, JSONB
-from sqlalchemy.sql import func
+
+# HB-AUTOGEN-IMPORTS:BEGIN
+from __future__ import annotations
+
+from datetime import date, datetime
+from typing import Optional
+from uuid import UUID
+
+import sqlalchemy as sa
+from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB as PG_JSONB, INET as PG_INET, ENUM as PG_ENUM
+# HB-AUTOGEN-IMPORTS:END
+
 import uuid
 
 from app.models.base import Base
@@ -27,23 +38,37 @@ class EmailQueue(Base):
     """
     __tablename__ = "email_queue"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    template_type = Column(String(50), nullable=False, comment='invite, welcome, reset_password')
-    to_email = Column(String(255), nullable=False, index=True)
-    template_data = Column(JSONB, nullable=False, comment='Dados dinâmicos do template')
+
+# HB-AUTOGEN:BEGIN
+    # AUTO-GENERATED FROM DB (SSOT). DO NOT EDIT MANUALLY.
+    # Table: public.email_queue
+    __table_args__ = (
+        Index('ix_email_queue_created_at', 'created_at', unique=False),
+        Index('ix_email_queue_next_retry', 'next_retry_at', unique=False, postgresql_where=sa.text("((status)::text = 'pending'::text)")),
+        Index('ix_email_queue_status', 'status', unique=False),
+        Index('ix_email_queue_to_email', 'to_email', unique=False),
+    )
+
+    # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
+
+    id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
+    template_type: Mapped[str] = mapped_column(sa.String(length=50), nullable=False)
+    to_email: Mapped[str] = mapped_column(sa.String(length=255), nullable=False)
+    template_data: Mapped[object] = mapped_column(PG_JSONB(), nullable=False)
+    status: Mapped[str] = mapped_column(sa.String(length=20), nullable=False)
+    attempts: Mapped[int] = mapped_column(sa.Integer(), nullable=False)
+    max_attempts: Mapped[int] = mapped_column(sa.Integer(), nullable=False)
+    next_retry_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+    last_error: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+    sent_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+    created_by_user_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('users.id', name='fk_email_queue_created_by_user'), nullable=True)
+    # HB-AUTOGEN:END
     
     # Status e controle
-    status = Column(String(20), nullable=False, default='pending', index=True)
-    attempts = Column(Integer, nullable=False, default=0)
-    max_attempts = Column(Integer, nullable=False, default=3)
-    next_retry_at = Column(DateTime(timezone=True), nullable=True)
-    last_error = Column(Text, nullable=True)
-    sent_at = Column(DateTime(timezone=True), nullable=True)
     
     # Auditoria
-    created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now())
-    created_by_user_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=True)
     
     def __repr__(self):
         return f"<EmailQueue(id={self.id}, type={self.template_type}, to={self.to_email}, status={self.status})>"
