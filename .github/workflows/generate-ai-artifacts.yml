@@ -1,0 +1,24 @@
+name: Generate AI Artifacts
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/_canon/**'
+
+jobs:
+  generate_artifacts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install -r scripts/_ia/requirements.txt
+      - name: TODO - Generate AI artifacts from SSOT
+        run: python .github/scripts/generate_ai_docs.py
+        shell: bash
+      - name: TODO - Commit or create PR
+        run: echo "[TODO] Implement auto-commit or PR creation logic"

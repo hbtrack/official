@@ -1,0 +1,25 @@
+name: AI Docs Validation
+
+on:
+  push:
+    paths:
+      - 'docs/_canon/**'
+      - 'docs/_ai/**'
+  pull_request:
+    paths:
+      - 'docs/_canon/**'
+      - 'docs/_ai/**'
+
+jobs:
+  validate_sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install -r scripts/_ia/requirements.txt
+      - name: TODO - Validate AI docs sync
+        run: python .github/scripts/validate_ai_sync.py
+        shell: bash

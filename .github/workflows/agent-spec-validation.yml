@@ -1,0 +1,23 @@
+name: Agent Spec Validation
+
+on:
+  push:
+    paths:
+      - 'docs/_ai/_specs/agent-spec.json'
+  pull_request:
+    paths:
+      - 'docs/_ai/_specs/agent-spec.json'
+
+jobs:
+  validate_spec:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install -r scripts/_ia/requirements.txt
+      - name: TODO - Validate agent spec JSON schema
+        run: python scripts/_ia/validators/validate-agent-spec.py
+        shell: bash

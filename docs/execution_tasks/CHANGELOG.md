@@ -5,6 +5,28 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 ### Adicionado
+* **AI Infrastructure: scripts/_ia/ + GitHub Actions Workflows** (2026-02-11): Construção completa de infraestrutura para automação e validação de agentes:
+  - **9 Diretórios Criados**: `scripts/_ia/` (root) + 6 subdirs (extractors, validators, generators, agents, utils) + `.github/scripts/` + `docs/_ai/_schemas/`
+  - **20 Arquivos Python Criados**:
+    - **Extractors (6)**: `extract-ai-context.py`, `extract-quality-gates.py`, `extract-workflows.py`, `extract-adr-index.py`, `extract-approved-commands.py`, `extract-troubleshooting.py`
+    - **Validators (5)**: `validate-ai-docs-sync.py`, `validate-quality-gates.py`, `validate-agent-spec.py`, `validate-approved-commands.py`, `validate-yaml-json.py`
+    - **Generators (4)**: `generate-handshake-template.py`, `generate-invocation-examples.py`, `generate-checklist-yml.py`, `generate-ai-index.py`
+    - **Agents (3)**: `code-review-agent.py`, `parity-check-agent.py`, `invariant-validator-agent.py`
+    - **Utils (4)**: `yaml_loader.py`, `json_loader.py`, `file_reader.py`, `git_diff_parser.py`
+    - **CI Scripts (3)**: `check_quality_gates.py`, `validate_ai_sync.py`, `generate_ai_docs.py`
+  - **5 GitHub Actions Workflows YAML** Criados:
+    - `ai-docs-validation.yml` — Valida sincronização docs/_ai ↔ docs/_canon
+    - `quality-gates.yml` — Enforce quality gates (radon/lizard)
+    - `approved-commands-check.yml` — Valida commands contra whitelist
+    - `agent-spec-validation.yml` — Esquema de validação agent-spec.json
+    - `generate-ai-artifacts.yml` — Auto-gera artefatos AI
+  - **3 JSON Schemas** Criados: `agent-spec.schema.json`, `quality-gates.schema.json`, `invocation.schema.json`
+  - **3 Markdown Documentation**: `scripts/_ia/README.md`, `.github/copilot-handshake.md`, `.github/PULL_REQUEST_TEMPLATE.md`
+  - **2 Configuration Files**: `scripts/_ia/requirements.txt` (radon>=6.0.1, lizard>=1.17.10, PyYAML>=6.0.1, jsonschema>=4.21.0, click>=8.1.7), `docs/_ai/.aiignore`
+  - **2 Global Config Files**: `.aiprompt` (YAML config Cursor/Aider), `.github/.copilotignore` (Copilot index exclusions)
+  - **File Move**: `docs/_ai/07_AGENT_ROUTING_MAP.md` → `docs/_ai/_maps/agent-routing-map.md` (com stub de backward compat)
+  - **Design**: Todos os arquivos Python contêm docstrings descritivos de purpose/input/output/TODO. Schemas JSON validam contracts. Workflows YAML integram-se ao CI/CD.
+
 * **Reorganização docs/_ai/** (2026-02-11): Estruturação sistemática de documentação para agentes:
   - **7 Subdirectórios Temáticos**: `_context/`, `_specs/`, `_prompts/`, `_maps/`, `_guardrails/`, `_checklists/`, `_docs_arch/`
   - **20 Arquivos Novos com Placeholders**:

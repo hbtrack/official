@@ -1,0 +1,130 @@
+# .aiignore — File patterns excluded from AI agent indexing
+# Used by Cursor, Aider, and local AI tools to reduce context pollution
+# Security-critical: prevents sensitive files from being included in AI context
+
+# Build artifacts and caches
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# IDE and editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Git
+.git/
+.gitignore
+
+# Logs and reports
+*.log
+logs/
+*.csv
+
+# Database and temp files
+*.db
+*.sqlite
+*.sqlite3
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Node and frontend
+node_modules/
+dist/
+.next/
+out/
+front-end/
+
+# OS files
+Thumbs.db
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Backup and archive files (security: may contain credentials)
+backup-dados-criticos/
+versions_backup_*/
+*.bak
+*.backup
+*.tar.gz
+*.zip
+
+# Environment and credentials (CRITICAL SECURITY)
+.env
+.env.local
+.env.*.local
+.env.production.local
+id_ed25519
+id_ed25519.pub
+*.pem
+*.key
+*.pfx
+credentials/
+secrets/
+
+# CI/CD and infrastructure artifacts
+.github/workflows/ (indexed separately)
+infra/
+
+# Generated documentation (may be stale)
+docs/_generated/
+docs/_generated/_scratch/
+
+# Test coverage reports
+.coverage
+htmlcov/
+.pytest_cache/
+coverage.xml
+
+# Scratch and temporary docs
+docs/scripts/_archive/
+docs/_generated/_scratch/
+Plano Agent.md
+agent.md
+temp_*.txt
+tmp_*.txt
+temp_*.py
+test_*.py
+test_*.js
+test-*.ps1
+
+# Large binary or dump files (performance)
+*.dump
+*.sql (except schema.sql)
+*.json (except essential configs)
+*.lock (except package-lock.json)
+
+# Project-specific exclusions
+dsa/
+postman/
+*.md (managed separately via docs/_ai/)
+
+# End of .aiignore

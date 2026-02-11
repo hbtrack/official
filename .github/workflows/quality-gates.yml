@@ -1,0 +1,21 @@
+name: Quality Gates
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/**'
+      - 'Hb Track - Backend/**'
+
+jobs:
+  quality_check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install -r scripts/_ia/requirements.txt
+      - name: TODO - Check quality gates
+        run: python .github/scripts/check_quality_gates.py
+        shell: bash

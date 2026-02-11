@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Agent Invocation Specification",
+  "description": "JSON Schema que valida invocações de agentes. Garante que FILE, MODE, GOAL, CONSTRAINTS estão presentes e válidos.",
+  "type": "object",
+  "required": ["FILE"],
+  "properties": {
+    "FILE": {
+      "type": "string",
+      "minLength": 1
+    },
+    "GOAL": {
+      "type": "string"
+    },
+    "MODE": {
+      "type": "string",
+      "enum": ["SUGGEST", "APPLY"]
+    },
+    "CONSTRAINTS": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}
