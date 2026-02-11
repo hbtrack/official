@@ -48,7 +48,7 @@ function Resolve-ModelFileForTable {
     throw "BLOCKER: Ambiguous __tablename__='$Table' found in $($hits.Count) files (determinism lost):`n$hitPaths"
   }
 
-  $hit = $hits[0]
+  $hit = if ($hits.Count -gt 0) { $hits[0] } else { $null }
   if ($hit) {
     $resolvedPath = $hit.Path
     if ($resolvedPath.StartsWith($RootPath, [System.StringComparison]::OrdinalIgnoreCase)) {
