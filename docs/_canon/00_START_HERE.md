@@ -333,6 +333,7 @@ SSOT Artifacts:
 | **Pipeline de Models** | `docs\_canon\05_MODELS_PIPELINE.md` | **Autoridade**: validação/correção (parity → requirements → guard) |
 | **Approved Commands** | `docs\_canon\08_APPROVED_COMMANDS.md` | Whitelist + proibidos. Consultar antes de rodar. |
 | **Troubleshooting** | `docs\_canon\09_TROUBLESHOOTING_GUARD_PARITY.md` | Exit code 2/3/4: causas, diagnóstico, resolução |
+| **Quality Metrics** | `docs\_canon\QUALITY_MATRICS.md` | Métricas de qualidade, padrões de código e critérios de sucesso para reviews/refactoring |
 | **GitHub Instructions** | `.github\instructions\*.instructions.md` | Carregamento condicional (git, commands, docs, etc) |
 
 ---
