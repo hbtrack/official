@@ -50,6 +50,7 @@ try {
     Write-Host "[PARITY] using injected report: $ParityReportPath"
   } else {
     $scanParams = @{
+      RepoRoot = $ROOT
       TableFilter = $Table
       FailOnStructuralDiffs = $true
     }
