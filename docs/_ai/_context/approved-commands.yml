@@ -1,6 +1,6 @@
 categories:
   Configuração Crítica: []
-  Guard System: []
+  Guard System: - radon cc -a -nc  # Análise de complexidade ciclomática
   Migrations: []
   SSOT Gerados (Derivados):
   - "# Exemplo para gate\n$expectedPath = \"Hb Track - Backend\"\n$currentPath = Get-Location\n\
