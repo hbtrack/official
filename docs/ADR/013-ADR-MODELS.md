@@ -130,7 +130,7 @@ Implementar um **sistema de validação em 3 camadas** (guardrails → parity �
 - Pode não detectar colunas extras no model (Alembic ignora)
 - SAWarnings de ciclos FK podem causar falsos negativos
 
-#### 3. `scripts/model_requirements.py` (A IMPLEMENTAR - CRÍTICO)
+#### 3. `scripts/model_requirements.py`
 
 **Responsabilidade:** Validação determinística independente de Alembic.
 
