@@ -1,5 +1,7 @@
 categories:
-  Configuração Crítica: []
+  shell:
+    - echo
+Configuração Crítica: []
   Guard System: - radon cc -a -nc  # Análise de complexidade ciclomática
   Migrations: []
   SSOT Gerados (Derivados):
