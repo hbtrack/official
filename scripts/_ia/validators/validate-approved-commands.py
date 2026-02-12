@@ -75,7 +75,7 @@ def main():
             print(f"  {v['file']}: {v['command']}", file=sys.stderr)
         sys.exit(1)
     
-    print("✅ All commands are approved")
+    print("OK: All commands are approved")
     sys.exit(0)
 
 

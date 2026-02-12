@@ -20,7 +20,7 @@ except ImportError:
 
 def extract_commands(md_path: Path) -> dict:
     """Extract approved commands from canonical markdown."""
-    content = md_path.read_text(encoding='utf-8')
+    lines = md_path.read_text(encoding='utf-8').splitlines()
     
     commands = {
         "version": "1.0",
@@ -28,24 +28,46 @@ def extract_commands(md_path: Path) -> dict:
         "categories": {}
     }
     
-    # Pattern: ### Categoria N: Nome
-    category_pattern = r'### Categoria \d+: (.+)'
-    # Pattern: ```powershell ... ```
-    code_block_pattern = r'```(?:powershell|bash)\n(.*?)\n```'
+    # Pattern to match categories regardless of header level
+    category_pattern = re.compile(r'^#+ Categoria \d+: (.+)')
     
     current_category = None
+    in_code_block = False
+    current_block = []
     
-    for line in content.split('\n'):
-        cat_match = re.match(category_pattern, line)
+    for line in lines:
+        # Check for category header
+        cat_match = category_pattern.match(line)
         if cat_match:
             current_category = cat_match.group(1).strip()
-            commands["categories"][current_category] = []
-    
-    # Extract code blocks (simplified - full implementation would parse more robustly)
-    for match in re.finditer(code_block_pattern, content, re.DOTALL):
-        cmd = match.group(1).strip()
-        if current_category and cmd:
-            commands["categories"][current_category].append(cmd)
+            if current_category not in commands["categories"]:
+                commands["categories"][current_category] = []
+            continue
+            
+        # Handle code blocks
+        if line.startswith('```'):
+            if in_code_block:
+                # Ending code block
+                if current_category and current_block:
+                    for b_line in current_block:
+                        # Clean line: strip whitespace
+                        clean_line = b_line.strip()
+                        # Remove leading bullet points (-, *)
+                        clean_line = re.sub(r'^[-*]\s+', '', clean_line)
+                        # Ignore empty lines or comments
+                        if clean_line and not clean_line.startswith('#'):
+                            # Add to category
+                            commands["categories"][current_category].append(clean_line)
+                current_block = []
+                in_code_block = False
+            else:
+                # Starting code block
+                in_code_block = True
+            continue
+            
+        # Accumulate lines if inside a block
+        if in_code_block:
+            current_block.append(line)
     
     return commands
 
@@ -65,7 +87,7 @@ def main():
     with open(output_path, 'w', encoding='utf-8') as f:
         yaml.safe_dump(commands, f, default_flow_style=False, allow_unicode=True)
     
-    print(f"✅ Extracted {len(commands['categories'])} categories to {output_path}")
+    print(f"OK: Extracted {len(commands['categories'])} categories to {output_path}")
     sys.exit(0)
 
 
