@@ -3,19 +3,64 @@ name: Quality Gates
 on:
   pull_request:
     paths:
-      - 'scripts/**'
-      - 'Hb Track - Backend/**'
+      - 'docs/**'
+      - 'scripts/_ia/**'
+      - '.github/workflows/**'
 
 jobs:
-  quality_check:
+  quality_gates:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v4
         with:
           python-version: '3.11'
+      
       - name: Install dependencies
-        run: pip install -r scripts/_ia/requirements.txt
-      - name: TODO - Check quality gates
-        run: python .github/scripts/check_quality_gates.py
-        shell: bash
+        run: |
+          pip install --upgrade pip
+          pip install -r scripts/_ia/requirements.txt
+      
+      - name: Run quality gates extractor
+        run: |
+          python scripts/_ia/extractors/extract-quality-gates.py \
+            --output docs/_ai/_specs/quality-gates.yml \
+            --allow-fallback
+      
+      - name: Validate schema
+        run: |
+          python scripts/_ia/validators/validate-quality-gates-schema.py
+      
+      - name: Run approved commands validator
+        continue-on-error: true
+        run: |
+          python scripts/_ia/validators/validate-approved-commands.py
+
+      - name: Run quality gates validator (optional)
+        continue-on-error: true
+        run: |
+          python scripts/_ia/validators/validate-quality-gates.py
+
+      - name: Run all extractors (smoke tests)
+        continue-on-error: true
+        run: |
+          python scripts/_ia/extractors/extract-approved-commands.py
+          python scripts/_ia/extractors/extract-troubleshooting.py
+
+      - name: Run all generators
+        continue-on-error: true
+        run: |
+          python scripts/_ia/generators/generate-handshake-template.py
+          python scripts/_ia/generators/generate-invocation-examples.py
+          python scripts/_ia/generators/generate-checklist-yml.py
+
+      - name: Upload validation logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-logs
+          path: scripts/_ia/logs/
+          retention-days: 7

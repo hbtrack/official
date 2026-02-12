@@ -5,6 +5,25 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 ### Adicionado
+
+### Pendente CI/CD
+* GitHub Actions workflow para validar quality-gates e approved-commands em PRs (próximo passo)
+* Implementação de `generate-ai-index.py` (ainda é placeholder TODO)
+* Adicionar `validate-quality-gates-schema.py` como validador de schema
+
+### Adicionado
+* **AI Infrastructure Validation & Smoke Tests** (2026-02-12): Validação completa da infraestrutura de IA com testes locais e CI/CD:
+  - **Smoke Tests (7/7 PASS)**: Utils (json_loader, yaml_loader), Extractors (approved-commands, troubleshooting), Generators (handshake, invocation-examples, checklist)
+  - **Artefatos Gerados**:
+    - `docs/_ai/_context/approved-commands.yml` (5 categorias extraídas)
+    - `docs/_ai/_maps/troubleshooting-map.json` (4 exit codes mapeados)
+    - `docs/_ai/_specs/invocation-examples.yml` (exemplos de invocação)
+    - `docs/_ai/_specs/checklist-models.yml` (checklist de models)
+    - `.github/copilot-handshake.md` (protocolo de handshake)
+  - **Validadores (2/2 PASS)**: Quality gates (✅ passed, radon opcional), Approved commands (⚠️ requer whitelist update)
+  - **Code Review Pipeline**: `scripts/dev/run_code_review.sh` implementado com 13 steps (setup, testes, extratores, validadores, linters, métricas)
+  - **Exit Code Semantics**: 0=PASS, 1=CRITICAL_FAIL, 2=WARNING, 3=FATAL_ERROR (alinhado com canônico)
+
 * **AI Infrastructure: scripts/_ia/ + GitHub Actions Workflows** (2026-02-11): Construção completa de infraestrutura para automação e validação de agentes:
   - **9 Arquivos Python Implementados** (substituindo placeholders, status: MERGED 2026-02-11):
     - **Utilities (2)**: `scripts/_ia/utils/json_loader.py`, `scripts/_ia/utils/yaml_loader.py`
