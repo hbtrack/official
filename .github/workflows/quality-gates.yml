@@ -34,7 +34,33 @@ jobs:
         run: |
           python scripts/_ia/validators/validate-quality-gates-schema.py
       
+      - name: Run approved commands validator
+        continue-on-error: true
+        run: |
+          python scripts/_ia/validators/validate-approved-commands.py
+
       - name: Run quality gates validator (optional)
         continue-on-error: true
         run: |
           python scripts/_ia/validators/validate-quality-gates.py
+
+      - name: Run all extractors (smoke tests)
+        continue-on-error: true
+        run: |
+          python scripts/_ia/extractors/extract-approved-commands.py
+          python scripts/_ia/extractors/extract-troubleshooting.py
+
+      - name: Run all generators
+        continue-on-error: true
+        run: |
+          python scripts/_ia/generators/generate-handshake-template.py
+          python scripts/_ia/generators/generate-invocation-examples.py
+          python scripts/_ia/generators/generate-checklist-yml.py
+
+      - name: Upload validation logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: validation-logs
+          path: scripts/_ia/logs/
+          retention-days: 7
