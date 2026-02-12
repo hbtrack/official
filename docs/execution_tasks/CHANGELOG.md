@@ -5,6 +5,13 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 ### Adicionado
+* **AI Governance Canonical Templates** (2026-02-12): Implementação da suite de governança e protocolos para agentes de IA:
+  - `AI_GOVERNANCE_INDEX.md`: Índice centralizador.
+  - `AI_INCIDENT_RESPONSE_POLICY.md`: Protocolo para falhas e alucinações.
+  - `AI_TASK_VERSIONING_POLICY.md`: Gestão de versões de tarefas.
+  - `AI_PROTOCOL_CHECKLIST.md`: Checklist de pré-emissão de tarefas.
+  - `AI_ARCH_EXEC_PROTOCOL.md`: Protocolo Architect vs Executor.
+  - `TASK_BRIEF.md` & `EVIDENCE_PACK.md`: Templates de input/output determinísticos.
 
 ### Pendente CI/CD
 * GitHub Actions workflow para validar quality-gates e approved-commands em PRs (próximo passo)

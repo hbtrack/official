@@ -3,6 +3,10 @@ Registro técnico de execuções, auditorias e sessões de trabalho do Agent.
 
 | Data/Hora | Task ID | Ação/Comando | Status | Observação |
 | :--- | :--- | :--- | :--- | :--- |
+| 2026-02-12 11:00 | `T-553` | Criação de AI Governance Suite (7 files) | ✅ PASS | Implementados templates canônicos em `docs/_canon/_agent/` conforme ADR. |
+| 2026-02-12 10:30 | `T-552` | Merge PR #10 (Bump GHA versions) | ✅ PASS | Atualizado actions/upload-artifact@v4 para mitigar deprecation v3. |
+| 2026-02-12 10:15 | `T-551` | Fix AI Extractors & Validators | ✅ PASS | Corrigido ParserError no YAML e UnicodeEncodeError em scripts de infra de IA. |
+| 2026-02-12 10:00 | `T-550` | Fix repo state & Sync main | ✅ PASS | Resolvido conflito de rebase em CHANGELOG.md; sync com origin/main. |
 | 2026-02-11 16:30 | `T-526` | Criação de 3 JSON Schemas (`agent-spec`, `quality-gates`, `invocation`) | ✅ PASS | Schemas validam contracts de agentes, thresholds de quality, e formato de invocação. |
 | 2026-02-11 16:32 | `T-527` | Criação de 3 Markdown Documentation files | ✅ PASS | `scripts/_ia/README.md` (guide), `.github/copilot-handshake.md` (template), `.github/PULL_REQUEST_TEMPLATE.md` (checklist). |
 | 2026-02-11 16:34 | `T-528` | Criação de `scripts/_ia/requirements.txt` | ✅ PASS | Dependências: radon>=6.0.1, lizard>=1.17.10, PyYAML>=6.0.1, jsonschema>=4.21.0, click>=8.1.7. |
