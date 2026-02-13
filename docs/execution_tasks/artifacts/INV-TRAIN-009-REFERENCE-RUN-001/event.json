@@ -10,7 +10,7 @@
     "docs/execution_tasks/artifacts/INV-TRAIN-009-REFERENCE-RUN-001/run_log.txt",
     "docs/execution_tasks/artifacts/INV-TRAIN-009-REFERENCE-RUN-001/run_log_rerun.txt",
     "docs/execution_tasks/artifacts/INV-TRAIN-009-REFERENCE-RUN-001/auditor_log.txt",
-    "docs/execution_tasks/artifacts/INV-TRAIN-009-REFERENCE-RUN-001/git_state.txt"
-  ],
-  "notes_short": "Baseline execution log captured for INV-TRAIN-009; PASS and reproducible."
-}
+      "docs/execution_tasks/artifacts/INV-TRAIN-009-REFERENCE-RUN-001/git_state.txt",
+      "docs/execution_tasks/artifacts/INV-TRAIN-009-REFERENCE-RUN-001/audit_report.yaml"
+    ],
+    "notes_short": "Baseline execution log captured for INV-TRAIN-009; PASS and reproducible. Audit closed with path/gitstate gaps."
