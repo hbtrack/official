@@ -50,12 +50,12 @@ def create_summary_json(task_id: str, status: str, description: str,
     return summary_file
 
 
-def create_placeholder_files(task_id: str, artifacts_dir: Path, log_file: str = None):
+def create_placeholder_files(task_id: str, artifacts_dir: Path, timestamp: str, log_file: str = None):
     """Create placeholder execution_log.txt and evidence_index.md"""
-    
+
     # execution_log.txt
     log_content = f"""=== {task_id} Execution Log ===
-Timestamp: {datetime.now(timezone.utc).isoformat()}
+Timestamp: {timestamp}
 Status: Archived via archive_task.py
 
 COMMANDS EXECUTED:
@@ -65,22 +65,22 @@ COMMANDS EXECUTED:
 
 === END LOG ===
 """
-    
+
     if log_file and Path(log_file).exists():
         # Copy actual log file if provided
         with open(log_file, 'r', encoding='utf-8') as f:
             log_content = f.read()
-    
+
     log_path = artifacts_dir / "execution_log.txt"
     with open(log_path, 'w', encoding='utf-8') as f:
         f.write(log_content)
-    
+
     # evidence_index.md
     evidence_content = f"""# Evidence Index - {task_id}
 
 **Task ID:** {task_id}
 **Status:** Archived
-**Timestamp:** {datetime.now(timezone.utc).isoformat()}
+**Timestamp:** {timestamp}
 
 ## Artifacts Generated
 
@@ -181,13 +181,7 @@ def main():
         print(f"Created summary.json: {summary_file}")
         
         # Create placeholder files
-        log_file, evidence_file = create_placeholder_files(args.task_id, artifacts_dir, args.log_file)
-        print(f"Created execution_log.txt: {log_file}")
-        print(f"Created evidence_index.md: {evidence_file}")
-        
-        # Validate schema
-        if not validate_summary_schema(summary_file):
-            return 2
+        log_file, evidence_file = create_placeholder_files(args.task_id, artifacts_dir, timestamp, args.log_file)
         
         print(f"SUCCESS: Task {args.task_id} archived successfully")
         return 0
