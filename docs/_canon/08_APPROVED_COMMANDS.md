@@ -1438,6 +1438,32 @@ PS> .\venv\Scripts\python.exe -m alembic current
 
 ---
 
+### Comando: bootstrap_task.py (Scaffolding)
+
+**Ação:** Cria estrutura determinística para uma nova task (event.json, HUMAN_SUMMARY, PROOFS).
+
+**CWD:** Backend root (`C:\HB TRACK\Hb Track - Backend`)
+
+```powershell
+# Criar nova task
+.\venv\Scripts\python.exe scripts\bootstrap_task.py <TASK_ID> --one-liner "<resumo_1_linha>" --scope "<area>"
+```
+
+**Parâmetros:**
+- `<TASK_ID>`: ID da task (Ex: ARCH-XYZ-001).
+- `--one-liner`: Resumo curto da tarefa.
+- `--scope`: Área de atuação (ex: Governance, Docs, Middlewares, etc).
+- `--force`: Sobrescrever se já existir.
+
+**Exit Codes:**
+- `0`: OK
+- `2`: INVALID_ARGS
+- `4`: EXISTS_CONFLICT (uso sem --force)
+
+**Aprovação:** Automática (comando de produtividade).
+
+---
+
 ## Comandos Proibidos (Blacklist)
 
 ### Categoria A: Git Destrutivos

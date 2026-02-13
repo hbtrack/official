@@ -19,7 +19,19 @@ Cada EXEC_TASK é um plano passo-a-passo com pré-requisitos, gates, e critério
 
 ---
 
-## 📋 Available Tasks
+## � Troubleshooting: "hv_check fail" (CI Failure)
+
+Se o gate de **Human Visibility Layer** falhar no GitHub Actions, siga este guia rápido:
+
+1. **Identifique a falha**: `python scripts/compact_exec_logs.py --check` (mostra o drift).
+2. **Sincronize**: `python scripts/compact_exec_logs.py --write` (regenera índices e normaliza sumários).
+3. **Valide**: `python scripts/compact_exec_logs.py --check` (deve retornar Exit 0).
+4. **Revise**: `git diff` para garantir que apenas artefatos de execução/docs foram alterados.
+5. **Commit**: `git add . && git commit -m "chore(docs): fix human visibility layer"`.
+
+---
+
+## �📋 Available Tasks
 
 ### 1. `EXEC_TASK_ADR_MODELS_001.md` — Fix Models ↔ DB Divergências
 

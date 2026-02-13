@@ -5,6 +5,7 @@ Validação canônica: `python scripts/compact_exec_logs.py --check`.
 
 - ARCH-SCRIPTS-REFACTOR-002 | status=PASS | evidence_sha256=49679f7a15b6c8d9a338aa72d7865c20e0b966966ee20e87e82eb730b3ac1acd | artifacts=docs/execution_tasks/artifacts/ARCH-SCRIPTS-REFACTOR-002
 - ARCH-SCRIPTS-REFACTOR-001 | status=PASS | evidence_sha256=43ac68588a6d042cc4bfd7e8561a135bd0a4cdce2cedb8fa7a5fff15cea64967 | artifacts=docs/execution_tasks/artifacts/ARCH-SCRIPTS-REFACTOR-001
+- ARCH-BOOTSTRAP-SMOKE-001 | status=DRAFT | evidence_sha256=e6dfe9de41b4bb0f14b5078f98e6a8517c6decf5fad8078038be2c1f1c7af011 | artifacts=docs/execution_tasks/artifacts/ARCH-BOOTSTRAP-SMOKE-001
 - ARCH-DOCS-ARTIFACTS-002-FOLLOWUP-DET | status=PASS | evidence_sha256=1413ce274ccc29dcada1b2aa2cb20518e7e316ee526e0d35b4ddbed58aa1b4b8 | artifacts=docs/execution_tasks/artifacts/ARCH-DOCS-ARTIFACTS-002-FOLLOWUP-DET
 - ARCH-DOCS-ARTIFACTS-002 | status=PASS | evidence_sha256=58e8affe236caef85c9b51cfbb892de01b3798fef341bf1250914d2f88e80d41 | artifacts=docs/execution_tasks/artifacts/ARCH-DOCS-ARTIFACTS-002
 - ARCH-GOV-STATUS-VOCAB-001 | status=PASS | evidence_sha256=c8d62845cae7471e6ad1f3f92d9107e4844a0d2107025e6002f4379bcade936d | artifacts=docs/execution_tasks/artifacts/ARCH-GOV-STATUS-VOCAB-001

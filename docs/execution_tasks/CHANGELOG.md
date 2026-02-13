@@ -4,6 +4,7 @@ Uma linha por TASK_ID (derivado de event.json).
 
 - 2026-02-14 | ARCH-SCRIPTS-REFACTOR-002 | PASS | Scripts | Refactor compact_exec_logs.py (idempotency + CLI + exit codes) | [ARCH-SCRIPTS-REFACTOR-002](docs/execution_tasks/artifacts/ARCH-SCRIPTS-REFACTOR-002/HUMAN_SUMMARY.md)
 - 2026-02-13 | ARCH-SCRIPTS-REFACTOR-001 | PASS | Scripts | Refactor fix_superadmin.py (idempotency + JSON logging + CLI) | [ARCH-SCRIPTS-REFACTOR-001](docs/execution_tasks/artifacts/ARCH-SCRIPTS-REFACTOR-001/HUMAN_SUMMARY.md)
+- 2026-02-13 | ARCH-BOOTSTRAP-SMOKE-001 | DRAFT | Governance | Smoke bootstrap | [ARCH-BOOTSTRAP-SMOKE-001](docs/execution_tasks/artifacts/ARCH-BOOTSTRAP-SMOKE-001/HUMAN_SUMMARY.md)
 - 2026-02-13 | ARCH-DOCS-ARTIFACTS-002-FOLLOWUP-DET | PASS | Governance | Fix Determinismo e Bug de Indentação (Follow-up) | [ARCH-DOCS-ARTIFACTS-002-FOLLOWUP-DET](docs/execution_tasks/artifacts/ARCH-DOCS-ARTIFACTS-002-FOLLOWUP-DET/HUMAN_SUMMARY.md)
 - 2026-02-13 | ARCH-DOCS-ARTIFACTS-002 | PASS | Governance | Execution Tasks Artifacts & Machine-Readable Indexing | [ARCH-DOCS-ARTIFACTS-002](docs/execution_tasks/artifacts/ARCH-DOCS-ARTIFACTS-002/HUMAN_SUMMARY.md)
 - 2026-02-13 | ARCH-GOV-STATUS-VOCAB-001 | PASS | Governance | Normalizar vocabulário de status (compactador + event.json) | [ARCH-GOV-STATUS-VOCAB-001](docs/execution_tasks/artifacts/ARCH-GOV-STATUS-VOCAB-001/HUMAN_SUMMARY.md)
