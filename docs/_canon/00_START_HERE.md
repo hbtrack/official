@@ -573,3 +573,19 @@ SSOT Artifacts:
 * **Snapshot**: só após gates OK + repo limpo; nunca com EXIT 2/3/4
 * **Constituição AI**: Agentes devem carregar `AI_KERNEL.md` obrigatoriamente; seguir protocolos determinísticos
 * **Este Index é router, não canon**: serve para navegar; quando conflitar com canon, canon vence
+
+---
+
+<!-- AUTO:LAST_TASKS_START -->
+## Últimas 10 tasks implementadas
+- [ARCH-SCRIPTS-REFACTOR-002](../execution_tasks/artifacts/ARCH-SCRIPTS-REFACTOR-002/HUMAN_SUMMARY.md) — PASS — Refactor compact_exec_logs.py (idempotency + CLI + exit codes)
+- [ARCH-SCRIPTS-REFACTOR-001](../execution_tasks/artifacts/ARCH-SCRIPTS-REFACTOR-001/HUMAN_SUMMARY.md) — PASS — Refactor fix_superadmin.py (idempotency + JSON logging + CLI)
+- [ARCH-DOCS-ARTIFACTS-002-FOLLOWUP-DET](../execution_tasks/artifacts/ARCH-DOCS-ARTIFACTS-002-FOLLOWUP-DET/HUMAN_SUMMARY.md) — PASS — Fix Determinismo e Bug de Indentação (Follow-up)
+- [ARCH-DOCS-ARTIFACTS-002](../execution_tasks/artifacts/ARCH-DOCS-ARTIFACTS-002/HUMAN_SUMMARY.md) — PASS — Execution Tasks Artifacts & Machine-Readable Indexing
+- [ARCH-GOV-STATUS-VOCAB-001](../execution_tasks/artifacts/ARCH-GOV-STATUS-VOCAB-001/HUMAN_SUMMARY.md) — PASS — Normalizar vocabulário de status (compactador + event.json)
+- [ARCH-AST-REG-001](../execution_tasks/artifacts/ARCH-AST-REG-001/HUMAN_SUMMARY.md) — PASS — ASTAnalyzer regression tests (async parity lock)
+- [SAMPLE-TASK-001](../execution_tasks/artifacts/SAMPLE-TASK-001/HUMAN_SUMMARY.md) — PASS — Template sample task for demonstration purposes
+- [INV-TRAIN-009-REFERENCE-RUN-001](../execution_tasks/artifacts/INV-TRAIN-009-REFERENCE-RUN-001/HUMAN_SUMMARY.md) — PASS — INV-TRAIN-009 reference run baseline
+- [ARCH-AST-001](../execution_tasks/artifacts/ARCH-AST-001/HUMAN_SUMMARY.md) — PASS — Refatoração ASTAnalyzer Async
+- [ARCH-GOV-AUDIT-LOGS-001](../execution_tasks/artifacts/ARCH-GOV-AUDIT-LOGS-001/HUMAN_SUMMARY.md) — PASS — Automated log compliance auditor (scripts/_ia)
+<!-- AUTO:LAST_TASKS_END -->
