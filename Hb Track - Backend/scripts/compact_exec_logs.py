@@ -404,11 +404,21 @@ def _ensure_human_artifacts(task: TaskRow, mode_write: bool) -> Tuple[Optional[s
   return None, None, missing, invalid
 
 def _render_status_board(rows: List[TaskRow]) -> str:
+  stats: Dict[str, int] = {}
+  for r in rows:
+    s = r.status or "UNKNOWN"
+    stats[s] = stats.get(s, 0) + 1
+
+  status_summary = ", ".join([f"{k}: {v}" for k, v in sorted(stats.items())])
+
   header = "\n".join([
     "# STATUS_BOARD",
     "",
     "Derivado de: docs/execution_tasks/artifacts/**/event.json (SSOT_SECONDARY).",
     "Regra: NÃO editar manualmente este arquivo; usar `python scripts/compact_exec_logs.py --write`.",
+    "",
+    f"**Métricas**: Total de Tarefas: {len(rows)} | {status_summary}",
+    f"**Última Atualização**: {datetime.now().strftime('%Y-%m-%d')}",
     "",
     "| TASK_ID | Status | Área | Resumo 1-linha | Commit | Evidence SHA256 | Path artifacts |",
     "|---|---|---|---|---|---|---|",

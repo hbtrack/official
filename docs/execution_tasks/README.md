@@ -12,10 +12,27 @@ Cada EXEC_TASK é um plano passo-a-passo com pré-requisitos, gates, e critério
 
 ## 🚀 Quick Start
 
+### Para uma Nova Tarefa:
+1. **Scaffold**: `python scripts/bootstrap_task.py TASK-ID --title "Título" --scope Area`
+2. **Executar**: Realize o trabalho técnico.
+3. **Documentar**: Atualize `status` e `notes_short` no `event.json` da tarefa.
+4. **Indexar**: `python scripts/compact_exec_logs.py --write` para atualizar o Board.
+
+### Para Executar uma Tarefa Existente:
 1. **Escolha uma tarefa abaixo**
 2. **Valide pré-requisitos** (seção "Checklist")
 3. **Siga Fases 1-4** (Prep → Execute → Validate → Commit)
 4. **Obtenha suporte** em Troubleshooting se falhar
+
+---
+
+## 📏 Line Endings & Determinism
+
+Para evitar falhas de "drift" no CI (**hv_check**) causadas por diferenças entre Windows (CRLF) e Linux (LF):
+
+1. **Configuração**: O repositório usa `.gitattributes` e `.editorconfig` para forçar **LF** em arquivos Python, JSON e Markdown.
+2. **Correção Automática**: O comando `python scripts/compact_exec_logs.py --write` normaliza as quebras de linha dos artefatos.
+3. **Git Config**: Se persistirem problemas, use `git config core.autocrlf input`.
 
 ---
 

@@ -3,6 +3,9 @@
 Derivado de: docs/execution_tasks/artifacts/**/event.json (SSOT_SECONDARY).
 Regra: NÃO editar manualmente este arquivo; usar `python scripts/compact_exec_logs.py --write`.
 
+**Métricas**: Total de Tarefas: 17 | DRAFT: 1, PASS: 16
+**Última Atualização**: 2026-02-13
+
 | TASK_ID | Status | Área | Resumo 1-linha | Commit | Evidence SHA256 | Path artifacts |
 |---|---|---|---|---|---|---|
 | [ARCH-SCRIPTS-REFACTOR-002](docs/execution_tasks/artifacts/ARCH-SCRIPTS-REFACTOR-002/HUMAN_SUMMARY.md) | PASS | Scripts | Refactor compact_exec_logs.py (idempotency + CLI + exit codes) |  | 49679f7a15b6c8d9a338aa72d7865c20e0b966966ee20e87e82eb730b3ac1acd | docs/execution_tasks/artifacts/ARCH-SCRIPTS-REFACTOR-002 |

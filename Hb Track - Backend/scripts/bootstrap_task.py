@@ -125,7 +125,7 @@ def _make_event_json(task_id: str, one_liner: str, scope: str) -> Dict[str, Any]
 def main(argv: list[str]) -> int:
   ap = argparse.ArgumentParser(add_help=True)
   ap.add_argument("task_id", help="Ex: ARCH-XYZ-001 (uppercase, digits, dash)")
-  ap.add_argument("--one-liner", default="", help="Resumo 1-linha (vai para event.json + HUMAN_SUMMARY)")
+  ap.add_argument("--one-liner", "--title", dest="one_liner", default="", help="Resumo 1-linha (vai para event.json + HUMAN_SUMMARY)")
   ap.add_argument("--scope", default="Unknown", help="Área/escopo (vai para event.json)")
   ap.add_argument("--force", action="store_true", help="Sobrescrever arquivos existentes")
   args = ap.parse_args(argv)
