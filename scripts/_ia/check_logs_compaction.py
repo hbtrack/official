@@ -39,7 +39,8 @@ RETENTION_MARKERS = [
     r"Retention/Detail Policy",
     r"Retention Policy",
 ]
-
+ARTIFACTS_DIR = Path("C:/HB TRACK/docs/execution_tasks/artifacts")
+TASK_ID_PATTERN = re.compile(r"\[([A-Z0-9-]+)\]")
 # Allow short bullets. Anything beyond this is likely narrative.
 MAX_BULLET_LINES = 8
 
@@ -61,6 +62,23 @@ def _find_narrative_markers(text: str) -> List[str]:
         if re.search(m, text, flags=re.IGNORECASE):
             hits.append(m)
     return hits
+
+
+def _verify_artifacts(text: str) -> List[str]:
+    violations: List[str] = []
+    tasks = TASK_ID_PATTERN.findall(text)
+    for task_id in tasks:
+        # Avoid common patterns that are not tasks
+        if task_id in ["Unreleased", "Archive", "HB-LOGS-001"]: # Exclude known non-task IDs if any
+            continue
+        # Only check if it looks like a real task ID (e.g., ARCH-LOGS-001)
+        if not re.match(r"^[A-Z0-9]+-[A-Z0-9-]+$", task_id):
+            continue
+            
+        event_path = ARTIFACTS_DIR / task_id / "event.json"
+        if not event_path.exists():
+            violations.append(f"Orphaned Task Index: Task {task_id} has no artifact at docs/execution_tasks/artifacts/{task_id}/event.json")
+    return list(set(violations)) # Deduplicate
 
 
 def _check_changelog(text: str) -> List[str]:
@@ -93,11 +111,13 @@ def _check_changelog(text: str) -> List[str]:
         s = ln.strip()
         if not s:
             continue
-        if s.startswith("|") or s.startswith("-") or s.startswith("*") or s.startswith(">") or s.startswith("#"):
+        if s.startswith("|") or s.startswith("-") or s.startswith("*") or s.startswith(">") or s.startswith("#") or s.startswith("<!--"):
             continue
         if MULTI_SENTENCE.search(s):
             violations.append("CHANGELOG: contains multi-sentence paragraph line (likely narrative)")
             break
+
+    violations.extend(_verify_artifacts(text))
 
     return violations
 
@@ -121,11 +141,13 @@ def _check_exec_log(text: str) -> List[str]:
         s = ln.strip()
         if not s:
             continue
-        if s.startswith("|") or s.startswith("-") or s.startswith("*") or s.startswith(">") or s.startswith("#"):
+        if s.startswith("|") or s.startswith("-") or s.startswith("*") or s.startswith(">") or s.startswith("#") or s.startswith("<!--"):
             continue
         if MULTI_SENTENCE.search(s):
             violations.append("EXECUTION_LOG: contains multi-sentence paragraph line (likely narrative)")
             break
+
+    violations.extend(_verify_artifacts(text))
 
     return violations
 

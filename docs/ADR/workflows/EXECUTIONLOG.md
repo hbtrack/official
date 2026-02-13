@@ -1,5 +1,13 @@
 # EXECUTIONLOG
 <!-- AUTO-GENERATED. Source: docs/execution_tasks/artifacts/*/event.json -->
+
+## Retention/Detail Policy
+- Recent tasks (last 150) are kept in the active list.
+- Detailed evidence for every task is archived in `docs/execution_tasks/artifacts/<TASK_ID>/`.
+- Use `scripts/compact_exec_logs.py` to maintain this document.
+
+## Tasks
+- 2026-02-13T11:32:00Z | ARCH-GOV-AUDIT-LOGS-001 | PASS | Automated log compliance auditor (scripts/_ia) | Implementação de gate automático (Exit 2) para detectar bloat narrativo e tarefas órfãs nos logs.
 - 2026-02-13T11:20:00Z | ARCH-LOGS-001-FOLLOWUP-SPLIT | PASS | Normalização de Governança e Particionamento de Escopo | Reclassificação de drifts do ARCH-LOGS-001 em domínios segregados.
 - 2026-02-13T11:15:00Z | ARCH-GOV-CANON-001 | PASS | Canon docs governance updates | Atualização de documentos canônicos para suporte ao modelo de logs.
 - 2026-02-13T11:15:00Z | ARCH-GOV-DBMIG-001 | PASS | DB migration state/artifacts | Sincronização de estado de migração pendente no workspace.

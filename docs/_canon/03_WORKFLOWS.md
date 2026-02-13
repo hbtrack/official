@@ -109,10 +109,18 @@ Execute o script de compactação para atualizar o `CHANGELOG.md` e `EXECUTIONLO
 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "& { Set-Location 'C:\HB TRACK'; & 'C:\HB TRACK\Hb Track - Backend\venv\Scripts\python.exe' 'scripts\compact_exec_logs.py' }"
 ```
 
-### 4. Validar Saída
-- O comando deve retornar `status: ok` no JSON de saída.
+### 4. Validar Saída e Conformidade
+Execute a auditoria de logs para garantir que não houve "drift" narrativo ou órfãos.
+
+```powershell
+# [CMD] Validar conformidade de logs (CWD: C:\HB TRACK)
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "& { Set-Location 'C:\HB TRACK'; & 'C:\HB TRACK\Hb Track - Backend\venv\Scripts\python.exe' 'scripts\_ia\check_logs_compaction.py' --changelog 'docs\ADR\architecture\CHANGELOG.md' --exec-log 'docs\ADR\workflows\EXECUTIONLOG.md' }"
+```
+
+### 5. Validar Estado do Repositório
+- O comando de auditoria deve retornar `[OK] Logs compaction check passed.`.
 - `git status` deve mostrar apenas as mudanças esperadas nos índices e novos artefatos.
-- Uma segunda execução do comando NÃO deve gerar diffs adicionais (idempotência).
+- Uma segunda execução da compactação NÃO deve gerar diffs adicionais (idempotência).
 
 ---
 

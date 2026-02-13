@@ -107,7 +107,17 @@ def _load_event(path: Path) -> Event:
 
 def _write_index(path: Path, title: str, marker: str, lines: list[str]) -> bool:
     path.parent.mkdir(parents=True, exist_ok=True)
-    content = [f"# {title}", marker]
+    content = [
+        f"# {title}",
+        marker,
+        "",
+        "## Retention/Detail Policy",
+        "- Recent tasks (last 150) are kept in the active list.",
+        "- Detailed evidence for every task is archived in `docs/execution_tasks/artifacts/<TASK_ID>/`.",
+        "- Use `scripts/compact_exec_logs.py` to maintain this document.",
+        "",
+        "## Tasks",
+    ]
     content.extend(lines)
     content.append("")  # trailing newline
     new_text = "\n".join(content)
