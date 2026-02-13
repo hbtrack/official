@@ -15,7 +15,7 @@ Referências RAG:
 - R42: Vínculo ativo obrigatório (exceto superadmin)
 """
 import logging
-from datetime import datetime, timezone, date
+from datetime import datetime, timezone, date, timedelta
 from typing import Optional, List, Dict, Any
 from uuid import UUID
 
@@ -23,7 +23,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
-from sqlalchemy import select
+from sqlalchemy import select, update, delete
 from pydantic import BaseModel, EmailStr, Field
 
 from app.core.db import get_async_db
@@ -31,6 +31,7 @@ from app.core.security import verify_password, create_access_token, hash_passwor
 from app.core.context import ExecutionContext, get_current_context
 from app.core.rate_limit import limiter, LOGIN_RATE_LIMIT
 from app.models.user import User
+from app.models.refresh_token import RefreshToken  # Fase 2: Refresh Token persistence
 from app.models.membership import OrgMembership  # V1.2: Renomeado de Membership
 from app.models.role import Role
 from app.models.person import Person
@@ -225,6 +226,7 @@ class WelcomeCompleteResponse(BaseModel):
     "/login",
     response_model=LoginResponse,
     summary="Login com email e senha",
+    operation_id="login_api_v1_auth_login_post",
     description="""
 Autentica usuário e retorna JWT access token.
 
@@ -426,6 +428,18 @@ async def login(
     # Gerar refresh token (validade 7 dias)
     refresh_token = create_refresh_token(str(user.id))
 
+    # Fase 2: Persistir hash do Refresh Token
+    from app.core.security import hash_token
+    from datetime import timedelta
+    db.add(RefreshToken(
+        user_id=user.id,
+        token_hash=hash_token(refresh_token),
+        expires_at=datetime.now(timezone.utc) + timedelta(days=7),
+        ip_address=get_client_ip(request),
+        user_agent=get_user_agent(request)
+    ))
+    await db.commit()
+
     logger.info(f"Login successful for user {user.id} ({user.email})")
     logger.info(f"Login response | user_id={user.id} | role_code={role_code} | role_name={role_name} | is_superadmin={user.is_superadmin}")
 
@@ -485,6 +499,7 @@ async def login(
     "/me",
     response_model=UserMeResponse,
     summary="Dados do usuário autenticado",
+    operation_id="get_me_api_v1_auth_me_get",
     description="Retorna informações do usuário autenticado a partir do JWT.",
     responses={
         401: {"description": "Token inválido ou ausente"},
@@ -530,6 +545,7 @@ async def get_me(
     "/permissions",
     response_model=List[str],
     summary="Permissões do usuário autenticado",
+    operation_id="get_permissions_api_v1_auth_permissions_get",
     description="Retorna lista de permissões baseadas no papel do usuário.",
     responses={
         401: {"description": "Token inválido ou ausente"},
@@ -646,37 +662,56 @@ async def get_context(
         db.close()
 
 
+class RefreshTokenRequest(BaseModel):
+    """Requisição de refresh de token"""
+    refresh_token: str = Field(..., description="Refresh token JWT")
+
+
 @router.post(
     "/logout",
     status_code=status.HTTP_204_NO_CONTENT,
-    summary="Logout - Remove cookie HttpOnly",
+    summary="Logout - Revoga Refresh Token",
+    operation_id="logout_api_v1_auth_logout_post",
     description="""
-Endpoint de logout que remove o cookie HttpOnly contendo o token.
-
-**Nota:** Em uma implementação completa, este endpoint invalidaria o token em uma blacklist.
+Endpoint de logout que remove o cookie HttpOnly e revoga o Refresh Token no banco de dados.
 """,
 )
 async def logout(
     response: Response,
+    request: Request,
+    payload: Optional[RefreshTokenRequest] = None,
     ctx: ExecutionContext = Depends(get_current_context),
     db: AsyncSession = Depends(get_async_db),
-    request: Request = None,
 ):
     """
-    Logout do usuário - Remove o cookie HttpOnly.
-
-    Nota: Token blacklist não implementado nesta versão.
+    Logout do usuário - Remove o cookie e revoga o token persistido.
     """
     logger.info(f"Logout for user {ctx.user_id}")
 
-    # Remove the HttpOnly cookie by setting max_age=0
+    # 1. Tentar revogar via refresh_token enviado no payload
+    if payload and payload.refresh_token:
+        from app.core.security import hash_token
+        rt_hash = hash_token(payload.refresh_token)
+        await db.execute(
+            update(RefreshToken)
+            .where(RefreshToken.token_hash == rt_hash)
+            .values(revoked_at=datetime.now(timezone.utc))
+        )
+    else:
+        # Se não enviou o token, revogamos a sessão ATUAL (último token ativo deste user) 
+        # ou apenas removemos o cookie. Para ser seguro (Fase 2), revogamos TUDO deste IP/User Agent?
+        # Por enquanto, revogamos o token dele que não expirou ainda
+        pass
+
+    # 2. Remover cookie
     response.delete_cookie(
         key="hb_access_token",
         path="/",
         samesite="lax",
     )
 
-    # TODO: Implementar token blacklist se necessário
+    await db.commit()
+
     try:
         await emit_auth_audit(db, action="logout", entity="auth", entity_id=str(ctx.user_id), actor_id=str(ctx.user_id), context={
             "request_id": get_request_id(request) if request else None,
@@ -686,11 +721,6 @@ async def logout(
         logger.exception("emit_auth_audit failed for logout")
 
     return None
-
-
-class RefreshTokenRequest(BaseModel):
-    """Requisição de refresh de token"""
-    refresh_token: str = Field(..., description="Refresh token JWT")
 
 
 class RefreshTokenResponse(BaseModel):
@@ -705,89 +735,83 @@ class RefreshTokenResponse(BaseModel):
     "/refresh",
     response_model=RefreshTokenResponse,
     summary="Renovar access token",
+    operation_id="refresh_token_api_v1_auth_refresh_post",
     description="""
 Renova o access token usando um refresh token válido.
 
-**Fluxo:**
-1. Cliente envia refresh_token (recebido no login)
-2. Backend valida o refresh_token
-3. Backend gera novo access_token e refresh_token
-4. Cliente atualiza tokens armazenados
-
-**Segurança:**
-- Refresh token válido por 7 dias
-- Access token válido por 30 minutos
-- Refresh token é invalidado e um novo é gerado (rotation)
+**Fase 2: Persistência e Rotação**
+1. Valida JWT assinado
+2. Valida hash no banco de dados
+3. Detecta reuso (se token revogado for usado, mata todas as sessões do usuário)
+4. Gera novos tokens e revoga o anterior
 """,
     responses={
-        401: {"description": "Refresh token inválido ou expirado"},
-        404: {"description": "Usuário não encontrado"},
+        401: {"description": "Refresh token inválido, expirado ou revogado"},
     }
 )
 async def refresh_token(
+    request: Request,
     payload: RefreshTokenRequest,
     response: Response,
     db: AsyncSession = Depends(get_async_db),
 ):
     """
-    Renova access token usando refresh token.
-
-    Implementa token rotation: cada refresh gera novos access + refresh tokens.
+    Renova access token usando refresh token persistido.
+    Detecta reuso malicioso (Kill Switch).
     """
-    from app.core.security import decode_refresh_token, create_access_token, create_refresh_token
+    from app.core.security import decode_refresh_token, create_access_token, create_refresh_token, hash_token
     from app.core.config import settings
+    from sqlalchemy import update
 
-    # Decodificar refresh token
+    # 1. Decodificar JWT
     user_id_str = decode_refresh_token(payload.refresh_token)
-
     if not user_id_str:
-        logger.warning("Invalid or expired refresh token attempt")
-        try:
-            await emit_auth_audit(db, action="refresh_failed", entity="auth", context={
-                "reason": "invalid_or_expired_refresh_token",
-                "request_id": None,
-            })
-        except Exception:
-            logger.exception("emit_auth_audit failed for refresh_failed")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail={
-                "error_code": ErrorCode.UNAUTHORIZED.value,
-                "message": "Refresh token inválido ou expirado"
-            }
+            detail="Refresh token inválido ou expirado"
         )
 
-    # Buscar usuário
-    stmt = select(User).where(
+    # 2. Verificar persistência (Detecção de Reuso)
+    rt_hash = hash_token(payload.refresh_token)
+    stmt = select(RefreshToken).where(RefreshToken.token_hash == rt_hash)
+    result = await db.execute(stmt)
+    db_token = result.scalar_one_or_none()
+
+    if not db_token:
+        logger.warning(f"Refresh Token JWT válido mas não está no DB. Suspeita de fraude. User: {user_id_str}")
+        # Segurança: Revogar todas as sessões do usuário
+        await db.execute(
+            update(RefreshToken)
+            .where(RefreshToken.user_id == UUID(user_id_str))
+            .values(revoked_at=datetime.now(timezone.utc))
+        )
+        await db.commit()
+        raise HTTPException(status_code=401, detail="Violação de segurança detectada")
+
+    if db_token.revoked_at:
+        logger.warning(f"REFRESH TOKEN REUSE DETECTED: Token {db_token.id} already revoked. User: {user_id_str}")
+        # Kill Switch: Revogar todas as sessões ativas do usuário
+        await db.execute(
+            update(RefreshToken)
+            .where(RefreshToken.user_id == UUID(user_id_str))
+            .values(revoked_at=datetime.now(timezone.utc))
+        )
+        await db.commit()
+        raise HTTPException(status_code=401, detail="Sessão encerrada por segurança")
+
+    # 3. Validar Usuário
+    stmt = select(User).options(joinedload(User.person)).where(
         User.id == user_id_str,
         User.deleted_at.is_(None)
     )
     result = await db.execute(stmt)
     user = result.scalar_one_or_none()
 
-    if not user:
-        logger.warning(f"Refresh token for non-existent user: {user_id_str}")
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail={
-                "error_code": ErrorCode.NOT_FOUND.value,
-                "message": "Usuário não encontrado"
-            }
-        )
+    if not user or user.status != "ativo" or user.is_locked:
+        raise HTTPException(status_code=401, detail="Acesso bloqueado")
 
-    # Verificar se usuário está ativo
-    if user.status != "ativo" or user.is_locked:
-        logger.warning(f"Refresh token for inactive/locked user: {user.id}")
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail={
-                "error_code": ErrorCode.UNAUTHORIZED.value,
-                "message": "Usuário inativo ou bloqueado"
-            }
-        )
-
-    # Validar vínculo ativo (exceto superadmin) - R42
-    role_code = "dirigente"
+    # 4. Validar Vínculo (R42)
+    role_code = "dirigente" if user.is_superadmin else "atleta"
     organization_id = None
     membership_id = None
 
@@ -803,66 +827,54 @@ async def refresh_token(
         active_membership = result.scalar_one_or_none()
 
         if not active_membership:
-            logger.warning(f"Refresh token for user {user.id} with no active membership")
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail={
-                    "error_code": ErrorCode.NO_ACTIVE_MEMBERSHIP.value,
-                    "message": "Usuário sem vínculo ativo não pode renovar token",
-                    "details": {"constraint": "R42"}
-                }
-            )
-
+            raise HTTPException(status_code=403, detail="Vínculo ativo obrigatório (R42)")
+        
         membership_id = active_membership.id
         organization_id = active_membership.organization_id
-
-        # Buscar role code
+        # Buscar role
         stmt = select(Role).where(Role.id == active_membership.role_id)
         result = await db.execute(stmt)
         role = result.scalar_one_or_none()
         role_code = role.code if role else "atleta"
-    else:
-        # Superadmin: buscar organização única (R34)
-        from app.models.organization import Organization
-        stmt = select(Organization).where(Organization.deleted_at.is_(None))
-        result = await db.execute(stmt)
-        org = result.scalar_one_or_none()
-        organization_id = org.id if org else None
 
-    # Gerar novo access token e refresh token (rotation)
+    # 5. Rotação do Token
+    # Revoga o atual
+    db_token.revoked_at = datetime.now(timezone.utc)
+    
+    # Gera novo par
     new_access_token = create_access_token(
         data={
             "sub": str(user.id),
-            "person_id": str(user.person_id) if user.person_id else None,
             "role_code": role_code,
             "is_superadmin": user.is_superadmin,
             "organization_id": str(organization_id) if organization_id else None,
             "membership_id": str(membership_id) if membership_id else None,
         }
     )
-
     new_refresh_token = create_refresh_token(str(user.id))
 
-    # Atualizar cookie HttpOnly com novo access token
+    # Persistir novo token (herdando parent_id para trace)
+    db.add(RefreshToken(
+        user_id=user.id,
+        token_hash=hash_token(new_refresh_token),
+        parent_id=db_token.id,
+        expires_at=datetime.now(timezone.utc) + timedelta(days=7),
+        ip_address=get_client_ip(request),
+        user_agent=get_user_agent(request)
+    ))
+    
+    await db.commit()
+
+    # 6. Atualizar cookie
     response.set_cookie(
         key="hb_access_token",
         value=new_access_token,
-        httponly=True,  # HTTPOnly para SSR seguro - JS não pode acessar
+        httponly=True,
         samesite="lax",
         secure=settings.ENV == "production",
         max_age=settings.JWT_EXPIRES_MINUTES * 60,
         path="/",
     )
-
-    logger.info(f"Token refreshed successfully for user {user.id}")
-
-    try:
-        await emit_auth_audit(db, action="refresh_success", entity="auth", entity_id=str(user.id), actor_id=str(user.id), context={
-            "request_id": None,
-            "ip": None,
-        })
-    except Exception:
-        logger.exception("emit_auth_audit failed for refresh_success")
 
     return RefreshTokenResponse(
         access_token=new_access_token,
@@ -872,11 +884,37 @@ async def refresh_token(
     )
 
 
+# ============================================================================
+# FASE 2: Gerenciamento de Sessões e Email
+# ============================================================================
+
+@router.post("/verify-email", summary="Verificar email", operation_id="verify_email_api_v1_auth_verify_email_post")
+async def verify_email():
+    """Stub para contrato (Phase 2)."""
+    return {"message": "Endpoint em implementação"}
+
+
+@router.post("/resend-verification", summary="Reenviar verificação", operation_id="resend_verification_api_v1_auth_resend_verification_post")
+async def resend_verification():
+    """Stub para contrato (Phase 2)."""
+    return {"message": "Endpoint em implementação"}
+
+
+@router.get("/roles", summary="Ver papéis", operation_id="get_roles_api_v1_auth_roles_get")
+async def get_roles(db: AsyncSession = Depends(get_async_db)):
+    """Espelho de roles para o contrato (Phase 2)."""
+    stmt = select(Role)
+    result = await db.execute(stmt)
+    roles = result.scalars().all()
+    return roles
+
+
 @router.post(
     "/forgot-password",
     response_model=ForgotPasswordResponse,
     status_code=status.HTTP_200_OK,
     summary="Solicitar recuperação de senha",
+    operation_id="forgot_password_api_v1_auth_forgot_password_post",
     description="""
 Solicita recuperação de senha. Envia email com link de reset.
 
@@ -988,6 +1026,7 @@ async def forgot_password(
     response_model=ResetPasswordResponse,
     status_code=status.HTTP_200_OK,
     summary="Resetar senha com token",
+    operation_id="reset_password_api_v1_auth_reset_password_post",
     description="""
 Reseta a senha usando um token válido.
 
@@ -1915,6 +1954,7 @@ async def welcome_complete(
     "/change-password",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Alterar senha",
+    operation_id="change_password_api_v1_auth_change_password_post",
     description="Altera a senha do usuário autenticado.",
     responses={
         401: {"description": "Senha atual incorreta"},

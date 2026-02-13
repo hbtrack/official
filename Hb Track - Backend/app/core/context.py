@@ -33,6 +33,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import OperationalError
 from jose import JWTError
 
+from app.core.db import get_async_db
 from app.core.permissions_map import get_permissions_for_role
 
 logger = logging.getLogger(__name__)
@@ -137,6 +138,7 @@ async def get_current_context(
     credentials: Optional[HTTPAuthorizationCredentials] = Depends(security),
     x_request_id: Optional[str] = Header(None, alias="X-Request-ID"),
     x_organization_id: Optional[str] = Header(None, alias="x-organization-id"),
+    db: AsyncSession = Depends(get_async_db)
 ) -> ExecutionContext:
     """
     Obtém contexto de execução a partir do JWT
@@ -153,7 +155,6 @@ async def get_current_context(
         HTTPException 401: Token inválido ou ausente
         HTTPException 403: Usuário sem vínculo ativo (R42)
     """
-    from app.core.db import get_async_session_local
     from app.core.security import decode_access_token
     from app.models.user import User
     from app.models.membership import OrgMembership  # V1.2: Renomeado de Membership
@@ -223,188 +224,161 @@ async def get_current_context(
             headers={"WWW-Authenticate": "Bearer"}
         )
 
-    # Obter sessão ASYNC do banco usando context manager (com retry)
-    session_maker = get_async_session_local()
+    # Buscar usuário
+    result = await db.execute(
+        select(User).where(
+            User.id == str(user_id),
+            User.deleted_at.is_(None)
+        )
+    )
+    user = result.scalars().first()
 
-    async def _resolve_context(db: AsyncSession) -> ExecutionContext:
-        # Buscar usuário
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail={
+                "error_code": ErrorCode.UNAUTHORIZED.value,
+                "message": "Usuário não encontrado"
+            }
+        )
+
+    # Validar vínculo ativo (R42, RF3) exceto superadmin (R3)
+    membership_id = None
+    organization_id = None
+    role_code = "dirigente" if user.is_superadmin else "atleta"
+
+    if not user.is_superadmin:
+        now = datetime.now(timezone.utc)
+        # V1.2: OrgMembership não tem status, usa start_at/end_at
         result = await db.execute(
-            select(User).where(
-                User.id == str(user_id),
-                User.deleted_at.is_(None)
+            select(OrgMembership).where(
+                OrgMembership.person_id == user.person_id,
+                OrgMembership.deleted_at.is_(None),
+                OrgMembership.start_at <= now,
+                (OrgMembership.end_at.is_(None)) | (OrgMembership.end_at >= now),
             )
         )
-        user = result.scalars().first()
+        active_membership = result.scalars().first()
 
-        if not user:
+        if not active_membership:
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
+                status_code=status.HTTP_403_FORBIDDEN,
                 detail={
-                    "error_code": ErrorCode.UNAUTHORIZED.value,
-                    "message": "Usuário não encontrado"
+                    "error_code": ErrorCode.NO_ACTIVE_MEMBERSHIP.value,
+                    "message": "Usuário sem vínculo ativo não pode operar",
+                    "details": {"constraint": "R42"}
                 }
             )
 
-        # Validar vínculo ativo (R42, RF3) exceto superadmin (R3)
-        if not user.is_superadmin:
-            now = datetime.now(timezone.utc)
-            # V1.2: OrgMembership não tem status, usa start_at/end_at
-            result = await db.execute(
-                select(OrgMembership).where(
-                    OrgMembership.person_id == user.person_id,
-                    OrgMembership.deleted_at.is_(None),
-                    OrgMembership.start_at <= now,
-                    (OrgMembership.end_at.is_(None)) | (OrgMembership.end_at >= now),
-                )
-            )
-            active_membership = result.scalars().first()
+        # Converter IDs garantindo compatibilidade com objetos UUID nativos do driver
+        membership_id = active_membership.id if isinstance(active_membership.id, UUID) else UUID(str(active_membership.id))
+        organization_id = active_membership.organization_id if isinstance(active_membership.organization_id, UUID) else UUID(str(active_membership.organization_id))
 
-            if not active_membership:
-                raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN,
-                    detail={
-                        "error_code": ErrorCode.NO_ACTIVE_MEMBERSHIP.value,
-                        "message": "Usuário sem vínculo ativo não pode operar",
-                        "details": {"constraint": "R42"}
-                    }
-                )
+        # Buscar role code
+        from app.models.role import Role
+        result = await db.execute(
+            select(Role).where(Role.id == active_membership.role_id)
+        )
+        role = result.scalars().first()
+        role_code = role.code if role else "atleta"
 
-            membership_id = UUID(active_membership.id)
-            organization_id = UUID(active_membership.organization_id)
+    else:
+        # Superadmin pode não ter vínculo (R3)
+        membership_id = None
+        role_code = "dirigente"  # Default para superadmin
 
-            # Buscar role code
-            from app.models.role import Role
-            result = await db.execute(
-                select(Role).where(Role.id == active_membership.role_id)
-            )
-            role = result.scalars().first()
-            role_code = role.code if role else "atleta"
-
-        else:
-            # Superadmin pode não ter vínculo (R3)
-            membership_id = None
-            role_code = "dirigente"  # Default para superadmin
-
-            # V1.2: Superadmin pode escolher organização via header x-organization-id
-            if x_organization_id:
-                try:
-                    organization_id = UUID(x_organization_id)
-                    # Validar que a organização existe
-                    result = await db.execute(
-                        select(Organization).where(
-                            Organization.id == organization_id,
-                            Organization.deleted_at.is_(None)
-                        )
+        # V1.2: Superadmin pode escolher organização via header x-organization-id
+        if x_organization_id:
+            try:
+                organization_id = UUID(x_organization_id)
+                # Validar que a organização existe
+                result = await db.execute(
+                    select(Organization).where(
+                        Organization.id == organization_id,
+                        Organization.deleted_at.is_(None)
                     )
-                    org = result.scalars().first()
-                    if not org:
-                        raise HTTPException(
-                            status_code=status.HTTP_400_BAD_REQUEST,
-                            detail={
-                                "error_code": "INVALID_ORGANIZATION",
-                                "message": f"Organização {x_organization_id} não encontrada"
-                            }
-                        )
-                except ValueError:
+                )
+                org = result.scalars().first()
+                if not org:
                     raise HTTPException(
                         status_code=status.HTTP_400_BAD_REQUEST,
                         detail={
-                            "error_code": "INVALID_ORGANIZATION_ID",
-                            "message": "x-organization-id deve ser um UUID válido"
+                            "error_code": "INVALID_ORGANIZATION",
+                            "message": f"Organização {x_organization_id} não encontrada"
                         }
                     )
-            else:
-                # Buscar primeira organização (único clube - R34)
-                result = await db.execute(
-                    select(Organization).where(Organization.deleted_at.is_(None))
+            except ValueError:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail={
+                        "error_code": "INVALID_ORGANIZATION_ID",
+                        "message": "x-organization-id deve ser um UUID válido"
+                    }
                 )
-                org = result.scalars().first()
-                organization_id = UUID(org.id) if org else UUID('00000000-0000-0000-0000-000000000000')
-
-        # Criar contexto
-        person_id = UUID(user.person_id) if user.person_id else None
-
-        # Resolver permissões do mapa canônico
-        permissions = get_permissions_for_role(role_code)
-
-        # Buscar team_ids (equipes que o usuário tem acesso)
-        team_ids: List[UUID] = []
-        if person_id and organization_id:
-            from app.models.team_registration import TeamRegistration
-            from app.models.athlete import Athlete
-            from app.models.team import Team
-
-            # Se for atleta, buscar equipes onde está registrado
+        else:
+            # Buscar primeira organização (único clube - R34)
             result = await db.execute(
-                select(Athlete).where(
-                    Athlete.person_id == str(person_id),
-                    Athlete.deleted_at.is_(None)
-                )
+                select(Organization).where(Organization.deleted_at.is_(None))
             )
-            athlete = result.scalars().first()
+            org = result.scalars().first()
+            organization_id = org.id if isinstance(org.id, UUID) else UUID(str(org.id)) if org else UUID('00000000-0000-0000-0000-000000000000')
 
-            if athlete:
-                now = datetime.now(timezone.utc)
-                result = await db.execute(
-                    select(TeamRegistration).join(
-                        Team, TeamRegistration.team_id == Team.id
-                    ).where(
-                        TeamRegistration.athlete_id == athlete.id,
-                        TeamRegistration.deleted_at.is_(None),
-                        Team.organization_id == str(organization_id),
-                        (TeamRegistration.end_at.is_(None)) | (TeamRegistration.end_at >= now)
-                    )
-                )
-                registrations = result.scalars().all()
+    # Criar contexto
+    def to_uuid(val):
+        if val is None: return None
+        if isinstance(val, UUID): return val
+        return UUID(str(val))
 
-                team_ids = [UUID(reg.team_id) for reg in registrations]
+    user_id_uuid = to_uuid(user.id)
+    person_id_uuid = to_uuid(user.person_id)
 
-        return ExecutionContext(
-            user_id=UUID(user.id),
-            email=user.email,
-            role_code=role_code,
-            request_id=request_id,
-            person_id=person_id,
-            is_superadmin=user.is_superadmin,
-            organization_id=organization_id,
-            membership_id=membership_id,
-            team_ids=team_ids,
-            permissions=permissions,
+    # Resolver permissões do mapa canônico
+    permissions = get_permissions_for_role(role_code)
+
+    # Buscar team_ids (equipes que o usuário tem acesso)
+    team_ids: List[UUID] = []
+    if person_id_uuid and organization_id:
+        from app.models.team_registration import TeamRegistration
+        from app.models.athlete import Athlete
+        from app.models.team import Team
+
+        # Se for atleta, buscar equipes onde está registrado
+        result = await db.execute(
+            select(Athlete).where(
+                Athlete.person_id == str(person_id_uuid),
+                Athlete.deleted_at.is_(None)
+            )
         )
+        athlete = result.scalars().first()
 
-    last_error = None
-    for attempt in range(2):
-        try:
-            async with session_maker() as db:
-                return await _resolve_context(db)
-        except OperationalError as exc:
-            last_error = exc
-            message = str(exc).lower()
-            retryable = any(
-                token in message
-                for token in (
-                    "connection abort",
-                    "consuming input failed",
-                    "server closed",
-                    "connection reset",
-                    "could not receive data",
-                    "timeout",
+        if athlete:
+            now = datetime.now(timezone.utc)
+            result = await db.execute(
+                select(TeamRegistration).join(
+                    Team, TeamRegistration.team_id == Team.id
+                ).where(
+                    TeamRegistration.athlete_id == athlete.id,
+                    TeamRegistration.deleted_at.is_(None),
+                    Team.organization_id == str(organization_id),
+                    (TeamRegistration.end_at.is_(None)) | (TeamRegistration.end_at >= now)
                 )
             )
-            if retryable and attempt == 0:
-                logger.warning("Conexao perdida ao carregar contexto. Repetindo...")
-                await asyncio.sleep(0.2)
-                continue
-            raise
+            registrations = result.scalars().all()
 
-    raise HTTPException(
-        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-        detail={
-            "error_code": ErrorCode.SERVICE_UNAVAILABLE.value,
-            "message": "Banco de dados indisponível no momento. Tente novamente.",
-        },
-    ) from last_error
+            team_ids = [to_uuid(reg.team_id) for reg in registrations]
 
+    return ExecutionContext(
+        user_id=user_id_uuid,
+        email=user.email,
+        role_code=role_code,
+        request_id=request_id,
+        person_id=person_id_uuid,
+        is_superadmin=user.is_superadmin,
+        organization_id=organization_id,
+        membership_id=membership_id,
+        team_ids=team_ids,
+        permissions=permissions,
+    )
 
 def require_role(allowed_roles: list[str]):
     """

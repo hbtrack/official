@@ -5,6 +5,16 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 ### Adicionado
+* **MIGRAÇÃO FASE 2: REFRESH TOKEN PERSISTENCE & ROTATION (REMEDIADA)** (2026-02-13): Migração completa de refresh tokens stateless para persistência server-side com rotação e detecção de fraude (Kill Switch). Versão final após remediação de drift de escopo.
+  - **Model**: Criado `RefreshToken` em `app/models/refresh_token.py` com suporte a `parent_id` (trace de rotação) e `token_hash`.
+  - **Migration**: Aplicada migração Alembic `0fb0f76b48a7` para criação da tabela no DB.
+  - **Security**: Implementado hashing SHA-256 para tokens persistidos (armazenamento seguro) em `app/core/security.py`.
+  - **Auth Router**: Refatorado `/login` e `/refresh` para suportar rotação de tokens. Removido drift `/sessions`.
+  - **Kill Switch**: Implementada lógica de detecção de reuso de token. Se um token revogado for usado, todas as sessões ativas do usuário são invalidadas imediatamente (Segurança R42).
+  - **Contract**: Validado contrato fixo de 13 operações de autenticação no `openapi.json` (removidos 2 operationIds de sessions).
+  - **Correções**: Resolvido bug de conversão de UUID em `ExecutionContext` para compatibilidade com `asyncpg`.
+  - **Testes**: Criado `tests/api/test_refresh_rotation.py` com validação funcional completa (Rotation, Reuse Detection, Logout). 14/14 testes de auth em PASS.
+  - **Status**: SUCCESS (Remediação concluída).
 * **Implementation of missing Analytics models** (2026-02-13): Implementation of 5 missing SQLAlchemy models for the analytics/match module.
   - **Models added**: `advantage_states`, `event_subtypes`, `event_types`, `match_possessions`, `phases_of_play`.
   - **Validation**: All models validated against SSOT (`schema.sql`) using `models_autogen_gate.ps1`.

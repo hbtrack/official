@@ -1,11 +1,11 @@
--- Schema dump generated: 2026-02-10T10:45:45.560496+00:00Z
+-- Schema dump generated: 2026-02-13T11:51:53.170468+00:00Z
 -- Source: localhost
 
 --
 -- PostgreSQL database dump
 --
 
-\restrict iSb7s1d1eWZY4xvb7ar8W6SKEFyX8Qpk3dKfKbIE0iO8XSY9CnCm9eGMb6U3fkU
+\restrict NaogJ0snh82BBGpgUECjDGrcprVv7kWpjQ5TsKPwgWsbOaOy0xIkpFiMGkATcEB
 
 -- Dumped from database version 12.22 (Debian 12.22-1.pgdg120+1)
 -- Dumped by pg_dump version 18.1
@@ -1960,6 +1960,23 @@ COMMENT ON TABLE public.phases_of_play IS 'Fases do jogo. Lookup table fixa com 
 
 
 --
+-- Name: refresh_tokens; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.refresh_tokens (
+    id uuid NOT NULL,
+    user_id uuid NOT NULL,
+    token_hash character varying(255) NOT NULL,
+    parent_id uuid,
+    expires_at timestamp with time zone NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    revoked_at timestamp with time zone,
+    ip_address inet,
+    user_agent text
+);
+
+
+--
 -- Name: role_permissions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3542,6 +3559,14 @@ ALTER TABLE ONLY public.wellness_pre
 
 
 --
+-- Name: refresh_tokens refresh_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.refresh_tokens
+    ADD CONSTRAINT refresh_tokens_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: session_templates session_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4926,6 +4951,13 @@ CREATE INDEX ix_persons_last_name ON public.persons USING btree (last_name);
 --
 
 CREATE INDEX ix_persons_last_name_trgm ON public.persons USING gin (last_name public.gin_trgm_ops) WHERE (deleted_at IS NULL);
+
+
+--
+-- Name: ix_refresh_tokens_token_hash; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX ix_refresh_tokens_token_hash ON public.refresh_tokens USING btree (token_hash);
 
 
 --
@@ -6493,6 +6525,22 @@ ALTER TABLE ONLY public.person_media
 
 
 --
+-- Name: refresh_tokens refresh_tokens_parent_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.refresh_tokens
+    ADD CONSTRAINT refresh_tokens_parent_id_fkey FOREIGN KEY (parent_id) REFERENCES public.refresh_tokens(id) ON DELETE SET NULL;
+
+
+--
+-- Name: refresh_tokens refresh_tokens_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.refresh_tokens
+    ADD CONSTRAINT refresh_tokens_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
 -- Name: session_templates session_templates_created_by_membership_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6696,5 +6744,5 @@ ALTER TABLE ONLY public.wellness_reminders
 -- PostgreSQL database dump complete
 --
 
-\unrestrict iSb7s1d1eWZY4xvb7ar8W6SKEFyX8Qpk3dKfKbIE0iO8XSY9CnCm9eGMb6U3fkU
+\unrestrict NaogJ0snh82BBGpgUECjDGrcprVv7kWpjQ5TsKPwgWsbOaOy0xIkpFiMGkATcEB
 

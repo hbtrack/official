@@ -1,3 +1,5 @@
+| 2026-02-13 19:30 | `T-AUTH-02-REM` | Remediação Auth Phase 2 (Limpeza de Drift) | ✅ PASS | **Task**: Remover endpoints `/sessions` e arquivos de guard não autorizados, mantendo a Fase 2 (Refresh Token Rotation) íntegra. **Action**: (1) Deletado `verify_auth_contract.py`, (2) Removidos endpoints `/sessions` de `auth.py`, (3) Revertido `.hb_guard`, (4) Corrigido bug de UUID em `context.py`. **Results**: Contract verified (13 ops). 14 tests passed. Baseline revertido. **SSOT**: `openapi.json` regenerado e validado. |
+| 2026-02-13 18:30 | `T-AUTH-02` | Phase 2: Refresh Token Persistence & Rotation | ⚠️ DRIFT | **Task**: Implement stateful refresh tokens. **Observação**: Implementação inicial conteve drift de escopo (endpoints /sessions e scripts extras). Remediado em T-AUTH-02-REM. |
 # Execution Log - HB Track
 Registro técnico de execuções, auditorias e sessões de trabalho do Agent.
 
