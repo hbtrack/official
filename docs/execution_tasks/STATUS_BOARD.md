@@ -3,7 +3,7 @@
 Derivado de: docs/execution_tasks/artifacts/**/event.json (SSOT_SECONDARY).
 Regra: NÃO editar manualmente este arquivo; usar `python scripts/compact_exec_logs.py --write`.
 
-**Métricas**: Total de Tarefas: 17 | DRAFT: 1, PASS: 16
+**Métricas**: Total de Tarefas: 18 | DRAFT: 1, PASS: 17
 **Última Atualização**: 2026-02-13
 
 | TASK_ID | Status | Área | Resumo 1-linha | Commit | Evidence SHA256 | Path artifacts |
@@ -25,3 +25,4 @@ Regra: NÃO editar manualmente este arquivo; usar `python scripts/compact_exec_l
 | [ARCH-GOV-DBMIG-001](docs/execution_tasks/artifacts/ARCH-GOV-DBMIG-001/HUMAN_SUMMARY.md) | PASS | Infra | DB migration state/artifacts |  | 2149bb08c516c020fc3fda234908f40aff0b6fc81c7a927892fcd2485592c99f | docs/execution_tasks/artifacts/ARCH-GOV-DBMIG-001 |
 | [ARCH-GOV-CANON-001](docs/execution_tasks/artifacts/ARCH-GOV-CANON-001/HUMAN_SUMMARY.md) | PASS | Docs | Canon docs governance updates |  | b5b6cfb8b62b341252655e22130a7d9b9051138af47607e7631c1949c495da52 | docs/execution_tasks/artifacts/ARCH-GOV-CANON-001 |
 | [ARCH-LOGS-001](docs/execution_tasks/artifacts/ARCH-LOGS-001/HUMAN_SUMMARY.md) | PASS | Docs | EXECUTION LOG/CHANGELOG compaction + artifacts SSOT |  | 5dbf72442ad12859cf24df7eb1079dcf4be00e435264b5900a764b2c65f503c1 | docs/execution_tasks/artifacts/ARCH-LOGS-001 |
+| [ARCH-SCRIPTS-REFACTOR-003](docs/execution_tasks/artifacts/ARCH-SCRIPTS-REFACTOR-003/HUMAN_SUMMARY.md) | PASS | Unknown | seed_v1_2_initial.py refactored: idempotency via idempotency_keys table, CLI (--dry-run, --force, --help), JSON logging… |  | 68701d5f7073c6db9f2ce51513a65b0bd6bdeaf3f7680f2ee0a3c4043b7cf66d | docs/execution_tasks/artifacts/ARCH-SCRIPTS-REFACTOR-003 |

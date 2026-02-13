@@ -20,3 +20,4 @@ Validação canônica: `python scripts/compact_exec_logs.py --check`.
 - ARCH-GOV-DBMIG-001 | status=PASS | evidence_sha256=2149bb08c516c020fc3fda234908f40aff0b6fc81c7a927892fcd2485592c99f | artifacts=docs/execution_tasks/artifacts/ARCH-GOV-DBMIG-001
 - ARCH-GOV-CANON-001 | status=PASS | evidence_sha256=b5b6cfb8b62b341252655e22130a7d9b9051138af47607e7631c1949c495da52 | artifacts=docs/execution_tasks/artifacts/ARCH-GOV-CANON-001
 - ARCH-LOGS-001 | status=PASS | evidence_sha256=5dbf72442ad12859cf24df7eb1079dcf4be00e435264b5900a764b2c65f503c1 | artifacts=docs/execution_tasks/artifacts/ARCH-LOGS-001
+- ARCH-SCRIPTS-REFACTOR-003 | status=PASS | evidence_sha256=68701d5f7073c6db9f2ce51513a65b0bd6bdeaf3f7680f2ee0a3c4043b7cf66d | artifacts=docs/execution_tasks/artifacts/ARCH-SCRIPTS-REFACTOR-003

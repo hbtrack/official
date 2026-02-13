@@ -19,3 +19,4 @@ Uma linha por TASK_ID (derivado de event.json).
 - 2026-02-13 | ARCH-GOV-DBMIG-001 | PASS | Infra | DB migration state/artifacts | [ARCH-GOV-DBMIG-001](docs/execution_tasks/artifacts/ARCH-GOV-DBMIG-001/HUMAN_SUMMARY.md)
 - 2026-02-13 | ARCH-GOV-CANON-001 | PASS | Docs | Canon docs governance updates | [ARCH-GOV-CANON-001](docs/execution_tasks/artifacts/ARCH-GOV-CANON-001/HUMAN_SUMMARY.md)
 - 2026-02-13 | ARCH-LOGS-001 | PASS | Docs | EXECUTION LOG/CHANGELOG compaction + artifacts SSOT | [ARCH-LOGS-001](docs/execution_tasks/artifacts/ARCH-LOGS-001/HUMAN_SUMMARY.md)
+- UNKNOWN_DATE | ARCH-SCRIPTS-REFACTOR-003 | PASS | Unknown | seed_v1_2_initial.py refactored: idempotency via idempotency_keys table, CLI (--dry-run, --force, --help), JSON logging… | [ARCH-SCRIPTS-REFACTOR-003](docs/execution_tasks/artifacts/ARCH-SCRIPTS-REFACTOR-003/HUMAN_SUMMARY.md)
