@@ -7,7 +7,7 @@
 - Use `scripts/compact_exec_logs.py` to maintain this document.
 
 ## Tasks
-- 2026-02-13T11:50:00Z | ARCH-AST-001 | PASS | Tests | Refatoração ASTAnalyzer Async
+- 2026-02-13T11:50:00Z | ARCH-AST-001 | PASS_WITH_EVIDENCE_GAPS_NOTED | Tests | Refatoração ASTAnalyzer Async (Gaps: E1/E5 paths)
 - 2026-02-13T11:32:00Z | ARCH-GOV-AUDIT-LOGS-001 | PASS | Governance | Automated log compliance auditor (scripts/_ia)
 - 2026-02-13T11:20:00Z | ARCH-LOGS-001-FOLLOWUP-SPLIT | PASS | Docs | Normalização de Governança e Particionamento de Escopo
 - 2026-02-13T11:15:00Z | ARCH-GOV-CANON-001 | PASS | Docs | Canon docs governance updates
