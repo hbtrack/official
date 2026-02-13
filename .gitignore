@@ -156,6 +156,11 @@ agents/
 _archived_e2e/
 _archived_e2e
 
+# Archived audit/compliance artifacts (no physical delete policy)
+_archived/
+**/_archived/
+**/_archived/**
+
 # Other
 coverage.xml
 

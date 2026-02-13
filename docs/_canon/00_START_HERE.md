@@ -468,6 +468,7 @@ SSOT Artifacts:
 | **Sources & Generated** | `docs\_canon\04_SOURCES_GENERATED.md` | Detalhes de geração e interpretação de artefatos |
 | **Pipeline de Models** | `docs\_canon\05_MODELS_PIPELINE.md` | **Autoridade**: validação/correção (parity → requirements → guard) |
 | **Approved Commands** | `docs\_canon\08_APPROVED_COMMANDS.md` | Whitelist + proibidos. Consultar antes de rodar. |
+| **Scripts Guide** | `docs\_canon\SCRIPTS_GUIDE.md` | Contrato Enterprise para scripts (interface padronizada, logs JSON, idempotência, `_archived/`) |
 | **Troubleshooting** | `docs\_canon\09_TROUBLESHOOTING_GUARD_PARITY.md` | Exit code 2/3/4: causas, diagnóstico, resolução |
 | **Quality Metrics** | `docs\_canon\QUALITY_METRICS.md` | Métricas de qualidade, padrões de código e critérios de sucesso para reviews/refactoring |
 | **GitHub Instructions** | `.github\instructions\*.instructions.md` | Carregamento condicional (git, commands, docs, etc) |
@@ -479,6 +480,14 @@ SSOT Artifacts:
 | **Generate AI Governance Index** | `scripts\_ia\generate_ai_governance_index.py` | Gera índice determinístico de documentos de governança | `python scripts/_ia/generate_ai_governance_index.py --write` |
 | **Lint ARCH_REQUEST** | `scripts\_ia\lint_arch_request.py` | Valida documentos ARCH_REQUEST contra DSL | `python scripts/_ia/lint_arch_request.py --glob "docs/**/ARCH_REQUEST*.md"` |
 | **Check Logs Compaction** | `scripts\_ia\check_logs_compaction.py` | Verifica se logs estão compactados (anti-narrativa) | `python scripts/_ia/check_logs_compaction.py --changelog path.md --exec-log path.md` |
+
+### 6.4 Governança de Scripts (Auditoria Enterprise)
+
+| Documento | Path | Finalidade |
+|-----------|------|------------|
+| **ARCH_REQUEST Scripts/Docs Audit** | `docs\_canon\_arch_requests\AR-2026-02-13-SCRIPTS-DOCS-AUDIT.md` | Contrato formal da auditoria técnica de scripts e documentação |
+| **Audit Report Scripts/Docs** | `docs\_canon\_arch_requests\AUDIT_SCRIPTS_DOCS_REPORT.md` | Matriz de decisão arquivo→destino (incorporar/refatorar/dívida/arquivar) |
+| **Scripts Guide** | `docs\_canon\SCRIPTS_GUIDE.md` | Critérios de incorporação: CLI padrão, JSON logs, idempotência, política `_archived/` |
 
 ---
 
