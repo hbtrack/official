@@ -105,6 +105,7 @@ Lista inicial (defaults autorizados):
 8. `Hb Track - Backend/scripts/model_requirements.py`
 9. `Hb Track - Backend/scripts/agent_guard.py`
 10. `Hb Track - Fronted/scripts/sync_openapi.ps1`
+11. `Hb Track - Backend/scripts/fix_superadmin.py` — fix superadmin (idempotente, JSON logging, CLI standards) ✅
 
 ---
 
@@ -119,6 +120,9 @@ Valores permitidos:
 Regra mandatória:
 - Sem interface padrão + JSON log => não pode ser `INCORPORAR`
 - Fix/migração sem idempotência comprovada => `DIVIDA_TECNICA`
+
+**Exceções (INCORPORAR após refactoring):**
+- `fix_superadmin.py` → **INCORPORAR** (idempotência comprovada via smoke tests, JSON logging, CLI standards implementados; ref: AR-2026-02-14)
 
 ---
 
