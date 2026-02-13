@@ -7,6 +7,7 @@
   "scope": "Governance",
   "artifacts": [
     "docs/execution_tasks/artifacts/ARCH-GOV-STATUS-VOCAB-001/TASK_BRIEF.md",
+    "docs/execution_tasks/artifacts/ARCH-GOV-STATUS-VOCAB-001/audit_report.yaml",
     "docs/ADR/architecture/GOVERNANCE_DRIFT_LOG.md",
     "scripts/compact_exec_logs.py"
   ],
