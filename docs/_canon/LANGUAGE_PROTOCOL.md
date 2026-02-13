@@ -1,3 +1,13 @@
+# LANGUAGE PROTOCOL
+
+## Authority Chain
+
+This protocol extends:
+- `AI_KERNEL.md` (LEVEL 0)
+- `ARCH_REQUEST_GENERATION_PROTOCOL.md` (sibling protocol)
+
+---
+
 RFC 2119 rules
 
 ARCH_REQUEST = contrato

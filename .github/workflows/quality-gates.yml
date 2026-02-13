@@ -39,6 +39,20 @@ jobs:
         run: |
           python scripts/_ia/validators/validate-approved-commands.py
 
+      - name: Validate ARCH_REQUEST Protocol Compliance
+        continue-on-error: true
+        run: |
+          python scripts/_ia/lint_arch_request.py --glob "docs/_canon/_arch_requests/*.md"
+
+      - name: Run AI Governance Linter
+        run: |
+          python scripts/_ia/ai_governance_linter.py
+      
+      - name: Detect Agent Drift (Non-blocking)
+        continue-on-error: true
+        run: |
+          python scripts/_ia/validators/agent_drift_detector.py
+
       - name: Run quality gates validator (optional)
         continue-on-error: true
         run: |

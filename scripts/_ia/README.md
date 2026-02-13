@@ -46,6 +46,16 @@ scripts/_ia/
 - **parity-check-agent.py** — Autonomous parity monitoring agent
 - **invariant-validator-agent.py** — Business rule invariant validation agent
 
+### Governance Linters (3 tools)
+
+- **ai_governance_linter.py** — Unified governance validator for ARCH_REQUEST, EXEC_TASK, ADR protocols
+- **validators/agent_drift_detector.py** — Detects governance drift (JSON leakage, mixed layers, conversational tone)
+- **validators/prompt_sanitizer.py** — Transforms loose prompts into deterministic prompts
+
+**Exit codes:**
+- **ai_governance_linter.py**: 0 = OK, 2 = structural, 3 = protocol, 4 = missing canon files
+- **agent_drift_detector.py**: 0 = no drift, 1 = warnings (non-blocking), 2 = blockers (must fix)
+
 ### Utilities (4 modules)
 
 - **yaml_loader.py** — YAML loader with error handling

@@ -31,6 +31,11 @@ Todo ciclo de trabalho deve seguir rigorosamente estas fases:
 2.  **Ação:** Gerar Determinism Score (0 a 5).
 3.  **Restrição:** Se Score < 4, refinar a demanda antes de prosseguir.
 
+**Protocol Binding:**
+- EXEC_TASK generation MUST follow: `docs/_canon/EXEC_TASK_GENERATION_PROTOCOL.md`
+- ADR creation MUST follow: `docs/_canon/ADR_GENERATION_PROTOCOL.md`
+- Agent roles defined in: `docs/_canon/_agent/AGENT_ROLE_MATRIX.md`
+
 ## Fase 3: Emissão do TASK BRIEF
 1.  **Ação:** Gerar o documento TASK_BRIEF.md seguindo o template canônico.
 2.  **Ação:** Declarar explicitamente as STOP CONDITIONS.

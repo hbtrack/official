@@ -15,3 +15,8 @@ Saídas:
 - Reprodutíveis
 - Estruturais
 - Sem narrativa livre
+
+## Protocol Binding
+
+All role behavior follows:
+→ `_agent/AGENT_ROLE_MATRIX.md`

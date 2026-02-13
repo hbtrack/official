@@ -7,6 +7,9 @@ Regras globais:
 - Load `docs/_canon/AI_KERNEL.md` before answering. (OBRIGATÓRIO)
 - Porta única: ler primeiro `docs/_canon/00_START_HERE.md` e `docs/_ai/_INDEX.md` para entender a organização documental e os próximos passos recomendados.
 - Follow `./docs/_canon/LANGUAGE_PROTOCOL.md` strictly. (OBRIGATÓRIO)
+- Before generating any ARCH_REQUEST: Load and comply with `docs/_canon/ARCH_REQUEST_GENERATION_PROTOCOL.md` (OBRIGATÓRIO)
+- Agent roles are defined in `docs/_canon/_agent/AGENT_ROLE_MATRIX.md`. Agents MUST respect role boundaries. (OBRIGATÓRIO)
+- Use governance tooling before commits: `python scripts/_ia/ai_governance_linter.py` (RECOMENDADO)
 - SSOT estrutural de DB: `Hb Track - Backend/docs/_generated/schema.sql` (gerado por `scripts/inv.ps1 refresh`).
 - Não inventar: decisões devem citar paths/outputs reais.
 - Não criar arquivos temporários/backups dentro do repo.

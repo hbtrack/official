@@ -1,5 +1,15 @@
 # ADR Index — Módulo Training
 
+## ADR Generation Protocol
+
+All ADRs in this repo MUST follow:
+→ `docs/_canon/ADR_GENERATION_PROTOCOL.md`
+
+**Template:** `docs/ADR/_TEMPLATE_ADR.md`
+**Schema:** `docs/_canon/_schemas/adr.schema.json`
+
+---
+
 Este índice lista todas as **Architecture Decision Records (ADRs)** do módulo **Training** do HB Track.
 
 As ADRs documentam **decisões técnicas já tomadas**, derivadas exclusivamente das fontes canônicas. Consulte [00_START_HERE.md](C:/HB TRACK/docs/_canon/00_START_HERE.md) e [01_AUTHORITY_SSOT.md](C:/HB TRACK/docs/_canon/01_AUTHORITY_SSOT.md) para ordem de precedência:

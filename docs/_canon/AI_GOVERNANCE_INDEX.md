@@ -12,20 +12,31 @@ This index enumerates governance-relevant artifacts under the HB Track repositor
 - `docs/_canon/LANGUAGE_PROTOCOL.md`
 - `docs/_canon/FAILSAFE_PROTOCOL.md`
 - `docs/_canon/ARCH_REQUEST_DSL.md`
+- `docs/_canon/ARCH_REQUEST_GENERATION_PROTOCOL.md`
+- `docs/_canon/EXEC_TASK_GENERATION_PROTOCOL.md`
+- `docs/_canon/ADR_GENERATION_PROTOCOL.md`
 - `docs/_canon/ARCHITECT_BOOTLOADER.md`
 - `docs/_canon/ARCHITECT_HANDSHAKE.md`
 - `docs/_canon/GOVERNANCE_MODEL.md`
 - `docs/_canon/AGENT_BEHAVIOR.md`
 
-## LEVEL 2 — Prompts
+## LEVEL 2 — Agent Coordination
+- `docs/_canon/_agent/AGENT_ROLE_MATRIX.md`
+- `docs/_canon/_agent/AGENT_DRIFT_RULES.md`
+- `docs/_canon/_agent/AI_ARCH_EXEC_PROTOCOL.md`
+- `docs/_canon/_agent/AI_PROTOCOL_CHECKLIST.md`
+- `docs/_canon/_agent/TASK_BRIEF.md`
+
+## LEVEL 3 — Prompts
 - `docs/_canon/_prompts/ARCHITECT_BOOT_PROMPT.md`
 - `docs/_canon/_prompts/EXECUTOR_BOOT_PROMPT.md`
 - `docs/_canon/_prompts/REVIEWER_BOOT_PROMPT.md`
 
-## LEVEL 3 — Schemas
+## LEVEL 4 — Schemas
 - `docs/_canon/_schemas/arch_request.schema.json`
 - `docs/_canon/_schemas/exec_task.schema.json`
 - `docs/_canon/_schemas/execution_event.schema.json`
+- `docs/_canon/_schemas/adr.schema.json`
 
 ## LEVEL X — Repo Governance (Selected)
 - `.github/copilot-handshake.md`

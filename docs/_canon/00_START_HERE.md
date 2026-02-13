@@ -452,13 +452,27 @@ SSOT Artifacts:
 | **Architect Bootloader** | `docs\_canon\ARCHITECT_BOOTLOADER.md` | Prompt inicial universal para modo arquiteto determinístico |
 | **Failsafe Protocol** | `docs\_canon\FAILSAFE_PROTOCOL.md` | Protocolo anti-alucinação: quando em dúvida, bloquear |
 | **ARCH_REQUEST DSL** | `docs\_canon\ARCH_REQUEST_DSL.md` | Definição da linguagem formal para contratos arquiteturais |
+| **ARCH_REQUEST Generation Protocol** | `docs\_canon\ARCH_REQUEST_GENERATION_PROTOCOL.md` | Regras obrigatórias para geração de ARCH_REQUESTs por agents |
+| **EXEC_TASK Generation Protocol** | `docs\_canon\EXEC_TASK_GENERATION_PROTOCOL.md` | Regras obrigatórias para geração de EXEC_TASKs por agents |
+| **ADR Generation Protocol** | `docs\_canon\ADR_GENERATION_PROTOCOL.md` | Regras obrigatórias para criação de ADRs por agents |
+| **Agent Role Matrix** | `docs\_canon\_agent\AGENT_ROLE_MATRIX.md` | Matriz consolidada de papéis, responsabilidades e boundaries de agents |
+| **Agent Drift Rules** | `docs\_canon\_agent\AGENT_DRIFT_RULES.md` | Regras operacionais para detecção e remediação de drift |
 | **Governance Model** | `docs\_canon\GOVERNANCE_MODEL.md` | Hierarquia de camadas L0>L1>L2>L3 com precedência |
 | **Agent Behavior** | `docs\_canon\AGENT_BEHAVIOR.md` | Papéis: Architect/Executor/Reviewer + handshake explícito |
 | **Prompts** | `docs\_canon\_prompts\*` | Templates especializados por tipo de agente |
 | **Schemas** | `docs\_canon\_schemas\*` | JSON schemas para validação automática |
 | **AI Governance Usage Guide** | `docs\_canon\AI_GOVERNANCE_USAGE_GUIDE.md` | Guia de uso da estrutura de governança |
 
-### 6.2 Documentação Operacional Canônica
+### 6.2 Ferramentas de Governança AI
+
+| Ferramenta | Path | Descrição | Comando |
+|-----------|------|-----------|---------|
+| **AI Governance Linter** | `scripts\_ia\ai_governance_linter.py` | Validador unificado de protocolos ARCH/EXEC/ADR | `python scripts/_ia/ai_governance_linter.py` |
+| **Agent Drift Detector** | `scripts\_ia\validators\agent_drift_detector.py` | Detecta drift estrutural/linguístico/protocolar | `python scripts/_ia/validators/agent_drift_detector.py` |
+| **Prompt Sanitizer** | `scripts\_ia\validators\prompt_sanitizer.py` | Remove ambiguidades de prompts | `python scripts/_ia/validators/prompt_sanitizer.py "texto"` |
+| **ARCH_REQUEST Linter** | `scripts\_ia\lint_arch_request.py` | Validador específico para ARCH_REQUESTs | `python scripts/_ia/lint_arch_request.py --glob "docs/**/*.md"` |
+
+### 6.3 Documentação Operacional Canônica
 
 | Documento | Path | Descrição |
 |-----------|------|-----------|
