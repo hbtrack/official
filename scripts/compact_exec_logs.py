@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from dataclasses import dataclass
@@ -105,8 +106,20 @@ def _load_event(path: Path) -> Event:
     )
 
 
-def _write_index(path: Path, title: str, marker: str, lines: list[str]) -> bool:
-    path.parent.mkdir(parents=True, exist_ok=True)
+def _write_index(path: Path, title: str, marker: str, lines: list[str], dry_run: bool = False) -> bool:
+    """
+    Write index file with retention policy and task list.
+    
+    Args:
+        path: Target file path
+        title: Document title
+        marker: Auto-generated marker comment
+        lines: Task lines
+        dry_run: If True, skip writing and return change status
+        
+    Returns:
+        True if file would be/was changed, False if identical
+    """
     content = [
         f"# {title}",
         marker,
@@ -129,11 +142,52 @@ def _write_index(path: Path, title: str, marker: str, lines: list[str]) -> bool:
     if old_text == new_text:
         return False
 
-    path.write_text(new_text, encoding="utf-8", newline="\n")
+    if not dry_run:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(new_text, encoding="utf-8", newline="\n")
+    
     return True
 
 
+def parse_args() -> argparse.Namespace:
+    """Parse command-line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Compact execution logs (CHANGELOG + EXECUTIONLOG)",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  %(prog)s                    # Apply updates (default)
+  %(prog)s --dry-run          # Preview without applying
+  %(prog)s --output text      # Human-readable output
+  %(prog)s --output json      # JSON output (default)
+        """
+    )
+    parser.add_argument(
+        '--dry-run',
+        action='store_true',
+        help='Preview changes without writing files'
+    )
+    parser.add_argument(
+        '--output',
+        choices=['text', 'json'],
+        default='json',
+        help='Output format (default: json)'
+    )
+    return parser.parse_args()
+
+
 def main() -> int:
+    """
+    Main execution logic.
+    
+    Exit Codes:
+      0: noop (no files changed)
+      1: updated (files changed successfully)
+      2: validation_error (invalid event.json)
+      3: runtime_error (unexpected exception)
+    """
+    args = parse_args()
+    
     marker = "<!-- AUTO-GENERATED. Source: docs/execution_tasks/artifacts/*/event.json -->"
 
     errors: list[str] = []
@@ -151,7 +205,12 @@ def main() -> int:
 
     if errors:
         out = {"status": "validation_error", "errors": errors}
-        print(json.dumps(out, ensure_ascii=False, indent=2))
+        if args.output == 'json':
+            print(json.dumps(out, ensure_ascii=False, indent=2))
+        else:
+            print(f"❌ Validation errors:")
+            for err in errors:
+                print(f"  - {err}")
         return 2
 
     events = list(events_by_task.values())
@@ -173,6 +232,7 @@ def main() -> int:
         "CHANGELOG",
         marker,
         [changelog_line(e) for e in main_events],
+        dry_run=args.dry_run,
     ):
         changed.append(CHANGELOG_PATH.as_posix())
 
@@ -181,18 +241,21 @@ def main() -> int:
         "EXECUTIONLOG",
         marker,
         [executionlog_line(e) for e in main_events],
+        dry_run=args.dry_run,
     ):
         changed.append(EXECUTIONLOG_PATH.as_posix())
 
     # Archives: write only if needed (overflow) or if archive files already exist.
     if archived_events or ARCHIVE_CHANGELOG_PATH.exists() or ARCHIVE_EXECUTIONLOG_PATH.exists():
-        ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
+        if not args.dry_run:
+            ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
 
         if _write_index(
             ARCHIVE_CHANGELOG_PATH,
             "CHANGELOG (ARCHIVE)",
             marker,
             [changelog_line(e) for e in archived_events],
+            dry_run=args.dry_run,
         ):
             changed.append(ARCHIVE_CHANGELOG_PATH.as_posix())
 
@@ -201,18 +264,42 @@ def main() -> int:
             "EXECUTIONLOG (ARCHIVE)",
             marker,
             [executionlog_line(e) for e in archived_events],
+            dry_run=args.dry_run,
         ):
             changed.append(ARCHIVE_EXECUTIONLOG_PATH.as_posix())
 
-    out = {
-        "status": "ok",
-        "events_total": len(events),
-        "main_events": len(main_events),
-        "archived_events": len(archived_events),
-        "changed_files": changed,
-    }
-    print(json.dumps(out, ensure_ascii=False, indent=2))
-    return 0
+    # Determine exit code: 0=noop, 1=updated
+    exit_code = 1 if changed else 0
+    
+    # Output
+    if args.output == 'json':
+        out = {
+            "status": "ok",
+            "events_total": len(events),
+            "main_events": len(main_events),
+            "archived_events": len(archived_events),
+            "changed_files": changed,
+            "dry_run": args.dry_run,
+        }
+        print(json.dumps(out, ensure_ascii=False, indent=2))
+    else:
+        if args.dry_run:
+            if changed:
+                print(f"✅ [DRY-RUN] Would update {len(changed)} file(s):")
+                for f in changed:
+                    print(f"  - {f}")
+            else:
+                print("✅ [DRY-RUN] No changes needed (logs already current)")
+        else:
+            if changed:
+                print(f"✅ Updated {len(changed)} file(s):")
+                for f in changed:
+                    print(f"  - {f}")
+            else:
+                print("✅ No changes needed (logs already current)")
+        print(f"\nEvents: {len(main_events)} main, {len(archived_events)} archived")
+    
+    return exit_code
 
 
 if __name__ == "__main__":

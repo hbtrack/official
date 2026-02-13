@@ -106,6 +106,7 @@ Lista inicial (defaults autorizados):
 9. `Hb Track - Backend/scripts/agent_guard.py`
 10. `Hb Track - Fronted/scripts/sync_openapi.ps1`
 11. `Hb Track - Backend/scripts/fix_superadmin.py` — fix superadmin (idempotente, JSON logging, CLI standards) ✅
+12. `scripts/compact_exec_logs.py` — Compact execution logs (idempotente, JSON logging, CLI standards) ✅
 
 ---
 
@@ -123,6 +124,7 @@ Regra mandatória:
 
 **Exceções (INCORPORAR após refactoring):**
 - `fix_superadmin.py` → **INCORPORAR** (idempotência comprovada via smoke tests, JSON logging, CLI standards implementados; ref: AR-2026-02-14)
+- `compact_exec_logs.py` → **INCORPORAR** (idempotência comprovada via smoke tests, JSON logging, CLI standards implementados; exit codes explícitos 0=noop, 1=updated; ref: AR-2026-02-15)
 
 ---
 
