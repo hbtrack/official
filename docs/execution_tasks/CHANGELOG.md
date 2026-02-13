@@ -5,6 +5,13 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 ### Adicionado
+* **Implementation of missing Analytics models** (2026-02-13): Implementation of 5 missing SQLAlchemy models for the analytics/match module.
+  - **Models added**: `advantage_states`, `event_subtypes`, `event_types`, `match_possessions`, `phases_of_play`.
+  - **Validation**: All models validated against SSOT (`schema.sql`) using `models_autogen_gate.ps1`.
+  - **Compliance**: 100% coverage achieved for schema-to-model parity (63/63 tables).
+  - **Guard**: Baseline snapshot updated in `.hb_guard/baseline.json`.
+  - **Status**: SUCCESS (Exit Code 0 on all gates).
+
 * **Documentation Governance Unification (R1+R2)** (2026-02-13): Implementação da remediação Priority 1 do GOVERNANCE_AUDIT_REPORT:
   - **R1 (Index Unification)**: Consolidação de `docs/_ai/_INDEX.md` (511 linhas) em `docs/_canon/00_START_HERE.md` como autoridade única de navegação
     - `_INDEX.md` convertido para stub redirect (backward compatibility mantida)
