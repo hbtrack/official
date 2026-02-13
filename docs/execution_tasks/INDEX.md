@@ -8,6 +8,7 @@
 - ARCH-AST-001 | PASS | 2026-02-13T12:00:00Z | unknown | Refatoração ASTAnalyzer Async
 - ARCH-AST-REG-001 | PASS | 2026-02-13T12:45:00Z | unknown | ASTAnalyzer regression tests (async parity lock)
 - ARCH-DOCS-ARTIFACTS-002 | PASS | 2026-02-13T16:45:00Z | unknown | Execution Tasks Artifacts & Machine-Readable Indexing
+- ARCH-DOCS-ARTIFACTS-002-FOLLOWUP-DET | PASS | 2026-02-13T17:30:00Z | unknown | Fix Determinismo e Bug de Indentação (Follow-up)
 - ARCH-GOV-AUDIT-LOGS-001 | PASS | 2026-02-13T11:32:00Z | unknown | Automated log compliance auditor (scripts/_ia)
 - ARCH-GOV-CANON-001 | PASS | 2026-02-13T11:15:00Z | unknown | Canon docs governance updates
 - ARCH-GOV-DBMIG-001 | PASS | 2026-02-13T11:15:00Z | unknown | DB migration state/artifacts
@@ -19,7 +20,7 @@
 - INV-TRAIN-009-REFERENCE-RUN-001 | PASS | 2026-02-13T12:15:00Z | unknown | INV-TRAIN-009 reference run baseline
 - SAMPLE-TASK-001 | PASS | 2026-02-13T12:00:00Z | a1b2c3d | Template sample task for demonstration purposes
 
-**Total Tasks:** 13
+**Total Tasks:** 14
 
 ---
 
