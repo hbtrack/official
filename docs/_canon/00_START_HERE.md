@@ -354,6 +354,24 @@ SSOT Artifacts:
 
 ## 5. Governança AI — Monorepo (`docs\_ai\`)
 
+### 5.0 LEVEL 0: AI Governance Formal (`docs\_canon\_agent\`)
+
+> **Precedência:** LEVEL 0 (máxima autoridade sobre operação de agentes AI)
+> **Aplicável a:** AI Architect (ChatGPT), Copilot Agents, automation scripts
+
+| Documento | Path | Descrição |
+|-----------|------|-----------|
+| **AI Governance Index** | `docs\_canon\_agent\AI_GOVERNANCE_INDEX.md` | Hierarquia documental suprema (LEVEL 0-3) + princípios de governança |
+| **AI Arch Exec Protocol** | `docs\_canon\_agent\AI_ARCH_EXEC_PROTOCOL.md` | Protocolo operacional completo: 6-phase TASK CYCLE (Context Harvesting → Pre-Validation → TASK BRIEF → Delivery → Evidence Audit → Finalization) |
+| **When to Use TASK BRIEF** | `docs\_canon\_agent\WHEN_TO_USE_TASK_BRIEF.md` | Bridge document: critérios objetivos (5 criteria: Files, SSOT, Time, Gates, Risk) para escalar de prompt operacional → protocolo formal TASK BRIEF |
+| **TASK BRIEF Template** | `docs\_canon\_agent\TASK_BRIEF.md` | Template formal (8 sections): Task Overview, Context & SSOT, Scope, Execution Plan, Acceptance Criteria, Stop Conditions, Rollback Plan, Architect Authorization |
+| **AI Protocol Checklist** | `docs\_canon\_agent\AI_PROTOCOL_CHECKLIST.md` | Pre-validation: 10 sections, Determinism Score (0-5), refine if < 4 |
+| **Evidence Pack Template** | `docs\_canon\_agent\EVIDENCE_PACK.md` | Output template: execution report (command log, artifacts, gate outputs, exit codes) |
+
+---
+
+### 5.1 LEVEL 2: Documentação Operacional (`docs\_ai\`)
+
 | Documento | Path | Descrição |
 |-----------|------|-----------|
 | **Index** (este) | `docs\_ai\_INDEX.md` | Router central + Quick Start Routing. Começar sempre aqui. |
@@ -364,7 +382,7 @@ SSOT Artifacts:
 | **System Design** | `docs\_ai\SYSTEM_DESIGN.md` | Arquitetura backend (stack, camadas, padrões, convenções) |
 | **Agent Routing Map** | `docs\_ai\07_AGENT_ROUTING_MAP.md` | Mapa: ação → instruções → docs canônicos → comandos |
 
-### 5.1 Subdiretórios `docs\_ai\` (Machine-Readable — ADR-016)
+### 5.2 Subdiretórios `docs\_ai\` (Machine-Readable — ADR-016)
 
 > **ADR fonte:** `docs\ADR\016-ADR-machine-readable-ai-quality-gates.md`
 > **EXEC_TASK:** `docs\execution_tasks\EXEC_TASK_machine-readable-ai-quality-gates.md`
@@ -380,7 +398,7 @@ SSOT Artifacts:
 | **_checklists** | `docs\_ai\_checklists\` | Checklists executáveis | `CHECKLIST_AGENT_DEPLOYMENT.md`, `CHECKLIST_AGENT_VALIDATION.md`, `CHECKLIST_AGENT_DOCUMENTATION.md` |
 | **_docs_arch** | `docs\_ai\_docs_arch\` | Arquitetura documental | `DOCS_ARCH_MASTER.md` |
 
-### 5.2 Infraestrutura de Scripts IA (`scripts\_ia\`)
+### 5.3 Infraestrutura de Scripts IA (`scripts\_ia\`)
 
 > **Documentação:** `scripts\_ia\README.md`
 > **Dependências:** `scripts\_ia\requirements.txt` (radon, lizard, pyyaml, jsonschema)
@@ -393,7 +411,7 @@ SSOT Artifacts:
 | **Agents** | `scripts\_ia\agents\` | `code-review-agent.py`, `parity-check-agent.py`, `invariant-validator-agent.py` |
 | **Utils** | `scripts\_ia\utils\` | `yaml_loader.py`, `json_loader.py`, `file_reader.py`, `git_diff_parser.py` |
 
-### 5.3 CI/CD Workflows IA (`.github\workflows\`)
+### 5.4 CI/CD Workflows IA (`.github\workflows\`)
 
 | Workflow | Path | Trigger | Propósito |
 |----------|------|---------|-----------|

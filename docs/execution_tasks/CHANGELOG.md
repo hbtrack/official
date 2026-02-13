@@ -30,6 +30,18 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
     - Domínios organizados: Gate-specific (baseline/parity/requirements) + Operational (DevOps/Repo/Model Pipeline/Docs) + Invariants (Training module)
   - **Artefatos**: `GUARDRAILS_INDEX.md` (290 linhas: decision tree, checklist pré-execução, troubleshooting, metrics de compliance)
   - **Impact**: Clear navigation hierarchy para guardrails; eliminated ambiguity de "qual guardrail consultar"; preserved granularity (não merged); checklist pré-execução universal
+  - **Branch**: `docs/gov-unify-001` (commit `36f3318`)
+
+* **Bridge Document (R4)** (2026-02-13): Implementação da remediação Priority 2 do GOVERNANCE_AUDIT_REPORT:
+  - **R4 (Task Escalation Criteria)**: Criação de documento bridge definindo quando escalar de prompt operacional → protocolo formal TASK BRIEF:
+    - Criado `docs/_canon/_agent/WHEN_TO_USE_TASK_BRIEF.md` (decision framework com 5 critérios objetivos)
+    - **5 Critérios Mensuráveis**: (1) Scope (arquivos afetados: ≤2=direto, 3-5=considerar, >5=TASK BRIEF), (2) SSOT Impact (modificação schema.sql/openapi.json=TASK BRIEF obrigatório), (3) Tempo (>30min=TASK BRIEF), (4) Complexity (>2 gates sequenciais ou branching condicional=TASK BRIEF), (5) Risk Level (operações irreversíveis=TASK BRIEF+autorização)
+    - **Decision Matrix**: Tabela combinatória (Files × SSOT × Time × Gates × Risk = Decision: Direct | Consider | TASK BRIEF)
+    - **Exemplos Práticos**: 7 casos reais (3 Direct OK: diagnóstico read-only, correção typo, single model fix; 4 TASK BRIEF Required: 4+ models, SSOT change, complex workflow, ADR-level change)
+    - **Escalation Flowchart**: Mermaid diagram com critérios em cadeia (qualquer 🔴 = TASK BRIEF obrigatório)
+    - **Integration**: Referências adicionadas em `AI_ARCH_EXEC_PROTOCOL.md` (Phase 2: Pré-Validação step 0 + Rules of Gold) e `00_START_HERE.md` (seção 5.0: LEVEL 0 AI Governance)
+  - **Artefatos**: `WHEN_TO_USE_TASK_BRIEF.md` (200+ linhas: framework, exemplos, flowchart, anti-patterns, métricas compliance)
+  - **Impact**: Critérios objetivos para escalação (90% target classification accuracy); reduced bureaucracy para tarefas triviais; ensured proper scoping para tarefas complexas; eliminated ambiguity de "quando usar protocolo formal?"
   - **Branch**: `docs/gov-unify-001` (commit pendente)
 
 * **AI Governance Canonical Templates** (2026-02-12): Implementação da suite de governança e protocolos para agentes de IA:
