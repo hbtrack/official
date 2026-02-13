@@ -7,6 +7,7 @@
 - Use `scripts/compact_exec_logs.py` to maintain this document.
 
 ## Tasks
+- 2026-02-15T01:00:00Z | ARCH-SCRIPTS-REFACTOR-002 | PASS | Scripts | Refactor compact_exec_logs.py (idempotency + CLI + exit codes)
 - 2026-02-14T00:15:00Z | ARCH-SCRIPTS-REFACTOR-001 | PASS | Scripts | Refactor fix_superadmin.py (idempotency + JSON logging + CLI)
 - 2026-02-13T17:30:00Z | ARCH-DOCS-ARTIFACTS-002-FOLLOWUP-DET | PASS | Governance | Fix Determinismo e Bug de Indentação (Follow-up)
 - 2026-02-13T16:45:00Z | ARCH-DOCS-ARTIFACTS-002 | PASS | Governance | Execution Tasks Artifacts & Machine-Readable Indexing

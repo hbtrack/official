@@ -7,6 +7,7 @@
 - Use `scripts/compact_exec_logs.py` to maintain this document.
 
 ## Tasks
+- 2026-02-15T01:00:00Z | ARCH-SCRIPTS-REFACTOR-002 | PASS | Refactor compact_exec_logs.py (idempotency + CLI + exit codes) | P2_REFACTORING: compact_exec_logs.py elevado de REFATORAR_ANTES_DE_INCORPORAR para INCORPORAR (CLI argparse, --dry-run, exit codes 0=noop/1=updated, idempotência comprovada). Commit e1f0b10.
 - 2026-02-14T00:15:00Z | ARCH-SCRIPTS-REFACTOR-001 | PASS | Refactor fix_superadmin.py (idempotency + JSON logging + CLI) | P2_REFACTORING: fix_superadmin.py elevado de DIVIDA_TECNICA para INCORPORAR (state checking, JSON logs, CLI standards). Commit 4d94422.
 - 2026-02-13T17:30:00Z | ARCH-DOCS-ARTIFACTS-002-FOLLOWUP-DET | PASS | Fix Determinismo e Bug de Indentação (Follow-up) | Determinismo alcançado ao remover timestamps dinâmicos e corrigir lógica de total de tarefas.
 - 2026-02-13T16:45:00Z | ARCH-DOCS-ARTIFACTS-002 | PASS | Execution Tasks Artifacts & Machine-Readable Indexing | Task completed successfully. Scripts created and indices generated from 13 tasks (11 event.json + 2 summary.json).
