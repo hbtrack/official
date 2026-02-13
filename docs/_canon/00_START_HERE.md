@@ -25,6 +25,8 @@
 > - (a-alt) para conceito único minor (ex: significado de exit code 4), citar só `exit_codes.md` + evidência
 > - (b) uma evidência (código, `schema.sql`, `openapi.json`, `parity_report.json`, ADR, ou git diff)
 > 
+> **Constituição AI**: Sempre carregar `docs/_canon/AI_KERNEL.md` antes de qualquer operação (OBRIGATÓRIO)
+> 
 > **Exemplos de evidência mínima:**
 > - Model↔schema: trecho de `schema.sql` (DDL + constraints) + item de `parity_report.json` + `git diff app/models/<table>.py`
 > - Requirements violation: trecho do log/CSV + referência a `model_requirements_guide.md` + exit code 4
@@ -192,7 +194,9 @@ if ($ec -ne 0) { exit $ec }  # NÃO flatten
 - Se parity ainda falha (structural diffs não resolvidos)
 - Se requirements ainda falha (model viola regras)
 
-**Regra de ouro**: snapshot = "registrar estado conformante e testado"; nunca snapshot de repo quebrado.
+**Regra de ouro para agentes AI**: snapshot = "registrar estado conformante e testado"; nunca snapshot de repo quebrado.
+
+**Constituição AI**: Todo agente deve carregar `docs/_canon/AI_KERNEL.md` antes de qualquer operação (MANDATÓRIO).
 
 ---
 
@@ -311,8 +315,8 @@ Os artefatos abaixo são gerados automaticamente e constituem a fonte autoritati
 
 | Documento | Path | Descrição | Quando Consultar |
 |-----------|------|-----------|------------------|
-| **CHANGELOG** | `docs\execution_tasks\CHANGELOG.md` | Registro de mudanças notáveis (pipeline, scripts, models, features) | Após cada lote de mudanças |
-| **EXECUTIONLOG** | `docs\execution_tasks\EXECUTIONLOG.md` | Log técnico: execuções, gates, auditorias, sessões de trabalho | Após cada sessão |
+| **CHANGELOG** | `docs\ADR\architecture\CHANGELOG.md` | Registro de mudanças notáveis (pipeline, scripts, models, features) | Após cada tarefa (via `compact_exec_logs.py`) |
+| **EXECUTIONLOG** | `docs\ADR\workflows\EXECUTIONLOG.md` | Log técnico: execuções, gates, auditorias, sessões de trabalho | Após cada tarefa (via `compact_exec_logs.py`) |
 | **Exit Codes** | `docs\references\exit_codes.md` | Guia: 0 (pass), 1 (crash), 2 (parity), 3 (guard), 4 (requirements) | **Sempre que ec ≠ 0** |
 | **Model Requirements Guide** | `docs\references\model_requirements_guide.md` | Uso do validador `model_requirements.py` (perfis, violations, troubleshooting) | Exit code 4 |
 | **Troubleshooting Guard/Parity** | `docs\_canon\09_TROUBLESHOOTING_GUARD_PARITY.md` | Diagnóstico: exit codes 2/3/4, causas raiz, resolução passo-a-passo | Exit code 2/3/4 |
@@ -402,9 +406,11 @@ SSOT Artifacts:
 
 > **Documentação:** `scripts\_ia\README.md`
 > **Dependências:** `scripts\_ia\requirements.txt` (radon, lizard, pyyaml, jsonschema)
+> **Núcleo de Governança:** Scripts principais para automação da constituição AI
 
 | Categoria | Path | Ferramentas |
 |-----------|------|-------------|
+| **Governança Core** | `scripts\_ia\` | `generate_ai_governance_index.py`, `lint_arch_request.py`, `check_logs_compaction.py` |
 | **Extractors** | `scripts\_ia\extractors\` | `extract-quality-gates.py`, `extract-ai-context.py`, `extract-workflows.py`, `extract-adr-index.py`, `extract-approved-commands.py`, `extract-troubleshooting.py` |
 | **Validators** | `scripts\_ia\validators\` | `validate-ai-docs-sync.py`, `validate-quality-gates.py`, `validate-agent-spec.py`, `validate-approved-commands.py`, `validate-yaml-json.py` |
 | **Generators** | `scripts\_ia\generators\` | `generate-ai-index.py`, `generate-checklist-yml.py`, `generate-handshake-template.py`, `generate-invocation-examples.py` |
@@ -438,6 +444,22 @@ SSOT Artifacts:
 
 ## 6. Documentação Canônica para Governança AI (`docs\_canon\`)
 
+### 6.1 Núcleo de Governança AI (AI Kernel)
+
+| Documento | Path | Descrição |
+|-----------|------|-----------|
+| **AI Kernel** | `docs\_canon\AI_KERNEL.md` | **Constituição universal** para qualquer IA (LEVEL 0) — determinismo, hierarquia, anti-alucinação |
+| **Architect Bootloader** | `docs\_canon\ARCHITECT_BOOTLOADER.md` | Prompt inicial universal para modo arquiteto determinístico |
+| **Failsafe Protocol** | `docs\_canon\FAILSAFE_PROTOCOL.md` | Protocolo anti-alucinação: quando em dúvida, bloquear |
+| **ARCH_REQUEST DSL** | `docs\_canon\ARCH_REQUEST_DSL.md` | Definição da linguagem formal para contratos arquiteturais |
+| **Governance Model** | `docs\_canon\GOVERNANCE_MODEL.md` | Hierarquia de camadas L0>L1>L2>L3 com precedência |
+| **Agent Behavior** | `docs\_canon\AGENT_BEHAVIOR.md` | Papéis: Architect/Executor/Reviewer + handshake explícito |
+| **Prompts** | `docs\_canon\_prompts\*` | Templates especializados por tipo de agente |
+| **Schemas** | `docs\_canon\_schemas\*` | JSON schemas para validação automática |
+| **AI Governance Usage Guide** | `docs\_canon\AI_GOVERNANCE_USAGE_GUIDE.md` | Guia de uso da estrutura de governança |
+
+### 6.2 Documentação Operacional Canônica
+
 | Documento | Path | Descrição |
 |-----------|------|-----------|
 | **Authority & SSOT** | `docs\_canon\01_AUTHORITY_SSOT.md` | Precedência: DB schema > Service models > OpenAPI > Docs |
@@ -449,6 +471,14 @@ SSOT Artifacts:
 | **Troubleshooting** | `docs\_canon\09_TROUBLESHOOTING_GUARD_PARITY.md` | Exit code 2/3/4: causas, diagnóstico, resolução |
 | **Quality Metrics** | `docs\_canon\QUALITY_METRICS.md` | Métricas de qualidade, padrões de código e critérios de sucesso para reviews/refactoring |
 | **GitHub Instructions** | `.github\instructions\*.instructions.md` | Carregamento condicional (git, commands, docs, etc) |
+
+### 6.3 Scripts de Automação da Governança AI
+
+| Script | Path | Finalidade | Como Usar |
+|--------|------|------------|----------|
+| **Generate AI Governance Index** | `scripts\_ia\generate_ai_governance_index.py` | Gera índice determinístico de documentos de governança | `python scripts/_ia/generate_ai_governance_index.py --write` |
+| **Lint ARCH_REQUEST** | `scripts\_ia\lint_arch_request.py` | Valida documentos ARCH_REQUEST contra DSL | `python scripts/_ia/lint_arch_request.py --glob "docs/**/ARCH_REQUEST*.md"` |
+| **Check Logs Compaction** | `scripts\_ia\check_logs_compaction.py` | Verifica se logs estão compactados (anti-narrativa) | `python scripts/_ia/check_logs_compaction.py --changelog path.md --exec-log path.md` |
 
 ---
 
@@ -494,6 +524,8 @@ SSOT Artifacts:
 
 **Executar conforme CWD na tabela "Guardrail: CWD"**:
 
+### 10.1 Comandos Core do Sistema
+
 | Comando | Onde Rodar | Finalidade | Exit Codes |
 |---------|------------|-----------|-----------|
 | `.\scripts\inv.ps1 refresh` | Repo root | Regenerar SSOT (schema.sql, openapi.json, alembic_state.txt, manifest.json) | 0 = success, 1 = crash |
@@ -503,6 +535,15 @@ SSOT Artifacts:
 | `.\scripts\inv.ps1 gate INV-TRAIN-XXX` | Repo root | Validar gate de invariante específica | 0 = pass, 1/2/3/4 = fail |
 | `.\scripts\inv.ps1 all` | Repo root | Rodar todos os gates | 0 = all pass, >0 = flag failed gates |
 | `.\scripts\inv.ps1 promote` | Repo root | Promover candidatas confirmadas para invariantes | 0 = success, 1 = crash |
+
+### 10.2 Comandos de Governança AI
+
+| Comando | Onde Rodar | Finalidade | Exit Codes |
+|---------|------------|-----------|-----------|
+| `python scripts\_ia\generate_ai_governance_index.py --write` | Repo root | Gerar/atualizar índice de governança AI | 0 = success, 2 = differences, 3 = error |
+| `python scripts\_ia\generate_ai_governance_index.py --check` | Repo root | Verificar se índice está atualizado (CI/CD) | 0 = up-to-date, 2 = needs update |
+| `python scripts\_ia\lint_arch_request.py --glob "docs/**/ARCH_REQUEST*.md"` | Repo root | Validar documentos ARCH_REQUEST contra DSL | 0 = OK, 2 = structure, 3 = normative, 4 = paths |
+| `python scripts\_ia\check_logs_compaction.py --changelog path --exec-log path` | Repo root | Verificar compactação de logs (anti-narrativa) | 0 = OK, 2 = violations, 3 = file error |
 
 **Guia Completo**: ver `docs\_canon\08_APPROVED_COMMANDS.md` (fonte canônica).
 
@@ -521,4 +562,5 @@ SSOT Artifacts:
 * **CWD obrigatório**: validar antes de rodar qualquer comando (ver tabela "Guardrail: CWD")
 * **Exit codes**: sempre propagar específicos (0/2/3/4); nunca flatten para 1; fonte autoritativa: `exit_codes.md`
 * **Snapshot**: só após gates OK + repo limpo; nunca com EXIT 2/3/4
+* **Constituição AI**: Agentes devem carregar `AI_KERNEL.md` obrigatoriamente; seguir protocolos determinísticos
 * **Este Index é router, não canon**: serve para navegar; quando conflitar com canon, canon vence

@@ -1648,7 +1648,7 @@ Registrando rationale:
 
 Commit necessário:
 docs/_canon/08_APPROVED_COMMANDS.md
-docs/execution_tasks/CHANGELOG.md
+docs/ADR/architecture/CHANGELOG.md
 
 Criar commit? [Y/N]
 ```

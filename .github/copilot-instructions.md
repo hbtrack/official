@@ -5,6 +5,8 @@ applyTo: '**'
 
 ## PORTA ÚNICA: Camada Canônica Docs
 
+**Source of truth: docs/_canon/AI_KERNEL.md**
+
 **Para QUALQUER consulta técnica, comece AQUI:** `docs/_canon/00_START_HERE.md` **(OBRIGATÓRIO)**
 
 * Sempre ler **_INDEX.md** (`docs/_ai/_INDEX.md`) para ter o contexto necessário antes de qualquer ação. **(OBRIGATÓRIO)**
