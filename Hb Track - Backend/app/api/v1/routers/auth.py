@@ -38,6 +38,7 @@ from app.models.organization import Organization
 from app.models.season import Season
 from app.schemas.error import ErrorCode
 from app.core.permissions_map import get_permissions_for_role
+from app.core.logging import emit_auth_audit, get_request_id, get_client_ip, get_user_agent
 
 logger = logging.getLogger(__name__)
 
@@ -272,6 +273,15 @@ async def login(
     
     if not user:
         logger.warning(f"Login failed: user not found for email {email}")
+        try:
+            await emit_auth_audit(db, action="login_failed", entity="auth", entity_id=None, actor_id=None, context={
+                "reason": "user_not_found",
+                "email": email,
+                "request_id": get_request_id(request),
+                "ip": get_client_ip(request),
+            })
+        except Exception:
+            logger.exception("emit_auth_audit failed for login_failed")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail={
@@ -283,6 +293,15 @@ async def login(
     # Verificar senha
     if not user.password_hash or not verify_password(password, user.password_hash):
         logger.warning(f"Login failed: invalid password for user {user.id}")
+        try:
+            await emit_auth_audit(db, action="login_failed", entity="auth", entity_id=str(user.id), actor_id=str(user.id), context={
+                "reason": "invalid_password",
+                "email": email,
+                "request_id": get_request_id(request),
+                "ip": get_client_ip(request),
+            })
+        except Exception:
+            logger.exception("emit_auth_audit failed for login_failed (invalid_password)")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail={
@@ -409,6 +428,17 @@ async def login(
 
     logger.info(f"Login successful for user {user.id} ({user.email})")
     logger.info(f"Login response | user_id={user.id} | role_code={role_code} | role_name={role_name} | is_superadmin={user.is_superadmin}")
+
+    try:
+        await emit_auth_audit(db, action="login_success", entity="auth", entity_id=str(user.id), actor_id=str(user.id), context={
+            "email": user.email,
+            "role_code": role_code,
+            "organization_id": str(organization_id) if organization_id else None,
+            "request_id": get_request_id(request),
+            "ip": get_client_ip(request),
+        })
+    except Exception:
+        logger.exception("emit_auth_audit failed for login_success")
 
     # Set HttpOnly cookie with the access token
     from app.core.config import settings
@@ -629,6 +659,8 @@ Endpoint de logout que remove o cookie HttpOnly contendo o token.
 async def logout(
     response: Response,
     ctx: ExecutionContext = Depends(get_current_context),
+    db: AsyncSession = Depends(get_async_db),
+    request: Request = None,
 ):
     """
     Logout do usuário - Remove o cookie HttpOnly.
@@ -645,6 +677,14 @@ async def logout(
     )
 
     # TODO: Implementar token blacklist se necessário
+    try:
+        await emit_auth_audit(db, action="logout", entity="auth", entity_id=str(ctx.user_id), actor_id=str(ctx.user_id), context={
+            "request_id": get_request_id(request) if request else None,
+            "ip": get_client_ip(request) if request else None,
+        })
+    except Exception:
+        logger.exception("emit_auth_audit failed for logout")
+
     return None
 
 
@@ -702,6 +742,13 @@ async def refresh_token(
 
     if not user_id_str:
         logger.warning("Invalid or expired refresh token attempt")
+        try:
+            await emit_auth_audit(db, action="refresh_failed", entity="auth", context={
+                "reason": "invalid_or_expired_refresh_token",
+                "request_id": None,
+            })
+        except Exception:
+            logger.exception("emit_auth_audit failed for refresh_failed")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail={
@@ -809,6 +856,14 @@ async def refresh_token(
 
     logger.info(f"Token refreshed successfully for user {user.id}")
 
+    try:
+        await emit_auth_audit(db, action="refresh_success", entity="auth", entity_id=str(user.id), actor_id=str(user.id), context={
+            "request_id": None,
+            "ip": None,
+        })
+    except Exception:
+        logger.exception("emit_auth_audit failed for refresh_success")
+
     return RefreshTokenResponse(
         access_token=new_access_token,
         refresh_token=new_refresh_token,
@@ -867,6 +922,13 @@ async def forgot_password(
     # Sempre retornar sucesso (não informar se email existe ou não)
     if not user:
         logger.warning(f"Forgot password requested for non-existent email: {payload.email}")
+        try:
+            await emit_auth_audit(db, action="forgot_password_requested", entity="auth", entity_id=None, actor_id=None, context={
+                "email": payload.email,
+                "request_id": get_request_id(request) if 'request' in locals() else None,
+            })
+        except Exception:
+            logger.exception("emit_auth_audit failed for forgot_password (no user)")
         return ForgotPasswordResponse(
             message="Se o email estiver registrado, você receberá um link de recuperação.",
             email=payload.email,
@@ -899,6 +961,14 @@ async def forgot_password(
             )
 
         logger.info(f"Password reset email sent to {user.email}")
+
+        try:
+            await emit_auth_audit(db, action="forgot_password_requested", entity="auth", entity_id=str(user.id), actor_id=str(user.id), context={
+                "email": user.email,
+                "request_id": get_request_id(request) if 'request' in locals() else None,
+            })
+        except Exception:
+            logger.exception("emit_auth_audit failed for forgot_password (sent)")
 
         return ForgotPasswordResponse(
             message="Se o email estiver registrado, você receberá um link de recuperação.",
@@ -936,6 +1006,7 @@ Reseta a senha usando um token válido.
 async def reset_password(
     payload: ResetPasswordRequest,
     db: AsyncSession = Depends(get_async_db),
+    request: Request = None,
 ):
     """
     Reseta a senha do usuário usando token válido.
@@ -1101,6 +1172,15 @@ async def reset_password(
         )
         
         logger.info(f"Auto-login after reset-password | user_id={user.id} | role={role_code}")
+
+        try:
+            await emit_auth_audit(db, action="reset_password", entity="auth", entity_id=str(user.id), actor_id=str(user.id), context={
+                "method": "reset_via_token",
+                "request_id": get_request_id(request) if request else None,
+                "ip": get_client_ip(request) if request else None,
+            })
+        except Exception:
+            logger.exception("emit_auth_audit failed for reset_password")
         
         return response
 
@@ -1135,7 +1215,8 @@ async def reset_password(
 )
 async def set_password_with_token(
     payload: SetPasswordRequest,
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
+    request: Request = None,
 ):
     """
     Valida token de ativação e define senha.
@@ -1299,7 +1380,15 @@ async def set_password_with_token(
     )
     
     logger.info(f"Auto-login after set-password | user_id={user.id} | role={role_code}")
-    
+    try:
+        await emit_auth_audit(db, action="set_password", entity="auth", entity_id=str(user.id), actor_id=str(user.id), context={
+            "method": "set_password_with_token",
+            "request_id": get_request_id(request) if request else None,
+            "ip": get_client_ip(request) if request else None,
+        })
+    except Exception:
+        logger.exception("emit_auth_audit failed for set_password_with_token")
+
     return response
 
 
@@ -1328,7 +1417,8 @@ async def set_password_with_token(
 )
 async def welcome_verify(
     token: str,
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
+    request: Request = None,
 ):
     """
     Verifica token de welcome e retorna informações do convite.
@@ -1441,6 +1531,14 @@ async def welcome_verify(
                         invitee_kind = "athlete"
     
     logger.info(f"Welcome token verified | user_id={user.id} | email={user.email}")
+
+    try:
+        await emit_auth_audit(db, action="welcome_verify", entity="auth", entity_id=str(user.id), actor_id=str(user.id), context={
+            "email": user.email,
+            "request_id": get_request_id(request) if request else None,
+        })
+    except Exception:
+        logger.exception("emit_auth_audit failed for welcome_verify")
     
     return WelcomeVerifyResponse(
         valid=True,
@@ -1479,7 +1577,8 @@ async def welcome_verify(
 async def welcome_complete(
     payload: WelcomeCompleteRequest,
     response: Response,
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
+    request: Request = None,
 ):
     """
     Completa o cadastro do usuário convidado.
@@ -1790,7 +1889,14 @@ async def welcome_complete(
         )
         
         logger.info(f"Welcome complete | user_id={user.id} | email={user.email} | role_code={role_code} | role_name={role_name} | team_id={team_id}")
-        
+        try:
+            await emit_auth_audit(db, action="welcome_complete", entity="auth", entity_id=str(user.id), actor_id=str(user.id), context={
+                "email": user.email,
+                "request_id": get_request_id(request) if request else None,
+            })
+        except Exception:
+            logger.exception("emit_auth_audit failed for welcome_complete")
+
         return json_response
         
     except HTTPException:
