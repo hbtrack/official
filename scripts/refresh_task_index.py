@@ -132,7 +132,7 @@ def generate_index_md(tasks: List[Dict], output_path: Path):
     content += "**Note:** This file is auto-generated. Do not edit manually.\n"
     content += "To regenerate: `python scripts/refresh_task_index.py`\n"
     
-    with open(output_path, 'w', encoding='utf-8') as f:
+    with open(output_path, 'w', encoding='utf-8', newline='\n') as f:
         f.write(content)
 
 
@@ -160,7 +160,7 @@ def generate_timeline_md(tasks: List[Dict], output_path: Path):
     content += "**Note:** This file is auto-generated. Do not edit manually.\n"
     content += "To regenerate: `python scripts/refresh_task_index.py`\n"
     
-    with open(output_path, 'w', encoding='utf-8') as f:
+    with open(output_path, 'w', encoding='utf-8', newline='\n') as f:
         f.write(content)
 
 

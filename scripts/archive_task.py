@@ -44,8 +44,7 @@ def create_summary_json(task_id: str, status: str, description: str,
     }
     
     summary_file = artifacts_dir / "summary.json"
-    with open(summary_file, 'w', encoding='utf-8') as f:
-        json.dump(summary_data, f, indent=2)
+    with open(summary_file, 'w', encoding='utf-8', newline='\n') as f:
     
     return summary_file
 
@@ -72,7 +71,7 @@ COMMANDS EXECUTED:
             log_content = f.read()
 
     log_path = artifacts_dir / "execution_log.txt"
-    with open(log_path, 'w', encoding='utf-8') as f:
+    with open(log_path, 'w', encoding='utf-8', newline='\n') as f:
         f.write(log_content)
 
     # evidence_index.md
@@ -100,8 +99,7 @@ No evidence packs created during archival.
 """
     
     evidence_path = artifacts_dir / "evidence_index.md"
-    with open(evidence_path, 'w', encoding='utf-8') as f:
-        f.write(evidence_content)
+    with open(evidence_path, 'w', encoding='utf-8', newline='\n') as f:
     
     return log_path, evidence_path
 
