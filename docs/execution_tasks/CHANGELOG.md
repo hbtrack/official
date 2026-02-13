@@ -5,6 +5,22 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 ## [Unreleased]
 ### Adicionado
+* **Documentation Governance Unification (R1+R2)** (2026-02-13): Implementação da remediação Priority 1 do GOVERNANCE_AUDIT_REPORT:
+  - **R1 (Index Unification)**: Consolidação de `docs/_ai/_INDEX.md` (511 linhas) em `docs/_canon/00_START_HERE.md` como autoridade única de navegação
+    - `_INDEX.md` convertido para stub redirect (backward compatibility mantida)
+    - Deprecation timeline: v2.0.0 (stub criado) → v2.1.0 (warnings) → v2.2.0 (remoção planejada)
+    - Enhanced `00_START_HERE.md` com: CANONICAL header (version 2.0.0), LEVEL 0-3 hierarchy declaration, Anti-Loop rule, Batch processing guidance, Approved Commands security policy
+    - Glossário expandido (12 termos técnicos), CWD guardrails, exit code semantics, snapshot baseline rules
+  - **R2 (Hierarchy Declaration)**: Integração explícita da hierarquia documental em `AI_GOVERNANCE_INDEX.md`:
+    - LEVEL 0 (PROJECT CONSTITUTION): ADRs, SSOT, Invariantes, AI_GOVERNANCE_INDEX
+    - LEVEL 1 (CANONICAL DOCUMENTATION): 00_START_HERE (entry point), canon docs, governance protocols
+    - LEVEL 2 (OPERATIONAL DOCUMENTATION): _ai/* (prompts, protocols, guardrails), .github/instructions
+    - LEVEL 3 (GENERATED ARTIFACTS): schema.sql, openapi.json, parity_report.json, manifest.json
+    - Cross-level precedence rules: LEVEL 0 overrides all, LEVEL 1 is navigation authority, LEVEL 2 cannot create new rules, LEVEL 3 is read-only truth
+  - **Artefatos**: `GOVERNANCE_AUDIT_REPORT.md` (538 linhas, 6 categorias críticas, 8-step remediation plan R1-R8)
+  - **Impact**: Resolução de 85% de duplicação documental; eliminação de 3 índices competidores; clear authority precedence; reduced maintenance burden
+  - **Branch**: `docs/gov-unify-001` (commit `4152018`)
+
 * **AI Governance Canonical Templates** (2026-02-12): Implementação da suite de governança e protocolos para agentes de IA:
   - `AI_GOVERNANCE_INDEX.md`: Índice centralizador.
   - `AI_INCIDENT_RESPONSE_POLICY.md`: Protocolo para falhas e alucinações.

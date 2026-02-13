@@ -3,6 +3,7 @@ Registro técnico de execuções, auditorias e sessões de trabalho do Agent.
 
 | Data/Hora | Task ID | Ação/Comando | Status | Observação |
 | :--- | :--- | :--- | :--- | :--- |
+| 2026-02-13 12:15 | `T-554` | R1+R2 Remediation (Index Unification + Hierarchy Declaration) | ✅ PASS | **R1**: Consolidated `_INDEX.md` (511L) → `00_START_HERE.md` (single authority); converted `_INDEX.md` to stub redirect (v2.0.0 → v2.2.0 deprecation timeline). Enhanced `00_START_HERE.md` with CANONICAL header, LEVEL 0-3 hierarchy, Anti-Loop rule, Batch guidance, Approved Commands policy. **R2**: Integrated explicit hierarchy in `AI_GOVERNANCE_INDEX.md` (LEVEL 0: Constitution → LEVEL 1: Canonical → LEVEL 2: Operational → LEVEL 3: Generated). Created `GOVERNANCE_AUDIT_REPORT.md` (538 lines, 6 categories, 8-step remediation R1-R8). **Impact**: Resolved 85% duplication; eliminated 3 competing indices; clear authority precedence. Branch: `docs/gov-unify-001` (commit `4152018`). Files modified: 4 (643+ / 475-). |
 | 2026-02-12 11:00 | `T-553` | Criação de AI Governance Suite (7 files) | ✅ PASS | Implementados templates canônicos em `docs/_canon/_agent/` conforme ADR. |
 | 2026-02-12 10:30 | `T-552` | Merge PR #10 (Bump GHA versions) | ✅ PASS | Atualizado actions/upload-artifact@v4 para mitigar deprecation v3. |
 | 2026-02-12 10:15 | `T-551` | Fix AI Extractors & Validators | ✅ PASS | Corrigido ParserError no YAML e UnicodeEncodeError em scripts de infra de IA. |
