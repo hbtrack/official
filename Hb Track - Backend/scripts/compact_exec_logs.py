@@ -34,15 +34,31 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-ARTIFACTS_ROOT = Path("docs/execution_tasks/artifacts")
-OUTPUT_DIR = Path("docs/execution_tasks")
+def get_repo_root() -> Path:
+  """Find the root of the repo (where .git is)."""
+  # Try starting from script location
+  start = Path(__file__).resolve().parent
+  for parent in [start] + list(start.parents):
+    if (parent / ".git").exists():
+      return parent
+  # Fallback to CWD
+  cwd = Path.cwd().resolve()
+  for parent in [cwd] + list(cwd.parents):
+    if (parent / ".git").exists():
+      return parent
+  return cwd
+
+REPO_ROOT = get_repo_root()
+
+ARTIFACTS_ROOT = REPO_ROOT / "docs" / "execution_tasks" / "artifacts"
+OUTPUT_DIR = REPO_ROOT / "docs" / "execution_tasks"
 STATUS_BOARD_PATH = OUTPUT_DIR / "STATUS_BOARD.md"
 CHANGELOG_PATH = OUTPUT_DIR / "CHANGELOG.md"
 EXECUTIONLOG_PATH = OUTPUT_DIR / "EXECUTIONLOG.md"
 
 START_HERE_CANDIDATES = [
-  Path("docs/_canon/00_START_HERE.md"),
-  Path("00_START_HERE.md"),
+  REPO_ROOT / "docs" / "_canon" / "00_START_HERE.md",
+  REPO_ROOT / "00_START_HERE.md",
 ]
 
 LAST_TASKS_START = "<!-- AUTO:LAST_TASKS_START -->"
@@ -179,6 +195,15 @@ def _extract_first_sentence(value: str, max_len: int = 120) -> str:
     out = out[: max_len - 1].rstrip() + "…"
   return out
 
+def _rel(path: Path) -> Path:
+  """Get path relative to REPO_ROOT if absolute."""
+  if path.is_absolute():
+    try:
+      return path.relative_to(REPO_ROOT)
+    except ValueError:
+      return path
+  return path
+
 def _render_human_summary(event: Dict[str, Any]) -> str:
   # Deterministic: no current timestamps, only SSOT-derived fields.
   short_title = str(event.get("short_title") or event.get("notes_short") or "").strip()
@@ -210,7 +235,7 @@ def _render_proofs(event: Dict[str, Any], evidence_sha256: str, evidence_files: 
   else:
     tests_str = "python scripts/compact_exec_logs.py --check"
 
-  files_str = ", ".join(str(p.as_posix()) for p in evidence_files)
+  files_str = ", ".join(_rel(p).as_posix() for p in evidence_files)
 
   return "\n".join([
     f"task_id: {task_id}",
@@ -390,8 +415,8 @@ def _render_status_board(rows: List[TaskRow]) -> str:
   ])
   lines = [header]
   for r in rows:
-    human_link = f"{r.artifacts_dir.as_posix()}/HUMAN_SUMMARY.md"
-    artifacts_link = r.artifacts_dir.as_posix()
+    human_link = (_rel(r.artifacts_dir) / "HUMAN_SUMMARY.md").as_posix()
+    artifacts_link = _rel(r.artifacts_dir).as_posix()
     commit = r.commit
     lines.append(
       f"| [{r.task_id}]({human_link}) | {r.status} | {r.area} | {r.resumo} | {commit} | {r.evidence_sha256} | {artifacts_link} |"
@@ -403,13 +428,13 @@ def _render_changelog(rows: List[TaskRow]) -> str:
   for r in rows:
     # Use ts_sort (may be empty); show only date part if present
     date = r.ts_sort.split("T")[0] if r.ts_sort else "UNKNOWN_DATE"
-    out.append(f"- {date} | {r.task_id} | {r.status} | {r.area} | {r.resumo}")
+    out.append(f"- {date} | {r.task_id} | {r.status} | {r.area} | {r.resumo} | [{r.task_id}]({_rel(r.artifacts_dir / 'HUMAN_SUMMARY.md').as_posix()})")
   return "\n".join(out)
 
 def _render_executionlog(rows: List[TaskRow]) -> str:
   out = ["# EXECUTIONLOG", "", "Índice curto (derivado de event.json).", "Validação canônica: `python scripts/compact_exec_logs.py --check`.", ""]
   for r in rows:
-    out.append(f"- {r.task_id} | status={r.status} | evidence_sha256={r.evidence_sha256} | artifacts={r.artifacts_dir.as_posix()}")
+    out.append(f"- {r.task_id} | status={r.status} | evidence_sha256={r.evidence_sha256} | artifacts={_rel(r.artifacts_dir).as_posix()}")
   return "\n".join(out)
 
 def _select_start_here_path() -> Optional[Path]:

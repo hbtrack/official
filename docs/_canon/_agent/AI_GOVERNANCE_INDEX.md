@@ -65,14 +65,16 @@ Devem obedecer integralmente os níveis superiores.
 
 ---
 
-LEVEL 4 — EXECUTION ARTIFACTS
+### LEVEL 4 — EXECUTION ARTIFACTS (Human Visibility Layer)
 
-7. parity_report.json
-8. requirements_report.json
-9. Guard baselines
-10. Logs de execução
+**Autoridade SSOT:** `event.json` (Machine) | `HUMAN_SUMMARY.md` (Audit)
 
-Artefatos operacionais. Não possuem autoridade normativa.
+1. **`event.json`**: Ponte de dados determinística para automação e logs.
+2. **`HUMAN_SUMMARY.md`**: Camada de visibilidade humana sobre a execução técnica.
+3. **`PROOFS.md`**: Registro de integridade (SHA256) do trio de execução.
+4. **`STATUS_BOARD.md`**: Painel centralizado do estado de todas as tasks.
+
+Artefatos operacionais com prova de integridade. Obrigatórios para fechamento de task.
 
 ---
 

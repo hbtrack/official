@@ -26,6 +26,7 @@
 - [Categoria 8: Parity Validation](#categoria-8-parity-validation)
 - [Categoria 9: Database & Infrastructure](#categoria-9-database--infrastructure)
 - [Categoria 10: Alembic Migrations](#categoria-10-alembic-migrations)
+- [Categoria 11: Task Lifecycle & Human Visibility](#categoria-11-task-lifecycle--human-visibility)
 - [Comandos Proibidos (Blacklist)](#comandos-proibidos-blacklist)
 - [Arquivos Protegidos (Guard)](#arquivos-protegidos-guard)
 - [Protocolo de Aprovação Condicional](#protocolo-de-aprovação-condicional)
@@ -1386,6 +1387,54 @@ PS> .\venv\Scripts\python.exe -m alembic current
 **Troubleshooting:**
 - Se output vazio → DB não tem tabela `alembic_version` (nunca rodou migrations)
 - Se hash diferente de HEAD → rodar `alembic upgrade head`
+
+---
+
+## Categoria 11: Task Lifecycle & Human Visibility
+
+**Objetivo:** Gerenciar a camada de visibilidade humana e integridade de artefatos de execução.
+
+### Comando: compact_exec_logs.py (Write)
+
+**Ação:** Gera summaries, proofs e atualiza o Status Board e a Home do documento.
+
+**CWD:** Backend root (`C:\HB TRACK\Hb Track - Backend`)
+
+```powershell
+# Gerar/Sincronizar camada de visibilidade (Determinístico)
+.\venv\Scripts\python.exe scripts\compact_exec_logs.py --write
+```
+
+**Parâmetros:**
+- `--write`: Atualiza arquivos físicos se houver drift (HUMAN_SUMMARY, PROOFS, STATUS_BOARD, 00_START_HERE).
+
+**Safe-T Checks:**
+- Verifica se `event.json` existe em cada task.
+- Não atualiza arquivos se o conteúdo gerado for idêntico (idempotência).
+
+**Tempo Estimado:** 5-15s (depende do volume de tasks).
+
+---
+
+### Comando: compact_exec_logs.py (Check)
+
+**Ação:** Valida integridade e sincronia da camada de visibilidade sem alterar arquivos.
+
+**CWD:** Backend root (`C:\HB TRACK\Hb Track - Backend`)
+
+```powershell
+# Validar integridade (Read-Only / Gate-Style)
+.\venv\Scripts\python.exe scripts\compact_exec_logs.py --check
+```
+
+**Exit Codes:**
+- `0`: PASS (Tudo sincronizado)
+- `2`: MISSING (Faltam artefatos ou event.json)
+- `3`: FORMAT (Erro de parsing ou estrutura)
+- `4`: MISMATCH (Drift detectado entre event.json e camada humana ou 00_START_HERE)
+
+**Uso Recomendado:**
+- Usar como gate final antes de commit de tasks.
 
 ---
 
