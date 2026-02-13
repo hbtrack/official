@@ -189,3 +189,10 @@ Hb Track - Backend/.env.local
 Hb Track - Backend/.env.*.local
 Hb Track - Backend/*.swp
 Hb Track - Backend/*.swo
+
+# Evidence packs (execution_tasks artifacts) - ARCH-DOCS-ARTIFACTS-002
+# Prevent accidental commit of evidence pack archives
+docs/execution_tasks/artifacts/**/*.zip
+docs/execution_tasks/artifacts/**/*.tar.gz
+docs/execution_tasks/artifacts/**/*.tgz
+docs/execution_tasks/artifacts/**/*.7z
