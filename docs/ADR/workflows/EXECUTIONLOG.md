@@ -7,6 +7,9 @@
 - Use `scripts/compact_exec_logs.py` to maintain this document.
 
 ## Tasks
+- 2026-02-14T00:15:00Z | ARCH-SCRIPTS-REFACTOR-001 | PASS | Refactor fix_superadmin.py (idempotency + JSON logging + CLI) | P2_REFACTORING: fix_superadmin.py elevado de DIVIDA_TECNICA para INCORPORAR (state checking, JSON logs, CLI standards). Commit 4d94422.
+- 2026-02-13T17:30:00Z | ARCH-DOCS-ARTIFACTS-002-FOLLOWUP-DET | PASS | Fix Determinismo e Bug de Indentação (Follow-up) | Determinismo alcançado ao remover timestamps dinâmicos e corrigir lógica de total de tarefas.
+- 2026-02-13T16:45:00Z | ARCH-DOCS-ARTIFACTS-002 | PASS | Execution Tasks Artifacts & Machine-Readable Indexing | Task completed successfully. Scripts created and indices generated from 13 tasks (11 event.json + 2 summary.json).
 - 2026-02-13T13:15:00Z | ARCH-GOV-STATUS-VOCAB-001 | PASS | Normalizar vocabulário de status (compactador + event.json) | Resgate de indexação para ARCH-AST-001/REG-001 via normalização de status e correção de JSON corrompido.
 - 2026-02-13T12:45:00Z | ARCH-AST-REG-001 | PASS | ASTAnalyzer regression tests (async parity lock) | (Audit: Gaps Noted) Audit closed with minor evidence gaps (path/content/index).
 - 2026-02-13T12:15:00Z | INV-TRAIN-009-REFERENCE-RUN-001 | PASS | INV-TRAIN-009 reference run baseline | Baseline execution log captured for INV-TRAIN-009; PASS and reproducible. Audit closed with path/gitstate gaps.
