@@ -108,6 +108,7 @@ Lista inicial (defaults autorizados):
 11. `Hb Track - Backend/scripts/fix_superadmin.py` — fix superadmin (idempotente, JSON logging, CLI standards) ✅
 12. `scripts/compact_exec_logs.py` — Compact execution logs (idempotente, JSON logging, CLI standards) ✅
 13. `Hb Track - Backend/scripts/seed_v1_2_initial.py` — Foundation data seeding (idempotente via idempotency_keys, JSON logging, CLI standards) ✅
+14. `Hb Track - Backend/scripts/seed_permissions.py` — RBAC permissions seeding (idempotente via idempotency_keys, JSON logging, CLI standards) ✅
 
 ---
 
@@ -127,6 +128,7 @@ Regra mandatória:
 - `fix_superadmin.py` → **INCORPORAR** (idempotência comprovada via smoke tests, JSON logging, CLI standards implementados; ref: AR-2026-02-14)
 - `compact_exec_logs.py` → **INCORPORAR** (idempotência comprovada via smoke tests, JSON logging, CLI standards implementados; exit codes explícitos 0=noop, 1=updated; ref: AR-2026-02-15)
 - `seed_v1_2_initial.py` → **INCORPORAR** (idempotência comprovada via idempotency_keys table, JSON logging, CLI standards implementados; exit codes 0=noop, 1=seeded, 3=error; ref: AR-2026-02-16)
+- `seed_permissions.py` → **INCORPORAR** (idempotência comprovada via idempotency_keys table, JSON logging, CLI standards implementados; exit codes 0=noop, 1=seeded, 3=error; GATE-A idempotency validated in SMOKE-3; ref: AR-2026-02-17)
 
 ---
 
