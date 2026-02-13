@@ -125,6 +125,15 @@ Governa a documentação humana (`docs/_canon/`, `docs/02_modulos/`, ADRs) — t
 
 ---
 
+### 018-ADR-DOCS — Unificação de Governança Documental e Hierarquia Explícita
+**Arquivo**: [`018-ADR-DOCS-governance-unification.md`](C:/HB TRACK/docs/ADR/018-ADR-DOCS-governance-unification.md)
+**Status**: ACCEPTED
+**Data**: 2026-02-13
+**Resumo**:
+Implementa R1+R2 de remediação crítica de governance audit: (1) Consolidação de `_INDEX.md` (511L) em `00_START_HERE.md` como autoridade única de navegação (stub redirect preserva backward compatibility); (2) Declaração explícita de hierarquia documental LEVEL 0-3 em `AI_GOVERNANCE_INDEX.md` (Constitution → Canonical → Operational → Generated). **Impact**: Resolução de 85% de duplicação documental; eliminação de 3 índices competidores; clear authority precedence; reduced maintenance burden. Branch: `docs/gov-unify-001`.
+
+---
+
 ## Template
 
 **Arquivo**: [`_TEMPLATE_ADR.md`](C:/HB TRACK/docs/ADR/_TEMPLATE_ADR.md)
