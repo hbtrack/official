@@ -40,7 +40,7 @@
 | **Structural Diff** | Divergência em: type, nullability, FK, UNIQUE, CHECK, DEFAULT — requer correção manual do model | `parity_report.json` seção `structural_diffs` |
 | **Non-Structural Diff** | Divergência em: comments, sequences, índices não-únicos — geralmente auto-corrigível | `parity_report.json` seção `field_diffs` |
 | **Requirements** | Validação de regras de negócio/constraints em models (vs schema.sql) | `model_requirements_guide.md` |
-| **Guard** | Proteção contra modificação não autorizada de arquivos críticos (ML/API/tests) | `INVARIANTS_AGENT_GUARDRAILS.md` |
+| **Guard** | Proteção contra modificação não autorizada de arquivos críticos (ML/API/tests) | `docs\_ai\_guardrails\GUARDRAILS_INDEX.md` |
 | **Baseline** | Snapshot de estado conformante (usado por guard para detectar diffs) | `08_APPROVED_COMMANDS.md` |
 | **Manifest** | Rastreabilidade de geração (git commit, checksums, timestamps) | `04_SOURCES_GENERATED.md` |
 | **Gate** | Comando atomicamente composto (ex: parity → requirements → guard) para validar 1 tabela | `05_MODELS_PIPELINE.md` |
@@ -359,7 +359,7 @@ SSOT Artifacts:
 | **Index** (este) | `docs\_ai\_INDEX.md` | Router central + Quick Start Routing. Começar sempre aqui. |
 | **Agent Prompts** | `docs\_ai\06_AGENT-PROMPTS.md` | Copy/paste prompts prontos para validação/correção models |
 | **Agent Protocol** | `docs\_ai\INVARIANTS_AGENT_PROTOCOL.md` | Local-first: SSOT refresh, validação, workflow obrigatório |
-| **Agent Guardrails** | `docs\_ai\INVARIANTS_AGENT_GUARDRAILS.md` | Anti-alucinação: fontes canônicas, gates, stop rules |
+| **Agent Guardrails** | `docs\_ai\_guardrails\GUARDRAILS_INDEX.md` | Entry point único: baseline, parity, requirements, operational, invariants policies |
 | **Task Template** | `docs\_ai\INV_TASK_TEMPLATE.md` | Template: instalar 1 invariante com zero alucinação |
 | **System Design** | `docs\_ai\SYSTEM_DESIGN.md` | Arquitetura backend (stack, camadas, padrões, convenções) |
 | **Agent Routing Map** | `docs\_ai\07_AGENT_ROUTING_MAP.md` | Mapa: ação → instruções → docs canônicos → comandos |
@@ -376,7 +376,7 @@ SSOT Artifacts:
 | **_schemas** | `docs\_ai\_schemas\` | JSON Schemas para validação automática | `agent-spec.schema.json`, `quality-gates.schema.json`, `invocation.schema.json` |
 | **_prompts** | `docs\_ai\_prompts\` | Templates de prompt (system messages) | `PROMPT_TEMPLATE_CODE_REVIEW.md`, `PROMPT_TEMPLATE_DOCUMENTATION.md`, `PROMPT_TEMPLATE_TESTING.md` |
 | **_maps** | `docs\_ai\_maps\` | Índices e mapas de roteamento | `agent-routing-map.md`, `MAP_ROUTING_AGENT_DOCUMENTATION.md`, `MAP_ROUTING_AGENT_GATES.md`, `MAP_ROUTING_AGENT_MODELS.md` |
-| **_guardrails** | `docs\_ai\_guardrails\` | Políticas hard (security, edit) | `GUARDRAIL_POLICY_BASELINE.md`, `GUARDRAIL_POLICY_PARITY.md`, `GUARDRAIL_POLICY_REQUIREMENTS.md` |
+| **_guardrails** | `docs\_ai\_guardrails\` | Políticas de proteção (entry: **GUARDRAILS_INDEX.md**) | `GUARDRAIL_POLICY_BASELINE.md`, `GUARDRAIL_POLICY_PARITY.md`, `GUARDRAIL_POLICY_REQUIREMENTS.md` |
 | **_checklists** | `docs\_ai\_checklists\` | Checklists executáveis | `CHECKLIST_AGENT_DEPLOYMENT.md`, `CHECKLIST_AGENT_VALIDATION.md`, `CHECKLIST_AGENT_DOCUMENTATION.md` |
 | **_docs_arch** | `docs\_ai\_docs_arch\` | Arquitetura documental | `DOCS_ARCH_MASTER.md` |
 

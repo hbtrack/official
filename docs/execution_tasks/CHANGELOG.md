@@ -21,6 +21,17 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
   - **Impact**: Resolução de 85% de duplicação documental; eliminação de 3 índices competidores; clear authority precedence; reduced maintenance burden
   - **Branch**: `docs/gov-unify-001` (commit `4152018`)
 
+* **Guardrails Consolidation (R3)** (2026-02-13): Implementação da remediação Priority 2 do GOVERNANCE_AUDIT_REPORT:
+  - **R3 (Guardrails Index Creation)**: Criação de entry point único para 5 arquivos fragmentados de guardrails:
+    - Criado `docs/_ai/_guardrails/GUARDRAILS_INDEX.md` (entry point único com decision tree, quick reference, workflow de consulta)
+    - Preservada granularidade: 5 arquivos mantidos intactos (GUARDRAIL_POLICY_BASELINE, GUARDRAIL_POLICY_PARITY, GUARDRAIL_POLICY_REQUIREMENTS, AGENT_GUARDRAILS, INVARIANTS_AGENT_GUARDRAILS)
+    - Headers atualizados: todos os 5 arquivos agora referenciam GUARDRAILS_INDEX.md como parent
+    - Referências atualizadas: `00_START_HERE.md` glossário e seção 5.1 agora apontam para GUARDRAILS_INDEX.md
+    - Domínios organizados: Gate-specific (baseline/parity/requirements) + Operational (DevOps/Repo/Model Pipeline/Docs) + Invariants (Training module)
+  - **Artefatos**: `GUARDRAILS_INDEX.md` (290 linhas: decision tree, checklist pré-execução, troubleshooting, metrics de compliance)
+  - **Impact**: Clear navigation hierarchy para guardrails; eliminated ambiguity de "qual guardrail consultar"; preserved granularity (não merged); checklist pré-execução universal
+  - **Branch**: `docs/gov-unify-001` (commit pendente)
+
 * **AI Governance Canonical Templates** (2026-02-12): Implementação da suite de governança e protocolos para agentes de IA:
   - `AI_GOVERNANCE_INDEX.md`: Índice centralizador.
   - `AI_INCIDENT_RESPONSE_POLICY.md`: Protocolo para falhas e alucinações.
