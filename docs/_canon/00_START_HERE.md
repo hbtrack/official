@@ -1,8 +1,19 @@
-# AI Agent Documentation Index (Router Central)
+# 00_START_HERE — Porta Única de Documentação (CANONICAL)
 
-> **Natureza deste documento**: Mapa de navegação e roteamento para agents (humanos ou IA) no monorepo HB Track.
-> **NÃO é fonte canônica**: em caso de conflito com docs canônicos (`docs\_canon\03_WORKFLOWS.md`, `05_MODELS_PIPELINE.md`, `08_APPROVED_COMMANDS.md`), **o canon vence sempre**.
-> 
+> **Status:** CANONICAL  
+> **Version:** 2.0.0  
+> **Last Updated:** 2026-02-13  
+> **Applies To:** AI Agents + Human Developers
+>
+> **NATUREZA DESTE ARQUIVO**: Porta única de entrada para toda navegação documental no HB Track.  
+> **PRECEDÊNCIA**: Este arquivo é a autoridade máxima de roteamento. Em caso de conflito com outros índices, este documento vence.
+>
+> **Hierarquia Documental (Ordem de Precedência):**
+> - **LEVEL 0**: AI Governance Formal (`docs\_canon\_agent\AI_GOVERNANCE_INDEX.md`)
+> - **LEVEL 1**: Documentação Canônica (`docs\_canon\` — **este arquivo é LEVEL 1**)
+> - **LEVEL 2**: Documentação Operacional (`docs\_ai\`)
+> - **LEVEL 3**: Artefatos Gerados (`docs\_generated\`)
+>
 > **Paths Canônicos:**
 > - **Repo root**: `C:\HB TRACK\` (Windows) | `<repo>` (portável)
 > - **Backend root**: `C:\HB TRACK\Hb Track - Backend\` (Windows) | `<repo>/Hb Track - Backend` (portável)
@@ -26,11 +37,14 @@
 |-------|-----------|---------------|
 | **SSOT** | Single Source of Truth — artefatos gerados (schema.sql, openapi.json) que definem estado autoritativo | `01_AUTHORITY_SSOT.md` |
 | **Parity** | Conformidade estrutural entre model (SQLAlchemy) e schema (PostgreSQL DDL) | `05_MODELS_PIPELINE.md` |
+| **Structural Diff** | Divergência em: type, nullability, FK, UNIQUE, CHECK, DEFAULT — requer correção manual do model | `parity_report.json` seção `structural_diffs` |
+| **Non-Structural Diff** | Divergência em: comments, sequences, índices não-únicos — geralmente auto-corrigível | `parity_report.json` seção `field_diffs` |
 | **Requirements** | Validação de regras de negócio/constraints em models (vs schema.sql) | `model_requirements_guide.md` |
 | **Guard** | Proteção contra modificação não autorizada de arquivos críticos (ML/API/tests) | `INVARIANTS_AGENT_GUARDRAILS.md` |
 | **Baseline** | Snapshot de estado conformante (usado por guard para detectar diffs) | `08_APPROVED_COMMANDS.md` |
 | **Manifest** | Rastreabilidade de geração (git commit, checksums, timestamps) | `04_SOURCES_GENERATED.md` |
-| **Gate** | Comando atomicamente composto (ex: parity → requirements → guard) | `05_MODELS_PIPELINE.md` |
+| **Gate** | Comando atomicamente composto (ex: parity → requirements → guard) para validar 1 tabela | `05_MODELS_PIPELINE.md` |
+| **Batch** | Orquestrador multi-table; exit code = primeiro FAIL não-skip (fail-fast) ou maior severidade | `08_APPROVED_COMMANDS.md` |
 | **Canon** | Documentação autoritativa (precedência sobre este Index) | `docs\_canon\` |
 | **Exit Code** | Código de retorno de comando (0=pass, 2=parity, 3=guard, 4=requirements, 1=crash) | `exit_codes.md` |
 
@@ -69,7 +83,37 @@
      ```
    - Se aprovado (EXIT 0): snapshot baseline (só quando autorizado explicitamente)
 
+**Regra Anti-Loop (CRÍTICA):**
+- Se `parity_scan` retorna EXIT 2 (structural diff) E `models_autogen_gate` também retorna EXIT 2 repetidamente (2+ vezes):
+  - **PARAR**: não insistir em autogen
+  - **Mudar para "diagnóstico estrutural"**: consultar `09_TROUBLESHOOTING_GUARD_PARITY.md` seção "Structural Diff Persistente"
+  - Possível causa: DDL constraints no schema.sql que o model não expressa (ex: UNIQUE, CHECK, DEFAULT)
+  - Categorias structural: type, nullability, FK, UNIQUE, CHECK, DEFAULT (ver glossário "Structural Diff")
+  - Ação: corrigir manualmente model OU atualizar schema.sql (se autorizado)
+
 **Triagem rápida (opcional)**: antes do gate, rode `model_requirements.py` para diagnóstico read-only (exit 0/4).
+
+**Batch Processing (40+ tabelas)**: para processar múltiplas tabelas em lote:
+```powershell
+# Rodar em modo preview (dry-run) primeiro
+.\scripts\models_batch.ps1 -BatchFile tables.txt -DryRun
+
+# Revisar summary; se OK, executar sem -DryRun
+.\scripts\models_batch.ps1 -BatchFile tables.txt
+```
+**Nota crítica**: batch exit code = primeiro FAIL não-skip (fail-fast) **ou** maior severidade. Consultar `08_APPROVED_COMMANDS.md` para comando batch canônico do projeto.
+
+---
+
+## Comandos Não Listados em Approved Commands
+
+**Regra de segurança (OBRIGATÓRIA):**
+- **Se um comando não estiver em `docs\_canon\08_APPROVED_COMMANDS.md`, NÃO EXECUTAR sem autorização explícita do usuário.**
+
+**Workflow após aprovação:**
+1. Usuário autoriza comando explicitamente
+2. Atualizar `08_APPROVED_COMMANDS.md` com comando + justificativa + riscos
+3. Commitar mudança (comando + documentação no mesmo commit)
 
 ---
 
