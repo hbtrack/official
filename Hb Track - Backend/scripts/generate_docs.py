@@ -354,7 +354,7 @@ def generate_alembic_state(output_dir: Path) -> bool:
         # Get alembic heads
         print("[INFO] Running alembic heads...")
         result_heads = subprocess.run(
-            ["alembic", "-c", str(alembic_ini), "heads"],
+            [sys.executable, "-m", "alembic", "-c", str(alembic_ini), "heads"],
             capture_output=True,
             text=True,
             cwd=BACKEND_ROOT,
@@ -363,15 +363,17 @@ def generate_alembic_state(output_dir: Path) -> bool:
         )
 
         output_lines.append("=== ALEMBIC HEADS ===")
-        output_lines.append(result_heads.stdout.strip() or "(no output)")
-        if result_heads.returncode != 0 and result_heads.stderr:
-            output_lines.append(f"stderr: {result_heads.stderr.strip()}")
+        stdout_heads = result_heads.stdout.strip()
+        stderr_heads = result_heads.stderr.strip()
+        output_lines.append(stdout_heads or "(no output)")
+        if stderr_heads:
+            output_lines.append(f"stderr:\n{stderr_heads}")
         output_lines.append("")
 
         # Get alembic current
         print("[INFO] Running alembic current...")
         result_current = subprocess.run(
-            ["alembic", "-c", str(alembic_ini), "current"],
+            [sys.executable, "-m", "alembic", "-c", str(alembic_ini), "current"],
             capture_output=True,
             text=True,
             cwd=BACKEND_ROOT,
@@ -380,9 +382,11 @@ def generate_alembic_state(output_dir: Path) -> bool:
         )
 
         output_lines.append("=== ALEMBIC CURRENT ===")
-        output_lines.append(result_current.stdout.strip() or "(no output)")
-        if result_current.returncode != 0 and result_current.stderr:
-            output_lines.append(f"stderr: {result_current.stderr.strip()}")
+        stdout_current = result_current.stdout.strip()
+        stderr_current = result_current.stderr.strip()
+        output_lines.append(stdout_current or "(no output)")
+        if stderr_current:
+            output_lines.append(f"stderr:\n{stderr_current}")
         output_lines.append("")
 
         # Add timestamp

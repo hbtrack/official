@@ -257,7 +257,7 @@ Detalhado em:
 * [exit_codes.md](C:/HB TRACK/docs/references/exit_codes.md)
 * [model_requirements_guide.md](C:/HB TRACK/docs/references/model_requirements_guide.md)
 * [CHECKLIST-CANONICA-MODELS.md](C:/HB TRACK/Hb Track - Backend/docs/architecture/CHECKLIST-CANONICA-MODELS.md)
-* [CHANGELOG.md](C:/HB TRACK/docs/execution_tasks/CHANGELOG.md)
+* [CHANGELOG.md](C:/HB TRACK/docs/ADR/architecture/CHANGELOG.md)
 * [EXECUTIONLOG.md](C:/HB TRACK/docs/execution_tasks/EXECUTIONLOG.md)
 
 ```

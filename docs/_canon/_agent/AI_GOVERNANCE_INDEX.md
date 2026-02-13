@@ -82,6 +82,77 @@ Documento de nível inferior nunca pode sobrescrever regra de nível superior.
 
 ---
 
+# 2.1. INTEGRATION WITH DOCUMENTATION HIERARCHY
+
+**This governance framework integrates with the project's documentation hierarchy as follows:**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ LEVEL 0: PROJECT CONSTITUTION (Highest Authority)          │
+│  ├─ ADRs (Architecture Decision Records)                    │
+│  ├─ SSOT (schema.sql, openapi.json, alembic_state.txt)     │
+│  ├─ Invariantes canônicas (INVARIANTS_TRAINING.md)         │
+│  └─ THIS DOCUMENT (AI_GOVERNANCE_INDEX.md)                  │
+└─────────────────────────────────────────────────────────────┘
+                           │
+                           ↓
+┌─────────────────────────────────────────────────────────────┐
+│ LEVEL 1: CANONICAL DOCUMENTATION (Navigation Authority)    │
+│  ├─ 00_START_HERE.md (Single Entry Point)                  │
+│  ├─ 01_AUTHORITY_SSOT.md (Precedence rules)                │
+│  ├─ 05_MODELS_PIPELINE.md (Validation workflows)           │
+│  ├─ 08_APPROVED_COMMANDS.md (Command whitelist)            │
+│  ├─ 09_TROUBLESHOOTING_GUARD_PARITY.md (Exit codes)        │
+│  └─ docs/_canon/_agent/*.md (Governance protocols)         │
+└─────────────────────────────────────────────────────────────┘
+                           │
+                           ↓
+┌─────────────────────────────────────────────────────────────┐
+│ LEVEL 2: OPERATIONAL DOCUMENTATION (Execution Guidance)    │
+│  ├─ docs/_ai/*.md (Prompts, protocols, guardrails)         │
+│  ├─ docs/_ai/_context/*.md (Agent constraints)             │
+│  ├─ docs/_ai/_specs/*.md (Formal specs)                    │
+│  ├─ docs/_ai/_checklists/*.md (Validation checklists)      │
+│  └─ .github/instructions/*.md (Conditional loading)        │
+└─────────────────────────────────────────────────────────────┘
+                           │
+                           ↓
+┌─────────────────────────────────────────────────────────────┐
+│ LEVEL 3: GENERATED ARTIFACTS (Evidence/SSOT State)         │
+│  ├─ schema.sql (Database DDL)                              │
+│  ├─ openapi.json (API contract)                            │
+│  ├─ parity_report.json (Model-schema alignment)            │
+│  ├─ manifest.json (Generation traceability)                │
+│  └─ baseline.json (Guard state — LOCAL ONLY)               │
+└─────────────────────────────────────────────────────────────┘
+                           │
+                           ↓
+┌─────────────────────────────────────────────────────────────┐
+│ LEVEL 4: EXECUTION ARTIFACTS (Operational Logs)            │
+│  ├─ Gate logs (parity, requirements, guard outputs)        │
+│  ├─ EXECUTIONLOG.md (Session logs)                         │
+│  ├─ CHANGELOG.md (Change history)                          │
+│  └─ Test outputs (pytest, invariant validation)            │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Cross-Level Precedence Rules:**
+
+1. **LEVEL 0 overrides all:** If ADR or SSOT contradicts any lower-level document, LEVEL 0 wins.
+2. **LEVEL 1 is navigation authority:** All agents MUST start at `00_START_HERE.md` before consulting operational docs.
+3. **LEVEL 2 cannot create new rules:** Operational docs interpret/implement LEVEL 1 rules but cannot contradict them.
+4. **LEVEL 3 is read-only truth:** Generated artifacts reflect system state; never edited manually.
+5. **LEVEL 4 is evidence only:** Logs do not have normative authority.
+
+**Integration Point:** Agents following `AI_ARCH_EXEC_PROTOCOL.md` MUST:
+- Start at `docs/_canon/00_START_HERE.md` for all operational tasks
+- Consult `AI_GOVERNANCE_INDEX.md` (this file) for governance decisions
+- Follow hierarchy LEVEL 0 → LEVEL 1 → LEVEL 2 → LEVEL 3 in case of uncertainty
+
+**Audit Trail:** Any conflict between levels must be escalated via `AI_INCIDENT_RESPONSE_POLICY.md` (SEV-2 or higher).
+
+---
+
 # 3. GOVERNANCE MAP (RESPONSABILIDADES)
 
 AI_ARCH_EXEC_PROTOCOL.md
