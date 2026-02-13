@@ -56,6 +56,10 @@ STATUS_BOARD_PATH = OUTPUT_DIR / "STATUS_BOARD.md"
 CHANGELOG_PATH = OUTPUT_DIR / "CHANGELOG.md"
 EXECUTIONLOG_PATH = OUTPUT_DIR / "EXECUTIONLOG.md"
 
+# Path to global sync files (architecture/workflow docs)
+GLOBAL_CHANGELOG_PATH = REPO_ROOT / "docs" / "ADR" / "architecture" / "CHANGELOG.md"
+GLOBAL_EXECUTIONLOG_PATH = REPO_ROOT / "docs" / "ADR" / "workflows" / "EXECUTIONLOG.md"
+
 START_HERE_CANDIDATES = [
   REPO_ROOT / "docs" / "_canon" / "00_START_HERE.md",
   REPO_ROOT / "00_START_HERE.md",
@@ -568,6 +572,11 @@ def main(argv: List[str]) -> int:
     _write_text_if_changed(STATUS_BOARD_PATH, status_board)
     _write_text_if_changed(CHANGELOG_PATH, changelog)
     _write_text_if_changed(EXECUTIONLOG_PATH, executionlog)
+    # Sync global copies
+    if GLOBAL_CHANGELOG_PATH.parent.exists():
+      _write_text_if_changed(GLOBAL_CHANGELOG_PATH, changelog)
+    if GLOBAL_EXECUTIONLOG_PATH.parent.exists():
+      _write_text_if_changed(GLOBAL_EXECUTIONLOG_PATH, executionlog)
   else:
     # Must exist and must match expected bytes
     mismatches: List[str] = []
@@ -575,8 +584,12 @@ def main(argv: List[str]) -> int:
       (STATUS_BOARD_PATH, status_board),
       (CHANGELOG_PATH, changelog),
       (EXECUTIONLOG_PATH, executionlog),
+      (GLOBAL_CHANGELOG_PATH, changelog),
+      (GLOBAL_EXECUTIONLOG_PATH, executionlog),
     ]:
       if not p.exists():
+        if p in [GLOBAL_CHANGELOG_PATH, GLOBAL_EXECUTIONLOG_PATH]:
+          continue # optional
         mismatches.append(f"missing_derived:{p.as_posix()}")
         continue
       current = _read_text(p).replace("\r\n", "\n").replace("\r", "\n")
