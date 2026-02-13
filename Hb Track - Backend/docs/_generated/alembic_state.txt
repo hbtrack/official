@@ -7,4 +7,4 @@ stderr:
 INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
 INFO  [alembic.runtime.migration] Will assume transactional DDL.
 
-Generated: 2026-02-13T11:51:56.060786+00:00Z
+Generated: 2026-02-13T20:01:39.115206+00:00Z
