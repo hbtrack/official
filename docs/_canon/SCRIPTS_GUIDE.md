@@ -110,6 +110,7 @@ Lista inicial (defaults autorizados):
 13. `Hb Track - Backend/scripts/seed_v1_2_initial.py` — Foundation data seeding (idempotente via idempotency_keys, JSON logging, CLI standards) ✅
 14. `Hb Track - Backend/scripts/seed_permissions.py` — RBAC permissions seeding (idempotente via idempotency_keys, JSON logging, CLI standards) ✅
 15. `Hb Track - Backend/scripts/seed_role_permissions.py` — RBAC role-permission mapping seeding (idempotente via idempotency_keys, JSON logging, CLI standards) ✅
+16. `Hb Track - Backend/scripts/seed_schooling_levels.py` — Brazilian education levels seeding (idempotente via idempotency_keys, JSON logging, CLI standards) ✅
 
 ---
 
@@ -131,6 +132,7 @@ Regra mandatória:
 - `seed_v1_2_initial.py` → **INCORPORAR** (idempotência comprovada via idempotency_keys table, JSON logging, CLI standards implementados; exit codes 0=noop, 1=seeded, 3=error; ref: AR-2026-02-16)
 - `seed_permissions.py` → **INCORPORAR** (idempotência comprovada via idempotency_keys table, JSON logging, CLI standards implementados; exit codes 0=noop, 1=seeded, 3=error; GATE-A idempotency validated in SMOKE-3; ref: AR-2026-02-17)
 - `seed_role_permissions.py` → **INCORPORAR** (idempotência comprovada via idempotency_keys table, JSON logging, CLI standards implementados; exit codes 0=noop, 1=seeded, 3=error; GATE-A idempotency mechanism validated; ref: AR-2026-02-18)
+- `seed_schooling_levels.py` → **INCORPORAR** (idempotência comprovada via idempotency_keys table, JSON logging, CLI standards implementados; exit codes 0=noop, 1=seeded, 3=error; GATE-A idempotency mechanism validated; simplest script (6 records); ref: AR-2026-02-19)
 
 ---
 
