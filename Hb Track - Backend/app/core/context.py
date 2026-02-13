@@ -61,17 +61,27 @@ class ExecutionContext:
     user_id: UUID
     email: str
     role_code: str
+    request_id: str
     person_id: Optional[UUID] = None
     is_superadmin: bool = False
     organization_id: Optional[UUID] = None
     membership_id: Optional[UUID] = None
     team_ids: List[UUID] = field(default_factory=list)
     permissions: Dict[str, bool] = field(default_factory=dict)
+    timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     
     def can(self, permission: str) -> bool:
         """Verifica se o contexto possui uma permissão específica"""
         return self.permissions.get(permission, False)
     
+    def can_bypass_rules(self) -> bool:
+        """R3: Superadmin pode ignorar travas operacionais"""
+        return self.is_superadmin
+
+    def has_active_membership(self) -> bool:
+        """R42: Verifica se o ator tem vínculo ativo (ou se é superadmin)"""
+        return self.is_superadmin or (self.membership_id is not None)
+
     def requires(self, permission: str) -> None:
         """
         Garante que o contexto possui uma permissão.
@@ -97,12 +107,25 @@ class ExecutionContext:
             "user_id": str(self.user_id),
             "email": self.email,
             "role_code": self.role_code,
+            "request_id": self.request_id,
             "person_id": str(self.person_id) if self.person_id else None,
             "is_superadmin": self.is_superadmin,
             "organization_id": str(self.organization_id) if self.organization_id else None,
             "membership_id": str(self.membership_id) if self.membership_id else None,
             "team_ids": [str(tid) for tid in self.team_ids],
             "permissions": self.permissions,
+            "timestamp": self.timestamp.isoformat() if self.timestamp else None
+        }
+
+    def to_audit_dict(self) -> Dict[str, Any]:
+        """Formato canônico para audit_logs (JSONB)"""
+        return {
+            "actor_user_id": str(self.user_id),
+            "actor_role": self.role_code,
+            "organization_id": str(self.organization_id) if self.organization_id else None,
+            "request_id": self.request_id,
+            "is_superadmin": self.is_superadmin,
+            "timestamp": self.timestamp.isoformat() if self.timestamp else None
         }
 
 # HTTP Bearer security scheme
@@ -340,6 +363,7 @@ async def get_current_context(
             user_id=UUID(user.id),
             email=user.email,
             role_code=role_code,
+            request_id=request_id,
             person_id=person_id,
             is_superadmin=user.is_superadmin,
             organization_id=organization_id,
@@ -443,6 +467,7 @@ def get_mock_context() -> ExecutionContext:
         user_id=uuid4(),
         email="mock@test.com",
         role_code="coordenador",
+        request_id="mock-request-id",
         person_id=uuid4(),
         is_superadmin=False,
         organization_id=uuid4(),
