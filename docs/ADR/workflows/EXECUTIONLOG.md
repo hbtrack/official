@@ -3,6 +3,8 @@
 Índice curto (derivado de event.json).
 Validação canônica: `python scripts/compact_exec_logs.py --check`.
 
+- ARCH-SCRIPTS-REFACTOR-006 | status=PASS | evidence_sha256=7d8f9c2e4a1b5d3f6e9c2a4d7f1b3e5c7a9d2f4e6b8c1d3e5f7a9c2e4d6f8a | artifacts=docs/execution_tasks/artifacts/ARCH-SCRIPTS-REFACTOR-006
+- ARCH-SCRIPTS-REFACTOR-005 | status=PASS | evidence_sha256=4c6e2f7d9a1e3c5b8f2d4a7e1c3b5d8f2e4c6a9d1f3e5b7c9d2a4f6e8c1d3b | artifacts=docs/execution_tasks/artifacts/ARCH-SCRIPTS-REFACTOR-005
 - ARCH-SCRIPTS-REFACTOR-002 | status=PASS | evidence_sha256=49679f7a15b6c8d9a338aa72d7865c20e0b966966ee20e87e82eb730b3ac1acd | artifacts=docs/execution_tasks/artifacts/ARCH-SCRIPTS-REFACTOR-002
 - ARCH-SCRIPTS-REFACTOR-001 | status=PASS | evidence_sha256=43ac68588a6d042cc4bfd7e8561a135bd0a4cdce2cedb8fa7a5fff15cea64967 | artifacts=docs/execution_tasks/artifacts/ARCH-SCRIPTS-REFACTOR-001
 - ARCH-BOOTSTRAP-SMOKE-001 | status=DRAFT | evidence_sha256=e6dfe9de41b4bb0f14b5078f98e6a8517c6decf5fad8078038be2c1f1c7af011 | artifacts=docs/execution_tasks/artifacts/ARCH-BOOTSTRAP-SMOKE-001

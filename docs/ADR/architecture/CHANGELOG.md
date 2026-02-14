@@ -2,6 +2,8 @@
 
 Uma linha por TASK_ID (derivado de event.json).
 
+- 2026-02-19 | ARCH-SCRIPTS-REFACTOR-006 | PASS | Scripts | Refactor seed_schooling_levels.py (6 education levels, idempotency + CLI, 85% template reuse from AR-005) | [ARCH-SCRIPTS-REFACTOR-006](docs/execution_tasks/artifacts/ARCH-SCRIPTS-REFACTOR-006)
+- 2026-02-18 | ARCH-SCRIPTS-REFACTOR-005 | PASS | Scripts | Refactor seed_role_permissions.py (113 RBAC mappings, idempotency + JSON logging + CLI, template validation) | [ARCH-SCRIPTS-REFACTOR-005](docs/execution_tasks/artifacts/ARCH-SCRIPTS-REFACTOR-005)
 - 2026-02-14 | ARCH-SCRIPTS-REFACTOR-002 | PASS | Scripts | Refactor compact_exec_logs.py (idempotency + CLI + exit codes) | [ARCH-SCRIPTS-REFACTOR-002](docs/execution_tasks/artifacts/ARCH-SCRIPTS-REFACTOR-002/HUMAN_SUMMARY.md)
 - 2026-02-13 | ARCH-SCRIPTS-REFACTOR-001 | PASS | Scripts | Refactor fix_superadmin.py (idempotency + JSON logging + CLI) | [ARCH-SCRIPTS-REFACTOR-001](docs/execution_tasks/artifacts/ARCH-SCRIPTS-REFACTOR-001/HUMAN_SUMMARY.md)
 - 2026-02-13 | ARCH-BOOTSTRAP-SMOKE-001 | DRAFT | Governance | Smoke bootstrap | [ARCH-BOOTSTRAP-SMOKE-001](docs/execution_tasks/artifacts/ARCH-BOOTSTRAP-SMOKE-001/HUMAN_SUMMARY.md)
