@@ -195,8 +195,8 @@ Enforced via:
 - **AI_KERNEL.md** (LEVEL 0 — constitutional authority)
 - **Language Protocol** (RFC 2119 normative language)
 - **CI Linters:**
-  - `scripts/_ia/ai_governance_linter.py`
-  - `scripts/_ia/validators/agent_drift_detector.py`
+  - `docs/scripts/_ia/ai_governance_linter.py`
+  - `docs/scripts/_ia/validators/agent_drift_detector.py`
 
 Violations detected by linters result in:
 - Exit code 3 (protocol violation)

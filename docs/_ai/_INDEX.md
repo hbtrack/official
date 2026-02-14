@@ -29,7 +29,7 @@ In case of conflict between documents, the following hierarchy applies:
 
 ```
 LEVEL 0: AI Governance Formal
-  └─ docs/_canon/_agent/AI_GOVERNANCE_INDEX.md
+  └─ docs/_canon/GOVERNANCE_MODEL.md
 
 LEVEL 1: Canonical Documentation (AUTHORITY)
   └─ docs/_canon/00_START_HERE.md ← **START HERE**

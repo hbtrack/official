@@ -39,7 +39,18 @@ RETENTION_MARKERS = [
     r"Retention/Detail Policy",
     r"Retention Policy",
 ]
-ARTIFACTS_DIR = Path("C:/HB TRACK/docs/execution_tasks/artifacts")
+
+def _find_repo_root(start: Path) -> Path:
+    # Prefer a deterministic repo root anchor over hardcoded absolute paths.
+    for p in [start] + list(start.parents):
+        if (p / ".git").exists():
+            return p
+    # Fallback: expected layout is <repo>/docs/scripts/_ia/<this_file>
+    return start.parents[4] if len(start.parents) >= 5 else start.parent
+
+
+REPO_ROOT = _find_repo_root(Path(__file__).resolve())
+ARTIFACTS_DIR = REPO_ROOT / "docs" / "execution_tasks" / "artifacts"
 TASK_ID_PATTERN = re.compile(r"\[([A-Z0-9-]+)\]")
 # Allow short bullets. Anything beyond this is likely narrative.
 MAX_BULLET_LINES = 8

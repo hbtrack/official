@@ -90,12 +90,12 @@ class TestQualityGatesExtractor:
     
     def test_extractor_script_exists(self):
         """Test that extract-quality-gates.py exists."""
-        extractor_path = Path("scripts/_ia/extractors/extract-quality-gates.py")
+        extractor_path = Path("docs/scripts/_ia/extractors/extract-quality-gates.py")
         assert extractor_path.exists(), f"Extractor script not found: {extractor_path}"
     
     def test_validator_script_exists(self):
         """Test that validate-quality-gates-schema.py exists."""
-        validator_path = Path("scripts/_ia/validators/validate-quality-gates-schema.py")
+        validator_path = Path("docs/scripts/_ia/validators/validate-quality-gates-schema.py")
         assert validator_path.exists(), f"Validator script not found: {validator_path}"
     
     def test_schema_file_exists(self):

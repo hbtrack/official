@@ -46,6 +46,6 @@ Multi-agent behavior governed by:
 ## 7. Governance Tooling
 
 Automated validation:
-- `scripts/_ia/ai_governance_linter.py` — Unified protocol validator
-- `scripts/_ia/validators/agent_drift_detector.py` — Drift detection tool
-- `scripts/_ia/validators/prompt_sanitizer.py` — Prompt normalization tool
+- `docs/scripts/_ia/ai_governance_linter.py` — Unified protocol validator
+- `docs/scripts/_ia/validators/agent_drift_detector.py` — Drift detection tool
+- `docs/scripts/_ia/validators/prompt_sanitizer.py` — Prompt normalization tool

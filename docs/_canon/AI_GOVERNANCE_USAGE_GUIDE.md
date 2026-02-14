@@ -5,22 +5,22 @@
 ### Núcleo de Governança (`docs/_canon/`)
 
 #### LEVEL 0 — Constituição
-- [AI_KERNEL.md](docs/_canon/AI_KERNEL.md) — **Constituição base** para qualquer IA
+- [AI_KERNEL.md](AI_KERNEL.md) — **Constituição base** para qualquer IA
 
 #### LEVEL 1 — Protocolos
-- [LANGUAGE_PROTOCOL.md](docs/_canon/LANGUAGE_PROTOCOL.md) — RFC 2119 + DSL
-- [FAILSAFE_PROTOCOL.md](docs/_canon/FAILSAFE_PROTOCOL.md) — Regras anti-alucinação
-- [ARCH_REQUEST_DSL.md](docs/_canon/ARCH_REQUEST_DSL.md) — Definição da linguagem formal
-- [ARCHITECT_BOOTLOADER.md](docs/_canon/ARCHITECT_BOOTLOADER.md) — Prompt inicial universal
-- [ARCHITECT_HANDSHAKE.md](docs/_canon/ARCHITECT_HANDSHAKE.md) — Handshake de projeto
-- [GOVERNANCE_MODEL.md](docs/_canon/GOVERNANCE_MODEL.md) — Hierarquia de camadas
-- [AGENT_BEHAVIOR.md](docs/_canon/AGENT_BEHAVIOR.md) — Papéis dos agentes
+- [LANGUAGE_PROTOCOL.md](LANGUAGE_PROTOCOL.md) — RFC 2119 + DSL
+- [FAILSAFE_PROTOCOL.md](FAILSAFE_PROTOCOL.md) — Regras anti-alucinação
+- [ARCH_REQUEST_DSL.md](ARCH_REQUEST_DSL.md) — Definição da linguagem formal
+- [ARCHITECT_BOOTLOADER.md](ARCHITECT_BOOTLOADER.md) — Prompt inicial universal
+- [ARCHITECT_HANDSHAKE.md](ARCHITECT_HANDSHAKE.md) — Handshake de projeto
+- [GOVERNANCE_MODEL.md](GOVERNANCE_MODEL.md) — Hierarquia de camadas
+- [AGENT_BEHAVIOR.md](AGENT_BEHAVIOR.md) — Papéis dos agentes
 
 #### LEVEL 2-3 — Prompts & Schemas
 - `docs/_canon/_prompts/` — Prompts especializados por tipo de agente
 - `docs/_canon/_schemas/` — JSON schemas para validação
 
-### Scripts de Automação (`scripts/_ia/`)
+### Scripts de Automação (`docs/scripts/_ia/`)
 
 1. **generate_ai_governance_index.py** — Gera índice automático
 2. **lint_arch_request.py** — Valida documentos ARCH_REQUEST
@@ -39,16 +39,16 @@ Load docs/_canon/AI_KERNEL.md
 ### Para Humanos
 ```bash
 # Gerar/atualizar índice de governança:
-python scripts/_ia/generate_ai_governance_index.py --write
+python docs/scripts/_ia/generate_ai_governance_index.py --write
 
 # Verificar se índice está atualizado (CI/CD):
-python scripts/_ia/generate_ai_governance_index.py --check
+python docs/scripts/_ia/generate_ai_governance_index.py --check
 
 # Validar documentos ARCH_REQUEST:
-python scripts/_ia/lint_arch_request.py --glob "docs/**/ARCH_REQUEST*.md"
+python docs/scripts/_ia/lint_arch_request.py --glob "docs/**/ARCH_REQUEST*.md"
 
 # Verificar compactação de logs:
-python scripts/_ia/check_logs_compaction.py --changelog "path/changelog.md" --exec-log "path/execution_log.md"
+python docs/scripts/_ia/check_logs_compaction.py --changelog "path/changelog.md" --exec-log "path/execution_log.md"
 ```
 
 ---

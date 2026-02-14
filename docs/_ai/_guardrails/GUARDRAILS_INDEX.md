@@ -9,7 +9,7 @@
 > **PRECEDÊNCIA**: Este arquivo é subordinado a [`docs/_canon/00_START_HERE.md`](../../_canon/00_START_HERE.md) (LEVEL 1 CANONICAL). Em caso de conflito, canonical docs vencem.
 >
 > **Hierarquia:**
-> - **LEVEL 1** (CANONICAL): [`00_START_HERE.md`](../../_canon/00_START_HERE.md), [`AI_GOVERNANCE_INDEX.md`](../../_canon/_agent/AI_GOVERNANCE_INDEX.md)
+> - **LEVEL 1** (CANONICAL): [`00_START_HERE.md`](../../_canon/00_START_HERE.md), [`GOVERNANCE_MODEL.md`](../../_canon/GOVERNANCE_MODEL.md)
 > - **LEVEL 2** (OPERATIONAL): Este arquivo (guardrails index) + módulos específicos abaixo
 > - **LEVEL 3** (GENERATED): `schema.sql`, `openapi.json`, `parity_report.json`, `baseline.json` (LOCAL)
 
@@ -179,7 +179,7 @@ Antes de **qualquer** tarefa operacional que modifique código/docs:
 - [`09_TROUBLESHOOTING_GUARD_PARITY.md`](../../_canon/09_TROUBLESHOOTING_GUARD_PARITY.md) — Exit codes + diagnóstico
 
 **LEVEL 0 (GOVERNANCE):**
-- [`AI_GOVERNANCE_INDEX.md`](../../_canon/_agent/AI_GOVERNANCE_INDEX.md) — Hierarquia documental (LEVEL 0-3)
+- [`GOVERNANCE_MODEL.md`](../../_canon/GOVERNANCE_MODEL.md) — Hierarquia documental (LEVEL 0-4)
 - [`AI_ARCH_EXEC_PROTOCOL.md`](../../_canon/_agent/AI_ARCH_EXEC_PROTOCOL.md) — Architect vs Executor protocol
 - [`AI_PROTOCOL_CHECKLIST.md`](../../_canon/_agent/AI_PROTOCOL_CHECKLIST.md) — Pre-validation checklist
 

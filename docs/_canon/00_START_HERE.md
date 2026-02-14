@@ -467,10 +467,10 @@ SSOT Artifacts:
 
 | Ferramenta | Path | Descrição | Comando |
 |-----------|------|-----------|---------|
-| **AI Governance Linter** | `scripts\_ia\ai_governance_linter.py` | Validador unificado de protocolos ARCH/EXEC/ADR | `python scripts/_ia/ai_governance_linter.py` |
-| **Agent Drift Detector** | `scripts\_ia\validators\agent_drift_detector.py` | Detecta drift estrutural/linguístico/protocolar | `python scripts/_ia/validators/agent_drift_detector.py` |
-| **Prompt Sanitizer** | `scripts\_ia\validators\prompt_sanitizer.py` | Remove ambiguidades de prompts | `python scripts/_ia/validators/prompt_sanitizer.py "texto"` |
-| **ARCH_REQUEST Linter** | `scripts\_ia\lint_arch_request.py` | Validador específico para ARCH_REQUESTs | `python scripts/_ia/lint_arch_request.py --glob "docs/**/*.md"` |
+| **AI Governance Linter** | `scripts\_ia\ai_governance_linter.py` | Validador unificado de protocolos ARCH/EXEC/ADR | `python docs/scripts/_ia/ai_governance_linter.py` |
+| **Agent Drift Detector** | `scripts\_ia\validators\agent_drift_detector.py` | Detecta drift estrutural/linguístico/protocolar | `python docs/scripts/_ia/validators/agent_drift_detector.py` |
+| **Prompt Sanitizer** | `scripts\_ia\validators\prompt_sanitizer.py` | Remove ambiguidades de prompts | `python docs/scripts/_ia/validators/prompt_sanitizer.py "texto"` |
+| **ARCH_REQUEST Linter** | `scripts\_ia\lint_arch_request.py` | Validador específico para ARCH_REQUESTs | `python docs/scripts/_ia/lint_arch_request.py --glob "docs/**/*.md"` |
 
 ### 6.3 Documentação Operacional Canônica
 
@@ -491,9 +491,9 @@ SSOT Artifacts:
 
 | Script | Path | Finalidade | Como Usar |
 |--------|------|------------|----------|
-| **Generate AI Governance Index** | `scripts\_ia\generate_ai_governance_index.py` | Gera índice determinístico de documentos de governança | `python scripts/_ia/generate_ai_governance_index.py --write` |
-| **Lint ARCH_REQUEST** | `scripts\_ia\lint_arch_request.py` | Valida documentos ARCH_REQUEST contra DSL | `python scripts/_ia/lint_arch_request.py --glob "docs/**/ARCH_REQUEST*.md"` |
-| **Check Logs Compaction** | `scripts\_ia\check_logs_compaction.py` | Verifica se logs estão compactados (anti-narrativa) | `python scripts/_ia/check_logs_compaction.py --changelog path.md --exec-log path.md` |
+| **Generate AI Governance Index** | `scripts\_ia\generate_ai_governance_index.py` | Gera índice determinístico de documentos de governança | `python docs/scripts/_ia/generate_ai_governance_index.py --write` |
+| **Lint ARCH_REQUEST** | `scripts\_ia\lint_arch_request.py` | Valida documentos ARCH_REQUEST contra DSL | `python docs/scripts/_ia/lint_arch_request.py --glob "docs/**/ARCH_REQUEST*.md"` |
+| **Check Logs Compaction** | `scripts\_ia\check_logs_compaction.py` | Verifica se logs estão compactados (anti-narrativa) | `python docs/scripts/_ia/check_logs_compaction.py --changelog path.md --exec-log path.md` |
 
 ### 6.4 Governança de Scripts (Auditoria Enterprise)
 

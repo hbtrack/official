@@ -62,8 +62,8 @@ Regras aplicadas:
 | `run_invariant_gate.ps1` | INCORPORAR | Gate operacional oficial |
 | `run_invariant_gate_all.ps1` | INCORPORAR | Gate global oficial |
 | `compact_exec_logs.py` | REFATORAR_ANTES_DE_INCORPORAR | Falta contrato explícito de interface/log JSON |
-| `scripts/_ia/**/*.py` | REFATORAR_ANTES_DE_INCORPORAR | Ferramentas relevantes, porém sem contrato uniforme único |
-| `scripts/_ia/logs/*` | ARQUIVAR | Artefatos de execução/histórico, não scripts operacionais |
+| `docs/scripts/_ia/**/*.py` | REFATORAR_ANTES_DE_INCORPORAR | Ferramentas relevantes, porém sem contrato uniforme único |
+| `docs/scripts/_ia/logs/*` | ARQUIVAR | Artefatos de execução/histórico, não scripts operacionais |
 
 ## 4.2 `docs/scripts/`
 

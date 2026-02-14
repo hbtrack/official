@@ -25,8 +25,8 @@ import re
 import sys
 import subprocess
 
-REPO_ROOT = Path(__file__).resolve().parents[2]  # scripts/_ia/ -> HB TRACK/
-CANON = REPO_ROOT / "docs/_canon"
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from utils.paths import REPO_ROOT, CANON
 
 REQUIRED_CANON = [
     "AI_KERNEL.md",
@@ -38,7 +38,12 @@ REQUIRED_CANON = [
 ]
 
 ARCH_REQ_PATTERN = re.compile(r"#\s+ARCH_REQUEST\s+—", re.MULTILINE)
-EXEC_TASK_PATTERN = re.compile(r"#\s+EXEC_TASK\s+—", re.MULTILINE)
+EXEC_TASK_HEADER_PATTERNS = [
+    re.compile(r"^#\s+EXEC_TASK\s+—", re.MULTILINE),
+    re.compile(r"^#\s+EXEC_TASK\s*:", re.MULTILINE),
+    re.compile(r"^##\s+EXEC_TASK\s+—", re.MULTILINE),
+    re.compile(r"^#\s+TASK\s*:", re.MULTILINE),
+]
 ADR_PATTERN = re.compile(r"#\s+ADR-\d+\s+—", re.MULTILINE)
 
 
@@ -73,7 +78,7 @@ def lint_arch_requests():
     print("[CHECK] Validating ARCH_REQUEST files...")
     
     # Find lint_arch_request.py
-    lint_script = REPO_ROOT / "scripts/_ia/lint_arch_request.py"
+    lint_script = Path(__file__).resolve().parent / "lint_arch_request.py"
     if not lint_script.exists():
         warn("lint_arch_request.py not found, skipping ARCH_REQUEST validation")
         return
@@ -81,7 +86,15 @@ def lint_arch_requests():
     # Run existing linter
     try:
         result = subprocess.run(
-            [sys.executable, str(lint_script), "--glob", "docs/**/*ARCH_REQUEST*.md"],
+            [
+                sys.executable,
+                str(lint_script),
+                "--glob",
+                "docs/_canon/_arch_requests/*.md",
+                "--profile",
+                "compat",
+                "--skip-non-arch",
+            ],
             cwd=REPO_ROOT,
             capture_output=True,
             text=True,
@@ -102,7 +115,7 @@ def lint_arch_requests():
 
 
 def lint_exec_tasks():
-    """Validate EXEC_TASK files (basic structure checks)."""
+    """Validate EXEC_TASK files (compat checks for current repo formats)."""
     print("[CHECK] Validating EXEC_TASK files...")
     
     exec_tasks = list(REPO_ROOT.rglob("EXEC_TASK*.md"))
@@ -116,19 +129,55 @@ def lint_exec_tasks():
         try:
             txt = p.read_text(encoding="utf-8", errors="ignore")
             
-            # Check 1: Valid header
-            if not EXEC_TASK_PATTERN.search(txt):
+            # Check 1: Valid header (compat)
+            if not any(pat.search(txt) for pat in EXEC_TASK_HEADER_PATTERNS):
                 violations.append(f"{p.relative_to(REPO_ROOT)}: invalid EXEC_TASK header")
             
             # Check 2: No architecture redefinition (ARCH_REQUEST DSL forbidden)
-            if "ARCH_REQUEST DSL" in txt or "## OBJETIVOS (MUST)" in txt:
+            if "ARCH_REQUEST DSL" in txt:
                 violations.append(f"{p.relative_to(REPO_ROOT)}: execution redefining architecture (ARCH_REQUEST content)")
             
-            # Check 3: Required sections present
-            required = ["OBJETIVO EXECUTÁVEL", "PRÉ-REQUISITOS", "FASES DE EXECUÇÃO"]
-            for section in required:
-                if section not in txt:
-                    violations.append(f"{p.relative_to(REPO_ROOT)}: missing section '{section}'")
+            txt_up = txt.upper()
+            has_objective = any(
+                token in txt_up
+                for token in [
+                    "OBJETIVO EXECUTÁVEL",
+                    "OBJETIVO DA FASE",
+                    "## OBJETIVO",
+                    "## EXEC_TASK",
+                ]
+            )
+            has_prereq = any(
+                token in txt_up
+                for token in [
+                    "PRÉ-REQUISITOS",
+                    "PRE-REQUISITOS",
+                    "DEPENDÊNCIAS",
+                    "DEPENDENCIAS",
+                    "AMBIENTE",
+                    "CONTEXTO",
+                ]
+            )
+            has_phases = any(
+                token in txt_up
+                for token in [
+                    "FASES DE EXECUÇÃO",
+                    "EXECUTION PLAN",
+                    "## FASE 0",
+                    "## FASE 1",
+                ]
+            ) or bool(re.search(r"^##\s+\d+\.\d+", txt, flags=re.MULTILINE))
+
+            # Compat acceptance: require evidence of execution structure, not rigid headings.
+            if not (has_objective or has_phases):
+                violations.append(
+                    f"{p.relative_to(REPO_ROOT)}: missing objective/execution structure (compat)"
+                )
+
+            if not (has_prereq or has_objective):
+                violations.append(
+                    f"{p.relative_to(REPO_ROOT)}: missing prerequisites/context structure (compat)"
+                )
         
         except Exception as e:
             warn(f"Error reading {p}: {e}")

@@ -154,7 +154,7 @@ Anything beyond the contract is invalid.
 
 This protocol is enforced by:
 
-- Lint: scripts/_ia/lint_arch_request.py
+- Lint: docs/scripts/_ia/lint_arch_request.py
 - Governance: AI_KERNEL.md
 - CI: arch-request-protocol-validation.yml
 

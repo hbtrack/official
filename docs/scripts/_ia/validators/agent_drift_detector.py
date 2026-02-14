@@ -24,7 +24,8 @@ import re
 import sys
 from typing import List, Tuple
 
-REPO_ROOT = Path(__file__).resolve().parents[3]  # scripts/_ia/validators/ -> HB TRACK/
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from utils.paths import REPO_ROOT
 
 # Drift detection patterns (from AGENT_DRIFT_RULES.md)
 JSON_START = re.compile(r"^\s*\{", re.MULTILINE)
@@ -189,6 +190,7 @@ def main():
     scan_paths = [
         REPO_ROOT / "docs/_canon",
         REPO_ROOT / "docs/execution_tasks",
+        REPO_ROOT / "docs/execution_tasks/artifacts",
         REPO_ROOT / "docs/ADR",
     ]
     

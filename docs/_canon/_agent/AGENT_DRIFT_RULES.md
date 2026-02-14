@@ -277,7 +277,7 @@ ALTER TABLE wellness_pre ADD COLUMN status TEXT;
 
 **Action:** Replace conversational/hedging with normative language.
 
-**Tool:** `scripts/_ia/validators/prompt_sanitizer.py`
+**Tool:** `docs/scripts/_ia/validators/prompt_sanitizer.py`
 
 **Example:**
 ```bash
@@ -332,11 +332,11 @@ Architect attempted to generate EXEC_TASK
 
 **When:** CI/CD pipeline, pre-commit hooks
 
-**Tool:** `scripts/_ia/validators/agent_drift_detector.py`
+**Tool:** `docs/scripts/_ia/validators/agent_drift_detector.py`
 
 **Invocation:**
 ```bash
-python scripts/_ia/validators/agent_drift_detector.py
+python docs/scripts/_ia/validators/agent_drift_detector.py
 ```
 
 **Output:**

@@ -5,7 +5,7 @@
 > **Last Updated:** 2026-02-13  
 > **Applies To:** AI Architect (decision-making guide)
 >
-> **Parent:** [`AI_GOVERNANCE_INDEX.md`](AI_GOVERNANCE_INDEX.md) (LEVEL 0 governance authority)  
+> **Parent:** [`GOVERNANCE_MODEL.md`](../GOVERNANCE_MODEL.md) (hierarquia normativa)  
 > **Related:** [`AI_ARCH_EXEC_PROTOCOL.md`](AI_ARCH_EXEC_PROTOCOL.md) (operational protocol), [`TASK_BRIEF.md`](TASK_BRIEF.md) (template), [`AI_PROTOCOL_CHECKLIST.md`](AI_PROTOCOL_CHECKLIST.md) (pre-validation)
 
 ---
@@ -274,7 +274,7 @@ Se decisão = 🔴 TASK BRIEF obrigatório, seguir este checklist:
 ## 🔗 Documentação Relacionada
 
 **LEVEL 0 (GOVERNANCE):**
-- [`AI_GOVERNANCE_INDEX.md`](AI_GOVERNANCE_INDEX.md) — Hierarquia documental suprema
+- [`GOVERNANCE_MODEL.md`](../GOVERNANCE_MODEL.md) — Hierarquia normativa (precedência)
 - [`AI_ARCH_EXEC_PROTOCOL.md`](AI_ARCH_EXEC_PROTOCOL.md) — Protocolo operacional completo (6 fases)
 - [`AI_PROTOCOL_CHECKLIST.md`](AI_PROTOCOL_CHECKLIST.md) — Pre-validation (10 sections, Determinism Score)
 - [`TASK_BRIEF.md`](TASK_BRIEF.md) — Template formal (8 sections)

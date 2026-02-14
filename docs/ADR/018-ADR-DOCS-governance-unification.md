@@ -21,7 +21,7 @@ Auditoria abrangente da documentação do HB Track (2026-02-13) revelou 6 catego
 2. **Índices competidores (3 entry points)**: Três arquivos reivindicavam ser "porta única de entrada":
    - `docs/_ai/_INDEX.md` (511L, "Router Central")
    - `docs/_canon/00_START_HERE.md` (462L, "Porta Única")
-   - `docs/_canon/_agent/AI_GOVERNANCE_INDEX.md` (370L, governance supremacy)
+   - `docs/_canon/GOVERNANCE_MODEL.md` (hierarquia normativa; substitui o antigo `docs/_canon/_agent/AI_GOVERNANCE_INDEX.md`)
 
 3. **Hierarquia de precedência implícita**: Documentação não declarava explicitamente qual camada (governance, canonical, operational, generated) prevalece em caso de conflito.
 
@@ -39,7 +39,7 @@ Auditoria abrangente da documentação do HB Track (2026-02-13) revelou 6 catego
 
 **Componentes Relacionados:**
 - Documentação canônica: `docs/_canon/00_START_HERE.md`, `docs/_ai/_INDEX.md`
-- Governança AI: `docs/_canon/_agent/AI_GOVERNANCE_INDEX.md`
+- Governança AI: `docs/_canon/GOVERNANCE_MODEL.md` + `docs/_canon/AI_GOVERNANCE_INDEX.md` (auto)
 - Operational docs: `docs/_ai/*.md`, `.github/instructions/*.md`
 - Artefatos gerados: `docs/_generated/*.{sql,json,txt}`
 
@@ -51,7 +51,7 @@ Auditoria abrangente da documentação do HB Track (2026-02-13) revelou 6 catego
 
 ## Decisão
 
-Implementar **remediação Priority 1** conforme [GOVERNANCE_AUDIT_REPORT.md](C:/HB TRACK/docs/_canon/_agent/GOVERNANCE_AUDIT_REPORT.md) Section 7:
+Implementar **remediação Priority 1** conforme [GOVERNANCE_AUDIT_REPORT.md](../_canon/_agent/GOVERNANCE_AUDIT_REPORT.md) Section 7:
 
 ### **R1 — Index Unification (Unificação de Índices)**
 
@@ -151,7 +151,7 @@ Adicionar Section 2.1 em `AI_GOVERNANCE_INDEX.md`:
 # Commit 1: R1+R2 implementation (4152018)
 - docs/_canon/00_START_HERE.md (enhanced: 462L → 484L)
 - docs/_ai/_INDEX.md (converted: 511L → 78L stub)
-- docs/_canon/_agent/AI_GOVERNANCE_INDEX.md (hierarchy integrated)
+- docs/_canon/GOVERNANCE_MODEL.md (hierarchy integrated; formerly docs/_canon/_agent/AI_GOVERNANCE_INDEX.md)
 - docs/_canon/_agent/GOVERNANCE_AUDIT_REPORT.md (new: 538L)
 
 # Commit 2: CHANGELOG/EXECUTIONLOG update (461b1f4)
@@ -163,7 +163,7 @@ Adicionar Section 2.1 em `AI_GOVERNANCE_INDEX.md`:
 - Documentation: Markdown, YAML front matter
 - Versioning: Git (branch strategy, backups)
 - Validation: Pre-commit hooks (documentation validation)
-- Governance: AI_GOVERNANCE_INDEX.md (LEVEL 0), Audit reports
+- Governance: GOVERNANCE_MODEL.md + AI_GOVERNANCE_INDEX.md (auto), Audit reports
 
 ---
 
@@ -321,13 +321,13 @@ Proliferação de índices é exatamente o problema que estamos resolvendo. Cria
 **Branch:** `docs/gov-unify-001` (from `main` @ 3c3a466)
 
 **Commits:**
-1. `4152018` — R1+R2 implementation (4 files, 643+/475-)
+   1. `4152018` — R1+R2 implementation (4 files, 643+/475-)
 2. `461b1f4` — CHANGELOG/EXECUTIONLOG update (2 files, 17+)
 
 **Files Modified:**
 - `docs/_canon/00_START_HERE.md` (enhanced: 462L → 484L)
 - `docs/_ai/_INDEX.md` (stub: 511L → 78L)
-- `docs/_canon/_agent/AI_GOVERNANCE_INDEX.md` (hierarchy integrated)
+- `docs/_canon/GOVERNANCE_MODEL.md` (hierarchy integrated; formerly `docs/_canon/_agent/AI_GOVERNANCE_INDEX.md`)
 - `docs/_canon/_agent/GOVERNANCE_AUDIT_REPORT.md` (new: 538L)
 - `docs/execution_tasks/CHANGELOG.md` (R1+R2 entry)
 - `docs/execution_tasks/EXECUTIONLOG.md` (T-554)
@@ -346,19 +346,20 @@ Proliferação de índices é exatamente o problema que estamos resolvendo. Cria
 ## Referências
 
 **Documentos Canônicos:**
-- [00_START_HERE.md](C:/HB TRACK/docs/_canon/00_START_HERE.md) (v2.0.0, CANONICAL)
-- [AI_GOVERNANCE_INDEX.md](C:/HB TRACK/docs/_canon/_agent/AI_GOVERNANCE_INDEX.md) (v1.0.0, LEVEL 0)
-- [GOVERNANCE_AUDIT_REPORT.md](C:/HB TRACK/docs/_canon/_agent/GOVERNANCE_AUDIT_REPORT.md) (538L audit)
-- [01_AUTHORITY_SSOT.md](C:/HB TRACK/docs/_canon/01_AUTHORITY_SSOT.md) (precedence rules)
+- [00_START_HERE.md](../_canon/00_START_HERE.md) (CANONICAL)
+- [GOVERNANCE_MODEL.md](../_canon/GOVERNANCE_MODEL.md) (hierarquia normativa)
+- [AI_GOVERNANCE_INDEX.md](../_canon/AI_GOVERNANCE_INDEX.md) (auto-generated index)
+- [GOVERNANCE_AUDIT_REPORT.md](../_canon/_agent/GOVERNANCE_AUDIT_REPORT.md) (audit)
+- [01_AUTHORITY_SSOT.md](../_canon/01_AUTHORITY_SSOT.md) (precedence rules)
 
 **ADRs Relacionadas:**
-- [ADR-001: SSOT e Precedência](C:/HB TRACK/docs/ADR/001-ADR-TRAIN-ssot-precedencia.md) (hierarchy foundation)
-- [ADR-008: Governança por Artefatos](C:/HB TRACK/docs/ADR/008-ADR-TRAIN-governanca-por-artefatos.md) (SSOT enforcement)
-- [ADR-016: Machine-Readable AI Quality Gates](C:/HB TRACK/docs/ADR/016-ADR-machine-readable-ai-quality-gates.md) (AI governance)
+- [ADR-001: SSOT e Precedência](001-ADR-TRAIN-ssot-precedencia.md) (hierarchy foundation)
+- [ADR-008: Governança por Artefatos](008-ADR-TRAIN-governanca-por-artefatos.md) (SSOT enforcement)
+- [ADR-016: Machine-Readable AI Quality Gates](016-ADR-machine-readable-ai-quality-gates.md) (AI governance)
 
 **Execution Logs:**
-- [CHANGELOG.md Entry](C:/HB TRACK/docs/execution_tasks/CHANGELOG.md) (2026-02-13)
-- [EXECUTIONLOG.md T-554](C:/HB TRACK/docs/execution_tasks/EXECUTIONLOG.md) (complete task summary)
+- [CHANGELOG.md Entry](../execution_tasks/CHANGELOG.md) (2026-02-13)
+- [EXECUTIONLOG.md T-554](../execution_tasks/EXECUTIONLOG.md) (complete task summary)
 
 **Deprecation Timeline:**
 - v2.0.0 (2026-02-13): Stub created, hierarchy established
@@ -369,7 +370,7 @@ Proliferação de índices é exatamente o problema que estamos resolvendo. Cria
 
 ## Notas de Auditoria
 
-**Audit Report:** [GOVERNANCE_AUDIT_REPORT.md](C:/HB TRACK/docs/_canon/_agent/GOVERNANCE_AUDIT_REPORT.md)  
+**Audit Report:** [GOVERNANCE_AUDIT_REPORT.md](../_canon/_agent/GOVERNANCE_AUDIT_REPORT.md)  
 **Audit Date:** 2026-02-13  
 **Audit Scope:** 50+ documentation files across `docs/_ai`, `docs/_canon`, `docs/_canon/_agent`  
 **Critical Findings:** 6 categories (duplications, competing indices, guardrails fragmentation, stubs, coverage gaps, versioning inconsistencies)  

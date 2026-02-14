@@ -52,12 +52,9 @@ REPLACEMENTS = {
     "perfeito": "compliant",
     "perfect": "compliant",
     
-    # Action verbs → Formal
+    # Action verbs → Formal (only unambiguous replacements)
     "implementar": "formalize",
     "criar": "define",
-    "fazer": "specify",
-    "build": "specify",
-    "add": "define",
 }
 
 # Case-insensitive patterns for whole-word replacement

@@ -122,6 +122,12 @@ switch ($Command) {
         $OpenApiFile = Join-Path $BackendDir "docs\_generated\openapi.json"
         $AlembicFile = Join-Path $BackendDir "docs\_generated\alembic_state.txt"
         $GenerateScript = Join-Path $BackendDir "scripts\generate_docs.py"
+
+        # Repo root mirror (SSOT canônico consumido pelas docs/agentes)
+        $RepoGeneratedDir = Join-Path $RootDir "docs\_generated"
+        $RepoSchemaFile = Join-Path $RepoGeneratedDir "schema.sql"
+        $RepoOpenApiFile = Join-Path $RepoGeneratedDir "openapi.json"
+        $RepoAlembicFile = Join-Path $RepoGeneratedDir "alembic_state.txt"
         
         # Validar que generate_docs.py existe
         if (-not (Test-Path $GenerateScript)) {
@@ -178,7 +184,53 @@ switch ($Command) {
             Write-Host "[FAIL] alembic_state.txt NOT FOUND" -ForegroundColor Red
             $AllArtifactsExist = $false
         }
-        
+
+        Write-Host ""
+
+        # Validar mirror em docs/_generated (repo root). SSOT canônico para docs/agentes.
+        Write-Host "========================================" -ForegroundColor Cyan
+        Write-Host "VALIDATING REPO ROOT MIRROR (docs/_generated)" -ForegroundColor Cyan
+        Write-Host "========================================" -ForegroundColor Cyan
+
+        if (Test-Path $RepoSchemaFile) {
+            $RepoSchemaSize = (Get-Item $RepoSchemaFile).Length
+            if ((Test-Path $SchemaFile) -and $RepoSchemaSize -ne (Get-Item $SchemaFile).Length) {
+                Write-Host "[FAIL] docs/_generated/schema.sql size mismatch vs backend copy" -ForegroundColor Red
+                $AllArtifactsExist = $false
+            } else {
+                Write-Host "[OK] docs/_generated/schema.sql ($RepoSchemaSize bytes)" -ForegroundColor Green
+            }
+        } else {
+            Write-Host "[FAIL] docs/_generated/schema.sql NOT FOUND" -ForegroundColor Red
+            $AllArtifactsExist = $false
+        }
+
+        if (Test-Path $RepoOpenApiFile) {
+            $RepoOpenApiSize = (Get-Item $RepoOpenApiFile).Length
+            if ((Test-Path $OpenApiFile) -and $RepoOpenApiSize -ne (Get-Item $OpenApiFile).Length) {
+                Write-Host "[FAIL] docs/_generated/openapi.json size mismatch vs backend copy" -ForegroundColor Red
+                $AllArtifactsExist = $false
+            } else {
+                Write-Host "[OK] docs/_generated/openapi.json ($RepoOpenApiSize bytes)" -ForegroundColor Green
+            }
+        } else {
+            Write-Host "[FAIL] docs/_generated/openapi.json NOT FOUND" -ForegroundColor Red
+            $AllArtifactsExist = $false
+        }
+
+        if (Test-Path $RepoAlembicFile) {
+            $RepoAlembicSize = (Get-Item $RepoAlembicFile).Length
+            if ((Test-Path $AlembicFile) -and $RepoAlembicSize -ne (Get-Item $AlembicFile).Length) {
+                Write-Host "[FAIL] docs/_generated/alembic_state.txt size mismatch vs backend copy" -ForegroundColor Red
+                $AllArtifactsExist = $false
+            } else {
+                Write-Host "[OK] docs/_generated/alembic_state.txt ($RepoAlembicSize bytes)" -ForegroundColor Green
+            }
+        } else {
+            Write-Host "[FAIL] docs/_generated/alembic_state.txt NOT FOUND" -ForegroundColor Red
+            $AllArtifactsExist = $false
+        }
+
         Write-Host ""
         
         if (-not $AllArtifactsExist) {

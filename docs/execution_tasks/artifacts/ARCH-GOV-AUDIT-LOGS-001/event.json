@@ -6,7 +6,7 @@
   "short_title": "Automated log compliance auditor (scripts/_ia)",
   "scope": "Governance",
   "artifacts": [
-    "scripts/_ia/check_logs_compaction.py",
+    "docs/scripts/_ia/check_logs_compaction.py",
     "docs/_canon/03_WORKFLOWS.md",
     "scripts/compact_exec_logs.py"
   ],

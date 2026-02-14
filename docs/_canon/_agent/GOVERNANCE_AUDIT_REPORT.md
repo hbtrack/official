@@ -108,12 +108,12 @@ docs/_canon/02_CONTEXT_MAP.md#L20-L30 (intenção 3: "Executar Parity Scan")
 **Arquivos identificados:**
 1. `docs/_ai/_INDEX.md` — "Router Central" para agents
 2. `docs/_canon/00_START_HERE.md` — "Porta única" canônica
-3. `docs/_canon/_agent/AI_GOVERNANCE_INDEX.md` — Índice de governança formal
+3. `docs/_canon/GOVERNANCE_MODEL.md` — Hierarquia normativa (precedência formal)
 
 **Problema:** 3 pontos de entrada diferentes para agents, sem hierarquia clara.
 
 **Hierarquia Declarada:**
-- `AI_GOVERNANCE_INDEX.md` declara-se como "LEVEL 0 — PROJECT CONSTITUTION"
+- `GOVERNANCE_MODEL.md` declara a hierarquia normativa (LEVEL 0-4)
 - `00_START_HERE.md` declara-se como "porta única"
 - `_INDEX.md` declara-se como "Router Central"
 
@@ -276,7 +276,7 @@ docs/_canon/02_CONTEXT_MAP.md#L20-L30 (intenção 3: "Executar Parity Scan")
 ---
 
 #### R2: Declarar Hierarquia de Precedência (HIGH)
-**Ação:** Criar seção explícita em `AI_GOVERNANCE_INDEX.md` (ou novo doc `PRECEDENCE_RULES.md`) definindo:
+**Ação:** Criar seção explícita em `docs/_canon/GOVERNANCE_MODEL.md` definindo:
 
 ```
 LEVEL 0: Governança Formal (docs/_canon/_agent/)
@@ -287,7 +287,7 @@ LEVEL 3: Artefatos Gerados (docs/_generated/)
 
 **Regra:** Em caso de conflito, nivel superior vence.
 
-**Artefato:** Atualização em `AI_GOVERNANCE_INDEX.md#L2` (NORMATIVE HIERARCHY).
+**Artefato:** Atualização em `docs/_canon/GOVERNANCE_MODEL.md` (NORMATIVE HIERARCHY).
 
 ---
 
@@ -440,7 +440,7 @@ docs/_canon/HUMAN_TUTORIAL.md
 docs/_canon/QUALITY_METRICS.md
 docs/_canon/README_TUTORIALS.md
 docs/_canon/_agent/AI_ARCH_EXEC_PROTOCOL.md
-docs/_canon/_agent/AI_GOVERNANCE_INDEX.md
+docs/_canon/GOVERNANCE_MODEL.md
 docs/_canon/_agent/AI_INCIDENT_RESPONSE_POLICY.md
 docs/_canon/_agent/AI_PROTOCOL_CHECKLIST.md
 docs/_canon/_agent/AI_TASK_VERSIONING_POLICY.md
@@ -466,7 +466,7 @@ Get-ChildItem "docs/_ai/*GUARDRAIL*.md" | Measure-Object | Select-Object Count
 # Verificar índices concorrentes
 Select-String -Path "docs/_ai/_INDEX.md" -Pattern "Router Central|porta única"
 Select-String -Path "docs/_canon/00_START_HERE.md" -Pattern "Router Central|porta única"
-Select-String -Path "docs/_canon/_agent/AI_GOVERNANCE_INDEX.md" -Pattern "GOVERNANCE MAP"
+Select-String -Path "docs/_canon/GOVERNANCE_MODEL.md" -Pattern "Governance Map|NORMATIVE HIERARCHY"
 ```
 
 ---

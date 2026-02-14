@@ -7,7 +7,7 @@
   "scope": "Infra",
   "artifacts": [
     ".github/**",
-    "scripts/_ia/**"
+    "docs/scripts/_ia/**"
   ],
   "notes_short": "Atualização de instruções de Copilot e scripts auxiliares de IA."
 }

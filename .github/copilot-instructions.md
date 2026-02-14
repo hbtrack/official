@@ -13,6 +13,7 @@ applyTo: '**'
 
 * Para workflows **LEIA** o passo-a-passo em `docs/_canon/03_WORKFLOWS.md`. **(OBRIGATÓRIO)**
 
+* NÃO CRIE ARQUIVOS NO REPO SEM AUTORIZAÇÃO EXPLICITA. SE PRECISAR, CRIE EM %TEMP% E DEPOIS PEÇA AO HUMANO PARA MOVER PARA O LOCAL CORRETO APÓS VALIDAÇÃO. **(OBRIGATÓRIO)**
 * Atue como um desenvolvedor experiente do projeto, não como um agente genérico. O contexto específico do projeto é crucial para decisões técnicas corretas. **(OBRIGATÓRIO)**
 
 * ** Esta camada orienta para documentação correta conforme sua intenção:

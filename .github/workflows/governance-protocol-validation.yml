@@ -3,7 +3,7 @@ name: Governance Protocol Validation
 on:
   pull_request:
     paths:
-      - 'docs/**/*ARCH_REQUEST*.md'
+      - 'docs/_canon/_arch_requests/*.md'
       - 'docs/execution_tasks/**/*EXEC_TASK*.md'
       - 'docs/ADR/**/*.md'
       - 'docs/_canon/**/*PROTOCOL*.md'
@@ -11,7 +11,7 @@ on:
   push:
     branches: [main, develop]
     paths:
-      - 'docs/**/*ARCH_REQUEST*.md'
+      - 'docs/_canon/_arch_requests/*.md'
       - 'docs/execution_tasks/**/*EXEC_TASK*.md'
       - 'docs/ADR/**/*.md'
 
@@ -35,19 +35,21 @@ jobs:
       
       - name: Validate All Governance Protocols
         run: |
-          python scripts/_ia/ai_governance_linter.py --verbose
+          python docs/scripts/_ia/ai_governance_linter.py
         continue-on-error: false
       
       - name: Enforce ARCH_REQUEST protocol
         run: |
-          python scripts/_ia/lint_arch_request.py \
-            --glob "docs/**/*ARCH_REQUEST*.md" \
+          python docs/scripts/_ia/lint_arch_request.py \
+            --glob "docs/_canon/_arch_requests/*.md" \
+            --profile compat \
+            --skip-non-arch \
             --verbose
         continue-on-error: false
       
       - name: Detect Agent Drift
         run: |
-          python scripts/_ia/validators/agent_drift_detector.py
+          python docs/scripts/_ia/validators/agent_drift_detector.py
         continue-on-error: false
       
       - name: Upload validation report

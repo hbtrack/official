@@ -20,11 +20,11 @@ Smoke Tests Executados:
 
 ## 0.1 Ler primeiro (ordem obrigatória)
 
-1. `C:/HB TRACK/docs/_canon/00_START_HERE.md`
-2. `C:/HB TRACK/docs/_canon/01_AUTHORITY_SSOT.md` (SSOT = `docs/_generated/schema.sql`)
-3. `C:/HB TRACK/docs/_canon/05_MODELS_PIPELINE.md` (pipeline atual)
-4. `C:/HB TRACK/docs/references/exit_codes.md` (0/1/2/3/4)
-5. `C:/HB TRACK/docs/ADR/014-ADR-MODELS.md` (decisão arquitetural detalhada)
+1. `docs/_canon/00_START_HERE.md`
+2. `docs/_canon/01_AUTHORITY_SSOT.md` (SSOT = `docs/_generated/schema.sql`)
+3. `docs/_canon/05_MODELS_PIPELINE.md` (pipeline atual)
+4. `docs/references/exit_codes.md` (0/1/2/3/4)
+5. `docs/ADR/014-ADR-MODELS.md` (decisão arquitetural detalhada)
 6. Scripts existentes:
 
    * `Hb Track - Backend/scripts/models_autogen_gate.ps1`
