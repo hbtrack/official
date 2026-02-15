@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+# HB_SCRIPT_KIND: GENERATE
+# HB_SCRIPT_SIDE_EFFECTS: FS_READ, FS_WRITE
+# HB_SCRIPT_SCOPE: docs
+# HB_SCRIPT_IDEMPOTENT: YES
+# HB_SCRIPT_ENTRYPOINT: python scripts/generate/docs/generate_docs_soot.py
+# HB_SCRIPT_OUTPUTS: generated_docs
+
 """
 Documentation Generation Script for HB Track Backend
 

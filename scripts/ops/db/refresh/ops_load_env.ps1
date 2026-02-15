@@ -1,8 +1,9 @@
-# SCRIPT_KIND: OPS
-# SIDE_EFFECTS: ENV_WRITE
-# SCOPE: infra
-# IDEMPOTENT: YES
-# ENTRYPOINT: . .\scripts\ops\db\refresh\_load_env.ps1
+# HB_SCRIPT_KIND: OPS
+# HB_SCRIPT_SIDE_EFFECTS: ENV_MODIFY
+# HB_SCRIPT_SCOPE: infra
+# HB_SCRIPT_IDEMPOTENT: YES
+# HB_SCRIPT_ENTRYPOINT: . scripts/ops/db/refresh/_load_env.ps1
+# HB_SCRIPT_OUTPUTS: env_vars
 
 param(
   [string]$EnvPath = (Join-Path (Get-Location) ".env")

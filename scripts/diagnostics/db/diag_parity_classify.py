@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# HB_SCRIPT_KIND: DIAGNOSTIC
+# HB_SCRIPT_SIDE_EFFECTS: FS_READ
+# HB_SCRIPT_SCOPE: parity
+# HB_SCRIPT_IDEMPOTENT: YES
+# HB_SCRIPT_ENTRYPOINT: python scripts/diagnostics/db/diag_parity_classify.py
+# HB_SCRIPT_OUTPUTS: classification_report
+
 import argparse
 import json
 import re

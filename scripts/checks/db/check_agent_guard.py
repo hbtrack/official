@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# HB_SCRIPT_KIND: CHECK
+# HB_SCRIPT_SIDE_EFFECTS: FS_READ
+# HB_SCRIPT_SCOPE: guard
+# HB_SCRIPT_IDEMPOTENT: YES
+# HB_SCRIPT_ENTRYPOINT: python scripts/checks/db/agent_guard.py
+# HB_SCRIPT_OUTPUTS: baseline.json, exit_code
+
 from __future__ import annotations
 
 import argparse

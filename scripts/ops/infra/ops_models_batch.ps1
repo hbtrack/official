@@ -1,3 +1,10 @@
+# HB_SCRIPT_KIND: OPS
+# HB_SCRIPT_SIDE_EFFECTS: DB_READ, FS_READ, FS_WRITE, PROCESS_SPAWN
+# HB_SCRIPT_SCOPE: models
+# HB_SCRIPT_IDEMPOTENT: NO
+# HB_SCRIPT_ENTRYPOINT: pwsh scripts/ops/infra/ops_models_batch.ps1
+# HB_SCRIPT_OUTPUTS: batch_results
+
 <#
 models_batch.ps1 (SSOT-AUTO)
 Batch runner determinístico: refresh SSOT (1x) -> tabelas do schema.sql -> requirements scan -> gate nas FAIL (1 por vez) -> stop-on-first-failure.

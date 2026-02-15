@@ -1,3 +1,10 @@
+# HB_SCRIPT_KIND: OPS
+# HB_SCRIPT_SIDE_EFFECTS: DB_READ, FS_READ, PROCESS_SPAWN
+# HB_SCRIPT_SCOPE: parity
+# HB_SCRIPT_IDEMPOTENT: YES
+# HB_SCRIPT_ENTRYPOINT: pwsh scripts/ops/infra/parity_gate.ps1
+# HB_SCRIPT_OUTPUTS: parity_report
+
 param(
   [Parameter(Mandatory=$true)][string]$Table,
   [string[]]$Allow = @(),

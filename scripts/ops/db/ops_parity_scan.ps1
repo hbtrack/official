@@ -1,3 +1,10 @@
+# HB_SCRIPT_KIND: OPS
+# HB_SCRIPT_SCOPE: parity
+# HB_SCRIPT_SIDE_EFFECTS: FS_READ, FS_WRITE, DB_READ, PROCESS_SPAWN
+# HB_SCRIPT_IDEMPOTENT: YES
+# HB_SCRIPT_ENTRYPOINT: pwsh scripts/ops/db/ops_parity_scan.ps1
+# HB_SCRIPT_OUTPUTS: parity_scan_results
+
 param(
   [string]$RepoRoot = "C:\HB TRACK\Hb Track - Backend",
   [string]$ScriptsRoot = "",

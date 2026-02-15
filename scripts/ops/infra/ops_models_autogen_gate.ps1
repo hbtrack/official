@@ -1,8 +1,9 @@
-# SCRIPT_KIND: OPS
-# SIDE_EFFECTS: FS_WRITE, DB_READ, EXEC_PYTHON, EXEC_PWSH
-# SCOPE: infra
-# IDEMPOTENT: NO
-# ENTRYPOINT: .\scripts\ops\infra\ops_models_autogen_gate.ps1
+# HB_SCRIPT_KIND: OPS
+# HB_SCRIPT_SIDE_EFFECTS: FS_WRITE, DB_READ, PROCESS_SPAWN
+# HB_SCRIPT_SCOPE: infra
+# HB_SCRIPT_IDEMPOTENT: NO
+# HB_SCRIPT_ENTRYPOINT: pwsh scripts/ops/infra/ops_models_autogen_gate.ps1
+# HB_SCRIPT_OUTPUTS: model_files, gate_report
 
 param(
   [Parameter(Mandatory=$true)][string]$Table,

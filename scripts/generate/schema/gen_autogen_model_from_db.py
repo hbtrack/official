@@ -1,8 +1,9 @@
-# SCRIPT_KIND: GENERATE
-# SIDE_EFFECTS: FS_READ, FS_WRITE, DB_READ
-# SCOPE: schema
-# IDEMPOTENT: YES
-# ENTRYPOINT: python -m scripts.generate.schema.gen_autogen_model_from_db
+# HB_SCRIPT_KIND: GENERATE
+# HB_SCRIPT_SIDE_EFFECTS: FS_READ, FS_WRITE, DB_READ
+# HB_SCRIPT_SCOPE: schema
+# HB_SCRIPT_IDEMPOTENT: YES
+# HB_SCRIPT_ENTRYPOINT: python scripts/generate/schema/gen_autogen_model_from_db.py
+# HB_SCRIPT_OUTPUTS: model_file
 
 from __future__ import annotations
 

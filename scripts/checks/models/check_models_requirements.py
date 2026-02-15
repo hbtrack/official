@@ -1,8 +1,10 @@
-# SCRIPT_KIND: CHECK
-# SIDE_EFFECTS: DB_READ, FS_READ
-# SCOPE: models
-# IDEMPOTENT: YES
-# ENTRYPOINT: python -m scripts.checks.models.check_models_requirements
+#!/usr/bin/env python3
+# HB_SCRIPT_KIND: CHECK
+# HB_SCRIPT_SIDE_EFFECTS: DB_READ, FS_READ
+# HB_SCRIPT_SCOPE: models
+# HB_SCRIPT_IDEMPOTENT: YES
+# HB_SCRIPT_ENTRYPOINT: python scripts/checks/models/check_models_requirements.py
+# HB_SCRIPT_OUTPUTS: exit_code, violations_list
 
 from __future__ import annotations
 

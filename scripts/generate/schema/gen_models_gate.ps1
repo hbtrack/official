@@ -1,3 +1,10 @@
+# HB_SCRIPT_KIND: GENERATE
+# HB_SCRIPT_SIDE_EFFECTS: DB_READ, FS_READ, FS_WRITE
+# HB_SCRIPT_SCOPE: models
+# HB_SCRIPT_IDEMPOTENT: YES
+# HB_SCRIPT_ENTRYPOINT: pwsh scripts/generate/schema/gen_models_gate.ps1
+# HB_SCRIPT_OUTPUTS: model_files, validation_report
+
 param(
   [Parameter(Mandatory=$true)][string]$Table,
   [switch]$Create,
