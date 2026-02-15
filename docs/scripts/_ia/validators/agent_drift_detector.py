@@ -29,6 +29,7 @@ from utils.paths import REPO_ROOT
 
 # Drift detection patterns (from AGENT_DRIFT_RULES.md)
 JSON_START = re.compile(r"^\s*\{", re.MULTILINE)
+JSON_CODE_BLOCK = re.compile(r"```(?:json|javascript|typescript)\s*\n.*?\n```", re.DOTALL)
 CONVERSATIONAL = re.compile(
     r"\b(acho que|I think|podemos|we can|na minha opinião|in my opinion|"
     r"seria legal|it would be nice|talvez|maybe|recomendo|I recommend)\b",
@@ -47,6 +48,35 @@ COMMANDS = re.compile(
     r"\b(powershell\.exe|python |bash |cmd\.exe|alembic |git commit|git push)\b",
     re.IGNORECASE
 )
+
+# Whitelist: files that are EXPECTED to contain JSON examples/documentation
+JSON_ALLOWED_PATTERNS = [
+    r"VALIDATION_MUST_REPORT.*\.md$",  # Validation reports document JSON output
+    r"ARCH_REQUEST_IMPLEMENTED\.md$",  # Implementation docs may show JSON configs
+    r"event\.json$",  # JSON files themselves
+    r".*schema\.json$",  # JSON schema files
+]
+
+# Whitelist: files that are EXPECTED to contain command examples
+COMMANDS_ALLOWED_PATTERNS = [
+    r"ARCH_REQUEST_GENERATION_PROTOCOL\.md$",  # Teaches how to create arch requests (includes command examples)
+    r".*_TUTORIAL\.md$",  # Tutorials show commands
+    r".*_GUIDE\.md$",  # Guides show commands
+    r"APPROVED_COMMANDS\.md$",  # Command catalog
+    r"AGENT_DRIFT_RULES\.md$",  # Meta-documentation: teaches drift rules by example
+    r"TROUBLESHOOTING.*\.md$",  # Troubleshooting guides show commands
+    r"AR-.*-SCRIPTS-.*\.md$",  # AR-* for script refactoring naturally document commands
+    r".*VALIDATION_MUST_REPORT.*\.md$",  # Validation reports document command execution
+    r".*EXECUTION_PLAN.*\.md$",  # Execution plans document commands
+    r"ARCH_REQUEST_IMPLEMENTED\.md$",  # Implementation documentation references commands
+    r"AUTH-CONTEXT-SSOT-.*\.md$",  # Auth context docs reference git commands
+]
+
+# Whitelist: files that are EXPECTED to contain conversational/promotional language (teaching materials)
+LANGUAGE_ALLOWED_PATTERNS = [
+    r"AGENT_DRIFT_RULES\.md$",  # Meta-documentation: teaches about prohibited language by example
+    r".*_TUTORIAL\.md$",  # Tutorials use friendlier language
+]
 
 
 class DriftIssue:
@@ -67,12 +97,18 @@ def detect_structural_drift(file: Path, content: str) -> List[DriftIssue]:
     """Detect structural drift (JSON, mixed layers, missing sections)."""
     issues = []
     
-    # Check 1: JSON in Markdown
-    if file.suffix == ".md" and JSON_START.search(content):
-        issues.append(DriftIssue(
-            file, "structural", "BLOCKER",
-            "JSON detected in Markdown file (should be pure Markdown)"
-        ))
+    # Check if file is whitelisted for JSON examples
+    is_json_allowed = any(re.search(pattern, file.name) for pattern in JSON_ALLOWED_PATTERNS)
+    
+    # Check 1: JSON in Markdown (only if not whitelisted and not in code blocks)
+    if file.suffix == ".md" and not is_json_allowed:
+        # Remove code blocks before checking
+        content_no_codeblocks = JSON_CODE_BLOCK.sub("", content)
+        if JSON_START.search(content_no_codeblocks):
+            issues.append(DriftIssue(
+                file, "structural", "BLOCKER",
+                "JSON detected in Markdown file (should be pure Markdown)"
+            ))
     
     # Check 2: Mixed layers
     has_arch = "ARCH_REQUEST" in content and "# ARCH_REQUEST" in content
@@ -90,6 +126,12 @@ def detect_structural_drift(file: Path, content: str) -> List[DriftIssue]:
 def detect_language_drift(file: Path, content: str) -> List[DriftIssue]:
     """Detect language drift (conversational tone, hedging, promotional)."""
     issues = []
+    
+    # Check if file is whitelisted for friendly/teaching language
+    is_language_allowed = any(re.search(pattern, file.name) for pattern in LANGUAGE_ALLOWED_PATTERNS)
+    
+    if is_language_allowed:
+        return issues  # Skip all language checks for teaching materials
     
     # Check 1: Conversational tone
     conv_matches = CONVERSATIONAL.findall(content)
@@ -133,8 +175,11 @@ def detect_protocol_drift(file: Path, content: str) -> List[DriftIssue]:
     """Detect protocol drift (execution in arch, architecture in exec, etc.)."""
     issues = []
     
-    # Check 1: Execution commands in ARCH_REQUEST
-    if "ARCH_REQUEST" in content and "# ARCH_REQUEST" in content:
+    # Check if file is whitelisted for command examples
+    is_commands_allowed = any(re.search(pattern, file.name) for pattern in COMMANDS_ALLOWED_PATTERNS)
+    
+    # Check 1: Execution commands in ARCH_REQUEST (unless whitelisted)
+    if "ARCH_REQUEST" in content and "# ARCH_REQUEST" in content and not is_commands_allowed:
         cmd_matches = COMMANDS.findall(content)
         if cmd_matches:
             issues.append(DriftIssue(
