@@ -1,3 +1,9 @@
+# HB_SCRIPT_KIND=OPS
+# HB_SCRIPT_SCOPE=infra
+# HB_SCRIPT_SIDE_EFFECTS=PROC_START_STOP
+# HB_SCRIPT_IDEMPOTENT=YES
+# HB_SCRIPT_ENTRYPOINT=powershell -File scripts/ops/inv.ps1
+# HB_SCRIPT_OUTPUTS=stdout
 #!/usr/bin/env pwsh
 #
 # inv.ps1

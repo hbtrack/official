@@ -1,4 +1,10 @@
-﻿# Celery Beat - Step 18
+# HB_SCRIPT_KIND=OPS
+# HB_SCRIPT_SCOPE=infra
+# HB_SCRIPT_SIDE_EFFECTS=PROC_START_STOP
+# HB_SCRIPT_IDEMPOTENT=NO
+# HB_SCRIPT_ENTRYPOINT=powershell -File scripts/ops/infra/ops_start_celery_beat_backup.ps1
+# HB_SCRIPT_OUTPUTS=stdout
+# Celery Beat - Step 18
 # Executa scheduler Celery Beat para scheduled jobs (alertas automÃ¡ticos)
 
 Write-Host "â° Starting Celery Beat (Scheduler)..." -ForegroundColor Green

@@ -1,7 +1,13 @@
-# Flower - Step 18
-# Executa monitoring UI do Celery
+# HB_SCRIPT_KIND=OPS
+# HB_SCRIPT_SCOPE=infra
+# HB_SCRIPT_SIDE_EFFECTS=PROC_START_STOP
+# HB_SCRIPT_IDEMPOTENT=NO
+# HB_SCRIPT_ENTRYPOINT=powershell -File scripts/ops/infra/ops_start_celery_beat.ps1
+# HB_SCRIPT_OUTPUTS=stdout
+# Celery Beat - Step 18
+# Executa scheduler Celery Beat para scheduled jobs (alertas automaticos)
 
-Write-Host "Starting Flower (Celery Monitoring UI)..." -ForegroundColor Green
+Write-Host "Starting Celery Beat (Scheduler)..." -ForegroundColor Green
 Write-Host "============================================" -ForegroundColor Green
 Write-Host ""
 
@@ -36,21 +42,21 @@ try {
 }
 
 Write-Host ""
-Write-Host "Starting Flower UI..." -ForegroundColor Cyan
-Write-Host "   URL: http://localhost:5555" -ForegroundColor Gray
-Write-Host "   Auth: admin / hbtrack2026" -ForegroundColor Gray
+Write-Host "Scheduled Jobs:" -ForegroundColor Cyan
+Write-Host "   - check-weekly-overload: Domingo 23:00" -ForegroundColor Gray
+Write-Host "   - check-wellness-response-rates: Diario 08:00" -ForegroundColor Gray
+Write-Host "   - cleanup-old-alerts: Domingo 02:00" -ForegroundColor Gray
 Write-Host ""
 Write-Host "Press Ctrl+C to stop" -ForegroundColor Yellow
 Write-Host "============================================" -ForegroundColor Green
 Write-Host ""
 
-# Executar flower
-# --port=5555: Porta do servidor
-# --basic_auth: Autenticacao basica
-python -m celery -A app.core.celery_app flower --port=5555 --basic_auth=admin:hbtrack2026
+# Executar beat
+# --loglevel=info: Mostrar logs dos schedules
+python -m celery -A app.core.celery_app beat --loglevel=info
 
 # Mensagem ao encerrar
 Write-Host ""
 Write-Host "============================================" -ForegroundColor Red
-Write-Host "Flower stopped" -ForegroundColor Red
+Write-Host "Celery Beat stopped" -ForegroundColor Red
 Write-Host "============================================" -ForegroundColor Red

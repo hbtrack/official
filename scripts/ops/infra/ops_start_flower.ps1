@@ -1,7 +1,13 @@
-# Celery Worker - Step 18
-# Executa worker Celery para processar tasks assincronas
+# HB_SCRIPT_KIND=OPS
+# HB_SCRIPT_SCOPE=infra
+# HB_SCRIPT_SIDE_EFFECTS=PROC_START_STOP
+# HB_SCRIPT_IDEMPOTENT=NO
+# HB_SCRIPT_ENTRYPOINT=powershell -File scripts/ops/infra/ops_start_flower.ps1
+# HB_SCRIPT_OUTPUTS=stdout
+# Flower - Step 18
+# Executa monitoring UI do Celery
 
-Write-Host "Starting Celery Worker..." -ForegroundColor Green
+Write-Host "Starting Flower (Celery Monitoring UI)..." -ForegroundColor Green
 Write-Host "============================================" -ForegroundColor Green
 Write-Host ""
 
@@ -36,23 +42,21 @@ try {
 }
 
 Write-Host ""
-Write-Host "Starting Celery Worker..." -ForegroundColor Cyan
-Write-Host "   Pool: solo (Windows compatible)" -ForegroundColor Gray
-Write-Host "   Concurrency: 4" -ForegroundColor Gray
-Write-Host "   Loglevel: info" -ForegroundColor Gray
+Write-Host "Starting Flower UI..." -ForegroundColor Cyan
+Write-Host "   URL: http://localhost:5555" -ForegroundColor Gray
+Write-Host "   Auth: admin / hbtrack2026" -ForegroundColor Gray
 Write-Host ""
 Write-Host "Press Ctrl+C to stop" -ForegroundColor Yellow
 Write-Host "============================================" -ForegroundColor Green
 Write-Host ""
 
-# Executar worker
-# --pool=solo: Windows-compatible pool
-# --concurrency=4: Processar ate 4 tasks simultaneamente
-# --loglevel=info: Mostrar logs informativos
-python -m celery -A app.core.celery_app worker --pool=solo --concurrency=4 --loglevel=info
+# Executar flower
+# --port=5555: Porta do servidor
+# --basic_auth: Autenticacao basica
+python -m celery -A app.core.celery_app flower --port=5555 --basic_auth=admin:hbtrack2026
 
 # Mensagem ao encerrar
 Write-Host ""
 Write-Host "============================================" -ForegroundColor Red
-Write-Host "Celery Worker stopped" -ForegroundColor Red
+Write-Host "Flower stopped" -ForegroundColor Red
 Write-Host "============================================" -ForegroundColor Red

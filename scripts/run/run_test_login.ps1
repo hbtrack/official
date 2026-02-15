@@ -1,3 +1,9 @@
+# HB_SCRIPT_KIND=RUN
+# HB_SCRIPT_SCOPE=infra
+# HB_SCRIPT_SIDE_EFFECTS=NET
+# HB_SCRIPT_IDEMPOTENT=YES
+# HB_SCRIPT_ENTRYPOINT=powershell -File scripts/run/run_test_login.ps1
+# HB_SCRIPT_OUTPUTS=stdout
 # Teste final de login
 Write-Host "`n========================================" -ForegroundColor Cyan
 Write-Host "TESTE FINAL DE LOGIN - SUPER ADMIN" -ForegroundColor Cyan

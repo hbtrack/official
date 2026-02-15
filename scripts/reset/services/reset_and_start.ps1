@@ -1,3 +1,9 @@
+# HB_SCRIPT_KIND=RESET
+# HB_SCRIPT_SCOPE=env
+# HB_SCRIPT_SIDE_EFFECTS=PROC_START_STOP,DESTRUCTIVE
+# HB_SCRIPT_IDEMPOTENT=NO
+# HB_SCRIPT_ENTRYPOINT=powershell -File scripts/reset/services/reset_and_start.ps1
+# HB_SCRIPT_OUTPUTS=stdout
 # =============================================================================
 # SCRIPT COMPLETO: RESET + MIGRATIONS + SEED + START BACKEND + FRONTEND
 # =============================================================================

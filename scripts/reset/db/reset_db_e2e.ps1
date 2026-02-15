@@ -1,3 +1,9 @@
+# HB_SCRIPT_KIND=RESET
+# HB_SCRIPT_SCOPE=db
+# HB_SCRIPT_SIDE_EFFECTS=DB_WRITE,DESTRUCTIVE
+# HB_SCRIPT_IDEMPOTENT=NO
+# HB_SCRIPT_ENTRYPOINT=powershell -File scripts/reset/db/reset_db_e2e.ps1
+# HB_SCRIPT_OUTPUTS=stdout
 # =============================================================================
 # SCRIPT DE RESET + MIGRATION + SEED - BANCO DE DADOS E2E
 # =============================================================================
