@@ -237,7 +237,7 @@ Rejeição:
 Vendor lock-in (dependência de serviço externo).
 Thresholds ficam em UI, não versionados com código.
 Dificulta agents locais/offline lerem regras.
-Nota: Podemos integrar SonarQube além desta estrutura (importar quality-gates.yml para Sonar).
+Nota: É possível integrar SonarQube além desta estrutura (importar quality-gates.yml para Sonar).
 
 Alternativa 4: Misturar docs humanas e AI na mesma pasta
 Rejeição:

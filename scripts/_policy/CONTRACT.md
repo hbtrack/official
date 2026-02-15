@@ -1,31 +1,31 @@
-# Scripts Policy — Canonical Contracts
+# Scripts Policy — Contratos Canônicos
 
-**Version:** 1.0.0  
-**Last Updated:** 2026-02-15  
-**Authority:** This document defines immutable contracts for the scripts governance system.
+**Versão:** 1.0.0  
+**Última Atualização:** 2026-02-15  
+**Autoridade:** Este documento define contratos imutáveis para o sistema de governança de scripts.
 
 ---
 
-## 1. Canonical File Paths
+## 1. Caminhos de Arquivo Canônicos
 
-These paths are **part of the contract** between SSOT, DERIVED, gates, and CI.  
-Changes require CI workflow updates and manifest regeneration.
+Estes caminhos são **parte do contrato** entre SSOT, DERIVED, gates e CI.  
+Mudanças requerem atualização do workflow de CI e regeneração do manifest.
 
-| Constant | Value | Description |
+| Constante | Valor | Descrição |
 |----------|-------|-------------|
-| **SSOT_YAML_RELPATH** | `scripts/_policy/scripts.policy.yaml` | Single Source of Truth (policy YAML) |
-| **DERIVED_MD_RELPATH** | `docs/_canon/_agent/SCRIPTS_classification.md` | Generated Markdown (documentation for AI agents) |
-| **MANIFEST_JSON_RELPATH** | `scripts/_policy/policy.manifest.json` | Evidence file with SHA256 hashes |
-| **HEURISTICS_YAML_RELPATH** | `scripts/_policy/side_effects_heuristics.yaml` | Auxiliary policy (side-effects detection) |
+| **SSOT_YAML_RELPATH** | `scripts/_policy/scripts.policy.yaml` | Fonte Única da Verdade (policy YAML) |
+| **DERIVED_MD_RELPATH** | `docs/_canon/_agent/SCRIPTS_classification.md` | Markdown Gerado (documentação para agentes IA) |
+| **MANIFEST_JSON_RELPATH** | `scripts/_policy/policy.manifest.json` | Arquivo de evidência com hashes SHA256 |
+| **HEURISTICS_YAML_RELPATH** | `scripts/_policy/side_effects_heuristics.yaml` | Política auxiliar (detecção de efeitos colaterais) |
 
-**Path Rationale:**
-- `_canon/` = Canonical documentation (authoritative)
-- `_agent/` = Documentation for AI agents (not ephemeral, versioned for LLM consumption)
+**Justificativa dos Caminhos:**
+- `_canon/` = Documentação canônica (autoritativa)
+- `_agent/` = Documentação para agentes IA (não efêmera, versionada para consumo LLM)
 
 **Enforcement:**
-- Python: Constants defined in [policy_lib.py](policy_lib.py#L49-L52)
-- PowerShell: Constants validated against Python via [check_path_constants.py](check_path_constants.py)
-- CI: Consistency gate runs on every PR (Windows + Ubuntu)
+- Python: Constantes definidas em [policy_lib.py](policy_lib.py#L49-L52)
+- PowerShell: Constantes validadas contra Python via [check_path_constants.py](check_path_constants.py)
+- CI: Gate de consistência roda em todo PR (Windows + Ubuntu)
 
 ---
 

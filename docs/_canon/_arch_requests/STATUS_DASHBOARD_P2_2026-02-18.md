@@ -230,7 +230,7 @@ PENDING (AR-7,8): ├─ AR-007: migrate_team_wellness.py
 | **Dependencies** | roles + permissions | none | AR-006 safer |
 | **Complexity** | MEDIUM | MEDIUM/simple | AR-006 validates simplified template |
 | **Est. Time** | 150-170 min | 130-150 min | AR-006 ~20 min faster |
-| **Risk** | LOW | **MINIMAL** | AR-006 ideal for 2nd AR |
+| **Risk** | LOW | **MINIMAL** | AR-006 suitable for 2nd AR |
 | **Execution Order** | **FIRST** | **SECOND** | Complexity descending |
 
 **Strategy:** Execute AR-005 first (validate template), then AR-006 (confirm simplification works), then decision on AR-007/008.

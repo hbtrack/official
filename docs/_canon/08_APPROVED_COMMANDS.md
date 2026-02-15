@@ -216,7 +216,7 @@ git status --porcelain
 - Troubleshooting de guard violations
 
 **Validação (DoD):**
-- Output vazio → repo limpo (ideal para gates)
+- Output vazio → repo limpo (adequado para gates)
 - Output com `M <file>` → arquivo modificado
 - Output com `?? <file>` → arquivo untracked
 
@@ -1069,7 +1069,7 @@ ExitCode: 4
 **Notas:**
 - Requirements é **determinístico**: mesmos inputs → mesmos outputs
 - Não modifica arquivos (read-only)
-- Perfeito para CI (sem side-effects)
+- Adequado para CI (sem side-effects)
 
 ---
 
