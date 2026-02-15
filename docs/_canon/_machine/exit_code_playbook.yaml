@@ -1,3 +1,4 @@
+
 # =============================================================================
 # EXIT CODE PLAYBOOK — Machine-Readable (Agent Consumption)
 # =============================================================================
@@ -131,15 +132,20 @@ playbook:
     title: "SCHEMA_DRIFT (migrations ≠ schema.sql)"
     category: pipeline
     action: >-
-      (a) Aplicar migrations até head (ou reset controlado).
-      (b) Regenerar schema.sql via comando canônico.
-      (c) Commit do schema atualizado.
-      (d) Rerun pipeline (parity + requirements).
+      (a) Verificar drift com check_schema_drift.py.
+      (b) Aplicar migrations até head (ou reset controlado).
+      (c) Regenerar schema.sql via --fix ou pipeline.
+      (d) Commit do schema atualizado.
+      (e) Rerun pipeline (parity + requirements).
     commands:
+      - syntax: 'python scripts/checks/db/check_schema_drift.py --verbose'
+        purpose: "Diagnosticar drift entre schema.sql e DB"
+      - syntax: 'python scripts/checks/db/check_schema_drift.py --fix'
+        purpose: "Regenerar schema.sql a partir do DB atual"
       - syntax: '.\venv\Scripts\python.exe -m alembic upgrade head'
         purpose: "Aplicar migrations pendentes"
       - syntax: 'powershell -NoProfile -ExecutionPolicy Bypass -File "C:\HB TRACK\scripts\inv.ps1" refresh'
-        purpose: "Regenerar SSOT artifacts"
+        purpose: "Regenerar SSOT artifacts (pipeline completo)"
       - syntax: '.\venv\Scripts\python.exe -m alembic current'
         purpose: "Verificar estado migrations"
     artifacts:
@@ -230,11 +236,16 @@ playbook:
     title: "CONTRACT_DRIFT (OpenAPI)"
     category: quality
     action: >-
-      (a) Regenerar OpenAPI a partir do app ou ajustar handlers/schemas.
-      (b) Rerun testes de contrato.
-      (c) Garantir compatibilidade com DB-first (DB continua vencendo).
+      (a) Verificar drift com check_contract_drift.py.
+      (b) Regenerar openapi.json via --fix ou pipeline.
+      (c) Rerun testes de contrato.
+      (d) Garantir compatibilidade com DB-first (DB continua vencendo).
     commands:
+      - syntax: 'python scripts/checks/openapi/check_contract_drift.py --verbose'
+        purpose: "Diagnosticar drift entre openapi.json e app"
+      - syntax: 'python scripts/checks/openapi/check_contract_drift.py --fix'
+        purpose: "Regenerar openapi.json a partir da app"
       - syntax: 'powershell -NoProfile -ExecutionPolicy Bypass -File "C:\HB TRACK\scripts\inv.ps1" refresh'
-        purpose: "Regenerar OpenAPI + SSOT"
+        purpose: "Regenerar OpenAPI + SSOT (pipeline completo)"
     iterate: true
     rule: "Contrato é derivado do app; app é derivado do DB. Cadeia: DB → Model → Service → Router → OpenAPI."

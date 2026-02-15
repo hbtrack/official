@@ -1,0 +1,115 @@
+# =============================================================================
+# HB Track — Backend — pyproject.toml
+# =============================================================================
+# Authority : docs/_ai/_specs/quality-gates.yml (thresholds)
+# Playbook  : docs/_canon/_machine/exit_code_playbook.yaml (EC 10-16)
+# Strategy  : Config permissiva (baseline limpo), apertar progressivamente.
+# =============================================================================
+
+# ---------------------------------------------------------------------------
+# RUFF (Linter — substitui flake8) — EC 10
+# ---------------------------------------------------------------------------
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+src = ["app", "scripts", "tests"]
+exclude = [
+    "venv",
+    "db/alembic/versions",
+    "__pycache__",
+    ".hb_guard",
+    "docs",
+    "_archived_e2e",
+]
+
+[tool.ruff.lint]
+# Fase 1 — Mínimo viável (erros, warnings, pyflakes)
+# Apertar progressivamente: adicionar "I" (isort), "UP" (pyupgrade), "B" (bugbear)
+select = ["E", "W", "F"]
+ignore = [
+    "E501",   # line too long (controlado por Black/line-length)
+    "W291",   # trailing whitespace (auto-fix)
+    "W292",   # no newline at end of file (auto-fix)
+    "W293",   # whitespace before ':' (auto-fix)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"db/alembic/versions/*.py" = ["E", "W", "F"]  # migrations: ignore all
+"tests/**/*.py" = ["F811"]                       # fixtures redefine names
+
+# ---------------------------------------------------------------------------
+# BLACK (Formatter) — EC 11
+# ---------------------------------------------------------------------------
+[tool.black]
+target-version = ["py311"]
+line-length = 120
+
+# ---------------------------------------------------------------------------
+# MYPY (Type checker) — EC 12
+# ---------------------------------------------------------------------------
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = false
+warn_unused_configs = true
+check_untyped_defs = false
+ignore_missing_imports = true
+# Fase 1 — Loose mode. Apertar progressivamente:
+# disallow_untyped_defs = true
+# disallow_any_generics = true
+# strict = true
+
+[[tool.mypy.overrides]]
+module = "db.alembic.versions.*"
+ignore_errors = true
+
+# ---------------------------------------------------------------------------
+# PYTEST — migrado de pytest.ini
+# ---------------------------------------------------------------------------
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests/unit", "tests/integration"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+markers = [
+    "integration: marks tests as integration tests (deselect with '-m \"not integration\"')",
+]
+asyncio_mode = "auto"
+
+# ---------------------------------------------------------------------------
+# COVERAGE — EC 16
+# ---------------------------------------------------------------------------
+[tool.coverage.run]
+source = ["app"]
+omit = [
+    "app/__pycache__/*",
+    "app/config.py",
+]
+
+[tool.coverage.report]
+fail_under = 0       # Fase 1: sem piso (definir após baseline)
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "if __name__ == .__main__.",
+]
+
+# ---------------------------------------------------------------------------
+# BANDIT (Security scanner) — EC 13
+# ---------------------------------------------------------------------------
+[tool.bandit]
+exclude_dirs = ["venv", "tests", "db/alembic/versions"]
+# severity: LOW, MEDIUM, HIGH
+# confidence: LOW, MEDIUM, HIGH
+skips = [
+    "B101",  # assert usado em testes (excluídos via exclude_dirs)
+]
+
+# ---------------------------------------------------------------------------
+# QUALITY GATES — Referência (de docs/_ai/_specs/quality-gates.yml)
+# ---------------------------------------------------------------------------
+# complexity_max   = 6   (Radon CC — EC 14)
+# nesting_max      = 3
+# function_lines   = 50
+# parameters_max   = 4

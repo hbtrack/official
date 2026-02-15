@@ -283,6 +283,70 @@ exit_codes:
         command: "# Ver docs/references/exit_codes.md seção Exit Code 4"
 
   # =========================================================================
+  # 5 — SCHEMA_DRIFT
+  # =========================================================================
+  "5":
+    title: "Schema Drift"
+    severity: warning
+    normative: >-
+      Scripts MUST return 5 when the on-disk schema.sql does not match the
+      live database schema. This indicates that a migration was applied or
+      manual DDL was executed without regenerating schema.sql.
+    description: >-
+      O arquivo schema.sql (SSOT) difere do schema atual do banco de dados.
+      Isso significa que migrações foram aplicadas ou DDL manual foi executado
+      sem atualizar o artefato SSOT.
+    emitters:
+      - path: scripts/checks/db/check_schema_drift.py
+        context: "pg_dump --schema-only difere de docs/_generated/schema.sql"
+    symptoms:
+      - "Output contém 'Schema drift detected'"
+      - "Diferenças em tabelas, colunas, constraints ou índices"
+    causes:
+      - "Migração Alembic aplicada sem regenerar schema.sql"
+      - "DDL manual executado diretamente no banco"
+      - "schema.sql gerado a partir de outro banco (staging vs dev)"
+    troubleshooting:
+      - step: "Verificar quais diferenças existem"
+        command: "python scripts/checks/db/check_schema_drift.py --verbose"
+      - step: "Regenerar schema.sql a partir do banco atual"
+        command: "python scripts/checks/db/check_schema_drift.py --fix"
+      - step: "Ou regenerar via pipeline completo"
+        command: "python scripts/generate/docs/gen_docs_soot.py --schema"
+
+  # =========================================================================
+  # 20 — CONTRACT_DRIFT
+  # =========================================================================
+  "20":
+    title: "Contract Drift"
+    severity: warning
+    normative: >-
+      Scripts MUST return 20 when the on-disk openapi.json does not match
+      the live FastAPI app contract. This indicates that routes, schemas,
+      or parameters were changed without regenerating the OpenAPI spec.
+    description: >-
+      O arquivo openapi.json (SSOT) difere do contrato atual exposto pela
+      aplicação FastAPI. Isso significa que rotas, schemas ou parâmetros
+      foram alterados sem atualizar o artefato SSOT.
+    emitters:
+      - path: scripts/checks/openapi/check_contract_drift.py
+        context: "app.openapi() difere de docs/_generated/openapi.json"
+    symptoms:
+      - "Output contém 'Contract drift detected'"
+      - "Diferenças em endpoints, schemas, parâmetros"
+    causes:
+      - "Router/endpoint alterado sem regenerar openapi.json"
+      - "Schema Pydantic alterado (field adicionado/removido)"
+      - "Dependência FastAPI atualizada com serialização diferente"
+    troubleshooting:
+      - step: "Verificar quais diferenças existem"
+        command: "python scripts/checks/openapi/check_contract_drift.py --verbose"
+      - step: "Regenerar openapi.json a partir da app atual"
+        command: "python scripts/checks/openapi/check_contract_drift.py --fix"
+      - step: "Ou regenerar via pipeline completo"
+        command: "python scripts/generate/docs/gen_docs_soot.py --openapi"
+
+  # =========================================================================
   # 100 — SKIP_NO_MODEL
   # =========================================================================
   "100":

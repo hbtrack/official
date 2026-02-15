@@ -19,6 +19,8 @@
     3. Policy Manifest Hashes
     4. Policy Markdown Drift
     5. Path Constants Consistency
+    6. Schema Drift (schema.sql vs live DB)
+    7. Contract Drift (openapi.json vs live app)
     
     Use antes de push para evitar falhas no CI.
 
@@ -36,6 +38,12 @@
 
 .PARAMETER SkipPathConstants
     Pula validação de constantes de path
+
+.PARAMETER SkipSchemaDrift
+    Pula validação de schema drift (requer DATABASE_URL)
+
+.PARAMETER SkipContractDrift
+    Pula validação de contract drift (requer FastAPI importável)
 
 .PARAMETER FailFast
     Para na primeira falha (padrão: continua até o fim)
@@ -69,6 +77,8 @@ param(
     [switch]$SkipManifest,
     [switch]$SkipDrift,
     [switch]$SkipPathConstants,
+    [switch]$SkipSchemaDrift,
+    [switch]$SkipContractDrift,
     [switch]$FailFast
 )
 
@@ -246,6 +256,52 @@ Invoke-Gate -Name "Path Constants" `
         }
     } `
     -Skip:$SkipPathConstants
+
+# ========================================
+# GATE 6: Schema Drift
+# ========================================
+Invoke-Gate -Name "Schema Drift" `
+    -Description "Compara schema.sql (SSOT) com o schema live do banco de dados" `
+    -Command {
+        $PythonExe = $null
+        $VenvPython = Join-Path $RepoRoot "Hb Track - Backend\venv\Scripts\python.exe"
+        if (Test-Path $VenvPython) {
+            $PythonExe = $VenvPython
+        } else {
+            $PythonExe = (Get-Command python -ErrorAction SilentlyContinue).Source
+        }
+        
+        if (-not $PythonExe) {
+            Write-Host "[ERROR] Python não encontrado" -ForegroundColor Red
+            exit 3
+        }
+        
+        & $PythonExe "scripts\checks\db\check_schema_drift.py"
+    } `
+    -Skip:$SkipSchemaDrift
+
+# ========================================
+# GATE 7: Contract Drift
+# ========================================
+Invoke-Gate -Name "Contract Drift" `
+    -Description "Compara openapi.json (SSOT) com o contrato live da FastAPI app" `
+    -Command {
+        $PythonExe = $null
+        $VenvPython = Join-Path $RepoRoot "Hb Track - Backend\venv\Scripts\python.exe"
+        if (Test-Path $VenvPython) {
+            $PythonExe = $VenvPython
+        } else {
+            $PythonExe = (Get-Command python -ErrorAction SilentlyContinue).Source
+        }
+        
+        if (-not $PythonExe) {
+            Write-Host "[ERROR] Python não encontrado" -ForegroundColor Red
+            exit 3
+        }
+        
+        & $PythonExe "scripts\checks\openapi\check_contract_drift.py"
+    } `
+    -Skip:$SkipContractDrift
 
 # ========================================
 # SUMMARY
