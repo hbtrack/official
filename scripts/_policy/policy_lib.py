@@ -708,14 +708,23 @@ def validate_headers(script_path: Path, category: str) -> List[Tuple[str, str, s
     except Exception:
         return violations
 
-    # Extract headers (simple regex)
+    # Extract headers (flexible: accepts # or -- leader, = or : separator)
     headers = {}
     for line in content.splitlines()[:100]:  # Check first 100 lines
-        match = re.match(r"^\s*#\s*HB_SCRIPT_(\w+):\s*(.+)$", line)
+        match = re.match(r"^\s*(?:(#|--)\s*)?HB_SCRIPT_(\w+)\s*[:=]\s*(.+?)\s*$", line)
         if match:
-            key = f"HB_SCRIPT_{match.group(1)}"
-            value = match.group(2).strip()
+            key = f"HB_SCRIPT_{match.group(2)}"  # group(2) = field name
+            value = match.group(3).strip()  # group(3) = value
             headers[key] = value
+
+    # Normalize IDEMPOTENT values (TRUE->YES, FALSE->NO)
+    if "HB_SCRIPT_IDEMPOTENT" in headers:
+        raw = headers["HB_SCRIPT_IDEMPOTENT"].strip().upper()
+        normalized = {"TRUE": "YES", "FALSE": "NO"}.get(raw, raw)
+        if normalized not in {"YES", "NO", "CONDITIONAL"}:
+            violations.append(("HB004", rel_path, f"Invalid IDEMPOTENT value: {raw} (expected YES/NO/CONDITIONAL)"))
+        else:
+            headers["HB_SCRIPT_IDEMPOTENT"] = normalized
 
     # Check required headers
     for req in REQUIRED_HEADERS:
