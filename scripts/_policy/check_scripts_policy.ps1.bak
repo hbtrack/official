@@ -1,0 +1,532 @@
+<# HB Track — scripts/checks/check_policy_md_is_derived.ps1
+
+# HB_SCRIPT_KIND=CHECK
+# HB_SCRIPT_SCOPE=security
+# HB_SCRIPT_SIDE_EFFECTS=FS_READ
+# HB_SCRIPT_IDEMPOTENT=YES
+# HB_SCRIPT_ENTRYPOINT=powershell -ExecutionPolicy Bypass -File scripts/checks/check_scripts_policy.ps1
+# HB_SCRIPT_OUTPUTS=scripts/artifacts/checks/security/check_scripts_policy/
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = "Stop"
+
+# Exit codes (deterministic contract)
+# 0 = PASS
+# 2 = POLICY VIOLATION (content/naming/layout)
+# 3 = HARNESS ERROR (missing deps, unreadable files, invalid YAML/JSON) #>
+
+$EXIT_PASS = 0
+$EXIT_VIOLATION = 2
+$EXIT_HARNESS = 3
+
+function Write-SummaryLine([string]$level, [string]$msg) {
+  # single-line, stable format
+  Write-Host ("[{0}] {1}" -f $level.ToUpperInvariant(), $msg)
+}
+
+function New-Result {
+  param(
+    [int]$ExitCode = 0,
+    [string[]]$Errors = @(),
+    [string[]]$Warnings = @()
+  )
+  [pscustomobject]@{
+    ExitCode = $ExitCode
+    Errors   = $Errors
+    Warnings = $Warnings
+  }
+}
+
+function Add-Error([ref]$arr, [string]$msg) { $arr.Value += $msg }
+function Add-Warn([ref]$arr, [string]$msg)  { $arr.Value += $msg }
+
+function Resolve-RepoRoot {
+  # Deterministic: assume script is invoked from anywhere inside repo
+  $here = Split-Path -Parent $PSCommandPath
+  $root = Resolve-Path (Join-Path $here "..\..")  # scripts/checks -> scripts -> repo root
+  return $root.Path
+}
+
+function Require-File([string]$path) {
+  if (-not (Test-Path -LiteralPath $path)) {
+    throw "Required file not found: $path"
+  }
+}
+
+function Ensure-Python {
+  try {
+    $null = Get-Command python -ErrorAction Stop
+  } catch {
+    throw "python not found on PATH (required for YAML parse + schema validation)"
+  }
+}
+
+function Get-PythonJson {
+  param(
+    [string]$Script,
+    [string[]]$Args = @()
+  )
+  # Returns parsed JSON object
+  $cmd = @("python", "-c", $Script) + $Args
+  $json = & $cmd 2>&1
+  if ($LASTEXITCODE -ne 0) {
+    throw ("Python helper failed: " + ($json -join "`n"))
+  }
+  if ([string]::IsNullOrWhiteSpace($json)) {
+    throw "Python helper returned empty output"
+  }
+  try {
+    return ($json | ConvertFrom-Json -ErrorAction Stop)
+  } catch {
+    throw ("Failed to parse JSON from Python helper. Raw: " + ($json -join "`n"))
+  }
+}
+
+function Load-Policy {
+  param(
+    [string]$PolicyYamlPath,
+    [string]$SchemaJsonPath
+  )
+
+  Ensure-Python
+  Require-File $PolicyYamlPath
+  Require-File $SchemaJsonPath
+
+  $py = @'
+import json, sys
+def die(msg):
+  print(msg, file=sys.stderr)
+  sys.exit(2)
+
+yaml_path = sys.argv[1]
+schema_path = sys.argv[2]
+
+# lazy imports: require pyyaml + jsonschema
+try:
+  import yaml
+except Exception as e:
+  die("Missing dependency: pyyaml (pip install pyyaml). " + str(e))
+
+try:
+  import jsonschema
+except Exception as e:
+  die("Missing dependency: jsonschema (pip install jsonschema). " + str(e))
+
+with open(yaml_path, "r", encoding="utf-8") as f:
+  policy = yaml.safe_load(f)
+
+with open(schema_path, "r", encoding="utf-8") as f:
+  schema = json.load(f)
+
+try:
+  jsonschema.validate(instance=policy, schema=schema)
+except jsonschema.ValidationError as e:
+  die("Schema validation failed: " + e.message)
+
+print(json.dumps(policy, ensure_ascii=False))
+'@
+
+  return Get-PythonJson -Script $py -Args @($PolicyYamlPath, $SchemaJsonPath)
+}
+
+function Get-RelPath([string]$root, [string]$fullPath) {
+  $rp = Resolve-Path -LiteralPath $fullPath
+  $rootRp = Resolve-Path -LiteralPath $root
+  $rel = $rp.Path.Substring($rootRp.Path.Length).TrimStart('\','/')
+  return $rel -replace "\\","/"
+}
+
+function Get-AllScriptFiles {
+  param(
+    [string]$RepoRoot,
+    [string[]]$AllowedExtensions
+  )
+  $scriptsRoot = Join-Path $RepoRoot "scripts"
+  $files = Get-ChildItem -LiteralPath $scriptsRoot -Recurse -File -ErrorAction Stop
+
+  # Filter: executable extensions only (policy header required)
+  $extSet = @{}
+  foreach ($e in $AllowedExtensions) { $extSet[$e.ToLowerInvariant()] = $true }
+
+  $out = @()
+  foreach ($f in $files) {
+    $ext = $f.Extension.ToLowerInvariant()
+    if ($extSet.ContainsKey($ext)) {
+      $out += $f.FullName
+    }
+  }
+  return $out
+}
+
+function Is-Under([string]$relPath, [string]$prefix) {
+  return $relPath.StartsWith($prefix, [System.StringComparison]::OrdinalIgnoreCase)
+}
+
+function Read-FirstLines([string]$path, [int]$maxLines) {
+  $lines = @()
+  $i = 0
+  foreach ($line in [System.IO.File]::ReadLines($path)) {
+    $lines += $line
+    $i++
+    if ($i -ge $maxLines) { break }
+  }
+  return $lines
+}
+
+function Parse-Header {
+  param(
+    [string]$FilePath,
+    [string[]]$RequiredFields,
+    [string[]]$OptionalFields
+  )
+  # Deterministic: parse first 60 lines only
+  $lines = Read-FirstLines -path $FilePath -maxLines 60
+  $map = @{}
+  foreach ($ln in $lines) {
+    # accept:
+    #   # KEY=VALUE
+    #   // KEY=VALUE
+    #   -- KEY=VALUE
+    #   ; KEY=VALUE
+    # whitespace tolerant
+    $m = [regex]::Match($ln, '^\s*(#|//|--|;)\s*(HB_SCRIPT_[A-Z_]+)\s*=\s*(.+?)\s*$')
+    if ($m.Success) {
+      $k = $m.Groups[2].Value.Trim()
+      $v = $m.Groups[3].Value.Trim()
+      if (-not $map.ContainsKey($k)) { $map[$k] = $v } # first wins (stable)
+    }
+  }
+
+  # Validate required presence
+  $missing = @()
+  foreach ($rf in $RequiredFields) {
+    if (-not $map.ContainsKey($rf)) { $missing += $rf }
+  }
+
+  return [pscustomobject]@{
+    Map = $map
+    Missing = $missing
+  }
+}
+
+function Get-CategoryFromPath {
+  param(
+    [string]$RelPath
+  )
+  # expects rel path like: scripts/<category>/...
+  if (-not ($RelPath.StartsWith("scripts/", [System.StringComparison]::OrdinalIgnoreCase))) {
+    return $null
+  }
+  $parts = $RelPath.Split("/")
+  if ($parts.Length -lt 2) { return $null }
+  return $parts[1].ToLowerInvariant()
+}
+
+function Get-SubScopeFromPath {
+  param(
+    [string]$RelPath,
+    [string]$Category
+  )
+  # returns null if none / not applicable
+  $parts = $RelPath.Split("/")
+  if ($parts.Length -lt 3) { return $null }
+  # scripts/<category>/<subscope>/file.ext
+  if ($parts[1].ToLowerInvariant() -ne $Category) { return $null }
+  return $parts[2].ToLowerInvariant()
+}
+
+function Is-ExceptionFile([string]$relPath, [string[]]$exceptions) {
+  foreach ($ex in $exceptions) {
+    if ($relPath.EndsWith($ex, [System.StringComparison]::OrdinalIgnoreCase)) {
+      return $true
+    }
+  }
+  return $false
+}
+
+function Validate-CategoryRootNoExecutables {
+  param(
+    [string]$RepoRoot,
+    [object]$Policy,
+    [ref]$Errors,
+    [ref]$Warnings
+  )
+  $enabled = $Policy.rules.category_root_no_executables.enabled
+  if (-not $enabled) { return }
+
+  $exceptions = @($Policy.rules.category_root_no_executables.exceptions)
+
+  $scriptsRoot = Join-Path $RepoRoot "scripts"
+  $cats = $Policy.taxonomy.categories.PSObject.Properties.Name
+
+  foreach ($cat in $cats) {
+    $catPath = Join-Path $scriptsRoot $cat
+    if (-not (Test-Path -LiteralPath $catPath)) { continue }
+
+    # files directly under scripts/<cat>/
+    $direct = Get-ChildItem -LiteralPath $catPath -File -ErrorAction Stop
+    foreach ($f in $direct) {
+      $rel = Get-RelPath -root $RepoRoot -fullPath $f.FullName
+      if (Is-ExceptionFile -relPath $rel -exceptions $exceptions) { continue }
+
+      # treat any executable ext under category root as violation
+      $ext = $f.Extension.ToLowerInvariant()
+      if ($Policy.headers.required_for_extensions -contains $ext) {
+        Add-Error $Errors ("CATEGORY_ROOT_EXECUTABLE_FORBIDDEN: {0}" -f $rel)
+      }
+    }
+  }
+}
+
+function Validate-ArtifactsNoExecutables {
+  param(
+    [string]$RepoRoot,
+    [object]$Policy,
+    [ref]$Errors
+  )
+  if (-not $Policy.rules.forbid_executable_in_artifacts.enabled) { return }
+
+  $artPath = Join-Path $RepoRoot $Policy.artifacts.path
+  if (-not (Test-Path -LiteralPath $artPath)) { return }
+
+  $files = Get-ChildItem -LiteralPath $artPath -Recurse -File -ErrorAction Stop
+  foreach ($f in $files) {
+    $rel = Get-RelPath -root $RepoRoot -fullPath $f.FullName
+    $ext = $f.Extension.ToLowerInvariant()
+    if ($Policy.headers.required_for_extensions -contains $ext) {
+      Add-Error $Errors ("ARTIFACTS_EXECUTABLE_FORBIDDEN: {0}" -f $rel)
+    }
+  }
+}
+
+function Validate-RunDoesNotReferenceTemp {
+  param(
+    [string]$RepoRoot,
+    [object]$Policy,
+    [ref]$Errors
+  )
+  if (-not $Policy.rules.forbid_temp_referenced_by_run.enabled) { return }
+
+  $runRoot = Join-Path $RepoRoot "scripts\run"
+  if (-not (Test-Path -LiteralPath $runRoot)) { return }
+
+  # Search textual references to "scripts/temp" or "/scripts/temp" in run/ wrappers
+  $runFiles = Get-ChildItem -LiteralPath $runRoot -Recurse -File -ErrorAction Stop
+  foreach ($f in $runFiles) {
+    $content = ""
+    try { $content = Get-Content -LiteralPath $f.FullName -Raw -ErrorAction Stop } catch { continue }
+    if ($content -match '(?i)(^|[^\w])(scripts[/\\]temp)([^\w]|$)') {
+      $rel = Get-RelPath -root $RepoRoot -fullPath $f.FullName
+      Add-Error $Errors ("RUN_REFERENCES_TEMP_FORBIDDEN: {0}" -f $rel)
+    }
+  }
+}
+
+function Validate-PerFileRules {
+  param(
+    [string]$RepoRoot,
+    [object]$Policy,
+    [string[]]$Files,
+    [ref]$Errors,
+    [ref]$Warnings
+  )
+
+  $requiredFields = @($Policy.headers.required_fields)
+  $optionalFields = @($Policy.headers.optional_fields)
+  $forbiddenGeneric = @($Policy.naming.forbidden_generic_names)
+  $forbiddenPrefixes = @($Policy.naming.forbidden_prefixes)
+
+  foreach ($full in $Files) {
+    $rel = Get-RelPath -root $RepoRoot -fullPath $full
+
+    # allowlist: don't lint artifacts; handled separately
+    if (Is-Under -relPath $rel -prefix "scripts/artifacts/") { continue }
+    # ignore _lib and _policy helpers (optional; they are not "operational scripts")
+    if (Is-Under -relPath $rel -prefix "scripts/_lib/") { continue }
+    if (Is-Under -relPath $rel -prefix "scripts/_policy/") { continue }
+
+    $cat = Get-CategoryFromPath -RelPath $rel
+    if ($null -eq $cat) {
+      Add-Error $Errors ("NOT_UNDER_SCRIPTS_ROOT: {0}" -f $rel)
+      continue
+    }
+
+    # basic category existence
+    $catNode = $Policy.taxonomy.categories.$cat
+    if ($null -eq $catNode) {
+      Add-Error $Errors ("UNKNOWN_CATEGORY: {0} (path={1})" -f $cat, $rel)
+      continue
+    }
+
+    # naming: prefix MUST match category prefix
+    $fname = Split-Path -Leaf $full
+    if ($Policy.naming.must_match_folder_prefix -eq $true) {
+      $prefix = [string]$catNode.prefix
+      if (-not $fname.StartsWith($prefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+        Add-Error $Errors ("PREFIX_MISMATCH: {0} expected_prefix={1}" -f $rel, $prefix)
+      }
+    }
+
+    # forbidden prefixes anywhere
+    foreach ($fp in $forbiddenPrefixes) {
+      if ($fname.StartsWith($fp, [System.StringComparison]::OrdinalIgnoreCase)) {
+        Add-Error $Errors ("FORBIDDEN_PREFIX: {0} prefix={1}" -f $rel, $fp)
+      }
+    }
+
+    # forbidden generic file base names
+    $base = [System.IO.Path]::GetFileNameWithoutExtension($fname)
+    foreach ($g in $forbiddenGeneric) {
+      if ($base.Equals($g, [System.StringComparison]::OrdinalIgnoreCase)) {
+        Add-Error $Errors ("FORBIDDEN_GENERIC_NAME: {0} name={1}" -f $rel, $g)
+      }
+    }
+
+    # tmp_* must live in temp
+    if ($Policy.rules.temp_only_tmp_prefix.enabled -eq $true) {
+      if ($fname.StartsWith("tmp_", [System.StringComparison]::OrdinalIgnoreCase) -and $cat -ne "temp") {
+        Add-Error $Errors ("TMP_PREFIX_OUTSIDE_TEMP: {0}" -f $rel)
+      }
+    }
+
+    # "*fix*" must not live under checks/diagnostics
+    if ($Policy.rules.forbid_fix_named_in_checks_or_diagnostics.enabled -eq $true) {
+      if (($cat -eq "checks" -or $cat -eq "diagnostics") -and ($fname -match $Policy.rules.forbid_fix_named_in_checks_or_diagnostics.pattern)) {
+        Add-Error $Errors ("FIX_NAMED_IN_READONLY_CATEGORY: {0}" -f $rel)
+      }
+    }
+
+    # subscope enforcement
+    if ($catNode.requires_subscope -eq $true) {
+      $sub = Get-SubScopeFromPath -RelPath $rel -Category $cat
+      if ($null -eq $sub -or [string]::IsNullOrWhiteSpace($sub)) {
+        Add-Error $Errors ("MISSING_SUBSCOPE_DIR: {0}" -f $rel)
+      } else {
+        # must be valid subscope
+        $allowedSubs = @($catNode.subscope)
+        if ($allowedSubs.Count -gt 0 -and -not ($allowedSubs -contains $sub)) {
+          Add-Error $Errors ("INVALID_SUBSCOPE: {0} subscope={1}" -f $rel, $sub)
+        } else {
+          # scope must match subscope dir if enabled
+          if ($Policy.naming.scope_must_match_subscope_dir -eq $true) {
+            # enforce file pattern: <prefix><scope>__... where scope == subscope
+            $expected = $sub
+            $prefix = [string]$catNode.prefix
+            $pat = ("^{0}{1}__" -f [regex]::Escape($prefix), [regex]::Escape($expected))
+            if (-not ([regex]::IsMatch($fname, $pat, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase))) {
+              Add-Error $Errors ("SCOPE_TOKEN_MISMATCH: {0} expected_scope_token={1}" -f $rel, $expected)
+            }
+          }
+        }
+      }
+    }
+
+    # extensions allowed in category
+    $ext = [System.IO.Path]::GetExtension($fname).ToLowerInvariant()
+    $allowedExt = @($catNode.allowed_extensions)
+    if ($allowedExt.Count -gt 0 -and -not ($allowedExt -contains $ext)) {
+      Add-Error $Errors ("EXTENSION_NOT_ALLOWED: {0} ext={1}" -f $rel, $ext)
+    }
+
+    # header parsing (required for .py/.ps1/.sql)
+    if ($Policy.headers.required_for_extensions -contains $ext) {
+      $hdr = Parse-Header -FilePath $full -RequiredFields $requiredFields -OptionalFields $optionalFields
+      if ($hdr.Missing.Count -gt 0) {
+        Add-Error $Errors ("MISSING_HEADER_FIELDS: {0} missing={1}" -f $rel, ($hdr.Missing -join ",")))
+      } else {
+        # Validate header kind matches category kind
+        $kind = [string]$hdr.Map["HB_SCRIPT_KIND"]
+        $expectedKind = [string]$catNode.kind
+        if (-not $kind.Equals($expectedKind, [System.StringComparison]::OrdinalIgnoreCase)) {
+          Add-Error $Errors ("HEADER_KIND_MISMATCH: {0} expected={1} got={2}" -f $rel, $expectedKind, $kind)
+        }
+
+        # Validate header scope matches subscope directory (if required)
+        if ($catNode.requires_subscope -eq $true) {
+          $sub = Get-SubScopeFromPath -RelPath $rel -Category $cat
+          $hs = [string]$hdr.Map["HB_SCRIPT_SCOPE"]
+          if (-not $hs.Equals($sub, [System.StringComparison]::OrdinalIgnoreCase)) {
+            Add-Error $Errors ("HEADER_SCOPE_MISMATCH: {0} expected={1} got={2}" -f $rel, $sub, $hs)
+          }
+        }
+
+        # Validate side-effects are subset of allowed set for category
+        $seRaw = [string]$hdr.Map["HB_SCRIPT_SIDE_EFFECTS"]
+        $se = @()
+        foreach ($token in $seRaw.Split(",") ) {
+          $t = $token.Trim().ToUpperInvariant()
+          if (-not [string]::IsNullOrWhiteSpace($t)) { $se += $t }
+        }
+        $allowedSE = @($catNode.allowed_side_effects) | ForEach-Object { $_.ToUpperInvariant() }
+        $forbiddenSE = @($catNode.forbidden_side_effects) | ForEach-Object { $_.ToUpperInvariant() }
+
+        foreach ($t in $se) {
+          if ($t -eq "ANY") { continue } # only valid for temp
+          if ($forbiddenSE -contains $t) {
+            Add-Error $Errors ("FORBIDDEN_SIDE_EFFECT: {0} side_effect={1}" -f $rel, $t)
+          }
+          if (-not ($allowedSE -contains $t)) {
+            Add-Error $Errors ("SIDE_EFFECT_NOT_ALLOWED: {0} side_effect={1}" -f $rel, $t)
+          }
+        }
+
+        # Optional: checks must be idempotent YES
+        if ($cat -eq "checks") {
+          $idem = [string]$hdr.Map["HB_SCRIPT_IDEMPOTENT"]
+          if (-not $idem.Equals("YES", [System.StringComparison]::OrdinalIgnoreCase)) {
+            Add-Error $Errors ("CHECK_MUST_BE_IDEMPOTENT: {0}" -f $rel)
+          }
+        }
+
+        # Optional: temp kind allowed to be ANY side-effects; but should still have header
+        if ($cat -eq "temp") {
+          # no extra requirements here
+          $null = $true
+        }
+      }
+    }
+  }
+}
+
+# ------------------- Main -------------------
+$repoRoot = Resolve-RepoRoot
+$policyPath = Join-Path $repoRoot "scripts\_policy\script_classification.yaml"
+$schemaPath = Join-Path $repoRoot "scripts\_policy\scripts.policy.schema.json"
+
+$errors = @()
+$warnings = @()
+
+try {
+  $policy = Load-Policy -PolicyYamlPath $policyPath -SchemaJsonPath $schemaPath
+
+  # 1) category root no executables (subscope enforcement)
+  Validate-CategoryRootNoExecutables -RepoRoot $repoRoot -Policy $policy -Errors ([ref]$errors) -Warnings ([ref]$warnings)
+
+  # 2) artifacts must not contain executable scripts
+  Validate-ArtifactsNoExecutables -RepoRoot $repoRoot -Policy $policy -Errors ([ref]$errors)
+
+  # 3) run/ must not reference temp/
+  Validate-RunDoesNotReferenceTemp -RepoRoot $repoRoot -Policy $policy -Errors ([ref]$errors)
+
+  # 4) per-file checks: naming + headers + subscope + allowed ext + side-effects
+  $files = Get-AllScriptFiles -RepoRoot $repoRoot -AllowedExtensions @($policy.headers.required_for_extensions)
+  Validate-PerFileRules -RepoRoot $repoRoot -Policy $policy -Files $files -Errors ([ref]$errors) -Warnings ([ref]$warnings)
+
+} catch {
+  Write-SummaryLine "ERROR" ("HARNESS_ERROR: " + $_.Exception.Message)
+  exit $EXIT_HARNESS
+}
+
+if ($warnings.Count -gt 0) {
+  foreach ($w in $warnings) { Write-SummaryLine "WARN" $w }
+}
+
+if ($errors.Count -gt 0) {
+  foreach ($e in $errors) { Write-SummaryLine "FAIL" $e }
+  Write-SummaryLine "FAIL" ("CHECK_SCRIPTS_POLICY violations=" + $errors.Count)
+  exit $EXIT_VIOLATION
+}
+
+Write-SummaryLine "OK" "CHECK_SCRIPTS_POLICY PASS"
+exit $EXIT_PASS
+

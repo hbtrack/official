@@ -1,0 +1,512 @@
+#!/usr/bin/env python3
+"""
+HB Track — render_policy_md.py (CANONICAL GENERATOR)
+
+SSOT -> DERIVED MD generator.
+Uses policy_lib for all deterministic rendering logic.
+
+Reads:
+  - scripts/_policy/scripts.policy.yaml (SSOT)
+Validates:
+  - scripts/_policy/scripts.policy.schema.json (JSON Schema)
+Renders (DERIVED):
+  - docs/_canon/_agent/SCRIPTS_classification.md
+
+Determinism goals:
+  - stable ordering (by policy_lib)
+  - stable whitespace (LF normalized)
+  - no timestamps in MD (only in manifest)
+  - deterministic exit codes
+
+Exit codes:
+  0 = OK
+  2 = POLICY_INVALID
+  3 = HARNESS_ERROR
+
+Version: 1.0.0 (canonical generator)
+"""
+
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+# Import centralized policy library
+try:
+    from policy_lib import load_policy, render_derived_md
+except ImportError:
+    # Fallback for direct execution
+    import os
+    sys.path.insert(0, str(Path(__file__).parent))
+    from policy_lib import load_policy, render_derived_md
+
+
+# ----------------------------
+# Minimal YAML loader strategy
+# ----------------------------
+# Prefer PyYAML if available. If not, fail with deterministic harness error.
+def load_yaml(path: Path) -> Dict[str, Any]:
+    try:
+        import yaml  # type: ignore
+    except Exception:
+        raise RuntimeError(
+            "Missing dependency: PyYAML. Install with: pip install pyyaml"
+        )
+    with path.open("r", encoding="utf-8") as f:
+        data = yaml.safe_load(f)
+    if not isinstance(data, dict):
+        raise ValueError("YAML root MUST be an object/map.")
+    return data
+
+
+def load_json(path: Path) -> Dict[str, Any]:
+    with path.open("r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def validate_schema(instance: Dict[str, Any], schema: Dict[str, Any]) -> List[str]:
+    """
+    Returns list of errors (strings). Empty list means OK.
+    Uses jsonschema if available; otherwise fails deterministically.
+    """
+    try:
+        import jsonschema  # type: ignore
+    except Exception:
+        return ["Missing dependency: jsonschema. Install with: pip install jsonschema"]
+
+    validator = jsonschema.Draft202012Validator(schema)
+    errors = []
+    for err in sorted(validator.iter_errors(instance), key=lambda e: e.json_path):
+        # Keep messages short but actionable
+        path = err.json_path or "$"
+        errors.append(f"{path}: {err.message}")
+    return errors
+
+
+# ----------------------------
+# Deterministic helpers
+# ----------------------------
+def _as_list(x: Any) -> List[Any]:
+    if x is None:
+        return []
+    if isinstance(x, list):
+        return x
+    return [x]
+
+
+def sorted_keys(d: Dict[str, Any]) -> List[str]:
+    return sorted(d.keys(), key=lambda s: (s.lower(), s))
+
+
+def norm_ws(s: str) -> str:
+    # Normalize CRLF in output, keep LF for deterministic rendering.
+    return s.replace("\r\n", "\n").replace("\r", "\n")
+
+
+def md_codeblock(content: str) -> str:
+    return f"```\n{content.rstrip()}\n```"
+
+
+def require_str(d: Dict[str, Any], key: str) -> str:
+    v = d.get(key)
+    if not isinstance(v, str) or not v.strip():
+        raise ValueError(f"Missing/invalid required string field: {key}")
+    return v.strip()
+
+
+def require_list_of_str(d: Dict[str, Any], key: str) -> List[str]:
+    v = d.get(key)
+    if not isinstance(v, list) or not all(isinstance(i, str) for i in v):
+        raise ValueError(f"Missing/invalid required list[str] field: {key}")
+    return [i.strip() for i in v]
+
+
+# ----------------------------
+# Semantic validation (beyond schema)
+# ----------------------------
+VALID_KINDS = [
+    "CHECK",
+    "DIAGNOSTIC",
+    "FIX",
+    "GENERATE",
+    "MIGRATE",
+    "OPS",
+    "RESET",
+    "SEED",
+    "RUNNER",
+    "TEMP",
+]
+
+VALID_EFFECTS = [
+    "NONE",
+    "DB_READ",
+    "DB_WRITE",
+    "FS_READ",
+    "FS_WRITE",
+    "ENV_WRITE",
+    "NET",
+]
+
+VALID_EXTS_DEFAULT = [".py", ".ps1", ".sql"]
+
+
+def semantic_validate(policy: Dict[str, Any]) -> List[str]:
+    errs: List[str] = []
+
+    # Basic presence
+    if "spec" not in policy or not isinstance(policy["spec"], dict):
+        errs.append("spec: missing or not an object")
+        return errs
+
+    # Priority order must be subset of folders
+    folders = policy.get("folders")
+    if not isinstance(folders, dict):
+        errs.append("folders: missing or not an object")
+        return errs
+
+    priority = policy.get("priority_order")
+    if not isinstance(priority, list) or not all(isinstance(x, str) for x in priority):
+        errs.append("priority_order: missing or invalid list[str]")
+    else:
+        for p in priority:
+            if p not in folders:
+                errs.append(f"priority_order: item '{p}' not present in folders map")
+
+    # Validate each folder config
+    for folder_name in sorted_keys(folders):
+        fcfg = folders[folder_name]
+        if not isinstance(fcfg, dict):
+            errs.append(f"folders.{folder_name}: not an object")
+            continue
+
+        kind = fcfg.get("kind")
+        if kind not in VALID_KINDS:
+            errs.append(f"folders.{folder_name}.kind: invalid '{kind}'")
+
+        prefix = fcfg.get("prefix")
+        if folder_name not in ["artifacts"] and (not isinstance(prefix, str) or not prefix):
+            errs.append(f"folders.{folder_name}.prefix: required for non-artifacts")
+        if isinstance(prefix, str) and folder_name != "artifacts" and not prefix.endswith("_"):
+            errs.append(f"folders.{folder_name}.prefix: MUST end with '_' (got '{prefix}')")
+
+        allowed = fcfg.get("allowed_side_effects")
+        if not isinstance(allowed, list) or not all(isinstance(x, str) for x in allowed):
+            errs.append(f"folders.{folder_name}.allowed_side_effects: invalid list")
+        else:
+            for eff in allowed:
+                if eff not in VALID_EFFECTS:
+                    errs.append(f"folders.{folder_name}.allowed_side_effects: invalid effect '{eff}'")
+
+        must_not = fcfg.get("must_not_side_effects", [])
+        if not isinstance(must_not, list) or not all(isinstance(x, str) for x in must_not):
+            errs.append(f"folders.{folder_name}.must_not_side_effects: invalid list")
+        else:
+            for eff in must_not:
+                if eff not in VALID_EFFECTS:
+                    errs.append(f"folders.{folder_name}.must_not_side_effects: invalid effect '{eff}'")
+
+        # Overlap check
+        if isinstance(allowed, list) and isinstance(must_not, list):
+            overlap = sorted(set(allowed).intersection(set(must_not)))
+            if overlap:
+                errs.append(f"folders.{folder_name}: allowed_side_effects overlaps must_not_side_effects: {overlap}")
+
+        # Subscopes must be list[str] if present
+        subscopes = fcfg.get("subscopes")
+        if subscopes is not None:
+            if not isinstance(subscopes, list) or not all(isinstance(x, str) for x in subscopes):
+                errs.append(f"folders.{folder_name}.subscopes: invalid list[str]")
+
+    # Extensions list
+    exts = policy.get("extensions", VALID_EXTS_DEFAULT)
+    if not isinstance(exts, list) or not all(isinstance(x, str) for x in exts):
+        errs.append("extensions: invalid list[str]")
+    else:
+        for e in exts:
+            if not e.startswith("."):
+                errs.append(f"extensions: '{e}' MUST start with '.'")
+
+    return errs
+
+
+# ----------------------------
+# Rendering
+# ----------------------------
+DERIVED_PREAMBLE = """<!--
+DERIVED FILE — DO NOT EDIT BY HAND
+
+This Markdown is derived from the SSOT policy:
+- scripts/_policy/script_classification.yaml
+Validated by:
+- scripts/_policy/scripts.policy.schema.json
+
+Edits MUST be applied to script_classification.yaml, then the generator MUST re-render this file.
+-->
+"""
+
+
+def render_md(policy: Dict[str, Any]) -> str:
+    spec = policy["spec"]
+    version = require_str(spec, "version")
+    date = spec.get("date", "").strip() if isinstance(spec.get("date"), str) else ""
+    status = require_str(spec, "status")
+    scope = require_str(spec, "scope")
+
+    # Optional: naming pattern
+    naming = policy.get("naming", {})
+    if not isinstance(naming, dict):
+        naming = {}
+
+    file_pattern = naming.get("filename_pattern", "<prefix><scope>__<action>[_<qualifier>].<ext>")
+    if not isinstance(file_pattern, str) or not file_pattern.strip():
+        file_pattern = "<prefix><scope>__<action>[_<qualifier>].<ext>"
+
+    # Build canonical folder list and tree surface from policy
+    folders: Dict[str, Any] = policy["folders"]
+    folder_order = require_list_of_str(policy, "priority_order")  # already validated subset
+    # For readability, render folder taxonomy in stable sorted order by folder_order, then remaining.
+    rendered_folder_names = folder_order + [f for f in sorted_keys(folders) if f not in folder_order]
+
+    # Subscope mapping table rows
+    subscope_rows: List[Tuple[str, str, str]] = []
+    for fname in rendered_folder_names:
+        fcfg = folders[fname]
+        if not isinstance(fcfg, dict):
+            continue
+        subs = fcfg.get("subscopes")
+        if subs is None:
+            subs_str = "(no sub-scope)"
+        else:
+            subs_str = ", ".join(sorted([s.strip() for s in subs]))
+        rule = fcfg.get("subscope_rule", "choose the single best scope")
+        if not isinstance(rule, str) or not rule.strip():
+            rule = "choose the single best scope"
+        subscope_rows.append((f"{fname}/", subs_str, rule))
+
+    # Category constraints table rows
+    constraints_rows: List[Tuple[str, str, str, str, str, str]] = []
+    for fname in rendered_folder_names:
+        fcfg = folders[fname]
+        if not isinstance(fcfg, dict):
+            continue
+        path = fcfg.get("path", f"scripts/{fname}/**")
+        kind = fcfg.get("kind", "")
+        allowed = ", ".join(fcfg.get("allowed_side_effects", []))
+        ci_role = fcfg.get("ci_role", "")
+        deterministic = fcfg.get("must_be_deterministic", "")
+        must_not = ", ".join(fcfg.get("must_not_side_effects", []))
+        constraints_rows.append((path, kind, allowed, ci_role, str(deterministic), must_not))
+
+    # Prefix table
+    prefix_rows: List[Tuple[str, str]] = []
+    for fname in rendered_folder_names:
+        if fname == "artifacts":
+            continue
+        fcfg = folders[fname]
+        prefix = fcfg.get("prefix", "")
+        if isinstance(prefix, str) and prefix:
+            prefix_rows.append((f"{fname}/", prefix))
+
+    # Effects list and kinds list
+    kinds = policy.get("kinds", VALID_KINDS)
+    effects = policy.get("side_effects", VALID_EFFECTS)
+    extensions = policy.get("extensions", VALID_EXTS_DEFAULT)
+
+    # Compose
+    lines: List[str] = []
+    lines.append(DERIVED_PREAMBLE.strip())
+    lines.append("")
+    lines.append("# SPEC — HB Track Scripts Classification (BCP14)")
+    lines.append("")
+    lines.append(f"Version: {version}  ")
+    if date:
+        lines.append(f"Date: {date}  ")
+    lines.append(f"Status: {status}  ")
+    lines.append("SSOT: `scripts/_policy/script_classification.yaml`  ")
+    lines.append("Schema: `scripts/_policy/scripts.policy.schema.json`  ")
+    lines.append("Derived artifact: `scripts/scripts_classification.md` (this file)")
+    lines.append("")
+    lines.append("## 0. Normative language (BCP 14)")
+    lines.append("")
+    lines.append(
+        "The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, "
+        "“SHOULD”, “SHOULD NOT”, and “MAY” in this document are to be interpreted "
+        "as described in BCP 14 (RFC2119 and RFC8174)."
+    )
+    lines.append("")
+    lines.append("## 1. Objective")
+    lines.append("")
+    lines.append(
+        "This SPEC defines a deterministic classification system for ANY script created "
+        "in this repository, using only: (1) script intent, (2) script side-effects, and "
+        "(3) a fixed folder taxonomy + naming rules."
+    )
+    lines.append("")
+    lines.append("A script that complies with this SPEC SHALL have exactly one valid placement "
+                 "(folder + sub-scope) and one valid name pattern.")
+    lines.append("")
+    lines.append(f"Repository assumption: the `scripts/` folder is at repository root. Scope surface: `{scope}`.")
+    lines.append("")
+    lines.append("## 2. Canonical categories")
+    lines.append("")
+    # Show taxonomy as code block
+    taxonomy = "  ".join([f"{n}/" for n in rendered_folder_names])
+    lines.append(md_codeblock(taxonomy))
+    lines.append("")
+    lines.append("## 3. Classification dimensions")
+    lines.append("")
+    lines.append("Every script MUST be classifiable by these dimensions:")
+    lines.append("")
+    lines.append(f"- KIND (operational intent): {', '.join(sorted([str(k) for k in kinds]))}")
+    lines.append(f"- SIDE_EFFECTS: {', '.join(sorted([str(e) for e in effects]))}")
+    lines.append(f"- Allowed extensions: {', '.join(sorted([str(x) for x in extensions]))}")
+    lines.append("")
+    lines.append("## 4. Deterministic classification algorithm")
+    lines.append("")
+    lines.append("### 4.1 Select TOP-LEVEL category by priority")
+    lines.append("")
+    lines.append("When multiple categories are plausible, classification MUST follow this precedence order (highest wins):")
+    lines.append("")
+    lines.append(md_codeblock(" > ".join([x.upper() for x in folder_order])))
+    lines.append("")
+    lines.append("### 4.2 Select SUB-SCOPE")
+    lines.append("")
+    lines.append("| Category | Sub-scope options | Rule |")
+    lines.append("| --- | --- | --- |")
+    for cat, subs, rule in subscope_rows:
+        lines.append(f"| `{cat}` | {subs} | {rule} |")
+    lines.append("")
+    lines.append("## 5. Folder constraints (hard rules)")
+    lines.append("")
+    lines.append("| Path | KIND | Allowed side-effects | CI role | Must be deterministic? | MUST NOT side-effects |")
+    lines.append("| --- | --- | --- | --- | --- | --- |")
+    for row in constraints_rows:
+        path, kind, allowed, ci_role, must_det, must_not = row
+        lines.append(f"| `{path}` | `{kind}` | {allowed or '-'} | {ci_role or '-'} | {must_det} | {must_not or '-'} |")
+    lines.append("")
+    lines.append("## 6. Naming rules")
+    lines.append("")
+    lines.append("### 6.1 Prefix per category (REQUIRED)")
+    lines.append("")
+    lines.append("| Category | Prefix |")
+    lines.append("| --- | --- |")
+    for cat, prefix in prefix_rows:
+        lines.append(f"| `{cat}` | `{prefix}` |")
+    lines.append("")
+    lines.append("### 6.2 Canonical filename pattern (REQUIRED)")
+    lines.append("")
+    lines.append(md_codeblock(file_pattern.strip()))
+    lines.append("")
+    lines.append("## 7. Script header (REQUIRED)")
+    lines.append("")
+    header = policy.get("header", {})
+    if not isinstance(header, dict):
+        header = {}
+    required_fields = header.get("required_fields", [])
+    optional_fields = header.get("optional_fields", [])
+    if not isinstance(required_fields, list):
+        required_fields = []
+    if not isinstance(optional_fields, list):
+        optional_fields = []
+    if required_fields:
+        lines.append("Required fields:")
+        for f in required_fields:
+            lines.append(f"- `{f}`")
+    else:
+        # Safe fallback matching your SPEC
+        lines.append("Required fields:")
+        for f in [
+            "HB_SCRIPT_KIND",
+            "HB_SCRIPT_SCOPE",
+            "HB_SCRIPT_SIDE_EFFECTS",
+            "HB_SCRIPT_IDEMPOTENT",
+            "HB_SCRIPT_ENTRYPOINT",
+            "HB_SCRIPT_OUTPUTS",
+        ]:
+            lines.append(f"- `{f}`")
+    lines.append("")
+    if optional_fields:
+        lines.append("Optional fields:")
+        for f in optional_fields:
+            lines.append(f"- `{f}`")
+        lines.append("")
+    lines.append("## 8. Artifacts policy (output-only)")
+    lines.append("")
+    lines.append("`scripts/artifacts/` is OUTPUT-ONLY, MUST be gitignored (except `.gitignore`/README), "
+                 "and MUST NOT be used as SSOT input by scripts.")
+    lines.append("")
+    lines.append("## 9. Determinism acceptance criteria")
+    lines.append("")
+    lines.append("This system is deterministic if and only if:")
+    lines.append("")
+    lines.append("1) Any new script’s category is uniquely determined by SIDE_EFFECTS constraints + priority order + scope mapping.")
+    lines.append("2) Misplacements are mechanically detectable by lint/gate (prefix mismatch, forbidden side-effects, missing headers, temp referenced by run).")
+    lines.append("3) This Markdown matches the SSOT YAML. Drift is forbidden.")
+    lines.append("")
+
+    return norm_ws("\n".join(lines))
+
+
+# ----------------------------
+# Main
+# ----------------------------
+def main() -> int:
+    repo_root = Path(os.getcwd()).resolve()
+
+    ssot_path = repo_root / "scripts" / "_policy" / "script_classification.yaml"
+    schema_path = repo_root / "scripts" / "_policy" / "scripts.policy.schema.json"
+    out_md_path = repo_root / "scripts" / "scripts_classification.md"
+
+    # Allow overriding paths for local dev/testing
+    if "--ssot" in sys.argv:
+        ssot_path = Path(sys.argv[sys.argv.index("--ssot") + 1]).resolve()
+    if "--schema" in sys.argv:
+        schema_path = Path(sys.argv[sys.argv.index("--schema") + 1]).resolve()
+    if "--out" in sys.argv:
+        out_md_path = Path(sys.argv[sys.argv.index("--out") + 1]).resolve()
+
+    try:
+        if not ssot_path.exists():
+            print(f"[HARNESS_ERROR] SSOT missing: {ssot_path}")
+            return 3
+        if not schema_path.exists():
+            print(f"[HARNESS_ERROR] Schema missing: {schema_path}")
+            return 3
+
+        policy = load_yaml(ssot_path)
+        schema = load_json(schema_path)
+
+        schema_errors = validate_schema(policy, schema)
+        if schema_errors:
+            print("[POLICY_INVALID] YAML failed schema validation:")
+            for e in schema_errors:
+                print(f" - {e}")
+            return 2
+
+        semantic_errors = semantic_validate(policy)
+        if semantic_errors:
+            print("[POLICY_INVALID] YAML failed semantic validation:")
+            for e in semantic_errors:
+                print(f" - {e}")
+            return 2
+
+        md = render_md(policy)
+
+        # Ensure parent exists
+        out_md_path.parent.mkdir(parents=True, exist_ok=True)
+        out_md_path.write_text(md, encoding="utf-8", newline="\n")
+
+        print(f"[OK] Rendered: {out_md_path}")
+        return 0
+
+    except ValueError as e:
+        print(f"[POLICY_INVALID] {e}")
+        return 2
+    except Exception as e:
+        print(f"[HARNESS_ERROR] {type(e).__name__}: {e}")
+        return 3
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+

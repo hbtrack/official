@@ -1,0 +1,219 @@
+<#
+HB_SCRIPT_KIND=CHECK
+HB_SCRIPT_SCOPE=docs
+HB_SCRIPT_SIDE_EFFECTS=FS_READ,FS_WRITE
+HB_SCRIPT_IDEMPOTENT=YES
+HB_SCRIPT_ENTRYPOINT=powershell -ExecutionPolicy Bypass -File scripts/checks/check_policy_manifest.ps1
+HB_SCRIPT_OUTPUTS=scripts/artifacts/checks/docs/check_policy_manifest/
+HB_SCRIPT_INPUTS=scripts/_policy/scripts.policy.yaml,scripts/_policy/scripts.policy.schema.json,scripts/_policy/policy.manifest.json
+HB_SCRIPT_RISK=LOW
+#>
+
+Set-StrictMode -Version Latest
+$ErrorActionPreference = "Stop"
+
+# Exit codes contract
+$EXIT_PASS = 0
+$EXIT_FAIL = 2
+$EXIT_HARNESS = 3
+
+function Write-SummaryLine([string]$msg) {
+  Write-Host $msg
+}
+
+function Get-RepoRoot {
+  # Assumes this file lives at scripts/checks/check_policy_manifest.ps1
+  $here = Split-Path -Parent $PSCommandPath
+  return (Resolve-Path (Join-Path $here "..\..")).Path
+}
+
+function Ensure-Dir([string]$path) {
+  if (-not (Test-Path $path)) { New-Item -ItemType Directory -Path $path | Out-Null }
+}
+
+function Compute-Sha256([string]$path) {
+  $h = Get-FileHash -Algorithm SHA256 -Path $path
+  return $h.Hash.ToLowerInvariant()
+}
+
+function Normalize-JsonToFile([object]$obj, [string]$outPath) {
+  # Deterministic JSON: ordered keys is not guaranteed by PS hashtables,
+  # so we rely on Python renderer for canonical JSON.
+  throw "Normalize-JsonToFile must not be called. Use Python renderer."
+}
+
+$repo = Get-RepoRoot
+$yamlPath = Join-Path $repo "scripts\_policy\scripts.policy.yaml"
+$schemaPath = Join-Path $repo "scripts\_policy\scripts.policy.schema.json"
+$manifestPath = Join-Path $repo "scripts\_policy\policy.manifest.json"
+
+$artifactsDir = Join-Path $repo "scripts\artifacts\checks\docs\check_policy_manifest"
+Ensure-Dir $artifactsDir
+
+try {
+  if (-not (Test-Path $yamlPath)) {
+    Write-SummaryLine "[HARNESS] Missing SSOT policy yaml: $yamlPath"
+    exit $EXIT_HARNESS
+  }
+  if (-not (Test-Path $manifestPath)) {
+    Write-SummaryLine "[HARNESS] Missing derived manifest: $manifestPath"
+    exit $EXIT_HARNESS
+  }
+
+  $yamlSha = Compute-Sha256 $yamlPath
+  $schemaSha = if (Test-Path $schemaPath) { Compute-Sha256 $schemaPath } else { "" }
+
+  # Regenerate manifest deterministically via Python.
+  # Requires: Python available. YAML parsing requires PyYAML.
+  $py = $env:PYTHON
+  if ([string]::IsNullOrWhiteSpace($py)) {
+    $py = "python"
+  }
+
+  $tmpOut = Join-Path $artifactsDir "policy.manifest.regen.json"
+
+  $pyCode = @"
+import json, sys, hashlib, pathlib
+
+ROOT = pathlib.Path(r"$repo").resolve()
+yaml_path = ROOT / "scripts/_policy/scripts.policy.yaml"
+schema_path = ROOT / "scripts/_policy/scripts.policy.schema.json"
+manifest_path = ROOT / "scripts/_policy/policy.manifest.json"
+out_path = pathlib.Path(r"$tmpOut")
+
+def sha256_file(p: pathlib.Path) -> str:
+    h = hashlib.sha256()
+    with p.open("rb") as f:
+        for chunk in iter(lambda: f.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+try:
+    import yaml  # type: ignore
+except Exception as e:
+    print("[HARNESS] Missing dependency: PyYAML (pip install pyyaml).", file=sys.stderr)
+    sys.exit(3)
+
+data = yaml.safe_load(yaml_path.read_text(encoding="utf-8"))
+
+# ---- Expected YAML shape (SSOT) ----
+# data.spec.id/version/status/scope/norm
+# data.determinism.rule or data.determinism
+# data.classification.priority or data.priority
+# data.classification.folders.<name>.prefix / allowed_side_effects / forbidden_side_effects / subscopes
+# -----------------------------------
+
+spec = data.get("spec", {})
+classification = data.get("classification", data)  # allow top-level fallback
+priority = classification.get("priority", data.get("priority", []))
+folders = classification.get("folders", data.get("folders", {}))
+
+allowed_ext = data.get("script_surface", {}).get("allowed_extensions", [".py", ".ps1", ".sql"])
+required_header = data.get("script_surface", {}).get("required_header_fields", [
+    "HB_SCRIPT_KIND","HB_SCRIPT_SCOPE","HB_SCRIPT_SIDE_EFFECTS","HB_SCRIPT_IDEMPOTENT","HB_SCRIPT_ENTRYPOINT","HB_SCRIPT_OUTPUTS"
+])
+optional_header = data.get("script_surface", {}).get("optional_header_fields", [
+    "HB_SCRIPT_INPUTS","HB_SCRIPT_RISK","HB_SCRIPT_ROLLBACK"
+])
+
+manifest = {
+    "manifest_version": "1.0.0",
+    "derived_from": {
+        "ssot_policy_yaml": "scripts/_policy/scripts.policy.yaml",
+        "schema_json": "scripts/_policy/scripts.policy.schema.json",
+    },
+    "spec": {
+        "id": spec.get("id", "HB-SCRIPTS-CLASSIFICATION"),
+        "version": spec.get("version", "1.0.0"),
+        "status": spec.get("status", "APPROVED"),
+        "scope": spec.get("scope", "scripts/**"),
+        "norm": spec.get("norm", "BCP14 (RFC2119 + RFC8174)"),
+    },
+    "determinism": {
+        "rule": data.get("determinism", {}).get("rule", "classify_by_side_effects_then_intent"),
+        "tie_break_priority": priority,
+    },
+    "script_surface": {
+        "root": "scripts/",
+        "categories": [
+            "artifacts","checks","diagnostics","fixes","generate","migrate","ops","reset","run","seeds","temp"
+        ],
+        "allowed_extensions": allowed_ext,
+        "required_header_fields": required_header,
+        "optional_header_fields": optional_header,
+    },
+    "side_effects": {
+        "enum": data.get("side_effects", {}).get("enum", ["NONE","DB_READ","DB_WRITE","FS_READ","FS_WRITE","ENV_WRITE","NET"])
+    },
+    "checks_contract": {
+        "exit_codes": data.get("checks_contract", {}).get("exit_codes", {"0":"PASS","2":"FAIL","3":"HARNESS_ERROR"})
+    },
+    "folders": {},
+    "integrity": {
+        "sha256": {
+            "ssot_policy_yaml": sha256_file(yaml_path),
+            "schema_json": sha256_file(schema_path) if schema_path.exists() else ""
+        },
+        "json_render": {
+            "sort_keys": True,
+            "indent": 2,
+            "ensure_ascii": False,
+            "newline": "LF"
+        }
+    }
+}
+
+# Copy folders in a predictable order (sorted keys)
+for name in sorted(folders.keys()):
+    manifest["folders"][name] = folders[name]
+
+# Canonical JSON render
+text = json.dumps(manifest, ensure_ascii=False, sort_keys=True, indent=2) + "\n"
+out_path.write_text(text, encoding="utf-8")
+"@
+
+  $proc = Start-Process -FilePath $py -ArgumentList @("-c", $pyCode) -NoNewWindow -PassThru -Wait
+  if ($proc.ExitCode -ne 0) {
+    Write-SummaryLine "[HARNESS] Regen failed. ExitCode=$($proc.ExitCode). See artifacts: $tmpOut"
+    exit $EXIT_HARNESS
+  }
+
+  # Compare bit-a-bit
+  $expected = Get-Content -Raw -Encoding UTF8 $tmpOut
+  $actual = Get-Content -Raw -Encoding UTF8 $manifestPath
+
+  if ($expected -ne $actual) {
+    $diffPath = Join-Path $artifactsDir "policy.manifest.diff.txt"
+
+    # Minimal deterministic diff (line-based) using PowerShell comparison
+    $expLines = $expected -split "`n"
+    $actLines = $actual -split "`n"
+    $cmp = Compare-Object -ReferenceObject $actLines -DifferenceObject $expLines -IncludeEqual:$false
+
+    $out = @()
+    $out += "MANIFEST_DIFF=1"
+    $out += "EXPECTED=$tmpOut"
+    $out += "ACTUAL=$manifestPath"
+    $out += ""
+    $out += "First 200 Compare-Object rows:"
+    $i = 0
+    foreach ($row in $cmp) {
+      $out += ("{0} {1}" -f $row.SideIndicator, $row.InputObject)
+      $i++
+      if ($i -ge 200) { break }
+    }
+    ($out -join "`n") | Set-Content -Encoding UTF8 $diffPath
+
+    Write-SummaryLine "[FAIL] policy.manifest.json drift detected. See: $diffPath"
+    exit $EXIT_FAIL
+  }
+
+  Write-SummaryLine "OK_POLICY_MANIFEST exit=0 sha256_yaml=$yamlSha"
+  exit $EXIT_PASS
+}
+catch {
+  $errPath = Join-Path $artifactsDir "policy.manifest.error.txt"
+  ("[HARNESS] " + $_.Exception.Message) | Set-Content -Encoding UTF8 $errPath
+  Write-SummaryLine "[HARNESS] Unexpected error. See: $errPath"
+  exit $EXIT_HARNESS
+}
