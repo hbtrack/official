@@ -1,0 +1,1080 @@
+# =============================================================================
+# APPROVED COMMANDS REGISTRY — Single Source of Truth
+# =============================================================================
+# Authority : This file is the SSOT for all approved/blocked commands for
+#             AI agents in HB Track. Replaces corrupted approved-commands.yml.
+# Source    : docs/_canon/08_APPROVED_COMMANDS.md (canonical reference)
+# Consumers : Policy checkers, agent guardrails, drift detectors
+# Governance: BCP 14 (RFC 2119) normative language.
+# Schema    : docs/_ai/_schemas/approved_commands_registry.schema.json
+# Version   : 1.0.0
+# Updated   : 2026-02-15
+# =============================================================================
+
+version: "1.0.0"
+
+# ---------------------------------------------------------------------------
+# GLOBAL RULES (normative — agents MUST comply)
+# ---------------------------------------------------------------------------
+global_rules:
+
+  precedence:
+    id: RULE-1
+    normative: >-
+      If a command is NOT listed in this whitelist, agents MUST NOT execute it
+      without explicit user approval via the Approval Protocol.
+
+  cwd_validation:
+    id: RULE-2
+    normative: >-
+      Agents MUST validate CWD before executing any command. CWD expectations
+      are declared per-command. Agents MUST abort with exit 1 if CWD is wrong.
+
+  exit_code_propagation:
+    id: RULE-3
+    normative: >-
+      Agents MUST capture $LASTEXITCODE immediately after command execution,
+      without intermediate pipelines. Tee-Object and Format-* cmdlets
+      MUST NOT appear before $LASTEXITCODE capture.
+
+  repo_hygiene:
+    id: RULE-4
+    normative: >-
+      Gate and batch commands MUST be executed only when git status --porcelain
+      returns empty output. Read-only commands (git status, parity_scan with
+      -SkipDocsRegeneration, model_requirements) are exempt.
+
+  write_approval:
+    id: RULE-5
+    normative: >-
+      Commands classified as approval: required MUST receive explicit user
+      confirmation before execution. Commands classified as approval: gated
+      receive implicit approval when validation passes.
+
+  evidence:
+    id: RULE-6
+    normative: >-
+      Every command execution MUST be logged with: command, CWD, exit code,
+      and relevant output (last 50 lines).
+
+# ---------------------------------------------------------------------------
+# CWD DEFINITIONS
+# ---------------------------------------------------------------------------
+cwd_definitions:
+  repo_root:
+    path: "C:\\HB TRACK"
+    alias: "repo_root"
+    validation: 'Get-Location = "C:\HB TRACK"'
+
+  backend_root:
+    path: "C:\\HB TRACK\\Hb Track - Backend"
+    alias: "backend_root"
+    validation: 'Get-Location -match "Hb Track - Backend"'
+
+# ---------------------------------------------------------------------------
+# APPROVED COMMANDS — by category
+# ---------------------------------------------------------------------------
+categories:
+
+  # =========================================================================
+  # CATEGORY 1: Git Operations (Read-Only)
+  # =========================================================================
+  git_read:
+    id: CAT-1
+    label: "Git Operations (Read-Only)"
+    approval: automatic
+    risk_level: green
+    description: "Commands that inspect repository state without modifying it."
+
+    commands:
+
+      - id: CMD-1.1
+        name: "git status"
+        syntax: "git status --porcelain"
+        description: "Inspect working tree state (modified, staged, untracked files)."
+        parameters:
+          - name: "--porcelain"
+            required: true
+            description: "Machine-readable output format"
+        exit_codes: [0]
+        cwd: repo_root
+        approval: automatic
+        risk_level: green
+        time_estimate: "<1s"
+        normative: >-
+          Agents SHOULD use this command before every gate execution to validate
+          repo cleanliness.
+
+      - id: CMD-1.2
+        name: "git diff"
+        syntax: "git diff <file>"
+        description: "View detailed changes in a specific file (unified diff)."
+        parameters:
+          - name: "<file>"
+            required: true
+            description: "Relative path to the file"
+          - name: "--stat"
+            required: false
+            description: "Show only change statistics (+X -Y)"
+          - name: "--cached"
+            required: false
+            description: "Diff of staged changes (not working tree)"
+        exit_codes: [0]
+        cwd: repo_root
+        approval: automatic
+        risk_level: green
+        time_estimate: "<1s"
+
+      - id: CMD-1.3
+        name: "git log"
+        syntax: "git log --oneline -n <N>"
+        description: "View recent commit history (summarized)."
+        parameters:
+          - name: "-n <N>"
+            required: true
+            description: "Number of commits to show"
+          - name: "--oneline"
+            required: true
+            description: "Compact format (hash + message)"
+          - name: "--graph"
+            required: false
+            description: "Show branch graph (ASCII art)"
+          - name: "--stat"
+            required: false
+            description: "Add file change statistics"
+        exit_codes: [0]
+        cwd: repo_root
+        approval: automatic
+        risk_level: green
+        time_estimate: "<1s"
+
+      - id: CMD-1.4
+        name: "git show"
+        syntax: "git show <commit>"
+        description: "View complete details of a specific commit (diff + metadata)."
+        parameters:
+          - name: "<commit>"
+            required: true
+            description: "Commit hash (short or full)"
+          - name: "--stat"
+            required: false
+            description: "Only file change statistics"
+          - name: "<commit>:<file>"
+            required: false
+            description: "File content at that commit"
+        exit_codes: [0, 128]
+        cwd: repo_root
+        approval: automatic
+        risk_level: green
+        time_estimate: "<1s"
+
+  # =========================================================================
+  # CATEGORY 2: Git Operations (Write)
+  # =========================================================================
+  git_write:
+    id: CAT-2
+    label: "Git Operations (Write)"
+    approval: required
+    risk_level: yellow
+    description: "Commands that modify staging area or commit history."
+
+    commands:
+
+      - id: CMD-2.1
+        name: "git add"
+        syntax: "git add <file>"
+        description: "Add file to staging area (prepare for commit)."
+        parameters:
+          - name: "<file>"
+            required: true
+            description: "Relative path to the file"
+          - name: "-A <path>"
+            required: false
+            description: "Add ALL files in path (use with caution)"
+          - name: "-u"
+            required: false
+            description: "Add only tracked modified/deleted files"
+        exit_codes: [0, 128]
+        cwd: repo_root
+        approval: required
+        risk_level: yellow
+        time_estimate: "<1s"
+        normative: >-
+          Agents MUST NOT use 'git add .' or 'git add -A' without reviewing
+          git status first. Agents SHOULD add files explicitly by name.
+
+      - id: CMD-2.2
+        name: "git commit"
+        syntax: 'git commit -m "tipo(escopo): mensagem"'
+        description: "Create commit with message (save staged changes to history)."
+        parameters:
+          - name: '-m "msg"'
+            required: true
+            description: "Commit message (inline, semantic format)"
+        exit_codes: [0, 1]
+        cwd: repo_root
+        approval: required
+        risk_level: yellow
+        time_estimate: "<5s"
+        normative: >-
+          Agents MUST use semantic commit format: tipo(escopo): mensagem.
+          Agents MUST NOT use --no-verify without explicit approval.
+          Agents MUST NOT use --amend after push.
+        commit_types:
+          fix: "Bug/violation fix"
+          feat: "New functionality"
+          chore: "Maintenance (baseline, artifacts)"
+          refactor: "Refactoring without behavior change"
+          docs: "Documentation changes"
+          test: "Add/fix tests"
+
+      - id: CMD-2.3
+        name: "git restore"
+        syntax: "git restore -- <file>"
+        description: "Discard unstaged changes (revert to HEAD)."
+        parameters:
+          - name: "<file>"
+            required: true
+            description: "Relative path to the file"
+          - name: "--staged"
+            required: false
+            description: "Remove from staging area (keeps working tree changes)"
+        exit_codes: [0, 128]
+        cwd: repo_root
+        approval: required
+        risk_level: red
+        time_estimate: "<1s"
+        normative: >-
+          DESTRUCTIVE OPERATION: local changes are lost permanently.
+          Agents MUST always ask user before executing. Consider git stash
+          as non-destructive alternative.
+
+  # =========================================================================
+  # CATEGORY 3: Model Validation (Gates)
+  # =========================================================================
+  model_gates:
+    id: CAT-3
+    label: "Model Validation (Gates)"
+    approval: gated
+    risk_level: yellow
+    description: "Atomically composed gates (guard → parity → autogen → requirements) for validating 1 table."
+
+    commands:
+
+      - id: CMD-3.1
+        name: "models_autogen_gate"
+        syntax: 'powershell -NoProfile -ExecutionPolicy Bypass -File scripts\ops\infra\ops_models_autogen_gate.ps1 -Table <name> -Profile strict'
+        script_path: "scripts/ops/infra/ops_models_autogen_gate.ps1"
+        description: "Full gate (guard → parity → autogen → requirements) for 1 table."
+        parameters:
+          - name: "-Table <name>"
+            required: true
+            description: "Table name (e.g., athletes, teams)"
+          - name: "-Profile <string>"
+            required: false
+            description: "Validation profile: strict (default) | fk | lenient"
+            default: "strict"
+          - name: "-AllowCycleWarning"
+            required: false
+            description: "Allow FK cycle warnings (alternative to -Profile fk)"
+          - name: '-Allow <path>'
+            required: false
+            description: "Authorize modification of a protected file (guard allowlist)"
+        exit_codes: [0, 1, 2, 3, 4]
+        cwd: backend_root
+        approval: gated
+        risk_level: yellow
+        time_estimate: "30s-2min"
+        normative: >-
+          Gate is idempotent: running twice consecutively MUST return exit=0 both
+          times. Autogen MAY modify model — agents MUST review git diff before
+          commit. For FK cycles (teams/seasons): use -Profile fk or
+          -AllowCycleWarning.
+        exit_code_map:
+          "0": "PASS — all layers (guard, parity, requirements)"
+          "1": "Internal crash (unexpected error)"
+          "2": "Parity structural diff (model ≠ schema.sql)"
+          "3": "Guard violation (protected file modified without authorization)"
+          "4": "Requirements violation (model violates rules)"
+
+      - id: CMD-3.2
+        name: "parity_gate"
+        syntax: 'powershell -NoProfile -ExecutionPolicy Bypass -File scripts\ops\infra\ops_parity_gate.ps1 -Table <name>'
+        script_path: "scripts/ops/infra/ops_parity_gate.ps1"
+        description: "Parity gate (guard → parity scan) without autogen (diagnostic only)."
+        parameters:
+          - name: "-Table <name>"
+            required: true
+            description: "Table name"
+          - name: "-SkipDocsRegeneration"
+            required: false
+            description: "Skip SSOT refresh (use existing schema.sql)"
+        exit_codes: [0, 1, 2, 3]
+        cwd: backend_root
+        approval: gated
+        risk_level: yellow
+        time_estimate: "20s-1min"
+        exit_code_map:
+          "0": "PASS (guard + parity)"
+          "1": "Internal crash"
+          "2": "Parity structural diff"
+          "3": "Guard violation"
+
+  # =========================================================================
+  # CATEGORY 4: Batch Processing
+  # =========================================================================
+  batch:
+    id: CAT-4
+    label: "Batch Processing"
+    approval: gated
+    risk_level: yellow
+    description: "Multi-table orchestrator; exit code = first FAIL non-skip (fail-fast) or highest severity."
+
+    commands:
+
+      - id: CMD-4.1
+        name: "models_batch"
+        syntax: 'powershell -NoProfile -ExecutionPolicy Bypass -File scripts\ops\infra\ops_models_batch.ps1'
+        script_path: "scripts/ops/infra/ops_models_batch.ps1"
+        description: "Batch runner for validating/fixing multiple tables (scan-then-fix pattern)."
+        parameters:
+          - name: "-DryRun"
+            required: false
+            description: "Scan-only mode (no fix). Alias: -SkipGate"
+          - name: "-SkipGate"
+            required: false
+            description: "Legacy alias for -DryRun (scan-only)"
+            deprecated: true
+          - name: "-SkipRefresh"
+            required: false
+            description: "Skip SSOT refresh (use existing schema.sql/openapi.json)"
+          - name: "-Profile <string>"
+            required: false
+            description: "Default profile for requirements/gate"
+            default: "strict"
+          - name: "-FailFast <bool>"
+            required: false
+            description: "Stop on first error"
+            default: "$true"
+          - name: "-LogPath <string>"
+            required: false
+            description: "Custom log path"
+            default: "%TEMP%"
+        exit_codes: [0, 1, 2, 3, 4]
+        cwd: backend_root
+        approval: gated
+        risk_level: yellow
+        time_estimate: "5-15min"
+        normative: >-
+          Batch is deterministic: order = schema.sql appearance order.
+          -DryRun is preferred over -SkipGate (more semantic).
+          Logs are written to %TEMP% (not committed to repo).
+        outputs:
+          - "%TEMP%\\models_batch_{timestamp}.csv"
+          - "%TEMP%\\models_batch_{timestamp}.log"
+
+  # =========================================================================
+  # CATEGORY 5: SSOT Refresh
+  # =========================================================================
+  ssot_refresh:
+    id: CAT-5
+    label: "SSOT Refresh"
+    approval: required
+    risk_level: yellow
+    description: "Regenerate all SSOT artifacts (schema.sql, openapi.json, alembic_state.txt, manifest.json)."
+
+    commands:
+
+      - id: CMD-5.1
+        name: "inv.ps1 refresh"
+        syntax: 'powershell -NoProfile -ExecutionPolicy Bypass -File "C:\\HB TRACK\\scripts\\inv.ps1" refresh'
+        script_path: "scripts/ops/ops_inv.ps1"
+        description: "Regenerate ALL canonical SSOT artifacts."
+        parameters:
+          - name: "refresh"
+            required: true
+            description: "Subcommand to regenerate all artifacts"
+        exit_codes: [0, 1]
+        cwd: repo_root
+        approval: required
+        risk_level: yellow
+        time_estimate: "1-5min"
+        normative: >-
+          Agents MUST run this before parity/requirements gates to ensure
+          schema.sql is current. Agents MUST NOT manually edit generated
+          artifacts (schema.sql, openapi.json, etc.). DB is the real SSOT;
+          artifacts are derived.
+        artifacts_generated:
+          - "docs/_generated/schema.sql"
+          - "docs/_generated/openapi.json"
+          - "docs/_generated/alembic_state.txt"
+          - "docs/_generated/manifest.json"
+
+  # =========================================================================
+  # CATEGORY 6: Guard & Baseline
+  # =========================================================================
+  guard:
+    id: CAT-6
+    label: "Guard & Baseline"
+    approval: mixed
+    risk_level: yellow
+    description: "SHA256 baseline drift detection for protected files."
+
+    commands:
+
+      - id: CMD-6.1
+        name: "agent_guard snapshot"
+        syntax: 'python scripts\checks\db\check_agent_guard.py snapshot --root . --out ".hb_guard/baseline.json"'
+        script_path: "scripts/checks/db/check_agent_guard.py"
+        description: "Create SHA256 snapshot of protected files (update baseline)."
+        parameters:
+          - name: "snapshot"
+            required: true
+            description: "Subcommand to create snapshot"
+          - name: "--root <path>"
+            required: false
+            description: "Project root (default: .)"
+          - name: "--out <path>"
+            required: false
+            description: "Baseline output path (default: .hb_guard/baseline.json)"
+          - name: "baseline"
+            required: false
+            description: "Short alias using defaults"
+        exit_codes: [0, 1]
+        cwd: backend_root
+        approval: required
+        risk_level: yellow
+        time_estimate: "5-15s"
+        normative: >-
+          Agents MUST NOT snapshot a broken repo (exit 2/3/4 still active).
+          Agents MUST NOT snapshot when git status --porcelain returns output.
+          Baseline is LOCAL (not versioned via git). NEVER add baseline.json
+          to git. Snapshot = "register known-good conformant state".
+
+      - id: CMD-6.2
+        name: "agent_guard check"
+        syntax: 'python scripts\checks\db\check_agent_guard.py check --root . --baseline ".hb_guard\\baseline.json"'
+        script_path: "scripts/checks/db/check_agent_guard.py"
+        description: "Verify if protected files were modified vs baseline."
+        parameters:
+          - name: "check"
+            required: true
+            description: "Subcommand to verify baseline"
+          - name: "--root <path>"
+            required: false
+            description: "Project root"
+          - name: "--baseline <path>"
+            required: false
+            description: "Baseline path"
+          - name: "baseline"
+            required: false
+            description: "Short alias using defaults"
+        exit_codes: [0, 1, 3]
+        cwd: backend_root
+        approval: automatic
+        risk_level: green
+        time_estimate: "5-10s"
+        exit_code_map:
+          "0": "PASS — no protected files modified"
+          "1": "Crash"
+          "3": "FAIL — protected files modified without authorization"
+
+  # =========================================================================
+  # CATEGORY 7: Requirements Validation
+  # =========================================================================
+  requirements:
+    id: CAT-7
+    label: "Requirements Validation"
+    approval: automatic
+    risk_level: green
+    description: "Static conformance validation model vs schema.sql (read-only)."
+
+    commands:
+
+      - id: CMD-7.1
+        name: "model_requirements"
+        syntax: 'python scripts\checks\models\check_models_requirements.py --table <name> --profile strict'
+        script_path: "scripts/checks/models/check_models_requirements.py"
+        description: "Validate model against schema.sql constraints (read-only)."
+        parameters:
+          - name: "--table <name>"
+            required: true
+            description: "Table name (e.g., athletes)"
+          - name: "--profile <string>"
+            required: false
+            description: "Validation profile: strict | fk | lenient"
+            default: "strict"
+        exit_codes: [0, 1, 4]
+        cwd: backend_root
+        approval: automatic
+        risk_level: green
+        time_estimate: "5-15s"
+        normative: >-
+          Requirements is deterministic: same inputs → same outputs.
+          Does NOT modify files (read-only). Suitable for CI (no side-effects).
+        violation_types:
+          TYPE_MISMATCH: "PG ↔ SA type incompatible"
+          NULLABLE_MISMATCH: "NOT NULL in DB but nullable=True in model"
+          MISSING_SERVER_DEFAULT: "DEFAULT in DB but no server_default in model"
+          MISSING_USE_ALTER: "FK cycle without use_alter=True"
+          MISSING_CHECK: "CHECK constraint missing in model"
+
+  # =========================================================================
+  # CATEGORY 8: Parity Validation
+  # =========================================================================
+  parity:
+    id: CAT-8
+    label: "Parity Validation"
+    approval: automatic
+    risk_level: green
+    description: "Generate parity_report.json for structural/field diff diagnostics."
+
+    commands:
+
+      - id: CMD-8.1
+        name: "parity_scan"
+        syntax: 'powershell -NoProfile -ExecutionPolicy Bypass -File scripts\ops\db\ops_parity_scan.ps1 -TableFilter <name>'
+        script_path: "scripts/ops/db/ops_parity_scan.ps1"
+        description: "Generate parity_report.json for structural/field diffs."
+        parameters:
+          - name: "-TableFilter <name>"
+            required: true
+            description: "Table name"
+          - name: "-SkipDocsRegeneration"
+            required: false
+            description: "Skip SSOT refresh (use existing schema.sql)"
+        exit_codes: [0, 1, 2]
+        cwd: backend_root
+        approval: automatic
+        risk_level: green
+        time_estimate: "10-30s"
+        normative: >-
+          -SkipDocsRegeneration MAY be used only when inv.ps1 refresh was
+          executed in the current session (< 1min ago) AND manifest.json
+          timestamp confirms recent refresh AND no migration was applied
+          since refresh. If in doubt, do NOT use -SkipDocsRegeneration.
+        structural_diff_types:
+          - modify_type: "Column type differs"
+          - modify_nullable: "Nullability differs"
+          - add_column: "Column in model not in DB"
+          - remove_column: "Column in DB not in model"
+          - add_fk: "FK in model not in DB"
+          - remove_fk: "FK in DB not in model"
+        field_diff_types:
+          - modify_comment: "Comment differs (warning)"
+          - modify_sequence: "Sequence differs (warning)"
+          - add_index: "Non-unique INDEX (auto-correctable)"
+
+  # =========================================================================
+  # CATEGORY 9: Database & Infrastructure
+  # =========================================================================
+  database:
+    id: CAT-9
+    label: "Database & Infrastructure"
+    approval: required
+    risk_level: yellow
+    description: "Docker container and database management."
+
+    commands:
+
+      - id: CMD-9.1
+        name: "docker-compose up"
+        syntax: "docker-compose up -d postgres"
+        description: "Start PostgreSQL container in background (detached mode)."
+        parameters:
+          - name: "up -d"
+            required: true
+            description: "Start containers in background"
+          - name: "postgres"
+            required: false
+            description: "Service name (in docker-compose.yml)"
+        exit_codes: [0, 1]
+        cwd: repo_root
+        approval: required
+        risk_level: yellow
+        time_estimate: "10-60s"
+        normative: >-
+          Agents MUST NOT run docker-compose down -v without approval
+          (removes volumes = data loss).
+
+      - id: CMD-9.2
+        name: "docker-compose down"
+        syntax: "docker-compose down"
+        description: "Stop and remove all containers (preserving volumes)."
+        parameters:
+          - name: "down"
+            required: true
+            description: "Stop and remove containers (preserve volumes)"
+          - name: "-v"
+            required: false
+            description: "DANGEROUS: remove volumes (data loss)"
+            dangerous: true
+        exit_codes: [0, 1]
+        cwd: repo_root
+        approval: required
+        risk_level: yellow
+        time_estimate: "5-15s"
+        normative: >-
+          docker-compose down: approval required.
+          docker-compose down -v: PROHIBITED without explicit authorization.
+
+  # =========================================================================
+  # CATEGORY 10: Alembic Migrations
+  # =========================================================================
+  alembic:
+    id: CAT-10
+    label: "Alembic Migrations"
+    approval: required
+    risk_level: yellow
+    description: "Database schema migration management."
+
+    commands:
+
+      - id: CMD-10.1
+        name: "alembic upgrade"
+        syntax: '.\\venv\\Scripts\\python.exe -m alembic upgrade head'
+        description: "Apply all pending migrations (update DB to HEAD)."
+        parameters:
+          - name: "upgrade head"
+            required: true
+            description: "Apply all migrations up to HEAD"
+          - name: "upgrade +1"
+            required: false
+            description: "Apply only next migration"
+          - name: "downgrade -1"
+            required: false
+            description: "Revert last migration (DESTRUCTIVE)"
+            dangerous: true
+        exit_codes: [0, 1]
+        cwd: backend_root
+        approval: required
+        risk_level: yellow
+        time_estimate: "5-120s"
+        normative: >-
+          Agents MUST NOT run downgrade in production without backup.
+          Migrations are unidirectional (downgrade may lose data).
+          Always run inv.ps1 refresh after upgrade to update schema.sql.
+
+      - id: CMD-10.2
+        name: "alembic current"
+        syntax: '.\\venv\\Scripts\\python.exe -m alembic current'
+        description: "View current DB migration revision."
+        parameters:
+          - name: "--verbose"
+            required: false
+            description: "Show hash + message + branch"
+        exit_codes: [0, 1]
+        cwd: backend_root
+        approval: automatic
+        risk_level: green
+        time_estimate: "<5s"
+
+  # =========================================================================
+  # CATEGORY 11: Task Lifecycle & Human Visibility
+  # =========================================================================
+  task_lifecycle:
+    id: CAT-11
+    label: "Task Lifecycle & Human Visibility"
+    approval: mixed
+    risk_level: yellow
+    description: "Manage execution task visibility layer and SSOT root validation."
+
+    commands:
+
+      - id: CMD-11.1
+        name: "validate-ssot-roots"
+        syntax: 'python docs/scripts/validate-ssot-roots.py --config docs/_canon/PATHS_SSOT.yaml'
+        script_path: "docs/scripts/validate-ssot-roots.py"
+        deprecated: true
+        deprecated_reason: "Script deleted during reorganization. Pending replacement."
+        description: "Validate that documents are in the correct canonical root (anti-drift)."
+        parameters:
+          - name: "--config"
+            required: true
+            description: "Path to canonical PATHS_SSOT.yaml"
+          - name: "--verbose"
+            required: false
+            description: "Show roots and counts per rule"
+        exit_codes: [0, 1, 2]
+        cwd: repo_root
+        approval: automatic
+        risk_level: green
+        time_estimate: "<5s"
+
+      - id: CMD-11.2
+        name: "compact_exec_logs (write)"
+        syntax: 'python scripts/compact_exec_logs.py --write'
+        script_path: "scripts/compact_exec_logs.py"
+        deprecated: true
+        deprecated_reason: "Script deleted during reorganization. Pending replacement."
+        description: "Generate summaries, proofs, update Status Board and Home."
+        parameters:
+          - name: "--write"
+            required: true
+            description: "Update physical files if drift detected"
+        exit_codes: [0, 2, 3, 4]
+        cwd: backend_root
+        approval: required
+        risk_level: yellow
+        time_estimate: "5-15s"
+        exit_code_map:
+          "0": "PASS — everything synchronized"
+          "2": "MISSING — artifacts or event.json missing"
+          "3": "FORMAT — parsing or structure error"
+          "4": "MISMATCH — drift between event.json and human layer"
+
+      - id: CMD-11.3
+        name: "compact_exec_logs (check)"
+        syntax: 'python scripts/compact_exec_logs.py --check'
+        script_path: "scripts/compact_exec_logs.py"
+        deprecated: true
+        deprecated_reason: "Script deleted during reorganization. Pending replacement."
+        description: "Validate visibility layer integrity without modifying files."
+        parameters:
+          - name: "--check"
+            required: true
+            description: "Read-only validation mode"
+        exit_codes: [0, 2, 3, 4]
+        cwd: backend_root
+        approval: automatic
+        risk_level: green
+        time_estimate: "5-15s"
+
+      - id: CMD-11.4
+        name: "bootstrap_task"
+        syntax: 'python scripts/bootstrap_task.py <TASK_ID> --one-liner "<resumo>" --scope "<area>"'
+        script_path: "scripts/bootstrap_task.py"
+        deprecated: true
+        deprecated_reason: "Script deleted during reorganization. Pending replacement."
+        description: "Create deterministic structure for a new task (event.json, HUMAN_SUMMARY, PROOFS)."
+        parameters:
+          - name: "<TASK_ID>"
+            required: true
+            description: "Task ID (e.g., ARCH-XYZ-001)"
+          - name: "--one-liner"
+            required: true
+            description: "Short one-line summary"
+          - name: "--scope"
+            required: true
+            description: "Area of action (e.g., Governance, Docs, Middlewares)"
+          - name: "--force"
+            required: false
+            description: "Overwrite if already exists"
+        exit_codes: [0, 2, 4]
+        cwd: backend_root
+        approval: automatic
+        risk_level: green
+        time_estimate: "<5s"
+        exit_code_map:
+          "0": "OK — task created"
+          "2": "INVALID_ARGS"
+          "4": "EXISTS_CONFLICT (use --force)"
+
+  # =========================================================================
+  # CATEGORY 12: Testing
+  # =========================================================================
+  testing:
+    id: CAT-12
+    label: "Testing"
+    approval: automatic
+    risk_level: green
+    description: "Automated test execution with Pytest."
+
+    commands:
+
+      - id: CMD-12.1
+        name: "pytest"
+        syntax: '.\\venv\\Scripts\\pytest.exe <path> [options]'
+        script_path: "Hb Track - Backend/venv/Scripts/pytest.exe"
+        description: "Run automated tests with Pytest."
+        parameters:
+          - name: "<path>"
+            required: true
+            description: "Test directory or file path"
+          - name: "-x"
+            required: false
+            description: "Stop after first failure (fail-fast)"
+          - name: "--maxfail=<N>"
+            required: false
+            description: "Stop after N failures"
+          - name: "-k <expr>"
+            required: false
+            description: "Filter tests by name expression"
+          - name: "-m <marker>"
+            required: false
+            description: "Filter by marker (e.g., slow)"
+          - name: "--tb=<style>"
+            required: false
+            description: "Traceback style: short | line | long"
+          - name: "--disable-warnings"
+            required: false
+            description: "Suppress dependency warnings"
+          - name: "-v, --verbose"
+            required: false
+            description: "Increase verbosity"
+          - name: "--collect-only"
+            required: false
+            description: "List tests without executing (diagnostic)"
+        exit_codes: [0, 1, 2, 3, 4, 5]
+        cwd: backend_root
+        approval: automatic
+        risk_level: green
+        time_estimate: "1-5min"
+        normative: >-
+          Agents MUST NOT run pytest outside the venv (contaminates global
+          environment). Prefer specific paths over wildcards. Use
+          --collect-only for quick diagnostics without execution.
+        recommended_flags: "-x --tb=short --disable-warnings"
+        exit_code_map:
+          "0": "All tests passed"
+          "1": "Some test failed (assertion error)"
+          "2": "Interrupted or --maxfail reached"
+          "3": "Test collection failed (syntax/import error)"
+          "4": "Pytest internal usage (rare)"
+          "5": "No tests collected"
+
+# ---------------------------------------------------------------------------
+# BLACKLIST — Prohibited Commands
+# ---------------------------------------------------------------------------
+blacklist:
+
+  git_destructive:
+    id: BLACKLIST-A
+    label: "Git Destructive"
+    normative: >-
+      Agents MUST NEVER execute these commands without explicit out-of-band
+      user approval. These commands cause irreversible data loss or rewrite
+      shared history.
+    commands:
+      - command: "git reset --hard <commit>"
+        reason: "Permanently loses local work"
+        alternative: "git stash + git restore"
+      - command: "git reset --soft <commit>"
+        reason: "Can cause state confusion"
+        alternative: "git revert"
+      - command: "git clean -f"
+        reason: "Removes untracked files without recovery"
+        alternative: "Review git status, delete manually"
+      - command: "git clean -fd"
+        reason: "Removes untracked files + directories"
+        alternative: "git clean -n (dry-run) first"
+      - command: "git push --force"
+        reason: "Rewrites remote history (breaks collaboration)"
+        alternative: "git revert (creates new commit)"
+      - command: "git push --force-with-lease"
+        reason: "Still rewrites history"
+        alternative: "git revert"
+      - command: "git branch -D <branch>"
+        reason: "Deletes branch without merge check"
+        alternative: "git branch -d (safe delete)"
+      - command: "git checkout ."
+        reason: "Discards changes (use git restore)"
+        alternative: "git restore -- <file>"
+
+  powershell_dangerous:
+    id: BLACKLIST-B
+    label: "PowerShell Dangerous"
+    normative: >-
+      Agents MUST NEVER execute these commands. Code injection risk
+      and irreversible data loss.
+    commands:
+      - command: "Invoke-Expression <string>"
+        reason: "Code injection risk"
+        alternative: "Call operator & with array of args"
+      - command: "iex <string>"
+        reason: "Alias of Invoke-Expression"
+        alternative: "Call operator & with array of args"
+      - command: "Remove-Item -Recurse -Force <path>"
+        reason: "Deletes directories without confirmation"
+        alternative: "Delete files explicitly (not wildcards)"
+      - command: "rm -rf <path>"
+        reason: "Unix-like alias for Remove-Item"
+        alternative: "Delete files explicitly"
+      - command: "Start-Process -NoNewWindow"
+        reason: "Can hang terminal"
+        alternative: "Use & operator"
+      - command: "& <untrusted-script>"
+        reason: "Execute unreviewed scripts"
+        alternative: "Review script first"
+
+  python_dangerous:
+    id: BLACKLIST-C
+    label: "Python Dangerous"
+    normative: >-
+      Agents MUST NEVER execute these constructs. Arbitrary code execution
+      and shell injection vulnerabilities.
+    commands:
+      - command: "exec(<string>)"
+        reason: "Arbitrary code execution"
+        alternative: "Specific functions (not dynamic strings)"
+      - command: "eval(<string>)"
+        reason: "Can execute malicious code"
+        alternative: "Specific functions"
+      - command: "subprocess.run([...], shell=True)"
+        reason: "Shell injection risk"
+        alternative: "subprocess.run() with shell=False (default)"
+      - command: "os.system(<command>)"
+        reason: "Shell injection risk"
+        alternative: "subprocess.run() with shell=False"
+      - command: "__import__('os').system(...)"
+        reason: "Security bypass"
+        alternative: "Explicit imports"
+
+  filesystem_destructive:
+    id: BLACKLIST-D
+    label: "Filesystem Destructive"
+    normative: >-
+      Agents MUST NEVER execute these commands without explicit approval.
+      Irreversible loss of history, baseline, or migrations.
+    commands:
+      - command: "Remove-Item .hb_guard\\baseline.json -Force"
+        reason: "No backup of baseline"
+        alternative: "Always backup before deleting"
+      - command: "Remove-Item alembic\\versions\\* -Recurse"
+        reason: "Deletes migrations"
+        alternative: "Revert via alembic downgrade"
+      - command: "Remove-Item .git -Recurse -Force"
+        reason: "Destroys the repository"
+        alternative: "Never do this"
+      - command: "rm -rf .git"
+        reason: "Destroys the repository"
+        alternative: "Never do this"
+      - command: 'find . -name "*.pyc" -delete'
+        reason: "Unsafe recursive delete"
+        alternative: "Use .gitignore + git clean -n (dry-run)"
+
+# ---------------------------------------------------------------------------
+# PROTECTED FILES
+# ---------------------------------------------------------------------------
+protected_files:
+
+  critical_config:
+    id: PROTECTED-1
+    label: "Critical Configuration"
+    normative: >-
+      Changes MAY break the entire application or expose secrets.
+      Agents MUST use guard -Allow to modify.
+    files:
+      - "app/main.py"
+      - "app/config.py"
+      - "app/database.py"
+      - ".env"
+      - ".env.example"
+      - "docker-compose.yml"
+      - "Dockerfile"
+
+  migrations:
+    id: PROTECTED-2
+    label: "Migrations"
+    normative: >-
+      Migrations are append-only. Agents MUST NOT edit existing migrations.
+      To modify schema, create a new migration via alembic revision.
+    files:
+      - "Hb Track - Backend/alembic/versions/*"
+      - "alembic.ini"
+
+  guard_system:
+    id: PROTECTED-3
+    label: "Guard System"
+    normative: >-
+      Modifying guard bypasses security. Agents MUST NOT edit guard logic
+      or baseline manually.
+    files:
+      - ".hb_guard/baseline.json"
+      - "scripts/checks/db/check_agent_guard.py"
+
+  critical_tests:
+    id: PROTECTED-4
+    label: "Critical Tests"
+    normative: >-
+      Changes MAY hide violations. Agents MUST follow INVARIANTS_TESTING_CANON.md
+      protocol to modify.
+    files:
+      - "tests/test_invariants.py"
+      - "tests/conftest.py"
+
+  ssot_generated:
+    id: PROTECTED-5
+    label: "SSOT Generated (Derived)"
+    normative: >-
+      These are derived artifacts (not canonical source). Agents MUST NOT edit
+      manually. Regenerate via inv.ps1 refresh.
+    files:
+      - "docs/_generated/schema.sql"
+      - "docs/_generated/openapi.json"
+      - "docs/_generated/alembic_state.txt"
+      - "docs/_generated/manifest.json"
+
+# ---------------------------------------------------------------------------
+# APPROVAL PROTOCOL
+# ---------------------------------------------------------------------------
+approval_protocol:
+  normative: >-
+    When an agent detects a command not in this whitelist, the agent MUST stop
+    execution and present the user with Y/N/A options. The agent MUST NOT
+    proceed without user response.
+  options:
+    Y: "Execute once (do not add to whitelist)"
+    N: "Abort operation"
+    A: "Execute AND add to whitelist (update this registry + canonical MD)"
+  risk_classification:
+    green:
+      criteria: "Read-only, no side-effects"
+      action: "May add via option A"
+    yellow:
+      criteria: "Write with possible rollback"
+      action: "Request A + human review"
+    red:
+      criteria: "Destructive, no recovery"
+      action: "Request Y only (one-time)"
+    critical:
+      criteria: "Security risk, code injection"
+      action: "Auto-refuse (never execute)"
+
+# ---------------------------------------------------------------------------
+# CROSS-REFERENCES
+# ---------------------------------------------------------------------------
+cross_references:
+  - path: "docs/_canon/05_MODELS_PIPELINE.md"
+    relation: "Defines pipeline that uses commands from this whitelist"
+  - path: "docs/_canon/03_WORKFLOWS.md"
+    relation: "Workflows use commands from this whitelist"
+  - path: "docs/references/exit_codes.md"
+    relation: "Specifies exit codes returned by commands"
+  - path: "docs/_canon/09_TROUBLESHOOTING_GUARD_PARITY.md"
+    relation: "Troubleshooting uses commands for diagnostics"
+  - path: "docs/_canon/04_SOURCES_GENERATED.md"
+    relation: "Details artifacts generated by inv.ps1 refresh"
+  - path: "docs/_ai/INVARIANTS_AGENT_GUARDRAILS.md"
+    relation: "Guard policy (baseline, allowlist)"
+  - path: "docs/_ai/_specs/exit_codes_registry.yaml"
+    relation: "SSOT for exit codes emitted by commands"
+
+# ---------------------------------------------------------------------------
+# REFERENCE WORKFLOWS
+# ---------------------------------------------------------------------------
+workflows:
+
+  single_table_fix:
+    label: "Fix 1 table"
+    steps:
+      - { cmd_ref: CMD-1.1, action: "Validate repo clean" }
+      - { cmd_ref: CMD-5.1, action: "Update SSOT" }
+      - { cmd_ref: CMD-8.1, action: "Diagnose parity" }
+      - { cmd_ref: CMD-3.1, action: "Fix via autogen gate" }
+      - { cmd_ref: CMD-1.2, action: "Review changes" }
+      - { cmd_ref: CMD-2.1, action: "Stage model" }
+      - { cmd_ref: CMD-2.2, action: "Commit" }
+      - { cmd_ref: CMD-6.1, action: "Update baseline" }
+
+  batch_40_tables:
+    label: "Batch 40+ tables"
+    steps:
+      - { cmd_ref: CMD-1.1, action: "Validate repo clean" }
+      - { cmd_ref: CMD-4.1, action: "Scan (DryRun)" }
+      - { action: "Review CSV output" }
+      - { cmd_ref: CMD-4.1, action: "Fix (full)" }
+      - { cmd_ref: CMD-1.2, action: "Review changes" }
+      - { cmd_ref: CMD-2.1, action: "Stage (granular per table)" }
+      - { cmd_ref: CMD-2.2, action: "Commit (granular per table)" }
+      - { cmd_ref: CMD-6.1, action: "Update baseline" }

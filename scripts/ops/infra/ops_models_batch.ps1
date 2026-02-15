@@ -98,8 +98,8 @@ function Run-RefreshSSOT {
     return
   }
 
-  $inv = "C:\HB TRACK\scripts\inv.ps1"
-  if (-not (Test-Path $inv)) { Abort "inv.ps1 não encontrado em $inv" 1 }
+  $inv = "C:\HB TRACK\scripts\ops\ops_inv.ps1"
+  if (-not (Test-Path $inv)) { Abort "ops_inv.ps1 não encontrado em $inv" 1 }
 
   Write-Host "`n[STEP] SSOT refresh (inv.ps1 refresh)" -ForegroundColor Cyan
   & powershell -NoProfile -ExecutionPolicy Bypass -File $inv refresh

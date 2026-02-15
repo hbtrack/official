@@ -30,9 +30,15 @@ $ErrorActionPreference = "Stop"
 
 # Paths
 $ScriptRoot = $PSScriptRoot
-$RootDir = Split-Path -Parent $ScriptRoot
-$GateScript = Join-Path $ScriptRoot "run_invariant_gate.ps1"
-$GateAllScript = Join-Path $ScriptRoot "run_invariant_gate_all.ps1"
+$RootDir = Split-Path -Parent (Split-Path -Parent $ScriptRoot)   # scripts/ops → scripts → repo root
+$GateScript = Join-Path $RootDir "scripts\run\run_invariant_gate.ps1"
+$GateAllScript = Join-Path $RootDir "scripts\run\run_invariant_gate_all.ps1"
+
+# Guardrail: validate repo root
+if (-not (Test-Path (Join-Path $RootDir "AGENTS.md"))) {
+    Write-Host "FATAL: repo root not found at $RootDir (missing AGENTS.md)" -ForegroundColor Red
+    exit 1
+}
 
 # Header
 Write-Host "========================================" -ForegroundColor Cyan
@@ -127,7 +133,7 @@ switch ($Command) {
         $SchemaFile = Join-Path $BackendDir "docs\_generated\schema.sql"
         $OpenApiFile = Join-Path $BackendDir "docs\_generated\openapi.json"
         $AlembicFile = Join-Path $BackendDir "docs\_generated\alembic_state.txt"
-        $GenerateScript = Join-Path $BackendDir "scripts\generate_docs.py"
+        $GenerateScript = Join-Path $RootDir "scripts\generate\docs\gen_docs_soot.py"
 
         # Repo root mirror (SSOT canônico consumido pelas docs/agentes)
         $RepoGeneratedDir = Join-Path $RootDir "docs\_generated"
@@ -135,24 +141,24 @@ switch ($Command) {
         $RepoOpenApiFile = Join-Path $RepoGeneratedDir "openapi.json"
         $RepoAlembicFile = Join-Path $RepoGeneratedDir "alembic_state.txt"
         
-        # Validar que generate_docs.py existe
+        # Validar que gen_docs_soot.py existe
         if (-not (Test-Path $GenerateScript)) {
-            Write-Host "ERROR: generate_docs.py not found at $GenerateScript" -ForegroundColor Red
+            Write-Host "ERROR: gen_docs_soot.py not found at $GenerateScript" -ForegroundColor Red
             exit 1
         }
         
-        Write-Host "Executing: python $GenerateScript" -ForegroundColor Yellow
+        Write-Host "Executing: python $GenerateScript --all" -ForegroundColor Yellow
         Write-Host ""
         
-        # Executar generate_docs.py
+        # Executar gen_docs_soot.py --all
         Push-Location $BackendDir
         try {
-            & python $GenerateScript
+            & python $GenerateScript --all
             $ExitCode = $LASTEXITCODE
             
             if ($ExitCode -ne 0) {
                 Write-Host ""
-                Write-Host "ERROR: generate_docs.py failed with exit code $ExitCode" -ForegroundColor Red
+                Write-Host "ERROR: gen_docs_soot.py failed with exit code $ExitCode" -ForegroundColor Red
                 exit $ExitCode
             }
         } finally {

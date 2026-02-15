@@ -1,0 +1,240 @@
+# =============================================================================
+# EXIT CODE PLAYBOOK — Machine-Readable (Agent Consumption)
+# =============================================================================
+# Authority : docs/_canon/09_TROUBLESHOOTING_GUARD_PARITY.md (canonical human doc)
+# Registry  : docs/_ai/_specs/exit_codes_registry.yaml (emitters + normative)
+# Consumers : AI agents, CI gates, policy checkers
+# Schema    : docs/_canon/_schemas/exit_code_playbook.schema.json (TODO)
+# Version   : 1.0.0
+# Updated   : 2026-02-15
+# =============================================================================
+
+version: "1.0.0"
+
+# ---------------------------------------------------------------------------
+# FIX LOOP — Agent operational convention
+# ---------------------------------------------------------------------------
+fix_loop:
+  max_iterations: 3
+  rule: "fix → rerun gate → check exit code"
+  immediate_stop_codes: [1]
+  stop_conditions:
+    - "Exit code 0 → success"
+    - "3 iterations without convergence → STOP, escalate"
+    - "Exit code 1 (crash/infra) → STOP immediately, no iteration"
+    - "Fix would expand scope → STOP, report, ask authorization"
+  evidence_on_stop:
+    - "$LASTEXITCODE"
+    - "git status --porcelain"
+    - "git diff --stat"
+    - "Generated reports (parity_report.json, requirements output, logs)"
+    - "Root cause hypothesis (1-2 sentences)"
+    - "Number of iterations executed"
+  baseline_policy:
+    auto_snapshot: false
+    requires_flag: "-AllowBaselineSnapshot"
+    requires_user_auth: true
+    evidence: "motivo + diff + commit hash"
+
+# ---------------------------------------------------------------------------
+# EXIT CODES — Playbook entries
+# ---------------------------------------------------------------------------
+playbook:
+
+  # =========================================================================
+  # Pipeline Models (0–5)
+  # =========================================================================
+  "0":
+    title: "OK / PASS"
+    category: pipeline
+    action: "Encerrar. Publicar artefatos (reports/logs). NÃO mexer em baseline."
+    commands: []
+    artifacts:
+      - parity_report.json
+      - requirements output
+    iterate: false
+
+  "1":
+    title: "INFRA / EXECUÇÃO INVÁLIDA"
+    category: pipeline
+    action: >-
+      (a) Validar env (.venv, variáveis, DB/Redis).
+      (b) Rerun UMA vez.
+      (c) Se repetir: gerar diagnóstico mínimo (logs + versão ferramentas) e PARAR.
+    commands:
+      - syntax: 'Test-Path "venv\Scripts\python.exe"'
+        purpose: "Verificar venv"
+      - syntax: '.\venv\Scripts\python.exe -m pip list | Select-String "sqlalchemy|alembic"'
+        purpose: "Verificar dependências"
+    artifacts:
+      - "Stack trace completo"
+      - "$PSVersionTable"
+      - "python --version"
+    iterate: false
+    rule: "NÃO chutar correções no código. Parar e escalar."
+
+  "2":
+    title: "PARITY_ISSUE (Model ↔ DB diff estrutural)"
+    category: pipeline
+    action: >-
+      (a) Rodar autogen do(s) model(s) a partir de schema.sql (escopo mínimo: só tabelas FAIL).
+      (b) Rodar normalizações permitidas (imports, TYPE_CHECKING, ordering, naming).
+      (c) Reexecutar parity gate.
+    commands:
+      - syntax: 'powershell -NoProfile -ExecutionPolicy Bypass -File scripts\ops\infra\ops_models_autogen_gate.ps1 -Table <name> -Profile strict'
+        purpose: "Autogen + gate"
+      - syntax: 'powershell -NoProfile -ExecutionPolicy Bypass -File scripts\ops\infra\ops_parity_gate.ps1 -Table <name>'
+        purpose: "Validação parity"
+    artifacts:
+      - parity_report.json
+      - "git diff app/models/<table>.py"
+    iterate: true
+    rule: "NÃO editar schema.sql para 'fazer bater' (DB vence). Se persistir: corrigir gerador/normalizador."
+
+  "3":
+    title: "GUARD_VIOLATION (violação de guardrail/política)"
+    category: pipeline
+    action: >-
+      (a) Localizar regra violada no relatório.
+      (b) Ajustar código para satisfazer a política.
+      (c) Reexecutar.
+    commands:
+      - syntax: 'git restore -- <arquivo_não_autorizado>'
+        purpose: "Reverter mudança não autorizada"
+      - syntax: 'python scripts\checks\db\check_agent_guard.py check --root . --baseline ".hb_guard\baseline.json"'
+        purpose: "Validação guard"
+    artifacts:
+      - "Output do guard check"
+      - "git status --porcelain"
+    iterate: true
+    rule: "Baseline snapshot MUST NOT acontecer por padrão. Só com flag + autorização + evidência."
+
+  "4":
+    title: "REQUIREMENTS_VIOLATION (regras/invariantes)"
+    category: pipeline
+    action: >-
+      (a) Abrir requirements_report (output ou JSON).
+      (b) Aplicar correção mínima no nível correto (service/model/constraint).
+      (c) Rerun requirements + gate.
+    commands:
+      - syntax: 'powershell -NoProfile -ExecutionPolicy Bypass -File scripts\ops\infra\ops_models_autogen_gate.ps1 -Table <name> -Profile strict'
+        purpose: "Autogen + gate"
+      - syntax: 'python scripts\checks\models\check_models_requirements.py --table <name> --profile strict'
+        purpose: "Validação requirements"
+    artifacts:
+      - "Output do requirements"
+      - "git diff app/models/<table>.py"
+    iterate: true
+    rule: "Se violação é por drift estrutural, voltar para EC 2 (parity) ou EC 5 (schema drift). Não maquiar requirements."
+
+  "5":
+    title: "SCHEMA_DRIFT (migrations ≠ schema.sql)"
+    category: pipeline
+    action: >-
+      (a) Aplicar migrations até head (ou reset controlado).
+      (b) Regenerar schema.sql via comando canônico.
+      (c) Commit do schema atualizado.
+      (d) Rerun pipeline (parity + requirements).
+    commands:
+      - syntax: '.\venv\Scripts\python.exe -m alembic upgrade head'
+        purpose: "Aplicar migrations pendentes"
+      - syntax: 'powershell -NoProfile -ExecutionPolicy Bypass -File "C:\HB TRACK\scripts\inv.ps1" refresh'
+        purpose: "Regenerar SSOT artifacts"
+      - syntax: '.\venv\Scripts\python.exe -m alembic current'
+        purpose: "Verificar estado migrations"
+    artifacts:
+      - alembic_state.txt
+      - "schema.sql diff"
+      - parity_report.json
+    iterate: true
+    rule: "Mudanças estruturais MUST entrar como migration; schema.sql é derivado."
+
+  # =========================================================================
+  # Quality Gates — Horizontal (10–20)
+  # =========================================================================
+  "10":
+    title: "LINT_FAIL (Ruff)"
+    category: quality
+    action: "(a) ruff check --fix (escopo: arquivos alterados). (b) Rerun ruff check."
+    commands:
+      - syntax: "ruff check --fix <files>"
+        purpose: "Auto-fix lint"
+      - syntax: "ruff check <files>"
+        purpose: "Validação lint"
+    iterate: true
+    rule: "Se fix automático piorar legibilidade, desabilitar rule pontual com # noqa + justificativa."
+
+  "11":
+    title: "FORMAT_FAIL (Black)"
+    category: quality
+    action: "(a) black no escopo do PR. (b) Rerun black --check."
+    commands:
+      - syntax: "black <files>"
+        purpose: "Formatar"
+      - syntax: "black --check <files>"
+        purpose: "Validação formatação"
+    iterate: true
+    rule: "Formatação é mecânica; agente não deve discutir."
+
+  "12":
+    title: "TYPECHECK_FAIL (MyPy)"
+    category: quality
+    action: "(a) Corrigir tipos/annotations/imports. (b) Preferir ajustes locais e Protocols. (c) Rerun mypy."
+    commands:
+      - syntax: "mypy <files>"
+        purpose: "Validação tipos"
+    iterate: true
+    rule: "Evitar Any indiscriminado; se precisar, isolar e justificar."
+
+  "13":
+    title: "SECURITY_FAIL (Bandit)"
+    category: quality
+    action: "(a) Corrigir finding (parametrização, validação, secrets, hashing). (b) Rerun scanner."
+    commands:
+      - syntax: "bandit -r <path>"
+        purpose: "Scan segurança"
+    iterate: true
+    rule: "Silenciar finding SOMENTE com justificativa e se for falso positivo confirmado."
+
+  "14":
+    title: "COMPLEXITY_FAIL (Radon)"
+    category: quality
+    action: "(a) Refatorar para reduzir caminhos (guard clauses, Strategy/Command, extração de funções). (b) Rerun radon."
+    commands:
+      - syntax: "radon cc <path> -a -nc"
+        purpose: "Medir complexidade"
+    iterate: true
+    rule: "NÃO aumentar limite para passar; meta é manter orçamento de complexidade."
+
+  "15":
+    title: "TEST_FAIL (Pytest)"
+    category: quality
+    action: "(a) Rodar só testes falhos com output detalhado. (b) Corrigir bug ou teste (o que estiver errado). (c) Rerun suite do escopo."
+    commands:
+      - syntax: "pytest <path> -x -vv"
+        purpose: "Rodar testes falhos"
+    iterate: true
+    rule: "Se bug é de drift estrutural, voltar para EC 2/5. Não remendar teste para acompanhar bug."
+
+  "16":
+    title: "COVERAGE_FAIL"
+    category: quality
+    action: "(a) Adicionar testes nos pontos tocados. (b) Priorizar regras de negócio. (c) Rerun coverage."
+    commands:
+      - syntax: "pytest --cov=app --cov-report=term-missing <path>"
+        purpose: "Medir cobertura"
+    iterate: true
+    rule: "NÃO omitir arquivo para ganhar cobertura, exceto itens gerados/infra com regra explícita."
+
+  "20":
+    title: "CONTRACT_DRIFT (OpenAPI)"
+    category: quality
+    action: >-
+      (a) Regenerar OpenAPI a partir do app ou ajustar handlers/schemas.
+      (b) Rerun testes de contrato.
+      (c) Garantir compatibilidade com DB-first (DB continua vencendo).
+    commands:
+      - syntax: 'powershell -NoProfile -ExecutionPolicy Bypass -File "C:\HB TRACK\scripts\inv.ps1" refresh'
+        purpose: "Regenerar OpenAPI + SSOT"
+    iterate: true
+    rule: "Contrato é derivado do app; app é derivado do DB. Cadeia: DB → Model → Service → Router → OpenAPI."

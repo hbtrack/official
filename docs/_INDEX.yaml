@@ -1,0 +1,255 @@
+---
+status: CANONICAL
+version: 3.0.0
+last_updated: 2026-02-15
+applies_to: AI Agents + Human Developers
+ai_binding: MUST_FOLLOW
+determinism_score: 5
+nature: Porta única de entrada para toda navegação documental no HB Track
+precedence: Autoridade máxima de roteamento. Em caso de conflito com outros índices, este documento vence
+
+# ---------------------------------------------------------------------------
+# SSOT REGISTRY — Artefatos gerados (fonte de verdade derivada)
+# ---------------------------------------------------------------------------
+ssot_registry:
+  - artifact: schema.sql
+    path: docs/_generated/schema.sql
+    description: PostgreSQL DDL (tabelas, constraints, enums, comments)
+    precedence: 1
+    update_trigger: Após migrations ou inv.ps1 refresh
+  
+  - artifact: openapi.json
+    path: docs/_generated/openapi.json
+    description: Especificação OpenAPI 3.1 FastAPI (operationIds, schemas, paths)
+    precedence: 4
+    update_trigger: Após mudanças em API routes/models
+  
+  - artifact: alembic_state.txt
+    path: docs/_generated/alembic_state.txt
+    description: Estado atual das migrations (head + versão corrente)
+    precedence: 6
+    update_trigger: Após alembic upgrade head
+  
+  - artifact: manifest.json
+    path: docs/_generated/manifest.json
+    description: Rastreabilidade (git commit, checksums, timestamps)
+    precedence: 7
+    update_trigger: Automático via inv.ps1 refresh
+  
+  - artifact: parity_report.json
+    path: docs/_generated/parity_report.json
+    description: Relatório model↔schema (structural + field diffs)
+    precedence: 5
+    update_trigger: Via parity_scan.ps1 (diagnóstico antes de editar models)
+
+# ---------------------------------------------------------------------------
+# MANDATORY READS — Documentação canônica obrigatória
+# ---------------------------------------------------------------------------
+mandatory_reads:
+  - doc: AI_KERNEL.md
+    path: docs/_canon/AI_KERNEL.md
+    when: Antes de qualquer operação (Constituição AI universal)
+    binding: OBRIGATÓRIO
+
+  - doc: SSOT_AUTHORITY.md
+    path: docs/_canon/01_AUTHORITY_SSOT.md
+    when: Qualquer dúvida sobre fonte de verdade ou precedência
+    binding: OBRIGATÓRIO
+  
+  - doc: APPROVED_COMMANDS.md
+    path: docs/_canon/08_APPROVED_COMMANDS.md
+    when: Antes de rodar comando não listado neste Index
+    binding: OBRIGATÓRIO
+  
+  - doc: MODELS_PIPELINE.md
+    path: docs/_canon/05_MODELS_PIPELINE.md
+    when: Trabalho em app/models/ ou execução de gates
+    binding: OBRIGATÓRIO
+  
+  - doc: TROUBLESHOOTING_GUARD_PARITY.md
+    path: docs/_canon/09_TROUBLESHOOTING_GUARD_PARITY.md
+    when: Qualquer comando com exit code ≠ 0 (inclui Playbook + Fix Loop)
+    binding: OBRIGATÓRIO
+
+  - doc: CODE_RULES.md
+    path: docs/_canon/02_CODE_RULES.md
+    when: Antes de escrever ou revisar código
+    binding: OBRIGATÓRIO
+
+  - doc: CODEMAP.md
+    path: docs/_canon/03_CODEMAP.md
+    when: Navegação de módulos/arquivos do backend
+    binding: RECOMENDADO
+
+  - doc: GIT_PR_MERGE_WORKFLOW.md
+    path: docs/_canon/10_GIT_PR_MERGE_WORKFLOW.md
+    when: Commits, PRs, merges, branches
+    binding: OBRIGATÓRIO
+
+# ---------------------------------------------------------------------------
+# MACHINE-READABLE REGISTRIES — YAML/JSON consumíveis por agente
+# ---------------------------------------------------------------------------
+machine_readable:
+  - doc: Exit Codes Registry (SSOT)
+    path: docs/_ai/_specs/exit_codes_registry.yaml
+    schema: docs/_ai/_schemas/exit_codes_registry.schema.json
+    description: Registro completo de exit codes, emitters, troubleshooting steps
+    when: Mapear exit code para emitter/ação
+
+  - doc: Approved Commands Registry (SSOT)
+    path: docs/_ai/_specs/approved_commands_registry.yaml
+    schema: docs/_ai/_schemas/approved_commands_registry.schema.json
+    description: Whitelist/blacklist de comandos, parâmetros, risk levels
+    when: Verificar se comando é permitido antes de executar
+
+  - doc: Exit Code Playbook
+    path: docs/_canon/_machine/exit_code_playbook.yaml
+    description: Mapa exit code → ação corretiva (fix loop do agente)
+    when: Qualquer exit code ≠ 0 — consultar antes de tentar fix
+
+  - doc: Scripts Policy
+    path: scripts/_policy/scripts.policy.yaml
+    description: Classificação de scripts por categoria, exit codes padrão
+    when: Validar conformidade de script com política
+
+  - doc: PATHS_SSOT
+    path: docs/_canon/PATHS_SSOT.yaml
+    description: Mapeamento de paths canônicos no repositório
+    when: Resolver path de artefato/script
+
+# ---------------------------------------------------------------------------
+# STOP CONDITIONS — Quando o agente DEVE parar
+# ---------------------------------------------------------------------------
+stop_conditions:
+  - condition: SSOT artefact missing or stale
+    check: Test-Path docs/_generated/schema.sql, openapi.json, alembic_state.txt, manifest.json
+    action: STOP. Executar inv.ps1 refresh (repo root) antes de continuar
+    severity: BLOCKER
+  
+  - condition: Command not in approved list
+    check: Verificar comando em docs/_canon/08_APPROVED_COMMANDS.md
+    action: STOP. Pedir autorização explícita do usuário antes de executar
+    severity: BLOCKER
+  
+  - condition: Exit code ≠ 0
+    check: Capturar $LASTEXITCODE imediatamente após comando
+    action: >-
+      STOP. Consultar docs/_canon/09_TROUBLESHOOTING_GUARD_PARITY.md (Playbook).
+      Máximo 3 iterações fix → rerun. Se não convergir: escalar.
+    severity: BLOCKER
+  
+  - condition: Working tree dirty before gate
+    check: git status --porcelain (deve retornar vazio)
+    action: STOP. Reportar arquivos uncommitted, não limpar automaticamente
+    severity: BLOCKER
+
+# ---------------------------------------------------------------------------
+# REPO STRUCTURE — Árvore de diretórios de referência
+# ---------------------------------------------------------------------------
+repo_structure:
+  root: "C:\\HB TRACK"
+  layout:
+    docs/:
+      _canon/:
+        description: "Documentação canônica (SSOT humana). Autoridade máxima."
+        key_files:
+          - AI_KERNEL.md
+          - 01_AUTHORITY_SSOT.md
+          - 02_CODE_RULES.md
+          - 03_CODEMAP.md
+          - 05_MODELS_PIPELINE.md
+          - 08_APPROVED_COMMANDS.md
+          - 09_TROUBLESHOOTING_GUARD_PARITY.md
+          - 10_GIT_PR_MERGE_WORKFLOW.md
+          - PATHS_SSOT.yaml
+        subdirs:
+          _agent/: "Regras de agente (role matrix, drift, incident response)"
+          _machine/: "YAML/JSON machine-readable (playbooks consumíveis por agente)"
+          _schemas/: "JSON Schemas canônicas"
+          _prompts/: "Prompts canônicos para agente"
+          _arch_requests/: "ARCH_REQUESTs pendentes/aprovadas"
+      _ai/:
+        description: "Guidelines operacionais para agente AI"
+        subdirs:
+          _specs/: "YAML registries (exit_codes, approved_commands)"
+          _schemas/: "JSON Schemas para validação dos specs"
+          _context/: "Contexto operacional do agente"
+          _checklists/: "Checklists de validação"
+          _guardrails/: "Guardrails de política"
+          _maps/: "Mapas de troubleshooting (JSON)"
+      _generated/:
+        description: "Artefatos gerados (schema.sql, openapi.json, etc.) — NÃO editar manualmente"
+        key_files:
+          - schema.sql
+          - openapi.json
+          - alembic_state.txt
+          - manifest.json
+          - parity_report.json
+      ADR/:
+        description: "Architecture Decision Records"
+      execution_tasks/:
+        description: "EXEC_TASK files (tarefas executáveis com gates)"
+      references/:
+        description: "Documentação de referência (exit_codes.md, etc.)"
+
+    scripts/:
+      description: "Scripts organizados por categoria (repo root)"
+      subdirs:
+        ops/:
+          description: "Operacionais (inv, batch, parity_scan)"
+          key_files:
+            - ops_inv.ps1
+          subdirs:
+            infra/: "Gates e batch (autogen_gate, parity_gate, models_batch)"
+            db/: "Operações DB (parity_scan)"
+        checks/:
+          description: "Validações read-only"
+          subdirs:
+            db/: "Guard checks (check_agent_guard.py)"
+            models/: "Requirements checks (check_models_requirements.py)"
+        generate/:
+          description: "Geradores (SSOT, sync, docs)"
+          subdirs:
+            docs/: "gen_docs_soot.py, gen_sync_exit_codes.py"
+        run/:
+          description: "Runners (gate runners, test runners)"
+        fixes/:
+          description: "Scripts de correção"
+        diagnostics/:
+          description: "Scripts de diagnóstico"
+        migrate/:
+          description: "Scripts de migração"
+        seeds/:
+          description: "Seed data scripts"
+        _policy/:
+          description: "Política de scripts (scripts.policy.yaml)"
+
+    "Hb Track - Backend/":
+      description: "Backend FastAPI (Python 3.11+)"
+      key_dirs:
+        app/:
+          models/: "SQLAlchemy models (SSOT derivado de schema.sql)"
+          routes/: "FastAPI routers"
+          services/: "Business logic"
+          tasks/: "Celery tasks"
+        db/: "Alembic migrations"
+        tests/: "Pytest test suite"
+        docs/_generated/: "Artefatos gerados (symlink/mirror de docs/_generated/)"
+        venv/: "Python virtual environment"
+
+    "Hb Track - Fronted/":
+      description: "Frontend Next.js (TypeScript)"
+      key_dirs:
+        src/: "Source code (pages, components, hooks)"
+        tests/: "Test suite"
+        lib/: "Shared libraries"
+        store/: "State management"
+
+    infra/:
+      description: "Docker Compose e infra"
+
+    ".github/":
+      description: "GitHub config + agent instructions"
+      subdirs:
+        instructions/: "Instruction files para agentes (context-dependent)"
+---

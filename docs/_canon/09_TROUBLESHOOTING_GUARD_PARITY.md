@@ -5,7 +5,7 @@
 | ID | CANON-TROUBLESHOOTING-GUARD-PARITY-009 |
 | Status | CANÔNICO |
 | Última verificação | 2026-02-10 (America/Sao_Paulo) |
-| Porta de entrada | docs/_canon/00_START_HERE.md |
+| Porta de entrada | docs/_INDEX.yaml |
 | Depende de | docs/_canon/05_MODELS_PIPELINE.md, docs/_canon/08_APPROVED_COMMANDS.md, docs/references/exit_codes.md |
 | Objetivo | Diagnosticar e resolver problemas comuns de guard/parity/requirements |
 
@@ -788,6 +788,256 @@ Se problema persiste após seguir todos os diagnósticos:
 
 ---
 
-**Última atualização:** 2026-02-10
+---
+
+## Exit Codes e Ações Corretivas (Playbook)
+
+> **Versão machine-readable:** `docs/_canon/_machine/exit_code_playbook.yaml`
+> **Registro completo de emitters:** `docs/_ai/_specs/exit_codes_registry.yaml`
+
+Matriz prática: **exit code → causa provável → ação permitida → comando canônico → artefatos**.
+Alinhada com o fluxo DB-first (SSOT = `schema.sql`) e com a regra "gate é juiz; agente só corrige até passar".
+
+### Códigos do Pipeline Models (0–5)
+
+#### Exit 0 — OK / PASS
+
+| Campo | Valor |
+|---|---|
+| **Causa** | Operação concluída sem violations |
+| **Ação** | Encerrar. Publicar artefatos (reports/logs). NÃO mexer em baseline |
+| **Comando** | (nenhum — pipeline encerrado) |
+| **Artefatos** | `parity_report.json`, `requirements_report` (se gerados) |
+
+---
+
+#### Exit 1 — INFRA / EXECUÇÃO INVÁLIDA
+
+| Campo | Valor |
+|---|---|
+| **Causa** | Ambiente, dependências, comando, paths, crash interno |
+| **Ação** | (a) Validar env (`.venv`, variáveis, DB/Redis). (b) Rerun UMA vez. (c) Se repetir, gerar diagnóstico mínimo (logs + versão ferramentas) e PARAR |
+| **Comando validação** | `Test-Path "venv\Scripts\python.exe"` / `.\venv\Scripts\python.exe -m pip list \| Select-String "sqlalchemy\|alembic"` |
+| **Regra** | NÃO "chutar" correções no código. Parar e escalar |
+| **Artefatos** | Stack trace completo, `$PSVersionTable`, `python --version` |
+
+---
+
+#### Exit 2 — PARITY_ISSUE (Model ↔ DB diff estrutural)
+
+| Campo | Valor |
+|---|---|
+| **Causa** | Estrutura do model SQLAlchemy difere do schema PostgreSQL |
+| **Ação** | (a) Rodar autogen do(s) model(s) a partir de `schema.sql` (escopo mínimo: só tabelas que falharam). (b) Rodar normalizações permitidas (imports, TYPE_CHECKING, ordering, naming). (c) Reexecutar parity gate |
+| **Comando fix** | `powershell -NoProfile -ExecutionPolicy Bypass -File scripts\ops\infra\ops_models_autogen_gate.ps1 -Table <name> -Profile strict` |
+| **Comando validação** | `powershell -NoProfile -ExecutionPolicy Bypass -File scripts\ops\infra\ops_parity_gate.ps1 -Table <name>` |
+| **Regra** | **NÃO editar schema.sql para "fazer bater"** (DB vence). Se persistir: abrir relatório de diff e corrigir gerador/normalizador, não o schema |
+| **Artefatos** | `parity_report.json`, `git diff app/models/<table>.py` |
+
+---
+
+#### Exit 3 — GUARD_VIOLATION (violação de guardrail/política)
+
+| Campo | Valor |
+|---|---|
+| **Causa** | Arquivo protegido modificado sem estar na allowlist. Baseline diverge |
+| **Ação** | (a) Localizar regra violada no relatório. (b) Ajustar código para satisfazer a política. (c) Reexecutar |
+| **Comando fix** | `git restore -- <arquivo_não_autorizado>` OU rerun com `-Allow "<path>"` |
+| **Comando validação** | `python scripts\checks\db\check_agent_guard.py check --root . --baseline ".hb_guard\baseline.json"` |
+| **Regra** | **Baseline snapshot MUST NOT acontecer por padrão.** Só atualizar com flag explícita (`-AllowBaselineSnapshot`) + registro de evidência (motivo + diff + commit) |
+| **Artefatos** | Output do guard check, `git status --porcelain` |
+
+---
+
+#### Exit 4 — REQUIREMENTS_VIOLATION (regras/invariantes de requirements)
+
+| Campo | Valor |
+|---|---|
+| **Causa** | Model viola expectativas estruturais de `schema.sql` (server_default, tipos, nullable, colunas extras/faltando) |
+| **Ação** | (a) Abrir `requirements_report` (output ou JSON). (b) Aplicar correção mínima no nível correto (service/model/constraint). (c) Rerun requirements + gate |
+| **Comando fix** | `powershell -NoProfile -ExecutionPolicy Bypass -File scripts\ops\infra\ops_models_autogen_gate.ps1 -Table <name> -Profile strict` |
+| **Comando validação** | `python scripts\checks\models\check_models_requirements.py --table <name> --profile strict` |
+| **Regra** | Se a violação for causada por drift estrutural, voltar para EC 2 (parity) ou EC 5 (schema drift). **Não maquiar requirements** |
+| **Artefatos** | Output do requirements, `git diff app/models/<table>.py` |
+
+---
+
+#### Exit 5 — SCHEMA_DRIFT (migrations aplicadas ≠ schema.sql / estado do banco)
+
+| Campo | Valor |
+|---|---|
+| **Causa** | Migrations aplicadas não correspondem ao `schema.sql` versionado ou ao estado real do banco |
+| **Ação** | (a) Aplicar migrations até head (ou reset controlado). (b) Regenerar `schema.sql` via comando canônico. (c) Commit do schema atualizado. (d) Rerun pipeline (parity + requirements) |
+| **Comando fix** | `.\venv\Scripts\python.exe -m alembic upgrade head` → `powershell -NoProfile -ExecutionPolicy Bypass -File "C:\HB TRACK\scripts\inv.ps1" refresh` |
+| **Comando validação** | `.\venv\Scripts\python.exe -m alembic current` + parity gate |
+| **Regra** | Mudanças estruturais **MUST** entrar como migration; `schema.sql` é derivado |
+| **Artefatos** | `alembic_state.txt`, `schema.sql` (diff), `parity_report.json` |
+
+---
+
+### Códigos Horizontais (Quality Gates — 10–20)
+
+#### Exit 10 — LINT_FAIL (Ruff)
+
+| Campo | Valor |
+|---|---|
+| **Causa** | Violações de lint (Ruff rules) |
+| **Ação** | (a) `ruff check --fix` (escopo: arquivos alterados). (b) Rerun `ruff check` |
+| **Regra** | Se fix automático piorar legibilidade/arquitetura, desabilitar rule pontual com justificativa local (inline `# noqa`) em vez de reformatar tudo |
+
+#### Exit 11 — FORMAT_FAIL (Black)
+
+| Campo | Valor |
+|---|---|
+| **Causa** | Código fora do padrão de formatação |
+| **Ação** | (a) `black` no escopo do PR. (b) Rerun `black --check` |
+| **Regra** | Formatação é mecânica; agente não deve discutir |
+
+#### Exit 12 — TYPECHECK_FAIL (MyPy)
+
+| Campo | Valor |
+|---|---|
+| **Causa** | Erro de tipos/annotations/imports |
+| **Ação** | (a) Corrigir tipos/annotations/imports. (b) Preferir ajustes locais e Protocols. (c) Rerun `mypy` |
+| **Regra** | Evitar `Any` indiscriminado; se precisar, isolar e justificar |
+
+#### Exit 13 — SECURITY_FAIL (Bandit ou equivalente)
+
+| Campo | Valor |
+|---|---|
+| **Causa** | Finding de segurança (parametrização, validação, secrets, hashing) |
+| **Ação** | (a) Corrigir finding. (b) Rerun scanner |
+| **Regra** | Silenciar finding SOMENTE com justificativa e se for falso positivo confirmado |
+
+#### Exit 14 — COMPLEXITY_FAIL (Radon / CC > limite)
+
+| Campo | Valor |
+|---|---|
+| **Causa** | Complexidade ciclomática acima do threshold |
+| **Ação** | (a) Refatorar para reduzir caminhos (guard clauses, Strategy/Command, extração de funções). (b) Rerun radon |
+| **Regra** | NÃO aumentar limite para "passar"; meta é manter orçamento de complexidade |
+
+#### Exit 15 — TEST_FAIL (Pytest)
+
+| Campo | Valor |
+|---|---|
+| **Causa** | Testes falhando |
+| **Ação** | (a) Rodar só testes falhos com output detalhado (`pytest <path> -x -vv`). (b) Corrigir bug ou teste (o que estiver errado). (c) Rerun suite do escopo |
+| **Regra** | Se bug é de drift estrutural, voltar para EC 2/5 — não remendar teste para "acompanhar bug" |
+
+#### Exit 16 — COVERAGE_FAIL (abaixo do piso)
+
+| Campo | Valor |
+|---|---|
+| **Causa** | Cobertura abaixo do threshold mínimo |
+| **Ação** | (a) Adicionar testes unitários nos pontos tocados. (b) Priorizar regras de negócio. (c) Rerun coverage |
+| **Regra** | NÃO omitir arquivo para ganhar cobertura, exceto itens genuinamente gerados/infra com regra explícita |
+
+#### Exit 20 — CONTRACT_DRIFT (OpenAPI/contrato fora do esperado)
+
+| Campo | Valor |
+|---|---|
+| **Causa** | Contrato OpenAPI difere do esperado (handlers/schemas) |
+| **Ação** | (a) Regenerar OpenAPI a partir do app ou ajustar handlers/schemas. (b) Rerun testes de contrato. (c) Garantir compatibilidade com DB-first (DB continua vencendo) |
+| **Regra** | Contrato é derivado do app; app é derivado do DB. Cadeia: `DB → Model → Service → Router → OpenAPI` |
+
+---
+
+## Convenção Operacional do Agente (Fix Loop)
+
+> **Machine-readable:** `docs/_canon/_machine/exit_code_playbook.yaml` → campo `fix_loop`
+
+### Regra Central
+
+Para **qualquer exit code ≠ 0**, o agente executa no máximo **3 iterações** do ciclo:
+
+```
+fix → rerun gate → check exit code
+```
+
+### Fluxo
+
+```
+┌─────────────────────────────────┐
+│  Executar gate/check            │
+│  Capturar $LASTEXITCODE         │
+└──────────┬──────────────────────┘
+           │
+     ┌─────▼─────┐
+     │ EC == 0 ?  │──yes──▶ DONE (publicar artefatos, não mexer baseline)
+     └─────┬──────┘
+           │ no
+     ┌─────▼──────────────┐
+     │ iteração > 3 ?     │──yes──▶ STOP (não convergiu — escalar)
+     └─────┬──────────────┘
+           │ no
+     ┌─────▼──────────────────────────────────────────────┐
+     │ Consultar Playbook (seção EC correspondente)       │
+     │ Aplicar ação corretiva MÍNIMA                      │
+     │ Registrar: arquivo tocado, diff, exit code prévio  │
+     └─────┬──────────────────────────────────────────────┘
+           │
+           └──────▶ (voltar ao topo: rerun gate)
+```
+
+### Condições de Parada
+
+| Condição | Ação |
+|---|---|
+| Exit code 0 | Encerrar com sucesso |
+| 3 iterações sem convergir | STOP. Devolver evidências e escalar |
+| Exit code 1 (crash/infra) | STOP imediato. Não iterar (sem fix possível via código) |
+| Fix geraria efeito fora do escopo | STOP. Reportar escopo expandido e pedir autorização |
+
+### Evidências Obrigatórias ao Parar (STOP)
+
+Ao parar (convergência ou não), o agente MUST devolver:
+
+1. **Exit code** final (`$LASTEXITCODE`)
+2. **Arquivos tocados** (`git status --porcelain`)
+3. **Diff summary** (`git diff --stat`)
+4. **Relatórios gerados** (parity_report.json, requirements output, logs)
+5. **Hipótese de causa** (1–2 frases)
+6. **Número de iterações** executadas
+
+### Política de Baseline
+
+- Snapshot baseline MUST NOT acontecer automaticamente
+- Requer flag explícita (`-AllowBaselineSnapshot`) + autorização do usuário
+- Registro obrigatório: motivo + diff + commit hash
+- Baseline NUNCA é versionado (`.hb_guard/baseline.json` está em `.gitignore`)
+
+---
+
+## Referências Cruzadas
+
+### Documentos
+
+| Documento | Path | Uso |
+|-----------|------|-----|
+| **Exit Codes Registry (SSOT)** | `docs/_ai/_specs/exit_codes_registry.yaml` | Registro completo de exit codes + emitters |
+| **Playbook Machine-Readable** | `docs/_canon/_machine/exit_code_playbook.yaml` | Versão YAML do playbook (agente consome) |
+| **Exit Codes (Referência MD)** | `docs/references/exit_codes.md` | Detalhe de cada exit code com exemplos |
+| **Comandos Aprovados (SSOT)** | `docs/_ai/_specs/approved_commands_registry.yaml` | Whitelist/blacklist de comandos |
+| **Comandos Aprovados (MD)** | `docs/_canon/08_APPROVED_COMMANDS.md` | Referência humana de comandos |
+| **Agent Prompts** | `docs/_ai/06_AGENT-PROMPTS.md` | Prompts prontos para corrigir problemas |
+| **ADR Models** | `docs/ADR/013-ADR-MODELS.md` | Arquitetura do gate (3 camadas) |
+| **Pipeline Models** | `docs/_canon/05_MODELS_PIPELINE.md` | Fluxo canônico SSOT → Requirements → Gate |
+
+### Scripts
+
+| Script | Path | Propósito |
+|--------|------|-----------|
+| **models_autogen_gate** | `scripts/ops/infra/ops_models_autogen_gate.ps1` | Orquestrador (guard → parity → requirements) |
+| **parity_gate** | `scripts/ops/infra/ops_parity_gate.ps1` | Guard + parity scan |
+| **parity_scan** | `scripts/ops/db/ops_parity_scan.ps1` | Apenas alembic compare (read-only) |
+| **model_requirements** | `scripts/checks/models/check_models_requirements.py` | Parser DDL + AST (validação estática) |
+| **agent_guard** | `scripts/checks/db/check_agent_guard.py` | Baseline snapshot/check |
+| **models_batch** | `scripts/ops/infra/ops_models_batch.ps1` | Batch runner (scan/fix em lote) |
+| **inv (refresh)** | `scripts/ops/ops_inv.ps1` | Wrapper SSOT refresh (schema.sql, openapi.json, etc.) |
+
+---
+
+**Última atualização:** 2026-02-15
 **Responsável:** Tech Lead + AI Assistant
-**Versão:** 1.0 (reescrita do zero — separado de Agent Prompts)
+**Versão:** 2.0 (adicionado Playbook exit codes + Fix Loop convention)

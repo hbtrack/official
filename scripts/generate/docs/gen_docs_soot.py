@@ -46,7 +46,18 @@ from dotenv import load_dotenv
 # =============================================================================
 
 # Load .env from backend root
-BACKEND_ROOT = Path(__file__).resolve().parent.parent
+# Script lives at scripts/generate/docs/gen_docs_soot.py → 4 levels up = repo root
+#   .parent    = scripts/generate/docs/
+#   .parent(2) = scripts/generate/
+#   .parent(3) = scripts/
+#   .parent(4) = C:\HB TRACK  (repo root)
+REPO_ROOT = Path(__file__).resolve().parents[3]
+BACKEND_ROOT = REPO_ROOT / "Hb Track - Backend"
+
+if not BACKEND_ROOT.is_dir():
+    print(f"[FATAL] Backend dir not found: {BACKEND_ROOT}", file=sys.stderr)
+    sys.exit(1)
+
 env_path = BACKEND_ROOT / '.env'
 load_dotenv(dotenv_path=env_path)
 
@@ -55,7 +66,7 @@ load_dotenv(dotenv_path=env_path)
 GENERATED_DIR_NAME = os.getenv("HB_DOCS_GENERATED_DIR", "_generated")
 OUTPUT_DIR = BACKEND_ROOT / "docs" / GENERATED_DIR_NAME
 # Secondary output: repo-level docs/_generated
-REPO_OUTPUT_DIR = BACKEND_ROOT.parent / "docs" / GENERATED_DIR_NAME
+REPO_OUTPUT_DIR = REPO_ROOT / "docs" / GENERATED_DIR_NAME
 
 
 # =============================================================================
