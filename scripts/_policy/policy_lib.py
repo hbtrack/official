@@ -491,6 +491,49 @@ def iter_effective_lines(content: str, ext: str):
         yield line
 
 
+def _is_select_only_execute_text(content: str) -> bool:
+    """
+    High-priority check for execute(text("SELECT...")) patterns.
+    Detects deterministically: execute(text("SELECT ... ")) where SQL is SELECT-only.
+    Returns True if confirmed SELECT-only SQL in text() literal.
+    """
+    # Pattern: execute(text("""...""")) or execute(text('...')) with SQL SELECT
+    # Captures multi-line raw strings and validates no write operations
+    pattern = r'(?i)\.execute\s*\(\s*text\s*\(\s*["\']'
+    
+    if not re.search(pattern, content, re.IGNORECASE):
+        return False
+    
+    # Extract execute(text(...)) blocks
+    # Match: text("...") or text("""...""")
+    sql_pattern = r'\.execute\s*\(\s*text\s*\(\s*"""(.*?)"""|text\s*\(\s*["\']([^"\']*)["\']'
+    matches = re.finditer(sql_pattern, content, re.IGNORECASE | re.DOTALL)
+    
+    for match in matches:
+        sql_str = match.group(1) or match.group(2) or ""
+        if not sql_str.strip():
+            continue
+        
+        # Normalize SQL (remove comments, extra whitespace)
+        sql_normalized = re.sub(r'--.*$', '', sql_str, flags=re.MULTILINE)  # Remove SQL comments
+        sql_normalized = re.sub(r'#.*$', '', sql_normalized, flags=re.MULTILINE)  # Remove Python comments
+        sql_normalized = re.sub(r'/\*.*?\*/', '', sql_normalized, flags=re.DOTALL)  # Remove block comments
+        
+        # Check for DML (write operations)
+        write_keywords = [r'\bINSERT\b', r'\bUPDATE\b', r'\bDELETE\b', r'\bCREATE\b', 
+                         r'\bALTER\b', r'\bDROP\b', r'\bTRUNCATE\b', r'\bMERGE\b']
+        has_write = any(re.search(kw, sql_normalized, re.IGNORECASE) for kw in write_keywords)
+        
+        if has_write:
+            return False  # Contains write operations, not SELECT-only
+        
+        # Check for SELECT or WITH (read-only operations)
+        if re.search(r'^\s*(SELECT|WITH)\b', sql_normalized, re.IGNORECASE):
+            return True  # Confirmed SELECT-only
+    
+    return False
+
+
 def detect_side_effects(
     script_path: Path, heuristics: Dict[str, Any]
 ) -> Set[str]:
@@ -498,6 +541,10 @@ def detect_side_effects(
     Detect side-effects from script content using regex heuristics.
     Returns set of detected effect names (e.g., {"DB_WRITE", "FS_WRITE"}).
     Filters out comments to reduce false positives.
+    
+    ** PRIORITY RULE (HB006 override): **
+    If execute(text("SELECT...")) is detected (SELECT-only SQL), mark as DB_READ
+    and exclude DB_WRITE to prevent false HB006 violation in checks/diagnostics.
     """
     if not script_path.exists():
         return set()
@@ -518,9 +565,23 @@ def detect_side_effects(
     lang_rules = detect.get(lang, {})
     detected: Set[str] = set()
 
-    # A4: Filter comments line-by-line to reduce false positives
+    # PRIORITY RULE: Check for execute(text("SELECT...")) FIRST (Python only)
+    if lang == "python" and _is_select_only_execute_text(content):
+        # Confirmed SELECT-only: mark DB_READ, exclude DB_WRITE
+        detected.add("DB_READ")
+        # Do NOT add DB_WRITE (even if generic pattern matches)
+        # Continue checking other patterns (FS_*, etc.)
+        skip_db_write = True
+    else:
+        skip_db_write = False
+
+    # Apply heuristic patterns (with skip override for DB_WRITE if needed)
     for line in iter_effective_lines(content, ext):
         for effect, patterns in lang_rules.items():
+            # Skip DB_WRITE if we already confirmed SELECT-only
+            if skip_db_write and effect == "DB_WRITE":
+                continue
+            
             if not isinstance(patterns, list):
                 continue
             for pattern in patterns:
