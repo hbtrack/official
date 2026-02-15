@@ -1,7 +1,15 @@
 #!/usr/bin/env python3
+#
+# HB Track — gen_scripts_policy_md.py (WRAPPER FOR COMPATIBILITY)
+#
+# HB_SCRIPT_KIND: generate
+# HB_SCRIPT_SCOPE: docs
+# HB_SCRIPT_SIDE_EFFECTS: filesystem_write,process_spawn
+# HB_SCRIPT_IDEMPOTENT: true
+# HB_SCRIPT_ENTRYPOINT: main()
+# HB_SCRIPT_OUTPUTS: docs/_canon/_agent/SCRIPTS_classification.md
+#
 """
-HB Track — gen_scripts_policy_md.py (WRAPPER FOR COMPATIBILITY)
-
 DEPRECATED: This file is now a compatibility wrapper.
 The canonical generator is scripts/_policy/render_policy_md.py
 
