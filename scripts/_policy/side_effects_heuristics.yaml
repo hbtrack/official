@@ -76,11 +76,15 @@ detect:
       # Alembic upgrade/downgrade calls
       - "(?i)\\balembic\\b.*\\bupgrade\\b"
       - "(?i)\\balembic\\b.*\\bdowngrade\\b"
+      # NOTE: execute(text("SELECT...")) is handled by PRIORITY RULE in policy_lib.py:
+      #   _is_select_only_execute_text() → confirmed SELECT-only → categorized as DB_READ,
+      #   suppresses this DB_WRITE match to prevent false HB006 in checks/diagnostics.
 
     DB_READ:
       # Read-only SQLAlchemy patterns (lower confidence; do not FAIL alone)
       - "(?i)\\b(session|db)\\.query\\b"
       - "(?i)\\b(session|db)\\.execute\\b\\s*\\("
+      # NOTE: see DB_WRITE note above for execute() priority handling
 
     FS_WRITE:
       # Writes/edits files

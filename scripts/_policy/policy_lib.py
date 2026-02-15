@@ -112,6 +112,12 @@ VALID_EFFECTS = [
 
 VALID_EXTS_DEFAULT = [".py", ".ps1", ".sql"]
 
+# Canonical prefixes for script-candidate detection
+CANON_PREFIXES = ("check_", "diag_", "fix_", "gen_", "mig_", "ops_", "reset_", "seed_", "run_", "tmp_")
+
+# Excepted files (not subject to header validation)
+EXCEPT_FILES = {"README.md", ".gitignore", "__init__.py"}
+
 # Required headers per script
 REQUIRED_HEADERS = [
     "HB_SCRIPT_KIND",
@@ -219,6 +225,17 @@ def require_list_of_str(d: Dict[str, Any], key: str) -> List[str]:
     if not isinstance(v, list) or not all(isinstance(i, str) for i in v):
         raise ValueError(f"Missing/invalid required list[str] field: {key}")
     return [i.strip() for i in v]
+
+
+def norm_path(p: str) -> str:
+    """
+    Normalize path to POSIX format (/) for deterministic comparison.
+    Removes './' prefix if present.
+    """
+    p = p.replace("\\", "/")
+    while p.startswith("./"):
+        p = p[2:]
+    return p
 
 
 def compute_file_hash(path: Path) -> str:
@@ -424,12 +441,110 @@ def load_heuristics(heuristics_path: Path) -> Dict[str, Any]:
     return load_yaml(heuristics_path)
 
 
+def is_comment_line(line: str, ext: str) -> bool:
+    """
+    Detect if line is a comment (simple, doesn't parse full language).
+    Reduces false positives from examples in comments/docstrings.
+    """
+    stripped = line.strip()
+    if not stripped:
+        return True  # Empty lines don't match patterns anyway
+    
+    if ext in [".ps1", ".py"]:
+        return stripped.startswith("#")
+    elif ext == ".sql":
+        # Single-line comment
+        if stripped.startswith("--"):
+            return True
+    return False
+
+
+def iter_effective_lines(content: str, ext: str):
+    """
+    Yield non-comment lines for pattern matching.
+    Filters out comments to reduce false positives.
+    """
+    in_sql_block = False
+    for line in content.splitlines():
+        s = line.strip()
+        if not s:
+            continue
+
+        if ext == ".sql":
+            # Block comments /* ... */
+            if in_sql_block:
+                if "*/" in s:
+                    in_sql_block = False
+                continue
+            if s.startswith("/*"):
+                if "*/" not in s:
+                    in_sql_block = True
+                continue
+            if s.startswith("--"):
+                continue
+            yield line
+            continue
+
+        # .py and .ps1
+        if s.startswith("#"):
+            continue
+        yield line
+
+
+def _is_select_only_execute_text(content: str) -> bool:
+    """
+    High-priority check for execute(text("SELECT...")) patterns.
+    Detects deterministically: execute(text("SELECT ... ")) where SQL is SELECT-only.
+    Returns True if confirmed SELECT-only SQL in text() literal.
+    """
+    # Pattern: execute(text("""...""")) or execute(text('...')) with SQL SELECT
+    # Captures multi-line raw strings and validates no write operations
+    pattern = r'(?i)\.execute\s*\(\s*text\s*\(\s*["\']'
+    
+    if not re.search(pattern, content, re.IGNORECASE):
+        return False
+    
+    # Extract execute(text(...)) blocks
+    # Match: text("...") or text("""...""")
+    sql_pattern = r'\.execute\s*\(\s*text\s*\(\s*"""(.*?)"""|text\s*\(\s*["\']([^"\']*)["\']'
+    matches = re.finditer(sql_pattern, content, re.IGNORECASE | re.DOTALL)
+    
+    for match in matches:
+        sql_str = match.group(1) or match.group(2) or ""
+        if not sql_str.strip():
+            continue
+        
+        # Normalize SQL (remove comments, extra whitespace)
+        sql_normalized = re.sub(r'--.*$', '', sql_str, flags=re.MULTILINE)  # Remove SQL comments
+        sql_normalized = re.sub(r'#.*$', '', sql_normalized, flags=re.MULTILINE)  # Remove Python comments
+        sql_normalized = re.sub(r'/\*.*?\*/', '', sql_normalized, flags=re.DOTALL)  # Remove block comments
+        
+        # Check for DML (write operations)
+        write_keywords = [r'\bINSERT\b', r'\bUPDATE\b', r'\bDELETE\b', r'\bCREATE\b', 
+                         r'\bALTER\b', r'\bDROP\b', r'\bTRUNCATE\b', r'\bMERGE\b']
+        has_write = any(re.search(kw, sql_normalized, re.IGNORECASE) for kw in write_keywords)
+        
+        if has_write:
+            return False  # Contains write operations, not SELECT-only
+        
+        # Check for SELECT or WITH (read-only operations)
+        if re.search(r'^\s*(SELECT|WITH)\b', sql_normalized, re.IGNORECASE):
+            return True  # Confirmed SELECT-only
+    
+    return False
+
+
 def detect_side_effects(
     script_path: Path, heuristics: Dict[str, Any]
 ) -> Set[str]:
     """
     Detect side-effects from script content using regex heuristics.
     Returns set of detected effect names (e.g., {"DB_WRITE", "FS_WRITE"}).
+    Filters out comments to reduce false positives.
+    
+    ** PRIORITY RULE (HB006 override): **
+    If execute(text("SELECT...")) is detected (SELECT-only SQL), mark as DB_READ
+    and exclude DB_WRITE to prevent false HB006 violation in checks/diagnostics.
     """
     if not script_path.exists():
         return set()
@@ -450,17 +565,33 @@ def detect_side_effects(
     lang_rules = detect.get(lang, {})
     detected: Set[str] = set()
 
-    for effect, patterns in lang_rules.items():
-        if not isinstance(patterns, list):
-            continue
-        for pattern in patterns:
-            if isinstance(pattern, str):
-                try:
-                    if re.search(pattern, content, re.IGNORECASE):
-                        detected.add(effect)
-                        break  # One match per effect is enough
-                except Exception:
-                    pass  # Skip invalid regex
+    # PRIORITY RULE: Check for execute(text("SELECT...")) FIRST (Python only)
+    if lang == "python" and _is_select_only_execute_text(content):
+        # Confirmed SELECT-only: mark DB_READ, exclude DB_WRITE
+        detected.add("DB_READ")
+        # Do NOT add DB_WRITE (even if generic pattern matches)
+        # Continue checking other patterns (FS_*, etc.)
+        skip_db_write = True
+    else:
+        skip_db_write = False
+
+    # Apply heuristic patterns (with skip override for DB_WRITE if needed)
+    for line in iter_effective_lines(content, ext):
+        for effect, patterns in lang_rules.items():
+            # Skip DB_WRITE if we already confirmed SELECT-only
+            if skip_db_write and effect == "DB_WRITE":
+                continue
+            
+            if not isinstance(patterns, list):
+                continue
+            for pattern in patterns:
+                if isinstance(pattern, str):
+                    try:
+                        if re.search(pattern, line, re.IGNORECASE):
+                            detected.add(effect)
+                            break  # One match per effect is enough
+                    except Exception:
+                        pass  # Skip invalid regex
 
     return detected
 
@@ -468,6 +599,30 @@ def detect_side_effects(
 # ----------------------------
 # Policy validation (scripts against policy)
 # ----------------------------
+def has_script_header(script_path: Path) -> bool:
+    """
+    Check if script has HB_SCRIPT_KIND header in first 50 lines.
+    Used for R1.3 (POLICY-E_UNTAGGED_SCRIPT) validation.
+    """
+    try:
+        content = script_path.read_text(encoding="utf-8", errors="ignore")
+        for line in content.splitlines()[:50]:
+            if "HB_SCRIPT_KIND" in line:
+                return True
+        return False
+    except Exception:
+        return False
+
+
+def is_script_candidate(filename: str, script_path: Path) -> bool:
+    """
+    Determine if file is a script-candidate (has canonical prefix OR header).
+    """
+    if filename.startswith(CANON_PREFIXES):
+        return True
+    return has_script_header(script_path)
+
+
 def validate_scripts(
     repo_root: Path,
     policy: Dict[str, Any],
@@ -484,17 +639,23 @@ def validate_scripts(
     if not scripts_dir.exists():
         return violations
 
-    # Get tracked files using git ls-files (deterministic, respects .gitignore)
+    # A1: Get tracked files using git ls-files -z (deterministic, portable)
     try:
         result = subprocess.run(
-            ["git", "ls-files", "scripts/"],
+            ["git", "ls-files", "-z", "--", "scripts"],
             cwd=repo_root,
             capture_output=True,
-            text=True,
+            text=False,  # Binary for NUL-separated output
             check=False,
         )
         if result.returncode == 0:
-            tracked = [repo_root / line.strip() for line in result.stdout.splitlines() if line.strip()]
+            # Split by NUL, decode UTF-8, filter empty
+            paths_raw = result.stdout.decode("utf-8", errors="replace").split("\0")
+            tracked = [
+                repo_root / norm_path(p.strip())
+                for p in paths_raw
+                if p.strip()
+            ]
         else:
             # Fallback: scan filesystem (less reliable)
             tracked = list(scripts_dir.rglob("*"))
@@ -508,7 +669,8 @@ def validate_scripts(
     ]
 
     for script_path in script_files:
-        rel_path = script_path.relative_to(repo_root).as_posix()
+        # A2: Normalize path completely
+        rel_path = norm_path(str(script_path.relative_to(repo_root)))
 
         # Rule HB001: Must be under scripts/
         if not rel_path.startswith("scripts/"):
@@ -536,6 +698,18 @@ def validate_scripts(
         if category in ["_policy", "_lib"]:
             continue
 
+        # R1.3: POLICY-E_UNTAGGED_SCRIPT (detect untagged scripts in operational categories)
+        # Any .py/.ps1/.sql file in operational category MUST be a script-candidate
+        if category in ["checks", "diagnostics", "fixes", "generate", "migrate", "ops", "reset", "run", "seeds", "temp"]:
+            if script_path.name not in EXCEPT_FILES:
+                if script_path.suffix.lower() in VALID_EXTS_DEFAULT:
+                    if not is_script_candidate(script_path.name, script_path):
+                        violations.append(
+                            ("POLICY-E_UNTAGGED_SCRIPT", rel_path,
+                             "File in operational category lacks canonical prefix and HB_SCRIPT_KIND header")
+                        )
+                        # Don't continue - still validate other rules for reporting
+
         # Rule HB003: Prefix mismatch
         expected_prefix = get_expected_prefix(category)
         if expected_prefix and not script_path.name.startswith(expected_prefix):
@@ -560,7 +734,12 @@ def validate_scripts(
                     ("HB008", rel_path, "scripts/run/ must not reference scripts/temp/")
                 )
 
-    return violations
+    # A3: Sort violations deterministically (by path, then code, then details)
+    violations_sorted = sorted(
+        violations,
+        key=lambda v: (v[1], v[0], v[2])  # path, code, details
+    )
+    return violations_sorted
 
 
 def get_expected_prefix(category: str) -> str:
@@ -590,14 +769,23 @@ def validate_headers(script_path: Path, category: str) -> List[Tuple[str, str, s
     except Exception:
         return violations
 
-    # Extract headers (simple regex)
+    # Extract headers (flexible: accepts # or -- leader, = or : separator)
     headers = {}
     for line in content.splitlines()[:100]:  # Check first 100 lines
-        match = re.match(r"^\s*#\s*HB_SCRIPT_(\w+):\s*(.+)$", line)
+        match = re.match(r"^\s*(?:(#|--)\s*)?HB_SCRIPT_(\w+)\s*[:=]\s*(.+?)\s*$", line)
         if match:
-            key = f"HB_SCRIPT_{match.group(1)}"
-            value = match.group(2).strip()
+            key = f"HB_SCRIPT_{match.group(2)}"  # group(2) = field name
+            value = match.group(3).strip()  # group(3) = value
             headers[key] = value
+
+    # Normalize IDEMPOTENT values (TRUE->YES, FALSE->NO)
+    if "HB_SCRIPT_IDEMPOTENT" in headers:
+        raw = headers["HB_SCRIPT_IDEMPOTENT"].strip().upper()
+        normalized = {"TRUE": "YES", "FALSE": "NO"}.get(raw, raw)
+        if normalized not in {"YES", "NO", "CONDITIONAL"}:
+            violations.append(("HB004", rel_path, f"Invalid IDEMPOTENT value: {raw} (expected YES/NO/CONDITIONAL)"))
+        else:
+            headers["HB_SCRIPT_IDEMPOTENT"] = normalized
 
     # Check required headers
     for req in REQUIRED_HEADERS:

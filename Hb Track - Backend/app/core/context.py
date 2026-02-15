@@ -144,12 +144,15 @@ async def get_current_context(
     Obtém contexto de execução a partir do JWT
 
     FASE 6: Autenticação JWT Real
+    AUTH-CONTEXT-SSOT-002: Precedência COOKIE > BEARER com fallback
 
-    Fluxo:
-    1. Decodifica JWT
-    2. Busca usuário no banco
-    3. Valida vínculo ativo (R42, RF3) exceto superadmin
-    4. Retorna ExecutionContext
+    Fluxo (AUTH-CONTEXT-SSOT-002):
+    1. Tenta cookie PRIMEIRO (hb_access_token, access_token, hb_session)
+    2. Se cookie INVÁLIDO/EXPIRADO, tenta Bearer (fallback)
+    3. Se Bearer usado em mutation path, emite warning (soft deprecation)
+    4. Decodifica JWT e busca usuário
+    5. Valida vínculo ativo (R42, RF3) exceto superadmin
+    6. Retorna ExecutionContext
 
     Raises:
         HTTPException 401: Token inválido ou ausente
@@ -161,29 +164,93 @@ async def get_current_context(
     from app.models.organization import Organization
     from app.schemas.error import ErrorCode
 
+    # AUTH-CONTEXT-SSOT-002: Mutation paths requiring Cookie+CSRF (soft deprecation for Bearer)
+    PATHS_MUTATION_LIST = [
+        "/api/v1/training_sessions",
+        "/api/v1/seasons",
+        "/api/v1/users",
+    ]
+
     # Verificar se token foi fornecido
-    # Priority: 1. Authorization header, 2. access_token cookie (HttpOnly), 3. hb_session cookie (legacy)
+    # AUTH-CONTEXT-SSOT-002: Priority COOKIE > BEARER (com fallback se cookie inválido)
     token = None
+    auth_method = None
+    cookie_found_but_invalid = False
 
-    if credentials:
-        token = credentials.credentials
-    else:
-        # Try HttpOnly cookie first (new standard)
-        token = request.cookies.get("hb_access_token")
-
-        # Fallback to access_token cookie (alternative)
-        if not token:
-            token = request.cookies.get("access_token")
-
-        # Fallback to legacy session cookie
-        if not token:
-            session_cookie = request.cookies.get("hb_session")
-            if session_cookie:
-                try:
-                    session_data = json.loads(session_cookie)
-                except json.JSONDecodeError:
-                    session_data = {}
+    # 1. Try Cookie FIRST (COOKIE > BEARER precedence)
+    token = request.cookies.get("hb_access_token")
+    if token:
+        auth_method = "COOKIE"
+    
+    # Fallback to access_token cookie (alternative)
+    if not token:
+        token = request.cookies.get("access_token")
+        if token:
+            auth_method = "COOKIE"
+    
+    # Fallback to legacy session cookie
+    if not token:
+        session_cookie = request.cookies.get("hb_session")
+        if session_cookie:
+            try:
+                session_data = json.loads(session_cookie)
                 token = session_data.get("accessToken")
+                if token:
+                    auth_method = "COOKIE"
+            except json.JSONDecodeError:
+                pass
+
+    # Try to decode cookie token if found
+    if token and auth_method == "COOKIE":
+        try:
+            payload = decode_access_token(token)
+            user_id_str = payload.get("sub")
+            if not user_id_str:
+                # Cookie invalid, try fallback to Bearer
+                cookie_found_but_invalid = True
+                token = None
+                auth_method = None
+        except JWTError:
+            # Cookie invalid/expired, try fallback to Bearer
+            cookie_found_but_invalid = True
+            token = None
+            auth_method = None
+            logger.debug("Cookie token invalid/expired, attempting Bearer fallback")
+
+    # 2. Fallback to Bearer if cookie invalid/absent (FALLBACK_TO_BEARER policy)
+    if not token and credentials:
+        token = credentials.credentials
+        auth_method = "BEARER"
+        
+        # AUTH-CONTEXT-SSOT-002: Soft deprecation warning for Bearer in mutations
+        request_path = request.url.path
+        is_mutation_path = any(
+            request_path.startswith(mutation_path) 
+            for mutation_path in PATHS_MUTATION_LIST
+        )
+        unsafe_methods = {"POST", "PUT", "PATCH", "DELETE"}
+        
+        if is_mutation_path and request.method in unsafe_methods:
+            logger.warning(
+                "Bearer token used for mutation endpoint. Deprecated. Hard block on 2026-06-01.",
+                extra={
+                    "path": request_path,
+                    "method": request.method,
+                    "code": "BEARER_MUTATION_DEPRECATED",
+                    "enforcement_date": "2026-06-01"
+                }
+            )
+
+    # 3. Log auth method for debugging (DEBUG level)
+    if auth_method:
+        logger.debug(
+            f"Authentication resolved: {auth_method}",
+            extra={
+                "auth_method": auth_method,
+                "path": request.url.path,
+                "cookie_fallback": cookie_found_but_invalid
+            }
+        )
 
     if not token:
         raise HTTPException(
@@ -194,22 +261,24 @@ async def get_current_context(
             },
             headers={"WWW-Authenticate": "Bearer"}
         )
+    
     request_id = x_request_id or str(uuid4())
 
     try:
-        # Decodificar JWT
-        payload = decode_access_token(token)
-        user_id_str = payload.get("sub")
+        # Decodificar JWT (se não foi decodificado ainda na tentativa de cookie)
+        if auth_method != "COOKIE" or cookie_found_but_invalid:
+            payload = decode_access_token(token)
+            user_id_str = payload.get("sub")
 
-        if not user_id_str:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail={
-                    "error_code": ErrorCode.UNAUTHORIZED.value,
-                    "message": "Token inválido: subject ausente"
-                },
-                headers={"WWW-Authenticate": "Bearer"}
-            )
+            if not user_id_str:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail={
+                        "error_code": ErrorCode.UNAUTHORIZED.value,
+                        "message": "Token inválido: subject ausente"
+                    },
+                    headers={"WWW-Authenticate": "Bearer"}
+                )
 
         user_id = UUID(user_id_str)
 

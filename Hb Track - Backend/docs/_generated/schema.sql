@@ -1,11 +1,11 @@
--- Schema dump generated: 2026-02-13T20:01:33.810446+00:00Z
+-- Schema dump generated: 2026-02-14T15:01:05.151268+00:00Z
 -- Source: localhost
 
 --
 -- PostgreSQL database dump
 --
 
-\restrict KJLgqAnaZAQM9wDP0K7PPcpJRdVHL0pZdFcAZy6FskCNKQzJkf9SJfMMw4EywRd
+\restrict ho7fk19KMuJx0CDdjBtcmOh8HdW1wJfBLfZNAXKQ01TP4bKeGiJbzIYGrhTqyt9
 
 -- Dumped from database version 12.22 (Debian 12.22-1.pgdg120+1)
 -- Dumped by pg_dump version 18.1
@@ -1280,7 +1280,10 @@ CREATE TABLE public.idempotency_keys (
     request_hash character varying(64) NOT NULL,
     response_json jsonb,
     status_code integer,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    executed_at timestamp with time zone DEFAULT now() NOT NULL,
+    script_name character varying(255),
+    metadata jsonb
 );
 
 
@@ -6744,5 +6747,5 @@ ALTER TABLE ONLY public.wellness_reminders
 -- PostgreSQL database dump complete
 --
 
-\unrestrict KJLgqAnaZAQM9wDP0K7PPcpJRdVHL0pZdFcAZy6FskCNKQzJkf9SJfMMw4EywRd
+\unrestrict ho7fk19KMuJx0CDdjBtcmOh8HdW1wJfBLfZNAXKQ01TP4bKeGiJbzIYGrhTqyt9
 

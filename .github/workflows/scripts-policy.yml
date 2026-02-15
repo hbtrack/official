@@ -77,19 +77,19 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
-          pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/_policy/check_scripts_policy.ps1 -Verbose
+          pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/checks/policy/check_scripts_policy.ps1 -Verbose
 
       - name: Run check_policy_md_is_derived.ps1
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
-          pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/_policy/check_policy_md_is_derived.ps1 -Verbose
+          pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/checks/policy/check_policy_md_is_derived.ps1 -Verbose
 
       - name: Run check_policy_manifest.ps1
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
-          pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/_policy/check_policy_manifest.ps1 -Verbose
+          pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/checks/policy/check_policy_manifest.ps1 -Verbose
 
   policy-check-ubuntu:
     name: Policy Gates (Ubuntu - Path/Case Check)
@@ -166,10 +166,10 @@ jobs:
           PYPYTHON
 
       - name: Run check_scripts_policy.ps1 (via pwsh)
-        run: pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/_policy/check_scripts_policy.ps1 -Verbose
+        run: pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/checks/policy/check_scripts_policy.ps1 -Verbose
 
       - name: Run check_policy_md_is_derived.ps1 (via pwsh)
-        run: pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/_policy/check_policy_md_is_derived.ps1 -Verbose
+        run: pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/checks/policy/check_policy_md_is_derived.ps1 -Verbose
 
       - name: Verify no typo vestiges (SCRIPTS_clasification.md)
         run: |
