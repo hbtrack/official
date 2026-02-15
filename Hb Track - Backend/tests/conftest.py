@@ -9,7 +9,11 @@ Suporta testes síncronos (Session) e assíncronos (AsyncSession).
 """
 import os
 import sys
+from pathlib import Path
 import asyncio
+
+# Add repo-root scripts to path for test imports
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / "scripts"))
 
 # IMPORTANTE: Setar ENV=test ANTES de qualquer importação da app
 # Isso garante que rate_limit.py use limite alto (10000/min)

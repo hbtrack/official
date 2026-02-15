@@ -58,7 +58,7 @@ def main():
     # Validate against schema
     try:
         validate(instance=data, schema=schema)
-        print(f"✅ {yaml_path} is valid according to {schema_path}")
+        print(f"[OK] {yaml_path} is valid according to {schema_path}")
         sys.exit(0)
     except ValidationError as e:
         print(f"[ERROR] Schema validation failed:", file=sys.stderr)

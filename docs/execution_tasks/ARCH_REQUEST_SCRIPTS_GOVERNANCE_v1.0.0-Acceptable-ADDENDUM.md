@@ -294,7 +294,7 @@ def test(): pass
 # HB_SCRIPT_OUTPUTS: stdout
 
 """
-Check Python Layout (Repo-Wide)
+Check Project Layout (Repo-Wide)
 
 Validates that .py files only exist in approved roots.
 """
@@ -518,7 +518,7 @@ tests/policy_scripts/evidence/
 ├── run_log_3.txt        # Saída execução 3
 ├── diff_1_vs_2.txt      # Diff entre runs (esperado: vazio)
 ├── git_state.txt        # git rev-parse HEAD + git status --porcelain
-└── env.txt              # python -V, git --version, PowerShell $PSVersionTable
+└── env.txt              # Environment: interpreter version, git version, shell version
 ```
 
 ---
@@ -614,7 +614,7 @@ Um gate é **determinístico provado** SE:
 ### 8.2 Evidências Externas
 - [Git ls-files documentation](https://git-scm.com/docs/git-ls-files) (-z para paths com espaços)
 - [Pre-commit best practices](https://pre-commit.com/) (determinismo em hooks)
-- Python PEP 8 (ordenação e normalização)
+- PEP 8 style guide (ordenação e normalização)
 
 ### 8.3 Histórico
 | Versão | Data | Mudanças |

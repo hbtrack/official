@@ -23,6 +23,5 @@ jobs:
           python-version: "3.11"
 
       - name: Human Visibility Layer — check
-        working-directory: "Hb Track - Backend"
         run: |
-          python scripts/compact_exec_logs.py --check
+          python Hb\ Track\ -\ Backend/scripts/compact_exec_logs.py --check

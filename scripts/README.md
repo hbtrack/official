@@ -1,19 +1,35 @@
 # HB Track - Backend Scripts
 
-Pasta centralizada para scripts operacionais, de manutenção e automação.
+Pasta centralizada para scripts operacionais, de manutenÃ§Ã£o e automaÃ§Ã£o.
 
-## Regra Determinística (MANDATÓRIA)
-- **scripts/checks/**: Estritamente **READ-ONLY**. Scripts aqui não podem alterar banco de dados, arquivos ou estados do sistema.
-- **scripts/fixes/**: Scripts que aplicam correções ou patches.
-- **scripts/run/**: Ponto de entrada para automação (PowerShell).
+## CANONICAL ENTRYPOINTS (CI + Local)
+
+Estes sÃ£o os **Ãºnicos** comandos oficiais para validaÃ§Ã£o de governance:
+
+| Gate | Comando | SSOT | Engine |
+|------|---------|------|--------|
+| **R12: Python Layout** | `pwsh -File scripts/checks/lint/check_python_layout.ps1` | [python_layout.policy.yaml](../_policy/python_layout.policy.yaml) | [check_python_layout.py](../_policy/check_python_layout.py) |
+| **Scripts Policy** | `pwsh -File scripts/checks/policy/check_scripts_policy.ps1` | [scripts.policy.yaml](../_policy/scripts.policy.yaml) | [check_scripts_policy.ps1](../_policy/check_scripts_policy.ps1) |
+| **Manifest Integrity** | `pwsh -File scripts/checks/policy/check_policy_manifest.ps1` | [policy.manifest.json](../_policy/policy.manifest.json) | [check_policy_manifest.ps1](../_policy/check_policy_manifest.ps1) |
+| **Derived MD Drift** | `pwsh -File scripts/checks/policy/check_policy_md_is_derived.ps1` | [scripts.policy.yaml](../_policy/scripts.policy.yaml) | [check_policy_md_is_derived.ps1](../_policy/check_policy_md_is_derived.ps1) |
+
+**Exit codes (all gates):**
+- `0` = OK (compliance)
+- `2` = VIOLATION / MISMATCH / DRIFT (policy/data error)
+- `3` = HARNESS_ERROR (missing deps, git issue, etc.)
+
+## Regra Determinï¿½stica (MANDATï¿½RIA)
+- **scripts/checks/**: Estritamente **READ-ONLY**. Scripts aqui nï¿½o podem alterar banco de dados, arquivos ou estados do sistema.
+- **scripts/fixes/**: Scripts que aplicam correï¿½ï¿½es ou patches.
+- **scripts/run/**: Ponto de entrada para automaï¿½ï¿½o (PowerShell).
 
 ## Estrutura
-- **artifacts/**: Saídas de scripts (ignorados pelo git, exceto README).
-- **diagnostics/**: Scripts de análise profunda (Read-only mais complexos).
-- **generate/**: Geradores de código, hashes, schemas.
-- **migrate/**: Migrações de dados e backfills.
-- **ops/**: Operações de infraestrutura e banco (maintenance/refresh).
-- **reset/**: Scripts para resetar ambiente ou serviços.
-- **security/**: Auditorias e correções de segurança.
-- **seeds/**: População de dados (dev/test/official).
-- **temp/**: Scripts temporários e testes locais (ignorados pelo git).
+- **artifacts/**: Saï¿½das de scripts (ignorados pelo git, exceto README).
+- **diagnostics/**: Scripts de anï¿½lise profunda (Read-only mais complexos).
+- **generate/**: Geradores de cï¿½digo, hashes, schemas.
+- **migrate/**: Migraï¿½ï¿½es de dados e backfills.
+- **ops/**: Operaï¿½ï¿½es de infraestrutura e banco (maintenance/refresh).
+- **reset/**: Scripts para resetar ambiente ou serviï¿½os.
+- **security/**: Auditorias e correï¿½ï¿½es de seguranï¿½a.
+- **seeds/**: Populaï¿½ï¿½o de dados (dev/test/official).
+- **temp/**: Scripts temporï¿½rios e testes locais (ignorados pelo git).

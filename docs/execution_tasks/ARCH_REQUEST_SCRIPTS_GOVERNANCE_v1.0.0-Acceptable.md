@@ -618,7 +618,7 @@ Criar 6 arquivos de teste e validar saída idêntica em múltiplas execuções:
 Rodar gate 3x no mesmo commit:
 - Windows PowerShell 5.1
 - Windows PowerShell 7+
-- Linux bash + Python 3.11
+- Linux bash (com intérprete py3.11+)
 
 **Critério:** Output idêntico (diff = 0) em todas as execuções.
 
@@ -732,7 +732,7 @@ Validates openapi.json against HB Track contract rules.
 Does NOT modify any files or execute external processes.
 
 Usage:
-    python scripts/checks/openapi/check_contract.py
+    Invoke via policy gate or directly from repo root.
 """
 
 import json
