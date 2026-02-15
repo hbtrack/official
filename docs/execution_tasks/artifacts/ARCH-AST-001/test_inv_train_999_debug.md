@@ -1,3 +1,8 @@
+# INV-TRAIN-999 Debug Artifact
+
+Debug test skeleton for invariant TRAIN-999 (development artifact).
+
+```python
 
 import pytest
 from sqlalchemy.exc import IntegrityError
@@ -26,3 +31,4 @@ class TestInvTrain999Debug:
     async def test_async_with_async_raises(self, *, async_db):
         async with pytest.raises(IntegrityError):
             pass
+```

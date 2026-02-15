@@ -1,3 +1,13 @@
+# HB_SCRIPT_KIND=diagnostics
+# HB_SCRIPT_SCOPE=auth
+# HB_SCRIPT_SIDE_EFFECTS=FS_READ
+# HB_SCRIPT_IDEMPOTENT=true
+# HB_SCRIPT_ENTRYPOINT=scripts/diagnostics/auth/analyze_permissions.py
+# HB_SCRIPT_OUTPUTS=stdout
+# HB_SCRIPT_INPUTS=repo_files
+# HB_SCRIPT_RISK=low
+# HB_SCRIPT_ROLLBACK=none
+
 """Analisar permissions_map.py e gerar matriz RBAC correta."""
 import sys
 sys.path.insert(0, 'Hb Track - Backend')

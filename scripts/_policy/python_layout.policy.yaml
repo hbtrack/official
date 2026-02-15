@@ -23,7 +23,10 @@ policy:
     - "Hb Track - Backend/tests/"
     - "Hb Track - Backend/db/"
     - "Hb Track - Backend/alembic/"
+    - "Hb Track - Backend/scripts/"
+    - "Hb Track - Backend/services/"
   forbidden_prefixes:
     - "docs/_generated/"
+    - "Hb Track - Backend/docs/_generated/"
   ignore_globs:
     - "backup-dados-criticos/**"
