@@ -15,10 +15,10 @@ ARCH_REQUEST é uma linguagem formal, não texto livre.
 - Auditável
 - Reprodutível
 
-## Generation Rules
+## Regras de Geração
 
-Rules for generating ARCH_REQUESTs are defined in:
+As regras para gerar ARCH_REQUESTs estão definidas em:
 → `ARCH_REQUEST_GENERATION_PROTOCOL.md`
 
-This DSL defines WHAT an ARCH_REQUEST is.  
-The protocol defines HOW to generate one.
+Esta DSL define O QUE é um ARCH_REQUEST.  
+O protocolo define COMO gerar um.
