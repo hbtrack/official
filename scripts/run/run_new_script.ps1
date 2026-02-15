@@ -1,3 +1,10 @@
+# HB_SCRIPT_KIND=RUNNER
+# HB_SCRIPT_SCOPE=run
+# HB_SCRIPT_SIDE_EFFECTS=FS_WRITE,PROC_START_STOP
+# HB_SCRIPT_IDEMPOTENT=NO
+# HB_SCRIPT_ENTRYPOINT=powershell scripts/run/run_new_script.ps1 -Kind CHECK -Scope db -Action check_integrity -Ext py
+# HB_SCRIPT_OUTPUTS=scripts/{checks,fixes,seeds,generates,migrates,resets,ops}/
+
 <# HB Track — run_new_script.ps1
 
 Purpose:
