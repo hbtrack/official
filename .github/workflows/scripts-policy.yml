@@ -11,6 +11,7 @@ on:
     branches:
       - main
       - develop
+      - dev-changes  # TEMPORARY: validação pré-merge, remover após merge
     paths:
       - "scripts/**"
       - "scripts/_policy/**"
