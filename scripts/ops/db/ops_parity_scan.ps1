@@ -126,24 +126,78 @@ try {
 
   Write-Host "[OK] Alembic scan concluído" -ForegroundColor Green
 
-  # 3) Classifica log em JSON (parity_classify foi descontinuado)
-  # NOTE: parity_classify.py foi descontinuado. Criando parity_report.json simples
+  # 3) Classifica output do Alembic em parity_report.json (SSOT = schema.sql)
+  # Regra: QUALQUER "Detected ..." do autogenerate é diff estrutural.
+  $diffs    = New-Object System.Collections.Generic.List[object]
+  $warnings = New-Object System.Collections.Generic.List[object]
+
+  foreach ($raw in $alembicOutput) {
+    $line = [string]$raw
+
+    # Warnings relevantes (principalmente ciclos)
+    if ($line -match "(?i)(SAWarning|Cannot correctly sort tables|unresolvable cycles)") {
+      $warnings.Add(@{ category = "sa_warning"; message = $line })
+    }
+
+    # Diffs estruturais (Alembic autogenerate compare)
+    if ($line -match "(?i)\bDetected\b") {
+      $table = ""
+      $column = ""
+      if ($line -match "table '([^']+)'")
+        { $table  = $Matches[1] }
+      if ($line -match "column '([^']+)'")
+        { $column = $Matches[1] }
+
+      # Filtra por tabela, quando solicitado
+      if (-not [string]::IsNullOrWhiteSpace($TableFilter)) {
+        if ($table -and ($table -ne $TableFilter)) { continue }
+        if (-not $table -and ($line -notmatch [regex]::Escape($TableFilter))) { continue }
+      }
+
+      $kind = "structural_change"
+      if     ($line -match "(?i)nullable change")       { $kind = "nullable_change" }
+      elseif ($line -match "(?i)type change")           { $kind = "type_change" }
+      elseif ($line -match "(?i)added table")           { $kind = "add_table" }
+      elseif ($line -match "(?i)removed table")         { $kind = "drop_table" }
+      elseif ($line -match "(?i)added column")          { $kind = "add_column" }
+      elseif ($line -match "(?i)removed column")        { $kind = "drop_column" }
+      elseif ($line -match "(?i)foreign key")           { $kind = "fk_change" }
+      elseif ($line -match "(?i)unique constraint")     { $kind = "unique_change" }
+      elseif ($line -match "(?i)\bindex\b")             { $kind = "index_change" }
+
+      $diffs.Add(@{
+        kind    = $kind
+        table   = $table
+        column  = $column
+        message = $line
+      })
+    }
+  }
+
+  $structCount = $diffs.Count
   $reportData = @{
     summary = @{
-      structural_count = 0
-      status = "skipped"
-      note = "parity_classify.py discontinued; using minimal report"
+      structural_count = $structCount
+      status = if ($structCount -eq 0) { "ok" } else { "fail" }
+      table_filter = $TableFilter
+      source = "alembic revision --autogenerate (scan-only)"
     }
+    diffs = $diffs
+    warnings = $warnings
     timestamp = Get-Date -Format "o"
   }
-  $reportJson = $reportData | ConvertTo-Json
+
+  $reportJson = $reportData | ConvertTo-Json -Depth 10
   [System.IO.File]::WriteAllText($reportPathBackend, $reportJson, (New-Object System.Text.UTF8Encoding $false))
-  Write-Host "[OK] parity_report.json criado (minimal)" -ForegroundColor Green
+  Write-Host "[OK] parity_report.json criado (diffs=$structCount)" -ForegroundColor Green
 
   # 4) Validação de Diffs Estruturais
   if ($FailOnStructuralDiffs -and (Test-Path $reportPathBackend)) {
     $json = Get-Content $reportPathBackend -Raw | ConvertFrom-Json
-    $count = $json.summary.structural_count
+    if (-not ($json.summary) -or ($null -eq $json.summary.structural_count)) {
+      throw "parity_report.json inválido: summary.structural_count ausente ($reportPathBackend)"
+    }
+    $count = [int]$json.summary.structural_count
     if ($count -gt 0) {
       Write-Host "----------------------------------------------------" -ForegroundColor Red
       Write-Host "ERRO: Parity scan encontrou $count diffs estruturais!" -ForegroundColor Red
