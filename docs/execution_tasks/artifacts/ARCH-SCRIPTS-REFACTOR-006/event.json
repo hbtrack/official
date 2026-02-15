@@ -1,5 +1,6 @@
 {
   "event_id": "AR-2026-02-19-SCRIPTS-REFACTOR-006",
+  "task_id": "EXEC-TASK-AR-2026-02-19-SCRIPTS-REFACTOR-006",
   "timestamp": "2026-02-19T00:05:00Z",
   "status": "PASS_WITH_GATES_APPROVED",
   "type": "SCRIPTS_REFACTOR",
