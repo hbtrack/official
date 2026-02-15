@@ -115,7 +115,7 @@ O script deve ser determinístico e fail-fast.
 
 ### (F) Baseline (apenas se autorizado)
 
-* `Maybe-SnapshotBaseline(logPath)`
+* `Invoke-ConditionalBaseline(logPath)`
 
   * default OFF
   * só roda se `-AllowBaselineSnapshot`
@@ -270,7 +270,7 @@ ENTREGÁVEIS
 1) scripts/models_batch.ps1 implementado com funções:
    Abort, Ensure-BackendRoot, Ensure-CleanRepo, Run-RefreshSSOT, Load-TablesFromSSOT, Load-TablesManual,
    Get-ProfileForTable, Restore-GeneratedArtifacts (sem engolir erro), Run-Requirements (Test-Path + 100),
-   Run-Gate (captura exitcode segura), Maybe-SnapshotBaseline (somente com flag)
+   Run-Gate (captura exitcode segura), Invoke-ConditionalBaseline (somente com flag)
 2) Parâmetros:
    -AutoTables FromSSOT/None, -ExcludeTables, -Tables, -TablesFile, -DefaultProfile strict/fk/lenient,
    -SkipRefresh, -SkipGate, -NoFailFast (failfast ON por default), -AllowBaselineSnapshot

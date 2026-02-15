@@ -259,7 +259,7 @@ When asked to generate an ARCH_REQUEST:
 - Cite exact SSOT paths
 
 **Step 5: Self-Lint**
-- Check for hedging words (acho, talvez, recomendo)
+- Check for hedging words (examples include: uncertain modifiers, opinion markers)
 - Check for Windows paths (C:\)
 - Check for missing sections
 
