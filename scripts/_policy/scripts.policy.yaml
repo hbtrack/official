@@ -229,6 +229,8 @@ folders:
       - "lint"
       - "models"
       - "openapi"
+      - "policy"
+      - "schema"
       - "security"
 
   diagnostics:
@@ -291,6 +293,9 @@ folders:
       allowed_targets:
         - "scripts/artifacts"
         - "docs/_generated"
+        - "docs/_canon"
+        - "docs/_ai/_maps"
+        - "docs/references"
 
   migrate:
     path: "scripts/migrate"
