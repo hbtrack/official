@@ -1,3 +1,11 @@
 version: 1
 append_only: true
-scenarios: []
+scenarios:
+  - id: auth_login_refresh
+    path: docs/product/runtime/auth_login_refresh.md
+  - id: training_creation_flow
+    path: docs/product/runtime/training_creation_flow.md
+  - id: async_job_execution
+    path: docs/product/runtime/async_job_execution.md
+  - id: parity_pipeline
+    path: docs/product/runtime/parity_pipeline.md
