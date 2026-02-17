@@ -35,5 +35,4 @@ gates:
 
 modules:
   - id: auth
-    canonical_doc: docs/product/modules/auth.md
     runtime_index: docs/product/runtime/_INDEX.yaml
