@@ -1,0 +1,34 @@
+version: 1
+authority:
+  precedence_order:
+    - ssot_factual
+    - runtime_evidence
+    - canon_docs
+    - derived_docs
+    - narrative
+
+entrypoints:
+  - id: product_core
+    path: docs/product/SYSTEM_OVERVIEW.md
+    mode: required
+  - id: architecture
+    path: docs/product/ARCHITECTURE.md
+    mode: required
+  - id: domain_model
+    path: docs/product/DOMAIN_MODEL.md
+    mode: required
+  - id: runtime_index
+    path: docs/product/runtime/_INDEX.yaml
+    mode: required
+  - id: project_profile
+    path: docs/_canon/HB_TRACK_PROFILE.yaml
+    mode: required
+  - id: uds_spec
+    path: docs/_canon/UDS_SPEC.md
+    mode: required
+
+rules:
+  append_only_indexes:
+    - docs/product/runtime/_INDEX.yaml
+  derived_read_only_roots:
+    - docs/_generated/
