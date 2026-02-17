@@ -1,0 +1,39 @@
+version: 1
+project:
+  name: HB Track
+  profile_id: HB_TRACK_PROFILE_v1
+
+truth:
+  precedence_ref: docs/_INDEX.yaml
+
+ssot_registry:
+  - artifact: schema.sql
+    path: docs/_generated/_core/schema.sql
+    kind: derived_promoted
+    required: false
+    update_trigger: "run your generator to refresh _generated/_core outputs"
+  - artifact: openapi.json
+    path: docs/_generated/_core/openapi.json
+    kind: derived_promoted
+    required: false
+    update_trigger: "run your generator to refresh _generated/_core outputs"
+
+approved_commands:
+  - id: gate_profile
+    cmd: "pwsh scripts/checks/check_hb_profile.ps1"
+    purpose: "L0/L1 PROFILE validation"
+  - id: gate_ci_local
+    cmd: "pwsh scripts/checks/check_ci_gates_local.ps1"
+    purpose: "Local CI gates baseline"
+
+gates:
+  blocking:
+    - L0
+    - L1
+  non_blocking:
+    - L4
+
+modules:
+  - id: auth
+    canonical_doc: docs/product/modules/auth.md
+    runtime_index: docs/product/runtime/_INDEX.yaml
