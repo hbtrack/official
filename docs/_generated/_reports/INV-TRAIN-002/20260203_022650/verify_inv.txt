@@ -1,7 +1,0 @@
-﻿
-docs\_generated\_reports\INV-TRAIN-002\20260203_022650\verify.txt:1:C:\HB TRACK\Hb Track - 
-Backend\tests\training\invariants\test_inv_train_002_wellness_pre_deadline.py:1:0: ERROR [CLASS_NOT_IMPLEMENTED]: 
-Class C2 is in taxonomy but validator not yet implemented. - Implement validator for class C2 in 
-verify_invariants_tests.py or mark unit as required: false in SPEC until validator is ready
-
-

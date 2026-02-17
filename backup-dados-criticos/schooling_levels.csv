@@ -1,7 +1,0 @@
-"id","code","name","is_active"
-"1","elementary_incomplete","Ensino Fundamental Incompleto","true"
-"2","elementary_complete","Ensino Fundamental Completo","true"
-"3","high_school_incomplete","Ensino Médio Incompleto","true"
-"4","high_school_complete","Ensino Médio Completo","true"
-"5","higher_education_incomplete","Ensino Superior Incompleto","true"
-"6","higher_education_complete","Ensino Superior Completo","true"

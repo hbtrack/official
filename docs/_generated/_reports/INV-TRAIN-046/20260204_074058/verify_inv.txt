@@ -1,7 +1,0 @@
-﻿
-docs\_generated\_reports\INV-TRAIN-046\20260204_074058\verify.txt:1:C:\HB TRACK\Hb Track - 
-Backend\tests\training\invariants\test_inv_train_046_wellness_post_response_trigger.py:0:0: ERROR 
-[B_COMMENT_NOT_FOUND]: COMMENT ON COLUMN not found for wellness_reminders.responded_at - add COMMENT ON COLUMN 
-wellness_reminders.responded_at in schema.sql
-
-

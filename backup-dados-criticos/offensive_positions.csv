@@ -1,7 +1,0 @@
-"id","code","name","abbreviation","is_active"
-"1","center_back","Armadora Central","AC","true"
-"2","left_back","Lateral Esquerda","LE","true"
-"3","right_back","Lateral Direita","LD","true"
-"4","left_wing","Ponta Esquerda","PE","true"
-"5","right_wing","Ponta Direita","PD","true"
-"6","pivot","Pivô","PI","true"

@@ -1,6 +1,0 @@
-﻿
-docs\_generated\_reports\INV-TRAIN-046\20260204_081647\verify.txt:1:C:\HB TRACK\Hb Track - 
-Backend\tests\training\invariants\test_inv_train_046_wellness_post_response_trigger.py:0:0: ERROR [B_MISSING_ANCHOR]: 
-Missing required db.* anchors: ['column', 'comment'] - add column, comment to SPEC db anchors
-
-

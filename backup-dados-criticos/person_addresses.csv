@@ -1,2 +1,0 @@
-"id","person_id","address_type","street","number","complement","neighborhood","city","state","postal_code","country","is_primary","created_at","updated_at","deleted_at","deleted_reason","created_by_user_id"
-"097827b5-09f5-4ecd-83e0-52c1be0b8bfa","f855ab71-7e9e-4f4d-a14a-71fbcf487fa6","residencial_1","Rua Gabriel Matta","110","302","Recreio dos Bandeirantes","Rio de Janeiro","RJ","22790-050","Brasil","true","2026-01-02 06:42:33.403333+00","2026-01-02 06:42:33.403333+00",,,

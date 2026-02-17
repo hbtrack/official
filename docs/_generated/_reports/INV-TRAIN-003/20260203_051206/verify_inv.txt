@@ -1,7 +1,0 @@
-﻿
-docs\_generated\_reports\INV-TRAIN-003\20260203_051206\verify.txt:1:C:\HB TRACK\Hb Track - 
-Backend\tests\training\invariants\test_inv_train_003_wellness_post_deadline.py:0:0: ERROR 
-[C2_MISSING_PYTEST_RAISES]: Class C2 requires pytest.raises(ValidationError) test - add test_invalid_case with 
-pytest.raises(ValidationError)
-
-

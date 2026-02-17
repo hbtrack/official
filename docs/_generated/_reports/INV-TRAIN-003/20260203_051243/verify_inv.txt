@@ -1,6 +1,0 @@
-﻿
-docs\_generated\_reports\INV-TRAIN-003\20260203_051243\verify.txt:1:C:\HB TRACK\Hb Track - 
-Backend\tests\training\invariants\test_inv_train_003_wellness_post_deadline.py:0:0: ERROR [HARDCODED_ID]: 
-forbidden: hardcoded IDs (id=123, athlete_id="fixed") - use uuid4() or factory for dynamic ID generation
-
-

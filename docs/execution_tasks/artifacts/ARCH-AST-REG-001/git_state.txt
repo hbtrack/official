@@ -1,3 +1,0 @@
-﻿---
-?? docs/execution_tasks/artifacts/ARCH-AST-REG-001/
-?? docs/scripts/tests/

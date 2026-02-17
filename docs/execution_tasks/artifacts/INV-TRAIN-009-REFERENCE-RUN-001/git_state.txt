@@ -1,2 +1,0 @@
-﻿---
-?? docs/execution_tasks/artifacts/INV-TRAIN-009-REFERENCE-RUN-001/

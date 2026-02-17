@@ -1,6 +1,0 @@
-﻿INV: INV-TRAIN-002
-DATE: 2026-02-02T13:27:54.5207646-03:00
-ROOT: C:\HB TRACK
-BACKEND: C:\HB TRACK\Hb Track - Backend
-PYTHON: Python 3.14.2
-NOTE: pytest warning WinError 183 cache path + 54 warnings (non-blocking)
