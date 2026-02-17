@@ -1,0 +1,5 @@
+
+  - id: "AR-2026-02-17-000"
+    title: "Duplicate Entry (should fail)"
+    path: "docs/ssot/manifest.json"
+    category: "ssot"

@@ -79,6 +79,7 @@ param(
     [switch]$SkipPathConstants,
     [switch]$SkipSchemaDrift,
     [switch]$SkipContractDrift,
+    [switch]$SkipDocsIndex,
     [switch]$FailFast
 )
 
@@ -302,6 +303,16 @@ Invoke-Gate -Name "Contract Drift" `
         & $PythonExe "scripts\checks\openapi\check_contract_drift.py"
     } `
     -Skip:$SkipContractDrift
+
+# ========================================
+# GATE 8: Docs Index
+# ========================================
+Invoke-Gate -Name "Docs Index" `
+    -Description "Valida docs/_INDEX.yaml (schema, IDs únicos, paths existentes)" `
+    -Command {
+        & 'scripts\checks\docs\check_docs_index.ps1'
+    } `
+    -Skip:$SkipDocsIndex
 
 # ========================================
 # SUMMARY

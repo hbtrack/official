@@ -51,6 +51,7 @@ from dotenv import load_dotenv
 #   .parent(2) = scripts/generate/
 #   .parent(3) = scripts/
 #   .parent(4) = C:\HB TRACK  (repo root)
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
 BACKEND_ROOT = REPO_ROOT / "Hb Track - Backend"
 
