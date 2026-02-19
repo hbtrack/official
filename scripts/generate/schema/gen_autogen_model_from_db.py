@@ -45,7 +45,7 @@ FORCE_USE_ALTER_FK_NAMES: set[str] = {
     "fk_seasons_team_id",  # quebra ciclo teams <-> seasons no metadata sort
 }
 
-SCHEMA_SQL = Path("docs/_generated/schema.sql")
+SCHEMA_SQL = Path("docs/ssot/schema.sql")
 
 
 def exit_with_code(code: int, msg: str) -> None:

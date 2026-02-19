@@ -13,9 +13,9 @@ Fontes obrigatórias (ler e seguir):
 
 
 Autoridade / Artefatos canônicos:
-- `Hb Track - Backend/docs/_generated/openapi.json (contrato FastAPI)`
-- `Hb Track - Backend/docs/_generated/schema.sql (DDL + COMMENT ON COLUMN)`
-- `Hb Track - Backend/docs/_generated/alembic_state.txt (estado de migrações)`
+- `docs/ssot/openapi.json (contrato FastAPI)`
+- `docs/ssot/schema.sql (DDL + COMMENT ON COLUMN)`
+- `docs/ssot/alembic_state.txt (estado de migrações)`
 
 
 Regras:

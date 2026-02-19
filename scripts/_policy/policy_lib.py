@@ -66,6 +66,7 @@ RULE_IDS = {
     "HB011": "DERIVED_MD_CANONICAL_PATH_CASE",
     "HB012": "MANIFEST_HASH_MISMATCH",
     "HB013": "EXCEPTION_EXPIRED_OR_INVALID",
+    "HB014": "LOCAL_TEMPLATES_MISSING_OR_INVALID",
 }
 
 # Deterministic ordering for taxonomy
@@ -81,6 +82,8 @@ TAXONOMY_PRECEDENCE = [
     "temp",
     "artifacts",
     "run",
+    "gates",
+    "ssot",
 ]
 
 # Valid vocabulary
@@ -419,7 +422,30 @@ def render_md(policy: Dict[str, Any]) -> str:
                  "referenced by `scripts/run/` wrappers.")
     lines.append("")
 
-    lines.append("## 8. Determinism Acceptance Criteria")
+    lines.append("## 8. Local Templates")
+    lines.append("")
+    lines.append("Each operational category MAY have a `templates/` folder with category-specific header templates:")
+    lines.append("")
+    lines.append("- **Location:** `scripts/<category>/templates/`")
+    lines.append("- **Required files:** `header_template.sql.txt`, `header_template.py.txt`, `header_template.ps1.txt`")
+    lines.append("- **Validation:** Rule HB014 validates presence and structure")
+    lines.append("- **Purpose:** Templates reflect correct KIND, paths, and side-effects for the category")
+    lines.append("")
+    lines.append("**Categories with local templates:**")
+    lines.append("")
+    templates_info = spec.get("templates", {})
+    categories_with_templates = templates_info.get("categories_with_templates", [
+        "checks", "diagnostics", "fixes", "generate", "migrate",
+        "ops", "reset", "run", "seeds", "temp", "gates", "ssot"
+    ])
+    for cat in sorted(categories_with_templates):
+        lines.append(f"- `scripts/{cat}/templates/`")
+    lines.append("")
+    lines.append("Scaffolders SHOULD prefer local templates when available, falling back to "
+                 "`scripts/_policy/templates/` SSOT templates.")
+    lines.append("")
+
+    lines.append("## 9. Determinism Acceptance Criteria")
     lines.append("")
     lines.append("This system is deterministic if and only if:")
     lines.append("")
@@ -847,6 +873,64 @@ def validate_side_effects(
     return violations
 
 
+def validate_local_templates(repo_root: Path) -> List[Tuple[str, str, str]]:
+    """
+    Validate that each operational category has local templates folder with required files.
+    
+    Returns list of violations: (rule_id, path, message)
+    """
+    violations: List[Tuple[str, str, str]] = []
+    scripts_dir = repo_root / "scripts"
+    
+    # Categories that should have local templates
+    required_categories = [
+        "checks", "diagnostics", "fixes", "generate", "migrate",
+        "ops", "reset", "run", "seeds", "temp", "gates", "ssot"
+    ]
+    
+    required_files = [
+        "header_template.sql.txt",
+        "header_template.py.txt",
+        "header_template.ps1.txt",
+    ]
+    
+    for category in required_categories:
+        templates_dir = scripts_dir / category / "templates"
+        
+        if not templates_dir.exists():
+            violations.append(
+                ("HB014", f"scripts/{category}/templates/",
+                 f"Missing templates folder for category '{category}'")
+            )
+            continue
+        
+        # Check for required template files
+        for template_file in required_files:
+            template_path = templates_dir / template_file
+            if not template_path.exists():
+                violations.append(
+                    ("HB014", f"scripts/{category}/templates/{template_file}",
+                     f"Missing required template file '{template_file}'")
+                )
+                continue
+            
+            # Validate template contains HB_SCRIPT_KIND
+            try:
+                content = template_path.read_text(encoding="utf-8", errors="ignore")
+                if "HB_SCRIPT_KIND" not in content:
+                    violations.append(
+                        ("HB014", f"scripts/{category}/templates/{template_file}",
+                         "Template missing HB_SCRIPT_KIND metadata")
+                    )
+            except Exception as e:
+                violations.append(
+                    ("HB014", f"scripts/{category}/templates/{template_file}",
+                     f"Failed to read template: {e}")
+                )
+    
+    return violations
+
+
 def references_temp(script_path: Path) -> bool:
     """Check if script references scripts/temp/ (for run/ scripts)."""
     try:
@@ -1025,8 +1109,14 @@ def validate_policy_compliance(repo_root: Path) -> Tuple[int, List[str]]:
         if exc_errors:
             return 2, exc_errors
 
+        # Validate local templates
+        template_violations = validate_local_templates(repo_root)
+        
         # Validate scripts
         violations = validate_scripts(repo_root, policy, heuristics)
+        
+        # Merge template violations with script violations
+        violations.extend(template_violations)
 
         # Filter out exceptions
         filtered = []

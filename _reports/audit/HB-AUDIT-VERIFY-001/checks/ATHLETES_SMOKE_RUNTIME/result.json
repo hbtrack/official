@@ -1,0 +1,11 @@
+{
+  "artifacts": [
+    "stdout.log",
+    "stderr.log"
+  ],
+  "command": "python -m pytest -q tests/smoke_test_canonical_routes.py -k athlete",
+  "duration_ms": 103,
+  "exit_code": 2,
+  "id": "ATHLETES_SMOKE_RUNTIME",
+  "status": "FAIL_ACTIONABLE"
+}

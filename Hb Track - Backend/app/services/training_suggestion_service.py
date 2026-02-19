@@ -21,6 +21,7 @@ from uuid import UUID
 
 from sqlalchemy import select, func, and_, or_, desc
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 
 from app.models.training_microcycle import TrainingMicrocycle
 from app.models.training_session import TrainingSession

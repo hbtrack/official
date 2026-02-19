@@ -44,10 +44,15 @@ docs/adr/ADR_INDEX.md
 docs/adr/ADR_TEMPLATE.md
 docs/adr/ADR-xxxx-<topic>.md
 
+docs/ssot
+docs/ssot/README.md
+docs/ssot/openapi.json
+docs/ssot/schema.sql
+docs/ssot/alembic_state.txt
+docs/ssot/manifest.json
+
 docs/_generated
 docs/_generated/README.md
-docs/_generated/openapi.json
-docs/_generated/schema.sql
 docs/_generated/parity_report.json
 docs/_generated/requirements_report.json
 

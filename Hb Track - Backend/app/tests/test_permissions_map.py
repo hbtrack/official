@@ -10,12 +10,12 @@ import pytest
 from app.core.permissions_map import ROLE_PERMISSIONS, get_permissions_for_role
 
 
-ROLES = ["superadmin", "dirigente", "coordenador", "treinador", "atleta"]
+ROLES = ["superadmin", "dirigente", "coordenador", "treinador", "atleta", "membro"]
 
 
 def test_role_permissions_map_exists():
-    """Valida que o mapa canônico existe e tem 5 roles."""
-    assert len(ROLE_PERMISSIONS) == 5
+    """Valida que o mapa canônico existe e tem 6 roles."""
+    assert len(ROLE_PERMISSIONS) == 6
     for role in ROLES:
         assert role in ROLE_PERMISSIONS
 
@@ -38,6 +38,9 @@ def test_superadmin_permissions():
     assert perms["can_generate_reports"] is True
 
     # Legado (amostra)
+    assert perms["can_manage_org"] is True
+    assert perms["can_manage_users"] is True
+    assert perms["can_manage_members"] is True
     assert perms["can_manage_org"] is True
     assert perms["can_create_team"] is True
     assert perms["can_create_match"] is True
@@ -138,8 +141,8 @@ def test_all_roles_have_same_keys():
     for role in ROLES:
         assert set(get_permissions_for_role(role).keys()) == all_keys
 
-    # Novas 15 + legadas 24 = 39
-    assert len(all_keys) == 39
+    # Novas 15 + legadas 26 = 41 (includes can_manage_members, can_correct_attendance)
+    assert len(all_keys) == 41
 
 
 def test_permissions_are_boolean():

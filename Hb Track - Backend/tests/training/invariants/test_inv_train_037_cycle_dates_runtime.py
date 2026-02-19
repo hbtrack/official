@@ -5,7 +5,7 @@ RUNTIME DB TEST - Testa constraint real no Postgres via IntegrityError.
 
 Evidência:
 - Constraint: `check_cycle_dates CHECK ((start_date < end_date))`
-- Schema: `Hb Track - Backend/docs/_generated/schema.sql:2402`
+- Schema: `Hb Track - Backend/docs/ssot/schema.sql:2402`
 - Model: `app/models/training_cycle.py:110` (CheckConstraint)
 
 Este teste NÃO usa string match. Ele insere registros no DB e verifica

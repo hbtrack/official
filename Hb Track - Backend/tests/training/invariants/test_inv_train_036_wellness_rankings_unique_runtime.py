@@ -5,7 +5,7 @@ RUNTIME DB TEST - Testa constraint real no Postgres via IntegrityError.
 
 Evidência:
 - Constraint: `uq_team_wellness_rankings_team_month UNIQUE (team_id, month_reference)`
-- Schema: `Hb Track - Backend/docs/_generated/schema.sql:3653`
+- Schema: `Hb Track - Backend/docs/ssot/schema.sql:3653`
 - Table: `team_wellness_rankings`
 
 Este teste NÃO usa string match. Ele insere registros no DB e verifica

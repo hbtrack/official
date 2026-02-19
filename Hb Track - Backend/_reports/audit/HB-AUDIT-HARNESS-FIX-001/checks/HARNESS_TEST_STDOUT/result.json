@@ -1,0 +1,11 @@
+{
+  "artifacts": [
+    "stdout.log",
+    "stderr.log"
+  ],
+  "command": null,
+  "duration_ms": 0,
+  "exit_code": 4,
+  "id": "HARNESS_TEST_STDOUT",
+  "status": "BLOCKED_INPUT"
+}

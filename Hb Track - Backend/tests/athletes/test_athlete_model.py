@@ -12,77 +12,78 @@ from app.models.athlete import Athlete, AthleteState
 class TestAthleteModel:
     """Testes de criação e propriedades do modelo Athlete."""
 
-    def test_create_athlete_basic(self, db, organization, membership):
+    @pytest.mark.asyncio
+    async def test_create_athlete_basic(self, async_db, organization, membership):
         """Criar atleta com campos obrigatórios."""
         athlete = Athlete(
             organization_id=organization.id,
-            created_by_membership_id=membership.id,
             person_id=uuid4(),
-            full_name="Maria Silva",
+            athlete_name="Maria Silva",
+            birth_date=date(2000, 1, 1),
         )
-        db.add(athlete)
-        db.flush()
+        async_db.add(athlete)
+        await async_db.flush()
 
         assert athlete.id is not None
-        assert athlete.full_name == "Maria Silva"
-        assert athlete.state == AthleteState.ativa.value
+        assert athlete.athlete_name == "Maria Silva"
+        assert athlete.state == AthleteState.ATIVA.value
 
-    def test_create_athlete_all_fields(self, db, organization, membership):
+    @pytest.mark.asyncio
+    async def test_create_athlete_all_fields(self, async_db, organization, membership):
         """Criar atleta com todos os campos."""
         athlete = Athlete(
             organization_id=organization.id,
-            created_by_membership_id=membership.id,
             person_id=uuid4(),
-            full_name="Ana Santos",
-            nickname="Aninha",
+            athlete_name="Ana Santos",
+            athlete_nickname="Aninha",
             birth_date=date(2008, 5, 15),
-            position="pivô",
         )
-        db.add(athlete)
-        db.flush()
+        async_db.add(athlete)
+        await async_db.flush()
 
-        assert athlete.nickname == "Aninha"
+        assert athlete.athlete_nickname == "Aninha"
         assert athlete.birth_date == date(2008, 5, 15)
-        assert athlete.position == "pivô"
 
-    def test_athlete_default_state_ativa(self, db, organization, membership):
+    @pytest.mark.asyncio
+    async def test_athlete_default_state_ativa(self, async_db, organization, membership):
         """Estado padrão é 'ativa' (R13)."""
         athlete = Athlete(
             organization_id=organization.id,
-            created_by_membership_id=membership.id,
             person_id=uuid4(),
-            full_name="Teste Default",
+            athlete_name="Teste Default",
+            birth_date=date(2000, 1, 1),
         )
-        db.add(athlete)
-        db.flush()
+        async_db.add(athlete)
+        await async_db.flush()
 
-        assert athlete.state == AthleteState.ativa.value
-        assert athlete.current_state == AthleteState.ativa
+        assert athlete.state == AthleteState.ATIVA.value
 
-    def test_athlete_is_active_property(self, db, organization, membership):
+    @pytest.mark.asyncio
+    async def test_athlete_is_active_property(self, async_db, organization, membership):
         """Propriedade is_active reflete soft delete."""
         athlete = Athlete(
             organization_id=organization.id,
-            created_by_membership_id=membership.id,
             person_id=uuid4(),
-            full_name="Teste Active",
+            athlete_name="Teste Active",
+            birth_date=date(2000, 1, 1),
         )
-        db.add(athlete)
-        db.flush()
+        async_db.add(athlete)
+        await async_db.flush()
 
         assert athlete.is_active is True
         assert athlete.deleted_at is None
 
-    def test_athlete_repr(self, db, organization, membership):
+    @pytest.mark.asyncio
+    async def test_athlete_repr(self, async_db, organization, membership):
         """Representação string do atleta."""
         athlete = Athlete(
             organization_id=organization.id,
-            created_by_membership_id=membership.id,
             person_id=uuid4(),
-            full_name="Repr Test",
+            athlete_name="Repr Test",
+            birth_date=date(2000, 1, 1),
         )
-        db.add(athlete)
-        db.flush()
+        async_db.add(athlete)
+        await async_db.flush()
 
         assert "Repr Test" in repr(athlete)
         assert "ativa" in repr(athlete)
@@ -93,36 +94,37 @@ class TestAthleteStateEnum:
 
     def test_state_values(self):
         """Verificar valores do enum (R13)."""
-        assert AthleteState.ativa.value == "ativa"
-        assert AthleteState.lesionada.value == "lesionada"
-        assert AthleteState.dispensada.value == "dispensada"
+        assert AthleteState.ATIVA.value == "ativa"
+        assert AthleteState.DISPENSADA.value == "dispensada"
+        assert AthleteState.ARQUIVADA.value == "arquivada"
 
     def test_state_from_string(self):
         """Criar enum a partir de string."""
-        state = AthleteState("lesionada")
-        assert state == AthleteState.lesionada
+        state = AthleteState("dispensada")
+        assert state == AthleteState.DISPENSADA
 
 
 class TestAthleteSoftDelete:
     """Testes de soft delete (RDB4)."""
 
-    def test_soft_delete_sets_deleted_at(self, db, organization, membership):
+    @pytest.mark.asyncio
+    async def test_soft_delete_sets_deleted_at(self, async_db, organization, membership):
         """Soft delete define deleted_at."""
         from datetime import datetime, timezone
 
         athlete = Athlete(
             organization_id=organization.id,
-            created_by_membership_id=membership.id,
             person_id=uuid4(),
-            full_name="Soft Delete Test",
+            athlete_name="Soft Delete Test",
+            birth_date=date(2000, 1, 1),
         )
-        db.add(athlete)
-        db.flush()
+        async_db.add(athlete)
+        await async_db.flush()
 
         # Simular soft delete
         athlete.deleted_at = datetime.now(timezone.utc)
         athlete.deleted_reason = "Teste de exclusão"
-        db.flush()
+        await async_db.flush()
 
         assert athlete.is_active is False
         assert athlete.deleted_reason == "Teste de exclusão"

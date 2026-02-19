@@ -88,8 +88,8 @@ class SmokeTestSetup:
             # 3. Criar person para coordenador
             self.person_id = str(uuid4())
             self.db.execute(text("""
-                INSERT INTO persons (id, full_name, first_name, last_name, gender)
-                VALUES (:id, 'Coordenador Smoke', 'Coordenador', 'Smoke', 'masculino')
+                INSERT INTO persons (id, first_name, last_name, full_name, gender)
+                VALUES (:id, 'Coordenador', 'Smoke', 'Coordenador Smoke', 'masculino')
             """), {"id": self.person_id})
             print(f"   ✅ person_id: {self.person_id}")
             
@@ -183,8 +183,8 @@ class SmokeTestSetup:
             # 10. Criar pessoa para atleta
             self.athlete_person_id = str(uuid4())
             self.db.execute(text("""
-                INSERT INTO persons (id, full_name, first_name, last_name, gender, birth_date)
-                VALUES (:id, 'Atleta Smoke', 'Atleta', 'Smoke', 'feminino', :birth)
+                INSERT INTO persons (id, first_name, last_name, full_name, gender, birth_date)
+                VALUES (:id, 'Atleta', 'Smoke', 'Atleta Smoke', 'feminino', :birth)
             """), {"id": self.athlete_person_id, "birth": date(2005, 1, 1)})
             print(f"   ✅ athlete_person_id: {self.athlete_person_id}")
             
@@ -192,16 +192,15 @@ class SmokeTestSetup:
             self.athlete_id = str(uuid4())
             self.db.execute(text("""
                 INSERT INTO athletes (
-                    id, person_id, organization_id, state,
+                    id, person_id, state,
                     athlete_name, birth_date
                 ) VALUES (
-                    :id, :person_id, :org_id, 'ativa',
+                    :id, :person_id, 'ativa',
                     'Atleta Smoke Test', :birth_date
                 )
             """), {
                 "id": self.athlete_id,
                 "person_id": self.athlete_person_id,
-                "org_id": self.org_id,
                 "birth_date": date(2005, 1, 1)
             })
             print(f"   ✅ athlete_id: {self.athlete_id}")

@@ -78,8 +78,7 @@ def auth_headers_superadmin(db: Session):
             email="superadmin_e2e@hbtrack.com",
             password_hash="$2b$12$test",
             status="ativo",
-            is_superadmin=True,
-            role_id=admin_role.id
+            is_superadmin=True
         )
         db.add(user)
         db.flush()
@@ -133,8 +132,7 @@ def auth_headers_dirigente(db: Session):
             email="dirigente_e2e@hbtrack.com",
             password_hash="$2b$12$test",
             status="ativo",
-            is_superadmin=False,
-            role_id=dirigente_role.id
+            is_superadmin=False
         )
         db.add(user)
         db.flush()
@@ -186,8 +184,7 @@ def auth_headers_coordenador(db: Session):
             email="coordenador_e2e@hbtrack.com",
             password_hash="$2b$12$test",
             status="ativo",
-            is_superadmin=False,
-            role_id=coordenador_role.id
+            is_superadmin=False
         )
         db.add(user)
         db.flush()
@@ -239,8 +236,7 @@ def auth_headers_treinador(db: Session):
             email="treinador_e2e@hbtrack.com",
             password_hash="$2b$12$test",
             status="ativo",
-            is_superadmin=False,
-            role_id=treinador_role.id
+            is_superadmin=False
         )
         db.add(user)
         db.flush()

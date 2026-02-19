@@ -319,11 +319,21 @@ async def startup_event():
     Evento de startup da aplicação.
     
     Executa:
-    1. Warmup do banco de dados (acordar Neon)
-    2. Healthcheck inicial
-    3. Log de inicialização
-    4. Step 17: Iniciar background tasks (WebSocket cleanup, notification cleanup)
+    1. Log de runtime Python (evidência permanente no journald)
+    2. Warmup do banco de dados (acordar Neon)
+    3. Healthcheck inicial
+    4. Log de inicialização
+    5. Step 17: Iniciar background tasks (WebSocket cleanup, notification cleanup)
     """
+    import sys
+    
+    # EVIDÊNCIA DE RUNTIME: Log permanente no journald (verificação objetiva de Python)
+    logger.warning("═══════════════════════════════════════════════════════════")
+    logger.warning(f"RUNTIME sys.executable = {sys.executable}")
+    logger.warning(f"RUNTIME sys.version = {sys.version.replace(chr(10), ' ')}")
+    logger.warning(f"RUNTIME Python {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}")
+    logger.warning("═══════════════════════════════════════════════════════════")
+    
     logger.info(
         f"🚀 HB Tracking API {settings.API_VERSION_NUMBER} iniciando...",
         extra={

@@ -1,0 +1,16 @@
+{
+  "checks": [
+    {
+      "exit_code": 4,
+      "id": "HARNESS_TEST_STDOUT",
+      "status": "BLOCKED_INPUT"
+    },
+    {
+      "exit_code": 4,
+      "id": "HARNESS_TEST_STDERR",
+      "status": "BLOCKED_INPUT"
+    }
+  ],
+  "overall_exit_code": 4,
+  "run_id": "HB-AUDIT-HARNESS-FIX-001"
+}

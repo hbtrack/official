@@ -408,8 +408,8 @@ templates:
       prohibited:
         - "<path_or_glob>"
       ssot_anchors:
-        - "docs/_generated/schema.sql"
-        - "docs/_generated/openapi.json"
+        - "docs/ssot/schema.sql"
+        - "docs/ssot/openapi.json"
 
     exit_code_semantics:
       "0": "PASS"

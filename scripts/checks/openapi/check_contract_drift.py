@@ -14,7 +14,7 @@ Exit Codes:
 
 Strategy:
   1. Import app.main.app and call app.openapi() to get the live spec.
-  2. Load docs/_generated/openapi.json (SSOT).
+  2. Load docs/ssot/openapi.json (SSOT).
   3. Compare structurally (ignoring key order, info.version, description
      whitespace).
   4. Report additions/removals/changes in paths, schemas, parameters.
@@ -45,7 +45,7 @@ from typing import Any, Dict, List, Set, Tuple
 # ── Paths ───────────────────────────────────────────────────────────────────
 REPO_ROOT = Path(__file__).resolve().parents[3]
 BACKEND_ROOT = REPO_ROOT / "Hb Track - Backend"
-OPENAPI_JSON = REPO_ROOT / "docs" / "_generated" / "openapi.json"
+OPENAPI_JSON = REPO_ROOT / "docs" / "ssot" / "openapi.json"
 
 # Exit codes (per exit_codes_registry.yaml)
 EC_OK = 0

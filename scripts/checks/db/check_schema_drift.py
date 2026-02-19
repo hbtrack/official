@@ -12,7 +12,7 @@ Exit Codes:
   5 - Schema drift (alias for 2, used by exit_codes_registry)
 
 Uses the same pg_dump approach as gen_docs_soot.py to get a fresh dump
-and compares it (structurally) against docs/_generated/schema.sql.
+and compares it (structurally) against docs/ssot/schema.sql.
 
 Usage:
   python scripts/checks/db/check_schema_drift.py [--verbose] [--fix]
@@ -42,7 +42,7 @@ from urllib.parse import urlparse
 # ── Paths ───────────────────────────────────────────────────────────────────
 REPO_ROOT = Path(__file__).resolve().parents[3]
 BACKEND_ROOT = REPO_ROOT / "Hb Track - Backend"
-SCHEMA_SQL = REPO_ROOT / "docs" / "_generated" / "schema.sql"
+SCHEMA_SQL = REPO_ROOT / "docs" / "ssot" / "schema.sql"
 
 # Exit codes (per exit_codes_registry.yaml)
 EC_OK = 0

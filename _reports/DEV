@@ -1,0 +1,51 @@
+([Past chat][1])([Past chat][2])([Past chat][1])([Past chat][1])([Past chat][3])([Past chat][3])([Past chat][4])([Past chat][5])([Past chat][6])([Past chat][7])([Past chat][8])([Past chat][2])([Past chat][9])([Past chat][10])([Past chat][9])([Past chat][2])
+
+O protocolo que ficou implícito nas nossas ARs não foi “eu confio no relato”, e sim “eu só considero **comprovado** quando existe **PASS objetivo em gates + Evidence Pack rastreável**”. Em termos operacionais, a comprovação acontece quando TODAS as condições abaixo são verdadeiras ao mesmo tempo:
+
+1. Congelamento da AR (pré-condição)
+
+* A AR está em arquivo no repo (freeze), com `ACTIVE_PLAN` completo (objetivo, DoD, invariantes, gates, rollback).
+* Se faltar contexto mínimo (ex.: “evidências necessárias por gate”, “status atual do componente”, “dependências”), a validação da AR dá FAIL e a execução não avança (o que você viu no ARV-002).
+
+2. Execução de gates binários (critério de verdade)
+
+* Cada gate definido no `ACTIVE_PLAN` precisa rodar e retornar um resultado **binário**:
+
+  * `EXIT=0` ⇒ PASS
+  * `EXIT!=0` ⇒ FAIL (ex.: você teve caso `EXIT(check_ci_gates_local)=2`, então NÃO estava comprovado; estava “falhou, com evidence gerada”).
+* “Verde” só conta se veio do gate, não de interpretação.
+
+3. Evidence Pack obrigatório (prova rastreável)
+   Para cada gate, precisa existir evidência mínima, tipicamente:
+
+* comando/entrypoint executado (exato),
+* stdout/stderr capturado em log,
+* artefatos de teste/relatório (quando aplicável),
+* resumo de `git diff` (o que mudou),
+* referência a commit (hash) que representa o estado “passante”.
+
+Sem Evidence Pack (ou com Evidence Pack incompleto), o protocolo não permite promover o estado para “comprovado”.
+
+4. Promoção de status (quando “vira verdade”)
+   Só depois de (1)+(2)+(3):
+
+* o resultado passa de `DRAFT/IN_PROGRESS` para algo como `VERIFIED` (ou equivalente),
+* e isso fica ancorado em um commit específico + evidências associadas.
+
+5. Rollback determinístico como “rede de segurança”
+   Mesmo com PASS, a execução só é aceita como “operacionalmente segura” se o rollback for determinístico e já estiver definido (ex.: `git revert`, sem force-push; restore/clean com escopo; preservando evidências).
+
+Observação importante (pela sua regra atual): “validação por snapshot” está banida e automação/infra precisa ser em Python (`.py`) usando `config.py`. Então, mesmo que antes tenhamos citado gates em `.ps1`, o protocolo de comprovação continua o mesmo (PASS binário + Evidence Pack), mas **a implementação do runner/coletor de evidências precisa estar em Python**.
+
+O que você NÃO perguntou, mas é a peça que mais costuma quebrar esse protocolo: “Qual é o *mínimo* de evidência exigida por tipo de gate?”. Se você não definir isso em um mapa (Gate → Evidências obrigatórias → Onde salvar → Como validar), você fica vulnerável a dois erros clássicos: PASS sem prova (log faltando) e prova sem PASS (log existe mas gate falhou). Se você quiser, eu te devolvo um template enxuto desse mapa (compatível com seu ban de snapshot e ban de .sh/.ps1) para virar SSOT do processo.
+
+[1]: https://chatgpt.com/c/6993d6c6-24d4-832c-8095-7be24f99f970 "Branch · Branch · Branch · Documentação para Agentes"
+[2]: https://chatgpt.com/c/69937551-91dc-832b-86c8-1093f477baaa "Determinismo no Fluxo IA"
+[3]: https://chatgpt.com/c/698f298a-d204-8327-9ce4-17770b9895c9 "Arquitetura HB Track"
+[4]: https://chatgpt.com/c/699108da-9620-832b-9fd8-467d5c0815e8 "Análise de Qualidade de Código"
+[5]: https://chatgpt.com/c/698f104f-ab04-8331-9309-6411c6210f65 "O que é ARCH_REQUEST"
+[6]: https://chatgpt.com/c/69932834-a0dc-8332-ae5a-0fff95cf3eb4 "Documentação para Agentes"
+[7]: https://chatgpt.com/c/69934f7d-4548-8325-b5ed-c41b80eb416d "Branch · Documentação para Agentes"
+[8]: https://chatgpt.com/c/6993fc6f-ca44-8329-9e41-3d1aa87f81ed "Branch · Branch · Branch · Branch · Documentação para Agentes"
+[9]: https://chatgpt.com/c/6991e33f-a1e4-832c-ae8d-037902993d54 "Code Governance Pack Refinement"
+[10]: https://chatgpt.com/c/698cd3b8-a6a8-832a-889f-4622495e9570 "Caminho para confiabilidade do gate"

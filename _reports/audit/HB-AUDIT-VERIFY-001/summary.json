@@ -1,0 +1,21 @@
+{
+  "checks": [
+    {
+      "exit_code": 2,
+      "id": "ATHLETES_PYTEST",
+      "status": "FAIL_ACTIONABLE"
+    },
+    {
+      "exit_code": 2,
+      "id": "ATHLETES_SMOKE_RUNTIME",
+      "status": "FAIL_ACTIONABLE"
+    },
+    {
+      "exit_code": 2,
+      "id": "RBAC_PYTEST_PERMISSIONS",
+      "status": "FAIL_ACTIONABLE"
+    }
+  ],
+  "overall_exit_code": 2,
+  "run_id": "HB-AUDIT-VERIFY-001"
+}

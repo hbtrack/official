@@ -9,8 +9,8 @@ depends_on:
   - docs/product/ARCHITECTURE.md
 evidence_expected:
   - docs/_generated/_reports/tasks/parity_pipeline.log
-  - docs/_generated/_core/schema.sql
-  - docs/_generated/_core/openapi.json
+  - docs/ssot/schema.sql
+  - docs/ssot/openapi.json
 ---
 
 # Runtime Scenario: Parity Pipeline (SSOT Generation + Validation)
@@ -38,13 +38,7 @@ Expected: All migrations applied, single head.
 cd "/c/HB TRACK"
 python scripts/ssot/gen_docs_ssot.py --all
 ```
-Expected: Files generated in output directory (schema.sql, openapi.json, alembic_state.txt, manifest.json).
-
-3. Copy generated artifacts to canonical location:
-```bash
-cp docs/ssot/schema.sql docs/_generated/_core/schema.sql
-cp docs/ssot/openapi.json docs/_generated/_core/openapi.json
-```
+Expected: Files generated in docs/ssot/ (schema.sql, openapi.json, alembic_state.txt, manifest.json).
 
 4. Run L0/L1 gate:
 ```bash

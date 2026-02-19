@@ -37,7 +37,7 @@ HB Track is a handball club management system covering athlete registration, tra
 
 ## SSOT artifacts
 Source of truth is managed via `docs/_canon/HB_TRACK_PROFILE.yaml`.
-Generated artifacts live in `docs/_generated/_core/` (read-only, derived).
+Generated artifacts live in `docs/ssot/` (read-only, derived).
 
 ## Gates
 Run `pwsh scripts/checks/check_hb_profile.ps1` for L0/L1 validation.

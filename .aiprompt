@@ -10,12 +10,12 @@ language: ["python", "typescript", "powershell", "sql"]
 # Authority hierarchy (SSOT precedence)
 authority:
   - name: "Database Schema"
-    source: "docs/_generated/_core/schema.sql"
+    source: "docs/ssot/schema.sql"
     trust: 100
     updateFrequency: "after migrations"
   
   - name: "OpenAPI Contract"
-    source: "docs/_generated/_core/openapi.json"
+    source: "docs/ssot/openapi.json"
     trust: 95
     updateFrequency: "after code changes"
   

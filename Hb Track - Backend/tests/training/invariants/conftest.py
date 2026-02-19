@@ -18,8 +18,8 @@ async def person_id(async_db: AsyncSession):
     """Cria uma pessoa no banco e retorna seu ID."""
     pid = str(uuid4())
     await async_db.execute(text("""
-        INSERT INTO persons (id, full_name, first_name, last_name, birth_date)
-        VALUES (:id, 'Test Person Training', 'Test', 'Training', :birth_date)
+        INSERT INTO persons (id, first_name, last_name, full_name, birth_date)
+        VALUES (:id, 'Test', 'Training', 'Test Person Training', :birth_date)
     """), {"id": pid, "birth_date": date(1995, 1, 1)})
     await async_db.flush()
     return pid
@@ -104,8 +104,8 @@ async def athlete_person_id(async_db: AsyncSession):
     """Cria uma pessoa para o atleta."""
     pid = str(uuid4())
     await async_db.execute(text("""
-        INSERT INTO persons (id, full_name, first_name, last_name)
-        VALUES (:id, 'Athlete Person Training', 'Athlete', 'Training')
+        INSERT INTO persons (id, first_name, last_name, full_name, birth_date)
+        VALUES (:id, 'Athlete', 'Training', 'Athlete Person Training', '1995-01-01')
     """), {"id": pid})
     await async_db.flush()
     return pid
@@ -116,7 +116,6 @@ async def athlete(async_db: AsyncSession, organization, athlete_person_id: str):
     """Cria um atleta para testes."""
     from datetime import date
     a = Athlete(
-        organization_id=organization.id,
         person_id=UUID(athlete_person_id),
         athlete_name="Atleta Teste Training",
         birth_date=date(1995, 1, 1),

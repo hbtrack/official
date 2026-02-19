@@ -27,16 +27,16 @@ evidence_expected: []
 pwsh scripts/checks/check_ci_gates_local.ps1 2>&1 | grep -i "fail"
 ```
 
-2. For **schema drift** — compare generated vs committed:
+2. For **schema drift** — regenerate and validate:
 ```bash
 python scripts/ssot/gen_docs_ssot.py --schema
-diff docs/ssot/schema.sql docs/_generated/_core/schema.sql
+python scripts/checks/db/check_schema_drift.py
 ```
 
-3. For **OpenAPI drift** — compare generated vs committed:
+3. For **OpenAPI drift** — regenerate and validate:
 ```bash
 python scripts/ssot/gen_docs_ssot.py --openapi
-diff docs/ssot/openapi.json docs/_generated/_core/openapi.json
+python scripts/checks/openapi/check_contract_drift.py
 ```
 
 4. For **multi-head migration**:
@@ -50,8 +50,8 @@ Expected: single head. If multiple: merge needed.
 
 | Symptom | Fix |
 |---------|-----|
-| Schema drift | Regenerate: `python scripts/ssot/gen_docs_ssot.py --schema` then copy to `_generated/_core/` |
-| OpenAPI drift | Regenerate: `python scripts/ssot/gen_docs_ssot.py --openapi` then copy to `_generated/_core/` |
+| Schema drift | Regenerate: `python scripts/ssot/gen_docs_ssot.py --schema` (outputs to docs/ssot/) |
+| OpenAPI drift | Regenerate: `python scripts/ssot/gen_docs_ssot.py --openapi` (outputs to docs/ssot/) |
 | Multi-head | `alembic merge heads -m "merge"` then `alembic upgrade head` |
 | Generator import error | `pip install -r requirements.txt` in backend venv |
 

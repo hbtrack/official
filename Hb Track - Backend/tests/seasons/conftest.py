@@ -28,8 +28,8 @@ def person_id(db):
     """Cria uma pessoa no banco e retorna seu ID."""
     pid = str(uuid4())
     db.execute(text("""
-        INSERT INTO persons (id, full_name)
-        VALUES (:id, 'Test Person')
+        INSERT INTO persons (id, first_name, last_name, full_name)
+        VALUES (:id, 'Test', 'Person', 'Test Person')
     """), {"id": pid})
     db.flush()
     return pid
@@ -41,8 +41,8 @@ def user_id(db, person_id):
     uid = str(uuid4())
     email = f"test_{uid[:8]}@example.com"
     db.execute(text("""
-        INSERT INTO users (id, email, full_name, person_id, password_hash, status)
-        VALUES (:id, :email, 'Test User', :person_id, 'hash', 'ativo')
+        INSERT INTO users (id, email, person_id, password_hash, status)
+        VALUES (:id, :email, :person_id, 'hash', 'ativo')
     """), {"id": uid, "email": email, "person_id": person_id})
     db.flush()
     return uid
@@ -65,31 +65,41 @@ def membership_id(db, organization_id, user_id, person_id, season_base_id):
     """Cria um membership no banco e retorna seu ID."""
     mid = str(uuid4())
     db.execute(text("""
-        INSERT INTO membership (id, organization_id, user_id, person_id, role_id, status, season_id)
-        VALUES (:id, :org_id, :user_id, :person_id, 2, 'ativo', :season_id)
+        INSERT INTO org_memberships (id, organization_id, person_id, role_id, start_at)
+        VALUES (:id, :org_id, :person_id, 3, NOW())
     """), {
         "id": mid,
         "org_id": organization_id,
-        "user_id": user_id,
-        "person_id": person_id,
-        "season_id": season_base_id
+        "person_id": person_id
     })
     db.flush()
     return mid
 
 
 @pytest.fixture
-def season_base_id(db, organization_id):
+def team_id(db, organization_id):
+    """Cria uma equipe e retorna seu ID."""
+    tid = str(uuid4())
+    db.execute(text("""
+        INSERT INTO teams (id, organization_id, name, category_id, gender)
+        VALUES (:id, :org_id, 'Test Team Seasons', 1, 'feminino')
+    """), {"id": tid, "org_id": organization_id})
+    db.flush()
+    return tid
+
+
+@pytest.fixture
+def season_base_id(db, team_id):
     """Cria uma season base sem membership (usando DEFERRED constraint) e retorna seu ID."""
     sid = str(uuid4())
     # Cria uma season temporária com membership_id nulo (será atualizada depois)
     # Como a FK é DEFERRABLE INITIALLY DEFERRED, isso funciona dentro da mesma transação
     db.execute(text("""
-        INSERT INTO seasons (id, organization_id, created_by_membership_id, year, name, starts_at, ends_at)
-        VALUES (:id, :org_id, :id, 2020, 'Base Season', :starts, :ends)
+        INSERT INTO seasons (id, team_id, year, name, start_date, end_date)
+        VALUES (:id, :team_id, 2020, 'Base Season', :starts, :ends)
     """), {
         "id": sid,
-        "org_id": organization_id,
+        "team_id": team_id,
         "starts": date.today() + timedelta(days=30),
         "ends": date.today() + timedelta(days=365)
     })

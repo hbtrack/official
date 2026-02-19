@@ -35,6 +35,7 @@ ROLE_PERMISSIONS: Dict[str, Dict[str, bool]] = {
         # Legado granular
         "can_manage_org": True,
         "can_manage_users": True,
+        "can_manage_members": True,  # Adicionar/remover membros de equipes (step 1)
         "can_manage_seasons": True,
         "can_create_team": True,
         "can_edit_team": True,

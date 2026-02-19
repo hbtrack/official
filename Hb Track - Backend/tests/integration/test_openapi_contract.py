@@ -2,14 +2,14 @@
 OpenAPI Contract Test
 
 AUTH-CONTEXT-SSOT-002 (AC-A4)
-Evidence: docs/_generated/openapi.json
+Evidence: docs/ssot/openapi.json
 
 Validates that:
 1. OpenAPI spec contains securitySchemes: cookieAuth + csrfToken
 2. Mutation paths require BOTH (AND logic): security: [{"cookieAuth": [], "csrfToken": []}]
 3. All paths in PATHS_MUTATION_LIST exist in OpenAPI spec
 
-SSOT: docs/_generated/openapi.json
+SSOT: docs/ssot/openapi.json
 AUTHORITY: Regenerated via scripts/inv.ps1 refresh
 """
 import json
@@ -32,7 +32,7 @@ UNSAFE_METHODS = ["post", "put", "patch", "delete"]
 def openapi_spec():
     """Load OpenAPI specification from generated artifact"""
     backend_root = Path(__file__).parent.parent.parent
-    openapi_path = backend_root / "docs" / "_generated" / "openapi.json"
+    openapi_path = backend_root / "docs" / "ssot" / "openapi.json"
     
     assert openapi_path.exists(), f"OpenAPI spec not found at {openapi_path}"
     

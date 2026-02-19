@@ -5,7 +5,7 @@ RUNTIME DB TEST - Testa constraint real no Postgres via IntegrityError.
 
 Evidência:
 - Constraint: `ck_wellness_pre_sleep_quality CHECK (((sleep_quality >= 1) AND (sleep_quality <= 5)))`
-- Schema: `Hb Track - Backend/docs/_generated/schema.sql:2895`
+- Schema: `Hb Track - Backend/docs/ssot/schema.sql:2895`
 - Model: `app/models/wellness_pre.py:59` (sleep_quality SmallInteger)
 
 Este teste NÃO usa string match. Ele insere registros no DB e verifica

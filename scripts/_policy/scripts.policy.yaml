@@ -21,6 +21,31 @@ spec:
     schema_json: "scripts/_policy/scripts.policy.schema.json"
   derived_docs:
     - "scripts/README.md"
+  templates:
+    # Local templates policy: Each operational category MAY have a templates/ folder
+    # with category-specific header templates for scaffolding new scripts.
+    location_pattern: "scripts/{category}/templates/"
+    required_files:
+      - "header_template.sql.txt"
+      - "header_template.py.txt"
+      - "header_template.ps1.txt"
+    validation_rule: "HB014"
+    purpose: "Category-specific templates reflect correct KIND, paths, and side-effects for the category. Scaffolders SHOULD prefer local templates when available."
+    categories_with_templates:
+      - "checks"
+      - "diagnostics"
+      - "fixes"
+      - "generate"
+      - "migrate"
+      - "ops"
+      - "reset"
+      - "run"
+      - "seeds"
+      - "temp"
+      - "gates"
+      - "ssot"
+    ssot_fallback: "scripts/_policy/templates/"
+    notes: "Templates MUST contain HB_SCRIPT_KIND and HB_SCRIPT_SCOPE metadata. {{SCOPE}} and {{ACTION}} are placeholders for scaffolders."
 
 normative:
   exit_codes:
@@ -82,6 +107,8 @@ classification:
     - "ops"
     - "temp"
     - "artifacts"
+    - "gates"
+    - "ssot"
 
   # Deterministic rules: first match wins by precedence_order.
   rules:

@@ -1,0 +1,39 @@
+meta:
+  document: CORRECTION_WRITE_ALLOWLIST.yaml
+  version: "2.0"
+  status: SSOT
+  description: "Define o escopo de escrita permitido para o Arquiteto/Executor em modo de correção."
+  enforcement: "IA MUST NOT edit files outside these paths without a formal WAIVER."
+
+# Caminhos onde a escrita é permitida por padrão para correções
+allowlist:
+  - path: "app/"
+    description: "Código fonte do backend (FastAPI/SQLAlchemy)."
+  - path: "web/"
+    description: "Código fonte do frontend (React/Next.js)."
+  - path: "tests/"
+    description: "Suíte de testes (unitários, integração e fixtures)."
+  - path: "_reports/cases/"
+    description: "Gestão de estado e logs de correção."
+  - path: "docs/api/"
+    description: "Documentação técnica de endpoints."
+
+# Proibições explícitas (Overrides)
+# Mesmo que um caminho acima coincida, estas regras bloqueiam a escrita
+prohibitions:
+  - path: "docs/_canon/_agent/"
+    description: "Protocolos, Registries e Matrizes de Governança (SSOT)."
+  - path: "scripts/checks/"
+    description: "Scripts de fiscalização do protocolo (Policiais)."
+  - path: "scripts/audit/"
+    description: "Runner oficial de auditoria."
+  - path: "config.py"
+    description: "Configurações globais de caminhos e segredos."
+  - path: "alembic/"
+    description: "Histórico de migrations (deve ser alterado via comando, não edição direta)."
+
+# Regras de atomicidade
+policy:
+  max_files_per_patch: 5
+  forbidden_extensions: [".exe", ".bin", ".ps1"]
+  require_auth_on_delete: true

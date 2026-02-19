@@ -10,8 +10,8 @@ def person_id(db):
     pid = str(uuid4())
     db.execute(
         text("""
-            INSERT INTO persons (id, full_name, birth_date, created_at, updated_at)
-            VALUES (:id, 'Pessoa Teste User', '1990-01-01', NOW(), NOW())
+            INSERT INTO persons (id, first_name, last_name, full_name, birth_date, created_at, updated_at)
+            VALUES (:id, 'Pessoa', 'Teste User', 'Pessoa Teste User', '1990-01-01', NOW(), NOW())
         """),
         {"id": pid}
     )
@@ -25,7 +25,6 @@ def user_data(person_id):
     return {
         "person_id": person_id,
         "email": f"test-{uuid4().hex[:8]}@example.com",
-        "full_name": "Usuário Teste",
         "password_hash": "hashed_password",
         "status": "ativo",
     }

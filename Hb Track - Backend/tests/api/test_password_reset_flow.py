@@ -33,8 +33,8 @@ def create_person(db: Session) -> str:
     pid = str(uuid4())
     db.execute(
         text("""
-            INSERT INTO persons (id, full_name, first_name, last_name, gender, birth_date, created_at, updated_at)
-            VALUES (:id, 'Pessoa Teste Password', 'Pessoa', 'Teste', 'masculino', '1990-01-01', NOW(), NOW())
+            INSERT INTO persons (id, first_name, last_name, full_name, gender, birth_date, created_at, updated_at)
+            VALUES (:id, 'Pessoa', 'Teste', 'Pessoa Teste Password', 'masculino', '1990-01-01', NOW(), NOW())
         """),
         {"id": pid}
     )

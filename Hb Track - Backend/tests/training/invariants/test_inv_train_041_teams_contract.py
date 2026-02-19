@@ -11,7 +11,7 @@ Obrigação B:
   - responses: 200, 422
   - security: HTTPBearer (autenticação JWT obrigatória)
   
-  Evidência: docs/_generated/openapi.json (FastAPI auto-generated schema)
+  Evidência: docs/ssot/openapi.json (FastAPI auto-generated schema)
   
   O teste valida que o contrato declarado no SPEC corresponde ao OpenAPI real:
     - operationId existe
@@ -20,7 +20,7 @@ Obrigação B:
     - security scheme está presente
   
   Este teste NÃO usa fixtures de DB (db, async_db).
-  Valida apenas o contrato da API contra docs/_generated/openapi.json.
+  Valida apenas o contrato da API contra docs/ssot/openapi.json.
 """
 
 import json

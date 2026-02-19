@@ -27,6 +27,7 @@ from enum import Enum
 
 from app.core.db import get_async_db
 from app.core.auth import get_current_user, MockUser
+from app.models.user import User
 from app.services.unified_person_service import UnifiedPersonService
 
 router = APIRouter(prefix="/unified-registration", tags=["unified-registration"])

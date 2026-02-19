@@ -18,26 +18,28 @@ from app.services.membership_service import (
 class TestRDB9ExclusividadeStaff:
     """RDB9: Staff tem apenas 1 vínculo ativo."""
     
-    def test_RDB9_create_first_staff_ok(self, db, organization, user):
+    @pytest.mark.asyncio
+    async def test_RDB9_create_first_staff_ok(self, async_db, organization, user, person_id):
         """Primeiro vínculo staff é permitido."""
-        service = MembershipService(db)
+        service = MembershipService(async_db)
         
-        membership = service.create(
+        membership = await service.create(
             organization_id=organization.id,
-            user_id=user.id,
+            person_id=person_id,
             role_id=ROLE_COACH,
         )
         
         assert membership.id is not None
     
-    def test_RDB9_duplicate_staff_fails(self, db, organization, user, membership_coach):
+    @pytest.mark.asyncio
+    async def test_RDB9_duplicate_staff_fails(self, async_db, organization, user, membership_coach, person_id):
         """Segundo vínculo staff para mesma pessoa falha."""
-        service = MembershipService(db)
+        service = MembershipService(async_db)
         
         with pytest.raises(ValueError, match="conflict_membership_active"):
-            service.create(
+            await service.create(
                 organization_id=organization.id,
-                user_id=user.id,  # mesmo usuário
+                person_id=person_id,  # mesma pessoa
                 role_id=ROLE_COORDINATOR,  # papel diferente, mas ainda staff
             )
 
@@ -46,22 +48,23 @@ class TestRDB9ExclusividadeAtleta:
     """RDB9: Atleta tem apenas 1 vínculo ativo por temporada."""
     
     @pytest.mark.skip(reason="Aguardando season_id no modelo Membership")
-    def test_RDB9_athlete_different_seasons_ok(
-        self, db, organization, user, season_2024, season_2025
+    @pytest.mark.asyncio
+    async def test_RDB9_athlete_different_seasons_ok(
+        self, async_db, organization, user, person_id, season_2024, season_2025
     ):
         """Atleta pode ter vínculo em temporadas diferentes."""
-        service = MembershipService(db)
+        service = MembershipService(async_db)
         
-        m1 = service.create(
+        m1 = await service.create(
             organization_id=organization.id,
-            user_id=user.id,
+            person_id=person_id,
             role_id=ROLE_ATHLETE,
             season_id=season_2024.id,
         )
         
-        m2 = service.create(
+        m2 = await service.create(
             organization_id=organization.id,
-            user_id=user.id,
+            person_id=person_id,
             role_id=ROLE_ATHLETE,
             season_id=season_2025.id,  # temporada diferente
         )
@@ -69,16 +72,17 @@ class TestRDB9ExclusividadeAtleta:
         assert m1.id != m2.id
     
     @pytest.mark.skip(reason="Aguardando season_id no modelo Membership")
-    def test_RDB9_athlete_same_season_fails(
-        self, db, organization, user, season_2024, membership_athlete
+    @pytest.mark.asyncio
+    async def test_RDB9_athlete_same_season_fails(
+        self, async_db, organization, user, person_id, season_2024, membership_athlete
     ):
         """Segundo vínculo atleta na mesma temporada falha."""
-        service = MembershipService(db)
+        service = MembershipService(async_db)
         
         with pytest.raises(ValueError, match="conflict_membership_active"):
-            service.create(
+            await service.create(
                 organization_id=organization.id,
-                user_id=user.id,
+                person_id=person_id,
                 role_id=ROLE_ATHLETE,
                 season_id=season_2024.id,  # mesma temporada
             )

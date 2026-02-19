@@ -39,7 +39,7 @@ def _create_person_user(db, full_name: str, email: str) -> tuple[str, str]:
     person_id = str(uuid4())
     user_id = str(uuid4())
     db.execute(
-        text("INSERT INTO persons (id, full_name) VALUES (:id, :name)"),
+        text("INSERT INTO persons (id, first_name, last_name, full_name) VALUES (:id, 'John', 'Doe', :name)"),
         {"id": person_id, "name": full_name},
     )
     db.execute(

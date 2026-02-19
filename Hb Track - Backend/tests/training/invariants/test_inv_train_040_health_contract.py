@@ -11,7 +11,7 @@ Obrigação B:
   - responses: 200
   - security: none (endpoint público)
   
-  Evidência: docs/_generated/openapi.json (FastAPI auto-generated schema)
+  Evidência: docs/ssot/openapi.json (FastAPI auto-generated schema)
   
   O teste valida que o contrato declarado no SPEC corresponde ao OpenAPI real:
     - operationId existe
@@ -19,7 +19,7 @@ Obrigação B:
     - response codes estão documentados
   
   Este teste NÃO usa fixtures de DB (db, async_db).
-  Valida apenas o contrato da API contra docs/_generated/openapi.json.
+  Valida apenas o contrato da API contra docs/ssot/openapi.json.
 """
 
 import json

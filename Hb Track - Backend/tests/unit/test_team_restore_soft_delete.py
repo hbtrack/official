@@ -40,7 +40,7 @@ def test_team_restore_clears_soft_delete(db):
     role_id = _ensure_role_id(db, "coordenador", "Coordenador")
 
     db.execute(
-        text("INSERT INTO persons (id, full_name) VALUES (:id, 'Restore Person')"),
+        text("INSERT INTO persons (id, first_name, last_name, full_name) VALUES (:id, 'Restore', 'Person', 'Restore Person')"),
         {"id": person_id},
     )
     db.execute(

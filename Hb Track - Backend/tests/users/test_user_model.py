@@ -11,7 +11,6 @@ class TestUserModel:
         user = User(
             person_id=str(person_id),
             email="test@example.com",
-            full_name="Test User",
             status="ativo",
         )
         db.add(user)

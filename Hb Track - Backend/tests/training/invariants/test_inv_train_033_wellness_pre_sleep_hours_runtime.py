@@ -5,7 +5,7 @@ RUNTIME DB TEST - Testa constraint real no Postgres via IntegrityError.
 
 Evidência:
 - Constraint: `ck_wellness_pre_sleep_hours CHECK (((sleep_hours >= (0)::numeric) AND (sleep_hours <= (24)::numeric)))`
-- Schema: `Hb Track - Backend/docs/_generated/schema.sql:2895`
+- Schema: `Hb Track - Backend/docs/ssot/schema.sql:2895`
 - Model: `app/models/wellness_pre.py:58` (sleep_hours Numeric(4,1))
 
 Este teste NÃO usa string match. Ele insere registros no DB e verifica

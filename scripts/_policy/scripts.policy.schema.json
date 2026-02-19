@@ -56,6 +56,18 @@
         },
         "derived_docs": {
           "type": "array"
+        },
+        "templates": {
+          "type": "object",
+          "properties": {
+            "location_pattern": { "type": "string" },
+            "required_files": { "type": "array", "items": { "type": "string" } },
+            "validation_rule": { "type": "string" },
+            "purpose": { "type": "string" },
+            "categories_with_templates": { "type": "array", "items": { "type": "string" } },
+            "ssot_fallback": { "type": "string" },
+            "notes": { "type": "string" }
+          }
         }
       }
     },

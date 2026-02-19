@@ -135,7 +135,7 @@ function Load-TablesManual {
 }
 
 function Load-TablesFromSSOT([string[]]$Exclude) {
-  $schemaPath = "docs/_generated/schema.sql"
+  $schemaPath = "docs/ssot/schema.sql"
   if (-not (Test-Path $schemaPath)) {
     Abort "SSOT não encontrado: $schemaPath. Rode inv.ps1 refresh (ou remova -SkipRefresh)." 1
   }
@@ -186,20 +186,20 @@ function Restore-GeneratedArtifacts {
   # Backend docs/_generated
   try {
     git restore -- `
-      "docs/_generated/alembic_state.txt" `
-      "docs/_generated/manifest.json" `
-      "docs/_generated/parity_report.json" `
-      "docs/_generated/parity-scan.log" `
-      "docs/_generated/schema.sql" 2>$null | Out-Null
+      "docs/ssot/alembic_state.txt" `
+      "docs/ssot/manifest.json" `
+      "docs/ssot/parity_report.json" `
+      "docs/ssot/parity-scan.log" `
+      "docs/ssot/schema.sql" 2>$null | Out-Null
   } catch {}
 
-  # Root docs/_generated (um nível acima do backend)
+  # Root docs/ssot (um nível acima do backend)
   try {
     git restore -- `
-      "..\docs/_generated/alembic_state.txt" `
-      "..\docs/_generated/manifest.json" `
-      "..\docs/_generated/schema.sql" `
-      "..\docs/_generated/trd_training_permissions_report.txt" 2>$null | Out-Null
+      "..\/docs/ssot/alembic_state.txt" `
+      "..\/docs/ssot/manifest.json" `
+      "..\/docs/ssot/schema.sql" `
+      "..\/docs/ssot/trd_training_permissions_report.txt" 2>$null | Out-Null
   } catch {}
 }
 

@@ -20,8 +20,8 @@ def owner_person_id(db):
     """Cria uma pessoa para ser dona da organização."""
     pid = str(uuid4())
     db.execute(text("""
-        INSERT INTO persons (id, full_name)
-        VALUES (:id, 'Owner Person')
+        INSERT INTO persons (id, first_name, last_name, full_name)
+        VALUES (:id, 'Owner', 'Person', 'Owner Person')
     """), {"id": pid})
     db.flush()
     return pid
@@ -33,8 +33,8 @@ def owner_user_id(db, owner_person_id):
     uid = str(uuid4())
     email = f"owner_{uid[:8]}@example.com"
     db.execute(text("""
-        INSERT INTO users (id, email, full_name, person_id, password_hash, status)
-        VALUES (:id, :email, 'Owner User', :person_id, 'hash', 'ativo')
+        INSERT INTO users (id, email, person_id, password_hash, status)
+        VALUES (:id, :email, :person_id, 'hash', 'ativo')
     """), {"id": uid, "email": email, "person_id": owner_person_id})
     db.flush()
     return uid

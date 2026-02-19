@@ -15,16 +15,17 @@ from app.models.athlete import Athlete, AthleteState
 class TestR13EstadosAtleta:
     """R13: Estados da atleta e transições."""
     
-    def test_R13_create_athlete_state_ativa(self, db, organization):
+    @pytest.mark.asyncio
+    async def test_R13_create_athlete_state_ativa(self, async_db, organization):
         """Atleta criada com estado 'ativa' por padrão."""
-        service = AthleteService(db)
+        service = AthleteService(async_db)
         
-        athlete = service.create(
+        athlete = await service.create(
             organization_id=organization.id,
             full_name="Maria Silva",
         )
         
-        assert athlete.state == AthleteState.ativa.value
+        assert athlete.state == AthleteState.ATIVA.value
     
     @pytest.mark.skip(reason="AthleteStateHistory não implementado - change_state() comentado")
     def test_R13_change_to_lesionada(self, db, athlete):

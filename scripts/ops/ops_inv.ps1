@@ -207,26 +207,26 @@ switch ($Command) {
         if (Test-Path $RepoSchemaFile) {
             $RepoSchemaSize = (Get-Item $RepoSchemaFile).Length
             if ((Test-Path $SchemaFile) -and $RepoSchemaSize -ne (Get-Item $SchemaFile).Length) {
-                Write-Host "[FAIL] docs/_generated/schema.sql size mismatch vs backend copy" -ForegroundColor Red
+                Write-Host "[FAIL] docs/ssot/schema.sql size mismatch vs backend copy" -ForegroundColor Red
                 $AllArtifactsExist = $false
             } else {
-                Write-Host "[OK] docs/_generated/schema.sql ($RepoSchemaSize bytes)" -ForegroundColor Green
+                Write-Host "[OK] docs/ssot/schema.sql ($RepoSchemaSize bytes)" -ForegroundColor Green
             }
         } else {
-            Write-Host "[FAIL] docs/_generated/schema.sql NOT FOUND" -ForegroundColor Red
+            Write-Host "[FAIL] docs/ssot/schema.sql NOT FOUND" -ForegroundColor Red
             $AllArtifactsExist = $false
         }
 
         if (Test-Path $RepoOpenApiFile) {
             $RepoOpenApiSize = (Get-Item $RepoOpenApiFile).Length
             if ((Test-Path $OpenApiFile) -and $RepoOpenApiSize -ne (Get-Item $OpenApiFile).Length) {
-                Write-Host "[FAIL] docs/_generated/openapi.json size mismatch vs backend copy" -ForegroundColor Red
+                Write-Host "[FAIL] docs/ssot/openapi.json size mismatch vs backend copy" -ForegroundColor Red
                 $AllArtifactsExist = $false
             } else {
-                Write-Host "[OK] docs/_generated/openapi.json ($RepoOpenApiSize bytes)" -ForegroundColor Green
+                Write-Host "[OK] docs/ssot/openapi.json ($RepoOpenApiSize bytes)" -ForegroundColor Green
             }
         } else {
-            Write-Host "[FAIL] docs/_generated/openapi.json NOT FOUND" -ForegroundColor Red
+            Write-Host "[FAIL] docs/ssot/openapi.json NOT FOUND" -ForegroundColor Red
             $AllArtifactsExist = $false
         }
 

@@ -44,8 +44,8 @@ class AthleteService:
         if search:
             search_filter = f"%{search}%"
             query = query.where(
-                (Athlete.full_name.ilike(search_filter)) |
-                (Athlete.nickname.ilike(search_filter))
+                (Athlete.athlete_name.ilike(search_filter)) |
+                (Athlete.athlete_nickname.ilike(search_filter))
             )
         
         if not include_deleted:
@@ -56,7 +56,7 @@ class AthleteService:
         total = await self.db.scalar(count_query) or 0
         
         query = query.offset((page - 1) * limit).limit(limit)
-        query = query.order_by(Athlete.full_name.asc())
+        query = query.order_by(Athlete.athlete_name.asc())
         
         result = await self.db.scalars(query)
         return list(result.all()), total
@@ -137,12 +137,10 @@ class AthleteService:
 
         athlete = Athlete(
             organization_id=organization_id,
-            full_name=full_name,
-            nickname=nickname,
+            athlete_name=full_name,
+            athlete_nickname=nickname,
             birth_date=birth_date,
-            position=position,
             state=AthleteState.ATIVA.value,
-            created_by_membership_id=created_by_membership_id,
             person_id=person_id,
         )
         self.db.add(athlete)
@@ -212,9 +210,9 @@ class AthleteService:
         """
         Atualiza dados editáveis (não estado).
         
-        Campos editáveis: full_name, nickname, birth_date, position
+        Campos editáveis: athlete_name, athlete_nickname, birth_date
         """
-        allowed_fields = {"full_name", "nickname", "birth_date", "position"}
+        allowed_fields = {"athlete_name", "athlete_nickname", "birth_date"}
 
         athlete = await self.get_by_id(athlete_id)
         if athlete is None:

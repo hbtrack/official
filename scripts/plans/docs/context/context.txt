@@ -1,0 +1,242 @@
+================================================================================
+HB TRACK — CONTEXT SNAPSHOT FOR ARCHITECT
+================================================================================
+Generated at: 2026-02-17T18:28:55.074852
+Project root: C:\HB TRACK
+Backend dir: C:\HB TRACK\Hb Track - Backend
+
+## GIT STATE
+--------------------------------------------------------------------------------
+branch: dev-changes
+last_commit: 5503f7c gates: add L2 consistency gate + fix profile broken ref
+uncommitted_files: M .aiprompt
+ M .clauderules
+ M .cursorrules
+ M .github/workflows/architecture-requests.yaml
+ M .gitignore
+ M "Hb Track - Backend/tests/integration/test_openapi_contract.py"
+ M "Hb Track - Backend/tests/training/invariants/test_inv_train_032_wellness_post_rpe_runtime.py"
+ M "Hb Track - Backend/tests/training/invariants/test_inv_train_033_wellness_pre_sleep_hours_runtime.py"
+ M "Hb Track - Backend/tests/training/invariants/test_inv_train_034_wellness_pre_sleep_quality_runtime.py"
+ M "Hb Track - Backend/tests/training/invariants/test_inv_train_035_session_templates_unique_name_runtime.py"
+ M "Hb Track - Backend/tests/training/invariants/test_inv_train_036_wellness_rankings_unique_runtime.py"
+ M "Hb Track - Backend/tests/training/invariants/test_inv_train_037_cycle_dates_runtime.py"
+ M "Hb Track - Backend/tests/training/invariants/test_inv_train_040_health_contract.py"
+ M "Hb Track - Backend/tests/training/invariants/test_inv_train_041_teams_contract.py"
+ D IMPLEMENTATION_SUMMARY.md
+ M docs/_INDEX.yaml
+ M docs/_canon/HB_TRACK_PROFILE.yaml
+ M docs/playbooks/pb_parity_gate_fail.md
+ M docs/product/SYSTEM_OVERVIEW.md
+ M docs/product/runtime/parity_pipeline.md
+ M scripts/README.md
+ M scripts/_lib/README.md
+ M scripts/_policy/policy_lib.py
+ M scripts/_policy/scripts.policy.schema.json
+ M scripts/_policy/scripts.policy.yaml
+ M scripts/_policy/templates/_shared/README.md
+ D scripts/checks/check_ci_gates_local.ps1
+ D scripts/checks/check_hb_profile.ps1
+ D scripts/checks/check_hb_track_profile.py
+ D scripts/checks/check_uds_consistency.py
+ M scripts/checks/db/check_schema_drift.py
+ M scripts/checks/openapi/check_contract_drift.py
+ M scripts/generate/schema/gen_autogen_model_from_db.py
+ M scripts/ops/infra/ops_models_batch.ps1
+ M scripts/ops/ops_inv.ps1
+?? VPS_1.md
+?? VPS_2.md
+?? docs/_canon/_agent/
+?? scripts/__init__.py
+?? scripts/checks/templates/
+?? scripts/diagnostics/templates/
+?? scripts/fixes/templates/
+?? scripts/gates/
+?? scripts/generate/templates/
+?? scripts/migrate/templates/
+?? scripts/ops/templates/
+?? scripts/plans/
+?? scripts/reset/templates/
+?? scripts/run/templates/
+?? scripts/seeds/templates/
+?? scripts/ssot/templates/
+?? vps4.md
+?? vps5.md
+?? vps6.md
+?? vps_3.md
+
+## DATABASE SCHEMA
+--------------------------------------------------------------------------------
+current_migration: 'N/A'
+pending_migrations: 'N/A'
+model_files:
+  - advantage_states.py
+  - athlete.py
+  - athlete_badge.py
+  - attendance.py
+  - audit_logs.py
+  - base.py
+  - category.py
+  - competition.py
+  - competition_match.py
+  - competition_opponent_team.py
+  - competition_phase.py
+  - competition_season.py
+  - competition_standing.py
+  - data_access_log.py
+  - data_retention_log.py
+  - defensive_position.py
+  - email_queue.py
+  - event_subtypes.py
+  - event_types.py
+  - exercise.py
+  - exercise_favorite.py
+  - exercise_tag.py
+  - export_job.py
+  - export_rate_limit.py
+  - idempotency_key.py
+  - match.py
+  - match_event.py
+  - match_period.py
+  - match_possessions.py
+  - match_roster.py
+  - match_teams.py
+  - medical_case.py
+  - membership.py
+  - notification.py
+  - offensive_position.py
+  - organization.py
+  - password_reset.py
+  - permission.py
+  - person.py
+  - phases_of_play.py
+  - refresh_token.py
+  - role.py
+  - role_permission.py
+  - schooling_level.py
+  - season.py
+  - session_exercise.py
+  - session_template.py
+  - team.py
+  - team_membership.py
+  - team_registration.py
+  - team_wellness_ranking.py
+  - training_alert.py
+  - training_analytics_cache.py
+  - training_cycle.py
+  - training_microcycle.py
+  - training_session.py
+  - training_suggestion.py
+  - user.py
+  - wellness_post.py
+  - wellness_pre.py
+  - wellness_reminder.py
+
+## FILE STRUCTURE
+--------------------------------------------------------------------------------
+
+app/models:
+
+
+app/schemas:
+
+
+app/services:
+
+
+tests:
+
+
+## TEST STATISTICS
+--------------------------------------------------------------------------------
+pytest_collection: 
+test_files: 
+
+## DEPENDENCIES
+--------------------------------------------------------------------------------
+Key requirements (first 20):
+  - ï»¿alembic==1.17.2
+  - annotated-types==0.7.0
+  - anyio==4.12.0
+  - asyncpg==0.31.0
+  - bcrypt==4.0.1
+  - cachetools==6.2.4
+  - certifi==2025.11.12
+  - cffi==2.0.0
+  - charset-normalizer==3.4.4
+  - click==8.3.1
+  - colorama==0.4.6
+  - coverage==7.13.0
+  - cryptography==46.0.3
+  - Deprecated==1.3.1
+  - dnspython==2.8.0
+  - ecdsa==0.19.1
+  - email-validator==2.3.0
+  - fastapi==0.127.0
+  - greenlet==3.3.0
+  - h11==0.16.0
+
+## INVARIANTS
+--------------------------------------------------------------------------------
+No invariants documented yet.
+
+## RECENT MIGRATIONS
+--------------------------------------------------------------------------------
+No migrations found.
+
+## REQUIRED ENVIRONMENT VARIABLES
+--------------------------------------------------------------------------------
+  - ENV
+  - DATABASE_URL
+  - DATABASE_URL_SYNC
+  - POSTGRES_HOST
+  - POSTGRES_PORT
+  - POSTGRES_PASSWORD
+  - POSTGRES_DB
+  - POSTGRES_USER
+  - PGDATA
+  - DB_POOL_SIZE
+  - DB_MAX_OVERFLOW
+  - DB_POOL_PRE_PING
+  - DB_POOL_TIMEOUT
+  - DB_POOL_RECYCLE
+  - JWT_SECRET
+  - JWT_ALGORITHM
+  - JWT_EXPIRES_MINUTES
+  - API_DESCRIPTION
+  - API_TITLE
+  - API_DESCRIPTION
+  - FRONTEND_URL
+  - CORS_ORIGINS
+  - CORS_ALLOW_CREDENTIALS
+  - CACHE_TTL_VINCULOS
+  - CACHE_TTL_PERMISSOES
+  - LOG_LEVEL
+  - CLOUDINARY_URL
+  - CLOUDINARY_CLOUD_NAME
+  - CLOUDINARY_API_KEY
+  - CLOUDINARY_API_SECRET
+  - CLOUDINARY_UPLOAD_PRESET
+  - CLOUDINARY_ASSET
+  - RESEND_API_KEY
+  - RESEND_FROM_EMAIL
+  - RESEND_FROM_NAME
+  - GEMINI_API_KEY
+  - CELERY_BROKER_URL
+  - CELERY_RESULT_BACKEND
+  - CELERY_TIMEZONE
+  - CELERY_TASK_TRACK_STARTED
+  - CELERY_TASK_TIME_LIMIT
+  - FLOWER_BASIC_AUTH
+  - FLOWER_PORT
+  - FLOWER_BASIC_AUTH
+
+================================================================================
+END OF SNAPSHOT
+================================================================================
+
+INSTRUCTIONS FOR ARCHITECT:
+- Use this snapshot to understand current repo state
+- Do NOT specify changes to files/tables that don't exist
+- Do NOT create migrations for tables that already exist
+- Verify your Plan against this snapshot before declaring it complete

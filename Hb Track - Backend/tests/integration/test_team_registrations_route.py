@@ -74,7 +74,7 @@ async def test_move_athlete_route(async_db):
     registration_id = uuid4()
 
     await async_db.execute(
-        text("INSERT INTO persons (id, full_name) VALUES (:id, 'Actor Person')"),
+        text("INSERT INTO persons (id, first_name, last_name, full_name) VALUES (:id, 'Actor', 'Person', 'Actor Person')"),
         {"id": actor_person_id},
     )
     await async_db.execute(
@@ -173,7 +173,7 @@ async def test_move_athlete_route(async_db):
         },
     )
     await async_db.execute(
-        text("INSERT INTO persons (id, full_name, birth_date) VALUES (:id, 'Athlete Person', :birth)"),
+        text("INSERT INTO persons (id, first_name, last_name, full_name, birth_date) VALUES (:id, 'Athlete', 'Person', 'Athlete Person', :birth)"),
         {"id": athlete_person_id, "birth": date(2012, 1, 1)},
     )
     await async_db.execute(

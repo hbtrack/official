@@ -8,17 +8,20 @@ truth:
 
 ssot_registry:
   - artifact: schema.sql
-    path: docs/_generated/_core/schema.sql
+    path: docs/ssot/schema.sql
     kind: derived_promoted
     required: false
-    update_trigger: "run your generator to refresh _generated/_core outputs"
+    update_trigger: "run SSOT generator"
   - artifact: openapi.json
-    path: docs/_generated/_core/openapi.json
+    path: docs/ssot/openapi.json
     kind: derived_promoted
     required: false
-    update_trigger: "run your generator to refresh _generated/_core outputs"
+    update_trigger: "run SSOT generator"
 
 approved_commands:
+  - id: ssot_generate_all
+    cmd: "python scripts/ssot/gen_docs_ssot.py --all"
+    purpose: "Generate SSOT artifacts into docs/ssot"
   - id: gate_profile
     cmd: "pwsh scripts/checks/check_hb_profile.ps1"
     purpose: "L0/L1 PROFILE validation"

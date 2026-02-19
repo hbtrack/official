@@ -37,7 +37,7 @@ def _ensure_role(db, code: str, name: str) -> int:
 def _create_person(db, name: str) -> str:
     person_id = str(uuid4())
     db.execute(
-        text("INSERT INTO persons (id, full_name) VALUES (:id, :name)"),
+        text("INSERT INTO persons (id, first_name, last_name, full_name) VALUES (:id, 'John', 'Doe', :name)"),
         {"id": person_id, "name": name},
     )
     db.flush()

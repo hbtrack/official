@@ -83,8 +83,8 @@ class TestSetup:
             # 3. Criar person para o coach
             self.person_id = str(uuid4())
             self.db.execute(text("""
-                INSERT INTO persons (id, full_name, first_name, last_name, gender)
-                VALUES (:id, 'Coach de Teste', 'Coach', 'de Teste', 'masculino')
+                INSERT INTO persons (id, first_name, last_name, full_name, gender)
+                VALUES (:id, 'Coach', 'de Teste', 'Coach de Teste', 'masculino')
             """), {"id": self.person_id})
             print(f"   ✅ person_id: {self.person_id}")
             

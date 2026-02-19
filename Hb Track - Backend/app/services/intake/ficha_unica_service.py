@@ -24,7 +24,7 @@ Baseado em: Ficha unica de cadastro.txt, REGRAS.md, REGRAS_GERENCIAMENTO_ATLETAS
 
 import logging
 import secrets
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, date
 from typing import List, Optional, Tuple
 from uuid import UUID
 

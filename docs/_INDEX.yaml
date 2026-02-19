@@ -26,9 +26,13 @@ entrypoints:
   - id: uds_spec
     path: docs/_canon/UDS_SPEC.md
     mode: required
+  - id: determinism_manual
+    path: docs/_canon/MANUAL_CANONICO_DETERMINISMO.md
+    mode: required
 
 rules:
   append_only_indexes:
     - docs/product/runtime/_INDEX.yaml
   derived_read_only_roots:
     - docs/_generated/
+    - docs/ssot/

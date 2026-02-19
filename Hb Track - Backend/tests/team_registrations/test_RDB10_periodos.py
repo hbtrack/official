@@ -80,7 +80,7 @@ async def seed_data(async_db):
     
     # 2) Person
     await async_db.execute(
-        text("INSERT INTO persons (id, full_name, birth_date) VALUES (:person_id, 'Test Person', '2013-01-01')"),
+        text("INSERT INTO persons (id, first_name, last_name, full_name, birth_date) VALUES (:person_id, 'Test', 'Person', 'Test Person', '2013-01-01')"),
         {"person_id": person_id}
     )
     
