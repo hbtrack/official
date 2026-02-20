@@ -199,9 +199,9 @@ switch ($Command) {
 
         Write-Host ""
 
-        # Validar mirror em docs/_generated (repo root). SSOT canônico para docs/agentes.
+        # Validar mirror em docs/ssot (repo root). SSOT canônico para docs/agentes.
         Write-Host "========================================" -ForegroundColor Cyan
-        Write-Host "VALIDATING REPO ROOT MIRROR (docs/_generated)" -ForegroundColor Cyan
+        Write-Host "VALIDATING REPO ROOT MIRROR (docs/ssot)" -ForegroundColor Cyan
         Write-Host "========================================" -ForegroundColor Cyan
 
         if (Test-Path $RepoSchemaFile) {
@@ -233,13 +233,13 @@ switch ($Command) {
         if (Test-Path $RepoAlembicFile) {
             $RepoAlembicSize = (Get-Item $RepoAlembicFile).Length
             if ((Test-Path $AlembicFile) -and $RepoAlembicSize -ne (Get-Item $AlembicFile).Length) {
-                Write-Host "[FAIL] docs/_generated/alembic_state.txt size mismatch vs backend copy" -ForegroundColor Red
+                Write-Host "[FAIL] docs/ssot/alembic_state.txt size mismatch vs backend copy" -ForegroundColor Red
                 $AllArtifactsExist = $false
             } else {
-                Write-Host "[OK] docs/_generated/alembic_state.txt ($RepoAlembicSize bytes)" -ForegroundColor Green
+                Write-Host "[OK] docs/ssot/alembic_state.txt ($RepoAlembicSize bytes)" -ForegroundColor Green
             }
         } else {
-            Write-Host "[FAIL] docs/_generated/alembic_state.txt NOT FOUND" -ForegroundColor Red
+            Write-Host "[FAIL] docs/ssot/alembic_state.txt NOT FOUND" -ForegroundColor Red
             $AllArtifactsExist = $false
         }
 

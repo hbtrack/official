@@ -118,10 +118,10 @@ class MatchList(BaseModel):
 
 
 class MatchWithEvents(MatchResponse):
-    events: list["MatchEventResponse"] = []
+    events: list["ScoutEventRead"] = []
     total_events: int = 0
 
 
-from app.schemas.match_events import MatchEventResponse  # noqa: E402
+from app.schemas.match_events import ScoutEventRead  # noqa: E402
 
 MatchWithEvents.model_rebuild()

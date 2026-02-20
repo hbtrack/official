@@ -101,7 +101,7 @@ if ([string]::IsNullOrWhiteSpace($ParityReportPath)) {
   $ParityReportPath = $env:HB_PARITY_REPORT_PATH
 }
 if ([string]::IsNullOrWhiteSpace($ParityReportPath)) {
-  $ParityReportPath = "docs\_generated\parity_report.json"
+  $ParityReportPath = "_reports\parity_report.json"
 }
 if (-not (Test-Path $ParityReportPath)) {
   throw "Missing $ParityReportPath after parity scan"

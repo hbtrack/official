@@ -8,7 +8,7 @@ source_of_truth:
 depends_on:
   - docs/product/ARCHITECTURE.md
 evidence_expected:
-  - docs/_generated/_reports/tasks/parity_pipeline.log
+  - _reports/tasks/parity_pipeline.log
   - docs/ssot/schema.sql
   - docs/ssot/openapi.json
 ---

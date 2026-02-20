@@ -1,5 +1,18 @@
-﻿=== ALEMBIC HEADS ===
+=== ALEMBIC META ===
+profile: vps
+script_location: migrations
+version_table: alembic_version
+python: 3.11.9
+alembic: 1.17.2
 
-=== ALEMBIC CURRENT ===
+=== ALEMBIC HEADS (REPO) ===
+0fb0f76b48a7
 
-Generated: 2026-02-18T07:21:10Z
+=== ALEMBIC CURRENT (DB) ===
+0fb0f76b48a7
+
+=== DERIVED CHECKS ===
+db_reachable: true
+repo_heads_count: 1
+db_current_count: 1
+db_at_head: true

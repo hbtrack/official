@@ -8,7 +8,7 @@ source_of_truth:
 depends_on:
   - docs/product/ARCHITECTURE.md
 evidence_expected:
-  - docs/_generated/_reports/tasks/async_job_execution.log
+  - _reports/tasks/async_job_execution.log
 ---
 
 # Runtime Scenario: Async Job Execution (Celery)

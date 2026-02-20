@@ -1,0 +1,454 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-02-19",
+  "source_ssot": "schema.sql",
+  "module": "scout",
+  "description": "Plano de dados do módulo de Scout (Scouting de Partidas). Derivado do schema.sql canônico. Define entidades, catálogos lookup, regras de registro de eventos e restrições de negócio.",
+
+  "entities": {
+    "matches": {
+      "table": "matches",
+      "purpose": "Jogo oficial. Ponto de entrada para roster, eventos, estatísticas.",
+      "key_fields": {
+        "id": "uuid PK",
+        "season_id": "uuid FK → seasons",
+        "competition_id": "uuid FK → competitions (nullable)",
+        "match_date": "date NOT NULL",
+        "start_time": "time nullable",
+        "venue": "varchar(120) nullable",
+        "phase": "enum: group | semifinal | final | friendly",
+        "status": "enum: scheduled | in_progress | finished | cancelled",
+        "home_team_id": "uuid FK → teams",
+        "away_team_id": "uuid FK → teams",
+        "our_team_id": "uuid FK → teams (MUST equal home ou away)",
+        "final_score_home": "smallint nullable",
+        "final_score_away": "smallint nullable"
+      },
+      "constraints": [
+        "home_team_id <> away_team_id",
+        "our_team_id IN (home_team_id, away_team_id)",
+        "final_score_home/away >= 0 quando NOT NULL",
+        "soft_delete: deleted_at + deleted_reason obrigatórios juntos"
+      ]
+    },
+
+    "match_teams": {
+      "table": "match_teams",
+      "purpose": "Bridge match ↔ teams. Identifica papel de cada equipe no jogo.",
+      "key_fields": {
+        "id": "uuid PK",
+        "match_id": "uuid FK → matches",
+        "team_id": "uuid FK → teams",
+        "is_home": "boolean",
+        "is_our_team": "boolean"
+      }
+    },
+
+    "match_roster": {
+      "table": "match_roster",
+      "purpose": "Súmula oficial. Define atletas elegíveis para o jogo.",
+      "key_fields": {
+        "id": "uuid PK",
+        "match_id": "uuid FK → matches",
+        "team_id": "uuid FK → teams",
+        "athlete_id": "uuid FK → athletes",
+        "jersey_number": "smallint > 0",
+        "is_starting": "boolean nullable",
+        "is_goalkeeper": "boolean NOT NULL",
+        "is_available": "boolean NOT NULL",
+        "notes": "text nullable"
+      },
+      "notes": "Somente atletas presentes nesta tabela podem ser referenciados em match_events.athlete_id (regra RD4)."
+    },
+
+    "match_periods": {
+      "table": "match_periods",
+      "purpose": "Estrutura de tempo do jogo.",
+      "key_fields": {
+        "id": "uuid PK",
+        "match_id": "uuid FK → matches",
+        "number": "smallint >= 1",
+        "duration_seconds": "integer > 0",
+        "period_type": "enum: regular | extra_time | shootout_7m"
+      }
+    },
+
+    "match_possessions": {
+      "table": "match_possessions",
+      "purpose": "Sequências de posse de bola para análise tática de eficiência.",
+      "key_fields": {
+        "id": "uuid PK",
+        "match_id": "uuid FK → matches",
+        "team_id": "uuid FK → teams",
+        "start_period_number": "smallint >= 1",
+        "start_time_seconds": "integer >= 0",
+        "end_period_number": "smallint >= start_period_number",
+        "end_time_seconds": "integer >= 0",
+        "start_score_our": "smallint",
+        "start_score_opponent": "smallint",
+        "end_score_our": "smallint",
+        "end_score_opponent": "smallint",
+        "result": "enum: goal | turnover | seven_meter_won | time_over"
+      }
+    },
+
+    "match_events": {
+      "table": "match_events",
+      "purpose": "Eventos de jogo lance a lance. Coração analítico: reconstrói jogo, contexto tático e gera estatísticas.",
+      "key_fields": {
+        "id": "uuid PK",
+        "match_id": "uuid FK → matches ON DELETE CASCADE",
+        "team_id": "uuid FK → teams (time que executou o evento)",
+        "opponent_team_id": "uuid FK → teams nullable",
+        "athlete_id": "uuid FK → athletes nullable (executora do evento)",
+        "assisting_athlete_id": "uuid FK → athletes nullable (assistência)",
+        "secondary_athlete_id": "uuid FK → athletes nullable (uso contextual)",
+        "period_number": "smallint >= 1",
+        "game_time_seconds": "integer >= 0",
+        "phase_of_play": "varchar(32) FK → phases_of_play.code",
+        "possession_id": "uuid FK → match_possessions nullable ON DELETE SET NULL",
+        "advantage_state": "varchar(32) FK → advantage_states.code",
+        "score_our": "smallint >= 0 (placar do nosso time NO MOMENTO do evento)",
+        "score_opponent": "smallint >= 0 (placar adversário NO MOMENTO do evento)",
+        "event_type": "varchar(64) FK → event_types.code",
+        "event_subtype": "varchar(64) FK → event_subtypes.code nullable",
+        "outcome": "varchar(64) NOT NULL (resultado do evento, ex: goal/saved/missed/blocked/post)",
+        "is_shot": "boolean (desnormalizado de event_types.is_shot)",
+        "is_goal": "boolean (true quando o evento resultou em gol)",
+        "x_coord": "numeric(5,2) 0–100 nullable (posição em quadra %)",
+        "y_coord": "numeric(5,2) 0–100 nullable (posição em quadra %)",
+        "related_event_id": "uuid FK → match_events nullable ON DELETE SET NULL (auto-referência)",
+        "source": "enum: live | video | post_game_correction",
+        "notes": "text nullable",
+        "created_at": "timestamptz DEFAULT now()",
+        "created_by_user_id": "uuid FK → users"
+      },
+      "indexes": [
+        "ix_match_events_match_id",
+        "ix_match_events_athlete_id",
+        "ix_match_events_event_type",
+        "ix_match_events_team_id",
+        "ix_match_events_phase_of_play"
+      ]
+    }
+  },
+
+  "catalogs": {
+    "event_types": {
+      "source_migration": "0038_populate_event_system_data.py",
+      "total": 11,
+      "values": [
+        { "code": "goal",           "description": "Gol",                   "is_shot": true,  "is_possession_ending": true  },
+        { "code": "shot",           "description": "Arremesso",             "is_shot": true,  "is_possession_ending": false },
+        { "code": "seven_meter",    "description": "Tiro de 7 Metros",      "is_shot": true,  "is_possession_ending": true  },
+        { "code": "goalkeeper_save","description": "Defesa de Goleira",     "is_shot": false, "is_possession_ending": false },
+        { "code": "turnover",       "description": "Perda de Bola",         "is_shot": false, "is_possession_ending": true  },
+        { "code": "foul",           "description": "Falta",                 "is_shot": false, "is_possession_ending": false },
+        { "code": "exclusion_2min", "description": "Exclusão 2 Minutos",   "is_shot": false, "is_possession_ending": false },
+        { "code": "yellow_card",    "description": "Cartão Amarelo",        "is_shot": false, "is_possession_ending": false },
+        { "code": "red_card",       "description": "Cartão Vermelho",       "is_shot": false, "is_possession_ending": false },
+        { "code": "substitution",   "description": "Substituição",          "is_shot": false, "is_possession_ending": false },
+        { "code": "timeout",        "description": "Pedido de Tempo",       "is_shot": false, "is_possession_ending": false }
+      ]
+    },
+
+    "event_subtypes": {
+      "source_migration": "0042_populate_event_subtypes.py",
+      "total": 21,
+      "values": [
+        { "code": "defensive_foul",       "parent_event_type": "foul",           "description": "Falta Defensiva" },
+        { "code": "offensive_foul",       "parent_event_type": "foul",           "description": "Falta Ofensiva" },
+        { "code": "shot_6m",              "parent_event_type": "shot",           "description": "Arremesso 6m" },
+        { "code": "shot_9m",              "parent_event_type": "shot",           "description": "Arremesso 9m" },
+        { "code": "shot_counterattack",   "parent_event_type": "shot",           "description": "Arremesso em Contra-Ataque" },
+        { "code": "shot_pivot",           "parent_event_type": "shot",           "description": "Arremesso de Pivô" },
+        { "code": "shot_left_wing",       "parent_event_type": "shot",           "description": "Arremesso de Ponta Esquerda" },
+        { "code": "shot_right_wing",      "parent_event_type": "shot",           "description": "Arremesso de Ponta Direita" },
+        { "code": "shot_left_back",       "parent_event_type": "shot",           "description": "Arremesso de Lateral Esquerda" },
+        { "code": "shot_right_back",      "parent_event_type": "shot",           "description": "Arremesso de Lateral Direita" },
+        { "code": "shot_center_back",     "parent_event_type": "shot",           "description": "Arremesso de Central" },
+        { "code": "shot_jumping",         "parent_event_type": "shot",           "description": "Arremesso em suspensão" },
+        { "code": "shot_grounded",        "parent_event_type": "shot",           "description": "Arremesso em Apoio" },
+        { "code": "turnover_dribble",     "parent_event_type": "turnover",       "description": "Perda de Bola - Dois Dribles" },
+        { "code": "turnover_offensive_foul","parent_event_type": "turnover",     "description": "Perda de Bola - Falta de Ataque" },
+        { "code": "turnover_pass",        "parent_event_type": "turnover",       "description": "Perda de Bola - Passe Errado" },
+        { "code": "turnover_steps",       "parent_event_type": "turnover",       "description": "Perda de Bola - Passos" },
+        { "code": "turnover_invasion",    "parent_event_type": "turnover",       "description": "Perda de Bola - Invasão de Área" },
+        { "code": "turnover_timeout",     "parent_event_type": "turnover",       "description": "Perda de Bola - Mais de 3 seg" },
+        { "code": "substitution_wrong",   "parent_event_type": "exclusion_2min", "description": "Erro de troca - 2 minutos" },
+        { "code": "three_exlusions_2min", "parent_event_type": "red_card",       "description": "Três exclusões por 2 min" }
+      ]
+    },
+
+    "phases_of_play": {
+      "source_migration": "0038_populate_event_system_data.py",
+      "total": 4,
+      "values": [
+        { "code": "attack_positional",  "description": "Ataque Posicional" },
+        { "code": "defense",            "description": "Defesa" },
+        { "code": "transition_defense", "description": "Transição Defensiva" },
+        { "code": "transition_offense", "description": "Transição Ofensiva" }
+      ]
+    },
+
+    "advantage_states": {
+      "source_migration": "0038_populate_event_system_data.py",
+      "total": 3,
+      "values": [
+        { "code": "even",                  "delta_players": 0,  "description": "Igualdade numérica (6x6)" },
+        { "code": "numerical_inferiority", "delta_players": -1, "description": "Inferioridade numérica (-1 jogadora)" },
+        { "code": "numerical_superiority", "delta_players": 1,  "description": "Superioridade numérica (+1 jogadora)" }
+      ]
+    }
+  },
+
+  "event_registration_rules": {
+    "field_goal": {
+      "description": "Gol de campo (arremesso convertido)",
+      "n_events": 1,
+      "event": {
+        "event_type": "goal",
+        "is_shot": true,
+        "is_goal": true,
+        "outcome": "goal",
+        "athlete_id": "ID da atleta que marcou (OBRIGATÓRIO)",
+        "assisting_athlete_id": "ID da atleta que deu assistência (nullable)",
+        "event_subtype": "Não aplicável (subtypes definidos somente para shot/foul/turnover)",
+        "score_our": "placar do nosso time APÓS o gol",
+        "score_opponent": "placar adversário (não muda)"
+      },
+      "notes": "Gol contra (own_goal) está FORA DO ESCOPO atual."
+    },
+
+    "shot_saved": {
+      "description": "Arremesso defendido pelo goleiro — DOIS eventos linkados",
+      "n_events": 2,
+      "event_1": {
+        "event_type": "shot",
+        "is_shot": true,
+        "is_goal": false,
+        "outcome": "saved",
+        "athlete_id": "ID da atleta arremessadora",
+        "event_subtype": "ex: shot_6m, shot_9m, shot_pivot... (recomendado)",
+        "related_event_id": "null (este é o evento raiz)"
+      },
+      "event_2": {
+        "event_type": "goalkeeper_save",
+        "is_shot": false,
+        "is_goal": false,
+        "outcome": "saved",
+        "athlete_id": "ID da goleira",
+        "related_event_id": "ID do evento shot (event_1.id)"
+      },
+      "notes": "related_event_id em goalkeeper_save aponta para o shot correspondente. FK: ON DELETE SET NULL."
+    },
+
+    "shot_missed": {
+      "description": "Arremesso que não acerta o gol (fora, na trave)",
+      "n_events": 1,
+      "event": {
+        "event_type": "shot",
+        "is_shot": true,
+        "is_goal": false,
+        "outcome": "missed | post",
+        "athlete_id": "ID da atleta arremessadora",
+        "event_subtype": "ex: shot_9m, shot_left_wing..."
+      }
+    },
+
+    "shot_blocked": {
+      "description": "Arremesso bloqueado por jogadora de campo (não goleira)",
+      "n_events": 1,
+      "event": {
+        "event_type": "shot",
+        "is_shot": true,
+        "is_goal": false,
+        "outcome": "blocked",
+        "athlete_id": "ID da atleta arremessadora",
+        "secondary_athlete_id": "ID da atleta que bloqueou (opcional)"
+      }
+    },
+
+    "seven_meter_goal": {
+      "description": "Tiro de 7 metros convertido",
+      "n_events": 1,
+      "event": {
+        "event_type": "seven_meter",
+        "is_shot": true,
+        "is_goal": true,
+        "outcome": "goal",
+        "athlete_id": "ID da atleta cobradora",
+        "score_our": "placar do nosso time APÓS o gol"
+      }
+    },
+
+    "seven_meter_saved": {
+      "description": "Tiro de 7 metros defendido — DOIS eventos linkados (mesmo padrão shot_saved)",
+      "n_events": 2,
+      "event_1": {
+        "event_type": "seven_meter",
+        "is_shot": true,
+        "is_goal": false,
+        "outcome": "saved",
+        "athlete_id": "ID da atleta cobradora",
+        "related_event_id": "null"
+      },
+      "event_2": {
+        "event_type": "goalkeeper_save",
+        "is_shot": false,
+        "is_goal": false,
+        "outcome": "saved",
+        "athlete_id": "ID da goleira",
+        "related_event_id": "ID do evento seven_meter (event_1.id)"
+      }
+    },
+
+    "seven_meter_missed": {
+      "description": "Tiro de 7 metros para fora",
+      "n_events": 1,
+      "event": {
+        "event_type": "seven_meter",
+        "is_shot": true,
+        "is_goal": false,
+        "outcome": "missed"
+      }
+    },
+
+    "turnover": {
+      "description": "Perda de bola",
+      "n_events": 1,
+      "event": {
+        "event_type": "turnover",
+        "is_shot": false,
+        "is_goal": false,
+        "is_possession_ending": true,
+        "outcome": "turnover",
+        "athlete_id": "ID da atleta que perdeu a bola",
+        "event_subtype": "turnover_pass | turnover_steps | turnover_invasion | turnover_dribble | turnover_offensive_foul | turnover_timeout"
+      }
+    },
+
+    "foul": {
+      "description": "Falta cometida",
+      "n_events": 1,
+      "event": {
+        "event_type": "foul",
+        "is_shot": false,
+        "is_goal": false,
+        "outcome": "foul",
+        "athlete_id": "ID da atleta que cometeu",
+        "event_subtype": "defensive_foul | offensive_foul"
+      }
+    },
+
+    "exclusion_2min": {
+      "description": "Exclusão de 2 minutos",
+      "n_events": 1,
+      "event": {
+        "event_type": "exclusion_2min",
+        "athlete_id": "ID da atleta excluída",
+        "event_subtype": "substitution_wrong (se erro de troca)"
+      },
+      "effect_on_advantage_state": "Próximos eventos do adversário devem usar advantage_state='numerical_superiority'"
+    },
+
+    "yellow_card": {
+      "description": "Cartão amarelo (advertência)",
+      "n_events": 1,
+      "event": {
+        "event_type": "yellow_card",
+        "athlete_id": "ID da atleta advertida"
+      }
+    },
+
+    "red_card": {
+      "description": "Cartão vermelho (desclassificação)",
+      "n_events": 1,
+      "event": {
+        "event_type": "red_card",
+        "athlete_id": "ID da atleta desclassificada",
+        "event_subtype": "three_exlusions_2min (se terceira exclusão)"
+      }
+    },
+
+    "substitution": {
+      "description": "Substituição de atleta",
+      "n_events": 1,
+      "event": {
+        "event_type": "substitution",
+        "athlete_id": "ID da atleta que entra",
+        "secondary_athlete_id": "ID da atleta que sai (opcional)"
+      }
+    },
+
+    "timeout": {
+      "description": "Pedido de tempo",
+      "n_events": 1,
+      "event": {
+        "event_type": "timeout",
+        "athlete_id": "null (não tem atleta associada)"
+      }
+    }
+  },
+
+  "score_tracking_rule": {
+    "description": "O placar (score_our + score_opponent) é snapshotado no momento do evento.",
+    "for_goal_events": "score_our deve refletir o placar APÓS o gol ser marcado.",
+    "for_all_other_events": "score_our/score_opponent refletem o placar VIGENTE no momento do evento (antes de qualquer mudança)."
+  },
+
+  "possession_integration": {
+    "description": "match_events podem ser linkados a match_possessions via possession_id.",
+    "possession_result_to_event_type_map": {
+      "goal":           "Posse terminou com event_type='goal'",
+      "turnover":       "Posse terminou com event_type='turnover'",
+      "seven_meter_won":"Posse terminou com event_type='seven_meter' (falta sofrida → penalti conquistado)",
+      "time_over":      "Posse esgotou o tempo sem evento finalizador"
+    }
+  },
+
+  "field_coordinate_system": {
+    "description": "Coordenadas (x_coord, y_coord) em percentual 0–100 do campo de jogo.",
+    "x_axis": "0 = lado esquerdo, 100 = lado direito",
+    "y_axis": "0 = linha de fundo defensiva, 100 = linha de fundo ofensiva",
+    "nullable": true,
+    "constraints": "x_coord IN [0,100] | y_coord IN [0,100]"
+  },
+
+  "source_values": {
+    "live":                "Registro durante o jogo (ao vivo)",
+    "video":               "Registro via análise de vídeo pós-jogo",
+    "post_game_correction": "Correção feita após encerramento do jogo"
+  },
+
+  "edit_policy": {
+    "rule": "RF15",
+    "description": "Eventos só podem ser criados/editados enquanto matches.status != 'finished'.",
+    "exception": "Superadmin pode corrigir eventos em partidas finalizadas usando source='post_game_correction'."
+  },
+
+  "athlete_eligibility_rule": {
+    "rule": "RD4",
+    "description": "athlete_id em match_events DEVE ser um atleta presente em match_roster para o mesmo match_id.",
+    "applies_to": ["athlete_id", "assisting_athlete_id", "secondary_athlete_id"]
+  },
+
+  "out_of_scope": [
+    {
+      "item": "own_goal",
+      "reason": "Gol contra fora do escopo do módulo de scout atual. Não existe event_type='own_goal' no catálogo canônico."
+    },
+    {
+      "item": "opponent_team_events",
+      "reason": "O módulo registra apenas eventos do nosso time (our_team_id). Eventos do adversário não são scouteados nesta versão."
+    }
+  ],
+
+  "known_divergences": [
+    {
+      "location": "app/models/match_event.py + app/services/match_event_service.py",
+      "issue": "O EventType enum em Python referencia codes como 'goal_7m', 'own_goal', 'shot_on_target', 'assist', 'technical_foul' que NÃO existem na tabela event_types do banco (seed canônico 0038). Os valores canônicos são os da coluna 'code' em event_types.",
+      "canonical_source": "schema.sql + migration 0038_populate_event_system_data.py"
+    }
+  ]
+}

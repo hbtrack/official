@@ -9,13 +9,13 @@
 """
 Documentation Generation Script for HB Track Backend
 
-Generates: (Hb Track - Backend/docs/_generated/*)
+Generates: (Hb Track - Backend/docs/ssot/*)
 - openapi.json: OpenAPI 3.x specification from FastAPI app
 - schema.sql: Database schema dump from PostgreSQL (pg_dump)
 - alembic_state.txt: Current migration state (heads + current)
 - manifest.json: Generation manifest with git commit, timestamp, and file checksums
 
-Output directory: Hb Track - Backend/docs/_generated/ (backend repo root)
+Output directory: Hb Track - Backend/docs/ssot/ (backend repo root)
 
 Usage:
     python scripts/generate_docs.py --all
@@ -47,12 +47,11 @@ from dotenv import load_dotenv
 
 # Load .env from backend root
 # Script lives at scripts/generate/docs/gen_docs_soot.py → 4 levels up = repo root
-#   .parent    = scripts/generate/docs/
-#   .parent(2) = scripts/generate/
-#   .parent(3) = scripts/
-#   .parent(4) = C:\HB TRACK  (repo root)
+#   .parent    = scripts/ssot/
+#   .parent(2) = scripts/
+#   .parent(3) = C:\HB TRACK  (repo root)
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
+REPO_ROOT = Path(__file__).resolve().parents[2]
 BACKEND_ROOT = REPO_ROOT / "Hb Track - Backend"
 
 if not BACKEND_ROOT.is_dir():
@@ -62,12 +61,12 @@ if not BACKEND_ROOT.is_dir():
 env_path = BACKEND_ROOT / '.env'
 load_dotenv(dotenv_path=env_path)
 
-# Output to backend repo: Hb Track - Backend/docs/_generated/
-# Use env var HB_DOCS_GENERATED_DIR if set, else default to docs/_generated
-GENERATED_DIR_NAME = os.getenv("HB_DOCS_GENERATED_DIR", "_generated")
-OUTPUT_DIR = BACKEND_ROOT / "docs" / GENERATED_DIR_NAME
-# Secondary output: repo-level docs/_generated
-REPO_OUTPUT_DIR = REPO_ROOT / "docs" / GENERATED_DIR_NAME
+# Output to backend repo: Hb Track - Backend/docs/ssot/
+# Use env var HB_DOCS_SSOT_DIR if set, else default to docs/ssot
+SSOT_DIR_NAME = os.getenv("HB_DOCS_SSOT_DIR", "ssot")
+OUTPUT_DIR = BACKEND_ROOT / "docs" / SSOT_DIR_NAME
+# Secondary output: repo-level docs/ssot
+REPO_OUTPUT_DIR = REPO_ROOT / "docs" / SSOT_DIR_NAME
 
 
 # =============================================================================
@@ -209,12 +208,12 @@ def generate_openapi(output_dir: Path) -> bool:
 
 
 # =============================================================================
-# TRAINING PERMISSIONS REPORT (docs/_generated)
+# TRAINING PERMISSIONS REPORT (docs/ssot)
 # =============================================================================
 
 def generate_training_permissions_report() -> bool:
     """
-    Generate Training permissions report (docs/_generated/trd_training_permissions_report.txt).
+    Generate Training permissions report (docs/ssot/trd_training_permissions_report.txt).
     Runs after OpenAPI generation to keep artifacts deterministic.
     """
     report_script = BACKEND_ROOT.parent / "docs" / "scripts" / "trd_extract_training_permissions_report.py"

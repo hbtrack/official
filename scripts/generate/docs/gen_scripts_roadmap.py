@@ -4,7 +4,7 @@
 # HB_SCRIPT_SIDE_EFFECTS=FS_READ,FS_WRITE
 # HB_SCRIPT_IDEMPOTENT=YES
 # HB_SCRIPT_ENTRYPOINT=python scripts/generate/docs/gen_scripts_roadmap.py
-# HB_SCRIPT_OUTPUTS=docs/hbtrack/_generated/scripts_roadmap.md
+# HB_SCRIPT_OUTPUTS=docs/product/scripts_roadmap.md
 # HB_SCRIPT_INPUTS=scripts/scripts_roadmap.yaml
 # HB_SCRIPT_RISK=LOW
 
@@ -18,7 +18,7 @@ import yaml
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parent.parent.parent
 YAML_PATH = REPO_ROOT / "scripts" / "scripts_roadmap.yaml"
-MD_PATH = REPO_ROOT / "docs" / "hbtrack" / "_generated" / "scripts_roadmap.md"
+MD_PATH = REPO_ROOT / "docs" / "product" / "scripts_roadmap.md"
 
 def load_ssot(yaml_path: Path) -> dict:
     """Carrega o arquivo YAML (SSOT)."""
@@ -32,6 +32,17 @@ def load_ssot(yaml_path: Path) -> dict:
 def generate_markdown(data: dict) -> str:
     """Renderiza o conteúdo do dicionário para uma string Markdown determinística."""
     md = []
+    
+    # Header de derivação (DERIVED FILE - DO NOT EDIT)
+    md.append("<!--")
+    md.append("DERIVED FILE — DO NOT EDIT BY HAND")
+    md.append("")
+    md.append("This Markdown is derived from the SSOT:")
+    md.append("- scripts/scripts_roadmap.yaml")
+    md.append("")
+    md.append("Edits MUST be applied to scripts_roadmap.yaml, then re-run:")
+    md.append("  python scripts/generate/docs/gen_scripts_roadmap.py")
+    md.append("-->\n")
     
     # Meta
     meta = data.get('meta', {})

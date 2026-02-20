@@ -21,7 +21,7 @@ $ErrorActionPreference = "Stop"
 # Paths
 $ScriptRoot = $PSScriptRoot
 $RootDir = Split-Path -Parent $ScriptRoot
-$ReportsDir = Join-Path $RootDir "docs\_generated\_reports"
+$ReportsDir = Join-Path $RootDir "_reports\invariants"
 $GateScript = Join-Path $ScriptRoot "run_invariant_gate.ps1"
 
 Write-Host "========================================" -ForegroundColor Cyan

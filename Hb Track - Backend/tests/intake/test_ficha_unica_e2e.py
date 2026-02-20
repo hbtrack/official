@@ -23,6 +23,7 @@ import pytest
 from fastapi.testclient import TestClient
 from uuid import uuid4
 from datetime import date, timedelta
+from sqlalchemy.orm import Session
 
 from app.main import app
 from app.core.db import SessionLocal

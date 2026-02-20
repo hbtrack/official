@@ -26,7 +26,7 @@ from typing import Any, Dict, List, Optional
 
 # Paths
 WORKSPACE_ROOT = Path(__file__).resolve().parents[2]
-REPORTS_ROOT = WORKSPACE_ROOT / "docs" / "_generated" / "_reports" / "audit"
+REPORTS_ROOT = WORKSPACE_ROOT / "_reports" / "audit"
 
 # Exit code mapping
 STATUS_MAP = {0: "PASS", 2: "FAIL_ACTIONABLE", 3: "ERROR_INFRA", 4: "BLOCKED_INPUT"}

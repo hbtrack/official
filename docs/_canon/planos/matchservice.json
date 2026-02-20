@@ -1,0 +1,52 @@
+{
+  "project": "HB Track",
+  "version": "1.0.5",
+  "notes": "Demanda: lógica de criação de eventos de partida (scout), cobrindo: (1) mapeamento ORM correto em MatchEventService.create(), com snapshot de placar passado pelo chamador e link obrigatório goalkeeper_save → related_event_id; (2) correção do router POST /matches/{id}/events para usar schemas canônicos ScoutEventCreate/ScoutEventRead e await correto em AsyncSession. SSOTs de referência: schema.sql (tabelas match_events, match_roster, event_types), openapi.json (operationId addEventToMatch / ScoutEventCreate schema). Precedência de decisão: docs/_canon/MANUAL_CANONICO_DETERMINISMO.md.",
+  "assumptions": [
+    "A tabela event_types existe no banco e possui colunas code (str), is_shot (bool), is_possession_ending (bool) — referenciada em AR_004 spec.",
+    "match_roster.is_available (boolean NOT NULL) é o campo canônico para validar se atleta está apto na partida (schema.sql confirma).",
+    "score_our e score_opponent no payload representam o placar no momento do evento; o service NÃO recalcula — apenas persiste (regra declarada em AR_004 item 6).",
+    "O campo related_event_id já é validado como obrigatório no Pydantic validator de ScoutEventCreate quando event_type='goalkeeper_save'; o service adiciona uma segunda camada verificando que o evento referenciado é do tipo shot ou seven_meter.",
+    "Os awaits ausentes em db.commit() e db.refresh() nas rotas assíncronas são bugs silenciosos confirmados pelo contexto do router (AR_005 item 3).",
+    "Tests de integração estão em 'Hb Track - Backend/tests/' — o Executor deve criar ou adaptar os testes necessários para cobrir os critérios."
+  ],
+  "tasks": [
+    {
+      "id": "004",
+      "title": "MatchEventService.create() — ORM correto, roster, is_shot e link goalkeeper_save",
+      "description": "CONTEXTO: O método MatchEventService.create() em app/services/match_event_service.py apresenta quatro defeitos críticos detectados via leitura do código frente ao schema.sql e openapi.json: (A) mapeia campos inexistentes no modelo ORM — event.minute, event.period, event.x_position, event.y_position não existem; os campos reais são period_number, game_time_seconds, x_coord, y_coord; (B) valida atleta em team_registration em vez de match_roster — são entidades distintas; a regra correta (schema.sql match_roster) é: SELECT match_roster WHERE match_id=:match_id AND athlete_id=:athlete_id AND is_available=true; (C) não preenche is_shot no ORM — campo NOT NULL no banco; o valor canônico deve vir de SELECT event_types WHERE code=data.event_type, campo is_shot; (D) não implementa link goalkeeper_save→related_event_id: quando event_type='goalkeeper_save', o service deve verificar que related_event_id referencia um evento existente na mesma partida com event_type IN ('shot','seven_meter').\n\nAÇÃO (patch mínimo, sem refactor amplo):\n1) Substituir _validate_athlete_in_roster: query em match_roster (match_id + athlete_id + is_available=true); aplicar para athlete_id, assisting_athlete_id e secondary_athlete_id quando presentes.\n2) Adicionar lookup: SELECT event_types WHERE code=data.event_type → is_shot_db = row.is_shot.\n3) Adicionar regra goalkeeper_save: se event_type=='goalkeeper_save', verificar que related_event_id não é None (redundante com Pydantic, mas defensivo) E que match_events WHERE id=related_event_id AND match_id=match_id AND event_type IN ('shot','seven_meter') retorna linha — raise ValidationError se não.\n4) Corrigir instanciação do ORM MatchEvent: usar period_number, game_time_seconds, x_coord, y_coord, is_shot=is_shot_db, is_goal=data.is_goal e todos os demais campos mapeados do payload ScoutEventCreate.\n5) Adicionar comentário inline sobre score snapshot: '# score_our/score_opponent representam o placar NO MOMENTO do evento; o service NÃO recalcula — persiste o valor informado pelo chamador'.\n\nARQUIVOS AFETADOS: Hb Track - Backend/app/services/match_event_service.py (único). NÃO criar arquivo novo.",
+      "criteria": "1) pytest -k 'test_create_match_event' passa sem AttributeError (nenhuma referência a event.minute, event.period, event.x_position, event.y_position).\n2) Criar evento com athlete_id ausente em match_roster retorna ValidationError (HTTP 422 ou exceção de serviço).\n3) Criar goalkeeper_save sem related_event_id retorna ValidationError.\n4) Criar goalkeeper_save com related_event_id apontando para evento não-shot/seven_meter retorna ValidationError com mensagem 'related_event must be a shot or seven_meter'.\n5) Evento persistido no banco tem is_shot preenchido conforme event_types.is_shot (não NULL).\n6) Evento persistido tem period_number e game_time_seconds preenchidos (não NULL); x_coord e y_coord presentes quando informados.\n7) score_our e score_opponent no banco correspondem aos valores enviados no payload (passthrough, sem recálculo).",
+      "gate": "GATE_MATCH_EVENT_SERVICE_CREATE",
+      "ssot_touches": [
+        "docs/ssot/schema.sql",
+        "docs/ssot/openapi.json"
+      ],
+      "validation_command": "pytest \"Hb Track - Backend/tests/\" -k \"match_event\" -x --tb=short -q",
+      "evidence_file": "docs/hbtrack/evidence/AR_004_match_event_service_create.log",
+      "notes": "O lookup em event_types pressupõe que a tabela existe e está populada (assumption declarada). Se event_types não existir no banco de dev/test, o Executor deve bloquear (BLOCKED_INPUT 4) e reportar ao Arquiteto antes de prosseguir.",
+      "risks": [
+        "Se event_types não estiver no schema.sql canônico ou não existir no banco, o lookup falhará em runtime — verificar schema.sql antes de executar.",
+        "Remover _validate_athlete_in_roster pode quebrar outros callers do método — auditar usos no codebase antes de remover.",
+        "bulk_create também chama lógica de validação de roster — verificar se precisa ser atualizado em conjunto (pode ser escopo da mesma task ou task separada)."
+      ]
+    },
+    {
+      "id": "005",
+      "title": "Router match_events — schemas canônicos ScoutEventCreate/ScoutEventRead e await AsyncSession",
+      "description": "CONTEXTO: O endpoint POST /matches/{match_id}/events em app/api/v1/routers/match_events.py tem três problemas confirmados: (A) importa e usa MatchEventCreate (schema antigo com campos errados) em vez de ScoutEventCreate — causando mismatch com o service refatorado na task 004; (B) chamadas db.commit() e db.refresh(event) sem await — bug silencioso em AsyncSession que produz RuntimeWarning de coroutine não aguardada e comportamento não determinístico; (C) docstring lista event_type codes inválidos (goal_7m, own_goal, shot_on_target) — não existem no enum CanonicalEventType.\n\nAÇÃO (patch mínimo):\n1) IMPORTS: trocar MatchEventCreate → ScoutEventCreate; MatchEventResponse → ScoutEventRead.\n2) ASSINATURA do handler: payload: ScoutEventCreate; return type: ScoutEventRead; response_model=ScoutEventRead.\n3) CORPO: event = await service.create(match_id, payload); await db.commit(); await db.refresh(event).\n4) DOCSTRING: remover lista de event_type inválidos; substituir por: 'event_type canônicos (11): goal, shot, seven_meter, goalkeeper_save, turnover, foul, exclusion_2min, yellow_card, red_card, substitution, timeout — ref: event_types table'.\n5) Aplicar mesma correção de await nas rotas: update_match_event, correct_match_event, delete_match_event, bulk_create_match_events.\n6) Rota scoped scoped_add_event_to_match: mesma atualização de schema (ScoutEventCreate/ScoutEventRead) e await.\n\nARQUIVOS AFETADOS: Hb Track - Backend/app/api/v1/routers/match_events.py (único). NÃO criar arquivo novo.",
+      "criteria": "1) POST /matches/{id}/events com payload ScoutEventCreate válido retorna HTTP 201 e JSON com todos os campos de ScoutEventRead (id, match_id, is_shot, is_goal, period_number, game_time_seconds, score_our, score_opponent, event_type, outcome, source, created_at, created_by_user_id).\n2) POST com event_type='goal_7m' retorna HTTP 422 Unprocessable Entity.\n3) POST com event_type='goalkeeper_save' e related_event_id=null retorna HTTP 422.\n4) Nenhum RuntimeWarning de coroutine não aguardada nos logs do uvicorn ao chamar o endpoint.\n5) python -c 'from app.api.v1.routers.match_events import add_event_to_match' executa sem ImportError.\n6) pytest -k 'test_add_event_to_match' passa com response_model=ScoutEventRead.",
+      "gate": "GATE_MATCH_EVENT_ENDPOINT",
+      "ssot_touches": [
+        "docs/ssot/openapi.json"
+      ],
+      "validation_command": "pytest \"Hb Track - Backend/tests/\" -k \"test_add_event\" -x --tb=short -q",
+      "evidence_file": "docs/hbtrack/evidence/AR_005_endpoint_match_events.log",
+      "notes": "Task 005 tem dependência de task 004: o service.create() com assinatura (match_id, payload) deve estar implementado antes de corrigir o router. Executor deve executar 004 antes de 005.",
+      "risks": [
+        "Trocar MatchEventCreate por ScoutEventCreate pode quebrar outros endpoints que ainda importam MatchEventCreate — auditar imports antes de remover.",
+        "Corrigir await em bulk_create pode alterar o comportamento de rollback em batch — testar cenário de erro parcial.",
+        "A rota scoped usa _get_match_scoped() com validação de team_id — garantir que a validação de roster também verifica match_id correto após o patch."
+      ]
+    }
+  ]
+}

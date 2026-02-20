@@ -63,8 +63,8 @@ def main(argv: List[str]) -> int:
             errors.append(f"[E006] Missing capability runner: {cap_runner}")
         else:
             cr = _read_text(cap_runner)
-            if "docs/_generated/_reports" in cr.replace("\\", "/"):
-                errors.append("[E007] run_capability_gates.py still contains hardcoded docs/_generated/_reports")
+            if "docs/ssot/_reports" in cr.replace("\\", "/"):
+                errors.append("[E007] run_capability_gates.py still contains hardcoded docs/ssot/_reports")
 
         # 5) Tokens de "citação" (se tiverem sido gravados no YAML do repo, isso contamina SSOT)
         # (não depende de PyYAML; é verificação textual)

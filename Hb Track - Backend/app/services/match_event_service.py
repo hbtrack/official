@@ -15,7 +15,7 @@ from datetime import datetime
 from typing import Optional
 from uuid import UUID
 
-from sqlalchemy import select, func, and_
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.context import ExecutionContext
@@ -26,13 +26,15 @@ from app.core.exceptions import (
 )
 from app.models.match import Match, MatchStatus
 from app.models.match_event import MatchEvent, EventType
-from app.models.team_registration import TeamRegistration
+from app.models.match_roster import MatchRoster
+from app.models.event_types import EventTypes
 from app.models.team import Team
 from app.schemas.match_events import (
-    MatchEventCreate,
+    ScoutEventCreate,
     MatchEventUpdate,
     MatchEventCorrection,
     AthleteMatchStats,
+    CanonicalEventType,
 )
 
 logger = logging.getLogger(__name__)
@@ -78,15 +80,15 @@ class MatchEventService:
             query = query.where(MatchEvent.event_type == event_type)
 
         if period:
-            query = query.where(MatchEvent.period == period)
+            query = query.where(MatchEvent.period_number == period)
 
         # Count total - usar with_only_columns para evitar produto cartesiano
         count_query = query.with_only_columns(func.count()).order_by(None)
         result_count = await self.db.execute(count_query)
         total = result_count.scalar_one_or_none() or 0
 
-        # Paginate e ordenar por período e minuto
-        query = query.order_by(MatchEvent.period, MatchEvent.minute)
+        # Paginate e ordenar por período e tempo de jogo
+        query = query.order_by(MatchEvent.period_number, MatchEvent.game_time_seconds)
         query = query.offset((page - 1) * size).limit(size)
 
         result = await self.db.execute(query)
@@ -119,13 +121,13 @@ class MatchEventService:
 
         return event
 
-    async def create(self, data: MatchEventCreate) -> MatchEvent:
+    async def create(self, match_id: UUID, data: ScoutEventCreate) -> MatchEvent:
         """
         Cria novo evento.
         Ref: RD4 - Atleta deve estar no roster
         Ref: RF15 - Partida não pode estar finalizada
         """
-        match = await self._get_match(data.match_id)
+        match = await self._get_match(match_id)
 
         # RF15: Verificar se partida permite edição
         if match.status == MatchStatus.finished:
@@ -133,18 +135,70 @@ class MatchEventService:
                 "Cannot add events to finalized match"
             )
 
-        # RD4: Verificar se atleta está no roster do time
-        await self._validate_athlete_in_roster(match.team_id, data.athlete_id)
+        event_type_code = self._event_type_code(data.event_type)
+
+        # RD4: Validar atletas no roster da partida (não em team_registration)
+        athlete_ids = [
+            data.athlete_id,
+            data.assisting_athlete_id,
+            data.secondary_athlete_id,
+        ]
+        for athlete_id in athlete_ids:
+            if athlete_id:
+                await self._validate_athlete_in_roster(match.id, athlete_id)
+
+        # Resolver is_shot canônico a partir de event_types
+        event_type_row = await self.db.scalar(
+            select(EventTypes).where(EventTypes.code == event_type_code)
+        )
+        if not event_type_row:
+            raise ValidationError(f"event_type '{event_type_code}' not found in event_types")
+        is_shot_db = bool(event_type_row.is_shot)
+
+        # Regra defensiva: goalkeeper_save deve apontar para shot/seven_meter da mesma partida
+        if event_type_code == CanonicalEventType.goalkeeper_save.value:
+            if data.related_event_id is None:
+                raise ValidationError("related_event_id is required for goalkeeper_save")
+
+            related_event = await self.db.scalar(
+                select(MatchEvent.id).where(
+                    MatchEvent.id == data.related_event_id,
+                    MatchEvent.match_id == match.id,
+                    MatchEvent.event_type.in_(
+                        [CanonicalEventType.shot.value, CanonicalEventType.seven_meter.value]
+                    ),
+                )
+            )
+            if not related_event:
+                raise ValidationError("related_event must be a shot or seven_meter")
 
         event = MatchEvent(
-            match_id=data.match_id,
+            match_id=match.id,
+            team_id=data.team_id,
             athlete_id=data.athlete_id,
-            event_type=data.event_type,
-            minute=data.minute,
-            period=data.period,
-            x_position=data.x_position,
-            y_position=data.y_position,
+            assisting_athlete_id=data.assisting_athlete_id,
+            secondary_athlete_id=data.secondary_athlete_id,
+            opponent_team_id=data.opponent_team_id,
+            period_number=data.period_number,
+            game_time_seconds=data.game_time_seconds,
+            phase_of_play=data.phase_of_play,
+            possession_id=data.possession_id,
+            advantage_state=data.advantage_state,
+            score_our=data.score_our,
+            score_opponent=data.score_opponent,
+            # score_our/score_opponent representam o placar NO MOMENTO do evento;
+            # o service NÃO recalcula — persiste o valor informado pelo chamador.
+            event_type=event_type_code,
+            event_subtype=data.event_subtype,
+            outcome=data.outcome,
+            is_shot=is_shot_db,
+            is_goal=data.is_goal,
+            x_coord=data.x_coord,
+            y_coord=data.y_coord,
+            related_event_id=data.related_event_id,
+            source=data.source,
             notes=data.notes,
+            created_by_user_id=self.context.user_id,
         )
 
         self.db.add(event)
@@ -281,6 +335,7 @@ class MatchEventService:
         """
         Calcula estatísticas de um atleta em uma partida.
         Ref: RD1-RD91 - Agregação de eventos por tipo
+        Usa tipos canônicos: goal, shot, seven_meter, goalkeeper_save, etc.
         """
         events, _ = await self.get_all_for_match(
             match_id,
@@ -294,39 +349,35 @@ class MatchEventService:
         )
 
         for event in events:
-            match event.event_type:
-                case EventType.goal:
-                    stats.goals += 1
-                case EventType.goal_7m:
+            # event.event_type é string no DB, comparar com valores do enum
+            event_type_str = event.event_type if isinstance(event.event_type, str) else event.event_type.value
+            
+            if event_type_str == CanonicalEventType.goal.value:
+                stats.goals += 1
+            elif event_type_str == CanonicalEventType.seven_meter.value:
+                # seven_meter pode ser gol ou finalização
+                if event.is_goal:
                     stats.goals_7m += 1
-                case EventType.own_goal:
-                    stats.own_goals += 1
-                case EventType.shot:
-                    stats.shots += 1
-                case EventType.shot_on_target:
-                    stats.shots_on_target += 1
-                case EventType.save:
-                    stats.saves += 1
-                case EventType.goal_conceded:
-                    stats.goals_conceded += 1
-                case EventType.assist:
-                    stats.assists += 1
-                case EventType.yellow_card:
-                    stats.yellow_cards += 1
-                case EventType.red_card:
-                    stats.red_cards += 1
-                case EventType.two_minutes:
-                    stats.two_minutes += 1
-                case EventType.turnover:
-                    stats.turnovers += 1
-                case EventType.technical_foul:
-                    stats.technical_fouls += 1
+                stats.shots += 1
+            elif event_type_str == CanonicalEventType.shot.value:
+                stats.shots += 1
+            elif event_type_str == CanonicalEventType.goalkeeper_save.value:
+                stats.saves += 1
+            elif event_type_str == CanonicalEventType.yellow_card.value:
+                stats.yellow_cards += 1
+            elif event_type_str == CanonicalEventType.red_card.value:
+                stats.red_cards += 1
+            elif event_type_str == CanonicalEventType.exclusion_2min.value:
+                stats.two_minutes += 1
+            elif event_type_str == CanonicalEventType.turnover.value:
+                stats.turnovers += 1
 
         return stats
 
     async def bulk_create(
         self,
-        events: list[MatchEventCreate],
+        match_id: UUID,
+        events: list[ScoutEventCreate],
     ) -> list[MatchEvent]:
         """
         Cria múltiplos eventos de uma vez.
@@ -335,31 +386,55 @@ class MatchEventService:
         if not events:
             return []
 
-        # Todos devem ser da mesma partida
-        match_ids = {e.match_id for e in events}
-        if len(match_ids) > 1:
-            raise ValidationError("All events must belong to the same match")
-
-        match = await self._get_match(events[0].match_id)
-        if match.status == MatchStatus.finished:
+        match = await self._get_match(match_id)
+        if match and match.status == MatchStatus.finished:
             raise ForbiddenError("Cannot add events to finalized match")
 
-        # Validar todos os atletas
-        athlete_ids = {e.athlete_id for e in events}
+        # Validar atletas referenciadas nos eventos (principal/assistência/secundária)
+        athlete_ids: set[UUID] = set()
+        for e in events:
+            for athlete_id in (e.athlete_id, e.assisting_athlete_id, e.secondary_athlete_id):
+                if athlete_id:
+                    athlete_ids.add(athlete_id)
+
         for athlete_id in athlete_ids:
-            await self._validate_athlete_in_roster(match.team_id, athlete_id)
+            if match:
+                await self._validate_athlete_in_roster(match.id, athlete_id)
 
         created = []
         for data in events:
+            event_type_code = self._event_type_code(data.event_type)
+            event_type_row = await self.db.scalar(
+                select(EventTypes).where(EventTypes.code == event_type_code)
+            )
+            if not event_type_row:
+                raise ValidationError(f"event_type '{event_type_code}' not found in event_types")
+
             event = MatchEvent(
-                match_id=data.match_id,
+                match_id=match.id,
+                team_id=data.team_id,
                 athlete_id=data.athlete_id,
-                event_type=data.event_type,
-                minute=data.minute,
-                period=data.period,
-                x_position=data.x_position,
-                y_position=data.y_position,
+                assisting_athlete_id=data.assisting_athlete_id,
+                secondary_athlete_id=data.secondary_athlete_id,
+                opponent_team_id=data.opponent_team_id,
+                period_number=data.period_number,
+                game_time_seconds=data.game_time_seconds,
+                phase_of_play=data.phase_of_play,
+                possession_id=data.possession_id,
+                advantage_state=data.advantage_state,
+                score_our=data.score_our,
+                score_opponent=data.score_opponent,
+                event_type=event_type_code,
+                event_subtype=data.event_subtype,
+                outcome=data.outcome,
+                is_shot=bool(event_type_row.is_shot),
+                is_goal=data.is_goal,
+                x_coord=data.x_coord,
+                y_coord=data.y_coord,
+                related_event_id=data.related_event_id,
+                source=data.source,
                 notes=data.notes,
+                created_by_user_id=self.context.user_id,
             )
             self.db.add(event)
             created.append(event)
@@ -369,7 +444,7 @@ class MatchEventService:
             await self.db.refresh(event)
 
         logger.info(
-            f"Bulk created {len(created)} events for match {match.id}"
+            f"Bulk created {len(created)} events for match {match.id if match else 'unknown'}"
         )
         return created
 
@@ -390,24 +465,25 @@ class MatchEventService:
 
     async def _validate_athlete_in_roster(
         self,
-        team_id: UUID,
+        match_id: UUID,
         athlete_id: UUID,
     ) -> None:
         """
-        Valida que atleta está no roster do time.
-        Ref: RD4 - Atleta deve estar registrado no time
+        Valida que atleta está no roster da partida e disponível.
+        Ref: RD4 - Atleta deve estar na súmula oficial (match_roster)
         """
-        query = select(TeamRegistration).where(
-            and_(
-                TeamRegistration.team_id == team_id,
-                TeamRegistration.athlete_id == athlete_id,
-                TeamRegistration.deleted_at.is_(None),
-            )
+        query = select(MatchRoster.id).where(
+            MatchRoster.match_id == match_id,
+            MatchRoster.athlete_id == athlete_id,
+            MatchRoster.is_available.is_(True),
         )
-        result = await self.db.execute(query)
-        registration = result.scalar_one_or_none()
+        registration = await self.db.scalar(query)
 
         if not registration:
             raise ValidationError(
-                f"Athlete {athlete_id} is not registered in team {team_id}"
+                f"Athlete {athlete_id} is not available in match roster for match {match_id}"
             )
+
+    @staticmethod
+    def _event_type_code(event_type: CanonicalEventType | str) -> str:
+        return event_type.value if hasattr(event_type, "value") else str(event_type)

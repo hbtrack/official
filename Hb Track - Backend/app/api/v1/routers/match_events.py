@@ -30,10 +30,10 @@ from app.models.team import Team
 from app.models.season import Season
 from app.models.match_event import EventType
 from app.schemas.match_events import (
-    MatchEventCreate,
+    ScoutEventCreate,
     MatchEventUpdate,
     MatchEventCorrection,
-    MatchEventResponse,
+    ScoutEventRead,
     MatchEventList,
     AthleteMatchStats,
 )
@@ -60,7 +60,7 @@ async def _get_match_scoped(
     )
     if not ctx.is_superadmin:
         query = query.where(Team.organization_id == ctx.organization_id)
-    result = db.execute(query)
+    result = await db.execute(query)
     match = result.scalar_one_or_none()
     if not match:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="match_not_found")
@@ -132,7 +132,7 @@ async def list_match_events(
     status_code=status.HTTP_201_CREATED,
     summary="Adicionar evento ao jogo",
     operation_id="addEventToMatch",
-    response_model=MatchEventResponse,
+    response_model=ScoutEventRead,
     responses={
         201: {"description": "Evento criado"},
         401: {"description": "Token inválido ou ausente", "model": ErrorResponse},
@@ -150,10 +150,10 @@ async def list_match_events(
 )
 async def add_event_to_match(
     match_id: UUID,
-    payload: MatchEventCreate,
+    payload: ScoutEventCreate,
     db: AsyncSession = Depends(get_async_db),
     context: ExecutionContext = Depends(require_role(["admin", "coach"])),
-) -> MatchEventResponse:
+) -> ScoutEventRead:
     """
     Adiciona um novo evento ao jogo (gol, falta, etc.).
 
@@ -163,19 +163,17 @@ async def add_event_to_match(
     - RF15: Partida não pode estar finalizada
     - R25/R26: Permissões por papel e escopo
 
-    **Campo event_type (EventType enum):**
-    goal, goal_7m, own_goal, shot, shot_on_target, save, goal_conceded,
-    assist, yellow_card, red_card, two_minutes, turnover, technical_foul, etc.
+    **event_type canônicos (11):**
+    goal, shot, seven_meter, goalkeeper_save, turnover, foul, exclusion_2min,
+    yellow_card, red_card, substitution, timeout — ref: event_types table
     """
-    # Garantir que o match_id do path é usado
-    payload.match_id = match_id
-    
-    service = MatchEventService(db, context)
-    event = await service.create(payload)
-    db.commit()
-    db.refresh(event)
 
-    return MatchEventResponse.model_validate(event)
+    service = MatchEventService(db, context)
+    event = await service.create(match_id, payload)
+    await db.commit()
+    await db.refresh(event)
+
+    return ScoutEventRead.model_validate(event)
 
 
 @router.patch(
@@ -183,7 +181,7 @@ async def add_event_to_match(
     status_code=status.HTTP_200_OK,
     summary="Atualizar evento do jogo",
     operation_id="updateMatchEvent",
-    response_model=MatchEventResponse,
+    response_model=ScoutEventRead,
     responses={
         200: {"description": "Evento atualizado"},
         401: {"description": "Token inválido ou ausente", "model": ErrorResponse},
@@ -198,11 +196,11 @@ async def update_match_event(
     payload: MatchEventUpdate,
     db: AsyncSession = Depends(get_async_db),
     context: ExecutionContext = Depends(require_role(["admin", "coach"])),
-) -> MatchEventResponse:
+) -> ScoutEventRead:
     """
     Atualiza atributos de um evento do jogo.
 
-    **Campos editáveis:** event_type, minute, period, x_position, y_position, notes
+    **Campos editáveis:** event_type, period_number, game_time_seconds, x_coord, y_coord, notes
     **Campos NÃO editáveis:** match_id, athlete_id
 
     **Regras aplicáveis:**
@@ -213,10 +211,10 @@ async def update_match_event(
     """
     service = MatchEventService(db, context)
     event = await service.update(match_event_id, payload)
-    db.commit()
-    db.refresh(event)
+    await db.commit()
+    await db.refresh(event)
 
-    return MatchEventResponse.model_validate(event)
+    return ScoutEventRead.model_validate(event)
 
 
 @router.post(
@@ -224,7 +222,7 @@ async def update_match_event(
     status_code=status.HTTP_200_OK,
     summary="Corrigir evento com histórico",
     operation_id="correctMatchEvent",
-    response_model=MatchEventResponse,
+    response_model=ScoutEventRead,
     responses={
         200: {"description": "Evento corrigido com histórico"},
         401: {"description": "Token inválido ou ausente", "model": ErrorResponse},
@@ -238,7 +236,7 @@ async def correct_match_event(
     payload: MatchEventCorrection,
     db: AsyncSession = Depends(get_async_db),
     context: ExecutionContext = Depends(require_role(["admin", "coach"])),
-) -> MatchEventResponse:
+) -> ScoutEventRead:
     """
     Corrige evento com histórico obrigatório.
     
@@ -250,10 +248,10 @@ async def correct_match_event(
     """
     service = MatchEventService(db, context)
     event = await service.correct(match_event_id, payload)
-    db.commit()
-    db.refresh(event)
+    await db.commit()
+    await db.refresh(event)
 
-    return MatchEventResponse.model_validate(event)
+    return ScoutEventRead.model_validate(event)
 
 
 @router.delete(
@@ -261,7 +259,7 @@ async def correct_match_event(
     status_code=status.HTTP_200_OK,
     summary="Excluir evento",
     operation_id="deleteMatchEvent",
-    response_model=MatchEventResponse,
+    response_model=ScoutEventRead,
     responses={
         200: {"description": "Evento excluído (soft delete)"},
         401: {"description": "Token inválido ou ausente", "model": ErrorResponse},
@@ -274,7 +272,7 @@ async def delete_match_event(
     reason: str = Query(..., min_length=5, description="Motivo da exclusão"),
     db: AsyncSession = Depends(get_async_db),
     context: ExecutionContext = Depends(require_role(["admin", "coach"])),
-) -> MatchEventResponse:
+) -> ScoutEventRead:
     """
     Soft delete de evento.
     
@@ -284,10 +282,10 @@ async def delete_match_event(
     """
     service = MatchEventService(db, context)
     event = await service.soft_delete(match_event_id, reason)
-    db.commit()
-    db.refresh(event)
+    await db.commit()
+    await db.refresh(event)
 
-    return MatchEventResponse.model_validate(event)
+    return ScoutEventRead.model_validate(event)
 
 
 @router.get(
@@ -326,7 +324,7 @@ async def get_athlete_match_stats(
     status_code=status.HTTP_201_CREATED,
     summary="Criar eventos em lote",
     operation_id="bulkCreateMatchEvents",
-    response_model=list[MatchEventResponse],
+    response_model=list[ScoutEventRead],
     responses={
         201: {"description": "Eventos criados"},
         403: {"description": "Partida finalizada", "model": ErrorResponse},
@@ -335,23 +333,19 @@ async def get_athlete_match_stats(
 )
 async def bulk_create_match_events(
     match_id: UUID,
-    events: list[MatchEventCreate],
+    events: list[ScoutEventCreate],
     db: AsyncSession = Depends(get_async_db),
     context: ExecutionContext = Depends(require_role(["admin"])),
-) -> list[MatchEventResponse]:
+) -> list[ScoutEventRead]:
     """
     Cria múltiplos eventos em lote.
     Útil para importação de súmula.
     """
-    # Garantir que todos usam o match_id do path
-    for event in events:
-        event.match_id = match_id
-
     service = MatchEventService(db, context)
-    created = await service.bulk_create(events)
-    db.commit()
+    created = await service.bulk_create(match_id, events)
+    await db.commit()
 
-    return [MatchEventResponse.model_validate(e) for e in created]
+    return [ScoutEventRead.model_validate(e) for e in created]
 
 
 # =============================================================================
@@ -397,7 +391,7 @@ async def _maybe_validate_registration(
     athlete_id: Optional[UUID],
 ) -> None:
     if athlete_id and match.season_id:
-        season = db.scalar(select(Season).where(Season.id == match.season_id))
+        season = await db.scalar(select(Season).where(Season.id == match.season_id))
         if season:
             require_team_registration_in_season(
                 team_id=team_id,
@@ -413,30 +407,29 @@ async def _maybe_validate_registration(
     "/events",
     status_code=status.HTTP_201_CREATED,
     summary="Adicionar evento ao jogo (escopo equipe)",
-    response_model=MatchEventResponse,
+    response_model=ScoutEventRead,
 )
 async def scoped_add_event_to_match(
     team_id: UUID,
     match_id: UUID,
-    payload: MatchEventCreate,
+    payload: ScoutEventCreate,
     db: AsyncSession = Depends(get_async_db),
     ctx: ExecutionContext = Depends(permission_dep(roles=["admin", "coach"], require_team=True)),
-) -> MatchEventResponse:
+) -> ScoutEventRead:
     match = await _get_match_scoped(db, ctx, team_id, match_id)
-    payload.match_id = match_id
     await _maybe_validate_registration(db, ctx, team_id, match, payload.athlete_id)
     service = MatchEventService(db, ctx)
-    event = await service.create(payload)
-    db.commit()
-    db.refresh(event)
-    return MatchEventResponse.model_validate(event)
+    event = await service.create(match_id, payload)
+    await db.commit()
+    await db.refresh(event)
+    return ScoutEventRead.model_validate(event)
 
 
 @scoped_events_router.patch(
     "/match_events/{match_event_id}",
     status_code=status.HTTP_200_OK,
     summary="Atualizar evento (escopo equipe)",
-    response_model=MatchEventResponse,
+    response_model=ScoutEventRead,
 )
 async def scoped_update_match_event(
     team_id: UUID,
@@ -445,22 +438,22 @@ async def scoped_update_match_event(
     payload: MatchEventUpdate,
     db: AsyncSession = Depends(get_async_db),
     ctx: ExecutionContext = Depends(permission_dep(roles=["admin", "coach"], require_team=True)),
-) -> MatchEventResponse:
+) -> ScoutEventRead:
     match = await _get_match_scoped(db, ctx, team_id, match_id)
     service = MatchEventService(db, ctx)
     event = await service.update(match_event_id, payload)
     if str(event.match_id) != str(match.id):
         raise HTTPException(status.HTTP_403_FORBIDDEN, detail="permission_denied_team_scope")
-    db.commit()
-    db.refresh(event)
-    return MatchEventResponse.model_validate(event)
+    await db.commit()
+    await db.refresh(event)
+    return ScoutEventRead.model_validate(event)
 
 
 @scoped_events_router.post(
     "/match_events/{match_event_id}/correct",
     status_code=status.HTTP_200_OK,
     summary="Corrigir evento (escopo equipe)",
-    response_model=MatchEventResponse,
+    response_model=ScoutEventRead,
 )
 async def scoped_correct_match_event(
     team_id: UUID,
@@ -469,22 +462,22 @@ async def scoped_correct_match_event(
     payload: MatchEventCorrection,
     db: AsyncSession = Depends(get_async_db),
     ctx: ExecutionContext = Depends(permission_dep(roles=["admin", "coach"], require_team=True)),
-) -> MatchEventResponse:
+) -> ScoutEventRead:
     match = await _get_match_scoped(db, ctx, team_id, match_id)
     service = MatchEventService(db, ctx)
     event = await service.correct(match_event_id, payload)
     if str(event.match_id) != str(match.id):
         raise HTTPException(status.HTTP_403_FORBIDDEN, detail="permission_denied_team_scope")
-    db.commit()
-    db.refresh(event)
-    return MatchEventResponse.model_validate(event)
+    await db.commit()
+    await db.refresh(event)
+    return ScoutEventRead.model_validate(event)
 
 
 @scoped_events_router.delete(
     "/match_events/{match_event_id}",
     status_code=status.HTTP_200_OK,
     summary="Excluir evento (escopo equipe)",
-    response_model=MatchEventResponse,
+    response_model=ScoutEventRead,
 )
 async def scoped_delete_match_event(
     team_id: UUID,
@@ -493,15 +486,15 @@ async def scoped_delete_match_event(
     reason: str = Query(..., min_length=5, description="Motivo da exclusão"),
     db: AsyncSession = Depends(get_async_db),
     ctx: ExecutionContext = Depends(permission_dep(roles=["admin", "coach"], require_team=True)),
-) -> MatchEventResponse:
+) -> ScoutEventRead:
     match = await _get_match_scoped(db, ctx, team_id, match_id)
     service = MatchEventService(db, ctx)
     event = await service.soft_delete(match_event_id, reason)
     if str(event.match_id) != str(match.id):
         raise HTTPException(status.HTTP_403_FORBIDDEN, detail="permission_denied_team_scope")
-    db.commit()
-    db.refresh(event)
-    return MatchEventResponse.model_validate(event)
+    await db.commit()
+    await db.refresh(event)
+    return ScoutEventRead.model_validate(event)
 
 
 @scoped_events_router.get(
@@ -528,20 +521,19 @@ async def scoped_get_athlete_match_stats(
     "/events/bulk",
     status_code=status.HTTP_201_CREATED,
     summary="Criar eventos em lote (escopo equipe)",
-    response_model=list[MatchEventResponse],
+    response_model=list[ScoutEventRead],
 )
 async def scoped_bulk_create_match_events(
     team_id: UUID,
     match_id: UUID,
-    events: list[MatchEventCreate],
+    events: list[ScoutEventCreate],
     db: AsyncSession = Depends(get_async_db),
     ctx: ExecutionContext = Depends(permission_dep(roles=["admin"], require_team=True)),
-) -> list[MatchEventResponse]:
+) -> list[ScoutEventRead]:
     match = await _get_match_scoped(db, ctx, team_id, match_id)
     for event in events:
-        event.match_id = match_id
         await _maybe_validate_registration(db, ctx, team_id, match, event.athlete_id)
     service = MatchEventService(db, ctx)
-    created = await service.bulk_create(events)
-    db.commit()
-    return [MatchEventResponse.model_validate(e) for e in created]
+    created = await service.bulk_create(match_id, events)
+    await db.commit()
+    return [ScoutEventRead.model_validate(e) for e in created]

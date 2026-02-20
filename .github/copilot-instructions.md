@@ -10,7 +10,7 @@ Você é o braço técnico do Arquiteto. Suas ações devem ser determinísticas
 ## 2. GOVERNANÇA DE ARQUIVOS (SSOT)
 - Root de Evidências: `_reports/audit/`.
 - Root de Casos: `_reports/cases/`.
-- Proibido: Criar pastas fora de `_reports/` ou usar `docs/_generated/` para logs.
+- Proibido: Criar pastas fora de `_reports/` ou usar diretórios fora da estrutura canônica para logs.
 - Limpeza: Antes de novos Audits, limpe resíduos de execuções falhas.
 
 ## 3. PROTOCOLO DE CASO (SEÇÃO 6.3)

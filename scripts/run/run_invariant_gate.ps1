@@ -115,7 +115,7 @@ if (-not (Test-Path $Backend)) {
 
 # Criar diretório de reports
 $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
-$reportDir = Join-Path $Root "docs\_generated\_reports\$InvId\$timestamp"
+$reportDir = Join-Path $Root "_reports\invariants\$InvId\$timestamp"
 New-Item -ItemType Directory -Path $reportDir -Force | Out-Null
 Write-Host "Report dir: $reportDir" -ForegroundColor Green
 Write-Host ""
@@ -248,13 +248,13 @@ $metaPath = Join-Path $reportDir "meta.txt"
 
 # Canonical input files (for golden drift detection)
 $openapiPath = Resolve-FirstExistingPath @(
-    (Join-Path $Backend "docs\_generated\openapi.json"),
-    (Join-Path $Root "docs\_generated\openapi.json")
+    (Join-Path $Backend "docs\ssot\openapi.json"),
+    (Join-Path $Root "docs\ssot\openapi.json")
 )
 
 $schemaPath = Resolve-FirstExistingPath @(
-    (Join-Path $Backend "docs\_generated\schema.sql"),
-    (Join-Path $Root "docs\_generated\schema.sql")
+    (Join-Path $Backend "docs\ssot\schema.sql"),
+    (Join-Path $Root "docs\ssot\schema.sql")
 )
 
 $invariantsPath = Join-Path $Root "docs\02-modulos\training\INVARIANTS_TRAINING.md"
@@ -317,7 +317,7 @@ if ([string]::IsNullOrWhiteSpace($unitClass)) {
 }
 
 # Golden dir is at INV level (not timestamp level)
-$invReportsDir = Join-Path $Root "docs\_generated\_reports\$InvId"
+$invReportsDir = Join-Path $Root "_reports\invariants\$InvId"
 $goldenDir = Join-Path $invReportsDir "_golden_$unitClass"
 
 Write-Host "  Unit class: $unitClass" -ForegroundColor Gray

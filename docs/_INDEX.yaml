@@ -26,8 +26,17 @@ entrypoints:
   - id: uds_spec
     path: docs/_canon/UDS_SPEC.md
     mode: required
+  - id: hb_track_contract
+    path: docs/_canon/contratos/HB_TRACK_CONTRACT.md
+    mode: required
+  - id: hb_track_spec
+    path: docs/_canon/specs/HB_TRACK_SPEC.md
+    mode: required
+  - id: hb_track_kanban
+    path: docs/hbtrack/Hb Track Kanban.md
+    mode: required
   - id: determinism_manual
-    path: docs/_canon/MANUAL_CANONICO_DETERMINISMO.md
+    path: docs/hbtrack/manuais/Manual Deterministico.md
     mode: required
 
 rules:

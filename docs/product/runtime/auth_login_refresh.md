@@ -8,7 +8,7 @@ source_of_truth:
 depends_on:
   - docs/product/ARCHITECTURE.md
 evidence_expected:
-  - docs/_generated/_reports/tasks/auth_login_refresh.log
+  - _reports/tasks/auth_login_refresh.log
 ---
 
 # Runtime Scenario: Auth Login + Refresh

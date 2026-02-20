@@ -116,7 +116,7 @@ def check_derived_not_manually_edited(errors: list[str]) -> None:
     """Check that _generated/ and ssot/ dirs exist but don't enforce content rules yet."""
     gen_path = ROOT / "docs" / "_generated"
     if not gen_path.exists():
-        errors.append("L2: docs/_generated/ directory not found")
+        errors.append("L2: docs/ssot/ directory not found")
     
     ssot_path = ROOT / "docs" / "ssot"
     if not ssot_path.exists():

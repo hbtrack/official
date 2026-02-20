@@ -68,7 +68,7 @@ class Person(Base):
 
     id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
     full_name: Mapped[str] = mapped_column(sa.Text(), nullable=False)
-    birth_date: Mapped[Optional[date]] = mapped_column(sa.Date(), nullable=True)
+    birth_date: Mapped[date] = mapped_column(sa.Date(), nullable=False)
     created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
     updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
     deleted_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)

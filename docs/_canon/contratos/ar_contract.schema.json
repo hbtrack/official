@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hbtrack:ar_contract.schema.json",
+  "title": "HB Track AR Contract (Plan JSON) — v1.0.4",
+  "type": "object",
+  "required": ["project", "version", "tasks"],
+  "additionalProperties": false,
+  "properties": {
+    "project": {
+      "type": "string",
+      "const": "HB Track"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "MUST igualar a versão do protocolo reportada pelo hb.py (ex.: 1.0.4)."
+    },
+
+    "notes": {
+      "type": "string",
+      "maxLength": 5000,
+      "description": "Notas gerais do Arquiteto sobre o plano (texto livre canônico)."
+    },
+    "assumptions": {
+      "type": "array",
+      "maxItems": 50,
+      "items": { "type": "string", "minLength": 1, "maxLength": 500 },
+      "description": "Suposições feitas ao gerar o plano."
+    },
+
+    "tasks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "description", "criteria", "evidence_file", "validation_command"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[0-9]{3}$",
+            "description": "ID no formato 001..999."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 20000
+          },
+          "criteria": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 5000
+          },
+
+          "gate": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "description": "Rótulo do gate (informativo)."
+          },
+
+          "validation_command": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Comando exato para hb report (contrato forte)."
+          },
+
+          "evidence_file": {
+            "type": "string",
+            "pattern": "^docs/hbtrack/evidence/AR_[0-9]{3}.*\\.log$",
+            "description": "Caminho do evidence pack (canon)."
+          },
+
+          "ssot_touches": {
+            "type": "array",
+            "uniqueItems": true,
+            "maxItems": 3,
+            "items": {
+              "type": "string",
+              "enum": [
+                "docs/ssot/schema.sql",
+                "docs/ssot/openapi.json",
+                "docs/ssot/alembic_state.txt"
+              ]
+            },
+            "description": "SSOTs que esta task pode tocar (opcional)."
+          },
+
+          "notes": {
+            "type": "string",
+            "maxLength": 5000,
+            "description": "Notas específicas da task (texto livre canônico)."
+          },
+          "risks": {
+            "type": "array",
+            "maxItems": 20,
+            "items": { "type": "string", "minLength": 1, "maxLength": 500 },
+            "description": "Riscos/atenções para o Executor."
+          }
+        }
+      }
+    }
+  }
+}

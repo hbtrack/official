@@ -1,0 +1,178 @@
+{
+  "ar_id": "AR_003.5",
+  "title": "Migration: persons.birth_date NOT NULL + Trigger de Paridade com athletes",
+  "status": "PROPOSTA",
+  "version": "1.0",
+  "created_at": "2026-02-19",
+  "mode": "PROPOSE_ONLY",
+  "author": "Arquiteto",
+  "prd_source": "docs/hbtrack/PRD HB Track.md §8.2 — Invariante de Dados",
+  "invariant_text": "O campo birth_date é obrigatório para todas as pessoas classificadas como Atletas. O sistema deve garantir paridade entre persons.birth_date e athletes.birth_date.",
+
+  "ssot_bindings": {
+    "schema_ssot": "docs/ssot/schema.sql",
+    "model_person": "Hb Track - Backend/app/models/person.py",
+    "model_athlete": "Hb Track - Backend/app/models/athlete.py",
+    "alembic_versions_dir": "Hb Track - Backend/db/alembic/versions/",
+    "alembic_current_head": "0fb0f76b48a7"
+  },
+
+  "context": {
+    "current_state": {
+      "persons.birth_date": "date, nullable=True — coluna PERMITE NULL no banco e no model SQLAlchemy",
+      "athletes.birth_date": "date, NOT NULL — já obrigatório desde migration 0005",
+      "model_person_line": "Hb Track - Backend/app/models/person.py:57 — birth_date: Mapped[Optional[date]] = mapped_column(sa.Date(), nullable=True)",
+      "gap": "Atletas vinculados via athletes.person_id → persons.id podem ter persons.birth_date = NULL, violando o invariante do PRD"
+    },
+    "target_state": {
+      "persons.birth_date": "date, NOT NULL — obrigatório para todos os registros ativos",
+      "parity_guarantee": "TRIGGER de banco garante persons.birth_date == athletes.birth_date em INSERT/UPDATE em ambas as tabelas",
+      "model_person_line": "Hb Track - Backend/app/models/person.py:57 — birth_date: Mapped[date] = mapped_column(sa.Date(), nullable=False)"
+    }
+  },
+
+  "pre_flight_checks": [
+    {
+      "id": "PF-001",
+      "label": "Persons de atletas com birth_date NULL (backfillável automaticamente)",
+      "sql": "SELECT p.id, p.full_name, p.birth_date AS persons_birth_date, a.id AS athlete_id, a.birth_date AS athletes_birth_date FROM athletes a JOIN persons p ON a.person_id = p.id WHERE p.birth_date IS NULL AND a.deleted_at IS NULL AND p.deleted_at IS NULL;",
+      "expected_result": "0 linhas (ideal). Se > 0, executar MIG-002 (backfill automático).",
+      "action_if_nonzero": "CONTINUAR — backfill via MIG-002",
+      "blocker": false
+    },
+    {
+      "id": "PF-002",
+      "label": "Persons NÃO-atletas com birth_date NULL (NÃO backfillável automaticamente)",
+      "sql": "SELECT p.id, p.full_name FROM persons p WHERE p.birth_date IS NULL AND p.deleted_at IS NULL AND NOT EXISTS (SELECT 1 FROM athletes a WHERE a.person_id = p.id AND a.deleted_at IS NULL);",
+      "expected_result": "0 linhas. Se > 0, a migration NÃO pode ser executada sem correção manual de dados.",
+      "action_if_nonzero": "BLOCKED — retornar BLOCKED_INPUT (4). Listar persons encontrados para o operador corrigir birth_date manualmente antes de reexecutar.",
+      "blocker": true
+    },
+    {
+      "id": "PF-003",
+      "label": "Divergência de birth_date entre persons e athletes (dados inconsistentes pré-existentes)",
+      "sql": "SELECT p.id, p.full_name, p.birth_date AS persons_bd, a.birth_date AS athletes_bd FROM athletes a JOIN persons p ON a.person_id = p.id WHERE p.birth_date IS NOT NULL AND p.birth_date != a.birth_date AND a.deleted_at IS NULL AND p.deleted_at IS NULL;",
+      "expected_result": "0 linhas. Se > 0, indicar ao operador quais registros possuem divergência para resolver manualmente antes da migration.",
+      "action_if_nonzero": "BLOCKED — retornar BLOCKED_INPUT (4). Listar divergências para resolução manual.",
+      "blocker": true
+    }
+  ],
+
+  "migration_steps": [
+    {
+      "step": "MIG-001",
+      "label": "Pre-flight gate: abortar se PF-002 ou PF-003 retornarem linhas",
+      "type": "data_check",
+      "alembic_pattern": "op.get_bind() + conn.execute(text(...)).scalar()",
+      "exit_code_on_fail": 4,
+      "description": "Executar PF-002 e PF-003 via conn.execute(). Se count > 0 em qualquer um, levantar RuntimeError com lista dos IDs bloqueadores. A migration NÃO deve continuar."
+    },
+    {
+      "step": "MIG-002",
+      "label": "Backfill: copiar athletes.birth_date → persons.birth_date onde NULL",
+      "type": "data_migration",
+      "sql": "UPDATE persons p SET birth_date = a.birth_date, updated_at = now() FROM athletes a WHERE a.person_id = p.id AND p.birth_date IS NULL AND a.deleted_at IS NULL AND p.deleted_at IS NULL;",
+      "description": "Somente executa se PF-001 retornou linhas (count > 0). Idempotente — safe para executar mesmo se não há linhas."
+    },
+    {
+      "step": "MIG-003",
+      "label": "Verificação pós-backfill: confirmar 0 nulls restantes para atletas",
+      "type": "data_check",
+      "sql": "SELECT COUNT(*) FROM persons p JOIN athletes a ON a.person_id = p.id WHERE p.birth_date IS NULL AND a.deleted_at IS NULL;",
+      "expected_count": 0,
+      "exit_code_on_fail": 2,
+      "description": "Deve retornar 0. Se não, o backfill falhou parcialmente e a migration deve abortar com FAIL_ACTIONABLE (2)."
+    },
+    {
+      "step": "MIG-004",
+      "label": "DDL: ALTER TABLE persons ALTER COLUMN birth_date SET NOT NULL",
+      "type": "ddl_alter_column",
+      "alembic_op": "op.alter_column('persons', 'birth_date', existing_type=sa.Date(), nullable=False)",
+      "description": "Aplica a constraint NOT NULL na coluna. Só pode executar após MIG-001 a MIG-003 confirmarem 0 nulls."
+    },
+    {
+      "step": "MIG-005",
+      "label": "DDL: Criar função fn_sync_birth_date_athletes_to_persons (athletes → persons)",
+      "type": "ddl_trigger_function",
+      "sql": "CREATE OR REPLACE FUNCTION fn_sync_birth_date_athletes_to_persons() RETURNS TRIGGER AS $$ BEGIN IF NEW.birth_date IS DISTINCT FROM OLD.birth_date THEN UPDATE persons SET birth_date = NEW.birth_date, updated_at = now() WHERE id = NEW.person_id AND deleted_at IS NULL; END IF; RETURN NEW; END; $$ LANGUAGE plpgsql;",
+      "description": "Função de trigger: quando athletes.birth_date é atualizado, propaga para persons.birth_date."
+    },
+    {
+      "step": "MIG-006",
+      "label": "DDL: Criar trigger trg_sync_birth_date_athletes (AFTER UPDATE OF birth_date ON athletes)",
+      "type": "ddl_trigger",
+      "sql": "CREATE TRIGGER trg_sync_birth_date_athletes AFTER UPDATE OF birth_date ON athletes FOR EACH ROW EXECUTE FUNCTION fn_sync_birth_date_athletes_to_persons();",
+      "description": "Dispara MIG-005 após qualquer UPDATE em athletes.birth_date."
+    },
+    {
+      "step": "MIG-007",
+      "label": "DDL: Criar função fn_validate_birth_date_parity_on_person (persons → athletes validação)",
+      "type": "ddl_trigger_function",
+      "sql": "CREATE OR REPLACE FUNCTION fn_validate_birth_date_parity_on_person() RETURNS TRIGGER AS $$ DECLARE v_athlete_birth_date date; BEGIN SELECT a.birth_date INTO v_athlete_birth_date FROM athletes a WHERE a.person_id = NEW.id AND a.deleted_at IS NULL ORDER BY a.created_at DESC LIMIT 1; IF v_athlete_birth_date IS NOT NULL AND NEW.birth_date IS DISTINCT FROM v_athlete_birth_date THEN RAISE EXCEPTION 'INV-PARITY-001: persons.birth_date (%) deve ser igual a athletes.birth_date (%) para person_id=%', NEW.birth_date, v_athlete_birth_date, NEW.id; END IF; RETURN NEW; END; $$ LANGUAGE plpgsql;",
+      "description": "Função de trigger: quando persons.birth_date é atualizado, valida que não diverge de athletes.birth_date. Levanta exception com código INV-PARITY-001 se divergir."
+    },
+    {
+      "step": "MIG-008",
+      "label": "DDL: Criar trigger trg_validate_birth_date_persons (BEFORE UPDATE OF birth_date ON persons)",
+      "type": "ddl_trigger",
+      "sql": "CREATE TRIGGER trg_validate_birth_date_persons BEFORE UPDATE OF birth_date ON persons FOR EACH ROW EXECUTE FUNCTION fn_validate_birth_date_parity_on_person();",
+      "description": "Dispara MIG-007 antes de qualquer UPDATE em persons.birth_date, bloqueando divergências."
+    }
+  ],
+
+  "alembic_migration": {
+    "filename_pattern": "XXXX_persons_birth_date_not_null_parity.py",
+    "down_revision": "0fb0f76b48a7",
+    "revision": "<alembic_autogenerate>",
+    "upgrade_body": "import sqlalchemy as sa\nfrom alembic import op\n\ndef upgrade():\n    conn = op.get_bind()\n\n    # MIG-001: PF-002 — non-athlete persons com birth_date NULL\n    result = conn.execute(sa.text(\"\"\"\n        SELECT COUNT(*) FROM persons p\n        WHERE p.birth_date IS NULL AND p.deleted_at IS NULL\n          AND NOT EXISTS (\n              SELECT 1 FROM athletes a WHERE a.person_id = p.id AND a.deleted_at IS NULL\n          )\n    \"\"\")).scalar()\n    if result > 0:\n        rows = conn.execute(sa.text(\"\"\"\n            SELECT id, full_name FROM persons p\n            WHERE p.birth_date IS NULL AND p.deleted_at IS NULL\n              AND NOT EXISTS (SELECT 1 FROM athletes a WHERE a.person_id = p.id AND a.deleted_at IS NULL)\n        \"\"\")).fetchall()\n        raise RuntimeError(\n            f'MIGRATION BLOCKED (PF-002): {result} non-athlete person(s) with NULL birth_date. '\n            f'Correct manually before running: {[(str(r.id), r.full_name) for r in rows]}'\n        )\n\n    # MIG-001: PF-003 — divergência person vs athlete birth_date\n    result = conn.execute(sa.text(\"\"\"\n        SELECT COUNT(*) FROM athletes a\n        JOIN persons p ON a.person_id = p.id\n        WHERE p.birth_date IS NOT NULL AND p.birth_date != a.birth_date\n          AND a.deleted_at IS NULL AND p.deleted_at IS NULL\n    \"\"\")).scalar()\n    if result > 0:\n        rows = conn.execute(sa.text(\"\"\"\n            SELECT p.id, p.full_name, p.birth_date AS persons_bd, a.birth_date AS athletes_bd\n            FROM athletes a JOIN persons p ON a.person_id = p.id\n            WHERE p.birth_date IS NOT NULL AND p.birth_date != a.birth_date\n              AND a.deleted_at IS NULL AND p.deleted_at IS NULL\n        \"\"\")).fetchall()\n        raise RuntimeError(\n            f'MIGRATION BLOCKED (PF-003): {result} person(s) with birth_date divergence. '\n            f'Resolve manually: {[(str(r.id), r.full_name, str(r.persons_bd), str(r.athletes_bd)) for r in rows]}'\n        )\n\n    # MIG-002: Backfill persons.birth_date from athletes.birth_date\n    op.execute(sa.text(\"\"\"\n        UPDATE persons p\n        SET birth_date = a.birth_date,\n            updated_at = now()\n        FROM athletes a\n        WHERE a.person_id = p.id\n          AND p.birth_date IS NULL\n          AND a.deleted_at IS NULL\n          AND p.deleted_at IS NULL\n    \"\"\"))\n\n    # MIG-003: Verificar backfill — deve retornar 0\n    remaining = conn.execute(sa.text(\"\"\"\n        SELECT COUNT(*) FROM persons p\n        JOIN athletes a ON a.person_id = p.id\n        WHERE p.birth_date IS NULL AND a.deleted_at IS NULL\n    \"\"\")).scalar()\n    if remaining > 0:\n        raise RuntimeError(\n            f'BACKFILL INCOMPLETE (MIG-003): {remaining} athlete person(s) still have NULL birth_date.'\n        )\n\n    # MIG-004: ALTER COLUMN — NOT NULL\n    op.alter_column('persons', 'birth_date', existing_type=sa.Date(), nullable=False)\n\n    # MIG-005: Função fn_sync_birth_date_athletes_to_persons\n    op.execute(sa.text(\"\"\"\n        CREATE OR REPLACE FUNCTION fn_sync_birth_date_athletes_to_persons()\n        RETURNS TRIGGER AS $$\n        BEGIN\n            IF NEW.birth_date IS DISTINCT FROM OLD.birth_date THEN\n                UPDATE persons\n                SET birth_date = NEW.birth_date,\n                    updated_at = now()\n                WHERE id = NEW.person_id AND deleted_at IS NULL;\n            END IF;\n            RETURN NEW;\n        END;\n        $$ LANGUAGE plpgsql;\n    \"\"\"))\n\n    # MIG-006: Trigger athletes → persons sync\n    op.execute(sa.text(\"\"\"\n        CREATE TRIGGER trg_sync_birth_date_athletes\n        AFTER UPDATE OF birth_date ON athletes\n        FOR EACH ROW\n        EXECUTE FUNCTION fn_sync_birth_date_athletes_to_persons();\n    \"\"\"))\n\n    # MIG-007: Função fn_validate_birth_date_parity_on_person\n    op.execute(sa.text(\"\"\"\n        CREATE OR REPLACE FUNCTION fn_validate_birth_date_parity_on_person()\n        RETURNS TRIGGER AS $$\n        DECLARE\n            v_athlete_birth_date date;\n        BEGIN\n            SELECT a.birth_date INTO v_athlete_birth_date\n            FROM athletes a\n            WHERE a.person_id = NEW.id AND a.deleted_at IS NULL\n            ORDER BY a.created_at DESC\n            LIMIT 1;\n            IF v_athlete_birth_date IS NOT NULL\n               AND NEW.birth_date IS DISTINCT FROM v_athlete_birth_date THEN\n                RAISE EXCEPTION\n                    'INV-PARITY-001: persons.birth_date (%) deve ser igual a athletes.birth_date (%) para person_id=%',\n                    NEW.birth_date, v_athlete_birth_date, NEW.id;\n            END IF;\n            RETURN NEW;\n        END;\n        $$ LANGUAGE plpgsql;\n    \"\"\"))\n\n    # MIG-008: Trigger persons → athletes validation\n    op.execute(sa.text(\"\"\"\n        CREATE TRIGGER trg_validate_birth_date_persons\n        BEFORE UPDATE OF birth_date ON persons\n        FOR EACH ROW\n        EXECUTE FUNCTION fn_validate_birth_date_parity_on_person();\n    \"\"\"))\n",
+    "downgrade_body": "def downgrade():\n    op.execute(sa.text('DROP TRIGGER IF EXISTS trg_validate_birth_date_persons ON persons;'))\n    op.execute(sa.text('DROP FUNCTION IF EXISTS fn_validate_birth_date_parity_on_person();'))\n    op.execute(sa.text('DROP TRIGGER IF EXISTS trg_sync_birth_date_athletes ON athletes;'))\n    op.execute(sa.text('DROP FUNCTION IF EXISTS fn_sync_birth_date_athletes_to_persons();'))\n    op.alter_column('persons', 'birth_date', existing_type=sa.Date(), nullable=True)\n"
+  },
+
+  "model_changes": [
+    {
+      "file": "Hb Track - Backend/app/models/person.py",
+      "line_approx": 57,
+      "old": "birth_date: Mapped[Optional[date]] = mapped_column(sa.Date(), nullable=True)",
+      "new": "birth_date: Mapped[date] = mapped_column(sa.Date(), nullable=False)",
+      "import_change": "Remove 'Optional' de Mapped[Optional[date]] se não usado por outros campos. Verificar imports no topo do arquivo."
+    }
+  ],
+
+  "success_criteria": [
+    "PF-002 retorna 0 linhas antes e depois da migration",
+    "PF-003 retorna 0 linhas antes e depois da migration",
+    "ALTER COLUMN persons.birth_date SET NOT NULL aplicado com sucesso (verificar via \\d persons no psql)",
+    "Trigger trg_sync_birth_date_athletes existe em information_schema.triggers",
+    "Trigger trg_validate_birth_date_persons existe em information_schema.triggers",
+    "UPDATE athletes SET birth_date='2000-01-01' WHERE ... propaga para persons.birth_date",
+    "UPDATE persons SET birth_date='1999-12-31' WHERE id=(atleta) levanta exception INV-PARITY-001",
+    "Model Person.birth_date typado como Mapped[date] (não Optional)",
+    "alembic upgrade head retorna exit code 0",
+    "alembic downgrade -1 retorna exit code 0 (reversibilidade verificada)"
+  ],
+
+  "evidence_file": "docs/evidence/AR_003.5_persons_birth_date_not_null.log",
+
+  "rollback_plan": {
+    "alembic": "alembic downgrade -1",
+    "effect": "Restaura persons.birth_date para nullable=True. Remove os dois triggers e as duas funções. NÃO reverte o backfill de dados (persons que tiveram birth_date preenchida mantenha o valor — não há perda de informação).",
+    "model_revert": "Reverter Hb Track - Backend/app/models/person.py para Mapped[Optional[date]] + nullable=True",
+    "git": "git restore 'Hb Track - Backend/app/models/person.py'"
+  },
+
+  "required_gates": [
+    "Verificar existência de gates no _INDEX.yaml antes de executar — o Executor NÃO deve criar gates novos.",
+    "Candidatos esperados (verificar IDs reais no repo): gate de models vs schema (structural sync), gate de alembic head (db_at_head)"
+  ],
+
+  "risk_assessment": {
+    "data_loss": "NENHUM — backfill só adiciona dados, não remove",
+    "downtime": "MÍNIMO — ALTER COLUMN NOT NULL requer lock breve em tabela persons; executar em janela de baixo tráfego",
+    "regression": "MÉDIO — código que cria Person sem birth_date irá falhar após a migration; auditar endpoints de criação de Person",
+    "endpoints_to_audit": [
+      "POST /persons (se existir endpoint direto)",
+      "POST /users (cria Person internamente)",
+      "POST /athletes (cria Person + Athlete — já passa birth_date via athletes)"
+    ]
+  }
+}

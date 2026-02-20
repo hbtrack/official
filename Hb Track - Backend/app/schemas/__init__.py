@@ -59,11 +59,12 @@ from app.schemas.matches import (
     MatchWithEvents,
 )
 from app.schemas.match_events import (
-    MatchEventBase,
-    MatchEventCreate,
+    CanonicalEventType,
+    EventType,
+    ScoutEventCreate,
+    ScoutEventRead,
     MatchEventUpdate,
     MatchEventCorrection,
-    MatchEventResponse,
     MatchEventSummary,
     MatchEventList,
     AthleteMatchStats,
@@ -99,12 +100,13 @@ __all__ = [
     "MatchSummary",
     "MatchList",
     "MatchWithEvents",
-    # Match Events
-    "MatchEventBase",
-    "MatchEventCreate",
+    # Match Events (canônicos)
+    "CanonicalEventType",
+    "EventType",
+    "ScoutEventCreate",
+    "ScoutEventRead",
     "MatchEventUpdate",
     "MatchEventCorrection",
-    "MatchEventResponse",
     "MatchEventSummary",
     "MatchEventList",
     "AthleteMatchStats",

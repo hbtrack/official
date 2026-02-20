@@ -19,7 +19,7 @@ MUST NOT mix modes in a single document.
 Authority precedence MUST follow docs/_INDEX.yaml.
 
 4. DERIVED policy
-Anything under docs/_generated/ is DERIVED and MUST be treated as read-only.
+Anything under docs/ssot/ is DERIVED and MUST be treated as read-only.
 Manual edits are forbidden. Regeneration MUST be declared.
 
 5. ADR policy

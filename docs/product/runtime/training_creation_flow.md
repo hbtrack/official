@@ -9,7 +9,7 @@ depends_on:
   - docs/product/ARCHITECTURE.md
   - docs/product/DOMAIN_MODEL.md
 evidence_expected:
-  - docs/_generated/_reports/tasks/training_creation_flow.log
+  - _reports/tasks/training_creation_flow.log
 ---
 
 # Runtime Scenario: Training Session Creation Flow

@@ -240,9 +240,9 @@ gates:
 
   - id: DOCS_INDEX_CHECK
     kind: CORE
-    lifecycle: MISSING
-    description: "Docs index check (não implementado)."
-    command: "python scripts/audit/gate_stub_blocked.py DOCS_INDEX_CHECK"
+    lifecycle: IMPLEMENTED
+    description: "Valida docs/_INDEX.yaml (precedence_order + entrypoints mínimos)."
+    command: "python scripts/checks/check_docs_index.py"
     prerequisites: []
     timeout_seconds: 30
 

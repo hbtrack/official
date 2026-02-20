@@ -1,12 +1,7 @@
-﻿-- Schema dump generated: 2026-02-18T07:21:07Z
--- Source: localhost
-
-
 --
 -- PostgreSQL database dump
 --
 
-\restrict aZTkEobeK5rQV6MEta5d4uAylAMBNs049VVq8fCRuECNVLybPJmI7Kasu8Gh3fe
 
 -- Dumped from database version 12.22 (Debian 12.22-1.pgdg120+1)
 -- Dumped by pg_dump version 18.1
@@ -38,13 +33,6 @@ CREATE SCHEMA app;
 
 
 --
--- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON SCHEMA public IS '';
-
-
---
 -- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -52,24 +40,10 @@ CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
-
-
---
 -- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
 --
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
-
-
---
--- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION pgcrypto IS 'RDB1: Extens├úo para fun├º├Áes criptogr├íficas, incluindo gen_random_uuid() usado em PKs UUID.';
 
 
 --
@@ -93,7 +67,7 @@ CREATE FUNCTION app."current_user"() RETURNS uuid
     LANGUAGE plpgsql STABLE
     AS $$
         BEGIN
-            -- Retorna o user_id do contexto da sess├úo
+            -- Retorna o user_id do contexto da sessão
             -- Backend deve setar isso via: SET LOCAL app.current_user_id = '<uuid>';
             RETURN current_setting('app.current_user_id', true)::UUID;
         EXCEPTION
@@ -101,13 +75,6 @@ CREATE FUNCTION app."current_user"() RETURNS uuid
                 RETURN NULL;
         END;
         $$;
-
-
---
--- Name: FUNCTION "current_user"(); Type: COMMENT; Schema: app; Owner: -
---
-
-COMMENT ON FUNCTION app."current_user"() IS 'Fun├º├úo auxiliar: retorna UUID do usu├írio atual do contexto da sess├úo. Backend seta via SET LOCAL.';
 
 
 --
@@ -154,13 +121,6 @@ CREATE FUNCTION public.fn_audit_session_status() RETURNS trigger
 
 
 --
--- Name: FUNCTION fn_audit_session_status(); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.fn_audit_session_status() IS 'Step 2: Registra mudan├ºas de status de sess├Áes de treino em audit_logs';
-
-
---
 -- Name: fn_calculate_internal_load(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -168,20 +128,13 @@ CREATE FUNCTION public.fn_calculate_internal_load() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
         BEGIN
-            -- Calcular internal_load: minutes_effective ├ù session_rpe
+            -- Calcular internal_load: minutes_effective × session_rpe
             -- COALESCE garante 0 se algum valor for NULL
             NEW.internal_load := COALESCE(NEW.minutes_effective, 0) * COALESCE(NEW.session_rpe, 0);
             
             RETURN NEW;
         END;
         $$;
-
-
---
--- Name: FUNCTION fn_calculate_internal_load(); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.fn_calculate_internal_load() IS 'Step 2: Calcula internal_load automaticamente como minutes_effective ├ù session_rpe';
 
 
 --
@@ -194,13 +147,13 @@ CREATE FUNCTION public.fn_derive_phase_focus() RETURNS trigger
         DECLARE
             v_threshold CONSTANT NUMERIC := 5;
         BEGIN
-            -- Derivar phase_focus_attack (ataque posicional + t├®cnico)
+            -- Derivar phase_focus_attack (ataque posicional + técnico)
             NEW.phase_focus_attack := (
                 COALESCE(NEW.focus_attack_positional_pct, 0) +
                 COALESCE(NEW.focus_attack_technical_pct, 0)
             ) >= v_threshold;
 
-            -- Derivar phase_focus_defense (defesa posicional + t├®cnico)
+            -- Derivar phase_focus_defense (defesa posicional + técnico)
             NEW.phase_focus_defense := (
                 COALESCE(NEW.focus_defense_positional_pct, 0) +
                 COALESCE(NEW.focus_defense_technical_pct, 0)
@@ -222,13 +175,6 @@ CREATE FUNCTION public.fn_derive_phase_focus() RETURNS trigger
 
 
 --
--- Name: FUNCTION fn_derive_phase_focus(); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.fn_derive_phase_focus() IS 'Step 3: Deriva automaticamente phase_focus_* baseado no threshold de 5%';
-
-
---
 -- Name: fn_invalidate_analytics_cache(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -239,7 +185,7 @@ CREATE FUNCTION public.fn_invalidate_analytics_cache() RETURNS trigger
             v_session_month DATE;
             v_microcycle_id UUID;
         BEGIN
-            -- Determinar valores OLD ou NEW dependendo da opera├º├úo
+            -- Determinar valores OLD ou NEW dependendo da operação
             IF TG_OP = 'DELETE' THEN
                 v_session_month := DATE_TRUNC('month', OLD.session_at);
                 v_microcycle_id := OLD.microcycle_id;
@@ -275,13 +221,6 @@ CREATE FUNCTION public.fn_invalidate_analytics_cache() RETURNS trigger
 
 
 --
--- Name: FUNCTION fn_invalidate_analytics_cache(); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.fn_invalidate_analytics_cache() IS 'Step 2: Invalida cache de analytics ao modificar sess├Áes de treino (weekly/monthly)';
-
-
---
 -- Name: fn_update_wellness_response_timestamp(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -299,13 +238,6 @@ CREATE FUNCTION public.fn_update_wellness_response_timestamp() RETURNS trigger
             RETURN NEW;
         END;
         $$;
-
-
---
--- Name: FUNCTION fn_update_wellness_response_timestamp(); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.fn_update_wellness_response_timestamp() IS 'Step 2: Atualiza responded_at em wellness_reminders quando atleta responde wellness';
 
 
 --
@@ -342,7 +274,7 @@ CREATE FUNCTION public.trg_auto_end_team_registrations_on_dispensada() RETURNS t
                     AND end_at IS NULL
                     AND deleted_at IS NULL;
 
-                -- Log: registra quantos v├¡nculos foram encerrados
+                -- Log: registra quantos vínculos foram encerrados
                 RAISE NOTICE 'Atleta % mudou para dispensada. % team_registrations ativos foram encerrados automaticamente.',
                     NEW.id,
                     (SELECT COUNT(*) FROM team_registrations WHERE athlete_id = NEW.id AND end_at = now()::date);
@@ -354,13 +286,6 @@ CREATE FUNCTION public.trg_auto_end_team_registrations_on_dispensada() RETURNS t
 
 
 --
--- Name: FUNCTION trg_auto_end_team_registrations_on_dispensada(); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.trg_auto_end_team_registrations_on_dispensada() IS 'RDB18.6: Encerra automaticamente todos team_registrations ativos quando atleta muda para state=dispensada.';
-
-
---
 -- Name: trg_block_audit_logs_modification(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -368,16 +293,9 @@ CREATE FUNCTION public.trg_block_audit_logs_modification() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
         BEGIN
-            RAISE EXCEPTION 'audit_logs ├® append-only. UPDATE e DELETE s├úo bloqueados. Opera├º├úo tentada: %', TG_OP;
+            RAISE EXCEPTION 'audit_logs é append-only. UPDATE e DELETE são bloqueados. Operação tentada: %', TG_OP;
         END;
         $$;
-
-
---
--- Name: FUNCTION trg_block_audit_logs_modification(); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.trg_block_audit_logs_modification() IS 'RDB18.5: Bloqueia UPDATE e DELETE em audit_logs. Tabela append-only, absolutamente imut├ível.';
 
 
 --
@@ -388,33 +306,26 @@ CREATE FUNCTION public.trg_block_finished_match_update() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
         BEGIN
-            -- Permite mudan├ºa de 'finished' para 'in_progress' (reabertura)
+            -- Permite mudança de 'finished' para 'in_progress' (reabertura)
             IF OLD.status = 'finished' AND NEW.status != 'finished' THEN
-                -- Permitir apenas mudan├ºa para 'in_progress' (reabertura)
+                -- Permitir apenas mudança para 'in_progress' (reabertura)
                 IF NEW.status = 'in_progress' THEN
-                    -- Auditoria ser├í feita pelo backend
+                    -- Auditoria será feita pelo backend
                     RETURN NEW;
                 ELSE
-                    RAISE EXCEPTION 'Jogo finalizado s├│ pode ser reaberto para status in_progress. Status atual: %, tentou mudar para: %',
+                    RAISE EXCEPTION 'Jogo finalizado só pode ser reaberto para status in_progress. Status atual: %, tentou mudar para: %',
                         OLD.status, NEW.status;
                 END IF;
             END IF;
 
-            -- Bloqueia qualquer UPDATE se status for 'finished' e n├úo for reabertura
+            -- Bloqueia qualquer UPDATE se status for 'finished' e não for reabertura
             IF OLD.status = 'finished' AND NEW.status = 'finished' THEN
-                RAISE EXCEPTION 'N├úo ├® permitido alterar jogo com status finished. Use reabertura administrativa (status -> in_progress) para editar.';
+                RAISE EXCEPTION 'Não é permitido alterar jogo com status finished. Use reabertura administrativa (status -> in_progress) para editar.';
             END IF;
 
             RETURN NEW;
         END;
         $$;
-
-
---
--- Name: FUNCTION trg_block_finished_match_update(); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.trg_block_finished_match_update() IS 'RDB18.3: Bloqueia UPDATE em matches com status=finished. Exce├º├úo: reabertura para in_progress.';
 
 
 --
@@ -425,16 +336,9 @@ CREATE FUNCTION public.trg_block_physical_delete() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
         BEGIN
-            RAISE EXCEPTION 'DELETE f├¡sico bloqueado. Use soft delete (UPDATE deleted_at, deleted_reason) na tabela %.', TG_TABLE_NAME;
+            RAISE EXCEPTION 'DELETE físico bloqueado. Use soft delete (UPDATE deleted_at, deleted_reason) na tabela %.', TG_TABLE_NAME;
         END;
         $$;
-
-
---
--- Name: FUNCTION trg_block_physical_delete(); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.trg_block_physical_delete() IS 'RDB18.4: Bloqueia DELETE f├¡sico em tabelas com soft delete. For├ºa uso de deleted_at + deleted_reason.';
 
 
 --
@@ -455,29 +359,29 @@ CREATE FUNCTION public.trg_insert_default_session_templates() RETURNS trigger
             ) VALUES
             (
                 gen_random_uuid(), NEW.id,
-                'T├ítico Ofensivo',
-                'Foco em ataque posicional e transi├º├úo ofensiva',
+                'Tático Ofensivo',
+                'Foco em ataque posicional e transição ofensiva',
                 'target',
                 45.00, 10.00, 25.00, 5.00, 10.00, 0.00, 5.00, true
             ),
             (
                 gen_random_uuid(), NEW.id,
-                'F├¡sico Intensivo',
-                'Treino de alta intensidade f├¡sica',
+                'Físico Intensivo',
+                'Treino de alta intensidade física',
                 'flame',
                 10.00, 10.00, 5.00, 5.00, 0.00, 10.00, 60.00, true
             ),
             (
                 gen_random_uuid(), NEW.id,
                 'Balanceado',
-                'Distribui├º├úo equilibrada entre todos os focos',
+                'Distribuição equilibrada entre todos os focos',
                 'activity',
                 15.00, 15.00, 15.00, 15.00, 10.00, 10.00, 20.00, false
             ),
             (
                 gen_random_uuid(), NEW.id,
                 'Defensivo',
-                'Prioridade em defesa posicional e transi├º├úo defensiva',
+                'Prioridade em defesa posicional e transição defensiva',
                 'shield',
                 5.00, 50.00, 0.00, 30.00, 5.00, 5.00, 5.00, false
             );
@@ -504,13 +408,6 @@ CREATE FUNCTION public.trg_set_athlete_age_at_registration() RETURNS trigger
 
 
 --
--- Name: FUNCTION trg_set_athlete_age_at_registration(); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.trg_set_athlete_age_at_registration() IS 'RDB18.2: Calcula automaticamente athlete_age_at_registration quando birth_date ou registered_at mudam.';
-
-
---
 -- Name: trg_set_updated_at(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -522,13 +419,6 @@ CREATE FUNCTION public.trg_set_updated_at() RETURNS trigger
             RETURN NEW;
         END;
         $$;
-
-
---
--- Name: FUNCTION trg_set_updated_at(); Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON FUNCTION public.trg_set_updated_at() IS 'RDB18.1: Atualiza automaticamente updated_at em todas as tabelas de dom├¡nio.';
 
 
 --
@@ -561,13 +451,6 @@ CREATE TABLE public.advantage_states (
 
 
 --
--- Name: TABLE advantage_states; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.advantage_states IS 'Estados de vantagem num├®rica. Lookup table.';
-
-
---
 -- Name: alembic_version; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -588,13 +471,6 @@ CREATE TABLE public.athlete_badges (
     earned_at timestamp with time zone DEFAULT now() NOT NULL,
     CONSTRAINT ck_athlete_badges_type CHECK (((badge_type)::text = ANY ((ARRAY['wellness_champion_monthly'::character varying, 'wellness_streak_3months'::character varying])::text[])))
 );
-
-
---
--- Name: TABLE athlete_badges; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.athlete_badges IS 'Step 3: Badges de gamifica├º├úo para atletas (wellness_champion_monthly 90%+, wellness_streak_3months)';
 
 
 --
@@ -635,20 +511,6 @@ CREATE TABLE public.athletes (
 
 
 --
--- Name: TABLE athletes; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.athletes IS 'Atletas. V1.2: estado base + flags (injured, medical_restriction, suspended_until, load_restricted).';
-
-
---
--- Name: COLUMN athletes.athlete_photo_path; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.athletes.athlete_photo_path IS 'DEPRECATED (31/12/2025): Use person_media para fotos de atletas. Este campo ser├í removido em vers├úo futura. Novo fluxo: POST /api/v1/persons/{person_id}/media com media_type=profile_photo';
-
-
---
 -- Name: attendance; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -681,34 +543,6 @@ CREATE TABLE public.attendance (
 
 
 --
--- Name: TABLE attendance; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.attendance IS 'Presen├ºa por treino. V1.2: sem convoca├º├úo formal; lista gerada por team_registrations ativos.';
-
-
---
--- Name: COLUMN attendance.correction_by_user_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.attendance.correction_by_user_id IS 'ID do usu├írio que realizou a corre├º├úo (quando source=correction)';
-
-
---
--- Name: COLUMN attendance.correction_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.attendance.correction_at IS 'Timestamp da corre├º├úo (quando source=correction)';
-
-
---
--- Name: CONSTRAINT ck_attendance_correction_fields ON attendance; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON CONSTRAINT ck_attendance_correction_fields ON public.attendance IS 'Garante que corre├º├Áes t├¬m correction_by_user_id e correction_at preenchidos';
-
-
---
 -- Name: audit_logs; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -727,13 +561,6 @@ CREATE TABLE public.audit_logs (
 
 
 --
--- Name: TABLE audit_logs; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.audit_logs IS 'Logs de auditoria. R35: absolutamente imut├ível (RDB5: append-only).';
-
-
---
 -- Name: categories; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -744,13 +571,6 @@ CREATE TABLE public.categories (
     is_active boolean DEFAULT true NOT NULL,
     CONSTRAINT ck_categories_max_age_positive CHECK ((max_age > 0))
 );
-
-
---
--- Name: TABLE categories; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.categories IS 'Categorias esportivas. V1.2: sem min_age, apenas max_age.';
 
 
 --
@@ -807,13 +627,6 @@ CREATE TABLE public.competition_matches (
 
 
 --
--- Name: TABLE competition_matches; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.competition_matches IS 'Jogos espec├¡ficos de uma competi├º├úo';
-
-
---
 -- Name: competition_opponent_teams; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -835,13 +648,6 @@ CREATE TABLE public.competition_opponent_teams (
 
 
 --
--- Name: TABLE competition_opponent_teams; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.competition_opponent_teams IS 'Times advers├írios em uma competi├º├úo';
-
-
---
 -- Name: competition_phases; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -860,13 +666,6 @@ CREATE TABLE public.competition_phases (
 
 
 --
--- Name: TABLE competition_phases; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.competition_phases IS 'Fases de uma competi├º├úo (grupos, semifinais, finais, etc.)';
-
-
---
 -- Name: competition_seasons; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -878,13 +677,6 @@ CREATE TABLE public.competition_seasons (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: TABLE competition_seasons; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.competition_seasons IS 'V├¡nculo competi├º├úo Ôåö temporada';
 
 
 --
@@ -910,13 +702,6 @@ CREATE TABLE public.competition_standings (
     qualification_status character varying(50),
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: TABLE competition_standings; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.competition_standings IS 'Classifica├º├úo/standings de uma competi├º├úo';
 
 
 --
@@ -949,13 +734,6 @@ CREATE TABLE public.competitions (
 
 
 --
--- Name: TABLE competitions; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.competitions IS 'Competi├º├Áes esportivas. Tabela principal do m├│dulo de competi├º├Áes.';
-
-
---
 -- Name: data_access_logs; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -972,13 +750,6 @@ CREATE TABLE public.data_access_logs (
 
 
 --
--- Name: TABLE data_access_logs; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.data_access_logs IS 'Step 3: Log de auditoria LGPD - registra acesso de staff a dados de atletas (n├úo self-access)';
-
-
---
 -- Name: data_retention_logs; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -988,13 +759,6 @@ CREATE TABLE public.data_retention_logs (
     records_anonymized integer NOT NULL,
     anonymized_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: TABLE data_retention_logs; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.data_retention_logs IS 'Step 3: Log de anonimiza├º├úo autom├ítica ap├│s 3 anos (pol├¡tica LGPD)';
 
 
 --
@@ -1008,13 +772,6 @@ CREATE TABLE public.defensive_positions (
     abbreviation character varying(10),
     is_active boolean DEFAULT true NOT NULL
 );
-
-
---
--- Name: TABLE defensive_positions; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.defensive_positions IS 'Posi├º├Áes defensivas. RD13: ID=5 ├® Goleira.';
 
 
 --
@@ -1059,69 +816,6 @@ CREATE TABLE public.email_queue (
 
 
 --
--- Name: TABLE email_queue; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.email_queue IS 'Fila de emails com retry autom├ítico';
-
-
---
--- Name: COLUMN email_queue.template_type; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.email_queue.template_type IS 'invite, welcome, reset_password';
-
-
---
--- Name: COLUMN email_queue.template_data; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.email_queue.template_data IS 'Dados din├ómicos do template';
-
-
---
--- Name: COLUMN email_queue.status; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.email_queue.status IS 'pending, sent, failed, cancelled';
-
-
---
--- Name: COLUMN email_queue.attempts; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.email_queue.attempts IS 'N├║mero de tentativas';
-
-
---
--- Name: COLUMN email_queue.max_attempts; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.email_queue.max_attempts IS 'M├íximo de tentativas';
-
-
---
--- Name: COLUMN email_queue.next_retry_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.email_queue.next_retry_at IS 'Pr├│xima tentativa';
-
-
---
--- Name: COLUMN email_queue.last_error; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.email_queue.last_error IS '├Ültima mensagem de erro';
-
-
---
--- Name: COLUMN email_queue.sent_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.email_queue.sent_at IS 'Quando foi enviado';
-
-
---
 -- Name: event_subtypes; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1130,13 +824,6 @@ CREATE TABLE public.event_subtypes (
     event_type_code character varying(64) NOT NULL,
     description character varying(255) NOT NULL
 );
-
-
---
--- Name: TABLE event_subtypes; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.event_subtypes IS 'Subtipos de evento (shot_6m, shot_9m, shot_wing, turnover_pass, etc.).';
 
 
 --
@@ -1152,13 +839,6 @@ CREATE TABLE public.event_types (
 
 
 --
--- Name: TABLE event_types; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.event_types IS 'Tipos de evento (shot, goal, goalkeeper_save, turnover, foul, etc.).';
-
-
---
 -- Name: exercise_favorites; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1167,13 +847,6 @@ CREATE TABLE public.exercise_favorites (
     exercise_id uuid NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: TABLE exercise_favorites; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.exercise_favorites IS 'Step 3: Exerc├¡cios favoritados por usu├írio';
 
 
 --
@@ -1195,13 +868,6 @@ CREATE TABLE public.exercise_tags (
 
 
 --
--- Name: TABLE exercise_tags; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.exercise_tags IS 'Step 3: Tags hier├írquicas de exerc├¡cios (T├ítico ÔåÆ Ataque Posicional, etc)';
-
-
---
 -- Name: exercises; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1217,13 +883,6 @@ CREATE TABLE public.exercises (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: TABLE exercises; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.exercises IS 'Step 3: Banco de exerc├¡cios com tags hier├írquicas e busca GIN';
 
 
 --
@@ -1246,13 +905,6 @@ CREATE TABLE public.export_jobs (
 
 
 --
--- Name: TABLE export_jobs; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.export_jobs IS 'Step 3: Jobs ass├¡ncronos de exporta├º├úo PDF com cache por params_hash';
-
-
---
 -- Name: export_rate_limits; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1261,13 +913,6 @@ CREATE TABLE public.export_rate_limits (
     date date NOT NULL,
     count integer DEFAULT 0 NOT NULL
 );
-
-
---
--- Name: TABLE export_rate_limits; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.export_rate_limits IS 'Step 3: Rate limiting de exporta├º├Áes - m├íximo 5 exports por dia por usu├írio';
 
 
 --
@@ -1286,55 +931,6 @@ CREATE TABLE public.idempotency_keys (
     script_name character varying(255),
     metadata jsonb
 );
-
-
---
--- Name: TABLE idempotency_keys; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.idempotency_keys IS 'Controle de idempot├¬ncia para retry seguro. FICHA.MD Fase 1.2';
-
-
---
--- Name: COLUMN idempotency_keys.key; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.idempotency_keys.key IS 'Chave ├║nica de idempot├¬ncia fornecida pelo cliente (geralmente UUID)';
-
-
---
--- Name: COLUMN idempotency_keys.endpoint; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.idempotency_keys.endpoint IS 'Endpoint da API onde a chave foi utilizada';
-
-
---
--- Name: COLUMN idempotency_keys.request_hash; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.idempotency_keys.request_hash IS 'Hash SHA-256 do payload para validar consist├¬ncia';
-
-
---
--- Name: COLUMN idempotency_keys.response_json; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.idempotency_keys.response_json IS 'Resposta completa para replay em caso de retry';
-
-
---
--- Name: COLUMN idempotency_keys.status_code; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.idempotency_keys.status_code IS 'C├│digo HTTP da resposta armazenada';
-
-
---
--- Name: COLUMN idempotency_keys.created_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.idempotency_keys.created_at IS 'Data/hora do registro (para limpeza peri├│dica)';
 
 
 --
@@ -1379,13 +975,6 @@ CREATE TABLE public.match_events (
 
 
 --
--- Name: TABLE match_events; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.match_events IS 'Eventos de jogo lance a lance. Cora├º├úo anal├¡tico: reconstr├│i jogo, contexto t├ítico e gera estat├¡sticas.';
-
-
---
 -- Name: match_periods; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1399,13 +988,6 @@ CREATE TABLE public.match_periods (
     CONSTRAINT ck_match_periods_number CHECK ((number >= 1)),
     CONSTRAINT ck_match_periods_type CHECK (((period_type)::text = ANY ((ARRAY['regular'::character varying, 'extra_time'::character varying, 'shootout_7m'::character varying])::text[])))
 );
-
-
---
--- Name: TABLE match_periods; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.match_periods IS 'Estrutura de tempo dos jogos (1┬║ tempo, 2┬║ tempo, prorroga├º├úo, 7m).';
 
 
 --
@@ -1434,13 +1016,6 @@ CREATE TABLE public.match_possessions (
 
 
 --
--- Name: TABLE match_possessions; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.match_possessions IS 'Sequ├¬ncias de posse de bola. Base para an├ílise t├ítica de efici├¬ncia.';
-
-
---
 -- Name: match_roster; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1459,13 +1034,6 @@ CREATE TABLE public.match_roster (
 
 
 --
--- Name: TABLE match_roster; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.match_roster IS 'S├║mula/convoca├º├úo oficial. Define quais atletas est├úo eleg├¡veis para o jogo.';
-
-
---
 -- Name: match_teams; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1476,13 +1044,6 @@ CREATE TABLE public.match_teams (
     is_home boolean NOT NULL,
     is_our_team boolean NOT NULL
 );
-
-
---
--- Name: TABLE match_teams; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.match_teams IS 'Ponte jogo Ôåö equipes. Identifica quais equipes jogaram e com qual papel.';
 
 
 --
@@ -1520,13 +1081,6 @@ CREATE TABLE public.matches (
 
 
 --
--- Name: TABLE matches; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.matches IS 'Jogos oficiais. Ponto de partida para convoca├º├úo, s├║mula, eventos, estat├¡sticas e relat├│rios.';
-
-
---
 -- Name: medical_cases; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1547,13 +1101,6 @@ CREATE TABLE public.medical_cases (
     CONSTRAINT ck_medical_cases_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL)))),
     CONSTRAINT medical_cases_status_check CHECK (((status)::text = ANY ((ARRAY['ativo'::character varying, 'resolvido'::character varying, 'em_acompanhamento'::character varying])::text[])))
 );
-
-
---
--- Name: TABLE medical_cases; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.medical_cases IS 'Casos m├®dicos de atletas. V1.2: RDB4 compliant (soft delete + deleted_reason).';
 
 
 --
@@ -1582,13 +1129,6 @@ CREATE TABLE public.offensive_positions (
     abbreviation character varying(10),
     is_active boolean DEFAULT true NOT NULL
 );
-
-
---
--- Name: TABLE offensive_positions; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.offensive_positions IS 'Posi├º├Áes ofensivas.';
 
 
 --
@@ -1632,13 +1172,6 @@ CREATE TABLE public.org_memberships (
 
 
 --
--- Name: TABLE org_memberships; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.org_memberships IS 'V├¡nculos organizacionais (staff). V1.2: sem season_id; apenas org+person+role.';
-
-
---
 -- Name: organizations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1651,13 +1184,6 @@ CREATE TABLE public.organizations (
     deleted_reason text,
     CONSTRAINT ck_organizations_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL))))
 );
-
-
---
--- Name: TABLE organizations; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.organizations IS 'Clubes/organiza├º├Áes esportivas. V1.2: suporta m├║ltiplos clubes desde V1.';
 
 
 --
@@ -1682,13 +1208,6 @@ CREATE TABLE public.password_resets (
 
 
 --
--- Name: TABLE password_resets; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.password_resets IS 'Email-based password reset tokens. R29: soft delete. Token expires in 24h.';
-
-
---
 -- Name: permissions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1699,13 +1218,6 @@ CREATE TABLE public.permissions (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: TABLE permissions; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.permissions IS 'Permiss├Áes do sistema. R24: aplicadas via papel.';
 
 
 --
@@ -1756,20 +1268,6 @@ CREATE TABLE public.person_addresses (
 
 
 --
--- Name: TABLE person_addresses; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.person_addresses IS 'Endere├ºos da pessoa. Suporta m├║ltiplos endere├ºos (residencial_1, residencial_2).';
-
-
---
--- Name: COLUMN person_addresses.created_by_user_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.person_addresses.created_by_user_id IS 'Usu├írio que criou o registro. R30/R31: auditoria obrigat├│ria.';
-
-
---
 -- Name: person_contacts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1789,20 +1287,6 @@ CREATE TABLE public.person_contacts (
     CONSTRAINT ck_person_contacts_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL)))),
     CONSTRAINT ck_person_contacts_type CHECK (((contact_type)::text = ANY ((ARRAY['telefone'::character varying, 'email'::character varying, 'whatsapp'::character varying, 'outro'::character varying])::text[])))
 );
-
-
---
--- Name: TABLE person_contacts; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.person_contacts IS 'Contatos da pessoa (telefone, email, whatsapp). Suporta m├║ltiplos contatos por pessoa.';
-
-
---
--- Name: COLUMN person_contacts.created_by_user_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.person_contacts.created_by_user_id IS 'Usu├írio que criou o registro. R30/R31: auditoria obrigat├│ria.';
 
 
 --
@@ -1831,20 +1315,6 @@ CREATE TABLE public.person_documents (
 
 
 --
--- Name: TABLE person_documents; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.person_documents IS 'Documentos oficiais da pessoa (CPF, RG, CNH, passaporte).';
-
-
---
--- Name: COLUMN person_documents.created_by_user_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.person_documents.created_by_user_id IS 'Usu├írio que criou o registro. R30/R31: auditoria obrigat├│ria.';
-
-
---
 -- Name: person_media; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1866,20 +1336,6 @@ CREATE TABLE public.person_media (
     CONSTRAINT ck_person_media_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL)))),
     CONSTRAINT ck_person_media_type CHECK (((media_type)::text = ANY ((ARRAY['foto_perfil'::character varying, 'foto_documento'::character varying, 'video'::character varying, 'outro'::character varying])::text[])))
 );
-
-
---
--- Name: TABLE person_media; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.person_media IS 'M├¡dias da pessoa (fotos de perfil, documentos digitalizados).';
-
-
---
--- Name: COLUMN person_media.created_by_user_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.person_media.created_by_user_id IS 'Usu├írio que criou o registro. R30/R31: auditoria obrigat├│ria.';
 
 
 --
@@ -1905,48 +1361,6 @@ CREATE TABLE public.persons (
 
 
 --
--- Name: TABLE persons; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.persons IS 'R1: Pessoas f├¡sicas do sistema. Identidade b├ísica (nome, g├¬nero, nascimento). V1.2: normalizada.';
-
-
---
--- Name: COLUMN persons.first_name; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.persons.first_name IS 'Primeiro nome da pessoa';
-
-
---
--- Name: COLUMN persons.last_name; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.persons.last_name IS 'Sobrenome da pessoa';
-
-
---
--- Name: COLUMN persons.gender; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.persons.gender IS 'G├¬nero: masculino, feminino, outro, prefiro_nao_dizer';
-
-
---
--- Name: COLUMN persons.nationality; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.persons.nationality IS 'Nacionalidade (default: brasileira)';
-
-
---
--- Name: COLUMN persons.notes; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.persons.notes IS 'Observa├º├Áes gerais sobre a pessoa';
-
-
---
 -- Name: phases_of_play; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1954,13 +1368,6 @@ CREATE TABLE public.phases_of_play (
     code character varying(32) NOT NULL,
     description character varying(255) NOT NULL
 );
-
-
---
--- Name: TABLE phases_of_play; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.phases_of_play IS 'Fases do jogo. Lookup table fixa com 4 fases.';
 
 
 --
@@ -1991,13 +1398,6 @@ CREATE TABLE public.role_permissions (
 
 
 --
--- Name: TABLE role_permissions; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.role_permissions IS 'Junction table: pap├®is Ôåö permiss├Áes.';
-
-
---
 -- Name: roles; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2009,13 +1409,6 @@ CREATE TABLE public.roles (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: TABLE roles; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.roles IS 'Pap├®is do sistema. R4: Dirigente, Coordenador, Treinador, Atleta.';
 
 
 --
@@ -2048,13 +1441,6 @@ CREATE TABLE public.schooling_levels (
     name character varying(64) NOT NULL,
     is_active boolean DEFAULT true NOT NULL
 );
-
-
---
--- Name: TABLE schooling_levels; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.schooling_levels IS 'N├¡veis de escolaridade.';
 
 
 --
@@ -2099,27 +1485,6 @@ CREATE TABLE public.seasons (
     CONSTRAINT ck_seasons_dates CHECK ((start_date < end_date)),
     CONSTRAINT ck_seasons_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL))))
 );
-
-
---
--- Name: TABLE seasons; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.seasons IS 'Temporadas por equipe. V1.2: team_id FK (n├úo organization_id); m├║ltiplas competi├º├Áes simult├óneas.';
-
-
---
--- Name: COLUMN seasons.canceled_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.seasons.canceled_at IS 'RF5.1: Cancelamento pr├®-in├¡cio (apenas se sem dados vinculados)';
-
-
---
--- Name: COLUMN seasons.interrupted_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.seasons.interrupted_at IS 'RF5.2: Interrup├º├úo p├│s-in├¡cio (for├ºa maior)';
 
 
 --
@@ -2171,55 +1536,6 @@ CREATE TABLE public.team_memberships (
 
 
 --
--- Name: TABLE team_memberships; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.team_memberships IS 'V├¡nculo de staff (coordenadores/treinadores) com equipes espec├¡ficas';
-
-
---
--- Name: COLUMN team_memberships.person_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.team_memberships.person_id IS 'Pessoa (staff)';
-
-
---
--- Name: COLUMN team_memberships.team_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.team_memberships.team_id IS 'Equipe';
-
-
---
--- Name: COLUMN team_memberships.org_membership_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.team_memberships.org_membership_id IS 'Refer├¬ncia ao cargo organizacional';
-
-
---
--- Name: COLUMN team_memberships.start_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.team_memberships.start_at IS 'Data de in├¡cio do v├¡nculo';
-
-
---
--- Name: COLUMN team_memberships.end_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.team_memberships.end_at IS 'Data de t├®rmino; NULL = ativo';
-
-
---
--- Name: COLUMN team_memberships.status; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.team_memberships.status IS 'Status: pendente, ativo, inativo';
-
-
---
 -- Name: team_registrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2239,13 +1555,6 @@ CREATE TABLE public.team_registrations (
 
 
 --
--- Name: TABLE team_registrations; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.team_registrations IS 'V├¡nculos de atletas com equipes. V1.2: m├║ltiplos v├¡nculos ativos simult├óneos permitidos.';
-
-
---
 -- Name: team_wellness_rankings; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2260,13 +1569,6 @@ CREATE TABLE public.team_wellness_rankings (
     athletes_90plus integer DEFAULT 0 NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: TABLE team_wellness_rankings; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.team_wellness_rankings IS 'Step 3: Rankings mensais de equipes por taxa de resposta wellness';
 
 
 --
@@ -2299,41 +1601,6 @@ CREATE TABLE public.teams (
 
 
 --
--- Name: TABLE teams; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.teams IS 'Equipes esportivas. V1.2: sem season_id; gender obrigat├│rio.';
-
-
---
--- Name: COLUMN teams.season_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.teams.season_id IS 'FK para seasons - vincula team a temporada espec├¡fica';
-
-
---
--- Name: COLUMN teams.coach_membership_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.teams.coach_membership_id IS 'RF7 - Treinador principal atribu├¡do ├á equipe';
-
-
---
--- Name: COLUMN teams.created_by_membership_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.teams.created_by_membership_id IS 'Auditoria - membership que criou a equipe';
-
-
---
--- Name: COLUMN teams.alert_threshold_multiplier; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.teams.alert_threshold_multiplier IS 'Step 3: Multiplicador para threshold de alertas (1.5 juvenis, 2.0 padr├úo, 2.5 adultos)';
-
-
---
 -- Name: training_alerts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2350,13 +1617,6 @@ CREATE TABLE public.training_alerts (
     CONSTRAINT ck_training_alerts_severity CHECK (((severity)::text = ANY ((ARRAY['warning'::character varying, 'critical'::character varying])::text[]))),
     CONSTRAINT ck_training_alerts_type CHECK (((alert_type)::text = ANY ((ARRAY['weekly_overload'::character varying, 'low_wellness_response'::character varying])::text[])))
 );
-
-
---
--- Name: TABLE training_alerts; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.training_alerts IS 'Step 3: Alertas autom├íticos de sobrecarga semanal e baixa taxa de resposta wellness';
 
 
 --
@@ -2394,13 +1654,6 @@ CREATE TABLE public.training_analytics_cache (
 
 
 --
--- Name: TABLE training_analytics_cache; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.training_analytics_cache IS 'Step 3: Cache h├¡brido de analytics - weekly (granular) para m├¬s corrente, monthly (agregado) para hist├│rico';
-
-
---
 -- Name: training_cycles; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2424,34 +1677,6 @@ CREATE TABLE public.training_cycles (
     CONSTRAINT check_cycle_status CHECK (((status)::text = ANY ((ARRAY['active'::character varying, 'completed'::character varying, 'cancelled'::character varying])::text[]))),
     CONSTRAINT check_cycle_type CHECK (((type)::text = ANY ((ARRAY['macro'::character varying, 'meso'::character varying])::text[])))
 );
-
-
---
--- Name: COLUMN training_cycles.type; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_cycles.type IS 'Tipo: ''macro'' ou ''meso''';
-
-
---
--- Name: COLUMN training_cycles.objective; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_cycles.objective IS 'Objetivo estrat├®gico do ciclo';
-
-
---
--- Name: COLUMN training_cycles.status; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_cycles.status IS 'Status: active, completed, cancelled';
-
-
---
--- Name: COLUMN training_cycles.parent_cycle_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_cycles.parent_cycle_id IS 'FK para macrociclo (apenas mesociclos)';
 
 
 --
@@ -2485,90 +1710,6 @@ CREATE TABLE public.training_microcycles (
 
 
 --
--- Name: COLUMN training_microcycles.week_start; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_microcycles.week_start IS 'In├¡cio da semana (seg)';
-
-
---
--- Name: COLUMN training_microcycles.week_end; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_microcycles.week_end IS 'Fim da semana (dom)';
-
-
---
--- Name: COLUMN training_microcycles.cycle_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_microcycles.cycle_id IS 'FK para mesociclo';
-
-
---
--- Name: COLUMN training_microcycles.planned_focus_attack_positional_pct; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_microcycles.planned_focus_attack_positional_pct IS 'Percentual planejado de foco em ataque posicionado (0-100)';
-
-
---
--- Name: COLUMN training_microcycles.planned_focus_defense_positional_pct; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_microcycles.planned_focus_defense_positional_pct IS 'Percentual planejado de foco em defesa posicionada (0-100)';
-
-
---
--- Name: COLUMN training_microcycles.planned_focus_transition_offense_pct; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_microcycles.planned_focus_transition_offense_pct IS 'Percentual planejado de foco em transi├º├úo ofensiva (0-100)';
-
-
---
--- Name: COLUMN training_microcycles.planned_focus_transition_defense_pct; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_microcycles.planned_focus_transition_defense_pct IS 'Percentual planejado de foco em transi├º├úo defensiva (0-100)';
-
-
---
--- Name: COLUMN training_microcycles.planned_focus_attack_technical_pct; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_microcycles.planned_focus_attack_technical_pct IS 'Percentual planejado de foco em ataque t├®cnico (0-100)';
-
-
---
--- Name: COLUMN training_microcycles.planned_focus_defense_technical_pct; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_microcycles.planned_focus_defense_technical_pct IS 'Percentual planejado de foco em defesa t├®cnica (0-100)';
-
-
---
--- Name: COLUMN training_microcycles.planned_focus_physical_pct; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_microcycles.planned_focus_physical_pct IS 'Percentual planejado de foco em treino f├¡sico (0-100)';
-
-
---
--- Name: COLUMN training_microcycles.planned_weekly_load; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_microcycles.planned_weekly_load IS 'Carga planejada da semana (RPE ├ù minutos)';
-
-
---
--- Name: COLUMN training_microcycles.microcycle_type; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_microcycles.microcycle_type IS 'Tipo: carga_alta, recuperacao, pre_jogo, etc.';
-
-
---
 -- Name: training_session_exercises; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2585,13 +1726,6 @@ CREATE TABLE public.training_session_exercises (
     CONSTRAINT ck_session_exercises_duration_positive CHECK (((duration_minutes IS NULL) OR (duration_minutes >= 0))),
     CONSTRAINT ck_session_exercises_order_positive CHECK ((order_index >= 0))
 );
-
-
---
--- Name: TABLE training_session_exercises; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.training_session_exercises IS 'V├¡nculo entre sess├Áes de treino e exerc├¡cios. ÔÜá´©Å Permite DUPLICATAS do mesmo exerc├¡cio (circuitos/repeti├º├Áes).';
 
 
 --
@@ -2667,104 +1801,6 @@ CREATE TABLE public.training_sessions (
 
 
 --
--- Name: TABLE training_sessions; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.training_sessions IS 'Treinos. V1.2: team_id e season_id opcionais (treinos organizacionais, avalia├º├Áes, capta├º├úo).';
-
-
---
--- Name: COLUMN training_sessions.focus_attack_positional_pct; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_sessions.focus_attack_positional_pct IS 'Percentual aproximado (0-100) do tempo dedicado ao foco Ataque Posicionado. Usado em an├ílise estrat├®gica /statistics/teams.';
-
-
---
--- Name: COLUMN training_sessions.focus_defense_positional_pct; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_sessions.focus_defense_positional_pct IS 'Percentual aproximado (0-100) do tempo dedicado ao foco Defesa Posicionada. Usado em an├ílise estrat├®gica /statistics/teams.';
-
-
---
--- Name: COLUMN training_sessions.focus_transition_offense_pct; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_sessions.focus_transition_offense_pct IS 'Percentual aproximado (0-100) do tempo dedicado ao foco Transi├º├úo Ofensiva. Usado em an├ílise estrat├®gica /statistics/teams.';
-
-
---
--- Name: COLUMN training_sessions.focus_transition_defense_pct; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_sessions.focus_transition_defense_pct IS 'Percentual aproximado (0-100) do tempo dedicado ao foco Transi├º├úo Defensiva. Usado em an├ílise estrat├®gica /statistics/teams.';
-
-
---
--- Name: COLUMN training_sessions.focus_attack_technical_pct; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_sessions.focus_attack_technical_pct IS 'Percentual aproximado (0-100) do tempo dedicado ao foco Ataque T├®cnico. Usado em an├ílise estrat├®gica /statistics/teams.';
-
-
---
--- Name: COLUMN training_sessions.focus_defense_technical_pct; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_sessions.focus_defense_technical_pct IS 'Percentual aproximado (0-100) do tempo dedicado ao foco Defesa T├®cnica. Usado em an├ílise estrat├®gica /statistics/teams.';
-
-
---
--- Name: COLUMN training_sessions.focus_physical_pct; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_sessions.focus_physical_pct IS 'Percentual aproximado (0-100) do tempo dedicado ao foco Treino F├¡sico. Usado em an├ílise estrat├®gica /statistics/teams.';
-
-
---
--- Name: COLUMN training_sessions.microcycle_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_sessions.microcycle_id IS 'FK para microciclo (planejamento semanal)';
-
-
---
--- Name: COLUMN training_sessions.status; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_sessions.status IS 'Status da sess├úo: draft (rascunho), scheduled (agendado), closed (fechado), readonly (somente leitura). in_progress ├® LEGADO e n├úo deve ser usado - estado "Em andamento" ├® derivado via is_happening.';
-
-
---
--- Name: COLUMN training_sessions.closed_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_sessions.closed_at IS 'Timestamp de fechamento';
-
-
---
--- Name: COLUMN training_sessions.closed_by_user_id; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_sessions.closed_by_user_id IS 'Usu├írio que fechou a sess├úo';
-
-
---
--- Name: COLUMN training_sessions.deviation_justification; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_sessions.deviation_justification IS 'Justificativa de desvio em rela├º├úo ao planejamento';
-
-
---
--- Name: COLUMN training_sessions.planning_deviation_flag; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.training_sessions.planning_deviation_flag IS 'Flag de desvio significativo (ÔëÑ20pts ou ÔëÑ30% agregado)';
-
-
---
 -- Name: training_suggestions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2787,13 +1823,6 @@ CREATE TABLE public.training_suggestions (
 
 
 --
--- Name: TABLE training_suggestions; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.training_suggestions IS 'Step 3: Sugest├Áes autom├íticas de compensa├º├úo de carga e redu├º├úo de intensidade';
-
-
---
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2813,13 +1842,6 @@ CREATE TABLE public.users (
     CONSTRAINT ck_users_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL)))),
     CONSTRAINT ck_users_status CHECK (((status)::text = ANY ((ARRAY['ativo'::character varying, 'inativo'::character varying, 'arquivado'::character varying])::text[])))
 );
-
-
---
--- Name: TABLE users; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.users IS 'Usu├írios com acesso ao sistema. R2, R3: Super Admin ├║nico e vital├¡cio (RDB6).';
 
 
 --
@@ -2857,34 +1879,6 @@ CREATE TABLE public.wellness_post (
 
 
 --
--- Name: TABLE wellness_post; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.wellness_post IS 'Bem-estar p├│s-treino. V1.2: atleta preenche depois do treino, 1 por atleta ├ù sess├úo.';
-
-
---
--- Name: COLUMN wellness_post.internal_load; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.wellness_post.internal_load IS 'Carga interna calculada automaticamente: minutes_effective ├ù session_rpe';
-
-
---
--- Name: COLUMN wellness_post.minutes_effective; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.wellness_post.minutes_effective IS 'Minutos efetivos de participa├º├úo do atleta (usado para c├ílculo de internal_load)';
-
-
---
--- Name: COLUMN wellness_post.locked_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.wellness_post.locked_at IS 'Step 3: Timestamp de lock - post edit├ível at├® 24h ap├│s submission';
-
-
---
 -- Name: wellness_pre; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2917,20 +1911,6 @@ CREATE TABLE public.wellness_pre (
     CONSTRAINT ck_wellness_pre_soreness CHECK (((muscle_soreness >= 0) AND (muscle_soreness <= 10))),
     CONSTRAINT ck_wellness_pre_stress CHECK (((stress_level >= 0) AND (stress_level <= 10)))
 );
-
-
---
--- Name: TABLE wellness_pre; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.wellness_pre IS 'Bem-estar pr├®-treino. V1.2: atleta preenche antes do treino, 1 por atleta ├ù sess├úo.';
-
-
---
--- Name: COLUMN wellness_pre.locked_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN public.wellness_pre.locked_at IS 'Step 3: Timestamp de lock - pr├® edit├ível at├® 2h antes da sess├úo';
 
 
 --
@@ -3043,14 +2023,6 @@ UNION ALL
 
 
 --
--- Name: VIEW v_anonymization_status; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON VIEW public.v_anonymization_status IS 'Real-time status of records eligible for anonymization (LGPD Art. 16).
-        Shows counts per table and severity levels for compliance dashboard.';
-
-
---
 -- Name: wellness_reminders; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -3063,13 +2035,6 @@ CREATE TABLE public.wellness_reminders (
     reminder_count integer DEFAULT 0 NOT NULL,
     locked_at timestamp with time zone
 );
-
-
---
--- Name: TABLE wellness_reminders; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE public.wellness_reminders IS 'Step 3: Tracking de lembretes wellness enviados aos atletas';
 
 
 --
@@ -3798,14 +2763,6 @@ CREATE INDEX idx_analytics_lookup ON public.training_analytics_cache USING btree
 
 
 --
--- Name: INDEX idx_analytics_lookup; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON INDEX public.idx_analytics_lookup IS 'Optimizes analytics cache queries. Partial index: only valid (non-dirty) cache entries.
-        Used by TrainingAnalyticsService for summary and load queries.';
-
-
---
 -- Name: idx_athletes_person_deleted; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3831,13 +2788,6 @@ CREATE INDEX idx_attendance_session ON public.attendance USING btree (training_s
 --
 
 CREATE INDEX idx_badges_athlete_month ON public.athlete_badges USING btree (athlete_id, month_reference);
-
-
---
--- Name: INDEX idx_badges_athlete_month; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON INDEX public.idx_badges_athlete_month IS 'Optimizes badge queries by athlete and month. Used in athlete profile badges section.';
 
 
 --
@@ -3890,14 +2840,6 @@ CREATE INDEX idx_notifications_unread ON public.notifications USING btree (user_
 
 
 --
--- Name: INDEX idx_notifications_unread; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON INDEX public.idx_notifications_unread IS 'Optimizes unread notification count and listing. Partial index: only unread notifications.
-        Used in navbar badge and notifications dropdown.';
-
-
---
 -- Name: idx_notifications_user_read; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3916,13 +2858,6 @@ CREATE INDEX idx_rankings_month_rank ON public.team_wellness_rankings USING btre
 --
 
 CREATE INDEX idx_rankings_team_month ON public.team_wellness_rankings USING btree (team_id, month_reference);
-
-
---
--- Name: INDEX idx_rankings_team_month; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON INDEX public.idx_rankings_team_month IS 'Optimizes team ranking queries. Used in analytics dashboard and team comparison.';
 
 
 --
@@ -3965,14 +2900,6 @@ CREATE INDEX idx_session_templates_org_favorite ON public.session_templates USIN
 --
 
 CREATE INDEX idx_sessions_team_date ON public.training_sessions USING btree (team_id, session_at DESC) INCLUDE (status);
-
-
---
--- Name: INDEX idx_sessions_team_date; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON INDEX public.idx_sessions_team_date IS 'Covering index for session listing. Includes frequently accessed columns (status).
-        Used in agenda view and session calendar.';
 
 
 --
@@ -4179,14 +3106,6 @@ CREATE INDEX idx_wellness_athlete_date ON public.wellness_post USING btree (athl
 
 
 --
--- Name: INDEX idx_wellness_athlete_date; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON INDEX public.idx_wellness_athlete_date IS 'Optimizes wellness history queries by athlete. Used in athlete profile and history pages.
-        WHERE clause excludes anonymized records (athlete_id IS NULL).';
-
-
---
 -- Name: idx_wellness_reminders_pending; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4194,25 +3113,10 @@ CREATE INDEX idx_wellness_reminders_pending ON public.wellness_reminders USING b
 
 
 --
--- Name: INDEX idx_wellness_reminders_pending; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON INDEX public.idx_wellness_reminders_pending IS 'Optimizes pending reminder lookups. Used by scheduled jobs (send_pre_wellness_reminders_daily).
-        Partial index: only indexes unresponded reminders.';
-
-
---
 -- Name: idx_wellness_session_athlete; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX idx_wellness_session_athlete ON public.wellness_pre USING btree (training_session_id, athlete_id);
-
-
---
--- Name: INDEX idx_wellness_session_athlete; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON INDEX public.idx_wellness_session_athlete IS 'Optimizes wellness status queries per session. Used in wellness dashboard and session modal.';
 
 
 --
@@ -4486,13 +3390,6 @@ CREATE INDEX ix_event_subtypes_event_type_code ON public.event_subtypes USING bt
 --
 
 CREATE INDEX ix_idempotency_keys_created_at ON public.idempotency_keys USING btree (created_at);
-
-
---
--- Name: INDEX ix_idempotency_keys_created_at; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON INDEX public.ix_idempotency_keys_created_at IS '├ìndice para otimizar limpeza de registros antigos via cron job';
 
 
 --
@@ -4934,13 +3831,6 @@ CREATE INDEX ix_persons_first_name_trgm ON public.persons USING gin (first_name 
 --
 
 CREATE INDEX ix_persons_full_name_trgm ON public.persons USING gin (full_name public.gin_trgm_ops) WHERE (deleted_at IS NULL);
-
-
---
--- Name: INDEX ix_persons_full_name_trgm; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON INDEX public.ix_persons_full_name_trgm IS '├ìndice trigram para busca fuzzy de pessoas (autocomplete). FICHA.MD 1.6';
 
 
 --
@@ -6748,5 +5638,4 @@ ALTER TABLE ONLY public.wellness_reminders
 -- PostgreSQL database dump complete
 --
 
-\unrestrict aZTkEobeK5rQV6MEta5d4uAylAMBNs049VVq8fCRuECNVLybPJmI7Kasu8Gh3fe
 

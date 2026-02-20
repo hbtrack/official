@@ -1,19 +1,23 @@
-﻿{
-    "generated_at":  "2026-02-18T07:21:10Z",
-    "files":  [
-                  {
-                      "size_bytes":  228822,
-                      "checksum":  "b4f5e00da42a5064d253d85c014785752a255ee61c873cbf33ea5a42652bd815",
-                      "filename":  "schema.sql"
-                  },
-                  {
-                      "size_bytes":  88,
-                      "checksum":  "c43ba2fb7cc5b18a90c992e1a91a8e07741b53fa52109b2a80820cfa727ac0d8",
-                      "filename":  "alembic_state.txt"
-                  }
-              ],
-    "git_commit":  "5503f7cb8b86d5205fe205a037163a24548fd44a",
-    "output_strategy":  "single_location",
-    "output_location":  "docs/ssot",
-    "generator_script":  "scripts/ssot/gen_docs_ssot.ps1 (unified)"
+{
+  "git_commit": "9bebd2c6a363036e42e1a4dc4b04e4b59428c52b",
+  "generated_at": "2026-02-20T03:43:38.322773+00:00Z",
+  "backend_root": "C:\\HB TRACK\\Hb Track - Backend",
+  "generator_script": "scripts/generate_docs.py",
+  "files": [
+    {
+      "filename": "openapi.json",
+      "checksum": "12f281271474ab9e3bc3cbb6d52046cad57d6a02e9cfe0d73bca6f6a2736ecf1",
+      "size_bytes": 1640230
+    },
+    {
+      "filename": "schema.sql",
+      "checksum": "768058d5b8473e133c8cc8ace295d6061495cab6429c82af5b6e8131a7983d6e",
+      "size_bytes": 227934
+    },
+    {
+      "filename": "alembic_state.txt",
+      "checksum": "c9b4d83c0ec18b152e8fde879ecba09ad47213f06f765e930bc04311e1cb978d",
+      "size_bytes": 138
+    }
+  ]
 }
