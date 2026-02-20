@@ -407,6 +407,19 @@ Ordem sugerida de entrega:
 | 18 | Threshold desvio-padrão | `threshold_stddev` | Desvios |
 
 ---
+### **6.1 Módulo de Ingestão Inteligente (AI Parser)**
+
+**Leitura de Regulamentos:** Upload de PDF/Imagens do regulamento para extração de critérios de pontuação e desempate.
+
+**Leitura de Tabelas e Súmulas:** Upload de PDFs/Imagens da federação para criação automática de jogos, reconhecimento de adversários e atualização de resultados.
+
+⚠️Pergunta Oculta 1: "Como o sistema lida com a IA inventando regras (Alucinação)?"Se o PDF estiver borrado e a IA ler "Vitória = 2 pontos" em vez de "3 pontos", o campeonato inteiro será calculado errado.A Solução (Human-in-the-Loop): O sistema não pode salvar direto no banco. O fluxo deve ser: Upload do PDF $\rightarrow$ IA extrai os dados $\rightarrow$ Exibe uma tela de "Rascunho/Revisão" $\rightarrow$ O usuário (você) confere se a IA leu certo e clica em "Aprovar" $\rightarrow$ Salva no banco.
+
+⚠️ Pergunta Oculta 2: "Como o banco de dados armazena regras dinâmicas?"Se cada campeonato tem regras únicas, não podemos ter colunas fixas no banco como criterio_1, criterio_2.A Solução: A tabela de competições precisará de uma coluna do tipo JSONB (no PostgreSQL) chamada ranking_rules. Isso permite que a IA guarde as regras como um pacote flexível, independentemente de quantas regras o regulamento tenha.
+
+⚠️ Pergunta Oculta 3: "Como o sistema sabe que o 'CEPAEA B' da súmula é o nosso time?"A federação pode escrever o nome do seu time ou dos adversários com erros de digitação, abreviações ("Fla" em vez de "Flamengo") ou nomes incompletos na súmula.A Solução (Resolução de Entidades): O sistema precisará de uma tabela de team_aliases (apelidos) ou usar um algoritmo de similaridade de texto. Quando a IA ler a súmula, ela pergunta: "Achei um time chamado 'CEPEA'. Ele é 90% parecido com o seu time 'CEPAEA'. É o mesmo?"
+
+⚠️ Pergunta Oculta 4: "O usuário vai ficar olhando para uma tela de carregamento?"Ler um PDF de 30 páginas com LLM leva tempo (às vezes minutos).A Solução (Arquitetura Assíncrona): O upload não pode travar a tela. Você precisará de "Background Jobs" (uma fila de tarefas). O usuário faz o upload, o sistema diz "Estamos processando seu regulamento, avisaremos quando terminar", e o processo roda em segundo plano.
 
 ## 7. User Stories Canônicas
 
@@ -892,6 +905,18 @@ jobs:
 | **Bugs críticos em produção** | 0 por sprint | Sentry |
 | **Tempo médio de resolução (MTTR)** | < 4h | Ticket system |
 | **Incidentes de segurança** | 0 | Logs + Auditorias |
+
+14.4 Configuração Inteligente de Competições (IA-Driven)
+
+Ingestão de Regulamento (PDF/Imagem): O usuário faz o upload do regulamento oficial. A IA deve extrair e sugerir a configuração dos parâmetros:
+
+Sistema de Pontuação: (Ex: Vitória = 2, Empate = 1, Derrota = 0).
+
+Critérios de Desempate (Ordem): (Ex: 1º Confronto Direto, 2º Gols Pró, 3º Saldo).
+
+Motor de Regras Transitório: O cálculo da tabela competition_standings deve ser uma "função" que recebe esses parâmetros. Uma equipe pode estar em duas tabelas diferentes com regras de pontos diferentes simultaneamente.
+
+Validação Humana: O sistema apresenta os critérios extraídos para o treinador apenas confirmar ("Deseja aplicar estas regras de desempate?").
 
 ### 14.5 KPIs de Negócio (V2+)
 
