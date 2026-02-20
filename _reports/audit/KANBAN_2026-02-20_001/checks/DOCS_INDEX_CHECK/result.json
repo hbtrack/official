@@ -3,7 +3,7 @@
   "command": "python scripts/checks/check_docs_index.py",
   "exit_code": 0,
   "status": "PASS",
-  "duration_ms": 52,
+  "duration_ms": 42,
   "artifacts": [
     "stdout.log",
     "stderr.log"

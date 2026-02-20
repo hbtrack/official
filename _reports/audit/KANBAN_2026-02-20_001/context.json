@@ -1,12 +1,11 @@
 {
-  "run_id": "KANBAN_2026-02-20_001",
   "ar_id": "AR-2026-02-20-KANBAN-VERIFY-001",
-  "timestamp": "2026-02-20T16:58:36.538908Z",
+  "run_id": "KANBAN_2026-02-20_001",
+  "created_at": "2026-02-20T17:13:54.965324Z",
   "python_version": "3.11.9",
   "git": {
-    "commit": "7a950fe2fd4966d47a27c8e448e2f160f69a4700",
-    "branch": "dev-changes-2",
-    "porcelain": "?? _build_evidence_pack.py"
+    "commit": "12c71b9077ec10f22f4f8a7f4393c8a2382c7dc8",
+    "porcelain": " M _reports/audit/KANBAN_2026-02-20_001/checks/DOCS_CANON_CHECK/result.json\n M _reports/audit/KANBAN_2026-02-20_001/checks/DOCS_INDEX_CHECK/result.json\n?? _reports/audit/KANBAN_2026-02-20_001/_build_pack.py\n"
   },
   "ssot_paths": [
     "docs/_INDEX.yaml",

@@ -1,9 +1,9 @@
 {
   "id": "DOCS_CANON_CHECK",
   "command": "python scripts/checks/check_docs_canon.py KANBAN_2026-02-20_001",
-  "exit_code": 2,
-  "status": "FAIL_ACTIONABLE",
-  "duration_ms": 92,
+  "exit_code": 0,
+  "status": "PASS",
+  "duration_ms": 77,
   "artifacts": [
     "stdout.log",
     "stderr.log"

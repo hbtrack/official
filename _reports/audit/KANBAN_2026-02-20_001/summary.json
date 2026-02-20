@@ -1,19 +1,21 @@
 {
   "run_id": "KANBAN_2026-02-20_001",
   "ar_id": "AR-2026-02-20-KANBAN-VERIFY-001",
-  "timestamp": "2026-02-20T16:58:36.704739Z",
-  "overall_exit_code": 2,
-  "overall_status": "FAIL_ACTIONABLE",
+  "created_at": "2026-02-20T17:13:54.965324Z",
+  "overall_exit_code": 0,
+  "overall_status": "PASS",
   "checks": [
     {
       "id": "DOCS_INDEX_CHECK",
       "exit_code": 0,
-      "status": "PASS"
+      "status": "PASS",
+      "duration_ms": 42
     },
     {
       "id": "DOCS_CANON_CHECK",
-      "exit_code": 2,
-      "status": "FAIL_ACTIONABLE"
+      "exit_code": 0,
+      "status": "PASS",
+      "duration_ms": 77
     }
   ]
 }
