@@ -1,6 +1,6 @@
 {
   "project": "HB Track",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "notes": "Demanda: adicionar coluna team_id (uuid, nullable) na tabela competition_standings com FK para teams.id (ON DELETE SET NULL) e atualizar o model SQLAlchemy CompetitionStanding. Escopo estritamente estrutural — sem calculos, rotas ou logica de IA. Base PRD §4.2 Regra de Arquitetura de Classificacao: 'competition_standings deve possuir relacao direta com a entidade teams'. SSOTs: docs/ssot/schema.sql (definicao da tabela), docs/ssot/alembic_state.txt (head atual: 0fb0f76b48a7).",
   "assumptions": [
     "A tabela teams existe no banco (confirmado em docs/ssot/schema.sql linha 1578).",
@@ -24,6 +24,7 @@
       ],
       "validation_command": "python -m pytest \"Hb Track - Backend/tests/\" -k \"competition_standing\" -x --tb=short -q",
       "evidence_file": "docs/hbtrack/evidence/AR_001_competition_standings_add_team_id_migration.log",
+      "rollback_plan": "alembic downgrade -1\n# OU manualmente (nessa ordem):\n# DROP INDEX IF EXISTS ix_competition_standings_team_id;\n# ALTER TABLE competition_standings DROP CONSTRAINT IF EXISTS fk_competition_standings_team_id;\n# ALTER TABLE competition_standings DROP COLUMN IF EXISTS team_id;",
       "risks": [
         "Se houver dados com team_id=NULL apos a migration, queries que filtram por team_id devem tratar NULL explicitamente — risco de silenciar linhas em JOINs. Fora do escopo deste plano, mas deve ser documentado.",
         "ON DELETE SET NULL requer que a FK nao seja NOT NULL — confirmar com o Arquiteto se essa e a semantica desejada antes de executar.",

@@ -114,13 +114,13 @@ Se quiser o comando `hb`:
 Linux/Mac:
 
 ```bash
-alias hb='python3 scripts/run/hb.py'
+alias hb='python3 scripts/run/hb_cli.py'
 ```
 
 Windows PowerShell (recomendado usar caminho relativo dentro do repo):
 
 ```powershell
-function hb { python scripts\run\hb.py @args }
+function hb { python scripts\run\hb_cli.py @args }
 ```
 
 ### Passo 4: Ativar Hooks
@@ -1115,10 +1115,10 @@ RESTRIÇÕES:
 - Cada task deve ser validável de forma independente.
 
 OUTPUT:
-- Crie o aquivo .json, SOMENTE com o JSON final, válido no schema v1.0.4 em `docs/_canon/planos`
--VALIDAÇÃO: rode 'hb plan docs/_canon/planos/<nome_do_plano>.json'
-✅ Plan materialized successfully: docs/hbtrack/ars/AR_0**_*.md, docs/hbtrack/ars/AR_0**_*.md, ...
-- Arqvuivos etão gerados em docs/hbtrack/ars/
+- Crie o arquivo .json SOMENTE com o JSON final, válido no schema v1.0.4 em `docs/_canon/planos/`
+- VALIDAÇÃO: rode `hb plan docs/_canon/planos/<nome_do_plano>.json>` ou `python scripts/run/hb_cli.py plan docs/_canon/planos/<nome_do_plano>.json>`
+- ✅ Resultado esperado: "Plan materialized successfully"
+- Arquivos serão gerados em `docs/hbtrack/ars/` (AR_001_*.md, AR_002_*.md, ...)
 ```
 DEMANDA:
 O objetivo é APENAS adicionar a coluna team_id (opcional/nullable) na tabela competition_standings e atualizar os models do SQLAlchemy. Ignore cálculos, rotas ou lógicas de IA por enquanto. Foque apenas na estrutura do banco.
@@ -1314,3 +1314,10 @@ Se você quiser, eu adapto esses prompts para os seus roots reais (`backend/` e 
 
 
 *Framework HB Track v1.0.2 — “Código é subproduto. Evidência é realidade.”*
+
+🎯 Resumo Tático do Tech Lead
+Automação de Frontend: Excelente conceito, mas vamos aplicar apenas na Fase 2, quando começarmos as telas.
+
+Rollbacks de Banco: Obrigatório a partir de hoje. Toda AR que mexe no banco precisa ter uma rota de fuga clara.
+
+Como estamos no aguardo do Claude Arquiteto gerar a AR_006, o seu desafio agora é exatamente este: assim que o JSON chegar, verifique se a ação de adicionar a coluna team_id na tabela competition_standings veio acompanhada de um plano de reversão estruturado. Cole o JSON aqui quando ele responder!

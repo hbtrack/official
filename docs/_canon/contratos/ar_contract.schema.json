@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "hbtrack:ar_contract.schema.json",
-  "title": "HB Track AR Contract (Plan JSON) — v1.0.4",
+  "title": "HB Track AR Contract (Plan JSON) — v1.0.5",
   "type": "object",
   "required": ["project", "version", "tasks"],
   "additionalProperties": false,
@@ -13,7 +13,7 @@
     "version": {
       "type": "string",
       "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
-      "description": "MUST igualar a versão do protocolo reportada pelo hb.py (ex.: 1.0.4)."
+      "description": "MUST igualar a versão do protocolo reportada pelo hb_cli.py (ex.: 1.0.5)."
     },
 
     "notes": {
@@ -39,7 +39,7 @@
           "id": {
             "type": "string",
             "pattern": "^[0-9]{3}$",
-            "description": "ID no formato 001..999."
+            "description": "ID no formato 001..999. MUST ser único dentro do plano."
           },
           "title": {
             "type": "string",
@@ -92,6 +92,13 @@
             "description": "SSOTs que esta task pode tocar (opcional)."
           },
 
+          "rollback_plan": {
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 2000,
+            "description": "Plano de reversão. OBRIGATÓRIO para tasks que tocam banco (schema.sql ou alembic_state.txt). Deve conter comandos exatos: alembic downgrade, SQL DDL reverso, ou git revert."
+          },
+
           "notes": {
             "type": "string",
             "maxLength": 5000,
@@ -103,6 +110,20 @@
             "items": { "type": "string", "minLength": 1, "maxLength": 500 },
             "description": "Riscos/atenções para o Executor."
           }
+        },
+
+        "if": {
+          "properties": {
+            "ssot_touches": {
+              "contains": {
+                "enum": ["docs/ssot/schema.sql", "docs/ssot/alembic_state.txt"]
+              }
+            }
+          },
+          "required": ["ssot_touches"]
+        },
+        "then": {
+          "required": ["id", "title", "description", "criteria", "evidence_file", "validation_command", "rollback_plan"]
         }
       }
     }

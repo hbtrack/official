@@ -1,7 +1,8 @@
-# AR_003 — Exit Code Zero Test
+# AR_007 — Exit Code Zero Test
 
 **Status**: DRAFT
 **Versão do Protocolo**: 1.0.4
+**Plano Fonte**: *(teste manual, sem plano JSON)*
 
 ## Descrição
 Test task with exit 0 command for Gate F validation on Windows environment
@@ -15,7 +16,7 @@ python test_gate_f.py
 ```
 
 ## Evidence File (Contrato)
-`docs/hbtrack/evidence/AR_003_exit_zero.log`
+`docs/hbtrack/evidence/AR_007_exit_zero.log`
 
 ## Notas do Arquiteto
 Using working directory command without complex shell escaping

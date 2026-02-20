@@ -2,6 +2,7 @@
 
 **Status**: 🏗️ EM_EXECUCAO
 **Versão do Protocolo**: 1.0.5
+**Plano Fonte**: `docs/_canon/planos/matchservice.json`
 
 ## Descrição
 CONTEXTO: O método MatchEventService.create() em app/services/match_event_service.py apresenta quatro defeitos críticos detectados via leitura do código frente ao schema.sql e openapi.json: (A) mapeia campos inexistentes no modelo ORM — event.minute, event.period, event.x_position, event.y_position não existem; os campos reais são period_number, game_time_seconds, x_coord, y_coord; (B) valida atleta em team_registration em vez de match_roster — são entidades distintas; a regra correta (schema.sql match_roster) é: SELECT match_roster WHERE match_id=:match_id AND athlete_id=:athlete_id AND is_available=true; (C) não preenche is_shot no ORM — campo NOT NULL no banco; o valor canônico deve vir de SELECT event_types WHERE code=data.event_type, campo is_shot; (D) não implementa link goalkeeper_save→related_event_id: quando event_type='goalkeeper_save', o service deve verificar que related_event_id referencia um evento existente na mesma partida com event_type IN ('shot','seven_meter').

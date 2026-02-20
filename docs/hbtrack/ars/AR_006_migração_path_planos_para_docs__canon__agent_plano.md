@@ -2,6 +2,7 @@
 
 **Status**: COMPLETED ✅
 **Versão do Protocolo**: 1.0.5
+**Plano Fonte**: `docs/_canon/planos/AR_GOV_001_plans_path_migration.json`
 
 ## Descrição
 CONTEXTO: Os planos JSON do Arquiteto estão armazenados em docs/_canon/planos/, mas os contratos (Dev Flow v1.0.4 + Hb CLI Spec v1.0.4) especificavam docs/hbtrack/planos/. Isso causava E_PLAN_PATH ao tentar materializar planos. A localização atual em _canon/planos é CORRETA do ponto de vista de organização lógica (artefatos canônicos de governança dentro de _canon/, separados de artefatos finais auditáveis como ARs/evidence em hbtrack/), portanto a solução é atualizar os contratos e o CLI para refletir a realidade.

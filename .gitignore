@@ -208,4 +208,5 @@ Hb Track - Backend/*.swo
 docs/execution_tasks/artifacts/**/*.zip
 docs/execution_tasks/artifacts/**/*.tar.gz
 docs/execution_tasks/artifacts/**/*.tgz
-docs/execution_tasks/artifacts/**/*.7z
+docs/execution_tasks/artifacts/**/*.7z_reports/audit/KANBAN_* 
+_audit_output.txt 

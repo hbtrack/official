@@ -2,6 +2,7 @@
 
 **Status**: 🏗️ EM_EXECUCAO
 **Versão do Protocolo**: 1.0.5
+**Plano Fonte**: `docs/_canon/planos/matchservice.json`
 
 ## Descrição
 CONTEXTO: O endpoint POST /matches/{match_id}/events em app/api/v1/routers/match_events.py tem três problemas confirmados: (A) importa e usa MatchEventCreate (schema antigo com campos errados) em vez de ScoutEventCreate — causando mismatch com o service refatorado na task 004; (B) chamadas db.commit() e db.refresh(event) sem await — bug silencioso em AsyncSession que produz RuntimeWarning de coroutine não aguardada e comportamento não determinístico; (C) docstring lista event_type codes inválidos (goal_7m, own_goal, shot_on_target) — não existem no enum CanonicalEventType.

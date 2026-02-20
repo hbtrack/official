@@ -1,5 +1,6 @@
 # AR_003: Schemas Pydantic Canônicos de Scout
 ## Status: 🏗️ EM_EXECUCAO
+**Plano Fonte**: `docs/_canon/planos/matchservice.json`
 
 ### 🛠️ Especificação Técnica (Arquiteto)
 CONTEXTO: O arquivo app/schemas/match_events.py contém um EventType enum com códigos inválidos (goal_7m, own_goal, shot_on_target, assist, technical_foul) que NÃO existem na tabela event_types do banco. Os schemas atuais (MatchEventBase/Create) mapeiam campos inexistentes ('minute', 'period', 'x_position', 'y_position') em vez dos campos reais do banco (period_number, game_time_seconds, x_coord, y_coord). O arquivo app/schemas/matches_subresources.py usa event_type como str livre com campo 'points' que também não existe na tabela.
