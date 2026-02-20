@@ -1,0 +1,19 @@
+{
+  "run_id": "KANBAN_2026-02-20_001",
+  "ar_id": "AR-2026-02-20-KANBAN-VERIFY-001",
+  "timestamp": "2026-02-20T16:58:36.538908Z",
+  "python_version": "3.11.9",
+  "git": {
+    "commit": "7a950fe2fd4966d47a27c8e448e2f160f69a4700",
+    "branch": "dev-changes-2",
+    "porcelain": "?? _build_evidence_pack.py"
+  },
+  "ssot_paths": [
+    "docs/_INDEX.yaml",
+    "docs/_canon/_agent/GATES_REGISTRY.yaml",
+    "docs/_canon/contratos/HB_TRACK_CONTRACT.md",
+    "docs/_canon/specs/HB_TRACK_SPEC.md",
+    "docs/hbtrack/Hb Track Kanban.md",
+    "scripts/checks/check_docs_index.py"
+  ]
+}

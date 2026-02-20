@@ -1,0 +1,19 @@
+{
+  "run_id": "KANBAN_2026-02-20_002",
+  "ar_id": "AR-2026-02-20-KANBAN-VERIFY-001",
+  "timestamp": "2026-02-20T17:03:10.687753Z",
+  "overall_exit_code": 0,
+  "overall_status": "PASS",
+  "checks": [
+    {
+      "id": "DOCS_INDEX_CHECK",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "DOCS_CANON_CHECK",
+      "exit_code": 0,
+      "status": "PASS"
+    }
+  ]
+}

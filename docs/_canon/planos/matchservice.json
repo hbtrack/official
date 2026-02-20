@@ -1,7 +1,7 @@
 {
   "project": "HB Track",
   "version": "1.0.5",
-  "notes": "Demanda: implementação completa do módulo de scout (match events), cobrindo: (1) schemas Pydantic canônicos com CanonicalEventType enum; (2) mapeamento ORM correto em MatchEventService.create(), com snapshot de placar passado pelo chamador e link obrigatório goalkeeper_save → related_event_id; (3) correção do router POST /matches/{id}/events para usar schemas canônicos ScoutEventCreate/ScoutEventRead e await correto em AsyncSession. SSOTs de referência: schema.sql (tabelas match_events, match_roster, event_types), openapi.json (operationId addEventToMatch / ScoutEventCreate schema). Precedência de decisão: docs/_canon/MANUAL_CANONICO_DETERMINISMO.md.",
+  "notes": "Demanda: implementação completa do módulo de scout (match events), cobrindo: (1) schemas Pydantic canônicos com CanonicalEventType enum; (2) mapeamento ORM correto em MatchEventService.create(), com snapshot de placar passado pelo chamador e link obrigatório goalkeeper_save → related_event_id; (3) correção do router POST /matches/{id}/events para usar schemas canônicos ScoutEventCreate/ScoutEventRead e await correto em AsyncSession. SSOTs de referência: schema.sql (tabelas match_events, match_roster, event_types), openapi.json (operationId addEventToMatch / ScoutEventCreate schema). Precedência de decisão: docs/hbtrack/manuais/Manual Deterministico.md.",
   "assumptions": [
     "A tabela event_types existe no banco e possui colunas code (str), is_shot (bool), is_possession_ending (bool) — referenciada em AR_004 spec.",
     "match_roster.is_available (boolean NOT NULL) é o campo canônico para validar se atleta está apto na partida (schema.sql confirma).",

@@ -31,7 +31,7 @@ def main(argv: List[str]) -> int:
     try:
         repo = _repo_root()
 
-        manual = repo / "docs" / "_canon" / "MANUAL_CANONICO_DETERMINISMO.md"
+        manual = repo / "docs" / "hbtrack" / "manuais" / "Manual Deterministico.md"
         index_yaml = repo / "docs" / "_INDEX.yaml"
         gates_registry = repo / "docs" / "_canon" / "_agent" / "GATES_REGISTRY.yaml"
         cap_runner = repo / "scripts" / "gates" / "run_capability_gates.py"
@@ -47,8 +47,8 @@ def main(argv: List[str]) -> int:
             errors.append(f"[E002] Missing root index: {index_yaml}")
         else:
             idx = _read_text(index_yaml)
-            if "docs/_canon/MANUAL_CANONICO_DETERMINISMO.md" not in idx:
-                errors.append("[E003] docs/_INDEX.yaml does not reference docs/_canon/MANUAL_CANONICO_DETERMINISMO.md")
+            if "docs/hbtrack/manuais/Manual Deterministico.md" not in idx:
+                errors.append("[E003] docs/_INDEX.yaml does not reference docs/hbtrack/manuais/Manual Deterministico.md")
 
         # 3) GATES_REGISTRY reports_root == _reports
         if not gates_registry.exists():

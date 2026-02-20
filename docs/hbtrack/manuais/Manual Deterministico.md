@@ -1,17 +1,17 @@
 ---
 meta:
-  document: MANUAL_CANONICO_DETERMINISMO.md
+  document: MANUAL_DETERMINISTICO.md
   version: "2.0"
   status: SSOT
   evidence_root: _reports/
   precedence: "overrides_conflicting_validation_texts"
 ---
 
-# MANUAL_CANONICO_DETERMINISMO.md — HB TRACK (v2.0, SSOT)
+# MANUAL_DETERMINISTICO.md — HB TRACK (v2.0, SSOT)
 
 ## Change Control
 
-* Documento: `MANUAL_CANONICO_DETERMINISMO.md`
+* Documento: `MANUAL_DETERMINISTICO.md`
 * Versão: v2.0
 * Status: **SSOT** (fonte de verdade)
 * Root canônico de evidências: **`_reports/`**

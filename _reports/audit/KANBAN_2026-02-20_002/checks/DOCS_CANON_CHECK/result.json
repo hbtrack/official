@@ -1,0 +1,11 @@
+{
+  "id": "DOCS_CANON_CHECK",
+  "command": "python scripts/checks/check_docs_canon.py KANBAN_2026-02-20_002",
+  "exit_code": 0,
+  "status": "PASS",
+  "duration_ms": 78,
+  "artifacts": [
+    "stdout.log",
+    "stderr.log"
+  ]
+}

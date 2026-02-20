@@ -108,7 +108,7 @@ summary = {
     "exit_code": 0 if (all_passed and pack_ok) else 2,
     "exit_label": "PASS" if (all_passed and pack_ok) else "FAIL_ACTIONABLE",
     "reason": "ALL_GATES_PASSED" if (all_passed and pack_ok) else ("GATE_FAILED" if not all_passed else "AUDIT_PACK_INTEGRITY_FAILED"),
-    "ssot_reference": "docs/_canon/MANUAL_CANONICO_DETERMINISMO.md",
+    "ssot_reference": "docs/hbtrack/manuais/Manual Deterministico.md",
     "created_at": card["created_at"],
     "finalized_at": datetime.datetime.utcnow().isoformat() + "Z",
     "gates_executed": list(results.keys()),
