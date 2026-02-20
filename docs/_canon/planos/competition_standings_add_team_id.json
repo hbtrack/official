@@ -1,0 +1,48 @@
+{
+  "project": "HB Track",
+  "version": "1.0.5",
+  "notes": "Demanda: adicionar coluna team_id (uuid, nullable) na tabela competition_standings com FK para teams.id (ON DELETE SET NULL) e atualizar o model SQLAlchemy CompetitionStanding. Escopo estritamente estrutural — sem calculos, rotas ou logica de IA. Base PRD §4.2 Regra de Arquitetura de Classificacao: 'competition_standings deve possuir relacao direta com a entidade teams'. SSOTs: docs/ssot/schema.sql (definicao da tabela), docs/ssot/alembic_state.txt (head atual: 0fb0f76b48a7).",
+  "assumptions": [
+    "A tabela teams existe no banco (confirmado em docs/ssot/schema.sql linha 1578).",
+    "O alembic head atual e 0fb0f76b48a7 (confirmado em docs/ssot/alembic_state.txt).",
+    "team_id e nullable — registros de standings existentes nao serao bloqueados pela migration (zero downtime para dados existentes).",
+    "ON DELETE SET NULL e a semantica correta: se um team for removido, o vinculo e desfeito sem apagar o standing.",
+    "O unique constraint uk_competition_standings_team_phase (competition_id, phase_id, opponent_team_id) NAO e alterado neste plano — escopo apenas adiciona a coluna.",
+    "O Executor NAO deve alterar calculos, rotas, queries nem logica de negocio — somente estrutura de banco e model.",
+    "CONFIRMACAO HUMANA NECESSARIA antes de executar: verificar se ON DELETE SET NULL e o comportamento correto (alternativa: ON DELETE RESTRICT ou sem FK implicita)."
+  ],
+  "tasks": [
+    {
+      "id": "001",
+      "title": "Migration: ADD COLUMN competition_standings.team_id (uuid nullable FK teams)",
+      "description": "Criar migration Alembic que adiciona a coluna team_id (uuid, nullable) na tabela competition_standings com FK para teams.id e ON DELETE SET NULL. A migration deve ser idempotente e reversivel. Down-revision: 0fb0f76b48a7. Passos: (1) op.add_column('competition_standings', sa.Column('team_id', PG_UUID(as_uuid=True), nullable=True)); (2) op.create_foreign_key('fk_competition_standings_team_id', 'competition_standings', 'teams', ['team_id'], ['id'], ondelete='SET NULL'); (3) op.create_index('ix_competition_standings_team_id', 'competition_standings', ['team_id'], unique=False). Downgrade: drop index, drop FK, drop column (nessa ordem). Nome do arquivo: XXXX_competition_standings_add_team_id.py onde XXXX e gerado pelo alembic. Arquivo destino: Hb Track - Backend/db/alembic/versions/. NAO modificar nenhum outro arquivo.",
+      "criteria": "1) alembic upgrade head retorna exit code 0 sem erros. 2) A coluna team_id existe em competition_standings (SELECT column_name FROM information_schema.columns WHERE table_name='competition_standings' AND column_name='team_id' retorna 1 linha). 3) A FK fk_competition_standings_team_id existe (SELECT constraint_name FROM information_schema.table_constraints WHERE constraint_name='fk_competition_standings_team_id' retorna 1 linha). 4) alembic downgrade -1 retorna exit code 0 (reversibilidade). 5) alembic upgrade head novamente retorna exit code 0 (idempotencia do ciclo up/down/up).",
+      "gate": "GATE_ALEMBIC_HEAD",
+      "ssot_touches": [
+        "docs/ssot/schema.sql",
+        "docs/ssot/alembic_state.txt"
+      ],
+      "validation_command": "python -m pytest \"Hb Track - Backend/tests/\" -k \"competition_standing\" -x --tb=short -q",
+      "evidence_file": "docs/hbtrack/evidence/AR_001_competition_standings_add_team_id_migration.log",
+      "risks": [
+        "Se houver dados com team_id=NULL apos a migration, queries que filtram por team_id devem tratar NULL explicitamente — risco de silenciar linhas em JOINs. Fora do escopo deste plano, mas deve ser documentado.",
+        "ON DELETE SET NULL requer que a FK nao seja NOT NULL — confirmar com o Arquiteto se essa e a semantica desejada antes de executar.",
+        "O indice ix_competition_standings_team_id e optional para performance; se equipe decidir nao criar, remover do plano antes de executar."
+      ]
+    },
+    {
+      "id": "002",
+      "title": "Model: CompetitionStanding.team_id — mapped_column + relationship para Team",
+      "description": "Atualizar o model SQLAlchemy CompetitionStanding em Hb Track - Backend/app/models/competition_standing.py para refletir a coluna adicionada na task 001. Mudancas necessarias: (1) Adicionar import TYPE_CHECKING para Team se ainda nao existir. (2) Adicionar no bloco HB-AUTOGEN (entre as tags HB-AUTOGEN:BEGIN e HB-AUTOGEN:END) a coluna mapeada: team_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('teams.id', name='fk_competition_standings_team_id', ondelete='SET NULL'), nullable=True). (3) Adicionar relationship: team: Mapped[Optional['Team']] = relationship('Team', back_populates=None) — sem back_populates a menos que o model Team declare standings. (4) Adicionar ao TYPE_CHECKING block: from app.models.team import Team. NAO modificar constraints, outros campos ou logica existente.",
+      "criteria": "1) python -c 'import sys; sys.path.insert(0, \"Hb Track - Backend\"); from app.models.competition_standing import CompetitionStanding; assert hasattr(CompetitionStanding, \"team_id\"); print(\"PASS\")' retorna exit code 0. 2) O atributo team_id e do tipo Mapped[Optional[UUID]] com nullable=True. 3) O atributo team e um relationship apontando para Team. 4) python -c 'from app.models.competition_standing import CompetitionStanding' nao levanta ImportError nem AttributeError. 5) alembic check nao reporta divergencia entre model e schema (se gate de models estiver disponivel no repo).",
+      "gate": "GATE_MODEL_SYNC",
+      "validation_command": "python -c \"import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition_standing import CompetitionStanding; assert hasattr(CompetitionStanding, 'team_id'), 'FAIL: team_id not found'; print('PASS: team_id present in CompetitionStanding')\"",
+      "evidence_file": "docs/hbtrack/evidence/AR_002_competition_standings_model_team_id.log",
+      "notes": "A task 002 depende da task 001: o model deve ser atualizado APOS a migration ser aplicada e validada. O bloco HB-AUTOGEN no arquivo e delimitado por comentarios HB-AUTOGEN:BEGIN / HB-AUTOGEN:END — o Executor deve inserir a coluna dentro dessas marcacoes para manter consistencia com o pipeline de autogeneration.",
+      "risks": [
+        "Se o model Team nao declarar back_populates='standings', o relationship em CompetitionStanding deve usar back_populates=None ou ser omitido — verificar app/models/team.py antes de adicionar relationship.",
+        "O bloco HB-AUTOGEN e marcado como AUTO-GENERATED — alterar manualmente pode entrar em conflito com reruns do autogenerator. Documentar que team_id foi adicionado manualmente fora de ciclo automatico."
+      ]
+    }
+  ]
+}

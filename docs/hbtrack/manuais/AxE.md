@@ -1119,10 +1119,10 @@ OUTPUT:
 -VALIDAÇÃO: rode 'hb plan docs/_canon/planos/<nome_do_plano>.json'
 ✅ Plan materialized successfully: docs/hbtrack/ars/AR_0**_*.md, docs/hbtrack/ars/AR_0**_*.md, ...
 - Arqvuivos etão gerados em docs/hbtrack/ars/
-DEMANDA:
-[cole aqui]
 ```
-
+DEMANDA:
+O objetivo é APENAS adicionar a coluna team_id (opcional/nullable) na tabela competition_standings e atualizar os models do SQLAlchemy. Ignore cálculos, rotas ou lógicas de IA por enquanto. Foque apenas na estrutura do banco.
+```
 ---
 
 ### 2) Prompt “Gate-first” (força comando de validação real, não genérico)

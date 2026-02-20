@@ -1,0 +1,13 @@
+{
+  "PRECHECK_PYTHON": {
+    "exit_code": 0,
+    "stdout": "Python 3.11.9",
+    "status": "PASS"
+  },
+  "PRECHECK_GIT": {
+    "exit_code": 0,
+    "stdout": " D _reports/audit/KANBAN_2026-02-20_001/card.json\n D _reports/audit/KANBAN_2026-02-20_001/register_fail.py\n M docs/hbtrack/manuais/AxE.md\n?? docs/_canon/planos/competition_standings_add_team_id.json\n?? docs/hbtrack/ars/AR_001_migration\n?? docs/hbtrack/ars/AR_002_model\n?? scripts/audit/_audit_kanban.py\n",
+    "status": "FAIL"
+  },
+  "git_head": "f408c9eb55274c40bd36003ca462d49abe6178c0"
+}
