@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_101-a29d573",
+  "timestamp_utc": "2026-02-23T02:44:15.461726+00:00",
+  "git": {
+    "commit": "a29d573f7551c6b9807039e888ce13bffeada551"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "101",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_101_resgate_de_ars_de_governança_v1.2.0_core.md"
+}
