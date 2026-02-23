@@ -1,6 +1,6 @@
 # AR_004 — MatchEventService.create() — ORM correto, roster, is_shot e link goalkeeper_save
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: 🔍 NEEDS REVIEW
 **Versão do Protocolo**: 1.0.5
 **Plano Fonte**: `docs/_canon/planos/matchservice.json`
 
@@ -79,3 +79,12 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_004_match_event_service_create.log`
 **Python Version**: 3.11.9
 
+
+> 📋 Kanban routing: Arquiteto: Output não-determinístico: behavior_hash diverge nos 3 runs (exit 0 em todos, mas hash diferente)
+
+### Verificacao Testador em e971d7f
+**Status Testador**: 🔍 NEEDS REVIEW
+**Consistency**: AH_DIVERGENCE
+**Triple-Run**: FLAKY_OUTPUT (3x)
+**Exit Testador**: 2 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_004_e971d7f/result.json`
