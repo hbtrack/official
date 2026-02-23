@@ -1,6 +1,6 @@
 # AR_101 — Resgate de ARs de Governança (v1.2.0 Core)
 
-**Status**: 🔲 PENDENTE
+**Status**: ⚠️ PENDENTE
 **Versão do Protocolo**: 1.2.0
 
 ## Descrição
@@ -34,3 +34,12 @@ _(A ser preenchido pelo Executor)_
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
+
+> 📋 Kanban routing: Executor: Evidence Pack missing or incomplete
+
+### Verificacao Testador em a29d573
+**Status Testador**: ⚠️ PENDENTE
+**Consistency**: UNKNOWN
+**Triple-Run**: TRIPLE_FAIL (3x)
+**Exit Testador**: 2 | **Exit Executor**: None
+**TESTADOR_REPORT**: `_reports/testador/AR_101_a29d573/result.json`

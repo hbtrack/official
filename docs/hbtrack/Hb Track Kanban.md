@@ -509,6 +509,7 @@ EVIDENCE_PACK:
 - AR_999 — test
 
 ### 🛠️ Em Execução
+- AR_101 — Executor: Evidence Pack missing or incomplete
 - AR_053 — Executor: Output não-determinístico: hashes divergem nos 3 runs (exit 0 em todos, mas stdout_hash diferente)
 
 ### 📥 Backlog
