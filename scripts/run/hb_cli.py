@@ -1107,11 +1107,18 @@ def _write_kanban(ar_id: str, new_status: str, reason: str = None) -> None:
         # Mapa de status para coluna do Kanban
         status_to_column = {
             "✅ VERIFICADO": "✅ Concluído",
-            "🔍 NEEDS REVIEW": "📥 Backlog",
-            "⚠️ PENDENTE": "🛠️ Em Execução",
+            "✅ SUCESSO": "✅ Concluído",
+            "🔴 REJEITADO": "📥 Backlog",  # Default: Backlog (pode ser refinado pela reason)
             "⏸️ BLOQUEADO_INFRA": "⏸️ Bloqueado",
         }
-        coluna = status_to_column.get(new_status, "📥 Backlog")
+        # Roteamento inteligente para REJEITADO baseado na reason
+        if new_status == "🔴 REJEITADO" and reason:
+            if "Executor:" in reason:
+                coluna = "🛠️ Em Execução"  # Executor deve corrigir
+            else:
+                coluna = "📥 Backlog"  # Arquiteto/outros
+        else:
+            coluna = status_to_column.get(new_status, "📥 Backlog")
         note = f" — {reason}" if reason else ""
         card = f"- {ar_ref}{note}"
         # Se AR já está no Kanban, não duplicar
@@ -1150,11 +1157,14 @@ def update_kanban_and_status(ar_content: str, new_status: str, reason: str = Non
 def finalize_verification(ar_id: str, ar_content: str, result_data: dict) -> tuple:
     """Roteia o resultado do Testador para o Kanban e define o próximo responsável.
 
-    Lógica de roteamento:
-    - PASS (SUCESSO)           → ✅ SUCESSO     (aguarda selo humano)
-    - REJEITADO + AH_DIVERGENCE → 🔍 NEEDS REVIEW (Arquiteto deve rever o plano)
-    - REJEITADO (técnico)      → ⚠️ PENDENTE     (Executor deve corrigir)
-    - outro (BLOQUEADO_INFRA)  → ⏸️ BLOQUEADO_INFRA
+    Status canônicos (Protocol v1.2.0 - Testador Contract §5):
+    - SUCESSO           → ✅ SUCESSO (triple-run OK + consistency OK + temporal_check PASS)
+    - REJEITADO         → 🔴 REJEITADO (AH_DIVERGENCE, INCOMPLETE_EVIDENCE, FLAKY_OUTPUT, TRIPLE_FAIL, AH_TEMPORAL_INVALID)
+    - BLOQUEADO_INFRA   → ⏸️ BLOQUEADO_INFRA (infra inacessível — waiver necessário)
+
+    Roteamento de Kanban (via reason):
+    - REJEITADO + AH_DIVERGENCE → Backlog (Arquiteto: reason)
+    - REJEITADO (outros)        → Em Execução (Executor: reason)
 
     Retorna (ar_updated_content, novo_status, final_exit).
     Deve ser chamada dentro de um contexto HBLock ativo.
@@ -1164,34 +1174,40 @@ def finalize_verification(ar_id: str, ar_content: str, result_data: dict) -> tup
     rejection_reason = result_data.get("rejection_reason") or ""
 
     if status_testador == "SUCESSO":
+        # Protocol §5: SUCESSO → ✅ SUCESSO
         novo_status = "✅ SUCESSO"
         final_exit = 0
-        print(f"📋 Kanban: AR_{ar_id} → SUCESSO (aguarda selo humano)")
+        print(f"✅ SUCESSO | Consistency: {consistency}")
+        print(f"Report: _reports/testador/AR_{ar_id}_<git7>/result.json")
         ar_updated = update_kanban_and_status(ar_content, novo_status, ar_id=ar_id)
 
     elif status_testador == "REJEITADO":
+        # Protocol §5: REJEITADO → 🔴 REJEITADO (sempre)
+        novo_status = "🔴 REJEITADO"
+        final_exit = 1
+        
+        # Roteamento de Kanban baseado em consistency para indicar responsável
         if consistency == "AH_DIVERGENCE":
             # Erro de contrato/lógica — Arquiteto precisa rever o plano
-            novo_status = "🔍 NEEDS REVIEW"
-            final_exit = 2
-            print(f"📋 Kanban: AR_{ar_id} → NEEDS REVIEW — Arquiteto: {rejection_reason}")
-            ar_updated = update_kanban_and_status(
-                ar_content, novo_status, reason=f"Arquiteto: {rejection_reason}", ar_id=ar_id
-            )
+            kanban_reason = f"Arquiteto: {rejection_reason}"
+            print(f"🔴 REJEITADO | Consistency: {consistency}")
+            print(f"Reason: {rejection_reason}")
         else:
             # Erro técnico — Executor falhou na implementação
-            novo_status = "⚠️ PENDENTE"
-            final_exit = 2
-            print(f"📋 Kanban: AR_{ar_id} → PENDENTE — Executor: {rejection_reason}")
-            ar_updated = update_kanban_and_status(
-                ar_content, novo_status, reason=f"Executor: {rejection_reason}", ar_id=ar_id
-            )
+            kanban_reason = f"Executor: {rejection_reason}"
+            print(f"🔴 REJEITADO | Consistency: {consistency}")
+            print(f"Reason: {rejection_reason}")
+        
+        ar_updated = update_kanban_and_status(
+            ar_content, novo_status, reason=kanban_reason, ar_id=ar_id
+        )
 
     else:
-        # BLOQUEADO_INFRA
+        # Protocol §5: BLOQUEADO_INFRA → ⏸️ BLOQUEADO_INFRA
         novo_status = "⏸️ BLOQUEADO_INFRA"
         final_exit = 3
-        print(f"📋 Kanban: AR_{ar_id} → BLOQUEADO_INFRA — waiver necessário")
+        print(f"⏸️ BLOQUEADO_INFRA | Consistency: {consistency}")
+        print(f"Reason: waiver necessário")
         ar_updated = update_kanban_and_status(ar_content, novo_status, ar_id=ar_id)
 
     return ar_updated, novo_status, final_exit
