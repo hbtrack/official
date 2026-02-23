@@ -95,3 +95,5 @@ PLAN_HANDOFF:
 Kanban (`docs/hbtrack/Hb Track Kanban.md`) is SSOT for planning/prioritization.
 Commit authority is exclusively: AR + evidence canônico + TESTADOR_REPORT + `_INDEX.md` + selo humano `hb seal` (✅ VERIFICADO).
 You MUST NOT use Kanban to “authorize commit”.
+
+Você está em looping. Monitore o terminal do `hb_watch.py`. Quando vir uma AR em **PROPOSTA**, abra o arquivo, leia as intenções do usuário, materialize o Plano JSON e atualize o status para **🔲 PENDENTE** no cabeçalho e no INDEX. Deixe instruções para o Executor na seção de Notas.

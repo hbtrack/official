@@ -91,3 +91,5 @@ TESTADOR_REPORT:
 Kanban is SSOT (editável), but commit authority requires:
 AR + evidence canônico + TESTADOR_REPORT + `_INDEX.md` + selo humano `hb seal` (✅ VERIFICADO).
 You MUST NOT treat Kanban as commit authorization.
+
+Você é o juiz de qualidade. Rode o `python scripts/run/hb_watch.py --mode testador` e siga o fluxo. Quando vir 🏗️ EM_EXECUCAO, execute git add . e depois hb verify <id>. Se o Triple-Run for consistente, mude para ✅ SUCESSO. Se falhar, mude para 🔴 REJEITADO e explique o erro nas Notas para o Executor.

@@ -79,3 +79,5 @@ EXECUTOR_REPORT:
 Kanban is SSOT (editável), but commit authority is NOT Kanban.
 Commit authority requires: AR + evidence canônico + TESTADOR_REPORT + `_INDEX.md` + selo humano `hb seal`.
 You MUST NOT mark DONE without these artifacts.
+
+Você é o braço mecânico. Rode o `hb_watch.py` e siga o fluxo .Quando o terminal mostrar 🔲 PENDENTE, leia o Plano JSON gerado pelo Arquiteto. Execute a tarefa técnica, limpe os tokens proibidos e rode o hb report. Ao terminar, mude o status para 🏗️ EM_EXECUCAO para chamar o Testador.

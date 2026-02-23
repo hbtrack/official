@@ -1,19 +1,12 @@
-{
-  "trigger": "TESTADOR",
-  "ar_ids": [],
-  "warnings": [
-    "AR_001: status ✅ SUCESSO mas AR não declara TESTADOR_REPORT.",
-    "AR_003: status ✅ SUCESSO mas AR não declara TESTADOR_REPORT.",
-    "AR_032: status ✅ SUCESSO mas AR não declara TESTADOR_REPORT.",
-    "AR_035: status ✅ SUCESSO mas AR não declara TESTADOR_REPORT.",
-    "AR_037: status ✅ SUCESSO mas AR não declara TESTADOR_REPORT.",
-    "AR_038: status ✅ SUCESSO mas AR não declara TESTADOR_REPORT.",
-    "AR_039: status ✅ SUCESSO mas AR não declara TESTADOR_REPORT.",
-    "AR_040: status ✅ SUCESSO mas AR não declara TESTADOR_REPORT.",
-    "AR_041: status ✅ SUCESSO mas AR não declara TESTADOR_REPORT.",
-    "AR_042: status ✅ SUCESSO mas AR não declara TESTADOR_REPORT.",
-    "AR_043: status ✅ SUCESSO mas AR não declara TESTADOR_REPORT.",
-    "AR_044: status ✅ SUCESSO mas AR não declara TESTADOR_REPORT.",
-    "AR_045: status ✅ SUCESSO mas AR não declara TESTADOR_REPORT."
-  ]
-}
+AR_002
+AR_002.5
+AR_002.5
+AR_002.5
+AR_002.5
+AR_004
+AR_005
+AR_014
+AR_015
+AR_023
+AR_024
+AR_036
