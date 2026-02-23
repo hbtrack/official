@@ -507,7 +507,11 @@ def main() -> None:
     validate_inputs(args.ar_id)
 
     head = git_head()
-    ts = now_utc_iso()
+    # Para triple-run determinístico: timestamp fixo quando HB_TRIPLE_RUN=1
+    if os.getenv("HB_TRIPLE_RUN") == "1":
+        ts = "2026-01-01T00:00:00.000000+0000"  # Timestamp fixo para hash determinístico
+    else:
+        ts = now_utc_iso()
     run_id = f"DOC_GATES-AR_{args.ar_id}-{(head[:7] if head != 'N/A' else 'NOHEAD')}-{ts.replace(':','').replace('.','')}"
     gates = build_gates()
 

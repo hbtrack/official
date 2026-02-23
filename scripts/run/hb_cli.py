@@ -1247,21 +1247,27 @@ def cmd_verify(ar_id: str) -> None:
     print(f"🔁 TESTADOR: triple-run ({TRIPLE_RUN_COUNT}x): {validation_cmd[:60]}...")
     runs_data: List[Dict] = []
     stdout, stderr = "", ""
-    for run_n in range(1, TRIPLE_RUN_COUNT + 1):
-        run_ec, run_out, run_err = run_cmd(validation_cmd)
-        run_hash_full = compute_behavior_hash(run_ec, run_out, run_err)
-        run_hash = run_hash_full[:16]
-        runs_data.append({
-            "run": run_n,
-            "exit_code": run_ec,
-            "hash_full": run_hash_full,
-            "hash": run_hash,
-            "stdout_len": len(run_out or ""),
-            "stderr_len": len(run_err or ""),
-        })
-        print(f"  Run {run_n}/{TRIPLE_RUN_COUNT}: exit={run_ec} hash={run_hash}")
-        if run_n == 1:
-            stdout, stderr = run_out, run_err
+    # Define HB_TRIPLE_RUN=1 para tornar scripts determinísticos (ex: doc_gates.py timestamp fixo)
+    os.environ["HB_TRIPLE_RUN"] = "1"
+    try:
+        for run_n in range(1, TRIPLE_RUN_COUNT + 1):
+            run_ec, run_out, run_err = run_cmd(validation_cmd)
+            run_hash_full = compute_behavior_hash(run_ec, run_out, run_err)
+            run_hash = run_hash_full[:16]
+            runs_data.append({
+                "run": run_n,
+                "exit_code": run_ec,
+                "hash_full": run_hash_full,
+                "hash": run_hash,
+                "stdout_len": len(run_out or ""),
+                "stderr_len": len(run_err or ""),
+            })
+            print(f"  Run {run_n}/{TRIPLE_RUN_COUNT}: exit={run_ec} hash={run_hash}")
+            if run_n == 1:
+                stdout, stderr = run_out, run_err
+    finally:
+        # Limpa a variável de ambiente após o triple-run
+        os.environ.pop("HB_TRIPLE_RUN", None)
     all_exit_0 = all(r["exit_code"] == 0 for r in runs_data)
     all_same_hash = len(set(r["hash_full"] for r in runs_data)) == 1
     if all_exit_0 and all_same_hash:
