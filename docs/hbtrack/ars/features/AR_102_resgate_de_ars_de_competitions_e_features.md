@@ -1,6 +1,6 @@
 # AR_102 — Resgate de ARs de Competitions e Features
 
-**Status**: 🔲 PENDENTE
+**Status**: ⚠️ PENDENTE
 **Versão do Protocolo**: 1.2.0
 
 ## Descrição
@@ -35,3 +35,12 @@ _(A ser preenchido pelo Executor)_
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
+
+> 📋 Kanban routing: Executor: Evidence Pack missing or incomplete
+
+### Verificacao Testador em 6577c49
+**Status Testador**: ⚠️ PENDENTE
+**Consistency**: UNKNOWN
+**Triple-Run**: TRIPLE_FAIL (3x)
+**Exit Testador**: 2 | **Exit Executor**: None
+**TESTADOR_REPORT**: `_reports/testador/AR_102_6577c49/result.json`

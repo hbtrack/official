@@ -1,0 +1,42 @@
+{
+  "ar_id": "102",
+  "validation_command": "python scripts/run/doc_gates.py --ar-id 102",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 2,
+      "hash_full": "16c1150e9fcbb544ef483147297e7652db7761cb6518d685a01925b6bc84dbcc",
+      "hash": "16c1150e9fcbb544",
+      "stdout_len": 301,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 2,
+      "hash_full": "16c1150e9fcbb544ef483147297e7652db7761cb6518d685a01925b6bc84dbcc",
+      "hash": "16c1150e9fcbb544",
+      "stdout_len": 301,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 2,
+      "hash_full": "16c1150e9fcbb544ef483147297e7652db7761cb6518d685a01925b6bc84dbcc",
+      "hash": "16c1150e9fcbb544",
+      "stdout_len": 301,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "TRIPLE_FAIL",
+  "testador_exit_code": 2,
+  "executor_exit_code": null,
+  "consistency": "UNKNOWN",
+  "status": "REJEITADO",
+  "ah_flags": [
+    "INCOMPLETE_EVIDENCE"
+  ],
+  "evidence_pack_complete": false,
+  "rejection_reason": "Evidence Pack missing or incomplete",
+  "workspace_clean": true
+}

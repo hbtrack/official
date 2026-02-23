@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_102-6577c49",
+  "timestamp_utc": "2026-02-23T02:44:43.908513+00:00",
+  "git": {
+    "commit": "6577c491f4b4ce489fb51f505165a7d9c9b8c5de"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "102",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_102_resgate_de_ars_de_competitions_e_features.md"
+}
