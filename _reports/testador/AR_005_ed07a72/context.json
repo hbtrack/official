@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_005-ed07a72",
+  "timestamp_utc": "2026-02-23T14:56:30.982999+00:00",
+  "git": {
+    "commit": "ed07a72959ccd02d86203260646ee8b8ad72277e"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "005",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_005_router_match_events_—_schemas_canônicos_scoutevent.md"
+}
