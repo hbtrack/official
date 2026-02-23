@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_023-0207898",
+  "timestamp_utc": "2026-02-23T14:57:13.556878+00:00",
+  "git": {
+    "commit": "02078984d88410af266e9699e70685978a1d6d40"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "023",
+  "ar_file": "docs\\hbtrack\\ars\\governance\\AR_023_triple-run_determinism_+_anti-trivial_gate_+_proto.md"
+}
