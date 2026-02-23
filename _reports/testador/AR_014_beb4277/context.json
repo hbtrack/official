@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_014-beb4277",
+  "timestamp_utc": "2026-02-23T14:56:45.938646+00:00",
+  "git": {
+    "commit": "beb4277a5821fa24bac53d17c6c83cca9843904f"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "014",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_014_git_mv_renomear_hb_track_-_fronted_→_hb_track_-_fr.md"
+}

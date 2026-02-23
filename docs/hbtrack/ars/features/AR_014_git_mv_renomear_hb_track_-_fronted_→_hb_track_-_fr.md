@@ -1,6 +1,6 @@
 # AR_014 — git mv: renomear Hb Track - Fronted → Hb Track - Frontend
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ⚠️ PENDENTE
 **Versão do Protocolo**: 1.0.6
 
 ## Descrição
@@ -77,3 +77,12 @@ _(Gerado por hb report)_
 
 
 
+
+> 📋 Kanban routing: Executor: Evidence Pack missing or incomplete
+
+### Verificacao Testador em beb4277
+**Status Testador**: ⚠️ PENDENTE
+**Consistency**: UNKNOWN
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: None
+**TESTADOR_REPORT**: `_reports/testador/AR_014_beb4277/result.json`
