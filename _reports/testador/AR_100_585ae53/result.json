@@ -1,0 +1,40 @@
+{
+  "ar_id": "100",
+  "validation_command": "python scripts/run/hb_cli.py version && python scripts/run/doc_gates.py --ar-id 100 && python scripts/run/hb_cli.py gates check DOC-GATE-018",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "a6ff8811ef3e338e6ed4747f6026657ac82820c7630adeeda1054a8962305a68",
+      "hash": "a6ff8811ef3e338e",
+      "stdout_len": 416,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "a6ff8811ef3e338e6ed4747f6026657ac82820c7630adeeda1054a8962305a68",
+      "hash": "a6ff8811ef3e338e",
+      "stdout_len": 416,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "a6ff8811ef3e338e6ed4747f6026657ac82820c7630adeeda1054a8962305a68",
+      "hash": "a6ff8811ef3e338e",
+      "stdout_len": 416,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

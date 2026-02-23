@@ -43,6 +43,7 @@ Thumbs.db
 
 # Logs and caches
 *.log
+!docs/hbtrack/evidence/**/*.log
 .cache/
 
 # Local runtime/generated dirs
