@@ -1,0 +1,37 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "Resgate de ARs ativas da pasta _legacy, limpeza de status e re-certificação para conformidade v1.2.0.",
+  "tasks": [
+    {
+      "id": "101",
+      "title": "Resgate de ARs de Governança (v1.2.0 Core)",
+      "description": "Mover AR_017, AR_023, AR_024, AR_026 e AR_034 de _legacy/ars/governance para docs/hbtrack/ars/governance/. Atualizar status 'EM TESTE' para 'EM_EXECUCAO'.",
+      "criteria": "1. Arquivos movidos com sucesso; 2. Token 'EM TESTE' removido; 3. doc_gates.py reporta PASS.",
+      "validation_command": "python scripts/run/doc_gates.py --ar-id 101",
+      "ssot_touches": [],
+      "rollback_plan": "git checkout -- docs/_legacy/ars/governance/\ngit clean -fd docs/hbtrack/ars/governance/",
+      "notes": "Essas ARs são o núcleo do protocolo atual."
+    },
+    {
+      "id": "102",
+      "title": "Resgate de ARs de Competitions e Features",
+      "description": "Mover AR_002, AR_036 (competitions) e AR_014, AR_015 (features) para as pastas ativas. Restaurar DEPRECATED_PATTERNS.md para a raiz de specs.",
+      "criteria": "1. Paths restaurados conforme PRD; 2. DEPRECATED_PATTERNS.md acessível pelo DOC-GATE-017.",
+      "validation_command": "python scripts/run/doc_gates.py --ar-id 102",
+      "ssot_touches": [],
+      "rollback_plan": "git checkout -- docs/_legacy/ars/\ngit clean -fd docs/hbtrack/ars/competitions/\ngit clean -fd docs/hbtrack/ars/features/",
+      "notes": "Restaura o histórico de migração do frontend."
+    },
+    {
+      "id": "103",
+      "title": "Resgate de Drafts e Invariantes Wellness",
+      "description": "Mover AR_002.5 (A, B, C, D) para docs/hbtrack/ars/drafts/ para suportar gates de escala wellness.",
+      "criteria": "1. Invariantes wellness documentadas e em pasta ativa; 2. WELLNESS_SCALE_DOCS_ALIGNED gate funcional.",
+      "validation_command": "python scripts/run/doc_gates.py --ar-id 103",
+      "ssot_touches": [],
+      "rollback_plan": "git checkout -- docs/_legacy/ars/drafts/\ngit clean -fd docs/hbtrack/ars/drafts/",
+      "notes": "Essencial para o gate de triangulação de verdade §13.3."
+    }
+  ]
+}
