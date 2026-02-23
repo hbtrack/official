@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_002-7b022e9",
+  "timestamp_utc": "2026-02-23T14:51:08.224289+00:00",
+  "git": {
+    "commit": "7b022e95c8a0cba7348eb80ceff2f96945b76ad2"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "002",
+  "ar_file": "docs\\hbtrack\\ars\\competitions\\AR_002_model_competitionstanding.team_id_-_mapped_column_.md"
+}

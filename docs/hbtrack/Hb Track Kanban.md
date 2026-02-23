@@ -509,6 +509,7 @@ EVIDENCE_PACK:
 - AR_999 — test
 
 ### 🛠️ Em Execução
+- AR_002 — Executor: Evidence Pack missing or incomplete
 - AR_103 — Executor: Evidence Pack missing or incomplete
 - AR_102 — Executor: Evidence Pack missing or incomplete
 - AR_101 — Executor: Evidence Pack missing or incomplete

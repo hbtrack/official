@@ -1,6 +1,6 @@
 # AR_002 — Model: CompetitionStanding.team_id — mapped_column + relationship para Team
 
-**Status**: 🏗️ EM_EXECUCAO | NEDDS REVIEW (sem rollback no plano)
+**Status**: ⚠️ PENDENTE
 **Versão do Protocolo**: 1.0.6
 **Plano Fonte**: `docs/_canon/planos/competition_standings_add_team_id.json`
 
@@ -64,3 +64,12 @@ _(Gerado por hb report)_
 
 
 
+
+> 📋 Kanban routing: Executor: Evidence Pack missing or incomplete
+
+### Verificacao Testador em 7b022e9
+**Status Testador**: ⚠️ PENDENTE
+**Consistency**: UNKNOWN
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: None
+**TESTADOR_REPORT**: `_reports/testador/AR_002_7b022e9/result.json`
