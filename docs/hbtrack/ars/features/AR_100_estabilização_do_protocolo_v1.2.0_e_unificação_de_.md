@@ -1,6 +1,6 @@
 # AR_100 — Estabilização do Protocolo v1.2.0 e Unificação de Registros
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: 🔍 NEEDS REVIEW
 **Versão do Protocolo**: 1.2.0
 
 ## Descrição
@@ -48,3 +48,12 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_100/executor_main.log`
 **Python Version**: 3.11.9
 
+
+> 📋 Kanban routing: Arquiteto: Output não-determinístico: behavior_hash diverge nos 3 runs (exit 0 em todos, mas hash diferente)
+
+### Verificacao Testador em 94268d3
+**Status Testador**: 🔍 NEEDS REVIEW
+**Consistency**: AH_DIVERGENCE
+**Triple-Run**: FLAKY_OUTPUT (3x)
+**Exit Testador**: 2 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_100_94268d3/result.json`

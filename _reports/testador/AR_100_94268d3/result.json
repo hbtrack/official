@@ -1,0 +1,42 @@
+{
+  "ar_id": "100",
+  "validation_command": "python scripts/run/hb_cli.py version && python scripts/run/doc_gates.py --ar-id 100 && python scripts/run/hb_cli.py gates check DOC-GATE-018",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "ad80d66c5515d537ec4267c1182501d531f0b0c08041e75c3866c67328eb794e",
+      "hash": "ad80d66c5515d537",
+      "stdout_len": 416,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "861bfed879a0da8580418f8d64435caad90c1c82d47f400df8221b94c08566bf",
+      "hash": "861bfed879a0da85",
+      "stdout_len": 416,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "f177759ddd7b4d2974582157106e928c8e30f33e860293735d7c483b582d5ede",
+      "hash": "f177759ddd7b4d29",
+      "stdout_len": 416,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "FLAKY_OUTPUT",
+  "testador_exit_code": 2,
+  "executor_exit_code": 0,
+  "consistency": "AH_DIVERGENCE",
+  "status": "REJEITADO",
+  "ah_flags": [
+    "FLAKY_OUTPUT"
+  ],
+  "evidence_pack_complete": true,
+  "rejection_reason": "Output não-determinístico: behavior_hash diverge nos 3 runs (exit 0 em todos, mas hash diferente)",
+  "workspace_clean": true
+}

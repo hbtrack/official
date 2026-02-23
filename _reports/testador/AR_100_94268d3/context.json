@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_100-94268d3",
+  "timestamp_utc": "2026-02-23T01:28:20.528071+00:00",
+  "git": {
+    "commit": "94268d30af4e7ca9787be2a1b04f43d6ccc08e8e"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "100",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_100_estabilização_do_protocolo_v1.2.0_e_unificação_de_.md"
+}
