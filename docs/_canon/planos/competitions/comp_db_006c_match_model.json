@@ -1,0 +1,32 @@
+{
+  "project": "HB Track",
+  "version": "1.1.0",
+  "notes": "COMP-DB-006c: Model CompetitionMatch — adicionar CheckConstraint ck_competition_matches_status no __table_args__ dentro do bloco HB-AUTOGEN para refletir o constraint criado pela migration 0058 (AR_040). Dependency: AR_040 deve ser executada antes ou no mesmo ciclo. Capability: COMPETITIONS.",
+  "assumptions": [
+    "competition_match.py já importa CheckConstraint (linha 41 do bloco HB-AUTOGEN-IMPORTS): from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint. NÃO é necessário alterar o bloco de imports.",
+    "O __table_args__ dentro do bloco HB-AUTOGEN:BEGIN/END contém apenas Index entries (sem CheckConstraints ainda). O novo CheckConstraint será o primeiro da tuple.",
+    "Valores válidos para status: 'scheduled','in_progress','finished','cancelled'.",
+    "O Executor NÃO deve alterar outros campos, relationships, indexes, imports ou qualquer coisa fora do bloco HB-AUTOGEN.",
+    "competition_match.py já possui deleted_at e deleted_reason (AR_009 aplicado). Verificar que os campos de soft delete estão intactos após a edição.",
+    "Dependency: esta AR pressupõe que AR_040 (migration 0058) foi ou será executada no mesmo ciclo de deploy."
+  ],
+  "tasks": [
+    {
+      "id": "042",
+      "title": "Model CompetitionMatch: ADD CheckConstraint ck_competition_matches_status",
+      "description": "Atualizar Hb Track - Backend/app/models/competition_match.py.\nDentro do bloco HB-AUTOGEN:BEGIN/END, no __table_args__, adicionar o CheckConstraint de status como primeiro elemento (antes dos Index entries):\n\n  CheckConstraint(\"status IN ('scheduled', 'in_progress', 'finished', 'cancelled')\", name='ck_competition_matches_status'),\n\nCheckConstraint já está importado (linha 41 do bloco HB-AUTOGEN-IMPORTS). NÃO alterar o bloco de imports. NÃO alterar outros campos, Index entries, relationships, deleted_at/deleted_reason ou lógica fora do bloco HB-AUTOGEN.",
+      "criteria": "1) python -c 'import sys; sys.path.insert(0,\"Hb Track - Backend\"); from app.models.competition_match import CompetitionMatch; args=CompetitionMatch.__table_args__; names=[getattr(a,\"name\",None) for a in args]; assert \"ck_competition_matches_status\" in names,f\"FAIL: not found, got {names}\"; print(\"PASS\")' retorna exit_code=0. 2) from app.models.competition_match import CompetitionMatch não levanta ImportError.",
+      "gate": "GATE_MODEL_SYNC",
+      "ssot_touches": [],
+      "validation_command": "python -c \"import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition_match import CompetitionMatch; args=CompetitionMatch.__table_args__; names=[getattr(a,'name',None) for a in args]; check='ck_competition_matches_status'; assert check in names,f'FAIL: {check} not in __table_args__. Current: {names}'; print(f'PASS: {check} present in CompetitionMatch.__table_args__')\"",
+      "evidence_file": "docs/hbtrack/evidence/AR_042_comp_db_006_competition_match_model_check.log",
+      "rollback_plan": "git revert HEAD  # se já commitado: desfaz o commit que adicionou o CheckConstraint\n# OU, antes de commit:\ngit restore 'Hb Track - Backend/app/models/competition_match.py'",
+      "risks": [
+        "O bloco HB-AUTOGEN é marcado como AUTO-GENERATED — alterar manualmente requer documentação explícita no commit (ciclo COMP-DB-006).",
+        "Se a migration 0058 (AR_040) não tiver sido aplicada ao banco, o model terá constraint que o DB não conhece — inconsistência aceitável em DEV.",
+        "A vírgula após o CheckConstraint no __table_args__ é obrigatória para tuple Python válida.",
+        "competition_match.py já possui deleted_at e deleted_reason (AR_009 aplicado). Verificar que os campos de soft delete estão intactos após a edição."
+      ]
+    }
+  ]
+}

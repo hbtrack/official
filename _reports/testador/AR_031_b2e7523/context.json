@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_031-b2e7523",
+  "timestamp_utc": "2026-02-21T10:50:15.853288+00:00",
+  "git": {
+    "commit": "b2e75234d5e3757507fdce48f06b3a57fde125a8"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "031",
+  "ar_file": "docs\\hbtrack\\ars\\AR_031_ambiente_ssot_docs__canon_contratos_ambiente.md_+_.md"
+}

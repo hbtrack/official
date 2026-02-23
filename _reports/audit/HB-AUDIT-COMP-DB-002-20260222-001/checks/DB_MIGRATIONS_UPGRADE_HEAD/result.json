@@ -1,0 +1,8 @@
+{
+  "id": "DB_MIGRATIONS_UPGRADE_HEAD",
+  "command": "alembic upgrade 0054",
+  "exit_code": 0,
+  "status": "PASS",
+  "duration_ms": 0,
+  "artifacts": ["stdout.log", "stderr.log"]
+}

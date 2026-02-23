@@ -48,6 +48,7 @@ Thumbs.db
 # Local runtime/generated dirs
 .hb_guard/
 .hb_backups/
+.hb_lock
 .hb_tmp_tests/
 
 # Temporary batch scripts

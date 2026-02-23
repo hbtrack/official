@@ -1,0 +1,46 @@
+{
+  "project": "HB Track",
+  "version": "1.0.6",
+  "notes": "INFRA-001: Correção do typo no nome do diretório do frontend. O diretório 'Hb Track - Frontend' contém um erro tipográfico ('Fronted' em vez de 'Frontend'). Fix: git mv + atualização das referências em scripts e docs canônicos. Impacto: hb_cli.py (GOVERNED_ROOTS), scripts/plans/config.py, scripts/scripts_roadmap.yaml e docs canônicos. Arquivos DENTRO do diretório (node_modules, .next, test-results, etc.) NÃO precisam de update manual — o git mv os move automaticamente.",
+  "assumptions": [
+    "Nome correto do diretório é 'Hb Track - Frontend' (com 'end').",
+    "git mv trata o rename de forma atômica no índice Git.",
+    "node_modules/ e .next/ são ignorados pelo .gitignore — não aparecem no git status após o mv.",
+    "O Executor MUST rodar git mv dentro do repo root (c:/HB TRACK/).",
+    "Após git mv, todos os imports TypeScript/Next.js que usam paths relativos internos continuam funcionando sem alteração.",
+    "hb_cli.py GOVERNED_ROOTS referencia 'Hb Track - Frontend/' — precisa de update para 'Hb Track - Frontend/'.",
+    "O Executor NÃO deve alterar lógica de negócio, só paths/strings com o typo."
+  ],
+  "tasks": [
+    {
+      "id": "014",
+      "title": "git mv: renomear Hb Track - Frontend → Hb Track - Frontend",
+      "description": "Executar o rename atômico do diretório via git mv:\n\n  git mv 'Hb Track - Frontend' 'Hb Track - Frontend'\n\nVerificar que o rename foi registrado no índice Git:\n  git status --short | grep 'Hb Track - Frontend'\n\nNAO fazer commit ainda — o commit é feito após ambas as tasks serem concluídas e validadas.\nNAO alterar nenhum arquivo de conteúdo nesta task.",
+      "criteria": "1) Diretório 'Hb Track - Frontend/' existe no filesystem. 2) Diretório 'Hb Track - Frontend/' NÃO existe mais. 3) git status mostra o rename staged (R  'Hb Track - Frontend/...' -> 'Hb Track - Frontend/...' ou equivalente). 4) next.config.js e package.json dentro de 'Hb Track - Frontend/' importam sem erro.",
+      "gate": "GATE_DIR_RENAME",
+      "validation_command": "python -c \"import os, sys; old=os.path.exists('Hb Track - Frontend'); new=os.path.exists('Hb Track - Frontend'); errs=[]; (errs.append('OLD still exists: Hb Track - Frontend') if old else None); (errs.append('NEW missing: Hb Track - Frontend') if not new else None); [print(e) for e in errs]; sys.exit(len(errs)) if errs else print('PASS: Hb Track - Frontend exists, Hb Track - Frontend removed')\"",
+      "evidence_file": "docs/hbtrack/evidence/AR_014_infra_rename_frontend_dir.log",
+      "rollback_plan": "git mv 'Hb Track - Frontend' 'Hb Track - Frontend'\n# OU: git restore --staged . (se ainda não commitado)",
+      "risks": [
+        "Se node_modules/ não estiver no .gitignore, o git mv pode gerar milhares de staged files. Verificar .gitignore antes de executar.",
+        "IDEs com watcher ativo (VSCode) podem reabrir arquivos com o path antigo e travar. Fechar e reabrir a IDE após o rename.",
+        "CI/CD pipelines que referenciam 'Hb Track - Frontend/' vão quebrar — verificar .github/workflows/ antes."
+      ]
+    },
+    {
+      "id": "015",
+      "title": "Update referências 'Fronted' → 'Frontend' em scripts e docs canônicos",
+      "description": "Atualizar todas as ocorrências do string path 'Hb Track - Frontend' nos arquivos fora do diretório renomeado.\n\nArquivos obrigatórios (canônicos/scripts):\n  1. scripts/run/hb_cli.py — GOVERNED_ROOTS: substituir 'Hb Track - Frontend/' por 'Hb Track - Frontend/'\n  2. scripts/plans/config.py — substituir quaisquer ocorrências de 'Fronted' por 'Frontend' em paths\n  3. scripts/scripts_roadmap.yaml — substituir path references\n\nArquivos de documentação (atualizar se referenciarem o path como string literal):\n  4. docs/_canon/contratos/Dev Flow.md\n  5. docs/_canon/specs/Hb cli Spec.md\n  6. docs/hbtrack/manuais/AxE.md\n\nRegra: substituir SOMENTE o string 'Hb Track - Frontend' por 'Hb Track - Frontend' (incluindo variações sem espaços se existirem). NÃO alterar lógica, apenas o string de path.\nNAO modificar arquivos dentro de 'Hb Track - Frontend/' (já movidos pelo git mv da task 014).",
+      "criteria": "1) grep -r 'Hb Track - Frontend' scripts/ retorna 0 ocorrências. 2) grep -r 'Hb Track - Frontend' docs/_canon/ retorna 0 ocorrências. 3) python scripts/run/hb_cli.py version retorna exit_code=0 (import ok). 4) GOVERNED_ROOTS em hb_cli.py contém 'Hb Track - Frontend/' (não 'Fronted').",
+      "gate": "GATE_REF_UPDATE",
+      "validation_command": "python -c \"import subprocess, sys; r=subprocess.run(['grep','-r','Hb Track - Frontend','scripts/','docs/_canon/'],capture_output=True,text=True); hits=r.stdout.strip(); print('REMAINING REFS:\\n'+hits) if hits else print('PASS: 0 references to Fronted in scripts/ and docs/_canon/')\"",
+      "evidence_file": "docs/hbtrack/evidence/AR_015_infra_rename_frontend_refs.log",
+      "rollback_plan": "git restore scripts/run/hb_cli.py scripts/plans/config.py scripts/scripts_roadmap.yaml docs/_canon/contratos/Dev Flow.md docs/_canon/specs/Hb cli Spec.md docs/hbtrack/manuais/AxE.md",
+      "risks": [
+        "Substituição global de 'Fronted' pode afetar texto em português que não seja path (ex: 'frontend' em prosa). Usar 'Hb Track - Frontend' como string de busca exata para evitar falsos positivos.",
+        "Se config.py usa o path em imports ou como constante, testar que o módulo ainda importa após a substituição.",
+        "docs/hbtrack/PRD Hb Track.md e TRD Traing.md também referenciam o path — são documentos históricos; atualizar se necessário mas não são canônicos críticos."
+      ]
+    }
+  ]
+}

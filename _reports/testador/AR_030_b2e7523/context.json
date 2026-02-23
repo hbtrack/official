@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_030-b2e7523",
+  "timestamp_utc": "2026-02-21T10:50:14.059315+00:00",
+  "git": {
+    "commit": "b2e75234d5e3757507fdce48f06b3a57fde125a8"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "030",
+  "ar_file": "docs\\hbtrack\\ars\\AR_030_dev_flow_v1.1.0_ar-as-semaphore_+_notes_como_canal.md"
+}

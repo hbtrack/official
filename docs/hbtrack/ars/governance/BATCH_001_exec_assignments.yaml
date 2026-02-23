@@ -1,0 +1,48 @@
+batch_id: BATCH_001
+base_branch: dev-changes-2
+base_commit: b2e75234d5e3757507fdce48f06b3a57fde125a8
+created_at: '2026-02-20'
+protocol_ref: docs/_canon/contratos/Dual Executor Contract.md
+
+executor_a:
+  branch: executor-a/batch-001
+  ar_sequence:
+    - '010'
+    - '011'
+    - '012'
+    - '020'
+  file_ownership:
+    - scripts/run/hb_cli.py
+    - docs/_canon/contratos/Dev Flow.md
+  notes: >
+    AR_010 MUST ser executada antes de AR_011 (011 depende de cmd_report corrigido).
+    AR_012 e AR_020 sao independentes entre si mas no mesmo arquivo — executar nessa ordem.
+    AR_020 e a ultima: bumpa HB_PROTOCOL_VERSION para 1.0.8.
+    AR_013 ja foi marcada como SUPERSEDED por AR_020 — nao aparece na sequencia.
+
+executor_b:
+  branch: executor-b/batch-001
+  ar_sequence:
+    - '016'
+    - '017'
+    - '018'
+    - '019'
+  file_ownership:
+    - docs/hbtrack/PRD Hb Track.md
+    - docs/_canon/contratos/Testador Contract.md
+    - docs/_canon/specs/Hb cli Spec.md
+  notes: >
+    AR_016 e AR_017 tocam o mesmo arquivo (PRD Hb Track.md) — executar nessa ordem.
+    AR_018 cria arquivo novo (Testador Contract.md) — independente.
+    AR_019 atualiza Hb cli Spec.md — independente de 016/017/018.
+
+file_ownership_conflict_check:
+  shared_files: []
+
+completion_signals:
+  executor_a: 'BATCH_001_EXEC_A: CONCLUIDO — branch executor-a/batch-001 pronta para merge'
+  executor_b: 'BATCH_001_EXEC_B: CONCLUIDO — branch executor-b/batch-001 pronta para merge'
+
+merge_order:
+  - executor-a/batch-001
+  - executor-b/batch-001

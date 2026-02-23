@@ -47,6 +47,7 @@ class MatchRoster(Base):
     # Table: public.match_roster
     __table_args__ = (
         CheckConstraint('jersey_number > 0', name='ck_match_roster_jersey'),
+        CheckConstraint("(deleted_at IS NULL AND deleted_reason IS NULL) OR (deleted_at IS NOT NULL AND deleted_reason IS NOT NULL)", name='ck_match_roster_deleted_reason'),
         Index('ix_match_roster_athlete_id', 'athlete_id', unique=False),
         Index('ix_match_roster_athlete_match', 'athlete_id', 'match_id', unique=False),
         Index('ix_match_roster_match_id', 'match_id', unique=False),
@@ -63,6 +64,8 @@ class MatchRoster(Base):
     is_goalkeeper: Mapped[bool] = mapped_column(sa.Boolean(), nullable=False)
     is_available: Mapped[bool] = mapped_column(sa.Boolean(), nullable=False)
     notes: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+    deleted_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+    deleted_reason: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
     # HB-AUTOGEN:END
 
 

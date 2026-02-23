@@ -46,6 +46,7 @@ if TYPE_CHECKING:
     from app.models.competition import Competition
     from app.models.competition_phase import CompetitionPhase
     from app.models.competition_opponent_team import CompetitionOpponentTeam
+    from app.models.team import Team
 
 
 class CompetitionStanding(Base):
@@ -67,11 +68,15 @@ class CompetitionStanding(Base):
 
     __table_args__ = (
 
-        UniqueConstraint('competition_id', 'phase_id', 'opponent_team_id', name='uk_competition_standings_team_phase'),
+        UniqueConstraint('competition_id', 'phase_id', 'opponent_team_id',
+                         name='uq_competition_standings_comp_phase_opponent',
+                         postgresql_nulls_not_distinct=True),
 
         Index('ix_competition_standings_competition_id', 'competition_id', unique=False),
 
         Index('ix_competition_standings_position', 'competition_id', 'phase_id', 'position', unique=False),
+
+        Index('ix_competition_standings_team_id', 'team_id', unique=False),
 
     )
 
@@ -86,6 +91,8 @@ class CompetitionStanding(Base):
     phase_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('competition_phases.id', name='fk_competition_standings_phase_id', ondelete='CASCADE'), nullable=True)
 
     opponent_team_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('competition_opponent_teams.id', name='fk_competition_standings_opponent_team_id', ondelete='CASCADE'), nullable=False)
+
+    team_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('teams.id', name='fk_competition_standings_team_id', ondelete='SET NULL'), nullable=True)
 
     position: Mapped[int] = mapped_column(sa.Integer(), nullable=False)
 
@@ -158,6 +165,8 @@ class CompetitionStanding(Base):
         "CompetitionOpponentTeam",
         back_populates="standings",
     )
+
+    team: Mapped[Optional["Team"]] = relationship("Team")
 
     def __repr__(self) -> str:
         return f"<CompetitionStanding pos={self.position} team={self.opponent_team_id} pts={self.points}>"

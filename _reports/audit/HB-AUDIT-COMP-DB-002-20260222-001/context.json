@@ -1,0 +1,12 @@
+{
+  "run_id": "HB-AUDIT-COMP-DB-002-20260222-001",
+  "card": "COMP-DB-002",
+  "created_at": "2026-02-22T03:00:00.000000Z",
+  "python_version": "3.11.9",
+  "local_db": "postgresql://hbtrack_dev@localhost:5433/hb_track_dev (postgres:12)",
+  "git": {
+    "commit": "b2e75234d5e3757507fdce48f06b3a57fde125a8",
+    "branch": "dev-changes-2"
+  },
+  "notes": "Local test — DB local PG12 porta 5433. VPS (PG15) inacessível no momento do teste."
+}

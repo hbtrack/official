@@ -1,0 +1,17 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "Plano de governança para estabilização do Protocolo v1.2.0 e unificação dos gates de documentação.",
+  "tasks": [
+    {
+      "id": "100",
+      "title": "Estabilização do Protocolo v1.2.0 e Unificação de Registros",
+      "description": "Implementação de travas de integridade no hb_watch.py, correção de segurança no ar_contract.schema.json, atualização do doc_gates.py para v1.2.0 e inclusão do DOC-GATE-018 no GATES_REGISTRY.yaml.",
+      "criteria": "1. hb version retorna v1.2.0;\n2. doc_gates.py reporta 18/18 PASS;\n3. hb gates list exibe DOC-GATE-018.",
+      "validation_command": "python scripts/run/hb_cli.py version && python scripts/run/doc_gates.py --ar-id 100 && python scripts/run/hb_cli.py gates check DOC-GATE-018",
+      "ssot_touches": [],
+      "rollback_plan": "git checkout -- docs/_canon/contratos/ar_contract.schema.json\ngit checkout -- scripts/run/hb_watch.py\ngit checkout -- scripts/run/doc_gates.py\ngit checkout -- docs/_canon/specs/GATES_REGISTRY.yaml",
+      "notes": "Esta AR é mandatória para satisfazer o enforcement do hb check após alterações em arquivos SSOT."
+    }
+  ]
+}

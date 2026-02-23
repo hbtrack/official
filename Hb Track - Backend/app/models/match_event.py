@@ -56,6 +56,7 @@ class MatchEvent(Base):
         CheckConstraint('game_time_seconds >= 0', name='ck_match_events_time'),
         CheckConstraint('x_coord IS NULL OR x_coord >= 0::numeric AND x_coord <= 100::numeric', name='ck_match_events_x_coord'),
         CheckConstraint('y_coord IS NULL OR y_coord >= 0::numeric AND y_coord <= 100::numeric', name='ck_match_events_y_coord'),
+        CheckConstraint("(deleted_at IS NULL AND deleted_reason IS NULL) OR (deleted_at IS NOT NULL AND deleted_reason IS NOT NULL)", name='ck_match_events_deleted_reason'),
         Index('ix_match_events_athlete_id', 'athlete_id', unique=False),
         Index('ix_match_events_event_type', 'event_type', unique=False),
         Index('ix_match_events_match_id', 'match_id', unique=False),
@@ -89,6 +90,8 @@ class MatchEvent(Base):
     related_event_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('match_events.id', name='fk_match_events_related_event_id', ondelete='SET NULL'), nullable=True)
     source: Mapped[str] = mapped_column(sa.String(length=32), nullable=False)
     notes: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
+    deleted_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+    deleted_reason: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
     created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
     created_by_user_id: Mapped[UUID] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('users.id', name='fk_match_events_created_by_user_id', ondelete='RESTRICT'), nullable=False)
     # HB-AUTOGEN:END

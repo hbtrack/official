@@ -72,6 +72,8 @@ class CompetitionPhase(Base):
 
         Index('ix_competition_phases_order', 'competition_id', 'order_index', unique=False),
 
+        CheckConstraint("(deleted_at IS NULL AND deleted_reason IS NULL) OR (deleted_at IS NOT NULL AND deleted_reason IS NOT NULL)", name='ck_competition_phases_deleted_reason'),
+
     )
 
 
@@ -97,6 +99,10 @@ class CompetitionPhase(Base):
     created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
 
     updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    deleted_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+
+    deleted_reason: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
 
     # HB-AUTOGEN:END
     # Primary key

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 SSOT Generator/Validator - HB Track (v1.0)
-SPEC: docs/hbtrack/specs/Gerador SSOTs.md
-CONTRATO: docs/hbtrack/contratos/Contratos SSOTs.md
+SPEC: docs/_canon/specs/Gerador SSOTs.md
+CONTRATO: docs/_canon/contratos/Contratos SSOTs.md
 
 Gera/valida SSOTs canônicos em docs/ssot/:
 - openapi.json

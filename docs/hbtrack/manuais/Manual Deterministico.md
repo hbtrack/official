@@ -103,15 +103,15 @@ Nenhum gate conta se:
 ### 2.1 Audit (execução de gates)
 
 Tudo que é execução de validação/correção produz:
-`_reports/audit/<RUN_ID>/`
+`docs/hbtrack/evidence/AR_<id>/`
 
 Obrigatório:
 
-* `_reports/audit/<RUN_ID>/summary.json`
-* `_reports/audit/<RUN_ID>/context.json`
-* `_reports/audit/<RUN_ID>/checks/<GATE_ID>/stdout.log`
-* `_reports/audit/<RUN_ID>/checks/<GATE_ID>/stderr.log`
-* `_reports/audit/<RUN_ID>/checks/<GATE_ID>/result.json`
+* `docs/hbtrack/evidence/AR_<id>/summary.json`
+* `docs/hbtrack/evidence/AR_<id>/context.json`
+* `docs/hbtrack/evidence/AR_<id>/checks/<GATE_ID>/stdout.log`
+* `docs/hbtrack/evidence/AR_<id>/checks/<GATE_ID>/stderr.log`
+* `docs/hbtrack/evidence/AR_<id>/checks/<GATE_ID>/result.json`
 
 Adicionais (quando aplicável):
 
@@ -372,7 +372,7 @@ Regra “VERIFIED”:
 Runner recomendado:
 
 * `python scripts/audit/audit_runner.py --only <GATE_ID> <GATE_ID> ...`
-  PASS global: exit 0 + Evidence Pack completo em `_reports/audit/<RUN_ID>/`.
+  PASS global: exit 0 + Evidence Pack completo em `docs/hbtrack/evidence/AR_<id>/`.
 
 Execução direta (aceita):
 
@@ -562,7 +562,7 @@ A resposta da IA (e/ou arquivo no case) MUST seguir:
 * SSOT_BINDINGS (arquivos SSOT usados)
 * PATCH_PLAN (arquivos/alterações exatas/risco/side-effects)
 * REQUIRED_GATES (GATE_ID + comando)
-* EVIDENCE_ARTIFACTS (o que será gerado em `_reports/audit/<RUN_ID>/`)
+* EVIDENCE_ARTIFACTS (o que será gerado em `docs/hbtrack/evidence/AR_<id>/`)
 * ROLLBACK_PLAN
 * STATUS_NEXT
 
@@ -572,7 +572,7 @@ A resposta da IA (e/ou arquivo no case) MUST seguir:
 
 Limites:
 
-* logs por gate: preferencialmente em `_reports/audit/.../checks/...`
+* logs por gate: preferencialmente em `docs/hbtrack/evidence/.../checks/...`
 * max recomendado por log: 5 MB / 2000 linhas
 * encoding: UTF-8
 
@@ -676,7 +676,7 @@ MUST existir (Python):
 Recomendado (também como gate):
 
 * `scripts/checks/check_audit_pack.py`
-  Valida: estrutura `_reports/audit/<RUN_ID>/`, presence de context/summary/result, exit code normalizado, base_url, commit.
+  Valida: estrutura `docs/hbtrack/evidence/AR_<id>/`, presence de context/summary/result, exit code normalizado, base_url, commit.
 
 Esses checks MUST estar registrados no `GATES_REGISTRY.yaml`.
 
@@ -712,7 +712,7 @@ Compatibilidade retroativa:
 
 ## 15) Templates mínimos (copiáveis)
 
-### 15.1 `_reports/audit/<RUN_ID>/context.json`
+### 15.1 `docs/hbtrack/evidence/AR_<id>/context.json`
 
 ```json
 {
@@ -732,7 +732,7 @@ Compatibilidade retroativa:
 }
 ```
 
-### 15.2 `_reports/audit/<RUN_ID>/summary.json`
+### 15.2 `docs/hbtrack/evidence/AR_<id>/summary.json`
 
 ```json
 {
@@ -745,7 +745,7 @@ Compatibilidade retroativa:
 }
 ```
 
-### 15.3 `_reports/audit/<RUN_ID>/checks/<GATE_ID>/result.json`
+### 15.3 `docs/hbtrack/evidence/AR_<id>/checks/<GATE_ID>/result.json`
 
 ```json
 {

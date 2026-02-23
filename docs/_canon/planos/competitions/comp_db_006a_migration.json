@@ -1,0 +1,33 @@
+{
+  "project": "HB Track",
+  "version": "1.1.0",
+  "notes": "COMP-DB-006a: As tabelas competitions e competition_matches possuem colunas status e modality com valores DEFAULT definidos, mas SEM CHECK constraints. Gap: sem CHECK constraints, qualquer string pode ser inserida nessas colunas, violando a semântica do domínio (competition.status IN draft/active/finished/cancelled, competition.modality IN masculino/feminino/misto, competition_match.status IN scheduled/in_progress/finished/cancelled). Fix: Migration 0058 adiciona os 3 CHECK constraints via op.create_check_constraint(). down_revision='0057'. Capability: COMPETITIONS. Nota: COMP-DB-005 está BLOQUEADO (PO-PEND-004) e será pulado; esta migration usa down_revision='0057' diretamente.",
+  "assumptions": [
+    "down_revision é '0057' (cadeia: 0055 → 0056 → 0057 → 0058). COMP-DB-005 está BLOQUEADO (PO-PEND-004) e será pulado; 0058 usa down_revision='0057' diretamente.",
+    "Valores válidos confirmados no schema e models: competition.status IN ('draft','active','finished','cancelled'), competition.modality IN ('masculino','feminino','misto'), competition_match.status IN ('scheduled','in_progress','finished','cancelled').",
+    "op.create_check_constraint() é a forma idiomática no Alembic para adicionar CHECK constraints a tabelas existentes.",
+    "O Executor NÃO deve alterar lógica de rotas, schemas Pydantic, services ou qualquer arquivo além do especificado.",
+    "Registros existentes que violem os valores permitidos NÃO deverão existir (os defaults já usam esses valores). Pré-flight seguro.",
+    "Downgrade remove os 3 constraints na ordem inversa.",
+    "Nenhum índice ou FK é alterado por esta migration."
+  ],
+  "tasks": [
+    {
+      "id": "040",
+      "title": "Migration 0058 COMP-DB-006: ADD 3 CHECK constraints status/modality (competitions+matches)",
+      "description": "Criar arquivo Hb Track - Backend/db/alembic/versions/0058_comp_db_006_status_check_constraints.py com revision='0058', down_revision='0057'.\n\nUpgrade:\n  op.create_check_constraint(\n      'ck_competitions_status',\n      'competitions',\n      \"status IN ('draft', 'active', 'finished', 'cancelled')\"\n  )\n  op.create_check_constraint(\n      'ck_competitions_modality',\n      'competitions',\n      \"modality IN ('masculino', 'feminino', 'misto')\"\n  )\n  op.create_check_constraint(\n      'ck_competition_matches_status',\n      'competition_matches',\n      \"status IN ('scheduled', 'in_progress', 'finished', 'cancelled')\"\n  )\n\nDowngrade:\n  op.drop_constraint('ck_competition_matches_status', 'competition_matches', type_='check')\n  op.drop_constraint('ck_competitions_modality', 'competitions', type_='check')\n  op.drop_constraint('ck_competitions_status', 'competitions', type_='check')\n\nDocstring MUST incluir: 'COMP-DB-006: CHECK constraints em competitions.status, competitions.modality, competition_matches.status'.\nNAO modificar nenhum outro arquivo.",
+      "criteria": "1) alembic upgrade head retorna exit_code=0. 2) SELECT constraint_name FROM information_schema.table_constraints WHERE constraint_name IN ('ck_competitions_status','ck_competitions_modality','ck_competition_matches_status') retorna 3 linhas. 3) INSERT com valor inválido (ex: status='INVALID') levanta CheckViolation. 4) alembic downgrade -1 retorna exit_code=0. 5) alembic upgrade head novamente retorna exit_code=0.",
+      "gate": "DB_MIGRATIONS_UPGRADE_HEAD",
+      "ssot_touches": ["docs/ssot/schema.sql", "docs/ssot/alembic_state.txt"],
+      "validation_command": "python -c \"import pathlib; f=pathlib.Path('Hb Track - Backend/db/alembic/versions/0058_comp_db_006_status_check_constraints.py'); assert f.exists(),'FAIL: migration file not found'; c=f.read_text(encoding='utf-8'); assert \\\"revision = '0058'\\\" in c,'FAIL: wrong revision id'; assert \\\"down_revision = '0057'\\\" in c or \\\"down_revision='0057'\\\" in c,'FAIL: wrong down_revision'; ck=['ck_competitions_status','ck_competitions_modality','ck_competition_matches_status']; missing=[k for k in ck if k not in c]; assert not missing,f'FAIL: missing constraints {missing}'; assert 'create_check_constraint' in c,'FAIL: create_check_constraint not used'; print('PASS: migration 0058 content validated with 3 CHECK constraints')\"",
+      "evidence_file": "docs/hbtrack/evidence/AR_040_comp_db_006_check_constraints_migration.log",
+      "rollback_plan": "alembic downgrade -1\n# OU manualmente:\n# ALTER TABLE competition_matches DROP CONSTRAINT IF EXISTS ck_competition_matches_status;\n# ALTER TABLE competitions DROP CONSTRAINT IF EXISTS ck_competitions_modality;\n# ALTER TABLE competitions DROP CONSTRAINT IF EXISTS ck_competitions_status;",
+      "risks": [
+        "Se existirem registros com valores de status/modality que não estejam nos conjuntos permitidos, a migration falhará com CheckViolation. Pré-flight recomendado: SELECT DISTINCT status FROM competitions; SELECT DISTINCT modality FROM competitions; SELECT DISTINCT status FROM competition_matches.",
+        "op.create_check_constraint em Alembic pode gerar nomes diferentes dependendo da versão. Usar o nome explícito fornecido.",
+        "Se COMP-DB-005 for implementado no futuro, sua migration deverá usar um slot de revision diferente (ex: 0058a) para não conflitar com a cadeia linear. Arquiteto deverá reorganizar nesse momento.",
+        "PostgreSQL cria locks ACCESS EXCLUSIVE para ALTER TABLE ADD CONSTRAINT. Em produção com dados, executar em janela de manutenção."
+      ]
+    }
+  ]
+}

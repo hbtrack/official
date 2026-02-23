@@ -37,7 +37,7 @@ Para você ter autonomia, este é o resumo do seu "Modo de Operar" (Workflow):
 | **3. Execução** | Cline | O Cline lê a AR, preenche a "Análise de Impacto" e escreve o código. |
 | **4. Validação** | `hb report` | Você (ou o Cline) roda o comando de teste. O resultado é carimbado na AR. |
 | **5. Selagem** | `git commit` | O Guardião (`hb check`) garante que você não esqueceu nada e que o banco está íntegro. |
-
+| **6. Gemini 2-5 flash** | ROO CODE | Api criada e conectada no ROO COODE |
 ---
 
 Excelente! O fato de o comando ter retornado "VÁLIDO" na sua CLI principal é a prova de que a refatoração foi bem-sucedida. O sistema voltou a "dar partida".

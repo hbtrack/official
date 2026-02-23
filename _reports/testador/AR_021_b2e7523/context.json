@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_021-b2e7523",
+  "timestamp_utc": "2026-02-21T10:49:44.142968+00:00",
+  "git": {
+    "commit": "b2e75234d5e3757507fdce48f06b3a57fde125a8"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "021",
+  "ar_file": "docs\\hbtrack\\ars\\AR_021_dual_executor_contract_protocolo_de_2_agentes_exec.md"
+}

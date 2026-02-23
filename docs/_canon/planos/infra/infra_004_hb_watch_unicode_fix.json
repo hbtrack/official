@@ -1,0 +1,30 @@
+{
+  "project": "HB Track",
+  "version": "1.1.0",
+  "notes": "Dois bugs críticos em hb_watch.py: (1) UnicodeEncodeError no Windows (cp1252 + emoji) e (2) INDEX_PATH aponta para índice LEGADO docs/hbtrack/ars/_INDEX.md que usa status DRAFT — violando DEV FLOW R-AR-4 que define PENDENTE como status inicial. O índice canônico correto é docs/hbtrack/_INDEX.md (escrito por rebuild_ar_index()). Ambos os fixes são no mesmo arquivo scripts/run/hb_watch.py.",
+  "assumptions": [
+    "Python 3.11.9 instalado localmente (ver Ambiente.md).",
+    "hb_watch.py está em scripts/run/hb_watch.py — sem mover ou renomear.",
+    "Fix 1 (stdout): idêntico ao hb_cli.py:31-32 — inserir após imports, antes do bloco CONFIG.",
+    "Fix 2 (INDEX_PATH): alterar linha 20 de 'docs/hbtrack/ars/_INDEX.md' para 'docs/hbtrack/_INDEX.md' (caminho canônico do DEV FLOW §2.2).",
+    "infra_003_hb_watch.json é um artefato Arquiteto — pode ser atualizado pelo Executor no mesmo ciclo pois está em docs/_canon/planos/ (escopo permitido via AR).",
+    "Nenhuma lógica de classificação ou triggers é alterada — fixes de encoding e path puros."
+  ],
+  "tasks": [
+    {
+      "id": "053",
+      "title": "hb_watch.py — Windows UTF-8 stdout fix + contract sync",
+      "description": "DOIS BUGS EM hb_watch.py v1.1.0:\n\n--- BUG 1: UnicodeEncodeError no Windows ---\nhb_watch.py falha com UnicodeEncodeError ao imprimir '👀 HB Watch v1.1.0...' (main():145).\nO stdout padrão no Windows usa codec cp1252, que não suporta emoji. Erro exato:\n\n  UnicodeEncodeError: 'charmap' codec can't encode character '\\U0001f440' in position 0\n\nFIX 1 (padrão canônico — hb_cli.py:31-32):\n  Inserir após a última linha de import (após 'import pathlib'), antes do bloco '# CONFIG':\n\n    # Windows UTF-8 fix (idem hb_cli.py:31-32)\n    if sys.platform == \"win32\":\n        sys.stdout.reconfigure(encoding=\"utf-8\")\n\n--- BUG 2: INDEX_PATH aponta para índice LEGADO ---\nhb_watch.py:20 define:\n  INDEX_PATH = pathlib.Path(\"docs/hbtrack/ars/_INDEX.md\")\n\nEsse arquivo é o índice LEGADO (formato antigo) que usa status 'DRAFT' — violando\nDEV FLOW §11.3 / R-AR-4, que define 🔲 PENDENTE como status inicial do semáforo.\n\nO índice CANÔNICO (escrito por hb_cli.py rebuild_ar_index(), DEV FLOW §2.2) é:\n  docs/hbtrack/_INDEX.md  (usa 🔲 PENDENTE conforme contrato)\n\nFIX 2:\n  Alterar linha 20 de:\n    INDEX_PATH = pathlib.Path(\"docs/hbtrack/ars/_INDEX.md\")\n  Para:\n    INDEX_PATH = pathlib.Path(\"docs/hbtrack/_INDEX.md\")\n\n--- TERCIÁRIO — CONTRACT SYNC ---\n  infra_003_hb_watch.json documenta v1.0.0 mas a implementação é v1.1.0.\n  Divergências identificadas (6): version, bucket review, PEND trigger, TESTE trigger,\n  snapshot scope, AR reference (AR_034 vs AR_035).\n  O Executor deve atualizar as notes de infra_003_hb_watch.json.",
+      "criteria": "1. grep 'sys.stdout.reconfigure' scripts/run/hb_watch.py retorna 1 match.\n2. grep 'docs/hbtrack/_INDEX.md' scripts/run/hb_watch.py retorna 1 match (SEM 'ars/' no path).\n3. python scripts/run/hb_watch.py --check exits 0 sem UnicodeEncodeError.\n4. python scripts/run/hb_watch.py --once exits 0 (output contém 'HB Watch' sem crash).\n5. infra_003_hb_watch.json atualizado com nota de divergências.",
+      "evidence_file": "docs/hbtrack/evidence/AR_053_hb_watch_unicode_fix.log",
+      "validation_command": "python scripts/run/hb_watch.py --check && python scripts/run/hb_watch.py --once",
+      "notes": "FIX 1 (stdout — após 'import pathlib', antes de '# ========== CONFIG'):\n\n  # Windows UTF-8 fix (idem hb_cli.py:31-32)\n  if sys.platform == \"win32\":\n      sys.stdout.reconfigure(encoding=\"utf-8\")\n\nFIX 2 (INDEX_PATH — linha 20 do arquivo):\n  ANTES: INDEX_PATH = pathlib.Path(\"docs/hbtrack/ars/_INDEX.md\")\n  DEPOIS: INDEX_PATH = pathlib.Path(\"docs/hbtrack/_INDEX.md\")\n\nApós o Fix 2, hb_watch lerá o índice canônico com status 🔲 PENDENTE (não DRAFT).\nO docs/hbtrack/ars/_INDEX.md (legado) deve ser mantido em disco — não deletar.\nO fix de stdout é idempotente em Linux/macOS (sys.platform != 'win32' → ignorado).",
+      "risks": [
+        "sys.stdout.reconfigure() só existe a partir do Python 3.7 — OK pois projeto usa Python 3.11.9.",
+        "Fix 2: o docs/hbtrack/_INDEX.md pode ter statuses diferentes do docs/hbtrack/ars/_INDEX.md — o hb_watch passará a mostrar os statuses reais (🔲 PENDENTE, ✅ SUCESSO etc.) em vez de DRAFT.",
+        "hb_watch EXECUTOR_TRIGGERS inclui 'DRAFT' como trigger — após Fix 2, ARs com status DRAFT não existem mais no índice canônico, portanto esse trigger não disparará. Isso é comportamento correto.",
+        "infra_003_hb_watch.json: atualizar apenas campos informativos — NÃO quebrar estrutura JSON."
+      ]
+    }
+  ]
+}

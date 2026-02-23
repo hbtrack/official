@@ -1,0 +1,47 @@
+{
+  "project": "HB Track",
+  "version": "1.0.6",
+  "notes": "COMP-DB-001: Soft delete (deleted_at/deleted_reason + trigger trg_block_physical_delete) em 5 tabelas do domínio COMPETITIONS: competition_matches, competition_opponent_teams, competition_phases, match_events, match_roster. competition_standings EXCLUÍDO deste escopo (decisão PO-PEND-004 — ver COMP-DB-005). Plano detalhado completo em docs/_canon/planos/comp_db_001_soft_delete_competition_tables.json. Este arquivo é o card canônico de referência para o Kanban. Alembic chain: 0fb0f76b48a7 → 0053 → 0054 → 0055 (nova migration). Capability: COMPETITIONS. Risco PRD: RDB4 (soft delete mandatório) + LGPD Art. 18 (direito ao apagamento).",
+  "assumptions": [
+    "A função public.trg_block_physical_delete() já existe no banco (confirmado em docs/ssot/schema.sql linha 383).",
+    "Padrão canônico soft delete: deleted_at timestamptz NULL + deleted_reason text NULL + CHECK ck_<table>_deleted_reason.",
+    "Padrão canônico trigger: BEFORE DELETE ON <table> FOR EACH ROW EXECUTE FUNCTION public.trg_block_physical_delete() com nome trg_<table>_block_delete.",
+    "Down-revision da migration 0055 é '0054' (cadeia: 0053 → 0054 → 0055).",
+    "competition_standings excluído: tabela de cache recalculável sem dados pessoais diretos — requer decisão PO separada (ver COMP-DB-005).",
+    "DDL-only: zero backfill — deleted_at=NULL por padrão em todos os registros existentes.",
+    "O Executor NÃO deve alterar lógica de negócio, queries, rotas ou outros campos além dos listados.",
+    "Plano detalhado com código Alembic completo disponível em: docs/_canon/planos/comp_db_001_soft_delete_competition_tables.json"
+  ],
+  "tasks": [
+    {
+      "id": "008",
+      "title": "Migration 0055: soft delete em 5 tabelas domínio COMPETITIONS",
+      "description": "Criar arquivo Hb Track - Backend/db/alembic/versions/0055_comp_db_001_soft_delete_competition_tables.py com revision='0055', down_revision='0054'.\n\nPara cada tabela (competition_matches, competition_opponent_teams, competition_phases, match_events, match_roster) — nesta ordem:\n  op.add_column('<table>', sa.Column('deleted_at', sa.DateTime(timezone=True), nullable=True))\n  op.add_column('<table>', sa.Column('deleted_reason', sa.Text(), nullable=True))\n  op.create_check_constraint('ck_<table>_deleted_reason', '<table>', '(deleted_at IS NULL AND deleted_reason IS NULL) OR (deleted_at IS NOT NULL AND deleted_reason IS NOT NULL)')\n  op.execute('CREATE TRIGGER trg_<table>_block_delete BEFORE DELETE ON <table> FOR EACH ROW EXECUTE FUNCTION public.trg_block_physical_delete()')\n\nDowngrade (ordem inversa — triggers → constraints → colunas):\n  TABLES = ['match_roster', 'match_events', 'competition_phases', 'competition_opponent_teams', 'competition_matches']\n  for t in TABLES: op.execute(f'DROP TRIGGER IF EXISTS trg_{t}_block_delete ON {t}')\n  for t in TABLES: op.drop_constraint(f'ck_{t}_deleted_reason', t)\n  for t in TABLES: op.drop_column(t, 'deleted_reason'); op.drop_column(t, 'deleted_at')\n\nVer código completo em: docs/_canon/planos/comp_db_001_soft_delete_competition_tables.json task id=008.",
+      "criteria": "1) alembic upgrade head retorna exit_code=0. 2) deleted_at e deleted_reason existem nas 5 tabelas (information_schema.columns, 2 linhas por tabela = 10 linhas total). 3) 5 triggers trg_<table>_block_delete existem (information_schema.triggers). 4) 5 CHECK constraints ck_<table>_deleted_reason existem. 5) alembic downgrade -1 retorna exit_code=0. 6) alembic upgrade head novamente retorna exit_code=0.",
+      "gate": "DB_MIGRATIONS_UPGRADE_HEAD",
+      "ssot_touches": ["docs/ssot/schema.sql", "docs/ssot/alembic_state.txt"],
+      "validation_command": "python -m pytest \"Hb Track - Backend/tests/\" -x --tb=short -q",
+      "evidence_file": "docs/hbtrack/evidence/AR_008_comp_db_001_soft_delete_migration.log",
+      "rollback_plan": "alembic downgrade -1\n# OU manualmente (ordem exata):\n# DROP TRIGGER IF EXISTS trg_match_roster_block_delete ON match_roster;\n# DROP TRIGGER IF EXISTS trg_match_events_block_delete ON match_events;\n# DROP TRIGGER IF EXISTS trg_competition_phases_block_delete ON competition_phases;\n# DROP TRIGGER IF EXISTS trg_competition_opponent_teams_block_delete ON competition_opponent_teams;\n# DROP TRIGGER IF EXISTS trg_competition_matches_block_delete ON competition_matches;\n# ALTER TABLE match_roster DROP CONSTRAINT IF EXISTS ck_match_roster_deleted_reason;\n# [... repetir para demais tabelas em ordem inversa ...]\n# ALTER TABLE competition_matches DROP COLUMN IF EXISTS deleted_reason, DROP COLUMN IF EXISTS deleted_at;",
+      "risks": [
+        "match_events.deleted_at=NULL em todos os registros existentes — queries com WHERE deleted_at IS NULL retornarão todos os eventos históricos (comportamento correto mas deve ser documentado para serviços existentes).",
+        "O trigger trg_match_events_block_delete bloqueia DELETE físico — serviços que fazem DELETE direto precisarão usar soft delete. Verificar match_event_service.py antes de executar.",
+        "Disponível: plano detalhado com código completo em docs/_canon/planos/comp_db_001_soft_delete_competition_tables.json"
+      ]
+    },
+    {
+      "id": "009",
+      "title": "Models: soft delete (deleted_at, deleted_reason) nos 5 models do domínio COMPETITIONS",
+      "description": "Atualizar os 5 models SQLAlchemy para refletir as colunas adicionadas na task 001.\nArquivos: competition_match.py, competition_opponent_team.py, competition_phase.py, match_event.py, match_roster.py.\nEm cada model, dentro do bloco HB-AUTOGEN:BEGIN/END:\n  (1) Adicionar ao __table_args__: CheckConstraint('(deleted_at IS NULL AND deleted_reason IS NULL) OR (deleted_at IS NOT NULL AND deleted_reason IS NOT NULL)', name='ck_<table>_deleted_reason')\n  (2) Adicionar campos: deleted_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True) e deleted_reason: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)\n  (3) Verificar imports datetime e Optional.\n\nVer código completo em: docs/_canon/planos/comp_db_001_soft_delete_competition_tables.json task id=009.",
+      "criteria": "1) Todos os 5 models importam sem erro. 2) deleted_at e deleted_reason presentes em todos. 3) __table_args__ contém ck_<table>_deleted_reason em todos. 4) Mapped[Optional[datetime]] e Mapped[Optional[str]] com nullable=True.",
+      "gate": "GATE_MODEL_SYNC",
+      "validation_command": "python -c \"import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition_match import CompetitionMatch; from app.models.competition_opponent_team import CompetitionOpponentTeam; from app.models.competition_phase import CompetitionPhase; from app.models.match_event import MatchEvent; from app.models.match_roster import MatchRoster; models=[CompetitionMatch,CompetitionOpponentTeam,CompetitionPhase,MatchEvent,MatchRoster]; errs=[f'{m.__name__}:missing {f}' for m in models for f in ['deleted_at','deleted_reason'] if not hasattr(m,f)]; [print(e) for e in errs]; sys.exit(len(errs)) if errs else print('PASS')\"",
+      "evidence_file": "docs/hbtrack/evidence/AR_009_comp_db_001_soft_delete_models.log",
+      "rollback_plan": "git restore 'Hb Track - Backend/app/models/competition_match.py' 'Hb Track - Backend/app/models/competition_opponent_team.py' 'Hb Track - Backend/app/models/competition_phase.py' 'Hb Track - Backend/app/models/match_event.py' 'Hb Track - Backend/app/models/match_roster.py'",
+      "risks": [
+        "match_event.py já tem 7+ CheckConstraints em __table_args__ — adicionar ck_match_events_deleted_reason como último item sem remover os existentes.",
+        "Bloco HB-AUTOGEN é auto-gerado — documentar que deleted_at/deleted_reason foram adicionados manualmente no ciclo COMP-DB-001."
+      ]
+    }
+  ]
+}

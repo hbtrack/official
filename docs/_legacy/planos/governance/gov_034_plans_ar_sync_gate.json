@@ -1,0 +1,29 @@
+{
+  "project": "HB Track",
+  "version": "1.1.0",
+  "notes": "Governança de Plans: garantir que todo plano JSON tenha AR correspondente materializada. Implementa gate de validação pré-commit para evitar plans órfãos sem ARs.",
+  "assumptions": [
+    "Plans JSON vivem em docs/_canon/planos/",
+    "ARs materializadas vivem em docs/hbtrack/ars/",
+    "Relação canônica: plan arquivo_xyz.json → AR_{ID}_*.md onde ID é extraído do plan.tasks[0].id",
+    "hb_cli.py já possui lógica de materialização (hb plan)"
+  ],
+  "tasks": [
+    {
+      "id": "034",
+      "title": "Governança Plans — Gate JSON-to-AR obrigatório",
+      "description": "Criar gate de validação que assegura que todo plan JSON em docs/_canon/planos/ possui AR correspondente materializada em docs/hbtrack/ars/. O gate MUST: (1) Escanear todos os arquivos .json em PLANS_DIR; (2) Para cada plan JSON, extrair task IDs e verificar existência de AR_{ID}_*.md em AR_DIR; (3) Retornar exit code 0 se todos os plans têm ARs, exit code 2 se houver plans órfãos; (4) Listar plans órfãos no stderr para ação corretiva. O gate será chamado por hb check --mode pre-commit para bloquear commits com plans não-materializados. Implementação: script Python scripts/checks/check_plans_ar_sync.py que usa pathlib para scan de arquivos, json.load para extrair IDs e glob para localizar ARs. Output format: JSON com {\"status\": \"PASS|FAIL\", \"orphan_plans\": [\"file1.json\", ...], \"total_plans\": N, \"total_ars\": M}. Anti-falso-positivo: gate MUST falhar se encontrar plan com tasks mas nenhuma AR correspondente.",
+      "criteria": "1) scripts/checks/check_plans_ar_sync.py existe e é executável via Python 3.11. 2) Executar o gate em workspace limpo retorna exit 0 e status PASS (todos os plans têm ARs). 3) Criar plan de teste test_orphan.json sem materializar AR, executar gate → exit 2, orphan_plans contém test_orphan.json. 4) Gate integrado ao hb check --mode pre-commit (modificar hb_cli.py para chamar o gate). 5) Gate registrado em docs/_canon/_agent/GATES_REGISTRY.yaml com id PLANS_AR_SYNC_CHECK.",
+      "validation_command": "python scripts/checks/check_plans_ar_sync.py && python -c \"import json; result=json.load(open('_reports/audit/PLANS_AR_SYNC/result.json')); assert result['status']=='PASS', f'FAIL: {result}'\"",
+      "evidence_file": "docs/hbtrack/evidence/AR_034_gov_plans_json_ar_sync_validation.log",
+      "ssot_touches": [],
+      "rollback_plan": "git revert <commit_hash>\n# OU manualmente:\n# git restore scripts/checks/check_plans_ar_sync.py\n# git restore scripts/run/hb_cli.py (se modificado)\n# git restore docs/_canon/_agent/GATES_REGISTRY.yaml",
+      "notes": "Este gate é crítico para governança: evita que Arquiteto crie plans sem materializar ARs, o que quebraria a auditoria. O gate deve ser rápido (<5s) para não atrasar pre-commit hooks. Considerar cache de scan se PLANS_DIR crescer >100 arquivos.",
+      "risks": [
+        "Plans legados podem não seguir convenção AR_{ID} exata — gate deve ter tolerância para variações (ex: AR_003.5_*.md).",
+        "Se AR for deletada manualmente mas plan JSON permanecer, gate vai falhar — comportamento correto, mas pode surpreender usuário.",
+        "Gate MUST ignorar arquivos .json que não são plans válidos (ex: schema.json, config.json) — filtrar por presença de campo 'tasks' no JSON."
+      ]
+    }
+  ]
+}

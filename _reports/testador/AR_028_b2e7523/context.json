@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_028-b2e7523",
+  "timestamp_utc": "2026-02-21T10:50:09.802866+00:00",
+  "git": {
+    "commit": "b2e75234d5e3757507fdce48f06b3a57fde125a8"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "028",
+  "ar_file": "docs\\hbtrack\\ars\\AR_028_hblock_concurrency_lock_atômico_para_hb_cli.py_3_a.md"
+}

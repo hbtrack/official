@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_047-b2e7523",
+  "timestamp_utc": "2026-02-22T17:57:59.563665+00:00",
+  "git": {
+    "commit": "b2e75234d5e3757507fdce48f06b3a57fde125a8"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "047",
+  "ar_file": "docs\\hbtrack\\ars\\drafts\\AR_047_sync_ar_003_status_desconhecido_→_sucesso_no__inde.md"
+}

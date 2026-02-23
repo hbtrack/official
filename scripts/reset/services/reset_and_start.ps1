@@ -102,7 +102,7 @@ if ($nodeProcess) {
 }
 
 # Verificar se existe package.json no frontend
-$frontendPath = "c:\HB TRACK\Hb Track - Fronted"
+$frontendPath = "c:\HB TRACK\Hb Track - Frontend"
 if (-not (Test-Path "$frontendPath\package.json")) {
     Write-Host "[ERRO] package.json não encontrado em $frontendPath" -ForegroundColor Red
     exit 1

@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_011-b2e7523",
+  "timestamp_utc": "2026-02-21T10:48:37.393603+00:00",
+  "git": {
+    "commit": "b2e75234d5e3757507fdce48f06b3a57fde125a8"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "011",
+  "ar_file": "docs\\hbtrack\\ars\\AR_011_hb_cli.py_rebuild_ar_index_-_auto-rebuild__index.m.md"
+}

@@ -1,0 +1,48 @@
+{
+  "project": "HB Track",
+  "version": "1.1.0",
+  "notes": "COMP-DB-003: A tabela competitions possui points_per_win (DEFAULT 2) mas NÃO possui points_per_draw nem points_per_loss. Sem esses campos, o cálculo de classificação usa valores hardcoded nos serviços, impedindo a configuração por torneio (ex: handebol usa win=2, draw=1, loss=0; mas competições futsal ou americano podem variar). Gap identificado: competitions.points_per_draw e competitions.points_per_loss ausentes. PRD §4.2: sistema deve suportar pontuação configurável. Migration 0056, down_revision='0055'. Atualiza model competition.py dentro do bloco HB-AUTOGEN:BEGIN/END. ARs geradas: AR_036 (migration), AR_037 (model).",
+  "assumptions": [
+    "Alembic down_revision é '0055' (sequência numérica: 0054 → 0055 → 0056).",
+    "DEFAULT para points_per_draw = 1 (empate = 1 ponto — padrão handebol CBHb).",
+    "DEFAULT para points_per_loss = 0 (derrota = 0 pontos — padrão universal).",
+    "Colunas são nullable=False com server_default — zero downtime, sem backfill manual (todos os registros existentes recebem os defaults automaticamente).",
+    "O Executor NÃO deve alterar lógica de cálculo, rotas, schemas Pydantic ou qualquer arquivo além dos listados.",
+    "points_per_win já existe na tabela (DEFAULT 2) — NÃO alterar essa coluna.",
+    "Modelo competition.py usa bloco HB-AUTOGEN:BEGIN/END — inserir dentro desse bloco.",
+    "CheckConstraint da função trg_block_physical_delete não é necessário para estas colunas (são dados operacionais, não soft delete)."
+  ],
+  "tasks": [
+    {
+      "id": "036",
+      "title": "Migration 0056: ADD COLUMN competitions.points_per_draw + competitions.points_per_loss",
+      "description": "Criar arquivo Hb Track - Backend/db/alembic/versions/0056_comp_db_003_scoring_rules_competitions.py com revision='0056', down_revision='0055'.\n\nUpgrade:\n  op.add_column('competitions', sa.Column('points_per_draw', sa.Integer(), nullable=False, server_default=sa.text('1')))\n  op.add_column('competitions', sa.Column('points_per_loss', sa.Integer(), nullable=False, server_default=sa.text('0')))\n\nDowngrade:\n  op.drop_column('competitions', 'points_per_loss')\n  op.drop_column('competitions', 'points_per_draw')\n\nDocstring da migration MUST incluir: 'COMP-DB-003: scoring rules — points_per_draw e points_per_loss em competitions'.\nNAO modificar nenhum outro arquivo.",
+      "criteria": "1) alembic upgrade head retorna exit_code=0 sem erros. 2) SELECT column_name, column_default FROM information_schema.columns WHERE table_name='competitions' AND column_name IN ('points_per_draw','points_per_loss') retorna 2 linhas com defaults '1' e '0'. 3) SELECT points_per_draw, points_per_loss FROM competitions LIMIT 1 retorna valores 1 e 0 para registros existentes. 4) alembic downgrade -1 retorna exit_code=0. 5) alembic upgrade head novamente retorna exit_code=0.",
+      "gate": "DB_MIGRATIONS_UPGRADE_HEAD",
+      "ssot_touches": ["docs/ssot/schema.sql", "docs/ssot/alembic_state.txt"],
+      "validation_command": "python -c \"import pathlib; f=pathlib.Path('Hb Track - Backend/db/alembic/versions/0056_comp_db_003_scoring_rules_competitions.py'); assert f.exists(),'FAIL: migration file not found'; c=f.read_text(encoding='utf-8'); assert \\\"revision = '0056'\\\" in c,'FAIL: wrong revision id'; assert 'points_per_draw' in c,'FAIL: points_per_draw missing'; assert 'points_per_loss' in c,'FAIL: points_per_loss missing'; assert 'server_default' in c,'FAIL: server_default missing'; assert \\\"down_revision = '0055'\\\" in c or \\\"down_revision='0055'\\\" in c,'FAIL: wrong down_revision'; print('PASS: migration 0056 content validated')\"",
+      "evidence_file": "docs/hbtrack/evidence/AR_036_comp_db_003_scoring_rules_migration.log",
+      "rollback_plan": "alembic downgrade -1\n# OU manualmente:\n# ALTER TABLE competitions DROP COLUMN IF EXISTS points_per_loss;\n# ALTER TABLE competitions DROP COLUMN IF EXISTS points_per_draw;",
+      "risks": [
+        "Serviços que calculam classificação com valores hardcoded (ex: DRAW_POINTS = 1) podem entrar em conflito com os valores configurados no banco após a migration. Verificar competition_service.py (ou equivalente) — mas NÃO alterar neste escopo.",
+        "nullable=False com server_default garante zero downtime. Registros existentes receberão points_per_draw=1 e points_per_loss=0 automaticamente.",
+        "Se o Alembic gerar autogenerate após esta migration, ele detectará os novos campos — OK, é o comportamento esperado."
+      ]
+    },
+    {
+      "id": "037",
+      "title": "Model: Competition.points_per_draw + Competition.points_per_loss em competition.py",
+      "description": "Atualizar Hb Track - Backend/app/models/competition.py para refletir as colunas adicionadas na task AR_036.\nDentro do bloco HB-AUTOGEN:BEGIN/END, após a linha de points_per_win (linha ~120), adicionar:\n\n  points_per_draw: Mapped[int] = mapped_column(sa.Integer(), nullable=False, server_default=sa.text('1'))\n\n  points_per_loss: Mapped[int] = mapped_column(sa.Integer(), nullable=False, server_default=sa.text('0'))\n\nVerificar que imports já presentes: sa (sqlalchemy), Mapped, mapped_column.\nNAO alterar __table_args__, outros campos, relationships ou lógica fora do bloco HB-AUTOGEN.",
+      "criteria": "1) python -c 'import sys; sys.path.insert(0, \"Hb Track - Backend\"); from app.models.competition import Competition; assert hasattr(Competition, \"points_per_draw\"); assert hasattr(Competition, \"points_per_loss\"); print(\"PASS\")' retorna exit_code=0. 2) Campos são Mapped[int] com nullable=False e server_default='1'/'0'. 3) from app.models.competition import Competition não levanta ImportError nem AttributeError.",
+      "gate": "GATE_MODEL_SYNC",
+      "ssot_touches": [],
+      "validation_command": "python -c \"import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition import Competition; fields=['points_per_draw','points_per_loss']; missing=[f for f in fields if not hasattr(Competition,f)]; assert not missing,f'FAIL: missing fields {missing}'; print(f'PASS: {fields} present in Competition')\"",
+      "evidence_file": "docs/hbtrack/evidence/AR_037_comp_db_003_scoring_rules_model.log",
+      "rollback_plan": "git revert HEAD  # se já commitado: desfaz o commit que adicionou os campos\n# OU, antes de commit:\ngit restore 'Hb Track - Backend/app/models/competition.py'",
+      "risks": [
+        "O bloco HB-AUTOGEN é marcado como AUTO-GENERATED — alterar manualmente pode ser sobrescrito em reruns do autogenerator. Documentar em commit que points_per_draw/points_per_loss foram adicionados no ciclo COMP-DB-003.",
+        "Garantir que Mapped[int] (não Optional) está correto dado nullable=False — não introduzir Optional desnecessário."
+      ]
+    }
+  ]
+}

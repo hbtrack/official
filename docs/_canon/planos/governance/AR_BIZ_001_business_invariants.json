@@ -1,0 +1,73 @@
+{
+  "project": "HB Track",
+  "version": "1.1.0",
+  "notes": "Plano para implementar Invariantes de Negocio no PostgreSQL para Handebol de QUADRA. Materializa regras criticas como constraints e triggers no banco de dados.",
+  "assumptions": [
+    "O sistema usa defensive_positions.id=5 como Goleira conforme RD13",
+    "A tabela attendance vincula athletes a training_sessions",
+    "Ja existe trigger fn_sync_birth_date_athletes_to_persons",
+    "PostgreSQL 12+ em uso"
+  ],
+  "tasks": [
+    {
+      "id": "056",
+      "title": "CONSTRAINT_GOALKEEPER: Validar Goleira Obrigatoria por Sessao",
+      "description": "CONTEXTO: Handebol de QUADRA exige ao menos UMA goleira (position_id=5) por sessao de treino/jogo. ARQUIVO ALVO: docs/ssot/schema.sql. TARGET: Adicionar trigger que valide presenca de pelo menos uma atleta com main_defensive_position_id=5 na tabela attendance. PASSOS: (1) Criar funcao fn_validate_goalkeeper_in_session() que conta atletas goleiras presentes. (2) Criar trigger trg_validate_goalkeeper BEFORE INSERT OR UPDATE ON attendance. (3) Adicionar COMMENT na tabela training_sessions documentando invariante. (4) Atualizar schema.sql. (5) Gerar migracao Alembic.",
+      "criteria": "1) Funcao fn_validate_goalkeeper_in_session() existe. 2) Trigger trg_validate_goalkeeper existe na tabela attendance. 3) INSERT sem goleira resulta em EXCEPTION CONSTRAINT_GOALKEEPER. 4) UPDATE removendo ultima goleira resulta em EXCEPTION. 5) INSERT valido com goleira passa. 6) Migracao Alembic gerada e listada em alembic_state.txt.",
+      "gate": "GATE_DB_INTEGRITY",
+      "validation_command": "cd 'Hb Track - Backend' ; python -m pytest tests/business_rules/test_goalkeeper_constraint.py -v --tb=short",
+      "evidence_file": "docs/hbtrack/evidence/AR_056_goalkeeper_constraint.log",
+      "ssot_touches": [
+        "docs/ssot/schema.sql",
+        "docs/ssot/alembic_state.txt"
+      ],
+      "rollback_plan": "1) Executar: cd 'Hb Track - Backend' ; alembic downgrade -1. 2) Remover manualmente: DROP TRIGGER IF EXISTS trg_validate_goalkeeper ON attendance; DROP FUNCTION IF EXISTS fn_validate_goalkeeper_in_session(). 3) Rodar scripts/gen_docs_ssot.py. 4) git revert se necessario.",
+      "notes": "ATENCAO: Constraint pode bloquear dados historicos sem goleira. Validar antes de aplicar trigger. Considerar flag de habilitacao progressiva.",
+      "risks": [
+        "Dados historicos podem violar constraint - data migration necessaria",
+        "Performance: trigger executa COUNT - considerar indice em training_session_id",
+        "Sessoes de captacao podem nao ter goleira - validar session_type"
+      ]
+    },
+    {
+      "id": "057",
+      "title": "CONSTRAINT_OFFENSIVE_POS: Posicoes Ofensivas Obrigatorias para Jogadoras de Linha",
+      "description": "CONTEXTO: Jogadoras de LINHA (position_id != 5) DEVEM ter posicoes ofensivas definidas. Goleiras podem ter NULL. ARQUIVO ALVO: docs/ssot/schema.sql. TARGET: Adicionar CHECK constraint na tabela athletes. PASSOS: (1) Adicionar constraint: ALTER TABLE athletes ADD CONSTRAINT ck_offensive_positions_required CHECK ((main_defensive_position_id = 5) OR (main_defensive_position_id != 5 AND main_offensive_position_id IS NOT NULL AND secondary_offensive_position_id IS NOT NULL)). (2) Adicionar COMMENT documentando regra. (3) Atualizar schema.sql. (4) Gerar migracao Alembic. (5) VALIDAR dados existentes antes de aplicar.",
+      "criteria": "1) Constraint ck_offensive_positions_required existe em athletes. 2) INSERT de goleira com offensive NULL passa. 3) INSERT de jogadora linha com offensive NULL resulta em constraint violation. 4) INSERT de jogadora linha com ambas offensive preenchidas passa. 5) Migracao Alembic gerada e listada.",
+      "gate": "GATE_DB_INTEGRITY",
+      "validation_command": "cd 'Hb Track - Backend' ; python -m pytest tests/business_rules/test_offensive_positions_constraint.py -v --tb=short",
+      "evidence_file": "docs/hbtrack/evidence/AR_057_offensive_positions_constraint.log",
+      "ssot_touches": [
+        "docs/ssot/schema.sql",
+        "docs/ssot/alembic_state.txt"
+      ],
+      "rollback_plan": "1) Executar: cd 'Hb Track - Backend' ; alembic downgrade -1. 2) Remover constraint: ALTER TABLE athletes DROP CONSTRAINT IF EXISTS ck_offensive_positions_required. 3) Rodar scripts/gen_docs_ssot.py. 4) git revert se necessario.",
+      "notes": "Constraint aplicada na tabela athletes, nao em attendance. Verificar atletas legados antes de aplicar.",
+      "risks": [
+        "Dados legados podem ter atletas sem posicoes ofensivas - data cleaning necessario",
+        "Importacoes bulk podem falhar",
+        "Frontend deve forcar preenchimento de ambas posicoes para nao-goleiras"
+      ]
+    },
+    {
+      "id": "058",
+      "title": "CONSTRAINT_DATE_PARITY: Paridade de birth_date entre athletes e persons",
+      "description": "CONTEXTO: athletes e persons possuem birth_date NOT NULL. Ja existe trigger athletes->persons. Este plano implementa sincronizacao bidirecional. ARQUIVO ALVO: docs/ssot/schema.sql. TARGET: Trigger reverso persons->athletes e validacao de paridade. PASSOS: (1) Criar funcao fn_sync_birth_date_persons_to_athletes() que sincroniza UPDATE em persons para athletes. (2) Criar trigger trg_sync_birth_date_persons_to_athletes AFTER UPDATE ON persons. (3) Criar funcao de validacao fn_validate_birth_date_parity(). (4) Criar trigger de validacao BEFORE INSERT OR UPDATE em athletes. (5) Adicionar COMMENT documentando sincronizacao bidirecional. (6) Atualizar schema.sql. (7) Gerar migracao Alembic. (8) VALIDAR dados existentes para detectar divergencias.",
+      "criteria": "1) Funcao fn_sync_birth_date_persons_to_athletes() existe. 2) Trigger trg_sync_birth_date_persons_to_athletes existe em persons. 3) UPDATE em persons.birth_date propaga para athletes. 4) UPDATE em athletes.birth_date propaga para persons. 5) Triggers nao causam loop infinito. 6) Migracao Alembic gerada e listada.",
+      "gate": "GATE_DB_INTEGRITY",
+      "validation_command": "cd 'Hb Track - Backend' ; python -m pytest tests/business_rules/test_birth_date_parity.py -v --tb=short",
+      "evidence_file": "docs/hbtrack/evidence/AR_058_birth_date_parity.log",
+      "ssot_touches": [
+        "docs/ssot/schema.sql",
+        "docs/ssot/alembic_state.txt"
+      ],
+      "rollback_plan": "1) Executar: cd 'Hb Track - Backend' ; alembic downgrade -1. 2) Remover triggers: DROP TRIGGER IF EXISTS trg_sync_birth_date_persons_to_athletes ON persons; DROP FUNCTION IF EXISTS fn_sync_birth_date_persons_to_athletes(). 3) Rodar scripts/gen_docs_ssot.py. 4) git revert se necessario.",
+      "notes": "Sincronizacao bidirecional. Executor DEVE garantir que triggers nao causem loop infinito usando IS DISTINCT FROM.",
+      "risks": [
+        "Loop infinito se triggers nao usarem IS DISTINCT FROM",
+        "Dados historicos podem ter divergencias - data migration necessaria",
+        "Performance: UPDATE em persons ou athletes dispara triggers adicionais"
+      ]
+    }
+  ]
+}

@@ -78,6 +78,8 @@ class CompetitionMatch(Base):
 
     __table_args__ = (
 
+        CheckConstraint("status IN ('scheduled', 'in_progress', 'finished', 'cancelled')", name='ck_competition_matches_status'),
+
         Index('ix_competition_matches_competition_id', 'competition_id', unique=False),
 
         Index('ix_competition_matches_date', 'match_date', unique=False),
@@ -87,6 +89,8 @@ class CompetitionMatch(Base):
         Index('ix_competition_matches_our_match', 'is_our_match', unique=False),
 
         Index('ix_competition_matches_phase_id', 'phase_id', unique=False),
+
+        CheckConstraint("(deleted_at IS NULL AND deleted_reason IS NULL) OR (deleted_at IS NOT NULL AND deleted_reason IS NOT NULL)", name='ck_competition_matches_deleted_reason'),
 
     )
 
@@ -143,6 +147,10 @@ class CompetitionMatch(Base):
     created_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
 
     updated_at: Mapped[datetime] = mapped_column(sa.DateTime(timezone=True), nullable=False, server_default=sa.text('now()'))
+
+    deleted_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+
+    deleted_reason: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
 
     # HB-AUTOGEN:END
     # Primary key

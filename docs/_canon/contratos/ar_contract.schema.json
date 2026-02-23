@@ -1,7 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "hbtrack:ar_contract.schema.json",
-  "title": "HB Track AR Contract (Plan JSON) — v1.0.5",
+  "schema_version": "1.2.0",
+  "title": "HB Track AR Contract (Plan JSON) — schema v1.2.0",
+  "description": "Contract schema for AR plans. Evidence path must be deterministic: docs/hbtrack/evidence/AR_<id>/executor_main.log",
   "type": "object",
   "required": ["project", "version", "tasks"],
   "additionalProperties": false,
@@ -13,7 +15,7 @@
     "version": {
       "type": "string",
       "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
-      "description": "MUST igualar a versão do protocolo reportada pelo hb_cli.py (ex.: 1.0.5)."
+      "description": "MUST igualar o 'schema_version' declarado neste ar_contract.schema.json (ex.: 1.2.0). NÃO é a versão do protocolo do hb_cli."
     },
 
     "notes": {
@@ -34,7 +36,7 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "title", "description", "criteria", "evidence_file", "validation_command"],
+        "required": ["id", "title", "description", "criteria", "validation_command"],
         "properties": {
           "id": {
             "type": "string",
@@ -73,8 +75,8 @@
 
           "evidence_file": {
             "type": "string",
-            "pattern": "^docs/hbtrack/evidence/AR_[0-9]{3}.*\\.log$",
-            "description": "Caminho do evidence pack (canon)."
+            "pattern": "^docs/hbtrack/evidence/AR_[0-9]{3}/executor_main\\.log$",
+            "description": "DERIVED/DETERMINÍSTICO. Se presente, MUST ser exatamente o path canônico do evidence pack do Executor. O Arquiteto NÃO escolhe paths arbitrários."
           },
 
           "ssot_touches": {
@@ -95,8 +97,9 @@
           "rollback_plan": {
             "type": "string",
             "minLength": 20,
-            "maxLength": 2000,
-            "description": "Plano de reversão. OBRIGATÓRIO para tasks que tocam banco (schema.sql ou alembic_state.txt). Deve conter comandos exatos: alembic downgrade, SQL DDL reverso, ou git revert."
+            "maxLength": 4000,
+            "pattern": "^(?:python\\s+scripts/run/hb_cli\\.py[^\\n]*|git\\s+checkout\\s+--\\s+[^.\\n][^\\n]*|git\\s+clean\\s+-fd\\s+[^.\\n][^\\n]*|psql\\s+-c\\s+\\\"TRUNCATE[^\\\"]*\\\")(?:\\n(?:python\\s+scripts/run/hb_cli\\.py[^\\n]*|git\\s+checkout\\s+--\\s+[^.\\n][^\\n]*|git\\s+clean\\s+-fd\\s+[^.\\n][^\\n]*|psql\\s+-c\\s+\\\"TRUNCATE[^\\\"]*\\\"))*$",
+            "description": "OBRIGATÓRIO para tasks que tocam banco (schema.sql ou alembic_state.txt). Whitelist estrita (linha a linha): (1) python scripts/run/hb_cli.py ... (2) git checkout -- <file> (3) git clean -fd <dir> (4) psql -c \"TRUNCATE...\" (somente staging/test). Path traversal bloqueado (não pode começar com .)."
           },
 
           "notes": {
@@ -109,6 +112,47 @@
             "maxItems": 20,
             "items": { "type": "string", "minLength": 1, "maxLength": 500 },
             "description": "Riscos/atenções para o Executor."
+          },
+
+          "retry_count": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 99,
+            "default": 0,
+            "description": "Número de tentativas do ciclo (gate retry_limit)."
+          },
+
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDENTE",
+              "EM_EXECUCAO",
+              "SUCESSO",
+              "REJEITADO",
+              "BLOQUEADO_INFRA",
+              "NEEDS_REVIEW",
+              "VERIFICADO",
+              "FALHA",
+              "SUPERSEDED"
+            ],
+            "description": "DEPRECATED (drift-risk). Status canônico é derivado da AR + hb verify + hb seal. Se usado, MUST refletir o estado real, ou hb_cli MAY rejeitar em gates futuros."
+          },
+
+          "last_test_feedback": {
+            "type": "string",
+            "maxLength": 2000,
+            "description": "DEPRECATED (drift-risk). Feedback canônico do Testador deve viver no TESTADOR_REPORT + carimbo na AR."
+          },
+
+          "execution_evidence": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "local_run_success": { "type": "boolean" },
+              "timestamp": { "type": "string", "format": "date-time" }
+            },
+            "required": ["local_run_success"],
+            "description": "DEPRECATED (drift-risk). Evidência canônica é o evidence pack do Executor + TESTADOR_REPORT."
           }
         },
 
@@ -123,7 +167,7 @@
           "required": ["ssot_touches"]
         },
         "then": {
-          "required": ["id", "title", "description", "criteria", "evidence_file", "validation_command", "rollback_plan"]
+          "required": ["id", "title", "description", "criteria", "validation_command", "rollback_plan"]
         }
       }
     }

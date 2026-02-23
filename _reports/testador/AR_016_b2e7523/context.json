@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_016-b2e7523",
+  "timestamp_utc": "2026-02-21T10:49:11.056432+00:00",
+  "git": {
+    "commit": "b2e75234d5e3757507fdce48f06b3a57fde125a8"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "016",
+  "ar_file": "docs\\hbtrack\\ars\\AR_016_prd_v2.2_sync_§1–§19_-_header,_rfs,_raci,_modelo_d.md"
+}

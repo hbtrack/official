@@ -1,0 +1,264 @@
+# GATES_REGISTRY.yaml — HB Track Protocol v1.2.0
+# SSOT: docs/_canon/specs/GATES_REGISTRY.yaml
+# Unificação: Technical Gates + Documentation Gates (v1.2.0)
+
+version: "1.1"
+protocol_version: "1.2.0"
+last_updated: "2026-02-22"
+
+# ================================================================
+# § PROTOCOLO F — TRIANGULAÇÃO DE VERDADE
+# ================================================================
+# behavioral   — output observável do sistema em runtime
+# structural   — artefato no código-fonte/filesystem
+# operational  — dado real no banco de dados / processo ativo
+# ================================================================
+
+gates:
+
+  # --- CLASSE DB (Migrations e Schema) ---
+
+  - id: DB_MIGRATION_FILE_EXISTS
+    name: "Alembic Version File Integrity"
+    class: db
+    lifecycle: ACTIVE
+    required_proofs:
+      behavioral: "alembic heads"
+      structural: "db/alembic/versions/*.py"
+
+  - id: DB_MIGRATIONS_UPGRADE_HEAD
+    name: "Alembic Upgrade Head — Local"
+    class: db
+    lifecycle: ACTIVE
+    required_proofs:
+      behavioral: "alembic upgrade head exit 0"
+      operational: "information_schema.columns check"
+
+  # --- CLASSE GOVERNANCE (ARs e Processo) ---
+
+  - id: PLANS_AR_SYNC
+    name: "Plan-to-AR Materialization Sync"
+    class: governance
+    lifecycle: ACTIVE
+    required_proofs:
+      structural: "match between plans/*.json and ars/*.md"
+      operational: "_INDEX.md consistency"
+
+  - id: RETRY_LIMIT_GATE
+    name: "AR Retry Limit Enforcer"
+    class: governance
+    lifecycle: ACTIVE
+    required_proofs:
+      behavioral: "hb plan blocked if retry_count >= 3"
+      structural: "retry_count field in task JSON"
+
+  # --- CLASSE DOCUMENTATION (Antigos DOC-GATEs) ---
+  # Estes gates são validados pelo script scripts/run/doc_gates.py
+
+  - id: DOC_FLOW_COMPLIANCE
+    name: "Dev Flow SSOT & Manual Seal Gate"
+    class: documentation
+    lifecycle: ACTIVE
+    required_proofs:
+      structural: "docs/_canon/contratos/Dev Flow.md v1.2.0"
+      behavioral: "doc_gates.py gate_001 + gate_015"
+
+  - id: DOC_SCHEMA_ROLLBACK_SAFE
+    name: "AR Schema Version & Rollback Whitelist"
+    class: documentation
+    lifecycle: ACTIVE
+    required_proofs:
+      structural: "ar_contract.schema.json v1.2.0"
+      behavioral: "regex pattern matching for safe git commands"
+
+  - id: DOC_AGENT_CONTRACTS_SYNC
+    name: "Agent Contracts (Arch/Exec/Test) Aligned"
+    class: documentation
+    lifecycle: ACTIVE
+    required_proofs:
+      structural: "Arquiteto v2.2.0, Executor v2.1.0, Testador v2.1.0"
+      behavioral: "doc_gates.py gates_004 to 006"
+
+  - id: DOC_WATCHER_AUTOMATION
+    name: "Watcher Automation & Dispatch Integrity"
+    class: documentation
+    lifecycle: ACTIVE
+    required_proofs:
+      structural: "scripts/run/hb_watch.py using _reports/dispatch"
+      behavioral: "doc_gates.py gate_014"
+
+  - id: DOC_FORBIDDEN_TOKENS_SCAN
+    name: "Global Forbidden Tokens Scan"
+    class: documentation
+    lifecycle: ACTIVE
+    required_proofs:
+      behavioral: "Zero matches for deprecated patterns in docs/"
+      structural: "doc_gates.py gate_017"
+
+  - id: DOC_ARCHITECT_SCOPE_PROTECTION
+    name: "Architect Product-Code Write Protection (P3.1)"
+    class: documentation
+    lifecycle: ACTIVE
+    required_proofs:
+      behavioral: "Zero references to backend/ or Frontend/ in execution plans"
+      structural: "doc_gates.py gate_018"
+    notes: "Mecaniza a proibição P3.1 do Arquiteto Contract."
+
+  # --- DOCUMENTATION GATES (DOC-GATE-001 até DOC-GATE-018) ---
+  # Path: scripts/run/doc_gates.py v1.2.0
+  # Evidence: docs/hbtrack/evidence/AR_<id>/doc_gates.log
+
+  - id: DOC-GATE-001
+    name: "Dev Flow SSOT v1.2.0"
+    class: documentation
+    lifecycle: ACTIVE
+    required_proofs:
+      structural: "docs/_canon/contratos/Dev Flow.md"
+    notes: "Valida Dev Flow SSOT v1.2.0 + hb seal + Kanban rule"
+
+  - id: DOC-GATE-002
+    name: "AR Contract Schema v1.2.0"
+    class: documentation
+    lifecycle: ACTIVE
+    required_proofs:
+      structural: "docs/_canon/contratos/ar_contract.schema.json"
+    notes: "Schema v1.2.0 + rollback whitelist + evidence path"
+
+  - id: DOC-GATE-003
+    name: "Governed Roots SSOT"
+    class: documentation
+    lifecycle: ACTIVE
+    required_proofs:
+      structural: "docs/_canon/specs/GOVERNED_ROOTS.yaml"
+    notes: "Governed roots SSOT parseable + roots non-empty"
+
+  - id: DOC-GATE-004
+    name: "Arquiteto Contract Aligned"
+    class: documentation
+    lifecycle: ACTIVE
+    required_proofs:
+      structural: "docs/_canon/contratos/Arquiteto Contract.md"
+
+  - id: DOC-GATE-005
+    name: "Executor Contract Aligned"
+    class: documentation
+    lifecycle: ACTIVE
+    required_proofs:
+      structural: "docs/_canon/contratos/Executor Contract.md"
+    notes: "No deprecated path references"
+
+  - id: DOC-GATE-006
+    name: "Testador Contract Aligned"
+    class: documentation
+    lifecycle: ACTIVE
+    required_proofs:
+      structural: "docs/_canon/contratos/Testador Contract.md"
+    notes: "No auto VERIFIED, AH-12 compliance"
+
+  - id: DOC-GATE-007
+    name: "Architect Agent File Aligned"
+    class: documentation
+    lifecycle: ACTIVE
+    required_proofs:
+      structural: ".github/agents/architect.agent.md"
+
+  - id: DOC-GATE-008
+    name: "Executor Agent File Aligned"
+    class: documentation
+    lifecycle: ACTIVE
+    required_proofs:
+      structural: ".github/agents/executor.agent.md"
+
+  - id: DOC-GATE-009
+    name: "Testador Agent File Aligned"
+    class: documentation
+    lifecycle: ACTIVE
+    required_proofs:
+      structural: ".github/agents/testador.agent.md"
+
+  - id: DOC-GATE-010
+    name: "Agents README Aligned"
+    class: documentation
+    lifecycle: ACTIVE
+    required_proofs:
+      structural: ".github/agents/README.md"
+    notes: "SSOT vs DERIVED distinction"
+
+  - id: DOC-GATE-011
+    name: "HB CLI Spec Aligned"
+    class: documentation
+    lifecycle: ACTIVE
+    required_proofs:
+      structural: "docs/_canon/specs/Hb cli Spec.md"
+
+  - id: DOC-GATE-012
+    name: "Kanban Rule Compliance"
+    class: documentation
+    lifecycle: ACTIVE
+    required_proofs:
+      structural: "docs/hbtrack/Hb Track Kanban.md"
+    notes: "Contains 'não libera commit'"
+
+  - id: DOC-GATE-013
+    name: "Index Derivation Warning"
+    class: documentation
+    lifecycle: ACTIVE
+    required_proofs:
+      structural: "docs/hbtrack/_INDEX.md"
+    notes: "_INDEX is derived and warns not to edit"
+
+  - id: DOC-GATE-014
+    name: "Watcher Automation Aligned"
+    class: documentation
+    lifecycle: ACTIVE
+    required_proofs:
+      structural: "scripts/run/hb_watch.py"
+    notes: "index+lock+dispatch+staged evidence"
+
+  - id: DOC-GATE-015
+    name: "Dev Flow Automation Docs"
+    class: documentation
+    lifecycle: ACTIVE
+    required_proofs:
+      structural: "docs/_canon/contratos/Dev Flow.md"
+    notes: "Documents automation + manual seal gate"
+
+  - id: DOC-GATE-016
+    name: "Agents README Automation Docs"
+    class: documentation
+    lifecycle: ACTIVE
+    required_proofs:
+      structural: ".github/agents/README.md"
+    notes: "Documents automation (watcher+dispatch)"
+
+  - id: DOC-GATE-017
+    name: "Forbidden Tokens Global Scan"
+    class: documentation
+    lifecycle: ACTIVE
+    required_proofs:
+      behavioral: "Zero deprecated tokens in docs/"
+      structural: "doc_gates.py gate_017"
+    notes: "Scans docs/ except _legacy/, evidence/, _reports/"
+
+  - id: DOC-GATE-018
+    name: "Architect Scope Protection"
+    class: documentation
+    lifecycle: ACTIVE
+    required_proofs:
+      behavioral: "No backend/ or Frontend/ refs in plans"
+      structural: "doc_gates.py gate_018"
+    notes: "P3.1 enforcement"
+
+  # --- OUTRAS CLASSES (MANTIDAS) ---
+
+  - id: INVARIANT_DOCS_EXIST
+    class: invariants
+    lifecycle: ACTIVE
+    required_proofs:
+      structural: "INVARIANTS_*.md files present"
+
+  - id: WELLNESS_SCALE_DOCS_ALIGNED
+    class: schema
+    lifecycle: ACTIVE
+    required_proofs:
+      behavioral: "grep validation of 0-10 vs 1-5 scales"

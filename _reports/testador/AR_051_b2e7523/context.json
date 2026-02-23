@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_051-b2e7523",
+  "timestamp_utc": "2026-02-22T18:31:42.544458+00:00",
+  "git": {
+    "commit": "b2e75234d5e3757507fdce48f06b3a57fde125a8"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "051",
+  "ar_file": "docs\\hbtrack\\ars\\drafts\\AR_051_hb_cli.py_v1.2.0_gates_registry_suporte_+_retry_co.md"
+}

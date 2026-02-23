@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_019-b2e7523",
+  "timestamp_utc": "2026-02-21T10:49:28.180630+00:00",
+  "git": {
+    "commit": "b2e75234d5e3757507fdce48f06b3a57fde125a8"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "019",
+  "ar_file": "docs\\hbtrack\\ars\\AR_019_hb_cli_spec_v1.0.8_§10_hb_verify,_§11_novos_status.md"
+}

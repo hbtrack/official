@@ -1,107 +1,355 @@
-# HBTRACK_DEV_FLOW_CONTRACT — HB Track (Determinístico) — v1.0.5
+# HBTRACK_DEV_FLOW_CONTRACT — HB Track (Determinístico) — v1.2.0 (SSOT)
 
-Este documento é o CONTRATO canônico do fluxo determinístico de desenvolvimento do HB Track usando IA + evidências.
-Qualquer divergência entre prática e este contrato é BUG de governança.
+STATUS: **SSOT**
+SSOT_KIND: **CONTRACT**
+SCOPE: fluxo determinístico de desenvolvimento governado por AR + evidências (Arquiteto/Executor/Testador/Humano)
+NORMS: MUST / MUST NOT / SHOULD / MAY (BCP14)
 
-## 1. Versão (governança)
-- Versão do protocolo: v1.0.5
-- scripts/run/hb.py MUST reportar esta versão (comando `hb version` e também no header do `hb check`).
+## 1) Versão e Governança (imutável sem AR de governança)
 
-Mudança em qualquer arquivo dentro de:
-- docs/_canon/contratos/**
-- docs/_canon/specs/**
-MUST:
-1) ser feita via AR de governança (docs/hbtrack/ars/)
-2) bump de versão (ex.: v1.0.4 → v1.0.5)
-3) atualizar a versão reportada pelo hb.py
+1.1) **PROTOCOL_VERSION = v1.2.0**
 
-## 2. Canon Paths (imutáveis sem AR de governança)
-Dentro do repo:
+1.2) `scripts/run/hb_cli.py` MUST reportar **PROTOCOL_VERSION** via:
 
-2.1 Referências
-- PRD (referência de negócio): docs/hbtrack/PRD Hb Track.md
-- SSOT (contratos do sistema): docs/ssot/
-  - docs/ssot/schema.sql
-  - docs/ssot/openapi.json
-  - docs/ssot/alembic_state.txt
+* `hb version`
+* header do `hb check` (qualquer `--mode`)
 
-2.2 Fluxo (artefatos)
-- Planos (JSON do Arquiteto): docs/_canon/planos/
-- ARs (materialização do plano): docs/hbtrack/ars/
-- Evidence packs (logs auditáveis): docs/hbtrack/evidence/
-- Índice (opcional, rastreio): docs/hbtrack/_INDEX.md
+1.3) Qualquer mudança em qualquer arquivo dentro de:
 
-2.3 Execução (scripts)
-- CLI: scripts/run/hb.py
-- Git hook: scripts/git-hooks/pre-commit (Python)
-- Política: scripts MUST ser Python (.py). .sh e .ps1 são proibidos.
+* `docs/_canon/contratos/**`
+* `docs/_canon/specs/**`
+  MUST:
+  A) ser feita via **AR de governança** em `docs/hbtrack/ars/`
+  B) bump de **PROTOCOL_VERSION**
+  C) atualizar a versão reportada pelo `hb_cli.py`
+  D) gerar evidence pack do gate de governança (Seção 6 + Seção 9)
 
-## 3. Definições
-- Plano (Plan JSON): arquivo JSON criado pelo Arquiteto, validado por schema e versão.
-- AR (Architectural Record): arquivo .md gerado por hb plan, governando uma tarefa atômica.
-- Evidence pack: arquivo .log gerado por hb report, contendo comando + Exit Code + stdout/stderr + contexto mínimo.
-- “Governed code”: diretórios de código que exigem AR no commit quando modificados (definidos em GOVERNED_ROOTS no hb.py).
+## 2) Canon Paths (imutáveis sem AR de governança)
 
-## 4. Contrato do Plano (AR Contract)
-- Plano MUST estar em: docs/_canon/planos/*.json
-- Plano MUST validar contra o schema canônico:
-  - docs/_canon/contratos/ar_contract.schema.json
-- Plano.version MUST ser igual a v1.0.5 (versão do protocolo).
-- Campos de “texto livre” são permitidos APENAS nos campos canônicos do schema (notes/assumptions/risks/notes por task).
+2.1) Referências
 
-## 5. Ciclo de Vida do Desenvolvimento (7 passos) — fluxo oficial
-Passo 1 — REFERÊNCIA
-O Arquiteto lê:
-- PRD: docs/hbtrack/PRD Hb Track.md
-- SSOT: docs/ssot/**
+* PRD: `docs/hbtrack/PRD Hb Track.md`
+* SSOT do sistema: `docs/ssot/`
 
-Passo 2 — PLANO
-O Arquiteto gera um plano JSON válido (AR Contract) e salva em:
-- docs/_canon/planos/<nome_do_plano>.json
+  * `docs/ssot/schema.sql`
+  * `docs/ssot/openapi.json`
+  * `docs/ssot/alembic_state.txt`
 
-Passo 3 — MATERIALIZAÇÃO
-Você executa:
-- python scripts/run/hb.py plan docs/_canon/planos/<nome_do_plano>.json
+2.2) Fluxo (artefatos governados)
 
-Resultado:
-- cria ARs em docs/hbtrack/ars/AR_<id>_<slug>.md
-- (opcional) atualiza docs/hbtrack/_INDEX.md
+* Planos (JSON do Arquiteto): `docs/_canon/planos/*.json`
+* ARs (materialização do plano): `docs/hbtrack/ars/`
+* Evidence packs (Executor/Testador): `docs/hbtrack/evidence/`
+* Índice canônico (obrigatório): `docs/hbtrack/_INDEX.md`
 
-Passo 4 — ANÁLISE
-Executor abre a AR e preenche “Análise de Impacto” ANTES de codar.
+2.3) Índice (regra dura)
 
-Passo 5 — AÇÃO
-Executor implementa no código (em seus roots reais, ex.: backend/ e Hb Track - Fronted/).
+* `docs/hbtrack/_INDEX.md` é o **Registry da Máquina de Estados** no commit.
+* MUST ser **AUTO-GERADO** por hb (`hb plan` / `hb report` / `hb verify` / `hb index` se existir).
+* MUST NOT ser editado manualmente.
+* **Qualquer AR staged ⇒ `_INDEX.md` MUST estar staged** (enforcement no pre-commit).
 
-Passo 6 — VALIDAÇÃO
-Executor (ou você) executa:
-- python scripts/run/hb.py report <id> "<validation_command>"
+2.4) Legado (proibido editar)
+
+* `docs/hbtrack/ars/_INDEX.md` é LEGADO, NÃO é SSOT, MUST NOT ser editado.
+
+2.5) Execução (scripts)
+
+* CLI oficial: `scripts/run/hb_cli.py`
+* Watcher automático: `scripts/run/hb_watch.py` (monitoring de _INDEX.md + dispatch inbox em `_reports/dispatch`)
+* Git hook: `scripts/git-hooks/pre-commit` (executável Python)
+* Política: scripts operacionais MUST ser Python; `.sh` e `.ps1` são proibidos.
+
+## 3) Definições (canônicas)
+
+3.1) **Schema Version (AR Contract)**
+
+* `ar_contract.schema.json` MUST declarar `schema_version` (string) em local canônico.
+* Essa é a versão de estrutura do plano/AR (independente de PROTOCOL_VERSION).
+
+3.2) **Plano (Plan JSON)**
+
+* arquivo JSON criado pelo Arquiteto, validado por schema canônico.
+
+3.3) **AR (Architectural Record)**
+
+* arquivo `.md` gerado por `hb plan`, governando UMA tarefa atômica.
+
+3.4) **Evidence pack do Executor**
+
+* arquivo `.log` gerado por `hb report`, path MUST ser determinístico: `docs/hbtrack/evidence/<AR_ID>/executor_main.log`
+* conteúdo mínimo obrigatório:
+
+  * command_line (string)
+  * exit_code (int)
+  * stdout (texto bruto)
+  * stderr (texto bruto)
+  * behavior_hash (SHA-256 de exit_code + stdout_norm + stderr_norm) — Seção 6.6
+  * checksums (SHA-256 por arquivo governado, snapshot do repo)
+  * workspace_state (git status + HEAD)
+  * timestamp_utc (ISO 8601 UTC)
+
+3.5) **TESTADOR_REPORT**
+
+* artefato gerado por `hb verify`, obrigatório em `_reports/testador/<AR_ID>/...` e **MUST estar staged quando houver verify** (Seção 8 e Seção 9).
+
+3.6) **GOVERNED_ROOTS**
+
+* NÃO pode estar hardcoded em scripts.
+* Fonte canônica MUST ser arquivo SSOT em `docs/_canon/specs/GOVERNED_ROOTS.yaml` (Seção 4.4).
+
+3.7) **AR como Única Voz (assíncrono)**
+
+* Agentes MUST NOT se comunicar diretamente.
+* Comunicação formal ocorre via campos da AR e do plano:
+
+  * Arquiteto → `notes` do plano/AR
+  * Executor → seção “Análise de Impacto” da AR + evidence do report
+  * Testador → resultado do verify + reason + status
+  * Humano → selo final “✅ VERIFICADO”
+
+## 4) Contrato do Plano (AR Contract)
+
+4.1) Path: plano MUST estar em `docs/_canon/planos/*.json`
+
+4.2) Schema: plano MUST validar contra `docs/_canon/contratos/ar_contract.schema.json`
+
+4.3) Versão: `plano.version` MUST ser **igual a `schema_version`** declarado no `ar_contract.schema.json` (separada de PROTOCOL_VERSION). Violação => FAIL com `E_PLAN_VERSION_MISMATCH`.
+
+4.4) Governança de roots (SSOT)
+
+* MUST existir `docs/_canon/specs/GOVERNED_ROOTS.yaml` como SSOT, contendo a lista de roots governados.
+* `hb` MUST carregar essa lista e usá-la em `hb report`, `hb verify` e `hb check`.
+
+Formato mínimo (normativo) do `GOVERNED_ROOTS.yaml`:
+
+* `version` (string)
+* `roots` (lista de paths relativos, sem glob ambíguo)
+* `notes` (opcional)
+
+4.5) Texto livre: permitido APENAS nos campos explicitamente previstos no schema (ex.: notes/assumptions/risks e notes por task). Fora disso => FAIL.
+
+4.6) Banco/SSOT: tasks que tocam banco/SSOT (`ssot_touches` contém `schema.sql` ou `alembic_state.txt`) MUST incluir `rollback_plan` com comandos válidos (Seção 7).
+
+## 5) Ciclo de Vida (fluxo oficial)
+
+Passo 1 — REFERÊNCIA (Arquiteto)
+Arquiteto lê PRD + SSOT.
+
+Passo 2 — PLANO (Arquiteto)
+Arquiteto cria plano JSON válido e salva em `docs/_canon/planos/<nome>.json`.
+
+Passo 3 — MATERIALIZAÇÃO (Humano)
+Executar:
+
+* `python scripts/run/hb_cli.py plan docs/_canon/planos/<nome>.json [--force|--skip-existing|--dry-run]`
+
+Efeitos:
+
+* cria ARs em `docs/hbtrack/ars/AR_<id>_<slug>.md` (escrita atômica via `.tmp/`)
+* atualiza `docs/hbtrack/_INDEX.md` (obrigatório)
+* aplica gates: schema/version/anti-trivial (Seção 6)
+
+Passo 4 — ANÁLISE (Executor)
+Executor MUST preencher “Análise de Impacto” ANTES de alterar qualquer arquivo em GOVERNED_ROOTS.
+
+Passo 5 — AÇÃO (Executor)
+Executor implementa a mudança no código.
+
+Passo 6 — EVIDÊNCIA (Executor)
+Executar:
+
+* `python scripts/run/hb_cli.py report <AR_ID> "<validation_command>"`
 
 Regras:
-- O comando deve bater exatamente com o Validation Command do contrato da AR (se declarado).
-- hb report grava evidence pack no caminho Evidence File do contrato.
 
-Passo 7 — FECHAMENTO
+* `<validation_command>` MUST ser idêntico ao declarado na task/AR quando existir; se não existir, MUST ser registrado como o comando da task no evidence pack (reprodutibilidade).
+* `hb report` MUST gravar evidence pack em `docs/hbtrack/evidence/<AR_ID>/executor_*.log`.
+* `hb report` MUST coletar checksums SHA-256 (pre) de arquivos governados e estado do workspace (pre).
+
+Passo 6.5 — VERIFICAÇÃO (Testador)
+Executar:
+
+* `python scripts/run/hb_cli.py verify <AR_ID>`
+
+Regras:
+
+* Pre-check: workspace MUST estar limpo (anti-falsa-evidência). Workspace sujo => FAIL hard com `E_VERIFY_DIRTY_WORKSPACE`.
+* Testador MUST re-executar o validation_command independentemente.
+* TRIPLE_RUN_COUNT = 3 (3 execuções independentes).
+* PASS do Testador exige: (i) 3× exit 0, (ii) behavior_hash idêntico entre runs (Seção 6.6).
+* FLAKY_OUTPUT: todos exit 0 mas hash diferente => **🔴 REJEITADO**.
+* `hb verify` MUST produzir `TESTADOR_REPORT` em `_reports/testador/<AR_ID>/...`
+* Testador SÓ DEVE atuar quando evidence do Executor estiver STAGED (enforcement via hb_watch.py + _reports/dispatch).
+* Testador MUST atualizar status da AR para:
+
+  * **✅ SUCESSO** (quando PASS)
+  * **🔴 REJEITADO** (quando FAIL_ACTIONABLE)
+  * **⏸️ BLOQUEADO_INFRA** (quando ERROR_INFRA)
+* Testador MUST NOT escrever "✅ VERIFICADO" — esse status é exclusivo do Humano (Passo 7).
+
+Passo 7 — SELO HUMANO (Humano)
+Executar:
+
+* `python scripts/run/hb_cli.py seal <AR_ID> ["reason"]`
+
+Pré-condições duras (enforcement):
+
+* AR MUST ter status **✅ SUCESSO** (Testador)
+* AR MUST ter `TESTADOR_REPORT` staged
+* `TESTADOR_REPORT`/result.json MUST indicar PASS
+* Evidence do Executor (`docs/hbtrack/evidence/AR_<id>/executor_main.log`) MUST existir, conter "Exit Code: 0", e estar staged
+
+Efeito:
+
+* Promove AR para **✅ VERIFICADO** (selo final do Humano)
+* Appenda carimbo humano com timestamp UTC + motivo
+* Rebuild _INDEX.md
+
+Nenhum agente automatizado pode escrever “✅ VERIFICADO”.
+
+Passo 8 — PRE-COMMIT (enforcement)
 No commit, o hook executa:
-- python scripts/run/hb.py check --mode pre-commit
 
-hb check valida integridade do commit e bloqueia se falhar.
+* `python scripts/run/hb_cli.py check --mode pre-commit`
 
-## 6. Regras determinísticas mínimas (mecanizadas)
-R1) Plano inválido (path/schema/version) => hb plan FAIL (não materializa AR).
-R2) Evidência válida de sucesso exige:
-- AR com marcador ✅ SUCESSO (gerado pelo hb report)
-- Evidence File existente e STAGED com “Exit Code: 0”
-R3) Se SSOT estiver STAGED => MUST existir AR STAGED que:
-- marcou [x] o SSOT em “SSOT Touches”
-- tem evidência ✅ SUCESSO
-- tem Evidence File staged com Exit Code: 0
-R4) Se houver mudança em governed roots (GOVERNED_ROOTS) no STAGED => MUST existir ao menos 1 AR STAGED.
+## 6) Regras determinísticas mínimas (mecanizadas)
 
-## 7. O que NÃO é garantido automaticamente (processual)
-- Mapear exatamente “quais arquivos pertencem a qual AR” (isso exigiria manifest por AR + checagem diff→manifest).
-- Garantir qualidade funcional do produto: isso depende do “validation_command” ser um gate real.
+6.1) Anti-trivial command (bloqueio na materialização)
+`validation_command` trivialmente passável MUST FAIL com `E_TRIVIAL_CMD`.
 
-## 8. Nota de estabilidade de paths (Fronted vs Frontend)
-Se existir diretório “Hb Track - Fronted” (com ‘Fronted’), ele é um path real do repo.
-Renomear diretório é mudança de governança/infra: só por AR dedicada + evidência de migração controlada.
+Definição mínima (normativa):
+
+* comandos “sempre verdes” sem asserção real (ex.: `echo`, `true`, `exit 0`) MUST ser bloqueados;
+* comandos cujo resultado não depende do código/artefato governado MUST ser bloqueados.
+
+6.2) Plano inválido (path/schema/version) => `hb plan` FAIL e não materializa AR.
+
+6.3) Evidence mínima para sucesso (por AR)
+Para uma AR ser elegível a “✅ VERIFICADO”, MUST existir:
+
+* evidence do Executor staged (Exit Code 0)
+* status do Testador = **✅ SUCESSO**
+* `TESTADOR_REPORT` staged (obrigatório)
+
+6.4) SSOT-touch (staged)
+Se `docs/ssot/**` estiver staged => MUST existir AR staged que:
+
+* marcou o SSOT em `ssot_touches`
+* tem `rollback_plan` válido
+* possui evidence do Executor exit 0 staged
+* possui `TESTADOR_REPORT` staged
+* está **✅ VERIFICADO** (selo humano) antes do commit
+
+6.5) Governed roots (staged)
+Se qualquer arquivo dentro de qualquer root em `GOVERNED_ROOTS.yaml` estiver staged => MUST existir pelo menos 1 AR staged que cubra a mudança e esteja **✅ VERIFICADO**.
+
+6.6) Hash canônico (triple-run) — behavior_hash
+O hash MUST cobrir **exit_code + stdout + stderr**, com normalização determinística:
+
+* converter CRLF→LF e CR→LF em stdout e stderr antes do hash
+* payload do hash (exato):
+
+  * `<exit_code>\n<stdout_norm>\n---STDERR---\n<stderr_norm>`
+  * exemplo: `"0\nOK\n---STDERR---\n"`
+* algoritmo: SHA-256 em UTF-8 (hex digest completo)
+* qualquer timestamp/log não-determinístico no output é responsabilidade do validation_command; se variar, vira FLAKY_OUTPUT ⇒ REJEITADO.
+
+Este hash é chamado **behavior_hash** no evidence pack e é canônico para comparação entre Executor e Testador.
+
+## 7) Whitelist de rollback_plan (comandos válidos)
+
+`rollback_plan` MUST conter apenas comandos na whitelist mínima abaixo:
+
+A) `python scripts/run/hb_cli.py ...` (comandos internos HB Track)
+
+B) `git checkout -- <file>`
+
+* restrito a reversão de arquivos específicos
+
+C) `git clean -fd <dir>`
+
+* restrito a limpeza de artefatos não rastreados dentro do diretório explicitamente declarado
+
+D) `psql -c "TRUNCATE ..."`
+
+* restrito a **tabelas de staging/testes** (proibido truncar dados de produção)
+* o plano/AR MUST declarar explicitamente quais tabelas são staging/test e justificar
+* credenciais MUST NOT aparecer em texto plano no evidence pack (redação/mascara é obrigatória no hb)
+
+Qualquer comando fora dessa whitelist => FAIL em `hb plan` (BLOCKED_INPUT) e em `hb check` (pre-commit).
+
+## 8) Regras de Governança de ARs (mecanizadas)
+
+R-AR-1) `docs/hbtrack/_INDEX.md` é AUTO-GERADO. MUST NOT editar manualmente.
+
+R-AR-2) ARs "✅ VERIFICADO" são IMUTÁVEIS. Corpo MUST NOT ser alterado manualmente. ARs com "✅ SUCESSO" (Testador) AINDA SÃO MUTÁVEIS até o selo humano.
+
+R-AR-3) Pre-commit MUST bloquear:
+
+* AR staged sem `_INDEX.md` staged => `E_AR_INDEX_NOT_STAGED`
+* AR "✅ VERIFICADO" alterada => `E_AR_IMMUTABLE`
+* AR com verify (status ✅ SUCESSO/🔴 REJEITADO) sem `TESTADOR_REPORT` staged => `E_TESTADOR_REPORT_NOT_STAGED`
+* AR "✅ VERIFICADO" sem evidence do Executor staged => `E_SEAL_EVIDENCE_NOT_STAGED`
+
+R-AR-4) Status válidos (canônicos):
+
+* 🔲 PENDENTE
+* 🏗️ EM_EXECUCAO
+* ✅ SUCESSO (somente Testador)
+* 🔴 REJEITADO (somente Testador)
+* ⏸️ BLOQUEADO_INFRA (somente Testador/hb)
+* 🔍 NEEDS_REVIEW (somente Humano)
+* ✅ VERIFICADO (somente Humano)
+* ❌ FALHA
+* ⛔ SUPERSEDED
+
+R-AR-5) Toda AR MUST ser materializada via `hb plan`. Criação manual proibida.
+
+R-AR-6) Autoridade por status (regra dura)
+
+* Arquiteto: 🔲 PENDENTE (via plano materializado)
+* Executor: 🏗️ EM_EXECUCAO (via preenchimento de seção + hb report)
+* Testador: ✅ SUCESSO / 🔴 REJEITADO / ⏸️ BLOQUEADO_INFRA (via hb verify)
+* Humano: ✅ VERIFICADO / 🔍 NEEDS_REVIEW (manual)
+
+## 9) Regras Anti-Alucinação (obrigatório)
+
+R-AH-1) “source-inspection-only” é proibido como único gate para tasks de código.
+
+R-AH-2) validation_command trivial é proibido (E_TRIVIAL_CMD).
+
+R-AH-3) Testador MUST re-executar independentemente — nunca confiar no output do Executor.
+
+R-AH-4) AH_DIVERGENCE:
+
+* Executor exit 0 e Testador exit != 0 ⇒ 🔴 REJEITADO automático.
+
+R-AH-5) ERROR_INFRA no Testador ⇒ ⏸️ BLOQUEADO_INFRA (não REJEITADO).
+
+## 10) Nota de estabilidade de paths (Frontend)
+
+Se existir diretório “Hb Track - Frontend”, ele é path real do repo.
+Renomear diretório é mudança de governança/infra: somente por AR dedicada + evidência de migração controlada.
+
+## 11) Fluxo Enterprise de 3 Agentes (binding)
+
+Contratos canônicos por agente:
+
+* Arquiteto: `docs/_canon/contratos/Arquiteto Contract.md`
+* Executor: `docs/_canon/contratos/Executor Contract.md`
+* Testador: `docs/_canon/contratos/Testador Contract.md`
+
+Todos esses contratos MUST declarar compatibilidade com **PROTOCOL_VERSION v1.2.0**.
+
+### Passo Final — SELO HUMANO (último gate)
+Após hb verify resultar em ✅ SUCESSO, o Humano MUST executar:
+- python scripts/run/hb_cli.py seal <AR_ID> "<reason opcional>"
+
+Regras:
+- hb seal é o único mecanismo autorizado a escrever **✅ VERIFICADO**.
+- hb seal MUST falhar se evidence canônico não estiver staged ou se TESTADOR_REPORT não estiver staged.
+- Kanban NÃO libera commit. Commit é liberado apenas por: AR + evidence canônico + TESTADOR_REPORT + _INDEX.md + ✅ VERIFICADO.
+
+B) docs/_canon/specs/GOVERNED_ROOTS.yaml precisa existir no repo (SSOT), porque o hb_cli vai ler de lá (I6).
+C) docs/_canon/specs/Hb cli.md (ou “Hb cli Spec.md”) deve documentar as mudanças: plan.version==schema_version, evidence path fixo, hb seal, verify sem ✅ VERIFICADO, hash canônico.

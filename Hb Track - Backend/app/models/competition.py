@@ -81,6 +81,10 @@ class Competition(Base):
 
         CheckConstraint('deleted_at IS NULL AND deleted_reason IS NULL OR deleted_at IS NOT NULL AND deleted_reason IS NOT NULL', name='ck_competitions_deleted_reason'),
 
+        CheckConstraint("status IN ('draft', 'active', 'finished', 'cancelled')", name='ck_competitions_status'),
+
+        CheckConstraint("modality IN ('masculino', 'feminino', 'misto')", name='ck_competitions_modality'),
+
         Index('ix_competitions_created_by', 'created_by', unique=False),
 
         Index('ix_competitions_organization_id', 'organization_id', unique=False),
@@ -118,6 +122,10 @@ class Competition(Base):
     tiebreaker_criteria: Mapped[Optional[object]] = mapped_column(PG_JSONB(), nullable=True, server_default=sa.text('\'["pontos", "saldo_gols", "gols_pro", "confronto_direto"]\'::jsonb'))
 
     points_per_win: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True, server_default=sa.text('2'))
+
+    points_per_draw: Mapped[int] = mapped_column(sa.Integer(), nullable=False, server_default=sa.text('1'))
+
+    points_per_loss: Mapped[int] = mapped_column(sa.Integer(), nullable=False, server_default=sa.text('0'))
 
     status: Mapped[Optional[str]] = mapped_column(sa.String(length=50), nullable=True, server_default=sa.text("'draft'::character varying"))
 

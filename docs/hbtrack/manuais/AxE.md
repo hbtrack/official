@@ -1120,8 +1120,7 @@ OUTPUT:
 - ✅ Resultado esperado: "Plan materialized successfully"
 - Arquivos serão gerados em `docs/hbtrack/ars/` (AR_001_*.md, AR_002_*.md, ...)
 ```
-DEMANDA:
-O objetivo é APENAS adicionar a coluna team_id (opcional/nullable) na tabela competition_standings e atualizar os models do SQLAlchemy. Ignore cálculos, rotas ou lógicas de IA por enquanto. Foque apenas na estrutura do banco.
+
 ```
 ---
 
@@ -1240,9 +1239,14 @@ REGRAS (obrigatórias):
    - arquivos modificados
    - comando executado
    - onde ficou o evidence_file
+VALIDAÇÃO: rodar hb report deve anexar evidência na AR e gerar evidence_file com Exit Code: 0.
+   - Cite os principais arquivos alterados (paths).
+   - Cite o comportamento entregue (1–3 bullets).
+   - Não usar frases vagas ("ajustado conforme solicitado").
+   - Não inventar nada fora do que está evidenciado.
 
 AR:
-[cole a AR]
+[AR_008_migration_0055_soft_delete_comp-db-001_em_5_tabela.md]
 ```
 
 ---
@@ -1256,10 +1260,7 @@ TAREFA:
 Gerar um resumo técnico determinístico (máx. 12 linhas) para a seção "Notas de Implementação" da AR.
 
 REGRAS:
-- Cite os principais arquivos alterados (paths).
-- Cite o comportamento entregue (1–3 bullets).
-- Não usar frases vagas ("ajustado conforme solicitado").
-- Não inventar nada fora do que está evidenciado.
+
 
 ENTRADAS:
 1) AR (após hb report):
@@ -1310,7 +1311,7 @@ ENTRADAS:
 3. “Qual é o limite de tarefas por plano?”
    Resposta: se passar de ~7–10, o executor tende a se perder. Quebre em múltiplos planos.
 
-Se você quiser, eu adapto esses prompts para os seus roots reais (`backend/` e `Hb Track - Fronted/`) e já deixo um “Prompt do Arquiteto” que obriga o Arquiteto a declarar explicitamente quais roots serão tocados em cada task (sem violar o schema).
+Se você quiser, eu adapto esses prompts para os seus roots reais (`backend/` e `Hb Track - Frontend/`) e já deixo um “Prompt do Arquiteto” que obriga o Arquiteto a declarar explicitamente quais roots serão tocados em cada task (sem violar o schema).
 
 
 *Framework HB Track v1.0.2 — “Código é subproduto. Evidência é realidade.”*

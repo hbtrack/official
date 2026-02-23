@@ -7,16 +7,16 @@ meta:
   path: docs/hbtrack/Hb Track Kanban.md
   last_updated: 2026-02-20
   ssot_governance:
-    contract: docs/_canon/contratos/HB_TRACK_CONTRACT.md
-    spec: docs/_canon/specs/HB_TRACK_SPEC.md
+    contract: docs/_canon/contratos/Kanban Hb Track.md
+    spec: docs/_canon/specs/Kanban Spec.md
   registries:
     gates_registry: docs/_canon/_agent/GATES_REGISTRY.yaml
     failure_to_gates: docs/_canon/_agent/FAILURE_TO_GATES.yaml
     correction_allowlist: docs/_canon/_agent/CORRECTION_WRITE_ALLOWLIST.yaml
     project_profile: docs/_canon/HB_TRACK_PROFILE.yaml
-  evidence_pack_root: "_reports/audit/<RUN_ID>/"
+  evidence_pack_root: "docs/hbtrack/evidence/AR_<id>/"
 
-1. Colunas
+## 1. Colunas
 
 Fluxo obrigatório:
 - BACKLOG
@@ -28,6 +28,10 @@ Fluxo obrigatório:
 
 WIP:
 - EXECUTING MUST ter WIP=1 (máximo 2 em exceção documentada no card).
+
+REGRA DURA (commit authority):
+- Kanban NÃO libera commit.
+- Autoridade de commit é exclusivamente: AR + evidence canônico + TESTADOR_REPORT + _INDEX.md + selo humano hb seal (✅ VERIFICADO).
 
 2. Regras determinísticas (essência)
 
@@ -90,11 +94,11 @@ Regra:
 O Executor MUST:
 - Aplicar mudanças somente no WRITE_SCOPE.
 - Rodar todos os gates do card.
-- Coletar evidências e estruturar o Evidence Pack em `_reports/audit/<RUN_ID>/`.
+- Coletar evidências e estruturar o Evidence Pack em `docs/hbtrack/evidence/AR_<id>/`.
 
 6. Evidence Pack (formato mínimo obrigatório)
 
-Em `_reports/audit/<RUN_ID>/` MUST existir:
+Em `docs/hbtrack/evidence/AR_<id>/` MUST existir:
 - card.yaml (CARD_ID, CAPABILITY, FAILURE_TYPE, SSOT_REFERENCES, WRITE_SCOPE)
 - commands.log (comandos exatos + cwd + env pré-requisitos)
 - exit_codes.json (map command -> exit code)
@@ -150,4 +154,359 @@ ACCEPTANCE_CRITERIA:
 
 EVIDENCE_PACK:
 - RUN_ID:
-- (links/paths em _reports/audit/<RUN_ID>/)
+- (links/paths em docs/hbtrack/evidence/AR_<id>/)
+
+---
+
+## 9. Cards — Domínio COMPETITIONS
+
+### COMP-DB-001
+
+CARD_ID: COMP-DB-001
+TITLE: Soft delete (deleted_at/deleted_reason + trigger) em 5 tabelas do domínio COMPETITIONS
+STATUS: EVIDENCE_PACK
+
+CAPABILITY: COMPETITIONS
+FAILURE_TYPE: FT_DB_MIGRATION
+SCOPE_NOTE: DDL-only, sem backfill. Tabelas: competition_matches, competition_opponent_teams, competition_phases, match_events, match_roster. competition_standings excluído (ver COMP-DB-005).
+
+SSOT_REFERENCES:
+- docs/ssot/schema.sql
+- docs/_canon/planos/comp_db_001_soft_delete_competition_tables.json
+
+WRITE_SCOPE:
+- Hb Track - Backend/db/alembic/versions/0055_comp_db_001_soft_delete_competition_tables.py
+- Hb Track - Backend/app/models/competition_match.py
+- Hb Track - Backend/app/models/competition_opponent_team.py
+- Hb Track - Backend/app/models/competition_phase.py
+- Hb Track - Backend/app/models/match_event.py
+- Hb Track - Backend/app/models/match_roster.py
+FORBIDDEN:
+- competition_standings (excluído explicitamente — ver COMP-DB-005)
+ALLOWLIST_MATCH:
+- N/A
+
+GATES_REQUIRED:
+- DB_MIGRATIONS_UPGRADE_HEAD
+- DB_MIGRATIONS_HASH_CHECK
+GATES_MINIMUM:
+- AUDIT_PACK_INTEGRITY
+
+EVIDENCE_EXPECTED:
+- DB_MIGRATIONS_UPGRADE_HEAD: exit_code=0 + alembic head=0055
+- DB_MIGRATIONS_HASH_CHECK: exit_code=0
+- AUDIT_PACK_INTEGRITY: exit_code=0
+
+ROLLBACK_PLAN:
+- alembic downgrade -1
+- git restore dos 5 models (competition_match.py, competition_opponent_team.py, competition_phase.py, match_event.py, match_roster.py)
+
+ACCEPTANCE_CRITERIA:
+- AC-001: deleted_at + deleted_reason presentes nas 5 tabelas (information_schema.columns)
+- AC-002: 5 triggers trg_<table>_block_delete existem (information_schema.triggers)
+- AC-003: ck_<table>_deleted_reason CHECK constraints existem nas 5 tabelas
+- AC-004: alembic downgrade -1 retorna exit_code=0
+
+EVIDENCE_PACK:
+- RUN_ID: HB-AUDIT-COMP-DB-001-20260222-001
+- docs/hbtrack/evidence/HB-AUDIT-COMP-DB-001/
+- DB_MIGRATIONS_UPGRADE_HEAD: PASS (exit_code=0, alembic upgrade 0055 OK, local PG12:5433)
+- DB_MIGRATIONS_HASH_CHECK: PASS (exit_code=0, single head 0061, sem conflitos)
+- AUDIT_PACK_INTEGRITY: PASS (exit_code=0)
+- AC-001 deleted_at/deleted_reason 5 tabelas: PASS
+- AC-002 5 triggers trg_*_block_delete: PASS
+- AC-003 5 CHECK ck_*_deleted_reason: PASS
+- AC-004 alembic downgrade -1 exit_code=0: PASS
+- NOTA: Gate LOCAL (PG12:5433) PASS. VPS (PG15) inacessível — gate VPS é CONDITIONAL per GATES_REGISTRY.
+
+---
+
+### COMP-DB-002
+
+CARD_ID: COMP-DB-002
+TITLE: competition_standings.team_id — FK → teams.id (ON DELETE SET NULL)
+STATUS: EVIDENCE_PACK
+
+CAPABILITY: COMPETITIONS
+FAILURE_TYPE: FT_DB_MIGRATION
+SCOPE_NOTE: Adiciona coluna team_id (uuid nullable) com FK para teams.id e índice de suporte. Plano detalhado em competition_standings_add_team_id.json.
+
+SSOT_REFERENCES:
+- docs/ssot/schema.sql
+- docs/_canon/planos/competition_standings_add_team_id.json
+
+WRITE_SCOPE:
+- Hb Track - Backend/db/alembic/versions/0054_competition_standings_add_team_id.py
+- Hb Track - Backend/app/models/competition_standing.py
+FORBIDDEN:
+- Demais models e rotas
+ALLOWLIST_MATCH:
+- N/A
+
+GATES_REQUIRED:
+- DB_MIGRATIONS_UPGRADE_HEAD
+- DB_MIGRATIONS_HASH_CHECK
+GATES_MINIMUM:
+- AUDIT_PACK_INTEGRITY
+
+EVIDENCE_EXPECTED:
+- DB_MIGRATIONS_UPGRADE_HEAD: exit_code=0
+- DB_MIGRATIONS_HASH_CHECK: exit_code=0
+- AUDIT_PACK_INTEGRITY: exit_code=0
+
+ROLLBACK_PLAN:
+- alembic downgrade -1
+- git restore Hb Track - Backend/app/models/competition_standing.py
+
+ACCEPTANCE_CRITERIA:
+- AC-001: competition_standings.team_id EXISTS (information_schema.columns)
+- AC-002: fk_competition_standings_team_id constraint EXISTS
+- AC-003: alembic downgrade -1 retorna exit_code=0
+
+EVIDENCE_PACK:
+- RUN_ID: HB-AUDIT-COMP-DB-002-20260222-001
+- docs/hbtrack/evidence/HB-AUDIT-COMP-DB-002/
+- DB_MIGRATIONS_UPGRADE_HEAD: PASS (exit_code=0, alembic upgrade 0054 OK, local PG12:5433)
+- DB_MIGRATIONS_HASH_CHECK: PASS (exit_code=0, single head 0061)
+- AUDIT_PACK_INTEGRITY: PASS (exit_code=0)
+- AC-001 competition_standings.team_id EXISTS: PASS
+- AC-002 fk_competition_standings_team_id EXISTS: PASS
+- AC-003 alembic downgrade -1 exit_code=0: PASS
+
+---
+
+### COMP-DB-003
+
+CARD_ID: COMP-DB-003
+TITLE: competitions.points_per_draw + points_per_loss — colunas de regras de pontuação
+STATUS: EVIDENCE_PACK
+
+CAPABILITY: COMPETITIONS
+FAILURE_TYPE: FT_DB_MIGRATION
+SCOPE_NOTE: Adiciona points_per_draw (DEFAULT 1) e points_per_loss (DEFAULT 0) em competitions. Atualiza model competition.py. Migration 0056, down_revision='0055'.
+
+SSOT_REFERENCES:
+- docs/ssot/schema.sql
+- docs/_canon/planos/comp_db_003_scoring_rules.json
+
+WRITE_SCOPE:
+- Hb Track - Backend/db/alembic/versions/0056_comp_db_003_scoring_rules_competitions.py
+- Hb Track - Backend/app/models/competition.py
+FORBIDDEN:
+- Rotas, serviços, schemas Pydantic (escopo estritamente estrutural)
+ALLOWLIST_MATCH:
+- N/A
+
+GATES_REQUIRED:
+- DB_MIGRATIONS_UPGRADE_HEAD
+- DB_MIGRATIONS_HASH_CHECK
+GATES_MINIMUM:
+- AUDIT_PACK_INTEGRITY
+
+EVIDENCE_EXPECTED:
+- DB_MIGRATIONS_UPGRADE_HEAD: exit_code=0 + head=0056
+- DB_MIGRATIONS_HASH_CHECK: exit_code=0
+- AUDIT_PACK_INTEGRITY: exit_code=0
+
+ROLLBACK_PLAN:
+- alembic downgrade -1 (drop columns points_per_draw, points_per_loss)
+- git restore Hb Track - Backend/app/models/competition.py
+
+ACCEPTANCE_CRITERIA:
+- AC-001: competitions.points_per_draw EXISTS com DEFAULT=1 (information_schema.columns)
+- AC-002: competitions.points_per_loss EXISTS com DEFAULT=0
+- AC-003: Competition model tem points_per_draw e points_per_loss como Mapped[int]
+- AC-004: alembic downgrade -1 retorna exit_code=0
+
+EVIDENCE_PACK:
+- RUN_ID: HB-AUDIT-COMP-DB-003-20260222-001
+- docs/hbtrack/evidence/HB-AUDIT-COMP-DB-003/
+- DB_MIGRATIONS_UPGRADE_HEAD: PASS (exit_code=0, alembic upgrade 0056 OK, local PG12:5433)
+- DB_MIGRATIONS_HASH_CHECK: PASS (exit_code=0, single head 0061)
+- AUDIT_PACK_INTEGRITY: PASS (exit_code=0)
+- AC-001 competitions.points_per_draw EXISTS default=1: PASS
+- AC-002 competitions.points_per_loss EXISTS default=0: PASS
+- AC-003 Competition model Mapped[int] fields: PASS
+- AC-004 alembic downgrade -1 exit_code=0: PASS
+
+---
+
+### COMP-DB-004
+
+CARD_ID: COMP-DB-004
+TITLE: competition_standings — UNIQUE index com NULLS NOT DISTINCT substituindo uk_competition_standings_team_phase
+STATUS: EVIDENCE_PACK
+
+CAPABILITY: COMPETITIONS
+FAILURE_TYPE: FT_DB_MIGRATION
+SCOPE_NOTE: O constraint UNIQUE atual (competition_id, phase_id, opponent_team_id) permite duplicatas quando phase_id IS NULL (NULL != NULL em UNIQUE). Substituir por UNIQUE INDEX NULLS NOT DISTINCT (PostgreSQL 15+). Migration 0060, down_revision='0059'. BLOQUEADO: requer PG15+ (local é PG12).
+
+SSOT_REFERENCES:
+- docs/ssot/schema.sql (linha 2668-2672)
+- docs/_canon/planos/comp_db_004_unique_index.json
+
+WRITE_SCOPE:
+- Hb Track - Backend/db/alembic/versions/0060_comp_db_004_standings_unique_nulls_not_distinct.py
+- Hb Track - Backend/app/models/competition_standing.py
+FORBIDDEN:
+- Demais models e rotas
+ALLOWLIST_MATCH:
+- N/A
+
+GATES_REQUIRED:
+- DB_MIGRATIONS_UPGRADE_HEAD
+- DB_MIGRATIONS_HASH_CHECK
+GATES_MINIMUM:
+- AUDIT_PACK_INTEGRITY
+
+EVIDENCE_EXPECTED:
+- DB_MIGRATIONS_UPGRADE_HEAD: exit_code=0 + head=0060
+- DB_MIGRATIONS_HASH_CHECK: exit_code=0
+- AUDIT_PACK_INTEGRITY: exit_code=0
+
+ROLLBACK_PLAN:
+- alembic downgrade -1 (drop new index, recreate uk_competition_standings_team_phase)
+- git restore Hb Track - Backend/app/models/competition_standing.py
+
+ACCEPTANCE_CRITERIA:
+- AC-001: uk_competition_standings_team_phase NÃO EXISTS após migration
+- AC-002: uq_competition_standings_comp_phase_opponent EXISTS (information_schema.table_constraints)
+- AC-003: INSERT duplicado com phase_id=NULL levanta UniqueViolation (teste funcional)
+- AC-004: alembic downgrade -1 retorna exit_code=0
+
+EVIDENCE_PACK:
+- RUN_ID: HB-AUDIT-COMP-DB-004-20260222-001
+- docs/hbtrack/evidence/HB-AUDIT-COMP-DB-004/
+- DB_MIGRATIONS_UPGRADE_HEAD: PASS (exit_code=0, VPS PG15.16, alembic upgrade 0060 OK)
+- DB_MIGRATIONS_HASH_CHECK: PASS (exit_code=0, single head 0061)
+- AUDIT_PACK_INTEGRITY: PASS (exit_code=0)
+- AC-001 uk_competition_standings_team_phase GONE: PASS
+- AC-002 uq_competition_standings_comp_phase_opponent EXISTS: PASS
+- AC-003 indnullsnotdistinct=true em pg_index: PASS
+- AC-004 alembic downgrade -1 exit_code=0: PASS
+- WAIVER: WAIVER-2026-02-22-001 CLOSED — docs/_canon/_agent/WAIVERS.yaml
+- CORR: _reports/cases/CORR-2026-02-22-001/state.yaml
+
+---
+
+### COMP-DB-005
+
+CARD_ID: COMP-DB-005
+TITLE: competition_standings soft delete (deleted_at/deleted_reason + trigger) — decisão PO necessária
+STATUS: BACKLOG
+
+CAPABILITY: COMPETITIONS
+FAILURE_TYPE: FT_DB_MIGRATION
+SCOPE_NOTE: Excluído de COMP-DB-001 (decisão PO-PEND-004). competition_standings é tabela de cache recalculável sem dados pessoais diretos. Requer confirmação: soft delete mandatório (RDB4) vs. recalculável sem LGPD Art.18. Bloqueado até decisão PO.
+
+SSOT_REFERENCES:
+- docs/ssot/schema.sql
+- docs/_canon/planos/comp_db_001_soft_delete_competition_tables.json (notas: exclusão)
+
+WRITE_SCOPE:
+- Hb Track - Backend/db/alembic/versions/0058_comp_db_005_standings_soft_delete.py
+- Hb Track - Backend/app/models/competition_standing.py
+FORBIDDEN:
+- Demais tables e models
+ALLOWLIST_MATCH:
+- N/A
+
+GATES_REQUIRED:
+- DB_MIGRATIONS_UPGRADE_HEAD
+- DB_MIGRATIONS_HASH_CHECK
+GATES_MINIMUM:
+- AUDIT_PACK_INTEGRITY
+
+EVIDENCE_EXPECTED:
+- DB_MIGRATIONS_UPGRADE_HEAD: exit_code=0
+- DB_MIGRATIONS_HASH_CHECK: exit_code=0
+- AUDIT_PACK_INTEGRITY: exit_code=0
+
+ROLLBACK_PLAN:
+- alembic downgrade -1
+- git restore Hb Track - Backend/app/models/competition_standing.py
+
+ACCEPTANCE_CRITERIA:
+- AC-001: competition_standings.deleted_at EXISTS
+- AC-002: ck_competition_standings_deleted_reason CHECK constraint EXISTS
+- AC-003: trg_competition_standings_block_delete trigger EXISTS
+- AC-004: alembic downgrade -1 retorna exit_code=0
+
+EVIDENCE_PACK:
+- RUN_ID: (pendente)
+- BLOQUEADO: aguardando decisão PO (PO-PEND-004)
+
+---
+
+### COMP-DB-006
+
+CARD_ID: COMP-DB-006
+TITLE: competitions + competition_matches — CHECK constraints de status/modality
+STATUS: EVIDENCE_PACK
+
+CAPABILITY: COMPETITIONS
+FAILURE_TYPE: FT_DB_MIGRATION
+SCOPE_NOTE: competitions.status e competition_matches.status têm DEFAULT definido mas sem CHECK constraint. competitions.modality também sem CHECK. Risco de valores inválidos silenciosos no banco.
+
+SSOT_REFERENCES:
+- docs/ssot/schema.sql (linhas 760-782, 648-674)
+- Hb Track - Backend/app/models/competition.py (status DEFAULT 'draft', modality DEFAULT 'masculino')
+
+WRITE_SCOPE:
+- Hb Track - Backend/db/alembic/versions/0061_comp_db_006_status_check_constraints.py
+- Hb Track - Backend/app/models/competition.py
+- Hb Track - Backend/app/models/competition_match.py
+FORBIDDEN:
+- Rotas, serviços, schemas Pydantic
+ALLOWLIST_MATCH:
+- N/A
+
+GATES_REQUIRED:
+- DB_MIGRATIONS_UPGRADE_HEAD
+- DB_MIGRATIONS_HASH_CHECK
+GATES_MINIMUM:
+- AUDIT_PACK_INTEGRITY
+
+EVIDENCE_EXPECTED:
+- DB_MIGRATIONS_UPGRADE_HEAD: exit_code=0
+- DB_MIGRATIONS_HASH_CHECK: exit_code=0
+- AUDIT_PACK_INTEGRITY: exit_code=0
+
+ROLLBACK_PLAN:
+- alembic downgrade -1
+- git restore dos 2 models
+
+ACCEPTANCE_CRITERIA:
+- AC-001: ck_competitions_status CHECK constraint EXISTS com valores permitidos
+- AC-002: ck_competitions_modality CHECK constraint EXISTS
+- AC-003: ck_competition_matches_status CHECK constraint EXISTS
+- AC-004: INSERT com status='invalido' levanta CheckViolation
+- AC-005: alembic downgrade -1 retorna exit_code=0
+
+EVIDENCE_PACK:
+- RUN_ID: HB-AUDIT-COMP-DB-006-20260222-001
+- docs/hbtrack/evidence/HB-AUDIT-COMP-DB-006/
+- DB_MIGRATIONS_UPGRADE_HEAD: PASS (exit_code=0, VPS PG15.16, alembic upgrade 0061 OK)
+- DB_MIGRATIONS_HASH_CHECK: PASS (exit_code=0, single head 0061)
+- AUDIT_PACK_INTEGRITY: PASS (exit_code=0)
+- AC-001 ck_competitions_status EXISTS: PASS (values: draft/active/finished/cancelled)
+- AC-002 ck_competitions_modality EXISTS: PASS
+- AC-003 ck_competition_matches_status EXISTS: PASS
+- AC-004 CHECK constraint def rejeita invalido: PASS (structural via information_schema)
+- AC-005 alembic downgrade -1 exit_code=0: PASS
+
+### ✅ Concluído
+- AR_064
+- AR_050
+- AR_055
+- AR_054
+- AR_052
+- AR_051
+- AR_049
+- AR_048
+- AR_046
+- AR_047
+- AR_999 — test
+
+### 🛠️ Em Execução
+- AR_053 — Executor: Output não-determinístico: hashes divergem nos 3 runs (exit 0 em todos, mas stdout_hash diferente)

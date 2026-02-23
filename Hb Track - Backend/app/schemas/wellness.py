@@ -10,8 +10,8 @@ Campos baseados na tabela wellness_pre:
 - created_by_membership_id: UUID NOT NULL
 - sleep_hours: numeric(4,1) CHECK 0-24
 - sleep_quality: int CHECK 1-5
-- fatigue: int CHECK 0-10
-- stress: int CHECK 0-10
+- fatigue_pre (payload alias: fatigue): int CHECK 0-10
+- stress_level (payload alias: stress/humor): int CHECK 0-10 (semântica inversa: 0=ótimo, 10=pior)
 - muscle_soreness: int CHECK 0-10
 - pain: boolean DEFAULT false
 - pain_level: int CHECK 0-10
@@ -39,11 +39,16 @@ Campos baseados na tabela wellness_post:
 Constraint: UNIQUE (session_id, athlete_id)
 """
 
+# DECISÃO AR_050 (2026-02-22): Manter escala 0-10 para fatigue_pre, stress_level,
+# muscle_soreness, pain_level. sleep_quality permanece 1-5 (alinhado PRD).
+# PRD Seção 7 US-002 deve ser atualizado em próximo ciclo de PRD sync.
+# Ref: docs/hbtrack/ars/drafts/AR_050_wellness_*.md
+
 from datetime import datetime
 from typing import Optional
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import AliasChoices, BaseModel, ConfigDict, Field
 
 
 # ==============================================================================
@@ -60,10 +65,26 @@ class WellnessPreBase(BaseModel):
         None, description="ID do membership que criou"
     )
     sleep_hours: Optional[float] = Field(None, ge=0, le=24, description="Horas de sono")
-    sleep_quality: Optional[int] = Field(None, ge=1, le=5, description="Qualidade do sono (1-5)")
-    fatigue: Optional[int] = Field(None, ge=0, le=10, description="Nível de fadiga (0-10)")
-    stress: Optional[int] = Field(None, ge=0, le=10, description="Nível de estresse (0-10)")
-    muscle_soreness: Optional[int] = Field(None, ge=0, le=10, description="Dor muscular (0-10)")
+    sleep_quality: Optional[int] = Field(None, ge=1, le=5, description="Qualidade do sono (1-5). 1=péssimo, 5=excelente.")
+    fatigue: Optional[int] = Field(
+        None,
+        ge=0,
+        le=10,
+        validation_alias=AliasChoices("fatigue", "fatigue_pre"),
+        description="Fadiga pré-treino (0-10). 0=sem fadiga, 10=exausto. Campo de banco: fatigue_pre.",
+    )
+    stress: Optional[int] = Field(
+        None,
+        ge=0,
+        le=10,
+        validation_alias=AliasChoices("stress", "stress_level", "humor"),
+        description=(
+            "Humor/Disposição (proxy stress_level) em escala 0-10, semântica inversa: "
+            "0 = muito bem, 10 = muito estressado."
+        ),
+        json_schema_extra={"x-accepted-aliases": ["stress_level", "humor"]},
+    )
+    muscle_soreness: Optional[int] = Field(None, ge=0, le=10, description="Dor muscular (0-10). 0=sem dor, 10=dor intensa.")
     pain: bool = Field(False, description="Indica presença de dor")
     pain_level: Optional[int] = Field(None, ge=0, le=10, description="Nível de dor (0-10)")
     pain_location: Optional[str] = Field(None, description="Localização da dor")
@@ -77,10 +98,26 @@ class WellnessPreCreate(BaseModel):
     organization_id: UUID = Field(..., description="ID da organização")
     created_by_membership_id: UUID = Field(..., description="ID do membership que criou")
     sleep_hours: Optional[float] = Field(None, ge=0, le=24, description="Horas de sono")
-    sleep_quality: Optional[int] = Field(None, ge=1, le=5, description="Qualidade do sono (1-5)")
-    fatigue: Optional[int] = Field(None, ge=0, le=10, description="Nível de fadiga (0-10)")
-    stress: Optional[int] = Field(None, ge=0, le=10, description="Nível de estresse (0-10)")
-    muscle_soreness: Optional[int] = Field(None, ge=0, le=10, description="Dor muscular (0-10)")
+    sleep_quality: Optional[int] = Field(None, ge=1, le=5, description="Qualidade do sono (1-5). 1=péssimo, 5=excelente.")
+    fatigue: Optional[int] = Field(
+        None,
+        ge=0,
+        le=10,
+        validation_alias=AliasChoices("fatigue", "fatigue_pre"),
+        description="Fadiga pré-treino (0-10). 0=sem fadiga, 10=exausto. Campo de banco: fatigue_pre.",
+    )
+    stress: Optional[int] = Field(
+        None,
+        ge=0,
+        le=10,
+        validation_alias=AliasChoices("stress", "stress_level", "humor"),
+        description=(
+            "Humor/Disposição (proxy stress_level) em escala 0-10, semântica inversa: "
+            "0 = muito bem, 10 = muito estressado."
+        ),
+        json_schema_extra={"x-accepted-aliases": ["stress_level", "humor"]},
+    )
+    muscle_soreness: Optional[int] = Field(None, ge=0, le=10, description="Dor muscular (0-10). 0=sem dor, 10=dor intensa.")
     pain: bool = Field(False, description="Indica presença de dor")
     pain_level: Optional[int] = Field(None, ge=0, le=10, description="Nível de dor (0-10)")
     pain_location: Optional[str] = Field(None, description="Localização da dor")
@@ -107,10 +144,26 @@ class WellnessPreUpdate(BaseModel):
     """Payload para atualização de wellness pré-treino."""
 
     sleep_hours: Optional[float] = Field(None, ge=0, le=24, description="Horas de sono")
-    sleep_quality: Optional[int] = Field(None, ge=1, le=5, description="Qualidade do sono (1-5)")
-    fatigue: Optional[int] = Field(None, ge=0, le=10, description="Nível de fadiga (0-10)")
-    stress: Optional[int] = Field(None, ge=0, le=10, description="Nível de estresse (0-10)")
-    muscle_soreness: Optional[int] = Field(None, ge=0, le=10, description="Dor muscular (0-10)")
+    sleep_quality: Optional[int] = Field(None, ge=1, le=5, description="Qualidade do sono (1-5). 1=péssimo, 5=excelente.")
+    fatigue: Optional[int] = Field(
+        None,
+        ge=0,
+        le=10,
+        validation_alias=AliasChoices("fatigue", "fatigue_pre"),
+        description="Fadiga pré-treino (0-10). 0=sem fadiga, 10=exausto. Campo de banco: fatigue_pre.",
+    )
+    stress: Optional[int] = Field(
+        None,
+        ge=0,
+        le=10,
+        validation_alias=AliasChoices("stress", "stress_level", "humor"),
+        description=(
+            "Humor/Disposição (proxy stress_level) em escala 0-10, semântica inversa: "
+            "0 = muito bem, 10 = muito estressado."
+        ),
+        json_schema_extra={"x-accepted-aliases": ["stress_level", "humor"]},
+    )
+    muscle_soreness: Optional[int] = Field(None, ge=0, le=10, description="Dor muscular (0-10). 0=sem dor, 10=dor intensa.")
     pain: Optional[bool] = Field(None, description="Indica presença de dor")
     pain_level: Optional[int] = Field(None, ge=0, le=10, description="Nível de dor (0-10)")
     pain_location: Optional[str] = Field(None, description="Localização da dor")

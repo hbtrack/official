@@ -5,10 +5,10 @@ meta:
   version: "0.1"
   status: SSOT
   ssot_scope: canon_docs
-  path: docs/_canon/specs/HB_TRACK_SPEC.md
+  path: docs/_canon/specs/Kanban Spec.md
   last_updated: 2026-02-20
   depends_on:
-    - docs/_canon/contratos/HB_TRACK_CONTRACT.md
+    - docs/_canon/contratos/Kanban Hb Track.md
     - docs/_canon/HB_TRACK_PROFILE.yaml
     - docs/_canon/_agent/GATES_REGISTRY.yaml
     - docs/_canon/_agent/FAILURE_TO_GATES.yaml
@@ -30,6 +30,7 @@ Qualquer CAPABILITY fora desta lista é NÃO-ESCOPO para READY→DONE.
 - TEAMS
 - TRAINING
 - DB_MIGRATIONS
+- COMPETITIONS
 - OPS_GOV (processo/gates/docs)
 
 3. SSOT por Domínio (alinhado à precedence)

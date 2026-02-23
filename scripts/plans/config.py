@@ -44,9 +44,7 @@ HB_BACKEND_DIR = PROJECT_ROOT / "Hb Track - Backend"
 if not HB_BACKEND_DIR.exists():
     HB_BACKEND_DIR = PROJECT_ROOT / "HB Track - Backend"
 
-HB_FRONTEND_DIR = PROJECT_ROOT / "Hb Track - Fronted"
-if not HB_FRONTEND_DIR.exists():
-    HB_FRONTEND_DIR = PROJECT_ROOT / "Hb Track - Frontend"
+HB_FRONTEND_DIR = PROJECT_ROOT / "Hb Track - Frontend"
 if not HB_FRONTEND_DIR.exists():
     HB_FRONTEND_DIR = PROJECT_ROOT / "HB Track - Frontend"
 

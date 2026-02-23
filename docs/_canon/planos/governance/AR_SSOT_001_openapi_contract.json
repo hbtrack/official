@@ -1,0 +1,31 @@
+{
+  "project": "HB Track",
+  "version": "1.1.0",
+  "notes": "Plano para criar o Contrato OpenAPI inicial. Sem este SSOT, o Frontend e o Backend desenvolvem endpoints sem coordenação, resultando em incompatibilidades de contrato (\"bater cabeça\"). Este plano define o docs/ssot/openapi.json como fonte canônica da API.",
+  "assumptions": [
+    "O backend usa FastAPI que gera OpenAPI automaticamente",
+    "Já existem endpoints implementados em Hb Track - Backend/app/",
+    "O frontend consome a API via fetch/axios",
+    "A versão da API é v1 (prefixo /api/v1/)"
+  ],
+  "tasks": [
+    {
+      "id": "060",
+      "title": "Gerar e Consolidar OpenAPI Spec Inicial",
+      "description": "CONTEXTO: O Backend FastAPI gera OpenAPI automaticamente, mas não há processo de governança que garanta que o frontend usa a spec canônica. Este plano cria o SSOT e o processo de sincronização.\n\nARQUIVO ALVO: docs/ssot/openapi.json (NOVO SSOT)\n\nOBJETIVO: Extrair spec OpenAPI do backend e consolidá-la como SSOT.\n\nPASSOS EXECUTOR:\n\n(1) GERAR spec OpenAPI do backend:\n   - Rodar backend localmente: cd 'Hb Track - Backend' ; uvicorn app.main:app --host 0.0.0.0 --port 8000\n   - Extrair spec via: curl http://localhost:8000/openapi.json > docs/ssot/openapi.json\n   - OU via código Python: python -c \"from app.main import app; import json; print(json.dumps(app.openapi(), indent=2))\" > docs/ssot/openapi.json\n\n(2) VALIDAR spec gerada:\n   - Verificar que contém 'openapi': '3.0.2' ou '3.1.0'\n   - Verificar que contém seção 'paths' com endpoints principais:\n     * /api/v1/athletes\n     * /api/v1/training-sessions\n     * /api/v1/teams\n     * /api/v1/users\n   - Verificar que contém seção 'components/schemas' com modelos principais\n\n(3) ADICIONAR metadados de governança:\n   - Adicionar no topo do JSON (seção 'info'):\n     {\n       \"title\": \"HB Track API\",\n       \"version\": \"1.0.0\",\n       \"description\": \"API REST para gestão técnica de handebol. SSOT: Este arquivo é gerado automaticamente do backend FastAPI e deve ser sincronizado antes de cada release.\",\n       \"x-ssot-generated-at\": \"<timestamp>\",\n       \"x-ssot-backend-commit\": \"<git hash>\"\n     }\n\n(4) CRIAR script de sincronização (Hb Track - Frontend/scripts/sync_openapi.ps1):\n   # PowerShell script que:\n   # 1. Verifica se backend está rodando\n   # 2. Baixa /openapi.json\n   # 3. Valida estrutura\n   # 4. Sobrescreve docs/ssot/openapi.json\n   # 5. Gera tipos TypeScript (opcional futuro)\n\n(5) DOCUMENTAR processo no README:\n   - Adicionar seção em Hb Track - Backend/README.md:\n     \"## OpenAPI SSOT\n     O contrato da API é mantido em docs/ssot/openapi.json.\n     Para atualizar: npm run sync:openapi (ou scripts/sync_openapi.ps1)\n     IMPORTANTE: Toda mudança de endpoint DEVE sincronizar o SSOT antes de commit.\"\n\n(6) VALIDAÇÃO FINAL:\n   - Confirmar que docs/ssot/openapi.json existe\n   - Confirmar que contém >50 endpoints (backend V1 tem ~60+ endpoints)\n   - Confirmar que script de sync funciona\n\nCRITÉRIO: O validation_command verifica a estrutura e conteúdo mínimo do openapi.json.",
+      "criteria": "1) Arquivo docs/ssot/openapi.json existe com >10KB. 2) JSON é válido e parseia sem erro. 3) Contém campo 'openapi' com versão 3.x. 4) Contém seção 'paths' com pelo menos 30 endpoints. 5) Contém seção 'components/schemas' com modelos (Athlete, TrainingSession, Team, User). 6) Contém metadados x-ssot-generated-at e x-ssot-backend-commit na seção info. 7) Script sync_openapi.ps1 existe em Hb Track - Frontend/scripts/.",
+      "gate": "GATE_API_CONTRACT",
+      "validation_command": "python -c \"import json, os; path='docs/ssot/openapi.json'; assert os.path.exists(path), 'OpenAPI file not found'; spec=json.load(open(path, encoding='utf-8')); assert 'openapi' in spec and spec['openapi'].startswith('3.'), 'Invalid OpenAPI version'; assert 'paths' in spec and len(spec['paths']) >= 30, f'Too few endpoints: {len(spec.get(\\\"paths\\\", {}))}'; assert 'components' in spec and 'schemas' in spec['components'], 'Missing schemas'; assert 'info' in spec and 'x-ssot-generated-at' in spec['info'], 'Missing SSOT metadata'; print(f'✅ OpenAPI SSOT válido: {len(spec[\\\"paths\\\"])} endpoints, {len(spec[\\\"components\\\"][\\\"schemas\\\"])} schemas')\"",
+      "evidence_file": "docs/hbtrack/evidence/AR_060_openapi_ssot.log",
+      "ssot_touches": [
+        "docs/ssot/openapi.json"
+      ],
+      "notes": "IMPORTANTE: Este plano NÃO gera código automaticamente a partir do OpenAPI. Ele apenas estabelece o SSOT. Em uma AR futura, pode-se implementar geração de tipos TypeScript (openapi-typescript) ou validação de requests (openapi-validator).",
+      "risks": [
+        "OpenAPI pode ficar desatualizado se desenvolvedores não rodarem sync antes de commit",
+        "FastAPI gera spec muito verbosa - considerar filtrar endpoints internos",
+        "Backend deve estar rodando para gerar spec - considerar extração via código Python sem servidor"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "gate_id": "GATE_MODEL_SYNC",
+  "exit_code": 0,
+  "status": "PASS",
+  "command": "python -c \"...validation AR_009...\"",
+  "run_id": "HB-AUDIT-COMP-DB-001-20260220-001",
+  "timestamp": "2026-02-20",
+  "stdout": "PASS: deleted_at+deleted_reason present in all 5 models",
+  "models_verified": [
+    "CompetitionMatch",
+    "CompetitionOpponentTeam",
+    "CompetitionPhase",
+    "MatchEvent",
+    "MatchRoster"
+  ],
+  "fields_verified": ["deleted_at", "deleted_reason"]
+}

@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_048-b2e7523",
+  "timestamp_utc": "2026-02-22T18:31:36.814460+00:00",
+  "git": {
+    "commit": "b2e75234d5e3757507fdce48f06b3a57fde125a8"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "048",
+  "ar_file": "docs\\hbtrack\\ars\\drafts\\AR_048_criar_invariants_competitions.md_inv-comp-001_a_in.md"
+}

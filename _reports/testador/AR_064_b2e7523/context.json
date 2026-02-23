@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_064-b2e7523",
+  "timestamp_utc": "2026-02-22T18:31:47.626365+00:00",
+  "git": {
+    "commit": "b2e75234d5e3757507fdce48f06b3a57fde125a8"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "064",
+  "ar_file": "docs\\hbtrack\\ars\\drafts\\AR_064_cleanup_rogue__agent_,_agentes_,_.github_cont_+_re.md"
+}

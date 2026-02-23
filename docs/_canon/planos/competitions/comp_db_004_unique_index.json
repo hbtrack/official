@@ -1,0 +1,51 @@
+{
+  "project": "HB Track",
+  "version": "1.1.0",
+  "notes": "COMP-DB-004: O constraint UNIQUE atual em competition_standings — uk_competition_standings_team_phase(competition_id, phase_id, opponent_team_id) — é um UNIQUE constraint padrão PostgreSQL. Gap: em PostgreSQL, duas linhas com os mesmos valores de competition_id e opponent_team_id mas ambas com phase_id=NULL NÃO violam o constraint (NULL != NULL no UNIQUE padrão). Isso permite duplicatas silenciosas para standings sem fase definida. Fix: substituir pelo índice UNIQUE com NULLS NOT DISTINCT (disponível a partir do PostgreSQL 15; banco usa PG 17.7). Migration 0057, down_revision='0056'. Capability: COMPETITIONS. PRD RDB10-equivalente para competition_standings. ARs geradas: AR_038 (migration), AR_039 (model).",
+  "assumptions": [
+    "Banco de dados é PostgreSQL 17.7 (Neon Serverless) — suporta NULLS NOT DISTINCT (recurso PG 15+).",
+    "SQLAlchemy 2.0.45 (conforme Ambiente.md) suporta postgresql_nulls_not_distinct=True em UniqueConstraint.",
+    "Down-revision é '0056' (cadeia: 0055 → 0056 → 0057).",
+    "O constraint uk_competition_standings_team_phase (competition_id, phase_id, opponent_team_id) existe atualmente no banco (confirmado em docs/ssot/schema.sql linhas 2668-2672).",
+    "A migration DROP CONSTRAINT + CREATE UNIQUE CONSTRAINT precisará de brief lock na tabela competition_standings — executar em janela de baixo tráfego.",
+    "NÃO usar CREATE INDEX CONCURRENTLY dentro de transação Alembic — usar op.create_unique_constraint() com postgresql_nulls_not_distinct=True.",
+    "O Executor NÃO deve alterar lógica de negócio, queries, rotas ou outros campos além dos listados.",
+    "team_id foi adicionado por migration 0054 e NÃO faz parte do unique constraint (é FK opcional para lookup, não identificador de unicidade do standing).",
+    "competition_standing.py já tem UniqueConstraint importado (linha 31): from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint."
+  ],
+  "tasks": [
+    {
+      "id": "038",
+      "title": "Migration 0057: DROP uk_competition_standings_team_phase + CREATE UNIQUE NULLS NOT DISTINCT",
+      "description": "Criar arquivo Hb Track - Backend/db/alembic/versions/0057_comp_db_004_standings_unique_nulls_not_distinct.py com revision='0057', down_revision='0056'.\n\nUpgrade:\n  # 1. Drop existing UNIQUE constraint (não é INDEX — é constraint)\n  op.drop_constraint('uk_competition_standings_team_phase', 'competition_standings', type_='unique')\n\n  # 2. Create new UNIQUE constraint with NULLS NOT DISTINCT\n  op.create_unique_constraint(\n      'uq_competition_standings_comp_phase_opponent',\n      'competition_standings',\n      ['competition_id', 'phase_id', 'opponent_team_id'],\n      postgresql_nulls_not_distinct=True\n  )\n\nDowngrade:\n  # Reverso exato\n  op.drop_constraint('uq_competition_standings_comp_phase_opponent', 'competition_standings', type_='unique')\n  op.create_unique_constraint(\n      'uk_competition_standings_team_phase',\n      'competition_standings',\n      ['competition_id', 'phase_id', 'opponent_team_id']\n  )\n\nDocstring MUST incluir: 'COMP-DB-004: unique NULLS NOT DISTINCT em competition_standings(competition_id, phase_id, opponent_team_id)'.\nNAO modificar nenhum outro arquivo.",
+      "criteria": "1) alembic upgrade head retorna exit_code=0. 2) uk_competition_standings_team_phase NÃO existe mais (SELECT constraint_name FROM information_schema.table_constraints WHERE constraint_name='uk_competition_standings_team_phase' retorna 0 linhas). 3) uq_competition_standings_comp_phase_opponent EXISTS (retorna 1 linha). 4) INSERT duplicado com phase_id=NULL levanta UniqueViolation (teste funcional: INSERT competition_standings com competition_id=X, phase_id=NULL, opponent_team_id=Y; segundo INSERT idêntico deve falhar com 23505). 5) alembic downgrade -1 retorna exit_code=0. 6) alembic upgrade head novamente retorna exit_code=0.",
+      "gate": "DB_MIGRATIONS_UPGRADE_HEAD",
+      "ssot_touches": ["docs/ssot/schema.sql", "docs/ssot/alembic_state.txt"],
+      "validation_command": "python -c \"import pathlib; f=pathlib.Path('Hb Track - Backend/db/alembic/versions/0057_comp_db_004_standings_unique_nulls_not_distinct.py'); assert f.exists(),'FAIL: migration file not found'; c=f.read_text(encoding='utf-8'); assert \\\"revision = '0057'\\\" in c,'FAIL: wrong revision id'; assert 'uq_competition_standings_comp_phase_opponent' in c,'FAIL: new constraint name missing'; assert 'uk_competition_standings_team_phase' in c,'FAIL: old constraint name missing (needed for drop and downgrade)'; assert 'nulls_not_distinct' in c.lower(),'FAIL: NULLS NOT DISTINCT missing'; assert \\\"down_revision = '0056'\\\" in c or \\\"down_revision='0056'\\\" in c,'FAIL: wrong down_revision'; print('PASS: migration 0057 content validated')\"",
+      "evidence_file": "docs/hbtrack/evidence/AR_038_comp_db_004_unique_index_migration.log",
+      "rollback_plan": "alembic downgrade -1\n# OU manualmente:\n# ALTER TABLE competition_standings DROP CONSTRAINT IF EXISTS uq_competition_standings_comp_phase_opponent;\n# ALTER TABLE competition_standings ADD CONSTRAINT uk_competition_standings_team_phase UNIQUE (competition_id, phase_id, opponent_team_id);",
+      "risks": [
+        "op.drop_constraint + op.create_unique_constraint adquirem lock ACCESS EXCLUSIVE na tabela competition_standings. Em produção com dados, executar em janela de manutenção.",
+        "Se SQLAlchemy < 2.0.8 estiver instalado, postgresql_nulls_not_distinct não será reconhecido. Verificar versão antes: python -c 'import sqlalchemy; print(sqlalchemy.__version__)'.",
+        "Alternativa se NULLS NOT DISTINCT não for suportado pelo SQLAlchemy local: usar op.execute(text(\"ALTER TABLE competition_standings ADD CONSTRAINT uq_competition_standings_comp_phase_opponent UNIQUE NULLS NOT DISTINCT (competition_id, phase_id, opponent_team_id)\"))",
+        "Registros existentes com duplicatas phase_id=NULL (se houver) vão impedir a migration. Pré-flight recomendado: SELECT competition_id, phase_id, opponent_team_id, COUNT(*) FROM competition_standings GROUP BY competition_id, phase_id, opponent_team_id HAVING COUNT(*) > 1."
+      ]
+    },
+    {
+      "id": "039",
+      "title": "Model: CompetitionStanding — UniqueConstraint legado → NULLS NOT DISTINCT",
+      "description": "Atualizar Hb Track - Backend/app/models/competition_standing.py para refletir o novo constraint.\nDentro do bloco HB-AUTOGEN:BEGIN/END, no __table_args__ (linhas ~69-79):\n\n  REMOVER:\n    UniqueConstraint('competition_id', 'phase_id', 'opponent_team_id', name='uk_competition_standings_team_phase')\n\n  ADICIONAR (mesma posição, antes dos Index entries):\n    UniqueConstraint('competition_id', 'phase_id', 'opponent_team_id',\n                     name='uq_competition_standings_comp_phase_opponent',\n                     postgresql_nulls_not_distinct=True)\n\nUniqueConstraint já está importado na linha 31: from sqlalchemy import ForeignKey, CheckConstraint, Index, UniqueConstraint.\nNAO alterar outros campos, relationships, indexes (ix_competition_standings_*) ou lógica fora do bloco HB-AUTOGEN.",
+      "criteria": "1) python -c 'import sys; sys.path.insert(0, \"Hb Track - Backend\"); from app.models.competition_standing import CompetitionStanding; args=CompetitionStanding.__table_args__; names=[getattr(a,\"name\",None) for a in args]; assert \"uq_competition_standings_comp_phase_opponent\" in names, \"FAIL\"; print(\"PASS\")' retorna exit_code=0. 2) uk_competition_standings_team_phase NÃO está mais em __table_args__. 3) from app.models.competition_standing import CompetitionStanding não levanta ImportError.",
+      "gate": "GATE_MODEL_SYNC",
+      "ssot_touches": [],
+      "validation_command": "python -c \"import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition_standing import CompetitionStanding; args=CompetitionStanding.__table_args__; names=[getattr(a,'name',None) for a in args]; old='uk_competition_standings_team_phase'; new='uq_competition_standings_comp_phase_opponent'; errs=[]; (errs.append(f'OLD still present: {old}') if old in names else None); (errs.append(f'NEW missing: {new}') if new not in names else None); [print(e) for e in errs]; sys.exit(len(errs)) if errs else print('PASS')\"",
+      "evidence_file": "docs/hbtrack/evidence/AR_039_comp_db_004_unique_index_model.log",
+      "rollback_plan": "git revert HEAD  # se já commitado: desfaz o commit que atualizou o UniqueConstraint\n# OU, antes de commit:\ngit restore 'Hb Track - Backend/app/models/competition_standing.py'",
+      "risks": [
+        "Se competition_standing.py não tiver UniqueConstraint importado explicitamente, adicionar sem remover imports existentes. (Verificado: já importado na linha 31).",
+        "O bloco HB-AUTOGEN é auto-gerado — documentar em commit que a alteração é manual do ciclo COMP-DB-004.",
+        "postgresql_nulls_not_distinct=True no UniqueConstraint do model requer SQLAlchemy 2.0.8+. SQLAlchemy 2.0.45 instalado (conforme Ambiente.md) — compatível."
+      ]
+    }
+  ]
+}

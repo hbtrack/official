@@ -8,7 +8,7 @@ import json
 import jwt
 
 # Ler token do coordenador
-with open(r'C:\HB TRACK\Hb Track - Fronted\playwright\.auth\coordenador.json', 'r') as f:
+with open(r'C:\HB TRACK\Hb Track - Frontend\playwright\.auth\coordenador.json', 'r') as f:
     data = json.load(f)
     token = next((c['value'] for c in data['cookies'] if c['name'] == 'hb_access_token'), None)
 

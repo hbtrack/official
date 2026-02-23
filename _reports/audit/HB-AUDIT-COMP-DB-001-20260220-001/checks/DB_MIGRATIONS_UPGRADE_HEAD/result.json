@@ -1,0 +1,12 @@
+{
+  "gate_id": "DB_MIGRATIONS_UPGRADE_HEAD",
+  "exit_code": 3,
+  "status": "ERROR_INFRA",
+  "command": "alembic upgrade head",
+  "run_id": "HB-AUDIT-COMP-DB-001-20260220-001",
+  "timestamp": "2026-02-20",
+  "error_class": "psycopg2.OperationalError",
+  "error_message": "connection to server at \"191.252.185.34\", port 5432 failed: Connection timed out (0x0000274C/10060)",
+  "root_cause": "VPS PostgreSQL at 191.252.185.34:5432 unreachable — TCP connection timeout",
+  "notes": "Migration file 0055 exists and is syntactically correct. Blocker is infrastructure (VPS network/firewall), not SQL syntax."
+}

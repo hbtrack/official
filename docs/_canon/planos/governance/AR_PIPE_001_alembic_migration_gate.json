@@ -1,0 +1,29 @@
+{
+  "project": "HB Track",
+  "version": "1.1.0",
+  "notes": "Plano para configurar o Gate de Migração Alembic. Este gate garante que toda mudança em schema.sql DEVE gerar uma migração Alembic correspondente, mantendo sincronia entre SSOT e migrações versionadas.",
+  "assumptions": [
+    "O backend usa Alembic para migrations em Hb Track - Backend/db/alembic/versions/",
+    "Já existem 55+ migrações (0001 a 0055 visíveis no environment_details)",
+    "O arquivo docs/ssot/alembic_state.txt lista as migrações ativas",
+    "O hb_cli.py já valida ssot_touches no GATE 2.5"
+  ],
+  "tasks": [
+    {
+      "id": "061",
+      "title": "Configurar Gate de Validação de Migrações Alembic",
+      "description": "CONTEXTO: Quando uma AR toca em schema.sql, o Executor DEVE gerar migração Alembic correspondente. Sem este gate, o schema diverge das migrations, causando falhas em deploy.\n\nARQUIVO ALVO: scripts/run/hb_cli.py (enhancement do hb check)\n\nOBJETIVO: Adicionar validação no `hb check` que garante paridade entre schema.sql staged e alembic_state.txt staged.\n\nPASSOS EXECUTOR:\n\n(1) ENTENDER estado atual:\n   - hb check já valida ssot_touches via GATE C3\n   - Se AR marca [x] schema.sql, exige Evidence Pack com sucesso\n   - MAS não valida se migração Alembic foi gerada\n\n(2) ADICIONAR validação no hb_cli.py:\n\n   Localizar função check_command() em scripts/run/hb_cli.py.\n\n   Adicionar nova validação C3.5 (entre C3 e C4):\n\n   ```python\n   # C3.5: Se schema.sql está STAGED, alembic_state.txt também DEVE estar STAGED\n   def validate_schema_migration_parity():\n       \"\"\"GATE: Schema changes require Alembic migration.\"\"\"\n       schema_staged = is_file_staged('docs/ssot/schema.sql')\n       alembic_staged = is_file_staged('docs/ssot/alembic_state.txt')\n       \n       if schema_staged and not alembic_staged:\n           fail(\"❌ E_SCHEMA_WITHOUT_MIGRATION: schema.sql is staged but alembic_state.txt is not. \" +\n                \"Database schema changes MUST be accompanied by Alembic migration. \" +\n                \"Run: cd 'Hb Track - Backend' ; alembic revision --autogenerate -m '<description>' ; \" +\n                \"Then: python scripts/gen_docs_ssot.py\")\n       \n       # Inverso também deve alertar (migration sem schema é suspeito)\n       if alembic_staged and not schema_staged:\n           warn(\"⚠️ W_MIGRATION_WITHOUT_SCHEMA: alembic_state.txt is staged but schema.sql is not. \" +\n                \"This is unusual - verify that schema was updated via gen_docs_ssot.py\")\n   ```\n\n(3) INTEGRAR no fluxo do hb check:\n   - Adicionar chamada a validate_schema_migration_parity() após C3\n   - Garantir que erro E_SCHEMA_WITHOUT_MIGRATION resulta em exit 1 (FAIL)\n\n(4) ATUALIZAR documentação:\n   - Adicionar entrada em docs/_canon/specs/Hb cli Spec.md seção §7:\n     \"C3.5) Se schema.sql STAGED => alembic_state.txt também DEVE estar STAGED (paridade de migrations)\"\n   - Adicionar error code em §8:\n     \"E_SCHEMA_WITHOUT_MIGRATION: schema.sql staged sem alembic_state.txt correspondente\"\n\n(5) CRIAR teste de validação:\n   - Testar cenário: stage schema.sql mas não alembic_state.txt → hb check FAIL\n   - Testar cenário: stage ambos → hb check PASS (assumindo outras validações OK)\n\n(6) VALIDAÇÃO FINAL:\n   - Confirmar que hb check --mode manual detecta divergência\n   - Confirmar que mensagem de erro é clara e instrui como corrigir\n\nCRITÉRIO: O validation_command simula o cenário de schema staged sem migration e verifica que hb check falha corretamente.",
+      "criteria": "1) Função validate_schema_migration_parity() existe em hb_cli.py. 2) hb check executa validação C3.5. 3) Staging schema.sql sem alembic_state.txt resulta em E_SCHEMA_WITHOUT_MIGRATION e exit 1. 4) Staging ambos permite hb check PASS (assumindo outras condições OK). 5) Mensagem de erro contém instruções de correção (alembic revision). 6) Documentação atualizada em Hb cli Spec.md com C3.5 e E_SCHEMA_WITHOUT_MIGRATION.",
+      "gate": "GATE_MIGRATION_PARITY",
+      "validation_command": "cd 'Hb Track - Backend' ; python -m pytest tests/cli/test_hb_check_migration_gate.py::test_schema_without_migration_fails -v",
+      "evidence_file": "docs/hbtrack/evidence/AR_061_migration_gate.log",
+      "rollback_plan": "1) Reverter mudancas em hb_cli.py: git checkout scripts/run/hb_cli.py. 2) Reverter mudancas em Hb cli Spec.md: git checkout docs/_canon/specs/Hb\\ cli\\ Spec.md. 3) Remover testes se criados: Remove-Item tests/cli/test_hb_check_migration_gate.py -Force -ErrorAction SilentlyContinue. 4) git revert do commit da AR se necessario.",
+      "notes": "IMPORTANTE: Este gate NÃO gera a migração automaticamente. Ele apenas VALIDA que o Executor gerou. A geração continua manual via `alembic revision --autogenerate`. Em AR futura, pode-se automatizar a geração.",
+      "risks": [
+        "False positives: mudanças em schema.sql que não são migrations (comentários, formatação) vão disparar o gate",
+        "Executor pode esquecer de rodar gen_docs_ssot.py após criar migration",
+        "Gate não valida se a migration está CORRETA, apenas se existe"
+      ]
+    }
+  ]
+}

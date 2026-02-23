@@ -1,0 +1,178 @@
+{
+  "timestamp": "2026-02-21T07:53:50.645348",
+  "testador_id": "TESTADOR_MASTER",
+  "dod_target": "0 ARs em EM TESTE",
+  "dod_achieved": false,
+  "dod_status": "PARCIAL — 9 ARs BLOQUEADAS por Executor incompleto",
+  "verified_success": [
+    {
+      "ar": "010",
+      "title": "hb report Status update",
+      "consistency": "OK"
+    },
+    {
+      "ar": "011",
+      "title": "rebuild_ar_index()",
+      "consistency": "OK"
+    },
+    {
+      "ar": "012",
+      "title": "hb check enforcement",
+      "consistency": "OK"
+    },
+    {
+      "ar": "017",
+      "title": "PRD v2.2 Governance",
+      "consistency": "OK"
+    },
+    {
+      "ar": "018",
+      "title": "Testador Contract v1.0.8",
+      "consistency": "OK"
+    },
+    {
+      "ar": "019",
+      "title": "Hb cli Spec v1.0.8",
+      "consistency": "OK"
+    },
+    {
+      "ar": "021",
+      "title": "Dual Executor Contract",
+      "consistency": "OK"
+    },
+    {
+      "ar": "022",
+      "title": "BATCH_001 assignment",
+      "consistency": "OK"
+    },
+    {
+      "ar": "025",
+      "title": "Arquiteto Contract v2.0",
+      "consistency": "OK"
+    },
+    {
+      "ar": "026",
+      "title": "Executor Contract v2.0",
+      "consistency": "OK"
+    },
+    {
+      "ar": "027",
+      "title": "Testador Contract v2.0",
+      "consistency": "OK"
+    },
+    {
+      "ar": "028",
+      "title": "HBLock Concurrency",
+      "consistency": "OK"
+    },
+    {
+      "ar": "029",
+      "title": "Evidence Integrity",
+      "consistency": "OK"
+    },
+    {
+      "ar": "030",
+      "title": "Dev Flow v1.1.0",
+      "consistency": "OK"
+    }
+  ],
+  "rejected_false_positive": [
+    {
+      "ar": "016",
+      "title": "PRD v2.2 sync",
+      "reason": "Executor reported exit 0, got 1"
+    },
+    {
+      "ar": "020",
+      "title": "Dev Flow v1.0.8",
+      "reason": "Executor reported exit 0, got 1"
+    },
+    {
+      "ar": "031",
+      "title": "Ambiente SSOT",
+      "reason": "Executor reported exit 0, got 1"
+    }
+  ],
+  "blocked_no_evidence": [
+    {
+      "ar": "002",
+      "title": "CompetitionStanding.team_id",
+      "status": "DRAFT",
+      "reason": "Executor não rodou hb report — Status=DRAFT, sem ✅ SUCESSO"
+    },
+    {
+      "ar": "003.5",
+      "title": "persons.birth_date NOT NULL",
+      "status": "PROPOSTA",
+      "reason": "Sem Validation Command declarado"
+    },
+    {
+      "ar": "007",
+      "title": "Exit Code Zero Test",
+      "status": "🔴 REJEITADO",
+      "reason": "Testador já rejeitou (AH-6 incomplete evidence)"
+    },
+    {
+      "ar": "014",
+      "title": "git mv rename",
+      "status": "DRAFT",
+      "reason": "Executor não rodou hb report"
+    },
+    {
+      "ar": "015",
+      "title": "Update referências",
+      "status": "DRAFT",
+      "reason": "Executor não rodou hb report"
+    },
+    {
+      "ar": "023",
+      "title": "Triple-Run Determinism",
+      "status": "DRAFT",
+      "reason": "Executor não rodou hb report"
+    },
+    {
+      "ar": "024",
+      "title": "Docs v1.1.0",
+      "status": "DRAFT",
+      "reason": "Executor não rodou hb report"
+    },
+    {
+      "ar": "032",
+      "title": "Hb cli Spec.md sync",
+      "status": "DRAFT",
+      "reason": "Executor não rodou hb report"
+    },
+    {
+      "ar": "034",
+      "title": "Governança Plans",
+      "status": "DRAFT",
+      "reason": "Executor não rodou hb report"
+    },
+    {
+      "ar": "035",
+      "title": "create hb_watch.py",
+      "status": "DRAFT",
+      "reason": "Executor não rodou hb report"
+    }
+  ],
+  "in_progress": [
+    {
+      "ar": "004",
+      "title": "MatchEventService.create()",
+      "status": "🏗️ EM EXECUÇÃO"
+    },
+    {
+      "ar": "005",
+      "title": "Router match_events",
+      "status": "🏗️ EM EXECUÇÃO"
+    }
+  ],
+  "summary": {
+    "total_ars_tested": 17,
+    "passed": 14,
+    "rejected": 3,
+    "blocked": 9,
+    "in_progress": 2,
+    "total_ar_in_pipeline": 28
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_027-b2e7523",
+  "timestamp_utc": "2026-02-21T10:50:01.587358+00:00",
+  "git": {
+    "commit": "b2e75234d5e3757507fdce48f06b3a57fde125a8"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "027",
+  "ar_file": "docs\\hbtrack\\ars\\AR_027_agente-testador_contract_v2.0_triple-run_enterpris.md"
+}

@@ -1,11 +1,29 @@
 {
   "permissions": {
     "allow": [
+      "Bash(python -m pytest *)",
+      "Bash(python scripts/run/hb_cli.py *)",
+      "Bash(python scripts/run/hb_watch.py *)",
+      "Bash(python scripts/checks/**)",
+      "Bash(git diff *)",
+      "Bash(git status)",
+      "Bash(git log *)",
+      "Bash(docker ps *)",
+      "Read(**)",
+      "Bash(\"c:/HB TRACK/Hb:*)",
+      "Bash(python -m alembic:*)",
+      "Bash(docker exec hbtrack-postgres-dev psql:*)",
+      "Bash(docker exec:*)",
+      "Bash(__NEW_LINE_d5a7ccd140a785b2__ docker exec hbtrack-postgres-dev psql -U hbtrack_dev -d hb_track_dev -t -A -c \":*)",
+      "Bash(__NEW_LINE_c0d9a0f43a906744__ docker exec hbtrack-postgres-dev psql -U hbtrack_dev -d hb_track_dev -t -A -c \":*)",
+      "Bash(echo:*)",
       "Bash(python:*)",
-      "Bash(grep:*)",
-      "Bash(ps1)"
+      "Bash(python3:*)",
+      "Bash(ssh:*)"
     ],
     "deny": [
+      "Write(*)",
+      "Edit(*)",
       "Read(./.env)",
       "Read(./.env.*)",
       "Read(./secrets/**)",

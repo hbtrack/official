@@ -1,7 +1,7 @@
 # PRD: Sistema HB Track - Comissão Técnica Digital
 
-> **Versão:** 2.1
-> **Última atualização:** 07 de fevereiro de 2026  
+> **Versão:** 2.2
+> **Última atualização:** 20 de fevereiro de 2026
 > **Autor:** Equipe HB Track  
 > **Aprovadores:** Product Owner, Tech Lead  
 > **Status:** ✅ V1.0 em produção | 🚧 V1.1 em desenvolvimento | 🔮 V2.0+ planejado  
@@ -12,6 +12,7 @@
 
 | Versão | Data | Autor | Mudanças |
 |--------|------|-------|----------|
+| 2.2 | 20/02/2026 | Equipe HB Track | Sync: RACI+Preparador Físico, RFs novos (009–014), §8.2 modelo completo (65 tabelas), §11 stack Celery/Redis, §13.3 gate corrigido (.py), §20 Governança IA |
 | 2.1 | 07/02/2026 | Equipe HB Track | Adição: SLAs (10.7), matriz priorização V1.1, baselines métricas (14.1), PoC IA (16.6), modelo de negócio (18), go-to-market (19) |
 | 2.0 | 07/02/2026 | Equipe HB Track | Alinhamento com V1 implementado; adição de modelo de dados, RACI, user stories, roadmap detalhado |
 | 1.0 | 15/12/2025 | Product Owner | Versão inicial com foco em visão estratégica de IA |
@@ -137,7 +138,7 @@ Transformar o HB Track na **"Comissão Técnica Virtual"** de referência para h
 - 🚧 **Módulo de Competições:** Campeonatos, adversários, classificações
 - 🚧 **Partidas e Scout:** Registro de eventos de jogo (gols, assistências, faltas, defesas)
 - 🚧 **Relatórios Avançados:** Exportação PDF, analytics de match events
-- 🚧 **Banco de Exercícios:** Catálogo de atividades com tags hierárquicas, favoritos, drag-and-drop para sessões (em desenvolvimento)
+- ✅ **Banco de Exercícios:** Catálogo de atividades com tags hierárquicas, favoritos, drag-and-drop para sessões (backend + frontend completos)
 - ⚠️ **Notificações:** Alertas automáticos de sobrecarga e baixa resposta wellness implementados (backend + frontend); badges monthly job INATIVO (comentado em `celery_app.py:136-139`)
 
 **Matriz de Priorização V1.1:**
@@ -169,6 +170,19 @@ Ordem sugerida de entrega:
   4. Partidas e Scout     → depende de #3
   5. ~~Banco de Exercícios~~  → ✅ COMPLETO (backend + frontend + tags + favoritos + drag-and-drop)
 ```
+
+**Estado Atual do Domínio Competitions (21/02/2026):**
+
+| Card | Título | Status | ARs | Dependência |
+|------|--------|--------|-----|-------------|
+| COMP-DB-001 | Soft delete (5 tabelas) — migration 0055 + models | ✅ CONCLUÍDO | AR_008 (migration) + AR_009 (models) | — |
+| COMP-DB-002 | competition_standings.team_id — FK → teams | 🔲 PARCIAL | AR_001 ✅ (migration 0054); AR_002 🔲 (model) | COMP-DB-001 |
+| COMP-DB-003 | competitions.scoring rules (points_per_draw/loss) | 🔲 PENDENTE | AR_036 (migration) + AR_037 (model) | COMP-DB-002 |
+| COMP-DB-004 | Índices únicos — DROP uk_competition_standings_team_phase | 🔲 PENDENTE | AR_038 (migration) + AR_039 (model) | COMP-DB-003 |
+| COMP-DB-006 | CHECK constraints competitions + competition_matches | 🔲 PENDENTE | AR_040 (migration) + AR_041 + AR_042 (models) | COMP-DB-004 |
+| SCOUT-001 | Schemas Pydantic canônicos de scout (ScoutEventCreate) | ✅ CONCLUÍDO | AR_003 | — |
+| SCOUT-002 | MatchEventService.create() — ORM + roster + is_shot | 🏗️ EM EXECUÇÃO | AR_004 | SCOUT-001 |
+| SCOUT-003 | Router match_events — endpoints CRUD + escalação | 🏗️ EM EXECUÇÃO | AR_005 | SCOUT-002 |
 
 ## Regra de Arquitetura de Classificação (Identificação de Equipe):
 
@@ -324,7 +338,7 @@ Ordem sugerida de entrega:
 **Descrição:** Atleta registra bem-estar antes e depois do treino.
 
 **Critérios de Aceitação:**
-- ✅ Wellness Pre: Humor, sono, dores, fadiga (escala 1-5)
+- ✅ Wellness Pre: `stress_level`/humor (0-10, semântica inversa), `sleep_quality`/sono (1-5), `sleep_hours` (horas decimais), `fatigue_pre`/fadiga (0-10), `muscle_soreness`/dores (0-10)
 - ✅ Wellness Post: Percepção de esforço, dores pós-treino
 - ✅ 1 registro por atleta × sessão
 - ✅ Dashboard mostra taxa de resposta semanal
@@ -407,6 +421,91 @@ Ordem sugerida de entrega:
 | 18 | Threshold desvio-padrão | `threshold_stddev` | Desvios |
 
 ---
+
+### **RF-009: Módulo de Competições**
+
+**Descrição:** Gerenciamento de campeonatos, fases, adversários e classificação. Base para scout de partidas.
+
+**Critérios de Aceitação:**
+- 🚧 Criação de competições com regras de pontuação configuráveis (points_per_win, points_per_draw, points_per_loss)
+- 🚧 Fases de competição (competition_phases) com datas e status
+- 🚧 Adversários (competition_opponent_teams) com soft delete
+- 🚧 Classificação automática (competition_standings) vinculada a teams.id via FK
+- 🚧 Soft delete em todas as 5 tabelas do domínio (deleted_at + deleted_reason + trigger de bloqueio físico)
+
+**Status:** 🚧 Em Desenvolvimento — COMP-DB-001 ✅ concluído (AR_008 + AR_009); SCOUT-001 ✅ concluído (AR_003); COMP-DB-002 🔲 parcial; COMP-DB-003..006 + SCOUT-002..003 🔲 pendentes
+
+---
+
+### **RF-010: Partidas e Scout**
+
+**Descrição:** Registro de partidas com scout de eventos em tempo real (gols, defesas, faltas, assistências, posse de bola).
+
+**Critérios de Aceitação:**
+- 🚧 Entidade matches com períodos (match_periods), escalação (match_roster), times (match_teams)
+- 🚧 Eventos de scout por jogador, tipo, subtype, minuto, período, fase de jogo
+- 🚧 Posse de bola (match_possessions) com vantagem de estado (advantage_states)
+- 🚧 Soft delete em match_events e match_roster
+
+**Status:** 🚧 Em Desenvolvimento (depende de RF-009)
+
+---
+
+### **RF-011: Ciclos e Microciclos de Treino**
+
+**Descrição:** Estrutura hierárquica de planejamento de treino: Macrociclo → Ciclo (training_cycles) → Microciclo semanal (training_microcycles) → Sessão.
+
+**Critérios de Aceitação:**
+- ✅ training_cycles: período, objetivo, fase (preparatória/competitiva/transição)
+- ✅ training_microcycles: semana específica com carga alvo, horas planejadas vs executadas
+- ✅ Sessões vinculadas a microciclo via microcycle_id
+- ✅ Cache de analytics invalidado automaticamente ao alterar sessão do microciclo (trigger fn_invalidate_analytics_cache)
+
+**Status:** ✅ Implementado (tabelas training_cycles + training_microcycles no schema)
+
+---
+
+### **RF-012: Exportação e Jobs Assíncronos**
+
+**Descrição:** Geração assíncrona de relatórios PDF e outros exports via fila de jobs (Celery + Redis).
+
+**Critérios de Aceitação:**
+- 🚧 export_jobs: rastreamento de jobs com status (pending/processing/completed/failed)
+- 🚧 export_rate_limits: controle de taxa por usuário
+- 🚧 email_queue: fila de e-mails transacionais
+- 🚧 idempotency_keys: prevenção de duplo envio/processamento
+
+**Status:** 🚧 Estrutura de BD implementada; lógica de geração em desenvolvimento
+
+---
+
+### **RF-013: Notificações**
+
+**Descrição:** Sistema de notificações push/in-app para alertas de sobrecarga, wellness e eventos do sistema.
+
+**Critérios de Aceitação:**
+- ⚠️ Tabela notifications implementada no BD
+- ⚠️ Backend de alertas implementado; badge monthly job INATIVO (comentado em celery_app.py)
+
+**Status:** ⚠️ Parcialmente implementado (backend sem frontend ativo)
+
+---
+
+### **RF-014: Perfil Estendido de Pessoa**
+
+**Descrição:** Dados pessoais enriquecidos além do campo básico: endereços, contatos, documentos, mídia, escolaridade.
+
+**Critérios de Aceitação:**
+- ✅ person_addresses: endereços com tipo (residencial/comercial)
+- ✅ person_contacts: telefones e e-mails secundários
+- ✅ person_documents: CPF, RG, passaporte
+- ✅ person_media: fotos e mídia pessoal
+- ✅ schooling_levels: nível de escolaridade do atleta
+
+**Status:** ✅ Implementado
+
+---
+
 ### **6.1 Módulo de Ingestão Inteligente (AI Parser)**
 
 **Leitura de Regulamentos:** Upload de PDF/Imagens do regulamento para extração de critérios de pontuação e desempate.
@@ -450,7 +549,7 @@ Ordem sugerida de entrega:
 
 **Critérios de Aceitação:**
 - [ ] Vejo lista de treinos agendados para hoje
-- [ ] Formulário tem 4 campos: humor, sono, fadiga, dores (escala 1-5 + emoji)
+- [ ] Formulário tem 5 campos mapeados do schema real: `stress_level`/humor (0–10, semântica inversa: 0=ótimo), `sleep_quality`/sono (1–5), `sleep_hours`/horas dormidas (decimal), `fatigue_pre`/fadiga (0–10), `muscle_soreness`/dores (0–10)
 - [ ] Consigo enviar em < 30s
 - [ ] Sistema bloqueia múltiplas submissões para o mesmo treino
 - [ ] Treinador vê resumo de wellness na dashboard antes do treino
@@ -546,12 +645,48 @@ erDiagram
 | **Season** | Temporada/ciclo esportivo | team_id, start_date, end_date |
 | **TrainingSession** | Sessão de treino | team_id, session_date, type, description |
 | **Attendance** | Presença em treino | athlete_id, session_id, status (Present/Absent/Justified) |
-| **WellnessPre** | Bem-estar pré-treino | athlete_id, session_id, mood, sleep, fatigue, soreness_level |
+| **WellnessPre** | Bem-estar pré-treino | athlete_id, session_id, stress_level (proxy de humor), sleep_quality, sleep_hours, fatigue_pre, muscle_soreness |
 | **WellnessPost** | Bem-estar pós-treino | athlete_id, session_id, rpe, post_soreness |
 | **MedicalCase** | Caso médico/lesão | athlete_id, injury_type, severity, start_date, end_date |
 | **Match** | Partida oficial | home_team_id, away_team_id, match_date, venue |
 | **MatchEvent** | Evento de jogo | match_id, athlete_id, event_type, minute |
 | **AuditLog** | Log de auditoria | actor_id, action, table_name, entity_id, old_data, new_data |
+
+**Domínio COMPETITIONS (V1.1):**
+| Entidade | Descrição | Campos Chave |
+|----------|-----------|---------------|
+| **Competition** | Campeonato/torneio | name, season_id, scoring_rules (JSONB) |
+| **CompetitionPhase** | Fase do campeonato | competition_id, name, start_date, end_date, deleted_at |
+| **CompetitionOpponentTeam** | Adversário cadastrado | competition_id, name, aliases, deleted_at |
+| **CompetitionSeason** | Temporada de competição | competition_id, season_id |
+| **CompetitionStanding** | Linha na tabela de classificação | competition_phase_id, team_id (FK→teams), points, wins, draws, losses |
+| **Match** | Partida oficial | competition_phase_id, match_date, venue, home_score, away_score |
+| **MatchTeam** | Time participante da partida | match_id, team_id ou opponent_id, is_home |
+| **MatchPeriod** | Período da partida (1º tempo, 2º tempo, prorrogação) | match_id, period_number, score |
+| **MatchRoster** | Escalação da partida | match_id, athlete_id, position, is_starter, deleted_at |
+| **MatchEvent** | Evento de scout | match_id, athlete_id, event_type_id, event_subtype_id, minute, period, phase_of_play_id, deleted_at |
+| **MatchPossession** | Posse de bola | match_id, team_id, advantage_state_id, duration_ms |
+
+**Domínio TRAINING PLANNING (V1):**
+| Entidade | Descrição | Campos Chave |
+|----------|-----------|---------------|
+| **TrainingCycle** | Ciclo de treinamento (macro) | team_id, season_id, start_date, end_date, phase_type |
+| **TrainingMicrocycle** | Semana de treino | cycle_id, week_number, planned_load, effective_load |
+| **SessionTemplate** | Template reutilizável de sessão | team_id, name, type, default_exercises |
+| **Exercise** | Exercício do banco de exercícios | name, description, tags, category |
+| **TrainingSessionExercise** | Exercício vinculado à sessão | session_id, exercise_id, duration, notes |
+| **TrainingAlert** | Alerta de sobrecarga/wellness | athlete_id, session_id, alert_type, threshold |
+| **TeamWellnessRanking** | Ranking de wellness da equipe | team_id, week, score |
+| **AthleteBadge** | Conquistas/gamificação do atleta | athlete_id, badge_type, earned_at |
+
+**Domínio PESSOA ENRIQUECIDA (V1):**
+| Entidade | Descrição | Campos Chave |
+|----------|-----------|---------------|
+| **PersonAddress** | Endereço | person_id, type, street, city, state |
+| **PersonContact** | Contato adicional | person_id, type (phone/email), value |
+| **PersonDocument** | Documento de identidade | person_id, doc_type (CPF/RG), number, expiry |
+| **PersonMedia** | Foto/mídia | person_id, media_type, url |
+| **SchoolingLevel** | Lookup: nível de escolaridade | code, name |
 
 **Invariante de Dados (Blindagem de Cadastro):**
 
@@ -573,27 +708,27 @@ erDiagram
 
 ## 9. Matriz RACI - Responsabilidades
 
-| Funcionalidade | Dirigente | Coordenador | Treinador | Atleta |
-|----------------|-----------|-------------|-----------|--------|
-| **Criar organização** | A, R | - | - | - |
-| **Criar temporada** | A, R | C | I | - |
-| **Criar equipe** | A | A, R | C | - |
-| **Cadastrar coordenador** | A, R | I | - | - |
-| **Cadastrar treinador** | C | A, R | I | - |
-| **Cadastrar atleta** | C | C | A, R | - |
-| **Definir responsável de equipe** | A | A, R | I | - |
-| **Criar treino** | - | C | A, R | I |
-| **Marcar presença** | - | C | A, R | I |
-| **Preencher wellness pré** | - | - | C | A, R |
-| **Preencher wellness pós** | - | - | C | A, R |
-| **Registrar caso médico** | - | A | A, R | I |
-| **Ver relatório de equipe** | A | A, R | A, R | - |
-| **Ver próprio histórico** | - | - | - | A, R |
-| **Exportar relatório** | A | A, R | R | - |
-| **Gerenciar permissões** | A, R | C | - | - |
-| **Acessar logs de auditoria** | A, R | C | - | - |
-| **Criar competição** | A | A, R | C | - |
-| **Registrar scout de jogo** | - | C | A, R | - |
+| Funcionalidade | Dirigente | Coordenador | Treinador | Preparador Físico | Atleta |
+|----------------|-----------|-------------|-----------|-------------------|--------|
+| **Criar organização** | A, R | - | - | - | - |
+| **Criar temporada** | A, R | C | I | - | - |
+| **Criar equipe** | A | A, R | C | - | - |
+| **Cadastrar coordenador** | A, R | I | - | - | - |
+| **Cadastrar treinador** | C | A, R | I | - | - |
+| **Cadastrar atleta** | C | C | A, R | - | - |
+| **Definir responsável de equipe** | A | A, R | I | - | - |
+| **Criar treino** | - | C | A, R | A, R | I |
+| **Marcar presença** | - | C | A, R | A, R | I |
+| **Preencher wellness pré** | - | - | C | - | A, R |
+| **Preencher wellness pós** | - | - | C | - | A, R |
+| **Registrar caso médico** | - | A | A, R | A, R | I |
+| **Ver relatório de equipe** | A | A, R | A, R | A, R | - |
+| **Ver próprio histórico** | - | - | - | - | A, R |
+| **Exportar relatório** | A | A, R | R | R | - |
+| **Gerenciar permissões** | A, R | C | - | - | - |
+| **Acessar logs de auditoria** | A, R | C | - | - | - |
+| **Criar competição** | A | A, R | C | - | - |
+| **Registrar scout de jogo** | - | C | A, R | C | - |
 
 **Legenda:**  
 - **R** (Responsible): Executa a ação  
@@ -683,6 +818,8 @@ erDiagram
 | **Validação** | Pydantic | 2.0+ | Type safety, validação automática |
 | **Cache** | cachetools | - | In-memory, TTL-based |
 | **Testing** | pytest | 8.0+ | Fixtures, parametrização, coverage |
+| **Task Queue** | Celery | 5.0+ | Jobs assíncronos (exports PDF, notificações, analytics) |
+| **Message Broker** | Redis | 7.0+ | Backend Celery; cache de sessões |
 
 ### 11.2 Banco de Dados
 
@@ -801,7 +938,7 @@ erDiagram
 
 ### 13.3 Testes de Regressão (Gates)
 
-**Gate 1: Invariantes de Banco (models_autogen_gate.ps1)**
+**Gate 1: Invariantes de Banco (scripts/checks/check_models_sync.py)**
 - Valida que models SQLAlchemy estão sincronizados com schema PostgreSQL
 - Bloqueia merge se houver divergências estruturais
 - Roda em: pre-commit, CI/CD
@@ -1116,6 +1253,7 @@ Antes de investir em IA de vídeo/conversacional, validar viabilidade técnica e
 | **Scout** | Registro estatístico de eventos durante uma partida (gols, assistências, faltas, defesas). |
 | **Wellness** | Avaliação de bem-estar físico e mental do atleta antes e depois do treino. |
 | **RPE (Rating of Perceived Exertion)** | Escala subjetiva de percepção de esforço (1-10). |
+| **stress_level** | Proxy de humor/disposição no wellness pré-treino. Escala 0–10 (semântica inversa: 0 = ótimo, 10 = muito estressado). NÃO existe coluna "humor" no schema — mapeamento UI→DB é implícito. Ver AR_002.5_C. |
 | **Soft Delete** | Marcação lógica de exclusão (deleted_at) sem remoção física do banco. |
 | **Team Registration** | Vínculo temporal de um atleta com uma equipe específica em uma temporada. |
 | **Membership** | Vínculo de um usuário (staff) com uma organização e papel. |
@@ -1242,6 +1380,92 @@ Risco identificado: treinadores podem resistir a abandonar o WhatsApp.
 - [MANUAL_SISTEMA_HBTRACK.md](../docs/01-sistema-atual/MANUAL_SISTEMA_HBTRACK.md) - Manual técnico do backend
 - [API_CONTRACT.md](../docs/API_CONTRACT.md) - Contrato de APIs
 - [ARCHITECTURE.md](../../Hb Track - Fronted/docs/ARCHITECTURE.md) - Arquitetura do frontend
+
+---
+
+## 20. Governança de Desenvolvimento IA (Processo Determinístico)
+
+> Este sistema é desenvolvido com assistência de IA. A governança determinística é **peça fundamental** para garantir auditabilidade, rastreabilidade e consistência entre sessões de desenvolvimento.
+
+### 20.1 Princípio de Determinismo
+
+Todo desenvolvimento do HB Track segue o **HBTRACK_DEV_FLOW_CONTRACT** (`docs/_canon/contratos/Dev Flow.md`), que define um processo de 7 passos com evidências obrigatórias. O princípio central: **"chat não é estado"** — nenhuma decisão ou execução existe se não houver evidência persistida em `_reports/`.
+
+### 20.2 Artefatos Canônicos do Processo
+
+| Artefato | Localização | Responsável | Descrição |
+|----------|-------------|-------------|----------|
+| **PRD** (este documento) | `docs/hbtrack/PRD Hb Track.md` | Arquiteto | Referência de negócio |
+| **SSOT Schema** | `docs/ssot/schema.sql` | Sistema | Verdade do banco de dados |
+| **SSOT OpenAPI** | `docs/ssot/openapi.json` | Sistema | Contrato da API |
+| **SSOT Alembic** | `docs/ssot/alembic_state.txt` | Sistema | Estado das migrações |
+| **Plan JSON** | `docs/_canon/planos/*.json` | Arquiteto | Plano de execução (schema-validated) |
+| **AR (Architectural Record)** | `docs/hbtrack/ars/AR_NNN_*.md` | Executor | Materialização do plano |
+| **AR Index** | `docs/hbtrack/ars/_INDEX.md` | Auto-gerado | Índice de todas as ARs (NÃO editar manualmente) |
+| **Evidence Pack** | `docs/hbtrack/evidence/*.log` | Executor | Evidência de validação por AR |
+| **Audit Report** | `docs/hbtrack/evidence/AR_<id>/` | Executor | Evidências estruturadas por execução |
+
+### 20.3 Ciclo de Vida de uma Tarefa (7 Passos)
+
+```
+Passo 1 — REFERÊNCIA     Arquiteto lê PRD + SSOT
+Passo 2 — PLANO          Arquiteto gera Plan JSON em docs/_canon/planos/
+Passo 3 — MATERIALIZAÇÃO python scripts/run/hb_cli.py plan <plan.json> → AR criada
+Passo 4 — ANÁLISE        Executor preenche 'Análise de Impacto' na AR
+Passo 5 — AÇÃO           Executor implementa no código
+Passo 6 — VALIDAÇÃO      python scripts/run/hb_cli.py report <id> "<cmd>"
+Passo 7 — FECHAMENTO     git commit → hook pré-commit (hb check) valida tudo
+```
+
+### 20.4 Regras de Imutabilidade e Proteção
+
+| Regra | Mecanismo | Enforcement |
+|-------|-----------|-------------|
+| **ARs SUCESSO são imutáveis** | Pre-commit hook bloqueia edição manual do corpo | `E_AR_IMMUTABLE` |
+| **_INDEX.md é auto-gerado** | Gerado por `hb plan`/`hb report` | `E_AR_INDEX_NOT_STAGED` |
+| **SSOT não pode ter mudanças unstaged** | Pre-commit hook bloqueia | `E_SSOT_UNSTAGED` |
+| **SSOT staged exige AR com evidência** | Pre-commit hook exige AR staged com ✅ SUCESSO | `E_SSOT_NO_VALID_AR` |
+| **Código governado exige AR staged** | Pre-commit hook exige ao menos 1 AR | `E_GOVERNED_NO_AR` |
+
+### 20.5 Exit Codes Canônicos
+
+| Código | Status | Significado |
+|--------|--------|-------------|
+| `0` | PASS | Sucesso — evidência válida |
+| `2` | FAIL_ACTIONABLE | Falha lógica/mérito — corrigível |
+| `3` | ERROR_INFRA | Erro de infraestrutura (VPS, DB, rede) |
+| `4` | BLOCKED_INPUT | Input inválido ou gate inexistente |
+
+### 20.6 CLI de Governança (hb_cli.py)
+
+```bash
+python scripts/run/hb_cli.py plan <plan.json>    # Materializa ARs a partir do plano
+python scripts/run/hb_cli.py report <id> "<cmd>" # Executa validação e grava evidência
+python scripts/run/hb_cli.py check --mode pre-commit  # Valida integridade antes do commit
+python scripts/run/hb_cli.py version             # Reporta versão do protocolo
+```
+
+**Regra crítica:** Scripts de automação MUST ser Python (`.py`). Arquivos `.sh` e `.ps1` são proibidos.
+
+### 20.7 Anti-padrões Proibidos
+
+- ❌ Marcar tarefa como PASS sem Evidence Pack em `_reports/`
+- ❌ Editar AR com Status ✅ SUCESSO manualmente
+- ❌ Criar Plan JSON sem validar contra `ar_contract.schema.json`
+- ❌ Usar snapshot como evidência de validação
+- ❌ Criar automação/infra em `.sh` ou `.ps1`
+- ❌ Inventar/alterar policies, gates ou SSOTs por iniciativa própria
+
+### 20.8 Protocolo de Verdade
+
+Nenhum resultado de execução é válido sem Evidence Pack. A fonte de verdade do sistema em qualquer momento é:
+
+1. `docs/ssot/schema.sql` — estado do banco
+2. `docs/ssot/openapi.json` — contrato da API
+3. `docs/hbtrack/ars/_INDEX.md` — todas as ARs e seus status
+4. `docs/hbtrack/evidence/` — evidências de execução
+
+Chat, mensagens e comentários não são estado. Estado vive em arquivos.
 
 ---
 

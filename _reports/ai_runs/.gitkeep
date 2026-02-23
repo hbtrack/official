@@ -1,0 +1,7 @@
+# Evidence Pack Root (§10 — Manual de Agentes v1.0.0)
+# Estrutura canônica: _reports/ai_runs/<RUN_ID>/
+#   run_meta.json
+#   commands.log
+#   artifacts/
+#   tests/
+#   diffs_or_commits.txt
