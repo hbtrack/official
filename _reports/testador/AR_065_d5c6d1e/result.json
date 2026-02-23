@@ -1,0 +1,40 @@
+{
+  "ar_id": "065",
+  "validation_command": "python scripts/run/doc_gates.py --ar-id 065",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "b215e80727a0edd07fc0425038c5a374d37724e1cc1e296213b796217f36dea8",
+      "hash": "b215e80727a0edd0",
+      "stdout_len": 161,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "b215e80727a0edd07fc0425038c5a374d37724e1cc1e296213b796217f36dea8",
+      "hash": "b215e80727a0edd0",
+      "stdout_len": 161,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "b215e80727a0edd07fc0425038c5a374d37724e1cc1e296213b796217f36dea8",
+      "hash": "b215e80727a0edd0",
+      "stdout_len": 161,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

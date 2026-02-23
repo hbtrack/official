@@ -1,10 +1,15 @@
 # Índice de Architectural Records (ARs)
 > ⚠️ Auto-gerado por `hb plan`/`hb report`. NÃO editar manualmente.
-> Última atualização: 2026-02-22
+> Última atualização: 2026-02-23
 
 | ID | Título | Status | Evidence |
 |---|---|---|---|
 | AR_001 | Migration: ADD COLUMN competition_standings.team_id (uuid... | ✅ SUCESSO | docs/hbtrack/evidence/AR_001_competition_standings_add_team_id_migration.log |
+| AR_002 | Model: CompetitionStanding.team_id — mapped_column + rela... | 🏗️ EM_EXECUCAO | NEDDS REVIEW (sem rollback no plano) | docs/hbtrack/evidence/AR_002_competition_standings_model_team_id.log |
+| AR_002.5 | Schema: match_goalkeeper_stints para Eficiência de Goleira | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_002_5_A_evidence.log |
+| AR_002.5 | Schema: attendance.presence_status + status 'justified' | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_002_5_B_evidence.log |
+| AR_002.5 | Documentar divergência de escalas wellness_pre vs. PRD | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_002_5_C_evidence.log |
+| AR_002.5 | Schema: match_analytics_cache para Relatórios V1.1 | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_002_5_D_evidence.log |
 | AR_003.5 | Migration: persons.birth_date NOT NULL + Trigger de Parid... | PROPOSTA | — |
 | AR_003 | Schemas Pydantic Canônicos de Scout | ✅ SUCESSO | — |
 | AR_004 | MatchEventService.create() — ORM correto, roster, is_shot... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_004_match_event_service_create.log |
@@ -17,13 +22,19 @@
 | AR_011 | hb_cli.py: rebuild_ar_index() — auto-rebuild _INDEX.md em... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_011_gov_ar_index_rebuild.log |
 | AR_012 | hb check: enforce _INDEX.md staged sync + imutabilidade d... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_012_gov_ar_check_immutability.log |
 | AR_013 | Dev Flow v1.0.7: §9 Regras de Governança de ARs + bump pr... | ⛔ SUPERSEDED — ver AR_020 | docs/hbtrack/evidence/AR_013_gov_devflow_ar_rules.log |
+| AR_014 | git mv: renomear Hb Track - Fronted → Hb Track - Frontend | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_014_infra_rename_frontend_dir.log |
+| AR_015 | Update referências 'Fronted' → 'Frontend' em scripts e do... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_015_infra_rename_frontend_refs.log |
 | AR_016 | PRD v2.2: sync §1–§19 — header, RFs, RACI, modelo dados, ... | 🔴 REJEITADO | docs/hbtrack/evidence/AR_016_prd_v22_content_sync.log |
+| AR_017 | PRD v2.2: §20 nova seção — Governança de Desenvolvimento ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_017_prd_v22_governance_section.log |
 | AR_018 | Novo contrato: docs/_canon/contratos/Testador Contract.md... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_018_gov_testador_contract.log |
 | AR_019 | Hb cli Spec v1.0.8: §10 hb verify, §11 novos status, §12 ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_019_gov_hb_cli_spec_v108.log |
 | AR_020 | Dev Flow v1.0.8 + hb_cli.py: cmd_verify, hb check C3 upgr... | 🔴 REJEITADO | docs/hbtrack/evidence/AR_020_gov_testador_v108_implementation.log |
 | AR_021 | Dual Executor Contract: protocolo de 2 agentes Executores... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_021_gov_dual_executor_contract.log |
 | AR_022 | BATCH_001: assignment das ARs pendentes para Executor A e... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_022_gov_dual_executor_batch_001.log |
+| AR_023 | Triple-Run Determinism + Anti-Trivial Gate + Protocol v1.... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_023_triple_run_determinism.log |
+| AR_024 | Docs v1.1.0: Dev Flow + Hb cli Spec + Testador Contract | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_024_docs_v110.log |
 | AR_025 | Agente-Arquiteto Contract v2.0: Regras, Gates, Prompt Ent... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_025_arquiteto_contract_enterprise.log |
+| AR_026 | Agente-Executor Contract v2.0: Regras, Guardrails, Eviden... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_026_executor_contract_enterprise.log |
 | AR_027 | Agente-Testador Contract v2.0: Triple-Run Enterprise + An... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_027_testador_contract_enterprise.log |
 | AR_028 | HBLock: Concurrency Lock Atômico para hb_cli.py (3 Agentes) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_028_hblock_concurrency_enterprise.log |
 | AR_029 | Evidence Integrity: SHA-256 Checksum + Git-Status Pre-Che... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_029_evidence_integrity_antiforja.log |
@@ -31,7 +42,9 @@
 | AR_031 | Ambiente SSOT: docs/_canon/contratos/Ambiente.md + gemini... | 🔴 REJEITADO | docs/hbtrack/evidence/AR_031_ambiente_ssot.log |
 | AR_032 | Hb cli Spec.md: sync v1.0.8 → v1.1.0 (GATE P3.5, HBLock, ... | ✅ SUCESSO | docs/hbtrack/evidence/AR_032_hb_cli_spec_v110_sync.log |
 | AR_033 | AR Index Checkpoint: _INDEX.md completo e sincronizado co... | ❌ FALHA | docs/hbtrack/evidence/AR_033_ar_index_validation_checkpoint.log |
+| AR_034 | Governança Plans — Gate JSON-to-AR obrigatório | ✅ SUCESSO | docs/hbtrack/evidence/AR_034_gov_plans_json_ar_sync_validation.log |
 | AR_035 | Criar scripts/run/hb_watch.py — sentinela de estado do fluxo | ✅ SUCESSO | docs/hbtrack/evidence/AR_035_hb_watch_sentinela_fluxo.log |
+| AR_036 | Migration 0056: ADD COLUMN competitions.points_per_draw +... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_036_comp_db_003_scoring_rules_migration.log |
 | AR_037 | Model: Competition.points_per_draw + Competition.points_p... | ✅ SUCESSO | docs/hbtrack/evidence/AR_037_comp_db_003_scoring_rules_model.log |
 | AR_038 | Migration 0057: DROP uk_competition_standings_team_phase ... | ✅ SUCESSO | docs/hbtrack/evidence/AR_038_comp_db_004_unique_index_migration.log |
 | AR_039 | Model: CompetitionStanding — UniqueConstraint legado → NU... | ✅ SUCESSO | docs/hbtrack/evidence/AR_039_comp_db_004_unique_index_model.log |
@@ -60,4 +73,10 @@
 | AR_062 | [STUB] RBAC Architecture Hardening | 🔲 PENDENTE | — |
 | AR_063 | [STUB] Logging and Trace Implementation | 🔲 PENDENTE | — |
 | AR_064 | Cleanup rogue: _agent/, agentes/, .github/cont + resolve ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_064_cleanup_rogue_dirs.log |
+| AR_065 | Resgate de ARs de Governança (v1.2.0 Core) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_065/executor_main.log |
+| AR_066 | Resgate de ARs de Competitions e Features | ✅ VERIFICADO | docs/hbtrack/evidence/AR_066/executor_main.log |
+| AR_067 | Resgate de Drafts e Invariantes Wellness | ✅ VERIFICADO | docs/hbtrack/evidence/AR_067/executor_main.log |
 | AR_100 | Estabilização do Protocolo v1.2.0 e Unificação de Registros | ✅ VERIFICADO | docs/hbtrack/evidence/AR_100/executor_main.log |
+| AR_101 | Resgate de ARs de Governança (v1.2.0 Core) | ⚠️ PENDENTE | docs/hbtrack/evidence/AR_101/executor_main.log |
+| AR_102 | Resgate de ARs de Competitions e Features | ⚠️ PENDENTE | docs/hbtrack/evidence/AR_102/executor_main.log |
+| AR_103 | Resgate de Drafts e Invariantes Wellness | ⚠️ PENDENTE | docs/hbtrack/evidence/AR_103/executor_main.log |

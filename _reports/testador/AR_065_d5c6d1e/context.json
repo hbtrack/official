@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_065-d5c6d1e",
+  "timestamp_utc": "2026-02-23T13:54:57.977983+00:00",
+  "git": {
+    "commit": "d5c6d1e370f2e12dd13e2b6c912c76ddbe4e3cba"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "065",
+  "ar_file": "docs\\hbtrack\\ars\\governance\\AR_065_resgate_ars_governanca_v120.md"
+}
