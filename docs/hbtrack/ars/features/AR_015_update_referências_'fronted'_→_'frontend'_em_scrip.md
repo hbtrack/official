@@ -1,6 +1,6 @@
 # AR_015 — Update referências 'Fronted' → 'Frontend' em scripts e docs canônicos
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ⚠️ PENDENTE
 **Versão do Protocolo**: 1.0.6
 
 ## Descrição
@@ -73,3 +73,12 @@ _(Gerado por hb report)_
 
 
 
+
+> 📋 Kanban routing: Executor: Evidence Pack missing or incomplete
+
+### Verificacao Testador em efdc617
+**Status Testador**: ⚠️ PENDENTE
+**Consistency**: UNKNOWN
+**Triple-Run**: TRIPLE_FAIL (3x)
+**Exit Testador**: 1 | **Exit Executor**: None
+**TESTADOR_REPORT**: `_reports/testador/AR_015_efdc617/result.json`
