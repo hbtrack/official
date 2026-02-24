@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_104-15ac28c",
+  "timestamp_utc": "2026-02-24T16:13:46.425132+00:00",
+  "git": {
+    "commit": "15ac28c5af5697a2b71b1cdf1b09f29bdadc30b2"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "104",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_104_modificar_migration_0060_para_detectar_versão_post.md"
+}

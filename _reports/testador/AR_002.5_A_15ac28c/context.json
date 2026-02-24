@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_002.5_A-15ac28c",
+  "timestamp_utc": "2026-02-24T16:14:33.401235+00:00",
+  "git": {
+    "commit": "15ac28c5af5697a2b71b1cdf1b09f29bdadc30b2"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "002.5_A",
+  "ar_file": "docs\\hbtrack\\ars\\drafts\\AR_002.5_A_schema_match_goalkeeper_stints_para_eficiência_de_goleira.md"
+}

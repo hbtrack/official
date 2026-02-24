@@ -496,6 +496,7 @@ EVIDENCE_PACK:
 - AC-005 alembic downgrade -1 exit_code=0: PASS
 
 ### ✅ Concluído
+- AR_104
 - AR_998
 - AR_072
 - AR_900
@@ -515,8 +516,14 @@ EVIDENCE_PACK:
 - AR_053 — hb_watch UTF-8 fix verificado (VERIFICADO 2x pelo Testador)
 
 ### 🛠️ Em Execução
+- **AR_104** — ✅ Evidence Exit 0 → Aguardando Testador (Triple-Run)
+- **AR_105** — ✅ Evidence Exit 0 → Aguardando Testador (Triple-Run)
+- **AR_002.5_A** (match_goalkeeper_stints) — ✅ Evidence Exit 0 → Aguardando Testador
+- **AR_002.5_B** (attendance.justified) — ✅ Evidence Exit 0 → Aguardando Testador
+- **AR_002.5_C** (wellness docs divergence) — ✅ Evidence Exit 0 → Aguardando Testador
+- **AR_002.5_D** (match_analytics_cache) — ✅ Evidence Exit 0 → Aguardando Testador
+- **AR_024** — ⚠️ BLOQUEADA: validation obsoleta (v1.1.0 literal, arquivos em v1.2.0+) → Plano 2 pronto (ar_024_validation_fix_obsolete.json, tasks 106-108)
 - AR_036 — Executor: Evidence Pack missing or incomplete
-- AR_024 — Executor: Evidence Pack missing or incomplete
 - AR_023 — Executor: Evidence Pack missing or incomplete
 - AR_015 — Executor: Evidence Pack missing or incomplete
 - AR_014 — Executor: Evidence Pack missing or incomplete

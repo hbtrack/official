@@ -1,0 +1,23 @@
+AR_ID: 002.5_B
+Command: python temp/validate_ar002_5_b.py
+Exit Code: 0
+Timestamp UTC: 2026-02-24T16:07:37.184258+00:00
+Behavior Hash (exit+stdout+stderr): 8853f6a300ab0bc04892c733a361513dca571bd2b56f09aa4d1eb268b4808bba
+Git HEAD: 15ac28c5af5697a2b71b1cdf1b09f29bdadc30b2
+Python Version: 3.11.9
+Protocol Version: 1.3.0
+Workspace Clean: False
+Workspace Status: unstaged_modified=8
+Governed Checksums (sha256): {"Hb Track - Backend/db/alembic/versions/0060_comp_db_004_standings_unique_nulls_not_distinct.py": "65900745407b4d70316345d25c2bdc22bf0641faf4255ceddcc7ac68041b8d48"}
+
+--- STDOUT ---
+Validating attendance.presence_status accepts 'justified'...
+[PASS] Tabela attendance existe
+[PASS] Coluna presence_status existe
+[PASS] Status 'justified' � aceito (encontrados 0 registros)
+
+[SUCCESS] AR_002.5_B validation complete
+
+
+--- STDERR ---
+
