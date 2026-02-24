@@ -76,6 +76,24 @@ Batch de evidence canonica AR_068 + correções de VCs legadas ARs 113–119. Co
 
 ---
 
+## ✅ PRONTO PARA VERIFICAÇÃO: AR_123 (Commit fe8ca5a)
+
+**Data**: 2026-02-24
+
+Fix AR_003 validation_command — cmd-safe via arquivo dedicado.
+
+| AR | Evidence Path | Validation Command | Descrição |
+|----|---------------|--------------------|-----------|
+| AR_123 | docs/hbtrack/evidence/AR_123/executor_main.log | python docs/hbtrack/evidence/AR_003/validate_ar003.py | Fix cmd-safe Windows shell |
+
+**Artefatos criados**:
+- `docs/hbtrack/evidence/AR_003/validate_ar003.py` — lógica determinística (UUID fixo, goalkeeper_save assert)
+- AR_003.md VC: raw Python → `python docs/hbtrack/evidence/AR_003/validate_ar003.py`
+
+**Verificar também**: após AR_123 VERIFICADO, re-rodar `hb verify 003` para selar AR_003.
+
+---
+
 **SEÇÃO EXECUTOR x ARQUITETO**
 NOTIFICAÇÕES DO EXECUTOR PARA O ARQUITETO:
 
