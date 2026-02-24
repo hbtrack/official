@@ -91,7 +91,7 @@ MUST incluir:
 | REJEITADO | `🔴 REJEITADO` | AH_DIVERGENCE, INCOMPLETE_EVIDENCE, FLAKY_OUTPUT, TRIPLE_FAIL, AH_TEMPORAL_INVALID |
 | BLOQUEADO_INFRA | `⏸️ BLOQUEADO_INFRA` | Infra inacessível — waiver necessário |
 
-✅ VERIFICADO é exclusivo do Humano via `hb seal <id>`.
+✅ VERIFICADO é escrito exclusivamente via `hb seal` — pelo Humano ou pelo daemon `hb_autotest.py` (modo autônomo).
 
 ## §6 HB CHECK — ENFORCEMENT PARA PROTOCOL v1.2.0+
 
@@ -99,10 +99,22 @@ Para commits em GOVERNED_ROOTS:
 - `hb check` exige `✅ VERIFICADO` na AR (selo humano via hb seal), e NÃO aceita apenas `✅ SUCESSO`.
 - `hb check` exige: `_INDEX.md` staged + evidence canônico staged + TESTADOR_REPORT staged.
 
-## §7 INTEGRAÇÃO COM HB_CLI.PY
+## §7 INTEGRAÇÃO COM HB_CLI.PY + HB_AUTOTEST.PY
 
+### Modo manual (sessão Claude Code com papel Testador)
 Comando: `python scripts/run/hb_cli.py verify <id>`  
-O Testador deve operar com workspace limpo e registrar timestamp UTC do início do verify.
+O Testador deve operar sem mudanças **não-staged** em arquivos rastreados, e registrar timestamp UTC do início do verify. Mudanças staged (trabalho do Executor) são **permitidas** — o verify testa exatamente esse estado.
+
+### Modo autônomo (hb_autotest.py daemon)
+`scripts/run/hb_autotest.py` substitui a sessão Claude Code para o papel Testador em operação totalmente autônoma:
+
+1. Detecta ARs em 🏗️ EM_EXECUCAO com evidence staged (`git diff --cached`)
+2. Executa `hb verify <id>` (triple-run 3×, behavior_hash, anti-alucinação AH-1..AH-12)
+3. Faz `git add` do TESTADOR_REPORT + AR atualizada + `_INDEX.md`
+4. Se SUCESSO: executa `hb seal <id>` automaticamente (`triple_consistency=OK + executor_exit=0 + ah_flags=[]`)
+5. Faz `git add` da AR selada + `_INDEX.md` reconstruído
+
+Uso: `python scripts/run/hb_autotest.py [--loop 5] [--once] [--dry-run]`
 
 ## §8 INDEPENDÊNCIA ABSOLUTA
 

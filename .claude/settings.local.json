@@ -19,7 +19,12 @@
       "Bash(echo:*)",
       "Bash(python:*)",
       "Bash(python3:*)",
-      "Bash(ssh:*)"
+      "Bash(ssh:*)",
+      "Bash(printf:*)",
+      "Bash('/c/HB TRACK/scripts/run/hb_watch.py':*)",
+      "Bash(git -C '/c/HB TRACK' show HEAD:scripts/run/hb_watch.py)",
+      "Bash(/tmp/apply_edits.py:*)",
+      "Bash(git check-ignore:*)"
     ],
     "deny": [
       "Write(*)",

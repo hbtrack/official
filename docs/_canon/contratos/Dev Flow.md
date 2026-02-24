@@ -56,7 +56,8 @@ NORMS: MUST / MUST NOT / SHOULD / MAY (BCP14)
 2.5) Execução (scripts)
 
 * CLI oficial: `scripts/run/hb_cli.py`
-* Watcher automático: `scripts/run/hb_watch.py` (monitoring de _INDEX.md + dispatch inbox em `_reports/dispatch`)
+* Watcher + Dispatcher: `scripts/run/hb_watch.py` v1.2.2 (dashboard + dispatch context JSON em `_reports/dispatch/<modo>_context.json`)
+* Daemon Testador: `scripts/run/hb_autotest.py` (Testador autônomo — detecta evidence staged → `hb verify` → `hb seal`)
 * Git hook: `scripts/git-hooks/pre-commit` (executável Python)
 * Política: scripts operacionais MUST ser Python; `.sh` e `.ps1` são proibidos.
 
@@ -174,26 +175,31 @@ Executar:
 
 Regras:
 
-* Pre-check: workspace MUST estar limpo (anti-falsa-evidência). Workspace sujo => FAIL hard com `E_VERIFY_DIRTY_WORKSPACE`.
+* Pre-check: workspace MUST NOT ter mudanças **não-staged** em arquivos rastreados (anti-falsa-evidência). Mudanças staged (trabalho do Executor) são **PERMITIDAS** — o Testador verifica exatamente esse estado. Workspace com unstaged modifications => FAIL hard com `E_VERIFY_DIRTY_WORKSPACE`.
 * Testador MUST re-executar o validation_command independentemente.
 * TRIPLE_RUN_COUNT = 3 (3 execuções independentes).
 * PASS do Testador exige: (i) 3× exit 0, (ii) behavior_hash idêntico entre runs (Seção 6.6).
 * FLAKY_OUTPUT: todos exit 0 mas hash diferente => **🔴 REJEITADO**.
 * `hb verify` MUST produzir `TESTADOR_REPORT` em `_reports/testador/<AR_ID>/...`
-* Testador SÓ DEVE atuar quando evidence do Executor estiver STAGED (enforcement via hb_watch.py + _reports/dispatch).
+* Testador SÓ DEVE atuar quando evidence do Executor estiver STAGED (enforcement via `hb_watch.py` dispatch + `hb_autotest.py` polling).
+* Testador autônomo: `hb_autotest.py` detecta evidence staged → executa `hb verify` → staging automático de TESTADOR_REPORT → `hb seal` (quando SUCESSO).
 * Testador MUST atualizar status da AR para:
 
   * **✅ SUCESSO** (quando PASS)
   * **🔴 REJEITADO** (quando FAIL_ACTIONABLE)
   * **⏸️ BLOQUEADO_INFRA** (quando ERROR_INFRA)
-* Testador MUST NOT escrever "✅ VERIFICADO" — esse status é exclusivo do Humano (Passo 7).
+* Testador MUST NOT escrever "✅ VERIFICADO" diretamente — esse status MUST ser escrito via `hb seal` (Passo 7): pelo Humano ou pelo daemon `hb_autotest.py`.
 
-Passo 7 — SELO HUMANO (Humano)
-Executar:
+Passo 7 — SELO (hb_autotest automático ou Humano)
+Executar via `hb seal`:
 
 * `python scripts/run/hb_cli.py seal <AR_ID> ["reason"]`
 
-Pré-condições duras (enforcement):
+**Modo autônomo (`hb_autotest.py`):** quando `triple_consistency=OK + executor_exit=0 + ah_flags=[]`, o daemon executa `hb seal` automaticamente após staging de TESTADOR_REPORT. Não requer intervenção humana.
+
+**Modo manual (Humano):** Humano executa `hb seal` diretamente — obrigatório em casos de REJEITADO resolvido, BLOQUEADO_INFRA com waiver, ou quando `hb_autotest` não estiver ativo.
+
+Pré-condições duras (enforcement — idênticas em ambos os modos):
 
 * AR MUST ter status **✅ SUCESSO** (Testador)
 * AR MUST ter `TESTADOR_REPORT` staged
@@ -202,11 +208,11 @@ Pré-condições duras (enforcement):
 
 Efeito:
 
-* Promove AR para **✅ VERIFICADO** (selo final do Humano)
-* Appenda carimbo humano com timestamp UTC + motivo
+* Promove AR para **✅ VERIFICADO** (selo final)
+* Appenda carimbo com timestamp UTC + motivo
 * Rebuild _INDEX.md
 
-Nenhum agente automatizado pode escrever “✅ VERIFICADO”.
+`✅ VERIFICADO` MUST ser escrito exclusivamente via `hb seal` — nunca por edição manual direta.
 
 Passo 8 — PRE-COMMIT (enforcement)
 No commit, o hook executa:
@@ -342,14 +348,19 @@ Contratos canônicos por agente:
 
 Todos esses contratos MUST declarar compatibilidade com **PROTOCOL_VERSION v1.2.0**.
 
-### Passo Final — SELO HUMANO (último gate)
-Após hb verify resultar em ✅ SUCESSO, o Humano MUST executar:
+### Passo Final — SELO (hb_autotest automático ou Humano)
+Após `hb verify` resultar em ✅ SUCESSO:
+
+**Modo autônomo:** `hb_autotest.py` (daemon) executa `hb seal` automaticamente quando `triple_consistency=OK + executor_exit=0 + ah_flags=[]`. Não requer intervenção humana.
+
+**Modo manual:** Humano executa:
 - python scripts/run/hb_cli.py seal <AR_ID> "<reason opcional>"
 
 Regras:
-- hb seal é o único mecanismo autorizado a escrever **✅ VERIFICADO**.
-- hb seal MUST falhar se evidence canônico não estiver staged ou se TESTADOR_REPORT não estiver staged.
+- `hb seal` é o único mecanismo autorizado a escrever **✅ VERIFICADO** (proibido edição manual direta).
+- `hb seal` MUST falhar se evidence canônico não estiver staged ou se TESTADOR_REPORT não estiver staged.
 - Kanban NÃO libera commit. Commit é liberado apenas por: AR + evidence canônico + TESTADOR_REPORT + _INDEX.md + ✅ VERIFICADO.
+- Modo autônomo (`hb_autotest.py`) é equivalente ao modo manual para fins de governança.
 
 B) docs/_canon/specs/GOVERNED_ROOTS.yaml precisa existir no repo (SSOT), porque o hb_cli vai ler de lá (I6).
 C) docs/_canon/specs/Hb cli.md (ou “Hb cli Spec.md”) deve documentar as mudanças: plan.version==schema_version, evidence path fixo, hb seal, verify sem ✅ VERIFICADO, hash canônico.

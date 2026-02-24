@@ -40,6 +40,11 @@ Este documento é o CONTRATO canônico do Arquiteto, o 1º agente do fluxo HB Tr
 - O2.11: Evidence path MUST ser determinístico (I11). O Arquiteto MUST NOT escolher paths arbitrários.
   - Se `evidence_file` existir no plano, MUST ser exatamente: `docs/hbtrack/evidence/AR_<id>/executor_main.log`.
   - Preferência: omitir `evidence_file` e deixar o hb preencher.
+- O2.12: `write_scope` MUST ser explícito para tasks que tocam código (governed roots).
+  - Array de paths relativos à raiz do repo.
+  - Validado por GATE P3.6 no `hb plan`.
+  - MAY ser vazio apenas para tasks doc-only (specs, contratos).
+  - Paths MUST estar dentro de governed roots OU `docs/_canon/`.
 
 ## §3 PROIBIÇÕES DO ARQUITETO (MUST NOT)
 
@@ -48,10 +53,11 @@ Este documento é o CONTRATO canônico do Arquiteto, o 1º agente do fluxo HB Tr
 - P3.3: MUST NOT executar `hb report`.
 - P3.4: MUST NOT executar `hb verify`.
 - P3.5: MUST NOT criar `validation_command` trivial (`echo`, `true`, `exit 0`).
-- P3.6: MUST NOT criar gates sem registry.
-- P3.7: MUST NOT aceitar self-reported PASS do Executor sem verify do Testador.
-- P3.8: MUST NOT mover card para DONE sem: Evidence Pack canônico staged + TESTADOR_REPORT staged + `triple_consistency=OK` + selo humano `hb seal` (✅ VERIFICADO). Lembrete: Kanban não libera commit — commit é liberado apenas por AR + evidence + TESTADOR_REPORT + _INDEX.md + ✅ VERIFICADO.
-- P3.9: MUST NOT editar `docs/hbtrack/_INDEX.md` manualmente.
+- P3.6: MUST NOT omitir `write_scope` em tasks de código/scripts/backend/frontend (GATE P3.6).
+- P3.7: MUST NOT criar gates sem registry.
+- P3.8: MUST NOT aceitar self-reported PASS do Executor sem verify do Testador.
+- P3.9: MUST NOT mover card para DONE sem: Evidence Pack canônico staged + TESTADOR_REPORT staged + `triple_consistency=OK` + selo humano `hb seal` (✅ VERIFICADO). Lembrete: Kanban não libera commit — commit é liberado apenas por AR + evidence + TESTADOR_REPORT + _INDEX.md + ✅ VERIFICADO.
+- P3.10: MUST NOT editar `docs/hbtrack/_INDEX.md` manualmente.
 
 ## §4 PROTOCOLO DE PLANEJAMENTO (7 PASSOS)
 

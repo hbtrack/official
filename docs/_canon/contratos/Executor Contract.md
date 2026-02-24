@@ -45,8 +45,11 @@ Este documento é o CONTRATO canônico do Executor, o 2º agente do fluxo HB Tra
 ## §4 PROTOCOLO DE EXECUÇÃO (5 PASSOS)
 
 - E1 RECEBER: validar input do Arquiteto (`plan_json_path`, `mode`, `write_scope`, `gates_required`).
+  - Extract `write_scope` from AR markdown section `## Write Scope`
+  - Extract `validation_command` from AR markdown section `## Validation Command (Contrato)`
+  - If both are empty/missing: report BLOCKED_INPUT and STOP
 - E2 ANALISAR: ler AR completa e preencher Análise de Impacto.
-- E3 IMPLEMENTAR: aplicar mudanças mínimas e atômicas.
+- E3 IMPLEMENTAR: aplicar mudanças mínimas e atômicas APENAS em paths listados no `write_scope`.
 - E4 EVIDENCIAR: executar `hb report` e confirmar evidence canônico.
 - E5 ENTREGAR: enviar RESUMO LEAN ao Arquiteto e aguardar Testador.
 

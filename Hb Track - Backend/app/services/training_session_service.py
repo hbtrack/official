@@ -26,6 +26,7 @@ from app.core.exceptions import (
 )
 from app.models.training_session import TrainingSession
 from app.models.team import Team
+from app.models.season import Season
 from app.models.team_registration import TeamRegistration
 from app.models.attendance import Attendance
 from app.models.session_exercise import SessionExercise
@@ -208,6 +209,10 @@ class TrainingSessionService:
 
         if team.organization_id != self.context.organization_id:
             raise ForbiddenError("Team belongs to another organization")
+
+        # TASK-TRN-052/INV-TRN-008: Bloqueia criação se temporada estiver interrompida (RF5.2)
+        if data.season_id:
+            await self._check_season_locked(data.season_id)
 
         # season_id é opcional - Team não tem season_id
         session = TrainingSession(
@@ -805,6 +810,17 @@ class TrainingSessionService:
             validation=None,
             message="Revisão concluída e sessão congelada",
         )
+
+    async def _check_season_locked(self, season_id: UUID) -> None:
+        """
+        Verifica se temporada está interrompida (RF5.2 / TASK-TRN-052).
+
+        Levanta ValidationError se `interrupted_at` estiver preenchido,
+        impedindo a criação de treinos em temporadas suspensas.
+        """
+        season = await self.db.get(Season, season_id)
+        if season and season.interrupted_at:
+            raise ValidationError("season_locked")
 
     async def _audit_session_action(
         self,

@@ -22,6 +22,13 @@ Changelog v1.2.0:
   - AR_051: cmd_gates_check(gate_id) — verifica gate específico por id
   - AR_055: check_retry_limit() agora chamada em cmd_plan() (gate ativo)
   - AR_055: Kanban write real via _write_kanban() em update_kanban_and_status()
+
+Changelog v1.2.1 (patch — auto-dispatch autônomo):
+  - check_workspace_clean(): migrado de git status --porcelain para git diff --name-only
+    Semântica: mudanças STAGED (Executor) são PERMITIDAS; apenas unstaged tracked blocked.
+    Permite hb verify com evidence staged (requisito do fluxo de 3 agentes autônomos).
+  - hb_autotest.py: novo daemon Testador (scripts/run/hb_autotest.py v1.0.0)
+  - hb_watch.py: bump v1.2.2 — rich JSON context dispatch (_reports/dispatch/<mode>_context.json)
 """
 
 import sys
@@ -111,6 +118,10 @@ E_GOVERNED_ROOTS_INVALID = "E_GOVERNED_ROOTS_INVALID"
 E_EVIDENCE_PATH_FORBIDDEN = "E_EVIDENCE_PATH_FORBIDDEN"
 E_EVIDENCE_MISSING = "E_EVIDENCE_MISSING"
 
+# Error codes determinísticos — write_scope pipeline (GAP-001)
+E_WRITE_SCOPE_MISSING = "E_WRITE_SCOPE_MISSING"
+E_WRITE_SCOPE_FORBIDDEN = "E_WRITE_SCOPE_FORBIDDEN"
+
 E_VERIFY_DIRTY_WORKSPACE = "E_VERIFY_DIRTY_WORKSPACE"
 
 E_TESTADOR_REPORT_NOT_STAGED = "E_TESTADOR_REPORT_NOT_STAGED"
@@ -161,6 +172,20 @@ def check_retry_limit(ar_data: Dict) -> None:
              f"Causa provável: Requisitos ambíguos ou bug persistente.\n"
              f"AÇÃO REQUERIDA: Intervenção humana necessária para resetar 'retry_count'.",
              exit_code=5)
+
+
+# ========== GATE I8 HELPER: FILE IN GIT ==========
+
+def is_file_in_git(file_path: str, staged_files: List[str]) -> bool:
+    """
+    Verifica se arquivo está staged OU já commitado no repo.
+    Resolve bug do gate I8: relatórios commitados devem ser aceitos.
+    """
+    if file_path in staged_files:
+        return True
+    # Verificar se arquivo já está commitado
+    ret, _, _ = run_cmd(f"git ls-files --error-unmatch {file_path}")
+    return ret == 0
 
 
 # ========== HBLock: CONCURRENCY LOCK (AR_028) ==========
@@ -498,6 +523,14 @@ def build_ar_content(task: Dict, protocol_version: str) -> str:
     lines.append(f"## Descrição\n{description}\n\n")
     lines.append(f"## Critérios de Aceite\n{criteria}\n\n")
 
+    # Write Scope (opcional, mas obrigatório para código via GATE P3.6)
+    write_scope = task.get("write_scope", [])
+    if write_scope:
+        lines.append("## Write Scope\n")
+        for ws in write_scope:
+            lines.append(f"- {ws}\n")
+        lines.append("\n")
+
     if ssot_touches:
         lines.append("## SSOT Touches\n")
         for ssot in ssot_touches:
@@ -821,6 +854,47 @@ def cmd_plan(plan_path: str, collision_mode: str = "default",
                      f"  Use assertions reais: pytest, python -c 'assert...', etc.",
                      exit_code=2)
 
+    # ===== GATE P3.6: write_scope obrigatório para governed roots =====
+    governed_roots = load_governed_roots(repo_root)
+    
+    for task in plan_data.get("tasks", []):
+        task_id = task["id"]
+        ws = task.get("write_scope", [])
+        desc = task.get("description", "").lower()
+        title = task.get("title", "").lower()
+        
+        # Heurística: detecta tasks de código
+        touches_code = any(
+            keyword in desc or keyword in title 
+            for keyword in ["backend", "frontend", "script", "model", "router", "service", 
+                           ".py", ".ts", ".tsx", "alembic", "migration", "endpoint"]
+        )
+        
+        if touches_code and not ws:
+            fail(E_WRITE_SCOPE_MISSING,
+                 f"Task {task_id}: write_scope obrigatório para tasks de código.\n"
+                 f"  Title: {task['title'][:60]}\n"
+                 f"  Defina explicitamente os paths que podem ser modificados.",
+                 exit_code=2)
+        
+        # Validar que write_scope não contém paths fora de governed roots (se houver)
+        if ws:
+            for path in ws:
+                # Normalizar: remover leading/trailing /
+                norm_path = path.strip().strip("/")
+                # Verificar se está em governed root OU em docs/_canon OU em scripts/ (governança)
+                is_governed = any(norm_path.startswith(root.strip("/")) for root in governed_roots)
+                is_canon = norm_path.startswith("docs/_canon")
+                is_scripts = norm_path.startswith("scripts/")
+                
+                if not (is_governed or is_canon or is_scripts):
+                    fail(E_WRITE_SCOPE_FORBIDDEN,
+                         f"Task {task_id}: write_scope contém path fora de governed roots:\n"
+                         f"  Path: {path}\n"
+                         f"  Governed roots: {governed_roots}\n"
+                         f"  Permitido: governed roots, docs/_canon/, scripts/",
+                         exit_code=2)
+
     # ===== GATE 2: IDs únicos no plan =====
     validate_unique_ids(plan_data)
 
@@ -940,20 +1014,28 @@ def compute_governed_checksum(repo_root: Path, governed_roots: List[str], files:
 
 
 def check_workspace_clean() -> Tuple[bool, str]:
-    """Verifica se o workspace tem arquivos não-commitados que podem contaminar o teste.
+    """Verifica se o workspace tem mudanças não-staged em arquivos rastreados.
+
+    Semântica para operação autônoma (3 agentes):
+    - Mudanças STAGED (trabalho do Executor) são PERMITIDAS — o Testador verifica exatamente esse estado.
+    - Mudanças NÃO-STAGED em arquivos rastreados são PROIBIDAS — podem contaminar o validation_command.
+    - Arquivos não-rastreados são ignorados — não afetam arquivos rastreados.
+
     Retorna (is_clean, status_summary).
     """
     try:
+        # Checar apenas mudanças não-staged em arquivos rastreados (working tree vs index)
         out = subprocess.run(
-            ['git', 'status', '--porcelain'],
+            ['git', 'diff', '--name-only'],
             capture_output=True, text=True, encoding='utf-8'
         )
         lines = [l for l in out.stdout.strip().split('\n') if l.strip()]
         if not lines:
             return True, 'workspace_clean'
-        return False, f'dirty_files={len(lines)}'
+        return False, f'unstaged_modified={len(lines)}'
     except Exception as e:
         return False, f'git_error={e}'
+
 
 
 def cmd_report(ar_id: str, command: str) -> None:
@@ -1604,14 +1686,14 @@ def cmd_check(mode: str = "manual") -> None:
         except Exception:
             continue
 
-        # I8: Se AR tem verify (✅ SUCESSO ou 🔴 REJEITADO), TESTADOR_REPORT MUST estar staged
+        # I8: Se AR tem verify (✅ SUCESSO ou 🔴 REJEITADO), TESTADOR_REPORT MUST estar staged OU commitado
         if "✅ SUCESSO" in current_content or "🔴 REJEITADO" in current_content:
             reports = re.findall(r"\*\*TESTADOR_REPORT\*\*:\s*`(.+?)`", current_content)
             if reports:
                 report_rel = reports[-1].strip().replace("\\", "/")
-                if report_rel not in staged_files:
+                if not is_file_in_git(report_rel, staged_files):
                     fail(E_TESTADOR_REPORT_NOT_STAGED,
-                         f"{ar_rel_path}: AR com verify MUST ter TESTADOR_REPORT staged: {report_rel}",
+                         f"{ar_rel_path}: AR com verify MUST ter TESTADOR_REPORT (staged ou commitado): {report_rel}",
                          exit_code=1)
 
         # I9: Imutabilidade de ARs com ✅ VERIFICADO

@@ -1,6 +1,6 @@
 # AR_036 — Migration 0056: ADD COLUMN competitions.points_per_draw + competitions.points_per_loss
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ⚠️ PENDENTE
 **Versão do Protocolo**: 1.1.0
 
 ## Descrição
@@ -60,3 +60,12 @@ _(Gerado por hb report)_
 
 
 
+
+> 📋 Kanban routing: Executor: Evidence Pack missing or incomplete
+
+### Verificacao Testador em 9037e56
+**Status Testador**: ⚠️ PENDENTE
+**Consistency**: UNKNOWN
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: None
+**TESTADOR_REPORT**: `_reports/testador/AR_036_9037e56/result.json`

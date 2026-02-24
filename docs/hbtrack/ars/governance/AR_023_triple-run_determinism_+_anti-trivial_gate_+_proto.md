@@ -1,6 +1,6 @@
 # AR_023 — Triple-Run Determinism + Anti-Trivial Gate + Protocol v1.1.0 em hb_cli.py
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: 🔴 REJEITADO
 **Versão do Protocolo**: 1.0.8
 
 ## Descrição
@@ -138,3 +138,12 @@ _(Gerado por hb report)_
 
 
 
+
+> 📋 Kanban routing: Executor: Evidence Pack missing or incomplete
+
+### Verificacao Testador em 55912f6
+**Status Testador**: 🔴 REJEITADO
+**Consistency**: UNKNOWN
+**Triple-Run**: TRIPLE_FAIL (3x)
+**Exit Testador**: 1 | **Exit Executor**: None
+**TESTADOR_REPORT**: `_reports/testador/AR_023_55912f6/result.json`

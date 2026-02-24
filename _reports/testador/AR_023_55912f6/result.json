@@ -1,0 +1,42 @@
+{
+  "ar_id": "023",
+  "validation_command": "python -c \"import subprocess,pathlib,json; v=subprocess.run(['python','scripts/run/hb_cli.py','version'],capture_output=True,text=True,encoding='utf-8').stdout.strip(); assert 'v1.1.0' in v,f'FAIL version={v}'; hb=pathlib.Path('scripts/run/hb_cli.py').read_text(encoding='utf-8'); assert 'TRIPLE_RUN_COUNT' in hb,'FAIL TRIPLE_RUN_COUNT'; assert 'triple_consistency' in hb,'FAIL triple_consistency'; assert 'FLAKY_OUTPUT' in hb,'FAIL FLAKY_OUTPUT'; assert 'E_TRIVIAL_CMD' in hb,'FAIL E_TRIVIAL_CMD'; assert 'is_trivial_command' in hb,'FAIL is_trivial_command'; p=pathlib.Path('docs/_canon/planos/TEMP_TRIVIAL_TEST.json'); p.write_text(json.dumps({'project':'HB Track','version':'1.1.0','tasks':[{'id':'999','title':'T','description':'test trivial gate behavioral check minimum length required','criteria':'E_TRIVIAL_CMD raised','validation_command':'echo OK','evidence_file':'docs/hbtrack/evidence/AR_999_t.log','ssot_touches':[]}]}),encoding='utf-8'); r=subprocess.run(['python','scripts/run/hb_cli.py','plan',str(p),'--dry-run'],capture_output=True,text=True,encoding='utf-8'); p.unlink(missing_ok=True); assert r.returncode!=0,f'FAIL trivial not rejected exit={r.returncode}'; assert 'E_TRIVIAL_CMD' in r.stderr or 'trivial' in r.stderr.lower(),f'FAIL wrong error:{r.stderr[:100]}'; print('PASS: v1.1.0+triple-run+anti-trivial OK')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 1,
+      "hash_full": "6d9d2471c0e54d8451c44b9484d6a038d59eb2f98cea8451500ab308d0baa3ef",
+      "hash": "6d9d2471c0e54d84",
+      "stdout_len": 0,
+      "stderr_len": 128
+    },
+    {
+      "run": 2,
+      "exit_code": 1,
+      "hash_full": "6d9d2471c0e54d8451c44b9484d6a038d59eb2f98cea8451500ab308d0baa3ef",
+      "hash": "6d9d2471c0e54d84",
+      "stdout_len": 0,
+      "stderr_len": 128
+    },
+    {
+      "run": 3,
+      "exit_code": 1,
+      "hash_full": "6d9d2471c0e54d8451c44b9484d6a038d59eb2f98cea8451500ab308d0baa3ef",
+      "hash": "6d9d2471c0e54d84",
+      "stdout_len": 0,
+      "stderr_len": 128
+    }
+  ],
+  "triple_consistency": "TRIPLE_FAIL",
+  "testador_exit_code": 1,
+  "executor_exit_code": null,
+  "consistency": "UNKNOWN",
+  "status": "REJEITADO",
+  "ah_flags": [
+    "INCOMPLETE_EVIDENCE"
+  ],
+  "evidence_pack_complete": false,
+  "rejection_reason": "Evidence Pack missing or incomplete",
+  "workspace_clean": true
+}

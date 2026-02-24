@@ -127,6 +127,7 @@ htmlcov/
 
 # Logs and caches
 *.log
+!docs/hbtrack/evidence/**
 logs/
 .cache/
 

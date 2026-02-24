@@ -1,0 +1,32 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "Correção completa do pipeline write_scope (GAP-001). Garante que Arquiteto → hb plan → AR.md → hb_watch → Executor funcionem com escopo explícito. Bug identificado: Executor bloqueado porque ARs pendentes têm write_scope vazio.",
+  "assumptions": [
+    "Schema JSON ainda não define write_scope (campo ausente)",
+    "build_ar_content não gera seção ## Write Scope",
+    "hb_watch.py extrai write_scope mas retorna array vazio",
+    "Executor exige write_scope não-vazio (contract-driven, correto)"
+  ],
+  "tasks": [
+    {
+      "id": "069",
+      "title": "Fix write_scope Pipeline: Schema + build_ar_content + GATE P3.6 + Contract",
+      "description": "Implementar campo write_scope estruturado em: (1) ar_contract.schema.json para validação, (2) build_ar_content para gerar seção ## Write Scope, (3) GATE P3.6 para validar obrigatoriedade em tasks de código, (4) Arquiteto Contract para documentar obrigações O2.12 e proibição P3.6.\n\nFluxo corrigido:\n- Arquiteto define write_scope no Plan JSON\n- hb plan valida (GATE P3.6) e materializa (## Write Scope na AR)\n- hb_watch extrai write_scope (código já existe, linha 82)\n- Executor recebe contexto completo\n\nRetrocompatibilidade: write_scope opcional no schema (ARs legadas doc-only).",
+      "criteria": "1. Schema valida write_scope (array de strings, pattern anti-path-traversal)\n2. build_ar_content gera seção ## Write Scope após Critérios de Aceite\n3. GATE P3.6 rejeita plan sem write_scope para código (heurística: backend/frontend/.py/.ts)\n4. GATE P3.6 valida que paths estão em governed roots OU docs/_canon\n5. Arquiteto Contract atualizado (O2.12 + P3.6)\n6. Template exemplo criado (gov_template_with_write_scope.json)\n7. hb plan --dry-run do template gera AR com ## Write Scope visível",
+      "write_scope": [
+        "docs/_canon/contratos/ar_contract.schema.json",
+        "scripts/run/hb_cli.py",
+        "docs/_canon/contratos/Arquiteto Contract.md",
+        "docs/_canon/planos/governance/gov_template_with_write_scope.json"
+      ],
+      "validation_command": "python -c \"import json; schema=json.load(open('docs/_canon/contratos/ar_contract.schema.json')); tasks=schema['properties']['tasks']['items']['properties']; assert 'write_scope' in tasks, 'write_scope ausente no schema'; print('✅ Schema: write_scope presente')\" && python scripts/run/hb_cli.py plan docs/_canon/planos/governance/gov_template_with_write_scope.json --dry-run 2>&1 | grep -q '## Write Scope' && echo '✅ build_ar_content: seção gerada' || echo '❌ build_ar_content: seção ausente'",
+      "evidence_file": "docs/hbtrack/evidence/AR_069/executor_main.log",
+      "notes": "Correção auto-referencial: esta AR usa write_scope estruturado para corrigir o pipeline de write_scope. Template criado serve como referência permanente.\n\nDecisões:\n- write_scope opcional no schema (compatibilidade ARs doc-only)\n- GATE P3.6 obrigatório apenas para código (heurística keywords)\n- Pattern permite espaços (Hb Track - Backend)\n- Validação governed roots previne escopo arbitrário",
+      "risks": [
+        "GATE P3.6 heurística pode ter falsos positivos (mitigado: keywords conservadores)",
+        "ARs legadas sem ## Write Scope retornam [] (comportamento atual, retrocompatível)"
+      ]
+    }
+  ]
+}

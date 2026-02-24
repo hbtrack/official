@@ -1,9 +1,10 @@
-# AR_003.5 — Migration: persons.birth_date NOT NULL + Trigger de Paridade com athletes
+# AR_068 — Migration: persons.birth_date NOT NULL + Trigger de Paridade com athletes
 
-**Status**: PROPOSTA  
-**Versão**: 1.0  
-**Criado em**: 2026-02-19  
-**Modo**: PROPOSE_ONLY  
+**Status**: 🔲 PENDENTE
+**Versão**: 1.1
+**Criado em**: 2026-02-19
+**Plano de Execução**: `docs/_canon/planos/AR_068_migration_persons_birth_date.json`
+**Modo**: EXECUTE
 **Autor**: Arquiteto  
 **PRD Source**: docs/hbtrack/PRD HB Track.md §8.2 — Invariante de Dados
 
@@ -408,7 +409,7 @@ birth_date: Mapped[date] = mapped_column(sa.Date(), nullable=False)
 
 ## Evidence File (Contrato)
 
-`docs/evidence/AR_003.5_persons_birth_date_not_null.log`
+`docs/evidence/AR_068_persons_birth_date_not_null.log`
 
 ---
 

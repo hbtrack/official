@@ -6,7 +6,7 @@ Tabela attendance (schema real):
 - training_session_id: UUID NOT NULL FK(training_sessions)
 - team_registration_id: UUID NOT NULL FK(team_registrations)
 - athlete_id: UUID NOT NULL FK(athletes)
-- presence_status: VARCHAR(32) NOT NULL CHECK ('present'|'absent')
+- presence_status: VARCHAR(32) NOT NULL CHECK ('present'|'absent'|'justified')  # 0058
 - minutes_effective: smallint
 - comment: text
 - source: VARCHAR(32) NOT NULL DEFAULT 'manual' CHECK ('manual'|'import'|'correction')
@@ -66,12 +66,21 @@ class Attendance(Base):
         CheckConstraint("participation_type IS NULL OR (participation_type::text = ANY (ARRAY['full'::character varying, 'partial'::character varying, 'adapted'::character varying, 'did_not_train'::character varying]::text[]))", name='ck_attendance_participation_type'),
         CheckConstraint("reason_absence IS NULL OR (reason_absence::text = ANY (ARRAY['medico'::character varying, 'escola'::character varying, 'familiar'::character varying, 'opcional'::character varying, 'outro'::character varying]::text[]))", name='ck_attendance_reason'),
         CheckConstraint("source::text = ANY (ARRAY['manual'::character varying, 'import'::character varying, 'correction'::character varying]::text[])", name='ck_attendance_source'),
-        CheckConstraint("presence_status::text = ANY (ARRAY['present'::character varying, 'absent'::character varying]::text[])", name='ck_attendance_status'),
+        # Atualizado pela migration 0058 (add justified status)
+        CheckConstraint("presence_status::text = ANY (ARRAY['present'::character varying, 'absent'::character varying, 'justified'::character varying]::text[])", name='ck_attendance_status'),
+        # TASK-TRN-036: Adicionado após detecção em sprint S1 (migration 0058).
+        # Regra: quando absent, reason_absence DEVE ser NULL.
+        # Para ausência com motivo, usar presence_status='justified'.
+        CheckConstraint("(deleted_at IS NOT NULL) OR (presence_status <> 'absent') OR (reason_absence IS NULL)", name='ck_attendance_absent_reason_null'),
         Index('idx_attendance_corrections', 'correction_by_user_id', 'correction_at', unique=False, postgresql_where=sa.text("((source)::text = 'correction'::text)")),
         Index('idx_attendance_session', 'training_session_id', unique=False),
         Index('ix_attendance_athlete_id', 'athlete_id', unique=False),
         Index('ix_attendance_athlete_session_active', 'athlete_id', 'training_session_id', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
         Index('ix_attendance_training_session_id', 'training_session_id', unique=False),
+        # TASK-TRN-009/INV-TRN-009: Constraint não gerada pelo autogen (ausente no SSOT).
+        # Existe no DB (IntegrityError capturado em attendance_service flush).
+        # Declarada aqui para garantir migrations futuras e reflexão correta do ORM.
+        UniqueConstraint('training_session_id', 'athlete_id', name='uq_attendance_session_athlete'),
     )
 
     # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID

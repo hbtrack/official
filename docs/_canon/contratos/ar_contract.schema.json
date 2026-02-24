@@ -79,6 +79,20 @@
             "description": "DERIVED/DETERMINÍSTICO. Se presente, MUST ser exatamente o path canônico do evidence pack do Executor. O Arquiteto NÃO escolhe paths arbitrários."
           },
 
+          "write_scope": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 5,
+              "maxLength": 200,
+              "pattern": "^[A-Za-z0-9_/. \\*\\-]+$"
+            },
+            "minItems": 0,
+            "maxItems": 10,
+            "uniqueItems": true,
+            "description": "Paths de arquivos/diretórios que esta task pode modificar. MUST ser explícito para tasks que tocam código (governed roots). MAY ser vazio para tasks doc-only. Aceita wildcards (*)."
+          },
+
           "ssot_touches": {
             "type": "array",
             "uniqueItems": true,

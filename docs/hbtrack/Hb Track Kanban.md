@@ -496,6 +496,7 @@ EVIDENCE_PACK:
 - AC-005 alembic downgrade -1 exit_code=0: PASS
 
 ### ✅ Concluído
+- AR_900
 - AR_064
 - AR_050
 - AR_055
@@ -509,6 +510,7 @@ EVIDENCE_PACK:
 - AR_999 — test
 
 ### 🛠️ Em Execução
+- AR_036 — Executor: Evidence Pack missing or incomplete
 - AR_024 — Executor: Evidence Pack missing or incomplete
 - AR_023 — Executor: Evidence Pack missing or incomplete
 - AR_015 — Executor: Evidence Pack missing or incomplete
