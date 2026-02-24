@@ -4,8 +4,8 @@
 
 ## 📊 **STATUS TESTADOR — 2026-02-25**
 
-**Batches Verificadas**: 3 ✅
-**Total ARs Verificadas**: 13 ✅
+**Batches Verificadas**: 4 ✅
+**Total ARs Verificadas**: 16 ✅
 **Taxa de Sucesso**: 100% (0 REJEITADA)
 **ARs Seladas (Side-Effects)**: 2 ✅
 
@@ -42,6 +42,22 @@ Plano AR_121 criado (fix validation_command deterministico). Aguardando Executor
 
 **SEÇÃO ARQUITETO x TESTADOR**
 SOLICITAÇÕES DO ARQUITETO PARA O TESTADOR:
+
+## ✅ BATCH VERIFY CONCLUÍDO — AR_101, 102, 103 (Commit 782b6ae)
+
+Patches DOC-GATE-014 e DOC-GATE-015 verificados com sucesso. Causa raiz (tokens faltando em hb_watch.py e Dev Flow.md) corrigida.
+
+| AR | Status Verify | Hash | Validation Command | Consistency |
+|---|---|---|---|---|
+| AR_101 | ✅ SUCESSO | edfab73c3097d9f3 | doc_gates.py --ar-id 101 | OK (3x) |
+| AR_102 | ✅ SUCESSO | d3dfebcbf614776d | doc_gates.py --ar-id 102 | OK (3x) |
+| AR_103 | ✅ SUCESSO | 2aee19654a678eec | doc_gates.py --ar-id 103 | OK (3x) |
+
+**Patches Validados**:
+- `scripts/run/hb_watch.py`: HB_LOCK, is_locked(), get_staged_evidence_files() ✅
+- `docs/_canon/contratos/Dev Flow.md`: "último gate" no Passo 7 ✅
+
+---
 
 ## ✅ BATCH VERIFY CONCLUÍDO — AR_120, 121, 122 (Commit bdb43aa)
 
@@ -83,6 +99,26 @@ SOLICITAÇÕES DO ARQUITETO PARA O TESTADOR:
 
 
 **SEÇÃO EXECUTOR x TESTADOR**
+FEEDBACK DO TESTADOR PARA O EXECUTOR:
+
+## ✅ VERIFICADO: ARs 101, 102, 103 (Commit 782b6ae)
+
+**Data**: 2026-02-25
+
+Batch de doc_gates.py (DOC-GATE-014/015 fixes) verificado com triple-run OK.
+
+| AR | Status | Hashes (3 runs) | Consistency | VC Path |
+|----|--------|---|---|---|
+| AR_101 | ✅ SUCESSO | edfab73c3097d9f3 | OK | scripts/run/doc_gates.py --ar-id 101 |
+| AR_102 | ✅ SUCESSO | d3dfebcbf614776d | OK | scripts/run/doc_gates.py --ar-id 102 |
+| AR_103 | ✅ SUCESSO | 2aee19654a678eec | OK | scripts/run/doc_gates.py --ar-id 103 |
+
+**Patches confirmados**:
+- hb_watch.py: HB_LOCK + is_locked() + get_staged_evidence_files() ✅
+- Dev Flow.md: "último gate" no Passo 7 ✅
+
+---
+
 FEEDBACK HISTÓRICO DO EXECUTOR PARA O TESTADOR:
 
 ## ✅ HISTÓRICO: ARs 037, 039, 041, 042, 043, 004, 109–112 — Seladas (Sessão Anterior)
