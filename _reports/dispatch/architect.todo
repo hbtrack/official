@@ -10,6 +10,13 @@ ARs verificadas (triple-run OK) e seladas como ✅ VERIFICADO em 2026-02-24.
 
 ---
 
+## ✅ RESOLVIDO: AR_004 — Selada
+
+AR_004 (MatchEventService.create()) selada como ✅ VERIFICADO em 2026-02-24.
+Validation_command deterministico (filesize) ja estava em vigor. Triple-run OK (hash 547b3586).
+
+---
+
 ## ✅ RESOLVIDO: AR_111, AR_112 — Seladas (fix_hb_seal parcial)
 
 Seladas como ✅ VERIFICADO em 2026-02-24.
@@ -28,19 +35,9 @@ Seladas como ✅ VERIFICADO em 2026-02-24.
 ## 🔴 BLOQUEIO CRITICO: AR_071 — Bug no `hb seal` (false positive) — NAO RESOLVIDO
 
 **Problema**: `hb seal 071` retorna "ja esta ✅ VERIFICADO (idempotente)" mas AR_071 NAO esta selada.
-**Causa Raiz**: `hb_cli.py` linha ~1513 procura string `"✅ VERIFICADO"` em TODO conteudo, mas aparece na Descricao de AR_071.
+**Causa Raiz**: `hb_cli.py` linha ~1513 procura string `"✅ VERIFICADO"` em TODO conteudo, mas aparece na Descricao de AR_071 (descreve que hb_autotest executa git commit apos hb seal marcar VERIFICADO).
 **Status Real**: Testador ✅ SUCESSO (hash: 659b3bfba6c3b88b), arquivo sem selo.
-**PENDENTE**: Criar plano AR_122 — fix cmd_seal check "✅ VERIFICADO" por campo Status (mesmo padrao do AR_120 mas para L1513).
-
----
-
-## 🔴 REJEITADO: AR_004 — FLAKY_OUTPUT (validation command nao-deterministico)
-
-**AR_ID**: 004 (MatchEventService.create())
-**Problema**: pytest retorna exit 0 mas behavior_hash diverge
-**Causa**: Output com timestamps/UUIDs nao-deterministicos
-**Status**: PENDENTE — criar plano similar ao fix_ar003_deterministic_validation.json
-**Report**: `_reports/testador/AR_004_e971d7f/result.json`
+**Status Plano**: AR_122 criada com `fix_ar071_seal_verificado_check.json` (dry-run Exit 0). Aguardando Executor.
 
 ---
 
@@ -54,7 +51,7 @@ Seladas como ✅ VERIFICADO em 2026-02-24.
 **SEÇÃO ARQUITETO x EXECUTOR**
 SOLICITAÇÕES DO ARQUITETO PARA O EXECUTOR:
 
-## 🔲 DISPATCH BATCH — 3 Planos Prontos (todos dry-run Exit 0)
+## 🔲 DISPATCH BATCH — 4 Planos Prontos (todos dry-run Exit 0)
 
 ### Plano 1 — Prioridade ALTA: fix_ar110_seal_status_check.json
 **Arquivo**: `docs/_canon/planos/fix_ar110_seal_status_check.json`
@@ -65,7 +62,17 @@ SOLICITAÇÕES DO ARQUITETO PARA O EXECUTOR:
 - Validation: `hb seal 110` deve retornar exit 0 apos a correcao
 - write_scope: `["scripts/run/hb_cli.py"]`
 
-### Plano 2 — Prioridade ALTA: fix_ar003_deterministic_validation.json
+### Plano 2 — Prioridade ALTA: fix_ar071_seal_verificado_check.json
+**Arquivo**: `docs/_canon/planos/fix_ar071_seal_verificado_check.json`
+**AR gerada**: AR_122
+**Tarefa**: Corrigir bloco de idempotencia em `cmd_seal` em `scripts/run/hb_cli.py` linha ~1513.
+- ANTES: `if "✅ VERIFICADO" in ar_content:`
+- DEPOIS: `_status_idem_match = re.search(r'^\*\*Status\*\*:\s*(.+)$', ar_content, re.MULTILINE)` -> `_status_idem_value = _status_idem_match.group(1).strip() if _status_idem_match else ''` -> `if '✅ VERIFICADO' in _status_idem_value:`
+- Validation: `hb seal 071` deve retornar exit 0 apos a correcao
+- write_scope: `["scripts/run/hb_cli.py"]`
+- NOTA: Aplicar DEPOIS do Plano 1 se ambos forem executados na mesma sessao, pois alteram o mesmo arquivo
+
+### Plano 3 — Prioridade ALTA: fix_ar003_deterministic_validation.json
 **Arquivo**: `docs/_canon/planos/fix_ar003_deterministic_validation.json`
 **AR gerada**: AR_121
 **Tarefa**: Substituir validation_command de AR_003.md por comando inline deterministico.
@@ -74,7 +81,7 @@ SOLICITAÇÕES DO ARQUITETO PARA O EXECUTOR:
 - Saida final: `PASS: Schemas Pydantic canonicos OK`
 - write_scope: `[]` (mudanca de doc apenas)
 
-### Plano 3 — Prioridade NORMAL: fix_legacy_validation_7ars_opcao_a.json
+### Plano 4 — Prioridade NORMAL: fix_legacy_validation_7ars_opcao_a.json
 **Arquivo**: `docs/_canon/planos/fix_legacy_validation_7ars_opcao_a.json`
 **ARs geradas**: AR_113 a AR_119
 **Tarefa**: Corrigir validation_commands em 7 ARs legado (ver criterios individuais em cada AR):
@@ -93,16 +100,18 @@ SOLICITAÇÕES DO ARQUITETO PARA O TESTADOR:
 
 ## 🔲 AGUARDANDO VERIFY apos Executor completar
 
-Apos Executor completar os 3 planos acima, fazer `hb verify` para:
+Apos Executor completar os 4 planos acima, fazer `hb verify` para:
 - AR_113 a AR_119 (7 ARs — correcoes de validation_commands legados)
-- AR_120 (fix cmd_seal — validation interna faz `hb seal 110`)
+- AR_120 (fix cmd_seal REJEITADO — validation interna faz `hb seal 110`)
 - AR_121 (fix validation AR_003 — verificar determinismo 3 runs)
+- AR_122 (fix cmd_seal VERIFICADO idempotencia — validation interna faz `hb seal 071`)
 
 ## INFO CONTEXTO
 
-- AR_037, AR_039, AR_041, AR_042, AR_043, AR_111, AR_112: ✅ VERIFICADO
+- AR_037, AR_039, AR_041, AR_042, AR_043: ✅ VERIFICADO
+- AR_004: ✅ VERIFICADO (selado 2026-02-24)
+- AR_111, AR_112: ✅ VERIFICADO
 - AR_109: ✅ VERIFICADO
 - AR_110: bloqueada aguardando AR_120
 - AR_003: bloqueada aguardando AR_121
-- AR_004: pendente criacao de plano
-- AR_071: pendente criacao de plano (falso-positivo check VERIFICADO L1513)
+- AR_071: bloqueada aguardando AR_122
