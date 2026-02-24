@@ -31,25 +31,32 @@ Plano AR_121 criado (fix validation_command deterministico). Aguardando Executor
 **SEÇÃO ARQUITETO x TESTADOR**
 SOLICITAÇÕES DO ARQUITETO PARA O TESTADOR:
 
-## 🔲 AGUARDANDO VERIFY — 10 ARs apos Executor completar batch
+## ✅ BATCH VERIFY CONCLUÍDO — AR_120, 121, 122 (Commit bdb43aa)
 
-Quando o Executor concluir, fazer `hb verify` para:
+| AR | Status Verify | Hash | Consistency |
+|---|---|---|---|
+| AR_120 | ✅ SUCESSO | c3d95cfa48b7c420 | OK (3x) |
+| AR_122 | ✅ SUCESSO | f620aeb8f88c13f5 | OK (3x) |
+| AR_121 | ✅ SUCESSO | 4740a157d82b1395 | OK (3x) |
 
-| AR | Plano Fonte | O que verificar |
-|---|---|---|
-| AR_120 | fix_ar110_seal_status_check.json | fix cmd_seal L1524; validation interna faz `hb seal 110` |
-| AR_122 | fix_ar071_seal_verificado_check.json | fix cmd_seal L1513; validation interna faz `hb seal 071` |
-| AR_121 | fix_ar003_deterministic_validation.json | validation command AR_003 — confirmar 3 hashes identicos |
-| AR_068 | AR_068_migration_persons_birth_date.json | evidencia canonica migration 0053 |
-| AR_113 | fix_legacy_validation_7ars_opcao_a.json | fix AR_032 validation assert v1. |
-| AR_114 | fix_legacy_validation_7ars_opcao_a.json | fix AR_034 gate path |
-| AR_115 | fix_legacy_validation_7ars_opcao_a.json | fix AR_035 INDEX path |
-| AR_116 | fix_legacy_validation_7ars_opcao_a.json | fix AR_038 revision 0060 |
-| AR_117 | fix_legacy_validation_7ars_opcao_a.json | fix AR_040 revision 0061 |
-| AR_118 | fix_legacy_validation_7ars_opcao_a.json | fix AR_044 counts >= |
-| AR_119 | fix_legacy_validation_7ars_opcao_a.json | fix AR_045 counts >= |
+**Efeitos Colaterais Confirmados**:
+- AR_110: ✅ VERIFICADO (selada por validate_ar120.py)
+- AR_071: ✅ VERIFICADO (selada por validate_ar122.py)
 
-**NOTA AR_120 + AR_122**: modificam o mesmo arquivo `scripts/run/hb_cli.py`. O Executor deve aplicar em sequencia (1 depois 2). Ao verificar, confirmar que AMBAS as correcoes estao presentes.
+---
+
+## 🔲 AGUARDANDO EVIDÊNCIA — 8 ARsDespois de Executor completar batch com evidências:
+
+| AR | Plano Fonte | Status | O que verificar |
+|---|---|---|---|
+| AR_068 | AR_068_migration_persons_birth_date.json | 🔲 PENDENTE_EVIDENCE | evidencia canonica migration 0053 |
+| AR_113 | fix_legacy_validation_7ars_opcao_a.json | 🔲 PENDENTE_EVIDENCE | fix AR_032 validation assert v1. |
+| AR_114 | fix_legacy_validation_7ars_opcao_a.json | 🔲 PENDENTE_EVIDENCE | fix AR_034 gate path |
+| AR_115 | fix_legacy_validation_7ars_opcao_a.json | 🔲 PENDENTE_EVIDENCE | fix AR_035 INDEX path |
+| AR_116 | fix_legacy_validation_7ars_opcao_a.json | 🔲 PENDENTE_EVIDENCE | fix AR_038 revision 0060 |
+| AR_117 | fix_legacy_validation_7ars_opcao_a.json | 🔲 PENDENTE_EVIDENCE | fix AR_040 revision 0061 |
+| AR_118 | fix_legacy_validation_7ars_opcao_a.json | 🔲 PENDENTE_EVIDENCE | fix AR_044 counts >= |
+| AR_119 | fix_legacy_validation_7ars_opcao_a.json | 🔲 PENDENTE_EVIDENCE | fix AR_045 counts >= |
 
 
 **SEÇÃO EXECUTOR x TESTADOR**

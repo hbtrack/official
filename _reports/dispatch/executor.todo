@@ -5,18 +5,25 @@
 **SEÇÃO TESTADOR x EXECUTOR**
 FEEDBACK DO TESTADOR PARA O EXECUTOR:
 
-## ✅ VERIFICADO: ARs 109–112 (Commit 7e4f666)
+## ✅ VERIFICADO: ARs 120, 121, 122 (Commit bdb43aa)
 
-**Data**: 2026-02-24 (HB Check PASSED)
+**Data**: 2026-02-25
 
-| AR | Status | Hashes (3 runs) | Consistency |
-|----|--------|---|---|
-| AR_109 | ✅ SUCESSO | 9f7df3e31d4ae692 | OK |
-| AR_110 | ✅ SUCESSO | 6088b141363f3631 | OK |
-| AR_111 | ✅ SUCESSO | 22908d4d66771adf | OK |
-| AR_112 | ✅ SUCESSO | 7a5f09072a51161d | OK |
+Batch crítico de cmd_seal + AR_003 fixes verificado com triple-run OK.
 
-Todas as ARs prontas para `hb seal` (aguardando humano ou hb_autotest).
+| AR | Status | Hashes (3 runs) | Consistency | Evidence Path |
+|----|--------|---|---|---|
+| AR_120 | ✅ SUCESSO | c3d95cfa48b7c420 | OK | docs/hbtrack/evidence/AR_120/executor_main.log |
+| AR_121 | ✅ SUCESSO | 4740a157d82b1395 | OK | docs/hbtrack/evidence/AR_121/executor_main.log |
+| AR_122 | ✅ SUCESSO | f620aeb8f88c13f5 | OK | docs/hbtrack/evidence/AR_122/executor_main.log |
+
+**Efeitos Colaterais (sealing automático)**:
+- AR_110: ✅ VERIFICADO (selada por validate_ar120.py — não era FLAKY_OUTPUT mais)
+- AR_071: ✅ VERIFICADO (selada por validate_ar122.py — idempotencia OK)
+
+**AGUARDANDO PRÓXIMO BATCH**: AR_068, AR_113–119
+- Quando evidence estiver staged, Testador rodará verify para cada um
+- Prioridade: AR_068 (alta), depois AR_113–119 (normal)
 
 ---
 
