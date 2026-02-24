@@ -1,6 +1,6 @@
 # AR_023 — Triple-Run Determinism + Anti-Trivial Gate + Protocol v1.1.0 em hb_cli.py
 
-**Status**: 🔴 REJEITADO
+**Status**: ⛔ SUPERSEDED — Triple-run em produção desde v1.1.0; Evidence Pack nunca criado — absorvida pelo protocolo atual
 **Versão do Protocolo**: 1.0.8
 
 ## Descrição

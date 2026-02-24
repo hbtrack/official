@@ -1,6 +1,6 @@
 # AR_007 — Exit Code Zero Test
 
-**Status**: 🔴 REJEITADO
+**Status**: ⛔ SUPERSEDED — Smoke test protocolo v1.0.4 obsoleto — absorvido por protocolo v1.3.0
 **Versão do Protocolo**: 1.0.4
 **Plano Fonte**: *(teste manual, sem plano JSON)*
 

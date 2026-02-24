@@ -1,6 +1,6 @@
 # AR_031 — Ambiente SSOT: docs/_canon/contratos/Ambiente.md + gemini.md update
 
-**Status**: 🔴 REJEITADO
+**Status**: ⛔ SUPERSEDED — gemini.md removido do repositório; conteúdo de SSOT absorvido por equivalentes atuais
 **Versão do Protocolo**: 1.1.0
 
 ## Descrição

@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_015-8d39a14",
+  "timestamp_utc": "2026-02-24T20:51:32.977159+00:00",
+  "git": {
+    "commit": "8d39a14336f1cafd673b5ad99e79eee931ab3054"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "015",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_015_update_referências_'fronted'_→_'frontend'_em_scrip.md"
+}

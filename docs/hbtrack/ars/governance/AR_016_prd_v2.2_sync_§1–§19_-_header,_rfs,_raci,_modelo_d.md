@@ -1,6 +1,6 @@
 # AR_016 — PRD v2.2: sync §1–§19 — header, RFs, RACI, modelo dados, stack, gates
 
-**Status**: 🔴 REJEITADO
+**Status**: ⛔ SUPERSEDED — PRD v2.2 sync concluído; validação .ps1 overfit em regra proibitiva — absorvida pelo protocolo atual
 **Versão do Protocolo**: 1.0.6
 
 ## Descrição

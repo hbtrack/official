@@ -1,6 +1,6 @@
 # AR_103 — Resgate de Drafts e Invariantes Wellness
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.2.0
 
 ## Descrição
@@ -52,9 +52,16 @@ _(Gerado por hb report)_
 **Python Version**: 3.11.9
 
 
-### Verificacao Testador em b6adc7e
+### Verificacao Testador em 8d39a14
 **Status Testador**: ✅ SUCESSO
 **Consistency**: OK
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
-**TESTADOR_REPORT**: `_reports/testador/AR_103_b6adc7e/result.json`
+**TESTADOR_REPORT**: `_reports/testador/AR_103_8d39a14/result.json`
+
+### Selo Humano em 8d39a14
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-24T20:37:11.044922+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_103_8d39a14/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_103/executor_main.log`

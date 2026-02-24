@@ -1,6 +1,6 @@
 # AR_024 — Docs v1.1.0: Dev Flow + Hb cli Spec + Testador Contract
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.0.8
 
 ## Descrição
@@ -96,9 +96,6 @@ git restore "docs/_canon/contratos/Dev Flow.md" "docs/_canon/specs/Hb cli Spec.m
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
-
-
 ### Execução Executor em c9f6f40
 **Status Executor**: 🏗️ EM_EXECUCAO
 **Comando**: `python -c "import pathlib, re; df=pathlib.Path('docs/_canon/contratos/Dev Flow.md').read_text(encoding='utf-8'); sp=pathlib.Path('docs/_canon/specs/Hb cli Spec.md').read_text(encoding='utf-8'); tc=pathlib.Path('docs/_canon/contratos/Testador Contract.md').read_text(encoding='utf-8'); df_ver=re.search(r'v(\d+)\.(\d+)\.(\d+)', df); sp_ver=re.search(r'v(\d+)\.(\d+)\.(\d+)', sp); tc_ver=re.search(r'v(\d+)\.(\d+)\.(\d+)', tc); assert df_ver and (int(df_ver.group(1)),int(df_ver.group(2)))>=(1,1), 'Dev Flow version < 1.1'; assert sp_ver and (int(sp_ver.group(1)),int(sp_ver.group(2)))>=(1,1), 'Hb cli Spec version < 1.1'; assert tc_ver and (int(tc_ver.group(1)),int(tc_ver.group(2)))>=(1,1), 'Testador Contract version < 1.1'; print('[PASS] AR_024 objective achieved: docs at version >= 1.1.0 (current: Dev Flow v{}.{}.{}, Hb cli Spec v{}.{}.{}, Testador Contract v{}.{}.{})'.format(*df_ver.groups(), *sp_ver.groups(), *tc_ver.groups()))"`
@@ -108,3 +105,17 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_024/executor_main.log`
 **Python Version**: 3.11.9
 
+
+### Verificacao Testador em 8d39a14
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_024_8d39a14/result.json`
+
+### Selo Humano em 8d39a14
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-24T20:38:20.089804+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_024_8d39a14/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_024/executor_main.log`

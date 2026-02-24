@@ -1,6 +1,6 @@
 # AR_014 — git mv: renomear Hb Track - Fronted → Hb Track - Frontend
 
-**Status**: ⚠️ PENDENTE
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.0.6
 
 ## Descrição
@@ -23,7 +23,7 @@ python -c "import os, sys; old=os.path.exists('Hb Track - Fronted'); new=os.path
 ```
 
 ## Evidence File (Contrato)
-`docs/hbtrack/evidence/AR_014_infra_rename_frontend_dir.log`
+`docs/hbtrack/evidence/AR_014/executor_main.log`
 
 ## Rollback Plan (Contrato)
 ```
@@ -75,14 +75,28 @@ _(Preenchido pelo Executor)_
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
-
-
 > 📋 Kanban routing: Executor: Evidence Pack missing or incomplete
 
-### Verificacao Testador em beb4277
-**Status Testador**: ⚠️ PENDENTE
-**Consistency**: UNKNOWN
+### Execução Executor em 8d39a14
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import os, sys; old=os.path.exists('Hb Track - Fronted'); new=os.path.exists('Hb Track - Frontend'); errs=[]; (errs.append('OLD still exists: Hb Track - Fronted') if old else None); (errs.append('NEW missing: Hb Track - Frontend') if not new else None); [print(e) for e in errs]; sys.exit(len(errs)) if errs else print('PASS: Hb Track - Frontend exists, Hb Track - Fronted removed')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-24T20:51:14.299588+00:00
+**Behavior Hash**: 4d2e095d2ead54d03ab2fe76b9e880a971b8b8b3e062d292cb52ccc15b524d26
+**Evidence File**: `docs/hbtrack/evidence/AR_014/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Verificacao Testador em 8d39a14
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
 **Triple-Run**: OK (3x)
-**Exit Testador**: 0 | **Exit Executor**: None
-**TESTADOR_REPORT**: `_reports/testador/AR_014_beb4277/result.json`
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_014_8d39a14/result.json`
+
+### Selo Humano em 8d39a14
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-24T20:51:41.048167+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_014_8d39a14/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_014/executor_main.log`

@@ -8,39 +8,39 @@
 | AR_002 | Model: CompetitionStanding.team_id — mapped_column + rela... | ⚠️ PENDENTE | docs/hbtrack/evidence/AR_002_competition_standings_model_team_id.log |
 | AR_002.5 | Schema: match_goalkeeper_stints para Eficiência de Goleira | ✅ VERIFICADO | docs/hbtrack/evidence/AR_002.5_A/executor_main.log |
 | AR_002.5 | Schema: attendance.presence_status + status 'justified' | ✅ VERIFICADO | docs/hbtrack/evidence/AR_002.5_B/executor_main.log |
-| AR_002.5 | Documentar divergência de escalas wellness_pre vs. PRD | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_002_5_C_evidence.log |
+| AR_002.5 | Documentar divergência de escalas wellness_pre vs. PRD | ⛛ SUPERSEDED — Draft EM_EXECUCAO abandonado; divergencia de escalas wellness documentada por outros meios | docs/hbtrack/evidence/AR_002_5_C_evidence.log |
 | AR_002.5 | Schema: match_analytics_cache para Relatórios V1.1 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_002.5_D/executor_main.log |
 | AR_003 | Schemas Pydantic Canônicos de Scout | ✅ VERIFICADO | docs/hbtrack/evidence/AR_003/executor_main.log |
 | AR_004 | MatchEventService.create() — ORM correto, roster, is_shot... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_004/executor_main.log |
-| AR_005 | Router match_events — schemas canônicos ScoutEventCreate/... | 🔍 NEEDS REVIEW | docs/hbtrack/evidence/AR_005_endpoint_match_events.log |
+| AR_005 | Router match_events — schemas canônicos ScoutEventCreate/... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_005/executor_main.log |
 | AR_006 | Migração path planos para docs/_canon/_agent/planos + v1.0.5 | COMPLETED ✅ | docs/hbtrack/evidence/AR_006_gov_plans_path_migration.log |
-| AR_007 | Exit Code Zero Test | 🔴 REJEITADO | docs/hbtrack/evidence/AR_007_exit_zero.log |
+| AR_007 | Exit Code Zero Test | ⛔ SUPERSEDED — Smoke test protocolo v1.0.4 obsoleto — absorvido por protocolo v1.3.0 | docs/hbtrack/evidence/AR_007_exit_zero.log |
 | AR_008 | Migration 0055: soft delete (COMP-DB-001) em 5 tabelas do... | ✅ CONCLUIDO | docs/hbtrack/evidence/AR_008_comp_db_001_soft_delete_migration.log |
 | AR_009 | Models: soft delete (deleted_at, deleted_reason) nos 5 mo... | ✅ CONCLUIDO | docs/hbtrack/evidence/AR_009_comp_db_001_soft_delete_models.log |
 | AR_010 | hb report: atualizar campo **Status** no cabeçalho da AR ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_010_gov_ar_status_header_sync.log |
 | AR_011 | hb_cli.py: rebuild_ar_index() — auto-rebuild _INDEX.md em... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_011_gov_ar_index_rebuild.log |
 | AR_012 | hb check: enforce _INDEX.md staged sync + imutabilidade d... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_012_gov_ar_check_immutability.log |
 | AR_013 | Dev Flow v1.0.7: §9 Regras de Governança de ARs + bump pr... | ⛔ SUPERSEDED — ver AR_020 | docs/hbtrack/evidence/AR_013_gov_devflow_ar_rules.log |
-| AR_014 | git mv: renomear Hb Track - Fronted → Hb Track - Frontend | ⚠️ PENDENTE | docs/hbtrack/evidence/AR_014_infra_rename_frontend_dir.log |
-| AR_015 | Update referências 'Fronted' → 'Frontend' em scripts e do... | ⚠️ PENDENTE | docs/hbtrack/evidence/AR_015_infra_rename_frontend_refs.log |
-| AR_016 | PRD v2.2: sync §1–§19 — header, RFs, RACI, modelo dados, ... | 🔴 REJEITADO | docs/hbtrack/evidence/AR_016_prd_v22_content_sync.log |
+| AR_014 | git mv: renomear Hb Track - Fronted → Hb Track - Frontend | ✅ VERIFICADO | docs/hbtrack/evidence/AR_014/executor_main.log |
+| AR_015 | Update referências 'Fronted' → 'Frontend' em scripts e do... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_015/executor_main.log |
+| AR_016 | PRD v2.2: sync §1–§19 — header, RFs, RACI, modelo dados, ... | ⛔ SUPERSEDED — PRD v2.2 sync concluído; validação .ps1 overfit em regra proibitiva — absorvida pelo protocolo atual | docs/hbtrack/evidence/AR_016_prd_v22_content_sync.log |
 | AR_017 | PRD v2.2: §20 nova seção — Governança de Desenvolvimento ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_017_prd_v22_governance_section.log |
 | AR_018 | Novo contrato: docs/_canon/contratos/Testador Contract.md... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_018_gov_testador_contract.log |
 | AR_019 | Hb cli Spec v1.0.8: §10 hb verify, §11 novos status, §12 ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_019_gov_hb_cli_spec_v108.log |
-| AR_020 | Dev Flow v1.0.8 + hb_cli.py: cmd_verify, hb check C3 upgr... | 🔴 REJEITADO | docs/hbtrack/evidence/AR_020_gov_testador_v108_implementation.log |
+| AR_020 | Dev Flow v1.0.8 + hb_cli.py: cmd_verify, hb check C3 upgr... | ⛔ SUPERSEDED — Dev Flow v1.0.8 check — Dev Flow está em v1.3.0; conteúdo absorvido por ARs de governança subsequentes | docs/hbtrack/evidence/AR_020_gov_testador_v108_implementation.log |
 | AR_021 | Dual Executor Contract: protocolo de 2 agentes Executores... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_021_gov_dual_executor_contract.log |
 | AR_022 | BATCH_001: assignment das ARs pendentes para Executor A e... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_022_gov_dual_executor_batch_001.log |
-| AR_023 | Triple-Run Determinism + Anti-Trivial Gate + Protocol v1.... | 🔴 REJEITADO | docs/hbtrack/evidence/AR_023_triple_run_determinism.log |
-| AR_024 | Docs v1.1.0: Dev Flow + Hb cli Spec + Testador Contract | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_024/executor_main.log |
+| AR_023 | Triple-Run Determinism + Anti-Trivial Gate + Protocol v1.... | ⛔ SUPERSEDED — Triple-run em produção desde v1.1.0; Evidence Pack nunca criado — absorvida pelo protocolo atual | docs/hbtrack/evidence/AR_023_triple_run_determinism.log |
+| AR_024 | Docs v1.1.0: Dev Flow + Hb cli Spec + Testador Contract | ✅ VERIFICADO | docs/hbtrack/evidence/AR_024/executor_main.log |
 | AR_025 | Agente-Arquiteto Contract v2.0: Regras, Gates, Prompt Ent... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_025_arquiteto_contract_enterprise.log |
 | AR_026 | Agente-Executor Contract v2.0: Regras, Guardrails, Eviden... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_026_executor_contract_enterprise.log |
 | AR_027 | Agente-Testador Contract v2.0: Triple-Run Enterprise + An... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_027_testador_contract_enterprise.log |
 | AR_028 | HBLock: Concurrency Lock Atômico para hb_cli.py (3 Agentes) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_028_hblock_concurrency_enterprise.log |
 | AR_029 | Evidence Integrity: SHA-256 Checksum + Git-Status Pre-Che... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_029_evidence_integrity_antiforja.log |
 | AR_030 | Dev Flow v1.1.0: AR-as-Semaphore + Notes como Canal + Tri... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_030_devflow_v110_enterprise.log |
-| AR_031 | Ambiente SSOT: docs/_canon/contratos/Ambiente.md + gemini... | 🔴 REJEITADO | docs/hbtrack/evidence/AR_031_ambiente_ssot.log |
+| AR_031 | Ambiente SSOT: docs/_canon/contratos/Ambiente.md + gemini... | ⛔ SUPERSEDED — gemini.md removido do repositório; conteúdo de SSOT absorvido por equivalentes atuais | docs/hbtrack/evidence/AR_031_ambiente_ssot.log |
 | AR_032 | Hb cli Spec.md: sync v1.0.8 → v1.1.0 (GATE P3.5, HBLock, ... | ✅ SUCESSO | docs/hbtrack/evidence/AR_032_hb_cli_spec_v110_sync.log |
-| AR_033 | AR Index Checkpoint: _INDEX.md completo e sincronizado co... | ❌ FALHA | docs/hbtrack/evidence/AR_033_ar_index_validation_checkpoint.log |
+| AR_033 | AR Index Checkpoint: _INDEX.md completo e sincronizado co... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_033/executor_main.log |
 | AR_034 | Governança Plans — Gate JSON-to-AR obrigatório | ✅ SUCESSO | docs/hbtrack/evidence/AR_034_gov_plans_json_ar_sync_validation.log |
 | AR_035 | Criar scripts/run/hb_watch.py — sentinela de estado do fluxo | ✅ SUCESSO | docs/hbtrack/evidence/AR_035_hb_watch_sentinela_fluxo.log |
 | AR_036 | Migration 0056: ADD COLUMN competitions.points_per_draw +... | ⚠️ PENDENTE | docs/hbtrack/evidence/AR_036_comp_db_003_scoring_rules_migration.log |
@@ -81,9 +81,9 @@
 | AR_071 | Add auto-commit opt-in to hb_autotest (strict allowlist +... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_071/executor_main.log |
 | AR_072 | Governance: Document daemons + bump PROTOCOL_VERSION v1.3.0 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_072/executor_main.log |
 | AR_100 | Estabilização do Protocolo v1.2.0 e Unificação de Registros | ✅ VERIFICADO | docs/hbtrack/evidence/AR_100/executor_main.log |
-| AR_101 | Resgate de ARs de Governança (v1.2.0 Core) | ✅ SUCESSO | docs/hbtrack/evidence/AR_101/executor_main.log |
-| AR_102 | Resgate de ARs de Competitions e Features | ✅ SUCESSO | docs/hbtrack/evidence/AR_102/executor_main.log |
-| AR_103 | Resgate de Drafts e Invariantes Wellness | ✅ SUCESSO | docs/hbtrack/evidence/AR_103/executor_main.log |
+| AR_101 | Resgate de ARs de Governança (v1.2.0 Core) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_101/executor_main.log |
+| AR_102 | Resgate de ARs de Competitions e Features | ✅ VERIFICADO | docs/hbtrack/evidence/AR_102/executor_main.log |
+| AR_103 | Resgate de Drafts e Invariantes Wellness | ✅ VERIFICADO | docs/hbtrack/evidence/AR_103/executor_main.log |
 | AR_104 | Modificar migration 0060 para detectar versão PostgreSQL ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_104/executor_main.log |
 | AR_105 | Validar comportamento semântico da constraint/index em Po... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_105/executor_main.log |
 | AR_109 | Adicionar constante E_SEAL_MULTIPLE_TESTADOR_STAMPS no to... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_109/executor_main.log |

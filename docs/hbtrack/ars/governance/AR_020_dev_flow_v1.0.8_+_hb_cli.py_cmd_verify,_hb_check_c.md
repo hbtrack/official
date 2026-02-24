@@ -1,6 +1,6 @@
 # AR_020 — Dev Flow v1.0.8 + hb_cli.py: cmd_verify, hb check C3 upgrade, bump protocolo (supersede AR_013)
 
-**Status**: 🔴 REJEITADO
+**Status**: ⛔ SUPERSEDED — Dev Flow v1.0.8 check — Dev Flow está em v1.3.0; conteúdo absorvido por ARs de governança subsequentes
 **Versão do Protocolo**: 1.0.6
 
 ## Descrição
