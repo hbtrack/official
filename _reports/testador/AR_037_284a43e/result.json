@@ -1,0 +1,40 @@
+{
+  "ar_id": "037",
+  "validation_command": "python -c \"import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition import Competition; fields=['points_per_draw','points_per_loss']; missing=[f for f in fields if not hasattr(Competition,f)]; assert not missing,f'FAIL: missing fields {missing}'; print(f'PASS: {fields} present in Competition')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "37b8d7a8a18998ca710e9b5bf95672082bc871540684a61fe5a63f6a341fdca5",
+      "hash": "37b8d7a8a18998ca",
+      "stdout_len": 68,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "37b8d7a8a18998ca710e9b5bf95672082bc871540684a61fe5a63f6a341fdca5",
+      "hash": "37b8d7a8a18998ca",
+      "stdout_len": 68,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "37b8d7a8a18998ca710e9b5bf95672082bc871540684a61fe5a63f6a341fdca5",
+      "hash": "37b8d7a8a18998ca",
+      "stdout_len": 68,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

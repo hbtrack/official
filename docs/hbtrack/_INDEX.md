@@ -44,7 +44,7 @@
 | AR_034 | Governança Plans — Gate JSON-to-AR obrigatório | ✅ SUCESSO | docs/hbtrack/evidence/AR_034_gov_plans_json_ar_sync_validation.log |
 | AR_035 | Criar scripts/run/hb_watch.py — sentinela de estado do fluxo | ✅ SUCESSO | docs/hbtrack/evidence/AR_035_hb_watch_sentinela_fluxo.log |
 | AR_036 | Migration 0056: ADD COLUMN competitions.points_per_draw +... | ⚠️ PENDENTE | docs/hbtrack/evidence/AR_036_comp_db_003_scoring_rules_migration.log |
-| AR_037 | Model: Competition.points_per_draw + Competition.points_p... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_037/executor_main.log |
+| AR_037 | Model: Competition.points_per_draw + Competition.points_p... | ✅ SUCESSO | docs/hbtrack/evidence/AR_037/executor_main.log |
 | AR_038 | Migration 0057: DROP uk_competition_standings_team_phase ... | ✅ SUCESSO | docs/hbtrack/evidence/AR_038_comp_db_004_unique_index_migration.log |
 | AR_039 | Model: CompetitionStanding — UniqueConstraint legado → NU... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_039/executor_main.log |
 | AR_040 | Migration 0058 COMP-DB-006: ADD 3 CHECK constraints statu... | ✅ SUCESSO | docs/hbtrack/evidence/AR_040_comp_db_006_check_constraints_migration.log |
