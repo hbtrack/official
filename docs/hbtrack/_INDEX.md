@@ -86,9 +86,9 @@
 | AR_103 | Resgate de Drafts e Invariantes Wellness | ⚠️ PENDENTE | docs/hbtrack/evidence/AR_103/executor_main.log |
 | AR_104 | Modificar migration 0060 para detectar versão PostgreSQL ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_104/executor_main.log |
 | AR_105 | Validar comportamento semântico da constraint/index em Po... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_105/executor_main.log |
-| AR_109 | Adicionar constante E_SEAL_MULTIPLE_TESTADOR_STAMPS no to... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_109/executor_main.log |
-| AR_110 | Adicionar guarda anti-múltiplos-carimbos em cmd_seal (ant... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_110/executor_main.log |
-| AR_111 | Adicionar limpeza automática de carimbos antigos em cmd_v... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_111/executor_main.log |
-| AR_112 | Limpar manualmente carimbos duplicados de AR_071 e AR_004 | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_112/executor_main.log |
+| AR_109 | Adicionar constante E_SEAL_MULTIPLE_TESTADOR_STAMPS no to... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_109/executor_main.log |
+| AR_110 | Adicionar guarda anti-múltiplos-carimbos em cmd_seal (ant... | ✅ SUCESSO | docs/hbtrack/evidence/AR_110/executor_main.log |
+| AR_111 | Adicionar limpeza automática de carimbos antigos em cmd_v... | ✅ SUCESSO | docs/hbtrack/evidence/AR_111/executor_main.log |
+| AR_112 | Limpar manualmente carimbos duplicados de AR_071 e AR_004 | ✅ SUCESSO | — |
 | AR_998 | Test Write Scope Section Generation | ✅ VERIFICADO | docs/hbtrack/evidence/AR_998/executor_main.log |
 | AR_999 | Exemplo: Adicionar campo birthdate em Person | ✅ VERIFICADO | docs/hbtrack/evidence/AR_999/executor_main.log |

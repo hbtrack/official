@@ -1,0 +1,29 @@
+AR_ID: 034
+Command: python scripts/checks/check_plans_ar_sync.py && python -c "import json; result=json.load(open('docs/hbtrack/evidence/PLANS_AR_SYNC/result.json')); assert result['status']=='PASS', f'FAIL: {result}'"
+Exit Code: 2
+Timestamp UTC: 2026-02-24T17:11:54.816223+00:00
+Behavior Hash (exit+stdout+stderr): dfa642cd5f9efa62094870d045a2ca9ab8942329fed7b722e1d48fad39688527
+Git HEAD: 38b62a53f80431e16988efa3cab6f8cee80241fe
+Python Version: 3.11.9
+Protocol Version: 1.3.0
+Workspace Clean: False
+Workspace Status: unstaged_modified=18
+Governed Checksums (sha256): {}
+
+--- STDOUT ---
+
+
+--- STDERR ---
+VIOLATION: Found 11 orphan plan tasks without ARs.
+  - Plan: docs\_canon\planos\ar_073_075_invariants_update.json | Task ID: 073
+  - Plan: docs\_canon\planos\ar_073_075_invariants_update.json | Task ID: 074
+  - Plan: docs\_canon\planos\ar_073_075_invariants_update.json | Task ID: 075
+  - Plan: docs\_canon\planos\fix_hb_seal_multiple_testador_stamps.json | Task ID: 109
+  - Plan: docs\_canon\planos\fix_hb_seal_multiple_testador_stamps.json | Task ID: 110
+  - Plan: docs\_canon\planos\fix_hb_seal_multiple_testador_stamps.json | Task ID: 111
+  - Plan: docs\_canon\planos\fix_hb_seal_multiple_testador_stamps.json | Task ID: 112
+  - Plan: docs\_canon\planos\plan_gov_v1_2_0.json | Task ID: 100
+  - Plan: docs\_canon\planos\resgate_legacy_v120.json | Task ID: 065
+  - Plan: docs\_canon\planos\resgate_legacy_v120.json | Task ID: 066
+  - Plan: docs\_canon\planos\resgate_legacy_v120.json | Task ID: 067
+

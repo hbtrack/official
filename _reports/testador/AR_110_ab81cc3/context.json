@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_110-ab81cc3",
+  "timestamp_utc": "2026-02-24T18:11:40.284445+00:00",
+  "git": {
+    "commit": "ab81cc328a0e19309152c7e0315d8ee1271e3820"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "110",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_110_adicionar_guarda_anti-múltiplos-carimbos_em_cmd_se.md"
+}

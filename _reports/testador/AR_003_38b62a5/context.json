@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_003-38b62a5",
+  "timestamp_utc": "2026-02-24T17:21:18.278244+00:00",
+  "git": {
+    "commit": "38b62a53f80431e16988efa3cab6f8cee80241fe"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "003",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_003_schemas_pydantic_canônicos_de_scout.md"
+}

@@ -1,6 +1,6 @@
 # AR_111 — Adicionar limpeza automática de carimbos antigos em cmd_verify (antes de append)
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ✅ SUCESSO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -52,7 +52,6 @@ Limpeza automática: cada verify sobrescreve histórico (não acumula carimbos).
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução Executor em 8608b0a
 **Status Executor**: 🏗️ EM_EXECUCAO
 **Comando**: `python temp/validate_ar111.py`
@@ -62,3 +61,10 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_111/executor_main.log`
 **Python Version**: 3.11.9
 
+
+### Verificacao Testador em ab81cc3
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_111_ab81cc3/result.json`

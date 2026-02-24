@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_001-b507dc6",
+  "timestamp_utc": "2026-02-24T16:28:49.023326+00:00",
+  "git": {
+    "commit": "b507dc60a131a155fa5aef9c47244f39ef86025e"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "001",
+  "ar_file": "docs\\hbtrack\\ars\\competitions\\AR_001_migration_add_column_competition_standings.team_id.md"
+}

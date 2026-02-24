@@ -1,0 +1,42 @@
+{
+  "ar_id": "003",
+  "validation_command": "python temp/validate_ar003.py",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "789d1a54a4d19a0295606d040fb6573fbba841c0bc0773c7a37dff4fd6b662f0",
+      "hash": "789d1a54a4d19a02",
+      "stdout_len": 1339,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "41c49bb5a53d41df56756c37c90d7c90c506868d91e0fd6099eb5376570453dd",
+      "hash": "41c49bb5a53d41df",
+      "stdout_len": 1339,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "5a582365eb3044fb9d7eac995901fd827b4d19644ab9fb8f3eceefd0057c90b0",
+      "hash": "5a582365eb3044fb",
+      "stdout_len": 1339,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "FLAKY_OUTPUT",
+  "testador_exit_code": 2,
+  "executor_exit_code": 0,
+  "consistency": "AH_DIVERGENCE",
+  "status": "REJEITADO",
+  "ah_flags": [
+    "FLAKY_OUTPUT"
+  ],
+  "evidence_pack_complete": true,
+  "rejection_reason": "Output não-determinístico: behavior_hash diverge nos 3 runs (exit 0 em todos, mas hash diferente)",
+  "workspace_clean": true
+}
