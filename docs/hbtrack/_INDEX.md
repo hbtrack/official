@@ -77,7 +77,7 @@
 | AR_067 | Resgate de Drafts e Invariantes Wellness | ✅ VERIFICADO | docs/hbtrack/evidence/AR_067/executor_main.log |
 | AR_068 | Migration: persons.birth_date NOT NULL + Trigger de Parid... | 🔲 PENDENTE | — |
 | AR_069 | Fix write_scope Pipeline: Schema + build_ar_content + GAT... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_069/executor_main.log |
-| AR_070 | Add hb_plan_watcher daemon (atomic claim + dry-run + diff... | 🔴 REJEITADO | docs/hbtrack/evidence/AR_070/executor_main.log |
+| AR_070 | Criar hb_plan_watcher.py com claim atomico + dry-run + di... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_070/executor_main.log |
 | AR_071 | Add auto-commit opt-in to hb_autotest (strict allowlist +... | ✅ SUCESSO | docs/hbtrack/evidence/AR_071/executor_main.log |
 | AR_072 | Governance: Document daemons + bump PROTOCOL_VERSION v1.3.0 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_072/executor_main.log |
 | AR_100 | Estabilização do Protocolo v1.2.0 e Unificação de Registros | ✅ VERIFICADO | docs/hbtrack/evidence/AR_100/executor_main.log |

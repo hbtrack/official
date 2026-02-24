@@ -496,6 +496,7 @@ EVIDENCE_PACK:
 - AC-005 alembic downgrade -1 exit_code=0: PASS
 
 ### ✅ Concluído
+- AR_072
 - AR_900
 - AR_064
 - AR_050
@@ -523,7 +524,7 @@ EVIDENCE_PACK:
 
 ### 📥 Backlog
 - AR_071 — Arquiteto: Executor reported exit 0 but Testador got exit 1
-- AR_070 — Arquiteto: Executor reported exit 0 but Testador got exit 1
+- **AR_070** — 🔄 PLANO CORRIGIDO v2: Removido emoji ✅ do validation_command (UnicodeEncodeError cp1252). Dry-run passou. Pronto para Executor com --force.
 - AR_005 — Arquiteto: Output não-determinístico: behavior_hash diverge nos 3 runs (exit 0 em todos, mas hash diferente)
 - AR_004 — Arquiteto: Output não-determinístico: behavior_hash diverge nos 3 runs (exit 0 em todos, mas hash diferente)
 - AR_067
