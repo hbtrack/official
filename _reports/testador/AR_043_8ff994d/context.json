@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_043-8ff994d",
+  "timestamp_utc": "2026-02-24T18:30:57.613112+00:00",
+  "git": {
+    "commit": "8ff994d4c252879f7b51109b0ef690524d3bb4f1"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "043",
+  "ar_file": "docs\\hbtrack\\ars\\drafts\\AR_043_hb_cli.py_scan_recursivo_rglob_+_subdir_routing_+_.md"
+}

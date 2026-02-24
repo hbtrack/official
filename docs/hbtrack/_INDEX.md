@@ -50,7 +50,7 @@
 | AR_040 | Migration 0058 COMP-DB-006: ADD 3 CHECK constraints statu... | ✅ SUCESSO | docs/hbtrack/evidence/AR_040_comp_db_006_check_constraints_migration.log |
 | AR_041 | Model Competition: ADD ck_competitions_status + ck_compet... | ✅ SUCESSO | docs/hbtrack/evidence/AR_041/executor_main.log |
 | AR_042 | Model CompetitionMatch: ADD CheckConstraint ck_competitio... | ✅ SUCESSO | docs/hbtrack/evidence/AR_042/executor_main.log |
-| AR_043 | hb_cli.py: scan recursivo (rglob) + subdir routing + hb r... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_043/executor_main.log |
+| AR_043 | hb_cli.py: scan recursivo (rglob) + subdir routing + hb r... | ✅ SUCESSO | docs/hbtrack/evidence/AR_043/executor_main.log |
 | AR_044 | git mv: docs/_canon/planos/ → governance/, competitions/,... | ✅ SUCESSO | docs/hbtrack/evidence/AR_044_gov_ar_folder_reorg_planos.log |
 | AR_045 | git mv: docs/hbtrack/ars/ → governance/, competitions/, f... | ✅ SUCESSO | docs/hbtrack/evidence/AR_045_gov_ar_folder_reorg_ars.log |
 | AR_046 | Limpeza Segura: Arquivos Temporários e Scripts Ad-hoc | ✅ VERIFICADO | docs/hbtrack/evidence/AR_046_removed_files.log |

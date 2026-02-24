@@ -1,6 +1,6 @@
 # AR_043 — hb_cli.py: scan recursivo (rglob) + subdir routing + hb rebuild-index
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ✅ SUCESSO
 **Versão do Protocolo**: 1.1.0
 
 ## Descrição
@@ -88,14 +88,12 @@ Mudança estrutural necessária para suportar subdirs em ARs. Sem SSOT touches, 
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução em b2e7523
 **Status Final**: ✅ SUCESSO
 **Comando**: `python -c "import pathlib; src=pathlib.Path('scripts/run/hb_cli.py').read_text(encoding='utf-8'); checks=['rglob','_get_ar_subdir','rebuild-index','competitions','governance','infra']; missing=[c for c in checks if c not in src]; assert not missing,f'FAIL: missing in hb_cli.py: {missing}'; count_rglob=src.count('rglob'); assert count_rglob>=4,f'FAIL: rglob count={count_rglob}, expected >=4'; print(f'PASS: hb_cli.py suporta subdirectórios (rglob x{count_rglob})')"`
 **Exit Code**: 0
 **Evidence File**: `docs/hbtrack/evidence/AR_043/executor_main.log`
 **Python Version**: 3.11.9
-
 
 ### Execução Executor em 38b62a5
 **Status Executor**: 🏗️ EM_EXECUCAO
@@ -106,7 +104,6 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_043/executor_main.log`
 **Python Version**: 3.11.9
 
-
 ### Execução Executor em 38b62a5
 **Status Executor**: 🏗️ EM_EXECUCAO
 **Comando**: `python -c "import pathlib; src=pathlib.Path('scripts/run/hb_cli.py').read_text(encoding='utf-8'); checks=['rglob','_get_ar_subdir','rebuild-index','competitions','governance','infra']; missing=[c for c in checks if c not in src]; assert not missing,f'FAIL: missing in hb_cli.py: {missing}'; count_rglob=src.count('rglob'); assert count_rglob>=4,f'FAIL: rglob count={count_rglob}, expected >=4'; print(f'PASS: hb_cli.py suporta subdirectórios (rglob x{count_rglob})')"`
@@ -116,3 +113,10 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_043/executor_main.log`
 **Python Version**: 3.11.9
 
+
+### Verificacao Testador em 8ff994d
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_043_8ff994d/result.json`

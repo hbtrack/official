@@ -1,0 +1,40 @@
+{
+  "ar_id": "043",
+  "validation_command": "python -c \"import pathlib; src=pathlib.Path('scripts/run/hb_cli.py').read_text(encoding='utf-8'); checks=['rglob','_get_ar_subdir','rebuild-index','competitions','governance','infra']; missing=[c for c in checks if c not in src]; assert not missing,f'FAIL: missing in hb_cli.py: {missing}'; count_rglob=src.count('rglob'); assert count_rglob>=4,f'FAIL: rglob count={count_rglob}, expected >=4'; print(f'PASS: hb_cli.py suporta subdirectórios (rglob x{count_rglob})')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "404668d7748101f21041231e8f9349f8233be53b3913a278b396af04474c7d1e",
+      "hash": "404668d7748101f2",
+      "stdout_len": 50,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "404668d7748101f21041231e8f9349f8233be53b3913a278b396af04474c7d1e",
+      "hash": "404668d7748101f2",
+      "stdout_len": 50,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "404668d7748101f21041231e8f9349f8233be53b3913a278b396af04474c7d1e",
+      "hash": "404668d7748101f2",
+      "stdout_len": 50,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}
