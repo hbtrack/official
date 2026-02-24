@@ -1,6 +1,6 @@
 # AR_120 — Fix cmd_seal — verificacao de REJEITADO por campo Status
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -57,7 +57,6 @@ Fix de 4 linhas. Nao alterar estrutura da funcao cmd_seal, apenas substituir o g
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução Executor em a06d856
 **Status Executor**: 🏗️ EM_EXECUCAO
 **Comando**: `python temp/validate_ar120.py`
@@ -67,3 +66,17 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_120/executor_main.log`
 **Python Version**: 3.11.9
 
+
+### Verificacao Testador em 2ef7e91
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_120_2ef7e91/result.json`
+
+### Selo Humano em 2ef7e91
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-24T19:19:54.536848+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_120_2ef7e91/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_120/executor_main.log`
