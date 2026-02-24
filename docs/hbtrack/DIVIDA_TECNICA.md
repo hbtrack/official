@@ -6,25 +6,25 @@
 
 ## 1. Invariantes Não Documentadas
 
-> Regras de negócio **implementadas no código** (via ARs concluídas) que **ainda não possuem** um arquivo `.md` correspondente na pasta de invariantes modulares. A pasta `docs/02-modulos/` **não possui nenhum arquivo INVARIANTS_.md** — toda a dívida de documentação está em aberto.
+> Regras de negócio **implementadas no código** (via ARs concluídas) que **ainda não possuem** um arquivo `.md` correspondente na pasta de invariantes modulares. A pasta `docs/hbtrack/modulos/` **não possui nenhum arquivo INVARIANTS_.md** — toda a dívida de documentação está em aberto.
 
 ### 1.1 Domínio: Competitions (implementado via AR_001, AR_008, AR_009, AR_003)
 
 | ID Proposto | Classe | Regra Implementada | Evidência (AR) | Arquivo Invariante Ausente |
 |-------------|--------|--------------------|----------------|---------------------------|
-| INV-COMP-001 | **A** (DB Constraint) | Soft delete obrigatório em 5 tabelas: `competition_matches`, `competition_opponent_teams`, `competition_phases`, `match_events`, `match_roster` — par `(deleted_at, deleted_reason)` enforced por CHECK `ck_{tabela}_deleted_reason`: `(IS NULL AND IS NULL) OR (IS NOT NULL AND IS NOT NULL)` | AR_008 ✅ | `docs/02-modulos/competitions/INVARIANTS_COMPETITIONS.md` |
-| INV-COMP-002 | **B** (Trigger) | Trigger `trg_{tabela}_block_delete` nas 5 tabelas bloqueia DELETE físico (EXIT EXCEPTION), forçando que toda remoção seja via soft delete. Função base `trg_block_physical_delete()` já existia no schema. | AR_008 ✅ | `docs/02-modulos/competitions/INVARIANTS_COMPETITIONS.md` |
-| INV-COMP-003 | **A** (DB Constraint) | `competition_standings.team_id NOT NULL FK → teams.id ON DELETE RESTRICT` — classificação DEVE estar vinculada diretamente a uma equipe cadastrada; impede registro órfão | AR_001 ✅ | `docs/02-modulos/competitions/INVARIANTS_COMPETITIONS.md` |
-| INV-COMP-004 | **C2** (Model) | Models `CompetitionMatch`, `CompetitionOpponentTeam`, `CompetitionPhase`, `MatchEvent`, `MatchRoster` expõem `deleted_at` e `deleted_reason` como `mapped_column` opcionais; queries de listagem DEVEM filtrar `WHERE deleted_at IS NULL` por padrão | AR_009 ✅ | `docs/02-modulos/competitions/INVARIANTS_COMPETITIONS.md` |
+| INV-COMP-001 | **A** (DB Constraint) | Soft delete obrigatório em 5 tabelas: `competition_matches`, `competition_opponent_teams`, `competition_phases`, `match_events`, `match_roster` — par `(deleted_at, deleted_reason)` enforced por CHECK `ck_{tabela}_deleted_reason`: `(IS NULL AND IS NULL) OR (IS NOT NULL AND IS NOT NULL)` | AR_008 ✅ | `docs/hbtrack/modulos/competitions/INVARIANTS_COMPETITIONS.md` |
+| INV-COMP-002 | **B** (Trigger) | Trigger `trg_{tabela}_block_delete` nas 5 tabelas bloqueia DELETE físico (EXIT EXCEPTION), forçando que toda remoção seja via soft delete. Função base `trg_block_physical_delete()` já existia no schema. | AR_008 ✅ | `docs/hbtrack/modulos/competitions/INVARIANTS_COMPETITIONS.md` |
+| INV-COMP-003 | **A** (DB Constraint) | `competition_standings.team_id NOT NULL FK → teams.id ON DELETE RESTRICT` — classificação DEVE estar vinculada diretamente a uma equipe cadastrada; impede registro órfão | AR_001 ✅ | `docs/hbtrack/modulos/competitions/INVARIANTS_COMPETITIONS.md` |
+| INV-COMP-004 | **C2** (Model) | Models `CompetitionMatch`, `CompetitionOpponentTeam`, `CompetitionPhase`, `MatchEvent`, `MatchRoster` expõem `deleted_at` e `deleted_reason` como `mapped_column` opcionais; queries de listagem DEVEM filtrar `WHERE deleted_at IS NULL` por padrão | AR_009 ✅ | `docs/hbtrack/modulos/competitions/INVARIANTS_COMPETITIONS.md` |
 
 ### 1.2 Domínio: Scout / Match Events (implementado via AR_003)
 
 | ID Proposto | Classe | Regra Implementada | Evidência (AR) | Arquivo Invariante Ausente |
 |-------------|--------|--------------------|----------------|---------------------------|
-| INV-SCOUT-001 | **F** (OpenAPI/Pydantic) | `CanonicalEventType` enum: apenas 11 valores válidos (`goal`, `shot`, `seven_meter`, `goalkeeper_save`, `turnover`, `foul`, `exclusion_2min`, `yellow_card`, `red_card`, `substitution`, `timeout`). Valores legados (`goal_7m`, `own_goal`, `shot_on_target`, `assist`, `technical_foul`) são **inválidos** e devem retornar 422 | AR_003 ✅ | `docs/02-modulos/scout/INVARIANTS_SCOUT.md` |
-| INV-SCOUT-002 | **C1** (Service Pure) | Quando `event_type = 'goalkeeper_save'`, o campo `related_event_id` é **OBRIGATÓRIO**. Pydantic validator levanta `ValidationError` se ausente. Regra: toda defesa deve referenciar o evento de arremesso original | AR_003 ✅ | `docs/02-modulos/scout/INVARIANTS_SCOUT.md` |
-| INV-SCOUT-003 | **F** (OpenAPI/Pydantic) | `ScoutEventCreate` exige campos de posicionamento na escala 0–100: `x_coord ∈ [0, 100]`, `y_coord ∈ [0, 100]`. Valores fora deste range retornam 422 | AR_003 ✅ | `docs/02-modulos/scout/INVARIANTS_SCOUT.md` |
-| INV-SCOUT-004 | **F** (OpenAPI/Pydantic) | Campo `source` de `ScoutEventCreate` é `Literal['live', 'video', 'post_game_correction']` — nenhum outro valor é aceito | AR_003 ✅ | `docs/02-modulos/scout/INVARIANTS_SCOUT.md` |
+| INV-SCOUT-001 | **F** (OpenAPI/Pydantic) | `CanonicalEventType` enum: apenas 11 valores válidos (`goal`, `shot`, `seven_meter`, `goalkeeper_save`, `turnover`, `foul`, `exclusion_2min`, `yellow_card`, `red_card`, `substitution`, `timeout`). Valores legados (`goal_7m`, `own_goal`, `shot_on_target`, `assist`, `technical_foul`) são **inválidos** e devem retornar 422 | AR_003 ✅ | `docs/hbtrack/modulos/scout/INVARIANTS_SCOUT.md` |
+| INV-SCOUT-002 | **C1** (Service Pure) | Quando `event_type = 'goalkeeper_save'`, o campo `related_event_id` é **OBRIGATÓRIO**. Pydantic validator levanta `ValidationError` se ausente. Regra: toda defesa deve referenciar o evento de arremesso original | AR_003 ✅ | `docs/hbtrack/modulos/scout/INVARIANTS_SCOUT.md` |
+| INV-SCOUT-003 | **F** (OpenAPI/Pydantic) | `ScoutEventCreate` exige campos de posicionamento na escala 0–100: `x_coord ∈ [0, 100]`, `y_coord ∈ [0, 100]`. Valores fora deste range retornam 422 | AR_003 ✅ | `docs/hbtrack/modulos/scout/INVARIANTS_SCOUT.md` |
+| INV-SCOUT-004 | **F** (OpenAPI/Pydantic) | Campo `source` de `ScoutEventCreate` é `Literal['live', 'video', 'post_game_correction']` — nenhum outro valor é aceito | AR_003 ✅ | `docs/hbtrack/modulos/scout/INVARIANTS_SCOUT.md` |
 
 ### 1.3 Domínio: Wellness (divergência detectada via AR_002.5_C)
 

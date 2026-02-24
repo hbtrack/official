@@ -510,6 +510,9 @@ EVIDENCE_PACK:
 - AR_046
 - AR_047
 - AR_999 — test
+- AR_100 — Protocolo v1.2.0 verificado com Selo Humano (2026-02-23)
+- AR_071 — hb_autotest auto-commit verificado (2026-02-24)
+- AR_053 — hb_watch UTF-8 fix verificado (VERIFICADO 2x pelo Testador)
 
 ### 🛠️ Em Execução
 - AR_036 — Executor: Evidence Pack missing or incomplete
@@ -521,14 +524,11 @@ EVIDENCE_PACK:
 - AR_103 — Executor: Evidence Pack missing or incomplete
 - AR_102 — Executor: Evidence Pack missing or incomplete
 - AR_101 — Executor: Evidence Pack missing or incomplete
-- AR_053 — Executor: Output não-determinístico: hashes divergem nos 3 runs (exit 0 em todos, mas stdout_hash diferente)
 
 ### 📥 Backlog
-- AR_071 — Arquiteto: Executor reported exit 0 but Testador got exit 1
 - **AR_070** — 🔄 PLANO CORRIGIDO v2: Removido emoji ✅ do validation_command (UnicodeEncodeError cp1252). Dry-run passou. Pronto para Executor com --force.
-- AR_005 — Arquiteto: Output não-determinístico: behavior_hash diverge nos 3 runs (exit 0 em todos, mas hash diferente)
-- AR_004 — Arquiteto: Output não-determinístico: behavior_hash diverge nos 3 runs (exit 0 em todos, mas hash diferente)
+- AR_005 — 🔲 PENDENTE — Plano v2 (ar_005_v2_fix_validation.json) pronto. Executor: hb plan --force + hb report (após AR_004 verificado). Validation_command corrigido para verificação estrutural determinística.
+- AR_004 — 🔲 PENDENTE — Plano v2 (ar_004_v2_fix_validation.json) pronto. Executor: hb plan --force + hb report. Validation_command corrigido para verificação estrutural determinística (implementação já correta).
 - AR_067
 - AR_066
 - AR_065
-- AR_100 — Arquiteto: Output não-determinístico: behavior_hash diverge nos 3 runs (exit 0 em todos, mas hash diferente)
