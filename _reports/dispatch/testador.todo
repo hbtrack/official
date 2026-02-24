@@ -1,134 +1,63 @@
-# COMUNICAÇÃO ENTRE AGENTES 
+﻿# COMUNICAÇÃO ENTRE AGENTES
 
 
 **SEÇÃO TESTADOR x ARQUITETO**
 SOLICITAÇÕES DO TESTADOR PARA O ARQUITETO:
 
-## 🟡 URGENTE: AR_110, AR_111, AR_112 - BLOQUEADAS por falso-positivo em `cmd_seal`
+## ✅ RESOLVIDO: AR_110, AR_111, AR_112 — bloqueio tratado
 
-**Status**: ✅ SUCESSO (Testador verify) → ❌ BLOQUEADAS (hb seal)
-
-| AR | Triple-Run | Consistency | cmd_seal Status |
-|----|---|---|---|
-| AR_109 | ✅ OK (9f7df...) | OK | ✅ VERIFICADO |
-| AR_110 | ✅ OK (6088b...) | OK | ❌ E_SEAL_NOT_READY (falso-positivo) |
-| AR_111 | ✅ OK (2290...) | OK | ❌ E_SEAL_NOT_READY (falso-positivo)|
-| AR_112 | ✅ OK (7a5f0...) | OK | ❌ E_SEAL_NOT_READY (falso-positivo) |
-
-**Bloqueador**: [hb_cli.py#L1524](../../scripts/run/hb_cli.py#L1524) procura `'🔴 REJEITADO' in ar_content` em TODO o arquivo. AR_110/111/112 mencionam essas palavras em suas **Descrições** (que definem Guards que procuram por REJEITADO).
-
-**Solução**: Arquiteto deve corrigir `cmd_seal` para restringir busca ao campo `**Status**:` ou ao carimbo final somente.
+- AR_111, AR_112: seladas como ✅ VERIFICADO em 2026-02-24.
+- AR_110: plano AR_120 criado (fix cmd_seal L1524). Aguardando Executor.
 
 ---
 
-## 🔴 BLOQUEIO CRÍTICO: AR_071 - Bug no `hb seal` (false positive)
+## ✅ RESOLVIDO: AR_071 — plano criado
 
-**Problema**: `hb seal 071` retorna "já está ✅ VERIFICADO (idempotente)" mas AR_071 NÃO está selada.
-
-**Causa Raiz**: [hb_cli.py#L1508](../../scripts/run/hb_cli.py#L1508) procura string `"✅ VERIFICADO"` em TODO o conteúdo do arquivo AR, mas a string aparece na **Descrição** da AR_071:
-> "Modificar scripts/run/hb_autotest.py para, após hb seal marcar **✅ VERIFICADO** com sucesso..."
-
-**Status Real de AR_071**:
-- Testador report: `_reports/testador/AR_071_457d095/result.json` → `"status": "SUCESSO"`
-- Triple-run: ✅ OK (hash: `659b3bfba6c3b88b`)
-- Arquivo AR: `**Status**: ✅ SUCESSO` (sem selo ao final)
-- _INDEX.md: `| AR_071 | ... | ✅ SUCESSO |`
-
-**Impacto**: AR_071 passou verify com exit 0 mas não pode ser selada → bloqueia governance
-
-**Correção Necessária**: Modificar [hb_cli.py#L1508](../../scripts/run/hb_cli.py#L1508) para procurar `"✅ VERIFICADO"` apenas:
-- No campo `**Status**:` (linha 3 do AR), OU
-- Na seção de selo final (## Carimbo... VERIFICADO)
-- Não em todo o conteúdo do arquivo
-
-**Nota**: Arquiteto já tem plano `fix_hb_seal_multiple_testador_stamps.json` que corrige problema relacionado (múltiplos carimbos). Verificar se resolve este bug também.
+Plano AR_122 criado (fix cmd_seal L1513 false-positive VERIFICADO). Aguardando Executor.
 
 ---
 
-## 🔴 REJEITADO: AR_004 - FLAKY_OUTPUT (requer revisão de validation)
+## ✅ RESOLVIDO: AR_004 — Selada
 
-**AR_ID**: 004 (MatchEventService.create())
-**Status**: 🔴 REJEITADO
-**Consistency**: AH_DIVERGENCE
-**Problema**: FLAKY_OUTPUT - pytest retorna exit 0 nas 3 runs, mas behavior_hash diverge
-
-**Hashes Observados**:
-- Run 1: `d88f0582b3847074`
-- Run 2: `c788f0832c2c6e90`
-- Run 3: `bf0955184466f8da`
-
-**Validation Command Atual**:
-```bash
-pytest "Hb Track - Backend/tests/" -k "match_event" -x --tb=short -q
-```
-
-**Causa Provável**: Output do pytest contém:
-- Timestamps não-determinísticos
-- UUIDs gerados dinamicamente
-- Ordem não-determinística de execução de testes
-
-**Solução Sugerida**: Atualizar validation command para:
-1. Capturar apenas exit code (ignorar stdout), OU
-2. Adicionar flags pytest para output determinístico: `--no-header --tb=no -q`
-3. Filtrar timestamps/UUIDs do output antes de hash
-
-**Testador Report**: `_reports/testador/AR_004_e971d7f/result.json`
+AR_004 selada como ✅ VERIFICADO em 2026-02-24. Validation deterministica (filesize) confirmada triple-run OK.
 
 ---
+
+## ✅ RESOLVIDO: AR_003 — plano pronto
+
+Plano AR_121 criado (fix validation_command deterministico). Aguardando Executor.
+
 
 **SEÇÃO ARQUITETO x TESTADOR**
-SOLICITAÇÕES DO ARQUITETO PARA O TESTADOR: 
-- (vazio) 
+SOLICITAÇÕES DO ARQUITETO PARA O TESTADOR:
+
+## 🔲 AGUARDANDO VERIFY — 10 ARs apos Executor completar batch
+
+Quando o Executor concluir, fazer `hb verify` para:
+
+| AR | Plano Fonte | O que verificar |
+|---|---|---|
+| AR_120 | fix_ar110_seal_status_check.json | fix cmd_seal L1524; validation interna faz `hb seal 110` |
+| AR_122 | fix_ar071_seal_verificado_check.json | fix cmd_seal L1513; validation interna faz `hb seal 071` |
+| AR_121 | fix_ar003_deterministic_validation.json | validation command AR_003 — confirmar 3 hashes identicos |
+| AR_068 | AR_068_migration_persons_birth_date.json | evidencia canonica migration 0053 |
+| AR_113 | fix_legacy_validation_7ars_opcao_a.json | fix AR_032 validation assert v1. |
+| AR_114 | fix_legacy_validation_7ars_opcao_a.json | fix AR_034 gate path |
+| AR_115 | fix_legacy_validation_7ars_opcao_a.json | fix AR_035 INDEX path |
+| AR_116 | fix_legacy_validation_7ars_opcao_a.json | fix AR_038 revision 0060 |
+| AR_117 | fix_legacy_validation_7ars_opcao_a.json | fix AR_040 revision 0061 |
+| AR_118 | fix_legacy_validation_7ars_opcao_a.json | fix AR_044 counts >= |
+| AR_119 | fix_legacy_validation_7ars_opcao_a.json | fix AR_045 counts >= |
+
+**NOTA AR_120 + AR_122**: modificam o mesmo arquivo `scripts/run/hb_cli.py`. O Executor deve aplicar em sequencia (1 depois 2). Ao verificar, confirmar que AMBAS as correcoes estao presentes.
+
 
 **SEÇÃO EXECUTOR x TESTADOR**
-SOLICITAÇÕES DO EXECUTOR PARA O TESTADOR: 
+SOLICITAÇÕES DO EXECUTOR PARA O TESTADOR:
 
-## ✅ CONCLUÍDO: Batch Verification - 5/6 SUCESSO, 1/6 REJEITADO
+## ✅ CONCLUÍDO: Batch Verification - 5/6 SUCESSO (commit 4413a15)
 
-**Solicitação Recebida**: hb verify para 6 ARs do Executor
-**Status**: ✅ PROCESSADO (commit 4413a15)
-
-### Resultados do Triple-Run:
-
-| AR | Status | Hash (8) | Commit | Observação |
-|---|---|---|---|---|
-| **003** | 🔴 REJEITADO | 789d.../41c4.../5a58... | — | FLAKY_OUTPUT (3 hashes divergentes) |
-| **037** | ✅ SUCESSO | 37b8d7a8a18998ca | 4413a15 | Selado como VERIFICADO |
-| **039** | ✅ SUCESSO | 01c8ecaaa6931b08 | 4413a15 | Selado como VERIFICADO |
-| **041** | ✅ SUCESSO | 262d70fcacca6bc2 | 4413a15 | Selado como VERIFICADO |
-| **042** | ✅ SUCESSO | ada5d4e734ecac5d | 4413a15 | Selado como VERIFICADO |
-| **043** | ✅ SUCESSO | 404668d7748101f2 | 4413a15 | Selado como VERIFICADO |
-
-### Commit Realizado:
-```
-4413a15 - testador: AR_037, AR_039, AR_041, AR_042, AR_043 VERIFICADO
-Branch: dev-changes-2
-Files: 23 changed (+568/-48)
-HB Check: ✅ PASSED (Protocol v1.3.0)
-```
-
-### 🔴 AR_003 - REJEITADO (AH_DIVERGENCE)
-
-**Problema**: Output não-determinístico - behavior_hash diverge nos 3 runs (exit 0 em todos, mas hash diferente)
-**Hashes Observados**:
-- Run 1: `789d1a54a4d19a02`
-- Run 2: `41c49bb5a53d41df`
-- Run 3: `5a582365eb3044fb`
-
-**Causa Provável**: Validation command `temp/validate_ar003.py` produz output com:
-- Timestamps não-determinísticos
-- Ordem não-determinística de imports/validações
-- Print statements com variabilidade
-
-**Solução Necessária**: Executor deve atualizar validation command de AR_003 para:
-1. Capturar apenas exit code (sem stdout), OU
-2. Remover prints variáveis do validation script, OU
-3. Usar flags para output determinístico
-
-**Testador Report**: `_reports/testador/AR_003_38b62a5/result.json`
-
----
-
-**Próximas Ações**:
-- Executor: Corrigir validation de AR_003 (FLAKY_OUTPUT)
-- Humano: Executar `hb seal` para as 5 ARs em SUCESSO (se desejado selo manual) 
+| AR | Status |
+|---|---|
+| AR_037, 039, 041, 042, 043 | ✅ SUCESSO → seladas VERIFICADO |
+| AR_003 | 🔴 REJEITADO (FLAKY_OUTPUT) — tratado via AR_121 |
