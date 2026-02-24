@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_042-b77ca6d",
+  "timestamp_utc": "2026-02-24T18:30:54.685375+00:00",
+  "git": {
+    "commit": "b77ca6dc2bd5d0f6a98f05c53d23733f19a01fac"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "042",
+  "ar_file": "docs\\hbtrack\\ars\\competitions\\AR_042_model_competitionmatch_add_checkconstraint_ck_comp.md"
+}

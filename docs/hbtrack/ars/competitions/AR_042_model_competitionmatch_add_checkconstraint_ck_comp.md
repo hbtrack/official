@@ -1,6 +1,6 @@
 # AR_042 — Model CompetitionMatch: ADD CheckConstraint ck_competition_matches_status
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ✅ SUCESSO
 **Versão do Protocolo**: 1.1.0
 
 ## Descrição
@@ -56,14 +56,12 @@ git restore 'Hb Track - Backend/app/models/competition_match.py'
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução em b2e7523
 **Status Final**: ✅ SUCESSO
 **Comando**: `python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition_match import CompetitionMatch; args=CompetitionMatch.__table_args__; names=[getattr(a,'name',None) for a in args]; check='ck_competition_matches_status'; assert check in names,f'FAIL: {check} not in __table_args__. Current: {names}'; print(f'PASS: {check} present in CompetitionMatch.__table_args__')"`
 **Exit Code**: 0
 **Evidence File**: `docs/hbtrack/evidence/AR_042/executor_main.log`
 **Python Version**: 3.11.9
-
 
 ### Execução Executor em 38b62a5
 **Status Executor**: 🏗️ EM_EXECUCAO
@@ -74,7 +72,6 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_042/executor_main.log`
 **Python Version**: 3.11.9
 
-
 ### Execução Executor em 38b62a5
 **Status Executor**: 🏗️ EM_EXECUCAO
 **Comando**: `python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition_match import CompetitionMatch; args=CompetitionMatch.__table_args__; names=[getattr(a,'name',None) for a in args]; check='ck_competition_matches_status'; assert check in names,f'FAIL: {check} not in __table_args__. Current: {names}'; print(f'PASS: {check} present in CompetitionMatch.__table_args__')"`
@@ -84,3 +81,10 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_042/executor_main.log`
 **Python Version**: 3.11.9
 
+
+### Verificacao Testador em b77ca6d
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_042_b77ca6d/result.json`
