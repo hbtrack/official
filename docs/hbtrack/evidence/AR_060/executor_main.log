@@ -1,17 +1,17 @@
 AR_ID: 060
-Command: python -c "import json,pathlib,hashlib; oapi_path=pathlib.Path('Hb Track - Backend/docs/ssot/openapi.json'); mf_path=pathlib.Path('Hb Track - Backend/docs/ssot/manifest.json'); assert oapi_path.exists(),'FAIL: openapi.json nao encontrado em Hb Track - Backend/docs/ssot/'; d=json.loads(oapi_path.read_bytes().decode('utf-8')); paths=list(d.get('paths',{}).keys()); assert len(paths)>=200,f'FAIL: openapi.json tem {len(paths)} paths, esperado >= 200'; assert '/api/v1/athletes' in paths,'FAIL: /api/v1/athletes ausente no openapi.json'; assert '/api/v1/attendance/{attendance_id}' in paths,'FAIL: /api/v1/attendance/{{attendance_id}} ausente'; assert d.get('info',{}).get('version'),'FAIL: info.version nao declarado no openapi.json'; mf=json.loads(mf_path.read_text(encoding='utf-8')); oapi_entry=[f for f in mf['files'] if f['filename']=='openapi.json']; assert oapi_entry and oapi_entry[0].get('checksum'),'FAIL: manifest.json nao tem checksum para openapi.json'; print(f'PASS AR_060: openapi.json valido — {len(paths)} paths, info.version={d[\"info\"][\"version\"]}, manifest checksum presente')"
+Command: python -c "import json,pathlib; oapi_path=pathlib.Path('Hb Track - Backend/docs/ssot/openapi.json'); assert oapi_path.exists(),'FAIL: openapi.json nao encontrado em Hb Track - Backend/docs/ssot/'; d=json.loads(oapi_path.read_bytes().decode('utf-8')); paths=list(d.get('paths',{}).keys()); assert len(paths)>=200,f'FAIL: openapi.json tem {len(paths)} paths, esperado >= 200'; assert '/api/v1/athletes' in paths,'FAIL: /api/v1/athletes ausente no openapi.json'; assert '/api/v1/attendance/{attendance_id}' in paths,'FAIL: /api/v1/attendance/{{attendance_id}} ausente'; assert d.get('info',{}).get('version'),'FAIL: info.version nao declarado no openapi.json'; print(f'PASS AR_060: openapi.json valido — {len(paths)} paths, info.version={d[\"info\"][\"version\"]}')"
 Exit Code: 0
-Timestamp UTC: 2026-02-24T22:27:17.985293+00:00
-Behavior Hash (exit+stdout+stderr): 489aac0b350c72f79bb40782b1dc3254f0e6c08af242f0efb41309f6ec3e1ad7
-Git HEAD: c5f1ba8918ed6a61bb9cdec4663497da3ab346fc
+Timestamp UTC: 2026-02-24T23:18:39.170344+00:00
+Behavior Hash (exit+stdout+stderr): 1d59f8d46c15cde960df8deb69a554f38e534bf52fcf2f790e2e2b8854278086
+Git HEAD: 62b4597e412e810a168c2837f64bef43b199573a
 Python Version: 3.11.9
 Protocol Version: 1.3.0
 Workspace Clean: False
-Workspace Status: unstaged_modified=3
+Workspace Status: unstaged_modified=2
 Governed Checksums (sha256): {}
 
 --- STDOUT ---
-PASS AR_060: openapi.json valido � 214 paths, info.version=1.0.0, manifest checksum presente
+PASS AR_060: openapi.json valido � 214 paths, info.version=1.0.0
 
 
 --- STDERR ---

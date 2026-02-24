@@ -1,0 +1,40 @@
+{
+  "ar_id": "060",
+  "validation_command": "python -c \"import json,pathlib; oapi_path=pathlib.Path('Hb Track - Backend/docs/ssot/openapi.json'); assert oapi_path.exists(),'FAIL: openapi.json nao encontrado em Hb Track - Backend/docs/ssot/'; d=json.loads(oapi_path.read_bytes().decode('utf-8')); paths=list(d.get('paths',{}).keys()); assert len(paths)>=200,f'FAIL: openapi.json tem {len(paths)} paths, esperado >= 200'; assert '/api/v1/athletes' in paths,'FAIL: /api/v1/athletes ausente no openapi.json'; assert '/api/v1/attendance/{attendance_id}' in paths,'FAIL: /api/v1/attendance/{{attendance_id}} ausente'; assert d.get('info',{}).get('version'),'FAIL: info.version nao declarado no openapi.json'; print(f'PASS AR_060: openapi.json valido — {len(paths)} paths, info.version={d[\\\"info\\\"][\\\"version\\\"]}')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "1d59f8d46c15cde960df8deb69a554f38e534bf52fcf2f790e2e2b8854278086",
+      "hash": "1d59f8d46c15cde9",
+      "stdout_len": 65,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "1d59f8d46c15cde960df8deb69a554f38e534bf52fcf2f790e2e2b8854278086",
+      "hash": "1d59f8d46c15cde9",
+      "stdout_len": 65,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "1d59f8d46c15cde960df8deb69a554f38e534bf52fcf2f790e2e2b8854278086",
+      "hash": "1d59f8d46c15cde9",
+      "stdout_len": 65,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}
