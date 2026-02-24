@@ -1,6 +1,6 @@
 # AR_121 — Corrigir contrato AR_003 — validation nao-deterministica
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ✅ SUCESSO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -45,7 +45,6 @@ Causa raiz: uuid4() muda a cada run; str(e) na impressao do ValidationError incl
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução Executor em a06d856
 **Status Executor**: ❌ FALHA
 **Comando**: `python temp/validate_ar121.py`
@@ -54,7 +53,6 @@ _(Gerado por hb report)_
 **Behavior Hash**: f9ea257a0b3bc2bc136ea9c22f16c956225ee6e05c3a3ab93818ab634d66ccd7
 **Evidence File**: `docs/hbtrack/evidence/AR_121/executor_main.log`
 **Python Version**: 3.11.9
-
 
 ### Execução Executor em a06d856
 **Status Executor**: 🏗️ EM_EXECUCAO
@@ -65,3 +63,10 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_121/executor_main.log`
 **Python Version**: 3.11.9
 
+
+### Verificacao Testador em 09654e9
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_121_09654e9/result.json`

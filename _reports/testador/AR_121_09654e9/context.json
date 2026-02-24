@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_121-09654e9",
+  "timestamp_utc": "2026-02-24T19:11:27.564574+00:00",
+  "git": {
+    "commit": "09654e9446f340d00869b17ade0c184c16e9da02"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "121",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_121_corrigir_contrato_ar_003_-_validation_nao-determin.md"
+}

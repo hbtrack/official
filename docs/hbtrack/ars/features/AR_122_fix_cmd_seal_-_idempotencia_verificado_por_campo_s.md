@@ -1,6 +1,6 @@
 # AR_122 — Fix cmd_seal — idempotencia VERIFICADO por campo Status
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ✅ SUCESSO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -59,7 +59,6 @@ Fix de 4 linhas. Mesmo padrao do AR_120, mas para verificacao de idempotencia (l
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução Executor em a06d856
 **Status Executor**: 🏗️ EM_EXECUCAO
 **Comando**: `python temp/validate_ar122.py`
@@ -69,3 +68,10 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_122/executor_main.log`
 **Python Version**: 3.11.9
 
+
+### Verificacao Testador em 09654e9
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_122_09654e9/result.json`

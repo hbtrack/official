@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_122-09654e9",
+  "timestamp_utc": "2026-02-24T19:14:35.164207+00:00",
+  "git": {
+    "commit": "09654e9446f340d00869b17ade0c184c16e9da02"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "122",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_122_fix_cmd_seal_-_idempotencia_verificado_por_campo_s.md"
+}
