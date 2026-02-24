@@ -1520,8 +1520,8 @@ def cmd_seal(ar_id: str, reason: str = "") -> None:
     if not report_file.exists():
         fail(E_SEAL_MISSING_TESTADOR_REPORT, f"TESTADOR_REPORT não encontrado: {report_path}", exit_code=2)
 
-    # staged files
-    _, stdout, _ = run_cmd("git diff --cached --name-only")
+    # staged files (usa git ls-files --cached em vez de git diff para detectar tudo no index)
+    _, stdout, _ = run_cmd("git ls-files --cached")
     staged = set(f.strip().replace("\\", "/") for f in stdout.splitlines() if f.strip())
 
     if report_path.replace("\\", "/") not in staged:

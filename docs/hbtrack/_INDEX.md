@@ -11,7 +11,7 @@
 | AR_002.5 | Documentar divergência de escalas wellness_pre vs. PRD | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_002_5_C_evidence.log |
 | AR_002.5 | Schema: match_analytics_cache para Relatórios V1.1 | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_002_5_D_evidence.log |
 | AR_003 | Schemas Pydantic Canônicos de Scout | ✅ SUCESSO | — |
-| AR_004 | MatchEventService.create() — ORM correto, roster, is_shot... | ✅ SUCESSO | docs/hbtrack/evidence/AR_004/executor_main.log |
+| AR_004 | MatchEventService.create() — ORM correto, roster, is_shot... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_004/executor_main.log |
 | AR_005 | Router match_events — schemas canônicos ScoutEventCreate/... | 🔍 NEEDS REVIEW | docs/hbtrack/evidence/AR_005_endpoint_match_events.log |
 | AR_006 | Migração path planos para docs/_canon/_agent/planos + v1.0.5 | COMPLETED ✅ | docs/hbtrack/evidence/AR_006_gov_plans_path_migration.log |
 | AR_007 | Exit Code Zero Test | 🔴 REJEITADO | docs/hbtrack/evidence/AR_007_exit_zero.log |
@@ -76,7 +76,7 @@
 | AR_066 | Resgate de ARs de Competitions e Features | ✅ VERIFICADO | docs/hbtrack/evidence/AR_066/executor_main.log |
 | AR_067 | Resgate de Drafts e Invariantes Wellness | ✅ VERIFICADO | docs/hbtrack/evidence/AR_067/executor_main.log |
 | AR_068 | Migration: persons.birth_date NOT NULL + Trigger de Parid... | 🔲 PENDENTE | — |
-| AR_069 | Fix write_scope Pipeline: Schema + build_ar_content + GAT... | ✅ SUCESSO | docs/hbtrack/evidence/AR_069/executor_main.log |
+| AR_069 | Fix write_scope Pipeline: Schema + build_ar_content + GAT... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_069/executor_main.log |
 | AR_070 | Criar hb_plan_watcher.py com claim atomico + dry-run + di... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_070/executor_main.log |
 | AR_071 | Add auto-commit opt-in to hb_autotest (strict allowlist +... | ✅ SUCESSO | docs/hbtrack/evidence/AR_071/executor_main.log |
 | AR_072 | Governance: Document daemons + bump PROTOCOL_VERSION v1.3.0 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_072/executor_main.log |
