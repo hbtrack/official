@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_999-3d84621",
+  "timestamp_utc": "2026-02-24T14:52:40.969164+00:00",
+  "git": {
+    "commit": "3d8462134a7ce514dd36fc1cf7549db5d4ca9d6b"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "999",
+  "ar_file": "docs\\hbtrack\\ars\\governance\\AR_999_exemplo_adicionar_campo_birthdate_em_person.md"
+}

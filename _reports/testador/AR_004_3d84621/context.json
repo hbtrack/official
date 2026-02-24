@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_004-3d84621",
+  "timestamp_utc": "2026-02-24T14:48:39.359965+00:00",
+  "git": {
+    "commit": "3d8462134a7ce514dd36fc1cf7549db5d4ca9d6b"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "004",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_004_matcheventservice.create()_—_orm_correto,_roster,_.md"
+}

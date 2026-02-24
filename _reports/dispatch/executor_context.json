@@ -1,0 +1,99 @@
+{
+  "role": "executor",
+  "protocol": "v1.2.0",
+  "timestamp_utc": "2026-02-24T15:05:41.970314+00:00",
+  "contract": "docs/_canon/contratos/Executor Contract.md",
+  "pending_ars": [
+    {
+      "id": "056",
+      "ar_id_full": "AR_056",
+      "ar_file": "docs/hbtrack/ars/drafts/AR_056_stub_biz_invariant_1.md",
+      "title": "[STUB] Business Invariant: Data Consistency Check",
+      "write_scope": [],
+      "validation_command": "",
+      "ssot_touches": [],
+      "next_action": "1. READ docs/hbtrack/ars/drafts/AR_056_stub_biz_invariant_1.md completamente\n2. Preencher secao Analise de Impacto\n3. Implementar mudancas em: []\n4. Executar: python scripts/run/hb_cli.py report 056 \"\"\n5. Aguardar hb_autotest.py fazer verify+seal automaticamente"
+    },
+    {
+      "id": "057",
+      "ar_id_full": "AR_057",
+      "ar_file": "docs/hbtrack/ars/drafts/AR_057_stub_biz_invariant_2.md",
+      "title": "[STUB] Business Invariant: Audit Trail Integrity",
+      "write_scope": [],
+      "validation_command": "",
+      "ssot_touches": [],
+      "next_action": "1. READ docs/hbtrack/ars/drafts/AR_057_stub_biz_invariant_2.md completamente\n2. Preencher secao Analise de Impacto\n3. Implementar mudancas em: []\n4. Executar: python scripts/run/hb_cli.py report 057 \"\"\n5. Aguardar hb_autotest.py fazer verify+seal automaticamente"
+    },
+    {
+      "id": "058",
+      "ar_id_full": "AR_058",
+      "ar_file": "docs/hbtrack/ars/drafts/AR_058_stub_biz_invariant_3.md",
+      "title": "[STUB] Business Invariant: Concurrency Control",
+      "write_scope": [],
+      "validation_command": "",
+      "ssot_touches": [],
+      "next_action": "1. READ docs/hbtrack/ars/drafts/AR_058_stub_biz_invariant_3.md completamente\n2. Preencher secao Analise de Impacto\n3. Implementar mudancas em: []\n4. Executar: python scripts/run/hb_cli.py report 058 \"\"\n5. Aguardar hb_autotest.py fazer verify+seal automaticamente"
+    },
+    {
+      "id": "059",
+      "ar_id_full": "AR_059",
+      "ar_file": "docs/hbtrack/ars/drafts/AR_059_stub_kb_context_map.md",
+      "title": "[STUB] Kanban Context Map",
+      "write_scope": [],
+      "validation_command": "",
+      "ssot_touches": [],
+      "next_action": "1. READ docs/hbtrack/ars/drafts/AR_059_stub_kb_context_map.md completamente\n2. Preencher secao Analise de Impacto\n3. Implementar mudancas em: []\n4. Executar: python scripts/run/hb_cli.py report 059 \"\"\n5. Aguardar hb_autotest.py fazer verify+seal automaticamente"
+    },
+    {
+      "id": "060",
+      "ar_id_full": "AR_060",
+      "ar_file": "docs/hbtrack/ars/drafts/AR_060_stub_openapi_contract.md",
+      "title": "[STUB] OpenAPI Contract Sync",
+      "write_scope": [],
+      "validation_command": "",
+      "ssot_touches": [],
+      "next_action": "1. READ docs/hbtrack/ars/drafts/AR_060_stub_openapi_contract.md completamente\n2. Preencher secao Analise de Impacto\n3. Implementar mudancas em: []\n4. Executar: python scripts/run/hb_cli.py report 060 \"\"\n5. Aguardar hb_autotest.py fazer verify+seal automaticamente"
+    },
+    {
+      "id": "061",
+      "ar_id_full": "AR_061",
+      "ar_file": "docs/hbtrack/ars/drafts/AR_061_stub_alembic_migration_gate.md",
+      "title": "[STUB] Alembic Migration Gate",
+      "write_scope": [],
+      "validation_command": "",
+      "ssot_touches": [],
+      "next_action": "1. READ docs/hbtrack/ars/drafts/AR_061_stub_alembic_migration_gate.md completamente\n2. Preencher secao Analise de Impacto\n3. Implementar mudancas em: []\n4. Executar: python scripts/run/hb_cli.py report 061 \"\"\n5. Aguardar hb_autotest.py fazer verify+seal automaticamente"
+    },
+    {
+      "id": "062",
+      "ar_id_full": "AR_062",
+      "ar_file": "docs/hbtrack/ars/drafts/AR_062_stub_rbac_hardening.md",
+      "title": "[STUB] RBAC Architecture Hardening",
+      "write_scope": [],
+      "validation_command": "",
+      "ssot_touches": [],
+      "next_action": "1. READ docs/hbtrack/ars/drafts/AR_062_stub_rbac_hardening.md completamente\n2. Preencher secao Analise de Impacto\n3. Implementar mudancas em: []\n4. Executar: python scripts/run/hb_cli.py report 062 \"\"\n5. Aguardar hb_autotest.py fazer verify+seal automaticamente"
+    },
+    {
+      "id": "063",
+      "ar_id_full": "AR_063",
+      "ar_file": "docs/hbtrack/ars/drafts/AR_063_stub_logging_trace.md",
+      "title": "[STUB] Logging and Trace Implementation",
+      "write_scope": [],
+      "validation_command": "",
+      "ssot_touches": [],
+      "next_action": "1. READ docs/hbtrack/ars/drafts/AR_063_stub_logging_trace.md completamente\n2. Preencher secao Analise de Impacto\n3. Implementar mudancas em: []\n4. Executar: python scripts/run/hb_cli.py report 063 \"\"\n5. Aguardar hb_autotest.py fazer verify+seal automaticamente"
+    },
+    {
+      "id": "068",
+      "ar_id_full": "AR_068",
+      "ar_file": "docs/hbtrack/ars/features/AR_068_persons_birth_date.md",
+      "title": "Migration: persons.birth_date NOT NULL + Trigger d",
+      "write_scope": [],
+      "validation_command": "",
+      "ssot_touches": [],
+      "next_action": "1. READ docs/hbtrack/ars/features/AR_068_persons_birth_date.md completamente\n2. Preencher secao Analise de Impacto\n3. Implementar mudancas em: []\n4. Executar: python scripts/run/hb_cli.py report 068 \"\"\n5. Aguardar hb_autotest.py fazer verify+seal automaticamente"
+    }
+  ],
+  "instructions": "Voce e o Executor. Para cada AR em pending_ars:\n  1. Leia o ar_file completo antes de agir\n  2. Implemente APENAS o que esta em write_scope\n  3. Execute hb report com o validation_command EXATO\n  4. Faca git add da evidence + codigo + AR + _INDEX.md\n  5. hb_autotest.py detectara a evidence staged e rodara verify+seal"
+}

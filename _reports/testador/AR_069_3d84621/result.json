@@ -1,0 +1,40 @@
+{
+  "ar_id": "069",
+  "validation_command": "python -c \"import json; schema=json.load(open('docs/_canon/contratos/ar_contract.schema.json')); tasks=schema['properties']['tasks']['items']['properties']; assert 'write_scope' in tasks, 'write_scope ausente no schema'; print('✅ Schema: write_scope presente')\" && python scripts/run/hb_cli.py plan docs/_canon/planos/governance/gov_template_with_write_scope.json --dry-run 2>&1 | grep -q '## Write Scope' && echo '✅ build_ar_content: seção gerada' || echo '❌ build_ar_content: seção ausente'",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "8ca2c008760fa24d0d1ca7f733a84b9b843e707932ea8d45d17ec1d478cd8a49",
+      "hash": "8ca2c008760fa24d",
+      "stdout_len": 36,
+      "stderr_len": 571
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "8ca2c008760fa24d0d1ca7f733a84b9b843e707932ea8d45d17ec1d478cd8a49",
+      "hash": "8ca2c008760fa24d",
+      "stdout_len": 36,
+      "stderr_len": 571
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "8ca2c008760fa24d0d1ca7f733a84b9b843e707932ea8d45d17ec1d478cd8a49",
+      "hash": "8ca2c008760fa24d",
+      "stdout_len": 36,
+      "stderr_len": 571
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

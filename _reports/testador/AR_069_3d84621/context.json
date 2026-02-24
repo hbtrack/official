@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_069-3d84621",
+  "timestamp_utc": "2026-02-24T14:49:30.660086+00:00",
+  "git": {
+    "commit": "3d8462134a7ce514dd36fc1cf7549db5d4ca9d6b"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "069",
+  "ar_file": "docs\\hbtrack\\ars\\governance\\AR_069_fix_write_scope_pipeline_schema_+_build_ar_content.md"
+}

@@ -1,0 +1,16 @@
+{
+  "role": "testador",
+  "timestamp_utc": "2026-02-24T15:03:13.066726+00:00",
+  "action_items": [
+    "AR_002.5",
+    "AR_002.5",
+    "AR_002.5",
+    "AR_002.5",
+    "AR_004",
+    "AR_024",
+    "AR_069",
+    "AR_998",
+    "AR_999"
+  ],
+  "note": "Use hb_autotest.py para verificacao automatica"
+}

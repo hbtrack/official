@@ -1,6 +1,6 @@
 # AR_069 — Fix write_scope Pipeline: Schema + build_ar_content + GATE P3.6 + Contract
 
-**Status**: 🔲 PENDENTE
+**Status**: ✅ SUCESSO
 **Versão do Protocolo**: 1.2.0
 
 ## Descrição
@@ -65,3 +65,20 @@ Risco: baixo (mudança documental/informativa).
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
+
+### Execução Executor em 3d84621
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import json; schema=json.load(open('docs/_canon/contratos/ar_contract.schema.json')); tasks=schema['properties']['tasks']['items']['properties']; assert 'write_scope' in tasks, 'write_scope ausente no schema'; print('✅ Schema: write_scope presente')" && python scripts/run/hb_cli.py plan docs/_canon/planos/governance/gov_template_with_write_scope.json --dry-run 2>&1 | grep -q '## Write Scope' && echo '✅ build_ar_content: seção gerada' || echo '❌ build_ar_content: seção ausente'`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-24T14:17:51.723307+00:00
+**Behavior Hash**: 8ca2c008760fa24d0d1ca7f733a84b9b843e707932ea8d45d17ec1d478cd8a49
+**Evidence File**: `docs/hbtrack/evidence/AR_069/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Verificacao Testador em 3d84621
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_069_3d84621/result.json`
