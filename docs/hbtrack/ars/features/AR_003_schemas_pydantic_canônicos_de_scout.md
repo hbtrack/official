@@ -1,6 +1,6 @@
 # AR_003 — Schemas Pydantic Canônicos de Scout
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: 🔴 REJEITADO
 **Plano Fonte**: `docs/_canon/planos/matchservice.json`
 
 ### 🛠️ Especificação Técnica (Arquiteto)
@@ -102,7 +102,6 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_003/executor_main.log`
 **Python Version**: 3.11.9
 
-
 ### Execução Executor em 38b62a5
 **Status Executor**: 🏗️ EM_EXECUCAO
 **Comando**: `python temp/validate_ar003.py`
@@ -112,3 +111,11 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_003/executor_main.log`
 **Python Version**: 3.11.9
 
+> 📋 Kanban routing: Arquiteto: Executor reported exit 0 but Testador got exit 1
+
+### Verificacao Testador em 494d48a
+**Status Testador**: 🔴 REJEITADO
+**Consistency**: AH_DIVERGENCE
+**Triple-Run**: TRIPLE_FAIL (3x)
+**Exit Testador**: 1 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_003_494d48a/result.json`

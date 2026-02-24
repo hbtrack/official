@@ -22,62 +22,113 @@ Seladas como ✅ VERIFICADO em 2026-02-24.
 
 ---
 
-## 🟡 PENDENTE: AR_110 — Seal falso-positivo
+## ✅ RESOLVIDO: AR_110, AR_120 — Seal false-positive + fix
 
-Plano AR_120 criado. Aguardando Executor.
-
----
-
-## 🔴 BLOQUEIO: AR_071 — Seal false-positive VERIFICADO
-
-Plano AR_122 criado. Aguardando Executor.
+AR_120 executada e verificada pelo Testador (commit bdb43aa). AR_120 selada ✅ VERIFICADO (commit 494d48a).
+Efeito colateral: AR_110 selada ✅ VERIFICADO pela validation interna de AR_120.
 
 ---
 
-## 🔴 REJEITADO: AR_003 — FLAKY_OUTPUT
+## ✅ RESOLVIDO: AR_071, AR_122 — Seal false-positive + fix
 
-Plano AR_121 criado. Aguardando Executor.
+AR_122 executada e verificada pelo Testador (commit bdb43aa). AR_122 selada ✅ VERIFICADO (commit 2ef7e91).
+Efeito colateral: AR_071 selada ✅ VERIFICADO pela validation interna de AR_122.
+
+---
+
+## ✅ RESOLVIDO: AR_121 — fix validation AR_003 (determinismo UUID)
+
+AR_121 executada e verificada (commit bdb43aa). AR_121 selada ✅ VERIFICADO (commit 2ef7e91).
+
+---
+
+## 🔴 NOVO REJEITADO: AR_003 — AH_DIVERGENCE (Windows cmd-safe)
+
+### Causa raiz identificada
+AR_121 corrigiu o não-determinismo (UUID4 → UUID fixo). Porém, o `validation_command` em AR_003.md ainda contém **código Python puro** começando com `import sys, uuid`. O `run_cmd` do `hb_cli.py` executa via `subprocess.run(cmd, shell=True)` — no Windows, `cmd.exe` tenta rodar `import` como comando de shell:
+
+```
+stderr: 'import' não é reconhecido como um comando interno
+ou externo, um programa operável ou um arquivo em lotes.
+exit_code: 1 (consistente 3x)
+```
+
+O próprio código de validação está **correto** (testado manualmente → PASS). O problema é exclusivamente o formato do `validation_command` (raw Python vs comando de shell).
+
+### Plano criado
+**AR_123** criado via `hb plan` — aguardando Executor.
+Plano: `docs/_canon/planos/fix_ar003_validation_cmd_windows_shell.json`
+
+### Instrução para o Executor
+1. Criar `docs/hbtrack/evidence/AR_003/validate_ar003.py` com o código abaixo (determinístico, UUID fixo):
+
+```python
+import sys, uuid
+sys.path.insert(0, 'Hb Track - Backend')
+from app.schemas.match_events import ScoutEventCreate, CanonicalEventType, EventType
+FIXED = uuid.UUID('00000000-0000-0000-0000-000000000001')
+invalid = [v for v in ['goal_7m','own_goal','shot_on_target','assist','technical_foul'] if v in [e.value for e in CanonicalEventType]]
+assert not invalid, f'Enum invalido: {invalid}'
+base = {'team_id': FIXED, 'period_number': 1, 'game_time_seconds': 300, 'phase_of_play': 'attack', 'advantage_state': 'even', 'score_our': 5, 'score_opponent': 3, 'event_type': 'goal', 'outcome': 'success', 'is_shot': True, 'is_goal': True, 'source': 'live', 'x_coord': 50.0, 'y_coord': 40.0}
+e = ScoutEventCreate(**base)
+assert e.period_number == 1 and e.game_time_seconds == 300 and e.x_coord == 50.0 and e.y_coord == 40.0
+assert EventType is CanonicalEventType
+gk_ok = False
+try:
+    ScoutEventCreate(**{**base, 'event_type': 'goalkeeper_save', 'related_event_id': None})
+except ValueError as err:
+    gk_ok = 'goalkeeper_save' in str(err).lower() and 'related_event_id' in str(err).lower()
+assert gk_ok, 'goalkeeper_save nao levantou ValidationError correta'
+print('PASS: Schemas Pydantic canonicos OK')
+```
+
+2. Atualizar a seção `## Validation Command (Contrato)` em `AR_003_schemas_pydantic_canônicos_de_scout.md` para conter SOMENTE:
+```
+python docs/hbtrack/evidence/AR_003/validate_ar003.py
+```
+
+3. Testar localmente: `python docs/hbtrack/evidence/AR_003/validate_ar003.py` deve retornar exit 0 + "PASS: Schemas Pydantic canonicos OK"
+
+4. Fazer `hb report 003` com exit_code=0.
 
 
 **SEÇÃO ARQUITETO x EXECUTOR**
 SOLICITAÇÕES DO ARQUITETO PARA O EXECUTOR:
 
-Ver `_reports/dispatch/executor.todo` seção ARQUITETO x EXECUTOR para instrucoes completas.
+## Batch Atual — Estado Atualizado
 
-## Resumo do Dispatch Batch (5 planos — todos dry-run Exit 0)
+| Prioridade | AR | Status |
+|---|---|---|
+| 🔴 URGENTE | AR_003 (via AR_123) | 🔲 PENDENTE — plano fix_ar003_validation_cmd_windows_shell.json |
+| NORMAL | AR_068 | 🔲 PENDENTE — plano AR_068_migration_persons_birth_date.json |
+| NORMAL | AR_113–119 | 🔲 PENDENTE — plano fix_legacy_validation_7ars_opcao_a.json |
 
-| Prioridade | Plano | AR(s) | Status |
-|---|---|---|---|
-| 1 ALTA | fix_ar110_seal_status_check.json | AR_120 | 🔲 PENDENTE |
-| 2 ALTA | fix_ar071_seal_verificado_check.json | AR_122 | 🔲 PENDENTE |
-| 3 ALTA | fix_ar003_deterministic_validation.json | AR_121 | 🔲 PENDENTE |
-| 4 NORMAL | AR_068_migration_persons_birth_date.json | AR_068 | 🔲 PENDENTE |
-| 5 NORMAL | fix_legacy_validation_7ars_opcao_a.json | AR_113–119 | 🔲 PENDENTE |
+**ARs já concluídas (NÃO re-executar):** AR_120, AR_121, AR_122 ✅ VERIFICADO; AR_110, AR_071 ✅ VERIFICADO (colateral).
 
-**ARs 056–063 (STUBs)**: NAO executar — aguardar planos proprios do Arquiteto.
+**ARs 056–063 (STUBs)**: NAO executar — aguardar planos próprios do Arquiteto.
 
 
 **SEÇÃO ARQUITETO x TESTADOR**
 SOLICITAÇÕES DO ARQUITETO PARA O TESTADOR:
 
-## 🔲 AGUARDANDO VERIFY apos Executor completar
+## 🔲 AGUARDANDO VERIFY após Executor completar AR_123
 
-Apos Executor completar os planos acima, fazer `hb verify` para:
-- AR_120 (fix cmd_seal REJEITADO — validation interna faz hb seal 110)
-- AR_122 (fix cmd_seal VERIFICADO idempotencia — validation interna faz hb seal 071)
-- AR_121 (fix validation AR_003 — verificar determinismo 3 runs)
-- AR_068 (evidencia canonica migration 0053)
-- AR_113 a AR_119 (7 ARs legado — correcoes de validation_commands)
+Após Executor completar AR_123, fazer `hb verify 003`.
+- Novo `validation_command`: `python docs/hbtrack/evidence/AR_003/validate_ar003.py`
+- Deve retornar exit 0, stdout "PASS: Schemas Pydantic canonicos OK", hash consistente 3x.
 
-## INFO CONTEXTO
+## INFO CONTEXTO — Estado Corrente
 
 | AR | Status |
 |---|---|
 | AR_037, 039, 041, 042, 043 | ✅ VERIFICADO |
 | AR_004, 109, 111, 112 | ✅ VERIFICADO |
-| AR_110 | 🔲 bloqueada aguardando AR_120 |
-| AR_003 | 🔲 bloqueada aguardando AR_121 |
-| AR_071 | 🔲 bloqueada aguardando AR_122 |
+| AR_110, AR_071 | ✅ VERIFICADO (colateral) |
+| AR_120, AR_121, AR_122 | ✅ VERIFICADO |
+| AR_003 | 🔴 REJEITADO → AR_123 plano criado |
+| AR_068 | 🔲 PENDENTE |
+| AR_113–119 | 🔲 PENDENTE |
+
 | AR_068 | 🔲 aguardando hb report (plano criado) |
 | AR_113–119 | 🔲 aguardando Executor |
 | AR_056–063 | 💤 STUBs sem plano — proxima sessao |
