@@ -119,6 +119,78 @@ If `retry_count >= 3` (`MAX_RETRY_THRESHOLD`): MUST NOT proceed.
 - Update Kanban to `❌ BLOQUEADO (Max Retries)`.
 - Require human intervention to reset `retry_count`.
 
+## 12.5) STAGING RULES (MAINTAIN DOMAIN ISOLATION)
+You MUST stage only plan/spec artifacts from your domain.
+
+### ❌ FORBIDDEN (will interfere):
+```
+git add .                         # FORBIDDEN — stages everything
+git add docs/                     # FORBIDDEN — too broad
+git add "Hb Track - Backend/"     # FORBIDDEN — Executor's domain
+git add _reports/testador/        # FORBIDDEN — Testador's domain
+git add "*"                       # FORBIDDEN — wildcard
+```
+
+### ✅ ALLOWED (and REQUIRED after hb plan):
+You MUST use WHITELISTED, explicit paths:
+```
+# For Plan JSON you created
+git add "docs/_canon/planos/fix_<your_plan>.json"
+git add "docs/_canon/planos/<your_plan>.json"
+
+# For ARs you created/modified in planning (rare: only governance ARs)
+git add "docs/hbtrack/ars/governance/AR_<id>_*.md"
+
+# After modifications, rebuild index
+git add "docs/_INDEX.md"
+
+# To report to other agents
+git add "_reports/dispatch/architect.todo"
+```
+
+### PATTERN: Staging after hb plan
+```powershell
+# Step 1: Create/modify plan JSON
+# (hb plan --dry-run validates it)
+
+# Step 2: Stage plan
+git add "docs/_canon/planos/my_plan.json"
+
+# Step 3: If hb plan modified AR files (rare), stage them
+git add "docs/hbtrack/ars/governance/AR_<id>_*.md"
+
+# Step 4: Rebuild and stage index
+python scripts/run/hb_cli.py rebuild-index
+git add "docs/_INDEX.md"
+
+# Step 5: Update dispatch to notify Executor/Testador
+git add "_reports/dispatch/architect.todo"
+```
+
+### ANTI-PATTERN: What NOT to do
+```powershell
+# ❌ DON'T: Stage other agents' domains
+git add docs/hbtrack/evidence/  # Executor's output
+git add _reports/testador/      # Testador's output
+git add "Hb Track - Backend/"   # Executor's code
+
+# ❌ DON'T: Modify and stage other sections
+git add docs/_canon/contratos/  # Don't edit contracts unless governance AR
+git add scripts/run/            # Leave CLI to Executor (unless explicit)
+```
+
+### WORKSPACE CLEANUP (Before next plan)
+If you need to clean workspace:
+```powershell
+# ✅ CORRECT: Restore only your modified files
+git restore "docs/_canon/planos/my_plan.json"
+git restore "docs/hbtrack/ars/governance/AR_XXX_*.md"
+
+# ❌ WRONG: Restore entire directories
+git restore docs/
+git restore "docs/_canon/"
+```
+
 ---
 **LOOP INSTRUCTION:** Monitore o terminal do `python scripts/run/hb_watch.py --mode architect`. Quando vir uma AR em **PROPOSTA** ou **STUB**, abra o arquivo, leia as intenções do usuário, materialize o Plano JSON e atualize o status para **🔲 PENDENTE** via `hb plan`. Deixe instruções para o Executor na seção de Notas. Quando vir **🔴 REJEITADO**, leia o TESTADOR_REPORT, aplique o roteamento do §11 e re-planeje ou devolva ao Executor conforme a causa raiz.
 
