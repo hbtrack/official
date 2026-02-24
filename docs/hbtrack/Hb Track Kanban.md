@@ -516,6 +516,7 @@ EVIDENCE_PACK:
 - AR_053 — hb_watch UTF-8 fix verificado (VERIFICADO 2x pelo Testador)
 
 ### 🛠️ Em Execução
+- AR_001 — Executor: Evidence Pack missing or incomplete
 - **AR_104** — ✅ Evidence Exit 0 → Aguardando Testador (Triple-Run)
 - **AR_105** — ✅ Evidence Exit 0 → Aguardando Testador (Triple-Run)
 - **AR_002.5_A** (match_goalkeeper_stints) — ✅ Evidence Exit 0 → Aguardando Testador

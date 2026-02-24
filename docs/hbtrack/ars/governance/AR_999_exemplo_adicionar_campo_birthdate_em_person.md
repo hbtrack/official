@@ -1,6 +1,6 @@
 # AR_999 — Exemplo: Adicionar campo birthdate em Person
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.2.0
 
 ## Descrição
@@ -120,3 +120,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_999_680f239/result.json`
+
+### Selo Humano em b507dc6
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-24T16:31:22.747026+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_999_680f239/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_999/executor_main.log`

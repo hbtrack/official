@@ -1,6 +1,6 @@
 # AR_069 — Fix write_scope Pipeline: Schema + build_ar_content + GATE P3.6 + Contract
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.2.0
 
 ## Descrição
@@ -82,3 +82,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_069_3d84621/result.json`
+
+### Selo Humano em b507dc6
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-24T16:30:32.247466+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_069_3d84621/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_069/executor_main.log`

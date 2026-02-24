@@ -4,7 +4,7 @@
 
 | ID | Título | Status | Evidence |
 |---|---|---|---|
-| AR_001 | Migration: ADD COLUMN competition_standings.team_id (uuid... | ✅ SUCESSO | docs/hbtrack/evidence/AR_001_competition_standings_add_team_id_migration.log |
+| AR_001 | Migration: ADD COLUMN competition_standings.team_id (uuid... | 🔴 REJEITADO | docs/hbtrack/evidence/AR_001_competition_standings_add_team_id_migration.log |
 | AR_002 | Model: CompetitionStanding.team_id — mapped_column + rela... | ⚠️ PENDENTE | docs/hbtrack/evidence/AR_002_competition_standings_model_team_id.log |
 | AR_002.5 | Schema: match_goalkeeper_stints para Eficiência de Goleira | ✅ VERIFICADO | docs/hbtrack/evidence/AR_002.5_A/executor_main.log |
 | AR_002.5 | Schema: attendance.presence_status + status 'justified' | ✅ VERIFICADO | docs/hbtrack/evidence/AR_002.5_B/executor_main.log |
@@ -76,7 +76,7 @@
 | AR_066 | Resgate de ARs de Competitions e Features | ✅ VERIFICADO | docs/hbtrack/evidence/AR_066/executor_main.log |
 | AR_067 | Resgate de Drafts e Invariantes Wellness | ✅ VERIFICADO | docs/hbtrack/evidence/AR_067/executor_main.log |
 | AR_068 | Migration: persons.birth_date NOT NULL + Trigger de Parid... | 🔲 PENDENTE | — |
-| AR_069 | Fix write_scope Pipeline: Schema + build_ar_content + GAT... | ✅ SUCESSO | docs/hbtrack/evidence/AR_069/executor_main.log |
+| AR_069 | Fix write_scope Pipeline: Schema + build_ar_content + GAT... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_069/executor_main.log |
 | AR_070 | Criar hb_plan_watcher.py com claim atomico + dry-run + di... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_070/executor_main.log |
 | AR_071 | Add auto-commit opt-in to hb_autotest (strict allowlist +... | ✅ SUCESSO | docs/hbtrack/evidence/AR_071/executor_main.log |
 | AR_072 | Governance: Document daemons + bump PROTOCOL_VERSION v1.3.0 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_072/executor_main.log |
@@ -86,5 +86,5 @@
 | AR_103 | Resgate de Drafts e Invariantes Wellness | ⚠️ PENDENTE | docs/hbtrack/evidence/AR_103/executor_main.log |
 | AR_104 | Modificar migration 0060 para detectar versão PostgreSQL ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_104/executor_main.log |
 | AR_105 | Validar comportamento semântico da constraint/index em Po... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_105/executor_main.log |
-| AR_998 | Test Write Scope Section Generation | ✅ SUCESSO | docs/hbtrack/evidence/AR_998/executor_main.log |
-| AR_999 | Exemplo: Adicionar campo birthdate em Person | ✅ SUCESSO | docs/hbtrack/evidence/AR_999/executor_main.log |
+| AR_998 | Test Write Scope Section Generation | ✅ VERIFICADO | docs/hbtrack/evidence/AR_998/executor_main.log |
+| AR_999 | Exemplo: Adicionar campo birthdate em Person | ✅ VERIFICADO | docs/hbtrack/evidence/AR_999/executor_main.log |
