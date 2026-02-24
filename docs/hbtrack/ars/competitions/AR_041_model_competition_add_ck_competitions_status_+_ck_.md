@@ -1,6 +1,6 @@
 # AR_041 — Model Competition: ADD ck_competitions_status + ck_competitions_modality
 
-**Status**: ✅ SUCESSO
+**Status**: 🏗️ EM_EXECUCAO
 **Versão do Protocolo**: 1.1.0
 
 ## Descrição
@@ -21,7 +21,7 @@ python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models
 ```
 
 ## Evidence File (Contrato)
-`docs/hbtrack/evidence/AR_041_comp_db_006_competition_model_checks.log`
+`docs/hbtrack/evidence/AR_041/executor_main.log`
 
 ## Rollback Plan (Contrato)
 ```
@@ -61,6 +61,26 @@ _(Gerado por hb report)_
 **Status Final**: ✅ SUCESSO
 **Comando**: `python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition import Competition; args=Competition.__table_args__; names=[getattr(a,'name',None) for a in args]; checks=['ck_competitions_status','ck_competitions_modality','ck_competitions_deleted_reason']; missing=[c for c in checks if c not in names]; assert not missing,f'FAIL: missing constraints {missing}'; print(f'PASS: all 3 constraints present in Competition.__table_args__')"`
 **Exit Code**: 0
-**Evidence File**: `docs/hbtrack/evidence/AR_041_comp_db_006_competition_model_checks.log`
+**Evidence File**: `docs/hbtrack/evidence/AR_041/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Execução Executor em 38b62a5
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition import Competition; args=Competition.__table_args__; names=[getattr(a,'name',None) for a in args]; checks=['ck_competitions_status','ck_competitions_modality','ck_competitions_deleted_reason']; missing=[c for c in checks if c not in names]; assert not missing,f'FAIL: missing constraints {missing}'; print(f'PASS: all 3 constraints present in Competition.__table_args__')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-24T17:11:06.797623+00:00
+**Behavior Hash**: 262d70fcacca6bc24f9c722955159989ef795e10d9403fd2bd992abd219bed76
+**Evidence File**: `docs/hbtrack/evidence/AR_041/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Execução Executor em 38b62a5
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition import Competition; args=Competition.__table_args__; names=[getattr(a,'name',None) for a in args]; checks=['ck_competitions_status','ck_competitions_modality','ck_competitions_deleted_reason']; missing=[c for c in checks if c not in names]; assert not missing,f'FAIL: missing constraints {missing}'; print(f'PASS: all 3 constraints present in Competition.__table_args__')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-24T17:12:01.100562+00:00
+**Behavior Hash**: 262d70fcacca6bc24f9c722955159989ef795e10d9403fd2bd992abd219bed76
+**Evidence File**: `docs/hbtrack/evidence/AR_041/executor_main.log`
 **Python Version**: 3.11.9
 

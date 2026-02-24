@@ -1,6 +1,6 @@
 # AR_003 — Schemas Pydantic Canônicos de Scout
 
-**Status**: ✅ SUCESSO
+**Status**: 🏗️ EM_EXECUCAO
 **Plano Fonte**: `docs/_canon/planos/matchservice.json`
 
 ### 🛠️ Especificação Técnica (Arquiteto)
@@ -36,35 +36,63 @@ model_config = ConfigDict(from_attributes=True).
 
 5) Manter MatchEventCorrection e MatchEventUpdate sem breaking changes (apenas corrigir referências ao enum).
 
-### 🔍 Análise de Impacto (EXECUTOR: PREENCHA ANTES DE CODAR)
-- **Arquivos afetados:** 
-  - `Hb Track - Backend/app/schemas/match_events.py` (edição principal)
-  - `Hb Track - Backend/app/models/match_event.py` (EventType legado - manter compatibilidade)
-- **Mudança no Schema?** [x] Sim - novos schemas ScoutEventCreate/ScoutEventRead
-- **Risco de Regressão?** [Médio] - schemas existentes serão substituídos, mas alias mantém compatibilidade de import
+## Critérios de Aceite
+- Import ScoutEventCreate, ScoutEventRead, CanonicalEventType executa sem ImportError
+- CanonicalEventType não contém valores inválidos: goal_7m, own_goal, shot_on_target, assist, technical_foul
+- ScoutEventCreate aceita campos DB-aligned: period_number, game_time_seconds, x_coord, y_coord, is_shot, is_goal, source, phase_of_play, advantage_state, score_our, score_opponent, event_subtype, related_event_id
+- ScoutEventCreate validation: goalkeeper_save com related_event_id=None levanta ValidationError
+- Alias EventType = CanonicalEventType funciona corretamente (backward compatibility)
 
-### ✅ Critérios de Sucesso
-- [x] 1) python -c 'from app.schemas.match_events import ScoutEventCreate, ScoutEventRead, CanonicalEventType' executa sem ImportError. 2) CanonicalEventType não contém os valores goal_7m, own_goal, shot_on_target, assist, technical_foul. 3) ScoutEventCreate aceita todos os campos do DB (period_number, game_time_seconds, x_coord, y_coord, is_shot, is_goal, source, phase_of_play, advantage_state, score_our, score_opponent, event_subtype, related_event_id). 4) ScoutEventCreate.model_validate({'team_id': '...', 'event_type': 'goalkeeper_save', 'related_event_id': None, ...}) levanta ValidationError. 5) Alias EventType = CanonicalEventType não quebra import existente no router.
-- [x] Evidência em: `docs/evidence/AR_003_evidence.log`
+## Write Scope
+- Hb Track - Backend/app/schemas/match_events.py
 
-### 📝 Notas de Implementação
-(Cline: Descreva brevemente COMO você resolveu desafios técnicos aqui)
-
----
-*Gerado via HB Track CLI em 19/02/2026*
-
-
-## 🏁 Evidência de Execução (2026-02-19 23:36:58)
-**Status Final:** ✅ SUCESSO
-**Comando de Validação:** `echo teste`
-**Exit Code:** 0
-
-### 📋 Log Output:
-```text
-teste
-
+## Validation Command (Contrato)
 ```
-## 🏁 Evidência de Execução (Manual)
-**Comando:** python -c 'from app.schemas.match_events import ScoutEventCreate, ScoutEventRead, CanonicalEventType, EventType; print("✅ VALIDADO")'
-**Resultado:** ✅ VALIDADO
+python temp/validate_ar003.py
+```
+
+## Evidence File (Contrato)
+`docs/hbtrack/evidence/AR_003/executor_main.log`
+
+## Rollback Plan (Contrato)
+```
+git checkout -- Hb Track - Backend/app/schemas/match_events.py
+```
+
+## Análise de Impacto
+**Escopo**: Schemas Pydantic para match events (Scout canônico)
+
+**Impacto**:
+- Substituição de enum EventType (legado) por CanonicalEventType (sem códigos inválidos)
+- Novos schemas ScoutEventCreate/ScoutEventRead alinhados com tabela match_events do DB
+- Campos renomeados para match DB: period_number (era 'period'), game_time_seconds (era 'minute'), x_coord/y_coord (eram 'x_position'/'y_position')
+- Validação de goalkeeper_save requer related_event_id obrigatório
+- Alias EventType mantém compatibilidade com imports existentes no router
+
+**Risco**: Baixo (alias preserva imports existentes, campos DB-aligned já eram esperados por models)
+
+**Implementação**: Código já presente no arquivo desde implementação anterior (verificado via grep). Esta AR gera evidence canônica retroativamente.
+
 ---
+## Carimbo de Execução
+_(Gerado por hb report)_
+
+### Execução Executor em 38b62a5
+**Status Executor**: ❌ FALHA
+**Comando**: `python temp/validate_ar003.py`
+**Exit Code**: 1
+**Timestamp UTC**: 2026-02-24T17:01:44.472025+00:00
+**Behavior Hash**: 5dad134366f921aff3a99f1d61cfd711646c40b192c16fc2b55344e7ed2fd3e7
+**Evidence File**: `docs/hbtrack/evidence/AR_003/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Execução Executor em 38b62a5
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python temp/validate_ar003.py`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-24T17:02:22.291617+00:00
+**Behavior Hash**: 4f4879b1d369502185309595bf57110e0bfedcf1191196f944b6b29cbb23bab3
+**Evidence File**: `docs/hbtrack/evidence/AR_003/executor_main.log`
+**Python Version**: 3.11.9
+

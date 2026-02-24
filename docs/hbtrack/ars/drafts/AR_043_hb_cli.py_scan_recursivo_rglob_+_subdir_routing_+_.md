@@ -1,6 +1,6 @@
 # AR_043 — hb_cli.py: scan recursivo (rglob) + subdir routing + hb rebuild-index
 
-**Status**: ✅ SUCESSO
+**Status**: 🏗️ EM_EXECUCAO
 **Versão do Protocolo**: 1.1.0
 
 ## Descrição
@@ -42,7 +42,7 @@ python -c "import pathlib; src=pathlib.Path('scripts/run/hb_cli.py').read_text(e
 ```
 
 ## Evidence File (Contrato)
-`docs/hbtrack/evidence/AR_043_gov_ar_folder_reorg_hb_cli.log`
+`docs/hbtrack/evidence/AR_043/executor_main.log`
 
 ## Rollback Plan (Contrato)
 ```
@@ -93,6 +93,26 @@ _(Gerado por hb report)_
 **Status Final**: ✅ SUCESSO
 **Comando**: `python -c "import pathlib; src=pathlib.Path('scripts/run/hb_cli.py').read_text(encoding='utf-8'); checks=['rglob','_get_ar_subdir','rebuild-index','competitions','governance','infra']; missing=[c for c in checks if c not in src]; assert not missing,f'FAIL: missing in hb_cli.py: {missing}'; count_rglob=src.count('rglob'); assert count_rglob>=4,f'FAIL: rglob count={count_rglob}, expected >=4'; print(f'PASS: hb_cli.py suporta subdirectórios (rglob x{count_rglob})')"`
 **Exit Code**: 0
-**Evidence File**: `docs/hbtrack/evidence/AR_043_gov_ar_folder_reorg_hb_cli.log`
+**Evidence File**: `docs/hbtrack/evidence/AR_043/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Execução Executor em 38b62a5
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import pathlib; src=pathlib.Path('scripts/run/hb_cli.py').read_text(encoding='utf-8'); checks=['rglob','_get_ar_subdir','rebuild-index','competitions','governance','infra']; missing=[c for c in checks if c not in src]; assert not missing,f'FAIL: missing in hb_cli.py: {missing}'; count_rglob=src.count('rglob'); assert count_rglob>=4,f'FAIL: rglob count={count_rglob}, expected >=4'; print(f'PASS: hb_cli.py suporta subdirectórios (rglob x{count_rglob})')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-24T17:11:08.519204+00:00
+**Behavior Hash**: 404668d7748101f21041231e8f9349f8233be53b3913a278b396af04474c7d1e
+**Evidence File**: `docs/hbtrack/evidence/AR_043/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Execução Executor em 38b62a5
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import pathlib; src=pathlib.Path('scripts/run/hb_cli.py').read_text(encoding='utf-8'); checks=['rglob','_get_ar_subdir','rebuild-index','competitions','governance','infra']; missing=[c for c in checks if c not in src]; assert not missing,f'FAIL: missing in hb_cli.py: {missing}'; count_rglob=src.count('rglob'); assert count_rglob>=4,f'FAIL: rglob count={count_rglob}, expected >=4'; print(f'PASS: hb_cli.py suporta subdirectórios (rglob x{count_rglob})')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-24T17:12:02.751959+00:00
+**Behavior Hash**: 404668d7748101f21041231e8f9349f8233be53b3913a278b396af04474c7d1e
+**Evidence File**: `docs/hbtrack/evidence/AR_043/executor_main.log`
 **Python Version**: 3.11.9
 

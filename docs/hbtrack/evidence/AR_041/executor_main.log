@@ -1,0 +1,18 @@
+AR_ID: 041
+Command: python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition import Competition; args=Competition.__table_args__; names=[getattr(a,'name',None) for a in args]; checks=['ck_competitions_status','ck_competitions_modality','ck_competitions_deleted_reason']; missing=[c for c in checks if c not in names]; assert not missing,f'FAIL: missing constraints {missing}'; print(f'PASS: all 3 constraints present in Competition.__table_args__')"
+Exit Code: 0
+Timestamp UTC: 2026-02-24T17:12:01.100562+00:00
+Behavior Hash (exit+stdout+stderr): 262d70fcacca6bc24f9c722955159989ef795e10d9403fd2bd992abd219bed76
+Git HEAD: 38b62a53f80431e16988efa3cab6f8cee80241fe
+Python Version: 3.11.9
+Protocol Version: 1.3.0
+Workspace Clean: False
+Workspace Status: unstaged_modified=18
+Governed Checksums (sha256): {}
+
+--- STDOUT ---
+PASS: all 3 constraints present in Competition.__table_args__
+
+
+--- STDERR ---
+

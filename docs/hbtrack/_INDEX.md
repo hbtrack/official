@@ -4,13 +4,13 @@
 
 | ID | Título | Status | Evidence |
 |---|---|---|---|
-| AR_001 | Migration: ADD COLUMN competition_standings.team_id (uuid... | 🔴 REJEITADO | docs/hbtrack/evidence/AR_001_competition_standings_add_team_id_migration.log |
+| AR_001 | Migration: ADD COLUMN competition_standings.team_id (uuid... | ✅ SUCESSO | docs/hbtrack/evidence/AR_001_competition_standings_add_team_id_migration.log |
 | AR_002 | Model: CompetitionStanding.team_id — mapped_column + rela... | ⚠️ PENDENTE | docs/hbtrack/evidence/AR_002_competition_standings_model_team_id.log |
 | AR_002.5 | Schema: match_goalkeeper_stints para Eficiência de Goleira | ✅ VERIFICADO | docs/hbtrack/evidence/AR_002.5_A/executor_main.log |
 | AR_002.5 | Schema: attendance.presence_status + status 'justified' | ✅ VERIFICADO | docs/hbtrack/evidence/AR_002.5_B/executor_main.log |
 | AR_002.5 | Documentar divergência de escalas wellness_pre vs. PRD | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_002_5_C_evidence.log |
 | AR_002.5 | Schema: match_analytics_cache para Relatórios V1.1 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_002.5_D/executor_main.log |
-| AR_003 | Schemas Pydantic Canônicos de Scout | ✅ SUCESSO | — |
+| AR_003 | Schemas Pydantic Canônicos de Scout | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_003/executor_main.log |
 | AR_004 | MatchEventService.create() — ORM correto, roster, is_shot... | ✅ SUCESSO | docs/hbtrack/evidence/AR_004/executor_main.log |
 | AR_005 | Router match_events — schemas canônicos ScoutEventCreate/... | 🔍 NEEDS REVIEW | docs/hbtrack/evidence/AR_005_endpoint_match_events.log |
 | AR_006 | Migração path planos para docs/_canon/_agent/planos + v1.0.5 | COMPLETED ✅ | docs/hbtrack/evidence/AR_006_gov_plans_path_migration.log |
@@ -44,13 +44,13 @@
 | AR_034 | Governança Plans — Gate JSON-to-AR obrigatório | ✅ SUCESSO | docs/hbtrack/evidence/AR_034_gov_plans_json_ar_sync_validation.log |
 | AR_035 | Criar scripts/run/hb_watch.py — sentinela de estado do fluxo | ✅ SUCESSO | docs/hbtrack/evidence/AR_035_hb_watch_sentinela_fluxo.log |
 | AR_036 | Migration 0056: ADD COLUMN competitions.points_per_draw +... | ⚠️ PENDENTE | docs/hbtrack/evidence/AR_036_comp_db_003_scoring_rules_migration.log |
-| AR_037 | Model: Competition.points_per_draw + Competition.points_p... | ✅ SUCESSO | docs/hbtrack/evidence/AR_037_comp_db_003_scoring_rules_model.log |
+| AR_037 | Model: Competition.points_per_draw + Competition.points_p... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_037/executor_main.log |
 | AR_038 | Migration 0057: DROP uk_competition_standings_team_phase ... | ✅ SUCESSO | docs/hbtrack/evidence/AR_038_comp_db_004_unique_index_migration.log |
-| AR_039 | Model: CompetitionStanding — UniqueConstraint legado → NU... | ✅ SUCESSO | docs/hbtrack/evidence/AR_039_comp_db_004_unique_index_model.log |
+| AR_039 | Model: CompetitionStanding — UniqueConstraint legado → NU... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_039/executor_main.log |
 | AR_040 | Migration 0058 COMP-DB-006: ADD 3 CHECK constraints statu... | ✅ SUCESSO | docs/hbtrack/evidence/AR_040_comp_db_006_check_constraints_migration.log |
-| AR_041 | Model Competition: ADD ck_competitions_status + ck_compet... | ✅ SUCESSO | docs/hbtrack/evidence/AR_041_comp_db_006_competition_model_checks.log |
-| AR_042 | Model CompetitionMatch: ADD CheckConstraint ck_competitio... | ✅ SUCESSO | docs/hbtrack/evidence/AR_042_comp_db_006_competition_match_model_check.log |
-| AR_043 | hb_cli.py: scan recursivo (rglob) + subdir routing + hb r... | ✅ SUCESSO | docs/hbtrack/evidence/AR_043_gov_ar_folder_reorg_hb_cli.log |
+| AR_041 | Model Competition: ADD ck_competitions_status + ck_compet... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_041/executor_main.log |
+| AR_042 | Model CompetitionMatch: ADD CheckConstraint ck_competitio... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_042/executor_main.log |
+| AR_043 | hb_cli.py: scan recursivo (rglob) + subdir routing + hb r... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_043/executor_main.log |
 | AR_044 | git mv: docs/_canon/planos/ → governance/, competitions/,... | ✅ SUCESSO | docs/hbtrack/evidence/AR_044_gov_ar_folder_reorg_planos.log |
 | AR_045 | git mv: docs/hbtrack/ars/ → governance/, competitions/, f... | ✅ SUCESSO | docs/hbtrack/evidence/AR_045_gov_ar_folder_reorg_ars.log |
 | AR_046 | Limpeza Segura: Arquivos Temporários e Scripts Ad-hoc | ✅ VERIFICADO | docs/hbtrack/evidence/AR_046_removed_files.log |

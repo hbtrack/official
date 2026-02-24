@@ -1,6 +1,6 @@
 # AR_039 — Model: CompetitionStanding — UniqueConstraint legado → NULLS NOT DISTINCT
 
-**Status**: ✅ SUCESSO
+**Status**: 🏗️ EM_EXECUCAO
 **Versão do Protocolo**: 1.1.0
 
 ## Descrição
@@ -27,7 +27,7 @@ python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models
 ```
 
 ## Evidence File (Contrato)
-`docs/hbtrack/evidence/AR_039_comp_db_004_unique_index_model.log`
+`docs/hbtrack/evidence/AR_039/executor_main.log`
 
 ## Rollback Plan (Contrato)
 ```
@@ -67,7 +67,7 @@ _(Gerado por hb report)_
 **Status Final**: ✅ SUCESSO
 **Comando**: `python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition_standing import CompetitionStanding; args=CompetitionStanding.__table_args__; names=[getattr(a,'name',None) for a in args]; old='uk_competition_standings_team_phase'; new='uq_competition_standings_comp_phase_opponent'; errs=[]; (errs.append(f'OLD still present: {old}') if old in names else None); (errs.append(f'NEW missing: {new}') if new not in names else None); [print(e) for e in errs]; sys.exit(len(errs)) if errs else print('PASS')"`
 **Exit Code**: 0
-**Evidence File**: `docs/hbtrack/evidence/AR_039_comp_db_004_unique_index_model.log`
+**Evidence File**: `docs/hbtrack/evidence/AR_039/executor_main.log`
 **Python Version**: 3.11.9
 
 
@@ -75,6 +75,26 @@ _(Gerado por hb report)_
 **Status Final**: ✅ SUCESSO
 **Comando**: `python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition_standing import CompetitionStanding; args=CompetitionStanding.__table_args__; names=[getattr(a,'name',None) for a in args]; old='uk_competition_standings_team_phase'; new='uq_competition_standings_comp_phase_opponent'; errs=[]; (errs.append(f'OLD still present: {old}') if old in names else None); (errs.append(f'NEW missing: {new}') if new not in names else None); [print(e) for e in errs]; sys.exit(len(errs)) if errs else print('PASS')"`
 **Exit Code**: 0
-**Evidence File**: `docs/hbtrack/evidence/AR_039_comp_db_004_unique_index_model.log`
+**Evidence File**: `docs/hbtrack/evidence/AR_039/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Execução Executor em 38b62a5
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition_standing import CompetitionStanding; args=CompetitionStanding.__table_args__; names=[getattr(a,'name',None) for a in args]; old='uk_competition_standings_team_phase'; new='uq_competition_standings_comp_phase_opponent'; errs=[]; (errs.append(f'OLD still present: {old}') if old in names else None); (errs.append(f'NEW missing: {new}') if new not in names else None); [print(e) for e in errs]; sys.exit(len(errs)) if errs else print('PASS')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-24T17:11:05.142469+00:00
+**Behavior Hash**: 01c8ecaaa6931b085591c0b4bfd55c9f076a6af3c37b9a610d0f1a8306848740
+**Evidence File**: `docs/hbtrack/evidence/AR_039/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Execução Executor em 38b62a5
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition_standing import CompetitionStanding; args=CompetitionStanding.__table_args__; names=[getattr(a,'name',None) for a in args]; old='uk_competition_standings_team_phase'; new='uq_competition_standings_comp_phase_opponent'; errs=[]; (errs.append(f'OLD still present: {old}') if old in names else None); (errs.append(f'NEW missing: {new}') if new not in names else None); [print(e) for e in errs]; sys.exit(len(errs)) if errs else print('PASS')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-24T17:11:59.341179+00:00
+**Behavior Hash**: 01c8ecaaa6931b085591c0b4bfd55c9f076a6af3c37b9a610d0f1a8306848740
+**Evidence File**: `docs/hbtrack/evidence/AR_039/executor_main.log`
 **Python Version**: 3.11.9
 

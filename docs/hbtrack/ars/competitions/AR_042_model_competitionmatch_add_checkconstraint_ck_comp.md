@@ -1,6 +1,6 @@
 # AR_042 — Model CompetitionMatch: ADD CheckConstraint ck_competition_matches_status
 
-**Status**: ✅ SUCESSO
+**Status**: 🏗️ EM_EXECUCAO
 **Versão do Protocolo**: 1.1.0
 
 ## Descrição
@@ -20,7 +20,7 @@ python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models
 ```
 
 ## Evidence File (Contrato)
-`docs/hbtrack/evidence/AR_042_comp_db_006_competition_match_model_check.log`
+`docs/hbtrack/evidence/AR_042/executor_main.log`
 
 ## Rollback Plan (Contrato)
 ```
@@ -61,6 +61,26 @@ _(Gerado por hb report)_
 **Status Final**: ✅ SUCESSO
 **Comando**: `python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition_match import CompetitionMatch; args=CompetitionMatch.__table_args__; names=[getattr(a,'name',None) for a in args]; check='ck_competition_matches_status'; assert check in names,f'FAIL: {check} not in __table_args__. Current: {names}'; print(f'PASS: {check} present in CompetitionMatch.__table_args__')"`
 **Exit Code**: 0
-**Evidence File**: `docs/hbtrack/evidence/AR_042_comp_db_006_competition_match_model_check.log`
+**Evidence File**: `docs/hbtrack/evidence/AR_042/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Execução Executor em 38b62a5
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition_match import CompetitionMatch; args=CompetitionMatch.__table_args__; names=[getattr(a,'name',None) for a in args]; check='ck_competition_matches_status'; assert check in names,f'FAIL: {check} not in __table_args__. Current: {names}'; print(f'PASS: {check} present in CompetitionMatch.__table_args__')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-24T17:11:07.926910+00:00
+**Behavior Hash**: ada5d4e734ecac5dc87786a5582ed7256eb7bfd0dd75e4f79b63861d6fc8f363
+**Evidence File**: `docs/hbtrack/evidence/AR_042/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Execução Executor em 38b62a5
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition_match import CompetitionMatch; args=CompetitionMatch.__table_args__; names=[getattr(a,'name',None) for a in args]; check='ck_competition_matches_status'; assert check in names,f'FAIL: {check} not in __table_args__. Current: {names}'; print(f'PASS: {check} present in CompetitionMatch.__table_args__')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-24T17:12:02.239503+00:00
+**Behavior Hash**: ada5d4e734ecac5dc87786a5582ed7256eb7bfd0dd75e4f79b63861d6fc8f363
+**Evidence File**: `docs/hbtrack/evidence/AR_042/executor_main.log`
 **Python Version**: 3.11.9
 

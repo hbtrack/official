@@ -1,6 +1,6 @@
 # AR_037 — Model: Competition.points_per_draw + Competition.points_per_loss em competition.py
 
-**Status**: ✅ SUCESSO
+**Status**: 🏗️ EM_EXECUCAO
 **Versão do Protocolo**: 1.1.0
 
 ## Descrição
@@ -23,7 +23,7 @@ python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models
 ```
 
 ## Evidence File (Contrato)
-`docs/hbtrack/evidence/AR_037_comp_db_003_scoring_rules_model.log`
+`docs/hbtrack/evidence/AR_037/executor_main.log`
 
 ## Rollback Plan (Contrato)
 ```
@@ -63,6 +63,26 @@ _(Gerado por hb report)_
 **Status Final**: ✅ SUCESSO
 **Comando**: `python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition import Competition; fields=['points_per_draw','points_per_loss']; missing=[f for f in fields if not hasattr(Competition,f)]; assert not missing,f'FAIL: missing fields {missing}'; print(f'PASS: {fields} present in Competition')"`
 **Exit Code**: 0
-**Evidence File**: `docs/hbtrack/evidence/AR_037_comp_db_003_scoring_rules_model.log`
+**Evidence File**: `docs/hbtrack/evidence/AR_037/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Execução Executor em 38b62a5
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition import Competition; fields=['points_per_draw','points_per_loss']; missing=[f for f in fields if not hasattr(Competition,f)]; assert not missing,f'FAIL: missing fields {missing}'; print(f'PASS: {fields} present in Competition')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-24T17:11:03.495364+00:00
+**Behavior Hash**: 37b8d7a8a18998ca710e9b5bf95672082bc871540684a61fe5a63f6a341fdca5
+**Evidence File**: `docs/hbtrack/evidence/AR_037/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Execução Executor em 38b62a5
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition import Competition; fields=['points_per_draw','points_per_loss']; missing=[f for f in fields if not hasattr(Competition,f)]; assert not missing,f'FAIL: missing fields {missing}'; print(f'PASS: {fields} present in Competition')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-24T17:11:57.572883+00:00
+**Behavior Hash**: 37b8d7a8a18998ca710e9b5bf95672082bc871540684a61fe5a63f6a341fdca5
+**Evidence File**: `docs/hbtrack/evidence/AR_037/executor_main.log`
 **Python Version**: 3.11.9
 
