@@ -1,4 +1,23 @@
-﻿# COMUNICAÇÃO ENTRE AGENTES
+﻿---
+
+**SEÇÃO TESTADOR x EXECUTOR**
+FEEDBACK DO TESTADOR PARA O EXECUTOR:
+
+## ✅ VERIFICADO: ARs 101, 102, 103 (Commit 782b6ae)
+
+**Data**: 2026-02-25
+
+Batch de doc_gates.py (DOC-GATE-014/015 fixes) verificado com triple-run OK.
+
+| AR | Status | Hashes (3 runs) | Consistency | VC |
+|----|--------|---|---|---|
+| AR_101 | ✅ SUCESSO | edfab73c3097d9f3 | OK | doc_gates.py --ar-id 101 |
+| AR_102 | ✅ SUCESSO | d3dfebcbf614776d | OK | doc_gates.py --ar-id 102 |
+| AR_103 | ✅ SUCESSO | 2aee19654a678eec | OK | doc_gates.py --ar-id 103 |
+
+**Patches confirmados**: hb_watch.py (HB_LOCK + funções) ✅ | Dev Flow.md ("último gate") ✅
+
+**AGUARDANDO PRÓXIMO BATCH**: Qual é a próxima prioridade?
 
 ---
 
