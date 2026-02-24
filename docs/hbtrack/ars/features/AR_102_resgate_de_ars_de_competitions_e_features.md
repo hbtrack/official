@@ -1,6 +1,6 @@
 # AR_102 — Resgate de ARs de Competitions e Features
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ✅ SUCESSO
 **Versão do Protocolo**: 1.2.0
 
 ## Descrição

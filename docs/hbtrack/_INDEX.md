@@ -81,8 +81,8 @@
 | AR_071 | Add auto-commit opt-in to hb_autotest (strict allowlist +... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_071/executor_main.log |
 | AR_072 | Governance: Document daemons + bump PROTOCOL_VERSION v1.3.0 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_072/executor_main.log |
 | AR_100 | Estabilização do Protocolo v1.2.0 e Unificação de Registros | ✅ VERIFICADO | docs/hbtrack/evidence/AR_100/executor_main.log |
-| AR_101 | Resgate de ARs de Governança (v1.2.0 Core) | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_101/executor_main.log |
-| AR_102 | Resgate de ARs de Competitions e Features | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_102/executor_main.log |
+| AR_101 | Resgate de ARs de Governança (v1.2.0 Core) | ✅ SUCESSO | docs/hbtrack/evidence/AR_101/executor_main.log |
+| AR_102 | Resgate de ARs de Competitions e Features | ✅ SUCESSO | docs/hbtrack/evidence/AR_102/executor_main.log |
 | AR_103 | Resgate de Drafts e Invariantes Wellness | ✅ SUCESSO | docs/hbtrack/evidence/AR_103/executor_main.log |
 | AR_104 | Modificar migration 0060 para detectar versão PostgreSQL ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_104/executor_main.log |
 | AR_105 | Validar comportamento semântico da constraint/index em Po... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_105/executor_main.log |
