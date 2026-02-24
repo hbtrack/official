@@ -40,7 +40,7 @@ NAO modificar nenhum outro arquivo.
 
 ## Validation Command (Contrato)
 ```
-python -c "import pathlib; f=pathlib.Path('Hb Track - Backend/db/alembic/versions/0058_comp_db_006_status_check_constraints.py'); assert f.exists(),'FAIL: migration file not found'; c=f.read_text(encoding='utf-8'); assert \"revision = '0058'\" in c,'FAIL: wrong revision id'; assert \"down_revision = '0057'\" in c or \"down_revision='0057'\" in c,'FAIL: wrong down_revision'; ck=['ck_competitions_status','ck_competitions_modality','ck_competition_matches_status']; missing=[k for k in ck if k not in c]; assert not missing,f'FAIL: missing constraints {missing}'; assert 'create_check_constraint' in c,'FAIL: create_check_constraint not used'; print('PASS: migration 0058 content validated with 3 CHECK constraints')"
+python -c "import pathlib; f=pathlib.Path('Hb Track - Backend/db/alembic/versions/0061_comp_db_006_status_check_constraints.py'); assert f.exists(),'FAIL: migration file not found'; c=f.read_text(encoding='utf-8'); assert "revision = '0061'" in c,'FAIL: wrong revision id'; assert "down_revision = '0060'" in c or "down_revision='0060'" in c,'FAIL: wrong down_revision'; ck=['ck_competitions_status','ck_competitions_modality','ck_competition_matches_status']; missing=[k for k in ck if k not in c]; assert not missing,f'FAIL: missing constraints {missing}'; assert 'create_check_constraint' in c,'FAIL: create_check_constraint not used'; print('PASS: migration 0061 content validated with 3 CHECK constraints')"
 ```
 
 ## Evidence File (Contrato)

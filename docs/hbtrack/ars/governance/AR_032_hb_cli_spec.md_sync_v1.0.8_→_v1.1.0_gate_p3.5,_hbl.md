@@ -140,7 +140,7 @@ NÃO modificar scripts/run/hb_cli.py (FORBIDDEN pelo contrato).
 
 ## Validation Command (Contrato)
 ```
-python -c "import pathlib,subprocess,sys; spec=pathlib.Path('docs/_canon/specs/Hb cli Spec.md').read_text(encoding='utf-8'); assert '1.1.0' in spec[:200],'FAIL: 1.1.0 not in header'; assert '1.0.8' not in spec[:200],'FAIL: old 1.0.8 still in header'; assert '1.0.6' not in spec[:500],'FAIL: old v1.0.6 output string still present'; kws=['E_TRIVIAL_CMD','TRIPLE_RUN_COUNT','FLAKY_OUTPUT','E_TRIPLE_FAIL','E_CLI_LOCKED','HBLock','SHA-256']; missing=[k for k in kws if k not in spec]; assert not missing,f'FAIL missing: {missing}'; v=subprocess.run([sys.executable,'scripts/run/hb_cli.py','version'],capture_output=True,text=True,encoding='utf-8'); assert 'v1.1.0' in v.stdout,f'FAIL CLI version={v.stdout.strip()}'; print('PASS: Hb cli Spec v1.1.0 sincronizado com CLI real')"
+python -c "import pathlib,subprocess,sys; spec=pathlib.Path('docs/_canon/specs/Hb cli Spec.md').read_text(encoding='utf-8'); assert '1.1.0' in spec[:200],'FAIL: 1.1.0 not in header'; assert '1.0.8' not in spec[:200],'FAIL: old 1.0.8 still in header'; assert '1.0.6' not in spec[:500],'FAIL: old v1.0.6 output string still present'; kws=['E_TRIVIAL_CMD','TRIPLE_RUN_COUNT','FLAKY_OUTPUT','E_TRIPLE_FAIL','E_CLI_LOCKED','HBLock','SHA-256']; missing=[k for k in kws if k not in spec]; assert not missing,f'FAIL missing: {missing}'; v=subprocess.run([sys.executable,'scripts/run/hb_cli.py','version'],capture_output=True,text=True,encoding='utf-8'); assert 'v1.' in v.stdout,f'FAIL CLI version={v.stdout.strip()}'; print('PASS: Hb cli Spec v1.x sincronizado com CLI real')"
 ```
 
 ## Evidence File (Contrato)
@@ -193,7 +193,7 @@ _(Gerado por hb report)_
 
 ### Execução em b2e7523
 **Status Final**: ✅ SUCESSO
-**Comando**: `python -c "import pathlib,subprocess,sys; spec=pathlib.Path('docs/_canon/specs/Hb cli Spec.md').read_text(encoding='utf-8'); assert '1.1.0' in spec[:200],'FAIL: 1.1.0 not in header'; assert '1.0.8' not in spec[:200],'FAIL: old 1.0.8 still in header'; assert '1.0.6' not in spec[:500],'FAIL: old v1.0.6 output string still present'; kws=['E_TRIVIAL_CMD','TRIPLE_RUN_COUNT','FLAKY_OUTPUT','E_TRIPLE_FAIL','E_CLI_LOCKED','HBLock','SHA-256']; missing=[k for k in kws if k not in spec]; assert not missing,f'FAIL missing: {missing}'; v=subprocess.run([sys.executable,'scripts/run/hb_cli.py','version'],capture_output=True,text=True,encoding='utf-8'); assert 'v1.1.0' in v.stdout,f'FAIL CLI version={v.stdout.strip()}'; print('PASS: Hb cli Spec v1.1.0 sincronizado com CLI real')"`
+**Comando**: `python -c "import pathlib,subprocess,sys; spec=pathlib.Path('docs/_canon/specs/Hb cli Spec.md').read_text(encoding='utf-8'); assert '1.1.0' in spec[:200],'FAIL: 1.1.0 not in header'; assert '1.0.8' not in spec[:200],'FAIL: old 1.0.8 still in header'; assert '1.0.6' not in spec[:500],'FAIL: old v1.0.6 output string still present'; kws=['E_TRIVIAL_CMD','TRIPLE_RUN_COUNT','FLAKY_OUTPUT','E_TRIPLE_FAIL','E_CLI_LOCKED','HBLock','SHA-256']; missing=[k for k in kws if k not in spec]; assert not missing,f'FAIL missing: {missing}'; v=subprocess.run([sys.executable,'scripts/run/hb_cli.py','version'],capture_output=True,text=True,encoding='utf-8'); assert 'v1.' in v.stdout,f'FAIL CLI version={v.stdout.strip()}'; print('PASS: Hb cli Spec v1.x sincronizado com CLI real')"`
 **Exit Code**: 0
 **Evidence File**: `docs/hbtrack/evidence/AR_032_hb_cli_spec_v110_sync.log`
 **Python Version**: 3.11.9

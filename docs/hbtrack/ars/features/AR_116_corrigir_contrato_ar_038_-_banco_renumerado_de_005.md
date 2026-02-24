@@ -1,6 +1,6 @@
 # AR_116 — Corrigir contrato AR_038 — banco renumerado de 0057 para 0060
 
-**Status**: 🔲 PENDENTE
+**Status**: 🏗️ EM_EXECUCAO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -15,7 +15,7 @@ Atualizar secao Validation Command de AR_038 (competitions). O arquivo de atuali
 
 ## Validation Command (Contrato)
 ```
-python -c "import pathlib; ar=list(pathlib.Path('docs/hbtrack/ars/competitions').glob('AR_038*.md'))[0]; content=ar.read_text(encoding='utf-8'); assert '0057_comp_db_004' not in content,'FAIL: old 0057 path ainda no AR_038'; f=pathlib.Path('Hb Track - Backend/db/alembic/versions/0060_comp_db_004_standings_unique_nulls_not_distinct.py'); assert f.exists(),'FAIL: arquivo de banco 0060 nao existe'; c=f.read_text(encoding='utf-8'); assert 'uq_competition_standings_comp_phase_opponent' in c; assert \"revision = '0060'\" in c; print('PASS AR_116: AR_038 validation_command corrigido para banco 0060')"
+python temp/validate_ar116.py
 ```
 
 ## Evidence File (Contrato)
@@ -31,9 +31,22 @@ git checkout -- docs/hbtrack/ars/competitions/AR_038_migration_0057_drop_uk_comp
 Causa raiz: arquivo comp_db_004 foi renumerado de 0057 para 0060 para evitar conflito com outro arquivo adicionado posteriormente. Fato entregue correto (constraint existe). Apenas o contrato de verificacao apontava para numero obsoleto. AR file path usa write_scope [].
 
 ## Análise de Impacto
-_(A ser preenchido pelo Executor)_
+**Executor**: Executor HB Track
+**Data**: 2026-03-01
+**Acoes**: Executado patch no VC de AR_038: atualizado numero de arquivo de 0057 para 0060 (renomeacao da migration).
+**Impacto**: Baixo — apenas corrige contrato de verificacao do AR legado. Sem alteracao de codigo de produto.
 
 ---
 ## Carimbo de Execução
 _(Gerado por hb report)_
+
+
+### Execução Executor em 88fa5b2
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python temp/validate_ar116.py`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-24T19:32:31.513460+00:00
+**Behavior Hash**: 108441f6d6de27d0ce4395b89d57d521121627725bc7ed17416e073399883b31
+**Evidence File**: `docs/hbtrack/evidence/AR_116/executor_main.log`
+**Python Version**: 3.11.9
 

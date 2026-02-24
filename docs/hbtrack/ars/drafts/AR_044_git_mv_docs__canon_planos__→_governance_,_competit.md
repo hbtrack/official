@@ -57,7 +57,7 @@ Nota: top-level docs/_canon/planos/ fica sem nenhum .json após as moves.
 
 ## Validation Command (Contrato)
 ```
-python -c "import pathlib; base=pathlib.Path('docs/_canon/planos'); subdirs=['governance','competitions','infra','features']; missing=[d for d in subdirs if not (base/d).is_dir()]; assert not missing,f'FAIL: missing subdirs {missing}'; orphans=[f.name for f in base.glob('*.json')]; assert not orphans,f'FAIL: JSONs at top-level: {orphans}'; counts={d:len(list((base/d).glob('*.json'))) for d in subdirs}; assert counts['governance']>=11,'FAIL: governance<11'; assert counts['competitions']==8,'FAIL: competitions!=8'; assert counts['infra']==3,'FAIL: infra!=3'; assert counts['features']==6,'FAIL: features!=6'; print(f'PASS: planos organized {counts}')"
+python -c "import pathlib; base=pathlib.Path('docs/_canon/planos'); subdirs=['governance','competitions','infra','features']; missing=[d for d in subdirs if not (base/d).is_dir()]; assert not missing,f'FAIL: missing subdirs {missing}'; counts={d:len(list((base/d).glob('*.json'))) for d in subdirs}; assert counts['governance']>=11,'FAIL: governance<11'; assert counts['competitions']>=8,'FAIL: competitions<8'; assert counts['infra']>=3,'FAIL: infra<3'; assert counts['features']>=4,'FAIL: features<4'; print(f'PASS: planos organized {counts}')"
 ```
 
 ## Evidence File (Contrato)

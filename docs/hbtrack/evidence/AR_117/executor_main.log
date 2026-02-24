@@ -1,0 +1,18 @@
+AR_ID: 117
+Command: python temp/validate_ar117.py
+Exit Code: 0
+Timestamp UTC: 2026-02-24T19:32:32.687614+00:00
+Behavior Hash (exit+stdout+stderr): 0cf3fc3e867029592490661557bef4f967e8caedaf6304becb375c7f33bb485f
+Git HEAD: 88fa5b2976586de8b60817ca42ae3637a7498ea2
+Python Version: 3.11.9
+Protocol Version: 1.3.0
+Workspace Clean: False
+Workspace Status: unstaged_modified=16
+Governed Checksums (sha256): {}
+
+--- STDOUT ---
+PASS AR_117: AR_040 validation_command corrigido para banco 0061
+
+
+--- STDERR ---
+

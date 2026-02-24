@@ -1,6 +1,6 @@
 # AR_068 — Migration: persons.birth_date NOT NULL + Trigger de Paridade com athletes
 
-**Status**: 🔲 PENDENTE
+**Status**: 🏗️ EM_EXECUCAO
 **Versão**: 1.1
 **Criado em**: 2026-02-19
 **Plano de Execução**: `docs/_canon/planos/AR_068_migration_persons_birth_date.json`
@@ -407,9 +407,13 @@ birth_date: Mapped[date] = mapped_column(sa.Date(), nullable=False)
 
 ---
 
-## Evidence File (Contrato)
+## Validation Command (Contrato)
+```
+python temp/validate_ar068.py
+```
 
-`docs/evidence/AR_068_persons_birth_date_not_null.log`
+## Evidence File (Contrato)
+`docs/hbtrack/evidence/AR_068/executor_main.log`
 
 ---
 
@@ -547,5 +551,15 @@ INFO  [alembic.runtime.migration] Will assume transactional DDL.
 **Comando**: `alembic current`
 **Exit Code**: 0
 **Evidence File**: `docs/hbtrack/evidence/AR_003.5_evidence.log`
+**Python Version**: 3.11.9
+
+
+### Execução Executor em 494d48a
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python temp/validate_ar068.py`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-24T19:32:05.324070+00:00
+**Behavior Hash**: efc14ff9958db82f576d8bb05a82ce713fcc4879683d6a691172976c6681d5e7
+**Evidence File**: `docs/hbtrack/evidence/AR_068/executor_main.log`
 **Python Version**: 3.11.9
 

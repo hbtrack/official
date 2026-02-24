@@ -1,0 +1,18 @@
+AR_ID: 119
+Command: python temp/validate_ar119.py
+Exit Code: 0
+Timestamp UTC: 2026-02-24T19:32:35.048916+00:00
+Behavior Hash (exit+stdout+stderr): 6a111f8baf122c6d20c077e2fcdd574c3de13df9ef833452152494d1f9c30c49
+Git HEAD: 88fa5b2976586de8b60817ca42ae3637a7498ea2
+Python Version: 3.11.9
+Protocol Version: 1.3.0
+Workspace Clean: False
+Workspace Status: unstaged_modified=16
+Governed Checksums (sha256): {}
+
+--- STDOUT ---
+PASS AR_119: AR_045 validation_command corrigido, AR counts OK {'governance': 32, 'competitions': 11, 'features': 30}
+
+
+--- STDERR ---
+

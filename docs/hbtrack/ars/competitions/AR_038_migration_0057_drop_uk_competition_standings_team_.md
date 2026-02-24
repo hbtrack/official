@@ -39,7 +39,7 @@ NAO modificar nenhum outro arquivo.
 
 ## Validation Command (Contrato)
 ```
-python -c "import pathlib; f=pathlib.Path('Hb Track - Backend/db/alembic/versions/0057_comp_db_004_standings_unique_nulls_not_distinct.py'); assert f.exists(),'FAIL: migration file not found'; c=f.read_text(encoding='utf-8'); assert \"revision = '0057'\" in c,'FAIL: wrong revision id'; assert 'uq_competition_standings_comp_phase_opponent' in c,'FAIL: new constraint name missing'; assert 'uk_competition_standings_team_phase' in c,'FAIL: old constraint name missing (needed for drop and downgrade)'; assert 'nulls_not_distinct' in c.lower(),'FAIL: NULLS NOT DISTINCT missing'; assert \"down_revision = '0056'\" in c or \"down_revision='0056'\" in c,'FAIL: wrong down_revision'; print('PASS: migration 0057 content validated')"
+python -c "import pathlib; f=pathlib.Path('Hb Track - Backend/db/alembic/versions/0060_comp_db_004_standings_unique_nulls_not_distinct.py'); assert f.exists(),'FAIL: migration file not found'; c=f.read_text(encoding='utf-8'); assert "revision = '0060'" in c,'FAIL: wrong revision id'; assert 'uq_competition_standings_comp_phase_opponent' in c,'FAIL: new constraint name missing'; assert 'uk_competition_standings_team_phase' in c,'FAIL: old constraint name missing (needed for drop and downgrade)'; assert 'nulls_not_distinct' in c.lower(),'FAIL: NULLS NOT DISTINCT missing'; assert "down_revision = '0059'" in c or "down_revision='0059'" in c,'FAIL: wrong down_revision'; print('PASS: migration 0060 content validated')"
 ```
 
 ## Evidence File (Contrato)

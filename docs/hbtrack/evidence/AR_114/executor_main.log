@@ -1,0 +1,18 @@
+AR_ID: 114
+Command: python temp/validate_ar114.py
+Exit Code: 0
+Timestamp UTC: 2026-02-24T19:32:18.685067+00:00
+Behavior Hash (exit+stdout+stderr): ef39b9fa766255a1b9ee81a33eb5afe13fb2f5ec5ace350e3dc304a04930074e
+Git HEAD: 88fa5b2976586de8b60817ca42ae3637a7498ea2
+Python Version: 3.11.9
+Protocol Version: 1.3.0
+Workspace Clean: False
+Workspace Status: unstaged_modified=16
+Governed Checksums (sha256): {}
+
+--- STDOUT ---
+PASS AR_114: AR_034 validation_command corrigido, gate confirmado funcional
+
+
+--- STDERR ---
+
