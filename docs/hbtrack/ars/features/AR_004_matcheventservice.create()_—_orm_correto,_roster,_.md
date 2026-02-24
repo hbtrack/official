@@ -1,6 +1,6 @@
 # AR_004 — MatchEventService.create() — ORM correto, roster, is_shot e link goalkeeper_save
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.0.5
 **Plano Fonte**: `docs/_canon/planos/matchservice.json`
 
@@ -104,3 +104,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_004_3d84621/result.json`
+
+### Selo Humano em a04ffab
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-24T18:44:09.550112+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_004_3d84621/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_004/executor_main.log`

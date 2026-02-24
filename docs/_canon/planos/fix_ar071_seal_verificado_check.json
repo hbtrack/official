@@ -1,0 +1,24 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "Fix cirurgico em cmd_seal (hb_cli.py linha 1513): a verificacao de idempotencia 'VERIFICADO' usa busca em todo ar_content, gerando falso-positivo quando o texto do AR menciona '✅ VERIFICADO' em sua descricao (e.g. AR_071 descreve que hb_autotest executa git commit apos hb seal marcar VERIFICADO). Fix: extrair apenas o campo **Status**: com regex e checar apenas esse valor — mesmo padrao ja usado na correcao de AR_120 (linha 1524). AR_071 tem Testador SUCESSO (hash 659b3bfba6c3b88b) mas nao pode ser selada por este falso-positivo.",
+  "assumptions": [
+    "hb_cli.py esta em scripts/run/hb_cli.py",
+    "modulo re ja esta importado em hb_cli.py",
+    "A linha exata a substituir e: if \"✅ VERIFICADO\" in ar_content: (linha ~1513 em cmd_seal)",
+    "AR_071 possui Testador SUCESSO, evidence canonica e TESTADOR_REPORT staged",
+    "A correcao nao altera nenhuma outra logica de cmd_seal"
+  ],
+  "tasks": [
+    {
+      "id": "122",
+      "title": "Fix cmd_seal — idempotencia VERIFICADO por campo Status",
+      "description": "Corrigir falso-positivo de idempotencia em cmd_seal. O guard atual verifica presenca de '✅ VERIFICADO' em todo ar_content, gerando falso-positivo quando o AR menciona essa string em sua descricao. SUBSTITUICAO CIRURGICA na funcao cmd_seal em hb_cli.py, bloco de idempotencia: ANTES (linha ~1513):\n  if \"✅ VERIFICADO\" in ar_content:\n    print(f\"✅ AR_{ar_id} ja esta VERIFICADO (idempotente).\")\n    sys.exit(0)\nDEPOIS:\n  # V11: Verificar apenas o campo **Status**: para evitar falso-positivo de idempotencia\n  _status_idem_match = re.search(r'^\\*\\*Status\\*\\*:\\s*(.+)$', ar_content, re.MULTILINE)\n  _status_idem_value = _status_idem_match.group(1).strip() if _status_idem_match else ''\n  if '✅ VERIFICADO' in _status_idem_value:\n    print(f\"✅ AR_{ar_id} ja esta VERIFICADO (idempotente).\")\n    sys.exit(0)\nNAO modificar nenhuma outra linha da funcao. Nomes de variaveis distintos dos de AR_120 (_status_idem_match vs _status_match) para evitar colisao de escopo.",
+      "criteria": "- hb_cli.py NAO contem 'if \"✅ VERIFICADO\" in ar_content' no bloco de idempotencia\n- hb_cli.py contem '_status_idem_match = re.search' no contexto de cmd_seal\n- hb_cli.py contem '_status_idem_value' no contexto de cmd_seal\n- Executar hb seal 071 retorna exit 0 (AR_071 selada como VERIFICADO)\n- Executar hb seal para AR realmente VERIFICADA ainda retorna idempotente (exit 0)\n- Nenhuma outra funcao de hb_cli.py modificada",
+      "validation_command": "python -c \"import pathlib, subprocess, sys; content = pathlib.Path('scripts/run/hb_cli.py').read_text(encoding='utf-8'); assert 'if \\\"✅ VERIFICADO\\\" in ar_content' not in content, 'FAIL: ainda usa busca em ar_content inteiro para idempotencia'; assert '_status_idem_match = re.search' in content, 'FAIL: regex por campo Status (idem) nao encontrada'; assert '_status_idem_value' in content, 'FAIL: _status_idem_value nao encontrado'; r = subprocess.run([sys.executable, 'scripts/run/hb_cli.py', 'seal', '071'], capture_output=True, text=True, encoding='utf-8'); assert r.returncode == 0, f'FAIL: hb seal 071 retornou {r.returncode}: {r.stderr.strip()}'; assert 'VERIFICADO' in r.stdout, f'FAIL: output={r.stdout}'; print('PASS AR_122: cmd_seal idempotencia fix aplicado, AR_071 selada com sucesso')\"",
+      "write_scope": ["scripts/run/hb_cli.py"],
+      "rollback_plan": "git checkout -- scripts/run/hb_cli.py",
+      "notes": "Fix de 4 linhas. Mesmo padrao do AR_120, mas para verificacao de idempotencia (linha 1513 vs 1524). Usar nomes de variaveis distintos (_status_idem_*) para evitar colisao com variaveis do fix de AR_120. AR_071 tem Testador SUCESSO — unico bloqueio era falso-positivo de idempotencia. Nota: se AR_120 ja tiver sido aplicada antes deste fix, o hb_cli.py tera mudado — o Executor deve aplicar este patch sobre a versao ja corrigida pelo AR_120."
+    }
+  ]
+}
