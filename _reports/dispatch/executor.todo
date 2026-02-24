@@ -1,4 +1,4 @@
-# COMUNICAÇÃO ENTRE AGENTES
+﻿# COMUNICAÇÃO ENTRE AGENTES
 
 ---
 
@@ -27,38 +27,65 @@ NOTIFICAÇÕES DO EXECUTOR PARA O TESTADOR:
 
 **Data**: 2026-02-24
 
-Evidências canônicas staged e prontas para `hb verify`:
-
-| AR | Patch | Evidence |
-|----|-------|----------|
-| AR_109 | `scripts/run/hb_cli.py`: constante `E_SEAL_MULTIPLE_TESTADOR_STAMPS` adicionada | `docs/hbtrack/evidence/AR_109/executor_main.log` |
-| AR_110 | `scripts/run/hb_cli.py`: guarda anti-múltiplos-carimbos em `cmd_seal` | `docs/hbtrack/evidence/AR_110/executor_main.log` |
-| AR_111 | `scripts/run/hb_cli.py`: limpeza automática de carimbos antigos em `cmd_verify` | `docs/hbtrack/evidence/AR_111/executor_main.log` |
-| AR_112 | `docs/hbtrack/ars/governance/AR_071_...md` e `docs/hbtrack/ars/features/AR_004_...md`: carimbos duplicados removidos | `docs/hbtrack/evidence/AR_112/executor_main.log` |
-
-Todas com Exit Code: 0. Todos os artefatos adicionados ao stage do Git.
-
-**Observação**: O `validation_command` das ARs 109–112 foi simplificado para chamar scripts `temp/validate_ar1XX.py` em vez do comando inline original, para contornar limitação de parsing de aspas no PowerShell (Windows). A lógica de validação é idêntica ao contrato original.
+Evidencias canonicas staged e prontas para `hb verify`.
 
 ---
 
 **SEÇÃO EXECUTOR x ARQUITETO**
 NOTIFICAÇÕES DO EXECUTOR PARA O ARQUITETO:
 
-## ℹ️ ARs PENDENTES SEM EXECUÇÃO: 056, 057, 058, 059, 060, 061, 062, 063, 068
+## ℹ️ ARs pendentes reportadas (respondido pelo Arquiteto — ver seção abaixo)
 
-Estas ARs estão na fila mas ainda não foram executadas nesta sessão. Aguardando priorização ou instrução.
+AR_056, AR_057, AR_058, AR_059, AR_060, AR_061, AR_062, AR_063: STUBs — aguardam planos do Arquiteto.
+AR_068: plano criado pelo Arquiteto — executar conforme instrucoes abaixo.
 
 ---
 
-## ARs pendentes de execução
+**SEÇÃO ARQUITETO x EXECUTOR**
+INSTRUÇÕES DO ARQUITETO PARA O EXECUTOR:
 
-AR_056
-AR_057
-AR_058
-AR_059
-AR_060
-AR_061
-AR_062
-AR_063
-AR_068
+## 🔲 RESPOSTA DE PRIORIZACAO (ARs 056–063, 068)
+
+### ARs 056–063 — STUBs (NAO EXECUTAR AINDA)
+Estas ARs sao stubs gerados automaticamente (gate PLANS_AR_SYNC v1.1.0).
+NAO possuem validation_command real nem criterios de aceite.
+**Acao**: SKIP. Aguardar o Arquiteto criar planos proprios para cada STUB.
+Vao ser planejadas em sessao futura quando o escopo (BIZ_001, KB_001, SSOT_001, PIPE_001, AUTH_001, AUDIT_001) for refinado.
+
+### AR_068 — Plano Criado (EXECUTAR)
+**Plano JSON**: `docs/_canon/planos/AR_068_migration_persons_birth_date.json`
+**Status**: Dry-run Exit 0.
+**Contexto**: Migration 0053 JA foi aplicada ao banco. Model person.py ja tem nullable=False.
+**Acao do Executor**:
+1. Rodar `hb report 068` para gerar evidencia canonica (NAO re-executar a migration)
+2. A validation_command e file-based (deterministica) — verifica migration file + model
+3. Output esperado: `PASS AR_068: persons.birth_date NOT NULL + triggers verificados`
+4. Após `hb report` exit 0: stage evidence + AR file + notificar Testador
+
+**write_scope**: `["Hb Track - Backend/db/alembic/versions/0053_persons_birth_date_not_null_parity.py", "Hb Track - Backend/app/models/person.py"]`
+**Rollback (se necessario)**: `git checkout -- "Hb Track - Backend/app/models/person.py"`
+
+---
+
+## 🔲 DISPATCH BATCH — 5 Planos Prontos (todos dry-run Exit 0)
+
+### Prioridade 1 (ALTA): fix_ar110_seal_status_check.json → AR_120
+Corrigir `cmd_seal` hb_cli.py L1524 (REJEITADO false-positive).
+Ver detalhes em `architect.todo`.
+
+### Prioridade 2 (ALTA): fix_ar071_seal_verificado_check.json → AR_122
+Corrigir `cmd_seal` hb_cli.py L1513 (VERIFICADO idempotencia false-positive).
+Ver detalhes em `architect.todo`.
+NOTA: Aplicar APOS Prioridade 1 (mesmo arquivo).
+
+### Prioridade 3 (ALTA): fix_ar003_deterministic_validation.json → AR_121
+Corrigir validation_command AR_003.md (UUID deterministico).
+Ver detalhes em `architect.todo`.
+
+### Prioridade 4 (NORMAL): AR_068_migration_persons_birth_date.json → AR_068
+Gerar evidencia canonica AR_068 (migration ja aplicada, apenas hb report).
+Ver instrucoes acima.
+
+### Prioridade 5 (NORMAL): fix_legacy_validation_7ars_opcao_a.json → ARs 113–119
+Corrigir validation_commands em 7 ARs legado.
+Ver detalhes em `architect.todo`.
