@@ -1,6 +1,6 @@
 # AR_117 — Corrigir contrato AR_040 — banco renumerado de 0058 para 0061
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -56,3 +56,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_117_3974fc8/result.json`
+
+### Selo Humano em fe8ca5a
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-24T19:37:48.285693+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_117_3974fc8/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_117/executor_main.log`

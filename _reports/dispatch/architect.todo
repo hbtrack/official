@@ -42,6 +42,24 @@ AR_121 executada e verificada (commit bdb43aa). AR_121 selada ✅ VERIFICADO (co
 
 ---
 
+## ✅ RESOLVIDO: AR_068 + AR_113–119 — Verificadas e Seladas
+
+Executor completou batch (commit c98470c + 3974fc8). Testador verificou (triple-run OK, hash consistente 3x).
+Arquiteto selou todas como ✅ VERIFICADO.
+
+| AR | Hash Verify | Status |
+|---|---|---|
+| AR_068 | efc14ff9958db82f | ✅ VERIFICADO |
+| AR_113 | 2a8d8696a6fd002c | ✅ VERIFICADO |
+| AR_114 | ef39b9fa766255a1 | ✅ VERIFICADO |
+| AR_115 | 4ab827461c6b5618 | ✅ VERIFICADO |
+| AR_116 | 108441f6d6de27d0 | ✅ VERIFICADO |
+| AR_117 | 0cf3fc3e86702959 | ✅ VERIFICADO |
+| AR_118 | c9cf9f28caa60fb1 | ✅ VERIFICADO |
+| AR_119 | 6a111f8baf122c6d | ✅ VERIFICADO |
+
+---
+
 ## 🔴 NOVO REJEITADO: AR_003 — AH_DIVERGENCE (Windows cmd-safe)
 
 ### Causa raiz identificada
@@ -100,10 +118,10 @@ SOLICITAÇÕES DO ARQUITETO PARA O EXECUTOR:
 | Prioridade | AR | Status |
 |---|---|---|
 | 🔴 URGENTE | AR_003 (via AR_123) | 🔲 PENDENTE — plano fix_ar003_validation_cmd_windows_shell.json |
-| NORMAL | AR_068 | 🔲 PENDENTE — plano AR_068_migration_persons_birth_date.json |
-| NORMAL | AR_113–119 | 🔲 PENDENTE — plano fix_legacy_validation_7ars_opcao_a.json |
+| ✅ | AR_068 | ✅ VERIFICADO |
+| ✅ | AR_113–119 | ✅ VERIFICADO (todos 7) |
 
-**ARs já concluídas (NÃO re-executar):** AR_120, AR_121, AR_122 ✅ VERIFICADO; AR_110, AR_071 ✅ VERIFICADO (colateral).
+**ARs já concluídas (NÃO re-executar):** AR_120, AR_121, AR_122, AR_068, AR_113–119 ✅ VERIFICADO; AR_110, AR_071 ✅ VERIFICADO (colateral).
 
 **ARs 056–063 (STUBs)**: NAO executar — aguardar planos próprios do Arquiteto.
 
@@ -125,10 +143,6 @@ Após Executor completar AR_123, fazer `hb verify 003`.
 | AR_004, 109, 111, 112 | ✅ VERIFICADO |
 | AR_110, AR_071 | ✅ VERIFICADO (colateral) |
 | AR_120, AR_121, AR_122 | ✅ VERIFICADO |
+| AR_068, AR_113–119 | ✅ VERIFICADO |
 | AR_003 | 🔴 REJEITADO → AR_123 plano criado |
-| AR_068 | 🔲 PENDENTE |
-| AR_113–119 | 🔲 PENDENTE |
-
-| AR_068 | 🔲 aguardando hb report (plano criado) |
-| AR_113–119 | 🔲 aguardando Executor |
-| AR_056–063 | 💤 STUBs sem plano — proxima sessao |
+| AR_056–063 | 💤 STUBs sem plano — próxima sessão |

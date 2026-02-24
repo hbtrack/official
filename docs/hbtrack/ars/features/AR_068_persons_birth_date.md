@@ -1,6 +1,6 @@
 # AR_068 — Migration: persons.birth_date NOT NULL + Trigger de Paridade com athletes
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão**: 1.1
 **Criado em**: 2026-02-19
 **Plano de Execução**: `docs/_canon/planos/AR_068_migration_persons_birth_date.json`
@@ -564,3 +564,10 @@ INFO  [alembic.runtime.migration] Will assume transactional DDL.
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_068_c98470c/result.json`
+
+### Selo Humano em fe8ca5a
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-24T19:37:41.835865+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_068_c98470c/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_068/executor_main.log`
