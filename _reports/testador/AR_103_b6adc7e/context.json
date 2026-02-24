@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_103-b6adc7e",
+  "timestamp_utc": "2026-02-24T20:23:40.162450+00:00",
+  "git": {
+    "commit": "b6adc7e9e8a3372d0f78d7ebbf388cff6c752d7f"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "103",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_103_resgate_de_drafts_e_invariantes_wellness.md"
+}
