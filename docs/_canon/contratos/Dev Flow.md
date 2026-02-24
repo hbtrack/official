@@ -7,7 +7,7 @@ NORMS: MUST / MUST NOT / SHOULD / MAY (BCP14)
 
 ## 1) Versão e Governança (imutável sem AR de governança)
 
-1.1) **PROTOCOL_VERSION = v1.2.0**
+1.1) **PROTOCOL_VERSION = v1.3.0**
 
 1.2) `scripts/run/hb_cli.py` MUST reportar **PROTOCOL_VERSION** via:
 
@@ -57,6 +57,7 @@ NORMS: MUST / MUST NOT / SHOULD / MAY (BCP14)
 
 * CLI oficial: `scripts/run/hb_cli.py`
 * Watcher + Dispatcher: `scripts/run/hb_watch.py` v1.2.2 (dashboard + dispatch context JSON em `_reports/dispatch/<modo>_context.json`)
+* Daemon Plan Watcher: `scripts/run/hb_plan_watcher.py` (auto-materialize daemon — monitora `docs/_canon/planos/*.json`, claim atômico, dry-run obrigatório, staging apenas diff)
 * Daemon Testador: `scripts/run/hb_autotest.py` (Testador autônomo — detecta evidence staged → `hb verify` → `hb seal`)
 * Git hook: `scripts/git-hooks/pre-commit` (executável Python)
 * Política: scripts operacionais MUST ser Python; `.sh` e `.ps1` são proibidos.
@@ -337,7 +338,29 @@ R-AH-5) ERROR_INFRA no Testador ⇒ ⏸️ BLOQUEADO_INFRA (não REJEITADO).
 
 Se existir diretório “Hb Track - Frontend”, ele é path real do repo.
 Renomear diretório é mudança de governança/infra: somente por AR dedicada + evidência de migração controlada.
+### 10.5) AUTO-COMMIT (OPCIONAL)
 
+Agente `hb_autotest.py` suporta auto-commit opt-in após `hb seal` bem-sucedido:
+
+* **Opt-in explícito**: variável de ambiente `HB_AUTO_COMMIT=1` (default: OFF)
+* **Allowlist estrita por AR**: apenas arquivos autorizados podem ser commitados:
+  * `docs/hbtrack/evidence/AR_<id>/`
+  * `docs/hbtrack/ars/`
+  * `_reports/testador/AR_<id>/`
+  * `docs/hbtrack/_INDEX.md`
+* **Abort on violation**: se qualquer staged file estiver FORA da allowlist, commit é abortado e erro detalhado é logado
+* **Staged-only**: NUNCA usa `git add .` — commit apenas arquivos previamente staged
+* **Mensagem padronizada**:
+  ```
+  feat(ar_<id>): <title> [VERIFICADO]
+  
+  Evidence: docs/hbtrack/evidence/AR_<id>/executor_main.log
+  Report: _reports/testador/AR_<id>/TESTADOR_REPORT.md
+  Protocol: v1.3.0
+  Agent: hb_autotest v1.0.0 (auto-commit)
+  ```
+* **Função**: `auto_commit_if_enabled(repo_root, ar_id, title, dry_run)`
+* **Segurança**: validação de allowlist acontece ANTES do commit — nenhum arquivo não-autorizado pode entrar no commit por erro
 ## 11) Fluxo Enterprise de 3 Agentes (binding)
 
 Contratos canônicos por agente:
@@ -346,7 +369,7 @@ Contratos canônicos por agente:
 * Executor: `docs/_canon/contratos/Executor Contract.md`
 * Testador: `docs/_canon/contratos/Testador Contract.md`
 
-Todos esses contratos MUST declarar compatibilidade com **PROTOCOL_VERSION v1.2.0**.
+Todos esses contratos MUST declarar compatibilidade com **PROTOCOL_VERSION v1.3.0**.
 
 ### Passo Final — SELO (hb_autotest automático ou Humano)
 Após `hb verify` resultar em ✅ SUCESSO:

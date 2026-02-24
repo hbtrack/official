@@ -1,0 +1,40 @@
+{
+  "ar_id": "072",
+  "validation_command": "python -c \"import pathlib; flow=pathlib.Path('docs/_canon/contratos/Dev Flow.md').read_text(encoding='utf-8'); assert 'hb_plan_watcher' in flow, 'hb_plan_watcher ausente no Dev Flow'; assert 'auto-commit' in flow.lower() or 'AUTO-COMMIT' in flow, 'auto-commit policy ausente no Dev Flow'; assert 'v1.3.0' in flow, 'v1.3.0 ausente no Dev Flow'; cli=pathlib.Path('scripts/run/hb_cli.py').read_text(encoding='utf-8'); assert 'HB_PROTOCOL_VERSION = \\\"1.3.0\\\"' in cli, 'HB_PROTOCOL_VERSION não bumpado para 1.3.0'; print('✅ Governança v1.3.0 validada: Dev Flow + hb_cli.py')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "019d7769727c7e7fd97ab5b70dffdb2bccc4f7a93c2a4219454bea1a3a984b3d",
+      "hash": "019d7769727c7e7f",
+      "stdout_len": 51,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "019d7769727c7e7fd97ab5b70dffdb2bccc4f7a93c2a4219454bea1a3a984b3d",
+      "hash": "019d7769727c7e7f",
+      "stdout_len": 51,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "019d7769727c7e7fd97ab5b70dffdb2bccc4f7a93c2a4219454bea1a3a984b3d",
+      "hash": "019d7769727c7e7f",
+      "stdout_len": 51,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

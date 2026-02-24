@@ -1,0 +1,42 @@
+{
+  "ar_id": "070",
+  "validation_command": "python -c \"import pathlib; p=pathlib.Path('scripts/run/hb_plan_watcher.py'); assert p.exists(), 'hb_plan_watcher.py ausente'; src=p.read_text(encoding='utf-8'); assert 'CLAIM_' in src, 'Claim atômico ausente'; assert '--dry-run' in src, 'Dry-run flag ausente'; assert 'get_new_plans' in src, 'Detecção de novos plans ausente'; assert 'run_hb_plan' in src, 'Chamada hb plan ausente'; print('✅ hb_plan_watcher validado: claim + dry-run + diff staging')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 1,
+      "hash_full": "6377cc24aac6aa2f50c000dbb7ae9d0d3f602493e91ab59ad7cdc89ff59feccc",
+      "hash": "6377cc24aac6aa2f",
+      "stdout_len": 0,
+      "stderr_len": 380
+    },
+    {
+      "run": 2,
+      "exit_code": 1,
+      "hash_full": "6377cc24aac6aa2f50c000dbb7ae9d0d3f602493e91ab59ad7cdc89ff59feccc",
+      "hash": "6377cc24aac6aa2f",
+      "stdout_len": 0,
+      "stderr_len": 380
+    },
+    {
+      "run": 3,
+      "exit_code": 1,
+      "hash_full": "6377cc24aac6aa2f50c000dbb7ae9d0d3f602493e91ab59ad7cdc89ff59feccc",
+      "hash": "6377cc24aac6aa2f",
+      "stdout_len": 0,
+      "stderr_len": 380
+    }
+  ],
+  "triple_consistency": "TRIPLE_FAIL",
+  "testador_exit_code": 1,
+  "executor_exit_code": 0,
+  "consistency": "AH_DIVERGENCE",
+  "status": "REJEITADO",
+  "ah_flags": [
+    "AH_DIVERGENCE"
+  ],
+  "evidence_pack_complete": true,
+  "rejection_reason": "Executor reported exit 0 but Testador got exit 1",
+  "workspace_clean": true
+}

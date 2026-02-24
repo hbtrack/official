@@ -1,0 +1,18 @@
+AR_ID: 070
+Command: python -c "import pathlib; p=pathlib.Path('scripts/run/hb_plan_watcher.py'); assert p.exists(), 'hb_plan_watcher.py ausente'; src=p.read_text(encoding='utf-8'); assert 'CLAIM_' in src, 'Claim atômico ausente'; assert '--dry-run' in src, 'Dry-run flag ausente'; assert 'get_new_plans' in src, 'Detecção de novos plans ausente'; assert 'run_hb_plan' in src, 'Chamada hb plan ausente'; print('✅ hb_plan_watcher validado: claim + dry-run + diff staging')"
+Exit Code: 0
+Timestamp UTC: 2026-02-24T04:35:06.204985+00:00
+Behavior Hash (exit+stdout+stderr): fa579aa5a7d33a95129db199c927628077db84528096a65567e0bab5147f82ff
+Git HEAD: 457d09567b7504a284d020eb0e85fac3e208ca0f
+Python Version: 3.11.9
+Protocol Version: 1.2.0
+Workspace Clean: False
+Workspace Status: unstaged_modified=2
+Governed Checksums (sha256): {}
+
+--- STDOUT ---
+✅ hb_plan_watcher validado: claim + dry-run + diff staging
+
+
+--- STDERR ---
+

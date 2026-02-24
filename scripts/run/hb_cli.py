@@ -46,7 +46,7 @@ if sys.platform == "win32":
     sys.stdout.reconfigure(encoding='utf-8')
 
 # ========== CONFIGURAÇÃO (CANON) ==========
-HB_PROTOCOL_VERSION = "1.2.0"
+HB_PROTOCOL_VERSION = "1.3.0"
 
 # Paths canônicos (relativos à raiz do repo)
 PLANS_DIR = "docs/_canon/planos"

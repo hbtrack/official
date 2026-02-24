@@ -522,6 +522,8 @@ EVIDENCE_PACK:
 - AR_053 — Executor: Output não-determinístico: hashes divergem nos 3 runs (exit 0 em todos, mas stdout_hash diferente)
 
 ### 📥 Backlog
+- AR_071 — Arquiteto: Executor reported exit 0 but Testador got exit 1
+- AR_070 — Arquiteto: Executor reported exit 0 but Testador got exit 1
 - AR_005 — Arquiteto: Output não-determinístico: behavior_hash diverge nos 3 runs (exit 0 em todos, mas hash diferente)
 - AR_004 — Arquiteto: Output não-determinístico: behavior_hash diverge nos 3 runs (exit 0 em todos, mas hash diferente)
 - AR_067
