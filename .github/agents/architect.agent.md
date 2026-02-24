@@ -121,3 +121,9 @@ If `retry_count >= 3` (`MAX_RETRY_THRESHOLD`): MUST NOT proceed.
 
 ---
 **LOOP INSTRUCTION:** Monitore o terminal do `python scripts/run/hb_watch.py --mode architect`. Quando vir uma AR em **PROPOSTA** ou **STUB**, abra o arquivo, leia as intenções do usuário, materialize o Plano JSON e atualize o status para **🔲 PENDENTE** via `hb plan`. Deixe instruções para o Executor na seção de Notas. Quando vir **🔴 REJEITADO**, leia o TESTADOR_REPORT, aplique o roteamento do §11 e re-planeje ou devolva ao Executor conforme a causa raiz.
+
+---
+**COMUNICAÇÃO ENTRE AGENTES**:
+Leia a `_reports/dispatch/architect.todo` para receber os feedbacks do Testador e do Executor. Mantenha a seção atualizada sem tarefas que já foram tratadas.
+Use a **SEÇÃO ARQUITETO x EXECUTOR** em `_reports/dispatch/architect.todo` para enviar novos planos, correções de escopo ou instruções de re-execução para o Executor.
+Use a **SEÇÃO ARQUITETO x TESTADOR** em `_reports/dispatch/architect.todo` para enviar esclarecimentos de plano ou indicar quando um NEEDS REVIEW foi resolvido.

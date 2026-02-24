@@ -104,3 +104,9 @@ Maximum correction cycles: 3. After that, escalate.
 
 Após sucesso, **MUST** faça `git add` do evidence e artefatos relacionados (E6). 
 O status muda automaticamente para 🏗️ EM_EXECUCAO — o `hb_autotest.py` ou Testador assume a partir daí.
+
+---
+**COMUNICAÇÃO ENTRE AGENTES**:
+Leia a `_reports/dispatch/executor.todo` para receber as instruções do Arquiteto e feedbacks do Testador. Mantenha a seção atualizada sem tarefas que já foram tratadas.
+Use a **SEÇÃO EXECUTOR x TESTADOR** em `_reports/dispatch/executor.todo` para notificar o Testador quando um novo evidence canônico estiver staged e pronto para verificação.
+Use a **SEÇÃO EXECUTOR x ARQUITETO** em `_reports/dispatch/executor.todo` para reportar bloqueios, ambiguidades no plano ou solicitar revisão do Arquiteto.

@@ -121,3 +121,9 @@ Manual mode (Claude Code session with Testador role) is the fallback only when h
 
 ---
 **LOOP INSTRUCTION:** O modo canônico é `python scripts/run/hb_autotest.py` — ele detecta automaticamente ARs prontas e executa verify + seal sem intervenção. Em modo manual: rode `python scripts/run/hb_watch.py --mode testador` para ver o contexto. Quando vir 🏗️ EM_EXECUCAO com evidence staged, execute apenas `python scripts/run/hb_cli.py verify <id>`. NUNCA use `git add .` — após verify, faça `git add` apenas dos artefatos do Testador (`_reports/testador/AR_<id>_*/`). Se SUCESSO, o humano (ou hb_autotest) executa `hb seal`. Se REJEITADO, aplique o roteamento do §10.
+
+---
+**COMUNICAÇÃO ENTRE AGENTES**:
+Leia a `_reports/dispatch/testador.todo` para receber as instruções e feedbacks do Executor e do Arquiteto. Mantenha a seção atualizada sem tarefas que já foram tratadas.
+Use a **SEÇÃO TESTADOR x ARQUITETO** em `_reports/dispatch/testador.todo` para enviar dúvidas, bloqueios ou solicitações para o Arquiteto.
+Use a **SEÇÃO TESTADOR X EXECUTOR** em `_reports/dispatch/testador.todo` para enviar feedback de validação e tarefas de correção para o Executor.
