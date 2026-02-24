@@ -90,5 +90,12 @@
 | AR_110 | Adicionar guarda anti-múltiplos-carimbos em cmd_seal (ant... | ✅ SUCESSO | docs/hbtrack/evidence/AR_110/executor_main.log |
 | AR_111 | Adicionar limpeza automática de carimbos antigos em cmd_v... | ✅ SUCESSO | docs/hbtrack/evidence/AR_111/executor_main.log |
 | AR_112 | Limpar manualmente carimbos duplicados de AR_071 e AR_004 | ✅ SUCESSO | — |
+| AR_113 | Corrigir contrato AR_032 — versao protocolo v1.1.0 obsoleta | 🔲 PENDENTE | docs/hbtrack/evidence/AR_113/executor_main.log |
+| AR_114 | Corrigir contrato AR_034 — path de evidencia pre-canonical | 🔲 PENDENTE | docs/hbtrack/evidence/AR_114/executor_main.log |
+| AR_115 | Corrigir contrato AR_035 — INDEX path e status PENDENTE v... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_115/executor_main.log |
+| AR_116 | Corrigir contrato AR_038 — banco renumerado de 0057 para ... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_116/executor_main.log |
+| AR_117 | Corrigir contrato AR_040 — banco renumerado de 0058 para ... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_117/executor_main.log |
+| AR_118 | Corrigir contrato AR_044 — contagens de planos e orphan c... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_118/executor_main.log |
+| AR_119 | Corrigir contrato AR_045 — contagens de ARs com valores e... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_119/executor_main.log |
 | AR_998 | Test Write Scope Section Generation | ✅ VERIFICADO | docs/hbtrack/evidence/AR_998/executor_main.log |
 | AR_999 | Exemplo: Adicionar campo birthdate em Person | ✅ VERIFICADO | docs/hbtrack/evidence/AR_999/executor_main.log |
