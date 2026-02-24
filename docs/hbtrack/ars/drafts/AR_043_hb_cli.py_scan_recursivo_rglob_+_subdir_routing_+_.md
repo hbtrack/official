@@ -1,6 +1,6 @@
 # AR_043 — hb_cli.py: scan recursivo (rglob) + subdir routing + hb rebuild-index
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.1.0
 
 ## Descrição
@@ -120,3 +120,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_043_8ff994d/result.json`
+
+### Selo Humano em 440adea
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-24T18:31:18.309454+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_043_8ff994d/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_043/executor_main.log`

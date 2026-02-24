@@ -1,6 +1,6 @@
 # AR_041 — Model Competition: ADD ck_competitions_status + ck_competitions_modality
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.1.0
 
 ## Descrição
@@ -88,3 +88,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_041_4220d7b/result.json`
+
+### Selo Humano em 440adea
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-24T18:31:16.585486+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_041_4220d7b/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_041/executor_main.log`

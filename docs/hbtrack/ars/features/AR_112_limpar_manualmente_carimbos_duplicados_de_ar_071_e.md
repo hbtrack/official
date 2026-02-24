@@ -1,6 +1,6 @@
 # AR_112 — Limpar manualmente carimbos duplicados de AR_071 e AR_004
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -20,3 +20,10 @@ Remover via edição direta os carimbos REJEITADO obsoletos dos arquivos AR mark
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_112_ab81cc3/result.json`
+
+### Selo Humano em 440adea
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-24T18:31:28.040243+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_112_ab81cc3/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_112/executor_main.log`

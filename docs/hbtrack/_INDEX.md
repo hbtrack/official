@@ -44,13 +44,13 @@
 | AR_034 | Governança Plans — Gate JSON-to-AR obrigatório | ✅ SUCESSO | docs/hbtrack/evidence/AR_034_gov_plans_json_ar_sync_validation.log |
 | AR_035 | Criar scripts/run/hb_watch.py — sentinela de estado do fluxo | ✅ SUCESSO | docs/hbtrack/evidence/AR_035_hb_watch_sentinela_fluxo.log |
 | AR_036 | Migration 0056: ADD COLUMN competitions.points_per_draw +... | ⚠️ PENDENTE | docs/hbtrack/evidence/AR_036_comp_db_003_scoring_rules_migration.log |
-| AR_037 | Model: Competition.points_per_draw + Competition.points_p... | ✅ SUCESSO | docs/hbtrack/evidence/AR_037/executor_main.log |
+| AR_037 | Model: Competition.points_per_draw + Competition.points_p... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_037/executor_main.log |
 | AR_038 | Migration 0057: DROP uk_competition_standings_team_phase ... | ✅ SUCESSO | docs/hbtrack/evidence/AR_038_comp_db_004_unique_index_migration.log |
-| AR_039 | Model: CompetitionStanding — UniqueConstraint legado → NU... | ✅ SUCESSO | docs/hbtrack/evidence/AR_039/executor_main.log |
+| AR_039 | Model: CompetitionStanding — UniqueConstraint legado → NU... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_039/executor_main.log |
 | AR_040 | Migration 0058 COMP-DB-006: ADD 3 CHECK constraints statu... | ✅ SUCESSO | docs/hbtrack/evidence/AR_040_comp_db_006_check_constraints_migration.log |
-| AR_041 | Model Competition: ADD ck_competitions_status + ck_compet... | ✅ SUCESSO | docs/hbtrack/evidence/AR_041/executor_main.log |
-| AR_042 | Model CompetitionMatch: ADD CheckConstraint ck_competitio... | ✅ SUCESSO | docs/hbtrack/evidence/AR_042/executor_main.log |
-| AR_043 | hb_cli.py: scan recursivo (rglob) + subdir routing + hb r... | ✅ SUCESSO | docs/hbtrack/evidence/AR_043/executor_main.log |
+| AR_041 | Model Competition: ADD ck_competitions_status + ck_compet... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_041/executor_main.log |
+| AR_042 | Model CompetitionMatch: ADD CheckConstraint ck_competitio... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_042/executor_main.log |
+| AR_043 | hb_cli.py: scan recursivo (rglob) + subdir routing + hb r... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_043/executor_main.log |
 | AR_044 | git mv: docs/_canon/planos/ → governance/, competitions/,... | ✅ SUCESSO | docs/hbtrack/evidence/AR_044_gov_ar_folder_reorg_planos.log |
 | AR_045 | git mv: docs/hbtrack/ars/ → governance/, competitions/, f... | ✅ SUCESSO | docs/hbtrack/evidence/AR_045_gov_ar_folder_reorg_ars.log |
 | AR_046 | Limpeza Segura: Arquivos Temporários e Scripts Ad-hoc | ✅ VERIFICADO | docs/hbtrack/evidence/AR_046_removed_files.log |
@@ -88,8 +88,8 @@
 | AR_105 | Validar comportamento semântico da constraint/index em Po... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_105/executor_main.log |
 | AR_109 | Adicionar constante E_SEAL_MULTIPLE_TESTADOR_STAMPS no to... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_109/executor_main.log |
 | AR_110 | Adicionar guarda anti-múltiplos-carimbos em cmd_seal (ant... | ✅ SUCESSO | docs/hbtrack/evidence/AR_110/executor_main.log |
-| AR_111 | Adicionar limpeza automática de carimbos antigos em cmd_v... | ✅ SUCESSO | docs/hbtrack/evidence/AR_111/executor_main.log |
-| AR_112 | Limpar manualmente carimbos duplicados de AR_071 e AR_004 | ✅ SUCESSO | — |
+| AR_111 | Adicionar limpeza automática de carimbos antigos em cmd_v... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_111/executor_main.log |
+| AR_112 | Limpar manualmente carimbos duplicados de AR_071 e AR_004 | ✅ VERIFICADO | — |
 | AR_113 | Corrigir contrato AR_032 — versao protocolo v1.1.0 obsoleta | 🔲 PENDENTE | docs/hbtrack/evidence/AR_113/executor_main.log |
 | AR_114 | Corrigir contrato AR_034 — path de evidencia pre-canonical | 🔲 PENDENTE | docs/hbtrack/evidence/AR_114/executor_main.log |
 | AR_115 | Corrigir contrato AR_035 — INDEX path e status PENDENTE v... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_115/executor_main.log |
