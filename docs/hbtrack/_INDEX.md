@@ -5,7 +5,7 @@
 | ID | Título | Status | Evidence |
 |---|---|---|---|
 | AR_001 | Migration: ADD COLUMN competition_standings.team_id (uuid... | ✅ SUCESSO | docs/hbtrack/evidence/AR_001_competition_standings_add_team_id_migration.log |
-| AR_002 | Model: CompetitionStanding.team_id — mapped_column + rela... | ⚠️ PENDENTE | docs/hbtrack/evidence/AR_002_competition_standings_model_team_id.log |
+| AR_002 | Model: CompetitionStanding.team_id — mapped_column + rela... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_002/executor_main.log |
 | AR_002.5 | Schema: match_goalkeeper_stints para Eficiência de Goleira | ✅ VERIFICADO | docs/hbtrack/evidence/AR_002.5_A/executor_main.log |
 | AR_002.5 | Schema: attendance.presence_status + status 'justified' | ✅ VERIFICADO | docs/hbtrack/evidence/AR_002.5_B/executor_main.log |
 | AR_002.5 | Documentar divergência de escalas wellness_pre vs. PRD | ⛛ SUPERSEDED — Draft EM_EXECUCAO abandonado; divergencia de escalas wellness documentada por outros meios | docs/hbtrack/evidence/AR_002_5_C_evidence.log |
@@ -43,7 +43,7 @@
 | AR_033 | AR Index Checkpoint: _INDEX.md completo e sincronizado co... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_033/executor_main.log |
 | AR_034 | Governança Plans — Gate JSON-to-AR obrigatório | ✅ SUCESSO | docs/hbtrack/evidence/AR_034_gov_plans_json_ar_sync_validation.log |
 | AR_035 | Criar scripts/run/hb_watch.py — sentinela de estado do fluxo | ✅ SUCESSO | docs/hbtrack/evidence/AR_035_hb_watch_sentinela_fluxo.log |
-| AR_036 | Migration 0056: ADD COLUMN competitions.points_per_draw +... | ⚠️ PENDENTE | docs/hbtrack/evidence/AR_036_comp_db_003_scoring_rules_migration.log |
+| AR_036 | Migration 0056: ADD COLUMN competitions.points_per_draw +... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_036/executor_main.log |
 | AR_037 | Model: Competition.points_per_draw + Competition.points_p... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_037/executor_main.log |
 | AR_038 | Migration 0057: DROP uk_competition_standings_team_phase ... | ✅ SUCESSO | docs/hbtrack/evidence/AR_038_comp_db_004_unique_index_migration.log |
 | AR_039 | Model: CompetitionStanding — UniqueConstraint legado → NU... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_039/executor_main.log |
@@ -63,9 +63,9 @@
 | AR_053 | hb_watch.py — Windows UTF-8 stdout fix + contract sync | ✅ VERIFICADO | docs/hbtrack/evidence/AR_053_hb_watch_unicode_fix.log |
 | AR_054 | Fix Arquiteto Contract §1: INDEX path errado + DEV FLOW c... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_054_contract_index_path_fix.log |
 | AR_055 | hb_cli.py: Kanban write + check_retry_limit call site (do... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_055_hb_cli_kanban_write.log |
-| AR_056 | Verificar CHECK constraints de consistência em schema.sql | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_056/executor_main.log |
+| AR_056 | Verificar CHECK constraints de consistência em schema.sql | ✅ VERIFICADO | docs/hbtrack/evidence/AR_056/executor_main.log |
 | AR_057 | Verificar integridade append-only de audit_logs em schema... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_057/executor_main.log |
-| AR_058 | Verificar controle de concorrência — idempotency_keys + U... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_058/executor_main.log |
+| AR_058 | Verificar controle de concorrência — idempotency_keys + U... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_058/executor_main.log |
 | AR_059 | Criar context_map.md — mapa temático de ARs por domínio | ❌ FALHA | docs/hbtrack/evidence/AR_059/executor_main.log |
 | AR_060 | Verificar integridade do contrato OpenAPI SSOT (214 paths) | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_060/executor_main.log |
 | AR_061 | Aplicar migrations 0056-0061 e regenerar alembic_state.tx... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_061/executor_main.log |

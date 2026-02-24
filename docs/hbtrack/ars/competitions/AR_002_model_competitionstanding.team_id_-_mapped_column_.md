@@ -1,6 +1,6 @@
 # AR_002 — Model: CompetitionStanding.team_id — mapped_column + relationship para Team
 
-**Status**: ⚠️ PENDENTE
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.0.6
 **Plano Fonte**: `docs/_canon/planos/competition_standings_add_team_id.json`
 
@@ -16,7 +16,7 @@ python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models
 ```
 
 ## Evidence File (Contrato)
-`docs/hbtrack/evidence/AR_002_competition_standings_model_team_id.log`
+`docs/hbtrack/evidence/AR_002/executor_main.log`
 
 ## Notas do Arquiteto
 A task 002 depende da task 001: o model deve ser atualizado APOS a migration ser aplicada e validada. O bloco HB-AUTOGEN no arquivo e delimitado por comentarios HB-AUTOGEN:BEGIN / HB-AUTOGEN:END — o Executor deve inserir a coluna dentro dessas marcacoes para manter consistencia com o pipeline de autogeneration.
@@ -62,14 +62,28 @@ _(Preenchido pelo Executor)_
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
-
-
 > 📋 Kanban routing: Executor: Evidence Pack missing or incomplete
 
-### Verificacao Testador em 7b022e9
-**Status Testador**: ⚠️ PENDENTE
-**Consistency**: UNKNOWN
+### Execução Executor em f8f030f
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition_standing import CompetitionStanding; assert hasattr(CompetitionStanding, 'team_id'), 'FAIL: team_id not found'; print('PASS: team_id present in CompetitionStanding')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-24T23:39:55.577176+00:00
+**Behavior Hash**: b4a8f84c31298107daa3def2e6ecc167fb20039b886433e9c7176e2bdf17efb4
+**Evidence File**: `docs/hbtrack/evidence/AR_002/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Verificacao Testador em f8f030f
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
 **Triple-Run**: OK (3x)
-**Exit Testador**: 0 | **Exit Executor**: None
-**TESTADOR_REPORT**: `_reports/testador/AR_002_7b022e9/result.json`
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_002_f8f030f/result.json`
+
+### Selo Humano em f8f030f
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-24T23:53:34.565822+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_002_f8f030f/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_002/executor_main.log`

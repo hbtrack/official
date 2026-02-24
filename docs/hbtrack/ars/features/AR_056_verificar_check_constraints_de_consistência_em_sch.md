@@ -1,6 +1,6 @@
 # AR_056 — Verificar CHECK constraints de consistência em schema.sql
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -46,7 +46,6 @@ Task doc-only de verificação. Executor não altera código — apenas verifica
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução Executor em c08f148
 **Status Executor**: 🏗️ EM_EXECUCAO
 **Comando**: `python -c "import pathlib; s=pathlib.Path('Hb Track - Backend/docs/ssot/schema.sql').read_text(encoding='utf-8'); checks={'ck_athletes_deleted_reason':'ck_athletes_deleted_reason' in s,'ck_athletes_shirt_number':'ck_athletes_shirt_number' in s,'ck_attendance_status':'ck_attendance_status' in s,'ck_attendance_source':'ck_attendance_source' in s,'ck_categories_max_age_positive':'ck_categories_max_age_positive' in s,'ck_match_events_score_our':'ck_match_events_score_our' in s,'ck_attendance_correction_fields':'ck_attendance_correction_fields' in s}; fails=[k for k,v in checks.items() if not v]; [print(f'FAIL: CHECK constraint ausente: {f}') for f in fails]; exit(len(fails)) if fails else print(f'PASS AR_056: {len(checks)} CHECK constraints de consistência verificados em schema.sql')"`
@@ -56,3 +55,17 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_056/executor_main.log`
 **Python Version**: 3.11.9
 
+
+### Verificacao Testador em f8f030f
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_056_f8f030f/result.json`
+
+### Selo Humano em f8f030f
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-24T23:39:54.196619+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_056_f8f030f/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_056/executor_main.log`

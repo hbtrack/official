@@ -1,0 +1,40 @@
+{
+  "ar_id": "036",
+  "validation_command": "python -c \"import pathlib; s=pathlib.Path('Hb Track - Backend/docs/ssot/schema.sql'); assert s.exists(),'FAIL: schema.sql missing'; c=s.read_text(encoding='utf-8'); assert 'points_per_draw' in c,'FAIL: schema.sql missing points_per_draw column'; assert 'points_per_loss' in c,'FAIL: schema.sql missing points_per_loss column'; assert 'DEFAULT 1' in c or 'default 1' in c.lower(),'FAIL: points_per_draw DEFAULT missing'; print('PASS: schema.sql regenerated with migrations 0056-0061 applied')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "058cf463747d01cf9eec1a64ce0eeb1afc6ae2cf003e2c75362d68f864bd4b23",
+      "hash": "058cf463747d01cf",
+      "stdout_len": 63,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "058cf463747d01cf9eec1a64ce0eeb1afc6ae2cf003e2c75362d68f864bd4b23",
+      "hash": "058cf463747d01cf",
+      "stdout_len": 63,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "058cf463747d01cf9eec1a64ce0eeb1afc6ae2cf003e2c75362d68f864bd4b23",
+      "hash": "058cf463747d01cf",
+      "stdout_len": 63,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

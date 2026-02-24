@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_036-f8f030f",
+  "timestamp_utc": "2026-02-24T23:53:05.567978+00:00",
+  "git": {
+    "commit": "f8f030f6998aa228228864d6e11d4389486eccd8"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "036",
+  "ar_file": "docs\\hbtrack\\ars\\competitions\\AR_036_migration_0056_add_column_competitions.points_per_.md"
+}

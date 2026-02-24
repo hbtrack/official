@@ -1,6 +1,6 @@
 # AR_058 — Verificar controle de concorrência — idempotency_keys + UNIQUE constraints
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -54,7 +54,6 @@ Verificação estática. Se algum UNIQUE estiver ausente do schema.sql mas exist
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução Executor em c5f1ba8
 **Status Executor**: 🏗️ EM_EXECUCAO
 **Comando**: `python -c "import pathlib; s=pathlib.Path('Hb Track - Backend/docs/ssot/schema.sql').read_text(encoding='utf-8'); checks={'idempotency_keys_table':('idempotency_keys' in s),'uq_idempotency_key_endpoint':('uq_idempotency_key_endpoint' in s),'uq_session_templates_org_name':('uq_session_templates_org_name' in s),'uq_wellness_reminders_session_athlete':('uq_wellness_reminders_session_athlete' in s),'uq_team_wellness_rankings_team_month':('uq_team_wellness_rankings_team_month' in s)}; fails=[k for k,v in checks.items() if not v]; [print(f'FAIL: {f}') for f in fails]; exit(len(fails)) if fails else print(f'PASS AR_058: {len(checks)} controles de concorrência verificados em schema.sql')"`
@@ -64,3 +63,17 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_058/executor_main.log`
 **Python Version**: 3.11.9
 
+
+### Verificacao Testador em f8f030f
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_058_f8f030f/result.json`
+
+### Selo Humano em f8f030f
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-24T23:39:55.373882+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_058_f8f030f/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_058/executor_main.log`

@@ -1,0 +1,18 @@
+AR_ID: 002
+Command: python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition_standing import CompetitionStanding; assert hasattr(CompetitionStanding, 'team_id'), 'FAIL: team_id not found'; print('PASS: team_id present in CompetitionStanding')"
+Exit Code: 0
+Timestamp UTC: 2026-02-24T23:39:55.577176+00:00
+Behavior Hash (exit+stdout+stderr): b4a8f84c31298107daa3def2e6ecc167fb20039b886433e9c7176e2bdf17efb4
+Git HEAD: f8f030f6998aa228228864d6e11d4389486eccd8
+Python Version: 3.11.9
+Protocol Version: 1.3.0
+Workspace Clean: False
+Workspace Status: unstaged_modified=3
+Governed Checksums (sha256): {}
+
+--- STDOUT ---
+PASS: team_id present in CompetitionStanding
+
+
+--- STDERR ---
+
