@@ -52,6 +52,30 @@ Próximas pendentes: AR_068 (evidence migration), ARs 113–119 (legacy validati
 
 ---
 
+## ✅ PRONTO PARA VERIFICAÇÃO: AR_068 + ARs 113–119 (Commit c98470c)
+
+**Data**: 2026-03-01
+
+Batch de evidence canonica AR_068 + correções de VCs legadas ARs 113–119. Commit `c98470c`.
+
+| AR | Evidence Path | Validation Script | Descrição |
+|----|---------------|-------------------|-----------|
+| AR_068 | docs/hbtrack/evidence/AR_068/executor_main.log | temp/validate_ar068.py | persons.birth_date NOT NULL + triggers (file-based) |
+| AR_113 | docs/hbtrack/evidence/AR_113/executor_main.log | temp/validate_ar113.py | AR_032 VC: v1.1.0 → v1.x assertion |
+| AR_114 | docs/hbtrack/evidence/AR_114/executor_main.log | temp/validate_ar114.py | AR_034 VC: PLANS_AR_SYNC runtime → gate estatico |
+| AR_115 | docs/hbtrack/evidence/AR_115/executor_main.log | temp/validate_ar115.py | AR_035 VC: INDEX_PATH hbtrack/ars/ → hbtrack/, remove PENDENTE assert |
+| AR_116 | docs/hbtrack/evidence/AR_116/executor_main.log | temp/validate_ar116.py | AR_038 VC: migration 0057 → 0060 |
+| AR_117 | docs/hbtrack/evidence/AR_117/executor_main.log | temp/validate_ar117.py | AR_040 VC: migration 0058 → 0061 |
+| AR_118 | docs/hbtrack/evidence/AR_118/executor_main.log | temp/validate_ar118.py | AR_044 VC: removed orphans, == → >= counts |
+| AR_119 | docs/hbtrack/evidence/AR_119/executor_main.log | temp/validate_ar119.py | AR_045 VC: == → >= counts governance/competitions/features |
+
+**Legacy ARs corrigidos** (VCs patcheadas neste batch):
+- AR_032, AR_034, AR_035, AR_038, AR_040, AR_044, AR_045
+
+**Nota**: validate scripts 113–119 extraem apenas a seção `## Validation Command (Contrato)` para checar padrões (evita falsos positivos com carimbos históricos).
+
+---
+
 **SEÇÃO EXECUTOR x ARQUITETO**
 NOTIFICAÇÕES DO EXECUTOR PARA O ARQUITETO:
 
