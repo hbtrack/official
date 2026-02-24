@@ -80,6 +80,9 @@
 | AR_070 | Criar hb_plan_watcher.py com claim atomico + dry-run + di... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_070/executor_main.log |
 | AR_071 | Add auto-commit opt-in to hb_autotest (strict allowlist +... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_071/executor_main.log |
 | AR_072 | Governance: Document daemons + bump PROTOCOL_VERSION v1.3.0 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_072/executor_main.log |
+| AR_073 | Append INV-COMP-005+006+007 em INVARIANTS_COMPETITIONS.md | 🔲 PENDENTE | docs/hbtrack/evidence/AR_073/executor_main.log |
+| AR_074 | Append INV-SCOUT-005+006+007 em INVARIANTS_SCOUT.md | 🔲 PENDENTE | docs/hbtrack/evidence/AR_074/executor_main.log |
+| AR_075 | Criar INVARIANTS_TRAINING.md com INV-TRAIN-001+002+003 | 🔲 PENDENTE | docs/hbtrack/evidence/AR_075/executor_main.log |
 | AR_100 | Estabilização do Protocolo v1.2.0 e Unificação de Registros | ✅ VERIFICADO | docs/hbtrack/evidence/AR_100/executor_main.log |
 | AR_101 | Resgate de ARs de Governança (v1.2.0 Core) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_101/executor_main.log |
 | AR_102 | Resgate de ARs de Competitions e Features | ✅ VERIFICADO | docs/hbtrack/evidence/AR_102/executor_main.log |
