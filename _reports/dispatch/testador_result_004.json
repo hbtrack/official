@@ -1,7 +1,0 @@
-{
-  "ar_id": "004",
-  "status": "REJEITADO",
-  "reason": "\\u274c E_VERIFY_DIRTY_WORKSPACE: Workspace deve estar limpo antes do verify (anti-falsa-evid�ncia). Status: unstaged_modified=1\n",
-  "timestamp_utc": "2026-02-24T14:33:42.090719+00:00",
-  "agent": "hb_autotest"
-}
