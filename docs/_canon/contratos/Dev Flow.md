@@ -191,7 +191,7 @@ Regras:
   * **⏸️ BLOQUEADO_INFRA** (quando ERROR_INFRA)
 * Testador MUST NOT escrever "✅ VERIFICADO" diretamente — esse status MUST ser escrito via `hb seal` (Passo 7): pelo Humano ou pelo daemon `hb_autotest.py`.
 
-Passo 7 — SELO (hb_autotest automático ou Humano)
+Passo 7 — SELO — último gate de verificação (hb_autotest automático ou Humano)
 Executar via `hb seal`:
 
 * `python scripts/run/hb_cli.py seal <AR_ID> ["reason"]`

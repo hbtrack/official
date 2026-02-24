@@ -1,0 +1,28 @@
+RUN_ID: DOC_GATES-AR_101-d0d9695-2026-02-24T201517131693+0000
+Timestamp UTC: 2026-02-24T20:15:17.266394+00:00
+Git HEAD: d0d9695a39e8efc39d2a721fc1b6e9757ea71fee
+Python Version: 3.11.9
+Exit Code: 0
+
+SUMMARY: PASS=18 FAIL_ACTIONABLE=0 ERROR_INFRA=0
+
+RESULTS:
+- DOC-GATE-001 [PASS] target=C:/HB TRACK/docs/_canon/contratos/Dev Flow.md
+- DOC-GATE-002 [PASS] target=C:/HB TRACK/docs/_canon/contratos/ar_contract.schema.json
+- DOC-GATE-003 [PASS] target=C:/HB TRACK/docs/_canon/specs/GOVERNED_ROOTS.yaml
+- DOC-GATE-004 [PASS] target=C:/HB TRACK/docs/_canon/contratos/Arquiteto Contract.md
+- DOC-GATE-005 [PASS] target=C:/HB TRACK/docs/_canon/contratos/Executor Contract.md
+- DOC-GATE-006 [PASS] target=C:/HB TRACK/docs/_canon/contratos/Testador Contract.md
+- DOC-GATE-007 [PASS] target=C:/HB TRACK/.github/agents/architect.agent.md
+- DOC-GATE-008 [PASS] target=C:/HB TRACK/.github/agents/executor.agent.md
+- DOC-GATE-009 [PASS] target=C:/HB TRACK/.github/agents/testador.agent.md
+- DOC-GATE-010 [PASS] target=C:/HB TRACK/.github/agents/README.md
+- DOC-GATE-011 [PASS] target=C:/HB TRACK/docs/_canon/specs/Hb cli Spec.md
+- DOC-GATE-012 [PASS] target=C:/HB TRACK/docs/hbtrack/Hb Track Kanban.md
+- DOC-GATE-013 [PASS] target=C:/HB TRACK/docs/hbtrack/_INDEX.md
+- DOC-GATE-014 [PASS] target=C:/HB TRACK/scripts/run/hb_watch.py
+- DOC-GATE-015 [PASS] target=C:/HB TRACK/docs/_canon/contratos/Dev Flow.md
+- DOC-GATE-016 [PASS] target=C:/HB TRACK/.github/agents/README.md
+- DOC-GATE-017 [PASS] target=docs/**
+- DOC-GATE-018 [PASS] target=C:/HB TRACK/docs/_canon/planos
+  details: OK

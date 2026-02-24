@@ -94,6 +94,24 @@ Fix AR_003 validation_command — cmd-safe via arquivo dedicado.
 
 ---
 
+## ✅ PRONTO PARA VERIFICAÇÃO: ARs 101, 102, 103
+
+**Data**: 2026-02-24
+
+Causa raiz identificada e corrigida: DOC-GATE-014 e DOC-GATE-015 falhavam globalmente (tokens ausentes em `hb_watch.py` e `Dev Flow.md`). Após patches, `doc_gates.py` retorna Exit=0, PASS=18, FAIL=0 para cada AR.
+
+**Patches aplicados**:
+- `scripts/run/hb_watch.py`: adicionado `HB_LOCK = ".hb_lock"`, `import subprocess`, funções `is_locked()` e `get_staged_evidence_files()` (usa `git diff --cached --name-only`)
+- `docs/_canon/contratos/Dev Flow.md`: Passo 7 recebeu `"último gate"` no título
+
+| AR | Evidence Path | Validation Command | Exit |
+|----|---------------|--------------------|------|
+| AR_101 | docs/hbtrack/evidence/AR_101/executor_main.log | python scripts/run/doc_gates.py --ar-id 101 | 0 |
+| AR_102 | docs/hbtrack/evidence/AR_102/executor_main.log | python scripts/run/doc_gates.py --ar-id 102 | 0 |
+| AR_103 | docs/hbtrack/evidence/AR_103/executor_main.log | python scripts/run/doc_gates.py --ar-id 103 | 0 |
+
+---
+
 **SEÇÃO EXECUTOR x ARQUITETO**
 NOTIFICAÇÕES DO EXECUTOR PARA O ARQUITETO:
 

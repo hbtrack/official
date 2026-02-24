@@ -10,6 +10,7 @@ Protocolo: v1.2.0+
 import os
 import re
 import json
+import subprocess
 import time
 import argparse
 import sys
@@ -37,6 +38,7 @@ class Colors:
 INDEX_PATH   = "docs/hbtrack/_INDEX.md"
 AR_DIR       = "docs/hbtrack/ars"
 DISPATCH_DIR = "_reports/dispatch"
+HB_LOCK      = ".hb_lock"  # Lock file: impede execuções concorrentes
 
 TRIGGERS = {
     "architect": ["PROPOSTA", "STUB", "REJEITADO", "NEEDS_REVIEW"],
@@ -46,6 +48,27 @@ TRIGGERS = {
 
 def get_repo_root() -> Path:
     return Path(__file__).resolve().parent.parent.parent
+
+
+def is_locked(repo_root: Path) -> bool:
+    """Verifica se .hb_lock existe (execução concorrente ativa)."""
+    return (repo_root / HB_LOCK).exists()
+
+
+def get_staged_evidence_files(repo_root: Path) -> list:
+    """Retorna lista de evidence files staged via git diff --cached --name-only."""
+    try:
+        result = subprocess.run(
+            ["git", "diff", "--cached", "--name-only"],
+            cwd=str(repo_root),
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        lines = result.stdout.strip().splitlines()
+        return [l for l in lines if "executor_main.log" in l or "doc_gates.log" in l]
+    except Exception:
+        return []
 
 
 def clear_screen():
