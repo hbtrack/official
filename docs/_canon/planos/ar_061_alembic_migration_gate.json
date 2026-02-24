@@ -1,0 +1,33 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "AR_061: O alembic_state.txt SSOT está desatualizado (gerado 2026-02-22, head=0059, current=0055) enquanto o disco tem migrations até 0061 (0060_comp_db_004_standings_unique_nulls_not_distinct, 0061_comp_db_006_status_check_constraints). Executor deve: (1) aplicar migrations pendentes 0056..0061 ao banco de dev, (2) regenerar alembic_state.txt via gen_docs_ssot.py. VC verifica que alembic_state.txt mostra 0061 como head.",
+  "assumptions": [
+    "DB de desenvolvimento disponível para o Executor (alembic upgrade head requer conexão)",
+    "DATABASE_URL está configurado no .env do backend",
+    "scripts/ssot/gen_docs_ssot.py existe e suporta --alembic",
+    "Migrations 0056..0061 são safe (não destrutivas, apenas additive)"
+  ],
+  "tasks": [
+    {
+      "id": "061",
+      "title": "Aplicar migrations 0056-0061 e regenerar alembic_state.txt SSOT",
+      "description": "O alembic_state.txt está defasado: SSOT diz head=0059 mas o disco tem até 0061. Migrations pendentes:\n- 0056_comp_db_003_scoring_rules_competitions.py\n- 0057_add_match_goalkeeper_stints.py\n- 0058_attendance_add_justified_status.py\n- 0059_add_match_analytics_cache.py\n- 0060_comp_db_004_standings_unique_nulls_not_distinct.py\n- 0061_comp_db_006_status_check_constraints.py\n\nPassos do Executor:\n1. Ativar venv: .venv\\Scripts\\Activate.ps1\n2. cd 'Hb Track - Backend'\n3. alembic upgrade head (aplica todas as pendentes até 0061)\n4. cd ..\n5. python scripts/ssot/gen_docs_ssot.py --alembic\n\nIsto atualiza Hb Track - Backend/docs/ssot/alembic_state.txt com head=0061.",
+      "criteria": "- Hb Track - Backend/docs/ssot/alembic_state.txt contém '0061' como head\n- Arquivo não mostra mais '0059 (head)'\n- alembic_state.txt tem linha com '0061 (head)' ou '0061'\n- hb report gera evidence exit 0",
+      "gate": "SSOT_ALEMBIC_SYNC",
+      "validation_command": "python -c \"import pathlib; p=pathlib.Path('Hb Track - Backend/docs/ssot/alembic_state.txt'); assert p.exists(),'FAIL: alembic_state.txt nao encontrado'; c=p.read_text(encoding='utf-8'); assert '0061' in c,f'FAIL: alembic_state.txt nao menciona 0061 (head atual esperado). Conteudo atual:\n{c}'; assert '0059 (head)' not in c,'FAIL: alembic_state.txt ainda mostra 0059 como head (stale)'; print(f'PASS AR_061: alembic_state.txt atualizado, 0061 presente. Conteudo: {c.strip()[:200]}')\"",
+      "ssot_touches": ["docs/ssot/alembic_state.txt"],
+      "write_scope": [
+        "Hb Track - Backend/docs/ssot/alembic_state.txt",
+        "Hb Track - Backend/docs/ssot/manifest.json"
+      ],
+      "rollback_plan": "git checkout -- \"Hb Track - Backend/docs/ssot/alembic_state.txt\"\ngit checkout -- \"Hb Track - Backend/docs/ssot/manifest.json\"",
+      "risks": [
+        "alembic upgrade pode falhar se DB não estiver disponível — verificar DATABASE_URL antes",
+        "Migration 0060 altera standings UNIQUE NULLS NOT DISTINCT — requer PostgreSQL >= 15",
+        "Migration 0058 adiciona status 'justified' em attendance — verificar enum existente"
+      ],
+      "notes": "Executor deve rodar alembic upgrade head ANTES de regenerar o SSOT. Se upgrade falhar por constraint/data error, reportar bloqueio ao Arquiteto com saída do alembic. NÃO forçar migration — não usar --sql ou bypass."
+    }
+  ]
+}

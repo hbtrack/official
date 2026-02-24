@@ -63,14 +63,14 @@
 | AR_053 | hb_watch.py — Windows UTF-8 stdout fix + contract sync | ✅ VERIFICADO | docs/hbtrack/evidence/AR_053_hb_watch_unicode_fix.log |
 | AR_054 | Fix Arquiteto Contract §1: INDEX path errado + DEV FLOW c... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_054_contract_index_path_fix.log |
 | AR_055 | hb_cli.py: Kanban write + check_retry_limit call site (do... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_055_hb_cli_kanban_write.log |
-| AR_056 | [STUB] Business Invariant: Data Consistency Check | 🔲 PENDENTE | — |
-| AR_057 | [STUB] Business Invariant: Audit Trail Integrity | 🔲 PENDENTE | — |
-| AR_058 | [STUB] Business Invariant: Concurrency Control | 🔲 PENDENTE | — |
-| AR_059 | [STUB] Kanban Context Map | 🔲 PENDENTE | — |
-| AR_060 | [STUB] OpenAPI Contract Sync | 🔲 PENDENTE | — |
-| AR_061 | [STUB] Alembic Migration Gate | 🔲 PENDENTE | — |
-| AR_062 | [STUB] RBAC Architecture Hardening | 🔲 PENDENTE | — |
-| AR_063 | [STUB] Logging and Trace Implementation | 🔲 PENDENTE | — |
+| AR_056 | Verificar CHECK constraints de consistência em schema.sql | 🔲 PENDENTE | docs/hbtrack/evidence/AR_056/executor_main.log |
+| AR_057 | Verificar integridade append-only de audit_logs em schema... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_057/executor_main.log |
+| AR_058 | Verificar controle de concorrência — idempotency_keys + U... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_058/executor_main.log |
+| AR_059 | Criar context_map.md — mapa temático de ARs por domínio | 🔲 PENDENTE | docs/hbtrack/evidence/AR_059/executor_main.log |
+| AR_060 | Verificar integridade do contrato OpenAPI SSOT (214 paths) | 🔲 PENDENTE | docs/hbtrack/evidence/AR_060/executor_main.log |
+| AR_061 | Aplicar migrations 0056-0061 e regenerar alembic_state.tx... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_061/executor_main.log |
+| AR_062 | Verificar RBAC hardening — ROLE_PERMISSIONS + schema cons... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_062/executor_main.log |
+| AR_063 | Verificar logging estruturado JSON + trace — R31/R32 | 🔲 PENDENTE | docs/hbtrack/evidence/AR_063/executor_main.log |
 | AR_064 | Cleanup rogue: _agent/, agentes/, .github/cont + resolve ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_064_cleanup_rogue_dirs.log |
 | AR_065 | Resgate de ARs de Governança (v1.2.0 Core) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_065/executor_main.log |
 | AR_066 | Resgate de ARs de Competitions e Features | ✅ VERIFICADO | docs/hbtrack/evidence/AR_066/executor_main.log |

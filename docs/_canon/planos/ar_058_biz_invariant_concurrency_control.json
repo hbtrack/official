@@ -1,0 +1,25 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "AR_058: Valida controle de concorrência via tabela idempotency_keys (UNIQUE constraint por key+endpoint) e UNIQUE constraints críticos de negócio. Verificação estática via schema.sql SSOT — sem DB, determinística.",
+  "assumptions": [
+    "schema.sql SSOT em Hb Track - Backend/docs/ssot/schema.sql existe",
+    "Tabela idempotency_keys foi criada em migration anterior (comentário FICHA.MD Fase 1.2)",
+    "Executor não altera código — apenas verifica invariante existente"
+  ],
+  "tasks": [
+    {
+      "id": "058",
+      "title": "Verificar controle de concorrência — idempotency_keys + UNIQUE constraints",
+      "description": "Verificar controles de concorrência existentes no schema: (1) tabela idempotency_keys com UNIQUE(key, endpoint) — garante que retries idempotentes não duplicam operações; (2) UNIQUE constraint uq_idempotency_key_endpoint presente; (3) UNIQUE constraints de negócio críticos: uq_session_templates_org_name (nomes únicos por org), uq_wellness_reminders_session_athlete (um reminder por atleta/sessão), uq_team_wellness_rankings_team_month (um ranking por time/mês). Estes são os mecanismos de proteção contra double-submit e race conditions.",
+      "criteria": "- Tabela idempotency_keys declarada em schema.sql\n- uq_idempotency_key_endpoint UNIQUE presente em schema.sql\n- uq_session_templates_org_name UNIQUE presente\n- uq_wellness_reminders_session_athlete UNIQUE presente\n- uq_team_wellness_rankings_team_month UNIQUE presente\n- hb report gera evidence exit 0",
+      "gate": "INVARIANT_CONCURRENCY",
+      "validation_command": "python -c \"import pathlib; s=pathlib.Path('Hb Track - Backend/docs/ssot/schema.sql').read_text(encoding='utf-8'); checks={'idempotency_keys_table':('idempotency_keys' in s),'uq_idempotency_key_endpoint':('uq_idempotency_key_endpoint' in s),'uq_session_templates_org_name':('uq_session_templates_org_name' in s),'uq_wellness_reminders_session_athlete':('uq_wellness_reminders_session_athlete' in s),'uq_team_wellness_rankings_team_month':('uq_team_wellness_rankings_team_month' in s)}; fails=[k for k,v in checks.items() if not v]; [print(f'FAIL: {f}') for f in fails]; exit(len(fails)) if fails else print(f'PASS AR_058: {len(checks)} controles de concorrência verificados em schema.sql')\"",
+      "write_scope": [
+        "Hb Track - Backend/docs/ssot/schema.sql"
+      ],
+      "rollback_plan": "git checkout -- \"Hb Track - Backend/docs/ssot/schema.sql\"",
+      "notes": "Verificação estática. Se algum UNIQUE estiver ausente do schema.sql mas existir em migration recente (0060/0061), o schema.sql SSOT está desatualizado — abrir AR para regenerar via gen_docs_ssot.py."
+    }
+  ]
+}
