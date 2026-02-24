@@ -83,9 +83,11 @@ After verify, stage the report:
 - Also stage: AR file (updated status) + `_INDEX.md`
 You MUST NOT use `git add .` — stage only the testador artifacts.
 
-## 9) OUTPUT FORMAT (WHAT YOU SEND IN CHAT)
-After verify, you MUST output:
+## 9) OUTPUT FORMAT (**MUST** ESCREVER NO ARQUIVO: `_reports/TESTADOR.md`)
+After verify, you MUST write the report block to `_reports/TESTADOR.md` (overwrite/append).
+Do NOT send this block as a chat message — write it to the file so the Humano/Arquiteto/Executor can consume it.
 
+```
 TESTADOR_REPORT:
 - ar_id: <id>
 - status: SUCESSO|REJEITADO|BLOQUEADO_INFRA
@@ -94,6 +96,10 @@ TESTADOR_REPORT:
 - report_path: _reports/testador/AR_<id>_<git7>/result.json
 - rejection_reason: <if any>
 - next: "humano deve hb seal" OR "executor deve corrigir" OR "arquiteto deve revisar plano" OR "waiver infra"
+```
+
+> ℹ️ `_reports/TESTADOR.md` e `_reports/dispatch/` são **gitignored** — existem no disco como sinal de runtime.
+> NÃO use `git add` neles; o Arquiteto/Executor/Humano os lê diretamente do disco.
 
 ## 10) REJEITADO ROUTING
 When status is 🔴 REJEITADO, route by `consistency` in result.json:
@@ -128,7 +134,8 @@ git add docs/hbtrack/ars/governance/AR_<id>_*.md   # AR file (governance folder)
 git add docs/hbtrack/ars/competitions/AR_<id>_*.md # AR file (competitions folder)
 git add docs/hbtrack/evidence/AR_<id>/             # Evidence folder (one AR only)
 git add docs/_INDEX.md                              # Index file (EXACT filename)
-git add _reports/dispatch/testador.todo            # Testador dispatch (EXACT)
+# NOTE: _reports/dispatch/ e _reports/TESTADOR.md são gitignored
+# Não há git add necessário — Arquiteto/Humano lê do disco diretamente
 ```
 
 ### PATTERN: Staging for Single Verify
@@ -144,8 +151,7 @@ git add "docs/hbtrack/ars/<folder>/AR_${id}_*.md"
 python scripts/run/hb_cli.py rebuild-index
 git add "docs/_INDEX.md"
 
-# Step 4: Update dispatch (optional, but recommended)
-git add "_reports/dispatch/testador.todo"
+# Step 4: _reports/dispatch/ é gitignored — apenas escreva no disco, sem git add
 ```
 
 ### PATTERN: Staging for Batch Verify (multiple ARs)
@@ -159,8 +165,7 @@ git add "docs/hbtrack/ars/<folder>/AR_<id>_*.md"
 python scripts/run/hb_cli.py rebuild-index
 git add "docs/_INDEX.md"
 
-# Stage dispatch once at end
-git add "_reports/dispatch/testador.todo"
+# _reports/dispatch/ é gitignored — apenas escreva no disco, sem git add
 ```
 
 ### ANTI-PATTERN: What NOT to do
@@ -212,10 +217,6 @@ Use: `python scripts/run/hb_autotest.py [--loop N] [--once] [--dry-run]`
 Manual mode (Claude Code session with Testador role) is the fallback only when hb_autotest is not running.
 
 ---
-**LOOP INSTRUCTION:** O modo canônico é `python scripts/run/hb_autotest.py` — ele detecta automaticamente ARs prontas e executa verify + seal sem intervenção. Em modo manual: rode `python scripts/run/hb_watch.py --mode testador` para ver o contexto. Quando vir 🏗️ EM_EXECUCAO com evidence staged, execute apenas `python scripts/run/hb_cli.py verify <id>`. NUNCA use `git add .` — após verify, faça `git add` apenas dos artefatos do Testador conforme padrões em §11.5. Se SUCESSO, o humano (ou hb_autotest) executa `hb seal`. Se REJEITADO, aplique o roteamento do §10.
+**LOOP INSTRUCTION:** O modo canônico é `python scripts/run/hb_autotest.py` — ele detecta automaticamente ARs prontas e executa verify + seal sem intervenção. Em modo manual: rode `python scripts/run/hb_watch.py --mode testador` para ver o contexto. Leia o EXECUTOR_REPORT em `_reports/EXECUTOR.md` para contexto. Leia o EXECUTOR_REPORT em `_reports/EXECUTOR.md` para contexto. Quando vir 🏗️ EM_EXECUCAO com evidence staged, execute apenas `python scripts/run/hb_cli.py verify <id>`. NUNCA use `git add .` — após verify, escreva o TESTADOR_REPORT em `_reports/TESTADOR.md` (gitignored — apenas salve no disco). Faça `git add` apenas dos artefatos canônicos do Testador conforme padrões em §11.5. Se SUCESSO, o humano (ou hb_autotest) executa `hb seal`. Se REJEITADO, aplique o roteamento do §10.
 
 ---
-**COMUNICAÇÃO ENTRE AGENTES**:
-Leia a `_reports/dispatch/testador.todo` para receber as instruções e feedbacks do Executor e do Arquiteto. Mantenha a seção atualizada sem tarefas que já foram tratadas.
-Use a **SEÇÃO TESTADOR x ARQUITETO** em `_reports/dispatch/testador.todo` para enviar dúvidas, bloqueios ou solicitações para o Arquiteto.
-Use a **SEÇÃO TESTADOR X EXECUTOR** em `_reports/dispatch/testador.todo` para enviar feedback de validação e tarefas de correção para o Executor.

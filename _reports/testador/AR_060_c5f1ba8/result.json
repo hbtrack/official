@@ -1,0 +1,42 @@
+{
+  "ar_id": "060",
+  "validation_command": "python -c \"import json,pathlib,hashlib; oapi_path=pathlib.Path('Hb Track - Backend/docs/ssot/openapi.json'); mf_path=pathlib.Path('Hb Track - Backend/docs/ssot/manifest.json'); assert oapi_path.exists(),'FAIL: openapi.json nao encontrado em Hb Track - Backend/docs/ssot/'; d=json.loads(oapi_path.read_bytes().decode('utf-8')); paths=list(d.get('paths',{}).keys()); assert len(paths)>=200,f'FAIL: openapi.json tem {len(paths)} paths, esperado >= 200'; assert '/api/v1/athletes' in paths,'FAIL: /api/v1/athletes ausente no openapi.json'; assert '/api/v1/attendance/{attendance_id}' in paths,'FAIL: /api/v1/attendance/{{attendance_id}} ausente'; assert d.get('info',{}).get('version'),'FAIL: info.version nao declarado no openapi.json'; mf=json.loads(mf_path.read_text(encoding='utf-8')); oapi_entry=[f for f in mf['files'] if f['filename']=='openapi.json']; assert oapi_entry and oapi_entry[0].get('checksum'),'FAIL: manifest.json nao tem checksum para openapi.json'; print(f'PASS AR_060: openapi.json valido — {len(paths)} paths, info.version={d[\\\"info\\\"][\\\"version\\\"]}, manifest checksum presente')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 1,
+      "hash_full": "dbd22add77a527856ad9729be0bbacd873303d74fbb08f55e6487e5287e01af9",
+      "hash": "dbd22add77a52785",
+      "stdout_len": 0,
+      "stderr_len": 145
+    },
+    {
+      "run": 2,
+      "exit_code": 1,
+      "hash_full": "dbd22add77a527856ad9729be0bbacd873303d74fbb08f55e6487e5287e01af9",
+      "hash": "dbd22add77a52785",
+      "stdout_len": 0,
+      "stderr_len": 145
+    },
+    {
+      "run": 3,
+      "exit_code": 1,
+      "hash_full": "dbd22add77a527856ad9729be0bbacd873303d74fbb08f55e6487e5287e01af9",
+      "hash": "dbd22add77a52785",
+      "stdout_len": 0,
+      "stderr_len": 145
+    }
+  ],
+  "triple_consistency": "TRIPLE_FAIL",
+  "testador_exit_code": 1,
+  "executor_exit_code": 0,
+  "consistency": "AH_DIVERGENCE",
+  "status": "REJEITADO",
+  "ah_flags": [
+    "AH_DIVERGENCE"
+  ],
+  "evidence_pack_complete": true,
+  "rejection_reason": "Executor reported exit 0 but Testador got exit 1",
+  "workspace_clean": true
+}

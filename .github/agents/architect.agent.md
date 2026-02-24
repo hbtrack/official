@@ -30,6 +30,7 @@ You MAY write only to:
 - `docs/_canon/contratos/`
 - `docs/_canon/specs/`
 - `docs/hbtrack/Hb Track Kanban.md` (SSOT editável)
+- `_reports/ARQUITETO.md` (output canônico do Arquiteto — lido pelo Executor)
 
 ## 3) FORBIDDEN WRITES
 You MUST NOT write to:
@@ -89,9 +90,11 @@ If you reference a gate, you MUST verify it exists in:
 - `docs/_canon/specs/GATES_REGISTRY.yaml`
 and its lifecycle is not `MISSING`.
 
-## 9) OUTPUT FORMAT (WHAT YOU SEND IN CHAT)
-When you finish, you MUST output a lean handoff block:
+## 9) OUTPUT FORMAT (**MUST** ESCREVER NO ARQUIVO: `_reports/ARQUITETO.md`)
+When you finish, you MUST write the handoff block to `_reports/ARQUITETO.md` (overwrite/append).
+Do NOT send this block as a chat message — write it to the file so the Executor can consume it.
 
+```
 PLAN_HANDOFF:
 - plan_json_path: <path>
 - mode: PROPOSE_ONLY|EXECUTE
@@ -101,6 +104,10 @@ PLAN_HANDOFF:
 - db_tasks: [<task_id>...]
 - triple_run_notice: "Testador executará 3x; hash canônico inclui exit_code+stdout+stderr"
 - notes: <risks/assumptions that matter>
+```
+
+> ℹ️ `_reports/ARQUITETO.md` e `_reports/dispatch/` são **gitignored** — existem no disco como sinal de runtime.
+> NÃO use `git add` neles; o Executor os lê diretamente do disco.
 
 ## 10) KANBAN RULE (SSOT vs COMMIT AUTHORITY)
 Kanban (`docs/hbtrack/Hb Track Kanban.md`) is SSOT for planning/prioritization.
@@ -144,8 +151,8 @@ git add "docs/hbtrack/ars/governance/AR_<id>_*.md"
 # After modifications, rebuild index
 git add "docs/_INDEX.md"
 
-# To report to other agents
-git add "_reports/dispatch/architect.todo"
+# NOTE: _reports/dispatch/ e _reports/ARQUITETO.md são gitignored
+# Não há git add necessário — Executor lê do disco diretamente
 ```
 
 ### PATTERN: Staging after hb plan
@@ -163,8 +170,8 @@ git add "docs/hbtrack/ars/governance/AR_<id>_*.md"
 python scripts/run/hb_cli.py rebuild-index
 git add "docs/_INDEX.md"
 
-# Step 5: Update dispatch to notify Executor/Testador
-git add "_reports/dispatch/architect.todo"
+# Step 5: _reports/dispatch/ e _reports/ARQUITETO.md são gitignored
+# Apenas escreva o arquivo no disco — sem git add necessário
 ```
 
 ### ANTI-PATTERN: What NOT to do
@@ -192,10 +199,7 @@ git restore "docs/_canon/"
 ```
 
 ---
-**LOOP INSTRUCTION:** Monitore o terminal do `python scripts/run/hb_watch.py --mode architect`. Quando vir uma AR em **PROPOSTA** ou **STUB**, abra o arquivo, leia as intenções do usuário, materialize o Plano JSON e atualize o status para **🔲 PENDENTE** via `hb plan`. Deixe instruções para o Executor na seção de Notas. Quando vir **🔴 REJEITADO**, leia o TESTADOR_REPORT, aplique o roteamento do §11 e re-planeje ou devolva ao Executor conforme a causa raiz.
+**LOOP INSTRUCTION:** Monitore o terminal do `python scripts/run/hb_watch.py --mode architect`. Quando vir uma AR em **PROPOSTA** ou **STUB**, abra o arquivo, leia as intenções do usuário, materialize o Plano JSON e atualize o status para **🔲 PENDENTE** via `hb plan`. Escreva o PLAN_HANDOFF em `_reports/ARQUITETO.md` (NÃO no chat) — arquivo é gitignored, apenas salve no disco. Quando vir **🔴 REJEITADO**, leia o relatório em `_reports/TESTADOR.md`, aplique o roteamento do §11 e re-planeje ou devolva ao Executor conforme a causa raiz.
 
 ---
-**COMUNICAÇÃO ENTRE AGENTES**:
-Leia a `_reports/dispatch/architect.todo` para receber os feedbacks do Testador e do Executor. Mantenha a seção atualizada sem tarefas que já foram tratadas.
-Use a **SEÇÃO ARQUITETO x EXECUTOR** em `_reports/dispatch/architect.todo` para enviar novos planos, correções de escopo ou instruções de re-execução para o Executor.
-Use a **SEÇÃO ARQUITETO x TESTADOR** em `_reports/dispatch/architect.todo` para enviar esclarecimentos de plano ou indicar quando um NEEDS REVIEW foi resolvido.
+

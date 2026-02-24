@@ -1,6 +1,6 @@
 # AR_074 — Append INV-SCOUT-005+006+007 em INVARIANTS_SCOUT.md
 
-**Status**: 🔲 PENDENTE
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -42,9 +42,45 @@ python -c "import pathlib; src=pathlib.Path('docs/hbtrack/modulos/scout/INVARIAN
 INV-SCOUT-005 marcada PENDENTE DE MIGRACAO: nao ha trigger/check no schema para goleira obrigatoria - apenas is_goalkeeper boolean como convencao de dado.
 
 ## Análise de Impacto
-_(A ser preenchido pelo Executor)_
+**Executor**: 2026-02-24
+
+**Escopo**: Documentação pura - APPEND 3 invariantes em INVARIANTS_SCOUT.md existente.
+
+**Riscos**:
+- **BAIXO**: Apenas append de texto em arquivo .md fora dos governed roots.
+- **BAIXO**: Validação verifica presença de INV-SCOUT-001 para garantir que arquivo existente não foi sobrescrito.
+
+**Dependências**:
+- Arquivo base: `docs/hbtrack/modulos/scout/INVARIANTS_SCOUT.md` (existe desde AR_048)
+- Formato: SPEC YAML v1.0 (padrão existente INV-SCOUT-001 a 004)
+
+**Patch**:
+- 1 arquivo modificado: append ~60 linhas no final
 
 ---
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
+### Execução Executor em c5f1ba8
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import pathlib; src=pathlib.Path('docs/hbtrack/modulos/scout/INVARIANTS_SCOUT.md').read_text(encoding='utf-8'); assert 'INV-SCOUT-005' in src, 'FAIL INV-SCOUT-005'; assert 'INV-SCOUT-006' in src, 'FAIL INV-SCOUT-006'; assert 'INV-SCOUT-007' in src, 'FAIL INV-SCOUT-007'; assert 'is_goalkeeper' in src, 'FAIL goalkeeper'; assert 'is_available' in src, 'FAIL is_available'; assert 'PENDENTE' in src, 'FAIL status pendente'; assert 'INV-SCOUT-001' in src, 'FAIL INV-SCOUT-001 perdido'; print('PASS: INVARIANTS_SCOUT INV-SCOUT-005+006+007 OK')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-24T22:39:31.786519+00:00
+**Behavior Hash**: e448793353c790d34f3828b178b628c705e167a53fdbfc9bdc415cea29f522dd
+**Evidence File**: `docs/hbtrack/evidence/AR_074/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Verificacao Testador em c5f1ba8
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_074_c5f1ba8/result.json`
+
+### Selo Humano em c5f1ba8
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-24T22:55:05.433512+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_074_c5f1ba8/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_074/executor_main.log`

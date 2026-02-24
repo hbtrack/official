@@ -496,6 +496,13 @@ EVIDENCE_PACK:
 - AC-005 alembic downgrade -1 exit_code=0: PASS
 
 ### ✅ Concluído
+- AR_075
+- AR_074
+- AR_073
+- AR_063
+- AR_062
+- AR_061
+- AR_057
 - AR_123
 - AR_119
 - AR_118
@@ -555,6 +562,7 @@ EVIDENCE_PACK:
 - AR_101 — Executor: Evidence Pack missing or incomplete
 
 ### 📥 Backlog
+- AR_060 — Arquiteto: Executor reported exit 0 but Testador got exit 1
 - AR_003 — Arquiteto: Executor reported exit 0 but Testador got exit 1
 - **AR_070** — 🔄 PLANO CORRIGIDO v2: Removido emoji ✅ do validation_command (UnicodeEncodeError cp1252). Dry-run passou. Pronto para Executor com --force.
 - AR_005 — 🔲 PENDENTE — Plano v2 (ar_005_v2_fix_validation.json) pronto. Executor: hb plan --force + hb report (após AR_004 verificado). Validation_command corrigido para verificação estrutural determinística.

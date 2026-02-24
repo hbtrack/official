@@ -1,6 +1,6 @@
 # AR_075 — Criar INVARIANTS_TRAINING.md com INV-TRAIN-001+002+003
 
-**Status**: 🔲 PENDENTE
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -41,9 +41,47 @@ python -c "import pathlib; src=pathlib.Path('docs/hbtrack/modulos/treinos/INVARI
 Criar novo arquivo INVARIANTS_TRAINING.md (padrao portugues, formato SPEC YAML v1.0). Manter INVARIANTES_TREINOS.md intacto - e um arquivo legado diferente.
 
 ## Análise de Impacto
-_(A ser preenchido pelo Executor)_
+**Executor**: 2026-02-24
+
+**Escopo**: Documentação pura - CRIAR novo arquivo INVARIANTS_TRAINING.md (módulo treinos).
+
+**Riscos**:
+- **BAIXO**: Criação de novo arquivo .md fora dos governed roots.
+- **ATENÇÃO**: Existe arquivo legado INVARIANTES_TREINOS.md (formato tabular) — NÃO sobrescrever.
+
+**Dependências**:
+- Diretório: `docs/hbtrack/modulos/treinos/` (a criar se não existir)
+- Formato: SPEC YAML v1.0 (padrão existente em INVARIANTS_COMPETITIONS.md e INVARIANTS_SCOUT.md)
+- Arquivo legado: `docs/hbtrack/INVARIANTES_TREINOS.md` (manter intacto)
+
+**Patch**:
+- 1 diretório criado (se não existir): docs/hbtrack/modulos/treinos/
+- 1 arquivo novo: INVARIANTS_TRAINING.md (~80 linhas)
 
 ---
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
+### Execução Executor em c5f1ba8
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import pathlib; src=pathlib.Path('docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md').read_text(encoding='utf-8'); assert 'INV-TRAIN-001' in src, 'FAIL INV-TRAIN-001'; assert 'INV-TRAIN-002' in src, 'FAIL INV-TRAIN-002'; assert 'INV-TRAIN-003' in src, 'FAIL INV-TRAIN-003'; assert 'invalidate_analytics_cache' in src, 'FAIL trigger ausente'; assert 'team_registrations' in src, 'FAIL team_registrations'; assert 'ux_wellness' in src, 'FAIL wellness index'; assert 'V1.2' in src, 'FAIL V1.2 revogacao'; print('PASS: INVARIANTS_TRAINING INV-TRAIN-001+002+003 OK')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-24T22:40:44.949766+00:00
+**Behavior Hash**: 7af66b83b1580fdb72f0a1aff1e8e9ed051ced7e4113d5cca6c1998f6d34094a
+**Evidence File**: `docs/hbtrack/evidence/AR_075/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Verificacao Testador em c5f1ba8
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_075_c5f1ba8/result.json`
+
+### Selo Humano em c5f1ba8
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-24T22:55:06.480327+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_075_c5f1ba8/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_075/executor_main.log`

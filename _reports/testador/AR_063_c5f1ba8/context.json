@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_063-c5f1ba8",
+  "timestamp_utc": "2026-02-24T22:50:12.940278+00:00",
+  "git": {
+    "commit": "c5f1ba8918ed6a61bb9cdec4663497da3ab346fc"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "063",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_063_verificar_logging_estruturado_json_+_trace_-_r31_r.md"
+}

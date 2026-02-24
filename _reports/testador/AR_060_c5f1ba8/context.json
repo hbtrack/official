@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_060-c5f1ba8",
+  "timestamp_utc": "2026-02-24T22:49:48.257471+00:00",
+  "git": {
+    "commit": "c5f1ba8918ed6a61bb9cdec4663497da3ab346fc"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "060",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_060_verificar_integridade_do_contrato_openapi_ssot_214.md"
+}

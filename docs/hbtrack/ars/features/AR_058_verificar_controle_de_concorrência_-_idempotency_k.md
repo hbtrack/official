@@ -1,6 +1,6 @@
 # AR_058 — Verificar controle de concorrência — idempotency_keys + UNIQUE constraints
 
-**Status**: 🔲 PENDENTE
+**Status**: 🏗️ EM_EXECUCAO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -35,9 +35,32 @@ git checkout -- "Hb Track - Backend/docs/ssot/schema.sql"
 Verificação estática. Se algum UNIQUE estiver ausente do schema.sql mas existir em migration recente (0060/0061), o schema.sql SSOT está desatualizado — abrir AR para regenerar via gen_docs_ssot.py.
 
 ## Análise de Impacto
-_(A ser preenchido pelo Executor)_
+**Executor**: 2026-02-24
+
+**Escopo**: Verificação estática pura - confirmar presença de controles de concorrência em schema.sql SSOT.
+
+**Riscos**:
+- **BAIXO**: Apenas leitura de schema.sql existente.
+- **ATENÇÃO**: Se algum UNIQUE estiver ausente, indica dessincronia entre migrations DB e schema.sql SSOT.
+
+**Dependências**:
+- Arquivo: `Hb Track - Backend/docs/ssot/schema.sql` (SSOT gerado por gen_docs_ssot.py)
+- Migrations recentes: 0060/0061 podem ter adicionado constraints
+
+**Patch**:
+- 0 arquivos modificados (verificação read-only)
 
 ---
 ## Carimbo de Execução
 _(Gerado por hb report)_
+
+
+### Execução Executor em c5f1ba8
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import pathlib; s=pathlib.Path('Hb Track - Backend/docs/ssot/schema.sql').read_text(encoding='utf-8'); checks={'idempotency_keys_table':('idempotency_keys' in s),'uq_idempotency_key_endpoint':('uq_idempotency_key_endpoint' in s),'uq_session_templates_org_name':('uq_session_templates_org_name' in s),'uq_wellness_reminders_session_athlete':('uq_wellness_reminders_session_athlete' in s),'uq_team_wellness_rankings_team_month':('uq_team_wellness_rankings_team_month' in s)}; fails=[k for k,v in checks.items() if not v]; [print(f'FAIL: {f}') for f in fails]; exit(len(fails)) if fails else print(f'PASS AR_058: {len(checks)} controles de concorrência verificados em schema.sql')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-24T22:51:18.938755+00:00
+**Behavior Hash**: ef4da78efa5dad5e1095f6df4b0a2b65e7ea3d475b0b8cba001bcfd9d802c477
+**Evidence File**: `docs/hbtrack/evidence/AR_058/executor_main.log`
+**Python Version**: 3.11.9
 

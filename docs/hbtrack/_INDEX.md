@@ -64,13 +64,13 @@
 | AR_054 | Fix Arquiteto Contract §1: INDEX path errado + DEV FLOW c... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_054_contract_index_path_fix.log |
 | AR_055 | hb_cli.py: Kanban write + check_retry_limit call site (do... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_055_hb_cli_kanban_write.log |
 | AR_056 | Verificar CHECK constraints de consistência em schema.sql | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_056/executor_main.log |
-| AR_057 | Verificar integridade append-only de audit_logs em schema... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_057/executor_main.log |
-| AR_058 | Verificar controle de concorrência — idempotency_keys + U... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_058/executor_main.log |
-| AR_059 | Criar context_map.md — mapa temático de ARs por domínio | 🔲 PENDENTE | docs/hbtrack/evidence/AR_059/executor_main.log |
-| AR_060 | Verificar integridade do contrato OpenAPI SSOT (214 paths) | 🔲 PENDENTE | docs/hbtrack/evidence/AR_060/executor_main.log |
-| AR_061 | Aplicar migrations 0056-0061 e regenerar alembic_state.tx... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_061/executor_main.log |
-| AR_062 | Verificar RBAC hardening — ROLE_PERMISSIONS + schema cons... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_062/executor_main.log |
-| AR_063 | Verificar logging estruturado JSON + trace — R31/R32 | 🔲 PENDENTE | docs/hbtrack/evidence/AR_063/executor_main.log |
+| AR_057 | Verificar integridade append-only de audit_logs em schema... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_057/executor_main.log |
+| AR_058 | Verificar controle de concorrência — idempotency_keys + U... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_058/executor_main.log |
+| AR_059 | Criar context_map.md — mapa temático de ARs por domínio | ❌ FALHA | docs/hbtrack/evidence/AR_059/executor_main.log |
+| AR_060 | Verificar integridade do contrato OpenAPI SSOT (214 paths) | 🔴 REJEITADO | docs/hbtrack/evidence/AR_060/executor_main.log |
+| AR_061 | Aplicar migrations 0056-0061 e regenerar alembic_state.tx... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_061/executor_main.log |
+| AR_062 | Verificar RBAC hardening — ROLE_PERMISSIONS + schema cons... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_062/executor_main.log |
+| AR_063 | Verificar logging estruturado JSON + trace — R31/R32 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_063/executor_main.log |
 | AR_064 | Cleanup rogue: _agent/, agentes/, .github/cont + resolve ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_064_cleanup_rogue_dirs.log |
 | AR_065 | Resgate de ARs de Governança (v1.2.0 Core) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_065/executor_main.log |
 | AR_066 | Resgate de ARs de Competitions e Features | ✅ VERIFICADO | docs/hbtrack/evidence/AR_066/executor_main.log |
@@ -80,9 +80,9 @@
 | AR_070 | Criar hb_plan_watcher.py com claim atomico + dry-run + di... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_070/executor_main.log |
 | AR_071 | Add auto-commit opt-in to hb_autotest (strict allowlist +... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_071/executor_main.log |
 | AR_072 | Governance: Document daemons + bump PROTOCOL_VERSION v1.3.0 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_072/executor_main.log |
-| AR_073 | Append INV-COMP-005+006+007 em INVARIANTS_COMPETITIONS.md | 🔲 PENDENTE | docs/hbtrack/evidence/AR_073/executor_main.log |
-| AR_074 | Append INV-SCOUT-005+006+007 em INVARIANTS_SCOUT.md | 🔲 PENDENTE | docs/hbtrack/evidence/AR_074/executor_main.log |
-| AR_075 | Criar INVARIANTS_TRAINING.md com INV-TRAIN-001+002+003 | 🔲 PENDENTE | docs/hbtrack/evidence/AR_075/executor_main.log |
+| AR_073 | Append INV-COMP-005+006+007 em INVARIANTS_COMPETITIONS.md | ✅ VERIFICADO | docs/hbtrack/evidence/AR_073/executor_main.log |
+| AR_074 | Append INV-SCOUT-005+006+007 em INVARIANTS_SCOUT.md | ✅ VERIFICADO | docs/hbtrack/evidence/AR_074/executor_main.log |
+| AR_075 | Criar INVARIANTS_TRAINING.md com INV-TRAIN-001+002+003 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_075/executor_main.log |
 | AR_100 | Estabilização do Protocolo v1.2.0 e Unificação de Registros | ✅ VERIFICADO | docs/hbtrack/evidence/AR_100/executor_main.log |
 | AR_101 | Resgate de ARs de Governança (v1.2.0 Core) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_101/executor_main.log |
 | AR_102 | Resgate de ARs de Competitions e Features | ✅ VERIFICADO | docs/hbtrack/evidence/AR_102/executor_main.log |

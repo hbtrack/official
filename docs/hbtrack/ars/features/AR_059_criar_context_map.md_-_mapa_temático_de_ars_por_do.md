@@ -1,6 +1,6 @@
 # AR_059 — Criar context_map.md — mapa temático de ARs por domínio
 
-**Status**: 🔲 PENDENTE
+**Status**: ❌ FALHA
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -52,9 +52,32 @@ python -c "import pathlib; p=pathlib.Path('docs/_canon/context_map.md'); assert 
 Documento estático criado pelo Executor. Não é auto-gerado — manter manualmente. Próximas atualizações: adicionar entrada manualmente ao criar nova AR de cada domínio.
 
 ## Análise de Impacto
-_(A ser preenchido pelo Executor)_
+**Executor**: 2026-02-24
+
+**Escopo**: Documentação pura - criar context_map.md mapeando ARs por domínio temático.
+
+**Riscos**:
+- **BAIXO**: Criação de arquivo .md estático fora dos governed roots.
+- **BAIXO**: Documento de referência para navegação — não afeta código ou DB.
+
+**Dependências**:
+- Leitura de docs/hbtrack/ars/ para mapear ARs existentes por diretório
+- Estrutura esperada: Governance, Features, Business Invariants, Infrastructure, Security, Observability, SUPERSEDED
+
+**Patch**:
+- 1 arquivo criado: docs/_canon/context_map.md (~50-100 linhas)
 
 ---
 ## Carimbo de Execução
 _(Gerado por hb report)_
+
+
+### Execução Executor em c5f1ba8
+**Status Executor**: ❌ FALHA
+**Comando**: `python -c "import pathlib; p=pathlib.Path('docs/_canon/context_map.md'); assert p.exists(),'FAIL: docs/_canon/context_map.md nao existe'; c=p.read_text(encoding='utf-8'); lines=[l for l in c.splitlines() if l.strip()]; assert len(lines)>=20,f'FAIL: context_map.md muito curto ({len(lines)} linhas nao-vazias, minimo 20)'; assert any('Governance' in l or 'governance' in l for l in lines),'FAIL: secao Governance ausente'; assert any('Feature' in l or 'feature' in l for l in lines),'FAIL: secao Features ausente'; assert any('Context Map' in c or 'context_map' in c.lower() or 'Mapa' in c),'FAIL: cabeçalho context map ausente'; print(f'PASS AR_059: context_map.md existe com {len(lines)} linhas e secoes obrigatorias')"`
+**Exit Code**: 1
+**Timestamp UTC**: 2026-02-24T22:53:53.287211+00:00
+**Behavior Hash**: 56963edea338ee9b767dc40ccbfff9d07f14b9f968fb7cb9119eca98467439f9
+**Evidence File**: `docs/hbtrack/evidence/AR_059/executor_main.log`
+**Python Version**: 3.11.9
 

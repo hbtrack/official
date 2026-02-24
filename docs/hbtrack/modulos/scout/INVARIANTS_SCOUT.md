@@ -80,3 +80,71 @@ rationale: >
   Sem related_event_id, o evento goalkeeper_save fica órfão analiticamente —
   impossível calcular eficiência de goleiro corretamente.
 ```
+
+---
+
+## INV-SCOUT-005
+
+```yaml
+id: INV-SCOUT-005
+class: C1
+name: goalkeeper_required_in_match_roster
+rule: "match_roster MUST have at least one player with defensive_position_id=5 (Goleira)"
+layer: "Service logic (validator)"
+evidence: >
+  Hb Track - Backend/docs/_generated/schema.sql COMMENT ON TABLE defensive_positions (RD13: ID=5 é Goleira);
+  is_goalkeeper boolean em match_roster (schema.sql:1514)
+status: PENDENTE DE MIGRACAO
+note: >
+  Atualmente não há trigger/check no schema para garantir goleira obrigatória.
+  Existe apenas is_goalkeeper boolean como convenção de dado.
+  Implementação futura requer trigger de validação ou constraint CHECK complexa.
+rationale: >
+  Partida de handebol exige goleiro escalado (regra RD13).
+  Sem goleira, o match_roster é inválido e a partida não pode ser auditada corretamente.
+  defensive_position_id=5 é a evidência canônica de goleiro no sistema.
+```
+
+---
+
+## INV-SCOUT-006
+
+```yaml
+id: INV-SCOUT-006
+class: C2
+name: rp10_is_available_gate
+rule: "Atleta só pode ser inserido em match_roster se is_available=true em team_registration para a data da partida"
+layer: "Service + DB (campo exists, gate lógico a validar)"
+table: team_registrations
+evidence: "is_available boolean em team_registrations (schema.sql)"
+status: PARCIALMENTE IMPLEMENTADO
+note: >
+  Campo is_available existe no schema.
+  Gate de validação no serviço (check antes de INSERT em match_roster) precisa ser auditado.
+rationale: >
+  Regra de negócio RP10: atleta indisponível (lesão, suspensão, afastamento) não pode ser escalado.
+  is_available=false bloqueia participação em match_roster.
+  Garante conformidade regulatória e integridade de dados de scout.
+```
+
+---
+
+## INV-SCOUT-007
+
+```yaml
+id: INV-SCOUT-007
+class: A+B
+name: match_events_immutability
+rule: "match_events são imutáveis após criação — UPDATE/DELETE bloqueados por trigger de auditoria"
+table: match_events
+triggers:
+  - tr_match_events_block_update (BEFORE UPDATE — bloqueia qualquer alteração)
+  - tr_match_events_block_delete (BEFORE DELETE — bloqueia exclusão física)
+evidence: "Audit trigger protection on match_events table (schema.sql)"
+status: IMPLEMENTADO
+rationale: >
+  Eventos de scout são registros históricos oficiais e auditáveis.
+  Alteração ou exclusão comprometeria integridade de analytics e relatórios estatísticos.
+  Triggers garantem imutabilidade end-to-end.
+  Correções de erros devem ser feitas via INSERT de evento compensatório.
+```

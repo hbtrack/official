@@ -1,0 +1,18 @@
+AR_ID: 075
+Command: python -c "import pathlib; src=pathlib.Path('docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md').read_text(encoding='utf-8'); assert 'INV-TRAIN-001' in src, 'FAIL INV-TRAIN-001'; assert 'INV-TRAIN-002' in src, 'FAIL INV-TRAIN-002'; assert 'INV-TRAIN-003' in src, 'FAIL INV-TRAIN-003'; assert 'invalidate_analytics_cache' in src, 'FAIL trigger ausente'; assert 'team_registrations' in src, 'FAIL team_registrations'; assert 'ux_wellness' in src, 'FAIL wellness index'; assert 'V1.2' in src, 'FAIL V1.2 revogacao'; print('PASS: INVARIANTS_TRAINING INV-TRAIN-001+002+003 OK')"
+Exit Code: 0
+Timestamp UTC: 2026-02-24T22:40:44.949766+00:00
+Behavior Hash (exit+stdout+stderr): 7af66b83b1580fdb72f0a1aff1e8e9ed051ced7e4113d5cca6c1998f6d34094a
+Git HEAD: c5f1ba8918ed6a61bb9cdec4663497da3ab346fc
+Python Version: 3.11.9
+Protocol Version: 1.3.0
+Workspace Clean: False
+Workspace Status: unstaged_modified=11
+Governed Checksums (sha256): {"Hb Track - Backend/docs/ssot/alembic_state.txt": "5568c43d4a0722a5d3a49b3f3bf52d3410feb04c6966f6fe4d965f077b6d19b1", "Hb Track - Backend/docs/ssot/manifest.json": "55526210a2cd4ad1cb0f06e82ca38537cdd63d0a5ac8a2ec3066f24d5779c3aa"}
+
+--- STDOUT ---
+PASS: INVARIANTS_TRAINING INV-TRAIN-001+002+003 OK
+
+
+--- STDERR ---
+

@@ -1,6 +1,6 @@
 # AR_061 — Aplicar migrations 0056-0061 e regenerar alembic_state.txt SSOT
 
-**Status**: 🔲 PENDENTE
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -36,8 +36,7 @@ Isto atualiza Hb Track - Backend/docs/ssot/alembic_state.txt com head=0061.
 
 ## Validation Command (Contrato)
 ```
-python -c "import pathlib; p=pathlib.Path('Hb Track - Backend/docs/ssot/alembic_state.txt'); assert p.exists(),'FAIL: alembic_state.txt nao encontrado'; c=p.read_text(encoding='utf-8'); assert '0061' in c,f'FAIL: alembic_state.txt nao menciona 0061 (head atual esperado). Conteudo atual:
-{c}'; assert '0059 (head)' not in c,'FAIL: alembic_state.txt ainda mostra 0059 como head (stale)'; print(f'PASS AR_061: alembic_state.txt atualizado, 0061 presente. Conteudo: {c.strip()[:200]}')"
+python -c "import pathlib; p=pathlib.Path('Hb Track - Backend/docs/ssot/alembic_state.txt'); assert p.exists(),'FAIL: alembic_state.txt nao encontrado'; c=p.read_text(encoding='utf-8'); assert '0061' in c,f'FAIL: alembic_state.txt nao menciona 0061 (head atual esperado). Conteudo atual: {c}'; assert '0059 (head)' not in c,'FAIL: alembic_state.txt ainda mostra 0059 como head (stale)'; print(f'PASS AR_061: alembic_state.txt atualizado, 0061 presente. Conteudo: {c.strip()[:200]}')"
 ```
 
 ## Evidence File (Contrato)
@@ -59,9 +58,55 @@ Executor deve rodar alembic upgrade head ANTES de regenerar o SSOT. Se upgrade f
 - Migration 0058 adiciona status 'justified' em attendance — verificar enum existente
 
 ## Análise de Impacto
-_(A ser preenchido pelo Executor)_
+- **CRÍTICO**: Aplica 6 migrations pendentes no banco de dados (0056-0061)
+- Migrations incluem: scoring rules, match_goalkeeper_stints, attendance justified status, analytics cache, standings UNIQUE NULLS NOT DISTINCT, status CHECK constraints
+- Modifica schema do BD: novas tabelas, colunas, constraints, enums
+- Requer PostgreSQL >= 15 (migration 0060 usa NULLS NOT DISTINCT)
+- Regenera SSOT: alembic_state.txt (head 0059 → 0061) e manifest.json
+- **Rollback**: `git checkout -- "Hb Track - Backend/docs/ssot/alembic_state.txt" "Hb Track - Backend/docs/ssot/manifest.json"` + rollback BD com alembic downgrade se necessário
+- **Pré-requisito**: DATABASE_URL configurado, DB disponível, PostgreSQL >= 15
+- **Risco Alto**: Falha de migration pode deixar BD em estado inconsistente
+- Se alembic upgrade falhar, **NÃO FORÇAR** — reportar erro ao Arquiteto
 
 ---
 ## Carimbo de Execução
 _(Gerado por hb report)_
+**Exit Code**: 1
+**Timestamp UTC**: 2026-02-24T22:34:17.090195+00:00
+**Behavior Hash**: f3e90d8198d26cc476bfad4b1387ec4f48b9f2f0525730af1564e74b0fada318
+**Evidence File**: `docs/hbtrack/evidence/AR_061/executor_main.log`
+**Python Version**: 3.11.9
 
+### Execução Executor em c5f1ba8
+**Status Executor**: ❌ FALHA
+**Comando**: `python -c "import pathlib; p=pathlib.Path('Hb Track - Backend/docs/ssot/alembic_state.txt'); assert p.exists(),'FAIL: alembic_state.txt nao encontrado'; c=p.read_text(encoding='utf-8'); assert '0061' in c,f'FAIL: alembic_state.txt nao menciona 0061 (head atual esperado). Conteudo atual:
+{c}'; assert '0059 (head)' not in c,'FAIL: alembic_state.txt ainda mostra 0059 como head (stale)'; print(f'PASS AR_061: alembic_state.txt atualizado, 0061 presente. Conteudo: {c.strip()[:200]}')"`
+**Exit Code**: 1
+**Timestamp UTC**: 2026-02-24T22:34:32.250955+00:00
+**Behavior Hash**: f3e90d8198d26cc476bfad4b1387ec4f48b9f2f0525730af1564e74b0fada318
+**Evidence File**: `docs/hbtrack/evidence/AR_061/executor_main.log`
+**Python Version**: 3.11.9
+
+### Execução Executor em c5f1ba8
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import pathlib; p=pathlib.Path('Hb Track - Backend/docs/ssot/alembic_state.txt'); assert p.exists(),'FAIL: alembic_state.txt nao encontrado'; c=p.read_text(encoding='utf-8'); assert '0061' in c,f'FAIL: alembic_state.txt nao menciona 0061 (head atual esperado). Conteudo atual: {c}'; assert '0059 (head)' not in c,'FAIL: alembic_state.txt ainda mostra 0059 como head (stale)'; print(f'PASS AR_061: alembic_state.txt atualizado, 0061 presente. Conteudo: {c.strip()[:200]}')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-24T22:41:34.281663+00:00
+**Behavior Hash**: 319795879cc49c87f9e62b82f28b3dbbc2feb7742b9ce1621d9b0fbd96c105fb
+**Evidence File**: `docs/hbtrack/evidence/AR_061/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Verificacao Testador em c5f1ba8
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_061_c5f1ba8/result.json`
+
+### Selo Humano em c5f1ba8
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-24T22:54:44.085284+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_061_c5f1ba8/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_061/executor_main.log`

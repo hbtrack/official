@@ -48,6 +48,12 @@ Thumbs.db
 
 # Local runtime/generated dirs
 .hb_guard/
+
+# Agent runtime signals — ephemeral, never version (prevent dirty workspace blocking hb verify)
+_reports/dispatch/
+_reports/ARQUITETO.md
+_reports/EXECUTOR.md
+_reports/TESTADOR.md
 .hb_backups/
 .hb_lock
 .hb_tmp_tests/

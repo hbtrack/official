@@ -1,0 +1,40 @@
+{
+  "ar_id": "075",
+  "validation_command": "python -c \"import pathlib; src=pathlib.Path('docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md').read_text(encoding='utf-8'); assert 'INV-TRAIN-001' in src, 'FAIL INV-TRAIN-001'; assert 'INV-TRAIN-002' in src, 'FAIL INV-TRAIN-002'; assert 'INV-TRAIN-003' in src, 'FAIL INV-TRAIN-003'; assert 'invalidate_analytics_cache' in src, 'FAIL trigger ausente'; assert 'team_registrations' in src, 'FAIL team_registrations'; assert 'ux_wellness' in src, 'FAIL wellness index'; assert 'V1.2' in src, 'FAIL V1.2 revogacao'; print('PASS: INVARIANTS_TRAINING INV-TRAIN-001+002+003 OK')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "7af66b83b1580fdb72f0a1aff1e8e9ed051ced7e4113d5cca6c1998f6d34094a",
+      "hash": "7af66b83b1580fdb",
+      "stdout_len": 51,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "7af66b83b1580fdb72f0a1aff1e8e9ed051ced7e4113d5cca6c1998f6d34094a",
+      "hash": "7af66b83b1580fdb",
+      "stdout_len": 51,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "7af66b83b1580fdb72f0a1aff1e8e9ed051ced7e4113d5cca6c1998f6d34094a",
+      "hash": "7af66b83b1580fdb",
+      "stdout_len": 51,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

@@ -96,3 +96,77 @@ rationale: >
   competição (NULLS NOT DISTINCT garante unicidade mesmo com NULL).
   competition_standings NÃO tem trigger block_delete por design (exclusão física permitida).
 ```
+
+---
+
+## INV-COMP-005
+
+```yaml
+id: INV-COMP-005
+class: A
+name: fk_competition_standings_team_id
+rule: "competition_standings.team_id REFERENCES teams(id) ON DELETE SET NULL"
+table: competition_standings
+constraint: fk_competition_standings_team_id
+evidence: "Hb Track - Backend/docs/_generated/schema.sql:6039"
+status: IMPLEMENTADO
+rationale: >
+  Classificação de competição referencia equipe adversária (opponent team).
+  ON DELETE SET NULL permite preservar histórico de standings mesmo quando equipe é excluída.
+  Mantém integridade referencial sem causar cascata de exclusões em histórico de competições.
+```
+
+---
+
+## INV-COMP-006
+
+```yaml
+id: INV-COMP-006
+class: A
+name: soft_delete_comp_db_001
+rule: >
+  (deleted_at IS NULL AND deleted_reason IS NULL)
+  OR
+  (deleted_at IS NOT NULL AND deleted_reason IS NOT NULL)
+tables:
+  - competitions
+  - competition_matches
+  - competition_standings
+  - competition_match_events
+  - match_rosters
+constraints:
+  - ck_soft_delete_competitions
+  - ck_soft_delete_competition_matches
+  - ck_soft_delete_competition_standings
+  - ck_soft_delete_competition_match_events
+  - ck_soft_delete_match_rosters
+evidence: "Migration 0055 (AR_008): Hb Track - Backend/db/alembic/versions/0055_comp_db_001_soft_delete_competition_tables.py"
+status: IMPLEMENTADO
+rationale: >
+  Soft delete padronizado para 5 tabelas do módulo competitions (COMP-DB-001).
+  deleted_at e deleted_reason devem ser preenchidos atomicamente.
+  Garante auditabilidade e reversibilidade de exclusões lógicas em domínio de competição.
+  Triggers de bloqueio de DELETE físico aplicados nas 5 tabelas.
+```
+
+---
+
+## INV-COMP-007
+
+```yaml
+id: INV-COMP-007
+class: A
+name: scoring_rules_competitions
+rule: "points_per_win INTEGER DEFAULT 2; points_per_draw e points_per_loss (PENDENTES AR_036)"
+table: competitions
+evidence: "Hb Track - Backend/docs/_generated/schema.sql:994"
+status: PARCIALMENTE IMPLEMENTADO
+note: >
+  AR_036 pendente para adicionar points_per_draw e points_per_loss em competitions.
+  Atualmente apenas points_per_win está implementado com DEFAULT 2 (sistema handball padrão).
+rationale: >
+  Regras de pontuação determinam campeão de torneio.
+  points_per_win DEFAULT 2 segue convenção handball padrão.
+  Expansão para points_per_draw e points_per_loss aguarda AR_036 para cobrir modalidades
+  com empates e penalizações específicas.
+```
