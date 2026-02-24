@@ -85,5 +85,5 @@
 | AR_102 | Resgate de ARs de Competitions e Features | ⚠️ PENDENTE | docs/hbtrack/evidence/AR_102/executor_main.log |
 | AR_103 | Resgate de Drafts e Invariantes Wellness | ⚠️ PENDENTE | docs/hbtrack/evidence/AR_103/executor_main.log |
 | AR_900 | Audit Multiagent Smoke Test | ✅ SUCESSO | docs/hbtrack/evidence/AR_900/executor_main.log |
-| AR_998 | Test Write Scope Section Generation | 🔲 PENDENTE | docs/hbtrack/evidence/AR_998/executor_main.log |
+| AR_998 | Test Write Scope Section Generation | ✅ VERIFICADO | docs/hbtrack/evidence/AR_998/executor_main.log |
 | AR_999 | Exemplo: Adicionar campo birthdate em Person | 🔲 PENDENTE | docs/hbtrack/evidence/AR_999/executor_main.log |

@@ -496,6 +496,7 @@ EVIDENCE_PACK:
 - AC-005 alembic downgrade -1 exit_code=0: PASS
 
 ### ✅ Concluído
+- AR_998
 - AR_072
 - AR_900
 - AR_064
