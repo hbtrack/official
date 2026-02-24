@@ -1,0 +1,18 @@
+AR_ID: 111
+Command: python temp/validate_ar111.py
+Exit Code: 0
+Timestamp UTC: 2026-02-24T17:59:38.180807+00:00
+Behavior Hash (exit+stdout+stderr): 22908d4d66771adf4298ed6ea97acf740e844e5cb6a07eac118c9188561699fe
+Git HEAD: 8608b0a4c3ad08d4a521e049f4846ea1dbb1c383
+Python Version: 3.11.9
+Protocol Version: 1.3.0
+Workspace Clean: False
+Workspace Status: unstaged_modified=2
+Governed Checksums (sha256): {}
+
+--- STDOUT ---
+PASS: cmd_verify limpeza de carimbos antigos implementada
+
+
+--- STDERR ---
+

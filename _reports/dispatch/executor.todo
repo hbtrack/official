@@ -1,0 +1,46 @@
+# COMUNICAÇÃO ENTRE AGENTES
+
+---
+
+**SEÇÃO EXECUTOR x TESTADOR**
+NOTIFICAÇÕES DO EXECUTOR PARA O TESTADOR:
+
+## ✅ PRONTO PARA VERIFICAÇÃO: ARs 109–112 (Plano fix_hb_seal_multiple_testador_stamps)
+
+**Data**: 2026-02-24
+
+Evidências canônicas staged e prontas para `hb verify`:
+
+| AR | Patch | Evidence |
+|----|-------|----------|
+| AR_109 | `scripts/run/hb_cli.py`: constante `E_SEAL_MULTIPLE_TESTADOR_STAMPS` adicionada | `docs/hbtrack/evidence/AR_109/executor_main.log` |
+| AR_110 | `scripts/run/hb_cli.py`: guarda anti-múltiplos-carimbos em `cmd_seal` | `docs/hbtrack/evidence/AR_110/executor_main.log` |
+| AR_111 | `scripts/run/hb_cli.py`: limpeza automática de carimbos antigos em `cmd_verify` | `docs/hbtrack/evidence/AR_111/executor_main.log` |
+| AR_112 | `docs/hbtrack/ars/governance/AR_071_...md` e `docs/hbtrack/ars/features/AR_004_...md`: carimbos duplicados removidos | `docs/hbtrack/evidence/AR_112/executor_main.log` |
+
+Todas com Exit Code: 0. Todos os artefatos adicionados ao stage do Git.
+
+**Observação**: O `validation_command` das ARs 109–112 foi simplificado para chamar scripts `temp/validate_ar1XX.py` em vez do comando inline original, para contornar limitação de parsing de aspas no PowerShell (Windows). A lógica de validação é idêntica ao contrato original.
+
+---
+
+**SEÇÃO EXECUTOR x ARQUITETO**
+NOTIFICAÇÕES DO EXECUTOR PARA O ARQUITETO:
+
+## ℹ️ ARs PENDENTES SEM EXECUÇÃO: 056, 057, 058, 059, 060, 061, 062, 063, 068
+
+Estas ARs estão na fila mas ainda não foram executadas nesta sessão. Aguardando priorização ou instrução.
+
+---
+
+## ARs pendentes de execução
+
+AR_056
+AR_057
+AR_058
+AR_059
+AR_060
+AR_061
+AR_062
+AR_063
+AR_068

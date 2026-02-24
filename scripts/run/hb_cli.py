@@ -129,6 +129,7 @@ E_TESTADOR_REPORT_NOT_STAGED = "E_TESTADOR_REPORT_NOT_STAGED"
 E_SEAL_NOT_READY = "E_SEAL_NOT_READY"
 E_SEAL_MISSING_TESTADOR_REPORT = "E_SEAL_MISSING_TESTADOR_REPORT"
 E_SEAL_REPORT_NOT_STAGED = "E_SEAL_REPORT_NOT_STAGED"
+E_SEAL_MULTIPLE_TESTADOR_STAMPS = "E_SEAL_MULTIPLE_TESTADOR_STAMPS"  # Seal abort: AR tem múltiplos carimbos do Testador (re-runs não limpos)
 E_SEAL_EVIDENCE_NOT_STAGED = "E_SEAL_EVIDENCE_NOT_STAGED"
 
 # ========== ANTI-TRIVIAL GATE (GATE P3.5) ==========
@@ -1481,6 +1482,11 @@ def cmd_verify(ar_id: str) -> None:
             f"**Exit Testador**: {exit_code} | **Exit Executor**: {executor_exit}\n"
             f"**TESTADOR_REPORT**: `{TESTADOR_DIR}/AR_{ar_id}_{hash7}/result.json`\n"
         )
+        
+        # Remover carimbos anteriores do Testador (idempotência: cada verify sobrescreve histórico)
+        ar_updated = re.sub(r"### Verificacao Testador em [a-f0-9]{7}.*?(?=(###|\Z))", "", ar_updated, flags=re.DOTALL)
+        ar_updated = re.sub(r"\n{3,}", "\n\n", ar_updated)
+
         ar_updated = ar_updated + stamp
 
         with open(ar_file, "w", encoding="utf-8") as f:
@@ -1507,6 +1513,15 @@ def cmd_seal(ar_id: str, reason: str = "") -> None:
     if "✅ VERIFICADO" in ar_content:
         print(f"✅ AR_{ar_id} já está VERIFICADO (idempotente).")
         sys.exit(0)
+
+    # V10: Guarda anti-múltiplos carimbos e status inválido
+    testador_stamps = re.findall(r"### Verificacao Testador em [a-f0-9]{7}", ar_content)
+    if len(testador_stamps) > 1:
+        fail(E_SEAL_MULTIPLE_TESTADOR_STAMPS, f"AR_{ar_id} tem {len(testador_stamps)} carimbos do Testador. Apenas 1 permitido. Carimbos encontrados: {testador_stamps}. AÇÃO: Limpe carimbos antigos ou re-execute hb verify.", exit_code=2)
+    if len(testador_stamps) == 0:
+        fail(E_SEAL_NOT_READY, f"AR_{ar_id} não tem carimbo do Testador. Rode: hb verify {ar_id}", exit_code=2)
+    if '🔴 REJEITADO' in ar_content or '🔍 NEEDS REVIEW' in ar_content:
+        fail(E_SEAL_NOT_READY, f"AR_{ar_id} tem status REJEITADO ou NEEDS REVIEW. Corrija e re-execute hb verify {ar_id}", exit_code=2)
 
     if "✅ SUCESSO" not in ar_content:
         fail(E_SEAL_NOT_READY, f"AR_{ar_id} não está ✅ SUCESSO (Testador). Rode: hb verify {ar_id}", exit_code=2)

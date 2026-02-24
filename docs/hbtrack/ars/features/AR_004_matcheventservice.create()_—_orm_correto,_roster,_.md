@@ -88,15 +88,6 @@ _(Gerado por hb report)_
 **Python Version**: 3.11.9
 
 
-> 📋 Kanban routing: Arquiteto: Output não-determinístico: behavior_hash diverge nos 3 runs (exit 0 em todos, mas hash diferente)
-
-### Verificacao Testador em e971d7f
-**Status Testador**: 🔍 NEEDS REVIEW
-**Consistency**: AH_DIVERGENCE
-**Triple-Run**: FLAKY_OUTPUT (3x)
-**Exit Testador**: 2 | **Exit Executor**: 0
-**TESTADOR_REPORT**: `_reports/testador/AR_004_e971d7f/result.json`
-
 ### Execução Executor em 3d84621
 **Status Executor**: 🏗️ EM_EXECUCAO
 **Comando**: `python -c "import pathlib; p=pathlib.Path('Hb Track - Backend/app/services/match_event_service.py'); assert p.exists(), 'File not found'; print(f'PASS_AR_004_bytes={p.stat().st_size}'); exit(0)"`

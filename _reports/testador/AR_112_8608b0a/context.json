@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_112-8608b0a",
+  "timestamp_utc": "2026-02-24T18:05:51.872416+00:00",
+  "git": {
+    "commit": "8608b0a4c3ad08d4a521e049f4846ea1dbb1c383"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "112",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_112_limpar_manualmente_carimbos_duplicados_de_ar_071_e.md"
+}

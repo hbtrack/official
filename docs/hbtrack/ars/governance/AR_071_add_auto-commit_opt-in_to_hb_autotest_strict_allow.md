@@ -56,15 +56,6 @@ _(Gerado por hb report)_
 **Python Version**: 3.11.9
 
 
-> 📋 Kanban routing: Arquiteto: Executor reported exit 0 but Testador got exit 1
-
-### Verificacao Testador em 457d095
-**Status Testador**: 🔴 REJEITADO
-**Consistency**: AH_DIVERGENCE
-**Triple-Run**: TRIPLE_FAIL (3x)
-**Exit Testador**: 1 | **Exit Executor**: 0
-**TESTADOR_REPORT**: `_reports/testador/AR_071_457d095/result.json`
-
 ### Verificacao Testador em 457d095
 **Status Testador**: ✅ SUCESSO
 **Consistency**: OK
