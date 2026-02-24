@@ -1,6 +1,6 @@
 # AR_041 — Model Competition: ADD ck_competitions_status + ck_competitions_modality
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ✅ SUCESSO
 **Versão do Protocolo**: 1.1.0
 
 ## Descrição
@@ -56,14 +56,12 @@ git restore 'Hb Track - Backend/app/models/competition.py'
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução em b2e7523
 **Status Final**: ✅ SUCESSO
 **Comando**: `python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition import Competition; args=Competition.__table_args__; names=[getattr(a,'name',None) for a in args]; checks=['ck_competitions_status','ck_competitions_modality','ck_competitions_deleted_reason']; missing=[c for c in checks if c not in names]; assert not missing,f'FAIL: missing constraints {missing}'; print(f'PASS: all 3 constraints present in Competition.__table_args__')"`
 **Exit Code**: 0
 **Evidence File**: `docs/hbtrack/evidence/AR_041/executor_main.log`
 **Python Version**: 3.11.9
-
 
 ### Execução Executor em 38b62a5
 **Status Executor**: 🏗️ EM_EXECUCAO
@@ -74,7 +72,6 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_041/executor_main.log`
 **Python Version**: 3.11.9
 
-
 ### Execução Executor em 38b62a5
 **Status Executor**: 🏗️ EM_EXECUCAO
 **Comando**: `python -c "import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition import Competition; args=Competition.__table_args__; names=[getattr(a,'name',None) for a in args]; checks=['ck_competitions_status','ck_competitions_modality','ck_competitions_deleted_reason']; missing=[c for c in checks if c not in names]; assert not missing,f'FAIL: missing constraints {missing}'; print(f'PASS: all 3 constraints present in Competition.__table_args__')"`
@@ -84,3 +81,10 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_041/executor_main.log`
 **Python Version**: 3.11.9
 
+
+### Verificacao Testador em 4220d7b
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_041_4220d7b/result.json`

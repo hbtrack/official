@@ -1,0 +1,40 @@
+{
+  "ar_id": "041",
+  "validation_command": "python -c \"import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition import Competition; args=Competition.__table_args__; names=[getattr(a,'name',None) for a in args]; checks=['ck_competitions_status','ck_competitions_modality','ck_competitions_deleted_reason']; missing=[c for c in checks if c not in names]; assert not missing,f'FAIL: missing constraints {missing}'; print(f'PASS: all 3 constraints present in Competition.__table_args__')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "262d70fcacca6bc24f9c722955159989ef795e10d9403fd2bd992abd219bed76",
+      "hash": "262d70fcacca6bc2",
+      "stdout_len": 62,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "262d70fcacca6bc24f9c722955159989ef795e10d9403fd2bd992abd219bed76",
+      "hash": "262d70fcacca6bc2",
+      "stdout_len": 62,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "262d70fcacca6bc24f9c722955159989ef795e10d9403fd2bd992abd219bed76",
+      "hash": "262d70fcacca6bc2",
+      "stdout_len": 62,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}
