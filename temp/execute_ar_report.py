@@ -5,12 +5,17 @@ import subprocess
 import sys
 from pathlib import Path
 
-ar_id = "104"
-ar_path = Path(f"docs/hbtrack/ars/features/AR_{ar_id}_modificar_migration_0060_para_detectar_versão_post.md")
+# Get AR ID from command line or use default
+ar_id = sys.argv[1] if len(sys.argv) > 1 else "024"
 
-if not ar_path.exists():
-    print(f"AR file not found: {ar_path}", file=sys.stderr)
+# Find AR file
+ar_files = list(Path("docs/hbtrack/ars").rglob(f"AR_{ar_id}_*.md"))
+if not ar_files:
+    print(f"AR file not found for AR_{ar_id}", file=sys.stderr)
     sys.exit(1)
+
+ar_path = ar_files[0]
+print(f"Found: {ar_path}")
 
 ar_content = ar_path.read_text(encoding="utf-8")
 
@@ -27,8 +32,7 @@ if not match:
 
 validation_cmd = match.group(1).strip()
 
-print(f"Extracted command ({len(validation_cmd)} chars)")
-print(f"Running: hb report {ar_id} <command>")
+print(f"Validation command length: {len(validation_cmd)} chars")
 
 result = subprocess.run(
     ["python", "scripts/run/hb_cli.py", "report", ar_id, validation_cmd],

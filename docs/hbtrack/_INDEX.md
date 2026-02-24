@@ -6,10 +6,10 @@
 |---|---|---|---|
 | AR_001 | Migration: ADD COLUMN competition_standings.team_id (uuid... | ✅ SUCESSO | docs/hbtrack/evidence/AR_001_competition_standings_add_team_id_migration.log |
 | AR_002 | Model: CompetitionStanding.team_id — mapped_column + rela... | ⚠️ PENDENTE | docs/hbtrack/evidence/AR_002_competition_standings_model_team_id.log |
-| AR_002.5 | Schema: match_goalkeeper_stints para Eficiência de Goleira | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_002.5_A/executor_main.log |
-| AR_002.5 | Schema: attendance.presence_status + status 'justified' | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_002.5_B/executor_main.log |
+| AR_002.5 | Schema: match_goalkeeper_stints para Eficiência de Goleira | ✅ VERIFICADO | docs/hbtrack/evidence/AR_002.5_A/executor_main.log |
+| AR_002.5 | Schema: attendance.presence_status + status 'justified' | ✅ VERIFICADO | docs/hbtrack/evidence/AR_002.5_B/executor_main.log |
 | AR_002.5 | Documentar divergência de escalas wellness_pre vs. PRD | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_002_5_C_evidence.log |
-| AR_002.5 | Schema: match_analytics_cache para Relatórios V1.1 | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_002.5_D/executor_main.log |
+| AR_002.5 | Schema: match_analytics_cache para Relatórios V1.1 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_002.5_D/executor_main.log |
 | AR_003 | Schemas Pydantic Canônicos de Scout | ✅ SUCESSO | — |
 | AR_004 | MatchEventService.create() — ORM correto, roster, is_shot... | ✅ SUCESSO | docs/hbtrack/evidence/AR_004/executor_main.log |
 | AR_005 | Router match_events — schemas canônicos ScoutEventCreate/... | 🔍 NEEDS REVIEW | docs/hbtrack/evidence/AR_005_endpoint_match_events.log |
@@ -31,7 +31,7 @@
 | AR_021 | Dual Executor Contract: protocolo de 2 agentes Executores... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_021_gov_dual_executor_contract.log |
 | AR_022 | BATCH_001: assignment das ARs pendentes para Executor A e... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_022_gov_dual_executor_batch_001.log |
 | AR_023 | Triple-Run Determinism + Anti-Trivial Gate + Protocol v1.... | 🔴 REJEITADO | docs/hbtrack/evidence/AR_023_triple_run_determinism.log |
-| AR_024 | Docs v1.1.0: Dev Flow + Hb cli Spec + Testador Contract | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_024_docs_v110.log |
+| AR_024 | Docs v1.1.0: Dev Flow + Hb cli Spec + Testador Contract | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_024/executor_main.log |
 | AR_025 | Agente-Arquiteto Contract v2.0: Regras, Gates, Prompt Ent... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_025_arquiteto_contract_enterprise.log |
 | AR_026 | Agente-Executor Contract v2.0: Regras, Guardrails, Eviden... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_026_executor_contract_enterprise.log |
 | AR_027 | Agente-Testador Contract v2.0: Triple-Run Enterprise + An... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_027_testador_contract_enterprise.log |
@@ -84,7 +84,7 @@
 | AR_101 | Resgate de ARs de Governança (v1.2.0 Core) | ⚠️ PENDENTE | docs/hbtrack/evidence/AR_101/executor_main.log |
 | AR_102 | Resgate de ARs de Competitions e Features | ⚠️ PENDENTE | docs/hbtrack/evidence/AR_102/executor_main.log |
 | AR_103 | Resgate de Drafts e Invariantes Wellness | ⚠️ PENDENTE | docs/hbtrack/evidence/AR_103/executor_main.log |
-| AR_104 | Modificar migration 0060 para detectar versão PostgreSQL ... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_104/executor_main.log |
-| AR_105 | Validar comportamento semântico da constraint/index em Po... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_105/executor_main.log |
+| AR_104 | Modificar migration 0060 para detectar versão PostgreSQL ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_104/executor_main.log |
+| AR_105 | Validar comportamento semântico da constraint/index em Po... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_105/executor_main.log |
 | AR_998 | Test Write Scope Section Generation | ✅ SUCESSO | docs/hbtrack/evidence/AR_998/executor_main.log |
 | AR_999 | Exemplo: Adicionar campo birthdate em Person | ✅ SUCESSO | docs/hbtrack/evidence/AR_999/executor_main.log |
