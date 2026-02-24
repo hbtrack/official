@@ -1,6 +1,6 @@
 # AR_071 — Add auto-commit opt-in to hb_autotest (strict allowlist + abort)
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.2.0
 
 ## Descrição
@@ -62,3 +62,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_071_457d095/result.json`
+
+### Selo Humano em a06d856
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-24T19:04:38.628968+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_071_457d095/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_071/executor_main.log`

@@ -1,6 +1,6 @@
 # AR_110 — Adicionar guarda anti-múltiplos-carimbos em cmd_seal (antes de check SUCESSO)
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -70,3 +70,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_110_ab81cc3/result.json`
+
+### Selo Humano em a06d856
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-24T19:04:32.303135+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_110_ab81cc3/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_110/executor_main.log`

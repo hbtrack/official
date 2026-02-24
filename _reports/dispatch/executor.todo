@@ -23,11 +23,25 @@ Todas as ARs prontas para `hb seal` (aguardando humano ou hb_autotest).
 **SEÇÃO EXECUTOR x TESTADOR**
 NOTIFICAÇÕES DO EXECUTOR PARA O TESTADOR:
 
-## ✅ PRONTO PARA VERIFICAÇÃO: ARs 109–112 (Plano fix_hb_seal_multiple_testador_stamps)
+## ✅ PRONTO PARA VERIFICAÇÃO: ARs 120, 121, 122
 
-**Data**: 2026-02-24
+**Data**: 2026-02-25
 
-Evidencias canonicas staged e prontas para `hb verify`.
+Evidencias canonicas staged e prontas para `hb verify`:
+
+| AR | Evidence Path | Status Executor |
+|----|---------------|-----------------|
+| AR_120 | docs/hbtrack/evidence/AR_120/executor_main.log | 🏗️ EM_EXECUCAO |
+| AR_121 | docs/hbtrack/evidence/AR_121/executor_main.log | 🏗️ EM_EXECUCAO |
+| AR_122 | docs/hbtrack/evidence/AR_122/executor_main.log | 🏗️ EM_EXECUCAO |
+
+Notas:
+- AR_120 fix: `_status_match` via regex em campo `**Status**:` em `cmd_seal` (elimina REJEITADO false-positive)
+- AR_121 fix: AR_003 validation_command agora usa UUID fixo `00000000-0000-0000-0000-000000000001` (determinístico)
+- AR_122 fix: `_status_idem_match` via regex em campo `**Status**:` em `cmd_seal` (elimina VERIFICADO idempotencia false-positive)
+- AR_110 e AR_071 foram seladas automaticamente pelas validações dos respectivos reports (hb seal chamado internamente)
+
+Próximas pendentes: AR_068 (evidence migration), ARs 113–119 (legacy validation fixes)
 
 ---
 
@@ -67,25 +81,21 @@ Vao ser planejadas em sessao futura quando o escopo (BIZ_001, KB_001, SSOT_001, 
 
 ---
 
-## 🔲 DISPATCH BATCH — 5 Planos Prontos (todos dry-run Exit 0)
+## ✅ DISPATCH BATCH CONCLUÍDO — ARs 120, 121, 122
 
-### Prioridade 1 (ALTA): fix_ar110_seal_status_check.json → AR_120
-Corrigir `cmd_seal` hb_cli.py L1524 (REJEITADO false-positive).
-Ver detalhes em `architect.todo`.
+### ✅ Prioridade 1 (ALTA): AR_120 — CONCLUÍDA
+`cmd_seal` fix REJEITADO aplicado. Evidence: `docs/hbtrack/evidence/AR_120/executor_main.log`. AR_110 selada.
 
-### Prioridade 2 (ALTA): fix_ar071_seal_verificado_check.json → AR_122
-Corrigir `cmd_seal` hb_cli.py L1513 (VERIFICADO idempotencia false-positive).
-Ver detalhes em `architect.todo`.
-NOTA: Aplicar APOS Prioridade 1 (mesmo arquivo).
+### ✅ Prioridade 2 (ALTA): AR_122 — CONCLUÍDA
+`cmd_seal` fix VERIFICADO idempotencia aplicado. Evidence: `docs/hbtrack/evidence/AR_122/executor_main.log`. AR_071 selada.
 
-### Prioridade 3 (ALTA): fix_ar003_deterministic_validation.json → AR_121
-Corrigir validation_command AR_003.md (UUID deterministico).
-Ver detalhes em `architect.todo`.
+### ✅ Prioridade 3 (ALTA): AR_121 — CONCLUÍDA
+AR_003 validation_command corrigido (UUID fixo deterministico). Evidence: `docs/hbtrack/evidence/AR_121/executor_main.log`.
 
-### Prioridade 4 (NORMAL): AR_068_migration_persons_birth_date.json → AR_068
+### 🔲 Prioridade 4 (NORMAL): AR_068 — PENDENTE
 Gerar evidencia canonica AR_068 (migration ja aplicada, apenas hb report).
-Ver instrucoes acima.
+Aguardando próximo ciclo de execução.
 
-### Prioridade 5 (NORMAL): fix_legacy_validation_7ars_opcao_a.json → ARs 113–119
+### 🔲 Prioridade 5 (NORMAL): ARs 113–119 — PENDENTE
 Corrigir validation_commands em 7 ARs legado.
-Ver detalhes em `architect.todo`.
+Aguardando próximo ciclo de execução.

@@ -78,7 +78,7 @@
 | AR_068 | Migration: persons.birth_date NOT NULL + Trigger de Parid... | 🔲 PENDENTE | — |
 | AR_069 | Fix write_scope Pipeline: Schema + build_ar_content + GAT... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_069/executor_main.log |
 | AR_070 | Criar hb_plan_watcher.py com claim atomico + dry-run + di... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_070/executor_main.log |
-| AR_071 | Add auto-commit opt-in to hb_autotest (strict allowlist +... | ✅ SUCESSO | docs/hbtrack/evidence/AR_071/executor_main.log |
+| AR_071 | Add auto-commit opt-in to hb_autotest (strict allowlist +... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_071/executor_main.log |
 | AR_072 | Governance: Document daemons + bump PROTOCOL_VERSION v1.3.0 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_072/executor_main.log |
 | AR_100 | Estabilização do Protocolo v1.2.0 e Unificação de Registros | ✅ VERIFICADO | docs/hbtrack/evidence/AR_100/executor_main.log |
 | AR_101 | Resgate de ARs de Governança (v1.2.0 Core) | ⚠️ PENDENTE | docs/hbtrack/evidence/AR_101/executor_main.log |
@@ -87,7 +87,7 @@
 | AR_104 | Modificar migration 0060 para detectar versão PostgreSQL ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_104/executor_main.log |
 | AR_105 | Validar comportamento semântico da constraint/index em Po... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_105/executor_main.log |
 | AR_109 | Adicionar constante E_SEAL_MULTIPLE_TESTADOR_STAMPS no to... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_109/executor_main.log |
-| AR_110 | Adicionar guarda anti-múltiplos-carimbos em cmd_seal (ant... | ✅ SUCESSO | docs/hbtrack/evidence/AR_110/executor_main.log |
+| AR_110 | Adicionar guarda anti-múltiplos-carimbos em cmd_seal (ant... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_110/executor_main.log |
 | AR_111 | Adicionar limpeza automática de carimbos antigos em cmd_v... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_111/executor_main.log |
 | AR_112 | Limpar manualmente carimbos duplicados de AR_071 e AR_004 | ✅ VERIFICADO | — |
 | AR_113 | Corrigir contrato AR_032 — versao protocolo v1.1.0 obsoleta | 🔲 PENDENTE | docs/hbtrack/evidence/AR_113/executor_main.log |
@@ -97,8 +97,8 @@
 | AR_117 | Corrigir contrato AR_040 — banco renumerado de 0058 para ... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_117/executor_main.log |
 | AR_118 | Corrigir contrato AR_044 — contagens de planos e orphan c... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_118/executor_main.log |
 | AR_119 | Corrigir contrato AR_045 — contagens de ARs com valores e... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_119/executor_main.log |
-| AR_120 | Fix cmd_seal — verificacao de REJEITADO por campo Status | 🔲 PENDENTE | docs/hbtrack/evidence/AR_120/executor_main.log |
-| AR_121 | Corrigir contrato AR_003 — validation nao-deterministica | 🔲 PENDENTE | docs/hbtrack/evidence/AR_121/executor_main.log |
-| AR_122 | Fix cmd_seal — idempotencia VERIFICADO por campo Status | 🔲 PENDENTE | docs/hbtrack/evidence/AR_122/executor_main.log |
+| AR_120 | Fix cmd_seal — verificacao de REJEITADO por campo Status | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_120/executor_main.log |
+| AR_121 | Corrigir contrato AR_003 — validation nao-deterministica | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_121/executor_main.log |
+| AR_122 | Fix cmd_seal — idempotencia VERIFICADO por campo Status | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_122/executor_main.log |
 | AR_998 | Test Write Scope Section Generation | ✅ VERIFICADO | docs/hbtrack/evidence/AR_998/executor_main.log |
 | AR_999 | Exemplo: Adicionar campo birthdate em Person | ✅ VERIFICADO | docs/hbtrack/evidence/AR_999/executor_main.log |

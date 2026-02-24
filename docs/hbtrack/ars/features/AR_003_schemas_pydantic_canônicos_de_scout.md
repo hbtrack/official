@@ -48,7 +48,23 @@ model_config = ConfigDict(from_attributes=True).
 
 ## Validation Command (Contrato)
 ```
-python temp/validate_ar003.py
+import sys, uuid
+sys.path.insert(0, 'Hb Track - Backend')
+from app.schemas.match_events import ScoutEventCreate, CanonicalEventType, EventType
+FIXED = uuid.UUID('00000000-0000-0000-0000-000000000001')
+invalid = [v for v in ['goal_7m','own_goal','shot_on_target','assist','technical_foul'] if v in [e.value for e in CanonicalEventType]]
+assert not invalid, f'Enum invalido: {invalid}'
+base = {'team_id': FIXED, 'period_number': 1, 'game_time_seconds': 300, 'phase_of_play': 'attack', 'advantage_state': 'even', 'score_our': 5, 'score_opponent': 3, 'event_type': 'goal', 'outcome': 'success', 'is_shot': True, 'is_goal': True, 'source': 'live', 'x_coord': 50.0, 'y_coord': 40.0}
+e = ScoutEventCreate(**base)
+assert e.period_number == 1 and e.game_time_seconds == 300 and e.x_coord == 50.0 and e.y_coord == 40.0
+assert EventType is CanonicalEventType
+gk_ok = False
+try:
+    ScoutEventCreate(**{**base, 'event_type': 'goalkeeper_save', 'related_event_id': None})
+except ValueError as err:
+    gk_ok = 'goalkeeper_save' in str(err).lower() and 'related_event_id' in str(err).lower()
+assert gk_ok, 'goalkeeper_save nao levantou ValidationError correta'
+print('PASS: Schemas Pydantic canonicos OK')
 ```
 
 ## Evidence File (Contrato)

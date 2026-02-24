@@ -1510,7 +1510,10 @@ def cmd_seal(ar_id: str, reason: str = "") -> None:
     ar_file = ar_files[0]
     ar_content = ar_file.read_text(encoding="utf-8")
 
-    if "✅ VERIFICADO" in ar_content:
+    # V11: Verificar apenas o campo **Status**: para evitar falso-positivo de idempotencia
+    _status_idem_match = re.search(r'^\*\*Status\*\*:\s*(.+)$', ar_content, re.MULTILINE)
+    _status_idem_value = _status_idem_match.group(1).strip() if _status_idem_match else ''
+    if '✅ VERIFICADO' in _status_idem_value:
         print(f"✅ AR_{ar_id} já está VERIFICADO (idempotente).")
         sys.exit(0)
 
@@ -1520,7 +1523,10 @@ def cmd_seal(ar_id: str, reason: str = "") -> None:
         fail(E_SEAL_MULTIPLE_TESTADOR_STAMPS, f"AR_{ar_id} tem {len(testador_stamps)} carimbos do Testador. Apenas 1 permitido. Carimbos encontrados: {testador_stamps}. AÇÃO: Limpe carimbos antigos ou re-execute hb verify.", exit_code=2)
     if len(testador_stamps) == 0:
         fail(E_SEAL_NOT_READY, f"AR_{ar_id} não tem carimbo do Testador. Rode: hb verify {ar_id}", exit_code=2)
-    if '🔴 REJEITADO' in ar_content or '🔍 NEEDS REVIEW' in ar_content:
+    # V11: Verificar apenas o campo **Status**: (nao o conteudo inteiro) para evitar falso-positivo
+    _status_match = re.search(r'^\*\*Status\*\*:\s*(.+)$', ar_content, re.MULTILINE)
+    _status_value = _status_match.group(1).strip() if _status_match else ''
+    if '🔴 REJEITADO' in _status_value or '🔍 NEEDS REVIEW' in _status_value:
         fail(E_SEAL_NOT_READY, f"AR_{ar_id} tem status REJEITADO ou NEEDS REVIEW. Corrija e re-execute hb verify {ar_id}", exit_code=2)
 
     if "✅ SUCESSO" not in ar_content:
