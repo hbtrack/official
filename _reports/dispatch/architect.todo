@@ -60,54 +60,17 @@ Arquiteto selou todas como ✅ VERIFICADO.
 
 ---
 
-## 🔴 NOVO REJEITADO: AR_003 — AH_DIVERGENCE (Windows cmd-safe)
+## ✅ RESOLVIDO: AR_003 + AR_123 — Verificadas e Seladas
 
-### Causa raiz identificada
-AR_121 corrigiu o não-determinismo (UUID4 → UUID fixo). Porém, o `validation_command` em AR_003.md ainda contém **código Python puro** começando com `import sys, uuid`. O `run_cmd` do `hb_cli.py` executa via `subprocess.run(cmd, shell=True)` — no Windows, `cmd.exe` tenta rodar `import` como comando de shell:
+AR_123 criada pelo Arquiteto (plano `fix_ar003_validation_cmd_windows_shell.json`), executada pelo Executor (commits fe8ca5a, fb72af5) e verificada pelo Testador.
 
-```
-stderr: 'import' não é reconhecido como um comando interno
-ou externo, um programa operável ou um arquivo em lotes.
-exit_code: 1 (consistente 3x)
-```
+| AR | Hash Verify | Status |
+|---|---|---|
+| AR_123 | 7149b8f31933aa3d | ✅ VERIFICADO |
+| AR_003 | 7149b8f31933aa3d | ✅ VERIFICADO |
 
-O próprio código de validação está **correto** (testado manualmente → PASS). O problema é exclusivamente o formato do `validation_command` (raw Python vs comando de shell).
-
-### Plano criado
-**AR_123** criado via `hb plan` — aguardando Executor.
-Plano: `docs/_canon/planos/fix_ar003_validation_cmd_windows_shell.json`
-
-### Instrução para o Executor
-1. Criar `docs/hbtrack/evidence/AR_003/validate_ar003.py` com o código abaixo (determinístico, UUID fixo):
-
-```python
-import sys, uuid
-sys.path.insert(0, 'Hb Track - Backend')
-from app.schemas.match_events import ScoutEventCreate, CanonicalEventType, EventType
-FIXED = uuid.UUID('00000000-0000-0000-0000-000000000001')
-invalid = [v for v in ['goal_7m','own_goal','shot_on_target','assist','technical_foul'] if v in [e.value for e in CanonicalEventType]]
-assert not invalid, f'Enum invalido: {invalid}'
-base = {'team_id': FIXED, 'period_number': 1, 'game_time_seconds': 300, 'phase_of_play': 'attack', 'advantage_state': 'even', 'score_our': 5, 'score_opponent': 3, 'event_type': 'goal', 'outcome': 'success', 'is_shot': True, 'is_goal': True, 'source': 'live', 'x_coord': 50.0, 'y_coord': 40.0}
-e = ScoutEventCreate(**base)
-assert e.period_number == 1 and e.game_time_seconds == 300 and e.x_coord == 50.0 and e.y_coord == 40.0
-assert EventType is CanonicalEventType
-gk_ok = False
-try:
-    ScoutEventCreate(**{**base, 'event_type': 'goalkeeper_save', 'related_event_id': None})
-except ValueError as err:
-    gk_ok = 'goalkeeper_save' in str(err).lower() and 'related_event_id' in str(err).lower()
-assert gk_ok, 'goalkeeper_save nao levantou ValidationError correta'
-print('PASS: Schemas Pydantic canonicos OK')
-```
-
-2. Atualizar a seção `## Validation Command (Contrato)` em `AR_003_schemas_pydantic_canônicos_de_scout.md` para conter SOMENTE:
-```
-python docs/hbtrack/evidence/AR_003/validate_ar003.py
-```
-
-3. Testar localmente: `python docs/hbtrack/evidence/AR_003/validate_ar003.py` deve retornar exit 0 + "PASS: Schemas Pydantic canonicos OK"
-
-4. Fazer `hb report 003` com exit_code=0.
+Novo `validation_command` (cmd-safe): `python docs/hbtrack/evidence/AR_003/validate_ar003.py`
+Triple-run: exit=0, stdout "PASS: Schemas Pydantic canonicos OK", hash consistente 3x.
 
 
 **SEÇÃO ARQUITETO x EXECUTOR**
@@ -144,5 +107,5 @@ Após Executor completar AR_123, fazer `hb verify 003`.
 | AR_110, AR_071 | ✅ VERIFICADO (colateral) |
 | AR_120, AR_121, AR_122 | ✅ VERIFICADO |
 | AR_068, AR_113–119 | ✅ VERIFICADO |
-| AR_003 | 🔴 REJEITADO → AR_123 plano criado |
+| AR_003 | ✅ VERIFICADO (via AR_123) |
 | AR_056–063 | 💤 STUBs sem plano — próxima sessão |

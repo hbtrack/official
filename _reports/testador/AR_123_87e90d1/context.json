@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_123-87e90d1",
+  "timestamp_utc": "2026-02-24T19:42:29.611053+00:00",
+  "git": {
+    "commit": "87e90d1e53ab4b94f5dc63cc853227fcf86d8989"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "123",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_123_fix_ar_003_validation_command_-_cmd-safe_via_arqui.md"
+}

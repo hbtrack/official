@@ -1,6 +1,6 @@
 # AR_123 — Fix AR_003 validation_command — cmd-safe via arquivo de verificacao dedicado
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -44,7 +44,6 @@ write_scope=[] — alteracoes sao exclusivamente em docs/hbtrack/ars/ e docs/hbt
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução Executor em 3974fc8
 **Status Executor**: 🏗️ EM_EXECUCAO
 **Comando**: `python docs/hbtrack/evidence/AR_003/validate_ar003.py`
@@ -54,3 +53,17 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_123/executor_main.log`
 **Python Version**: 3.11.9
 
+
+### Verificacao Testador em 87e90d1
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_123_87e90d1/result.json`
+
+### Selo Humano em 87e90d1
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-24T19:42:41.097370+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_123_87e90d1/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_123/executor_main.log`

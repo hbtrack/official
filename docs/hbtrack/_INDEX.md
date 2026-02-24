@@ -10,7 +10,7 @@
 | AR_002.5 | Schema: attendance.presence_status + status 'justified' | ✅ VERIFICADO | docs/hbtrack/evidence/AR_002.5_B/executor_main.log |
 | AR_002.5 | Documentar divergência de escalas wellness_pre vs. PRD | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_002_5_C_evidence.log |
 | AR_002.5 | Schema: match_analytics_cache para Relatórios V1.1 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_002.5_D/executor_main.log |
-| AR_003 | Schemas Pydantic Canônicos de Scout | 🔴 REJEITADO | docs/hbtrack/evidence/AR_003/executor_main.log |
+| AR_003 | Schemas Pydantic Canônicos de Scout | ✅ VERIFICADO | docs/hbtrack/evidence/AR_003/executor_main.log |
 | AR_004 | MatchEventService.create() — ORM correto, roster, is_shot... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_004/executor_main.log |
 | AR_005 | Router match_events — schemas canônicos ScoutEventCreate/... | 🔍 NEEDS REVIEW | docs/hbtrack/evidence/AR_005_endpoint_match_events.log |
 | AR_006 | Migração path planos para docs/_canon/_agent/planos + v1.0.5 | COMPLETED ✅ | docs/hbtrack/evidence/AR_006_gov_plans_path_migration.log |
@@ -100,6 +100,6 @@
 | AR_120 | Fix cmd_seal — verificacao de REJEITADO por campo Status | ✅ VERIFICADO | docs/hbtrack/evidence/AR_120/executor_main.log |
 | AR_121 | Corrigir contrato AR_003 — validation nao-deterministica | ✅ VERIFICADO | docs/hbtrack/evidence/AR_121/executor_main.log |
 | AR_122 | Fix cmd_seal — idempotencia VERIFICADO por campo Status | ✅ VERIFICADO | docs/hbtrack/evidence/AR_122/executor_main.log |
-| AR_123 | Fix AR_003 validation_command — cmd-safe via arquivo de v... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_123/executor_main.log |
+| AR_123 | Fix AR_003 validation_command — cmd-safe via arquivo de v... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_123/executor_main.log |
 | AR_998 | Test Write Scope Section Generation | ✅ VERIFICADO | docs/hbtrack/evidence/AR_998/executor_main.log |
 | AR_999 | Exemplo: Adicionar campo birthdate em Person | ✅ VERIFICADO | docs/hbtrack/evidence/AR_999/executor_main.log |
