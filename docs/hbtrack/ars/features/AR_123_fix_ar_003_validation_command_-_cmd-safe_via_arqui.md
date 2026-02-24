@@ -1,6 +1,6 @@
 # AR_123 — Fix AR_003 validation_command — cmd-safe via arquivo de verificacao dedicado
 
-**Status**: 🔲 PENDENTE
+**Status**: 🏗️ EM_EXECUCAO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -32,9 +32,25 @@ git clean -fd docs/hbtrack/evidence/AR_003/
 write_scope=[] — alteracoes sao exclusivamente em docs/hbtrack/ars/ e docs/hbtrack/evidence/, nao em governed roots. Mesmo padrao do plano fix_ar003_deterministic_validation.json (AR_121). Nenhuma mudanca em codigo de produto.
 
 ## Análise de Impacto
-_(A ser preenchido pelo Executor)_
+**Executor**: Executor HB Track
+**Data**: 2026-02-24
+**Acoes**:
+- Criado `docs/hbtrack/evidence/AR_003/validate_ar003.py` com logica deterministica (UUID fixo, goalkeeper_save assert)
+- Atualizado `## Validation Command (Contrato)` em AR_003.md para `python docs/hbtrack/evidence/AR_003/validate_ar003.py`
+- Testado localmente: exit 0, stdout PASS
+**Impacto**: Baixo — nenhuma mudanca em codigo de produto. Apenas contrato de verificacao da AR.
 
 ---
 ## Carimbo de Execução
 _(Gerado por hb report)_
+
+
+### Execução Executor em 3974fc8
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python docs/hbtrack/evidence/AR_003/validate_ar003.py`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-24T19:37:04.373961+00:00
+**Behavior Hash**: 7149b8f31933aa3d99e831654f8b28674f0a270efe16d02a4603c3358b0ebe59
+**Evidence File**: `docs/hbtrack/evidence/AR_123/executor_main.log`
+**Python Version**: 3.11.9
 

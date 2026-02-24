@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_068-c98470c",
+  "timestamp_utc": "2026-02-24T19:34:51.528856+00:00",
+  "git": {
+    "commit": "c98470c725aae4e0d718520befaccc464acd066d"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "068",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_068_persons_birth_date.md"
+}

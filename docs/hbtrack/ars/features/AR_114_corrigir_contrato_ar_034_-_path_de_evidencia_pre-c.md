@@ -1,6 +1,6 @@
 # AR_114 — Corrigir contrato AR_034 — path de evidencia pre-canonical
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ✅ SUCESSO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -39,7 +39,6 @@ Causa raiz: (1) gate retorna VIOLATION quando ha tasks em planos sem ARs — est
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução Executor em 88fa5b2
 **Status Executor**: 🏗️ EM_EXECUCAO
 **Comando**: `python temp/validate_ar114.py`
@@ -49,3 +48,10 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_114/executor_main.log`
 **Python Version**: 3.11.9
 
+
+### Verificacao Testador em 3974fc8
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_114_3974fc8/result.json`

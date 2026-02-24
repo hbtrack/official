@@ -1,0 +1,40 @@
+{
+  "ar_id": "068",
+  "validation_command": "python temp/validate_ar068.py",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "efc14ff9958db82f576d8bb05a82ce713fcc4879683d6a691172976c6681d5e7",
+      "hash": "efc14ff9958db82f",
+      "stdout_len": 64,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "efc14ff9958db82f576d8bb05a82ce713fcc4879683d6a691172976c6681d5e7",
+      "hash": "efc14ff9958db82f",
+      "stdout_len": 64,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "efc14ff9958db82f576d8bb05a82ce713fcc4879683d6a691172976c6681d5e7",
+      "hash": "efc14ff9958db82f",
+      "stdout_len": 64,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

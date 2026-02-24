@@ -1,6 +1,6 @@
 # AR_068 — Migration: persons.birth_date NOT NULL + Trigger de Paridade com athletes
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ✅ SUCESSO
 **Versão**: 1.1
 **Criado em**: 2026-02-19
 **Plano de Execução**: `docs/_canon/planos/AR_068_migration_persons_birth_date.json`
@@ -500,7 +500,6 @@ Reverter para `Mapped[Optional[date]] + nullable=True`
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ## 🏁 Evidência de Execução (2026-02-20 06:53:26)
 **Status Final:** ✅ SUCESSO
 **Comando de Validação:** `alembic current`
@@ -510,7 +509,6 @@ _(Gerado por hb report)_
 ```text
 0053 (head)
 
-
 [STDERR]
 INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
 INFO  [alembic.runtime.migration] Will assume transactional DDL.
@@ -518,7 +516,6 @@ INFO  [alembic.runtime.migration] Will assume transactional DDL.
 ```
 
 ---
-
 
 ## 🏁 Evidência de Execução (2026-02-20 06:54:04)
 **Status Final:** ✅ SUCESSO
@@ -529,7 +526,6 @@ INFO  [alembic.runtime.migration] Will assume transactional DDL.
 ```text
 0053 (head)
 
-
 [STDERR]
 INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
 INFO  [alembic.runtime.migration] Will assume transactional DDL.
@@ -545,14 +541,12 @@ INFO  [alembic.runtime.migration] Will assume transactional DDL.
 **Evidence File**: `docs/hbtrack/evidence/AR_003.5_evidence.log`
 **Python Version**: 3.11.9
 
-
 ### Execução em 9bebd2c
 **Status Final**: ✅ SUCESSO
 **Comando**: `alembic current`
 **Exit Code**: 0
 **Evidence File**: `docs/hbtrack/evidence/AR_003.5_evidence.log`
 **Python Version**: 3.11.9
-
 
 ### Execução Executor em 494d48a
 **Status Executor**: 🏗️ EM_EXECUCAO
@@ -563,3 +557,10 @@ INFO  [alembic.runtime.migration] Will assume transactional DDL.
 **Evidence File**: `docs/hbtrack/evidence/AR_068/executor_main.log`
 **Python Version**: 3.11.9
 
+
+### Verificacao Testador em c98470c
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_068_c98470c/result.json`

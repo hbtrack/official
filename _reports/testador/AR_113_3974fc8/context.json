@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_113-3974fc8",
+  "timestamp_utc": "2026-02-24T19:35:42.294492+00:00",
+  "git": {
+    "commit": "3974fc8833755195217ebd6db764fdde69493a85"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "113",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_113_corrigir_contrato_ar_032_-_versao_protocolo_v1.1.0.md"
+}

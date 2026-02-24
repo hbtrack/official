@@ -75,7 +75,7 @@
 | AR_065 | Resgate de ARs de Governança (v1.2.0 Core) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_065/executor_main.log |
 | AR_066 | Resgate de ARs de Competitions e Features | ✅ VERIFICADO | docs/hbtrack/evidence/AR_066/executor_main.log |
 | AR_067 | Resgate de Drafts e Invariantes Wellness | ✅ VERIFICADO | docs/hbtrack/evidence/AR_067/executor_main.log |
-| AR_068 | Migration: persons.birth_date NOT NULL + Trigger de Parid... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_068/executor_main.log |
+| AR_068 | Migration: persons.birth_date NOT NULL + Trigger de Parid... | ✅ SUCESSO | docs/hbtrack/evidence/AR_068/executor_main.log |
 | AR_069 | Fix write_scope Pipeline: Schema + build_ar_content + GAT... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_069/executor_main.log |
 | AR_070 | Criar hb_plan_watcher.py com claim atomico + dry-run + di... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_070/executor_main.log |
 | AR_071 | Add auto-commit opt-in to hb_autotest (strict allowlist +... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_071/executor_main.log |
@@ -90,16 +90,16 @@
 | AR_110 | Adicionar guarda anti-múltiplos-carimbos em cmd_seal (ant... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_110/executor_main.log |
 | AR_111 | Adicionar limpeza automática de carimbos antigos em cmd_v... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_111/executor_main.log |
 | AR_112 | Limpar manualmente carimbos duplicados de AR_071 e AR_004 | ✅ VERIFICADO | — |
-| AR_113 | Corrigir contrato AR_032 — versao protocolo v1.1.0 obsoleta | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_113/executor_main.log |
-| AR_114 | Corrigir contrato AR_034 — path de evidencia pre-canonical | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_114/executor_main.log |
-| AR_115 | Corrigir contrato AR_035 — INDEX path e status PENDENTE v... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_115/executor_main.log |
-| AR_116 | Corrigir contrato AR_038 — banco renumerado de 0057 para ... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_116/executor_main.log |
-| AR_117 | Corrigir contrato AR_040 — banco renumerado de 0058 para ... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_117/executor_main.log |
-| AR_118 | Corrigir contrato AR_044 — contagens de planos e orphan c... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_118/executor_main.log |
-| AR_119 | Corrigir contrato AR_045 — contagens de ARs com valores e... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_119/executor_main.log |
+| AR_113 | Corrigir contrato AR_032 — versao protocolo v1.1.0 obsoleta | ✅ SUCESSO | docs/hbtrack/evidence/AR_113/executor_main.log |
+| AR_114 | Corrigir contrato AR_034 — path de evidencia pre-canonical | ✅ SUCESSO | docs/hbtrack/evidence/AR_114/executor_main.log |
+| AR_115 | Corrigir contrato AR_035 — INDEX path e status PENDENTE v... | ✅ SUCESSO | docs/hbtrack/evidence/AR_115/executor_main.log |
+| AR_116 | Corrigir contrato AR_038 — banco renumerado de 0057 para ... | ✅ SUCESSO | docs/hbtrack/evidence/AR_116/executor_main.log |
+| AR_117 | Corrigir contrato AR_040 — banco renumerado de 0058 para ... | ✅ SUCESSO | docs/hbtrack/evidence/AR_117/executor_main.log |
+| AR_118 | Corrigir contrato AR_044 — contagens de planos e orphan c... | ✅ SUCESSO | docs/hbtrack/evidence/AR_118/executor_main.log |
+| AR_119 | Corrigir contrato AR_045 — contagens de ARs com valores e... | ✅ SUCESSO | docs/hbtrack/evidence/AR_119/executor_main.log |
 | AR_120 | Fix cmd_seal — verificacao de REJEITADO por campo Status | ✅ VERIFICADO | docs/hbtrack/evidence/AR_120/executor_main.log |
 | AR_121 | Corrigir contrato AR_003 — validation nao-deterministica | ✅ VERIFICADO | docs/hbtrack/evidence/AR_121/executor_main.log |
 | AR_122 | Fix cmd_seal — idempotencia VERIFICADO por campo Status | ✅ VERIFICADO | docs/hbtrack/evidence/AR_122/executor_main.log |
-| AR_123 | Fix AR_003 validation_command — cmd-safe via arquivo de v... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_123/executor_main.log |
+| AR_123 | Fix AR_003 validation_command — cmd-safe via arquivo de v... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_123/executor_main.log |
 | AR_998 | Test Write Scope Section Generation | ✅ VERIFICADO | docs/hbtrack/evidence/AR_998/executor_main.log |
 | AR_999 | Exemplo: Adicionar campo birthdate em Person | ✅ VERIFICADO | docs/hbtrack/evidence/AR_999/executor_main.log |
