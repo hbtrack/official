@@ -1,6 +1,6 @@
 # AR_056 — Verificar CHECK constraints de consistência em schema.sql
 
-**Status**: 🔲 PENDENTE
+**Status**: 🏗️ EM_EXECUCAO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -37,9 +37,22 @@ git checkout -- "Hb Track - Backend/docs/ssot/schema.sql"
 Task doc-only de verificação. Executor não altera código — apenas verifica invariante existente. Se algum constraint estiver ausente do schema.sql, Executor deve checar se está no alembic mais recente e reportar para Arquiteto.
 
 ## Análise de Impacto
-_(A ser preenchido pelo Executor)_
+- Verificação confirmada dos CHECK constraints listados no [schema.sql](Hb%20Track%20-%20Backend/docs/ssot/schema.sql:677).
+- Nenhuma alteração de código necessária; apenas validação e geração de evidência.
+- Risco baixo: sem migrações ou mudanças de comportamento.
+- Rollback não aplicável (sem alterações no SSOT).
 
 ---
 ## Carimbo de Execução
 _(Gerado por hb report)_
+
+
+### Execução Executor em c08f148
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import pathlib; s=pathlib.Path('Hb Track - Backend/docs/ssot/schema.sql').read_text(encoding='utf-8'); checks={'ck_athletes_deleted_reason':'ck_athletes_deleted_reason' in s,'ck_athletes_shirt_number':'ck_athletes_shirt_number' in s,'ck_attendance_status':'ck_attendance_status' in s,'ck_attendance_source':'ck_attendance_source' in s,'ck_categories_max_age_positive':'ck_categories_max_age_positive' in s,'ck_match_events_score_our':'ck_match_events_score_our' in s,'ck_attendance_correction_fields':'ck_attendance_correction_fields' in s}; fails=[k for k,v in checks.items() if not v]; [print(f'FAIL: CHECK constraint ausente: {f}') for f in fails]; exit(len(fails)) if fails else print(f'PASS AR_056: {len(checks)} CHECK constraints de consistência verificados em schema.sql')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-24T21:28:50.012262+00:00
+**Behavior Hash**: edf1ebf11cd0584c3575207ab679629dfc39c77a09520712f159ef98d4761167
+**Evidence File**: `docs/hbtrack/evidence/AR_056/executor_main.log`
+**Python Version**: 3.11.9
 

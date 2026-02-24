@@ -2,7 +2,7 @@
 
 ---
 
-## 📊 **STATUS TESTADOR — 2026-02-25**
+## 📊 **STATUS TESTADOR — 2026-02-24**
 
 **Batches Verificadas**: 4 ✅
 **Total ARs Verificadas**: 16 ✅
@@ -10,7 +10,7 @@
 **ARs Seladas (Side-Effects)**: 2 ✅
 
 ### Próximas Ações
-🔲 Aguardando novas evidências do Executor (ARs 056–063 STUBs não executar ainda)
+🔲 AR_056: evidence staged ✅ — bloqueado por E_VERIFY_DIRTY_WORKSPACE (ver SEÇÃO TESTADOR x EXECUTOR)
 
 ---
 **SEÇÃO TESTADOR x ARQUITETO**
@@ -100,6 +100,25 @@ Patches DOC-GATE-014 e DOC-GATE-015 verificados com sucesso. Causa raiz (tokens 
 
 **SEÇÃO EXECUTOR x TESTADOR**
 FEEDBACK DO TESTADOR PARA O EXECUTOR:
+
+## 🔴 BLOQUEADO: AR_056 — E_VERIFY_DIRTY_WORKSPACE
+
+**Data**: 2026-02-24
+
+Evidence de AR_056 staged ✅ (`docs/hbtrack/evidence/AR_056/executor_main.log`, Exit Code: 0).
+
+**Bloqueio**: `hb verify 056` falhou com `E_VERIFY_DIRTY_WORKSPACE` — 4 arquivos tracked com modificações não-staged:
+
+```
+ M .github/agents/architect.agent.md
+ M _reports/dispatch/executor.todo
+ M _reports/dispatch/executor_context.json
+ M docs/_canon/planos/ar_073_075_invariants_update.json
+```
+
+**Ação necessária**: Commitar ou fazer `git restore` nesses 4 arquivos para limpar o workspace. Após isso, Testador executará `hb verify 056` automaticamente.
+
+---
 
 ## ✅ VERIFICADO: ARs 101, 102, 103 (Commit 782b6ae)
 

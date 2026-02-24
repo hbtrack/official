@@ -63,7 +63,7 @@
 | AR_053 | hb_watch.py — Windows UTF-8 stdout fix + contract sync | ✅ VERIFICADO | docs/hbtrack/evidence/AR_053_hb_watch_unicode_fix.log |
 | AR_054 | Fix Arquiteto Contract §1: INDEX path errado + DEV FLOW c... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_054_contract_index_path_fix.log |
 | AR_055 | hb_cli.py: Kanban write + check_retry_limit call site (do... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_055_hb_cli_kanban_write.log |
-| AR_056 | Verificar CHECK constraints de consistência em schema.sql | 🔲 PENDENTE | docs/hbtrack/evidence/AR_056/executor_main.log |
+| AR_056 | Verificar CHECK constraints de consistência em schema.sql | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_056/executor_main.log |
 | AR_057 | Verificar integridade append-only de audit_logs em schema... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_057/executor_main.log |
 | AR_058 | Verificar controle de concorrência — idempotency_keys + U... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_058/executor_main.log |
 | AR_059 | Criar context_map.md — mapa temático de ARs por domínio | 🔲 PENDENTE | docs/hbtrack/evidence/AR_059/executor_main.log |
