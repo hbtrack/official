@@ -97,5 +97,7 @@
 | AR_117 | Corrigir contrato AR_040 — banco renumerado de 0058 para ... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_117/executor_main.log |
 | AR_118 | Corrigir contrato AR_044 — contagens de planos e orphan c... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_118/executor_main.log |
 | AR_119 | Corrigir contrato AR_045 — contagens de ARs com valores e... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_119/executor_main.log |
+| AR_120 | Fix cmd_seal — verificacao de REJEITADO por campo Status | 🔲 PENDENTE | docs/hbtrack/evidence/AR_120/executor_main.log |
+| AR_121 | Corrigir contrato AR_003 — validation nao-deterministica | 🔲 PENDENTE | docs/hbtrack/evidence/AR_121/executor_main.log |
 | AR_998 | Test Write Scope Section Generation | ✅ VERIFICADO | docs/hbtrack/evidence/AR_998/executor_main.log |
 | AR_999 | Exemplo: Adicionar campo birthdate em Person | ✅ VERIFICADO | docs/hbtrack/evidence/AR_999/executor_main.log |

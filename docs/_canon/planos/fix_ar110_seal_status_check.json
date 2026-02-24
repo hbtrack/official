@@ -1,0 +1,24 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "Fix cirurgico em cmd_seal (hb_cli.py linha 1524): a verificacao de status REJEITADO/NEEDS REVIEW usa busca em todo o conteudo do AR, gerando falso-positivo quando o texto do AR menciona essas strings em sua descricao (e.g. AR_110 descreve o proprio guard que verifica essas strings). Fix: extrair apenas o campo **Status**: com regex e checar apenas esse valor. Causa documentada em _reports/dispatch/architect.todo secao 'BUG CRITICO AR_110'.",
+  "assumptions": [
+    "hb_cli.py esta em scripts/run/hb_cli.py",
+    "modulo re ja esta importado em hb_cli.py (usado em outros contexts da mesma funcao)",
+    "A linha exata a substituir e: if '🔴 REJEITADO' in ar_content or '🔍 NEEDS REVIEW' in ar_content:",
+    "AR_110 tem **Status**: ✅ SUCESSO e carimbo Testador valido — so falha por falso-positivo",
+    "A correcao nao altera nenhuma outra logica de cmd_seal"
+  ],
+  "tasks": [
+    {
+      "id": "120",
+      "title": "Fix cmd_seal — verificacao de REJEITADO por campo Status",
+      "description": "Corrigir falso-positivo em cmd_seal no arquivo hb_cli.py. O guard atual verifica presenca de '🔴 REJEITADO' ou '🔍 NEEDS REVIEW' em todo o conteudo do AR (ar_content), gerando falso-positivo quando o AR menciona essas strings em sua descricao. SUBSTITUICAO CIRURGICA na funcao cmd_seal: ANTES (linha ~1524):\n  if '🔴 REJEITADO' in ar_content or '🔍 NEEDS REVIEW' in ar_content:\n    fail(E_SEAL_NOT_READY, f\"AR_{ar_id} tem status REJEITADO ou NEEDS REVIEW. Corrija e re-execute hb verify {ar_id}\", exit_code=2)\nDEPOIS:\n  # V11: Verificar apenas o campo **Status**: (nao o conteudo inteiro) para evitar falso-positivo\n  _status_match = re.search(r'^\\*\\*Status\\*\\*:\\s*(.+)$', ar_content, re.MULTILINE)\n  _status_value = _status_match.group(1).strip() if _status_match else ''\n  if '🔴 REJEITADO' in _status_value or '🔍 NEEDS REVIEW' in _status_value:\n    fail(E_SEAL_NOT_READY, f\"AR_{ar_id} tem status REJEITADO ou NEEDS REVIEW. Corrija e re-execute hb verify {ar_id}\", exit_code=2)\nNAO modificar nenhuma outra linha da funcao. Verificar que 're' ja esta importado no topo do arquivo (esta).",
+      "criteria": "- hb_cli.py NAO contem mais 'if .🔴 REJEITADO. in ar_content' na funcao cmd_seal\n- hb_cli.py contem '_status_match = re.search' no contexto de cmd_seal\n- hb_cli.py contem '_status_value' e a verificacao por campo especifico\n- Executar hb seal 110 retorna exit 0 (AR_110 selada como VERIFICADO)\n- Executar hb seal em AR realmente REJEITADA ainda retorna E_SEAL_NOT_READY\n- Nenhuma outra funcao de hb_cli.py modificada",
+      "validation_command": "python -c \"import pathlib, subprocess, sys; content = pathlib.Path('scripts/run/hb_cli.py').read_text(encoding='utf-8'); assert \\\"if '🔴 REJEITADO' in ar_content\\\" not in content, 'FAIL: ainda usa busca em ar_content inteiro'; assert '_status_match = re.search' in content, 'FAIL: regex por campo Status nao encontrada'; assert '_status_value' in content, 'FAIL: _status_value nao encontrado no cmd_seal'; r = subprocess.run([sys.executable, 'scripts/run/hb_cli.py', 'seal', '110'], capture_output=True, text=True, encoding='utf-8'); assert r.returncode == 0, f'FAIL: hb seal 110 retornou {r.returncode}: {r.stderr.strip()}'; assert 'VERIFICADO' in r.stdout, f'FAIL: VERIFICADO nao na saida: {r.stdout}'; print('PASS AR_120: cmd_seal fix aplicado, AR_110 selada com sucesso')\"",
+      "write_scope": ["scripts/run/hb_cli.py"],
+      "rollback_plan": "git checkout -- scripts/run/hb_cli.py",
+      "notes": "Fix de 4 linhas. Nao alterar estrutura da funcao cmd_seal, apenas substituir o guard de status. AR_110 tem Testador SUCESSO (result.json) e evidence com Exit 0. Unico bloqueio era o false-positive na linha 1524. Apos fix, AR_110 deve selar automaticamente na validation_command."
+    }
+  ]
+}
