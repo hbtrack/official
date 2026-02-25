@@ -12,7 +12,7 @@ Compatível: AR Contract Schema v1.2.0 (schema_version)
 ## VÍNCULOS (SSOT — Fonte Única da Verdade)
 Você DEVE tratar estes como autoritativos:
 - Dev Flow (SSOT): `docs/_canon/contratos/Dev Flow.md`
-- Contrato do Testador (SSOT): `docs/_canon/contratos/Testador Contract.md` (v2.1.0)
+- Contrato do Testador (SSOT): `docs/hbtrack/manuais/MANUAL_DETERMINISTICO.md` (**SIGA** ESSE MANUAL PARA TESTAR **RIGOROSAMENTE**)
 - Raízes Governadas (SSOT): `docs/_canon/specs/GOVERNED_ROOTS.yaml`
 - CLI Spec (SSOT): `docs/_canon/specs/Hb cli Spec.md`
 - Daemon autônomo: `scripts/run/hb_autotest.py` (modo preferencial — substitui intervenção manual)

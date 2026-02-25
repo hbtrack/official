@@ -6,6 +6,7 @@ Pydantic schemas para validação de API relacionadas a sugestões de treinament
 
 from datetime import datetime
 from typing import Optional, Literal
+from uuid import UUID
 from pydantic import BaseModel, Field, field_validator
 from enum import Enum
 
@@ -25,28 +26,20 @@ class SuggestionStatus(str, Enum):
 
 class SuggestionCreate(BaseModel):
     """Schema para criação de sugestão."""
-    team_id: int = Field(..., gt=0, description="ID da equipe")
+    team_id: UUID = Field(..., description="ID da equipe")
     type: SuggestionType = Field(..., description="Tipo de sugestão")
-    origin_session_id: Optional[int] = Field(default=None, gt=0, description="ID da sessão de origem")
-    target_session_ids: list[int] = Field(..., min_length=1, description="IDs das sessões alvo")
+    origin_session_id: Optional[UUID] = Field(default=None, description="ID da sessão de origem")
+    target_session_ids: list[UUID] = Field(..., min_length=1, description="IDs das sessões alvo")
     recommended_adjustment_pct: float = Field(..., ge=10, le=40, description="Ajuste recomendado em %")
     reason: str = Field(..., min_length=20, max_length=1000, description="Justificativa da sugestão")
-
-    @field_validator('target_session_ids')
-    @classmethod
-    def validate_target_ids(cls, v):
-        """Valida que todos os IDs são > 0."""
-        if any(id <= 0 for id in v):
-            raise ValueError('Todos os target_session_ids devem ser > 0')
-        return v
 
     class Config:
         json_schema_extra = {
             "example": {
-                "team_id": 1,
+                "team_id": "550e8400-e29b-41d4-a716-446655440000",
                 "type": "compensation",
-                "origin_session_id": 123,
-                "target_session_ids": [124, 125],
+                "origin_session_id": "550e8400-e29b-41d4-a716-446655440010",
+                "target_session_ids": ["550e8400-e29b-41d4-a716-446655440011", "550e8400-e29b-41d4-a716-446655440012"],
                 "recommended_adjustment_pct": 15.0,
                 "reason": "Sessão #123 teve focus_pct=120%. Sugerindo compensação de -15% nas próximas 2 sessões não-locked."
             }

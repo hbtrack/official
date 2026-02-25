@@ -1,11 +1,11 @@
--- Schema dump generated: 2026-02-24T23:41:21.951160+00:00Z
+-- Schema dump generated: 2026-02-25T16:33:34.268133+00:00Z
 -- Source: localhost
 
 --
 -- PostgreSQL database dump
 --
 
-\restrict cQiANQ12RMeywj7nWvPMZmX0DDkg7BKlEXEf1BEaNfaDfIUrKLqdc2hV1FlBWcd
+\restrict baDG2E9xhJfdcBhIdqQCkEHN6aPi2m2jjpHhgZderXBgzB2hIXTpmhmcZAcgIl5
 
 -- Dumped from database version 12.22 (Debian 12.22-1.pgdg120+1)
 -- Dumped by pg_dump version 18.1
@@ -854,6 +854,9 @@ CREATE TABLE public.competition_matches (
     deleted_at timestamp with time zone,
     deleted_reason text,
     CONSTRAINT ck_competition_matches_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL)))),
+    CONSTRAINT ck_competition_matches_different_teams CHECK (((home_team_id <> away_team_id) OR (home_team_id IS NULL) OR (away_team_id IS NULL))),
+    CONSTRAINT ck_competition_matches_score_away_gte_0 CHECK (((away_score >= 0) OR (away_score IS NULL))),
+    CONSTRAINT ck_competition_matches_score_home_gte_0 CHECK (((home_score >= 0) OR (home_score IS NULL))),
     CONSTRAINT ck_competition_matches_status CHECK (((status)::text = ANY ((ARRAY['scheduled'::character varying, 'in_progress'::character varying, 'finished'::character varying, 'cancelled'::character varying])::text[])))
 );
 
@@ -5313,10 +5316,24 @@ CREATE INDEX ix_wellness_pre_training_session_id ON public.wellness_pre USING bt
 
 
 --
+-- Name: uq_competition_matches_external_ref; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX uq_competition_matches_external_ref ON public.competition_matches USING btree (competition_id, external_reference_id) WHERE ((external_reference_id IS NOT NULL) AND (deleted_at IS NULL));
+
+
+--
 -- Name: uq_competition_standings_comp_phase_opponent; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX uq_competition_standings_comp_phase_opponent ON public.competition_standings USING btree (competition_id, phase_id, opponent_team_id) WHERE ((phase_id IS NOT NULL) OR (opponent_team_id IS NOT NULL));
+
+
+--
+-- Name: uq_match_roster_athlete_per_match; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX uq_match_roster_athlete_per_match ON public.match_roster USING btree (match_id, athlete_id) WHERE (deleted_at IS NULL);
 
 
 --
@@ -7018,5 +7035,5 @@ ALTER TABLE ONLY public.wellness_reminders
 -- PostgreSQL database dump complete
 --
 
-\unrestrict cQiANQ12RMeywj7nWvPMZmX0DDkg7BKlEXEf1BEaNfaDfIUrKLqdc2hV1FlBWcd
+\unrestrict baDG2E9xhJfdcBhIdqQCkEHN6aPi2m2jjpHhgZderXBgzB2hIXTpmhmcZAcgIl5
 

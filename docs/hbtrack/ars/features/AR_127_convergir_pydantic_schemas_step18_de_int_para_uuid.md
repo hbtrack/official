@@ -1,6 +1,6 @@
 # AR_127 — Convergir Pydantic schemas Step18 de int para UUID
 
-**Status**: 🔲 PENDENTE
+**Status**: ✅ SUCESSO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -55,9 +55,43 @@ Os schemas Pydantic DEFINEM o contrato da API. Convergir para UUID garante que O
 - json_schema_extra com exemplos int deve ser atualizado para UUIDs validos para manter documentacao correta
 
 ## Análise de Impacto
-_(A ser preenchido pelo Executor)_
+**Executor:** 2026-02-25
+
+**Arquivos modificados:** 2
+- `Hb Track - Backend/app/schemas/training_alerts.py`
+- `Hb Track - Backend/app/schemas/training_alerts_step18.py`
+
+**training_alerts.py:**
+- `AlertCreate.team_id: int` → `UUID`; `Field(gt=0)` removido (gt inaplicável a UUID)
+- `AlertUpdate.dismissed_by_user_id: int` → `UUID`; `Field(gt=0)` removido
+- `from uuid import UUID` adicionado
+- Exemplos atualizados para UUIDs válidos
+
+**training_alerts_step18.py:**
+- `SuggestionCreate.team_id: int` → `UUID`; `Field(gt=0)` removido
+- `SuggestionCreate.origin_session_id: Optional[int]` → `Optional[UUID]`; `gt=0` removido
+- `SuggestionCreate.target_session_ids: list[int]` → `list[UUID]`
+- Validator `validate_target_ids` removido (comparação `<= 0` inaplicável a UUID)
+- Exemplos atualizados para UUIDs válidos
+- `from uuid import UUID` adicionado
 
 ---
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
+### Execução Executor em 529b87c
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `cd "Hb Track - Backend" && python -c "from app.schemas.training_alerts import AlertCreate, AlertUpdate; from uuid import UUID; a=AlertCreate.model_fields; assert a['team_id'].annotation is UUID or 'UUID' in str(a['team_id'].annotation), 'FAIL: team_id not UUID'; print('PASS: AlertCreate.team_id is UUID')" && python -c "from app.schemas.training_alerts_step18 import SuggestionCreate; from uuid import UUID; f=SuggestionCreate.model_fields; assert 'UUID' in str(f['team_id'].annotation), 'FAIL: team_id'; print('PASS: SuggestionCreate fields UUID')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-25T17:15:04.050956+00:00
+**Behavior Hash**: 0f89e4cddcd4d3adb57a2e90fe9ff40369f29865a310a498c74e1e3311f5ee09
+**Evidence File**: `docs/hbtrack/evidence/AR_127/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Verificacao Testador em 529b87c
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_127_529b87c/result.json`

@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_129-529b87c",
+  "timestamp_utc": "2026-02-25T17:35:11.010101+00:00",
+  "git": {
+    "commit": "529b87c06584310c12e9e424c5b5e3be86b5d3a2"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "129",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_129_regenerar_openapi_ssot_e_validar_uuid_em_paths_ste.md"
+}

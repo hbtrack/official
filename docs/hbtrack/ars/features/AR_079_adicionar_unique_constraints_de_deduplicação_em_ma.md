@@ -1,6 +1,6 @@
 # AR_079 — Adicionar UNIQUE constraints de deduplicação em match_roster e competition_matches
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -105,3 +105,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_079_7dadb4c/result.json`
+
+### Selo Humano em 529b87c
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-25T17:04:23.883882+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_079_7dadb4c/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_079/executor_main.log`

@@ -1,0 +1,40 @@
+{
+  "ar_id": "127",
+  "validation_command": "cd \"Hb Track - Backend\" && python -c \"from app.schemas.training_alerts import AlertCreate, AlertUpdate; from uuid import UUID; a=AlertCreate.model_fields; assert a['team_id'].annotation is UUID or 'UUID' in str(a['team_id'].annotation), 'FAIL: team_id not UUID'; print('PASS: AlertCreate.team_id is UUID')\" && python -c \"from app.schemas.training_alerts_step18 import SuggestionCreate; from uuid import UUID; f=SuggestionCreate.model_fields; assert 'UUID' in str(f['team_id'].annotation), 'FAIL: team_id'; print('PASS: SuggestionCreate fields UUID')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "0f89e4cddcd4d3adb57a2e90fe9ff40369f29865a310a498c74e1e3311f5ee09",
+      "hash": "0f89e4cddcd4d3ad",
+      "stdout_len": 69,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "0f89e4cddcd4d3adb57a2e90fe9ff40369f29865a310a498c74e1e3311f5ee09",
+      "hash": "0f89e4cddcd4d3ad",
+      "stdout_len": 69,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "0f89e4cddcd4d3adb57a2e90fe9ff40369f29865a310a498c74e1e3311f5ee09",
+      "hash": "0f89e4cddcd4d3ad",
+      "stdout_len": 69,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

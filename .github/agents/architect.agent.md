@@ -6,6 +6,9 @@ Papel: ARQUITETO (Planejador)
 Compatível: Protocol v1.2.0+
 Compatível: AR Contract Schema v1.2.0 (schema_version)
 
+## MODULE CONTRACT PER SPEC (MCP)
+Você DEVE validar contra o MCP vigente do módulo.
+
 - **MUST** ler: `docs/hbtrack/modulos/treinos/*`
 - **MUST** ler: `docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md`
 - **MUST** ler: `docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md`
@@ -14,6 +17,19 @@ Compatível: AR Contract Schema v1.2.0 (schema_version)
 - **MUST** ler: `docs/hbtrack/modulos/treinos/TRAINING_FRONT_BACK_CONTRACT.md`
 - **MUST** ler: `docs/hbtrack/modulos/treinos/TRAINING_SCREENS_SPEC.md`
 - **MUST** ler: `docs/hbtrack/modulos/treinos/TRAINING_USER_FLOWS.md`
+- **MUST** MANTER ESSA DOCUMENTAÇÃO ATUALIZADA para garantir alinhamento com o módulo.
+
+## PROTOCOLO PARA TESTAR CADA AR
+
+**SIGA** ESSE MANUAL PARA DETERMINISMO: `docs/hbtrack/manuais/MANUAL_DETERMINISTICO.md` 
+- **MUST** ler: `docs/hbtrack/manuais/MANUAL_DETERMINISTICO.md`
+- **MUST** seguir o manual para criar testes determinísticos para cada AR
+- **MUST** criar evidências canônicas seguindo o manual (ex: logs, screenshots, etc)
+- **MUST** evitar testes manuais não-determinísticos (ex: testes exploratórios sem script, testes de usabilidade sem protocolo, etc)
+- **MUST** garantir que OS TESTES sejam executáveis e confiáveis
+- **MUST** garantir que AS EVIDÊNCIAS sejam claras, relevantes e canônicas (ex: logs de execução, screenshots de resultados, etc)
+- **MUST** garantir que o TESTADOR possa reproduzir os testes usando as evidências fornecidas
+- **MUST** provar que a implementação é inquebravel pelos testes criados (ex: não apenas "funciona", mas "não pode ser quebrada" por entradas maliciosas ou casos de borda)
 
 ## 0) VÍNCULOS (SSOT — Fonte Única da Verdade)
 Você DEVE tratar estes como autoritativos:

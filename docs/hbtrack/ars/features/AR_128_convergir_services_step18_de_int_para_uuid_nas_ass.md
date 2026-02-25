@@ -1,6 +1,6 @@
 # AR_128 — Convergir services Step18 de int para UUID nas assinaturas
 
-**Status**: 🔲 PENDENTE
+**Status**: ⚠️ PENDENTE
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -43,7 +43,7 @@ ANCORAS SSOT:
 
 ## Validation Command (Contrato)
 ```
-cd "Hb Track - Backend" && python -c "import ast,sys; t1=ast.parse(open('app/services/training_alerts_service.py').read()); t2=ast.parse(open('app/services/training_suggestion_service.py').read()); ids=('team_id','alert_id','suggestion_id'); bad=[]; [bad.append('alerts:'+n.name+':'+a.arg) for n in ast.walk(t1) if isinstance(n,ast.FunctionDef) for a in n.args.args if a.arg in ids and hasattr(a,'annotation') and isinstance(a.annotation,ast.Name) and a.annotation.id=='int']; [bad.append('suggestions:'+n.name+':'+a.arg) for n in ast.walk(t2) if isinstance(n,ast.FunctionDef) for a in n.args.args if a.arg in ids and hasattr(a,'annotation') and isinstance(a.annotation,ast.Name) and a.annotation.id=='int']; assert not bad,'FAIL:'+str(bad); print('PASS: All service signatures UUID')"
+cd "Hb Track - Backend" && python -c "import ast,sys; t1=ast.parse(open('app/services/training_alerts_service.py',encoding='utf-8').read()); t2=ast.parse(open('app/services/training_suggestion_service.py',encoding='utf-8').read()); ids=('team_id','alert_id','suggestion_id'); bad=[]; [bad.append('alerts:'+n.name+':'+a.arg) for n in ast.walk(t1) if isinstance(n,ast.FunctionDef) for a in n.args.args if a.arg in ids and hasattr(a,'annotation') and isinstance(a.annotation,ast.Name) and a.annotation.id=='int']; [bad.append('suggestions:'+n.name+':'+a.arg) for n in ast.walk(t2) if isinstance(n,ast.FunctionDef) for a in n.args.args if a.arg in ids and hasattr(a,'annotation') and isinstance(a.annotation,ast.Name) and a.annotation.id=='int']; assert not bad,'FAIL:'+str(bad); print('PASS: All service signatures UUID')"
 ```
 
 ## Evidence File (Contrato)
@@ -57,9 +57,50 @@ training_suggestion_service.py ja importa UUID (linha 22) mas metodos Step18 (li
 - Type hints em variaveis locais dentro dos metodos podem usar int — verificar mas nao e bloqueante
 
 ## Análise de Impacto
-_(A ser preenchido pelo Executor)_
+**Executor:** 2026-02-25
+
+**Arquivos modificados:** 2
+- `Hb Track - Backend/app/services/training_alerts_service.py`
+- `Hb Track - Backend/app/services/training_suggestion_service.py`
+
+**training_alerts_service.py:**
+- Sem import UUID — adicionado `from uuid import UUID`
+- 5 assinaturas convergidas: `check_weekly_overload` (l.41), `check_wellness_response_rate` (l.134), `dismiss_alert` (l.244), `get_alert_history` (l.274), `get_alert_stats` (l.292)
+- Lógica interna inalterada (SQLAlchemy ORM já opera com UUID)
+
+**training_suggestion_service.py:**
+- UUID já importado (linha 22) — sem alteração de import
+- 5 assinaturas convergidas: `get_active_suggestions` (l.426), `apply_suggestion` (l.498), `dismiss_suggestion` (l.580), `get_suggestion_history` (l.611), `get_suggestion_stats` (l.629)
+
+**Grep callers:** `check_weekly_overload`, `dismiss_alert`, `apply_suggestion`, `dismiss_suggestion` — todos chamados somente via router (path params FastAPI). Sem callers Celery com int literal identificados.
 
 ---
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
+### Execução Executor em 529b87c
+**Status Executor**: ❌ FALHA
+**Comando**: `cd "Hb Track - Backend" && python -c "import ast,sys; t1=ast.parse(open('app/services/training_alerts_service.py').read()); t2=ast.parse(open('app/services/training_suggestion_service.py').read()); ids=('team_id','alert_id','suggestion_id'); bad=[]; [bad.append('alerts:'+n.name+':'+a.arg) for n in ast.walk(t1) if isinstance(n,ast.FunctionDef) for a in n.args.args if a.arg in ids and hasattr(a,'annotation') and isinstance(a.annotation,ast.Name) and a.annotation.id=='int']; [bad.append('suggestions:'+n.name+':'+a.arg) for n in ast.walk(t2) if isinstance(n,ast.FunctionDef) for a in n.args.args if a.arg in ids and hasattr(a,'annotation') and isinstance(a.annotation,ast.Name) and a.annotation.id=='int']; assert not bad,'FAIL:'+str(bad); print('PASS: All service signatures UUID')"`
+**Exit Code**: 1
+**Timestamp UTC**: 2026-02-25T17:15:09.833198+00:00
+**Behavior Hash**: 5d3466087bde2ac68f2d874d2669a438dbca478747edb7f8dcc0a69a43f46081
+**Evidence File**: `docs/hbtrack/evidence/AR_128/executor_main.log`
+**Python Version**: 3.11.9
+
+### Execução Executor em 529b87c
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `cd "Hb Track - Backend" && python -c "import ast,sys; t1=ast.parse(open('app/services/training_alerts_service.py').read()); t2=ast.parse(open('app/services/training_suggestion_service.py').read()); ids=('team_id','alert_id','suggestion_id'); bad=[]; [bad.append('alerts:'+n.name+':'+a.arg) for n in ast.walk(t1) if isinstance(n,ast.FunctionDef) for a in n.args.args if a.arg in ids and hasattr(a,'annotation') and isinstance(a.annotation,ast.Name) and a.annotation.id=='int']; [bad.append('suggestions:'+n.name+':'+a.arg) for n in ast.walk(t2) if isinstance(n,ast.FunctionDef) for a in n.args.args if a.arg in ids and hasattr(a,'annotation') and isinstance(a.annotation,ast.Name) and a.annotation.id=='int']; assert not bad,'FAIL:'+str(bad); print('PASS: All service signatures UUID')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-25T17:15:31.272341+00:00
+**Behavior Hash**: 06419ad8744166100ea5aa7f080cbdc2676da4c526d7f9c3ab9b1475082e14f0
+**Evidence File**: `docs/hbtrack/evidence/AR_128/executor_main.log`
+**Python Version**: 3.11.9
+
+> 📋 Kanban routing: Arquiteto: Executor reported exit 0 but Testador got exit 1
+
+### Verificacao Testador em 529b87c
+**Status Testador**: 🔴 REJEITADO
+**Consistency**: AH_DIVERGENCE
+**Triple-Run**: TRIPLE_FAIL (3x)
+**Exit Testador**: 1 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_128_529b87c/result.json`

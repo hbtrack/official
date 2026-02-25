@@ -1,6 +1,6 @@
 # AR_126 — Convergir router Step18 path params de int para UUID
 
-**Status**: 🔲 PENDENTE
+**Status**: ✅ SUCESSO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -55,9 +55,38 @@ ANCORA: schema.sql training_alerts.id uuid, .team_id uuid FK; training_suggestio
 - Middleware ou dependencias FastAPI podem fazer validacao customizada de path params — verificar
 
 ## Análise de Impacto
-_(A ser preenchido pelo Executor)_
+**Executor:** 2026-02-25
+
+**Arquivos modificados:** 1
+- `Hb Track - Backend/app/api/v1/routers/training_alerts_step18.py`
+
+**Mudanças:**
+- Adicionado `from uuid import UUID` nos imports (linha 10)
+- 6× `team_id: int` → `team_id: UUID` (endpoints: get_active_alerts, get_alert_history, get_alert_stats, get_pending_suggestions, get_suggestion_history, get_suggestion_stats)
+- 1× `alert_id: int` → `alert_id: UUID` (endpoint: dismiss_alert)
+- 2× `suggestion_id: int` → `suggestion_id: UUID` (endpoints: apply_suggestion, dismiss_suggestion)
+
+**Sem alteração de lógica de negócio.** Apenas tipagem de path params.
+**Callers FastAPI:** nenhum caller interno injeta esses path params — vêm exclusivamente da URL HTTP. Sem risco de caller int.
+**Nenhuma migration necessária** (schema.sql já usa UUID).
 
 ---
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
+### Execução Executor em 529b87c
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `cd "Hb Track - Backend" && python -c "import ast,sys; tree=ast.parse(open('app/api/v1/routers/training_alerts_step18.py').read()); [sys.exit('FAIL:'+n.name+':'+a.arg+'=int') for n in ast.walk(tree) if isinstance(n,ast.FunctionDef) for a in n.args.args if a.arg in('team_id','alert_id','suggestion_id') and hasattr(a,'annotation') and isinstance(a.annotation,ast.Name) and a.annotation.id=='int']; print('PASS: No int Step18 IDs in router')" && python -c "from app.api.v1.routers.training_alerts_step18 import router; print('PASS: router imported with '+str(len(router.routes))+' routes')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-25T17:14:55.729014+00:00
+**Behavior Hash**: d35d8ef64df06742a862b1a6cd374be26a21bfc2f6641ea7daa1aacd9535c2e8
+**Evidence File**: `docs/hbtrack/evidence/AR_126/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Verificacao Testador em 529b87c
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_126_529b87c/result.json`

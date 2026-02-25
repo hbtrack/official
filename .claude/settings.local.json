@@ -24,7 +24,19 @@
       "Bash('/c/HB TRACK/scripts/run/hb_watch.py':*)",
       "Bash(git -C '/c/HB TRACK' show HEAD:scripts/run/hb_watch.py)",
       "Bash(/tmp/apply_edits.py:*)",
-      "Bash(git check-ignore:*)"
+      "Bash(git check-ignore:*)",
+      "Bash(\"C:/HB TRACK/docs/hbtrack/modulos/competitions/COMPETITIONS_SCREENS_SPEC.md\":*)",
+      "Bash(PYTHONIOENCODING=utf-8 python3 -c \":*)",
+      "Bash(tee \"C:/HB TRACK/temp/wf1.py\")",
+      "Bash(/dev/null:*)",
+      "Bash(tee -a \"C:/HB TRACK/temp/wf1.py\")",
+      "Bash(tee -a \"C:/HB TRACK/temp/wf2.py\")",
+      "Bash(PYTHONIOENCODING=utf-8 python3 \"C:/HB TRACK/temp/wf2.py\")",
+      "Bash(tee -a \"C:/HB TRACK/temp/wf3.py\")",
+      "Bash(PYTHONIOENCODING=utf-8 python3 \"C:/HB TRACK/temp/wf3.py\")",
+      "Bash(tee \"C:/HB TRACK/temp/wf4.py\")",
+      "Bash(tee -a \"C:/HB TRACK/temp/wf4.py\")",
+      "Bash(PYTHONIOENCODING=utf-8 python3 \"C:/HB TRACK/temp/wf4.py\")"
     ],
     "deny": [
       "Write(*)",

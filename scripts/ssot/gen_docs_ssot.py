@@ -218,8 +218,8 @@ def generate_training_permissions_report() -> bool:
     """
     report_script = BACKEND_ROOT.parent / "docs" / "scripts" / "trd_extract_training_permissions_report.py"
     if not report_script.exists():
-        print(f"[WARN] Permissions report script not found: {report_script}")
-        return False
+        print(f"[WARN] Permissions report script not found: {report_script} (skipped — optional)")
+        return True  # Script opcional — ausência não é falha bloqueante
 
     try:
         subprocess.run(

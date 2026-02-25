@@ -1,6 +1,6 @@
 # AR_036 — Migration 0056: ADD COLUMN competitions.points_per_draw + competitions.points_per_loss
 
-**Status**: ✅ VERIFICADO
+**Status**: ✅ SUCESSO
 **Versão do Protocolo**: 1.1.0
 
 ## Descrição
@@ -69,17 +69,16 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_036/executor_main.log`
 **Python Version**: 3.11.9
 
-
-### Verificacao Testador em f8f030f
-**Status Testador**: ✅ SUCESSO
-**Consistency**: OK
-**Triple-Run**: OK (3x)
-**Exit Testador**: 0 | **Exit Executor**: 0
-**TESTADOR_REPORT**: `_reports/testador/AR_036_f8f030f/result.json`
-
 ### Selo Humano em f8f030f
 **Status Humano**: ✅ VERIFICADO
 **Timestamp UTC**: 2026-02-24T23:53:35.432729+00:00
 **Motivo**: —
 **TESTADOR_REPORT**: `_reports/testador/AR_036_f8f030f/result.json`
 **Evidence File**: `docs/hbtrack/evidence/AR_036/executor_main.log`
+
+### Verificacao Testador em 529b87c
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_036_529b87c/result.json`

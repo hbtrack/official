@@ -1,6 +1,6 @@
 # AR_078 — Adicionar CHECK constraints de validação em competition_matches
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -120,3 +120,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_078_1a2e7bc/result.json`
+
+### Selo Humano em 529b87c
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-25T17:04:16.031207+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_078_1a2e7bc/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_078/executor_main.log`

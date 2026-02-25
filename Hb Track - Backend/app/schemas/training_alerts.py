@@ -6,6 +6,7 @@ Pydantic schemas para validação de API relacionadas a alertas de treinamento.
 
 from datetime import datetime
 from typing import Optional, Literal
+from uuid import UUID
 from pydantic import BaseModel, Field, field_validator
 from enum import Enum
 
@@ -24,7 +25,7 @@ class AlertSeverity(str, Enum):
 
 class AlertCreate(BaseModel):
     """Schema para criação de alerta."""
-    team_id: int = Field(..., gt=0, description="ID da equipe")
+    team_id: UUID = Field(..., description="ID da equipe")
     alert_type: AlertType = Field(..., description="Tipo de alerta")
     severity: AlertSeverity = Field(..., description="Severidade do alerta")
     message: str = Field(..., min_length=10, max_length=500, description="Mensagem do alerta")
@@ -33,7 +34,7 @@ class AlertCreate(BaseModel):
     class Config:
         json_schema_extra = {
             "example": {
-                "team_id": 1,
+                "team_id": "550e8400-e29b-41d4-a716-446655440000",
                 "alert_type": "weekly_overload",
                 "severity": "critical",
                 "message": "Sobrecarga semanal detectada: 1850% (limite 1200%). Risco de overtraining.",
@@ -49,12 +50,12 @@ class AlertCreate(BaseModel):
 
 class AlertUpdate(BaseModel):
     """Schema para atualização de alerta (dismiss)."""
-    dismissed_by_user_id: int = Field(..., gt=0, description="ID do usuário que dismissou o alerta")
+    dismissed_by_user_id: UUID = Field(..., description="ID do usuário que dismissou o alerta")
 
     class Config:
         json_schema_extra = {
             "example": {
-                "dismissed_by_user_id": 1
+                "dismissed_by_user_id": "550e8400-e29b-41d4-a716-446655440001"
             }
         }
 

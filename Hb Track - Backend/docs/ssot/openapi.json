@@ -13449,7 +13449,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
+              "format": "uuid",
               "title": "Team Id"
             }
           },
@@ -13546,7 +13547,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
+              "format": "uuid",
               "title": "Team Id"
             }
           },
@@ -13698,7 +13700,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
+              "format": "uuid",
               "title": "Team Id"
             }
           },
@@ -13843,7 +13846,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
+              "format": "uuid",
               "title": "Alert Id"
             }
           },
@@ -13924,7 +13928,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
+              "format": "uuid",
               "title": "Team Id"
             }
           },
@@ -14021,7 +14026,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
+              "format": "uuid",
               "title": "Team Id"
             }
           },
@@ -14157,7 +14163,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
+              "format": "uuid",
               "title": "Team Id"
             }
           },
@@ -14302,7 +14309,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
+              "format": "uuid",
               "title": "Suggestion Id"
             }
           },
@@ -14393,7 +14401,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
+              "type": "string",
+              "format": "uuid",
               "title": "Suggestion Id"
             }
           },
@@ -55427,7 +55436,7 @@
               }
             ],
             "title": "Sleep Quality",
-            "description": "Qualidade do sono (1-5)"
+            "description": "Qualidade do sono (1-5). 1=péssimo, 5=excelente."
           },
           "fatigue": {
             "anyOf": [
@@ -55441,7 +55450,7 @@
               }
             ],
             "title": "Fatigue",
-            "description": "Fadiga pré-treino (0-10). Campo de banco: fatigue_pre."
+            "description": "Fadiga pré-treino (0-10). 0=sem fadiga, 10=exausto. Campo de banco: fatigue_pre."
           },
           "stress": {
             "anyOf": [
@@ -55473,7 +55482,7 @@
               }
             ],
             "title": "Muscle Soreness",
-            "description": "Dor muscular (0-10)"
+            "description": "Dor muscular (0-10). 0=sem dor, 10=dor intensa."
           },
           "pain": {
             "type": "boolean",
@@ -55617,7 +55626,7 @@
               }
             ],
             "title": "Sleep Quality",
-            "description": "Qualidade do sono (1-5)"
+            "description": "Qualidade do sono (1-5). 1=péssimo, 5=excelente."
           },
           "fatigue": {
             "anyOf": [
@@ -55631,7 +55640,7 @@
               }
             ],
             "title": "Fatigue",
-            "description": "Fadiga pré-treino (0-10). Campo de banco: fatigue_pre."
+            "description": "Fadiga pré-treino (0-10). 0=sem fadiga, 10=exausto. Campo de banco: fatigue_pre."
           },
           "stress": {
             "anyOf": [
@@ -55663,7 +55672,7 @@
               }
             ],
             "title": "Muscle Soreness",
-            "description": "Dor muscular (0-10)"
+            "description": "Dor muscular (0-10). 0=sem dor, 10=dor intensa."
           },
           "pain": {
             "type": "boolean",
@@ -55798,7 +55807,7 @@
               }
             ],
             "title": "Sleep Quality",
-            "description": "Qualidade do sono (1-5)"
+            "description": "Qualidade do sono (1-5). 1=péssimo, 5=excelente."
           },
           "fatigue": {
             "anyOf": [
@@ -55812,7 +55821,7 @@
               }
             ],
             "title": "Fatigue",
-            "description": "Fadiga pré-treino (0-10). Campo de banco: fatigue_pre."
+            "description": "Fadiga pré-treino (0-10). 0=sem fadiga, 10=exausto. Campo de banco: fatigue_pre."
           },
           "stress": {
             "anyOf": [
@@ -55844,7 +55853,7 @@
               }
             ],
             "title": "Muscle Soreness",
-            "description": "Dor muscular (0-10)"
+            "description": "Dor muscular (0-10). 0=sem dor, 10=dor intensa."
           },
           "pain": {
             "anyOf": [

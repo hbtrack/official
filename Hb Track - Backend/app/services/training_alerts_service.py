@@ -7,6 +7,7 @@ Integra com NotificationService para envio de WebSocket broadcasts em alertas cr
 
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any, Tuple
+from uuid import UUID
 from sqlalchemy import select, func, and_, or_, desc
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -38,7 +39,7 @@ class TrainingAlertsService:
     
     async def check_weekly_overload(
         self,
-        team_id: int,
+        team_id: UUID,
         week_start: datetime,
         alert_threshold_multiplier: float = 1.5
     ) -> Optional[AlertResponse]:
@@ -131,7 +132,7 @@ class TrainingAlertsService:
     
     async def check_wellness_response_rate(
         self,
-        team_id: int,
+        team_id: UUID,
         weeks_to_analyze: int = 2,
         min_response_rate: float = 70.0
     ) -> Optional[AlertResponse]:
@@ -241,7 +242,7 @@ class TrainingAlertsService:
     
     async def dismiss_alert(
         self,
-        alert_id: int,
+        alert_id: UUID,
         user_id: int
     ) -> Optional[AlertResponse]:
         """
@@ -271,7 +272,7 @@ class TrainingAlertsService:
     
     async def get_active_alerts(
         self,
-        team_id: int,
+        team_id: UUID,
         limit: int = 10
     ) -> list[AlertResponse]:
         """Busca alertas ativos (não dismissados) de uma equipe."""
@@ -289,7 +290,7 @@ class TrainingAlertsService:
     
     async def get_alert_stats(
         self,
-        team_id: int,
+        team_id: UUID,
         filters: Optional[AlertFilters] = None
     ) -> AlertStatsResponse:
         """Calcula estatísticas de alertas."""

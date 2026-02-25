@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_128-529b87c",
+  "timestamp_utc": "2026-02-25T17:34:04.459221+00:00",
+  "git": {
+    "commit": "529b87c06584310c12e9e424c5b5e3be86b5d3a2"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "128",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_128_convergir_services_step18_de_int_para_uuid_nas_ass.md"
+}

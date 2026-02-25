@@ -1,0 +1,42 @@
+{
+  "ar_id": "128",
+  "validation_command": "cd \"Hb Track - Backend\" && python -c \"import ast,sys; t1=ast.parse(open('app/services/training_alerts_service.py').read()); t2=ast.parse(open('app/services/training_suggestion_service.py').read()); ids=('team_id','alert_id','suggestion_id'); bad=[]; [bad.append('alerts:'+n.name+':'+a.arg) for n in ast.walk(t1) if isinstance(n,ast.FunctionDef) for a in n.args.args if a.arg in ids and hasattr(a,'annotation') and isinstance(a.annotation,ast.Name) and a.annotation.id=='int']; [bad.append('suggestions:'+n.name+':'+a.arg) for n in ast.walk(t2) if isinstance(n,ast.FunctionDef) for a in n.args.args if a.arg in ids and hasattr(a,'annotation') and isinstance(a.annotation,ast.Name) and a.annotation.id=='int']; assert not bad,'FAIL:'+str(bad); print('PASS: All service signatures UUID')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 1,
+      "hash_full": "dd89a45e8303fa16b6bca5954542da51836270e9937475274dd8dcbca7419b52",
+      "hash": "dd89a45e8303fa16",
+      "stdout_len": 0,
+      "stderr_len": 420
+    },
+    {
+      "run": 2,
+      "exit_code": 1,
+      "hash_full": "dd89a45e8303fa16b6bca5954542da51836270e9937475274dd8dcbca7419b52",
+      "hash": "dd89a45e8303fa16",
+      "stdout_len": 0,
+      "stderr_len": 420
+    },
+    {
+      "run": 3,
+      "exit_code": 1,
+      "hash_full": "dd89a45e8303fa16b6bca5954542da51836270e9937475274dd8dcbca7419b52",
+      "hash": "dd89a45e8303fa16",
+      "stdout_len": 0,
+      "stderr_len": 420
+    }
+  ],
+  "triple_consistency": "TRIPLE_FAIL",
+  "testador_exit_code": 1,
+  "executor_exit_code": 0,
+  "consistency": "AH_DIVERGENCE",
+  "status": "REJEITADO",
+  "ah_flags": [
+    "AH_DIVERGENCE"
+  ],
+  "evidence_pack_complete": true,
+  "rejection_reason": "Executor reported exit 0 but Testador got exit 1",
+  "workspace_clean": true
+}

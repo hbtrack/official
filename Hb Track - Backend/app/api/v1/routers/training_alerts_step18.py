@@ -7,6 +7,7 @@ Endpoints para gerenciamento de alertas automáticos e sugestões de compensaç�
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
+from uuid import UUID
 
 from app.core.db import get_async_db
 from app.core.context import ExecutionContext
@@ -44,7 +45,7 @@ router = APIRouter(prefix="/training/alerts-suggestions", tags=["Training Alerts
     description="Retorna alertas não-dismissados de uma equipe."
 )
 async def get_active_alerts(
-    team_id: int,
+    team_id: UUID,
     limit: int = Query(default=10, ge=1, le=50),
     db: AsyncSession = Depends(get_async_db),
     ctx: ExecutionContext = Depends(require_role(["coordenador", "treinador"]))
@@ -62,7 +63,7 @@ async def get_active_alerts(
     description="Retorna alertas paginados com filtros opcionais."
 )
 async def get_alert_history(
-    team_id: int,
+    team_id: UUID,
     page: int = Query(default=1, ge=1),
     limit: int = Query(default=10, ge=1, le=100),
     alert_type: Optional[str] = Query(default=None),
@@ -128,7 +129,7 @@ async def get_alert_history(
     description="Retorna estatísticas agregadas de alertas."
 )
 async def get_alert_stats(
-    team_id: int,
+    team_id: UUID,
     alert_type: Optional[str] = Query(default=None),
     severity: Optional[str] = Query(default=None),
     start_date: Optional[str] = Query(default=None),
@@ -167,7 +168,7 @@ async def get_alert_stats(
     description="Marca alerta como dismissado (dismissed_at, dismissed_by_user_id)."
 )
 async def dismiss_alert(
-    alert_id: int,
+    alert_id: UUID,
     db: AsyncSession = Depends(get_async_db),
     ctx: ExecutionContext = Depends(require_role(["coordenador", "treinador"]))
 ):
@@ -195,7 +196,7 @@ async def dismiss_alert(
     description="Retorna sugestões pendentes de uma equipe."
 )
 async def get_pending_suggestions(
-    team_id: int,
+    team_id: UUID,
     limit: int = Query(default=10, ge=1, le=50),
     db: AsyncSession = Depends(get_async_db),
     ctx: ExecutionContext = Depends(require_role(["coordenador", "treinador"]))
@@ -213,7 +214,7 @@ async def get_pending_suggestions(
     description="Retorna sugestões paginadas com filtros opcionais."
 )
 async def get_suggestion_history(
-    team_id: int,
+    team_id: UUID,
     page: int = Query(default=1, ge=1),
     limit: int = Query(default=10, ge=1, le=100),
     type: Optional[str] = Query(default=None),
@@ -270,7 +271,7 @@ async def get_suggestion_history(
     description="Retorna estatísticas agregadas de sugestões."
 )
 async def get_suggestion_stats(
-    team_id: int,
+    team_id: UUID,
     type: Optional[str] = Query(default=None),
     status: Optional[str] = Query(default=None),
     start_date: Optional[str] = Query(default=None),
@@ -310,7 +311,7 @@ async def get_suggestion_stats(
     description="Aplica sugestão ajustando focus_pct das sessões alvo."
 )
 async def apply_suggestion(
-    suggestion_id: int,
+    suggestion_id: UUID,
     payload: SuggestionApply,
     db: AsyncSession = Depends(get_async_db),
     ctx: ExecutionContext = Depends(require_role(["coordenador", "treinador"]))
@@ -343,7 +344,7 @@ async def apply_suggestion(
     description="Marca sugestão como dismissada com justificativa."
 )
 async def dismiss_suggestion(
-    suggestion_id: int,
+    suggestion_id: UUID,
     payload: SuggestionDismiss,
     db: AsyncSession = Depends(get_async_db),
     ctx: ExecutionContext = Depends(require_role(["coordenador", "treinador"]))

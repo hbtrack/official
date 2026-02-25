@@ -1,6 +1,6 @@
 # AR_058 — Verificar controle de concorrência — idempotency_keys + UNIQUE constraints
 
-**Status**: ✅ VERIFICADO
+**Status**: ✅ SUCESSO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -63,17 +63,16 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_058/executor_main.log`
 **Python Version**: 3.11.9
 
-
-### Verificacao Testador em f8f030f
-**Status Testador**: ✅ SUCESSO
-**Consistency**: OK
-**Triple-Run**: OK (3x)
-**Exit Testador**: 0 | **Exit Executor**: 0
-**TESTADOR_REPORT**: `_reports/testador/AR_058_f8f030f/result.json`
-
 ### Selo Humano em f8f030f
 **Status Humano**: ✅ VERIFICADO
 **Timestamp UTC**: 2026-02-24T23:39:55.373882+00:00
 **Motivo**: —
 **TESTADOR_REPORT**: `_reports/testador/AR_058_f8f030f/result.json`
 **Evidence File**: `docs/hbtrack/evidence/AR_058/executor_main.log`
+
+### Verificacao Testador em 529b87c
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_058_529b87c/result.json`

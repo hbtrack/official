@@ -423,7 +423,7 @@ class TrainingSuggestionService:
 
     async def generate_reduction_suggestion(
         self,
-        team_id: int,
+        team_id: UUID,
         week: datetime,
         reduction_pct: float = 20.0
     ) -> Optional[SuggestionResponse]:
@@ -495,7 +495,7 @@ class TrainingSuggestionService:
 
     async def apply_suggestion(
         self,
-        suggestion_id: int,
+        suggestion_id: UUID,
         adjustment_pct: float
     ) -> Optional[SuggestionResponse]:
         """
@@ -577,7 +577,7 @@ class TrainingSuggestionService:
 
     async def dismiss_suggestion(
         self,
-        suggestion_id: int,
+        suggestion_id: UUID,
         dismissal_reason: str
     ) -> Optional[SuggestionResponse]:
         """
@@ -608,7 +608,7 @@ class TrainingSuggestionService:
 
     async def get_pending_suggestions(
         self,
-        team_id: int,
+        team_id: UUID,
         limit: int = 10
     ) -> list[SuggestionResponse]:
         """Busca sugestões pendentes de uma equipe."""
@@ -626,7 +626,7 @@ class TrainingSuggestionService:
 
     async def get_suggestion_stats(
         self,
-        team_id: int,
+        team_id: UUID,
         filters: Optional[SuggestionFilters] = None
     ) -> SuggestionStatsResponse:
         """Calcula estatísticas de sugestões."""

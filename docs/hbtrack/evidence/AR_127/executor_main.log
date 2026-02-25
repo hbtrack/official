@@ -1,0 +1,19 @@
+AR_ID: 127
+Command: cd "Hb Track - Backend" && python -c "from app.schemas.training_alerts import AlertCreate, AlertUpdate; from uuid import UUID; a=AlertCreate.model_fields; assert a['team_id'].annotation is UUID or 'UUID' in str(a['team_id'].annotation), 'FAIL: team_id not UUID'; print('PASS: AlertCreate.team_id is UUID')" && python -c "from app.schemas.training_alerts_step18 import SuggestionCreate; from uuid import UUID; f=SuggestionCreate.model_fields; assert 'UUID' in str(f['team_id'].annotation), 'FAIL: team_id'; print('PASS: SuggestionCreate fields UUID')"
+Exit Code: 0
+Timestamp UTC: 2026-02-25T17:15:04.050956+00:00
+Behavior Hash (exit+stdout+stderr): 0f89e4cddcd4d3adb57a2e90fe9ff40369f29865a310a498c74e1e3311f5ee09
+Git HEAD: 529b87c06584310c12e9e424c5b5e3be86b5d3a2
+Python Version: 3.11.9
+Protocol Version: 1.3.0
+Workspace Clean: False
+Workspace Status: unstaged_modified=12
+Governed Checksums (sha256): {"Hb Track - Backend/app/api/v1/routers/training_alerts_step18.py": "e077107338e6ea3e27760018bc4acfd5b2b3828c43d4bbbd2186bef42874727e", "Hb Track - Backend/app/schemas/training_alerts.py": "08efa4efa1c3f2db177d0a7e874665df5c710019f646bed9c91d943d2d8b1516", "Hb Track - Backend/app/schemas/training_alerts_step18.py": "0a43b0564031f44e0372a18b51d6002f4130b6ae4d66bfca1a19347981e46799", "Hb Track - Backend/app/services/training_alerts_service.py": "0879fb88f12a189f7e6e486181f036b48b34b98f727677fbb93c2b6dc1ab303b", "Hb Track - Backend/app/services/training_suggestion_service.py": "fb441bfde36e264f02e497a8dca8bee196126061a1da66eb8b3eb246f1b868e1", "Hb Track - Backend/docs/ssot/alembic_state.txt": "3793645d986dfe110d49455d4244bf1a4855de7e1be8ae8b3d62b0bd68ea9276", "Hb Track - Backend/docs/ssot/openapi.json": "213933d8ebbcb20b0d81a69613b0015cfee3974986eaa5bf78ca0b5e08a9e22d", "Hb Track - Backend/docs/ssot/schema.sql": "ae9e073fa1c9d6b2e684f2bb5c6c74e3cf10adfd916d5fbc2f3a4172ab83e6c8"}
+
+--- STDOUT ---
+PASS: AlertCreate.team_id is UUID
+PASS: SuggestionCreate fields UUID
+
+
+--- STDERR ---
+
