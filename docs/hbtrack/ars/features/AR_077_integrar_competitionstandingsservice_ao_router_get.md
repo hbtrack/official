@@ -1,6 +1,6 @@
 # AR_077 — Integrar CompetitionStandingsService ao router: GET /standings + POST /standings/recalculate
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -179,3 +179,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_077_f663157/result.json`
+
+### Selo Humano em 4b0b7f8
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-25T04:50:43.236329+00:00
+**Motivo**: CompetitionStandingsService router integration - v3 static validation (deterministic)
+**TESTADOR_REPORT**: `_reports/testador/AR_077_f663157/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_077/executor_main.log`
