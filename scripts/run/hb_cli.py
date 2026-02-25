@@ -1512,6 +1512,9 @@ def cmd_verify(ar_id: str) -> None:
         except subprocess.CalledProcessError as e:
             # Non-fatal: warn but don't block verify
             print(f"  ⚠ warning: could not stage {ar_file.name}: {e.stderr.decode()}")
+        
+        # Rebuild _INDEX.md após atualizar Status (Layer 3: Index Consistency)
+        rebuild_ar_index(repo_root)
 
     print(f"{novo_status} | Consistency: {consistency}")
     if rejection_reason:
