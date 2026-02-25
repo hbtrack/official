@@ -85,7 +85,7 @@
 | AR_074 | Append INV-SCOUT-005+006+007 em INVARIANTS_SCOUT.md | ✅ VERIFICADO | docs/hbtrack/evidence/AR_074/executor_main.log |
 | AR_075 | Criar INVARIANTS_TRAINING.md com INV-TRAIN-001+002+003 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_075/executor_main.log |
 | AR_076 | Criar CompetitionStandingsService com busca dinamica de r... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_076/executor_main.log |
-| AR_077 | Integrar CompetitionStandingsService ao router: GET /stan... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_077/executor_main.log |
+| AR_077 | Integrar CompetitionStandingsService ao router: GET /stan... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_077/executor_main.log |
 | AR_100 | Estabilização do Protocolo v1.2.0 e Unificação de Registros | ✅ VERIFICADO | docs/hbtrack/evidence/AR_100/executor_main.log |
 | AR_101 | Resgate de ARs de Governança (v1.2.0 Core) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_101/executor_main.log |
 | AR_102 | Resgate de ARs de Competitions e Features | ✅ VERIFICADO | docs/hbtrack/evidence/AR_102/executor_main.log |

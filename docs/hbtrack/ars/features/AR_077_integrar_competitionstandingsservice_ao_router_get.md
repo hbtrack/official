@@ -1,6 +1,6 @@
 # AR_077 — Integrar CompetitionStandingsService ao router: GET /standings + POST /standings/recalculate
 
-**Status**: 🔲 PENDENTE
+**Status**: 🔴 REJEITADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -92,9 +92,60 @@ DESIGN: GET /standings sempre recalcula - dados frescos. O assert pts[0]==6 e pr
 - Executor NAO deve tocar competition_standings_service.py (AR_076) - apenas router + teste
 
 ## Análise de Impacto
-_(A ser preenchido pelo Executor)_
+
+**Tipo**: Modificação (router) + Criação (testes)
+
+**Arquivos Modificados**:
+- `Hb Track - Backend/app/api/v1/routers/competitions_v2.py` (~50 linhas alteradas)
+  - **GET /competitions/{id}/standings**: remover JSONB fallback, integrar `CompetitionStandingsService.recalculate_standings()`
+  - **POST /competitions/{id}/standings/recalculate**: adicionar endpoint (operação documentada no header mas não implementada)
+
+**Arquivos Criados**:
+- `Hb Track - Backend/tests/api/test_standings_router_integration.py` (~200 linhas)
+  - 4 testes: autenticação (401) + INV-COMP-008 antifrágil (ppw=3→6pts) + recalculate básico
+
+**Dependências**:
+- `CompetitionStandingsService` (AR_076 VERIFICADO)
+- INV-COMP-005/006/008 (standings + soft delete + dynamic scoring)
+
+**Impacto Runtime**:
+- GET /standings muda de "cache-read JSONB" para "recalculate sempre" → dados frescos, operação write
+- POST /standings/recalculate expõe recalcular manualmente (útil para corrigir estado)
+
+**Riscos**:
+- LOW: NotFoundError se competition inexistente (router deve tratar → 404)
+- MEDIUM: openapi.json vai derivar com novo endpoint → follow-up AR_078 regenerar SSOT
+- LOW: updateMatchResult pode não aceitar campo `status` diretamente (adaptar no teste se necessário)
+
+**Validação Antifrágil**:
+- Cria competition com **ppw=3** (não-padrão)
+- TeamA vence 2 partidas → esperado **6pts** (ppw=3 × 2W)
+- **PROVA**: Se service usar ppw=2 hardcoded, daria 4pts → assert falha
+- Garante INV-COMP-008: scoring values vêm do DB
+
+**Impacto Governança**: 
+- Router: Governed Root (HB Track Backend)
+- Testes: Governed Root
+- Não toca SSOT contracts/specs
 
 ---
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
+### Execução Executor em dff987f
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -m pytest "Hb Track - Backend/tests/api/test_standings_router_integration.py" -v --tb=short -x`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-25T03:30:23.521710+00:00
+**Behavior Hash**: df2aa6579d707e2e7c0f8cedcb3258207011dc8d4bbc759a9f2ae00201e6d58f
+**Evidence File**: `docs/hbtrack/evidence/AR_077/executor_main.log`
+**Python Version**: 3.11.9
+
+> 📋 Kanban routing: Arquiteto: Output não-determinístico: behavior_hash diverge nos 3 runs (exit 0 em todos, mas hash diferente)
+
+### Verificacao Testador em dff987f
+**Status Testador**: 🔴 REJEITADO
+**Consistency**: AH_DIVERGENCE
+**Triple-Run**: FLAKY_OUTPUT (3x)
+**Exit Testador**: 2 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_077_dff987f/result.json`
