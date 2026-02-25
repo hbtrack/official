@@ -123,6 +123,7 @@ E_WRITE_SCOPE_MISSING = "E_WRITE_SCOPE_MISSING"
 E_WRITE_SCOPE_FORBIDDEN = "E_WRITE_SCOPE_FORBIDDEN"
 
 E_VERIFY_DIRTY_WORKSPACE = "E_VERIFY_DIRTY_WORKSPACE"
+E_VERIFY_WRITE_RACE = "E_VERIFY_WRITE_RACE"  # Post-write validation failed: carimbo not persisted
 
 E_TESTADOR_REPORT_NOT_STAGED = "E_TESTADOR_REPORT_NOT_STAGED"
 
@@ -1491,6 +1492,26 @@ def cmd_verify(ar_id: str) -> None:
 
         with open(ar_file, "w", encoding="utf-8") as f:
             f.write(ar_updated)
+        
+        # POST-WRITE VALIDATION (Layer 1: Fail Fast on Race Condition)
+        ar_verification = ar_file.read_text(encoding="utf-8")
+        expected_stamp_marker = f"### Verificacao Testador em {hash7}"
+        if expected_stamp_marker not in ar_verification:
+            fail(E_VERIFY_WRITE_RACE,
+                 f"CRITICAL: Carimbo do Testador não persistiu em {ar_file.name} após escrita.\n"
+                 f"Possível race condition com git ou filesystem.\n"
+                 f"Report válido em: {TESTADOR_DIR}/AR_{ar_id}_{hash7}/result.json\n"
+                 f"AÇÃO: Re-execute 'hb verify {ar_id}' com workspace estável.",
+                 exit_code=3)
+        
+        # AUTO-STAGE AR.md (Layer 2: Guarantee Git Consistency)
+        import subprocess
+        try:
+            subprocess.run(["git", "add", str(ar_file)], check=True, cwd=repo_root, capture_output=True)
+            print(f"  ✓ staged: {ar_file.relative_to(repo_root)}")
+        except subprocess.CalledProcessError as e:
+            # Non-fatal: warn but don't block verify
+            print(f"  ⚠ warning: could not stage {ar_file.name}: {e.stderr.decode()}")
 
     print(f"{novo_status} | Consistency: {consistency}")
     if rejection_reason:
