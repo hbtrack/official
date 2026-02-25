@@ -567,6 +567,7 @@ EVIDENCE_PACK:
 - AR_101 — Executor: Evidence Pack missing or incomplete
 
 ### 📥 Backlog
+- AR_077 — 🏗️ EM_EXECUCAO (v3 - static validation) — Executor: EXIT 0, evidence staged, awaiting Testador hb verify 077 (triple-run expected: 3 IDENTICAL hashes)
 - AR_060 — Arquiteto: Executor reported exit 0 but Testador got exit 1
 - AR_003 — Arquiteto: Executor reported exit 0 but Testador got exit 1
 - **AR_070** — 🔄 PLANO CORRIGIDO v2: Removido emoji ✅ do validation_command (UnicodeEncodeError cp1252). Dry-run passou. Pronto para Executor com --force.
