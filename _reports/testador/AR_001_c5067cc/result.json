@@ -1,0 +1,40 @@
+{
+  "ar_id": "001",
+  "validation_command": "python -c \"import pathlib; migration_files = list(pathlib.Path('Hb Track - Backend/db/alembic/versions').glob('*_competition_standings_add_team_id.py')); assert len(migration_files) >= 1, 'FAIL: Migration file not found'; content = migration_files[0].read_text(encoding='utf-8'); assert 'add_column' in content and 'team_id' in content, 'FAIL: Migration content invalid (missing add_column or team_id)'; assert 'fk_competition_standings_team_id' in content, 'FAIL: FK constraint fk_competition_standings_team_id missing in migration'; assert 'ix_competition_standings_team_id' in content, 'FAIL: Index ix_competition_standings_team_id missing in migration'; print(f'PASS AR_001: Migration file validated: {migration_files[0].name}')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "dab2252f0dd2fcdb8fbdfd3a5ecbc2b1cfa34bed11ef40e2ed9bdef79b2aef60",
+      "hash": "dab2252f0dd2fcdb",
+      "stdout_len": 81,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "dab2252f0dd2fcdb8fbdfd3a5ecbc2b1cfa34bed11ef40e2ed9bdef79b2aef60",
+      "hash": "dab2252f0dd2fcdb",
+      "stdout_len": 81,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "dab2252f0dd2fcdb8fbdfd3a5ecbc2b1cfa34bed11ef40e2ed9bdef79b2aef60",
+      "hash": "dab2252f0dd2fcdb",
+      "stdout_len": 81,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

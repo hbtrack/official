@@ -1,5 +1,35 @@
 import json, sys, os
 sys.stdout.reconfigure(encoding="utf-8")
-
 Q = chr(39)
-
+desc_parts = [
+    "Modificar Hb Track - Backend/app/api/v1/routers/competitions_v2.py.",
+    "",
+    "=== MUDANCA 1: get_standings (GET /competitions/{id}/standings) ===",
+    "REMOVER logica inline: cache-read competition_standings via stats.get() + JSONB fallback.",
+    "SUBSTITUIR por:",
+    "  1) from app.services.competition_standings_service import CompetitionStandingsService",
+    "  2) service = CompetitionStandingsService(db)",
+    "  3) standings = await service.recalculate_standings(competition_id, db, phase_id=phase_id)",
+    "  4) Se group_name fornecido: filtrar lista por standing.group_name == group_name",
+    "  5) return [CompetitionStandingResponse.model_validate(s) for s in standings]",
+    "",
+    "=== MUDANCA 2: POST /competitions/{id}/standings/recalculate ===",
+    "ADICIONAR endpoint (documentado no header do router linha 32, nunca implementado):",
+    f"  @router.post({Q}/competitions/{{competition_id}}/standings/recalculate{Q},",
+    f"    status_code=200, operation_id={Q}recalculateStandings{Q},",
+    "    response_model=List[CompetitionStandingResponse])",
+    "  async def recalculate_standings_endpoint(competition_id: UUID,",
+    "    phase_id: Optional[UUID]=Query(None), db=Depends(get_db),",
+    "    context=Depends(get_current_context)) -> List[CompetitionStandingResponse]:",
+    "  Logica identica GET: instancia service, chama recalculate_standings, retorna lista serializada.",
+    "",
+    "Criar Hb Track - Backend/tests/api/test_standings_router_integration.py",
+    "Classe TestStandingsRouterIntegration:",
+    "",
+    "  test_get_standings_requires_auth (fixture: client):",
+    f"    response = client.get(f{Q}/api/v1/competitions/{{uuid4()}}/standings{Q})",
+    "    assert response.status_code == 401",
+    "",
+    "  test_post_recalculate_requires_auth (fixture: client):",
+    f"    response = client.post(f{Q}/api/v1/competitions/{{uuid4()}}/standings/recalculate{Q})",
+    "    assert response.status_code == 401",

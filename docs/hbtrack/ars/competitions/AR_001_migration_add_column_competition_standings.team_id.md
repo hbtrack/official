@@ -1,6 +1,6 @@
 # AR_001 — Migration: ADD COLUMN competition_standings.team_id (uuid nullable FK teams)
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.0.6
 **Plano Fonte**: `docs/_canon/planos/competition_standings_add_team_id.json`
 
@@ -59,14 +59,6 @@ alembic downgrade -1
 
 > 📋 Kanban routing: Executor: Evidence Pack missing or incomplete
 
-
-### Verificacao Testador em 6210f7f
-**Status Testador**: 🔴 REJEITADO
-**Consistency**: UNKNOWN
-**Triple-Run**: OK (3x)
-**Exit Testador**: 0 | **Exit Executor**: None
-**TESTADOR_REPORT**: `_reports/testador/AR_001_6210f7f/result.json`
-
 ### Execução Executor em 6210f7f
 **Status Executor**: 🏗️ EM_EXECUCAO
 **Comando**: `python -c "import pathlib; migration_files = list(pathlib.Path('Hb Track - Backend/db/alembic/versions').glob('*_competition_standings_add_team_id.py')); assert len(migration_files) >= 1, 'FAIL: Migration file not found'; content = migration_files[0].read_text(encoding='utf-8'); assert 'add_column' in content and 'team_id' in content, 'FAIL: Migration content invalid (missing add_column or team_id)'; assert 'fk_competition_standings_team_id' in content, 'FAIL: FK constraint fk_competition_standings_team_id missing in migration'; assert 'ix_competition_standings_team_id' in content, 'FAIL: Index ix_competition_standings_team_id missing in migration'; print(f'PASS AR_001: Migration file validated: {migration_files[0].name}')"`
@@ -76,3 +68,17 @@ alembic downgrade -1
 **Evidence File**: `docs/hbtrack/evidence/AR_001/executor_main.log`
 **Python Version**: 3.11.9
 
+
+### Verificacao Testador em c5067cc
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_001_c5067cc/result.json`
+
+### Selo Humano em c5067cc
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-25T02:52:00.195276+00:00
+**Motivo**: Migration team_id validada e verificada com triple-run determinístico
+**TESTADOR_REPORT**: `_reports/testador/AR_001_c5067cc/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_001/executor_main.log`

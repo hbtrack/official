@@ -5,7 +5,7 @@
 | ID | Título | Status | Evidence |
 |---|---|---|---|
 | AR_000 | Documentar INV-COMP-008 (Motor de Calculo Dinamico) em IN... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_000/executor_main.log |
-| AR_001 | Migration: ADD COLUMN competition_standings.team_id (uuid... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_001/executor_main.log |
+| AR_001 | Migration: ADD COLUMN competition_standings.team_id (uuid... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_001/executor_main.log |
 | AR_002 | Model: CompetitionStanding.team_id — mapped_column + rela... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_002/executor_main.log |
 | AR_002.5 | Schema: match_goalkeeper_stints para Eficiência de Goleira | ✅ VERIFICADO | docs/hbtrack/evidence/AR_002.5_A/executor_main.log |
 | AR_002.5 | Schema: attendance.presence_status + status 'justified' | ✅ VERIFICADO | docs/hbtrack/evidence/AR_002.5_B/executor_main.log |
