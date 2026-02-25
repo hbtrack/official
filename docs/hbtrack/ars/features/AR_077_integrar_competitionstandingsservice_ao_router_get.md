@@ -75,7 +75,7 @@ Classe TestStandingsRouterIntegration:
 
 ## Validation Command (Contrato)
 ```
-python -m pytest "Hb Track - Backend/tests/api/test_standings_router_integration.py" -v --tb=short -x
+python -m pytest "Hb Track - Backend/tests/api/test_standings_router_integration.py" --no-header -p no:warnings --tb=no -q
 ```
 
 ## Evidence File (Contrato)
@@ -143,9 +143,20 @@ _(Gerado por hb report)_
 
 > 📋 Kanban routing: Arquiteto: Output não-determinístico: behavior_hash diverge nos 3 runs (exit 0 em todos, mas hash diferente)
 
-### Verificacao Testador em dff987f
+### Execução Executor em e02e5d0
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -m pytest "Hb Track - Backend/tests/api/test_standings_router_integration.py" --no-header -p no:warnings --tb=no -q`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-25T03:39:35.955302+00:00
+**Behavior Hash**: 6a7b3101dc9114f151580ac4a38c603b5bf68e3f9f474e4092e9910c8d320bab
+**Evidence File**: `docs/hbtrack/evidence/AR_077/executor_main.log`
+**Python Version**: 3.11.9
+
+> 📋 Kanban routing: Arquiteto: Output não-determinístico: behavior_hash diverge nos 3 runs (exit 0 em todos, mas hash diferente)
+
+### Verificacao Testador em e02e5d0
 **Status Testador**: 🔴 REJEITADO
 **Consistency**: AH_DIVERGENCE
 **Triple-Run**: FLAKY_OUTPUT (3x)
 **Exit Testador**: 2 | **Exit Executor**: 0
-**TESTADOR_REPORT**: `_reports/testador/AR_077_dff987f/result.json`
+**TESTADOR_REPORT**: `_reports/testador/AR_077_e02e5d0/result.json`
