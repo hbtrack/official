@@ -1,0 +1,31 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "Plan de finalização para AR_036 (schema.sql regeneration). AR_002 já está implementada (CompetitionStanding.team_id relationship presente linha 168), Executor deve rodar 'hb report 002' diretamente (trivial, sem plano necessário). AR_036: migration 0056 criada e aplicada via AR_061 VERIFICADO, mas schema.sql defasado (não reflete migrations 0056-0061). Task regenera schema.sql completo para restaurar consistência com alembic_state.txt (head=0061).",
+  "assumptions": [
+    "AR_002: Model CompetitionStanding já tem team_id + team relationship (verificado PASS), Executor roda hb report 002 diretamente",
+    "AR_036: Migration 0056 criada e aplicada (AR_061 VERIFICADO, alembic head=0061)",
+    "schema.sql defasado: não reflete migrations 0056-0061 aplicadas (AR_061 regenerou só alembic_state.txt)",
+    "PostgreSQL 15 disponível, migrations 0056-0061 aplicadas no banco via AR_061",
+    "Pipeline gen_docs_ssot.py funcional com flag --schema para regenerar schema.sql completo",
+    "Após schema.sql atualizado, Executor roda hb report 036 para validar AR_036 (migration file content)"
+  ],
+  "tasks": [
+    {
+      "id": "036",
+      "title": "AR_036: Regenerar schema.sql completo para refletir migrations 0056-0061",
+      "description": "Regenerar Hb Track - Backend/docs/ssot/schema.sql usando 'python scripts/ssot/gen_docs_ssot.py --schema' para incluir colunas points_per_draw e points_per_loss na tabela competitions (migration 0056 já aplicada via AR_061). AR_061 regenerou apenas alembic_state.txt (--alembic), causando dessincronia. Esta task restaura consistência entre alembic_state.txt (head=0061) e schema.sql (deve refletir estrutura atual do banco com migrations 0056-0061 aplicadas).",
+      "criteria": "1) schema.sql regenerado com sucesso (exit_code=0). 2) schema.sql contém 'points_per_draw integer' na definição de CREATE TABLE public.competitions. 3) schema.sql contém 'points_per_loss integer' na definição de CREATE TABLE public.competitions. 4) schema.sql contém DEFAULT 1 para points_per_draw. 5) schema.sql contém DEFAULT 0 para points_per_loss. 6) Após regeneração, executar hb report 036 para validar AR_036 (migration file content check).",
+      "validation_command": "python -c \"import pathlib; s=pathlib.Path('Hb Track - Backend/docs/ssot/schema.sql'); assert s.exists(),'FAIL: schema.sql missing'; c=s.read_text(encoding='utf-8'); assert 'points_per_draw' in c,'FAIL: schema.sql missing points_per_draw column'; assert 'points_per_loss' in c,'FAIL: schema.sql missing points_per_loss column'; assert 'DEFAULT 1' in c or 'default 1' in c.lower(),'FAIL: points_per_draw DEFAULT missing'; print('PASS: schema.sql regenerated with migrations 0056-0061 applied')\"",
+      "write_scope": [
+        "Hb Track - Backend/docs/ssot/schema.sql",
+        "Hb Track - Backend/docs/ssot/manifest.json"
+      ],
+      "evidence_file": "docs/hbtrack/evidence/AR_036/executor_main.log",
+      "ssot_touches": [
+        "docs/ssot/schema.sql"
+      ],
+      "rollback_plan": "git checkout -- \"Hb Track - Backend/docs/ssot/schema.sql\" \"Hb Track - Backend/docs/ssot/manifest.json\" (restaurar SSOTs para estado pré-regeneração)"
+    }
+  ]
+}

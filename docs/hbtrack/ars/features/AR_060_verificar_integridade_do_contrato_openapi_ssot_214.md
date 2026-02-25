@@ -1,6 +1,6 @@
 # AR_060 — Verificar integridade do contrato OpenAPI SSOT (214 paths)
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -62,13 +62,4 @@ _(Gerado por hb report)_
 **Motivo**: —
 **TESTADOR_REPORT**: `_reports/testador/AR_060_62b4597/result.json`
 **Evidence File**: `docs/hbtrack/evidence/AR_060/executor_main.log`
-
-### Execução Executor em 62b4597
-**Status Executor**: 🏗️ EM_EXECUCAO
-**Comando**: `python -c "import json,pathlib; oapi_path=pathlib.Path('Hb Track - Backend/docs/ssot/openapi.json'); assert oapi_path.exists(),'FAIL: openapi.json nao encontrado em Hb Track - Backend/docs/ssot/'; d=json.loads(oapi_path.read_bytes().decode('utf-8')); paths=list(d.get('paths',{}).keys()); assert len(paths)>=200,f'FAIL: openapi.json tem {len(paths)} paths, esperado >= 200'; assert '/api/v1/athletes' in paths,'FAIL: /api/v1/athletes ausente no openapi.json'; assert '/api/v1/attendance/{attendance_id}' in paths,'FAIL: /api/v1/attendance/{{attendance_id}} ausente'; assert d.get('info',{}).get('version'),'FAIL: info.version nao declarado no openapi.json'; print(f'PASS AR_060: openapi.json valido — {len(paths)} paths, info.version={d[\"info\"][\"version\"]}')"`
-**Exit Code**: 0
-**Timestamp UTC**: 2026-02-24T23:18:39.170344+00:00
-**Behavior Hash**: 1d59f8d46c15cde960df8deb69a554f38e534bf52fcf2f790e2e2b8854278086
-**Evidence File**: `docs/hbtrack/evidence/AR_060/executor_main.log`
-**Python Version**: 3.11.9
 

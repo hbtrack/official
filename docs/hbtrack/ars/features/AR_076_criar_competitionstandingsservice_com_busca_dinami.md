@@ -1,6 +1,6 @@
 # AR_076 — Criar CompetitionStandingsService com busca dinamica de regras de pontuacao (INV-COMP-008)
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -146,3 +146,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_076_6210f7f/result.json`
+
+### Selo Humano em 6643f97
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-25T01:58:35.544630+00:00
+**Motivo**: CompetitionStandingsService implementado com dynamic scoring (INV-COMP-008)
+**TESTADOR_REPORT**: `_reports/testador/AR_076_6210f7f/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_076/executor_main.log`

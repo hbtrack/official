@@ -1,6 +1,6 @@
 # AR_059 — Criar context_map.md — mapa temático de ARs por domínio
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -96,3 +96,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_059_1f85071/result.json`
+
+### Selo Humano em 1f85071
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-25T00:04:27.669895+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_059_1f85071/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_059/executor_main.log`
