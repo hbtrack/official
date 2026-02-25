@@ -1,11 +1,11 @@
--- Schema dump generated: 2026-02-22T00:24:34.089801+00:00Z
+-- Schema dump generated: 2026-02-24T23:41:21.951160+00:00Z
 -- Source: localhost
 
 --
 -- PostgreSQL database dump
 --
 
-\restrict JcRzxzFeWPr1434CsBJpgxnKlGBknzqmjDSb9pm6mtrdF4sFjOMT4YaecDq43MC
+\restrict cQiANQ12RMeywj7nWvPMZmX0DDkg7BKlEXEf1BEaNfaDfIUrKLqdc2hV1FlBWcd
 
 -- Dumped from database version 12.22 (Debian 12.22-1.pgdg120+1)
 -- Dumped by pg_dump version 18.1
@@ -718,12 +718,13 @@ CREATE TABLE public.attendance (
     deleted_reason text,
     correction_by_user_id uuid,
     correction_at timestamp with time zone,
+    CONSTRAINT ck_attendance_absent_reason_null CHECK (((deleted_at IS NOT NULL) OR ((presence_status)::text <> 'absent'::text) OR (reason_absence IS NULL))),
     CONSTRAINT ck_attendance_correction_fields CHECK ((((source)::text <> 'correction'::text) OR (((source)::text = 'correction'::text) AND (correction_by_user_id IS NOT NULL) AND (correction_at IS NOT NULL)))),
     CONSTRAINT ck_attendance_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL)))),
     CONSTRAINT ck_attendance_participation_type CHECK (((participation_type IS NULL) OR ((participation_type)::text = ANY ((ARRAY['full'::character varying, 'partial'::character varying, 'adapted'::character varying, 'did_not_train'::character varying])::text[])))),
     CONSTRAINT ck_attendance_reason CHECK (((reason_absence IS NULL) OR ((reason_absence)::text = ANY ((ARRAY['medico'::character varying, 'escola'::character varying, 'familiar'::character varying, 'opcional'::character varying, 'outro'::character varying])::text[])))),
     CONSTRAINT ck_attendance_source CHECK (((source)::text = ANY ((ARRAY['manual'::character varying, 'import'::character varying, 'correction'::character varying])::text[]))),
-    CONSTRAINT ck_attendance_status CHECK (((presence_status)::text = ANY ((ARRAY['present'::character varying, 'absent'::character varying])::text[])))
+    CONSTRAINT ck_attendance_status CHECK (((presence_status)::text = ANY ((ARRAY['present'::character varying, 'absent'::character varying, 'justified'::character varying])::text[])))
 );
 
 
@@ -852,7 +853,8 @@ CREATE TABLE public.competition_matches (
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     deleted_at timestamp with time zone,
     deleted_reason text,
-    CONSTRAINT ck_competition_matches_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL))))
+    CONSTRAINT ck_competition_matches_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL)))),
+    CONSTRAINT ck_competition_matches_status CHECK (((status)::text = ANY ((ARRAY['scheduled'::character varying, 'in_progress'::character varying, 'finished'::character varying, 'cancelled'::character varying])::text[])))
 );
 
 
@@ -991,7 +993,7 @@ CREATE TABLE public.competitions (
     competition_type character varying(50),
     format_details jsonb DEFAULT '{}'::jsonb,
     tiebreaker_criteria jsonb DEFAULT '["pontos", "saldo_gols", "gols_pro", "confronto_direto"]'::jsonb,
-    points_per_win integer DEFAULT 2,
+    points_per_win integer DEFAULT 2 NOT NULL,
     status character varying(50) DEFAULT 'draft'::character varying,
     current_phase_id uuid,
     regulation_file_url character varying(500),
@@ -1001,7 +1003,11 @@ CREATE TABLE public.competitions (
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     deleted_at timestamp with time zone,
     deleted_reason text,
-    CONSTRAINT ck_competitions_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL))))
+    points_per_draw integer DEFAULT 1 NOT NULL,
+    points_per_loss integer DEFAULT 0 NOT NULL,
+    CONSTRAINT ck_competitions_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL)))),
+    CONSTRAINT ck_competitions_modality CHECK (((modality)::text = ANY ((ARRAY['masculino'::character varying, 'feminino'::character varying, 'misto'::character varying])::text[]))),
+    CONSTRAINT ck_competitions_status CHECK (((status)::text = ANY ((ARRAY['draft'::character varying, 'active'::character varying, 'finished'::character varying, 'cancelled'::character varying])::text[])))
 );
 
 
@@ -1395,6 +1401,34 @@ COMMENT ON COLUMN public.idempotency_keys.created_at IS 'Data/hora do registro (
 
 
 --
+-- Name: match_analytics_cache; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.match_analytics_cache (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    match_id uuid NOT NULL,
+    team_id uuid NOT NULL,
+    athlete_id uuid,
+    cache_type character varying(32) NOT NULL,
+    total_shots integer DEFAULT 0 NOT NULL,
+    total_goals integer DEFAULT 0 NOT NULL,
+    goals_7m integer DEFAULT 0 NOT NULL,
+    shot_conversion_pct numeric(5,2),
+    total_saves integer DEFAULT 0 NOT NULL,
+    goals_conceded integer DEFAULT 0 NOT NULL,
+    goalkeeper_efficiency_pct numeric(5,2),
+    yellow_cards integer DEFAULT 0 NOT NULL,
+    red_cards integer DEFAULT 0 NOT NULL,
+    exclusions_2min integer DEFAULT 0 NOT NULL,
+    total_turnovers integer DEFAULT 0 NOT NULL,
+    total_assists integer DEFAULT 0 NOT NULL,
+    computed_at timestamp with time zone DEFAULT now() NOT NULL,
+    is_final boolean DEFAULT false NOT NULL,
+    CONSTRAINT ck_match_analytics_cache_type CHECK (((cache_type)::text = ANY ((ARRAY['team'::character varying, 'athlete'::character varying, 'goalkeeper'::character varying])::text[])))
+);
+
+
+--
 -- Name: match_events; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1443,6 +1477,32 @@ CREATE TABLE public.match_events (
 --
 
 COMMENT ON TABLE public.match_events IS 'Eventos de jogo lance a lance. Coração analítico: reconstrói jogo, contexto tático e gera estatísticas.';
+
+
+--
+-- Name: match_goalkeeper_stints; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.match_goalkeeper_stints (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    match_id uuid NOT NULL,
+    athlete_id uuid NOT NULL,
+    start_period_number smallint NOT NULL,
+    start_time_seconds integer NOT NULL,
+    end_period_number smallint,
+    end_time_seconds integer,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT ck_gk_stints_end CHECK (((end_time_seconds IS NULL) OR (end_time_seconds >= 0))),
+    CONSTRAINT ck_gk_stints_period CHECK ((start_period_number >= 1)),
+    CONSTRAINT ck_gk_stints_start CHECK ((start_time_seconds >= 0))
+);
+
+
+--
+-- Name: TABLE match_goalkeeper_stints; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.match_goalkeeper_stints IS 'Stints de goleiras por partida para cálculo de eficiência e gols sofridos por intervalo.';
 
 
 --
@@ -3434,11 +3494,27 @@ ALTER TABLE ONLY public.event_types
 
 
 --
+-- Name: match_analytics_cache pk_match_analytics_cache; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.match_analytics_cache
+    ADD CONSTRAINT pk_match_analytics_cache PRIMARY KEY (id);
+
+
+--
 -- Name: match_events pk_match_events; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.match_events
     ADD CONSTRAINT pk_match_events PRIMARY KEY (id);
+
+
+--
+-- Name: match_goalkeeper_stints pk_match_goalkeeper_stints; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.match_goalkeeper_stints
+    ADD CONSTRAINT pk_match_goalkeeper_stints PRIMARY KEY (id);
 
 
 --
@@ -3711,14 +3787,6 @@ ALTER TABLE ONLY public.training_suggestions
 
 ALTER TABLE ONLY public.competition_seasons
     ADD CONSTRAINT uk_competition_seasons_competition_season UNIQUE (competition_id, season_id);
-
-
---
--- Name: competition_standings uk_competition_standings_team_phase; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.competition_standings
-    ADD CONSTRAINT uk_competition_standings_team_phase UNIQUE (competition_id, phase_id, opponent_team_id);
 
 
 --
@@ -4580,6 +4648,13 @@ CREATE INDEX ix_idempotency_keys_key_endpoint ON public.idempotency_keys USING b
 
 
 --
+-- Name: ix_match_analytics_cache_match_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ix_match_analytics_cache_match_id ON public.match_analytics_cache USING btree (match_id);
+
+
+--
 -- Name: ix_match_events_athlete_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4612,6 +4687,20 @@ CREATE INDEX ix_match_events_phase_of_play ON public.match_events USING btree (p
 --
 
 CREATE INDEX ix_match_events_team_id ON public.match_events USING btree (team_id);
+
+
+--
+-- Name: ix_match_goalkeeper_stints_athlete_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ix_match_goalkeeper_stints_athlete_id ON public.match_goalkeeper_stints USING btree (athlete_id);
+
+
+--
+-- Name: ix_match_goalkeeper_stints_match_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ix_match_goalkeeper_stints_match_id ON public.match_goalkeeper_stints USING btree (match_id);
 
 
 --
@@ -5224,6 +5313,13 @@ CREATE INDEX ix_wellness_pre_training_session_id ON public.wellness_pre USING bt
 
 
 --
+-- Name: uq_competition_standings_comp_phase_opponent; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX uq_competition_standings_comp_phase_opponent ON public.competition_standings USING btree (competition_id, phase_id, opponent_team_id) WHERE ((phase_id IS NOT NULL) OR (opponent_team_id IS NOT NULL));
+
+
+--
 -- Name: uq_person_addresses_primary; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5249,6 +5345,13 @@ CREATE UNIQUE INDEX uq_person_documents_per_type ON public.person_documents USIN
 --
 
 CREATE UNIQUE INDEX uq_person_media_primary_per_type ON public.person_media USING btree (person_id, media_type) WHERE ((is_primary = true) AND (deleted_at IS NULL));
+
+
+--
+-- Name: ux_match_analytics_cache_match_team_athlete; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX ux_match_analytics_cache_match_team_athlete ON public.match_analytics_cache USING btree (match_id, team_id, COALESCE(athlete_id, '00000000-0000-0000-0000-000000000000'::uuid), cache_type);
 
 
 --
@@ -6088,6 +6191,30 @@ ALTER TABLE ONLY public.event_subtypes
 
 
 --
+-- Name: match_analytics_cache fk_match_analytics_cache_athlete_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.match_analytics_cache
+    ADD CONSTRAINT fk_match_analytics_cache_athlete_id FOREIGN KEY (athlete_id) REFERENCES public.athletes(id) ON DELETE SET NULL;
+
+
+--
+-- Name: match_analytics_cache fk_match_analytics_cache_match_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.match_analytics_cache
+    ADD CONSTRAINT fk_match_analytics_cache_match_id FOREIGN KEY (match_id) REFERENCES public.matches(id) ON DELETE CASCADE;
+
+
+--
+-- Name: match_analytics_cache fk_match_analytics_cache_team_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.match_analytics_cache
+    ADD CONSTRAINT fk_match_analytics_cache_team_id FOREIGN KEY (team_id) REFERENCES public.teams(id) ON DELETE RESTRICT;
+
+
+--
 -- Name: match_events fk_match_events_advantage_state; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6189,6 +6316,22 @@ ALTER TABLE ONLY public.match_events
 
 ALTER TABLE ONLY public.match_events
     ADD CONSTRAINT fk_match_events_team_id FOREIGN KEY (team_id) REFERENCES public.teams(id) ON DELETE RESTRICT;
+
+
+--
+-- Name: match_goalkeeper_stints fk_match_goalkeeper_stints_athlete_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.match_goalkeeper_stints
+    ADD CONSTRAINT fk_match_goalkeeper_stints_athlete_id FOREIGN KEY (athlete_id) REFERENCES public.athletes(id) ON DELETE RESTRICT;
+
+
+--
+-- Name: match_goalkeeper_stints fk_match_goalkeeper_stints_match_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.match_goalkeeper_stints
+    ADD CONSTRAINT fk_match_goalkeeper_stints_match_id FOREIGN KEY (match_id) REFERENCES public.matches(id) ON DELETE CASCADE;
 
 
 --
@@ -6875,5 +7018,5 @@ ALTER TABLE ONLY public.wellness_reminders
 -- PostgreSQL database dump complete
 --
 
-\unrestrict JcRzxzFeWPr1434CsBJpgxnKlGBknzqmjDSb9pm6mtrdF4sFjOMT4YaecDq43MC
+\unrestrict cQiANQ12RMeywj7nWvPMZmX0DDkg7BKlEXEf1BEaNfaDfIUrKLqdc2hV1FlBWcd
 
