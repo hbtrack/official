@@ -1,6 +1,6 @@
 # AR_000 — Documentar INV-COMP-008 (Motor de Calculo Dinamico) em INVARIANTS_COMPETITIONS.md
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -88,7 +88,6 @@ rationale: >
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução Executor em 6210f7f
 **Status Executor**: 🏗️ EM_EXECUCAO
 **Comando**: `python -c "import pathlib; src=pathlib.Path('docs/hbtrack/modulos/competitions/INVARIANTS_COMPETITIONS.md').read_text(encoding='utf-8'); assert 'INV-COMP-008' in src,'FAIL: INV-COMP-008 not found'; assert 'dynamic_scoring_rules' in src,'FAIL: name not found'; assert 'MUST NOT' in src,'FAIL: MUST NOT not found'; assert 'hardcoded' in src,'FAIL: hardcoded keyword not found'; assert 'competition.py:124' in src,'FAIL: evidence anchor not found'; assert 'INV-COMP-007' in src,'FAIL: INV-COMP-007 lost'; assert 'INV-COMP-001' in src,'FAIL: INV-COMP-001 lost'; print('PASS: INV-COMP-008 appended OK - dynamic_scoring_rules documented')"`
@@ -98,3 +97,17 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_000/executor_main.log`
 **Python Version**: 3.11.9
 
+
+### Verificacao Testador em a959e54
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_000_a959e54/result.json`
+
+### Selo Humano em a959e54
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-25T03:20:07.798861+00:00
+**Motivo**: INV-COMP-008 documented — correction after race condition fix
+**TESTADOR_REPORT**: `_reports/testador/AR_000_a959e54/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_000/executor_main.log`
