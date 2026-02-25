@@ -1,15 +1,58 @@
 # INVARIANTS_TRAINING.md — Invariantes do Módulo TRAINING
 
 Status: DRAFT  
-Versão: v1.0.0  
+Versão: v1.2.0  
 Tipo de Documento: SSOT Normativo — Invariantes  
 Módulo: TRAINING  
-Fase: PRD v2.2 (2026-02-20) + AS-IS repo (2026-02-25)  
+Fase: PRD v2.2 (2026-02-20) + AS-IS repo (2026-02-25) + DEC-TRAIN-EXB-* (2026-02-25)  
 Autoridade: NORMATIVO_TECNICO  
-Última revisão: 2026-02-25  
+Última revisão: 2026-02-26  
+
+> Changelog v1.2.0 (2026-02-26):  
+> - Adicionada Authority Matrix  
+> - Adicionada convenção de Classification Tags (`[NORMATIVO]`/`[DESCRITIVO-AS-IS]`/`[HIPOTESE]`/`[GAP]`)  
+> - Adicionado `decision_trace:` formal em INV-TRAIN-047..053, EXB-ACL-001..007  
+
+> Changelog v1.1.0 (2026-02-25):  
+> - Adicionadas INV-TRAIN-047..053 (Banco de Exercícios — base)  
+> - Adicionadas INV-TRAIN-EXB-ACL-001..007 (ACL/Visibilidade ORG)  
+> - Decisões aprovadas incorporadas: DEC-TRAIN-EXB-001, DEC-TRAIN-EXB-001B, DEC-TRAIN-EXB-002, DEC-TRAIN-EXB-RBAC-001  
 
 > Nota importante (IDs): este documento **alinha a numeração `INV-TRAIN-###`** ao conjunto de testes em
 > `Hb Track - Backend/tests/training/invariants/*` e às referências em `docs/hbtrack/TRD Traing.md`.
+
+---
+
+## Authority Matrix
+
+| Aspecto | Regra |
+|---|---|
+| Fonte de verdade | DB constraints/triggers (`schema.sql`) + Domain services + Decisões humanas (DEC-*) |
+| Escrita normativa | **Arquiteto** — criar, alterar, remover invariantes |
+| Escrita operacional | N/A (invariantes não têm estado operacional) |
+| Somente leitura | Executor, Testador, Designer UX |
+| Proposta de alteração | Qualquer papel → via GAP ou DEC ao Arquiteto |
+| Precedência em conflito | DB constraint > Service rule > DEC > PRD |
+
+---
+
+## Convenção de Tags (Classification)
+
+Cada invariante (INV-*) neste documento é uma **unidade de afirmação testável** e recebe classificação:
+
+| Tag | Significado |
+|---|---|
+| `[NORMATIVO]` | Regra que DEVE ser respeitada. Fonte: DB, Service, DEC ou PRD explícito. |
+| `[DESCRITIVO-AS-IS]` | Observação do estado atual (evidenciado no repo). Pode mudar. |
+| `[HIPOTESE]` | Expectativa derivada do PRD/fluxos, mas não evidenciada no repo. |
+| `[GAP]` | Lacuna identificada entre o normativo e o estado atual. |
+
+**Regra de ouro:** Se alguém puder perguntar "isso é normativo ou só observação?", o trecho precisa de tag própria.
+
+**Aplicação neste documento:** Todas as invariantes são `[NORMATIVO]` por definição (expressam regras obrigatórias). O campo `status` indica o estado AS-IS:
+- `status: IMPLEMENTADO` → regra normativa + implementação evidenciada (normativo + AS-IS).
+- `status: GAP` → regra normativa sem implementação evidenciada (normativo + gap).
+- `status: DEPRECATED` → mantida para referência, não normativa para novos ARs.
 
 ---
 
@@ -21,7 +64,7 @@ Dentro do escopo:
 - `attendance`
 - `training_cycles`, `training_microcycles`
 - `session_templates`
-- `exercises`, `exercise_tags`, `exercise_favorites`
+- `exercises`, `exercise_tags`, `exercise_favorites`, `exercise_media`, `exercise_acl`
 - `training_analytics_cache`, `team_wellness_rankings`
 - `training_alerts`, `training_suggestions`
 - Export LGPD / jobs assíncronos (quando ancorados no módulo Training)
@@ -1003,4 +1046,345 @@ evidence:
 status: IMPLEMENTADO
 rationale: >
   Permite métricas de lembretes/resposta e auditoria de engajamento wellness.
+```
+
+---
+
+## INV-TRAIN-047
+
+```yaml
+id: INV-TRAIN-047
+class: A
+name: exercise_scope_valid
+rule: >
+  Todo exercício DEVE pertencer a um escopo válido: SYSTEM ou ORG.
+  Exercícios SYSTEM são instalados pela plataforma.
+  Exercícios ORG são criados por usuários da organização.
+table: exercises
+constraints:
+  - ck_exercises_scope (enum: SYSTEM, ORG)
+evidence:
+  - GAP: constraint não evidenciada no schema atual; a ser materializada por AR.
+status: GAP
+decision_ref: DEC-TRAIN-EXB-001
+decision_trace: [DEC-TRAIN-EXB-001]
+rationale: >
+  Separar exercícios do sistema dos exercícios personalizados pela organização
+  permite catálogo curado + customização sem comprometer integridade.
+```
+
+---
+
+## INV-TRAIN-048
+
+```yaml
+id: INV-TRAIN-048
+class: B
+name: system_exercise_immutable_for_org_users
+rule: >
+  Usuários da organização NÃO PODEM editar ou excluir exercícios instalados (scope = SYSTEM).
+  Qualquer tentativa de PATCH/DELETE por usuário não-plataforma DEVE retornar 403.
+table: exercises
+services:
+  - app/services/exercise_service.py (guard de escopo)
+evidence:
+  - GAP: guard de escopo não evidenciado no service atual.
+status: GAP
+decision_ref: DEC-TRAIN-EXB-001
+decision_trace: [DEC-TRAIN-EXB-001]
+rationale: >
+  Protege o catálogo base da plataforma contra alterações acidentais ou indevidas.
+```
+
+---
+
+## INV-TRAIN-049
+
+```yaml
+id: INV-TRAIN-049
+class: A
+name: org_exercise_single_organization
+rule: >
+  Todo exercício criado pela organização (scope = ORG) DEVE estar vinculado
+  a exatamente uma organização válida (organization_id NOT NULL, FK ativa).
+table: exercises
+constraints:
+  - fk_exercises_organization_id (quando scope = ORG)
+  - ck_exercises_org_requires_org_id
+evidence:
+  - GAP: constraint condicional não evidenciada no schema atual.
+status: GAP
+decision_ref: DEC-TRAIN-EXB-001
+decision_trace: [DEC-TRAIN-EXB-001]
+rationale: >
+  Impede exercícios ORG "órfãos" e garante isolamento multi-tenant.
+```
+
+---
+
+## INV-TRAIN-050
+
+```yaml
+id: INV-TRAIN-050
+class: A
+name: favorite_unique_per_user_exercise
+rule: >
+  Um usuário só PODE favoritar o mesmo exercício uma vez.
+  Constraint de unicidade em (user_id, exercise_id).
+table: exercise_favorites
+constraints:
+  - uq_exercise_favorites_user_exercise
+evidence:
+  - Hb Track - Backend/docs/ssot/schema.sql (verificar: ux_exercise_favorites_*)
+  - GAP: verificar se constraint existe; se não, materializar via AR.
+status: GAP
+decision_ref: DEC-TRAIN-EXB-001
+decision_trace: [DEC-TRAIN-EXB-001]
+rationale: >
+  Favoritos duplicados poluem a lista e geram inconsistência de contagem.
+```
+
+---
+
+## INV-TRAIN-051
+
+```yaml
+id: INV-TRAIN-051
+class: B
+name: catalog_visibility_respects_organization
+rule: >
+  Usuário só PODE ver exercícios SYSTEM + exercícios ORG da própria organização,
+  respeitando visibility_mode e ACL quando aplicável.
+  Backend é a autoridade de enforcement (não apenas frontend).
+table: exercises
+services:
+  - app/services/exercise_service.py (filtro de catálogo)
+evidence:
+  - GAP: filtro de visibilidade por org + visibility_mode não evidenciado no service.
+status: GAP
+decision_ref: DEC-TRAIN-EXB-001, DEC-TRAIN-EXB-001B
+decision_trace: [DEC-TRAIN-EXB-001, DEC-TRAIN-EXB-001B]
+rationale: >
+  Multi-tenant + ACL: impede vazamento cross-org e respeita restrições de compartilhamento.
+```
+
+---
+
+## INV-TRAIN-052
+
+```yaml
+id: INV-TRAIN-052
+class: A
+name: exercise_media_type_reference_valid
+rule: >
+  Todo item de mídia vinculado ao exercício DEVE informar tipo válido
+  (ex.: image, video, youtube_link, external_link) e referência válida (URL ou asset_id).
+table: exercise_media
+constraints:
+  - ck_exercise_media_type
+  - ck_exercise_media_reference_not_empty
+evidence:
+  - GAP: tabela exercise_media e constraints não evidenciadas no schema atual.
+status: GAP
+decision_ref: DEC-TRAIN-EXB-001
+decision_trace: [DEC-TRAIN-EXB-001]
+rationale: >
+  Evita mídias "vazias" e garante renderização confiável no frontend.
+```
+
+---
+
+## INV-TRAIN-053
+
+```yaml
+id: INV-TRAIN-053
+class: B
+name: soft_delete_exercise_no_break_historic_session
+rule: >
+  Exercício referenciado por sessão histórica NÃO PODE ser removido de forma
+  a invalidar leitura da sessão (soft-delete preserva referência).
+  Se houver hard-delete, deve haver regra de tombstone ou fallback.
+tables:
+  - exercises
+  - training_session_exercises
+services:
+  - app/services/exercise_service.py (guard de delete)
+evidence:
+  - GAP: guard de preservação histórica não evidenciado no service.
+status: GAP
+decision_ref: DEC-TRAIN-EXB-001
+decision_trace: [DEC-TRAIN-EXB-001]
+rationale: >
+  Sessões históricas são artefatos de auditoria; remover exercícios referenciados
+  degrada dados e compliance.
+```
+
+---
+
+## INV-TRAIN-EXB-ACL-001
+
+```yaml
+id: INV-TRAIN-EXB-ACL-001
+class: A
+name: exercise_org_visibility_mode_valid
+rule: >
+  Todo exercício ORG DEVE possuir visibility_mode válido: org_wide ou restricted.
+  Default para novos exercícios ORG: org_wide.
+table: exercises
+constraints:
+  - ck_exercises_visibility_mode (enum: org_wide, restricted; aplicável quando scope = ORG)
+evidence:
+  - GAP: campo visibility_mode e constraint não evidenciados no schema atual.
+status: GAP
+decision_ref: DEC-TRAIN-EXB-001B
+decision_trace: [DEC-TRAIN-EXB-001B]
+rationale: >
+  Controla quem visualiza exercícios ORG e abre caminho para ACL granular.
+```
+
+---
+
+## INV-TRAIN-EXB-ACL-002
+
+```yaml
+id: INV-TRAIN-EXB-ACL-002
+class: B
+name: acl_only_for_org_restricted
+rule: >
+  ACL por usuário só PODE existir para exercício ORG com visibility_mode = restricted.
+  Tentativa de adicionar ACL em exercício com visibility_mode = org_wide DEVE ser bloqueada (400/422).
+table: exercise_acl
+services:
+  - app/services/exercise_acl_service.py (guard)
+evidence:
+  - GAP: tabela exercise_acl e guard de consistência não evidenciados.
+status: GAP
+decision_ref: DEC-TRAIN-EXB-001B
+decision_trace: [DEC-TRAIN-EXB-001B]
+rationale: >
+  ACL em exercício org_wide é redundante e gera confusão operacional.
+```
+
+---
+
+## INV-TRAIN-EXB-ACL-003
+
+```yaml
+id: INV-TRAIN-EXB-ACL-003
+class: B
+name: acl_anti_cross_org
+rule: >
+  Usuário incluído na ACL de um exercício DEVE pertencer à mesma organização do exercício.
+  Backend DEVE validar membership da organização antes de inserir na ACL.
+table: exercise_acl
+services:
+  - app/services/exercise_acl_service.py (validação cross-org)
+evidence:
+  - GAP: validação não evidenciada.
+status: GAP
+decision_ref: DEC-TRAIN-EXB-001B
+decision_trace: [DEC-TRAIN-EXB-001B]
+rationale: >
+  Previne vazamento cross-org de exercícios proprietários.
+```
+
+---
+
+## INV-TRAIN-EXB-ACL-004
+
+```yaml
+id: INV-TRAIN-EXB-ACL-004
+class: B+D
+name: acl_authority_creator_only
+rule: >
+  Apenas o treinador criador do exercício ORG PODE alterar visibility_mode e gerenciar ACL.
+  Outro treinador da mesma org NÃO PODE modificar ACL/visibilidade de exercício alheio (403).
+  O papel RBAC de "Treinador" é identificador explícito (não inferido de categoria genérica).
+table: exercises, exercise_acl
+services:
+  - app/services/exercise_service.py (guard created_by + role check)
+  - app/services/exercise_acl_service.py (guard)
+evidence:
+  - GAP: guard não evidenciado.
+status: GAP
+decision_ref: DEC-TRAIN-EXB-001B, DEC-TRAIN-EXB-002, DEC-TRAIN-EXB-RBAC-001
+decision_trace: [DEC-TRAIN-EXB-001B, DEC-TRAIN-EXB-002, DEC-TRAIN-EXB-RBAC-001]
+rationale: >
+  Evita que treinadores sobreponham configurações de compartilhamento de colegas.
+  RBAC explícito previne falsos positivos em guards baseados em inferência de papel.
+```
+
+---
+
+## INV-TRAIN-EXB-ACL-005
+
+```yaml
+id: INV-TRAIN-EXB-ACL-005
+class: B
+name: creator_implicit_access
+rule: >
+  O treinador criador DEVE manter acesso ao próprio exercício ORG
+  independentemente da ACL (restritiva ou não).
+  Não é necessário o criador estar listado explicitamente na ACL.
+table: exercises
+services:
+  - app/services/exercise_service.py (query de visibilidade)
+evidence:
+  - GAP: regra de bypass para criador não evidenciada.
+status: GAP
+decision_ref: DEC-TRAIN-EXB-001B
+decision_trace: [DEC-TRAIN-EXB-001B]
+rationale: >
+  Impede que o criador perca acesso ao próprio conteúdo por configuração de ACL.
+```
+
+---
+
+## INV-TRAIN-EXB-ACL-006
+
+```yaml
+id: INV-TRAIN-EXB-ACL-006
+class: A
+name: acl_unique_per_exercise_user
+rule: >
+  Um usuário NÃO PODE aparecer duplicado na ACL do mesmo exercício.
+  Constraint de unicidade em (exercise_id, user_id).
+table: exercise_acl
+constraints:
+  - uq_exercise_acl_exercise_user
+evidence:
+  - GAP: tabela e constraint não evidenciadas.
+status: GAP
+decision_ref: DEC-TRAIN-EXB-001B
+decision_trace: [DEC-TRAIN-EXB-001B]
+rationale: >
+  Duplicidade na ACL gera inconsistência de remoção e riscos de query.
+```
+
+---
+
+## INV-TRAIN-EXB-ACL-007
+
+```yaml
+id: INV-TRAIN-EXB-ACL-007
+class: B
+name: acl_change_no_retrobreak_historic_session
+rule: >
+  Mudanças de ACL/visibility_mode NÃO PODEM invalidar a leitura de sessões históricas
+  que já referenciam o exercício. O backend DEVE permitir leitura de session_exercises
+  independentemente do ACL/visibility atual do exercício referenciado.
+tables:
+  - training_session_exercises
+  - exercises
+  - exercise_acl
+services:
+  - app/services/training_session_service.py (leitura de sessão histórica)
+evidence:
+  - GAP: guard de leitura histórica não evidenciado.
+status: GAP
+decision_ref: DEC-TRAIN-EXB-001B
+decision_trace: [DEC-TRAIN-EXB-001B]
+rationale: >
+  Sessões históricas são imutáveis (INV-TRAIN-005); ACL restritiva posterior
+  não pode degradar auditoria ou leitura de dados consolidados.
 ```

@@ -1,12 +1,25 @@
 # TRAINING_USER_FLOWS.md — Fluxos de Usuário do Módulo TRAINING
 
 Status: DRAFT  
-Versão: v1.0.0  
+Versão: v1.2.0  
 Tipo de Documento: SSOT Normativo — User Flows  
 Módulo: TRAINING  
-Fase: PRD v2.2 (2026-02-20) + AS-IS repo (2026-02-25)  
+Fase: PRD v2.2 (2026-02-20) + AS-IS repo (2026-02-25) + DEC-TRAIN-* (2026-02-25)  
 Autoridade: NORMATIVO_TECNICO  
-Última revisão: 2026-02-25  
+Última revisão: 2026-02-26  
+
+> Changelog v1.2.0 (2026-02-26):  
+> - Adicionada Authority Matrix  
+> - Adicionada convenção de Classification Tags  
+> - Adicionado `decision_trace:` formal em FLOW-TRAIN-005/006/009/012/013  
+> - Adicionados Negative Cases em fluxos críticos (005, 006, 009, 012, 013)  
+
+> Changelog v1.1.0 (2026-02-25):  
+> - DEC-TRAIN-001: FLOW-TRAIN-005/006 — regra self-only explícita, sem `athlete_id` no payload  
+> - DEC-TRAIN-002: FLOW-TRAIN-005 — mapeamento FE→payload referenciado  
+> - DEC-TRAIN-003: FLOW-TRAIN-013 — `CONTRACT-TRAIN-076` como canônico FE  
+> - DEC-TRAIN-004: FLOW-TRAIN-012 — estado degradado sem worker  
+> - DEC-TRAIN-EXB-*: FLOW-TRAIN-009 — expansão com scope/ACL/visibility/mídia/copy  
 
 Dependências (leitura):
 - `docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md`
@@ -16,6 +29,37 @@ Dependências (leitura):
 - `Hb Track - Backend/app/api/v1/routers/*` (training/attendance/wellness/analytics)
 - `Hb Track - Frontend/src/app/(admin)/training/*`
 - `Hb Track - Frontend/src/app/(protected)/athlete/wellness-*/[sessionId]/*`
+
+---
+
+## Authority Matrix
+
+| Aspecto | Regra |
+|---|---|
+| Fonte de verdade | Fluxos derivados de PRD + SSOT (schema/OpenAPI) + Decisões humanas (DEC-*) |
+| Escrita normativa | **Arquiteto** — criar, alterar, remover fluxos e regras associadas |
+| Proposta UX | **Designer UX** — propõe alterações via DEC |
+| Somente leitura + GAP | Executor, Testador — leitura + registrar GAP |
+| Precedência em conflito | DB > Services > OpenAPI > FE > PRD |
+
+---
+
+## Convenção de Tags (Classification)
+
+Cada fluxo (FLOW-*) neste documento é uma **unidade de afirmação testável** e recebe classificação:
+
+| Tag | Significado |
+|---|---|
+| `[NORMATIVO]` | Fluxo/regra que DEVE ser respeitado. Fonte: DB, Service, DEC ou PRD explícito. |
+| `[DESCRITIVO-AS-IS]` | Observação do estado atual (evidenciado no repo). Pode mudar. |
+| `[HIPOTESE]` | Expectativa derivada do PRD/fluxos, mas não evidenciada no repo. |
+| `[GAP]` | Lacuna identificada entre o normativo e o estado atual. |
+
+**Aplicação neste documento:**
+- Seções "Passos (TO-BE normativo)" → `[NORMATIVO]`.
+- Seções "Gaps AS-IS" → `[GAP]` + `[DESCRITIVO-AS-IS]`.
+- Seções "Exceções normativas" → `[NORMATIVO]`.
+- Fluxos com `estado_asis: HIPOTESE` → `[HIPOTESE]`.
 
 ---
 
@@ -82,7 +126,7 @@ Regra normativa:
 | FLOW-TRAIN-006 | Atleta preencher wellness pós (janela 24h) | Atleta | P0 | PARCIAL | SCREEN-TRAIN-019 | CONTRACT-TRAIN-036 | INV-TRAIN-003, INV-TRAIN-010, INV-TRAIN-021 | RF-004 |
 | FLOW-TRAIN-007 | Treinador visualizar status wellness da sessão | Treinador | P1 | PARCIAL | SCREEN-TRAIN-004 | CONTRACT-TRAIN-012 | INV-TRAIN-022, INV-TRAIN-026 | RF-004 |
 | FLOW-TRAIN-008 | Planejar ciclos e microciclos | Treinador | P1 | EVIDENCIADO | SCREEN-TRAIN-007, SCREEN-TRAIN-008 | CONTRACT-TRAIN-040..052 | INV-TRAIN-037, INV-TRAIN-043 | RF-011 |
-| FLOW-TRAIN-009 | Gerenciar banco de exercícios e favoritos | Treinador | P1 | EVIDENCIADO | SCREEN-TRAIN-010, SCREEN-TRAIN-011 | CONTRACT-TRAIN-053..062 | INV-TRAIN-045 | (PRD: In Scope V1) |
+| FLOW-TRAIN-009 | Gerenciar banco de exercícios e favoritos | Treinador | P1 | EVIDENCIADO | SCREEN-TRAIN-010, SCREEN-TRAIN-011 | CONTRACT-TRAIN-053..062, 091..095 | INV-TRAIN-045, INV-TRAIN-047..053, INV-TRAIN-EXB-ACL-001..007 | (PRD: In Scope V1) |
 | FLOW-TRAIN-010 | Gerenciar templates de sessão | Treinador | P1 | EVIDENCIADO | SCREEN-TRAIN-017 | CONTRACT-TRAIN-063..068 | INV-TRAIN-035 | (PRD: suporte operacional) |
 | FLOW-TRAIN-011 | Visualizar analytics e desvios | Coordenador | P1 | EVIDENCIADO | SCREEN-TRAIN-012 | CONTRACT-TRAIN-069..071 | INV-TRAIN-020, INV-TRAIN-015 | US-003 |
 | FLOW-TRAIN-012 | Exportar relatório (PDF) de analytics | Coordenador | P1 | BLOQUEADO | SCREEN-TRAIN-012, SCREEN-TRAIN-013 | CONTRACT-TRAIN-086..089 | INV-TRAIN-012 | US-003, RF-012 |
@@ -251,6 +295,7 @@ atores:
   primario: atleta
 prioridade: P0
 estado_asis: PARCIAL
+decision_trace: [DEC-TRAIN-001, DEC-TRAIN-002]
 telas:
   - SCREEN-TRAIN-018 # /athlete/wellness-pre/[sessionId]
 contratos:
@@ -265,6 +310,10 @@ evidencias:
 ```
 
 ### Passos (TO-BE normativo)
+
+> **DEC-TRAIN-001 (normativo):** O payload de wellness pré do atleta NÃO DEVE conter
+> `athlete_id`. Backend infere do token JWT. Ver CONTRACT §4.5.
+
 1. Atleta acessa `SCREEN-TRAIN-018` via link para uma sessão agendada.
 2. Sistema exibe resumo da sessão e countdown de deadline (até `session_at - 2h`).
 3. Atleta preenche campos do **schema real** (PRD US-002):
@@ -274,11 +323,26 @@ evidencias:
    - `fatigue_pre` (0–10),
    - `muscle_soreness` (0–10),
    - opcionais SSOT: `readiness_score`, `menstrual_cycle_phase`, `notes`.
-4. Submete via `CONTRACT-TRAIN-030`.
+4. **FE NÃO inclui `athlete_id` no payload** (DEC-TRAIN-001).
+5. FE mapeia sliders/UI components conforme tabela canônica (CONTRACT §4.4, DEC-TRAIN-002).
+6. Submete via `CONTRACT-TRAIN-030`.
+
+### Exceções normativas (DEC-TRAIN-001)
+- Se FE enviar `athlete_id` no payload → backend DEVE ignorar ou retornar 422.
+- Staff/terceiros registrando wellness de outro atleta → endpoint/escopo separado com auditoria (INV-TRAIN-026).
 
 ### Gaps AS-IS (bloqueantes)
 - Frontend chama endpoints inexistentes/errados (`/wellness_pre`, `/wellness_pre/sessions/...`) em `Hb Track - Frontend/src/lib/api/wellness.ts` (esperado: prefix `/wellness-pre/...`).
 - UI coleta campos não alinhados ao schema (`fatigue_level`, `mood`, `readiness`) e não coleta `sleep_hours`.
+
+### Casos Negativos (anti-exemplos) `[NORMATIVO]`
+
+| # | Cenário negativo | Resultado esperado | DEC/INV |
+|---|---|---|---|
+| NEG-005-1 | Atleta envia payload com `athlete_id` explícito (tentativa de impersonação) | Backend retorna **422** ou ignora o campo; NUNCA usa o valor enviado | DEC-TRAIN-001 |
+| NEG-005-2 | Atleta submete wellness pré **após** deadline (session_at - 2h) | Backend retorna **403/422** com mensagem de deadline expirado | INV-TRAIN-002 |
+| NEG-005-3 | Atleta submete wellness pré **duplicado** (mesma sessão) | Backend retorna **409 Conflict** (unique constraint athlete×session) | INV-TRAIN-009 |
+| NEG-005-4 | FE mapeia slider "mood" para campo inexistente no schema | Validação falha **422** — campo não reconhecido | DEC-TRAIN-002 |
 
 ---
 
@@ -290,6 +354,7 @@ atores:
   primario: atleta
 prioridade: P0
 estado_asis: PARCIAL
+decision_trace: [DEC-TRAIN-001]
 telas:
   - SCREEN-TRAIN-019 # /athlete/wellness-post/[sessionId]
 contratos:
@@ -305,14 +370,31 @@ evidencias:
 ```
 
 ### Passos (TO-BE normativo)
+
+> **DEC-TRAIN-001 (normativo):** O payload de wellness pós do atleta NÃO DEVE conter
+> `athlete_id`. Backend infere do token JWT. Ver CONTRACT §4.5.
+
 1. Atleta acessa `SCREEN-TRAIN-019` após o treino.
 2. Preenche: `session_rpe`, `fatigue_after`, `mood_after`, `muscle_soreness_after` (opcional), `minutes_effective` (quando aplicável), `notes` (opcional).
-3. Submete via `CONTRACT-TRAIN-036`.
-4. Sistema calcula `internal_load` automaticamente (trigger) e invalida caches de analytics quando aplicável.
+3. **FE NÃO inclui `athlete_id` no payload** (DEC-TRAIN-001).
+4. Submete via `CONTRACT-TRAIN-036`.
+5. Sistema calcula `internal_load` automaticamente (trigger) e invalida caches de analytics quando aplicável.
+
+### Exceções normativas (DEC-TRAIN-001)
+- Se FE enviar `athlete_id` no payload → backend DEVE ignorar ou retornar 422.
+- Staff registrando wellness de outro atleta → endpoint separado com RBAC e auditoria.
 
 ### Gaps AS-IS (bloqueantes)
 - Mesmo problema de endpoint base do módulo wellness no frontend (`/wellness_post` vs `/wellness-post/...`).
 - Badge/progresso mensal na UI está hardcoded (não evidenciado como contrato consumido).
+
+### Casos Negativos (anti-exemplos) `[NORMATIVO]`
+
+| # | Cenário negativo | Resultado esperado | DEC/INV |
+|---|---|---|---|
+| NEG-006-1 | Atleta envia payload com `athlete_id` explícito | Backend retorna **422** ou ignora o campo | DEC-TRAIN-001 |
+| NEG-006-2 | Atleta submete wellness pós **após** janela de 24h | Backend retorna **403/422** — edição fora da janela | INV-TRAIN-003 |
+| NEG-006-3 | Atleta submete wellness pós **duplicado** (mesma sessão) | Backend retorna **409 Conflict** (unique athlete×session) | INV-TRAIN-010 |
 
 ---
 
@@ -386,23 +468,83 @@ id: FLOW-TRAIN-009
 atores:
   primario: treinador|coordenador
 prioridade: P1
-estado_asis: EVIDENCIADO
+estado_asis: EVIDENCIADO (CRUD base) / GAP (scope/ACL/media/copy)
+decision_trace: [DEC-TRAIN-EXB-001, DEC-TRAIN-EXB-001B, DEC-TRAIN-EXB-002, DEC-TRAIN-EXB-RBAC-001]
 telas:
   - SCREEN-TRAIN-010 # /training/exercise-bank
   - SCREEN-TRAIN-011 # modais create/edit/details
 contratos:
-  - CONTRACT-TRAIN-053..062 # exercises + tags + favorites
+  - CONTRACT-TRAIN-053..062 # exercises + tags + favorites (existentes)
+  - CONTRACT-TRAIN-091..095 # ACL + visibility + copy (novos, GAP)
 invariantes_chave:
-  - INV-TRAIN-045 # order_index unique em session_exercises (impacto indireto)
+  - INV-TRAIN-045 # order_index unique em session_exercises
+  - INV-TRAIN-047 # exercise scope (SYSTEM|ORG)
+  - INV-TRAIN-048 # SYSTEM imutável para org users
+  - INV-TRAIN-049 # ORG exercise single org
+  - INV-TRAIN-050 # favorite unique per user×exercise
+  - INV-TRAIN-051 # catalog visibility scoped
+  - INV-TRAIN-052 # exercise media valid type
+  - INV-TRAIN-053 # soft-delete no break historic
+  - INV-TRAIN-EXB-ACL-001..007 # ACL invariants
 evidencias:
   - Hb Track - Frontend/src/app/(admin)/training/exercise-bank/page.tsx
   - Hb Track - Backend/app/api/v1/routers/exercises.py
 ```
 
-### Passos (happy path)
+### Passos (happy path — CRUD base, EVIDENCIADO)
 1. Usuário acessa banco de exercícios e filtra por busca/tags/categoria/favoritos.
 2. Staff cria/edita exercícios e tags; marca favoritos.
 3. Usuário arrasta exercícios para compor sessão (integra com `FLOW-TRAIN-003`).
+
+### Passos (scope + visibility + ACL — DEC-TRAIN-EXB-001/001B, TO-BE normativo)
+4. Ao listar (`CONTRACT-TRAIN-053`), o catálogo exibe:
+   - Exercícios SYSTEM (visíveis para todos, imutáveis para org users).
+   - Exercícios ORG da própria organização com `visibility_mode = org_wide`.
+   - Exercícios ORG da própria org com `visibility_mode = restricted` **apenas se o usuário é creator ou está na ACL**.
+5. Ao criar exercício (`CONTRACT-TRAIN-054`):
+   - Staff de org cria com scope=ORG (padrão), `organization_id` inferido do token.
+   - Admin global pode criar com scope=SYSTEM.
+   - `visibility_mode` padrão = `org_wide` (pode ser alterado para `restricted`).
+6. Ao editar exercício ORG (`CONTRACT-TRAIN-056`):
+   - Apenas creator ou role "Treinador" da mesma org (DEC-TRAIN-RBAC-001).
+   - Exercícios SYSTEM → 403 para org users (INV-TRAIN-048).
+
+### Passos (ACL management — DEC-TRAIN-EXB-002, TO-BE normativo)
+7. Creator de exercício ORG com `restricted` acessa painel de ACL via UI:
+   - Lista usuários com acesso (`CONTRACT-TRAIN-092`).
+   - Adiciona usuário da mesma org (`CONTRACT-TRAIN-093`); cross-org → 422.
+   - Remove usuário (`CONTRACT-TRAIN-094`).
+8. Ao alterar `visibility_mode` (`CONTRACT-TRAIN-091`):
+   - `restricted → org_wide`: todos da org veem; ACL mantida mas irrelevante.
+   - `org_wide → restricted`: apenas creator e ACL explícita veem.
+
+### Passos (copy SYSTEM→ORG — DEC-TRAIN-EXB-001, TO-BE normativo)
+9. Usuário visualiza exercício SYSTEM e aciona "Copiar para minha org" (`CONTRACT-TRAIN-095`).
+10. Sistema cria cópia como scope=ORG, `created_by` do token, `visibility_mode` padrão = `org_wide`.
+11. Exercício SYSTEM original permanece inalterado.
+
+### Passos (mídia — DEC-TRAIN-EXB-001, TO-BE normativo)
+12. Ao criar/editar exercício, usuário pode anexar mídia (imagem, vídeo, documento).
+13. Tipo de mídia validado: IMAGE|VIDEO|DOCUMENT (INV-TRAIN-052).
+14. UI exibe preview/thumbnail quando disponível.
+
+### Passos (favoritos — existente)
+15. Usuário marca/desmarca favorito (CONTRACT-TRAIN-061/062).
+16. Unique constraint `(user_id, exercise_id)` → duplicata retorna 409 (INV-TRAIN-050).
+
+### Passos (soft-delete — DEC-TRAIN-EXB-001, TO-BE normativo)
+17. Ao excluir exercício ORG, soft-delete com reason pair.
+18. Sessões históricas que referenciavam esse exercício continuam legíveis (INV-TRAIN-053, INV-TRAIN-EXB-ACL-007).
+
+### Casos Negativos (anti-exemplos) `[NORMATIVO]`
+
+| # | Cenário negativo | Resultado esperado | DEC/INV |
+|---|---|---|---|
+| NEG-009-1 | Usuário fora da ACL tenta acessar exercício ORG restricted | Exercício **não aparece** no catálogo; acesso direto retorna **403** | DEC-TRAIN-EXB-001B, INV-TRAIN-EXB-ACL-001 |
+| NEG-009-2 | Usuário tenta adicionar à ACL um `user_id` de **outra org** | Backend retorna **422** (cross-org bloqueado) | INV-TRAIN-EXB-ACL-003 |
+| NEG-009-3 | Org user tenta editar exercício SYSTEM | Backend retorna **403** (SYSTEM imutável para org users) | INV-TRAIN-048, DEC-TRAIN-RBAC-001 |
+| NEG-009-4 | Usuário tenta gerenciar ACL em exercício com `visibility_mode = org_wide` | Backend retorna **409 Conflict** ("ACL not applicable for org_wide") | INV-TRAIN-EXB-ACL-002 |
+| NEG-009-5 | Duplicata de favorito `(user_id, exercise_id)` | Backend retorna **409 Conflict** | INV-TRAIN-050 |
 
 ---
 
@@ -457,6 +599,7 @@ atores:
   primario: coordenador|dirigente
 prioridade: P1
 estado_asis: BLOQUEADO
+decision_trace: [DEC-TRAIN-004]
 telas:
   - SCREEN-TRAIN-012 # /training/analytics (entrada)
   - SCREEN-TRAIN-013 # ExportPDFModal
@@ -475,6 +618,27 @@ evidencias:
 Regra normativa:
 - O fluxo só pode ser marcado como `EVIDENCIADO` quando o contrato de export e o job assíncrono estiverem expostos e testados.
 
+### Estado Degradado (DEC-TRAIN-004 — normativo)
+
+> Quando os contratos forem habilitados e o worker Celery/Redis NÃO estiver disponível:
+
+1. Backend retorna **202 Accepted** com `{"status": "queued", "degraded": true}` (não 500/503).
+2. FE exibe **banner/toast de degradação** em SCREEN-TRAIN-013 ("Export pode levar mais tempo").
+3. FE NÃO bloqueia a UI — usuário pode continuar navegando.
+4. Polling via `CONTRACT-TRAIN-087` continua com timeout estendido.
+5. Rate limit (`CONTRACT-TRAIN-089`) DEVE ser respeitado mesmo em estado degradado.
+
+**Invariantes:** INV-TRAIN-012.  
+**Tela:** SCREEN-TRAIN-013 deve mostrar indicador de degradação.
+
+### Casos Negativos (anti-exemplos) `[NORMATIVO]`
+
+| # | Cenário negativo | Resultado esperado | DEC/INV |
+|---|---|---|---|
+| NEG-012-1 | Worker Celery/Redis **indisponível** e backend retorna 500/503 | **PROIBIDO** — deve retornar **202 Accepted** + `{"degraded": true}` | DEC-TRAIN-004 |
+| NEG-012-2 | FE bloqueia UI completamente quando recebe `degraded: true` | **PROIBIDO** — FE deve exibir banner amigável, manter navegação | DEC-TRAIN-004 |
+| NEG-012-3 | Usuário excede rate limit de export diário | Backend retorna **429 Too Many Requests** | INV-TRAIN-012 |
+
 ---
 
 ## FLOW-TRAIN-013 — Visualizar rankings wellness e top performers
@@ -485,6 +649,7 @@ atores:
   primario: dirigente|coordenador|treinador
 prioridade: P1
 estado_asis: PARCIAL
+decision_trace: [DEC-TRAIN-003]
 telas:
   - SCREEN-TRAIN-014 # /training/rankings
   - SCREEN-TRAIN-015 # /training/top-performers/[teamId]
@@ -500,9 +665,31 @@ evidencias:
   - Hb Track - Backend/app/api/v1/routers/teams.py (/wellness-top-performers)
 ```
 
+### Regra Canônica (DEC-TRAIN-003 — normativo)
+
+> **`CONTRACT-TRAIN-076`** é o **endpoint canônico** que o FE deve consumir para a **tela principal
+> de top performers** (SCREEN-TRAIN-015).
+>
+> **`CONTRACT-TRAIN-075`** serve apenas como **drilldown especializado** (atletas com >90% de
+> taxa de resposta). O FE NÃO DEVE usar `CONTRACT-TRAIN-075` como fonte primária da listagem.
+
+### Passos (TO-BE normativo)
+1. Usuário acessa SCREEN-TRAIN-014 (rankings) e seleciona equipe/mês.
+2. Ranking listado via `CONTRACT-TRAIN-073` (GET wellness-rankings).
+3. Usuário clica em equipe para ver top performers → SCREEN-TRAIN-015.
+4. **FE consome `CONTRACT-TRAIN-076`** (canônico) para montar a listagem principal.
+5. (Opcional) Usuário aciona drilldown >90% → `CONTRACT-TRAIN-075`.
+
 ### Gaps AS-IS
 - Frontend trata `team_id` como `number` (parseInt) e backend/schema usam `UUID`.
 - Endpoint `/analytics/wellness-rankings/{team_id}/athletes-90plus` usa tipagem/implementação inconsistente (service com campos antigos).
+
+### Casos Negativos (anti-exemplos) `[NORMATIVO]`
+
+| # | Cenário negativo | Resultado esperado | DEC/INV |
+|---|---|---|---|
+| NEG-013-1 | FE usa `CONTRACT-TRAIN-075` (`/athletes-90plus`) como **fonte primária** da listagem top performers | **PROIBIDO** — FE DEVE usar `CONTRACT-TRAIN-076` (canônico) | DEC-TRAIN-003 |
+| NEG-013-2 | FE usa `team_id` como `number`/`parseInt` em vez de UUID | Request falha ou retorna dados errados — DEVE usar UUID string | GAP-CONTRACT-2 |
 
 ---
 

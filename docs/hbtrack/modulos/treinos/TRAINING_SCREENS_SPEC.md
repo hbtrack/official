@@ -1,12 +1,23 @@
 # TRAINING_SCREENS_SPEC.md — Especificação de Telas do Módulo TRAINING
 
 Status: DRAFT  
-Versão: v1.0.0  
+Versão: v1.2.0  
 Tipo de Documento: SSOT Normativo — Screens Spec  
 Módulo: TRAINING  
-Fase: PRD v2.2 (2026-02-20) + AS-IS repo (2026-02-25)  
+Fase: PRD v2.2 (2026-02-20) + AS-IS repo (2026-02-25) + DEC-TRAIN-* (2026-02-25)  
 Autoridade: NORMATIVO_TECNICO  
-Última revisão: 2026-02-25  
+Última revisão: 2026-02-26  
+
+> Changelog v1.2.0 (2026-02-26):  
+> - Adicionada Authority Matrix  
+> - Adicionada convenção de Classification Tags  
+> - Adicionado `decision_trace:` formal em SCREEN-TRAIN-010/011/013/015/018/019  
+
+> Changelog v1.1.0 (2026-02-25):  
+> - DEC-TRAIN-001/002: SCREEN-TRAIN-018/019 — self-only, sem seleção de atleta, mapeamento sliders  
+> - DEC-TRAIN-003: SCREEN-TRAIN-015 — consome endpoint canônico CONTRACT-TRAIN-076  
+> - DEC-TRAIN-004: SCREEN-TRAIN-013 — estado degradado sem worker  
+> - DEC-TRAIN-EXB-*: SCREEN-TRAIN-010/011 — scope/visibility/ACL/media/copy  
 
 Dependências (leitura):
 - `docs/hbtrack/modulos/treinos/TRAINING_USER_FLOWS.md`
@@ -14,6 +25,37 @@ Dependências (leitura):
 - `Hb Track - Backend/docs/ssot/openapi.json`
 - `Hb Track - Frontend/src/app/(admin)/training/*`
 - `Hb Track - Frontend/src/app/(protected)/athlete/wellness-*/[sessionId]/*`
+
+---
+
+## Authority Matrix
+
+| Aspecto | Regra |
+|---|---|
+| Fonte de verdade | Telas derivadas de PRD + SSOT (schema/OpenAPI) + Decisões humanas (DEC-*) |
+| Escrita normativa | **Arquiteto** — criar, alterar, remover especificações de tela e regras associadas |
+| Proposta UX | **Designer UX** — propõe alterações via DEC |
+| Somente leitura + GAP | Executor, Testador — leitura + registrar GAP |
+| Precedência em conflito | DB > Services > OpenAPI > FE > PRD |
+
+---
+
+## Convenção de Tags (Classification)
+
+Cada tela (SCREEN-*) neste documento é uma **unidade de afirmação testável** e recebe classificação:
+
+| Tag | Significado |
+|---|---|
+| `[NORMATIVO]` | Comportamento funcional que DEVE ser respeitado. |
+| `[DESCRITIVO-AS-IS]` | Observação do estado atual (evidenciado no repo). |
+| `[HIPOTESE]` | Expectativa derivada do PRD/fluxos, mas não evidenciada no repo. |
+| `[GAP]` | Lacuna entre normativo e estado atual. |
+
+**Aplicação neste documento:** O campo `Estado AS-IS` na tabela de índice indica a classificação:
+- `EVIDENCIADO` → `[NORMATIVO]` + `[DESCRITIVO-AS-IS]`.
+- `PARCIAL` → `[NORMATIVO]` com gaps identificados.
+- `HIPOTESE` → `[HIPOTESE]`.
+- `BLOQUEADO` → `[NORMATIVO]` + `[GAP]` (regra existe, implementação bloqueada).
 
 ---
 
@@ -258,13 +300,27 @@ Evidência:
 **Tipo:** Page  
 **Rota:** `/training/exercise-bank`  
 **Fluxo:** FLOW-TRAIN-009  
-**Contratos:** `CONTRACT-TRAIN-053..062`
+**Contratos:** `CONTRACT-TRAIN-053..062`, `CONTRACT-TRAIN-091..095`  
+**decision_trace:** `[DEC-TRAIN-EXB-001, DEC-TRAIN-EXB-001B, DEC-TRAIN-EXB-002, DEC-TRAIN-EXB-RBAC-001]`
 
-### Capacidades normativas
+### Capacidades normativas (CRUD base, EVIDENCIADO)
 - Buscar/filtrar por tags e categoria.
 - Favoritar/desfavoritar exercícios.
 - CRUD de exercício (somente staff).
 - DnD habilitado (integração com composição de sessão).
+
+### Capacidades normativas (scope/visibility/ACL — DEC-TRAIN-EXB-*, TO-BE)
+- **Indicador de scope:** badge visual `SYSTEM` (global, somente leitura) vs `ORG` (editável) em cada card de exercício.
+- **Filtro de scope:** toggle/tab para mostrar SYSTEM vs ORG vs todos.
+- **Indicador de visibility:** para exercícios ORG, badge `org_wide` vs `restricted`.
+- **Botão "Copiar para minha org"** em exercícios SYSTEM → aciona `CONTRACT-TRAIN-095`.
+- **Indicador de mídia:** thumbnail/preview quando exercício tem `exercise_media` (INV-TRAIN-052).
+- **RBAC:** Botões de edição/exclusão visíveis apenas para creator ou role "Treinador" na mesma org (DEC-TRAIN-RBAC-001).
+- **Exercícios SYSTEM:** botões de editar/excluir OCULTOS para org users (INV-TRAIN-048).
+
+### Estados de UI adicionais (TO-BE)
+- `restricted_hidden`: exercício ORG restricted que o usuário não tem acesso — não aparece na listagem.
+- `system_readonly`: exercício SYSTEM com ações limitadas a "ver detalhes" e "copiar para org".
 
 Evidência:
 - `Hb Track - Frontend/src/app/(admin)/training/exercise-bank/page.tsx`
@@ -276,7 +332,26 @@ Evidência:
 **Tipo:** Modal(s)  
 **Entradas:** `SCREEN-TRAIN-010`  
 **Fluxo:** FLOW-TRAIN-009  
-**Contratos:** `CONTRACT-TRAIN-054..061` (conforme ação)
+**Contratos:** `CONTRACT-TRAIN-054..061`, `CONTRACT-TRAIN-091..094` (conforme ação)  
+**decision_trace:** `[DEC-TRAIN-EXB-001, DEC-TRAIN-EXB-001B]`
+
+### Campos normativos adicionais (DEC-TRAIN-EXB-001/001B, TO-BE)
+- **scope** (select): `SYSTEM` | `ORG` — visível apenas para admin global.
+- **visibility_mode** (select): `org_wide` | `restricted` — visível apenas para scope=ORG.
+- **Mídia:** upload area para IMAGE/VIDEO/DOCUMENT, com preview. Tipo validado (INV-TRAIN-052).
+
+### Sub-painel: Gerenciar ACL (DEC-TRAIN-EXB-002, TO-BE)
+- Acessível apenas quando `visibility_mode = restricted`.
+- Listar usuários com acesso (`CONTRACT-TRAIN-092`).
+- Adicionar usuário (autocomplete da mesma org, `CONTRACT-TRAIN-093`); cross-org → erro inline.
+- Remover usuário (`CONTRACT-TRAIN-094`).
+- Nota visual: "Você (criador) tem acesso implícito" (INV-TRAIN-EXB-ACL-005).
+
+### Regras de visibilidade de ações (RBAC, DEC-TRAIN-RBAC-001)
+- Criar exercício: qualquer staff autenticado da org.
+- Editar/excluir: apenas creator OU role "Treinador" na mesma org.
+- Gerenciar ACL: apenas creator OU role "Treinador" na mesma org.
+- Exercício SYSTEM: nenhuma ação de edição para org users.
 
 Evidência:
 - `Hb Track - Frontend/src/components/training/exercises/ExerciseModal.tsx`
@@ -308,7 +383,8 @@ Evidência:
 **Tipo:** Modal  
 **Entrada:** `SCREEN-TRAIN-012`  
 **Fluxo:** FLOW-TRAIN-012  
-**Estado AS-IS:** BLOQUEADO (endpoints não incluídos no agregador)
+**Estado AS-IS:** BLOQUEADO (endpoints não incluídos no agregador)  
+**decision_trace:** `[DEC-TRAIN-004]`
 
 Contratos (quando reabilitado no agregador):
 - `CONTRACT-TRAIN-086` (request export)
@@ -320,6 +396,16 @@ Regras normativas (quando habilitado):
 - Consultar rate limit antes de solicitar export (INV-TRAIN-012).
 - Polling por status até `completed|failed`.
 - Histórico de exports por usuário.
+
+### Estado Degradado (DEC-TRAIN-004 — normativo, TO-BE)
+
+> Quando worker Celery/Redis NÃO estiver disponível:
+
+- UI DEVE exibir **banner/toast de degradação**: "Export pode levar mais tempo. O sistema está processando com capacidade reduzida."
+- UI NÃO DEVE bloquear — usuário pode fechar modal e continuar usando o sistema.
+- Botão "Exportar" permanece habilitado; backend retorna 202 com `degraded: true`.
+- Polling continua com timeout estendido.
+- Se export falhar após timeout → UI mostra estado `error` com retry.
 
 Evidência:
 - `Hb Track - Frontend/src/components/training/analytics/ExportPDFModal.tsx`
@@ -353,7 +439,18 @@ Evidência:
 **Tipo:** Page  
 **Rota:** `/training/top-performers/[teamId]`  
 **Fluxo:** FLOW-TRAIN-013  
-**Estado AS-IS:** PARCIAL
+**Estado AS-IS:** PARCIAL  
+**decision_trace:** `[DEC-TRAIN-003]`
+
+### Regra Canônica (DEC-TRAIN-003 — normativo)
+
+> Esta tela DEVE consumir **`CONTRACT-TRAIN-076`** como endpoint primário (canônico).
+> `CONTRACT-TRAIN-075` é apenas drilldown especializado (>90%) e NÃO DEVE ser a fonte
+> da listagem principal.
+
+### Contratos consumidos
+- **Primário (listagem):** `CONTRACT-TRAIN-076` — GET `/teams/{team_id}/wellness-top-performers`
+- **Drilldown (>90%):** `CONTRACT-TRAIN-075` — GET `/analytics/wellness-rankings/{team_id}/athletes-90plus`
 
 Regra normativa:
 - `teamId` deve ser tratado como `UUID` (string) e não `int`.
@@ -392,12 +489,28 @@ Evidência:
 **Tipo:** Page  
 **Rota:** `/athlete/wellness-pre/[sessionId]`  
 **Fluxo:** FLOW-TRAIN-005  
-**Estado AS-IS:** PARCIAL
+**Estado AS-IS:** PARCIAL  
+**decision_trace:** `[DEC-TRAIN-001, DEC-TRAIN-002]`
 
 ### Requisitos normativos
 - Countdown de deadline (INV-TRAIN-002).
 - Submit no endpoint correto (prefix `/wellness-pre/...`).
 - Campos alinhados ao schema (`sleep_hours`, `sleep_quality`, `fatigue_pre`, `stress_level`, `muscle_soreness`).
+
+### Regra Self-Only (DEC-TRAIN-001 — normativo)
+- UI NÃO DEVE exibir seletor de atleta — o atleta só registra para si mesmo.
+- Payload NÃO DEVE conter `athlete_id` (backend infere do JWT).
+- Não deve existir dropdown/autocomplete de "atleta".
+
+### Mapeamento FE→Payload (DEC-TRAIN-002 — normativo)
+- Sliders/UI components DEVEM ser mapeados conforme tabela canônica (CONTRACT §4.4).
+- Labels visuais (ex.: "Qualidade do sono") → campo payload (`sleep_quality`).
+- Ranges devem respeitar schema DB (ex.: `sleep_quality` 1..5, não 0..5).
+
+### Estados de UI adicionais (TO-BE)
+- `submitted`: wellness já enviado para esta sessão → readonly com resumo.
+- `deadline_expired`: após `session_at - 2h` → formulário desabilitado com mensagem.
+- `permission_error`: se backend retornar 422 por tentativa de registrar para outro atleta.
 
 Evidências:
 - `Hb Track - Frontend/src/app/(protected)/athlete/wellness-pre/[sessionId]/WellnessPreClient.tsx`
@@ -410,12 +523,23 @@ Evidências:
 **Tipo:** Page  
 **Rota:** `/athlete/wellness-post/[sessionId]`  
 **Fluxo:** FLOW-TRAIN-006  
-**Estado AS-IS:** PARCIAL
+**Estado AS-IS:** PARCIAL  
+**decision_trace:** `[DEC-TRAIN-001]`
 
-Requisitos normativos:
+### Requisitos normativos
 - Submit no endpoint correto (prefix `/wellness-post/...`).
 - Respeitar janela de edição (INV-TRAIN-003).
 - Exibir `internal_load` calculado (quando disponível).
+
+### Regra Self-Only (DEC-TRAIN-001 — normativo)
+- UI NÃO DEVE exibir seletor de atleta.
+- Payload NÃO DEVE conter `athlete_id` (backend infere do JWT).
+- Mesmas regras de SCREEN-TRAIN-018 aplicam-se aqui.
+
+### Estados de UI adicionais (TO-BE)
+- `submitted`: wellness já enviado para esta sessão → readonly com resumo + `internal_load`.
+- `window_expired`: após 24h da sessão → formulário desabilitado.
+- `permission_error`: tentativa de registrar para outro atleta.
 
 Evidências:
 - `Hb Track - Frontend/src/app/(protected)/athlete/wellness-post/[sessionId]/WellnessPostClient.tsx`
