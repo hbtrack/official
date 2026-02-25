@@ -1,0 +1,36 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "FASE 0 — Materialização de invariantes de banco (Classe A) para competition_matches. Invariantes BLOQUEANTE_TABELA que garantem integridade de dados para cálculo de standings. INV-COMP-016 (placar >= 0) e INV-COMP-018 (times diferentes) são pré-requisitos para tabela correta.",
+  "assumptions": [
+    "competition_matches.home_score e away_score são INTEGER, aceitam NULL (partidas não finalizadas)",
+    "CHECK constraints devem permitir NULL (partida agendada) mas rejeitar valores negativos",
+    "CHECK para home_team_id != away_team_id deve permitir NULL em ambos (partida em draft)",
+    "Migration será aplicada em ambiente local (Docker postgres:12) e VPS (postgres:15)",
+    "Dados existentes em production não violam essas constraints (assumido — verificar antes de migrar)"
+  ],
+  "tasks": [
+    {
+      "id": "078",
+      "title": "Adicionar CHECK constraints de validação em competition_matches",
+      "description": "Criar migração Alembic que adiciona 3 CHECK constraints em competition_matches:\n\n1. `ck_competition_matches_score_home_gte_0`: home_score >= 0 OR home_score IS NULL\n2. `ck_competition_matches_score_away_gte_0`: away_score >= 0 OR away_score IS NULL\n3. `ck_competition_matches_different_teams`: home_team_id != away_team_id OR home_team_id IS NULL OR away_team_id IS NULL\n\nINVARIANTES MATERIALIZADAS:\n- INV-COMP-016 (ck_match_score_valid_for_standings): Placar não pode ser negativo\n- INV-COMP-018 (ck_match_different_teams): Time não pode jogar contra si mesmo\n\nEVIDÊNCIA ESPERADA:\n- Migração aplica sem erro (exit 0)\n- pg_dump mostra constraints no schema\n- INSERT com score negativo retorna ERROR com constraint_name\n- INSERT com home_team_id = away_team_id retorna ERROR",
+      "criteria": "PASS: (1) Migração aplica com exit 0; (2) Constraints existem no schema.sql gerado; (3) INSERT com home_score=-1 falha com ck_competition_matches_score_home_gte_0; (4) INSERT com away_score=-1 falha com ck_competition_matches_score_away_gte_0; (5) INSERT com home_team_id=away_team_id falha com ck_competition_matches_different_teams. FAIL: Qualquer INSERT inválido passa ou constraint não existe.",
+      "gate": "GATE P3.5: Anti-trivial validation",
+      "validation_command": "python -c \"import subprocess, sys; r1=subprocess.run(['python','-m','alembic','upgrade','head'], cwd='Hb Track - Backend', capture_output=True, text=True); print('MIGRATION:', 'OK' if r1.returncode==0 else 'FAIL'); r2=subprocess.run(['python','scripts/generate/docs/gen_docs_ssot.py','--target','SSOT_SCHEMA','--mode','generate'], capture_output=True, text=True); r3=subprocess.run(['grep','-E','ck_competition_matches_score_home_gte_0|ck_competition_matches_score_away_gte_0|ck_competition_matches_different_teams','Hb Track - Backend/docs/ssot/schema.sql'], capture_output=True, text=True); found=r3.stdout.count('ck_competition_matches_'); print(f'CONSTRAINTS_FOUND: {found}/3'); sys.exit(0 if r1.returncode==0 and found>=3 else 1)\"",
+      "write_scope": [
+        "Hb Track - Backend/db/alembic/versions/*.py",
+        "Hb Track - Backend/docs/ssot/schema.sql"
+      ],
+      "ssot_touches": [
+        "docs/ssot/schema.sql"
+      ],
+      "rollback_plan": "python scripts/run/hb_cli.py downgrade head-1\ngit checkout -- Hb Track - Backend/docs/ssot/schema.sql",
+      "risks": [
+        "Se existirem dados com score negativo em production, migração falha → verificar antes",
+        "Se existirem partidas com home_team_id = away_team_id, migração falha → verificar antes",
+        "Constraint com NULL handling: usar (col >= 0 OR col IS NULL) para permitir partidas não finalizadas"
+      ],
+      "status": "PENDENTE"
+    }
+  ]
+}
