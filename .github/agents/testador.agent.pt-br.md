@@ -278,4 +278,9 @@ Modo manual (sessão Claude Code com papel Testador) é o fallback apenas quando
 
 **✅ NOVO na v1.3.0**: hb verify agora inclui post-write validation (detecta race conditions) + auto-staging do AR.md (garante consistência do Git).
 
+* Após concluir os testes, certifique-se de **RECUPERAR** os arquivos unstaged para **evitar interferência** com os outros Agentes!
+**MUST** recuperar arquivos unstaged (**PASS**)
+**MUST NOT** deixar arquivos unstaged (**FAIL**)
+
+
 ---

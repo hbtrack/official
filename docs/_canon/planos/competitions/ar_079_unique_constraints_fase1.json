@@ -1,0 +1,36 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "FASE 1 — Materialização de UNIQUE constraints (Classe A) para match_roster e competition_matches. INV-COMP-009 bloqueia atleta duplicado na escalação (proteção contra OCR duplicado). INV-COMP-014 bloqueia re-importação de súmula pelo external_reference_id.",
+  "assumptions": [
+    "match_roster não possui constraint UNIQUE (match_id, athlete_id) — verificado em schema.sql",
+    "competition_matches não possui constraint UNIQUE (competition_id, external_reference_id) — verificado em schema.sql",
+    "UNIQUE index em match_roster ignora soft-deleted (WHERE deleted_at IS NULL)",
+    "UNIQUE index em competition_matches condicional: WHERE external_reference_id IS NOT NULL AND deleted_at IS NULL",
+    "Não existem duplicatas nos dados atuais (assumido — verificar antes de migrar)"
+  ],
+  "tasks": [
+    {
+      "id": "079",
+      "title": "Adicionar UNIQUE constraints de deduplicação em match_roster e competition_matches",
+      "description": "Criar migração Alembic que adiciona 2 UNIQUE partial indexes:\n\n1. `uq_match_roster_athlete_per_match`: UNIQUE (match_id, athlete_id) WHERE deleted_at IS NULL\n   - Garante: Um atleta aparece no máximo uma vez na escalação de cada partida\n   - Proteção contra: IA/OCR que lê mesmo jogador duas vezes na súmula\n   - INV-COMP-009\n\n2. `uq_competition_matches_external_ref`: UNIQUE (competition_id, external_reference_id) WHERE external_reference_id IS NOT NULL AND deleted_at IS NULL\n   - Garante: Cada súmula é importada apenas uma vez por competição\n   - Proteção contra: Re-importação acidental do mesmo documento\n   - INV-COMP-014\n\nEVIDÊNCIA ESPERADA:\n- Migração aplica sem erro (exit 0)\n- pg_dump mostra indexes no schema\n- INSERT duplicado retorna ERROR com nome do index",
+      "criteria": "PASS: (1) Migração aplica com exit 0; (2) Indexes existem no schema.sql gerado; (3) INSERT de atleta duplicado em match_roster falha; (4) INSERT de external_reference_id duplicado em competition_matches falha. FAIL: Qualquer INSERT duplicado passa ou index não existe.",
+      "gate": "GATE P3.5: Anti-trivial validation",
+      "validation_command": "cd 'Hb Track - Backend'; python -m alembic upgrade head; python ../scripts/generate/docs/gen_docs_ssot.py --target SSOT_SCHEMA --mode generate; $idx1 = Select-String -Path 'docs/ssot/schema.sql' -Pattern 'uq_match_roster_athlete_per_match'; $idx2 = Select-String -Path 'docs/ssot/schema.sql' -Pattern 'uq_competition_matches_external_ref'; if ($idx1 -and $idx2) { Write-Host 'INDEXES_FOUND: 2/2'; exit 0 } else { Write-Host 'INDEXES_MISSING'; exit 1 }",
+      "write_scope": [
+        "Hb Track - Backend/db/alembic/versions/*.py",
+        "Hb Track - Backend/docs/ssot/schema.sql"
+      ],
+      "ssot_touches": [
+        "docs/ssot/schema.sql"
+      ],
+      "rollback_plan": "python scripts/run/hb_cli.py downgrade head-1\ngit checkout -- Hb Track - Backend/docs/ssot/schema.sql",
+      "risks": [
+        "Se existirem duplicatas em match_roster (mesmo atleta 2x por partida), migração falha → verificar antes",
+        "Se existirem external_reference_id duplicados em competition_matches, migração falha → verificar antes",
+        "Partial index ignora soft-deleted rows (deleted_at IS NOT NULL não conflita)"
+      ],
+      "status": "PENDENTE"
+    }
+  ]
+}
