@@ -1,0 +1,36 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "Completar INV-COMP-007 — points_per_win deve ser NOT NULL para consistência com points_per_draw e points_per_loss (ambos já NOT NULL). Gap identificado na auditoria de 2026-02-25: points_per_win permanece nullable (Optional[int]) enquanto os demais campos de pontuação são NOT NULL. Se NULL chegue ao service, compute_points(None, ...) silencia erro de cálculo.",
+  "assumptions": [
+    "competitions.points_per_win pode conter NULL em dados existentes — migration inclui UPDATE SET default=2 antes de ALTER SET NOT NULL",
+    "Model competition.py define points_per_win como Optional[int] — Executor deve alterar para int (NOT NULL)",
+    "tiebreaker_criteria já é NOT NULL com default — não afetado",
+    "points_per_draw e points_per_loss já são NOT NULL — migration é consistente com eles"
+  ],
+  "tasks": [
+    {
+      "id": "080",
+      "title": "Completar INV-COMP-007: competitions.points_per_win NOT NULL + model fix",
+      "description": "Criar migração Alembic que:\n\n1. UPDATE competitions SET points_per_win = 2 WHERE points_per_win IS NULL;\n   (data migration — preenche NULLs com valor padrão handebol antes de ALTER)\n\n2. ALTER TABLE competitions ALTER COLUMN points_per_win SET NOT NULL;\n   (torna coluna consistente com points_per_draw e points_per_loss)\n\n3. Atualizar model competition.py:\n   - Trocar `Optional[int]` → `int` em points_per_win\n   - Trocar `nullable=True` → `nullable=False` no mapped_column\n\nINVARIANTE MATERIALIZADA:\n- INV-COMP-007 (scoring_rules_competitions): consistência entre ppw, ppd, ppl (todos NOT NULL DEFAULT)\n\nEVIDÊNCIA ESPERADA:\n- schema.sql: points_per_win integer DEFAULT 2 NOT NULL\n- model: Mapped[int] em vez de Mapped[Optional[int]]\n- INSERT com points_per_win=NULL retorna ERROR",
+      "criteria": "PASS: (1) Migration aplica com exit 0; (2) grep em schema.sql mostra 'points_per_win integer DEFAULT 2 NOT NULL'; (3) INSERT com points_per_win=NULL em competitions falha com not-null violation; (4) INV-COMP-008 service continua funcional (compute_points recebe int, não None). FAIL: INSERT com NULL passa, ou migration falha, ou tests de service regridem.",
+      "gate": "GATE P3.5: Anti-trivial validation",
+      "validation_command": "cd 'Hb Track - Backend'; python -m pytest tests/unit/test_competition_standings_service.py -x -q 2>&1; python -m alembic upgrade head 2>&1; python -c \"import subprocess,sys; r=subprocess.run(['python','-c','import psycopg2; conn=psycopg2.connect(host=\\\"localhost\\\",port=5433,dbname=\\\"hbtrack\\\",user=\\\"hbtrack\\\",password=\\\"hbtrack\\\"); cur=conn.cursor(); cur.execute(\\\"INSERT INTO competitions(organization_id,name,points_per_win) VALUES(gen_random_uuid(),\\\\\"test\\\\\",NULL)\\\"); conn.commit(); print(\\\"FAIL: NULL aceito\\\")'], capture_output=True, text=True, cwd='Hb Track - Backend'); print('OK: NULL rejeitado' if r.returncode!=0 else 'FAIL: NULL aceito'); sys.exit(0 if r.returncode!=0 else 1)\"",
+      "write_scope": [
+        "Hb Track - Backend/db/alembic/versions/*.py",
+        "Hb Track - Backend/docs/ssot/schema.sql",
+        "Hb Track - Backend/app/models/competition.py"
+      ],
+      "ssot_touches": [
+        "docs/ssot/schema.sql"
+      ],
+      "rollback_plan": "python scripts/run/hb_cli.py downgrade head-1\ngit checkout -- \"Hb Track - Backend/docs/ssot/schema.sql\"\ngit checkout -- \"Hb Track - Backend/app/models/competition.py\"",
+      "risks": [
+        "Se existirem competitions com points_per_win NULL, o UPDATE deve preceder o ALTER — verificar ordem na migration",
+        "Model change (Optional→int) pode quebrar serializers/schemas Pydantic que esperam Optional — Executor deve revisar schemas",
+        "service compute_points já recebe int como parâmetro (sem defaults) — não é afetado"
+      ],
+      "status": "PENDENTE"
+    }
+  ]
+}
