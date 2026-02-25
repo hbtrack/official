@@ -1,0 +1,59 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "FASE 1 — UNIQUE constraints para anti-duplicação no módulo Competitions. INV-COMP-009 (competições), INV-COMP-011 (adversários canônicos), INV-COMP-014 (external reference deduplication).",
+  "assumptions": [
+    "Não existem duplicatas nas tabelas atualmente (verificar antes de criar constraints)",
+    "canonical_name será computed por trigger/function (lowercase, trim, unaccent)",
+    "external_reference é VARCHAR(100) já existente em competition_matches",
+    "organization_id + name + season deve ser único para evitar competições duplicadas"
+  ],
+  "tasks": [
+    {
+      "id": "126",
+      "title": "UNIQUE competition per org/name/season",
+      "description": "Implementar constraint uq_competitions_org_name_season para garantir unicidade de competição dentro de uma organização. UNIQUE (organization_id, name, season). Evita criação de competições duplicadas como 'Campeonato Paulista 2025' duas vezes na mesma org. Season pode ser NULL para competições sem temporada definida — usar NULLS NOT DISTINCT.",
+      "criteria": "1. EXISTE index uq_competitions_org_name_season em schema.sql. 2. INSERT duplicado (mesma org, nome, season) DEVE falhar com 23505. 3. INSERT com season=NULL duplicado DEVE falhar (NULLS NOT DISTINCT). 4. INSERT com nome diferente na mesma org DEVE passar.",
+      "gate": "GATE-DB-UNIQUE",
+      "validation_command": "cd \"Hb Track - Backend\" && pytest tests/invariants/test_inv_comp_009_unique_competition.py -v --tb=short",
+      "write_scope": [
+        "Hb Track - Backend/db/alembic/versions/*",
+        "Hb Track - Backend/docs/ssot/schema.sql",
+        "Hb Track - Backend/tests/invariants/test_inv_comp_009_unique_competition.py"
+      ],
+      "ssot_touches": ["docs/ssot/schema.sql"],
+      "rollback_plan": "git checkout -- Hb Track - Backend/db/alembic/versions/\ngit checkout -- Hb Track - Backend/docs/ssot/schema.sql"
+    },
+    {
+      "id": "127",
+      "title": "UNIQUE opponent canonical name",
+      "description": "Implementar deduplicação de adversários por nome canônico. Requer: (1) ADD COLUMN canonical_name em competition_opponent_teams, (2) CREATE FUNCTION normalize_opponent_name(text) → lowercase + trim + replace accents, (3) TRIGGER para preencher canonical_name before INSERT/UPDATE, (4) UNIQUE (competition_id, canonical_name). Aliases como 'São Paulo FC' e 'SAO PAULO' convergem para mesma entidade.",
+      "criteria": "1. EXISTE coluna canonical_name em competition_opponent_teams. 2. EXISTE function normalize_opponent_name. 3. EXISTE trigger trg_opponent_canonical. 4. EXISTE constraint uq_opponent_canonical (competition_id, canonical_name). 5. INSERT com 'São Paulo FC' e depois 'SAO PAULO' na mesma competition DEVE falhar.",
+      "gate": "GATE-DB-UNIQUE",
+      "validation_command": "cd \"Hb Track - Backend\" && pytest tests/invariants/test_inv_comp_011_opponent_canonical.py -v --tb=short",
+      "write_scope": [
+        "Hb Track - Backend/db/alembic/versions/*",
+        "Hb Track - Backend/docs/ssot/schema.sql",
+        "Hb Track - Backend/app/models/competition_opponent_team.py",
+        "Hb Track - Backend/tests/invariants/test_inv_comp_011_opponent_canonical.py"
+      ],
+      "ssot_touches": ["docs/ssot/schema.sql"],
+      "rollback_plan": "git checkout -- Hb Track - Backend/db/alembic/versions/\ngit checkout -- Hb Track - Backend/docs/ssot/schema.sql\ngit checkout -- Hb Track - Backend/app/models/competition_opponent_team.py"
+    },
+    {
+      "id": "128",
+      "title": "UNIQUE external reference per competition",
+      "description": "Implementar constraint uq_match_external_ref para garantir que external_reference é único dentro de uma competição. UNIQUE (competition_id, external_reference) WHERE external_reference IS NOT NULL. Permite que external_reference seja NULL para partidas sem documento externo, mas quando preenchido, não pode duplicar (mesmo ID de súmula/documento). Partial index evita index bloat com NULLs.",
+      "criteria": "1. EXISTE index uq_match_external_ref em schema.sql (partial: WHERE external_reference IS NOT NULL). 2. INSERT com external_reference='SUMULA-001' duplicado na mesma competition DEVE falhar com 23505. 3. INSERT com external_reference=NULL múltiplas vezes DEVE passar. 4. INSERT com mesmo external_reference em competitions diferentes DEVE passar.",
+      "gate": "GATE-DB-UNIQUE",
+      "validation_command": "cd \"Hb Track - Backend\" && pytest tests/invariants/test_inv_comp_014_external_ref.py -v --tb=short",
+      "write_scope": [
+        "Hb Track - Backend/db/alembic/versions/*",
+        "Hb Track - Backend/docs/ssot/schema.sql",
+        "Hb Track - Backend/tests/invariants/test_inv_comp_014_external_ref.py"
+      ],
+      "ssot_touches": ["docs/ssot/schema.sql"],
+      "rollback_plan": "git checkout -- Hb Track - Backend/db/alembic/versions/\ngit checkout -- Hb Track - Backend/docs/ssot/schema.sql"
+    }
+  ]
+}

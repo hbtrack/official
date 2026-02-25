@@ -121,7 +121,7 @@ class Competition(Base):
 
     tiebreaker_criteria: Mapped[Optional[object]] = mapped_column(PG_JSONB(), nullable=True, server_default=sa.text('\'["pontos", "saldo_gols", "gols_pro", "confronto_direto"]\'::jsonb'))
 
-    points_per_win: Mapped[Optional[int]] = mapped_column(sa.Integer(), nullable=True, server_default=sa.text('2'))
+    points_per_win: Mapped[int] = mapped_column(sa.Integer(), nullable=False, server_default=sa.text('2'))
 
     points_per_draw: Mapped[int] = mapped_column(sa.Integer(), nullable=False, server_default=sa.text('1'))
 

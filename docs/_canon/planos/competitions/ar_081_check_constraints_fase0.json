@@ -1,0 +1,43 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "FASE 0 — CHECK constraints para tabelas do módulo Competitions. Prioridade CRÍTICA: INV-COMP-016 e INV-COMP-018 garantem integridade de scores e evitam partidas auto-referenciadas. INV-COMP-007 já tratado por AR_080.",
+  "assumptions": [
+    "competitions.points_per_win já tem DEFAULT 2 no schema.sql:996",
+    "competition_matches.home_score e away_score são nullable mas scores negativos devem ser rejeitados",
+    "competition_matches.home_team_id e away_team_id podem ser ambos NULL (draft) mas não iguais quando preenchidos",
+    "Migrations alembic são aplicadas via alembic upgrade head"
+  ],
+  "tasks": [
+    {
+      "id": "124",
+      "title": "CHECK score >= 0 em competition_matches",
+      "description": "Implementar constraint ck_match_score_valid para garantir que home_score >= 0 AND away_score >= 0. Scores de handebol nunca são negativos. Esta constraint impede erros de digitação e validações client-side falhas. Constraint: ck_match_score_valid CHECK ((home_score IS NULL OR home_score >= 0) AND (away_score IS NULL OR away_score >= 0)). Permitir NULL para partidas não finalizadas.",
+      "criteria": "1. EXISTE constraint ck_match_score_valid em schema.sql. 2. INSERT com home_score=-1 DEVE falhar com 23514/ck_match_score_valid. 3. INSERT com away_score=-5 DEVE falhar. 4. INSERT com home_score=30, away_score=25 DEVE passar. 5. INSERT com NULL scores DEVE passar (partida draft).",
+      "gate": "GATE-DB-CHECK",
+      "validation_command": "cd \"Hb Track - Backend\" && pytest tests/invariants/test_inv_comp_016_score_valid.py -v --tb=short",
+      "write_scope": [
+        "Hb Track - Backend/db/alembic/versions/*",
+        "Hb Track - Backend/docs/ssot/schema.sql",
+        "Hb Track - Backend/tests/invariants/test_inv_comp_016_score_valid.py"
+      ],
+      "ssot_touches": ["docs/ssot/schema.sql"],
+      "rollback_plan": "git checkout -- Hb Track - Backend/db/alembic/versions/\ngit checkout -- Hb Track - Backend/docs/ssot/schema.sql"
+    },
+    {
+      "id": "125",
+      "title": "CHECK times diferentes em competition_matches",
+      "description": "Implementar constraint ck_match_different_teams para garantir que home_team_id != away_team_id quando ambos estão preenchidos. Exceção: ambos NULL é permitido para partidas draft/placeholder. Constraint: ck_match_different_teams CHECK (home_team_id != away_team_id OR (home_team_id IS NULL AND away_team_id IS NULL)). Time não joga contra si mesmo.",
+      "criteria": "1. EXISTE constraint ck_match_different_teams em schema.sql. 2. INSERT com home_team_id=1, away_team_id=1 DEVE falhar com 23514/ck_match_different_teams. 3. INSERT com home_team_id=1, away_team_id=2 DEVE passar. 4. INSERT com home_team_id=NULL, away_team_id=NULL DEVE passar. 5. INSERT com home_team_id=1, away_team_id=NULL DEVE passar.",
+      "gate": "GATE-DB-CHECK",
+      "validation_command": "cd \"Hb Track - Backend\" && pytest tests/invariants/test_inv_comp_018_different_teams.py -v --tb=short",
+      "write_scope": [
+        "Hb Track - Backend/db/alembic/versions/*",
+        "Hb Track - Backend/docs/ssot/schema.sql",
+        "Hb Track - Backend/tests/invariants/test_inv_comp_018_different_teams.py"
+      ],
+      "ssot_touches": ["docs/ssot/schema.sql"],
+      "rollback_plan": "git checkout -- Hb Track - Backend/db/alembic/versions/\ngit checkout -- Hb Track - Backend/docs/ssot/schema.sql"
+    }
+  ]
+}
