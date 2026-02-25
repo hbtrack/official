@@ -87,6 +87,7 @@
 | AR_076 | Criar CompetitionStandingsService com busca dinamica de r... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_076/executor_main.log |
 | AR_077 | Integrar CompetitionStandingsService ao router: GET /stan... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_077/executor_main.log |
 | AR_078 | Adicionar CHECK constraints de validação em competition_m... | ✅ SUCESSO | docs/hbtrack/evidence/AR_078/executor_main.log |
+| AR_079 | Adicionar UNIQUE constraints de deduplicação em match_ros... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_079/executor_main.log |
 | AR_100 | Estabilização do Protocolo v1.2.0 e Unificação de Registros | ✅ VERIFICADO | docs/hbtrack/evidence/AR_100/executor_main.log |
 | AR_101 | Resgate de ARs de Governança (v1.2.0 Core) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_101/executor_main.log |
 | AR_102 | Resgate de ARs de Competitions e Features | ✅ VERIFICADO | docs/hbtrack/evidence/AR_102/executor_main.log |

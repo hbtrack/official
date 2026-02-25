@@ -1,0 +1,40 @@
+{
+  "ar_id": "079",
+  "validation_command": "python -c \"import subprocess, sys; r1=subprocess.run(['python','-m','alembic','upgrade','head'], cwd='Hb Track - Backend', capture_output=True, text=True); print('MIGRATION:', 'OK' if r1.returncode==0 else 'FAIL:', r1.stdout.strip() or r1.stderr.strip()); db_url=next(l.split('=',1)[1].strip().strip(chr(34)).strip(chr(39)) for l in open('Hb Track - Backend/.env') if l.strip().startswith('DATABASE_URL')); from sqlalchemy import create_engine, text; engine=create_engine(db_url.replace('postgresql+asyncpg','postgresql')); conn=engine.connect(); names=['uq_match_roster_athlete_per_match','uq_competition_matches_external_ref']; rows=conn.execute(text(f'SELECT indexname FROM pg_indexes WHERE indexname = ANY(ARRAY{names!r}::text[])')).fetchall(); found_set={r[0] for r in rows}; found=sum(1 for n in names if n in found_set); print(f'INDEXES_FOUND: {found}/2'); [print(f'  {n}: OK' if n in found_set else f'  {n}: MISSING') for n in names]; sys.exit(0 if r1.returncode==0 and found>=2 else 1)\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "eb0e51ec8c390326e83389beb2d8f193f0fe404b0f8254d13032271da0277ec7",
+      "hash": "eb0e51ec8c390326",
+      "stdout_len": 243,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "eb0e51ec8c390326e83389beb2d8f193f0fe404b0f8254d13032271da0277ec7",
+      "hash": "eb0e51ec8c390326",
+      "stdout_len": 243,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "eb0e51ec8c390326e83389beb2d8f193f0fe404b0f8254d13032271da0277ec7",
+      "hash": "eb0e51ec8c390326",
+      "stdout_len": 243,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}
