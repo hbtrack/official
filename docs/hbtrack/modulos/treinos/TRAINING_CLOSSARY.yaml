@@ -1,0 +1,461 @@
+glossary:
+  meta:
+    name: "HB_TRACK_CONTROLLED_VOCABULARY_ANTI_ALUCINACAO"
+    version: "1.0.0"
+    language: "pt-BR"
+    status: "DRAFT_NORMATIVO"
+    scope:
+      - "global_handball_quadra"
+      - "training"
+      - "competitions"
+      - "scout"
+      - "rbac"
+    purpose:
+      - "padronizar_termos"
+      - "reduzir_alucinacao_de_agentes_ia"
+      - "evitar_inferencia_livre_em_docs_prompts_e_contratos"
+      - "apoiar_tags_categorias_e_reconhecimento_semantico"
+    usage_policy:
+      - "usar_termos_canonicos_quando_existirem"
+      - "nao_inferir_categoria_sem_contexto"
+      - "separar_tecnica_tatica_fisica_mental"
+      - "nao_confundir_cruzamento_permuta_circulacao"
+      - "confirmar_categoria_sexo_quando_impactar_bola_ou_regra"
+      - "marcar_nao_informado_quando_faltar_contexto"
+      - "backend_e_autoridade_para_autorizacao_rbac"
+      - "nao_usar_label_humano_como_valor_persistido"
+
+  anti_alucinacao:
+    regras_gerais:
+      - id: "AA-001"
+        regra: "Usar termo canônico quando existir correspondência no vocabulário."
+        forca: "MUST"
+      - id: "AA-002"
+        regra: "Se termo não existir e impactar contrato/schema/enum, registrar GAP-LEX e NÃO inventar."
+        forca: "MUST"
+      - id: "AA-003"
+        regra: "Quando contexto for insuficiente, usar 'nao_informado' e solicitar validação humana."
+        forca: "MUST"
+      - id: "AA-004"
+        regra: "Aliases contextuais NÃO devem ser normalizados automaticamente sem contexto."
+        forca: "SHOULD"
+      - id: "AA-005"
+        regra: "Separar termos de domínio esportivo de termos de sistema (RBAC/permissões)."
+        forca: "MUST"
+
+  domain_handball:
+    scope_note: "Vocabulário técnico/tático do handebol de quadra para documentação, prompts, tags e reconhecimento semântico."
+
+    contexto_demografico:
+      sexos_reconhecidos:
+        - key: "feminino"
+          label: "Feminino"
+        - key: "masculino"
+          label: "Masculino"
+        - key: "nao_informado"
+          label: "Não informado"
+      regra_operacional:
+        - id: "HB-CTX-001"
+          regra: "Quando sexo impactar bola/categoria/regra aplicável, sexo DEVE estar informado ou marcado como 'nao_informado'."
+          forca: "MUST"
+
+    categorias_base:
+      observacao_geral: "Categoria etária no handebol é calculada pelo ano de nascimento; transição ocorre na virada anual (31/12 -> 01/01). Pode haver nomenclaturas locais."
+      regra_operacional:
+        - id: "HB-CAT-001"
+          regra: "Categoria etária deve ser calculada por ano de nascimento (e não por idade exata no dia)."
+          forca: "MUST"
+        - id: "HB-CAT-002"
+          regra: "Mudança de categoria é tratada na virada anual (referência operacional 31/12)."
+          forca: "MUST"
+      categorias:
+        - nome: "Mini-Handebol A/B/C"
+          faixa_etaria_referencia: "5-10"
+          confianca: "media"
+          requires_confirmation: true
+          observacao: "Nomenclatura operacional/local pode variar."
+        - nome: "Mirim"
+          faixa_etaria_referencia: "10-12"
+          confianca: "media"
+          requires_confirmation: true
+        - nome: "Infantil"
+          faixa_etaria_referencia: "12-14"
+          confianca: "media"
+          requires_confirmation: true
+        - nome: "Cadete"
+          faixa_etaria_referencia: "14-16"
+          confianca: "media"
+          requires_confirmation: true
+        - nome: "Juvenil"
+          faixa_etaria_referencia: "16-18"
+          confianca: "media"
+          requires_confirmation: true
+        - nome: "Júnior"
+          faixa_etaria_referencia: "18-20"
+          confianca: "media"
+          requires_confirmation: true
+        - nome: "Adulto"
+          faixa_etaria_referencia: "21+"
+          confianca: "media"
+          requires_confirmation: true
+        - nome: "Master"
+          faixa_etaria_referencia: "35+"
+          confianca: "media"
+          requires_confirmation: true
+
+    bolas:
+      observacao_geral: "Referência de tamanhos de bola por sexo/categoria amplamente padronizada; confirmar contexto competitivo quando necessário."
+      regra_operacional:
+        - id: "HB-BALL-001"
+          regra: "Ao recomendar bola, considerar sexo e categoria (ou marcar 'nao_informado')."
+          forca: "MUST"
+      tamanhos:
+        - tamanho: "H1"
+          nome: "Tamanho 1"
+          uso_referencia:
+            feminino: "8-14"
+            masculino: "8-12"
+          requires_confirmation: true
+        - tamanho: "H2"
+          nome: "Tamanho 2"
+          uso_referencia:
+            feminino: "14+"
+            masculino: "12-16"
+          requires_confirmation: true
+        - tamanho: "H3"
+          nome: "Tamanho 3"
+          uso_referencia:
+            masculino: "16+"
+          requires_confirmation: true
+
+    fundamentos:
+      - canonical_key: "empunhadura"
+        termo: "Empunhadura"
+        definicao: "Forma correta de segurar a bola com uma das mãos."
+        classe: "tecnica"
+      - canonical_key: "recepcao"
+        termo: "Recepção"
+        definicao: "Ato de receber a bola."
+        classe: "tecnica"
+        tipos: ["bilateral", "unilateral"]
+      - canonical_key: "passe"
+        termo: "Passe"
+        definicao: "Ação de lançar a bola para companheiro(a)."
+        classe: "tecnica"
+        exemplos:
+          - "ombro"
+          - "pronação"
+          - "quicado"
+          - "lateral"
+          - "por cima da defesa"
+          - "por trás da cabeça"
+      - canonical_key: "drible"
+        termo: "Drible"
+        definicao: "Bater a bola no solo para progredir."
+        classe: "tecnica"
+      - canonical_key: "finta"
+        termo: "Finta"
+        definicao: "Movimento enganoso para desestabilizar defensor."
+        classe: "tecnica"
+      - canonical_key: "arremesso"
+        termo: "Arremesso"
+        definicao: "Ação final de lançar a bola ao gol."
+        classe: "tecnica"
+        tipos: ["apoio", "suspensão", "queda", "rolamento"]
+      - canonical_key: "progressao"
+        termo: "Progressão"
+        definicao: "Até três passos com a bola antes de driblar, passar ou arremessar."
+        classe: "regra_relevante_para_treino"
+
+    posicoes_jogo:
+      observacao: "Separadas entre goleiro e posições de linha para evitar confusão semântica."
+      goleiro:
+        - canonical_key: "goleiro"
+          termo: "Goleiro"
+          classe: "posicao_especifica"
+          observacao: "Posição específica do jogo; atua com função defensiva predominante e participação tática ofensiva/situações especiais."
+      linha_ofensiva:
+        - "Armador Central"
+        - "Lateral Esquerdo"
+        - "Lateral Direito"
+        - "Ponta Esquerda"
+        - "Ponta Direita"
+        - "Pivô"
+
+    funcoes_defensivas:
+      - termo: "1ª Defensora (Exterior)"
+      - termo: "2ª Defensora (Lateral)"
+      - termo: "3ª Defensora (Central)"
+      - termo: "Defensora Avançada"
+
+    sistemas:
+      ataque:
+        - "3:3"
+        - "4:2"
+      defesa:
+        - "6:0"
+        - "5:1"
+        - "3:2:1"
+
+    defesas:
+      - termo: "Defesa Fechada"
+        exemplos: ["6:0"]
+      - termo: "Defesa Mista"
+        aliases: ["Defesa Combinada"]
+
+    dinamicas_taticas:
+      - canonical_key: "superioridade_numerica"
+        termo: "Superioridade Numérica"
+        classe: "tatica"
+      - canonical_key: "inferioridade_numerica"
+        termo: "Inferioridade Numérica"
+        classe: "tatica"
+      - canonical_key: "ataque_ao_impar"
+        termo: "Ataque ao Ímpar"
+        classe: "tatica"
+      - canonical_key: "ataque_ao_par"
+        termo: "Ataque ao Par"
+        classe: "tatica"
+      - canonical_key: "desdobramento"
+        termo: "Desdobramento"
+        classe: "tatica"
+      - canonical_key: "cruzamento"
+        termo: "Cruzamento"
+        classe: "tatica"
+      - canonical_key: "permuta"
+        termo: "Permuta"
+        classe: "tatica"
+      - canonical_key: "circulacao"
+        termo: "Circulação"
+        classe: "tatica"
+      - canonical_key: "cobertura_defensiva"
+        termo: "Cobertura Defensiva"
+        classe: "tatica"
+      - canonical_key: "goleiro_linha"
+        termo: "Goleiro-linha"
+        classe: "situacao_tatica_especial"
+        observacao: "Termo válido e atual no handebol; não bloquear genericamente."
+
+    eventos_relevantes_para_treino_e_scout:
+      observacao: "Não substitui livro de regras completo; termos/eventos usados em treino, scout e recomendação."
+      itens:
+        - canonical_key: "sete_metros"
+          termo: "7 metros"
+          classe: "evento_regra_relevante"
+          exemplos_uso:
+            - "Treino de cobrança de 7m"
+            - "Scout de aproveitamento em 7m"
+        - canonical_key: "dois_minutos"
+          termo: "2 minutos"
+          classe: "evento_regra_relevante"
+          exemplos_uso:
+            - "Treino em inferioridade numérica após 2 minutos"
+            - "Treino em superioridade numérica"
+        - canonical_key: "transicao_direta"
+          termo: "Transição Direta"
+          classe: "tatica"
+        - canonical_key: "transicao_indireta"
+          termo: "Transição Indireta"
+          classe: "tatica"
+        - canonical_key: "desmarque"
+          termo: "Desmarque"
+          classe: "tatica_tecnica"
+        - canonical_key: "arremesso_em_apoio"
+          termo: "Arremesso em Apoio"
+          classe: "tecnica"
+
+    partes_treino:
+      - canonical_key: "parte_tecnica"
+        termo: "Parte Técnica"
+      - canonical_key: "parte_tatica"
+        termo: "Parte Tática"
+      - canonical_key: "parte_fisica"
+        termo: "Parte Física"
+      - canonical_key: "parte_mental"
+        termo: "Parte Mental"
+
+    aliases:
+      seguros_lexicais:
+        - from: "linha de 9m"
+          to: "Linha Tracejada (9 metros)"
+        - from: "linha de tiro livre"
+          to: "Linha Tracejada (9 metros)"
+        - from: "área"
+          to: "Área de 6 metros"
+        - from: "pênalti"
+          to: "7 metros"
+        - from: "2 min"
+          to: "2 minutos"
+      contextuais_exigem_confirmacao:
+        - from: "troca com posse"
+          to_sugerido: "Cruzamento"
+          motivo: "Mapeamento pode variar conforme metodologia/treinador."
+        - from: "troca sem posse"
+          to_sugerido: "Permuta"
+          motivo: "Mapeamento pode variar conforme contexto pedagógico."
+
+    termos_externos_bloqueados_sem_confirmacao:
+      observacao: "Termos de outros esportes ou ambíguos; exigir confirmação antes de mapear em handebol."
+      itens:
+        - "zagueiro"
+        - "volante"
+        - "setter"
+        - "levantador"
+        - "pick and roll"
+
+  training_glossary:
+    scope_note: "Vocabulário complementar específico do módulo TRAINING e banco de exercícios."
+
+    banco_exercicios:
+      conceitos:
+        - canonical_key: "exercise_scope_system"
+          termo: "Exercício SYSTEM"
+          definicao: "Exercício instalado pelo sistema, catálogo base."
+        - canonical_key: "exercise_scope_org"
+          termo: "Exercício ORG"
+          definicao: "Exercício criado pela organização."
+        - canonical_key: "exercise_visibility_org_wide"
+          termo: "Visibilidade org_wide"
+          definicao: "Exercício ORG visível na organização conforme permissões."
+        - canonical_key: "exercise_visibility_restricted"
+          termo: "Visibilidade restricted"
+          definicao: "Exercício ORG visível ao criador e usuários em ACL."
+        - canonical_key: "exercise_favorite"
+          termo: "Favorito"
+          definicao: "Relação usuário↔exercício sem duplicar exercício."
+        - canonical_key: "exercise_duplicate_to_org"
+          termo: "Duplicar para ORG"
+          definicao: "Criar cópia ORG a partir de exercício SYSTEM para adaptação."
+      midia_exercicio:
+        tipos_canonicos:
+          - key: "image"
+            label: "Imagem"
+          - key: "video_upload"
+            label: "Vídeo enviado"
+          - key: "external_video_link"
+            label: "Link de vídeo externo"
+          - key: "document_link"
+            label: "Link de documento"
+        providers_comuns:
+          - "youtube"
+          - "vimeo"
+          - "upload"
+          - "drive"
+          - "outro"
+
+    wellness:
+      conceitos:
+        - canonical_key: "wellness_self_only"
+          termo: "Wellness self-only"
+          definicao: "Submissão do próprio atleta, com athlete_id inferido do token."
+        - canonical_key: "wellness_mapping_ui_payload"
+          termo: "Mapeamento UI→Payload canônico"
+          definicao: "Tradução de sliders/componentes amigáveis para campos canônicos do backend."
+
+    analytics:
+      conceitos:
+        - canonical_key: "top_performers_canonical_endpoint"
+          termo: "Top performers (endpoint canônico FE)"
+          definicao: "Endpoint oficial do frontend principal para ranking/top performers."
+        - canonical_key: "analytics_drilldown_endpoint"
+          termo: "Analytics drilldown (endpoint derivado)"
+          definicao: "Endpoint especializado para detalhamento analítico."
+
+  competitions_glossary:
+    scope_note: "Termos úteis para súmula, resultado e tabela/classificação (alto nível)."
+    conceitos:
+      - "Súmula"
+      - "Placar"
+      - "Tabela de Classificação"
+      - "Equipe Adversária"
+      - "Participantes da partida"
+      - "Local da partida"
+      - "Data da partida"
+      - "Gols pró"
+      - "Gols contra"
+      - "Saldo de gols"
+      - "Critérios de desempate"
+
+  scout_glossary:
+    scope_note: "Vocabulário de scout (alto nível), sem detalhar aqui o modelo completo de eventos."
+    conceitos:
+      - "Scout"
+      - "Aproveitamento"
+      - "Distribuição tática"
+      - "Eventos de jogo"
+      - "Ações ofensivas"
+      - "Ações defensivas"
+      - "Métricas individuais"
+      - "Métricas coletivas"
+
+  rbac_glossary:
+    meta:
+      purpose:
+        - "padronizar_roles_e_capabilities"
+        - "evitar_alucinacao_de_permissoes"
+        - "separar_label_humano_de_identificador_tecnico"
+      regras:
+        - "backend_e_autoridade_de_autorizacao"
+        - "frontend_reflete_permissoes_mas_nao_define_autorizacao"
+        - "nao_usar_label_pt_br_como_role_id"
+        - "nao_inferir_que_staff_eq_coach_sem_contrato"
+
+    roles:
+      - role_id: "coach"
+        label_pt_br: "Treinador"
+        status: "canonico"
+        scope: ["org"]
+        observacao: "Papel RBAC específico. Usar este identificador quando a documentação disser 'Treinador'."
+      - role_id: "athlete"
+        label_pt_br: "Atleta"
+        status: "canonico"
+        scope: ["self", "team_context"]
+      - role_id: "org_admin"
+        label_pt_br: "Administrador da organização"
+        status: "canonico"
+        scope: ["org"]
+      - role_id: "nao_informado"
+        label_pt_br: "Não informado"
+        status: "auxiliar"
+        scope: []
+
+    aliases_roles_exigem_confirmacao:
+      - from: "staff"
+        to: null
+        motivo: "Termo amplo; não assumir equivalência com coach."
+      - from: "comissão técnica"
+        to: null
+        motivo: "Pode abranger múltiplos papéis."
+      - from: "professor"
+        to: null
+        motivo: "Rótulo humano; não mapear automaticamente para role_id."
+
+    capabilities_referencia:
+      observacao: "Vocabulário de capabilities sugeridas; contratos/invariantes/testes definem enforcement."
+      itens:
+        - capability_id: "wellness.submit_self"
+          label_pt_br: "Enviar wellness próprio"
+        - capability_id: "exercise_bank.create_org"
+          label_pt_br: "Criar exercício ORG"
+        - capability_id: "exercise_bank.edit_org"
+          label_pt_br: "Editar exercício ORG"
+        - capability_id: "exercise_bank.share_org_own"
+          label_pt_br: "Gerenciar ACL do próprio exercício ORG"
+        - capability_id: "exercise_bank.change_visibility_own"
+          label_pt_br: "Alterar visibilidade do próprio exercício ORG"
+        - capability_id: "exercise_bank.favorite"
+          label_pt_br: "Favoritar exercício"
+        - capability_id: "exercise_bank.view_org_catalog"
+          label_pt_br: "Ver catálogo ORG/SYSTEM conforme visibilidade"
+
+  output_normalization_guidelines:
+    para_agentes_ia:
+      - "Preferir canonical_key/role_id em artefatos técnicos (contratos, enums, testes)."
+      - "Usar label_pt_br na UI/documentação quando apropriado."
+      - "Ao encontrar alias, normalizar apenas se alias_type permitir."
+      - "Se termo impactar decisão funcional e houver ambiguidade, registrar GAP-LEX."
+      - "Não promover termo do glossário a enum persistido sem decisão contratual explícita."
+
+  gaps_lexicos_iniciais:
+    observacao: "Reservado para termos desconhecidos encontrados durante uso real."
+    itens: []

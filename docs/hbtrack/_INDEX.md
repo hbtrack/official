@@ -112,5 +112,9 @@
 | AR_123 | Fix AR_003 validation_command — cmd-safe via arquivo de v... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_123/executor_main.log |
 | AR_124 | CHECK score >= 0 em competition_matches | 🔲 PENDENTE | docs/hbtrack/evidence/AR_124/executor_main.log |
 | AR_125 | CHECK times diferentes em competition_matches | 🔲 PENDENTE | docs/hbtrack/evidence/AR_125/executor_main.log |
+| AR_126 | Convergir router Step18 path params de int para UUID | 🔲 PENDENTE | docs/hbtrack/evidence/AR_126/executor_main.log |
+| AR_127 | Convergir Pydantic schemas Step18 de int para UUID | 🔲 PENDENTE | docs/hbtrack/evidence/AR_127/executor_main.log |
+| AR_128 | Convergir services Step18 de int para UUID nas assinaturas | 🔲 PENDENTE | docs/hbtrack/evidence/AR_128/executor_main.log |
+| AR_129 | Regenerar OpenAPI SSOT e validar UUID em paths Step18 | 🔲 PENDENTE | docs/hbtrack/evidence/AR_129/executor_main.log |
 | AR_998 | Test Write Scope Section Generation | ✅ VERIFICADO | docs/hbtrack/evidence/AR_998/executor_main.log |
 | AR_999 | Exemplo: Adicionar campo birthdate em Person | ✅ VERIFICADO | docs/hbtrack/evidence/AR_999/executor_main.log |

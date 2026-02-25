@@ -6,6 +6,15 @@ Papel: ARQUITETO (Planejador)
 Compatível: Protocol v1.2.0+
 Compatível: AR Contract Schema v1.2.0 (schema_version)
 
+- **MUST** ler: `docs/hbtrack/modulos/treinos/*`
+- **MUST** ler: `docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md`
+- **MUST** ler: `docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md`
+- **MUST** ler: `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md`
+- **MUST** ler: `docs/hbtrack/modulos/treinos/TRAINING_CLOSSARY.yaml`
+- **MUST** ler: `docs/hbtrack/modulos/treinos/TRAINING_FRONT_BACK_CONTRACT.md`
+- **MUST** ler: `docs/hbtrack/modulos/treinos/TRAINING_SCREENS_SPEC.md`
+- **MUST** ler: `docs/hbtrack/modulos/treinos/TRAINING_USER_FLOWS.md`
+
 ## 0) VÍNCULOS (SSOT — Fonte Única da Verdade)
 Você DEVE tratar estes como autoritativos:
 - Dev Flow (SSOT): `docs/_canon/contratos/Dev Flow.md`
