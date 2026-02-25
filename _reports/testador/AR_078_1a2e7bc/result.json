@@ -1,0 +1,40 @@
+{
+  "ar_id": "078",
+  "validation_command": "python -c \"import subprocess, sys; r1=subprocess.run(['python','-m','alembic','upgrade','head'], cwd='Hb Track - Backend', capture_output=True, text=True); print('MIGRATION:', 'OK' if r1.returncode==0 else 'FAIL:', r1.stdout.strip() or r1.stderr.strip()); db_url=next(l.split('=',1)[1].strip().strip(chr(34)).strip(chr(39)) for l in open('Hb Track - Backend/.env') if l.strip().startswith('DATABASE_URL')); from sqlalchemy import create_engine, text; engine=create_engine(db_url.replace('postgresql+asyncpg','postgresql')); conn=engine.connect(); names=['ck_competition_matches_score_home_gte_0','ck_competition_matches_score_away_gte_0','ck_competition_matches_different_teams']; rows=conn.execute(text(f'SELECT conname FROM pg_constraint WHERE conname = ANY(ARRAY{names!r}::text[])')).fetchall(); found_set={r[0] for r in rows}; found=sum(1 for n in names if n in found_set); print(f'CONSTRAINTS_FOUND: {found}/3'); [print(f'  {n}: OK' if n in found_set else f'  {n}: MISSING') for n in names]; sys.exit(0 if r1.returncode==0 and found>=3 else 1)\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "c2aa85db8e34ac890698a17924e76f168646d415d865a0981f0226c527471358",
+      "hash": "c2aa85db8e34ac89",
+      "stdout_len": 302,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "c2aa85db8e34ac890698a17924e76f168646d415d865a0981f0226c527471358",
+      "hash": "c2aa85db8e34ac89",
+      "stdout_len": 302,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "c2aa85db8e34ac890698a17924e76f168646d415d865a0981f0226c527471358",
+      "hash": "c2aa85db8e34ac89",
+      "stdout_len": 302,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}
