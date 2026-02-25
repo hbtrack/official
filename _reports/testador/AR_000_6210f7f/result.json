@@ -1,0 +1,40 @@
+{
+  "ar_id": "000",
+  "validation_command": "python -c \"import pathlib; src=pathlib.Path('docs/hbtrack/modulos/competitions/INVARIANTS_COMPETITIONS.md').read_text(encoding='utf-8'); assert 'INV-COMP-008' in src,'FAIL: INV-COMP-008 not found'; assert 'dynamic_scoring_rules' in src,'FAIL: name not found'; assert 'MUST NOT' in src,'FAIL: MUST NOT not found'; assert 'hardcoded' in src,'FAIL: hardcoded keyword not found'; assert 'competition.py:124' in src,'FAIL: evidence anchor not found'; assert 'INV-COMP-007' in src,'FAIL: INV-COMP-007 lost'; assert 'INV-COMP-001' in src,'FAIL: INV-COMP-001 lost'; print('PASS: INV-COMP-008 appended OK - dynamic_scoring_rules documented')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "ff651fcec2efffda24e1e00841b86379fd2bc8bbe1d4ae51e2e137435a161be8",
+      "hash": "ff651fcec2efffda",
+      "stdout_len": 66,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "ff651fcec2efffda24e1e00841b86379fd2bc8bbe1d4ae51e2e137435a161be8",
+      "hash": "ff651fcec2efffda",
+      "stdout_len": 66,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "ff651fcec2efffda24e1e00841b86379fd2bc8bbe1d4ae51e2e137435a161be8",
+      "hash": "ff651fcec2efffda",
+      "stdout_len": 66,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

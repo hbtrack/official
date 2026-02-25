@@ -159,7 +159,7 @@ class: A
 name: scoring_rules_competitions
 rule: "points_per_win INTEGER DEFAULT 2; points_per_draw e points_per_loss (PENDENTES AR_036)"
 table: competitions
-evidence: "Hb Track - Backend/docs/_generated/schema.sql:994"
+evidence: "Hb Track - Backend/docs/ssot/schema.sql:994"
 status: PARCIALMENTE IMPLEMENTADO
 note: >
   AR_036 pendente para adicionar points_per_draw e points_per_loss em competitions.
@@ -170,3 +170,36 @@ rationale: >
   Expansão para points_per_draw e points_per_loss aguarda AR_036 para cobrir modalidades
   com empates e penalizações específicas.
 ```
+
+---
+
+## INV-COMP-008
+
+```yaml
+id: INV-COMP-008
+class: C1
+name: dynamic_scoring_rules
+rule: >
+  CompetitionStandingsService MUST carregar points_per_win, points_per_draw e
+  points_per_loss da competition.id especifica (SELECT da tabela competitions).
+  O service MUST NOT conter valores de pontuacao hardcoded ou DEFAULT constants.
+  Regulamentos variam por competicao: 2/1/0 e padrao handebol, mas configuravel.
+table: competitions
+columns:
+  - points_per_win (INTEGER DEFAULT 2)
+  - points_per_draw (INTEGER DEFAULT 1)
+  - points_per_loss (INTEGER DEFAULT 0)
+evidence: >
+  Hb Track - Backend/app/models/competition.py:124-128 (AR_036 VERIFICADO)
+status: PENDENTE
+note: >
+  AR_076 implementa CompetitionStandingsService respeitando esta invariante.
+  compute_points(wins, draws, losses, ppw, ppd, ppl) aceita parametros — sem defaults hardcoded.
+  recalculate_standings le ppw/ppd/ppl via SELECT competition WHERE id=competition_id.
+rationale: >
+  Handebol nao tem pontuacao universal: competicoes regionais, nacionais e internacionais
+  podem usar 2/1/0, 3/1/0 ou outros esquemas por regulamento da federacao.
+  Logica hardcoded no service violaria o principio de configuracao por regulamento
+  e criaria divergencia silenciosa quando competicoes usam esquema nao-padrao.
+```
+

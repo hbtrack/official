@@ -1,0 +1,40 @@
+{
+  "ar_id": "076",
+  "validation_command": "python -c \"import sys; sys.path.insert(0,'Hb Track - Backend'); from app.services.competition_standings_service import CompetitionStandingsService as CSS; a=CSS.compute_points(1,1,0,2,1,0); b=CSS.compute_points(1,0,1,2,1,0); c=CSS.compute_points(0,1,1,2,1,0); assert a==3,f'FAIL TeamA={a}\\!=3'; assert b==2,f'FAIL TeamB={b}\\!=2'; assert c==1,f'FAIL TeamC={c}\\!=1'; dyn=CSS.compute_points(1,1,0,3,1,0); assert dyn==4,f'FAIL INV-COMP-008: ppw=3 deu {dyn}\\!=4 (hardcoded ppw=2?)'; print(f'PASS: round-robin A={a} B={b} C={c} | INV-COMP-008 dynamic ppw=3->{dyn} OK')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "429a6e6be7f274f9e4768ba3405de27488010027f921984c97d53c9e6b6a0a33",
+      "hash": "429a6e6be7f274f9",
+      "stdout_len": 65,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "429a6e6be7f274f9e4768ba3405de27488010027f921984c97d53c9e6b6a0a33",
+      "hash": "429a6e6be7f274f9",
+      "stdout_len": 65,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "429a6e6be7f274f9e4768ba3405de27488010027f921984c97d53c9e6b6a0a33",
+      "hash": "429a6e6be7f274f9",
+      "stdout_len": 65,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}
