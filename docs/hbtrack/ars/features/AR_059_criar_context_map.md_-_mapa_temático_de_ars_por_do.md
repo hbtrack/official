@@ -1,6 +1,6 @@
 # AR_059 — Criar context_map.md — mapa temático de ARs por domínio
 
-**Status**: ❌ FALHA
+**Status**: ✅ SUCESSO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -42,7 +42,7 @@ O documento deve ter cabeçalho com data de geração e contagem total.
 
 ## Validation Command (Contrato)
 ```
-python -c "import pathlib; p=pathlib.Path('docs/_canon/context_map.md'); assert p.exists(),'FAIL: docs/_canon/context_map.md nao existe'; c=p.read_text(encoding='utf-8'); lines=[l for l in c.splitlines() if l.strip()]; assert len(lines)>=20,f'FAIL: context_map.md muito curto ({len(lines)} linhas nao-vazias, minimo 20)'; assert any('Governance' in l or 'governance' in l for l in lines),'FAIL: secao Governance ausente'; assert any('Feature' in l or 'feature' in l for l in lines),'FAIL: secao Features ausente'; assert any('Context Map' in c or 'context_map' in c.lower() or 'Mapa' in c),'FAIL: cabeçalho context map ausente'; print(f'PASS AR_059: context_map.md existe com {len(lines)} linhas e secoes obrigatorias')"
+python -c "import pathlib; p=pathlib.Path('docs/_canon/context_map.md'); assert p.exists(),'FAIL: docs/_canon/context_map.md nao existe'; c=p.read_text(encoding='utf-8'); lines=[l for l in c.splitlines() if l.strip()]; assert len(lines)>=20,f'FAIL: context_map.md muito curto ({len(lines)} linhas nao-vazias, minimo 20)'; assert any('Governance' in l or 'governance' in l for l in lines),'FAIL: secao Governance ausente'; assert any('Feature' in l or 'feature' in l for l in lines),'FAIL: secao Features ausente'; assert ('Context Map' in c or 'context_map' in c.lower() or 'Mapa' in c), 'FAIL: cabeçalho context map ausente'; print(f'PASS AR_059: context_map.md existe com {len(lines)} linhas e secoes obrigatorias')"
 ```
 
 ## Evidence File (Contrato)
@@ -71,7 +71,6 @@ Documento estático criado pelo Executor. Não é auto-gerado — manter manualm
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução Executor em c5f1ba8
 **Status Executor**: ❌ FALHA
 **Comando**: `python -c "import pathlib; p=pathlib.Path('docs/_canon/context_map.md'); assert p.exists(),'FAIL: docs/_canon/context_map.md nao existe'; c=p.read_text(encoding='utf-8'); lines=[l for l in c.splitlines() if l.strip()]; assert len(lines)>=20,f'FAIL: context_map.md muito curto ({len(lines)} linhas nao-vazias, minimo 20)'; assert any('Governance' in l or 'governance' in l for l in lines),'FAIL: secao Governance ausente'; assert any('Feature' in l or 'feature' in l for l in lines),'FAIL: secao Features ausente'; assert any('Context Map' in c or 'context_map' in c.lower() or 'Mapa' in c),'FAIL: cabeçalho context map ausente'; print(f'PASS AR_059: context_map.md existe com {len(lines)} linhas e secoes obrigatorias')"`
@@ -81,3 +80,19 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_059/executor_main.log`
 **Python Version**: 3.11.9
 
+### Execução Executor em 1f85071
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import pathlib; p=pathlib.Path('docs/_canon/context_map.md'); assert p.exists(),'FAIL: docs/_canon/context_map.md nao existe'; c=p.read_text(encoding='utf-8'); lines=[l for l in c.splitlines() if l.strip()]; assert len(lines)>=20,f'FAIL: context_map.md muito curto ({len(lines)} linhas nao-vazias, minimo 20)'; assert any('Governance' in l or 'governance' in l for l in lines),'FAIL: secao Governance ausente'; assert any('Feature' in l or 'feature' in l for l in lines),'FAIL: secao Features ausente'; assert ('Context Map' in c or 'context_map' in c.lower() or 'Mapa' in c), 'FAIL: cabeçalho context map ausente'; print(f'PASS AR_059: context_map.md existe com {len(lines)} linhas e secoes obrigatorias')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-25T00:01:19.856762+00:00
+**Behavior Hash**: 4356857b1e2c4697aaa1495ba106552b61f660ded8aeef4bd492d3ef6d549582
+**Evidence File**: `docs/hbtrack/evidence/AR_059/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Verificacao Testador em 1f85071
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_059_1f85071/result.json`

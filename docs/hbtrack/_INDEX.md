@@ -66,7 +66,7 @@
 | AR_056 | Verificar CHECK constraints de consistência em schema.sql | ✅ VERIFICADO | docs/hbtrack/evidence/AR_056/executor_main.log |
 | AR_057 | Verificar integridade append-only de audit_logs em schema... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_057/executor_main.log |
 | AR_058 | Verificar controle de concorrência — idempotency_keys + U... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_058/executor_main.log |
-| AR_059 | Criar context_map.md — mapa temático de ARs por domínio | ❌ FALHA | docs/hbtrack/evidence/AR_059/executor_main.log |
+| AR_059 | Criar context_map.md — mapa temático de ARs por domínio | ✅ VERIFICADO | docs/hbtrack/evidence/AR_059/executor_main.log |
 | AR_060 | Verificar integridade do contrato OpenAPI SSOT (214 paths) | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_060/executor_main.log |
 | AR_061 | Aplicar migrations 0056-0061 e regenerar alembic_state.tx... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_061/executor_main.log |
 | AR_062 | Verificar RBAC hardening — ROLE_PERMISSIONS + schema cons... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_062/executor_main.log |

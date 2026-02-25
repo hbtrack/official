@@ -1,20 +1,18 @@
 AR_ID: 059
-Command: python -c "import pathlib; p=pathlib.Path('docs/_canon/context_map.md'); assert p.exists(),'FAIL: docs/_canon/context_map.md nao existe'; c=p.read_text(encoding='utf-8'); lines=[l for l in c.splitlines() if l.strip()]; assert len(lines)>=20,f'FAIL: context_map.md muito curto ({len(lines)} linhas nao-vazias, minimo 20)'; assert any('Governance' in l or 'governance' in l for l in lines),'FAIL: secao Governance ausente'; assert any('Feature' in l or 'feature' in l for l in lines),'FAIL: secao Features ausente'; assert any('Context Map' in c or 'context_map' in c.lower() or 'Mapa' in c),'FAIL: cabeçalho context map ausente'; print(f'PASS AR_059: context_map.md existe com {len(lines)} linhas e secoes obrigatorias')"
-Exit Code: 1
-Timestamp UTC: 2026-02-24T22:53:53.287211+00:00
-Behavior Hash (exit+stdout+stderr): 56963edea338ee9b767dc40ccbfff9d07f14b9f968fb7cb9119eca98467439f9
-Git HEAD: c5f1ba8918ed6a61bb9cdec4663497da3ab346fc
+Command: python -c "import pathlib; p=pathlib.Path('docs/_canon/context_map.md'); assert p.exists(),'FAIL: docs/_canon/context_map.md nao existe'; c=p.read_text(encoding='utf-8'); lines=[l for l in c.splitlines() if l.strip()]; assert len(lines)>=20,f'FAIL: context_map.md muito curto ({len(lines)} linhas nao-vazias, minimo 20)'; assert any('Governance' in l or 'governance' in l for l in lines),'FAIL: secao Governance ausente'; assert any('Feature' in l or 'feature' in l for l in lines),'FAIL: secao Features ausente'; assert ('Context Map' in c or 'context_map' in c.lower() or 'Mapa' in c), 'FAIL: cabeçalho context map ausente'; print(f'PASS AR_059: context_map.md existe com {len(lines)} linhas e secoes obrigatorias')"
+Exit Code: 0
+Timestamp UTC: 2026-02-25T00:01:19.856762+00:00
+Behavior Hash (exit+stdout+stderr): 4356857b1e2c4697aaa1495ba106552b61f660ded8aeef4bd492d3ef6d549582
+Git HEAD: 1f85071a51e8a2766887a4d851583a555385a705
 Python Version: 3.11.9
 Protocol Version: 1.3.0
-Workspace Clean: False
-Workspace Status: unstaged_modified=1
-Governed Checksums (sha256): {"Hb Track - Backend/docs/ssot/alembic_state.txt": "7156adbcca761d9f08a14aeb3492d77aedd19ee4e8bf322683b9dd6ecd951cea", "Hb Track - Backend/docs/ssot/manifest.json": "9f0a4b8f2910ec2e5687d9bd9c0088d268231e138a73755d887ad590568539f1"}
+Workspace Clean: True
+Workspace Status: workspace_clean
+Governed Checksums (sha256): {}
 
 --- STDOUT ---
+PASS AR_059: context_map.md existe com 124 linhas e secoes obrigatorias
 
 
 --- STDERR ---
-Traceback (most recent call last):
-  File "<string>", line 1, in <module>
-TypeError: 'bool' object is not iterable
 
