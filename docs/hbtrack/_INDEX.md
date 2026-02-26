@@ -141,7 +141,7 @@
 | AR_153 | (sem título) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_153/executor_main.log |
 | AR_154 | Service: attendance_service.py — preconfirm + close flow | ✅ VERIFICADO | docs/hbtrack/evidence/AR_154/executor_main.log |
 | AR_155 | Service: training_pending_service.py + RBAC atleta | ✅ VERIFICADO | docs/hbtrack/evidence/AR_155/executor_main.log |
-| AR_156 | Service: Athlete UX — training visibility + exercise media | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_156/executor_main.log |
+| AR_156 | Service: Athlete UX — training visibility + exercise media | ✅ VERIFICADO | docs/hbtrack/evidence/AR_156/executor_main.log |
 | AR_157 | Service: wellness_post — campo conversacional (INV-070) | 🔲 PENDENTE | docs/hbtrack/evidence/AR_157/executor_main.log |
 | AR_158 | Tests: Attendance Avançada — INV-063 a 070 | 🔲 PENDENTE | docs/hbtrack/evidence/AR_158/executor_main.log |
 | AR_159 | Service: athlete_content_gate_service.py — Wellness Obrig... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_159/executor_main.log |
