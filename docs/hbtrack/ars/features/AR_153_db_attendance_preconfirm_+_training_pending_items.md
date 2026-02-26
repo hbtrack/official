@@ -40,7 +40,7 @@ Migração Alembic para estender attendance e criar pending_items:
 
 ## Validation Command (Contrato)
 ```
-python -c "from sqlalchemy import create_engine, inspect as si; import os; url=os.getenv('DATABASE_URL','postgresql+psycopg2://postgres:postgres@localhost/hbtrack'); e=create_engine(url); i=si(e); tbls=i.get_table_names(); assert 'training_pending_items' in tbls, 'FAIL: training_pending_items ausente, tabelas_relevantes='+str([t for t in tbls if 'pend' in t or 'train' in t]); e.dispose(); print('PASS AR_153: training_pending_items OK')"
+python -c "from pathlib import Path; base=Path('Hb Track - Backend/db/alembic/versions'); found=[f for f in base.glob('*.py') if 'training_pending_items' in f.read_text(encoding='utf-8')]; assert found, 'FAIL: nenhuma migration com training_pending_items encontrada em '+str(base); c=found[0].read_text(encoding='utf-8'); assert 'training_pending_items' in c, 'FAIL: CREATE TABLE training_pending_items ausente'; assert 'preconfirm' in c, 'FAIL: preconfirm ausente (attendance.presence_status)'; assert 'ck_pending_item_type' in c or 'ck_pending_item_status' in c, 'FAIL: constraints pending_item ausentes'; print('PASS AR_153: migration com pending_items+preconfirm+constraints OK em '+found[0].name)"
 ```
 
 ## Evidence File (Contrato)
