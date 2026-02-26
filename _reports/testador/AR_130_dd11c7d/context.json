@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_130-dd11c7d",
+  "timestamp_utc": "2026-02-26T02:17:42.337837+00:00",
+  "git": {
+    "commit": "dd11c7d780b0e675cf29d4a982eddb5bbf15eb68"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "130",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_130_fix_dismiss_alert_user_id_int_para_uuid.md"
+}

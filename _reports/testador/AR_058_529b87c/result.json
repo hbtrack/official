@@ -1,0 +1,40 @@
+{
+  "ar_id": "058",
+  "validation_command": "python -c \"import pathlib; s=pathlib.Path('Hb Track - Backend/docs/ssot/schema.sql').read_text(encoding='utf-8'); checks={'idempotency_keys_table':('idempotency_keys' in s),'uq_idempotency_key_endpoint':('uq_idempotency_key_endpoint' in s),'uq_session_templates_org_name':('uq_session_templates_org_name' in s),'uq_wellness_reminders_session_athlete':('uq_wellness_reminders_session_athlete' in s),'uq_team_wellness_rankings_team_month':('uq_team_wellness_rankings_team_month' in s)}; fails=[k for k,v in checks.items() if not v]; [print(f'FAIL: {f}') for f in fails]; exit(len(fails)) if fails else print(f'PASS AR_058: {len(checks)} controles de concorrência verificados em schema.sql')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "ef4da78efa5dad5e1095f6df4b0a2b65e7ea3d475b0b8cba001bcfd9d802c477",
+      "hash": "ef4da78efa5dad5e",
+      "stdout_len": 67,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "ef4da78efa5dad5e1095f6df4b0a2b65e7ea3d475b0b8cba001bcfd9d802c477",
+      "hash": "ef4da78efa5dad5e",
+      "stdout_len": 67,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "ef4da78efa5dad5e1095f6df4b0a2b65e7ea3d475b0b8cba001bcfd9d802c477",
+      "hash": "ef4da78efa5dad5e",
+      "stdout_len": 67,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

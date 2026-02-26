@@ -1,0 +1,40 @@
+{
+  "ar_id": "002",
+  "validation_command": "python -c \"import sys; sys.path.insert(0, 'Hb Track - Backend'); from app.models.competition_standing import CompetitionStanding; assert hasattr(CompetitionStanding, 'team_id'), 'FAIL: team_id not found'; print('PASS: team_id present in CompetitionStanding')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "b4a8f84c31298107daa3def2e6ecc167fb20039b886433e9c7176e2bdf17efb4",
+      "hash": "b4a8f84c31298107",
+      "stdout_len": 45,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "b4a8f84c31298107daa3def2e6ecc167fb20039b886433e9c7176e2bdf17efb4",
+      "hash": "b4a8f84c31298107",
+      "stdout_len": 45,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "b4a8f84c31298107daa3def2e6ecc167fb20039b886433e9c7176e2bdf17efb4",
+      "hash": "b4a8f84c31298107",
+      "stdout_len": 45,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

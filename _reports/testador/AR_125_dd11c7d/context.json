@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_125-dd11c7d",
+  "timestamp_utc": "2026-02-26T02:16:12.032838+00:00",
+  "git": {
+    "commit": "dd11c7d780b0e675cf29d4a982eddb5bbf15eb68"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "125",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_125_check_times_diferentes_em_competition_matches.md"
+}
