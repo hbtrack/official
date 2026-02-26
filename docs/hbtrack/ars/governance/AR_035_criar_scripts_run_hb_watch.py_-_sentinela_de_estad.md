@@ -1,6 +1,6 @@
 # AR_035 — Criar scripts/run/hb_watch.py — sentinela de estado do fluxo
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.1.0
 
 ## Descrição
@@ -284,3 +284,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_035_acf34a8/result.json`
+
+### Selo Humano em c68690b
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-26T21:09:48.364190+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_035_acf34a8/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_035/executor_main.log`

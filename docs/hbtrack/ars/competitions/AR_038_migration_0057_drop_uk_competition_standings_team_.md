@@ -1,6 +1,6 @@
 # AR_038 — Migration 0057: DROP uk_competition_standings_team_phase + CREATE UNIQUE NULLS NOT DISTINCT
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.1.0
 
 ## Descrição
@@ -112,3 +112,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_038_acf34a8/result.json`
+
+### Selo Humano em c68690b
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-26T21:09:49.191585+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_038_acf34a8/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_038/executor_main.log`

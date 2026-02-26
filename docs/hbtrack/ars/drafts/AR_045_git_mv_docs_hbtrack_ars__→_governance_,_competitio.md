@@ -1,6 +1,6 @@
 # AR_045 — git mv: docs/hbtrack/ars/ → governance/, competitions/, features/ + rebuild-index
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.1.0
 
 ## Descrição
@@ -144,14 +144,6 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_045_gov_ar_folder_reorg_ars.log`
 **Python Version**: 3.11.9
 
-
-### Verificacao Testador em acf34a8
-**Status Testador**: 🔴 REJEITADO
-**Consistency**: UNKNOWN
-**Triple-Run**: OK (3x)
-**Exit Testador**: 0 | **Exit Executor**: None
-**TESTADOR_REPORT**: `_reports/testador/AR_045_acf34a8/result.json`
-
 ### Execução Executor em acf34a8
 **Status Executor**: 🏗️ EM_EXECUCAO
 **Comando**: `python -c "import pathlib; base=pathlib.Path('docs/hbtrack/ars'); subdirs=['governance','competitions','features']; missing=[d for d in subdirs if not (base/d).is_dir()]; assert not missing,f'FAIL: missing subdirs {missing}'; counts={d:len(list((base/d).glob('*.md'))) for d in subdirs}; assert counts['governance']>=25,f'FAIL: governance={counts[\"governance\"]}>=25 required'; assert counts['competitions']>=11,f'FAIL: competitions={counts[\"competitions\"]}>=11 required'; assert counts['features']>=7,f'FAIL: features={counts[\"features\"]}>=7 required'; print(f'PASS: ars organized {counts}')"`
@@ -161,3 +153,17 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_045/executor_main.log`
 **Python Version**: 3.11.9
 
+
+### Verificacao Testador em c68690b
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_045_c68690b/result.json`
+
+### Selo Humano em c68690b
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-26T21:09:50.800632+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_045_c68690b/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_045/executor_main.log`

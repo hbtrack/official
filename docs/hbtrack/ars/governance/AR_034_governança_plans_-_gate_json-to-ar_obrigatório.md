@@ -1,6 +1,6 @@
 # AR_034 — Governança Plans — Gate JSON-to-AR obrigatório
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.1.0
 
 ## Descrição
@@ -84,3 +84,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_034_acf34a8/result.json`
+
+### Selo Humano em c68690b
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-26T21:09:47.575747+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_034_acf34a8/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_034/executor_main.log`

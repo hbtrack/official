@@ -1,6 +1,6 @@
 # AR_032 — Hb cli Spec.md: sync v1.0.8 → v1.1.0 (GATE P3.5, HBLock, SHA-256, triple-run)
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.1.0
 
 ## Descrição
@@ -213,3 +213,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_032_acf34a8/result.json`
+
+### Selo Humano em c68690b
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-26T21:09:46.775915+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_032_acf34a8/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_032/executor_main.log`

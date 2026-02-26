@@ -1,6 +1,6 @@
 # AR_044 — git mv: docs/_canon/planos/ → governance/, competitions/, infra/, features/
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.1.0
 
 ## Descrição
@@ -129,3 +129,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_044_acf34a8/result.json`
+
+### Selo Humano em c68690b
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-26T21:09:50.032361+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_044_acf34a8/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_044/executor_main.log`
