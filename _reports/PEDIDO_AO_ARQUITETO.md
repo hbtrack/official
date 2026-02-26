@@ -276,3 +276,97 @@ Comentário do usuário durante diagnóstico:
 **SSOT_BINDINGS:** `docs/hbtrack/manuais/Manual Deterministico.md`  
 **STATUS_NEXT:** BLOCKED_INPUT (Exit Code 4) — Aguardando decisão humana
 
+
+---
+---
+
+# PEDIDO AO ARQUITETO — AR_157 (DB-touch incompleto) — ✅ RESOLVIDO
+
+**Data**: 2026-02-26  
+**Executor**: Bloqueado em AR_157  
+**Exit Code**: 4 (BLOCKED_INPUT) → **0 (DESBLOQUEADO)**  
+**Resolução**: 2026-02-26 18:15 BRT
+
+## Contexto
+AR_156 ✅ SUCESSO. Próxima AR conforme HANDOFF 14: AR_157 — wellness_post campo conversacional.
+
+## Bloqueio Identificado (RESOLVIDO)
+AR_157 requer **DB-touch** (adicionar campo à tabela `wellness_post`), mas o plano estava incompleto.
+
+## ✅ DECISÃO DO ARQUITETO (2026-02-26)
+
+**Schema Change Aprovado:**
+```sql
+-- Migration 0068_wellness_post_conversational.py
+ALTER TABLE wellness_post 
+  ADD COLUMN conversational_feedback TEXT,
+  ADD COLUMN conversation_completed BOOLEAN DEFAULT FALSE;
+```
+
+**Write Scope Atualizado:**
+- ✅ alembic/versions/0068_wellness_post_conversational.py (migration)
+- ✅ wellness_post_service.py (service layer)
+- ✅ ssot_touches: schema.sql, alembic_state.txt
+
+**Validation Command:** Atualizado para verificar schema + migration 0068
+
+**Executor**: Pode prosseguir com AR_157 usando HANDOFF 15 em `_reports/ARQUITETO.md`.
+
+---
+---
+
+# PEDIDO AO ARQUITETO — PostgreSQL Upgrade Bloqueado — ✅ RESOLVIDO (AR_008 ✅ CONCLUIDO)
+
+## Contexto
+AR_156 ✅ SUCESSO. Próxima AR conforme HANDOFF 14: AR_157 — wellness_post campo conversacional.
+
+## Bloqueio Identificado
+AR_157 requer **DB-touch** (adicionar campo à tabela `wellness_post`), mas o plano está incompleto:
+
+### Evidência da INV-070 (SSOT)
+```yaml
+# docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md:1820-1842
+id: INV-TRAIN-070
+rule: Post-treino DEVE aceitar input conversacional (texto/voz)
+tables: wellness_post (extensão com campo conversational_feedback)
+evidence: GAP — formulário atual é fixo (session_rpe, fatigue_after, mood_after, notes)
+status: GAP
+```
+
+### Schema Atual (schema.sql:3016-3060)
+```sql
+CREATE TABLE public.wellness_post (
+    notes text,  -- campo livre tradicional, mas não conversacional
+    ...
+);
+-- NÃO existe: conversational_feedback, conversational_response, conversation_completed
+```
+
+### Write Scope Declarado (AR_157.md)
+- Hb Track - Backend/app/services/wellness_post_service.py  ✅
+
+**FALTAM**:
+- Migration alembic (ex: `0068_wellness_post_conversational_feedback.py`)
+- SSOT touches: `schema.sql`, `alembic_state.txt`
+
+## Impacto
+AR_157 **NÃO pode ser executada** sem:
+1. Migration alembic que adicione campo conversacional à `wellness_post`
+2. Atualização do write_scope para incluir migration path
+3. Atualização de `ssot_touches`
+4. Validation command que confirme campo no schema
+
+## Pergunta ao Arquiteto
+**Opção A**: Criar migration `0068_wellness_post_conversational_feedback.py` adicionando campo `conversational_feedback TEXT`?
+**Opção B**: Usar campo `notes` existente como conversacional (reinterpretar semântica)?
+**Opção C**: Adicionar múltiplos campos (`conversation_transcript TEXT`, `conversation_completed BOOLEAN`)?
+
+**Recomendação do Executor**: Opção A — campo dedicado preserva semântica de `notes` tradicional.
+
+## Próximos Passos
+Aguardando decisão do Arquiteto para:
+1. Definir schema change exato (nome do campo, tipo, nullable)
+2. Atualizar AR_157.md com write_scope completo
+3. Atualizar validation command para confirmar schema change
+
+**Status Executor**: ⏸️ BLOQUEADO — aguardando atualização do plano AR_157

@@ -18,26 +18,63 @@ Implementar fluxo conversacional pós-treino (INV-070):
 1. wellness_post aceita submissão em etapas com conversation_completed=FALSE. 2. Submissão final seta conversation_completed=TRUE. 3. Relatório de atleta não considera wellness_post completa até conversation_completed=TRUE. OU, se INV-070 é policy sem schema change: documentar e criar teste de policy.
 
 ## Write Scope
+- Hb Track - Backend/alembic/versions/0068_wellness_post_conversational.py (nova migration)
 - Hb Track - Backend/app/services/wellness_post_service.py
+- Hb Track - Backend/docs/ssot/schema.sql (SSOT derivado)
+- Hb Track - Backend/docs/ssot/alembic_state.txt (SSOT derivado)
+
+## SSOT Touches
+- schema.sql (2 alterações: +conversational_feedback TEXT, +conversation_completed BOOLEAN)
+- alembic_state.txt (head: 0067 → 0068)
 
 ## Validation Command (Contrato)
-```
-python -c "from pathlib import Path; candidates=[Path('Hb Track - Backend/app/services/wellness_post_service.py'),Path('Hb Track - Backend/app/services/wellness_service.py')]; existing=[f for f in candidates if f.exists()]; assert existing, 'FAIL: nenhum wellness service encontrado'; c=existing[0].read_text(encoding='utf-8'); assert 'conversation' in c.lower() or 'partial' in c.lower() or 'completed' in c.lower(), 'FAIL: logica conversacional ausente'; print('PASS AR_157: wellness service com fluxo conversacional OK em '+existing[0].name)"
+```bash
+python -c "import re; schema_path='Hb Track - Backend/docs/ssot/schema.sql'; schema=open(schema_path,encoding='utf-8').read(); wellness_table=re.search(r'CREATE TABLE public\.wellness_post.*?(?=CREATE TABLE|ALTER TABLE|\Z)',schema,re.DOTALL); assert wellness_table,'FAIL: wellness_post table not found'; table_def=wellness_table.group(); assert 'conversational_feedback' in table_def,'FAIL: conversational_feedback column missing'; assert 'conversation_completed' in table_def,'FAIL: conversation_completed column missing'; alembic=open('Hb Track - Backend/docs/ssot/alembic_state.txt').read(); assert '0068' in alembic,'FAIL: migration 0068 not applied'; print('PASS AR_157: wellness_post schema conversacional OK (migration 0068)')"
 ```
 
 ## Evidence File (Contrato)
 `docs/hbtrack/evidence/AR_157/executor_main.log`
 
 ## Rollback Plan (Contrato)
-```
+```bash
+# Rollback database migration
+cd "Hb Track - Backend" && alembic downgrade -1
+# Restore SSOT files
 git checkout -- "Hb Track - Backend/docs/ssot/schema.sql"
 git checkout -- "Hb Track - Backend/docs/ssot/alembic_state.txt"
-python scripts/run/hb_cli.py alembic -- downgrade -1
+# Remove migration file if not committed
+git clean -fd "Hb Track - Backend/alembic/versions/0068_*.py"
 ```
 ⚠️ **ATENÇÃO**: Este AR modifica banco. Execute rollback em caso de falha.
 
 ## Notas do Arquiteto
-Classe C2 (ou A se schema change). PENDÊNCIA CONDICIONAL: se wellness_post table não tem suporte estrutural para multi-step, a task pode virar DB-touch (adicionar ssot_touches). Executor DEVE resolver antes de implementar. Se schema change necessária, atualizar ssot_touches no plano.
+**Classe A (DB Constraint/Schema Change)** — confirmado após análise.
+
+**DECISÃO AR_157 (2026-02-26):**
+
+Schema change definido:
+```sql
+-- Migration 0068_wellness_post_conversational.py
+ALTER TABLE wellness_post 
+  ADD COLUMN conversational_feedback TEXT,
+  ADD COLUMN conversation_completed BOOLEAN DEFAULT FALSE;
+```
+
+**Rationale:**
+- `conversational_feedback`: armazena input conversacional (texto/voz transcrito)
+- `conversation_completed`: controle de fluxo (permite submissões parciais)
+- Preserva campo `notes` existente (semântica tradicional não afetada)
+- Permite coexistência: formulário tradicional + conversacional
+
+**Service layer:**
+- `wellness_post_service.py` deve aceitar `conversational_feedback` opcional
+- Se `conversation_completed=FALSE`, registro é considerado parcial
+- Atleta pode submeter em múltiplas etapas até `conversation_completed=TRUE`
+
+**Implementação mínima (MVP):**
+1. Migration adiciona 2 colunas (nullable)
+2. Service aceita campos opcionais no create/update
+3. Nenhuma validação complexa inicialmente (evolução futura: INV-071+)
 
 ## Riscos
 - INV-070 pode ser puramente de UI/UX (frontend conversational flow) sem mudança de backend — verificar INVARIANTS_TRAINING.md

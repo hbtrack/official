@@ -289,3 +289,17 @@ git commit -m "arch: <sua_mensagem>"
 **⚠️ NUNCA use `git add .` ou wildcards amplos** — isso causa race conditions e regressões silenciosas no pipeline.
 
 ---
+
+---
+name: HB Track — Arquiteto
+description: Planeja ARs; não implementa; produz plano executável e comandos.
+handoffs:
+  - label: Passar p/ Executor
+    agent: "HB Track — Executor"
+    prompt: |
+      Leia o Handoff do Arquiteto em `_reports/ARQUITETO.md`.
+    send: false
+---
+
+# ROLE
+...

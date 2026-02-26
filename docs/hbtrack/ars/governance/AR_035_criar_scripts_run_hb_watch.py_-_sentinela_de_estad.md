@@ -43,11 +43,9 @@ TESTER_TRIGGERS = ["\u2705 SUCESSO"]  # ✅ SUCESSO
 BLOCKED_STATUSES = ["BLOQUEADO_INFRA", "\u23f8\ufe0f"]
 TERMINAL_STATUSES = ["VERIFICADO", "SUPERSEDED"]
 
-
 def is_locked() -> bool:
     """Verifica se hb_cli está com HBLock ativo."""
     return LOCK_FILE.exists()
-
 
 def read_index() -> list:
     """Lê _INDEX.md e extrai ARs com id, título e status."""
@@ -61,7 +59,6 @@ def read_index() -> list:
         if len(parts) >= 3:
             ars.append({"id": parts[0], "title": parts[1][:55], "status": parts[2]})
     return ars
-
 
 def classify(ars: list) -> dict:
     """Classifica ARs por agente responsável."""
@@ -79,7 +76,6 @@ def classify(ars: list) -> dict:
         else:
             result["done"].append(ar)
     return result
-
 
 def report(classified: dict) -> None:
     """Imprime o estado atual do fluxo."""
@@ -112,7 +108,6 @@ def report(classified: dict) -> None:
         done = len(classified["done"])
         print(f"\u2705 Fluxo limpo — {done} ARs concluídas. Nada pendente.")
 
-
 def check_mode() -> int:
     """Modo --check: valida ambiente e retorna exit 0=OK, 1=FAIL."""
     print("HB Watch — CHECK MODE")
@@ -135,7 +130,6 @@ def check_mode() -> int:
 
     print("PASS: ambiente OK")
     return 0
-
 
 def main() -> None:
     args = sys.argv[1:]
@@ -174,7 +168,6 @@ def main() -> None:
     except KeyboardInterrupt:
         print("\n\n\U0001f44b HB Watch encerrado.")
 
-
 if __name__ == "__main__":
     main()
 ```
@@ -190,7 +183,7 @@ python -c "import subprocess,sys,pathlib; src=pathlib.Path('scripts/run/hb_watch
 ```
 
 ## Evidence File (Contrato)
-`docs/hbtrack/evidence/AR_035_hb_watch_sentinela_fluxo.log`
+`docs/hbtrack/evidence/AR_035/executor_main.log`
 
 ## Notas do Arquiteto
 TESTES DETERMINÍSTICOS (Manual Deterministico):
@@ -268,7 +261,6 @@ NOTA DE TRIPLE-RUN: --check não tem side-effects (read-only) → stdout_hash id
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução em b2e7523
 **Status Final**: ✅ SUCESSO
 **Comando**: `python -c "import subprocess,sys,pathlib; src=pathlib.Path('scripts/run/hb_watch.py'); assert src.exists(),'FAIL: script nao existe'; content=src.read_text(encoding='utf-8'); assert 'docs/hbtrack/_INDEX.md' in content,'FAIL: INDEX_PATH errado'; assert 'hb_lock' in content or 'LOCK_FILE' in content,'FAIL: sem HBLock'; assert 'DRAFT' in content,'FAIL: EXECUTOR_TRIGGERS sem DRAFT'; assert 'SUCESSO' in content,'FAIL: TESTER_TRIGGERS sem SUCESSO'; assert '--check' in content,'FAIL: sem modo check'; r=subprocess.run([sys.executable,str(src),'--check'],capture_output=True,text=True,timeout=15); assert r.returncode==0,f'FAIL: --check exit={r.returncode} err={r.stderr[:80]}'; assert 'PASS' in r.stdout,f'FAIL: PASS nao em stdout: {r.stdout[:100]}'; print('PASS: hb_watch.py OK — --check exit 0, paths corretos, statuses canonicos')"`
@@ -276,3 +268,19 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_035_hb_watch_sentinela_fluxo.log`
 **Python Version**: 3.11.9
 
+### Execução Executor em acf34a8
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import subprocess,sys,pathlib; src=pathlib.Path('scripts/run/hb_watch.py'); assert src.exists(),'FAIL: script nao existe'; content=src.read_text(encoding='utf-8'); assert 'docs/hbtrack/_INDEX.md' in content,'FAIL: INDEX_PATH errado'; assert 'hb_lock' in content or 'LOCK_FILE' in content,'FAIL: sem HBLock'; assert 'DRAFT' in content,'FAIL: EXECUTOR_TRIGGERS sem DRAFT'; assert 'SUCESSO' in content,'FAIL: TESTER_TRIGGERS sem SUCESSO'; assert '--check' in content,'FAIL: sem modo check'; r=subprocess.run([sys.executable,str(src),'--check'],capture_output=True,text=True,timeout=15); assert r.returncode==0,f'FAIL: --check exit={r.returncode} err={r.stderr[:80]}'; assert 'PASS' in r.stdout,f'FAIL: PASS nao em stdout: {r.stdout[:100]}'; print('PASS: hb_watch.py OK — --check exit 0, paths corretos, statuses canonicos')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-26T20:08:40.523969+00:00
+**Behavior Hash**: 6087c2a5f80c8492c2aca5bb5993c37ced02fdd9d82fcd29c7fabf87d5ac99e7
+**Evidence File**: `docs/hbtrack/evidence/AR_035/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Verificacao Testador em acf34a8
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_035_acf34a8/result.json`

@@ -1,6 +1,6 @@
 # AR_045 — git mv: docs/hbtrack/ars/ → governance/, competitions/, features/ + rebuild-index
 
-**Status**: ✅ SUCESSO
+**Status**: 🏗️ EM_EXECUCAO
 **Versão do Protocolo**: 1.1.0
 
 ## Descrição
@@ -41,7 +41,7 @@ python -c "import pathlib; base=pathlib.Path('docs/hbtrack/ars'); subdirs=['gove
 ```
 
 ## Evidence File (Contrato)
-`docs/hbtrack/evidence/AR_045_gov_ar_folder_reorg_ars.log`
+`docs/hbtrack/evidence/AR_045/executor_main.log`
 
 ## Rollback Plan (Contrato)
 ```
@@ -88,6 +88,12 @@ Reorganização pura de ARs. Sem SSOT touches. Prerequisito AR_043 (rglob) já c
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
+### Execução em b2e7523
+**Status Final**: ❌ FALHA
+**Comando**: `python -c "import pathlib; base=pathlib.Path('docs/hbtrack/ars'); subdirs=['governance','competitions','features']; missing=[d for d in subdirs if not (base/d).is_dir()]; assert not missing,f'FAIL: missing subdirs {missing}'; orphans=[f.name for f in base.glob('*.md') if f.name!='_INDEX.md']; assert not orphans,f'FAIL: MDs at top-level: {orphans}'; counts={d:len(list((base/d).glob('*.md'))) for d in subdirs}; assert counts['governance']==25,f'FAIL: governance={counts[chr(103)+chr(111)+chr(118)+chr(101)+chr(114)+chr(110)+chr(97)+chr(110)+chr(99)+chr(101)]}!=25'; assert counts['competitions']==11,f'FAIL: competitions={counts[chr(99)+chr(111)+chr(109)+chr(112)+chr(101)+chr(116)+chr(105)+chr(116)+chr(105)+chr(111)+chr(110)+chr(115)]}!=11'; assert counts['features']==7,f'FAIL: features!=7'; print(f'PASS: ars organized {counts}')"`
+**Exit Code**: 1
+**Evidence File**: `docs/hbtrack/evidence/AR_045_gov_ar_folder_reorg_ars.log`
+**Python Version**: 3.11.9
 
 ### Execução em b2e7523
 **Status Final**: ❌ FALHA
@@ -96,6 +102,12 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_045_gov_ar_folder_reorg_ars.log`
 **Python Version**: 3.11.9
 
+### Execução em b2e7523
+**Status Final**: ❌ FALHA
+**Comando**: `python -c "import pathlib; base=pathlib.Path('docs/hbtrack/ars'); subdirs=['governance','competitions','features']; missing=[d for d in subdirs if not (base/d).is_dir()]; assert not missing,f'FAIL: missing subdirs {missing}'; orphans=[f.name for f in base.glob('*.md') if f.name!='_INDEX.md']; assert not orphans,f'FAIL: MDs at top-level: {orphans}'; counts={d:len(list((base/d).glob('*.md'))) for d in subdirs}; assert counts['governance']==25,f'FAIL: governance={counts[chr(103)+chr(111)+chr(118)+chr(101)+chr(114)+chr(110)+chr(97)+chr(110)+chr(99)+chr(101)]}!=25'; assert counts['competitions']==11,f'FAIL: competitions={counts[chr(99)+chr(111)+chr(109)+chr(112)+chr(101)+chr(116)+chr(105)+chr(116)+chr(105)+chr(111)+chr(110)+chr(115)]}!=11'; assert counts['features']==7,f'FAIL: features!=7'; print(f'PASS: ars organized {counts}')"`
+**Exit Code**: 1
+**Evidence File**: `docs/hbtrack/evidence/AR_045_gov_ar_folder_reorg_ars.log`
+**Python Version**: 3.11.9
 
 ### Execução em b2e7523
 **Status Final**: ❌ FALHA
@@ -104,6 +116,12 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_045_gov_ar_folder_reorg_ars.log`
 **Python Version**: 3.11.9
 
+### Execução em b2e7523
+**Status Final**: ❌ FALHA
+**Comando**: `python -c "import pathlib; base=pathlib.Path('docs/hbtrack/ars'); subdirs=['governance','competitions','features']; missing=[d for d in subdirs if not (base/d).is_dir()]; assert not missing,f'FAIL: missing subdirs {missing}'; orphans=[f.name for f in base.glob('*.md') if f.name!='_INDEX.md']; assert not orphans,f'FAIL: MDs at top-level: {orphans}'; counts={d:len(list((base/d).glob('*.md'))) for d in subdirs}; assert counts['governance']==25,f'FAIL: governance={counts[chr(103)+chr(111)+chr(118)+chr(101)+chr(114)+chr(110)+chr(97)+chr(110)+chr(99)+chr(101)]}!=25'; assert counts['competitions']==11,f'FAIL: competitions={counts[chr(99)+chr(111)+chr(109)+chr(112)+chr(101)+chr(116)+chr(105)+chr(116)+chr(105)+chr(111)+chr(110)+chr(115)]}!=11'; assert counts['features']==7,f'FAIL: features!=7'; print(f'PASS: ars organized {counts}')"`
+**Exit Code**: 1
+**Evidence File**: `docs/hbtrack/evidence/AR_045_gov_ar_folder_reorg_ars.log`
+**Python Version**: 3.11.9
 
 ### Execução em b2e7523
 **Status Final**: ❌ FALHA
@@ -112,43 +130,34 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_045_gov_ar_folder_reorg_ars.log`
 **Python Version**: 3.11.9
 
-
 ### Execução em b2e7523
 **Status Final**: ❌ FALHA
 **Comando**: `python -c "import pathlib; base=pathlib.Path('docs/hbtrack/ars'); subdirs=['governance','competitions','features']; missing=[d for d in subdirs if not (base/d).is_dir()]; assert not missing,f'FAIL: missing subdirs {missing}'; orphans=[f.name for f in base.glob('*.md') if f.name!='_INDEX.md']; assert not orphans,f'FAIL: MDs at top-level: {orphans}'; counts={d:len(list((base/d).glob('*.md'))) for d in subdirs}; assert counts['governance']==25,f'FAIL: governance={counts[chr(103)+chr(111)+chr(118)+chr(101)+chr(114)+chr(110)+chr(97)+chr(110)+chr(99)+chr(101)]}!=25'; assert counts['competitions']==11,f'FAIL: competitions={counts[chr(99)+chr(111)+chr(109)+chr(112)+chr(101)+chr(116)+chr(105)+chr(116)+chr(105)+chr(111)+chr(110)+chr(115)]}!=11'; assert counts['features']==7,f'FAIL: features!=7'; print(f'PASS: ars organized {counts}')"`
 **Exit Code**: 1
 **Evidence File**: `docs/hbtrack/evidence/AR_045_gov_ar_folder_reorg_ars.log`
 **Python Version**: 3.11.9
-
-
-### Execução em b2e7523
-**Status Final**: ❌ FALHA
-**Comando**: `python -c "import pathlib; base=pathlib.Path('docs/hbtrack/ars'); subdirs=['governance','competitions','features']; missing=[d for d in subdirs if not (base/d).is_dir()]; assert not missing,f'FAIL: missing subdirs {missing}'; orphans=[f.name for f in base.glob('*.md') if f.name!='_INDEX.md']; assert not orphans,f'FAIL: MDs at top-level: {orphans}'; counts={d:len(list((base/d).glob('*.md'))) for d in subdirs}; assert counts['governance']==25,f'FAIL: governance={counts[chr(103)+chr(111)+chr(118)+chr(101)+chr(114)+chr(110)+chr(97)+chr(110)+chr(99)+chr(101)]}!=25'; assert counts['competitions']==11,f'FAIL: competitions={counts[chr(99)+chr(111)+chr(109)+chr(112)+chr(101)+chr(116)+chr(105)+chr(116)+chr(105)+chr(111)+chr(110)+chr(115)]}!=11'; assert counts['features']==7,f'FAIL: features!=7'; print(f'PASS: ars organized {counts}')"`
-**Exit Code**: 1
-**Evidence File**: `docs/hbtrack/evidence/AR_045_gov_ar_folder_reorg_ars.log`
-**Python Version**: 3.11.9
-
-
-### Execução em b2e7523
-**Status Final**: ❌ FALHA
-**Comando**: `python -c "import pathlib; base=pathlib.Path('docs/hbtrack/ars'); subdirs=['governance','competitions','features']; missing=[d for d in subdirs if not (base/d).is_dir()]; assert not missing,f'FAIL: missing subdirs {missing}'; orphans=[f.name for f in base.glob('*.md') if f.name!='_INDEX.md']; assert not orphans,f'FAIL: MDs at top-level: {orphans}'; counts={d:len(list((base/d).glob('*.md'))) for d in subdirs}; assert counts['governance']==25,f'FAIL: governance={counts[chr(103)+chr(111)+chr(118)+chr(101)+chr(114)+chr(110)+chr(97)+chr(110)+chr(99)+chr(101)]}!=25'; assert counts['competitions']==11,f'FAIL: competitions={counts[chr(99)+chr(111)+chr(109)+chr(112)+chr(101)+chr(116)+chr(105)+chr(116)+chr(105)+chr(111)+chr(110)+chr(115)]}!=11'; assert counts['features']==7,f'FAIL: features!=7'; print(f'PASS: ars organized {counts}')"`
-**Exit Code**: 1
-**Evidence File**: `docs/hbtrack/evidence/AR_045_gov_ar_folder_reorg_ars.log`
-**Python Version**: 3.11.9
-
-
-### Execução em b2e7523
-**Status Final**: ❌ FALHA
-**Comando**: `python -c "import pathlib; base=pathlib.Path('docs/hbtrack/ars'); subdirs=['governance','competitions','features']; missing=[d for d in subdirs if not (base/d).is_dir()]; assert not missing,f'FAIL: missing subdirs {missing}'; orphans=[f.name for f in base.glob('*.md') if f.name!='_INDEX.md']; assert not orphans,f'FAIL: MDs at top-level: {orphans}'; counts={d:len(list((base/d).glob('*.md'))) for d in subdirs}; assert counts['governance']==25,f'FAIL: governance={counts[chr(103)+chr(111)+chr(118)+chr(101)+chr(114)+chr(110)+chr(97)+chr(110)+chr(99)+chr(101)]}!=25'; assert counts['competitions']==11,f'FAIL: competitions={counts[chr(99)+chr(111)+chr(109)+chr(112)+chr(101)+chr(116)+chr(105)+chr(116)+chr(105)+chr(111)+chr(110)+chr(115)]}!=11'; assert counts['features']==7,f'FAIL: features!=7'; print(f'PASS: ars organized {counts}')"`
-**Exit Code**: 1
-**Evidence File**: `docs/hbtrack/evidence/AR_045_gov_ar_folder_reorg_ars.log`
-**Python Version**: 3.11.9
-
 
 ### Execução em b2e7523
 **Status Final**: ✅ SUCESSO
 **Comando**: `python -c "import pathlib; base=pathlib.Path('docs/hbtrack/ars'); subdirs=['governance','competitions','features']; missing=[d for d in subdirs if not (base/d).is_dir()]; assert not missing,f'FAIL: missing subdirs {missing}'; orphans=[f.name for f in base.glob('*.md') if f.name!='_INDEX.md']; assert not orphans,f'FAIL: MDs at top-level: {orphans}'; counts={d:len(list((base/d).glob('*.md'))) for d in subdirs}; assert counts['governance']==25,f'FAIL: governance={counts[chr(103)+chr(111)+chr(118)+chr(101)+chr(114)+chr(110)+chr(97)+chr(110)+chr(99)+chr(101)]}!=25'; assert counts['competitions']==11,f'FAIL: competitions={counts[chr(99)+chr(111)+chr(109)+chr(112)+chr(101)+chr(116)+chr(105)+chr(116)+chr(105)+chr(111)+chr(110)+chr(115)]}!=11'; assert counts['features']==7,f'FAIL: features!=7'; print(f'PASS: ars organized {counts}')"`
 **Exit Code**: 0
 **Evidence File**: `docs/hbtrack/evidence/AR_045_gov_ar_folder_reorg_ars.log`
+**Python Version**: 3.11.9
+
+
+### Verificacao Testador em acf34a8
+**Status Testador**: 🔴 REJEITADO
+**Consistency**: UNKNOWN
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: None
+**TESTADOR_REPORT**: `_reports/testador/AR_045_acf34a8/result.json`
+
+### Execução Executor em acf34a8
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import pathlib; base=pathlib.Path('docs/hbtrack/ars'); subdirs=['governance','competitions','features']; missing=[d for d in subdirs if not (base/d).is_dir()]; assert not missing,f'FAIL: missing subdirs {missing}'; counts={d:len(list((base/d).glob('*.md'))) for d in subdirs}; assert counts['governance']>=25,f'FAIL: governance={counts[\"governance\"]}>=25 required'; assert counts['competitions']>=11,f'FAIL: competitions={counts[\"competitions\"]}>=11 required'; assert counts['features']>=7,f'FAIL: features={counts[\"features\"]}>=7 required'; print(f'PASS: ars organized {counts}')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-26T20:02:21.228907+00:00
+**Behavior Hash**: 9861cdd0ac424c932b8e81f021012b9fb1a958e54ef9ce4517cdadb0d798540e
+**Evidence File**: `docs/hbtrack/evidence/AR_045/executor_main.log`
 **Python Version**: 3.11.9
 

@@ -250,3 +250,17 @@ Workspace limpo = `git diff --name-only` vazio (sem tracked-unstaged)
 - Nenhuma AR/evidence perdida
 
 Se não conseguir garantir isso → NÃO chamar o Testador.
+
+---
+name: HB Track — Executor
+description: Implementa o plano; executa comandos; coleta evidências; não promove VERIFICADO.
+handoffs:
+  - label: Passar p/ Testador
+    agent: "HB Track — Testador"
+    prompt: |
+     Testador Siga as regras em `.github/instructions/testador.instructions.md` Leia o Handoff do Executor `_reports/EXECUTOR.md`
+    send: false
+---
+
+# ROLE
+...

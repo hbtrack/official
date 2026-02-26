@@ -144,7 +144,7 @@ python -c "import pathlib,subprocess,sys; spec=pathlib.Path('docs/_canon/specs/H
 ```
 
 ## Evidence File (Contrato)
-`docs/hbtrack/evidence/AR_032_hb_cli_spec_v110_sync.log`
+`docs/hbtrack/evidence/AR_032/executor_main.log`
 
 ## Notas do Arquiteto
 WRITE_SCOPE permitido: docs/_canon/specs/Hb cli Spec.md APENAS. FORBIDDEN: scripts/run/hb_cli.py e qualquer outro arquivo.
@@ -190,7 +190,6 @@ WRITE_SCOPE permitido: docs/_canon/specs/Hb cli Spec.md APENAS. FORBIDDEN: scrip
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução em b2e7523
 **Status Final**: ✅ SUCESSO
 **Comando**: `python -c "import pathlib,subprocess,sys; spec=pathlib.Path('docs/_canon/specs/Hb cli Spec.md').read_text(encoding='utf-8'); assert '1.1.0' in spec[:200],'FAIL: 1.1.0 not in header'; assert '1.0.8' not in spec[:200],'FAIL: old 1.0.8 still in header'; assert '1.0.6' not in spec[:500],'FAIL: old v1.0.6 output string still present'; kws=['E_TRIVIAL_CMD','TRIPLE_RUN_COUNT','FLAKY_OUTPUT','E_TRIPLE_FAIL','E_CLI_LOCKED','HBLock','SHA-256']; missing=[k for k in kws if k not in spec]; assert not missing,f'FAIL missing: {missing}'; v=subprocess.run([sys.executable,'scripts/run/hb_cli.py','version'],capture_output=True,text=True,encoding='utf-8'); assert 'v1.' in v.stdout,f'FAIL CLI version={v.stdout.strip()}'; print('PASS: Hb cli Spec v1.x sincronizado com CLI real')"`
@@ -198,3 +197,19 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_032_hb_cli_spec_v110_sync.log`
 **Python Version**: 3.11.9
 
+### Execução Executor em acf34a8
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import pathlib,subprocess,sys; spec=pathlib.Path('docs/_canon/specs/Hb cli Spec.md').read_text(encoding='utf-8'); assert '1.1.0' in spec[:200],'FAIL: 1.1.0 not in header'; assert '1.0.8' not in spec[:200],'FAIL: old 1.0.8 still in header'; assert '1.0.6' not in spec[:500],'FAIL: old v1.0.6 output string still present'; kws=['E_TRIVIAL_CMD','TRIPLE_RUN_COUNT','FLAKY_OUTPUT','E_TRIPLE_FAIL','E_CLI_LOCKED','HBLock','SHA-256']; missing=[k for k in kws if k not in spec]; assert not missing,f'FAIL missing: {missing}'; v=subprocess.run([sys.executable,'scripts/run/hb_cli.py','version'],capture_output=True,text=True,encoding='utf-8'); assert 'v1.' in v.stdout,f'FAIL CLI version={v.stdout.strip()}'; print('PASS: Hb cli Spec v1.x sincronizado com CLI real')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-26T20:01:52.592668+00:00
+**Behavior Hash**: 60e100bf3366af36c05adac4282d521db308076ef318be54ca82741acb67eb7f
+**Evidence File**: `docs/hbtrack/evidence/AR_032/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Verificacao Testador em acf34a8
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_032_acf34a8/result.json`

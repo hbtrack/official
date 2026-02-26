@@ -15,7 +15,7 @@ python -c "import pathlib; f=pathlib.Path('scripts/checks/check_plans_ar_sync.py
 ```
 
 ## Evidence File (Contrato)
-`docs/hbtrack/evidence/AR_034_gov_plans_json_ar_sync_validation.log`
+`docs/hbtrack/evidence/AR_034/executor_main.log`
 
 ## Rollback Plan (Contrato)
 ```
@@ -61,7 +61,6 @@ Durante a implementação da AR-034, o gate PLANS_AR_SYNC_CHECK detectou 4 tasks
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução em b2e7523
 **Status Final**: ✅ SUCESSO
 **Comando**: `python -c "import pathlib; f=pathlib.Path('scripts/checks/check_plans_ar_sync.py'); assert f.exists(),'FAIL: gate nao existe'; c=f.read_text(encoding='utf-8'); assert 'VIOLATION' in c,'FAIL: gate nao tem logica VIOLATION'; print('PASS AR_034: gate check_plans_ar_sync.py existe e estruturado')"`
@@ -69,3 +68,19 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_034_gov_plans_json_ar_sync_validation.log`
 **Python Version**: 3.11.9
 
+### Execução Executor em acf34a8
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import pathlib; f=pathlib.Path('scripts/checks/check_plans_ar_sync.py'); assert f.exists(),'FAIL: gate nao existe'; c=f.read_text(encoding='utf-8'); assert 'VIOLATION' in c,'FAIL: gate nao tem logica VIOLATION'; print('PASS AR_034: gate check_plans_ar_sync.py existe e estruturado')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-26T20:02:16.475598+00:00
+**Behavior Hash**: 57c3712b02bf285809326eab5a7f25dc1922fda46b14260344dab63f64d2cfbf
+**Evidence File**: `docs/hbtrack/evidence/AR_034/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Verificacao Testador em acf34a8
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_034_acf34a8/result.json`

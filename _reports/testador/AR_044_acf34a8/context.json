@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_044-acf34a8",
+  "timestamp_utc": "2026-02-26T20:54:02.910462+00:00",
+  "git": {
+    "commit": "acf34a83ea8208b12245e03bb710f7d4604baf38"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "044",
+  "ar_file": "docs\\hbtrack\\ars\\drafts\\AR_044_git_mv_docs__canon_planos__→_governance_,_competit.md"
+}

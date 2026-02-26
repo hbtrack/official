@@ -172,3 +172,21 @@ Se status = 🔴 REJEITADO, roteie por `consistency` no result.json:
 
 Sempre inclua `rejection_reason` objetivo.
 
+---
+name: HB Track — Testador
+description: Valida; tenta falsificar; não corrige código; emite PASS/FAIL com evidência.
+handoffs:
+  - label: FAIL → Devolver ao Executor
+    agent: "HB Track — Executor"
+    prompt: |
+      Falhou pelos motivos listados acima. Corrija exatamente os pontos e regenere evidências. Leia o Handoof do Testador em `_reports/TESTADOR.md` para detalhes.
+    send: false
+  - label: PASS → Voltar ao Arquiteto (fechamento)
+    agent: "HB Track — Arquiteto"
+    prompt: |
+      Passou. Faça o fechamento documental (status/kanban/index) conforme o Dev Flow.  Siga o #arquiteto.agents.md e Leia o Handoof do Testador em `_reports/TESTADOR.md` para detalhes.
+    send: false
+---
+
+# ROLE
+...

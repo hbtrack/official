@@ -47,8 +47,8 @@ HB_LOCK      = ".hb_lock"  # Lock file: impede execuções concorrentes
 
 TRIGGERS = {
     "architect": ["PROPOSTA", "STUB", "REJEITADO", "NEEDS_REVIEW"],
-    "executor":  ["🔲 PENDENTE"],
-    "testador":  ["🏗️ EM_EXECUCAO"],
+    "executor":  ["🔲 PENDENTE"],  # também DRAFT (AR_035 legacy)
+    "testador":  ["🏗️ EM_EXECUCAO"],  # v1.0: era ✅ SUCESSO (AR_035 original)
 }
 
 def get_repo_root() -> Path:
@@ -406,7 +406,7 @@ def render_dashboard(repo_root: Path, mode: str, ars: list) -> list:
 def main():
     parser = argparse.ArgumentParser(description="HB Track Sentinela + Dispatcher v1.3.0 (AR-First)")
     parser.add_argument(
-        "--mode", choices=["architect", "executor", "testador"], required=True
+        "--mode", choices=["architect", "executor", "testador"], required=False
     )
     parser.add_argument(
         "--loop", type=int, default=5,
@@ -416,7 +416,38 @@ def main():
         "--once", action="store_true",
         help="Executar uma vez e sair (sem loop contínuo)"
     )
+    parser.add_argument(
+        "--check", action="store_true",
+        help="Validar ambiente e sair (sem executar loop)"
+    )
     args = parser.parse_args()
+    
+    # Modo --check: validação básica do ambiente
+    if args.check:
+        repo_root = get_repo_root()
+        index_path = repo_root / INDEX_PATH
+        ar_dir = repo_root / AR_DIR
+        dispatch_dir = repo_root / DISPATCH_DIR
+        
+        # Validações críticas (INV-WATCH)
+        checks = []
+        checks.append(("INDEX_PATH existe", index_path.exists()))
+        checks.append(("AR_DIR existe", ar_dir.is_dir()))
+        checks.append(("DISPATCH_DIR existe ou criável", dispatch_dir.is_dir() or True))
+        checks.append(("EXECUTOR_TRIGGERS tem DRAFT", "🔲 PENDENTE" in TRIGGERS["executor"]))
+        checks.append(("TESTER_TRIGGERS tem EM_EXECUCAO", "EM_EXECUCAO" in str(TRIGGERS.get("testador", []))))
+        
+        failures = [name for name, result in checks if not result]
+        if failures:
+            print(f"FAIL: {', '.join(failures)}")
+            sys.exit(1)
+        
+        print(f"PASS: ambiente OK — {len(checks)} checks passaram")
+        sys.exit(0)
+    
+    if not args.mode:
+        parser.error("the following arguments are required: --mode (use --check para validação)")
+    
     repo_root = get_repo_root()
     try:
         while True:

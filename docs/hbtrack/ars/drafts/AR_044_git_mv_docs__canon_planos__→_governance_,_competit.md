@@ -61,7 +61,7 @@ python -c "import pathlib; base=pathlib.Path('docs/_canon/planos'); subdirs=['go
 ```
 
 ## Evidence File (Contrato)
-`docs/hbtrack/evidence/AR_044_gov_ar_folder_reorg_planos.log`
+`docs/hbtrack/evidence/AR_044/executor_main.log`
 
 ## Rollback Plan (Contrato)
 ```
@@ -106,7 +106,6 @@ Reorganização pura de estrutura. Sem SSOT touches, sem lógica complexa.
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução em b2e7523
 **Status Final**: ✅ SUCESSO
 **Comando**: `python -c "import pathlib; base=pathlib.Path('docs/_canon/planos'); subdirs=['governance','competitions','infra','features']; missing=[d for d in subdirs if not (base/d).is_dir()]; assert not missing,f'FAIL: missing subdirs {missing}'; orphans=[f.name for f in base.glob('*.json')]; assert not orphans,f'FAIL: JSONs at top-level: {orphans}'; counts={d:len(list((base/d).glob('*.json'))) for d in subdirs}; assert counts['governance']>=11,'FAIL: governance<11'; assert counts['competitions']==8,'FAIL: competitions!=8'; assert counts['infra']==3,'FAIL: infra!=3'; assert counts['features']==6,'FAIL: features!=6'; print(f'PASS: planos organized {counts}')"`
@@ -114,3 +113,19 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_044_gov_ar_folder_reorg_planos.log`
 **Python Version**: 3.11.9
 
+### Execução Executor em acf34a8
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import pathlib; base=pathlib.Path('docs/_canon/planos'); subdirs=['governance','competitions','infra','features']; missing=[d for d in subdirs if not (base/d).is_dir()]; assert not missing,f'FAIL: missing subdirs {missing}'; counts={d:len(list((base/d).glob('*.json'))) for d in subdirs}; assert counts['governance']>=11,'FAIL: governance<11'; assert counts['competitions']>=8,'FAIL: competitions<8'; assert counts['infra']>=3,'FAIL: infra<3'; assert counts['features']>=4,'FAIL: features<4'; print(f'PASS: planos organized {counts}')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-26T20:02:18.591296+00:00
+**Behavior Hash**: 4bcc44dbc6f56a8fe8937ef22b9744973ecacd2cd09f1e8e8f728c6bd4e5cd1d
+**Evidence File**: `docs/hbtrack/evidence/AR_044/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Verificacao Testador em acf34a8
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_044_acf34a8/result.json`

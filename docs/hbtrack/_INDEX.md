@@ -40,20 +40,20 @@
 | AR_029 | Evidence Integrity: SHA-256 Checksum + Git-Status Pre-Che... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_029_evidence_integrity_antiforja.log |
 | AR_030 | Dev Flow v1.1.0: AR-as-Semaphore + Notes como Canal + Tri... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_030_devflow_v110_enterprise.log |
 | AR_031 | Ambiente SSOT: docs/_canon/contratos/Ambiente.md + gemini... | ⛔ SUPERSEDED — gemini.md removido do repositório; conteúdo de SSOT absorvido por equivalentes atuais | docs/hbtrack/evidence/AR_031_ambiente_ssot.log |
-| AR_032 | Hb cli Spec.md: sync v1.0.8 → v1.1.0 (GATE P3.5, HBLock, ... | ✅ SUCESSO | docs/hbtrack/evidence/AR_032_hb_cli_spec_v110_sync.log |
+| AR_032 | Hb cli Spec.md: sync v1.0.8 → v1.1.0 (GATE P3.5, HBLock, ... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_032/executor_main.log |
 | AR_033 | AR Index Checkpoint: _INDEX.md completo e sincronizado co... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_033/executor_main.log |
-| AR_034 | Governança Plans — Gate JSON-to-AR obrigatório | ✅ SUCESSO | docs/hbtrack/evidence/AR_034_gov_plans_json_ar_sync_validation.log |
-| AR_035 | Criar scripts/run/hb_watch.py — sentinela de estado do fluxo | ✅ SUCESSO | docs/hbtrack/evidence/AR_035_hb_watch_sentinela_fluxo.log |
+| AR_034 | Governança Plans — Gate JSON-to-AR obrigatório | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_034/executor_main.log |
+| AR_035 | Criar scripts/run/hb_watch.py — sentinela de estado do fluxo | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_035/executor_main.log |
 | AR_036 | Migration 0056: ADD COLUMN competitions.points_per_draw +... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_036/executor_main.log |
 | AR_037 | Model: Competition.points_per_draw + Competition.points_p... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_037/executor_main.log |
-| AR_038 | Migration 0057: DROP uk_competition_standings_team_phase ... | ✅ SUCESSO | docs/hbtrack/evidence/AR_038_comp_db_004_unique_index_migration.log |
+| AR_038 | Migration 0057: DROP uk_competition_standings_team_phase ... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_038/executor_main.log |
 | AR_039 | Model: CompetitionStanding — UniqueConstraint legado → NU... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_039/executor_main.log |
 | AR_040 | Migration 0058 COMP-DB-006: ADD 3 CHECK constraints statu... | ✅ SUCESSO | docs/hbtrack/evidence/AR_040_comp_db_006_check_constraints_migration.log |
 | AR_041 | Model Competition: ADD ck_competitions_status + ck_compet... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_041/executor_main.log |
 | AR_042 | Model CompetitionMatch: ADD CheckConstraint ck_competitio... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_042/executor_main.log |
 | AR_043 | hb_cli.py: scan recursivo (rglob) + subdir routing + hb r... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_043/executor_main.log |
-| AR_044 | git mv: docs/_canon/planos/ → governance/, competitions/,... | ✅ SUCESSO | docs/hbtrack/evidence/AR_044_gov_ar_folder_reorg_planos.log |
-| AR_045 | git mv: docs/hbtrack/ars/ → governance/, competitions/, f... | ✅ SUCESSO | docs/hbtrack/evidence/AR_045_gov_ar_folder_reorg_ars.log |
+| AR_044 | git mv: docs/_canon/planos/ → governance/, competitions/,... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_044/executor_main.log |
+| AR_045 | git mv: docs/hbtrack/ars/ → governance/, competitions/, f... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_045/executor_main.log |
 | AR_046 | Limpeza Segura: Arquivos Temporários e Scripts Ad-hoc | ✅ VERIFICADO | docs/hbtrack/evidence/AR_046_removed_files.log |
 | AR_047 | Sync AR_003 status DESCONHECIDO → SUCESSO no _INDEX.md | ✅ VERIFICADO | docs/hbtrack/evidence/AR_047_gov_sync_ar003_status.log |
 | AR_048 | Criar INVARIANTS_COMPETITIONS.md (INV-COMP-001 a INV-COMP... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_048_invariants_competitions.log |

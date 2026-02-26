@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_045-acf34a8",
+  "timestamp_utc": "2026-02-26T19:44:46.539763+00:00",
+  "git": {
+    "commit": "acf34a83ea8208b12245e03bb710f7d4604baf38"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "045",
+  "ar_file": "docs\\hbtrack\\ars\\drafts\\AR_045_git_mv_docs_hbtrack_ars__→_governance_,_competitio.md"
+}

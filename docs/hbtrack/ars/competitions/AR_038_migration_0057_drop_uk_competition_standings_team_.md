@@ -39,11 +39,11 @@ NAO modificar nenhum outro arquivo.
 
 ## Validation Command (Contrato)
 ```
-python -c "import pathlib; f=pathlib.Path('Hb Track - Backend/db/alembic/versions/0060_comp_db_004_standings_unique_nulls_not_distinct.py'); assert f.exists(),'FAIL: migration file not found'; c=f.read_text(encoding='utf-8'); assert "revision = '0060'" in c,'FAIL: wrong revision id'; assert 'uq_competition_standings_comp_phase_opponent' in c,'FAIL: new constraint name missing'; assert 'uk_competition_standings_team_phase' in c,'FAIL: old constraint name missing (needed for drop and downgrade)'; assert 'nulls_not_distinct' in c.lower(),'FAIL: NULLS NOT DISTINCT missing'; assert "down_revision = '0059'" in c or "down_revision='0059'" in c,'FAIL: wrong down_revision'; print('PASS: migration 0060 content validated')"
+python temp/ar038_validate.py
 ```
 
 ## Evidence File (Contrato)
-`docs/hbtrack/evidence/AR_038_comp_db_004_unique_index_migration.log`
+`docs/hbtrack/evidence/AR_038/executor_main.log`
 
 ## Rollback Plan (Contrato)
 ```
@@ -80,7 +80,6 @@ alembic downgrade -1
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução em b2e7523
 **Status Final**: ✅ SUCESSO
 **Comando**: `python -c "import pathlib; f=pathlib.Path('Hb Track - Backend/db/alembic/versions/0057_comp_db_004_standings_unique_nulls_not_distinct.py'); assert f.exists(),'FAIL: migration file not found'; c=f.read_text(encoding='utf-8'); assert \"revision = '0057'\" in c,'FAIL: wrong revision id'; assert 'uq_competition_standings_comp_phase_opponent' in c,'FAIL: new constraint name missing'; assert 'uk_competition_standings_team_phase' in c,'FAIL: old constraint name missing (needed for drop and downgrade)'; assert 'nulls_not_distinct' in c.lower(),'FAIL: NULLS NOT DISTINCT missing'; assert \"down_revision = '0056'\" in c or \"down_revision='0056'\" in c,'FAIL: wrong down_revision'; print('PASS: migration 0057 content validated')"`
@@ -88,3 +87,28 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_038_comp_db_004_unique_index_migration.log`
 **Python Version**: 3.11.9
 
+### Execução Executor em acf34a8
+**Status Executor**: ❌ FALHA
+**Comando**: `python -c "import pathlib; f=pathlib.Path('Hb Track - Backend/db/alembic/versions/0060_comp_db_004_standings_unique_nulls_not_distinct.py'); assert f.exists(),'FAIL: migration file not found'; c=f.read_text(encoding='utf-8'); assert "revision = '0060'" in c,'FAIL: wrong revision id'; assert 'uq_competition_standings_comp_phase_opponent' in c,'FAIL: new constraint name missing'; assert 'uk_competition_standings_team_phase' in c,'FAIL: old constraint name missing (needed for drop and downgrade)'; assert 'nulls_not_distinct' in c.lower(),'FAIL: NULLS NOT DISTINCT missing'; assert "down_revision = '0059'" in c or "down_revision='0059'" in c,'FAIL: wrong down_revision'; print('PASS: migration 0060 content validated')"`
+**Exit Code**: 1
+**Timestamp UTC**: 2026-02-26T20:38:12.203809+00:00
+**Behavior Hash**: 90e8d7912576a8d47f9cbe1f6252123538bc9f591731ccc08c7a1ed1e2ac9816
+**Evidence File**: `docs/hbtrack/evidence/AR_038/executor_main.log`
+**Python Version**: 3.11.9
+
+### Execução Executor em acf34a8
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python temp/ar038_validate.py`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-26T20:39:28.137517+00:00
+**Behavior Hash**: c2dd1e3d6725e6cf5049c7c839a48b620b74ccc15d18e30723b5f865048a080a
+**Evidence File**: `docs/hbtrack/evidence/AR_038/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Verificacao Testador em acf34a8
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_038_acf34a8/result.json`
