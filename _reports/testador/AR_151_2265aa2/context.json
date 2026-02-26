@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_151-2265aa2",
+  "timestamp_utc": "2026-02-26T16:02:18.955140+00:00",
+  "git": {
+    "commit": "2265aa2653b26aaa90e5be8f858007582c36ff6d"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "151",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_151_service_training_microcycle_service.py_-_meso_date.md"
+}

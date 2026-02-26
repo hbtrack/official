@@ -1,0 +1,40 @@
+{
+  "ar_id": "151",
+  "validation_command": "python -c \"from pathlib import Path; f=Path('Hb Track - Backend/app/services/training_cycle_service.py'); assert f.exists(), 'FAIL: training_cycle_service.py nao encontrado'; c=f.read_text(encoding='utf-8'); assert 'meso' in c.lower() or 'cycle' in c.lower(), 'FAIL: logica de ciclo/meso ausente'; assert 'overlap' in c.lower() or 'meso_start' in c.lower() or 'start_date' in c.lower(), 'FAIL: guard de overlap ausente'; print('PASS AR_151: training_cycle_service.py com meso+overlap OK')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "ce1c700e371b6d0448df823032d7d83a11254a18673a704c0bc8ac3737941510",
+      "hash": "ce1c700e371b6d04",
+      "stdout_len": 59,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "ce1c700e371b6d0448df823032d7d83a11254a18673a704c0bc8ac3737941510",
+      "hash": "ce1c700e371b6d04",
+      "stdout_len": 59,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "ce1c700e371b6d0448df823032d7d83a11254a18673a704c0bc8ac3737941510",
+      "hash": "ce1c700e371b6d04",
+      "stdout_len": 59,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}
