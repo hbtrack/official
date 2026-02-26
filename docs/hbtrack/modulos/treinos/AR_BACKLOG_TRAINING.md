@@ -1,7 +1,7 @@
 # AR_BACKLOG_TRAINING.md — Backlog de ARs (Materialização) do Módulo TRAINING
 
 Status: DRAFT  
-Versão: v1.3.0  
+Versão: v1.4.0  
 Tipo de Documento: AR Materialization Backlog (Normativo Operacional / SSOT)  
 Módulo: TRAINING  
 Fase: FASE_2 (PRD v2.2 — 2026-02-20) + DEC-TRAIN-* (2026-02-25) + FASE_3 (2026-02-27)  
@@ -11,8 +11,17 @@ Owners:
 - Execução (Executor): (a definir)
 - Auditoria/Testes: (a definir)
 
-Última revisão: 2026-02-27  
-Próxima revisão recomendada: 2026-03-06  
+Última revisão: 2026-02-26  
+Próxima revisão recomendada: 2026-03-05  
+
+> Changelog v1.4.0 (2026-02-26):  
+> - ARs de implementação materializadas: AR_143-161 (commit `c65c969`, planos `ar_train_invariants_installation.json` + `ar_train_invariants_implementation.json`)  
+> - AR_150 ✅ VERIFICADO+sealed (guards INV-054/INV-057, commit `236bfb6`)  
+> - **INCIDENTE**: Testador destruiu Fase A via `git restore .` antes do `hb seal` — AR_143-148 precisam de REDO  
+>   - AR_143 tinha sido verificada pelo Testador (hash `e57e1b35` ✅ SUCESSO) mas output `training_invariants_coverage_report.md` foi destruído  
+>   - AR_144-148: Executor tinha implementado (exit 0), mas Testador não chegou a verificar  
+> - Fase B (AR_149, 151, 152), Fase C (AR_153-158), Fase D (AR_159-161): NUNCA implementadas — aguardando Executor  
+> - Kanban atualizado com seção `## 10. Cards — Domínio TRAINING — Implementação Invariantes`  
 
 > Changelog v1.3.0 (2026-02-27):  
 > - FASE_3: Adicionado Lote 5 com AR-TRAIN-015..021 (ciclos, sessão, presença oficial, pending queue, visão atleta, pós-treino, IA coach)  
