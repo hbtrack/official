@@ -1,0 +1,96 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "PLANO: Instalação de invariantes de treino na ordem correta de dependência.\n\nINVENTÁRIO (84 invariantes totais):\n- 30 IMPLEMENTADO com teste: 001-012, 015-016, 018-022, 026-036, 043-046\n- 2 DIVERGENTE_DO_SSOT com teste: 014, 023 (risco UUID vs int)\n- 5 PARCIAL com teste existente: 013, 024, 025, 040, 041\n- 2 PARCIAL sem teste: 058, 059 (testáveis AGORA)\n- 1 DEPRECATED: 028\n- 35 GAP (feature não existe): 047-053, EXB-ACL-001..007, 054-057, 060-081 (BLOQUEADOS)\n\nORDEM DE INSTALAÇÃO (tiers por dependência):\n- Tier 0: Corrigir testes quebrados/divergentes (040, 041 path; 014, 023 UUID)\n- Tier 1: Novos testes para PARCIAL testáveis (058, 059)\n- Tier 2: Regressão completa de todos os testes existentes\n- Tier 3: (FUTURO) Testes GAP — requerem implementação de features primeiro\n\nDEPENDÊNCIAS MAPEADAS:\n- 058 coexists_with 004, 029 (validação já existente)\n- 059 extends 045 (uq constraint existente)\n- 014 depende de schema teams.alert_threshold_multiplier (existe)\n- 023 depende de wellness_post_service (existe)\n- 040 depende de openapi.json (existe em docs/ssot/)\n- 041 depende de openapi.json (existe em docs/ssot/)\n\n35 INVARIANTES GAP (documentação para planejamento futuro):\n- Exercise Bank: 047, 048, 049, 050, 051, 052, 053\n- Exercise Bank ACL: EXB-ACL-001..007\n- Ciclos/Periodização: 054, 055, 056, 057\n- Session Exercises: 060, 061, 062\n- Attendance Avançada: 063, 064, 065, 066, 067, 068, 069, 070\n- Wellness obrigatória: 071, 076\n- IA Coach: 073, 075, 079, 080\n- Gamification Extensions: 072, 074, 077, 078, 081",
+  "assumptions": [
+    "SSOT atualizado via gen_docs_ssot.py antes deste plano",
+    "openapi.json canônico está em Hb Track - Backend/docs/ssot/openapi.json",
+    "Testes 040/041 falham por path incorreto (docs/_generated/ não existe)",
+    "INV-TRAIN-014/023 DIVERGENTE por risco UUID vs int; testes existem mas podem falhar",
+    "INV-TRAIN-058/059 são PARCIAL com código parcial existente mas sem arquivo de teste",
+    "35 invariantes GAP requerem feature code antes de testes — fora de escopo deste plano"
+  ],
+  "tasks": [
+    {
+      "id": "138",
+      "title": "Fix openapi path em testes 040 e 041",
+      "description": "Os testes de contrato OpenAPI (INV-TRAIN-040 health_contract e INV-TRAIN-041 teams_contract) apontam para 'docs/_generated/openapi.json' que NÃO existe. O path SSOT correto é 'docs/ssot/openapi.json'. Corrigir o método _load_openapi_spec() em ambos os arquivos para usar Path(__file__).parents[3] / 'docs' / 'ssot' / 'openapi.json'. Manter toda a lógica de validação inalterada.",
+      "criteria": "Ambos os testes (040 e 041) passam com pytest. O path resolve para Hb Track - Backend/docs/ssot/openapi.json. Nenhuma outra mudança lógica nos testes.",
+      "validation_command": "cd \"Hb Track - Backend\" && python -m pytest tests/training/invariants/test_inv_train_040_health_contract.py tests/training/invariants/test_inv_train_041_teams_contract.py -v --tb=short 2>&1 | Select-String -Pattern \"PASSED|FAILED|ERROR\"",
+      "write_scope": [
+        "Hb Track - Backend/tests/training/invariants/test_inv_train_040_health_contract.py",
+        "Hb Track - Backend/tests/training/invariants/test_inv_train_041_teams_contract.py"
+      ],
+      "notes": "Classe F (OpenAPI contract). Não toca DB. Fix trivial de path. INV-TRAIN-040 docstring diz 'docs/ssot/openapi.json' mas código usa 'docs/_generated/'. Alinhar código com docstring.",
+      "risks": [
+        "Se operationIds mudaram desde a criação do teste, podem falhar por motivo diferente do path"
+      ]
+    },
+    {
+      "id": "139",
+      "title": "Revisar e corrigir testes DIVERGENTE 014 e 023",
+      "description": "INV-TRAIN-014 (overload_alert_threshold_multiplier) e INV-TRAIN-023 (wellness_post_triggers_overload_alert_check) estão marcados como DIVERGENTE_DO_SSOT. A divergência é: endpoints/serviços de alerts usam team_id tipado como int, mas schema define UUID. Revisar os testes existentes, verificar se passam com o schema atual, e ajustar tipos se necessário. Se o teste já passa (divergência é apenas documental), atualizar o status na INVARIANTS_TRAINING.md para IMPLEMENTADO.",
+      "criteria": "Testes 014 e 023 passam com pytest. Se tipos foram ajustados, os testes devem validar o tipo correto (UUID). Status dos invariantes atualizado se divergência resolvida.",
+      "validation_command": "cd \"Hb Track - Backend\" && python -m pytest tests/training/invariants/test_inv_train_014_overload_alert_threshold.py tests/training/invariants/test_inv_train_023_wellness_post_overload_alert_trigger.py -v --tb=short 2>&1 | Select-String -Pattern \"PASSED|FAILED|ERROR\"",
+      "write_scope": [
+        "Hb Track - Backend/tests/training/invariants/test_inv_train_014_overload_alert_threshold.py",
+        "Hb Track - Backend/tests/training/invariants/test_inv_train_023_wellness_post_overload_alert_trigger.py"
+      ],
+      "notes": "Classe B (Service). Divergência UUID vs int pode ser apenas documental (testes podem já passar). Executor DEVE primeiro rodar os testes SEM mudança para determinar se falham. Se passam, reportar como 'divergência apenas documental'. Se falham por tipo, corrigir. NOTA: atualização de status na INVARIANTS_TRAINING.md é responsabilidade do Arquiteto, não do Executor.",
+      "risks": [
+        "Se a cadeia alerts/suggestions inteira usa int e schema diz UUID, a correção pode ser maior que o escopo desta task",
+        "Se corrigir tipo no teste sem corrigir no service, teste falha por motivo inverso"
+      ]
+    },
+    {
+      "id": "140",
+      "title": "Criar teste INV-TRAIN-058 session structure mutable",
+      "description": "Criar arquivo de teste para INV-TRAIN-058 (session_structure_mutable_until_close). Regra: estrutura de exercícios de uma sessão de treino só pode ser alterada enquanto sessão NÃO estiver encerrada (status != readonly). Após encerrar, a estrutura é histórica e imutável. Classe C2 (Service com DB): usar async_db, sem mock de DB. O teste DEVE: (1) criar sessão aberta e adicionar exercício com sucesso, (2) encerrar sessão, (3) tentar adicionar/remover exercício e verificar exceção de negócio (não erro do banco). Coexiste com INV-TRAIN-004 (janela por papel) e INV-TRAIN-029 (regras por status).",
+      "criteria": "Arquivo test_inv_train_058_session_structure_mutable.py criado em tests/training/invariants/. Testa caso válido (sessão aberta permite edição) e caso inválido (sessão encerrada rejeita edição). Teste passa com pytest. Docstring contém evidência estável.",
+      "validation_command": "cd \"Hb Track - Backend\" && python -m pytest tests/training/invariants/test_inv_train_058_session_structure_mutable.py -v --tb=short 2>&1 | Select-String -Pattern \"PASSED|FAILED|ERROR\"",
+      "write_scope": [
+        "Hb Track - Backend/tests/training/invariants/test_inv_train_058_session_structure_mutable.py"
+      ],
+      "notes": "Classe C2 (Service com DB). Depende de: training_session_service.py e session_exercise_service.py existirem. Coexiste com testes 004 e 029. O teste NÃO deve duplicar o que 004/029 já validam — focar no princípio geral de mutabilidade por status da sessão. Services a inspecionar: app/services/training_session_service.py, app/services/session_exercise_service.py.",
+      "risks": [
+        "Se session_exercise_service não existe ou não tem guard de status, o teste precisará de stub ou será PENDING",
+        "Guard pode estar no router (não no service) — nesse caso, teste de API (classe D) seria mais adequado"
+      ]
+    },
+    {
+      "id": "141",
+      "title": "Criar teste INV-TRAIN-059 exercise order contiguous",
+      "description": "Criar arquivo de teste para INV-TRAIN-059 (exercise_order_contiguous_unique). Regra: dentro de uma sessão, order_index de exercícios DEVE ser único por sessão, contíguo (1..N sem gaps), e determinístico. Reorder DEVE normalizar gaps. Extends INV-TRAIN-045 (que garante unicidade via constraint uq_session_exercises_order). Classe A (DB Constraint) + validação de serviço: (1) validar que a constraint unique existe (extends 045), (2) testar inserção de exercícios e verificar contiguidade, (3) testar remoção de exercício e verificar normalização de gaps, (4) testar reorder e verificar resultado contíguo.",
+      "criteria": "Arquivo test_inv_train_059_exercise_order_contiguous.py criado em tests/training/invariants/. Testa: unicidade por constraint, contiguidade após inserção, normalização após remoção, reorder determinístico. Teste passa com pytest. Docstring referencia INV-TRAIN-045 como base.",
+      "validation_command": "cd \"Hb Track - Backend\" && python -m pytest tests/training/invariants/test_inv_train_059_exercise_order_contiguous.py -v --tb=short 2>&1 | Select-String -Pattern \"PASSED|FAILED|ERROR\"",
+      "write_scope": [
+        "Hb Track - Backend/tests/training/invariants/test_inv_train_059_exercise_order_contiguous.py"
+      ],
+      "notes": "Classe A+C2. Depends on INV-TRAIN-045 (uq_session_exercises_order constraint). DEVE executar APÓS task 140 (058) pois 058 valida premissa de sessão aberta. Executor DEVE inspecionar: schema.sql para constraint uq_session_exercises_order, e session_exercise_service.py para lógica de reorder/normalização.",
+      "risks": [
+        "Se normalização de gaps não está implementada no service, teste falhará — marcar PENDING nesse caso",
+        "INV-TRAIN-045 já testa unicidade; este teste deve focar em CONTIGUIDADE e NORMALIZAÇÃO, não duplicar 045"
+      ]
+    },
+    {
+      "id": "142",
+      "title": "Regressão completa de testes de invariantes",
+      "description": "Executar todos os testes de invariantes de treino em sequência para garantir que as correções das tasks 138-141 não introduziram regressões e que o conjunto completo de 42+ testes de invariantes passa. Este é o gate final de qualidade antes de considerar a instalação concluída para o tier atual.",
+      "criteria": "Todos os testes em tests/training/invariants/ passam (exit code 0). Nenhum teste que passava antes das mudanças agora falha. Output completo do pytest registrado como evidência.",
+      "validation_command": "cd \"Hb Track - Backend\" && python -m pytest tests/training/invariants/ -v --tb=short -q 2>&1 | Select-String -Pattern \"passed|failed|error|warning\"",
+      "write_scope": [],
+      "notes": "Task doc-only (sem escrita de código). Propósito: validação de regressão. Se algum teste novo (058/059) falhar por feature ausente, o Executor deve marcar como PENDING na evidência mas NÃO falhar o plan inteiro — os testes existentes devem todos passar."
+    },
+    {
+      "id": "143",
+      "title": "Atualizar TEST_MATRIX com status atualizado",
+      "description": "Atualizar o TEST_MATRIX_TRAINING.md com o status atualizado de todas as 84 invariantes após execução deste plano. Incluir: invariantes com teste passando (COVERED), invariantes com teste corrigido (FIXED), invariantes com teste novo (NEW), invariantes PENDING (feature ausente), invariantes DEPRECATED. Incluir coluna de tier (0-3) e coluna de dependência (extends/depends_on).",
+      "criteria": "Relatório de cobertura gerado em docs/_canon/specs/ com todas as 84 invariantes, status de teste, tier, e dependências. Formato tabular legível. Mínimo 80 linhas referenciando invariantes.",
+      "validation_command": "python -c \"f=open('docs/_canon/specs/training_invariants_coverage_report.md','r'); c=f.read(); f.close(); lines=[l for l in c.split('\\n') if 'INV-TRAIN' in l or 'EXB-ACL' in l]; print(f'Invariants in report: {len(lines)}'); assert len(lines)>=80, f'Expected >=80 invariants, got {len(lines)}'\"",
+      "write_scope": [
+        "docs/_canon/specs/training_invariants_coverage_report.md"
+      ],
+      "notes": "Relatório de cobertura em docs/_canon/specs/ (governed). O Arquiteto usará este relatório para atualizar TEST_MATRIX_TRAINING.md posteriormente. 35 invariantes GAP devem aparecer como PENDING com nota 'feature not implemented'. Formato sugerido: | ID | Nome | Classe | Tier | Status Teste | Depende de | Notas |"
+    }
+  ]
+}
