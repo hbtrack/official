@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_149-835607f",
+  "timestamp_utc": "2026-02-26T15:19:46.931876+00:00",
+  "git": {
+    "commit": "835607f70e415f558ca2dd93b1a0f00de22e499a"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "149",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_149_db_training_sessions.standalone_-_cycle_hierarchy_.md"
+}

@@ -1,0 +1,42 @@
+{
+  "ar_id": "149",
+  "validation_command": "python -c \"from sqlalchemy import create_engine, inspect as si; import os; url=os.getenv('DATABASE_URL','postgresql+psycopg2://postgres:postgres@localhost/hbtrack'); e=create_engine(url); i=si(e); cols=[c['name'] for c in i.get_columns('training_sessions')]; assert 'standalone' in cols, 'FAIL: standalone ausente em training_sessions, cols='+str(cols); e.dispose(); print('PASS AR_149: standalone column OK')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 1,
+      "hash_full": "04ac135f83388a51e230f831160c10f0c312505326a3c762983496b48b219bbe",
+      "hash": "04ac135f83388a51",
+      "stdout_len": 0,
+      "stderr_len": 4369
+    },
+    {
+      "run": 2,
+      "exit_code": 1,
+      "hash_full": "04ac135f83388a51e230f831160c10f0c312505326a3c762983496b48b219bbe",
+      "hash": "04ac135f83388a51",
+      "stdout_len": 0,
+      "stderr_len": 4369
+    },
+    {
+      "run": 3,
+      "exit_code": 1,
+      "hash_full": "04ac135f83388a51e230f831160c10f0c312505326a3c762983496b48b219bbe",
+      "hash": "04ac135f83388a51",
+      "stdout_len": 0,
+      "stderr_len": 4369
+    }
+  ],
+  "triple_consistency": "TRIPLE_FAIL",
+  "testador_exit_code": 1,
+  "executor_exit_code": 0,
+  "consistency": "AH_DIVERGENCE",
+  "status": "REJEITADO",
+  "ah_flags": [
+    "AH_DIVERGENCE"
+  ],
+  "evidence_pack_complete": true,
+  "rejection_reason": "Executor reported exit 0 but Testador got exit 1",
+  "workspace_clean": true
+}
