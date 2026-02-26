@@ -1276,16 +1276,16 @@ def update_kanban_and_status(ar_content: str, new_status: str, reason: str = Non
 
 
 def finalize_verification(ar_id: str, ar_content: str, result_data: dict) -> tuple:
-    """Roteia o resultado do Testador para o Kanban e define o próximo responsável.
+    """Roteia o resultado do Testador — atualiza APENAS o Status na AR.
 
-    Status canônicos (Protocol v1.2.0 - Testador Contract §5):
+    v1.3.0 AR-First: NÃO escreve Kanban. Kanban é atualizado APENAS por:
+    - hb seal (após selo humano)
+    - Manualmente pelo Arquiteto/Humano
+
+    Status canônicos (Protocol v1.3.0 - Testador Contract §5):
     - SUCESSO           → ✅ SUCESSO (triple-run OK + consistency OK + temporal_check PASS)
     - REJEITADO         → 🔴 REJEITADO (AH_DIVERGENCE, INCOMPLETE_EVIDENCE, FLAKY_OUTPUT, TRIPLE_FAIL, AH_TEMPORAL_INVALID)
     - BLOQUEADO_INFRA   → ⏸️ BLOQUEADO_INFRA (infra inacessível — waiver necessário)
-
-    Roteamento de Kanban (via reason):
-    - REJEITADO + AH_DIVERGENCE → Backlog (Arquiteto: reason)
-    - REJEITADO (outros)        → Em Execução (Executor: reason)
 
     Retorna (ar_updated_content, novo_status, final_exit).
     Deve ser chamada dentro de um contexto HBLock ativo.
@@ -1295,41 +1295,29 @@ def finalize_verification(ar_id: str, ar_content: str, result_data: dict) -> tup
     rejection_reason = result_data.get("rejection_reason") or ""
 
     if status_testador == "SUCESSO":
-        # Protocol §5: SUCESSO → ✅ SUCESSO
         novo_status = "✅ SUCESSO"
         final_exit = 0
         print(f"✅ SUCESSO | Consistency: {consistency}")
         print(f"Report: _reports/testador/AR_{ar_id}_<git7>/result.json")
-        ar_updated = update_kanban_and_status(ar_content, novo_status, ar_id=ar_id)
 
     elif status_testador == "REJEITADO":
-        # Protocol §5: REJEITADO → 🔴 REJEITADO (sempre)
         novo_status = "🔴 REJEITADO"
         final_exit = 1
-        
-        # Roteamento de Kanban baseado em consistency para indicar responsável
         if consistency == "AH_DIVERGENCE":
-            # Erro de contrato/lógica — Arquiteto precisa rever o plano
-            kanban_reason = f"Arquiteto: {rejection_reason}"
             print(f"🔴 REJEITADO | Consistency: {consistency}")
             print(f"Reason: {rejection_reason}")
         else:
-            # Erro técnico — Executor falhou na implementação
-            kanban_reason = f"Executor: {rejection_reason}"
             print(f"🔴 REJEITADO | Consistency: {consistency}")
             print(f"Reason: {rejection_reason}")
-        
-        ar_updated = update_kanban_and_status(
-            ar_content, novo_status, reason=kanban_reason, ar_id=ar_id
-        )
 
     else:
-        # Protocol §5: BLOQUEADO_INFRA → ⏸️ BLOQUEADO_INFRA
         novo_status = "⏸️ BLOQUEADO_INFRA"
         final_exit = 3
         print(f"⏸️ BLOQUEADO_INFRA | Consistency: {consistency}")
         print(f"Reason: waiver necessário")
-        ar_updated = update_kanban_and_status(ar_content, novo_status, ar_id=ar_id)
+
+    # v1.3.0: Apenas atualizar **Status** na AR — SEM Kanban write
+    ar_updated = re.sub(r"\*\*Status\*\*:.*", f"**Status**: {novo_status}", ar_content, count=1)
 
     return ar_updated, novo_status, final_exit
 
@@ -1550,15 +1538,9 @@ def cmd_verify(ar_id: str) -> None:
             # Non-fatal: warn but don't block verify
             print(f"  ⚠ warning: could not stage {ar_file.name}: {e.stderr.decode()}")
         
-        # V9.5: GATE AR_131 — Anti-Desatualização do _INDEX.md em batch (Layer 3: Index Consistency)
-        staged_ars = get_staged_ars(repo_root)
-        if len(staged_ars) > 1:
-            print(f"  ⚠ BATCH MODE: {len(staged_ars)} ARs staged. SKIP rebuild_ar_index (anti-desatualizacao).")
-            print(f"     ARs staged: {', '.join(staged_ars[:5])}{'...' if len(staged_ars) > 5 else ''}")
-        else:
-            # Rebuild _INDEX.md apenas se houver 1 AR ou nenhuma AR staged
-            rebuild_ar_index(repo_root)
-            print(f"  ✓ _INDEX.md rebuilt (single AR or cleanup mode)")
+        # v1.3.0 AR-First: Index rebuild OPTIONAL — pipeline não depende de _INDEX.md
+        # _INDEX.md será reconstruído por hb seal ou hb index (comando dedicado)
+        print(f"  ℹ _INDEX.md rebuild SKIPPED (AR-First pipeline — execute 'hb index' se necessário)")
 
     print(f"{novo_status} | Consistency: {consistency}")
     if rejection_reason:
@@ -1846,7 +1828,7 @@ def main() -> None:
         else:
             fail("E_USAGE", "Usage: hb gates list | hb gates check <id>")
 
-    elif command == "rebuild-index":
+    elif command == "rebuild-index" or command == "index":
         rebuild_ar_index(get_repo_root())
         print("✅ AR Index rebuilt successfully.")
         sys.exit(0)

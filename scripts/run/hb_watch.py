@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-HB Track - Sentinela + Dispatcher de Contexto
+HB Track - Sentinela + Dispatcher de Contexto (AR-First)
 Arquivo: scripts/run/hb_watch.py
-Versao: 1.2.2
-Protocolo: v1.2.0+
+Versao: 1.3.0
+Protocolo: v1.3.0+
+
+v1.3.0 — AR-First Pipeline:
+  - Dispatcher lê ARs diretamente (scan recursivo em docs/hbtrack/ars/**/AR_*.md)
+  - _INDEX.md NÃO é mais fonte de verdade para decisões de execução
+  - _INDEX.md é apenas cache/relatório — pode ficar desatualizado sem quebrar fluxo
 """
 
 import os
@@ -35,7 +40,7 @@ class Colors:
 
 
 # ========== CONFIGURACAO ==========
-INDEX_PATH   = "docs/hbtrack/_INDEX.md"
+INDEX_PATH   = "docs/hbtrack/_INDEX.md"   # Cache only — NOT used for dispatch decisions
 AR_DIR       = "docs/hbtrack/ars"
 DISPATCH_DIR = "_reports/dispatch"
 HB_LOCK      = ".hb_lock"  # Lock file: impede execuções concorrentes
@@ -131,13 +136,12 @@ def read_ar_details(repo_root: Path, ar_id_num: str) -> dict:
     }
 
 def parse_index(repo_root: Path) -> list:
-    """
-    Le _INDEX.md e retorna lista de ARs.
-    Cada item: {"id": "055", "id_num": "055", "title": "...", "status": "...", "evidence": "..."}
+    """DEPRECATED (v1.3.0): Mantida apenas para referência. Não usada pelo dispatcher.
+    O dispatcher agora usa scan_all_ars() para ler ARs diretamente.
     """
     index_path = repo_root / INDEX_PATH
     if not index_path.exists():
-        return None  # Sinaliza erro
+        return []
     ars = []
     pattern = re.compile(r"\|\s*(AR_([\w.]+))\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|\s*([^|]*)\s*\|")
     try:
@@ -164,6 +168,63 @@ def parse_index(repo_root: Path) -> list:
     except Exception as e:
         print(f"Erro ao ler _INDEX.md: {e}")
         return []
+    return ars
+
+
+def scan_all_ars(repo_root: Path) -> list:
+    """
+    v1.3.0 AR-First: Varre docs/hbtrack/ars/**/AR_*.md recursivamente
+    e extrai status, título, e campos da AR diretamente dos arquivos.
+
+    Retorna lista no mesmo formato de parse_index() para compatibilidade:
+    [{"id": "AR_055", "id_num": "055", "title": "...", "status": "...", "evidence": "..."}]
+
+    NÃO depende de _INDEX.md — lê cada AR.md diretamente.
+    """
+    ar_dir = repo_root / AR_DIR
+    if not ar_dir.exists():
+        return []
+
+    ars = []
+    for ar_file in sorted(ar_dir.rglob("AR_*.md")):
+        # Extrair ID numérico
+        id_match = re.search(r"AR_(\d+)", ar_file.name)
+        if not id_match:
+            continue
+        ar_id_num = id_match.group(1)
+
+        try:
+            content = ar_file.read_text(encoding="utf-8")
+        except Exception:
+            continue
+
+        # Extrair Status (campo **Status**: ...)
+        status_match = re.search(r"\*\*Status\*\*:\s*(.+)", content)
+        status = status_match.group(1).strip() if status_match else "UNKNOWN"
+
+        # Extrair título (primeira linha # AR_NNN ...)
+        title_match = re.search(r"^#\s+AR_\d+[^:\n]*[:\s]+(.+)", content, re.MULTILINE)
+        if not title_match:
+            # Fallback: usar o nome do arquivo
+            title = ar_file.stem.replace("_", " ")[:50]
+        else:
+            title = title_match.group(1).strip()[:50]
+
+        # Evidence path (campo canônico)
+        ev_match = re.search(r"## Evidence File.*?\n`(.+?)`", content)
+        evidence = ev_match.group(1).strip() if ev_match else "—"
+
+        ar_rel = str(ar_file.relative_to(repo_root)).replace("\\", "/")
+
+        ars.append({
+            "id": f"AR_{ar_id_num}",
+            "id_num": ar_id_num,
+            "title": title,
+            "status": status,
+            "evidence": evidence,
+            "ar_file": ar_rel,
+        })
+
     return ars
 
 def build_executor_context(repo_root: Path, action_items: list, ars: list) -> dict:
@@ -297,14 +358,14 @@ def write_dispatch_files(
 def render_dashboard(repo_root: Path, mode: str, ars: list) -> list:
     """
     Exibe dashboard colorido e retorna lista de action_items para o modo ativo.
+    v1.3.0: ars vem de scan_all_ars() — leitura direta de AR.md (sem _INDEX.md).
     """
     clear_screen()
     now = datetime.now().strftime("%H:%M:%S")
-    print(f"{Colors.BOLD}{Colors.HEADER}=== HB TRACK SENTINELA v1.2.2 - {now} ==={Colors.END}")
+    print(f"{Colors.BOLD}{Colors.HEADER}=== HB TRACK SENTINELA v1.3.0 (AR-First) - {now} ==={Colors.END}")
     print(f"{Colors.BOLD}MODO ATIVO: {Colors.CYAN}{mode.upper()}{Colors.END}")
-    if ars is None:
-        print(f"\n{Colors.RED}{Colors.BOLD}\u274c ERRO: {INDEX_PATH} nao encontrado{Colors.END}")
-        print(f"CWD: {os.getcwd()}")
+    if not ars:
+        print(f"\n{Colors.YELLOW}Nenhuma AR encontrada em {AR_DIR}/{Colors.END}")
         return []
     print("-" * 80)
     print(f"{Colors.BOLD}{'ID':<12} | {'STATUS':<18} | {'TITULO'}{Colors.END}")
@@ -343,7 +404,7 @@ def render_dashboard(repo_root: Path, mode: str, ars: list) -> list:
     return action_items
 
 def main():
-    parser = argparse.ArgumentParser(description="HB Track Sentinela + Dispatcher (v1.2.2)")
+    parser = argparse.ArgumentParser(description="HB Track Sentinela + Dispatcher v1.3.0 (AR-First)")
     parser.add_argument(
         "--mode", choices=["architect", "executor", "testador"], required=True
     )
@@ -351,13 +412,20 @@ def main():
         "--loop", type=int, default=5,
         help="Intervalo entre polls em segundos (default: 5)"
     )
+    parser.add_argument(
+        "--once", action="store_true",
+        help="Executar uma vez e sair (sem loop contínuo)"
+    )
     args = parser.parse_args()
     repo_root = get_repo_root()
     try:
         while True:
-            ars          = parse_index(repo_root)
-            action_items = render_dashboard(repo_root, args.mode, ars or [])
-            write_dispatch_files(repo_root, args.mode, action_items, ars or [])
+            # v1.3.0: scan direto dos AR.md — _INDEX.md não é necessário
+            ars          = scan_all_ars(repo_root)
+            action_items = render_dashboard(repo_root, args.mode, ars)
+            write_dispatch_files(repo_root, args.mode, action_items, ars)
+            if args.once:
+                break
             time.sleep(args.loop)
     except KeyboardInterrupt:
         print(f"\n{Colors.BLUE}Sentinela encerrada.{Colors.END}")

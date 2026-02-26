@@ -41,7 +41,7 @@ AH-12 — Evidence temporalmente válido (PASS/FAIL binário):
 
 ## §3 PROTOCOLO DE VERIFICAÇÃO ENTERPRISE (T1-T8)
 
-Passo T1 — LOCALIZAR     hb verify <id> → localiza AR_<id>_*.md  
+Passo T1 — LOCALIZAR     hb verify <id> → localiza AR_<id>_*.md DIRETAMENTE (sem depender de _INDEX.md)  
 Passo T2 — PRÉ-CHECK     Workspace MUST estar limpo; sujo ⇒ FAIL (bloqueio)  
 Passo T3 — EXTRAIR       Ler validation_command e Evidence File da AR  
 Passo T4 — VALIDAR       Evidence canônico MUST existir e conter Exit Code: 0 + Timestamp UTC + Behavior Hash  
@@ -50,9 +50,11 @@ Passo T5 — RE-EXECUTAR   Re-executar TRIPLE_RUN_COUNT=3 vezes independentes
 Passo T5.1 — HASH        Para cada run: behavior_hash = sha256(exit_code + stdout_norm + stderr_norm)  
 Passo T6 — CONFRONTAR    Comparar resultados com Evidence Pack do Executor (exit + consistência)  
 Passo T7 — RELATAR       Gravar TESTADOR_REPORT em _reports/testador/  
-Passo T8 — ATUALIZAR AR  Atualizar **Status** da AR para ✅ SUCESSO ou 🔴 REJEITADO ou ⏸️ BLOQUEADO_INFRA  
+Passo T8 — ATUALIZAR AR  Atualizar **Status** da AR para ✅ SUCESSO ou 🔴 REJEITADO ou ⏸️ BLOQUEADO_INFRA (SEM Kanban write)  
 
-Proibição: Testador MUST NOT escrever ✅ VERIFICADO.
+Proibição: Testador MUST NOT escrever ✅ VERIFICADO.  
+Proibição: Testador MUST NOT escrever no Kanban (`hb verify` não toca Kanban — v1.3.0+).  
+Proibição: Testador MUST NOT executar `git restore`, `git reset` ou `git clean`.
 
 ## §4 RESULT.JSON ENTERPRISE (estrutura obrigatória)
 
@@ -93,6 +95,10 @@ MUST incluir:
 
 ✅ VERIFICADO é escrito exclusivamente via `hb seal` — pelo Humano ou pelo daemon `hb_autotest.py` (modo autônomo).
 
+**Kanban NÃO é atualizado pelo verify** (v1.3.0+). Kanban é sincronizado por:
+- `hb seal` (após selo humano)
+- Manualmente pelo Arquiteto/Humano
+
 ## §6 HB CHECK — ENFORCEMENT PARA PROTOCOL v1.2.0+
 
 Para commits em GOVERNED_ROOTS:
@@ -105,14 +111,16 @@ Para commits em GOVERNED_ROOTS:
 Comando: `python scripts/run/hb_cli.py verify <id>`  
 O Testador deve operar sem mudanças **não-staged** em arquivos rastreados, e registrar timestamp UTC do início do verify. Mudanças staged (trabalho do Executor) são **permitidas** — o verify testa exatamente esse estado.
 
-### Modo autônomo (hb_autotest.py daemon)
+### Modo autônomo (hb_autotest.py daemon v1.1.0 — AR-First)
 `scripts/run/hb_autotest.py` substitui a sessão Claude Code para o papel Testador em operação totalmente autônoma:
 
-1. Detecta ARs em 🏗️ EM_EXECUCAO com evidence staged (`git diff --cached`)
-2. Executa `hb verify <id>` (triple-run 3×, behavior_hash, anti-alucinação AH-1..AH-12)
-3. Faz `git add` do TESTADOR_REPORT + AR atualizada + `_INDEX.md`
-4. Se SUCESSO: executa `hb seal <id>` automaticamente (`triple_consistency=OK + executor_exit=0 + ah_flags=[]`)
-5. Faz `git add` da AR selada + `_INDEX.md` reconstruído
+1. Varre `docs/hbtrack/ars/**/AR_*.md` e lê **Status** diretamente (sem `_INDEX.md`)
+2. Verifica se evidence do Executor EXISTE e está staged (`git diff --cached`)
+3. Verifica que não existe TESTADOR_REPORT staged (evitar reprocessar)
+4. Executa `hb verify <id>` (triple-run 3×, behavior_hash, anti-alucinação AH-1..AH-12)
+5. Faz `git add` do TESTADOR_REPORT + AR atualizada (SEM `_INDEX.md`)
+6. Se SUCESSO: executa `hb seal <id>` automaticamente
+7. Faz `git add` da AR selada
 
 Uso: `python scripts/run/hb_autotest.py [--loop 5] [--once] [--dry-run]`
 

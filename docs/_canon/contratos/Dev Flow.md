@@ -40,14 +40,16 @@ NORMS: MUST / MUST NOT / SHOULD / MAY (BCP14)
 * Planos (JSON do Arquiteto): `docs/_canon/planos/*.json`
 * ARs (materialização do plano): `docs/hbtrack/ars/`
 * Evidence packs (Executor/Testador): `docs/hbtrack/evidence/`
-* Índice canônico (obrigatório): `docs/hbtrack/_INDEX.md`
+* Índice (cache): `docs/hbtrack/_INDEX.md`
 
-2.3) Índice (regra dura)
+2.3) Índice (cache — NÃO é SSOT de execução)
 
-* `docs/hbtrack/_INDEX.md` é o **Registry da Máquina de Estados** no commit.
-* MUST ser **AUTO-GERADO** por hb (`hb plan` / `hb report` / `hb verify` / `hb index` se existir).
+* `docs/hbtrack/_INDEX.md` é o **Cache de Visualização** gerado automaticamente.
+* MUST ser AUTO-GERADO por `hb seal` ou `hb index`.
 * MUST NOT ser editado manualmente.
-* **Qualquer AR staged ⇒ `_INDEX.md` MUST estar staged** (enforcement no pre-commit).
+* **Pipeline executa lendo ARs diretamente** — `_INDEX.md` pode ficar desatualizado temporariamente sem quebrar o fluxo.
+* **Qualquer AR staged ⇒ `_INDEX.md` SHOULD estar staged** (recomendação, não bloqueio hard).
+* `hb verify` NÃO reconstrói `_INDEX.md` — isso é responsabilidade de `hb seal` ou `hb index`.
 
 2.4) Legado (proibido editar)
 
@@ -56,9 +58,9 @@ NORMS: MUST / MUST NOT / SHOULD / MAY (BCP14)
 2.5) Execução (scripts)
 
 * CLI oficial: `scripts/run/hb_cli.py`
-* Watcher + Dispatcher: `scripts/run/hb_watch.py` v1.2.2 (dashboard + dispatch context JSON em `_reports/dispatch/<modo>_context.json`)
+* Watcher + Dispatcher: `scripts/run/hb_watch.py` v1.3.0 (AR-First — varre ARs diretamente, dashboard + dispatch context JSON em `_reports/dispatch/<modo>_context.json`)
 * Daemon Plan Watcher: `scripts/run/hb_plan_watcher.py` (auto-materialize daemon — monitora `docs/_canon/planos/*.json`, claim atômico, dry-run obrigatório, staging apenas diff)
-* Daemon Testador: `scripts/run/hb_autotest.py` (Testador autônomo — detecta evidence staged → `hb verify` → `hb seal`)
+* Daemon Testador: `scripts/run/hb_autotest.py` v1.1.0 (AR-First — detecta elegibilidade lendo AR.md + evidence staged → `hb verify` → `hb seal`)
 * Git hook: `scripts/git-hooks/pre-commit` (executável Python)
 * Política: scripts operacionais MUST ser Python; `.sh` e `.ps1` são proibidos.
 

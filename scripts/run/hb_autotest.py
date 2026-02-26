@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-HB Track — Auto-Testador Daemon
+HB Track — Auto-Testador Daemon (AR-First)
 Arquivo: scripts/run/hb_autotest.py
-Versão: 1.0.0
-Protocolo: v1.2.0+
+Versão: 1.1.0
+Protocolo: v1.3.0+
 Contrato: docs/_canon/contratos/Testador Contract.md
 
 Papel: Testador autônomo — substitui a necessidade de humano atuando como API
@@ -19,19 +19,24 @@ Flags:
   --once      Executar uma vez e sair (sem loop contínuo)
   --dry-run   Apenas reportar o que faria, sem executar
 
-Fluxo autônomo implementado:
-  1. Detecta ARs em 🏗️ EM_EXECUCAO no _INDEX.md
-  2. Verifica se evidence do Executor está staged (git diff --cached)
-  3. Executa: python hb_cli.py verify <id>
-  4. Após SUCESSO: git add TESTADOR_REPORT + AR atualizada + _INDEX.md
-  5. Executa: python hb_cli.py seal <id> "<reason>"
-  6. Após VERIFICADO: git add AR selada + _INDEX.md reconstruído
+Fluxo autônomo implementado (v1.1.0 AR-First):
+  1. Varre docs/hbtrack/ars/**/AR_*.md e lê **Status**: diretamente (sem _INDEX.md)
+  2. Verifica se evidence do Executor existe E está staged (git diff --cached)
+  3. Verifica que não existe TESTADOR_REPORT staged (evitar reprocessar)
+  4. Executa: python hb_cli.py verify <id>
+  5. Após SUCESSO: git add TESTADOR_REPORT + AR atualizada
+  6. Executa: python hb_cli.py seal <id> "<reason>"
+  7. Após VERIFICADO: git add AR selada
 
 Regras Anti-Alucinação (AH-1..AH-12 do Testador Contract):
   - Este daemon NÃO modifica código — apenas executa hb verify e hb seal.
   - hb verify realiza triple-run independente (3x) com behavior_hash.
   - Este daemon NÃO confia no output do Executor — hb verify re-executa.
   - AH_DIVERGENCE, FLAKY_OUTPUT e TRIPLE_FAIL geram 🔴 REJEITADO automático.
+
+v1.1.0 — AR-First Pipeline:
+  - _INDEX.md NÃO é mais fonte de verdade para detecção de ARs
+  - Elegibilidade decidida por: Status na AR + evidence existe + evidence staged
 """
 
 import os
@@ -46,7 +51,7 @@ from pathlib import Path
 
 # ========== CONFIGURAÇÃO ==========
 POLL_INTERVAL_DEFAULT = 5  # segundos
-INDEX_PATH = 'docs/hbtrack/_INDEX.md'
+INDEX_PATH = 'docs/hbtrack/_INDEX.md'  # Cache only — NOT used for detection
 AR_DIR = 'docs/hbtrack/ars'
 TESTADOR_DIR = '_reports/testador'
 EV_DIR = 'docs/hbtrack/evidence'
@@ -107,17 +112,85 @@ def git_add(repo_root: Path, path: str, dry_run: bool = False) -> bool:
     return True
 
 
-# ========== PARSING _INDEX.md ==========
+# ========== AR-FIRST DETECTION (v1.1.0) ==========
+
+def find_ars_ready_for_verify(repo_root: Path) -> list:
+    """
+    v1.1.0 AR-First: Encontra ARs elegíveis para verify lendo ARs diretamente.
+
+    Critérios de elegibilidade (TODOS devem ser atendidos):
+    1. Status na AR é 🏗️ EM_EXECUCAO (ou ✅ SUCESSO para retrocompat)
+    2. Evidence do Executor EXISTE no disco: docs/hbtrack/evidence/AR_<id>/executor_main.log
+    3. Evidence está STAGED: presente em git diff --cached --name-only
+    4. NÃO existe TESTADOR_REPORT staged para esse AR (evitar reprocessar)
+
+    Retorna: [{"id": "055", "ar_full": "AR_055", "title": "...", "status": "..."}]
+
+    NÃO depende de _INDEX.md — lê cada AR.md diretamente.
+    """
+    ar_dir = repo_root / AR_DIR
+    if not ar_dir.exists():
+        return []
+
+    staged = get_staged_files(repo_root)
+    eligible = []
+
+    for ar_file in sorted(ar_dir.rglob("AR_*.md")):
+        # Extrair ID numérico
+        id_match = re.search(r"AR_(\d+)", ar_file.name)
+        if not id_match:
+            continue
+        ar_id = id_match.group(1)
+
+        try:
+            content = ar_file.read_text(encoding="utf-8")
+        except Exception:
+            continue
+
+        # Critério 1: Status deve indicar que Executor terminou
+        status_match = re.search(r'\*\*Status\*\*:\s*(.+)', content)
+        status = status_match.group(1).strip() if status_match else ""
+
+        if not ('🏗️' in status or 'EM_EXECUCAO' in status or '✅ SUCESSO' in status):
+            continue
+
+        # Critério 2: Evidence do Executor deve existir no disco
+        evidence_path = f"{EV_DIR}/AR_{ar_id}/executor_main.log"
+        evidence_file = repo_root / evidence_path
+        if not evidence_file.exists():
+            continue
+
+        # Critério 3: Evidence deve estar staged
+        evidence_norm = evidence_path.replace('\\', '/')
+        if evidence_norm not in staged:
+            continue
+
+        # Critério 4: Não deve existir TESTADOR_REPORT staged (evitar reprocessar)
+        testador_prefix = f"{TESTADOR_DIR}/AR_{ar_id}_"
+        has_testador_staged = any(testador_prefix in f for f in staged)
+        if has_testador_staged:
+            continue
+
+        # Extrair título
+        title_match = re.search(r"^#\s+AR_\d+[^:\n]*[:\s]+(.+)", content, re.MULTILINE)
+        title = title_match.group(1).strip()[:50] if title_match else ar_file.stem[:50]
+
+        eligible.append({
+            "id": ar_id,
+            "ar_full": f"AR_{ar_id}",
+            "title": title,
+            "status": status,
+        })
+
+    return eligible
+
 
 def parse_index(repo_root: Path) -> list:
-    """
-    Lê _INDEX.md e retorna lista de ARs em 🏗️ EM_EXECUCAO.
-    Retorna: [{"id": "055", "title": "...", "status": "🏗️ EM_EXECUCAO"}, ...]
-    """
+    """DEPRECATED (v1.1.0): Mantida para referência. Use find_ars_ready_for_verify().
+    Lê _INDEX.md e retorna lista de ARs em 🏗️ EM_EXECUCAO."""
     index_path = repo_root / INDEX_PATH
     if not index_path.exists():
         return []
-
     ars = []
     pattern = re.compile(r'\|\s*(AR_([\w.]+))\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|')
     for line in index_path.read_text(encoding='utf-8').splitlines():
@@ -128,12 +201,9 @@ def parse_index(repo_root: Path) -> list:
         ar_num = m.group(2).strip()
         title = m.group(3).strip()
         status = m.group(4).strip()
-
         if ar_num == "ID":
-            continue  # cabeçalho
-
+            continue
         if '🏗️' in status or 'EM_EXECUCAO' in status:
-            # Extrair id numérico simples para comandos hb
             id_match = re.match(r'^(\d+)', ar_num)
             if id_match:
                 ars.append({
@@ -344,9 +414,8 @@ def process_ar(repo_root: Path, ar_info: dict, processed: set, dry_run: bool) ->
         git_add(repo_root, ar_rel, dry_run)
         log(f"  staged: {ar_rel}")
 
-    # 3. _INDEX.md (atualizado por hb verify internamente)
-    git_add(repo_root, INDEX_PATH, dry_run)
-    log(f"  staged: {INDEX_PATH}")
+    # v1.1.0: _INDEX.md NÃO é mais staged pelo autotest (AR-First pipeline)
+    # Index é cache opcional — será reconstruído por hb seal ou hb index
 
     # Aguardar git settle
     if not dry_run:
@@ -370,12 +439,12 @@ def process_ar(repo_root: Path, ar_info: dict, processed: set, dry_run: bool) ->
         log(f"  Verificar pré-condições: evidence staged, TESTADOR_REPORT staged, status ✅ SUCESSO")
         return
 
-    # Seal OK — stage AR selada + _INDEX reconstruído
+    # Seal OK — stage AR selada
     log(f"AR_{ar_id}: ✅ VERIFICADO — staging artefatos finais...")
     if ar_file:
         ar_rel = str(ar_file.relative_to(repo_root)).replace('\\', '/')
         git_add(repo_root, ar_rel, dry_run)
-    git_add(repo_root, INDEX_PATH, dry_run)
+    # v1.1.0: NÃO stage _INDEX.md — AR-First pipeline
 
     log(f"✅ AR_{ar_id} [{title}]: VERIFICADO e staged — pronto para commit")
     
@@ -411,23 +480,25 @@ def main_loop(poll_interval: int, once: bool, dry_run: bool) -> None:
         log("MODO DRY-RUN ativo — nenhuma ação real será executada")
     log(f"Iniciado. Repo: {repo_root}")
     log(f"Poll interval: {poll_interval}s | Loop: {'não' if once else 'sim'}")
-    log("Aguardando ARs em 🏗️ EM_EXECUCAO com evidence staged...")
+    log("v1.1.0 AR-First: Varrendo ARs diretamente (sem _INDEX.md)...")
+    log("Critérios: Status EM_EXECUCAO + evidence existe + evidence staged + sem testador_report staged")
     log("-" * 60)
 
     while True:
-        em_execucao = parse_index(repo_root)
+        # v1.1.0: detecção AR-First — lê ARs diretamente
+        em_execucao = find_ars_ready_for_verify(repo_root)
 
         if em_execucao:
-            log(f"ARs em EM_EXECUCAO: {[a['id'] for a in em_execucao]}")
+            log(f"ARs elegíveis para verify: {[a['id'] for a in em_execucao]}")
             for ar_info in em_execucao:
                 try:
                     process_ar(repo_root, ar_info, processed, dry_run)
                 except Exception as e:
                     log_error(f"AR_{ar_info['id']}: erro inesperado: {e}")
         else:
-            # Limpar processed quando não há mais ARs ativas (novo ciclo)
+            # Limpar processed quando não há mais ARs elegíveis (novo ciclo)
             if processed:
-                log("Nenhuma AR em EM_EXECUCAO — resetando estado interno.")
+                log("Nenhuma AR elegível para verify — resetando estado interno.")
                 processed.clear()
 
         if once:

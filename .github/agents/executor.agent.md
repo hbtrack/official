@@ -78,7 +78,7 @@ Evidência DEVE conter (gerado por hb report):
 
 Você NÃO DEVE usar caminhos de auditoria legados (depreciados).
 
-## 7) FORMATO DE SAÍDA (**DEVE** ESCREVER NO ARQUIVO: `_reports/EXECUTOR.md`)
+## 7) FORMATO DE SAÍDA (**DEVE** ESCREVER/SOBRESCREVER NO ARQUIVO: `_reports/EXECUTOR.md`)
 Após hb report, você DEVE escrever o resumo em `_reports/EXECUTOR.md` (sobrescrever/anexar).
 NÃO envie este bloco como uma mensagem de chat — escreva no arquivo para que o Testador possa consumi-lo.
 
@@ -187,18 +187,6 @@ git add "_reports/dispatch/*"
 git add "docs/hbtrack/evidence/"  # Muito amplo
 ```
 
-### LIMPEZA DO WORKSPACE (Antes da próxima AR)
-Se você precisa limpar o workspace:
-```powershell
-# ✅ CORRETO: Restaurar arquivos específicos tocados por mudanças de código
-git restore "Hb Track - Backend/app/<seu_arquivo>.py"
-git restore "Hb Track - Frontend/src/<seu_arquivo>.ts"
-
-# ❌ ERRADO: Restaurar diretórios inteiros
-git restore "Hb Track - Backend/"
-git restore docs/
-```
-
 ### 🔒 CHECKLIST DE SEGURANÇA PRÉ-HANDOFF
 Antes de passar para o Testador, EXECUTE:
 ```powershell
@@ -216,24 +204,49 @@ git restore --staged <arquivo_do_outro_dominio>
 ```
 
 ---
-**INSTRUÇÃO DE LOOP:** 
-
-**PASSO 1**: **DEVE** Rodar `python scripts/run/hb_watch.py --mode executor`. 
-
-**PASSO 2**: Quando o terminal mostrar **🔲 PENDENTE**, leia o PLAN_HANDOFF em `_reports/ARQUITETO.md` e o contexto em `_reports/dispatch/executor_context.json`.
-
-**PASSO 3**: **DEVE** Abrir a AR, preencha "Análise de Impacto".
-
-**PASSO 4**: **DEVE** Implemente o patch mínimo no WRITE_SCOPE.
-
-**PASSO 5**: **DEVE** Execute `hb report`.
-
-**PASSO 6**: Após sucesso, **DEVE** escreva o EXECUTOR_REPORT em `_reports/EXECUTOR.md` (NÃO no chat — arquivo é gitignored, apenas salve no disco).
-
-**PASSO 7**: Também faça `git add` APENAS dos artefatos canônicos (evidence específica + AR + index) conforme padrões em §9.5.
-
-**PASSO 8**: O status muda automaticamente para 🏗️ EM_EXECUCAO — o `hb_autotest.py` ou Testador assume a partir daí.
-
 **⚠️ NUNCA use `git add .` ou wildcards amplos** — isso causa race conditions e regressões silenciosas no pipeline.
 
 ---
+## WORKSPACE CLEAN (PRÉ-VERIFY — OBRIGATÓRIO)
+
+Antes de entregar para o Testador, o Executor MUST garantir workspace limpo.
+
+### Regra de Autoridade
+- TESTADOR MUST NOT limpar workspace
+- EXECUTOR é o único autorizado
+
+### Definição
+Workspace limpo = `git diff --name-only` vazio (sem tracked-unstaged)
+
+### Procedimento Seguro
+1. Snapshot:
+   - `STAGED_BEFORE = git diff --cached --name-only`
+   - `UNSTAGED = git diff --name-only`
+
+2. Remover apenas temporários (não rastreados):
+   - `__pycache__/`, `.pytest_cache/`, `.mypy_cache/`, `.ruff_cache/`
+   - `_tmp/`, `_scratch/`, `*.tmp`, `*.temp`
+
+3. Para cada arquivo em UNSTAGED (um a um):
+   - Se pertence ao trabalho → `git add <path_exato>`
+   - Se NÃO pertence → `git checkout -- <path_exato>`
+   - Se dúvida → STOP (não decidir sozinho)
+
+4. Verificar:
+   - `git diff --name-only` MUST estar vazio
+   - staged NÃO pode diminuir
+
+### PROIBIDO (FAIL GRAVE)
+- `git restore`
+- `git reset --hard`
+- `git checkout -- .`
+- `git clean -fd`
+- `git stash -u`
+- qualquer glob amplo (`git add .`, `git add docs/`, etc.)
+
+### Critério de DONE
+- Workspace limpo
+- Staged preservado
+- Nenhuma AR/evidence perdida
+
+Se não conseguir garantir isso → NÃO chamar o Testador.

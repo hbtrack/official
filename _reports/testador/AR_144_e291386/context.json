@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_144-e291386",
+  "timestamp_utc": "2026-02-26T13:54:07.486641+00:00",
+  "git": {
+    "commit": "e29138621bc35d0aaa6b4d786585aac5d32c4844"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "144",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_144_db_exercise_bank_-_schema_foundation.md"
+}
