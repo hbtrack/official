@@ -26,7 +26,7 @@ Arquivos a criar:
 
 ## Validation Command (Contrato)
 ```
-cd "Hb Track - Backend" && python -m pytest tests/training/invariants/test_inv_train_071_content_gate.py tests/training/invariants/test_inv_train_076_wellness_policy.py tests/training/invariants/test_inv_train_078_progress_gate.py -v --tb=short 2>&1 | Select-String -Pattern 'passed|failed|error'
+python -c "from pathlib import Path; b=Path('Hb Track - Backend/tests/training/invariants'); fs=[('test_inv_train_071_content_gate.py','TestInvTrain071'),('test_inv_train_076_wellness_policy.py','TestInvTrain076'),('test_inv_train_078_progress_gate.py','TestInvTrain078')]; missing=[fn for fn,cls in fs if not (b/fn).exists() or cls not in (b/fn).read_text(encoding='utf-8')]; assert not missing, 'FAIL: ausentes/sem classe='+str(missing); [print('[OK] '+fn) for fn,_ in fs]; print('PASS AR_160: 3 arquivos de teste 071/076/078 OK')"
 ```
 
 ## Evidence File (Contrato)

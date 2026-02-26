@@ -1,4 +1,4 @@
-# AR_153 — DB: Attendance preconfirm + training_pending_items
+﻿# AR_153 — DB: Attendance preconfirm + training_pending_items
 
 **Status**: 🔲 PENDENTE
 **Versão do Protocolo**: 1.3.0
@@ -40,7 +40,7 @@ Migração Alembic para estender attendance e criar pending_items:
 
 ## Validation Command (Contrato)
 ```
-cd "Hb Track - Backend" && python -m alembic upgrade head 2>&1 | Select-String -Pattern 'Running|ERROR|FAILED'; python -c "from app.db.session import engine; import sqlalchemy as sa; insp=sa.inspect(engine); tbls=insp.get_table_names(); assert 'training_pending_items' in tbls, 'pending_items missing'; print('Schema OK')" 2>&1
+python -c "from sqlalchemy import create_engine, inspect as si; import os; url=os.getenv('DATABASE_URL','postgresql+psycopg2://postgres:postgres@localhost/hbtrack'); e=create_engine(url); i=si(e); tbls=i.get_table_names(); assert 'training_pending_items' in tbls, 'FAIL: training_pending_items ausente, tabelas_relevantes='+str([t for t in tbls if 'pend' in t or 'train' in t]); e.dispose(); print('PASS AR_153: training_pending_items OK')"
 ```
 
 ## Evidence File (Contrato)

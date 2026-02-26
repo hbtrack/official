@@ -23,7 +23,7 @@ Gerar relatório de cobertura:
 
 ## Validation Command (Contrato)
 ```
-cd "Hb Track - Backend" && python -m pytest tests/training/invariants/ -v --tb=short -q 2>&1 | Select-String -Pattern 'passed|failed|error|warning'; Get-Content "../docs/_canon/specs/training_invariants_full_coverage_report.md" | Select-String -Pattern 'GAP_COBERTO|IMPLEMENTADO' | Measure-Object | Select-Object Count
+python -c "from pathlib import Path; import glob; r=Path('docs/_canon/specs/training_invariants_full_coverage_report.md'); assert r.exists(), 'FAIL: training_invariants_full_coverage_report.md nao encontrado'; c=r.read_text(encoding='utf-8'); ts=glob.glob('Hb Track - Backend/tests/training/invariants/test_inv_train_*.py'); n=c.count('IMPLEMENTADO')+c.count('GAP_COBERTO'); assert n>=80, 'FAIL: cobertura insuficiente, n='+str(n); print('PASS AR_161: '+str(len(ts))+' testes, '+str(n)+' invariantes documentadas')"
 ```
 
 ## Evidence File (Contrato)

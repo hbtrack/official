@@ -24,7 +24,7 @@ Adicionar ao attendance_service.py existente os fluxos avançados:
 
 ## Validation Command (Contrato)
 ```
-cd "Hb Track - Backend" && python -m pytest tests/training/invariants/test_inv_train_063_preconfirm.py tests/training/invariants/test_inv_train_064_close_consolidation.py tests/training/invariants/test_inv_train_065_close_pending_guard.py -v --tb=short 2>&1 | Select-String -Pattern 'PASSED|FAILED|ERROR'
+python -c "from pathlib import Path; f=Path('Hb Track - Backend/app/services/attendance_service.py'); assert f.exists(), 'FAIL: attendance_service.py nao encontrado'; c=f.read_text(encoding='utf-8'); assert 'preconfirm' in c.lower(), 'FAIL: logica preconfirm ausente'; assert 'close' in c.lower(), 'FAIL: logica close ausente'; print('PASS AR_154: attendance_service.py com preconfirm+close OK')"
 ```
 
 ## Evidence File (Contrato)

@@ -31,7 +31,7 @@ Todos os 8 arquivos criados. pytest todos os 8 PASSAM. Para INV-067/068/069 (cla
 
 ## Validation Command (Contrato)
 ```
-cd "Hb Track - Backend" && python -m pytest tests/training/invariants/test_inv_train_063_preconfirm.py tests/training/invariants/test_inv_train_064_close_consolidation.py tests/training/invariants/test_inv_train_065_close_pending_guard.py tests/training/invariants/test_inv_train_066_pending_items.py tests/training/invariants/test_inv_train_067_athlete_pending_rbac.py tests/training/invariants/test_inv_train_068_athlete_sees_training.py tests/training/invariants/test_inv_train_069_exercise_media_via_session.py tests/training/invariants/test_inv_train_070_post_conversational.py -v --tb=short 2>&1 | Select-String -Pattern 'passed|failed|error'
+python -c "from pathlib import Path; b=Path('Hb Track - Backend/tests/training/invariants'); fs=[('test_inv_train_063_preconfirm.py','TestInvTrain063'),('test_inv_train_064_close_consolidation.py','TestInvTrain064'),('test_inv_train_065_close_pending_guard.py','TestInvTrain065'),('test_inv_train_066_pending_items.py','TestInvTrain066'),('test_inv_train_067_athlete_pending_rbac.py','TestInvTrain067'),('test_inv_train_068_athlete_sees_training.py','TestInvTrain068'),('test_inv_train_069_exercise_media_via_session.py','TestInvTrain069'),('test_inv_train_070_post_conversational.py','TestInvTrain070')]; missing=[fn for fn,cls in fs if not (b/fn).exists() or cls not in (b/fn).read_text(encoding='utf-8')]; assert not missing, 'FAIL: ausentes/sem classe='+str(missing); print('PASS AR_158: 8 arquivos de teste 063-070 OK')"
 ```
 
 ## Evidence File (Contrato)

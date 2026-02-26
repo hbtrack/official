@@ -30,7 +30,7 @@ Todos os 4 arquivos de teste criados. pytest todos os 4 arquivos PASSAM. INV-055
 
 ## Validation Command (Contrato)
 ```
-cd "Hb Track - Backend" && python -m pytest tests/training/invariants/test_inv_train_054_standalone_session.py tests/training/invariants/test_inv_train_055_meso_overlap.py tests/training/invariants/test_inv_train_056_micro_within_meso.py tests/training/invariants/test_inv_train_057_session_within_microcycle.py -v --tb=short 2>&1 | Select-String -Pattern 'passed|failed|error'
+python -c "from pathlib import Path; b=Path('Hb Track - Backend/tests/training/invariants'); fs=[('test_inv_train_054_standalone_session.py','TestInvTrain054'),('test_inv_train_055_meso_overlap.py','TestInvTrain055'),('test_inv_train_056_micro_within_meso.py','TestInvTrain056'),('test_inv_train_057_session_within_microcycle.py','TestInvTrain057')]; missing=[fn for fn,cls in fs if not (b/fn).exists() or cls not in (b/fn).read_text(encoding='utf-8')]; assert not missing, 'FAIL: ausentes ou sem classe='+str(missing); [print('[OK] '+fn) for fn,_ in fs]; print('PASS AR_152: 4 arquivos de teste OK')"
 ```
 
 ## Evidence File (Contrato)

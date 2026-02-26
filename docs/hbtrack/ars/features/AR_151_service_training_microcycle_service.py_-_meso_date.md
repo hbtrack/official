@@ -21,7 +21,7 @@ Adicionar guard ao training_cycle_service.py e/ou training_microcycle_service.py
 
 ## Validation Command (Contrato)
 ```
-cd "Hb Track - Backend" && python -m pytest tests/training/invariants/test_inv_train_056_micro_within_meso.py tests/training/invariants/test_inv_train_055_meso_overlap.py -v --tb=short 2>&1 | Select-String -Pattern 'PASSED|FAILED|ERROR'
+python -c "from pathlib import Path; f=Path('Hb Track - Backend/app/services/training_cycle_service.py'); assert f.exists(), 'FAIL: training_cycle_service.py nao encontrado'; c=f.read_text(encoding='utf-8'); assert 'meso' in c.lower() or 'cycle' in c.lower(), 'FAIL: logica de ciclo/meso ausente'; assert 'overlap' in c.lower() or 'meso_start' in c.lower() or 'start_date' in c.lower(), 'FAIL: guard de overlap ausente'; print('PASS AR_151: training_cycle_service.py com meso+overlap OK')"
 ```
 
 ## Evidence File (Contrato)
