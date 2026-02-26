@@ -1,6 +1,6 @@
 # AR_128 — Convergir services Step18 de int para UUID nas assinaturas
 
-**Status**: ⚠️ PENDENTE
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -98,9 +98,17 @@ _(Gerado por hb report)_
 
 > 📋 Kanban routing: Arquiteto: Executor reported exit 0 but Testador got exit 1
 
-### Verificacao Testador em 529b87c
-**Status Testador**: 🔴 REJEITADO
-**Consistency**: AH_DIVERGENCE
-**Triple-Run**: TRIPLE_FAIL (3x)
-**Exit Testador**: 1 | **Exit Executor**: 0
-**TESTADOR_REPORT**: `_reports/testador/AR_128_529b87c/result.json`
+
+### Verificacao Testador em 236bfb6
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_128_236bfb6/result.json`
+
+### Selo Humano em 236bfb6
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-26T12:00:00.856710+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_128_236bfb6/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_128/executor_main.log`

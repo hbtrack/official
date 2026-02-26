@@ -1,0 +1,40 @@
+{
+  "ar_id": "128",
+  "validation_command": "cd \"Hb Track - Backend\" && python -c \"import ast,sys; t1=ast.parse(open('app/services/training_alerts_service.py',encoding='utf-8').read()); t2=ast.parse(open('app/services/training_suggestion_service.py',encoding='utf-8').read()); ids=('team_id','alert_id','suggestion_id'); bad=[]; [bad.append('alerts:'+n.name+':'+a.arg) for n in ast.walk(t1) if isinstance(n,ast.FunctionDef) for a in n.args.args if a.arg in ids and hasattr(a,'annotation') and isinstance(a.annotation,ast.Name) and a.annotation.id=='int']; [bad.append('suggestions:'+n.name+':'+a.arg) for n in ast.walk(t2) if isinstance(n,ast.FunctionDef) for a in n.args.args if a.arg in ids and hasattr(a,'annotation') and isinstance(a.annotation,ast.Name) and a.annotation.id=='int']; assert not bad,'FAIL:'+str(bad); print('PASS: All service signatures UUID')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "06419ad8744166100ea5aa7f080cbdc2676da4c526d7f9c3ab9b1475082e14f0",
+      "hash": "06419ad874416610",
+      "stdout_len": 34,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "06419ad8744166100ea5aa7f080cbdc2676da4c526d7f9c3ab9b1475082e14f0",
+      "hash": "06419ad874416610",
+      "stdout_len": 34,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "06419ad8744166100ea5aa7f080cbdc2676da4c526d7f9c3ab9b1475082e14f0",
+      "hash": "06419ad874416610",
+      "stdout_len": 34,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

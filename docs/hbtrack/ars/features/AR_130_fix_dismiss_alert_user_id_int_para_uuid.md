@@ -1,6 +1,6 @@
 # AR_130 — Fix dismiss_alert user_id int para UUID
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -76,3 +76,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_130_dd11c7d/result.json`
+
+### Selo Humano em 236bfb6
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-26T11:48:59.015271+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_130_dd11c7d/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_130/executor_main.log`

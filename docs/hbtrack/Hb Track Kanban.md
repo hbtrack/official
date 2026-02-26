@@ -496,6 +496,8 @@ EVIDENCE_PACK:
 - AC-005 alembic downgrade -1 exit_code=0: PASS
 
 ### ✅ Concluído
+- AR_128
+- AR_125
 - AR_142
 - AR_141
 - AR_140
@@ -573,6 +575,7 @@ EVIDENCE_PACK:
 - AR_101 — Executor: Evidence Pack missing or incomplete
 
 ### 📥 Backlog
+- AR_124 — Arquiteto: Output não-determinístico: behavior_hash diverge nos 3 runs (exit 0 em todos, mas hash diferente)
 - AR_077 — 🏗️ EM_EXECUCAO (v3 - static validation) — Executor: EXIT 0, evidence staged, awaiting Testador hb verify 077 (triple-run expected: 3 IDENTICAL hashes)
 - AR_060 — Arquiteto: Executor reported exit 0 but Testador got exit 1
 - AR_003 — Arquiteto: Executor reported exit 0 but Testador got exit 1

@@ -1,6 +1,6 @@
 # AR_127 — Convergir Pydantic schemas Step18 de int para UUID
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -95,3 +95,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_127_529b87c/result.json`
+
+### Selo Humano em 236bfb6
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-26T11:48:56.797362+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_127_529b87c/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_127/executor_main.log`
