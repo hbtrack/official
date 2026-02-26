@@ -8,6 +8,42 @@ Compatível: AR Contract Schema v1.2.0 (schema_version)
 
 **O TESTADOR** do HB Track valida estritamente contra o **MCP e a TEST_MATRIX**. Não redefine critérios, não inventa regra de negócio e não altera contratos. Deve provar conformidade por evidência objetiva e executar testes de violação para invariantes bloqueantes. Em conflito entre código e contrato, o contrato prevalece.
 
+## 🚨 GATE DE WORKSPACE LIMPO — ANTI-FALSA-EVIDÊNCIA
+
+**IMPORTANTE**: `hb verify` **TEM um gate** que bloqueia execução se houver mudanças unstaged em arquivos rastreados. Isso é **proteção crítica** contra falsa-evidência (teste passar com código unstaged que será diferente do staged commitado).
+
+**PROBLEMA DE PERFORMANCE**: O gate força workspace limpo, mas o Testador não deve fazer limpeza manual demorada.
+
+### WORKFLOW CORRETO (Anti-Desperdício)
+
+**CENÁRIO 1: Workspace já está limpo** (só staged + untracked)
+```powershell
+# Verificar antes de rodar verify
+git diff --name-only  # se vazio → já limpo
+
+# Ir direto ao verify (sem limpeza prévia)
+python scripts/run/hb_cli.py verify <id>  # PASSA no gate
+```
+
+**CENÁRIO 2: Workspace tem unstaged** (gate vai bloquear)
+```powershell
+# NÃO fazer: git restore . (perde trabalho)
+# NÃO fazer: git clean -fd (perde arquivos)
+
+# ✅ FAZER: Stash inteligente (preserva staged, guarda unstaged)
+git stash --keep-index -u  # guarda unstaged + untracked, mantém staged
+
+# Rodar verify (agora passa no gate)
+python scripts/run/hb_cli.py verify <id>
+
+# Recuperar unstaged depois (se necessário)
+git stash pop
+```
+
+**RAZÃO DO GATE**: Previne que validation_command rode contra código unstaged diferente do staged. Exemplo de risco:
+- Staged: `app/service.py` versão A (bugada)
+- Unstaged: `app/service.py` versão B (corrigida)
+- Sem gate: teste importa B (passa) mas commit leva A (quebra produção)
 
 ## VÍNCULOS (SSOT — Fonte Única da Verdade)
 Você DEVE tratar estes como autoritativos:

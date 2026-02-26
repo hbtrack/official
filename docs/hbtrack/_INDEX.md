@@ -128,6 +128,24 @@
 | AR_140 | Criar teste INV-TRAIN-058 session structure mutable | ✅ VERIFICADO | docs/hbtrack/evidence/AR_140/executor_main.log |
 | AR_141 | Criar teste INV-TRAIN-059 exercise order contiguous | ✅ VERIFICADO | docs/hbtrack/evidence/AR_141/executor_main.log |
 | AR_142 | Regressão completa de testes de invariantes | ✅ VERIFICADO | docs/hbtrack/evidence/AR_142/executor_main.log |
+| AR_143 | Atualizar TEST_MATRIX com status atualizado | 🔲 PENDENTE | docs/hbtrack/evidence/AR_143/executor_main.log |
+| AR_144 | DB: Exercise Bank — schema foundation | 🔲 PENDENTE | docs/hbtrack/evidence/AR_144/executor_main.log |
+| AR_145 | Service: exercise_service.py — guards Exercise Bank | 🔲 PENDENTE | docs/hbtrack/evidence/AR_145/executor_main.log |
+| AR_146 | Service: exercise_acl_service.py — criar serviço ACL | 🔲 PENDENTE | docs/hbtrack/evidence/AR_146/executor_main.log |
+| AR_147 | Service: catalog visibility + session exercise guard | 🔲 PENDENTE | docs/hbtrack/evidence/AR_147/executor_main.log |
+| AR_148 | Tests: Exercise Bank — todos os invariantes (047-053, EXB... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_148/executor_main.log |
+| AR_149 | DB: training_sessions.standalone — cycle hierarchy schema | 🔲 PENDENTE | docs/hbtrack/evidence/AR_149/executor_main.log |
 | AR_150 | Service: training_session_service.py — standalone + micro... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_150/executor_main.log |
+| AR_151 | Service: training_microcycle_service.py — meso date conta... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_151/executor_main.log |
+| AR_152 | Tests: Hierarquia de Ciclos — INV-054, 055, 056, 057 | 🔲 PENDENTE | docs/hbtrack/evidence/AR_152/executor_main.log |
+| AR_153 | DB: Attendance preconfirm + training_pending_items | 🔲 PENDENTE | docs/hbtrack/evidence/AR_153/executor_main.log |
+| AR_154 | Service: attendance_service.py — preconfirm + close flow | 🔲 PENDENTE | docs/hbtrack/evidence/AR_154/executor_main.log |
+| AR_155 | Service: training_pending_service.py + RBAC atleta | 🔲 PENDENTE | docs/hbtrack/evidence/AR_155/executor_main.log |
+| AR_156 | Service: Athlete UX — training visibility + exercise media | 🔲 PENDENTE | docs/hbtrack/evidence/AR_156/executor_main.log |
+| AR_157 | Service: wellness_post — campo conversacional (INV-070) | 🔲 PENDENTE | docs/hbtrack/evidence/AR_157/executor_main.log |
+| AR_158 | Tests: Attendance Avançada — INV-063 a 070 | 🔲 PENDENTE | docs/hbtrack/evidence/AR_158/executor_main.log |
+| AR_159 | Service: athlete_content_gate_service.py — Wellness Obrig... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_159/executor_main.log |
+| AR_160 | Tests: Wellness Obrigatória — INV-071, 076, 078 | 🔲 PENDENTE | docs/hbtrack/evidence/AR_160/executor_main.log |
+| AR_161 | Tests: Regressão final — todos os 84 invariantes | 🔲 PENDENTE | docs/hbtrack/evidence/AR_161/executor_main.log |
 | AR_998 | Test Write Scope Section Generation | ✅ VERIFICADO | docs/hbtrack/evidence/AR_998/executor_main.log |
 | AR_999 | Exemplo: Adicionar campo birthdate em Person | ✅ VERIFICADO | docs/hbtrack/evidence/AR_999/executor_main.log |
