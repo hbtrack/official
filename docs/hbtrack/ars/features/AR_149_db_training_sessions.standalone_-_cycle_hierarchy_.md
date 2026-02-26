@@ -1,6 +1,6 @@
 ﻿# AR_149 — DB: training_sessions.standalone — cycle hierarchy schema
 
-**Status**: 🔴 REJEITADO
+**Status**: � PENDENTE
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
