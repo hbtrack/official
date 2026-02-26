@@ -1,0 +1,31 @@
+AR_ID: 148
+Command: python temp/ar148_validate.py
+Exit Code: 0
+Timestamp UTC: 2026-02-26T13:23:39.359364+00:00
+Behavior Hash (exit+stdout+stderr): 69d7527ccfdd2e6602825f162320d5f1a3bf4bc8e82551f8f33d13548b93b412
+Git HEAD: 017cc0cded0901a43ae7ce24ee3368070ba9e375
+Python Version: 3.11.9
+Protocol Version: 1.3.0
+Workspace Clean: False
+Workspace Status: unstaged_modified=11
+Governed Checksums (sha256): {"Hb Track - Backend/app/core/exceptions.py": "e78e56c32a1b41d95d665e39a761dce790c95414f84d2f1b5c225c1629ad794e", "Hb Track - Backend/app/services/exercise_service.py": "a5be19475a30857e4b35aa58587a5fd369208b21c63537d66dbc9e8c1fc69767", "Hb Track - Backend/app/services/session_exercise_service.py": "f45db25f0e543cd2dcb3a0fbae0544b82534199ff0ffbe511aa125c38ebd4d13"}
+
+--- STDOUT ---
+============================================================
+AR_148 Validation: Exercise Bank Test Files
+============================================================
+[OK] test_inv_train_047_exercise_scope.py - 4 tests
+[OK] test_inv_train_049_exercise_org_scope.py - 4 tests
+[OK] test_inv_train_050_exercise_favorites_unique.py - 3 tests
+[OK] test_inv_train_052_exercise_media.py - 4 tests
+[OK] test_inv_train_exb_acl_001_visibility_mode.py - 4 tests
+[OK] test_inv_train_exb_acl_006_acl_table.py - 3 tests
+[OK] test_inv_train_148_exercise_bank_services.py - 16 tests
+
+============================================================
+PASS: All 7 test files exist with correct classes
+============================================================
+
+
+--- STDERR ---
+

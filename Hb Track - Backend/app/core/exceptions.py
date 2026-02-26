@@ -95,6 +95,57 @@ class SessionOutsideMicrocycleWeekError(BusinessError):
         super().__init__(error_key="SESSION_OUTSIDE_MICROCYCLE_WEEK", message=message)
 
 
+class ExerciseImmutableError(BusinessError):
+    """Exceção quando tentativa de modificar exercise SYSTEM (INV-048)."""
+    
+    def __init__(self, message: str = "Exercícios SYSTEM são imutáveis"):
+        super().__init__(error_key="EXERCISE_IMMUTABLE", message=message)
+
+
+class ExerciseReferencedError(BusinessError):
+    """Exceção quando tentativa de deletar exercise referenciado em sessões históricas (INV-053)."""
+    
+    def __init__(self, message: str = "Exercício referenciado em sessões históricas (soft delete aplicado)"):
+        super().__init__(error_key="EXERCISE_REFERENCED", message=message)
+
+
+# ACL Exceptions (INV-EXB-ACL-*)
+
+class AclNotApplicableError(BusinessError):
+    """Exceção quando ACL não aplicável (exercise não é restricted) (INV-EXB-ACL-002)."""
+    
+    def __init__(self, message: str = "ACL não aplicável a exercícios com visibility_mode != restricted"):
+        super().__init__(error_key="ACL_NOT_APPLICABLE", message=message)
+
+
+class AclCrossOrgError(BusinessError):
+    """Exceção quando tentativa de grant ACL cross-org (INV-EXB-ACL-003)."""
+    
+    def __init__(self, message: str = "Usuário não pertence à mesma organização do exercício"):
+        super().__init__(error_key="ACL_CROSS_ORG", message=message)
+
+
+class AclUnauthorizedError(BusinessError):
+    """Exceção quando não-criador tenta gerenciar ACL (INV-EXB-ACL-004)."""
+    
+    def __init__(self, message: str = "Apenas o criador do exercício pode gerenciar ACL"):
+        super().__init__(error_key="ACL_UNAUTHORIZED", message=message)
+
+
+class AclDuplicateError(BusinessError):
+    """Exceção quando tentativa de grant ACL duplicado (INV-EXB-ACL-006)."""
+    
+    def __init__(self, message: str = "Usuário já possui acesso a este exercício"):
+        super().__init__(error_key="ACL_DUPLICATE", message=message)
+
+
+class ExerciseNotVisibleError(BusinessError):
+    """Exceção quando exercício não está visível para o usuário (INV-062)."""
+    
+    def __init__(self, message: str = "Exercício não está acessível para este usuário"):
+        super().__init__(error_key="EXERCISE_NOT_VISIBLE", message=message)
+
+
 # ═════════════════════════════════════════════════════════════════════
 # Schemas de erro (contrato padronizado)
 # ═════════════════════════════════════════════════════════════════════

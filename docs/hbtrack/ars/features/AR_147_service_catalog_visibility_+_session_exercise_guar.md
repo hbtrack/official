@@ -1,6 +1,6 @@
 # AR_147 — Service: catalog visibility + session exercise guard
 
-**Status**: 🔲 PENDENTE
+**Status**: 🏗️ EM_EXECUCAO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -27,7 +27,7 @@ Adicionar guards de visibilidade ao catálogo e à adição de exercícios em se
 
 ## Validation Command (Contrato)
 ```
-cd "Hb Track - Backend" && python -m pytest tests/training/invariants/test_inv_train_148_exercise_bank_services.py::TestInvTrain148ExerciseBankServices::test_051_catalog_visibility tests/training/invariants/test_inv_train_148_exercise_bank_services.py::TestInvTrain148ExerciseBankServices::test_062_session_exercise_guard -v --tb=short 2>&1 | Select-String -Pattern 'PASSED|FAILED|ERROR'
+python temp/ar147_validate.py
 ```
 
 ## Evidence File (Contrato)
@@ -46,4 +46,44 @@ _(A ser preenchido pelo Executor)_
 ---
 ## Carimbo de Execução
 _(Gerado por hb report)_
+
+
+### Execução Executor em 017cc0c
+**Status Executor**: ❌ FALHA
+**Comando**: `python temp/ar147_validate.py`
+**Exit Code**: 1
+**Timestamp UTC**: 2026-02-26T13:15:19.209898+00:00
+**Behavior Hash**: f36ba26eb52247c02fe18b8fd355d06b1cf0ba20518cdd18af9076351398e2fa
+**Evidence File**: `docs/hbtrack/evidence/AR_147/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Execução Executor em 017cc0c
+**Status Executor**: ❌ FALHA
+**Comando**: `python temp/ar147_validate.py`
+**Exit Code**: 1
+**Timestamp UTC**: 2026-02-26T13:15:30.231570+00:00
+**Behavior Hash**: f36ba26eb52247c02fe18b8fd355d06b1cf0ba20518cdd18af9076351398e2fa
+**Evidence File**: `docs/hbtrack/evidence/AR_147/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Execução Executor em 017cc0c
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python temp/ar147_validate.py`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-26T13:16:33.285559+00:00
+**Behavior Hash**: 5073b547e3ad981207147a66cab5dd691435276ad1e7d202e27235c07d466cbf
+**Evidence File**: `docs/hbtrack/evidence/AR_147/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Execução Executor em 017cc0c
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python temp/ar147_validate.py`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-26T13:16:48.957921+00:00
+**Behavior Hash**: 5073b547e3ad981207147a66cab5dd691435276ad1e7d202e27235c07d466cbf
+**Evidence File**: `docs/hbtrack/evidence/AR_147/executor_main.log`
+**Python Version**: 3.11.9
 

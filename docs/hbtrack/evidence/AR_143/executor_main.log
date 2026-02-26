@@ -1,0 +1,18 @@
+AR_ID: 143
+Command: python -c "f=open('docs/_canon/specs/training_invariants_coverage_report.md','r'); c=f.read(); f.close(); lines=[l for l in c.split('\n') if 'INV-TRAIN' in l or 'EXB-ACL' in l]; print(f'Invariants in report: {len(lines)}'); assert len(lines)>=80, f'Expected >=80 invariants, got {len(lines)}'"
+Exit Code: 0
+Timestamp UTC: 2026-02-26T12:51:48.812472+00:00
+Behavior Hash (exit+stdout+stderr): 62d3f492abb11bf1e2a927abd51e5599673d6e69020a14ee8db2e67d642683e1
+Git HEAD: 017cc0cded0901a43ae7ce24ee3368070ba9e375
+Python Version: 3.11.9
+Protocol Version: 1.3.0
+Workspace Clean: False
+Workspace Status: unstaged_modified=4
+Governed Checksums (sha256): {}
+
+--- STDOUT ---
+Invariants in report: 90
+
+
+--- STDERR ---
+

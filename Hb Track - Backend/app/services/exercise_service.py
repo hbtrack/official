@@ -5,6 +5,7 @@ from fastapi import HTTPException, status
 from app.models.exercise_tag import ExerciseTag
 from app.models.exercise import Exercise
 from app.models.exercise_favorite import ExerciseFavorite
+from app.core.exceptions import ExerciseImmutableError, ExerciseReferencedError
 from uuid import UUID
 from typing import List, Optional
 from datetime import datetime
@@ -213,9 +214,14 @@ class ExerciseService:
     ) -> dict:
         """
         Lista exercícios com paginação e filtros.
+        
+        INV-051: Aplica filtros de visibilidade do catálogo:
+        - SYSTEM exercises: sempre visíveis
+        - ORG exercises: visíveis apenas para a mesma organização
+        - Deleted exercises: excluídos do catálogo
 
         Args:
-            organization_id: Filtrar por organização
+            organization_id: Filtrar por organização (OBRIGATÓRIO para INV-051)
             user_id: UUID do usuário (para filtro de favoritos)
             page: Número da página (1-indexed)
             per_page: Itens por página
@@ -227,7 +233,7 @@ class ExerciseService:
         Returns:
             Dict com exercises, total, page, per_page
         """
-        from sqlalchemy import func, or_
+        from sqlalchemy import func, or_, and_
 
         # Query base
         stmt = (
@@ -238,9 +244,32 @@ class ExerciseService:
             )
         )
 
-        # Filtro por organização
+        # INV-051: Filtro de visibilidade do catálogo
+        # 1. Excluir exercises deletadas
+        # 2. Incluir apenas SYSTEM ou ORG da mesma organização
+        visibility_filters = []
+        
+        # Excluir deletados (se coluna existir)
+        # SQLAlchemy aceita atributo mesmo que não esteja no model - verificação em runtime
+        deleted_filter = Exercise.deleted_at.is_(None) if hasattr(Exercise, 'deleted_at') else True
+        
         if organization_id:
-            stmt = stmt.where(Exercise.organization_id == organization_id)
+            # SYSTEM exercises ou ORG exercises da mesma org
+            scope_filter = or_(
+                getattr(Exercise, 'scope', None) == 'SYSTEM',
+                Exercise.organization_id == organization_id
+            ) if hasattr(Exercise, 'scope') else (Exercise.organization_id == organization_id)
+            
+            if hasattr(Exercise, 'deleted_at'):
+                stmt = stmt.where(and_(deleted_filter, scope_filter))
+            else:
+                stmt = stmt.where(scope_filter)
+        else:
+            # Sem organization_id: apenas SYSTEM (fallback seguro)
+            if hasattr(Exercise, 'scope'):
+                stmt = stmt.where(getattr(Exercise, 'scope', None) == 'SYSTEM')
+            if hasattr(Exercise, 'deleted_at'):
+                stmt = stmt.where(deleted_filter)
 
         # Filtro por favoritos
         if favorites_only and user_id:
@@ -303,21 +332,29 @@ class ExerciseService:
         Cria novo exercício com validação de tag_ids.
 
         Args:
-            data: Dados do exercício (name, description, tag_ids, category, media_url)
+            data: Dados do exercício (name, description, tag_ids, category, media_url, scope, visibility_mode)
             user_id: UUID do usuário criador
             organization_id: UUID da organização
 
         Raises:
             HTTPException 400: tag_ids inválidos ou inativos
+        
+        INV-060: visibility_mode defaults to 'restricted' for ORG exercises if not specified.
         """
         # Validar tag_ids
         if data.get('tag_ids'):
             await self._validate_tag_ids(data['tag_ids'])
 
+        # INV-060: Default restricted para exercícios ORG
+        scope = data.get('scope', 'ORG')
+        if scope == 'ORG' and 'visibility_mode' not in data:
+            data['visibility_mode'] = 'restricted'
+
         exercise = Exercise(
             **data,
             created_by_user_id=user_id,
-            organization_id=organization_id,
+            organization_id=organization_id if scope == 'ORG' else None,
+            scope=scope,
             created_at=datetime.utcnow(),
             updated_at=datetime.utcnow()
         )
@@ -344,6 +381,7 @@ class ExerciseService:
             HTTPException 404: Exercício não encontrado
             HTTPException 403: Exercício não pertence à organização
             HTTPException 400: tag_ids inválidos
+            ExerciseImmutableError: Exercício SYSTEM não pode ser modificado (INV-048)
         """
         exercise = await self.db.get(Exercise, exercise_id)
         if not exercise:
@@ -351,6 +389,10 @@ class ExerciseService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Exercise not found"
             )
+
+        # INV-048: Guard SYSTEM immutable
+        if hasattr(exercise, 'scope') and exercise.scope == 'SYSTEM':
+            raise ExerciseImmutableError("Exercícios SYSTEM são imutáveis. Use copy_system_exercise_to_org() para criar cópia editável.")
 
         # Validar escopo de organização
         if organization_id and exercise.organization_id != organization_id:
@@ -430,3 +472,112 @@ class ExerciseService:
         ).order_by(ExerciseFavorite.created_at.desc())
         result = await self.db.execute(stmt)
         return result.scalars().all()
+
+    # =========================================================================
+    # EXERCISE BANK GUARDS (INV-048, INV-053, INV-060, INV-061)
+    # =========================================================================
+
+    async def copy_system_exercise_to_org(
+        self,
+        exercise_id: UUID,
+        organization_id: UUID,
+        user_id: UUID
+    ) -> Exercise:
+        """
+        INV-061: Cria cópia ORG de um exercício SYSTEM.
+        
+        Args:
+            exercise_id: UUID do exercício SYSTEM a copiar
+            organization_id: UUID da organização destino
+            user_id: UUID do usuário que está copiando
+            
+        Returns:
+            Novo exercício com scope='ORG' e organization_id da org destino
+            
+        Raises:
+            HTTPException 404: Exercício não encontrado
+            HTTPException 400: Exercício não é SYSTEM
+        """
+        exercise = await self.db.get(Exercise, exercise_id)
+        if not exercise:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Exercise not found"
+            )
+        
+        if not hasattr(exercise, 'scope') or exercise.scope != 'SYSTEM':
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Only SYSTEM exercises can be copied to ORG"
+            )
+        
+        # Criar cópia com scope ORG
+        clone = Exercise(
+            name=f"{exercise.name} (cópia)",
+            description=exercise.description,
+            tag_ids=exercise.tag_ids if hasattr(exercise, 'tag_ids') else [],
+            category=exercise.category if hasattr(exercise, 'category') else None,
+            media_url=exercise.media_url if hasattr(exercise, 'media_url') else None,
+            scope='ORG',
+            visibility_mode='restricted',  # Default restricted conforme INV-060
+            organization_id=organization_id,
+            created_by_user_id=user_id,
+            created_at=datetime.utcnow(),
+            updated_at=datetime.utcnow()
+        )
+        self.db.add(clone)
+        await self.db.commit()
+        await self.db.refresh(clone)
+        return clone
+
+    async def soft_delete_exercise(
+        self,
+        exercise_id: UUID,
+        reason: str,
+        user_id: UUID
+    ) -> Exercise:
+        """
+        INV-053: Soft delete de exercício (deleted_at + deleted_reason).
+        
+        Não remove fisicamente se exercício está referenciado em sessões históricas.
+        Exercícios deletados não aparecem em catálogos mas continuam acessíveis
+        via session_exercise para histórico.
+        
+        Args:
+            exercise_id: UUID do exercício
+            reason: Motivo da exclusão
+            user_id: UUID do usuário que está deletando
+            
+        Returns:
+            Exercício com deleted_at/deleted_reason preenchidos
+            
+        Raises:
+            HTTPException 404: Exercício não encontrado
+            ExerciseImmutableError: Exercício SYSTEM não pode ser deletado
+        """
+        exercise = await self.db.get(Exercise, exercise_id)
+        if not exercise:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Exercise not found"
+            )
+        
+        # INV-048: Guard SYSTEM immutable (também não pode deletar)
+        if hasattr(exercise, 'scope') and exercise.scope == 'SYSTEM':
+            raise ExerciseImmutableError("Exercícios SYSTEM não podem ser deletados.")
+        
+        # Verificar se já está deletado
+        if hasattr(exercise, 'deleted_at') and exercise.deleted_at is not None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Exercise already deleted"
+            )
+        
+        # Aplicar soft delete
+        exercise.deleted_at = datetime.utcnow()
+        exercise.deleted_reason = reason
+        exercise.updated_at = datetime.utcnow()
+        
+        await self.db.commit()
+        await self.db.refresh(exercise)
+        return exercise

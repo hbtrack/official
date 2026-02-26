@@ -1,6 +1,6 @@
 # AR_144 — DB: Exercise Bank — schema foundation
 
-**Status**: 🔲 PENDENTE
+**Status**: 🏗️ EM_EXECUCAO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -57,7 +57,7 @@ Migração Alembic para adicionar colunas e tabelas do Exercise Bank:
 
 ## Validation Command (Contrato)
 ```
-cd "Hb Track - Backend" && python -m alembic upgrade head 2>&1 | Select-String -Pattern 'Running|ERROR|FAILED'; python -c "from app.db.session import engine; import sqlalchemy as sa; insp=sa.inspect(engine); cols=[c['name'] for c in insp.get_columns('exercises')]; assert 'scope' in cols, 'scope missing'; assert 'visibility_mode' in cols, 'visibility_mode missing'; assert 'deleted_at' in cols, 'deleted_at missing'; tbls=insp.get_table_names(); assert 'exercise_media' in tbls, 'exercise_media missing'; assert 'exercise_acl' in tbls, 'exercise_acl missing'; print('ALL CHECKS PASSED')" 2>&1
+python temp/ar144_validate.py
 ```
 
 ## Evidence File (Contrato)
@@ -80,9 +80,38 @@ Classe A (DB Constraint). organization_id DROP NOT NULL é a mudança mais arris
 - Se exercise_favorites PK já supre INV-050, adicionar UNIQUE duplicado pode causar erro — verificar antes e documentar
 
 ## Análise de Impacto
-_(A ser preenchido pelo Executor)_
+
+**Tipo**: DB Schema — Migration Alembic
+**Risco**: Médio — altera tabela existente (exercises), cria 2 novas tabelas
+**Arquivos afetados**:
+- CREATE: `Hb Track - Backend/db/alembic/versions/0065_exercise_bank_schema_foundation.py`
+
+**Mudanças em exercises table**:
+- ADD COLUMN scope VARCHAR(10) NOT NULL DEFAULT 'ORG' + CHECK IN ('SYSTEM','ORG')
+- ADD COLUMN visibility_mode VARCHAR(20) NOT NULL DEFAULT 'restricted' + CHECK IN ('org_wide','restricted')
+- ADD COLUMN deleted_at TIMESTAMP WITH TIME ZONE (nullable)
+- ADD COLUMN deleted_reason TEXT (nullable)
+- ADD CHECK ck_exercises_deleted_reason (ambos ou nenhum)
+- ADD CHECK ck_exercises_org_scope (SYSTEM→NULL org_id, ORG→NOT NULL org_id)
+- ALTER COLUMN organization_id DROP NOT NULL
+
+**Novas tabelas**:
+- exercise_media (id, exercise_id, media_type, url, title, order_index, created_by, timestamps)
+- exercise_acl (id, exercise_id, user_id, granted_by, granted_at)
+
+**Backward compat**: DEFAULT 'ORG' e DEFAULT 'restricted' garantem que exercises existentes continuam válidos
 
 ---
 ## Carimbo de Execução
 _(Gerado por hb report)_
+
+
+### Execução Executor em 017cc0c
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python temp/ar144_validate.py`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-26T13:03:46.981360+00:00
+**Behavior Hash**: d119f2257051979433e551a55a79ee9feee889c4c770724a953a224d6225cc85
+**Evidence File**: `docs/hbtrack/evidence/AR_144/executor_main.log`
+**Python Version**: 3.11.9
 

@@ -1,6 +1,6 @@
 # AR_145 — Service: exercise_service.py — guards Exercise Bank
 
-**Status**: 🔲 PENDENTE
+**Status**: 🏗️ EM_EXECUCAO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -22,7 +22,7 @@ Adicionar guards ao exercise_service.py existente para implementar as invariante
 
 ## Validation Command (Contrato)
 ```
-cd "Hb Track - Backend" && python -m pytest tests/training/invariants/test_inv_train_148_exercise_bank_services.py::TestInvTrain148ExerciseBankServices::test_048_system_immutable tests/training/invariants/test_inv_train_148_exercise_bank_services.py::TestInvTrain148ExerciseBankServices::test_060_default_restricted tests/training/invariants/test_inv_train_148_exercise_bank_services.py::TestInvTrain148ExerciseBankServices::test_053_soft_delete_preserves_history -v --tb=short 2>&1 | Select-String -Pattern 'PASSED|FAILED|ERROR'
+python temp/ar145_validate.py
 ```
 
 ## Evidence File (Contrato)
@@ -36,9 +36,47 @@ Classe C2 (Service com DB). Depende de Task 144 (schema scope/visibility_mode/de
 - INV-053: se session_exercises não tem FK para sessions.status, a queryhistórica pode ser custosa — usar indexed query
 
 ## Análise de Impacto
-_(A ser preenchido pelo Executor)_
+
+**Tipo**: Service — Guards de domínio Exercise Bank
+**Risco**: Baixo — adiciona guards sem quebrar funcionalidade existente
+**Arquivos afetados**:
+- MODIFY: `Hb Track - Backend/app/services/exercise_service.py`
+- MODIFY: `Hb Track - Backend/app/core/exceptions.py`
+
+**Mudanças em exceptions.py**:
+- ADD: ExerciseImmutableError (BusinessError subclass)
+- ADD: ExerciseReferencedError (BusinessError subclass)
+
+**Mudanças em exercise_service.py**:
+- ADD import: ExerciseImmutableError, ExerciseReferencedError
+- MODIFY create_exercise(): INV-060 default 'restricted' para ORG
+- MODIFY update_exercise(): INV-048 guard SYSTEM immutable
+- ADD copy_system_exercise_to_org(): INV-061 clone SYSTEM→ORG
+- ADD soft_delete_exercise(): INV-053 soft delete com deleted_at/deleted_reason
+
+**Backward compat**: Sim — todos os métodos existentes mantêm assinatura original
 
 ---
 ## Carimbo de Execução
 _(Gerado por hb report)_
+
+
+### Execução Executor em 017cc0c
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python temp/ar145_validate.py`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-26T13:07:07.064919+00:00
+**Behavior Hash**: ce0159efbf867e089810f53366f16032eb743e83721d3b432e55ef645105b2b5
+**Evidence File**: `docs/hbtrack/evidence/AR_145/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Execução Executor em 017cc0c
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python temp/ar145_validate.py`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-26T13:07:11.019164+00:00
+**Behavior Hash**: ce0159efbf867e089810f53366f16032eb743e83721d3b432e55ef645105b2b5
+**Evidence File**: `docs/hbtrack/evidence/AR_145/executor_main.log`
+**Python Version**: 3.11.9
 

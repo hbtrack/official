@@ -13,6 +13,8 @@ from fastapi import HTTPException, status
 from app.models.session_exercise import SessionExercise
 from app.models.training_session import TrainingSession
 from app.models.exercise import Exercise
+from app.models.exercise_acl import ExerciseAcl
+from app.core.exceptions import ExerciseNotVisibleError
 from app.schemas.session_exercises import (
     SessionExerciseCreate,
     SessionExerciseBulkCreate,
@@ -93,6 +95,58 @@ class SessionExerciseService:
         
         return session_exercise
     
+    async def _verify_exercise_visibility(
+        self,
+        exercise: Exercise,
+        session: TrainingSession,
+        user_id: UUID
+    ) -> None:
+        """
+        INV-062: Verifica se exercício está visível para o usuário na sessão.
+        
+        Args:
+            exercise: Exercício a verificar
+            session: Sessão de treino
+            user_id: ID do usuário que está adicionando
+            
+        Raises:
+            ExerciseNotVisibleError: Se exercício não está acessível
+        """
+        # SYSTEM exercises são sempre visíveis
+        scope = getattr(exercise, 'scope', 'ORG')
+        if scope == 'SYSTEM':
+            return
+        
+        # Verificar se exercise é da mesma organização que a sessão
+        if exercise.organization_id != session.organization_id:
+            raise ExerciseNotVisibleError("Exercício não pertence à mesma organização da sessão")
+        
+        # Verificar visibility_mode
+        visibility_mode = getattr(exercise, 'visibility_mode', 'org_wide')
+        
+        if visibility_mode == 'org_wide':
+            # ORG_WIDE: visível para todos da organização
+            return
+        
+        # visibility_mode == 'restricted': verificar ACL
+        # Criador sempre tem acesso (INV-EXB-ACL-005)
+        if exercise.created_by_user_id == user_id:
+            return
+        
+        # Verificar ACL entry
+        result = await self.db.execute(
+            select(ExerciseAcl).where(
+                and_(
+                    ExerciseAcl.exercise_id == exercise.id,
+                    ExerciseAcl.user_id == user_id
+                )
+            )
+        )
+        acl_entry = result.scalar_one_or_none()
+        
+        if not acl_entry:
+            raise ExerciseNotVisibleError("Usuário não tem acesso a este exercício restrito")
+    
     # ==================== ADD (CREATE) ====================
     
     async def add_exercise(
@@ -115,10 +169,14 @@ class SessionExerciseService:
         Raises:
             404: Sessão ou exercício não encontrado
             400: Conflict de order_index (já existe exercício naquela posição)
+            ExerciseNotVisibleError: Exercício não está acessível para o usuário (INV-062)
         """
         # Verificar existência
-        await self._verify_session_exists(session_id)
-        await self._verify_exercise_exists(data.exercise_id)
+        session = await self._verify_session_exists(session_id)
+        exercise = await self._verify_exercise_exists(data.exercise_id)
+        
+        # INV-062: Verificar visibilidade do exercício
+        await self._verify_exercise_visibility(exercise, session, user_id)
         
         # Criar vínculo
         session_exercise = SessionExercise(

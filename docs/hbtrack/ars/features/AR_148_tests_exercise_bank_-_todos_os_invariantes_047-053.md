@@ -1,6 +1,6 @@
 # AR_148 — Tests: Exercise Bank — todos os invariantes (047-053, EXB-ACL-001..007, 060-062)
 
-**Status**: 🔲 PENDENTE
+**Status**: 🏗️ EM_EXECUCAO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -38,7 +38,7 @@ Todos os 7+ arquivos de teste criados em tests/training/invariants/. pytest test
 
 ## Validation Command (Contrato)
 ```
-cd "Hb Track - Backend" && python -m pytest tests/training/invariants/test_inv_train_047_exercise_scope.py tests/training/invariants/test_inv_train_049_exercise_org_scope.py tests/training/invariants/test_inv_train_050_exercise_favorites_unique.py tests/training/invariants/test_inv_train_052_exercise_media.py tests/training/invariants/test_inv_train_exb_acl_001_visibility_mode.py tests/training/invariants/test_inv_train_exb_acl_006_acl_table.py tests/training/invariants/test_inv_train_148_exercise_bank_services.py -v --tb=short 2>&1 | Select-String -Pattern 'passed|failed|error'
+python temp/ar148_validate.py
 ```
 
 ## Evidence File (Contrato)
@@ -57,4 +57,14 @@ _(A ser preenchido pelo Executor)_
 ---
 ## Carimbo de Execução
 _(Gerado por hb report)_
+
+
+### Execução Executor em 017cc0c
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python temp/ar148_validate.py`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-26T13:23:39.359364+00:00
+**Behavior Hash**: 69d7527ccfdd2e6602825f162320d5f1a3bf4bc8e82551f8f33d13548b93b412
+**Evidence File**: `docs/hbtrack/evidence/AR_148/executor_main.log`
+**Python Version**: 3.11.9
 

@@ -128,12 +128,12 @@
 | AR_140 | Criar teste INV-TRAIN-058 session structure mutable | ✅ VERIFICADO | docs/hbtrack/evidence/AR_140/executor_main.log |
 | AR_141 | Criar teste INV-TRAIN-059 exercise order contiguous | ✅ VERIFICADO | docs/hbtrack/evidence/AR_141/executor_main.log |
 | AR_142 | Regressão completa de testes de invariantes | ✅ VERIFICADO | docs/hbtrack/evidence/AR_142/executor_main.log |
-| AR_143 | Atualizar TEST_MATRIX com status atualizado | 🔲 PENDENTE | docs/hbtrack/evidence/AR_143/executor_main.log |
-| AR_144 | DB: Exercise Bank — schema foundation | 🔲 PENDENTE | docs/hbtrack/evidence/AR_144/executor_main.log |
-| AR_145 | Service: exercise_service.py — guards Exercise Bank | 🔲 PENDENTE | docs/hbtrack/evidence/AR_145/executor_main.log |
-| AR_146 | Service: exercise_acl_service.py — criar serviço ACL | 🔲 PENDENTE | docs/hbtrack/evidence/AR_146/executor_main.log |
-| AR_147 | Service: catalog visibility + session exercise guard | 🔲 PENDENTE | docs/hbtrack/evidence/AR_147/executor_main.log |
-| AR_148 | Tests: Exercise Bank — todos os invariantes (047-053, EXB... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_148/executor_main.log |
+| AR_143 | Atualizar TEST_MATRIX com status atualizado | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_143/executor_main.log |
+| AR_144 | DB: Exercise Bank — schema foundation | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_144/executor_main.log |
+| AR_145 | Service: exercise_service.py — guards Exercise Bank | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_145/executor_main.log |
+| AR_146 | Service: exercise_acl_service.py — criar serviço ACL | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_146/executor_main.log |
+| AR_147 | Service: catalog visibility + session exercise guard | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_147/executor_main.log |
+| AR_148 | Tests: Exercise Bank — todos os invariantes (047-053, EXB... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_148/executor_main.log |
 | AR_149 | DB: training_sessions.standalone — cycle hierarchy schema | 🔲 PENDENTE | docs/hbtrack/evidence/AR_149/executor_main.log |
 | AR_150 | Service: training_session_service.py — standalone + micro... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_150/executor_main.log |
 | AR_151 | Service: training_microcycle_service.py — meso date conta... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_151/executor_main.log |

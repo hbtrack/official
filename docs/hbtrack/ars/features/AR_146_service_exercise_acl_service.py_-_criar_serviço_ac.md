@@ -1,6 +1,6 @@
 # AR_146 — Service: exercise_acl_service.py — criar serviço ACL
 
-**Status**: 🔲 PENDENTE
+**Status**: 🏗️ EM_EXECUCAO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -26,7 +26,7 @@ Criar novo arquivo Hb Track - Backend/app/services/exercise_acl_service.py imple
 
 ## Validation Command (Contrato)
 ```
-cd "Hb Track - Backend" && python -m pytest tests/training/invariants/test_inv_train_148_exercise_bank_services.py::TestInvTrain148ExerciseBankServices -k 'acl' -v --tb=short 2>&1 | Select-String -Pattern 'PASSED|FAILED|ERROR'
+python temp/ar146_validate.py
 ```
 
 ## Evidence File (Contrato)
@@ -40,9 +40,50 @@ Classe C2 (Service com DB). Depende de Task 144 (exercise_acl table existir com 
 - INV-EXB-ACL-007: verificar session_exercises históricas pode ser N+1 — usar EXISTS query
 
 ## Análise de Impacto
-_(A ser preenchido pelo Executor)_
+
+**Tipo**: Service — Novo serviço ACL de exercícios
+**Risco**: Baixo — novo arquivo sem impacto em existentes
+**Arquivos afetados**:
+- CREATE: `Hb Track - Backend/app/services/exercise_acl_service.py`
+- CREATE: `Hb Track - Backend/app/models/exercise_acl.py`
+- MODIFY: `Hb Track - Backend/app/core/exceptions.py`
+
+**Novas exceptions**:
+- AclNotApplicableError (INV-EXB-ACL-002)
+- AclCrossOrgError (INV-EXB-ACL-003)
+- AclUnauthorizedError (INV-EXB-ACL-004)
+- AclDuplicateError (INV-EXB-ACL-006)
+
+**Métodos implementados**:
+- has_access(): INV-EXB-ACL-005 creator bypass
+- grant_access(): INV-EXB-ACL-002/003/004/006
+- revoke_access(): INV-EXB-ACL-004/007
+- list_access(): lista ACL entries
+- change_visibility_to_org_wide(): INV-EXB-ACL-007
+
+**Dependências**: AR_144 (tabela exercise_acl)
 
 ---
 ## Carimbo de Execução
 _(Gerado por hb report)_
+
+
+### Execução Executor em 017cc0c
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python temp/ar146_validate.py`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-26T13:09:44.665633+00:00
+**Behavior Hash**: 4e07a15047a6db53b4b1ec29676eb8f01acdab365448ffa50d3c3369aafa2f78
+**Evidence File**: `docs/hbtrack/evidence/AR_146/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Execução Executor em 017cc0c
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python temp/ar146_validate.py`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-26T13:09:53.605305+00:00
+**Behavior Hash**: 4e07a15047a6db53b4b1ec29676eb8f01acdab365448ffa50d3c3369aafa2f78
+**Evidence File**: `docs/hbtrack/evidence/AR_146/executor_main.log`
+**Python Version**: 3.11.9
 
