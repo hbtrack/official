@@ -1,6 +1,6 @@
 # AR_148 — Tests: Exercise Bank — todos os invariantes (047-053, EXB-ACL-001..007, 060-062)
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ✅ SUCESSO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -58,7 +58,6 @@ _(A ser preenchido pelo Executor)_
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução Executor em 017cc0c
 **Status Executor**: 🏗️ EM_EXECUCAO
 **Comando**: `python temp/ar148_validate.py`
@@ -68,3 +67,10 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_148/executor_main.log`
 **Python Version**: 3.11.9
 
+
+### Verificacao Testador em 018412f
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_148_018412f/result.json`

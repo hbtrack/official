@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_146-018412f",
+  "timestamp_utc": "2026-02-26T14:28:40.998485+00:00",
+  "git": {
+    "commit": "018412f9272cc35667fe405c1713c3c404a3f021"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "146",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_146_service_exercise_acl_service.py_-_criar_serviço_ac.md"
+}
