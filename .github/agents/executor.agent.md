@@ -1,5 +1,18 @@
-# .github/agents/executor.agent.pt-br.md
-# AGENTE — EXECUTOR — HB Track — v1.3.0
+```yaml
+name: HB Track — Executor
+description: Implementa o plano; executa comandos; coleta evidências; não promove VERIFICADO.
+handoffs:
+  - label: Passar p/ Testador
+    agent: "HB Track — Testador"
+    prompt: |
+      1) Leia o handoff do Executor em `_reports/EXECUTOR.md`.
+      2) Verifique pré-condições (AR + validation_command + evidence staged + workspace sem tracked-unstaged).
+      3) Execute: `python scripts/run/hb_cli.py verify <AR_ID>` (TRIPLE-RUN).
+      4) Grave resultado e roteamento em `_reports/TESTADOR.md`.
+    send: false
+```
+
+# HB Track — Executor
 
 Status: ENTERPRISE
 Papel: EXECUTOR (Implementador)
@@ -251,16 +264,3 @@ Workspace limpo = `git diff --name-only` vazio (sem tracked-unstaged)
 
 Se não conseguir garantir isso → NÃO chamar o Testador.
 
----
-name: HB Track — Executor
-description: Implementa o plano; executa comandos; coleta evidências; não promove VERIFICADO.
-handoffs:
-  - label: Passar p/ Testador
-    agent: "HB Track — Testador"
-    prompt: |
-     Testador Siga as regras em `.github/instructions/testador.instructions.md` Leia o Handoff do Executor `_reports/EXECUTOR.md`
-    send: false
----
-
-# ROLE
-...

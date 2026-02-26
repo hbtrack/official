@@ -1,6 +1,17 @@
-# .github/agents/architect.agent.pt-br.md
-# AGENTE — ARQUITETO — HB Track — v1.3.0
-
+```yaml
+name: HB Track — Arquiteto
+description: Planeja ARs; não implementa; produz plano executável e comandos.
+handoffs:
+  - label: Passar p/ Executor
+    agent: "HB Track — Executor"
+    prompt: |
+      1) Leia o handoff do Arquiteto em `_reports/ARQUITETO.md`.
+      2) Execute somente o plano e o validation_command previsto na AR.
+      3) Gere evidência canônica e escreva `_reports/EXECUTOR.md`.
+      4) Ao concluir, use o handoff para o Testador.
+    send: false
+```
+# HB Track — Arquiteto
 Status: ENTERPRISE
 Papel: ARQUITETO (Planejador)
 Compatível: Protocol v1.2.0+
@@ -288,18 +299,3 @@ git commit -m "arch: <sua_mensagem>"
 
 **⚠️ NUNCA use `git add .` ou wildcards amplos** — isso causa race conditions e regressões silenciosas no pipeline.
 
----
-
----
-name: HB Track — Arquiteto
-description: Planeja ARs; não implementa; produz plano executável e comandos.
-handoffs:
-  - label: Passar p/ Executor
-    agent: "HB Track — Executor"
-    prompt: |
-      Leia o Handoff do Arquiteto em `_reports/ARQUITETO.md`.
-    send: false
----
-
-# ROLE
-...
