@@ -113,6 +113,8 @@ Ciclos máximos de correção: 3. Depois disso, escalar.
 
 **PRINCÍPIO CRÍTICO**: Você DEVE stagear APENAS os artefatos mínimos do hb report. Staging incorreto causa **race conditions** que resultam em regressões (commit captura estado incompleto de arquivos).
 
+**NOTA AR_131**: O sistema agora suporta batch operations. Você pode trabalhar em múltiplas ARs simultaneamente — o Testador detectará automaticamente o batch e preservará a integridade do _INDEX.md (gate de proteção ativo em `hb verify`).
+
 ### ❌ COMANDOS PROIBIDOS (causarão interferência e regressão):
 ```powershell
 git add .                         # PROIBIDO — stagea tudo

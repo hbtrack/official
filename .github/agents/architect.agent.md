@@ -169,6 +169,8 @@ Se `retry_count >= 3` (`MAX_RETRY_THRESHOLD`): NÃO DEVE prosseguir.
 
 **PRINCÍPIO CRÍTICO**: Cada agente DEVE stagear APENAS os artefatos do seu próprio domínio. Staging incorreto causa **race conditions** que resultam em regressões silenciosas (result.json mostra SUCESSO mas commit não contém o carimbo).
 
+**NOTA AR_131**: O sistema agora suporta batch operations sem desatualização do _INDEX.md. O `hb verify` detecta múltiplas ARs staged e pula `rebuild_ar_index()` automaticamente, preservando a integridade do índice.
+
 ### ❌ COMANDOS PROIBIDOS (causarão interferência e regressão):
 ```powershell
 git add .                         # PROIBIDO — stagea tudo, incluindo domínios de outros agentes

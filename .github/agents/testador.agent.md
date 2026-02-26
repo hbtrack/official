@@ -275,6 +275,8 @@ Você NÃO DEVE tratar o Kanban como autorização de commit.
 
 **PRINCÍPIO CRÍTICO**: Você NÃO DEVE interferir com alterações staged de outros agentes. A partir da v1.3.0, **hb verify agora stageia automaticamente o arquivo AR.md** (post-write validation + auto-staging). Você DEVE stagear APENAS o report do Testador.
 
+**GATE AR_131 — Batch Mode Protection**: `hb verify` agora detecta quando há múltiplas ARs staged (batch operations) e **pula automaticamente** o `rebuild_ar_index()` para preservar a integridade do _INDEX.md. Você verá a mensagem "⚠ BATCH MODE: N ARs staged. SKIP rebuild_ar_index (anti-desatualizacao)" quando o gate estiver ativo. Isso previne as 12+ ocorrências de desatualização do índice que estavam atrasando o sistema.
+
 ### ❌ COMANDOS PROIBIDOS (causarão interferência e regressão):
 ```powershell
 git add .                    # PROIBIDO — stagea tudo

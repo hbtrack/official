@@ -127,6 +127,9 @@ E_VERIFY_WRITE_RACE = "E_VERIFY_WRITE_RACE"  # Post-write validation failed: car
 
 E_TESTADOR_REPORT_NOT_STAGED = "E_TESTADOR_REPORT_NOT_STAGED"
 
+# Error codes determinísticos — AR_131 (gate de proteção _INDEX.md)
+E_VERIFY_BATCH_INDEX_SKIP = "E_VERIFY_BATCH_INDEX_SKIP"  # AR_131 (doc only, não usado em fail())
+
 E_SEAL_NOT_READY = "E_SEAL_NOT_READY"
 E_SEAL_MISSING_TESTADOR_REPORT = "E_SEAL_MISSING_TESTADOR_REPORT"
 E_SEAL_REPORT_NOT_STAGED = "E_SEAL_REPORT_NOT_STAGED"
@@ -638,7 +641,15 @@ def rollback_created_ars(ar_dir: Path, created_ars: List[str]) -> None:
 def rebuild_ar_index(repo_root: Path) -> None:
     """
     Auto-gera docs/hbtrack/_INDEX.md com tabela de todas as ARs.
-    Chamado ao final de cmd_plan e cmd_report.
+    
+    AVISO (AR_131): Esta função é DESTRUTIVA para batch operations.
+    Regenera o índice baseado no estado do disco, descartando ARs staged.
+    
+    Uso seguro:
+    - cmd_plan / cmd_seal: SEMPRE pode chamar (materialização/selo completo)
+    - cmd_verify: DEVE verificar get_staged_ars() antes de chamar
+      - Se len(staged_ars) > 1: SKIP rebuild (batch mode)
+      - Se len(staged_ars) <= 1: CALL rebuild (single AR ou cleanup)
     """
     from datetime import date
     ar_dir = repo_root / AR_DIR
@@ -1037,6 +1048,32 @@ def check_workspace_clean() -> Tuple[bool, str]:
         return False, f'unstaged_modified={len(lines)}'
     except Exception as e:
         return False, f'git_error={e}'
+
+
+def get_staged_ars(repo_root: Path) -> List[str]:
+    """AR_131: Retorna lista de AR_IDs staged via git diff --cached.
+    
+    Usado por cmd_verify para detectar batch operations e prevenir desatualização
+    do _INDEX.md quando múltiplas ARs estão em processamento.
+    
+    Retorna: Lista ordenada de AR_IDs (strings como '002', '032', '131').
+    Em caso de erro, retorna lista vazia (fallback seguro).
+    """
+    try:
+        result = subprocess.run(
+            ["git", "diff", "--cached", "--name-only"],
+            capture_output=True, text=True, encoding="utf-8", cwd=repo_root
+        )
+        lines = [l for l in result.stdout.strip().split("\n") if l.strip()]
+        ar_ids = []
+        for line in lines:
+            if "/AR_" in line and line.endswith(".md"):
+                m = re.search(r"AR_(\d+)", line)
+                if m:
+                    ar_ids.append(m.group(1))
+        return sorted(set(ar_ids))
+    except Exception:
+        return []  # Fallback seguro: assume batch vazio
 
 
 
@@ -1513,8 +1550,15 @@ def cmd_verify(ar_id: str) -> None:
             # Non-fatal: warn but don't block verify
             print(f"  ⚠ warning: could not stage {ar_file.name}: {e.stderr.decode()}")
         
-        # Rebuild _INDEX.md após atualizar Status (Layer 3: Index Consistency)
-        rebuild_ar_index(repo_root)
+        # V9.5: GATE AR_131 — Anti-Desatualização do _INDEX.md em batch (Layer 3: Index Consistency)
+        staged_ars = get_staged_ars(repo_root)
+        if len(staged_ars) > 1:
+            print(f"  ⚠ BATCH MODE: {len(staged_ars)} ARs staged. SKIP rebuild_ar_index (anti-desatualizacao).")
+            print(f"     ARs staged: {', '.join(staged_ars[:5])}{'...' if len(staged_ars) > 5 else ''}")
+        else:
+            # Rebuild _INDEX.md apenas se houver 1 AR ou nenhuma AR staged
+            rebuild_ar_index(repo_root)
+            print(f"  ✓ _INDEX.md rebuilt (single AR or cleanup mode)")
 
     print(f"{novo_status} | Consistency: {consistency}")
     if rejection_reason:

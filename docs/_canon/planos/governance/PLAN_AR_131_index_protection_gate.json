@@ -1,0 +1,27 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "AR_131: Gate de Proteção do _INDEX.md em hb verify (Anti-Desatualização em Batch). Correção crítica de governança. O hb verify estava destruindo _INDEX.md em batch operations ao chamar rebuild_ar_index() incondicionalmente.",
+  "assumptions": [
+    "git diff --cached detecta corretamente ARs staged",
+    "rebuild_ar_index é idempotente quando chamado 1x",
+    "cmd_verify deve ser READ-ONLY para _INDEX.md em batch mode"
+  ],
+  "tasks": [
+    {
+      "id": "131",
+      "title": "Adicionar gate de proteção: cmd_verify MUST NOT rebuild _INDEX.md se houver ARs staged",
+      "description": "O hb verify está destruindo a integridade do _INDEX.md quando há batch de ARs em paralelo. Cada hb verify chama rebuild_ar_index() que regenera o índice baseado no disco, descartando ARs staged que ainda não foram commitadas.\n\nProblema identificado:\n- Executor trabalha em 10 ARs simultaneamente\n- hb report de cada AR atualiza _INDEX.md\n- _INDEX.md fica staged com TODAS as ARs\n- Alguém faz git restore _INDEX.md (limpeza manual)\n- hb verify chama rebuild_ar_index() e regenera índice COM APENAS 1 AR\n- _INDEX.md perde as outras 9 ARs\n\nSolução:\n1. Adicionar função get_staged_ars() que detecta ARs staged via git diff --cached\n2. Modificar cmd_verify para chamar essa função ANTES de rebuild_ar_index\n3. Se houver múltiplas ARs staged (len > 1), cmd_verify MUST SKIP rebuild_ar_index\n4. Se houver apenas 1 AR ou nenhuma AR staged, cmd_verify pode chamar rebuild_ar_index normalmente\n\nImplementação:\nA) Adicionar get_staged_ars() após check_workspace_clean() (linha ~1040)\nB) Modificar cmd_verify linha ~1515 com gate condicional\nC) Adicionar error code E_VERIFY_BATCH_INDEX_SKIP\nD) Modificar rebuild_ar_index docstring\n\nEvidência de sucesso:\n- get_staged_ars() detecta corretamente ARs staged\n- _INDEX.md NÃO é regerado quando há múltiplas ARs staged\n- _INDEX.md É regerado quando há 1 AR ou batch vazio",
+      "criteria": "get_staged_ars() implementada e funcional. cmd_verify chama get_staged_ars() antes de rebuild_ar_index. Se len(staged_ars) > 1, SKIP rebuild_ar_index com mensagem de warning. Se len(staged_ars) <= 1, CALL rebuild_ar_index normalmente. Error code E_VERIFY_BATCH_INDEX_SKIP definido. rebuild_ar_index docstring atualizada. _INDEX.md preservado em batch de 10 ARs sem desatualização.",
+      "validation_command": "python -c \"import sys; import subprocess; result = subprocess.run(['python', 'scripts/run/hb_cli.py', 'verify', '--help'], capture_output=True, text=True); sys.exit(0 if result.returncode in [0, 1] else 1)\"",
+      "evidence_file": "docs/hbtrack/evidence/AR_131/executor_main.log",
+      "write_scope": [
+        "scripts/run/hb_cli.py"
+      ],
+      "ssot_touches": [],
+      "rollback_plan": "git checkout -- scripts/run/hb_cli.py",
+      "notes": "CRITICAL: Correção de governança que estava atrasando sistema em 12+ ocorrências. Anti-desatualização do _INDEX.md em batch mode."
+    }
+  ]
+}
+
