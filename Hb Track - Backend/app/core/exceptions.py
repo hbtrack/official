@@ -88,6 +88,13 @@ class ConflictError(Exception):
         super().__init__(self.message)
 
 
+class SessionOutsideMicrocycleWeekError(BusinessError):
+    """Exceção quando sessão de treino está fora da semana do microciclo (INV-057)."""
+    
+    def __init__(self, message: str = "Sessão fora da semana do microciclo"):
+        super().__init__(error_key="SESSION_OUTSIDE_MICROCYCLE_WEEK", message=message)
+
+
 # ═════════════════════════════════════════════════════════════════════
 # Schemas de erro (contrato padronizado)
 # ═════════════════════════════════════════════════════════════════════

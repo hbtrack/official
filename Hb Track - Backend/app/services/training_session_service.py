@@ -23,8 +23,10 @@ from app.core.exceptions import (
     NotFoundError,
     ValidationError,
     ForbiddenError,
+    SessionOutsideMicrocycleWeekError,
 )
 from app.models.training_session import TrainingSession
+from app.models.training_microcycle import TrainingMicrocycle
 from app.models.team import Team
 from app.models.season import Season
 from app.models.team_registration import TeamRegistration
@@ -214,6 +216,29 @@ class TrainingSessionService:
         if data.season_id:
             await self._check_season_locked(data.season_id)
 
+        # INV-TRAIN-054: standalone = True se sem microciclo, False caso contrário
+        standalone = data.microcycle_id is None
+        
+        # INV-TRAIN-057: validar que sessão está dentro da semana do microciclo
+        if data.microcycle_id:
+            microcycle_query = select(TrainingMicrocycle).where(
+                TrainingMicrocycle.id == data.microcycle_id,
+                TrainingMicrocycle.deleted_at.is_(None),
+            )
+            microcycle_result = await self.db.execute(microcycle_query)
+            microcycle = microcycle_result.scalar_one_or_none()
+            
+            if not microcycle:
+                raise NotFoundError(f"Microcycle {data.microcycle_id} not found")
+            
+            # Validar que session_at está dentro de [week_start, week_end]
+            session_date = data.session_at.date()
+            if not (microcycle.week_start <= session_date <= microcycle.week_end):
+                raise SessionOutsideMicrocycleWeekError(
+                    f"Sessão ({session_date}) fora da semana do microciclo "
+                    f"[{microcycle.week_start} - {microcycle.week_end}]"
+                )
+
         # season_id é opcional - Team não tem season_id
         session = TrainingSession(
             organization_id=team.organization_id,
@@ -230,6 +255,7 @@ class TrainingSessionService:
             created_by_user_id=self.context.user_id,
             # Campos de foco e microciclo
             microcycle_id=data.microcycle_id,
+            standalone=standalone,  # INV-TRAIN-054
             focus_attack_positional_pct=data.focus_attack_positional_pct,
             focus_defense_positional_pct=data.focus_defense_positional_pct,
             focus_transition_offense_pct=data.focus_transition_offense_pct,

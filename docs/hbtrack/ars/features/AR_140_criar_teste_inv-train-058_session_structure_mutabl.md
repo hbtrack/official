@@ -1,6 +1,6 @@
 # AR_140 — Criar teste INV-TRAIN-058 session structure mutable
 
-**Status**: 🔴 REJEITADO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -61,9 +61,26 @@ _(Gerado por hb report)_
 
 > 📋 Kanban routing: Arquiteto: Output não-determinístico: behavior_hash diverge nos 3 runs (exit 0 em todos, mas hash diferente)
 
-### Verificacao Testador em 83cbe5d
-**Status Testador**: 🔴 REJEITADO
-**Consistency**: AH_DIVERGENCE
-**Triple-Run**: FLAKY_OUTPUT (3x)
-**Exit Testador**: 2 | **Exit Executor**: 0
-**TESTADOR_REPORT**: `_reports/testador/AR_140_83cbe5d/result.json`
+### Execução Executor em caead8d
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import pathlib; f=pathlib.Path('Hb Track - Backend/tests/training/invariants/test_inv_train_058_session_structure_mutable.py'); assert f.exists(), 'FAIL AR_140: arquivo ausente'; c=f.read_text(encoding='utf-8'); assert 'TestInvTrain058' in c, 'FAIL AR_140: classe TestInvTrain058 ausente'; assert 'readonly' in c or 'session_structure' in c, 'FAIL AR_140: logica de mutabilidade ausente'; print('PASS AR_140: test_058 existe com TestInvTrain058 e logica de mutabilidade')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-26T11:26:01.537457+00:00
+**Behavior Hash**: 0b6237c3795d1b1ff64a48ad19b8b582565ce7568982f855ca95c49c5f9b9f41
+**Evidence File**: `docs/hbtrack/evidence/AR_140/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Verificacao Testador em caead8d
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_140_caead8d/result.json`
+
+### Selo Humano em caead8d
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-26T11:47:27.257500+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_140_caead8d/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_140/executor_main.log`

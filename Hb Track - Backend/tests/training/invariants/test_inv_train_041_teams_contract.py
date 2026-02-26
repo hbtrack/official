@@ -64,7 +64,7 @@ class TestInvTrain041TeamsContract:
     @staticmethod
     def _load_openapi_spec() -> dict:
         """Load OpenAPI JSON from generated schema"""
-        openapi_path = Path(__file__).parents[3] / "docs" / "_generated" / "openapi.json"
+        openapi_path = Path(__file__).parents[3] / "docs" / "ssot" / "openapi.json"
         with open(openapi_path, encoding="utf-8") as f:
             return json.load(f)
 

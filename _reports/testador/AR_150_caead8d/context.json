@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_150-caead8d",
+  "timestamp_utc": "2026-02-26T11:10:24.236152+00:00",
+  "git": {
+    "commit": "caead8d135e1ef9b21b5ef13c7d1a428fd37b015"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "150",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_150_service_training_session_service.py_-_standalone_+.md"
+}

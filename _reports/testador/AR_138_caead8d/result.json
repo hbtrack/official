@@ -1,0 +1,40 @@
+{
+  "ar_id": "138",
+  "validation_command": "python -c \"import pathlib; p=pathlib.Path('Hb Track - Backend/tests/training/invariants'); f040=(p/'test_inv_train_040_health_contract.py').read_text(encoding='utf-8'); f041=(p/'test_inv_train_041_teams_contract.py').read_text(encoding='utf-8'); assert '_generated' not in f040, 'FAIL 040: ainda usa _generated'; assert 'ssot' in f040, 'FAIL 040: ssot path ausente'; assert '_generated' not in f041, 'FAIL 041: ainda usa _generated'; assert 'ssot' in f041, 'FAIL 041: ssot path ausente'; print('PASS AR_138: testes 040 e 041 usam docs/ssot/openapi.json')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "0fa7296f46de9b2bb3a97a2901af4783bd8349c3d0b609195de85dd9a5fcb735",
+      "hash": "0fa7296f46de9b2b",
+      "stdout_len": 58,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "0fa7296f46de9b2bb3a97a2901af4783bd8349c3d0b609195de85dd9a5fcb735",
+      "hash": "0fa7296f46de9b2b",
+      "stdout_len": 58,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "0fa7296f46de9b2bb3a97a2901af4783bd8349c3d0b609195de85dd9a5fcb735",
+      "hash": "0fa7296f46de9b2b",
+      "stdout_len": 58,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

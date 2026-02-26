@@ -1,6 +1,6 @@
 # AR_139 — Revisar e corrigir testes DIVERGENTE 014 e 023
 
-**Status**: 🔴 REJEITADO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -61,9 +61,26 @@ _(Gerado por hb report)_
 
 > 📋 Kanban routing: Arquiteto: Output não-determinístico: behavior_hash diverge nos 3 runs (exit 0 em todos, mas hash diferente)
 
-### Verificacao Testador em 83cbe5d
-**Status Testador**: 🔴 REJEITADO
-**Consistency**: AH_DIVERGENCE
-**Triple-Run**: FLAKY_OUTPUT (3x)
-**Exit Testador**: 2 | **Exit Executor**: 0
-**TESTADOR_REPORT**: `_reports/testador/AR_139_83cbe5d/result.json`
+### Execução Executor em caead8d
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import pathlib; p=pathlib.Path('Hb Track - Backend/tests/training/invariants'); f14=(p/'test_inv_train_014_overload_alert_threshold.py').read_text(encoding='utf-8'); f23=(p/'test_inv_train_023_wellness_post_overload_alert_trigger.py').read_text(encoding='utf-8'); assert 'parents[3]' in f14, 'FAIL 014: correcao parents[3] ausente — path ainda incorreto'; assert f23.strip(), 'FAIL 023: arquivo vazio'; print('PASS AR_139: test_014 usa parents[3] e test_023 intacto')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-26T11:21:30.675448+00:00
+**Behavior Hash**: ca412e17207cde6c61757ad36e621206fb4115e60c1553885ad0d3769ddfe064
+**Evidence File**: `docs/hbtrack/evidence/AR_139/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Verificacao Testador em caead8d
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_139_caead8d/result.json`
+
+### Selo Humano em caead8d
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-26T11:47:20.223310+00:00
+**Motivo**: 140
+**TESTADOR_REPORT**: `_reports/testador/AR_139_caead8d/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_139/executor_main.log`

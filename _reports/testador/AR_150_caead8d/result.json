@@ -1,0 +1,40 @@
+{
+  "ar_id": "150",
+  "validation_command": "python -c \"import pathlib; exc_path = pathlib.Path('Hb Track - Backend/app/core/exceptions.py'); svc_path = pathlib.Path('Hb Track - Backend/app/services/training_session_service.py'); exc_code = exc_path.read_text(encoding='utf-8'); svc_code = svc_path.read_text(encoding='utf-8'); assert 'class SessionOutsideMicrocycleWeekError' in exc_code, 'FAIL: SessionOutsideMicrocycleWeekError nao encontrada em exceptions.py'; assert 'standalone = data.microcycle_id is None' in svc_code, 'FAIL: INV-054 guard (standalone) nao encontrado em training_session_service.py'; assert 'SessionOutsideMicrocycleWeekError' in svc_code, 'FAIL: INV-057 guard (levanta SessionOutsideMicrocycleWeekError) nao encontrado'; assert 'week_start <= session_date <= week_end' in svc_code or 'microcycle.week_start' in svc_code, 'FAIL: INV-057 validacao de range week_start/week_end nao encontrada'; print('PASS AR_150: Guards INV-054 e INV-057 implementados em training_session_service.py + SessionOutsideMicrocycleWeekError em exceptions.py')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "928b6286ac1cca4bd6d634301ca70e6247800a9253ea09a9272f4db70aabb234",
+      "hash": "928b6286ac1cca4b",
+      "stdout_len": 136,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "928b6286ac1cca4bd6d634301ca70e6247800a9253ea09a9272f4db70aabb234",
+      "hash": "928b6286ac1cca4b",
+      "stdout_len": 136,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "928b6286ac1cca4bd6d634301ca70e6247800a9253ea09a9272f4db70aabb234",
+      "hash": "928b6286ac1cca4b",
+      "stdout_len": 136,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

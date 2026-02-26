@@ -1,0 +1,40 @@
+{
+  "ar_id": "142",
+  "validation_command": "python -c \"import subprocess,sys,re; r=subprocess.run([sys.executable,'-m','pytest','tests/training/invariants/','-q','--no-header','-p','no:warnings','--tb=no'],capture_output=True,text=True,cwd='Hb Track - Backend'); m_pass=re.search(r'(\\d+) passed',r.stdout); m_fail=re.search(r'(\\d+) failed',r.stdout); passed=int(m_pass.group(1)) if m_pass else 0; failed=int(m_fail.group(1)) if m_fail else 0; assert failed<=126, f'FAIL AR_142: REGRESSAO {failed}>126'; assert passed>=1, f'FAIL AR_142: zero testes passaram'; print(f'PASS AR_142: {passed} passed {failed} failed baseline_ok')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "54a1c504d1b11c9069d6c6600606b31228ab1df7e0c7a8a556a2edf636377611",
+      "hash": "54a1c504d1b11c90",
+      "stdout_len": 47,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "54a1c504d1b11c9069d6c6600606b31228ab1df7e0c7a8a556a2edf636377611",
+      "hash": "54a1c504d1b11c90",
+      "stdout_len": 47,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "54a1c504d1b11c9069d6c6600606b31228ab1df7e0c7a8a556a2edf636377611",
+      "hash": "54a1c504d1b11c90",
+      "stdout_len": 47,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

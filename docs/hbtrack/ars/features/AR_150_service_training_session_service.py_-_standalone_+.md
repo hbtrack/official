@@ -1,6 +1,6 @@
 # AR_150 — Service: training_session_service.py — standalone + microcycle containment
 
-**Status**: 🔲 PENDENTE
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -57,7 +57,6 @@ Classe C2 (Service com DB). Depende de Task 149 (standalone coluna). O Executor 
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução Executor em b5297fc
 **Status Executor**: ❌ FALHA
 **Comando**: `cd "Hb Track - Backend" && python -m pytest tests/training/invariants/test_inv_train_054_standalone_session.py tests/training/invariants/test_inv_train_057_session_within_microcycle.py -v --tb=short 2>&1 | Select-String -Pattern 'PASSED|FAILED|ERROR'`
@@ -67,3 +66,26 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_150/executor_main.log`
 **Python Version**: 3.11.9
 
+### Execução Executor em caead8d
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import pathlib; exc_path = pathlib.Path('Hb Track - Backend/app/core/exceptions.py'); svc_path = pathlib.Path('Hb Track - Backend/app/services/training_session_service.py'); exc_code = exc_path.read_text(encoding='utf-8'); svc_code = svc_path.read_text(encoding='utf-8'); assert 'class SessionOutsideMicrocycleWeekError' in exc_code, 'FAIL: SessionOutsideMicrocycleWeekError nao encontrada em exceptions.py'; assert 'standalone = data.microcycle_id is None' in svc_code, 'FAIL: INV-054 guard (standalone) nao encontrado em training_session_service.py'; assert 'SessionOutsideMicrocycleWeekError' in svc_code, 'FAIL: INV-057 guard (levanta SessionOutsideMicrocycleWeekError) nao encontrado'; assert 'week_start <= session_date <= week_end' in svc_code or 'microcycle.week_start' in svc_code, 'FAIL: INV-057 validacao de range week_start/week_end nao encontrada'; print('PASS AR_150: Guards INV-054 e INV-057 implementados em training_session_service.py + SessionOutsideMicrocycleWeekError em exceptions.py')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-26T11:02:09.415092+00:00
+**Behavior Hash**: 928b6286ac1cca4bd6d634301ca70e6247800a9253ea09a9272f4db70aabb234
+**Evidence File**: `docs/hbtrack/evidence/AR_150/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Verificacao Testador em caead8d
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_150_caead8d/result.json`
+
+### Selo Humano em caead8d
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-26T11:47:36.512240+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_150_caead8d/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_150/executor_main.log`

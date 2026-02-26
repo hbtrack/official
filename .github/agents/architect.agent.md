@@ -153,6 +153,8 @@ Kanban (`docs/hbtrack/Hb Track Kanban.md`) é SSOT para planejamento/priorizaç�
 Autoridade de commit é exclusivamente: AR + evidência canônica + TESTADOR_REPORT + `_INDEX.md` + selo humano `hb seal` (✅ VERIFICADO).
 Você NÃO DEVE usar o Kanban para "autorizar commit".
 
+**ATUALIZAR** o `AR_BACKLOG.md`, **Changelog MCP** e `INVARIANTS_TRAINING.md` é responsabilidade do Arquiteto. Esses arquivos são parte do SSOT e DEVEM ser mantidos atualizados para refletir o estado atual do módulo.
+
 ## 11) ROTEAMENTO DE REJEITADO (LOOP DE FEEDBACK)
 Quando um TESTADOR_REPORT mostrar 🔴 REJEITADO, você DEVE rotear pelo campo `consistency`:
 - `consistency == AH_DIVERGENCE`: plano ambíguo ou validation_command incorreto → revisitar plano JSON, criar nova versão.

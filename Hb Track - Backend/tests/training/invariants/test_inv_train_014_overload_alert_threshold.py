@@ -21,7 +21,7 @@ class TestInvTrain014OverloadAlertThreshold:
     def test_alert_threshold_multiplier_default_is_1_5(self):
         """Verifica que o valor default do multiplicador é 1.5."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parents[3]
             / "app"
             / "services"
             / "training_alerts_service.py"
@@ -42,7 +42,7 @@ class TestInvTrain014OverloadAlertThreshold:
     def test_threshold_calculation_uses_multiplier(self):
         """Verifica que o cálculo de threshold usa o multiplicador."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parents[3]
             / "app"
             / "services"
             / "training_alerts_service.py"
@@ -60,7 +60,7 @@ class TestInvTrain014OverloadAlertThreshold:
     def test_weekly_overload_alert_type_exists(self):
         """Verifica que o tipo de alerta 'weekly_overload' existe."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parents[3]
             / "app"
             / "services"
             / "training_alerts_service.py"
@@ -74,7 +74,7 @@ class TestInvTrain014OverloadAlertThreshold:
     def test_severity_levels_exist(self):
         """Verifica que os níveis de severidade 'critical' e 'warning' existem."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parents[3]
             / "app"
             / "services"
             / "training_alerts_service.py"
@@ -91,7 +91,7 @@ class TestInvTrain014OverloadAlertThreshold:
     def test_check_weekly_overload_method_exists(self):
         """Verifica que existe método para checar sobrecarga semanal."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parents[3]
             / "app"
             / "services"
             / "training_alerts_service.py"

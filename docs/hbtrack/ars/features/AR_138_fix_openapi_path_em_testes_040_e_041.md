@@ -1,6 +1,6 @@
 # AR_138 — Fix openapi path em testes 040 e 041
 
-**Status**: 🔴 REJEITADO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -65,9 +65,35 @@ _(Gerado por hb report)_
 
 > 📋 Kanban routing: Arquiteto: Output não-determinístico: behavior_hash diverge nos 3 runs (exit 0 em todos, mas hash diferente)
 
-### Verificacao Testador em 83cbe5d
-**Status Testador**: 🔴 REJEITADO
-**Consistency**: AH_DIVERGENCE
-**Triple-Run**: FLAKY_OUTPUT (3x)
-**Exit Testador**: 2 | **Exit Executor**: 0
-**TESTADOR_REPORT**: `_reports/testador/AR_138_83cbe5d/result.json`
+### Execução Executor em caead8d
+**Status Executor**: ❌ FALHA
+**Comando**: `python -c "import pathlib; p=pathlib.Path('Hb Track - Backend/tests/training/invariants'); f040=(p/'test_inv_train_040_health_contract.py').read_text(encoding='utf-8'); f041=(p/'test_inv_train_041_teams_contract.py').read_text(encoding='utf-8'); assert '_generated' not in f040, 'FAIL 040: ainda usa _generated'; assert 'ssot' in f040, 'FAIL 040: ssot path ausente'; assert '_generated' not in f041, 'FAIL 041: ainda usa _generated'; assert 'ssot' in f041, 'FAIL 041: ssot path ausente'; print('PASS AR_138: testes 040 e 041 usam docs/ssot/openapi.json')"`
+**Exit Code**: 1
+**Timestamp UTC**: 2026-02-26T11:19:45.139626+00:00
+**Behavior Hash**: e340b5cda54e7fb10e0ad66fb07435b7ceed96290d12e360d1ef0d3083c4371a
+**Evidence File**: `docs/hbtrack/evidence/AR_138/executor_main.log`
+**Python Version**: 3.11.9
+
+### Execução Executor em caead8d
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import pathlib; p=pathlib.Path('Hb Track - Backend/tests/training/invariants'); f040=(p/'test_inv_train_040_health_contract.py').read_text(encoding='utf-8'); f041=(p/'test_inv_train_041_teams_contract.py').read_text(encoding='utf-8'); assert '_generated' not in f040, 'FAIL 040: ainda usa _generated'; assert 'ssot' in f040, 'FAIL 040: ssot path ausente'; assert '_generated' not in f041, 'FAIL 041: ainda usa _generated'; assert 'ssot' in f041, 'FAIL 041: ssot path ausente'; print('PASS AR_138: testes 040 e 041 usam docs/ssot/openapi.json')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-26T11:20:34.044228+00:00
+**Behavior Hash**: 0fa7296f46de9b2bb3a97a2901af4783bd8349c3d0b609195de85dd9a5fcb735
+**Evidence File**: `docs/hbtrack/evidence/AR_138/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Verificacao Testador em caead8d
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_138_caead8d/result.json`
+
+### Selo Humano em caead8d
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-26T11:47:13.266939+00:00
+**Motivo**: 139
+**TESTADOR_REPORT**: `_reports/testador/AR_138_caead8d/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_138/executor_main.log`

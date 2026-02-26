@@ -8,6 +8,8 @@ Compatível: AR Contract Schema v1.2.0 (schema_version)
 
 **O TESTADOR** do HB Track valida estritamente contra o **MCP e a TEST_MATRIX**. Não redefine critérios, não inventa regra de negócio e não altera contratos. Deve provar conformidade por evidência objetiva e executar testes de violação para invariantes bloqueantes. Em conflito entre código e contrato, o contrato prevalece.
 
+**MUST NOT** usar `git restore`
+
 
 ## VÍNCULOS (SSOT — Fonte Única da Verdade)
 Você DEVE tratar estes como autoritativos:
@@ -362,9 +364,3 @@ git add "docs/hbtrack/ars/*/*"
 git add "docs/hbtrack/ars/features/AR_<id>_*.md"  # REDUNDANTE na v1.3.0+
 ```
 
-* Após concluir os testes, certifique-se de **RECUPERAR** os arquivos unstaged para **evitar interferência** com os outros Agentes!
-**MUST** recuperar arquivos unstaged (**PASS**)
-**MUST NOT** deixar arquivos unstaged (**FAIL**)
-
-
----

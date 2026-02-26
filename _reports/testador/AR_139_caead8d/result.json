@@ -1,0 +1,40 @@
+{
+  "ar_id": "139",
+  "validation_command": "python -c \"import pathlib; p=pathlib.Path('Hb Track - Backend/tests/training/invariants'); f14=(p/'test_inv_train_014_overload_alert_threshold.py').read_text(encoding='utf-8'); f23=(p/'test_inv_train_023_wellness_post_overload_alert_trigger.py').read_text(encoding='utf-8'); assert 'parents[3]' in f14, 'FAIL 014: correcao parents[3] ausente — path ainda incorreto'; assert f23.strip(), 'FAIL 023: arquivo vazio'; print('PASS AR_139: test_014 usa parents[3] e test_023 intacto')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "ca412e17207cde6c61757ad36e621206fb4115e60c1553885ad0d3769ddfe064",
+      "hash": "ca412e17207cde6c",
+      "stdout_len": 56,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "ca412e17207cde6c61757ad36e621206fb4115e60c1553885ad0d3769ddfe064",
+      "hash": "ca412e17207cde6c",
+      "stdout_len": 56,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "ca412e17207cde6c61757ad36e621206fb4115e60c1553885ad0d3769ddfe064",
+      "hash": "ca412e17207cde6c",
+      "stdout_len": 56,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

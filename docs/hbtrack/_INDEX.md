@@ -123,12 +123,11 @@
 | AR_134 | Atualizar TRAINING_FRONT_BACK_CONTRACT.md com contratos F... | ✅ SUCESSO | docs/hbtrack/evidence/AR_134/executor_main.log |
 | AR_135 | Atualizar TRAINING_USER_FLOWS.md com 6 novos fluxos FASE_3 | ✅ SUCESSO | docs/hbtrack/evidence/AR_135/executor_main.log |
 | AR_136 | Atualizar TRAINING_SCREENS_SPEC.md com 4 novas telas FASE_3 | ✅ SUCESSO | docs/hbtrack/evidence/AR_136/executor_main.log |
-| AR_137 | AR-TRAIN-003: Corrigir wellness FE (paths + payload + sel... | ✅ SUCESSO | docs/hbtrack/evidence/AR_137/executor_main.log |
-| AR_138 | Fix openapi path em testes 040 e 041 | 🔴 REJEITADO | docs/hbtrack/evidence/AR_138/executor_main.log |
-| AR_139 | Revisar e corrigir testes DIVERGENTE 014 e 023 | 🔴 REJEITADO | docs/hbtrack/evidence/AR_139/executor_main.log |
-| AR_140 | Criar teste INV-TRAIN-058 session structure mutable | 🔴 REJEITADO | docs/hbtrack/evidence/AR_140/executor_main.log |
-| AR_141 | Criar teste INV-TRAIN-059 exercise order contiguous | 🔴 REJEITADO | docs/hbtrack/evidence/AR_141/executor_main.log |
-| AR_142 | Regressão completa de testes de invariantes | 🔴 REJEITADO | docs/hbtrack/evidence/AR_142/executor_main.log |
-| AR_143 | Atualizar TEST_MATRIX com status atualizado | ✅ SUCESSO | docs/hbtrack/evidence/AR_143/executor_main.log |
+| AR_138 | Fix openapi path em testes 040 e 041 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_138/executor_main.log |
+| AR_139 | Revisar e corrigir testes DIVERGENTE 014 e 023 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_139/executor_main.log |
+| AR_140 | Criar teste INV-TRAIN-058 session structure mutable | ✅ VERIFICADO | docs/hbtrack/evidence/AR_140/executor_main.log |
+| AR_141 | Criar teste INV-TRAIN-059 exercise order contiguous | ✅ VERIFICADO | docs/hbtrack/evidence/AR_141/executor_main.log |
+| AR_142 | Regressão completa de testes de invariantes | ✅ VERIFICADO | docs/hbtrack/evidence/AR_142/executor_main.log |
+| AR_150 | Service: training_session_service.py — standalone + micro... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_150/executor_main.log |
 | AR_998 | Test Write Scope Section Generation | ✅ VERIFICADO | docs/hbtrack/evidence/AR_998/executor_main.log |
 | AR_999 | Exemplo: Adicionar campo birthdate em Person | ✅ VERIFICADO | docs/hbtrack/evidence/AR_999/executor_main.log |
