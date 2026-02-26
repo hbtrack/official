@@ -1,18 +1,25 @@
 # AR_BACKLOG_TRAINING.md — Backlog de ARs (Materialização) do Módulo TRAINING
 
 Status: DRAFT  
-Versão: v1.2.0  
+Versão: v1.3.0  
 Tipo de Documento: AR Materialization Backlog (Normativo Operacional / SSOT)  
 Módulo: TRAINING  
-Fase: FASE_2 (PRD v2.2 — 2026-02-20) + DEC-TRAIN-* (2026-02-25)  
+Fase: FASE_2 (PRD v2.2 — 2026-02-20) + DEC-TRAIN-* (2026-02-25) + FASE_3 (2026-02-27)  
 Autoridade: NORMATIVO_OPERACIONAL  
 Owners:
 - Arquitetura (Arquiteto): Codex (Arquiteto v2.2.0)
 - Execução (Executor): (a definir)
 - Auditoria/Testes: (a definir)
 
-Última revisão: 2026-02-26  
-Próxima revisão recomendada: 2026-03-04  
+Última revisão: 2026-02-27  
+Próxima revisão recomendada: 2026-03-06  
+
+> Changelog v1.3.0 (2026-02-27):  
+> - FASE_3: Adicionado Lote 5 com AR-TRAIN-015..021 (ciclos, sessão, presença oficial, pending queue, visão atleta, pós-treino, IA coach)  
+> - AR-TRAIN-001 progresso: materialização parcial via AR_126..130 (Step18 UUID convergence, commit 869e061)  
+> - INV-TRAIN-EXB-ACL-001 AMENDADA: default `org_wide` → `restricted` (consistência com INV-TRAIN-060)  
+> - Novos alvos SSOT: INV-TRAIN-054..081, FLOW-TRAIN-016..021, SCREEN-TRAIN-022..025, CONTRACT-TRAIN-096..105  
+> - Novos GAPs implícitos: ciclos hierarchy, presença oficial, IA coach (a detalhar em §2 se necessário)  
 
 > Changelog v1.2.0 (2026-02-26):  
 > - Adicionada Authority Matrix (separação Arquiteto/Executor/Testador)  
@@ -261,6 +268,15 @@ Decompor a materialização do módulo TRAINING em ARs pequenas, rastreáveis, t
 13. AR-TRAIN-013 (B/E) — Implementar endpoints ACL + copy SYSTEM→ORG + visibilidade
 14. AR-TRAIN-014 (D) — Materializar UI scope/visibility/ACL/mídia no exercise-bank FE
 
+### Lote 5 — FASE_3: Ciclos, Presença oficial, Visão atleta, IA (A/B/E/D)
+15. AR-TRAIN-015 (A/B) — Schema + Service ciclos hierarchy (macro→meso→micro)
+16. AR-TRAIN-016 (B/E) — Sessão standalone + mutabilidade + order_index exercícios
+17. AR-TRAIN-017 (B/E) — Presença oficial (pre-confirm atleta + closure treinador + pending)
+18. AR-TRAIN-018 (D/E) — UI fila de pendências (pending queue treinador)
+19. AR-TRAIN-019 (D/E) — Visão pré-treino atleta + wellness content gate
+20. AR-TRAIN-020 (B/E) — Pós-treino conversacional + feedback imediato
+21. AR-TRAIN-021 (B/E) — IA coach (drafts, chat, justificativas, privacidade)
+
 ---
 
 ## 7) Tabela resumo do backlog de ARs
@@ -281,6 +297,13 @@ Decompor a materialização do módulo TRAINING em ARs pequenas, rastreáveis, t
 | AR-TRAIN-012 | B/E | ALTA | Guards de escopo SYSTEM/ORG + RBAC "Treinador" + service ACL + visibilidade | INV-TRAIN-048/051, INV-TRAIN-EXB-ACL-002..005/007 | AR-TRAIN-011 | PENDENTE |
 | AR-TRAIN-013 | B/E | MEDIA | Endpoints ACL + copy SYSTEM→ORG + toggle visibilidade | CONTRACT-TRAIN-091..095, INV-TRAIN-EXB-ACL-001..007 | AR-TRAIN-012 | PENDENTE |
 | AR-TRAIN-014 | D | MEDIA | UI scope/visibility/ACL/mídia no exercise-bank FE | SCREEN-TRAIN-010/011, FLOW-TRAIN-009 | AR-TRAIN-013 | PENDENTE |
+| AR-TRAIN-015 | A/B | ALTA | Schema + Service ciclos hierarchy (macro→meso→micro) | INV-TRAIN-054..056, FLOW-TRAIN-016 | - | PENDENTE |
+| AR-TRAIN-016 | B/E | ALTA | Sessão standalone + mutabilidade + order_index exercícios | INV-TRAIN-057..059 | - | PENDENTE |
+| AR-TRAIN-017 | B/E | ALTA | Presença oficial (pre-confirm + closure + pending) | INV-TRAIN-063..066, FLOW-TRAIN-017, SCREEN-TRAIN-023, CONTRACT-TRAIN-097/098 | - | PENDENTE |
+| AR-TRAIN-018 | D/E | ALTA | UI fila de pendências (pending queue treinador) | INV-TRAIN-066/067, FLOW-TRAIN-018, SCREEN-TRAIN-023, CONTRACT-TRAIN-099/100 | AR-TRAIN-017 | PENDENTE |
+| AR-TRAIN-019 | D/E | ALTA | Visão pré-treino atleta + wellness content gate | INV-TRAIN-068/069/071/076/078, FLOW-TRAIN-016/021, SCREEN-TRAIN-022, CONTRACT-TRAIN-096/105 | AR-TRAIN-017 | PENDENTE |
+| AR-TRAIN-020 | B/E | MEDIA | Pós-treino conversacional + feedback imediato | INV-TRAIN-070/077 | AR-TRAIN-019 | PENDENTE |
+| AR-TRAIN-021 | B/E | MEDIA | IA coach (drafts, chat, justificativas, privacidade) | INV-TRAIN-072..075/079..081, FLOW-TRAIN-019/020, SCREEN-TRAIN-024/025, CONTRACT-TRAIN-101..104 | AR-TRAIN-020 | PENDENTE |
 
 ---
 
@@ -830,6 +853,263 @@ cd "Hb Track - Backend" && alembic upgrade head && python -c "from app.models.ex
 
 ---
 
+### AR-TRAIN-015 — Schema + Service ciclos hierarchy (macro→meso→micro)
+
+**Status:** PENDENTE  
+**Classe:** A/B  
+**Prioridade:** ALTA  
+**Fase:** FASE_3  
+**Objetivo da AR (1 frase):** Garantir que ciclos macro→meso→micro tenham hierarquia FK obrigatória (INV-054), meso overlap permitido (INV-055) e micro contido em meso (INV-056).
+
+#### 8.1 Alvos SSOT
+**Invariantes:** INV-TRAIN-054, INV-TRAIN-055, INV-TRAIN-056  
+**Flows:** FLOW-TRAIN-016 (parcial)  
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** -
+
+#### 8.5 WRITE
+- `Hb Track - Backend/app/models/training_cycle.py` (FK hierarchy)
+- `Hb Track - Backend/app/services/training_cycle_service.py` (validação containment)
+
+#### 8.7 AC binário
+##### AC-001
+**PASS:** Micro-ciclo sem `mesocycle_id` válido é rejeitado (FK enforced).  
+**FAIL:** Criação aceita micro sem meso.
+
+##### AC-002
+**PASS:** Micro-ciclo com datas fora do range do meso é rejeitado pelo service.  
+**FAIL:** Micro fora do intervalo aceito.
+
+##### AC-003
+**PASS:** Dois meso-ciclos com overlap temporal no mesmo macro são aceitos.  
+**FAIL:** Overlap rejeitado indevidamente.
+
+---
+
+### AR-TRAIN-016 — Sessão standalone + mutabilidade + order_index exercícios
+
+**Status:** PENDENTE  
+**Classe:** B/E  
+**Prioridade:** ALTA  
+**Fase:** FASE_3  
+**Objetivo da AR (1 frase):** Garantir que sessão suporte flag `standalone` explícito (INV-057), estrutura mutável até close (INV-058) e `order_index` contíguo/único em exercícios (INV-059).
+
+#### 8.1 Alvos SSOT
+**Invariantes:** INV-TRAIN-057, INV-TRAIN-058, INV-TRAIN-059  
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** -
+
+#### 8.5 WRITE
+- `Hb Track - Backend/app/services/training_session_service.py` (standalone flag + mutable guard)
+- `Hb Track - Backend/app/services/session_exercise_service.py` (order_index validation)
+
+#### 8.7 AC binário
+##### AC-001
+**PASS:** Sessão sem micro-ciclo requer `is_standalone=true`; sessão em ciclo requer `is_standalone=false`.  
+**FAIL:** Flag inconsistente aceito.
+
+##### AC-002
+**PASS:** PATCH em sessão `closed` retorna 409/403 (estrutura imutável após close).  
+**FAIL:** Sessão fechada permite edição de exercícios.
+
+##### AC-003
+**PASS:** `order_index` dos exercícios é contíguo (1,2,3...) e unique por sessão; reorder mantém contiguidade.  
+**FAIL:** Gaps ou duplicatas em `order_index`.
+
+---
+
+### AR-TRAIN-017 — Presença oficial (pre-confirm + closure + pending)
+
+**Status:** PENDENTE  
+**Classe:** B/E  
+**Prioridade:** ALTA  
+**Fase:** FASE_3  
+**Objetivo da AR (1 frase):** Implementar presença oficial: pré-confirmação do atleta (não oficial, INV-063), presença oficial no fechamento pelo treinador (INV-064), inconsistências viram pending (INV-065/066).
+
+#### 8.1 Alvos SSOT
+**Invariantes:** INV-TRAIN-063, INV-TRAIN-064, INV-TRAIN-065, INV-TRAIN-066  
+**Flows:** FLOW-TRAIN-017  
+**Screens:** SCREEN-TRAIN-023 (parcial)  
+**Contracts:** CONTRACT-TRAIN-097, CONTRACT-TRAIN-098  
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** -
+
+#### 8.5 WRITE
+- `Hb Track - Backend/app/services/attendance_service.py` (pre-confirm + official at closure)
+- `Hb Track - Backend/app/api/v1/routers/attendance.py` (novos endpoints pre-confirm/close)
+- `Hb Track - Backend/app/models/pending_item.py` (novo — fila de pendências)
+
+#### 8.7 AC binário
+##### AC-001
+**PASS:** Pré-confirmação do atleta gera registro `is_official=false`; não altera status oficial.  
+**FAIL:** Pré-confirmação cria presença oficial.
+
+##### AC-002
+**PASS:** Fechamento da sessão pelo treinador gera registros oficiais; divergências viram itens pending.  
+**FAIL:** Fechamento ignora inconsistências sem gerar pending.
+
+##### AC-003
+**PASS:** Atleta que pré-confirmou mas treinador marcou ausente gera pending com ambas as versões.  
+**FAIL:** Discrepância silenciada.
+
+---
+
+### AR-TRAIN-018 — UI fila de pendências (pending queue treinador)
+
+**Status:** PENDENTE  
+**Classe:** D/E  
+**Prioridade:** ALTA  
+**Fase:** FASE_3  
+**Objetivo da AR (1 frase):** Materializar UI de fila de pendências para o treinador resolver discrepâncias de presença, com colaboração do atleta sem poder de validação (INV-066/067).
+
+#### 8.1 Alvos SSOT
+**Invariantes:** INV-TRAIN-066, INV-TRAIN-067  
+**Flows:** FLOW-TRAIN-018  
+**Screens:** SCREEN-TRAIN-023  
+**Contracts:** CONTRACT-TRAIN-099, CONTRACT-TRAIN-100  
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** AR-TRAIN-017
+
+#### 8.5 WRITE
+- `Hb Track - Frontend/src/app/(admin)/training/pending-queue/*` (novo)
+- `Hb Track - Frontend/src/lib/api/pending.ts` (novo)
+
+#### 8.7 AC binário
+##### AC-001
+**PASS:** Treinador vê lista de itens pending filtráveis por sessão/atleta/data.  
+**FAIL:** Fila não renderizada ou sem filtros.
+
+##### AC-002
+**PASS:** Atleta pode enviar justificativa/evidência ao item pending, mas NÃO pode validar/fechar.  
+**FAIL:** Atleta consegue resolver o item por conta própria.
+
+##### AC-003
+**PASS:** Treinador resolve item pending com novo `presence_status` final e justificativa.  
+**FAIL:** Resolução não atualiza attendance oficial.
+
+---
+
+### AR-TRAIN-019 — Visão pré-treino atleta + wellness content gate
+
+**Status:** PENDENTE  
+**Classe:** D/E  
+**Prioridade:** ALTA  
+**Fase:** FASE_3  
+**Objetivo da AR (1 frase):** Permitir que atleta visualize treino antes da sessão (INV-068/069), com bloqueio de conteúdo completo se wellness obrigatório não preenchido (INV-071/076/078).
+
+#### 8.1 Alvos SSOT
+**Invariantes:** INV-TRAIN-068, INV-TRAIN-069, INV-TRAIN-071, INV-TRAIN-076, INV-TRAIN-078  
+**Flows:** FLOW-TRAIN-016, FLOW-TRAIN-021  
+**Screens:** SCREEN-TRAIN-022  
+**Contracts:** CONTRACT-TRAIN-096, CONTRACT-TRAIN-105  
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** AR-TRAIN-017
+
+#### 8.5 WRITE
+- `Hb Track - Backend/app/api/v1/routers/athlete_training.py` (novo — preview endpoint)
+- `Hb Track - Backend/app/services/wellness_gate_service.py` (novo — content gate)
+- `Hb Track - Frontend/src/app/(athlete)/training/[sessionId]/*` (novo)
+
+#### 8.7 AC binário
+##### AC-001
+**PASS:** Atleta vê preview do treino (exercícios, horário, objetivos) antes da sessão.  
+**FAIL:** 404 ou conteúdo inacessível.
+
+##### AC-002
+**PASS:** Atleta sem wellness pré preenchido recebe `wellness_blocked=true` e vê conteúdo reduzido.  
+**FAIL:** Conteúdo completo sem wellness.
+
+##### AC-003
+**PASS:** Mídia de exercícios (vídeo/imagem) acessível ao atleta na visão de preview.  
+**FAIL:** Mídia bloqueada para atleta.
+
+##### AC-004
+**PASS:** Tela de progresso exige compliance wellness (INV-078).  
+**FAIL:** Progresso visível sem compliance.
+
+---
+
+### AR-TRAIN-020 — Pós-treino conversacional + feedback imediato
+
+**Status:** PENDENTE  
+**Classe:** B/E  
+**Prioridade:** MEDIA  
+**Fase:** FASE_3  
+**Objetivo da AR (1 frase):** Implementar coleta pós-treino conversacional (INV-070) com feedback imediato do coach virtual (INV-077).
+
+#### 8.1 Alvos SSOT
+**Invariantes:** INV-TRAIN-070, INV-TRAIN-077  
+**Flows:** FLOW-TRAIN-020 (parcial)  
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** AR-TRAIN-019
+
+#### 8.5 WRITE
+- `Hb Track - Backend/app/services/post_training_service.py` (novo)
+- `Hb Track - Backend/app/api/v1/routers/post_training.py` (novo)
+
+#### 8.7 AC binário
+##### AC-001
+**PASS:** Atleta pode submeter feedback pós-treino via interface conversacional (não apenas formulário).  
+**FAIL:** Interface pós-treino é formulário estático sem conversação.
+
+##### AC-002
+**PASS:** Coach virtual gera feedback imediato baseado nos dados da sessão + wellness.  
+**FAIL:** Feedback ausente ou genérico sem dados da sessão.
+
+---
+
+### AR-TRAIN-021 — IA coach (drafts, chat, justificativas, privacidade)
+
+**Status:** PENDENTE  
+**Classe:** B/E  
+**Prioridade:** MEDIA  
+**Fase:** FASE_3  
+**Objetivo da AR (1 frase):** Implementar IA coach: sugestões como rascunhos (INV-075/080), chat atleta (INV-072/073), conteúdo educativo independente (INV-074), justificativas obrigatórias (INV-081), privacidade (INV-079).
+
+#### 8.1 Alvos SSOT
+**Invariantes:** INV-TRAIN-072, INV-TRAIN-073, INV-TRAIN-074, INV-TRAIN-075, INV-TRAIN-079, INV-TRAIN-080, INV-TRAIN-081  
+**Flows:** FLOW-TRAIN-019, FLOW-TRAIN-020  
+**Screens:** SCREEN-TRAIN-024, SCREEN-TRAIN-025  
+**Contracts:** CONTRACT-TRAIN-101, CONTRACT-TRAIN-102, CONTRACT-TRAIN-103, CONTRACT-TRAIN-104  
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** AR-TRAIN-020
+
+#### 8.5 WRITE
+- `Hb Track - Backend/app/services/ai_coach_service.py` (novo)
+- `Hb Track - Backend/app/api/v1/routers/ai_coach.py` (novo)
+- `Hb Track - Frontend/src/app/(athlete)/ai-chat/[sessionId]/*` (novo)
+- `Hb Track - Frontend/src/components/training/AICoachDraftModal.tsx` (novo)
+
+#### 8.7 AC binário
+##### AC-001
+**PASS:** Sugestão IA para treinador é rascunho (`draft=true`) que requer aprovação explícita (INV-075/080).  
+**FAIL:** Sugestão aplicada automaticamente sem aprovação.
+
+##### AC-002
+**PASS:** Chat IA com atleta não contém conteúdo íntimo/sensível (INV-073/079).  
+**FAIL:** IA retorna dados de wellness/médicos de outros atletas.
+
+##### AC-003
+**PASS:** Conteúdo educativo funciona mesmo sem dados históricos do atleta (INV-074).  
+**FAIL:** Conteúdo educativo requer histórico preexistente.
+
+##### AC-004
+**PASS:** Sugestão IA ao treinador inclui justificativa baseada em dados (INV-081).  
+**FAIL:** Sugestão sem justificativa ou com justificativa genérica.
+
+##### AC-005
+**PASS:** IA trata sugestões como orientações não-obrigatórias (INV-072 — "not an order").  
+**FAIL:** Sugestão apresentada como obrigatória.
+
+---
+
 ## 9) Critérios PASS/FAIL (fase do módulo)
 
 ### PASS se (mínimo)
@@ -841,9 +1121,16 @@ cd "Hb Track - Backend" && alembic upgrade head && python -c "from app.models.ex
 - [ ] Banco de exercícios com scope SYSTEM/ORG e ACL por visibility_mode (DEC-TRAIN-EXB-001/001B)
 - [ ] Rankings e exports com contrato tipado (ou explicitamente DEFERIDO com justificativa aprovada)
 - [ ] `TEST_MATRIX_TRAINING.md` atualizado com evidências
+- [ ] **FASE_3:** Ciclos hierarchy FK enforced (macro→meso→micro) — INV-TRAIN-054..056
+- [ ] **FASE_3:** Presença oficial via closure + pending queue funcional — INV-TRAIN-063..067
+- [ ] **FASE_3:** Atleta vê treino + wellness gate bloqueia conteúdo sem wellness — INV-TRAIN-068/071/076
+- [ ] **FASE_3:** IA coach gera drafts (não ordens) com justificativa e privacidade — INV-TRAIN-072..075/079..081
 
 ### FAIL se
 - [ ] Invariante bloqueante sem teste de violação
 - [ ] Contratos críticos expostos com drift (UUID/int) sem AR de correção
 - [ ] UI principal chama endpoints inexistentes (404 sistemático)
+- [ ] **FASE_3:** Pré-confirmação atleta tratada como oficial (INV-TRAIN-063 violada)
+- [ ] **FASE_3:** Sugestão IA aplicada sem aprovação do treinador (INV-TRAIN-075/080 violada)
+- [ ] **FASE_3:** Conteúdo completo liberado sem wellness (INV-TRAIN-071/076 violada)
 
