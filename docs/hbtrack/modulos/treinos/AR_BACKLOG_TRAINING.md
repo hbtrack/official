@@ -1,7 +1,7 @@
 # AR_BACKLOG_TRAINING.md — Backlog de ARs (Materialização) do Módulo TRAINING
 
-Status: DRAFT  
-Versão: v1.4.0  
+Status: ATIVO  
+Versão: v1.5.0  
 Tipo de Documento: AR Materialization Backlog (Normativo Operacional / SSOT)  
 Módulo: TRAINING  
 Fase: FASE_2 (PRD v2.2 — 2026-02-20) + DEC-TRAIN-* (2026-02-25) + FASE_3 (2026-02-27)  
@@ -13,6 +13,15 @@ Owners:
 
 Última revisão: 2026-02-26  
 Próxima revisão recomendada: 2026-03-05  
+
+> Changelog v1.5.0 (2026-02-26):  
+> - AR_151 ✅ SUCESSO (MicrocycleOutsideMesoError + overlap guard — eb88236)  
+> - AR_152 ✅ SUCESSO (tests INV-054..057 — 4 arquivos, 10 test cases — eb88236)  
+> - AR_153 ✅ SUCESSO (migration 0067: attendance.preconfirm + training_pending_items — eb88236)  
+> - AR_154 ✅ SUCESSO (attendance_service.py: set_preconfirm + close_session_attendance — eb88236)  
+>   - **DECISÃO DEC-INV-065**: Item 3 (guard SessionHasPendingItemsError) NÃO implementado — INV-TRAIN-065 é autoritativo: "sistema DEVE permitir encerrar" com pending items virando fila (INV-066). Contradição AR vs INV resolvida em favor da invariante canônica. AR_155 implementa o pending queue (INV-066).  
+> - Selagem pendente (HUMANO): AR_151, AR_152, AR_153, AR_154 → `hb seal 151 152 153 154`  
+> - AR_155 → PRÓXIMA (training_pending_service.py + RBAC atleta — INV-066/067)  
 
 > Changelog v1.4.0 (2026-02-26):  
 > - ARs de implementação materializadas: AR_143-161 (commit `c65c969`, planos `ar_train_invariants_installation.json` + `ar_train_invariants_implementation.json`)  
@@ -229,6 +238,17 @@ Cada item (AR-*, GAP-*, DEC-*, EVID-*, HIP-*) neste documento recebe classifica�
 - NÃO é categoria genérica inferida.  
 - O MCP DEVE explicitar esse identificador RBAC nos trechos de permissão do Banco de Exercícios ORG (criar/editar/compartilhar/alterar visibilidade).  
 **Impacto:** INV-TRAIN-EXB-ACL-004, CONTRACT-TRAIN-054/056/091..095, SCREEN-TRAIN-010/011.
+
+### DEC-INV-065 — Encerramento permite pendências (RESOLVIDA)
+**Status:** RESOLVIDA (2026-02-26)  
+**Contexto da contradição:** AR_154 item 3 solicitou guard que BLOQUEIA close_session() se houver pending items com status='open' (raise SessionHasPendingItemsError). Executor identificou contradição com INV-TRAIN-065 canônica: "Sistema DEVE PERMITIR encerrar. Itens inconsistentes viram pendências (INV-066), NÃO bloqueiam."  
+**Texto normativo final:**  
+- INV-TRAIN-065 é AUTORITATIVA: encerramento de sessão DEVE ser permitido independentemente de pending items.  
+- Dados inconsistentes/não resolvidos viram fila de pendências (training_pending_items via INV-066).  
+- Guard de bloqueio por pending items é PROIBIDO — violaria invariante canônica.  
+- AR_154 item 3 CANCELADO. AR_155 implementa pending queue service (INV-066).  
+**Decisão do Arquiteto:** Manter comportamento canônico. Prioridade operacional do treinador (encerrar treino) sobre perfeição de dados. Pendências são tratadas posteriormente.  
+**Impacto:** AR_154 (item 3 cancelado), AR_155 (pending queue), INV-TRAIN-065/066, FLOW-TRAIN-017.
 
 ---
 

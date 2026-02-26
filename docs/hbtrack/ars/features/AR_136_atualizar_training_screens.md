@@ -1,6 +1,6 @@
 # AR_136 — Atualizar TRAINING_SCREENS_SPEC.md com 4 novas telas FASE_3
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -43,3 +43,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_136_869e061/result.json`
+
+### Selo Humano em eb88236
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-26T18:55:22.369916+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_136_869e061/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_136/executor_main.log`

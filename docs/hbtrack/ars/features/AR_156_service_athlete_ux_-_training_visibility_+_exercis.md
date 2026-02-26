@@ -1,6 +1,6 @@
 # AR_156 — Service: Athlete UX — training visibility + exercise media
 
-**Status**: 🔲 PENDENTE
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -33,9 +33,40 @@ Classe D (Router/RBAC) + Classe C2. Depende de Task 144 (exercise_media table ex
 - Se status='draft' sessões não devem ser visíveis para atletas (apenas 'scheduled'), verificar regra exata em INVARIANTS_TRAINING.md INV-068
 
 ## Análise de Impacto
-_(A ser preenchido pelo Executor)_
+**Arquivos modificados (WRITE_SCOPE):**
+- `Hb Track - Backend/app/services/training_session_service.py` — +constante `ATHLETE_VISIBLE_STATUSES` + método `get_sessions_for_athlete()` implementando INV-068 (atleta vê apenas sessions 'scheduled' de seus times)
+- `Hb Track - Backend/app/services/session_exercise_service.py` — +método `is_exercise_in_athlete_session()` + bypass em `_verify_exercise_visibility` quando exercício já está em sessão do atleta (INV-069: exercise-in-session = implicit access)
+
+**RBAC:** verificado via `context.role_code == 'atleta'` + `context.team_ids` (lista de times do atleta resolvida no login).
+
+**Sem dependências de DB novas:** nenhum modelo/migration criado. Os modelos `TeamRegistration`, `TrainingSession`, `SessionExercise`, `Exercise` já existem.
+
+**Padrão de NÃO bloqueio (INV-065):** guards apenas restringem leitura para atletas — não alteram fluxo de close/edit.
 
 ---
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
+### Execução Executor em eb88236
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "from pathlib import Path; fs=[Path('Hb Track - Backend/app/services/training_session_service.py'),Path('Hb Track - Backend/app/services/session_exercise_service.py')]; assert all(f.exists() for f in fs), 'FAIL: ausentes='+str([f.name for f in fs if not f.exists()]); c=fs[0].read_text(encoding='utf-8'); assert 'athlete' in c.lower() or 'scheduled' in c.lower(), 'FAIL: visibilidade do atleta ausente'; [print('[OK] '+f.name) for f in fs]; print('PASS AR_156: guards de visibilidade do atleta OK')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-26T19:05:08.887420+00:00
+**Behavior Hash**: c19c6e9f7cae07603e6044d87b43a1c70828f6d87df51d79ea9e76ee3dcc17b9
+**Evidence File**: `docs/hbtrack/evidence/AR_156/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Verificacao Testador em eb88236
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_156_eb88236/result.json`
+
+### Selo Humano em eb88236
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-26T19:25:16.667845+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_156_eb88236/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_156/executor_main.log`

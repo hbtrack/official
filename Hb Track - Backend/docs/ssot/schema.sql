@@ -1,11 +1,11 @@
--- Schema dump generated: 2026-02-25T16:33:34.268133+00:00Z
+-- Schema dump generated: 2026-02-26T17:17:32.330458+00:00Z
 -- Source: localhost
 
 --
 -- PostgreSQL database dump
 --
 
-\restrict baDG2E9xhJfdcBhIdqQCkEHN6aPi2m2jjpHhgZderXBgzB2hIXTpmhmcZAcgIl5
+\restrict tKqgekKq3INDrJWnbjtRpGzkj46roxTBXrfV7ipxlmMRbfBXKExAHmjInecvZNz
 
 -- Dumped from database version 12.22 (Debian 12.22-1.pgdg120+1)
 -- Dumped by pg_dump version 18.1
@@ -724,7 +724,7 @@ CREATE TABLE public.attendance (
     CONSTRAINT ck_attendance_participation_type CHECK (((participation_type IS NULL) OR ((participation_type)::text = ANY ((ARRAY['full'::character varying, 'partial'::character varying, 'adapted'::character varying, 'did_not_train'::character varying])::text[])))),
     CONSTRAINT ck_attendance_reason CHECK (((reason_absence IS NULL) OR ((reason_absence)::text = ANY ((ARRAY['medico'::character varying, 'escola'::character varying, 'familiar'::character varying, 'opcional'::character varying, 'outro'::character varying])::text[])))),
     CONSTRAINT ck_attendance_source CHECK (((source)::text = ANY ((ARRAY['manual'::character varying, 'import'::character varying, 'correction'::character varying])::text[]))),
-    CONSTRAINT ck_attendance_status CHECK (((presence_status)::text = ANY ((ARRAY['present'::character varying, 'absent'::character varying, 'justified'::character varying])::text[])))
+    CONSTRAINT ck_attendance_status CHECK (((presence_status)::text = ANY (ARRAY['present'::text, 'absent'::text, 'justified'::text, 'preconfirm'::text])))
 );
 
 
@@ -1225,6 +1225,19 @@ COMMENT ON TABLE public.event_types IS 'Tipos de evento (shot, goal, goalkeeper_
 
 
 --
+-- Name: exercise_acl; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.exercise_acl (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    exercise_id uuid NOT NULL,
+    user_id uuid NOT NULL,
+    granted_by_user_id uuid NOT NULL,
+    granted_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
 -- Name: exercise_favorites; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1240,6 +1253,24 @@ CREATE TABLE public.exercise_favorites (
 --
 
 COMMENT ON TABLE public.exercise_favorites IS 'Step 3: Exercícios favoritados por usuário';
+
+
+--
+-- Name: exercise_media; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.exercise_media (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    exercise_id uuid NOT NULL,
+    media_type character varying(20) NOT NULL,
+    url character varying(500) NOT NULL,
+    title character varying(200),
+    order_index smallint DEFAULT '1'::smallint NOT NULL,
+    created_by_user_id uuid NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT ck_exercise_media_type CHECK (((media_type)::text = ANY ((ARRAY['video'::character varying, 'image'::character varying, 'gif'::character varying, 'document'::character varying])::text[])))
+);
 
 
 --
@@ -1273,7 +1304,7 @@ COMMENT ON TABLE public.exercise_tags IS 'Step 3: Tags hierárquicas de exercíc
 
 CREATE TABLE public.exercises (
     id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    organization_id uuid NOT NULL,
+    organization_id uuid,
     name character varying(200) NOT NULL,
     description text,
     tag_ids uuid[] DEFAULT '{}'::uuid[] NOT NULL,
@@ -1281,7 +1312,15 @@ CREATE TABLE public.exercises (
     media_url character varying(500),
     created_by_user_id uuid NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    scope character varying(10) DEFAULT 'ORG'::character varying NOT NULL,
+    visibility_mode character varying(20) DEFAULT 'restricted'::character varying NOT NULL,
+    deleted_at timestamp with time zone,
+    deleted_reason text,
+    CONSTRAINT ck_exercises_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL)))),
+    CONSTRAINT ck_exercises_org_scope CHECK (((((scope)::text = 'SYSTEM'::text) AND (organization_id IS NULL)) OR (((scope)::text = 'ORG'::text) AND (organization_id IS NOT NULL)))),
+    CONSTRAINT ck_exercises_scope CHECK (((scope)::text = ANY ((ARRAY['SYSTEM'::character varying, 'ORG'::character varying])::text[]))),
+    CONSTRAINT ck_exercises_visibility_mode CHECK (((visibility_mode)::text = ANY ((ARRAY['org_wide'::character varying, 'restricted'::character varying])::text[])))
 );
 
 
@@ -2695,6 +2734,26 @@ COMMENT ON COLUMN public.training_microcycles.microcycle_type IS 'Tipo: carga_al
 
 
 --
+-- Name: training_pending_items; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.training_pending_items (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    training_session_id uuid NOT NULL,
+    athlete_id uuid NOT NULL,
+    item_type character varying(50) NOT NULL,
+    description text NOT NULL,
+    status character varying(20) DEFAULT 'open'::character varying NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    resolved_at timestamp with time zone,
+    resolved_by_user_id uuid,
+    CONSTRAINT ck_pending_item_status CHECK (((status)::text = ANY (ARRAY['open'::text, 'resolved'::text, 'cancelled'::text]))),
+    CONSTRAINT ck_pending_item_type CHECK (((item_type)::text = ANY (ARRAY['equipment'::text, 'material'::text, 'admin'::text, 'other'::text])))
+);
+
+
+--
 -- Name: training_session_exercises; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2771,6 +2830,7 @@ CREATE TABLE public.training_sessions (
     post_review_completed_at timestamp with time zone,
     post_review_completed_by_user_id uuid,
     post_review_deadline_at timestamp with time zone,
+    standalone boolean DEFAULT true NOT NULL,
     CONSTRAINT check_training_session_status CHECK (((status)::text = ANY ((ARRAY['draft'::character varying, 'scheduled'::character varying, 'in_progress'::character varying, 'pending_review'::character varying, 'readonly'::character varying])::text[]))),
     CONSTRAINT check_training_sessions_execution_outcome CHECK ((((execution_outcome = 'on_time'::public.training_execution_outcome_enum) AND (delay_minutes IS NULL) AND (cancellation_reason IS NULL) AND (duration_actual_minutes IS NULL)) OR ((execution_outcome = 'delayed'::public.training_execution_outcome_enum) AND (delay_minutes IS NOT NULL) AND (delay_minutes > 0) AND (cancellation_reason IS NULL)) OR ((execution_outcome = 'canceled'::public.training_execution_outcome_enum) AND (cancellation_reason IS NOT NULL) AND (delay_minutes IS NULL) AND (duration_actual_minutes IS NULL)) OR ((execution_outcome = ANY (ARRAY['shortened'::public.training_execution_outcome_enum, 'extended'::public.training_execution_outcome_enum])) AND (duration_actual_minutes IS NOT NULL) AND (duration_actual_minutes > 0) AND (delay_minutes IS NULL) AND (cancellation_reason IS NULL)))),
     CONSTRAINT ck_phase_focus_attack_consistency CHECK ((phase_focus_attack = ((COALESCE(focus_attack_positional_pct, (0)::numeric) + COALESCE(focus_attack_technical_pct, (0)::numeric)) >= (5)::numeric))),
@@ -2788,6 +2848,7 @@ CREATE TABLE public.training_sessions (
     CONSTRAINT ck_training_sessions_focus_transition_defense_range CHECK (((focus_transition_defense_pct IS NULL) OR ((focus_transition_defense_pct >= (0)::numeric) AND (focus_transition_defense_pct <= (100)::numeric)))),
     CONSTRAINT ck_training_sessions_focus_transition_offense_range CHECK (((focus_transition_offense_pct IS NULL) OR ((focus_transition_offense_pct >= (0)::numeric) AND (focus_transition_offense_pct <= (100)::numeric)))),
     CONSTRAINT ck_training_sessions_intensity CHECK (((intensity_target IS NULL) OR ((intensity_target >= 1) AND (intensity_target <= 5)))),
+    CONSTRAINT ck_training_sessions_standalone CHECK ((((standalone = true) AND (microcycle_id IS NULL)) OR ((standalone = false) AND (microcycle_id IS NOT NULL)))),
     CONSTRAINT ck_training_sessions_type CHECK (((session_type)::text = ANY ((ARRAY['quadra'::character varying, 'fisico'::character varying, 'video'::character varying, 'reuniao'::character varying, 'teste'::character varying])::text[])))
 );
 
@@ -3281,11 +3342,27 @@ ALTER TABLE ONLY public.email_queue
 
 
 --
+-- Name: exercise_acl exercise_acl_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exercise_acl
+    ADD CONSTRAINT exercise_acl_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: exercise_favorites exercise_favorites_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.exercise_favorites
     ADD CONSTRAINT exercise_favorites_pkey PRIMARY KEY (user_id, exercise_id);
+
+
+--
+-- Name: exercise_media exercise_media_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exercise_media
+    ADD CONSTRAINT exercise_media_pkey PRIMARY KEY (id);
 
 
 --
@@ -3769,6 +3846,14 @@ ALTER TABLE ONLY public.training_microcycles
 
 
 --
+-- Name: training_pending_items training_pending_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.training_pending_items
+    ADD CONSTRAINT training_pending_items_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: training_session_exercises training_session_exercises_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3790,6 +3875,22 @@ ALTER TABLE ONLY public.training_suggestions
 
 ALTER TABLE ONLY public.competition_seasons
     ADD CONSTRAINT uk_competition_seasons_competition_season UNIQUE (competition_id, season_id);
+
+
+--
+-- Name: exercise_acl uq_exercise_acl_exercise_user; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exercise_acl
+    ADD CONSTRAINT uq_exercise_acl_exercise_user UNIQUE (exercise_id, user_id);
+
+
+--
+-- Name: exercise_media uq_exercise_media_exercise_order; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exercise_media
+    ADD CONSTRAINT uq_exercise_media_exercise_order UNIQUE (exercise_id, order_index);
 
 
 --
@@ -5880,6 +5981,30 @@ ALTER TABLE ONLY public.data_access_logs
 
 
 --
+-- Name: exercise_acl exercise_acl_exercise_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exercise_acl
+    ADD CONSTRAINT exercise_acl_exercise_id_fkey FOREIGN KEY (exercise_id) REFERENCES public.exercises(id) ON DELETE CASCADE;
+
+
+--
+-- Name: exercise_acl exercise_acl_granted_by_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exercise_acl
+    ADD CONSTRAINT exercise_acl_granted_by_user_id_fkey FOREIGN KEY (granted_by_user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: exercise_acl exercise_acl_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exercise_acl
+    ADD CONSTRAINT exercise_acl_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
 -- Name: exercise_favorites exercise_favorites_exercise_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5893,6 +6018,22 @@ ALTER TABLE ONLY public.exercise_favorites
 
 ALTER TABLE ONLY public.exercise_favorites
     ADD CONSTRAINT exercise_favorites_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: exercise_media exercise_media_created_by_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exercise_media
+    ADD CONSTRAINT exercise_media_created_by_user_id_fkey FOREIGN KEY (created_by_user_id) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: exercise_media exercise_media_exercise_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.exercise_media
+    ADD CONSTRAINT exercise_media_exercise_id_fkey FOREIGN KEY (exercise_id) REFERENCES public.exercises(id) ON DELETE CASCADE;
 
 
 --
@@ -6520,6 +6661,30 @@ ALTER TABLE ONLY public.password_resets
 
 
 --
+-- Name: training_pending_items fk_pending_items_athlete; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.training_pending_items
+    ADD CONSTRAINT fk_pending_items_athlete FOREIGN KEY (athlete_id) REFERENCES public.users(id);
+
+
+--
+-- Name: training_pending_items fk_pending_items_resolver; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.training_pending_items
+    ADD CONSTRAINT fk_pending_items_resolver FOREIGN KEY (resolved_by_user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: training_pending_items fk_pending_items_session; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.training_pending_items
+    ADD CONSTRAINT fk_pending_items_session FOREIGN KEY (training_session_id) REFERENCES public.training_sessions(id);
+
+
+--
 -- Name: person_addresses fk_person_addresses_created_by_user; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7035,5 +7200,5 @@ ALTER TABLE ONLY public.wellness_reminders
 -- PostgreSQL database dump complete
 --
 
-\unrestrict baDG2E9xhJfdcBhIdqQCkEHN6aPi2m2jjpHhgZderXBgzB2hIXTpmhmcZAcgIl5
+\unrestrict tKqgekKq3INDrJWnbjtRpGzkj46roxTBXrfV7ipxlmMRbfBXKExAHmjInecvZNz
 

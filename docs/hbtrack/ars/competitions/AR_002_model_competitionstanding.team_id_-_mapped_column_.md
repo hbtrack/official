@@ -1,6 +1,6 @@
 # AR_002 — Model: CompetitionStanding.team_id — mapped_column + relationship para Team
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.0.6
 **Plano Fonte**: `docs/_canon/planos/competition_standings_add_team_id.json`
 
@@ -86,3 +86,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_002_529b87c/result.json`
+
+### Selo Humano em eb88236
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-26T18:56:18.012586+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_002_529b87c/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_002/executor_main.log`

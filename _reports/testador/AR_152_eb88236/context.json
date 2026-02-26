@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_152-eb88236",
+  "timestamp_utc": "2026-02-26T17:07:41.742648+00:00",
+  "git": {
+    "commit": "eb88236b4c01f2afe9fa3d882ee66bfaf28f07c2"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "152",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_152_tests_hierarquia_de_ciclos_-_inv-054,_055,_056,_05.md"
+}

@@ -1,0 +1,40 @@
+{
+  "ar_id": "154",
+  "validation_command": "python -c \"from pathlib import Path; f=Path('Hb Track - Backend/app/services/attendance_service.py'); assert f.exists(), 'FAIL: attendance_service.py nao encontrado'; c=f.read_text(encoding='utf-8'); assert 'preconfirm' in c.lower(), 'FAIL: logica preconfirm ausente'; assert 'close' in c.lower(), 'FAIL: logica close ausente'; print('PASS AR_154: attendance_service.py com preconfirm+close OK')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "bf79b90579c655b32603c8a04b6ee77e99038831ea412ba7e2f2f68eff0216ee",
+      "hash": "bf79b90579c655b3",
+      "stdout_len": 59,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "bf79b90579c655b32603c8a04b6ee77e99038831ea412ba7e2f2f68eff0216ee",
+      "hash": "bf79b90579c655b3",
+      "stdout_len": 59,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "bf79b90579c655b32603c8a04b6ee77e99038831ea412ba7e2f2f68eff0216ee",
+      "hash": "bf79b90579c655b3",
+      "stdout_len": 59,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

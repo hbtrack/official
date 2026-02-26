@@ -1,0 +1,18 @@
+AR_ID: 149
+Command: python -c "from pathlib import Path; f=Path('Hb Track - Backend/db/alembic/versions/0066_training_sessions_standalone_flag.py'); assert f.exists(), 'FAIL: migration 0066 nao encontrada'; c=f.read_text(encoding='utf-8'); assert 'standalone' in c, 'FAIL: coluna standalone ausente na migration'; assert 'ck_training_sessions_standalone' in c, 'FAIL: constraint ck_training_sessions_standalone ausente'; assert 'Boolean' in c, 'FAIL: tipo Boolean ausente'; assert 'standalone = FALSE' in c or 'standalone=FALSE' in c, 'FAIL: UPDATE standalone=FALSE ausente (INV-054)'; print('PASS AR_149: migration 0066 com standalone+ck_training_sessions_standalone+UPDATE OK')"
+Exit Code: 0
+Timestamp UTC: 2026-02-26T15:31:44.415923+00:00
+Behavior Hash (exit+stdout+stderr): 1cbbbb029b8143fb5b1a3078b792aefeb6d39c1beeab67eaf79fa15359c9aaff
+Git HEAD: 568bbf619322729a3cf9ed4a286394279f713e69
+Python Version: 3.11.9
+Protocol Version: 1.3.0
+Workspace Clean: False
+Workspace Status: unstaged_modified=4
+Governed Checksums (sha256): {"Hb Track - Backend/docs/ssot/alembic_state.txt": "262228ca2c889e96525fc2e87a89f6e36ae89501701e6af862c1844c9a750fb9", "Hb Track - Backend/docs/ssot/schema.sql": "035e57b91c8d9f6436fe7a456d3c4796cc370f017b0f6de01615fcb7420e120f"}
+
+--- STDOUT ---
+PASS AR_149: migration 0066 com standalone+ck_training_sessions_standalone+UPDATE OK
+
+
+--- STDERR ---
+

@@ -1,6 +1,6 @@
 # AR_135 — Atualizar TRAINING_USER_FLOWS.md com 6 novos fluxos FASE_3
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -43,3 +43,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_135_869e061/result.json`
+
+### Selo Humano em eb88236
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-26T18:55:18.637718+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_135_869e061/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_135/executor_main.log`

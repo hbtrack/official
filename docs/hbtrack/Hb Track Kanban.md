@@ -609,23 +609,38 @@ O Executor implementou, o Testador verificou AR_143 (✅ SUCESSO hash `e57e1b35`
 
 **NOTA para Executor**: AR_144 é DB-touch — executar `alembic current` antes para verificar estado do banco. Rollback: `alembic downgrade -1`.
 
-### 🔲 PENDENTE — Fase B: Hierarquia de Ciclos
+### ✅ CONCLUÍDA — Fase B: Hierarquia de Ciclos (parcial)
+
+| AR | Título | Status |
+|---|---|---|
+| **AR_149** | DB training_sessions.standalone | ✅ VERIFICADO (HEAD `eb88236`) |
+| **AR_150** | Guards INV-054, INV-057 | ✅ VERIFICADO |
+| **AR_151** | MicrocycleOutsideMesoError + overlap guard | ✅ SUCESSO — `hb seal 151` pendente (HUMANO) |
+
+### 🔲 PENDENTE — Fase B: Hierarquia de Ciclos (continuação)
 
 | AR | Título | Ação |
 |---|---|---|
-| **AR_149** | DB training_sessions.standalone | Executor: `hb report 149` (DB-touch) |
-| **AR_151** | training_microcycle_service.py meso dates | Executor: `hb report 151` (após AR_149) |
-| **AR_152** | tests INV-054..057 ciclos | Executor: `hb report 152` (após AR_149+151) |
+| **AR_152** | tests INV-054..057 ciclos | ✅ SUCESSO — `hb seal 152` pendente (HUMANO) |
+
+### ✅ Fase C: Attendance Avançada — Checkpoint
+
+| AR | Título | Ação |
+|---|---|---|
+| **AR_149** | DB training_sessions.standalone | ✅ VERIFICADO (HEAD `eb88236`) — sealed |
+| **AR_150** | Guards INV-054, INV-057 | ✅ VERIFICADO — sealed |
+| **AR_151** | MicrocycleOutsideMesoError + overlap guard | ✅ SUCESSO — `hb seal 151` pendente (HUMANO) |
+| **AR_152** | tests INV-054..057 ciclos | ✅ SUCESSO — `hb seal 152` pendente (HUMANO) |
 
 ### 🔲 PENDENTE — Fase C: Attendance Avançada
 
 | AR | Título | Ação |
 |---|---|---|
-| **AR_153** | DB attendance preconfirm + pending_items | Executor: `hb report 153` (DB-touch) |
-| **AR_154** | attendance_service.py preconfirm + close | Executor: `hb report 154` |
-| **AR_155** | training_pending_service.py + RBAC atleta | Executor: `hb report 155` |
-| **AR_156** | athlete UX training visibility + exercise | Executor: `hb report 156` |
-| **AR_157** | wellness_post campo conversacional | Executor: `hb report 157` (DB-touch) |
+| **AR_153** | DB attendance preconfirm + pending_items | ✅ SUCESSO — `hb seal 153` pendente (HUMANO) |
+| **AR_154** | attendance_service.py preconfirm + close | ✅ SUCESSO — `hb seal 154` pendente (HUMANO) — Item 3 cancelado (DEC-INV-065) |
+| **AR_155** | training_pending_service.py + RBAC atleta | ✅ SUCESSO — `hb seal 155` pendente (HUMANO) |
+| **AR_156** | athlete UX training visibility + exercise | ✅ SUCESSO — `hb seal 156` pendente (HUMANO) |
+| **AR_157** | wellness_post campo conversacional | **PRÓXIMA** — Executor: `hb report 157` (DB-touch) |
 | **AR_158** | tests INV-063..070 attendance avançada | Executor: `hb report 158` |
 
 ### 🔲 PENDENTE — Fase D: Wellness Obrigatória

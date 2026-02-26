@@ -1,6 +1,6 @@
 ﻿# AR_149 — DB: training_sessions.standalone — cycle hierarchy schema
 
-**Status**: � PENDENTE
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -25,8 +25,9 @@ Rationale: training_sessions.microcycle_id já é nullable (schema.sql L2763), m
 - Hb Track - Backend/alembic/versions/
 
 ## SSOT Touches
-- [ ] docs/ssot/schema.sql
-- [ ] docs/ssot/alembic_state.txt
+- [x] Hb Track - Backend/docs/ssot/alembic_state.txt
+- [x] Hb Track - Backend/docs/ssot/schema.sql
+- [x] docs/ssot/alembic_state.txt
 
 ## Validation Command (Contrato)
 ```
@@ -81,10 +82,26 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_149/executor_main.log`
 **Python Version**: 3.11.9
 
+### Execução Executor em 568bbf6
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "from pathlib import Path; f=Path('Hb Track - Backend/db/alembic/versions/0066_training_sessions_standalone_flag.py'); assert f.exists(), 'FAIL: migration 0066 nao encontrada'; c=f.read_text(encoding='utf-8'); assert 'standalone' in c, 'FAIL: coluna standalone ausente na migration'; assert 'ck_training_sessions_standalone' in c, 'FAIL: constraint ck_training_sessions_standalone ausente'; assert 'Boolean' in c, 'FAIL: tipo Boolean ausente'; assert 'standalone = FALSE' in c or 'standalone=FALSE' in c, 'FAIL: UPDATE standalone=FALSE ausente (INV-054)'; print('PASS AR_149: migration 0066 com standalone+ck_training_sessions_standalone+UPDATE OK')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-26T15:31:44.415923+00:00
+**Behavior Hash**: 1cbbbb029b8143fb5b1a3078b792aefeb6d39c1beeab67eaf79fa15359c9aaff
+**Evidence File**: `docs/hbtrack/evidence/AR_149/executor_main.log`
+**Python Version**: 3.11.9
 
-### Verificacao Testador em 835607f
-**Status Testador**: 🔴 REJEITADO
-**Consistency**: AH_DIVERGENCE
-**Triple-Run**: TRIPLE_FAIL (3x)
-**Exit Testador**: 1 | **Exit Executor**: 0
-**TESTADOR_REPORT**: `_reports/testador/AR_149_835607f/result.json`
+
+### Verificacao Testador em 568bbf6
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_149_568bbf6/result.json`
+
+### Selo Humano em 2265aa2
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-26T15:44:55.881318+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_149_568bbf6/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_149/executor_main.log`

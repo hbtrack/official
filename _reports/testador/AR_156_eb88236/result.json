@@ -1,0 +1,40 @@
+{
+  "ar_id": "156",
+  "validation_command": "python -c \"from pathlib import Path; fs=[Path('Hb Track - Backend/app/services/training_session_service.py'),Path('Hb Track - Backend/app/services/session_exercise_service.py')]; assert all(f.exists() for f in fs), 'FAIL: ausentes='+str([f.name for f in fs if not f.exists()]); c=fs[0].read_text(encoding='utf-8'); assert 'athlete' in c.lower() or 'scheduled' in c.lower(), 'FAIL: visibilidade do atleta ausente'; [print('[OK] '+f.name) for f in fs]; print('PASS AR_156: guards de visibilidade do atleta OK')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "c19c6e9f7cae07603e6044d87b43a1c70828f6d87df51d79ea9e76ee3dcc17b9",
+      "hash": "c19c6e9f7cae0760",
+      "stdout_len": 115,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "c19c6e9f7cae07603e6044d87b43a1c70828f6d87df51d79ea9e76ee3dcc17b9",
+      "hash": "c19c6e9f7cae0760",
+      "stdout_len": 115,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "c19c6e9f7cae07603e6044d87b43a1c70828f6d87df51d79ea9e76ee3dcc17b9",
+      "hash": "c19c6e9f7cae0760",
+      "stdout_len": 115,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

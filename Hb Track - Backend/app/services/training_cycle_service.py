@@ -33,6 +33,20 @@ from app.schemas.training_cycles import (
 logger = logging.getLogger(__name__)
 
 
+class MicrocycleOutsideMesoError(ValidationError):
+    """
+    INV-056: Raised when a microcycle's week_start/week_end falls outside
+    the parent mesocycle's start_date/end_date range.
+    """
+    pass
+
+
+# INV-055: Overlap entre mesociclos de EQUIPES DIFERENTES é permitido por design.
+# Não há constraint de non-overlap entre mesociclos — a ausência é intencional.
+# Dois times podem ter mesociclos sobrepostos no calendário sem conflito lógico.
+
+
+
 class TrainingCycleService:
     """
     Service de Ciclos de Treinamento.
@@ -142,7 +156,7 @@ class TrainingCycleService:
             parent = await self.get_by_id(data.parent_cycle_id)
 
             if data.start_date < parent.start_date or data.end_date > parent.end_date:
-                raise ValidationError(
+                raise MicrocycleOutsideMesoError(
                     f"Datas do mesociclo ({data.start_date} - {data.end_date}) "
                     f"devem estar dentro do macrociclo pai ({parent.start_date} - {parent.end_date})"
                 )

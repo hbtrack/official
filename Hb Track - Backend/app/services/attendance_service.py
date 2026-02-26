@@ -562,3 +562,124 @@ class AttendanceService:
         await self.db.refresh(attendance)
 
         return attendance
+
+    async def set_preconfirm(
+        self,
+        session_id: UUID,
+        athlete_id: UUID,
+        user_id: UUID,
+    ) -> "AttendanceModel":
+        """
+        Registra pré-confirmação de presença pelo atleta (INV-TRAIN-063).
+
+        Cria ou atualiza attendance com presence_status='preconfirm'.
+        Só permitido antes do início da sessão (status in ['scheduled', 'draft']).
+        Presença oficial é consolidada pelo treinador no encerramento (INV-TRAIN-064).
+
+        Args:
+            session_id: ID da sessão de treino
+            athlete_id: ID do atleta que está pré-confirmando
+            user_id: ID do usuário que está realizando a ação
+
+        Returns:
+            Registro de presença com presence_status='preconfirm'
+
+        Raises:
+            NotFoundError: Sessão não encontrada
+            ValidationError: Sessão já iniciada (in_progress, pending_review, readonly)
+        """
+        # 1. Carregar sessão e verificar status
+        session_stmt = select(TrainingSession).where(
+            and_(
+                TrainingSession.id == session_id,
+                TrainingSession.deleted_at.is_(None)
+            )
+        )
+        session_result = await self.db.execute(session_stmt)
+        session = session_result.scalar_one_or_none()
+
+        if not session:
+            raise NotFoundError("Sessão de treino não encontrada")
+
+        allowed_statuses = ['scheduled', 'draft']
+        if session.status not in allowed_statuses:
+            raise ValidationError(
+                f"Pré-confirmação só é permitida antes do início da sessão "
+                f"(status atual: '{session.status}', permitidos: {allowed_statuses})"
+            )
+
+        # 2. Verificar se já existe attendance para (session_id, athlete_id)
+        existing_stmt = select(AttendanceModel).where(
+            and_(
+                AttendanceModel.training_session_id == session_id,
+                AttendanceModel.athlete_id == athlete_id,
+                AttendanceModel.deleted_at.is_(None)
+            )
+        )
+        existing_result = await self.db.execute(existing_stmt)
+        attendance = existing_result.scalar_one_or_none()
+
+        if attendance:
+            # Atualizar existente para preconfirm
+            attendance.presence_status = 'preconfirm'
+            attendance.updated_at = datetime.utcnow()
+        else:
+            # Criar novo registro de pré-confirmação
+            attendance = AttendanceModel(
+                training_session_id=session_id,
+                athlete_id=athlete_id,
+                presence_status='preconfirm',
+                source='preconfirm',
+                created_by_user_id=user_id,
+            )
+            self.db.add(attendance)
+
+        await self.db.flush()
+        await self.db.refresh(attendance)
+
+        return attendance
+
+    async def close_session_attendance(
+        self,
+        session_id: UUID,
+        closed_by_user_id: UUID,
+    ) -> int:
+        """
+        Consolida presenças no encerramento da sessão (INV-TRAIN-064).
+
+        Converte todos os registros com presence_status='preconfirm' para 'absent'
+        (regra padrão: preconfirm não confirmado pelo treinador = ausente).
+        Correção posterior é possível via correct_attendance().
+
+        Deve ser chamado quando session.status transita para 'readonly'.
+        Integração automática requer modificação em training_session_service.py
+        (fora do WRITE_SCOPE desta AR).
+
+        Args:
+            session_id: ID da sessão sendo encerrada
+            closed_by_user_id: ID do usuário que está fechando
+
+        Returns:
+            Quantidade de registros convertidos de preconfirm→absent
+        """
+        # Buscar todos os attendance com preconfirm para esta sessão
+        stmt = select(AttendanceModel).where(
+            and_(
+                AttendanceModel.training_session_id == session_id,
+                AttendanceModel.presence_status == 'preconfirm',
+                AttendanceModel.deleted_at.is_(None)
+            )
+        )
+        result = await self.db.execute(stmt)
+        preconfirm_records = result.scalars().all()
+
+        converted = 0
+        for record in preconfirm_records:
+            record.presence_status = 'absent'
+            record.updated_at = datetime.utcnow()
+            converted += 1
+
+        if converted > 0:
+            await self.db.flush()
+
+        return converted

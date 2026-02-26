@@ -95,6 +95,13 @@ class SessionOutsideMicrocycleWeekError(BusinessError):
         super().__init__(error_key="SESSION_OUTSIDE_MICROCYCLE_WEEK", message=message)
 
 
+class SessionClosedError(BusinessError):
+    """Exceção quando operação é proibida em sessão readonly (INV-067)."""
+
+    def __init__(self, message: str = "Sessão encerrada — operação não permitida em status readonly"):
+        super().__init__(error_key="SESSION_CLOSED", message=message)
+
+
 class ExerciseImmutableError(BusinessError):
     """Exceção quando tentativa de modificar exercise SYSTEM (INV-048)."""
     

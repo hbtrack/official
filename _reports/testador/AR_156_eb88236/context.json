@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_156-eb88236",
+  "timestamp_utc": "2026-02-26T19:18:37.026875+00:00",
+  "git": {
+    "commit": "eb88236b4c01f2afe9fa3d882ee66bfaf28f07c2"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "156",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_156_service_athlete_ux_-_training_visibility_+_exercis.md"
+}

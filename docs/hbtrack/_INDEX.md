@@ -6,7 +6,7 @@
 |---|---|---|---|
 | AR_000 | Documentar INV-COMP-008 (Motor de Calculo Dinamico) em IN... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_000/executor_main.log |
 | AR_001 | Migration: ADD COLUMN competition_standings.team_id (uuid... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_001/executor_main.log |
-| AR_002 | Model: CompetitionStanding.team_id — mapped_column + rela... | ✅ SUCESSO | docs/hbtrack/evidence/AR_002/executor_main.log |
+| AR_002 | Model: CompetitionStanding.team_id — mapped_column + rela... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_002/executor_main.log |
 | AR_002.5 | Schema: match_goalkeeper_stints para Eficiência de Goleira | ✅ VERIFICADO | docs/hbtrack/evidence/AR_002.5_A/executor_main.log |
 | AR_002.5 | Schema: attendance.presence_status + status 'justified' | ✅ VERIFICADO | docs/hbtrack/evidence/AR_002.5_B/executor_main.log |
 | AR_002.5 | Documentar divergência de escalas wellness_pre vs. PRD | ⛛ SUPERSEDED — Draft EM_EXECUCAO abandonado; divergencia de escalas wellness documentada por outros meios | docs/hbtrack/evidence/AR_002_5_C_evidence.log |
@@ -44,7 +44,7 @@
 | AR_033 | AR Index Checkpoint: _INDEX.md completo e sincronizado co... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_033/executor_main.log |
 | AR_034 | Governança Plans — Gate JSON-to-AR obrigatório | ✅ SUCESSO | docs/hbtrack/evidence/AR_034_gov_plans_json_ar_sync_validation.log |
 | AR_035 | Criar scripts/run/hb_watch.py — sentinela de estado do fluxo | ✅ SUCESSO | docs/hbtrack/evidence/AR_035_hb_watch_sentinela_fluxo.log |
-| AR_036 | Migration 0056: ADD COLUMN competitions.points_per_draw +... | ✅ SUCESSO | docs/hbtrack/evidence/AR_036/executor_main.log |
+| AR_036 | Migration 0056: ADD COLUMN competitions.points_per_draw +... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_036/executor_main.log |
 | AR_037 | Model: Competition.points_per_draw + Competition.points_p... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_037/executor_main.log |
 | AR_038 | Migration 0057: DROP uk_competition_standings_team_phase ... | ✅ SUCESSO | docs/hbtrack/evidence/AR_038_comp_db_004_unique_index_migration.log |
 | AR_039 | Model: CompetitionStanding — UniqueConstraint legado → NU... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_039/executor_main.log |
@@ -66,7 +66,7 @@
 | AR_055 | hb_cli.py: Kanban write + check_retry_limit call site (do... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_055_hb_cli_kanban_write.log |
 | AR_056 | Verificar CHECK constraints de consistência em schema.sql | ✅ VERIFICADO | docs/hbtrack/evidence/AR_056/executor_main.log |
 | AR_057 | Verificar integridade append-only de audit_logs em schema... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_057/executor_main.log |
-| AR_058 | Verificar controle de concorrência — idempotency_keys + U... | ✅ SUCESSO | docs/hbtrack/evidence/AR_058/executor_main.log |
+| AR_058 | Verificar controle de concorrência — idempotency_keys + U... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_058/executor_main.log |
 | AR_059 | Criar context_map.md — mapa temático de ARs por domínio | ✅ VERIFICADO | docs/hbtrack/evidence/AR_059/executor_main.log |
 | AR_060 | Verificar integridade do contrato OpenAPI SSOT (214 paths) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_060/executor_main.log |
 | AR_061 | Aplicar migrations 0056-0061 e regenerar alembic_state.tx... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_061/executor_main.log |
@@ -118,30 +118,30 @@
 | AR_129 | Regenerar OpenAPI SSOT e validar UUID em paths Step18 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_129/executor_main.log |
 | AR_130 | Fix dismiss_alert user_id int para UUID | ✅ VERIFICADO | docs/hbtrack/evidence/AR_130/executor_main.log |
 | AR_131 | Adicionar gate de proteção: cmd_verify MUST NOT rebuild _... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_131/executor_main.log |
-| AR_132 | Atualizar INVARIANTS_TRAINING.md com 28 novas invariantes | ✅ SUCESSO | docs/hbtrack/evidence/AR_132/executor_main.log |
-| AR_133 | Atualizar TEST_MATRIX_TRAINING.md com linhas de teste FASE_3 | ✅ SUCESSO | docs/hbtrack/evidence/AR_133/executor_main.log |
-| AR_134 | Atualizar TRAINING_FRONT_BACK_CONTRACT.md com contratos F... | ✅ SUCESSO | docs/hbtrack/evidence/AR_134/executor_main.log |
-| AR_135 | Atualizar TRAINING_USER_FLOWS.md com 6 novos fluxos FASE_3 | ✅ SUCESSO | docs/hbtrack/evidence/AR_135/executor_main.log |
-| AR_136 | Atualizar TRAINING_SCREENS_SPEC.md com 4 novas telas FASE_3 | ✅ SUCESSO | docs/hbtrack/evidence/AR_136/executor_main.log |
+| AR_132 | Atualizar INVARIANTS_TRAINING.md com 28 novas invariantes | ✅ VERIFICADO | docs/hbtrack/evidence/AR_132/executor_main.log |
+| AR_133 | Atualizar TEST_MATRIX_TRAINING.md com linhas de teste FASE_3 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_133/executor_main.log |
+| AR_134 | Atualizar TRAINING_FRONT_BACK_CONTRACT.md com contratos F... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_134/executor_main.log |
+| AR_135 | Atualizar TRAINING_USER_FLOWS.md com 6 novos fluxos FASE_3 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_135/executor_main.log |
+| AR_136 | Atualizar TRAINING_SCREENS_SPEC.md com 4 novas telas FASE_3 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_136/executor_main.log |
 | AR_138 | Fix openapi path em testes 040 e 041 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_138/executor_main.log |
 | AR_139 | Revisar e corrigir testes DIVERGENTE 014 e 023 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_139/executor_main.log |
 | AR_140 | Criar teste INV-TRAIN-058 session structure mutable | ✅ VERIFICADO | docs/hbtrack/evidence/AR_140/executor_main.log |
 | AR_141 | Criar teste INV-TRAIN-059 exercise order contiguous | ✅ VERIFICADO | docs/hbtrack/evidence/AR_141/executor_main.log |
 | AR_142 | Regressão completa de testes de invariantes | ✅ VERIFICADO | docs/hbtrack/evidence/AR_142/executor_main.log |
 | AR_143 | Atualizar TEST_MATRIX com status atualizado | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_143/executor_main.log |
-| AR_144 | DB: Exercise Bank — schema foundation | ✅ SUCESSO | docs/hbtrack/evidence/AR_144/executor_main.log |
-| AR_145 | Service: exercise_service.py — guards Exercise Bank | ✅ SUCESSO | docs/hbtrack/evidence/AR_145/executor_main.log |
-| AR_146 | Service: exercise_acl_service.py — criar serviço ACL | ✅ SUCESSO | docs/hbtrack/evidence/AR_146/executor_main.log |
-| AR_147 | Service: catalog visibility + session exercise guard | ✅ SUCESSO | docs/hbtrack/evidence/AR_147/executor_main.log |
-| AR_148 | Tests: Exercise Bank — todos os invariantes (047-053, EXB... | ✅ SUCESSO | docs/hbtrack/evidence/AR_148/executor_main.log |
-| AR_149 | DB: training_sessions.standalone — cycle hierarchy schema | 🔲 PENDENTE | docs/hbtrack/evidence/AR_149/executor_main.log |
+| AR_144 | DB: Exercise Bank — schema foundation | ✅ VERIFICADO | docs/hbtrack/evidence/AR_144/executor_main.log |
+| AR_145 | Service: exercise_service.py — guards Exercise Bank | ✅ VERIFICADO | docs/hbtrack/evidence/AR_145/executor_main.log |
+| AR_146 | Service: exercise_acl_service.py — criar serviço ACL | ✅ VERIFICADO | docs/hbtrack/evidence/AR_146/executor_main.log |
+| AR_147 | Service: catalog visibility + session exercise guard | ✅ VERIFICADO | docs/hbtrack/evidence/AR_147/executor_main.log |
+| AR_148 | Tests: Exercise Bank — todos os invariantes (047-053, EXB... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_148/executor_main.log |
+| AR_149 | (sem título) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_149/executor_main.log |
 | AR_150 | Service: training_session_service.py — standalone + micro... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_150/executor_main.log |
-| AR_151 | Service: training_microcycle_service.py — meso date conta... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_151/executor_main.log |
-| AR_152 | Tests: Hierarquia de Ciclos — INV-054, 055, 056, 057 | 🔲 PENDENTE | docs/hbtrack/evidence/AR_152/executor_main.log |
-| AR_153 | DB: Attendance preconfirm + training_pending_items | 🔲 PENDENTE | docs/hbtrack/evidence/AR_153/executor_main.log |
-| AR_154 | Service: attendance_service.py — preconfirm + close flow | 🔲 PENDENTE | docs/hbtrack/evidence/AR_154/executor_main.log |
-| AR_155 | Service: training_pending_service.py + RBAC atleta | 🔲 PENDENTE | docs/hbtrack/evidence/AR_155/executor_main.log |
-| AR_156 | Service: Athlete UX — training visibility + exercise media | 🔲 PENDENTE | docs/hbtrack/evidence/AR_156/executor_main.log |
+| AR_151 | Service: training_microcycle_service.py — meso date conta... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_151/executor_main.log |
+| AR_152 | Tests: Hierarquia de Ciclos — INV-054, 055, 056, 057 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_152/executor_main.log |
+| AR_153 | (sem título) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_153/executor_main.log |
+| AR_154 | Service: attendance_service.py — preconfirm + close flow | ✅ VERIFICADO | docs/hbtrack/evidence/AR_154/executor_main.log |
+| AR_155 | Service: training_pending_service.py + RBAC atleta | ✅ VERIFICADO | docs/hbtrack/evidence/AR_155/executor_main.log |
+| AR_156 | Service: Athlete UX — training visibility + exercise media | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_156/executor_main.log |
 | AR_157 | Service: wellness_post — campo conversacional (INV-070) | 🔲 PENDENTE | docs/hbtrack/evidence/AR_157/executor_main.log |
 | AR_158 | Tests: Attendance Avançada — INV-063 a 070 | 🔲 PENDENTE | docs/hbtrack/evidence/AR_158/executor_main.log |
 | AR_159 | Service: athlete_content_gate_service.py — Wellness Obrig... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_159/executor_main.log |

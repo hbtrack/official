@@ -1,6 +1,6 @@
 # AR_147 — Service: catalog visibility + session exercise guard
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -90,3 +90,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_147_018412f/result.json`
+
+### Selo Humano em eb88236
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-26T18:55:34.676460+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_147_018412f/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_147/executor_main.log`

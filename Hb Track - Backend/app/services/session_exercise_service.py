@@ -99,16 +99,20 @@ class SessionExerciseService:
         self,
         exercise: Exercise,
         session: TrainingSession,
-        user_id: UUID
+        user_id: UUID,
+        athlete_team_ids: Optional[list] = None,
     ) -> None:
         """
         INV-062: Verifica se exercício está visível para o usuário na sessão.
-        
+        INV-069: Atleta com vínculo ativo na equipe da sessão tem acesso implícito
+                 a exercícios já incluídos na sessão pelo treinador.
+
         Args:
             exercise: Exercício a verificar
             session: Sessão de treino
             user_id: ID do usuário que está adicionando
-            
+            athlete_team_ids: IDs dos times do atleta (passado apenas para role 'atleta')
+
         Raises:
             ExerciseNotVisibleError: Se exercício não está acessível
         """
@@ -116,10 +120,17 @@ class SessionExerciseService:
         scope = getattr(exercise, 'scope', 'ORG')
         if scope == 'SYSTEM':
             return
-        
+
         # Verificar se exercise é da mesma organização que a sessão
         if exercise.organization_id != session.organization_id:
             raise ExerciseNotVisibleError("Exercício não pertence à mesma organização da sessão")
+
+        # INV-069: Atleta com vínculo ativo na equipe da sessão tem acesso implícito
+        # a exercícios já incluídos na sessão (bypass de visibility_mode).
+        if athlete_team_ids is not None:
+            session_team_id = getattr(session, 'team_id', None)
+            if session_team_id and session_team_id in athlete_team_ids:
+                return  # INV-069: acesso implícito ao atleta da equipe
         
         # Verificar visibility_mode
         visibility_mode = getattr(exercise, 'visibility_mode', 'org_wide')

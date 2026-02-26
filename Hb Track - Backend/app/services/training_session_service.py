@@ -56,9 +56,12 @@ class TrainingSessionService:
     # R40: Janelas de edição
     AUTHOR_EDIT_WINDOW_MINUTES = 10
     SUPERIOR_EDIT_WINDOW_HOURS = 24
-    
+
     # Step 15: Imutabilidade - sessões >60 dias são somente leitura
     IMMUTABILITY_DAYS = 60
+
+    # INV-068: status de sessão visíveis para atletas (leitura)
+    ATHLETE_VISIBLE_STATUSES = frozenset({"scheduled"})
 
     def __init__(self, db: AsyncSession, context: ExecutionContext):
         self.db = db
@@ -166,6 +169,77 @@ class TrainingSessionService:
 
         logger.info(
             f"Listed {len(sessions)} training sessions for org {self.context.organization_id}"
+        )
+        return sessions, total
+
+    async def get_sessions_for_athlete(
+        self,
+        *,
+        team_id: Optional[UUID] = None,
+        season_id: Optional[UUID] = None,
+        start_date: Optional[datetime] = None,
+        end_date: Optional[datetime] = None,
+        page: int = 1,
+        size: int = 20,
+    ) -> tuple[list[TrainingSession], int]:
+        """
+        INV-068: Lista sessões visíveis para atleta autenticado.
+
+        Regras:
+        - Atleta vê apenas sessions com status IN ATHLETE_VISIBLE_STATUSES ('scheduled')
+        - Filtrado aos times do atleta (context.team_ids)
+        - Atleta sem team_registration não vê nenhuma sessão (retorna lista vazia)
+
+        RBAC: chamada exclusiva para context.role_code == 'atleta'
+        """
+        athlete_team_ids = self.context.team_ids  # resolvido no JWT/login
+
+        if not athlete_team_ids:
+            # Atleta sem vínculo de equipe não vê treinos (AC 2 — retorna vazio)
+            return [], 0
+
+        query = (
+            select(TrainingSession)
+            .where(
+                and_(
+                    TrainingSession.organization_id == self.context.organization_id,
+                    TrainingSession.deleted_at.is_(None),
+                    TrainingSession.status.in_(self.ATHLETE_VISIBLE_STATUSES),
+                    TrainingSession.team_id.in_(athlete_team_ids),
+                )
+            )
+        )
+
+        if team_id:
+            # Filtro adicional: apenas times que o atleta pertence
+            if team_id not in athlete_team_ids:
+                raise ForbiddenError(
+                    "Atleta não tem acesso à sessões deste time (INV-068)"
+                )
+            query = query.where(TrainingSession.team_id == team_id)
+
+        if season_id:
+            query = query.where(TrainingSession.season_id == season_id)
+
+        if start_date:
+            query = query.where(TrainingSession.session_at >= start_date)
+
+        if end_date:
+            query = query.where(TrainingSession.session_at <= end_date)
+
+        count_query = query.with_only_columns(func.count()).order_by(None)
+        result_count = await self.db.execute(count_query)
+        total = result_count.scalar_one_or_none() or 0
+
+        query = query.order_by(TrainingSession.session_at.asc())
+        query = query.offset((page - 1) * size).limit(size)
+
+        result = await self.db.execute(query)
+        sessions = list(result.scalars().all())
+
+        logger.info(
+            f"Athlete {self.context.user_id} listed {len(sessions)} visible sessions "
+            f"(INV-068, org={self.context.organization_id})"
         )
         return sessions, total
 
