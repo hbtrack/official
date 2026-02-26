@@ -1,12 +1,18 @@
 # INVARIANTS_TRAINING.md — Invariantes do Módulo TRAINING
 
 Status: DRAFT  
-Versão: v1.2.0  
+Versão: v1.3.0  
 Tipo de Documento: SSOT Normativo — Invariantes  
 Módulo: TRAINING  
-Fase: PRD v2.2 (2026-02-20) + AS-IS repo (2026-02-25) + DEC-TRAIN-EXB-* (2026-02-25)  
+Fase: PRD v2.2 (2026-02-20) + AS-IS repo (2026-02-25) + DEC-TRAIN-EXB-* (2026-02-25) + FASE_3 (2026-02-27)  
 Autoridade: NORMATIVO_TECNICO  
-Última revisão: 2026-02-26  
+Última revisão: 2026-02-27  
+
+> Changelog v1.3.0 (2026-02-27):  
+> - Adicionadas INV-TRAIN-054..081 (28 invariantes — FASE_3: Ciclos/Sessão, Banco Exercícios, Presença/Pendências, Atleta/Pós-treino, IA/Educativo, Wellness Obrigatório, Gamificação, IA Treinador)  
+> - INV-TRAIN-EXB-ACL-001 AMENDADA: default `org_wide` → `restricted` (decisão normativa do humano: "ORG default = restricted, só criador vê")  
+> - INV-TRAIN-060 sobrepõe EXB-ACL-001 default; EXB-ACL-001 atualizada para consistência  
+> - Nota: INV-TRAIN-058 coexiste com INV-TRAIN-004/029 (princípio geral; 004/029 são refinamentos por-papel/por-status)  
 
 > Changelog v1.2.0 (2026-02-26):  
 > - Adicionada Authority Matrix  
@@ -1229,17 +1235,20 @@ class: A
 name: exercise_org_visibility_mode_valid
 rule: >
   Todo exercício ORG DEVE possuir visibility_mode válido: org_wide ou restricted.
-  Default para novos exercícios ORG: org_wide.
+  Default para novos exercícios ORG: **restricted** (apenas criador vê; compartilhar exige ação explícita).
+  AMENDADA v1.3.0: default alterado de org_wide para restricted por decisão normativa do humano
+  e consistência com INV-TRAIN-060.
 table: exercises
 constraints:
   - ck_exercises_visibility_mode (enum: org_wide, restricted; aplicável quando scope = ORG)
 evidence:
   - GAP: campo visibility_mode e constraint não evidenciados no schema atual.
 status: GAP
-decision_ref: DEC-TRAIN-EXB-001B
-decision_trace: [DEC-TRAIN-EXB-001B]
+decision_ref: DEC-TRAIN-EXB-001B, INV-TRAIN-060
+decision_trace: [DEC-TRAIN-EXB-001B, INV-TRAIN-060]
 rationale: >
   Controla quem visualiza exercícios ORG e abre caminho para ACL granular.
+  Default restricted segue princípio de menor privilégio: apenas criador vê por padrão.
 ```
 
 ---
@@ -1387,4 +1396,737 @@ decision_trace: [DEC-TRAIN-EXB-001B]
 rationale: >
   Sessões históricas são imutáveis (INV-TRAIN-005); ACL restritiva posterior
   não pode degradar auditoria ou leitura de dados consolidados.
+```
+
+---
+
+# FASE_3 — Ciclos/Sessão + Atleta + IA + Wellness Obrigatório (v1.3.0, 2026-02-27)
+
+> **Nota de coexistência (INV-TRAIN-058 vs 004/029):**
+> INV-TRAIN-058 é o princípio geral ("mutável até encerrar"). INV-TRAIN-004 e INV-TRAIN-029
+> são refinamentos por-papel e por-status que operam **dentro** desse princípio.
+> Ou seja: 058 NÃO override as restrições de papel/janela temporal de 004/029.
+
+## INV-TRAIN-054
+
+```yaml
+id: INV-TRAIN-054
+class: A+B
+name: cycle_hierarchy_mandatory
+rule: >
+  Um Microciclo DEVE pertencer a um Mesociclo válido, e um Mesociclo DEVE pertencer
+  a um Macrociclo válido. Não pode existir micro/meso "solto" (sem parent_cycle_id
+  apontando para ciclo existente do tipo correto).
+tables:
+  - training_cycles
+  - training_microcycles
+constraints:
+  - FK training_microcycles.cycle_id → training_cycles.id
+  - Service: validação de que parent_cycle_id aponta para cycle_type correto
+evidence:
+  - GAP: FK básica existe, mas validação de hierarquia (macro→meso→micro) não evidenciada em service.
+status: GAP
+extends: INV-TRAIN-037, INV-TRAIN-043
+rationale: >
+  Reforça a integridade hierárquica do planejamento. Ciclos "soltos" degradam
+  rastreabilidade e analytics de periodização.
+```
+
+---
+
+## INV-TRAIN-055
+
+```yaml
+id: INV-TRAIN-055
+class: B
+name: meso_overlap_allowed
+rule: >
+  Mesociclos da mesma equipe/macrociclo PODEM se sobrepor em datas.
+  O sistema NÃO deve bloquear sobreposição nem forçar ajuste automático.
+tables:
+  - training_cycles
+evidence:
+  - GAP: política de sobreposição não explicitada em service/constraint.
+status: GAP
+rationale: >
+  Periodização de handebol admite mesociclos simultâneos (ex.: preparatório físico
+  e competitivo técnico-tático). Bloquear sobreposição impediria planejamento real.
+```
+
+---
+
+## INV-TRAIN-056
+
+```yaml
+id: INV-TRAIN-056
+class: A+B
+name: micro_contained_in_meso
+rule: >
+  As datas (start_date, end_date) do Microciclo DEVEM estar 100% contidas no
+  intervalo do Mesociclo pai. Microciclo que extrapola é inválido (422).
+tables:
+  - training_microcycles
+  - training_cycles
+constraints:
+  - Service/DB: check micro.start >= meso.start AND micro.end <= meso.end
+evidence:
+  - GAP: validação de containment não evidenciada (INV-TRAIN-043 valida datas do micro, mas não containment no meso).
+status: GAP
+extends: INV-TRAIN-043
+rationale: >
+  Garante coerência temporal da hierarquia macro→meso→micro sem deixar semanas
+  "vazando" fora do mesociclo planejado.
+```
+
+---
+
+## INV-TRAIN-057
+
+```yaml
+id: INV-TRAIN-057
+class: B
+name: standalone_session_explicit_flag
+rule: >
+  Toda sessão DEVE estar vinculada a um Microciclo (via microcycle_id) OU
+  estar marcada explicitamente como avulsa (microcycle_id IS NULL + flag standalone).
+  Sessão sem vínculo e sem flag é inválida.
+tables:
+  - training_sessions
+services:
+  - app/services/training_session_service.py (validação create/update)
+evidence:
+  - GAP: campo standalone/flag de sessão avulsa não evidenciado no schema.
+status: GAP
+rationale: >
+  Evita sessões "invisíveis" ao planejamento, permitindo ao treinador treinos
+  fora da periodização (amistosos, reforço).
+```
+
+---
+
+## INV-TRAIN-058
+
+```yaml
+id: INV-TRAIN-058
+class: B
+name: session_structure_mutable_until_close
+rule: >
+  O treinador PODE adicionar/remover/reordenar exercícios enquanto a sessão NÃO
+  estiver encerrada (status != readonly). Após encerrar, a estrutura de exercícios
+  é histórica e NÃO pode ser alterada.
+  NOTA: Este é o princípio geral. INV-TRAIN-004 (janela por papel) e INV-TRAIN-029
+  (regras por status) são refinamentos que operam DENTRO deste princípio.
+tables:
+  - training_sessions
+  - training_session_exercises
+services:
+  - app/services/training_session_service.py
+  - app/services/session_exercise_service.py
+evidence:
+  - PARCIAL: status lifecycle impede edição em readonly, mas guard explícito de exercícios por status
+    não evidenciado como regra separada.
+status: PARCIAL
+coexists_with: INV-TRAIN-004, INV-TRAIN-029
+rationale: >
+  Permite ajustes de última hora no treino (realidade operacional) sem degradar
+  o histórico consolidado.
+```
+
+---
+
+## INV-TRAIN-059
+
+```yaml
+id: INV-TRAIN-059
+class: A
+name: exercise_order_contiguous_unique
+rule: >
+  Dentro de uma sessão, a ordem dos exercícios (order_index) DEVE ser:
+  - Única por sessão (sem duplicidade),
+  - Contígua (1..N sem gaps),
+  - Determinística.
+  Reorder DEVE normalizar gaps.
+tables:
+  - training_session_exercises
+constraints:
+  - uq_session_exercises_order (unique (training_session_id, order_index))
+evidence:
+  - INV-TRAIN-045 garante unicidade, mas contiguidade/normalização de gaps não evidenciada.
+status: PARCIAL
+extends: INV-TRAIN-045
+rationale: >
+  Ordem determinística garante reprodutibilidade do treino e UX consistente
+  no drag-and-drop.
+```
+
+---
+
+## INV-TRAIN-060
+
+```yaml
+id: INV-TRAIN-060
+class: B
+name: org_exercise_default_restricted
+rule: >
+  Ao criar exercício de scope ORG, o default de visibility_mode DEVE ser
+  "restricted" (apenas o treinador criador vê). Compartilhar com outros
+  treinadores exige ação explícita do criador (ACL ou mudança para org_wide).
+tables:
+  - exercises
+services:
+  - app/services/exercise_service.py (default na criação)
+evidence:
+  - GAP: default atual documentado como org_wide (INV-TRAIN-EXB-ACL-001 amendada para restricted em v1.3.0).
+status: GAP
+overrides: INV-TRAIN-EXB-ACL-001 (default)
+decision_trace: [DECISÃO_HUMANA_2026-02-27]
+rationale: >
+  Princípio de menor privilégio. Evita exposição acidental de exercícios
+  proprietários do treinador.
+```
+
+---
+
+## INV-TRAIN-061
+
+```yaml
+id: INV-TRAIN-061
+class: B
+name: system_exercise_copy_not_edit
+rule: >
+  Exercícios SYSTEM NÃO podem ser editados por usuários de org. Ao "adaptar",
+  o sistema DEVE criar uma cópia ORG (via copy-to-org) e o treinador edita a cópia.
+  O exercício SYSTEM original permanece inalterado.
+tables:
+  - exercises
+services:
+  - app/services/exercise_service.py (guard SYSTEM + copy-to-org)
+evidence:
+  - INV-TRAIN-048 proíbe edição de SYSTEM. Copy-to-org está em CONTRACT-TRAIN-095 (GAP).
+status: GAP
+extends: INV-TRAIN-048
+rationale: >
+  Preserva o catálogo global. Adaptações locais são cópias ORG rastreáveis.
+```
+
+---
+
+## INV-TRAIN-062
+
+```yaml
+id: INV-TRAIN-062
+class: B
+name: exercise_visibility_required_for_session_add
+rule: >
+  Um exercício só PODE ser adicionado a uma sessão se for visível ao treinador
+  naquele momento: SYSTEM (global), ORG criado por ele, ou ORG compartilhado
+  via ACL com ele. Exercício ORG restricted sem ACL para o treinador → 403.
+tables:
+  - training_session_exercises
+  - exercises
+  - exercise_acl
+services:
+  - app/services/session_exercise_service.py (guard de visibilidade)
+evidence:
+  - GAP: guard de visibilidade no add-exercise-to-session não evidenciado.
+status: GAP
+extends: INV-TRAIN-051
+rationale: >
+  Impede que treinador B monte sessão com exercício privado do treinador A.
+```
+
+---
+
+## INV-TRAIN-063
+
+```yaml
+id: INV-TRAIN-063
+class: B+D
+name: athlete_preconfirm_not_official
+rule: >
+  O atleta PODE pré-confirmar presença no app (status = preconfirmed),
+  mas isso NÃO constitui presença oficial. A presença oficial só é
+  consolidada pelo treinador no encerramento da sessão (INV-TRAIN-064).
+tables:
+  - attendance
+services:
+  - app/services/attendance_service.py (fluxo de pré-confirmação)
+evidence:
+  - GAP: fluxo de pré-confirmação de atleta não evidenciado.
+status: GAP
+extends: INV-TRAIN-016
+decision_trace: [DECISÃO_HUMANA_2026-02-27]
+rationale: >
+  Dá ao atleta engajamento antecipado sem retirar do treinador a
+  autoridade sobre presença oficial.
+```
+
+---
+
+## INV-TRAIN-064
+
+```yaml
+id: INV-TRAIN-064
+class: B
+name: official_attendance_at_closure
+rule: >
+  O sistema só PODE consolidar presença oficial (presente/ausente/justificado)
+  no momento do encerramento da sessão pelo treinador. Antes do encerramento,
+  registros de presença são provisórios/rascunho.
+tables:
+  - attendance
+  - training_sessions
+services:
+  - app/services/attendance_service.py
+  - app/services/training_session_service.py (fluxo de close)
+evidence:
+  - PARCIAL: close existe, mas fluxo de consolidação de presença no close não evidenciado como separado.
+status: GAP
+extends: INV-TRAIN-016
+decision_trace: [DECISÃO_HUMANA_2026-02-27]
+rationale: >
+  Evita que presença parcial antes do treino vire dado oficial sem validação humana.
+```
+
+---
+
+## INV-TRAIN-065
+
+```yaml
+id: INV-TRAIN-065
+class: B
+name: closure_allows_inconsistency_as_pending
+rule: >
+  Se no encerramento houver atleta não elegível ou dado não resolvido,
+  o sistema DEVE permitir encerrar. Itens inconsistentes NÃO viram oficiais;
+  viram "pendências" com motivo, rastreáveis em fila separada (INV-TRAIN-066).
+tables:
+  - training_sessions
+  - attendance
+services:
+  - app/services/training_session_service.py (close com pendências)
+evidence:
+  - GAP: fluxo de encerramento com pendências não evidenciado.
+status: GAP
+decision_trace: [DECISÃO_HUMANA_2026-02-27]
+rationale: >
+  Prioriza o encerramento do treino (realidade operacional) sobre perfeição de dados.
+  Pendências são tratadas posteriormente sem bloquear o fluxo.
+```
+
+---
+
+## INV-TRAIN-066
+
+```yaml
+id: INV-TRAIN-066
+class: B+D
+name: pending_queue_separate
+rule: >
+  Pendências geradas no encerramento (presença inválida, atleta não resolvido etc.)
+  DEVEM ir para fila/tela separada "Pendências do Treino". A sessão encerrada
+  NÃO é alterada; pendências são entidades próprias vinculadas à sessão.
+tables:
+  - training_pending_items (nova tabela ou extensão)
+  - training_sessions
+services:
+  - app/services/training_pending_service.py (novo)
+evidence:
+  - GAP: tabela e service de pendências não existem.
+status: GAP
+decision_trace: [DECISÃO_HUMANA_2026-02-27]
+rationale: >
+  Separar pendências da sessão concluída preserva integridade do histórico
+  e dá ao treinador UX dedicada para resolução assíncrona.
+```
+
+---
+
+## INV-TRAIN-067
+
+```yaml
+id: INV-TRAIN-067
+class: B+D
+name: athlete_pending_collaboration_no_validate
+rule: >
+  O atleta PODE ajudar a resolver pendências (ex.: confirmar identidade),
+  mas NÃO PODE transformar pendência em dado oficial sozinho.
+  A validação final de qualquer pendência é exclusiva do treinador.
+tables:
+  - training_pending_items
+services:
+  - app/services/training_pending_service.py (RBAC: atleta colabora, treinador valida)
+evidence:
+  - GAP: fluxo colaborativo não evidenciado.
+status: GAP
+decision_trace: [DECISÃO_HUMANA_2026-02-27]
+rationale: >
+  Engaja o atleta sem delegar autoridade de validação oficial.
+```
+
+---
+
+## INV-TRAIN-068
+
+```yaml
+id: INV-TRAIN-068
+class: D
+name: athlete_sees_training_before
+rule: >
+  O atleta DEVE conseguir ver, antes do treino: horário, lista de exercícios
+  e objetivo da sessão (quando existir), sem depender de preencher formulários.
+  Esta é informação read-only na perspectiva do atleta.
+tables:
+  - training_sessions
+  - training_session_exercises
+services:
+  - Endpoint de leitura para atleta (scoped pela equipe)
+evidence:
+  - GAP: endpoint/tela de atleta para ver treino antecipadamente não evidenciado.
+status: GAP
+decision_trace: [DECISÃO_HUMANA_2026-02-27]
+rationale: >
+  Permite ao atleta se preparar mentalmente e logisticamente para o treino.
+```
+
+---
+
+## INV-TRAIN-069
+
+```yaml
+id: INV-TRAIN-069
+class: D+B
+name: exercise_media_accessible_to_athlete
+rule: >
+  Se um exercício está no treino do atleta, o atleta DEVE poder ver as
+  mídias/instruções do exercício, independente da visibility_mode do exercício
+  (SYSTEM ou ORG). A visibilidade por mídia segue a sessão, não o exercício.
+tables:
+  - training_session_exercises
+  - exercise_media
+services:
+  - app/services/session_exercise_service.py (acesso via sessão)
+evidence:
+  - GAP: acesso do atleta a mídia via sessão não evidenciado.
+status: GAP
+decision_trace: [DECISÃO_HUMANA_2026-02-27]
+rationale: >
+  Atleta precisa das instruções/vídeos para executar corretamente,
+  independente de quem criou o exercício.
+```
+
+---
+
+## INV-TRAIN-070
+
+```yaml
+id: INV-TRAIN-070
+class: B+D
+name: post_training_conversational
+rule: >
+  O pós-treino do atleta (RPE, dificuldade, dores, feedback) DEVE poder
+  ser registrado de forma conversacional (texto/voz), sem exigir formulário
+  rígido como pré-requisito. Campos de formulário, se existirem, DEVEM ser opcionais.
+tables:
+  - wellness_post (extensão com campo conversational_feedback)
+services:
+  - app/services/wellness_post_service.py (aceitar input conversacional)
+evidence:
+  - GAP: input conversacional não evidenciado; wellness_post atual é formulário fixo.
+status: GAP
+decision_trace: [DECISÃO_HUMANA_2026-02-27]
+rationale: >
+  Reduz atrito para o atleta e aumenta taxa de resposta pós-treino.
+  Formulário rígido é barreira para adolescentes.
+```
+
+---
+
+## INV-TRAIN-071
+
+```yaml
+id: INV-TRAIN-071
+class: B+D
+name: wellness_missing_blocks_full_content
+rule: >
+  Se o atleta NÃO cumprir a política de wellness obrigatória (INV-TRAIN-076),
+  o sistema DEVE:
+  - Permitir ver o mínimo operacional (horário do treino, local).
+  - Bloquear conteúdo completo (exercícios, vídeos, instruções e detalhes).
+  O bloqueio de conteúdo é consequência da política, não regra independente.
+tables:
+  - wellness_pre
+  - wellness_post
+  - training_sessions
+services:
+  - app/services/athlete_content_gate_service.py (novo)
+evidence:
+  - GAP: gate de conteúdo por wellness não implementado.
+status: GAP
+extends: INV-TRAIN-002
+depends_on: INV-TRAIN-076
+decision_trace: [DECISÃO_HUMANA_2026-02-27]
+rationale: >
+  Incentivo positivo: compliance com wellness desbloqueia valor (conteúdo).
+  Atleta nunca fica "no escuro" sobre horário/local.
+```
+
+---
+
+## INV-TRAIN-072
+
+```yaml
+id: INV-TRAIN-072
+class: B
+name: ai_suggestion_not_order
+rule: >
+  A IA PODE enviar mensagens automáticas ao atleta, mas SEMPRE como
+  sugestão/apoio (tom não-imperativo) e NÃO PODE criar/publicar treino
+  oficial automaticamente. Toda geração de treino pela IA passa por
+  "editar antes" do treinador (INV-TRAIN-075, INV-TRAIN-080).
+services:
+  - app/services/ai_coach_service.py (tone guard + publish guard)
+evidence:
+  - GAP: módulo de IA coach não existe.
+status: GAP
+decision_trace: [DECISÃO_HUMANA_2026-02-27]
+rationale: >
+  O treinador humano é a autoridade. IA é ferramenta de apoio,
+  não tomador de decisão.
+```
+
+---
+
+## INV-TRAIN-073
+
+```yaml
+id: INV-TRAIN-073
+class: B
+name: ai_privacy_no_intimate_content
+rule: >
+  O treinador NÃO PODE ver conteúdo íntimo das conversas do atleta com a IA.
+  O treinador só recebe alertas/resumos de risco (safety), sem expor texto íntimo.
+  O atleta é dono do conteúdo da conversa.
+services:
+  - app/services/ai_coach_service.py (privacy filter)
+  - app/services/coach_alerts_service.py (summarizer)
+evidence:
+  - GAP: módulo de IA coach não existe.
+status: GAP
+decision_trace: [DECISÃO_HUMANA_2026-02-27]
+rationale: >
+  Confiança atleta ↔ IA depende de privacidade. Treinador recebe
+  informação acionável sem violação de intimidade.
+```
+
+---
+
+## INV-TRAIN-074
+
+```yaml
+id: INV-TRAIN-074
+class: B
+name: ai_educational_content_independent
+rule: >
+  A IA PODE explicar regras e situações de jogo (2 minutos, superioridade numérica,
+  7m, princípios táticos) mesmo que o treino do dia não cite o tema.
+  Conteúdo educativo NÃO altera treino/agendamento; é informativo.
+services:
+  - app/services/ai_coach_service.py (educational module)
+evidence:
+  - GAP: conteúdo educativo não implementado.
+status: GAP
+decision_trace: [DECISÃO_HUMANA_2026-02-27]
+rationale: >
+  Atleta tem curiosidade além do treino do dia. Conteúdo educativo aumenta
+  literacia tática sem interferir no planejamento.
+```
+
+---
+
+## INV-TRAIN-075
+
+```yaml
+id: INV-TRAIN-075
+class: B
+name: ai_extra_training_draft_only
+rule: >
+  Se o atleta pedir "treino extra", a IA PODE gerar um rascunho, mas o rascunho
+  DEVE chegar ao treinador como "editar antes de aprovar". O sistema NÃO PODE
+  publicar/agendar automaticamente. Publicação só após ação explícita do treinador.
+tables:
+  - training_sessions (status=draft, source=ai_athlete_request)
+services:
+  - app/services/ai_coach_service.py (draft generation)
+  - app/services/training_session_service.py (source tracking)
+evidence:
+  - GAP: geração de rascunho por IA não implementada.
+status: GAP
+decision_trace: [DECISÃO_HUMANA_2026-02-27]
+rationale: >
+  Mantém o treinador humano como gatekeeper de tudo que vira treino oficial.
+  Evita risco de IA sugerir treino inadequado.
+```
+
+---
+
+## INV-TRAIN-076
+
+```yaml
+id: INV-TRAIN-076
+class: B
+name: mandatory_wellness_policy
+rule: >
+  Para o atleta acessar conteúdo completo do treino (exercícios, vídeos,
+  instruções e detalhes), o sistema DEVE exigir:
+  1) wellness pré DO DIA; e
+  2) wellness pós DO ÚLTIMO TREINO realizado (quando existir).
+  Se algum estiver faltando, o atleta vê apenas mínimo operacional
+  (horário, local), sem conteúdo completo.
+  "Último treino realizado" = último treino encerrado/concluído do atleta/equipe.
+tables:
+  - wellness_pre
+  - wellness_post
+  - training_sessions
+services:
+  - app/services/athlete_content_gate_service.py (policy check)
+evidence:
+  - GAP: política de bloqueio por wellness não implementada.
+status: GAP
+extends: INV-TRAIN-002, INV-TRAIN-003
+decision_trace: [DECISÃO_HUMANA_2026-02-27]
+rationale: >
+  Incentiva compliance contínua do atleta com wellness, criando ciclo virtuoso:
+  preencher wellness → desbloquear conteúdo → preparar-se melhor → desempenho.
+```
+
+---
+
+## INV-TRAIN-077
+
+```yaml
+id: INV-TRAIN-077
+class: B+D
+name: immediate_virtual_coach_feedback
+rule: >
+  Quando o atleta concluir o pós-treino conversacional, o sistema DEVE gerar
+  e entregar feedback curto do treinador virtual contendo:
+  1) 1 reconhecimento (esforço/consistência), e
+  2) 1 orientação prática (técnica/tática/recuperação) aplicável ao próximo treino.
+  Se o atleta NÃO concluir o pós-treino, o sistema NÃO gera feedback.
+services:
+  - app/services/ai_coach_service.py (feedback gen)
+  - app/services/wellness_post_service.py (trigger on complete)
+evidence:
+  - GAP: treinador virtual e feedback automático não implementados.
+status: GAP
+extends: INV-TRAIN-013
+decision_trace: [DECISÃO_HUMANA_2026-02-27]
+rationale: >
+  Recompensa imediata por completar pós-treino. Orientação prática
+  conecta feedback a ação futura.
+```
+
+---
+
+## INV-TRAIN-078
+
+```yaml
+id: INV-TRAIN-078
+class: B+D
+name: progress_view_requires_compliance
+rule: >
+  O atleta só PODE visualizar a aba/visão de progresso pessoal
+  (histórico e comparativos de evolução) quando estiver em conformidade
+  com a política de check-ins obrigatórios (INV-TRAIN-076).
+  Se não estiver em conformidade, vê apenas visão básica do dia.
+services:
+  - app/services/athlete_content_gate_service.py (progress gate)
+evidence:
+  - GAP: gate de progresso por compliance não implementado.
+status: GAP
+extends: INV-TRAIN-013
+depends_on: INV-TRAIN-076
+decision_trace: [DECISÃO_HUMANA_2026-02-27]
+rationale: >
+  Reforça incentivo de compliance: progressão pessoal é desbloqueada
+  por participação contínua.
+```
+
+---
+
+## INV-TRAIN-079
+
+```yaml
+id: INV-TRAIN-079
+class: B
+name: individual_recognition_no_intimate_leak
+rule: >
+  Qualquer reconhecimento/feedback gerado para valorizar o atleta
+  (consistência, participação) DEVE ser individual e NÃO PODE expor
+  conteúdo íntimo de conversa do atleta para terceiros.
+  O treinador recebe apenas resumos/alertas conforme INV-TRAIN-073.
+services:
+  - app/services/ai_coach_service.py (privacy filter on recognition)
+evidence:
+  - GAP: módulo de reconhecimento não implementado.
+status: GAP
+extends: INV-TRAIN-073
+decision_trace: [DECISÃO_HUMANA_2026-02-27]
+rationale: >
+  Proteção de dados sensíveis. Reconhecimento público usa apenas
+  métricas agregadas (taxa de resposta, frequência), não conteúdo de conversa.
+```
+
+---
+
+## INV-TRAIN-080
+
+```yaml
+id: INV-TRAIN-080
+class: B
+name: ai_coach_draft_only
+rule: >
+  A IA PODE ajudar o treinador sugerindo exercícios, montando sessões e propondo
+  planejamento (microciclo/agenda), mas toda proposta DEVE ser criada como
+  rascunho ("editar antes"). O sistema NÃO pode publicar/agendar automaticamente.
+  Publicação/agendamento ocorre APENAS após ação explícita do treinador.
+  (Generaliza INV-TRAIN-075 para o contexto do treinador.)
+tables:
+  - training_sessions (status=draft, source=ai_coach_suggestion)
+services:
+  - app/services/ai_coach_service.py (draft-only guard)
+evidence:
+  - GAP: módulo de IA para coach não implementado.
+status: GAP
+extends: INV-TRAIN-075
+decision_trace: [DECISÃO_HUMANA_2026-02-27]
+rationale: >
+  O treinador DEVE revisar toda proposta antes de publicar. IA
+  é copiloto, não autopiloto.
+```
+
+---
+
+## INV-TRAIN-081
+
+```yaml
+id: INV-TRAIN-081
+class: B
+name: ai_suggestion_requires_justification
+rule: >
+  Toda sugestão da IA para o treinador (exercício/sessão/planejamento) DEVE
+  incluir justificativa mínima (curta e objetiva) baseada em sinais do sistema
+  (wellness, carga recente, consistência, objetivo do microciclo, dados de jogo/scout).
+  Sugestões sem justificativa NÃO PODEM ser apresentadas como recomendação
+  (apenas como "ideia genérica" com label distinto).
+services:
+  - app/services/ai_coach_service.py (justification enforcer)
+evidence:
+  - GAP: módulo de IA para coach não implementado.
+status: GAP
+decision_trace: [DECISÃO_HUMANA_2026-02-27]
+rationale: >
+  Justificativa rastreável permite ao treinador avaliar qualidade da sugestão
+  e cria feedback loop para melhoria do modelo de IA.
 ```

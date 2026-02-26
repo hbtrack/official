@@ -1,12 +1,19 @@
 # TRAINING_FRONT_BACK_CONTRACT.md — Contratos Front-Back do Módulo TRAINING
 
 Status: DRAFT  
-Versão: v1.2.0  
+Versão: v1.3.0  
 Tipo de Documento: SSOT Normativo — Front-Back Contract  
 Módulo: TRAINING  
-Fase: PRD v2.2 (2026-02-20) + AS-IS repo (2026-02-25) + DEC-TRAIN-* (2026-02-25)  
+Fase: PRD v2.2 (2026-02-20) + AS-IS repo (2026-02-25) + DEC-TRAIN-* (2026-02-25) + FASE_3 (2026-02-27)  
 Autoridade: NORMATIVO_TECNICO  
-Última revisão: 2026-02-26  
+Última revisão: 2026-02-27  
+
+> Changelog v1.3.0 (2026-02-27):  
+> - §3.5: Default `visibility_mode` alterado de `org_wide` para `restricted` (INV-TRAIN-060, AMENDA EXB-ACL-001)  
+> - §5.11: Novos contratos FASE_3 — presença oficial, pending queue, wellness content gate, IA coach  
+> - Shapes: Adicionados `AthleteSessionPreview`, `PendingItem`  
+> - Gaps: GAP-CONTRACT-6 (presença/pending/wellness gate) e GAP-CONTRACT-7 (IA coach)  
+> - Novos contracts: CONTRACT-TRAIN-096..105  
 
 > Changelog v1.2.0 (2026-02-26):  
 > - Adicionada Authority Matrix  
@@ -126,7 +133,7 @@ Valores padrão que o sistema DEVE aplicar quando o campo não é informado no r
 
 | Campo / Contexto | Default | Fonte / DEC |
 |---|---|---|
-| `visibility_mode` (exercício ORG) | `org_wide` | DEC-TRAIN-EXB-001 |
+| `visibility_mode` (exercício ORG) | `restricted` | DEC-TRAIN-EXB-001, INV-TRAIN-060 (AMENDADO v1.3.0: era org_wide) |
 | `is_favorite` (exercício recém-criado) | `false` | INV-TRAIN-050 |
 | `athlete_id` (wellness atleta) | Inferido do token JWT | DEC-TRAIN-001 |
 | Worker Celery indisponível (export) | 202 estado degradado (não 500) | DEC-TRAIN-004 |
@@ -703,6 +710,71 @@ Contratos (AS-IS expostos no OpenAPI; TO-BE deve convergir para UUIDs):
 
 ---
 
+### 5.11 FASE_3 — Presença Oficial, Pending Queue, Atleta Pre-Session, IA Coach (v1.3.0)
+
+> **decision_trace:** `[INV-TRAIN-063..081]`  
+> Contratos novos da FASE_3. Nenhum implementado ainda — status GAP.  
+> Shapes mínimos definidos abaixo; operationIds serão materializados pelas ARs correspondentes.
+
+#### Presença oficial e fila de pendências
+
+| ID | Método | Path | operationId | Request shape (mínimo) | Response shape (mínimo) | Status | Invariantes-chave |
+|---|---|---|---|---|---|---|---|
+| CONTRACT-TRAIN-096 | GET | `/athlete/training-sessions/{session_id}/preview` | `get_athlete_session_preview` | — | `AthleteSessionPreview` | GAP | INV-TRAIN-068, INV-TRAIN-069 |
+| CONTRACT-TRAIN-097 | POST | `/training-sessions/{session_id}/pre-confirm` | `pre_confirm_attendance` | `{athlete_id?: uuid}` | `{status: "pre_confirmed", is_official: false}` | GAP | INV-TRAIN-063 |
+| CONTRACT-TRAIN-098 | POST | `/training-sessions/{session_id}/close` | `close_session_with_attendance` | `{attendance: AttendanceBatch, allow_pending: bool}` | `{closed: true, pending_items: PendingItem[]}` | GAP | INV-TRAIN-064, INV-TRAIN-065 |
+| CONTRACT-TRAIN-099 | GET | `/training/pending-items` | `list_pending_items` | query: `?team_id=&status=open` | `PendingItem[]` | GAP | INV-TRAIN-066 |
+| CONTRACT-TRAIN-100 | PATCH | `/training/pending-items/{item_id}/resolve` | `resolve_pending_item` | `{resolution: string, new_status: present\|absent\|justified}` | `PendingItem` | GAP | INV-TRAIN-066, INV-TRAIN-067 |
+
+#### Wellness content gate
+
+| ID | Método | Path | operationId | Request shape | Response shape | Status | Invariantes-chave |
+|---|---|---|---|---|---|---|---|
+| CONTRACT-TRAIN-105 | GET | `/athlete/wellness-content-gate/{session_id}` | `check_wellness_content_gate` | — | `{has_wellness: bool, can_see_full_content: bool, blocked_reason?: string}` | GAP | INV-TRAIN-071, INV-TRAIN-076 |
+
+#### IA Coach (atleta + treinador)
+
+| ID | Método | Path | operationId | Request shape | Response shape | Status | Invariantes-chave |
+|---|---|---|---|---|---|---|---|
+| CONTRACT-TRAIN-101 | POST | `/ai-coach/draft-session` | `ai_draft_session` | `{team_id: uuid, context: object}` | `{draft_id: uuid, suggested_session: object, justification: string}` | GAP | INV-TRAIN-075, INV-TRAIN-080, INV-TRAIN-081 |
+| CONTRACT-TRAIN-102 | PATCH | `/ai-coach/draft-session/{draft_id}/apply` | `apply_ai_draft` | `{edits?: object}` | `{training_session_id: uuid, applied: true}` | GAP | INV-TRAIN-075, INV-TRAIN-080 |
+| CONTRACT-TRAIN-103 | POST | `/ai-coach/athlete-chat` | `ai_athlete_chat` | `{session_id: uuid, message: string}` | `{response: string, type: "educational"\|"motivational"\|"suggestion"}` | GAP | INV-TRAIN-072, INV-TRAIN-073, INV-TRAIN-074 |
+| CONTRACT-TRAIN-104 | POST | `/ai-coach/justify-suggestion` | `ai_justify_suggestion` | `{suggestion_id: uuid}` | `{justification: string, references: string[]}` | GAP | INV-TRAIN-081 |
+
+#### Shapes mínimos novos (FASE_3)
+
+```yaml
+AthleteSessionPreview:
+  session_id: uuid
+  session_date: date
+  session_title: string
+  focus_items: FocusItem[]
+  exercises: ExercisePreviewItem[]  # só nome + duração + media_url (sem notas internas do coach)
+  wellness_status: {has_pre: bool, can_see_full: bool}
+
+PendingItem:
+  id: uuid
+  training_session_id: uuid
+  athlete_id: uuid
+  athlete_name: string
+  type: "attendance_mismatch" | "missing_wellness" | "late_arrival"
+  created_at: datetime
+  status: "open" | "resolved"
+  resolution?: string
+  resolved_by?: uuid
+  resolved_at?: datetime
+```
+
+> **Nota normativa (INV-TRAIN-063):** `pre-confirm` NÃO é presença oficial.  
+> O FE DEVE exibir label distinto (ex: "Confirmou presença" vs "Presente ✓") para evitar ambiguidade.  
+> Presença oficial é registrada APENAS em `close` (CONTRACT-TRAIN-098).
+
+> **Nota normativa (INV-TRAIN-071, INV-TRAIN-076):** Se `wellness_status.can_see_full == false`,  
+> o FE DEVE ocultar detalhes de exercícios e mostrar prompt de wellness.  
+> O backend DEVE retornar shape parcial (sem `exercises` completos) quando wellness ausente.
+
+---
+
 ## 6) Contratos desabilitados no agregador (BLOQUEADO)
 
 > Estes contratos existem como código, mas **não estão expostos** em `Hb Track - Backend/app/api/v1/api.py` e portanto **não aparecem** no `openapi.json` atual.
@@ -764,6 +836,16 @@ Fonte: `Hb Track - Backend/app/api/v1/routers/athlete_export.py`
 
 ### GAP-CONTRACT-5 — Exports/LGPD routers existem mas estão desabilitados
 - UI existe para export PDF, invariantes existem, mas as rotas não estão incluídas no agregador v1.
+
+### GAP-CONTRACT-6 — FASE_3: Presença oficial, pending queue, wellness content gate (v1.3.0)
+- Contratos CONTRACT-TRAIN-096..100, 105 definidos normativamente na §5.11 mas **não implementados**.
+- Nenhum endpoint existe ainda no backend — ARs AR-TRAIN-017/018/019 devem materializar.
+- Shapes `AthleteSessionPreview` e `PendingItem` são normativos mínimos, sem âncora no SSOT DB (tabelas ainda não criadas).
+
+### GAP-CONTRACT-7 — FASE_3: IA Coach endpoints (v1.3.0)
+- Contratos CONTRACT-TRAIN-101..104 definidos normativamente na §5.11 mas **não implementados**.
+- Funcionalidade de IA está marcada como P2 — endpoints serão materializados por AR-TRAIN-021.
+- Shapes de request/response são provisórios — dependem da interface de LLM/agent escolhida.
 
 ---
 

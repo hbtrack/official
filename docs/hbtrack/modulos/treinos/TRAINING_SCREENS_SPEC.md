@@ -1,12 +1,16 @@
 # TRAINING_SCREENS_SPEC.md — Especificação de Telas do Módulo TRAINING
 
 Status: DRAFT  
-Versão: v1.2.0  
+Versão: v1.3.0  
 Tipo de Documento: SSOT Normativo — Screens Spec  
 Módulo: TRAINING  
-Fase: PRD v2.2 (2026-02-20) + AS-IS repo (2026-02-25) + DEC-TRAIN-* (2026-02-25)  
+Fase: PRD v2.2 (2026-02-20) + AS-IS repo (2026-02-25) + DEC-TRAIN-* (2026-02-25) + FASE_3 (2026-02-27)  
 Autoridade: NORMATIVO_TECNICO  
-Última revisão: 2026-02-26  
+Última revisão: 2026-02-27  
+
+> Changelog v1.3.0 (2026-02-27):  
+> - FASE_3: Adicionados SCREEN-TRAIN-022..025 (atleta pre-session, pending queue, AI chat, AI coach draft)  
+> - Cross-ref: INV-TRAIN-063..081, CONTRACT-TRAIN-096..105, FLOW-TRAIN-016..021  
 
 > Changelog v1.2.0 (2026-02-26):  
 > - Adicionada Authority Matrix  
@@ -579,3 +583,151 @@ Requisitos normativos:
 
 Contratos:
 - `CONTRACT-TRAIN-077..085`
+
+---
+
+# FASE_3 — Telas v1.3.0 (Atleta Pre-Session, Pending Queue, IA Coach)
+
+> **Cross-ref:** INV-TRAIN-063..081 • CONTRACT-TRAIN-096..105 • FLOW-TRAIN-016..021
+
+---
+
+## SCREEN-TRAIN-022 — Visão Pré-Treino do Atleta
+
+**Tipo:** Page  
+**Rota:** `/athlete/training/[sessionId]`  
+**Fluxo:** FLOW-TRAIN-016, FLOW-TRAIN-017, FLOW-TRAIN-021  
+**Estado AS-IS:** GAP  
+
+### Estados de UI
+
+| Estado | Condição | Elementos visíveis |
+|---|---|---|
+| `loading` | Carregando dados da sessão | Skeleton/spinner |
+| `wellness_blocked` | `can_see_full_content == false` | Prompt wellness + info parcial (data/hora/título) |
+| `data` | Wellness OK, sessão futura/em andamento | Exercícios + mídia + foco + botão pre-confirm |
+| `pre_confirmed` | Atleta já pré-confirmou | Badge "Presença pré-confirmada" (não oficial) |
+| `readonly` | Sessão já fechada | Dados da sessão readonly + resultado presença |
+| `error` | Falha de rede/permissão | Mensagem de erro |
+
+### Regras normativas
+1. **Wellness gate (INV-TRAIN-071, INV-TRAIN-076):** Se `wellness_status.can_see_full == false`, a tela DEVE:
+   - Ocultar lista de exercícios detalhada.
+   - Mostrar prompt informativo (não punitivo) para preenchimento de wellness.
+   - Exibir apenas: título da sessão, data/hora, local.
+2. **Pre-confirm (INV-TRAIN-063):** Botão "Confirmar presença" disponível APENAS antes do fechamento.
+   - Label DEVE ser "Confirmar presença" (nunca "Marcar presente").
+   - Após click, exibir badge "Pré-confirmado" com nota "(não oficial)".
+3. **Mídia (INV-TRAIN-069):** Exercícios devem exibir thumbnail/vídeo quando disponível.
+4. **Progress gate (INV-TRAIN-078):** Se tela incluir tab de "meu progresso", compliance de wellness é requisito.
+
+### Contratos consumidos
+- `CONTRACT-TRAIN-096` (preview do treino)
+- `CONTRACT-TRAIN-097` (pre-confirm)
+- `CONTRACT-TRAIN-105` (wellness content gate)
+
+### Evidências
+- (a criar — AR-TRAIN-019)
+
+---
+
+## SCREEN-TRAIN-023 — Fila de Pendências (Admin)
+
+**Tipo:** Page  
+**Rota:** `/training/pending-queue`  
+**Fluxo:** FLOW-TRAIN-018  
+**Estado AS-IS:** GAP  
+
+### Estados de UI
+
+| Estado | Condição | Elementos visíveis |
+|---|---|---|
+| `loading` | Carregando pendências | Skeleton/spinner |
+| `empty` | Nenhuma pendência aberta | Mensagem "Nenhuma pendência — ótimo!" |
+| `data` | Pendências abertas existem | Lista filtrada por equipe/sessão + ações |
+| `error` | Falha de rede/permissão | Mensagem de erro |
+
+### Regras normativas
+1. **Separação (INV-TRAIN-066):** Pendências são entidade separada — NÃO são attendance nor alerts.
+2. **Filtros:** Por equipe, por sessão de treino, por tipo de pendência (`attendance_mismatch`, `missing_wellness`, `late_arrival`).
+3. **Ações por item:**
+   - "Resolver" → abre modal com resolução textual + novo status (`present|absent|justified`).
+   - "Solicitar colaboração" → envia notificação ao atleta para fornecer informação (INV-TRAIN-067).
+4. **RBAC:** Apenas `treinador` e `coordenador` podem resolver. Atleta pode ver e colaborar, mas não resolver (INV-TRAIN-067).
+
+### Contratos consumidos
+- `CONTRACT-TRAIN-099` (listar pendências)
+- `CONTRACT-TRAIN-100` (resolver pendência)
+
+### Evidências
+- (a criar — AR-TRAIN-017, AR-TRAIN-018)
+
+---
+
+## SCREEN-TRAIN-024 — Chat IA do Atleta
+
+**Tipo:** Page  
+**Rota:** `/athlete/ai-chat/[sessionId]`  
+**Fluxo:** FLOW-TRAIN-019  
+**Estado AS-IS:** GAP  
+
+### Estados de UI
+
+| Estado | Condição | Elementos visíveis |
+|---|---|---|
+| `loading` | Carregando contexto da sessão | Skeleton/spinner |
+| `data` | Chat ativo | Input de mensagem + histórico de conversa |
+| `empty` | Primeira interação | Mensagem de boas-vindas + sugestões de perguntas |
+| `error` | Falha de rede/LLM indisponível | Mensagem "Assistente indisponível, tente depois" |
+
+### Regras normativas
+1. **Sugestão, não ordem (INV-TRAIN-072):** Todas as respostas da IA DEVEM usar linguagem sugestiva.
+   - Exemplos OK: "Que tal...", "Uma ideia seria...", "Considere..."
+   - Exemplos PROIBIDOS: "Faça...", "Você deve...", "Execute..."
+2. **Privacidade (INV-TRAIN-073):** IA NÃO acessa dados wellness individuais de outros atletas.
+3. **Conteúdo educacional (INV-TRAIN-074):** Conteúdo educacional (ex: técnica de arremesso) deve ser acessível independente de dados pessoais.
+4. **Disclaimer:** Toda resposta tipo `"suggestion"` deve ter disclaimer visível: "Consulte seu treinador antes de adotar mudanças."
+5. **Feedback imediato (INV-TRAIN-077):** Resposta deve ser gerada em ≤ 15s. Se LLM demorar, mostrar streaming ou indicador de digitação.
+
+### Contratos consumidos
+- `CONTRACT-TRAIN-103` (chat IA atleta)
+
+### Evidências
+- (a criar — AR-TRAIN-021)
+
+---
+
+## SCREEN-TRAIN-025 — Sugestão IA para Treinador (Draft Modal)
+
+**Tipo:** Modal  
+**Rota:** N/A (modal sobre `/training/agenda` ou `/training/sessions/[id]/edit`)  
+**Fluxo:** FLOW-TRAIN-020  
+**Estado AS-IS:** GAP  
+
+### Estados de UI
+
+| Estado | Condição | Elementos visíveis |
+|---|---|---|
+| `loading` | IA gerando draft | Indicador de progresso "Gerando sugestão..." |
+| `data` | Draft pronto | Preview da sessão sugerida + justificativa + form de edição |
+| `editing` | Treinador editando draft | Form preenchido com dados IA, editável |
+| `applied` | Draft aplicado | Confirmação "Sessão criada com sucesso" |
+| `error` | Falha de rede/LLM | Mensagem "Não foi possível gerar sugestão" |
+
+### Regras normativas
+1. **Draft only (INV-TRAIN-075, INV-TRAIN-080):** IA NUNCA cria sessão publicada diretamente.
+   - Modal DEVE exibir preview antes de qualquer "Aplicar".
+   - Botão "Aplicar" DEVE abrir editor preenchido (não criar sessão diretamente).
+2. **Justificativa obrigatória (INV-TRAIN-081):** A justificativa gerada pela IA DEVE ser visível no modal.
+   - Se IA não gerar justificativa, backend DEVE rejeitar o draft (422).
+3. **Editar antes (INV-TRAIN-075):** O treinador DEVE conseguir editar TODOS os campos antes de aplicar.
+   - FE DEVE impedir "apply" sem exibição da tela de edição (mesmo sem mudanças).
+4. **Privacidade (INV-TRAIN-079):** Se sugestão menciona dados de atletas, deve ser agregado (nunca individual identificável).
+
+### Contratos consumidos
+- `CONTRACT-TRAIN-101` (gerar draft)
+- `CONTRACT-TRAIN-102` (aplicar draft)
+- `CONTRACT-TRAIN-104` (pedir justificativa)
+
+### Evidências
+- (a criar — AR-TRAIN-021)

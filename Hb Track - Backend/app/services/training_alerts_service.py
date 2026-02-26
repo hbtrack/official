@@ -243,7 +243,7 @@ class TrainingAlertsService:
     async def dismiss_alert(
         self,
         alert_id: UUID,
-        user_id: int
+        user_id: UUID
     ) -> Optional[AlertResponse]:
         """
         Marca alerta como dismissado.

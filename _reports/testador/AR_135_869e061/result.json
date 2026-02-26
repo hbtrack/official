@@ -1,0 +1,40 @@
+{
+  "ar_id": "135",
+  "validation_command": "python -c \"c=open('docs/hbtrack/modulos/treinos/TRAINING_USER_FLOWS.md','r',encoding='utf-8').read(); ids=[f'FLOW-TRAIN-{str(i).zfill(3)}' for i in range(16,22)]; missing=[i for i in ids if i not in c]; assert not missing, f'Missing: {missing}'; assert 'v1.3.0' in c; assert 'NEG-016-1' in c and 'NEG-021-1' in c, 'Missing negative cases'; print('PASS: USER_FLOWS fully updated')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "503a3428cfbb324f505575c0ca17e900d2a48798286f0b436d865b2dd5394179",
+      "hash": "503a3428cfbb324f",
+      "stdout_len": 31,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "503a3428cfbb324f505575c0ca17e900d2a48798286f0b436d865b2dd5394179",
+      "hash": "503a3428cfbb324f",
+      "stdout_len": 31,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "503a3428cfbb324f505575c0ca17e900d2a48798286f0b436d865b2dd5394179",
+      "hash": "503a3428cfbb324f",
+      "stdout_len": 31,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

@@ -1,0 +1,40 @@
+{
+  "ar_id": "134",
+  "validation_command": "python -c \"c=open('docs/hbtrack/modulos/treinos/TRAINING_FRONT_BACK_CONTRACT.md','r',encoding='utf-8').read(); checks=['CONTRACT-TRAIN-096','CONTRACT-TRAIN-105','AthleteSessionPreview','PendingItem','GAP-CONTRACT-6','GAP-CONTRACT-7','5.11','v1.3.0']; missing=[k for k in checks if k not in c]; assert not missing, f'Missing: {missing}'; print('PASS: CONTRACT fully updated')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "7b08b0a09af296337c28acbe7f5369a84f5849150186d80b409c0dcc479ab0ca",
+      "hash": "7b08b0a09af29633",
+      "stdout_len": 29,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "7b08b0a09af296337c28acbe7f5369a84f5849150186d80b409c0dcc479ab0ca",
+      "hash": "7b08b0a09af29633",
+      "stdout_len": 29,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "7b08b0a09af296337c28acbe7f5369a84f5849150186d80b409c0dcc479ab0ca",
+      "hash": "7b08b0a09af29633",
+      "stdout_len": 29,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

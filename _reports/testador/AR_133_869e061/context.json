@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_133-869e061",
+  "timestamp_utc": "2026-02-26T03:29:13.529116+00:00",
+  "git": {
+    "commit": "869e0612035afca16c9efcd9e517d99905298f70"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "133",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_133_atualizar_test_matrix_training.md_com_linhas_de_te.md"
+}

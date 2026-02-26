@@ -1,0 +1,40 @@
+{
+  "ar_id": "132",
+  "validation_command": "python -c \"content=open('docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md','r',encoding='utf-8').read(); ids=[f'INV-TRAIN-{str(i).zfill(3)}' for i in range(54,82)]; missing=[i for i in ids if i not in content]; assert not missing, f'Missing: {missing}'; assert 'v1.3.0' in content, 'Missing v1.3.0'; assert 'default: restricted' in content or 'restricted' in content.split('EXB-ACL-001')[1][:500], 'EXB-ACL-001 not amended'; print('PASS: 28 invariants + v1.3.0 + EXB-ACL-001 amended')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "284bec2bccd876cee57d2668914b6e9aa3021a5c4b0b223f3fc05f7cc15e394c",
+      "hash": "284bec2bccd876ce",
+      "stdout_len": 51,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "284bec2bccd876cee57d2668914b6e9aa3021a5c4b0b223f3fc05f7cc15e394c",
+      "hash": "284bec2bccd876ce",
+      "stdout_len": 51,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "284bec2bccd876cee57d2668914b6e9aa3021a5c4b0b223f3fc05f7cc15e394c",
+      "hash": "284bec2bccd876ce",
+      "stdout_len": 51,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

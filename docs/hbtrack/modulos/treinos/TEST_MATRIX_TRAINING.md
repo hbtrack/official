@@ -1,18 +1,26 @@
 # TEST_MATRIX_TRAINING.md — Matriz de Verificação e Rastreabilidade do Módulo TRAINING
 
 Status: DRAFT  
-Versão: v1.2.0  
+Versão: v1.3.0  
 Tipo de Documento: Verification & Traceability Matrix (Normativo Operacional / SSOT)  
 Módulo: TRAINING  
-Fase: FASE_2 (PRD v2.2 — 2026-02-20) + AS-IS repo (2026-02-25) + DEC-TRAIN-* (2026-02-25)  
+Fase: FASE_2 (PRD v2.2 — 2026-02-20) + AS-IS repo (2026-02-25) + DEC-TRAIN-* (2026-02-25) + FASE_3 (2026-02-27)  
 Autoridade: NORMATIVO_OPERACIONAL  
 Owners:
 - Arquitetura: Codex (Arquiteto v2.2.0)
 - Auditoria/Testes: (a definir)
 - Backend/Frontend: (a definir)
 
-Última revisão: 2026-02-26  
-Próxima revisão recomendada: 2026-03-04  
+Última revisão: 2026-02-27  
+Próxima revisão recomendada: 2026-03-06  
+
+> Changelog v1.3.0 (2026-02-27):  
+> - Adicionados 28 test rows para novas invariantes INV-TRAIN-054..081 (FASE_3)  
+> - Adicionados novos flows FLOW-TRAIN-016..021 na matriz de fluxos (§6)  
+> - Adicionados novos screens SCREEN-TRAIN-022..025 na matriz de telas (§7)  
+> - Adicionados novos contratos CONTRACT-TRAIN-096..105 na matriz de contratos (§8)  
+> - INV-TRAIN-EXB-ACL-001 AMENDADA: default restricted (consistência com INV-TRAIN-060)  
+> - Atualizado resumo §0 (novos PENDENTE)  
 
 > Changelog v1.2.0 (2026-02-26):  
 > - Adicionada Authority Matrix (separação escrita estrutural vs execução)  
@@ -74,7 +82,8 @@ Resumo rápido (AS-IS) — invariantes:
 - `PARCIAL`: 9
 - `BLOQUEADO`: 7
 - `NAO_APLICAVEL`: 1
-- `PENDENTE` (novos v1.1.0): 14
+- `PENDENTE` (v1.1.0): 14
+- `PENDENTE` (v1.3.0 — FASE_3): 28
 
 ---
 
@@ -218,6 +227,34 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 | INV-TRAIN-EXB-ACL-005 | creator_implicit_access | BLOQUEANTE_ARQUITETURA | service | TEST-TRAIN-INV-EXB-ACL-005 | CONTRACT | NAO | ALTA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-012 |
 | INV-TRAIN-EXB-ACL-006 | acl_unique_per_exercise_user | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-EXB-ACL-006 | INTEGRATION | SIM | CRITICA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-011 |
 | INV-TRAIN-EXB-ACL-007 | acl_change_no_retrobreak_historic_session | BLOQUEANTE_ARQUITETURA | service+db | TEST-TRAIN-INV-EXB-ACL-007 | INTEGRATION | NAO | ALTA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-012 |
+| INV-TRAIN-054 | cycle_hierarchy_mandatory | BLOQUEANTE_VALIDACAO | db+service | TEST-TRAIN-INV-054 | INTEGRATION | SIM | CRITICA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-015 |
+| INV-TRAIN-055 | meso_overlap_allowed | NAO_BLOQUEANTE | service | TEST-TRAIN-INV-055 | UNIT | NAO | MEDIA | NO | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-015 |
+| INV-TRAIN-056 | micro_contained_in_meso | BLOQUEANTE_VALIDACAO | db+service | TEST-TRAIN-INV-056 | INTEGRATION | SIM | CRITICA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-015 |
+| INV-TRAIN-057 | standalone_session_explicit_flag | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-057 | CONTRACT | SIM | CRITICA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-016 |
+| INV-TRAIN-058 | session_structure_mutable_until_close | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-058 | CONTRACT | SIM | CRITICA | POST | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-016 |
+| INV-TRAIN-059 | exercise_order_contiguous_unique | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-059 | INTEGRATION | SIM | CRITICA | POST | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-016 |
+| INV-TRAIN-060 | org_exercise_default_restricted | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-060 | CONTRACT | SIM | CRITICA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-011, AR-TRAIN-013 |
+| INV-TRAIN-061 | system_exercise_copy_not_edit | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-061 | CONTRACT | SIM | CRITICA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-012 |
+| INV-TRAIN-062 | exercise_visibility_required_for_session_add | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-062 | CONTRACT | SIM | CRITICA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-012, AR-TRAIN-013 |
+| INV-TRAIN-063 | athlete_preconfirm_not_official | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-063 | CONTRACT | SIM | CRITICA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-017 |
+| INV-TRAIN-064 | official_attendance_at_closure | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-064 | CONTRACT | SIM | CRITICA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-017 |
+| INV-TRAIN-065 | closure_allows_inconsistency_as_pending | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-065 | CONTRACT | SIM | CRITICA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-017 |
+| INV-TRAIN-066 | pending_queue_separate | BLOQUEANTE_ARQUITETURA | service+db | TEST-TRAIN-INV-066 | INTEGRATION | NAO | ALTA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-017, AR-TRAIN-018 |
+| INV-TRAIN-067 | athlete_pending_collaboration_no_validate | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-067 | CONTRACT | SIM | ALTA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-018 |
+| INV-TRAIN-068 | athlete_sees_training_before | BLOQUEANTE_ARQUITETURA | service+api | TEST-TRAIN-INV-068 | CONTRACT | NAO | ALTA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-019 |
+| INV-TRAIN-069 | exercise_media_accessible_to_athlete | BLOQUEANTE_ARQUITETURA | service | TEST-TRAIN-INV-069 | CONTRACT | NAO | ALTA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-019 |
+| INV-TRAIN-070 | post_training_conversational | NAO_BLOQUEANTE | service | TEST-TRAIN-INV-070 | CONTRACT | NAO | MEDIA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-020 |
+| INV-TRAIN-071 | wellness_missing_blocks_full_content | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-071 | CONTRACT | SIM | CRITICA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-019 |
+| INV-TRAIN-072 | ai_suggestion_not_order | BLOQUEANTE_ARQUITETURA | service | TEST-TRAIN-INV-072 | UNIT | NAO | ALTA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-021 |
+| INV-TRAIN-073 | ai_privacy_no_intimate_content | BLOQUEANTE_ARQUITETURA | service | TEST-TRAIN-INV-073 | UNIT | NAO | ALTA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-021 |
+| INV-TRAIN-074 | ai_educational_content_independent | NAO_BLOQUEANTE | service | TEST-TRAIN-INV-074 | UNIT | NAO | MEDIA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-021 |
+| INV-TRAIN-075 | ai_extra_training_draft_only | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-075 | CONTRACT | SIM | CRITICA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-021 |
+| INV-TRAIN-076 | mandatory_wellness_policy | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-076 | CONTRACT | SIM | CRITICA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-019 |
+| INV-TRAIN-077 | immediate_virtual_coach_feedback | NAO_BLOQUEANTE | service | TEST-TRAIN-INV-077 | UNIT | NAO | MEDIA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-020, AR-TRAIN-021 |
+| INV-TRAIN-078 | progress_view_requires_compliance | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-078 | CONTRACT | SIM | ALTA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-019 |
+| INV-TRAIN-079 | individual_recognition_no_intimate_leak | BLOQUEANTE_ARQUITETURA | service | TEST-TRAIN-INV-079 | UNIT | NAO | ALTA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-021 |
+| INV-TRAIN-080 | ai_coach_draft_only | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-080 | CONTRACT | SIM | CRITICA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-021 |
+| INV-TRAIN-081 | ai_suggestion_requires_justification | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-081 | CONTRACT | SIM | CRITICA | BOTH | PENDENTE | NOT_RUN | (a criar) | AR-TRAIN-021 |
 
 ### Observações (invariantes) — gaps de cobertura (AS-IS)
 
@@ -277,6 +314,12 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 | FLOW-TRAIN-013 | Visualizar rankings wellness e top performers | P1 | TEST-TRAIN-FLOW-013 | MANUAL_GUIADO | Happy path (end-to-end) | Happy | PENDENTE | NOT_RUN | `_reports/training/TEST-TRAIN-FLOW-013.md` (a gerar) | SCREEN-TRAIN-014, SCREEN-TRAIN-015 | CONTRACT-TRAIN-073..076 |
 | FLOW-TRAIN-014 | Visualizar eficácia preventiva | P2 | TEST-TRAIN-FLOW-014 | MANUAL_GUIADO | Happy path (end-to-end) | Happy | PENDENTE | NOT_RUN | `_reports/training/TEST-TRAIN-FLOW-014.md` (a gerar) | SCREEN-TRAIN-016 | CONTRACT-TRAIN-072 |
 | FLOW-TRAIN-015 | Gerenciar alertas e sugestões (apply/dismiss) | P2 | TEST-TRAIN-FLOW-015 | MANUAL_GUIADO | Happy path (end-to-end) | Happy | PENDENTE | NOT_RUN | `_reports/training/TEST-TRAIN-FLOW-015.md` (a gerar) | SCREEN-TRAIN-021 | CONTRACT-TRAIN-077..085 |
+| FLOW-TRAIN-016 | Atleta visualiza treino antes da sessão | P1 | TEST-TRAIN-FLOW-016 | MANUAL_GUIADO | Happy path (end-to-end) | Happy | PENDENTE | NOT_RUN | `_reports/training/TEST-TRAIN-FLOW-016.md` (a gerar) | SCREEN-TRAIN-022 | CONTRACT-TRAIN-096 |
+| FLOW-TRAIN-017 | Pré-confirmação e presença oficial no fechamento | P0 | TEST-TRAIN-FLOW-017 | MANUAL_GUIADO | Happy path (end-to-end) | Happy | PENDENTE | NOT_RUN | `_reports/training/TEST-TRAIN-FLOW-017.md` (a gerar) | SCREEN-TRAIN-020, SCREEN-TRAIN-022 | CONTRACT-TRAIN-097, CONTRACT-TRAIN-098 |
+| FLOW-TRAIN-018 | Treinador resolve fila de pendências | P0 | TEST-TRAIN-FLOW-018 | MANUAL_GUIADO | Happy path (end-to-end) | Happy | PENDENTE | NOT_RUN | `_reports/training/TEST-TRAIN-FLOW-018.md` (a gerar) | SCREEN-TRAIN-023 | CONTRACT-TRAIN-099, CONTRACT-TRAIN-100 |
+| FLOW-TRAIN-019 | Atleta interage com coach virtual (IA) | P2 | TEST-TRAIN-FLOW-019 | MANUAL_GUIADO | Happy path (end-to-end) | Happy | PENDENTE | NOT_RUN | `_reports/training/TEST-TRAIN-FLOW-019.md` (a gerar) | SCREEN-TRAIN-024 | CONTRACT-TRAIN-103, CONTRACT-TRAIN-104 |
+| FLOW-TRAIN-020 | IA gera rascunho de treino para coach editar | P2 | TEST-TRAIN-FLOW-020 | MANUAL_GUIADO | Happy path (end-to-end) | Happy | PENDENTE | NOT_RUN | `_reports/training/TEST-TRAIN-FLOW-020.md` (a gerar) | SCREEN-TRAIN-025 | CONTRACT-TRAIN-101, CONTRACT-TRAIN-102 |
+| FLOW-TRAIN-021 | Wellness gates conteúdo (atleta sem wellness bloqueado) | P1 | TEST-TRAIN-FLOW-021 | MANUAL_GUIADO | Happy path (end-to-end) | Happy | PENDENTE | NOT_RUN | `_reports/training/TEST-TRAIN-FLOW-021.md` (a gerar) | SCREEN-TRAIN-022 | CONTRACT-TRAIN-105 |
 
 ---
 
@@ -305,6 +348,10 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 | SCREEN-TRAIN-019 | `/athlete/wellness-post/[sessionId]` | loading\|error\|empty\|data\|readonly | TEST-TRAIN-SCREEN-019 | MANUAL_GUIADO | Smoke funcional + estados | ALTA | PENDENTE | NOT_RUN | `_reports/training/TEST-TRAIN-SCREEN-019.md` (a gerar) | AR-TRAIN-003, AR-TRAIN-004 |
 | SCREEN-TRAIN-020 | `/training/presencas` (placeholder) | loading\|error\|empty\|data\|readonly | TEST-TRAIN-SCREEN-020 | MANUAL_GUIADO | Smoke funcional + estados | ALTA | PENDENTE | NOT_RUN | `_reports/training/TEST-TRAIN-SCREEN-020.md` (a gerar) | AR-TRAIN-005 |
 | SCREEN-TRAIN-021 | (a definir) Central de Alertas/Sugestões | loading\|error\|empty\|data\|readonly | TEST-TRAIN-SCREEN-021 | MANUAL_GUIADO | Smoke funcional + estados | MEDIA | PENDENTE | NOT_RUN | `_reports/training/TEST-TRAIN-SCREEN-021.md` (a gerar) | AR-TRAIN-001, AR-TRAIN-002 |
+| SCREEN-TRAIN-022 | `/athlete/training/[sessionId]` Visão pré-treino atleta | loading\|error\|empty\|data\|wellness_blocked | TEST-TRAIN-SCREEN-022 | MANUAL_GUIADO | Smoke funcional + estados (incl. wellness gate) | ALTA | PENDENTE | NOT_RUN | `_reports/training/TEST-TRAIN-SCREEN-022.md` (a gerar) | AR-TRAIN-019 |
+| SCREEN-TRAIN-023 | `/training/pending-queue` Fila de pendências | loading\|error\|empty\|data\|readonly | TEST-TRAIN-SCREEN-023 | MANUAL_GUIADO | Smoke funcional + estados | ALTA | PENDENTE | NOT_RUN | `_reports/training/TEST-TRAIN-SCREEN-023.md` (a gerar) | AR-TRAIN-017, AR-TRAIN-018 |
+| SCREEN-TRAIN-024 | `/athlete/ai-chat/[sessionId]` Chat IA atleta | loading\|error\|empty\|data\|readonly | TEST-TRAIN-SCREEN-024 | MANUAL_GUIADO | Smoke funcional + estados | MEDIA | PENDENTE | NOT_RUN | `_reports/training/TEST-TRAIN-SCREEN-024.md` (a gerar) | AR-TRAIN-021 |
+| SCREEN-TRAIN-025 | `AICoachDraftModal` Sugestão IA para treinador | loading\|error\|empty\|data\|readonly | TEST-TRAIN-SCREEN-025 | MANUAL_GUIADO | Smoke funcional + estados | MEDIA | PENDENTE | NOT_RUN | `_reports/training/TEST-TRAIN-SCREEN-025.md` (a gerar) | AR-TRAIN-021 |
 
 ---
 
@@ -409,6 +456,16 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 | CONTRACT-TRAIN-093 | POST `/exercises/{exercise_id}/acl` | P1 | TEST-TRAIN-CONTRACT-093 | CONTRACT | BOTH | PENDENTE | NOT_RUN | `-` | AR-TRAIN-012, AR-TRAIN-013 |
 | CONTRACT-TRAIN-094 | DELETE `/exercises/{exercise_id}/acl/{user_id}` | P1 | TEST-TRAIN-CONTRACT-094 | CONTRACT | BOTH | PENDENTE | NOT_RUN | `-` | AR-TRAIN-012, AR-TRAIN-013 |
 | CONTRACT-TRAIN-095 | POST `/exercises/{exercise_id}/copy-to-org` | P1 | TEST-TRAIN-CONTRACT-095 | CONTRACT | BOTH | PENDENTE | NOT_RUN | `-` | AR-TRAIN-011, AR-TRAIN-013 |
+| CONTRACT-TRAIN-096 | GET `/athlete/training-sessions/{session_id}/preview` | P1 | TEST-TRAIN-CONTRACT-096 | CONTRACT | BOTH | PENDENTE | NOT_RUN | `-` | AR-TRAIN-019 |
+| CONTRACT-TRAIN-097 | POST `/training-sessions/{session_id}/pre-confirm` | P0 | TEST-TRAIN-CONTRACT-097 | CONTRACT | BOTH | PENDENTE | NOT_RUN | `-` | AR-TRAIN-017 |
+| CONTRACT-TRAIN-098 | POST `/training-sessions/{session_id}/close` (+ pending items) | P0 | TEST-TRAIN-CONTRACT-098 | CONTRACT | BOTH | PENDENTE | NOT_RUN | `-` | AR-TRAIN-017 |
+| CONTRACT-TRAIN-099 | GET `/training/pending-items` | P0 | TEST-TRAIN-CONTRACT-099 | CONTRACT | BOTH | PENDENTE | NOT_RUN | `-` | AR-TRAIN-018 |
+| CONTRACT-TRAIN-100 | PATCH `/training/pending-items/{item_id}/resolve` | P0 | TEST-TRAIN-CONTRACT-100 | CONTRACT | BOTH | PENDENTE | NOT_RUN | `-` | AR-TRAIN-018 |
+| CONTRACT-TRAIN-101 | POST `/ai-coach/draft-session` | P2 | TEST-TRAIN-CONTRACT-101 | CONTRACT | BOTH | PENDENTE | NOT_RUN | `-` | AR-TRAIN-021 |
+| CONTRACT-TRAIN-102 | PATCH `/ai-coach/draft-session/{draft_id}/apply` | P2 | TEST-TRAIN-CONTRACT-102 | CONTRACT | BOTH | PENDENTE | NOT_RUN | `-` | AR-TRAIN-021 |
+| CONTRACT-TRAIN-103 | POST `/ai-coach/athlete-chat` | P2 | TEST-TRAIN-CONTRACT-103 | CONTRACT | BOTH | PENDENTE | NOT_RUN | `-` | AR-TRAIN-021 |
+| CONTRACT-TRAIN-104 | POST `/ai-coach/justify-suggestion` | P2 | TEST-TRAIN-CONTRACT-104 | CONTRACT | BOTH | PENDENTE | NOT_RUN | `-` | AR-TRAIN-021 |
+| CONTRACT-TRAIN-105 | GET `/athlete/wellness-content-gate/{session_id}` | P1 | TEST-TRAIN-CONTRACT-105 | CONTRACT | BOTH | PENDENTE | NOT_RUN | `-` | AR-TRAIN-019 |
 
 ---
 
@@ -430,6 +487,13 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 | AR-TRAIN-012 | C | Guards/RBAC + ACL service layer | TEST-TRAIN-INV-048/051, TEST-TRAIN-INV-EXB-ACL-002..005/007, TEST-TRAIN-DEC-RBAC-001a/b | test_output + api_response | PENDENTE |
 | AR-TRAIN-013 | E | Endpoints ACL/copy/visibility (CONTRACT-TRAIN-091..095) | TEST-TRAIN-CONTRACT-091..095, TEST-TRAIN-DEC-EXB-001/001B/002 | OpenAPI SSOT + api_response | PENDENTE |
 | AR-TRAIN-014 | D | UI exercise-bank FE (scope/ACL/media/copy) | TEST-TRAIN-SCREEN-010/011 (atualizado) | screenshot + manual_checklist | PENDENTE |
+| AR-TRAIN-015 | A | Schema ciclos (cycle_hierarchy, meso_overlap, micro_contained) | TEST-TRAIN-INV-054/055/056 | db_state_before_after + test_output | PENDENTE |
+| AR-TRAIN-016 | C | Service sessão standalone + mutabilidade + order_index | TEST-TRAIN-INV-057/058/059 | test_output + api_response | PENDENTE |
+| AR-TRAIN-017 | C/E | Presença oficial (pre-confirm + closure + pending) | TEST-TRAIN-INV-063/064/065/066, TEST-TRAIN-CONTRACT-097/098 | test_output + api_response | PENDENTE |
+| AR-TRAIN-018 | D | UI fila de pendências (pending queue) | TEST-TRAIN-INV-066/067, TEST-TRAIN-SCREEN-023, TEST-TRAIN-FLOW-018 | screenshot + manual_checklist | PENDENTE |
+| AR-TRAIN-019 | D | Atleta vê treino + wellness content gate | TEST-TRAIN-INV-068/069/071/076/078, TEST-TRAIN-SCREEN-022, TEST-TRAIN-FLOW-016/021 | screenshot + manual_checklist | PENDENTE |
+| AR-TRAIN-020 | C | Post-training conversacional + feedback imediato | TEST-TRAIN-INV-070/077 | test_output + api_response | PENDENTE |
+| AR-TRAIN-021 | C/E | IA coach (drafts, chat, justification, privacy) | TEST-TRAIN-INV-072..075/079..081, TEST-TRAIN-CONTRACT-101..104 | test_output + api_response | PENDENTE |
 
 ---
 
@@ -445,6 +509,9 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 - [ ] DEC-TRAIN-003: FE consome CONTRACT-TRAIN-076 como canônico (TEST-TRAIN-DEC-003)
 - [ ] DEC-TRAIN-004: Export degradado retorna 202 (não 500) sem worker (TEST-TRAIN-DEC-004a)
 - [ ] DEC-TRAIN-EXB-*: Invariantes de scope/ACL/visibility cobertas (14 novas INV com testes)
+- [ ] FASE_3 (INV-TRAIN-054..081): Todos os `BLOQUEANTE_VALIDACAO` com teste de violação
+- [ ] FASE_3 flows P0 (FLOW-TRAIN-017, FLOW-TRAIN-018) com evidência
+- [ ] FASE_3 contracts P0 (CONTRACT-TRAIN-097..100) com validação CONTRACT
 
 ### FAIL (fase TRAINING) se:
 - [ ] Alguma invariante `BLOQUEANTE_VALIDACAO` sem teste de violação (não justificável)

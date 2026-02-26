@@ -1,12 +1,16 @@
 # TRAINING_USER_FLOWS.md — Fluxos de Usuário do Módulo TRAINING
 
 Status: DRAFT  
-Versão: v1.2.0  
+Versão: v1.3.0  
 Tipo de Documento: SSOT Normativo — User Flows  
 Módulo: TRAINING  
-Fase: PRD v2.2 (2026-02-20) + AS-IS repo (2026-02-25) + DEC-TRAIN-* (2026-02-25)  
+Fase: PRD v2.2 (2026-02-20) + AS-IS repo (2026-02-25) + DEC-TRAIN-* (2026-02-25) + FASE_3 (2026-02-27)  
 Autoridade: NORMATIVO_TECNICO  
-Última revisão: 2026-02-26  
+Última revisão: 2026-02-27  
+
+> Changelog v1.3.0 (2026-02-27):  
+> - FASE_3: Adicionados FLOW-TRAIN-016..021 (atleta pre-session, pre-confirm, pending queue, IA coach, wellness gate)  
+> - Cross-ref: INV-TRAIN-063..081, CONTRACT-TRAIN-096..105  
 
 > Changelog v1.2.0 (2026-02-26):  
 > - Adicionada Authority Matrix  
@@ -736,3 +740,254 @@ evidencias:
 
 Regra normativa:
 - Este fluxo só pode ser marcado como `EVIDENCIADO` quando houver UI consumindo os endpoints de alertas/sugestões com RBAC correto e rastreabilidade de ação (apply/dismiss).
+
+---
+
+# FASE_3 — Fluxos v1.3.0 (Presença Oficial, Atleta Pre-Session, Pending Queue, IA Coach, Wellness Gate)
+
+> **Cross-ref:** INV-TRAIN-063..081 • CONTRACT-TRAIN-096..105
+
+---
+
+## FLOW-TRAIN-016 — Atleta visualiza treino antes da sessão
+
+```yaml
+id: FLOW-TRAIN-016
+atores:
+  primario: atleta
+prioridade: P1
+estado_asis: GAP
+telas:
+  - SCREEN-TRAIN-022 # /athlete/training/[sessionId]
+contratos:
+  - CONTRACT-TRAIN-096 # GET /athlete/training-sessions/{session_id}/preview
+  - CONTRACT-TRAIN-105 # GET /athlete/wellness-content-gate/{session_id}
+invariantes_chave:
+  - INV-TRAIN-068 # atleta vê treino antes
+  - INV-TRAIN-069 # mídia acessível ao atleta
+  - INV-TRAIN-071 # wellness missing bloqueia conteúdo completo
+  - INV-TRAIN-076 # wellness obrigatório
+evidencias: []
+```
+
+### Passos (happy path)
+1. Atleta abre tela do treino agendado (SCREEN-TRAIN-022).
+2. FE chama `CONTRACT-TRAIN-105` (wellness content gate) para verificar se atleta tem wellness pré preenchido.
+3. **Se `has_wellness == true`**: FE chama `CONTRACT-TRAIN-096` (preview completo) → exibe exercícios, mídia, foco.
+4. **Se `has_wellness == false`**: FE mostra conteúdo parcial + prompt "Preencha seu wellness para ver o treino completo" (INV-TRAIN-071).
+5. Atleta pode navegar para preenchimento de wellness (FLOW-TRAIN-005).
+
+### Casos Negativos (anti-exemplos) `[NORMATIVO]`
+
+| # | Cenário negativo | Resultado esperado | DEC/INV |
+|---|---|---|---|
+| NEG-016-1 | Atleta sem wellness tenta ver exercícios detalhados | Conteúdo bloqueado — FE mostra prompt de wellness | INV-TRAIN-071 |
+| NEG-016-2 | Atleta de outra equipe tenta acessar preview | 403 Forbidden | INV-TRAIN-016 |
+
+---
+
+## FLOW-TRAIN-017 — Pré-confirmação de presença e presença oficial no fechamento
+
+```yaml
+id: FLOW-TRAIN-017
+atores:
+  primario: atleta (pre-confirm)
+  secundario: treinador (presença oficial)
+prioridade: P0
+estado_asis: GAP
+telas:
+  - SCREEN-TRAIN-022 # /athlete/training/[sessionId] (botão pre-confirm)
+  - SCREEN-TRAIN-020 # /training/presencas (presença oficial pelo coach)
+contratos:
+  - CONTRACT-TRAIN-097 # POST /training-sessions/{session_id}/pre-confirm
+  - CONTRACT-TRAIN-098 # POST /training-sessions/{session_id}/close (com attendance batch)
+invariantes_chave:
+  - INV-TRAIN-063 # pre-confirm não é oficial
+  - INV-TRAIN-064 # presença oficial só no fechamento
+  - INV-TRAIN-065 # fechamento permite inconsistência como pendência
+evidencias: []
+```
+
+### Passos (happy path)
+1. Atleta abre treino agendado e clica "Confirmar presença" (pre-confirm).
+2. FE chama `CONTRACT-TRAIN-097` → backend registra `pre_confirmed = true`, **sem marcar como presente oficialmente**.
+3. FE exibe label "Presença confirmada (não oficial)" — nunca "✓ Presente".
+4. Treinador abre SCREEN-TRAIN-020 para fechar a sessão.
+5. Treinador revisa lista de atletas:
+   - Pré-confirmados aparecem com sugestão "presente" (mas editável).
+   - Atletas sem pré-confirmação aparecem como "ausente" (editável).
+6. Treinador ajusta conforme realidade e clica "Fechar sessão".
+7. FE chama `CONTRACT-TRAIN-098` com batch de attendance + `allow_pending: true`.
+8. Backend registra presenças oficiais e gera `PendingItem` para inconsistências (INV-TRAIN-065).
+
+### Casos Negativos (anti-exemplos) `[NORMATIVO]`
+
+| # | Cenário negativo | Resultado esperado | DEC/INV |
+|---|---|---|---|
+| NEG-017-1 | FE trata pre-confirm como presença oficial | **PROIBIDO** — pre-confirm nunca é oficial | INV-TRAIN-063 |
+| NEG-017-2 | Backend permite presença oficial sem sessão fechada | **PROIBIDO** — presença oficial só no `close` | INV-TRAIN-064 |
+| NEG-017-3 | Treinador fecha sessão com atleta ausente+justificado e ambos | Backend gera PendingItem para resolver | INV-TRAIN-065 |
+
+---
+
+## FLOW-TRAIN-018 — Treinador resolve fila de pendências
+
+```yaml
+id: FLOW-TRAIN-018
+atores:
+  primario: treinador|coordenador
+  secundario: atleta (colaboração opcional)
+prioridade: P0
+estado_asis: GAP
+telas:
+  - SCREEN-TRAIN-023 # /training/pending-queue
+contratos:
+  - CONTRACT-TRAIN-099 # GET /training/pending-items
+  - CONTRACT-TRAIN-100 # PATCH /training/pending-items/{item_id}/resolve
+invariantes_chave:
+  - INV-TRAIN-066 # pending queue separada
+  - INV-TRAIN-067 # atleta colabora mas não valida
+evidencias: []
+```
+
+### Passos (happy path)
+1. Treinador acessa SCREEN-TRAIN-023 (fila de pendências).
+2. FE chama `CONTRACT-TRAIN-099` → lista PendingItems `status=open`.
+3. Para cada item, treinador pode:
+   a. Resolver diretamente (ex: marcar como "present" após verificação).
+   b. Solicitar colaboração do atleta (ex: pedir justificativa — INV-TRAIN-067).
+4. Treinador clica "Resolver" → FE chama `CONTRACT-TRAIN-100` com resolução.
+5. Backend atualiza PendingItem e ajusta attendance conforme resolução.
+
+### Nota sobre colaboração do atleta (INV-TRAIN-067)
+- Atleta PODE fornecer informação (ex: justificativa, horário real de chegada).
+- Atleta NÃO PODE validar/resolver a pendência — apenas o treinador ou coordenador.
+
+### Casos Negativos (anti-exemplos) `[NORMATIVO]`
+
+| # | Cenário negativo | Resultado esperado | DEC/INV |
+|---|---|---|---|
+| NEG-018-1 | Atleta tenta resolver pendência própria via API | 403 Forbidden — só treinador/coordenador pode | INV-TRAIN-067 |
+| NEG-018-2 | Pendência resolvida sem `resolution` text | 422 — resolução requer texto | INV-TRAIN-066 |
+
+---
+
+## FLOW-TRAIN-019 — Atleta interage com coach virtual (IA)
+
+```yaml
+id: FLOW-TRAIN-019
+atores:
+  primario: atleta
+prioridade: P2
+estado_asis: GAP
+telas:
+  - SCREEN-TRAIN-024 # /athlete/ai-chat/[sessionId]
+contratos:
+  - CONTRACT-TRAIN-103 # POST /ai-coach/athlete-chat
+invariantes_chave:
+  - INV-TRAIN-072 # sugestão, não ordem
+  - INV-TRAIN-073 # privacidade (sem conteúdo íntimo)
+  - INV-TRAIN-074 # conteúdo educacional independente
+  - INV-TRAIN-077 # feedback imediato do virtual coach
+evidencias: []
+```
+
+### Passos (happy path)
+1. Atleta abre chat IA pós-treino (SCREEN-TRAIN-024).
+2. Atleta digita mensagem (ex: "como posso melhorar meu arremesso?").
+3. FE chama `CONTRACT-TRAIN-103` → backend processa via LLM com contexto da sessão.
+4. Backend retorna resposta com `type: "educational"` ou `"suggestion"` ou `"motivational"`.
+5. FE exibe resposta. Se `type == "suggestion"`, FE exibe disclaimer: "Isto é uma sugestão — consulte seu treinador."
+
+### Casos Negativos (anti-exemplos) `[NORMATIVO]`
+
+| # | Cenário negativo | Resultado esperado | DEC/INV |
+|---|---|---|---|
+| NEG-019-1 | IA sugere como se fosse ordem ("faça 50 flexões agora") | **PROIBIDO** — IA deve usar linguagem de sugestão | INV-TRAIN-072 |
+| NEG-019-2 | IA acessa dados íntimos do atleta (wellness individual detalhado) | **PROIBIDO** — IA opera em dados agregados/públicos | INV-TRAIN-073 |
+| NEG-019-3 | IA condiciona conteúdo educacional a dados pessoais | **PROIBIDO** — educacional deve ser acessível sem expor dados | INV-TRAIN-074 |
+
+---
+
+## FLOW-TRAIN-020 — IA gera rascunho de treino para treinador editar
+
+```yaml
+id: FLOW-TRAIN-020
+atores:
+  primario: treinador
+prioridade: P2
+estado_asis: GAP
+telas:
+  - SCREEN-TRAIN-025 # AICoachDraftModal
+contratos:
+  - CONTRACT-TRAIN-101 # POST /ai-coach/draft-session
+  - CONTRACT-TRAIN-102 # PATCH /ai-coach/draft-session/{draft_id}/apply
+  - CONTRACT-TRAIN-104 # POST /ai-coach/justify-suggestion
+invariantes_chave:
+  - INV-TRAIN-075 # treino extra gerado por IA é rascunho
+  - INV-TRAIN-080 # IA coach gera apenas draft, humano materializa
+  - INV-TRAIN-081 # sugestão requer justificativa
+evidencias: []
+```
+
+### Passos (happy path)
+1. Treinador abre SCREEN-TRAIN-025 (modal de sugestão IA).
+2. FE chama `CONTRACT-TRAIN-101` com contexto do time e período.
+3. Backend retorna `draft_id` + sessão sugerida + justificativa textual (INV-TRAIN-081).
+4. Treinador DEVE revisar e pode editar qualquer campo do rascunho.
+5. Treinador clica "Aplicar" → FE chama `CONTRACT-TRAIN-102` com edits opcionais.
+6. Backend cria a sessão de treino REAL a partir do draft + edits. Draft é marcado como `applied`.
+
+### Nota normativa (INV-TRAIN-080)
+- IA NUNCA cria sessão real diretamente. Sempre passa por `draft` → revisão humana → `apply`.
+- FE DEVE impedir "apply" sem que o treinador veja a tela de edição (mesmo que não edite).
+
+### Casos Negativos (anti-exemplos) `[NORMATIVO]`
+
+| # | Cenário negativo | Resultado esperado | DEC/INV |
+|---|---|---|---|
+| NEG-020-1 | IA cria sessão publicada diretamente (sem draft) | **PROIBIDO** — IA só gera drafts | INV-TRAIN-080 |
+| NEG-020-2 | Draft aplicado sem justificativa | **PROIBIDO** — toda sugestão IA requer justificativa | INV-TRAIN-081 |
+| NEG-020-3 | FE permite "apply" sem exibir tela de edição | **PROIBIDO** — treinador deve ver/editar antes de aplicar | INV-TRAIN-075 |
+
+---
+
+## FLOW-TRAIN-021 — Wellness gates conteúdo (atleta sem wellness bloqueado)
+
+```yaml
+id: FLOW-TRAIN-021
+atores:
+  primario: atleta
+prioridade: P1
+estado_asis: GAP
+telas:
+  - SCREEN-TRAIN-022 # /athlete/training/[sessionId]
+contratos:
+  - CONTRACT-TRAIN-105 # GET /athlete/wellness-content-gate/{session_id}
+invariantes_chave:
+  - INV-TRAIN-071 # wellness missing bloqueia conteúdo completo
+  - INV-TRAIN-076 # wellness obrigatório como política
+  - INV-TRAIN-078 # progress view requer compliance
+evidencias: []
+```
+
+### Passos (happy path)
+1. Atleta tenta acessar visualização de treino ou progresso.
+2. FE chama `CONTRACT-TRAIN-105` → backend verifica se atleta tem `wellness_pre` preenchido para a sessão.
+3. **Se `can_see_full_content == true`**: FE libera visualização completa.
+4. **Se `can_see_full_content == false`**: FE bloqueia conteúdo detalhado e exibe:
+   - Mensagem: "Preencha seu wellness para acessar o conteúdo completo do treino."
+   - Link para FLOW-TRAIN-005 (preenchimento wellness pré).
+5. Após preenchimento, atleta retorna e FE re-verifica → libera conteúdo.
+
+### Nota sobre progresso (INV-TRAIN-078)
+- Visualização de progresso individual (ex: gráficos de evolução) também é bloqueada sem compliance de wellness.
+- O bloqueio é informativo ("preencha para ver"), não punitivo (sem mensagem negativa).
+
+### Casos Negativos (anti-exemplos) `[NORMATIVO]`
+
+| # | Cenário negativo | Resultado esperado | DEC/INV |
+|---|---|---|---|
+| NEG-021-1 | Atleta sem wellness vê exercícios detalhados | **PROIBIDO** — conteúdo bloqueado até wellness | INV-TRAIN-071 |
+| NEG-021-2 | Atleta sem compliance vê gráficos de progresso | **PROIBIDO** — progress view requer compliance | INV-TRAIN-078 |
+| NEG-021-3 | FE mostra mensagem punitiva ("você foi penalizado") | **PROIBIDO** — tom deve ser informativo/motivacional | INV-TRAIN-076 |
