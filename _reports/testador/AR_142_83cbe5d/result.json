@@ -1,0 +1,40 @@
+{
+  "ar_id": "142",
+  "validation_command": "cd \"Hb Track - Backend\" && python -m pytest tests/training/invariants/ -v --tb=short -q",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 1,
+      "hash_full": "32cf1b90dfc85b722112ef1fb4c4c55ec72ee0af3396c36e3aea85a067e9f05c",
+      "hash": "32cf1b90dfc85b72",
+      "stdout_len": 155802,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 1,
+      "hash_full": "7b292d8dc4ccb4f4812f3d56cbac973c8441d1d8b51d6a3e8f34986cdab2906f",
+      "hash": "7b292d8dc4ccb4f4",
+      "stdout_len": 155808,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 1,
+      "hash_full": "bb046e41e08c79d17c259cfc99bc0d67313b1ea95bcb55faaedc0b21dc3f3ba7",
+      "hash": "bb046e41e08c79d1",
+      "stdout_len": 155802,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "TRIPLE_FAIL",
+  "testador_exit_code": 1,
+  "executor_exit_code": 1,
+  "consistency": "OK",
+  "status": "REJEITADO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": "Re-execution failed: exit 1 (triple_consistency=TRIPLE_FAIL)",
+  "workspace_clean": true
+}

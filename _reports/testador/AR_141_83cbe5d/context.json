@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_141-83cbe5d",
+  "timestamp_utc": "2026-02-26T07:45:07.850794+00:00",
+  "git": {
+    "commit": "83cbe5dad094cfec28a8a6e82011e198eec78952"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "141",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_141_criar_teste_inv-train-059_exercise_order_contiguou.md"
+}
