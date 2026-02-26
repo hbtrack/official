@@ -496,6 +496,7 @@ EVIDENCE_PACK:
 - AC-005 alembic downgrade -1 exit_code=0: PASS
 
 ### ✅ Concluído
+- AR_150 — ✅ VERIFICADO+sealed (guards INV-054/INV-057, commit 236bfb6)
 - AR_128
 - AR_125
 - AR_142
@@ -585,3 +586,58 @@ EVIDENCE_PACK:
 - AR_067
 - AR_066
 - AR_065
+
+---
+
+## 10. Cards — Domínio TRAINING — Implementação Invariantes (AR_143-161)
+
+> **Contexto**: Planos materializados em `c65c969`. Fase A foi implementada pelo Executor mas destruída por `git restore .` acidental do Testador (26/02/2026).
+> `AR_150` já ✅ VERIFICADO+sealed. As demais precisam de execução pelo Executor.
+
+### ⚠️ REDO — Fase A: Exercise Bank (implementação destruída)
+
+O Executor implementou, o Testador verificou AR_143 (✅ SUCESSO hash `e57e1b35`), mas `git restore .` destruiu todos os outputs antes do `hb seal`.
+
+| AR | Título | O que foi perdido | Ação |
+|---|---|---|---|
+| **AR_143** | Atualizar TEST_MATRIX | `docs/_canon/specs/training_invariants_coverage_report.md` (97 invariants) | Executor: `hb report 143` |
+| **AR_144** | DB exercise_bank schema | Migration `0065_exercise_bank_schema_foundation.py` | Executor: `hb report 144` |
+| **AR_145** | exercise_service.py guards | Guards SYSTEM/copy-to-org/soft-delete em exercise_service.py | Executor: `hb report 145` |
+| **AR_146** | exercise_acl_service.py | `exercise_acl_service.py` + `exercise_acl.py` + `exercise_media.py` (novos) | Executor: `hb report 146` |
+| **AR_147** | catalog visibility + session_exercise guard | Guards em session_exercise_service.py | Executor: `hb report 147` |
+| **AR_148** | tests INV-047..053 | 7 arquivos de teste em `tests/training/invariants/` | Executor: `hb report 148` |
+
+**NOTA para Executor**: AR_144 é DB-touch — executar `alembic current` antes para verificar estado do banco. Rollback: `alembic downgrade -1`.
+
+### 🔲 PENDENTE — Fase B: Hierarquia de Ciclos
+
+| AR | Título | Ação |
+|---|---|---|
+| **AR_149** | DB training_sessions.standalone | Executor: `hb report 149` (DB-touch) |
+| **AR_151** | training_microcycle_service.py meso dates | Executor: `hb report 151` (após AR_149) |
+| **AR_152** | tests INV-054..057 ciclos | Executor: `hb report 152` (após AR_149+151) |
+
+### 🔲 PENDENTE — Fase C: Attendance Avançada
+
+| AR | Título | Ação |
+|---|---|---|
+| **AR_153** | DB attendance preconfirm + pending_items | Executor: `hb report 153` (DB-touch) |
+| **AR_154** | attendance_service.py preconfirm + close | Executor: `hb report 154` |
+| **AR_155** | training_pending_service.py + RBAC atleta | Executor: `hb report 155` |
+| **AR_156** | athlete UX training visibility + exercise | Executor: `hb report 156` |
+| **AR_157** | wellness_post campo conversacional | Executor: `hb report 157` (DB-touch) |
+| **AR_158** | tests INV-063..070 attendance avançada | Executor: `hb report 158` |
+
+### 🔲 PENDENTE — Fase D: Wellness Obrigatória
+
+| AR | Título | Ação |
+|---|---|---|
+| **AR_159** | athlete_content_gate_service.py (novo) | Executor: `hb report 159` |
+| **AR_160** | tests INV-071/076/078 wellness | Executor: `hb report 160` |
+| **AR_161** | Regressão final — todos os 84 invariantes | Executor: `hb report 161` (LAST — após AR_143-160 VERIFICADOS) |
+
+### Lição aprendida (protocolo)
+
+> **CAUSA DO REDO**: Testador usou `git restore .` + `git clean -fd` para "limpar workspace" antes do seal.
+> Isso viola `§12.5 COMANDOS PROIBIDOS`. O correto é `git restore --staged <arquivo>` (seletivo).
+> O testador.agent.pt-br.md foi atualizado com gate anti-restore indiscriminado (commit `c65c969`).
