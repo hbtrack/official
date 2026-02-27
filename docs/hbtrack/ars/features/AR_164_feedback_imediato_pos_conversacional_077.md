@@ -1,6 +1,6 @@
 # AR_164 — Feedback imediato pos conversacional (077)
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ✅ SUCESSO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -17,7 +17,7 @@ Implementar enforcement para INV-TRAIN-077: ao concluir o pos-treino conversacio
 
 ## Validation Command (Contrato)
 ```
-python -c "from pathlib import Path; import re, subprocess; ss=Path('docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md'); t=ss.read_text(encoding='utf-8'); m=re.search(r'(?s)id:\s*INV-TRAIN-077.*?\n\s*status:\s*([A-Z_]+)', t); assert m, 'FAIL SSOT missing 077'; assert m.group(1)=='IMPLEMENTADO', 'FAIL 077 status='+m.group(1); req=['Hb Track - Backend/app/services/ai_coach_service.py','Hb Track - Backend/tests/training/invariants/test_inv_train_077_immediate_virtual_coach_feedback.py']; miss=[p for p in req if not Path(p).exists()]; assert not miss,'FAIL missing '+str(miss); subprocess.check_call(['pytest','Hb Track - Backend/tests/training/invariants/test_inv_train_077_immediate_virtual_coach_feedback.py','-q']); print('PASS AR_164')"
+python -c "from pathlib import Path; import re, subprocess; ss=Path('docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md'); t=ss.read_text(encoding='utf-8'); m=re.search(r'(?s)id:\s*INV-TRAIN-077.*?\n\s*status:\s*([A-Z_]+)', t); assert m, 'FAIL SSOT missing 077'; assert m.group(1)=='IMPLEMENTADO', 'FAIL 077 status='+m.group(1); req=['Hb Track - Backend/app/services/ai_coach_service.py','Hb Track - Backend/tests/training/invariants/test_inv_train_077_immediate_virtual_coach_feedback.py']; miss=[p for p in req if not Path(p).exists()]; assert not miss,'FAIL missing '+str(miss); r=subprocess.run(['pytest','Hb Track - Backend/tests/training/invariants/test_inv_train_077_immediate_virtual_coach_feedback.py','-q','--tb=short','-p','no:randomly','--no-header'],capture_output=True,text=True); assert r.returncode==0,'FAIL pytest\n'+r.stdout[-400:]+r.stderr[-200:]; print('PASS AR_164')"
 ```
 
 ## Evidence File (Contrato)
@@ -54,7 +54,6 @@ python -c "from pathlib import Path; import re, subprocess; ss=Path('docs/hbtrac
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução Executor em ad0e159
 **Status Executor**: 🏗️ EM_EXECUCAO
 **Comando**: `python -c "from pathlib import Path; import re, subprocess; ss=Path('docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md'); t=ss.read_text(encoding='utf-8'); m=re.search(r'(?s)id:\s*INV-TRAIN-077.*?\n\s*status:\s*([A-Z_]+)', t); assert m, 'FAIL SSOT missing 077'; assert m.group(1)=='IMPLEMENTADO', 'FAIL 077 status='+m.group(1); req=['Hb Track - Backend/app/services/ai_coach_service.py','Hb Track - Backend/tests/training/invariants/test_inv_train_077_immediate_virtual_coach_feedback.py']; miss=[p for p in req if not Path(p).exists()]; assert not miss,'FAIL missing '+str(miss); subprocess.check_call(['pytest','Hb Track - Backend/tests/training/invariants/test_inv_train_077_immediate_virtual_coach_feedback.py','-q']); print('PASS AR_164')"`
@@ -64,3 +63,19 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_164/executor_main.log`
 **Python Version**: 3.11.9
 
+### Execução Executor em dce9117
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "from pathlib import Path; import re, subprocess; ss=Path('docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md'); t=ss.read_text(encoding='utf-8'); m=re.search(r'(?s)id:\s*INV-TRAIN-077.*?\n\s*status:\s*([A-Z_]+)', t); assert m, 'FAIL SSOT missing 077'; assert m.group(1)=='IMPLEMENTADO', 'FAIL 077 status='+m.group(1); req=['Hb Track - Backend/app/services/ai_coach_service.py','Hb Track - Backend/tests/training/invariants/test_inv_train_077_immediate_virtual_coach_feedback.py']; miss=[p for p in req if not Path(p).exists()]; assert not miss,'FAIL missing '+str(miss); r=subprocess.run(['pytest','Hb Track - Backend/tests/training/invariants/test_inv_train_077_immediate_virtual_coach_feedback.py','-q','--tb=short','-p','no:randomly','--no-header'],capture_output=True,text=True); assert r.returncode==0,'FAIL pytest\n'+r.stdout[-400:]+r.stderr[-200:]; print('PASS AR_164')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-27T10:57:15.848141+00:00
+**Behavior Hash**: 4bf76f4a7f8c176921ce83d3b983834c6cdb0e62021c6cb64ce29d99bcf5a28b
+**Evidence File**: `docs/hbtrack/evidence/AR_164/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Verificacao Testador em dce9117
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_164_dce9117/result.json`
