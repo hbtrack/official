@@ -1,12 +1,19 @@
 # INVARIANTS_TRAINING.md — Invariantes do Módulo TRAINING
 
 Status: DRAFT  
-Versão: v1.3.0  
+Versão: v1.4.0  
 Tipo de Documento: SSOT Normativo — Invariantes  
 Módulo: TRAINING  
 Fase: PRD v2.2 (2026-02-20) + AS-IS repo (2026-02-25) + DEC-TRAIN-EXB-* (2026-02-25) + FASE_3 (2026-02-27)  
 Autoridade: NORMATIVO_TECNICO  
 Última revisão: 2026-02-27  
+
+> Changelog v1.4.0 (2026-02-27):  
+> - **Atualização de status GAP → IMPLEMENTADO** para invariantes com testes verificados:  
+>   - INV-063..070 (8 invariantes — attendance avançada + visão atleta + pós-treino) — AR_158 commit `4ccde93`  
+>   - INV-071, 076, 078 (3 invariantes — wellness obrigatória + gates de conteúdo/progresso) — AR_160 commit `079a8fd`  
+> - Total: 11 invariantes migraram de GAP → IMPLEMENTADO  
+> - Evidence atualizada com caminhos de testes canônicos em `tests/training/invariants/`  
 
 > Changelog v1.3.0 (2026-02-27):  
 > - Adicionadas INV-TRAIN-054..081 (28 invariantes — FASE_3: Ciclos/Sessão, Banco Exercícios, Presença/Pendências, Atleta/Pós-treino, IA/Educativo, Wellness Obrigatório, Gamificação, IA Treinador)  
@@ -1652,8 +1659,9 @@ tables:
 services:
   - app/services/attendance_service.py (fluxo de pré-confirmação)
 evidence:
-  - GAP: fluxo de pré-confirmação de atleta não evidenciado.
-status: GAP
+  - Hb Track - Backend/tests/training/invariants/test_inv_train_063_preconfirm.py
+  - AR_158 (commit 4ccde93)
+status: IMPLEMENTADO
 extends: INV-TRAIN-016
 decision_trace: [DECISÃO_HUMANA_2026-02-27]
 rationale: >
@@ -1680,8 +1688,9 @@ services:
   - app/services/attendance_service.py
   - app/services/training_session_service.py (fluxo de close)
 evidence:
-  - PARCIAL: close existe, mas fluxo de consolidação de presença no close não evidenciado como separado.
-status: GAP
+  - Hb Track - Backend/tests/training/invariants/test_inv_train_064_close_consolidation.py
+  - AR_158 (commit 4ccde93)
+status: IMPLEMENTADO
 extends: INV-TRAIN-016
 decision_trace: [DECISÃO_HUMANA_2026-02-27]
 rationale: >
@@ -1706,8 +1715,9 @@ tables:
 services:
   - app/services/training_session_service.py (close com pendências)
 evidence:
-  - GAP: fluxo de encerramento com pendências não evidenciado.
-status: GAP
+  - Hb Track - Backend/tests/training/invariants/test_inv_train_065_close_pending_guard.py
+  - AR_158 (commit 4ccde93)
+status: IMPLEMENTADO
 decision_trace: [DECISÃO_HUMANA_2026-02-27]
 rationale: >
   Prioriza o encerramento do treino (realidade operacional) sobre perfeição de dados.
@@ -1732,8 +1742,9 @@ tables:
 services:
   - app/services/training_pending_service.py (novo)
 evidence:
-  - GAP: tabela e service de pendências não existem.
-status: GAP
+  - Hb Track - Backend/tests/training/invariants/test_inv_train_066_pending_items.py
+  - AR_158 (commit 4ccde93)
+status: IMPLEMENTADO
 decision_trace: [DECISÃO_HUMANA_2026-02-27]
 rationale: >
   Separar pendências da sessão concluída preserva integridade do histórico
@@ -1757,8 +1768,9 @@ tables:
 services:
   - app/services/training_pending_service.py (RBAC: atleta colabora, treinador valida)
 evidence:
-  - GAP: fluxo colaborativo não evidenciado.
-status: GAP
+  - Hb Track - Backend/tests/training/invariants/test_inv_train_067_athlete_pending_readonly.py
+  - AR_158 (commit 4ccde93)
+status: IMPLEMENTADO
 decision_trace: [DECISÃO_HUMANA_2026-02-27]
 rationale: >
   Engaja o atleta sem delegar autoridade de validação oficial.
@@ -1782,8 +1794,9 @@ tables:
 services:
   - Endpoint de leitura para atleta (scoped pela equipe)
 evidence:
-  - GAP: endpoint/tela de atleta para ver treino antecipadamente não evidenciado.
-status: GAP
+  - Hb Track - Backend/tests/training/invariants/test_inv_train_068_athlete_sees_plan.py
+  - AR_158 (commit 4ccde93)
+status: IMPLEMENTADO
 decision_trace: [DECISÃO_HUMANA_2026-02-27]
 rationale: >
   Permite ao atleta se preparar mentalmente e logisticamente para o treino.
@@ -1807,8 +1820,9 @@ tables:
 services:
   - app/services/session_exercise_service.py (acesso via sessão)
 evidence:
-  - GAP: acesso do atleta a mídia via sessão não evidenciado.
-status: GAP
+  - Hb Track - Backend/tests/training/invariants/test_inv_train_069_athlete_sees_summary.py
+  - AR_158 (commit 4ccde93)
+status: IMPLEMENTADO
 decision_trace: [DECISÃO_HUMANA_2026-02-27]
 rationale: >
   Atleta precisa das instruções/vídeos para executar corretamente,
@@ -1832,8 +1846,9 @@ tables:
 services:
   - app/services/wellness_post_service.py (aceitar input conversacional)
 evidence:
-  - GAP: input conversacional não evidenciado; wellness_post atual é formulário fixo.
-status: GAP
+  - Hb Track - Backend/tests/training/invariants/test_inv_train_070_post_training.py
+  - AR_158 (commit 4ccde93)
+status: IMPLEMENTADO
 decision_trace: [DECISÃO_HUMANA_2026-02-27]
 rationale: >
   Reduz atrito para o atleta e aumenta taxa de resposta pós-treino.
@@ -1861,8 +1876,9 @@ tables:
 services:
   - app/services/athlete_content_gate_service.py (novo)
 evidence:
-  - GAP: gate de conteúdo por wellness não implementado.
-status: GAP
+  - Hb Track - Backend/tests/training/invariants/test_inv_train_071_wellness_blocks_content.py
+  - AR_160 (commit 079a8fd)
+status: IMPLEMENTADO
 extends: INV-TRAIN-002
 depends_on: INV-TRAIN-076
 decision_trace: [DECISÃO_HUMANA_2026-02-27]
@@ -1991,8 +2007,9 @@ tables:
 services:
   - app/services/athlete_content_gate_service.py (policy check)
 evidence:
-  - GAP: política de bloqueio por wellness não implementada.
-status: GAP
+  - Hb Track - Backend/tests/training/invariants/test_inv_train_076_mandatory_wellness.py
+  - AR_160 (commit 079a8fd)
+status: IMPLEMENTADO
 extends: INV-TRAIN-002, INV-TRAIN-003
 decision_trace: [DECISÃO_HUMANA_2026-02-27]
 rationale: >
@@ -2043,8 +2060,9 @@ rule: >
 services:
   - app/services/athlete_content_gate_service.py (progress gate)
 evidence:
-  - GAP: gate de progresso por compliance não implementado.
-status: GAP
+  - Hb Track - Backend/tests/training/invariants/test_inv_train_078_progress_requires_compliance.py
+  - AR_160 (commit 079a8fd)
+status: IMPLEMENTADO
 extends: INV-TRAIN-013
 depends_on: INV-TRAIN-076
 decision_trace: [DECISÃO_HUMANA_2026-02-27]

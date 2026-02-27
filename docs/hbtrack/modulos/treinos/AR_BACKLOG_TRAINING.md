@@ -1,7 +1,7 @@
 # AR_BACKLOG_TRAINING.md — Backlog de ARs (Materialização) do Módulo TRAINING
 
 Status: ATIVO  
-Versão: v1.5.0  
+Versão: v1.6.0  
 Tipo de Documento: AR Materialization Backlog (Normativo Operacional / SSOT)  
 Módulo: TRAINING  
 Fase: FASE_2 (PRD v2.2 — 2026-02-20) + DEC-TRAIN-* (2026-02-25) + FASE_3 (2026-02-27)  
@@ -11,7 +11,7 @@ Owners:
 - Execução (Executor): (a definir)
 - Auditoria/Testes: (a definir)
 
-Última revisão: 2026-02-26  
+Última revisão: 2026-02-27  
 Próxima revisão recomendada: 2026-03-05  
 
 > Changelog v1.5.0 (2026-02-26):  
@@ -29,7 +29,7 @@ Próxima revisão recomendada: 2026-03-05
 > - **INCIDENTE**: Testador destruiu Fase A via `git restore .` antes do `hb seal` — AR_143-148 precisam de REDO  
 >   - AR_143 tinha sido verificada pelo Testador (hash `e57e1b35` ✅ SUCESSO) mas output `training_invariants_coverage_report.md` foi destruído  
 >   - AR_144-148: Executor tinha implementado (exit 0), mas Testador não chegou a verificar  
-> - Fase B (AR_149, 151, 152), Fase C (AR_153-158), Fase D (AR_159-161): NUNCA implementadas — aguardando Executor  
+> - **ATUALIZAÇÃO 2026-02-27**: Fase C (AR_153-158), Fase D (AR_159-161) CONCLUÍDAS com SUCESSO/VERIFICADO  
 > - Kanban atualizado com seção `## 10. Cards — Domínio TRAINING — Implementação Invariantes`  
 
 > Changelog v1.3.0 (2026-02-27):  
