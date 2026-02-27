@@ -1,6 +1,6 @@
 # AR_160 — Tests: Wellness Obrigatória — INV-071, 076, 078
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -58,7 +58,6 @@ Classes C1+C2. Testes DEVEM usar fixtures mínimas (apenas usuário + wellness r
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução Executor em 4ccde93
 **Status Executor**: 🏗️ EM_EXECUCAO
 **Comando**: `python -c "from pathlib import Path; b=Path('Hb Track - Backend/tests/training/invariants'); fs=[('test_inv_train_071_content_gate.py','TestInvTrain071'),('test_inv_train_076_wellness_policy.py','TestInvTrain076'),('test_inv_train_078_progress_gate.py','TestInvTrain078')]; missing=[fn for fn,cls in fs if not (b/fn).exists() or cls not in (b/fn).read_text(encoding='utf-8')]; assert not missing, 'FAIL: ausentes/sem classe='+str(missing); [print('[OK] '+fn) for fn,_ in fs]; print('PASS AR_160: 3 arquivos de teste 071/076/078 OK')"`
@@ -68,3 +67,26 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_160/executor_main.log`
 **Python Version**: 3.11.9
 
+### Execução Executor em c770127
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "from pathlib import Path; b=Path('Hb Track - Backend/tests/training/invariants'); fs=[('test_inv_train_071_content_gate.py','TestInvTrain071'),('test_inv_train_076_wellness_policy.py','TestInvTrain076'),('test_inv_train_078_progress_gate.py','TestInvTrain078')]; missing=[fn for fn,cls in fs if not (b/fn).exists() or cls not in (b/fn).read_text(encoding='utf-8')]; assert not missing, 'FAIL: ausentes/sem classe='+str(missing); [print('[OK] '+fn) for fn,_ in fs]; print('PASS AR_160: 3 arquivos de teste 071/076/078 OK')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-27T03:30:54.970801+00:00
+**Behavior Hash**: e9097d725a555589dfcf2f66f858060d28057c2658a9c350d3f4f322519a2170
+**Evidence File**: `docs/hbtrack/evidence/AR_160/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Verificacao Testador em c770127
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_160_c770127/result.json`
+
+### Selo Humano em c770127
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-27T03:35:06.720723+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_160_c770127/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_160/executor_main.log`

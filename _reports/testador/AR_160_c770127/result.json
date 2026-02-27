@@ -1,0 +1,40 @@
+{
+  "ar_id": "160",
+  "validation_command": "python -c \"from pathlib import Path; b=Path('Hb Track - Backend/tests/training/invariants'); fs=[('test_inv_train_071_content_gate.py','TestInvTrain071'),('test_inv_train_076_wellness_policy.py','TestInvTrain076'),('test_inv_train_078_progress_gate.py','TestInvTrain078')]; missing=[fn for fn,cls in fs if not (b/fn).exists() or cls not in (b/fn).read_text(encoding='utf-8')]; assert not missing, 'FAIL: ausentes/sem classe='+str(missing); [print('[OK] '+fn) for fn,_ in fs]; print('PASS AR_160: 3 arquivos de teste 071/076/078 OK')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "e9097d725a555589dfcf2f66f858060d28057c2658a9c350d3f4f322519a2170",
+      "hash": "e9097d725a555589",
+      "stdout_len": 172,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "e9097d725a555589dfcf2f66f858060d28057c2658a9c350d3f4f322519a2170",
+      "hash": "e9097d725a555589",
+      "stdout_len": 172,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "e9097d725a555589dfcf2f66f858060d28057c2658a9c350d3f4f322519a2170",
+      "hash": "e9097d725a555589",
+      "stdout_len": 172,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

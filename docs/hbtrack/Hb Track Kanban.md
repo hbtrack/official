@@ -643,12 +643,12 @@ O Executor implementou, o Testador verificou AR_143 (✅ SUCESSO hash `e57e1b35`
 | **AR_157** | wellness_post campo conversacional | ✅ SUCESSO — `hb seal 157` pendente (HUMANO) |
 | **AR_158** | tests INV-063..070 attendance avançada | ✅ SUCESSO — `hb seal 158` pendente (HUMANO) |
 | **AR_159** | athlete_content_gate_service.py (novo) | ✅ SUCESSO — `hb seal 159` pendente (HUMANO) |
+| **AR_160** | tests INV-071/076/078 wellness | ✅ SUCESSO — `hb seal 160` pendente (HUMANO) |
 
 ### 🔲 PENDENTE — Fase D: Wellness Obrigatória
 
 | AR | Título | Ação |
 |---|---|---|
-| **AR_160** | tests INV-071/076/078 wellness | Executor: `hb report 160` |
 | **AR_161** | Regressão final — todos os 84 invariantes | Executor: `hb report 161` (LAST — após AR_143-160 VERIFICADOS) |
 
 ### Lição aprendida (protocolo)
