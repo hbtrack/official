@@ -3,6 +3,7 @@ status: SSOT
 roots:
   - Hb Track - Backend/
   - Hb Track - Frontend/
+  - docs/hbtrack/
 notes: >
   Roots governados. Qualquer mudança em arquivos sob esses paths exige AR staged
   e selo humano (✅ VERIFICADO) para commit.
