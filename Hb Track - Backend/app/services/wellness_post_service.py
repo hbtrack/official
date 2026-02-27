@@ -30,6 +30,7 @@ from app.models.user import User
 from app.models.data_access_log import DataAccessLog
 from app.core.exceptions import NotFoundError, PermissionDeniedError, ConflictError, ValidationError
 from app.services.training_alerts_service import TrainingAlertsService
+from app.services.ai_coach_service import AICoachService, PostTrainingFeedback
 
 
 class WellnessPostService:
@@ -271,6 +272,17 @@ class WellnessPostService:
             await self.db.flush()
             await self._invalidate_training_analytics_cache(training_session)
             await self._trigger_overload_alert_on_wellness_post(training_session)
+            # INV-077: gerar feedback imediato se pós-treino conversacional concluído
+            _ai = AICoachService()
+            _fb = _ai.generate_post_training_feedback(
+                conversation_completed=bool(normalized.get("conversation_completed")),
+                session_rpe=normalized.get("session_rpe"),
+            )
+            existing_wellness.virtual_coach_feedback = (
+                {"recognition": _fb.recognition, "guidance": _fb.guidance}
+                if isinstance(_fb, PostTrainingFeedback)
+                else None
+            )
             return existing_wellness
         
         # 4. Criar novo wellness
@@ -288,6 +300,17 @@ class WellnessPostService:
             # internal_load será calculado por tr_calculate_internal_load trigger
             await self._invalidate_training_analytics_cache(training_session)
             await self._trigger_overload_alert_on_wellness_post(training_session)
+            # INV-077: gerar feedback imediato se pós-treino conversacional concluído
+            _ai = AICoachService()
+            _fb = _ai.generate_post_training_feedback(
+                conversation_completed=bool(normalized.get("conversation_completed")),
+                session_rpe=normalized.get("session_rpe"),
+            )
+            wellness.virtual_coach_feedback = (
+                {"recognition": _fb.recognition, "guidance": _fb.guidance}
+                if isinstance(_fb, PostTrainingFeedback)
+                else None
+            )
             return wellness
         
         except IntegrityError as e:

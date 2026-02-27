@@ -2040,8 +2040,11 @@ services:
   - app/services/ai_coach_service.py (feedback gen)
   - app/services/wellness_post_service.py (trigger on complete)
 evidence:
-  - GAP: treinador virtual e feedback automático não implementados.
-status: GAP
+  - Hb Track - Backend/tests/training/invariants/test_inv_train_077_immediate_virtual_coach_feedback.py
+  - Hb Track - Backend/app/services/ai_coach_service.py :: generate_post_training_feedback
+  - Hb Track - Backend/app/services/wellness_post_service.py :: submit_wellness_post (trigger INV-077)
+  - AR_164
+status: IMPLEMENTADO
 extends: INV-TRAIN-013
 decision_trace: [DECISÃO_HUMANA_2026-02-27]
 rationale: >

@@ -221,7 +221,37 @@ ExtraTrainingResult = Union[ExtraTrainingDraft, ExtraTrainingBlocked]
 
 
 # ---------------------------------------------------------------------------
-# AICoachService — orquestra os guards de INV-072, INV-073, INV-074, INV-075
+# INV-077 — Feedback pós-treino conversacional
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class PostTrainingFeedback:
+    """
+    INV-077: Feedback gerado ao concluir pós-treino conversacional.
+
+    DEVE conter:
+    - 1 reconhecimento (esforço/consistência)
+    - 1 orientação prática (técnica/tática/recuperação)
+    """
+
+    recognition: str          # 1 reconhecimento (esforço/consistência)
+    guidance: str             # 1 orientação prática (técnica/tática/recuperação)
+    source: str = "virtual_coach"  # INV-077: SEMPRE este valor
+
+
+@dataclass
+class FeedbackNotGenerated:
+    """INV-077: Pós-treino não concluído — feedback NÃO gerado."""
+
+    reason: str = "post_training_not_completed"
+
+
+PostTrainingFeedbackResult = Union[PostTrainingFeedback, FeedbackNotGenerated]
+
+
+# ---------------------------------------------------------------------------
+# AICoachService — orquestra os guards de INV-072, INV-073, INV-074, INV-075, INV-077
 # ---------------------------------------------------------------------------
 
 
@@ -234,6 +264,7 @@ class AICoachService:
     - INV-073: filter_privacy()
     - INV-074: get_educational_content()
     - INV-075: request_extra_training()
+    - INV-077: generate_post_training_feedback()
 
     Não acessa DB diretamente — é um service de lógica de negócio (Classe C1).
     """
@@ -389,6 +420,57 @@ class AICoachService:
             source="ai_athlete_request",  # INV-075: SEMPRE este valor
             status="draft",               # INV-075: NUNCA publicado automaticamente
             requires_coach_approval=True,
+        )
+
+    # -----------------------------------------------------------------------
+    # INV-077: Feedback imediato pós-treino conversacional
+    # -----------------------------------------------------------------------
+
+    def generate_post_training_feedback(
+        self,
+        conversation_completed: bool,
+        session_rpe: "int | None" = None,
+    ) -> PostTrainingFeedbackResult:
+        """
+        INV-077 — feedback imediato pós conversacional.
+        Gera feedback curto somente se o pós-treino conversacional foi concluído.
+        Se não concluído, retorna FeedbackNotGenerated (nunca lança exceção).
+
+        Args:
+            conversation_completed: True se atleta concluiu o fluxo conversacional.
+            session_rpe: RPE declarado pelo atleta (1–10) ou None.
+
+        Returns:
+            PostTrainingFeedback com recognition + guidance se concluído.
+            FeedbackNotGenerated caso contrário.
+
+        Evidence: app/services/ai_coach_service.py :: generate_post_training_feedback
+        """
+        if not conversation_completed:
+            return FeedbackNotGenerated()
+
+        # Reconhecimento baseado no esforço declarado (RPE)
+        if session_rpe is not None and session_rpe >= 8:
+            recognition = (
+                "Excelente esforço na sessão de hoje — intensidade alta exige comprometimento."
+            )
+        elif session_rpe is not None and session_rpe >= 5:
+            recognition = (
+                "Bom trabalho! Consistência é a base do desenvolvimento no handebol."
+            )
+        else:
+            recognition = (
+                "Presença e dedicação contam — cada treino é um passo na sua evolução."
+            )
+
+        guidance = (
+            "Para o próximo treino: foque na recuperação ativa (alongamento + hidratação) "
+            "e revise sua posição defensiva básica."
+        )
+        return PostTrainingFeedback(
+            recognition=recognition,
+            guidance=guidance,
+            source="virtual_coach",  # INV-077: SEMPRE este valor
         )
 
 

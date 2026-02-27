@@ -1,6 +1,6 @@
 # AR_164 — Feedback imediato pos conversacional (077)
 
-**Status**: 🔲 PENDENTE
+**Status**: 🏗️ EM_EXECUCAO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -28,9 +28,39 @@ python -c "from pathlib import Path; import re, subprocess; ss=Path('docs/hbtrac
 - Garantir que o teste simula 'concluido' sem depender de estado externo.
 
 ## Análise de Impacto
-_(A ser preenchido pelo Executor)_
+
+**Arquivos afetados (write_scope):**
+
+1. `Hb Track - Backend/app/services/ai_coach_service.py`
+   - Adicionar dataclasses `PostTrainingFeedback` e `FeedbackNotGenerated` após bloco INV-075 (~linha 222)
+   - Adicionar método `AICoachService.generate_post_training_feedback(conversation_completed, session_rpe)` após `request_extra_training` (~linha 392)
+   - Lógica: retorna `PostTrainingFeedback` somente se `conversation_completed=True`; caso contrário `FeedbackNotGenerated`
+   - Classe C1: sem IO, sem DB
+
+2. `Hb Track - Backend/app/services/wellness_post_service.py`
+   - Adicionar chamada ao `generate_post_training_feedback` no final de `submit_wellness_post`, antes dos dois `return` (update path ~linha 278 e create path ~linha 295)
+   - Feedback é transiente: armazenado em atributo dinâmico `wellness.virtual_coach_feedback` (não persiste no DB)
+   - Import local para evitar circular imports
+
+3. `Hb Track - Backend/tests/training/invariants/test_inv_train_077_immediate_virtual_coach_feedback.py`
+   - Arquivo novo — 7 casos Classe C1 (unit, sem IO): concluído (RPE alto/médio/None), não-concluído, anti-falso-positivo, source invariante, campos não-vazios
+
+4. `docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md`
+   - INV-TRAIN-077: `status: GAP → IMPLEMENTADO`, adicionar evidência referenciando test_inv_train_077 e AR_164
+
+**Risco:** Baixo — service é Classe C1 (stateless, sem IO). O campo `virtual_coach_feedback` é transiente; nenhuma migração necessária. O trigger em `wellness_post_service.py` é additive (não altera paths existentes de erro).
 
 ---
 ## Carimbo de Execução
 _(Gerado por hb report)_
+
+
+### Execução Executor em ad0e159
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "from pathlib import Path; import re, subprocess; ss=Path('docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md'); t=ss.read_text(encoding='utf-8'); m=re.search(r'(?s)id:\s*INV-TRAIN-077.*?\n\s*status:\s*([A-Z_]+)', t); assert m, 'FAIL SSOT missing 077'; assert m.group(1)=='IMPLEMENTADO', 'FAIL 077 status='+m.group(1); req=['Hb Track - Backend/app/services/ai_coach_service.py','Hb Track - Backend/tests/training/invariants/test_inv_train_077_immediate_virtual_coach_feedback.py']; miss=[p for p in req if not Path(p).exists()]; assert not miss,'FAIL missing '+str(miss); subprocess.check_call(['pytest','Hb Track - Backend/tests/training/invariants/test_inv_train_077_immediate_virtual_coach_feedback.py','-q']); print('PASS AR_164')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-27T09:23:15.021962+00:00
+**Behavior Hash**: 0c8e48d5a54b882b5eb1bc8430140fc89257f5b99ab9776e156b2f6d3a7e36ad
+**Evidence File**: `docs/hbtrack/evidence/AR_164/executor_main.log`
+**Python Version**: 3.11.9
 
