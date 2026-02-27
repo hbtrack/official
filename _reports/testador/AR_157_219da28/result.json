@@ -1,0 +1,40 @@
+{
+  "ar_id": "157",
+  "validation_command": "python -c \"import re; schema_path='Hb Track - Backend/docs/ssot/schema.sql'; schema=open(schema_path,encoding='utf-8').read(); wellness_table=re.search(r'CREATE TABLE public\\.wellness_post.*?(?=CREATE TABLE|ALTER TABLE|\\Z)',schema,re.DOTALL); assert wellness_table,'FAIL: wellness_post table not found'; table_def=wellness_table.group(); assert 'conversational_feedback' in table_def,'FAIL: conversational_feedback column missing'; assert 'conversation_completed' in table_def,'FAIL: conversation_completed column missing'; alembic=open('Hb Track - Backend/docs/ssot/alembic_state.txt').read(); assert '0068' in alembic,'FAIL: migration 0068 not applied'; print('PASS AR_157: wellness_post schema conversacional OK (migration 0068)')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "6abe66eaf6012de4559011f80e03d235070225de19d08c23a528ca8c89cc4dca",
+      "hash": "6abe66eaf6012de4",
+      "stdout_len": 69,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "6abe66eaf6012de4559011f80e03d235070225de19d08c23a528ca8c89cc4dca",
+      "hash": "6abe66eaf6012de4",
+      "stdout_len": 69,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "6abe66eaf6012de4559011f80e03d235070225de19d08c23a528ca8c89cc4dca",
+      "hash": "6abe66eaf6012de4",
+      "stdout_len": 69,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

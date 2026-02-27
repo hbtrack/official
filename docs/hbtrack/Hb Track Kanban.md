@@ -1,4 +1,4 @@
-# HB Track — Kanban (Processo determinístico para IA)
+﻿# HB Track — Kanban (Processo determinístico para IA)
 
 meta:
   document: HB_TRACK_KANBAN
@@ -640,7 +640,7 @@ O Executor implementou, o Testador verificou AR_143 (✅ SUCESSO hash `e57e1b35`
 | **AR_154** | attendance_service.py preconfirm + close | ✅ SUCESSO — `hb seal 154` pendente (HUMANO) — Item 3 cancelado (DEC-INV-065) |
 | **AR_155** | training_pending_service.py + RBAC atleta | ✅ SUCESSO — `hb seal 155` pendente (HUMANO) |
 | **AR_156** | athlete UX training visibility + exercise | ✅ SUCESSO — `hb seal 156` pendente (HUMANO) |
-| **AR_157** | wellness_post campo conversacional | **PRÓXIMA** — Executor: `hb report 157` (DB-touch) |
+| **AR_157** | wellness_post campo conversacional | ✅ SUCESSO — `hb seal 157` pendente (HUMANO) |
 | **AR_158** | tests INV-063..070 attendance avançada | Executor: `hb report 158` |
 
 ### 🔲 PENDENTE — Fase D: Wellness Obrigatória

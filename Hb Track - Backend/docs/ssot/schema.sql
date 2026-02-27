@@ -1,11 +1,11 @@
--- Schema dump generated: 2026-02-26T17:17:32.330458+00:00Z
+-- Schema dump generated: 2026-02-26T21:16:18.516948+00:00Z
 -- Source: localhost
 
 --
 -- PostgreSQL database dump
 --
 
-\restrict tKqgekKq3INDrJWnbjtRpGzkj46roxTBXrfV7ipxlmMRbfBXKExAHmjInecvZNz
+\restrict Bqd1vnaEuUfpDajVdvLM6mSJdoRoEBlNxXMzxCs3BZbff4hkNKfgV1Zzn9QxYO7
 
 -- Dumped from database version 12.22 (Debian 12.22-1.pgdg120+1)
 -- Dumped by pg_dump version 18.1
@@ -3034,6 +3034,8 @@ CREATE TABLE public.wellness_post (
     internal_load numeric(10,2) DEFAULT 0,
     minutes_effective smallint,
     locked_at timestamp with time zone,
+    conversational_feedback text,
+    conversation_completed boolean DEFAULT false NOT NULL,
     CONSTRAINT ck_wellness_post_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL)))),
     CONSTRAINT ck_wellness_post_fatigue CHECK (((fatigue_after >= 0) AND (fatigue_after <= 10))),
     CONSTRAINT ck_wellness_post_intensity CHECK (((perceived_intensity IS NULL) OR ((perceived_intensity >= 1) AND (perceived_intensity <= 5)))),
@@ -7200,5 +7202,5 @@ ALTER TABLE ONLY public.wellness_reminders
 -- PostgreSQL database dump complete
 --
 
-\unrestrict tKqgekKq3INDrJWnbjtRpGzkj46roxTBXrfV7ipxlmMRbfBXKExAHmjInecvZNz
+\unrestrict Bqd1vnaEuUfpDajVdvLM6mSJdoRoEBlNxXMzxCs3BZbff4hkNKfgV1Zzn9QxYO7
 

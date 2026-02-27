@@ -251,6 +251,8 @@ class WellnessPostService:
             "perceived_intensity",
             "notes",
             "flag_medical_followup",
+            "conversational_feedback",
+            "conversation_completed",
         }
         normalized = {k: v for k, v in normalized.items() if k in allowed_fields}
         

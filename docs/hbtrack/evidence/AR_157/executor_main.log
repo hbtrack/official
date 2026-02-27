@@ -1,0 +1,18 @@
+﻿AR_ID: 157
+Command: python -c "import re; schema_path='Hb Track - Backend/docs/ssot/schema.sql'; schema=open(schema_path,encoding='utf-8').read(); wellness_table=re.search(r'CREATE TABLE public\.wellness_post.*?(?=CREATE TABLE|ALTER TABLE|\Z)',schema,re.DOTALL); assert wellness_table,'FAIL: wellness_post table not found'; table_def=wellness_table.group(); assert 'conversational_feedback' in table_def,'FAIL: conversational_feedback column missing'; assert 'conversation_completed' in table_def,'FAIL: conversation_completed column missing'; alembic=open('Hb Track - Backend/docs/ssot/alembic_state.txt').read(); assert '0068' in alembic,'FAIL: migration 0068 not applied'; print('PASS AR_157: wellness_post schema conversacional OK (migration 0068)')"
+Exit Code: 0
+Timestamp UTC: 2026-02-27T00:36:20.440572+00:00
+Behavior Hash (exit+stdout+stderr): 6abe66eaf6012de4559011f80e03d235070225de19d08c23a528ca8c89cc4dca
+Git HEAD: 219da2800f06a738effcc9ba1bcb7185c080b31f
+Python Version: 3.11.9
+Protocol Version: 1.3.0
+Workspace Clean: False
+Workspace Status: unstaged_modified=2
+Governed Checksums (sha256): {"Hb Track - Backend/app/services/wellness_post_service.py": "ffb33939f7179580765d78d4dd163233c0bef1324ae99473140a4f5b1e4c6664", "Hb Track - Backend/db/alembic/versions/0068_wellness_post_conversational.py": "580722cb680e5b73682b7e89743e3630e8f06ac5f565153885af8c3975714eb9", "Hb Track - Backend/docs/ssot/alembic_state.txt": "df307c37c468cabf71de8c06b29256eab7d45c99f3735d046a8406296a764350", "Hb Track - Backend/docs/ssot/schema.sql": "6cf62052e9efccfebd8fd73288d847d9172ffaf794b89ca064ab248688892abd"}
+
+--- STDOUT ---
+PASS AR_157: wellness_post schema conversacional OK (migration 0068)
+
+
+--- STDERR ---
+

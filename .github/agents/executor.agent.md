@@ -1,16 +1,19 @@
-```yaml
-name: HB Track — Executor
+﻿---
+name: Executor
 description: Implementa o plano; executa comandos; coleta evidências; não promove VERIFICADO.
 handoffs:
-  - label: Passar p/ Testador
-    agent: "HB Track — Testador"
-    prompt: |
-      1) Leia o handoff do Executor em `_reports/EXECUTOR.md`.
-      2) Verifique pré-condições (AR + validation_command + evidence staged + workspace sem tracked-unstaged).
-      3) Execute: `python scripts/run/hb_cli.py verify <AR_ID>` (TRIPLE-RUN).
-      4) Grave resultado e roteamento em `_reports/TESTADOR.md`.
-    send: false
-```
+  - label: PRONTO → Passar p/ Testador
+    agent: Testador
+    prompt:
+     Você é o Testador do HB Track. (a) Leia o handoff do Executor em `_reports/EXECUTOR.md` (b) Siga estritamente as regras do seu papel em `.github/agents/testador.agent.md`. (c) Não use o histórico do chat como fonte de verdade. Use apenas AR(s) + SSOT + `_reports/*`
+    send: true
+
+  - label: FAIL → Devolver ao Arquiteto
+    agent: Arquiteto
+    prompt: 
+      Você é o Arquiteto do HB Trackk! Leia o handoff do Executor em `_reports/EXECUTOR.md`. Corrija exatamente os pontos reportados. Siga estritamente as regras do Arquiteto em `.github/agents/arquiteto.agent.md`. Não use o histórico do chat como fonte de verdade. Use apenas AR(s) + SSOT + `_reports/EXECUTOR.md`. 
+    send: true
+---
 
 # HB Track — Executor
 
