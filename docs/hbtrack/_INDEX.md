@@ -146,6 +146,6 @@
 | AR_158 | Tests: Attendance Avançada — INV-063 a 070 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_158/executor_main.log |
 | AR_159 | Service: athlete_content_gate_service.py — Wellness Obrig... | ✅ SUCESSO | docs/hbtrack/evidence/AR_159/executor_main.log |
 | AR_160 | Tests: Wellness Obrigatória — INV-071, 076, 078 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_160/executor_main.log |
-| AR_161 | Tests: Regressão final — todos os 84 invariantes | 🔲 PENDENTE | docs/hbtrack/evidence/AR_161/executor_main.log |
+| AR_161 | Tests: Regressão final — todos os 84 invariantes | ✅ VERIFICADO | docs/hbtrack/evidence/AR_161/executor_main.log |
 | AR_998 | Test Write Scope Section Generation | ✅ VERIFICADO | docs/hbtrack/evidence/AR_998/executor_main.log |
 | AR_999 | Exemplo: Adicionar campo birthdate em Person | ✅ VERIFICADO | docs/hbtrack/evidence/AR_999/executor_main.log |

@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_161-079a8fd",
+  "timestamp_utc": "2026-02-27T03:51:59.730835+00:00",
+  "git": {
+    "commit": "079a8fdac8256639c7acca7cd869210f8c7fe5a1"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "161",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_161_tests_regressão_final_-_todos_os_84_invariantes.md"
+}
