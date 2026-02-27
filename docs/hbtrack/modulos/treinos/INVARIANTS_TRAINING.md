@@ -1980,8 +1980,9 @@ services:
   - app/services/ai_coach_service.py (draft generation)
   - app/services/training_session_service.py (source tracking)
 evidence:
-  - GAP: geração de rascunho por IA não implementada.
-status: GAP
+  - Hb Track - Backend/tests/training/invariants/test_inv_train_075_ai_extra_training_draft_only.py
+  - AR_163 (write scope: app/services/ai_coach_service.py)
+status: IMPLEMENTADO
 decision_trace: [DECISÃO_HUMANA_2026-02-27]
 rationale: >
   Mantém o treinador humano como gatekeeper de tudo que vira treino oficial.

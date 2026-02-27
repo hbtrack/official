@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_163-f5b91a8",
+  "timestamp_utc": "2026-02-27T08:00:00.233397+00:00",
+  "git": {
+    "commit": "f5b91a8e2165e3f262254488c297e082c309c025"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "163",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_163_ai_extra_training_sempre_draft_075.md"
+}

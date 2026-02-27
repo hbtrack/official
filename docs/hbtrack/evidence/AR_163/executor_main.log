@@ -1,0 +1,18 @@
+AR_ID: 163
+Command: python -c "from pathlib import Path; import re, subprocess; ss=Path('docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md'); t=ss.read_text(encoding='utf-8'); m=re.search(r'(?s)id:\s*INV-TRAIN-075.*?\n\s*status:\s*([A-Z_]+)', t); assert m, 'FAIL SSOT missing 075'; assert m.group(1)=='IMPLEMENTADO', 'FAIL 075 status='+m.group(1); req=['Hb Track - Backend/app/services/ai_coach_service.py','Hb Track - Backend/tests/training/invariants/test_inv_train_075_ai_extra_training_draft_only.py']; miss=[p for p in req if not Path(p).exists()]; assert not miss,'FAIL missing '+str(miss); r=subprocess.run(['pytest','Hb Track - Backend/tests/training/invariants/test_inv_train_075_ai_extra_training_draft_only.py','-q','--tb=short','-p','no:randomly','--no-header'],capture_output=True,text=True); assert r.returncode==0,'FAIL pytest\n'+r.stdout[-400:]+r.stderr[-200:]; print('PASS AR_163')"
+Exit Code: 0
+Timestamp UTC: 2026-02-27T07:54:18.766612+00:00
+Behavior Hash (exit+stdout+stderr): d362868db385b63525521d5e901aa2a996445a4c68af9a4edcad173ea06363a0
+Git HEAD: f5b91a8e2165e3f262254488c297e082c309c025
+Python Version: 3.11.9
+Protocol Version: 1.3.0
+Workspace Clean: False
+Workspace Status: unstaged_modified=4
+Governed Checksums (sha256): {"Hb Track - Backend/app/services/ai_coach_service.py": "52555288e1c80c50b9f5fccb3dd942453104515e146761e20d8879870fd1fe0d", "Hb Track - Backend/tests/training/invariants/test_inv_train_075_ai_extra_training_draft_only.py": "73ad37bc5114f12e03878bc5394b45971e9699240bc638a618ad5e60de432ee7", "docs/hbtrack/ars/features/AR_163_ai_extra_training_sempre_draft_075.md": "bd4c69b899b04ecd7b60c52835bbf07f77b8a2a7fb8cdad90adffbb6a0f8d14b", "docs/hbtrack/ars/features/AR_164_feedback_imediato_pos_conversacional_077.md": "c2d2a73c29053750b734e0a16951b7d038d4b2cda27f3c3e9d56c775f75c4741", "docs/hbtrack/ars/features/AR_165_reconhecimento_sem_vazamento_intimo_079.md": "6e7d0848ff1b98c4d674b4793ddd755bd937f596574cb526ac948c9a31a7fc48", "docs/hbtrack/ars/features/AR_166_coach_draft-only_+_justificativa_080-081.md": "4f500a95b7770c41c527ed5887dfec590ec512fad7925a3e36a2a60a65357092", "docs/hbtrack/ars/features/AR_167_gate_ia_coach_072-081_tests_exist_+_pytest.md": "a27fcf93b5fae4fd8590d5f49e8323af4fc0d557681e9d8a03db750f7d001389", "docs/hbtrack/evidence/AR_163/executor_main.log": "4fcebbb9c5929d50e687e02c01db352c23fa39edb387ff1e877c3a8ecf3375de", "docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md": "7d62379e2ce5d64cfc981dfd76835a7c8b8313a0d75425595ea0205f83c6e79b"}
+
+--- STDOUT ---
+PASS AR_163
+
+
+--- STDERR ---
+

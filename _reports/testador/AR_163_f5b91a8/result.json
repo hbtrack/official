@@ -1,0 +1,40 @@
+{
+  "ar_id": "163",
+  "validation_command": "python -c \"from pathlib import Path; import re, subprocess; ss=Path('docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md'); t=ss.read_text(encoding='utf-8'); m=re.search(r'(?s)id:\\s*INV-TRAIN-075.*?\\n\\s*status:\\s*([A-Z_]+)', t); assert m, 'FAIL SSOT missing 075'; assert m.group(1)=='IMPLEMENTADO', 'FAIL 075 status='+m.group(1); req=['Hb Track - Backend/app/services/ai_coach_service.py','Hb Track - Backend/tests/training/invariants/test_inv_train_075_ai_extra_training_draft_only.py']; miss=[p for p in req if not Path(p).exists()]; assert not miss,'FAIL missing '+str(miss); r=subprocess.run(['pytest','Hb Track - Backend/tests/training/invariants/test_inv_train_075_ai_extra_training_draft_only.py','-q','--tb=short','-p','no:randomly','--no-header'],capture_output=True,text=True); assert r.returncode==0,'FAIL pytest\\n'+r.stdout[-400:]+r.stderr[-200:]; print('PASS AR_163')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "d362868db385b63525521d5e901aa2a996445a4c68af9a4edcad173ea06363a0",
+      "hash": "d362868db385b635",
+      "stdout_len": 12,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "d362868db385b63525521d5e901aa2a996445a4c68af9a4edcad173ea06363a0",
+      "hash": "d362868db385b635",
+      "stdout_len": 12,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "d362868db385b63525521d5e901aa2a996445a4c68af9a4edcad173ea06363a0",
+      "hash": "d362868db385b635",
+      "stdout_len": 12,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

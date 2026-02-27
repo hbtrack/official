@@ -1,0 +1,30 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "Instalar INV-TRAIN-075 (ai_extra_training_draft_only): qualquer sugestao/treino extra via IA deve nascer como DRAFT e nunca autopublicar.",
+  "assumptions": [
+    "SSOT path canonico: docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md",
+    "Pytest disponivel no ambiente do Executor",
+    "FIX v2 (AH_DIVERGENCE): subprocess.check_call substituido por subprocess.run(capture_output=True) para impedir que timings do pytest contaminem o behavior_hash. Apenas print('PASS AR_163') alcanca stdout do processo-pai — output deterministico garantido."
+  ],
+  "tasks": [
+    {
+      "id": "163",
+      "title": "AI extra training sempre draft (075)",
+      "description": "Implementar enforcement para INV-TRAIN-075: requisicao de treino extra via IA cria apenas rascunho (draft) e nao altera treino/sessao publicada. Criar teste dedicado e atualizar SSOT para IMPLEMENTADO.",
+      "criteria": "1) Implementar regra em ai_coach_service.py. 2) Criar teste test_inv_train_075_ai_extra_training_draft_only.py. 3) Atualizar SSOT: INV-TRAIN-075 status=IMPLEMENTADO. 4) pytest invariants exitcode=0.",
+      "gate": "TRAIN-IA-075",
+      "validation_command": "python -c \"from pathlib import Path; import re, subprocess; ss=Path('docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md'); t=ss.read_text(encoding='utf-8'); m=re.search(r'(?s)id:\\s*INV-TRAIN-075.*?\\n\\s*status:\\s*([A-Z_]+)', t); assert m, 'FAIL SSOT missing 075'; assert m.group(1)=='IMPLEMENTADO', 'FAIL 075 status='+m.group(1); req=['Hb Track - Backend/app/services/ai_coach_service.py','Hb Track - Backend/tests/training/invariants/test_inv_train_075_ai_extra_training_draft_only.py']; miss=[p for p in req if not Path(p).exists()]; assert not miss,'FAIL missing '+str(miss); r=subprocess.run(['pytest','Hb Track - Backend/tests/training/invariants/test_inv_train_075_ai_extra_training_draft_only.py','-q','--tb=short','-p','no:randomly','--no-header'],capture_output=True,text=True); assert r.returncode==0,'FAIL pytest\\n'+r.stdout[-400:]+r.stderr[-200:]; print('PASS AR_163')\"",
+      "evidence_file": "docs/hbtrack/evidence/AR_163/executor_main.log",
+      "write_scope": [
+        "Hb Track - Backend/app/services/ai_coach_service.py",
+        "Hb Track - Backend/tests/training/invariants/test_inv_train_075_ai_extra_training_draft_only.py",
+        "docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md"
+      ],
+      "risks": [
+        "Se INV-TRAIN-075 exigir persistencia de status draft em tabela especifica, criar/ajustar modelo conforme o backend atual."
+      ],
+      "retry_count": 0
+    }
+  ]
+}
