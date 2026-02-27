@@ -1903,9 +1903,10 @@ rule: >
 services:
   - app/services/ai_coach_service.py (tone guard + publish guard)
 evidence:
-  - GAP: módulo de IA coach não existe.
-status: GAP
-decision_trace: [DECISÃO_HUMANA_2026-02-27]
+  - app/services/ai_coach_service.py: check_suggestion_tone(), check_auto_publish()
+  - tests/training/invariants/test_inv_train_072_ai_suggestion_not_order.py
+status: IMPLEMENTADO
+decision_trace: [DECISÃO_HUMANA_2026-02-27, AR_162]
 rationale: >
   O treinador humano é a autoridade. IA é ferramenta de apoio,
   não tomador de decisão.
@@ -1927,9 +1928,11 @@ services:
   - app/services/ai_coach_service.py (privacy filter)
   - app/services/coach_alerts_service.py (summarizer)
 evidence:
-  - GAP: módulo de IA coach não existe.
-status: GAP
-decision_trace: [DECISÃO_HUMANA_2026-02-27]
+  - app/services/ai_coach_service.py: filter_privacy()
+  - app/services/coach_alerts_service.py: generate_risk_summary(), create_alert_for_coach()
+  - tests/training/invariants/test_inv_train_073_ai_privacy_no_intimate_content.py
+status: IMPLEMENTADO
+decision_trace: [DECISÃO_HUMANA_2026-02-27, AR_162]
 rationale: >
   Confiança atleta ↔ IA depende de privacidade. Treinador recebe
   informação acionável sem violação de intimidade.
@@ -1950,9 +1953,10 @@ rule: >
 services:
   - app/services/ai_coach_service.py (educational module)
 evidence:
-  - GAP: conteúdo educativo não implementado.
-status: GAP
-decision_trace: [DECISÃO_HUMANA_2026-02-27]
+  - app/services/ai_coach_service.py: get_educational_content()
+  - tests/training/invariants/test_inv_train_074_ai_educational_content_independent.py
+status: IMPLEMENTADO
+decision_trace: [DECISÃO_HUMANA_2026-02-27, AR_162]
 rationale: >
   Atleta tem curiosidade além do treino do dia. Conteúdo educativo aumenta
   literacia tática sem interferir no planejamento.

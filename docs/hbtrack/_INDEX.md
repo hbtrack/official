@@ -147,6 +147,12 @@
 | AR_159 | Service: athlete_content_gate_service.py — Wellness Obrig... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_159/executor_main.log |
 | AR_160 | Tests: Wellness Obrigatória — INV-071, 076, 078 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_160/executor_main.log |
 | AR_161 | Tests: Regressão final — todos os 84 invariantes | ✅ VERIFICADO | docs/hbtrack/evidence/AR_161/executor_main.log |
+| AR_162 | IA Coach core (072-074): guards + privacidade + educativo | ✅ VERIFICADO | docs/hbtrack/evidence/AR_162/executor_main.log |
+| AR_163 | AI extra training sempre draft (075) | 🔲 PENDENTE | docs/hbtrack/evidence/AR_163/executor_main.log |
+| AR_164 | Feedback imediato pos conversacional (077) | 🔲 PENDENTE | docs/hbtrack/evidence/AR_164/executor_main.log |
+| AR_165 | Reconhecimento sem vazamento intimo (079) | 🔲 PENDENTE | docs/hbtrack/evidence/AR_165/executor_main.log |
+| AR_166 | Coach draft-only + justificativa (080-081) | 🔲 PENDENTE | docs/hbtrack/evidence/AR_166/executor_main.log |
+| AR_167 | GATE IA Coach 072-081 (tests exist + pytest) | 🔲 PENDENTE | docs/hbtrack/evidence/AR_167/executor_main.log |
 | AR_168 | Adicionar docs/hbtrack/ ao GOVERNED_ROOTS.yaml | ✅ VERIFICADO | docs/hbtrack/evidence/AR_168/executor_main.log |
 | AR_998 | Test Write Scope Section Generation | ✅ VERIFICADO | docs/hbtrack/evidence/AR_998/executor_main.log |
 | AR_999 | Exemplo: Adicionar campo birthdate em Person | ✅ VERIFICADO | docs/hbtrack/evidence/AR_999/executor_main.log |
