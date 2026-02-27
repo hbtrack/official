@@ -143,7 +143,7 @@
 | AR_155 | Service: training_pending_service.py + RBAC atleta | ✅ VERIFICADO | docs/hbtrack/evidence/AR_155/executor_main.log |
 | AR_156 | Service: Athlete UX — training visibility + exercise media | ✅ VERIFICADO | docs/hbtrack/evidence/AR_156/executor_main.log |
 | AR_157 | (sem título) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_157/executor_main.log |
-| AR_158 | Tests: Attendance Avançada — INV-063 a 070 | 🔲 PENDENTE | docs/hbtrack/evidence/AR_158/executor_main.log |
+| AR_158 | Tests: Attendance Avançada — INV-063 a 070 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_158/executor_main.log |
 | AR_159 | Service: athlete_content_gate_service.py — Wellness Obrig... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_159/executor_main.log |
 | AR_160 | Tests: Wellness Obrigatória — INV-071, 076, 078 | 🔲 PENDENTE | docs/hbtrack/evidence/AR_160/executor_main.log |
 | AR_161 | Tests: Regressão final — todos os 84 invariantes | 🔲 PENDENTE | docs/hbtrack/evidence/AR_161/executor_main.log |

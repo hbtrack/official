@@ -1148,8 +1148,8 @@ def cmd_report(ar_id: str, command: str) -> None:
     ws_clean, ws_status = check_workspace_clean()
 
     # checksums dos arquivos governados tocados (staged + unstaged)
-    _, d1, _ = run_cmd("git diff --name-only")
-    _, d2, _ = run_cmd("git diff --cached --name-only")
+    _, d1, _ = run_cmd("git -c core.quotepath=false diff --name-only")
+    _, d2, _ = run_cmd("git -c core.quotepath=false diff --cached --name-only")
     changed = sorted({f for f in (d1.splitlines() + d2.splitlines()) if f.strip()})
     governed_checksums = compute_governed_checksum(repo_root, governed_roots, changed)
 
@@ -1654,7 +1654,7 @@ def cmd_check(mode: str = "manual") -> None:
             fail("E_SSOT_MISSING", f"SSOT file missing: {ssot}", exit_code=1)
     
     # C2: SSOT com mudanças UNSTAGED => FAIL
-    _, stdout, _ = run_cmd("git diff --name-only")
+    _, stdout, _ = run_cmd("git -c core.quotepath=false diff --name-only")
     unstaged_files = stdout.strip().split("\n") if stdout.strip() else []
     
     ssot_unstaged = [f for f in unstaged_files if f in SSOT_FILES]
@@ -1663,7 +1663,7 @@ def cmd_check(mode: str = "manual") -> None:
              f"SSOT files have unstaged changes: {ssot_unstaged}", exit_code=1)
     
     # C3 & C4: verificar staged files
-    _, stdout, _ = run_cmd("git diff --cached --name-only")
+    _, stdout, _ = run_cmd("git -c core.quotepath=false diff --cached --name-only")
     staged_files = stdout.strip().split("\n") if stdout.strip() else []
     
     # Carregar governed_roots via YAML (I6)

@@ -1,0 +1,40 @@
+{
+  "ar_id": "158",
+  "validation_command": "python -c \"from pathlib import Path; b=Path('Hb Track - Backend/tests/training/invariants'); fs=[('test_inv_train_063_preconfirm.py','TestInvTrain063'),('test_inv_train_064_close_consolidation.py','TestInvTrain064'),('test_inv_train_065_close_pending_guard.py','TestInvTrain065'),('test_inv_train_066_pending_items.py','TestInvTrain066'),('test_inv_train_067_athlete_pending_rbac.py','TestInvTrain067'),('test_inv_train_068_athlete_sees_training.py','TestInvTrain068'),('test_inv_train_069_exercise_media_via_session.py','TestInvTrain069'),('test_inv_train_070_post_conversational.py','TestInvTrain070')]; missing=[fn for fn,cls in fs if not (b/fn).exists() or cls not in (b/fn).read_text(encoding='utf-8')]; assert not missing, 'FAIL: ausentes/sem classe='+str(missing); print('PASS AR_158: 8 arquivos de teste 063-070 OK')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "20bd42c8059707a7a6c593b18e71e58cb9f0f69eefaefea7c13eed86b85a6e29",
+      "hash": "20bd42c8059707a7",
+      "stdout_len": 44,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "20bd42c8059707a7a6c593b18e71e58cb9f0f69eefaefea7c13eed86b85a6e29",
+      "hash": "20bd42c8059707a7",
+      "stdout_len": 44,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "20bd42c8059707a7a6c593b18e71e58cb9f0f69eefaefea7c13eed86b85a6e29",
+      "hash": "20bd42c8059707a7",
+      "stdout_len": 44,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

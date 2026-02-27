@@ -641,7 +641,7 @@ O Executor implementou, o Testador verificou AR_143 (✅ SUCESSO hash `e57e1b35`
 | **AR_155** | training_pending_service.py + RBAC atleta | ✅ SUCESSO — `hb seal 155` pendente (HUMANO) |
 | **AR_156** | athlete UX training visibility + exercise | ✅ SUCESSO — `hb seal 156` pendente (HUMANO) |
 | **AR_157** | wellness_post campo conversacional | ✅ SUCESSO — `hb seal 157` pendente (HUMANO) |
-| **AR_158** | tests INV-063..070 attendance avançada | Executor: `hb report 158` |
+| **AR_158** | tests INV-063..070 attendance avançada | ✅ SUCESSO — `hb seal 158` pendente (HUMANO) |
 
 ### 🔲 PENDENTE — Fase D: Wellness Obrigatória
 
