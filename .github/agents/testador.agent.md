@@ -3,15 +3,15 @@ name: Testador
 description: Implementa o plano; executa comandos; coleta evidências; não promove VERIFICADO.
 handoffs:
   - label: PRONTO → Passar p/ Arquiteto
-    agent: Testador
+    agent: Arquiteto
     prompt: 
-      Você é o ARQUITETO do HB Track. (a) Leia o handoff do Executor em `_reports/TESTADOR.md` (PLAN_HANDOFF). (b) Siga estritamente as regras do seu papel em `.github/agents/testador.agent.md`. (c) Não use o histórico do chat como fonte de verdade. Use apenas AR(s) + SSOT + `_reports/*`
+      Você é o Arquiteto do HB Track! Leia o handoff em `_reports/TESTADOR.md` e siga estritamente as regras em `.github/agents/architect.agent.md`. Não use o histórico do chat como fonte de verdade.
     send: true
 
   - label: PRONTO → Passar p/ Executor
     agent: Executor
     prompt: 
-      Você é o Executor do HB Trackk! (a) Leia o handoff do Arquiteto em `_reports/TESTADOR.md`. Corrija exatamente os pontos reportados. (b) Siga estritamente as regras do Executor em `.github/agents/executor.agent.md`. (c) Não use o histórico do chat como fonte de verdade. Use apenas AR(s) + SSOT + `_reports/*`.
+      Você é o Executor do HB Track! Leia o handoff em `_reports/TESTADOR.md` e siga estritamente as regras em `.github/agents/executor.agent.md`. Não use o histórico do chat como fonte de verdade.
     send: true
 ---
 
@@ -186,22 +186,3 @@ Se status = 🔴 REJEITADO, roteie por `consistency` no result.json:
 - `BLOQUEADO_INFRA` → Humano decide waiver/infra fix
 
 Sempre inclua `rejection_reason` objetivo.
-
----
-name: HB Track — Testador
-description: Valida; tenta falsificar; não corrige código; emite PASS/FAIL com evidência.
-handoffs:
-  - label: FAIL → Devolver ao Executor
-    agent: "HB Track — Executor"
-    prompt: |
-      Falhou pelos motivos listados acima. Corrija exatamente os pontos e regenere evidências. Leia o Handoof do Testador em `_reports/TESTADOR.md` para detalhes.
-    send: false
-  - label: PASS → Voltar ao Arquiteto (fechamento)
-    agent: "HB Track — Arquiteto"
-    prompt: |
-      Passou. Faça o fechamento documental (status/kanban/index) conforme o Dev Flow.  Siga o #arquiteto.agents.md e Leia o Handoof do Testador em `_reports/TESTADOR.md` para detalhes.
-    send: false
----
-
-# ROLE
-...

@@ -5,13 +5,13 @@ handoffs:
   - label: PRONTO → Passar p/ Testador
     agent: Testador
     prompt:
-     Você é o Testador do HB Track. (a) Leia o handoff do Executor em `_reports/EXECUTOR.md` (b) Siga estritamente as regras do seu papel em `.github/agents/testador.agent.md`. (c) Não use o histórico do chat como fonte de verdade. Use apenas AR(s) + SSOT + `_reports/*`
+     Você é o Testador do HB Track! Leia o handoff em `_reports/EXECUTOR.md` e siga estritamente as regras em `.github/agents/testador.agent.md`. Não use o histórico do chat como fonte de verdade. 
     send: true
 
   - label: FAIL → Devolver ao Arquiteto
     agent: Arquiteto
     prompt: 
-      Você é o Arquiteto do HB Trackk! Leia o handoff do Executor em `_reports/EXECUTOR.md`. Corrija exatamente os pontos reportados. Siga estritamente as regras do Arquiteto em `.github/agents/arquiteto.agent.md`. Não use o histórico do chat como fonte de verdade. Use apenas AR(s) + SSOT + `_reports/EXECUTOR.md`. 
+      Você é o Arquiteto do HB Track! Leia o handoff em `_reports/EXECUTOR.md` e siga estritamente as regras em  `.github/agents/architect.agent.md`. Não use o histórico do chat como fonte de verdade. 
     send: true
 ---
 

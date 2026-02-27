@@ -1,6 +1,6 @@
 # AR_160 — Tests: Wellness Obrigatória — INV-071, 076, 078
 
-**Status**: 🔲 PENDENTE
+**Status**: 🏗️ EM_EXECUCAO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -39,9 +39,32 @@ Classes C1+C2. Testes DEVEM usar fixtures mínimas (apenas usuário + wellness r
 - wellness_pre/post models podem não ter schema de fixture disponível no conftest — criar inline no teste se necessário
 
 ## Análise de Impacto
-_(A ser preenchido pelo Executor)_
+**Arquivos criados**: 3 novos arquivos em `Hb Track - Backend/tests/training/invariants/`
+
+**Classe por teste**:
+- test_inv_train_071_content_gate.py → C1 (unit, AsyncMock — sem DB): valida lógica de check_content_access
+- test_inv_train_076_wellness_policy.py → C2 (integration, async_db): valida has_completed_daily_wellness com registros reais
+- test_inv_train_078_progress_gate.py → C1 (unit, AsyncMock — sem DB): valida lógica de check_progress_access
+
+**Âncoras canônicas usadas**:
+- `Hb Track - Backend/app/services/athlete_content_gate_service.py` (AR_159): AthleteContentGateService, AccessGranted, AccessGated
+- `docs/ssot/schema.sql:3080` — wellness_pre (filled_at TZ, sleep_hours/quality/fatigue/stress/soreness NOT NULL)
+- `docs/ssot/schema.sql:3016` — wellness_post (session_rpe, fatigue_after, mood_after NOT NULL)
+- `docs/ssot/schema.sql:2820` — training_sessions.closed_at
+
+**Impacto lateral**: nenhum — apenas novos arquivos de teste. Não altera código de produto.
 
 ---
 ## Carimbo de Execução
 _(Gerado por hb report)_
+
+
+### Execução Executor em 4ccde93
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "from pathlib import Path; b=Path('Hb Track - Backend/tests/training/invariants'); fs=[('test_inv_train_071_content_gate.py','TestInvTrain071'),('test_inv_train_076_wellness_policy.py','TestInvTrain076'),('test_inv_train_078_progress_gate.py','TestInvTrain078')]; missing=[fn for fn,cls in fs if not (b/fn).exists() or cls not in (b/fn).read_text(encoding='utf-8')]; assert not missing, 'FAIL: ausentes/sem classe='+str(missing); [print('[OK] '+fn) for fn,_ in fs]; print('PASS AR_160: 3 arquivos de teste 071/076/078 OK')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-02-27T03:02:51.612018+00:00
+**Behavior Hash**: e9097d725a555589dfcf2f66f858060d28057c2658a9c350d3f4f322519a2170
+**Evidence File**: `docs/hbtrack/evidence/AR_160/executor_main.log`
+**Python Version**: 3.11.9
 
