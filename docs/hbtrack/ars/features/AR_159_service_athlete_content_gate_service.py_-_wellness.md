@@ -1,6 +1,6 @@
 # AR_159 — Service: athlete_content_gate_service.py — Wellness Obrigatória
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -77,3 +77,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_159_4ccde93/result.json`
+
+### Selo Humano em 48e7eed
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-27T04:39:53.467179+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_159_4ccde93/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_159/executor_main.log`

@@ -144,7 +144,7 @@
 | AR_156 | Service: Athlete UX — training visibility + exercise media | ✅ VERIFICADO | docs/hbtrack/evidence/AR_156/executor_main.log |
 | AR_157 | (sem título) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_157/executor_main.log |
 | AR_158 | Tests: Attendance Avançada — INV-063 a 070 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_158/executor_main.log |
-| AR_159 | Service: athlete_content_gate_service.py — Wellness Obrig... | ✅ SUCESSO | docs/hbtrack/evidence/AR_159/executor_main.log |
+| AR_159 | Service: athlete_content_gate_service.py — Wellness Obrig... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_159/executor_main.log |
 | AR_160 | Tests: Wellness Obrigatória — INV-071, 076, 078 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_160/executor_main.log |
 | AR_161 | Tests: Regressão final — todos os 84 invariantes | ✅ VERIFICADO | docs/hbtrack/evidence/AR_161/executor_main.log |
 | AR_998 | Test Write Scope Section Generation | ✅ VERIFICADO | docs/hbtrack/evidence/AR_998/executor_main.log |
