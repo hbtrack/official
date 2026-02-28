@@ -13,7 +13,7 @@ import { apiClient } from './client';
 /**
  * Status de presença (backend canonical)
  */
-export type PresenceStatus = 'present' | 'absent';
+export type PresenceStatus = 'present' | 'absent' | 'justified' | 'preconfirm';
 
 /**
  * Tipo de participação (backend canonical)

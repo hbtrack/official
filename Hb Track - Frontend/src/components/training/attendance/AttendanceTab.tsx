@@ -130,6 +130,10 @@ export function AttendanceTab({
             next.participation_type = undefined;
             next.minutes_effective = undefined;
             next.reason_absence = next.reason_absence || 'outro';
+          } else if (value === 'justified') {
+            next.participation_type = undefined;
+            next.minutes_effective = undefined;
+            next.reason_absence = next.reason_absence || 'outro';
           }
         }
         if (field === 'participation_type' && value === 'did_not_train') {
@@ -492,6 +496,30 @@ export function AttendanceTab({
                     >
                       Ausente
                     </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleUpdatePresence(
+                          row.athlete_id,
+                          'presence_status',
+                          'justified',
+                          row.team_registration_id
+                        )
+                      }
+                      disabled={!canEdit}
+                      className={`
+                        px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors
+                        ${presenceStatus === 'justified'
+                          ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-700'
+                          : presenceStatus === 'preconfirm'
+                          ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-700'
+                          : 'bg-white dark:bg-[#0a0a0a] text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'
+                        }
+                        ${canEdit ? '' : 'opacity-60 cursor-not-allowed'}
+                      `}
+                    >
+                      {presenceStatus === 'preconfirm' ? 'Pré-confirmado' : 'Justificado'}
+                    </button>
                   </div>
 
                   {/* Participation Type (only if present) */}
@@ -542,8 +570,8 @@ export function AttendanceTab({
                   )}
                 </div>
 
-                {/* Ausência - Detalhes */}
-                {presenceStatus === 'absent' && (
+                {/* Ausência / Justificativa - Detalhes */}
+                {(presenceStatus === 'absent' || presenceStatus === 'justified') && (
                   <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <label className="block text-xs font-medium text-slate-600 dark:text-slate-300 mb-1">

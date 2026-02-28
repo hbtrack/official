@@ -657,3 +657,49 @@ O Executor implementou, o Testador verificou AR_143 (✅ SUCESSO hash `e57e1b35`
 > **CAUSA DO REDO**: Testador usou `git restore .` + `git clean -fd` para "limpar workspace" antes do seal.
 > Isso viola `§12.5 COMANDOS PROIBIDOS`. O correto é `git restore --staged <arquivo>` (seletivo).
 > O testador.agent.pt-br.md foi atualizado com gate anti-restore indiscriminado (commit `c65c969`).
+
+---
+
+## 11. Cards — TRAINING Batch 0 — Finalização do Módulo (AR_169-174)
+
+> **Contexto**: Batch 0 do `TRAINING_BATCH_PLAN_v1.md`. P0 blockers: Wellness FE (paths + campos) +
+> Presenças UI (status `justified`) + desbloqueio de testes via migração SSOT.
+> Planos materializados em `docs/_canon/planos/`. SSOT regenerado (gen_docs_ssot.py). **Data**: 2026.
+
+### ✅ DONE — AR-TRAIN-001: Step18 UUID Convergence
+
+> AR_126, AR_127, AR_128, AR_129 — todos `✅ VERIFICADO` (hb seal executado).
+
+| AR | Título | Status |
+|---|---|---|
+| **AR_126** | Router UUID attrs convergence | ✅ VERIFICADO |
+| **AR_127** | Schema Pydantic UUID align | ✅ VERIFICADO |
+| **AR_128** | Service UUID propagation | ✅ VERIFICADO |
+| **AR_129** | Regen OpenAPI após UUID fix | ✅ VERIFICADO |
+
+### ✅ DONE — AR-TRAIN-003: Wellness FE Fix
+
+> AR_169, AR_170 — todos `✅ VERIFICADO` (hb seal 2026-02-28). Hash canônico AR_169=`3b7525c5`, AR_170=`98ff43e0`.
+
+| AR | Título | Status |
+|---|---|---|
+| **AR_169** | Fix `wellness.ts` paths + interface | ✅ VERIFICADO |
+| **AR_170** | Fix `WellnessPreForm.tsx` campos UI | ✅ VERIFICADO |
+
+### ✅ DONE — AR-TRAIN-005: Presenças UI `justified`
+
+> AR_171, AR_172 — todos `✅ VERIFICADO` (hb seal 2026-02-28).
+
+| AR | Título | Status |
+|---|---|---|
+| **AR_171** | Fix `attendance.ts` `PresenceStatus` | ✅ VERIFICADO |
+| **AR_172** | Fix `AttendanceTab.tsx` UI justified | ✅ VERIFICADO |
+
+### ✅ DONE — AR-TRAIN-010A: Migração SSOT path nos testes
+
+> AR_173, AR_174 — todos `✅ VERIFICADO` (hb seal 2026-02-28). Hash canônico AR_173=`9fcd68c9`, AR_174=`58341b51`.
+
+| AR | Título | Status |
+|---|---|---|
+| **AR_173** | Migrar `_generated`→`ssot` (lote 1/2) | ✅ VERIFICADO |
+| **AR_174** | Migrar `_generated`→`ssot` (lote 2/2) | ✅ VERIFICADO |

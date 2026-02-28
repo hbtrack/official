@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_169-07760d4",
+  "timestamp_utc": "2026-02-28T17:26:14.493194+00:00",
+  "git": {
+    "commit": "07760d4242a80a1015f7857cb3494f6a3c74b4f8"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "169",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_169_fix_wellness.ts_paths_canonicos_+_wellnesspreinput.md"
+}

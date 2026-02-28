@@ -23,7 +23,7 @@ class TestInvTrain028FocusSumConstraint:
         schema_path = (
             Path(__file__).parent.parent.parent
             / "docs"
-            / "_generated"
+            / "ssot"
             / "schema.sql"
         )
         assert schema_path.exists(), f"Schema não encontrado: {schema_path}"
@@ -38,7 +38,7 @@ class TestInvTrain028FocusSumConstraint:
         schema_path = (
             Path(__file__).parent.parent.parent
             / "docs"
-            / "_generated"
+            / "ssot"
             / "schema.sql"
         )
         content = schema_path.read_text(encoding="utf-8")
@@ -61,7 +61,7 @@ class TestInvTrain028FocusSumConstraint:
         schema_path = (
             Path(__file__).parent.parent.parent
             / "docs"
-            / "_generated"
+            / "ssot"
             / "schema.sql"
         )
         content = schema_path.read_text(encoding="utf-8")
@@ -85,7 +85,7 @@ class TestInvTrain028FocusSumConstraint:
         schema_path = (
             Path(__file__).parent.parent.parent
             / "docs"
-            / "_generated"
+            / "ssot"
             / "schema.sql"
         )
         content = schema_path.read_text(encoding="utf-8")
@@ -121,7 +121,7 @@ class TestInvTrain028FocusSumConstraint:
         schema_path = (
             Path(__file__).parent.parent.parent
             / "docs"
-            / "_generated"
+            / "ssot"
             / "schema.sql"
         )
         content = schema_path.read_text(encoding="utf-8")

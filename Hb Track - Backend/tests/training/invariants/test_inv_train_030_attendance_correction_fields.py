@@ -22,7 +22,7 @@ class TestInvTrain030AttendanceCorrectionFields:
 
     def test_constraint_exists_in_schema(self):
         """Verifica que a constraint ck_attendance_correction_fields existe."""
-        schema_path = Path(__file__).parent.parent.parent / "docs" / "_generated" / "schema.sql"
+        schema_path = Path(__file__).parent.parent.parent / "docs" / "ssot" / "schema.sql"
         assert schema_path.exists(), f"Schema não encontrado: {schema_path}"
 
         content = schema_path.read_text(encoding="utf-8")
@@ -33,7 +33,7 @@ class TestInvTrain030AttendanceCorrectionFields:
 
     def test_constraint_checks_source_correction(self):
         """Verifica que a constraint verifica source = 'correction'."""
-        schema_path = Path(__file__).parent.parent.parent / "docs" / "_generated" / "schema.sql"
+        schema_path = Path(__file__).parent.parent.parent / "docs" / "ssot" / "schema.sql"
         content = schema_path.read_text(encoding="utf-8")
 
         # Busca a linha completa da constraint
@@ -53,7 +53,7 @@ class TestInvTrain030AttendanceCorrectionFields:
 
     def test_constraint_requires_correction_by_user_id(self):
         """Verifica que a constraint exige correction_by_user_id quando source = 'correction'."""
-        schema_path = Path(__file__).parent.parent.parent / "docs" / "_generated" / "schema.sql"
+        schema_path = Path(__file__).parent.parent.parent / "docs" / "ssot" / "schema.sql"
         content = schema_path.read_text(encoding="utf-8")
 
         lines = content.split("\n")
@@ -72,7 +72,7 @@ class TestInvTrain030AttendanceCorrectionFields:
 
     def test_constraint_requires_correction_at(self):
         """Verifica que a constraint exige correction_at quando source = 'correction'."""
-        schema_path = Path(__file__).parent.parent.parent / "docs" / "_generated" / "schema.sql"
+        schema_path = Path(__file__).parent.parent.parent / "docs" / "ssot" / "schema.sql"
         content = schema_path.read_text(encoding="utf-8")
 
         lines = content.split("\n")
@@ -91,7 +91,7 @@ class TestInvTrain030AttendanceCorrectionFields:
 
     def test_constraint_allows_non_correction_sources(self):
         """Verifica que a constraint permite sources diferentes de 'correction' sem os campos."""
-        schema_path = Path(__file__).parent.parent.parent / "docs" / "_generated" / "schema.sql"
+        schema_path = Path(__file__).parent.parent.parent / "docs" / "ssot" / "schema.sql"
         content = schema_path.read_text(encoding="utf-8")
 
         lines = content.split("\n")
@@ -112,7 +112,7 @@ class TestInvTrain030AttendanceCorrectionFields:
 
     def test_constraint_comment_exists(self):
         """Verifica que existe comentário explicando a constraint."""
-        schema_path = Path(__file__).parent.parent.parent / "docs" / "_generated" / "schema.sql"
+        schema_path = Path(__file__).parent.parent.parent / "docs" / "ssot" / "schema.sql"
         content = schema_path.read_text(encoding="utf-8")
 
         # Busca o COMMENT ON CONSTRAINT
@@ -122,7 +122,7 @@ class TestInvTrain030AttendanceCorrectionFields:
 
     def test_constraint_logic_is_complete(self):
         """Verifica que a constraint tem lógica completa: source <> 'correction' OR (source = 'correction' AND campos preenchidos)."""
-        schema_path = Path(__file__).parent.parent.parent / "docs" / "_generated" / "schema.sql"
+        schema_path = Path(__file__).parent.parent.parent / "docs" / "ssot" / "schema.sql"
         content = schema_path.read_text(encoding="utf-8")
 
         lines = content.split("\n")

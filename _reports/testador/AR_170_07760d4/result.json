@@ -1,0 +1,40 @@
+{
+  "ar_id": "170",
+  "validation_command": "cd \"Hb Track - Frontend\" && python -c \"import sys; c=open('src/components/training/wellness/WellnessPreForm.tsx', encoding='utf-8').read(); checks=[('sleep_hours' in c, 'sleep_hours in form'), ('fatigue_pre' in c, 'fatigue_pre in form'), ('fatigue_level' not in c, 'fatigue_level removed from form'), (' mood: ' not in c, 'mood removed from form'), ('readiness_score' in c, 'readiness_score in form'), ('readiness:' not in c or 'readiness_score' in c, 'readiness renamed to readiness_score'), ('athlete_id' not in c.split('handleSubmit')[1].split('submitWellnessPre')[0] if 'handleSubmit' in c and 'submitWellnessPre' in c else True, 'no athlete_id in submit payload')]; failed=[msg for ok,msg in checks if not ok]; print('PASS: WellnessPreForm checks OK') if not failed else sys.exit('FAIL: '+str(failed))\" && npx tsc --noEmit --skipLibCheck 2>&1 | python -c \"import sys; lines=sys.stdin.read(); errs=[l for l in lines.splitlines() if 'WellnessPreForm' in l and 'error TS' in l]; print('PASS: WellnessPreForm tsc ok') if not errs else sys.exit('FAIL WellnessPreForm tsc: '+chr(10).join(errs[:5]))\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "98ff43e0d607dc3c16eace9b98f476ed01170e48475d69f0bb49e2134e6187b1",
+      "hash": "98ff43e0d607dc3c",
+      "stdout_len": 61,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "98ff43e0d607dc3c16eace9b98f476ed01170e48475d69f0bb49e2134e6187b1",
+      "hash": "98ff43e0d607dc3c",
+      "stdout_len": 61,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "98ff43e0d607dc3c16eace9b98f476ed01170e48475d69f0bb49e2134e6187b1",
+      "hash": "98ff43e0d607dc3c",
+      "stdout_len": 61,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

@@ -1,0 +1,40 @@
+{
+  "ar_id": "171",
+  "validation_command": "cd \"Hb Track - Frontend\" && python -c \"import sys; c=open('src/lib/api/attendance.ts', encoding='utf-8').read(); checks=[('justified' in c, 'justified in PresenceStatus'), ('preconfirm' in c, 'preconfirm in PresenceStatus'), ('reason_absence' in c, 'reason_absence in AttendanceInput')]; failed=[msg for ok,msg in checks if not ok]; print('PASS: attendance.ts type checks OK') if not failed else sys.exit('FAIL: '+str(failed))\" && npx tsc --noEmit --skipLibCheck 2>&1 | python -c \"import sys; lines=sys.stdin.read(); errs=[l for l in lines.splitlines() if 'attendance.ts' in l and 'error TS' in l]; print('PASS: attendance.ts tsc ok') if not errs else sys.exit('FAIL tsc: '+chr(10).join(errs[:5]))\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "5257c66fb8175f85d3501996387b06a01c283fefdb7f03d4e24585758246a2d1",
+      "hash": "5257c66fb8175f85",
+      "stdout_len": 62,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "5257c66fb8175f85d3501996387b06a01c283fefdb7f03d4e24585758246a2d1",
+      "hash": "5257c66fb8175f85",
+      "stdout_len": 62,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "5257c66fb8175f85d3501996387b06a01c283fefdb7f03d4e24585758246a2d1",
+      "hash": "5257c66fb8175f85",
+      "stdout_len": 62,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

@@ -18,13 +18,14 @@ export interface WellnessPre {
   training_session_id: string;
   athlete_id: string;
   
-  // Métricas (0-10)
-  sleep_quality: number;
-  fatigue_level: number;
-  stress_level: number;
-  muscle_soreness: number;
-  mood: number;
-  readiness: number;
+  // Métricas
+  sleep_hours: number;         // 0..24, 1 decimal
+  sleep_quality: number;       // 1..5
+  fatigue_pre: number;         // 0..10
+  stress_level: number;        // 0..10
+  muscle_soreness: number;     // 0..10
+  readiness_score?: number;    // 0..10 (opcional)
+  menstrual_cycle_phase?: string; // enum opcional
   
   // Metadados
   notes?: string;
@@ -84,12 +85,13 @@ export interface WellnessPost {
  * Wellness Pre Input
  */
 export interface WellnessPreInput {
-  sleep_quality: number;
-  fatigue_level: number;
-  stress_level: number;
-  muscle_soreness: number;
-  mood: number;
-  readiness: number;
+  sleep_hours: number;         // 0..24, 1 decimal (NOT NULL no DB)
+  sleep_quality: number;       // 1..5
+  fatigue_pre: number;         // 0..10
+  stress_level: number;        // 0..10
+  muscle_soreness: number;     // 0..10
+  readiness_score?: number;    // 0..10 (opcional)
+  menstrual_cycle_phase?: string; // enum opcional
   notes?: string;
 }
 
@@ -128,11 +130,11 @@ export interface AthleteWellnessSummary {
   
   // Pre averages
   avg_sleep_quality: number;
-  avg_fatigue_level: number;
+  avg_fatigue_pre: number;
   avg_stress_level: number;
   avg_muscle_soreness: number;
-  avg_mood: number;
-  avg_readiness: number;
+  avg_mood_score: number;
+  avg_readiness_score: number;
   
   // Post averages
   avg_session_rpe: number;
@@ -177,31 +179,29 @@ export interface DeadlineInfo {
 
 /**
  * Submete wellness pré-treino
- * Endpoint: POST /wellness_pre
+ * Endpoint: POST /wellness-pre/training_sessions/{sessionId}/wellness_pre
  * Permissão: Atleta (self-only)
  */
 export async function submitWellnessPre(
   sessionId: string,
   data: WellnessPreInput
 ): Promise<WellnessPre> {
-  return await apiClient.post<WellnessPre>('/wellness_pre', {
-    training_session_id: sessionId,
-    ...data,
-  });
+  return await apiClient.post<WellnessPre>(
+    `/wellness-pre/training_sessions/${sessionId}/wellness_pre`,
+    { ...data }
+  );
 }
 
 /**
  * Busca wellness pre existente do atleta
- * Endpoint: GET /wellness_pre?training_session_id={id}&athlete_id=me
+ * Endpoint: GET /wellness-pre/training_sessions/{sessionId}/wellness_pre
+ * Backend infere athlete_id do JWT (DEC-TRAIN-001)
  */
 export async function getMyWellnessPre(sessionId: string): Promise<WellnessPre | null> {
   try {
-    const response = await apiClient.get<WellnessPre[]>('/wellness_pre', {
-      params: {
-        training_session_id: sessionId,
-        athlete_id: 'me', // Backend resolve para user.athlete_id
-      },
-    });
+    const response = await apiClient.get<WellnessPre[]>(
+      `/wellness-pre/training_sessions/${sessionId}/wellness_pre`
+    );
     return response[0] || null;
   } catch (error) {
     return null;
@@ -257,31 +257,29 @@ export function calculateDeadline(sessionAt: string): DeadlineInfo {
 
 /**
  * Submete wellness pós-treino
- * Endpoint: POST /wellness_post
+ * Endpoint: POST /wellness-post/training_sessions/{sessionId}/wellness_post
  * Permissão: Atleta (self-only)
  */
 export async function submitWellnessPost(
   sessionId: string,
   data: WellnessPostInput
 ): Promise<WellnessPost> {
-  return await apiClient.post<WellnessPost>('/wellness_post', {
-    training_session_id: sessionId,
-    ...data,
-  });
+  return await apiClient.post<WellnessPost>(
+    `/wellness-post/training_sessions/${sessionId}/wellness_post`,
+    { ...data }
+  );
 }
 
 /**
  * Busca wellness post existente do atleta
- * Endpoint: GET /wellness_post?training_session_id={id}&athlete_id=me
+ * Endpoint: GET /wellness-post/training_sessions/{sessionId}/wellness_post
+ * Backend infere athlete_id do JWT (DEC-TRAIN-001)
  */
 export async function getMyWellnessPost(sessionId: string): Promise<WellnessPost | null> {
   try {
-    const response = await apiClient.get<WellnessPost[]>('/wellness_post', {
-      params: {
-        training_session_id: sessionId,
-        athlete_id: 'me',
-      },
-    });
+    const response = await apiClient.get<WellnessPost[]>(
+      `/wellness-post/training_sessions/${sessionId}/wellness_post`
+    );
     return response[0] || null;
   } catch (error) {
     return null;
@@ -309,12 +307,12 @@ export const WELLNESS_PRE_PRESETS: WellnessPreset[] = [
     emoji: '💪',
     description: 'Dormiu muito bem, sem fadiga, pronto para treinar',
     values: {
-      sleep_quality: 9,
-      fatigue_level: 2,
+      sleep_hours: 8.0,
+      sleep_quality: 5,
+      fatigue_pre: 2,
       stress_level: 2,
       muscle_soreness: 1,
-      mood: 9,
-      readiness: 9,
+      readiness_score: 9,
     },
   },
   {
@@ -323,12 +321,12 @@ export const WELLNESS_PRE_PRESETS: WellnessPreset[] = [
     emoji: '😊',
     description: 'Estado normal de treino, sem problemas',
     values: {
-      sleep_quality: 7,
-      fatigue_level: 5,
+      sleep_hours: 7.0,
+      sleep_quality: 3,
+      fatigue_pre: 5,
       stress_level: 4,
       muscle_soreness: 4,
-      mood: 7,
-      readiness: 7,
+      readiness_score: 7,
     },
   },
   {
@@ -337,12 +335,12 @@ export const WELLNESS_PRE_PRESETS: WellnessPreset[] = [
     emoji: '😓',
     description: 'Pouco descanso, fadiga moderada',
     values: {
-      sleep_quality: 4,
-      fatigue_level: 7,
+      sleep_hours: 6.0,
+      sleep_quality: 2,
+      fatigue_pre: 7,
       stress_level: 6,
       muscle_soreness: 6,
-      mood: 5,
-      readiness: 4,
+      readiness_score: 4,
     },
   },
   {
@@ -351,12 +349,12 @@ export const WELLNESS_PRE_PRESETS: WellnessPreset[] = [
     emoji: '😴',
     description: 'Muito fatigado, considere treino leve',
     values: {
-      sleep_quality: 3,
-      fatigue_level: 9,
+      sleep_hours: 5.0,
+      sleep_quality: 1,
+      fatigue_pre: 9,
       stress_level: 8,
       muscle_soreness: 8,
-      mood: 3,
-      readiness: 2,
+      readiness_score: 2,
     },
   },
 ];

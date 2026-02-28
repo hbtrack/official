@@ -21,16 +21,18 @@ import { apiClient } from '@/lib/api/client';
 interface WellnessHistoricalData {
   date: string;
   sleep_quality: number | null;
-  fatigue_level: number | null;
+  fatigue_level: number | null;   // legado
+  fatigue_pre: number | null;     // novo nome (SSOT)
   stress_level: number | null;
   muscle_soreness: number | null;
   mood: number | null;
-  readiness: number | null;
+  readiness: number | null;        // legado
+  readiness_score: number | null; // novo nome (SSOT)
 }
 
 interface WellnessHistoricalChartProps {
   athleteId: number;
-  metric: 'sleep_quality' | 'fatigue_level' | 'stress_level' | 'muscle_soreness' | 'mood' | 'readiness';
+  metric: 'sleep_quality' | 'fatigue_level' | 'fatigue_pre' | 'stress_level' | 'muscle_soreness' | 'mood' | 'readiness' | 'readiness_score';
   days?: number;
   height?: number;
   showTitle?: boolean;
@@ -216,6 +218,11 @@ function getMetricConfig(metric: string): MetricConfig {
       color: '#ef4444', // red-500
       icon: <Icons.Training.Wellness.Battery className="h-4 w-4 text-red-500" />,
     },
+    fatigue_pre: {
+      label: 'Nível de Fadiga (Pré)',
+      color: '#ef4444', // red-500
+      icon: <Icons.Training.Wellness.Battery className="h-4 w-4 text-red-500" />,
+    },
     stress_level: {
       label: 'Nível de Estresse',
       color: '#f59e0b', // amber-500
@@ -233,6 +240,11 @@ function getMetricConfig(metric: string): MetricConfig {
     },
     readiness: {
       label: 'Prontidão',
+      color: '#06b6d4', // cyan-500
+      icon: <Icons.Training.Wellness.Target className="h-4 w-4 text-cyan-500" />,
+    },
+    readiness_score: {
+      label: 'Prontidão para Treinar',
       color: '#06b6d4', // cyan-500
       icon: <Icons.Training.Wellness.Target className="h-4 w-4 text-cyan-500" />,
     },

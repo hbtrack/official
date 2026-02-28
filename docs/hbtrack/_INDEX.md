@@ -154,5 +154,11 @@
 | AR_166 | Coach draft-only + justificativa (080-081) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_166/executor_main.log |
 | AR_167 | GATE IA Coach 072-081 (tests exist + pytest) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_167/executor_main.log |
 | AR_168 | Adicionar docs/hbtrack/ ao GOVERNED_ROOTS.yaml | ✅ VERIFICADO | docs/hbtrack/evidence/AR_168/executor_main.log |
+| AR_169 | Fix wellness.ts: paths canonicos + WellnessPreInput SSOT-... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_169/executor_main.log |
+| AR_170 | Fix WellnessPreForm.tsx: campos UI alinhados ao WellnessP... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_170/executor_main.log |
+| AR_171 | Fix attendance.ts: adicionar 'justified' e 'preconfirm' a... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_171/executor_main.log |
+| AR_172 | Fix AttendanceTab.tsx: UI para status justified + reason_... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_172/executor_main.log |
+| AR_173 | Migrar _generated para ssot nos test files TRAINING (lote... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_173/executor_main.log |
+| AR_174 | Migrar _generated para ssot nos test files TRAINING (lote... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_174/executor_main.log |
 | AR_998 | Test Write Scope Section Generation | ✅ VERIFICADO | docs/hbtrack/evidence/AR_998/executor_main.log |
 | AR_999 | Exemplo: Adicionar campo birthdate em Person | ✅ VERIFICADO | docs/hbtrack/evidence/AR_999/executor_main.log |

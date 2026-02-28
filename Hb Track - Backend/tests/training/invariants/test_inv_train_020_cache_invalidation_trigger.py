@@ -23,7 +23,7 @@ class TestInvTrain020CacheInvalidationTrigger:
         schema_path = (
             Path(__file__).parent.parent.parent
             / "docs"
-            / "_generated"
+            / "ssot"
             / "schema.sql"
         )
         assert schema_path.exists(), f"Schema não encontrado: {schema_path}"
@@ -38,7 +38,7 @@ class TestInvTrain020CacheInvalidationTrigger:
         schema_path = (
             Path(__file__).parent.parent.parent
             / "docs"
-            / "_generated"
+            / "ssot"
             / "schema.sql"
         )
         content = schema_path.read_text(encoding="utf-8")
@@ -60,7 +60,7 @@ class TestInvTrain020CacheInvalidationTrigger:
         schema_path = (
             Path(__file__).parent.parent.parent
             / "docs"
-            / "_generated"
+            / "ssot"
             / "schema.sql"
         )
         content = schema_path.read_text(encoding="utf-8")
@@ -83,7 +83,7 @@ class TestInvTrain020CacheInvalidationTrigger:
         schema_path = (
             Path(__file__).parent.parent.parent
             / "docs"
-            / "_generated"
+            / "ssot"
             / "schema.sql"
         )
         content = schema_path.read_text(encoding="utf-8")
@@ -106,7 +106,7 @@ class TestInvTrain020CacheInvalidationTrigger:
         schema_path = (
             Path(__file__).parent.parent.parent
             / "docs"
-            / "_generated"
+            / "ssot"
             / "schema.sql"
         )
         content = schema_path.read_text(encoding="utf-8")
@@ -129,7 +129,7 @@ class TestInvTrain020CacheInvalidationTrigger:
         schema_path = (
             Path(__file__).parent.parent.parent
             / "docs"
-            / "_generated"
+            / "ssot"
             / "schema.sql"
         )
         content = schema_path.read_text(encoding="utf-8")

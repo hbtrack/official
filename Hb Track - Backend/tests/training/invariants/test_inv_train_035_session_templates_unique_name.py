@@ -18,7 +18,7 @@ class TestInvTrain035SessionTemplatesUniqueName:
     CONSTRAINT_NAME = "uq_session_templates_org_name"
 
     def _get_schema_content(self) -> str:
-        schema_path = Path(__file__).parent.parent.parent / "docs" / "_generated" / "schema.sql"
+        schema_path = Path(__file__).parent.parent.parent / "docs" / "ssot" / "schema.sql"
         assert schema_path.exists(), f"Schema não encontrado: {schema_path}"
         return schema_path.read_text(encoding="utf-8")
 

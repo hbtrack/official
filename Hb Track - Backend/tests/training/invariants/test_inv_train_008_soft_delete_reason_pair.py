@@ -29,7 +29,7 @@ class TestInvTrain008SoftDeleteReasonPair:
 
     def test_training_tables_have_deleted_reason_constraint(self):
         """Verifica que todas as tabelas TRAINING têm constraint de deleted_reason."""
-        schema_path = Path(__file__).parent.parent.parent / "docs" / "_generated" / "schema.sql"
+        schema_path = Path(__file__).parent.parent.parent / "docs" / "ssot" / "schema.sql"
         assert schema_path.exists(), f"Schema não encontrado: {schema_path}"
 
         content = schema_path.read_text(encoding="utf-8")
@@ -46,7 +46,7 @@ class TestInvTrain008SoftDeleteReasonPair:
 
     def test_deleted_reason_constraint_logic_is_correct(self):
         """Verifica que a lógica da constraint é: ambos NULL ou ambos NOT NULL."""
-        schema_path = Path(__file__).parent.parent.parent / "docs" / "_generated" / "schema.sql"
+        schema_path = Path(__file__).parent.parent.parent / "docs" / "ssot" / "schema.sql"
         content = schema_path.read_text(encoding="utf-8")
 
         for table in self.TRAINING_TABLES_WITH_SOFT_DELETE:
@@ -83,7 +83,7 @@ class TestInvTrain008SoftDeleteReasonPair:
 
     def test_training_sessions_constraint_exists(self):
         """Verifica constraint específica em training_sessions."""
-        schema_path = Path(__file__).parent.parent.parent / "docs" / "_generated" / "schema.sql"
+        schema_path = Path(__file__).parent.parent.parent / "docs" / "ssot" / "schema.sql"
         content = schema_path.read_text(encoding="utf-8")
 
         assert "ck_training_sessions_deleted_reason" in content, (
@@ -92,7 +92,7 @@ class TestInvTrain008SoftDeleteReasonPair:
 
     def test_wellness_pre_constraint_exists(self):
         """Verifica constraint específica em wellness_pre."""
-        schema_path = Path(__file__).parent.parent.parent / "docs" / "_generated" / "schema.sql"
+        schema_path = Path(__file__).parent.parent.parent / "docs" / "ssot" / "schema.sql"
         content = schema_path.read_text(encoding="utf-8")
 
         assert "ck_wellness_pre_deleted_reason" in content, (
@@ -101,7 +101,7 @@ class TestInvTrain008SoftDeleteReasonPair:
 
     def test_wellness_post_constraint_exists(self):
         """Verifica constraint específica em wellness_post."""
-        schema_path = Path(__file__).parent.parent.parent / "docs" / "_generated" / "schema.sql"
+        schema_path = Path(__file__).parent.parent.parent / "docs" / "ssot" / "schema.sql"
         content = schema_path.read_text(encoding="utf-8")
 
         assert "ck_wellness_post_deleted_reason" in content, (
@@ -110,7 +110,7 @@ class TestInvTrain008SoftDeleteReasonPair:
 
     def test_attendance_constraint_exists(self):
         """Verifica constraint específica em attendance."""
-        schema_path = Path(__file__).parent.parent.parent / "docs" / "_generated" / "schema.sql"
+        schema_path = Path(__file__).parent.parent.parent / "docs" / "ssot" / "schema.sql"
         content = schema_path.read_text(encoding="utf-8")
 
         assert "ck_attendance_deleted_reason" in content, (

@@ -1,0 +1,18 @@
+AR_ID: 174
+Command: cd "Hb Track - Backend" && python -c "import sys; from pathlib import Path; files=['tests/training/invariants/test_inv_train_035_session_templates_unique_name.py','tests/training/invariants/test_inv_train_036_wellness_rankings_unique.py','tests/training/invariants/test_inv_train_037_cycle_dates.py','tests/training/invariants/test_inv_train_072_ai_suggestion_not_order.py','tests/training/invariants/test_inv_train_077_immediate_virtual_coach_feedback.py']; errs=[f for f in files if chr(34)+'_generated'+chr(34) in Path(f).read_text(encoding='utf-8')]; sys.exit('FAIL _generated still found: '+str(errs)) if errs else print('PASS lote 2: 5 files migrated')"
+Exit Code: 0
+Timestamp UTC: 2026-02-28T10:05:14.915105+00:00
+Behavior Hash (exit+stdout+stderr): 58341b511dfb92e42bd5a09804ad4d2e446574a93741856bb391809f86f0c651
+Git HEAD: 07760d4242a80a1015f7857cb3494f6a3c74b4f8
+Python Version: 3.11.9
+Protocol Version: 1.3.0
+Workspace Clean: False
+Workspace Status: unstaged_modified=22
+Governed Checksums (sha256): {"Hb Track - Backend/docs/ssot/alembic_state.txt": "671d73c4f45bcde1dbcd555d05aa3361b9cd90867f988758eb3aa513379316b7", "Hb Track - Backend/docs/ssot/schema.sql": "f0ea4058468ddaf45041eb3770c5e65fc84a6ebc5651001c68e6cf61d8dc4bb4", "Hb Track - Backend/tests/training/invariants/test_inv_train_008_soft_delete_reason_pair.py": "53a08cb0bbec06dc09efd127f8212d761857748ea031543846428ebb65e6c72c", "Hb Track - Backend/tests/training/invariants/test_inv_train_020_cache_invalidation_trigger.py": "32f417accce3f466aab2c23651d5f4eae0c1e277d578acb9f642ef735446609e", "Hb Track - Backend/tests/training/invariants/test_inv_train_021_internal_load_trigger.py": "adad0fc283f783d3d896ceb423ba40cf2f733c3cac76971820d1d72f18494439", "Hb Track - Backend/tests/training/invariants/test_inv_train_028_focus_sum_constraint.py": "286e06fe5e2c14bd87c7c2be579b459fea60a1c778296a1aaf855a7fa26d0d4c", "Hb Track - Backend/tests/training/invariants/test_inv_train_030_attendance_correction_fields.py": "b8ba512780223e98f1c4df55c151789b48b4effa1c523c383152b720b0fd8205", "Hb Track - Backend/tests/training/invariants/test_inv_train_031_derive_phase_focus.py": "4fc19fcad5c0ba0af50c1ab6a22971d87f234faa639f5555aaba0e24f6c97ce3", "Hb Track - Backend/tests/training/invariants/test_inv_train_035_session_templates_unique_name.py": "2b052a8e17bbdecada6c948652c3b9833a4a533b3f348e5731e12d81d60d7e21", "Hb Track - Backend/tests/training/invariants/test_inv_train_036_wellness_rankings_unique.py": "38f3a38efaeafebe5ddf655c1816118f28c844c973525afd7e61dd840acbf3f1", "Hb Track - Backend/tests/training/invariants/test_inv_train_037_cycle_dates.py": "d918d464ad732a10035f0e12c5972b56e7bc27a347e506e89159dedee2e90ed9", "Hb Track - Frontend/src/components/training/attendance/AttendanceTab.tsx": "cf64410adb499fcbe46e4f4856c56961536ebf6c490308abf6f963280f02ac18", "Hb Track - Frontend/src/components/training/wellness/WellnessHistoricalChart.tsx": "90cd0ed35654f5d53de4bfd349ca847f74f54d7dedb0411293e83212e8ff6256", "Hb Track - Frontend/src/components/training/wellness/WellnessPreForm.tsx": "b2b698d80dc6d2cd422cbc35f2b58459fb9ac574f032fc60a8406bf4d37d9163", "Hb Track - Frontend/src/lib/api/attendance.ts": "fabe4520ad3cb985b53505fa49812e66b1c80779c7973363f24be1c09066fc20", "Hb Track - Frontend/src/lib/api/wellness.ts": "091a1c1977301d31545fdfd757d3357067bbcfbc98cfc21b67fe1546a6d19ad0", "docs/hbtrack/Hb Track Kanban.md": "1357f64ce5c6bc38775181ac0f32d8a1bc6355e35c1d73005271624b4ad50e32", "docs/hbtrack/_INDEX.md": "c0d919e16167263e6ec285a56436d246cc569d5d7db3ef4f9ea0afb0aa70d99e"}
+
+--- STDOUT ---
+PASS lote 2: 5 files migrated
+
+
+--- STDERR ---
+

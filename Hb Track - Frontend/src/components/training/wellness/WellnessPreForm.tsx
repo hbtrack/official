@@ -17,7 +17,6 @@ import {
   Zap,
   Brain,
   Activity,
-  Smile,
   Target,
   Clock,
   Save,
@@ -66,12 +65,12 @@ export function WellnessPreForm({
   
   // Form values
   const [values, setValues] = useState<WellnessPreInput>({
-    sleep_quality: 7,
-    fatigue_level: 5,
+    sleep_hours: 7.0,
+    sleep_quality: 3,
+    fatigue_pre: 5,
     stress_level: 4,
     muscle_soreness: 4,
-    mood: 7,
-    readiness: 7,
+    readiness_score: 7,
     notes: '',
   });
 
@@ -84,12 +83,12 @@ export function WellnessPreForm({
         if (existing) {
           setExistingWellness(existing);
           setValues({
+            sleep_hours: existing.sleep_hours ?? 7.0,
             sleep_quality: existing.sleep_quality,
-            fatigue_level: existing.fatigue_level,
+            fatigue_pre: existing.fatigue_pre,
             stress_level: existing.stress_level,
             muscle_soreness: existing.muscle_soreness,
-            mood: existing.mood,
-            readiness: existing.readiness,
+            readiness_score: existing.readiness_score,
             notes: existing.notes || '',
           });
         }
@@ -151,9 +150,9 @@ export function WellnessPreForm({
 
   // Check if any value is critical
   const hasCriticalValues = 
-    values.fatigue_level >= 8 ||
+    (values.fatigue_pre ?? 0) >= 8 ||
     values.stress_level >= 8 ||
-    values.readiness <= 3 ||
+    (values.readiness_score ?? 10) <= 3 ||
     values.muscle_soreness >= 7;
 
   if (loading) {
@@ -261,7 +260,7 @@ export function WellnessPreForm({
             />
             <WellnessHistoricalChart
               athleteId={athleteId}
-              metric="fatigue_level"
+              metric="fatigue_pre"
               days={14}
               height={180}
               showTitle={false}
@@ -275,6 +274,31 @@ export function WellnessPreForm({
         <h3 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-4">
           Como você está se sentindo hoje?
         </h3>
+
+        {/* Horas de sono (input numérico) */}
+        <div className="mb-4">
+          <label
+            htmlFor="sleep_hours"
+            className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+          >
+            <Moon className="w-4 h-4 inline mr-1" />
+            Horas de sono
+          </label>
+          <input
+            id="sleep_hours"
+            type="number"
+            min={0}
+            max={24}
+            step={0.5}
+            value={values.sleep_hours ?? ''}
+            onChange={(e) =>
+              setValues((prev) => ({ ...prev, sleep_hours: parseFloat(e.target.value) || 0 }))
+            }
+            disabled={deadline.is_expired}
+            placeholder="Ex: 7.5"
+            className="w-32 px-3 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 disabled:opacity-50 disabled:cursor-not-allowed"
+          />
+        </div>
         
         <SliderGrid columns={2}>
           <Slider
@@ -282,6 +306,8 @@ export function WellnessPreForm({
             value={values.sleep_quality}
             onChange={(v) => setValues((prev) => ({ ...prev, sleep_quality: v }))}
             icon={<Moon className="w-5 h-5" />}
+            min={1}
+            max={5}
             minLabel="Péssimo"
             maxLabel="Excelente"
             reversed
@@ -290,8 +316,8 @@ export function WellnessPreForm({
 
           <Slider
             label="Nível de Fadiga"
-            value={values.fatigue_level}
-            onChange={(v) => setValues((prev) => ({ ...prev, fatigue_level: v }))}
+            value={values.fatigue_pre ?? 5}
+            onChange={(v) => setValues((prev) => ({ ...prev, fatigue_pre: v }))}
             icon={<Zap className="w-5 h-5" />}
             minLabel="Nenhuma"
             maxLabel="Extrema"
@@ -325,20 +351,9 @@ export function WellnessPreForm({
           />
 
           <Slider
-            label="Humor"
-            value={values.mood}
-            onChange={(v) => setValues((prev) => ({ ...prev, mood: v }))}
-            icon={<Smile className="w-5 h-5" />}
-            minLabel="Muito mal"
-            maxLabel="Excelente"
-            reversed
-            disabled={deadline.is_expired}
-          />
-
-          <Slider
             label="Prontidão para Treinar"
-            value={values.readiness}
-            onChange={(v) => setValues((prev) => ({ ...prev, readiness: v }))}
+            value={values.readiness_score ?? 7}
+            onChange={(v) => setValues((prev) => ({ ...prev, readiness_score: v }))}
             icon={<Target className="w-5 h-5" />}
             minLabel="Não pronto"
             maxLabel="100% pronto"
