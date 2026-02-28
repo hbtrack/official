@@ -74,7 +74,7 @@ Dependências:
 ## 0) Nota SSOT (bloqueios conhecidos)
 
 1. SSOT atual de schema e OpenAPI está em `docs/ssot/*`.
-2. Parte dos testes existentes referencia `Hb Track - Backend/docs/_generated/*` (inexistente no repo atual) ⇒ itens ficam `BLOQUEADO` até `AR-TRAIN-010`.
+2. Parte dos testes existentes referencia `Hb Track - Backend/docs/_generated/*` (inexistente no repo atual) ⇒ itens ficam `BLOQUEADO` até `AR-TRAIN-010A`.
 3. “COBERTO” neste documento significa **teste implementado e apontado**. Resultado de execução permanece `NOT_RUN` até a produção de evidência (`_reports/*`).
 
 Resumo rápido (AS-IS) — invariantes:
@@ -178,37 +178,37 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 | INV-TRAIN-005 | session_immutable_after_60_days | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-005 | UNIT | SIM | CRITICA | POST | COBERTO | NOT_RUN | test_inv_train_005_immutability_60_days.py | - |
 | INV-TRAIN-006 | training_session_status_lifecycle | BLOQUEANTE_VALIDACAO | db+calc | TEST-TRAIN-INV-006 | UNIT | NAO | CRITICA | POST | PARCIAL | NOT_RUN | test_inv_train_006_lifecycle_status.py | - |
 | INV-TRAIN-007 | celery_uses_utc | BLOQUEANTE_ARQUITETURA | calc | TEST-TRAIN-INV-007 | GATE_CHECK | NAO | ALTA | POST | COBERTO | NOT_RUN | test_inv_train_007_celery_utc_timezone.py | - |
-| INV-TRAIN-008 | soft_delete_reason_pair | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-008 | GATE_CHECK | NAO | CRITICA | PRE | BLOQUEADO | NOT_RUN | test_inv_train_008_soft_delete_reason_pair.py (refs _generated) | AR-TRAIN-010 |
+| INV-TRAIN-008 | soft_delete_reason_pair | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-008 | GATE_CHECK | NAO | CRITICA | PRE | BLOQUEADO | NOT_RUN | test_inv_train_008_soft_delete_reason_pair.py (refs _generated) | AR-TRAIN-010A |
 | INV-TRAIN-009 | unique_wellness_pre_per_athlete_session | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-009 | INTEGRATION | SIM | CRITICA | POST | COBERTO | NOT_RUN | test_inv_train_009_wellness_pre_uniqueness.py | AR-TRAIN-003, AR-TRAIN-004 |
 | INV-TRAIN-010 | unique_wellness_post_per_athlete_session | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-010 | INTEGRATION | SIM | CRITICA | POST | COBERTO | NOT_RUN | test_inv_train_010_wellness_post_uniqueness.py | AR-TRAIN-003, AR-TRAIN-004 |
 | INV-TRAIN-011 | deviation_rules_and_min_justification | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-011 | GATE_CHECK | NAO | CRITICA | POST | PARCIAL | NOT_RUN | test_inv_train_011_deviation_rules.py | - |
 | INV-TRAIN-012 | export_rate_limits_daily | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-012 | GATE_CHECK | NAO | CRITICA | POST | PARCIAL | NOT_RUN | test_inv_train_012_export_rate_limit.py | AR-TRAIN-008, AR-TRAIN-009 |
-| INV-TRAIN-013 | gamification_badge_eligibility | NAO_BLOQUEANTE | service | TEST-TRAIN-INV-013 | GATE_CHECK | NAO | MEDIA | NO | PARCIAL | NOT_RUN | test_inv_train_013_gamification_badge_rules.py | AR-TRAIN-010 |
+| INV-TRAIN-013 | gamification_badge_eligibility | NAO_BLOQUEANTE | service | TEST-TRAIN-INV-013 | GATE_CHECK | NAO | MEDIA | NO | PARCIAL | NOT_RUN | test_inv_train_013_gamification_badge_rules.py | AR-TRAIN-010B |
 | INV-TRAIN-014 | overload_alert_threshold_multiplier | NAO_BLOQUEANTE | service | TEST-TRAIN-INV-014 | GATE_CHECK | NAO | MEDIA | NO | PARCIAL | NOT_RUN | test_inv_train_014_overload_alert_threshold.py | AR-TRAIN-001, AR-TRAIN-002 |
 | INV-TRAIN-015 | training_analytics_endpoints_exposed | BLOQUEANTE_ARQUITETURA | calc+api | TEST-TRAIN-INV-015 | GATE_CHECK | NAO | ALTA | POST | COBERTO | NOT_RUN | test_inv_train_015_training_analytics_exposure.py | - |
 | INV-TRAIN-016 | attendance_auth_and_scoped_route_not_exposed | BLOQUEANTE_ARQUITETURA | api | TEST-TRAIN-INV-016 | CONTRACT | SIM | ALTA | POST | COBERTO | NOT_RUN | test_inv_train_016_attendance_auth_scoped.py | - |
 | INV-TRAIN-018 | microcycle_session_default_status | BLOQUEANTE_ARQUITETURA | service | TEST-TRAIN-INV-018 | CONTRACT|UNIT | NAO | ALTA | POST | COBERTO | NOT_RUN | test_inv_train_018_training_session_microcycle_status.py, test_inv_train_018_training_session_microcycle_status_route.py | - |
 | INV-TRAIN-019 | audit_logs_for_training_session_actions | BLOQUEANTE_ARQUITETURA | service | TEST-TRAIN-INV-019 | INTEGRATION | NAO | ALTA | POST | COBERTO | NOT_RUN | test_inv_train_019_training_session_audit_logs.py | - |
-| INV-TRAIN-020 | analytics_cache_invalidation_trigger | BLOQUEANTE_ARQUITETURA | db | TEST-TRAIN-INV-020 | GATE_CHECK | NAO | ALTA | PRE | BLOQUEADO | NOT_RUN | test_inv_train_020_cache_invalidation_trigger.py (refs _generated) | AR-TRAIN-010 |
-| INV-TRAIN-021 | internal_load_trigger | BLOQUEANTE_ARQUITETURA | db | TEST-TRAIN-INV-021 | GATE_CHECK | NAO | ALTA | PRE | BLOQUEADO | NOT_RUN | test_inv_train_021_internal_load_trigger.py (refs _generated) | AR-TRAIN-010 |
+| INV-TRAIN-020 | analytics_cache_invalidation_trigger | BLOQUEANTE_ARQUITETURA | db | TEST-TRAIN-INV-020 | GATE_CHECK | NAO | ALTA | PRE | BLOQUEADO | NOT_RUN | test_inv_train_020_cache_invalidation_trigger.py (refs _generated) | AR-TRAIN-010A |
+| INV-TRAIN-021 | internal_load_trigger | BLOQUEANTE_ARQUITETURA | db | TEST-TRAIN-INV-021 | GATE_CHECK | NAO | ALTA | PRE | BLOQUEADO | NOT_RUN | test_inv_train_021_internal_load_trigger.py (refs _generated) | AR-TRAIN-010A |
 | INV-TRAIN-022 | wellness_post_invalidates_training_analytics_cache | BLOQUEANTE_ARQUITETURA | calc | TEST-TRAIN-INV-022 | UNIT | NAO | ALTA | POST | COBERTO | NOT_RUN | test_inv_train_022_wellness_post_cache_invalidation.py | - |
 | INV-TRAIN-023 | wellness_post_triggers_overload_alert_check | NAO_BLOQUEANTE | service+calc | TEST-TRAIN-INV-023 | UNIT | NAO | MEDIA | NO | PARCIAL | NOT_RUN | test_inv_train_023_wellness_post_overload_alert_trigger.py | AR-TRAIN-001, AR-TRAIN-002 |
-| INV-TRAIN-024 | websocket_broadcast_for_alerts_and_badges | NAO_BLOQUEANTE | service+ux | TEST-TRAIN-INV-024 | GATE_CHECK | NAO | MEDIA | NO | PARCIAL | NOT_RUN | test_inv_train_024_websocket_broadcast.py | AR-TRAIN-010 |
+| INV-TRAIN-024 | websocket_broadcast_for_alerts_and_badges | NAO_BLOQUEANTE | service+ux | TEST-TRAIN-INV-024 | GATE_CHECK | NAO | MEDIA | NO | PARCIAL | NOT_RUN | test_inv_train_024_websocket_broadcast.py | AR-TRAIN-010B |
 | INV-TRAIN-025 | lgpd_export_async_jobs | BLOQUEANTE_ARQUITETURA | calc+api | TEST-TRAIN-INV-025 | GATE_CHECK | NAO | ALTA | POST | PARCIAL | NOT_RUN | test_inv_train_025_export_lgpd_endpoints.py | AR-TRAIN-008, AR-TRAIN-009 |
 | INV-TRAIN-026 | lgpd_access_logging | BLOQUEANTE_ARQUITETURA | service | TEST-TRAIN-INV-026 | GATE_CHECK | NAO | ALTA | POST | COBERTO | NOT_RUN | test_inv_train_026_lgpd_access_logging.py | - |
 | INV-TRAIN-027 | refresh_training_rankings_task | BLOQUEANTE_ARQUITETURA | calc | TEST-TRAIN-INV-027 | UNIT | NAO | ALTA | POST | COBERTO | NOT_RUN | test_inv_train_027_refresh_training_rankings_task.py | AR-TRAIN-006, AR-TRAIN-007 |
 | INV-TRAIN-028 | deprecated_duplicate_focus_rule | DEPRECATED | tests | TEST-TRAIN-INV-028 | GATE_CHECK | NAO | BAIXA | NO | NAO_APLICAVEL | NOT_RUN | test_inv_train_028_focus_sum_constraint.py (refs _generated) | - |
 | INV-TRAIN-029 | editing_rules_by_session_status | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-029 | GATE_CHECK | NAO | CRITICA | POST | PARCIAL | NOT_RUN | test_inv_train_029_edit_blocked_after_in_progress.py | - |
-| INV-TRAIN-030 | attendance_correction_requires_audit_fields | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-030 | GATE_CHECK | NAO | CRITICA | PRE | BLOQUEADO | NOT_RUN | test_inv_train_030_attendance_correction_fields.py (refs _generated) | AR-TRAIN-010 |
-| INV-TRAIN-031 | derive_phase_focus_from_percentages | BLOQUEANTE_ARQUITETURA | db | TEST-TRAIN-INV-031 | GATE_CHECK | NAO | ALTA | PRE | BLOQUEADO | NOT_RUN | test_inv_train_031_derive_phase_focus.py (refs _generated) | AR-TRAIN-010 |
+| INV-TRAIN-030 | attendance_correction_requires_audit_fields | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-030 | GATE_CHECK | NAO | CRITICA | PRE | BLOQUEADO | NOT_RUN | test_inv_train_030_attendance_correction_fields.py (refs _generated) | AR-TRAIN-010A |
+| INV-TRAIN-031 | derive_phase_focus_from_percentages | BLOQUEANTE_ARQUITETURA | db | TEST-TRAIN-INV-031 | GATE_CHECK | NAO | ALTA | PRE | BLOQUEADO | NOT_RUN | test_inv_train_031_derive_phase_focus.py (refs _generated) | AR-TRAIN-010A |
 | INV-TRAIN-032 | wellness_post_rpe_range | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-032 | INTEGRATION | SIM | CRITICA | POST | COBERTO | NOT_RUN | test_inv_train_032_wellness_post_rpe.py, test_inv_train_032_wellness_post_rpe_runtime.py | - |
 | INV-TRAIN-033 | wellness_pre_sleep_hours_range | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-033 | INTEGRATION | SIM | CRITICA | POST | COBERTO | NOT_RUN | test_inv_train_033_wellness_pre_sleep_hours.py, test_inv_train_033_wellness_pre_sleep_hours_runtime.py | - |
 | INV-TRAIN-034 | wellness_pre_sleep_quality_range | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-034 | INTEGRATION | SIM | CRITICA | POST | COBERTO | NOT_RUN | test_inv_train_034_wellness_pre_sleep_quality.py, test_inv_train_034_wellness_pre_sleep_quality_runtime.py | - |
 | INV-TRAIN-035 | session_template_unique_name_per_org | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-035 | GATE_CHECK|INTEGRATION | SIM | CRITICA | POST | COBERTO | NOT_RUN | test_inv_train_035_session_templates_unique_name.py (refs _generated), test_inv_train_035_session_templates_unique_name_runtime.py | - |
 | INV-TRAIN-036 | wellness_rankings_unique_team_month | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-036 | GATE_CHECK|INTEGRATION | SIM | CRITICA | POST | COBERTO | NOT_RUN | test_inv_train_036_wellness_rankings_unique.py (refs _generated), test_inv_train_036_wellness_rankings_unique_runtime.py | AR-TRAIN-006, AR-TRAIN-007 |
 | INV-TRAIN-037 | cycle_dates_valid | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-037 | GATE_CHECK|INTEGRATION | SIM | CRITICA | POST | COBERTO | NOT_RUN | test_inv_train_037_cycle_dates.py (refs _generated), test_inv_train_037_cycle_dates_runtime.py | - |
-| INV-TRAIN-040 | openapi_contract_health_public | BLOQUEANTE_ARQUITETURA | api | TEST-TRAIN-INV-040 | CONTRACT | NAO | ALTA | PRE | BLOQUEADO | NOT_RUN | test_inv_train_040_health_contract.py (refs _generated) | AR-TRAIN-010 |
-| INV-TRAIN-041 | openapi_contract_teams_auth | BLOQUEANTE_ARQUITETURA | api | TEST-TRAIN-INV-041 | CONTRACT | NAO | ALTA | PRE | BLOQUEADO | NOT_RUN | test_inv_train_041_teams_contract.py (refs _generated) | AR-TRAIN-010 |
+| INV-TRAIN-040 | openapi_contract_health_public | BLOQUEANTE_ARQUITETURA | api | TEST-TRAIN-INV-040 | CONTRACT | NAO | ALTA | PRE | BLOQUEADO | NOT_RUN | test_inv_train_040_health_contract.py (refs _generated) | AR-TRAIN-010A |
+| INV-TRAIN-041 | openapi_contract_teams_auth | BLOQUEANTE_ARQUITETURA | api | TEST-TRAIN-INV-041 | CONTRACT | NAO | ALTA | PRE | BLOQUEADO | NOT_RUN | test_inv_train_041_teams_contract.py (refs _generated) | AR-TRAIN-010A |
 | INV-TRAIN-043 | microcycle_dates_valid | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-043 | INTEGRATION | SIM | CRITICA | POST | COBERTO | NOT_RUN | test_inv_train_043_microcycle_dates_check.py | - |
 | INV-TRAIN-044 | analytics_cache_unique_lookup | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-044 | INTEGRATION | SIM | CRITICA | POST | COBERTO | NOT_RUN | test_inv_train_044_analytics_cache_unique.py | - |
 | INV-TRAIN-045 | session_exercises_order_unique | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-045 | INTEGRATION | SIM | CRITICA | POST | COBERTO | NOT_RUN | test_inv_train_045_session_exercises_order_unique.py | - |
@@ -259,7 +259,7 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 ### Observações (invariantes) — gaps de cobertura (AS-IS)
 
 - `INV-TRAIN-006`, `INV-TRAIN-011`, `INV-TRAIN-012`, `INV-TRAIN-029`: faltam testes de violação (hoje a cobertura é majoritariamente `GATE_CHECK/UNIT`).
-- `INV-TRAIN-008`, `INV-TRAIN-020`, `INV-TRAIN-021`, `INV-TRAIN-030`, `INV-TRAIN-031`, `INV-TRAIN-040`, `INV-TRAIN-041`: `BLOQUEADO` por dependência de `Hb Track - Backend/docs/_generated/*` (migrar para `docs/ssot/*` via `AR-TRAIN-010`).
+- `INV-TRAIN-008`, `INV-TRAIN-020`, `INV-TRAIN-021`, `INV-TRAIN-030`, `INV-TRAIN-031`, `INV-TRAIN-040`, `INV-TRAIN-041`: `BLOQUEADO` por dependência de `Hb Track - Backend/docs/_generated/*` (migrar para `docs/ssot/*` via `AR-TRAIN-010A`).
 - `INV-TRAIN-047..053`, `INV-TRAIN-EXB-ACL-001..007`: `PENDENTE` — invariantes novas (v1.1.0, DEC-TRAIN-EXB-*). Schema/service não materializado ainda (GAP-TRAIN-EXB-001..003).
 
 ### 5c) Referência de Blocking Stage `[NORMATIVO]`
@@ -482,7 +482,8 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 | AR-TRAIN-007 | D | SCREEN-TRAIN-014/015, CONTRACT-TRAIN-073..076 | TEST-TRAIN-SCREEN-014/015, TEST-TRAIN-FLOW-013 | screenshot + manual_checklist | PENDENTE |
 | AR-TRAIN-008 | E | CONTRACT-TRAIN-086..090, INV-TRAIN-012/025 | TEST-TRAIN-CONTRACT-086..090, TEST-TRAIN-INV-012/025 | OpenAPI SSOT atualizado + api_response | PENDENTE |
 | AR-TRAIN-009 | D | FLOW-TRAIN-012, SCREEN-TRAIN-013, CONTRACT-TRAIN-086..089 | TEST-TRAIN-FLOW-012, TEST-TRAIN-SCREEN-013 | screenshot + manual_checklist | PENDENTE |
-| AR-TRAIN-010 | T | Atualizar cobertura + corrigir referências SSOT | TEST-TRAIN-INV-008/020/021/030/031/040/041 | test_output + report_json | PENDENTE |
+| AR-TRAIN-010A | T | Migrar refs `_generated` → `docs/ssot` | TEST-TRAIN-INV-008/020/021/030/031/040/041 | test_output + report_json | PENDENTE |
+| AR-TRAIN-010B | T | Cobertura adicional (itens `PARCIAL`) | TEST-TRAIN-INV-013/024 | test_output + report_json | PENDENTE |
 | AR-TRAIN-011 | A | Schema exercises+exercise_acl+exercise_media | TEST-TRAIN-INV-047/049/050/052/053, TEST-TRAIN-INV-EXB-ACL-001/006 | db_state_before_after + test_output | PENDENTE |
 | AR-TRAIN-012 | C | Guards/RBAC + ACL service layer | TEST-TRAIN-INV-048/051, TEST-TRAIN-INV-EXB-ACL-002..005/007, TEST-TRAIN-DEC-RBAC-001a/b | test_output + api_response | PENDENTE |
 | AR-TRAIN-013 | E | Endpoints ACL/copy/visibility (CONTRACT-TRAIN-091..095) | TEST-TRAIN-CONTRACT-091..095, TEST-TRAIN-DEC-EXB-001/001B/002 | OpenAPI SSOT + api_response | PENDENTE |

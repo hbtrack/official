@@ -142,7 +142,7 @@ Valores padrão que o sistema DEVE aplicar quando o campo não é informado no r
 
 **Regras:**
 - O FE NÃO DEVE enviar `athlete_id` no payload wellness do atleta — o backend o infere (DEC-TRAIN-001).
-- Se `visibility_mode` não for informado em `ExerciseCreate`, o backend DEVE usar `org_wide`.
+- Se `visibility_mode` não for informado em `ExerciseCreate`, o backend DEVE usar `restricted`.
 - Export sem worker disponível DEVE retornar 202 + `{"degraded": true}`, nunca 500/503 (DEC-TRAIN-004).
 
 ---
@@ -585,7 +585,7 @@ ExerciseACL:  # tabela exercise_acl
 3. **CONTRACT-TRAIN-095 (copy SYSTEM→ORG):**
    - Só funciona se o exercício fonte é scope=SYSTEM. Se ORG, retornar 422.
    - Cria um novo exercício com scope=ORG, `organization_id` do request, `created_by` do token.
-   - `visibility_mode` padrão = `org_wide` (pode ser overridden no request).
+   - `visibility_mode` padrão = `restricted` (pode ser overridden no request).
    - Não altera o exercício SYSTEM original.
    - Invariantes: INV-TRAIN-047 (scope válido), INV-TRAIN-049 (single org).
 

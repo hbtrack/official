@@ -289,7 +289,8 @@ Decompor a materialização do módulo TRAINING em ARs pequenas, rastreáveis, t
 ### Lote 3 — Exports e gates (E/T/D)
 8. AR-TRAIN-008 (E) — Reabilitar routers de export + atualizar OpenAPI SSOT + estado degradado sem worker
 9. AR-TRAIN-009 (D) — Conectar ExportPDFModal ao backend reabilitado + estado degradado
-10. AR-TRAIN-010 (T) — Ajustar testes invariants para SSOT atual e adicionar testes de contrato faltantes
+10. AR-TRAIN-010A (T) — Testes/Gates: migrar refs `_generated` → `docs/ssot`
+10b. AR-TRAIN-010B (T) — Testes de contrato/cobertura (workstream) — ver dependências
 
 ### Lote 4 — Banco de Exercícios (A/B/E/D) — novo pós DEC-TRAIN-EXB-*
 11. AR-TRAIN-011 (A) — Materializar schema exercises (scope, visibility_mode) + tabelas exercise_acl e exercise_media
@@ -321,12 +322,13 @@ Decompor a materialização do módulo TRAINING em ARs pequenas, rastreáveis, t
 | AR-TRAIN-007 | D | MEDIA | Corrigir Rankings/TopPerformers FE (UUID + endpoint canônico CONTRACT-TRAIN-076) | SCREEN-TRAIN-014/015, CONTRACT-TRAIN-073..076 | AR-TRAIN-006 | PENDENTE |
 | AR-TRAIN-008 | E | MEDIA | Reabilitar exports + atualizar OpenAPI SSOT + estado degradado sem worker | CONTRACT-TRAIN-086..090, INV-TRAIN-012/025 | - | PENDENTE |
 | AR-TRAIN-009 | D | MEDIA | Conectar ExportPDFModal (polling + history + rate limit + estado degradado) | FLOW-TRAIN-012, SCREEN-TRAIN-013, CONTRACT-TRAIN-086..089 | AR-TRAIN-008 | PENDENTE |
-| AR-TRAIN-010 | T | ALTA | Corrigir testes invariants para SSOT e cobrir gaps de contrato | INV-TRAIN-040/041, TEST_MATRIX_TRAINING | AR-TRAIN-001..009 | PENDENTE |
+| AR-TRAIN-010A | T | ALTA | Testes/Gates: migrar refs `_generated` → `docs/ssot` | INV-TRAIN-008/020/021/030/031/040/041, TEST_MATRIX_TRAINING | - | PENDENTE |
+| AR-TRAIN-010B | T | ALTA | Testes de contrato/cobertura (workstream) | INV-TRAIN-013/024, CONTRACT-TRAIN-073..075, CONTRACT-TRAIN-077..085, TEST_MATRIX_TRAINING | AR-TRAIN-001..009 | PENDENTE |
 | AR-TRAIN-011 | A | ALTA | Materializar schema exercises (scope, visibility_mode) + exercise_acl + exercise_media | INV-TRAIN-047..053, INV-TRAIN-EXB-ACL-001/006 | - | PENDENTE |
 | AR-TRAIN-012 | B/E | ALTA | Guards de escopo SYSTEM/ORG + RBAC "Treinador" + service ACL + visibilidade | INV-TRAIN-048/051, INV-TRAIN-EXB-ACL-002..005/007 | AR-TRAIN-011 | PENDENTE |
 | AR-TRAIN-013 | B/E | MEDIA | Endpoints ACL + copy SYSTEM→ORG + toggle visibilidade | CONTRACT-TRAIN-091..095, INV-TRAIN-EXB-ACL-001..007 | AR-TRAIN-012 | PENDENTE |
 | AR-TRAIN-014 | D | MEDIA | UI scope/visibility/ACL/mídia no exercise-bank FE | SCREEN-TRAIN-010/011, FLOW-TRAIN-009 | AR-TRAIN-013 | PENDENTE |
-| AR-TRAIN-015 | A/B | ALTA | Schema + Service ciclos hierarchy (macro→meso→micro) | INV-TRAIN-054..056, FLOW-TRAIN-016 | - | PENDENTE |
+| AR-TRAIN-015 | A/B | ALTA | Schema + Service ciclos hierarchy (macro→meso→micro) | INV-TRAIN-054..056, FLOW-TRAIN-008 | - | PENDENTE |
 | AR-TRAIN-016 | B/E | ALTA | Sessão standalone + mutabilidade + order_index exercícios | INV-TRAIN-057..059 | - | PENDENTE |
 | AR-TRAIN-017 | B/E | ALTA | Presença oficial (pre-confirm + closure + pending) | INV-TRAIN-063..066, FLOW-TRAIN-017, SCREEN-TRAIN-023, CONTRACT-TRAIN-097/098 | - | PENDENTE |
 | AR-TRAIN-018 | D/E | ALTA | UI fila de pendências (pending queue treinador) | INV-TRAIN-066/067, FLOW-TRAIN-018, SCREEN-TRAIN-023, CONTRACT-TRAIN-099/100 | AR-TRAIN-017 | PENDENTE |
@@ -661,27 +663,55 @@ cd "Hb Track - Backend" && pytest -q tests/training/invariants/test_inv_train_02
 
 ---
 
-### AR-TRAIN-010 — Testes/Gates: SSOT path + contratos críticos
+### AR-TRAIN-010A — Testes/Gates: SSOT path (migrar `_generated` → `docs/ssot`)
 
 **Status:** PENDENTE  
 **Classe:** T  
 **Prioridade:** ALTA  
 **Fase:** FASE_2  
-**Objetivo da AR (1 frase):** Ajustar testes para SSOT atual (`docs/ssot`) e cobrir contratos críticos sem schema no OpenAPI.
+**Objetivo da AR (1 frase):** Ajustar testes para SSOT atual (`docs/ssot`) removendo dependência de `docs/_generated/*`.
 
 #### 8.1 Alvos SSOT
 **Invariantes:**
+- INV-TRAIN-008
+- INV-TRAIN-020
+- INV-TRAIN-021
+- INV-TRAIN-030
+- INV-TRAIN-031
 - INV-TRAIN-040
 - INV-TRAIN-041
-
-**Contracts:**
-- CONTRACT-TRAIN-073..075
-- CONTRACT-TRAIN-077..085
 
 #### 8.7 AC binário
 ##### AC-001
 **PASS:** suite `Hb Track - Backend/tests/training/invariants/*` não depende de `docs/_generated/*`.  
 **FAIL:** testes falham por arquivo inexistente.
+
+---
+
+### AR-TRAIN-010B — Testes de Contrato/Cobertura: contratos críticos (workstream)
+
+**Status:** PENDENTE  
+**Classe:** T  
+**Prioridade:** ALTA  
+**Fase:** FASE_2  
+**Objetivo da AR (1 frase):** Cobrir contratos críticos sem schema no OpenAPI e consolidar cobertura no `TEST_MATRIX_TRAINING`.
+
+#### 8.1 Alvos SSOT
+**Invariantes:**
+- INV-TRAIN-013
+- INV-TRAIN-024
+
+**Contracts:**
+- CONTRACT-TRAIN-073..075
+- CONTRACT-TRAIN-077..085
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** AR-TRAIN-001..009
+
+#### 8.7 AC binário
+##### AC-001
+**PASS:** `TEST_MATRIX_TRAINING.md` referencia `AR-TRAIN-010B` para os itens em escopo (ex.: `INV-TRAIN-013/024`).  
+**FAIL:** Itens em escopo permanecem sem AR relacionada na matriz.
 
 ---
 
@@ -723,7 +753,7 @@ cd "Hb Track - Backend" && pytest -q tests/training/invariants/test_inv_train_02
 
 #### 8.7 AC binário
 ##### AC-001
-**PASS:** Migration cria `exercises.scope` (enum SYSTEM|ORG), `exercises.visibility_mode` (enum org_wide|restricted, default org_wide), `exercises.created_by_user_id` (FK).  
+**PASS:** Migration cria `exercises.scope` (enum SYSTEM|ORG), `exercises.visibility_mode` (enum org_wide|restricted, default restricted), `exercises.created_by_user_id` (FK).  
 **FAIL:** Campos ausentes ou sem constraint.
 
 ##### AC-002
@@ -892,7 +922,7 @@ cd "Hb Track - Backend" && alembic upgrade head && python -c "from app.models.ex
 
 #### 8.1 Alvos SSOT
 **Invariantes:** INV-TRAIN-054, INV-TRAIN-055, INV-TRAIN-056  
-**Flows:** FLOW-TRAIN-016 (parcial)  
+**Flows:** FLOW-TRAIN-008  
 
 #### 8.3 Dependências
 **ARs predecessoras obrigatórias:** -
@@ -1162,4 +1192,3 @@ cd "Hb Track - Backend" && alembic upgrade head && python -c "from app.models.ex
 - [ ] **FASE_3:** Pré-confirmação atleta tratada como oficial (INV-TRAIN-063 violada)
 - [ ] **FASE_3:** Sugestão IA aplicada sem aprovação do treinador (INV-TRAIN-075/080 violada)
 - [ ] **FASE_3:** Conteúdo completo liberado sem wellness (INV-TRAIN-071/076 violada)
-

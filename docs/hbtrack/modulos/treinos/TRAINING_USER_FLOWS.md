@@ -508,7 +508,7 @@ evidencias:
 5. Ao criar exercício (`CONTRACT-TRAIN-054`):
    - Staff de org cria com scope=ORG (padrão), `organization_id` inferido do token.
    - Admin global pode criar com scope=SYSTEM.
-   - `visibility_mode` padrão = `org_wide` (pode ser alterado para `restricted`).
+   - `visibility_mode` padrão = `restricted` (pode ser alterado para `org_wide`).
 6. Ao editar exercício ORG (`CONTRACT-TRAIN-056`):
    - Apenas creator ou role "Treinador" da mesma org (DEC-TRAIN-RBAC-001).
    - Exercícios SYSTEM → 403 para org users (INV-TRAIN-048).
@@ -524,7 +524,7 @@ evidencias:
 
 ### Passos (copy SYSTEM→ORG — DEC-TRAIN-EXB-001, TO-BE normativo)
 9. Usuário visualiza exercício SYSTEM e aciona "Copiar para minha org" (`CONTRACT-TRAIN-095`).
-10. Sistema cria cópia como scope=ORG, `created_by` do token, `visibility_mode` padrão = `org_wide`.
+10. Sistema cria cópia como scope=ORG, `created_by` do token, `visibility_mode` padrão = `restricted`.
 11. Exercício SYSTEM original permanece inalterado.
 
 ### Passos (mídia — DEC-TRAIN-EXB-001, TO-BE normativo)
