@@ -1,6 +1,6 @@
 # AR_143 — Atualizar TEST_MATRIX com status atualizado
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ✅ SUCESSO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -48,7 +48,6 @@ Relatório de cobertura em docs/_canon/specs/ (governed). O Arquiteto usará est
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução Executor em 017cc0c
 **Status Executor**: 🏗️ EM_EXECUCAO
 **Comando**: `python -c "f=open('docs/_canon/specs/training_invariants_coverage_report.md','r'); c=f.read(); f.close(); lines=[l for l in c.split('\n') if 'INV-TRAIN' in l or 'EXB-ACL' in l]; print(f'Invariants in report: {len(lines)}'); assert len(lines)>=80, f'Expected >=80 invariants, got {len(lines)}'"`
@@ -58,3 +57,10 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_143/executor_main.log`
 **Python Version**: 3.11.9
 
+
+### Verificacao Testador em 61f1733
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_143_61f1733/result.json`

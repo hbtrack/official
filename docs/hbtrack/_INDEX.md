@@ -1,6 +1,6 @@
 # Índice de Architectural Records (ARs)
 > ⚠️ Auto-gerado por `hb plan`/`hb report`. NÃO editar manualmente.
-> Última atualização: 2026-02-27
+> Última atualização: 2026-02-28
 
 | ID | Título | Status | Evidence |
 |---|---|---|---|
@@ -88,7 +88,7 @@
 | AR_077 | Integrar CompetitionStandingsService ao router: GET /stan... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_077/executor_main.log |
 | AR_078 | Adicionar CHECK constraints de validação em competition_m... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_078/executor_main.log |
 | AR_079 | Adicionar UNIQUE constraints de deduplicação em match_ros... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_079/executor_main.log |
-| AR_080 | Completar INV-COMP-007: competitions.points_per_win NOT N... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_080/executor_main.log |
+| AR_080 | Completar INV-COMP-007: competitions.points_per_win NOT N... | 🔴 REJEITADO | docs/hbtrack/evidence/AR_080/executor_main.log |
 | AR_100 | Estabilização do Protocolo v1.2.0 e Unificação de Registros | ✅ VERIFICADO | docs/hbtrack/evidence/AR_100/executor_main.log |
 | AR_101 | Resgate de ARs de Governança (v1.2.0 Core) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_101/executor_main.log |
 | AR_102 | Resgate de ARs de Competitions e Features | ✅ VERIFICADO | docs/hbtrack/evidence/AR_102/executor_main.log |
@@ -117,7 +117,7 @@
 | AR_128 | Convergir services Step18 de int para UUID nas assinaturas | ✅ VERIFICADO | docs/hbtrack/evidence/AR_128/executor_main.log |
 | AR_129 | Regenerar OpenAPI SSOT e validar UUID em paths Step18 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_129/executor_main.log |
 | AR_130 | Fix dismiss_alert user_id int para UUID | ✅ VERIFICADO | docs/hbtrack/evidence/AR_130/executor_main.log |
-| AR_131 | Adicionar gate de proteção: cmd_verify MUST NOT rebuild _... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_131/executor_main.log |
+| AR_131 | Adicionar gate de proteção: cmd_verify MUST NOT rebuild _... | ✅ SUCESSO | docs/hbtrack/evidence/AR_131/executor_main.log |
 | AR_132 | Atualizar INVARIANTS_TRAINING.md com 28 novas invariantes | ✅ VERIFICADO | docs/hbtrack/evidence/AR_132/executor_main.log |
 | AR_133 | Atualizar TEST_MATRIX_TRAINING.md com linhas de teste FASE_3 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_133/executor_main.log |
 | AR_134 | Atualizar TRAINING_FRONT_BACK_CONTRACT.md com contratos F... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_134/executor_main.log |
@@ -128,7 +128,7 @@
 | AR_140 | Criar teste INV-TRAIN-058 session structure mutable | ✅ VERIFICADO | docs/hbtrack/evidence/AR_140/executor_main.log |
 | AR_141 | Criar teste INV-TRAIN-059 exercise order contiguous | ✅ VERIFICADO | docs/hbtrack/evidence/AR_141/executor_main.log |
 | AR_142 | Regressão completa de testes de invariantes | ✅ VERIFICADO | docs/hbtrack/evidence/AR_142/executor_main.log |
-| AR_143 | Atualizar TEST_MATRIX com status atualizado | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_143/executor_main.log |
+| AR_143 | Atualizar TEST_MATRIX com status atualizado | ✅ SUCESSO | docs/hbtrack/evidence/AR_143/executor_main.log |
 | AR_144 | DB: Exercise Bank — schema foundation | ✅ VERIFICADO | docs/hbtrack/evidence/AR_144/executor_main.log |
 | AR_145 | Service: exercise_service.py — guards Exercise Bank | ✅ VERIFICADO | docs/hbtrack/evidence/AR_145/executor_main.log |
 | AR_146 | Service: exercise_acl_service.py — criar serviço ACL | ✅ VERIFICADO | docs/hbtrack/evidence/AR_146/executor_main.log |

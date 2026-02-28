@@ -1,0 +1,42 @@
+{
+  "ar_id": "080",
+  "validation_command": "python temp/run_ar080_wrapper.py",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 2,
+      "hash_full": "2f0115adf0705744c6db3578ce071df257ceba146efcf95e517be688fac21254",
+      "hash": "2f0115adf0705744",
+      "stdout_len": 0,
+      "stderr_len": 111
+    },
+    {
+      "run": 2,
+      "exit_code": 2,
+      "hash_full": "2f0115adf0705744c6db3578ce071df257ceba146efcf95e517be688fac21254",
+      "hash": "2f0115adf0705744",
+      "stdout_len": 0,
+      "stderr_len": 111
+    },
+    {
+      "run": 3,
+      "exit_code": 2,
+      "hash_full": "2f0115adf0705744c6db3578ce071df257ceba146efcf95e517be688fac21254",
+      "hash": "2f0115adf0705744",
+      "stdout_len": 0,
+      "stderr_len": 111
+    }
+  ],
+  "triple_consistency": "TRIPLE_FAIL",
+  "testador_exit_code": 2,
+  "executor_exit_code": 0,
+  "consistency": "AH_DIVERGENCE",
+  "status": "REJEITADO",
+  "ah_flags": [
+    "AH_DIVERGENCE"
+  ],
+  "evidence_pack_complete": true,
+  "rejection_reason": "Executor reported exit 0 but Testador got exit 2",
+  "workspace_clean": true
+}

@@ -1,6 +1,6 @@
 # AR_131 — Adicionar gate de proteção: cmd_verify MUST NOT rebuild _INDEX.md se houver ARs staged
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: ✅ SUCESSO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -94,7 +94,6 @@ CRITICAL: Correção de governança que estava atrasando sistema em 12+ ocorrên
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução Executor em dd11c7d
 **Status Executor**: 🏗️ EM_EXECUCAO
 **Comando**: `python temp/validate_ar131.py`
@@ -104,3 +103,10 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_131/executor_main.log`
 **Python Version**: 3.11.9
 
+
+### Verificacao Testador em 61f1733
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_131_61f1733/result.json`

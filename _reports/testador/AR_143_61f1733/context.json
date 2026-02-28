@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_143-61f1733",
+  "timestamp_utc": "2026-02-28T05:42:37.354061+00:00",
+  "git": {
+    "commit": "61f17338c40c4a961ad255e06a2929c0e4b9d71c"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "143",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_143_atualizar_test_matrix_com_status_atualizado.md"
+}

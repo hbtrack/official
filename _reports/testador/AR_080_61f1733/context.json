@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_080-61f1733",
+  "timestamp_utc": "2026-02-28T05:42:06.638107+00:00",
+  "git": {
+    "commit": "61f17338c40c4a961ad255e06a2929c0e4b9d71c"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "080",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_080_completar_inv-comp-007_competitions.points_per_win.md"
+}

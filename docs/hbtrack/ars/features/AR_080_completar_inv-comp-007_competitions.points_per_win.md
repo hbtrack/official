@@ -1,6 +1,6 @@
 # AR_080 — Completar INV-COMP-007: competitions.points_per_win NOT NULL + model fix
 
-**Status**: 🏗️ EM_EXECUCAO
+**Status**: 🔴 REJEITADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -85,7 +85,6 @@ git checkout -- "Hb Track - Backend/app/models/competition.py"
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
-
 ### Execução Executor em ef6f73a
 **Status Executor**: ❌ FALHA
 **Comando**: `python temp/run_ar080_wrapper.py`
@@ -94,7 +93,6 @@ _(Gerado por hb report)_
 **Behavior Hash**: 87e1207ff9fa677f3d9d34bdb9010ae9fdb59f8030539b4f512f2a371d88b2ef
 **Evidence File**: `docs/hbtrack/evidence/AR_080/executor_main.log`
 **Python Version**: 3.11.9
-
 
 ### Execução Executor em ef6f73a
 **Status Executor**: 🏗️ EM_EXECUCAO
@@ -105,3 +103,10 @@ _(Gerado por hb report)_
 **Evidence File**: `docs/hbtrack/evidence/AR_080/executor_main.log`
 **Python Version**: 3.11.9
 
+
+### Verificacao Testador em 61f1733
+**Status Testador**: 🔴 REJEITADO
+**Consistency**: AH_DIVERGENCE
+**Triple-Run**: TRIPLE_FAIL (3x)
+**Exit Testador**: 2 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_080_61f1733/result.json`
