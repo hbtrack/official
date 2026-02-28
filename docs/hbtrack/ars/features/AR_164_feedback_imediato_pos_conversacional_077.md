@@ -1,6 +1,6 @@
 # AR_164 — Feedback imediato pos conversacional (077)
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -79,3 +79,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_164_dce9117/result.json`
+
+### Selo Humano em c6f3dd1
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-27T16:19:25.347256+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_164_dce9117/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_164/executor_main.log`

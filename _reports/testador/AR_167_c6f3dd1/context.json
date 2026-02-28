@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_167-c6f3dd1",
+  "timestamp_utc": "2026-02-27T16:10:37.613566+00:00",
+  "git": {
+    "commit": "c6f3dd1a7963da53c17eb0f99a9d8a2d20a98a90"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "167",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_167_gate_ia_coach_072-081_tests_exist_+_pytest.md"
+}

@@ -1,6 +1,6 @@
 # AR_163 — AI extra training sempre draft (075)
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -66,3 +66,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_163_f5b91a8/result.json`
+
+### Selo Humano em c6f3dd1
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-02-27T16:19:35.549251+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_163_f5b91a8/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_163/executor_main.log`

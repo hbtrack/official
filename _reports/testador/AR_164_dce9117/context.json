@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_164-dce9117",
+  "timestamp_utc": "2026-02-27T10:58:18.792943+00:00",
+  "git": {
+    "commit": "dce9117e64b48faf038b431ce9d0ad82562ba276"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "164",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_164_feedback_imediato_pos_conversacional_077.md"
+}

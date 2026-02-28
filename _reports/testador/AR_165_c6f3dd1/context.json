@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_165-c6f3dd1",
+  "timestamp_utc": "2026-02-27T15:56:55.922434+00:00",
+  "git": {
+    "commit": "c6f3dd1a7963da53c17eb0f99a9d8a2d20a98a90"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "165",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_165_reconhecimento_sem_vazamento_intimo_079.md"
+}
