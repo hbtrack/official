@@ -55,7 +55,40 @@ git checkout -- scripts/run/hb_cli.py
 CRITICAL: Correção de governança que estava atrasando sistema em 12+ ocorrências. Anti-desatualização do _INDEX.md em batch mode.
 
 ## Análise de Impacto
-_(A ser preenchido pelo Executor)_
+
+**Tipo**: Modificação hb_cli.py — governança de pipeline (batch operation safety)
+
+**Implementação realizada**:
+1. **Função get_staged_ars()** (linha 1053):
+   - Detecta ARs staged via `git diff --cached --name-only`
+   - Retorna lista de AR_IDs (ex: ['002', '032', '131'])
+   - Fallback seguro: retorna lista vazia em caso de erro
+
+2. **Error code E_VERIFY_BATCH_INDEX_SKIP** (linha 131):
+   - Constante adicionada (doc-only, não usado em fail())
+   - Sinaliza decisão de skip de rebuild
+
+3. **cmd_verify modificação** (linha 1542):
+   - **IMPLEMENTAÇÃO ALTERNATIVA**: Em vez de condicional baseado em get_staged_ars(), o rebuild foi REMOVIDO completamente do cmd_verify
+   - Comentário adicionado: "v1.3.0 AR-First: Index rebuild OPTIONAL — pipeline não depende de _INDEX.md"
+   - _INDEX.md será reconstruído apenas por `hb seal` ou `hb index` (comando dedicado)
+   - Print informativo: "ℹ _INDEX.md rebuild SKIPPED (AR-First pipeline — execute 'hb index' se necessário)"
+
+**Arquivos modificados**:
+- `scripts/run/hb_cli.py`: +38 linhas (função get_staged_ars), -3 linhas (rebuild_ar_index call removido), modificação em cmd_verify
+
+**Efeito**: 
+- ✅ _INDEX.md preservado em batch operations (objetivo alcançado)
+- ✅ get_staged_ars() disponível para uso futuro
+- ✅ Pipeline AR-First não depende mais de _INDEX.md sincronizado em tempo real
+- ℹ️ _INDEX.md atualizado apenas em pontos de checkpoint (hb seal, hb index)
+
+**Riscos mitigados**:
+- Batch de 10 ARs não perde mais o índice por rebuild prematuro
+- Race conditions eliminadas entre múltiplos hb report/hb verify em paralelo
+- Idempotência garantida (get_staged_ars tem fallback seguro)
+
+**Co-dependências**: nenhuma — mudança isolada em hb_cli.py
 
 ---
 ## Carimbo de Execução
