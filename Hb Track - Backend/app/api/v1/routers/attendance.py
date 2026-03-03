@@ -35,7 +35,9 @@ from app.schemas.attendance import (
     AttendanceUpdate,
     AttendanceCorrection,
 )
+from sqlalchemy import text as sa_text
 from app.services.attendance_service import AttendanceService
+from app.services.training_pending_service import TrainingPendingService
 
 router = APIRouter(tags=["attendance"])
 
@@ -425,4 +427,148 @@ async def correct_attendance_administrative(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Erro ao corrigir presença: {str(e)}"
+        )
+
+
+# =============================================================================
+# AR_185 — Novos endpoints: preconfirm, close_session, pending-items
+# INV-TRAIN-063, INV-TRAIN-065, DEC-INV-065
+# =============================================================================
+
+@router.post(
+    "/attendance/sessions/{session_id}/preconfirm",
+    summary="Atleta registra pré-confirmação de presença (INV-TRAIN-063)",
+    responses={
+        200: {"description": "Pré-confirmação registrada"},
+        401: {"description": "Token inválido ou ausente"},
+        403: {"description": "Permissão insuficiente (apenas atleta)"},
+        404: {"description": "Sessão ou atleta não encontrado"},
+        422: {"description": "Sessão já iniciada — pré-confirmação não permitida"},
+    },
+)
+async def preconfirm_attendance(
+    session_id: UUID,
+    db: AsyncSession = Depends(get_async_db),
+    current_user: ExecutionContext = Depends(get_current_user),
+):
+    """
+    Registra pré-confirmação de presença pelo atleta autenticado.
+
+    INV-TRAIN-063: preconfirm NÃO gera is_official=True.
+    Permitido apenas antes do início da sessão (status in [scheduled, draft]).
+    """
+    try:
+        # Resolver athlete_id a partir do person_id do usuário autenticado
+        athlete_row = await db.execute(
+            sa_text("SELECT id FROM athletes WHERE person_id = :pid AND deleted_at IS NULL LIMIT 1"),
+            {"pid": str(current_user.person_id)},
+        )
+        athlete = athlete_row.fetchone()
+        if athlete is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Atleta não encontrado para o usuário autenticado",
+            )
+        athlete_id = athlete[0]
+
+        service = AttendanceService(db)
+        await service.set_preconfirm(
+            session_id=session_id,
+            athlete_id=athlete_id,
+            user_id=current_user.user_id,
+        )
+        await db.commit()
+        return {"presence_status": "preconfirm", "session_id": str(session_id)}
+
+    except HTTPException:
+        await db.rollback()
+        raise
+    except NotFoundError as e:
+        await db.rollback()
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    except ValidationError as e:
+        await db.rollback()
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e))
+    except Exception as e:
+        await db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erro ao registrar pré-confirmação: {str(e)}",
+        )
+
+
+@router.post(
+    "/attendance/sessions/{session_id}/close",
+    summary="Treinador fecha sessão e consolida presenças (DEC-INV-065)",
+    responses={
+        200: {"description": "Sessão fechada com sucesso"},
+        401: {"description": "Token inválido ou ausente"},
+        403: {"description": "Permissão insuficiente (apenas treinador/admin)"},
+        404: {"description": "Sessão não encontrada"},
+    },
+)
+async def close_session(
+    session_id: UUID,
+    db: AsyncSession = Depends(get_async_db),
+    current_user: ExecutionContext = Depends(get_current_user),
+):
+    """
+    Consolida presenças ao fechar sessão.
+
+    DEC-INV-065: encerramento NUNCA é bloqueado por pending items.
+    Converte registros preconfirm→absent (treinador define presença oficial).
+    Permissão: treinador/admin.
+    """
+    try:
+        service = AttendanceService(db)
+        pending_count = await service.close_session_attendance(
+            session_id=session_id,
+            closed_by_user_id=current_user.user_id,
+        )
+        await db.commit()
+        return {"closed": True, "pending_count": pending_count}
+
+    except NotFoundError as e:
+        await db.rollback()
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    except Exception as e:
+        await db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erro ao fechar sessão: {str(e)}",
+        )
+
+
+@router.get(
+    "/attendance/sessions/{session_id}/pending-items",
+    summary="Lista pending items da sessão (INV-TRAIN-066)",
+    responses={
+        200: {"description": "Lista de pending items"},
+        401: {"description": "Token inválido ou ausente"},
+        403: {"description": "Permissão insuficiente (apenas treinador/admin)"},
+        404: {"description": "Sessão não encontrada"},
+    },
+)
+async def list_session_pending_items(
+    session_id: UUID,
+    db: AsyncSession = Depends(get_async_db),
+    current_user: ExecutionContext = Depends(get_current_user),
+):
+    """
+    Lista todos os pending items de divergência da sessão.
+
+    INV-TRAIN-066: treinador vê todos; atleta vê apenas os próprios (RBAC no service).
+    Permissão: treinador/admin.
+    """
+    try:
+        service = TrainingPendingService(db, current_user)
+        items = await service.list_pending_items(session_id=session_id)
+        return items
+
+    except NotFoundError as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erro ao listar pending items: {str(e)}",
         )

@@ -1,0 +1,18 @@
+AR_ID: 176
+Command: python -c "import subprocess; r=subprocess.run(['pytest','Hb Track - Backend/tests/training/invariants/test_inv_train_026_lgpd_access_logging.py','Hb Track - Backend/tests/training/invariants/test_inv_train_002_wellness_pre_deadline.py','Hb Track - Backend/tests/training/invariants/test_inv_train_003_wellness_post_deadline.py','-q'],capture_output=True); assert r.returncode==0,'FAIL AR_176 exit='+str(r.returncode); print('PASS AR_176')"
+Exit Code: 0
+Timestamp UTC: 2026-02-28T19:42:21.878810+00:00
+Behavior Hash (exit+stdout+stderr): 386b5d5092ca75638b0610b0775c316537a51a7190140b90f5a4abe0a487050c
+Git HEAD: b123a58f679bdb2264c973a4c5f7875ad4a3a66a
+Python Version: 3.11.9
+Protocol Version: 1.3.0
+Workspace Clean: True
+Workspace Status: workspace_clean
+Governed Checksums (sha256): {"Hb Track - Backend/app/services/training_suggestion_service.py": "4c746b9eda27d6e3b8270ba2771c057bd2d226c5287bfd718756354b4bcf2f0f", "Hb Track - Backend/docs/ssot/alembic_state.txt": "63c1ecc61cdadd682a64549512735a9585d468b1424b04b08cb1858e6dfd3d4d", "Hb Track - Backend/docs/ssot/schema.sql": "6cfd5ab21e9bb5d413893bee06d437e6ea4f773a3a07e4a0c23ba5a9605ed327", "Hb Track - Backend/tests/training/invariants/test_inv_train_026_lgpd_access_logging.py": "0b5ac0b53419fc1238ee96831c8666a6fa451374946c772e5901a7d3f1eee0f1", "docs/hbtrack/Hb Track Kanban.md": "85013a2fb680f327ca1e51db9e3353a4b631a490c84dea39472d9e18de2d4550", "docs/hbtrack/_INDEX.md": "2d4d66aa974fcb60b7498cbb6e33e093725b35b8cdc4eff50682349771199eac", "docs/hbtrack/ars/features/AR_175_fix_step18_services_training_alerts_service.py_+_t.md": "8b6b1b02260061bfbde7f6499d984c4e28b254497cb675b1da2283fea0319add", "docs/hbtrack/ars/features/AR_176_fix_wellness_be_self-only_athlete_id_do_jwt_+_payl.md": "c503b7f8e0f4bf187ec0f056d5ca1035977ae49e44094cc7035b8741e930e7c2", "docs/hbtrack/evidence/AR_175/executor_main.log": "9f79b48d15b85bd7a2f28fe80c2894f59e243e8205bce87776fb96d90df9b705", "docs/hbtrack/evidence/AR_176/executor_main.log": "cd0334a3562fe71de0faa4870d492564272257a8509314ca7268521797f04961"}
+
+--- STDOUT ---
+PASS AR_176
+
+
+--- STDERR ---
+

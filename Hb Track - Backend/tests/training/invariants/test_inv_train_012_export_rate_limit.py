@@ -22,7 +22,7 @@ class TestInvTrain012ExportRateLimit:
     def test_analytics_pdf_daily_limit_exists(self):
         """Verifica que a constante ANALYTICS_PDF_DAILY_LIMIT = 5 existe."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "export_service.py"
@@ -43,7 +43,7 @@ class TestInvTrain012ExportRateLimit:
     def test_athlete_data_daily_limit_exists(self):
         """Verifica que a constante ATHLETE_DATA_DAILY_LIMIT = 3 existe."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "export_service.py"
@@ -62,7 +62,7 @@ class TestInvTrain012ExportRateLimit:
     def test_check_rate_limit_method_exists(self):
         """Verifica que existe método check_rate_limit no ExportService."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "export_service.py"
@@ -76,7 +76,7 @@ class TestInvTrain012ExportRateLimit:
     def test_export_service_class_exists(self):
         """Verifica que a classe ExportService existe."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "export_service.py"

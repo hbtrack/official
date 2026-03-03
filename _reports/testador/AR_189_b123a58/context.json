@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_189-b123a58",
+  "timestamp_utc": "2026-03-01T08:59:51.669805+00:00",
+  "git": {
+    "commit": "b123a58f679bdb2264c973a4c5f7875ad4a3a66a"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "189",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_189_ciclos_hierarchy_fk_obrigatório_+_containment_vali.md"
+}

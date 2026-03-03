@@ -125,21 +125,21 @@ Regra normativa:
 | FLOW-TRAIN-001 | Navegar agenda semanal/mensal | Treinador | P0 | EVIDENCIADO | SCREEN-TRAIN-001 | CONTRACT-TRAIN-001 | INV-TRAIN-006 | RF-003 |
 | FLOW-TRAIN-002 | Criar sessão (draft) e publicar (scheduled) | Treinador | P0 | EVIDENCIADO | SCREEN-TRAIN-003, SCREEN-TRAIN-004 | CONTRACT-TRAIN-002, CONTRACT-TRAIN-006 | INV-TRAIN-001, INV-TRAIN-006 | US-001 |
 | FLOW-TRAIN-003 | Editar sessão e compor treino (foco + exercícios + notas) | Treinador | P0 | EVIDENCIADO | SCREEN-TRAIN-004, SCREEN-TRAIN-005 | CONTRACT-TRAIN-004, CONTRACT-TRAIN-019..024 | INV-TRAIN-001, INV-TRAIN-004, INV-TRAIN-005 | RF-003 |
-| FLOW-TRAIN-004 | Registrar presença digital (incl. justified) | Treinador | P0 | PARCIAL | SCREEN-TRAIN-020 | CONTRACT-TRAIN-025..028 | INV-TRAIN-030, INV-TRAIN-016 | US-001 |
-| FLOW-TRAIN-005 | Atleta preencher wellness pré (deadline 2h) | Atleta | P0 | PARCIAL | SCREEN-TRAIN-018 | CONTRACT-TRAIN-030 | INV-TRAIN-002, INV-TRAIN-009 | US-002 |
-| FLOW-TRAIN-006 | Atleta preencher wellness pós (janela 24h) | Atleta | P0 | PARCIAL | SCREEN-TRAIN-019 | CONTRACT-TRAIN-036 | INV-TRAIN-003, INV-TRAIN-010, INV-TRAIN-021 | RF-004 |
-| FLOW-TRAIN-007 | Treinador visualizar status wellness da sessão | Treinador | P1 | PARCIAL | SCREEN-TRAIN-004 | CONTRACT-TRAIN-012 | INV-TRAIN-022, INV-TRAIN-026 | RF-004 |
+| FLOW-TRAIN-004 | Registrar presença digital (incl. justified) | Treinador | P0 | EVIDENCIADO | SCREEN-TRAIN-020 | CONTRACT-TRAIN-025..028 | INV-TRAIN-030, INV-TRAIN-016 | US-001 |
+| FLOW-TRAIN-005 | Atleta preencher wellness pré (deadline 2h) | Atleta | P0 | EVIDENCIADO | SCREEN-TRAIN-018 | CONTRACT-TRAIN-030 | INV-TRAIN-002, INV-TRAIN-009 | US-002 |
+| FLOW-TRAIN-006 | Atleta preencher wellness pós (janela 24h) | Atleta | P0 | EVIDENCIADO | SCREEN-TRAIN-019 | CONTRACT-TRAIN-036 | INV-TRAIN-003, INV-TRAIN-010, INV-TRAIN-021 | RF-004 |
+| FLOW-TRAIN-007 | Treinador visualizar status wellness da sessão | Treinador | P1 | EVIDENCIADO | SCREEN-TRAIN-004 | CONTRACT-TRAIN-012 | INV-TRAIN-022, INV-TRAIN-026 | RF-004 |
 | FLOW-TRAIN-008 | Planejar ciclos e microciclos | Treinador | P1 | EVIDENCIADO | SCREEN-TRAIN-007, SCREEN-TRAIN-008 | CONTRACT-TRAIN-040..052 | INV-TRAIN-037, INV-TRAIN-043 | RF-011 |
 | FLOW-TRAIN-009 | Gerenciar banco de exercícios e favoritos | Treinador | P1 | EVIDENCIADO | SCREEN-TRAIN-010, SCREEN-TRAIN-011 | CONTRACT-TRAIN-053..062, 091..095 | INV-TRAIN-045, INV-TRAIN-047..053, INV-TRAIN-EXB-ACL-001..007 | (PRD: In Scope V1) |
 | FLOW-TRAIN-010 | Gerenciar templates de sessão | Treinador | P1 | EVIDENCIADO | SCREEN-TRAIN-017 | CONTRACT-TRAIN-063..068 | INV-TRAIN-035 | (PRD: suporte operacional) |
 | FLOW-TRAIN-011 | Visualizar analytics e desvios | Coordenador | P1 | EVIDENCIADO | SCREEN-TRAIN-012 | CONTRACT-TRAIN-069..071 | INV-TRAIN-020, INV-TRAIN-015 | US-003 |
-| FLOW-TRAIN-012 | Exportar relatório (PDF) de analytics | Coordenador | P1 | BLOQUEADO | SCREEN-TRAIN-012, SCREEN-TRAIN-013 | CONTRACT-TRAIN-086..089 | INV-TRAIN-012 | US-003, RF-012 |
-| FLOW-TRAIN-013 | Visualizar rankings wellness e top performers | Dirigente | P1 | PARCIAL | SCREEN-TRAIN-014, SCREEN-TRAIN-015 | CONTRACT-TRAIN-073..076 | INV-TRAIN-036, INV-TRAIN-027 | RF-008 |
+| FLOW-TRAIN-012 | Exportar relatório (PDF) de analytics | Coordenador | P1 | EVIDENCIADO | SCREEN-TRAIN-012, SCREEN-TRAIN-013 | CONTRACT-TRAIN-086..089 | INV-TRAIN-012 | US-003, RF-012 |
+| FLOW-TRAIN-013 | Visualizar rankings wellness e top performers | Dirigente | P1 | EVIDENCIADO | SCREEN-TRAIN-014, SCREEN-TRAIN-015 | CONTRACT-TRAIN-073..076 | INV-TRAIN-036, INV-TRAIN-027 | RF-008 |
 | FLOW-TRAIN-014 | Visualizar eficácia preventiva | Coordenador | P2 | EVIDENCIADO | SCREEN-TRAIN-016 | CONTRACT-TRAIN-072 | INV-TRAIN-014, INV-TRAIN-023 | RF-008 |
 | FLOW-TRAIN-015 | Gerenciar alertas e sugestões (apply/dismiss) | Coordenador | P2 | HIPOTESE | SCREEN-TRAIN-021 | CONTRACT-TRAIN-077..085 | INV-TRAIN-014, INV-TRAIN-023 | RF-013 |
 
 Notas:
-- `FLOW-TRAIN-012` está `BLOQUEADO`: routers de export existem, mas estão **desabilitados** no agregador atual (ver `Hb Track - Backend/app/api/v1/api.py`).
+- `FLOW-TRAIN-012` estava `BLOQUEADO`: routers de export existem, **habilitados** após AR_179+AR_180 (evidenciado) (ver `Hb Track - Backend/app/api/v1/api.py`).
 
 ---
 
@@ -260,7 +260,7 @@ id: FLOW-TRAIN-004
 atores:
   primario: treinador|coordenador
 prioridade: P0
-estado_asis: PARCIAL
+estado_asis: EVIDENCIADO
 telas:
   - SCREEN-TRAIN-020 # Presenças (placeholder) ou tab de presença no editor
 contratos:
@@ -275,6 +275,8 @@ evidencias:
   - Hb Track - Frontend/src/components/training/attendance/AttendanceTab.tsx (não integrado)
   - Hb Track - Frontend/src/app/(admin)/training/presencas/page.tsx (placeholder)
 ```
+
+> Promovido por Kanban+evidência: AR_176 (hb seal 2026-02-28), paths: docs/hbtrack/evidence/AR_176/executor_main.log
 
 ### Passos (TO-BE normativo)
 1. Usuário abre a sessão e acessa “Presenças”.
@@ -298,7 +300,7 @@ id: FLOW-TRAIN-005
 atores:
   primario: atleta
 prioridade: P0
-estado_asis: PARCIAL
+estado_asis: EVIDENCIADO
 decision_trace: [DEC-TRAIN-001, DEC-TRAIN-002]
 telas:
   - SCREEN-TRAIN-018 # /athlete/wellness-pre/[sessionId]
@@ -312,6 +314,8 @@ evidencias:
   - Hb Track - Frontend/src/components/training/wellness/WellnessPreForm.tsx
   - Hb Track - Backend/app/api/v1/routers/wellness_pre.py
 ```
+
+> Promovido por Kanban+evidência: AR_171 (hb seal 2026-02-28), paths: docs/hbtrack/evidence/AR_171/executor_main.log
 
 ### Passos (TO-BE normativo)
 
@@ -357,7 +361,7 @@ id: FLOW-TRAIN-006
 atores:
   primario: atleta
 prioridade: P0
-estado_asis: PARCIAL
+estado_asis: EVIDENCIADO
 decision_trace: [DEC-TRAIN-001]
 telas:
   - SCREEN-TRAIN-019 # /athlete/wellness-post/[sessionId]
@@ -372,6 +376,8 @@ evidencias:
   - Hb Track - Frontend/src/components/training/wellness/WellnessPostForm.tsx
   - Hb Track - Backend/app/api/v1/routers/wellness_post.py
 ```
+
+> Promovido por Kanban+evidência: AR_187 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_187/executor_main.log
 
 ### Passos (TO-BE normativo)
 
@@ -409,7 +415,7 @@ id: FLOW-TRAIN-007
 atores:
   primario: treinador|coordenador
 prioridade: P1
-estado_asis: PARCIAL
+estado_asis: EVIDENCIADO
 telas:
   - SCREEN-TRAIN-004 # editor modal (ponto de entrada natural)
 contratos:
@@ -420,6 +426,8 @@ invariantes_chave:
 evidencias:
   - Hb Track - Backend/app/api/v1/routers/training_sessions.py (wellness-status)
 ```
+
+> Promovido por Kanban+evidência: AR_177 + AR_178 (hb seal 2026-02-28), paths: docs/hbtrack/evidence/AR_177/executor_main.log, docs/hbtrack/evidence/AR_178/executor_main.log
 
 ### Passos (TO-BE normativo)
 1. Treinador abre detalhes da sessão.
@@ -602,7 +610,7 @@ id: FLOW-TRAIN-012
 atores:
   primario: coordenador|dirigente
 prioridade: P1
-estado_asis: BLOQUEADO
+estado_asis: EVIDENCIADO
 decision_trace: [DEC-TRAIN-004]
 telas:
   - SCREEN-TRAIN-012 # /training/analytics (entrada)
@@ -618,6 +626,8 @@ evidencias:
   - Hb Track - Frontend/src/components/training/analytics/ExportPDFModal.tsx
   - Hb Track - Backend/app/api/v1/api.py (exports desabilitado)
 ```
+
+> Promovido por Kanban+evidência: AR_179 + AR_180 (hb seal 2026-02-28), paths: docs/hbtrack/evidence/AR_179/executor_main.log, docs/hbtrack/evidence/AR_180/executor_main.log
 
 Regra normativa:
 - O fluxo só pode ser marcado como `EVIDENCIADO` quando o contrato de export e o job assíncrono estiverem expostos e testados.
@@ -652,7 +662,7 @@ id: FLOW-TRAIN-013
 atores:
   primario: dirigente|coordenador|treinador
 prioridade: P1
-estado_asis: PARCIAL
+estado_asis: EVIDENCIADO
 decision_trace: [DEC-TRAIN-003]
 telas:
   - SCREEN-TRAIN-014 # /training/rankings
@@ -668,6 +678,8 @@ evidencias:
   - Hb Track - Backend/app/api/v1/routers/analytics.py
   - Hb Track - Backend/app/api/v1/routers/teams.py (/wellness-top-performers)
 ```
+
+> Promovido por Kanban+evidência: AR_181 + AR_182 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_181/executor_main.log, docs/hbtrack/evidence/AR_182/executor_main.log
 
 ### Regra Canônica (DEC-TRAIN-003 — normativo)
 

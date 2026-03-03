@@ -1,12 +1,25 @@
 # INVARIANTS_TRAINING.md — Invariantes do Módulo TRAINING
 
 Status: DRAFT  
-Versão: v1.4.0  
+Versão: v1.5.0  
 Tipo de Documento: SSOT Normativo — Invariantes  
 Módulo: TRAINING  
 Fase: PRD v2.2 (2026-02-20) + AS-IS repo (2026-02-25) + DEC-TRAIN-EXB-* (2026-02-25) + FASE_3 (2026-02-27)  
 Autoridade: NORMATIVO_TECNICO  
-Última revisão: 2026-02-27  
+Última revisão: 2026-03-02  
+
+> Changelog v1.5.0 (2026-03-02):  
+> - **Sync pós-Batch 3..5**: promovidos 31 invariantes GAP/PARCIAL/DIVERGENTE_DO_SSOT → IMPLEMENTADO  
+>   - INV-013/024 (PARCIAL→IMPLEMENTADO): evidência AR_195 (hb seal 2026-03-01)  
+>   - INV-014/023 (DIVERGENTE_DO_SSOT→IMPLEMENTADO): evidência AR_175/176 (hb seal 2026-02-28)  
+>   - INV-025 (PARCIAL→IMPLEMENTADO): evidência AR_179/180 (hb seal 2026-02-28)  
+>   - INV-047..053 (GAP→IMPLEMENTADO): evidência AR_181/182 (hb seal 2026-03-01)  
+>   - INV-EXB-ACL-001..007 (GAP→IMPLEMENTADO): evidência AR_181/182/183 (hb seal 2026-03-01)  
+>   - INV-054..056 (GAP→IMPLEMENTADO): evidência AR_189 (hb seal 2026-03-01)  
+>   - INV-057 (GAP→IMPLEMENTADO): evidência AR_190 (hb seal 2026-03-01)  
+>   - INV-058..059 (PARCIAL→IMPLEMENTADO): evidência AR_190 (hb seal 2026-03-01)  
+>   - INV-060..062 (GAP→IMPLEMENTADO): evidência AR_182/183 (hb seal 2026-03-01)  
+>   - INV-079..081 (GAP→IMPLEMENTADO): evidência AR_192 (hb seal 2026-03-01)  
 
 > Changelog v1.4.0 (2026-02-27):  
 > - **Atualização de status GAP → IMPLEMENTADO** para invariantes com testes verificados:  
@@ -405,8 +418,8 @@ services:
 evidence:
   - Hb Track - Backend/app/services/wellness_gamification_service.py
   - Hb Track - Backend/tests/training/invariants/test_inv_train_013_gamification_badge_rules.py
-status: PARCIAL
-note: >
+status: IMPLEMENTADO
+note: Regra backend gamification_badge_eligibility evidenciada. Promovido por Kanban+evidencia: AR_195 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_195/executor_main.log
   Backend evidencia regras; front-end de notificações/badges pode estar incompleto conforme PRD RF-013.
 rationale: >
   Incentiva consistência de resposta wellness e melhora qualidade de dados.
@@ -433,8 +446,8 @@ evidence:
   - Hb Track - Backend/docs/ssot/schema.sql (teams.alert_threshold_multiplier DEFAULT 2.0; COMMENT)
   - Hb Track - Backend/app/services/training_alerts_service.py
   - Hb Track - Backend/tests/training/invariants/test_inv_train_014_overload_alert_threshold.py
-status: DIVERGENTE_DO_SSOT
-note: >
+status: IMPLEMENTADO
+note: Divergencia UUID/int resolvida por fix de tipagem em alerts/suggestions. Promovido por Kanban+evidencia: AR_175 (hb seal 2026-02-28), paths: docs/hbtrack/evidence/AR_175/executor_main.log
   Há divergência/risco: vários endpoints/serviços de alerts usam team_id tipado como int,
   mas o SSOT do schema define UUID. Ver AR backlog (classe E/B) para correção.
 rationale: >
@@ -617,8 +630,8 @@ services:
 evidence:
   - Hb Track - Backend/app/services/wellness_post_service.py (_trigger_overload_alert_on_wellness_post)
   - Hb Track - Backend/tests/training/invariants/test_inv_train_023_wellness_post_overload_alert_trigger.py
-status: DIVERGENTE_DO_SSOT
-note: >
+status: IMPLEMENTADO
+note: Divergencia team_id UUID+wellness self-only resolvida. Promovido por Kanban+evidencia: AR_175/AR_176 (hb seal 2026-02-28), paths: docs/hbtrack/evidence/AR_175/executor_main.log
   Mesmo com evidência de chamada, a cadeia alerts/suggestions tem risco de quebra por tipos (team_id UUID vs int) e por endpoints.
 rationale: >
   Integra wellness/carga com prevenção de overtraining de forma automática.
@@ -641,8 +654,8 @@ evidence:
   - Hb Track - Backend/app/services/training_alerts_service.py
   - Hb Track - Backend/app/services/wellness_gamification_service.py
   - Hb Track - Backend/tests/training/invariants/test_inv_train_024_websocket_broadcast.py
-status: PARCIAL
-note: >
+status: IMPLEMENTADO
+note: WebSocket broadcast backend evidenciado; testes cobrindo integracao. Promovido por Kanban+evidencia: AR_195 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_195/executor_main.log
   Backend evidencia integração; FE de notificações pode não estar materializado (PRD RF-013).
 rationale: >
   Notificações reduzem latência operacional (coordenação e prevenção).
@@ -669,7 +682,8 @@ evidence:
   - Hb Track - Backend/app/core/celery_tasks.py
   - Hb Track - Backend/app/services/export_service.py
   - Hb Track - Backend/tests/training/invariants/test_inv_train_025_export_lgpd_endpoints.py
-status: PARCIAL
+status: IMPLEMENTADO
+note: Exports reabilitados + estado degradado sem worker. Promovido por Kanban+evidencia: AR_179/AR_180 (hb seal 2026-02-28), paths: docs/hbtrack/evidence/AR_179/executor_main.log
 rationale: >
   Evita bloquear UI, garante rastreabilidade e reduz risco de reprocessamentos.
 ```
@@ -945,9 +959,9 @@ api:
 evidence:
   - Hb Track - Backend/docs/ssot/openapi.json
   - Hb Track - Backend/tests/training/invariants/test_inv_train_040_health_contract.py
-status: PARCIAL
+status: IMPLEMENTADO
 note: >
-  O teste atual aponta para docs/_generated/openapi.json; SSOT atual do repo está em Hb Track - Backend/docs/ssot/openapi.json.
+  Migração _generated→ssot implementada por AR_173/174. Promovido por Kanban+evidência: AR_173 (hb seal 2026-02-28), paths: docs/hbtrack/evidence/AR_173/executor_main.log
 rationale: >
   Gate de contrato: endpoint health é âncora de observabilidade e smoke tests.
 ```
@@ -969,9 +983,9 @@ api:
 evidence:
   - Hb Track - Backend/docs/ssot/openapi.json
   - Hb Track - Backend/tests/training/invariants/test_inv_train_041_teams_contract.py
-status: PARCIAL
+status: IMPLEMENTADO
 note: >
-  O teste atual aponta para docs/_generated/openapi.json; SSOT atual do repo está em Hb Track - Backend/docs/ssot/openapi.json.
+  Migração _generated→ssot implementada por AR_173/174. Promovido por Kanban+evidência: AR_173 (hb seal 2026-02-28), paths: docs/hbtrack/evidence/AR_173/executor_main.log
 rationale: >
   Gate de contrato: Training depende de teams; contrato precisa ser estável e autenticado.
 ```
@@ -1078,7 +1092,8 @@ constraints:
   - ck_exercises_scope (enum: SYSTEM, ORG)
 evidence:
   - GAP: constraint não evidenciada no schema atual; a ser materializada por AR.
-status: GAP
+status: IMPLEMENTADO
+note: Promovido por Kanban+evidencia: AR_181 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_181/executor_main.log
 decision_ref: DEC-TRAIN-EXB-001
 decision_trace: [DEC-TRAIN-EXB-001]
 rationale: >
@@ -1102,7 +1117,8 @@ services:
   - app/services/exercise_service.py (guard de escopo)
 evidence:
   - GAP: guard de escopo não evidenciado no service atual.
-status: GAP
+status: IMPLEMENTADO
+note: Promovido por Kanban+evidencia: AR_182 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_182/executor_main.log
 decision_ref: DEC-TRAIN-EXB-001
 decision_trace: [DEC-TRAIN-EXB-001]
 rationale: >
@@ -1126,7 +1142,8 @@ constraints:
   - ck_exercises_org_requires_org_id
 evidence:
   - GAP: constraint condicional não evidenciada no schema atual.
-status: GAP
+status: IMPLEMENTADO
+note: Promovido por Kanban+evidencia: AR_181 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_181/executor_main.log
 decision_ref: DEC-TRAIN-EXB-001
 decision_trace: [DEC-TRAIN-EXB-001]
 rationale: >
@@ -1150,7 +1167,8 @@ constraints:
 evidence:
   - Hb Track - Backend/docs/ssot/schema.sql (verificar: ux_exercise_favorites_*)
   - GAP: verificar se constraint existe; se não, materializar via AR.
-status: GAP
+status: IMPLEMENTADO
+note: Promovido por Kanban+evidencia: AR_181 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_181/executor_main.log
 decision_ref: DEC-TRAIN-EXB-001
 decision_trace: [DEC-TRAIN-EXB-001]
 rationale: >
@@ -1174,7 +1192,8 @@ services:
   - app/services/exercise_service.py (filtro de catálogo)
 evidence:
   - GAP: filtro de visibilidade por org + visibility_mode não evidenciado no service.
-status: GAP
+status: IMPLEMENTADO
+note: Promovido por Kanban+evidencia: AR_182 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_182/executor_main.log
 decision_ref: DEC-TRAIN-EXB-001, DEC-TRAIN-EXB-001B
 decision_trace: [DEC-TRAIN-EXB-001, DEC-TRAIN-EXB-001B]
 rationale: >
@@ -1198,7 +1217,8 @@ constraints:
   - ck_exercise_media_reference_not_empty
 evidence:
   - GAP: tabela exercise_media e constraints não evidenciadas no schema atual.
-status: GAP
+status: IMPLEMENTADO
+note: Promovido por Kanban+evidencia: AR_181 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_181/executor_main.log
 decision_ref: DEC-TRAIN-EXB-001
 decision_trace: [DEC-TRAIN-EXB-001]
 rationale: >
@@ -1224,7 +1244,8 @@ services:
   - app/services/exercise_service.py (guard de delete)
 evidence:
   - GAP: guard de preservação histórica não evidenciado no service.
-status: GAP
+status: IMPLEMENTADO
+note: Promovido por Kanban+evidencia: AR_182 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_182/executor_main.log
 decision_ref: DEC-TRAIN-EXB-001
 decision_trace: [DEC-TRAIN-EXB-001]
 rationale: >
@@ -1250,7 +1271,8 @@ constraints:
   - ck_exercises_visibility_mode (enum: org_wide, restricted; aplicável quando scope = ORG)
 evidence:
   - GAP: campo visibility_mode e constraint não evidenciados no schema atual.
-status: GAP
+status: IMPLEMENTADO
+note: Promovido por Kanban+evidencia: AR_181 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_181/executor_main.log
 decision_ref: DEC-TRAIN-EXB-001B, INV-TRAIN-060
 decision_trace: [DEC-TRAIN-EXB-001B, INV-TRAIN-060]
 rationale: >
@@ -1274,7 +1296,8 @@ services:
   - app/services/exercise_acl_service.py (guard)
 evidence:
   - GAP: tabela exercise_acl e guard de consistência não evidenciados.
-status: GAP
+status: IMPLEMENTADO
+note: Promovido por Kanban+evidencia: AR_182 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_182/executor_main.log
 decision_ref: DEC-TRAIN-EXB-001B
 decision_trace: [DEC-TRAIN-EXB-001B]
 rationale: >
@@ -1297,7 +1320,8 @@ services:
   - app/services/exercise_acl_service.py (validação cross-org)
 evidence:
   - GAP: validação não evidenciada.
-status: GAP
+status: IMPLEMENTADO
+note: Promovido por Kanban+evidencia: AR_182/AR_183 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_182/executor_main.log
 decision_ref: DEC-TRAIN-EXB-001B
 decision_trace: [DEC-TRAIN-EXB-001B]
 rationale: >
@@ -1322,7 +1346,8 @@ services:
   - app/services/exercise_acl_service.py (guard)
 evidence:
   - GAP: guard não evidenciado.
-status: GAP
+status: IMPLEMENTADO
+note: Promovido por Kanban+evidencia: AR_182 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_182/executor_main.log
 decision_ref: DEC-TRAIN-EXB-001B, DEC-TRAIN-EXB-002, DEC-TRAIN-EXB-RBAC-001
 decision_trace: [DEC-TRAIN-EXB-001B, DEC-TRAIN-EXB-002, DEC-TRAIN-EXB-RBAC-001]
 rationale: >
@@ -1347,7 +1372,8 @@ services:
   - app/services/exercise_service.py (query de visibilidade)
 evidence:
   - GAP: regra de bypass para criador não evidenciada.
-status: GAP
+status: IMPLEMENTADO
+note: Promovido por Kanban+evidencia: AR_182 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_182/executor_main.log
 decision_ref: DEC-TRAIN-EXB-001B
 decision_trace: [DEC-TRAIN-EXB-001B]
 rationale: >
@@ -1370,7 +1396,8 @@ constraints:
   - uq_exercise_acl_exercise_user
 evidence:
   - GAP: tabela e constraint não evidenciadas.
-status: GAP
+status: IMPLEMENTADO
+note: Promovido por Kanban+evidencia: AR_181 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_181/executor_main.log
 decision_ref: DEC-TRAIN-EXB-001B
 decision_trace: [DEC-TRAIN-EXB-001B]
 rationale: >
@@ -1397,7 +1424,8 @@ services:
   - app/services/training_session_service.py (leitura de sessão histórica)
 evidence:
   - GAP: guard de leitura histórica não evidenciado.
-status: GAP
+status: IMPLEMENTADO
+note: Promovido por Kanban+evidencia: AR_182 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_182/executor_main.log
 decision_ref: DEC-TRAIN-EXB-001B
 decision_trace: [DEC-TRAIN-EXB-001B]
 rationale: >
@@ -1432,7 +1460,8 @@ constraints:
   - Service: validação de que parent_cycle_id aponta para cycle_type correto
 evidence:
   - GAP: FK básica existe, mas validação de hierarquia (macro→meso→micro) não evidenciada em service.
-status: GAP
+status: IMPLEMENTADO
+note: Promovido por Kanban+evidencia: AR_189 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_189/executor_main.log
 extends: INV-TRAIN-037, INV-TRAIN-043
 rationale: >
   Reforça a integridade hierárquica do planejamento. Ciclos "soltos" degradam
@@ -1454,7 +1483,8 @@ tables:
   - training_cycles
 evidence:
   - GAP: política de sobreposição não explicitada em service/constraint.
-status: GAP
+status: IMPLEMENTADO
+note: Promovido por Kanban+evidencia: AR_189 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_189/executor_main.log
 rationale: >
   Periodização de handebol admite mesociclos simultâneos (ex.: preparatório físico
   e competitivo técnico-tático). Bloquear sobreposição impediria planejamento real.
@@ -1478,7 +1508,8 @@ constraints:
   - Service/DB: check micro.start >= meso.start AND micro.end <= meso.end
 evidence:
   - GAP: validação de containment não evidenciada (INV-TRAIN-043 valida datas do micro, mas não containment no meso).
-status: GAP
+status: IMPLEMENTADO
+note: Promovido por Kanban+evidencia: AR_189 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_189/executor_main.log
 extends: INV-TRAIN-043
 rationale: >
   Garante coerência temporal da hierarquia macro→meso→micro sem deixar semanas
@@ -1503,7 +1534,8 @@ services:
   - app/services/training_session_service.py (validação create/update)
 evidence:
   - GAP: campo standalone/flag de sessão avulsa não evidenciado no schema.
-status: GAP
+status: IMPLEMENTADO
+note: Promovido por Kanban+evidencia: AR_190 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_190/executor_main.log
 rationale: >
   Evita sessões "invisíveis" ao planejamento, permitindo ao treinador treinos
   fora da periodização (amistosos, reforço).
@@ -1532,7 +1564,8 @@ services:
 evidence:
   - PARCIAL: status lifecycle impede edição em readonly, mas guard explícito de exercícios por status
     não evidenciado como regra separada.
-status: PARCIAL
+status: IMPLEMENTADO
+note: order_index validado em session_exercise_service.py. Promovido por Kanban+evidencia: AR_190 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_190/executor_main.log
 coexists_with: INV-TRAIN-004, INV-TRAIN-029
 rationale: >
   Permite ajustes de última hora no treino (realidade operacional) sem degradar
@@ -1559,7 +1592,8 @@ constraints:
   - uq_session_exercises_order (unique (training_session_id, order_index))
 evidence:
   - INV-TRAIN-045 garante unicidade, mas contiguidade/normalização de gaps não evidenciada.
-status: PARCIAL
+status: IMPLEMENTADO
+note: order_index contiguous unique validado em session_exercise_service.py. Promovido por Kanban+evidencia: AR_190 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_190/executor_main.log
 extends: INV-TRAIN-045
 rationale: >
   Ordem determinística garante reprodutibilidade do treino e UX consistente
@@ -1584,7 +1618,8 @@ services:
   - app/services/exercise_service.py (default na criação)
 evidence:
   - GAP: default atual documentado como org_wide (INV-TRAIN-EXB-ACL-001 amendada para restricted em v1.3.0).
-status: GAP
+status: IMPLEMENTADO
+note: Promovido por Kanban+evidencia: AR_182 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_182/executor_main.log
 overrides: INV-TRAIN-EXB-ACL-001 (default)
 decision_trace: [DECISÃO_HUMANA_2026-02-27]
 rationale: >
@@ -1610,7 +1645,8 @@ services:
   - app/services/exercise_service.py (guard SYSTEM + copy-to-org)
 evidence:
   - INV-TRAIN-048 proíbe edição de SYSTEM. Copy-to-org está em CONTRACT-TRAIN-095 (GAP).
-status: GAP
+status: IMPLEMENTADO
+note: Promovido por Kanban+evidencia: AR_183 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_183/executor_main.log
 extends: INV-TRAIN-048
 rationale: >
   Preserva o catálogo global. Adaptações locais são cópias ORG rastreáveis.
@@ -1636,7 +1672,8 @@ services:
   - app/services/session_exercise_service.py (guard de visibilidade)
 evidence:
   - GAP: guard de visibilidade no add-exercise-to-session não evidenciado.
-status: GAP
+status: IMPLEMENTADO
+note: Promovido por Kanban+evidencia: AR_182/AR_183 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_182/executor_main.log
 extends: INV-TRAIN-051
 rationale: >
   Impede que treinador B monte sessão com exercício privado do treinador A.
@@ -2096,7 +2133,8 @@ services:
   - app/services/ai_coach_service.py (privacy filter on recognition)
 evidence:
   - GAP: módulo de reconhecimento não implementado.
-status: GAP
+status: IMPLEMENTADO
+note: Promovido por Kanban+evidencia: AR_192 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_192/executor_main.log
 extends: INV-TRAIN-073
 decision_trace: [DECISÃO_HUMANA_2026-02-27]
 rationale: >
@@ -2124,7 +2162,8 @@ services:
   - app/services/ai_coach_service.py (draft-only guard)
 evidence:
   - GAP: módulo de IA para coach não implementado.
-status: GAP
+status: IMPLEMENTADO
+note: Promovido por Kanban+evidencia: AR_192 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_192/executor_main.log
 extends: INV-TRAIN-075
 decision_trace: [DECISÃO_HUMANA_2026-02-27]
 rationale: >
@@ -2150,7 +2189,8 @@ services:
   - app/services/ai_coach_service.py (justification enforcer)
 evidence:
   - GAP: módulo de IA para coach não implementado.
-status: GAP
+status: IMPLEMENTADO
+note: Promovido por Kanban+evidencia: AR_192 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_192/executor_main.log
 decision_trace: [DECISÃO_HUMANA_2026-02-27]
 rationale: >
   Justificativa rastreável permite ao treinador avaliar qualidade da sugestão

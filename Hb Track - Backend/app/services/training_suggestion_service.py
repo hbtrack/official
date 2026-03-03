@@ -348,7 +348,7 @@ class TrainingSuggestionService:
 
     async def generate_compensation_suggestion(
         self,
-        session_id: int,
+        session_id: UUID,
         adjustment_pct: Optional[float] = None
     ) -> Optional[SuggestionResponse]:
         """
@@ -386,11 +386,11 @@ class TrainingSuggestionService:
         next_sessions_stmt = select(TrainingSession).where(
             and_(
                 TrainingSession.team_id == origin_session.team_id,
-                TrainingSession.session_date > origin_session.session_date,
-                TrainingSession.is_locked == False,
+                TrainingSession.session_at > origin_session.session_at,
+                TrainingSession.status != "readonly",
                 TrainingSession.id != session_id
             )
-        ).order_by(TrainingSession.session_date).limit(3)
+        ).order_by(TrainingSession.session_at).limit(3)
         
         next_sessions_result = await self.db.execute(next_sessions_stmt)
         next_sessions = next_sessions_result.scalars().all()
@@ -451,11 +451,11 @@ class TrainingSuggestionService:
         next_sessions_stmt = select(TrainingSession).where(
             and_(
                 TrainingSession.team_id == team_id,
-                TrainingSession.session_date >= next_week_start,
-                TrainingSession.session_date < next_week_end,
-                TrainingSession.is_locked == False
+                TrainingSession.session_at >= next_week_start,
+                TrainingSession.session_at < next_week_end,
+                TrainingSession.status != "readonly"
             )
-        ).order_by(TrainingSession.session_date)
+        ).order_by(TrainingSession.session_at)
         
         next_sessions_result = await self.db.execute(next_sessions_stmt)
         next_sessions = next_sessions_result.scalars().all()

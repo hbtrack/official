@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_180-b123a58",
+  "timestamp_utc": "2026-02-28T21:18:45.168320+00:00",
+  "git": {
+    "commit": "b123a58f679bdb2264c973a4c5f7875ad4a3a66a"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "180",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_180_fix_exportpdfmodal_fe_conectar_backend_reabilitado.md"
+}

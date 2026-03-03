@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_188-b123a58",
+  "timestamp_utc": "2026-03-01T04:58:54.615343+00:00",
+  "git": {
+    "commit": "b123a58f679bdb2264c973a4c5f7875ad4a3a66a"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "188",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_188_test_matrix_sync_batch2_3_-_ar-train-006..014_veri.md"
+}

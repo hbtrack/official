@@ -312,9 +312,15 @@ def _norm_newlines(s: str) -> str:
 
 
 def compute_behavior_hash(exit_code: int, stdout: str, stderr: str) -> str:
-    """Hash canônico (SHA-256) de exit_code + stdout_norm + stderr_norm."""
+    """Hash canônico (SHA-256) de exit_code + stdout_norm + stderr_norm.
+
+    Normaliza timings de test-runners (ex: pytest '0.43s') para garantir
+    determinismo no triple-run do hb verify (AR_210).
+    """
     import hashlib
     payload = f"{exit_code}\n{_norm_newlines(stdout)}\n---STDERR---\n{_norm_newlines(stderr)}"
+    # Normalizar timings de test-runner: '0.43s', '1.20s' -> 'X.Xs'
+    payload = re.sub(r'\b\d+\.\d+s\b', 'X.Xs', payload)
     return hashlib.sha256(payload.encode("utf-8", errors="replace")).hexdigest()
 
 

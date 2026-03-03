@@ -1,0 +1,40 @@
+{
+  "ar_id": "190",
+  "validation_command": "python -c \"import os; b='Hb Track - Backend'; svc=open(os.path.join(b,'app','services','training_session_service.py')).read(); assert 'standalone' in svc, 'session_service missing standalone guard'; assert 'closed' in svc, 'session_service missing closed/mutability guard'; exsvc=open(os.path.join(b,'app','services','session_exercise_service.py')).read(); assert 'order_index' in exsvc, 'exercise_service missing order_index validation'; print('PASS AR_190')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "f34429c99dd5c440e94fe2aa98f0d7a5abfa4e3dd54854f2e918f9d60657c4a7",
+      "hash": "f34429c99dd5c440",
+      "stdout_len": 12,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "f34429c99dd5c440e94fe2aa98f0d7a5abfa4e3dd54854f2e918f9d60657c4a7",
+      "hash": "f34429c99dd5c440",
+      "stdout_len": 12,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "f34429c99dd5c440e94fe2aa98f0d7a5abfa4e3dd54854f2e918f9d60657c4a7",
+      "hash": "f34429c99dd5c440",
+      "stdout_len": 12,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_179-b123a58",
+  "timestamp_utc": "2026-02-28T20:46:11.259459+00:00",
+  "git": {
+    "commit": "b123a58f679bdb2264c973a4c5f7875ad4a3a66a"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "179",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_179_reabilitar_exports_be_+_estado_degradado_sem_worke.md"
+}

@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hbtrack://schemas/dispatch.v1",
+  "title": "HB Track Dispatch Token (dispatch.v1)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "from_role",
+    "to_role",
+    "ar_id",
+    "handoff_path",
+    "handoff_sha256",
+    "reason",
+    "attempt",
+    "created_utc"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "dispatch.v1"
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9_.:-]+$"
+    },
+    "from_role": {
+      "type": "string",
+      "enum": ["ARQUITETO", "EXECUTOR", "TESTADOR", "HUMANO"]
+    },
+    "to_role": {
+      "type": "string",
+      "enum": ["ARQUITETO", "EXECUTOR", "TESTADOR", "HUMANO"]
+    },
+    "ar_id": {
+      "type": "string",
+      "pattern": "^[0-9]{3}$"
+    },
+    "handoff_path": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 240
+    },
+    "handoff_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "reason": {
+      "type": "string",
+      "enum": [
+        "READY_FOR_EXECUTION",
+        "READY_FOR_VERIFY",
+        "REJECTED_IMPL",
+        "AH_DIVERGENCE",
+        "BLOCKED_INPUT",
+        "PLAN_AMBIGUOUS",
+        "WRITE_SCOPE_INVALID",
+        "BLOCKED_INFRA",
+        "PASS_FOR_SEAL"
+      ]
+    },
+    "attempt": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 99
+    },
+    "created_utc": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "next_action": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["EXECUTE_PLAN", "RUN_VERIFY", "HUMAN_SEAL", "REPLAN"]
+        },
+        "plan_json_path": {
+          "type": "string"
+        },
+        "command": {
+          "type": "string"
+        }
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["finished_utc", "result", "worker_id"],
+      "properties": {
+        "finished_utc": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+        },
+        "result": {
+          "type": "string",
+          "enum": ["DONE", "FAIL", "BLOCKED"]
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "worker_id": {
+          "type": "string",
+          "maxLength": 120
+        }
+      }
+    }
+  }
+}

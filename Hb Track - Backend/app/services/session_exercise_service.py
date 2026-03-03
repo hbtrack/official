@@ -519,10 +519,29 @@ class SessionExerciseService:
         """
         # Verificar existência
         session_exercise = await self._verify_session_exercise_exists(session_exercise_id)
-        
+
+        removed_order_index = session_exercise.order_index
+        session_id = session_exercise.session_id
+
         # Soft delete
         session_exercise.deleted_at = datetime.utcnow()
-        
+
+        # INV-059: Reindexar exercícios restantes para manter contiguidade após remoção
+        result = await self.db.execute(
+            select(SessionExercise)
+            .where(
+                and_(
+                    SessionExercise.session_id == session_id,
+                    SessionExercise.deleted_at.is_(None),
+                    SessionExercise.order_index > removed_order_index,
+                )
+            )
+            .order_by(SessionExercise.order_index.asc())
+        )
+        subsequent = result.scalars().all()
+        for se in subsequent:
+            se.order_index -= 1
+
         await self.db.commit()
     
     # ==================== HELPERS ====================

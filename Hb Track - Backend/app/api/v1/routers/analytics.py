@@ -3,9 +3,10 @@ Router Analytics - Endpoints de análises e rankings
 
 Endpoints para métricas, rankings e relatórios de wellness.
 """
-from typing import Optional
+from typing import Optional, Any, List
 
 from fastapi import APIRouter, Depends, HTTPException, status, Query
+from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import get_async_db
@@ -16,7 +17,46 @@ from app.services.team_wellness_ranking_service import TeamWellnessRankingServic
 router = APIRouter(prefix="/analytics", tags=["analytics"])
 
 
-@router.get("/wellness-rankings")
+# ---------------------------------------------------------------------------
+# Pydantic response schemas — AR_177 (SSOT canônico: team_id UUID string)
+# ---------------------------------------------------------------------------
+
+class WellnessRankingItemResponse(BaseModel):
+    """Item de ranking de equipe para response_model canônico."""
+    team_id: str
+    team_name: str
+    response_rate_pre: float
+    response_rate_post: float
+    avg_rate: float
+    rank: int
+    athletes_90plus: int
+    calculated_at: Optional[str] = None
+
+    model_config = {"from_attributes": True}
+
+
+class Athlete90PlusItemResponse(BaseModel):
+    """Item de atleta 90%+ para response_model canônico."""
+    athlete_id: Any  # UUID como string ou UUID nativo
+    athlete_name: str
+    response_rate: float
+    badge_earned: bool
+
+    model_config = {"from_attributes": True}
+
+
+class RankingCalculateResponse(BaseModel):
+    """Resposta do cálculo manual de rankings."""
+    month_reference: str
+    teams_processed: int
+    rankings_created: int
+    top_team: Optional[Any] = None
+    executed_at: Optional[str] = None
+
+    model_config = {"from_attributes": True}
+
+
+@router.get("/wellness-rankings", response_model=List[WellnessRankingItemResponse])
 async def get_wellness_rankings(
     month: Optional[str] = Query(None, description="Mês de referência (YYYY-MM)"),
     limit: int = Query(50, ge=1, le=100),
@@ -76,9 +116,9 @@ async def get_wellness_rankings(
     return rankings
 
 
-@router.get("/wellness-rankings/{team_id}/athletes-90plus")
+@router.get("/wellness-rankings/{team_id}/athletes-90plus", response_model=List[Athlete90PlusItemResponse])
 async def get_team_athletes_90plus(
-    team_id: int,
+    team_id: str,
     month: str = Query(..., description="Mês de referência (YYYY-MM)"),
     db: AsyncSession = Depends(get_async_db),
     ctx: ExecutionContext = Depends(permission_dep(roles=["dirigente","coordenador","treinador"], require_org=True)),
@@ -123,7 +163,7 @@ async def get_team_athletes_90plus(
     return athletes
 
 
-@router.post("/wellness-rankings/calculate")
+@router.post("/wellness-rankings/calculate", response_model=RankingCalculateResponse)
 async def calculate_rankings_manually(
     month: Optional[str] = Query(None, description="Mês de referência (YYYY-MM)"),
     db: AsyncSession = Depends(get_async_db),

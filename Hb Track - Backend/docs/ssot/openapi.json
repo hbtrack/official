@@ -15335,6 +15335,640 @@
         }
       }
     },
+    "/api/v1/exercises/{exercise_id}/acl": {
+      "get": {
+        "tags": [
+          "exercises"
+        ],
+        "summary": "Listar ACL do exercício",
+        "description": "Lista usuários com acesso ao exercício restricted. Apenas o criador pode ver.",
+        "operationId": "list_exercise_acl_api_v1_exercises__exercise_id__acl_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "exercise_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Exercise Id"
+            }
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExerciseACLResponse"
+                  },
+                  "title": "Response List Exercise Acl Api V1 Exercises  Exercise Id  Acl Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "exercises"
+        ],
+        "summary": "Conceder acesso ao exercício",
+        "description": "Adiciona usuário à ACL do exercício restricted. Apenas o criador pode conceder.",
+        "operationId": "grant_exercise_acl_api_v1_exercises__exercise_id__acl_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "exercise_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Exercise Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "team_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Team Id"
+            }
+          },
+          {
+            "name": "athlete_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Athlete Id"
+            }
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExerciseACLGrantRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExerciseACLResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/exercises/{exercise_id}/acl/{user_id}": {
+      "delete": {
+        "tags": [
+          "exercises"
+        ],
+        "summary": "Revogar acesso ao exercício",
+        "description": "Remove usuário da ACL do exercício. Apenas o criador pode revogar.",
+        "operationId": "revoke_exercise_acl_api_v1_exercises__exercise_id__acl__user_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "exercise_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Exercise Id"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "User Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "team_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Team Id"
+            }
+          },
+          {
+            "name": "athlete_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Athlete Id"
+            }
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/exercises/{exercise_id}/visibility": {
+      "patch": {
+        "tags": [
+          "exercises"
+        ],
+        "summary": "Alterar visibilidade do exercício",
+        "description": "Altera visibility_mode entre org_wide e restricted. Apenas o criador pode alterar.",
+        "operationId": "update_exercise_visibility_api_v1_exercises__exercise_id__visibility_patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "exercise_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Exercise Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "team_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Team Id"
+            }
+          },
+          {
+            "name": "athlete_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Athlete Id"
+            }
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VisibilityUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExerciseResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/exercises/{exercise_id}/copy-to-org": {
+      "post": {
+        "tags": [
+          "exercises"
+        ],
+        "summary": "Copiar exercício SYSTEM para ORG",
+        "description": "Cria cópia editável de um exercício SYSTEM na organização do usuário.",
+        "operationId": "copy_exercise_to_org_api_v1_exercises__exercise_id__copy_to_org_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "exercise_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Exercise Id"
+            }
+          },
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Organization Id"
+            }
+          },
+          {
+            "name": "team_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Team Id"
+            }
+          },
+          {
+            "name": "athlete_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Athlete Id"
+            }
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExerciseResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/exercise-favorites": {
       "post": {
         "tags": [
@@ -23886,6 +24520,266 @@
         }
       }
     },
+    "/api/v1/attendance/sessions/{session_id}/preconfirm": {
+      "post": {
+        "tags": [
+          "attendance",
+          "attendance"
+        ],
+        "summary": "Atleta registra pré-confirmação de presença (INV-TRAIN-063)",
+        "description": "Registra pré-confirmação de presença pelo atleta autenticado.\n\nINV-TRAIN-063: preconfirm NÃO gera is_official=True.\nPermitido apenas antes do início da sessão (status in [scheduled, draft]).",
+        "operationId": "preconfirm_attendance_api_v1_attendance_sessions__session_id__preconfirm_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Session Id"
+            }
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pré-confirmação registrada",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou ausente"
+          },
+          "403": {
+            "description": "Permissão insuficiente (apenas atleta)"
+          },
+          "404": {
+            "description": "Sessão ou atleta não encontrado"
+          },
+          "422": {
+            "description": "Sessão já iniciada — pré-confirmação não permitida"
+          }
+        }
+      }
+    },
+    "/api/v1/attendance/sessions/{session_id}/close": {
+      "post": {
+        "tags": [
+          "attendance",
+          "attendance"
+        ],
+        "summary": "Treinador fecha sessão e consolida presenças (DEC-INV-065)",
+        "description": "Consolida presenças ao fechar sessão.\n\nDEC-INV-065: encerramento NUNCA é bloqueado por pending items.\nConverte registros preconfirm→absent (treinador define presença oficial).\nPermissão: treinador/admin.",
+        "operationId": "close_session_api_v1_attendance_sessions__session_id__close_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Session Id"
+            }
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sessão fechada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou ausente"
+          },
+          "403": {
+            "description": "Permissão insuficiente (apenas treinador/admin)"
+          },
+          "404": {
+            "description": "Sessão não encontrada"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/attendance/sessions/{session_id}/pending-items": {
+      "get": {
+        "tags": [
+          "attendance",
+          "attendance"
+        ],
+        "summary": "Lista pending items da sessão (INV-TRAIN-066)",
+        "description": "Lista todos os pending items de divergência da sessão.\n\nINV-TRAIN-066: treinador vê todos; atleta vê apenas os próprios (RBAC no service).\nPermissão: treinador/admin.",
+        "operationId": "list_session_pending_items_api_v1_attendance_sessions__session_id__pending_items_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Session Id"
+            }
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de pending items",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou ausente"
+          },
+          "403": {
+            "description": "Permissão insuficiente (apenas treinador/admin)"
+          },
+          "404": {
+            "description": "Sessão não encontrada"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/wellness-pre/training_sessions/{training_session_id}/wellness_pre": {
       "get": {
         "tags": [
@@ -24947,7 +25841,13 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WellnessRankingItemResponse"
+                  },
+                  "title": "Response Get Wellness Rankings Api V1 Analytics Wellness Rankings Get"
+                }
               }
             }
           },
@@ -25079,7 +25979,13 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Athlete90PlusItemResponse"
+                  },
+                  "title": "Response Get Team Athletes 90Plus Api V1 Analytics Wellness Rankings  Team Id  Athletes 90Plus Get"
+                }
               }
             }
           },
@@ -25218,7 +26124,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/RankingCalculateResponse"
+                }
               }
             }
           },
@@ -25857,6 +26765,99 @@
                 "schema": {}
               }
             }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/athlete/training-sessions/{session_id}/preview": {
+      "get": {
+        "tags": [
+          "athlete-training",
+          "athlete-training"
+        ],
+        "summary": "Pré-visualização do treino para atleta com gate de wellness (INV-TRAIN-071)",
+        "description": "Retorna dados de pré-visualização do treino para o atleta.\n\n- Se wellness_blocked=True (AccessGated): retorna info mínima + flag\n- Se wellness_blocked=False (AccessGranted): retorna info completa com exercícios\n\nINV-TRAIN-071: conteúdo completo (exercícios + mídia) apenas se wellness em dia.",
+        "operationId": "get_training_preview_api_v1_athlete_training_sessions__session_id__preview_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Session Id"
+            }
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dados de preview (conteúdo completo ou mínimo segundo wellness_blocked)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Get Training Preview Api V1 Athlete Training Sessions  Session Id  Preview Get"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou ausente"
+          },
+          "403": {
+            "description": "Permissão insuficiente (apenas atleta da sessão)"
+          },
+          "404": {
+            "description": "Sessão ou atleta não encontrado"
           },
           "422": {
             "description": "Validation Error",
@@ -34327,6 +35328,457 @@
         }
       }
     },
+    "/api/v1/analytics/export-pdf": {
+      "post": {
+        "tags": [
+          "exports"
+        ],
+        "summary": "Solicita export PDF analytics",
+        "description": "Cria job assíncrono para gerar PDF com analytics do team.\n    \n    **Rate Limit**: 5 exports/dia por usuário\n    \n    **Fluxo**:\n    1. Valida rate limit (retorna 429 se excedido)\n    2. Calcula hash dos params (cache)\n    3. Verifica se export idêntico já existe e é válido\n    4. Se cached: retorna job existente (não conta no rate limit)\n    5. Se novo: cria job, incrementa contador, dispara Celery task\n    \n    **Polling**: Cliente deve fazer GET /analytics/exports/{id} a cada 2s\n    para verificar status (pending → processing → completed/failed)\n    \n    **Cache**: Export idêntico é reutilizado se ainda válido (<7 dias)",
+        "operationId": "request_analytics_pdf_export_api_v1_analytics_export_pdf_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalyticsPDFExportRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportJobResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/analytics/exports/{job_id}": {
+      "get": {
+        "tags": [
+          "exports"
+        ],
+        "summary": "Consulta status de export job",
+        "description": "Retorna status atual do job de export.\n    \n    **Status possíveis**:\n    - `pending`: Na fila (Celery worker irá processar)\n    - `processing`: Sendo gerado neste momento\n    - `completed`: Pronto para download (file_url disponível)\n    - `failed`: Erro durante geração (error_message disponível)\n    \n    **Polling**: Recomendado fazer GET a cada 2-3 segundos até status != pending\n    \n    **Expiração**: file_url é válido por 7 dias após completed_at",
+        "operationId": "get_export_job_status_api_v1_analytics_exports__job_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Job Id"
+            }
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportJobResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/analytics/exports": {
+      "get": {
+        "tags": [
+          "exports"
+        ],
+        "summary": "Lista exports do usuário",
+        "description": "Lista histórico de exports do usuário (paginado).\n    \n    Útil para:\n    - Dashboard \"Meus Exports\"\n    - Redownload de PDFs anteriores (se ainda válidos)\n    - Histórico de exports com status/data",
+        "operationId": "list_user_exports_api_v1_analytics_exports_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Página (1-indexed)",
+              "default": 1,
+              "title": "Page"
+            },
+            "description": "Página (1-indexed)"
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 50,
+              "minimum": 1,
+              "description": "Itens por página",
+              "default": 10,
+              "title": "Per Page"
+            },
+            "description": "Itens por página"
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportJobListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/analytics/export-rate-limit": {
+      "get": {
+        "tags": [
+          "exports"
+        ],
+        "summary": "Verifica rate limit atual",
+        "description": "Retorna informações sobre rate limit do usuário.\n    \n    Útil para:\n    - Exibir no frontend: \"Você pode exportar mais X vezes hoje\"\n    - Prevenir tentativas de export quando limite atingido\n    - Mostrar quando limite reseta (meia-noite)",
+        "operationId": "check_export_rate_limit_api_v1_analytics_export_rate_limit_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "export_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Tipo de export",
+              "default": "analytics_pdf",
+              "title": "Export Type"
+            },
+            "description": "Tipo de export"
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportRateLimitResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/athletes/me/export-data": {
+      "get": {
+        "tags": [
+          "lgpd",
+          "athletes-export"
+        ],
+        "summary": "Exportar Dados Pessoais (LGPD)",
+        "description": "Exporta todos os dados pessoais do atleta conforme LGPD Art. 18.\n    \n    **Formatos disponíveis:**\n    - `json`: Retorna JSON direto no response\n    - `csv`: Retorna ZIP com múltiplos CSVs (download)\n    \n    **Dados incluídos:**\n    - Informações pessoais (nome, data nascimento, posição, etc)\n    - Wellness pré-treino (todas entradas)\n    - Wellness pós-treino (todas entradas)\n    - Presenças em treinos\n    - Histórico médico (casos registrados)\n    - Badges conquistados\n    \n    **NÃO inclui:**\n    - Logs de acesso (data_access_logs)\n    - Dados de outros atletas\n    - Informações de equipes/organizações\n    \n    **Segurança:**\n    - Apenas o próprio atleta pode exportar seus dados\n    - Registra exportação em audit_logs\n    - Rate limiting futuro: 3 exports/dia\n    \n    **Compliance:**\n    - LGPD Art. 18, II - Direito à portabilidade\n    - Dados em formato estruturado (JSON/CSV)\n    - Gerado em até 5 segundos",
+        "operationId": "export_athlete_data_api_v1_athletes_me_export_data_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^(json|csv)$",
+              "description": "Formato do export: 'json' ou 'csv'",
+              "default": "json",
+              "title": "Format"
+            },
+            "description": "Formato do export: 'json' ou 'csv'"
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dados exportados com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "example": {
+                  "format": "json",
+                  "data": {
+                    "personal_info": {},
+                    "wellness_pre_history": [],
+                    "wellness_post_history": [],
+                    "attendance_history": [],
+                    "medical_cases": [],
+                    "badges": []
+                  },
+                  "generated_at": "2026-01-17T23:45:00",
+                  "total_records": 1234
+                }
+              },
+              "application/zip": {
+                "example": "Binary ZIP file with CSVs"
+              }
+            }
+          },
+          "400": {
+            "description": "Formato inválido ou usuário não é atleta"
+          },
+          "401": {
+            "description": "Não autenticado"
+          },
+          "404": {
+            "description": "Atleta não encontrado"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/": {
       "get": {
         "summary": "Root",
@@ -35582,6 +37034,61 @@
         "title": "AnalyticsMetrics",
         "description": "Métricas agregadas de analytics."
       },
+      "AnalyticsPDFExportRequest": {
+        "properties": {
+          "team_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Team Id"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Start Date",
+            "description": "Start date for analytics period"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date",
+            "title": "End Date",
+            "description": "End date for analytics period"
+          },
+          "include_wellness": {
+            "type": "boolean",
+            "title": "Include Wellness",
+            "description": "Include wellness metrics",
+            "default": true
+          },
+          "include_badges": {
+            "type": "boolean",
+            "title": "Include Badges",
+            "description": "Include badges and rankings",
+            "default": true
+          },
+          "include_prevention": {
+            "type": "boolean",
+            "title": "Include Prevention",
+            "description": "Include prevention effectiveness",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "team_id",
+          "start_date",
+          "end_date"
+        ],
+        "title": "AnalyticsPDFExportRequest",
+        "description": "Request to export analytics as PDF",
+        "example": {
+          "end_date": "2026-01-31",
+          "include_badges": true,
+          "include_prevention": true,
+          "include_wellness": true,
+          "start_date": "2026-01-01",
+          "team_id": "f2971108-2b14-478d-b5af-39aae83749da"
+        }
+      },
       "AnalyticsPeriod": {
         "properties": {
           "start": {
@@ -35602,6 +37109,34 @@
         ],
         "title": "AnalyticsPeriod",
         "description": "Período de análise."
+      },
+      "Athlete90PlusItemResponse": {
+        "properties": {
+          "athlete_id": {
+            "title": "Athlete Id"
+          },
+          "athlete_name": {
+            "type": "string",
+            "title": "Athlete Name"
+          },
+          "response_rate": {
+            "type": "number",
+            "title": "Response Rate"
+          },
+          "badge_earned": {
+            "type": "boolean",
+            "title": "Badge Earned"
+          }
+        },
+        "type": "object",
+        "required": [
+          "athlete_id",
+          "athlete_name",
+          "response_rate",
+          "badge_earned"
+        ],
+        "title": "Athlete90PlusItemResponse",
+        "description": "Item de atleta 90%+ para response_model canônico."
       },
       "AthleteAttendanceMetrics": {
         "properties": {
@@ -41895,6 +43430,60 @@
         "title": "EventType",
         "description": "Tipos de eventos conforme tabela event_types."
       },
+      "ExerciseACLGrantRequest": {
+        "properties": {
+          "target_user_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Target User Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "target_user_id"
+        ],
+        "title": "ExerciseACLGrantRequest",
+        "description": "Schema de request para conceder acesso (POST /exercises/{id}/acl)."
+      },
+      "ExerciseACLResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "exercise_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Exercise Id"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "User Id"
+          },
+          "granted_by_user_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Granted By User Id"
+          },
+          "granted_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Granted At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "exercise_id",
+          "user_id",
+          "granted_by_user_id",
+          "granted_at"
+        ],
+        "title": "ExerciseACLResponse",
+        "description": "Schema de resposta para entrada de ACL de exercício."
+      },
       "ExerciseCreate": {
         "properties": {
           "name": {
@@ -42488,6 +44077,202 @@
         "type": "object",
         "title": "ExerciseUpdate",
         "description": "Schema para atualização de exercício.\n\nTodos os campos são opcionais."
+      },
+      "ExportJobListResponse": {
+        "properties": {
+          "jobs": {
+            "items": {
+              "$ref": "#/components/schemas/ExportJobResponse"
+            },
+            "type": "array",
+            "title": "Jobs"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "page": {
+            "type": "integer",
+            "title": "Page"
+          },
+          "per_page": {
+            "type": "integer",
+            "title": "Per Page"
+          }
+        },
+        "type": "object",
+        "required": [
+          "jobs",
+          "total",
+          "page",
+          "per_page"
+        ],
+        "title": "ExportJobListResponse",
+        "description": "Response for list of export jobs",
+        "example": {
+          "jobs": [],
+          "page": 1,
+          "per_page": 10,
+          "total": 15
+        }
+      },
+      "ExportJobResponse": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "export_type": {
+            "type": "string",
+            "title": "Export Type"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "params": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Params"
+          },
+          "file_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File Url"
+          },
+          "file_size_bytes": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File Size Bytes"
+          },
+          "error_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Message"
+          },
+          "started_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Started At"
+          },
+          "completed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed At"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "expires_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expires At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "export_type",
+          "status",
+          "params",
+          "created_at"
+        ],
+        "title": "ExportJobResponse",
+        "description": "Response for export job status",
+        "example": {
+          "completed_at": "2026-01-17T23:01:30Z",
+          "created_at": "2026-01-17T23:00:00Z",
+          "expires_at": "2026-01-24T23:01:30Z",
+          "export_type": "analytics_pdf",
+          "file_size_bytes": 2048576,
+          "file_url": "https://s3.amazonaws.com/exports/analytics_abc123.pdf",
+          "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+          "params": {
+            "end_date": "2026-01-31",
+            "start_date": "2026-01-01",
+            "team_id": "f2971108-2b14-478d-b5af-39aae83749da"
+          },
+          "started_at": "2026-01-17T23:00:00Z",
+          "status": "completed"
+        }
+      },
+      "ExportRateLimitResponse": {
+        "properties": {
+          "export_type": {
+            "type": "string",
+            "title": "Export Type"
+          },
+          "remaining_today": {
+            "type": "integer",
+            "title": "Remaining Today"
+          },
+          "total_limit": {
+            "type": "integer",
+            "title": "Total Limit"
+          },
+          "resets_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Resets At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "export_type",
+          "remaining_today",
+          "total_limit",
+          "resets_at"
+        ],
+        "title": "ExportRateLimitResponse",
+        "description": "Response for rate limit status",
+        "example": {
+          "export_type": "analytics_pdf",
+          "remaining_today": 3,
+          "resets_at": "2026-01-18T00:00:00Z",
+          "total_limit": 5
+        }
       },
       "FichaUnicaDryRunResponse": {
         "properties": {
@@ -46906,6 +48691,50 @@
         ],
         "title": "PresenceStatus",
         "description": "Status de presença conforme banco."
+      },
+      "RankingCalculateResponse": {
+        "properties": {
+          "month_reference": {
+            "type": "string",
+            "title": "Month Reference"
+          },
+          "teams_processed": {
+            "type": "integer",
+            "title": "Teams Processed"
+          },
+          "rankings_created": {
+            "type": "integer",
+            "title": "Rankings Created"
+          },
+          "top_team": {
+            "anyOf": [
+              {},
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Top Team"
+          },
+          "executed_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Executed At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "month_reference",
+          "teams_processed",
+          "rankings_created"
+        ],
+        "title": "RankingCalculateResponse",
+        "description": "Resposta do cálculo manual de rankings."
       },
       "ReasonAbsence": {
         "type": "string",
@@ -54535,6 +56364,21 @@
         "title": "ValidationResult",
         "description": "Resultado de validação (dry-run)"
       },
+      "VisibilityUpdateRequest": {
+        "properties": {
+          "visibility_mode": {
+            "type": "string",
+            "pattern": "^(org_wide|restricted)$",
+            "title": "Visibility Mode"
+          }
+        },
+        "type": "object",
+        "required": [
+          "visibility_mode"
+        ],
+        "title": "VisibilityUpdateRequest",
+        "description": "Schema de request para alterar visibilidade (PATCH /exercises/{id}/visibility)."
+      },
       "WeeklyLoadItem": {
         "properties": {
           "week_start": {
@@ -55914,6 +57758,61 @@
           "notes": "Ajustado após revisão",
           "stress": 3
         }
+      },
+      "WellnessRankingItemResponse": {
+        "properties": {
+          "team_id": {
+            "type": "string",
+            "title": "Team Id"
+          },
+          "team_name": {
+            "type": "string",
+            "title": "Team Name"
+          },
+          "response_rate_pre": {
+            "type": "number",
+            "title": "Response Rate Pre"
+          },
+          "response_rate_post": {
+            "type": "number",
+            "title": "Response Rate Post"
+          },
+          "avg_rate": {
+            "type": "number",
+            "title": "Avg Rate"
+          },
+          "rank": {
+            "type": "integer",
+            "title": "Rank"
+          },
+          "athletes_90plus": {
+            "type": "integer",
+            "title": "Athletes 90Plus"
+          },
+          "calculated_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Calculated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "team_id",
+          "team_name",
+          "response_rate_pre",
+          "response_rate_post",
+          "avg_rate",
+          "rank",
+          "athletes_90plus"
+        ],
+        "title": "WellnessRankingItemResponse",
+        "description": "Item de ranking de equipe para response_model canônico."
       },
       "WellnessSessionStats": {
         "properties": {

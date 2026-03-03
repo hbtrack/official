@@ -1,0 +1,5 @@
+6
+Hb Track - Backend/docs/ssot/alembic_state.txt
+Hb Track - Backend/docs/ssot/schema.sql
+docs/hbtrack/ars/features/AR_195_ar-train-010b_testes_inv-train-013_024_+_contract-.md
+docs/ssot/alembic_state.txt

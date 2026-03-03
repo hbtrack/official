@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_182-b123a58",
+  "timestamp_utc": "2026-03-01T03:28:11.261005+00:00",
+  "git": {
+    "commit": "b123a58f679bdb2264c973a4c5f7875ad4a3a66a"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "182",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_182_guards_system_imutavel_+_filtro_visibilidade_em_ex.md"
+}

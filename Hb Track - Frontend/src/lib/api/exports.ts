@@ -79,11 +79,21 @@ export interface ExportRateLimit {
 export async function requestAnalyticsPDFExport(
   request: AnalyticsPDFExportRequest
 ): Promise<ExportJob> {
-  const response = await apiClient.post<ExportJob>(
-    '/analytics/export-pdf',
-    request
-  );
-  return response;
+  try {
+    const response = await apiClient.post<ExportJob>(
+      '/analytics/export-pdf',
+      request
+    );
+    return response;
+  } catch (error: any) {
+    const status = error?.status ?? error?.response?.status;
+    if (status === 503) {
+      throw new Error(
+        'Serviço de exportação temporariamente unavailable. O worker de processamento não está ativo.'
+      );
+    }
+    throw error;
+  }
 }
 
 /**

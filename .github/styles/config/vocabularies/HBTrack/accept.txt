@@ -1,0 +1,16 @@
+HB
+HBTrack
+HB Track
+SSOT
+INV
+AR
+RUN_ID
+Kanban
+FastAPI
+PostgreSQL
+Alembic
+Celery
+Redis
+Next.js
+Radix
+TanStack

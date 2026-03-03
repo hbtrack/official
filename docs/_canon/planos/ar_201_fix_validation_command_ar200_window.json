@@ -1,0 +1,23 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "Correção de contrato: a validation_command original de AR_200 usa janela de 450 chars a partir de '| INV-TRAIN-005', o que captura INV-006 (NOT_RUN legítimo — não estava no top-10). Falso positivo. Fix: substituir t.find(lbl)+450 por verificação linha-a-linha usando t.split('\\n'). Após a correção, re-executar hb report 200 para obter executor_main.log com Exit Code: 0. Esta AR não altera testes, evidências ou TEST_MATRIX — apenas corrige o contrato da AR_200.",
+  "tasks": [
+    {
+      "id": "201",
+      "title": "Fix validation_command AR_200 - janela 450 para split-por-linha",
+      "description": "A validation_command de AR_200 contém checagem por janela fixa de 450 chars (t.find('| '+lbl):t.find('| '+lbl)+450) para detectar NOT_RUN em linhas INV. A linha INV-TRAIN-005 tem ~206 chars; os 244 chars restantes da janela de 450 estendem-se para INV-006, que legitimamente tem NOT_RUN (não estava no top-10). Resultado: falso positivo FAIL no hb report 200 — Exit Code: 1.\n\nAção obrigatória:\n\n1. Editar docs/hbtrack/ars/features/AR_200_executar_top-10_testes_coberto+not_run_e_salvar_ev.md, seção '## Validation Command (Contrato)'. Substituir a linha de checagem INV (que contém +450) pela versão line-by-line abaixo.\n\n2. Nova validation_command completa para AR_200 (substituição total do bloco de código):\npython -c \"import os,sys; base='_reports/training'; ids=['INV-001','INV-002','INV-003','INV-004','INV-005','INV-008','INV-009','INV-030','INV-032','CONTRACT-077-085']; [sys.exit('FAIL: missing '+base+'/TEST-TRAIN-'+i+'.md') for i in ids if not os.path.exists(base+'/TEST-TRAIN-'+i+'.md')]; [sys.exit('FAIL: AR Origem ausente em '+base+'/TEST-TRAIN-'+i+'.md') for i in ids if 'AR Origem: AR_200' not in open(base+'/TEST-TRAIN-'+i+'.md',encoding='utf-8').read()]; t=open('docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md',encoding='utf-8').read(); assert 'v1.7.0' in t,'FAIL: TEST_MATRIX nao bump para v1.7.0'; inv=[('001','INV-TRAIN-001'),('002','INV-TRAIN-002'),('003','INV-TRAIN-003'),('004','INV-TRAIN-004'),('005','INV-TRAIN-005'),('008','INV-TRAIN-008'),('009','INV-TRAIN-009'),('030','INV-TRAIN-030'),('032','INV-TRAIN-032')]; [sys.exit('FAIL: NOT_RUN persiste na linha '+lbl) for _,lbl in inv if any('NOT_RUN' in ln for ln in t.split('\\n') if ln.startswith('| '+lbl+' '))]; ct_ids=['CONTRACT-TRAIN-077','CONTRACT-TRAIN-078','CONTRACT-TRAIN-079','CONTRACT-TRAIN-080','CONTRACT-TRAIN-081','CONTRACT-TRAIN-082','CONTRACT-TRAIN-083','CONTRACT-TRAIN-084','CONTRACT-TRAIN-085']; [sys.exit('FAIL: NOT_RUN persiste na linha '+c) for c in ct_ids if any('NOT_RUN' in ln for ln in t.split('\\n') if ln.startswith('| '+c+' '))]; print('PASS: 10 evidencias criadas com AR_200 + TEST_MATRIX v1.7.0 + NOT_RUN removido')\"\n\n3. Re-executar hb report 200 com a nova validation_command (deve retornar Exit Code: 0 e PASS na saída).",
+      "criteria": "AC-001: docs/hbtrack/ars/features/AR_200*.md nao contem '+450' na validation_command. AC-002: docs/hbtrack/ars/features/AR_200*.md contem split('\\n') na validation_command. AC-003: docs/hbtrack/evidence/AR_200/executor_main.log contem 'Exit Code: 0'. AC-004: docs/hbtrack/evidence/AR_200/executor_main.log contem 'PASS: 10 evidencias criadas'.",
+      "validation_command": "python -c \"import sys; ar200=open('docs/hbtrack/ars/features/AR_200_executar_top-10_testes_coberto+not_run_e_salvar_ev.md',encoding='utf-8').read(); assert '+450' not in ar200,'FAIL: janela 450 ainda presente em AR_200'; assert 'split' in ar200,'FAIL: split-por-linha ausente em AR_200'; log=open('docs/hbtrack/evidence/AR_200/executor_main.log',encoding='utf-8').read(); assert 'Exit Code: 0' in log,'FAIL: executor_main.log AR_200 nao tem Exit Code: 0'; assert 'PASS: 10 evidencias' in log,'FAIL: PASS ausente em executor_main.log AR_200'; print('PASS: AR_200 validation_command corrigida + executor_main.log Exit Code: 0')\"",
+      "evidence_file": "docs/hbtrack/evidence/AR_201/executor_main.log",
+      "write_scope": [
+        "docs/hbtrack/ars/features/",
+        "docs/hbtrack/evidence/AR_200/"
+      ],
+      "risks": [
+        "hb report 200 deve ser re-executado com a nova validation_command exata (cmd-match obrigatorio). Se o Executor usar python temp/_run_ar200_report.py, deve atualizar o script para a nova validation_command.",
+        "A nova validation_command usa t.split('\\n') e ln.startswith('| INV-TRAIN-XXX ') — exige espaco após o ID para evitar match de prefixo (e.g. INV-TRAIN-001 nao captura INV-TRAIN-0010 hipotetico)."
+      ]
+    }
+  ]
+}

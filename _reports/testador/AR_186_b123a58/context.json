@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_186-b123a58",
+  "timestamp_utc": "2026-03-01T05:29:18.140692+00:00",
+  "git": {
+    "commit": "b123a58f679bdb2264c973a4c5f7875ad4a3a66a"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "186",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_186_criar_pending.ts_+_pagina_pending-queue_fe_ui_fila.md"
+}

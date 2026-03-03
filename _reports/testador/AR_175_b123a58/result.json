@@ -1,0 +1,40 @@
+{
+  "ar_id": "175",
+  "validation_command": "python -c \"import subprocess; r=subprocess.run(['pytest','Hb Track - Backend/tests/training/invariants/test_inv_train_023_wellness_post_overload_alert_trigger.py','-q'],capture_output=True); assert r.returncode==0,'FAIL AR_175 exit='+str(r.returncode); print('PASS AR_175')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "4311eca06eecd493e593a6f78e49c1262d3ea9199861fee278cfa3b7e84309c2",
+      "hash": "4311eca06eecd493",
+      "stdout_len": 12,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "4311eca06eecd493e593a6f78e49c1262d3ea9199861fee278cfa3b7e84309c2",
+      "hash": "4311eca06eecd493",
+      "stdout_len": 12,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "4311eca06eecd493e593a6f78e49c1262d3ea9199861fee278cfa3b7e84309c2",
+      "hash": "4311eca06eecd493",
+      "stdout_len": 12,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

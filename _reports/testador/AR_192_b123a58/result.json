@@ -1,0 +1,40 @@
+{
+  "ar_id": "192",
+  "validation_command": "python -c \"import os; b='Hb Track - Backend'; fe='Hb Track - Frontend'; svc=open(os.path.join(b,'app','services','ai_coach_service.py')).read(); assert 'draft' in svc.lower(), 'ai_coach_service missing draft guard (INV-080)'; assert 'justif' in svc.lower(), 'ai_coach_service missing justification enforcer (INV-081)'; assert 'recognition' in svc.lower() or 'reconhec' in svc.lower() or 'privacy' in svc.lower(), 'ai_coach_service missing recognition privacy filter (INV-079)'; assert os.path.exists(os.path.join(b,'app','api','v1','routers','ai_coach.py')), 'ai_coach router missing'; api=open(os.path.join(b,'app','api','v1','api.py')).read(); assert 'ai_coach' in api, 'ai_coach router not registered in api.py'; fe_page=os.path.join(fe,'src','app','(athlete)','ai-chat'); assert os.path.exists(fe_page), 'FE ai-chat directory missing'; modal=os.path.join(fe,'src','components','training','AICoachDraftModal.tsx'); assert os.path.exists(modal), 'AICoachDraftModal.tsx missing'; print('PASS AR_192')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "6d1a3cd21aeee79921395e79d6a671e2835e6dc3e81d10f08334851be518db22",
+      "hash": "6d1a3cd21aeee799",
+      "stdout_len": 12,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "6d1a3cd21aeee79921395e79d6a671e2835e6dc3e81d10f08334851be518db22",
+      "hash": "6d1a3cd21aeee799",
+      "stdout_len": 12,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "6d1a3cd21aeee79921395e79d6a671e2835e6dc3e81d10f08334851be518db22",
+      "hash": "6d1a3cd21aeee799",
+      "stdout_len": 12,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

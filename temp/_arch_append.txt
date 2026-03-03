@@ -1,0 +1,484 @@
+## ARQUITETO-AR165-FIX-VALIDATION-COMMAND-20260227
+
+DIAGNÓSTICO:
+- AR_ID: 165
+- RESULT Testador: 🔴 REJEITADO | CONSISTENCY: AH_DIVERGENCE | TRIPLE: FLAKY_OUTPUT
+- Motivo: validation_command usava subprocess.check_call(['pytest',...,'-q']) que
+  propagava timings do pytest para stdout (ex: "0.48s passed"), tornando o
+  behavior_hash não-determinístico entre runs (exit=0 nos 3, mas hashes distintos).
+- Implementação produto: CORRETA (generate_individual_recognition já existia, SSOT IMPLEMENTADO).
+- Causa raiz: apenas o validation_command na AR estava errado (versão antiga do plano).
+
+CORREÇÃO APLICADA:
+- Plano JSON: docs/_canon/planos/ar_165_plan.json já continha a versão correta
+  com r=subprocess.run(['pytest',...],capture_output=True) — captura stdout/stderr
+  impedindo timings de vazar para o outer process.
+- AR re-materializada via: hb plan ar_165_plan.json --force (dry-run OK, gates OK).
+- Status da AR: 🔲 PENDENTE (carimbo limpo para novo ciclo).
+- retry_count: preservado em 0.
+
+PLAN_HANDOFF:
+- RUN_ID: AR_165_FIX_20260227
+- AR_ID: 165
+- plan_json_path: docs/_canon/planos/ar_165_plan.json
+- mode: EXECUTE
+- dry_run_exit_code: 0
+- gates_required: [TRAIN-IA-079]
+- write_scope:
+  - Hb Track - Backend/app/services/ai_coach_service.py
+  - Hb Track - Backend/tests/training/invariants/test_inv_train_079_individual_recognition_no_intimate_leak.py
+  - docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md
+- db_tasks: []
+- triple_run_notice: "Testador executará 3x; hash canônico inclui exit_code+stdout+stderr.
+    Com capture_output=True, o único stdout é 'PASS AR_165' — determinístico."
+- notes: |
+    SEM alterações de produto necessárias — implementação já estava correta.
+    Executor deve apenas executar:
+      python scripts/run/hb_cli.py report 165 "<validation_command da AR>"
+    e stagear:
+      docs/hbtrack/evidence/AR_165/executor_main.log
+      docs/hbtrack/ars/features/AR_165_reconhecimento_sem_vazamento_intimo_079.md
+      docs/hbtrack/_INDEX.md
+
+---
+
+## ARQUITETO-AR166-REPARO-VALIDATION-COMMAND-20260227
+
+DIAGNÓSTICO:
+- AR_ID: 166
+- Motivo rejeição: FLAKY_OUTPUT — validation_command usava subprocess.check_call([pytest,...])
+  que propagava stdout completo do pytest (warnings Pydantic + timestamps) para o stdout
+  do comando, causando behavior_hash não-determinístico entre rodadas.
+- Implementação: CORRETA (exit=0 nas 3 rodadas, 10 testes passam).
+- Causa raiz: stdout variável entre invocações 1 e 2+ (compilação .pyc na 1ª run).
+
+CORREÇÃO APLICADA:
+- Arquivo: docs/hbtrack/ars/features/AR_166_coach_draft-only_+_justificativa_080-081.md
+- Mudança: substituído subprocess.check_call([...]) por subprocess.run([...], stdout=DEVNULL, stderr=DEVNULL) + assert returncode==0
+- Resultado: stdout do validation_command passa a ser SOMENTE "PASS AR_166\n" — 100% determinístico
+- Validação prévia: 3/3 "PASS AR_166" com output idêntico confirmado pelo Arquiteto
+
+INSTRUÇÕES PARA O EXECUTOR:
+- NÃO é necessário alterar código de implementação (ai_coach_service.py, testes).
+- NÃO é necessário alterar INVARIANTS_TRAINING.md.
+- APENAS re-executar hb report (o validation_command já está corrigido na AR).
+- Status da AR foi resetado para 🔲 PENDENTE — pronto para nova execução.
+- Após hb report: staged os artefatos e aguardar Testador.
+
+WRITE SCOPE (não alterado):
+- Hb Track - Backend/app/services/ai_coach_service.py (já implementado — não tocar)
+- Hb Track - Backend/tests/training/invariants/test_inv_train_080_ai_coach_draft_only.py (já implementado — não tocar)
+- Hb Track - Backend/tests/training/invariants/test_inv_train_081_ai_suggestion_requires_justification.py (já implementado — não tocar)
+- docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md (já atualizado — não tocar)
+
+PRÓXIMA AÇÃO: Executor deve executar `python scripts/run/hb_cli.py report 166`
+
+---
+
+## ARQUITETO-AR164-FEEDBACK-IMEDIATO-POS-CONVERSACIONAL-20260227
+
+PLAN_HANDOFF:
+- plan_json_path: docs/_canon/planos/ar_165_plan.json
+- mode: EXECUTE
+- dry_run_exit_code: 0
+- gates_required: [TRAIN-IA-079]
+- write_scope:
+    - Hb Track - Backend/app/services/ai_coach_service.py
+    - Hb Track - Backend/tests/training/invariants/test_inv_train_079_individual_recognition_no_intimate_leak.py
+    - docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md
+    - docs/hbtrack/ars/features/AR_165_reconhecimento_sem_vazamento_intimo_079.md
+
+DIAGNÓSTICO DO TESTADOR (AH_DIVERGENCE):
+  CAUSA: validation_command original usava subprocess.check_call(['pytest',...])
+  que despejava todo o output do pytest (timestamps, duração) no stdout do processo
+  pai → behavior_hash não-determinístico no triple-run.
+  IMPLEMENTAÇÃO: CORRETA — 5 testes, exit 0 nos 3 runs do triple-run.
+
+CORREÇÃO APLICADA PELO ARQUITETO:
+  subprocess.check_call([...]) → subprocess.run([...], capture_output=True)
+  Resultado: apenas "PASS AR_165\n" vai para stdout → hash 100% determinístico.
+  Arquivos alterados:
+    - docs/_canon/planos/ar_165_plan.json (validation_command corrigido)
+    - docs/hbtrack/ars/features/AR_165_reconhecimento_sem_vazamento_intimo_079.md
+        (validation_command corrigido + Status: PENDENTE)
+
+INSTRUÇÃO AO EXECUTOR:
+  A implementação está COMPLETA e CORRETA (código não precisa ser alterado).
+  Executor DEVE apenas re-executar hb report com o novo validation_command:
+    python scripts/run/hb_cli.py report 165 "<validation_command da AR>"
+  O validation_command novo é:
+    python -c "from pathlib import Path; import re, subprocess; ss=Path('docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md'); t=ss.read_text(encoding='utf-8'); m=re.search(r'(?s)id:\s*INV-TRAIN-079.*?\n\s*status:\s*([A-Z_]+)', t); assert m, 'FAIL SSOT missing 079'; assert m.group(1)=='IMPLEMENTADO', 'FAIL 079 status='+m.group(1); req=['Hb Track - Backend/app/services/ai_coach_service.py','Hb Track - Backend/tests/training/invariants/test_inv_train_079_individual_recognition_no_intimate_leak.py']; miss=[p for p in req if not Path(p).exists()]; assert not miss,'FAIL missing '+str(miss); r=subprocess.run(['pytest','Hb Track - Backend/tests/training/invariants/test_inv_train_079_individual_recognition_no_intimate_leak.py','-q'],capture_output=True); assert r.returncode==0,'FAIL pytest exit='+str(r.returncode); print('PASS AR_165')"
+- ar_path: docs/hbtrack/ars/features/AR_164_feedback_imediato_pos_conversacional_077.md
+- mode: EXECUTE
+- dry_run_exit_code: 0
+- gates_required: [TRAIN-IA-077]
+- write_scope:
+    - "Hb Track - Backend/app/services/ai_coach_service.py"
+    - "Hb Track - Backend/app/services/wellness_post_service.py"
+    - "Hb Track - Backend/tests/training/invariants/test_inv_train_077_immediate_virtual_coach_feedback.py"
+    - "docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md"
+- db_tasks: []
+- triple_run_notice: "Testador executará 3x; hash canônico inclui exit_code+stdout+stderr. STDOUT DEVE ser APENAS print('PASS AR_164') — determinístico. Usar subprocess.run(..., capture_output=True), NÃO subprocess.check_call."
+
+---
+
+### CONTEXTO DA AR
+
+**INV-TRAIN-077** (status atual: `GAP`) define:
+- Quando atleta concluir pós-treino conversacional → sistema DEVE gerar feedback curto com:
+  1. 1 reconhecimento (esforço/consistência)
+  2. 1 orientação prática (técnica/tática/recuperação)
+- Se atleta NÃO concluir → sistema NÃO gera feedback
+
+**Serviços referenciados no SSOT:**
+- `app/services/ai_coach_service.py` — geração do feedback
+- `app/services/wellness_post_service.py` — trigger ao completar
+
+**Campo relevante já presente em `wellness_post_service.py`:**
+- `conversation_completed` (linha 255, dentro de `allowed_fields` de `submit_wellness_post`)
+- Ou seja: a completude já é registrada; falta o trigger de feedback.
+
+---
+
+### PLANO DE IMPLEMENTAÇÃO (Executor deve seguir exatamente)
+
+#### Passo 1 — `ai_coach_service.py`: adicionar dataclasses + método `generate_post_training_feedback`
+
+Adicionar após o bloco `ExtraTrainingBlocked`/`ExtraTrainingResult` (linhas ~212+):
+
+```python
+# ---------------------------------------------------------------------------
+# Feedback pós-treino conversacional (INV-077)
+# ---------------------------------------------------------------------------
+
+@dataclass
+class PostTrainingFeedback:
+    """INV-077: Feedback gerado ao concluir pós-treino conversacional."""
+    recognition: str          # 1 reconhecimento (esforço/consistência)
+    guidance: str             # 1 orientação prática (técnica/tática/recuperação)
+    source: str = "virtual_coach"
+
+@dataclass
+class FeedbackNotGenerated:
+    """INV-077: Pós-treino não concluído — feedback NÃO gerado."""
+    reason: str = "post_training_not_completed"
+```
+
+Adicionar método na classe `AICoachService`:
+
+```python
+def generate_post_training_feedback(
+    self,
+    conversation_completed: bool,
+    session_rpe: int | None = None,
+) -> PostTrainingFeedback | FeedbackNotGenerated:
+    """
+    INV-077: Gera feedback curto somente se pós-treino conversacional concluído.
+    Evidence: app/services/ai_coach_service.py :: generate_post_training_feedback
+    """
+    if not conversation_completed:
+        return FeedbackNotGenerated()
+
+    # Reconhecimento baseado em esforço declarado (RPE)
+    if session_rpe is not None and session_rpe >= 8:
+        recognition = "Excelente esforço na sessão de hoje — intensidade alta exige comprometimento."
+    elif session_rpe is not None and session_rpe >= 5:
+        recognition = "Bom trabalho! Consistência é a base do desenvolvimento no handebol."
+    else:
+        recognition = "Presença e dedicação contam — cada treino é um passo na sua evolução."
+
+    guidance = (
+        "Para o próximo treino: foque na recuperação ativa (alongamento + hidratação) "
+        "e revise sua posição defensiva básica."
+    )
+    return PostTrainingFeedback(recognition=recognition, guidance=guidance)
+```
+
+#### Passo 2 — `wellness_post_service.py`: chamar `generate_post_training_feedback` após salvar
+
+No método `submit_wellness_post`, após persistir o wellness e antes do `return`, adicionar trigger:
+
+```python
+# INV-077: gerar feedback imediato se pós-treino conversacional concluído
+from app.services.ai_coach_service import AICoachService, PostTrainingFeedback
+_ai = AICoachService()
+_feedback = _ai.generate_post_training_feedback(
+    conversation_completed=bool(normalized.get("conversation_completed")),
+    session_rpe=normalized.get("session_rpe"),
+)
+# Armazenar no objeto retornado para o router expor ao frontend
+_wellness_result.virtual_coach_feedback = (
+    {"recognition": _feedback.recognition, "guidance": _feedback.guidance}
+    if isinstance(_feedback, PostTrainingFeedback)
+    else None
+)
+```
+
+> **ATENÇÃO**: Se o modelo/schema retornado não suportar `virtual_coach_feedback`, adicionar como campo extra no dict de resposta do router, NÃO na tabela. O campo é transiente (não persiste no DB neste ciclo).
+
+#### Passo 3 — Teste `test_inv_train_077_immediate_virtual_coach_feedback.py`
+
+Classe C1 (Unit, sem IO, sem DB). Casos obrigatórios:
+
+| # | Descrição | Entrada | Resultado esperado |
+|---|-----------|---------|-------------------|
+| 1 | Concluído com RPE alto → gera feedback | `conversation_completed=True, rpe=9` | `PostTrainingFeedback` com recognition+guidance |
+| 2 | Concluído com RPE médio → gera feedback | `conversation_completed=True, rpe=6` | `PostTrainingFeedback` |
+| 3 | Concluído sem RPE → gera feedback | `conversation_completed=True, rpe=None` | `PostTrainingFeedback` |
+| 4 | NÃO concluído → NÃO gera | `conversation_completed=False` | `FeedbackNotGenerated` |
+| 5 | Anti-falso-positivo: tipo correto | resultado de True | `isinstance(result, PostTrainingFeedback)` |
+| 6 | Source invariante | resultado de True | `result.source == "virtual_coach"` |
+| 7 | recognition e guidance não vazios | resultado de True | `len(result.recognition) > 0 and len(result.guidance) > 0` |
+
+#### Passo 4 — SSOT `INVARIANTS_TRAINING.md`
+
+Alterar bloco INV-TRAIN-077:
+```yaml
+status: IMPLEMENTADO
+evidence:
+  - Hb Track - Backend/tests/training/invariants/test_inv_train_077_immediate_virtual_coach_feedback.py
+  - AR_164 (commit <hash>)
+```
+
+---
+
+### VALIDATION COMMAND (versão determinística — obrigatório usar exatamente)
+
+```
+python -c "from pathlib import Path; import re, subprocess; ss=Path('docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md'); t=ss.read_text(encoding='utf-8'); m=re.search(r'(?s)id:\s*INV-TRAIN-077.*?\n\s*status:\s*([A-Z_]+)', t); assert m, 'FAIL SSOT missing 077'; assert m.group(1)=='IMPLEMENTADO', 'FAIL 077 status='+m.group(1); req=['Hb Track - Backend/app/services/ai_coach_service.py','Hb Track - Backend/tests/training/invariants/test_inv_train_077_immediate_virtual_coach_feedback.py']; miss=[p for p in req if not Path(p).exists()]; assert not miss,'FAIL missing '+str(miss); r=subprocess.run(['pytest','Hb Track - Backend/tests/training/invariants/test_inv_train_077_immediate_virtual_coach_feedback.py','-q','--tb=short','-p','no:randomly','--no-header'],capture_output=True,text=True); assert r.returncode==0,'FAIL pytest\n'+r.stdout[-400:]+r.stderr[-200:]; print('PASS AR_164')"
+```
+
+> ⚠️ **CRÍTICO**: Usar `subprocess.run(..., capture_output=True)` — NÃO `subprocess.check_call`. Saída do pytest deve ser capturada internamente. Único stdout do processo-pai: `PASS AR_164`.
+
+---
+
+### INSTRUÇÃO AO EXECUTOR
+
+1. Ler AR completa: `docs/hbtrack/ars/features/AR_164_feedback_imediato_pos_conversacional_077.md`
+2. Preencher **Análise de Impacto** na AR ANTES do código
+3. Implementar write_scope seguindo o plano acima (4 passos)
+4. Executar: `python scripts/run/hb_cli.py report 164 "<validation_command_acima>"`
+5. Confirmar evidência em: `docs/hbtrack/evidence/AR_164/executor_main.log`
+6. Stagear: evidence log + AR + `_INDEX.md` (SEM `git add` amplo)
+
+---
+
+### RISCOS MAPEADOS
+
+| Risco | Probabilidade | Mitigação |
+|-------|---------------|-----------|
+| `wellness_post_service.py` retorna objeto ORM sem campo `virtual_coach_feedback` | Alta | Adicionar no dict da resposta do router, não no modelo ORM |
+| `session_rpe` pode ser None ou fora de 1–10 | Média | Método já trata `rpe=None` com fallback neutro |
+| Import circular entre services | Baixa | Importar `AICoachService` localmente dentro do método (dentro da função) |
+
+---
+
+## ARQUITETO-AR166-VALIDATION-COMMAND-CORRECTED-20260227
+
+```
+PLAN_HANDOFF:
+- RUN_ID: AR_166_fix_validation_20260227_134500
+- AR_ID: 166
+- mode: FIX_VALIDATION_COMMAND
+- issue_resolved: validation_command_syntax_error
+- gates_required: []
+- write_scope: []
+- db_tasks: []
+- triple_run_notice: "Testador executará 3x; hash canônico inclui exit_code+stdout+stderr"
+- notes: |
+    CORREÇÃO APLICADA: validation_command na AR_166 foi reescrito sem def ok(i):
+    (padrão inline seguindo AR_165).
+    
+    IMPLEMENTAÇÃO: Executor reportou 100% COMPLETO — código existe, testes passam (10 passed).
+    
+    COMANDO CORRIGIDO (agora válido):
+    python -c "from pathlib import Path; import re, subprocess; ss=Path('docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md'); t=ss.read_text(encoding='utf-8'); m080=re.search(r'(?s)id:\s*INV-TRAIN-080.*?\n\s*status:\s*([A-Z_]+)', t); assert m080, 'FAIL SSOT missing 080'; assert m080.group(1)=='IMPLEMENTADO', 'FAIL 080 status='+m080.group(1); m081=re.search(r'(?s)id:\s*INV-TRAIN-081.*?\n\s*status:\s*([A-Z_]+)', t); assert m081, 'FAIL SSOT missing 081'; assert m081.group(1)=='IMPLEMENTADO', 'FAIL 081 status='+m081.group(1); req=['Hb Track - Backend/app/services/ai_coach_service.py','Hb Track - Backend/tests/training/invariants/test_inv_train_080_ai_coach_draft_only.py','Hb Track - Backend/tests/training/invariants/test_inv_train_081_ai_suggestion_requires_justification.py']; miss=[p for p in req if not Path(p).exists()]; assert not miss,'FAIL missing '+str(miss); subprocess.check_call(['pytest','Hb Track - Backend/tests/training/invariants/test_inv_train_080_ai_coach_draft_only.py','Hb Track - Backend/tests/training/invariants/test_inv_train_081_ai_suggestion_requires_justification.py','-q']); print('PASS AR_166')"
+    
+    ALTERAÇÕES:
+    - docs/hbtrack/ars/features/AR_166_coach_draft-only_+_justificativa_080-081.md:
+        * validation_command: substituído def ok(i): por m080/m081 inline
+        * Status: ❌ FALHA → 🔲 PENDENTE
+    
+    INSTRUÇÃO AO EXECUTOR:
+    A implementação física está COMPLETA (código já existe no workspace).
+    Executor DEVE re-executar APENAS:
+      python scripts/run/hb_cli.py report 166 "<validation_command da AR_166>"
+    
+    NÃO há necessidade de re-implementar código. Apenas re-executar hb report.
+```
+
+---
+
+## ARQUITETO-BATCH0-TRAINING-20260228
+
+### CONTEXTO
+
+Batch 0 do `docs/hbtrack/modulos/treinos/TRAINING_BATCH_PLAN_v1.md` foi planejado.
+P0 blockers: Wellness FE + Presenças UI + desbloqueio de testes via migração SSOT.
+SSOT regenerado via `gen_docs_ssot.py` (docs/ssot/schema.sql, openapi.json, manifest.json).
+AR-TRAIN-001 já tem plano existente (ar_train_001_step18_uuid_convergence.json, tasks 126-129).
+
+### EVIDÊNCIAS DE ÂNCORA
+
+| Artefato | Fato confirmado |
+|---|---|
+| `docs/ssot/openapi.json` | Path POST wellness-pre: `/api/v1/wellness-pre/training_sessions/{training_session_id}/wellness_pre` |
+| `docs/ssot/openapi.json` | Path POST wellness-post: `/api/v1/wellness-post/training_sessions/{training_session_id}/wellness_post` |
+| `docs/ssot/schema.sql` | `wellness_pre.sleep_hours numeric(4,1) NOT NULL` — campo ausente no FE atual |
+| `docs/ssot/schema.sql` | `fatigue_pre` (não `fatigue_level`), `readiness_score` (não `readiness`) |
+| `docs/ssot/schema.sql` | `ck_attendance_status CHECK IN ('present','absent','justified','preconfirm')` |
+| `docs/ssot/schema.sql` | `mood` NÃO existe em `wellness_pre` — FE atual tem campo inválido |
+
+### PLANOS MATERIALIZADOS (dry-run PASS)
+
+| Plano | Tasks ARs | dry-run |
+|---|---|---|
+| `ar_train_001_step18_uuid_convergence.json` | AR_126, 127, 128, 129 | já existe |
+| `ar_train_003_wellness_fe.json` | AR_169, AR_170 | ✅ PASS |
+| `ar_train_005_presencas_ui.json` | AR_171, AR_172 | ✅ PASS |
+| `ar_train_010a_ssot_path_migration.json` | AR_173, AR_174 | ✅ PASS |
+
+### PLAN_HANDOFF — Batch 0
+
+```yaml
+RUN_ID: BATCH0_TRAINING_20260228
+mode: EXECUTE_SEQUENTIAL
+ssot_regenerated: true
+ssot_path: docs/ssot/
+
+planos:
+  - id: AR-TRAIN-003
+    plan_json: docs/_canon/planos/ar_train_003_wellness_fe.json
+    command: python scripts/run/hb_cli.py plan docs/_canon/planos/ar_train_003_wellness_fe.json
+    tasks:
+      - AR_169: "Fix wellness.ts paths + WellnessPreInput (sleep_hours, fatigue_pre, readiness_score)"
+      - AR_170: "Fix WellnessPreForm.tsx campos UI + sleep_hours slider"
+    write_scope_summary:
+      - Hb Track - Frontend/src/lib/api/wellness.ts
+      - Hb Track - Frontend/src/components/training/wellness/WellnessPreForm.tsx
+    db_tasks: []
+    prerequisite: none
+
+  - id: AR-TRAIN-005
+    plan_json: docs/_canon/planos/ar_train_005_presencas_ui.json
+    command: python scripts/run/hb_cli.py plan docs/_canon/planos/ar_train_005_presencas_ui.json
+    tasks:
+      - AR_171: "Fix attendance.ts: PresenceStatus union + 'justified' + 'preconfirm'"
+      - AR_172: "Fix AttendanceTab.tsx: UI para justified + reason_absence condicional"
+    write_scope_summary:
+      - Hb Track - Frontend/src/lib/api/attendance.ts
+      - Hb Track - Frontend/src/components/training/attendance/AttendanceTab.tsx
+    db_tasks: []
+    prerequisite: none
+
+  - id: AR-TRAIN-010A
+    plan_json: docs/_canon/planos/ar_train_010a_ssot_path_migration.json
+    command: python scripts/run/hb_cli.py plan docs/_canon/planos/ar_train_010a_ssot_path_migration.json
+    tasks:
+      - AR_173: "Migrar '_generated'→'ssot' em 6 test files TRAINING (lote 1/2)"
+      - AR_174: "Migrar '_generated'→'ssot' em 5 test files TRAINING (lote 2/2)"
+    write_scope_summary:
+      - 11 arquivos em Hb Track - Backend/tests/training/invariants/
+    db_tasks: []
+    prerequisite: none (paralelo aos FE fixes)
+
+  - id: AR-TRAIN-001  
+    plan_json: docs/_canon/planos/ar_train_001_step18_uuid_convergence.json
+    command: python scripts/run/hb_cli.py plan docs/_canon/planos/ar_train_001_step18_uuid_convergence.json --skip-existing
+    tasks:
+      - AR_126..129: "Step18 UUID convergence (parcialmente executado, commit 869e061)"
+    note: "Usar --skip-existing se ARs já existirem. Verificar estado antes."
+
+ordens_de_execucao:
+  - 1. Rodar AR-TRAIN-010A (desbloqueio de testes — sem dependência de FE)
+  - 2. Rodar AR-TRAIN-003 (wellness FE fix)
+  - 3. Rodar AR-TRAIN-005 (presença UI fix)
+  - 4. Rodar AR-TRAIN-001 (UUID convergence — verificar estado atual antes)
+
+notas_ao_executor:
+  - "AR-TRAIN-003 e AR-TRAIN-005 são FE-only: zero risco de DB"
+  - "AR-TRAIN-010A é substituição mecânica de string em fixtures de teste: zero risco lógico"
+  - "AR-TRAIN-001 tem DB touches (router/schema/service): verificar alembic current antes"
+  - "DEC-TRAIN-001 RESOLVIDA: frontend de atleta NÃO envia athlete_id no payload POST wellness"
+  - "WellnessPostInput já está correto no FE — apenas paths precisavam correção"
+  - "sleep_quality range correto é 1-5 (não 0-10): ck_wellness_pre_sleep_quality confirma"
+```
+
+
+
+---
+
+## ARQUITETO-BATCH0-TRAINING-FIXES-20260228
+
+DIAGNOSTICO (recebido do Executor via ESC-001/002/003):
+- AR_174: FALHA --- validation_command usa _generated in content que gera
+  falso positivo em tests 072/077 (campo is_ai_generated contem _generated).
+  Codigo correto --- migracao foi executada. Defeito apenas no contrato.
+- AR_171/172: EM_EXECUCAO (exit=0 via smart runner) --- validation_commands
+  usavam strings com aspas duplas embutidas que truncam o argumento no cmd.exe.
+  Codigo correto --- implementacao executada. Defeito apenas no contrato.
+- ESC-003: hb verify (triple-run via run_cmd shell=True) bloqueado para
+  AR_171/172 ate ESC-002 resolvido.
+
+CORRECOES APLICADAS:
+
+1. ESC-001 --- AR_174 (ar_train_010a_ssot_path_migration.json, task 174):
+   DE:   if chr(39)+'_generated'+chr(39) in Path(f).read_text(encoding=chr(39)+'utf-8'+chr(39))
+   PARA: if chr(34)+'_generated'+chr(34) in Path(f).read_text(encoding=chr(39)+'utf-8'+chr(39))
+   Verifica o padrao de path com aspas duplas sem falso positivo em is_ai_generated.
+
+2. ESC-002 --- AR_171 (ar_train_005_presencas_ui.json, task 171):
+   Removidas aspas simples das strings de descricao nos checks:
+   justified in PresenceStatus (era: embebbed single-quotes)
+   preconfirm in PresenceStatus (idem)
+
+3. ESC-002 --- AR_172 (ar_train_005_presencas_ui.json, task 172):
+   justified status in UI (era: embedded single-quotes)
+   label Justificado in UI text (idem)
+
+4. dry-run --force: PASS (exit 0) em ambos os planos.
+
+5. Re-materializacao via hb plan --force:
+   AR_173, AR_174 --- PENDENTE (carimbo limpo; plano 010a)
+   AR_171, AR_172 --- PENDENTE (carimbo limpo; plano 005)
+
+NOTA --- AR_173 re-materializado colateralmente:
+AR_173 esta no mesmo plano que AR_174. Seu validation_command esta correto.
+Executor deve re-rodar hb report 173 sem necessidade de alteracao de codigo.
+
+ESC-003 RESOLVIDO IMPLICITAMENTE:
+Com ESC-002 corrigido, os validation_commands de AR_171/172 sao Windows-compativeis.
+hb verify (triple-run via run_cmd shell=True) devera funcionar normalmente.
+
+PLAN_HANDOFF:
+- RUN_ID: BATCH0-TRAINING-FIXES-20260228
+- AR_IDs: [173, 174, 171, 172]
+- plan_json_paths:
+    - docs/_canon/planos/ar_train_010a_ssot_path_migration.json (tasks 173, 174)
+    - docs/_canon/planos/ar_train_005_presencas_ui.json (tasks 171, 172)
+- mode: EXECUTE
+- dry_run_exit_code: 0 (ambos os planos)
+- gates_required: []
+- write_scope: [] (nenhuma mudanca de produto; apenas re-run de hb report)
+- db_tasks: []
+- triple_run_notice: >
+    Testador executara 3x por AR; hash canonico inclui exit_code+stdout+stderr.
+    Comandos sao agora Windows-compativeis (sem aspas duplas embutidas no python -c).
+- notes: |
+    Executor NAO precisa alterar codigo de produto --- implementacoes estao corretas.
+    Executar em ordem:
+      python scripts/run/hb_cli.py report 173
+      python scripts/run/hb_cli.py report 174
+      python scripts/run/hb_cli.py report 171
+      python scripts/run/hb_cli.py report 172
+
+    Apos todos os 4 com exit=0, stagear (explicito --- sem wildcards):
+      git add docs/hbtrack/evidence/AR_173/executor_main.log
+      git add docs/hbtrack/evidence/AR_174/executor_main.log
+      git add docs/hbtrack/evidence/AR_171/executor_main.log
+      git add docs/hbtrack/evidence/AR_172/executor_main.log
+      git add docs/hbtrack/ars/features/AR_173_migrar__generated_para_ssot_nos_test_files_trainin.md
+      git add docs/hbtrack/ars/features/AR_174_migrar__generated_para_ssot_nos_test_files_trainin.md
+      git add docs/hbtrack/ars/features/AR_171_fix_attendance.ts_adicionar_justified_e_preconf.md
+      git add docs/hbtrack/ars/features/AR_172_fix_attendancetab.tsx_ui_para_status_justified_r.md
+      git diff --cached --name-only  (confirmar isolamento de dominio)

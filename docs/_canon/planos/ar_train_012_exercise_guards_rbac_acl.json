@@ -1,0 +1,145 @@
+{
+  "ar_id": "AR_182",
+  "ar_train_id": "AR-TRAIN-012",
+  "title": "Guards escopo SYSTEM/ORG + RBAC Treinador + service ACL + visibilidade",
+  "batch": "Batch 3",
+  "class": "B/E",
+  "priority": "ALTA",
+  "phase": "FASE_2",
+  "created_at": "2026-02-28",
+  "status": "PENDENTE",
+  "objective": "Implementar guards de escopo (SYSTEM imutável, ORG org-bound), filtro de visibilidade (org_wide+restricted+ACL), RBAC explícito Treinador, e service de ACL com validação anti-cross-org.",
+  "dependencies": [
+    "AR_181"
+  ],
+  "ssot_targets": {
+    "invariants": [
+      "INV-TRAIN-048",
+      "INV-TRAIN-051",
+      "INV-TRAIN-EXB-ACL-002",
+      "INV-TRAIN-EXB-ACL-003",
+      "INV-TRAIN-EXB-ACL-004",
+      "INV-TRAIN-EXB-ACL-005",
+      "INV-TRAIN-EXB-ACL-007"
+    ],
+    "contracts": [],
+    "flows": [],
+    "screens": []
+  },
+  "decisions_incorporated": [
+    "DEC-TRAIN-EXB-001",
+    "DEC-TRAIN-EXB-001B",
+    "DEC-TRAIN-EXB-002",
+    "DEC-TRAIN-EXB-RBAC-001"
+  ],
+  "gaps_covered": [
+    "GAP-TRAIN-EXB-003"
+  ],
+  "read_scope": [
+    "Hb Track - Backend/app/services/exercise_service.py",
+    "Hb Track - Backend/app/models/exercise.py",
+    "Hb Track - Backend/app/models/exercise_acl.py",
+    "Hb Track - Backend/app/models/user.py",
+    "Hb Track - Backend/app/core/permissions.py"
+  ],
+  "write_scope": [
+    "Hb Track - Backend/app/services/exercise_service.py",
+    "Hb Track - Backend/app/services/exercise_acl_service.py"
+  ],
+  "forbidden": [
+    "Hb Track - Backend/app/api/v1/routers/",
+    "Hb Track - Frontend/"
+  ],
+  "tasks": [
+    {
+      "id": 182,
+      "title": "Implementar guards de escopo + RBAC + service ACL em exercise_service.py e exercise_acl_service.py (novo)",
+      "type": "backend-service",
+      "reason": "Materializar guards de escopo SYSTEM imutável (INV-TRAIN-048), filtro de visibilidade org+ACL (INV-TRAIN-051), e service ACL com validação anti-cross-org (INV-TRAIN-EXB-ACL-002..007).",
+      "targets": [
+        "Hb Track - Backend/app/services/exercise_service.py",
+        "Hb Track - Backend/app/services/exercise_acl_service.py"
+      ],
+      "validation": {
+        "command": "cd \"Hb Track - Backend\" && pytest tests/training/invariants/test_inv_train_048_system_immutable.py tests/training/invariants/test_inv_train_051_catalog_visibility.py tests/training/invariants/test_inv_train_exb_acl_002_acl_restricted.py tests/training/invariants/test_inv_train_exb_acl_003_anti_cross_org.py tests/training/invariants/test_inv_train_exb_acl_004_creator_authority.py tests/training/invariants/test_inv_train_exb_acl_005_creator_implicit.py -q",
+        "expected_exit_code": 0,
+        "rationale": "Valida guards de escopo, visibilidade, ACL e RBAC via testes de invariantes."
+      },
+      "write_authority": "Executor",
+      "acceptance_criteria": [
+        {
+          "id": "AC-001",
+          "rule": "PATCH/DELETE em exercício SYSTEM por usuário da organização retorna 403.",
+          "pass_condition": "Guard de escopo verifica exercise.scope == SYSTEM e rejeita edição por não-plataforma.",
+          "fail_condition": "Edição permitida sem guard."
+        },
+        {
+          "id": "AC-002",
+          "rule": "Listagem de exercícios para usuário da org X retorna apenas SYSTEM + ORG da org X, respeitando visibility_mode e ACL.",
+          "pass_condition": "Filtro de catálogo aplica scope + org_id + visibility + ACL corretamente.",
+          "fail_condition": "Exercícios de org Y visíveis ou visibilidade não respeitada."
+        },
+        {
+          "id": "AC-003",
+          "rule": "Adicionar user de org Y à ACL de exercício org X retorna 400/422 (validação anti-cross-org).",
+          "pass_condition": "exercise_acl_service.py valida membership da organização antes de inserir ACL.",
+          "fail_condition": "ACL aceita user cross-org."
+        },
+        {
+          "id": "AC-004",
+          "rule": "Treinador B (não criador) tenta alterar visibility_mode ou ACL de exercício de treinador A → 403.",
+          "pass_condition": "Guard verifica created_by_user_id == current_user.id antes de permitir alteração.",
+          "fail_condition": "Alteração permitida sem verificação de criador."
+        },
+        {
+          "id": "AC-005",
+          "rule": "Guard de criação/edição de exercício ORG verifica papel RBAC explícito Treinador (identificador no contrato, não inferência genérica).",
+          "pass_condition": "RBAC check usa identificador explícito do papel Treinador (ex.: role.name == 'Treinador' ou id específico).",
+          "fail_condition": "Guard usa verificação genérica ou ausente."
+        },
+        {
+          "id": "AC-006",
+          "rule": "Criador mantém acesso ao próprio exercício ORG independentemente da ACL.",
+          "pass_condition": "Filtro de visibilidade inclui bypass para created_by_user_id == current_user.id.",
+          "fail_condition": "Criador perde acesso ao próprio exercício com ACL restritiva."
+        }
+      ],
+      "risks": [
+        {
+          "description": "Role/RBAC do Treinador não padronizado (nome ou ID variável)",
+          "mitigation": "Executor deve consultar tabela roles ou definir constante ROLE_TREINADOR no código."
+        },
+        {
+          "description": "Service de ACL sem tratamento de concorrência (inserções duplicadas)",
+          "mitigation": "Usar constraint unique uq_exercise_acl_exercise_user + catch IntegrityError."
+        }
+      ]
+    }
+  ],
+  "evidence_expected": {
+    "artifacts": [
+      "Hb Track - Backend/app/services/exercise_service.py (atualizado com guards)",
+      "Hb Track - Backend/app/services/exercise_acl_service.py (novo)",
+      "tests/training/invariants/test_inv_train_048_system_immutable.py",
+      "tests/training/invariants/test_inv_train_051_catalog_visibility.py",
+      "tests/training/invariants/test_inv_train_exb_acl_002_acl_restricted.py",
+      "tests/training/invariants/test_inv_train_exb_acl_003_anti_cross_org.py",
+      "tests/training/invariants/test_inv_train_exb_acl_004_creator_authority.py",
+      "tests/training/invariants/test_inv_train_exb_acl_005_creator_implicit.py"
+    ],
+    "validation_output": "pytest exit 0 + guards evidenciados via testes",
+    "notes": "Executor deve criar testes de invariantes junto com a implementação dos guards."
+  },
+  "rollback_plan": [
+    "git restore Hb Track - Backend/app/services/exercise_service.py",
+    "git restore Hb Track - Backend/app/services/exercise_acl_service.py (se novo, deletar)",
+    "remover testes criados (se aplicável)"
+  ],
+  "plan_metadata": {
+    "author": "Arquiteto v2.2.0",
+    "protocol_version": "v1.3.0",
+    "ssot_sync": "gen_docs_ssot.py v2026-02-28",
+    "batch_plan_ref": "docs/hbtrack/modulos/treinos/TRAINING_BATCH_PLAN_v1.md -- Batch 3",
+    "backlog_ref": "docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md -- AR-TRAIN-012"
+  }
+}

@@ -1,0 +1,77 @@
+
+---
+
+# TESTADOR REPORT — AR177-AR179-SUCESSO-20260228
+
+## CABECALHO
+
+| Campo | Valor |
+|---|---|
+| **RUN_ID** | TESTADOR-AR177-AR179-SUCESSO-20260228 |
+| **GIT_SHA** | b123a58 |
+| **Timestamp** | 2026-02-28T21:15:00Z |
+| **Handoff lido** | _reports/EXECUTOR.md (EXECUTOR-BATCH2-TRAINING-20260228) |
+
+---
+
+## RESULTADO
+
+| AR | RESULT | CONSISTENCY | TRIPLE_CONSISTENCY |
+|---|---|---|---|
+| AR_177 | ✅ SUCESSO | OK | OK |
+| AR_179 | ✅ SUCESSO | OK | OK |
+
+---
+
+## DETALHE TRIPLE-RUN
+
+### AR_177
+
+| Run | Exit | Hash (16) |
+|---|---|---|
+| 1/3 | 0 | `3cd0305429580561` |
+| 2/3 | 0 | `3cd0305429580561` |
+| 3/3 | 0 | `3cd0305429580561` |
+
+Hash full: `3cd0305429580561eaba3b745b7f5ba748da101440d7e731074a8ba6ce2a635d`  
+Hash executor: `3cd0305429580561eaba3b745b7f5ba748da101440d7e731074a8ba6ce2a635d` ✅ MATCH
+
+### AR_179
+
+| Run | Exit | Hash (16) |
+|---|---|---|
+| 1/3 | 0 | `a9dcc0d09dae6600` |
+| 2/3 | 0 | `a9dcc0d09dae6600` |
+| 3/3 | 0 | `a9dcc0d09dae6600` |
+
+Hash full: `a9dcc0d09dae66000506033e38562d0fcaed622372bb480456846f451469c8a8`  
+Hash executor: `a9dcc0d09dae66000506033e38562d0fcaed622372bb480456846f451469c8a8` ✅ MATCH
+
+---
+
+## EVIDENCES
+
+| Artefato | Path | Staged |
+|---|---|---|
+| context AR_177 | `_reports/testador/AR_177_b123a58/context.json` | ✅ |
+| result AR_177 | `_reports/testador/AR_177_b123a58/result.json` | ✅ |
+| context AR_179 | `_reports/testador/AR_179_b123a58/context.json` | ✅ |
+| result AR_179 | `_reports/testador/AR_179_b123a58/result.json` | ✅ |
+
+---
+
+## NEXT_ACTION
+
+**Humano: hb seal para cada AR aprovada, depois commit.**
+
+```
+python scripts/run/hb_cli.py seal 177
+python scripts/run/hb_cli.py seal 179
+```
+
+---
+
+**Testador Agent**  
+**Timestamp**: 2026-02-28  
+**Protocol**: v1.3.0  
+**Verdict**: ✅ SUCESSO (AR_177 + AR_179)

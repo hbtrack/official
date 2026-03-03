@@ -12,7 +12,7 @@ import { apiClient } from './client';
 // ========================================
 
 export interface TeamRanking {
-  team_id: number;
+  team_id: string;
   team_name: string;
   response_rate_pre: number;
   response_rate_post: number;
@@ -29,7 +29,7 @@ export interface RankingsResponse {
 }
 
 export interface Athlete90Plus {
-  athlete_id: number;
+  athlete_id: string;
   athlete_name: string;
   response_rate: number;
   badge_earned: boolean;
@@ -37,7 +37,7 @@ export interface Athlete90Plus {
 
 export interface Athletes90PlusResponse {
   athletes: Athlete90Plus[];
-  team_id: number;
+  team_id: string;
   team_name: string;
   month: string;
   total: number;
@@ -81,7 +81,7 @@ export async function getWellnessRankings(
  * @returns Lista de atletas 90%+ ordenada por response_rate DESC
  */
 export async function getTeamAthletes90Plus(
-  teamId: number,
+  teamId: string,
   month: string
 ): Promise<Athletes90PlusResponse> {
   const athletes = await apiClient.get<Athlete90Plus[]>(
@@ -166,7 +166,7 @@ export function getRateBadgeColor(rate: number): string {
 export function formatMonthReference(month: string): string {
   try {
     const [year, monthNum] = month.split('-');
-    const date = new Date(parseInt(year), parseInt(monthNum) - 1, 1);
+    const date = new Date(Number(year), Number(monthNum) - 1, 1);
     return date.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
   } catch {
     return month;

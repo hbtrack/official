@@ -151,6 +151,12 @@ class TrainingCycleService:
             ValidationError: Se validações falharem
         """
         # Validações já feitas pelo schema Pydantic
+        # INV-054 (parcial): meso DEVE ter parent_cycle_id
+        if data.type == 'meso' and not data.parent_cycle_id:
+            raise ValidationError(
+                "Mesociclo requer parent_cycle_id (macro pai obrigatório — INV-054)"
+            )
+
         # Validação adicional: se mesociclo, verificar datas do pai
         if data.type == 'meso' and data.parent_cycle_id:
             parent = await self.get_by_id(data.parent_cycle_id)
@@ -273,3 +279,51 @@ class TrainingCycleService:
 
         result = await self.db.execute(query)
         return list(result.scalars().all())
+
+    async def validate_microcycle_containment(
+        self,
+        mesocycle_id: UUID,
+        week_start: date,
+        week_end: date,
+    ) -> TrainingCycle:
+        """
+        INV-054 + INV-056: Valida que o microciclo está contido no mesociclo pai.
+
+        INV-054: mesocycle_id deve referenciar um ciclo do tipo 'meso'.
+        INV-056: week_start/week_end dentro do date range do meso pai.
+
+        Args:
+            mesocycle_id: cycle_id do microciclo — deve apontar para um 'meso'
+            week_start: Início da semana do microciclo
+            week_end: Fim da semana do microciclo
+
+        Returns:
+            O mesociclo validado (TrainingCycle type='meso').
+
+        Raises:
+            ValidationError: INV-054 se mesocycle_id não é do tipo 'meso'.
+            MicrocycleOutsideMesoError: INV-056 se datas fora do range do meso.
+        """
+        meso = await self.get_by_id(mesocycle_id)
+
+        # INV-054: cycle_id deve referenciar um mesociclo (type='meso')
+        if meso.type != 'meso':
+            raise ValidationError(
+                f"cycle_id {mesocycle_id} não é um mesociclo (type='{meso.type}'). "
+                "Microciclo deve ser vinculado a um mesociclo válido — INV-054."
+            )
+
+        # INV-056: containment — week_start/week_end within meso date range
+        if week_start < meso.start_date or week_end > meso.end_date:
+            raise MicrocycleOutsideMesoError(
+                f"Semana do microciclo ({week_start} — {week_end}) fora do range "
+                f"do mesociclo pai ({meso.start_date} — {meso.end_date}). "
+                "Ajuste as datas ou o mesociclo de referência — INV-056."
+            )
+
+        logger.debug(
+            f"Microcycle containment validated: week_start={week_start} "
+            f"week_end={week_end} within meso {mesocycle_id} "
+            f"({meso.start_date} — {meso.end_date})"
+        )
+        return meso

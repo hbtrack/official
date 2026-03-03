@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_200-b123a58",
+  "timestamp_utc": "2026-03-03T00:32:03.764878+00:00",
+  "git": {
+    "commit": "b123a58f679bdb2264c973a4c5f7875ad4a3a66a"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "200",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_200_executar_top-10_testes_coberto+not_run_e_salvar_ev.md"
+}

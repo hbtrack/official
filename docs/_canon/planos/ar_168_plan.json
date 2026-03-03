@@ -1,0 +1,23 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "Adiciona docs/hbtrack/ à lista de governed roots para rastrear mudanças em ARs, evidências, Kanban, backlog e invariantes. Esta é uma AR de governança que expande o escopo de proteção do hb_cli para incluir documentação normativa.",
+  "assumptions": [
+    "GOVERNED_ROOTS.yaml é editável pelo Executor",
+    "hb_cli.py load_governed_roots() valida corretamente a nova root",
+    "docs/hbtrack/ existe no repositório"
+  ],
+  "tasks": [
+    {
+      "id": "168",
+      "title": "Adicionar docs/hbtrack/ ao GOVERNED_ROOTS.yaml",
+      "description": "Modificar docs/_canon/specs/GOVERNED_ROOTS.yaml para incluir 'docs/hbtrack/' na lista de roots governadas. Verificar que o hb_cli valida e carrega corretamente a nova configuração.",
+      "criteria": "1) GOVERNED_ROOTS.yaml contém entrada 'docs/hbtrack/' na lista roots. 2) load_governed_roots() retorna lista incluindo 'docs/hbtrack/'. 3) Validação comportamental confirma que arquivo sob docs/hbtrack/ seria considerado 'governed'.",
+      "validation_command": "python -c \"import yaml; from pathlib import Path; import sys; sys.path.insert(0, 'scripts/run'); from hb_cli import load_governed_roots; spec_path = Path('docs/_canon/specs/GOVERNED_ROOTS.yaml'); data = yaml.safe_load(spec_path.read_text(encoding='utf-8')); roots = data.get('roots', []); assert 'docs/hbtrack/' in roots, 'FAIL: docs/hbtrack/ ausente em GOVERNED_ROOTS.yaml'; loaded = load_governed_roots(Path('.')); assert 'docs/hbtrack/' in loaded, 'FAIL: load_governed_roots() nao retornou docs/hbtrack/'; test_path = 'docs/hbtrack/ars/features/AR_161.md'; is_governed = any(test_path.startswith(r.rstrip('/')) for r in loaded); assert is_governed, 'FAIL: docs/hbtrack/ nao sendo reconhecida como governed'; print('PASS AR_168: docs/hbtrack/ adicionada com sucesso as governed roots')\"",
+      "write_scope": [
+        "docs/_canon/specs/GOVERNED_ROOTS.yaml"
+      ],
+      "retry_count": 0
+    }
+  ]
+}

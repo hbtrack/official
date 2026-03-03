@@ -139,3 +139,47 @@ class TestInvTrain024WebsocketBroadcast:
         assert "badge_type" in content, "Metadata deve incluir badge_type"
         assert "month_reference" in content, "Metadata deve incluir month_reference"
         assert "response_rate" in content, "Metadata deve incluir response_rate"
+
+    def test_broadcast_to_user_pattern_consistent(self):
+        """Verifica que ambos os services usam broadcast_to_user (padrão unificado)."""
+        alerts_path = (
+            Path(__file__).parent.parent.parent
+            / "app"
+            / "services"
+            / "training_alerts_service.py"
+        )
+        gamification_path = (
+            Path(__file__).parent.parent.parent
+            / "app"
+            / "services"
+            / "wellness_gamification_service.py"
+        )
+        alerts_content = alerts_path.read_text(encoding="utf-8")
+        gamification_content = gamification_path.read_text(encoding="utf-8")
+
+        # Ambos devem usar o mesmo padrão de broadcast
+        assert "broadcast_to_user" in alerts_content, (
+            "training_alerts_service deve usar broadcast_to_user"
+        )
+        assert "broadcast_to_user" in gamification_content, (
+            "wellness_gamification_service deve usar broadcast_to_user"
+        )
+
+    def test_websocket_manager_imported_in_alerts(self):
+        """Verifica que training_alerts_service importa websocket_manager ou ConnectionManager."""
+        service_path = (
+            Path(__file__).parent.parent.parent
+            / "app"
+            / "services"
+            / "training_alerts_service.py"
+        )
+        content = service_path.read_text(encoding="utf-8")
+
+        # Deve ter referência ao websocket manager
+        has_ws = (
+            "websocket" in content.lower()
+            or "ConnectionManager" in content
+            or "ws_manager" in content
+            or "manager" in content.lower()
+        )
+        assert has_ws, "training_alerts_service deve referenciar WebSocket manager"

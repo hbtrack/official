@@ -21,13 +21,15 @@ Obrigação B: Invariante alvo: ck_wellness_post_rpe (CHECK).
   * Estratégia: pytest.raises validando SQLSTATE e presença do nome da constraint.
 """
 
-from datetime import datetime, timezone, timedelta
+from datetime import date, datetime, timezone, timedelta
 from uuid import uuid4
 import pytest
+import pytest_asyncio
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from tests._helpers.pg_error import assert_pg_constraint_violation
+from app.models.athlete import Athlete
 from app.models.category import Category
 from app.models.organization import Organization
 from app.models.person import Person
@@ -37,7 +39,7 @@ from app.models.user import User
 from app.models.wellness_post import WellnessPost
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def inv032_category(async_db: AsyncSession) -> Category:
     """Fixture para Category do INV-032"""
     category = Category(
@@ -51,7 +53,7 @@ async def inv032_category(async_db: AsyncSession) -> Category:
     return category
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def inv032_organization(async_db: AsyncSession) -> Organization:
     """Fixture para Organization do INV-032"""
     org = Organization(
@@ -63,7 +65,7 @@ async def inv032_organization(async_db: AsyncSession) -> Organization:
     return org
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def inv032_person(async_db: AsyncSession) -> Person:
     """Fixture para Person do INV-032"""
     person = Person(
@@ -71,14 +73,14 @@ async def inv032_person(async_db: AsyncSession) -> Person:
         full_name="Atleta INV-032",
         first_name="Atleta",
         last_name="INV-032",
-        birth_date="1995-01-01",
+        birth_date=date(1995, 1, 1),
     )
     async_db.add(person)
     await async_db.flush()
     return person
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def inv032_user(async_db: AsyncSession, inv032_person: Person) -> User:
     """Fixture para User do INV-032"""
     user = User(
@@ -91,7 +93,25 @@ async def inv032_user(async_db: AsyncSession, inv032_person: Person) -> User:
     return user
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
+async def inv032_athlete(async_db: AsyncSession, inv032_person: Person, inv032_organization: Organization) -> Athlete:
+    """Fixture para Athlete do INV-032"""
+    athlete = Athlete(
+        id=uuid4(),
+        person_id=inv032_person.id,
+        athlete_name="Atleta INV-032",
+        birth_date=date(1995, 1, 1),
+        state="ativa",
+        injured=False,
+        medical_restriction=False,
+        load_restricted=False,
+    )
+    async_db.add(athlete)
+    await async_db.flush()
+    return athlete
+
+
+@pytest_asyncio.fixture
 async def inv032_team(async_db: AsyncSession, inv032_category: Category, inv032_organization: Organization) -> Team:
     """Fixture para Team do INV-032"""
     team = Team(
@@ -107,7 +127,7 @@ async def inv032_team(async_db: AsyncSession, inv032_category: Category, inv032_
     return team
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def inv032_session(
     async_db: AsyncSession, 
     inv032_organization: Organization, 
@@ -141,7 +161,7 @@ class TestInvTrain032WellnessPostRpe:
         async_db: AsyncSession, 
         inv032_organization: Organization,
         inv032_session: TrainingSession,
-        inv032_person: Person,
+        inv032_athlete: Athlete,
         inv032_user: User
     ):
         """RPE nos limites 0 e 10 deve ser aceito"""
@@ -150,12 +170,19 @@ class TestInvTrain032WellnessPostRpe:
             id=uuid4(),
             organization_id=inv032_organization.id,
             training_session_id=inv032_session.id,
-            athlete_id=inv032_person.id,
-            overall_feeling=5,
+            athlete_id=inv032_athlete.id,
+            fatigue_after=5,
+            mood_after=5,
             session_rpe=0,  # Limite mínimo
             created_by_user_id=inv032_user.id
         )
         async_db.add(wellness_min)
+        await async_db.flush()
+
+        # Soft-delete wellness_min para liberar a unique constraint parcial
+        # (ux_wellness_post_session_athlete WHERE deleted_at IS NULL)
+        wellness_min.deleted_at = datetime.now(timezone.utc)
+        wellness_min.deleted_reason = "Boundary test cleanup"
         await async_db.flush()
 
         # Teste com RPE = 10 (limite superior)
@@ -163,8 +190,9 @@ class TestInvTrain032WellnessPostRpe:
             id=uuid4(),
             organization_id=inv032_organization.id,
             training_session_id=inv032_session.id,
-            athlete_id=inv032_person.id,
-            overall_feeling=3,
+            athlete_id=inv032_athlete.id,
+            fatigue_after=3,
+            mood_after=3,
             session_rpe=10,  # Limite máximo
             created_by_user_id=inv032_user.id
         )
@@ -181,7 +209,7 @@ class TestInvTrain032WellnessPostRpe:
         async_db: AsyncSession, 
         inv032_organization: Organization,
         inv032_session: TrainingSession,
-        inv032_person: Person,
+        inv032_athlete: Athlete,
         inv032_user: User
     ):
         """RPE abaixo do mínimo (< 0) deve ser rejeitado pela constraint DB"""
@@ -189,8 +217,9 @@ class TestInvTrain032WellnessPostRpe:
             id=uuid4(),
             organization_id=inv032_organization.id,
             training_session_id=inv032_session.id,
-            athlete_id=inv032_person.id,
-            overall_feeling=5,
+            athlete_id=inv032_athlete.id,
+            fatigue_after=5,
+            mood_after=5,
             session_rpe=-1,  # Viola constraint (< 0)
             created_by_user_id=inv032_user.id
         )
@@ -212,7 +241,7 @@ class TestInvTrain032WellnessPostRpe:
         async_db: AsyncSession, 
         inv032_organization: Organization,
         inv032_session: TrainingSession,
-        inv032_person: Person,
+        inv032_athlete: Athlete,
         inv032_user: User
     ):
         """RPE acima do máximo (> 10) deve ser rejeitado pela constraint DB"""
@@ -220,8 +249,9 @@ class TestInvTrain032WellnessPostRpe:
             id=uuid4(),
             organization_id=inv032_organization.id,
             training_session_id=inv032_session.id,
-            athlete_id=inv032_person.id,
-            overall_feeling=4,
+            athlete_id=inv032_athlete.id,
+            fatigue_after=4,
+            mood_after=4,
             session_rpe=11,  # Viola constraint (> 10)
             created_by_user_id=inv032_user.id
         )

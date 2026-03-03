@@ -111,3 +111,46 @@ class TestInvTrain013GamificationBadgeRules:
         assert "_create_badge_notification" in content, (
             "Método _create_badge_notification não encontrado"
         )
+
+    def test_zero_expected_wellness_not_eligible(self):
+        """Verifica que expected > 0 é pré-condição para award (não divide por zero)."""
+        service_path = (
+            Path(__file__).parent.parent.parent
+            / "app"
+            / "services"
+            / "wellness_gamification_service.py"
+        )
+        content = service_path.read_text(encoding="utf-8")
+
+        # A guarda 'expected > 0' protege contra divisão por zero e falso-positivo
+        assert "expected > 0" in content, (
+            "Guarda 'expected > 0' não encontrada — risco de badge com 0 questionários esperados"
+        )
+
+    def test_calculate_monthly_wellness_badges_entrypoint_exists(self):
+        """Verifica que existe entry-point público calculate_monthly_wellness_badges."""
+        service_path = (
+            Path(__file__).parent.parent.parent
+            / "app"
+            / "services"
+            / "wellness_gamification_service.py"
+        )
+        content = service_path.read_text(encoding="utf-8")
+
+        assert "calculate_monthly_wellness_badges" in content, (
+            "Entry-point 'calculate_monthly_wellness_badges' não encontrado no service"
+        )
+
+    def test_award_badge_method_exists(self):
+        """Verifica que existe método interno _award_badge para persistência do badge."""
+        service_path = (
+            Path(__file__).parent.parent.parent
+            / "app"
+            / "services"
+            / "wellness_gamification_service.py"
+        )
+        content = service_path.read_text(encoding="utf-8")
+
+        assert "_award_badge" in content, (
+            "Método _award_badge não encontrado — badge não pode ser persistido"
+        )

@@ -1,0 +1,40 @@
+{
+  "ar_id": "177",
+  "validation_command": "python -c \"import subprocess; r=subprocess.run(['pytest','Hb Track - Backend/tests/training/invariants/test_inv_train_036_wellness_rankings_unique_runtime.py','Hb Track - Backend/tests/training/invariants/test_inv_train_027_refresh_training_rankings_task.py','-q'],capture_output=True); assert r.returncode==0,'FAIL AR_177 exit='+str(r.returncode); print('PASS AR_177')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "3cd0305429580561eaba3b745b7f5ba748da101440d7e731074a8ba6ce2a635d",
+      "hash": "3cd0305429580561",
+      "stdout_len": 12,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "3cd0305429580561eaba3b745b7f5ba748da101440d7e731074a8ba6ce2a635d",
+      "hash": "3cd0305429580561",
+      "stdout_len": 12,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "3cd0305429580561eaba3b745b7f5ba748da101440d7e731074a8ba6ce2a635d",
+      "hash": "3cd0305429580561",
+      "stdout_len": 12,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

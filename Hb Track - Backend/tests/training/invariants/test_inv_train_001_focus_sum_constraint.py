@@ -220,7 +220,7 @@ class TestInvTrain001FocusSumConstraint:
         assert_pg_constraint_violation(
             exc_info,
             "23514",
-            "ck_training_sessions_focus_total_sum"
+            "ck_training_sessions_focus_attack_positional_range"
         )
-        
+
         await async_db.rollback()

@@ -1,0 +1,40 @@
+{
+  "ar_id": "186",
+  "validation_command": "python -c \"import os; b='Hb Track - Frontend'; f1=os.path.join(b,'src','lib','api','pending.ts'); c1=open(f1).read(); assert 'listPendingItems' in c1 or 'list_pending' in c1.lower(), 'pending.ts missing listPendingItems'; assert 'resolve' in c1.lower(), 'pending.ts missing resolve function'; f2=os.path.join(b,'src','app','(admin)','training','pending-queue','page.tsx'); assert os.path.exists(f2), 'pending-queue page.tsx missing'; f3=os.path.join(b,'src','components','training','PendingQueueTable.tsx'); assert os.path.exists(f3), 'PendingQueueTable.tsx missing'; print('PASS AR_186')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "3da485fcea0e1d5b1c0d11e1f7578232a3ccc615f0b5b4233824fd1bd927baf2",
+      "hash": "3da485fcea0e1d5b",
+      "stdout_len": 12,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "3da485fcea0e1d5b1c0d11e1f7578232a3ccc615f0b5b4233824fd1bd927baf2",
+      "hash": "3da485fcea0e1d5b",
+      "stdout_len": 12,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "3da485fcea0e1d5b1c0d11e1f7578232a3ccc615f0b5b4233824fd1bd927baf2",
+      "hash": "3da485fcea0e1d5b",
+      "stdout_len": 12,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

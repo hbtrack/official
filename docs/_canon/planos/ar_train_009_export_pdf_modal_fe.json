@@ -1,0 +1,33 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "AR-TRAIN-009: Conectar ExportPDFModal ao backend reabilitado (AR-TRAIN-008 done) — polling real, history de exports, rate limit e estado degradado explícito quando worker indisponível (DEC-TRAIN-004). ANCORA SSOT: openapi.json (/analytics/export-pdf + /analytics/exports), SCREEN-TRAIN-013, FLOW-TRAIN-012, INV-TRAIN-012. Batch 2 do TRAINING_BATCH_PLAN_v1.md. Depende de AR-TRAIN-008 (AR_179).",
+  "assumptions": [
+    "AR-TRAIN-008 (AR_179) ✅: routers reabilitados, openapi.json contém /analytics/export-pdf e /analytics/exports",
+    "ExportPDFModal.tsx existe em Hb Track - Frontend/src/components/training/analytics/ExportPDFModal.tsx",
+    "src/lib/api/exports.ts existe e contém funções para chamar endpoints de export",
+    "FLOW-TRAIN-012 está BLOQUEADO por routers desabilitados — com AR_179 concluído, o bloqueio é removido",
+    "DEC-TRAIN-004: FE deve exibir estado degradado explícito (mensagem UI) quando backend retorna 503 {status: unavailable}",
+    "Polling fake (simular progresso sem worker) é PROIBIDO — FE deve mostrar estado real do backend"
+  ],
+  "tasks": [
+    {
+      "id": "180",
+      "title": "Fix ExportPDFModal FE: conectar backend reabilitado + estado degradado",
+      "description": "Conectar ExportPDFModal.tsx e exports.ts ao backend reabilitado, implementando polling real e estado degradado explícito quando worker indisponível.\n\n=== ANCORA SSOT ===\n- openapi.json (pós AR_179): /analytics/export-pdf (POST), /analytics/exports (GET — history)\n- SCREEN-TRAIN-013: modal deve exibir estado de job, histórico e estado degradado\n- FLOW-TRAIN-012: fluxo export PDF (submit → poll → download ou degradado)\n- INV-TRAIN-012: rate limit deve ser respeitado — FE exibe erro se rate limit atingido\n- DEC-TRAIN-004: PROIBIDO polling fake; UI DEVE exibir estado real\n\n=== LEITURA PRÉVIA (READ-ONLY) ===\n1. Ler openapi.json (pós AR_179) — confirmar paths exatos de /analytics/export-pdf e /analytics/exports\n2. Ler src/lib/api/exports.ts — ver funções atuais e se chamam endpoints corretos\n3. Ler ExportPDFModal.tsx — ver estado atual: polling fake? endpoints divergentes?\n4. Ler SCREEN-TRAIN-013 (TRAINING_SCREENS_SPEC.md) para entender estados esperados da UI\n\n=== MODIFICAÇÕES OBRIGATÓRIAS ===\n1. exports.ts:\n   - Função submitExport: POST /analytics/export-pdf com params corretos do openapi.json\n   - Função getExportHistory: GET /analytics/exports (listing de exports do time)\n   - Ambas devem tratar resposta 503 {status: unavailable} e propagar o erro com mensagem legível\n   - REMOVER qualquer mock/fake data ou setTimeout de polling simulado\n\n2. ExportPDFModal.tsx:\n   - Integrar com exports.ts (funções reais)\n   - Estado degradado: se API retornar 503/unavailable → exibir mensagem clara: 'Serviço de exportação temporariamente indisponível.' ou equivalente\n   - Polling real: se job_id retornado → poll endpoint de status a cada N segundos (ex: 3s)\n   - Exibir histórico de exports (getExportHistory) na UI se SCREEN-TRAIN-013 prevê\n   - Tratar rate limit (429): exibir mensagem de rate limit ao usuário\n   - REMOVER qualquer setTimeout fake simulando progresso\n\n=== ARQUIVOS A MODIFICAR ===\n- Hb Track - Frontend/src/lib/api/exports.ts\n- Hb Track - Frontend/src/components/training/analytics/ExportPDFModal.tsx",
+      "criteria": "1) exports.ts chama o endpoint correto POST /analytics/export-pdf (sem mock/fake).\n2) ExportPDFModal.tsx exibe estado degradado explícito quando API retorna 503 unavailable.\n3) Nenhum setTimeout fake de polling simulado no ExportPDFModal.tsx.\n4) Tratamento de rate limit (429) presente no modal.\n5) TypeScript compila sem erros nos arquivos modificados.",
+      "validation_command": "python -c \"import sys; ct=open('Hb Track - Frontend/src/components/training/analytics/ExportPDFModal.tsx', encoding='utf-8').read(); ce=open('Hb Track - Frontend/src/lib/api/exports.ts', encoding='utf-8').read(); checks=[('unavailable' in ct or 'indisponível' in ct or 'unavailable' in ce, 'estado degradado presente'), ('export-pdf' in ce or 'export_pdf' in ce, 'endpoint export-pdf referenciado'), ('fake' not in ct.lower() or 'mock' not in ct.lower(), 'sem mock/fake óbvio no modal')]; failed=[msg for ok,msg in checks if not ok]; print('PASS AR_180 ' + str(len(checks)) + ' checks') if not failed else sys.exit('FAIL AR_180: '+str(failed))\"",
+      "write_scope": [
+        "Hb Track - Frontend/src/lib/api/exports.ts",
+        "Hb Track - Frontend/src/components/training/analytics/ExportPDFModal.tsx"
+      ],
+      "risks": [
+        "openapi.json pós AR_179 pode ter paths ligeiramente diferentes do esperado — Executor DEVE ler openapi.json antes de hardcodar paths em exports.ts",
+        "Polling de status de job pode exigir endpoint adicional não previsto em CONTRACT-TRAIN-086..089 — Executor deve verificar se existe endpoint de status de job no openapi.json antes de implementar polling",
+        "Se SCREEN-TRAIN-013 não prevê histórico de exports na UI do modal, Executor NÃO deve adicionar getExportHistory — manter escopo ao que a screen prevê",
+        "DataExportSection.tsx (LGPD) também existe para athlete_export — Executor DEVE verificar se está no escopo desta AR ou pertence a AR-TRAIN-008 apenas"
+      ],
+      "notes": "ANCORA: openapi.json pós AR_179 (paths reabilitados). DEC-TRAIN-004 RESOLVIDA: polling fake PROIBIDO. ANCORA: SCREEN-TRAIN-013 (estados do modal). ANCORA: INV-TRAIN-012 (rate limit). Dependência AR-TRAIN-008 (AR_179). Batch 2 TRAINING_BATCH_PLAN_v1."
+    }
+  ]
+}

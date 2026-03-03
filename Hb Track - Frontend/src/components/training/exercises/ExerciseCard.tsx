@@ -20,7 +20,11 @@ interface ExerciseCardProps {
   exercise: Exercise;
   tags?: ExerciseTag[];
   isFavorite?: boolean;
+  currentUserId?: string;
   onToggleFavorite?: (exerciseId: string, currentState: boolean) => void;
+  onCopyToOrg?: (exerciseId: string) => void;
+  onManageACL?: (exerciseId: string) => void;
+  onToggleVisibility?: (exerciseId: string) => void;
   onClick?: () => void;
   isDragging?: boolean;
 }
@@ -39,13 +43,35 @@ export function ExerciseCard({
   exercise,
   tags = [],
   isFavorite = false,
+  currentUserId,
   onToggleFavorite,
+  onCopyToOrg,
+  onManageACL,
+  onToggleVisibility,
   onClick,
   isDragging = false,
 }: ExerciseCardProps) {
+  const isCreator = currentUserId && exercise.created_by_user_id === currentUserId;
+  const isSystem = exercise.scope === 'SYSTEM';
+
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onToggleFavorite?.(exercise.id, isFavorite);
+  };
+
+  const handleCopyToOrg = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onCopyToOrg?.(exercise.id);
+  };
+
+  const handleManageACL = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onManageACL?.(exercise.id);
+  };
+
+  const handleToggleVisibility = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onToggleVisibility?.(exercise.id);
   };
 
   const getTagColor = (tagName: string): string => {
@@ -123,6 +149,28 @@ export function ExerciseCard({
 
       {/* Content */}
       <div className="p-4 space-y-3">
+        {/* Scope Badge */}
+        <div className="flex items-center justify-between">
+          {exercise.scope && (
+            <span
+              className={`
+                inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold
+                ${isSystem
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                  : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
+                }
+              `}
+            >
+              {isSystem ? 'SYSTEM' : 'ORG'}
+            </span>
+          )}
+          {exercise.visibility_mode && !isSystem && (
+            <span className="text-xs text-gray-400 dark:text-gray-500">
+              {exercise.visibility_mode === 'org_wide' ? '🔓 Todos' : '🔒 Restrito'}
+            </span>
+          )}
+        </div>
+
         {/* Title */}
         <h3 className="font-semibold text-gray-900 dark:text-white line-clamp-2 min-h-[3rem]">
           {exercise.name}
@@ -164,6 +212,51 @@ export function ExerciseCard({
             <span>{exercise.category}</span>
           </div>
         )}
+
+        {/* Action Buttons */}
+        <div className="flex flex-wrap gap-2 pt-1">
+          {/* Duplicar para Meu Banco (SYSTEM exercises only) */}
+          {isSystem && onCopyToOrg && (
+            <button
+              type="button"
+              onClick={handleCopyToOrg}
+              className="flex-1 px-3 py-1.5 text-xs font-medium rounded-md
+                bg-blue-50 text-blue-700 hover:bg-blue-100
+                dark:bg-blue-900/20 dark:text-blue-400 dark:hover:bg-blue-900/40
+                transition-colors"
+            >
+              Duplicar p/ Meu Banco
+            </button>
+          )}
+
+          {/* Gerenciar ACL (ORG, criador, visibility=restricted) */}
+          {!isSystem && isCreator && exercise.visibility_mode === 'restricted' && onManageACL && (
+            <button
+              type="button"
+              onClick={handleManageACL}
+              className="flex-1 px-3 py-1.5 text-xs font-medium rounded-md
+                bg-gray-50 text-gray-700 hover:bg-gray-100
+                dark:bg-gray-700/50 dark:text-gray-300 dark:hover:bg-gray-700
+                transition-colors"
+            >
+              Gerenciar Acesso
+            </button>
+          )}
+
+          {/* Toggle Visibilidade (ORG, criador) */}
+          {!isSystem && isCreator && onToggleVisibility && (
+            <button
+              type="button"
+              onClick={handleToggleVisibility}
+              className="px-3 py-1.5 text-xs font-medium rounded-md
+                bg-gray-50 text-gray-600 hover:bg-gray-100
+                dark:bg-gray-700/50 dark:text-gray-400 dark:hover:bg-gray-700
+                transition-colors"
+            >
+              {exercise.visibility_mode === 'org_wide' ? 'Restringir' : 'Tornar Público'}
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Drag Handle (visible quando draggable) */}

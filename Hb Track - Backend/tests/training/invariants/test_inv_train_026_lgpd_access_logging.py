@@ -21,7 +21,7 @@ class TestInvTrain026LgpdAccessLogging:
     def test_wellness_pre_service_has_access_logging(self):
         """Verifica que wellness_pre_service registra acessos."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "wellness_pre_service.py"
@@ -36,7 +36,7 @@ class TestInvTrain026LgpdAccessLogging:
     def test_wellness_post_service_has_access_logging(self):
         """Verifica que wellness_post_service registra acessos."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "wellness_post_service.py"
@@ -51,7 +51,7 @@ class TestInvTrain026LgpdAccessLogging:
     def test_wellness_pre_logs_staff_access_only(self):
         """Verifica que wellness_pre só loga quando staff lê dados de outros."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "wellness_pre_service.py"
@@ -66,7 +66,7 @@ class TestInvTrain026LgpdAccessLogging:
     def test_wellness_post_logs_staff_access_only(self):
         """Verifica que wellness_post só loga quando staff lê dados de outros."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "wellness_post_service.py"
@@ -81,7 +81,7 @@ class TestInvTrain026LgpdAccessLogging:
     def test_data_access_log_model_exists(self):
         """Verifica que o modelo DataAccessLog existe."""
         model_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "models"
             / "data_access_log.py"
@@ -89,7 +89,7 @@ class TestInvTrain026LgpdAccessLogging:
         # Se não existir arquivo específico, verifica se está em outro lugar
         if not model_path.exists():
             # Busca em outros arquivos de modelo
-            models_dir = Path(__file__).parent.parent.parent / "app" / "models"
+            models_dir = Path(__file__).parent.parent.parent.parent / "app" / "models"
             found = False
             for py_file in models_dir.glob("*.py"):
                 content = py_file.read_text(encoding="utf-8")
@@ -107,7 +107,7 @@ class TestInvTrain026LgpdAccessLogging:
         """Verifica que services importam DataAccessLog."""
         for service_name in ["wellness_pre_service.py", "wellness_post_service.py"]:
             service_path = (
-                Path(__file__).parent.parent.parent
+                Path(__file__).parent.parent.parent.parent
                 / "app"
                 / "services"
                 / service_name

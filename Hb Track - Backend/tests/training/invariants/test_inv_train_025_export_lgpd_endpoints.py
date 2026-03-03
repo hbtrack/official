@@ -22,7 +22,7 @@ class TestInvTrain025ExportLgpdEndpoints:
     def test_exports_router_exists(self):
         """Verifica que o router exports.py existe."""
         router_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "api"
             / "v1"
@@ -34,7 +34,7 @@ class TestInvTrain025ExportLgpdEndpoints:
     def test_export_pdf_endpoint_exists(self):
         """Verifica endpoint POST /analytics/export-pdf."""
         router_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "api"
             / "v1"
@@ -53,7 +53,7 @@ class TestInvTrain025ExportLgpdEndpoints:
     def test_export_status_endpoint_exists(self):
         """Verifica endpoint GET /analytics/exports/{job_id}."""
         router_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "api"
             / "v1"
@@ -72,7 +72,7 @@ class TestInvTrain025ExportLgpdEndpoints:
     def test_export_list_endpoint_exists(self):
         """Verifica endpoint GET /analytics/exports."""
         router_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "api"
             / "v1"
@@ -88,7 +88,7 @@ class TestInvTrain025ExportLgpdEndpoints:
     def test_athlete_export_router_exists(self):
         """Verifica que o router athlete_export.py existe."""
         router_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "api"
             / "v1"
@@ -100,7 +100,7 @@ class TestInvTrain025ExportLgpdEndpoints:
     def test_lgpd_export_endpoint_exists(self):
         """Verifica endpoint GET /athletes/me/export-data."""
         router_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "api"
             / "v1"
@@ -119,7 +119,7 @@ class TestInvTrain025ExportLgpdEndpoints:
     def test_celery_pdf_task_exists(self):
         """Verifica que task generate_analytics_pdf_task existe."""
         celery_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "core"
             / "celery_tasks.py"
@@ -134,7 +134,7 @@ class TestInvTrain025ExportLgpdEndpoints:
     def test_celery_cleanup_task_exists(self):
         """Verifica que task cleanup_expired_export_jobs_task existe."""
         celery_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "core"
             / "celery_tasks.py"
@@ -148,7 +148,7 @@ class TestInvTrain025ExportLgpdEndpoints:
     def test_lgpd_endpoint_mentions_art_18(self):
         """Verifica que endpoint LGPD menciona Art. 18 da LGPD."""
         router_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "api"
             / "v1"

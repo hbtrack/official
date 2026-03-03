@@ -1,0 +1,40 @@
+{
+  "ar_id": "184",
+  "validation_command": "python -c \"import os; b='Hb Track - Frontend'; c1=open(os.path.join(b,'src','lib','api','exercises.ts')).read(); assert 'copy-to-org' in c1 or 'copyExercise' in c1,'exercises.ts missing copy-to-org'; assert 'acl' in c1.lower(),'exercises.ts missing ACL'; c2=open(os.path.join(b,'src','components','training','exercises','ExerciseCard.tsx')).read(); assert 'scope' in c2 or 'SYSTEM' in c2,'ExerciseCard missing scope'; assert os.path.exists(os.path.join(b,'src','components','training','exercises','ExerciseACLModal.tsx')),'ExerciseACLModal missing'; print('PASS AR_184')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "a038f04e873dce35696016e055c90a9b8915fa533881588c66090a5afbc308ac",
+      "hash": "a038f04e873dce35",
+      "stdout_len": 12,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "a038f04e873dce35696016e055c90a9b8915fa533881588c66090a5afbc308ac",
+      "hash": "a038f04e873dce35",
+      "stdout_len": 12,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "a038f04e873dce35696016e055c90a9b8915fa533881588c66090a5afbc308ac",
+      "hash": "a038f04e873dce35",
+      "stdout_len": 12,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

@@ -109,7 +109,7 @@ Regras:
 | SCREEN-TRAIN-010 | Page | `/training/exercise-bank` | Treinador | EVIDENCIADO | FLOW-TRAIN-009 |
 | SCREEN-TRAIN-011 | Modal | `ExerciseModal` / `CreateExerciseModal` / `EditExerciseModal` | Treinador | EVIDENCIADO | FLOW-TRAIN-009 |
 | SCREEN-TRAIN-012 | Page | `/training/analytics` | Coordenador | EVIDENCIADO | FLOW-TRAIN-011 |
-| SCREEN-TRAIN-013 | Modal | `ExportPDFModal` | Coordenador | BLOQUEADO | FLOW-TRAIN-012 |
+| SCREEN-TRAIN-013 | Modal | `ExportPDFModal` | Coordenador | EVIDENCIADO | FLOW-TRAIN-012 |
 | SCREEN-TRAIN-014 | Page | `/training/rankings` | Dirigente | PARCIAL | FLOW-TRAIN-013 |
 | SCREEN-TRAIN-015 | Page | `/training/top-performers/[teamId]` | Dirigente | PARCIAL | FLOW-TRAIN-013 |
 | SCREEN-TRAIN-016 | Page | `/training/eficacia-preventiva` | Coordenador | EVIDENCIADO | FLOW-TRAIN-014 |
@@ -387,8 +387,10 @@ Evidência:
 **Tipo:** Modal  
 **Entrada:** `SCREEN-TRAIN-012`  
 **Fluxo:** FLOW-TRAIN-012  
-**Estado AS-IS:** BLOQUEADO (endpoints não incluídos no agregador)  
+**Estado AS-IS:** EVIDENCIADO
 **decision_trace:** `[DEC-TRAIN-004]`
+
+> Promovido por Kanban+evidência: AR_180 (hb seal 2026-02-28), paths: docs/hbtrack/evidence/AR_180/executor_main.log
 
 Contratos (quando reabilitado no agregador):
 - `CONTRACT-TRAIN-086` (request export)

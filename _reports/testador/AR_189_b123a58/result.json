@@ -1,0 +1,40 @@
+{
+  "ar_id": "189",
+  "validation_command": "python -c \"import os; b='Hb Track - Backend'; svc=open(os.path.join(b,'app','services','training_cycle_service.py')).read(); assert 'mesocycle_id' in svc or 'cycle_id' in svc, 'service missing cycle FK reference'; assert 'start_date' in svc or 'week_start' in svc, 'service missing date containment check'; assert 'containment' in svc.lower() or 'fora' in svc.lower() or 'range' in svc.lower() or 'within' in svc.lower() or 'week_start' in svc, 'service missing containment validation'; mdl=open(os.path.join(b,'app','models','training_cycle.py')).read(); assert 'parent_cycle_id' in mdl, 'model missing parent_cycle_id'; print('PASS AR_189')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "d33b5eeeb589b2ce25e262f3d8906379b02585e896a8d397ac7fdaea7e4c36a0",
+      "hash": "d33b5eeeb589b2ce",
+      "stdout_len": 12,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "d33b5eeeb589b2ce25e262f3d8906379b02585e896a8d397ac7fdaea7e4c36a0",
+      "hash": "d33b5eeeb589b2ce",
+      "stdout_len": 12,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "d33b5eeeb589b2ce25e262f3d8906379b02585e896a8d397ac7fdaea7e4c36a0",
+      "hash": "d33b5eeeb589b2ce",
+      "stdout_len": 12,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

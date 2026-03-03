@@ -561,11 +561,13 @@ ExerciseACL:  # tabela exercise_acl
 
 | ID | Método | Path | operationId | Request | Response | Status | Invariantes-chave |
 |---|---|---|---|---|---|---|---|
-| CONTRACT-TRAIN-091 | PATCH | `/exercises/{exercise_id}/visibility` | `update_exercise_visibility` | `{visibility_mode: "org_wide"\|"restricted"}` | `Exercise` | GAP | INV-TRAIN-EXB-ACL-001, INV-TRAIN-EXB-ACL-002 |
-| CONTRACT-TRAIN-092 | GET | `/exercises/{exercise_id}/acl` | `list_exercise_acl` | — | `ExerciseACLEntry[]` | GAP | INV-TRAIN-EXB-ACL-002, INV-TRAIN-EXB-ACL-003 |
-| CONTRACT-TRAIN-093 | POST | `/exercises/{exercise_id}/acl` | `add_exercise_acl_user` | `{user_id: uuid}` | `ExerciseACLEntry` | GAP | INV-TRAIN-EXB-ACL-003, INV-TRAIN-EXB-ACL-006 |
-| CONTRACT-TRAIN-094 | DELETE | `/exercises/{exercise_id}/acl/{user_id}` | `remove_exercise_acl_user` | — | 204 | GAP | INV-TRAIN-EXB-ACL-004 |
-| CONTRACT-TRAIN-095 | POST | `/exercises/{exercise_id}/copy-to-org` | `copy_exercise_to_org` | `{organization_id: uuid, visibility_mode?: str}` | `Exercise` (novo, scope=ORG) | GAP | INV-TRAIN-047, INV-TRAIN-049 |
+| CONTRACT-TRAIN-091 | PATCH | `/exercises/{exercise_id}/visibility` | `update_exercise_visibility` | `{visibility_mode: "org_wide"\|"restricted"}` | `Exercise` | IMPLEMENTADO | INV-TRAIN-EXB-ACL-001, INV-TRAIN-EXB-ACL-002 |
+| CONTRACT-TRAIN-092 | GET | `/exercises/{exercise_id}/acl` | `list_exercise_acl` | — | `ExerciseACLEntry[]` | IMPLEMENTADO | INV-TRAIN-EXB-ACL-002, INV-TRAIN-EXB-ACL-003 |
+| CONTRACT-TRAIN-093 | POST | `/exercises/{exercise_id}/acl` | `add_exercise_acl_user` | `{user_id: uuid}` | `ExerciseACLEntry` | IMPLEMENTADO | INV-TRAIN-EXB-ACL-003, INV-TRAIN-EXB-ACL-006 |
+| CONTRACT-TRAIN-094 | DELETE | `/exercises/{exercise_id}/acl/{user_id}` | `remove_exercise_acl_user` | — | 204 | IMPLEMENTADO | INV-TRAIN-EXB-ACL-004 |
+| CONTRACT-TRAIN-095 | POST | `/exercises/{exercise_id}/copy-to-org` | `copy_exercise_to_org` | `{organization_id: uuid, visibility_mode?: str}` | `Exercise` (novo, scope=ORG) | IMPLEMENTADO | INV-TRAIN-047, INV-TRAIN-049 |
+
+> Promovido por Kanban+evidência: AR_183 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_183/executor_main.log
 
 **Regras normativas para novos contratos:**
 
@@ -713,33 +715,39 @@ Contratos (AS-IS expostos no OpenAPI; TO-BE deve convergir para UUIDs):
 ### 5.11 FASE_3 — Presença Oficial, Pending Queue, Atleta Pre-Session, IA Coach (v1.3.0)
 
 > **decision_trace:** `[INV-TRAIN-063..081]`  
-> Contratos novos da FASE_3. Nenhum implementado ainda — status GAP.  
+> Contratos da FASE_3. Todos os contratos promovidos para IMPLEMENTADO via AR_185, AR_187, AR_192 (hb seal 2026-03-01).
 > Shapes mínimos definidos abaixo; operationIds serão materializados pelas ARs correspondentes.
 
 #### Presença oficial e fila de pendências
 
 | ID | Método | Path | operationId | Request shape (mínimo) | Response shape (mínimo) | Status | Invariantes-chave |
 |---|---|---|---|---|---|---|---|
-| CONTRACT-TRAIN-096 | GET | `/athlete/training-sessions/{session_id}/preview` | `get_athlete_session_preview` | — | `AthleteSessionPreview` | GAP | INV-TRAIN-068, INV-TRAIN-069 |
-| CONTRACT-TRAIN-097 | POST | `/training-sessions/{session_id}/pre-confirm` | `pre_confirm_attendance` | `{athlete_id?: uuid}` | `{status: "pre_confirmed", is_official: false}` | GAP | INV-TRAIN-063 |
-| CONTRACT-TRAIN-098 | POST | `/training-sessions/{session_id}/close` | `close_session_with_attendance` | `{attendance: AttendanceBatch, allow_pending: bool}` | `{closed: true, pending_items: PendingItem[]}` | GAP | INV-TRAIN-064, INV-TRAIN-065 |
-| CONTRACT-TRAIN-099 | GET | `/training/pending-items` | `list_pending_items` | query: `?team_id=&status=open` | `PendingItem[]` | GAP | INV-TRAIN-066 |
-| CONTRACT-TRAIN-100 | PATCH | `/training/pending-items/{item_id}/resolve` | `resolve_pending_item` | `{resolution: string, new_status: present\|absent\|justified}` | `PendingItem` | GAP | INV-TRAIN-066, INV-TRAIN-067 |
+| CONTRACT-TRAIN-096 | GET | `/athlete/training-sessions/{session_id}/preview` | `get_athlete_session_preview` | — | `AthleteSessionPreview` | IMPLEMENTADO | INV-TRAIN-068, INV-TRAIN-069 |
+| CONTRACT-TRAIN-097 | POST | `/training-sessions/{session_id}/pre-confirm` | `pre_confirm_attendance` | `{athlete_id?: uuid}` | `{status: "pre_confirmed", is_official: false}` | IMPLEMENTADO | INV-TRAIN-063 |
+| CONTRACT-TRAIN-098 | POST | `/training-sessions/{session_id}/close` | `close_session_with_attendance` | `{attendance: AttendanceBatch, allow_pending: bool}` | `{closed: true, pending_items: PendingItem[]}` | IMPLEMENTADO | INV-TRAIN-064, INV-TRAIN-065 |
+| CONTRACT-TRAIN-099 | GET | `/training/pending-items` | `list_pending_items` | query: `?team_id=&status=open` | `PendingItem[]` | IMPLEMENTADO | INV-TRAIN-066 |
+| CONTRACT-TRAIN-100 | PATCH | `/training/pending-items/{item_id}/resolve` | `resolve_pending_item` | `{resolution: string, new_status: present\|absent\|justified}` | `PendingItem` | IMPLEMENTADO | INV-TRAIN-066, INV-TRAIN-067 |
+
+> Promovido por Kanban+evidência: AR_185 + AR_187 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_185/executor_main.log, docs/hbtrack/evidence/AR_187/executor_main.log
 
 #### Wellness content gate
 
 | ID | Método | Path | operationId | Request shape | Response shape | Status | Invariantes-chave |
 |---|---|---|---|---|---|---|---|
-| CONTRACT-TRAIN-105 | GET | `/athlete/wellness-content-gate/{session_id}` | `check_wellness_content_gate` | — | `{has_wellness: bool, can_see_full_content: bool, blocked_reason?: string}` | GAP | INV-TRAIN-071, INV-TRAIN-076 |
+| CONTRACT-TRAIN-105 | GET | `/athlete/wellness-content-gate/{session_id}` | `check_wellness_content_gate` | — | `{has_wellness: bool, can_see_full_content: bool, blocked_reason?: string}` | IMPLEMENTADO | INV-TRAIN-071, INV-TRAIN-076 |
+
+> Promovido por Kanban+evidência: AR_187 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_187/executor_main.log
 
 #### IA Coach (atleta + treinador)
 
 | ID | Método | Path | operationId | Request shape | Response shape | Status | Invariantes-chave |
 |---|---|---|---|---|---|---|---|
-| CONTRACT-TRAIN-101 | POST | `/ai-coach/draft-session` | `ai_draft_session` | `{team_id: uuid, context: object}` | `{draft_id: uuid, suggested_session: object, justification: string}` | GAP | INV-TRAIN-075, INV-TRAIN-080, INV-TRAIN-081 |
-| CONTRACT-TRAIN-102 | PATCH | `/ai-coach/draft-session/{draft_id}/apply` | `apply_ai_draft` | `{edits?: object}` | `{training_session_id: uuid, applied: true}` | GAP | INV-TRAIN-075, INV-TRAIN-080 |
-| CONTRACT-TRAIN-103 | POST | `/ai-coach/athlete-chat` | `ai_athlete_chat` | `{session_id: uuid, message: string}` | `{response: string, type: "educational"\|"motivational"\|"suggestion"}` | GAP | INV-TRAIN-072, INV-TRAIN-073, INV-TRAIN-074 |
-| CONTRACT-TRAIN-104 | POST | `/ai-coach/justify-suggestion` | `ai_justify_suggestion` | `{suggestion_id: uuid}` | `{justification: string, references: string[]}` | GAP | INV-TRAIN-081 |
+| CONTRACT-TRAIN-101 | POST | `/ai-coach/draft-session` | `ai_draft_session` | `{team_id: uuid, context: object}` | `{draft_id: uuid, suggested_session: object, justification: string}` | IMPLEMENTADO | INV-TRAIN-075, INV-TRAIN-080, INV-TRAIN-081 |
+| CONTRACT-TRAIN-102 | PATCH | `/ai-coach/draft-session/{draft_id}/apply` | `apply_ai_draft` | `{edits?: object}` | `{training_session_id: uuid, applied: true}` | IMPLEMENTADO | INV-TRAIN-075, INV-TRAIN-080 |
+| CONTRACT-TRAIN-103 | POST | `/ai-coach/athlete-chat` | `ai_athlete_chat` | `{session_id: uuid, message: string}` | `{response: string, type: "educational"\|"motivational"\|"suggestion"}` | IMPLEMENTADO | INV-TRAIN-072, INV-TRAIN-073, INV-TRAIN-074 |
+| CONTRACT-TRAIN-104 | POST | `/ai-coach/justify-suggestion` | `ai_justify_suggestion` | `{suggestion_id: uuid}` | `{justification: string, references: string[]}` | IMPLEMENTADO | INV-TRAIN-081 |
+
+> Promovido por Kanban+evidência: AR_192 (hb seal 2026-03-01), paths: docs/hbtrack/evidence/AR_192/executor_main.log
 
 #### Shapes mínimos novos (FASE_3)
 

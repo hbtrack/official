@@ -217,9 +217,10 @@ class TeamWellnessRankingService:
             }
         """
         # Contar presenças (expected responses) no mês para este team
+        # SSOT: presence_status IN ('present', 'justified') — sem campo legado 'present' booleano
         stmt_attendance = select(func.count(Attendance.id)).where(
             and_(
-                Attendance.present == True,
+                Attendance.presence_status.in_(['present', 'justified']),
                 Attendance.training_session_id.in_(
                     select(TrainingSession.id).where(
                         and_(
@@ -311,17 +312,17 @@ class TeamWellnessRankingService:
         Returns:
             Quantidade de atletas com rate >= 90%
         """
-        # Buscar atletas ativos do team (via team_memberships)
-        from app.models.team_membership import TeamMembership
+        # Buscar atletas ativos do team (via team_registrations — SSOT V1.2)
+        from app.models.team_registration import TeamRegistration
         
         stmt = select(Athlete).join(
-            TeamMembership,
-            TeamMembership.athlete_id == Athlete.id
+            TeamRegistration,
+            TeamRegistration.athlete_id == Athlete.id
         ).where(
             and_(
-                TeamMembership.team_id == team_id,
-                TeamMembership.active == True,
-                Athlete.active == True
+                TeamRegistration.team_id == team_id,
+                TeamRegistration.deleted_at == None,
+                Athlete.deleted_at == None
             )
         )
         result = await self.db.execute(stmt)
@@ -331,11 +332,11 @@ class TeamWellnessRankingService:
         
         for athlete in athletes:
             # Calcular response rate do atleta
-            # Contar presenças
+            # Contar presenças (SSOT: presence_status IN ('present', 'justified'))
             stmt_attendance = select(func.count(Attendance.id)).where(
                 and_(
                     Attendance.athlete_id == athlete.id,
-                    Attendance.present == True,
+                    Attendance.presence_status.in_(['present', 'justified']),
                     Attendance.training_session_id.in_(
                         select(TrainingSession.id).where(
                             and_(
@@ -602,20 +603,20 @@ class TeamWellnessRankingService:
         else:
             month_end = datetime(int(year), int(month) + 1, 1) - timedelta(seconds=1)
         
-        # Buscar atletas ativos do team
-        from app.models.team_membership import TeamMembership
+        # Buscar atletas ativos do team (via team_registrations — SSOT V1.2)
+        from app.models.team_registration import TeamRegistration
         from app.models.persons import Person
         
         stmt = select(Athlete, Person).join(
             Person, Person.id == Athlete.person_id
         ).join(
-            TeamMembership,
-            TeamMembership.athlete_id == Athlete.id
+            TeamRegistration,
+            TeamRegistration.athlete_id == Athlete.id
         ).where(
             and_(
-                TeamMembership.team_id == team_id,
-                TeamMembership.active == True,
-                Athlete.active == True
+                TeamRegistration.team_id == team_id,
+                TeamRegistration.deleted_at == None,
+                Athlete.deleted_at == None
             )
         )
         result = await self.db.execute(stmt)
@@ -625,10 +626,11 @@ class TeamWellnessRankingService:
         
         for athlete, person in rows:
             # Calcular response rate do atleta
+            # SSOT: presence_status IN ('present', 'justified') — sem campo legado
             stmt_attendance = select(func.count(Attendance.id)).where(
                 and_(
                     Attendance.athlete_id == athlete.id,
-                    Attendance.present == True,
+                    Attendance.presence_status.in_(['present', 'justified']),
                     Attendance.training_session_id.in_(
                         select(TrainingSession.id).where(
                             and_(

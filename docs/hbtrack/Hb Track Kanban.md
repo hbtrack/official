@@ -5,7 +5,7 @@ meta:
   version: "0.2"
   status: CANON_PROCESS
   path: docs/hbtrack/Hb Track Kanban.md
-  last_updated: 2026-02-20
+  last_updated: 2026-03-02T00:02:00
   ssot_governance:
     contract: docs/_canon/contratos/Kanban Hb Track.md
     spec: docs/_canon/specs/Kanban Spec.md
@@ -703,3 +703,352 @@ O Executor implementou, o Testador verificou AR_143 (✅ SUCESSO hash `e57e1b35`
 |---|---|---|
 | **AR_173** | Migrar `_generated`→`ssot` (lote 1/2) | ✅ VERIFICADO |
 | **AR_174** | Migrar `_generated`→`ssot` (lote 2/2) | ✅ VERIFICADO |
+
+
+---
+
+## 12. Cards -- TRAINING Batch 1 -- Step18 Funcional + Wellness BE Self-Only (AR_175-176)
+
+> **Contexto**: Batch 1 do TRAINING_BATCH_PLAN_v1.md. Depende de Batch 0 (DONE).
+> AR-TRAIN-002 depende de AR-TRAIN-001 DONE. AR-TRAIN-004 depende de AR-TRAIN-003 DONE.
+> Planos: docs/_canon/planos/ar_train_002_step18_services.json + docs/_canon/planos/ar_train_004_wellness_backend.json.
+> **Data planejamento**: 2026-02-28.
+> **Batch 1 DONE** (2026-02-28): AR_175 hash `4311eca06eecd493` ✅ | AR_176 hash `386b5d5092ca7563` ✅
+
+### ✅ DONE -- AR-TRAIN-002: Step18 Services UUID
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_175** | Fix Step18 services: UUID em training_alerts/suggestions | ✅ VERIFICADO | Batch 1 DONE |
+
+### ✅ DONE -- AR-TRAIN-004: Wellness BE Self-Only + LGPD
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_176** | Fix wellness BE: self-only JWT + payload minimo + LGPD | ✅ VERIFICADO | Batch 1 DONE |
+
+---
+
+## 13. Cards -- TRAINING Batch 2 -- Rankings + Exports (AR_177-180) ✅ DONE
+
+> **Contexto**: Batch 2 do TRAINING_BATCH_PLAN_v1.md. Depende de Batch 1 (DONE).
+> AR-TRAIN-006 depende de AR-TRAIN-004 (AR_176 ✅ VERIFICADO).
+> AR-TRAIN-007 depende de AR-TRAIN-006 (AR_177).
+> AR-TRAIN-009 depende de AR-TRAIN-008 (AR_179).
+> Planos: docs/_canon/planos/ar_train_006_wellness_rankings_be.json + ar_train_007_rankings_fe_uuid.json + ar_train_008_exports_be_reabilitar.json + ar_train_009_export_pdf_modal_fe.json.
+> **Data planejamento**: 2026-02-28.
+> **Ordem de execução**: AR_177 → AR_178 | AR_179 → AR_180 (paralela: AR_177+AR_179 podem rodar juntos; AR_178 aguarda AR_177; AR_180 aguarda AR_179).
+> **Status**: BATCH COMPLETO (2026-02-28) — todos ARs ✅ VERIFICADO.
+
+### ✅ DONE -- AR-TRAIN-006: Rankings Wellness BE (cálculo SSOT + response_model)
+
+| AR | Titulo | Status | Hash |
+|---|---|---|---|
+| **AR_177** | Fix wellness rankings BE: cálculo SSOT (presence_status) + UUID + response_model | ✅ VERIFICADO | (staged) |
+
+### ✅ DONE -- AR-TRAIN-007: Rankings/TopPerformers FE (UUID + endpoint canônico)
+
+| AR | Titulo | Status | Hash |
+|---|---|---|---|
+| **AR_178** | Fix Rankings FE: UUID strings em rankings.ts + RankingsClient + TopPerformersClient | ✅ VERIFICADO | (staged) |
+
+### ✅ DONE -- AR-TRAIN-008: Reabilitar Exports BE + OpenAPI + Estado Degradado
+
+| AR | Titulo | Status | Hash |
+|---|---|---|---|
+| **AR_179** | Reabilitar exports BE + estado degradado sem worker + regen OpenAPI SSOT | ✅ VERIFICADO | (staged) |
+
+### ✅ DONE -- AR-TRAIN-009: ExportPDFModal FE (conectar backend + estado degradado)
+
+| AR | Titulo | Status | Hash |
+|---|---|---|---|
+| **AR_180** | Fix ExportPDFModal FE: conectar backend reabilitado + estado degradado | ✅ VERIFICADO | (staged) |
+
+---
+
+## 14. Cards -- TRAINING Batch 3 -- Banco de Exercícios (Schema/ACL/Mídia/UI) (AR_181-184)
+
+> **Contexto**: Batch 3 do TRAINING_BATCH_PLAN_v1.md. Depende de Batch 2 (DONE).
+> AR-TRAIN-012 depende de AR-TRAIN-011.
+> AR-TRAIN-013 depende de AR-TRAIN-012.
+> AR-TRAIN-014 depende de AR-TRAIN-013.
+> **Data planejamento**: 2026-02-28.
+> **Ordem de execução**: AR_181 → AR_182 → AR_183 → AR_184 (sequencial por dependência).
+
+### ✅ VERIFICADO -- AR-TRAIN-011: Schema Exercises (scope + visibility + ACL + media)
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_181** | Schema exercises (scope, visibility_mode) + exercise_acl + exercise_media | ✅ VERIFICADO | hb seal 181 executado em 2026-03-01 |
+
+### ✅ VERIFICADO -- AR-TRAIN-012: Guards Escopo + RBAC + Service ACL
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_182** | Guards escopo SYSTEM/ORG + RBAC Treinador + service ACL + visibilidade | ✅ VERIFICADO | hb seal 182 executado em 2026-03-01 |
+
+### ✅ VERIFICADO -- AR-TRAIN-013: Endpoints ACL + Copy SYSTEM→ORG + Toggle Visibilidade
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_183** | Endpoints ACL + copy SYSTEM→ORG + toggle visibilidade | ✅ VERIFICADO | hb seal 183 executado em 2026-03-01 |
+
+### ✅ VERIFICADO -- AR-TRAIN-014: UI Scope/Visibility/ACL/Mídia FE
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_184** | UI scope/visibility/ACL/mídia no exercise-bank FE | ✅ VERIFICADO | hb seal 184 executado em 2026-03-01 |
+
+---
+
+## 15. Cards -- TRAINING Batch 4 -- FASE_3 Presença Oficial + Pending Queue + Visão Atleta (AR_185-187) ✅ DONE
+
+> **Contexto**: Batch 4 do TRAINING_BATCH_PLAN_v1.md. Depende de Batch 3 (✅ VERIFICADO 2026-03-01).
+> Serviços backend já existem via AR_153-161 (attendance_service, training_pending_service, athlete_content_gate_service).
+> O que falta: router endpoints + UI completa.
+> AR-TRAIN-018 depende de AR-TRAIN-017 (AR_185 VERIFICADO).
+> AR-TRAIN-019 depende de AR-TRAIN-017 (AR_185 VERIFICADO).
+> **Data planejamento**: 2026-03-01.
+> **Ordem de execução**: AR_185 → (AR_186 e AR_187 paralelas após AR_185 VERIFICADO).
+> **Planos**: docs/_canon/planos/ar_train_017_attendance_preconfirm_router.json | ar_train_018_pending_queue_fe.json | ar_train_019_athlete_training_preview.json
+
+### ✅ VERIFICADO -- AR-TRAIN-017: Presença Oficial — Router Endpoints
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_185** | Expor preconfirm + close_session + pending-items no router attendance.py | ✅ VERIFICADO | hb seal 185 executado em 2026-03-01 |
+
+### ✅ VERIFICADO -- AR-TRAIN-018: UI Fila de Pendências (FE Treinador)
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_186** | pending.ts + pending-queue/page.tsx + PendingQueueTable.tsx | ✅ VERIFICADO | hb seal 186 executado em 2026-03-01 |
+
+### ✅ VERIFICADO -- AR-TRAIN-019: Visão Pré-Treino Atleta + Wellness Gate
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_187** | athlete_training.py router (preview) + FE /athlete/training/[sessionId] | ✅ VERIFICADO | hb seal 187 executado em 2026-03-01 |
+
+---
+
+## 16. Cards -- TRAINING Batch 5 -- FASE_3 Ciclos Hierarchy + Sessão Standalone + Pós-Treino + IA Coach (AR_189-192) ✅ VERIFICADO
+
+> **Contexto**: Batch 5 do TRAINING_BATCH_PLAN_v1.md. Depende de Batch 4 (✅ VERIFICADO 2026-03-01). **Batch 5 ✅ VERIFICADO 2026-03-01 (hb seal 189 190 191 192).**
+> AR-TRAIN-015 (ciclos): training_cycle.py + training_cycle_service.py — tabela training_cycles já existe, falta validação de containment service-level.
+> AR-TRAIN-016 (standalone): training_session_service.py + session_exercise_service.py — coluna standalone já existe no DB, falta guard no service.
+> AR-TRAIN-020 (pós-treino): post_training_service.py (novo) + post_training.py router (novo) — sem tabela dedicada no schema atual (Executor verifica INV-070/077).
+> AR-TRAIN-021 (IA coach): ai_coach_service.py (já existe parcial, INV-072..075) + ai_coach.py router (novo) + FE ai-chat + AICoachDraftModal.tsx — delta = INV-079..081 + FLOW-TRAIN-019/020 + SCREEN-TRAIN-024/025.
+> **Data planejamento**: 2026-03-01.
+> **Ordem de execução**: AR_189 + AR_190 + AR_191 paralelas → AR_192 após AR_191 VERIFICADO.
+> **Planos**: docs/_canon/planos/ar_train_015_ciclos_hierarchy.json | ar_train_016_sessao_standalone_mutabilidade.json | ar_train_020_pos_treino_conversacional.json | ar_train_021_ia_coach.json
+
+### ✅ VERIFICADO -- AR-TRAIN-015: Schema + Service ciclos hierarchy (macro→meso→micro)
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_189** | training_cycle.py FK hierarchy + training_cycle_service.py containment validation | ✅ VERIFICADO | hb seal 189 executado em 2026-03-01 |
+
+### ✅ VERIFICADO -- AR-TRAIN-016: Sessão standalone + mutabilidade + order_index exercícios
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_190** | training_session_service.py standalone guard + session_exercise_service.py order_index | ✅ VERIFICADO | hb seal 190 executado em 2026-03-01 |
+
+### ✅ VERIFICADO -- AR-TRAIN-020: Pós-treino conversacional + feedback imediato
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_191** | post_training_service.py (novo) + post_training.py router (novo) | ✅ VERIFICADO | hb seal 191 executado em 2026-03-01 |
+
+### ✅ VERIFICADO -- AR-TRAIN-021: IA Coach (drafts + chat + justificativas + privacidade)
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_192** | ai_coach_service.py (delta INV-079..081) + ai_coach.py router + FE ai-chat + AICoachDraftModal.tsx | ✅ VERIFICADO | hb seal 192 executado em 2026-03-01 |
+
+---
+
+## 17. Cards -- TRAINING Governança -- TEST_MATRIX sync Batch4/5 (AR_193) ✅ VERIFICADO
+
+> **Contexto**: AR de governança. Atualiza TEST_MATRIX_TRAINING.md §9 para refletir AR-TRAIN-015..021 (AR_185..192) como VERIFICADOS. Não implementa código de produto. **✅ VERIFICADO 2026-03-01 (hb seal 193).**
+> **Data planejamento**: 2026-03-01.
+> **Plano**: docs/_canon/planos/ar_193_test_matrix_update_batch4_5.json
+
+### ✅ VERIFICADO -- TEST_MATRIX sync Batch4/5 — AR-TRAIN-015..021 VERIFICADOS
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_193** | TEST_MATRIX sync: §9 AR-TRAIN-015..021 PENDENTE→VERIFICADO + changelog v1.5.0 | ✅ VERIFICADO | hb seal 193 executado em 2026-03-01 |
+
+---
+
+## 18. Cards -- TRAINING Governança -- Batch Plan Batch6 AR-TRAIN-010B (AR_194) ✅ VERIFICADO
+
+> **Contexto**: AR de governança. Atualiza `TRAINING_BATCH_PLAN_v1.md` para incluir Batch 6 com AR-TRAIN-010B (Testes de contrato/cobertura). Não implementa código de produto. Dependências de AR-TRAIN-010B (AR-TRAIN-001..009) todas VERIFICADAS em 2026-03-01. **✅ VERIFICADO 2026-03-01 (hb seal 194).**
+> **Data planejamento**: 2026-03-01.
+> **Plano**: docs/_canon/planos/ar_194_batch_plan_add_batch6_010b.json
+
+### ✅ VERIFICADO -- TRAINING_BATCH_PLAN_v1 adicionar Batch 6 (AR-TRAIN-010B)
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_194** | TRAINING_BATCH_PLAN_v1.md: header v1.0.2 + secao Batch 6 com AR-TRAIN-010B (INV-TRAIN-013/024, CONTRACT-TRAIN-073..075/077..085) | ✅ VERIFICADO | hb seal 194 executado em 2026-03-01 |
+
+---
+
+## 19. Cards -- TRAINING Batch 6 -- Testes Contrato/Cobertura AR-TRAIN-010B (AR_195) ✅ VERIFICADO
+
+> **Contexto**: Batch 6 do `TRAINING_BATCH_PLAN_v1.md` (v1.0.2). Class T. Cobrir INV-TRAIN-013 (gamification_badge_eligibility) + INV-TRAIN-024 (websocket_broadcast) + CONTRACT-TRAIN-073..075 (wellness-rankings) + CONTRACT-TRAIN-077..085 (alerts-suggestions). Consolidar cobertura em `TEST_MATRIX_TRAINING.md` referenciando AR-TRAIN-010B. Dependências: AR-TRAIN-001..009 todas ✅ VERIFICADAS. **✅ VERIFICADO 2026-03-01 (hb seal 195). Hash canônico: 92e2fd8e77a76cda.**
+> **Data planejamento**: 2026-03-01.
+> **Plano**: docs/_canon/planos/ar_195_ar_train_010b_testes_contrato_cobertura.json
+
+### ✅ VERIFICADO -- AR-TRAIN-010B Testes Contrato/Cobertura
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_195** | AR-TRAIN-010B: testes INV-TRAIN-013/024 + CONTRACT-TRAIN-073..075/077..085 + TEST_MATRIX sync | ✅ VERIFICADO | hb seal 195 executado em 2026-03-01 |
+
+---
+
+## 20. Cards -- TRAINING Governança -- Promover status SSOT Training (AR_196) ✅ VERIFICADO
+
+> **Contexto**: AR de governança Classe G. Promoveu status desatualizados nos 6 arquivos SSOT do módulo TRAINING (AR_BACKLOG PENDENTE→VERIFICADO, INVARIANTS INV-040/041, CONTRACT-091..105, SCREEN-013, FLOWS 004..013). Não alterou Backend/Frontend. **✅ VERIFICADO 2026-03-02 (hb seal 196). Hash canônico: 2ecd5b6ad4bf18d4.**
+> **Data planejamento**: 2026-03-01.
+> **Plano**: docs/_canon/planos/ar_196_promover_ssot_training.json
+
+### ✅ VERIFICADO -- Promover status SSOT Training (6 arquivos)
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_196** | Promover AR_BACKLOG + INVARIANTS (040/041) + CONTRACT (091..105) + SCREENS + FLOWS | ✅ VERIFICADO | hb seal 196 executado em 2026-03-02 |
+
+---
+
+## 21. Cards -- TRAINING Governança -- INVARIANTS_TRAINING.md sync (AR-TRAIN-022) — AR_197 ✅ VERIFICADO
+
+> **Contexto**: Batch 7 do `TRAINING_BATCH_PLAN_v1.md` (v1.0.3). Classe G. Promover 31 invariantes GAP/PARCIAL/DIVERGENTE_DO_SSOT → IMPLEMENTADO em `INVARIANTS_TRAINING.md`, com notas de rastreabilidade para ARs 011..021 já verificadas. Versão bump para v1.5.0.
+> **Dependências**: AR-TRAIN-011..021 todas ✅ VERIFICADO (2026-03-01).
+> **Data planejamento**: 2026-03-02.
+> **Plano**: docs/_canon/planos/ar_197_inv_training_sync.json
+> **✅ VERIFICADO 2026-03-02 (hb seal 197). Behavior Hash: 024a3407e37d128b.**
+
+### ✅ VERIFICADO -- AR-TRAIN-022: Sync INVARIANTS_TRAINING.md
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_197** | INVARIANTS_TRAINING.md v1.5.0: 31 itens GAP/PARCIAL/DIVERGENTE → IMPLEMENTADO + evidence + changelog | ✅ VERIFICADO | hb seal 197 executado em 2026-03-02 |
+
+---
+
+## 22. Cards -- TRAINING Governança -- Fechar AR_BACKLOG AR-TRAIN-022 + Batch 8 (AR_198)
+
+> **Contexto**: AR de governança Classe G. Fecha AR-TRAIN-022 no AR_BACKLOG_TRAINING.md (PENDENTE → VERIFICADO, evidência AR_197 hb seal 2026-03-02). Introduz AR-TRAIN-023 no backlog (Sync TEST_MATRIX §9 pós-Batch 7). Adiciona Batch 8 ao TRAINING_BATCH_PLAN_v1.md. Não altera Backend/Frontend.
+> **Dependências**: AR_197 ✅ VERIFICADO.
+> **Data planejamento**: 2026-03-02.
+> **Plano**: docs/_canon/planos/ar_198_fechar_backlog_ar_train_022.json
+> **✅ VERIFICADO 2026-03-02 (hb seal 198). Behavior Hash: 11acd59aac33acc37c65ebf3c774daf292846fd12ce0bdf242a91589c7769435.**
+
+### ✅ VERIFICADO -- AR-TRAIN-023 adicionada: Fechar backlog + add AR-TRAIN-023 + Batch 8
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_198** | AR_BACKLOG: AR-TRAIN-022 PENDENTE→VERIFICADO + AR-TRAIN-023 adicionada + Batch 8 no BatchPlan | ✅ VERIFICADO | hb seal 198 executado em 2026-03-02 |
+
+---
+
+## 23. Cards -- TRAINING Governança -- TEST_MATRIX §9 sync pós-Batch 7 (AR_199)
+
+> **Contexto**: AR de governança Classe G. Executa AR-TRAIN-023. Sincroniza TEST_MATRIX_TRAINING.md §9: AR-TRAIN-001/002/003/004/005/010A/010B/022 PENDENTE → VERIFICADO. Desbloqueia 7 INV-TRAIN (008/020/021/030/031/040/041) e 9 CONTRACT-TRAIN (077..085). Bump v1.5.1 → v1.6.0. Não altera Backend/Frontend.
+> **Dependências**: AR_198 ✅ VERIFICADO (AR-TRAIN-023 deve existir no backlog antes de executar).
+> **Data planejamento**: 2026-03-02.
+> **Plano**: docs/_canon/planos/ar_199_test_matrix_sync_post_batch7.json
+> **✅ VERIFICADO 2026-03-02 (hb seal 199). Behavior Hash: 3e0c31d9a8a31bbf69fde156aa8ed813faba5ddd250bc40dfc448e7f984c5d34.**
+
+### ✅ VERIFICADO (AR-TRAIN-023 executada) -- TEST_MATRIX §9 sync
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_199** | TEST_MATRIX sync: §9 AR-TRAIN-001..005/010A/010B/022 PENDENTE→VERIFICADO + desbloquear 7 INV + 9 CONTRACT + v1.6.0 | ✅ VERIFICADO | hb seal 199 executado em 2026-03-02 |
+
+---
+
+## 24. Cards -- TRAINING Evidência -- Top-10 DoD Evidence Execution (AR_200)
+
+> **Contexto**: AR de execução de evidência Classe T. Roda os 10 testes COBERTO+NOT_RUN com maior prioridade DoD (§10): 9 invariantes BLOQUEANTE_VALIDACAO/ARQUITETURA + CRITICA (INV-TRAIN-001/002/003/004/005/008/009/030/032) + 1 grupo de contratos (CONTRACT-TRAIN-077..085). Salva output de pytest em `_reports/training/TEST-TRAIN-*.md`. Atualiza TEST_MATRIX_TRAINING.md v1.6.0 → v1.7.0 (colunas Últ.Execução + Evidência). Não altera Backend/Frontend.
+> **Dependências**: AR_199 ✅ VERIFICADO (TEST_MATRIX v1.6.0, CONTRACT-077..085 em COBERTO).
+> **Data planejamento**: 2026-03-02.
+> **Plano**: docs/_canon/planos/ar_200_top10_dod_evidence.json
+
+### ✅ VERIFICADO — 2026-03-02
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_200** | Top-10 DoD: executar 9 INV + 1 grupo CONTRACT COBERTO+NOT_RUN; salvar evidências; TEST_MATRIX v1.7.0 | ✅ VERIFICADO | — |
+
+> **Fix**: AR_201 corrigiu validation_command (janela 450→split-por-linha). executor_main.log Exit Code: 0. hb seal 200 ✅ 2026-03-02.
+
+---
+
+## 25. Cards -- TRAINING Fix Contrato -- Fix validation_command AR_200 (AR_201)
+
+> **Contexto**: Correção de contrato Classe G. A validation_command de AR_200 usa janela fixa de 450 chars para checar NOT_RUN em linhas INV; a janela de INV-TRAIN-005 (~206 chars) extravaza para INV-006 (NOT_RUN legítimo), causando falso positivo. Fix: substituir checagem `t.find(lbl)+450` por verificação linha-a-linha `t.split('\n')`. Após fix, re-executar `hb report 200` para obter Exit Code: 0 em executor_main.log. Não altera testes, evidências ou TEST_MATRIX.
+> **Dependências**: AR_200 executado (evidências criadas ✅; TEST_MATRIX v1.7.0 ✅; só a validation_command está quebrada).
+> **Data planejamento**: 2026-03-02.
+> **Plano**: docs/_canon/planos/ar_201_fix_validation_command_ar200_window.json
+
+### ✅ VERIFICADO — 2026-03-02
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_201** | Fix validation_command AR_200: janela 450→split-por-linha + re-executar hb report 200 | ✅ VERIFICADO | — |
+
+---
+
+## 26. Cards -- TRAINING Batch 9 -- Fix FAILs críticos test-layer (AR_202..206)
+
+> **Contexto**: 5 correções de teste (Classe T). Eliminam os FAILs que bloqueiam o Done Gate. Zero mudança de produto (Backend/Frontend). Todos os 5 fixes são em `tests/training/`. Pré-condição: nenhuma (independentes entre si).
+> **Plano**: docs/_canon/planos/ar_batch9_fix_fails_202_206.json
+> **Data planejamento**: 2026-03-02.
+> **Dependências**: Nenhuma (Batch 9 independente).
+
+### 🔲 READY — aguardando Executor
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_202** | Fix INV-001: test_invalid_case_2 expected constraint name errado (ck_training_sessions_focus_attack_positional_range) | 🔲 READY | Executor — Batch 9 |
+| **AR_203** | Fix INV-008: schema_path 3 .parent → 4 .parent (tests/ → backend root) | 🔲 READY | Executor — Batch 9 |
+| **AR_204** | Fix INV-030: schema_path 3 .parent → 4 .parent (mesma causa INV-008) | 🔲 READY | Executor — Batch 9 |
+| **AR_205** | Fix INV-032: 6 async fixtures @pytest.fixture → @pytest_asyncio.fixture + import | 🔲 READY | Executor — Batch 9 |
+| **AR_206** | Fix CONTRACT-077-085: ROUTER_PATH 3 .parent → 4 .parent (tests/ → backend root) | 🔲 READY | Executor — Batch 9 |
+
+---
+
+## 27. Cards -- TRAINING Batch 10 -- Flow P0 evidence + Contract P0 tests (AR_207..208)
+
+> **Contexto**: Cobertura P0 restante. AR_207 cria 8 evidências MANUAL_GUIADO para flows P0 (FLOW-TRAIN-001..006/017/018) + atualiza TEST_MATRIX §6. AR_208 cria testes automatizados para CONTRACT-TRAIN-097..100 (pre-confirm + close + pending-items) + atualiza TEST_MATRIX §8.
+> **Plano**: docs/_canon/planos/ar_batch10_flows_contracts_207_208.json
+> **Data planejamento**: 2026-03-02.
+> **Dependências**: AR_202..206 (Batch 9) VERIFICADO.
+
+### 🔲 READY (após Batch 9 VERIFICADO)
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_207** | Flow P0 evidence: FLOW-TRAIN-001..006 + 017 + 018 (MANUAL_GUIADO) + TEST_MATRIX §6 | 🔲 READY | Executor — Batch 10 (dep: Batch 9) |
+| **AR_208** | Contract P0 tests: CONTRACT-TRAIN-097..100 (pre-confirm, close, pending-items) + TEST_MATRIX §8 | 🔲 READY | Executor — Batch 10 (dep: Batch 9) |
+
+---
+
+## 28. Cards -- TRAINING Batch 11 -- Done Gate (AR_209)
+
+> **Contexto**: Done Gate do módulo TRAINING. Sincroniza TEST_MATRIX_TRAINING.md para v1.8.0 (§9 + §5/§6/§8 finais). Executa validação em 2 fases: **FASE-1** smoke dos 5 FAILs Batch9 fixados (INV-001/008/030/032 + CONTRACT-077-085); **FASE-2** sanity re-run completo dos 10 itens do AR_200 (INV-001/002/003/004a/004b/005/008/009/030/032 + CONTRACT-077-085) — garantindo que o DONE não depende só de fix de import/path, mas que o conjunto integral virou PASS. Produz `_reports/training/DONE_GATE_TRAINING.md` declarando critérios §10 satisfeitos. Após VERIFICADO, o módulo TRAINING pode ser selado pelo humano.
+> **Plano**: docs/_canon/planos/ar_209_done_gate_training.json
+> **Data planejamento**: 2026-03-02.
+> **Dependências**: AR_202..208 (Batches 9 e 10) todos VERIFICADO.
+
+### 🔲 READY (após Batches 9+10 VERIFICADOS)
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_209** | Done Gate: sync TEST_MATRIX v1.8.0 + smoke Batch9 (5) + sanity AR_200 full (11) + DONE_GATE_TRAINING.md | 🔲 READY | Executor — Batch 11 (dep: Batches 9+10) |

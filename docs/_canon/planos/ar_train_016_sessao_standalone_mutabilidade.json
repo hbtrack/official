@@ -1,0 +1,31 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "AR-TRAIN-016 — Batch 5 TRAINING_BATCH_PLAN_v1.md. Objetivo: garantir que sessão suporte flag standalone explícito (INV-057), estrutura mutável até close (INV-058) e order_index contíguo/único em exercícios (INV-059). Coluna standalone já existe na tabela training_sessions (DEFAULT true, com CHECK constraint). O que falta: (1) guard no service que rejeita sessão sem standalone explícito ao criar (força declaração intencional, não default silencioso); (2) guard de mutabilidade: PATCH em sessão com status='closed' deve retornar 409/403; (3) validação de order_index contíguo/único ao adicionar/reordenar exercícios em sessão. Sem dependências externas. Sem nova migration necessária.",
+  "assumptions": [
+    "Coluna standalone boolean DEFAULT true NOT NULL já existe em training_sessions (confirmado schema.sql 2026-03-01)",
+    "CHECK constraint ck_training_sessions_standalone já existe no DB",
+    "training_session_service.py já existe (confirmado Test-Path 2026-03-01)",
+    "session_exercise_service.py já existe (confirmado Test-Path 2026-03-01)",
+    "Sem nova migration necessária — schema já tem as colunas necessárias",
+    "Batch 5 do TRAINING_BATCH_PLAN_v1.md; AR-TRAIN-016 sem dependências externas"
+  ],
+  "tasks": [
+    {
+      "id": "190",
+      "title": "Sessão standalone guard + mutabilidade + order_index exercícios",
+      "description": "Implementar em dois arquivos: (1) Hb Track - Backend/app/services/training_session_service.py — (a) INV-057: ao criar sessão, exigir que standalone seja passado explicitamente (não inferido por default); se standalone=False, exigir microcycle_id válido; se standalone=True, rejeitar microcycle_id preenchido (ou descartar silenciosamente se schema CHECK já cuida). (b) INV-058: ao executar PATCH/update em sessão com status='closed', retornar HTTPException 409 (Conflict) com mensagem 'Sessão encerrada não pode ser alterada'. Guard DEVE ser aplicado antes de qualquer modificação dos campos. (2) Hb Track - Backend/app/services/session_exercise_service.py — (c) INV-059: ao adicionar ou reordenar exercício em sessão, validar que order_index é único dentro da sessão e que os índices formam sequência contígua (ex: 1,2,3 não 1,3,5). Ao remover exercício, reindexar os demais para manter contiguidade. PROIBIDO: não modificar routers; não alterar tabelas DB.",
+      "criteria": "1) training_session_service.py: criar sessão sem passar standalone explicitamente retorna erro de validação (400/422). 2) training_session_service.py: PATCH em sessão closed retorna 409. 3) session_exercise_service.py: adicionar exercício com order_index duplicado retorna 422. 4) session_exercise_service.py: após remoção de exercício, order_index dos restantes é reindexado para sequência contígua. 5) INV-057: standalone=False sem microcycle_id válido rejeitado. 6) INV-058: guard de mutabilidade aplicado no service, não no router.",
+      "validation_command": "python -c \"import os; b='Hb Track - Backend'; svc=open(os.path.join(b,'app','services','training_session_service.py')).read(); assert 'standalone' in svc, 'session_service missing standalone guard'; assert 'closed' in svc, 'session_service missing closed/mutability guard'; exsvc=open(os.path.join(b,'app','services','session_exercise_service.py')).read(); assert 'order_index' in exsvc, 'exercise_service missing order_index validation'; print('PASS AR_190')\"",
+      "write_scope": [
+        "Hb Track - Backend/app/services/training_session_service.py",
+        "Hb Track - Backend/app/services/session_exercise_service.py"
+      ],
+      "notes": "O CHECK constraint no DB (standalone=True AND microcycle_id IS NULL OR standalone=False AND microcycle_id IS NOT NULL) já existe — o service deve respeitar essa lógica e adicionar mensagens de erro claras antes de chegar ao DB. Guard INV-058 deve ser early-return: se status='closed', lançar exceção antes de tentar qualquer modificação.",      "rollback_plan": "git checkout -- Hb Track - Backend/app/services/training_session_service.py\ngit checkout -- Hb Track - Backend/app/services/session_exercise_service.py",      "risks": [
+        "training_session_service.py pode ter muitos métodos — identificar todos os pontos de update/PATCH para aplicar o guard de mutabilidade",
+        "Reindexação de order_index após remoção: garantir que a operação é atômica (sessão DB ou transação)",
+        "session_exercise_service.py pode não existir como serviço separado — verificar se a lógica está em training_session_service.py; ajustar write_scope se necessário"
+      ]
+    }
+  ]
+}

@@ -17,7 +17,7 @@ export function TopPerformersClient() {
   const params = useParams();
   const searchParams = useSearchParams();
   
-  const teamId = parseInt(params.teamId as string, 10);
+  const teamId = params.teamId as string;
   const month = searchParams.get('month') || getPreviousMonth();
 
   // Query top performers
@@ -25,7 +25,7 @@ export function TopPerformersClient() {
     queryKey: ['team-athletes-90plus', teamId, month],
     queryFn: () => getTeamAthletes90Plus(teamId, month),
     staleTime: 5 * 60 * 1000, // 5 minutos
-    enabled: !isNaN(teamId) && month.length > 0,
+    enabled: !!teamId && month.length > 0,
   });
 
   const athletes = data?.athletes || [];

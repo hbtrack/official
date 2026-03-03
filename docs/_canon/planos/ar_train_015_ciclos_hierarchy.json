@@ -1,0 +1,33 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "AR-TRAIN-015 — Batch 5 TRAINING_BATCH_PLAN_v1.md. Objetivo: garantir hierarquia FK obrigatória macro→meso→micro (INV-054), meso overlap permitido (INV-055) e micro contido em meso (INV-056). Tabelas já existem no DB (training_cycles com parent_cycle_id; training_microcycles com cycle_id FK). O que falta: (1) validação service-level em training_cycle_service.py para rejeitar micro fora do range do meso; (2) confirmar FK obrigatório via modelo Python (training_cycle.py). SEM nova migration necessária se schema atual já enforcement parent_cycle_id FK — Executor deve confirmar via schema.sql antes de criar migration. Sem pré-requisitos: AR-TRAIN-015 não depende de nenhum batch anterior além de tabelas existentes.",
+  "assumptions": [
+    "training_cycles table já existe com parent_cycle_id FK (confirmado schema.sql 2026-03-01)",
+    "training_microcycles table já existe com cycle_id FK para mesociclo (confirmado schema.sql 2026-03-01)",
+    "training_cycle.py model já existe (confirmado Test-Path 2026-03-01)",
+    "training_cycle_service.py já existe mas pode não ter validação de containment de datas (Executor verifica)",
+    "Sem nova migration necessária se constrint já está no DB — Executor validar antes de criar migration",
+    "Batch 5 do TRAINING_BATCH_PLAN_v1.md; AR-TRAIN-015 sem dependências externas"
+  ],
+  "tasks": [
+    {
+      "id": "189",
+      "title": "Ciclos hierarchy: FK obrigatório + containment validation service",
+      "description": "Implementar em dois arquivos: (1) Hb Track - Backend/app/models/training_cycle.py — Garantir que o modelo SQLAlchemy declare parent_cycle_id como FK obrigatório/nullable correto para meso (meso DEVE ter parent_cycle_id apontando para macro; macro DEVE ter parent_cycle_id=NULL). Verificar se há enum/check para type in ('macro','meso'). Inspecionar também training_microcycles model para garantir que cycle_id é FK NOT NULL para training_cycles.id. (2) Hb Track - Backend/app/services/training_cycle_service.py — Adicionar ou completar: (a) validação INV-054: ao criar microciclo, verificar que o mesocycle_id referenciado existe e é do tipo 'meso'; rejeitar com 422 se ausente/inválido [AC-001]; (b) validação INV-056: ao criar microciclo, verificar que week_start >= meso.start_date AND week_end <= meso.end_date; rejeitar com 422 se fora do range [AC-002]; (c) meso overlap (INV-055): ao criar mesociclo, NÃO rejeitar overlap com outro meso do mesmo macro — overlaps são PERMITIDOS [AC-003]. PROIBIDO: não criar nova tabela; não alterar schema se FK já existe no DB; não modificar routers. Se descobrir que alguma FK está faltando no DB (não só no model), criar migration Alembic e atualizar ssot via gen_docs_ssot.py.",
+      "criteria": "1) training_cycle_service.py rejeita criação de microciclo sem mesocycle_id válido (mock test ou assert no código). 2) training_cycle_service.py rejeita microciclo com datas fora do range do meso pai. 3) training_cycle_service.py NÃO rejeita dois mesos com overlap no mesmo macro. 4) INV-054: FK obrigatório declarado no model Python (nullable=False para microciclo.cycle_id). 5) INV-055: sem restrição de overlap entre mesos. 6) INV-056: containment de datas validado.",
+      "validation_command": "python -c \"import os; b='Hb Track - Backend'; svc=open(os.path.join(b,'app','services','training_cycle_service.py')).read(); assert 'mesocycle_id' in svc or 'cycle_id' in svc, 'service missing cycle FK reference'; assert 'start_date' in svc or 'week_start' in svc, 'service missing date containment check'; assert 'containment' in svc.lower() or 'fora' in svc.lower() or 'range' in svc.lower() or 'within' in svc.lower() or 'week_start' in svc, 'service missing containment validation'; mdl=open(os.path.join(b,'app','models','training_cycle.py')).read(); assert 'parent_cycle_id' in mdl, 'model missing parent_cycle_id'; print('PASS AR_189')\"",
+      "write_scope": [
+        "Hb Track - Backend/app/models/training_cycle.py",
+        "Hb Track - Backend/app/services/training_cycle_service.py"
+      ],
+      "notes": "Se Executor detectar que constraint de FK falta no DB (não só no model), deve criar migration Alembic e rodar gen_docs_ssot.py para atualizar schema.sql + alembic_state.txt. Nesse caso adicionar ssot_touches ao evidence. INV-055 é positivo: overlap de mesos é PERMITIDO, não é erro — garantir que o service não adicione restrição desnecessária de overlap.",
+      "rollback_plan": "git checkout -- Hb Track - Backend/app/models/training_cycle.py\ngit checkout -- Hb Track - Backend/app/services/training_cycle_service.py",
+      "risks": [
+        "training_cycle_service.py pode já ter validação parcial — Executor ler antes de adicionar para evitar duplicação",
+        "Tabela training_microcycles é separada de training_cycles — garantir que o service cria microciclo na tabela correta",
+        "INV-055: overlap de mesos DEVE ser aceito — não inserir guard de overlap"
+      ]
+    }
+  ]
+}

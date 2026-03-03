@@ -74,11 +74,20 @@ from app.api.v1.routers import reports_operational
 # Dashboard (Endpoint agregado otimizado)
 from app.api.v1.routers import dashboard
 
-# Exports (Step 23: Export PDF Assíncrono) - TEMPORARIAMENTE DESABILITADO
-# from app.api.v1.routers import exports
+# Exports (Step 23: Export PDF Assíncrono)
+from app.api.v1.routers import exports
 
-# Athlete Export (Step 24: LGPD Data Export) - TEMPORARIAMENTE DESABILITADO
-# from app.api.v1.routers import athlete_export
+# Athlete Export (Step 24: LGPD Data Export)
+from app.api.v1.routers import athlete_export
+
+# Athlete Training Preview (AR_187: AR-TRAIN-019)
+from app.api.v1.routers import athlete_training
+
+# Post-Training Conversational Feedback (AR_191: AR-TRAIN-020)
+from app.api.v1.routers import post_training
+
+# IA Coach (AR_192: AR-TRAIN-021)
+from app.api.v1.routers import ai_coach
 # from app.api.v1.routers import data_retention
 
 # Import Legacy (Step 28: CSV Import) - TEMPORARIAMENTE DESABILITADO
@@ -192,6 +201,15 @@ api_router.include_router(wellness_post.router, prefix="/wellness-post", tags=["
 api_router.include_router(analytics.router, tags=["analytics"])
 api_router.include_router(training_analytics.router, tags=["training-analytics"])
 
+# Athlete Training Preview (AR_187: AR-TRAIN-019)
+api_router.include_router(athlete_training.router, prefix="/athlete", tags=["athlete-training"])
+
+# Post-Training Conversational Feedback (AR_191: AR-TRAIN-020)
+api_router.include_router(post_training.router, tags=["post-training"])
+
+# IA Coach (AR_192: AR-TRAIN-021)
+api_router.include_router(ai_coach.router, tags=["ai-coach"])
+
 # =============================================================================
 # RBAC
 # =============================================================================
@@ -234,14 +252,14 @@ api_router.include_router(reports_operational.router, prefix="/reports", tags=["
 api_router.include_router(dashboard.router, prefix="/dashboard", tags=["dashboard"])
 
 # =============================================================================
-# EXPORTS (Step 23: Export PDF Assíncrono) - TEMPORARIAMENTE DESABILITADO
+# EXPORTS (Step 23: Export PDF Assíncrono)
 # =============================================================================
-# api_router.include_router(exports.router, tags=["exports"])
+api_router.include_router(exports.router, tags=["exports"])
 
 # =============================================================================
-# ATHLETE DATA EXPORT (Step 24: LGPD Compliance) - TEMPORARIAMENTE DESABILITADO
+# ATHLETE DATA EXPORT (Step 24: LGPD Compliance)
 # =============================================================================
-# api_router.include_router(athlete_export.router, tags=["lgpd"])
+api_router.include_router(athlete_export.router, tags=["lgpd"])
 
 # =============================================================================
 # DATA RETENTION & ANONYMIZATION (Step 25: LGPD Compliance) - TEMPORARIAMENTE DESABILITADO

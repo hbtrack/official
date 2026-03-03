@@ -1,0 +1,34 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "Instalar invariantes IA Coach 072-074: suggestion-not-order, privacy-no-intimate-content, educational-content-independent. Requer enforcement em services + testes + SSOT GAP->IMPLEMENTADO.",
+  "assumptions": [
+    "SSOT path canonico: docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md",
+    "Tests path canonico: Hb Track - Backend/tests/training/invariants/",
+    "Pytest disponivel no ambiente do Executor"
+  ],
+  "tasks": [
+    {
+      "id": "162",
+      "title": "IA Coach core (072-074): guards + privacidade + educativo",
+      "description": "Implementar enforcement em services e testes para INV-TRAIN-072 (ai_suggestion_not_order), INV-TRAIN-073 (ai_privacy_no_intimate_content), INV-TRAIN-074 (ai_educational_content_independent). Atualizar SSOT para marcar 072/073/074 como IMPLEMENTADO e incluir evidencias (arquivo de teste e/or service).",
+      "criteria": "1) Criar/atualizar services: app/services/ai_coach_service.py e app/services/coach_alerts_service.py com guards. 2) Criar 3 testes: test_inv_train_072_*.py, test_inv_train_073_*.py, test_inv_train_074_*.py. 3) Atualizar SSOT: 072/073/074 status=IMPLEMENTADO. 4) pytest invariants exitcode=0.",
+      "gate": "TRAIN-IA-CORE-072-074",
+      "validation_command": "python -c \"from pathlib import Path; import re, subprocess; ss=Path('docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md'); assert ss.exists(), 'FAIL SSOT missing'; t=ss.read_text(encoding='utf-8'); ids=['INV-TRAIN-072','INV-TRAIN-073','INV-TRAIN-074']; bad=[]\nfor i in ids:\n m=re.search(r'(?s)id:\\s*'+re.escape(i)+r'.*?\\n\\s*status:\\s*([A-Z_]+)', t)\n if not m: bad.append((i,'MISSING_BLOCK')); continue\n if m.group(1)!='IMPLEMENTADO': bad.append((i,m.group(1)))\nassert not bad, 'FAIL SSOT statuses '+str(bad); req=[ 'Hb Track - Backend/app/services/ai_coach_service.py','Hb Track - Backend/app/services/coach_alerts_service.py','Hb Track - Backend/tests/training/invariants/test_inv_train_072_ai_suggestion_not_order.py','Hb Track - Backend/tests/training/invariants/test_inv_train_073_ai_privacy_no_intimate_content.py','Hb Track - Backend/tests/training/invariants/test_inv_train_074_ai_educational_content_independent.py' ]; miss=[p for p in req if not Path(p).exists()]; assert not miss, 'FAIL missing '+str(miss); subprocess.check_call(['pytest','Hb Track - Backend/tests/training/invariants','-q']); print('PASS AR_162')\"",
+      "evidence_file": "docs/hbtrack/evidence/AR_162/executor_main.log",
+      "write_scope": [
+        "Hb Track - Backend/app/services/ai_coach_service.py",
+        "Hb Track - Backend/app/services/coach_alerts_service.py",
+        "Hb Track - Backend/tests/training/invariants/test_inv_train_072_ai_suggestion_not_order.py",
+        "Hb Track - Backend/tests/training/invariants/test_inv_train_073_ai_privacy_no_intimate_content.py",
+        "Hb Track - Backend/tests/training/invariants/test_inv_train_074_ai_educational_content_independent.py",
+        "docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md"
+      ],
+      "risks": [
+        "Regex de status depende do SSOT conter linhas 'id:' e 'status:' no mesmo bloco do item.",
+        "Se o projeto usa outro runner/caminho de pytest, ajustar o comando mantendo a semantica."
+      ],
+      "retry_count": 0
+    }
+  ]
+}

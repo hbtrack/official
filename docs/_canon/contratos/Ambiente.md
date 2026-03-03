@@ -1,3 +1,4 @@
+````md
 # Ambiente HB Track — Especificação Canônica
 
 > **SSOT**: Este arquivo é a fonte canônica de verdade sobre o ambiente de execução do HB Track.
@@ -5,7 +6,7 @@
 > que envolva ambiente, banco, runtime ou infra.
 >
 > **Implementação**: AR_031
-> **Última atualização**: 2026-02-21
+> **Última atualização**: 2026-03-01
 
 ---
 
@@ -42,7 +43,7 @@
 **Como iniciar serviços locais**:
 ```bash
 docker-compose -f infra/docker-compose.yml up -d
-```
+````
 
 **Fonte**: `infra/docker-compose.yml`
 
@@ -52,34 +53,43 @@ docker-compose -f infra/docker-compose.yml up -d
 
 > **Estado em 2026-02-21**: PostgreSQL upgrade 12 → 15 concluído via Docker (AR implícita, log em `VPS/runbooks/UPGRADE_PG15_EXECUTION_LOG.md`).
 
-| Serviço    | Imagem/Versão         | Porta  | Container    | Volume                              |
-|------------|-----------------------|--------|--------------|--------------------------------------|
-| PostgreSQL | **postgres:15.16**    | **5432** | `postgres15` | `/var/lib/postgresql/docker/15`     |
-| Redis      | **[A PREENCHER]**     | —      | —            | —                                    |
+| Serviço    | Imagem/Versão      | Porta              | Container    | Volume                          |
+| ---------- | ------------------ | ------------------ | ------------ | ------------------------------- |
+| PostgreSQL | **postgres:15.16** | **5432**           | `postgres15` | `/var/lib/postgresql/docker/15` |
+| Redis      | **redis:7-alpine** | **127.0.0.1:6379** | `redis7`     | —                               |
 
 **OS VPS**: Ubuntu 20.04.6 LTS (focal)
 **Docker VPS**: 26.1.3 (ativo, restart habilitado)
 
+**Celery (VPS) — execução**
+
+* Unit systemd: `hbtrack-worker`
+* Broker: `redis://127.0.0.1:6379/0`
+* Result backend: `redis://127.0.0.1:6379/1`
+* Env file (VPS): `/home/deploy/hbtrack-backend/shared/backend.env`
+
 **Bancos disponíveis (PostgreSQL 15.16):**
-| Banco            | Ambiente   | Tamanho | Tabelas | Última migration |
-|------------------|------------|---------|---------|------------------|
-| `hb_track`       | staging    | 12 MB   | 67      | 0055 (soft delete) |
-| `hb_track_prod`  | produção   | 12 MB   | 67      | 0055 (soft delete) |
+
+| Banco           | Ambiente | Tamanho | Tabelas | Última migration   |
+| --------------- | -------- | ------- | ------- | ------------------ |
+| `hb_track`      | staging  | 12 MB   | 67      | 0055 (soft delete) |
+| `hb_track_prod` | produção | 12 MB   | 67      | 0055 (soft delete) |
 
 **Credenciais VPS**: ver `.env.production` ou `VPS/infra/POSTGRESQL_CONNECTIONS.md`
-- Host: `191.252.185.34`
-- Port: `5432`
-- User: `hbtrack_app`
-- Password: **NUNCA hardcodar — usar variável de ambiente**
 
-> **REGRA PARA AGENTES**: Se Redis VPS ainda contiver `[A PREENCHER]`,
+* Host: `191.252.185.34`
+* Port: `5432`
+* User: `hbtrack_app`
+* Password: **NUNCA hardcodar — usar variável de ambiente**
+
+> **REGRA PARA AGENTES**: Se Redis VPS estiver ausente/indefinido nesta tabela (ou não estiver acessível via `redis-cli ping`),
 > BLOQUEIE qualquer tarefa de Celery/Redis na VPS e retorne BLOCKED_INPUT (4).
-> Exija que o Arquiteto preencha esta seção com a versão real.
 
 **Playbooks e diagnósticos VPS**:
-- Verificação de runtime Python: `docs/playbooks/pb_vps_python_runtime.md`
-- Script diagnóstico: `scripts/diagnostics/runtime/diag_vps_python_runtime.sh`
-- Log do upgrade PostgreSQL: `VPS/runbooks/UPGRADE_PG15_EXECUTION_LOG.md`
+
+* Verificação de runtime Python: `docs/playbooks/pb_vps_python_runtime.md`
+* Script diagnóstico: `scripts/diagnostics/runtime/diag_vps_python_runtime.sh`
+* Log do upgrade PostgreSQL: `VPS/runbooks/UPGRADE_PG15_EXECUTION_LOG.md`
 
 ---
 
@@ -94,6 +104,7 @@ docker-compose -f infra/docker-compose.yml up -d
 7. **Backup**: PROIBIDO fazer backup VPS sem confirmar que o container `postgres15` está ativo.
 8. **Credenciais**: NUNCA hardcodar senha em docs ou código. Usar `.env` sempre.
 9. **PostgreSQL 12 VPS**: parado e desabilitado (cluster em `/var/lib/postgresql/12/main`). NÃO reativar sem autorização do Arquiteto.
+10. **Redis VPS não deve ser exposto externamente**: bind MUST ser `127.0.0.1` (ou rede interna docker sem publish público).
 
 ---
 
@@ -117,13 +128,25 @@ python -c "import psycopg; conn=psycopg.connect('host=localhost port=5433 dbname
 # Verificar container VPS PostgreSQL ativo (rodar na VPS)
 sudo docker ps --filter name=postgres15 --format "{{.Status}}"
 # Expected: Up X hours
+
+# Verificar Redis na VPS (rodar na VPS)
+sudo docker ps --filter name=redis7 --format "{{.Status}}"
+docker exec -it redis7 redis-cli ping
+# Expected: PONG
+
+# Verificar worker Celery na VPS (rodar na VPS)
+sudo systemctl status hbtrack-worker --no-pager
 ```
 
 ---
 
 ## 6. Changelog
 
-| Versão | Data       | Descrição                                                       |
-|--------|------------|-----------------------------------------------------------------|
-| 1.0.0  | 2026-02-20 | Criação inicial — AR_031 (local env)                           |
-| 1.1.0  | 2026-02-21 | VPS atualizado: PostgreSQL 15.16 (Docker) confirmado via runbook |
+| Versão | Data       | Descrição                                                                                      |
+| ------ | ---------- | ---------------------------------------------------------------------------------------------- |
+| 1.0.0  | 2026-02-20 | Criação inicial — AR_031 (local env)                                                           |
+| 1.1.0  | 2026-02-21 | VPS atualizado: PostgreSQL 15.16 (Docker) confirmado via runbook                               |
+| 1.2.0  | 2026-03-01 | VPS atualizado: Redis 7 (Docker, bind 127.0.0.1:6379) + Celery worker (systemd hbtrack-worker) |
+
+```
+```

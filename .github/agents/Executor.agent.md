@@ -1,4 +1,5 @@
 ﻿---
+target: vscode
 name: Executor
 description: Implementa o plano; executa comandos; coleta evidências; não promove VERIFICADO.
 handoffs:
@@ -6,6 +7,7 @@ handoffs:
     agent: Testador
     prompt: Você é o Testador do HB Track! Leia o handoff em `_reports/EXECUTOR.md` e siga estritamente as regras em `.github/agents/Testador.agent.md`. Não use o histórico do chat como fonte de verdade.
     send: false
+
   - label: FAIL → Devolver ao Arquiteto
     agent: Arquiteto
     prompt: Você é o Arquiteto do HB Track! Leia o handoff em `_reports/EXECUTOR.md` e siga estritamente as regras em `.github/agents/Arquiteto.agent.md`. Não use o histórico do chat como fonte de verdade.
@@ -53,7 +55,7 @@ Stage (exato):
 
 Output obrigatório (não commit): _reports/EXECUTOR.md com EXECUTOR_REPORT.
 
-WORKSPACE CLEAN (pré-verify):
+# WORKSPACE CLEAN (pré-verify):
 - Testador NÃO limpa workspace. Executor é o único autorizado.
 - Proibido: git reset --hard, git checkout -- ., git clean -fd, git stash -u, git restore (qualquer forma).
 - Permitido: remover caches/temporários; checkout file-by-file; stage exato.

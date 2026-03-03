@@ -1,0 +1,46 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "Batch 10 — Cobrir evidências P0 restantes para Done Gate. AR_207: gerar evidências MANUAL_GUIADO para FLOW-TRAIN-001..006, 017, 018 (todos P0 PENDENTE no §6 da TEST_MATRIX) e atualizar TEST_MATRIX_TRAINING.md §6. AR_208: criar arquivo de testes automatizados para CONTRACT-TRAIN-097..100 (P0 PENDENTE, dependentes de AR-TRAIN-017/018 já VERIFICADOS) e gerar evidência de execução + atualizar TEST_MATRIX_TRAINING.md §8. Pré-requisito: Batch 9 (AR_202-206) VERIFICADO.",
+  "assumptions": [
+    "Batch 9 (AR_202-206) está VERIFICADO antes de iniciar Batch 10.",
+    "Flows P0 (001-006, 017, 018) correspondem a funcionalidades já implementadas e verificadas em ARs anteriores (AR-TRAIN-001..009, AR-TRAIN-017, AR-TRAIN-018).",
+    "CONTRACT-TRAIN-097/098 implementados por AR-TRAIN-017 (VERIFICADO: endpoints /training-sessions/{id}/pre-confirm e /training-sessions/{id}/close).",
+    "CONTRACT-TRAIN-099/100 implementados por AR-TRAIN-018 (VERIFICADO: endpoints /training/pending-items e /training/pending-items/{id}/resolve).",
+    "Evidências MANUAL_GUIADO devem descrever o fluxo completo com prints/outputs representativos do comportamento esperado.",
+    "Arquivo de teste contract 097-100 vai em tests/training/contracts/test_contract_train_097_100_presence_pending.py.",
+    "AR-TRAIN-029 e AR-TRAIN-030 são os IDs backlog para AR_207 e AR_208."
+  ],
+  "tasks": [
+    {
+      "id": "207",
+      "title": "Flow P0 evidence: FLOW-TRAIN-001..006 + 017 + 018 (MANUAL_GUIADO)",
+      "description": "Criar 8 arquivos de evidência MANUAL_GUIADO em _reports/training/ para os flows P0 ainda PENDENTE: FLOW-TRAIN-001 (criar sessão de treino a partir de template), FLOW-TRAIN-002 (entrada de wellness pré-treino), FLOW-TRAIN-003 (RPE pós-sessão), FLOW-TRAIN-004 (FLEX session builder), FLOW-TRAIN-005 (registro de presença), FLOW-TRAIN-006 (correção de presença), FLOW-TRAIN-017 (pré-confirmação - pre-confirm), FLOW-TRAIN-018 (fila de pendências - pending queue). Cada arquivo deve: descrever a situação inicial, listar os passos executados, indicar o resultado observado e o critério de PASS. Após criar os arquivos, atualizar o §6 da TEST_MATRIX_TRAINING.md marcando status=COBERTO, Últ.Execução=data_atual, evidência apontando para o arquivo criado.",
+      "criteria": "Existência de _reports/training/TEST-TRAIN-FLOW-001.md com conteúdo MANUAL_GUIADO; Existência de _reports/training/TEST-TRAIN-FLOW-002.md com conteúdo MANUAL_GUIADO; Existência de _reports/training/TEST-TRAIN-FLOW-003.md com conteúdo MANUAL_GUIADO; Existência de _reports/training/TEST-TRAIN-FLOW-004.md com conteúdo MANUAL_GUIADO; Existência de _reports/training/TEST-TRAIN-FLOW-005.md com conteúdo MANUAL_GUIADO; Existência de _reports/training/TEST-TRAIN-FLOW-006.md com conteúdo MANUAL_GUIADO; Existência de _reports/training/TEST-TRAIN-FLOW-017.md com conteúdo MANUAL_GUIADO; Existência de _reports/training/TEST-TRAIN-FLOW-018.md com conteúdo MANUAL_GUIADO; TEST_MATRIX_TRAINING.md §6: linhas FLOW-TRAIN-001/002/003/004/005/006/017/018 com status COBERTO e evidência linkada",
+      "validation_command": "python -c \"import os,sys; files=['_reports/training/TEST-TRAIN-FLOW-001.md','_reports/training/TEST-TRAIN-FLOW-002.md','_reports/training/TEST-TRAIN-FLOW-003.md','_reports/training/TEST-TRAIN-FLOW-004.md','_reports/training/TEST-TRAIN-FLOW-005.md','_reports/training/TEST-TRAIN-FLOW-006.md','_reports/training/TEST-TRAIN-FLOW-017.md','_reports/training/TEST-TRAIN-FLOW-018.md']; missing=[f for f in files if not os.path.exists(f)]; print('PASS - all flow evidence files present' if not missing else 'MISSING: '+str(missing)); sys.exit(0 if not missing else 1)\"",
+      "evidence_file": "docs/hbtrack/evidence/AR_207/executor_main.log",
+      "write_scope": [
+        "docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md"
+      ],
+      "risks": [
+        "Evidências MANUAL_GUIADO requerem descrição honesta — não inventar comportamento. Se algum flow tiver bloqueio técnico real, registrar como BLOCKED com nota."
+      ]
+    },
+    {
+      "id": "208",
+      "title": "Contract P0 tests: CONTRACT-TRAIN-097..100 (pre-confirm, close, pending-items)",
+      "description": "Criar arquivo tests/training/contracts/test_contract_train_097_100_presence_pending.py com testes de contrato para os 4 endpoints P0 PENDENTE: CONTRACT-TRAIN-097 (POST /training-sessions/{session_id}/pre-confirm), CONTRACT-TRAIN-098 (POST /training-sessions/{session_id}/close), CONTRACT-TRAIN-099 (GET /training/pending-items), CONTRACT-TRAIN-100 (PATCH /training/pending-items/{item_id}/resolve). Estilo: teste de contrato (verifica schema de request/response + status codes esperados + estrutura de router). Pode ser predom. contrato estático (verificar existência de endpoint no router, campos no schema, status codes documentados) sem necessariamente requerer DB ativo. Após criar e passar o arquivo, gerar evidência em _reports/training/TEST-TRAIN-CONTRACT-097-100.md e atualizar TEST_MATRIX_TRAINING.md §8 para os 4 contratos.",
+      "criteria": "pytest tests/training/contracts/test_contract_train_097_100_presence_pending.py passa (0 FAILs, 0 ERRORs); Arquivo cobre todos os 4 contract IDs (097, 098, 099, 100); Evidência gerada em _reports/training/TEST-TRAIN-CONTRACT-097-100.md; TEST_MATRIX_TRAINING.md §8: CONTRACT-TRAIN-097/098/099/100 status=COBERTO com evidência linkada",
+      "validation_command": "cd \"Hb Track - Backend\" && pytest tests/training/contracts/test_contract_train_097_100_presence_pending.py -v --tb=short 2>&1 | tail -20",
+      "evidence_file": "docs/hbtrack/evidence/AR_208/executor_main.log",
+      "write_scope": [
+        "Hb Track - Backend/tests/training/contracts/test_contract_train_097_100_presence_pending.py",
+        "docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md"
+      ],
+      "risks": [
+        "Se os endpoints não existirem no router (ex: training_presence_step17.py), os testes de contrato de rota vão falhar — verificar routers existentes antes de criar os testes.",
+        "Testes de contrato com DB: se DB não estiver disponível no CI, usar approach de contrato estático (import + schema inspection) ao invés de HTTP integration test."
+      ]
+    }
+  ]
+}

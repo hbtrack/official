@@ -26,7 +26,7 @@ Implementa guards/invariantes:
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import List, Union
+from typing import Any, Dict, List, Optional, Union
 
 # ---------------------------------------------------------------------------
 # INV-072 — Tone guard: tom imperativo proibido
@@ -423,6 +423,154 @@ class AICoachService:
         )
 
     # -----------------------------------------------------------------------
+    # INV-079: Recognition privacy filter
+    # -----------------------------------------------------------------------
+
+    def filter_recognition_privacy(
+        self,
+        metric_value: float,
+        metric_name: str,
+        raw_context: Optional[str] = None,
+    ) -> RecognitionResult:
+        """
+        INV-079 — Recognition privacy filter.
+        Gera mensagem de reconhecimento baseada EXCLUSIVAMENTE em métricas
+        agregadas. Se raw_context contiver padrões íntimos, bloqueia.
+
+        Args:
+            metric_value: Valor da métrica (ex: 0.85 para 85% de frequência).
+            metric_name: Nome da métrica (ex: 'attendance_rate').
+            raw_context: Texto opcional de contexto — verificado por conteúdo íntimo.
+
+        Returns:
+            RecognitionMessage baseado em métricas agregadas (nunca em texto íntimo).
+            RecognitionBlocked se raw_context contiver conteúdo íntimo.
+        """
+        # INV-079: verificar raw_context por padrões íntimos
+        if raw_context:
+            lower_ctx = raw_context.lower()
+            if any(p in lower_ctx for p in INTIMATE_CONTENT_PATTERNS):
+                return RecognitionBlocked()
+
+        # Gerar reconhecimento baseado apenas em métricas agregadas
+        if metric_value >= 0.85:
+            message = (
+                f"Excelente consistência! Sua {metric_name} de "
+                f"{metric_value:.0%} reflete dedicação ao treinamento."
+            )
+        elif metric_value >= 0.65:
+            message = (
+                f"Boa regularidade! Continue mantendo sua {metric_name} "
+                f"de {metric_value:.0%} para evoluir continuamente."
+            )
+        else:
+            message = (
+                "Participação registrada. Cada sessão conta para seu desenvolvimento."
+            )
+
+        return RecognitionMessage(
+            message=message,
+            based_on=metric_name,
+            privacy_filter_applied=True,  # INV-079: SEMPRE True
+        )
+
+    # -----------------------------------------------------------------------
+    # INV-080: Draft-only guard para propostas do treinador
+    # -----------------------------------------------------------------------
+
+    def generate_session_suggestion(
+        self,
+        coach_id: str,
+        context: Dict[str, Any],
+    ) -> TrainingSessionDraft:
+        """
+        INV-080 — Draft-only guard para proposta de sessão.
+        Toda sessão sugerida pela IA chega como rascunho (draft).
+        Treinador DEVE revisar e aprovar antes de publicar.
+
+        Args:
+            coach_id: ID do treinador solicitante.
+            context: Contexto do sistema (wellness, carga, microciclo).
+
+        Returns:
+            TrainingSessionDraft com status='draft' e source='ai_coach_suggestion'.
+        """
+        title = context.get("title", "Sessão sugerida pela IA")
+        justification = context.get("justification", "")
+
+        return TrainingSessionDraft(
+            title=title,
+            context_summary=f"Gerado por IA para coach {coach_id}",
+            status="draft",                   # INV-080: SEMPRE draft
+            source="ai_coach_suggestion",     # INV-080: SEMPRE este valor
+            requires_coach_approval=True,
+            justification=justification,
+        )
+
+    def generate_microcycle_suggestion(
+        self,
+        coach_id: str,
+        context: Dict[str, Any],
+    ) -> MicrocycleDraft:
+        """
+        INV-080 — Draft-only guard para proposta de microciclo.
+        Todo microciclo sugerido pela IA chega como rascunho (draft).
+
+        Args:
+            coach_id: ID do treinador.
+            context: Contexto (carga planejada, foco da semana).
+
+        Returns:
+            MicrocycleDraft com status='draft' e source='ai_coach_suggestion'.
+        """
+        title = context.get("title", "Microciclo sugerido pela IA")
+        week_focus = context.get("week_focus", "Foco geral")
+        justification = context.get("justification", "")
+
+        return MicrocycleDraft(
+            title=title,
+            week_focus=week_focus,
+            status="draft",                   # INV-080: SEMPRE draft
+            source="ai_coach_suggestion",
+            requires_coach_approval=True,
+            justification=justification,
+        )
+
+    # -----------------------------------------------------------------------
+    # INV-081: Justification enforcer
+    # -----------------------------------------------------------------------
+
+    def enforce_justification(
+        self,
+        content: str,
+        justification: str,
+    ) -> JustificationResult:
+        """
+        INV-081 — Justification enforcer.
+        Toda sugestão da IA deve ter campo 'justification' não-vazio
+        baseado em sinais do sistema (wellness, carga, consistência).
+        Sugestão sem justificativa → classificada como 'ideia_generica'.
+
+        Args:
+            content: Conteúdo da sugestão.
+            justification: Justificativa baseada em sinais do sistema.
+
+        Returns:
+            SuggestionWithJustification se justification presente e não-vazia.
+            SuggestionWithoutJustification (label='ideia_generica') caso contrário.
+        """
+        if not justification or not justification.strip():
+            return SuggestionWithoutJustification(
+                content=content,
+                label="ideia_generica",   # INV-081: sem justif = ideia genérica
+            )
+        return SuggestionWithJustification(
+            content=content,
+            justification=justification.strip(),
+            label="recomendacao",
+        )
+
+    # -----------------------------------------------------------------------
     # INV-077: Feedback imediato pós-treino conversacional
     # -----------------------------------------------------------------------
 
@@ -472,6 +620,95 @@ class AICoachService:
             guidance=guidance,
             source="virtual_coach",  # INV-077: SEMPRE este valor
         )
+
+
+# ---------------------------------------------------------------------------
+# INV-079 — Recognition privacy filter: elogio usa apenas métricas agregadas
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class RecognitionMessage:
+    """
+    INV-079: Mensagem de reconhecimento baseada exclusivamente em métricas
+    agregadas (frequência, taxa de resposta, consistência).
+    NUNCA usa texto de conversa íntima do atleta.
+    """
+
+    message: str
+    based_on: str  # ex: "attendance_rate", "response_rate", "consistency"
+    privacy_filter_applied: bool = True  # INV-079: SEMPRE True
+
+
+@dataclass
+class RecognitionBlocked:
+    """INV-079: Reconhecimento bloqueado — contexto íntimo detectado."""
+
+    reason: str = "intimate_content_detected"
+    detail: str = "Reconhecimento não gerado: conteúdo íntimo detectado nas métricas"
+
+
+RecognitionResult = Union[RecognitionMessage, RecognitionBlocked]
+
+
+# ---------------------------------------------------------------------------
+# INV-080 — Draft-only guard para propostas de sessão/microciclo do treinador
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class TrainingSessionDraft:
+    """
+    INV-080: Proposta de sessão gerada pela IA — sempre como rascunho.
+    Treinador DEVE revisar e aprovar antes de publicar.
+    """
+
+    title: str
+    context_summary: str
+    status: str = "draft"                      # INV-080: SEMPRE draft
+    source: str = "ai_coach_suggestion"        # INV-080: SEMPRE este valor
+    requires_coach_approval: bool = True       # INV-080: aprovação obrigatória
+    justification: str = ""                    # INV-081: obrigatório para recomendacao
+
+
+@dataclass
+class MicrocycleDraft:
+    """
+    INV-080: Proposta de microciclo gerada pela IA — sempre como rascunho.
+    """
+
+    title: str
+    week_focus: str
+    status: str = "draft"                      # INV-080: SEMPRE draft
+    source: str = "ai_coach_suggestion"        # INV-080: SEMPRE este valor
+    requires_coach_approval: bool = True
+    justification: str = ""                    # INV-081: obrigatório para recomendacao
+
+
+# ---------------------------------------------------------------------------
+# INV-081 — Justification enforcer: sugestão sem justificativa = ideia_generica
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class SuggestionWithJustification:
+    """INV-081: Sugestão da IA com justificativa baseada em sinais do sistema."""
+
+    content: str
+    justification: str   # INV-081: baseado em wellness/carga/consistência
+    label: str = "recomendacao"
+
+
+@dataclass
+class SuggestionWithoutJustification:
+    """INV-081: Sugestão sem justificativa — classificada como ideia_generica."""
+
+    content: str
+    justification: str = ""
+    label: str = "ideia_generica"   # INV-081: sem justificativa = ideia genérica
+
+
+JustificationResult = Union[SuggestionWithJustification, SuggestionWithoutJustification]
 
 
 # ---------------------------------------------------------------------------

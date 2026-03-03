@@ -295,7 +295,7 @@ def warmup_database() -> bool:
 async def warmup_database_async() -> bool:
     """Aquece o banco de dados no boot (async)."""
     async def _do_warmup():
-        async with async_engine.connect() as conn:
+        async with get_async_engine().connect() as conn:
             result = await conn.execute(text("SELECT 1"))
             return result.scalar() == 1
     

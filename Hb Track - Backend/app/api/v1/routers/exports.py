@@ -16,8 +16,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import get_async_db
-from app.core.security import get_current_active_user
-from app.models.user import User
+from app.core.context import get_current_context as get_current_active_user
+from app.core.context import ExecutionContext
 from app.schemas.exports import (
     AnalyticsPDFExportRequest,
     ExportJobListResponse,
@@ -54,18 +54,45 @@ router = APIRouter()
 )
 async def request_analytics_pdf_export(
     request: AnalyticsPDFExportRequest,
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    current_user: Annotated[ExecutionContext, Depends(get_current_active_user)],
     db: AsyncSession = Depends(get_async_db),
 ) -> ExportJobResponse:
     """
     Solicita export PDF analytics (assíncrono)
     """
+    # DEC-TRAIN-004: estado degradado quando Celery worker não ativo (proibido polling fake)
+    try:
+        from app.core.celery_app import app as _celery_app
+        inspector = _celery_app.control.inspect(timeout=1.0)
+        active = inspector.active()
+        if not active:  # None ou dict vazio = sem workers ativos
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail={
+                    "status": "unavailable",
+                    "reason": "worker_not_active",
+                    "message": "Export service is temporarily unavailable. Celery worker is not running.",
+                },
+            )
+    except HTTPException:
+        raise
+    except Exception:
+        # Falha na conexão com broker = worker não disponível
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail={
+                "status": "unavailable",
+                "reason": "worker_not_active",
+                "message": "Export service is temporarily unavailable. Celery worker is not running.",
+            },
+        )
+
     try:
         service = ExportService(db)
         
         # Create export job
         job = await service.create_export_job(
-            user_id=UUID(current_user.id),
+            user_id=current_user.user_id,
             export_type='analytics_pdf',
             params={
                 'team_id': str(request.team_id),
@@ -111,7 +138,7 @@ async def request_analytics_pdf_export(
 )
 async def get_export_job_status(
     job_id: UUID,
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    current_user: Annotated[ExecutionContext, Depends(get_current_active_user)],
     db: AsyncSession = Depends(get_async_db),
 ) -> ExportJobResponse:
     """
@@ -122,7 +149,7 @@ async def get_export_job_status(
     try:
         job = await service.get_job_status(
             job_id=job_id,
-            user_id=UUID(current_user.id)
+            user_id=current_user.user_id
         )
         return ExportJobResponse.model_validate(job)
     except Exception as e:
@@ -146,7 +173,7 @@ async def get_export_job_status(
     """,
 )
 async def list_user_exports(
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    current_user: Annotated[ExecutionContext, Depends(get_current_active_user)],
     db: AsyncSession = Depends(get_async_db),
     page: int = Query(1, ge=1, description="Página (1-indexed)"),
     per_page: int = Query(10, ge=1, le=50, description="Itens por página"),
@@ -157,7 +184,7 @@ async def list_user_exports(
     service = ExportService(db)
     
     jobs, total = await service.list_user_jobs(
-        user_id=UUID(current_user.id),
+        user_id=current_user.user_id,
         page=page,
         per_page=per_page
     )
@@ -184,7 +211,7 @@ async def list_user_exports(
     """,
 )
 async def check_export_rate_limit(
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    current_user: Annotated[ExecutionContext, Depends(get_current_active_user)],
     db: AsyncSession = Depends(get_async_db),
     export_type: str = Query("analytics_pdf", description="Tipo de export"),
 ) -> ExportRateLimitResponse:
@@ -195,7 +222,7 @@ async def check_export_rate_limit(
     
     try:
         return await service.check_rate_limit(
-            user_id=UUID(current_user.id),
+            user_id=current_user.user_id,
             export_type=export_type
         )
     except Exception as e:

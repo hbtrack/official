@@ -14,6 +14,7 @@ from datetime import datetime, timedelta, timezone
 from typing import List, Optional
 from uuid import UUID
 
+from fastapi import HTTPException, status as http_status
 from sqlalchemy import select, func, and_, or_, text
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
@@ -379,6 +380,14 @@ class TrainingSessionService:
         Ref: R40 - Janelas de edição
         """
         session = await self.get_by_id(session_id)
+
+        # INV-058: Guard de mutabilidade — sessão closed/readonly é imutável
+        # Aplicado ANTES de qualquer modificação (early-return)
+        if session.status in ('readonly', 'closed'):
+            raise HTTPException(
+                status_code=http_status.HTTP_409_CONFLICT,
+                detail="Sessão encerrada não pode ser alterada",
+            )
 
         # R40: Verificar janela de edição
         self._validate_edit_permission(session, data)

@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_185-b123a58",
+  "timestamp_utc": "2026-03-01T05:29:11.375854+00:00",
+  "git": {
+    "commit": "b123a58f679bdb2264c973a4c5f7875ad4a3a66a"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "185",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_185_expor_endpoints_preconfirm_+_close_session_no_rout.md"
+}

@@ -1,0 +1,16 @@
+extends: existence
+message: "Linguagem vaga: '%s'. Troque por condição/critério/teste."
+level: warning
+ignorecase: true
+tokens:
+  - "\\balgumas vezes\\b"
+  - "\\bem geral\\b"
+  - "\\bnormalmente\\b"
+  - "\\bgeralmente\\b"
+  - "\\bàs vezes\\b"
+  - "\\bquando possível\\b"
+  - "\\bse necessário\\b"
+  - "\\bidealmente\\b"
+  - "\\btalvez\\b"
+  - "\\bprovavelmente\\b"
+  - "\\bde alguma forma\\b"

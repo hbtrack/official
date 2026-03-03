@@ -1,0 +1,40 @@
+{
+  "ar_id": "194",
+  "validation_command": "python -c \"c=open('docs/hbtrack/modulos/treinos/TRAINING_BATCH_PLAN_v1.md',encoding='utf-8').read(); assert 'v1.0.2' in c, 'versao v1.0.2 nao encontrada'; assert 'Batch 6' in c, 'secao Batch 6 nao encontrada'; assert 'AR-TRAIN-010B' in c[c.index('Batch 6'):c.index('Batch 6')+2000], 'AR-TRAIN-010B ausente na secao Batch 6'; assert 'INV-TRAIN-013' in c[c.index('Batch 6'):c.index('Batch 6')+2000], 'INV-TRAIN-013 ausente em Batch 6'; assert 'CONTRACT-TRAIN-073..075' in c[c.index('Batch 6'):c.index('Batch 6')+2000], 'CONTRACT-TRAIN-073..075 ausente em Batch 6'; assert 'Batch 0' in c, 'Batch 0 removido — alteracao indevida'; assert '## 3) Test strategy per batch' in c, 'secao §3 removida — alteracao indevida'; idx6=c.index('Batch 6'); idx3=c.index('## 3) Test strategy'); assert idx6 < idx3, 'Batch 6 nao esta antes de §3'; print('PASS AR_194')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "9d82efdb0df5743180c0d7810dae4246871d819e9bb25ccaa1e7c20f613ebc16",
+      "hash": "9d82efdb0df57431",
+      "stdout_len": 12,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "9d82efdb0df5743180c0d7810dae4246871d819e9bb25ccaa1e7c20f613ebc16",
+      "hash": "9d82efdb0df57431",
+      "stdout_len": 12,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "9d82efdb0df5743180c0d7810dae4246871d819e9bb25ccaa1e7c20f613ebc16",
+      "hash": "9d82efdb0df57431",
+      "stdout_len": 12,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

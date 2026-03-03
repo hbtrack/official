@@ -1,0 +1,40 @@
+{
+  "ar_id": "188",
+  "validation_command": "python -c \"c=open('docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md',encoding='utf-8').read(); assert 'Ultima revisao: 2026-03-01' in c or '2026-03-01' in c, 'header data nao atualizada'; assert '| AR-TRAIN-006 |' in c; lines=[l for l in c.splitlines() if '| AR-TRAIN-006 |' in l]; assert 'VERIFICADO' in lines[0], 'AR-TRAIN-006 nao VERIFICADO em §9'; lines6=[l for l in c.splitlines() if 'FLOW-TRAIN-012' in l]; assert all('BLOQUEADO' not in l for l in lines6), 'FLOW-TRAIN-012 ainda BLOQUEADO'; lines7=[l for l in c.splitlines() if 'SCREEN-TRAIN-013' in l]; assert all('BLOQUEADO' not in l for l in lines7), 'SCREEN-TRAIN-013 ainda BLOQUEADO'; lines8=[l for l in c.splitlines() if 'CONTRACT-TRAIN-086' in l]; assert all('BLOQUEADO' not in l for l in lines8), 'CONTRACT-TRAIN-086 ainda BLOQUEADO'; assert 'v1.4.0' in c, 'changelog v1.4.0 nao adicionado'; print('PASS AR_188')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "4072f2af756ac0a81f6a70eff4cced46f8daa90c45ead18f42482857281d3c5b",
+      "hash": "4072f2af756ac0a8",
+      "stdout_len": 12,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "4072f2af756ac0a81f6a70eff4cced46f8daa90c45ead18f42482857281d3c5b",
+      "hash": "4072f2af756ac0a8",
+      "stdout_len": 12,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "4072f2af756ac0a81f6a70eff4cced46f8daa90c45ead18f42482857281d3c5b",
+      "hash": "4072f2af756ac0a8",
+      "stdout_len": 12,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

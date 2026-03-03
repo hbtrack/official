@@ -53,3 +53,25 @@ class ExerciseListResponse(BaseModel):
     total: int
     page: int
     per_page: int
+
+
+class ExerciseACLResponse(BaseModel):
+    """Schema de resposta para entrada de ACL de exercício."""
+    id: UUID
+    exercise_id: UUID
+    user_id: UUID
+    granted_by_user_id: UUID
+    granted_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class ExerciseACLGrantRequest(BaseModel):
+    """Schema de request para conceder acesso (POST /exercises/{id}/acl)."""
+    target_user_id: UUID
+
+
+class VisibilityUpdateRequest(BaseModel):
+    """Schema de request para alterar visibilidade (PATCH /exercises/{id}/visibility)."""
+    visibility_mode: str = Field(..., pattern="^(org_wide|restricted)$")

@@ -1,0 +1,32 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "AR-TRAIN-014 v2 (formato canonico ar_contract.schema.json v1.2.0). Materializar UI de scope/visibility/ACL/midia no exercise-bank FE. Depende de AR_183 (endpoints BE prontos). Corrige plan JSON original de Batch 3. Paths com parenteses (como src/app/(admin)/...) nao podem estar em write_scope por restricao do schema — usando diretorio pai src/app.",
+  "assumptions": [
+    "AR_183 VERIFICADO: endpoints /exercises/{id}/acl, /visibility, /copy-to-org prontos no BE",
+    "ExerciseCard.tsx ja existe em Hb Track - Frontend/src/components/training/exercises/",
+    "exercises.ts ja existe em Hb Track - Frontend/src/lib/api/",
+    "page.tsx do exercise-bank ja existe — apenas adicionar integracao de scope/ACL",
+    "ExerciseACLModal.tsx e ExerciseVisibilityToggle.tsx NAO existem — Executor cria novos",
+    "current_user.role disponivel via contexto de auth existente no FE (useAuth ou similar)"
+  ],
+  "tasks": [
+    {
+      "id": "184",
+      "title": "UI scope/visibility/ACL/midia no exercise-bank FE (ExerciseCard + ACLModal + exercises.ts)",
+      "description": "Implementar no FE Hb Track - Frontend/src/components/training/exercises/ExerciseCard.tsx: badge SYSTEM ou ORG visivel, botao Duplicar para Meu Banco quando scope=SYSTEM, toggle de visibilidade (org_wide|restricted) e botao Gerenciar ACL quando scope=ORG e usuario e criador, preview de midia se exercise.media presente. Criar Hb Track - Frontend/src/components/training/exercises/ExerciseACLModal.tsx: modal que chama GET /exercises/{id}/acl, lista users, permite POST (adicionar) e DELETE (remover) users da mesma org. Criar Hb Track - Frontend/src/components/training/exercises/ExerciseVisibilityToggle.tsx: toggle org_wide|restricted via PATCH /exercises/{id}/visibility. Atualizar Hb Track - Frontend/src/lib/api/exercises.ts: adicionar funcoes copyExerciseToOrg, patchExerciseVisibility, getExerciseACL, addUserToACL, removeUserFromACL. Atualizar page.tsx em src/app (exercise-bank) se necessario para passar scope/ACL ao ExerciseCard. RBAC FE: acoes de edicao visıveis apenas se current_user.role === Treinador. Proibido: modificar BE.",
+      "criteria": "1) ExerciseCard.tsx exibe badge scope (SYSTEM|ORG) e botao copy-to-org para SYSTEM. 2) exercises.ts tem funcoes copyExerciseToOrg e endpoints de ACL. 3) ExerciseACLModal.tsx existe com chamadas GET/POST/DELETE para /acl. 4) Acoes de edicao verificam role RBAC antes de renderizar. 5) Imports TypeScript sem erros de compilacao.",
+      "validation_command": "python -c \"import os; b='Hb Track - Frontend'; c1=open(os.path.join(b,'src','lib','api','exercises.ts')).read(); assert 'copy-to-org' in c1 or 'copyExercise' in c1,'exercises.ts missing copy-to-org'; assert 'acl' in c1.lower(),'exercises.ts missing ACL'; c2=open(os.path.join(b,'src','components','training','exercises','ExerciseCard.tsx')).read(); assert 'scope' in c2 or 'SYSTEM' in c2,'ExerciseCard missing scope'; assert os.path.exists(os.path.join(b,'src','components','training','exercises','ExerciseACLModal.tsx')),'ExerciseACLModal missing'; print('PASS AR_184')\"",
+      "write_scope": [
+        "Hb Track - Frontend/src/lib/api/exercises.ts",
+        "Hb Track - Frontend/src/components/training/exercises",
+        "Hb Track - Frontend/src/app"
+      ],
+      "notes": "page.tsx do exercise-bank esta em src/app/(admin)/training/exercise-bank/page.tsx — caminho com parenteses nao pode ser listado no write_scope do schema, mas e coberto por src/app. ExerciseACLModal e ExerciseVisibilityToggle sao arquivos novos — Executor cria dentro do diretorio de componentes existente. Preview de midia pode ser placeholder img/video se dados nao estiverem populados.",
+      "risks": [
+        "Tipo Exercise no FE pode nao ter campos scope/visibility_mode/media — Executor deve adicionar ao tipo/interface em exercises.ts ou types existentes",
+        "Chamadas de ACL requerem error handling para 403/404 — Executor deve tratar estados de erro na UI"
+      ]
+    }
+  ]
+}

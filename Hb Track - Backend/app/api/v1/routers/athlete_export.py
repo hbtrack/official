@@ -18,10 +18,10 @@ from fastapi.responses import Response, JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import get_async_db
-from app.core.auth import get_current_active_user
+from app.core.auth import get_current_user as get_current_active_user
 from app.models.user import User
 from app.services.athlete_data_export_service import AthleteDataExportService
-from app.core.exceptions import BadRequestException
+from app.core.exceptions import BusinessError as BadRequestException
 
 router = APIRouter(prefix="/athletes", tags=["athletes-export"])
 

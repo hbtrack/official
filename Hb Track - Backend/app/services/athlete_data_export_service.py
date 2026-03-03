@@ -30,8 +30,8 @@ from app.models.wellness_post import WellnessPost
 from app.models.attendance import Attendance
 from app.models.medical_case import MedicalCase
 from app.models.athlete_badge import AthleteBadge
-from app.models.audit_log import AuditLog
-from app.core.exceptions import NotFoundException, BadRequestException
+from app.models.audit_logs import AuditLog
+from app.core.exceptions import NotFoundError as NotFoundException, BusinessError as BadRequestException
 
 
 class AthleteDataExportService:

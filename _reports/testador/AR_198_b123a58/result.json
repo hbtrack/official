@@ -1,0 +1,40 @@
+{
+  "ar_id": "198",
+  "validation_command": "python -c \"import re,sys; t=open('docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md',encoding='utf-8').read(); assert re.search(r'Vers.o:\\s*v1\\.8\\.0',t),'FAIL: backlog versao nao e v1.8.0'; idx=t.find('AR-TRAIN-022'); seg=t[idx:idx+600]; assert 'VERIFICADO' in seg,'FAIL: AR-TRAIN-022 nao VERIFICADO'; assert 'Status:** PENDENTE' not in seg,'FAIL: AR-TRAIN-022 ainda PENDENTE'; assert 'AR-TRAIN-023' in t,'FAIL: AR-TRAIN-023 nao adicionada'; b=open('docs/hbtrack/modulos/treinos/TRAINING_BATCH_PLAN_v1.md',encoding='utf-8').read(); assert 'Batch 8' in b,'FAIL: Batch 8 nao no BatchPlan'; assert 'AR-TRAIN-023' in b,'FAIL: AR-TRAIN-023 nao no BatchPlan'; assert 'v1.0.4' in b,'FAIL: BatchPlan versao nao e v1.0.4'; print('PASS: AR-TRAIN-022 VERIFICADO, AR-TRAIN-023 present v1.8.0, Batch 8 v1.0.4')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "11acd59aac33acc37c65ebf3c774daf292846fd12ce0bdf242a91589c7769435",
+      "hash": "11acd59aac33acc3",
+      "stdout_len": 75,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "11acd59aac33acc37c65ebf3c774daf292846fd12ce0bdf242a91589c7769435",
+      "hash": "11acd59aac33acc3",
+      "stdout_len": 75,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "11acd59aac33acc37c65ebf3c774daf292846fd12ce0bdf242a91589c7769435",
+      "hash": "11acd59aac33acc3",
+      "stdout_len": 75,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

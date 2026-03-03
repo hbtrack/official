@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_201-b123a58",
+  "timestamp_utc": "2026-03-03T00:31:32.113836+00:00",
+  "git": {
+    "commit": "b123a58f679bdb2264c973a4c5f7875ad4a3a66a"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "201",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_201_fix_validation_command_ar_200_-_janela_450_para_sp.md"
+}

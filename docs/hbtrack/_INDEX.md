@@ -1,6 +1,6 @@
 # Índice de Architectural Records (ARs)
 > ⚠️ Auto-gerado por `hb plan`/`hb report`. NÃO editar manualmente.
-> Última atualização: 2026-02-28
+> Última atualização: 2026-03-03
 
 | ID | Título | Status | Evidence |
 |---|---|---|---|
@@ -160,5 +160,38 @@
 | AR_172 | Fix AttendanceTab.tsx: UI para status justified + reason_... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_172/executor_main.log |
 | AR_173 | Migrar _generated para ssot nos test files TRAINING (lote... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_173/executor_main.log |
 | AR_174 | Migrar _generated para ssot nos test files TRAINING (lote... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_174/executor_main.log |
+| AR_175 | Fix Step18 services: training_alerts_service.py + trainin... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_175/executor_main.log |
+| AR_176 | Fix wellness BE: self-only (athlete_id do JWT) + payload ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_176/executor_main.log |
+| AR_177 | Fix wellness rankings BE: cálculo SSOT + response_model n... | ✅ SUCESSO | docs/hbtrack/evidence/AR_177/executor_main.log |
+| AR_178 | Fix Rankings FE: UUID strings em rankings.ts + RankingsCl... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_178/executor_main.log |
+| AR_179 | Reabilitar exports BE + estado degradado sem worker + reg... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_179/executor_main.log |
+| AR_180 | Fix ExportPDFModal FE: conectar backend reabilitado + est... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_180/executor_main.log |
+| AR_181 | Atualizar exercise.py + criar exercise_media.py (scope/vi... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_181/executor_main.log |
+| AR_182 | Guards SYSTEM imutavel + filtro visibilidade em exercise_... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_182/executor_main.log |
+| AR_183 | Endpoints ACL + copy-to-org + toggle visibility em exerci... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_183/executor_main.log |
+| AR_184 | UI scope/visibility/ACL/midia no exercise-bank FE (Exerci... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_184/executor_main.log |
+| AR_185 | Expor endpoints preconfirm + close_session no router atte... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_185/executor_main.log |
+| AR_186 | Criar pending.ts + pagina pending-queue FE (UI fila de pe... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_186/executor_main.log |
+| AR_187 | Criar athlete_training.py router (preview) + FE visao pre... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_187/executor_main.log |
+| AR_188 | TEST_MATRIX sync Batch2/3 — AR-TRAIN-006..014 VERIFICADOS | ✅ VERIFICADO | docs/hbtrack/evidence/AR_188/executor_main.log |
+| AR_189 | Ciclos hierarchy: FK obrigatório + containment validation... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_189/executor_main.log |
+| AR_190 | Sessão standalone guard + mutabilidade + order_index exer... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_190/executor_main.log |
+| AR_191 | Pós-treino conversacional: service + router | ✅ VERIFICADO | docs/hbtrack/evidence/AR_191/executor_main.log |
+| AR_192 | IA Coach: INV-079/080/081 + router + FE ai-chat + AICoach... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_192/executor_main.log |
+| AR_193 | TEST_MATRIX sync Batch4/5 — AR-TRAIN-015..021 VERIFICADOS | ✅ VERIFICADO | docs/hbtrack/evidence/AR_193/executor_main.log |
+| AR_194 | TRAINING_BATCH_PLAN_v1 — adicionar Batch 6 com AR-TRAIN-010B | ✅ VERIFICADO | docs/hbtrack/evidence/AR_194/executor_main.log |
+| AR_195 | AR-TRAIN-010B: testes INV-TRAIN-013/024 + CONTRACT-TRAIN-... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_195/executor_main.log |
+| AR_196 | Promover status SSOT Training: AR_BACKLOG + INVARIANTS + ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_196/executor_main.log |
+| AR_197 | INVARIANTS_TRAINING.md v1.5.0: 31 itens GAP/PARCIAL/DIVER... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_197/executor_main.log |
+| AR_198 | AR_BACKLOG: AR-TRAIN-022 VERIFICADO + add AR-TRAIN-023 + ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_198/executor_main.log |
+| AR_199 | TEST_MATRIX §9 sync + desbloquear §5 INV + §8 CONTRACT + ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_199/executor_main.log |
+| AR_200 | Executar Top-10 testes COBERTO+NOT_RUN e salvar evidências | ✅ VERIFICADO | docs/hbtrack/evidence/AR_200/executor_main.log |
+| AR_201 | Fix validation_command AR_200 - janela 450 para split-por... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_201/executor_main.log |
+| AR_202 | Fix INV-001: test_invalid_case_2 expects wrong constraint... | 🔴 REJEITADO | docs/hbtrack/evidence/AR_202/executor_main.log |
+| AR_203 | Fix INV-008: schema_path tem 3 .parent ao invés de 4 | 🔴 REJEITADO | docs/hbtrack/evidence/AR_203/executor_main.log |
+| AR_204 | Fix INV-030: schema_path tem 3 .parent ao invés de 4 (mes... | 🔴 REJEITADO | docs/hbtrack/evidence/AR_204/executor_main.log |
+| AR_205 | Fix INV-032: 6 async fixtures usam @pytest.fixture em vez... | 🔴 REJEITADO | docs/hbtrack/evidence/AR_205/executor_main.log |
+| AR_206 | Fix CONTRACT-077-085: ROUTER_PATH tem 3 .parent ao invés ... | 🔴 REJEITADO | docs/hbtrack/evidence/AR_206/executor_main.log |
+| AR_210 | Fix compute_behavior_hash: normalizar timings pytest no s... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_210/executor_main.log |
 | AR_998 | Test Write Scope Section Generation | ✅ VERIFICADO | docs/hbtrack/evidence/AR_998/executor_main.log |
 | AR_999 | Exemplo: Adicionar campo birthdate em Person | ✅ VERIFICADO | docs/hbtrack/evidence/AR_999/executor_main.log |

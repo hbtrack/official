@@ -1,0 +1,40 @@
+{
+  "ar_id": "196",
+  "validation_command": "python -c \"import re,sys;e=[];b=open('docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md',encoding='utf-8').read();n_pend=len(re.findall(r'AR-TRAIN-0[12][0-9].*PENDENTE',b));e+=[f'FAIL backlog still has {n_pend} PENDENTE AR-TRAINs'] if n_pend>0 else [None];inv=open('docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md',encoding='utf-8').read();seg40=inv[inv.index('INV-TRAIN-040'):inv.index('INV-TRAIN-040')+300] if 'INV-TRAIN-040' in inv else '';seg41=inv[inv.index('INV-TRAIN-041'):inv.index('INV-TRAIN-041')+300] if 'INV-TRAIN-041' in inv else '';e+=['FAIL INV-040 still PARCIAL'] if 'PARCIAL' in seg40 else [None];e+=['FAIL INV-041 still PARCIAL'] if 'PARCIAL' in seg41 else [None];sc=open('docs/hbtrack/modulos/treinos/TRAINING_SCREENS_SPEC.md',encoding='utf-8').read();seg13=sc[sc.index('SCREEN-TRAIN-013'):sc.index('SCREEN-TRAIN-013')+400] if 'SCREEN-TRAIN-013' in sc else '';e+=['FAIL SCREEN-013 still BLOQUEADO'] if 'BLOQUEADO' in seg13 else [None];ct=open('docs/hbtrack/modulos/treinos/TRAINING_FRONT_BACK_CONTRACT.md',encoding='utf-8').read();g91=len(re.findall(r'CONTRACT-TRAIN-09[1-5].*GAP',ct));e+=[f'FAIL CONTRACT-091..095 GAP={g91}'] if g91>0 else [None];errs=[x for x in e if x];[print(x) for x in errs];print('PASS: all AC checks ok') if not errs else None;sys.exit(len(errs))\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "2ecd5b6ad4bf18d429393cb1bed1555f7ac76f2d8fb1e107034ed99fa4fc0608",
+      "hash": "2ecd5b6ad4bf18d4",
+      "stdout_len": 23,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "2ecd5b6ad4bf18d429393cb1bed1555f7ac76f2d8fb1e107034ed99fa4fc0608",
+      "hash": "2ecd5b6ad4bf18d4",
+      "stdout_len": 23,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "2ecd5b6ad4bf18d429393cb1bed1555f7ac76f2d8fb1e107034ed99fa4fc0608",
+      "hash": "2ecd5b6ad4bf18d4",
+      "stdout_len": 23,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

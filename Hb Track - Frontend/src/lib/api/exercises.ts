@@ -30,9 +30,12 @@ export interface ExerciseTag {
   children?: ExerciseTag[];
 }
 
+export type VisibilityMode = 'org_wide' | 'restricted';
+export type ExerciseScope = 'SYSTEM' | 'ORG';
+
 export interface Exercise {
   id: string;
-  organization_id: string;
+  organization_id: string | null;
   name: string;
   description: string | null;
   tag_ids: string[];
@@ -41,10 +44,22 @@ export interface Exercise {
   created_by_user_id: string;
   created_at: string;
   updated_at: string;
+  // Adicionados pelo AR_181 (scope/visibility/soft-delete)
+  scope?: ExerciseScope;
+  visibility_mode?: VisibilityMode;
+  deleted_at?: string | null;
   // Computed
   tags?: ExerciseTag[];
   is_favorite?: boolean;
   youtube_embed_url?: string;
+}
+
+export interface ExerciseACLEntry {
+  id: string;
+  exercise_id: string;
+  user_id: string;
+  granted_by_user_id: string;
+  granted_at: string;
 }
 
 export interface ExerciseFavorite {
@@ -181,6 +196,52 @@ export async function removeFavorite(exerciseId: string): Promise<void> {
 export async function getFavorites(): Promise<ExerciseFavorite[]> {
   const response = await apiClient.get<ExerciseFavorite[]>('/exercise-favorites');
   return response;
+}
+
+/**
+ * Copia um exercício SYSTEM para a organização do usuário (copy-to-org)
+ */
+export async function copyExerciseToOrg(exerciseId: string): Promise<Exercise> {
+  const response = await apiClient.post<Exercise>(`/exercises/${exerciseId}/copy-to-org`, {});
+  return response;
+}
+
+/**
+ * Altera visibility_mode do exercício (org_wide | restricted)
+ */
+export async function patchExerciseVisibility(
+  exerciseId: string,
+  visibilityMode: VisibilityMode
+): Promise<Exercise> {
+  const response = await apiClient.patch<Exercise>(`/exercises/${exerciseId}/visibility`, {
+    visibility_mode: visibilityMode,
+  });
+  return response;
+}
+
+/**
+ * Lista usuários com acesso ao exercício (ACL)
+ */
+export async function getExerciseACL(exerciseId: string): Promise<ExerciseACLEntry[]> {
+  const response = await apiClient.get<ExerciseACLEntry[]>(`/exercises/${exerciseId}/acl`);
+  return response;
+}
+
+/**
+ * Adiciona usuário à ACL do exercício
+ */
+export async function addUserToACL(exerciseId: string, targetUserId: string): Promise<ExerciseACLEntry> {
+  const response = await apiClient.post<ExerciseACLEntry>(`/exercises/${exerciseId}/acl`, {
+    target_user_id: targetUserId,
+  });
+  return response;
+}
+
+/**
+ * Remove usuário da ACL do exercício
+ */
+export async function removeUserFromACL(exerciseId: string, userId: string): Promise<void> {
+  await apiClient.delete(`/exercises/${exerciseId}/acl/${userId}`);
 }
 
 // ==================== HELPERS ====================

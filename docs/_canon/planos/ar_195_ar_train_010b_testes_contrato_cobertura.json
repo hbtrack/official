@@ -1,0 +1,25 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "tasks": [
+    {
+      "id": "195",
+      "title": "AR-TRAIN-010B: testes INV-TRAIN-013/024 + CONTRACT-TRAIN-073..085 + TEST_MATRIX sync",
+      "description": "Class T. Cobrir: (1) INV-TRAIN-013 gamification_badge_eligibility — completar test_inv_train_013_gamification_badge_rules.py (status PARCIAL -> cobertura VERIFICADO); (2) INV-TRAIN-024 websocket_broadcast_for_alerts_and_badges — completar test_inv_train_024_websocket_broadcast.py (status PARCIAL -> cobertura VERIFICADO); (3) CONTRACT-TRAIN-073 GET /analytics/wellness-rankings, CONTRACT-TRAIN-074 POST /analytics/wellness-rankings/calculate, CONTRACT-TRAIN-075 GET /analytics/wellness-rankings/{team_id}/athletes-90plus; (4) CONTRACT-TRAIN-077..085 /training/alerts-suggestions/* endpoints (status DIVERGENTE_DO_SSOT — criar/atualizar testes alinhados ao SSOT, nao ao backend atual). Atualizar TEST_MATRIX_TRAINING.md referenciando AR-TRAIN-010B para INV-TRAIN-013 e INV-TRAIN-024. Deps: AR-TRAIN-001..009 todos VERIFICADOS em 2026-03-01.",
+      "criteria": "AC-001 PASS: TEST_MATRIX_TRAINING.md referencia AR-TRAIN-010B para INV-TRAIN-013 e INV-TRAIN-024. Arquivos de teste para INV-TRAIN-013 e INV-TRAIN-024 existem e cobertura elevada de PARCIAL para VERIFICADO. Contract tests para CONTRACT-TRAIN-073..075 e CONTRACT-TRAIN-077..085 existem em Hb Track - Backend/tests/training/contracts/.",
+      "validation_command": "python -c \"c=open('docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md').read(); assert 'AR-TRAIN-010B' in c, 'AR-TRAIN-010B ausente TEST_MATRIX'; s13=c[max(0,c.index('INV-TRAIN-013')-200):c.index('INV-TRAIN-013')+1000]; assert 'AR-TRAIN-010B' in s13, 'AR-TRAIN-010B nao referenciado perto de INV-TRAIN-013'; s24=c[max(0,c.index('INV-TRAIN-024')-200):c.index('INV-TRAIN-024')+1000]; assert 'AR-TRAIN-010B' in s24, 'AR-TRAIN-010B nao referenciado perto de INV-TRAIN-024'; print('OK: AC-001 PASS')\"",
+      "evidence_file": "docs/hbtrack/evidence/AR_195/executor_main.log",
+      "write_scope": [
+        "Hb Track - Backend/tests/training/invariants/test_inv_train_013_gamification_badge_rules.py",
+        "Hb Track - Backend/tests/training/invariants/test_inv_train_024_websocket_broadcast.py",
+        "Hb Track - Backend/tests/training/contracts/*.py",
+        "docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md"
+      ],
+      "risks": [
+        "CONTRACT-TRAIN-077..085 marcados DIVERGENTE_DO_SSOT: Executor deve criar/atualizar testes alinhados ao SSOT (nao ao backend atual). Confirmar endpoints em TRAINING_FRONT_BACK_CONTRACT.md antes de implementar.",
+        "INV-TRAIN-013 e INV-TRAIN-024 status PARCIAL: testes existem mas cobertura incompleta. Executor deve completar sem remover testes pre-existentes.",
+        "validation_command usa c.index() — falha se INV-TRAIN-013 ou INV-TRAIN-024 nao estiverem presentes em TEST_MATRIX_TRAINING.md. Verificar existencia antes de hb report."
+      ]
+    }
+  ]
+}

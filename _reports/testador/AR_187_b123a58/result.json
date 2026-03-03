@@ -1,0 +1,40 @@
+{
+  "ar_id": "187",
+  "validation_command": "python -c \"import os; b='Hb Track - Backend'; r=open(os.path.join(b,'app','api','v1','routers','athlete_training.py')).read(); assert 'preview' in r, 'router missing preview endpoint'; assert 'wellness_blocked' in r or 'check_content_access' in r, 'router missing wellness gate call'; api=open(os.path.join(b,'app','api','v1','api.py')).read(); assert 'athlete_training' in api, 'api.py missing athlete_training router include'; fb='Hb Track - Frontend'; fe=os.path.join(fb,'src','lib','api','athlete-training.ts'); assert os.path.exists(fe), 'athlete-training.ts missing'; fp=os.path.join(fb,'src','app','(athlete)','training'); assert os.path.exists(fp), 'athlete training page missing'; print('PASS AR_187')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "a5c9f72f97dcc720a1e46649fdf964713375f7592d6e4d7ea31538b316a6fbfb",
+      "hash": "a5c9f72f97dcc720",
+      "stdout_len": 12,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "a5c9f72f97dcc720a1e46649fdf964713375f7592d6e4d7ea31538b316a6fbfb",
+      "hash": "a5c9f72f97dcc720",
+      "stdout_len": 12,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "a5c9f72f97dcc720a1e46649fdf964713375f7592d6e4d7ea31538b316a6fbfb",
+      "hash": "a5c9f72f97dcc720",
+      "stdout_len": 12,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

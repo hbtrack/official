@@ -1,0 +1,33 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "AR-TRAIN-019 — Batch 4 TRAINING_BATCH_PLAN_v1.md. Depende de AR-TRAIN-017 (AR_185 VERIFICADO). Visao pre-treino do atleta + wellness content gate. athlete_content_gate_service.py ja existe com check_content_access + check_progress_access (AR_159). O que falta: (1) athlete_training.py router (novo) com endpoint GET /athlete/training-sessions/{session_id}/preview; (2) FE /athlete/training/[sessionId]/page.tsx (visao pre-treino atleta); (3) integrar wellness gate na visao. CONTRACT-TRAIN-096: preview endpoint. CONTRACT-TRAIN-105: wellness content gate. INV-TRAIN-068/069/071/076/078.",
+  "assumptions": [
+    "AR-TRAIN-017 (AR_185) VERIFICADO — precondicao",
+    "athlete_content_gate_service.py ja existe com check_content_access(session_id, user_id) (AR_159)",
+    "Nenhuma nova migration necessaria",
+    "FE usa Next.js App Router; rota athlete em src/app/(athlete)/",
+    "Media de exercicios (exercise_media) ja existem no DB (AR_181/exercise_media.py VERIFICADO)"
+  ],
+  "tasks": [
+    {
+      "id": "187",
+      "title": "Criar athlete_training.py router (preview) + FE visao pre-treino atleta com wellness gate",
+      "description": "BACKEND: Criar Hb Track - Backend/app/api/v1/routers/athlete_training.py com endpoint: GET /athlete/training-sessions/{session_id}/preview — retorna dados da sessao pre-treino para atleta: exercicios (lista minima: nome, descricao, media_urls se disponivel), horario, objetivo, wellness_blocked=bool (resultado de athlete_content_gate_service.check_content_access). Se wellness_blocked=True: retornar apenas info basica (nome da sessao, horario) mais flag wellness_blocked=True. Se wellness_blocked=False: retornar exercicios com detalhes + media. Permissao: atleta autenticado da sessao. Registrar o router em Hb Track - Backend/app/api/v1/api.py (adicionar include_router). FRONTEND: Criar Hb Track - Frontend/src/app/(athlete)/training/[sessionId]/page.tsx — tela pre-treino: (1) se wellness_blocked=True: mostrar banner de alerta pedindo preenchimento de wellness antes de ver conteudo completo; (2) se wellness_blocked=False: mostrar exercicios com nome/descricao/media (preview). Criar Hb Track - Frontend/src/lib/api/athlete-training.ts com funcao getTrainingPreview(sessionId). INV-TRAIN-068: atleta PODE ver treino antes. INV-TRAIN-069: midia acessivel ao atleta. INV-TRAIN-071: wellness missing bloqueia conteudo completo. INV-TRAIN-076: wellness obrigatorio. INV-TRAIN-078: progresso exige compliance wellness. PROIBIDO: nao alterar athlete_content_gate_service.py.",
+      "criteria": "1) Hb Track - Backend/app/api/v1/routers/athlete_training.py existe com endpoint /preview. 2) athlete_training router registrado em api.py. 3) athlete_content_gate_service.check_content_access chamado no endpoint. 4) Response inclui wellness_blocked bool. 5) Hb Track - Frontend/src/app/(athlete)/training/[sessionId]/page.tsx existe. 6) Hb Track - Frontend/src/lib/api/athlete-training.ts existe. 7) Tela mostra banner de wellness se wellness_blocked=True (INV-TRAIN-071).",
+      "validation_command": "python -c \"import os; b='Hb Track - Backend'; r=open(os.path.join(b,'app','api','v1','routers','athlete_training.py')).read(); assert 'preview' in r, 'router missing preview endpoint'; assert 'wellness_blocked' in r or 'check_content_access' in r, 'router missing wellness gate call'; api=open(os.path.join(b,'app','api','v1','api.py')).read(); assert 'athlete_training' in api, 'api.py missing athlete_training router include'; fb='Hb Track - Frontend'; fe=os.path.join(fb,'src','lib','api','athlete-training.ts'); assert os.path.exists(fe), 'athlete-training.ts missing'; fp=os.path.join(fb,'src','app','(athlete)','training'); assert os.path.exists(fp), 'athlete training page missing'; print('PASS AR_187')\"",
+      "write_scope": [
+        "Hb Track - Backend/app/api/v1/routers/athlete_training.py",
+        "Hb Track - Backend/app/api/v1/api.py",
+        "Hb Track - Frontend/src/lib/api/athlete-training.ts",
+        "Hb Track - Frontend/src/app/*/training"
+      ],
+      "notes": "athlete_content_gate_service.py tem check_content_access(session_id, user_id) — chamar para determinar wellness_blocked. Se AccessGated retornado: wellness_blocked=True; se AccessGranted: wellness_blocked=False. Verificar assinatura exata do service antes de codificar o router. api.py: adicionar include_router(athlete_training.router, prefix='/athlete', tags=['athlete-training']).",
+      "risks": [
+        "athlete_training.py pode conflitar com athlete_states.py ou athletes.py — verificar rotas existentes antes de registrar",
+        "A tela FE /athlete/training/[sessionId] pode ja existir parcialmente (athlete/training path) — inspecionar src/app/(athlete)/ antes",
+        "Media de exercicios depende de exercise_media (AR_181) — verificar se ExerciseMedia model esta corretamente importado no servico de preview"
+      ]
+    }
+  ]
+}
