@@ -26872,6 +26872,576 @@
         }
       }
     },
+    "/api/v1/post-training/sessions/{session_id}/feedback": {
+      "post": {
+        "tags": [
+          "post-training",
+          "post-training"
+        ],
+        "summary": "Registrar feedback pós-treino (atleta)",
+        "description": "Atleta registra feedback imediato após encerramento da sessão. INV-TRAIN-070: somente aceito se sessão está encerrada. INV-TRAIN-077: texto é privado — treinador não acessa verbatim.",
+        "operationId": "create_post_training_feedback_api_v1_post_training_sessions__session_id__feedback_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Session Id"
+            }
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostTrainingFeedbackRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostTrainingFeedbackResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/post-training/sessions/{session_id}/summary": {
+      "get": {
+        "tags": [
+          "post-training",
+          "post-training"
+        ],
+        "summary": "Resumo de sessão pós-treino (atleta e treinador)",
+        "description": "Retorna resumo de performance da sessão encerrada. INV-TRAIN-077: treinador recebe apenas rating médio e contagem — NUNCA o texto verbatim do feedback do atleta.",
+        "operationId": "get_session_summary_api_v1_post_training_sessions__session_id__summary_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Session Id"
+            }
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionSummaryResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/post-training/athletes/{athlete_id}/feedbacks": {
+      "get": {
+        "tags": [
+          "post-training",
+          "post-training"
+        ],
+        "summary": "Listar feedbacks de atleta (treinador — apenas agregados)",
+        "description": "Treinador lista feedbacks pós-treino de um atleta por sessão. INV-TRAIN-077: retorna somente rating por sessão — NUNCA texto verbatim.",
+        "operationId": "list_athlete_feedbacks_api_v1_post_training_athletes__athlete_id__feedbacks_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "athlete_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Athlete Id"
+            }
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ai/chat": {
+      "post": {
+        "tags": [
+          "ai-coach",
+          "ai-coach"
+        ],
+        "summary": "Chat conversacional com IA Coach",
+        "description": "Atleta ou treinador envia mensagem para a IA Coach. INV-072: guard de tom imperativo aplicado na resposta. INV-073: filtro de privacidade — conteúdo íntimo do atleta não exposto ao treinador.",
+        "operationId": "chat_api_v1_ai_chat_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatMessageRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatMessageResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ai/coach/suggest-session": {
+      "post": {
+        "tags": [
+          "ai-coach",
+          "ai-coach"
+        ],
+        "summary": "Sugerir sessão de treino (treinador — rascunho obrigatório)",
+        "description": "Treinador solicita sugestão de sessão à IA. INV-080: resultado SEMPRE criado como draft — nunca autopublicado. INV-081: justificativa obrigatória; sem ela → label 'ideia_generica'.",
+        "operationId": "suggest_session_api_v1_ai_coach_suggest_session_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SuggestSessionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuggestSessionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ai/coach/suggest-microcycle": {
+      "post": {
+        "tags": [
+          "ai-coach",
+          "ai-coach"
+        ],
+        "summary": "Sugerir microciclo (treinador — rascunho obrigatório)",
+        "description": "INV-080: microciclo sugerido sempre como draft. INV-081: sem justificativa → label 'ideia_generica'.",
+        "operationId": "suggest_microcycle_api_v1_ai_coach_suggest_microcycle_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SuggestMicrocycleRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ai/coach/drafts": {
+      "get": {
+        "tags": [
+          "ai-coach",
+          "ai-coach"
+        ],
+        "summary": "Listar rascunhos pendentes de revisão (treinador)",
+        "description": "Lista rascunhos de sessões/microciclos gerados pela IA aguardando aprovação do treinador. INV-080: nenhum draft é autopublicado.",
+        "operationId": "list_drafts_api_v1_ai_coach_drafts_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DraftListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/users": {
       "get": {
         "tags": [
@@ -39757,6 +40327,58 @@
         "title": "ChangePasswordRequest",
         "description": "Requisição de troca de senha"
       },
+      "ChatMessageRequest": {
+        "properties": {
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Message",
+            "description": "Mensagem do usuário"
+          },
+          "session_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Id",
+            "description": "ID da sessão de contexto"
+          }
+        },
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "title": "ChatMessageRequest",
+        "description": "Mensagem de chat para a IA Coach."
+      },
+      "ChatMessageResponse": {
+        "properties": {
+          "response": {
+            "type": "string",
+            "title": "Response"
+          },
+          "tone_validated": {
+            "type": "boolean",
+            "title": "Tone Validated",
+            "default": true
+          },
+          "privacy_filter_applied": {
+            "type": "boolean",
+            "title": "Privacy Filter Applied",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "response"
+        ],
+        "title": "ChatMessageResponse",
+        "description": "Resposta da IA Coach ao chat."
+      },
       "CloudinarySignatureResponse": {
         "properties": {
           "cloud_name": {
@@ -43265,6 +43887,29 @@
         "type": "object",
         "title": "DocumentsSchema",
         "description": "Documentos"
+      },
+      "DraftListResponse": {
+        "properties": {
+          "drafts": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Drafts"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          }
+        },
+        "type": "object",
+        "required": [
+          "drafts",
+          "total"
+        ],
+        "title": "DraftListResponse",
+        "description": "Lista de rascunhos pendentes de revisão pelo treinador."
       },
       "ErrorCode": {
         "type": "string",
@@ -48683,6 +49328,59 @@
         ],
         "title": "PositionResponse"
       },
+      "PostTrainingFeedbackRequest": {
+        "properties": {
+          "feedback_text": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Feedback Text",
+            "description": "Texto do feedback (privado — INV-077)"
+          },
+          "rating": {
+            "type": "integer",
+            "maximum": 10.0,
+            "minimum": 0.0,
+            "title": "Rating",
+            "description": "Percepção subjetiva de esforço 0–10"
+          }
+        },
+        "type": "object",
+        "required": [
+          "feedback_text",
+          "rating"
+        ],
+        "title": "PostTrainingFeedbackRequest",
+        "description": "Corpo da requisição para registrar feedback pós-treino."
+      },
+      "PostTrainingFeedbackResponse": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "title": "Session Id"
+          },
+          "athlete_id": {
+            "type": "string",
+            "title": "Athlete Id"
+          },
+          "rating": {
+            "type": "integer",
+            "title": "Rating"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "default": "Feedback registrado com sucesso."
+          }
+        },
+        "type": "object",
+        "required": [
+          "session_id",
+          "athlete_id",
+          "rating"
+        ],
+        "title": "PostTrainingFeedbackResponse",
+        "description": "Resposta ao registrar feedback."
+      },
       "PresenceStatus": {
         "type": "string",
         "enum": [
@@ -50427,6 +51125,52 @@
           "notes": "Aumentado para 20min devido à baixa intensidade"
         }
       },
+      "SessionSummaryResponse": {
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "title": "Session Id"
+          },
+          "session_status": {
+            "type": "string",
+            "title": "Session Status"
+          },
+          "rating_avg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rating Avg"
+          },
+          "feedback_count": {
+            "type": "integer",
+            "title": "Feedback Count",
+            "default": 0
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "session_id",
+          "session_status"
+        ],
+        "title": "SessionSummaryResponse",
+        "description": "Resumo de sessão para treinador/atleta."
+      },
       "SessionTemplateCreate": {
         "properties": {
           "focus_attack_positional_pct": {
@@ -50903,6 +51647,120 @@
         ],
         "title": "SetPasswordResponse",
         "description": "Resposta de senha definida"
+      },
+      "SuggestMicrocycleRequest": {
+        "properties": {
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "week_focus": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Week Focus"
+          },
+          "justification": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Justification"
+          },
+          "context": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "justification"
+        ],
+        "title": "SuggestMicrocycleRequest",
+        "description": "Solicitar sugestão de microciclo."
+      },
+      "SuggestSessionRequest": {
+        "properties": {
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title",
+            "description": "Título sugerido para a sessão"
+          },
+          "justification": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Justification",
+            "description": "Justificativa baseada em sinais do sistema (INV-081)"
+          },
+          "context": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "justification"
+        ],
+        "title": "SuggestSessionRequest",
+        "description": "Solicitar sugestão de sessão de treino."
+      },
+      "SuggestSessionResponse": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "requires_coach_approval": {
+            "type": "boolean",
+            "title": "Requires Coach Approval"
+          },
+          "justification": {
+            "type": "string",
+            "title": "Justification"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "status",
+          "source",
+          "requires_coach_approval",
+          "justification",
+          "label"
+        ],
+        "title": "SuggestSessionResponse",
+        "description": "Rascunho de sessão sugerida pela IA."
       },
       "SuggestionApply": {
         "properties": {
