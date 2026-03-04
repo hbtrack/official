@@ -1,218 +1,33 @@
-.claude/settings.local.json
-.github/agents/Arquiteto.agent.md
-.github/agents/Executor.agent.md
-.github/agents/Testador.agent.md
-Hb Track - Backend/app/models/training_session.py
-Hb Track - Backend/app/services/ai_coach_service.py
-Hb Track - Backend/docs/ssot/alembic_state.txt
-Hb Track - Backend/docs/ssot/schema.sql
-Hb Track - Backend/tests/training/contracts/test_contract_train_001_012_sessions_crud.py
-Hb Track - Backend/tests/training/contracts/test_contract_train_013_028_teams_attendance.py
-Hb Track - Backend/tests/training/contracts/test_contract_train_029_039_wellness.py
-Hb Track - Backend/tests/training/contracts/test_contract_train_040_072_ciclos_exercises.py
-Hb Track - Backend/tests/training/contracts/test_contract_train_073_075_wellness_rankings.py
-Hb Track - Backend/tests/training/contracts/test_contract_train_086_095_exports_acl.py
-Hb Track - Backend/tests/training/contracts/test_contract_train_096_101_105_ia_athlete.py
-Hb Track - Backend/tests/training/contracts/test_contract_train_097_100_presence_pending.py
-Hb Track - Backend/tests/training/invariants/test_dec_train_001_004_wellness_exports.py
-Hb Track - Backend/tests/training/invariants/test_dec_train_exb_rbac_scope_acl.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_010_wellness_post_uniqueness.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_011_deviation_rules.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_013_gamification_badge_rules.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_018_training_session_microcycle_status.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_018_training_session_microcycle_status_route.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_019_training_session_audit_logs.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_020_cache_invalidation_trigger.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_021_internal_load_trigger.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_024_websocket_broadcast.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_028_focus_sum_constraint.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_029_edit_blocked_after_in_progress.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_031_derive_phase_focus.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_034_wellness_pre_sleep_quality.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_035_session_templates_unique_name.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_035_session_templates_unique_name_runtime.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_036_wellness_rankings_unique.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_037_cycle_dates.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_050_exercise_favorites_unique.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_052_exercise_media.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_053_soft_delete_exercise_no_break_historic.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_054_standalone_session.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_058_session_structure_mutable.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_059_exercise_order_contiguous.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_060_org_exercise_default_restricted.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_061_system_exercise_copy_not_edit.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_062_exercise_visibility_required.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_063_preconfirm.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_064_close_consolidation.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_065_close_pending_guard.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_066_pending_items.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_067_athlete_pending_rbac.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_070_post_conversational.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_076_wellness_policy.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_079_individual_recognition_no_intimate_leak.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_080_ai_coach_draft_only.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_081_ai_suggestion_requires_justification.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_148_exercise_bank_services.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_exb_acl_005_creator_implicit_access.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_exb_acl_006_acl_table.py
-Hb Track - Backend/tests/training/invariants/test_inv_train_exb_acl_007_acl_change_no_retrobreak.py
+.github/skills/test-preconditions-guard/SKILL.md
+Hb Track - Backend/.env.example
+Hb Track - Backend/app/core/config.py
+Hb Track - Backend/app/main.py
+Hb Track - Backend/tests/unit/test_config.py
 _reports/ARQUITETO.md
 _reports/EXECUTOR.md
 _reports/TESTADOR.md
-_reports/testador/AR_207_142a146/context.json
-_reports/testador/AR_207_142a146/result.json
-_reports/testador/AR_208_142a146/context.json
-_reports/testador/AR_208_142a146/result.json
-_reports/testador/AR_209_142a146/context.json
-_reports/testador/AR_209_142a146/result.json
-_reports/testador/AR_211_142a146/context.json
-_reports/testador/AR_211_142a146/result.json
-_reports/testador/AR_212_142a146/context.json
-_reports/testador/AR_212_142a146/result.json
-_reports/testador/AR_213_142a146/context.json
-_reports/testador/AR_213_142a146/result.json
-_reports/testador/AR_214_142a146/context.json
-_reports/testador/AR_214_142a146/result.json
-_reports/testador/AR_215_142a146/context.json
-_reports/testador/AR_215_142a146/result.json
-_reports/testador/AR_216_142a146/context.json
-_reports/testador/AR_216_142a146/result.json
-_reports/testador/AR_217_142a146/context.json
-_reports/testador/AR_217_142a146/result.json
-_reports/testador/AR_218_142a146/context.json
-_reports/testador/AR_218_142a146/result.json
-_reports/testador/AR_219_142a146/context.json
-_reports/testador/AR_219_142a146/result.json
-_reports/testador/AR_220_142a146/context.json
-_reports/testador/AR_220_142a146/result.json
-_reports/testador/AR_221_142a146/context.json
-_reports/testador/AR_221_142a146/result.json
-_reports/testador/AR_223_142a146/context.json
-_reports/testador/AR_223_142a146/result.json
-_reports/testador/AR_224_142a146/context.json
-_reports/testador/AR_224_142a146/result.json
-_reports/testador/AR_225_142a146/context.json
-_reports/testador/AR_225_142a146/result.json
-_reports/testador/AR_226_142a146/context.json
-_reports/testador/AR_226_142a146/result.json
-_reports/testador/AR_227_142a146/context.json
-_reports/testador/AR_227_142a146/result.json
-_reports/testador/AR_228_142a146/context.json
-_reports/testador/AR_228_142a146/result.json
-_reports/training/DONE_GATE_TRAINING.md
-_reports/training/DONE_GATE_TRAINING_v2.md
-_reports/training/TEST-TRAIN-FLOW-001.md
-_reports/training/TEST-TRAIN-FLOW-002.md
-_reports/training/TEST-TRAIN-FLOW-003.md
-_reports/training/TEST-TRAIN-FLOW-004.md
-_reports/training/TEST-TRAIN-FLOW-005.md
-_reports/training/TEST-TRAIN-FLOW-006.md
-_reports/training/TEST-TRAIN-FLOW-007.md
-_reports/training/TEST-TRAIN-FLOW-008.md
-_reports/training/TEST-TRAIN-FLOW-009.md
-_reports/training/TEST-TRAIN-FLOW-010.md
-_reports/training/TEST-TRAIN-FLOW-011.md
-_reports/training/TEST-TRAIN-FLOW-012.md
-_reports/training/TEST-TRAIN-FLOW-013.md
-_reports/training/TEST-TRAIN-FLOW-014.md
-_reports/training/TEST-TRAIN-FLOW-015.md
-_reports/training/TEST-TRAIN-FLOW-016.md
-_reports/training/TEST-TRAIN-FLOW-017.md
-_reports/training/TEST-TRAIN-FLOW-018.md
-_reports/training/TEST-TRAIN-FLOW-019.md
-_reports/training/TEST-TRAIN-FLOW-020.md
-_reports/training/TEST-TRAIN-FLOW-021.md
-_reports/training/TEST-TRAIN-SCREEN-001.md
-_reports/training/TEST-TRAIN-SCREEN-002.md
-_reports/training/TEST-TRAIN-SCREEN-003.md
-_reports/training/TEST-TRAIN-SCREEN-004.md
-_reports/training/TEST-TRAIN-SCREEN-005.md
-_reports/training/TEST-TRAIN-SCREEN-006.md
-_reports/training/TEST-TRAIN-SCREEN-007.md
-_reports/training/TEST-TRAIN-SCREEN-008.md
-_reports/training/TEST-TRAIN-SCREEN-009.md
-_reports/training/TEST-TRAIN-SCREEN-010.md
-_reports/training/TEST-TRAIN-SCREEN-011.md
-_reports/training/TEST-TRAIN-SCREEN-012.md
-_reports/training/TEST-TRAIN-SCREEN-013.md
-_reports/training/TEST-TRAIN-SCREEN-014.md
-_reports/training/TEST-TRAIN-SCREEN-015.md
-_reports/training/TEST-TRAIN-SCREEN-016.md
-_reports/training/TEST-TRAIN-SCREEN-017.md
-_reports/training/TEST-TRAIN-SCREEN-018.md
-_reports/training/TEST-TRAIN-SCREEN-019.md
-_reports/training/TEST-TRAIN-SCREEN-020.md
-_reports/training/TEST-TRAIN-SCREEN-021.md
-_reports/training/TEST-TRAIN-SCREEN-022.md
-_reports/training/TEST-TRAIN-SCREEN-023.md
-_reports/training/TEST-TRAIN-SCREEN-024.md
-_reports/training/TEST-TRAIN-SCREEN-025.md
-_reports/training/evidence_run_batch13.txt
+_reports/testador/AR_231_b452cbf/context.json
+_reports/testador/AR_231_b452cbf/result.json
+_reports/testador/AR_233_b452cbf/context.json
+_reports/testador/AR_233_b452cbf/result.json
 _tmp_staged_before.txt
 _tmp_unstaged_before.txt
-ar_046_cmd.py
-docs/_canon/planos/ar_batch10_flows_contracts_207_208.json
-docs/_canon/planos/ar_batch13_not_run_034.json
-docs/_canon/planos/ar_batch14_contracts_035_039.json
-docs/_canon/planos/ar_batch15_dec_flows_screens_040_042.json
-docs/_canon/planos/ar_batch16_done_gate_043.json
-docs/_canon/planos/ar_batch18_fix_test_layer_044_047.json
-docs/_canon/planos/ar_batch19_sync_app_layer_048.json
-docs/_canon/specs/GOVERNED_ROOTS.yaml
+docs/_canon/planos/ar_cors_hardening_233.json
+docs/_canon/specs/GATES_REGISTRY.yaml
 docs/hbtrack/Hb Track Kanban.md
 docs/hbtrack/_INDEX.md
-docs/hbtrack/ars/features/AR_202_fix_inv-001_test_invalid_case_2_expects_wrong_cons.md
-"docs/hbtrack/ars/features/AR_203_fix_inv-008_schema_path_tem_3_.parent_ao_inv\303\251s_de_.md"
-"docs/hbtrack/ars/features/AR_204_fix_inv-030_schema_path_tem_3_.parent_ao_inv\303\251s_de_.md"
-docs/hbtrack/ars/features/AR_205_fix_inv-032_6_async_fixtures_usam_@pytest.fixture_.md
-docs/hbtrack/ars/features/AR_206_fix_contract-077-085_router_path_tem_3_.parent_ao_.md
-docs/hbtrack/ars/features/AR_207_flow_p0_evidence_flow-train-001..006_+_017_+_018_m.md
-docs/hbtrack/ars/features/AR_208_contract_p0_tests_contract-train-097..100_pre-conf.md
-docs/hbtrack/ars/features/AR_209_done_gate_sync_test_matrix_v1.8.0_+_smoke_batch9_5.md
-"docs/hbtrack/ars/features/AR_211_sync_\302\2475_test_matrix_~40_inv_pendente_\342\206\222_coberto_not.md"
-docs/hbtrack/ars/features/AR_212_criar_6_testes_ausentes_inv-053_060_061_062_exb-ac.md
-docs/hbtrack/ars/features/AR_213_executar_not_run_inv_evidence_batch13.md
-docs/hbtrack/ars/features/AR_214_contract_tests_sessions_crud_contract_001_012.md
-docs/hbtrack/ars/features/AR_215_contract_tests_teams_attendance_contract_013_028.md
-docs/hbtrack/ars/features/AR_216_contract_tests_wellness_pre_post_contract_029_039.md
-docs/hbtrack/ars/features/AR_217_contract_tests_ciclos_exercises_analytics_export.md
-docs/hbtrack/ars/features/AR_218_contract_tests_ia_coach_athlete_view_096_101_105.md
-docs/hbtrack/ars/features/AR_219_dec_tests_train_001_004_exb_rbac_ar_train_040.md
-docs/hbtrack/ars/features/AR_220_flows_p1_manual_guiado_007_016_019_021_ar_train_041.md
-docs/hbtrack/ars/features/AR_221_screens_smoke_manual_guiado_001_025_ar_train_042.md
-"docs/hbtrack/ars/features/AR_222_ar-train-043_done_gate_\302\24710_final_-_sync_test_matri.md"
-docs/hbtrack/ars/features/AR_223_fix_contract-073-075_router_path_tem_3_.parent_ao_.md
-docs/hbtrack/ars/features/AR_224_fix_contract-097-100_assert_checa_'pre-confirm'_ma.md
-"docs/hbtrack/ars/features/AR_225_fix_async_fixtures_@pytest.fixture_\342\206\222_@pytest_async.md"
-docs/hbtrack/ars/features/AR_226_fix_db_fixture_setup_category_id_not_null_+_fk_tea.md
-docs/hbtrack/ars/features/AR_227_fix_import_stubs_ausentes_em_ai_coach_service_3_er.md
-"docs/hbtrack/ars/features/AR_228_fix_residuais_mistos_+_valida\303\247\303\243o_done_gate_suite_0.md"
-docs/hbtrack/ars/features/AR_229_sync_app_layer_modelos_inv-010_035_036_054_060_+_s.md
-docs/hbtrack/ars/features/AR_230_fix_residuais_test-layer_6_fails_+_10_errors_em_te.md
-docs/hbtrack/evidence/AR_207/executor_main.log
-docs/hbtrack/evidence/AR_208/executor_main.log
-docs/hbtrack/evidence/AR_209/executor_main.log
-docs/hbtrack/evidence/AR_211/executor_main.log
-docs/hbtrack/evidence/AR_212/executor_main.log
-docs/hbtrack/evidence/AR_213/executor_main.log
-docs/hbtrack/evidence/AR_214/executor_main.log
-docs/hbtrack/evidence/AR_215/executor_main.log
-docs/hbtrack/evidence/AR_216/executor_main.log
-docs/hbtrack/evidence/AR_217/executor_main.log
-docs/hbtrack/evidence/AR_218/executor_main.log
-docs/hbtrack/evidence/AR_219/executor_main.log
-docs/hbtrack/evidence/AR_220/executor_main.log
-docs/hbtrack/evidence/AR_221/executor_main.log
-docs/hbtrack/evidence/AR_222/executor_main.log
-docs/hbtrack/evidence/AR_223/executor_main.log
-docs/hbtrack/evidence/AR_224/executor_main.log
-docs/hbtrack/evidence/AR_225/executor_main.log
-docs/hbtrack/evidence/AR_226/executor_main.log
-docs/hbtrack/evidence/AR_227/executor_main.log
-docs/hbtrack/evidence/AR_228/executor_main.log
-docs/hbtrack/evidence/AR_229/executor_main.log
-docs/hbtrack/evidence/AR_230/executor_main.log
+"docs/hbtrack/ars/features/AR_231_sync_\302\2475_test_matrix_training.md_11_itens_not_run_f.md"
+"docs/hbtrack/ars/features/AR_232_done_gate_\302\24710_formal_test_matrix_v3.0.0_+_\302\24710_chec.md"
+"docs/hbtrack/ars/features/AR_233_centralizar_config_cors_em_config.py_+_valida\303\247\303\243o_f.md"
+"docs/hbtrack/ars/features/AR_234_refatorar_corsmiddleware_em_main.py_-_config_\303\272nica.md"
+"docs/hbtrack/ars/features/AR_235_criar_tests_test_cors.py_-_su\303\255te_m\303\255nima_de_preflig.md"
+docs/hbtrack/evidence/AR_231/executor_main.log
+docs/hbtrack/evidence/AR_232/executor_main.log
+docs/hbtrack/evidence/AR_233/executor_main.log
 docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md
+docs/hbtrack/modulos/treinos/DONE_GATE_TRAINING_v3.md
 docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md
 docs/hbtrack/modulos/treinos/TRAINING_BATCH_PLAN_v1.md
 docs/ssot/alembic_state.txt
+scripts/gates/tests/test_check_handoff_contract.py
+scripts/run/hb_cli.py

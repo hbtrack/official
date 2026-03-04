@@ -10,5 +10,9 @@ Quando o agente selecionado for ARQUITETO:
 - Escrever handoff em _reports/ARQUITETO.md.
 - Se faltar evidência/SSOT/ordem: bloquear (exit 4).
 
-
-
+Requisito PROOF/TRACE por AR_ID (obrigatório no handoff):
+- Para cada AR_ID listado no handoff, o bloco correspondente DEVE conter:
+  - `PROOF:` (ou `PROOF: N/A (governance)` com justificativa explícita)
+  - `TRACE:` (ou `TRACE: N/A (governance)` com justificativa explícita)
+- Handoff sem esses campos por AR_ID é considerado INCOMPLETO e não deve ser entregue.
+- "Por acaso" não é aceitável: o Arquiteto deve preencher deliberadamente cada campo.

@@ -1,0 +1,40 @@
+{
+  "ar_id": "231",
+  "validation_command": "python -c \"import re, sys; c=open('docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md',encoding='utf-8').read(); checks=[('Versão: v2.2.0','AC-005'),('INV-TRAIN-079','AC-001'),('INV-TRAIN-080','AC-002'),('INV-TRAIN-081','AC-002'),('INV-TRAIN-018','AC-003'),('INV-TRAIN-035','AC-004'),('AR-TRAIN-050','AC-006')]; failed=[l for t,l in checks if t not in c]; print('FAIL:',failed) or sys.exit(1) if failed else print('PASS: todos AC-001..AC-006 presentes')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "a7e941c9952cdb4e4263593a34b075723d93a6ea05306caf27cbac65554ad9f3",
+      "hash": "a7e941c9952cdb4e",
+      "stdout_len": 37,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "a7e941c9952cdb4e4263593a34b075723d93a6ea05306caf27cbac65554ad9f3",
+      "hash": "a7e941c9952cdb4e",
+      "stdout_len": 37,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "a7e941c9952cdb4e4263593a34b075723d93a6ea05306caf27cbac65554ad9f3",
+      "hash": "a7e941c9952cdb4e",
+      "stdout_len": 37,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

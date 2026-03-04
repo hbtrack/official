@@ -1,18 +1,33 @@
 # AR_BACKLOG_TRAINING.md — Backlog de ARs (Materialização) do Módulo TRAINING
 
 Status: ATIVO
-Versão: v2.2.0
+Versão: v2.4.0
 Tipo de Documento: AR Materialization Backlog (Normativo Operacional / SSOT)  
 Módulo: TRAINING  
 Fase: FASE_2 (PRD v2.2 — 2026-02-20) + DEC-TRAIN-* (2026-02-25) + FASE_3 (2026-02-27)  
 Autoridade: NORMATIVO_OPERACIONAL  
 Owners:
-- Arquitetura (Arquiteto): Codex (Arquiteto v2.2.0)
+- Arquitetura (Arquiteto): Codex (Arquiteto v2.4.0)
 - Execução (Executor): (a definir)
 - Auditoria/Testes: (a definir)
 
 Última revisão: 2026-03-03  
-Próxima revisão recomendada: 2026-03-06  
+Próxima revisão recomendada: 2026-03-10  
+
+> Changelog v2.4.0 (2026-03-03) — Arquiteto (Batch 21/22 planejados; AR-TRAIN-043 obsoleta):
+> - AR-TRAIN-043: EM_EXECUCAO → OBSOLETO (Contexto mudou pós-Batches 17-20; escopo de sync §5 TEST_MATRIX extraído para AR-TRAIN-050; Done Gate formal coberto por AR-TRAIN-051).
+> - AR-TRAIN-050 (G): ADICIONADA — Sync §5 TEST_MATRIX_TRAINING.md: 11 itens (INV-079/080/081 NOT_RUN→PASS + INV-018/035/058/059/063/064/076/EXB-ACL-006 FAIL/ERROR→PASS) refletindo AR-TRAIN-046 + AR-TRAIN-049 VERIFICADOS.
+> - AR-TRAIN-051 (G): ADICIONADA — Done Gate §10 final pós-Batch 21: declaração formal Done + bump versão matriz v2.2.0→v3.0.0 + §10/§0 preenchidos (substitui AR-TRAIN-043 com escopo atualizado).
+
+> Changelog v2.3.0 (2026-03-03) — Arquiteto (Sync Batches 14-20: status das ARs executadas):
+> - AR-TRAIN-035..042: PENDENTE → VERIFICADO (AR_214..221, hb seal 2026-03-03 — Batches 14/15: contratos P0 + DEC + Flows P1 + Screens).
+> - AR-TRAIN-043: PENDENTE → EM_EXECUCAO (AR_222 Done Gate §10 — suite verde não atingida ainda; 124 FAILs em AR_222).
+> - AR-TRAIN-044: PENDENTE → VERIFICADO (AR_225, hb seal 2026-03-03 — Fix async fixtures Batch 17).
+> - AR-TRAIN-045: PENDENTE → VERIFICADO (AR_226, hb seal 2026-03-03 — Fix DB fixture setup).
+> - AR-TRAIN-046: PENDENTE → VERIFICADO (AR_227, hb seal 2026-03-03 — Fix import stubs ai_coach_service).
+> - AR-TRAIN-047: PENDENTE → REJEITADO (AR_228, 🔴 REJEITADO — fix residuais substituído por AR-TRAIN-049).
+> - AR-TRAIN-048: PENDENTE → VERIFICADO (AR_229, hb seal 2026-03-03 — Sync app layer modelos/serviços/stubs Batch 19).
+> - AR-TRAIN-049: PENDENTE → VERIFICADO (AR_230, hb seal 2026-03-03 — Fix 6 FAILs + 10 ERRORs residuais Batch 20).
 
 > Changelog v2.2.0 (2026-03-03) — Arquiteto (Batch 19 — Sincronização em Lote: app/ desbloqueada via GOVERNED_ROOTS.yaml `UNLOCKED_FOR_SYNC_BATCH_19`):
 > - DECISÃO HUMANA: Batch Sync Strategy — corrigir app/models/ + app/services/ para eliminar desalinhamento SSOT (contrato v1.3.0 + invariantes v1.5.0).
@@ -383,6 +398,12 @@ Decompor a materialização do módulo TRAINING em ARs pequenas, rastreáveis, t
 ### Lote 14 — Batch 20: Fix residuais test-layer pós-Batch 18/19 (T)
 49. AR-TRAIN-049 (T) — Fix 6 FAILs + 10 ERRORs residuais em tests/training/invariants/ (test_018_route, test_035, test_058, test_059, test_063, test_064, test_076, test_acl_006)
 
+### Lote 15 — Batch 21: Sync §5 TEST_MATRIX pós-Batches 17-20 (G)
+50. AR-TRAIN-050 (G) — Sync §5 TEST_MATRIX_TRAINING.md: 11 itens (INV-079/080/081: NOT_RUN→PASS; INV-018/035/058/059/063/064/076/EXB-ACL-006: FAIL/ERROR→PASS) refletindo AR-TRAIN-046 + AR-TRAIN-049 VERIFICADOS
+
+### Lote 16 — Batch 22: Done Gate §10 formal pós-Batch 21 (G) [substitui AR-TRAIN-043 OBSOLETA]
+51. AR-TRAIN-051 (G) — Done Gate §10 final: declaração formal Done + bump TEST_MATRIX v2.2.0→v3.0.0 + §10/§0 preenchidos + §9 entry AR-TRAIN-051
+
 ---
 
 ## 7) Tabela resumo do backlog de ARs
@@ -424,21 +445,23 @@ Decompor a materialização do módulo TRAINING em ARs pequenas, rastreáveis, t
 | AR-TRAIN-032 | G | ALTA | Sync §5 TEST_MATRIX: ~40 INV PENDENTE→COBERTO onde teste já existe no filesystem | TEST_MATRIX_TRAINING.md §5/§0 | AR-TRAIN-031 | VERIFICADO |
 | AR-TRAIN-033 | T | ALTA | Criar 6 testes ausentes: INV-053/060/061/062/EXB-ACL-005/EXB-ACL-007 | INV-TRAIN-053/060/061/062/EXB-ACL-005/007 | AR-TRAIN-032 | VERIFICADO |
 | AR-TRAIN-034 | T | ALTA | Executar todos NOT_RUN + evidências formais em TEST_MATRIX | TEST_MATRIX_TRAINING.md §5 | AR-TRAIN-033 | VERIFICADO |
-| AR-TRAIN-035 | E | ALTA | Contract tests: Sessions CRUD (CONTRACT-001..012) | CONTRACT-TRAIN-001..012 | AR-TRAIN-034 | PENDENTE |
-| AR-TRAIN-036 | E | ALTA | Contract tests: Teams + Attendance (CONTRACT-013..028) | CONTRACT-TRAIN-013..028 | AR-TRAIN-034 | PENDENTE |
-| AR-TRAIN-037 | E | ALTA | Contract tests: Wellness pre/post (CONTRACT-029..039) | CONTRACT-TRAIN-029..039 | AR-TRAIN-034 | PENDENTE |
-| AR-TRAIN-038 | E | MEDIA | Contract tests: Ciclos/Exercises/Analytics/Export (CONTRACT-040..095) | CONTRACT-TRAIN-040..095 | AR-TRAIN-034 | PENDENTE |
-| AR-TRAIN-039 | E | MEDIA | Contract tests: IA Coach + Athlete view (CONTRACT-096/101..105) | CONTRACT-TRAIN-096/101..105 | AR-TRAIN-034 | PENDENTE |
-| AR-TRAIN-040 | T | ALTA | DEC tests automatizados (DEC-TRAIN-001..004 + EXB-* + RBAC-*) | TEST_MATRIX_TRAINING.md §5b | AR-TRAIN-033 | PENDENTE |
-| AR-TRAIN-041 | T | MEDIA | Flows P1 evidências MANUAL_GUIADO (13 flows P1: FLOW-007..016/019..021) | FLOW-TRAIN-007..016/019..021 | AR-TRAIN-034 | PENDENTE |
-| AR-TRAIN-042 | T | MEDIA | Screens smoke tests MANUAL_GUIADO (25 telas: SCREEN-001..025) | SCREEN-TRAIN-001..025 | AR-TRAIN-034 | PENDENTE |
-| AR-TRAIN-043 | G | ALTA | Done Gate §10 final: sync TEST_MATRIX v2.0.0 + full suite verde + declaração Done | TEST_MATRIX_TRAINING.md §10/§0/§9 | AR-TRAIN-034..042 | PENDENTE |
-| AR-TRAIN-044 | T | ALTA | Fix async fixtures: `@pytest.fixture` → `@pytest_asyncio.fixture` (~23+ tests, 7 arquivos) | tests/training/invariants/ | AR-TRAIN-034 | PENDENTE |
-| AR-TRAIN-045 | T | ALTA | Fix DB fixture setup: `category_id` NOT NULL + FK `team_registrations` (~57+ ERROs setup) | tests/training/invariants/ | AR-TRAIN-034 | PENDENTE |
-| AR-TRAIN-046 | T | ALTA | Fix import stubs ausentes em ai_coach_service (3 ERRORs coleta: INV-079/080/081) | tests/training/invariants/ | AR-TRAIN-034 | PENDENTE |
-| AR-TRAIN-047 | T | ALTA | Fix residuais mistos + validação done gate (0 FAILs suite completa) | tests/training/invariants/ | AR-TRAIN-044..046 | PENDENTE |
-| AR-TRAIN-048 | A/E | CRÍTICA | Sync app/models/ (constraints INV-010/035/036/054) + app/services/ (assinaturas contrato v1.3.0) + stubs IA Coach | app/models/, app/services/, openapi.json | AR-TRAIN-044..047 | PENDENTE |
-| AR-TRAIN-049 | T | CRÍTICA | Fix 6 FAILs + 10 ERRORs residuais em tests/training/invariants/ (test_018_route, 035, 058, 059, 063, 064, 076, acl_006) | tests/training/invariants/ | AR-TRAIN-048 | PENDENTE |
+| AR-TRAIN-035 | E | ALTA | Contract tests: Sessions CRUD (CONTRACT-001..012) | CONTRACT-TRAIN-001..012 | AR-TRAIN-034 | VERIFICADO |
+| AR-TRAIN-036 | E | ALTA | Contract tests: Teams + Attendance (CONTRACT-013..028) | CONTRACT-TRAIN-013..028 | AR-TRAIN-034 | VERIFICADO |
+| AR-TRAIN-037 | E | ALTA | Contract tests: Wellness pre/post (CONTRACT-029..039) | CONTRACT-TRAIN-029..039 | AR-TRAIN-034 | VERIFICADO |
+| AR-TRAIN-038 | E | MEDIA | Contract tests: Ciclos/Exercises/Analytics/Export (CONTRACT-040..095) | CONTRACT-TRAIN-040..095 | AR-TRAIN-034 | VERIFICADO |
+| AR-TRAIN-039 | E | MEDIA | Contract tests: IA Coach + Athlete view (CONTRACT-096/101..105) | CONTRACT-TRAIN-096/101..105 | AR-TRAIN-034 | VERIFICADO |
+| AR-TRAIN-040 | T | ALTA | DEC tests automatizados (DEC-TRAIN-001..004 + EXB-* + RBAC-*) | TEST_MATRIX_TRAINING.md §5b | AR-TRAIN-033 | VERIFICADO |
+| AR-TRAIN-041 | T | MEDIA | Flows P1 evidências MANUAL_GUIADO (13 flows P1: FLOW-007..016/019..021) | FLOW-TRAIN-007..016/019..021 | AR-TRAIN-034 | VERIFICADO |
+| AR-TRAIN-042 | T | MEDIA | Screens smoke tests MANUAL_GUIADO (25 telas: SCREEN-001..025) | SCREEN-TRAIN-001..025 | AR-TRAIN-034 | VERIFICADO |
+| AR-TRAIN-043 | G | ALTA | Done Gate §10 final: sync TEST_MATRIX v2.0.0 + full suite verde + declaração Done | TEST_MATRIX_TRAINING.md §10/§0/§9 | AR-TRAIN-034..042 | OBSOLETO |
+| AR-TRAIN-044 | T | ALTA | Fix async fixtures: `@pytest.fixture` → `@pytest_asyncio.fixture` (~23+ tests, 7 arquivos) | tests/training/invariants/ | AR-TRAIN-034 | VERIFICADO |
+| AR-TRAIN-045 | T | ALTA | Fix DB fixture setup: `category_id` NOT NULL + FK `team_registrations` (~57+ ERROs setup) | tests/training/invariants/ | AR-TRAIN-034 | VERIFICADO |
+| AR-TRAIN-046 | T | ALTA | Fix import stubs ausentes em ai_coach_service (3 ERRORs coleta: INV-079/080/081) | tests/training/invariants/ | AR-TRAIN-034 | VERIFICADO |
+| AR-TRAIN-047 | T | ALTA | Fix residuais mistos + validação done gate (0 FAILs suite completa) | tests/training/invariants/ | AR-TRAIN-044..046 | REJEITADO |
+| AR-TRAIN-048 | A/E | CRÍTICA | Sync app/models/ (constraints INV-010/035/036/054) + app/services/ (assinaturas contrato v1.3.0) + stubs IA Coach | app/models/, app/services/, openapi.json | AR-TRAIN-044..047 | VERIFICADO |
+| AR-TRAIN-049 | T | CRÍTICA | Fix 6 FAILs + 10 ERRORs residuais em tests/training/invariants/ (test_018_route, 035, 058, 059, 063, 064, 076, acl_006) | tests/training/invariants/ | AR-TRAIN-048 | VERIFICADO |
+| AR-TRAIN-050 | G | ALTA | Sync §5 TEST_MATRIX_TRAINING.md: 11 itens (INV-079/080/081 NOT_RUN→PASS; INV-018/035/058/059/063/064/076/EXB-ACL-006 FAIL/ERROR→PASS) | TEST_MATRIX_TRAINING.md §5 | AR-TRAIN-046/049 | PENDENTE |
+| AR-TRAIN-051 | G | ALTA | Done Gate §10 final: declaração formal Done + bump TEST_MATRIX→v3.0.0 + §10/§0/§9 preenchidos | TEST_MATRIX_TRAINING.md §10/§0/§9 | AR-TRAIN-050 | PENDENTE |
 
 ---
 
@@ -1772,7 +1795,8 @@ cd "Hb Track - Backend" && alembic upgrade head && python -c "from app.models.ex
 
 ### AR-TRAIN-035 — Contract tests: Sessions CRUD (CONTRACT-001..012)
 
-**Status:** PENDENTE
+**Status:** VERIFICADO (2026-03-03)
+> Promovido por evidência: AR_214 (hb seal 2026-03-03), paths: docs/hbtrack/evidence/AR_214/executor_main.log
 **Classe:** E
 **Prioridade:** ALTA
 **Fase:** Batch 14 — Contratos P0
@@ -1804,7 +1828,8 @@ cd "Hb Track - Backend" && alembic upgrade head && python -c "from app.models.ex
 
 ### AR-TRAIN-036 — Contract tests: Teams + Attendance (CONTRACT-013..028)
 
-**Status:** PENDENTE
+**Status:** VERIFICADO (2026-03-03)
+> Promovido por evidência: AR_215 (hb seal 2026-03-03), paths: docs/hbtrack/evidence/AR_215/executor_main.log
 **Classe:** E
 **Prioridade:** ALTA
 **Fase:** Batch 14 — Contratos P0
@@ -1832,7 +1857,8 @@ cd "Hb Track - Backend" && alembic upgrade head && python -c "from app.models.ex
 
 ### AR-TRAIN-037 — Contract tests: Wellness pre/post (CONTRACT-029..039)
 
-**Status:** PENDENTE
+**Status:** VERIFICADO (2026-03-03)
+> Promovido por evidência: AR_216 (hb seal 2026-03-03), paths: docs/hbtrack/evidence/AR_216/executor_main.log
 **Classe:** E
 **Prioridade:** ALTA
 **Fase:** Batch 14 — Contratos P0
@@ -1860,7 +1886,8 @@ cd "Hb Track - Backend" && alembic upgrade head && python -c "from app.models.ex
 
 ### AR-TRAIN-038 — Contract tests: Ciclos/Exercises/Analytics/Export (CONTRACT-040..095)
 
-**Status:** PENDENTE
+**Status:** VERIFICADO (2026-03-03)
+> Promovido por evidência: AR_217 (hb seal 2026-03-03), paths: docs/hbtrack/evidence/AR_217/executor_main.log
 **Classe:** E
 **Prioridade:** MEDIA
 **Fase:** Batch 14 — Contratos P0
@@ -1893,7 +1920,8 @@ cd "Hb Track - Backend" && alembic upgrade head && python -c "from app.models.ex
 
 ### AR-TRAIN-039 — Contract tests: IA Coach + Athlete view (CONTRACT-096/101..105)
 
-**Status:** PENDENTE
+**Status:** VERIFICADO (2026-03-03)
+> Promovido por evidência: AR_218 (hb seal 2026-03-03), paths: docs/hbtrack/evidence/AR_218/executor_main.log
 **Classe:** E
 **Prioridade:** MEDIA
 **Fase:** Batch 14 — Contratos P0
@@ -1922,7 +1950,8 @@ cd "Hb Track - Backend" && alembic upgrade head && python -c "from app.models.ex
 
 ### AR-TRAIN-040 — DEC tests automatizados (DEC-TRAIN-001..004 + EXB-* + RBAC-*)
 
-**Status:** PENDENTE
+**Status:** VERIFICADO (2026-03-03)
+> Promovido por evidência: AR_219 (hb seal 2026-03-03), paths: docs/hbtrack/evidence/AR_219/executor_main.log
 **Classe:** T
 **Prioridade:** ALTA
 **Fase:** Batch 15 — DEC/Flows/Screens
@@ -1962,7 +1991,8 @@ cd "Hb Track - Backend" && alembic upgrade head && python -c "from app.models.ex
 
 ### AR-TRAIN-041 — Flows P1 evidências MANUAL_GUIADO (13 flows P1)
 
-**Status:** PENDENTE
+**Status:** VERIFICADO (2026-03-03)
+> Promovido por evidência: AR_220 (hb seal 2026-03-03), paths: docs/hbtrack/evidence/AR_220/executor_main.log
 **Classe:** T
 **Prioridade:** MEDIA
 **Fase:** Batch 15 — DEC/Flows/Screens
@@ -2006,7 +2036,8 @@ cd "Hb Track - Backend" && alembic upgrade head && python -c "from app.models.ex
 
 ### AR-TRAIN-042 — Screens smoke tests MANUAL_GUIADO (25 telas)
 
-**Status:** PENDENTE
+**Status:** VERIFICADO (2026-03-03)
+> Promovido por evidência: AR_221 (hb seal 2026-03-03), paths: docs/hbtrack/evidence/AR_221/executor_main.log
 **Classe:** T
 **Prioridade:** MEDIA
 **Fase:** Batch 15 — DEC/Flows/Screens
@@ -2038,7 +2069,8 @@ cd "Hb Track - Backend" && alembic upgrade head && python -c "from app.models.ex
 
 ### AR-TRAIN-043 — Done Gate §10 final: sync TEST_MATRIX v2.0.0
 
-**Status:** PENDENTE
+**Status:** OBSOLETO (2026-03-03)
+> Substituída por AR-TRAIN-051 (Batch 22) com escopo atualizado. Contexto mudou significativamente pós-Batches 17-20: (a) sync §5 TEST_MATRIX extraído para AR-TRAIN-050 (Batch 21); (b) versão-alvo da matriz passa de v2.0.0 para v3.0.0; (c) AC-005 suite verde agora satisfatível via resultado AR_230. AR_222 (execução associada) encerrada sem selo — não tomar mais ações sobre ela.
 **Classe:** G
 **Prioridade:** ALTA
 **Fase:** Batch 16 — Done Gate §10
@@ -2086,7 +2118,8 @@ cd "Hb Track - Backend" && alembic upgrade head && python -c "from app.models.ex
 
 ### AR-TRAIN-044 — Fix async fixtures: @pytest.fixture → @pytest_asyncio.fixture
 
-**Status:** PENDENTE
+**Status:** VERIFICADO (2026-03-03)
+> Promovido por evidência: AR_225 (hb seal 2026-03-03), paths: docs/hbtrack/evidence/AR_225/executor_main.log
 **Classe:** T
 **Prioridade:** ALTA
 **Fase:** Batch 18 — Fix FAILs de test-layer
@@ -2131,7 +2164,8 @@ cd "Hb Track - Backend" && alembic upgrade head && python -c "from app.models.ex
 
 ### AR-TRAIN-045 — Fix DB fixture setup: category_id NOT NULL + FK team_registrations
 
-**Status:** PENDENTE
+**Status:** VERIFICADO (2026-03-03)
+> Promovido por evidência: AR_226 (hb seal 2026-03-03), paths: docs/hbtrack/evidence/AR_226/executor_main.log
 **Classe:** T
 **Prioridade:** ALTA
 **Fase:** Batch 18 — Fix FAILs de test-layer
@@ -2178,7 +2212,8 @@ cd "Hb Track - Backend" && alembic upgrade head && python -c "from app.models.ex
 
 ### AR-TRAIN-046 — Fix import stubs ausentes em ai_coach_service (INV-079/080/081)
 
-**Status:** PENDENTE
+**Status:** VERIFICADO (2026-03-03)
+> Promovido por evidência: AR_227 (hb seal 2026-03-03), paths: docs/hbtrack/evidence/AR_227/executor_main.log
 **Classe:** T
 **Prioridade:** ALTA
 **Fase:** Batch 18 — Fix FAILs de test-layer
@@ -2210,7 +2245,7 @@ cd "Hb Track - Backend" && alembic upgrade head && python -c "from app.models.ex
 
 ### AR-TRAIN-047 — Fix residuais mistos + validação done gate (0 FAILs suite completa)
 
-**Status:** PENDENTE
+**Status:** REJEITADO (AR_228 🔴 REJEITADO — substituido por AR-TRAIN-049/AR_230)
 **Classe:** T
 **Prioridade:** ALTA
 **Fase:** Batch 18 — Fix FAILs de test-layer
@@ -2243,7 +2278,8 @@ cd "Hb Track - Backend" && alembic upgrade head && python -c "from app.models.ex
 ---
 ### AR-TRAIN-048 — Sincronização em Lote: Transposição do SSOT para a App Layer
 
-**Status:** PENDENTE  
+**Status:** VERIFICADO (2026-03-03)
+> Promovido por evidência: AR_229 (hb seal 2026-03-03), paths: docs/hbtrack/evidence/AR_229/executor_main.log  
 **Classe:** A/E  
 **Prioridade:** CRÍTICA  
 **Módulo:** TRAINING  
@@ -2319,7 +2355,8 @@ Antes de fazer commit: verificar se novas `UniqueConstraint`/`Column` exigem `al
 
 ### AR-TRAIN-049 — Fix residuais test-layer pós-Batch 18/19 (6 FAILs + 10 ERRORs)
 
-**Status:** PENDENTE  
+**Status:** VERIFICADO (2026-03-03)
+> Promovido por evidência: AR_230 (hb seal 2026-03-03), paths: docs/hbtrack/evidence/AR_230/executor_main.log  
 **Classe:** T  
 **Prioridade:** CRÍTICA  
 **Módulo:** TRAINING  
@@ -2390,6 +2427,154 @@ cd "Hb Track - Backend" && python -m pytest tests/training/ -q --tb=no 2>&1
 Todos os fixes são localizados em arquivos de teste — nenhuma mudança de schema ou migração. Rollback via `git diff HEAD -- "Hb Track - Backend/tests/training/invariants/"`.
 
 **ARs predecessoras obrigatórias:** AR-TRAIN-048 executado (AR_229 com amendment de status server_default)
+
+---
+
+### AR-TRAIN-050 — Sync §5 TEST_MATRIX_TRAINING.md pós-Batches 17-20
+
+**Status:** PENDENTE
+**Classe:** G
+**Prioridade:** ALTA
+**Módulo:** TRAINING
+**Lote:** 15 (Batch 21)
+**Objetivo:** Sync TEST_MATRIX_TRAINING.md §5: atualizar 11 itens com resultados validados por AR-TRAIN-046 (AR_227) e AR-TRAIN-049 (AR_230). INV-079/080/081: NOT_RUN→PASS; INV-018/035/058/059/063/064/076/EXB-ACL-006: FAIL/ERROR→PASS. Bump versão v2.1.0→v2.2.0.
+
+#### 8.1 Alvos SSOT
+- `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` — §5 (11 linhas de resultados) + bump versão v2.1.0→v2.2.0 + §9 entry AR-TRAIN-050
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** AR-TRAIN-046 VERIFICADO (AR_227) + AR-TRAIN-049 VERIFICADO (AR_230)
+
+#### 8.5 WRITE (máximo 3 itens)
+- `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` — §5 (11 itens) + versão + §9
+
+#### 8.6 FORBIDDEN
+- `Hb Track - Backend/` — zero toque
+- `Hb Track - Frontend/` — zero toque
+- Todos os demais §§ da TEST_MATRIX_TRAINING.md (não alterar §1..§4, §6..§8, §10)
+
+#### 8.7 AC binário
+
+##### AC-001
+**PASS:** `TEST_MATRIX_TRAINING.md` §5 contém `INV-TRAIN-079` com `Últ.Execução = PASS` e AR = AR-TRAIN-046.
+**FAIL:** Linha ausente ou status diferente de PASS.
+
+##### AC-002
+**PASS:** `TEST_MATRIX_TRAINING.md` §5 contém `INV-TRAIN-080` e `INV-TRAIN-081` com `Últ.Execução = PASS`.
+**FAIL:** Qualquer NOT_RUN ou status desatualizado.
+
+##### AC-003
+**PASS:** §5 contém `INV-TRAIN-018` com `Últ.Execução = PASS` e AR = AR-TRAIN-049.
+**FAIL:** Status divergente.
+
+##### AC-004
+**PASS:** §5 contém INV-TRAIN-035/058/059/063/064/076 e EXB-ACL-006 todos com `Últ.Execução = PASS`.
+**FAIL:** Qualquer FAIL ou ERROR restante nesses itens.
+
+##### AC-005
+**PASS:** `TEST_MATRIX_TRAINING.md` versão = `v2.2.0` no cabeçalho.
+**FAIL:** Versão não atualizada.
+
+##### AC-006
+**PASS:** §9 contém entry `AR-TRAIN-050` com status VERIFICADO.
+**FAIL:** Entry ausente.
+
+#### 8.8 validation_command
+```
+python -c "
+import re, sys
+content = open('docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md', encoding='utf-8').read()
+checks = [
+    ('Versão: v2.2.0', 'AC-005 versão'),
+    ('INV-TRAIN-079', 'AC-001 INV-079'),
+    ('INV-TRAIN-080', 'AC-002 INV-080'),
+    ('INV-TRAIN-081', 'AC-002 INV-081'),
+    ('INV-TRAIN-018', 'AC-003 INV-018'),
+    ('INV-TRAIN-035', 'AC-004 INV-035'),
+    ('AR-TRAIN-050', 'AC-006 §9 entry'),
+]
+failed = [label for text, label in checks if text not in content]
+if failed:
+    print('FAIL:', failed); sys.exit(1)
+print('PASS: todos os checks AC-001..AC-006 presentes')
+"
+```
+
+#### 8.9 rollback_plan
+Apenas mudança documental em `docs/`. `git diff HEAD -- docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md`.
+
+---
+
+### AR-TRAIN-051 — Done Gate §10 formal pós-Batch 21
+
+**Status:** PENDENTE
+**Classe:** G
+**Prioridade:** ALTA
+**Módulo:** TRAINING
+**Lote:** 16 (Batch 22)
+**Objetivo:** Done Gate §10 formal pós-Batch 21: preencher §10 e §0 da TEST_MATRIX_TRAINING.md, bump versão v2.2.0→v3.0.0, emitir declaração `docs/hbtrack/modulos/treinos/DONE_GATE_TRAINING_v3.md`. Substitui AR-TRAIN-043 (OBSOLETA).
+
+#### 8.1 Alvos SSOT
+- `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` — §0 (contadores finais) + §10 (checkboxes) + bump versão v2.2.0→v3.0.0 + §9 entry AR-TRAIN-051
+- `docs/hbtrack/modulos/treinos/DONE_GATE_TRAINING_v3.md` (declaração Done Gate formal)
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** AR-TRAIN-050 VERIFICADO
+
+#### 8.5 WRITE (máximo 3 itens)
+- `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` — §0 + §10 + versão + §9
+- `docs/hbtrack/modulos/treinos/DONE_GATE_TRAINING_v3.md` (novo — declaração formal)
+
+#### 8.6 FORBIDDEN
+- `Hb Track - Backend/` — zero toque
+- `Hb Track - Frontend/` — zero toque
+- Não alterar §5 nem §1..§4 da TEST_MATRIX_TRAINING.md (cobertos por AR-TRAIN-050)
+
+#### 8.7 AC binário
+
+##### AC-001
+**PASS:** `TEST_MATRIX_TRAINING.md` versão = `v3.0.0` no cabeçalho.
+**FAIL:** Versão não atualizada.
+
+##### AC-002
+**PASS:** §10 da TEST_MATRIX tem todos os checkboxes marcados com ✅.
+**FAIL:** Qualquer checkbox não marcado.
+
+##### AC-003
+**PASS:** §9 contém entry `AR-TRAIN-051` VERIFICADO.
+**FAIL:** Entry ausente.
+
+##### AC-004
+**PASS:** `docs/hbtrack/modulos/treinos/DONE_GATE_TRAINING_v3.md` existe e contém lista de critérios §10 satisfeitos.
+**FAIL:** Arquivo ausente ou sem lista de critérios.
+
+##### AC-005
+**PASS:** §0 contém contadores de INV/CONTRACT/FLOW/SCREEN atualizados (0 GAPs).
+**FAIL:** Contadores desatualizados ou GAPs existentes.
+
+#### 8.8 validation_command
+```
+python -c "
+import sys, os
+content = open('docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md', encoding='utf-8').read()
+gate = os.path.exists('docs/hbtrack/modulos/treinos/DONE_GATE_TRAINING_v3.md')
+checks = [
+    ('Versão: v3.0.0', 'AC-001 versão'),
+    ('AR-TRAIN-051', 'AC-003 §9 entry'),
+]
+failed = [label for text, label in checks if text not in content]
+if not gate:
+    failed.append('AC-004 DONE_GATE_TRAINING_v3.md ausente')
+if failed:
+    print('FAIL:', failed); sys.exit(1)
+print('PASS: todos os checks AC-001..AC-005 presentes')
+"
+```
+
+#### 8.9 rollback_plan
+Apenas mudança documental. `git diff HEAD -- docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md docs/hbtrack/modulos/treinos/DONE_GATE_TRAINING_v3.md`.
+
+**ARs predecessoras obrigatórias:** AR-TRAIN-050 VERIFICADO (AR_231)
 
 ---
 

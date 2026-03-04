@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 HB Track CLI — scripts/run/hb_cli.py (Entrypoint Oficial)
-Versão: v1.2.0
+Versão: v1.3.0
 SSOT: docs/_canon/specs/Hb cli.md
 Contrato: docs/_canon/contratos/Dev Flow.md
 Schema: docs/_canon/contratos/ar_contract.schema.json
@@ -1082,10 +1082,208 @@ def get_staged_ars(repo_root: Path) -> List[str]:
         return []  # Fallback seguro: assume batch vazio
 
 
+# ========== DOC-GATE-019: HANDOFF CONTRACT PRE-FLIGHT ==========
+
+def _gate_handoff_preflight(repo_root: Path) -> None:
+    """
+    DOC-GATE-019: soft pre-flight do contrato de handoff.
+    Executa check_handoff_contract.py contra _reports/ARQUITETO.md.
+    Emite ⚠️  warning se falhar, mas NÃO bloqueia hb report (exit 0).
+    """
+    gate_script = repo_root / "scripts" / "gates" / "check_handoff_contract.py"
+    handoff_path = repo_root / "_reports" / "ARQUITETO.md"
+
+    if not gate_script.exists() or not handoff_path.exists():
+        return  # gate ausente ou handoff inexistente — silencioso
+
+    try:
+        result = subprocess.run(
+            [sys.executable, str(gate_script), str(handoff_path)],
+            capture_output=True,
+            text=True,
+            timeout=15,
+            encoding="utf-8",
+            errors="replace",
+        )
+        if result.returncode != 0:
+            print("⚠️  DOC-GATE-019: check_handoff_contract.py reportou problema no handoff:")
+            for line in (result.stdout + result.stderr).strip().splitlines():
+                print(f"     {line}")
+            print("   (continuando — gate não-bloqueante)")
+    except Exception:
+        pass  # gate nunca pode crashar o report
+
+
+# ========== DOD HELPERS (DOC-GATE-019/020/021 + DOD-TABLE) ==========
+
+def _run_gate_output(gate_script, extra_args: list, repo_root: Path) -> tuple:
+    """
+    Executa um gate script e retorna (exit_code: int, combined_output: str).
+    Assinatura canônica: (gate_script_rel_str_ou_Path, extra_args_list, repo_root).
+    - exit_code == 4 → BLOCKED_INPUT (script ausente ou handoff ausente)
+    - nunca levanta exceção; erros de infra retornam (4, "INFRA_ERROR: <msg>")
+    """
+    script_path = repo_root / gate_script if not isinstance(gate_script, Path) else gate_script
+    if not Path(script_path).exists():
+        return 4, f"SCRIPT_NOT_FOUND: {gate_script}"
+    try:
+        # PYTHONIOENCODING=utf-8 força subprocesso a usar UTF-8 no stdout/stderr
+        # mesmo em terminais Windows cp1252 (evita UnicodeEncodeError em gates com emoji)
+        env = {**os.environ, "PYTHONIOENCODING": "utf-8"}
+        r = subprocess.run(
+            [sys.executable, str(script_path)] + [str(a) for a in extra_args],
+            capture_output=True, text=True, timeout=20, encoding="utf-8",
+            env=env,
+        )
+        combined = (r.stdout or "") + (r.stderr or "")
+        return r.returncode, combined
+    except Exception as exc:
+        return 4, f"INFRA_ERROR: {exc}"
+
+
+def _parse_gate_warns_for_ar(output: str, ar_id: str) -> list:
+    """
+    Extrai linhas de WARN do output de um gate que mencionam ar_id.
+    Critérios:
+      • A linha começa com marcador WARN legítimo após espaços/emoji opcional:
+          "WARN:", "[WARN]" ou p.ex. "⚠️  WARN:"
+        (descarta linhas de traceback onde 'WARN' aparece dentro de código-fonte)
+      • E (ar_id aparece na linha OU linha não está associada a nenhum AR_NNN)
+    Retorna lista de strings.
+    """
+    # Prefixo legítimo: espaço/emoji ⚠ opcional + WARN seguido de separador
+    # \u26a0 = ⚠, \ufe0f = variation selector (⚠️)
+    _WARN_LINE = re.compile(
+        r"^[\s\u26a0\ufe0f]*(\[WARN\]|WARN[\s:>!])",
+        re.IGNORECASE,
+    )
+    warns = []
+    for line in output.splitlines():
+        stripped = line.strip()
+        if not _WARN_LINE.match(stripped):
+            continue
+        # Se a linha menciona explicitamente um AR diferente, ignorar
+        other_ar = re.search(r"\bAR_(\d+)\b", stripped)
+        if other_ar and other_ar.group(1) != ar_id:
+            continue
+        warns.append(stripped)
+    return warns
+
+
+def _collect_dod_status(ar_id: str, repo_root: Path) -> dict:
+    """
+    Roda DOC-GATE-019/020/021 para o ar_id e retorna dict DoD:
+      {
+        "proof":  "OK" | "WARN" | "N/A",
+        "trace":  "OK" | "WARN" | "N/A",
+        "stitch": "OK" | "WARN" | "N/A",
+        "matrix": "N/A",          # derivado; não checado aqui
+        "warns":  [...],          # linhas de warn (deduplicadas)
+        "gate_errors": [...],     # erros de infra / BLOCKED_INPUT (não-fatais)
+      }
+    WARN-only: nunca lança exceção.
+    """
+    handoff = repo_root / "_reports" / "ARQUITETO.md"
+    result: dict = {"proof": "OK", "trace": "OK", "stitch": "OK",
+                    "matrix": "N/A", "warns": [], "gate_errors": []}
+    _warns_set: set = set()
+
+    def _add_warns(lines: list) -> None:
+        for w in lines:
+            if w not in _warns_set:
+                _warns_set.add(w)
+                result["warns"].append(w)
+
+    # DOC-GATE-019: proof
+    ec019, out019 = _run_gate_output("scripts/gates/check_handoff_contract.py",
+                                     [str(handoff)], repo_root)
+    if ec019 == 4:
+        result["gate_errors"].append(f"DOC-GATE-019: BLOCKED_INPUT")
+    else:
+        warns = _parse_gate_warns_for_ar(out019, ar_id)
+        if warns:
+            result["proof"] = "WARN"
+            _add_warns(warns)
+
+    # DOC-GATE-020: trace
+    ec020, out020 = _run_gate_output("scripts/gates/check_trace_contract.py",
+                                     [str(handoff)], repo_root)
+    if ec020 == 4:
+        result["gate_errors"].append(f"DOC-GATE-020: BLOCKED_INPUT")
+    else:
+        warns = _parse_gate_warns_for_ar(out020, ar_id)
+        if warns:
+            result["trace"] = "WARN"
+            _add_warns(warns)
+
+    # DOC-GATE-021: stitch
+    ec021, out021 = _run_gate_output("scripts/gates/trace_stitcher.py",
+                                     [str(handoff), str(repo_root)], repo_root)
+    if ec021 == 4:
+        result["gate_errors"].append(f"DOC-GATE-021: BLOCKED_INPUT")
+    else:
+        warns = _parse_gate_warns_for_ar(out021, ar_id)
+        if warns:
+            result["stitch"] = "WARN"
+            _add_warns(warns)
+
+    return result
+
+
+def _print_dod_table(ar_id: str, dod: dict) -> None:
+    """
+    Imprime bloco DOD-TABLE/V1 estável e parseável por AR_ID.
+    Marcador: '# DOD-TABLE/V1 AR_<id>'
+    Formato estável (golden output):
+      # DOD-TABLE/V1 AR_<id>
+      ──────────────────────────
+        PROOF  [✓]
+        TRACE  [✓]
+        STITCH [✓]
+        MATRIX [N/A] — veja gen_test_matrix
+      ──────────────────────────
+    """
+    _SEP = "  " + "─" * 26
+    _ICON = {"OK": "✓", "WARN": "⚠", "N/A": "N/A"}
+
+    def _icon(val: str) -> str:
+        return _ICON.get(val, val)
+
+    print(f"# DOD-TABLE/V1 AR_{ar_id}")
+    print(_SEP)
+    print(f"  PROOF  [{_icon(dod.get('proof',  'N/A'))}]")
+    print(f"  TRACE  [{_icon(dod.get('trace',  'N/A'))}]")
+    print(f"  STITCH [{_icon(dod.get('stitch', 'N/A'))}]")
+    print(f"  MATRIX [{_icon(dod.get('matrix', 'N/A'))}] — veja gen_test_matrix")
+    print(_SEP)
+    warns = dod.get("warns", [])
+    gate_errors = dod.get("gate_errors", [])
+    if warns:
+        for w in warns:
+            print(f"  ⚠️  WARN: {w}")
+    if gate_errors:
+        for e in gate_errors:
+            print(f"  GATE-ERROR: {e}")
+
+
+# Código de erro para strict DoD no verify
+E_DOD_STRICT_WARN = "E_DOD_STRICT_WARN"
+
 
 def cmd_report(ar_id: str, command: str) -> None:
     """Comando: hb report <id> "<command>" """
     repo_root = get_repo_root()
+
+    # DOC-GATE-019: soft pre-flight — verifica contrato do handoff (⚠️ warning, não bloqueia)
+    _gate_handoff_preflight(repo_root)
+
+    # DOC-GATE-020/021: pré-flight trace e stitch (WARN-only)
+    print(f"⚙️  DOC-GATE-020/021: verificando trace/stitch para AR_{ar_id}...")
+    dod = _collect_dod_status(ar_id, repo_root)
+    # Imprime log compacto (não DOD-TABLE ainda — será no fim do report)
+    for gate_err in dod.get("gate_errors", []):
+        print(f"  ℹ️  {gate_err}")
+
     ar_dir = repo_root / AR_DIR
     
     # R1: localizar AR por prefixo (recursivo)
@@ -1209,6 +1407,9 @@ def cmd_report(ar_id: str, command: str) -> None:
 
         # Rebuild _INDEX.md após atualizar Status
         rebuild_ar_index(repo_root)
+
+    # DOD-TABLE por AR_ID (WARN-only; não altera exit code do report)
+    _print_dod_table(ar_id, dod)
 
     # Exit code do hb report reflete o resultado do comando
     sys.exit(0 if exit_code == 0 else 1)
@@ -1374,6 +1575,35 @@ def cmd_verify(ar_id: str) -> None:
             exit_code=2,
         )
 
+    # V4.1: Strict DoD — coleta WARNs dos gates para este AR_ID antes do triple-run
+    print(f"🔍 DOD-STRICT: verificando WARNs de gate para AR_{ar_id}...")
+    _dod_pre = _collect_dod_status(ar_id, repo_root)
+    _dod_warns = _dod_pre.get("warns", [])
+    if _dod_warns:
+        # Persistir result.json parcial com campo dod ANTES de falhar (para auditoria)
+        _git_head_pre = run_cmd("git rev-parse HEAD")[1].strip() or "N/A"
+        _hash7_pre = _git_head_pre[:7]
+        _run_dir_pre = repo_root / TESTADOR_DIR / f"AR_{ar_id}_{_hash7_pre}"
+        _run_dir_pre.mkdir(parents=True, exist_ok=True)
+        import json as _json_pre
+        _result_pre = {
+            "ar_id": ar_id,
+            "validation_command": validation_cmd,
+            "status": "REJEITADO",
+            "rejection_reason": f"E_DOD_STRICT_WARN: {len(_dod_warns)} WARN(s) sem waiver",
+            "dod": _dod_pre,
+        }
+        with open(_run_dir_pre / "result.json", "w", encoding="utf-8") as _f:
+            _json_pre.dump(_result_pre, _f, indent=2, ensure_ascii=False)
+        print(f"📄 result.json parcial persistido em: {_run_dir_pre}/result.json")
+        _print_dod_table(ar_id, _dod_pre)
+        fail(
+            E_DOD_STRICT_WARN,
+            f"AR_{ar_id}: {len(_dod_warns)} WARN(s) de DoD sem waiver explícito. "
+            f"Veja result.json campo 'dod'. Corrija ou declare waiver no _reports/EXECUTOR.md.",
+            exit_code=2,
+        )
+
     # V4: Re-executar validation_command — TRIPLE_RUN obrigatório (3x) com behavior_hash
     print(f"🔁 TESTADOR: triple-run ({TRIPLE_RUN_COUNT}x): {validation_cmd[:60]}...")
     runs_data: List[Dict] = []
@@ -1488,6 +1718,7 @@ def cmd_verify(ar_id: str) -> None:
         "evidence_pack_complete": evidence_pack_complete,
         "rejection_reason": rejection_reason,
         "workspace_clean": ws_clean,
+        "dod": _dod_pre,
     }
 
     with HBLock():

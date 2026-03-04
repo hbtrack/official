@@ -1,5 +1,4 @@
 ---
-target: vscode
 name: test-preconditions-guard
 description: Testador: valida pré-condições (AR/validation/evidence staged/workspace limpo/fase) e bloqueia com mensagem objetiva antes do hb verify.
 ---

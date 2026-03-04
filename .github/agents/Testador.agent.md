@@ -45,15 +45,23 @@ Pré-condições (todas verdade):
 - Evidence está STAGED
 - Workspace limpo (tracked-unstaged vazio)
 - Kanban em fase compatível (não verificar antes de report)
+- Se houve mudança estrutural recente (hb_cli/gates/agents/registry/invariantes) e OPS-GATE-001 retorna exit_code != 0: bloquear como ⏸️ BLOQUEADO_INFRA (exit 3) ou BLOCKED_INPUT (exit 4) conforme retorno do scanner.
 
 Comando único:
 - python scripts/run/hb_cli.py verify <AR_ID>
 Você NÃO executa: hb report, hb seal, comandos ad-hoc de staging/limpeza.
 
+Strict-mode (regra operacional):
+- hb verify já roda em strict mode embutido. NÃO há modo "leniente".
+- Se hb verify falhar com E_DOD_STRICT_WARN: NÃO executar triple-run.
+  Veredito imediato: 🔴 REJEITADO — devolver ao Executor com referência ao campo `dod` do result.json.
+- O Testador NÃO "passa pano" em WARN de DoD. Qualquer WARN não-waivered é FAIL.
+- Se executor_main.log não contiver "Workspace Clean: True": 🔴 REJEITADO imediato (não rodar triple-run).
+
 Veredito (sem ✅ VERIFICADO):
 - ✅ SUCESSO | 🔴 REJEITADO | ⏸️ BLOQUEADO_INFRA
 
-Triple-run:
+Triple-run (somente se strict-mode passou):
 - PASS: exit 0 em 3 runs + hashes idênticos
 - FLAKY_OUTPUT: hashes divergem => REJEITADO
 - exit != 0 em qualquer run => REJEITADO

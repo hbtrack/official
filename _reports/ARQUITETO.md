@@ -3,242 +3,293 @@
 <!-- PLAN_HANDOFF -->
 
 **Protocolo**: 1.3.0
+**AR IDs**: [232, 900]
 **Branch**: dev-changes-2
-**HEAD**: 142a146
+**HEAD**: b452cbf
 **Data Planejamento**: 2026-03-04
 **Status**: PLAN_HANDOFF
+**OPS SSOT**: docs/invariantes/INVARIANTS_OPERACIONAIS_HBTRACK.md (v1.4.0)
+
+---
+
+## 0. PRE-FLIGHT / STOP CONDITIONS
+
+```
+PRE-FLIGHT obrigatório antes de qualquer edição:
+  git status                     # workspace clean = sem tracked-unstaged
+  git diff --name-only           # deve estar vazio
+
+STOP CONDITIONS (abortar e reportar exit code):
+  BLOCKED_INPUT  (exit 4) — AR não existe, plano ilegível, dependência não VERIFICADA
+  ERROR_INFRA    (exit 3) — hb plan/report retorna stack trace ou erro de infraestrutura
+  FAIL_ACTIONABLE (exit 2) — AC falhou, hb verify < 3/3, hash divergente
+```
 
 ---
 
 ## 1. Contexto
 
-Batch 18 concluído **parcialmente**: AR_225/226/227 ✅ VERIFICADO + sealed; AR_228 🔴 REJEITADO (AC-001 impossível — test_018_route + test_035 fora do write_scope + 10 ERRORs de conftest diferente). Batch 19 AR_229 executado mas em ⚠️ FALHA (exit=1, 6 FAILs, 10 ERRORs).
+**Batch 22 — AR_232 (AR-TRAIN-051)**: Done Gate §10 formal do módulo TRAINING.
 
-Durante execução de AR_229, foram diagnosticados **root causes definitivos** de todos os 6 FAILs + 10 ERRORs remanescentes. O Arquiteto concluiu que:
+Substitui AR-TRAIN-043 (OBSOLETA). Fecha o módulo TRAINING com §10 formal, bump TEST_MATRIX→v3.0.0 e declaração `DONE_GATE_TRAINING_v3.md`. **Zero toque em Backend ou Frontend.**
 
-1. **AR_229 precisa de amendment**: `training_session.py` `status` server_default tem bug de triple-quote (`'''draft'''` → `'draft'`). Este fix está no write_scope de AR_229 — **Executor deve aplicá-lo e re-rodar `hb report 229`**.
+**AR_232 (AR-TRAIN-051) SEALED** (hb seal 2026-03-03) — Done Gate §10 formal do módulo TRAINING concluído.
 
-2. **AR_230 (AR-TRAIN-049)** é a AR capturadora: 8 arquivos de teste com bugs puros de test-layer. Após AR_230 VERIFICADO e suite verde → re-rodar `hb report 228` e `hb report 229` para fechar ambas.
+**CORS Hardening** (AR_233–235): diagnóstico do backend FastAPI revelou 4 gaps críticos que serão corrigidos em 3 ARs sequenciais:
 
-**SSOTs atualizados nesta sessão:**
-- `AR_BACKLOG_TRAINING.md` → AR-TRAIN-049 adicionado (Lote 14, Batch 20; tabela-resumo; seção detalhada §8)
-- `TRAINING_BATCH_PLAN_v1.md` → Batch 20 adicionado; alerta de amendment em Batch 19
-- `docs/_canon/planos/ar_batch20_fix_test_layer_residuals_049.json` — **NOVO** (dry-run ✅ → AR_230)
-- `Hb Track Kanban.md` → §35 Batch 18 status atualizado; §36 Batch 19 FALHA + amendment; §37 Batch 20 READY
+| Gap | Severidade |
+|---|---|
+| Branch dev usa `allow_headers=["*"]` + `credentials=True` (browser bloqueia por spec) | CRÍTICO |
+| `CORS_ALLOW_CREDENTIALS` da env não é lido — campo inexistente em `Settings` (`extra="ignore"`) | ALTO |
+| `CORS_ORIGINS` da env ignorada em dev/staging — origens hardcoded | ALTO |
+| `X-CSRF-Token` e `Accept` ausentes em `allow_headers` de produção | MÉDIO |
+| Zero testes de preflight/headers CORS | CRÍTICO (DoD) |
+
+**SSOTs verificados antes do plano:**
+- `docs/ssot/schema.sql`, `openapi.json`, `alembic_state.txt` — não tocados (CORS não altera banco)
+- `Hb Track - Backend/app/core/config.py` — lido integralmente (134 linhas)
+- `Hb Track - Backend/app/main.py` — bloco CORS identificado nas linhas 89–131
+- `Hb Track - Backend/app/middleware/csrf.py` — confirmado: `UNSAFE_METHODS = {POST,PUT,PATCH,DELETE}` (OPTIONS exempt)
+- `Hb Track - Backend/app/api/v1/routers/health.py` — confirmado: `/health/liveness` público e sem banco
+- `Hb Track - Backend/app/api/v1/routers/auth.py` — confirmado: cookie auth real (`hb_access_token`, HttpOnly, SameSite=Lax) → `credentials=True` mandatório
+
+**Plano gerado:** `docs/_canon/planos/ar_cors_hardening_233.json`
+**Dry-run:** ✅ `3 ARs seriam criados, 0 seriam pulados. Todas as validações passaram.`
 
 ---
 
-## 2. Diagnóstico por Root Cause
+## 2. Planos Materializados
 
-### Amendment AR_229 — fix em `app/models/training_session.py` (dentro do write_scope de AR_229)
-
-| Bug | Root Cause | Fix |
-|---|---|---|
-| test_019 FAIL após AR_229 | `status` server_default = `sa.text("'''draft'''::character varying")` → armazena `'draft'` (com aspas literais) violando `check_training_session_status` | Mudar para `sa.text("'draft'::character varying")` |
-
-### AR_230 — 8 arquivos de teste (write_scope AR-TRAIN-049)
-
-| Arquivo de Teste | FAILs/ERRORs | Root Cause | Fix |
+| AR | Plano JSON | Dependência | Dry-Run |
 |---|---|---|---|
-| `test_018_..._route.py` | 1 FAIL | `Person()` sem `birth_date` (NOT NULL) | `birth_date=date(1990, 1, 1)` em Person() |
-| `test_035_...runtime.py` | 4 FAILs | `SessionTemplate(organization_id=...)` — modelo usa `org_id` | Renomear kwarg `organization_id` → `org_id` |
-| `test_058_...mutable.py` | 1 ERROR | `inv058_team`: `Team()` sem `category_id` NOT NULL | Add fixture `category` local + `category_id=category.id` |
-| `test_059_...contiguous.py` | 1 ERROR | `inv059_team`: `Team()` sem `category_id` | Mesmo fix que test_058 |
-| `test_063_preconfirm.py` | 2 ERRORs | `team_reg` usa `athlete.person_id` mas FK refs `athletes.id` (PK auto-gerada) | `str(athlete.person_id)` → `str(athlete.id)` |
-| `test_064_close_consolidation.py` | 1 ERROR | Mesmo bug do test_063 na fixture `team_reg` local | Mesmo fix |
-| `test_076_wellness_policy.py` | 3 ERRORs | SQL usa `status='concluída'` inválido (INVARIANTS: só 5 valores canônicos) | `'concluída'` → `'pending_review'` |
-| `test_exb_acl_006_acl_table.py` | 2 ERRORs | `uuid4.__class__(exercise_id)` = `function(...)` → TypeError | `UUID(exercise_id)` + `from uuid import uuid4, UUID` |
+| **AR_233** | `docs/_canon/planos/ar_cors_hardening_233.json` (task 233) | AR_232 SEALED ✅ | ✅ PASS |
+| **AR_234** | `docs/_canon/planos/ar_cors_hardening_233.json` (task 234) | AR_233 staged | ✅ PASS |
+| **AR_235** | `docs/_canon/planos/ar_cors_hardening_233.json` (task 235) | AR_234 staged | ✅ PASS |
+
+> **Atenção**: As 3 tasks estão em um único Plan JSON. O Executor materializa todas com `hb plan ar_cors_hardening_233.json` e executa em sequência.
 
 ---
 
-## 3. Planos Materializados
-
-| AR Físico | AR-TRAIN | Título | Batch | Plano JSON |
-|---|---|---|---|---|
-| **AR_229** | TRAIN-048 | Sync app/models/ + services/ + stubs IA Coach **(FALHA — amendment obrigatório)** | 19 | `docs/_canon/planos/ar_batch19_sync_app_layer_048.json` |
-| **AR_230** | TRAIN-049 | Fix 6 FAILs + 10 ERRORs residuais test-layer (8 arquivos) | 20 | `docs/_canon/planos/ar_batch20_fix_test_layer_residuals_049.json` |
-
----
-
-## 4. Ordem de Execução
+## 3. Ordem de Execução
 
 ```
-[STEP 1] Amendment AR_229 → fix training_session.py (server_default) → hb report 229
-
-[STEP 2] Materializar AR_230 → executar AR_230 → hb report 230
-         (validation: pytest tests/training/ -q --tb=no → 0 failed, 0 errors)
-
-[STEP 3 — cascata após suite verde]
-         hb verify 230 → (humano: hb seal)
-         hb report 228 → (deve exit=0 agora) → hb verify 228 → (humano: hb seal)
-         hb report 229 → (deve exit=0 agora) → hb verify 229 → (humano: hb seal)
-
-[STEP 4 — Done Gate]
-         hb report 222 → hb verify 222 → (humano: hb seal)
+AR_233 (config.py + .env.example)
+    → AR_234 (main.py — depende de Settings novos de AR_233)
+        → AR_235 (tests/test_cors.py — depende de app refatorado de AR_234)
 ```
 
-*(AR_230 + AR_229 amendment = pré-requisitos para fechar AR_228 e AR_229. Depois AR_222.)*
+**Sequencial estrito**: cada AR deve ter `hb report` + staging antes da próxima iniciar.
 
 ---
 
-## 5. Dry-run
+## 4. Diagnóstico por AR
 
+### AR_233 — Centralizar config CORS em config.py + validação fail-fast
+
+**write_scope:**
 ```
-python scripts/run/hb_cli.py plan docs/_canon/planos/ar_batch20_fix_test_layer_residuals_049.json --dry-run
-→ AR_230_fix_residuais_test-layer_6_fails_+_10_errors_em_te.md (7120 bytes)  [ROLLBACK ✓]
-→ 1 ARs seriam criados, 0 seriam pulados. Todas as validações passaram. ✅
+Hb Track - Backend/app/core/config.py
+Hb Track - Backend/.env.example
 ```
+
+**validation_command:**
+```bash
+cd "Hb Track - Backend" && pytest -q tests/unit/test_config.py
+```
+
+**Campos novos em Settings:**
+```python
+CORS_ALLOW_CREDENTIALS: bool = True
+CORS_ALLOW_ORIGIN_REGEX: Optional[str] = None
+CORS_ALLOW_HEADERS: str = "Authorization,Content-Type,Accept,X-CSRF-Token,X-Request-ID,X-Organization-ID"
+CORS_ALLOW_METHODS: str = "GET,POST,PUT,PATCH,DELETE,OPTIONS"
+CORS_EXPOSE_HEADERS: str = "X-Request-ID"
+CORS_MAX_AGE: int = 600
+```
+
+**model_validator fail-fast:**
+- Regra 1: `credentials=True` + `"*"` em origins → ValueError ("wildcard")
+- Regra 2: `credentials=True` + `CORS_ALLOW_ORIGIN_REGEX is not None` → ValueError ("REGEX")
+
+**cors_origins_list corrigido** — filtrar itens vazios (tolera trailing comma):
+```python
+return [o.strip() for o in self.CORS_ORIGINS.split(",") if o.strip()]
+```
+
+**Critérios de aceite:**
+- AC-001: `Settings(credentials=True, origins="*")` → ValidationError/ValueError com "wildcard"
+- AC-002: `Settings(credentials=True, regex=".*")` → ValidationError/ValueError com "REGEX"
+- AC-003: `Settings(origins="http://a.test, http://b.test,").cors_origins_list == ["http://a.test","http://b.test"]`
+- AC-004: Settings válido sobe sem erro
+- AC-005: `pytest tests/unit/test_config.py` passa
+
+**Riscos:**
+- `model_validator` requer `from pydantic import model_validator` (pydantic v2 ✅)
+- Filtrar vazios pode afetar testes que dependam de lista com strings vazias (verificar)
+- Se renomear `CORS_ORIGINS` para `CORS_ALLOW_ORIGINS` no .env, atualizar `.env` de produção — documentar no log
 
 ---
 
-## 6. Kanban atualizado
+### AR_234 — Refatorar CORSMiddleware em main.py
 
-| Seção | Conteúdo | Status |
-|---|---|---|
-| §33 | AR_222 — Done Gate §10 | ⛔ BLOCKED_AC005 (aguarda Batch 20 + AR_229 re-verify) |
-| §35 | Batch 18 (AR_225..228) | AR_225/226/227 ✅ VERIFICADO; AR_228 🔴 REJEITADO (aguarda AR_230) |
-| §36 | Batch 19 (AR_229) | ⚠️ FALHA — amendment obrigatório (status server_default) |
-| §37 | Batch 20 (AR_230) | 🔲 READY (dep: AR_229 amendment) |
+**Dependência:** AR_233 staged
+
+**write_scope:**
+```
+Hb Track - Backend/app/main.py
+```
+
+**validation_command:**
+```bash
+cd "Hb Track - Backend" && python -c "from app.main import app; print('OK')"
+```
+
+**Substituição principal** (remover bloco if/else ~linhas 89–110, inserir):
+```python
+# CORS — Política determinística lida de settings (AR_234)
+# Starlette: middleware adicionado PRIMEIRO = INNERMOST (LIFO).
+# Preflight OPTIONS: CSRFMiddleware só intercepta UNSAFE_METHODS → OPTIONS passa livre.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.cors_origins_list,
+    allow_credentials=settings.CORS_ALLOW_CREDENTIALS,
+    allow_methods=settings.cors_allow_methods_list,
+    allow_headers=settings.cors_allow_headers_list,
+    expose_headers=settings.cors_expose_headers_list,
+    max_age=settings.CORS_MAX_AGE,
+    **({"allow_origin_regex": settings.CORS_ALLOW_ORIGIN_REGEX}
+       if settings.CORS_ALLOW_ORIGIN_REGEX else {}),
+)
+```
+
+**Log de startup:**
+```python
+logger.info(
+    "CORS config: origins=%s credentials=%s methods=%s headers=%s",
+    settings.cors_origins_list,
+    settings.CORS_ALLOW_CREDENTIALS,
+    settings.cors_allow_methods_list,
+    settings.cors_allow_headers_list,
+)
+```
+
+**Proxy Canary — obrigatório no executor_main.log (saída COMPLETA, não truncar):**
+
+```bash
+# Curl 1 — Preflight direto
+curl -si -X OPTIONS http://localhost:8000/api/v1/health/liveness \
+  -H "Origin: http://localhost:3000" \
+  -H "Access-Control-Request-Method: GET" \
+  -H "Access-Control-Request-Headers: Authorization, X-CSRF-Token"
+
+# Curl 2 — Request real direto
+curl -si http://localhost:8000/api/v1/health/liveness \
+  -H "Origin: http://localhost:3000" \
+  -H "Authorization: Bearer dummy_token_for_cors_test"
+
+# Curl 3 — Via domínio público (opcional, se disponível)
+curl -si -X OPTIONS https://<dominio>/api/v1/health/liveness \
+  -H "Origin: <origin_esperada>" \
+  -H "Access-Control-Request-Method: GET" \
+  -H "Access-Control-Request-Headers: Authorization, X-CSRF-Token"
+```
+
+Cada curl deve registrar: **status line**, `access-control-allow-origin`, `access-control-allow-methods`, `access-control-allow-headers`, `access-control-allow-credentials`, `vary`.
+
+Se Curl 1 tem headers CORS mas Curl 3 não → **abrir AR de infra separada** (não bloqueia AR_234).
+
+**Critérios de aceite:**
+- AC-001: Import do app sem erro
+- AC-002: Bloco `if settings.is_production` removido da seção CORS
+- AC-003: Todos os parâmetros de `CORSMiddleware` lidos de `settings.*`
+- AC-004: `executor_main.log` com Curl 1 + Curl 2 integrais
+- AC-005: Log de startup contém `"CORS config: origins="`
+
+**Riscos:**
+- `.env` deve ter config válida antes de AR_234 (fail-fast de AR_233 impede boot com wildcard)
+- Staging/CI sem `CORS_ALLOW_ORIGINS` herdará default de Settings — verificar
 
 ---
 
-## 7. Comandos para o Executor
+### AR_235 — Criar tests/test_cors.py
 
-```powershell
-# STEP 1 — Amendment AR_229 (fix dentro do write_scope de AR_229)
-# Arquivo: Hb Track - Backend/app/models/training_session.py
-# Linha com:  server_default=sa.text("'''draft'''::character varying")
-# Trocar por: server_default=sa.text("'draft'::character varying")
+**Dependência:** AR_234 staged
+
+**write_scope:**
+```
+Hb Track - Backend/tests/test_cors.py
+```
+
+**validation_command:**
+```bash
+cd "Hb Track - Backend" && pytest -q tests/test_cors.py
+```
+
+**Rota alvo:** `GET /api/v1/health/liveness` — público, sem banco (`{"status":"alive"}`)
+*(NÃO usar `/health` linha 23 — faz `healthcheck_db()`)*
+
+**Testes:**
+
+| Função | AC |
+|---|---|
+| `test_preflight_allowed_origin` | AC-001: allow-origin, allow-methods(GET), allow-headers(Authorization+X-CSRF-Token), allow-credentials=true |
+| `test_preflight_blocked_origin` | AC-002: header `access-control-allow-origin` ausente (sem checar status code) |
+| `test_real_request_allowed_origin` | AC-003: GET com Origin permitida → allow-origin correto |
+| `test_credentials_wildcard_fail_fast` | AC-004: `Settings(origins="*", credentials=True)` → ValidationError/ValueError |
+| `test_origins_read_from_env_with_spaces` | AC-005: `"http://a.test, http://b.test,"` → `["http://a.test","http://b.test"]` |
+| `pytest -q` | AC-006: 5 passed, 0 failed, 0 error |
+
+**Preflight request** (enviar `Access-Control-Request-Headers` explícito):
+```
+Origin: http://allowed.test
+Access-Control-Request-Method: GET
+Access-Control-Request-Headers: Authorization, X-CSRF-Token
+```
+
+**Riscos:**
+- Fixture com `importlib.reload` pode ter efeitos colaterais — usar `scope="module"` + isolamento
+- `test_credentials_wildcard_fail_fast` precisa de `JWT_SECRET` override para evitar ValidationError de campo obrigatório unrelated
+- Se lifespan disparar `healthcheck_db` no TestClient → mockar o startup ou usar `TestClient(app, raise_server_exceptions=False)` com mock de DB
+
+---
+
+## 5. Comando de materialização
+
+```bash
 cd "c:\HB TRACK"
-python scripts/run/hb_cli.py report 229
-
-# STEP 2 — Materializar e executar AR_230
-python scripts/run/hb_cli.py plan docs/_canon/planos/ar_batch20_fix_test_layer_residuals_049.json
-python scripts/run/hb_cli.py report 230
-
-# STEP 3 — Cascata de verificação (após suite verde)
-python scripts/run/hb_cli.py verify 230
-# (humano: hb seal 230)
-python scripts/run/hb_cli.py report 228
-python scripts/run/hb_cli.py verify 228
-# (humano: hb seal 228)
-python scripts/run/hb_cli.py report 229
-python scripts/run/hb_cli.py verify 229
-# (humano: hb seal 229)
+python scripts/run/hb_cli.py plan docs/_canon/planos/ar_cors_hardening_233.json
 ```
 
-**Restrições AR_230 (FORBIDDEN):**
-- `app/` — zero toque (bugs são exclusivamente test-layer)
-- `tests/training/invariants/conftest.py` — zero toque (fixtures base estão corretas)
-- Qualquer arquivo de teste fora do write_scope de 8 arquivos
-- Se necessitar de arquivo fora do write_scope → BLOCKED (reportar ao Arquiteto)
-
-**Cuidados extras AR_230:**
-- test_058/059: usar `ON CONFLICT DO NOTHING` ao criar fixture `category` (evitar colisão com id=9999)
-- test_063/064: se `athlete.id` for `None` após `flush()`, adicionar `await async_db.refresh(athlete)` antes de usar `athlete.id`
-- test_076: verificar se lógica do teste faz sentido semântico com `status='pending_review'`
+*(sem `--dry-run` — já validado ✅)*
 
 ---
 
-*Arquiteto — 2026-03-04 — Batch 20 planejado, dry-run ✅, amendment AR_229 autorizado*
+## 6. Rollback por AR
+
+| AR | Rollback |
+|---|---|
+| AR_233 | Reverter `app/core/config.py` (remover campos novos + model_validator) e `.env.example` |
+| AR_234 | Reverter `app/main.py` para bloco `if settings.is_production` original |
+| AR_235 | Remover `tests/test_cors.py` |
+
+Logs e evidências mantidos mesmo em rollback.
 
 ---
 
-## 1. Contexto
-
-Sessão anterior encerrou com Batch 17 (AR_223 + AR_224) selados. Diagnóstico confirmou 109 FAILs + 31 ERRORs residuais bloqueando AR_222 (Done Gate §10). Humano autorizou **Opção A (Batch 18)** para zerar a suite.
-
-Nesta sessão o humano solicitou **Batch Sync Strategy** (Batch 19): sincronizar `app/` com contrato v1.3.0 + invariantes v1.5.0 via AR-TRAIN-048. A pasta `app/` foi desbloqueada explicitamente via `GOVERNED_ROOTS.yaml` (`UNLOCKED_FOR_SYNC_BATCH_19`).
-
-**SSOTs atualizados nesta sessão:**
-- `AR_BACKLOG_TRAINING.md` v2.1.0 → **v2.2.0** (AR-TRAIN-048 completa com ACs, FORBIDDEN, validation_command, rollback_plan; Lote 13; tabela-resumo)
-- `TRAINING_BATCH_PLAN_v1.md` v1.2.0 → **v1.3.0** (Batch 19 adicionado com zonas de impacto, DoD, riscos)
-- `docs/_canon/planos/ar_batch19_sync_app_layer_048.json` — **NOVO** (dry-run ✅)
-- `Hb Track Kanban.md` — seção 36 adicionada (AR_229 🔲 READY)
+*Arquiteto — 2026-03-03 — CORS Hardening AR_233–235 planejado, dry-run ✅*
 
 ---
 
-## 2. Diagnóstico de Desalinhamento (input para AR_229)
+## AR_900 — E2E: Verificação pipeline DoD (GOVERNANCE_ONLY)
 
-### Zona 1 — Modelos (app/models/)
-| Arquivo | Invariante | Correção |
-|---|---|---|
-| `athlete.py` | TRAINING_CLOSSARY.yaml | Campos `athlete_name` + `birth_date` alinhados ao Glossário |
-| `exercise.py` | INV-TRAIN-060 | `visibility_mode` server_default=`restricted` |
-| `training_session.py` | INV-TRAIN-010 | UniqueConstraint unicidade wellness_post |
-| `attendance.py` | INV-TRAIN-036 | FK `athlete_id` com OnDelete explícito |
-| `training_cycle.py` | INV-TRAIN-054 | FK hierarchy `parent_cycle_id` → self |
+**Objetivo**: Provar que o ciclo DoD (DOC-GATE-019/020/021 + DOD-TABLE/V1 + strict verify + gen_test_matrix) está operacional end-to-end.
 
-### Zona 2 — Serviços (app/services/)
-| Arquivo | Contrato | Correção |
-|---|---|---|
-| `exercise_service.py` | CONTRACT-TRAIN-091..095 | Assinatura `update_exercise(self, exercise_id, data: dict, organization_id)` |
-| `attendance_service.py` | GAP-CONTRACT-7 | Stub mínimo para closure de presença |
+**CLASS**: GOVERNANCE_ONLY — zero toque em código de produto.
 
-### Zona 3 — Stubs IA Coach
-| Arquivo | Problema | Correção |
-|---|---|---|
-| `ai_coach_service.py` | ImportError nos testes 079/080/081 | Adicionar `RecognitionApproved`, `CoachSuggestionDraft`, `JustifiedSuggestion` como dataclasses |
+**PROOF**: `Hb Track - Backend/tests/training/contracts/test_e2e_dod_pipeline.py::test_wellness_rankings_route_contract_declared`
 
----
+**TRACE**: `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` (§8 CONTRACT-TRAIN-073 → COBERTO via gen_test_matrix --update-matrix)
 
-## 3. Planos Materializados
+**write_scope**: `Hb Track - Backend/tests/training/contracts/test_e2e_dod_pipeline.py`
 
-| AR Físico | AR-TRAIN | Título | Batch |
-|---|---|---|---|
-| **AR_229** | TRAIN-048 | Sync app/models/ (INV-010/035/036/054/060) + app/services/ (contrato v1.3.0) + stubs IA Coach | 19 |
-
-**Ordem de execução:**
-```
-[Batch 18] AR_225 + AR_226 + AR_227  →  AR_228  →  [Batch 19] AR_229  →  AR_222
-```
-*(AR_225/226/227 são pré-requisito; AR_228 depende das 3; AR_229 depende de AR_228 VERIFICADO)*
-
----
-
-## 4. Dry-run
-
-```
-python scripts/run/hb_cli.py plan docs/_canon/planos/ar_batch19_sync_app_layer_048.json --dry-run
-→ 1 ARs seriam criados, 0 seriam pulados. Todas as validações passaram. ✅
-```
-
----
-
-## 5. Kanban atualizado
-
-| Seção | Conteúdo | Status |
-|---|---|---|
-| §33 | AR_222 — Done Gate §10 | ⛔ BLOCKED_AC005 (aguarda Batch 18 + Batch 19) |
-| §34 | Batch 17 (AR_223 + AR_224) | ✅ SELADO |
-| §35 | Batch 18 (AR_225..228) — Fix FAILs test-layer | 🔲 READY |
-| §36 | Batch 19 (AR_229) — Sync app layer | 🔲 READY (dep: Batch 18) |
-
----
-
-## 6. Próximos passos para o Executor
-
-```powershell
-# 1. Materializar ARs de ambos os batches
-python scripts/run/hb_cli.py plan docs/_canon/planos/ar_batch18_fix_test_layer_044_047.json
-python scripts/run/hb_cli.py plan docs/_canon/planos/ar_batch19_sync_app_layer_048.json
-
-# 2. Executar Batch 18 (225/226/227 em paralelo, depois 228)
-python scripts/run/hb_cli.py report 225
-python scripts/run/hb_cli.py report 226
-python scripts/run/hb_cli.py report 227
-# Após os 3 VERIFICADO:
-python scripts/run/hb_cli.py report 228
-
-# 3. Executar Batch 19 (após AR_228 VERIFICADO)
-python scripts/run/hb_cli.py report 229
-```
-
-**Restrições AR_229:**
-- FORBIDDEN: `tests/` (zero toque) e qualquer `app/` não listado no write_scope
-- Antes de `hb report 229`: verificar se novas Column/Constraint exigem `alembic revision --autogenerate`
-- Se surgir necessidade de arquivo fora do write_scope → BLOCKED (reportar ao Arquiteto)
-
----
-
-*Arquiteto — 2026-03-03 — Batch 18 + Batch 19 planejados e dry-run ✅*
+*AR_900 adicionada em 2026-03-04 — E2E controlado do pipeline DoD*

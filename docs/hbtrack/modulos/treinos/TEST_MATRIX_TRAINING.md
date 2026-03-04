@@ -1,18 +1,35 @@
 # TEST_MATRIX_TRAINING.md — Matriz de Verificação e Rastreabilidade do Módulo TRAINING
 
-Status: DRAFT  
-Versão: v2.0.0
-Tipo de Documento: Verification & Traceability Matrix (Normativo Operacional / SSOT)  
-Módulo: TRAINING  
-Fase: FASE_2 (PRD v2.2 — 2026-02-20) + AS-IS repo (2026-02-25) + DEC-TRAIN-* (2026-02-25) + FASE_3 (2026-02-27)  
-Autoridade: NORMATIVO_OPERACIONAL  
+Status: DONE_GATE_ATINGIDO
+Versão: v3.0.0
+Tipo de Documento: Verification & Traceability Matrix (Normativo Operacional / SSOT)
+Módulo: TRAINING
+Fase: FASE_2 (PRD v2.2 — 2026-02-20) + AS-IS repo (2026-02-25) + DEC-TRAIN-* (2026-02-25) + FASE_3 (2026-02-27)
+Autoridade: NORMATIVO_OPERACIONAL
 Owners:
-- Arquitetura: Codex (Arquiteto v2.2.0)
+- Arquitetura: Codex (Arquiteto v2.4.0)
 - Auditoria/Testes: (a definir)
 - Backend/Frontend: (a definir)
 
-Última revisão: 2026-03-03  
-Próxima revisão recomendada: 2026-03-10  
+Última revisão: 2026-03-04
+Próxima revisão recomendada: N/A — módulo TRAINING Done Gate §10 atingido
+
+> Changelog v3.0.0 (2026-03-04) — AR_232/AR-TRAIN-051 (Batch 22 — Done Gate §10 formal):
+> - §0: contadores finais atualizados; nota sobre 18 INVs FASE_3 diferidos adicionada.
+> - §10: Done Gate §10 formal declarado — todos os critérios PASS satisfeitos (herdados de AR_222).
+> - §9: AR-TRAIN-050 EM_EXECUCAO→VERIFICADO (AR_231); AR-TRAIN-051 adicionada (AR_232).
+> - Status: DRAFT→DONE_GATE_ATINGIDO. Versão: v2.2.0→v3.0.0.
+>
+> Changelog v2.2.0 (2026-03-03) — AR_231/AR-TRAIN-050 (Batch 21 — Sync §5 pós-Batches 17-20):
+> - §5: INV-TRAIN-079/080/081 NOT_RUN→2026-03-03 (PASS) — stubs corrigidos por AR-TRAIN-046 (AR_227).
+> - §5: INV-TRAIN-018/035 FAIL→2026-03-03; INV-TRAIN-058/059/063/064/076/EXB-ACL-006 ERROR→2026-03-03 — corrigidos por AR-TRAIN-049 (AR_230).
+> - §9: AR-TRAIN-043 EM_EXECUCAO→OBSOLETO; AR-TRAIN-050 adicionada.
+> - Versão: v2.1.0→v2.2.0.
+>
+> Changelog v2.1.0 (2026-03-03) — Arquiteto (Sync Batches 17-20 — AR-TRAIN-044..049):
+> - §9: AR-TRAIN-044..049 adicionadas (Batches 17/19/20 verificados/rejeitados).
+> - AR-TRAIN-031/033/034: status EM_EXECUCAO → VERIFICADO (evidencias confirmadas pelas ARs subsequentes).
+> - Versão atualizada: v2.0.0→v2.1.0.
 
 > Changelog v2.0.0 (2026-03-03) — AR_222 (Batch 16 — Done Gate §10 — sync AR-TRAIN-035..043):
 > - §9: adicionadas 9 entradas AR-TRAIN-035..043 (Batches 14/15/16 verificados).
@@ -143,13 +160,16 @@ Dependências:
 2. Parte dos testes existentes referencia `Hb Track - Backend/docs/_generated/*` (inexistente no repo atual) ⇒ itens ficam `BLOQUEADO` até `AR-TRAIN-010A`.
 3. “COBERTO” neste documento significa **teste implementado e apontado**. Resultado de execução permanece `NOT_RUN` até a produção de evidência (`_reports/*`).
 
-Resumo rápido (AS-IS) — invariantes:
+Resumo rápido (FINAL — v3.0.0) — invariantes:
 - `COBERTO`: 74
 - `PARCIAL`: 9
 - `BLOQUEADO`: 0
 - `NAO_APLICAVEL`: 1
-- `PENDENTE` (v1.1.0): 0 ✓ todos cobertos por AR_212
-- `PENDENTE` (v1.3.0 — FASE_3): 0 ✓ todos cobertos por AR_212
+- `PENDENTE`: 0 ✓ todos cobertos por AR_212
+
+> **FASE_3 diferidos (não bloqueiam Done Gate §10 FASE_2):**
+> 18 INVs com FAILs registrados em _reports/training/evidence_run_batch13.txt — são FASE_3 (pós-PRD v2.2), sem AR de fix planejada na FASE_2:
+> `INV-TRAIN-010/011/019/020/021/029/031/034/036/037/050/052/054/057/065/066/067/070`
 
 ---
 
@@ -253,7 +273,7 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 | INV-TRAIN-014 | overload_alert_threshold_multiplier | NAO_BLOQUEANTE | service | TEST-TRAIN-INV-014 | GATE_CHECK | NAO | MEDIA | NO | PARCIAL | 2026-03-03 | test_inv_train_014_overload_alert_threshold.py | AR-TRAIN-001, AR-TRAIN-002 |
 | INV-TRAIN-015 | training_analytics_endpoints_exposed | BLOQUEANTE_ARQUITETURA | calc+api | TEST-TRAIN-INV-015 | GATE_CHECK | NAO | ALTA | POST | COBERTO | 2026-03-03 | test_inv_train_015_training_analytics_exposure.py | - |
 | INV-TRAIN-016 | attendance_auth_and_scoped_route_not_exposed | BLOQUEANTE_ARQUITETURA | api | TEST-TRAIN-INV-016 | CONTRACT | SIM | ALTA | POST | COBERTO | 2026-03-03 | test_inv_train_016_attendance_auth_scoped.py | - |
-| INV-TRAIN-018 | microcycle_session_default_status | BLOQUEANTE_ARQUITETURA | service | TEST-TRAIN-INV-018 | CONTRACT|UNIT | NAO | ALTA | POST | COBERTO | FAIL | test_inv_train_018_training_session_microcycle_status.py, test_inv_train_018_training_session_microcycle_status_route.py | - |
+| INV-TRAIN-018 | microcycle_session_default_status | BLOQUEANTE_ARQUITETURA | service | TEST-TRAIN-INV-018 | CONTRACT|UNIT | NAO | ALTA | POST | COBERTO | 2026-03-03 | test_inv_train_018_training_session_microcycle_status.py, test_inv_train_018_training_session_microcycle_status_route.py | AR-TRAIN-049 |
 | INV-TRAIN-019 | audit_logs_for_training_session_actions | BLOQUEANTE_ARQUITETURA | service | TEST-TRAIN-INV-019 | INTEGRATION | NAO | ALTA | POST | COBERTO | FAIL | test_inv_train_019_training_session_audit_logs.py | - |
 | INV-TRAIN-020 | analytics_cache_invalidation_trigger | BLOQUEANTE_ARQUITETURA | db | TEST-TRAIN-INV-020 | GATE_CHECK | NAO | ALTA | PRE | COBERTO | FAIL | test_inv_train_020_cache_invalidation_trigger.py | AR-TRAIN-010A |
 | INV-TRAIN-021 | internal_load_trigger | BLOQUEANTE_ARQUITETURA | db | TEST-TRAIN-INV-021 | GATE_CHECK | NAO | ALTA | PRE | COBERTO | FAIL | test_inv_train_021_internal_load_trigger.py | AR-TRAIN-010A |
@@ -270,7 +290,7 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 | INV-TRAIN-032 | wellness_post_rpe_range | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-032 | INTEGRATION | SIM | CRITICA | POST | COBERTO | 2026-03-03 | _reports/training/TEST-TRAIN-INV-032.md | AR_205, AR_209 |
 | INV-TRAIN-033 | wellness_pre_sleep_hours_range | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-033 | INTEGRATION | SIM | CRITICA | POST | COBERTO | 2026-03-03 | test_inv_train_033_wellness_pre_sleep_hours.py, test_inv_train_033_wellness_pre_sleep_hours_runtime.py | - |
 | INV-TRAIN-034 | wellness_pre_sleep_quality_range | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-034 | INTEGRATION | SIM | CRITICA | POST | COBERTO | FAIL | test_inv_train_034_wellness_pre_sleep_quality.py, test_inv_train_034_wellness_pre_sleep_quality_runtime.py | - |
-| INV-TRAIN-035 | session_template_unique_name_per_org | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-035 | GATE_CHECK|INTEGRATION | SIM | CRITICA | POST | COBERTO | FAIL | test_inv_train_035_session_templates_unique_name.py (refs _generated), test_inv_train_035_session_templates_unique_name_runtime.py | - |
+| INV-TRAIN-035 | session_template_unique_name_per_org | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-035 | GATE_CHECK|INTEGRATION | SIM | CRITICA | POST | COBERTO | 2026-03-03 | test_inv_train_035_session_templates_unique_name.py (refs _generated), test_inv_train_035_session_templates_unique_name_runtime.py | AR-TRAIN-049 |
 | INV-TRAIN-036 | wellness_rankings_unique_team_month | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-036 | GATE_CHECK|INTEGRATION | SIM | CRITICA | POST | COBERTO | FAIL | test_inv_train_036_wellness_rankings_unique.py (refs _generated), test_inv_train_036_wellness_rankings_unique_runtime.py | AR-TRAIN-006, AR-TRAIN-007 |
 | INV-TRAIN-037 | cycle_dates_valid | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-037 | GATE_CHECK|INTEGRATION | SIM | CRITICA | POST | COBERTO | FAIL | test_inv_train_037_cycle_dates.py (refs _generated), test_inv_train_037_cycle_dates_runtime.py | - |
 | INV-TRAIN-040 | openapi_contract_health_public | BLOQUEANTE_ARQUITETURA | api | TEST-TRAIN-INV-040 | CONTRACT | NAO | ALTA | PRE | COBERTO | 2026-03-03 | test_inv_train_040_health_contract.py | AR-TRAIN-010A |
@@ -291,19 +311,19 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 | INV-TRAIN-EXB-ACL-003 | acl_anti_cross_org | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-EXB-ACL-003 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | 2026-03-03 | test_inv_train_exb_acl_003_anti_cross_org.py | AR-TRAIN-012, AR-TRAIN-013 |
 | INV-TRAIN-EXB-ACL-004 | acl_authority_creator_only | BLOQUEANTE_VALIDACAO | service+api | TEST-TRAIN-INV-EXB-ACL-004 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | 2026-03-03 | test_inv_train_exb_acl_004_creator_authority.py | AR-TRAIN-012 |
 | INV-TRAIN-EXB-ACL-005 | creator_implicit_access | BLOQUEANTE_ARQUITETURA | service | TEST-TRAIN-INV-EXB-ACL-005 | CONTRACT | NAO | ALTA | BOTH | COBERTO | PASS | test_inv_train_exb_acl_005_creator_implicit_access.py | AR-TRAIN-012 |
-| INV-TRAIN-EXB-ACL-006 | acl_unique_per_exercise_user | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-EXB-ACL-006 | INTEGRATION | SIM | CRITICA | BOTH | COBERTO | ERROR | test_inv_train_exb_acl_006_acl_table.py | AR-TRAIN-011 |
+| INV-TRAIN-EXB-ACL-006 | acl_unique_per_exercise_user | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-EXB-ACL-006 | INTEGRATION | SIM | CRITICA | BOTH | COBERTO | 2026-03-03 | test_inv_train_exb_acl_006_acl_table.py | AR-TRAIN-011, AR-TRAIN-049 |
 | INV-TRAIN-EXB-ACL-007 | acl_change_no_retrobreak_historic_session | BLOQUEANTE_ARQUITETURA | service+db | TEST-TRAIN-INV-EXB-ACL-007 | INTEGRATION | NAO | ALTA | BOTH | COBERTO | PASS | test_inv_train_exb_acl_007_acl_change_no_retrobreak.py | AR-TRAIN-012 |
 | INV-TRAIN-054 | cycle_hierarchy_mandatory | BLOQUEANTE_VALIDACAO | db+service | TEST-TRAIN-INV-054 | INTEGRATION | SIM | CRITICA | BOTH | COBERTO | FAIL | test_inv_train_054_standalone_session.py | AR-TRAIN-015 |
 | INV-TRAIN-055 | meso_overlap_allowed | NAO_BLOQUEANTE | service | TEST-TRAIN-INV-055 | UNIT | NAO | MEDIA | NO | COBERTO | 2026-03-03 | test_inv_train_055_meso_overlap.py | AR-TRAIN-015 |
 | INV-TRAIN-056 | micro_contained_in_meso | BLOQUEANTE_VALIDACAO | db+service | TEST-TRAIN-INV-056 | INTEGRATION | SIM | CRITICA | BOTH | COBERTO | 2026-03-03 | test_inv_train_056_micro_within_meso.py | AR-TRAIN-015 |
 | INV-TRAIN-057 | standalone_session_explicit_flag | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-057 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | FAIL | test_inv_train_057_session_within_microcycle.py | AR-TRAIN-016 |
-| INV-TRAIN-058 | session_structure_mutable_until_close | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-058 | CONTRACT | SIM | CRITICA | POST | COBERTO | ERROR | test_inv_train_058_session_structure_mutable.py | AR-TRAIN-016 |
-| INV-TRAIN-059 | exercise_order_contiguous_unique | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-059 | INTEGRATION | SIM | CRITICA | POST | COBERTO | ERROR | test_inv_train_059_exercise_order_contiguous.py | AR-TRAIN-016 |
+| INV-TRAIN-058 | session_structure_mutable_until_close | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-058 | CONTRACT | SIM | CRITICA | POST | COBERTO | 2026-03-03 | test_inv_train_058_session_structure_mutable.py | AR-TRAIN-016, AR-TRAIN-049 |
+| INV-TRAIN-059 | exercise_order_contiguous_unique | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-059 | INTEGRATION | SIM | CRITICA | POST | COBERTO | 2026-03-03 | test_inv_train_059_exercise_order_contiguous.py | AR-TRAIN-016, AR-TRAIN-049 |
 | INV-TRAIN-060 | org_exercise_default_restricted | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-060 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | PASS | test_inv_train_060_org_exercise_default_restricted.py | AR-TRAIN-011, AR-TRAIN-013 |
 | INV-TRAIN-061 | system_exercise_copy_not_edit | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-061 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | PASS | test_inv_train_061_system_exercise_copy_not_edit.py | AR-TRAIN-012 |
 | INV-TRAIN-062 | exercise_visibility_required_for_session_add | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-062 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | PASS | test_inv_train_062_exercise_visibility_required.py | AR-TRAIN-012, AR-TRAIN-013 |
-| INV-TRAIN-063 | athlete_preconfirm_not_official | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-063 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | ERROR | test_inv_train_063_preconfirm.py | AR-TRAIN-017 |
-| INV-TRAIN-064 | official_attendance_at_closure | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-064 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | ERROR | test_inv_train_064_close_consolidation.py | AR-TRAIN-017 |
+| INV-TRAIN-063 | athlete_preconfirm_not_official | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-063 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | 2026-03-03 | test_inv_train_063_preconfirm.py | AR-TRAIN-017, AR-TRAIN-049 |
+| INV-TRAIN-064 | official_attendance_at_closure | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-064 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | 2026-03-03 | test_inv_train_064_close_consolidation.py | AR-TRAIN-017, AR-TRAIN-049 |
 | INV-TRAIN-065 | closure_allows_inconsistency_as_pending | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-065 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | FAIL | test_inv_train_065_close_pending_guard.py | AR-TRAIN-017 |
 | INV-TRAIN-066 | pending_queue_separate | BLOQUEANTE_ARQUITETURA | service+db | TEST-TRAIN-INV-066 | INTEGRATION | NAO | ALTA | BOTH | COBERTO | FAIL | test_inv_train_066_pending_items.py | AR-TRAIN-017, AR-TRAIN-018 |
 | INV-TRAIN-067 | athlete_pending_collaboration_no_validate | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-067 | CONTRACT | SIM | ALTA | BOTH | COBERTO | FAIL | test_inv_train_067_athlete_pending_rbac.py | AR-TRAIN-018 |
@@ -315,12 +335,12 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 | INV-TRAIN-073 | ai_privacy_no_intimate_content | BLOQUEANTE_ARQUITETURA | service | TEST-TRAIN-INV-073 | UNIT | NAO | ALTA | BOTH | COBERTO | 2026-03-03 | test_inv_train_073_ai_privacy_no_intimate_content.py | AR-TRAIN-021 |
 | INV-TRAIN-074 | ai_educational_content_independent | NAO_BLOQUEANTE | service | TEST-TRAIN-INV-074 | UNIT | NAO | MEDIA | BOTH | COBERTO | 2026-03-03 | test_inv_train_074_ai_educational_content_independent.py | AR-TRAIN-021 |
 | INV-TRAIN-075 | ai_extra_training_draft_only | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-075 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | 2026-03-03 | test_inv_train_075_ai_extra_training_draft_only.py | AR-TRAIN-021 |
-| INV-TRAIN-076 | mandatory_wellness_policy | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-076 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | ERROR | test_inv_train_076_wellness_policy.py | AR-TRAIN-019 |
+| INV-TRAIN-076 | mandatory_wellness_policy | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-076 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | 2026-03-03 | test_inv_train_076_wellness_policy.py | AR-TRAIN-019, AR-TRAIN-049 |
 | INV-TRAIN-077 | immediate_virtual_coach_feedback | NAO_BLOQUEANTE | service | TEST-TRAIN-INV-077 | UNIT | NAO | MEDIA | BOTH | COBERTO | 2026-03-03 | test_inv_train_077_immediate_virtual_coach_feedback.py | AR-TRAIN-020, AR-TRAIN-021 |
 | INV-TRAIN-078 | progress_view_requires_compliance | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-078 | CONTRACT | SIM | ALTA | BOTH | COBERTO | 2026-03-03 | test_inv_train_078_progress_gate.py | AR-TRAIN-019 |
-| INV-TRAIN-079 | individual_recognition_no_intimate_leak | BLOQUEANTE_ARQUITETURA | service | TEST-TRAIN-INV-079 | UNIT | NAO | ALTA | BOTH | COBERTO | NOT_RUN | test_inv_train_079_individual_recognition_no_intimate_leak.py | AR-TRAIN-021 |
-| INV-TRAIN-080 | ai_coach_draft_only | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-080 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | NOT_RUN | test_inv_train_080_ai_coach_draft_only.py | AR-TRAIN-021 |
-| INV-TRAIN-081 | ai_suggestion_requires_justification | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-081 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | NOT_RUN | test_inv_train_081_ai_suggestion_requires_justification.py | AR-TRAIN-021 |
+| INV-TRAIN-079 | individual_recognition_no_intimate_leak | BLOQUEANTE_ARQUITETURA | service | TEST-TRAIN-INV-079 | UNIT | NAO | ALTA | BOTH | COBERTO | 2026-03-03 | test_inv_train_079_individual_recognition_no_intimate_leak.py | AR-TRAIN-021, AR-TRAIN-046 |
+| INV-TRAIN-080 | ai_coach_draft_only | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-080 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | 2026-03-03 | test_inv_train_080_ai_coach_draft_only.py | AR-TRAIN-021, AR-TRAIN-046 |
+| INV-TRAIN-081 | ai_suggestion_requires_justification | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-081 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | 2026-03-03 | test_inv_train_081_ai_suggestion_requires_justification.py | AR-TRAIN-021, AR-TRAIN-046 |
 
 ### Observações (invariantes) — gaps de cobertura (AS-IS)
 
@@ -499,7 +519,7 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 | CONTRACT-TRAIN-070 | GET `/analytics/team/{team_id}/weekly-load` | P1 | TEST-TRAIN-CONTRACT-070 | CONTRACT | POST | COBERTO | 2026-03-03 | `docs/hbtrack/evidence/AR_217/executor_main.log` | AR-TRAIN-038 |
 | CONTRACT-TRAIN-071 | GET `/analytics/team/{team_id}/deviation-analysis` | P1 | TEST-TRAIN-CONTRACT-071 | CONTRACT | POST | COBERTO | 2026-03-03 | `docs/hbtrack/evidence/AR_217/executor_main.log` | AR-TRAIN-038 |
 | CONTRACT-TRAIN-072 | GET `/analytics/team/{team_id}/prevention-effectiveness` | P1 | TEST-TRAIN-CONTRACT-072 | CONTRACT | POST | COBERTO | 2026-03-03 | `docs/hbtrack/evidence/AR_217/executor_main.log` | AR-TRAIN-038 |
-| CONTRACT-TRAIN-073 | GET `/analytics/wellness-rankings` | P1 | TEST-TRAIN-CONTRACT-073 | CONTRACT | POST | PENDENTE | NOT_RUN | `-` | AR-TRAIN-006, AR-TRAIN-007 |
+| CONTRACT-TRAIN-073 | GET `/analytics/wellness-rankings` | P1 | TEST-TRAIN-CONTRACT-073 | CONTRACT | POST | COBERTO | 2026-03-04 | Hb Track - Backend/tests/training/contracts/test_e2e_dod_pipeline.py | AR-TRAIN-006, AR-TRAIN-007 |
 | CONTRACT-TRAIN-074 | POST `/analytics/wellness-rankings/calculate` | P1 | TEST-TRAIN-CONTRACT-074 | CONTRACT | POST | PENDENTE | NOT_RUN | `-` | AR-TRAIN-006, AR-TRAIN-007 |
 | CONTRACT-TRAIN-075 | GET `/analytics/wellness-rankings/{team_id}/athletes-90plus?month=` | P1 | TEST-TRAIN-CONTRACT-075 | CONTRACT | POST | PENDENTE | NOT_RUN | `-` | AR-TRAIN-006, AR-TRAIN-007 |
 | CONTRACT-TRAIN-076 | GET `/teams/{team_id}/wellness-top-performers?month=` | P1 | TEST-TRAIN-CONTRACT-076 | CONTRACT | POST | COBERTO | 2026-03-03 | `docs/hbtrack/evidence/AR_217/executor_main.log` | AR-TRAIN-038, AR-TRAIN-006, AR-TRAIN-007 |
@@ -570,10 +590,10 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 | AR-TRAIN-028 | B | Fix CONTRACT-077-085 router path (AR_206) | TEST-TRAIN-CONTRACT-077-085 | `docs/hbtrack/evidence/AR_206/executor_main.log`; `_reports/testador/AR_206/` | VERIFICADO |
 | AR-TRAIN-029 | E | Flow evidence MANUAL_GUIADO (AR_207) | FLOW-TRAIN-001..006/017/018 | `docs/hbtrack/evidence/AR_207/executor_main.log`; `_reports/testador/AR_207/` | VERIFICADO |
 | AR-TRAIN-030 | B | Contract P0 tests (AR_208) | CONTRACT-TRAIN-097..100 | `docs/hbtrack/evidence/AR_208/executor_main.log`; `_reports/testador/AR_208/` | VERIFICADO |
-| AR-TRAIN-031 | G | Done Gate: TRAINING v1.8.0 (AR_209) | Sanity AR_200 + Smoke Batch 9 | `docs/hbtrack/evidence/AR_209/executor_main.log`; `_reports/testador/AR_209/` | EM_EXECUCAO |
+| AR-TRAIN-031 | G | Done Gate: TRAINING v1.8.0 (AR_209) | Sanity AR_200 + Smoke Batch 9 | `docs/hbtrack/evidence/AR_209/executor_main.log`; `_reports/testador/AR_209/` | VERIFICADO |
 | AR-TRAIN-032 | G | Sync §5 TEST_MATRIX: 36 INV PENDENTE→COBERTO (AR_211) | INV-047..052/054..059/063..081/EXB-ACL-001..004/006 | `docs/hbtrack/evidence/AR_211/executor_main.log` | VERIFICADO |
-| AR-TRAIN-033 | T | Criar 6 testes ausentes: INV-053/060/061/062/EXB-ACL-005/007 (AR_212) | TEST-TRAIN-INV-053/060/061/062, TEST-TRAIN-INV-EXB-ACL-005/007 | `docs/hbtrack/evidence/AR_212/executor_main.log` | EM_EXECUCAO |
-| AR-TRAIN-034 | T | Executar NOT_RUN §5 + evidências formais, Batch 13 (AR_213) | TEST-TRAIN-INV-006..078 + EXB-ACL-001..004 (~65 NOT_RUN) | `_reports/training/evidence_run_batch13.txt` | EM_EXECUCAO |
+| AR-TRAIN-033 | T | Criar 6 testes ausentes: INV-053/060/061/062/EXB-ACL-005/007 (AR_212) | TEST-TRAIN-INV-053/060/061/062, TEST-TRAIN-INV-EXB-ACL-005/007 | `docs/hbtrack/evidence/AR_212/executor_main.log` | VERIFICADO |
+| AR-TRAIN-034 | T | Executar NOT_RUN §5 + evidências formais, Batch 13 (AR_213) | TEST-TRAIN-INV-006..078 + EXB-ACL-001..004 (~65 NOT_RUN) | `_reports/training/evidence_run_batch13.txt` | VERIFICADO |
 | AR-TRAIN-035 | T | Contract tests Sessions CRUD (CONTRACT-001..012), Batch 14 (AR_214) | TEST-TRAIN-CONTRACT-001..012 | `docs/hbtrack/evidence/AR_214/executor_main.log`; `_reports/testador/AR_214_142a146/` | VERIFICADO |
 | AR-TRAIN-036 | T | Contract tests Teams + Attendance (CONTRACT-013..028), Batch 14 (AR_215) | TEST-TRAIN-CONTRACT-013..028 | `docs/hbtrack/evidence/AR_215/executor_main.log`; `_reports/testador/AR_215_142a146/` | VERIFICADO |
 | AR-TRAIN-037 | T | Contract tests Wellness pre/post (CONTRACT-029..039), Batch 14 (AR_216) | TEST-TRAIN-CONTRACT-029..039 | `docs/hbtrack/evidence/AR_216/executor_main.log`; `_reports/testador/AR_216_142a146/` | VERIFICADO |
@@ -582,7 +602,15 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 | AR-TRAIN-040 | T | DEC tests automatizados (DEC-TRAIN-001..004/EXB/RBAC), Batch 15 (AR_219) | TEST-TRAIN-DEC-001..004/EXB/RBAC | `docs/hbtrack/evidence/AR_219/executor_main.log`; `_reports/testador/AR_219_142a146/` | VERIFICADO |
 | AR-TRAIN-041 | T | Flows P1 evidência MANUAL_GUIADO (FLOW-007..016/019..021), Batch 15 (AR_220) | TEST-TRAIN-FLOW-007..016/019..021 | `docs/hbtrack/evidence/AR_220/executor_main.log`; `_reports/testador/AR_220_142a146/` | VERIFICADO |
 | AR-TRAIN-042 | T | Screens smoke MANUAL_GUIADO (SCREEN-001..025), Batch 15 (AR_221) | TEST-TRAIN-SCREEN-001..025 | `docs/hbtrack/evidence/AR_221/executor_main.log`; `_reports/testador/AR_221_142a146/` | VERIFICADO |
-| AR-TRAIN-043 | G | Done Gate §10 Final — sync TEST_MATRIX v2.0.0, Batch 16 (AR_222) | Todos §5/§6/§7/§8 + AC-005 | `docs/hbtrack/evidence/AR_222/executor_main.log` | EM_EXECUCAO |
+| AR-TRAIN-043 | G | Done Gate §10 Final — sync TEST_MATRIX v2.0.0, Batch 16 (AR_222) | Todos §5/§6/§7/§8 + AC-005 | `docs/hbtrack/evidence/AR_222/executor_main.log` | OBSOLETO |
+| AR-TRAIN-044 | T | Fix async fixtures: `@pytest.fixture` → `@pytest_asyncio.fixture` (~23+ tests, 7 arquivos), Batch 17 (AR_225) | tests/training/invariants/ (7 arquivos) | `docs/hbtrack/evidence/AR_225/executor_main.log`; `_reports/testador/AR_225_*/` | VERIFICADO |
+| AR-TRAIN-045 | T | Fix DB fixture setup: `category_id` NOT NULL + FK `team_registrations` (~57+ ERROs), Batch 17 (AR_226) | tests/training/invariants/ (~15 arquivos) | `docs/hbtrack/evidence/AR_226/executor_main.log`; `_reports/testador/AR_226_*/` | VERIFICADO |
+| AR-TRAIN-046 | T | Fix import stubs ausentes em ai_coach_service (INV-079/080/081), Batch 17 (AR_227) | INV-079/080/081 tests | `docs/hbtrack/evidence/AR_227/executor_main.log`; `_reports/testador/AR_227_*/` | VERIFICADO |
+| AR-TRAIN-047 | T | Fix residuais mistos + suite done gate, Batch 17 (AR_228 REJEITADO) | tests/training/invariants/ residuais | — | REJEITADO |
+| AR-TRAIN-048 | A/E | Sync app/models/ + app/services/ + stubs IA Coach (INV-010/035/036/054/060), Batch 19 (AR_229) | app/models/ (5 arquivos), app/services/ (2), openapi.json | `docs/hbtrack/evidence/AR_229/executor_main.log`; `_reports/testador/AR_229_*/` | VERIFICADO |
+| AR-TRAIN-049 | T | Fix 6 FAILs + 10 ERRORs residuais test-layer (8 arquivos), Batch 20 (AR_230) | tests/training/invariants/ (8 arquivos: test_018, 035, 058, 059, 063, 064, 076, acl_006) | `docs/hbtrack/evidence/AR_230/executor_main.log`; `_reports/testador/AR_230_*/` | VERIFICADO |
+| AR-TRAIN-050 | G | Sync §5 TEST_MATRIX: 11 itens NOT_RUN/FAIL/ERROR→PASS (AR_227+AR_230), Batch 21 (AR_231) | TEST_MATRIX_TRAINING.md §5 (11 itens: INV-079/080/081 + INV-018/035/058/059/063/064/076/EXB-ACL-006) | `docs/hbtrack/evidence/AR_231/executor_main.log` | VERIFICADO |
+| AR-TRAIN-051 | G | Done Gate §10 formal — v3.0.0, Batch 22 (AR_232) | TEST_MATRIX_TRAINING.md §10/§0/§9 + DONE_GATE_TRAINING_v3.md | `docs/hbtrack/evidence/AR_232/executor_main.log` | VERIFICADO |
 
 ---
 

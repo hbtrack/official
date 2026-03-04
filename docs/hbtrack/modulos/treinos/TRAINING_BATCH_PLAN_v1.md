@@ -1,7 +1,7 @@
 # TRAINING_BATCH_PLAN_v1.md — Plano de Batches do Módulo TRAINING
 
 Data: 2026-03-03
-Versão: v1.3.0
+Versão: v1.5.0
 Sync (pós-patch SSOT): `AR-TRAIN-010A/010B` + `AR-TRAIN-015`→`FLOW-TRAIN-008`.
 Sync: Batch-6 adicionado — AR-TRAIN-010B desbloqueada (deps 001..009 VERIFICADAS 2026-03-01)
 Sync: Batch-7 adicionado — AR-TRAIN-022 (Governança: sync INVARIANTS_TRAINING.md — deps 011..021 VERIFICADAS 2026-03-01)
@@ -10,6 +10,8 @@ Sync: Batches 9-11 adicionados — AR-TRAIN-024..031 (Fix FAILs críticos + Flow
 Sync v1.1.0: Batches 12-16 adicionados — AR-TRAIN-032..043 (Cobertura §10 formal — decisão humana 2026-03-03)
 Sync v1.2.0: Batch 17 adicionado — AR-TRAIN-044..047 (Fix FAILs test-layer Batch 13 — decisão humana Opção A 2026-03-03)
 Sync v1.3.0: Batch 19 adicionado — AR-TRAIN-048 (Sincronização em Lote app layer — decisão humana 2026-03-03; GOVERNED_ROOTS.yaml UNLOCKED_FOR_SYNC_BATCH_19)
+Sync v1.4.0: Batches 17-20 EXECUTADOS — AR-TRAIN-044/045/046 ✅ VERIFICADO (AR_225/226/227, 2026-03-03); AR-TRAIN-047 🔴 REJEITADO (AR_228); AR-TRAIN-048 ✅ VERIFICADO (AR_229, 2026-03-03); AR-TRAIN-049 ✅ VERIFICADO (AR_230, 2026-03-03). AR-TRAIN-043 Done Gate §10 permanece EM_EXECUCAO.
+Sync v1.5.0: Batches 21-22 planejados — AR-TRAIN-043 OBSOLETA (substituída por AR-TRAIN-050+051); AR-TRAIN-050 (G) Sync §5 TEST_MATRIX pós-Batches 17-20 (Batch 21); AR-TRAIN-051 (G) Done Gate §10 formal (Batch 22, substitui AR-TRAIN-043).
 
 ## SSOTs lidos (bindings)
 - `docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md`
@@ -947,3 +949,57 @@ Evidência adicional (trecho do SSOT — default `restricted` em CONTRACT-TRAIN-
 - test_058/059: usar `ON CONFLICT DO NOTHING` na criação de fixture `category` para evitar colisão com id=9999 de outros testes.
 - test_076: verificar coerência semântica ao substituir 'concluída' → 'pending_review' na lógica do teste.
 - Após AR-TRAIN-049 VERIFICADO: re-executar `hb report 228` + `hb report 229` para fechar os dois ciclos em aberto.
+
+---
+
+### Batch 21 — Sync §5 TEST_MATRIX pós-Batches 17-20 (Governança documental)
+
+**Objetivo:** Sincronizar TEST_MATRIX_TRAINING.md §5 para refletir resultados validados por AR-TRAIN-046 (AR_227) e AR-TRAIN-049 (AR_230). Zero toque em Backend ou Frontend.
+
+**AR-TRAIN incluída:**
+- `AR-TRAIN-050` (G) — Sync 11 itens §5 TEST_MATRIX (INV-079/080/081 NOT_RUN→PASS; INV-018/035/058/059/063/064/076/EXB-ACL-006 FAIL/ERROR→PASS)
+
+**Zonas de impacto (apenas docs/):**
+- `TEST_MATRIX_TRAINING.md` §5 — 11 linhas atualizadas + bump v2.1.0→v2.2.0 + §9 entry AR-TRAIN-050
+
+**DoD objetivo do batch:**
+- AC-001..004: INV-079/080/081 + INV-018/035/058/059/063/064/076/EXB-ACL-006 todos com `Últ.Execução = PASS`
+- AC-005: versão = v2.2.0 no cabeçalho da TEST_MATRIX
+- AC-006: §9 contém entry AR-TRAIN-050 VERIFICADO
+
+**Non-scope:**
+- `Hb Track - Backend/` — zero toque
+- `Hb Track - Frontend/` — zero toque
+- Demais §§ da TEST_MATRIX não listados no write_scope
+
+**Riscos/Dependências:**
+- **Dep obrigatória:** AR-TRAIN-046 VERIFICADO + AR-TRAIN-049 VERIFICADO.
+- Apenas alterações documentais; risco operacional mínimo.
+
+---
+
+### Batch 22 — Done Gate §10 formal pós-Batch 21 (Governança documental)
+
+**Objetivo:** Done Gate §10 formal do módulo TRAINING: preencher §10 + §0 da TEST_MATRIX_TRAINING.md, bump v2.2.0→v3.0.0, emitir declaração `docs/hbtrack/modulos/treinos/DONE_GATE_TRAINING_v3.md`. Substitui AR-TRAIN-043 (OBSOLETA, Batch 16).
+
+**AR-TRAIN incluída:**
+- `AR-TRAIN-051` (G) — Done Gate §10 formal + declaração DONE_GATE_TRAINING_v3.md + bump TEST_MATRIX→v3.0.0
+
+**Zonas de impacto (apenas docs/):**
+- `TEST_MATRIX_TRAINING.md` §0 + §10 + versão + §9 entry AR-TRAIN-051
+- `_reports/training/DONE_GATE_TRAINING_v3.md` (novo)
+
+**DoD objetivo do batch:**
+- AC-001: versão = v3.0.0
+- AC-002: §10 com todos os checkboxes ✅
+- AC-003: §9 contém entry AR-TRAIN-051
+- AC-004: `DONE_GATE_TRAINING_v3.md` existe com critérios §10 satisfeitos
+- AC-005: §0 contém contadores atualizados (0 GAPs)
+
+**Non-scope:**
+- `Hb Track - Backend/` — zero toque
+- `Hb Track - Frontend/` — zero toque
+- §5 da TEST_MATRIX (coberto por Batch 21)
+
+**Riscos/Dependências:**
+- **Dep obrigatória:** AR-TRAIN-050 VERIFICADO (Batch 21).

@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_232-b452cbf",
+  "timestamp_utc": "2026-03-04T12:57:35.171677+00:00",
+  "git": {
+    "commit": "b452cbf90370f68c3d286d6cf1d9ed68b8d7fe9d"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "232",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_232_done_gate_§10_formal_test_matrix_v3.0.0_+_§10_chec.md"
+}

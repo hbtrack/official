@@ -18,7 +18,7 @@ def test_settings_required_fields():
 
 def test_settings_env_detection():
     """Valida detecção de ambiente"""
-    assert settings.ENV in ["local", "staging", "production"]
+    assert settings.ENV in ["local", "staging", "production", "test"]
 
     if settings.ENV == "local":
         assert settings.is_local is True

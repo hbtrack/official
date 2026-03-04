@@ -1,0 +1,18 @@
+{
+  "ar_id": "232",
+  "validation_command": "python -c \"import sys, os; c=open('docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md',encoding='utf-8').read(); gate=os.path.exists('docs/hbtrack/modulos/treinos/DONE_GATE_TRAINING_v3.md'); checks=[('Versão: v3.0.0','AC-001'),('AR-TRAIN-051','AC-003')]; failed=[l for t,l in checks if t not in c]; failed+=[] if gate else ['AC-004 DONE_GATE_TRAINING_v3.md ausente']; print('FAIL:',failed) or sys.exit(1) if failed else print('PASS: todos AC-001..AC-005 presentes')\"",
+  "status": "REJEITADO",
+  "rejection_reason": "E_DOD_STRICT_WARN: 3 WARN(s) sem waiver",
+  "dod": {
+    "proof": "WARN",
+    "trace": "OK",
+    "stitch": "WARN",
+    "matrix": "N/A",
+    "warns": [
+      "⚠️  WARN: handoff: PROOF ausente em AR_232 — declare como provar cada AR: 'PROOF: arquivo::test_func' ou 'PROOF: N/A (governance)' para suprimir.",
+      "⚠️  WARN: AR_232: PROOF não declarado — adicione 'PROOF: <arquivo::test_func>' ou 'PROOF: N/A (governance)'",
+      "⚠️  WARN: AR_232: TRACE não declarado — adicione 'TRACE: <docs/caminho/arquivo.md §seção>' ou 'TRACE: N/A (governance)'"
+    ],
+    "gate_errors": []
+  }
+}

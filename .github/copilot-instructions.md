@@ -15,6 +15,12 @@ SSOT principais:
 - docs/_canon/specs/GOVERNED_ROOTS.yaml
 - docs/_canon/specs/GATES_REGISTRY.yaml
 - docs/_canon/specs/Hb cli Spec.md
+- docs/invariantes/INVARIANTS_OPERACIONAIS_HBTRACK.md (normas operacionais — SSOT vence em conflito)
+
+Invariantes operacionais (SSOT normativo global):
+- Antes de qualquer ação, consultar docs/invariantes/INVARIANTS_OPERACIONAIS_HBTRACK.md.
+- Se houver conflito entre instruções e este SSOT, o SSOT vence.
+- Nunca inventar regras não presentes no SSOT; se faltar, marcar como GAP.
 
 Módulo TRAINING:
 - docs/hbtrack/modulos/treinos/TRAINING_BATCH_PLAN_v1.md

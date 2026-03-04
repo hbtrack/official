@@ -1,16 +1,2 @@
-.github/agents/Arquiteto.agent.md
-.github/agents/Executor.agent.md
-.github/agents/Testador.agent.md
-.github/skills/ar-handoff-writer/SKILL.md
-Hb Track - Backend/app/api/v1/routers/session_templates.py
-_reports/ARQUITETO.md
-_reports/TESTADOR.md
 _tmp_staged_before.txt
 _tmp_unstaged_before.txt
-docs/hbtrack/Hb Track Kanban.md
-docs/hbtrack/_INDEX.md
-"docs/hbtrack/ars/features/AR_225_fix_async_fixtures_@pytest.fixture_\342\206\222_@pytest_async.md"
-docs/hbtrack/ars/features/AR_226_fix_db_fixture_setup_category_id_not_null_+_fk_tea.md
-docs/hbtrack/ars/features/AR_227_fix_import_stubs_ausentes_em_ai_coach_service_3_er.md
-docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md
-docs/hbtrack/modulos/treinos/TRAINING_BATCH_PLAN_v1.md

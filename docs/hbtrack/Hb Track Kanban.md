@@ -1112,15 +1112,16 @@ EVIDENCE_PACK:
 > **Data planejamento**: 2026-03-03.
 > **Dependências**: AR-TRAIN-034..042 todos VERIFICADO (Batches 13-15 selados).
 
-### ⛔ BLOCKED_AC005 — aguarda Batch 18 (AR_225..AR_228)
+### ⛔ OBSOLETO — AR-TRAIN-043 substituída por AR-TRAIN-050 (Batch 21) + AR-TRAIN-051 (Batch 22)
 
-> **Pós-Batch 17 (2026-03-03):** AR_223 + AR_224 verificadas e seladas. Suite `tests/training/` ainda tem **109 FAILs + 31 ERRORs** residuais de Batch 13. AC-005 ("0 FAILs full suite") **ainda inalcançável**.
-> **Decisão humana (Opção A — 2026-03-03):** Criar Batch 18. AR-TRAIN-044..047 (físicos AR_225..228) catalogadas no Backlog e Batch Plan. Plano: `docs/_canon/planos/ar_batch18_fix_test_layer_044_047.json`.
-> AR_222 só pode ser re-executada após AR_228 (TRAIN-047) VERIFICADO + suite verde.
+> **2026-03-03 (pós-Batch 20):** AR-TRAIN-043 marcada como OBSOLETA pelo Arquiteto. Contexto mudou significativamente pós-Batches 17-20. Escopo desmembrado:
+> - Sync §5 TEST_MATRIX (11 itens desatualizados) → AR-TRAIN-050 (AR_231, Batch 21)
+> - Done Gate §10 formal com escopo atualizado → AR-TRAIN-051 (AR_232, Batch 22)
+> AR_222 encerrada sem selo. Não retomar.
 
 | AR | Titulo | Status | Proxima Acao |
 |---|---|---|---|
-| **AR_222** | Done Gate §10 final: sync TEST_MATRIX v2.0.0 + declaração formal (AR-TRAIN-043) | ⛔ BLOCKED_AC005 | Aguarda AR_228 VERIFICADO |
+| **AR_222** | Done Gate §10 final: sync TEST_MATRIX v2.0.0 + declaração formal (AR-TRAIN-043) | ⛔ OBSOLETO | AR-TRAIN-043 substituída — ver Batch 21/22 |
 
 ---
 
@@ -1184,10 +1185,39 @@ EVIDENCE_PACK:
 > **Plano**: docs/_canon/planos/ar_batch20_fix_test_layer_residuals_049.json (dry-run ✅)
 > **Correspondência Backlog**: AR-TRAIN-049 → AR_230
 > **Dependências obrigatórias**: AR_229 com amendment (status server_default fix) executado.
-> **Após Batch 20**: Re-executar `hb report 228` + `hb report 229` → ambos devem exit=0 → `hb verify 228` + `hb verify 229`. Depois re-executar AR_222 (Done Gate §10).
 
-### 🔲 READY — aguardando Executor (dep: AR_229 amendment)
+### ✅ SEALED (2026-03-03) — hb seal 230 exit=0
+
+| AR | AR-TRAIN | Título | Status |
+|---|---|---|—|
+| **AR_230** | TRAIN-049 | Fix 6 FAILs + 10 ERRORs residuais test-layer (test_018_route, 035×4, 058, 059, 063×2, 064, 076×3, acl_006×2) | ✅ VERIFICADO (hb seal 2026-03-03) |
+
+---
+
+## 38. Cards -- TRAINING Batch 21 -- Sync §5 TEST_MATRIX pós-Batches 17-20 (AR_231)
+
+> **Contexto**: AR-TRAIN-046 (AR_227) corrigiu stubs INV-079/080/081 (NOT_RUN); AR-TRAIN-049 (AR_230) corrigiu 8 testes (FAIL/ERROR). §5 da TEST_MATRIX ainda reflete estados desatualizados em 11 linhas. Zero toque em Backend/Frontend.
+> **Plano**: docs/_canon/planos/ar_batch21_sync_test_matrix_050.json
+> **Correspondência Backlog**: AR-TRAIN-050 → AR_231
+> **Dependências obrigatórias**: AR-TRAIN-046 VERIFICADO (AR_227) + AR-TRAIN-049 VERIFICADO (AR_230).
+
+### 🔲 PRONTO PARA PLANEJAR — aguarda Executor (dep: AR_230 SEALED ✅)
 
 | AR | AR-TRAIN | Título | Status |
 |---|---|---|---|
-| **AR_230** | TRAIN-049 | Fix 6 FAILs + 10 ERRORs residuais test-layer (test_018_route, 035×4, 058, 059, 063×2, 064, 076×3, acl_006×2) | 🔲 PENDENTE (dep: AR_229 amendment) |
+| **AR_231** | TRAIN-050 | Sync §5 TEST_MATRIX: INV-079/080/081 NOT_RUN→PASS + INV-018/035/058/059/063/064/076/EXB-ACL-006 FAIL/ERROR→PASS + bump v2.1.0→v2.2.0 | 🔲 PENDENTE |
+
+---
+
+## 39. Cards -- TRAINING Batch 22 -- Done Gate §10 Formal pós-Batch 21 (AR_232)
+
+> **Contexto**: Substitui AR-TRAIN-043 (OBSOLETA, Batch 16). Fecha o módulo TRAINING com §10 formal preenchido, bump TEST_MATRIX→v3.0.0 e declaração DONE_GATE_TRAINING_v3.md. Zero toque em Backend/Frontend.
+> **Plano**: docs/_canon/planos/ar_batch22_done_gate_051.json
+> **Correspondência Backlog**: AR-TRAIN-051 → AR_232
+> **Dependências obrigatórias**: AR-TRAIN-050 VERIFICADO (AR_231, Batch 21).
+
+### 🔲 AGUARDANDO BATCH 21 — Batch 22 não pode iniciar sem AR_231 SEALED
+
+| AR | AR-TRAIN | Título | Status |
+|---|---|---|---|
+| **AR_232** | TRAIN-051 | Done Gate §10 final: §10 checkboxes ✅ + §0 contadores + TEST_MATRIX v3.0.0 + DONE_GATE_TRAINING_v3.md | 🔲 AGUARDA BATCH 21 |

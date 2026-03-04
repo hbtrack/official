@@ -1,4 +1,301 @@
-# TESTADOR — BATCH 20 (AR_229..AR_230) + HISTÓRICO BATCH 18
+# TESTADOR — AR_235 (SUCESSO) + AR_234 (SUCESSO) + AR_232 (SUCESSO) + AR_233 + AR_231 + HISTÓRICO BATCH 18-20
+
+---
+
+## ✅ SUCESSO — AR_235 (2026-03-04)
+
+### Status Geral
+
+| Campo | Valor |
+|---|---|
+| **RUN_ID** | AR_235_b452cbf |
+| **AR_ID** | AR_235 |
+| **RESULT** | ✅ SUCESSO |
+| **CONSISTENCY** | OK |
+| **TRIPLE_CONSISTENCY** | PASS (3/3 exit=0, hash=5a5373c01870b997) |
+| **EVIDENCES** | `_reports/testador/AR_235_b452cbf/context.json`, `_reports/testador/AR_235_b452cbf/result.json` |
+| **NEXT_ACTION** | **Humano**: `hb seal 235` |
+
+### Triple-run
+
+| Run | Exit | Hash |
+|---|---|---|
+| 1/3 | 0 | `5a5373c01870b997` |
+| 2/3 | 0 | `5a5373c01870b997` |
+| 3/3 | 0 | `5a5373c01870b997` |
+
+### Evidências staged
+
+- `_reports/testador/AR_235_b452cbf/context.json`
+- `_reports/testador/AR_235_b452cbf/result.json`
+
+---
+
+## ✅ SUCESSO — AR_234 (SUCESSO) + AR_232 (SUCESSO) + AR_233 + AR_231 + HISTÓRICO BATCH 18-20
+
+---
+
+## ✅ SUCESSO — AR_234 (2026-03-04)
+
+### Status Geral
+
+| Campo | Valor |
+|---|---|
+| **RUN_ID** | AR_234_b452cbf |
+| **AR_ID** | AR_234 |
+| **RESULT** | ✅ SUCESSO |
+| **CONSISTENCY** | OK |
+| **TRIPLE_CONSISTENCY** | PASS (3/3 exit=0, hash=d6913e35a48fbda2) |
+| **EVIDENCES** | `_reports/testador/AR_234_b452cbf/context.json`, `_reports/testador/AR_234_b452cbf/result.json` |
+| **NEXT_ACTION** | **Humano**: `hb seal 234` |
+
+### Triple-run
+
+| Run | Exit | Hash |
+|---|---|---|
+| 1/3 | 0 | d6913e35a48fbda2 |
+| 2/3 | 0 | d6913e35a48fbda2 |
+| 3/3 | 0 | d6913e35a48fbda2 |
+
+### Pré-condições verificadas
+
+| # | Pré-condição | Resultado |
+|---|---|---|
+| 1 | AR existe (`docs/hbtrack/ars/**/AR_234_*.md`) | ✅ OK |
+| 2 | Validation Command não vazio | ✅ OK |
+| 3 | Evidence existe (`docs/hbtrack/evidence/AR_234/executor_main.log`) | ✅ OK |
+| 4 | Evidence STAGED | ✅ OK |
+| 5 | Workspace limpo (tracked-unstaged vazio) | ✅ OK |
+| 6 | Kanban fase compatível | ✅ OK |
+| DOC-GATE-019 | Sem ⚠️ DOC-GATE-019 no log | ✅ OK (Exit Code=0) |
+
+---
+
+
+
+---
+
+## ✅ SUCESSO — AR_232 (2026-03-04)
+
+### Status Geral
+
+| Campo | Valor |
+|---|---|
+| **RUN_ID** | AR_232_b452cbf |
+| **AR_ID** | AR_232 |
+| **RESULT** | ✅ SUCESSO |
+| **CONSISTENCY** | OK |
+| **TRIPLE_CONSISTENCY** | PASS (3/3 exit=0, hash=e9705818b15b3c76) |
+| **EVIDENCES** | `_reports/testador/AR_232_b452cbf/context.json`, `_reports/testador/AR_232_b452cbf/result.json` |
+| **NEXT_ACTION** | **Humano**: `hb seal 232` |
+
+### Triple-run
+
+| Run | Exit | Hash |
+|---|---|---|
+| 1/3 | 0 | e9705818b15b3c76 |
+| 2/3 | 0 | e9705818b15b3c76 |
+| 3/3 | 0 | e9705818b15b3c76 |
+
+### Pré-condições verificadas
+
+| # | Pré-condição | Resultado |
+|---|---|---|
+| 1 | AR existe (`docs/hbtrack/ars/**/AR_232_*.md`) | ✅ OK |
+| 2 | Validation Command não vazio | ✅ OK |
+| 3 | Evidence existe (`docs/hbtrack/evidence/AR_232/executor_main.log`) | ✅ OK |
+| 4 | Evidence STAGED | ✅ OK |
+| 5 | Workspace limpo (tracked-unstaged vazio) | ✅ OK |
+| 6 | Kanban fase compatível | ✅ OK |
+| DOC-GATE-019 | Sem ⚠️ DOC-GATE-019 no log | ✅ OK |
+
+### Nota
+
+1ª tentativa bloqueada por `E_VERIFY_DIRTY_WORKSPACE` (unstaged_modified=18). Executor limpou workspace (skill exec-workspace-clean-safe). 2ª tentativa: triple-run PASS.
+
+---
+
+## ⏸️ BLOQUEADO_INFRA — AR_232 (1ª tentativa — SUPERADO)
+
+### Status Geral
+
+| Campo | Valor |
+|---|---|
+| **RUN_ID** | AR_232_b452cbf |
+| **AR_ID** | AR_232 |
+| **RESULT** | ⏸️ BLOQUEADO_INFRA |
+| **CONSISTENCY** | N/A — verify não executou |
+| **TRIPLE_CONSISTENCY** | N/A |
+| **EVIDENCES** | `docs/hbtrack/evidence/AR_232/executor_main.log` (STAGED ✓) |
+| **NEXT_ACTION** | **Executor**: limpar workspace (stagear ou reverter tracked-unstaged) e re-entregar |
+
+### Motivo do bloqueio
+
+```
+❌ E_VERIFY_DIRTY_WORKSPACE: unstaged_modified=18
+```
+
+`git diff --name-only` retornou 18 arquivos tracked-unstaged:
+
+```
+.claude/settings.local.json
+.github/agents/Arquiteto.agent.md
+.github/agents/Executor.agent.md
+.github/agents/Testador.agent.md
+Hb Track - Backend/docs/ssot/alembic_state.txt
+Hb Track - Backend/docs/ssot/openapi.json
+Hb Track - Backend/docs/ssot/schema.sql
+Hb Track - Backend/pytest.ini
+_reports/ARQUITETO.md
+docs/_canon/specs/GATES_REGISTRY.yaml
+docs/hbtrack/Hb Track Kanban.md
+docs/hbtrack/ars/features/AR_233_centralizar_config_cors_em_config.py_+_validação_f.md
+docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md
+docs/hbtrack/modulos/treinos/TRAINING_BATCH_PLAN_v1.md
+docs/ssot/alembic_state.txt
+docs/ssot/openapi.json
+scripts/gates/tests/test_check_handoff_contract.py
+scripts/run/hb_cli.py
+```
+
+### Pré-condições verificadas
+
+| # | Pré-condição | Resultado |
+|---|---|---|
+| 1 | AR existe (`docs/hbtrack/ars/**/AR_232_*.md`) | ✅ OK |
+| 2 | Validation Command não vazio | ✅ OK |
+| 3 | Evidence existe (`docs/hbtrack/evidence/AR_232/executor_main.log`) | ✅ OK |
+| 4 | Evidence STAGED | ✅ OK |
+| 5 | Workspace limpo (tracked-unstaged vazio) | ❌ FALHOU — unstaged_modified=18 |
+| 6 | Kanban fase compatível | N/A |
+| DOC-GATE-019 | Sem ⚠️ DOC-GATE-019 no log | ✅ OK (Exit Code=0, PASS) |
+
+### Ação requerida do Executor
+
+Stagear ou reverter os 18 arquivos tracked-unstaged listados acima, de forma que `git diff --name-only` retorne vazio, e re-entregar para o Testador.
+
+> ⚠️ Testador NÃO executa limpeza de workspace. Cabe ao Executor, sem comandos destrutivos (git restore / git reset --hard / git clean proibidos).
+
+---
+
+# TESTADOR — AR_233 + AR_231 + HISTÓRICO BATCH 18-20
+
+## ✅ SUCESSO — AR_233 (2026-03-04)
+
+### Status Geral
+
+| Campo | Valor |
+|---|---|
+| **RUN_ID** | AR_233_b452cbf |
+| **AR_ID** | AR_233 |
+| **RESULT** | ✅ SUCESSO |
+| **CONSISTENCY** | OK |
+| **TRIPLE_CONSISTENCY** | PASS (3/3 exit=0, hash=587eb9944a62713d) |
+| **EVIDENCES** | `_reports/testador/AR_233_b452cbf/context.json`, `_reports/testador/AR_233_b452cbf/result.json` |
+| **NEXT_ACTION** | **Humano**: `hb seal 233` |
+
+### Triple-run
+
+| Run | Exit | Hash |
+|---|---|---|
+| 1/3 | 0 | `587eb9944a62713d` |
+| 2/3 | 0 | `587eb9944a62713d` |
+| 3/3 | 0 | `587eb9944a62713d` |
+
+**Consistência**: hashes idênticos nos 3 runs — determinístico ✅
+
+### Evidências staged (Testador)
+
+```
+git add "_reports/testador/AR_233_b452cbf/context.json"
+git add "_reports/testador/AR_233_b452cbf/result.json"
+```
+
+---
+
+## ✅ SUCESSO — AR_231 (2026-03-04)
+
+### Status Geral
+
+| Campo | Valor |
+|---|---|
+| **RUN_ID** | AR_231_b452cbf |
+| **AR_ID** | AR_231 |
+| **RESULT** | ✅ SUCESSO |
+| **CONSISTENCY** | OK |
+| **TRIPLE_CONSISTENCY** | PASS (3/3 exit=0, hash=a7e941c9952cdb4e) |
+| **EVIDENCES** | `_reports/testador/AR_231_b452cbf/context.json`, `_reports/testador/AR_231_b452cbf/result.json` |
+| **NEXT_ACTION** | ✅ SEALED por humano |
+
+### Triple-run
+
+| Run | Exit | Hash |
+|---|---|---|
+| 1/3 | 0 | `a7e941c9952cdb4e` |
+| 2/3 | 0 | `a7e941c9952cdb4e` |
+| 3/3 | 0 | `a7e941c9952cdb4e` |
+
+### Critérios de Aceite
+
+| AC | Critério | Status |
+|---|---|---|
+| AC-001 | INV-TRAIN-079 presente em §5 | ✅ |
+| AC-002 | INV-TRAIN-080 e INV-TRAIN-081 presentes em §5 | ✅ |
+| AC-003 | INV-TRAIN-018 com AR = AR-TRAIN-049 | ✅ |
+| AC-004 | INV-TRAIN-035/058/059/063/064/076/EXB-ACL-006 todos PASS | ✅ |
+| AC-005 | Versão = v2.2.0 no cabeçalho | ✅ |
+| AC-006 | §9 contém AR-TRAIN-050 | ✅ |
+
+---
+
+
+### Status Geral
+
+| Campo | Valor |
+|---|---|
+| **RUN_ID** | AR_231_b452cbf |
+| **AR_ID** | AR_231 |
+| **RESULT** | ✅ SUCESSO |
+| **CONSISTENCY** | OK |
+| **TRIPLE_CONSISTENCY** | PASS (3/3 exit=0, hash=a7e941c9952cdb4e) |
+| **EVIDENCES** | `_reports/testador/AR_231_b452cbf/context.json`, `_reports/testador/AR_231_b452cbf/result.json` |
+| **NEXT_ACTION** | **Humano**: `hb seal 231` |
+
+### Triple-run
+
+| Run | Exit | Hash |
+|---|---|---|
+| 1/3 | 0 | `a7e941c9952cdb4e` |
+| 2/3 | 0 | `a7e941c9952cdb4e` |
+| 3/3 | 0 | `a7e941c9952cdb4e` |
+
+**Consistência**: hashes idênticos nos 3 runs — determinístico ✅
+
+### Critérios de Aceite (validation_command)
+
+```
+PASS: todos AC-001..AC-006 presentes
+```
+
+| AC | Critério | Status |
+|---|---|---|
+| AC-001 | INV-TRAIN-079 presente em §5 | ✅ |
+| AC-002 | INV-TRAIN-080 e INV-TRAIN-081 presentes em §5 | ✅ |
+| AC-003 | INV-TRAIN-018 com AR = AR-TRAIN-049 | ✅ |
+| AC-004 | INV-TRAIN-035/058/059/063/064/076/EXB-ACL-006 todos PASS | ✅ |
+| AC-005 | Versão = v2.2.0 no cabeçalho | ✅ |
+| AC-006 | §9 contém AR-TRAIN-050 | ✅ |
+
+### Evidências staged (Testador)
+
+```
+git add "_reports/testador/AR_231_b452cbf/context.json"
+git add "_reports/testador/AR_231_b452cbf/result.json"
+```
+
+---
+
+
 
 ## ✅ SUCESSO — BATCH 19+20: AR_229 + AR_230 (2026-03-04)
 

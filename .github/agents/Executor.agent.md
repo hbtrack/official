@@ -43,11 +43,21 @@ Proibido:
 - Criar .sh/.ps1 (Python-only)
 
 Processo obrigatório:
+E0) PRE-FLIGHT: Confirmar workspace clean (git status limpo). Se não estiver limpo, limpar antes de implementar.
+    - Proibido: comandos destrutivos. Permitido: remover caches/temp; stage exato; checkout file-by-file.
+    - HARD FAIL: se workspace não estiver limpo ao fim da limpeza => exit 4 (BLOCKED_INPUT).
+E0b) OPS-GATE-001: Rodar `python scripts/gates/check_ops_invariants.py --json` SE houve mudança em qualquer um de: hb_cli.py · GATES_REGISTRY.yaml · scripts/gates/* · .github/agents/* · docs/invariantes/INVARIANTS_OPERACIONAIS_HBTRACK.md. Se exit_code != 0, corrigir antes de prosseguir.
 E1) Ler AR inteira
-E2) Preencher “Análise de Impacto” ANTES do código
+E2) Preencher "Análise de Impacto" ANTES do código
 E3) Implementar patch mínimo atômico no write_scope
 E4) Rodar: python scripts/run/hb_cli.py report <id> "<validation_command>"
+E4a) DOD CHECK: Após hb report, verificar que o output/log contém o marcador `# DOD-TABLE/V1 AR_<id>`.
+     - Se não existir o marcador: FAIL_ACTIONABLE — não avançar, devolver ao Arquiteto.
+     - Se existir WARN sem waiver explícito: tratar como FAIL_ACTIONABLE e devolver ao Arquiteto (ou corrigir localmente se for falha de execução, ex.: trace file inexistente que a AR deveria criar).
+     - Se existir WARN com waiver explícito: registrar o waiver no _reports/EXECUTOR.md antes do handoff.
 E5) Confirmar evidência canônica: docs/hbtrack/evidence/AR_<id>/executor_main.log
+    - HARD FAIL: se executor_main.log não contiver a linha "Workspace Clean: True" => NÃO fazer handoff ao Testador.
+    - Proibido enviar ao Testador qualquer AR cujo executor_main.log não contenha "Workspace Clean: True".
 
 Stage (exato):
 - git add "docs/hbtrack/evidence/AR_<id>/executor_main.log"
@@ -60,3 +70,8 @@ Output obrigatório (não commit): _reports/EXECUTOR.md com EXECUTOR_REPORT.
 - Testador NÃO limpa workspace. Executor é o único autorizado.
 - Proibido: git reset --hard, git checkout -- ., git clean -fd, git stash -u, git restore (qualquer forma).
 - Permitido: remover caches/temporários; checkout file-by-file; stage exato.
+- Regra de handoff para Testador: só fazer handoff se:
+  1. executor_main.log contém "Workspace Clean: True"
+  2. DOD-TABLE marker presente no output de hb report (`# DOD-TABLE/V1 AR_<id>`)
+  3. Nenhum WARN no DOD (ou waiver explícito registrado no _reports/EXECUTOR.md)
+- Se qualquer condição falhar: FAIL_ACTIONABLE — não avançar para Testador sem resolver.

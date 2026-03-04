@@ -1,0 +1,18 @@
+AR_ID: 231
+Command: python -c "import re, sys; c=open('docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md',encoding='utf-8').read(); checks=[('Versão: v2.2.0','AC-005'),('INV-TRAIN-079','AC-001'),('INV-TRAIN-080','AC-002'),('INV-TRAIN-081','AC-002'),('INV-TRAIN-018','AC-003'),('INV-TRAIN-035','AC-004'),('AR-TRAIN-050','AC-006')]; failed=[l for t,l in checks if t not in c]; print('FAIL:',failed) or sys.exit(1) if failed else print('PASS: todos AC-001..AC-006 presentes')"
+Exit Code: 0
+Timestamp UTC: 2026-03-04T02:38:33.759426+00:00
+Behavior Hash (exit+stdout+stderr): a7e941c9952cdb4e4263593a34b075723d93a6ea05306caf27cbac65554ad9f3
+Git HEAD: b452cbf90370f68c3d286d6cf1d9ed68b8d7fe9d
+Python Version: 3.11.9
+Protocol Version: 1.3.0
+Workspace Clean: False
+Workspace Status: unstaged_modified=8
+Governed Checksums (sha256): {"Hb Track - Backend/app/main.py": "17cab8bfda520659d190ff7158186f2cbcbbf32843e9872d79373a24c75db141", "docs/hbtrack/Hb Track Kanban.md": "c054e7edb27115ede65994d19464c3dd53bc8baa9098c22406b15933e6c8037e", "docs/hbtrack/_INDEX.md": "3a83ba40d8eb60f25640906a0014b6f50c70471303a7e34200827c80e3464fa7", "docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md": "e995690ac953a443dd11147235d63e64e99cbb7a42a38fbcb9e867d07097d71f", "docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md": "b647f05c664f66487aad8e4197c769337caef4e04f6e4cf98b95b0ad104bf023", "docs/hbtrack/modulos/treinos/TRAINING_BATCH_PLAN_v1.md": "52f1eb8aa5fa83a4b0cc824ac34dd6dbf5154a6967a99cc104d99842da6e4486"}
+
+--- STDOUT ---
+PASS: todos AC-001..AC-006 presentes
+
+
+--- STDERR ---
+

@@ -1,6 +1,6 @@
 # Índice de Architectural Records (ARs)
 > ⚠️ Auto-gerado por `hb plan`/`hb report`. NÃO editar manualmente.
-> Última atualização: 2026-03-03
+> Última atualização: 2026-03-04
 
 | ID | Título | Status | Evidence |
 |---|---|---|---|
@@ -216,5 +216,11 @@
 | AR_228 | Fix residuais mistos + validação done gate (suite 0 FAILs) | 🔴 REJEITADO | docs/hbtrack/evidence/AR_228/executor_main.log |
 | AR_229 | Sync app layer: modelos (INV-010/035/036/054/060) + servi... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_229/executor_main.log |
 | AR_230 | Fix residuais test-layer: 6 FAILs + 10 ERRORs em tests/tr... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_230/executor_main.log |
+| AR_231 | Sync §5 TEST_MATRIX_TRAINING.md: 11 itens NOT_RUN/FAIL/ER... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_231/executor_main.log |
+| AR_232 | Done Gate §10 formal: TEST_MATRIX v3.0.0 + §10 checkboxes... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_232/executor_main.log |
+| AR_233 | Centralizar config CORS em config.py + validação fail-fast | ✅ VERIFICADO | docs/hbtrack/evidence/AR_233/executor_main.log |
+| AR_234 | Refatorar CORSMiddleware em main.py — config única via se... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_234/executor_main.log |
+| AR_235 | Criar tests/test_cors.py — suíte mínima de preflight e re... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_235/executor_main.log |
+| AR_900 | E2E: Verificação pipeline DoD (GOVERNANCE_ONLY) | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_900/executor_main.log |
 | AR_998 | Test Write Scope Section Generation | ✅ VERIFICADO | docs/hbtrack/evidence/AR_998/executor_main.log |
 | AR_999 | Exemplo: Adicionar campo birthdate em Person | ✅ VERIFICADO | docs/hbtrack/evidence/AR_999/executor_main.log |

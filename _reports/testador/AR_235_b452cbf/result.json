@@ -1,0 +1,40 @@
+{
+  "ar_id": "235",
+  "validation_command": "cd \"Hb Track - Backend\" && pytest -q tests/test_cors.py",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "5a5373c01870b99752b2596a177623dfa35c0edafe1a983401b48710a2d53421",
+      "hash": "5a5373c01870b997",
+      "stdout_len": 17196,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "5a5373c01870b99752b2596a177623dfa35c0edafe1a983401b48710a2d53421",
+      "hash": "5a5373c01870b997",
+      "stdout_len": 17196,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "5a5373c01870b99752b2596a177623dfa35c0edafe1a983401b48710a2d53421",
+      "hash": "5a5373c01870b997",
+      "stdout_len": 17196,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

@@ -5,6 +5,7 @@ Todas as configurações via variáveis de ambiente (12-factor app)
 Ref: FASE 2 — Núcleo do backend
 """
 from pathlib import Path
+from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Literal, Optional
 
@@ -71,13 +72,31 @@ class Settings(BaseSettings):
     HSTS_INCLUDE_SUBDOMAINS: bool = True
     HSTS_PRELOAD: bool = True
 
-    # CORS
+    # CORS — política determinística (AR_233)
     CORS_ORIGINS: str = "http://localhost:3000,http://localhost:5173"
+    CORS_ALLOW_CREDENTIALS: bool = True
+    CORS_ALLOW_ORIGIN_REGEX: Optional[str] = None
+    CORS_ALLOW_HEADERS: str = "Authorization,Content-Type,Accept,X-CSRF-Token,X-Request-ID,X-Organization-ID"
+    CORS_ALLOW_METHODS: str = "GET,POST,PUT,PATCH,DELETE,OPTIONS"
+    CORS_EXPOSE_HEADERS: str = "X-Request-ID"
+    CORS_MAX_AGE: int = 600
 
     @property
     def cors_origins_list(self) -> list[str]:
-        """Converte CORS_ORIGINS de string para lista"""
-        return [origin.strip() for origin in self.CORS_ORIGINS.split(",")]
+        """Converte CORS_ORIGINS de string para lista, com strip e filtro de vazios."""
+        return [o.strip() for o in self.CORS_ORIGINS.split(",") if o.strip()]
+
+    @property
+    def cors_allow_headers_list(self) -> list[str]:
+        return [h.strip() for h in self.CORS_ALLOW_HEADERS.split(",") if h.strip()]
+
+    @property
+    def cors_allow_methods_list(self) -> list[str]:
+        return [m.strip() for m in self.CORS_ALLOW_METHODS.split(",") if m.strip()]
+
+    @property
+    def cors_expose_headers_list(self) -> list[str]:
+        return [h.strip() for h in self.CORS_EXPOSE_HEADERS.split(",") if h.strip()]
 
     # Email (Resend)
     RESEND_API_KEY: Optional[str] = None
@@ -112,6 +131,24 @@ class Settings(BaseSettings):
     # Institutional team lookup (R39)
     INSTITUTIONAL_TEAM_ID: Optional[str] = None
     INSTITUTIONAL_TEAM_ALIASES: str = "equipe institucional,grupo de avaliacao,avaliacao"
+
+    @model_validator(mode="after")
+    def validate_cors_policy(self) -> "Settings":
+        """Regras de segurança CORS — fail-fast no boot (AR_233)."""
+        if self.CORS_ALLOW_CREDENTIALS:
+            # Regra 1: credentials=True + wildcard é inválido (browser bloqueia, RFC 6454)
+            if "*" in self.cors_origins_list:
+                raise ValueError(
+                    "CORS inseguro: CORS_ALLOW_CREDENTIALS=True é incompatível com "
+                    "wildcard em CORS_ALLOW_ORIGINS. Use lista explícita de origens."
+                )
+            # Regra 2: credentials=True + regex — somente lista explícita é auditável
+            if self.CORS_ALLOW_ORIGIN_REGEX is not None:
+                raise ValueError(
+                    "CORS inseguro: CORS_ALLOW_CREDENTIALS=True é incompatível com "
+                    "CORS_ALLOW_ORIGIN_REGEX. Use CORS_ALLOW_ORIGINS com lista explícita."
+                )
+        return self
 
     model_config = SettingsConfigDict(
         env_file=str(PROJECT_ROOT / ".env"),

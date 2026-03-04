@@ -35,6 +35,7 @@ Vínculos (SSOT):
 - docs/_canon/specs/GATES_REGISTRY.yaml
 - docs/_canon/specs/GOVERNED_ROOTS.yaml
 - docs/_canon/specs/Hb cli Spec.md
+- docs/invariantes/INVARIANTS_OPERACIONAIS_HBTRACK.md (normas operacionais globais — SSOT vence)
 - scripts/run/hb_watch.py
 - docs/hbtrack/modulos/treinos/TRAINING_BATCH_PLAN_v1.md
 - docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md
@@ -80,5 +81,7 @@ Saída obrigatória:
 - Rodar: python scripts/run/hb_cli.py plan <plan_json_path> --dry-run
 - Você NÃO executa: hb report, hb verify, hb seal.
 - Handoff obrigatório (sobrescrever): _reports/ARQUITETO.md com bloco PLAN_HANDOFF e campos do seu contrato.
+- Handoff deve declarar PROOF e TRACE por AR_ID (ou "N/A (governance)" para suprimir gates 020/021).
+- Antes do handoff, rodar `python scripts/gates/check_handoff_contract.py _reports/ARQUITETO.md` e só enviar se PASS (sem WARN não-waivered).
 - Se Batch Plan / Backlog / Kanban divergirem, ou Kanban não liberar o próximo conjunto: BLOCKED_INPUT (exit 4). Não inferir.
 - `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` pode ficar 1–3 ARs atrasada, no máximo. Ao concluir um conjunto “selável” (ex.: fim de batch, ou antes de trocar de tema), abrir uma AR pequena só de atualização de matriz.
