@@ -58,7 +58,7 @@ class TestInvTrain070:
             "id": wp_id,
             "org_id": str(organization.id),
             "session_id": str(training_session.id),
-            "athlete_id": str(athlete.person_id),
+            "athlete_id": str(athlete.id),
             "feedback": feedback_text,
             "user_id": str(user.id),
         })
@@ -103,7 +103,7 @@ class TestInvTrain070:
             "id": wp_id,
             "org_id": str(organization.id),
             "session_id": str(training_session.id),
-            "athlete_id": str(athlete.person_id),
+            "athlete_id": str(athlete.id),
             "user_id": str(user.id),
         })
         await async_db.flush()
@@ -143,7 +143,7 @@ class TestInvTrain070:
             "id": wp_id,
             "org_id": str(organization.id),
             "session_id": str(training_session.id),
-            "athlete_id": str(athlete.person_id),
+            "athlete_id": str(athlete.id),
             "user_id": str(user.id),
         })
         await async_db.flush()

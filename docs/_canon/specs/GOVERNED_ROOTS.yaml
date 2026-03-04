@@ -1,7 +1,7 @@
 version: "1.0"
 status: SSOT
 roots:
-  - Hb Track - Backend/
+  - Hb Track - Backend/ # UNLOCKED_FOR_SYNC_BATCH_19
   - Hb Track - Frontend/
   - docs/hbtrack/
 notes: >

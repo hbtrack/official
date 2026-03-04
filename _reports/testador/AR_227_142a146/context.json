@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_227-142a146",
+  "timestamp_utc": "2026-03-03T23:15:49.199497+00:00",
+  "git": {
+    "commit": "142a1469efb1d530e4bd579fb2f134cd78754a7e"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "227",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_227_fix_import_stubs_ausentes_em_ai_coach_service_3_er.md"
+}

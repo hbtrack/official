@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_209-142a146",
+  "timestamp_utc": "2026-03-03T05:52:58.849132+00:00",
+  "git": {
+    "commit": "142a1469efb1d530e4bd579fb2f134cd78754a7e"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "209",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_209_done_gate_sync_test_matrix_v1.8.0_+_smoke_batch9_5.md"
+}

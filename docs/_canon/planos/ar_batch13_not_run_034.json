@@ -1,0 +1,34 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "Batch 13 — AR-TRAIN-034. Executar todos os ~60 testes de invariante marcados COBERTO/NOT_RUN no §5 da TEST_MATRIX_TRAINING.md. Dep: AR-TRAIN-032/033 VERIFICADO (Batch 12 sealed). Nenhum toque em app/. Resultado esperado: 0 FAILs em toda a suite invariants. Após execução, atualizar §5 com Últ.Execução e gerar evidence_run_batch13.txt.",
+  "assumptions": [
+    "Batch 12 (AR-TRAIN-032 = AR_211 + AR-TRAIN-033 = AR_212) ambos VERIFICADO e sealed — dep satisfeita.",
+    "Todos os arquivos de teste para os ~60 NOT_RUN já existem em Hb Track - Backend/tests/training/invariants/ (criados pelas ARs 144-167 nos Batches 3-10 e AR_212 no Batch 12).",
+    "INV-028 está marcada como NAO_APLICAVEL/DEPRECATED no §5 — pode ser excluída ou skipada naturalmente pelo pytest; não forçar PASS.",
+    "Testes PARCIAL (INV-006, 011, 012, 014, 023, 025, 029) podem revelar FAILs legítimos — Executor relata no EXECUTOR.md SEM atualizar Matrix para PASS.",
+    "validation_command sem pipe (compatível cmd.exe no Windows — sem tail, sem Select-Object).",
+    "evidence_run_batch13.txt deve ser criado pelo Executor em _reports/training/evidence_run_batch13.txt como artefato de evidência e staged separadamente. NÃO incluído no write_scope (fora dos governed roots) mas exigido pelo AC-002."
+  ],
+  "tasks": [
+    {
+      "id": "213",
+      "title": "AR-TRAIN-034: Executar todos NOT_RUN §5 + gerar evidências formais",
+      "description": "Executar toda a suite de testes de invariante em Hb Track - Backend/tests/training/invariants/ (que inclui os ~60 testes marcados NOT_RUN no §5 da TEST_MATRIX_TRAINING.md). Capturar o output completo do pytest em _reports/training/evidence_run_batch13.txt. Para cada INV executada com PASS: atualizar §5 da TEST_MATRIX — coluna 'Status' = COBERTO, coluna 'Últ.Execução' = data_atual. Para INV com FAIL: NÃO atualizar Matrix para PASS — registrar no EXECUTOR.md como FAIL_REAL com contexto. Atualizar §0 (contadores COBERTO/NOT_RUN/FAIL). Adicionar entry de AR-TRAIN-034 em §9 com status VERIFICADO. IMPORTANTE: INV-028 (NAO_APLICAVEL/DEPRECATED) — se pytest skipar naturalmente, manter status NAO_APLICAVEL. Forbidden: Hb Track - Backend/app/ zero toque.",
+      "criteria": "AC-001: §5 da TEST_MATRIX_TRAINING.md não contém nenhuma linha com valor NOT_RUN na coluna Status (ou FAILs documentados com AR de fix proposta no EXECUTOR.md). AC-002: _reports/training/evidence_run_batch13.txt existe com output pytest completo mostrando 0 FAILs (ou FAILs listados e documentados). AC-003: §0 atualizado — contadores COBERTO/NOT_RUN/FAIL refletem resultado real da execução.",
+      "gate": "PLANS_AR_SYNC",
+      "validation_command": "cd \"Hb Track - Backend\" && pytest -q tests/training/invariants/",
+      "evidence_file": "docs/hbtrack/evidence/AR_213/executor_main.log",
+      "write_scope": [
+        "docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md"
+      ],
+      "risks": [
+        "Testes PARCIAL (INV-006, 011, 012, 014, 023, 025, 029) podem ter implementação incompleta e gerar FAILs reais — Executor documenta sem forçar PASS.",
+        "Suite completa de ~60+ testes pode levar vários minutos — DB fixtures podem requerer banco rodando.",
+        "INV-028 DEPRECATED — pytest pode skipar ou falhar; manter status NAO_APLICAVEL independente do resultado.",
+        "Testes FASE_3 (INV-054..081) cobrem funcionalidades avançadas (wellness gate, IA coach) — podem requerer fixtures específicas; se ModuleNotFoundError, reportar como BLOCKED e não alterar Matrix.",
+        "validation_command roda a suite inteira — se houver FAILs, Executor identifica quais e propõe ARs de fix antes de atualizar Matrix."
+      ]
+    }
+  ]
+}

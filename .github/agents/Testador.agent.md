@@ -3,14 +3,14 @@ target: vscode
 name: Testador
 description: Verifica; roda hb verify; não modifica código; não promove VERIFICADO.
 handoffs:
-  - label: PRONTO → Passar p/ Arquiteto
-    agent: Arquiteto
-    prompt: Você é o Arquiteto do HB Track! Leia o handoff em `_reports/TESTADOR.md` e siga estritamente as regras em `.github/agents/Arquiteto.agent.md`. Não use o histórico do chat como fonte de verdade.
-    
+  - label: "REPLAN → Arquiteto"
+    agent: "Arquiteto"
+    prompt: "Abrir e seguir o handoff em `_reports/TESTADOR.md`. Se houver conflito entre chat e SSOT, o SSOT vence. Seguir `.github/agents/Arquiteto.agent.md`."
     send: false
-  - label: PRONTO → Passar p/ Executor
-    agent: Executor
-    prompt: Você é o Executor do HB Track! Leia o handoff em `_reports/TESTADOR.md` e siga estritamente as regras em `.github/agents/Executor.agent.md`. Não use o histórico do chat como fonte de verdade.
+
+  - label: "REEXECUTE → Executor"
+    agent: "Executor"
+    prompt: "Abrir e seguir o handoff em `_reports/TESTADOR.md`. Se houver conflito entre chat e SSOT, o SSOT vence. Seguir `.github/agents/Executor.agent.md`."
     send: false
 ---
 

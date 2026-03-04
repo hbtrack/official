@@ -27,7 +27,7 @@ class TestInvTrain029EditBlockedAfterInProgress:
     def test_validate_edit_permission_method_exists(self):
         """Verifica que existe método _validate_edit_permission."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "training_session_service.py"
@@ -42,7 +42,7 @@ class TestInvTrain029EditBlockedAfterInProgress:
     def test_readonly_status_raises_forbidden(self):
         """Verifica que status readonly lança ForbiddenError."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "training_session_service.py"
@@ -60,7 +60,7 @@ class TestInvTrain029EditBlockedAfterInProgress:
     def test_in_progress_status_raises_forbidden(self):
         """Verifica que status in_progress lança ForbiddenError."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "training_session_service.py"
@@ -78,7 +78,7 @@ class TestInvTrain029EditBlockedAfterInProgress:
     def test_pending_review_has_allowed_fields(self):
         """Verifica que pending_review tem lista de campos permitidos."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "training_session_service.py"
@@ -104,7 +104,7 @@ class TestInvTrain029EditBlockedAfterInProgress:
     def test_scheduled_has_allowed_fields(self):
         """Verifica que scheduled tem lista de campos permitidos."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "training_session_service.py"
@@ -127,7 +127,7 @@ class TestInvTrain029EditBlockedAfterInProgress:
     def test_field_subset_validation_exists(self):
         """Verifica que há validação de subset de campos."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "training_session_service.py"
@@ -142,7 +142,7 @@ class TestInvTrain029EditBlockedAfterInProgress:
     def test_forbidden_error_raised_for_invalid_fields(self):
         """Verifica que ForbiddenError é lançado para campos inválidos."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "training_session_service.py"
@@ -157,7 +157,7 @@ class TestInvTrain029EditBlockedAfterInProgress:
     def test_all_session_statuses_handled(self):
         """Verifica que todos os status de sessão são tratados."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "training_session_service.py"

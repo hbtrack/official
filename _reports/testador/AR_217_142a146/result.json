@@ -1,0 +1,40 @@
+{
+  "ar_id": "217",
+  "validation_command": "cd \"Hb Track - Backend\" && pytest -q tests/training/contracts/test_contract_train_040_072_ciclos_exercises.py tests/training/contracts/test_contract_train_086_095_exports_acl.py",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "f52f0ce8846c9e2ddf643920be211406d5c883b58a5a1caa7abaa826616df6dc",
+      "hash": "f52f0ce8846c9e2d",
+      "stdout_len": 17113,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "f52f0ce8846c9e2ddf643920be211406d5c883b58a5a1caa7abaa826616df6dc",
+      "hash": "f52f0ce8846c9e2d",
+      "stdout_len": 17113,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "f52f0ce8846c9e2ddf643920be211406d5c883b58a5a1caa7abaa826616df6dc",
+      "hash": "f52f0ce8846c9e2d",
+      "stdout_len": 17113,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

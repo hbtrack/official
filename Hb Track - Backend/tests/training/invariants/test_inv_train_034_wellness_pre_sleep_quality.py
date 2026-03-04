@@ -25,7 +25,8 @@ Obrigação B: Invariante alvo: ck_wellness_pre_sleep_quality (CHECK).
 """
 
 from datetime import datetime, timezone, date
-from uuid import uuid4
+from pathlib import Path
+from uuid import uuid4, UUID
 from decimal import Decimal
 
 import pytest
@@ -44,6 +45,13 @@ from app.models.training_session import TrainingSession
 
 class TestInvTrain034WellnessPreSleepQuality:
     """Testes para INV-TRAIN-034: Qualidade do sono deve estar entre 1 e 5."""
+
+    CONSTRAINT_NAME = "ck_wellness_pre_sleep_quality"
+
+    def _get_schema_content(self) -> str:
+        schema_path = Path(__file__).parent.parent.parent.parent / "docs" / "ssot" / "schema.sql"
+        assert schema_path.exists(), f"Schema não encontrado: {schema_path}"
+        return schema_path.read_text(encoding="utf-8")
 
     @pytest.mark.asyncio
     async def test_valid_case__quality_3(self, async_db: AsyncSession):
@@ -93,9 +101,9 @@ class TestInvTrain034WellnessPreSleepQuality:
         await async_db.flush()
 
         athlete = Athlete(
-            id=str(uuid4()),
-            person_id=person.id,
-            jersey_number=36,
+            person_id=UUID(person.id),
+            athlete_name="Atleta INV-034",
+            birth_date=date(1995, 1, 1),
         )
         async_db.add(athlete)
 
@@ -182,9 +190,9 @@ class TestInvTrain034WellnessPreSleepQuality:
         await async_db.flush()
 
         athlete = Athlete(
-            id=str(uuid4()),
-            person_id=person.id,
-            jersey_number=37,
+            person_id=UUID(person.id),
+            athlete_name="Atleta INV-034",
+            birth_date=date(1995, 1, 1),
         )
         async_db.add(athlete)
 
@@ -285,9 +293,9 @@ class TestInvTrain034WellnessPreSleepQuality:
         await async_db.flush()
 
         athlete = Athlete(
-            id=str(uuid4()),
-            person_id=person.id,
-            jersey_number=38,
+            person_id=UUID(person.id),
+            athlete_name="Atleta INV-034",
+            birth_date=date(1995, 1, 1),
         )
         async_db.add(athlete)
 

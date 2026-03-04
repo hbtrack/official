@@ -21,7 +21,7 @@ class TestInvTrain024WebsocketBroadcast:
     def test_training_alerts_service_has_notification_method(self):
         """Verifica que training_alerts_service tem método de notificação."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "training_alerts_service.py"
@@ -36,7 +36,7 @@ class TestInvTrain024WebsocketBroadcast:
     def test_alerts_service_uses_notification_service(self):
         """Verifica que alertas usam NotificationService."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "training_alerts_service.py"
@@ -53,7 +53,7 @@ class TestInvTrain024WebsocketBroadcast:
     def test_alerts_service_broadcasts_to_user(self):
         """Verifica que alertas fazem broadcast via WebSocket."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "training_alerts_service.py"
@@ -67,7 +67,7 @@ class TestInvTrain024WebsocketBroadcast:
     def test_gamification_service_has_notification_method(self):
         """Verifica que wellness_gamification_service tem método de notificação."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "wellness_gamification_service.py"
@@ -82,7 +82,7 @@ class TestInvTrain024WebsocketBroadcast:
     def test_gamification_service_uses_notification_service(self):
         """Verifica que badges usam NotificationService."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "wellness_gamification_service.py"
@@ -99,7 +99,7 @@ class TestInvTrain024WebsocketBroadcast:
     def test_gamification_service_broadcasts_to_user(self):
         """Verifica que badges fazem broadcast via WebSocket."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "wellness_gamification_service.py"
@@ -113,7 +113,7 @@ class TestInvTrain024WebsocketBroadcast:
     def test_alerts_notification_includes_metadata(self):
         """Verifica que notificação de alertas inclui metadata relevante."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "training_alerts_service.py"
@@ -128,7 +128,7 @@ class TestInvTrain024WebsocketBroadcast:
     def test_badges_notification_includes_metadata(self):
         """Verifica que notificação de badges inclui metadata relevante."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "wellness_gamification_service.py"
@@ -143,13 +143,13 @@ class TestInvTrain024WebsocketBroadcast:
     def test_broadcast_to_user_pattern_consistent(self):
         """Verifica que ambos os services usam broadcast_to_user (padrão unificado)."""
         alerts_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "training_alerts_service.py"
         )
         gamification_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "wellness_gamification_service.py"
@@ -168,7 +168,7 @@ class TestInvTrain024WebsocketBroadcast:
     def test_websocket_manager_imported_in_alerts(self):
         """Verifica que training_alerts_service importa websocket_manager ou ConnectionManager."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "training_alerts_service.py"

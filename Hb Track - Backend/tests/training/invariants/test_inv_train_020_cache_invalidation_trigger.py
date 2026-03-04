@@ -21,7 +21,7 @@ class TestInvTrain020CacheInvalidationTrigger:
     def test_trigger_exists_in_schema(self):
         """Verifica que o trigger tr_invalidate_analytics_cache existe."""
         schema_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "docs"
             / "ssot"
             / "schema.sql"
@@ -36,7 +36,7 @@ class TestInvTrain020CacheInvalidationTrigger:
     def test_trigger_is_on_training_sessions_table(self):
         """Verifica que o trigger está na tabela training_sessions."""
         schema_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "docs"
             / "ssot"
             / "schema.sql"
@@ -58,7 +58,7 @@ class TestInvTrain020CacheInvalidationTrigger:
     def test_trigger_fires_on_insert_update_delete(self):
         """Verifica que o trigger dispara em INSERT, UPDATE e DELETE."""
         schema_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "docs"
             / "ssot"
             / "schema.sql"
@@ -81,7 +81,7 @@ class TestInvTrain020CacheInvalidationTrigger:
     def test_trigger_executes_correct_function(self):
         """Verifica que o trigger executa fn_invalidate_analytics_cache."""
         schema_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "docs"
             / "ssot"
             / "schema.sql"
@@ -104,7 +104,7 @@ class TestInvTrain020CacheInvalidationTrigger:
     def test_trigger_fires_after_operation(self):
         """Verifica que o trigger dispara AFTER (não BEFORE)."""
         schema_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "docs"
             / "ssot"
             / "schema.sql"
@@ -127,7 +127,7 @@ class TestInvTrain020CacheInvalidationTrigger:
     def test_function_exists_in_schema(self):
         """Verifica que a função fn_invalidate_analytics_cache existe."""
         schema_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "docs"
             / "ssot"
             / "schema.sql"

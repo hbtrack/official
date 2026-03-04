@@ -1,0 +1,41 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "Batch 19 — Sincronização em Lote: Transposição SSOT → App Layer. Decisão humana (2026-03-03) após desbloqueio de app/ via GOVERNED_ROOTS.yaml (UNLOCKED_FOR_SYNC_BATCH_19). Uma única AR-TRAIN-048 (ID físico AR_229) concentra todas as correções deterministicas em app/models/ + app/services/. Dep obrigatória: Batch 18 (AR_225..228) VERIFICADO + suite tests/training/ verde.",
+  "assumptions": [
+    "Batch 18 (AR_225..228) está VERIFICADO — suite tests/training/ em 0 FAILs, 0 ERRORs antes desta AR.",
+    "GOVERNED_ROOTS.yaml UNLOCKED_FOR_SYNC_BATCH_19 = app/ liberada para escrita neste batch.",
+    "SQLAlchemy models usam declarative base — UniqueConstraint e ForeignKey são adicionadas na classe sem migração automática pelo hb report (Executor verifica Alembic separadamente).",
+    "exercise_service.update_exercise existe e pode ter assinatura ajustada sem quebrar outros callers (Executor verifica usages antes de alterar).",
+    "ai_coach_service.py existe mas não exporta RecognitionApproved / CoachSuggestionDraft / JustifiedSuggestion — adicionar como dataclasses/stubs mínimas.",
+    "openapi.json em docs/ssot/ deve ser atualizado apenas se assinatura de endpoint mudar de forma breaking."
+  ],
+  "tasks": [
+    {
+      "id": "229",
+      "title": "Sync app layer: modelos (INV-010/035/036/054/060) + serviços (contrato v1.3.0) + stubs IA Coach",
+      "description": "Sincronização deterministíca em 3 zonas — app/models/, app/services/, stubs IA:\n\n## ZONA 1 — Modelos (app/models/)\n\n### athlete.py\n- Verificar que campos `athlete_name` (str, NOT NULL) e `birth_date` (date) estão presentes conforme TRAINING_CLOSSARY.yaml.\n- Se `athlete_name` mapeado como outro nome (ex: `name` ou campo da tabela `person`), alinhar ao vocabulário do Glossário sem renomear coluna DB — usar `column_property` ou `property` se necessário.\n\n### exercise.py\n- Garantir `visibility_mode` com `server_default='restricted'` (INV-TRAIN-060).\n- server_default deve ser 'restricted', não 'public'.\n\n### training_session.py\n- Adicionar UniqueConstraint para INV-TRAIN-010 (uniqueness de wellness_post por sessão+atleta, se o campo existir no modelo ou referenciado via FK).\n- Verificar integridade com INV-TRAIN-010 antes de adicionar constraint.\n\n### attendance.py\n- Verificar ForeignKey para athlete_id (INV-TRAIN-036: attendance deve ter FK para athlete, não apenas field solto).\n- Se FK já existe, confirmar OnDelete behavior (CASCADE ou RESTRICT conforme invariante).\n\n### training_cycle.py\n- Verificar ForeignKey hierarchy (INV-TRAIN-054: macro→meso→micro). Garantir que `parent_cycle_id` FK aponta para a própria tabela `training_cycles`.\n- Se já existe, confirmar que nullable=True para o nível macro.\n\n## ZONA 2 — Serviços (app/services/)\n\n### exercise_service.py\n- Localizar método `update_exercise` e ajustar assinatura para aceitar `(self, exercise_id: UUID, data: dict, organization_id: UUID)` conforme CONTRACT-TRAIN-091..095.\n- Se o método já aceita esses parâmetros com nomes diferentes, alinhar sem quebrar callers internos.\n- Aplicar `visibility_mode=restricted` como default em criação de exercícios SYSTEM e ORG.\n\n### attendance_service.py\n- Para GAP-CONTRACT-7 (presença): adicionar stub mínimo para closure de presença se método ausente.\n- Stub deve retornar estrutura mínima esperada pelo contrato (dict ou Pydantic model stub).\n\n## ZONA 3 — Stubs IA Coach (app/services/ai_coach_service.py)\n- Adicionar ao módulo as 3 classes exportáveis:\n  ```python\n  from dataclasses import dataclass\n\n  @dataclass\n  class RecognitionApproved:\n      athlete_id: str\n      message: str = \"\"\n\n  @dataclass\n  class CoachSuggestionDraft:\n      suggestion_id: str\n      justification: str = \"\"\n      approved: bool = False\n\n  @dataclass\n  class JustifiedSuggestion:\n      suggestion_id: str\n      justification: str\n      approved_by: str = \"\"\n  ```\n- Estas classes são stubs mínimos importáveis — não implementar lógica de negócio real.\n\n## ZONA 4 — OpenAPI (docs/ssot/openapi.json)\n- Se assinatura de `PATCH /exercises/{exercise_id}` mudou com o ajuste do exercise_service, atualizar o requestBody schema correspondente.\n- Se não houve mudança breaking, não alterar.\n\n## PROCESSO SUGERIDO\n1. Ler cada arquivo antes de editar — verificar estado atual\n2. Zonas 1 e 3 são independentes — podem ser feitas em sequência\n3. Zona 2 (exercise_service.py): verificar `list_code_usages` de `update_exercise` antes de alterar assinatura\n4. Ao final: rodar validation_command\n5. Se surgir necessidade de arquivo fora do write_scope → BLOCKED (reportar ao Arquiteto)",
+      "criteria": "AC-001: app/models/athlete.py contém campos athlete_name (str) e birth_date (date) alinhados ao Glossário canônico.\nAC-002: app/models/exercise.py declara visibility_mode com server_default='restricted' (INV-TRAIN-060).\nAC-003: app/services/exercise_service.py → método update_exercise aceita (self, exercise_id, data: dict, organization_id) ou assinatura equivalente compatível com CONTRACT-TRAIN-091..095.\nAC-004: app/services/ai_coach_service.py exporta RecognitionApproved, CoachSuggestionDraft, JustifiedSuggestion (importáveis sem erro).\nAC-005: pytest tests/training/invariants/ nos arquivos test_inv_train_079*.py / 080*.py / 081*.py = 0 ERRORs de coleta.\nAC-006: pytest tests/training/ -q --tb=no sem aumento de FAILs/ERRORs vs baseline pré-AR (suite não pode piorar).",
+      "validation_command": "cd \"Hb Track - Backend\" && python -m pytest tests/training/invariants/test_inv_train_079_individual_recognition_no_intimate_leak.py tests/training/invariants/test_inv_train_080_ai_coach_draft_only.py tests/training/invariants/test_inv_train_081_ai_suggestion_requires_justification.py -q --tb=short 2>&1 | tail -10 && python -m pytest tests/training/ -q --tb=no 2>&1 | tail -5",
+      "write_scope": [
+        "Hb Track - Backend/app/models/athlete.py",
+        "Hb Track - Backend/app/models/exercise.py",
+        "Hb Track - Backend/app/models/training_session.py",
+        "Hb Track - Backend/app/models/attendance.py",
+        "Hb Track - Backend/app/models/training_cycle.py",
+        "Hb Track - Backend/app/services/exercise_service.py",
+        "Hb Track - Backend/app/services/ai_coach_service.py",
+        "Hb Track - Backend/app/services/attendance_service.py",
+        "Hb Track - Backend/docs/ssot/openapi.json"
+      ],
+      "rollback_plan": "python scripts/run/hb_cli.py plan docs/_canon/planos/ar_batch19_sync_app_layer_048.json --dry-run",
+      "risks": [
+        "Modelos alterados podem exigir alembic revision --autogenerate se novas Column/UniqueConstraint forem adicionadas. Executor DEVE verificar antes do hb report.",
+        "update_exercise pode ter outros callers (routers, testes de contrato) — verificar usages antes de alterar assinatura.",
+        "ai_coach_service.py pode ter imports circulares se já importa de modelos — verificar estrutura do arquivo antes de adicionar dataclasses.",
+        "visibility_mode server_default='restricted' é DDL-level — se já existente com default diferente, pode exigir migração para dados existentes.",
+        "attendance_service.py stub para GAP-CONTRACT-7: se método já existe com assinatura diferente, ajustar sem criar duplicata."
+      ]
+    }
+  ]
+}

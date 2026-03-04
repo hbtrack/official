@@ -76,13 +76,13 @@ class TestInvTrain035SessionTemplatesUniqueNameRuntime:
         """
         template1 = SessionTemplate(
             id=uuid4(),
-            organization_id=UUID(inv035_organization_a.id),
+            org_id=UUID(inv035_organization_a.id),
             name="Template A",
             icon="target",
         )
         template2 = SessionTemplate(
             id=uuid4(),
-            organization_id=UUID(inv035_organization_a.id),
+            org_id=UUID(inv035_organization_a.id),
             name="Template B",  # Nome diferente - deve passar
             icon="target",
         )
@@ -108,13 +108,13 @@ class TestInvTrain035SessionTemplatesUniqueNameRuntime:
         """
         template1 = SessionTemplate(
             id=uuid4(),
-            organization_id=UUID(inv035_organization_a.id),
+            org_id=UUID(inv035_organization_a.id),
             name="Template Comum",
             icon="target",
         )
         template2 = SessionTemplate(
             id=uuid4(),
-            organization_id=UUID(inv035_organization_b.id),  # Org diferente
+            org_id=UUID(inv035_organization_b.id),  # Org diferente
             name="Template Comum",  # Mesmo nome - deve passar
             icon="target",
         )
@@ -138,7 +138,7 @@ class TestInvTrain035SessionTemplatesUniqueNameRuntime:
         """
         template1 = SessionTemplate(
             id=uuid4(),
-            organization_id=UUID(inv035_organization_a.id),
+            org_id=UUID(inv035_organization_a.id),
             name="Template Duplicado",
             icon="target",
         )
@@ -148,7 +148,7 @@ class TestInvTrain035SessionTemplatesUniqueNameRuntime:
         # Tentar criar segundo com mesmo nome na mesma org
         template2 = SessionTemplate(
             id=uuid4(),
-            organization_id=UUID(inv035_organization_a.id),  # Mesma org
+            org_id=UUID(inv035_organization_a.id),  # Mesma org
             name="Template Duplicado",  # MESMO NOME - deve falhar
             icon="activity",
         )
@@ -173,13 +173,13 @@ class TestInvTrain035SessionTemplatesUniqueNameRuntime:
         """
         template1 = SessionTemplate(
             id=uuid4(),
-            organization_id=UUID(inv035_organization_a.id),
+            org_id=UUID(inv035_organization_a.id),
             name="Template Case",
             icon="target",
         )
         template2 = SessionTemplate(
             id=uuid4(),
-            organization_id=UUID(inv035_organization_a.id),
+            org_id=UUID(inv035_organization_a.id),
             name="TEMPLATE CASE",  # Case diferente - deve passar
             icon="target",
         )

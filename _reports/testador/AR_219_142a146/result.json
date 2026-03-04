@@ -1,0 +1,40 @@
+{
+  "ar_id": "219",
+  "validation_command": "cd \"Hb Track - Backend\" && pytest -q tests/training/invariants/test_dec_train_001_004_wellness_exports.py tests/training/invariants/test_dec_train_exb_rbac_scope_acl.py",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "81ddd421292a01802cde4e4bc775efe2e8059c2e8a388e7a0e9537b555ca5392",
+      "hash": "81ddd421292a0180",
+      "stdout_len": 17113,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "81ddd421292a01802cde4e4bc775efe2e8059c2e8a388e7a0e9537b555ca5392",
+      "hash": "81ddd421292a0180",
+      "stdout_len": 17113,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "81ddd421292a01802cde4e4bc775efe2e8059c2e8a388e7a0e9537b555ca5392",
+      "hash": "81ddd421292a0180",
+      "stdout_len": 17113,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

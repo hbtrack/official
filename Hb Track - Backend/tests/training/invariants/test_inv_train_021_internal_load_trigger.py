@@ -21,7 +21,7 @@ class TestInvTrain021InternalLoadTrigger:
     def test_trigger_exists_in_schema(self):
         """Verifica que o trigger tr_calculate_internal_load existe."""
         schema_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "docs"
             / "ssot"
             / "schema.sql"
@@ -36,7 +36,7 @@ class TestInvTrain021InternalLoadTrigger:
     def test_trigger_is_on_wellness_post_table(self):
         """Verifica que o trigger está na tabela wellness_post."""
         schema_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "docs"
             / "ssot"
             / "schema.sql"
@@ -58,7 +58,7 @@ class TestInvTrain021InternalLoadTrigger:
     def test_trigger_fires_on_insert_and_update(self):
         """Verifica que o trigger dispara em INSERT e UPDATE."""
         schema_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "docs"
             / "ssot"
             / "schema.sql"
@@ -80,7 +80,7 @@ class TestInvTrain021InternalLoadTrigger:
     def test_trigger_executes_correct_function(self):
         """Verifica que o trigger executa fn_calculate_internal_load."""
         schema_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "docs"
             / "ssot"
             / "schema.sql"
@@ -103,7 +103,7 @@ class TestInvTrain021InternalLoadTrigger:
     def test_trigger_fires_before_operation(self):
         """Verifica que o trigger dispara BEFORE (para calcular antes de salvar)."""
         schema_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "docs"
             / "ssot"
             / "schema.sql"
@@ -126,7 +126,7 @@ class TestInvTrain021InternalLoadTrigger:
     def test_function_exists_in_schema(self):
         """Verifica que a função fn_calculate_internal_load existe."""
         schema_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "docs"
             / "ssot"
             / "schema.sql"

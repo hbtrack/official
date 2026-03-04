@@ -39,6 +39,7 @@ async def test_create_training_session_with_microcycle_sets_expected_status(asyn
         full_name="Treinador Microciclo",
         first_name="Treinador",
         last_name="Microciclo",
+        birth_date=date(1990, 1, 1),
     )
     async_db.add(person)
 
@@ -78,6 +79,7 @@ async def test_create_training_session_with_microcycle_sets_expected_status(asyn
         user_id=UUID(user.id),
         email=user.email,
         role_code="treinador",
+        request_id=str(uuid4()),
         person_id=None,
         is_superadmin=False,
         organization_id=UUID(organization.id),

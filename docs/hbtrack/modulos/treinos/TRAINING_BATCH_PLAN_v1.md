@@ -1,12 +1,15 @@
-# TRAINING_BATCH_PLAN_v1.md — Correção de rastreabilidade + Batch Plan v1 (contract-driven) — Módulo TRAINING
+# TRAINING_BATCH_PLAN_v1.md — Plano de Batches do Módulo TRAINING
 
-Data: 2026-03-02
-Versão: v1.0.5
+Data: 2026-03-03
+Versão: v1.3.0
 Sync (pós-patch SSOT): `AR-TRAIN-010A/010B` + `AR-TRAIN-015`→`FLOW-TRAIN-008`.
 Sync: Batch-6 adicionado — AR-TRAIN-010B desbloqueada (deps 001..009 VERIFICADAS 2026-03-01)
 Sync: Batch-7 adicionado — AR-TRAIN-022 (Governança: sync INVARIANTS_TRAINING.md — deps 011..021 VERIFICADAS 2026-03-01)
 Sync: Batch-8 adicionado — AR-TRAIN-023 (Governança: sync TEST_MATRIX §9 pós-Batch 7 — deps 001/002/010A/022 VERIFICADAS 2026-03-02)
 Sync: Batches 9-11 adicionados — AR-TRAIN-024..031 (Fix FAILs críticos + Flow/Contract P0 evidence + Done Gate — planejado 2026-03-02)
+Sync v1.1.0: Batches 12-16 adicionados — AR-TRAIN-032..043 (Cobertura §10 formal — decisão humana 2026-03-03)
+Sync v1.2.0: Batch 17 adicionado — AR-TRAIN-044..047 (Fix FAILs test-layer Batch 13 — decisão humana Opção A 2026-03-03)
+Sync v1.3.0: Batch 19 adicionado — AR-TRAIN-048 (Sincronização em Lote app layer — decisão humana 2026-03-03; GOVERNED_ROOTS.yaml UNLOCKED_FOR_SYNC_BATCH_19)
 
 ## SSOTs lidos (bindings)
 - `docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md`
@@ -712,3 +715,235 @@ Evidência adicional (trecho do SSOT — default `restricted` em CONTRACT-TRAIN-
 **Riscos/Dependências:**
 - **Dep obrigatória:** Batches 9 e 10 (AR-TRAIN-024..030) todos VERIFICADO.
 - A declaração Done Gate não é a selagem final — o humano executa `hb seal` por conta própria.
+
+---
+
+### Batch 12 — Sync Matrix §10 + 6 Testes Ausentes
+
+**Objetivo:** Resolver a dessincronia crítica entre TEST_MATRIX_TRAINING.md e o estado real do filesystem: ~40 invariantes marcadas PENDENTE mas com testes criados pelas ARs 144-167. Criar os 6 arquivos de teste que genuinamente não existem.
+
+**AR-TRAIN incluídas:**
+- `AR-TRAIN-032` — Sync §5 TEST_MATRIX: ~40 INV PENDENTE → COBERTO
+- `AR-TRAIN-033` — Criar 6 testes ausentes: INV-053/060/061/062/EXB-ACL-005/007
+
+**Itens alvo (IDs SSOT):**
+- **TEST_MATRIX §5:** todas as INV PENDENTE onde arquivo de teste já existe no filesystem
+- **INV:** INV-TRAIN-053, 060, 061, 062, EXB-ACL-005, EXB-ACL-007
+
+**DoD objetivo do batch:**
+- TEST_MATRIX §5: zero linhas PENDENTE para INV com arquivo de teste presente.
+- 6 novos arquivos de teste criados e passando (0 FAILs).
+- §0 contadores atualizados.
+
+**Non-scope:**
+- `Hb Track - Backend/app/` e `Hb Track - Frontend/` — zero toque.
+
+**Riscos/Dependências:**
+- **Dep obrigatória:** Batch 11 (AR-TRAIN-031) VERIFICADO.
+- Dessincronia confirmada: ~40 INV marcadas PENDENTE na Matrix apesar de testes existentes criados nos Batches 3-8 (ARs 144-167). Causa: AR-TRAIN-031 (Done Gate v1.8.0) não retroagiu nos status da Matrix.
+
+---
+
+### Batch 13 — Execução NOT_RUN + Evidências Formais
+
+**Objetivo:** Executar os ~32 testes marcados NOT_RUN no §5 da TEST_MATRIX e gerar evidências formais de passagem.
+
+**AR-TRAIN incluídas:**
+- `AR-TRAIN-034` — Executar todos NOT_RUN + evidências formais
+
+**Itens alvo:**
+- **TEST_MATRIX §5:** todas as linhas NOT_RUN
+
+**DoD objetivo do batch:**
+- TEST_MATRIX §5: zero linhas NOT_RUN.
+- `_reports/training/evidence_run_batch13.txt` com output pytest = 0 FAILs.
+
+**Non-scope:**
+- `Hb Track - Backend/app/` — zero toque.
+
+**Riscos/Dependências:**
+- **Dep obrigatória:** Batch 12 (AR-TRAIN-032/033) VERIFICADO.
+- Alguns NOT_RUN podem revelar FAILs reais — se houver, criar AR de fix antes de prosseguir (Executor deve reportar).
+
+---
+
+### Batch 14 — Contratos P0 Automatizados por Domínio
+
+**Objetivo:** Criar testes automatizados de contrato para os ~88 contratos P0 ainda sem cobertura, organizados por domínio em 5 ARs paralelas.
+
+**AR-TRAIN incluídas:**
+- `AR-TRAIN-035` — Contract tests: Sessions CRUD (CONTRACT-001..012)
+- `AR-TRAIN-036` — Contract tests: Teams + Attendance (CONTRACT-013..028)
+- `AR-TRAIN-037` — Contract tests: Wellness pre/post (CONTRACT-029..039)
+- `AR-TRAIN-038` — Contract tests: Ciclos/Exercises/Analytics/Export (CONTRACT-040..095)
+- `AR-TRAIN-039` — Contract tests: IA Coach + Athlete view (CONTRACT-096/101..105)
+
+**Itens alvo:**
+- **CONTRACT:** CONTRACT-TRAIN-001..072, 076, 086..096, 101..105
+- **Já cobertos (não tocar):** CONTRACT-073..075, 077..085, 097..100 (testes existentes)
+
+**DoD objetivo do batch:**
+- 5+ novos arquivos de contract tests criados, todos: 0 FAILs.
+- TEST_MATRIX §8: todos os contratos P0 em escopo = COBERTO.
+
+**Non-scope:**
+- `Hb Track - Backend/app/` — zero toque.
+
+**Riscos/Dependências:**
+- **Dep obrigatória:** Batch 13 (AR-TRAIN-034) VERIFICADO.
+- Testes de contrato devem usar aproximação estática (import + schema inspection) quando DB não disponível em CI.
+
+---
+
+### Batch 15 — DEC Tests + Flows P1 + Screens
+
+**Objetivo:** Cobrir os 11 DECs do módulo com testes automatizados, os 13 flows P1 com evidências MANUAL_GUIADO, e as 25 telas com smoke tests.
+
+**AR-TRAIN incluídas:**
+- `AR-TRAIN-040` — DEC tests automatizados (DEC-TRAIN-001..004 + EXB-* + RBAC-*)
+- `AR-TRAIN-041` — Flows P1 evidência MANUAL_GUIADO (FLOW-007..016/019..021)
+- `AR-TRAIN-042` — Screens smoke tests MANUAL_GUIADO (SCREEN-001..025)
+
+**Itens alvo:**
+- **TEST_MATRIX §5b:** 11 DEC tests
+- **TEST_MATRIX §6:** FLOW-TRAIN-007..016/019..021 (13 flows P1)
+- **TEST_MATRIX §7:** SCREEN-TRAIN-001..025 (25 telas)
+
+**DoD objetivo do batch:**
+- TEST_MATRIX §5b: todos DECs = COBERTO.
+- TEST_MATRIX §6: todos flows P1 = COBERTO.
+- TEST_MATRIX §7: todas telas = COBERTO ou NOT_APPLICABLE com nota.
+
+**Non-scope:**
+- `Hb Track - Backend/app/` — zero toque.
+
+**Riscos/Dependências:**
+- **Dep obrigatória:** Batch 12 (AR-TRAIN-033) VERIFICADO para AR-TRAIN-040.
+- **Dep obrigatória:** Batch 13 (AR-TRAIN-034) VERIFICADO para AR-TRAIN-041/042.
+- AR-TRAIN-040 pode ser executada em paralelo com AR-TRAIN-041/042 (independentes).
+
+---
+
+### Batch 16 — Done Gate §10 Final
+
+**Objetivo:** Sync final do TEST_MATRIX_TRAINING.md para v2.0.0, verificação de que todos os critérios §10 estão formalmente satisfeitos, e emissão da declaração Done Gate §10.
+
+**AR-TRAIN incluídas:**
+- `AR-TRAIN-043` — Done Gate §10 final: sync TEST_MATRIX v2.0.0 + full suite verde
+
+**Itens alvo:**
+- `TEST_MATRIX_TRAINING.md` — versão v1.8.0 → v2.0.0, §10 todos ✅, §9 AR-TRAIN-024..043
+- `_reports/training/DONE_GATE_TRAINING_v2.md` — declaração formal
+
+**DoD objetivo do batch:**
+- TEST_MATRIX v2.0.0 com §10 todos PASS marcados.
+- `pytest tests/training/ -q` = 0 FAILs (full suite).
+- DONE_GATE_TRAINING_v2.md emitido com assinatura do Arquiteto.
+
+**Non-scope:**
+- `Hb Track - Backend/app/` e `Hb Track - Frontend/` — zero toque.
+
+**Riscos/Dependências:**
+- **Dep obrigatória:** Batches 12-15 (AR-TRAIN-032..042) todos VERIFICADO.
+- A declaração Done Gate não substitui `hb seal` — o humano executa por conta própria.
+
+---
+
+### Batch 18 — Fix FAILs de test-layer pré-existentes (Batch 13)
+
+**Objetivo:** Zerar os 109 FAILs + 31 ERRORs residuais na suite `tests/training/` provenientes do Batch 13, agrupados em 4 tipos: async fixtures, DB fixture setup, import stubs ausentes, e residuais mistos.
+
+**AR-TRAIN incluídas:**
+- `AR-TRAIN-044` — Fix async fixtures: `@pytest.fixture` → `@pytest_asyncio.fixture` (~23+ tests, 7 arquivos)
+- `AR-TRAIN-045` — Fix DB fixture setup: `category_id` NOT NULL + FK `team_registrations` (~57+ ERROs)
+- `AR-TRAIN-046` — Fix import stubs ausentes em `ai_coach_service` (3 ERRORs coleta: INV-079/080/081)
+- `AR-TRAIN-047` — Fix residuais mistos + validação done gate (0 FAILs suite completa)
+
+**Itens alvo:**
+- **TypeError globals:** `test_inv_train_024`, `_031`, `_034`, `_035`, `_036`, `_037`, `_070`
+- **category_id NOT NULL:** `test_inv_train_011`, `_013`, `_020`, `_021`, `_028`, `_029`, `_050`, `_052`, `_058`, `_059`, `_063`, `_064`, `_076`, `_148`, `exb_acl_006`
+- **ImportError ai_coach_service:** `test_inv_train_079`, `_080`, `_081`
+- **Residuais:** `test_inv_train_010`, `_018`, `_019`, `_054`, `_057`, `_065`, `_066`, `_067`
+
+**DoD objetivo do batch:**
+- `pytest tests/training/ -q --tb=no` = 0 FAILs, 0 ERRORs.
+- AR-TRAIN-044/045/046 podem rodar em paralelo (arquivos disjuntos).
+- AR-TRAIN-047 depende das 3 anteriores.
+
+**Non-scope:**
+- `Hb Track - Backend/app/` — zero toque.
+- Não criar novos testes de produto — apenas corrigir fixtures/imports existentes.
+
+**Riscos/Dependências:**
+- **Dep obrigatória:** AR-TRAIN-034 VERIFICADO.
+- AR-TRAIN-047 só pode rodar após AR-TRAIN-044 + 045 + 046 VERIFICADO.
+- Residuais em AR-TRAIN-047 podem revelar FAILs adicionais — se ocorrer, Executor reporta e Arquiteto cria AR-TRAIN-048 antes de prosseguir para AR_222.
+- AR_222 (Done Gate §10) só pode ser re-executada após AR-TRAIN-047 VERIFICADO e suite verde.
+
+
+---
+
+### Batch 19 — Sincronização em Lote: Transposição SSOT → App Layer
+
+**Objetivo:** Eliminar o desalinhamento entre `app/` e o contrato v1.3.0 + Invariantes v1.5.0, aplicando correções determinísticas em modelos, serviços e stubs de IA Coach. Esta é a única AR do batch — toda a sincronização é concentrada para execução única.
+
+**AR-TRAIN incluida:**
+- `AR-TRAIN-048` (A/E) — Sync app/models/ (UniqueConstraint/FK: INV-010/035/036/054) + app/services/ (assinaturas contrato v1.3.0) + stubs IA Coach (`RecognitionApproved`, `CoachSuggestionDraft`, `JustifiedSuggestion`)
+
+**Zonas de impacto:**
+- **Zona 1 — Modelos:** `athlete.py` (campos Glossário), `exercise.py` (visibility_mode default restricted INV-060), `training_session.py`, `attendance.py`, `training_cycle.py`
+- **Zona 2 — Serviços:** `exercise_service.py` (assinatura update_exercise), `attendance_service.py` (GAP-CONTRACT-7 stubs)
+- **Zona 3 — Stubs IA:** `ai_coach_service.py` (3 dataclasses mínimas importáveis)
+- **Zona 4 — OpenAPI:** `docs/ssot/openapi.json` (atualizar se necessário após mudanças de assinatura)
+
+**DoD objetivo do batch:**
+- AC-001: `app/models/athlete.py` alinhado ao Glossário (athlete_name, birth_date)
+- AC-002: `app/models/exercise.py` com `visibility_mode` server_default=`restricted`
+- AC-003: `exercise_service.update_exercise` aceita `(exercise_id, data: dict, organization_id)`
+- AC-004: `ai_coach_service.py` exporta `RecognitionApproved`, `CoachSuggestionDraft`, `JustifiedSuggestion`
+- AC-005: `pytest tests/training/invariants/test_inv_train_079*.py 080*.py 081*.py` = 0 ERRORs coleta
+
+**Non-scope:**
+- `Hb Track - Backend/tests/` — zero toque nesta AR (testes são alvo do Batch 18)
+- `Hb Track - Frontend/` — zero toque
+- Qualquer `app/` não listado no write_scope de AR-TRAIN-048
+
+**Riscos/Dependências:**
+- **Dep obrigatória:** AR-TRAIN-044..047 (Batch 18) todos VERIFICADO. Suite tests/ deve estar verde antes desta AR.
+- Modificações em `app/models/` podem exigir `alembic revision --autogenerate` se houver novas Column/Constraint. Executor DEVE verificar antes do `hb report`.
+- Se durante a execução surgir necessidade de alterar `app/` além dos 9 arquivos do write_scope → Executor para, documenta no `executor_main.log` e reporta BLOCKED para o Arquiteto.
+- **ALERTA PÓS-EXECUÇÃO:** AR_229 revelou status server_default `'''draft'''` com triple-quote BUG em `training_session.py`. Executor deve corrigir (sa.text("'draft'::character varying")) dentro do write_scope de AR_229 antes de re-run do `hb report 229`.
+
+---
+
+### Batch 20 — Fix residuais test-layer pós-Batch 18/19
+
+**Objetivo:** Eliminar 6 FAILs + 10 ERRORs remanescentes em `tests/training/invariants/` que emergiram durante execução de AR_229 (Batch 19). Todos são bugs exclusivamente de test-layer (nenhuma mudança de produto). Esta é a AR capturadora final antes do verde completo da suite.
+
+**AR-TRAIN incluída:**
+- `AR-TRAIN-049` (T) — Fix 6 FAILs + 10 ERRORs residuais em 8 arquivos de teste
+
+**Zonas de impacto (apenas tests/):**
+- `test_018_route.py` — add birth_date em Person()
+- `test_035_runtime.py` — renomear kwarg organization_id → org_id em SessionTemplate()
+- `test_058.py` / `test_059.py` — add category fixture + category_id em Team() local
+- `test_063.py` / `test_064.py` — substituir athlete.person_id → athlete.id em team_registrations
+- `test_076.py` — substituir status='concluída' → 'pending_review'
+- `test_exb_acl_006.py` — corrigir uuid4.__class__(exercise_id) → UUID(exercise_id)
+
+**DoD objetivo do batch:**
+- AC-001..005: cada file-pair passando 0 FAILs, 0 ERRORs
+- AC-006: `pytest tests/training/ -q --tb=no` = `0 failed, 0 errors` (suite training/ verde completa)
+- Após AC-006 ✅: re-executar `hb report 228` e `hb report 229` para verificação final + AR_222 (Done Gate §10)
+
+**Non-scope:**
+- `app/` — zero toque (bugs são exclusivamente test-layer)
+- `Hb Track - Frontend/` — zero toque
+- `tests/training/invariants/conftest.py` — zero toque
+- Qualquer arquivo de teste não listado no write_scope
+
+**Riscos/Dependências:**
+- **Dep obrigatória:** AR-TRAIN-048 executado (com amendment de status server_default).
+- test_058/059: usar `ON CONFLICT DO NOTHING` na criação de fixture `category` para evitar colisão com id=9999 de outros testes.
+- test_076: verificar coerência semântica ao substituir 'concluída' → 'pending_review' na lógica do teste.
+- Após AR-TRAIN-049 VERIFICADO: re-executar `hb report 228` + `hb report 229` para fechar os dois ciclos em aberto.

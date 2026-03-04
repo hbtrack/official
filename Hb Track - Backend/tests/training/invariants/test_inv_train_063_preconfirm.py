@@ -30,7 +30,7 @@ class TestInvTrain063:
             VALUES (:id, :athlete_id, :team_id, :user_id)
         """), {
             "id": tr_id,
-            "athlete_id": str(athlete.person_id),
+            "athlete_id": str(athlete.id),
             "team_id": str(team.id),
             "user_id": str(user.id),
         })
@@ -62,7 +62,7 @@ class TestInvTrain063:
             "id": att_id,
             "session_id": str(training_session.id),
             "tr_id": team_reg,
-            "athlete_id": str(athlete.person_id),
+            "athlete_id": str(athlete.id),
             "user_id": str(user.id),
         })
         await async_db.flush()
@@ -103,7 +103,7 @@ class TestInvTrain063:
                 "id": att_id,
                 "session_id": str(training_session.id),
                 "tr_id": team_reg,
-                "athlete_id": str(athlete.person_id),
+                "athlete_id": str(athlete.id),
                 "user_id": str(user.id),
             })
             await async_db.flush()

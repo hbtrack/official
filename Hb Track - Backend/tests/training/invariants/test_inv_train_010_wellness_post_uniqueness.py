@@ -91,9 +91,9 @@ class TestInvTrain010WellnessPostUniqueness:
         await async_db.flush()
 
         athlete = Athlete(
-            id=str(uuid4()),
             person_id=person.id,
-            jersey_number=10,
+            athlete_name="Atleta INV-010",
+            birth_date=date(1995, 1, 1),
         )
         async_db.add(athlete)
 
@@ -209,9 +209,9 @@ class TestInvTrain010WellnessPostUniqueness:
         await async_db.flush()
 
         athlete = Athlete(
-            id=str(uuid4()),
             person_id=person.id,
-            jersey_number=11,
+            athlete_name="Atleta INV-010B",
+            birth_date=date(1995, 1, 1),
         )
         async_db.add(athlete)
 

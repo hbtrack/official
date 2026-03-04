@@ -1,0 +1,40 @@
+{
+  "ar_id": "225",
+  "validation_command": "cd \"Hb Track - Backend\" && python -m pytest tests/training/invariants/test_inv_train_024_websocket_broadcast.py tests/training/invariants/test_inv_train_031_derive_phase_focus.py tests/training/invariants/test_inv_train_034_wellness_pre_sleep_quality.py tests/training/invariants/test_inv_train_035_session_templates_unique_name.py tests/training/invariants/test_inv_train_036_wellness_rankings_unique.py tests/training/invariants/test_inv_train_037_cycle_dates.py tests/training/invariants/test_inv_train_070_post_conversational.py -q --tb=short 2>&1",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "2c1b1a5959989d0dd3ca44f5b56fddecece2f13775e254cd97377bff56ccdf98",
+      "hash": "2c1b1a5959989d0d",
+      "stdout_len": 17113,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "2c1b1a5959989d0dd3ca44f5b56fddecece2f13775e254cd97377bff56ccdf98",
+      "hash": "2c1b1a5959989d0d",
+      "stdout_len": 17113,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "2c1b1a5959989d0dd3ca44f5b56fddecece2f13775e254cd97377bff56ccdf98",
+      "hash": "2c1b1a5959989d0d",
+      "stdout_len": 17113,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

@@ -37,7 +37,7 @@ class TestInvTrain076:
                created_by_user_id, closed_at)
             VALUES
               (:id, :org_id, :team_id, :session_at, 90,
-               'quadra', 'Treino INV-076', 'Ginásio', 'concluída',
+               'quadra', 'Treino INV-076', 'Ginásio', 'pending_review',
                :user_id, :closed_at)
         """), {
             "id": ts_id,
@@ -68,7 +68,7 @@ class TestInvTrain076:
             "id": wp_id,
             "org_id": str(organization.id),
             "session_id": closed_session,
-            "athlete_id": str(athlete.person_id),
+            "athlete_id": str(athlete.id),
             "user_id": str(user.id),
         })
         await async_db.flush()
@@ -92,7 +92,7 @@ class TestInvTrain076:
             "id": wp_id,
             "org_id": str(organization.id),
             "session_id": closed_session,
-            "athlete_id": str(athlete.person_id),
+            "athlete_id": str(athlete.id),
             "user_id": str(user.id),
         })
         await async_db.flush()
@@ -112,7 +112,7 @@ class TestInvTrain076:
         svc = AthleteContentGateService(db=async_db)
 
         completed, missing = await svc.has_completed_daily_wellness(
-            athlete_id=athlete.person_id,
+            athlete_id=athlete.id,
         )
 
         assert completed is False, (
@@ -137,7 +137,7 @@ class TestInvTrain076:
         svc = AthleteContentGateService(db=async_db)
 
         completed, missing = await svc.has_completed_daily_wellness(
-            athlete_id=athlete.person_id,
+            athlete_id=athlete.id,
         )
 
         assert completed is True, (
@@ -163,7 +163,7 @@ class TestInvTrain076:
         svc = AthleteContentGateService(db=async_db)
 
         completed, missing = await svc.has_completed_daily_wellness(
-            athlete_id=athlete.person_id,
+            athlete_id=athlete.id,
         )
 
         assert isinstance(missing, list), (

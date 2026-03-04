@@ -29,6 +29,7 @@ async def test_audit_logs_for_create_update_publish_and_close(async_db):
         full_name="Treinador Audit",
         first_name="Treinador",
         last_name="Audit",
+        birth_date=date(1985, 1, 1),
     )
     user_id = uuid4()
     from app.models.user import User
@@ -52,6 +53,7 @@ async def test_audit_logs_for_create_update_publish_and_close(async_db):
         user_id=user_id,
         email=user.email,
         role_code="treinador",
+        request_id=str(uuid4()),
         organization_id=UUID(organization.id),
         membership_id=uuid4(),
         team_ids=[team.id],
@@ -100,6 +102,7 @@ async def test_audit_logs_for_create_update_publish_and_close(async_db):
         full_name="Treinador Close",
         first_name="Treinador",
         last_name="Close",
+        birth_date=date(1985, 1, 1),
     )
     user_id = uuid4()
     from app.models.user import User
@@ -175,6 +178,7 @@ async def test_audit_logs_for_create_update_publish_and_close(async_db):
         user_id=user_id,
         email=user.email,
         role_code="treinador",
+        request_id=str(uuid4()),
         organization_id=UUID(organization.id),
         membership_id=uuid4(),
         team_ids=[team.id],

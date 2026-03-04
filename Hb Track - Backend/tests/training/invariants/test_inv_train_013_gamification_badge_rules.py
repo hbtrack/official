@@ -23,7 +23,7 @@ class TestInvTrain013GamificationBadgeRules:
     def test_monthly_badge_requires_90_percent_rate(self):
         """Verifica que badge mensal exige response_rate >= 90%."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "wellness_gamification_service.py"
@@ -44,7 +44,7 @@ class TestInvTrain013GamificationBadgeRules:
     def test_streak_badge_requires_3_consecutive_months(self):
         """Verifica que streak badge exige 3 meses consecutivos."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "wellness_gamification_service.py"
@@ -59,7 +59,7 @@ class TestInvTrain013GamificationBadgeRules:
     def test_check_and_award_streak_method_exists(self):
         """Verifica que existe método _check_and_award_streak."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "wellness_gamification_service.py"
@@ -73,7 +73,7 @@ class TestInvTrain013GamificationBadgeRules:
     def test_wellness_champion_monthly_badge_type_exists(self):
         """Verifica que o tipo de badge 'wellness_champion_monthly' existe."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "wellness_gamification_service.py"
@@ -87,7 +87,7 @@ class TestInvTrain013GamificationBadgeRules:
     def test_wellness_streak_3months_badge_type_exists(self):
         """Verifica que o tipo de badge 'wellness_streak_3months' existe."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "wellness_gamification_service.py"
@@ -101,7 +101,7 @@ class TestInvTrain013GamificationBadgeRules:
     def test_badge_notification_created(self):
         """Verifica que há criação de notificação para badges."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "wellness_gamification_service.py"
@@ -115,7 +115,7 @@ class TestInvTrain013GamificationBadgeRules:
     def test_zero_expected_wellness_not_eligible(self):
         """Verifica que expected > 0 é pré-condição para award (não divide por zero)."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "wellness_gamification_service.py"
@@ -130,7 +130,7 @@ class TestInvTrain013GamificationBadgeRules:
     def test_calculate_monthly_wellness_badges_entrypoint_exists(self):
         """Verifica que existe entry-point público calculate_monthly_wellness_badges."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "wellness_gamification_service.py"
@@ -144,7 +144,7 @@ class TestInvTrain013GamificationBadgeRules:
     def test_award_badge_method_exists(self):
         """Verifica que existe método interno _award_badge para persistência do badge."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "wellness_gamification_service.py"

@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_228-142a146",
+  "timestamp_utc": "2026-03-03T23:16:57.359855+00:00",
+  "git": {
+    "commit": "142a1469efb1d530e4bd579fb2f134cd78754a7e"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "228",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_228_fix_residuais_mistos_+_validação_done_gate_suite_0.md"
+}

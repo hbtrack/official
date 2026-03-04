@@ -1,7 +1,7 @@
 # AR_BACKLOG_TRAINING.md — Backlog de ARs (Materialização) do Módulo TRAINING
 
 Status: ATIVO
-Versão: v1.9.0
+Versão: v2.2.0
 Tipo de Documento: AR Materialization Backlog (Normativo Operacional / SSOT)  
 Módulo: TRAINING  
 Fase: FASE_2 (PRD v2.2 — 2026-02-20) + DEC-TRAIN-* (2026-02-25) + FASE_3 (2026-02-27)  
@@ -11,8 +11,33 @@ Owners:
 - Execução (Executor): (a definir)
 - Auditoria/Testes: (a definir)
 
-Última revisão: 2026-03-02  
-Próxima revisão recomendada: 2026-03-05  
+Última revisão: 2026-03-03  
+Próxima revisão recomendada: 2026-03-06  
+
+> Changelog v2.2.0 (2026-03-03) — Arquiteto (Batch 19 — Sincronização em Lote: app/ desbloqueada via GOVERNED_ROOTS.yaml `UNLOCKED_FOR_SYNC_BATCH_19`):
+> - DECISÃO HUMANA: Batch Sync Strategy — corrigir app/models/ + app/services/ para eliminar desalinhamento SSOT (contrato v1.3.0 + invariantes v1.5.0).
+> - AR-TRAIN-048 (A/E): Sync app layer — modelos (UniqueConstraint/FK INV-010/035/036/054), serviços (assinaturas contrato), stubs IA Coach (GAP-CONTRACT-6/7).
+
+> Changelog v2.1.0 (2026-03-03) — Arquiteto (Batch 18 — fix FAILs de test-layer pré-existentes Batch 13):
+> - DECISÃO HUMANA (Opção A): Criar Batch 18 para zerar os 109 FAILs + 31 ERRORs residuais da suite tests/training/.
+> - AR-TRAIN-044 (T): Fix async fixtures — `@pytest.fixture` → `@pytest_asyncio.fixture` (~23+ FAILs, 7 arquivos).
+> - AR-TRAIN-045 (T): Fix DB fixture setup — `category_id` NOT NULL + FK `team_registrations` (~57+ ERROs, múltiplos arquivos).
+> - AR-TRAIN-046 (T): Fix import stubs ausentes em ai_coach_service (3 ERRORs coleta: `RecognitionApproved`, `CoachSuggestionDraft`, `JustifiedSuggestion`).
+> - AR-TRAIN-047 (T): Fix residuais mistos + validação done gate (suite verde 0 FAILs).
+
+> Changelog v2.0.0 (2026-03-03) — Arquiteto (Batches 12-16 — §10 como gate formal):
+> - DECISÃO HUMANA: §10 de TEST_MATRIX_TRAINING.md é o critério formal de aceitação do módulo TRAINING (não "norte ideal").
+> - Dessincronia detectada: ~40 invariantes na Matrix marcadas PENDENTE, mas testes já existem no filesystem (criados ARs 144-167).
+> - Adicionadas AR-TRAIN-032..043 (Batches 12-16) para satisfazer §10 integral.
+> - AR-TRAIN-032 (G): Sync TEST_MATRIX §5 — ~40 INV PENDENTE → COBERTO onde arquivo de teste já existe.
+> - AR-TRAIN-033 (T): Criar 6 testes realmente ausentes: INV-053/060/061/062/EXB-ACL-005/007.
+> - AR-TRAIN-034 (T): Executar todos NOT_RUN + evidências formais.
+> - AR-TRAIN-035..039 (E): Testes de contrato por domínio (5 ARs, ~105 contratos P0 ausentes).
+> - AR-TRAIN-040 (T): DEC tests automatizados (11 DEC: DEC-TRAIN-001..004 + EXB-* + RBAC-*).
+> - AR-TRAIN-041 (T): Flows P1 evidências MANUAL_GUIADO (13 flows).
+> - AR-TRAIN-042 (T): Screens smoke tests MANUAL_GUIADO (25 telas).
+> - AR-TRAIN-043 (G): Done Gate §10 final — sync TEST_MATRIX v2.0.0 completo.
+> - Também adicionadas linhas 024..031 na tabela-resumo §7 (estavam ausentes por serem adicionadas pós v1.2.0).
 
 > Changelog v1.9.0 (2026-03-02) — Arquiteto (pós hb seal 199):
 > - AR-TRAIN-023 PENDENTE → VERIFICADO (AR_199 hb seal 2026-03-02)
@@ -322,6 +347,42 @@ Decompor a materialização do módulo TRAINING em ARs pequenas, rastreáveis, t
 ### Lote 6 — Governança: Sync INVARIANTS_TRAINING.md (G)
 22. AR-TRAIN-022 (G) — Sync INVARIANTS_TRAINING.md: promover 31 itens GAP/PARCIAL/DIVERGENTE_DO_SSOT → IMPLEMENTADO com evidência ARs 011..021
 
+> **Nota (v1.x.0 → v1.9.0):** ARs 023-031 foram adicionadas em patches posteriores como Batches 7-11 (fix FAILs críticos, evidências P0 de flows/contracts, Done Gate v1.8.0). Todas estão VERIFICADO. Ver detalhes nas seções §8 correspondentes.
+
+### Lote 7 — Cobertura §10: Matrix Sync + 6 testes ausentes + run NOT_RUN (G/T)
+32. AR-TRAIN-032 (G) — Sync §5 TEST_MATRIX: ~40 INV PENDENTE → COBERTO onde teste já existe no filesystem
+33. AR-TRAIN-033 (T) — Criar 6 testes ausentes: INV-053/060/061/062/EXB-ACL-005/EXB-ACL-007
+
+### Lote 8 — Cobertura §10: Executar NOT_RUN + evidências (T)
+34. AR-TRAIN-034 (T) — Executar todos NOT_RUN (INV + EXB) + gerar evidências formais
+
+### Lote 9 — Contratos P0 automatizados por domínio (E/T)
+35. AR-TRAIN-035 (E) — Contract tests: Sessions CRUD (CONTRACT-001..012)
+36. AR-TRAIN-036 (E) — Contract tests: Teams + Attendance (CONTRACT-013..028)
+37. AR-TRAIN-037 (E) — Contract tests: Wellness pre/post (CONTRACT-029..039)
+38. AR-TRAIN-038 (E) — Contract tests: Ciclos/Exercises/Analytics/Export (CONTRACT-040..095)
+39. AR-TRAIN-039 (E) — Contract tests: IA Coach + Athlete view (CONTRACT-096/101..105)
+
+### Lote 10 — DEC tests + Flows P1 + Screens (T)
+40. AR-TRAIN-040 (T) — DEC tests automatizados (DEC-TRAIN-001..004, EXB-*, RBAC-*)
+41. AR-TRAIN-041 (T) — Flows P1 evidências MANUAL_GUIADO (FLOW-007..016/019..021)
+42. AR-TRAIN-042 (T) — Screens smoke tests MANUAL_GUIADO (SCREEN-001..025)
+
+### Lote 11 — Done Gate §10 final (G)
+43. AR-TRAIN-043 (G) — Done Gate §10: sync TEST_MATRIX v2.0.0 + full suite verde + declaração final
+
+### Lote 12 — Batch 18: Fix FAILs de test-layer (T)
+44. AR-TRAIN-044 (T) — Fix async fixtures: `@pytest.fixture` → `@pytest_asyncio.fixture` (~23+ tests, 7 arquivos)
+45. AR-TRAIN-045 (T) — Fix DB fixture setup: `category_id` NOT NULL + FK `team_registrations` (~57+ ERROs setup)
+46. AR-TRAIN-046 (T) — Fix import stubs ausentes em ai_coach_service (3 ERRORs coleta: INV-079/080/081)
+47. AR-TRAIN-047 (T) — Fix residuais mistos + validação done gate (0 FAILs suite completa)
+
+### Lote 13 — Batch 19: Sincronização em Lote app layer (A/E)
+48. AR-TRAIN-048 (A/E) — Sync app/models/ (constraints INV-010/035/036/054) + app/services/ (assinaturas contrato v1.3.0) + stubs IA Coach
+
+### Lote 14 — Batch 20: Fix residuais test-layer pós-Batch 18/19 (T)
+49. AR-TRAIN-049 (T) — Fix 6 FAILs + 10 ERRORs residuais em tests/training/invariants/ (test_018_route, test_035, test_058, test_059, test_063, test_064, test_076, test_acl_006)
+
 ---
 
 ## 7) Tabela resumo do backlog de ARs
@@ -352,6 +413,32 @@ Decompor a materialização do módulo TRAINING em ARs pequenas, rastreáveis, t
 | AR-TRAIN-021 | B/E | MEDIA | IA coach (drafts, chat, justificativas, privacidade) | INV-TRAIN-072..075/079..081, FLOW-TRAIN-019/020, SCREEN-TRAIN-024/025, CONTRACT-TRAIN-101..104 | AR-TRAIN-020 | VERIFICADO |
 | AR-TRAIN-022 | G | ALTA | Sync INVARIANTS_TRAINING.md: promover 31 itens GAP/PARCIAL/DIVERGENTE_DO_SSOT → IMPLEMENTADO | INV-TRAIN-013/014/023/024/025/047..053/EXB-ACL-001..007/054..062/079..081 | AR-TRAIN-011..021 | VERIFICADO |
 | AR-TRAIN-023 | G | ALTA | Sync TEST_MATRIX_TRAINING.md §9: AR-TRAIN-001..022 PENDENTE→VERIFICADO + desbloquear 7 INV + 9 CONTRACT | TEST_MATRIX_TRAINING.md §9/§5/§8 | AR-TRAIN-001/002/010A/022 | VERIFICADO |
+| AR-TRAIN-024 | B | ALTA | Fix INV-001 test_invalid_case_2 — pytest assertion correto | INV-TRAIN-001, TEST_MATRIX_TRAINING | AR-TRAIN-010A | VERIFICADO |
+| AR-TRAIN-025 | B | ALTA | Fix INV-008 schema_path: 3 .parent → 4 .parent | INV-TRAIN-008, TEST_MATRIX_TRAINING | AR-TRAIN-010A | VERIFICADO |
+| AR-TRAIN-026 | B | ALTA | Fix INV-030 schema_path: 3 .parent → 4 .parent | INV-TRAIN-030, TEST_MATRIX_TRAINING | AR-TRAIN-010A | VERIFICADO |
+| AR-TRAIN-027 | B | ALTA | Fix INV-032 6 async fixtures (pytest-asyncio) | INV-TRAIN-032, TEST_MATRIX_TRAINING | AR-TRAIN-010A | VERIFICADO |
+| AR-TRAIN-028 | B | MEDIA | Fix CONTRACT-077-085 router path: 3 .parent → 4 .parent | CONTRACT-TRAIN-077..085 | AR-TRAIN-002 | VERIFICADO |
+| AR-TRAIN-029 | E | ALTA | Flow P0 evidence MANUAL_GUIADO: FLOW-TRAIN-001..006/017/018 | FLOW-TRAIN-001..006/017/018 | AR-TRAIN-024..028 | VERIFICADO |
+| AR-TRAIN-030 | B | ALTA | Contract P0 tests automatizados: CONTRACT-TRAIN-097..100 | CONTRACT-TRAIN-097..100 | AR-TRAIN-017/018/029 | VERIFICADO |
+| AR-TRAIN-031 | G | ALTA | Done Gate v1.8.0: sync TEST_MATRIX §5/§6/§8/§9, declaração DONE | TEST_MATRIX_TRAINING.md §5/§6/§8/§9 | AR-TRAIN-024..030 | VERIFICADO |
+| AR-TRAIN-032 | G | ALTA | Sync §5 TEST_MATRIX: ~40 INV PENDENTE→COBERTO onde teste já existe no filesystem | TEST_MATRIX_TRAINING.md §5/§0 | AR-TRAIN-031 | VERIFICADO |
+| AR-TRAIN-033 | T | ALTA | Criar 6 testes ausentes: INV-053/060/061/062/EXB-ACL-005/EXB-ACL-007 | INV-TRAIN-053/060/061/062/EXB-ACL-005/007 | AR-TRAIN-032 | VERIFICADO |
+| AR-TRAIN-034 | T | ALTA | Executar todos NOT_RUN + evidências formais em TEST_MATRIX | TEST_MATRIX_TRAINING.md §5 | AR-TRAIN-033 | VERIFICADO |
+| AR-TRAIN-035 | E | ALTA | Contract tests: Sessions CRUD (CONTRACT-001..012) | CONTRACT-TRAIN-001..012 | AR-TRAIN-034 | PENDENTE |
+| AR-TRAIN-036 | E | ALTA | Contract tests: Teams + Attendance (CONTRACT-013..028) | CONTRACT-TRAIN-013..028 | AR-TRAIN-034 | PENDENTE |
+| AR-TRAIN-037 | E | ALTA | Contract tests: Wellness pre/post (CONTRACT-029..039) | CONTRACT-TRAIN-029..039 | AR-TRAIN-034 | PENDENTE |
+| AR-TRAIN-038 | E | MEDIA | Contract tests: Ciclos/Exercises/Analytics/Export (CONTRACT-040..095) | CONTRACT-TRAIN-040..095 | AR-TRAIN-034 | PENDENTE |
+| AR-TRAIN-039 | E | MEDIA | Contract tests: IA Coach + Athlete view (CONTRACT-096/101..105) | CONTRACT-TRAIN-096/101..105 | AR-TRAIN-034 | PENDENTE |
+| AR-TRAIN-040 | T | ALTA | DEC tests automatizados (DEC-TRAIN-001..004 + EXB-* + RBAC-*) | TEST_MATRIX_TRAINING.md §5b | AR-TRAIN-033 | PENDENTE |
+| AR-TRAIN-041 | T | MEDIA | Flows P1 evidências MANUAL_GUIADO (13 flows P1: FLOW-007..016/019..021) | FLOW-TRAIN-007..016/019..021 | AR-TRAIN-034 | PENDENTE |
+| AR-TRAIN-042 | T | MEDIA | Screens smoke tests MANUAL_GUIADO (25 telas: SCREEN-001..025) | SCREEN-TRAIN-001..025 | AR-TRAIN-034 | PENDENTE |
+| AR-TRAIN-043 | G | ALTA | Done Gate §10 final: sync TEST_MATRIX v2.0.0 + full suite verde + declaração Done | TEST_MATRIX_TRAINING.md §10/§0/§9 | AR-TRAIN-034..042 | PENDENTE |
+| AR-TRAIN-044 | T | ALTA | Fix async fixtures: `@pytest.fixture` → `@pytest_asyncio.fixture` (~23+ tests, 7 arquivos) | tests/training/invariants/ | AR-TRAIN-034 | PENDENTE |
+| AR-TRAIN-045 | T | ALTA | Fix DB fixture setup: `category_id` NOT NULL + FK `team_registrations` (~57+ ERROs setup) | tests/training/invariants/ | AR-TRAIN-034 | PENDENTE |
+| AR-TRAIN-046 | T | ALTA | Fix import stubs ausentes em ai_coach_service (3 ERRORs coleta: INV-079/080/081) | tests/training/invariants/ | AR-TRAIN-034 | PENDENTE |
+| AR-TRAIN-047 | T | ALTA | Fix residuais mistos + validação done gate (0 FAILs suite completa) | tests/training/invariants/ | AR-TRAIN-044..046 | PENDENTE |
+| AR-TRAIN-048 | A/E | CRÍTICA | Sync app/models/ (constraints INV-010/035/036/054) + app/services/ (assinaturas contrato v1.3.0) + stubs IA Coach | app/models/, app/services/, openapi.json | AR-TRAIN-044..047 | PENDENTE |
+| AR-TRAIN-049 | T | CRÍTICA | Fix 6 FAILs + 10 ERRORs residuais em tests/training/invariants/ (test_018_route, 035, 058, 059, 063, 064, 076, acl_006) | tests/training/invariants/ | AR-TRAIN-048 | PENDENTE |
 
 ---
 
@@ -1568,6 +1655,741 @@ cd "Hb Track - Backend" && alembic upgrade head && python -c "from app.models.ex
 ##### AC-004
 **PASS:** Smoke pytest (5 testes: INV-001/008/030/032 + CONTRACT-077-085) = 0 FAILs.
 **FAIL:** Qualquer FAIL no smoke.
+
+---
+
+### AR-TRAIN-032 — Sync §5 TEST_MATRIX: ~40 INV PENDENTE → COBERTO
+
+**Status:** VERIFICADO (AR_211 — hb seal 2026-03-03)
+**Classe:** G
+**Prioridade:** ALTA
+**Fase:** Batch 12 — Cobertura §10 (Dessincronia Matrix)
+**Objetivo da AR (1 frase):** Atualizar TEST_MATRIX_TRAINING.md §5 para refletir o estado real do filesystem: ~40 invariantes marcadas PENDENTE cuja suite de teste já existe (criada pelas ARs 144-167 nos Batches 3-8).
+
+#### 8.1 Alvos SSOT
+- `TEST_MATRIX_TRAINING.md` — §5 (status INV), §0 (contadores), §9 (entry AR-TRAIN-032)
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** AR-TRAIN-031 VERIFICADO
+
+#### 8.5 WRITE
+- `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md`
+
+#### 8.6 FORBIDDEN
+- `Hb Track - Backend/app/` — zero toque
+- `Hb Track - Frontend/`
+- Não criar código nesta AR — apenas sync documental
+
+#### 8.7 AC binário
+##### AC-001
+**PASS:** §5 da TEST_MATRIX não contém mais nenhuma linha com `PENDENTE` para INV cujo arquivo de teste existe em `Hb Track - Backend/tests/training/`.
+**FAIL:** Ainda existem linhas PENDENTE para INV com arquivo de teste presente.
+
+##### AC-002
+**PASS:** §0 contadores atualizados refletem a real distribuição COBERTO/NOT_RUN/PENDENTE.
+**FAIL:** Contadores divergem do estado real.
+
+##### AC-003
+**PASS:** §9 contém entry para AR-TRAIN-032 com status VERIFICADO.
+**FAIL:** Entry ausente.
+
+---
+
+### AR-TRAIN-033 — Criar 6 testes ausentes: INV-053/060/061/062/EXB-ACL-005/EXB-ACL-007
+
+**Status:** VERIFICADO (AR_212 — hb seal 2026-03-03)
+**Classe:** T
+**Prioridade:** ALTA
+**Fase:** Batch 12 — Cobertura §10 (6 testes faltantes)
+**Objetivo da AR (1 frase):** Criar os 6 únicos arquivos de teste de invariante que realmente não existem no filesystem após a revisão de dessincronia.
+
+#### 8.1 Alvos SSOT
+- INV-TRAIN-053 (soft delete exercise não quebra sessões históricas)
+- INV-TRAIN-060 (exercício ORG default visibility restricted)
+- INV-TRAIN-061 (exercício SYSTEM copy → ORG, não edita original)
+- INV-TRAIN-062 (exercise_visibility_mode required for session add)
+- INV-TRAIN-EXB-ACL-005 (criador tem acesso implícito independente da ACL)
+- INV-TRAIN-EXB-ACL-007 (mudança de ACL/visibilidade não invalida leitura histórica)
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** AR-TRAIN-032 VERIFICADO
+
+#### 8.5 WRITE
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_053_soft_delete_exercise_no_break_historic.py`
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_060_org_exercise_default_restricted.py`
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_061_system_exercise_copy_not_edit.py`
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_062_exercise_visibility_required.py`
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_exb_acl_005_creator_implicit_access.py`
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_exb_acl_007_acl_change_no_retrobreak.py`
+- `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` (§5: status COBERTO para os 6 INV)
+
+#### 8.6 FORBIDDEN
+- `Hb Track - Backend/app/` — zero toque em código de produto
+- `Hb Track - Frontend/`
+
+#### 8.7 AC binário
+##### AC-001
+**PASS:** Os 6 arquivos de teste existem com pelo menos 1 test case cada que testa a violação da invariante (assert de exceção ou status 4xx).
+**FAIL:** Qualquer arquivo ausente ou sem test case de violação.
+
+##### AC-002
+**PASS:** `pytest tests/training/invariants/test_inv_train_053*.py tests/training/invariants/test_inv_train_060*.py tests/training/invariants/test_inv_train_061*.py tests/training/invariants/test_inv_train_062*.py tests/training/invariants/test_inv_train_exb_acl_005*.py tests/training/invariants/test_inv_train_exb_acl_007*.py` = 0 FAILs / 0 ERRORs.
+**FAIL:** Qualquer FAIL ou ERROR.
+
+---
+
+### AR-TRAIN-034 — Executar todos NOT_RUN + evidências formais
+
+**Status:** EM_EXECUCAO (AR_213 — Batch 13 planejado 2026-03-03)
+**Classe:** T
+**Prioridade:** ALTA
+**Fase:** Batch 13 — Execução NOT_RUN
+**Objetivo da AR (1 frase):** Executar os ~60 testes marcados como COBERTO/NOT_RUN no §5 da TEST_MATRIX, capturar evidências de execução em _reports/training/evidence_run_batch13.txt e atualizar os status.
+
+#### 8.1 Alvos SSOT
+- `TEST_MATRIX_TRAINING.md` §5 — todas as linhas NOT_RUN → COBERTO com Últ.Execução preenchida
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** AR-TRAIN-033 VERIFICADO
+
+#### 8.5 WRITE
+- `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md`
+- `_reports/training/evidence_run_batch13.txt` (output pytest)
+
+#### 8.6 FORBIDDEN
+- `Hb Track - Backend/app/` — zero toque
+
+#### 8.7 AC binário
+##### AC-001
+**PASS:** §5 da TEST_MATRIX não contém mais nenhuma linha com status `NOT_RUN`.
+**FAIL:** Ainda existem linhas NOT_RUN.
+
+##### AC-002
+**PASS:** `_reports/training/evidence_run_batch13.txt` existe com output pytest mostrando 0 FAILs para os testes executados.
+**FAIL:** Arquivo ausente ou mostra FAILs.
+
+---
+
+### AR-TRAIN-035 — Contract tests: Sessions CRUD (CONTRACT-001..012)
+
+**Status:** PENDENTE
+**Classe:** E
+**Prioridade:** ALTA
+**Fase:** Batch 14 — Contratos P0
+**Objetivo da AR (1 frase):** Criar arquivo de testes de contrato para os 12 contratos do domínio Sessões de Treino e atualizar TEST_MATRIX §8.
+
+#### 8.1 Alvos SSOT
+- CONTRACT-TRAIN-001..012 (Sessions CRUD: criar, listar, detalhar, publicar, fechar, duplicar, restaurar)
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** AR-TRAIN-034 VERIFICADO
+
+#### 8.5 WRITE
+- `Hb Track - Backend/tests/training/contracts/test_contract_train_001_012_sessions_crud.py`
+- `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` (§8: CONTRACT-001..012)
+
+#### 8.6 FORBIDDEN
+- `Hb Track - Backend/app/` — zero toque
+
+#### 8.7 AC binário
+##### AC-001
+**PASS:** `pytest tests/training/contracts/test_contract_train_001_012_sessions_crud.py` = 0 FAILs.
+**FAIL:** Qualquer FAIL ou ERROR.
+
+##### AC-002
+**PASS:** TEST_MATRIX §8 mostra CONTRACT-001..012 = COBERTO com evidência linkada.
+**FAIL:** Algum contrato ainda PENDENTE.
+
+---
+
+### AR-TRAIN-036 — Contract tests: Teams + Attendance (CONTRACT-013..028)
+
+**Status:** PENDENTE
+**Classe:** E
+**Prioridade:** ALTA
+**Fase:** Batch 14 — Contratos P0
+**Objetivo da AR (1 frase):** Criar arquivo de testes de contrato para contratos de Teams e Attendance e atualizar TEST_MATRIX §8.
+
+#### 8.1 Alvos SSOT
+- CONTRACT-TRAIN-013..028 (Teams/equipes + Attendance/presenças com justified/batch)
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** AR-TRAIN-034 VERIFICADO
+
+#### 8.5 WRITE
+- `Hb Track - Backend/tests/training/contracts/test_contract_train_013_028_teams_attendance.py`
+- `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` (§8: CONTRACT-013..028)
+
+#### 8.6 FORBIDDEN
+- `Hb Track - Backend/app/` — zero toque
+
+#### 8.7 AC binário
+##### AC-001
+**PASS:** `pytest tests/training/contracts/test_contract_train_013_028_teams_attendance.py` = 0 FAILs.
+**FAIL:** Qualquer FAIL ou ERROR.
+
+---
+
+### AR-TRAIN-037 — Contract tests: Wellness pre/post (CONTRACT-029..039)
+
+**Status:** PENDENTE
+**Classe:** E
+**Prioridade:** ALTA
+**Fase:** Batch 14 — Contratos P0
+**Objetivo da AR (1 frase):** Criar arquivo de testes de contrato para os contratos de Wellness pré/pós treino e atualizar TEST_MATRIX §8.
+
+#### 8.1 Alvos SSOT
+- CONTRACT-TRAIN-029..039 (Wellness pre + post: payload, self-only, mapeamento FE→backend)
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** AR-TRAIN-034 VERIFICADO
+
+#### 8.5 WRITE
+- `Hb Track - Backend/tests/training/contracts/test_contract_train_029_039_wellness.py`
+- `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` (§8: CONTRACT-029..039)
+
+#### 8.6 FORBIDDEN
+- `Hb Track - Backend/app/` — zero toque
+
+#### 8.7 AC binário
+##### AC-001
+**PASS:** `pytest tests/training/contracts/test_contract_train_029_039_wellness.py` = 0 FAILs.
+**FAIL:** Qualquer FAIL ou ERROR.
+
+---
+
+### AR-TRAIN-038 — Contract tests: Ciclos/Exercises/Analytics/Export (CONTRACT-040..095)
+
+**Status:** PENDENTE
+**Classe:** E
+**Prioridade:** MEDIA
+**Fase:** Batch 14 — Contratos P0
+**Objetivo da AR (1 frase):** Criar arquivos de testes de contrato para os contratos de Ciclos, Exercícios, Analytics e Export (excluindo 073-075/077-085/091-095 que já têm teste) e atualizar TEST_MATRIX §8.
+
+#### 8.1 Alvos SSOT
+- CONTRACT-TRAIN-040..072 (Ciclos, microciclos, session exercises, session-templates)
+- CONTRACT-TRAIN-076 (top performers endpoint canônico)
+- CONTRACT-TRAIN-086..090 (exports e estado degradado)
+- CONTRACT-TRAIN-091..095 (ACL exercícios)
+**Nota:** CONTRACT-073..075 e 077..085 já têm testes (test_contract_train_073_075.py e test_contract_train_077_085.py).
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** AR-TRAIN-034 VERIFICADO
+
+#### 8.5 WRITE
+- `Hb Track - Backend/tests/training/contracts/test_contract_train_040_072_ciclos_exercises.py`
+- `Hb Track - Backend/tests/training/contracts/test_contract_train_086_095_exports_acl.py`
+- `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` (§8)
+
+#### 8.6 FORBIDDEN
+- `Hb Track - Backend/app/` — zero toque
+
+#### 8.7 AC binário
+##### AC-001
+**PASS:** Todos os novos arquivos de contrato: 0 FAILs no pytest.
+**FAIL:** Qualquer FAIL ou ERROR.
+
+---
+
+### AR-TRAIN-039 — Contract tests: IA Coach + Athlete view (CONTRACT-096/101..105)
+
+**Status:** PENDENTE
+**Classe:** E
+**Prioridade:** MEDIA
+**Fase:** Batch 14 — Contratos P0
+**Objetivo da AR (1 frase):** Criar arquivo de testes de contrato para IA Coach e visão do atleta e atualizar TEST_MATRIX §8.
+
+#### 8.1 Alvos SSOT
+- CONTRACT-TRAIN-096 (GET /athlete/training-sessions/{session_id}/preview)
+- CONTRACT-TRAIN-101..105 (IA coach: drafts, chat, feedback, wellness-gate atleta)
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** AR-TRAIN-034 VERIFICADO
+
+#### 8.5 WRITE
+- `Hb Track - Backend/tests/training/contracts/test_contract_train_096_101_105_ia_athlete.py`
+- `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` (§8: CONTRACT-096/101..105)
+
+#### 8.6 FORBIDDEN
+- `Hb Track - Backend/app/` — zero toque
+
+#### 8.7 AC binário
+##### AC-001
+**PASS:** `pytest tests/training/contracts/test_contract_train_096_101_105_ia_athlete.py` = 0 FAILs.
+**FAIL:** Qualquer FAIL ou ERROR.
+
+---
+
+### AR-TRAIN-040 — DEC tests automatizados (DEC-TRAIN-001..004 + EXB-* + RBAC-*)
+
+**Status:** PENDENTE
+**Classe:** T
+**Prioridade:** ALTA
+**Fase:** Batch 15 — DEC/Flows/Screens
+**Objetivo da AR (1 frase):** Criar testes automatizados para os 11 DECs do módulo TRAINING que ainda não têm teste de violação formal, e atualizar TEST_MATRIX §5b.
+
+#### 8.1 Alvos SSOT
+- DEC-TRAIN-001 (wellness self-only — athlete_id do token, nunca do payload)
+- DEC-TRAIN-002 (wellness UX sliders mapeados ao payload canônico)
+- DEC-TRAIN-003 (top performers: CONTRACT-076 canônico no FE)
+- DEC-TRAIN-004 (exports: estado degradado sem worker, sem polling fake)
+- DEC-TRAIN-EXB-001/001B (scope SYSTEM/ORG + visibility org_wide/restricted)
+- DEC-TRAIN-EXB-002 (categorias/tags personalizadas por treinador)
+- DEC-TRAIN-EXB-RBAC-001 (Treinador como papel RBAC explícito)
+- DEC-INV-065 (encerramento de sessão permite pendências, não bloqueia)
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** AR-TRAIN-033 VERIFICADO
+
+#### 8.5 WRITE
+- `Hb Track - Backend/tests/training/invariants/test_dec_train_001_004_wellness_exports.py`
+- `Hb Track - Backend/tests/training/invariants/test_dec_train_exb_rbac_scope_acl.py`
+- `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` (§5b)
+
+#### 8.6 FORBIDDEN
+- `Hb Track - Backend/app/` — zero toque
+
+#### 8.7 AC binário
+##### AC-001
+**PASS:** Todos os DEC tests: 0 FAILs no pytest.
+**FAIL:** Qualquer FAIL ou ERROR.
+
+##### AC-002
+**PASS:** TEST_MATRIX §5b mostra status COBERTO para todos os DECs testados.
+**FAIL:** Algum DEC ainda PENDENTE.
+
+---
+
+### AR-TRAIN-041 — Flows P1 evidências MANUAL_GUIADO (13 flows P1)
+
+**Status:** PENDENTE
+**Classe:** T
+**Prioridade:** MEDIA
+**Fase:** Batch 15 — DEC/Flows/Screens
+**Objetivo da AR (1 frase):** Criar evidências MANUAL_GUIADO para os 13 flows P1 restantes não cobertos no Batch 10, e atualizar TEST_MATRIX §6.
+
+#### 8.1 Alvos SSOT
+- FLOW-TRAIN-007 (banco de exercícios scope/ACL)
+- FLOW-TRAIN-008 (planejamento ciclos macro→meso→micro)
+- FLOW-TRAIN-009 (criar/compartilhar exercício ORG)
+- FLOW-TRAIN-010 (copiar exercício SYSTEM→ORG)
+- FLOW-TRAIN-011 (analytics team summary)
+- FLOW-TRAIN-012 (export PDF analytics)
+- FLOW-TRAIN-013 (rankings top performers)
+- FLOW-TRAIN-014 (session templates)
+- FLOW-TRAIN-015 (step18 alertas/sugestões)
+- FLOW-TRAIN-016 (visão atleta pré-treino + wellness gate)
+- FLOW-TRAIN-019 (IA coach draft)
+- FLOW-TRAIN-020 (IA coach chat feedback)
+- FLOW-TRAIN-021 (pós-treino conversacional)
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** AR-TRAIN-034 VERIFICADO
+
+#### 8.5 WRITE
+- `_reports/training/TEST-TRAIN-FLOW-007.md` até `TEST-TRAIN-FLOW-021.md` (13 arquivos)
+- `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` §6
+
+#### 8.6 FORBIDDEN
+- `Hb Track - Backend/app/` — zero toque
+
+#### 8.7 AC binário
+##### AC-001
+**PASS:** 13 arquivos de evidência existem com conteúdo MANUAL_GUIADO (descrição de passos + resultado observado).
+**FAIL:** Qualquer arquivo ausente ou vazio.
+
+##### AC-002
+**PASS:** TEST_MATRIX §6: FLOW-007..016/019..021 com status COBERTO e evidência linkada.
+**FAIL:** Algum flow ainda PENDENTE.
+
+---
+
+### AR-TRAIN-042 — Screens smoke tests MANUAL_GUIADO (25 telas)
+
+**Status:** PENDENTE
+**Classe:** T
+**Prioridade:** MEDIA
+**Fase:** Batch 15 — DEC/Flows/Screens
+**Objetivo da AR (1 frase):** Criar evidências MANUAL_GUIADO de smoke test para as 25 telas do módulo TRAINING e atualizar TEST_MATRIX §7.
+
+#### 8.1 Alvos SSOT
+- SCREEN-TRAIN-001..025 (todas as telas do módulo TRAINING)
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** AR-TRAIN-034 VERIFICADO
+
+#### 8.5 WRITE
+- `_reports/training/TEST-TRAIN-SCREEN-001.md` até `TEST-TRAIN-SCREEN-025.md`
+- `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` §7
+
+#### 8.6 FORBIDDEN
+- `Hb Track - Backend/app/` — zero toque
+
+#### 8.7 AC binário
+##### AC-001
+**PASS:** 25 arquivos de evidência existem com descrição de smoke (título da tela, rota, estado visual observado, PASS/FAIL).
+**FAIL:** Qualquer arquivo ausente.
+
+##### AC-002
+**PASS:** TEST_MATRIX §7: SCREEN-001..025 com status COBERTO ou NOT_APPLICABLE (se tela não existe ainda).
+**FAIL:** Alguma tela ainda PENDENTE sem nota.
+
+---
+
+### AR-TRAIN-043 — Done Gate §10 final: sync TEST_MATRIX v2.0.0
+
+**Status:** PENDENTE
+**Classe:** G
+**Prioridade:** ALTA
+**Fase:** Batch 16 — Done Gate §10
+**Objetivo da AR (1 frase):** Sincronizar TEST_MATRIX_TRAINING.md para v2.0.0 com todos os §10 formalmente satisfeitos, §9 atualizado com AR-TRAIN-032..043, e emitir declaração de Done Gate §10.
+
+#### 8.1 Alvos SSOT
+- `TEST_MATRIX_TRAINING.md` — v1.8.0 → v2.0.0
+  - §0: contadores finais (COBERTO: todos INV/FLOW/CONTRACT/SCREEN em escopo)
+  - §9: entries AR-TRAIN-032..043
+  - §10: todos os checkboxes marcados ✅
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** AR-TRAIN-034..042 todos VERIFICADO
+
+#### 8.5 WRITE
+- `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md`
+- `_reports/training/DONE_GATE_TRAINING_v2.md` (declaração Done Gate §10 completo)
+
+#### 8.6 FORBIDDEN
+- `Hb Track - Backend/app/` — zero toque
+- Não criar novos testes nesta AR — apenas sync documental
+
+#### 8.7 AC binário
+##### AC-001
+**PASS:** `TEST_MATRIX_TRAINING.md` contém `Versão: v2.0.0`.
+**FAIL:** Versão não atualizada.
+
+##### AC-002
+**PASS:** §10 da TEST_MATRIX tem todos os checkboxes PASS marcados (todos os critérios formais satisfeitos).
+**FAIL:** Qualquer checkbox PASS não marcado.
+
+##### AC-003
+**PASS:** §9 contém entries para AR-TRAIN-024..043.
+**FAIL:** Alguma AR ausente.
+
+##### AC-004
+**PASS:** `_reports/training/DONE_GATE_TRAINING_v2.md` existe com lista explícita dos critérios §10 satisfeitos e assinatura do Arquiteto.
+**FAIL:** Arquivo ausente ou incompleto.
+
+##### AC-005
+**PASS:** `pytest tests/training/ -q` = 0 FAILs (full suite verde).
+**FAIL:** Qualquer FAIL na suite completa de training.
+
+---
+
+### AR-TRAIN-044 — Fix async fixtures: @pytest.fixture → @pytest_asyncio.fixture
+
+**Status:** PENDENTE
+**Classe:** T
+**Prioridade:** ALTA
+**Fase:** Batch 18 — Fix FAILs de test-layer
+**Objetivo da AR (1 frase):** Substituir `@pytest.fixture` por `@pytest_asyncio.fixture` em todos os testes de training com coroutines async, eliminando o TypeError `missing required argument 'globals' (pos 2)`.
+
+#### 8.1 Alvos SSOT
+- INV-TRAIN-024 (`test_inv_train_024_websocket_broadcast.py`)
+- INV-TRAIN-031 (`test_inv_train_031_derive_phase_focus.py`)
+- INV-TRAIN-034 (`test_inv_train_034_wellness_pre_sleep_quality.py`)
+- INV-TRAIN-035 (`test_inv_train_035_session_templates_unique_name.py`)
+- INV-TRAIN-036 (`test_inv_train_036_wellness_rankings_unique.py`)
+- INV-TRAIN-037 (`test_inv_train_037_cycle_dates.py`)
+- INV-TRAIN-070 (`test_inv_train_070_post_conversational.py`)
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** AR-TRAIN-034 VERIFICADO
+
+#### 8.5 WRITE
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_024_websocket_broadcast.py`
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_031_derive_phase_focus.py`
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_034_wellness_pre_sleep_quality.py`
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_035_session_templates_unique_name.py`
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_035_session_templates_unique_name_runtime.py`
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_036_wellness_rankings_unique.py`
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_037_cycle_dates.py`
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_070_post_conversational.py`
+
+#### 8.6 FORBIDDEN
+- `Hb Track - Backend/app/` — zero toque
+- Não criar novos testes — apenas corrigir o decorador
+
+#### 8.7 AC binário
+##### AC-001
+**PASS:** `pytest tests/training/invariants/test_inv_train_024_websocket_broadcast.py tests/training/invariants/test_inv_train_031_derive_phase_focus.py tests/training/invariants/test_inv_train_034_wellness_pre_sleep_quality.py tests/training/invariants/test_inv_train_035_session_templates_unique_name.py tests/training/invariants/test_inv_train_036_wellness_rankings_unique.py tests/training/invariants/test_inv_train_037_cycle_dates.py tests/training/invariants/test_inv_train_070_post_conversational.py -q --tb=no` = 0 FAILs, 0 ERRORs.
+**FAIL:** Qualquer FAIL ou ERROR nestes arquivos.
+
+##### AC-002
+**PASS:** Nenhum arquivo listado em §8.5 contém `@pytest.fixture` em posição de async coroutine (grep clean).
+**FAIL:** Grep encontra fixture async sem `pytest_asyncio`.
+
+---
+
+### AR-TRAIN-045 — Fix DB fixture setup: category_id NOT NULL + FK team_registrations
+
+**Status:** PENDENTE
+**Classe:** T
+**Prioridade:** ALTA
+**Fase:** Batch 18 — Fix FAILs de test-layer
+**Objetivo da AR (1 frase):** Corrigir fixtures de setup de banco que falham por `category_id` NOT NULL e FK `team_registrations.athlete_id`, adicionando os campos obrigatórios ou criando os registros dependentes corretos.
+
+#### 8.1 Alvos SSOT
+- INV-TRAIN-011 (`test_inv_train_011_deviation_rules.py`)
+- INV-TRAIN-013 (`test_inv_train_013_gamification_badge_rules.py`)
+- INV-TRAIN-020 (`test_inv_train_020_cache_invalidation_trigger.py`)
+- INV-TRAIN-021 (`test_inv_train_021_internal_load_trigger.py`)
+- INV-TRAIN-028 (`test_inv_train_028_focus_sum_constraint.py`)
+- INV-TRAIN-029 (`test_inv_train_029_edit_blocked_after_in_progress.py`)
+- INV-TRAIN-050 (`test_inv_train_050_*` — exercise_favorites)
+- INV-TRAIN-052 (`test_inv_train_052_*` — exercise_media)
+- INV-TRAIN-058 (`test_inv_train_058_*` — session_structure_mutable)
+- INV-TRAIN-059 (`test_inv_train_059_*` — exercise_order_contiguous)
+- INV-TRAIN-063 (`test_inv_train_063_*` — preconfirm)
+- INV-TRAIN-064 (`test_inv_train_064_*`)
+- INV-TRAIN-076 (`test_inv_train_076_*` — wellness_content_gate)
+- INV-TRAIN-148 (`test_inv_train_148_exercise_bank_services.py`)
+- INV-TRAIN-EXB-ACL-006 (`test_inv_train_exb_acl_006_*`)
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** AR-TRAIN-034 VERIFICADO
+
+#### 8.5 WRITE
+- `Hb Track - Backend/tests/training/invariants/` (arquivos listados nos alvos SSOT)
+- `Hb Track - Backend/tests/training/conftest.py` (se fixtures compartilhadas precisarem de `category_id`)
+
+#### 8.6 FORBIDDEN
+- `Hb Track - Backend/app/` — zero toque
+- Não alterar schema de DB — apenas corrigir fixtures de teste
+
+#### 8.7 AC binário
+##### AC-001
+**PASS:** `pytest tests/training/invariants/test_inv_train_011_deviation_rules.py tests/training/invariants/test_inv_train_013_gamification_badge_rules.py tests/training/invariants/test_inv_train_020_cache_invalidation_trigger.py tests/training/invariants/test_inv_train_021_internal_load_trigger.py tests/training/invariants/test_inv_train_028_focus_sum_constraint.py tests/training/invariants/test_inv_train_029_edit_blocked_after_in_progress.py -q --tb=no` = 0 FAILs, 0 ERRORs.
+**FAIL:** Qualquer FAIL ou ERROR nestes arquivos.
+
+##### AC-002
+**PASS:** `pytest tests/training/invariants/test_inv_train_050_exercise_favorites_unique.py tests/training/invariants/test_inv_train_052_exercise_media.py tests/training/invariants/test_inv_train_058_session_structure_mutable.py tests/training/invariants/test_inv_train_148_exercise_bank_services.py -q --tb=no` = 0 FAILs, 0 ERRORs.
+**FAIL:** Qualquer FAIL ou ERROR nestes arquivos.
+
+---
+
+### AR-TRAIN-046 — Fix import stubs ausentes em ai_coach_service (INV-079/080/081)
+
+**Status:** PENDENTE
+**Classe:** T
+**Prioridade:** ALTA
+**Fase:** Batch 18 — Fix FAILs de test-layer
+**Objetivo da AR (1 frase):** Adicionar stubs/mocks ou corrigir os imports em `test_inv_train_079/080/081` que importam `RecognitionApproved`, `CoachSuggestionDraft` e `JustifiedSuggestion` de `app.services.ai_coach_service` — classes inexistentes no módulo atual.
+
+#### 8.1 Alvos SSOT
+- INV-TRAIN-079 (`test_inv_train_079_individual_recognition_no_intimate_leak.py`)
+- INV-TRAIN-080 (`test_inv_train_080_ai_coach_draft_only.py`)
+- INV-TRAIN-081 (`test_inv_train_081_ai_suggestion_requires_justification.py`)
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** AR-TRAIN-034 VERIFICADO
+
+#### 8.5 WRITE
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_079_individual_recognition_no_intimate_leak.py`
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_080_ai_coach_draft_only.py`
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_081_ai_suggestion_requires_justification.py`
+
+#### 8.6 FORBIDDEN
+- `Hb Track - Backend/app/services/ai_coach_service.py` — NÃO adicionar classes reais ao produto; usar mock/stub local nos tests se classes não existem
+- Não alterar lógica de produto
+
+#### 8.7 AC binário
+##### AC-001
+**PASS:** `pytest tests/training/invariants/test_inv_train_079_individual_recognition_no_intimate_leak.py tests/training/invariants/test_inv_train_080_ai_coach_draft_only.py tests/training/invariants/test_inv_train_081_ai_suggestion_requires_justification.py -q --tb=no` = 0 FAILs, 0 ERRORs (sem ImportError).
+**FAIL:** Qualquer ERROR de coleta ou FAIL.
+
+---
+
+### AR-TRAIN-047 — Fix residuais mistos + validação done gate (0 FAILs suite completa)
+
+**Status:** PENDENTE
+**Classe:** T
+**Prioridade:** ALTA
+**Fase:** Batch 18 — Fix FAILs de test-layer
+**Objetivo da AR (1 frase):** Corrigir FAILs residuais não cobertos por AR-TRAIN-044..046 (arquivos: `test_inv_train_010`, `_018`, `_019`, `_054`, `_057`, `_065`, `_066`, `_067`) e validar que a suite completa atinge 0 FAILs.
+
+#### 8.1 Alvos SSOT
+- INV-TRAIN-010 (`test_inv_train_010_wellness_post_uniqueness.py`)
+- INV-TRAIN-018 (`test_inv_train_018_training_session_microcycle_status.py`)
+- INV-TRAIN-019 (`test_inv_train_019_training_session_audit_logs.py`)
+- INV-TRAIN-054 (`test_inv_train_054_standalone_session.py`)
+- INV-TRAIN-057 (`test_inv_train_057_session_within_microcycle.py`)
+- INV-TRAIN-065 (`test_inv_train_065_close_pending_guard.py`)
+- INV-TRAIN-066 (`test_inv_train_066_pending_items.py`)
+- INV-TRAIN-067 (`test_inv_train_067_athlete_pending_rbac.py`)
+
+#### 8.3 Dependências
+**ARs predecessoras obrigatórias:** AR-TRAIN-044 VERIFICADO, AR-TRAIN-045 VERIFICADO, AR-TRAIN-046 VERIFICADO
+
+#### 8.5 WRITE
+- `Hb Track - Backend/tests/training/invariants/` (arquivos listados nos alvos SSOT)
+
+#### 8.6 FORBIDDEN
+- `Hb Track - Backend/app/` — zero toque
+
+#### 8.7 AC binário
+##### AC-001
+**PASS:** `pytest tests/training/ -q --tb=no` = 0 FAILs, 0 ERRORs (suite completa verde).
+**FAIL:** Qualquer FAIL ou ERROR na suite.
+
+---
+### AR-TRAIN-048 — Sincronização em Lote: Transposição do SSOT para a App Layer
+
+**Status:** PENDENTE  
+**Classe:** A/E  
+**Prioridade:** CRÍTICA  
+**Módulo:** TRAINING  
+**Lote:** 13 (Batch 19)  
+**Objetivo:** Eliminar desalinhamento entre `app/` e o contrato v1.3.0 + INV v1.5.0, aplicando correções determinísticas em modelos (constraints/FKs), serviços (assinaturas) e stubs de IA Coach.
+
+#### 8.0 Descrição
+Alinhamento em 3 zonas de impacto:
+1. **Modelos** — adicionar UniqueConstraint/FK onde INV exige (INV-010: wellness_post unicidade; INV-035: rankings weekly_unique; INV-036: attendance FK athlete_id; INV-054: training_cycle FK hierarchy)
+2. **Serviços** — sincronizar assinaturas de `exercise_service.update_exercise` para aceitar `(exercise_id, data: dict, organization_id)` conforme CONTRACT-TRAIN-091..095; aplicar `visibility_mode` default=`restricted` em `exercise.py` (INV-TRAIN-060)
+3. **Stubs IA Coach** — adicionar `RecognitionApproved`, `CoachSuggestionDraft`, `JustifiedSuggestion` como dataclasses mínimas em `ai_coach_service.py` para eliminar ImportError de coleta nos testes 079/080/081
+
+**Restrição:** Não alterar lógica de testes (`tests/`) — esta AR toca apenas `app/`.
+
+#### 8.1 Alvos SSOT
+- `INVARIANTS_TRAINING.md` — INV-TRAIN-010, 035, 036, 054, 060
+- `TRAINING_FRONT_BACK_CONTRACT.md` v1.3.0 — CONTRACT-TRAIN-091..095
+- `TRAINING_CLOSSARY.yaml` — campos canônicos de `Athlete` (athlete_name, birth_date)
+
+#### 8.5 WRITE (máximo 10 itens)
+- `Hb Track - Backend/app/models/athlete.py`
+- `Hb Track - Backend/app/models/exercise.py`
+- `Hb Track - Backend/app/models/training_session.py`
+- `Hb Track - Backend/app/models/attendance.py`
+- `Hb Track - Backend/app/models/training_cycle.py`
+- `Hb Track - Backend/app/services/exercise_service.py`
+- `Hb Track - Backend/app/services/ai_coach_service.py`
+- `Hb Track - Backend/app/services/attendance_service.py`
+- `Hb Track - Backend/docs/ssot/openapi.json`
+
+#### 8.6 FORBIDDEN
+- `Hb Track - Backend/tests/` — zero toque (esta AR não corrige testes)
+- `Hb Track - Frontend/` — zero toque
+- Qualquer arquivo `app/` não listado explicitamente no §8.5
+
+#### 8.7 AC binário
+
+##### AC-001
+**PASS:** `app/models/athlete.py` contém campos `athlete_name` (string) e `birth_date` (date) alinhados ao Glossário canônico.  
+**FAIL:** Campo `athlete_name` ou `birth_date` ausente; ou campo divergente do Glossário.
+
+##### AC-002
+**PASS:** `app/models/exercise.py` declara `visibility_mode` com `server_default='restricted'` (INV-TRAIN-060).  
+**FAIL:** `server_default` ausente ou diferente de `'restricted'`.
+
+##### AC-003
+**PASS:** `app/services/exercise_service.py` → método `update_exercise` aceita assinatura `(self, exercise_id, data: dict, organization_id)` ou equivalente com Pydantic Schema (CONTRACT-TRAIN-091..095).  
+**FAIL:** Assinatura divergente do contrato v1.3.0.
+
+##### AC-004
+**PASS:** `app/services/ai_coach_service.py` exporta os 3 stubs: `RecognitionApproved`, `CoachSuggestionDraft`, `JustifiedSuggestion` (dataclasses ou classes mínimas importáveis).  
+**FAIL:** Qualquer um dos 3 ausente ou não importável.
+
+##### AC-005
+**PASS:** `python -m pytest tests/training/invariants/test_inv_train_079*.py tests/training/invariants/test_inv_train_080*.py tests/training/invariants/test_inv_train_081*.py -q --tb=short` = 0 ERRORs de coleta.  
+**FAIL:** Qualquer `ImportError` ou `ERROR` de coleta nos 3 arquivos.
+
+#### 8.8 validation_command
+```
+cd "Hb Track - Backend" && python -m pytest tests/training/ -q --tb=no 2>&1 | tail -5
+```
+
+#### 8.9 rollback_plan
+Esta AR modifica modelos SQLAlchemy. Se algum campo adicionado requer migração Alembic:
+```
+git diff HEAD -- "Hb Track - Backend/app/models/" | head -200
+```
+Antes de fazer commit: verificar se novas `UniqueConstraint`/`Column` exigem `alembic revision --autogenerate`. Rollback via `git restore` proibido — usar `git revert <AR_229_commit>` se necessário.
+
+**ARs predecessoras obrigatórias:** AR-TRAIN-044..047 VERIFICADO (suite tests/ zerada antes desta AR)
+
+---
+
+### AR-TRAIN-049 — Fix residuais test-layer pós-Batch 18/19 (6 FAILs + 10 ERRORs)
+
+**Status:** PENDENTE  
+**Classe:** T  
+**Prioridade:** CRÍTICA  
+**Módulo:** TRAINING  
+**Lote:** 14 (Batch 20)  
+**Objetivo:** Eliminar 6 FAILs + 10 ERRORs remanescentes em `tests/training/invariants/` diagnosticados durante execução de AR_229 (Batch 19). Todos são bugs test-layer sem mudança de produto.
+
+#### 8.0 Descrição
+8 root causes distintos em 8 arquivos de teste:
+1. **test_018_route** — `Person()` sem `birth_date` (NOT NULL) → adicionar `birth_date=date(1990,1,1)`
+2. **test_035** (4 FAILs) — `SessionTemplate(organization_id=...)` mas modelo usa campo `org_id` → renomear kwarg
+3. **test_058** — fixture `inv058_team` cria `Team()` sem `category_id` NOT NULL → adicionar fixture `category` + `category_id=category.id`
+4. **test_059** — mesma causa que test_058 → mesmo fix
+5. **test_063** (2 ERRORs) — `team_reg` usa `athlete.person_id` como FK mas `team_registrations.athlete_id` refs `athletes.id` (PK auto-gerada) → substituir `athlete.person_id` → `athlete.id`
+6. **test_064** (1 ERROR) — mesmo bug que test_063 → mesmo fix
+7. **test_076** (3 ERRORs) — INSERT usa `status='concluída'` invalido; `check_training_session_status` aceita apenas `draft|scheduled|in_progress|pending_review|readonly` → substituir por `'pending_review'`
+8. **test_acl_006** (2 ERRORs) — `uuid4.__class__(exercise_id)` tenta instanciar `function` Python → substituir por `UUID(exercise_id)`
+
+**ALERTA:** AR_229 (TRAIN-048) deve corrigir `training_session.py` `status` server_default (`'''draft'''` → `'draft'`) dentro do seu próprio write_scope, pois este bug revelou um FAIL em test_019. Esta AR_230 NÃO cobre esse fix (está fora do write_scope desta AR).
+
+#### 8.5 WRITE (máximo 10 itens)
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_018_training_session_microcycle_status_route.py`
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_035_session_templates_unique_name_runtime.py`
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_058_session_structure_mutable.py`
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_059_exercise_order_contiguous.py`
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_063_preconfirm.py`
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_064_close_consolidation.py`
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_076_wellness_policy.py`
+- `Hb Track - Backend/tests/training/invariants/test_inv_train_exb_acl_006_acl_table.py`
+
+#### 8.6 FORBIDDEN
+- `app/` — zero toque (bugs são exclusivamente test-layer)
+- `Hb Track - Frontend/` — zero toque
+- `tests/training/invariants/conftest.py` — zero toque (fixtures base são corretas)
+- Qualquer arquivo de teste não listado explicitamente no §8.5
+
+#### 8.7 AC binário
+
+##### AC-001
+**PASS:** `pytest tests/training/invariants/test_inv_train_018_*` = 0 FAIL, 0 ERROR.  
+**FAIL:** Qualquer FAIL ou ERROR.
+
+##### AC-002
+**PASS:** `pytest tests/training/invariants/test_inv_train_035_*` = 0 FAIL, 0 ERROR (4 testes passando).  
+**FAIL:** Qualquer `TypeError: 'organization_id' is an invalid keyword argument`.
+
+##### AC-003
+**PASS:** `pytest tests/training/invariants/test_inv_train_058_* tests/training/invariants/test_inv_train_059_*` = 0 ERROR.  
+**FAIL:** Qualquer `NotNullViolationError` em `category_id`.
+
+##### AC-004
+**PASS:** `pytest tests/training/invariants/test_inv_train_063_* tests/training/invariants/test_inv_train_064_*` = 0 ERROR.  
+**FAIL:** Qualquer `ForeignKeyViolationError` em `fk_team_registrations_athlete_id`.
+
+##### AC-005
+**PASS:** `pytest tests/training/invariants/test_inv_train_076_* tests/training/invariants/test_inv_train_exb_acl_006_*` = 0 ERROR.  
+**FAIL:** `CheckViolationError` em `check_training_session_status` ou `TypeError: function() missing required argument 'globals'`.
+
+##### AC-006
+**PASS:** `pytest tests/training/ -q --tb=no` = `0 failed, 0 errors` (após AR_229 amendment).  
+**FAIL:** Qualquer FAIL ou ERROR restante em `tests/training/`.
+
+#### 8.8 validation_command
+```
+cd "Hb Track - Backend" && python -m pytest tests/training/ -q --tb=no 2>&1
+```
+
+#### 8.9 rollback_plan
+Todos os fixes são localizados em arquivos de teste — nenhuma mudança de schema ou migração. Rollback via `git diff HEAD -- "Hb Track - Backend/tests/training/invariants/"`.
+
+**ARs predecessoras obrigatórias:** AR-TRAIN-048 executado (AR_229 com amendment de status server_default)
 
 ---
 

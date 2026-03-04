@@ -94,6 +94,7 @@ class TrainingSession(Base):
         Index('ix_training_sessions_team_date_active', 'team_id', 'session_at', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
         Index('ix_training_sessions_team_id', 'team_id', unique=False),
         Index('ix_training_sessions_team_season_date', 'team_id', 'season_id', 'session_at', unique=False, postgresql_where=sa.text('(deleted_at IS NULL)')),
+        CheckConstraint('(standalone = true AND microcycle_id IS NULL) OR (standalone = false AND microcycle_id IS NOT NULL)', name='ck_training_sessions_standalone'),
     )
 
     # NOTE: typing helpers may require: from datetime import date, datetime; from uuid import UUID
@@ -130,7 +131,7 @@ class TrainingSession(Base):
     focus_defense_technical_pct: Mapped[Optional[object]] = mapped_column(sa.Numeric(5, 2), nullable=True)
     focus_physical_pct: Mapped[Optional[object]] = mapped_column(sa.Numeric(5, 2), nullable=True)
     microcycle_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('training_microcycles.id', name='fk_training_sessions_microcycle'), nullable=True)
-    status: Mapped[str] = mapped_column(sa.String(), nullable=False, server_default=sa.text("'''draft'''::character varying"))
+    status: Mapped[str] = mapped_column(sa.String(), nullable=False, default='draft', server_default=sa.text("'draft'::character varying"))
     closed_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
     closed_by_user_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('users.id', name='fk_training_sessions_closed_by'), nullable=True)
     deviation_justification: Mapped[Optional[str]] = mapped_column(sa.Text(), nullable=True)
@@ -144,6 +145,7 @@ class TrainingSession(Base):
     post_review_completed_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
     post_review_completed_by_user_id: Mapped[Optional[UUID]] = mapped_column(PG_UUID(as_uuid=True), ForeignKey('users.id', name='training_sessions_post_review_completed_by_user_id_fkey'), nullable=True)
     post_review_deadline_at: Mapped[Optional[datetime]] = mapped_column(sa.DateTime(timezone=True), nullable=True)
+    standalone: Mapped[bool] = mapped_column(sa.Boolean(), nullable=False, server_default=sa.text('true'))
     # HB-AUTOGEN:END
 
     @property

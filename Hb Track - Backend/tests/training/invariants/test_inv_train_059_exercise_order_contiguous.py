@@ -25,6 +25,7 @@ from uuid import uuid4, UUID
 
 import pytest
 import pytest_asyncio
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.organization import Organization
@@ -88,14 +89,29 @@ async def inv059_user(async_db: AsyncSession, inv059_person: Person) -> User:
 
 
 @pytest_asyncio.fixture
+async def inv059_category(async_db: AsyncSession):
+    """Categoria de teste para INV-TRAIN-059."""
+    cid = 9997
+    await async_db.execute(text("""
+        INSERT INTO categories (id, name, max_age, is_active)
+        VALUES (:id, 'Test Category INV-059', 19, true)
+        ON CONFLICT (id) DO NOTHING
+    """), {"id": cid})
+    await async_db.flush()
+    return type('Category', (), {'id': cid})()
+
+
+@pytest_asyncio.fixture
 async def inv059_team(
     async_db: AsyncSession,
     inv059_organization: Organization,
+    inv059_category,
 ) -> Team:
     """Time de teste para INV-TRAIN-059."""
     team = Team(
         id=uuid4(),
         organization_id=UUID(inv059_organization.id),
+        category_id=inv059_category.id,
         name="Time INV-059",
         gender="masculino",
         is_our_team=True,

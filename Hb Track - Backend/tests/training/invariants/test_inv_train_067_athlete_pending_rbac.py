@@ -30,6 +30,7 @@ class TestInvTrain067:
         async_db: AsyncSession,
         training_session,
         athlete,
+        user,
     ):
         """
         Um training_pending_item com resolved_by_user_id=NULL representa
@@ -45,7 +46,7 @@ class TestInvTrain067:
         """), {
             "id": pi_id,
             "session_id": str(training_session.id),
-            "athlete_id": str(athlete.person_id),
+            "athlete_id": str(user.id),
         })
         await async_db.flush()
 
@@ -83,7 +84,7 @@ class TestInvTrain067:
         """), {
             "id": pi_id,
             "session_id": str(training_session.id),
-            "athlete_id": str(athlete.person_id),
+            "athlete_id": str(user.id),
         })
         await async_db.flush()
 
@@ -114,6 +115,7 @@ class TestInvTrain067:
         async_db: AsyncSession,
         training_session,
         athlete,
+        user,
     ):
         """
         Item inserido pelo atleta sem resolved_by_user_id permanece 'open'.
@@ -128,7 +130,7 @@ class TestInvTrain067:
         """), {
             "id": pi_id,
             "session_id": str(training_session.id),
-            "athlete_id": str(athlete.person_id),
+            "athlete_id": str(user.id),
         })
         await async_db.flush()
 
@@ -140,3 +142,5 @@ class TestInvTrain067:
         assert row[0] == "open", (
             "INV-067: sem ação do treinador, pendência permanece 'open'"
         )
+
+

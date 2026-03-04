@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_216-142a146",
+  "timestamp_utc": "2026-03-03T15:22:47.917407+00:00",
+  "git": {
+    "commit": "142a1469efb1d530e4bd579fb2f134cd78754a7e"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "216",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_216_contract_tests_wellness_pre_post_contract_029_039.md"
+}

@@ -33,6 +33,12 @@ class CSRFMiddleware(BaseHTTPMiddleware):
         if request.method not in UNSAFE_METHODS:
             return await call_next(request)
         
+        auth = request.headers.get("Authorization", "")
+        has_bearer = auth.lower().startswith("bearer ")
+
+        if has_bearer:
+            return await call_next(request)
+
         # Check if request is authenticated via cookie
         has_cookie_auth = (
             request.cookies.get("hb_access_token") is not None

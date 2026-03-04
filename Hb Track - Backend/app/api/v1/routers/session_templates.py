@@ -53,7 +53,7 @@ async def list_session_templates(
     """
     ctx.requires("can_view_training")
     query = select(SessionTemplate).where(
-        SessionTemplate.organization_id == ctx.organization_id
+        SessionTemplate.org_id == ctx.organization_id
     )
     
     if active_only:
@@ -109,7 +109,7 @@ async def create_session_template(
     
     # Check limit (50 templates per org)
     count_query = select(func.count()).select_from(SessionTemplate).where(
-        SessionTemplate.organization_id == ctx.organization_id
+        SessionTemplate.org_id == ctx.organization_id
     )
     result = await db.execute(count_query)
     count = result.scalar()
@@ -127,7 +127,7 @@ async def create_session_template(
     # Check duplicate name
     check_query = select(SessionTemplate).where(
         and_(
-            SessionTemplate.organization_id == ctx.organization_id,
+            SessionTemplate.org_id == ctx.organization_id,
             SessionTemplate.name == data.name
         )
     )
@@ -146,7 +146,7 @@ async def create_session_template(
     
     # Create template
     template = SessionTemplate(
-        organization_id=ctx.organization_id,
+        org_id=ctx.organization_id,
         created_by_membership_id=ctx.membership_id,
         **data.model_dump()
     )
@@ -180,7 +180,7 @@ async def get_session_template(
     query = select(SessionTemplate).where(
         and_(
             SessionTemplate.id == template_id,
-            SessionTemplate.organization_id == ctx.organization_id
+            SessionTemplate.org_id == ctx.organization_id
         )
     )
     
@@ -224,7 +224,7 @@ async def update_session_template(
     query = select(SessionTemplate).where(
         and_(
             SessionTemplate.id == template_id,
-            SessionTemplate.organization_id == ctx.organization_id
+            SessionTemplate.org_id == ctx.organization_id
         )
     )
     
@@ -247,7 +247,7 @@ async def update_session_template(
     if 'name' in update_data and update_data['name'] != template.name:
         check_query = select(SessionTemplate).where(
             and_(
-                SessionTemplate.organization_id == ctx.organization_id,
+                SessionTemplate.org_id == ctx.organization_id,
                 SessionTemplate.name == update_data['name'],
                 SessionTemplate.id != template_id
             )
@@ -324,7 +324,7 @@ async def toggle_favorite_template(
     query = select(SessionTemplate).where(
         and_(
             SessionTemplate.id == template_id,
-            SessionTemplate.organization_id == ctx.organization_id
+            SessionTemplate.org_id == ctx.organization_id
         )
     )
     
@@ -376,7 +376,7 @@ async def delete_session_template(
     query = select(SessionTemplate).where(
         and_(
             SessionTemplate.id == template_id,
-            SessionTemplate.organization_id == ctx.organization_id
+            SessionTemplate.org_id == ctx.organization_id
         )
     )
     

@@ -1,0 +1,40 @@
+{
+  "ar_id": "228",
+  "validation_command": "cd \"Hb Track - Backend\" && python -m pytest tests/training/ -q --tb=no 2>&1",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 1,
+      "hash_full": "9000391b61fd2b2a840a961f61861b4716136cca497980eb88103e6afd5faa11",
+      "hash": "9000391b61fd2b2a",
+      "stdout_len": 20541,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 1,
+      "hash_full": "9000391b61fd2b2a840a961f61861b4716136cca497980eb88103e6afd5faa11",
+      "hash": "9000391b61fd2b2a",
+      "stdout_len": 20541,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 1,
+      "hash_full": "9000391b61fd2b2a840a961f61861b4716136cca497980eb88103e6afd5faa11",
+      "hash": "9000391b61fd2b2a",
+      "stdout_len": 20541,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "TRIPLE_FAIL",
+  "testador_exit_code": 1,
+  "executor_exit_code": 1,
+  "consistency": "OK",
+  "status": "REJEITADO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": "Re-execution failed: exit 1 (triple_consistency=TRIPLE_FAIL)",
+  "workspace_clean": true
+}

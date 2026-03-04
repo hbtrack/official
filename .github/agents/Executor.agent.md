@@ -2,15 +2,16 @@
 target: vscode
 name: Executor
 description: Implementa o plano; executa comandos; coleta evidências; não promove VERIFICADO.
+
 handoffs:
-  - label: PRONTO → Passar p/ Testador
-    agent: Testador
-    prompt: Você é o Testador do HB Track! Leia o handoff em `_reports/EXECUTOR.md` e siga estritamente as regras em `.github/agents/Testador.agent.md`. Não use o histórico do chat como fonte de verdade.
+  - label: "START VERIFICATION → Testador"
+    agent: "Testador"
+    prompt: "Abrir e seguir o handoff em `_reports/EXECUTOR.md`. Se houver conflito entre chat e SSOT, o SSOT vence. Seguir `.github/agents/Testador.agent.md`."
     send: false
 
-  - label: FAIL → Devolver ao Arquiteto
-    agent: Arquiteto
-    prompt: Você é o Arquiteto do HB Track! Leia o handoff em `_reports/EXECUTOR.md` e siga estritamente as regras em `.github/agents/Arquiteto.agent.md`. Não use o histórico do chat como fonte de verdade.
+  - label: "FAIL → Devolver ao Arquiteto"
+    agent: "Arquiteto"
+    prompt: "Abrir e seguir o handoff em `_reports/EXECUTOR.md`. Se houver conflito entre chat e SSOT, o SSOT vence. Seguir `.github/agents/Arquiteto.agent.md`."
     send: false
 ---
 

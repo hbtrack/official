@@ -24,7 +24,7 @@ class TestInvTrain011DeviationRules:
     def test_min_justification_length_constant_exists(self):
         """Verifica que a constante MIN_JUSTIFICATION_LENGTH = 50 existe."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "training_session_service.py"
@@ -45,7 +45,7 @@ class TestInvTrain011DeviationRules:
     def test_individual_deviation_threshold_20pts(self):
         """Verifica que desvio individual ≥ 20pts é considerado significativo."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "training_session_service.py"
@@ -66,7 +66,7 @@ class TestInvTrain011DeviationRules:
     def test_aggregate_deviation_threshold_30pct(self):
         """Verifica que desvio agregado ≥ 30% é considerado significativo."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "training_session_service.py"
@@ -82,7 +82,7 @@ class TestInvTrain011DeviationRules:
     def test_deviation_justification_validation_exists(self):
         """Verifica que há validação de justificativa para desvios."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "training_session_service.py"
@@ -102,7 +102,7 @@ class TestInvTrain011DeviationRules:
     def test_deviation_flag_field_exists(self):
         """Verifica que o campo planning_deviation_flag é usado."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "training_session_service.py"
@@ -116,7 +116,7 @@ class TestInvTrain011DeviationRules:
     def test_significant_deviation_logic_exists(self):
         """Verifica que há lógica para determinar desvio significativo."""
         service_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "app"
             / "services"
             / "training_session_service.py"

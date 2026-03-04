@@ -21,7 +21,7 @@ class TestInvTrain028FocusSumConstraint:
     def test_constraint_exists_in_schema(self):
         """Verifica que a constraint ck_training_sessions_focus_total_sum existe."""
         schema_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "docs"
             / "ssot"
             / "schema.sql"
@@ -36,7 +36,7 @@ class TestInvTrain028FocusSumConstraint:
     def test_constraint_is_on_training_sessions_table(self):
         """Verifica que a constraint está na tabela training_sessions."""
         schema_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "docs"
             / "ssot"
             / "schema.sql"
@@ -59,7 +59,7 @@ class TestInvTrain028FocusSumConstraint:
     def test_constraint_validates_sum_120(self):
         """Verifica que a constraint valida soma ≤ 120."""
         schema_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "docs"
             / "ssot"
             / "schema.sql"
@@ -83,7 +83,7 @@ class TestInvTrain028FocusSumConstraint:
     def test_constraint_sums_focus_fields(self):
         """Verifica que a constraint soma os campos de foco."""
         schema_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "docs"
             / "ssot"
             / "schema.sql"
@@ -119,7 +119,7 @@ class TestInvTrain028FocusSumConstraint:
     def test_constraint_uses_check(self):
         """Verifica que é uma CHECK constraint."""
         schema_path = (
-            Path(__file__).parent.parent.parent
+            Path(__file__).parent.parent.parent.parent
             / "docs"
             / "ssot"
             / "schema.sql"

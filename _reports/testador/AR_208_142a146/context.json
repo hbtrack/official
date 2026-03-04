@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_208-142a146",
+  "timestamp_utc": "2026-03-03T04:46:06.571931+00:00",
+  "git": {
+    "commit": "142a1469efb1d530e4bd579fb2f134cd78754a7e"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "208",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_208_contract_p0_tests_contract-train-097..100_pre-conf.md"
+}

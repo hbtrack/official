@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_226-142a146",
+  "timestamp_utc": "2026-03-03T23:15:17.825244+00:00",
+  "git": {
+    "commit": "142a1469efb1d530e4bd579fb2f134cd78754a7e"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "226",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_226_fix_db_fixture_setup_category_id_not_null_+_fk_tea.md"
+}

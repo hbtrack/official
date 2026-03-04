@@ -1,6 +1,6 @@
 # AR_202 — Fix INV-001: test_invalid_case_2 expects wrong constraint name
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -71,3 +71,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_202_b123a58/result.json`
+
+### Selo Humano em b123a58
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-03-03T04:25:34.106383+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_202_b123a58/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_202/executor_main.log`

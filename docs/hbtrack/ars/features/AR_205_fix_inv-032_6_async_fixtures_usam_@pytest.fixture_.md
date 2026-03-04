@@ -1,6 +1,6 @@
 # AR_205 — Fix INV-032: 6 async fixtures usam @pytest.fixture em vez de @pytest_asyncio.fixture
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -77,3 +77,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_205_b123a58/result.json`
+
+### Selo Humano em b123a58
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-03-03T04:25:43.488126+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_205_b123a58/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_205/executor_main.log`

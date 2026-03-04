@@ -555,37 +555,17 @@ EVIDENCE_PACK:
 - AR_100 — Protocolo v1.2.0 verificado com Selo Humano (2026-02-23)
 - AR_071 — hb_autotest auto-commit verificado (2026-02-24)
 - AR_053 — hb_watch UTF-8 fix verificado (VERIFICADO 2x pelo Testador)
+- AR_001, AR_002, AR_014, AR_015, AR_024, AR_033, AR_036, AR_101, AR_102, AR_103 — ✅ VERIFICADO (confirmado kanban_audit 2026-03-03)
+- AR_104, AR_105, AR_002.5_A, AR_002.5_B, AR_002.5_D — ✅ VERIFICADO (confirmado kanban_audit 2026-03-03)
+- AR_002.5_C — ⛛ SUPERSEDED (absorvida; divergência documentada por outros meios)
+- AR_003, AR_004, AR_005, AR_060, AR_065, AR_066, AR_067, AR_070, AR_077, AR_124 — ✅ VERIFICADO (confirmado kanban_audit 2026-03-03)
+- AR_023 — ⛔ SUPERSEDED (triple-run em produção desde v1.1.0; Evidence Pack nunca criado — absorvida)
 
 ### 🛠️ Em Execução
-- AR_033 — Executor: Evidence Pack missing or incomplete
-- AR_001 — Executor: Evidence Pack missing or incomplete
-- **AR_104** — ✅ Evidence Exit 0 → Aguardando Testador (Triple-Run)
-- **AR_105** — ✅ Evidence Exit 0 → Aguardando Testador (Triple-Run)
-- **AR_002.5_A** (match_goalkeeper_stints) — ✅ Evidence Exit 0 → Aguardando Testador
-- **AR_002.5_B** (attendance.justified) — ✅ Evidence Exit 0 → Aguardando Testador
-- **AR_002.5_C** (wellness docs divergence) — ✅ Evidence Exit 0 → Aguardando Testador
-- **AR_002.5_D** (match_analytics_cache) — ✅ Evidence Exit 0 → Aguardando Testador
-- **AR_024** — ⚠️ BLOQUEADA: validation obsoleta (v1.1.0 literal, arquivos em v1.2.0+) → Plano 2 pronto (ar_024_validation_fix_obsolete.json, tasks 106-108)
-- AR_036 — Executor: Evidence Pack missing or incomplete
-- AR_023 — Executor: Evidence Pack missing or incomplete
-- AR_015 — Executor: Evidence Pack missing or incomplete
-- AR_014 — Executor: Evidence Pack missing or incomplete
-- AR_002 — Executor: Evidence Pack missing or incomplete
-- AR_103 — Executor: Evidence Pack missing or incomplete
-- AR_102 — Executor: Evidence Pack missing or incomplete
-- AR_101 — Executor: Evidence Pack missing or incomplete
+(vazio — todas ARs movidas para ✅ Concluído em 2026-03-03 via kanban_audit)
 
 ### 📥 Backlog
-- AR_124 — Arquiteto: Output não-determinístico: behavior_hash diverge nos 3 runs (exit 0 em todos, mas hash diferente)
-- AR_077 — 🏗️ EM_EXECUCAO (v3 - static validation) — Executor: EXIT 0, evidence staged, awaiting Testador hb verify 077 (triple-run expected: 3 IDENTICAL hashes)
-- AR_060 — Arquiteto: Executor reported exit 0 but Testador got exit 1
-- AR_003 — Arquiteto: Executor reported exit 0 but Testador got exit 1
-- **AR_070** — 🔄 PLANO CORRIGIDO v2: Removido emoji ✅ do validation_command (UnicodeEncodeError cp1252). Dry-run passou. Pronto para Executor com --force.
-- AR_005 — 🔲 PENDENTE — Plano v2 (ar_005_v2_fix_validation.json) pronto. Executor: hb plan --force + hb report (após AR_004 verificado). Validation_command corrigido para verificação estrutural determinística.
-- AR_004 — 🔲 PENDENTE — Plano v2 (ar_004_v2_fix_validation.json) pronto. Executor: hb plan --force + hb report. Validation_command corrigido para verificação estrutural determinística (implementação já correta).
-- AR_067
-- AR_066
-- AR_065
+(vazio — todas ARs movidas para ✅ Concluído em 2026-03-03 via kanban_audit)
 
 ---
 
@@ -594,20 +574,18 @@ EVIDENCE_PACK:
 > **Contexto**: Planos materializados em `c65c969`. Fase A foi implementada pelo Executor mas destruída por `git restore .` acidental do Testador (26/02/2026).
 > `AR_150` já ✅ VERIFICADO+sealed. As demais precisam de execução pelo Executor.
 
-### ⚠️ REDO — Fase A: Exercise Bank (implementação destruída)
+### ✅ DONE — Fase A: Exercise Bank (re-executada e verificada)
 
-O Executor implementou, o Testador verificou AR_143 (✅ SUCESSO hash `e57e1b35`), mas `git restore .` destruiu todos os outputs antes do `hb seal`.
+> Todos os outputs recuperados e verificados pelo Testador. hb seal executado.
 
-| AR | Título | O que foi perdido | Ação |
-|---|---|---|---|
-| **AR_143** | Atualizar TEST_MATRIX | `docs/_canon/specs/training_invariants_coverage_report.md` (97 invariants) | Executor: `hb report 143` |
-| **AR_144** | DB exercise_bank schema | Migration `0065_exercise_bank_schema_foundation.py` | Executor: `hb report 144` |
-| **AR_145** | exercise_service.py guards | Guards SYSTEM/copy-to-org/soft-delete em exercise_service.py | Executor: `hb report 145` |
-| **AR_146** | exercise_acl_service.py | `exercise_acl_service.py` + `exercise_acl.py` + `exercise_media.py` (novos) | Executor: `hb report 146` |
-| **AR_147** | catalog visibility + session_exercise guard | Guards em session_exercise_service.py | Executor: `hb report 147` |
-| **AR_148** | tests INV-047..053 | 7 arquivos de teste em `tests/training/invariants/` | Executor: `hb report 148` |
-
-**NOTA para Executor**: AR_144 é DB-touch — executar `alembic current` antes para verificar estado do banco. Rollback: `alembic downgrade -1`.
+| AR | Título | Status |
+|---|---|---|
+| **AR_143** | Atualizar TEST_MATRIX | ✅ VERIFICADO |
+| **AR_144** | DB exercise_bank schema | ✅ VERIFICADO |
+| **AR_145** | exercise_service.py guards | ✅ VERIFICADO |
+| **AR_146** | exercise_acl_service.py | ✅ VERIFICADO |
+| **AR_147** | catalog visibility + session_exercise guard | ✅ VERIFICADO |
+| **AR_148** | tests INV-047..053 | ✅ VERIFICADO |
 
 ### ✅ CONCLUÍDA — Fase B: Hierarquia de Ciclos (parcial)
 
@@ -615,36 +593,36 @@ O Executor implementou, o Testador verificou AR_143 (✅ SUCESSO hash `e57e1b35`
 |---|---|---|
 | **AR_149** | DB training_sessions.standalone | ✅ VERIFICADO (HEAD `eb88236`) |
 | **AR_150** | Guards INV-054, INV-057 | ✅ VERIFICADO |
-| **AR_151** | MicrocycleOutsideMesoError + overlap guard | ✅ SUCESSO — `hb seal 151` pendente (HUMANO) |
+| **AR_151** | MicrocycleOutsideMesoError + overlap guard | ✅ VERIFICADO |
 
-### 🔲 PENDENTE — Fase B: Hierarquia de Ciclos (continuação)
+### ✅ DONE — Fase B: Hierarquia de Ciclos (concluída)
 
-| AR | Título | Ação |
+| AR | Título | Status |
 |---|---|---|
-| **AR_152** | tests INV-054..057 ciclos | ✅ SUCESSO — `hb seal 152` pendente (HUMANO) |
+| **AR_152** | tests INV-054..057 ciclos | ✅ VERIFICADO |
 
 ### ✅ Fase C: Attendance Avançada — Checkpoint
 
-| AR | Título | Ação |
+| AR | Título | Status |
 |---|---|---|
-| **AR_149** | DB training_sessions.standalone | ✅ VERIFICADO (HEAD `eb88236`) — sealed |
-| **AR_150** | Guards INV-054, INV-057 | ✅ VERIFICADO — sealed |
-| **AR_151** | MicrocycleOutsideMesoError + overlap guard | ✅ SUCESSO — `hb seal 151` pendente (HUMANO) |
-| **AR_152** | tests INV-054..057 ciclos | ✅ SUCESSO — `hb seal 152` pendente (HUMANO) |
+| **AR_149** | DB training_sessions.standalone | ✅ VERIFICADO |
+| **AR_150** | Guards INV-054, INV-057 | ✅ VERIFICADO |
+| **AR_151** | MicrocycleOutsideMesoError + overlap guard | ✅ VERIFICADO |
+| **AR_152** | tests INV-054..057 ciclos | ✅ VERIFICADO |
 
-### 🔲 PENDENTE — Fase C: Attendance Avançada
+### ✅ DONE — Fase C: Attendance Avançada (concluída)
 
-| AR | Título | Ação |
+| AR | Título | Status |
 |---|---|---|
-| **AR_153** | DB attendance preconfirm + pending_items | ✅ SUCESSO — `hb seal 153` pendente (HUMANO) |
-| **AR_154** | attendance_service.py preconfirm + close | ✅ SUCESSO — `hb seal 154` pendente (HUMANO) — Item 3 cancelado (DEC-INV-065) |
-| **AR_155** | training_pending_service.py + RBAC atleta | ✅ SUCESSO — `hb seal 155` pendente (HUMANO) |
-| **AR_156** | athlete UX training visibility + exercise | ✅ SUCESSO — `hb seal 156` pendente (HUMANO) |
-| **AR_157** | wellness_post campo conversacional | ✅ SUCESSO — `hb seal 157` pendente (HUMANO) |
-| **AR_158** | tests INV-063..070 attendance avançada | ✅ SUCESSO — `hb seal 158` pendente (HUMANO) |
-| **AR_159** | athlete_content_gate_service.py (novo) | ✅ SUCESSO — `hb seal 159` pendente (HUMANO) |
-| **AR_160** | tests INV-071/076/078 wellness | ✅ SUCESSO — `hb seal 160` pendente (HUMANO) |
-| **AR_161** | Regressão final — todos os 84 invariantes | ✅ SUCESSO — `hb seal 161` pendente (HUMANO) |
+| **AR_153** | DB attendance preconfirm + pending_items | ✅ VERIFICADO |
+| **AR_154** | attendance_service.py preconfirm + close | ✅ VERIFICADO |
+| **AR_155** | training_pending_service.py + RBAC atleta | ✅ VERIFICADO |
+| **AR_156** | athlete UX training visibility + exercise | ✅ VERIFICADO |
+| **AR_157** | wellness_post campo conversacional | ✅ VERIFICADO |
+| **AR_158** | tests INV-063..070 attendance avançada | ✅ VERIFICADO |
+| **AR_159** | athlete_content_gate_service.py (novo) | ✅ VERIFICADO |
+| **AR_160** | tests INV-071/076/078 wellness | ✅ VERIFICADO |
+| **AR_161** | Regressão final — todos os 84 invariantes | ✅ VERIFICADO |
 
 ### 🔲 PENDENTE — Fase D: Wellness Obrigatória
 
@@ -1016,11 +994,12 @@ O Executor implementou, o Testador verificou AR_143 (✅ SUCESSO hash `e57e1b35`
 
 | AR | Titulo | Status | Proxima Acao |
 |---|---|---|---|
-| **AR_202** | Fix INV-001: test_invalid_case_2 expected constraint name errado (ck_training_sessions_focus_attack_positional_range) | 🔲 READY | Executor — Batch 9 |
-| **AR_203** | Fix INV-008: schema_path 3 .parent → 4 .parent (tests/ → backend root) | 🔲 READY | Executor — Batch 9 |
-| **AR_204** | Fix INV-030: schema_path 3 .parent → 4 .parent (mesma causa INV-008) | 🔲 READY | Executor — Batch 9 |
-| **AR_205** | Fix INV-032: 6 async fixtures @pytest.fixture → @pytest_asyncio.fixture + import | 🔲 READY | Executor — Batch 9 |
-| **AR_206** | Fix CONTRACT-077-085: ROUTER_PATH 3 .parent → 4 .parent (tests/ → backend root) | 🔲 READY | Executor — Batch 9 |
+| **AR_202** | Fix INV-001: test_invalid_case_2 expected constraint name errado (ck_training_sessions_focus_attack_positional_range) | ✅ VERIFICADO | — |
+| **AR_203** | Fix INV-008: schema_path 3 .parent → 4 .parent | ✅ VERIFICADO |
+| **AR_204** | Fix INV-030: schema_path 3 .parent → 4 .parent | ✅ VERIFICADO |
+| **AR_205** | Fix INV-032: 6 async fixtures @pytest.fixture | ✅ VERIFICADO |
+| **AR_206** | Fix CONTRACT-077-085: ROUTER_PATH 3 .parent | ✅ VERIFICADO |
+| **AR_210** | Fix timing-agnostic behavior hash (SHA-256) | ✅ VERIFICADO |
 
 ---
 
@@ -1031,12 +1010,12 @@ O Executor implementou, o Testador verificou AR_143 (✅ SUCESSO hash `e57e1b35`
 > **Data planejamento**: 2026-03-02.
 > **Dependências**: AR_202..206 (Batch 9) VERIFICADO.
 
-### 🔲 READY (após Batch 9 VERIFICADO)
+### ✅ DONE (Batch 10)
 
 | AR | Titulo | Status | Proxima Acao |
 |---|---|---|---|
-| **AR_207** | Flow P0 evidence: FLOW-TRAIN-001..006 + 017 + 018 (MANUAL_GUIADO) + TEST_MATRIX §6 | 🔲 READY | Executor — Batch 10 (dep: Batch 9) |
-| **AR_208** | Contract P0 tests: CONTRACT-TRAIN-097..100 (pre-confirm, close, pending-items) + TEST_MATRIX §8 | 🔲 READY | Executor — Batch 10 (dep: Batch 9) |
+| **AR_207** | Flow P0 evidence: FLOW-TRAIN-001..006 + 017 + 018 (MANUAL_GUIADO) + TEST_MATRIX §6 | ✅ VERIFICADO | Testador — Batch 10 (dep: Batch 9) |
+| **AR_208** | Contract P0 tests: CONTRACT-TRAIN-097..100 (pre-confirm, close, pending-items) + TEST_MATRIX §8 | ✅ VERIFICADO | Testador — Batch 10 (dep: Batch 9) |
 
 ---
 
@@ -1047,8 +1026,168 @@ O Executor implementou, o Testador verificou AR_143 (✅ SUCESSO hash `e57e1b35`
 > **Data planejamento**: 2026-03-02.
 > **Dependências**: AR_202..208 (Batches 9 e 10) todos VERIFICADO.
 
-### 🔲 READY (após Batches 9+10 VERIFICADOS)
+### ✅ DONE (Batch 11)
 
 | AR | Titulo | Status | Proxima Acao |
 |---|---|---|---|
-| **AR_209** | Done Gate: sync TEST_MATRIX v1.8.0 + smoke Batch9 (5) + sanity AR_200 full (11) + DONE_GATE_TRAINING.md | 🔲 READY | Executor — Batch 11 (dep: Batches 9+10) |
+| **AR_209** | Done Gate: sync TEST_MATRIX v1.8.0 + smoke Batch9 (5) + sanity AR_200 full (11) + DONE_GATE_TRAINING.md | ✅ VERIFICADO | — |
+
+---
+
+## 29. Cards -- TRAINING Batch 12 -- Cobertura §10 formal: sync Matrix + 6 testes ausentes (AR_211..212)
+
+> **Contexto**: §10 exige cobertura integral de invariantes. AR_211 resolve dessincronia crítica: ~40 INV marcadas PENDENTE na Matrix quando os arquivos de teste já existiam (Batches 3-8). AR_212 cria os 6 únicos testes genuinamente ausentes (INV-053/060/061/062/EXB-ACL-005/007). Zero mudança de produto.
+> **Plano**: docs/_canon/planos/ar_batch12_matrix_sync_211_212.json
+> **Data planejamento**: 2026-03-03.
+> **Dependências**: AR_209 (Batch 11) VERIFICADO.
+
+### ✅ DONE (Batch 12)
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_211** | Sync §5 TEST_MATRIX: ~40 INV PENDENTE → COBERTO/NOT_RUN (testes já existem) | ✅ VERIFICADO | — |
+| **AR_212** | Criar 6 testes ausentes: INV-053/060/061/062/EXB-ACL-005/EXB-ACL-007 | ✅ VERIFICADO | — |
+
+---
+
+## 30. Cards -- TRAINING Batch 13 -- Execução NOT_RUN: rodar suite invariants + evidências formais (AR_213)
+
+> **Contexto**: Com Batch 12 concluído, todos os ~60 testes de invariante existem no filesystem mas nunca foram executados formalmente (status NOT_RUN). AR_213 executa toda a suite `tests/training/invariants/`, captura saída em `_reports/training/evidence_run_batch13.txt` e atualiza §5 TEST_MATRIX para COBERTO. Zero toque em código de produto.
+> **Plano**: docs/_canon/planos/ar_batch13_not_run_034.json
+> **Data planejamento**: 2026-03-03.
+> **Dependências**: AR_211 + AR_212 (Batch 12) ambos VERIFICADO.
+
+### ✅ VERIFICADO
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_213** | Executar NOT_RUN §5 TEST_MATRIX + evidências formais (AR-TRAIN-034) | ✅ VERIFICADO | — |
+
+```
+
+---
+
+## 31. Cards -- TRAINING Batch 14 -- Contract Tests P0: 5 ARs cobrindo ~88 contratos (AR_214..AR_218)
+
+> **Contexto**: Com Batch 13 concluído (AR-TRAIN-034 VERIFICADO), o próximo passo é criar testes de contrato automatizados para os ~88 contratos P0 catalogados em TRAINING_FRONT_BACK_CONTRACT.md sem cobertura. 5 ARs organizadas por domínio (sessões, equipes/presença, wellness, ciclos/exercises/analytics/export, IA coach/athlete). Testes usam abordagem estática (import + schema inspection) — compatível com CI sem DB. Zero toque em app/.
+> **Plano**: docs/_canon/planos/ar_batch14_contracts_035_039.json
+> **Data planejamento**: 2026-03-03.
+> **Dependências**: AR_213 (Batch 13) VERIFICADO.
+
+### ✅ VERIFICADO — sealed pelo humano (2026-03-03)
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_214** | Contract tests: Sessions CRUD (CONTRACT-001..012) (AR-TRAIN-035) | ✅ VERIFICADO | — sealed |
+| **AR_215** | Contract tests: Teams + Attendance (CONTRACT-013..028) (AR-TRAIN-036) | ✅ VERIFICADO | — sealed |
+| **AR_216** | Contract tests: Wellness pre/post (CONTRACT-029..039) (AR-TRAIN-037) | ✅ VERIFICADO | — sealed |
+| **AR_217** | Contract tests: Ciclos/Exercises/Analytics/Export (CONTRACT-040..072,076,086..095) (AR-TRAIN-038) | ✅ VERIFICADO | — sealed |
+| **AR_218** | Contract tests: IA Coach + Athlete view (CONTRACT-096,101..105) (AR-TRAIN-039) | ✅ VERIFICADO | — sealed |
+
+---
+
+## 32. Cards -- TRAINING Batch 15 -- DEC Tests Automatizados + Flows P1 + Screens Smoke (AR_219..AR_221)
+
+> **Contexto**: Com Batch 14 concluído (AR-TRAIN-035..039 VERIFICADO), Batch 15 cobre: (1) 11 DECs automatizados via invariant tests, (2) 13 flows P1 evidências MANUAL_GUIADO, (3) 25 telas smoke MANUAL_GUIADO. Nenhum toque em app/.
+> **Plano**: docs/_canon/planos/ar_batch15_dec_flows_screens_040_042.json
+> **Data planejamento**: 2026-03-03.
+> **Dependências**: AR-TRAIN-033 VERIFICADO (dep AR_219) + AR-TRAIN-034 VERIFICADO (dep AR_220/221).
+
+### ✅ VERIFICADO
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_219** | DEC tests automatizados: DEC-TRAIN-001..004 + EXB + RBAC (AR-TRAIN-040) | ✅ VERIFICADO | — sealed |
+| **AR_220** | Flows P1 MANUAL_GUIADO: FLOW-007..016 + 019..021 (AR-TRAIN-041) | ✅ VERIFICADO | — sealed |
+| **AR_221** | Screens smoke MANUAL_GUIADO: SCREEN-001..025 (AR-TRAIN-042) | ✅ VERIFICADO | — sealed |
+
+```
+
+---
+
+## 33. Cards -- TRAINING Batch 16 -- Done Gate §10 Final (AR_222)
+
+> **Contexto**: Com Batch 15 concluído (AR-TRAIN-040..042 VERIFICADO), Batch 16 fecha o módulo TRAINING com sync final da TEST_MATRIX para v2.0.0, atualização de §9 com AR-TRAIN-035..043, marcação de §10 checkboxes PASS e emissão da declaração Done Gate §10. Nenhum toque em app/ ou Frontend/.
+> **Plano**: docs/_canon/planos/ar_batch16_done_gate_043.json
+> **Data planejamento**: 2026-03-03.
+> **Dependências**: AR-TRAIN-034..042 todos VERIFICADO (Batches 13-15 selados).
+
+### ⛔ BLOCKED_AC005 — aguarda Batch 18 (AR_225..AR_228)
+
+> **Pós-Batch 17 (2026-03-03):** AR_223 + AR_224 verificadas e seladas. Suite `tests/training/` ainda tem **109 FAILs + 31 ERRORs** residuais de Batch 13. AC-005 ("0 FAILs full suite") **ainda inalcançável**.
+> **Decisão humana (Opção A — 2026-03-03):** Criar Batch 18. AR-TRAIN-044..047 (físicos AR_225..228) catalogadas no Backlog e Batch Plan. Plano: `docs/_canon/planos/ar_batch18_fix_test_layer_044_047.json`.
+> AR_222 só pode ser re-executada após AR_228 (TRAIN-047) VERIFICADO + suite verde.
+
+| AR | Titulo | Status | Proxima Acao |
+|---|---|---|---|
+| **AR_222** | Done Gate §10 final: sync TEST_MATRIX v2.0.0 + declaração formal (AR-TRAIN-043) | ⛔ BLOCKED_AC005 | Aguarda AR_228 VERIFICADO |
+
+---
+
+## 34. Cards -- TRAINING Batch 17 -- Fix Bugs Test-Layer Batch 14 (AR_223..AR_224)
+
+> **Contexto**: 2 correções test-layer (Classe T). Eliminam os +15 novos FAILs introduzidos no Batch 14 (AR_217 e AR_208) que bloqueavam AR_222. Zero mudança de produto.
+> **Plano**: docs/_canon/planos/ar_batch17_fix_batch14_tests_223.json
+> **Data planejamento**: 2026-03-03.
+> **Após Batch 17**: Descoberto que 109 FAILs pré-existentes de Batch 13 ainda bloqueiam AC-005 → Batch 18 criado.
+
+### ✅ DONE (Batch 17) — 2026-03-03
+
+| AR | Titulo | Status | Retorno |
+|---|---|---|---|
+| **AR_223** | Fix CONTRACT-073-075: ROUTER_PATH 3 .parent → 4 .parent (14 FAILs) | ✅ VERIFICADO | — |
+| **AR_224** | Fix CONTRACT-097-100: assert 'pre-confirm' → 'preconfirm' (1 FAIL) | ✅ VERIFICADO | — |
+
+---
+
+## 35. Cards -- TRAINING Batch 18 -- Fix FAILs Test-Layer pré-existentes (AR_225..AR_228)
+
+> **Contexto**: 109 FAILs + 31 ERRORs residuais confirmados pós-Batch 17. Zero mudança de produto — todos são bugs de test-layer (async fixtures, DB fixture setup, import stubs). Decisão humana Opção A (2026-03-03).
+> **Plano**: docs/_canon/planos/ar_batch18_fix_test_layer_044_047.json (dry-run ✅ 2026-03-03)
+> **Correspondência Backlog**: AR-TRAIN-044 → AR_225, AR-TRAIN-045 → AR_226, AR-TRAIN-046 → AR_227, AR-TRAIN-047 → AR_228
+> **Dependências**: AR_225/226/227 independentes entre si; AR_228 depende das 3.
+> **Após Batch 18**: Executar Batch 19 (AR_229 — sync app layer) antes de re-executar AR_222.
+
+### ✅ VERIFICADO + 🔴 REJEITADO — Batch 18 concluído (parcial)
+
+| AR | AR-TRAIN | Titulo | Status |
+|---|---|---|---|
+| **AR_225** | TRAIN-044 | Fix async fixtures: @pytest.fixture → @pytest_asyncio.fixture (7 arquivos, ~23+ FAILs) | ✅ VERIFICADO (sealed `2c1b1a5959989d0d`) |
+| **AR_226** | TRAIN-045 | Fix DB fixture setup: category_id NOT NULL + FK team_registrations (~57+ ERROs) | ✅ VERIFICADO (sealed `2412147326683390`) |
+| **AR_227** | TRAIN-046 | Fix import stubs ai_coach_service (3 ERRORs coleta INV-079/080/081) | ✅ VERIFICADO (sealed `6a86838d0052b800`) |
+| **AR_228** | TRAIN-047 | Fix residuais mistos + validação done gate (suite 0 FAILs) | 🔴 REJEITADO — AC-001 impossível: test_018_route + test_035 fora do write_scope; 10 ERRORs de conftest diferente fora do scope. Aguarda AR_230 (AR-TRAIN-049) para desbloquear |
+
+```
+
+
+---
+
+## 36. Cards -- TRAINING Batch 19 -- Sincronização em Lote: App Layer (AR_229)
+
+> **Contexto**: app/ desbloqueada via GOVERNED_ROOTS.yaml (UNLOCKED_FOR_SYNC_BATCH_19). Decisão humana (2026-03-03). AR única que sincroniza app/models/ + app/services/ com contrato v1.3.0 + invariantes v1.5.0.
+> **Plano**: docs/_canon/planos/ar_batch19_sync_app_layer_048.json (dry-run ✅ 2026-03-03)
+> **Correspondência Backlog**: AR-TRAIN-048 → AR_229
+> **Dependências obrigatórias**: Batch 18 (AR_225..228) todos VERIFICADO + suite tests/ verde antes de iniciar.
+> **Após Batch 19**: Re-executar AR_222 (Batch 16 / Done Gate §10).
+
+### ⚠️ EM_EXECUCAO/FALHA — amendment obrigatório antes de re-run
+
+| AR | AR-TRAIN | Título | Status |
+|---|---|---|---|
+| **AR_229** | TRAIN-048 | Sync app/models/ (INV-010/035/036/054/060) + app/services/ (contrato v1.3.0) + stubs IA Coach | ⚠️ FALHA (exit=1, 6 FAILs, 10 ERRORs). AC-005 ✅ (15 passed). **AMENDMENT OBRIGATÓRIO:** fix `training_session.py` status server_default `'''draft'''` → `'draft'` (está no write_scope). Re-executar `hb report 229` após Batch 20 verde. |
+
+---
+
+## 37. Cards -- TRAINING Batch 20 -- Fix residuais test-layer pós-Batch 18/19 (AR_230)
+
+> **Contexto**: 6 FAILs + 10 ERRORs remanescentes em tests/training/invariants/ diagnosticados durante execução de AR_229. Root causes: birth_date missing, org_id typo, category_id missing, athlete.id vs person_id FK, status 'concluída' inválido, UUID class bug. Zero mudança de produto.
+> **Plano**: docs/_canon/planos/ar_batch20_fix_test_layer_residuals_049.json (dry-run ✅)
+> **Correspondência Backlog**: AR-TRAIN-049 → AR_230
+> **Dependências obrigatórias**: AR_229 com amendment (status server_default fix) executado.
+> **Após Batch 20**: Re-executar `hb report 228` + `hb report 229` → ambos devem exit=0 → `hb verify 228` + `hb verify 229`. Depois re-executar AR_222 (Done Gate §10).
+
+### 🔲 READY — aguardando Executor (dep: AR_229 amendment)
+
+| AR | AR-TRAIN | Título | Status |
+|---|---|---|---|
+| **AR_230** | TRAIN-049 | Fix 6 FAILs + 10 ERRORs residuais test-layer (test_018_route, 035×4, 058, 059, 063×2, 064, 076×3, acl_006×2) | 🔲 PENDENTE (dep: AR_229 amendment) |

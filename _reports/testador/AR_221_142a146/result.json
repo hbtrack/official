@@ -1,0 +1,40 @@
+{
+  "ar_id": "221",
+  "validation_command": "python -c \"import os; screens=range(1,26); missing=[s for s in screens if not os.path.exists(f'_reports/training/TEST-TRAIN-SCREEN-{s:03d}.md')]; print('OK' if not missing else f'MISSING: {missing}'); exit(1 if missing else 0)\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "d6913e35a48fbda2cab914089cbbae790f406f5857def0cc0b0cdc22d08e9713",
+      "hash": "d6913e35a48fbda2",
+      "stdout_len": 3,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "d6913e35a48fbda2cab914089cbbae790f406f5857def0cc0b0cdc22d08e9713",
+      "hash": "d6913e35a48fbda2",
+      "stdout_len": 3,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "d6913e35a48fbda2cab914089cbbae790f406f5857def0cc0b0cdc22d08e9713",
+      "hash": "d6913e35a48fbda2",
+      "stdout_len": 3,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true
+}

@@ -187,11 +187,34 @@
 | AR_199 | TEST_MATRIX §9 sync + desbloquear §5 INV + §8 CONTRACT + ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_199/executor_main.log |
 | AR_200 | Executar Top-10 testes COBERTO+NOT_RUN e salvar evidências | ✅ VERIFICADO | docs/hbtrack/evidence/AR_200/executor_main.log |
 | AR_201 | Fix validation_command AR_200 - janela 450 para split-por... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_201/executor_main.log |
-| AR_202 | Fix INV-001: test_invalid_case_2 expects wrong constraint... | 🔴 REJEITADO | docs/hbtrack/evidence/AR_202/executor_main.log |
-| AR_203 | Fix INV-008: schema_path tem 3 .parent ao invés de 4 | 🔴 REJEITADO | docs/hbtrack/evidence/AR_203/executor_main.log |
-| AR_204 | Fix INV-030: schema_path tem 3 .parent ao invés de 4 (mes... | 🔴 REJEITADO | docs/hbtrack/evidence/AR_204/executor_main.log |
-| AR_205 | Fix INV-032: 6 async fixtures usam @pytest.fixture em vez... | 🔴 REJEITADO | docs/hbtrack/evidence/AR_205/executor_main.log |
-| AR_206 | Fix CONTRACT-077-085: ROUTER_PATH tem 3 .parent ao invés ... | 🔴 REJEITADO | docs/hbtrack/evidence/AR_206/executor_main.log |
+| AR_202 | Fix INV-001: test_invalid_case_2 expects wrong constraint... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_202/executor_main.log |
+| AR_203 | Fix INV-008: schema_path tem 3 .parent ao invés de 4 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_203/executor_main.log |
+| AR_204 | Fix INV-030: schema_path tem 3 .parent ao invés de 4 (mes... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_204/executor_main.log |
+| AR_205 | Fix INV-032: 6 async fixtures usam @pytest.fixture em vez... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_205/executor_main.log |
+| AR_206 | Fix CONTRACT-077-085: ROUTER_PATH tem 3 .parent ao invés ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_206/executor_main.log |
+| AR_207 | Flow P0 evidence: FLOW-TRAIN-001..006 + 017 + 018 (MANUAL... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_207/executor_main.log |
+| AR_208 | Contract P0 tests: CONTRACT-TRAIN-097..100 (pre-confirm, ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_208/executor_main.log |
+| AR_209 | Done Gate: sync TEST_MATRIX v1.8.0 + smoke Batch9 (5) + s... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_209/executor_main.log |
 | AR_210 | Fix compute_behavior_hash: normalizar timings pytest no s... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_210/executor_main.log |
+| AR_211 | Sync §5 TEST_MATRIX: ~40 INV PENDENTE → COBERTO/NOT_RUN (... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_211/executor_main.log |
+| AR_212 | Criar 6 testes ausentes: INV-053/060/061/062/EXB-ACL-005/... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_212/executor_main.log |
+| AR_213 | Executar NOT_RUN §5 TEST_MATRIX + evidências formais (Bat... | ✅ SUCESSO | docs/hbtrack/evidence/AR_213/executor_main.log |
+| AR_214 | Contract Tests: Sessions CRUD (CONTRACT-001..012) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_214/executor_main.log |
+| AR_215 | Contract Tests: Teams + Attendance (CONTRACT-013..028) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_215/executor_main.log |
+| AR_216 | Contract Tests: Wellness Pre/Post (CONTRACT-029..039) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_216/executor_main.log |
+| AR_217 | Contract Tests: Ciclos/Exercises/Analytics/Export (CONTRA... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_217/executor_main.log |
+| AR_218 | Contract Tests: IA Coach + Athlete View (CONTRACT-096, 10... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_218/executor_main.log |
+| AR_219 | DEC Tests Automatizados: DEC-TRAIN-001..004, EXB, RBAC (A... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_219/executor_main.log |
+| AR_220 | Flows P1 Evidências MANUAL_GUIADO: FLOW-007..016, 019..02... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_220/executor_main.log |
+| AR_221 | Screens Smoke Tests MANUAL_GUIADO: SCREEN-001..025 (AR-TR... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_221/executor_main.log |
+| AR_222 | AR-TRAIN-043: Done Gate §10 final — sync TEST_MATRIX v2.0... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_222/executor_main.log |
+| AR_223 | Fix CONTRACT-073-075: ROUTER_PATH tem 3 .parent ao invés ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_223/executor_main.log |
+| AR_224 | Fix CONTRACT-097-100: assert checa 'pre-confirm' mas impl... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_224/executor_main.log |
+| AR_225 | Fix async fixtures: @pytest.fixture → @pytest_asyncio.fix... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_225/executor_main.log |
+| AR_226 | Fix DB fixture setup: category_id NOT NULL + FK team_regi... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_226/executor_main.log |
+| AR_227 | Fix import stubs ausentes em ai_coach_service (3 ERRORs c... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_227/executor_main.log |
+| AR_228 | Fix residuais mistos + validação done gate (suite 0 FAILs) | 🔴 REJEITADO | docs/hbtrack/evidence/AR_228/executor_main.log |
+| AR_229 | Sync app layer: modelos (INV-010/035/036/054/060) + servi... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_229/executor_main.log |
+| AR_230 | Fix residuais test-layer: 6 FAILs + 10 ERRORs em tests/tr... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_230/executor_main.log |
 | AR_998 | Test Write Scope Section Generation | ✅ VERIFICADO | docs/hbtrack/evidence/AR_998/executor_main.log |
 | AR_999 | Exemplo: Adicionar campo birthdate em Person | ✅ VERIFICADO | docs/hbtrack/evidence/AR_999/executor_main.log |

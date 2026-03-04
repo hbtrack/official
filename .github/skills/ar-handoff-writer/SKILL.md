@@ -1,7 +1,6 @@
 ---
 name: ar-handoff-writer
 description: Escreve _reports/ARQUITETO.md no formato canônico HB Track (PLAN_HANDOFF), incluindo tabela de planos, ordem e diagnóstico por AR.
-target: vscode
 ---
 
 # Skill — Arquiteto: Handoff Writer (PLAN_HANDOFF)

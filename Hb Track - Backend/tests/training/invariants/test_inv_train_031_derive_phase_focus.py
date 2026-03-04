@@ -35,7 +35,7 @@ class TestInvTrain031DerivePhasceFocus:
     ]
 
     def _get_schema_content(self) -> str:
-        schema_path = Path(__file__).parent.parent.parent / "docs" / "ssot" / "schema.sql"
+        schema_path = Path(__file__).parent.parent.parent.parent / "docs" / "ssot" / "schema.sql"
         assert schema_path.exists(), f"Schema não encontrado: {schema_path}"
         return schema_path.read_text(encoding="utf-8")
 

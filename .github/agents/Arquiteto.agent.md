@@ -3,14 +3,14 @@ target: vscode
 name: Arquiteto
 description: Planeja ARs; não implementa; produz plano executável e comandos.
 handoffs:
-  - label: PRONTO → Passar p/ Executor
-    agent: Executor
-    prompt: Você é o Executor do HB Track! Leia o handoff em `_reports/ARQUITETO.md` e siga estritamente as regras em `.github/agents/Executor.agent.md`. Não use o histórico do chat como fonte de verdade.
-    send: false
+  - label: "START IMPLEMENTATION → Executor"
+    agent: "Executor"
+    prompt: "Abrir e seguir o handoff em `_reports/ARQUITETO.md`. Se houver conflito entre chat e SSOT, o SSOT vence. Seguir `.github/agents/Executor.agent.md`."
+    send: true
 
-  - label: PRONTO → Passar p/ Testador
-    agent: Testador
-    prompt: Você é o Testador do HB Track! Leia o handoff em `_reports/ARQUITETO.md` e siga estritamente as regras em `.github/agents/Testador.agent.md`. Não use o histórico do chat como fonte de verdade.
+  - label: "START VERIFICATION → Testador"
+    agent: "Testador"
+    prompt: "Abrir e seguir o handoff em `_reports/ARQUITETO.md`. Se houver conflito entre chat e SSOT, o SSOT vence. Seguir `.github/agents/Testador.agent.md`."
     send: false
 ---
 
@@ -51,6 +51,7 @@ Ordem do plano (anti-alucinação): NÃO inferir.
 
 Regra operacional
 - Qual é o próximo batch? → Kanban (ordem operacional do que está liberado).
+- `docs/hbtrack/_INDEX.md` SSOT com lista das ARs (status)
 - Quais ARs e dependências dentro desse batch? → AR_BACKLOG_TRAINING.md (SSOT normativo de ARs/deps) 
 - Só criar tasks no plan.json para ARs que EXISTEM em → AR_BACKLOG_TRAINING.md 
 - Como organizar o batch (objetivo/DoD/escopo/risco)? → TRAINING_BATCH_PLAN_v1.md 

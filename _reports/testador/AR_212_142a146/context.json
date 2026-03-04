@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_212-142a146",
+  "timestamp_utc": "2026-03-03T13:00:02.194385+00:00",
+  "git": {
+    "commit": "142a1469efb1d530e4bd579fb2f134cd78754a7e"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "212",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_212_criar_6_testes_ausentes_inv-053_060_061_062_exb-ac.md"
+}

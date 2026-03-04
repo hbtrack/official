@@ -1,301 +1,244 @@
-# ARQUITETO.md — Handoff para executor (Batch 9)
+# ARQUITETO.md — Handoff para Executor
 
-| Campo | Valor |
-|---|---|
-| **Protocolo** | v1.3.0 |
-| **Branch** | dev-changes-2 |
-| **HEAD** | b123a58 |
-| **Data** | 2026-03-03 |
-| **Status** | PLAN_HANDOFF — Re-execução Batch 9 (AR_202..206) |
-| **gen_docs_ssot.py** | OpenAPI FAILED (backend offline, pré-existente) / Schema SQL ✅ / Alembic ✅ / Manifest ✅ |
+<!-- PLAN_HANDOFF -->
 
----
-
-## Contexto
-
-**AR_210 (Fix sistêmico compute_behavior_hash)** ✅ VERIFICADO.
-
-Anteriormente, o Batch 9 foi rejeitado pelo Testador devido ao `FLAKY_OUTPUT` causado por timings variáveis do pytest no `stdout`. O fix sistêmico implementado em AR_210 normaliza timings (`\b\d+\.\d+s\b` → `X.Xs`) antes de gerar o hash, tornando o processo determinístico.
-
-**Missão atual:** Realizar a verificação oficial (triple-run) das ARs do Batch 9. Como o código das ARs 202..206 já foi reportado e está staged, o próximo passo é estritamente a verificação via Testador.
+**Protocolo**: 1.3.0
+**Branch**: dev-changes-2
+**HEAD**: 142a146
+**Data Planejamento**: 2026-03-04
+**Status**: PLAN_HANDOFF
 
 ---
 
-## Ordem de Execução
+## 1. Contexto
 
-Ao invés de passar para o Executor (que já concluiu seu trabalho para este batch), o fluxo segue para o **Testador** para re-validar as ARs com a nova infraestrutura de hash.
+Batch 18 concluído **parcialmente**: AR_225/226/227 ✅ VERIFICADO + sealed; AR_228 🔴 REJEITADO (AC-001 impossível — test_018_route + test_035 fora do write_scope + 10 ERRORs de conftest diferente). Batch 19 AR_229 executado mas em ⚠️ FALHA (exit=1, 6 FAILs, 10 ERRORs).
 
-```
-AR_202 → AR_203 → AR_204 → AR_205 → AR_206
-```
+Durante execução de AR_229, foram diagnosticados **root causes definitivos** de todos os 6 FAILs + 10 ERRORs remanescentes. O Arquiteto concluiu que:
 
----
+1. **AR_229 precisa de amendment**: `training_session.py` `status` server_default tem bug de triple-quote (`'''draft'''` → `'draft'`). Este fix está no write_scope de AR_229 — **Executor deve aplicá-lo e re-rodar `hb report 229`**.
 
-## Diagnóstico por AR
+2. **AR_230 (AR-TRAIN-049)** é a AR capturadora: 8 arquivos de teste com bugs puros de test-layer. Após AR_230 VERIFICADO e suite verde → re-rodar `hb report 228` e `hb report 229` para fechar ambas.
 
-*Nota: Todas as ARs abaixo já foram reportadas. O Testador deve apenas executar `hb verify <id>`.*
-
-### AR_202 .. AR_206
-
-**Estado**: `EM_EXECUCAO` (Reported, staged evidence).
-**validation_command**: (Original, inalterado).
-**Mudança esperada**: O hash gerado por `hb_cli.py verify` agora deve ser idêntico nos 3 runs devido à normalização implementada em AR_210.
+**SSOTs atualizados nesta sessão:**
+- `AR_BACKLOG_TRAINING.md` → AR-TRAIN-049 adicionado (Lote 14, Batch 20; tabela-resumo; seção detalhada §8)
+- `TRAINING_BATCH_PLAN_v1.md` → Batch 20 adicionado; alerta de amendment em Batch 19
+- `docs/_canon/planos/ar_batch20_fix_test_layer_residuals_049.json` — **NOVO** (dry-run ✅ → AR_230)
+- `Hb Track Kanban.md` → §35 Batch 18 status atualizado; §36 Batch 19 FALHA + amendment; §37 Batch 20 READY
 
 ---
 
-## Instrução ao Testador
+## 2. Diagnóstico por Root Cause
 
-```
-PLAN_HANDOFF — Testador deve:
-1. Executar triple-run de verificação para as ARs do Batch 9:
-   python scripts/run/hb_cli.py verify 202
-   python scripts/run/hb_cli.py verify 203
-   python scripts/run/hb_cli.py verify 204
-   python scripts/run/hb_cli.py verify 205
-   python scripts/run/hb_cli.py verify 206
-2. Confirmar que Consistency = OK (3/3 hashes idênticos).
-3. Após aprovação de todas, notificar para hb seal humano.
-```
+### Amendment AR_229 — fix em `app/models/training_session.py` (dentro do write_scope de AR_229)
 
-_gerado pelo Arquiteto — 2026-03-03_
-
-
----
-
-## Contexto
-
-Ciclo anterior (AR_200 + AR_201) ✅ VERIFICADO. Kanban §24/§25 = ✅ VERIFICADO.
-
-Este ciclo planeja o caminho completo para o **Done Gate do módulo TRAINING** (§10 TEST_MATRIX_TRAINING.md):
-
-1. **Batch 9** (AR_202..206): Eliminar 5 FAILs críticos — todos test-layer, zero mudança de produto.
-2. **Batch 10** (AR_207..208): Cobrir evidências P0 restantes — 8 flows MANUAL_GUIADO + 4 contracts P0 com teste automatizado.
-3. **Batch 11** (AR_209): Done Gate — sync TEST_MATRIX v1.8.0 + FASE-1 smoke 5 Batch9 + FASE-2 sanity AR_200 full (11 arquivos) + declaração DONE.
-
-Root cause analysis concluída pelo Arquiteto:
-- **INV-001**: `test_invalid_case_2__negative_focus` espera `ck_training_sessions_focus_total_sum` mas valor negativo (`focus_attack_positional_pct=-5`) dispara `ck_training_sessions_focus_attack_positional_range` primeiro.
-- **INV-008**: `Path(__file__).parent.parent.parent / "docs/ssot/schema.sql"` resolve para `tests/docs/ssot/schema.sql` (inexistente); fix = adicionar `.parent` → aponta para `Hb Track - Backend/docs/ssot/schema.sql`.
-- **INV-030**: Mesma causa raiz do INV-008.
-- **INV-032**: 6 fixtures `async def` decoradas com `@pytest.fixture` (linhas 40/54/66/81/94/110) em vez de `@pytest_asyncio.fixture`.
-- **CONTRACT-077-085**: `ROUTER_PATH = Path(__file__).parent.parent.parent / "app/..."` resolve para `tests/app/...` (inexistente); fix = adicionar `.parent`.
-
----
-
-## Planos Materializados
-
-| AR | AR-TRAIN | Plano JSON | Dependência | Dry-run |
-|---|---|---|---|---|
-| AR_202 | AR-TRAIN-024 | `docs/_canon/planos/ar_batch9_fix_fails_202_206.json` (task 202) | nenhuma | ✅ PASS |
-| AR_203 | AR-TRAIN-025 | `docs/_canon/planos/ar_batch9_fix_fails_202_206.json` (task 203) | nenhuma | ✅ PASS |
-| AR_204 | AR-TRAIN-026 | `docs/_canon/planos/ar_batch9_fix_fails_202_206.json` (task 204) | nenhuma | ✅ PASS |
-| AR_205 | AR-TRAIN-027 | `docs/_canon/planos/ar_batch9_fix_fails_202_206.json` (task 205) | nenhuma | ✅ PASS |
-| AR_206 | AR-TRAIN-028 | `docs/_canon/planos/ar_batch9_fix_fails_202_206.json` (task 206) | nenhuma | ✅ PASS |
-| AR_207 | AR-TRAIN-029 | `docs/_canon/planos/ar_batch10_flows_contracts_207_208.json` (task 207) | AR_202..206 VERIFICADO | ✅ PASS |
-| AR_208 | AR-TRAIN-030 | `docs/_canon/planos/ar_batch10_flows_contracts_207_208.json` (task 208) | AR_202..206 VERIFICADO | ✅ PASS |
-| AR_209 | AR-TRAIN-031 | `docs/_canon/planos/ar_209_done_gate_training.json` (task 209) | AR_202..208 VERIFICADO | ✅ PASS |
-
----
-
-## Ordem de Execução
-
-```
-Batch 9 (paralelas entre si — sem deps): AR_202 → AR_203 → AR_204 → AR_205 → AR_206
-  (todos os 5 são independentes; podem ser executados em sequência rápida)
-
-Batch 10 (após Batch 9 VERIFICADO): AR_207 → AR_208
-  (AR_207 e AR_208 podem ser paralelas)
-
-Batch 11 (após Batches 9+10 VERIFICADOS): AR_209
-```
-
----
-
-## Diagnóstico por AR
-
-### AR_202 — Fix INV-001: expected constraint name errado
-
-**write_scope:**
-- `Hb Track - Backend/tests/training/invariants/test_inv_train_001_focus_sum_constraint.py`
-
-**Fix exato:** Na função `test_invalid_case_2__negative_focus`, linha ~220-223: mudar a string esperada de `"ck_training_sessions_focus_total_sum"` para `"ck_training_sessions_focus_attack_positional_range"` na chamada `assert_pg_constraint_violation`.
-
-**validation_command:**
-```
-cd "Hb Track - Backend" && pytest tests/training/invariants/test_inv_train_001_focus_sum_constraint.py -v --tb=short 2>&1 | tail -20
-```
-
-**AC-001:** pytest = 0 FAILs, 0 ERRORs.
-**Risco:** Verificar outros test cases que possam esperar `ck_training_sessions_focus_total_sum` com valores negativos.
-
----
-
-### AR_203 — Fix INV-008: schema_path 3 .parent → 4 .parent
-
-**write_scope:**
-- `Hb Track - Backend/tests/training/invariants/test_inv_train_008_soft_delete_reason_pair.py`
-
-**Fix exato:** `Path(__file__).parent.parent.parent / "docs" / "ssot" / "schema.sql"` → `Path(__file__).parent.parent.parent.parent / "docs" / "ssot" / "schema.sql"`. Arquivo em `tests/training/invariants/` → 4 parents = `Hb Track - Backend/` → schema existe.
-
-**validation_command:**
-```
-cd "Hb Track - Backend" && pytest tests/training/invariants/test_inv_train_008_soft_delete_reason_pair.py -v --tb=short 2>&1 | tail -20
-```
-
-**AC-001:** pytest = 0 FAILs, 0 ERRORs.
-
----
-
-### AR_204 — Fix INV-030: schema_path 3 .parent → 4 .parent (mesma causa INV-008)
-
-**write_scope:**
-- `Hb Track - Backend/tests/training/invariants/test_inv_train_030_attendance_correction_fields.py`
-
-**Fix exato:** Mesmo fix de AR_203 — adicionar `.parent` extra na definição de `schema_path`.
-
-**validation_command:**
-```
-cd "Hb Track - Backend" && pytest tests/training/invariants/test_inv_train_030_attendance_correction_fields.py -v --tb=short 2>&1 | tail -20
-```
-
-**AC-001:** pytest = 0 FAILs, 0 ERRORs.
-
----
-
-### AR_205 — Fix INV-032: 6 async fixtures @pytest.fixture → @pytest_asyncio.fixture
-
-**write_scope:**
-- `Hb Track - Backend/tests/training/invariants/test_inv_train_032_wellness_post_rpe.py`
-
-**Fix exato:**
-1. Adicionar `import pytest_asyncio` no bloco de imports.
-2. Linhas 40, 54, 66, 81, 94, 110: `@pytest.fixture` → `@pytest_asyncio.fixture` **somente** nas `async def` fixtures (não tocar fixtures síncronas).
-
-**validation_command:**
-```
-cd "Hb Track - Backend" && pytest tests/training/invariants/test_inv_train_032_wellness_post_rpe.py -v --tb=short 2>&1 | tail -20
-```
-
-**AC-001:** pytest = 0 FAILs, 0 ERRORs, sem `PytestUnraisableExceptionWarning` de async.
-**Risco:** Verificar `pytest.ini` asyncio_mode — se `strict`, `@pytest_asyncio.fixture` é obrigatório (já é o caso).
-
----
-
-### AR_206 — Fix CONTRACT-077-085: ROUTER_PATH 3 .parent → 4 .parent
-
-**write_scope:**
-- `Hb Track - Backend/tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py`
-
-**Fix exato:** Definição de `ROUTER_PATH` (~linha 27-31): `Path(__file__).parent.parent.parent / "app" / ...` → `Path(__file__).parent.parent.parent.parent / "app" / ...`. Router `training_alerts_step18.py` existe em `Hb Track - Backend/app/api/v1/routers/`.
-
-**validation_command:**
-```
-cd "Hb Track - Backend" && pytest tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py -v --tb=short 2>&1 | tail -20
-```
-
-**AC-001:** pytest = 0 FAILs, 0 ERRORs.
-
----
-
-### AR_207 — Flow P0 evidence: FLOW-TRAIN-001..006 + 017 + 018 (MANUAL_GUIADO)
-
-**write_scope (governed):**
-- `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` (§6: Status/Últ.Execução/Evidência para 8 flows)
-
-**Deliverables adicionais (criados pelo Executor, fora governed roots):**
-- `_reports/training/TEST-TRAIN-FLOW-001.md` a `_reports/training/TEST-TRAIN-FLOW-006.md`
-- `_reports/training/TEST-TRAIN-FLOW-017.md`, `_reports/training/TEST-TRAIN-FLOW-018.md`
-
-Cada arquivo: situação inicial, passos executados, resultado observado, critério de PASS.
-
-**validation_command:**
-```
-python -c "import os,sys; files=['_reports/training/TEST-TRAIN-FLOW-001.md','_reports/training/TEST-TRAIN-FLOW-002.md','_reports/training/TEST-TRAIN-FLOW-003.md','_reports/training/TEST-TRAIN-FLOW-004.md','_reports/training/TEST-TRAIN-FLOW-005.md','_reports/training/TEST-TRAIN-FLOW-006.md','_reports/training/TEST-TRAIN-FLOW-017.md','_reports/training/TEST-TRAIN-FLOW-018.md']; missing=[f for f in files if not os.path.exists(f)]; print('PASS' if not missing else 'MISSING: '+str(missing)); sys.exit(0 if not missing else 1)"
-```
-
-**AC-001:** 8 arquivos de evidência existem com conteúdo MANUAL_GUIADO.
-**AC-002:** TEST_MATRIX §6: FLOW-TRAIN-001..006/017/018 = COBERTO.
-
----
-
-### AR_208 — Contract P0 tests: CONTRACT-TRAIN-097..100
-
-**write_scope (governed):**
-- `Hb Track - Backend/tests/training/contracts/test_contract_train_097_100_presence_pending.py` (novo)
-- `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` (§8: CONTRACT-097..100 COBERTO)
-
-Endpoints (implementados por AR-TRAIN-017/018 VERIFICADOS):
-- `CONTRACT-097`: `POST /training-sessions/{id}/pre-confirm`
-- `CONTRACT-098`: `POST /training-sessions/{id}/close`
-- `CONTRACT-099`: `GET /training/pending-items`
-- `CONTRACT-100`: `PATCH /training/pending-items/{id}/resolve`
-
-**validation_command:**
-```
-cd "Hb Track - Backend" && pytest tests/training/contracts/test_contract_train_097_100_presence_pending.py -v --tb=short 2>&1 | tail -20
-```
-
-**AC-001:** pytest = 0 FAILs, 0 ERRORs.
-**AC-002:** TEST_MATRIX §8: CONTRACT-097..100 = COBERTO.
-**Risco:** Se DB offline, usar testes de contrato estático (import + schema inspection).
-
----
-
-### AR_209 — Done Gate: sync TEST_MATRIX v1.8.0 + smoke Batch9 (5) + sanity AR_200 full (11) + DONE_GATE_TRAINING.md
-
-**write_scope (governed):**
-- `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` (v1.7.0 → v1.8.0; §9 + §5 + §6 + §8 + §0)
-
-**Deliverables adicionais (fora governed roots):**
-- `_reports/training/DONE_GATE_TRAINING.md`
-
-**validation_command (2 fases encadeadas):**
-```
-cd "Hb Track - Backend" && echo '=== FASE-1: SMOKE Batch9 fixes (5 arquivos) ===' && pytest tests/training/invariants/test_inv_train_001_focus_sum_constraint.py tests/training/invariants/test_inv_train_008_soft_delete_reason_pair.py tests/training/invariants/test_inv_train_030_attendance_correction_fields.py tests/training/invariants/test_inv_train_032_wellness_post_rpe.py tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py -v --tb=short 2>&1 && echo '=== FASE-2: SANITY AR_200 full rerun (11 arquivos) ===' && pytest tests/training/invariants/test_inv_train_001_focus_sum_constraint.py tests/training/invariants/test_inv_train_002_wellness_pre_deadline.py tests/training/invariants/test_inv_train_003_wellness_post_deadline.py tests/training/invariants/test_inv_train_004_edit_window_constants_runtime.py tests/training/invariants/test_inv_train_004_edit_window_time.py tests/training/invariants/test_inv_train_005_immutability_60_days.py tests/training/invariants/test_inv_train_008_soft_delete_reason_pair.py tests/training/invariants/test_inv_train_009_wellness_pre_uniqueness.py tests/training/invariants/test_inv_train_030_attendance_correction_fields.py tests/training/invariants/test_inv_train_032_wellness_post_rpe.py tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py -v --tb=short 2>&1 | tail -40
-```
-
-**AC-001:** TEST_MATRIX versão = v1.8.0.
-**AC-002:** §9 contém entries para AR-TRAIN-024..031.
-**AC-003:** `_reports/training/DONE_GATE_TRAINING.md` existe com critérios §10 satisfeitos.
-**AC-004:** FASE-1 smoke (5 arquivos fixados Batch9, incl. CONTRACT-077-085) = 0 FAILs.
-**AC-005:** FASE-2 sanity AR_200 full (11 arquivos: INV-001/002/003/004a/004b/005/008/009/030/032 + CONTRACT-077-085) = 0 FAILs — prova que o DONE não é artefato de 'fix import/path'.
-**Risco:** Bloquear se algum AR de Batch 9/10 não estiver VERIFICADO ao iniciar esta AR.
-
----
-
-## Kanban
-
-| Seção | AR | Atualização |
+| Bug | Root Cause | Fix |
 |---|---|---|
-| §26 | AR_202..206 | Adicionado — Batch 9 🔲 READY |
-| §27 | AR_207..208 | Adicionado — Batch 10 🔲 READY (dep: Batch 9) |
-| §28 | AR_209 | Adicionado — Batch 11 🔲 READY (dep: Batches 9+10) |
+| test_019 FAIL após AR_229 | `status` server_default = `sa.text("'''draft'''::character varying")` → armazena `'draft'` (com aspas literais) violando `check_training_session_status` | Mudar para `sa.text("'draft'::character varying")` |
+
+### AR_230 — 8 arquivos de teste (write_scope AR-TRAIN-049)
+
+| Arquivo de Teste | FAILs/ERRORs | Root Cause | Fix |
+|---|---|---|---|
+| `test_018_..._route.py` | 1 FAIL | `Person()` sem `birth_date` (NOT NULL) | `birth_date=date(1990, 1, 1)` em Person() |
+| `test_035_...runtime.py` | 4 FAILs | `SessionTemplate(organization_id=...)` — modelo usa `org_id` | Renomear kwarg `organization_id` → `org_id` |
+| `test_058_...mutable.py` | 1 ERROR | `inv058_team`: `Team()` sem `category_id` NOT NULL | Add fixture `category` local + `category_id=category.id` |
+| `test_059_...contiguous.py` | 1 ERROR | `inv059_team`: `Team()` sem `category_id` | Mesmo fix que test_058 |
+| `test_063_preconfirm.py` | 2 ERRORs | `team_reg` usa `athlete.person_id` mas FK refs `athletes.id` (PK auto-gerada) | `str(athlete.person_id)` → `str(athlete.id)` |
+| `test_064_close_consolidation.py` | 1 ERROR | Mesmo bug do test_063 na fixture `team_reg` local | Mesmo fix |
+| `test_076_wellness_policy.py` | 3 ERRORs | SQL usa `status='concluída'` inválido (INVARIANTS: só 5 valores canônicos) | `'concluída'` → `'pending_review'` |
+| `test_exb_acl_006_acl_table.py` | 2 ERRORs | `uuid4.__class__(exercise_id)` = `function(...)` → TypeError | `UUID(exercise_id)` + `from uuid import uuid4, UUID` |
 
 ---
 
-## SSOTs Atualizados Neste Ciclo
+## 3. Planos Materializados
 
-| Arquivo | Mudança |
-|---|---|
-| `docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md` | AR-TRAIN-024..031 adicionadas (8 novas entradas) |
-| `docs/hbtrack/modulos/treinos/TRAINING_BATCH_PLAN_v1.md` | v1.0.4 → v1.0.5; Batches 9/10/11 adicionados |
-| `docs/hbtrack/Hb Track Kanban.md` | §26/§27/§28 adicionados |
-| `docs/_canon/planos/ar_batch9_fix_fails_202_206.json` | criado; dry-run ✅ PASS (5 ARs) |
-| `docs/_canon/planos/ar_batch10_flows_contracts_207_208.json` | criado; dry-run ✅ PASS (2 ARs) |
-| `docs/_canon/planos/ar_209_done_gate_training.json` | criado; dry-run ✅ PASS (1 AR) |
+| AR Físico | AR-TRAIN | Título | Batch | Plano JSON |
+|---|---|---|---|---|
+| **AR_229** | TRAIN-048 | Sync app/models/ + services/ + stubs IA Coach **(FALHA — amendment obrigatório)** | 19 | `docs/_canon/planos/ar_batch19_sync_app_layer_048.json` |
+| **AR_230** | TRAIN-049 | Fix 6 FAILs + 10 ERRORs residuais test-layer (8 arquivos) | 20 | `docs/_canon/planos/ar_batch20_fix_test_layer_residuals_049.json` |
 
 ---
 
-## Instrução ao Executor
+## 4. Ordem de Execução
 
 ```
-PLAN_HANDOFF — Executor deve:
-1. Ler este handoff e os 3 planos JSON listados acima.
-2. Executar Batch 9 (AR_202..206) — sem dependências entre si.
-   Para cada AR: hb plan <json> → implementar fix → hb report <N> → aguardar Testador → hb seal <N>.
-3. Após Batch 9 VERIFICADO (todos os 5 ARs), executar Batch 10 (AR_207..208).
-4. Após Batches 9+10 VERIFICADOS, executar Batch 11 (AR_209 Done Gate).
-NÃO alterar Backend/Frontend app/ — todos os fixes Batch 9 são test-layer.
-NÃO criar novas ARs — apenas executar as listadas.
+[STEP 1] Amendment AR_229 → fix training_session.py (server_default) → hb report 229
+
+[STEP 2] Materializar AR_230 → executar AR_230 → hb report 230
+         (validation: pytest tests/training/ -q --tb=no → 0 failed, 0 errors)
+
+[STEP 3 — cascata após suite verde]
+         hb verify 230 → (humano: hb seal)
+         hb report 228 → (deve exit=0 agora) → hb verify 228 → (humano: hb seal)
+         hb report 229 → (deve exit=0 agora) → hb verify 229 → (humano: hb seal)
+
+[STEP 4 — Done Gate]
+         hb report 222 → hb verify 222 → (humano: hb seal)
 ```
 
-_gerado pelo Arquiteto — 2026-03-02_
+*(AR_230 + AR_229 amendment = pré-requisitos para fechar AR_228 e AR_229. Depois AR_222.)*
+
+---
+
+## 5. Dry-run
+
+```
+python scripts/run/hb_cli.py plan docs/_canon/planos/ar_batch20_fix_test_layer_residuals_049.json --dry-run
+→ AR_230_fix_residuais_test-layer_6_fails_+_10_errors_em_te.md (7120 bytes)  [ROLLBACK ✓]
+→ 1 ARs seriam criados, 0 seriam pulados. Todas as validações passaram. ✅
+```
+
+---
+
+## 6. Kanban atualizado
+
+| Seção | Conteúdo | Status |
+|---|---|---|
+| §33 | AR_222 — Done Gate §10 | ⛔ BLOCKED_AC005 (aguarda Batch 20 + AR_229 re-verify) |
+| §35 | Batch 18 (AR_225..228) | AR_225/226/227 ✅ VERIFICADO; AR_228 🔴 REJEITADO (aguarda AR_230) |
+| §36 | Batch 19 (AR_229) | ⚠️ FALHA — amendment obrigatório (status server_default) |
+| §37 | Batch 20 (AR_230) | 🔲 READY (dep: AR_229 amendment) |
+
+---
+
+## 7. Comandos para o Executor
+
+```powershell
+# STEP 1 — Amendment AR_229 (fix dentro do write_scope de AR_229)
+# Arquivo: Hb Track - Backend/app/models/training_session.py
+# Linha com:  server_default=sa.text("'''draft'''::character varying")
+# Trocar por: server_default=sa.text("'draft'::character varying")
+cd "c:\HB TRACK"
+python scripts/run/hb_cli.py report 229
+
+# STEP 2 — Materializar e executar AR_230
+python scripts/run/hb_cli.py plan docs/_canon/planos/ar_batch20_fix_test_layer_residuals_049.json
+python scripts/run/hb_cli.py report 230
+
+# STEP 3 — Cascata de verificação (após suite verde)
+python scripts/run/hb_cli.py verify 230
+# (humano: hb seal 230)
+python scripts/run/hb_cli.py report 228
+python scripts/run/hb_cli.py verify 228
+# (humano: hb seal 228)
+python scripts/run/hb_cli.py report 229
+python scripts/run/hb_cli.py verify 229
+# (humano: hb seal 229)
+```
+
+**Restrições AR_230 (FORBIDDEN):**
+- `app/` — zero toque (bugs são exclusivamente test-layer)
+- `tests/training/invariants/conftest.py` — zero toque (fixtures base estão corretas)
+- Qualquer arquivo de teste fora do write_scope de 8 arquivos
+- Se necessitar de arquivo fora do write_scope → BLOCKED (reportar ao Arquiteto)
+
+**Cuidados extras AR_230:**
+- test_058/059: usar `ON CONFLICT DO NOTHING` ao criar fixture `category` (evitar colisão com id=9999)
+- test_063/064: se `athlete.id` for `None` após `flush()`, adicionar `await async_db.refresh(athlete)` antes de usar `athlete.id`
+- test_076: verificar se lógica do teste faz sentido semântico com `status='pending_review'`
+
+---
+
+*Arquiteto — 2026-03-04 — Batch 20 planejado, dry-run ✅, amendment AR_229 autorizado*
+
+---
+
+## 1. Contexto
+
+Sessão anterior encerrou com Batch 17 (AR_223 + AR_224) selados. Diagnóstico confirmou 109 FAILs + 31 ERRORs residuais bloqueando AR_222 (Done Gate §10). Humano autorizou **Opção A (Batch 18)** para zerar a suite.
+
+Nesta sessão o humano solicitou **Batch Sync Strategy** (Batch 19): sincronizar `app/` com contrato v1.3.0 + invariantes v1.5.0 via AR-TRAIN-048. A pasta `app/` foi desbloqueada explicitamente via `GOVERNED_ROOTS.yaml` (`UNLOCKED_FOR_SYNC_BATCH_19`).
+
+**SSOTs atualizados nesta sessão:**
+- `AR_BACKLOG_TRAINING.md` v2.1.0 → **v2.2.0** (AR-TRAIN-048 completa com ACs, FORBIDDEN, validation_command, rollback_plan; Lote 13; tabela-resumo)
+- `TRAINING_BATCH_PLAN_v1.md` v1.2.0 → **v1.3.0** (Batch 19 adicionado com zonas de impacto, DoD, riscos)
+- `docs/_canon/planos/ar_batch19_sync_app_layer_048.json` — **NOVO** (dry-run ✅)
+- `Hb Track Kanban.md` — seção 36 adicionada (AR_229 🔲 READY)
+
+---
+
+## 2. Diagnóstico de Desalinhamento (input para AR_229)
+
+### Zona 1 — Modelos (app/models/)
+| Arquivo | Invariante | Correção |
+|---|---|---|
+| `athlete.py` | TRAINING_CLOSSARY.yaml | Campos `athlete_name` + `birth_date` alinhados ao Glossário |
+| `exercise.py` | INV-TRAIN-060 | `visibility_mode` server_default=`restricted` |
+| `training_session.py` | INV-TRAIN-010 | UniqueConstraint unicidade wellness_post |
+| `attendance.py` | INV-TRAIN-036 | FK `athlete_id` com OnDelete explícito |
+| `training_cycle.py` | INV-TRAIN-054 | FK hierarchy `parent_cycle_id` → self |
+
+### Zona 2 — Serviços (app/services/)
+| Arquivo | Contrato | Correção |
+|---|---|---|
+| `exercise_service.py` | CONTRACT-TRAIN-091..095 | Assinatura `update_exercise(self, exercise_id, data: dict, organization_id)` |
+| `attendance_service.py` | GAP-CONTRACT-7 | Stub mínimo para closure de presença |
+
+### Zona 3 — Stubs IA Coach
+| Arquivo | Problema | Correção |
+|---|---|---|
+| `ai_coach_service.py` | ImportError nos testes 079/080/081 | Adicionar `RecognitionApproved`, `CoachSuggestionDraft`, `JustifiedSuggestion` como dataclasses |
+
+---
+
+## 3. Planos Materializados
+
+| AR Físico | AR-TRAIN | Título | Batch |
+|---|---|---|---|
+| **AR_229** | TRAIN-048 | Sync app/models/ (INV-010/035/036/054/060) + app/services/ (contrato v1.3.0) + stubs IA Coach | 19 |
+
+**Ordem de execução:**
+```
+[Batch 18] AR_225 + AR_226 + AR_227  →  AR_228  →  [Batch 19] AR_229  →  AR_222
+```
+*(AR_225/226/227 são pré-requisito; AR_228 depende das 3; AR_229 depende de AR_228 VERIFICADO)*
+
+---
+
+## 4. Dry-run
+
+```
+python scripts/run/hb_cli.py plan docs/_canon/planos/ar_batch19_sync_app_layer_048.json --dry-run
+→ 1 ARs seriam criados, 0 seriam pulados. Todas as validações passaram. ✅
+```
+
+---
+
+## 5. Kanban atualizado
+
+| Seção | Conteúdo | Status |
+|---|---|---|
+| §33 | AR_222 — Done Gate §10 | ⛔ BLOCKED_AC005 (aguarda Batch 18 + Batch 19) |
+| §34 | Batch 17 (AR_223 + AR_224) | ✅ SELADO |
+| §35 | Batch 18 (AR_225..228) — Fix FAILs test-layer | 🔲 READY |
+| §36 | Batch 19 (AR_229) — Sync app layer | 🔲 READY (dep: Batch 18) |
+
+---
+
+## 6. Próximos passos para o Executor
+
+```powershell
+# 1. Materializar ARs de ambos os batches
+python scripts/run/hb_cli.py plan docs/_canon/planos/ar_batch18_fix_test_layer_044_047.json
+python scripts/run/hb_cli.py plan docs/_canon/planos/ar_batch19_sync_app_layer_048.json
+
+# 2. Executar Batch 18 (225/226/227 em paralelo, depois 228)
+python scripts/run/hb_cli.py report 225
+python scripts/run/hb_cli.py report 226
+python scripts/run/hb_cli.py report 227
+# Após os 3 VERIFICADO:
+python scripts/run/hb_cli.py report 228
+
+# 3. Executar Batch 19 (após AR_228 VERIFICADO)
+python scripts/run/hb_cli.py report 229
+```
+
+**Restrições AR_229:**
+- FORBIDDEN: `tests/` (zero toque) e qualquer `app/` não listado no write_scope
+- Antes de `hb report 229`: verificar se novas Column/Constraint exigem `alembic revision --autogenerate`
+- Se surgir necessidade de arquivo fora do write_scope → BLOCKED (reportar ao Arquiteto)
+
+---
+
+*Arquiteto — 2026-03-03 — Batch 18 + Batch 19 planejados e dry-run ✅*

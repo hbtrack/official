@@ -18,7 +18,7 @@ import re
 
 
 ROUTER_PATH = (
-    Path(__file__).parent.parent.parent
+    Path(__file__).parent.parent.parent.parent
     / "app"
     / "api"
     / "v1"

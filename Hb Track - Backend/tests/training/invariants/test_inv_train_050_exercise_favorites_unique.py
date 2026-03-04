@@ -31,7 +31,7 @@ class TestInvTrain050ExerciseFavoritesUnique:
             "user_id": str(user.id)
         })
         await async_db.flush()
-        return type('Exercise', (), {'id': uuid4.__class__(exercise_id)})()
+        return type('Exercise', (), {'id': exercise_id})()
     
     @pytest.mark.asyncio
     async def test_valid_favorite_insert(self, async_db: AsyncSession, exercise, user):

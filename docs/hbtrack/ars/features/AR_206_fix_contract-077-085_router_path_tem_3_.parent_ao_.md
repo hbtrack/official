@@ -1,6 +1,6 @@
 # AR_206 — Fix CONTRACT-077-085: ROUTER_PATH tem 3 .parent ao invés de 4
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -47,3 +47,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_206_b123a58/result.json`
+
+### Selo Humano em b123a58
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-03-03T04:25:47.280590+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_206_b123a58/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_206/executor_main.log`

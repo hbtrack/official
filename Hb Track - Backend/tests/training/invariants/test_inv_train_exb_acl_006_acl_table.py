@@ -6,7 +6,7 @@ Constraint: uq_exercise_acl_exercise_user
 """
 import pytest
 import pytest_asyncio
-from uuid import uuid4
+from uuid import uuid4, UUID
 from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -31,7 +31,7 @@ class TestInvTrainExbAcl006AclTable:
             "user_id": str(user.id)
         })
         await async_db.flush()
-        return type('Exercise', (), {'id': uuid4.__class__(exercise_id)})()
+        return type('Exercise', (), {'id': UUID(exercise_id)})()
     
     @pytest_asyncio.fixture
     async def grantee_user(self, async_db: AsyncSession):

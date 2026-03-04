@@ -802,3 +802,33 @@ _EDUCATIONAL_CONTENT: dict[str, str] = {
         "Advertências progressivas: amarelo → 2min → vermelho (exclusão definitiva)."
     ),
 }
+
+
+# ---------------------------------------------------------------------------
+# AR_229 — ZONA 3: Stubs IA Coach exportáveis (INV-079/080/081)
+# Stubs mínimos importáveis — sem lógica de negócio real.
+# ---------------------------------------------------------------------------
+
+@dataclass
+class RecognitionApproved:
+    """Stubs para INV-079: reconhecimento aprovado sem vazamento de dados íntimos."""
+    athlete_id: str
+    message: str = ""
+    intimate_content_exposed: bool = False
+
+
+@dataclass
+class CoachSuggestionDraft:
+    """Stub para INV-080: sugestão de treino extra como rascunho (draft-only)."""
+    suggestion_id: str
+    justification: str = ""
+    approved: bool = False
+
+
+@dataclass
+class JustifiedSuggestion:
+    """Stub para INV-081: sugestão com justificativa obrigatória."""
+    suggestion_id: str
+    justification: str
+    approved_by: str = ""
+

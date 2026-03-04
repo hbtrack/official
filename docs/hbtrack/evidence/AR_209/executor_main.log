@@ -1,0 +1,314 @@
+AR_ID: 209
+Command: cd "Hb Track - Backend" && echo '=== FASE-1: SMOKE Batch9 fixes (5 arquivos) ===' && pytest tests/training/invariants/test_inv_train_001_focus_sum_constraint.py tests/training/invariants/test_inv_train_008_soft_delete_reason_pair.py tests/training/invariants/test_inv_train_030_attendance_correction_fields.py tests/training/invariants/test_inv_train_032_wellness_post_rpe.py tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py -v --tb=short 2>&1 && echo '=== FASE-2: SANITY AR_200 full rerun (11 arquivos) ===' && pytest tests/training/invariants/test_inv_train_001_focus_sum_constraint.py tests/training/invariants/test_inv_train_002_wellness_pre_deadline.py tests/training/invariants/test_inv_train_003_wellness_post_deadline.py tests/training/invariants/test_inv_train_004_edit_window_constants_runtime.py tests/training/invariants/test_inv_train_004_edit_window_time.py tests/training/invariants/test_inv_train_005_immutability_60_days.py tests/training/invariants/test_inv_train_008_soft_delete_reason_pair.py tests/training/invariants/test_inv_train_009_wellness_pre_uniqueness.py tests/training/invariants/test_inv_train_030_attendance_correction_fields.py tests/training/invariants/test_inv_train_032_wellness_post_rpe.py tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py -v --tb=short 2>&1 | tail -40
+Exit Code: 0
+Timestamp UTC: 2026-03-03T05:46:10.982077+00:00
+Behavior Hash (exit+stdout+stderr): 5dc33d3e0537cf7d36a0d32bee1114b4bd65d809dd52d25e46b150c28f442eaf
+Git HEAD: 142a1469efb1d530e4bd579fb2f134cd78754a7e
+Python Version: 3.11.9
+Protocol Version: 1.3.0
+Workspace Clean: False
+Workspace Status: unstaged_modified=7
+Governed Checksums (sha256): {"Hb Track - Backend/docs/ssot/alembic_state.txt": "fa773c076fa74983ef8496b6ecb4eaf929af4828c6e5f5d43c54a3b46fc66667", "Hb Track - Backend/docs/ssot/schema.sql": "a9074201bd3d8dbd41a6e5b0f31206c5b18a4a51d3efeebc19d978c175140b4f", "Hb Track - Backend/tests/training/contracts/test_contract_train_097_100_presence_pending.py": "ef9a492b41a6908297f512693e9452849d29525c34adb043d56f17e8705ef719", "docs/hbtrack/Hb Track Kanban.md": "11bdf972a503b50e0693ae31df2a15fb9ef60a44064ce839bb5336e5a1d0cf9f", "docs/hbtrack/_INDEX.md": "2e162c3230018d776b04b3b8cd1cd6d2be595ce9f7c354e3f9dce2b51111eb4c", "docs/hbtrack/ars/features/AR_202_fix_inv-001_test_invalid_case_2_expects_wrong_cons.md": "f54f07eb5a297e0f977a9cab788bd8d42127817f421b074d4934193467a8a017", "docs/hbtrack/ars/features/AR_203_fix_inv-008_schema_path_tem_3_.parent_ao_invés_de_.md": "2e61fe51aeec0c5c75f3508acbd378e7001e76301f720e2f4b1b9567817c32e6", "docs/hbtrack/ars/features/AR_204_fix_inv-030_schema_path_tem_3_.parent_ao_invés_de_.md": "2ffb3f76b88d5a86d8003e1ad3711602731ed6b9080d90581284d26e4f7a6909", "docs/hbtrack/ars/features/AR_205_fix_inv-032_6_async_fixtures_usam_@pytest.fixture_.md": "9145edaab6bc45868e5b421d4c6cb329ebd0be6ccf3ba404e8d65ebf34775cb3", "docs/hbtrack/ars/features/AR_206_fix_contract-077-085_router_path_tem_3_.parent_ao_.md": "64a9ff7318955afb8fa3be2af20235212debcd836b017fe59a18bc5167d98929", "docs/hbtrack/ars/features/AR_207_flow_p0_evidence_flow-train-001..006_+_017_+_018_m.md": "49f4d5fa8fa6c299c60504f9ce5cbcc9e402421105476aed9cfd215c70bc1f3f", "docs/hbtrack/ars/features/AR_208_contract_p0_tests_contract-train-097..100_pre-conf.md": "2607da5dbe0f75c0fe6bfe84778ce5e0a5ec19b95ff2b97ab887dca0429c40fe", "docs/hbtrack/ars/features/AR_209_done_gate_sync_test_matrix_v1.8.0_+_smoke_batch9_5.md": "6e1a130e80c27ed8e23b429914f4e23c19c28d2f4d7cc7fed1cb454c5d3bbe5c", "docs/hbtrack/evidence/AR_207/executor_main.log": "115256f11d2574e6576b41c85b187c471369664bf4d17bf8e81ecf2ac50b935f", "docs/hbtrack/evidence/AR_208/executor_main.log": "3ced1ab4f702a38f14c2f73c6bd010c5d15a3d36b24277a23190fe83d184f8fd", "docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md": "c93276594c46f54e910325a3dc3c9623d120d65b07349e6be7e4dd853697c627"}
+
+--- STDOUT ---
+'=== FASE-1: SMOKE Batch9 fixes (5 arquivos) ===' 
+============================= test session starts =============================
+platform win32 -- Python 3.11.9, pytest-9.0.2, pluggy-1.6.0 -- C:\HB TRACK\Hb Track - Backend\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: C:\HB TRACK\Hb Track - Backend
+configfile: pytest.ini (WARNING: ignoring pytest config in pyproject.toml!)
+plugins: anyio-4.12.0, hypothesis-6.151.9, asyncio-1.3.0, cov-7.0.0, schemathesis-4.10.2
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 39 items
+
+tests/training/invariants/test_inv_train_001_focus_sum_constraint.py::TestInvTrain001FocusSumConstraint::test_valid_case__sum_at_120 PASSED [  2%]
+tests/training/invariants/test_inv_train_001_focus_sum_constraint.py::TestInvTrain001FocusSumConstraint::test_invalid_case_1__sum_exceeds_120 PASSED [  5%]
+tests/training/invariants/test_inv_train_001_focus_sum_constraint.py::TestInvTrain001FocusSumConstraint::test_invalid_case_2__negative_focus PASSED [  7%]
+tests/training/invariants/test_inv_train_008_soft_delete_reason_pair.py::TestInvTrain008SoftDeleteReasonPair::test_training_tables_have_deleted_reason_constraint PASSED [ 10%]
+tests/training/invariants/test_inv_train_008_soft_delete_reason_pair.py::TestInvTrain008SoftDeleteReasonPair::test_deleted_reason_constraint_logic_is_correct PASSED [ 12%]
+tests/training/invariants/test_inv_train_008_soft_delete_reason_pair.py::TestInvTrain008SoftDeleteReasonPair::test_training_sessions_constraint_exists PASSED [ 15%]
+tests/training/invariants/test_inv_train_008_soft_delete_reason_pair.py::TestInvTrain008SoftDeleteReasonPair::test_wellness_pre_constraint_exists PASSED [ 17%]
+tests/training/invariants/test_inv_train_008_soft_delete_reason_pair.py::TestInvTrain008SoftDeleteReasonPair::test_wellness_post_constraint_exists PASSED [ 20%]
+tests/training/invariants/test_inv_train_008_soft_delete_reason_pair.py::TestInvTrain008SoftDeleteReasonPair::test_attendance_constraint_exists PASSED [ 23%]
+tests/training/invariants/test_inv_train_030_attendance_correction_fields.py::TestInvTrain030AttendanceCorrectionFields::test_constraint_exists_in_schema PASSED [ 25%]
+tests/training/invariants/test_inv_train_030_attendance_correction_fields.py::TestInvTrain030AttendanceCorrectionFields::test_constraint_checks_source_correction PASSED [ 28%]
+tests/training/invariants/test_inv_train_030_attendance_correction_fields.py::TestInvTrain030AttendanceCorrectionFields::test_constraint_requires_correction_by_user_id PASSED [ 30%]
+tests/training/invariants/test_inv_train_030_attendance_correction_fields.py::TestInvTrain030AttendanceCorrectionFields::test_constraint_requires_correction_at PASSED [ 33%]
+tests/training/invariants/test_inv_train_030_attendance_correction_fields.py::TestInvTrain030AttendanceCorrectionFields::test_constraint_allows_non_correction_sources PASSED [ 35%]
+tests/training/invariants/test_inv_train_030_attendance_correction_fields.py::TestInvTrain030AttendanceCorrectionFields::test_constraint_comment_exists PASSED [ 38%]
+tests/training/invariants/test_inv_train_030_attendance_correction_fields.py::TestInvTrain030AttendanceCorrectionFields::test_constraint_logic_is_complete PASSED [ 41%]
+tests/training/invariants/test_inv_train_032_wellness_post_rpe.py::TestInvTrain032WellnessPostRpe::test_valid_case__rpe_at_boundaries PASSED [ 43%]
+tests/training/invariants/test_inv_train_032_wellness_post_rpe.py::TestInvTrain032WellnessPostRpe::test_invalid_case_1__rpe_below_minimum PASSED [ 46%]
+tests/training/invariants/test_inv_train_032_wellness_post_rpe.py::TestInvTrain032WellnessPostRpe::test_invalid_case_2__rpe_above_maximum PASSED [ 48%]
+tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py::TestContractTrain077AlertsTeamActive::test_router_file_exists PASSED [ 51%]
+tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py::TestContractTrain077AlertsTeamActive::test_router_prefix_is_alerts_suggestions PASSED [ 53%]
+tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py::TestContractTrain077AlertsTeamActive::test_get_alerts_team_active_route_defined PASSED [ 56%]
+tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py::TestContractTrain077AlertsTeamActive::test_get_alerts_team_active_is_get_method PASSED [ 58%]
+tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py::TestContractTrain078AlertsTeamHistory::test_get_alerts_team_history_route_defined PASSED [ 61%]
+tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py::TestContractTrain078AlertsTeamHistory::test_get_alerts_team_history_is_get_method PASSED [ 64%]
+tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py::TestContractTrain079AlertsTeamStats::test_get_alerts_team_stats_route_defined PASSED [ 66%]
+tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py::TestContractTrain079AlertsTeamStats::test_get_alerts_team_stats_is_get_method PASSED [ 69%]
+tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py::TestContractTrain080AlertsDismiss::test_post_alerts_dismiss_route_defined PASSED [ 71%]
+tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py::TestContractTrain080AlertsDismiss::test_post_alerts_dismiss_is_post_method PASSED [ 74%]
+tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py::TestContractTrain081SuggestionsTeamPending::test_get_suggestions_team_pending_route_defined PASSED [ 76%]
+tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py::TestContractTrain081SuggestionsTeamPending::test_get_suggestions_team_pending_is_get_method PASSED [ 79%]
+tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py::TestContractTrain082SuggestionsTeamHistory::test_get_suggestions_team_history_route_defined PASSED [ 82%]
+tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py::TestContractTrain082SuggestionsTeamHistory::test_get_suggestions_team_history_is_get_method PASSED [ 84%]
+tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py::TestContractTrain083SuggestionsTeamStats::test_get_suggestions_team_stats_route_defined PASSED [ 87%]
+tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py::TestContractTrain083SuggestionsTeamStats::test_get_suggestions_team_stats_is_get_method PASSED [ 89%]
+tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py::TestContractTrain084SuggestionsApply::test_post_suggestions_apply_route_defined PASSED [ 92%]
+tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py::TestContractTrain084SuggestionsApply::test_post_suggestions_apply_is_post_method PASSED [ 94%]
+tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py::TestContractTrain085SuggestionsDismiss::test_post_suggestions_dismiss_route_defined PASSED [ 97%]
+tests/training/contracts/test_contract_train_077_085_alerts_suggestions.py::TestContractTrain085SuggestionsDismiss::test_post_suggestions_dismiss_is_post_method PASSED [100%]
+
+============================== warnings summary ===============================
+app\main.py:23
+app\main.py:23
+app\main.py:23
+app\main.py:23
+app\main.py:23
+app\main.py:23
+app\main.py:23
+  C:\HB TRACK\Hb Track - Backend\app\main.py:23: DeprecationWarning: 'HTTP_422_UNPROCESSABLE_ENTITY' is deprecated. Use 'HTTP_422_UNPROCESSABLE_CONTENT' instead.
+    from app.core.exceptions import NotFoundError, ForbiddenError, ValidationError, ConflictError
+
+app\schemas\training_alerts_step18.py:27
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts_step18.py:27: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SuggestionCreate(BaseModel):
+
+app\schemas\training_alerts_step18.py:49
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts_step18.py:49: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SuggestionApply(BaseModel):
+
+app\schemas\training_alerts_step18.py:69
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts_step18.py:69: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SuggestionDismiss(BaseModel):
+
+app\schemas\training_alerts_step18.py:81
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts_step18.py:81: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SuggestionResponse(BaseModel):
+
+app\schemas\training_alerts_step18.py:126
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts_step18.py:126: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SuggestionListResponse(BaseModel):
+
+app\schemas\training_alerts_step18.py:146
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts_step18.py:146: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SuggestionStatsResponse(BaseModel):
+
+app\schemas\training_alerts_step18.py:173
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts_step18.py:173: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SuggestionFilters(BaseModel):
+
+app\schemas\person.py:275
+  C:\HB TRACK\Hb Track - Backend\app\schemas\person.py:275: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class PersonResponse(PersonBase, BaseResponseSchema, SoftDeleteMixin):
+
+app\schemas\person.py:298
+  C:\HB TRACK\Hb Track - Backend\app\schemas\person.py:298: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class PersonListResponse(BaseModel):
+
+app\schemas\intake\ficha_unica.py:457
+  C:\HB TRACK\Hb Track - Backend\app\schemas\intake\ficha_unica.py:457: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class FichaUnicaResponse(BaseModel):
+
+app\schemas\intake\ficha_unica.py:551
+  C:\HB TRACK\Hb Track - Backend\app\schemas\intake\ficha_unica.py:551: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class OrganizationAutocompleteItem(BaseModel):
+
+app\schemas\intake\ficha_unica.py:567
+  C:\HB TRACK\Hb Track - Backend\app\schemas\intake\ficha_unica.py:567: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class TeamAutocompleteItem(BaseModel):
+
+app\api\v1\routers\lookup.py:29
+  C:\HB TRACK\Hb Track - Backend\app\api\v1\routers\lookup.py:29: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class PositionResponse(BaseModel):
+
+app\api\v1\routers\lookup.py:37
+  C:\HB TRACK\Hb Track - Backend\app\api\v1\routers\lookup.py:37: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CategoryResponse(BaseModel):
+
+app\api\v1\routers\lookup.py:47
+  C:\HB TRACK\Hb Track - Backend\app\api\v1\routers\lookup.py:47: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SchoolingLevelResponse(BaseModel):
+
+app\api\v1\routers\lookup.py:54
+  C:\HB TRACK\Hb Track - Backend\app\api\v1\routers\lookup.py:54: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class OrganizationResponse(BaseModel):
+
+app\api\v1\routers\lookup.py:61
+  C:\HB TRACK\Hb Track - Backend\app\api\v1\routers\lookup.py:61: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class TeamResponse(BaseModel):
+
+app\api\v1\routers\lookup.py:71
+  C:\HB TRACK\Hb Track - Backend\app\api\v1\routers\lookup.py:71: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SeasonResponse(BaseModel):
+
+app\api\v1\routers\media.py:37
+  C:\HB TRACK\Hb Track - Backend\app\api\v1\routers\media.py:37: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CloudinarySignatureResponse(BaseModel):
+
+app\schemas\exercise_tags.py:19
+  C:\HB TRACK\Hb Track - Backend\app\schemas\exercise_tags.py:19: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class ExerciseTagResponse(ExerciseTagBase):
+
+app\schemas\exercise_tags.py:29
+  C:\HB TRACK\Hb Track - Backend\app\schemas\exercise_tags.py:29: PydanticDeprecatedSince20: The `update_forward_refs` method is deprecated; use `model_rebuild` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    ExerciseTagResponse.update_forward_refs()
+
+app\schemas\exercises.py:38
+  C:\HB TRACK\Hb Track - Backend\app\schemas\exercises.py:38: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class ExerciseResponse(ExerciseBase):
+
+app\schemas\exercises.py:58
+  C:\HB TRACK\Hb Track - Backend\app\schemas\exercises.py:58: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class ExerciseACLResponse(BaseModel):
+
+app\schemas\exercise_favorites.py:8
+  C:\HB TRACK\Hb Track - Backend\app\schemas\exercise_favorites.py:8: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class ExerciseFavoriteResponse(BaseModel):
+
+app\schemas\athletes_v2.py:198
+  C:\HB TRACK\Hb Track - Backend\app\schemas\athletes_v2.py:198: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class AthleteResponse(BaseModel):
+
+app\schemas\athletes_v2.py:279
+  C:\HB TRACK\Hb Track - Backend\app\schemas\athletes_v2.py:279: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class AthleteStateHistoryResponse(BaseModel):
+
+app\schemas\training_alerts.py:26
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts.py:26: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class AlertCreate(BaseModel):
+
+app\schemas\training_alerts.py:51
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts.py:51: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class AlertUpdate(BaseModel):
+
+app\schemas\training_alerts.py:63
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts.py:63: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class AlertResponse(BaseModel):
+
+app\schemas\training_alerts.py:104
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts.py:104: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class AlertListResponse(BaseModel):
+
+app\schemas\training_alerts.py:124
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts.py:124: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class AlertStatsResponse(BaseModel):
+
+app\schemas\training_alerts.py:151
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_alerts.py:151: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class AlertFilters(BaseModel):
+
+app\schemas\training_analytics.py:54
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_analytics.py:54: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class TeamSummaryResponse(BaseModel):
+
+app\schemas\training_analytics.py:95
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_analytics.py:95: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class WeeklyLoadResponse(BaseModel):
+
+app\schemas\training_analytics.py:131
+  C:\HB TRACK\Hb Track - Backend\app\schemas\training_analytics.py:131: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class DeviationAnalysisResponse(BaseModel):
+
+app\schemas\dashboard.py:157
+  C:\HB TRACK\Hb Track - Backend\app\schemas\dashboard.py:157: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class DashboardSummaryResponse(BaseModel):
+
+app\schemas\exports.py:17
+  C:\HB TRACK\Hb Track - Backend\app\schemas\exports.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class AnalyticsPDFExportRequest(BaseModel):
+
+app\schemas\exports.py:46
+  C:\HB TRACK\Hb Track - Backend\app\schemas\exports.py:46: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class AthleteDataExportRequest(BaseModel):
+
+app\schemas\exports.py:69
+  C:\HB TRACK\Hb Track - Backend\app\schemas\exports.py:69: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class ExportJobResponse(BaseModel):
+
+app\schemas\exports.py:106
+  C:\HB TRACK\Hb Track - Backend\app\schemas\exports.py:106: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class ExportJobListResponse(BaseModel):
+
+app\schemas\exports.py:128
+  C:\HB TRACK\Hb Track - Backend\app\schemas\exports.py:128: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class ExportRateLimitResponse(BaseModel):
+
+app\main.py:316
+  C:\HB TRACK\Hb Track - Backend\app\main.py:316: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("startup")
+
+.venv\Lib\site-packages\fastapi\applications.py:4576
+.venv\Lib\site-packages\fastapi\applications.py:4576
+  C:\HB TRACK\Hb Track - Backend\.venv\Lib\site-packages\fastapi\applications.py:4576: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)
+
+app\main.py:369
+  C:\HB TRACK\Hb Track - Backend\app\main.py:369: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("shutdown")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 39 passed, 52 warnings in 1.29s =======================
+'=== FASE-2: SANITY AR_200 full rerun (11 arquivos) ===' 
+    class ExportJobResponse(BaseModel):
+
+app\schemas\exports.py:106
+  C:\HB TRACK\Hb Track - Backend\app\schemas\exports.py:106: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class ExportJobListResponse(BaseModel):
+
+app\schemas\exports.py:128
+  C:\HB TRACK\Hb Track - Backend\app\schemas\exports.py:128: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class ExportRateLimitResponse(BaseModel):
+
+app\main.py:316
+  C:\HB TRACK\Hb Track - Backend\app\main.py:316: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("startup")
+
+.venv\Lib\site-packages\fastapi\applications.py:4576
+.venv\Lib\site-packages\fastapi\applications.py:4576
+  C:\HB TRACK\Hb Track - Backend\.venv\Lib\site-packages\fastapi\applications.py:4576: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)
+
+app\main.py:369
+  C:\HB TRACK\Hb Track - Backend\app\main.py:369: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event("shutdown")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================= 70 passed, 52 warnings in 2.51s =======================
+
+
+--- STDERR ---
+

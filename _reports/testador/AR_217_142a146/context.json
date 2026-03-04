@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_217-142a146",
+  "timestamp_utc": "2026-03-03T15:23:35.422624+00:00",
+  "git": {
+    "commit": "142a1469efb1d530e4bd579fb2f134cd78754a7e"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "217",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_217_contract_tests_ciclos_exercises_analytics_export.md"
+}
