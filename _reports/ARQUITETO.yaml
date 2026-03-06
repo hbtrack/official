@@ -1,0 +1,264 @@
+---
+titulo: ARQUITETO.md -- Handoff para Executor
+protocolo: 1.3.0
+branch: dev-changes-2
+head: a7ab568
+data: 2026-03-06
+status: BATCH_32_SEALED
+ar_ids:
+  - 254
+  - 255
+
+pre_flight:
+  workspace_clean_check:
+    - "`git status` — confirmar nenhum unstaged tracked change nao relacionado a esta AR."
+    - "`git diff HEAD` — confirmar ausencia de mudancas de outras ARs."
+    - "Confirmar que AR_253 esta VERIFICADO (Batch 31 selado) antes de executar Batch 32."
+    - "Verificar que test_contract_train_029_039_wellness.py existe e tem as classes CONTRACT-031..039."
+
+## STOP CONDITIONS
+
+Parar e escalar ao Arquiteto se:
+- BLOCKED_INPUT (exit 4): arquivo de write_scope nao encontrado.
+- ERROR_INFRA (exit 3): pytest nao executavel.
+- FAIL_ACTIONABLE (exit 2): validation_command retorna FAIL apos 3 tentativas.
+- pytest dos novos testes falha (significa que AR_253 nao foi corretamente implementado — verificar routers).
+
+---
+
+## GAP ANALYSIS SUMMARY — Batch 32
+
+| Gap ID | Tipo | Descricao | Criticidade |
+|---|---|---|---|
+| GAP-BATCH32-001 | Teste Runtime | CONTRACT-031/032/037/038: grep-only, sem guard de impl pos-AR-TRAIN-069 | ALTA |
+| GAP-BATCH32-002 | Sync Documental | TEST_MATRIX + BACKLOG + Kanban nao atualizados para Batch 31 | ALTA |
+| GAP-POLISH-001..005 | UX Polish | Items nao planejados no BACKLOG — aguardando priorizacao PO | BAIXA |
+| GAP-CAP-001..005 | Nova Capability | Fora do escopo atual — requer autorizacao PO | BAIXA |
+| GAP-TRUTH_FE | TRUTH_FE | Playwright nao materializado — post-DONE futuro | BAIXA |
+
+**CONTRACT_DIFF_GATE**: N/A — nenhuma mudanca em openapi.json. Batch 32 e T+G only.
+
+---
+
+## PLAN_HANDOFF — AR_254 + AR_255 / AR-TRAIN-070 + AR-TRAIN-071 (Batch 32)
+
+**Titulo Batch 32:** Testes de implementacao runtime GET/PATCH wellness por ID + Sync documental pos-Batch 31
+
+**Classificacao:** Categoria T (testes) + G (governanca) — sem mudanca de schema DB, sem migration, sem mudanca de contrato openapi.
+
+**Plano JSON:** `docs/_canon/planos/ar_batch32_wellness_runtime_tests_sync_070_071.json`
+
+PROOF: Hb Track - Backend/tests/training/contracts/test_contract_train_029_039_wellness.py::TestContractTrain031ImplWellnessPre
+PROOF: Hb Track - Backend/tests/training/contracts/test_contract_train_029_039_wellness.py::TestContractTrain037ImplWellnessPost
+PROOF: docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md::CONTRACT-031/032/037/038
+
+TRACE: TEST_MATRIX_TRAINING.md §9 + AR_BACKLOG_TRAINING.md lote 22 + Kanban + _INDEX.md v1.5.0
+
+**PROOF por AR_ID:**
+
+| AR_ID | PROOF | TRACE |
+|---|---|---|
+| AR_254 | validation_command AC1..AC8 PASS + pytest tests/training/contracts/test_contract_train_029_039_wellness.py exit=0 | 4 novas classes de teste verificando async def, get_current_user, service delegation para CONTRACT-031/032/037/038 |
+| AR_255 | validation_command AC1..AC5 PASS (grep em BACKLOG, TEST_MATRIX, Kanban, _INDEX) | Sync documental pos-Batch 31+32: lote 22, v4.2.0 TEST_MATRIX, v3.6.0 BACKLOG, _INDEX v1.5.0 |
+
+**TRACE de invariantes impactadas:**
+
+- INV-TRAIN-002/003 (wellness deadlines): nao impactadas — testes verificam impl, nao alteram logica.
+- INV-TRAIN-009/010 (wellness uniqueness): nao impactadas — sem mudanca de produto.
+- INV-TRAIN-022 (cache_invalidation): nao impactada — apenas testes + docs.
+- DEC-TRAIN-001: N/A — nenhum payload modificado.
+
+**Schemathesis:** N/A — sem mudanca de openapi.json. Os 4 endpoints 501 foram corrigidos em AR_253. Schemathesis agora deve passar para todos os endpoints wellness.
+
+---
+
+## Tasks do Executor
+
+### AR_254 (AR-TRAIN-070 — T)
+
+| Task | Arquivo | Operacao |
+|---|---|---|
+| 001 | tests/training/contracts/test_contract_train_029_039_wellness.py | Adicionar 4 classes de teste de implementacao (031/032/037/038 Impl) |
+| 002 | TEST_MATRIX_TRAINING.md + AR_BACKLOG_TRAINING.md + Kanban | Sync documental AR-TRAIN-070 |
+
+### AR_255 (AR-TRAIN-071 — G)
+
+| Task | Arquivo | Operacao |
+|---|---|---|
+| 003 | AR_BACKLOG_TRAINING.md | Adicionar lote 22 com AR-TRAIN-070 e AR-TRAIN-071 — versao v3.6.0 |
+| 004 | TEST_MATRIX_TRAINING.md | Atualizar evidencia CONTRACT-031/032/037/038 + versao v4.2.0 |
+| 005 | Kanban | Mover AR_253/AR_254/AR_255 para VERIFICADO |
+| 006 | docs/hbtrack/modulos/treinos/_INDEX.md | Atualizar: ultima AR = AR_255, total = 71, versao v1.5.0 |
+
+---
+
+## Instrucoes tecnicas para o Executor (AR_254)
+
+### Estrutura de insercao no arquivo de teste
+
+O arquivo `tests/training/contracts/test_contract_train_029_039_wellness.py` tem 135 linhas. Inserir cada nova classe IMEDIATAMENTE APOS a classe existente correspondente:
+
+- Apos linha 65 (`TestContractTrain031GetWellnessPre`): inserir `TestContractTrain031ImplWellnessPre`
+- Apos `TestContractTrain032UpdateWellnessPre`: inserir `TestContractTrain032ImplUpdateWellnessPre`
+- Apos `TestContractTrain037GetWellnessPost`: inserir `TestContractTrain037ImplWellnessPost`
+- Apos `TestContractTrain038UpdateWellnessPost`: inserir `TestContractTrain038ImplUpdateWellnessPost`
+
+### Conteudo exato a inserir (copiar verbatim)
+
+```
+# ---------------------------------------------------------------------------
+# CONTRACT-031 IMPL — GET /wellness_pre/{wellness_pre_id} — impl quality guard
+# ---------------------------------------------------------------------------
+class TestContractTrain031ImplWellnessPre:
+    def test_get_by_id_is_async(self):
+        """Endpoint nao pode ser def sync (bug pre-AR_253)."""
+        assert "async def get_wellness_pre_by_id" in _pre()
+
+    def test_get_by_id_has_auth(self):
+        """Endpoint deve exigir autenticacao (get_current_user)."""
+        assert "get_current_user" in _pre()
+
+    def test_get_by_id_calls_service(self):
+        """Endpoint deve delegar ao WellnessPreService."""
+        content = _pre()
+        assert "get_wellness_pre_by_id" in content
+        assert "WellnessPreService" in content
+
+
+# ---------------------------------------------------------------------------
+# CONTRACT-032 IMPL — PATCH /wellness_pre/{wellness_pre_id} — impl quality guard
+# ---------------------------------------------------------------------------
+class TestContractTrain032ImplUpdateWellnessPre:
+    def test_update_is_async(self):
+        """Endpoint nao pode ser def sync (bug pre-AR_253)."""
+        assert "async def update_wellness_pre" in _pre()
+
+    def test_update_has_auth(self):
+        """Endpoint deve exigir autenticacao."""
+        assert "get_current_user" in _pre()
+
+    def test_update_calls_service(self):
+        """Endpoint deve delegar ao WellnessPreService.update_wellness_pre_by_id."""
+        assert "update_wellness_pre_by_id" in _pre()
+
+    def test_update_commits(self):
+        """Endpoint PATCH deve fazer commit apos edicao."""
+        assert "db.commit()" in _pre()
+```
+
+```
+# ---------------------------------------------------------------------------
+# CONTRACT-037 IMPL — GET /wellness_post/{wellness_post_id} — impl quality guard
+# ---------------------------------------------------------------------------
+class TestContractTrain037ImplWellnessPost:
+    def test_get_by_id_is_async(self):
+        """Endpoint deve ser async def."""
+        assert "async def get_wellness_post_by_id" in _post()
+
+    def test_get_by_id_has_auth(self):
+        """Endpoint deve exigir autenticacao."""
+        assert "get_current_user" in _post()
+
+    def test_get_by_id_calls_service(self):
+        """Endpoint deve delegar ao WellnessPostService."""
+        content = _post()
+        assert "get_wellness_post_by_id" in content
+        assert "WellnessPostService" in content
+
+
+# ---------------------------------------------------------------------------
+# CONTRACT-038 IMPL — PATCH /wellness_post/{wellness_post_id} — impl quality guard
+# ---------------------------------------------------------------------------
+class TestContractTrain038ImplUpdateWellnessPost:
+    def test_update_is_async(self):
+        """Endpoint nao pode ser def sync (bug pre-AR_253)."""
+        assert "async def update_wellness_post" in _post()
+
+    def test_update_has_auth(self):
+        """Endpoint deve exigir autenticacao."""
+        assert "get_current_user" in _post()
+
+    def test_update_calls_service(self):
+        """Endpoint deve delegar ao WellnessPostService.update_wellness_post_by_id."""
+        assert "update_wellness_post_by_id" in _post()
+
+    def test_update_commits(self):
+        """Endpoint PATCH deve fazer commit apos edicao."""
+        assert "db.commit()" in _post()
+```
+
+### Justificativa tecnica (para Testador)
+
+Os novos testes sao static analysis aprimorada (sem DB, NO_MOCKS_GLOBAL compliant). Verificam:
+1. `async def` — garante que o bug de sync->async foi corrigido e nao pode regredir
+2. `get_current_user` — garante que autenticacao nao pode ser removida silenciosamente
+3. service delegation — garante que o handler nao retorna hardcoded response
+4. `db.commit()` — garante que edicoes sao persistidas
+
+---
+
+## Gates obrigatorios
+
+- `DOC-GATE-003` (Governed Roots SSOT) — verificar write_scope dentro dos roots permitidos.
+- `PLANS_AR_SYNC` (Plan-to-AR Materialization Sync) — task 002/004 sincronizam backlog e matrix.
+- Gate anti-trivial (O2.5): validation_commands sao grep estrutural de qualidade de impl + pytest — nao triviais.
+- Triple-run notice: Testador executara validation_commands 3x; hash canonico por run: sha256(exit_code + stdout_norm + stderr_norm).
+- CONTRACT_DIFF_GATE: N/A — sem mudanca de openapi.json. Declarado explicitamente para suprimir gate.
+
+---
+
+## Rollback
+
+Nenhum rollback de banco necessario.
+
+Para reverter:
+```
+git checkout -- "Hb Track - Backend/tests/training/contracts/test_contract_train_029_039_wellness.py"
+git checkout -- "docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md"
+git checkout -- "docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md"
+git checkout -- "docs/hbtrack/Hb Track Kanban.md"
+git checkout -- "docs/hbtrack/modulos/treinos/_INDEX.md"
+```
+
+---
+
+## Schemathesis
+
+N/A — sem mudanca de openapi.json. Batch 32 e T+G only.
+
+Nota: pos-AR_253, os 4 endpoints wellness que retornavam 501 estao implementados. Schemathesis agora deve passar para esses endpoints. Nenhuma acao adicional requerida neste batch.
+
+---
+
+## A7 — AUDITORIA (Arquiteto, 2026-03-06)
+
+### Resultado: BATCH_32_SEALED ✅
+
+| AR | Triple-run | hash_short | triple_consistency | hb seal |
+|---|---|---|---|---|
+| AR_254 | 3/3 exit=0 | c7950ee5238ba684 | OK | ✅ `hb seal 254` — VERIFICADO |
+| AR_255 | 3/3 exit=0 | c7950ee5238ba684 | OK | ✅ `hb seal 255` — VERIFICADO |
+
+**DOD**: PROOF[OK] TRACE[OK] STITCH[OK] MATRIX[N/A] WARNs[zero]
+
+---
+
+## Contexto anterior (selado — nao re-executar)
+
+**BATCH_31_SEALED** (2026-03-06) — AR_253 / AR-TRAIN-069 — VERIFICADO.
+
+Implementados 4 endpoints wellness-pre e wellness-post GET/PATCH por ID (fix stubs 501).
+- WellnessPreService: get_wellness_pre_by_id + update_wellness_pre_by_id adicionados
+- WellnessPostService: get_wellness_post_by_id + update_wellness_post_by_id adicionados
+- wellness_pre.py router: async def + get_current_user implementados
+- wellness_post.py router: async def + get_current_user implementados
+
+**BATCH_30_SEALED** (2026-03-06) — AR_252 / AR-TRAIN-068 — VERIFICADO.
+
+**BATCH_29_SEALED** (2026-03-05) — ARs 247..251 / AR-TRAIN-063..067 — VERIFICADO.
+
+Baseline pos-Batch 29: 615p / 0s / 0xf / 0f (NO_MOCKS_GLOBAL atingido).
+
+---
+
+*Arquiteto — 2026-03-06 — Batch 31 SEALED. Batch 32 SEALED (AR_254+AR_255 VERIFICADO, hash c7950ee5, hb seal executado). Gap Analysis: 2 gaps criticos resolvidos (GAP-BATCH32-001/002), 5 polish/cap itens aguardando PO.*

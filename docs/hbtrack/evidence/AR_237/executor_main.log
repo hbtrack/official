@@ -1,0 +1,18 @@
+AR_ID: 237
+Command: python -c "import sys; c=open('docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md',encoding='utf-8').read(); checks=[('AR-TRAIN-052','AC-001 AR-TRAIN-052 em §9'),('AR-TRAIN-052','AC-002 entry presente')]; failed=[l for t,l in checks if t not in c]; print('FAIL:',failed) or sys.exit(1) if failed else print('PASS: AC-001..003 verificados')"
+Exit Code: 0
+Timestamp UTC: 2026-03-04T16:27:18.065079+00:00
+Behavior Hash (exit+stdout+stderr): dbf416d002c86c04ecb925c06fd0618a654825cb956bfcb2d89c2fd240565bfe
+Git HEAD: a7ab568714918f4a7d148bde178a2c5f1bb88e98
+Python Version: 3.11.9
+Protocol Version: 1.3.0
+Workspace Clean: True
+Workspace Status: workspace_clean
+Governed Checksums (sha256): {"Hb Track - Frontend/src/lib/api/exercises.ts": "ed2e75c3cf226b2a0d8d847a31d119955cd0e359efcdccd947351668b47c2f9f", "Hb Track - Frontend/src/lib/api/training-phase3.ts": "8a24dc8cb4a65e6d9f098cbc1ce698c5c7515e0b33a0e61fb15c8283f53e60d4", "Hb Track - Frontend/src/lib/api/trainings.ts": "f7146d74342b1e50f8eece066209a102cf0c4a1387ab9f8ce5ebe15fe6e6672a", "docs/hbtrack/_INDEX.md": "d3c5e7d62e3498435871b77433b7971a4480c03cd151d1d24553066c7c17bef5", "docs/hbtrack/ars/features/AR_236_frontend_hard_sync_v1.3.0_tipos_uuid_standalone_+_.md": "9706747cdde61a7341bae9f44aa4044f91b7c251baa07b198b9b7bc2d4575689", "docs/hbtrack/evidence/AR_236/executor_main.log": "c1966de6d1515bb0e9750b7cb73f6097c41c1abc6ff81ba012b9c4e81ee738d2", "docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md": "5767e6450b592e2140555139169bf322838c34010f76dea2de71a37137a32870"}
+
+--- STDOUT ---
+PASS: AC-001..003 verificados
+
+
+--- STDERR ---
+

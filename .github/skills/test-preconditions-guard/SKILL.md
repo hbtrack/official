@@ -37,7 +37,7 @@ Comandos (copiar e rodar)
 
 Se qualquer pré-condição falhar
 - NÃO rodar verify.
-- Preencher `_reports/TESTADOR.md` com:
+- Preencher `_reports/TESTADOR.yaml` com:
   - RESULT=BLOCKED
   - Motivo objetivo (ex.: "EVIDENCE_NOT_STAGED", "DIRTY_WORKSPACE: unstaged_modified=N", "MISSING_EVIDENCE_FILE")
   - NEXT_ACTION: Executor (limpar workspace / stagear evidence) ou Arquiteto (divergência de plano)

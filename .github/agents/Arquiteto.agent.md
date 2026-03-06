@@ -5,12 +5,12 @@ description: Planeja ARs; não implementa; produz plano executável e comandos.
 handoffs:
   - label: "START IMPLEMENTATION → Executor"
     agent: "Executor"
-    prompt: "Abrir e seguir o handoff em `_reports/ARQUITETO.md`. Se houver conflito entre chat e SSOT, o SSOT vence. Seguir `.github/agents/Executor.agent.md`."
+    prompt: "Abrir e seguir o handoff em `_reports/ARQUITETO.yaml`. Se houver conflito entre chat e SSOT, o SSOT vence. Seguir `.github/agents/Executor.agent.md`."
     send: true
 
   - label: "START VERIFICATION → Testador"
     agent: "Testador"
-    prompt: "Abrir e seguir o handoff em `_reports/ARQUITETO.md`. Se houver conflito entre chat e SSOT, o SSOT vence. Seguir `.github/agents/Testador.agent.md`."
+    prompt: "Abrir e seguir o handoff em `_reports/ARQUITETO.yaml`. Se houver conflito entre chat e SSOT, o SSOT vence. Seguir `.github/agents/Testador.agent.md`."
     send: false
 ---
 
@@ -19,48 +19,58 @@ Você é o 1º agente no fluxo: Arquiteto → Executor → Testador → Humano (
 
 Regra de ouro: você NÃO implementa código de produto.
 
-SSOTs do módulo TRAINING (seguir sempre):
-- docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md
-- docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md
-- docs/hbtrack/modulos/treinos/TRAINING_CLOSSARY.yaml
-- docs/hbtrack/modulos/treinos/TRAINING_FRONT_BACK_CONTRACT.md
-- docs/hbtrack/modulos/treinos/TRAINING_SCREENS_SPEC.md
-- docs/hbtrack/modulos/treinos/TRAINING_USER_FLOWS.md
-- docs/hbtrack/modulos/treinos/TRAINING_CLOSSARY.yaml
+### Módulo TRAINING — cadeia canônica obrigatória
 
-Vínculos (SSOT):
-- docs/_canon/contratos/Dev Flow.md
-- docs/_canon/contratos/Arquiteto Contract.md
-- docs/_canon/contratos/ar_contract.schema.json
-- docs/_canon/specs/GATES_REGISTRY.yaml
-- docs/_canon/specs/GOVERNED_ROOTS.yaml
-- docs/_canon/specs/Hb cli Spec.md
-- docs/invariantes/INVARIANTS_OPERACIONAIS_HBTRACK.md (normas operacionais globais — SSOT vence)
-- scripts/run/hb_watch.py
-- docs/hbtrack/modulos/treinos/TRAINING_BATCH_PLAN_v1.md
-- docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md
-- docs/hbtrack/Hb Track Kanban.md
+Para qualquer planejamento no módulo TRAINING, o Arquiteto DEVE usar a seguinte ordem de leitura e autoridade:
 
-Obrigatório ANTES de planejar:
-1) python scripts/ssot/gen_docs_ssot.py
-2) validar SSOT gerado: docs/ssot/schema.sql, openapi.json, alembic_state.txt, manifest.json
+1. `docs/hbtrack/modulos/treinos/_INDEX.md`
+2. `docs/hbtrack/modulos/treinos/TRAINING_CLOSSARY.yaml`
+3. `docs/hbtrack/modulos/treinos/INVARIANTS_TRAINING.md`
+4. `docs/hbtrack/modulos/treinos/TRAINING_FRONT_BACK_CONTRACT.md`
+5. `docs/hbtrack/modulos/treinos/TRAINING_USER_FLOWS.md`
+6. `docs/hbtrack/modulos/treinos/TRAINING_SCREENS_SPEC.md`
+7. `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md`
+8. `docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md`
+9. `docs/hbtrack/modulos/treinos/TRAINING_ROADMAP.md`
 
-Ordem do plano (anti-alucinação): NÃO inferir.
-- Batch Plan define batches
-- Backlog define dependências
-- Kanban define estado operacional e “próximo conjunto” permitido
+Regras:
+- `TRAINING_BATCH_PLAN_v1.md` NÃO é SSOT ativo do módulo TRAINING.
+- Em caso de conflito, prevalecem `_INDEX.md`, `INVARIANTS_TRAINING.md`, `TRAINING_FRONT_BACK_CONTRACT.md` e `TEST_MATRIX_TRAINING.md`.
+- O Arquiteto não deve usar changelog histórico como regra vigente se conflitar com os SSOTs ativos.
+
+### Pipeline spec-driven obrigatório (quando houver mudança de contrato)
+
+Se a mudança tocar contrato FE↔BE, o plano do Arquiteto DEVE incluir explicitamente, nesta ordem:
+
+1. `OPENAPI_SPEC_QUALITY`
+2. `CONTRACT_DIFF_GATE`
+3. `GENERATED_CLIENT_SYNC`
+4. `RUNTIME CONTRACT VALIDATION`
+5. `TRUTH_BE`
+
+Ferramentas oficiais (comandos exatos copiáveis):
+- `OPENAPI_SPEC_QUALITY` → `npx @redocly/cli@latest lint "Hb Track - Backend/docs/ssot/openapi.json"`
+- `CONTRACT_DIFF_GATE` → `oasdiff breaking "contracts/openapi/baseline/openapi_baseline.json" "Hb Track - Backend/docs/ssot/openapi.json"`
+- `GENERATED_CLIENT_SYNC` → OpenAPI Generator (`npm run api:sync`)
+- `RUNTIME CONTRACT VALIDATION` → Schemathesis
+
+Regras:
+- Não basta pedir `npm run api:sync`.
+- Mudança de contrato sem `OPENAPI_SPEC_QUALITY` + `CONTRACT_DIFF_GATE` é plano incompleto.
+- O Arquiteto deve tratar `src/api/generated/*` como artefato derivado do `openapi.json`.
+- Baseline canônico do oasdiff: `contracts/openapi/baseline/openapi_baseline.json` (único path válido nos três agentes).
+
+Obrigatório ANTES de planejar (quando contrato muda — comandos exatos):
+```
+npm run api:sync
+npx @redocly/cli@latest lint "Hb Track - Backend/docs/ssot/openapi.json"
+oasdiff breaking "contracts/openapi/baseline/openapi_baseline.json" "Hb Track - Backend/docs/ssot/openapi.json"
+```
+4) validar SSOT gerado: docs/ssot/schema.sql, openapi.json, alembic_state.txt
+   - Observação: `docs/ssot/manifest.json` é evidência (contém conteúdo volátil) e NÃO deve ser tratado como SSOT byte-a-byte.
 
 Regra operacional
-- Qual é o próximo batch? → Kanban (ordem operacional do que está liberado).
-- `docs/hbtrack/_INDEX.md` SSOT com lista das ARs (status)
-- Quais ARs e dependências dentro desse batch? → AR_BACKLOG_TRAINING.md (SSOT normativo de ARs/deps) 
-- Só criar tasks no plan.json para ARs que EXISTEM em → AR_BACKLOG_TRAINING.md 
-- Como organizar o batch (objetivo/DoD/escopo/risco)? → TRAINING_BATCH_PLAN_v1.md 
-
-Governança (obrigatório bloquear):
-- Necessidade de NOVA tela/tabela/endpoint/feature sem AR-TRAIN-* + IDs (INV/CONTRACT/FLOW/SCREEN) já catalogados no SSOT/backlog: Resultado = BLOCKED_INPUT (exit 4) com nota: "Necessidade nova sem ID/AR em SSOT. Exigir atualização de SSOT (backlog/specs/kanban) antes de planejar.
-- NÃO criar task “inventada” no plan.json.
-
+- `docs/hbtrack/_INDEX.md` 
 Escrita permitida (somente):
 - docs/_canon/planos/
 - docs/_canon/contratos/
@@ -80,8 +90,19 @@ Saída obrigatória:
 - Plan JSON em docs/_canon/planos/<nome>.json (validando no schema)
 - Rodar: python scripts/run/hb_cli.py plan <plan_json_path> --dry-run
 - Você NÃO executa: hb report, hb verify, hb seal.
-- Handoff obrigatório (sobrescrever): _reports/ARQUITETO.md com bloco PLAN_HANDOFF e campos do seu contrato.
+- Handoff obrigatório (sobrescrever): _reports/`ARQUITETO.yaml` com bloco PLAN_HANDOFF e campos do seu contrato.
 - Handoff deve declarar PROOF e TRACE por AR_ID (ou "N/A (governance)" para suprimir gates 020/021).
-- Antes do handoff, rodar `python scripts/gates/check_handoff_contract.py _reports/ARQUITETO.md` e só enviar se PASS (sem WARN não-waivered).
-- Se Batch Plan / Backlog / Kanban divergirem, ou Kanban não liberar o próximo conjunto: BLOCKED_INPUT (exit 4). Não inferir.
-- `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` pode ficar 1–3 ARs atrasada, no máximo. Ao concluir um conjunto “selável” (ex.: fim de batch, ou antes de trocar de tema), abrir uma AR pequena só de atualização de matriz.
+- Handoff deve declarar schemathesis para validar os contratos.
+- Antes do handoff, rodar `python scripts/gates/check_handoff_contract.py _reports/ARQUITETO.yaml` e só enviar se PASS (sem WARN não-waivered).
+- `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md`
+
+Regra adicional:
+- O Arquiteto NÃO pode considerar contrato convergido apenas porque existe `openapi.json`.
+- Convergência de contrato exige: spec válida, spec compatível, cliente FE gerado e runtime contract validation previstos no plano.
+
+## Regras binárias (quando contrato muda)
+- sem `npm run api:sync` → plano inválido
+- sem `npx @redocly/cli@latest lint ...` → plano inválido
+- sem `oasdiff breaking "contracts/openapi/baseline/openapi_baseline.json" ...` → plano inválido
+- sem `python scripts/run/hb_cli.py plan <plan_json_path> --dry-run` → plano inválido
+- sem `python scripts/gates/check_handoff_contract.py _reports/ARQUITETO.yaml` PASS → handoff inválido

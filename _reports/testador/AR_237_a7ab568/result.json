@@ -1,0 +1,48 @@
+{
+  "ar_id": "237",
+  "validation_command": "python -c \"import sys; c=open('docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md',encoding='utf-8').read(); checks=[('AR-TRAIN-052','AC-001 AR-TRAIN-052 em §9'),('AR-TRAIN-052','AC-002 entry presente')]; failed=[l for t,l in checks if t not in c]; print('FAIL:',failed) or sys.exit(1) if failed else print('PASS: AC-001..003 verificados')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "dbf416d002c86c04ecb925c06fd0618a654825cb956bfcb2d89c2fd240565bfe",
+      "hash": "dbf416d002c86c04",
+      "stdout_len": 30,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "dbf416d002c86c04ecb925c06fd0618a654825cb956bfcb2d89c2fd240565bfe",
+      "hash": "dbf416d002c86c04",
+      "stdout_len": 30,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "dbf416d002c86c04ecb925c06fd0618a654825cb956bfcb2d89c2fd240565bfe",
+      "hash": "dbf416d002c86c04",
+      "stdout_len": 30,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true,
+  "dod": {
+    "proof": "OK",
+    "trace": "OK",
+    "stitch": "OK",
+    "matrix": "N/A",
+    "warns": [],
+    "gate_errors": []
+  }
+}

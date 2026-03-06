@@ -301,9 +301,6 @@ class TestInvTrain059ExerciseOrderContiguous:
         orders = [ex.order_index for ex in session_exercises.exercises]
         assert orders == [1, 2, 3], f"Ordem esperada [1,2,3], obtida {orders}"
 
-    @pytest.mark.skip(
-        reason="PENDING: session_exercise_service.reorder_exercises não valida contiguidade (permite gaps)"
-    )
     @pytest.mark.asyncio
     async def test_invalid_gap_in_order_2_4(
         self,

@@ -1,6 +1,6 @@
 # Índice de Architectural Records (ARs)
 > ⚠️ Auto-gerado por `hb plan`/`hb report`. NÃO editar manualmente.
-> Última atualização: 2026-03-04
+> Última atualização: 2026-03-06
 
 | ID | Título | Status | Evidence |
 |---|---|---|---|
@@ -221,6 +221,26 @@
 | AR_233 | Centralizar config CORS em config.py + validação fail-fast | ✅ VERIFICADO | docs/hbtrack/evidence/AR_233/executor_main.log |
 | AR_234 | Refatorar CORSMiddleware em main.py — config única via se... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_234/executor_main.log |
 | AR_235 | Criar tests/test_cors.py — suíte mínima de preflight e re... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_235/executor_main.log |
-| AR_900 | E2E: Verificação pipeline DoD (GOVERNANCE_ONLY) | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_900/executor_main.log |
+| AR_236 | Frontend Hard Sync v1.3.0: tipos UUID/standalone + stubs ... | ✅ SUCESSO | docs/hbtrack/evidence/AR_236/executor_main.log |
+| AR_237 | Sync §9 TEST_MATRIX: entry AR-TRAIN-052 VERIFICADO pós-Ba... | ✅ SUCESSO | docs/hbtrack/evidence/AR_237/executor_main.log |
+| AR_238 | Sync §5 FASE_3: 18 INVs FAIL/ERROR→PASS + v3.1.0 + §9 053... | ✅ SUCESSO | docs/hbtrack/evidence/AR_238/executor_main.log |
+| AR_239 | BE: endpoint PATCH resolve-pending-item no attendance rou... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_239/executor_main.log |
+| AR_240 | BE: endpoints apply-draft + justify-suggestion no ai_coac... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_240/executor_main.log |
+| AR_241 | BE: endpoint GET wellness-content-gate no athlete_trainin... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_241/executor_main.log |
+| AR_242 | FE: corrigir URLs training-phase3.ts para paths reais do ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_242/executor_main.log |
+| AR_243 | Sync TEST_MATRIX e SSOT documental pos-Batch 26 (AR-TRAIN... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_243/executor_main.log |
+| AR_244 | AR-TRAIN-060: Governance Sync Kanban+BatchPlan | ✅ VERIFICADO | docs/hbtrack/evidence/AR_244/executor_main.log |
+| AR_245 | AR-TRAIN-061: Contract tests CONTRACT-074/075 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_245/executor_main.log |
+| AR_246 | AR-TRAIN-062: Sync Backlog + TEST_MATRIX §9 + BatchPlan p... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_246/executor_main.log |
+| AR_247 | AR_247 | AR-TRAIN-063 | Fase 0+1: TRUTH SUITE dupla + tri... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_247/executor_main.log |
+| AR_248 | AR_248 | AR-TRAIN-064 | Fix user.organization_id not a co... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_248/executor_main.log |
+| AR_249 | AR_249 | AR-TRAIN-065 | Bucket C: Fix 4 SKIP em test_inv_... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_249/executor_main.log |
+| AR_250 | AR_250 | AR-TRAIN-066 | Fase 4: Converter 9 LEGACY_INVALI... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_250/executor_main.log |
+| AR_251 | AR_251 | AR-TRAIN-067 | Sync documental pos-Batch 29: Bac... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_251/executor_main.log |
+| AR_252 | AR_252 | AR-TRAIN-068 | Refactor FE Wellness Pre/Pos: mig... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_252/executor_main.log |
+| AR_253 | AR-TRAIN-069 — Implementar endpoints GET/PATCH wellness-p... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_253/executor_main.log |
+| AR_254 | AR-TRAIN-070 — Testes impl GET/PATCH wellness por ID (CON... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_254/executor_main.log |
+| AR_255 | AR-TRAIN-071 — Sync documental pos-Batch 31+32 (TEST_MATR... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_255/executor_main.log |
+| AR_900 | E2E: Verificação pipeline DoD (GOVERNANCE_ONLY) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_900/executor_main.log |
 | AR_998 | Test Write Scope Section Generation | ✅ VERIFICADO | docs/hbtrack/evidence/AR_998/executor_main.log |
 | AR_999 | Exemplo: Adicionar campo birthdate em Person | ✅ VERIFICADO | docs/hbtrack/evidence/AR_999/executor_main.log |

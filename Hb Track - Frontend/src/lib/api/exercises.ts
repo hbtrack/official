@@ -76,6 +76,7 @@ export interface ExerciseFilters {
   category?: string;
   favorites_only?: boolean;
   created_by_user_id?: string;
+  organization_id?: string; // AR_236 (Z4/INV-TRAIN-049): filtro por organização
 }
 
 export interface ExerciseInput {
@@ -84,6 +85,10 @@ export interface ExerciseInput {
   tag_ids: string[];
   category?: string;
   media_url?: string; // YouTube URL
+  // AR_236 (Z1-B): campos de escopo/visibilidade
+  scope?: ExerciseScope;          // 'SYSTEM' | 'ORG'
+  visibility_mode?: VisibilityMode; // Backend server_default='restricted' — omitir para usar default
+  organization_id?: string;       // uuid — injetar da org do usuário logado
 }
 
 export interface ExerciseListResponse {
@@ -126,11 +131,14 @@ export async function getExercises(
   if (filters?.created_by_user_id) {
     params.append('created_by_user_id', filters.created_by_user_id);
   }
+  if (filters?.organization_id) {
+    params.append('organization_id', filters.organization_id); // AR_236 (Z4/INV-TRAIN-049)
+  }
 
   const response = await apiClient.get<ExerciseListResponse>(
     `/exercises?${params.toString()}`
   );
-  
+
   return response;
 }
 
@@ -275,7 +283,7 @@ function buildTagHierarchy(tags: ExerciseTag[]): ExerciseTag[] {
   });
 
   // Ordenar por display_order
-  const sortByDisplayOrder = (a: ExerciseTag, b: ExerciseTag) => 
+  const sortByDisplayOrder = (a: ExerciseTag, b: ExerciseTag) =>
     a.display_order - b.display_order;
 
   rootTags.sort(sortByDisplayOrder);

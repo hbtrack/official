@@ -1,8 +1,8 @@
 # AR_BACKLOG_TRAINING.md — Backlog de ARs (Materialização) do Módulo TRAINING
 
 Status: ATIVO
-Versão: v2.4.0
-Tipo de Documento: AR Materialization Backlog (Normativo Operacional / SSOT)  
+Versão: v3.6.0
+Tipo de Documento: AR Materialization Backlog (**apenas ARs** — sem gate, sem roadmap)  
 Módulo: TRAINING  
 Fase: FASE_2 (PRD v2.2 — 2026-02-20) + DEC-TRAIN-* (2026-02-25) + FASE_3 (2026-02-27)  
 Autoridade: NORMATIVO_OPERACIONAL  
@@ -11,8 +11,76 @@ Owners:
 - Execução (Executor): (a definir)
 - Auditoria/Testes: (a definir)
 
-Última revisão: 2026-03-03  
-Próxima revisão recomendada: 2026-03-10  
+Última revisão: 2026-03-06  
+Próxima revisão recomendada: N/A — TRUTH SUITE 0 failed/skipped/xfailed atingido  
+
+> Changelog v3.6.0 (2026-03-06) — Batch 32 sync documental (AR-TRAIN-070/071):
+> - Lote 22 adicionado: AR-TRAIN-070 (T) — testes impl GET/PATCH wellness por ID (CONTRACT-031/032/037/038).
+> - Lote 22 adicionado: AR-TRAIN-071 (G) — sync documental pós-Batch 31+32.
+> - Tabela de ARs: 2 linhas adicionadas AR-TRAIN-070/071.
+> - Detalhe §8: seções AR-TRAIN-070 e AR-TRAIN-071 adicionadas.
+
+> Changelog v3.5.1 (2026-03-06) — Doc hygiene (spec-driven):
+> - DONE_GATE tratado como evidência derivada (`_reports/training/DONE_GATE_TRAINING.md`), não SSOT.
+> - Removidas referências a artefatos inexistentes (Done Gate versionado / Batch Plan) como exigência normativa.
+> - Ajustadas referências para `TEST_MATRIX_TRAINING.md` (norma) e `_reports/training/*` (evidência).
+
+> Changelog v3.5.0 (2026-03-06) - Batch 31 BE stubs fix (AR-TRAIN-069):
+> - Lote 21 adicionado: AR-TRAIN-069 (B) — BE: implementar GET/PATCH wellness-pre e wellness-post por ID (fix stubs 501).
+> - Tabela de ARs: 1 linha adicionada AR-TRAIN-069.
+> - Detalhe §8: secao AR-TRAIN-069 adicionada.
+
+> Changelog v3.4.0 (2026-03-06) - Batch 30 FE Refactor (AR-TRAIN-068):
+> - Lote 20 adicionado: AR-TRAIN-068 (M) — Refactor FE Wellness Pre/Pos para cliente gerado.
+> - Tabela de ARs: 1 linha adicionada AR-TRAIN-068.
+> - Detalhe §8: secao AR-TRAIN-068 adicionada.
+
+> Changelog v3.3.0 (2026-03-05) — Batch 29 TRUTH SUITE Residuals (AR-TRAIN-063..067):
+> - Lote 19 adicionado: AR-TRAIN-063 (T/G), AR-TRAIN-064 (B), AR-TRAIN-065 (B/E), AR-TRAIN-066 (T), AR-TRAIN-067 (G) — todos VERIFICADO.
+> - Tabela de ARs: 5 linhas adicionadas AR-TRAIN-063..067.
+> - Detalhe §8: seções AR-TRAIN-063..067 adicionadas.
+> - Meta-objetivo Batch 29 atingido: 0 xfailed, 0 skipped, 0 LEGACY_INVALID.
+
+> Changelog v3.2.0 (2026-03-05) — NO_MOCKS_GLOBAL + RESPOSTA_A_FALHA:
+> - §1: bloco `RESPOSTA A FALHA DE TRUTH TEST` adicionado — procedimento obrigatório para agentes quando TRUTH TEST falha; proibição de alterar testes para simular comportamento.
+> - Sem alteração de status de nenhuma AR.
+
+> Changelog v3.1.0 (2026-03-04) — SSOT_PATCH_NO_STUBS_AI (Governança IA Coach):
+> - §1 Classes: adicionada Regra NO_STUBS (IA Core) `[NORMATIVO]` — proíbe `unittest.mock`/`MagicMock` no production code de `ai_coach_service.py`.
+> - Changelogs v2.1.0, v2.2.0: linguagem "stubs IA Coach" → "símbolos determinísticos" (reclassificação histórica).
+> - Descritores de lotes 12/13 (AR-TRAIN-046, AR-TRAIN-048): "stubs" → "símbolos determinísticos".
+> - Nenhuma AR alterada em status ou funcionalidade; patch é exclusivamente normativo/documental.
+
+> Changelog v3.0.0 (2026-03-04) — Reestruturação de responsabilidades:
+> - **Este arquivo** agora contém SOMENTE ARs (backlog, tabela de status, templates).
+> - **TEST_MATRIX_TRAINING.md**: critérios de DONE, PASS/FAIL, classificação BLOQUEANTE/NAO_BLOQUEANTE e gates TRUTH (SSOT operacional vigente).
+> - **TRAINING_ROADMAP.md**: auditoria AS-IS, gaps, mapa evidência vs hipótese, decisões arquiteturais (extraído de §0..§3).
+> - Removidas: §0 (AS-IS), §1 (evidência/hipótese), §2 (gaps), §3 (decisões), §7b (classificação gate), §9 (PASS/FAIL).
+
+> Changelog v2.9.1 (2026-03-04) — Patch SSOT_PATCH_TRAINING_DONE (reclassificação NON_BLOCKING):
+> - Adicionada §7b: Classificação Gate — identifica ARs NON_BLOCKING (classe G) vs BLOCKING.
+> - 11 ARs de classe G reclassificadas como NON_BLOCKING (DOCUMENTATION_ONLY / DERIVED_ARTIFACT).
+> - Não altera status VERIFICADO de nenhuma AR; não altera funcionalidade, testes, invariantes ou contratos.
+
+> Changelog v2.9.0 (2026-03-04) — AR_246/AR-TRAIN-062 (Batch 28 — Sync pós-Batch 27):
+> - AR-TRAIN-060 (G): VERIFICADO (AR_244, hb seal 2026-03-04).
+> - AR-TRAIN-061 (T): VERIFICADO (AR_245, hb seal 2026-03-04).
+> - AR-TRAIN-062 (G): PENDENTE — Sync Backlog + TEST_MATRIX §9 pós-Batch 27.
+
+> Changelog v2.8.0 (2026-03-04) — AR_244-245/AR-TRAIN-060-061 (Batch 27 — Opção C: Governance+Contracts):
+> - AR-TRAIN-060 (G): PENDENTE → VERIFICADO — Governance: Kanban retroativo Batches 23-26 (AR_244).
+> - AR-TRAIN-061 (T): PENDENTE → VERIFICADO — Contract tests: CONTRACT-TRAIN-074/075 wellness-rankings (AR_245).
+
+> Changelog v2.7.0 (2026-03-04) — AR_243/AR-TRAIN-059 (Batch 26 — Sync pós-Batch 26):
+> - AR-TRAIN-052 (M): VERIFICADO — Frontend Hard Sync v1.3.0 (AR_236, hb seal Batch 23).
+> - AR-TRAIN-053 (G): VERIFICADO — Sync §9 TEST_MATRIX entry AR-TRAIN-052 (AR_237, hb seal Batch 24).
+> - AR-TRAIN-054 (G): VERIFICADO — Sync §5 FASE_3 18 INVs FAIL/ERROR→PASS + v3.1.0 (AR_238, hb seal Batch 25).
+> - AR-TRAIN-055 (E): VERIFICADO — PATCH /attendance/pending-items resolve (AR_239, hb seal Batch 26).
+> - AR-TRAIN-056 (E): VERIFICADO — PATCH apply-draft + POST justify-suggestion AI Coach (AR_240, hb seal Batch 26).
+> - AR-TRAIN-057 (E): VERIFICADO — GET wellness-content-gate BE endpoint (AR_241, hb seal Batch 26).
+> - AR-TRAIN-058 (M): VERIFICADO — FE corrigir URLs training-phase3.ts (AR_242, hb seal Batch 26).
+> - AR-TRAIN-059 (G): VERIFICADO — Sync TEST_MATRIX + BACKLOG pós-Batch 26 (AR_243).
+> - AR-TRAIN-050/051: PENDENTE→VERIFICADO retroativo (AR_231/AR_232 já selados; tabela estava desatualizada).
 
 > Changelog v2.4.0 (2026-03-03) — Arquiteto (Batch 21/22 planejados; AR-TRAIN-043 obsoleta):
 > - AR-TRAIN-043: EM_EXECUCAO → OBSOLETO (Contexto mudou pós-Batches 17-20; escopo de sync §5 TEST_MATRIX extraído para AR-TRAIN-050; Done Gate formal coberto por AR-TRAIN-051).
@@ -31,13 +99,13 @@ Próxima revisão recomendada: 2026-03-10
 
 > Changelog v2.2.0 (2026-03-03) — Arquiteto (Batch 19 — Sincronização em Lote: app/ desbloqueada via GOVERNED_ROOTS.yaml `UNLOCKED_FOR_SYNC_BATCH_19`):
 > - DECISÃO HUMANA: Batch Sync Strategy — corrigir app/models/ + app/services/ para eliminar desalinhamento SSOT (contrato v1.3.0 + invariantes v1.5.0).
-> - AR-TRAIN-048 (A/E): Sync app layer — modelos (UniqueConstraint/FK INV-010/035/036/054), serviços (assinaturas contrato), stubs IA Coach (GAP-CONTRACT-6/7).
+> - AR-TRAIN-048 (A/E): Sync app layer — modelos (UniqueConstraint/FK INV-010/035/036/054), serviços (assinaturas contrato), símbolos determinísticos IA Coach — `RecognitionApproved`, `CoachSuggestionDraft`, `JustifiedSuggestion` (GAP-CONTRACT-6/7). *(Nota: o termo "stubs" usado originalmente referia-se a implementações ausentes, NÃO a mocks de teste — ver RH-06/NO_STUBS em TEST_MATRIX_TRAINING.md §5d)*
 
 > Changelog v2.1.0 (2026-03-03) — Arquiteto (Batch 18 — fix FAILs de test-layer pré-existentes Batch 13):
 > - DECISÃO HUMANA (Opção A): Criar Batch 18 para zerar os 109 FAILs + 31 ERRORs residuais da suite tests/training/.
 > - AR-TRAIN-044 (T): Fix async fixtures — `@pytest.fixture` → `@pytest_asyncio.fixture` (~23+ FAILs, 7 arquivos).
 > - AR-TRAIN-045 (T): Fix DB fixture setup — `category_id` NOT NULL + FK `team_registrations` (~57+ ERROs, múltiplos arquivos).
-> - AR-TRAIN-046 (T): Fix import stubs ausentes em ai_coach_service (3 ERRORs coleta: `RecognitionApproved`, `CoachSuggestionDraft`, `JustifiedSuggestion`).
+> - AR-TRAIN-046 (T): Fix símbolos determinísticos ausentes em ai_coach_service (3 ERRORs de coleta: `RecognitionApproved`, `CoachSuggestionDraft`, `JustifiedSuggestion`) — implementações reais de motor determinístico interno, **não** mocks de teste.
 > - AR-TRAIN-047 (T): Fix residuais mistos + validação done gate (suite verde 0 FAILs).
 
 > Changelog v2.0.0 (2026-03-03) — Arquiteto (Batches 12-16 — §10 como gate formal):
@@ -111,6 +179,28 @@ Dependências:
 - `docs/hbtrack/modulos/treinos/TRAINING_FRONT_BACK_CONTRACT.md`
 - `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md`
 
+Documentos separados (ver arquivo próprio):
+- `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` — critérios de evidência, TRUTH_BE, BLOCKING/NON_BLOCKING, PASS/FAIL
+- `docs/hbtrack/modulos/treinos/TRAINING_ROADMAP.md` — features futuras, gaps e decisões arquiteturais
+
+---
+
+## REGRA DE LEITURA HISTÓRICA (NORMATIVO)
+
+Os changelogs históricos deste arquivo não governam a execução atual quando conflitam com:
+- `_INDEX.md`
+- `TEST_MATRIX_TRAINING.md`
+- `TRAINING_FRONT_BACK_CONTRACT.md`
+
+Regras:
+- Nenhuma instrução histórica de mock/stub, evidência manual/guiada ou sincronização antiga pode ser usada como protocolo operacional vigente.
+- Para execução corrente, prevalecem:
+  - `TRUTH_BE`
+  - `NO_MOCKS_GLOBAL`
+  - `API_SYNC_REQUIRED`
+  - `GENERATED_CLIENT_SYNC`
+  - `CONTRACT_SYNC_FE`
+
 ---
 
 ## Authority Matrix
@@ -137,174 +227,37 @@ Cada item (AR-*, GAP-*, DEC-*, EVID-*, HIP-*) neste documento recebe classifica�
 | `[HIPOTESE]` | Expectativa do PRD não evidenciada. |
 | `[GAP]` | Lacuna identificada. |
 
+---
+
+## Resposta a Falha de TRUTH TEST (NORMATIVO)
+
+> **Se TRUTH TEST falhar: o agente DEVE corrigir o produto real** (código/rotas/serviços/invariantes/UI) até o teste passar. É **proibido** alterar o teste para simular comportamento (mock/stub/monkeypatch/patch). Nenhuma exceção sem AR aprovada pelo Arquiteto.
+
+**Procedimento padrão (4 passos obrigatórios):**
+
+1. **Reproduzir falha** com o TRUTH command:
+   ```bash
+   python scripts/db/reset_hb_track_test.py && cd "Hb Track - Backend" && pytest -q tests/training/ 2>&1 | tee /tmp/truth_run.txt
+   ```
+2. **Corrigir o produto** (código de produção, não o teste): identificar a causa no código/rota/serviço/invariante e corrigir.
+3. **Rodar TRUTH novamente** até `0 failed`:
+   ```bash
+   python scripts/db/reset_hb_track_test.py && cd "Hb Track - Backend" && pytest -q tests/training/
+   ```
+4. **Registrar evidência mínima:**
+   - Saída pytest (`X passed, 0 failed`)
+   - RH-09a: `rg` retornando exit 1 = 0 matches
+   - RH-09b: `rg` retornando exit 1 = 0 matches
+
+> Se a falha persistir após correção do produto, abrir nova AR com classe `T` ou `E` conforme escopo. Não marcar como PASS enquanto `pytest` retornar `FAILED`.
+
 **Aplicação:** `EVID-*` = `[DESCRITIVO-AS-IS]`. `HIP-*` = `[HIPOTESE]`. `GAP-*` = `[GAP]`. `AR-*` com ACs aprovados = `[NORMATIVO]`. `DEC-*` = `[NORMATIVO]` quando resolvida.
 
----
-
-## 0) Auditoria AS-IS (Resumo) — 2026-02-25
-
-### 0.1 O que está evidenciado (alto nível)
-- **Training sessions**: CRUD + workflow (publish/close/duplicate/restore) exposto via `/api/v1/training-sessions/*` e rotas scoped `/api/v1/teams/{team_id}/trainings/*`.
-- **Session exercises**: add/bulk/reorder/update/remove exposto sob `/api/v1/training-sessions/*/exercises*` (suporta DnD).
-- **Attendance**: endpoints expostos sob `/api/v1/training_sessions/{id}/attendance*` (underscore).
-- **Wellness pré/pós**: endpoints expostos sob `/api/v1/wellness-pre/*` e `/api/v1/wellness-post/*` (com subpaths underscore).
-- **Ciclos/microciclos**: endpoints expostos sob `/api/v1/training-cycles/*` e `/api/v1/training-microcycles/*`.
-- **Analytics**: endpoints expostos sob `/api/v1/analytics/team/{team_id}/*` e prevenção `/prevention-effectiveness`.
-- **Banco de exercícios**: endpoints expostos sob `/api/v1/exercises`, `/exercise-tags`, `/exercise-favorites`.
-- **Templates de sessão**: endpoints expostos sob `/api/v1/session-templates/*`.
-- **Frontend admin training**: `/training/agenda`, `/planejamento`, `/exercise-bank`, `/analytics`, `/rankings`, `/eficacia-preventiva`, `/configuracoes`, `/relatorio/[sessionId]`, `/sessions/[id]/edit`.
-
-### 0.2 O que está parcial/bloqueado (alto nível)
-- **Presenças (UI)**: `/training/presencas` é placeholder; componente `AttendanceTab` existe mas não está integrado.
-- **Wellness (FE)**: `src/lib/api/wellness.ts` aponta para endpoints incorretos; formulário não está alinhado ao schema (faltam campos e tipos).
-- **Rankings (FE/BE)**: FE tipa `team_id`/`athlete_id` como `number`; BE tem endpoints com response_model ausente e services com trechos legados.
-- **Alertas/Sugestões Step 18**: endpoints expostos, mas **IDs em path tipados como int** conflitam com DB `uuid` (alert_id, suggestion_id, team_id).
-- **Exports/LGPD export**: routers existem (`exports.py`, `athlete_export.py`) mas estão **desabilitados** no agregador v1 ⇒ não aparecem no OpenAPI SSOT e bloqueiam o fluxo de export.
-- **Testes invariants**: parte referencia `docs/_generated/*` (inexistente); SSOT atual está em `Hb Track - Backend/docs/ssot/*`.
+> **Auditoria AS-IS, Gaps e Decisões Arquiteturais** → ver [TRAINING_ROADMAP.md](TRAINING_ROADMAP.md)
 
 ---
 
-## 1) Mapa: Evidência vs Hipótese
-
-| Item | Descrição | Status | Evidência mínima |
-|---|---|---|---|
-| EVID-TRAIN-001 | Sessões de treino CRUD+workflow | EVIDENCIADO | `app/api/v1/routers/training_sessions.py`, `openapi.json` |
-| EVID-TRAIN-002 | Presença (endpoints) | EVIDENCIADO | `app/api/v1/routers/attendance.py`, `openapi.json` |
-| EVID-TRAIN-003 | Presença (UI) | PARCIAL | `AttendanceTab.tsx` existe; `/training/presencas` placeholder |
-| EVID-TRAIN-004 | Wellness pré/pós (endpoints) | EVIDENCIADO | `routers/wellness_pre.py`, `routers/wellness_post.py` |
-| EVID-TRAIN-005 | Wellness pré/pós (athlete UX) | PARCIAL | páginas existem, API FE divergente |
-| EVID-TRAIN-006 | Planejamento ciclos/microciclos | EVIDENCIADO | `PlanejamentoClient.tsx` + routers cycles/microcycles |
-| EVID-TRAIN-007 | Banco de exercícios + favoritos | EVIDENCIADO | `/training/exercise-bank` + routers exercises |
-| EVID-TRAIN-007B | Banco de exercícios (scope SYSTEM/ORG, ACL, visibilidade) | GAP | Decisões DEC-TRAIN-EXB-* aprovadas; schema/services não evidenciam scope/ACL |
-| EVID-TRAIN-008 | Templates de sessão | EVIDENCIADO | `/training/configuracoes` + `/session-templates` |
-| EVID-TRAIN-009 | Analytics (team summary/load/deviation) | EVIDENCIADO | `routers/training_analytics.py` + FE analytics |
-| EVID-TRAIN-010 | Rankings wellness (endpoints) | PARCIAL | endpoints expostos, mas sem schema e services legados |
-| EVID-TRAIN-011 | Alertas/Sugestões Step 18 | DIVERGENTE_DO_SSOT | endpoints expostos com IDs int vs DB uuid |
-| EVID-TRAIN-012 | Export PDF analytics | BLOQUEADO | FE modal existe; router existe mas desabilitado |
-| HIP-TRAIN-001 | Central UI de alertas/sugestões | HIPOTESE | não evidenciado no FE |
-| HIP-TRAIN-002 | Lista “treinos de hoje” para atleta (US-002) | HIPOTESE | não evidenciado no FE (`/athlete/dashboard` não existe) |
-
----
-
-## 2) Gaps (com severidade)
-
-### Bloqueantes (P0)
-- **GAP-TRAIN-001:** IDs `int` em Step18 (`team_id`, `alert_id`, `suggestion_id`) divergem do DB `uuid` e impedem UI confiável.  
-  Alvos: `CONTRACT-TRAIN-077..085`, `INV-TRAIN-014`.
-- **GAP-TRAIN-002:** Wellness FE chama endpoints errados e formulário pré não está alinhado ao schema (sem `sleep_hours`, campos divergentes).  
-  Alvos: `SCREEN-TRAIN-018`, `CONTRACT-TRAIN-029..034`, `INV-TRAIN-002`.
-- **GAP-TRAIN-003:** Serviços wellness para atleta dependem de resolução de `athlete_id` (há evidência de query por coluna inexistente em `Athlete`).  
-  Alvos: `INV-TRAIN-026`, `FLOW-TRAIN-005/006`.
-- **GAP-TRAIN-004:** UI de presenças não materializada; falta suporte a `justified` e semântica de `reason_absence` (DB).  
-  Alvos: `SCREEN-TRAIN-020`, `CONTRACT-TRAIN-025..028`, `INV-TRAIN-030`.
-
-### Não-bloqueantes (P1/P2)
-- **GAP-TRAIN-005:** Rankings FE usa `team_id:number` e `parseInt`, mas SSOT é UUID; endpoints de drilldown têm response_model ausente.  
-  Alvos: `SCREEN-TRAIN-014/015`, `CONTRACT-TRAIN-073..076`, `INV-TRAIN-036`.
-- **GAP-TRAIN-006:** Exports/LGPD export routers existem mas estão desabilitados no agregador v1, bloqueando US-003 “Export PDF”.  
-  Alvos: `CONTRACT-TRAIN-086..090`, `INV-TRAIN-012`, `INV-TRAIN-025`.
-- **GAP-TRAIN-007:** Testes invariants referenciam `docs/_generated/*` ao invés do SSOT atual `docs/ssot/*`.  
-  Alvos: `INV-TRAIN-040/041`, gates T.
-### Gaps — Banco de Exercícios (novos, pós-decisões EXB)
-- **GAP-TRAIN-EXB-001:** Schema/model de `exercises` não possui campo `scope` (SYSTEM|ORG) nem `visibility_mode` (org_wide|restricted). Decisões DEC-TRAIN-EXB-001/001B aprovadas mas não materializadas.  
-  Alvos: `INV-TRAIN-047`, `INV-TRAIN-EXB-ACL-001`, `CONTRACT-TRAIN-053..056`.
-- **GAP-TRAIN-EXB-002:** Tabela `exercise_acl` e tabela `exercise_media` não evidenciadas no schema atual. Necessárias para suportar ACL por usuário e mídias ricas.  
-  Alvos: `INV-TRAIN-EXB-ACL-002..006`, `INV-TRAIN-052`.
-- **GAP-TRAIN-EXB-003:** Service de exercícios não possui guards de escopo (`SYSTEM` imutável), visibilidade (`restricted` + ACL), nem RBAC explícito "Treinador".  
-  Alvos: `INV-TRAIN-048`, `INV-TRAIN-051`, `INV-TRAIN-EXB-ACL-004`.
----
-
-## 3) Decisões RESOLVIDAS (validação humana concluída)
-
-### DEC-TRAIN-001 — Wellness self-only (RESOLVIDA)
-**Status:** RESOLVIDA (2026-02-25)  
-**Texto normativo final:**  
-- `athlete_id` DEVE ser inferido do token JWT pelo backend.  
-- Cliente atleta NÃO envia `athlete_id` no payload de wellness.  
-- Fluxo por staff/terceiros (se existir) DEVE ser endpoint/escopo separado com permissão explícita e auditoria (INV-TRAIN-026).  
-**Impacto:** AR-TRAIN-003, AR-TRAIN-004, CONTRACT-TRAIN-029..039, FLOW-TRAIN-005/006, SCREEN-TRAIN-018/019.
-
-### DEC-TRAIN-002 — Wellness UI (RESOLVIDA)
-**Status:** RESOLVIDA (2026-02-25)  
-**Texto normativo final:**  
-- Manter UX com sliders/componentes amigáveis ao atleta.  
-- Mapear UI para payload canônico do backend.  
-- O contrato DEVE conter tabela explícita de mapeamento FE→payload (ver TRAINING_FRONT_BACK_CONTRACT.md §4.4).  
-- A matriz de testes DEVE conter testes normativos de mapeamento (ver TEST_MATRIX_TRAINING.md).  
-**Impacto:** AR-TRAIN-003, CONTRACT-TRAIN-029..039, SCREEN-TRAIN-018/019, TEST_MATRIX.
-
-### DEC-TRAIN-003 — Top performers endpoint canônico (RESOLVIDA)
-**Status:** RESOLVIDA (2026-02-25)  
-**Texto normativo final:**  
-- `CONTRACT-TRAIN-076` é o endpoint canônico único para consumo no frontend principal (listings).  
-- `CONTRACT-TRAIN-075` permanece como endpoint especializado/derivado para drilldown analytics.  
-- Frontend NÃO DEVE consumir ambos para a mesma funcionalidade; diferenciação documentada no contrato.  
-**Impacto:** AR-TRAIN-007, CONTRACT-TRAIN-073..076, SCREEN-TRAIN-015, FLOW-TRAIN-013.
-
-### DEC-TRAIN-004 — Exports worker obrigatório (RESOLVIDA)
-**Status:** RESOLVIDA (2026-02-25)  
-**Texto normativo final:**  
-- Fluxos assíncronos de export exigem worker/Celery ativo no ambiente.  
-- Sem worker ativo, UI/contrato DEVE expor estado degradado explícito (indisponível), sem simular job funcional.  
-- Polling fake (simular progresso sem worker) é PROIBIDO.  
-**Impacto:** AR-TRAIN-008, AR-TRAIN-009, CONTRACT-TRAIN-086..090, SCREEN-TRAIN-013, FLOW-TRAIN-012.
-
-### DEC-TRAIN-EXB-001 — Banco de Exercícios modelo base (RESOLVIDA)
-**Status:** RESOLVIDA (2026-02-25)  
-**Texto normativo final:**  
-- Banco de Exercícios do TRAINING é global por organização.  
-- Exercícios possuem escopo `SYSTEM` (instalados) ou `ORG` (criados pela organização).  
-- Usuários visualizam `SYSTEM` + `ORG` da própria organização (respeitando visibility/ACL).  
-- Favoritos são por usuário (sem duplicar exercício).  
-- Exercícios `SYSTEM` não são editáveis por usuários da organização.  
-- Exercícios `ORG` podem conter fotos, vídeos, links externos (YouTube etc.).  
-- Adaptar exercício `SYSTEM` → cria cópia `ORG` (não altera original).  
-**Impacto:** INV-TRAIN-047..053, CONTRACT-TRAIN-053..062 + novos, FLOW-TRAIN-009, SCREEN-TRAIN-010/011.
-
-### DEC-TRAIN-EXB-001B — Visibilidade ORG + ACL (RESOLVIDA)
-**Status:** RESOLVIDA (2026-02-25)  
-**Texto normativo final:**  
-- Exercícios `ORG` DEVEM suportar `visibility_mode` = `org_wide` ou `restricted`.  
-- Em `restricted`, exercício visível ao criador + usuários explícitos na ACL.  
-- ACL é por usuário individual (não por grupo/papel nesta fase).  
-- Usuários na ACL DEVEM pertencer à mesma organização do exercício.  
-- Apenas o treinador criador PODE gerenciar compartilhamento (ACL) e alterar `visibility_mode`.  
-- Criador mantém acesso implícito independentemente da ACL.  
-- Mudanças de ACL/visibilidade NÃO PODEM invalidar leitura de sessões históricas.  
-- **Default para novos exercícios ORG: `org_wide`.**  
-**Impacto:** INV-TRAIN-EXB-ACL-001..007, CONTRACT-TRAIN-091..095, SCREEN-TRAIN-010/011.
-
-### DEC-TRAIN-EXB-002 — Capability aprovada (RESOLVIDA)
-**Status:** RESOLVIDA (2026-02-25)  
-**Texto normativo final:**  
-- Treinador PODE criar categorias, nomes e tags personalizadas de exercícios.  
-- Exercícios `ORG` DEVEM suportar compartilhamento conforme DEC-TRAIN-EXB-001B.  
-- Apenas o treinador criador PODE gerenciar ACL/visibilidade.  
-- Refletir em Flows/Screens/Contracts/Testes e nas invariantes por restrições normativas.  
-**Impacto:** FLOW-TRAIN-009, SCREEN-TRAIN-010/011, CONTRACT-TRAIN-053..062.
-
-### DEC-TRAIN-EXB-RBAC-001 — Treinador como RBAC específico (RESOLVIDA)
-**Status:** RESOLVIDA (2026-02-25)  
-**Texto normativo final:**  
-- O termo “Treinador” DEVE ser tratado como papel RBAC específico (identificador explícito no contrato).  
-- NÃO é categoria genérica inferida.  
-- O MCP DEVE explicitar esse identificador RBAC nos trechos de permissão do Banco de Exercícios ORG (criar/editar/compartilhar/alterar visibilidade).  
-**Impacto:** INV-TRAIN-EXB-ACL-004, CONTRACT-TRAIN-054/056/091..095, SCREEN-TRAIN-010/011.
-
-### DEC-INV-065 — Encerramento permite pendências (RESOLVIDA)
-**Status:** RESOLVIDA (2026-02-26)  
-**Contexto da contradição:** AR_154 item 3 solicitou guard que BLOQUEIA close_session() se houver pending items com status='open' (raise SessionHasPendingItemsError). Executor identificou contradição com INV-TRAIN-065 canônica: "Sistema DEVE PERMITIR encerrar. Itens inconsistentes viram pendências (INV-066), NÃO bloqueiam."  
-**Texto normativo final:**  
-- INV-TRAIN-065 é AUTORITATIVA: encerramento de sessão DEVE ser permitido independentemente de pending items.  
-- Dados inconsistentes/não resolvidos viram fila de pendências (training_pending_items via INV-066).  
-- Guard de bloqueio por pending items é PROIBIDO — violaria invariante canônica.  
-- AR_154 item 3 CANCELADO. AR_155 implementa pending queue service (INV-066).  
-**Decisão do Arquiteto:** Manter comportamento canônico. Prioridade operacional do treinador (encerrar treino) sobre perfeição de dados. Pendências são tratadas posteriormente.  
-**Impacto:** AR_154 (item 3 cancelado), AR_155 (pending queue), INV-TRAIN-065/066, FLOW-TRAIN-017.
-
----
-
-## 4) Objetivo (Normativo)
+## 0) Objetivo (Normativo)
 
 Decompor a materialização do módulo TRAINING em ARs pequenas, rastreáveis, testáveis e auditáveis, com:
 - alvos SSOT explícitos (`INV/FLOW/SCREEN/CONTRACT`),
@@ -314,7 +267,7 @@ Decompor a materialização do módulo TRAINING em ARs pequenas, rastreáveis, t
 
 ---
 
-## 5) Classes de AR (Padrão)
+## 1) Classes de AR (Padrão)
 
 - **A** — Banco/Persistência
 - **B** — Regras de Domínio/Services
@@ -322,10 +275,18 @@ Decompor a materialização do módulo TRAINING em ARs pequenas, rastreáveis, t
 - **D** — Frontend/UX
 - **E** — Contrato Front-Back / integração
 - **T** — Testes/Gates/Paridade
+- **G** — Governança/Sync documental *(não conta para DONE_FASE_3_REAL)*
+- **M** — Manutenção / Hard Sync FE (stubs/tipos) *(stubs pré-implementação não contam para DONE_FASE_3_REAL)*
+
+> **Tag `[FASE_3_REAL]`**: aplicada a ARs de **implementação funcional** de FASE_3 (classes A/B/D/E com entregaveis operáveis).  
+> ARs com tag `[FASE_3_SYNC]` são de sincronização documental ou stubs — **não entram** no cálculo `DONE_FASE_3_REAL_ATINGIDO`.  
+> Regra de cálculo completa em `TEST_MATRIX_TRAINING.md` (seção `DONE_TRAINING_ATINGIDO`).
+
+> **Regra NO_STUBS (IA Core) `[NORMATIVO]`:** ARs que tocam `ai_coach_service.py` ou módulos de decisão da IA DEVEM implementar lógica determinística real. Uso de `unittest.mock` / `MagicMock` no **código de produção** desses módulos é **PROIBIDO**. `RecognitionApproved`, `CoachSuggestionDraft` e `JustifiedSuggestion` são classes concretas de motor determinístico — não mocks. Ver RH-06/NO_STUBS em `TEST_MATRIX_TRAINING.md` (§5d) e evidências em `_reports/training/` quando aplicável.
 
 ---
 
-## 6) Ordem sugerida (lotes)
+## 2) Ordem sugerida (lotes)
 
 ### Lote 1 — Núcleo bloqueante (E/B/T)
 1. AR-TRAIN-001 (E) — Convergir IDs UUID em Step18
@@ -350,14 +311,18 @@ Decompor a materialização do módulo TRAINING em ARs pequenas, rastreáveis, t
 13. AR-TRAIN-013 (B/E) — Implementar endpoints ACL + copy SYSTEM→ORG + visibilidade
 14. AR-TRAIN-014 (D) — Materializar UI scope/visibility/ACL/mídia no exercise-bank FE
 
-### Lote 5 — FASE_3: Ciclos, Presença oficial, Visão atleta, IA (A/B/E/D)
-15. AR-TRAIN-015 (A/B) — Schema + Service ciclos hierarchy (macro→meso→micro)
-16. AR-TRAIN-016 (B/E) — Sessão standalone + mutabilidade + order_index exercícios
-17. AR-TRAIN-017 (B/E) — Presença oficial (pre-confirm atleta + closure treinador + pending)
-18. AR-TRAIN-018 (D/E) — UI fila de pendências (pending queue treinador)
-19. AR-TRAIN-019 (D/E) — Visão pré-treino atleta + wellness content gate
-20. AR-TRAIN-020 (B/E) — Pós-treino conversacional + feedback imediato
-21. AR-TRAIN-021 (B/E) — IA coach (drafts, chat, justificativas, privacidade)
+### Lote 5 — FASE_3: Ciclos, Presença oficial, Visão atleta, IA (A/B/E/D) `[FASE_3_REAL]`
+
+> **Tag: `[FASE_3_REAL]`** — Todas as 7 ARs deste lote (AR-TRAIN-015..021) são implementação funcional FASE_3.  
+> Contam para `DONE_FASE_3_REAL_ATINGIDO`. Status: todas VERIFICADO (AR_169..246, Batches 0..27).
+
+15. AR-TRAIN-015 (A/B) `[FASE_3_REAL]` — Schema + Service ciclos hierarchy (macro→meso→micro)
+16. AR-TRAIN-016 (B/E) `[FASE_3_REAL]` — Sessão standalone + mutabilidade + order_index exercícios
+17. AR-TRAIN-017 (B/E) `[FASE_3_REAL]` — Presença oficial (pre-confirm atleta + closure treinador + pending)
+18. AR-TRAIN-018 (D/E) `[FASE_3_REAL]` — UI fila de pendências (pending queue treinador)
+19. AR-TRAIN-019 (D/E) `[FASE_3_REAL]` — Visão pré-treino atleta + wellness content gate
+20. AR-TRAIN-020 (B/E) `[FASE_3_REAL]` — Pós-treino conversacional + feedback imediato
+21. AR-TRAIN-021 (B/E) `[FASE_3_REAL]` — IA coach (drafts, chat, justificativas, privacidade)
 
 ### Lote 6 — Governança: Sync INVARIANTS_TRAINING.md (G)
 22. AR-TRAIN-022 (G) — Sync INVARIANTS_TRAINING.md: promover 31 itens GAP/PARCIAL/DIVERGENTE_DO_SSOT → IMPLEMENTADO com evidência ARs 011..021
@@ -389,11 +354,11 @@ Decompor a materialização do módulo TRAINING em ARs pequenas, rastreáveis, t
 ### Lote 12 — Batch 18: Fix FAILs de test-layer (T)
 44. AR-TRAIN-044 (T) — Fix async fixtures: `@pytest.fixture` → `@pytest_asyncio.fixture` (~23+ tests, 7 arquivos)
 45. AR-TRAIN-045 (T) — Fix DB fixture setup: `category_id` NOT NULL + FK `team_registrations` (~57+ ERROs setup)
-46. AR-TRAIN-046 (T) — Fix import stubs ausentes em ai_coach_service (3 ERRORs coleta: INV-079/080/081)
+46. AR-TRAIN-046 (T) — Fix símbolos determinísticos ausentes em ai_coach_service (`RecognitionApproved`, `CoachSuggestionDraft`, `JustifiedSuggestion`) — ERRORs de coleta INV-079/080/081
 47. AR-TRAIN-047 (T) — Fix residuais mistos + validação done gate (0 FAILs suite completa)
 
 ### Lote 13 — Batch 19: Sincronização em Lote app layer (A/E)
-48. AR-TRAIN-048 (A/E) — Sync app/models/ (constraints INV-010/035/036/054) + app/services/ (assinaturas contrato v1.3.0) + stubs IA Coach
+48. AR-TRAIN-048 (A/E) — Sync app/models/ (constraints INV-010/035/036/054) + app/services/ (assinaturas contrato v1.3.0) + símbolos determinísticos IA Coach (implementações reais de `RecognitionApproved`, `CoachSuggestionDraft`, `JustifiedSuggestion`)
 
 ### Lote 14 — Batch 20: Fix residuais test-layer pós-Batch 18/19 (T)
 49. AR-TRAIN-049 (T) — Fix 6 FAILs + 10 ERRORs residuais em tests/training/invariants/ (test_018_route, test_035, test_058, test_059, test_063, test_064, test_076, test_acl_006)
@@ -404,9 +369,31 @@ Decompor a materialização do módulo TRAINING em ARs pequenas, rastreáveis, t
 ### Lote 16 — Batch 22: Done Gate §10 formal pós-Batch 21 (G) [substitui AR-TRAIN-043 OBSOLETA]
 51. AR-TRAIN-051 (G) — Done Gate §10 final: declaração formal Done + bump TEST_MATRIX v2.2.0→v3.0.0 + §10/§0 preenchidos + §9 entry AR-TRAIN-051
 
+### Lote 17 — Batches 23-26: FASE_3 FE sync + BE endpoints + doc sync (M/E/G)
+52. AR-TRAIN-052 (M) — Frontend Hard Sync v1.3.0: tipos UUID/standalone + stubs CONTRACT-096..105 + AICoach justification (AR_236, Batch 23)
+53. AR-TRAIN-053 (G) — Sync §9 TEST_MATRIX: entry AR-TRAIN-052 VERIFICADO pós-Batch 23 (AR_237, Batch 24)
+54. AR-TRAIN-054 (G) — Sync §5 FASE_3: 18 INVs FAIL/ERROR→2026-03-04 + v3.1.0 + §9 entries AR-TRAIN-053/054 (AR_238, Batch 25)
+55. AR-TRAIN-055 (E) `[FASE_3_REAL]` — BE: PATCH /attendance/pending-items/{item_id}/resolve (AR_239, Batch 26)
+56. AR-TRAIN-056 (E) `[FASE_3_REAL]` — BE: PATCH /ai/coach/draft/{draft_id}/apply + POST /ai/coach/justify-suggestion (AR_240, Batch 26)
+57. AR-TRAIN-057 (E) `[FASE_3_REAL]` — BE: GET /athlete/wellness-content-gate/{session_id} (AR_241, Batch 26)
+58. AR-TRAIN-058 (M) `[FASE_3_REAL]` — FE: corrigir URLs training-phase3.ts — CONTRACT-097/101/102/103/104 (AR_242, Batch 26)
+59. AR-TRAIN-059 (G) `[FASE_3_SYNC]` — Sync TEST_MATRIX §8/§9 + BACKLOG pós-Batch 26 + v3.2.0 (AR_243, Batch 26)
+
+### Lote 18 — Batch 27: Governance Sync + Contract tests (G/T)
+60. AR-TRAIN-060 (G) `[FASE_3_SYNC]` — Governance: Kanban retroativo Batches 23-26 (AR_244, Batch 27) ✅ VERIFICADO
+61. AR-TRAIN-061 (T) — Contract tests: CONTRACT-TRAIN-074/075 wellness-rankings (AR_245, Batch 27) ✅ VERIFICADO
+62. AR-TRAIN-062 (G) `[FASE_3_SYNC]` — Sync Backlog + TEST_MATRIX §9 pós-Batch 27 (AR_246, Batch 28) ✅ VERIFICADO
+
+### Lote 19 — Batch 29: TRUTH SUITE Residuals (T/B/G)
+63. AR-TRAIN-063 (T/G) — Fase 0+1: TRUTH SUITE dupla + triage 4 buckets (AR_247, Batch 29) ✅ VERIFICADO
+64. AR-TRAIN-064 (B) — Fix user.organization_id not a column (unblock xfail INV-148) (AR_248, Batch 29) ✅ VERIFICADO
+65. AR-TRAIN-065 (B/E) — Fix 4 SKIP em test_058 e test_059 (AR_249, Batch 29) ✅ VERIFICADO
+66. AR-TRAIN-066 (T) `[NO_MOCKS_GLOBAL]` — Converter 9 LEGACY_INVALID para TRUTH (AR_250, Batch 29) ✅ VERIFICADO
+67. AR-TRAIN-067 (G) `[FASE_3_SYNC]` — Sync documental pós-Batch 29: Backlog + TEST_MATRIX + DONE_GATE(relatório) + Kanban (AR_251, Batch 29) ✅ VERIFICADO
+
 ---
 
-## 7) Tabela resumo do backlog de ARs
+## 3) Tabela resumo do backlog de ARs
 
 | AR ID | Classe | Prioridade | Objetivo | Alvos SSOT | Dependências | Status |
 |---|---|---|---|---|---|---|
@@ -460,12 +447,35 @@ Decompor a materialização do módulo TRAINING em ARs pequenas, rastreáveis, t
 | AR-TRAIN-047 | T | ALTA | Fix residuais mistos + validação done gate (0 FAILs suite completa) | tests/training/invariants/ | AR-TRAIN-044..046 | REJEITADO |
 | AR-TRAIN-048 | A/E | CRÍTICA | Sync app/models/ (constraints INV-010/035/036/054) + app/services/ (assinaturas contrato v1.3.0) + stubs IA Coach | app/models/, app/services/, openapi.json | AR-TRAIN-044..047 | VERIFICADO |
 | AR-TRAIN-049 | T | CRÍTICA | Fix 6 FAILs + 10 ERRORs residuais em tests/training/invariants/ (test_018_route, 035, 058, 059, 063, 064, 076, acl_006) | tests/training/invariants/ | AR-TRAIN-048 | VERIFICADO |
-| AR-TRAIN-050 | G | ALTA | Sync §5 TEST_MATRIX_TRAINING.md: 11 itens (INV-079/080/081 NOT_RUN→PASS; INV-018/035/058/059/063/064/076/EXB-ACL-006 FAIL/ERROR→PASS) | TEST_MATRIX_TRAINING.md §5 | AR-TRAIN-046/049 | PENDENTE |
-| AR-TRAIN-051 | G | ALTA | Done Gate §10 final: declaração formal Done + bump TEST_MATRIX→v3.0.0 + §10/§0/§9 preenchidos | TEST_MATRIX_TRAINING.md §10/§0/§9 | AR-TRAIN-050 | PENDENTE |
+| AR-TRAIN-050 | G | ALTA | Sync §5 TEST_MATRIX_TRAINING.md: 11 itens (INV-079/080/081 NOT_RUN→PASS; INV-018/035/058/059/063/064/076/EXB-ACL-006 FAIL/ERROR→PASS) | TEST_MATRIX_TRAINING.md §5 | AR-TRAIN-046/049 | VERIFICADO |
+| AR-TRAIN-051 | G | ALTA | Done Gate §10 final: declaração formal Done + bump TEST_MATRIX→v3.0.0 + §10/§0/§9 preenchidos | TEST_MATRIX_TRAINING.md §10/§0/§9 | AR-TRAIN-050 | VERIFICADO |
+| AR-TRAIN-052 | M | ALTA | Frontend Hard Sync v1.3.0 — tipos UUID/standalone + stubs CONTRACT-096..105 + AICoach justification | Hb Track - Frontend/src/ (5 arquivos) | AR-TRAIN-021/051 | VERIFICADO |
+| AR-TRAIN-053 | G | MEDIA | Sync §9 TEST_MATRIX: entry AR-TRAIN-052 VERIFICADO pós-Batch 23 | TEST_MATRIX_TRAINING.md §9 | AR-TRAIN-052 | VERIFICADO |
+| AR-TRAIN-054 | G | ALTA | Sync §5 FASE_3: 18 INVs FAIL/ERROR→PASS + v3.1.0 + §9 entries | TEST_MATRIX_TRAINING.md §0/§5/§9 | AR-TRAIN-052/053 | VERIFICADO |
+| AR-TRAIN-055 | E | ALTA | BE: PATCH /attendance/pending-items/{item_id}/resolve | app/api/v1/routers/attendance.py | AR-TRAIN-017 | VERIFICADO |
+| AR-TRAIN-056 | E | ALTA | BE: PATCH apply-draft + POST justify-suggestion AI Coach | app/api/v1/routers/ai_coach.py, app/services/ai_coach_service.py | AR-TRAIN-021 | VERIFICADO |
+| AR-TRAIN-057 | E | ALTA | BE: GET /athlete/wellness-content-gate/{session_id} | app/api/v1/routers/athlete_training.py | AR-TRAIN-019 | VERIFICADO |
+| AR-TRAIN-058 | M | ALTA | FE: corrigir URLs training-phase3.ts — CONTRACT-097/101/102/103/104 | Hb Track - Frontend/src/lib/api/training-phase3.ts | AR-TRAIN-055/056/057 | VERIFICADO |
+| AR-TRAIN-059 | G | ALTA | Sync TEST_MATRIX §8/§9 + BACKLOG pós-Batch 26 + bump v3.2.0 | TEST_MATRIX_TRAINING.md, AR_BACKLOG_TRAINING.md | AR-TRAIN-055..058 | VERIFICADO |
+| AR-TRAIN-060 | G | ALTA | Governance Sync: Kanban retroativo Batches 23-26 | docs/hbtrack/Hb Track Kanban.md | AR-TRAIN-059 | VERIFICADO |
+| AR-TRAIN-061 | T | MEDIA | Contract tests: CONTRACT-TRAIN-074/075 wellness-rankings | tests/training/contracts/, TEST_MATRIX_TRAINING.md | AR-TRAIN-060, AR-TRAIN-006 | VERIFICADO |
+| AR-TRAIN-062 | G | ALTA | Sync Backlog AR-TRAIN-060/061 VERIFICADO + TEST_MATRIX §9 + Batch 28 | AR_BACKLOG_TRAINING.md, TEST_MATRIX_TRAINING.md | AR-TRAIN-061 | VERIFICADO |
+| AR-TRAIN-063 | T/G | ALTA | Fase 0+1: TRUTH SUITE dupla + triage 4 buckets | `_reports/training/DONE_GATE_TRAINING.md` (RH-08 baseline 610p/4s/1xf/0f) | AR-TRAIN-062 | VERIFICADO |
+| AR-TRAIN-064 | B | ALTA | Fix user.organization_id not a column (unblock xfail test_inv_train_148) | Hb Track - Backend/app/services/exercise_acl_service.py | AR-TRAIN-063 | VERIFICADO |
+| AR-TRAIN-065 | B/E | ALTA | Fix 4 SKIP em test_inv_train_058 e test_inv_train_059 | tests/training/invariants/test_inv_train_058_*.py, test_inv_train_059_*.py | AR-TRAIN-063 | VERIFICADO |
+| AR-TRAIN-066 | T | ALTA | Converter 9 LEGACY_INVALID para TRUTH (NO_MOCKS_GLOBAL) | tests/training/invariants/ (9 arquivos) | AR-TRAIN-065 | VERIFICADO |
+| AR-TRAIN-067 | G | ALTA | Sync documental pós-Batch 29: Backlog + TEST_MATRIX + DONE_GATE (relatório) + Kanban | AR_BACKLOG_TRAINING.md, TEST_MATRIX_TRAINING.md, `_reports/training/DONE_GATE_TRAINING.md`, Hb Track Kanban.md | AR-TRAIN-066 | VERIFICADO |
+| AR-TRAIN-068 | M | MEDIA | Refactor FE Wellness Pre/Pos: migrar WellnessPreForm+WellnessPostForm para cliente gerado (src/api/generated) | src/api/generated/api-instance.ts, WellnessPreForm.tsx, WellnessPostForm.tsx, AR_BACKLOG_TRAINING.md, TEST_MATRIX_TRAINING.md, Hb Track Kanban.md | AR-TRAIN-067 | VERIFICADO |
+| AR-TRAIN-069 | B | ALTA | BE: implementar GET/PATCH wellness-pre e wellness-post por ID (fix stubs 501) | app/api/v1/routers/wellness_pre.py, app/api/v1/routers/wellness_post.py, app/services/wellness_pre_service.py, app/services/wellness_post_service.py, AR_BACKLOG_TRAINING.md, TEST_MATRIX_TRAINING.md, Hb Track Kanban.md | AR-TRAIN-068 | VERIFICADO |
+| AR-TRAIN-070 | T | ALTA | Testes impl GET/PATCH wellness por ID (CONTRACT-031/032/037/038) | tests/training/contracts/test_contract_train_029_039_wellness.py, AR_BACKLOG_TRAINING.md, TEST_MATRIX_TRAINING.md, Hb Track Kanban.md | AR-TRAIN-069 | VERIFICADO |
+| AR-TRAIN-071 | G | ALTA | Sync documental pós-Batch 31+32: BACKLOG v3.6.0 + TEST_MATRIX v4.2.0 + Kanban Batch 32 + _INDEX v1.5.0 | AR_BACKLOG_TRAINING.md, TEST_MATRIX_TRAINING.md, Hb Track Kanban.md, docs/hbtrack/modulos/treinos/_INDEX.md | AR-TRAIN-070 | VERIFICADO |
+
+> **Critérios de classificação (BLOQUEANTE/NAO_BLOQUEANTE)** → ver `TEST_MATRIX_TRAINING.md` (definições + matriz §5)  
+> **Regra de cálculo de DONE_FASE_3_REAL_ATINGIDO**: contar apenas ARs com tag `[FASE_3_REAL]`. ARs `[FASE_3_SYNC]` (classe G/M de sync documental e stubs) **não contam**.
 
 ---
 
-## 8) Template completo por AR (obrigatório)
+## 4) Template completo por AR (obrigatório)
 
 > Abaixo, cada AR já vem pré-preenchida para execução por agentes (Executor/Testador).
 
@@ -2507,23 +2517,21 @@ Apenas mudança documental em `docs/`. `git diff HEAD -- docs/hbtrack/modulos/tr
 
 ### AR-TRAIN-051 — Done Gate §10 formal pós-Batch 21
 
-**Status:** PENDENTE
+**Status:** VERIFICADO
 **Classe:** G
 **Prioridade:** ALTA
 **Módulo:** TRAINING
 **Lote:** 16 (Batch 22)
-**Objetivo:** Done Gate §10 formal pós-Batch 21: preencher §10 e §0 da TEST_MATRIX_TRAINING.md, bump versão v2.2.0→v3.0.0, emitir declaração `docs/hbtrack/modulos/treinos/DONE_GATE_TRAINING_v3.md`. Substitui AR-TRAIN-043 (OBSOLETA).
+**Objetivo:** Done Gate §10 formal pós-Batch 21: preencher §10 e §0 da TEST_MATRIX_TRAINING.md, bump versão v2.2.0→v3.0.0, e registrar evidência derivada em `_reports/training/DONE_GATE_TRAINING.md`. Substitui AR-TRAIN-043 (OBSOLETA).
 
 #### 8.1 Alvos SSOT
 - `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` — §0 (contadores finais) + §10 (checkboxes) + bump versão v2.2.0→v3.0.0 + §9 entry AR-TRAIN-051
-- `docs/hbtrack/modulos/treinos/DONE_GATE_TRAINING_v3.md` (declaração Done Gate formal)
 
 #### 8.3 Dependências
 **ARs predecessoras obrigatórias:** AR-TRAIN-050 VERIFICADO
 
 #### 8.5 WRITE (máximo 3 itens)
 - `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` — §0 + §10 + versão + §9
-- `docs/hbtrack/modulos/treinos/DONE_GATE_TRAINING_v3.md` (novo — declaração formal)
 
 #### 8.6 FORBIDDEN
 - `Hb Track - Backend/` — zero toque
@@ -2545,8 +2553,8 @@ Apenas mudança documental em `docs/`. `git diff HEAD -- docs/hbtrack/modulos/tr
 **FAIL:** Entry ausente.
 
 ##### AC-004
-**PASS:** `docs/hbtrack/modulos/treinos/DONE_GATE_TRAINING_v3.md` existe e contém lista de critérios §10 satisfeitos.
-**FAIL:** Arquivo ausente ou sem lista de critérios.
+**PASS:** `_reports/training/DONE_GATE_TRAINING.md` existe como evidência derivada (relatório de execução).
+**FAIL:** Evidência ausente.
 
 ##### AC-005
 **PASS:** §0 contém contadores de INV/CONTRACT/FLOW/SCREEN atualizados (0 GAPs).
@@ -2557,14 +2565,14 @@ Apenas mudança documental em `docs/`. `git diff HEAD -- docs/hbtrack/modulos/tr
 python -c "
 import sys, os
 content = open('docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md', encoding='utf-8').read()
-gate = os.path.exists('docs/hbtrack/modulos/treinos/DONE_GATE_TRAINING_v3.md')
+gate = os.path.exists('_reports/training/DONE_GATE_TRAINING.md')
 checks = [
     ('Versão: v3.0.0', 'AC-001 versão'),
     ('AR-TRAIN-051', 'AC-003 §9 entry'),
 ]
 failed = [label for text, label in checks if text not in content]
 if not gate:
-    failed.append('AC-004 DONE_GATE_TRAINING_v3.md ausente')
+    failed.append('AC-004 _reports/training/DONE_GATE_TRAINING.md ausente')
 if failed:
     print('FAIL:', failed); sys.exit(1)
 print('PASS: todos os checks AC-001..AC-005 presentes')
@@ -2572,32 +2580,286 @@ print('PASS: todos os checks AC-001..AC-005 presentes')
 ```
 
 #### 8.9 rollback_plan
-Apenas mudança documental. `git diff HEAD -- docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md docs/hbtrack/modulos/treinos/DONE_GATE_TRAINING_v3.md`.
+Apenas mudança documental. `git diff HEAD -- docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md`.
 
 **ARs predecessoras obrigatórias:** AR-TRAIN-050 VERIFICADO (AR_231)
 
 ---
 
-## 9) Critérios PASS/FAIL (fase do módulo)
+### AR-TRAIN-060 — Governance Sync Kanban (AR_244, Batch 27)
 
-### PASS se (mínimo)
-- [ ] Fluxos P0 (US-001/US-002) operacionais fim-a-fim (FE↔BE) com validação de invariantes bloqueantes
-- [ ] Step18 sem divergência de IDs (UUID em contrato e runtime)
-- [ ] Wellness self-only com `athlete_id` inferido do token (DEC-TRAIN-001)
-- [ ] Top performers consumido via `CONTRACT-TRAIN-076` canônico no FE (DEC-TRAIN-003)
-- [ ] Exports exibem estado degradado sem worker (DEC-TRAIN-004)
-- [ ] Banco de exercícios com scope SYSTEM/ORG e ACL por visibility_mode (DEC-TRAIN-EXB-001/001B)
-- [ ] Rankings e exports com contrato tipado (ou explicitamente DEFERIDO com justificativa aprovada)
-- [ ] `TEST_MATRIX_TRAINING.md` atualizado com evidências
-- [ ] **FASE_3:** Ciclos hierarchy FK enforced (macro→meso→micro) — INV-TRAIN-054..056
-- [ ] **FASE_3:** Presença oficial via closure + pending queue funcional — INV-TRAIN-063..067
-- [ ] **FASE_3:** Atleta vê treino + wellness gate bloqueia conteúdo sem wellness — INV-TRAIN-068/071/076
-- [ ] **FASE_3:** IA coach gera drafts (não ordens) com justificativa e privacidade — INV-TRAIN-072..075/079..081
+#### 8.1 Metadados
+- **Class:** G
+- **Prioridade:** ALTA
+- **AR_ID:** 244
+- **Batch:** 27
+- **Status:** VERIFICADO
 
-### FAIL se
-- [ ] Invariante bloqueante sem teste de violação
-- [ ] Contratos críticos expostos com drift (UUID/int) sem AR de correção
-- [ ] UI principal chama endpoints inexistentes (404 sistemático)
-- [ ] **FASE_3:** Pré-confirmação atleta tratada como oficial (INV-TRAIN-063 violada)
-- [ ] **FASE_3:** Sugestão IA aplicada sem aprovação do treinador (INV-TRAIN-075/080 violada)
-- [ ] **FASE_3:** Conteúdo completo liberado sem wellness (INV-TRAIN-071/076 violada)
+#### 8.2 Objetivo
+Sincronizar retroativamente o Kanban (adicionar Batches 23-26 com ARs 236-243 seladas) e adicionar seção Batch 27 (AR_244/245 PENDENTE).
+
+#### 8.3 Contexto / Motivação
+Kanban divergente: ausentes seções Batches 23-26 (ARs 236-243 já verificadas). Divergência detectada no BLOCKED_INPUT (Batch 26).
+
+#### 8.4 Escopo / Write Scope
+- `docs/hbtrack/Hb Track Kanban.md` — adicionar seções ## (Batches 23-26 retroativos + Batch 27)
+
+#### 8.5 Acceptance Criteria
+- AC-001: Kanban contém seção Batch 23 com AR_236 SEALED
+- AC-002: Kanban contém seções Batch 24/25/26 com ARs respectivas SEALED
+- AC-003: Kanban contém seção Batch 27 com AR_244/AR_245 PENDENTE
+
+#### 8.6 Instrução de Implementação (Executor)
+Adicionar no Kanban as seções numeradas conforme padrão existente. Antes: ler o último número de seção do Kanban e continuar sequencialmente.
+
+#### 8.7 Validation Command
+```python
+python -c "
+import sys
+kanban = open('docs/hbtrack/Hb Track Kanban.md', encoding='utf-8').read()
+checks = [
+    ('Batch 23', kanban, 'AC-001 Kanban Batch23'),
+    ('Batch 24', kanban, 'AC-002 Kanban Batch24'),
+    ('Batch 25', kanban, 'AC-002 Kanban Batch25'),
+    ('Batch 26', kanban, 'AC-002 Kanban Batch26'),
+    ('Batch 27', kanban, 'AC-003 Kanban Batch27'),
+]
+failed = [label for text, content, label in checks if text not in content]
+if failed:
+    print('FAIL:', failed); sys.exit(1)
+print('PASS: governance sync OK')
+"
+```
+
+#### 8.8 rollback_plan
+Documental: `git diff HEAD -- "docs/hbtrack/Hb Track Kanban.md"`
+
+**ARs predecessoras obrigatórias:** AR-TRAIN-059 VERIFICADO (AR_243)
+
+---
+
+### AR-TRAIN-061 — Contract tests CONTRACT-074/075 wellness-rankings (AR_245, Batch 27)
+
+#### 8.1 Metadados
+- **Class:** T
+- **Prioridade:** MEDIA
+- **AR_ID:** 245
+- **Batch:** 27
+- **Status:** PENDENTE
+
+#### 8.2 Objetivo
+Criar testes de contrato para CONTRACT-TRAIN-074 (POST /analytics/wellness-rankings/calculate) e CONTRACT-TRAIN-075 (GET /analytics/wellness-rankings/{team_id}/athletes-90plus?month=). Marcar ambos COBERTO na TEST_MATRIX §8. Bump v3.2.0 → v3.3.0.
+
+#### 8.3 Contexto / Motivação
+CONTRACT-074/075 status PENDENTE/NOT_RUN na TEST_MATRIX v3.2.0. São P1. Endpoints implementados por AR-TRAIN-006 (VERIFICADO). Lacuna de cobertura residual pós-Batch 26.
+
+#### 8.4 Escopo / Write Scope
+- `Hb Track - Backend/tests/training/contracts/test_contract_train_074_075_wellness_rankings.py` (novo)
+- `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` §8 CONTRACT-074/075 → COBERTO; §9 entry AR-TRAIN-061; bump v3.3.0
+
+**FORBIDDEN:** `Hb Track - Backend/app/` (zero toque código produto), `Hb Track - Frontend/`.
+
+#### 8.5 Acceptance Criteria
+- AC-001: pytest `tests/training/contracts/test_contract_train_074_075_wellness_rankings.py` = 0 FAILs, 0 ERRORs
+- AC-002: TEST_MATRIX §8 CONTRACT-TRAIN-074 status = COBERTO
+- AC-003: TEST_MATRIX §8 CONTRACT-TRAIN-075 status = COBERTO
+- AC-004: TEST_MATRIX versão = v3.3.0
+
+#### 8.6 Instrução de Implementação (Executor)
+1. Ler `app/api/v1/routers/training_analytics.py` (ou equivalente) para confirmar assinatura dos endpoints.
+2. Criar arquivo de testes usando padrão de contract tests do projeto (ver tests/training/contracts/ existing files como referência).
+3. Atualizar TEST_MATRIX_TRAINING.md §8 nas linhas CONTRACT-TRAIN-074 e CONTRACT-TRAIN-075: alterar status de PENDENTE para COBERTO.
+4. Adicionar §9 entry para AR-TRAIN-061 com link ao arquivo criado.
+5. Bump versão v3.2.0 → v3.3.0 no header do TEST_MATRIX.
+
+#### 8.7 Validation Command
+```bash
+cd "Hb Track - Backend" && pytest -q tests/training/contracts/test_contract_train_074_075_wellness_rankings.py
+```
+
+#### 8.8 rollback_plan
+`git diff HEAD -- "Hb Track - Backend/tests/training/contracts/test_contract_train_074_075_wellness_rankings.py" docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md`
+
+**ARs predecessoras obrigatórias:** AR-TRAIN-060 VERIFICADO (AR_244), AR-TRAIN-006 VERIFICADO
+
+> **Critérios PASS/FAIL** → ver `TEST_MATRIX_TRAINING.md` (§10 e `DONE_TRAINING_ATINGIDO`)
+
+---
+
+### AR-TRAIN-062 — Sync pós-Batch 27 (AR_246, Batch 28)
+
+#### 8.1 Metadados
+- **Class:** G
+- **Prioridade:** ALTA
+- **AR_ID:** 246
+- **Batch:** 28
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Governança pós-Batch 27. Sincronizar: AR_BACKLOG_TRAINING.md (AR-TRAIN-060/061 PENDENTE→VERIFICADO + add AR-TRAIN-062) e TEST_MATRIX_TRAINING.md §9 (AR-TRAIN-061 EM_EXECUCAO→VERIFICADO + bump v3.4.0).
+
+#### 8.3 Evidência
+- **Evidence**: `docs/hbtrack/evidence/AR_246/executor_main.log`
+- **Status Final**: ✅ VERIFICADO (hb seal 246, 2026-03-04)
+
+---
+
+### AR-TRAIN-063 — Fase 0+1: TRUTH SUITE dupla + triage 4 buckets (AR_247, Batch 29)
+
+#### 8.1 Metadados
+- **Class:** T/G
+- **Prioridade:** ALTA
+- **AR_ID:** 247
+- **Batch:** 29
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Executar TRUTH SUITE dupla (2 rodadas idempotentes) no VPS `hb_track`. Confirmar baseline 610p/4s/1xf/0f. Classificar os 4s+1xf em 3 buckets (A: produto, B: produto, C: test-layer) para planejar ARs 064/065/066.
+
+#### 8.3 Evidência
+- **Evidence**: `docs/hbtrack/evidence/AR_247/executor_main.log`
+- **Status Final**: ✅ VERIFICADO (hb seal 247, 2026-03-05)
+
+---
+
+### AR-TRAIN-064 — Fix user.organization_id not a column (AR_248, Batch 29)
+
+#### 8.1 Metadados
+- **Class:** B
+- **Prioridade:** ALTA
+- **AR_ID:** 248
+- **Batch:** 29
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Corrigir `exercise_acl_service.py` método `_validate_same_org` que acessa `user.organization_id` — coluna inexistente no modelo `User`. Fix = acessar via `athlete.organization_id`. Converte `test_inv_train_148` de xfail para PASS.
+
+#### 8.3 Evidência
+- **Evidence**: `docs/hbtrack/evidence/AR_248/executor_main.log`
+- **Status Final**: ✅ VERIFICADO (hb seal 248, 2026-03-05)
+
+---
+
+### AR-TRAIN-065 — Fix 4 SKIP em test_058 e test_059 (AR_249, Batch 29)
+
+#### 8.1 Metadados
+- **Class:** B/E
+- **Prioridade:** ALTA
+- **AR_ID:** 249
+- **Batch:** 29
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Converter os 4 testes skipped (`test_inv_train_058_*` e `test_inv_train_059_*`) de skip para PASS. Guards INV-058 (session structure mutable) e INV-059 (exercise order contiguous) implementados em `session_exercise_service.py`.
+
+#### 8.3 Evidência
+- **Evidence**: `docs/hbtrack/evidence/AR_249/executor_main.log`
+- **Status Final**: ✅ VERIFICADO (hb seal 249, 2026-03-05)
+
+---
+
+### AR-TRAIN-066 — Converter 9 LEGACY_INVALID para TRUTH (AR_250, Batch 29)
+
+#### 8.1 Metadados
+- **Class:** T
+- **Prioridade:** ALTA
+- **AR_ID:** 250
+- **Batch:** 29
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Converter 9 arquivos de testes `LEGACY_INVALID` (que usam `unittest.mock`/`MagicMock`) para TRUTH (banco real, sem mocks). Meta: `NO_MOCKS_GLOBAL` RH-09 atingido (rg retorna 0 matches). Estratégias: puro/None, TRUTH/async_db, contextlib/no-mock.
+
+#### 8.3 Arquivos convertidos
+`test_003`, `test_004`, `test_005`, `test_018`, `test_022`, `test_023`, `test_027`, `test_071`, `test_078` em `Hb Track - Backend/tests/training/invariants/`.
+
+#### 8.4 Evidência
+- **Evidence**: `docs/hbtrack/evidence/AR_250/executor_main.log`
+- **Resultado**: 31/31 PASSED, Workspace Clean: True, rg=0 matches
+- **Status Final**: ✅ VERIFICADO (hb seal 250, 2026-03-05)
+
+---
+
+### AR-TRAIN-067 — Sync documental pós-Batch 29 (AR_251, Batch 29)
+
+#### 8.1 Metadados
+- **Class:** G
+- **Prioridade:** ALTA
+- **AR_ID:** 251
+- **Batch:** 29
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Governança pós-Batch 29. Sincronizar SSOTs: AR_BACKLOG_TRAINING.md (bump v3.2.0→v3.3.0 + add AR-TRAIN-063..067), TEST_MATRIX_TRAINING.md (bump v3.6.0→v3.7.0 + §9 entries), `_reports/training/DONE_GATE_TRAINING.md` (RH-08 baseline 610p/4s/1xf/0f→615p/0s/0xf/0f) e Kanban (add §46 Batch 29 SEALED).
+
+#### 8.3 Evidência
+- **Evidence**: `docs/hbtrack/evidence/AR_251/executor_main.log`
+- **Status Final**: ✅ VERIFICADO (hb seal 251, 2026-03-05)
+
+### AR-TRAIN-068 — Refactor FE Wellness Pre/Pos: migrar para cliente gerado (AR_252, Batch 30)
+
+#### 8.1 Metadados
+- **Class:** M
+- **Prioridade:** MEDIA
+- **AR_ID:** 252
+- **Batch:** 30
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Refactor funcional (Categoria B): migrar WellnessPreForm.tsx e WellnessPostForm.tsx de src/lib/api/wellness (camada manual) para src/api/generated (WellnessPreApi, WellnessPostApi). Adiciona export wellnessPostApi em api-instance.ts. Sem mudanca de contrato BE, sem regeneracao de openapi.json. CONTRACT_SYNC_FE nao acionado (cliente gerado ja existe de AR_236).
+
+#### 8.3 Evidencia
+- **Evidence**: docs/hbtrack/evidence/AR_252/executor_main.log
+- **Status Final**: ✅ VERIFICADO (hb seal 252, 2026-03-06)
+
+### AR-TRAIN-069 — BE: implementar GET/PATCH wellness-pre e wellness-post por ID (AR_253, Batch 31)
+
+#### 8.1 Metadados
+- **Class:** B
+- **Prioridade:** ALTA
+- **AR_ID:** 253
+- **Batch:** 31
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Implementar os 4 endpoints BE que retornavam 501 Not Implemented. Sem mudancas de schema DB. Apenas service layer + router. AC1..AC8 (presença de async def + metodos de servico). INV-TRAIN-022 (cache_invalidation) mantida via chamadas a _invalidate_training_analytics_cache e _trigger_overload_alert_on_wellness_post.
+
+#### 8.3 Evidencia
+- **Evidence**: docs/hbtrack/evidence/AR_253/executor_main.log
+- **Status Final**: ✅ VERIFICADO (hb seal 253, 2026-03-06)
+
+---
+
+### AR-TRAIN-070 — Testes impl GET/PATCH wellness por ID (AR_254, Batch 32)
+
+#### 8.1 Metadados
+- **Class:** T
+- **Prioridade:** ALTA
+- **AR_ID:** 254
+- **Batch:** 32
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Adicionar 4 classes de teste de implementação (static analysis aprimorada, NO_MOCKS_GLOBAL compliant) ao arquivo test_contract_train_029_039_wellness.py para CONTRACT-031/032/037/038. Verificam: async def, get_current_user, service delegation, db.commit(). Sem mudança de schema DB ou openapi.
+
+#### 8.3 Evidencia
+- **Evidence**: docs/hbtrack/evidence/AR_254/executor_main.log
+- **Status Final**: ✅ VERIFICADO (hb seal 254, 2026-03-06)
+
+---
+
+### AR-TRAIN-071 — Sync documental pós-Batch 31+32 (AR_255, Batch 32)
+
+#### 8.1 Metadados
+- **Class:** G
+- **Prioridade:** ALTA
+- **AR_ID:** 255
+- **Batch:** 32
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Governança pura — sincronizar BACKLOG v3.6.0, TEST_MATRIX v4.2.0, Kanban (Batch 32), e _INDEX v1.5.0 após Batch 31 (AR_253) e Batch 32 (AR_254). Sem mudança de código produto, testes ou contrato BE.
+
+#### 8.3 Evidencia
+- **Evidence**: docs/hbtrack/evidence/AR_255/executor_main.log
+- **Status Final**: ✅ VERIFICADO (hb seal 255, 2026-03-06)

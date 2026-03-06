@@ -1201,11 +1201,11 @@ EVIDENCE_PACK:
 > **Correspondência Backlog**: AR-TRAIN-050 → AR_231
 > **Dependências obrigatórias**: AR-TRAIN-046 VERIFICADO (AR_227) + AR-TRAIN-049 VERIFICADO (AR_230).
 
-### 🔲 PRONTO PARA PLANEJAR — aguarda Executor (dep: AR_230 SEALED ✅)
+### ✅ VERIFICADO (2026-03-04) — hb seal 231 exit=0
 
 | AR | AR-TRAIN | Título | Status |
 |---|---|---|---|
-| **AR_231** | TRAIN-050 | Sync §5 TEST_MATRIX: INV-079/080/081 NOT_RUN→PASS + INV-018/035/058/059/063/064/076/EXB-ACL-006 FAIL/ERROR→PASS + bump v2.1.0→v2.2.0 | 🔲 PENDENTE |
+| **AR_231** | TRAIN-050 | Sync §5 TEST_MATRIX: INV-079/080/081 NOT_RUN→PASS + INV-018/035/058/059/063/064/076/EXB-ACL-006 FAIL/ERROR→PASS + bump v2.1.0→v2.2.0 | ✅ VERIFICADO |
 
 ---
 
@@ -1216,8 +1216,208 @@ EVIDENCE_PACK:
 > **Correspondência Backlog**: AR-TRAIN-051 → AR_232
 > **Dependências obrigatórias**: AR-TRAIN-050 VERIFICADO (AR_231, Batch 21).
 
-### 🔲 AGUARDANDO BATCH 21 — Batch 22 não pode iniciar sem AR_231 SEALED
+### ✅ VERIFICADO (2026-03-04) — hb seal 232 exit=0
 
 | AR | AR-TRAIN | Título | Status |
 |---|---|---|---|
-| **AR_232** | TRAIN-051 | Done Gate §10 final: §10 checkboxes ✅ + §0 contadores + TEST_MATRIX v3.0.0 + DONE_GATE_TRAINING_v3.md | 🔲 AGUARDA BATCH 21 |
+| **AR_232** | TRAIN-051 | Done Gate §10 final: §10 checkboxes ✅ + §0 contadores + TEST_MATRIX v3.0.0 + DONE_GATE_TRAINING_v3.md | ✅ VERIFICADO |
+
+---
+
+## 40. Cards -- TRAINING Batch 23 -- Frontend Hard Sync v1.3.0 (AR_236) ✅ SEALED
+
+> **Contexto**: Batch 23 — AR-TRAIN-052 (AR_236). Frontend Hard Sync v1.3.0: alinhar tipos UUID/standalone, payloads e stubs CONTRACT-096..105 do Frontend ao contrato Backend v1. Executado pós-Done Gate §10 (AR_232 VERIFICADO). Zero toque em Backend.
+> **Plano**: docs/_canon/planos/ar_batch23_frontend_sync_052.json
+> **Correspondência Backlog**: AR-TRAIN-052 → AR_236
+> **Dependências obrigatórias**: AR-TRAIN-051 VERIFICADO (AR_232, Batch 22).
+
+### ✅ SEALED — Batch 23 concluído (hb seal 2026-03-04)
+
+| AR | AR-TRAIN | Título | Status |
+|---|---|---|---|
+| **AR_236** | TRAIN-052 | Frontend Hard Sync v1.3.0: tipos UUID/standalone + stubs CONTRACT-096..105 | ✅ VERIFICADO |
+
+---
+
+## 41. Cards -- TRAINING Batch 24 -- Sync §9 TEST_MATRIX pós-Batch 23 (AR_237) ✅ SEALED
+
+> **Contexto**: Batch 24 — AR-TRAIN-053 (AR_237). Governance sync obrigatório: §9 da TEST_MATRIX_TRAINING.md requer entry AR-TRAIN-052 VERIFICADO. Zero toque em Backend/Frontend.
+> **Plano**: docs/_canon/planos/ar_batch24_sync_matrix_053.json
+> **Correspondência Backlog**: AR-TRAIN-053 → AR_237
+> **Dependências obrigatórias**: AR-TRAIN-052 VERIFICADO (AR_236, Batch 23).
+
+### ✅ SEALED — Batch 24 concluído (hb seal 2026-03-04)
+
+| AR | AR-TRAIN | Título | Status |
+|---|---|---|---|
+| **AR_237** | TRAIN-053 | Sync §9 TEST_MATRIX: entry AR-TRAIN-052 VERIFICADO pós-Batch 23 | ✅ VERIFICADO |
+
+---
+
+## 42. Cards -- TRAINING Batch 25 -- Sync §5 FASE_3 INVs FAIL/ERROR→PASS + v3.1.0 (AR_238) ✅ SEALED
+
+> **Contexto**: Batch 25 — AR-TRAIN-054 (AR_238). Sync §5 FASE_3: 18 INVs que estavam FAIL/ERROR passam a PASS (suite 59 tests), bump TEST_MATRIX v3.0.0→v3.1.0. Zero toque em Backend/Frontend.
+> **Plano**: docs/_canon/planos/ar_batch25_sync_fase3_054.json
+> **Correspondência Backlog**: AR-TRAIN-054 → AR_238
+> **Dependências obrigatórias**: AR-TRAIN-053 VERIFICADO (AR_237, Batch 24).
+
+### ✅ SEALED — Batch 25 concluído (hb seal 2026-03-04)
+
+| AR | AR-TRAIN | Título | Status |
+|---|---|---|---|
+| **AR_238** | TRAIN-054 | Sync §5 FASE_3: 18 INVs FAIL/ERROR→PASS + v3.1.0 + §9 entries 053/054 | ✅ VERIFICADO |
+
+---
+
+## 43. Cards -- TRAINING Batch 26 -- FASE_3 Impl Real + Sync SSOT pós-Batch 26 (AR_239-243) ✅ SEALED
+
+> **Contexto**: Batch 26 — AR-TRAIN-055..059 (AR_239-243). PO autorizou início 2026-03-04. Implementação real de 3 endpoints FASE_3 (PATCH attendance, PATCH+POST ai_coach, GET wellness-content-gate), corrigindo URLs Frontend + sync documental pós-Batch.
+> **Plano**: docs/_canon/planos/ar_batch26_fase3_impl_055_059.json
+> **Correspondência Backlog**: AR-TRAIN-055→AR_239; AR-TRAIN-056→AR_240; AR-TRAIN-057→AR_241; AR-TRAIN-058→AR_242; AR-TRAIN-059→AR_243
+> **Dependências obrigatórias**: AR-TRAIN-054 VERIFICADO (AR_238, Batch 25).
+
+### ✅ SEALED — Batch 26 concluído (hb seal 2026-03-04)
+
+| AR | AR-TRAIN | Título | Status |
+|---|---|---|---|
+| **AR_239** | TRAIN-055 | BE: PATCH /attendance/:id/resolve-pending-item | ✅ VERIFICADO |
+| **AR_240** | TRAIN-056 | BE: PATCH /ai/coach/draft/:id/apply + POST /ai/coach/justify-suggestion | ✅ VERIFICADO |
+| **AR_241** | TRAIN-057 | BE: GET /athlete/wellness-content-gate/:session_id | ✅ VERIFICADO |
+| **AR_242** | TRAIN-058 | FE: corrigir URLs training-phase3.ts — CONTRACT-097/101/102/103/104 | ✅ VERIFICADO |
+| **AR_243** | TRAIN-059 | Sync TEST_MATRIX §8/§9 + BACKLOG pós-Batch 26 + v3.2.0 | ✅ VERIFICADO |
+
+---
+
+## 44. Cards -- TRAINING Batch 27 -- Governance Sync + Contract tests (AR_244-245)
+
+> **Contexto**: Batch 27 — Opção C (decisão humana 2026-03-04). Duas frentes: (1) AR-TRAIN-060 corrige divergência de governança — Kanban ausente Batches 23-26, Batch Plan v1.5.0 sem Batches 23-26; (2) AR-TRAIN-061 fecha lacuna de cobertura P1 — CONTRACT-TRAIN-074/075 (wellness-rankings) com status NOT_RUN na TEST_MATRIX v3.2.0. Pré-condição: AR-TRAIN-059 VERIFICADO (AR_243, hb seal Batch 26).
+> **Plano**: docs/_canon/planos/ar_batch27_governance_contracts_060_061.json
+> **Correspondência Backlog**: AR-TRAIN-060 → AR_244; AR-TRAIN-061 → AR_245
+> **Dependências obrigatórias**: AR-TRAIN-059 VERIFICADO (AR_243, Batch 26).
+
+### ✅ SEALED — Batch 27 concluído (hb seal 244/245, 2026-03-04)
+
+| AR | AR-TRAIN | Título | Status |
+|---|---|---|---|
+| **AR_244** | TRAIN-060 | Governance Sync: Kanban retroativo Batches 23-26 + seção Batch 27 + Batch Plan v1.6.0 | ✅ VERIFICADO |
+| **AR_245** | TRAIN-061 | Contract tests: CONTRACT-TRAIN-074 (POST /analytics/wellness-rankings/calculate) + CONTRACT-TRAIN-075 (GET /…/athletes-90plus) + TEST_MATRIX v3.3.0 | ✅ VERIFICADO |
+
+---
+
+## 45. Cards -- TRAINING Batch 28 -- Sync pós-Batch 27 (AR_246)
+
+> **Contexto**: Batch 28 — Governança pós-Batch 27. AR-TRAIN-062 sincroniza: Backlog (AR-TRAIN-060/061 PENDENTE→VERIFICADO + add 062), TEST_MATRIX §9 (AR-TRAIN-061 EM_EXECUCAO→VERIFICADO + bump v3.4.0), e TRAINING_BATCH_PLAN_v1.md (fix header v1.5.0→v1.6.0 + add Batch 28 section).
+> **Plano**: docs/_canon/planos/ar_batch28_sync_matrix_062.json
+> **Correspondência Backlog**: AR-TRAIN-062 → AR_246
+> **Dependências obrigatórias**: AR-TRAIN-061 VERIFICADO (AR_245, Batch 27).
+
+### ✅ VERIFICADO (2026-03-04) — hb seal 246 exit=0
+
+| AR | AR-TRAIN | Título | Status |
+|---|---|---|---|
+| **AR_246** | TRAIN-062 | Sync Backlog AR-TRAIN-060/061→VERIFICADO + TEST_MATRIX §9 v3.4.0 + BatchPlan v1.6.0 + add Batch 28 | ✅ VERIFICADO |
+
+---
+
+## 49. Cards -- TRAINING Batch 32 -- Testes Impl Wellness + Sync Documental (AR_254, AR_255)
+
+> **Contexto**: Batch 32 — AR-TRAIN-070 (AR_254) + AR-TRAIN-071 (AR_255). T+G only: testes de implementação runtime GET/PATCH wellness por ID (CONTRACT-031/032/037/038) + sync documental pós-Batch 31+32. Sem mudança de schema DB, sem migration, sem mudança de contrato openapi.
+> **Plano**: docs/_canon/planos/ar_batch32_wellness_runtime_tests_sync_070_071.json
+> **Correspondência Backlog**: AR-TRAIN-070 → AR_254; AR-TRAIN-071 → AR_255
+> **Dependências obrigatórias**: AR-TRAIN-069 VERIFICADO (AR_253, Batch 31).
+
+### ✅ VERIFICADO (2026-03-06) — hb seal 254..255 exit=0
+
+| AR | AR-TRAIN | Título | Status |
+|---|---|---|---|
+| **AR_254** | TRAIN-070 | Testes impl GET/PATCH wellness por ID (CONTRACT-031/032/037/038) | ✅ VERIFICADO |
+| **AR_255** | TRAIN-071 | Sync documental pós-Batch 31+32: BACKLOG v3.6.0 + TEST_MATRIX v4.2.0 + Kanban + _INDEX v1.5.0 | ✅ VERIFICADO |
+
+---
+
+## 48. Cards -- TRAINING Batch 31 -- BE Stubs Fix Wellness GET/PATCH por ID (AR_253)
+
+> **Contexto**: Batch 31 — AR-TRAIN-069 (AR_253). BE fix stubs 501: implementar async def get_wellness_pre_by_id, update_wellness_pre (wellness_pre.py router), get_wellness_post_by_id, update_wellness_post (wellness_post.py router), mais metodos de servico em WellnessPreService e WellnessPostService. Sem mudanca de schema DB ou contrato.
+> **Plano**: docs/_canon/planos/ar_batch31_be_stubs_fix_wellness_069.json
+> **Correspondência Backlog**: AR-TRAIN-069 → AR_253
+> **Dependências obrigatórias**: AR-TRAIN-068 VERIFICADO (AR_252, Batch 30).
+
+### ✅ VERIFICADO (2026-03-07) — hb seal 253 exit=0
+
+| AR | AR-TRAIN | Título | Status |
+|---|---|---|---|
+| **AR_253** | TRAIN-069 | BE: implementar GET/PATCH wellness-pre e wellness-post por ID (fix stubs 501) | ✅ VERIFICADO |
+
+---
+
+## 47. Cards -- TRAINING Batch 30 -- FE Refactor Wellness Pre/Pos (AR_252)
+
+> **Contexto**: Batch 30 — AR-TRAIN-068 (AR_252). Refactor funcional Categoria B: migrar WellnessPreForm.tsx e WellnessPostForm.tsx de src/lib/api/wellness (camada manual) para src/api/generated (WellnessPreApi, WellnessPostApi). Adiciona export wellnessPostApi em api-instance.ts. Sem mudança de contrato BE, sem regeneração de openapi.json.
+> **Plano**: docs/_canon/planos/ar_batch30_wellness_pre_fe_generated_client_068.json
+> **Correspondência Backlog**: AR-TRAIN-068 → AR_252
+> **Dependências obrigatórias**: AR-TRAIN-067 VERIFICADO (AR_251, Batch 29).
+
+### ✅ VERIFICADO (2026-03-06) — hb seal 252 exit=0
+
+| AR | AR-TRAIN | Título | Status |
+|---|---|---|---|
+| **AR_252** | TRAIN-068 | Refactor FE Wellness Pre/Pos: migrar para cliente gerado (src/api/generated) | ✅ VERIFICADO |
+
+---
+
+## 46. Cards -- TRAINING Batch 29 -- TRUTH SUITE Residuals (AR_247-251) ✅ SEALED
+
+> **Contexto**: Batch 29 — Zerar residuais TRUTH SUITE: 1 xfailed (INV-148) + 4 skipped (test_058/059) + 9 LEGACY_INVALID → 0 xfailed, 0 skipped, 0 LEGACY_INVALID. Baseline pós-Batch 29: 615p/0s/0xf/0f. NO_MOCKS_GLOBAL atingido.
+> **Plano**: docs/_canon/planos/ar_batch29_plano_final_truth_suite_063_067.json
+> **Correspondência Backlog**: AR-TRAIN-063→AR_247, AR-TRAIN-064→AR_248, AR-TRAIN-065→AR_249, AR-TRAIN-066→AR_250, AR-TRAIN-067→AR_251
+> **Dependências obrigatórias**: AR-TRAIN-062 VERIFICADO (AR_246, Batch 28).
+
+### ✅ VERIFICADO (2026-03-05) — hb seal 247..251 exit=0
+
+| AR | AR-TRAIN | Título | Status |
+|---|---|---|---|
+| **AR_247** | TRAIN-063 | Fase 0+1: TRUTH SUITE dupla + triage 4 buckets — baseline 610p/4s/1xf/0f | ✅ VERIFICADO |
+| **AR_248** | TRAIN-064 | Fix user.organization_id not a column — xfail INV-148 → PASS | ✅ VERIFICADO |
+| **AR_249** | TRAIN-065 | Fix 4 SKIP em test_058/test_059 — INV-058/059 guards → PASS | ✅ VERIFICADO |
+| **AR_250** | TRAIN-066 | Converter 9 LEGACY_INVALID para TRUTH (NO_MOCKS_GLOBAL atingido) | ✅ VERIFICADO |
+| **AR_251** | TRAIN-067 | Sync documental pós-Batch 29: Backlog+TEST_MATRIX+BatchPlan+DONE_GATE+Kanban | ✅ VERIFICADO |
+
+---
+
+## 43. Cards -- TRAINING Batch 25 -- Sync §5 FASE_3: 18 INVs→PASS (AR_238)
+
+> **Contexto**: Suite FASE_2 confirmada 594p/0f. Os 18 INVs listados como FAIL/ERROR em §5 da TEST_MATRIX já passam. Esta AR sincroniza §5 + bump v3.0.1→v3.1.0 + §9 entries AR-TRAIN-053/054.
+> **Plano**: docs/_canon/planos/ar_batch25_sync_fase3_054.json
+> **Correspondência Backlog**: AR-TRAIN-054 → AR_238
+> **Dependências obrigatórias**: AR-TRAIN-053 VERIFICADO (AR_237, Batch 24).
+
+### ✅ VERIFICADO (2026-03-04) — hb seal 238 exit=0
+
+| AR | AR-TRAIN | Título | Status |
+|---|---|---|---|
+| **AR_238** | TRAIN-054 | Sync §5 FASE_3: 18 INVs FAIL/ERROR→2026-03-04 + v3.1.0 + §9 entries | ✅ VERIFICADO |
+
+---
+
+## TRAINING FASE_2 — STATUS FINAL
+
+> **Módulo TRAINING FASE_2: ✅ COMPLETO** (2026-03-04)
+>
+> - Backend v1.3.0: 100% invariantes cobertos (AR_126..AR_235)
+> - Frontend Hard Sync: ✅ (AR_236)
+> - TEST_MATRIX v3.0.0 / DONE_GATE_ATINGIDO: ✅ (AR_232 + AR_237)
+> - Pipeline DoD E2E: ✅ (AR_900)
+
+---
+
+## TRAINING FASE_3 — SYNC CONCLUÍDO
+
+> **Sync §5 FASE_3: ✅ CONCLUÍDO** (2026-03-04 — AR_238)
+>
+> - Suite completa: 594 passed, 0 failed, 0 errors
+> - 18 INVs FASE_3 (INV-TRAIN-010/011/019/020/021/029/031/034/036/037/050/052/054/057/065/066/067/070): ✅ PASS → TEST_MATRIX v3.1.0
+> - Backend FASE_3 endpoints: presentes no openapi.json
+> - Frontend FASE_3 stubs: training-phase3.ts (AR_236)
+> - TEST_MATRIX_TRAINING.md: v3.1.0 / DONE_GATE_ATINGIDO / §5 + §9 atualizados
+>
+> **FASE_3 Batch 26-28: ✅ COMPLETO** (2026-03-04) — AR_239..AR_246 todos VERIFICADOS. TEST_MATRIX v3.4.0.

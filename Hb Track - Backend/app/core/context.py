@@ -390,7 +390,7 @@ async def get_current_context(
                 select(Organization).where(Organization.deleted_at.is_(None))
             )
             org = result.scalars().first()
-            organization_id = org.id if isinstance(org.id, UUID) else UUID(str(org.id)) if org else UUID('00000000-0000-0000-0000-000000000000')
+            organization_id = (org.id if isinstance(org.id, UUID) else UUID(str(org.id))) if org else UUID('00000000-0000-0000-0000-000000000000')
 
     # Criar contexto
     def to_uuid(val):

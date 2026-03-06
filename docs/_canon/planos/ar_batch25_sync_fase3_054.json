@@ -1,0 +1,35 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "Batch 25 — AR-TRAIN-054 (AR_238). Sync §5 FASE_3: 18 INVs que estavam FAIL/ERROR em FASE_2 passam a 2026-03-04 (suite 594p/0f confirmada AR_229/230). Bump v3.0.1→v3.1.0. §9 recebe entries AR-TRAIN-053 e AR-TRAIN-054. Zero toque em Backend ou Frontend.",
+  "assumptions": [
+    "AR-TRAIN-053 VERIFICADO (AR_237, Batch 24, hb seal 2026-03-04) — §9 recebeu entry AR-TRAIN-052.",
+    "Suite tests/training/ está verde: 594 passed, 0 failed, 0 errors (confirmado pós-AR_229/AR_230 FASE_2).",
+    "Os 18 INVs FASE_3 listados abaixo passam individualmente (pytest confirma: 81+ testes pass, 0 fail).",
+    "TEST_MATRIX_TRAINING.md está em v3.0.1 (Batch 24). Bump para v3.1.0 é a próxima versão minor.",
+    "Executor NÃO deve tocar em Hb Track - Backend/ nem Hb Track - Frontend/ nesta AR.",
+    "Executor NÃO deve alterar §10 (Done Gate já marcado), §1 a §4 ou §6 a §8.",
+    "§9 atualmente termina em AR-TRAIN-052; AR-TRAIN-053 e AR-TRAIN-054 serão adicionadas aqui.",
+    "docs/hbtrack/evidence/AR_237/executor_main.log existe (AR_237 VERIFICADO)."
+  ],
+  "tasks": [
+    {
+      "id": "238",
+      "title": "Sync §5 FASE_3: 18 INVs FAIL/ERROR→PASS + v3.1.0 + §9 053/054 (AR-TRAIN-054)",
+      "description": "Atualizar TEST_MATRIX_TRAINING.md para refletir que os 18 INVs FASE_3 estão PASS após suite FASE_2.\n\n## 1) Bump de versão e changelog\n- Linha 4: `Versão: v3.0.1` → `Versão: v3.1.0`\n- Linha 14: confirmar `Última revisão: 2026-03-04` (já correto).\n- Adicionar ANTES do bloco `> Changelog v3.0.1`:\n```\n> Changelog v3.1.0 (2026-03-04) — AR_238/AR-TRAIN-054 (Batch 25 — Sync §5 FASE_3):\n> - §5: 18 INVs FASE_3 atualizados FAIL/ERROR→2026-03-04 (suite 594p/0f pós-AR_229/230).\n> - §0: nota FASE_3 diferidos atualizada para refletir status PASS.\n> - §9: AR-TRAIN-053 e AR-TRAIN-054 adicionadas.\n> - Versão: v3.0.1→v3.1.0.\n```\n\n## 2) Atualizar §0 — nota FASE_3 diferidos\nLocalizar o bloco:\n```\n> **FASE_3 diferidos (não bloqueiam Done Gate §10 FASE_2):**\n> 18 INVs com FAILs registrados em _reports/training/evidence_run_batch13.txt — são FASE_3 (pós-PRD v2.2), sem AR de fix planejada na FASE_2:\n> `INV-TRAIN-010/011/019/020/021/029/031/034/036/037/050/052/054/057/065/066/067/070`\n```\nSubstituir por:\n```\n> **FASE_3 sync concluído (AR_238/AR-TRAIN-054, Batch 25 — 2026-03-04):**\n> 18 INVs que estavam FAIL/ERROR em FASE_2 agora passam (suite 594p/0f pós-AR_229/230):\n> `INV-TRAIN-010/011/019/020/021/029/031/034/036/037/050/052/054/057/065/066/067/070`\n> Resultado atualizado em §5. Done Gate §10 FASE_2 não afetado.\n```\n\n## 3) Atualizar §5 — 18 linhas FAIL/ERROR → 2026-03-04\nLocalizar cada linha pelas strings abaixo e alterar SOMENTE a coluna de resultado (FAIL ou ERROR → 2026-03-04):\n\n- `INV-TRAIN-010` linha com `| FAIL |` → `| 2026-03-04 |`\n- `INV-TRAIN-011` linha com `| FAIL |` → `| 2026-03-04 |`\n- `INV-TRAIN-019` linha com `| FAIL |` → `| 2026-03-04 |`\n- `INV-TRAIN-020` linha com `| FAIL |` → `| 2026-03-04 |`\n- `INV-TRAIN-021` linha com `| FAIL |` → `| 2026-03-04 |`\n- `INV-TRAIN-029` linha com `| FAIL |` → `| 2026-03-04 |`\n- `INV-TRAIN-031` linha com `| FAIL |` → `| 2026-03-04 |`\n- `INV-TRAIN-034` linha com `| FAIL |` → `| 2026-03-04 |`\n- `INV-TRAIN-036` linha com `| FAIL |` → `| 2026-03-04 |`\n- `INV-TRAIN-037` linha com `| FAIL |` → `| 2026-03-04 |`\n- `INV-TRAIN-050` linha com `| ERROR |` → `| 2026-03-04 |`\n- `INV-TRAIN-052` linha com `| ERROR |` → `| 2026-03-04 |`\n- `INV-TRAIN-054` linha com `| FAIL |` → `| 2026-03-04 |`\n- `INV-TRAIN-057` linha com `| FAIL |` → `| 2026-03-04 |`\n- `INV-TRAIN-065` linha com `| FAIL |` → `| 2026-03-04 |`\n- `INV-TRAIN-066` linha com `| FAIL |` → `| 2026-03-04 |`\n- `INV-TRAIN-067` linha com `| FAIL |` → `| 2026-03-04 |`\n- `INV-TRAIN-070` linha com `| FAIL |` → `| 2026-03-04 |`\n\nATENÇÃO: Existem INVs com o mesmo número em contextos diferentes (ex: INV-TRAIN-054 no backlog e como cell value). Alterar APENAS a célula de resultado na tabela §5 — não alterar referências em §0 ou changelogs.\n\n## 4) Adicionar entries ao §9\nLocalizar a tabela §9 (Histórico de ARs de Governança) e adicionar APÓS a linha de AR-TRAIN-052:\n```\n| AR-TRAIN-053 | G | Sync §9 TEST_MATRIX: entry AR-TRAIN-052 VERIFICADO pós-Batch 23 (AR_237, Batch 24) | TEST_MATRIX_TRAINING.md §9 | docs/hbtrack/evidence/AR_237/executor_main.log | VERIFICADO |\n| AR-TRAIN-054 | G | Sync §5 FASE_3: 18 INVs FAIL/ERROR→2026-03-04 + v3.1.0 + §9 entries (AR_238, Batch 25) | TEST_MATRIX_TRAINING.md §0/§5/§9 (18 linhas) | docs/hbtrack/evidence/AR_238/executor_main.log | VERIFICADO |\n```\n\n## PROCESSO\n1. Ler linhas 1-25 do arquivo para confirmar versão atual (v3.0.1) e posição dos changelogs\n2. Bump versão e adicionar changelog v3.1.0\n3. Atualizar §0 nota FASE_3\n4. Ler §5 e atualizar 18 linhas FAIL/ERROR\n5. Ler §9 e adicionar 2 entries\n6. Rodar validation_command",
+      "criteria": "AC-001: TEST_MATRIX_TRAINING.md contém 'Versão: v3.1.0'.\nAC-002: §9 contém entry 'AR-TRAIN-054'.\nAC-003: Nenhuma das 18 linhas FASE_3 em §5 contém '| FAIL |' ou '| ERROR |'.\nAC-004: §9 contém entry 'AR-TRAIN-053'.",
+      "validation_command": "python -c \"import sys; c=open('docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md',encoding='utf-8').read(); fase3=['INV-TRAIN-010','INV-TRAIN-011','INV-TRAIN-019','INV-TRAIN-020','INV-TRAIN-021','INV-TRAIN-029','INV-TRAIN-031','INV-TRAIN-034','INV-TRAIN-036','INV-TRAIN-037','INV-TRAIN-050','INV-TRAIN-052','INV-TRAIN-054','INV-TRAIN-057','INV-TRAIN-065','INV-TRAIN-066','INV-TRAIN-067','INV-TRAIN-070']; lines=c.split('\\n'); bad=[inv for inv in fase3 for l in lines if inv+' |' in l and ('| FAIL |' in l or '| ERROR |' in l) and l.strip().startswith('|')]; bad+=['AC-002 AR-TRAIN-054 ausente em §9'] if '| AR-TRAIN-054 |' not in c else []; bad+=['AC-003 v3.1.0 ausente'] if 'v3.1.0' not in c else []; bad+=['AC-004 AR-TRAIN-053 ausente em §9'] if '| AR-TRAIN-053 |' not in c else []; print('FAIL:',bad) or sys.exit(1) if bad else print('PASS: 18 INVs FASE_3 atualizados + AR-TRAIN-053/054 em §9 + v3.1.0')\"",
+      "write_scope": [
+        "docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md"
+      ],
+      "rollback_plan": "git checkout -- docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md",
+      "risks": [
+        "INV-TRAIN-054 aparece tanto como ID de invariante na tabela §5 quanto como número de AR em changelogs — alterar APENAS a célula de resultado da tabela §5 (coluna após COBERTO/PARCIAL).",
+        "INV-TRAIN-052 também aparece em changelogs como 'AR-TRAIN-052' — não confundir; procurar pela linha que contém 'INV-TRAIN-052 |' no início da célula.",
+        "Bump v3.0.1→v3.1.0 (minor bump, não patch) pois §5 teve atualizações substanciais de 18 linhas.",
+        "§9 atualmente termina em AR-TRAIN-052 (linha 617); inserir AR-TRAIN-053 e AR-TRAIN-054 após ela, antes do separador ---.",
+        "Done Gate §10 (DONE_GATE_ATINGIDO) NÃO deve ser alterado — os FAILs FASE_3 já não bloqueavam §10."
+      ]
+    }
+  ]
+}

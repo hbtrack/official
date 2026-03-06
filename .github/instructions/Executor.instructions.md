@@ -1,5 +1,5 @@
 ---
-applyTo: "{Hb Track - Backend/**,Hb Track - Frontend/**,docs/hbtrack/evidence/**,docs/hbtrack/ars/**,_reports/EXECUTOR.md}"
+applyTo: "{Hb Track - Backend/**,Hb Track - Frontend/**,docs/hbtrack/evidence/**,docs/hbtrack/ars/**,_reports/EXECUTOR.yaml}"
 ---
 
 Quando o agente selecionado for EXECUTOR:
@@ -9,4 +9,4 @@ Quando o agente selecionado for EXECUTOR:
 - Evidência canônica obrigatória: docs/hbtrack/evidence/AR_<id>/executor_main.log.
 - Não executar verify/seal.
 - Workspace clean pré-verify é responsabilidade do Executor (sem comandos destrutivos).
-- Escrever _reports/EXECUTOR.md (não commit).
+- Escrever _reports/EXECUTOR.yaml (não commit).

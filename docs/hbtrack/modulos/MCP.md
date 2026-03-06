@@ -494,5 +494,46 @@ Mudanças neste documento DEVEM:
 * Gerar MCP completo
 * Submeter à validação humana
 * Iniciar ARs Classe A/B/C do núcleo bloqueante
+---
 
+### 2.1 Consolidar o que é SSOT vs o que é evidência
+1. **Criar** `docs/hbtrack/modulos/treinos/DONE_GATE_TRAINING.md` como SSOT normativo do gate.  
+2. Padronizar: `_reports/training/*` = evidência (data + logs + outputs), nunca “SSOT”.
+3. Definir um único padrão de versionamento para DONE_GATE (sem `v3` fantasma).
 
+### 2.2 Remover drifts temporais e restaurar auditabilidade
+1. Remover/realocar para “PLANEJADO” qualquer changelog com data futura.
+2. Regra: `Última revisão` nunca pode estar no futuro.
+
+### 2.3 Resolver contradições normativas (DEC vs INV vs CONTRACT)
+1. Atualizar `TRAINING_ROADMAP.md` para refletir a emenda do default `visibility_mode` (`org_wide` → `restricted`) e referenciar INV-TRAIN-060.
+2. Proibir texto “normativo final” em Roadmap quando a regra já foi amendada por outro SSOT (ou adicionar bloco “AMENDMENTS” com data e autoridade).
+
+### 2.4 Tornar `INVARIANTS_TRAINING.md` internamente consistente
+1. Para toda invariante com `status: IMPLEMENTADO`: remover `evidence: - GAP:` e substituí-lo por evidência positiva verificável.  
+2. Para toda invariante com evidência de ausência real: mudar `status` para `GAP`/`PARCIAL` conforme definição.
+3. Ajustar `Status:` do documento (DRAFT vs NORMATIVO_VIGENTE) para refletir o estado real do módulo.
+
+### 2.5 Tornar `CONTRACT_DIFF_GATE` executável de verdade
+1. Criar e documentar o baseline exigido por `SPEC_VERSIONING` (ex.: `contracts/openapi/previous_openapi.json` ou baseline versionado).
+2. Documentar comando canônico completo (incluindo onde obter “previous”).
+
+### 2.6 Eliminar duplicidade de SSOT técnico
+1. Declarar um único path canônico para OpenAPI/Schema.
+2. Se mantiver cópia espelhada, declarar explicitamente como derivada e como ela é regenerada (e por qual gate).
+Hoje o script `scripts/ssot/gen_docs_ssot.py` gera o `openapi.json` em dois lugares (primary + cópia):
+Primary: `/Hb Track - Backend/docs/ssot/openapi.json`
+Cópia (repo-level): `openapi.json`
+- Isso vem das constantes no script:
+OUTPUT_DIR      = BACKEND_ROOT / "docs" / "ssot"   # → Hb Track - Backend/docs/ssot/REPO_OUTPUT_DIR = REPO_ROOT    / "docs" / "ssot"   # → docs/ssot/
+---
+
+## 3) Checklist de aceitação (quando considerar “DOCS PERFEITAS”)
+
+1. **Nenhum link interno quebrado** em `docs/hbtrack/modulos/treinos/*.md`.  
+2. `DONE_GATE_TRAINING.md` existe no módulo e contém RH-06/RH-08 + critérios §10 (referenciados por INVs/ARs/Matrix).  
+3. Nenhum SSOT possui `Última revisão`/changelog com data no futuro.  
+4. `TRAINING_ROADMAP.md` não contradiz `INVARIANTS/CONTRACT/FLOWS` em regras normativas vigentes (ou registra emendas de forma explícita).  
+5. Em `INVARIANTS_TRAINING.md`: `status: IMPLEMENTADO` não contém `GAP:` no `evidence:`.  
+6. Existe baseline definido para `CONTRACT_DIFF_GATE` e o protocolo diz como promovê-lo.  
+7. Apenas **um** local é “SSOT” de OpenAPI/Schema, e o outro (se existir) está classificado como derivado com regra de sync.

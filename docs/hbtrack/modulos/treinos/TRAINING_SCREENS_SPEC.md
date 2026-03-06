@@ -1,16 +1,22 @@
 # TRAINING_SCREENS_SPEC.md — Especificação de Telas do Módulo TRAINING
 
-Status: DRAFT  
-Versão: v1.3.0  
-Tipo de Documento: SSOT Normativo — Screens Spec  
-Módulo: TRAINING  
-Fase: PRD v2.2 (2026-02-20) + AS-IS repo (2026-02-25) + DEC-TRAIN-* (2026-02-25) + FASE_3 (2026-02-27)  
-Autoridade: NORMATIVO_TECNICO  
-Última revisão: 2026-02-27  
+Status: NORMATIVO_VIGENTE  
+Versão: v1.5.0
+Tipo de Documento: SSOT Normativo — Screens Spec
+Módulo: TRAINING
+Fase: FASE_2 + FASE_3 REAL — implementação concluída (2026-03-04). Itens pós-DONE: ver TRAINING_ROADMAP.md §POST-DONE.
+Autoridade: NORMATIVO_TECNICO
+Última revisão: 2026-03-05
 
-> Changelog v1.3.0 (2026-02-27):  
-> - FASE_3: Adicionados SCREEN-TRAIN-022..025 (atleta pre-session, pending queue, AI chat, AI coach draft)  
-> - Cross-ref: INV-TRAIN-063..081, CONTRACT-TRAIN-096..105, FLOW-TRAIN-016..021  
+> Changelog v1.5.0 (2026-03-05):
+> - SCREEN-TRAIN-014/015: PARCIAL → EVIDENCIADO (UUID gap corrigido em rankings.ts; RankingsClient + TopPerformersClient evidenciados)
+> - SCREEN-TRAIN-018/019: PARCIAL → EVIDENCIADO (WellnessPreClient + WellnessPostClient evidenciados)
+> - SCREEN-TRAIN-023: GAP → EVIDENCIADO (pending-queue/page.tsx + PendingQueueTable.tsx implementados)
+> - Índice expandido com SCREEN-TRAIN-022..025 (FASE_3)
+
+> Changelog v1.4.0 (2026-03-04):
+> - Status: DRAFT → NORMATIVO_VIGENTE (FASE_2 + FASE_3 REAL concluídas, DONE_TRAINING_ATINGIDO)  
+> - Fase atualizada: sem itens pendentes bloqueantes; features pós-DONE em TRAINING_ROADMAP.md §POST-DONE  
 
 > Changelog v1.2.0 (2026-02-26):  
 > - Adicionada Authority Matrix  
@@ -44,6 +50,29 @@ Dependências (leitura):
 
 ---
 
+## CONSUMO DO CONTRATO
+
+As telas do módulo TRAINING devem consumir o cliente gerado a partir do contrato OpenAPI.
+
+Cliente canônico:
+
+`Hb Track - Frontend/src/api/generated/*`
+
+Regras:
+
+- telas não definem manualmente payloads de request
+- telas não redefinem tipos já presentes no cliente gerado
+- validações devem refletir o contrato OpenAPI
+
+Precedência:
+
+`FE Generated client > FE Manual adapter > Screen specification`
+
+A especificação de tela descreve UX,
+não contrato de API.
+
+---
+
 ## Convenção de Tags (Classification)
 
 Cada tela (SCREEN-*) neste documento é uma **unidade de afirmação testável** e recebe classificação:
@@ -60,6 +89,25 @@ Cada tela (SCREEN-*) neste documento é uma **unidade de afirmação testável**
 - `PARCIAL` → `[NORMATIVO]` com gaps identificados.
 - `HIPOTESE` → `[HIPOTESE]`.
 - `BLOQUEADO` → `[NORMATIVO]` + `[GAP]` (regra existe, implementação bloqueada).
+
+---
+
+## RELAÇÃO COM O PIPELINE SPEC-DRIVEN
+
+Este documento integra o pipeline spec-driven definido em:
+
+- `_INDEX.md`
+- `TEST_MATRIX_TRAINING.md`
+- `TRAINING_FRONT_BACK_CONTRACT.md`
+
+Ele não substitui a validação técnica realizada por:
+
+- `OPENAPI_SPEC_QUALITY`
+- `CONTRACT_DIFF_GATE`
+- `GENERATED_CLIENT_SYNC`
+- `RUNTIME CONTRACT VALIDATION`
+- `TRUTH_BE`
+- `TRUTH_FE`
 
 ---
 
@@ -110,14 +158,18 @@ Regras:
 | SCREEN-TRAIN-011 | Modal | `ExerciseModal` / `CreateExerciseModal` / `EditExerciseModal` | Treinador | EVIDENCIADO | FLOW-TRAIN-009 |
 | SCREEN-TRAIN-012 | Page | `/training/analytics` | Coordenador | EVIDENCIADO | FLOW-TRAIN-011 |
 | SCREEN-TRAIN-013 | Modal | `ExportPDFModal` | Coordenador | EVIDENCIADO | FLOW-TRAIN-012 |
-| SCREEN-TRAIN-014 | Page | `/training/rankings` | Dirigente | PARCIAL | FLOW-TRAIN-013 |
-| SCREEN-TRAIN-015 | Page | `/training/top-performers/[teamId]` | Dirigente | PARCIAL | FLOW-TRAIN-013 |
+| SCREEN-TRAIN-014 | Page | `/training/rankings` | Dirigente | EVIDENCIADO | FLOW-TRAIN-013 |
+| SCREEN-TRAIN-015 | Page | `/training/top-performers/[teamId]` | Dirigente | EVIDENCIADO | FLOW-TRAIN-013 |
 | SCREEN-TRAIN-016 | Page | `/training/eficacia-preventiva` | Coordenador | EVIDENCIADO | FLOW-TRAIN-014 |
 | SCREEN-TRAIN-017 | Page | `/training/configuracoes` | Treinador | EVIDENCIADO | FLOW-TRAIN-010 |
-| SCREEN-TRAIN-018 | Page | `/athlete/wellness-pre/[sessionId]` | Atleta | PARCIAL | FLOW-TRAIN-005 |
-| SCREEN-TRAIN-019 | Page | `/athlete/wellness-post/[sessionId]` | Atleta | PARCIAL | FLOW-TRAIN-006 |
+| SCREEN-TRAIN-018 | Page | `/athlete/wellness-pre/[sessionId]` | Atleta | EVIDENCIADO | FLOW-TRAIN-005 |
+| SCREEN-TRAIN-019 | Page | `/athlete/wellness-post/[sessionId]` | Atleta | EVIDENCIADO | FLOW-TRAIN-006 |
 | SCREEN-TRAIN-020 | Page | `/training/presencas` (placeholder) | Treinador | PARCIAL | FLOW-TRAIN-004 |
 | SCREEN-TRAIN-021 | Page | (a definir) Central de Alertas/Sugestões | Treinador | HIPOTESE | FLOW-TRAIN-015 |
+| SCREEN-TRAIN-022 | Page | `/athlete/training/[sessionId]` | Atleta | GAP | FLOW-TRAIN-016, FLOW-TRAIN-017, FLOW-TRAIN-021 |
+| SCREEN-TRAIN-023 | Page | `/training/pending-queue` | Treinador | EVIDENCIADO | FLOW-TRAIN-018 |
+| SCREEN-TRAIN-024 | Page | `/athlete/ai-chat/[sessionId]` | Atleta | GAP | FLOW-TRAIN-019 |
+| SCREEN-TRAIN-025 | Modal | N/A (modal sobre agenda/editor) | Treinador | GAP | FLOW-TRAIN-020 |
 
 ---
 
@@ -421,18 +473,15 @@ Evidência:
 
 ## SCREEN-TRAIN-014 — Rankings de Wellness (equipes)
 
-**Tipo:** Page  
-**Rota:** `/training/rankings`  
-**Fluxo:** FLOW-TRAIN-013  
-**Estado AS-IS:** PARCIAL
+**Tipo:** Page
+**Rota:** `/training/rankings`
+**Fluxo:** FLOW-TRAIN-013
+**Estado AS-IS:** EVIDENCIADO
 
 ### Contratos
 - `CONTRACT-TRAIN-073` (listar rankings)
 - `CONTRACT-TRAIN-074` (recalcular — dirigente)
 - `CONTRACT-TRAIN-075` (drilldown 90%+)
-
-### Gap crítico
-- Frontend tipa `team_id` como `number`, mas SSOT usa `UUID`.
 
 Evidência:
 - `Hb Track - Frontend/src/app/(admin)/training/rankings/RankingsClient.tsx`
@@ -445,7 +494,7 @@ Evidência:
 **Tipo:** Page  
 **Rota:** `/training/top-performers/[teamId]`  
 **Fluxo:** FLOW-TRAIN-013  
-**Estado AS-IS:** PARCIAL  
+**Estado AS-IS:** EVIDENCIADO
 **decision_trace:** `[DEC-TRAIN-003]`
 
 ### Regra Canônica (DEC-TRAIN-003 — normativo)
@@ -492,10 +541,10 @@ Evidência:
 
 ## SCREEN-TRAIN-018 — Wellness Pré (Atleta)
 
-**Tipo:** Page  
-**Rota:** `/athlete/wellness-pre/[sessionId]`  
-**Fluxo:** FLOW-TRAIN-005  
-**Estado AS-IS:** PARCIAL  
+**Tipo:** Page
+**Rota:** `/athlete/wellness-pre/[sessionId]`
+**Fluxo:** FLOW-TRAIN-005
+**Estado AS-IS:** EVIDENCIADO
 **decision_trace:** `[DEC-TRAIN-001, DEC-TRAIN-002]`
 
 ### Requisitos normativos
@@ -526,10 +575,10 @@ Evidências:
 
 ## SCREEN-TRAIN-019 — Wellness Pós (Atleta)
 
-**Tipo:** Page  
-**Rota:** `/athlete/wellness-post/[sessionId]`  
-**Fluxo:** FLOW-TRAIN-006  
-**Estado AS-IS:** PARCIAL  
+**Tipo:** Page
+**Rota:** `/athlete/wellness-post/[sessionId]`
+**Fluxo:** FLOW-TRAIN-006
+**Estado AS-IS:** EVIDENCIADO
 **decision_trace:** `[DEC-TRAIN-001]`
 
 ### Requisitos normativos
@@ -635,10 +684,10 @@ Contratos:
 
 ## SCREEN-TRAIN-023 — Fila de Pendências (Admin)
 
-**Tipo:** Page  
-**Rota:** `/training/pending-queue`  
-**Fluxo:** FLOW-TRAIN-018  
-**Estado AS-IS:** GAP  
+**Tipo:** Page
+**Rota:** `/training/pending-queue`
+**Fluxo:** FLOW-TRAIN-018
+**Estado AS-IS:** EVIDENCIADO
 
 ### Estados de UI
 
@@ -662,7 +711,8 @@ Contratos:
 - `CONTRACT-TRAIN-100` (resolver pendência)
 
 ### Evidências
-- (a criar — AR-TRAIN-017, AR-TRAIN-018)
+- `Hb Track - Frontend/src/app/(admin)/training/pending-queue/page.tsx`
+- `Hb Track - Frontend/src/components/training/PendingQueueTable.tsx`
 
 ---
 

@@ -1,0 +1,48 @@
+{
+  "ar_id": "242",
+  "validation_command": "python -c \"import sys; c=open('Hb Track - Frontend/src/lib/api/training-phase3.ts',encoding='utf-8').read(); errs=[]; errs.append('FAIL AC-001: /ai-coach/ ainda presente') if '/ai-coach/' in c else None; errs.append('FAIL AC-003: /training-sessions/${sessionId}/pre-confirm ainda presente') if 'training-sessions/${sessionId}/pre-confirm' in c else None; print('FAIL:',errs) or sys.exit(1) if errs else print('PASS AC-001+003: URLs criticas corrigidas (AC-002/004 via inspeção manual)')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "b85fb327b85f096017110e39b252dedf9fdf7e05a0cc023fb06619c5ed4ad6df",
+      "hash": "b85fb327b85f0960",
+      "stdout_len": 75,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "b85fb327b85f096017110e39b252dedf9fdf7e05a0cc023fb06619c5ed4ad6df",
+      "hash": "b85fb327b85f0960",
+      "stdout_len": 75,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "b85fb327b85f096017110e39b252dedf9fdf7e05a0cc023fb06619c5ed4ad6df",
+      "hash": "b85fb327b85f0960",
+      "stdout_len": 75,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true,
+  "dod": {
+    "proof": "OK",
+    "trace": "OK",
+    "stitch": "OK",
+    "matrix": "N/A",
+    "warns": [],
+    "gate_errors": []
+  }
+}

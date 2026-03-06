@@ -3,133 +3,148 @@ Teste unitário para refresh_training_rankings_task (INV-TRAIN-027).
 
 Verifica que a task:
 1. Busca teams ativos
-2. Busca caches com cache_dirty=true
+2. Busca caches com cache_dirty=true para cada team
 3. Marca caches como não-dirty e atualiza calculated_at
+
+Sem unittest.mock — usa contextlib.asynccontextmanager + data classes Python puros.
 """
 
-import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
+from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from uuid import uuid4
 
+import app.core.celery_tasks as _celery_mod
+from app.core.celery_tasks import refresh_training_rankings_task
+
+
+# ---------------------------------------------------------------------------
+# Helpers Python puros (sem unittest.mock)
+# ---------------------------------------------------------------------------
+
+class _Rows:
+    """Simula o resultado de db.execute(...).scalars().all() sem mock."""
+
+    def __init__(self, items):
+        self._items = items
+
+    def scalars(self):
+        return self
+
+    def all(self):
+        return self._items
+
+
+class _Team:
+    """Team fake com os atributos lidos pela task."""
+
+    def __init__(self):
+        self.id = uuid4()
+        self.deleted_at = None
+        self.active_from = datetime(2025, 1, 1, tzinfo=timezone.utc)
+
+
+class _Cache:
+    """Cache fake mutável — a task define cache_dirty/calculated_at in-place."""
+
+    def __init__(self, team_id):
+        self.id = uuid4()
+        self.team_id = team_id
+        self.cache_dirty = True
+        self.calculated_at = None
+
+
+class _SequenceDB:
+    """DB fake que retorna resultados pré-configurados em sequência."""
+
+    def __init__(self, *returns):
+        self._idx = 0
+        self._returns = list(returns)
+        self.commit_calls = 0
+
+    async def execute(self, stmt):
+        r = self._returns[self._idx]
+        self._idx += 1
+        return r
+
+    async def commit(self):
+        self.commit_calls += 1
+
+
+# ---------------------------------------------------------------------------
+# Testes
+# ---------------------------------------------------------------------------
 
 def test_refresh_training_rankings_task_recalculates_dirty_caches():
     """
     Verifica que a task refresh_training_rankings_task:
     1. Busca teams ativos
     2. Busca caches com cache_dirty=true
-    3. Atualiza caches dirty -> clean
+    3. Atualiza caches dirty -> clean (cache_dirty=False, calculated_at preenchido)
     """
-    # Mock team
-    team_id = uuid4()
-    mock_team = MagicMock()
-    mock_team.id = team_id
-    mock_team.deleted_at = None
-    mock_team.active_from = datetime(2025, 1, 1)
+    team = _Team()
+    cache = _Cache(team.id)
+    fake_db = _SequenceDB(_Rows([team]), _Rows([cache]))
 
-    # Mock cache dirty
-    cache_id = uuid4()
-    mock_cache = MagicMock()
-    mock_cache.id = cache_id
-    mock_cache.team_id = team_id
-    mock_cache.cache_dirty = True
-    mock_cache.calculated_at = None
+    @asynccontextmanager
+    async def _fake_ctx():
+        yield fake_db
 
-    # Setup execute returns
-    teams_result = MagicMock()
-    teams_result.scalars.return_value.all.return_value = [mock_team]
-
-    caches_result = MagicMock()
-    caches_result.scalars.return_value.all.return_value = [mock_cache]
-
-    # Setup mock DB
-    mock_db = AsyncMock()
-    mock_db.execute = AsyncMock(side_effect=[teams_result, caches_result])
-    mock_db.commit = AsyncMock()
-
-    with patch("app.core.celery_tasks.get_db_context") as mock_db_ctx:
-        # Mock async context manager
-        mock_ctx_manager = AsyncMock()
-        mock_ctx_manager.__aenter__.return_value = mock_db
-        mock_ctx_manager.__aexit__.return_value = None
-        mock_db_ctx.return_value = mock_ctx_manager
-
-        # Import and run task
-        from app.core.celery_tasks import refresh_training_rankings_task
-
+    original = _celery_mod.get_db_context
+    _celery_mod.get_db_context = _fake_ctx
+    try:
         result = refresh_training_rankings_task()
+    finally:
+        _celery_mod.get_db_context = original
 
-        # Assertions
-        assert result["teams_processed"] == 1
-        assert result["caches_refreshed"] == 1
-        assert result["success"] is True
-        assert "errors" in result
-        assert len(result["errors"]) == 0
-
-        # Verify cache was updated
-        assert mock_cache.cache_dirty is False
-        assert mock_cache.calculated_at is not None
+    assert result["teams_processed"] == 1
+    assert result["caches_refreshed"] == 1
+    assert result["success"] is True
+    assert len(result["errors"]) == 0
+    assert cache.cache_dirty is False, "Cache deve estar marcado como não-dirty"
+    assert cache.calculated_at is not None, "calculated_at deve ter sido preenchido"
 
 
 def test_refresh_training_rankings_task_no_dirty_caches():
     """
     Verifica que a task não falha quando não há caches dirty.
     """
-    # Mock team
-    team_id = uuid4()
-    mock_team = MagicMock()
-    mock_team.id = team_id
-    mock_team.deleted_at = None
-    mock_team.active_from = datetime(2025, 1, 1)
+    team = _Team()
+    fake_db = _SequenceDB(_Rows([team]), _Rows([]))
 
-    # Setup execute returns
-    teams_result = MagicMock()
-    teams_result.scalars.return_value.all.return_value = [mock_team]
+    @asynccontextmanager
+    async def _fake_ctx():
+        yield fake_db
 
-    # No dirty caches
-    caches_result = MagicMock()
-    caches_result.scalars.return_value.all.return_value = []
-
-    mock_db = AsyncMock()
-    mock_db.execute = AsyncMock(side_effect=[teams_result, caches_result])
-    mock_db.commit = AsyncMock()
-
-    with patch("app.core.celery_tasks.get_db_context") as mock_db_ctx:
-        mock_ctx_manager = AsyncMock()
-        mock_ctx_manager.__aenter__.return_value = mock_db
-        mock_ctx_manager.__aexit__.return_value = None
-        mock_db_ctx.return_value = mock_ctx_manager
-
-        from app.core.celery_tasks import refresh_training_rankings_task
-
+    original = _celery_mod.get_db_context
+    _celery_mod.get_db_context = _fake_ctx
+    try:
         result = refresh_training_rankings_task()
+    finally:
+        _celery_mod.get_db_context = original
 
-        assert result["teams_processed"] == 1
-        assert result["caches_refreshed"] == 0
-        assert result["success"] is True
+    assert result["teams_processed"] == 1
+    assert result["caches_refreshed"] == 0
+    assert result["success"] is True
+    assert len(result["errors"]) == 0
 
 
 def test_refresh_training_rankings_task_no_active_teams():
     """
     Verifica que a task não falha quando não há teams ativos.
     """
-    # No teams
-    teams_result = MagicMock()
-    teams_result.scalars.return_value.all.return_value = []
+    fake_db = _SequenceDB(_Rows([]))
 
-    mock_db = AsyncMock()
-    mock_db.execute = AsyncMock(return_value=teams_result)
+    @asynccontextmanager
+    async def _fake_ctx():
+        yield fake_db
 
-    with patch("app.core.celery_tasks.get_db_context") as mock_db_ctx:
-        mock_ctx_manager = AsyncMock()
-        mock_ctx_manager.__aenter__.return_value = mock_db
-        mock_ctx_manager.__aexit__.return_value = None
-        mock_db_ctx.return_value = mock_ctx_manager
-
-        from app.core.celery_tasks import refresh_training_rankings_task
-
+    original = _celery_mod.get_db_context
+    _celery_mod.get_db_context = _fake_ctx
+    try:
         result = refresh_training_rankings_task()
+    finally:
+        _celery_mod.get_db_context = original
 
-        assert result["teams_processed"] == 0
-        assert result["caches_refreshed"] == 0
-        assert result["success"] is True
+    assert result["teams_processed"] == 0
+    assert result["caches_refreshed"] == 0
+    assert result["success"] is True

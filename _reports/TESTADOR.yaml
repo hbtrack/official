@@ -1,0 +1,205 @@
+# TESTADOR — Relatório de Verificação
+
+**RUN_ID**: TESTADOR-AR254-AR255-a7ab568-2026-03-06
+**AR_IDs**: [254, 255]
+**AR-TRAINs**: AR-TRAIN-070, AR-TRAIN-071
+**Batch**: 32
+**Branch**: dev-changes-2
+**HEAD**: a7ab568
+**Data**: 2026-03-06
+
+---
+
+## RESULT
+
+| Campo | AR_254 | AR_255 |
+|---|---|---|
+| RESULT | ✅ SUCESSO | ✅ SUCESSO |
+| CONSISTENCY | OK | OK |
+| TRIPLE_CONSISTENCY | OK (3/3 exit=0, hash idêntico) | OK (3/3 exit=0, hash idêntico) |
+| Hash | c7950ee5238ba684 | c7950ee5238ba684 |
+| DOD.proof | OK | OK |
+| DOD.trace | OK | OK |
+| DOD.stitch | OK | OK |
+| DOD.matrix | N/A | N/A |
+| DOD.warns | [] (zero WARNs) | [] (zero WARNs) |
+| Workspace Clean | True | True |
+| OPS-GATE-001 | PASS (exit_code=0) | PASS (exit_code=0) |
+| CONTRACT_DIFF_GATE | N/A (sem mudança openapi.json) | N/A (sem mudança openapi.json) |
+| Schemathesis | N/A (sem mudança de contrato) | N/A (sem mudança de contrato) |
+
+---
+
+## PRÉ-CONDIÇÕES (verificadas)
+
+| Condição | AR_254 | AR_255 |
+|---|---|---|
+| AR existe (`docs/hbtrack/ars/**/AR_<id>_*.md`) | ✅ | ✅ |
+| Validation Command não vazio | ✅ | ✅ |
+| Evidence `docs/hbtrack/evidence/AR_<id>/executor_main.log` existe | ✅ | ✅ |
+| Evidence staged (`git diff --cached`) | ✅ | ✅ |
+| Workspace limpo (tracked-unstaged vazio) | ✅ | ✅ |
+| executor_main.log: `Exit Code: 0` | ✅ | ✅ |
+| executor_main.log: `Workspace Clean: True` | ✅ | ✅ |
+| OPS-GATE-001 exit_code=0 | ✅ | ✅ |
+| CONTRACT_DIFF_GATE | N/A | N/A |
+| Schemathesis | N/A | N/A |
+
+---
+
+## TRIPLE-RUN DETALHADO
+
+### AR_254
+
+| Run | Exit | Hash |
+|---|---|---|
+| 1/3 | 0 | c7950ee5238ba684 |
+| 2/3 | 0 | c7950ee5238ba684 |
+| 3/3 | 0 | c7950ee5238ba684 |
+
+Hash full: `c7950ee5238ba6845dd89c9bc183f2c44810fc6427b78bfd5cd97290aaad941f`
+
+### AR_255
+
+| Run | Exit | Hash |
+|---|---|---|
+| 1/3 | 0 | c7950ee5238ba684 |
+| 2/3 | 0 | c7950ee5238ba684 |
+| 3/3 | 0 | c7950ee5238ba684 |
+
+Hash full: `c7950ee5238ba6845dd89c9bc183f2c44810fc6427b78bfd5cd97290aaad941f`
+
+---
+
+## EVIDÊNCIAS
+
+- `_reports/testador/AR_254_a7ab568/context.json` — staged ✅
+- `_reports/testador/AR_254_a7ab568/result.json` — staged ✅
+- `_reports/testador/AR_255_a7ab568/context.json` — staged ✅
+- `_reports/testador/AR_255_a7ab568/result.json` — staged ✅
+
+---
+
+## NEXT_ACTION
+
+✅ **SUCESSO** — Humano pode executar: `hb seal 254 255`
+ — Relatório de Verificação Batch 32
+
+<!-- TESTADOR_REPORT -->
+
+**RUN_ID**: TESTADOR-BATCH29-REPLAN6-a7ab568
+**AR_IDs**: [248, 249, 250, 251]
+**Batch**: 29 — AR-TRAIN-064/065/066/067
+**Branch**: dev-changes-2
+**HEAD**: a7ab568
+**Data**: 2026-03-05
+**Protocolo**: 1.3.0
+
+---
+
+## RESULT: ✅ SUCESSO TOTAL
+
+4/4 aprovadas (248, 249, 250, 251)
+
+| AR | Triple-run | Hash (short) | Consistency | Status |
+|---|---|---|---|---|
+| AR_248 | 3/3 exit=0 | `df44f0d19e2e33eb` | OK | ✅ SUCESSO |
+| AR_249 | 3/3 exit=0 | `ab5a8e330cd36314` | OK | ✅ SUCESSO (REPLAN-6) |
+| AR_250 | 3/3 exit=0 | `8a76608b9604980e` | OK | ✅ SUCESSO |
+| AR_251 | 3/3 exit=0 | `6b811a6c85bb9674` | OK | ✅ SUCESSO |
+
+---
+
+## DETALHE — AR_248 ✅
+
+**AR-TRAIN**: 064 | triple_consistency: OK
+**hash_full**: `df44f0d19e2e33ebea7f3a83e3ee4219cefb44e22e6da85e4b2dc8b9a7a82c56`
+
+| Run | Exit | Hash |
+|-----|------|------|
+| 1 | 0 | `df44f0d19e2e33eb` |
+| 2 | 0 | `df44f0d19e2e33eb` |
+| 3 | 0 | `df44f0d19e2e33eb` |
+
+DOD: PROOF[OK] TRACE[OK] STITCH[OK] MATRIX[N/A] WARNs[nenhum]
+
+---
+
+## DETALHE — AR_249 ✅ (REPLAN-6)
+
+**AR-TRAIN**: 065 | triple_consistency: OK
+**hash_full**: `ab5a8e330cd36314b542230a8c0d31960eec6671b2aca605c4e2cb2acfdc98fb`
+
+| Run | Exit | Hash |
+|-----|------|------|
+| 1 | 0 | `ab5a8e330cd36314` |
+| 2 | 0 | `ab5a8e330cd36314` |
+| 3 | 0 | `ab5a8e330cd36314` |
+
+DOD: PROOF[OK] TRACE[OK] STITCH[OK] MATRIX[N/A] WARNs[nenhum]
+
+**Histórico**: Ciclo 1 REJEITADO (FLAKY_OUTPUT) — `re.sub(r' - \d+\.\d+s', '', l)` ausente no filtro.
+**Fix REPLAN-6**: `import re` + strip de timing adicionado → hash determinístico. SUCESSO no 2º ciclo.
+
+---
+
+## DETALHE — AR_250 ✅
+
+**AR-TRAIN**: 066 | triple_consistency: OK
+**hash_full**: `8a76608b9604980e518df9e77d87cc288f7e4bf7e66642edbfa59877771278c1`
+
+| Run | Exit | Hash |
+|-----|------|------|
+| 1 | 0 | `8a76608b9604980e` |
+| 2 | 0 | `8a76608b9604980e` |
+| 3 | 0 | `8a76608b9604980e` |
+
+DOD: PROOF[OK] TRACE[OK] STITCH[OK] MATRIX[N/A] WARNs[nenhum]
+
+---
+
+## DETALHE — AR_251 ✅
+
+**AR-TRAIN**: 067 | triple_consistency: OK
+**hash_full**: `6b811a6c85bb96745a24549718db92a1ac2970544e8331f8885c349056e9273f`
+
+| Run | Exit | Hash |
+|-----|------|------|
+| 1 | 0 | `6b811a6c85bb9674` |
+| 2 | 0 | `6b811a6c85bb9674` |
+| 3 | 0 | `6b811a6c85bb9674` |
+
+DOD: PROOF[OK] TRACE[OK] STITCH[OK] MATRIX[N/A] WARNs[nenhum]
+
+---
+
+## TRIPLE_CONSISTENCY
+
+| AR | triple_consistency |
+|----|--------------------|
+| AR_248 | OK |
+| AR_249 | OK (REPLAN-6) |
+| AR_250 | OK |
+| AR_251 | OK |
+
+---
+
+## EVIDENCES
+
+**Testador commitaveis (staged)**:
+- `_reports/testador/AR_248_a7ab568/context.json` OK
+- `_reports/testador/AR_248_a7ab568/result.json` OK
+- `_reports/testador/AR_249_a7ab568/context.json` OK
+- `_reports/testador/AR_249_a7ab568/result.json` OK
+- `_reports/testador/AR_250_a7ab568/context.json` OK
+- `_reports/testador/AR_250_a7ab568/result.json` OK
+- `_reports/testador/AR_251_a7ab568/context.json` OK
+- `_reports/testador/AR_251_a7ab568/result.json` OK
+
+---
+
+## NEXT_ACTION
+
+### Todas aprovadas — Humano: `hb seal 248`, `hb seal 249`, `hb seal 250`, `hb seal 251`
+
+*Testador — 2026-03-05 — Batch 29 completo: AR_248 AR_249 AR_250 AR_251 todos SUCESSO. hb seal 248/249/250/251.*

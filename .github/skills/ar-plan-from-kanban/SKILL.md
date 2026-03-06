@@ -7,12 +7,12 @@ target: vscode
 # Skill — Arquiteto: Planos a partir de Kanban/Backlog/Batch
 
 Objetivo
-- Converter estado operacional (Kanban) + dependências (AR_BACKLOG) + agrupamento (TRAINING_BATCH_PLAN) em Plan JSON(s) válidos e prontos para `hb plan --dry-run`.
+- Converter estado operacional (Kanban) + dependências (AR_BACKLOG) + marcos/ordem macro (ROADMAP, quando aplicável) em Plan JSON(s) válidos e prontos para `hb plan --dry-run`.
 
 Autoridade (SSOT)
 - `docs/hbtrack/Hb Track Kanban.md` (ordem/estado operacional)
 - `docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md` (dependências + AR-TRAIN permitidas)
-- `docs/hbtrack/modulos/treinos/TRAINING_BATCH_PLAN_v1.md` (batches + definição de Done)
+- `docs/hbtrack/modulos/treinos/TRAINING_ROADMAP.md` (marcos/ordem macro; quando aplicável)
 - `docs/_canon/contratos/ar_contract.schema.json` (validação do plan JSON)
 - `docs/_canon/specs/GATES_REGISTRY.yaml` (gates referenciáveis)
 
@@ -44,7 +44,7 @@ Procedimento (checklist determinístico)
 
 Saídas obrigatórias
 - `docs/_canon/planos/<nome>.json` (um por AR ou por conjunto, conforme seu padrão)
-- `_reports/ARQUITETO.md` (preenchido via skill `ar-handoff-writer`)
+- `_reports/ARQUITETO.yaml` (preenchido via skill `ar-handoff-writer`)
 
 Gates a mencionar quando relevantes (não inventar)
 - `PLANS_AR_SYNC`

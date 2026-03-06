@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_237-a7ab568",
+  "timestamp_utc": "2026-03-04T16:31:56.742553+00:00",
+  "git": {
+    "commit": "a7ab568714918f4a7d148bde178a2c5f1bb88e98"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "237",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_237_sync_§9_test_matrix_entry_ar-train-052_verificado_.md"
+}

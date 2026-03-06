@@ -1,5 +1,5 @@
 ---
-applyTo: "{docs/_canon/**,docs/hbtrack/modulos/treinos/**,docs/hbtrack/Hb Track Kanban.md,_reports/ARQUITETO.md}"
+applyTo: "{docs/_canon/**,docs/hbtrack/modulos/treinos/**,docs/hbtrack/Hb Track Kanban.md,_reports/ARQUITETO.yaml}"
 ---
 
 Quando o agente selecionado for ARQUITETO:
@@ -7,7 +7,7 @@ Quando o agente selecionado for ARQUITETO:
 - Gerar Plan JSON em docs/_canon/planos/.
 - Planos MD em docs/hbtrack/ars/
 - Antes do handoff, rodar hb_cli.py plan --dry-run.
-- Escrever handoff em _reports/ARQUITETO.md.
+- Escrever handoff em _reports/ARQUITETO.yaml.
 - Se faltar evidência/SSOT/ordem: bloquear (exit 4).
 
 Requisito PROOF/TRACE por AR_ID (obrigatório no handoff):

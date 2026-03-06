@@ -59,7 +59,7 @@ export interface TrainingMicrocycle {
   week_start: string; // ISO 8601 date
   week_end: string; // ISO 8601 date
   cycle_id?: string; // FK para mesociclo
-  
+
   // Focos planejados (0-100, soma ≤ 120)
   planned_focus_attack_positional_pct?: number;
   planned_focus_defense_positional_pct?: number;
@@ -68,11 +68,11 @@ export interface TrainingMicrocycle {
   planned_focus_attack_technical_pct?: number;
   planned_focus_defense_technical_pct?: number;
   planned_focus_physical_pct?: number;
-  
+
   planned_weekly_load?: number;
   microcycle_type?: string;
   notes?: string;
-  
+
   created_by_user_id: string;
   created_at: string;
   updated_at: string;
@@ -107,7 +107,7 @@ export interface TrainingSession {
   duration_planned_minutes?: number;
   duration_actual_minutes?: number;
   location?: string; // Local do treino
-  
+
   // Estado
   status: SessionStatus;
   started_at?: string;
@@ -120,10 +120,11 @@ export interface TrainingSession {
   post_review_deadline_at?: string;
   closed_at?: string;
   closed_by_user_id?: string;
-  
+
   // Relacionamento com microciclo
   microcycle_id?: string;
-  
+  standalone: boolean; // AR_236 (Z1-C/INV-TRAIN-057): sessão pode existir fora de microciclo
+
   // Focos executados (0-100, soma ≤ 120)
   focus_attack_positional_pct?: number;
   focus_defense_positional_pct?: number;
@@ -132,7 +133,7 @@ export interface TrainingSession {
   focus_attack_technical_pct?: number;
   focus_defense_technical_pct?: number;
   focus_physical_pct?: number;
-  
+
   // Desvios
   planning_deviation_flag: boolean;
   deviation_justification?: string;
@@ -141,7 +142,7 @@ export interface TrainingSession {
   exercises_count?: number;
   attendance_present_count?: number;
   attendance_total_count?: number;
-  
+
   created_by_user_id: string;
   created_at: string;
   updated_at: string;
@@ -195,7 +196,7 @@ export interface FocusValues {
 export interface DeviationAnalysis {
   training_session_id: string;
   microcycle_id?: string;
-  
+
   // Desvios por foco (diferença em pontos percentuais)
   deviation_attack_positional_pct?: number;
   deviation_defense_positional_pct?: number;
@@ -204,11 +205,11 @@ export interface DeviationAnalysis {
   deviation_attack_technical_pct?: number;
   deviation_defense_technical_pct?: number;
   deviation_physical_pct?: number;
-  
+
   // Desvio total e flag
   total_deviation_pct: number;
   is_significant_deviation: boolean;
-  
+
   // Mensagens
   deviation_message: string;
   suggestions: string[];
@@ -240,7 +241,7 @@ export interface MicrocycleCreate {
   week_start: string; // YYYY-MM-DD
   week_end: string; // YYYY-MM-DD
   cycle_id?: string;
-  
+
   planned_focus_attack_positional_pct?: number;
   planned_focus_defense_positional_pct?: number;
   planned_focus_transition_offense_pct?: number;
@@ -248,7 +249,7 @@ export interface MicrocycleCreate {
   planned_focus_attack_technical_pct?: number;
   planned_focus_defense_technical_pct?: number;
   planned_focus_physical_pct?: number;
-  
+
   planned_weekly_load?: number;
   microcycle_type?: string;
   notes?: string;
@@ -262,7 +263,7 @@ export interface MicrocycleUpdate {
   planned_focus_attack_technical_pct?: number;
   planned_focus_defense_technical_pct?: number;
   planned_focus_physical_pct?: number;
-  
+
   planned_weekly_load?: number;
   microcycle_type?: string;
   notes?: string;
@@ -372,11 +373,11 @@ export const trainingsService = {
     const params: Record<string, any> = {
       team_id: filters.team_id,
     };
-    
+
     if (filters.type) params.cycle_type = filters.type;
     if (filters.status) params.status = filters.status;
     if (filters.include_deleted) params.include_deleted = filters.include_deleted;
-    
+
     return apiClient.get<TrainingCycle[]>("/training-cycles", { params });
   },
 
@@ -405,8 +406,8 @@ export const trainingsService = {
    * Soft delete de ciclo
    */
   async deleteCycle(id: string, reason: string): Promise<void> {
-    await apiClient.delete(`/training-cycles/${id}`, { 
-      params: { reason } 
+    await apiClient.delete(`/training-cycles/${id}`, {
+      params: { reason }
     });
   },
 
@@ -428,12 +429,12 @@ export const trainingsService = {
     const params: Record<string, any> = {
       team_id: filters.team_id,
     };
-    
+
     if (filters.cycle_id) params.cycle_id = filters.cycle_id;
     if (filters.start_date) params.start_date = filters.start_date;
     if (filters.end_date) params.end_date = filters.end_date;
     if (filters.include_deleted) params.include_deleted = filters.include_deleted;
-    
+
     return apiClient.get<TrainingMicrocycle[]>("/training-microcycles", { params });
   },
 
@@ -462,8 +463,8 @@ export const trainingsService = {
    * Soft delete de microciclo
    */
   async deleteMicrocycle(id: string, reason: string): Promise<void> {
-    await apiClient.delete(`/training-microcycles/${id}`, { 
-      params: { reason } 
+    await apiClient.delete(`/training-microcycles/${id}`, {
+      params: { reason }
     });
   },
 
@@ -799,7 +800,7 @@ export const TrainingSessionsAPI = {
       page: filters.page || 1,
       limit: filters.limit || 50,
     };
-    
+
     if (filters.team_id) queryParams.team_id = filters.team_id;
     if (filters.season_id) queryParams.season_id = filters.season_id;
     if (filters.status) queryParams.status = filters.status;
@@ -816,7 +817,7 @@ export const TrainingSessionsAPI = {
       limit: number;
       pages: number;
     }>('/training-sessions', { params: queryParams });
-    
+
     return {
       items: response.items || [],
       total: response.total || 0,
@@ -854,22 +855,22 @@ export const TrainingSessionsAPI = {
     focus: Partial<FocusValues>
   ): Promise<TrainingSession> => {
     const data: Partial<SessionUpdate> = {};
-    
-    if (focus.attack_positional_pct !== undefined) 
+
+    if (focus.attack_positional_pct !== undefined)
       data.focus_attack_positional_pct = focus.attack_positional_pct;
-    if (focus.defense_positional_pct !== undefined) 
+    if (focus.defense_positional_pct !== undefined)
       data.focus_defense_positional_pct = focus.defense_positional_pct;
-    if (focus.transition_offense_pct !== undefined) 
+    if (focus.transition_offense_pct !== undefined)
       data.focus_transition_offense_pct = focus.transition_offense_pct;
-    if (focus.transition_defense_pct !== undefined) 
+    if (focus.transition_defense_pct !== undefined)
       data.focus_transition_defense_pct = focus.transition_defense_pct;
-    if (focus.attack_technical_pct !== undefined) 
+    if (focus.attack_technical_pct !== undefined)
       data.focus_attack_technical_pct = focus.attack_technical_pct;
-    if (focus.defense_technical_pct !== undefined) 
+    if (focus.defense_technical_pct !== undefined)
       data.focus_defense_technical_pct = focus.defense_technical_pct;
-    if (focus.physical_pct !== undefined) 
+    if (focus.physical_pct !== undefined)
       data.focus_physical_pct = focus.physical_pct;
-    
+
     return TrainingSessionsAPI.updateSession(id, data);
   },
 

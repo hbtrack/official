@@ -539,6 +539,70 @@ async def close_session(
         )
 
 
+# =============================================================================
+# AR_239 — AR-TRAIN-055 — CONTRACT-TRAIN-100
+# PATCH /attendance/pending-items/{item_id}/resolve
+# INV-TRAIN-067: apenas treinador/coach pode resolver
+# =============================================================================
+
+from pydantic import BaseModel as _BaseModel
+
+
+class ResolveItemRequest(_BaseModel):
+    """Schema de request para resolução de pending item."""
+    resolution: str
+    new_status: str  # 'present' | 'absent' | 'justified'
+
+
+@router.patch(
+    "/attendance/pending-items/{item_id}/resolve",
+    summary="Treinador resolve pending item de divergência (INV-TRAIN-067)",
+    responses={
+        200: {"description": "Pending item resolvido com sucesso"},
+        401: {"description": "Token inválido ou ausente"},
+        403: {"description": "Permissão insuficiente (apenas treinador/admin)"},
+        404: {"description": "Pending item não encontrado"},
+        409: {"description": "Item já resolvido ou sessão em readonly"},
+    },
+)
+async def resolve_pending_item(
+    item_id: UUID,
+    body: ResolveItemRequest,
+    db: AsyncSession = Depends(get_async_db),
+    current_user: ExecutionContext = Depends(get_current_user),
+):
+    """
+    Treinador resolve um pending item de divergência de presença.
+
+    INV-TRAIN-067: apenas treinador/coach pode resolver — atleta só submete justificativa.
+    INV-TRAIN-066: status muda para 'resolved' com resolved_at e resolved_by.
+    """
+    try:
+        service = TrainingPendingService(db, current_user)
+        result = await service.resolve_pending_item(
+            item_id=item_id,
+            resolved_by_user_id=current_user.user_id,
+        )
+        await db.commit()
+        return result
+
+    except NotFoundError as e:
+        await db.rollback()
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    except PermissionDeniedError as e:
+        await db.rollback()
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(e))
+    except ValidationError as e:
+        await db.rollback()
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
+    except Exception as e:
+        await db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Erro ao resolver pending item: {str(e)}",
+        )
+
+
 @router.get(
     "/attendance/sessions/{session_id}/pending-items",
     summary="Lista pending items da sessão (INV-TRAIN-066)",

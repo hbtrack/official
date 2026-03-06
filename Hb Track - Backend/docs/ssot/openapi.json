@@ -24691,6 +24691,108 @@
         }
       }
     },
+    "/api/v1/attendance/pending-items/{item_id}/resolve": {
+      "patch": {
+        "tags": [
+          "attendance",
+          "attendance"
+        ],
+        "summary": "Treinador resolve pending item de divergência (INV-TRAIN-067)",
+        "description": "Treinador resolve um pending item de divergência de presença.\n\nINV-TRAIN-067: apenas treinador/coach pode resolver — atleta só submete justificativa.\nINV-TRAIN-066: status muda para 'resolved' com resolved_at e resolved_by.",
+        "operationId": "resolve_pending_item_api_v1_attendance_pending_items__item_id__resolve_patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Item Id"
+            }
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResolveItemRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Pending item resolvido com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou ausente"
+          },
+          "403": {
+            "description": "Permissão insuficiente (apenas treinador/admin)"
+          },
+          "404": {
+            "description": "Pending item não encontrado"
+          },
+          "409": {
+            "description": "Item já resolvido ou sessão em readonly"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/attendance/sessions/{session_id}/pending-items": {
       "get": {
         "tags": [
@@ -26872,6 +26974,99 @@
         }
       }
     },
+    "/api/v1/athlete/wellness-content-gate/{session_id}": {
+      "get": {
+        "tags": [
+          "athlete-training",
+          "athlete-training"
+        ],
+        "summary": "Gate de wellness do atleta para acesso a conteúdo (INV-TRAIN-071)",
+        "description": "Verifica se o atleta autenticado tem wellness em dia e pode ver conteúdo completo.\n\nINV-TRAIN-071: sem wellness = conteúdo completo bloqueado.\nINV-TRAIN-076: athlete_id inferido do JWT — NUNCA de query param (self-only).\n\nResponse:\n- has_wellness: bool — True se wellness diário completo\n- can_see_full_content: bool — True se acesso liberado\n- blocked_reason: str | null — razão do bloqueio quando has_wellness=False",
+        "operationId": "get_wellness_content_gate_api_v1_athlete_wellness_content_gate__session_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Session Id"
+            }
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Estado do gate de wellness (has_wellness, can_see_full_content)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Get Wellness Content Gate Api V1 Athlete Wellness Content Gate  Session Id  Get"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token inválido ou ausente"
+          },
+          "403": {
+            "description": "Permissão insuficiente (apenas o próprio atleta)"
+          },
+          "404": {
+            "description": "Atleta não encontrado para o usuário autenticado"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/post-training/sessions/{session_id}/feedback": {
       "post": {
         "tags": [
@@ -27426,6 +27621,175 @@
                 "schema": {
                   "$ref": "#/components/schemas/DraftListResponse"
                 }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ai/coach/draft/{draft_id}/apply": {
+      "patch": {
+        "tags": [
+          "ai-coach",
+          "ai-coach"
+        ],
+        "summary": "Aplicar rascunho IA aprovado pelo treinador (INV-TRAIN-080)",
+        "description": "Treinador aplica rascunho gerado pela IA. INV-TRAIN-080: draft DEVE ser aprovado antes de aplicar — chamar este endpoint implica aprovação. Stub canônico: tabela de drafts pendente de migration futura.",
+        "operationId": "apply_draft_api_v1_ai_coach_draft__draft_id__apply_patch",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "draft_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Draft Id"
+            }
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApplyDraftRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ai/coach/justify-suggestion": {
+      "post": {
+        "tags": [
+          "ai-coach",
+          "ai-coach"
+        ],
+        "summary": "Obter justificativa de sugestão IA (INV-TRAIN-081)",
+        "description": "Retorna justificativa obrigatória para sugestão do tipo 'recomendacao'. INV-TRAIN-081: sugestão sem justificativa → label 'ideia_generica'.",
+        "operationId": "justify_suggestion_api_v1_ai_coach_justify_suggestion_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Request-Id"
+            }
+          },
+          {
+            "name": "x-organization-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Organization-Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JustifySuggestionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
               }
             }
           },
@@ -36348,23 +36712,6 @@
           }
         }
       }
-    },
-    "/": {
-      "get": {
-        "summary": "Root",
-        "description": "Root endpoint - redirect para docs",
-        "operationId": "root__get",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          }
-        }
-      }
     }
   },
   "components": {
@@ -37679,6 +38026,26 @@
         ],
         "title": "AnalyticsPeriod",
         "description": "Período de análise."
+      },
+      "ApplyDraftRequest": {
+        "properties": {
+          "edits": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Edits",
+            "description": "Edições opcionais antes de aplicar"
+          }
+        },
+        "type": "object",
+        "title": "ApplyDraftRequest",
+        "description": "Request para aplicar rascunho gerado pela IA (CONTRACT-TRAIN-102)."
       },
       "Athlete90PlusItemResponse": {
         "properties": {
@@ -45491,6 +45858,21 @@
         "title": "Insights",
         "description": "Insights interpretativos gerados pelo backend."
       },
+      "JustifySuggestionRequest": {
+        "properties": {
+          "suggestion_id": {
+            "type": "string",
+            "title": "Suggestion Id",
+            "description": "ID da sugestão a justificar"
+          }
+        },
+        "type": "object",
+        "required": [
+          "suggestion_id"
+        ],
+        "title": "JustifySuggestionRequest",
+        "description": "Request para obter justificativa de sugestão (CONTRACT-TRAIN-104)."
+      },
       "LoadReportResponse": {
         "properties": {
           "team_id": {
@@ -49581,6 +49963,25 @@
         ],
         "title": "ResetPasswordResponse",
         "description": "Resposta de reset de senha"
+      },
+      "ResolveItemRequest": {
+        "properties": {
+          "resolution": {
+            "type": "string",
+            "title": "Resolution"
+          },
+          "new_status": {
+            "type": "string",
+            "title": "New Status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "resolution",
+          "new_status"
+        ],
+        "title": "ResolveItemRequest",
+        "description": "Schema de request para resolução de pending item."
       },
       "Role": {
         "properties": {

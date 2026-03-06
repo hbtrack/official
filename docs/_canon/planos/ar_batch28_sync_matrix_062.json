@@ -1,0 +1,26 @@
+{
+    "project": "HB Track",
+    "version": "1.2.0",
+    "notes": "Batch 28 — Governança pós-Batch 27: AR-TRAIN-062 sincroniza Backlog (AR-TRAIN-060/061 PENDENTE→VERIFICADO + add AR-TRAIN-062), TEST_MATRIX §9 (AR-TRAIN-061 EM_EXECUCAO→VERIFICADO + bump v3.3.0→v3.4.0), e TRAINING_BATCH_PLAN_v1.md (fix header v1.5.0→v1.6.0 + sync entry v1.6.0 + add Batch 28 section). Pré-condições: AR-TRAIN-061 VERIFICADO (AR_245, hb seal 2026-03-04).",
+    "assumptions": [
+        "AR_244 (AR-TRAIN-060) VERIFICADO; AR_245 (AR-TRAIN-061) VERIFICADO — hb seal 2026-03-04.",
+        "AR_BACKLOG_TRAINING.md em v2.8.0 com AR-TRAIN-060/061 ainda como PENDENTE (update atrasado).",
+        "TEST_MATRIX_TRAINING.md em v3.3.0 com AR-TRAIN-061 como EM_EXECUCAO em §9 (precisa VERIFICADO).",
+        "TRAINING_BATCH_PLAN_v1.md header diz v1.5.0 (AR_244 adicionou seção Batch 27 mas não atualizou header). Correção retroativa inclusa.",
+        "Kanban já atualizado pelo Arquiteto: Batch 27 → SEALED, Batch 28 adicionado com AR_246 PENDENTE."
+    ],
+    "tasks": [
+        {
+            "id": "246",
+            "title": "AR-TRAIN-062: Sync Backlog + TEST_MATRIX §9 + BatchPlan pós-Batch 27",
+            "write_scope": [
+                "docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md",
+                "docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md",
+                "docs/hbtrack/modulos/treinos/TRAINING_BATCH_PLAN_v1.md"
+            ],
+            "description": "Sincronização de governança pós-Batch 27 (AR_244/AR_245 selados).\n\nEscritas obrigatórias:\n\n1) AR_BACKLOG_TRAINING.md:\n   - Linha AR-TRAIN-060: PENDENTE → VERIFICADO\n   - Linha AR-TRAIN-061: PENDENTE → VERIFICADO\n   - Adicionar nova linha ao final da tabela: AR-TRAIN-062\n   - Adicionar item numerado 62 na lista de ARs\n   - Adicionar changelog v2.9.0 no topo (após v2.8.0)\n   - Bump header: Versão v2.8.0 → v2.9.0 + Última revisão: 2026-03-04\n\n2) TEST_MATRIX_TRAINING.md:\n   - §9: Linha AR-TRAIN-061: EM_EXECUCAO → VERIFICADO\n   - Adicionar changelog v3.4.0 no topo (após v3.3.0)\n   - Bump header: Versão v3.3.0 → v3.4.0\n\n3) TRAINING_BATCH_PLAN_v1.md:\n   - Corrigir header: Versão v1.5.0 → v1.6.0 (AR_244 adicionou seção Batch 27 mas não atualizou header)\n   - Adicionar linha de sync: 'Sync v1.6.0: Batch 27 adicionado — AR-TRAIN-060 (G) Governance Sync Kanban retroativo Batches 23-26 + Batch Plan v1.6.0 (AR_244) + AR-TRAIN-061 (T) Contract tests 074/075 (AR_245). 2026-03-04, hb seal 244/245.'\n   - Adicionar seção '### Batch 28 — Sync pós-Batch 27 (AR_246, AR-TRAIN-062)' ao final do arquivo\n\nFORBIDDEN: Hb Track - Backend/, Hb Track - Frontend/, docs/hbtrack/Hb Track Kanban.md (já atualizado pelo Arquiteto).",
+            "criteria": "AC-001: AR_BACKLOG_TRAINING.md versao = v2.9.0.\nAC-002: AR_BACKLOG_TRAINING.md linha AR-TRAIN-060 = VERIFICADO.\nAC-003: AR_BACKLOG_TRAINING.md linha AR-TRAIN-061 = VERIFICADO.\nAC-004: AR_BACKLOG_TRAINING.md contém AR-TRAIN-062.\nAC-005: TEST_MATRIX_TRAINING.md versao = v3.4.0.\nAC-006: TEST_MATRIX_TRAINING.md §9 linha AR-TRAIN-061 = VERIFICADO.\nAC-007: TRAINING_BATCH_PLAN_v1.md header Versao = v1.6.0.\nAC-008: TRAINING_BATCH_PLAN_v1.md contém secao Batch 28.",
+            "validation_command": "python -c \"\nimport sys\nsys.stdout.reconfigure(encoding='utf-8')\nbacklog = open('docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md', encoding='utf-8').read()\ntm = open('docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md', encoding='utf-8').read()\nbp = open('docs/hbtrack/modulos/treinos/TRAINING_BATCH_PLAN_v1.md', encoding='utf-8').read()\nchecks = [\n    ('Versão: v2.9.0', backlog, 'AC-001 Backlog v2.9.0'),\n    ('AR-TRAIN-060', backlog, 'AC-002-pre AR-TRAIN-060 exists'),\n    ('AR-TRAIN-061', backlog, 'AC-003-pre AR-TRAIN-061 exists'),\n    ('AR-TRAIN-062', backlog, 'AC-004 AR-TRAIN-062 in backlog'),\n    ('Versão: v3.4.0', tm, 'AC-005 TEST_MATRIX v3.4.0'),\n    ('Batch 28', bp, 'AC-008 BatchPlan Batch28'),\n]\nfailed = [label for text, content, label in checks if text not in content]\nif 'AR-TRAIN-060 | G' in backlog and '| VERIFICADO |' in backlog.split('AR-TRAIN-060')[1][:200]:\n    pass\nelse:\n    failed.append('AC-002 AR-TRAIN-060 VERIFICADO')\nif 'AR-TRAIN-061 | T' in backlog and '| VERIFICADO |' in backlog.split('AR-TRAIN-061 | T')[1][:200]:\n    pass\nelse:\n    failed.append('AC-003 AR-TRAIN-061 VERIFICADO')\nif 'AR-TRAIN-061 | T | Contract tests CONTRACT-074/075' in tm and 'VERIFICADO' in tm.split('AR-TRAIN-061 | T | Contract tests CONTRACT-074/075')[1][:200]:\n    pass\nelse:\n    failed.append('AC-006 TEST_MATRIX 061 VERIFICADO')\nif 'v1.6.0' in bp:\n    pass\nelse:\n    failed.append('AC-007 BatchPlan v1.6.0')\nif failed:\n    print('FAIL:', failed); sys.exit(1)\nprint('PASS: sync pós-Batch 27 OK')\n\""
+        }
+    ]
+}

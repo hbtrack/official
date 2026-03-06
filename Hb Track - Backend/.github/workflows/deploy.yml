@@ -1,0 +1,91 @@
+name: Deploy
+
+# Dispara em push direto nas branches (não em PRs)
+on:
+  push:
+    branches:
+      - dev-changes   # → VPS hb_track (staging)
+      - main          # → VPS hb_track_prod (prod)
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest -m "rdb or fase8" -q
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Determine target DB
+        id: config
+        run: |
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            echo "db=hb_track_prod" >> $GITHUB_OUTPUT
+            echo "env=production" >> $GITHUB_OUTPUT
+            echo "run_alembic=false" >> $GITHUB_OUTPUT
+          else
+            echo "db=hb_track" >> $GITHUB_OUTPUT
+            echo "env=staging" >> $GITHUB_OUTPUT
+            echo "run_alembic=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 191.252.185.34
+          username: deploy
+          key: ${{ secrets.VPS_DEPLOY_KEY }}
+          envs: GITHUB_REF_NAME
+          script: |
+            set -e
+
+            # 1. Atualizar código
+            cd /home/deploy/hbtrack-backend/repo
+            git fetch origin
+            git checkout ${{ github.ref_name }}
+            git pull origin ${{ github.ref_name }}
+
+            # 2. Sincronizar código para current/
+            rsync -a --delete \
+              --exclude='.git' \
+              --exclude='__pycache__' \
+              --exclude='*.pyc' \
+              --exclude='.env' \
+              /home/deploy/hbtrack-backend/repo/ \
+              /home/deploy/hbtrack-backend/current/
+
+            # 3. Instalar dependências
+            source /home/deploy/hbtrack-backend/.venv/bin/activate
+            pip install -q -r /home/deploy/hbtrack-backend/current/requirements.txt
+
+            # 4. Alembic upgrade (somente staging — prod é manual)
+            if [ "${{ steps.config.outputs.run_alembic }}" = "true" ]; then
+              echo "[DEPLOY] Rodando alembic upgrade head (staging)..."
+              set -a && . /home/deploy/hbtrack-backend/shared/backend.env && set +a
+              cd /home/deploy/hbtrack-backend/current
+              alembic upgrade head
+            else
+              echo "[DEPLOY] Alembic em prod é manual. Pulando upgrade."
+            fi
+
+            # 5. Reiniciar serviço
+            sudo systemctl restart hbtrack-backend
+
+            # 6. Verificar se subiu
+            sleep 3
+            sudo systemctl is-active --quiet hbtrack-backend \
+              && echo "[DEPLOY] Serviço ativo." \
+              || (echo "[DEPLOY] FALHA: serviço não subiu." && exit 1)

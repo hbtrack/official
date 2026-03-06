@@ -1,13 +1,13 @@
--- Schema dump generated: 2026-03-03T18:37:29.597744+00:00Z
--- Source: localhost
+-- Schema dump generated: 2026-03-05T06:29:28.770535+00:00Z
+-- Source: 191.252.185.34
 
 --
 -- PostgreSQL database dump
 --
 
-\restrict 8FpaNDc3BMlI0CE6jTBZcETbnjUSdceBg6Az68zzPtQa1XwxIstFKZmLD0X47eD
+\restrict Iyh6hypJHG52m3FPapiGjOtnVF2wphYigYtdemnB1f5IA1aw6xnUJzcdSxacYJJ
 
--- Dumped from database version 12.22 (Debian 12.22-1.pgdg120+1)
+-- Dumped from database version 15.16 (Debian 15.16-1.pgdg13+1)
 -- Dumped by pg_dump version 18.1
 
 SET statement_timeout = 0;
@@ -27,20 +27,6 @@ SET row_security = off;
 --
 
 CREATE SCHEMA app;
-
-
---
--- Name: public; Type: SCHEMA; Schema: -; Owner: -
---
-
--- *not* creating schema, since initdb creates it
-
-
---
--- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON SCHEMA public IS '';
 
 
 --
@@ -68,7 +54,7 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 -- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: -
 --
 
-COMMENT ON EXTENSION pgcrypto IS 'RDB1: Extensão para funções criptográficas, incluindo gen_random_uuid() usado em PKs UUID.';
+COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 
 
 --
@@ -597,6 +583,16 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: __restore_probe; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.__restore_probe (
+    id integer NOT NULL,
+    ts timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
 -- Name: advantage_states; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -633,7 +629,7 @@ CREATE TABLE public.athlete_badges (
     badge_type character varying(50) NOT NULL,
     month_reference date,
     earned_at timestamp with time zone DEFAULT now() NOT NULL,
-    CONSTRAINT ck_athlete_badges_type CHECK (((badge_type)::text = ANY ((ARRAY['wellness_champion_monthly'::character varying, 'wellness_streak_3months'::character varying])::text[])))
+    CONSTRAINT ck_athlete_badges_type CHECK (((badge_type)::text = ANY (ARRAY[('wellness_champion_monthly'::character varying)::text, ('wellness_streak_3months'::character varying)::text])))
 );
 
 
@@ -677,7 +673,7 @@ CREATE TABLE public.athletes (
     organization_id uuid,
     CONSTRAINT ck_athletes_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL)))),
     CONSTRAINT ck_athletes_shirt_number CHECK (((shirt_number IS NULL) OR ((shirt_number >= 1) AND (shirt_number <= 99)))),
-    CONSTRAINT ck_athletes_state CHECK (((state)::text = ANY ((ARRAY['ativa'::character varying, 'dispensada'::character varying, 'arquivada'::character varying])::text[])))
+    CONSTRAINT ck_athletes_state CHECK (((state)::text = ANY (ARRAY[('ativa'::character varying)::text, ('dispensada'::character varying)::text, ('arquivada'::character varying)::text])))
 );
 
 
@@ -721,9 +717,9 @@ CREATE TABLE public.attendance (
     CONSTRAINT ck_attendance_absent_reason_null CHECK (((deleted_at IS NOT NULL) OR ((presence_status)::text <> 'absent'::text) OR (reason_absence IS NULL))),
     CONSTRAINT ck_attendance_correction_fields CHECK ((((source)::text <> 'correction'::text) OR (((source)::text = 'correction'::text) AND (correction_by_user_id IS NOT NULL) AND (correction_at IS NOT NULL)))),
     CONSTRAINT ck_attendance_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL)))),
-    CONSTRAINT ck_attendance_participation_type CHECK (((participation_type IS NULL) OR ((participation_type)::text = ANY ((ARRAY['full'::character varying, 'partial'::character varying, 'adapted'::character varying, 'did_not_train'::character varying])::text[])))),
-    CONSTRAINT ck_attendance_reason CHECK (((reason_absence IS NULL) OR ((reason_absence)::text = ANY ((ARRAY['medico'::character varying, 'escola'::character varying, 'familiar'::character varying, 'opcional'::character varying, 'outro'::character varying])::text[])))),
-    CONSTRAINT ck_attendance_source CHECK (((source)::text = ANY ((ARRAY['manual'::character varying, 'import'::character varying, 'correction'::character varying])::text[]))),
+    CONSTRAINT ck_attendance_participation_type CHECK (((participation_type IS NULL) OR ((participation_type)::text = ANY (ARRAY[('full'::character varying)::text, ('partial'::character varying)::text, ('adapted'::character varying)::text, ('did_not_train'::character varying)::text])))),
+    CONSTRAINT ck_attendance_reason CHECK (((reason_absence IS NULL) OR ((reason_absence)::text = ANY (ARRAY[('medico'::character varying)::text, ('escola'::character varying)::text, ('familiar'::character varying)::text, ('opcional'::character varying)::text, ('outro'::character varying)::text])))),
+    CONSTRAINT ck_attendance_source CHECK (((source)::text = ANY (ARRAY[('manual'::character varying)::text, ('import'::character varying)::text, ('correction'::character varying)::text]))),
     CONSTRAINT ck_attendance_status CHECK (((presence_status)::text = ANY (ARRAY['present'::text, 'absent'::text, 'justified'::text, 'preconfirm'::text])))
 );
 
@@ -1229,7 +1225,7 @@ COMMENT ON TABLE public.event_types IS 'Tipos de evento (shot, goal, goalkeeper_
 --
 
 CREATE TABLE public.exercise_acl (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
     exercise_id uuid NOT NULL,
     user_id uuid NOT NULL,
     granted_by_user_id uuid NOT NULL,
@@ -1260,7 +1256,7 @@ COMMENT ON TABLE public.exercise_favorites IS 'Step 3: Exercícios favoritados p
 --
 
 CREATE TABLE public.exercise_media (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
     exercise_id uuid NOT NULL,
     media_type character varying(20) NOT NULL,
     url character varying(500) NOT NULL,
@@ -1346,7 +1342,7 @@ CREATE TABLE public.export_jobs (
     error_message text,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     completed_at timestamp with time zone,
-    CONSTRAINT ck_export_jobs_status CHECK (((status)::text = ANY ((ARRAY['pending'::character varying, 'processing'::character varying, 'completed'::character varying, 'failed'::character varying])::text[])))
+    CONSTRAINT ck_export_jobs_status CHECK (((status)::text = ANY (ARRAY[('pending'::character varying)::text, ('processing'::character varying)::text, ('completed'::character varying)::text, ('failed'::character varying)::text])))
 );
 
 
@@ -1386,10 +1382,7 @@ CREATE TABLE public.idempotency_keys (
     request_hash character varying(64) NOT NULL,
     response_json jsonb,
     status_code integer,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    executed_at timestamp with time zone DEFAULT now() NOT NULL,
-    script_name character varying(255),
-    metadata jsonb
+    created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
@@ -1447,7 +1440,7 @@ COMMENT ON COLUMN public.idempotency_keys.created_at IS 'Data/hora do registro (
 --
 
 CREATE TABLE public.match_analytics_cache (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
     match_id uuid NOT NULL,
     team_id uuid NOT NULL,
     athlete_id uuid,
@@ -1507,7 +1500,7 @@ CREATE TABLE public.match_events (
     CONSTRAINT ck_match_events_period CHECK ((period_number >= 1)),
     CONSTRAINT ck_match_events_score_opponent CHECK ((score_opponent >= 0)),
     CONSTRAINT ck_match_events_score_our CHECK ((score_our >= 0)),
-    CONSTRAINT ck_match_events_source CHECK (((source)::text = ANY ((ARRAY['live'::character varying, 'video'::character varying, 'post_game_correction'::character varying])::text[]))),
+    CONSTRAINT ck_match_events_source CHECK (((source)::text = ANY (ARRAY[('live'::character varying)::text, ('video'::character varying)::text, ('post_game_correction'::character varying)::text]))),
     CONSTRAINT ck_match_events_time CHECK ((game_time_seconds >= 0)),
     CONSTRAINT ck_match_events_x_coord CHECK (((x_coord IS NULL) OR ((x_coord >= (0)::numeric) AND (x_coord <= (100)::numeric)))),
     CONSTRAINT ck_match_events_y_coord CHECK (((y_coord IS NULL) OR ((y_coord >= (0)::numeric) AND (y_coord <= (100)::numeric))))
@@ -1526,7 +1519,7 @@ COMMENT ON TABLE public.match_events IS 'Eventos de jogo lance a lance. Coraçã
 --
 
 CREATE TABLE public.match_goalkeeper_stints (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
     match_id uuid NOT NULL,
     athlete_id uuid NOT NULL,
     start_period_number smallint NOT NULL,
@@ -1559,7 +1552,7 @@ CREATE TABLE public.match_periods (
     period_type character varying(32) NOT NULL,
     CONSTRAINT ck_match_periods_duration CHECK ((duration_seconds > 0)),
     CONSTRAINT ck_match_periods_number CHECK ((number >= 1)),
-    CONSTRAINT ck_match_periods_type CHECK (((period_type)::text = ANY ((ARRAY['regular'::character varying, 'extra_time'::character varying, 'shootout_7m'::character varying])::text[])))
+    CONSTRAINT ck_match_periods_type CHECK (((period_type)::text = ANY (ARRAY[('regular'::character varying)::text, ('extra_time'::character varying)::text, ('shootout_7m'::character varying)::text])))
 );
 
 
@@ -1589,7 +1582,7 @@ CREATE TABLE public.match_possessions (
     result character varying(32) NOT NULL,
     CONSTRAINT ck_match_possessions_end_period CHECK ((end_period_number >= start_period_number)),
     CONSTRAINT ck_match_possessions_end_time CHECK ((end_time_seconds >= 0)),
-    CONSTRAINT ck_match_possessions_result CHECK (((result)::text = ANY ((ARRAY['goal'::character varying, 'turnover'::character varying, 'seven_meter_won'::character varying, 'time_over'::character varying])::text[]))),
+    CONSTRAINT ck_match_possessions_result CHECK (((result)::text = ANY (ARRAY[('goal'::character varying)::text, ('turnover'::character varying)::text, ('seven_meter_won'::character varying)::text, ('time_over'::character varying)::text]))),
     CONSTRAINT ck_match_possessions_start_period CHECK ((start_period_number >= 1)),
     CONSTRAINT ck_match_possessions_start_time CHECK ((start_time_seconds >= 0))
 );
@@ -1677,10 +1670,10 @@ CREATE TABLE public.matches (
     CONSTRAINT ck_matches_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL)))),
     CONSTRAINT ck_matches_different_teams CHECK ((home_team_id <> away_team_id)),
     CONSTRAINT ck_matches_our_team CHECK (((our_team_id = home_team_id) OR (our_team_id = away_team_id))),
-    CONSTRAINT ck_matches_phase CHECK (((phase)::text = ANY ((ARRAY['group'::character varying, 'semifinal'::character varying, 'final'::character varying, 'friendly'::character varying])::text[]))),
+    CONSTRAINT ck_matches_phase CHECK (((phase)::text = ANY (ARRAY[('group'::character varying)::text, ('semifinal'::character varying)::text, ('final'::character varying)::text, ('friendly'::character varying)::text]))),
     CONSTRAINT ck_matches_score_away CHECK (((final_score_away IS NULL) OR (final_score_away >= 0))),
     CONSTRAINT ck_matches_score_home CHECK (((final_score_home IS NULL) OR (final_score_home >= 0))),
-    CONSTRAINT ck_matches_status CHECK (((status)::text = ANY ((ARRAY['scheduled'::character varying, 'in_progress'::character varying, 'finished'::character varying, 'cancelled'::character varying])::text[])))
+    CONSTRAINT ck_matches_status CHECK (((status)::text = ANY (ARRAY[('scheduled'::character varying)::text, ('in_progress'::character varying)::text, ('finished'::character varying)::text, ('cancelled'::character varying)::text])))
 );
 
 
@@ -1710,7 +1703,7 @@ CREATE TABLE public.medical_cases (
     organization_id uuid,
     created_by_user_id uuid,
     CONSTRAINT ck_medical_cases_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL)))),
-    CONSTRAINT medical_cases_status_check CHECK (((status)::text = ANY ((ARRAY['ativo'::character varying, 'resolvido'::character varying, 'em_acompanhamento'::character varying])::text[])))
+    CONSTRAINT medical_cases_status_check CHECK (((status)::text = ANY (ARRAY[('ativo'::character varying)::text, ('resolvido'::character varying)::text, ('em_acompanhamento'::character varying)::text])))
 );
 
 
@@ -1916,7 +1909,7 @@ CREATE TABLE public.person_addresses (
     deleted_reason text,
     created_by_user_id uuid,
     CONSTRAINT ck_person_addresses_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL)))),
-    CONSTRAINT ck_person_addresses_type CHECK (((address_type)::text = ANY ((ARRAY['residencial_1'::character varying, 'residencial_2'::character varying, 'comercial'::character varying, 'outro'::character varying])::text[])))
+    CONSTRAINT ck_person_addresses_type CHECK (((address_type)::text = ANY (ARRAY[('residencial_1'::character varying)::text, ('residencial_2'::character varying)::text, ('comercial'::character varying)::text, ('outro'::character varying)::text])))
 );
 
 
@@ -1952,7 +1945,7 @@ CREATE TABLE public.person_contacts (
     deleted_reason text,
     created_by_user_id uuid,
     CONSTRAINT ck_person_contacts_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL)))),
-    CONSTRAINT ck_person_contacts_type CHECK (((contact_type)::text = ANY ((ARRAY['telefone'::character varying, 'email'::character varying, 'whatsapp'::character varying, 'outro'::character varying])::text[])))
+    CONSTRAINT ck_person_contacts_type CHECK (((contact_type)::text = ANY (ARRAY[('telefone'::character varying)::text, ('email'::character varying)::text, ('whatsapp'::character varying)::text, ('outro'::character varying)::text])))
 );
 
 
@@ -1991,7 +1984,7 @@ CREATE TABLE public.person_documents (
     deleted_reason text,
     created_by_user_id uuid,
     CONSTRAINT ck_person_documents_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL)))),
-    CONSTRAINT ck_person_documents_type CHECK (((document_type)::text = ANY ((ARRAY['cpf'::character varying, 'rg'::character varying, 'cnh'::character varying, 'passaporte'::character varying, 'certidao_nascimento'::character varying, 'titulo_eleitor'::character varying, 'outro'::character varying])::text[])))
+    CONSTRAINT ck_person_documents_type CHECK (((document_type)::text = ANY (ARRAY[('cpf'::character varying)::text, ('rg'::character varying)::text, ('cnh'::character varying)::text, ('passaporte'::character varying)::text, ('certidao_nascimento'::character varying)::text, ('titulo_eleitor'::character varying)::text, ('outro'::character varying)::text])))
 );
 
 
@@ -2029,7 +2022,7 @@ CREATE TABLE public.person_media (
     deleted_reason text,
     created_by_user_id uuid,
     CONSTRAINT ck_person_media_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL)))),
-    CONSTRAINT ck_person_media_type CHECK (((media_type)::text = ANY ((ARRAY['foto_perfil'::character varying, 'foto_documento'::character varying, 'video'::character varying, 'outro'::character varying])::text[])))
+    CONSTRAINT ck_person_media_type CHECK (((media_type)::text = ANY (ARRAY[('foto_perfil'::character varying)::text, ('foto_documento'::character varying)::text, ('video'::character varying)::text, ('outro'::character varying)::text])))
 );
 
 
@@ -2065,7 +2058,7 @@ CREATE TABLE public.persons (
     nationality character varying(100) DEFAULT 'brasileira'::character varying,
     notes text,
     CONSTRAINT ck_persons_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL)))),
-    CONSTRAINT ck_persons_gender CHECK (((gender IS NULL) OR ((gender)::text = ANY ((ARRAY['masculino'::character varying, 'feminino'::character varying, 'outro'::character varying, 'prefiro_nao_dizer'::character varying])::text[]))))
+    CONSTRAINT ck_persons_gender CHECK (((gender IS NULL) OR ((gender)::text = ANY (ARRAY[('masculino'::character varying)::text, ('feminino'::character varying)::text, ('outro'::character varying)::text, ('prefiro_nao_dizer'::character varying)::text]))))
 );
 
 
@@ -2309,7 +2302,7 @@ CREATE TABLE public.session_templates (
     created_by_membership_id uuid,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    CONSTRAINT chk_session_templates_icon CHECK (((icon)::text = ANY ((ARRAY['target'::character varying, 'activity'::character varying, 'bar-chart'::character varying, 'shield'::character varying, 'zap'::character varying, 'flame'::character varying])::text[]))),
+    CONSTRAINT chk_session_templates_icon CHECK (((icon)::text = ANY (ARRAY[('target'::character varying)::text, ('activity'::character varying)::text, ('bar-chart'::character varying)::text, ('shield'::character varying)::text, ('zap'::character varying)::text, ('flame'::character varying)::text]))),
     CONSTRAINT chk_session_templates_total_focus CHECK ((((((((focus_attack_positional_pct + focus_defense_positional_pct) + focus_transition_offense_pct) + focus_transition_defense_pct) + focus_attack_technical_pct) + focus_defense_technical_pct) + focus_physical_pct) <= (120)::numeric))
 );
 
@@ -2458,7 +2451,7 @@ CREATE TABLE public.teams (
     alert_threshold_multiplier numeric(3,1) DEFAULT 2.0,
     CONSTRAINT ck_teams_active_dates CHECK (((active_from IS NULL) OR (active_until IS NULL) OR (active_from <= active_until))),
     CONSTRAINT ck_teams_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL)))),
-    CONSTRAINT ck_teams_gender CHECK (((gender)::text = ANY ((ARRAY['masculino'::character varying, 'feminino'::character varying])::text[]))),
+    CONSTRAINT ck_teams_gender CHECK (((gender)::text = ANY (ARRAY[('masculino'::character varying)::text, ('feminino'::character varying)::text]))),
     CONSTRAINT teams_alert_threshold_multiplier_check CHECK (((alert_threshold_multiplier >= 1.0) AND (alert_threshold_multiplier <= 3.0)))
 );
 
@@ -2512,8 +2505,8 @@ CREATE TABLE public.training_alerts (
     triggered_at timestamp with time zone DEFAULT now() NOT NULL,
     dismissed_at timestamp with time zone,
     dismissed_by_user_id uuid,
-    CONSTRAINT ck_training_alerts_severity CHECK (((severity)::text = ANY ((ARRAY['warning'::character varying, 'critical'::character varying])::text[]))),
-    CONSTRAINT ck_training_alerts_type CHECK (((alert_type)::text = ANY ((ARRAY['weekly_overload'::character varying, 'low_wellness_response'::character varying])::text[])))
+    CONSTRAINT ck_training_alerts_severity CHECK (((severity)::text = ANY (ARRAY[('warning'::character varying)::text, ('critical'::character varying)::text]))),
+    CONSTRAINT ck_training_alerts_type CHECK (((alert_type)::text = ANY (ARRAY[('weekly_overload'::character varying)::text, ('low_wellness_response'::character varying)::text])))
 );
 
 
@@ -2554,7 +2547,7 @@ CREATE TABLE public.training_analytics_cache (
     threshold_stddev numeric(10,2),
     cache_dirty boolean DEFAULT true NOT NULL,
     calculated_at timestamp with time zone,
-    CONSTRAINT ck_training_analytics_cache_granularity CHECK (((granularity)::text = ANY ((ARRAY['weekly'::character varying, 'monthly'::character varying])::text[])))
+    CONSTRAINT ck_training_analytics_cache_granularity CHECK (((granularity)::text = ANY (ARRAY[('weekly'::character varying)::text, ('monthly'::character varying)::text])))
 );
 
 
@@ -2586,8 +2579,8 @@ CREATE TABLE public.training_cycles (
     deleted_at timestamp with time zone,
     deleted_reason text,
     CONSTRAINT check_cycle_dates CHECK ((start_date < end_date)),
-    CONSTRAINT check_cycle_status CHECK (((status)::text = ANY ((ARRAY['active'::character varying, 'completed'::character varying, 'cancelled'::character varying])::text[]))),
-    CONSTRAINT check_cycle_type CHECK (((type)::text = ANY ((ARRAY['macro'::character varying, 'meso'::character varying])::text[])))
+    CONSTRAINT check_cycle_status CHECK (((status)::text = ANY (ARRAY[('active'::character varying)::text, ('completed'::character varying)::text, ('cancelled'::character varying)::text]))),
+    CONSTRAINT check_cycle_type CHECK (((type)::text = ANY (ARRAY[('macro'::character varying)::text, ('meso'::character varying)::text])))
 );
 
 
@@ -2738,7 +2731,7 @@ COMMENT ON COLUMN public.training_microcycles.microcycle_type IS 'Tipo: carga_al
 --
 
 CREATE TABLE public.training_pending_items (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
     training_session_id uuid NOT NULL,
     athlete_id uuid NOT NULL,
     item_type character varying(50) NOT NULL,
@@ -2821,6 +2814,7 @@ CREATE TABLE public.training_sessions (
     closed_by_user_id uuid,
     deviation_justification text,
     planning_deviation_flag boolean DEFAULT false NOT NULL,
+    standalone boolean DEFAULT true NOT NULL,
     started_at timestamp with time zone,
     ended_at timestamp with time zone,
     duration_actual_minutes integer,
@@ -2830,8 +2824,7 @@ CREATE TABLE public.training_sessions (
     post_review_completed_at timestamp with time zone,
     post_review_completed_by_user_id uuid,
     post_review_deadline_at timestamp with time zone,
-    standalone boolean DEFAULT true NOT NULL,
-    CONSTRAINT check_training_session_status CHECK (((status)::text = ANY ((ARRAY['draft'::character varying, 'scheduled'::character varying, 'in_progress'::character varying, 'pending_review'::character varying, 'readonly'::character varying])::text[]))),
+    CONSTRAINT check_training_session_status CHECK (((status)::text = ANY (ARRAY[('draft'::character varying)::text, ('scheduled'::character varying)::text, ('in_progress'::character varying)::text, ('pending_review'::character varying)::text, ('readonly'::character varying)::text]))),
     CONSTRAINT check_training_sessions_execution_outcome CHECK ((((execution_outcome = 'on_time'::public.training_execution_outcome_enum) AND (delay_minutes IS NULL) AND (cancellation_reason IS NULL) AND (duration_actual_minutes IS NULL)) OR ((execution_outcome = 'delayed'::public.training_execution_outcome_enum) AND (delay_minutes IS NOT NULL) AND (delay_minutes > 0) AND (cancellation_reason IS NULL)) OR ((execution_outcome = 'canceled'::public.training_execution_outcome_enum) AND (cancellation_reason IS NOT NULL) AND (delay_minutes IS NULL) AND (duration_actual_minutes IS NULL)) OR ((execution_outcome = ANY (ARRAY['shortened'::public.training_execution_outcome_enum, 'extended'::public.training_execution_outcome_enum])) AND (duration_actual_minutes IS NOT NULL) AND (duration_actual_minutes > 0) AND (delay_minutes IS NULL) AND (cancellation_reason IS NULL)))),
     CONSTRAINT ck_phase_focus_attack_consistency CHECK ((phase_focus_attack = ((COALESCE(focus_attack_positional_pct, (0)::numeric) + COALESCE(focus_attack_technical_pct, (0)::numeric)) >= (5)::numeric))),
     CONSTRAINT ck_phase_focus_defense_consistency CHECK ((phase_focus_defense = ((COALESCE(focus_defense_positional_pct, (0)::numeric) + COALESCE(focus_defense_technical_pct, (0)::numeric)) >= (5)::numeric))),
@@ -2849,7 +2842,7 @@ CREATE TABLE public.training_sessions (
     CONSTRAINT ck_training_sessions_focus_transition_offense_range CHECK (((focus_transition_offense_pct IS NULL) OR ((focus_transition_offense_pct >= (0)::numeric) AND (focus_transition_offense_pct <= (100)::numeric)))),
     CONSTRAINT ck_training_sessions_intensity CHECK (((intensity_target IS NULL) OR ((intensity_target >= 1) AND (intensity_target <= 5)))),
     CONSTRAINT ck_training_sessions_standalone CHECK ((((standalone = true) AND (microcycle_id IS NULL)) OR ((standalone = false) AND (microcycle_id IS NOT NULL)))),
-    CONSTRAINT ck_training_sessions_type CHECK (((session_type)::text = ANY ((ARRAY['quadra'::character varying, 'fisico'::character varying, 'video'::character varying, 'reuniao'::character varying, 'teste'::character varying])::text[])))
+    CONSTRAINT ck_training_sessions_type CHECK (((session_type)::text = ANY (ARRAY[('quadra'::character varying)::text, ('fisico'::character varying)::text, ('video'::character varying)::text, ('reuniao'::character varying)::text, ('teste'::character varying)::text])))
 );
 
 
@@ -2968,8 +2961,8 @@ CREATE TABLE public.training_suggestions (
     dismissed_at timestamp with time zone,
     dismissal_reason text,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    CONSTRAINT ck_training_suggestions_status CHECK (((status)::text = ANY ((ARRAY['pending'::character varying, 'applied'::character varying, 'dismissed'::character varying])::text[]))),
-    CONSTRAINT ck_training_suggestions_type CHECK (((type)::text = ANY ((ARRAY['compensation'::character varying, 'reduce_next_week'::character varying])::text[])))
+    CONSTRAINT ck_training_suggestions_status CHECK (((status)::text = ANY (ARRAY[('pending'::character varying)::text, ('applied'::character varying)::text, ('dismissed'::character varying)::text]))),
+    CONSTRAINT ck_training_suggestions_type CHECK (((type)::text = ANY (ARRAY[('compensation'::character varying)::text, ('reduce_next_week'::character varying)::text])))
 );
 
 
@@ -2998,7 +2991,7 @@ CREATE TABLE public.users (
     deleted_at timestamp with time zone,
     deleted_reason text,
     CONSTRAINT ck_users_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL)))),
-    CONSTRAINT ck_users_status CHECK (((status)::text = ANY ((ARRAY['ativo'::character varying, 'inativo'::character varying, 'arquivado'::character varying])::text[])))
+    CONSTRAINT ck_users_status CHECK (((status)::text = ANY (ARRAY[('ativo'::character varying)::text, ('inativo'::character varying)::text, ('arquivado'::character varying)::text])))
 );
 
 
@@ -3099,7 +3092,7 @@ CREATE TABLE public.wellness_pre (
     locked_at timestamp with time zone,
     CONSTRAINT ck_wellness_pre_deleted_reason CHECK ((((deleted_at IS NULL) AND (deleted_reason IS NULL)) OR ((deleted_at IS NOT NULL) AND (deleted_reason IS NOT NULL)))),
     CONSTRAINT ck_wellness_pre_fatigue CHECK (((fatigue_pre >= 0) AND (fatigue_pre <= 10))),
-    CONSTRAINT ck_wellness_pre_menstrual CHECK (((menstrual_cycle_phase IS NULL) OR ((menstrual_cycle_phase)::text = ANY ((ARRAY['folicular'::character varying, 'lutea'::character varying, 'menstruacao'::character varying, 'nao_informa'::character varying])::text[])))),
+    CONSTRAINT ck_wellness_pre_menstrual CHECK (((menstrual_cycle_phase IS NULL) OR ((menstrual_cycle_phase)::text = ANY (ARRAY[('folicular'::character varying)::text, ('lutea'::character varying)::text, ('menstruacao'::character varying)::text, ('nao_informa'::character varying)::text])))),
     CONSTRAINT ck_wellness_pre_readiness CHECK (((readiness_score IS NULL) OR ((readiness_score >= 0) AND (readiness_score <= 10)))),
     CONSTRAINT ck_wellness_pre_sleep_hours CHECK (((sleep_hours >= (0)::numeric) AND (sleep_hours <= (24)::numeric))),
     CONSTRAINT ck_wellness_pre_sleep_quality CHECK (((sleep_quality >= 1) AND (sleep_quality <= 5))),
@@ -3301,6 +3294,14 @@ ALTER TABLE ONLY public.roles ALTER COLUMN id SET DEFAULT nextval('public.roles_
 --
 
 ALTER TABLE ONLY public.schooling_levels ALTER COLUMN id SET DEFAULT nextval('public.schooling_levels_id_seq'::regclass);
+
+
+--
+-- Name: __restore_probe __restore_probe_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.__restore_probe
+    ADD CONSTRAINT __restore_probe_pkey PRIMARY KEY (id);
 
 
 --
@@ -3880,6 +3881,14 @@ ALTER TABLE ONLY public.competition_seasons
 
 
 --
+-- Name: competition_standings uq_competition_standings_comp_phase_opponent; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.competition_standings
+    ADD CONSTRAINT uq_competition_standings_comp_phase_opponent UNIQUE NULLS NOT DISTINCT (competition_id, phase_id, opponent_team_id);
+
+
+--
 -- Name: exercise_acl uq_exercise_acl_exercise_user; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4075,6 +4084,27 @@ CREATE INDEX idx_badges_athlete_month ON public.athlete_badges USING btree (athl
 --
 
 COMMENT ON INDEX public.idx_badges_athlete_month IS 'Optimizes badge queries by athlete and month. Used in athlete profile badges section.';
+
+
+--
+-- Name: idx_exercise_acl_exercise; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_exercise_acl_exercise ON public.exercise_acl USING btree (exercise_id);
+
+
+--
+-- Name: idx_exercise_acl_user; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_exercise_acl_user ON public.exercise_acl USING btree (user_id);
+
+
+--
+-- Name: idx_exercise_media_exercise; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_exercise_media_exercise ON public.exercise_media USING btree (exercise_id);
 
 
 --
@@ -4360,13 +4390,6 @@ CREATE INDEX idx_training_sessions_deviation_flag ON public.training_sessions US
 
 
 --
--- Name: idx_training_sessions_in_progress_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_training_sessions_in_progress_at ON public.training_sessions USING btree (session_at) WHERE (((status)::text = 'in_progress'::text) AND (deleted_at IS NULL));
-
-
---
 -- Name: idx_training_sessions_microcycle; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -4385,13 +4408,6 @@ CREATE INDEX idx_training_sessions_org ON public.training_sessions USING btree (
 --
 
 CREATE INDEX idx_training_sessions_pending_review_deadline ON public.training_sessions USING btree (post_review_deadline_at) WHERE (((status)::text = 'pending_review'::text) AND (deleted_at IS NULL));
-
-
---
--- Name: idx_training_sessions_scheduled_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_training_sessions_scheduled_at ON public.training_sessions USING btree (session_at) WHERE (((status)::text = 'scheduled'::text) AND (deleted_at IS NULL));
 
 
 --
@@ -4911,7 +4927,7 @@ CREATE INDEX ix_matches_status ON public.matches USING btree (status);
 -- Name: ix_medical_cases_athlete_status_active; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX ix_medical_cases_athlete_status_active ON public.medical_cases USING btree (athlete_id, status) WHERE ((deleted_at IS NULL) AND ((status)::text = ANY ((ARRAY['ativo'::character varying, 'em_acompanhamento'::character varying])::text[])));
+CREATE INDEX ix_medical_cases_athlete_status_active ON public.medical_cases USING btree (athlete_id, status) WHERE ((deleted_at IS NULL) AND ((status)::text = ANY (ARRAY[('ativo'::character varying)::text, ('em_acompanhamento'::character varying)::text])));
 
 
 --
@@ -5423,13 +5439,6 @@ CREATE INDEX ix_wellness_pre_training_session_id ON public.wellness_pre USING bt
 --
 
 CREATE UNIQUE INDEX uq_competition_matches_external_ref ON public.competition_matches USING btree (competition_id, external_reference_id) WHERE ((external_reference_id IS NOT NULL) AND (deleted_at IS NULL));
-
-
---
--- Name: uq_competition_standings_comp_phase_opponent; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX uq_competition_standings_comp_phase_opponent ON public.competition_standings USING btree (competition_id, phase_id, opponent_team_id) WHERE ((phase_id IS NOT NULL) OR (opponent_team_id IS NOT NULL));
 
 
 --
@@ -5995,7 +6004,7 @@ ALTER TABLE ONLY public.exercise_acl
 --
 
 ALTER TABLE ONLY public.exercise_acl
-    ADD CONSTRAINT exercise_acl_granted_by_user_id_fkey FOREIGN KEY (granted_by_user_id) REFERENCES public.users(id);
+    ADD CONSTRAINT exercise_acl_granted_by_user_id_fkey FOREIGN KEY (granted_by_user_id) REFERENCES public.users(id) ON DELETE RESTRICT;
 
 
 --
@@ -7202,5 +7211,5 @@ ALTER TABLE ONLY public.wellness_reminders
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 8FpaNDc3BMlI0CE6jTBZcETbnjUSdceBg6Az68zzPtQa1XwxIstFKZmLD0X47eD
+\unrestrict Iyh6hypJHG52m3FPapiGjOtnVF2wphYigYtdemnB1f5IA1aw6xnUJzcdSxacYJJ
 

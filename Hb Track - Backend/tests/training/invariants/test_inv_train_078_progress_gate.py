@@ -1,6 +1,6 @@
 """
 INV-TRAIN-078: check_progress_access — gate de telas de progresso/relatório
-Classe C1 — Unit (AsyncMock, sem DB)
+Classe C1 — Unit (sem DB, corrotinas reais substituem delegado has_completed_daily_wellness)
 Evidência: app/services/athlete_content_gate_service.py — check_progress_access()
 Regra: sem wellness diário completo → AccessGated(allows_minimum=False);
        com wellness completo → AccessGranted.
@@ -8,7 +8,6 @@ Regra: sem wellness diário completo → AccessGated(allows_minimum=False);
        diferente de check_content_access que usa allows_minimum=True.
 """
 import pytest
-from unittest.mock import AsyncMock
 from uuid import uuid4
 
 from app.services.athlete_content_gate_service import (
@@ -33,10 +32,12 @@ class TestInvTrain078:
         check_progress_access() deve retornar AccessGated com allows_minimum=False.
         Telas de progresso bloqueadas completamente (sem acesso mínimo).
         """
-        svc = AthleteContentGateService(db=AsyncMock())
-        svc.has_completed_daily_wellness = AsyncMock(
-            return_value=(False, ["wellness_pre_hoje"])
-        )
+        svc = AthleteContentGateService(db=None)
+
+        async def _fake_no_wellness(*args, **kwargs):
+            return (False, ["wellness_pre_hoje"])
+
+        svc.has_completed_daily_wellness = _fake_no_wellness
 
         result = await svc.check_progress_access(athlete_id=uuid4())
 
@@ -54,8 +55,12 @@ class TestInvTrain078:
         INV-078 CASO 2: com wellness completo →
         check_progress_access() deve retornar AccessGranted.
         """
-        svc = AthleteContentGateService(db=AsyncMock())
-        svc.has_completed_daily_wellness = AsyncMock(return_value=(True, []))
+        svc = AthleteContentGateService(db=None)
+
+        async def _fake_complete(*args, **kwargs):
+            return (True, [])
+
+        svc.has_completed_daily_wellness = _fake_complete
 
         result = await svc.check_progress_access(athlete_id=uuid4())
 
@@ -74,15 +79,17 @@ class TestInvTrain078:
         AccessGated(allows_minimum=True). São semanticamente diferentes.
         Garante que progress gate é MAIS restritivo que content gate.
         """
-        db_mock = AsyncMock()
-        svc = AthleteContentGateService(db=db_mock)
-        # Tanto 071 quanto 078: wellness incompleto
+        svc = AthleteContentGateService(db=None)
         incomplete = (False, ["wellness_pre_hoje"])
 
-        svc.has_completed_daily_wellness = AsyncMock(return_value=incomplete)
+        async def _fake_incomplete(*args, **kwargs):
+            return incomplete
+
+        svc.has_completed_daily_wellness = _fake_incomplete
         progress_result = await svc.check_progress_access(athlete_id=uuid4())
 
-        svc.has_completed_daily_wellness = AsyncMock(return_value=incomplete)
+        # Reatribui para garantir estado limpo
+        svc.has_completed_daily_wellness = _fake_incomplete
         content_result = await svc.check_content_access(athlete_id=uuid4())
 
         # Ambos são AccessGated

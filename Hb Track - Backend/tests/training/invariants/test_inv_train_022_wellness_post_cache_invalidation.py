@@ -1,39 +1,82 @@
 import pytest
-from unittest.mock import AsyncMock
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from uuid import uuid4
 
-from sqlalchemy.sql.dml import Update
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.services.wellness_post_service import WellnessPostService
 from app.models.training_session import TrainingSession
-from app.models.training_analytics_cache import TrainingAnalyticsCache
 
 
 @pytest.mark.asyncio
-async def test_invalidate_training_analytics_cache_marks_weekly_and_monthly():
-    db = AsyncMock()
-    service = WellnessPostService(db)
+async def test_invalidate_training_analytics_cache_marks_weekly_and_monthly(
+    async_db: AsyncSession, organization, team, category, user,
+):
+    """
+    INV-TRAIN-022 TRUTH: _invalidate_training_analytics_cache deve marcar
+    cache_dirty=True nos registros weekly e monthly correspondentes.
+    """
+    # Arrange: cria microciclo no DB (FK training_microcycles.id)
+    mc_id = uuid4()
+    await async_db.execute(text("""
+        INSERT INTO training_microcycles
+            (id, organization_id, team_id, week_start, week_end, created_by_user_id)
+        VALUES (:id, :org_id, :team_id, :ws, :we, :user_id)
+    """), {
+        "id": str(mc_id),
+        "org_id": str(organization.id),
+        "team_id": str(team.id),
+        "ws": date(2026, 1, 19),
+        "we": date(2026, 1, 25),
+        "user_id": str(user.id),
+    })
 
+    # Insere cache weekly com cache_dirty=False
+    weekly_id = uuid4()
+    await async_db.execute(text("""
+        INSERT INTO training_analytics_cache
+            (id, team_id, microcycle_id, granularity, cache_dirty)
+        VALUES (:id, :team_id, :mc_id, 'weekly', false)
+    """), {"id": str(weekly_id), "team_id": str(team.id), "mc_id": str(mc_id)})
+
+    # Insere cache monthly com cache_dirty=False
+    monthly_id = uuid4()
+    await async_db.execute(text("""
+        INSERT INTO training_analytics_cache
+            (id, team_id, month, granularity, cache_dirty)
+        VALUES (:id, :team_id, :month, 'monthly', false)
+    """), {"id": str(monthly_id), "team_id": str(team.id), "month": date(2026, 1, 1)})
+
+    await async_db.flush()
+
+    # TrainingSession como objeto Python puro (não inserido no DB — só precisa das attrs)
     training_session = TrainingSession(
-        organization_id=uuid4(),
-        created_by_user_id=uuid4(),
-        team_id=uuid4(),
+        organization_id=organization.id,
+        created_by_user_id=user.id,
+        team_id=team.id,
         session_at=datetime(2026, 1, 15, tzinfo=timezone.utc),
         session_type="quadra",
-        microcycle_id=uuid4(),
+        microcycle_id=mc_id,
     )
 
+    # Act
+    service = WellnessPostService(async_db)
     await service._invalidate_training_analytics_cache(training_session)
+    await async_db.flush()
 
-    assert db.execute.call_count == 2
-    stmts = [call.args[0] for call in db.execute.call_args_list]
+    # Assert: ambos os registros devem estar com cache_dirty=True
+    weekly_dirty = (await async_db.execute(
+        text("SELECT cache_dirty FROM training_analytics_cache WHERE id = :id"),
+        {"id": str(weekly_id)},
+    )).scalar()
 
-    for stmt in stmts:
-        assert isinstance(stmt, Update)
-        assert stmt.table.name == TrainingAnalyticsCache.__tablename__
+    monthly_dirty = (await async_db.execute(
+        text("SELECT cache_dirty FROM training_analytics_cache WHERE id = :id"),
+        {"id": str(monthly_id)},
+    )).scalar()
 
-    weekly_stmt = next(stmt for stmt in stmts if "microcycle_id" in str(stmt))
-    monthly_stmt = next(stmt for stmt in stmts if "month" in str(stmt))
-    assert "granularity" in str(weekly_stmt)
-    assert "granularity" in str(monthly_stmt)
+    assert weekly_dirty is True, \
+        "Cache weekly deve estar marcado como dirty após invalidação"
+    assert monthly_dirty is True, \
+        "Cache monthly deve estar marcado como dirty após invalidação"

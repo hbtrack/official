@@ -1,0 +1,52 @@
+{
+  "ar_id": "255",
+  "validation_command": "python -c \"\nimport sys\nfrom pathlib import Path\nbacklog = Path('docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md').read_text(encoding='utf-8')\nmatrix = Path('docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md').read_text(encoding='utf-8')\nkanban = Path('docs/hbtrack/Hb Track Kanban.md').read_text(encoding='utf-8')\nindex = Path('docs/hbtrack/modulos/treinos/_INDEX.md').read_text(encoding='utf-8')\nchecks = [\n  ('AR-TRAIN-070' in backlog, 'AC1a: AR-TRAIN-070 em BACKLOG'),\n  ('AR-TRAIN-071' in backlog, 'AC1b: AR-TRAIN-071 em BACKLOG'),\n  ('AR_253' in matrix or 'AR-TRAIN-069' in matrix, 'AC2a: AR_253 em TEST_MATRIX'),\n  ('AR_254' in matrix or 'AR-TRAIN-070' in matrix, 'AC2b: AR_254 em TEST_MATRIX'),\n  ('AR_254' in kanban or 'AR-TRAIN-070' in kanban, 'AC3a: AR_254 em Kanban'),\n  ('AR_255' in kanban or 'AR-TRAIN-071' in kanban, 'AC3b: AR_255 em Kanban'),\n  ('AR_255' in index or 'AR-TRAIN-071' in index, 'AC4: AR_255 em _INDEX'),\n]\nbad = [msg for ok, msg in checks if not ok]\nif bad: print('FAIL:', bad); sys.exit(1)\nprint('AC1..AC5 PASS')\n\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "c7950ee5238ba6845dd89c9bc183f2c44810fc6427b78bfd5cd97290aaad941f",
+      "hash": "c7950ee5238ba684",
+      "stdout_len": 0,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "c7950ee5238ba6845dd89c9bc183f2c44810fc6427b78bfd5cd97290aaad941f",
+      "hash": "c7950ee5238ba684",
+      "stdout_len": 0,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "c7950ee5238ba6845dd89c9bc183f2c44810fc6427b78bfd5cd97290aaad941f",
+      "hash": "c7950ee5238ba684",
+      "stdout_len": 0,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true,
+  "dod": {
+    "proof": "OK",
+    "trace": "OK",
+    "stitch": "OK",
+    "matrix": "N/A",
+    "warns": [],
+    "gate_errors": [
+      "DOC-GATE-019: BLOCKED_INPUT",
+      "DOC-GATE-020: BLOCKED_INPUT",
+      "DOC-GATE-021: BLOCKED_INPUT"
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_247-a7ab568",
+  "timestamp_utc": "2026-03-05T14:30:01.419590+00:00",
+  "git": {
+    "commit": "a7ab568714918f4a7d148bde178a2c5f1bb88e98"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "247",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_247_ar_247__ar-train-063__fase_0+1_truth_suite_dupla_+.md"
+}

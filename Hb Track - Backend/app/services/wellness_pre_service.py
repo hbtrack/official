@@ -403,3 +403,86 @@ class WellnessPreService:
         
         # TODO: Criar registro em approval_requests para atleta
         raise ValidationError("Sistema de aprovação ainda não implementado")
+
+    async def get_wellness_pre_by_id(
+        self,
+        wellness_id: UUID,
+        user_id: UUID,
+        user_role: str,
+    ) -> WellnessPre:
+        """Retorna um wellness pré-treino pelo ID. Aplica R25/R26."""
+        stmt = select(WellnessPre).where(
+            WellnessPre.id == wellness_id,
+            WellnessPre.deleted_at.is_(None),
+        )
+        result = await self.db.execute(stmt)
+        wellness = result.scalar_one_or_none()
+
+        if not wellness:
+            raise NotFoundError(f"Wellness pré {wellness_id} não encontrado")
+
+        if user_role == 'athlete':
+            athlete_id = await self._get_athlete_id_from_user(user_id)
+            if not athlete_id or athlete_id != wellness.athlete_id:
+                raise PermissionDeniedError("Atleta só pode acessar o próprio wellness pré")
+        elif user_role in ['coach', 'coordinator']:
+            team_ids = await self._get_user_team_ids(user_id)
+            session_stmt = select(TrainingSession).where(TrainingSession.id == wellness.training_session_id)
+            session_result = await self.db.execute(session_stmt)
+            session = session_result.scalar_one_or_none()
+            if not session or session.team_id not in team_ids:
+                raise PermissionDeniedError("Treinador/coordenador sem acesso à equipe deste wellness")
+
+        return wellness
+
+    async def update_wellness_pre_by_id(
+        self,
+        wellness_id: UUID,
+        data: dict,
+        user_id: UUID,
+        user_role: str,
+    ) -> WellnessPre:
+        """Atualiza um wellness pré-treino pelo ID. Aplica R25/R26 + janela 24h."""
+        stmt = select(WellnessPre).where(
+            WellnessPre.id == wellness_id,
+            WellnessPre.deleted_at.is_(None),
+        )
+        result = await self.db.execute(stmt)
+        wellness = result.scalar_one_or_none()
+
+        if not wellness:
+            raise NotFoundError(f"Wellness pré {wellness_id} não encontrado")
+
+        if user_role == 'athlete':
+            athlete_id = await self._get_athlete_id_from_user(user_id)
+            if not athlete_id or athlete_id != wellness.athlete_id:
+                raise PermissionDeniedError("Atleta só pode editar o próprio wellness pré")
+        elif user_role in ['coach', 'coordinator']:
+            team_ids = await self._get_user_team_ids(user_id)
+            session_stmt = select(TrainingSession).where(TrainingSession.id == wellness.training_session_id)
+            session_result = await self.db.execute(session_stmt)
+            session = session_result.scalar_one_or_none()
+            if not session or session.team_id not in team_ids:
+                raise PermissionDeniedError("Treinador/coordenador sem acesso à equipe deste wellness")
+
+        if wellness.locked_at is not None:
+            raise ValidationError("Wellness bloqueado para edição.")
+
+        deadline = wellness.created_at + timedelta(hours=24)
+        if datetime.now(timezone.utc) >= deadline:
+            raise ValidationError("Fora da janela de edição (24h após criação)")
+
+        # Normalizar nomes de campo: fatigue→fatigue_pre, stress→stress_level
+        if 'fatigue' in data and 'fatigue_pre' not in data:
+            data['fatigue_pre'] = data.pop('fatigue')
+        if 'stress' in data and 'stress_level' not in data:
+            data['stress_level'] = data.pop('stress')
+
+        allowed = {'sleep_hours', 'sleep_quality', 'fatigue_pre', 'stress_level', 'muscle_soreness', 'notes'}
+        for field, value in data.items():
+            if field in allowed and value is not None:
+                setattr(wellness, field, value)
+
+        wellness.updated_at = datetime.now(timezone.utc)
+        await self.db.flush()
+        return wellness

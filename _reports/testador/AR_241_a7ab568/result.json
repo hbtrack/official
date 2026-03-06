@@ -1,0 +1,48 @@
+{
+  "ar_id": "241",
+  "validation_command": "python -c \"import json,io; spec=json.load(io.open('Hb Track - Backend/docs/ssot/openapi.json',encoding='utf-8')); paths=spec['paths']; wg=[p for p in paths if 'wellness-content-gate' in p]; print('PASS wellness-content-gate found:', wg) if wg else (print('FAIL: wellness-content-gate endpoint missing'), __import__('sys').exit(1))\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "07133bd3ea54d5c853f2c7cce40bae97e1f6df268e9153e86faf1fcbc49878e8",
+      "hash": "07133bd3ea54d5c8",
+      "stdout_len": 89,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "07133bd3ea54d5c853f2c7cce40bae97e1f6df268e9153e86faf1fcbc49878e8",
+      "hash": "07133bd3ea54d5c8",
+      "stdout_len": 89,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "07133bd3ea54d5c853f2c7cce40bae97e1f6df268e9153e86faf1fcbc49878e8",
+      "hash": "07133bd3ea54d5c8",
+      "stdout_len": 89,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true,
+  "dod": {
+    "proof": "OK",
+    "trace": "OK",
+    "stitch": "OK",
+    "matrix": "N/A",
+    "warns": [],
+    "gate_errors": []
+  }
+}

@@ -72,4 +72,4 @@ Regra: a lista staged deve conter APENAS os arquivos permitidos acima.
 Se aparecer qualquer coisa fora -> `git restore --staged <path_exato>` e repetir o checklist.
 
 Output (disco, não commit)
-- Escrever `_reports/EXECUTOR.md` com: AR_ID, exit code, evidence_path, patch_summary, next action.
+- Escrever `_reports/EXECUTOR.yaml` com: AR_ID, exit code, evidence_path, patch_summary, next action.

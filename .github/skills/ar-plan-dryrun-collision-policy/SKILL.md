@@ -32,4 +32,4 @@ Checklist (execução)
   - AR id(s) impactadas
 
 Saída obrigatória
-- Nota em `_reports/ARQUITETO.md` explicando a escolha (FORCE/SKIP/BLOCKED) e citando o erro/saída observada.
+- Nota em `_reports/ARQUITETO.yaml` explicando a escolha (FORCE/SKIP/BLOCKED) e citando o erro/saída observada.

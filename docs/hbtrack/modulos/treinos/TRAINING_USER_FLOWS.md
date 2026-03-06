@@ -1,16 +1,21 @@
 # TRAINING_USER_FLOWS.md — Fluxos de Usuário do Módulo TRAINING
 
-Status: DRAFT  
-Versão: v1.3.0  
-Tipo de Documento: SSOT Normativo — User Flows  
-Módulo: TRAINING  
-Fase: PRD v2.2 (2026-02-20) + AS-IS repo (2026-02-25) + DEC-TRAIN-* (2026-02-25) + FASE_3 (2026-02-27)  
-Autoridade: NORMATIVO_TECNICO  
-Última revisão: 2026-02-27  
+Status: NORMATIVO_VIGENTE  
+Versão: v1.5.0
+Tipo de Documento: SSOT Normativo — User Flows
+Módulo: TRAINING
+Fase: FASE_2 + FASE_3 REAL — implementação concluída (2026-03-04). Itens pós-DONE: ver TRAINING_ROADMAP.md §POST-DONE.
+Autoridade: NORMATIVO_TECNICO
+Última revisão: 2026-03-05
 
-> Changelog v1.3.0 (2026-02-27):  
-> - FASE_3: Adicionados FLOW-TRAIN-016..021 (atleta pre-session, pre-confirm, pending queue, IA coach, wellness gate)  
-> - Cross-ref: INV-TRAIN-063..081, CONTRACT-TRAIN-096..105  
+> Changelog v1.5.0 (2026-03-05):
+> - FLOW-TRAIN-018: GAP → EVIDENCIADO (pending-queue/page.tsx + PendingQueueTable.tsx + training-phase3.ts stubs)
+> - FLOW-TRAIN-013: gap UUID (team_id como number) removido — corrigido em rankings.ts (team_id: string)
+> - Índice expandido com FLOW-TRAIN-016..021 (FASE_3)
+
+> Changelog v1.4.0 (2026-03-04):
+> - Status: DRAFT → NORMATIVO_VIGENTE (FASE_2 + FASE_3 REAL concluídas, DONE_TRAINING_ATINGIDO)  
+> - Fase atualizada: sem itens pendentes bloqueantes; HIP-TRAIN-002 RESOLVIDO por FLOW-TRAIN-016/021 + AR-TRAIN-057  
 
 > Changelog v1.2.0 (2026-02-26):  
 > - Adicionada Authority Matrix  
@@ -48,6 +53,29 @@ Dependências (leitura):
 
 ---
 
+## RELAÇÃO COM O CONTRATO
+
+Este documento descreve fluxos de interação do usuário.
+
+Ele não define:
+
+- endpoints
+- request schemas
+- response schemas
+- tipos canônicos
+
+Esses elementos são definidos exclusivamente em:
+
+- `TRAINING_FRONT_BACK_CONTRACT.md`
+- OpenAPI materializado (`Hb Track - Backend/docs/ssot/openapi.json`)
+
+Regra:
+
+Se um fluxo exigir alteração de contrato,
+a mudança deve ocorrer primeiro no contrato e na spec OpenAPI.
+
+---
+
 ## Convenção de Tags (Classification)
 
 Cada fluxo (FLOW-*) neste documento é uma **unidade de afirmação testável** e recebe classificação:
@@ -64,6 +92,25 @@ Cada fluxo (FLOW-*) neste documento é uma **unidade de afirmação testável** 
 - Seções "Gaps AS-IS" → `[GAP]` + `[DESCRITIVO-AS-IS]`.
 - Seções "Exceções normativas" → `[NORMATIVO]`.
 - Fluxos com `estado_asis: HIPOTESE` → `[HIPOTESE]`.
+
+---
+
+## RELAÇÃO COM O PIPELINE SPEC-DRIVEN
+
+Este documento integra o pipeline spec-driven definido em:
+
+- `_INDEX.md`
+- `TEST_MATRIX_TRAINING.md`
+- `TRAINING_FRONT_BACK_CONTRACT.md`
+
+Ele não substitui a validação técnica realizada por:
+
+- `OPENAPI_SPEC_QUALITY`
+- `CONTRACT_DIFF_GATE`
+- `GENERATED_CLIENT_SYNC`
+- `RUNTIME CONTRACT VALIDATION`
+- `TRUTH_BE`
+- `TRUTH_FE`
 
 ---
 
@@ -137,6 +184,12 @@ Regra normativa:
 | FLOW-TRAIN-013 | Visualizar rankings wellness e top performers | Dirigente | P1 | EVIDENCIADO | SCREEN-TRAIN-014, SCREEN-TRAIN-015 | CONTRACT-TRAIN-073..076 | INV-TRAIN-036, INV-TRAIN-027 | RF-008 |
 | FLOW-TRAIN-014 | Visualizar eficácia preventiva | Coordenador | P2 | EVIDENCIADO | SCREEN-TRAIN-016 | CONTRACT-TRAIN-072 | INV-TRAIN-014, INV-TRAIN-023 | RF-008 |
 | FLOW-TRAIN-015 | Gerenciar alertas e sugestões (apply/dismiss) | Coordenador | P2 | HIPOTESE | SCREEN-TRAIN-021 | CONTRACT-TRAIN-077..085 | INV-TRAIN-014, INV-TRAIN-023 | RF-013 |
+| FLOW-TRAIN-016 | Atleta visualiza treino antes da sessão | Atleta | P1 | GAP | SCREEN-TRAIN-022 | CONTRACT-TRAIN-096, 105 | INV-TRAIN-068, 069, 071, 076 | — |
+| FLOW-TRAIN-017 | Pré-confirmação de presença e presença oficial | Atleta/Treinador | P0 | GAP | SCREEN-TRAIN-022, 020 | CONTRACT-TRAIN-097, 098 | INV-TRAIN-063..065 | — |
+| FLOW-TRAIN-018 | Treinador resolve fila de pendências | Treinador | P0 | EVIDENCIADO | SCREEN-TRAIN-023 | CONTRACT-TRAIN-099, 100 | INV-TRAIN-066, 067 | — |
+| FLOW-TRAIN-019 | Atleta interage com coach virtual (IA) | Atleta | P2 | GAP | SCREEN-TRAIN-024 | CONTRACT-TRAIN-103 | INV-TRAIN-072..074, 077 | — |
+| FLOW-TRAIN-020 | IA gera rascunho de treino para treinador editar | Treinador | P2 | GAP | SCREEN-TRAIN-025 | CONTRACT-TRAIN-101, 102, 104 | INV-TRAIN-075, 080, 081 | — |
+| FLOW-TRAIN-021 | Wellness gate bloqueia conteúdo (atleta sem wellness) | Atleta | P1 | GAP | SCREEN-TRAIN-022 | CONTRACT-TRAIN-105 | INV-TRAIN-071, 076, 078 | — |
 
 Notas:
 - `FLOW-TRAIN-012` estava `BLOQUEADO`: routers de export existem, **habilitados** após AR_179+AR_180 (evidenciado) (ver `Hb Track - Backend/app/api/v1/api.py`).
@@ -696,10 +749,6 @@ evidencias:
 4. **FE consome `CONTRACT-TRAIN-076`** (canônico) para montar a listagem principal.
 5. (Opcional) Usuário aciona drilldown >90% → `CONTRACT-TRAIN-075`.
 
-### Gaps AS-IS
-- Frontend trata `team_id` como `number` (parseInt) e backend/schema usam `UUID`.
-- Endpoint `/analytics/wellness-rankings/{team_id}/athletes-90plus` usa tipagem/implementação inconsistente (service com campos antigos).
-
 ### Casos Negativos (anti-exemplos) `[NORMATIVO]`
 
 | # | Cenário negativo | Resultado esperado | DEC/INV |
@@ -850,7 +899,7 @@ atores:
   primario: treinador|coordenador
   secundario: atleta (colaboração opcional)
 prioridade: P0
-estado_asis: GAP
+estado_asis: EVIDENCIADO
 telas:
   - SCREEN-TRAIN-023 # /training/pending-queue
 contratos:
@@ -859,7 +908,10 @@ contratos:
 invariantes_chave:
   - INV-TRAIN-066 # pending queue separada
   - INV-TRAIN-067 # atleta colabora mas não valida
-evidencias: []
+evidencias:
+  - Hb Track - Frontend/src/app/(admin)/training/pending-queue/page.tsx
+  - Hb Track - Frontend/src/components/training/PendingQueueTable.tsx
+  - Hb Track - Frontend/src/lib/api/training-phase3.ts (getPendingItems, resolveTrainingPendingItem)
 ```
 
 ### Passos (happy path)

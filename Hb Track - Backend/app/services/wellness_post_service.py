@@ -492,3 +492,92 @@ class WellnessPostService:
         
         # TODO: Criar registro em approval_requests para atleta
         raise ValidationError("Sistema de aprovação ainda não implementado")
+
+    async def get_wellness_post_by_id(
+        self,
+        wellness_id: UUID,
+        user_id: UUID,
+        user_role: str,
+    ) -> WellnessPost:
+        """Retorna um wellness pós-treino pelo ID. Aplica R25/R26."""
+        stmt = select(WellnessPost).where(
+            WellnessPost.id == wellness_id,
+            WellnessPost.deleted_at.is_(None),
+        )
+        result = await self.db.execute(stmt)
+        wellness = result.scalar_one_or_none()
+
+        if not wellness:
+            raise NotFoundError(f"Wellness pós {wellness_id} não encontrado")
+
+        if user_role == 'athlete':
+            athlete_id = await self._get_athlete_id_from_user(user_id)
+            if not athlete_id or athlete_id != wellness.athlete_id:
+                raise PermissionDeniedError("Atleta só pode acessar o próprio wellness pós")
+        elif user_role in ['coach', 'coordinator']:
+            team_ids = await self._get_user_team_ids(user_id)
+            session_stmt = select(TrainingSession).where(TrainingSession.id == wellness.training_session_id)
+            session_result = await self.db.execute(session_stmt)
+            session = session_result.scalar_one_or_none()
+            if not session or session.team_id not in team_ids:
+                raise PermissionDeniedError("Treinador/coordenador sem acesso à equipe deste wellness")
+
+        return wellness
+
+    async def update_wellness_post_by_id(
+        self,
+        wellness_id: UUID,
+        data: dict,
+        user_id: UUID,
+        user_role: str,
+    ) -> WellnessPost:
+        """Atualiza um wellness pós-treino pelo ID. Aplica R25/R26 + janela 24h + cache invalidation."""
+        stmt = select(WellnessPost).where(
+            WellnessPost.id == wellness_id,
+            WellnessPost.deleted_at.is_(None),
+        )
+        result = await self.db.execute(stmt)
+        wellness = result.scalar_one_or_none()
+
+        if not wellness:
+            raise NotFoundError(f"Wellness pós {wellness_id} não encontrado")
+
+        if user_role == 'athlete':
+            athlete_id = await self._get_athlete_id_from_user(user_id)
+            if not athlete_id or athlete_id != wellness.athlete_id:
+                raise PermissionDeniedError("Atleta só pode editar o próprio wellness pós")
+        elif user_role in ['coach', 'coordinator']:
+            team_ids = await self._get_user_team_ids(user_id)
+            session_stmt = select(TrainingSession).where(TrainingSession.id == wellness.training_session_id)
+            session_result = await self.db.execute(session_stmt)
+            session = session_result.scalar_one_or_none()
+            if not session or session.team_id not in team_ids:
+                raise PermissionDeniedError("Treinador/coordenador sem acesso à equipe deste wellness")
+
+        if wellness.locked_at is not None:
+            raise ValidationError("Wellness bloqueado para edição.")
+
+        if not await self._check_edit_window(wellness):
+            raise ValidationError("Fora da janela de edição (24h após criação)")
+
+        allowed = {
+            'session_rpe', 'minutes_effective', 'internal_load', 'fatigue_after',
+            'mood_after', 'muscle_soreness_after', 'perceived_intensity', 'notes',
+            'flag_medical_followup', 'conversational_feedback', 'conversation_completed',
+        }
+        for field, value in data.items():
+            if field in allowed and value is not None:
+                setattr(wellness, field, value)
+
+        wellness.updated_at = datetime.now(timezone.utc)
+        await self.db.flush()
+
+        # Buscar training_session para invalidação de cache e alerta
+        ts_stmt = select(TrainingSession).where(TrainingSession.id == wellness.training_session_id)
+        ts_result = await self.db.execute(ts_stmt)
+        training_session = ts_result.scalar_one_or_none()
+        if training_session:
+            await self._invalidate_training_analytics_cache(training_session)
+            await self._trigger_overload_alert_on_wellness_post(training_session)
+
+        return wellness

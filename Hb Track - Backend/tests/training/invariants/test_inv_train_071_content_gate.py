@@ -1,13 +1,12 @@
 """
 INV-TRAIN-071: check_content_access — gate de conteúdo por wellness obrigatório
-Classe C1 — Unit (AsyncMock, sem DB)
+Classe C1 — Unit (sem DB, corrotinas reais substituem delegado has_completed_daily_wellness)
 Evidência: app/services/athlete_content_gate_service.py — check_content_access()
 Regra: sem wellness diário completo → AccessGated(allows_minimum=True);
        com wellness completo → AccessGranted.
        allows_minimum=True permite ver conteúdo mínimo (horário) mas NÃO conteúdo completo.
 """
 import pytest
-from unittest.mock import AsyncMock
 from uuid import uuid4
 
 from app.services.athlete_content_gate_service import (
@@ -31,11 +30,12 @@ class TestInvTrain071:
         check_content_access() deve retornar AccessGated com allows_minimum=True.
         O atleta pode ver conteúdo mínimo (ex: horário) mas NÃO conteúdo completo.
         """
-        svc = AthleteContentGateService(db=AsyncMock())
-        # Mock: wellness incompleto — pre ausente
-        svc.has_completed_daily_wellness = AsyncMock(
-            return_value=(False, ["wellness_pre_hoje"])
-        )
+        svc = AthleteContentGateService(db=None)
+
+        async def _fake_no_wellness(*args, **kwargs):
+            return (False, ["wellness_pre_hoje"])
+
+        svc.has_completed_daily_wellness = _fake_no_wellness
 
         result = await svc.check_content_access(athlete_id=uuid4())
 
@@ -56,8 +56,12 @@ class TestInvTrain071:
         INV-071 CASO 2: com wellness completo →
         check_content_access() deve retornar AccessGranted.
         """
-        svc = AthleteContentGateService(db=AsyncMock())
-        svc.has_completed_daily_wellness = AsyncMock(return_value=(True, []))
+        svc = AthleteContentGateService(db=None)
+
+        async def _fake_complete(*args, **kwargs):
+            return (True, [])
+
+        svc.has_completed_daily_wellness = _fake_complete
 
         result = await svc.check_content_access(athlete_id=uuid4())
 
@@ -75,10 +79,12 @@ class TestInvTrain071:
         equivalente a AccessGranted. Tipos distintos — isinstance() deve distinguir.
         Garante que código downstream não confunda allows_minimum=True com acesso total.
         """
-        svc = AthleteContentGateService(db=AsyncMock())
-        svc.has_completed_daily_wellness = AsyncMock(
-            return_value=(False, ["wellness_pre_hoje"])
-        )
+        svc = AthleteContentGateService(db=None)
+
+        async def _fake_no_wellness(*args, **kwargs):
+            return (False, ["wellness_pre_hoje"])
+
+        svc.has_completed_daily_wellness = _fake_no_wellness
 
         result = await svc.check_content_access(athlete_id=uuid4())
 

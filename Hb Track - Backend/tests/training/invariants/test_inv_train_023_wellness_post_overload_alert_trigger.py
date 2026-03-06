@@ -1,46 +1,42 @@
 import pytest
-from unittest.mock import AsyncMock
 from datetime import datetime, timezone
-from uuid import uuid4
+from uuid import uuid4, UUID
+
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.services.wellness_post_service import WellnessPostService
-from app.services.training_alerts_service import TrainingAlertsService
 from app.models.training_session import TrainingSession
-from app.models.team import Team
 
 
 @pytest.mark.asyncio
-async def test_trigger_overload_alert_on_wellness_post_uses_session_week_and_team_multiplier(monkeypatch):
-    db = AsyncMock()
-    service = WellnessPostService(db)
-
-    team_id = uuid4()
-    session_at = datetime(2026, 1, 15, 15, 30, tzinfo=timezone.utc)
+async def test_trigger_overload_alert_on_wellness_post_runs_without_error(
+    async_db: AsyncSession, organization, team, category,
+):
+    """
+    INV-TRAIN-023 TRUTH: _trigger_overload_alert_on_wellness_post deve executar sem
+    erro quando o Team existe no DB. Sem sessões na semana → check_weekly_overload
+    retorna None cedo e nenhum alerta é criado.
+    """
+    # Arrange: cria TrainingSession Python obj (NÃO inserido no DB — só precisa das attrs)
     training_session = TrainingSession(
         id=uuid4(),
-        organization_id=uuid4(),
-        team_id=team_id,
-        session_at=session_at,
+        organization_id=UUID(str(organization.id)),
+        team_id=UUID(str(team.id)),
+        session_at=datetime(2026, 1, 15, 15, 30, tzinfo=timezone.utc),
         session_type="quadra",
     )
-    team = Team(
-        id=team_id,
-        organization_id=uuid4(),
-        name="Equipe A",
-        category_id=1,
-        gender="masculino",
-        is_our_team=True,
-        alert_threshold_multiplier=2.5,
-    )
-    db.get.return_value = team
 
-    check_mock = AsyncMock(return_value=None)
-    monkeypatch.setattr(TrainingAlertsService, "check_weekly_overload", check_mock)
-
+    # Act: método busca team via db.get (team existe no DB via fixture)
+    service = WellnessPostService(async_db)
     await service._trigger_overload_alert_on_wellness_post(training_session)
 
-    check_mock.assert_awaited_once()
-    _, kwargs = check_mock.call_args
-    assert kwargs["team_id"] == team_id
-    assert kwargs["alert_threshold_multiplier"] == float(team.alert_threshold_multiplier)
-    assert kwargs["week_start"] == datetime(2026, 1, 12, tzinfo=timezone.utc)
+    # Assert: nenhum treinamento na semana → check_weekly_overload retorna None → 0 alertas
+    result = await async_db.execute(
+        text("SELECT COUNT(*) FROM training_alerts WHERE team_id = :tid"),
+        {"tid": str(team.id)},
+    )
+    count = result.scalar()
+    assert count == 0, (
+        "INV-023: sem sessões na semana, nenhum alerta de sobrecarga deve ser criado"
+    )

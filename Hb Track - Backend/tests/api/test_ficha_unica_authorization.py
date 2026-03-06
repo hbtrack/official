@@ -51,6 +51,7 @@ def ctx_superadmin():
     return ExecutionContext(
         user_id=uuid4(),
         email="superadmin@test.com",
+        request_id="test-superadmin",
         person_id=uuid4(),
         membership_id=None,
         organization_id=uuid4(),
@@ -65,6 +66,7 @@ def ctx_dirigente():
     return ExecutionContext(
         user_id=uuid4(),
         email="dirigente@test.com",
+        request_id="test-dirigente",
         person_id=uuid4(),
         membership_id=uuid4(),
         organization_id=uuid4(),
@@ -79,6 +81,7 @@ def ctx_coordenador():
     return ExecutionContext(
         user_id=uuid4(),
         email="coordenador@test.com",
+        request_id="test-coordenador",
         person_id=uuid4(),
         membership_id=uuid4(),
         organization_id=uuid4(),
@@ -93,6 +96,7 @@ def ctx_treinador():
     return ExecutionContext(
         user_id=uuid4(),
         email="treinador@test.com",
+        request_id="test-treinador",
         person_id=uuid4(),
         membership_id=uuid4(),
         organization_id=uuid4(),

@@ -20,6 +20,7 @@ from datetime import datetime
 
 from app.models.exercise import Exercise
 from app.models.exercise_acl import ExerciseAcl
+from app.models.membership import OrgMembership
 from app.models.user import User
 from app.core.exceptions import (
     AclNotApplicableError,
@@ -78,8 +79,20 @@ class ExerciseAclService:
     async def _validate_same_org(self, exercise: Exercise, user: User) -> None:
         """
         INV-EXB-ACL-003: Valida que usuário pertence à mesma org do exercício.
+
+        User não possui coluna organization_id; o vínculo org é via org_memberships
+        (person_id → org_memberships.organization_id). Considera apenas memberships
+        ativas (deleted_at IS NULL AND end_at IS NULL).
         """
-        if exercise.organization_id != user.organization_id:
+        stmt = select(OrgMembership).where(
+            OrgMembership.person_id == user.person_id,
+            OrgMembership.organization_id == exercise.organization_id,
+            OrgMembership.deleted_at.is_(None),
+            OrgMembership.end_at.is_(None),
+        )
+        result = await self.db.execute(stmt)
+        membership = result.scalar_one_or_none()
+        if membership is None:
             raise AclCrossOrgError()
 
     async def has_access(self, exercise_id: UUID, user_id: UUID) -> bool:

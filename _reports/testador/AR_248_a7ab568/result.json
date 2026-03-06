@@ -1,0 +1,48 @@
+{
+  "ar_id": "248",
+  "validation_command": "python -X utf8 scripts/db/reset_hb_track_test.py && cd \"Hb Track - Backend\" && python -m pytest -q tests/training/invariants/test_inv_train_148_exercise_bank_services.py -v 2>&1 | python -c \"import sys; lines=sys.stdin.readlines(); [print(l.rstrip()) for l in lines[-30:] if any(w in l for w in ['PASSED','FAILED','ERROR','xfailed','xpassed','passed','failed','error','XFAIL','XPASS']) and 'warnings' not in l] or [print(lines[-1].rstrip())]\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "df44f0d19e2e33eb1883a864770048119125825292fe06884fe51d8e17f5714d",
+      "hash": "df44f0d19e2e33eb",
+      "stdout_len": 961,
+      "stderr_len": 360
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "df44f0d19e2e33eb1883a864770048119125825292fe06884fe51d8e17f5714d",
+      "hash": "df44f0d19e2e33eb",
+      "stdout_len": 961,
+      "stderr_len": 360
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "df44f0d19e2e33eb1883a864770048119125825292fe06884fe51d8e17f5714d",
+      "hash": "df44f0d19e2e33eb",
+      "stdout_len": 961,
+      "stderr_len": 360
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true,
+  "dod": {
+    "proof": "OK",
+    "trace": "OK",
+    "stitch": "OK",
+    "matrix": "N/A",
+    "warns": [],
+    "gate_errors": []
+  }
+}

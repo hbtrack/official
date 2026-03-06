@@ -1,0 +1,23 @@
+# ChangePasswordRequest
+
+Requisição de troca de senha
+
+## Properties
+
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**current_password** | **string** |  | [default to undefined]
+**new_password** | **string** | Nova senha (mínimo 8 caracteres) | [default to undefined]
+
+## Example
+
+```typescript
+import { ChangePasswordRequest } from './api';
+
+const instance: ChangePasswordRequest = {
+    current_password,
+    new_password,
+};
+```
+
+[[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

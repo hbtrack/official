@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_243-a7ab568",
+  "timestamp_utc": "2026-03-04T18:34:07.922184+00:00",
+  "git": {
+    "commit": "a7ab568714918f4a7d148bde178a2c5f1bb88e98"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "243",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_243_sync_test_matrix_e_ssot_documental_pos-batch_26_ar.md"
+}

@@ -1,0 +1,52 @@
+{
+  "ar_id": "254",
+  "validation_command": "python -c \"\nimport sys\nfrom pathlib import Path\nc = Path('Hb Track - Backend/tests/training/contracts/test_contract_train_029_039_wellness.py').read_text(encoding='utf-8')\nchecks = [\n  ('TestContractTrain031ImplWellnessPre' in c, 'AC1: TestContractTrain031ImplWellnessPre presente'),\n  ('TestContractTrain032ImplUpdateWellnessPre' in c, 'AC2: TestContractTrain032ImplUpdateWellnessPre presente'),\n  ('TestContractTrain037ImplWellnessPost' in c, 'AC3: TestContractTrain037ImplWellnessPost presente'),\n  ('TestContractTrain038ImplUpdateWellnessPost' in c, 'AC4: TestContractTrain038ImplUpdateWellnessPost presente'),\n  ('async def get_wellness_pre_by_id' in c or 'async def update_wellness_pre' in c, 'AC6: testes verificam async def'),\n  ('get_current_user' in c, 'AC7: testes verificam get_current_user'),\n  ('WellnessPreService' in c and 'WellnessPostService' in c, 'AC8: testes verificam service layer'),\n]\nbad = [msg for ok, msg in checks if not ok]\nif bad: print('FAIL:', bad); sys.exit(1)\nprint('AC1..AC8 PASS (static)')\n\" && cd \"Hb Track - Backend\" && python -m pytest tests/training/contracts/test_contract_train_029_039_wellness.py -q 2>&1 | tail -5",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "c7950ee5238ba6845dd89c9bc183f2c44810fc6427b78bfd5cd97290aaad941f",
+      "hash": "c7950ee5238ba684",
+      "stdout_len": 0,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "c7950ee5238ba6845dd89c9bc183f2c44810fc6427b78bfd5cd97290aaad941f",
+      "hash": "c7950ee5238ba684",
+      "stdout_len": 0,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "c7950ee5238ba6845dd89c9bc183f2c44810fc6427b78bfd5cd97290aaad941f",
+      "hash": "c7950ee5238ba684",
+      "stdout_len": 0,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true,
+  "dod": {
+    "proof": "OK",
+    "trace": "OK",
+    "stitch": "OK",
+    "matrix": "N/A",
+    "warns": [],
+    "gate_errors": [
+      "DOC-GATE-019: BLOCKED_INPUT",
+      "DOC-GATE-020: BLOCKED_INPUT",
+      "DOC-GATE-021: BLOCKED_INPUT"
+    ]
+  }
+}

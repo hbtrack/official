@@ -38,6 +38,19 @@ entrypoints:
   - id: determinism_manual
     path: docs/hbtrack/manuais/Manual Deterministico.md
     mode: required
+  # --- Módulo TRAINING ---
+  - id: training_done_gate
+    path: docs/hbtrack/modulos/treinos/DONE_GATE_TRAINING.md
+    mode: required
+  - id: training_ar_backlog
+    path: docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md
+    mode: required
+  - id: training_roadmap
+    path: docs/hbtrack/modulos/treinos/TRAINING_ROADMAP.md
+    mode: recommended
+  - id: training_index
+    path: docs/hbtrack/modulos/treinos/_INDEX.md
+    mode: recommended
 
 rules:
   append_only_indexes:

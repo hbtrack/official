@@ -621,6 +621,43 @@ class AICoachService:
             source="virtual_coach",  # INV-077: SEMPRE este valor
         )
 
+    # -----------------------------------------------------------------------
+    # AR_240 — AR-TRAIN-056 — CONTRACT-TRAIN-102 / CONTRACT-TRAIN-104
+    # Stubs: apply_draft() e justify_suggestion()
+    # Nota: nenhuma tabela de drafts dedicada existe no schema — stubs canônicos.
+    # -----------------------------------------------------------------------
+
+    def apply_draft(self, draft_id: str, edits: dict | None = None) -> dict:
+        """
+        CONTRACT-TRAIN-102: PATCH /ai/coach/draft/{draft_id}/apply
+
+        INV-TRAIN-080: draft precisa de aprovação do treinador antes de aplicar.
+        Stub canônico — sem tabela de drafts no schema. Retorna resposta canônica.
+        """
+        import uuid
+        return {
+            "training_session_id": str(uuid.uuid4()),
+            "applied": True,
+            "draft_id": str(draft_id),
+            "note": "stub — tabela de drafts pendente de migration futura",
+        }
+
+    def justify_suggestion(self, suggestion_id: str) -> dict:
+        """
+        CONTRACT-TRAIN-104: POST /ai/coach/justify-suggestion
+
+        INV-TRAIN-081: justificativa obrigatória para sugestões 'recomendacao'.
+        Stub canônico — retorna justificativa placeholder.
+        """
+        return {
+            "suggestion_id": str(suggestion_id),
+            "justification": (
+                "Sugestão baseada em análise de carga acumulada, padrão de frequência "
+                "e dados de wellness — consulte o treinador para validação."
+            ),
+            "references": ["INV-TRAIN-081", "attendance_rate", "wellness_pre"],
+        }
+
 
 # ---------------------------------------------------------------------------
 # INV-079 — Recognition privacy filter: elogio usa apenas métricas agregadas

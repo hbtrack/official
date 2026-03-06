@@ -13,30 +13,22 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import {
-  Zap,
-  Smile,
-  Activity,
-  TrendingUp,
-  Clock,
-  Save,
-  AlertTriangle,
-  Lock,
-  Award,
-  Loader2,
-  CheckCircle,
-  XCircle,
-} from 'lucide-react';
-import { Slider, SliderGrid } from '@/components/ui/Slider';
+import type { WellnessPost, WellnessPostCreate } from '@/api/generated';
+import { wellnessApi, wellnessPostApi } from '@/api/generated/api-instance';
 import { Button } from '@/components/ui/Button';
+import { Slider, SliderGrid } from '@/components/ui/Slider';
 import {
-  submitWellnessPost,
-  getMyWellnessPost,
-  getMyWellnessPre,
-  type WellnessPostInput,
-  type WellnessPost,
-} from '@/lib/api/wellness';
+  Activity,
+  AlertTriangle,
+  Clock,
+  Loader2,
+  Lock,
+  Save,
+  Smile,
+  TrendingUp,
+  Zap
+} from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 interface WellnessPostFormProps {
   sessionId: string;
@@ -114,6 +106,16 @@ const RPE_SCALE = [
   { value: 10, label: 'Máximo Absoluto', color: 'red' },
 ];
 
+// Local form state type — muscle_soreness_after is UI-only (not in WellnessPostCreate schema)
+type WellnessPostFormState = {
+  session_rpe: number;
+  fatigue_after: number;
+  mood_after: number;
+  muscle_soreness_after: number;  // UI-only field, not sent to API
+  minutes_effective?: number;     // optional (matches original WellnessPostInput semantics)
+  notes?: string;
+};
+
 export function WellnessPostForm({
   sessionId,
   sessionAt,
@@ -130,7 +132,7 @@ export function WellnessPostForm({
   const [checkingPre, setCheckingPre] = useState(true);
   
   // Form values
-  const [values, setValues] = useState<WellnessPostInput>({
+  const [values, setValues] = useState<WellnessPostFormState>({
     session_rpe: 5,
     fatigue_after: 5,
     mood_after: 7,
@@ -144,8 +146,8 @@ export function WellnessPostForm({
     async function checkWellnessPre() {
       try {
         setCheckingPre(true);
-        const wellnessPre = await getMyWellnessPre(sessionId);
-        setHasWellnessPre(!!wellnessPre);
+        const { data } = await wellnessApi.listWellnessPreBySessionApiV1WellnessPreTrainingSessionsTrainingSessionIdWellnessPreGet(sessionId);
+        setHasWellnessPre(data.length > 0);
       } catch (err) {
         console.error('Error checking wellness pre:', err);
         setHasWellnessPre(false);
@@ -162,15 +164,16 @@ export function WellnessPostForm({
     async function loadWellness() {
       try {
         setLoading(true);
-        const existing = await getMyWellnessPost(sessionId);
+        const { data: existingList } = await wellnessPostApi.listWellnessPostBySessionApiV1WellnessPostTrainingSessionsTrainingSessionIdWellnessPostGet(sessionId);
+        const existing = existingList[0] || null;
         if (existing) {
           setExistingWellness(existing);
           setValues({
-            session_rpe: existing.session_rpe,
-            fatigue_after: existing.fatigue_after,
-            mood_after: existing.mood_after,
-            muscle_soreness_after: existing.muscle_soreness_after,
-            minutes_effective: existing.minutes_effective || sessionDuration,
+            session_rpe: existing.session_rpe ?? 5,
+            fatigue_after: existing.fatigue_after ?? 5,
+            mood_after: existing.mood_after ?? 7,
+            muscle_soreness_after: 4,  // not in WellnessPost response schema
+            minutes_effective: existing.minutes_effective ?? sessionDuration,
             notes: existing.notes || '',
           });
         }
@@ -225,10 +228,21 @@ export function WellnessPostForm({
       setSaving(true);
       setError(null);
       
-      const wellness = await submitWellnessPost(sessionId, values);
+      // DEC-TRAIN-001: athlete_id/org_id/created_by_membership_id inferred by backend from JWT
+      const payload: Partial<WellnessPostCreate> = {
+        session_rpe: values.session_rpe,
+        fatigue_after: values.fatigue_after,
+        mood_after: values.mood_after,
+        minutes_effective: values.minutes_effective,
+        notes: values.notes || undefined,
+      };
+      const { data } = await wellnessPostApi.addWellnessPostToSessionApiV1WellnessPostTrainingSessionsTrainingSessionIdWellnessPostPost(
+        sessionId,
+        payload as WellnessPostCreate
+      );
       
       if (onSuccess) {
-        onSuccess(wellness);
+        onSuccess(data);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao salvar wellness');

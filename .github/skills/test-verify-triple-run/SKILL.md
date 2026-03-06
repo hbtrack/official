@@ -1,6 +1,6 @@
 ---
 name: test-verify-triple-run
-description: Testador: executa hb verify, aplica regra triple-run/hashes, escreve TESTADOR.md e stageia apenas context.json/result.json.
+description: Testador: executa hb verify, aplica regra triple-run/hashes, escreve TESTADOR.yaml e stageia apenas context.json/result.json.
 target: vscode
 ---
 
@@ -46,7 +46,7 @@ PROIBIDO:
 - stagear ARs, Kanban, _INDEX, evidence do executor (isso é do Executor)
 
 Output (disco, não chat)
-- Sobrescrever `_reports/TESTADOR.md` no seu template real (cabecalho + tabela + detalhes + evidências staged + NEXT_ACTION).
+- Sobrescrever `_reports/TESTADOR.yaml` no seu template real (cabecalho + tabela + detalhes + evidências staged + NEXT_ACTION).
 - NEXT_ACTION (conforme seu padrão):
   - PASS -> humano: `hb seal <id>`
   - FAIL por consistência -> Arquiteto (AH_DIVERGENCE se aplicável)

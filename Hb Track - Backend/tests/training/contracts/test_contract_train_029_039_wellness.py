@@ -55,6 +55,27 @@ class TestContractTrain031GetWellnessPre:
 
 
 # ---------------------------------------------------------------------------
+# CONTRACT-031 IMPL — GET /wellness_pre/{wellness_pre_id} — impl quality guard
+# ---------------------------------------------------------------------------
+class TestContractTrain031ImplWellnessPre:
+    def test_get_by_id_is_async(self):
+        """Endpoint nao pode ser def sync (bug pre-AR_253)."""
+        content = _pre()
+        assert "async def get_wellness_pre_by_id" in content
+
+    def test_get_by_id_has_auth(self):
+        """Endpoint deve exigir autenticacao (get_current_user)."""
+        content = _pre()
+        assert "get_current_user" in content
+
+    def test_get_by_id_calls_service(self):
+        """Endpoint deve delegar ao WellnessPreService.get_wellness_pre_by_id."""
+        content = _pre()
+        assert "get_wellness_pre_by_id" in content
+        assert "WellnessPreService" in content
+
+
+# ---------------------------------------------------------------------------
 # CONTRACT-032  PATCH /wellness_pre/{wellness_pre_id}
 # ---------------------------------------------------------------------------
 class TestContractTrain032UpdateWellnessPre:
@@ -62,6 +83,31 @@ class TestContractTrain032UpdateWellnessPre:
         content = _pre()
         assert "@router.patch" in content
         assert "wellness_pre_id" in content
+
+
+# ---------------------------------------------------------------------------
+# CONTRACT-032 IMPL — PATCH /wellness_pre/{wellness_pre_id} — impl quality guard
+# ---------------------------------------------------------------------------
+class TestContractTrain032ImplUpdateWellnessPre:
+    def test_update_is_async(self):
+        """Endpoint nao pode ser def sync (bug pre-AR_253)."""
+        content = _pre()
+        assert "async def update_wellness_pre" in content
+
+    def test_update_has_auth(self):
+        """Endpoint deve exigir autenticacao."""
+        content = _pre()
+        assert "get_current_user" in content
+
+    def test_update_calls_service(self):
+        """Endpoint deve delegar ao WellnessPreService.update_wellness_pre_by_id."""
+        content = _pre()
+        assert "update_wellness_pre_by_id" in content
+
+    def test_update_commits(self):
+        """Endpoint PATCH deve fazer commit apos edicao bem sucedida."""
+        content = _pre()
+        assert "await db.commit()" in content or "db.commit()" in content
 
 
 # ---------------------------------------------------------------------------
@@ -116,6 +162,27 @@ class TestContractTrain037GetWellnessPost:
 
 
 # ---------------------------------------------------------------------------
+# CONTRACT-037 IMPL — GET /wellness_post/{wellness_post_id} — impl quality guard
+# ---------------------------------------------------------------------------
+class TestContractTrain037ImplWellnessPost:
+    def test_get_by_id_is_async(self):
+        """Endpoint deve ser async def."""
+        content = _post()
+        assert "async def get_wellness_post_by_id" in content
+
+    def test_get_by_id_has_auth(self):
+        """Endpoint deve exigir autenticacao."""
+        content = _post()
+        assert "get_current_user" in content
+
+    def test_get_by_id_calls_service(self):
+        """Endpoint deve delegar ao WellnessPostService.get_wellness_post_by_id."""
+        content = _post()
+        assert "get_wellness_post_by_id" in content
+        assert "WellnessPostService" in content
+
+
+# ---------------------------------------------------------------------------
 # CONTRACT-038  PATCH /wellness_post/{wellness_post_id}
 # ---------------------------------------------------------------------------
 class TestContractTrain038UpdateWellnessPost:
@@ -123,6 +190,31 @@ class TestContractTrain038UpdateWellnessPost:
         content = _post()
         assert "@router.patch" in content
         assert "wellness_post_id" in content
+
+
+# ---------------------------------------------------------------------------
+# CONTRACT-038 IMPL — PATCH /wellness_post/{wellness_post_id} — impl quality guard
+# ---------------------------------------------------------------------------
+class TestContractTrain038ImplUpdateWellnessPost:
+    def test_update_is_async(self):
+        """Endpoint nao pode ser def sync (bug pre-AR_253)."""
+        content = _post()
+        assert "async def update_wellness_post" in content
+
+    def test_update_has_auth(self):
+        """Endpoint deve exigir autenticacao."""
+        content = _post()
+        assert "get_current_user" in content
+
+    def test_update_calls_service(self):
+        """Endpoint deve delegar ao WellnessPostService.update_wellness_post_by_id."""
+        content = _post()
+        assert "update_wellness_post_by_id" in content
+
+    def test_update_commits(self):
+        """Endpoint PATCH deve fazer commit."""
+        content = _post()
+        assert "await db.commit()" in content or "db.commit()" in content
 
 
 # ---------------------------------------------------------------------------

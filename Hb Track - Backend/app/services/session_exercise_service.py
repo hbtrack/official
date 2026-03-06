@@ -14,7 +14,7 @@ from app.models.session_exercise import SessionExercise
 from app.models.training_session import TrainingSession
 from app.models.exercise import Exercise
 from app.models.exercise_acl import ExerciseAcl
-from app.core.exceptions import ExerciseNotVisibleError
+from app.core.exceptions import ExerciseNotVisibleError, ForbiddenError, BusinessError
 from app.schemas.session_exercises import (
     SessionExerciseCreate,
     SessionExerciseBulkCreate,
@@ -95,6 +95,19 @@ class SessionExerciseService:
         
         return session_exercise
     
+    def _validate_session_mutable(self, session: TrainingSession) -> None:
+        """
+        INV-058: Guard — sessão readonly ou in_progress não pode ter estrutura alterada.
+
+        Args:
+            session: Sessão de treino a validar
+
+        Raises:
+            ForbiddenError: Se sessão estiver em status readonly ou in_progress
+        """
+        if session.status in ("readonly", "in_progress"):
+            raise ForbiddenError("Sessão encerrada. Estrutura não pode ser alterada.")
+
     async def _verify_exercise_visibility(
         self,
         exercise: Exercise,
@@ -185,7 +198,10 @@ class SessionExerciseService:
         # Verificar existência
         session = await self._verify_session_exists(session_id)
         exercise = await self._verify_exercise_exists(data.exercise_id)
-        
+
+        # INV-058: Guard — sessão readonly/in_progress não aceita alterações de estrutura
+        self._validate_session_mutable(session)
+
         # INV-062: Verificar visibilidade do exercício
         await self._verify_exercise_visibility(exercise, session, user_id)
         
@@ -450,6 +466,12 @@ class SessionExerciseService:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Order index duplicado no payload de reordenação"
             )
+
+        # INV-059: Guard — order_index deve ser contíguo começando em 1 (sem gaps)
+        sorted_orders = sorted(reorder_map.values())
+        expected_orders = list(range(1, len(sorted_orders) + 1))
+        if sorted_orders != expected_orders:
+            raise BusinessError("Order index deve ser contíguo começando em 1")
 
         # Evitar violação de índice UNIQUE (session_id, order_index) em swaps
         max_order_result = await self.db.execute(

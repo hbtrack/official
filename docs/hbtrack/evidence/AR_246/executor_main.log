@@ -1,0 +1,51 @@
+AR_ID: 246
+Command: python -c "
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
+backlog = open('docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md', encoding='utf-8').read()
+tm = open('docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md', encoding='utf-8').read()
+bp = open('docs/hbtrack/modulos/treinos/TRAINING_BATCH_PLAN_v1.md', encoding='utf-8').read()
+checks = [
+    ('Versão: v2.9.0', backlog, 'AC-001 Backlog v2.9.0'),
+    ('AR-TRAIN-060', backlog, 'AC-002-pre AR-TRAIN-060 exists'),
+    ('AR-TRAIN-061', backlog, 'AC-003-pre AR-TRAIN-061 exists'),
+    ('AR-TRAIN-062', backlog, 'AC-004 AR-TRAIN-062 in backlog'),
+    ('Versão: v3.4.0', tm, 'AC-005 TEST_MATRIX v3.4.0'),
+    ('Batch 28', bp, 'AC-008 BatchPlan Batch28'),
+]
+failed = [label for text, content, label in checks if text not in content]
+if 'AR-TRAIN-060 | G' in backlog and '| VERIFICADO |' in backlog.split('AR-TRAIN-060 | G')[1][:200]:
+    pass
+else:
+    failed.append('AC-002 AR-TRAIN-060 VERIFICADO')
+if 'AR-TRAIN-061 | T' in backlog and '| VERIFICADO |' in backlog.split('AR-TRAIN-061 | T')[1][:200]:
+    pass
+else:
+    failed.append('AC-003 AR-TRAIN-061 VERIFICADO')
+if 'AR-TRAIN-061 | T | Contract tests CONTRACT-074/075' in tm and 'VERIFICADO' in tm.split('AR-TRAIN-061 | T | Contract tests CONTRACT-074/075')[1][:200]:
+    pass
+else:
+    failed.append('AC-006 TEST_MATRIX 061 VERIFICADO')
+if 'v1.6.0' in bp:
+    pass
+else:
+    failed.append('AC-007 BatchPlan v1.6.0')
+if failed:
+    print('FAIL:', failed); sys.exit(1)
+print('PASS: sync pós-Batch 27 OK')
+"
+Exit Code: 0
+Timestamp UTC: 2026-03-04T20:17:10.973729+00:00
+Behavior Hash (exit+stdout+stderr): c7950ee5238ba6845dd89c9bc183f2c44810fc6427b78bfd5cd97290aaad941f
+Git HEAD: a7ab568714918f4a7d148bde178a2c5f1bb88e98
+Python Version: 3.11.9
+Protocol Version: 1.3.0
+Workspace Clean: True
+Workspace Status: workspace_clean
+Governed Checksums (sha256): {"Hb Track - Backend/app/api/v1/routers/ai_coach.py": "3eccaa78708dfa6a4b52d8aa1b6c0ee6749dc59c4f2adc1460b011f12c77ae34", "Hb Track - Backend/app/api/v1/routers/athlete_training.py": "c38aee610efb5c9f890397748431e7c14f50ab82c39eb12347363a4de088012a", "Hb Track - Backend/app/api/v1/routers/attendance.py": "0f08df69a92170faa7b7a40ba2bde28865192800b5167decf2d2f12d4333eb72", "Hb Track - Backend/app/services/ai_coach_service.py": "257b81ec1e92d9e365329dc989efd2ec7aee943924cb5cc661ac96d3098ce613", "Hb Track - Backend/docs/ssot/alembic_state.txt": "65d6d8e7d66dc730d7d9408518f36e12af178755f3ce499290c6d5505794ea63", "Hb Track - Backend/docs/ssot/openapi.json": "e6ed4bd7622f775ce91e07487356f75e2950591b8897e840f2a5c1cc36517202", "Hb Track - Backend/docs/ssot/schema.sql": "91e6a2702a6c4dd0bb9d57bfab4523477ff9b6c96e5b7a1a60faf7f21f114636", "Hb Track - Backend/tests/training/contracts/test_contract_train_074_075_wellness_rankings.py": "f58da868fd5a0062ce2e5f5cd662a3fd5774effcb6a4b48ca2bd462a33c2c2e1", "Hb Track - Frontend/src/lib/api/exercises.ts": "ed2e75c3cf226b2a0d8d847a31d119955cd0e359efcdccd947351668b47c2f9f", "Hb Track - Frontend/src/lib/api/training-phase3.ts": "dbf1b378f1f5e6729b3c72669eb16fc3d5c300cddd8567bf86643c40e657e06d", "Hb Track - Frontend/src/lib/api/trainings.ts": "f7146d74342b1e50f8eece066209a102cf0c4a1387ab9f8ce5ebe15fe6e6672a", "docs/hbtrack/Hb Track Kanban.md": "98d2f35d6ade3c0fa7d29b97bc6c5021a968d5ddde07337302c5bbb7800f6d18", "docs/hbtrack/_INDEX.md": "7515b7486c1dcaa1cedaedd2292ec761ea47624e689ca8bc6b91e5408d09a199", "docs/hbtrack/ars/features/AR_236_frontend_hard_sync_v1.3.0_tipos_uuid_standalone_+_.md": "9706747cdde61a7341bae9f44aa4044f91b7c251baa07b198b9b7bc2d4575689", "docs/hbtrack/ars/features/AR_237_sync_§9_test_matrix_entry_ar-train-052_verificado_.md": "23f3c67597d6b46e4c3f667954b9c0d427e3779176f0860fab64ecbd8a2bb08a", "docs/hbtrack/ars/features/AR_238_sync_§5_fase_3_18_invs_fail_error→pass_+_v3.1.0_+_.md": "c2615026a16a8be59102a85de49b62dbfee882bc905d828ae46ae081ec33419a", "docs/hbtrack/ars/features/AR_239_be_endpoint_patch_resolve-pending-item_no_attendan.md": "8c6e0ffd1b4b44bba83eb6b654146e5491c9aea911f879ca5257c37473ee75a6", "docs/hbtrack/ars/features/AR_240_be_endpoints_apply-draft_+_justify-suggestion_no_a.md": "f452ec23301230ecc1f54781d9c0c95ecbc76f042d002f6183892ff43acae802", "docs/hbtrack/ars/features/AR_241_be_endpoint_get_wellness-content-gate_no_athlete_t.md": "15ded397c056bb0386abad031879e879f475e53dd72c96fd6dd6ec296d2cfb34", "docs/hbtrack/ars/features/AR_242_fe_corrigir_urls_training-phase3.ts_para_paths_rea.md": "891a6b5a91f4690678797afc649c6d84bf5117a451c972a2cb9ccbc00dc54492", "docs/hbtrack/ars/features/AR_243_sync_test_matrix_e_ssot_documental_pos-batch_26_ar.md": "6d34aa2aed708e2fbe197b07522655154965b19bceaf616d7d6f7557d24c08de", "docs/hbtrack/ars/features/AR_244_ar-train-060_governance_sync_kanban+batchplan.md": "668721a001d719259f3b9707f84e9db2978cef4c846a1e77c646c5b870f89f27", "docs/hbtrack/ars/features/AR_245_ar-train-061_contract_tests_contract-074_075.md": "f6da2f016cd3a4fb4a19db02ef451711370a8ee17daa200b93070e93263a52bd", "docs/hbtrack/ars/features/AR_246_ar-train-062_sync_backlog_+_test_matrix_§9_+_batch.md": "031c9398d7677567f89b7417517f8c4d607255019687043776c66ea3d89a75ca", "docs/hbtrack/evidence/AR_236/executor_main.log": "c1966de6d1515bb0e9750b7cb73f6097c41c1abc6ff81ba012b9c4e81ee738d2", "docs/hbtrack/evidence/AR_237/executor_main.log": "0cd1af5a6bd2d719d2ff8fc80eb6df5a459ebdc63291c1d800fc19ef7b5b854a", "docs/hbtrack/evidence/AR_238/executor_main.log": "2de2f2f6c9736f9b6ce577f8cacd9f511a86ade781f088bb3379b07ec3ee6838", "docs/hbtrack/evidence/AR_239/executor_main.log": "5b4ce2844e5396057e5d12a31b9c7439a749331d4b94c280a9e35d6320d4a9d8", "docs/hbtrack/evidence/AR_240/executor_main.log": "2b8c130c680d95ac74d68be1be05d6d949049c23175e32d208248c30204c8755", "docs/hbtrack/evidence/AR_241/executor_main.log": "77e3cd10f13a6788051450df1d6d0355d6343fce2199606456b52eb3dc93a735", "docs/hbtrack/evidence/AR_242/executor_main.log": "3a956b7915240231056c498745907eb42134940c1ce1541636dd81d5f64ab766", "docs/hbtrack/evidence/AR_243/executor_main.log": "b34da0d1a5ac000fcbce14a2008fdcfbdaaf26d23c5c3602065a3ca73048527d", "docs/hbtrack/evidence/AR_244/executor_main.log": "3534b7b09378b27c496d289971aeefe5e7ab8a7553d9c43c64107e50c00f15a7", "docs/hbtrack/evidence/AR_245/executor_main.log": "e0e695454d3357be87a779c99b2768569e76ce2b341f71379f8ccbebb62bb9dd", "docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md": "adc2837c735ea118d9eb79567ad7880a0ac39425fffada960ab235ca711ba3c7", "docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md": "13e1a4188e5431151e484b4bd90ea36b62e1c81c0b94a90d5a2e1b33a0ec8681", "docs/hbtrack/modulos/treinos/TRAINING_BATCH_PLAN_v1.md": "1c65682c30dee6bb119e1e004c4b85eb996e47b192469b7385ace8e9b9b8c4ac"}
+
+--- STDOUT ---
+
+
+--- STDERR ---
+

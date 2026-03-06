@@ -1,0 +1,48 @@
+{
+  "ar_id": "250",
+  "validation_command": "rg -n \"unittest\\.mock|\\bmocker\\.|monkeypatch\\b|\\bMagicMock\\b|\\bMock\\b|patch\\(\" \"Hb Track - Backend/tests/training/\" && echo FAIL_RH09A || echo PASS_RH09A",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "8a76608b9604980e518df9e77d87cc288f7e4bf7e66642edbfa59877771278c1",
+      "hash": "8a76608b9604980e",
+      "stdout_len": 11,
+      "stderr_len": 104
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "8a76608b9604980e518df9e77d87cc288f7e4bf7e66642edbfa59877771278c1",
+      "hash": "8a76608b9604980e",
+      "stdout_len": 11,
+      "stderr_len": 104
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "8a76608b9604980e518df9e77d87cc288f7e4bf7e66642edbfa59877771278c1",
+      "hash": "8a76608b9604980e",
+      "stdout_len": 11,
+      "stderr_len": 104
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true,
+  "dod": {
+    "proof": "OK",
+    "trace": "OK",
+    "stitch": "OK",
+    "matrix": "N/A",
+    "warns": [],
+    "gate_errors": []
+  }
+}

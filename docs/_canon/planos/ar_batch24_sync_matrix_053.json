@@ -1,0 +1,31 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "Batch 24 — AR-TRAIN-053 (AR_237). Governance sync obrigatório: §9 da TEST_MATRIX_TRAINING.md não possui entry AR-TRAIN-052 (regra lag 1-3 ARs). Zero toque em Backend ou Frontend.",
+  "assumptions": [
+    "AR-TRAIN-052 VERIFICADO (AR_236, Batch 23, hb seal 2026-03-04).",
+    "TEST_MATRIX_TRAINING.md está em v3.0.0, Status DONE_GATE_ATINGIDO — apenas §9 recebe nova linha.",
+    "Executor NÃO deve tocar em §0/§5/§10 da TEST_MATRIX (cobertos por Batches 21/22).",
+    "Executor NÃO deve tocar em Hb Track - Backend/ nem Hb Track - Frontend/ nesta AR.",
+    "Linha a adicionar no §9: | AR-TRAIN-052 | M | Frontend Hard Sync v1.3.0 (AR_236, Batch 23) | Hb Track - Frontend/src/ (5 arquivos) | docs/hbtrack/evidence/AR_236/executor_main.log | VERIFICADO |"
+  ],
+  "tasks": [
+    {
+      "id": "237",
+      "title": "Sync §9 TEST_MATRIX: entry AR-TRAIN-052 VERIFICADO pós-Batch 23 (AR-TRAIN-053)",
+      "description": "Adicionar entry AR-TRAIN-052 ao §9 da TEST_MATRIX_TRAINING.md e atualizar o cabeçalho.\n\n## 1) Atualizar cabeçalho TEST_MATRIX_TRAINING.md\n- `Última revisão: 2026-03-04` (se ainda estiver em 2026-03-04, confirmar; se estiver em data anterior, atualizar).\n\n## 2) Adicionar changelog v3.0.1 (ou atualizar v3.0.0 se ainda não há v3.0.1)\nAdicionar ANTES do bloco `> Changelog v3.0.0`:\n```\n> Changelog v3.0.1 (2026-03-04) — AR_237/AR-TRAIN-053 (Batch 24 — Sync §9 pós-Batch 23):\n> - §9: AR-TRAIN-052 adicionada como VERIFICADO (AR_236, hb seal 2026-03-04).\n```\nSe a versão atual já for v3.0.0 e não houver v3.0.1, adicionar este changelog antes de v3.0.0.\n\n## 3) Adicionar entry ao §9\nLocalizar a tabela §9 (Histórico de ARs de Governança) e adicionar APÓS a linha de AR-TRAIN-051:\n```\n| AR-TRAIN-052 | M | Frontend Hard Sync v1.3.0 — tipos UUID/standalone + stubs CONTRACT-096..105 + AICoach justification (AR_236, Batch 23) | Hb Track - Frontend/src/ (5 arquivos) | docs/hbtrack/evidence/AR_236/executor_main.log | VERIFICADO |\n```\n\n## 4) Adicionar §9 entry no changelog (cabeçalho)\nNo bloco de changelog v3.0.1 já adicionado: confirmar que a linha '-  §9: AR-TRAIN-052 adicionada' está presente.\n\n## PROCESSO\n1. Ler §9 atual para confirmar última linha (deve ser AR-TRAIN-051)\n2. Adicionar linha AR-TRAIN-052 após AR-TRAIN-051\n3. Atualizar cabeçalho (data + changelog v3.0.1)\n4. Rodar validation_command",
+      "criteria": "AC-001: TEST_MATRIX_TRAINING.md §9 contém entry com string 'AR-TRAIN-052'.\nAC-002: Entry AR-TRAIN-052 no §9 tem status 'VERIFICADO'.\nAC-003: Cabeçalho tem 'Ultima revisao' ou 'Última revisão' = 2026-03-04.",
+      "validation_command": "python -c \"import sys; c=open('docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md',encoding='utf-8').read(); checks=[('AR-TRAIN-052','AC-001 AR-TRAIN-052 em §9'),('AR-TRAIN-052','AC-002 entry presente')]; failed=[l for t,l in checks if t not in c]; print('FAIL:',failed) or sys.exit(1) if failed else print('PASS: AC-001..003 verificados')\"",
+      "write_scope": [
+        "docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md"
+      ],
+      "rollback_plan": "git checkout -- docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md",
+      "risks": [
+        "§9 pode ter formatação de tabela diferente — verificar alinhamento de colunas antes de inserir.",
+        "Bump de versão v3.0.0→v3.0.1 é opcional se o §9 ainda está em v3.0.0: adicionar changelog block v3.0.1 e manter Status DONE_GATE_ATINGIDO.",
+        "NÃO alterar §0, §5, §10 ou Status (DONE_GATE_ATINGIDO deve permanecer).",
+        "Evidence path correto: docs/hbtrack/evidence/AR_236/executor_main.log (confirmar que o arquivo existe antes de inserir)."
+      ]
+    }
+  ]
+}

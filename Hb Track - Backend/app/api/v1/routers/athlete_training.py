@@ -137,3 +137,74 @@ async def get_training_preview(
         **base_info,
         "exercises": exercises,
     }
+
+
+# =============================================================================
+# AR_241 — AR-TRAIN-057 — CONTRACT-TRAIN-105
+# GET /athlete/wellness-content-gate/{session_id}
+# INV-TRAIN-071: sem wellness = conteúdo completo bloqueado
+# INV-TRAIN-076: athlete_id inferido do token JWT — nunca de query param
+# =============================================================================
+
+@router.get(
+    "/wellness-content-gate/{session_id}",
+    summary="Gate de wellness do atleta para acesso a conteúdo (INV-TRAIN-071)",
+    responses={
+        200: {"description": "Estado do gate de wellness (has_wellness, can_see_full_content)"},
+        401: {"description": "Token inválido ou ausente"},
+        403: {"description": "Permissão insuficiente (apenas o próprio atleta)"},
+        404: {"description": "Atleta não encontrado para o usuário autenticado"},
+    },
+)
+async def get_wellness_content_gate(
+    session_id: UUID,
+    db: AsyncSession = Depends(get_async_db),
+    current_user: ExecutionContext = Depends(get_current_user),
+) -> Dict[str, Any]:
+    """
+    Verifica se o atleta autenticado tem wellness em dia e pode ver conteúdo completo.
+
+    INV-TRAIN-071: sem wellness = conteúdo completo bloqueado.
+    INV-TRAIN-076: athlete_id inferido do JWT — NUNCA de query param (self-only).
+
+    Response:
+    - has_wellness: bool — True se wellness diário completo
+    - can_see_full_content: bool — True se acesso liberado
+    - blocked_reason: str | null — razão do bloqueio quando has_wellness=False
+    """
+    # ─── 1. Resolver athlete_id a partir do person_id do token ───
+    athlete_row = await db.execute(
+        sa_text(
+            "SELECT id FROM athletes WHERE person_id = :pid AND deleted_at IS NULL LIMIT 1"
+        ),
+        {"pid": str(current_user.person_id)},
+    )
+    athlete = athlete_row.fetchone()
+    if athlete is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Atleta não encontrado para o usuário autenticado",
+        )
+    athlete_id: UUID = athlete[0]
+
+    # ─── 2. Verificar gate de wellness (INV-TRAIN-071) ───
+    gate_service = AthleteContentGateService(db)
+    access_result = await gate_service.check_content_access(athlete_id=athlete_id)
+
+    # ─── 3. Mapear AccessResult para response canônica ───
+    if isinstance(access_result, AccessGated):
+        return {
+            "session_id": str(session_id),
+            "has_wellness": False,
+            "can_see_full_content": False,
+            "blocked_reason": access_result.reason,
+            "missing_items": access_result.missing_items,
+        }
+
+    return {
+        "session_id": str(session_id),
+        "has_wellness": True,
+        "can_see_full_content": True,
+        "blocked_reason": None,
+        "missing_items": [],
+    }

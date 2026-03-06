@@ -1,19 +1,38 @@
 # TRAINING_FRONT_BACK_CONTRACT.md — Contratos Front-Back do Módulo TRAINING
 
-Status: DRAFT  
-Versão: v1.3.0  
+Status: NORMATIVO_VIGENTE  
+Versão: v1.7.1  
 Tipo de Documento: SSOT Normativo — Front-Back Contract  
 Módulo: TRAINING  
-Fase: PRD v2.2 (2026-02-20) + AS-IS repo (2026-02-25) + DEC-TRAIN-* (2026-02-25) + FASE_3 (2026-02-27)  
+Fase: FASE_2 + FASE_3 REAL — implementação concluída (2026-03-04). Itens pós-DONE: ver TRAINING_ROADMAP.md §POST-DONE.  
 Autoridade: NORMATIVO_TECNICO  
-Última revisão: 2026-02-27  
+Última revisão: 2026-03-06  
 
-> Changelog v1.3.0 (2026-02-27):  
-> - §3.5: Default `visibility_mode` alterado de `org_wide` para `restricted` (INV-TRAIN-060, AMENDA EXB-ACL-001)  
-> - §5.11: Novos contratos FASE_3 — presença oficial, pending queue, wellness content gate, IA coach  
-> - Shapes: Adicionados `AthleteSessionPreview`, `PendingItem`  
-> - Gaps: GAP-CONTRACT-6 (presença/pending/wellness gate) e GAP-CONTRACT-7 (IA coach)  
-> - Novos contracts: CONTRACT-TRAIN-096..105  
+> Changelog v1.7.0 (2026-03-06):
+> - `CONTRACT_SYNC_FE` alinhado a `OPENAPI_SPEC_QUALITY` + `CONTRACT_DIFF_GATE`.
+> - Adicionadas regras `SPEC_VERSIONING` e `SPEC_FREEZE_RULE`.
+> - Formalizadas ferramentas oficiais: Redocly CLI, oasdiff e OpenAPI Generator.
+
+> Changelog v1.7.1 (2026-03-06):
+> - `SPEC_VERSIONING`: baseline padronizado para `contracts/openapi/baseline/openapi_baseline.json`.
+
+> Changelog v1.6.0 (2026-03-06):  
+> - Fluxo FE↔BE atualizado para OpenAPI Generator.  
+> - Dependências do Frontend alteradas de `src/lib/api/*` para `src/api/generated/*` como referência principal.  
+> - Authority Matrix expandida com `FE Generated` vs `FE Manual/Adapter`.  
+> - Nova regra normativa `CONTRACT_SYNC_FE`: mudou contrato → regenerar cliente FE.  
+> - Proibida edição manual de `Hb Track - Frontend/src/api/generated/*`.  
+
+> Changelog v1.5.0 (2026-03-05):  
+> - §6: título e intro corrigidos — exports e LGPD routers estão habilitados em `api.py` desde AR-TRAIN-008/009 (Batch 4). Divergência documental identificada em auditoria 2026-03-05.  
+> - CONTRACT-TRAIN-086..090: Status `BLOQUEADO` → `EVIDENCIADO` + operationIds reais adicionados.  
+> - CONTRACT-TRAIN-086: nota de divergência `DEC-TRAIN-004` adicionada (impl. retorna 503 vs normativo 202).  
+> - DEC-TRAIN-004: remoção da condição "quando forem habilitados" (já estão expostos).  
+
+> Changelog v1.4.0 (2026-03-04):  
+> - Status: DRAFT → NORMATIVO_VIGENTE (FASE_2 + FASE_3 REAL concluídas, DONE_TRAINING_ATINGIDO)  
+> - GAP-CONTRACT-6 e GAP-CONTRACT-7: marcados como RESOLVIDO (AR-TRAIN-017..021 + AR-TRAIN-055..058)  
+> - Training Suggestions (§8): explicitamente ROADMAP pós-DONE, não pendência bloqueante  
 
 > Changelog v1.2.0 (2026-02-26):  
 > - Adicionada Authority Matrix  
@@ -37,7 +56,9 @@ Dependências (leitura):
 - `Hb Track - Backend/docs/ssot/schema.sql`
 - `Hb Track - Backend/app/api/v1/api.py`
 - `Hb Track - Backend/app/api/v1/routers/*` (training, attendance, wellness, analytics, exports)
-- `Hb Track - Frontend/src/lib/api/*` (trainings, attendance, wellness, analytics, rankings)
+- `Hb Track - Frontend/src/api/generated/*` (cliente derivado via OpenAPI Generator)
+- `Hb Track - Frontend/src/api/generated/api-instance.ts`
+- `Hb Track - Frontend/src/lib/api/*` (**somente** se existir como adapter/composition layer; nunca como fonte de verdade do contrato)
 
 ---
 
@@ -50,7 +71,11 @@ Dependências (leitura):
 | Escrita de paridade (não-semântica) | **Executor** — pode corrigir paridade comprovada e não-semântica (operationId, path typo, tipo UUID/int documentado por evidência). **NÃO pode alterar comportamento normativo sob pretexto de paridade.** |
 | Somente leitura / divergência | **Testador** — registra divergência/evidência, não altera regra |
 | Proposta de alteração | Qualquer papel → via GAP ou DEC ao Arquiteto |
-| Precedência em conflito | DB > Services > OpenAPI > FE > PRD |
+| Precedência em conflito | DB > Services > OpenAPI > FE Generated > FE Manual/Adapter > PRD |
+| Cliente FE derivado | `Hb Track - Frontend/src/api/generated/*` é artefato **derivado** do `openapi.json` via OpenAPI Generator. **Não pode ser editado manualmente.** |
+| Integração FE | O Frontend DEVE preferir APIs, operationIds e tipos gerados em `src/api/generated/*`. Código em `src/lib/api/*` é subordinado ao cliente gerado e não define contrato. |
+| Sync obrigatório | Qualquer mudança que afete `CONTRACT-TRAIN-*`, path, operationId, request/response schema ou enum canônico exige regeneração do cliente FE. |
+| Ferramentas oficiais do pipeline | Redocly CLI (`OPENAPI_SPEC_QUALITY`) · oasdiff (`CONTRACT_DIFF_GATE`) · OpenAPI Generator (`GENERATED_CLIENT_SYNC`) · Schemathesis (`RUNTIME CONTRACT VALIDATION`) |
 
 ---
 
@@ -80,7 +105,14 @@ Definir o **contrato determinístico** entre Frontend e Backend do módulo **TRA
 - shapes mínimos de request/response (quando OpenAPI não tipa),
 - tipos canônicos (UUID vs int, datetime),
 - erros e regras (mapeadas para invariantes),
-- gaps de paridade FE↔BE e contrato↔schema.
+- gaps de paridade FE↔BE e contrato↔schema,
+- regra de materialização técnica do contrato no Frontend via `openapi.json` + OpenAPI Generator.
+
+Este documento também normatiza a ponte técnica FE↔BE:
+- o Backend materializa o contrato normativo em `openapi.json`,
+- o Frontend consome o contrato preferencialmente por `Hb Track - Frontend/src/api/generated/*`,
+- o código gerado é **derivado** e **não pode ser editado manualmente**,
+- integrações manuais em `src/lib/api/*` (quando existirem) são subordinadas ao cliente gerado.
 
 Este documento é **TO-BE**: quando houver divergência, a regra é **registrar como `DIVERGENTE_DO_SSOT`** e criar ARs para convergir.
 
@@ -92,10 +124,93 @@ Ordem de precedência para decisões de contrato:
 1. **DB schema/constraints/triggers**: `Hb Track - Backend/docs/ssot/schema.sql`
 2. **Models/Services** (regras de domínio)
 3. **OpenAPI SSOT**: `Hb Track - Backend/docs/ssot/openapi.json`
-4. **Frontend** (UX e integrações)
-5. **PRD/TRD** (referência)
+4. **Frontend Generated Client**: `Hb Track - Frontend/src/api/generated/*`
+5. **Frontend Manual / Adapter Layer**: `Hb Track - Frontend/src/lib/api/*` (quando existir)
+6. **PRD/TRD** (referência)
 
-Quando **OpenAPI** estiver incompleto (schema `{}`) ou divergente do DB, este contrato define o **shape mínimo normativo** e registra o gap.
+Regras:
+- O cliente em `src/api/generated/*` é **derivado** do `openapi.json` e não pode ser tratado como fonte normativa primária.
+- O código manual do Frontend (`src/lib/api/*`) não pode redefinir shapes, enums, operationIds ou paths já tipados no OpenAPI.
+- Quando **OpenAPI** estiver incompleto (schema `{}`) ou divergente do DB, este contrato define o **shape mínimo normativo** e registra o gap.
+- Quando o OpenAPI estiver completo e tipado, o Frontend DEVE preferir os tipos e APIs gerados.
+
+---
+
+### 2.1 CONTRACT_SYNC_FE (normativo)
+
+Sempre que houver mudança que afete qualquer um dos itens abaixo:
+- `CONTRACT-TRAIN-*`,
+- path HTTP,
+- `operationId`,
+- request schema,
+- response schema,
+- enum canônico,
+- tipo canônico (`uuid`, `datetime`, `date`, etc.),
+
+o fluxo obrigatório é:
+
+1. materializar a mudança no Backend real;
+2. regenerar `Hb Track - Backend/docs/ssot/openapi.json`;
+3. validar a spec com `OPENAPI_SPEC_QUALITY`;
+4. comparar a spec nova com a anterior via `CONTRACT_DIFF_GATE`;
+5. regenerar o cliente FE via OpenAPI Generator;
+6. sobrescrever `Hb Track - Frontend/src/api/generated/*`;
+7. migrar a(s) tela(s) impactada(s) para consumir o cliente gerado;
+8. validar runtime contract contra a API real;
+9. só então declarar paridade FE↔BE.
+
+Ferramentas oficiais:
+- `OPENAPI_SPEC_QUALITY` → Redocly CLI
+- `CONTRACT_DIFF_GATE` → oasdiff
+- `GENERATED_CLIENT_SYNC` → OpenAPI Generator
+- `RUNTIME CONTRACT VALIDATION` → Schemathesis
+
+Comando canônico de geração FE:
+```bash
+cd "C:\HB TRACK\Hb Track - Frontend" && npx @openapitools/openapi-generator-cli generate -i openapi.json -g typescript-axios -o ./src/api/generated
+```
+
+Regras:
+- É proibido editar manualmente arquivos dentro de `src/api/generated/*`.
+- Correção de paridade FE↔BE deve priorizar:
+  1. corrigir Backend / OpenAPI,
+  2. validar spec,
+  3. validar diff,
+  4. regenerar cliente,
+  5. ajustar FE.
+- `src/lib/api/*` pode compor/adaptar chamadas, mas não pode redefinir contrato normativo já tipado no OpenAPI.
+
+---
+
+### SPEC_VERSIONING (normativo)
+
+Objetivo:
+Garantir baseline canônica para comparação entre versões do contrato.
+
+Regra:
+Toda execução de `CONTRACT_DIFF_GATE` exige identificação explícita da spec anterior aceita.
+
+Path canônico:
+- `contracts/openapi/baseline/openapi_baseline.json`
+OU
+- estrutura equivalente definida pelo repositório para baseline de comparação
+
+Regras:
+- Não existe comparação de breaking change sem baseline anterior.
+- A spec anterior aceita deve ser preservada para comparação até a nova spec ser promovida.
+
+---
+
+### SPEC_FREEZE_RULE (normativo)
+
+Regra:
+Nenhuma mudança de código FE/BE que afete contrato pode ser considerada válida se `openapi.json` não estiver atualizado, validado e sincronizado com o cliente FE gerado quando aplicável.
+
+FAIL se:
+- backend alterar contrato sem atualizar `openapi.json`
+- frontend alterar consumo contratual sem `GENERATED_CLIENT_SYNC`
+- paridade FE↔BE for declarada com spec desatualizada
+- código mudar contrato sem `OPENAPI_SPEC_QUALITY` + `CONTRACT_DIFF_GATE`
 
 ---
 
@@ -151,6 +266,9 @@ Valores padrão que o sistema DEVE aplicar quando o campo não é informado no r
 
 > Nota: quando o OpenAPI já define schema tipado, ele permanece a referência.  
 > Quando o OpenAPI não tipa (schema `{}`), os shapes abaixo são **normativos mínimos**.
+
+Regra adicional:
+- Quando existir tipo/API correspondente em `Hb Track - Frontend/src/api/generated/*`, o FE DEVE consumir o shape gerado e não reescrever manualmente o mesmo contrato em código local.
 
 ### 4.1 Attendance (Presenças)
 
@@ -783,9 +901,10 @@ PendingItem:
 
 ---
 
-## 6) Contratos desabilitados no agregador (BLOQUEADO)
+## 6) Contratos de Export e LGPD (EVIDENCIADO)
 
-> Estes contratos existem como código, mas **não estão expostos** em `Hb Track - Backend/app/api/v1/api.py` e portanto **não aparecem** no `openapi.json` atual.
+> Estes contratos estão **expostos** em `Hb Track - Backend/app/api/v1/api.py` (habilitados via AR-TRAIN-008/009, Batch 4) e aparecem no `openapi.json`.  
+> Histórico: eram BLOQUEADO antes do Batch 4; a divergência documental foi corrigida em v1.5.0 (auditoria 2026-03-05).
 
 ### 6.1 Exports (Step 23)
 
@@ -795,15 +914,16 @@ Fonte: `Hb Track - Backend/app/api/v1/routers/exports.py`
 
 | ID | Método | Path | operationId | Status | Invariantes-chave |
 |---|---|---|---|---|---|
-| CONTRACT-TRAIN-086 | POST | `/analytics/export-pdf` | (não exposto no OpenAPI atual) | BLOQUEADO | INV-TRAIN-012 |
-| CONTRACT-TRAIN-087 | GET | `/analytics/exports/{job_id}` | (não exposto no OpenAPI atual) | BLOQUEADO | INV-TRAIN-012 |
-| CONTRACT-TRAIN-088 | GET | `/analytics/exports` | (não exposto no OpenAPI atual) | BLOQUEADO | INV-TRAIN-012 |
-| CONTRACT-TRAIN-089 | GET | `/analytics/export-rate-limit` | (não exposto no OpenAPI atual) | BLOQUEADO | INV-TRAIN-012 |
+| CONTRACT-TRAIN-086 | POST | `/analytics/export-pdf` | `request_analytics_pdf_export_api_v1_analytics_export_pdf_post` | EVIDENCIADO ⚠️ | INV-TRAIN-012 |
+| CONTRACT-TRAIN-087 | GET | `/analytics/exports/{job_id}` | `get_export_job_status_api_v1_analytics_exports__job_id__get` | EVIDENCIADO | INV-TRAIN-012 |
+| CONTRACT-TRAIN-088 | GET | `/analytics/exports` | `list_user_exports_api_v1_analytics_exports_get` | EVIDENCIADO | INV-TRAIN-012 |
+| CONTRACT-TRAIN-089 | GET | `/analytics/export-rate-limit` | `check_export_rate_limit_api_v1_analytics_export_rate_limit_get` | EVIDENCIADO | INV-TRAIN-012 |
 
 #### Estado Degradado sem Worker (DEC-TRAIN-004) — Normativo
 
-> **DEC-TRAIN-004:** Quando os contratos de export forem habilitados,
-> se o worker Celery/Redis não estiver disponível, o backend DEVE:
+> ⚠️ **DIVERGÊNCIA CONTRACT-TRAIN-086:** A implementação atual em `exports.py` retorna **503** quando o worker não está disponível (em vez de 202 conforme abaixo). Isso é DIVERGENTE_DO_SSOT. O normativo abaixo é o TO-BE canônico; AR necessária para convergir a implementação.
+
+> **DEC-TRAIN-004:** Se o worker Celery/Redis não estiver disponível, o backend DEVE:
 >
 > 1. Retornar **202 Accepted** com `{"status": "queued", "degraded": true, "message": "Export enfileirado, processamento pode estar lento"}`.
 > 2. O FE DEVE exibir estado degradado amigável (banner/toast) — não bloquear a UI.
@@ -820,49 +940,63 @@ Fonte: `Hb Track - Backend/app/api/v1/routers/athlete_export.py`
 
 | ID | Método | Path | operationId | Status | Invariantes-chave |
 |---|---|---|---|---|---|
-| CONTRACT-TRAIN-090 | GET | `/athletes/me/export-data?format=json|csv` | (não exposto no OpenAPI atual) | BLOQUEADO | INV-TRAIN-025 |
+| CONTRACT-TRAIN-090 | GET | `/athletes/me/export-data?format=json\|csv` | `export_athlete_data_api_v1_athletes_me_export_data_get` | EVIDENCIADO | INV-TRAIN-025 |
 
 ---
 
 ## 7) Divergências e Gaps (paridade)
 
+Regra operacional de convergência:
+- Para gaps FE↔BE em contratos já materializados no OpenAPI, a ordem de correção é:
+  1. corrigir Backend / OpenAPI;
+  2. regenerar `src/api/generated/*`;
+  3. ajustar a tela/adapter para consumir o cliente gerado.
+- Correção manual direta no FE, sem regeneração do cliente, só é aceitável quando o contrato ainda não estiver tipado no OpenAPI e o gap estiver explicitamente registrado neste documento.
+
 ### GAP-CONTRACT-1 — Wellness FE aponta para endpoints errados
 - FE chama `/wellness_pre` e `/wellness_post` sem prefixo `/wellness-pre|/wellness-post`.
 - Contrato normativo exige `CONTRACT-TRAIN-029..039`.
+- **RESOLVIDO** — AR-TRAIN-003/004 (AR_177/AR_178, Batch 2).
 
 ### GAP-CONTRACT-2 — Rankings wellness e TopPerformers usam tipos errados no FE
 - FE trata `team_id` como `number` e usa `parseInt` em rotas.
 - SSOT DB define `teams.id` como UUID.
+- **RESOLVIDO** — AR-TRAIN-006/007 (AR_180/AR_183, Batch 2).
 
 ### GAP-CONTRACT-3 — Alertas/Sugestões Step 18 com IDs `int` vs DB `uuid`
 - Endpoint exposto, mas incompatível com schema (team_id/alert_id/suggestion_id).
 - Deve ser tratado como **bloqueante** para qualquer UI que dependa dessas rotas.
+- **RESOLVIDO** — AR-TRAIN-001/002 (AR_126/AR_175, Batch 0).
 
 ### GAP-CONTRACT-4 — OpenAPI incompleto para rankings
 - Endpoints de rankings (`/analytics/wellness-rankings*`) não têm response_model, gerando schema `{}`.
 - Este documento define o shape mínimo normativo até o contrato ser tipado.
+- **RESOLVIDO** — AR-TRAIN-006 (AR_180, Batch 2): response_model adicionado.
 
 ### GAP-CONTRACT-5 — Exports/LGPD routers existem mas estão desabilitados
 - UI existe para export PDF, invariantes existem, mas as rotas não estão incluídas no agregador v1.
+- **RESOLVIDO** — AR-TRAIN-008/009 (AR_185/AR_186, Batch 4): routers reabilitados + estado degradado.
 
-### GAP-CONTRACT-6 — FASE_3: Presença oficial, pending queue, wellness content gate (v1.3.0)
-- Contratos CONTRACT-TRAIN-096..100, 105 definidos normativamente na §5.11 mas **não implementados**.
-- Nenhum endpoint existe ainda no backend — ARs AR-TRAIN-017/018/019 devem materializar.
-- Shapes `AthleteSessionPreview` e `PendingItem` são normativos mínimos, sem âncora no SSOT DB (tabelas ainda não criadas).
+### GAP-CONTRACT-6 — FASE_3: Presença oficial, pending queue, wellness content gate
+- Contratos CONTRACT-TRAIN-096..100, 105 definidos normativamente na §5.11.
+- **RESOLVIDO** — AR-TRAIN-017/018/019 (Batches 5, implementação funcional) + AR-TRAIN-055/057 (Batch 26, BE endpoints) + AR-TRAIN-058 (Batch 26, FE URLs). CONTRACT-TRAIN-097/098/099/100 cobertos por contract tests em AR-TRAIN-030.
 
-### GAP-CONTRACT-7 — FASE_3: IA Coach endpoints (v1.3.0)
-- Contratos CONTRACT-TRAIN-101..104 definidos normativamente na §5.11 mas **não implementados**.
-- Funcionalidade de IA está marcada como P2 — endpoints serão materializados por AR-TRAIN-021.
-- Shapes de request/response são provisórios — dependem da interface de LLM/agent escolhida.
+### GAP-CONTRACT-7 — FASE_3: IA Coach endpoints
+- Contratos CONTRACT-TRAIN-101..104 definidos normativamente na §5.11.
+- **RESOLVIDO** — AR-TRAIN-021 (implementação funcional) + AR-TRAIN-056 (Batch 26, BE apply-draft + justify-suggestion) + AR-TRAIN-052/058 (FE stubs e URLs). CONTRACT-TRAIN-101..104 cobertos em AR-TRAIN-039.
 
 ---
 
-## 8) Proposta fora do PRD — não normativa
+## 8) Proposta fora do PRD — ROADMAP pós-DONE (não bloqueante)
 
-### “Training Suggestions” (planejamento inteligente)
+> Itens desta seção são **candidatos a FASE_4 / UX Polish pós-DONE**.  
+> Nenhum deles é pendência que impeça `DONE_TRAINING_ATINGIDO`.  
+> Ver seção detalhada em [TRAINING_ROADMAP.md §POST-DONE](TRAINING_ROADMAP.md).
+
+### Training Suggestions (planejamento inteligente)
 
 Há um router em `Hb Track - Backend/app/api/v1/routers/training_suggestions.py`, e chamadas no FE (`/training-suggestions`), porém:
 - não está exposto no agregador v1 (não aparece no OpenAPI SSOT),
 - PRD marca recomendador de treinos como futuro.
 
-Portanto, **não** entra como contrato normativo do MCP TRAINING nesta fase.
+Classificação: **ROADMAP — Nova Capability**. Não entra como contrato normativo do MCP TRAINING nesta fase.

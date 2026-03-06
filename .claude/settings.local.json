@@ -35,7 +35,21 @@
       "Bash(python -m pytest tests/training/invariants/test_inv_train_148_exercise_bank_services.py::TestInvTrain148ExerciseBankServices::test_acl_003_cross_org_blocked tests/training/invariants/test_inv_train_148_exercise_bank_services.py::TestInvTrain148ExerciseBankServices::test_acl_006_duplicate_grant_blocked tests/training/invariants/test_inv_train_148_exercise_bank_services.py::TestInvTrain148ExerciseBankServices::test_acl_007_visibility_change_removes_acl -q --tb=long)",
       "Bash(python -m pytest tests/training/invariants/test_inv_train_148_exercise_bank_services.py::TestInvTrain148ExerciseBankServices::test_acl_003_cross_org_blocked tests/training/invariants/test_inv_train_148_exercise_bank_services.py::TestInvTrain148ExerciseBankServices::test_acl_006_duplicate_grant_blocked tests/training/invariants/test_inv_train_148_exercise_bank_services.py::TestInvTrain148ExerciseBankServices::test_acl_007_visibility_change_removes_acl -q --tb=short)",
       "Bash(python -m pytest tests/training/invariants/test_inv_train_011_deviation_rules.py tests/training/invariants/test_inv_train_148_exercise_bank_services.py::TestInvTrain148ExerciseBankServices::test_acl_007_visibility_change_removes_acl -q --tb=short)",
-      "Bash(python -m pytest tests/training/invariants/test_inv_train_148_exercise_bank_services.py::TestInvTrain148ExerciseBankServices::test_acl_007_visibility_change_removes_acl -q --tb=short)"
+      "Bash(python -m pytest tests/training/invariants/test_inv_train_148_exercise_bank_services.py::TestInvTrain148ExerciseBankServices::test_acl_007_visibility_change_removes_acl -q --tb=short)",
+      "Bash(python temp/_write_arquiteto_batch27.py)",
+      "Bash(python temp/_append_kanban_batches.py)",
+      "Bash(python scripts/run/hb_cli.py plan docs/_canon/planos/ar_batch29_plano_final_truth_suite_063_067.json --dry-run)",
+      "Bash(python scripts/run/hb_cli.py plan \"docs/_canon/planos/ar_batch29_plano_final_truth_suite_063_067.json\" --dry-run --skip-existing)",
+      "Bash(python scripts/gates/check_handoff_contract.py _reports/ARQUITETO.md)",
+      "Bash(python scripts/run/hb_cli.py plan docs/_canon/planos/ar_batch29_plano_final_truth_suite_063_067.json --dry-run --skip-existing)",
+      "Bash(python3 -c \"import sys; [print\\(l.rstrip\\(\\)\\) for l in sys.stdin if ''AR_24'' in l or ''AR_25'' in l]\")",
+      "Bash(ls \"c:\\\\HB TRACK\\\\docs\\\\hbtrack\\\\ars\\\\features\"\" | grep -E \"AR_24[89])",
+      "Bash(AR_251 \")",
+      "Bash(python -X:*)",
+      "Bash(python scripts/run/hb_cli.py plan \"docs/_canon/planos/ar_batch30_wellness_pre_fe_generated_client_068.json\" --dry-run)",
+      "Bash(python scripts/run/hb_cli.py plan \"docs/_canon/planos/ar_batch32_wellness_runtime_tests_sync_070_071.json\" --dry-run)",
+      "Bash(python -c \"import json; d=json.load\\(open\\(''c:/HB TRACK/scripts/run/hb_cli.py''.replace\\(''hb_cli.py'',''''\\) + ''../_policy/ar_contract.schema.json''\\)\\); print\\(json.dumps\\(d.get\\(''definitions'',d.get\\(''$defs'',{}\\)\\).get\\(''Task'',{}\\).get\\(''properties'',{}\\).get\\(''title'',{}\\), indent=2\\)\\)\")",
+      "Bash(python -c \"import json; d=json.load\\(open\\(''c:/HB TRACK/docs/_canon/contratos/ar_contract.schema.json''\\)\\); props=d.get\\(''properties'',{}\\); tasks=props.get\\(''tasks'',{}\\).get\\(''items'',{}\\).get\\(''properties'',{}\\); print\\(json.dumps\\(tasks.get\\(''title'',{}\\), indent=2\\)\\)\")"
     ]
   }
 }

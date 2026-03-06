@@ -11,31 +11,28 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import {
-  Moon,
-  Zap,
-  Brain,
-  Activity,
-  Target,
-  Clock,
-  Save,
-  AlertTriangle,
-  Lock,
-  TrendingUp,
-  Loader2,
-} from 'lucide-react';
-import { Slider, SliderGrid } from '@/components/ui/Slider';
+import type { WellnessPre, WellnessPreCreate } from '@/api/generated';
+import { wellnessApi } from '@/api/generated/api-instance';
 import { Button } from '@/components/ui/Button';
+import { Slider, SliderGrid } from '@/components/ui/Slider';
 import {
-  submitWellnessPre,
-  getMyWellnessPre,
   calculateDeadline,
   WELLNESS_PRE_PRESETS,
-  type WellnessPreInput,
-  type WellnessPre,
   type DeadlineInfo,
 } from '@/lib/api/wellness';
+import {
+  Activity,
+  AlertTriangle,
+  Brain,
+  Clock,
+  Loader2,
+  Lock,
+  Moon,
+  Save,
+  Target,
+  Zap
+} from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 import { WellnessHistoricalChart } from './WellnessHistoricalChart';
 
 interface WellnessPreFormProps {
@@ -47,6 +44,18 @@ interface WellnessPreFormProps {
   onSuccess?: (wellness: WellnessPre) => void;
   onRequestUnlock?: () => void;
 }
+
+// Local form state type — uses original field names (aligns with WELLNESS_PRE_PRESETS)
+// Mapped to WellnessPreCreate on API call: fatigue_pre→fatigue, stress_level→stress
+type WellnessPreFormState = {
+  sleep_hours: number;
+  sleep_quality: number;
+  fatigue_pre: number;       // maps to WellnessPreCreate.fatigue on submit
+  stress_level: number;      // maps to WellnessPreCreate.stress on submit
+  muscle_soreness: number;
+  readiness_score?: number;  // UI-only field (not in WellnessPreCreate schema)
+  notes?: string;
+};
 
 export function WellnessPreForm({
   sessionId,
@@ -64,7 +73,7 @@ export function WellnessPreForm({
   const [deadline, setDeadline] = useState<DeadlineInfo>(calculateDeadline(sessionAt));
   
   // Form values
-  const [values, setValues] = useState<WellnessPreInput>({
+  const [values, setValues] = useState<WellnessPreFormState>({
     sleep_hours: 7.0,
     sleep_quality: 3,
     fatigue_pre: 5,
@@ -79,17 +88,18 @@ export function WellnessPreForm({
     async function loadWellness() {
       try {
         setLoading(true);
-        const existing = await getMyWellnessPre(sessionId);
+        const { data: existingList } = await wellnessApi.listWellnessPreBySessionApiV1WellnessPreTrainingSessionsTrainingSessionIdWellnessPreGet(sessionId);
+        const existing = existingList[0] || null;
         if (existing) {
           setExistingWellness(existing);
           setValues({
             sleep_hours: existing.sleep_hours ?? 7.0,
-            sleep_quality: existing.sleep_quality,
-            fatigue_pre: existing.fatigue_pre,
-            stress_level: existing.stress_level,
-            muscle_soreness: existing.muscle_soreness,
-            readiness_score: existing.readiness_score,
+            sleep_quality: existing.sleep_quality ?? 3,
+            fatigue_pre: existing.fatigue ?? 5,      // generated uses 'fatigue'
+            stress_level: existing.stress ?? 4,      // generated uses 'stress'
+            muscle_soreness: existing.muscle_soreness ?? 4,
             notes: existing.notes || '',
+            readiness_score: 7, // not in API response, keep default
           });
         }
       } catch (err) {
@@ -135,10 +145,23 @@ export function WellnessPreForm({
       setSaving(true);
       setError(null);
       
-      const wellness = await submitWellnessPre(sessionId, values);
+      // Map form state fields to WellnessPreCreate schema names
+      // DEC-TRAIN-001: athlete_id/org_id/created_by_membership_id inferred by backend from JWT
+      const payload: Partial<WellnessPreCreate> = {
+        sleep_hours: values.sleep_hours,
+        sleep_quality: values.sleep_quality,
+        fatigue: values.fatigue_pre,     // fatigue_pre → fatigue (schema field name)
+        stress: values.stress_level,     // stress_level → stress (schema field name)
+        muscle_soreness: values.muscle_soreness,
+        notes: values.notes || undefined,
+      };
+      const { data } = await wellnessApi.addWellnessPreToSessionApiV1WellnessPreTrainingSessionsTrainingSessionIdWellnessPrePost(
+        sessionId,
+        payload as WellnessPreCreate
+      );
       
       if (onSuccess) {
-        onSuccess(wellness);
+        onSuccess(data);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao salvar wellness');

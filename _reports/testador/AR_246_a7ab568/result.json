@@ -1,0 +1,48 @@
+{
+  "ar_id": "246",
+  "validation_command": "python -c \"\nimport sys\nsys.stdout.reconfigure(encoding='utf-8')\nbacklog = open('docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md', encoding='utf-8').read()\ntm = open('docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md', encoding='utf-8').read()\nbp = open('docs/hbtrack/modulos/treinos/TRAINING_BATCH_PLAN_v1.md', encoding='utf-8').read()\nchecks = [\n    ('Versão: v2.9.0', backlog, 'AC-001 Backlog v2.9.0'),\n    ('AR-TRAIN-060', backlog, 'AC-002-pre AR-TRAIN-060 exists'),\n    ('AR-TRAIN-061', backlog, 'AC-003-pre AR-TRAIN-061 exists'),\n    ('AR-TRAIN-062', backlog, 'AC-004 AR-TRAIN-062 in backlog'),\n    ('Versão: v3.4.0', tm, 'AC-005 TEST_MATRIX v3.4.0'),\n    ('Batch 28', bp, 'AC-008 BatchPlan Batch28'),\n]\nfailed = [label for text, content, label in checks if text not in content]\nif 'AR-TRAIN-060 | G' in backlog and '| VERIFICADO |' in backlog.split('AR-TRAIN-060 | G')[1][:200]:\n    pass\nelse:\n    failed.append('AC-002 AR-TRAIN-060 VERIFICADO')\nif 'AR-TRAIN-061 | T' in backlog and '| VERIFICADO |' in backlog.split('AR-TRAIN-061 | T')[1][:200]:\n    pass\nelse:\n    failed.append('AC-003 AR-TRAIN-061 VERIFICADO')\nif 'AR-TRAIN-061 | T | Contract tests CONTRACT-074/075' in tm and 'VERIFICADO' in tm.split('AR-TRAIN-061 | T | Contract tests CONTRACT-074/075')[1][:200]:\n    pass\nelse:\n    failed.append('AC-006 TEST_MATRIX 061 VERIFICADO')\nif 'v1.6.0' in bp:\n    pass\nelse:\n    failed.append('AC-007 BatchPlan v1.6.0')\nif failed:\n    print('FAIL:', failed); sys.exit(1)\nprint('PASS: sync pós-Batch 27 OK')\n\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "c7950ee5238ba6845dd89c9bc183f2c44810fc6427b78bfd5cd97290aaad941f",
+      "hash": "c7950ee5238ba684",
+      "stdout_len": 0,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "c7950ee5238ba6845dd89c9bc183f2c44810fc6427b78bfd5cd97290aaad941f",
+      "hash": "c7950ee5238ba684",
+      "stdout_len": 0,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "c7950ee5238ba6845dd89c9bc183f2c44810fc6427b78bfd5cd97290aaad941f",
+      "hash": "c7950ee5238ba684",
+      "stdout_len": 0,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true,
+  "dod": {
+    "proof": "OK",
+    "trace": "OK",
+    "stitch": "OK",
+    "matrix": "N/A",
+    "warns": [],
+    "gate_errors": []
+  }
+}

@@ -239,3 +239,62 @@ async def list_drafts(
         drafts=[],
         total=0,
     )
+
+
+# =============================================================================
+# AR_240 — AR-TRAIN-056 — CONTRACT-TRAIN-102 e CONTRACT-TRAIN-104
+# PATCH /ai/coach/draft/{draft_id}/apply
+# POST  /ai/coach/justify-suggestion
+# =============================================================================
+
+
+class ApplyDraftRequest(BaseModel):
+    """Request para aplicar rascunho gerado pela IA (CONTRACT-TRAIN-102)."""
+    edits: Optional[Dict[str, Any]] = Field(default=None, description="Edições opcionais antes de aplicar")
+
+
+class JustifySuggestionRequest(BaseModel):
+    """Request para obter justificativa de sugestão (CONTRACT-TRAIN-104)."""
+    suggestion_id: str = Field(..., description="ID da sugestão a justificar")
+
+
+@router.patch(
+    "/coach/draft/{draft_id}/apply",
+    status_code=status.HTTP_200_OK,
+    summary="Aplicar rascunho IA aprovado pelo treinador (INV-TRAIN-080)",
+    description=(
+        "Treinador aplica rascunho gerado pela IA. "
+        "INV-TRAIN-080: draft DEVE ser aprovado antes de aplicar — chamar este endpoint implica aprovação. "
+        "Stub canônico: tabela de drafts pendente de migration futura."
+    ),
+)
+async def apply_draft(
+    draft_id: str,
+    body: ApplyDraftRequest,
+    current_user=Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """PATCH /ai/coach/draft/{draft_id}/apply"""
+    svc = AICoachService()
+    result = svc.apply_draft(draft_id=draft_id, edits=body.edits)
+    return result
+
+
+@router.post(
+    "/coach/justify-suggestion",
+    status_code=status.HTTP_200_OK,
+    summary="Obter justificativa de sugestão IA (INV-TRAIN-081)",
+    description=(
+        "Retorna justificativa obrigatória para sugestão do tipo 'recomendacao'. "
+        "INV-TRAIN-081: sugestão sem justificativa → label 'ideia_generica'."
+    ),
+)
+async def justify_suggestion(
+    body: JustifySuggestionRequest,
+    current_user=Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """POST /ai/coach/justify-suggestion"""
+    svc = AICoachService()
+    result = svc.justify_suggestion(suggestion_id=body.suggestion_id)
+    return result

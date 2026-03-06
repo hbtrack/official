@@ -230,6 +230,7 @@ async def add_wellness_post_to_session(
 )
 async def get_wellness_post_by_id(
     wellness_post_id: UUID,
+    current_user = Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     """
@@ -241,12 +242,28 @@ async def get_wellness_post_by_id(
     - 403 permission_denied: Permissão insuficiente.
     - 404 not_found: Wellness pós-treino não encontrado.
     """
-    # TODO: Buscar wellness pós no banco → 404 se não encontrar
-    # TODO: Verificar permissões R25/R26
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="Endpoint não implementado",
-    )
+    try:
+        service = WellnessPostService(db)
+
+        is_superadmin = bool(_ctx_get(current_user, "is_superadmin", False))
+        role_code = _ctx_get(current_user, "role_code")
+        user_role = 'coordinator' if is_superadmin else 'coach'
+        if role_code == "atleta":
+            user_role = 'athlete'
+
+        wellness = await service.get_wellness_post_by_id(
+            wellness_id=wellness_post_id,
+            user_id=_ctx_get(current_user, "user_id"),
+            user_role=user_role,
+        )
+        return wellness
+
+    except NotFoundError as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    except PermissionDeniedError as e:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
 @router.patch(
@@ -262,9 +279,10 @@ async def get_wellness_post_by_id(
         422: {"description": "Erro de validação"},
     },
 )
-def update_wellness_post(
+async def update_wellness_post(
     wellness_post_id: UUID,
     payload: WellnessPostUpdate,
+    current_user = Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     """
@@ -293,14 +311,30 @@ def update_wellness_post(
     - 409 season_locked: Temporada interrompida/encerrada.
     - 422 validation_error: Payload inválido.
     """
-    # TODO: Buscar wellness pós no banco → 404 se não encontrar
-    # TODO: Verificar permissões R25/R26
-    # TODO: Verificar janela de edição R40
-    # TODO: Verificar conflito de edição R41
-    # TODO: Verificar temporada RF5.2/R37
-    # TODO: Atualizar wellness pós
-    # NOTA: internal_load será recalculado pelo trigger do banco
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="Endpoint não implementado",
-    )
+    try:
+        service = WellnessPostService(db)
+
+        is_superadmin = bool(_ctx_get(current_user, "is_superadmin", False))
+        role_code = _ctx_get(current_user, "role_code")
+        user_role = 'coordinator' if is_superadmin else 'coach'
+        if role_code == "atleta":
+            user_role = 'athlete'
+
+        wellness = await service.update_wellness_post_by_id(
+            wellness_id=wellness_post_id,
+            data=payload.dict(exclude_none=True),
+            user_id=_ctx_get(current_user, "user_id"),
+            user_role=user_role,
+        )
+        await db.commit()
+        return wellness
+
+    except NotFoundError as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    except PermissionDeniedError as e:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(e))
+    except ValidationError as e:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
+    except Exception as e:
+        await db.rollback()
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))

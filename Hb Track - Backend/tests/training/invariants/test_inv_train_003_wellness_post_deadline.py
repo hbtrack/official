@@ -11,12 +11,10 @@ Evidência:
 """
 
 from datetime import datetime, timedelta, timezone
-from unittest.mock import AsyncMock, MagicMock
-from uuid import uuid4
 
 import pytest
-from pydantic import ValidationError
 
+from app.models.wellness_post import WellnessPost
 from app.services.wellness_post_service import WellnessPostService
 
 
@@ -26,16 +24,12 @@ class TestInvTrain003WellnessPostDeadline:
     @pytest.mark.asyncio
     async def test_check_edit_window_within_24h_returns_true(self):
         """Wellness criado há menos de 24h deve permitir edição."""
-        # Arrange
-        mock_db = AsyncMock()
-        service = WellnessPostService(mock_db)
-
-        # Wellness criado há 23 horas (dentro da janela)
-        mock_wellness = MagicMock()
-        mock_wellness.created_at = datetime.now(timezone.utc) - timedelta(hours=23)
+        # Arrange — _check_edit_window é puro: só lê wellness.created_at, sem DB
+        service = WellnessPostService(None)
+        wellness = WellnessPost(created_at=datetime.now(timezone.utc) - timedelta(hours=23))
 
         # Act
-        result = await service._check_edit_window(mock_wellness)
+        result = await service._check_edit_window(wellness)
 
         # Assert
         assert result is True, "Deve permitir edição quando NOW < created_at + 24h"
@@ -44,15 +38,11 @@ class TestInvTrain003WellnessPostDeadline:
     async def test_check_edit_window_past_24h_returns_false(self):
         """Wellness criado há mais de 24h deve bloquear edição."""
         # Arrange
-        mock_db = AsyncMock()
-        service = WellnessPostService(mock_db)
-
-        # Wellness criado há 25 horas (fora da janela)
-        mock_wellness = MagicMock()
-        mock_wellness.created_at = datetime.now(timezone.utc) - timedelta(hours=25)
+        service = WellnessPostService(None)
+        wellness = WellnessPost(created_at=datetime.now(timezone.utc) - timedelta(hours=25))
 
         # Act
-        result = await service._check_edit_window(mock_wellness)
+        result = await service._check_edit_window(wellness)
 
         # Assert
         assert result is False, "Deve bloquear edição quando NOW >= created_at + 24h"
@@ -61,15 +51,11 @@ class TestInvTrain003WellnessPostDeadline:
     async def test_check_edit_window_exactly_at_24h_returns_false(self):
         """Wellness exatamente em 24h deve bloquear (limite não inclusivo)."""
         # Arrange
-        mock_db = AsyncMock()
-        service = WellnessPostService(mock_db)
-
-        # Wellness criado exatamente há 24 horas (no limite)
-        mock_wellness = MagicMock()
-        mock_wellness.created_at = datetime.now(timezone.utc) - timedelta(hours=24)
+        service = WellnessPostService(None)
+        wellness = WellnessPost(created_at=datetime.now(timezone.utc) - timedelta(hours=24))
 
         # Act
-        result = await service._check_edit_window(mock_wellness)
+        result = await service._check_edit_window(wellness)
 
         # Assert
         # NOW < deadline significa que quando NOW == deadline, retorna False
@@ -79,15 +65,11 @@ class TestInvTrain003WellnessPostDeadline:
     async def test_check_edit_window_just_created_returns_true(self):
         """Wellness recém criado deve permitir edição."""
         # Arrange
-        mock_db = AsyncMock()
-        service = WellnessPostService(mock_db)
-
-        # Wellness criado agora
-        mock_wellness = MagicMock()
-        mock_wellness.created_at = datetime.now(timezone.utc)
+        service = WellnessPostService(None)
+        wellness = WellnessPost(created_at=datetime.now(timezone.utc))
 
         # Act
-        result = await service._check_edit_window(mock_wellness)
+        result = await service._check_edit_window(wellness)
 
         # Assert
         assert result is True, "Deve permitir edição para wellness recém criado"
@@ -96,15 +78,11 @@ class TestInvTrain003WellnessPostDeadline:
     async def test_check_edit_window_created_12h_ago_returns_true(self):
         """Wellness criado há 12h deve permitir edição (metade da janela)."""
         # Arrange
-        mock_db = AsyncMock()
-        service = WellnessPostService(mock_db)
-
-        # Wellness criado há 12 horas
-        mock_wellness = MagicMock()
-        mock_wellness.created_at = datetime.now(timezone.utc) - timedelta(hours=12)
+        service = WellnessPostService(None)
+        wellness = WellnessPost(created_at=datetime.now(timezone.utc) - timedelta(hours=12))
 
         # Act
-        result = await service._check_edit_window(mock_wellness)
+        result = await service._check_edit_window(wellness)
 
         # Assert
         assert result is True, "Deve permitir edição quando criado há 12h (metade da janela)"

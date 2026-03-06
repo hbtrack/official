@@ -1,0 +1,120 @@
+{
+  "project": "HB Track",
+  "version": "1.2.0",
+  "notes": "Batch 29 — Materialização do PLANO_FINAL.md (pós-TRUTH SUITE). Objetivo: zerar XFAILs, desbloquear 4 SKIPs, converter 9 arquivos LEGACY_INVALID para TRUTH, e declarar módulo TRAINING com TRUTH SUITE = 0 failed, 0 xfailed. Baseline de referência: 610p/4s/1xf/0f (VPS hb_track, 2026-05-25). Autoridade: docs/hbtrack/modulos/treinos/PLANO_FINAL.md + DONE_GATE_TRAINING.md RH-07/08/09 + AR_BACKLOG_TRAINING.md v3.2.0 (RESPOSTA A FALHA DE TRUTH TEST). Pré-condição: AR-TRAIN-062 VERIFICADO (AR_246, Batch 28). REPLAN-3 (2026-03-05): corrigidos tail-20 e UnicodeEncodeError (P1+P2 Windows) em AR_248, AR_249, AR_251. AR_250 nao alterada (rg e Windows-compatible). Versao bump 1.2.0 -> 1.3.0. REPLAN-4 (2026-03-05): fix cmd.exe compat — hb_cli.py usa subprocess.run(shell=True) que invoca cmd.exe/c, NAO PowerShell. Substituido $env:PYTHONUTF8='1'; por 'set PYTHONUTF8=1 &&' e ';' separadores por '&&' em AR_248, AR_249, AR_251. Tambem adicionados PROOF/TRACE na AR_248.md (gate DOC/STITCH). REPLAN-5 (2026-03-05): fix definitivo Unicode — set PYTHONUTF8=1 && causava \"Fatal Python error: environment variable PYTHONUTF8 must be '1' or '0'\" por espaço à direita antes do &&. Fix: python -X utf8 flag direta em AR_248, AR_249, AR_251. AR_250 nao alterada (rg Windows-compatible).",
+  "assumptions": [
+    "Baseline TRUTH VPS 2026-05-25: 610p/4s/1xf/0f (2 rodadas idênticas, VPS hb_track PG15).",
+    "1 XFAIL real: test_inv_train_148 (user.organization_id not a column) — bug em service que acessa atributo inexistente no modelo User.",
+    "4 SKIP: test_inv_train_058 (2 tests) + test_inv_train_059 (2 tests) — skip por dependência de infra ou comportamento não implementado.",
+    "9 arquivos com violação RH-09 NO_MOCKS_GLOBAL: test_003, 004, 005, 018, 022, 023, 027, 071, 078 -- mocks/MagicMock/monkeypatch presentes.",
+    "Correção de produto obrigatória: nunca alterar teste para simular comportamento (PLANO_FINAL.md Fase 3.3 + AR_BACKLOG_TRAINING.md RESPOSTA A FALHA).",
+    "Correção de app/ é permitida nas tarefas de produto (002 write_scope inclui app/).",
+    "Todos os testes TRUTH devem rodar contra VPS hb_track (PG15, porta 5432) usando TRUTH command canônico.",
+    "TRUTH command: python scripts/db/reset_hb_track_test.py && cd 'Hb Track - Backend' && pytest -q tests/training/",
+    "AR_247..AR_251 são os IDs numericos do lote (proximo apos AR_246).",
+    "AR-TRAIN-063..067 são os IDs de backlog — todos adicionados ao AR_BACKLOG_TRAINING.md por esta task ou pelo Executor.",
+    "REGRA WINDOWS (cmd.exe): hb_cli.py usa subprocess.run(shell=True) que invoca cmd.exe/c, NAO PowerShell. Proibido: $env:VAR=, ; como separador, grep/tail/head/sed/awk/find Unix. Para Unicode: 'set PYTHONUTF8=1 &&'. Para filtrar output de pytest usar python -c inline. Separador de comandos: '&&' (cmd.exe e PowerShell). REPLAN-4 aplica esta regra em AR_248, AR_249, AR_251."
+  ],
+  "tasks": [
+    {
+      "id": "247",
+      "title": "AR_247 | AR-TRAIN-063 | Fase 0+1: TRUTH SUITE dupla + triage 4 buckets",
+      "description": "PLANO_FINAL.md Fase 0 + Fase 1. Executar TRUTH command duas vezes consecutivas contra VPS hb_track e verificar idempotência (mesmo contagem de resultados nas 2 rodadas). Após confirmar estabilidade, classificar todos os FAILs/XFAILs/SKIPs encontrados em 4 buckets: A=Infra/DB/Seed, B=Contrato/Endpoint, C=Regra/Invariante, D=UI/E2E. Registrar triage em _reports/EXECUTOR.md e evidence pack em docs/hbtrack/evidence/AR_247/. SSOT de referência: DONE_GATE_TRAINING.md §RH-08 (TRUTH_SUITE + idempotencia). DoD da Fase 0: mesma contagem de FAIL e mesmos primeiros erros nas 2 rodadas. DoD da Fase 1: tabela de triage com todos os itens classificados. Esta AR é classe T/G (triage documental + execucao de suite). Nao toca em codigo de producao. Escopo esperado do baseline: 610p/4s/1xf/0f — se divergir, reportar divergencia antes de prosseguir.",
+      "criteria": "AC-001: TRUTH command executado 2x consecutivas e ambas retornam exatamente o mesmo resumo (NNNp/Xs/Yxf/Zf). AC-002: Tabela de triage com colunas (Arquivo, Tipo, Bucket) listando todos os itens nao-PASS. AC-003: evidence pack em docs/hbtrack/evidence/AR_247/ com saida completa de ambas as rodadas.",
+      "gate": "TRUTH_SUITE_IDEMPOTENCIA",
+      "validation_command": "cd \"Hb Track - Backend\" && python -m pytest tests/training/ -x --tb=no -q 2>&1 | python -c \"import sys; [print(l.rstrip()) for l in sys.stdin if ('passed' in l or 'failed' in l or 'error' in l) and 'warnings' not in l]\"",
+      "write_scope": [
+        "docs/hbtrack/evidence/AR_247/"
+      ],
+      "notes": "Classe: T/G. Fase: PLANO_FINAL Fase 0+1. Dependencia: AR-TRAIN-062 VERIFICADO. Se resultado divergir do baseline 610p/4s/1xf/0f, reportar antes de prosseguir — pode indicar regressao ou schema drift. Nao corrigir produto nesta tarefa: apenas observar e classificar.",
+      "risks": [
+        "Resultado pode diferir do baseline 2026-05-25 se houve mudancas de codigo entre batches — reportar antes de prosseguir.",
+        "Se FAIL count > 0 alem dos 4 skips e 1 xfail conhecidos, parar e escalar para o Arquiteto.",
+        "Nao contar XFAIL e SKIP como FAIL — verificar sumario exato do pytest."
+      ]
+    },
+    {
+      "id": "248",
+      "title": "AR_248 | AR-TRAIN-064 | Fix user.organization_id not a column (unblock xfail INV-148)",
+      "description": "PLANO_FINAL.md Fase 2.2 + Fase 3. Bucket B (Contrato/Endpoint) — o servico acessa user.organization_id que nao existe como coluna no modelo User. Correto enforcement point: app/services/exercise_acl_service.py (metodo _validate_same_org). O fix deve adicionar organizacao do usuario via org_membership (relacao ORM real) em vez de atributo direto inexistente. Procedimento (Fase 3): (1) Reproduzir isolado: reset + pytest -q tests/training/invariants/test_inv_train_148_exercise_bank_services.py. (2) Identificar enforcement point: exercise_acl_service.py metodo _validate_same_org. (3) Corrigir o produto (nunca o teste): substituir acesso a user.organization_id por query ou relacao ORM real de org_membership. (4) Reexecutar isolado ate PASS. (5) Reexecutar TRUTH SUITE completa. DoD: test_inv_train_148 converte de xfail para PASS na TRUTH SUITE. Dependencia: AR_247 concluido (triage confirmado). SSOT: INVARIANTS_TRAINING.md (INV-EXB-ACL-002..007), exercise_acl_service.py.",
+      "criteria": "AC-001: pytest test_inv_train_148_exercise_bank_services.py retorna PASS (sem xfail marker ativo). AC-002: TRUTH SUITE completa retorna 0 xfailed para este arquivo. AC-003: Nenhum mock/MagicMock introduzido no codigo de producao ou de teste. AC-004: rg RH-09a retorna 0 matches em tests/training/invariants/test_inv_train_148*. AC-005: openapi.json nao foi modificado (fix e apenas de service layer).",
+      "gate": "TRUTH_SUITE_XFAIL_ELIMINADO",
+      "validation_command": "python -X utf8 scripts/db/reset_hb_track_test.py && cd \"Hb Track - Backend\" && python -m pytest -q tests/training/invariants/test_inv_train_148_exercise_bank_services.py -v 2>&1 | python -c \"import sys; lines=sys.stdin.readlines(); [print(l.rstrip()) for l in lines[-30:] if any(w in l for w in ['PASSED','FAILED','ERROR','xfailed','xpassed','passed','failed','error','XFAIL','XPASS']) and 'warnings' not in l] or [print(lines[-1].rstrip())]\"",
+      "write_scope": [
+        "Hb Track - Backend/app/services/exercise_acl_service.py"
+      ],
+      "notes": "Classe: B (Regra de Dominio/Service). Fase: PLANO_FINAL Fase 2.2 + 3. Enforcement point: exercise_acl_service.py metodo _validate_same_org. O modelo User nao tem coluna organization_id — o servico deve recuperar org do usuario via ORM (org_membership ou similar). NAO alterar o teste para contornar — corrigir o service. Apos fix, o xfail marker no teste deve ser removido ou o teste deve converter para PASS organicamente. REPLAN-3: prefixo $env:PYTHONUTF8 corrige UnicodeEncodeError (P1); python -c inline substitui tail -20 (P2 Windows-compat). REPLAN-4: substituido $env:PYTHONUTF8='1'; por 'set PYTHONUTF8=1 &&' e ';' separadores por '&&' (P3 cmd.exe compat — subprocess.run(shell=True) invoca cmd.exe, nao PowerShell). PROOF/TRACE adicionados na AR_248.md. REPLAN-5 (2026-03-05): substituido set PYTHONUTF8=1 && por python -X utf8 (fix espaço à direita antes do && que causava Fatal Python error).",
+      "risks": [
+        "Fix pode afetar outros metodos do exercise_acl_service que tambem acessam organization_id — verificar todos os usos.",
+        "Mudanca no service pode quebrar outros testes que dependem de _validate_same_org — rodar TRUTH SUITE completa apos fix.",
+        "Nao usar MagicMock ou monkeypatch no service — apenas ORM real."
+      ]
+    },
+    {
+      "id": "249",
+      "title": "AR_249 | AR-TRAIN-065 | Bucket C: Fix 4 SKIP em test_inv_train_058 e test_inv_train_059",
+      "description": "PLANO_FINAL.md Fase 2.3 + Fase 3. Bucket C (Regra/Invariante) — 4 testes marcados como skip em test_inv_train_058_session_structure_mutable.py (INV-TRAIN-058: sessao standalone mutavel) e test_inv_train_059_exercise_order_contiguous.py (INV-TRAIN-059: order_index contiguos). Procedimento: (1) Reproduzir cada teste isolado: reset + pytest -q tests/training/invariants/test_inv_train_058* e test_inv_train_059*. (2) Identificar motivo do skip (ausencia de feature, dependencia nao satisfeita, ou comportamento nao implementado). (3) Corrigir o produto no enforcement point correto (router/service/schema) para satisfazer o comportamento esperado pela invariante. (4) Remover o skip marker ou verificar que o teste passe organicamente. (5) Reexecutar TRUTH SUITE completa. DoD: 4 tests convertidos de skip para PASS na TRUTH SUITE. INV-TRAIN-058: sessao standalone pode ter estrutura editada (mutavel). INV-TRAIN-059: order_index de exercicios deve ser contiguos sem gaps. SSOT: INVARIANTS_TRAINING.md INV-TRAIN-058/059.",
+      "criteria": "AC-001: pytest test_inv_train_058* retorna PASS (ambos os testes, sem skip marker). AC-002: pytest test_inv_train_059* retorna PASS (ambos os testes, sem skip marker). AC-003: TRUTH SUITE completa retorna 0 skipped para esses 2 arquivos. AC-004: Nenhum mock introduzido no codigo de producao ou teste. AC-005: Corrrecao feita no produto (service/router/schema), nunca no teste.",
+      "gate": "TRUTH_SUITE_SKIP_ELIMINADO",
+      "validation_command": "python -X utf8 scripts/db/reset_hb_track_test.py && cd \"Hb Track - Backend\" && python -m pytest -q tests/training/invariants/test_inv_train_058_session_structure_mutable.py tests/training/invariants/test_inv_train_059_exercise_order_contiguous.py -v 2>&1 | python -c \"import sys; lines=sys.stdin.readlines(); [print(l.rstrip()) for l in lines[-30:] if any(w in l for w in ['PASSED','FAILED','ERROR','xfailed','xpassed','passed','failed','error','XFAIL','XPASS','skipped']) and 'warnings' not in l] or [print(lines[-1].rstrip())]\"",
+      "write_scope": [
+        "Hb Track - Backend/app/services/session_exercise_service.py",
+        "Hb Track - Backend/app/api/v1/routers/training_sessions.py",
+        "Hb Track - Backend/app/api/v1/routers/athlete_training.py"
+      ],
+      "notes": "Classe: B/E (Regra de Dominio/Service + Contrato). Fase: PLANO_FINAL Fase 2.3 + 3. Enforcement point a determinar apos leitura dos testes: pode ser session_exercise_service.py (order_index logic) ou training_sessions router. Verificar INVARIANTS_TRAINING.md para ACs de INV-TRAIN-058/059 antes de corrigir. Dependencia: AR_248 concluido (TRUTH baseline estabilizado). REPLAN-3: prefixo $env:PYTHONUTF8 + python -c substitui tail -20 (Windows-compat). REPLAN-4: substituido $env:PYTHONUTF8='1'; por 'set PYTHONUTF8=1 &&' e ';' separadores por '&&' (P3 cmd.exe compat). REPLAN-5 (2026-03-05): substituido set PYTHONUTF8=1 && por python -X utf8 (fix espaço à direita antes do && que causava Fatal Python error).",
+      "risks": [
+        "Motivo do skip pode indicar feature nao implementada no produto — se for case assim, escalar ao Arquiteto antes de implementar.",
+        "order_index contiguo pode requerer logica de renumeracao que afeta performance — verificar volume esperado.",
+        "Fix pode afetar contratos existentes de CONTRACT-TRAIN-* — verificar openapi.json antes e depois."
+      ]
+    },
+    {
+      "id": "250",
+      "title": "AR_250 | AR-TRAIN-066 | Fase 4: Converter 9 LEGACY_INVALID (mocks) para TRUTH",
+      "description": "PLANO_FINAL.md Fase 4 — Converter LEGACY_INVALID em TRUTH. Os 9 arquivos abaixo violam RH-09 NO_MOCKS_GLOBAL (usam MagicMock/monkeypatch/patch/AsyncMock): test_003 (wellness_post_deadline), test_004 (edit_window_time), test_005 (immutability_60_days), test_018 (training_session_microcycle_status), test_022 (wellness_post_cache_invalidation), test_023 (wellness_post_overload_alert_trigger), test_027 (refresh_training_rankings_task), test_071 (content_gate), test_078 (progress_gate). Procedimento por arquivo (Fase 4.2): substituir MagicMock de dominio por factories de objetos reais + persistencia real no hb_track. Cada correcao deve: (1) Remover imports de unittest.mock/MagicMock/AsyncMock/monkeypatch. (2) Substituir por factories ou fixtures reais usando async_db. (3) Executar o arquivo isolado com TRUTH command. (4) Confirmar PASS. DoD: rg RH-09a e RH-09b retornam 0 matches em todos os 9 arquivos. TRUTH SUITE completa = 0 xfailed, 0 skipped, >= 610 passed, 0 failed. NAO criar novos testes — apenas reescrever os existentes sem mocks.",
+      "criteria": "AC-001: rg -n 'unittest.mock|mocker.|monkeypatch|MagicMock|Mock|patch(' Hb Track - Backend/tests/training/ retorna exit 1 (0 matches) apos correcao. AC-002: rg RH-09b retorna exit 1 (0 matches). AC-003: TRUTH SUITE completa: 0 failed, 0 xfailed, 0 skipped para os 9 arquivos. AC-004: Nenhum novo mock introduzido (os testes corrigidos devem usar async_db real). AC-005: Contagem total TRUTH >= 610 passed (nao pode haver regressao).",
+      "gate": "NO_MOCKS_GLOBAL_PASS",
+      "validation_command": "rg -n \"unittest\\.mock|\\bmocker\\.|monkeypatch\\b|\\bMagicMock\\b|\\bMock\\b|patch\\(\" \"Hb Track - Backend/tests/training/\" && echo FAIL_RH09A || echo PASS_RH09A",
+      "write_scope": [
+        "Hb Track - Backend/tests/training/invariants/test_inv_train_003_wellness_post_deadline.py",
+        "Hb Track - Backend/tests/training/invariants/test_inv_train_004_edit_window_time.py",
+        "Hb Track - Backend/tests/training/invariants/test_inv_train_005_immutability_60_days.py",
+        "Hb Track - Backend/tests/training/invariants/test_inv_train_018_training_session_microcycle_status.py",
+        "Hb Track - Backend/tests/training/invariants/test_inv_train_022_wellness_post_cache_invalidation.py",
+        "Hb Track - Backend/tests/training/invariants/test_inv_train_023_wellness_post_overload_alert_trigger.py",
+        "Hb Track - Backend/tests/training/invariants/test_inv_train_027_refresh_training_rankings_task.py",
+        "Hb Track - Backend/tests/training/invariants/test_inv_train_071_content_gate.py",
+        "Hb Track - Backend/tests/training/invariants/test_inv_train_078_progress_gate.py"
+      ],
+      "notes": "Classe: T (Testes). Fase: PLANO_FINAL Fase 4. Prioridade de conversao: primeiro converter os LEGACY_INVALID que cobrem P0 e invariantes bloqueantes (test_003/004/005 = janela de edicao/imutabilidade; test_018 = status microciclo; test_022/023 = wellness alerts). O write_scope inclui somente os 9 arquivos de teste — nenhum arquivo de producao deve ser alterado nesta AR (se o produto precisar de correcao para viabilizar o teste TRUTH, abrir nova AR separada). Estrategia tipica: substituir MagicMock de dominio por objetos reais inseridos via async_db; para Celery tasks, usar CELERY_TASK_ALWAYS_EAGER=True em settings de teste (configuracao deterministica real, nao patch). REPLAN-3: validation_command NAO alterado — rg e Windows-compatible (Python package ripgrep ou rg.exe). Se rg nao disponivel no PATH do Executor Windows, substituir por: python -c \"import subprocess,sys; r=subprocess.run(['python','-m','rg',...],capture_output=True)\" ou usar python -m grep equivalente.",
+      "risks": [
+        "Testes que usam MagicMock para simular DB podem depender de comportamento de produto nao implementado — se o produto nao suportar o teste real, abre nova AR de produto (Bucket B/C) antes desta.",
+        "Celery tasks (test_027) em modo eager podem ter comportamento diferente de producao — verificar CELERY_TASK_ALWAYS_EAGER_PROPAGATES.",
+        "test_022 (cache invalidation) pode depender de Redis real — confirmar se Redis esta disponivel no ambiente de teste VPS.",
+        "Conversao de todos os 9 pode ser grande — se alguns falharem por dependencia de produto, marcar como xfail(strict=True, reason=LEGACY_INVALID) e abrir AR separada de produto.",
+        "Se rg nao estiver no PATH Windows do Executor, reportar ao Arquiteto — validacao alternativa via python -c pode ser necessaria."
+      ]
+    },
+    {
+      "id": "251",
+      "title": "AR_251 | AR-TRAIN-067 | Sync documental pos-Batch 29: Backlog + TEST_MATRIX + BatchPlan",
+      "description": "Governanca pos-Batch 29. Sincroniza todos os documentos SSOTs refletindo o estado pos-Batch 29: (1) AR_BACKLOG_TRAINING.md: adicionar AR-TRAIN-063..067 com status VERIFICADO + bump versao v3.2.0 -> v3.3.0. (2) TEST_MATRIX_TRAINING.md: atualizar §9 com entries AR-TRAIN-063..067 + §0 com novo baseline TRUTH SUITE (0 xfailed, 0 skipped apos fix) + bump versao v3.6.0 -> v3.7.0. (3) TRAINING_BATCH_PLAN_v1.md: adicionar Batch 29 section + bump versao v1.6.0 -> v1.7.0. (4) DONE_GATE_TRAINING.md: atualizar RH-08 baseline para refletir novo resultado TRUTH (ex.: 614p/0s/0xf/0f) se diferente do baseline anterior 610p/4s/1xf/0f. (5) docs/hbtrack/Hb Track Kanban.md: adicionar secao '## 46. Cards -- TRAINING Batch 29' com status SEALED. Dependencia: AR_250 concluido (TRUTH SUITE = 0 failed, 0 xfailed).",
+      "criteria": "AC-001: AR_BACKLOG_TRAINING.md versao >= v3.3.0 com AR-TRAIN-063..067 VERIFICADO. AC-002: TEST_MATRIX_TRAINING.md versao >= v3.7.0 com §9 entries para as 5 ARs do batch. AC-003: TRAINING_BATCH_PLAN_v1.md versao >= v1.7.0 com secao Batch 29. AC-004: DONE_GATE_TRAINING.md RH-08 baseline atualizado para refletir resultado pós-Batch 29. AC-005: Kanban com secao Batch 29 SEALED.",
+      "gate": "DOCS_CANON_CHECK",
+      "validation_command": "python -X utf8 scripts/run/hb_cli.py verify 2>&1 | python -c \"import sys; lines=sys.stdin.readlines(); [print(l.rstrip()) for l in lines[-15:]]\"",
+      "write_scope": [
+        "docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md",
+        "docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md",
+        "docs/hbtrack/modulos/treinos/TRAINING_BATCH_PLAN_v1.md",
+        "docs/hbtrack/modulos/treinos/DONE_GATE_TRAINING.md",
+        "docs/hbtrack/Hb Track Kanban.md"
+      ],
+      "notes": "Classe: G (Governanca/Sync documental). Nao conta para DONE_FASE_3_REAL_ATINGIDO (ja atingido). Atualizacao de versao de docs: AR_BACKLOG v3.2.0->v3.3.0, TEST_MATRIX v3.6.0->v3.7.0, BatchPlan v1.6.0->v1.7.0. Se o novo baseline TRUTH divergir do esperado, documentar a nova linha de referencia em RH-08 de DONE_GATE_TRAINING.md. REPLAN-3: prefixo $env:PYTHONUTF8 + python -c substitui tail -10 (Windows-compat). REPLAN-4: substituido $env:PYTHONUTF8='1'; por 'set PYTHONUTF8=1 &&' e ';' separador por '&&' (P3 cmd.exe compat). REPLAN-5 (2026-03-05): substituido set PYTHONUTF8=1 && por python -X utf8 (fix espaço à direita antes do && que causava Fatal Python error).",
+      "risks": [
+        "TRAINING_BATCH_PLAN_v1.md tem caracteres unicode — editar via script Python (io.open encoding=utf-8) conforme licao aprendida registrada na memoria do agente.",
+        "Se a versao atual do TEST_MATRIX nao for v3.6.0, verificar o changelog atual antes de bumpar para v3.7.0."
+      ]
+    }
+  ]
+}

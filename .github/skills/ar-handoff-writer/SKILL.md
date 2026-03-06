@@ -1,12 +1,12 @@
 ---
 name: ar-handoff-writer
-description: Escreve _reports/ARQUITETO.md no formato canônico HB Track (PLAN_HANDOFF), incluindo tabela de planos, ordem e diagnóstico por AR.
+description: Escreve _reports/ARQUITETO.yaml no formato canônico HB Track (PLAN_HANDOFF), incluindo tabela de planos, ordem e diagnóstico por AR.
 ---
 
 # Skill — Arquiteto: Handoff Writer (PLAN_HANDOFF)
 
 Objetivo
-- Preencher `_reports/ARQUITETO.md` no seu layout real:
+- Preencher `_reports/ARQUITETO.yaml` no seu layout real:
   - cabeçalho (protocolo/branch/head/data/status)
   - tabela “Planos Materializados”
   - “Ordem de execução”
@@ -18,7 +18,7 @@ Inputs mínimos
 - Estado Kanban (Batch alvo e status)
 
 Template obrigatório (estrutura)
-1) Título: `# ARQUITETO.md — Handoff para Executor`
+1) Título: `# ARQUITETO.yaml — Handoff para Executor`
 2) Metadados: Protocolo / Branch / HEAD / Data / Status = PLAN_HANDOFF
 3) Contexto
 - Ex.: “Batch 1 concluído ✅ … gen_docs_ssot.py rodado …”
@@ -38,4 +38,4 @@ Regras
 - Se divergência entre Batch Plan/Backlog/Kanban -> BLOCKED_INPUT (exit 4) e registrar.
 
 Saída
-- Sobrescrever `_reports/ARQUITETO.md` com o conteúdo final.
+- Sobrescrever `_reports/ARQUITETO.yaml` com o conteúdo final.

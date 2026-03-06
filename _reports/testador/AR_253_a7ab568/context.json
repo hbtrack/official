@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_253-a7ab568",
+  "timestamp_utc": "2026-03-06T10:45:28.119003+00:00",
+  "git": {
+    "commit": "a7ab568714918f4a7d148bde178a2c5f1bb88e98"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "253",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_253_ar-train-069_-_implementar_endpoints_get_patch_wel.md"
+}

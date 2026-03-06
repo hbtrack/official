@@ -1,7 +1,7 @@
 # TEST_MATRIX_TRAINING.md — Matriz de Verificação e Rastreabilidade do Módulo TRAINING
 
 Status: DONE_GATE_ATINGIDO
-Versão: v3.0.0
+Versão: v4.2.0
 Tipo de Documento: Verification & Traceability Matrix (Normativo Operacional / SSOT)
 Módulo: TRAINING
 Fase: FASE_2 (PRD v2.2 — 2026-02-20) + AS-IS repo (2026-02-25) + DEC-TRAIN-* (2026-02-25) + FASE_3 (2026-02-27)
@@ -11,9 +11,77 @@ Owners:
 - Auditoria/Testes: (a definir)
 - Backend/Frontend: (a definir)
 
-Última revisão: 2026-03-04
-Próxima revisão recomendada: N/A — módulo TRAINING Done Gate §10 atingido
+Última revisão: 2026-03-06
+Próxima revisão recomendada: N/A — TRUTH SUITE 0 failed/skipped/xfailed atingido (Batch 29)
 
+> Changelog v4.2.0 (2026-03-06) — Batch 32 sync documental:
+> - §9: AR-TRAIN-070 adicionada como VERIFICADO (Batch 32 — testes impl CONTRACT-031/032/037/038).
+> - §9: AR-TRAIN-071 adicionada como VERIFICADO (Batch 32 — sync documental pós-Batch 31+32).
+> - Evidencia CONTRACT-031/032/037/038 atualizada: AR_253 + AR_254.
+
+> Changelog v4.1.0 (2026-03-06) - Batch 31 BE stubs fix:
+> - §9: AR-TRAIN-069 adicionada como VERIFICADO (Batch 31 - BE stubs fix).
+
+> Changelog v4.0.0 (2026-03-06):
+> - Adicionado `CONTRACT_DIFF_GATE`.
+> - Comparação entre spec anterior e nova passa a ser obrigatória em mudanças de contrato.
+> - `GENERATED_CLIENT_SYNC` não pode ocorrer sem `OPENAPI_SPEC_QUALITY` + `CONTRACT_DIFF_GATE`.
+> - Formalizado `RUNTIME CONTRACT VALIDATION` com Schemathesis.
+> - Preparado `TRUTH_FE` para Playwright quando o frontend for materializado.
+
+> Changelog v3.10.0 (2026-03-06):
+> - Adicionada política `OPENAPI_SPEC_QUALITY`.
+> - Formalizado gate de lint/validate da spec OpenAPI para mudanças de contrato.
+> - `GENERATED_CLIENT_SYNC` passa a depender de spec válida.
+> - Versão: v3.9.0→v3.10.0.
+
+> Changelog v3.9.0 (2026-03-06) - Batch 30 FE Refactor:
+> - §9: AR-TRAIN-068 adicionada como VERIFICADO (Batch 30 - FE Refactor).
+
+> Changelog v3.8.0 (2026-03-06):
+> - Adicionada política `API_SYNC_REQUIRED` para mudanças de contrato TRAINING.
+> - Adicionada regra `GENERATED_CLIENT_SYNC` para regeneração obrigatória de `Hb Track - Frontend/src/api/generated/*`.
+> - §13.5 `CHANGE IMPACT ROUTING` atualizado para o fluxo spec-driven com OpenAPI Generator.
+> - Separação explícita entre `TRUTH_BE` e `TRUTH_FE_FUTURO`.
+> - Versão: v3.7.0→v3.8.0.
+
+> Changelog v3.7.0 (2026-03-05) — Batch 29 TRUTH SUITE Residuals:
+> - §9: AR-TRAIN-063..067 adicionadas como VERIFICADO (Batch 29 completo).
+> - §0: baseline RH-08 atualizado 610p/4s/1xf/0f → 615p/0s/0xf/0f (pos-Batch 29).
+> - Versão: v3.6.0→v3.7.0.
+
+> Changelog v3.6.0 (2026-03-05) — NO_MOCKS_GLOBAL + TRUTH_SUITE_POLICY:
+> - §13 adicionado: TRUTH SUITE POLICY (§13.1 TRUTH + §13.2 LEGACY_INVALID).
+> - Versão: v3.5.0→v3.6.0.
+
+> Changelog v3.5.0 (2026-03-04) — SSOT_PATCH_NO_STUBS_AI (Governança IA Coach):
+> - §5d adicionado: Regra NO_STUBS — IA Coach (3 verification commands; reclassificação histórica AR-TRAIN-046/048).
+> - Versão: v3.4.0→v3.5.0.
+
+> Changelog v3.4.0 (2026-03-04) — AR_246/AR-TRAIN-062 (Batch 28 — Sync pós-Batch 27):
+> - §9: AR-TRAIN-061 EM_EXECUCAO → VERIFICADO (AR_245 selado, hb seal 2026-03-04).
+> - §9: AR-TRAIN-062 adicionada como EM_EXECUCAO.
+> - Versão: v3.3.0→v3.4.0.
+
+> Changelog v3.3.0 (2026-03-04) — AR_245/AR-TRAIN-061 (Batch 27 — Contract tests 074/075):
+> - §8: CONTRACT-TRAIN-074/075: PENDENTE/NOT_RUN → COBERTO/2026-03-04.
+> - §9: AR-TRAIN-061 adicionada como EM_EXECUCAO.
+> - Versão: v3.2.0→v3.3.0.
+>
+> Changelog v3.2.0 (2026-03-04) — AR_243/AR-TRAIN-059 (Batch 26 — Sync pós-Batch 26):
+> - §8: CONTRACT-TRAIN-100/102/104/105: evidência e links atualizados para AR_239..241 (Batch 26).
+> - §9: AR-TRAIN-055..059 adicionadas como VERIFICADO.
+> - Versão: v3.1.0→v3.2.0.
+
+> Changelog v3.1.0 (2026-03-04) — AR_238/AR-TRAIN-054 (Batch 25 — Sync §5 FASE_3):
+> - §5: 18 INVs FASE_3 atualizados FAIL/ERROR→2026-03-04 (suite 594p/0f pós-AR_229/230).
+> - §0: nota FASE_3 diferidos atualizada para refletir status PASS.
+> - §9: AR-TRAIN-053 e AR-TRAIN-054 adicionadas.
+> - Versão: v3.0.1→v3.1.0.
+>
+> Changelog v3.0.1 (2026-03-04) — AR_237/AR-TRAIN-053 (Batch 24 — Sync §9 pós-Batch 23):
+> - §9: AR-TRAIN-052 adicionada como VERIFICADO (AR_236, hb seal 2026-03-04).
+>
 > Changelog v3.0.0 (2026-03-04) — AR_232/AR-TRAIN-051 (Batch 22 — Done Gate §10 formal):
 > - §0: contadores finais atualizados; nota sobre 18 INVs FASE_3 diferidos adicionada.
 > - §10: Done Gate §10 formal declarado — todos os critérios PASS satisfeitos (herdados de AR_222).
@@ -35,7 +103,7 @@ Próxima revisão recomendada: N/A — módulo TRAINING Done Gate §10 atingido
 > - §9: adicionadas 9 entradas AR-TRAIN-035..043 (Batches 14/15/16 verificados).
 > - §10 PASS: 12 checkboxes [ ] → [x] (cobertura formal declarada; AC-005 pendente — 124 FAILs, veja DONE_GATE_v2).
 > - Versão atualizada: v1.11.0→v2.0.0; Status mantido DRAFT (AC-005 não satisfeito).
-> - DONE_GATE_TRAINING_v2.md emitido com Status: DONE_WITH_CAVEATS.
+> - `_reports/training/DONE_GATE_TRAINING_v2.md` emitido como evidência (Status: DONE_WITH_CAVEATS).
 
 > Changelog v1.11.0 (2026-03-03) — AR_213 (Batch 13 — Execução NOT_RUN §5):
 > - §5: 38 NOT_RUN→2026-03-03 (PASS): INV-006/007/012/014/015/016/022/023/025/026/027/033/040/041/043/044/045/046/047/048/049/051/055/056/068/069/071/072/073/074/075/077/078 + EXB-ACL-001/002/003/004.
@@ -156,7 +224,7 @@ Dependências:
 
 ## 0) Nota SSOT (bloqueios conhecidos)
 
-1. SSOT atual de schema e OpenAPI está em `docs/ssot/*`.
+1. SSOT técnico canônico de schema e OpenAPI está em `Hb Track - Backend/docs/ssot/*` (espelho derivado: `docs/ssot/*`).
 2. Parte dos testes existentes referencia `Hb Track - Backend/docs/_generated/*` (inexistente no repo atual) ⇒ itens ficam `BLOQUEADO` até `AR-TRAIN-010A`.
 3. “COBERTO” neste documento significa **teste implementado e apontado**. Resultado de execução permanece `NOT_RUN` até a produção de evidência (`_reports/*`).
 
@@ -167,9 +235,17 @@ Resumo rápido (FINAL — v3.0.0) — invariantes:
 - `NAO_APLICAVEL`: 1
 - `PENDENTE`: 0 ✓ todos cobertos por AR_212
 
-> **FASE_3 diferidos (não bloqueiam Done Gate §10 FASE_2):**
-> 18 INVs com FAILs registrados em _reports/training/evidence_run_batch13.txt — são FASE_3 (pós-PRD v2.2), sem AR de fix planejada na FASE_2:
+> **FASE_3 sync concluído (AR_238/AR-TRAIN-054, Batch 25 — 2026-03-04):**
+> 18 INVs que estavam FAIL/ERROR em FASE_2 agora passam (suite 594p/0f pós-AR_229/230):
 > `INV-TRAIN-010/011/019/020/021/029/031/034/036/037/050/052/054/057/065/066/067/070`
+> Resultado atualizado em §5. Done Gate §10 FASE_2 não afetado.
+
+> **TRUTH SUITE Batch 29 concluído (AR_247..251/AR-TRAIN-063..067 — 2026-03-05):**
+> Baseline RH-08 atualizado: 610p/4s/1xf/0f → **615p/0s/0xf/0f** (pós-Batch 29).
+> - AR-TRAIN-064: xfail INV-148 (user.organization_id) → PASS.
+> - AR-TRAIN-065: 4 skips (test_058/059) → PASS.
+> - AR-TRAIN-066: 9 LEGACY_INVALID convertidos para TRUTH (NO_MOCKS_GLOBAL atingido).
+> Resultado registrado em `_reports/training/DONE_GATE_TRAINING.md` (RH-08).
 
 ---
 
@@ -266,17 +342,17 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 | INV-TRAIN-007 | celery_uses_utc | BLOQUEANTE_ARQUITETURA | calc | TEST-TRAIN-INV-007 | GATE_CHECK | NAO | ALTA | POST | COBERTO | 2026-03-03 | test_inv_train_007_celery_utc_timezone.py | - |
 | INV-TRAIN-008 | soft_delete_reason_pair | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-008 | GATE_CHECK | NAO | CRITICA | PRE | COBERTO | 2026-03-03 | _reports/training/TEST-TRAIN-INV-008.md | AR_203, AR_209 |
 | INV-TRAIN-009 | unique_wellness_pre_per_athlete_session | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-009 | INTEGRATION | SIM | CRITICA | POST | COBERTO | 2026-03-03 | _reports/training/TEST-TRAIN-INV-009.md | AR_209 |
-| INV-TRAIN-010 | unique_wellness_post_per_athlete_session | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-010 | INTEGRATION | SIM | CRITICA | POST | COBERTO | FAIL | test_inv_train_010_wellness_post_uniqueness.py | AR-TRAIN-003, AR-TRAIN-004 |
-| INV-TRAIN-011 | deviation_rules_and_min_justification | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-011 | GATE_CHECK | NAO | CRITICA | POST | PARCIAL | FAIL | test_inv_train_011_deviation_rules.py | - |
+| INV-TRAIN-010 | unique_wellness_post_per_athlete_session | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-010 | INTEGRATION | SIM | CRITICA | POST | COBERTO | 2026-03-04 | test_inv_train_010_wellness_post_uniqueness.py | AR-TRAIN-003, AR-TRAIN-004 |
+| INV-TRAIN-011 | deviation_rules_and_min_justification | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-011 | GATE_CHECK | NAO | CRITICA | POST | PARCIAL | 2026-03-04 | test_inv_train_011_deviation_rules.py | - |
 | INV-TRAIN-012 | export_rate_limits_daily | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-012 | GATE_CHECK | NAO | CRITICA | POST | PARCIAL | 2026-03-03 | test_inv_train_012_export_rate_limit.py | AR-TRAIN-008, AR-TRAIN-009 |
 | INV-TRAIN-013 | gamification_badge_eligibility | NAO_BLOQUEANTE | service | TEST-TRAIN-INV-013 | GATE_CHECK | NAO | MEDIA | NO | VERIFICADO | PASS | test_inv_train_013_gamification_badge_rules.py | AR-TRAIN-010B |
 | INV-TRAIN-014 | overload_alert_threshold_multiplier | NAO_BLOQUEANTE | service | TEST-TRAIN-INV-014 | GATE_CHECK | NAO | MEDIA | NO | PARCIAL | 2026-03-03 | test_inv_train_014_overload_alert_threshold.py | AR-TRAIN-001, AR-TRAIN-002 |
 | INV-TRAIN-015 | training_analytics_endpoints_exposed | BLOQUEANTE_ARQUITETURA | calc+api | TEST-TRAIN-INV-015 | GATE_CHECK | NAO | ALTA | POST | COBERTO | 2026-03-03 | test_inv_train_015_training_analytics_exposure.py | - |
 | INV-TRAIN-016 | attendance_auth_and_scoped_route_not_exposed | BLOQUEANTE_ARQUITETURA | api | TEST-TRAIN-INV-016 | CONTRACT | SIM | ALTA | POST | COBERTO | 2026-03-03 | test_inv_train_016_attendance_auth_scoped.py | - |
 | INV-TRAIN-018 | microcycle_session_default_status | BLOQUEANTE_ARQUITETURA | service | TEST-TRAIN-INV-018 | CONTRACT|UNIT | NAO | ALTA | POST | COBERTO | 2026-03-03 | test_inv_train_018_training_session_microcycle_status.py, test_inv_train_018_training_session_microcycle_status_route.py | AR-TRAIN-049 |
-| INV-TRAIN-019 | audit_logs_for_training_session_actions | BLOQUEANTE_ARQUITETURA | service | TEST-TRAIN-INV-019 | INTEGRATION | NAO | ALTA | POST | COBERTO | FAIL | test_inv_train_019_training_session_audit_logs.py | - |
-| INV-TRAIN-020 | analytics_cache_invalidation_trigger | BLOQUEANTE_ARQUITETURA | db | TEST-TRAIN-INV-020 | GATE_CHECK | NAO | ALTA | PRE | COBERTO | FAIL | test_inv_train_020_cache_invalidation_trigger.py | AR-TRAIN-010A |
-| INV-TRAIN-021 | internal_load_trigger | BLOQUEANTE_ARQUITETURA | db | TEST-TRAIN-INV-021 | GATE_CHECK | NAO | ALTA | PRE | COBERTO | FAIL | test_inv_train_021_internal_load_trigger.py | AR-TRAIN-010A |
+| INV-TRAIN-019 | audit_logs_for_training_session_actions | BLOQUEANTE_ARQUITETURA | service | TEST-TRAIN-INV-019 | INTEGRATION | NAO | ALTA | POST | COBERTO | 2026-03-04 | test_inv_train_019_training_session_audit_logs.py | - |
+| INV-TRAIN-020 | analytics_cache_invalidation_trigger | BLOQUEANTE_ARQUITETURA | db | TEST-TRAIN-INV-020 | GATE_CHECK | NAO | ALTA | PRE | COBERTO | 2026-03-04 | test_inv_train_020_cache_invalidation_trigger.py | AR-TRAIN-010A |
+| INV-TRAIN-021 | internal_load_trigger | BLOQUEANTE_ARQUITETURA | db | TEST-TRAIN-INV-021 | GATE_CHECK | NAO | ALTA | PRE | COBERTO | 2026-03-04 | test_inv_train_021_internal_load_trigger.py | AR-TRAIN-010A |
 | INV-TRAIN-022 | wellness_post_invalidates_training_analytics_cache | BLOQUEANTE_ARQUITETURA | calc | TEST-TRAIN-INV-022 | UNIT | NAO | ALTA | POST | COBERTO | 2026-03-03 | test_inv_train_022_wellness_post_cache_invalidation.py | - |
 | INV-TRAIN-023 | wellness_post_triggers_overload_alert_check | NAO_BLOQUEANTE | service+calc | TEST-TRAIN-INV-023 | UNIT | NAO | MEDIA | NO | PARCIAL | 2026-03-03 | test_inv_train_023_wellness_post_overload_alert_trigger.py | AR-TRAIN-001, AR-TRAIN-002 |
 | INV-TRAIN-024 | websocket_broadcast_for_alerts_and_badges | NAO_BLOQUEANTE | service+ux | TEST-TRAIN-INV-024 | GATE_CHECK | NAO | MEDIA | NO | VERIFICADO | PASS | test_inv_train_024_websocket_broadcast.py | AR-TRAIN-010B |
@@ -284,15 +360,15 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 | INV-TRAIN-026 | lgpd_access_logging | BLOQUEANTE_ARQUITETURA | service | TEST-TRAIN-INV-026 | GATE_CHECK | NAO | ALTA | POST | COBERTO | 2026-03-03 | test_inv_train_026_lgpd_access_logging.py | - |
 | INV-TRAIN-027 | refresh_training_rankings_task | BLOQUEANTE_ARQUITETURA | calc | TEST-TRAIN-INV-027 | UNIT | NAO | ALTA | POST | COBERTO | 2026-03-03 | test_inv_train_027_refresh_training_rankings_task.py | AR-TRAIN-006, AR-TRAIN-007 |
 | INV-TRAIN-028 | deprecated_duplicate_focus_rule | DEPRECATED | tests | TEST-TRAIN-INV-028 | GATE_CHECK | NAO | BAIXA | NO | NAO_APLICAVEL | FAIL | test_inv_train_028_focus_sum_constraint.py (refs _generated) | - |
-| INV-TRAIN-029 | editing_rules_by_session_status | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-029 | GATE_CHECK | NAO | CRITICA | POST | PARCIAL | FAIL | test_inv_train_029_edit_blocked_after_in_progress.py | - |
+| INV-TRAIN-029 | editing_rules_by_session_status | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-029 | GATE_CHECK | NAO | CRITICA | POST | PARCIAL | 2026-03-04 | test_inv_train_029_edit_blocked_after_in_progress.py | - |
 | INV-TRAIN-030 | attendance_correction_requires_audit_fields | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-030 | GATE_CHECK | NAO | CRITICA | PRE | COBERTO | 2026-03-03 | _reports/training/TEST-TRAIN-INV-030.md | AR_204, AR_209 |
-| INV-TRAIN-031 | derive_phase_focus_from_percentages | BLOQUEANTE_ARQUITETURA | db | TEST-TRAIN-INV-031 | GATE_CHECK | NAO | ALTA | PRE | COBERTO | FAIL | test_inv_train_031_derive_phase_focus.py | AR-TRAIN-010A |
+| INV-TRAIN-031 | derive_phase_focus_from_percentages | BLOQUEANTE_ARQUITETURA | db | TEST-TRAIN-INV-031 | GATE_CHECK | NAO | ALTA | PRE | COBERTO | 2026-03-04 | test_inv_train_031_derive_phase_focus.py | AR-TRAIN-010A |
 | INV-TRAIN-032 | wellness_post_rpe_range | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-032 | INTEGRATION | SIM | CRITICA | POST | COBERTO | 2026-03-03 | _reports/training/TEST-TRAIN-INV-032.md | AR_205, AR_209 |
 | INV-TRAIN-033 | wellness_pre_sleep_hours_range | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-033 | INTEGRATION | SIM | CRITICA | POST | COBERTO | 2026-03-03 | test_inv_train_033_wellness_pre_sleep_hours.py, test_inv_train_033_wellness_pre_sleep_hours_runtime.py | - |
-| INV-TRAIN-034 | wellness_pre_sleep_quality_range | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-034 | INTEGRATION | SIM | CRITICA | POST | COBERTO | FAIL | test_inv_train_034_wellness_pre_sleep_quality.py, test_inv_train_034_wellness_pre_sleep_quality_runtime.py | - |
+| INV-TRAIN-034 | wellness_pre_sleep_quality_range | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-034 | INTEGRATION | SIM | CRITICA | POST | COBERTO | 2026-03-04 | test_inv_train_034_wellness_pre_sleep_quality.py, test_inv_train_034_wellness_pre_sleep_quality_runtime.py | - |
 | INV-TRAIN-035 | session_template_unique_name_per_org | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-035 | GATE_CHECK|INTEGRATION | SIM | CRITICA | POST | COBERTO | 2026-03-03 | test_inv_train_035_session_templates_unique_name.py (refs _generated), test_inv_train_035_session_templates_unique_name_runtime.py | AR-TRAIN-049 |
-| INV-TRAIN-036 | wellness_rankings_unique_team_month | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-036 | GATE_CHECK|INTEGRATION | SIM | CRITICA | POST | COBERTO | FAIL | test_inv_train_036_wellness_rankings_unique.py (refs _generated), test_inv_train_036_wellness_rankings_unique_runtime.py | AR-TRAIN-006, AR-TRAIN-007 |
-| INV-TRAIN-037 | cycle_dates_valid | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-037 | GATE_CHECK|INTEGRATION | SIM | CRITICA | POST | COBERTO | FAIL | test_inv_train_037_cycle_dates.py (refs _generated), test_inv_train_037_cycle_dates_runtime.py | - |
+| INV-TRAIN-036 | wellness_rankings_unique_team_month | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-036 | GATE_CHECK|INTEGRATION | SIM | CRITICA | POST | COBERTO | 2026-03-04 | test_inv_train_036_wellness_rankings_unique.py (refs _generated), test_inv_train_036_wellness_rankings_unique_runtime.py | AR-TRAIN-006, AR-TRAIN-007 |
+| INV-TRAIN-037 | cycle_dates_valid | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-037 | GATE_CHECK|INTEGRATION | SIM | CRITICA | POST | COBERTO | 2026-03-04 | test_inv_train_037_cycle_dates.py (refs _generated), test_inv_train_037_cycle_dates_runtime.py | - |
 | INV-TRAIN-040 | openapi_contract_health_public | BLOQUEANTE_ARQUITETURA | api | TEST-TRAIN-INV-040 | CONTRACT | NAO | ALTA | PRE | COBERTO | 2026-03-03 | test_inv_train_040_health_contract.py | AR-TRAIN-010A |
 | INV-TRAIN-041 | openapi_contract_teams_auth | BLOQUEANTE_ARQUITETURA | api | TEST-TRAIN-INV-041 | CONTRACT | NAO | ALTA | PRE | COBERTO | 2026-03-03 | test_inv_train_041_teams_contract.py | AR-TRAIN-010A |
 | INV-TRAIN-043 | microcycle_dates_valid | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-043 | INTEGRATION | SIM | CRITICA | POST | COBERTO | 2026-03-03 | test_inv_train_043_microcycle_dates_check.py | - |
@@ -302,9 +378,9 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 | INV-TRAIN-047 | exercise_scope_valid | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-047 | INTEGRATION | SIM | CRITICA | BOTH | COBERTO | 2026-03-03 | test_inv_train_047_exercise_scope.py | AR-TRAIN-011 |
 | INV-TRAIN-048 | system_exercise_immutable_for_org_users | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-048 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | 2026-03-03 | test_inv_train_048_system_immutable.py | AR-TRAIN-012 |
 | INV-TRAIN-049 | org_exercise_single_organization | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-049 | INTEGRATION | SIM | CRITICA | BOTH | COBERTO | 2026-03-03 | test_inv_train_049_exercise_org_scope.py | AR-TRAIN-011 |
-| INV-TRAIN-050 | favorite_unique_per_user_exercise | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-050 | INTEGRATION | SIM | CRITICA | BOTH | COBERTO | ERROR | test_inv_train_050_exercise_favorites_unique.py | AR-TRAIN-011 |
+| INV-TRAIN-050 | favorite_unique_per_user_exercise | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-050 | INTEGRATION | SIM | CRITICA | BOTH | COBERTO | 2026-03-04 | test_inv_train_050_exercise_favorites_unique.py | AR-TRAIN-011 |
 | INV-TRAIN-051 | catalog_visibility_respects_organization | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-051 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | 2026-03-03 | test_inv_train_051_catalog_visibility.py | AR-TRAIN-012, AR-TRAIN-013 |
-| INV-TRAIN-052 | exercise_media_type_reference_valid | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-052 | INTEGRATION | SIM | ALTA | BOTH | COBERTO | ERROR | test_inv_train_052_exercise_media.py | AR-TRAIN-011 |
+| INV-TRAIN-052 | exercise_media_type_reference_valid | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-052 | INTEGRATION | SIM | ALTA | BOTH | COBERTO | 2026-03-04 | test_inv_train_052_exercise_media.py | AR-TRAIN-011 |
 | INV-TRAIN-053 | soft_delete_exercise_no_break_historic_session | BLOQUEANTE_ARQUITETURA | db+service | TEST-TRAIN-INV-053 | INTEGRATION | NAO | ALTA | BOTH | COBERTO | PASS | test_inv_train_053_soft_delete_exercise_no_break_historic.py | AR-TRAIN-011 |
 | INV-TRAIN-EXB-ACL-001 | exercise_org_visibility_mode_valid | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-EXB-ACL-001 | INTEGRATION | SIM | CRITICA | BOTH | COBERTO | 2026-03-03 | test_inv_train_exb_acl_001_visibility_mode.py | AR-TRAIN-011, AR-TRAIN-013 |
 | INV-TRAIN-EXB-ACL-002 | acl_only_for_org_restricted | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-EXB-ACL-002 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | 2026-03-03 | test_inv_train_exb_acl_002_acl_restricted.py | AR-TRAIN-012, AR-TRAIN-013 |
@@ -313,10 +389,10 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 | INV-TRAIN-EXB-ACL-005 | creator_implicit_access | BLOQUEANTE_ARQUITETURA | service | TEST-TRAIN-INV-EXB-ACL-005 | CONTRACT | NAO | ALTA | BOTH | COBERTO | PASS | test_inv_train_exb_acl_005_creator_implicit_access.py | AR-TRAIN-012 |
 | INV-TRAIN-EXB-ACL-006 | acl_unique_per_exercise_user | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-EXB-ACL-006 | INTEGRATION | SIM | CRITICA | BOTH | COBERTO | 2026-03-03 | test_inv_train_exb_acl_006_acl_table.py | AR-TRAIN-011, AR-TRAIN-049 |
 | INV-TRAIN-EXB-ACL-007 | acl_change_no_retrobreak_historic_session | BLOQUEANTE_ARQUITETURA | service+db | TEST-TRAIN-INV-EXB-ACL-007 | INTEGRATION | NAO | ALTA | BOTH | COBERTO | PASS | test_inv_train_exb_acl_007_acl_change_no_retrobreak.py | AR-TRAIN-012 |
-| INV-TRAIN-054 | cycle_hierarchy_mandatory | BLOQUEANTE_VALIDACAO | db+service | TEST-TRAIN-INV-054 | INTEGRATION | SIM | CRITICA | BOTH | COBERTO | FAIL | test_inv_train_054_standalone_session.py | AR-TRAIN-015 |
+| INV-TRAIN-054 | cycle_hierarchy_mandatory | BLOQUEANTE_VALIDACAO | db+service | TEST-TRAIN-INV-054 | INTEGRATION | SIM | CRITICA | BOTH | COBERTO | 2026-03-04 | test_inv_train_054_standalone_session.py | AR-TRAIN-015 |
 | INV-TRAIN-055 | meso_overlap_allowed | NAO_BLOQUEANTE | service | TEST-TRAIN-INV-055 | UNIT | NAO | MEDIA | NO | COBERTO | 2026-03-03 | test_inv_train_055_meso_overlap.py | AR-TRAIN-015 |
 | INV-TRAIN-056 | micro_contained_in_meso | BLOQUEANTE_VALIDACAO | db+service | TEST-TRAIN-INV-056 | INTEGRATION | SIM | CRITICA | BOTH | COBERTO | 2026-03-03 | test_inv_train_056_micro_within_meso.py | AR-TRAIN-015 |
-| INV-TRAIN-057 | standalone_session_explicit_flag | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-057 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | FAIL | test_inv_train_057_session_within_microcycle.py | AR-TRAIN-016 |
+| INV-TRAIN-057 | standalone_session_explicit_flag | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-057 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | 2026-03-04 | test_inv_train_057_session_within_microcycle.py | AR-TRAIN-016 |
 | INV-TRAIN-058 | session_structure_mutable_until_close | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-058 | CONTRACT | SIM | CRITICA | POST | COBERTO | 2026-03-03 | test_inv_train_058_session_structure_mutable.py | AR-TRAIN-016, AR-TRAIN-049 |
 | INV-TRAIN-059 | exercise_order_contiguous_unique | BLOQUEANTE_VALIDACAO | db | TEST-TRAIN-INV-059 | INTEGRATION | SIM | CRITICA | POST | COBERTO | 2026-03-03 | test_inv_train_059_exercise_order_contiguous.py | AR-TRAIN-016, AR-TRAIN-049 |
 | INV-TRAIN-060 | org_exercise_default_restricted | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-060 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | PASS | test_inv_train_060_org_exercise_default_restricted.py | AR-TRAIN-011, AR-TRAIN-013 |
@@ -324,12 +400,12 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 | INV-TRAIN-062 | exercise_visibility_required_for_session_add | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-062 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | PASS | test_inv_train_062_exercise_visibility_required.py | AR-TRAIN-012, AR-TRAIN-013 |
 | INV-TRAIN-063 | athlete_preconfirm_not_official | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-063 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | 2026-03-03 | test_inv_train_063_preconfirm.py | AR-TRAIN-017, AR-TRAIN-049 |
 | INV-TRAIN-064 | official_attendance_at_closure | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-064 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | 2026-03-03 | test_inv_train_064_close_consolidation.py | AR-TRAIN-017, AR-TRAIN-049 |
-| INV-TRAIN-065 | closure_allows_inconsistency_as_pending | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-065 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | FAIL | test_inv_train_065_close_pending_guard.py | AR-TRAIN-017 |
-| INV-TRAIN-066 | pending_queue_separate | BLOQUEANTE_ARQUITETURA | service+db | TEST-TRAIN-INV-066 | INTEGRATION | NAO | ALTA | BOTH | COBERTO | FAIL | test_inv_train_066_pending_items.py | AR-TRAIN-017, AR-TRAIN-018 |
-| INV-TRAIN-067 | athlete_pending_collaboration_no_validate | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-067 | CONTRACT | SIM | ALTA | BOTH | COBERTO | FAIL | test_inv_train_067_athlete_pending_rbac.py | AR-TRAIN-018 |
+| INV-TRAIN-065 | closure_allows_inconsistency_as_pending | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-065 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | 2026-03-04 | test_inv_train_065_close_pending_guard.py | AR-TRAIN-017 |
+| INV-TRAIN-066 | pending_queue_separate | BLOQUEANTE_ARQUITETURA | service+db | TEST-TRAIN-INV-066 | INTEGRATION | NAO | ALTA | BOTH | COBERTO | 2026-03-04 | test_inv_train_066_pending_items.py | AR-TRAIN-017, AR-TRAIN-018 |
+| INV-TRAIN-067 | athlete_pending_collaboration_no_validate | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-067 | CONTRACT | SIM | ALTA | BOTH | COBERTO | 2026-03-04 | test_inv_train_067_athlete_pending_rbac.py | AR-TRAIN-018 |
 | INV-TRAIN-068 | athlete_sees_training_before | BLOQUEANTE_ARQUITETURA | service+api | TEST-TRAIN-INV-068 | CONTRACT | NAO | ALTA | BOTH | COBERTO | 2026-03-03 | test_inv_train_068_athlete_sees_training.py | AR-TRAIN-019 |
 | INV-TRAIN-069 | exercise_media_accessible_to_athlete | BLOQUEANTE_ARQUITETURA | service | TEST-TRAIN-INV-069 | CONTRACT | NAO | ALTA | BOTH | COBERTO | 2026-03-03 | test_inv_train_069_exercise_media_via_session.py | AR-TRAIN-019 |
-| INV-TRAIN-070 | post_training_conversational | NAO_BLOQUEANTE | service | TEST-TRAIN-INV-070 | CONTRACT | NAO | MEDIA | BOTH | COBERTO | FAIL | test_inv_train_070_post_conversational.py | AR-TRAIN-020 |
+| INV-TRAIN-070 | post_training_conversational | NAO_BLOQUEANTE | service | TEST-TRAIN-INV-070 | CONTRACT | NAO | MEDIA | BOTH | COBERTO | 2026-03-04 | test_inv_train_070_post_conversational.py | AR-TRAIN-020 |
 | INV-TRAIN-071 | wellness_missing_blocks_full_content | BLOQUEANTE_VALIDACAO | service | TEST-TRAIN-INV-071 | CONTRACT | SIM | CRITICA | BOTH | COBERTO | 2026-03-03 | test_inv_train_071_content_gate.py | AR-TRAIN-019 |
 | INV-TRAIN-072 | ai_suggestion_not_order | BLOQUEANTE_ARQUITETURA | service | TEST-TRAIN-INV-072 | UNIT | NAO | ALTA | BOTH | COBERTO | 2026-03-03 | test_inv_train_072_ai_suggestion_not_order.py | AR-TRAIN-021 |
 | INV-TRAIN-073 | ai_privacy_no_intimate_content | BLOQUEANTE_ARQUITETURA | service | TEST-TRAIN-INV-073 | UNIT | NAO | ALTA | BOTH | COBERTO | 2026-03-03 | test_inv_train_073_ai_privacy_no_intimate_content.py | AR-TRAIN-021 |
@@ -378,6 +454,20 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 | DEC-TRAIN-EXB-002 | ACL management (CRUD) | TEST-TRAIN-DEC-EXB-002 | CONTRACT | POST/DELETE ACL user + verifica lista | Happy | BOTH | COBERTO | AR-TRAIN-012, AR-TRAIN-013 |
 | DEC-TRAIN-RBAC-001 | Treinador gerencia exercícios ORG próprios | TEST-TRAIN-DEC-RBAC-001a | CONTRACT | PATCH exercise como Treinador creator → 200 | Happy | BOTH | COBERTO | AR-TRAIN-012 |
 | DEC-TRAIN-RBAC-001 | Org user não edita SYSTEM | TEST-TRAIN-DEC-RBAC-001b | CONTRACT | PATCH exercise SYSTEM como Treinador → 403 | Exceção | BOTH | COBERTO | AR-TRAIN-012 |
+
+### 5d) Regra NO_STUBS — IA Coach `[NORMATIVO]`
+
+> **Invariante de Arquitetura:** Testes de INV-TRAIN-072..081 DEVEM exercitar a lógica real de `ai_coach_service.py`.  
+> Substituição do core por `unittest.mock` / `MagicMock` é **PROIBIDA** — invalida as garantias BLOQUEANTE_ARQUITETURA.  
+> `RecognitionApproved`, `CoachSuggestionDraft` e `JustifiedSuggestion` são **classes determinísticas concretas** — não mocks.
+
+| Verificação | Comando | Resultado esperado |
+|---|---|---|
+| Sem mocks no production code | `grep -rn "unittest.mock\|MagicMock\|monkeypatch" "Hb Track - Backend/app/services/ai_coach_service.py"` | **0 resultados** |
+| Sem patch do core nos testes INV | `grep -rn "patch.*ai_coach_service\|mock.*generate_draft\|mock.*check_suggestion" "Hb Track - Backend/tests/training/invariants/"` | **0 resultados** |
+| RecognitionApproved é determinístico | `grep -n "class RecognitionApproved" "Hb Track - Backend/app/services/ai_coach_service.py"` | **Classe concreta** (não Mock) |
+
+> **Reclassificação histórica:** Os "stubs" referenciados em AR-TRAIN-046/048 eram **símbolos implementados ausentes** (`RecognitionApproved`, `CoachSuggestionDraft`, `JustifiedSuggestion`) — não `unittest.mock`. A correção foi prover implementações determinísticas reais, NÃO mocks de teste.
 
 ---
 
@@ -520,8 +610,8 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 | CONTRACT-TRAIN-071 | GET `/analytics/team/{team_id}/deviation-analysis` | P1 | TEST-TRAIN-CONTRACT-071 | CONTRACT | POST | COBERTO | 2026-03-03 | `docs/hbtrack/evidence/AR_217/executor_main.log` | AR-TRAIN-038 |
 | CONTRACT-TRAIN-072 | GET `/analytics/team/{team_id}/prevention-effectiveness` | P1 | TEST-TRAIN-CONTRACT-072 | CONTRACT | POST | COBERTO | 2026-03-03 | `docs/hbtrack/evidence/AR_217/executor_main.log` | AR-TRAIN-038 |
 | CONTRACT-TRAIN-073 | GET `/analytics/wellness-rankings` | P1 | TEST-TRAIN-CONTRACT-073 | CONTRACT | POST | COBERTO | 2026-03-04 | Hb Track - Backend/tests/training/contracts/test_e2e_dod_pipeline.py | AR-TRAIN-006, AR-TRAIN-007 |
-| CONTRACT-TRAIN-074 | POST `/analytics/wellness-rankings/calculate` | P1 | TEST-TRAIN-CONTRACT-074 | CONTRACT | POST | PENDENTE | NOT_RUN | `-` | AR-TRAIN-006, AR-TRAIN-007 |
-| CONTRACT-TRAIN-075 | GET `/analytics/wellness-rankings/{team_id}/athletes-90plus?month=` | P1 | TEST-TRAIN-CONTRACT-075 | CONTRACT | POST | PENDENTE | NOT_RUN | `-` | AR-TRAIN-006, AR-TRAIN-007 |
+| CONTRACT-TRAIN-074 | POST `/analytics/wellness-rankings/calculate` | P1 | TEST-TRAIN-CONTRACT-074 | CONTRACT | POST | COBERTO | 2026-03-04 | `docs/hbtrack/evidence/AR_245/executor_main.log` | AR-TRAIN-061 |
+| CONTRACT-TRAIN-075 | GET `/analytics/wellness-rankings/{team_id}/athletes-90plus?month=` | P1 | TEST-TRAIN-CONTRACT-075 | CONTRACT | POST | COBERTO | 2026-03-04 | `docs/hbtrack/evidence/AR_245/executor_main.log` | AR-TRAIN-061 |
 | CONTRACT-TRAIN-076 | GET `/teams/{team_id}/wellness-top-performers?month=` | P1 | TEST-TRAIN-CONTRACT-076 | CONTRACT | POST | COBERTO | 2026-03-03 | `docs/hbtrack/evidence/AR_217/executor_main.log` | AR-TRAIN-038, AR-TRAIN-006, AR-TRAIN-007 |
 | CONTRACT-TRAIN-077 | GET `/training/alerts-suggestions/alerts/team/{team_id}/active` | P2 | TEST-TRAIN-CONTRACT-077 | CONTRACT | PRE | COBERTO | 2026-03-02 | `_reports/training/TEST-TRAIN-CONTRACT-077-085.md` | AR-TRAIN-001, AR-TRAIN-002 |
 | CONTRACT-TRAIN-078 | GET `/training/alerts-suggestions/alerts/team/{team_id}/history` | P2 | TEST-TRAIN-CONTRACT-078 | CONTRACT | PRE | COBERTO | 2026-03-02 | `_reports/training/TEST-TRAIN-CONTRACT-077-085.md` | AR-TRAIN-001, AR-TRAIN-002 |
@@ -546,12 +636,12 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 | CONTRACT-TRAIN-097 | POST `/training-sessions/{session_id}/pre-confirm` | P0 | TEST-TRAIN-CONTRACT-097 | CONTRACT | BOTH | COBERTO | 2026-03-03 | `_reports/training/TEST-TRAIN-CONTRACT-097-100.md` | AR_208, AR_209 |
 | CONTRACT-TRAIN-098 | POST `/training-sessions/{session_id}/close` (+ pending items) | P0 | TEST-TRAIN-CONTRACT-098 | CONTRACT | BOTH | COBERTO | 2026-03-03 | `_reports/training/TEST-TRAIN-CONTRACT-097-100.md` | AR_208, AR_209 |
 | CONTRACT-TRAIN-099 | GET `/training/pending-items` | P0 | TEST-TRAIN-CONTRACT-099 | CONTRACT | BOTH | COBERTO | 2026-03-03 | `_reports/training/TEST-TRAIN-CONTRACT-097-100.md` | AR_208, AR_209 |
-| CONTRACT-TRAIN-100 | PATCH `/training/pending-items/{item_id}/resolve` | P0 | TEST-TRAIN-CONTRACT-100 | CONTRACT | BOTH | COBERTO | 2026-03-03 | `_reports/training/TEST-TRAIN-CONTRACT-097-100.md` | AR_208, AR_209 |
+| CONTRACT-TRAIN-100 | PATCH `/attendance/pending-items/{item_id}/resolve` | P0 | TEST-TRAIN-CONTRACT-100 | CONTRACT | BOTH | COBERTO | 2026-03-04 | `docs/hbtrack/evidence/AR_239/executor_main.log` | AR-TRAIN-055 |
 | CONTRACT-TRAIN-101 | POST `/ai-coach/draft-session` | P2 | TEST-TRAIN-CONTRACT-101 | CONTRACT | BOTH | COBERTO | 2026-03-03 | `docs/hbtrack/evidence/AR_218/executor_main.log` | AR-TRAIN-039, AR-TRAIN-021 |
-| CONTRACT-TRAIN-102 | PATCH `/ai-coach/draft-session/{draft_id}/apply` | P2 | TEST-TRAIN-CONTRACT-102 | CONTRACT | BOTH | COBERTO | 2026-03-03 | `docs/hbtrack/evidence/AR_218/executor_main.log` | AR-TRAIN-039, AR-TRAIN-021 |
+| CONTRACT-TRAIN-102 | PATCH `/ai/coach/draft/{draft_id}/apply` | P2 | TEST-TRAIN-CONTRACT-102 | CONTRACT | BOTH | COBERTO | 2026-03-04 | `docs/hbtrack/evidence/AR_240/executor_main.log` | AR-TRAIN-056 |
 | CONTRACT-TRAIN-103 | POST `/ai-coach/athlete-chat` | P2 | TEST-TRAIN-CONTRACT-103 | CONTRACT | BOTH | COBERTO | 2026-03-03 | `docs/hbtrack/evidence/AR_218/executor_main.log` | AR-TRAIN-039, AR-TRAIN-021 |
-| CONTRACT-TRAIN-104 | POST `/ai-coach/justify-suggestion` | P2 | TEST-TRAIN-CONTRACT-104 | CONTRACT | BOTH | COBERTO | 2026-03-03 | `docs/hbtrack/evidence/AR_218/executor_main.log` | AR-TRAIN-039, AR-TRAIN-021 |
-| CONTRACT-TRAIN-105 | GET `/athlete/wellness-content-gate/{session_id}` | P1 | TEST-TRAIN-CONTRACT-105 | CONTRACT | BOTH | COBERTO | 2026-03-03 | `docs/hbtrack/evidence/AR_218/executor_main.log` | AR-TRAIN-039, AR-TRAIN-019 |
+| CONTRACT-TRAIN-104 | POST `/ai/coach/justify-suggestion` | P2 | TEST-TRAIN-CONTRACT-104 | CONTRACT | BOTH | COBERTO | 2026-03-04 | `docs/hbtrack/evidence/AR_240/executor_main.log` | AR-TRAIN-056 |
+| CONTRACT-TRAIN-105 | GET `/athlete/wellness-content-gate/{session_id}` | P1 | TEST-TRAIN-CONTRACT-105 | CONTRACT | BOTH | COBERTO | 2026-03-04 | `docs/hbtrack/evidence/AR_241/executor_main.log` | AR-TRAIN-057 |
 
 ---
 
@@ -610,7 +700,26 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 | AR-TRAIN-048 | A/E | Sync app/models/ + app/services/ + stubs IA Coach (INV-010/035/036/054/060), Batch 19 (AR_229) | app/models/ (5 arquivos), app/services/ (2), openapi.json | `docs/hbtrack/evidence/AR_229/executor_main.log`; `_reports/testador/AR_229_*/` | VERIFICADO |
 | AR-TRAIN-049 | T | Fix 6 FAILs + 10 ERRORs residuais test-layer (8 arquivos), Batch 20 (AR_230) | tests/training/invariants/ (8 arquivos: test_018, 035, 058, 059, 063, 064, 076, acl_006) | `docs/hbtrack/evidence/AR_230/executor_main.log`; `_reports/testador/AR_230_*/` | VERIFICADO |
 | AR-TRAIN-050 | G | Sync §5 TEST_MATRIX: 11 itens NOT_RUN/FAIL/ERROR→PASS (AR_227+AR_230), Batch 21 (AR_231) | TEST_MATRIX_TRAINING.md §5 (11 itens: INV-079/080/081 + INV-018/035/058/059/063/064/076/EXB-ACL-006) | `docs/hbtrack/evidence/AR_231/executor_main.log` | VERIFICADO |
-| AR-TRAIN-051 | G | Done Gate §10 formal — v3.0.0, Batch 22 (AR_232) | TEST_MATRIX_TRAINING.md §10/§0/§9 + DONE_GATE_TRAINING_v3.md | `docs/hbtrack/evidence/AR_232/executor_main.log` | VERIFICADO |
+| AR-TRAIN-051 | G | Done Gate §10 formal — v3.0.0, Batch 22 (AR_232) | TEST_MATRIX_TRAINING.md §10/§0/§9 | `docs/hbtrack/evidence/AR_232/executor_main.log` | VERIFICADO |
+| AR-TRAIN-052 | M | Frontend Hard Sync v1.3.0 — tipos UUID/standalone + stubs CONTRACT-096..105 + AICoach justification (AR_236, Batch 23) | Hb Track - Frontend/src/ (5 arquivos) | docs/hbtrack/evidence/AR_236/executor_main.log | VERIFICADO |
+| AR-TRAIN-053 | G | Sync §9 TEST_MATRIX: entry AR-TRAIN-052 VERIFICADO pós-Batch 23 (AR_237, Batch 24) | TEST_MATRIX_TRAINING.md §9 | docs/hbtrack/evidence/AR_237/executor_main.log | VERIFICADO |
+| AR-TRAIN-054 | G | Sync §5 FASE_3: 18 INVs FAIL/ERROR→2026-03-04 + v3.1.0 + §9 entries (AR_238, Batch 25) | TEST_MATRIX_TRAINING.md §0/§5/§9 (18 linhas) | docs/hbtrack/evidence/AR_238/executor_main.log | VERIFICADO |
+| AR-TRAIN-055 | E | BE: PATCH /attendance/pending-items/{item_id}/resolve (AR_239, Batch 26) | TEST-TRAIN-CONTRACT-100 | docs/hbtrack/evidence/AR_239/executor_main.log | VERIFICADO |
+| AR-TRAIN-056 | E | BE: PATCH apply-draft + POST justify-suggestion AI Coach (AR_240, Batch 26) | TEST-TRAIN-CONTRACT-102/104 | docs/hbtrack/evidence/AR_240/executor_main.log | VERIFICADO |
+| AR-TRAIN-057 | E | BE: GET wellness-content-gate (AR_241, Batch 26) | TEST-TRAIN-CONTRACT-105 | docs/hbtrack/evidence/AR_241/executor_main.log | VERIFICADO |
+| AR-TRAIN-058 | M | FE: corrigir URLs training-phase3.ts (AR_242, Batch 26) | CONTRACT-TRAIN-100..105 no FE | docs/hbtrack/evidence/AR_242/executor_main.log | VERIFICADO |
+| AR-TRAIN-059 | G | Sync TEST_MATRIX §8/§9 + BACKLOG pós-Batch 26 + v3.2.0 (AR_243, Batch 26) | TEST_MATRIX_TRAINING.md §8/§9/§0 + AR_BACKLOG_TRAINING.md | docs/hbtrack/evidence/AR_243/executor_main.log | VERIFICADO |
+| AR-TRAIN-061 | T | Contract tests CONTRACT-074/075 wellness-rankings (AR_245, Batch 27) | tests/training/contracts/test_contract_train_074_075_wellness_rankings.py + TEST_MATRIX §8/§9/§0 | docs/hbtrack/evidence/AR_245/executor_main.log | VERIFICADO |
+| AR-TRAIN-062 | G | Sync Backlog + TEST_MATRIX §9 pós-Batch 27 (AR_246, Batch 28) | AR_BACKLOG_TRAINING.md + TEST_MATRIX_TRAINING.md | docs/hbtrack/evidence/AR_246/executor_main.log | VERIFICADO |
+| AR-TRAIN-063 | T/G | Fase 0+1: TRUTH SUITE dupla + triage 4 buckets — baseline 610p/4s/1xf/0f (AR_247, Batch 29) | `_reports/training/DONE_GATE_TRAINING.md` (RH-08) | docs/hbtrack/evidence/AR_247/executor_main.log | VERIFICADO |
+| AR-TRAIN-064 | B | Fix user.organization_id not a column — xfail INV-148→PASS (AR_248, Batch 29) | app/services/exercise_acl_service.py | docs/hbtrack/evidence/AR_248/executor_main.log | VERIFICADO |
+| AR-TRAIN-065 | B/E | Fix 4 SKIP em test_058/test_059 — INV-058/059→PASS (AR_249, Batch 29) | tests/training/invariants/test_inv_train_058*.py, test_inv_train_059*.py | docs/hbtrack/evidence/AR_249/executor_main.log | VERIFICADO |
+| AR-TRAIN-066 | T | Converter 9 LEGACY_INVALID para TRUTH — NO_MOCKS_GLOBAL atingido (AR_250, Batch 29) | tests/training/invariants/ (9 arquivos) | docs/hbtrack/evidence/AR_250/executor_main.log | VERIFICADO |
+| AR-TRAIN-067 | G | Sync documental pos-Batch 29: Backlog+TEST_MATRIX+DONE_GATE(relatório)+Kanban (AR_251, Batch 29) | AR_BACKLOG_TRAINING.md, TEST_MATRIX_TRAINING.md, `_reports/training/DONE_GATE_TRAINING.md`, Kanban | docs/hbtrack/evidence/AR_251/executor_main.log | VERIFICADO |
+| AR-TRAIN-068 | M | Refactor FE Wellness Pre/Pos: migrar WellnessPreForm+WellnessPostForm para cliente gerado — zero novos erros TS (AR_252, Batch 30) | src/api/generated/api-instance.ts, WellnessPreForm.tsx, WellnessPostForm.tsx | docs/hbtrack/evidence/AR_252/executor_main.log | VERIFICADO |
+| AR-TRAIN-069 | B | BE: implementar async def get/update wellness-pre e wellness-post por ID — AC1..AC8 PASS, stubs 501 removidos (AR_253, Batch 31) | app/api/v1/routers/wellness_pre.py, app/api/v1/routers/wellness_post.py, app/services/wellness_pre_service.py, app/services/wellness_post_service.py | docs/hbtrack/evidence/AR_253/executor_main.log | VERIFICADO |
+| AR-TRAIN-070 | T | Testes impl GET/PATCH wellness por ID: 4 classes CONTRACT-031/032/037/038 Impl (static analysis aprimorada — async def, get_current_user, service delegation, db.commit) (AR_254, Batch 32) | tests/training/contracts/test_contract_train_029_039_wellness.py | docs/hbtrack/evidence/AR_254/executor_main.log | VERIFICADO |
+| AR-TRAIN-071 | G | Sync documental pós-Batch 31+32: BACKLOG v3.6.0 + TEST_MATRIX v4.2.0 + Kanban Batch 32 + _INDEX v1.5.0 (AR_255, Batch 32) | AR_BACKLOG_TRAINING.md, TEST_MATRIX_TRAINING.md, Hb Track Kanban.md, docs/hbtrack/modulos/treinos/_INDEX.md | docs/hbtrack/evidence/AR_255/executor_main.log | VERIFICADO |
 
 ---
 
@@ -638,7 +747,75 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 
 ---
 
-## 11) Protocolo de Atualização (normativo)
+## 13) TRUTH SUITE POLICY (Normativo)
+
+> Esta seção declara o que conta e o que não conta como evidência de PASS para o módulo TRAINING.  
+> Autoridade: `TEST_MATRIX_TRAINING.md` §§13.1..13.6 e `_INDEX.md` § POLÍTICA DE TESTES.
+
+### §13.1 TRUTH_BE (evidência válida atual)
+
+Status atual:
+- `TRUTH_BE` = vigente e obrigatória
+- `TRUTH_FE` = futuro (ainda não materializada)
+
+Regra:
+Até a materialização da suíte automatizada do Frontend, a verdade operacional do módulo TRAINING é definida por `TRUTH_BE` + contrato gerado + sincronização obrigatória do cliente FE quando aplicável.
+
+Um resultado PASS é **evidência válida** somente quando todas as colunas abaixo são `YES` / `PASS`:
+
+| AR_ID | TRUTH=YES | DB=`hb_track`/`hb_track_dev` | NO_MOCKS=PASS (rg=0 matches) | Evidência mínima aceita |
+|---|---|---|---|---|
+| (qualquer AR de teste) | reset+migrations+seed executados antes do pytest | DATABASE_URL não contém `hb_track_prod` | `rg` RH-09a e RH-09b retornam 0 matches | Saída do TRUTH command + `result.json` do Testador |
+
+**TRUTH command canônico:**
+```bash
+python scripts/db/reset_hb_track_test.py && cd "Hb Track - Backend" && pytest -q tests/training/
+```
+
+Evidência mínima exigida por resultado TRUTH:
+1. Saída completa do `pytest` (stdout com contagem `X passed, 0 failed`)
+2. `result.json` do Testador registrando `status: VERIFICADO`
+3. Saída ou exit 0 do `reset_hb_track_test.py`
+
+### §13.2 TRUTH_FE_FUTURO (planejado, não bloqueante nesta fase)
+
+Status:
+- Testes automatizados do Frontend ainda não materializados.
+
+Ferramenta oficial prevista:
+- **Playwright**
+
+Objetivo futuro:
+Validar fluxo real, telas, UX e integração FE↔BE do módulo TRAINING.
+
+Regra:
+- A ausência de `TRUTH_FE` não invalida `TRUTH_BE`.
+- Enquanto `TRUTH_FE` não existir, mudanças de UI/UX são validadas por:
+  - `TRAINING_SCREENS_SPEC.md`
+  - `TRAINING_USER_FLOWS.md`
+  - `TRAINING_FRONT_BACK_CONTRACT.md`
+  - `GENERATED_CLIENT_SYNC`
+  - `TRUTH_BE`
+
+Quando `TRUTH_FE` for materializada:
+- deverá entrar nesta matriz com comando canônico próprio;
+- passará a ser obrigatória para mudanças que afetem UI/UX do módulo.
+
+### §13.3 LEGACY_INVALID (não conta como evidência)
+
+> **LEGACY_INVALID:** qualquer teste que viole `NO_MOCKS_GLOBAL` (RH-09) é inválido como evidência. Deve estar `@pytest.mark.xfail(strict=True, reason="LEGACY_INVALID: aguarda reescrita como TRUTH")` até ser reescrito como TRUTH.
+
+> **PASS de teste inválido não é PASS do produto.**
+
+Exemplos históricos de escopo LEGACY_INVALID (já corrigidos ou arquivados):
+- AR-TRAIN-052: stubs de tipo FE (classe M pré-implementação) — não constitui evidência de TRUTH
+- Qualquer teste com `unittest.mock` / `MagicMock` / `monkeypatch` / `patch(` sem AR de correção aprovada
+
+| Condição | Classificação | Ação obrigatória |
+|---|---|---|
+| Teste usa `rg` RH-09a/09b com match | LEGACY_INVALID | Marcar `xfail(strict=True)` e abrir AR de correção |
+| Teste passou sem reset+migrations | LEGACY_INVALID | Reexecutar como TRUTH; não registrar como evidência |
+| Teste passou sem Postgres real | LEGACY_INVALID | Não registrar como evidência; corrigir ambiente |
 
 Toda mudança em:
 - `INVARIANTS_TRAINING.md` ⇒ atualizar §5
@@ -649,6 +826,294 @@ Toda mudança em:
 
 Regra:
 - Atualização desta matriz é obrigatória no mesmo ciclo da AR (ou marcar explicitamente `BLOQUEADO` com motivo).
+
+### §13.4 API_SYNC_REQUIRED (NORMATIVO)
+
+Regra:
+Sempre que houver mudança que afete qualquer item abaixo no módulo TRAINING:
+- `CONTRACT-TRAIN-*`,
+- path HTTP,
+- `operationId`,
+- request schema,
+- response schema,
+- enum canônico,
+- tipo canônico (`uuid`, `datetime`, `date`, etc.),
+
+o agente DEVE executar o fluxo de sincronização FE↔BE abaixo:
+
+1. materializar a mudança no Backend real;
+2. regenerar `Hb Track - Backend/docs/ssot/openapi.json`;
+3. regenerar o cliente FE em `Hb Track - Frontend/src/api/generated/*`;
+4. sobrescrever o código gerado anterior;
+5. ajustar a(s) tela(s)/adapter(s) impactada(s) para consumir o cliente gerado;
+6. só então declarar paridade FE↔BE validada.
+
+Comando técnico de referência para geração FE:
+```bash
+npx @openapitools/openapi-generator-cli generate \
+  -i openapi.json \
+  -g typescript-axios \
+  -o ./src/api/generated
+```
+
+Regras obrigatórias:
+- `Hb Track - Frontend/src/api/generated/*` é artefato derivado.
+- É proibido editar manualmente arquivos dentro de `src/api/generated/*`.
+- Se o contrato já estiver tipado no OpenAPI, o FE deve preferir os tipos e APIs gerados.
+- Código em `src/lib/api/*` (quando existir) é subordinado ao cliente gerado e não pode redefinir contrato normativo.
+
+spec válida
+→ spec compatível
+→ gerar client
+→ validar produto
+
+## CONTRACT_DIFF_GATE (NORMATIVO)
+
+Status:
+- obrigatório para mudanças que afetem contrato materializado no OpenAPI.
+
+Objetivo:
+Bloquear breaking changes silenciosas no contrato OpenAPI do módulo TRAINING antes da regeneração/aceitação do cliente FE gerado.
+
+Ferramenta oficial:
+- **oasdiff**
+
+Comando canônico:
+```bash
+oasdiff breaking "contracts/openapi/baseline/openapi_baseline.json" "Hb Track - Backend/docs/ssot/openapi.json"
+```
+
+Regra:
+Sempre que `API_SYNC_REQUIRED = sim`, o agente DEVE comparar a nova versão de `openapi.json` com a última versão aceita da spec.
+
+Evidência mínima:
+1. `contracts/openapi/baseline/openapi_baseline.json` identificado;
+2. `openapi.json` novo regenerado;
+3. comparação entre spec anterior e nova;
+4. ausência de breaking changes
+   OU
+5. breaking change coberto por:
+   - depreciação + substituição
+   - nova versão de contrato
+   - waiver explícito aprovado
+
+Considera-se breaking change:
+- remoção de endpoint
+- remoção de campo em request/response
+- alteração incompatível de tipo
+- alteração incompatível de enum
+- renomeação de `operationId`
+- remoção/alteração incompatível de status code documentado
+- qualquer mudança que invalide o consumo do cliente FE anterior sem política de migração
+
+FAIL se:
+- houver breaking change silenciosa entre a spec nova e a anterior
+- `operationId` mudar sem política de migração
+- endpoint/campo/enum/status code for removido sem depreciação, nova versão ou waiver
+- `GENERATED_CLIENT_SYNC` for executado sobre contrato incompatível sem governança explícita
+- convergência FE↔BE for declarada sem comparação entre specs
+
+Regra de precedência:
+- `OPENAPI_SPEC_QUALITY` deve passar antes de `CONTRACT_DIFF_GATE`
+- `CONTRACT_DIFF_GATE` deve passar antes de `GENERATED_CLIENT_SYNC`
+
+Fluxo obrigatório:
+1. backend atualizado
+2. `openapi.json` regenerado
+3. `OPENAPI_SPEC_QUALITY` = PASS
+4. `CONTRACT_DIFF_GATE` = PASS
+5. `GENERATED_CLIENT_SYNC`
+6. FE ajustado
+7. `TRUTH_BE` = PASS
+
+## RUNTIME CONTRACT VALIDATION (NORMATIVO)
+
+Status:
+- obrigatório para mudanças de contrato materializado no OpenAPI.
+
+Objetivo:
+Garantir que a API real implementada continue aderente à spec OpenAPI vigente.
+
+Ferramenta oficial:
+- **Schemathesis**
+
+Comando canônico:
+```bash
+schemathesis run "Hb Track - Backend/docs/ssot/openapi.json" --base-url=http://localhost:8000
+```
+
+Regra:
+Mudanças em contrato, request schema, response schema, status codes ou enums canônicos exigem validação runtime da API real contra a spec.
+
+Evidência mínima:
+1. backend em execução;
+2. `openapi.json` regenerado;
+3. Schemathesis executado contra a API real;
+4. `0 failures`.
+
+FAIL se:
+- request/response real divergir do contrato
+- status code real divergir do contrato
+- Schemathesis falhar
+- contrato for declarado convergente sem validação runtime
+
+
+
+### §13.5 CHANGE IMPACT ROUTING (NORMATIVO) — como saber o que fazer
+
+| Tipo | Mudança típica | SSOT a atualizar (se aplicável) | Subset obrigatório (antes) | Sync obrigatório | TRUTH final |
+|---|---|---|---|---|---|
+| A | Bugfix em regra (invariante falha) | INVARIANTS_TRAINING.md (se a regra mudou) | pytest -q tests/training/invariants/ | não | TRUTH_BE completa |
+| A | Bugfix em API TRAINING (4xx/5xx, validação) | TRAINING_FRONT_BACK_CONTRACT.md (se shape/rota mudou) | pytest -q tests/training/ && pytest -q tests/api/ | se contrato mudou, sim | TRUTH_BE completa |
+| A | Bugfix em CRUD/fluxo E2E de treino | TRAINING_USER_FLOWS.md (se sequência mudou) | pytest -q tests/test_training_crud_e2e.py | se contrato mudou, sim | TRUTH_BE completa |
+| B | Refactor de service TRAINING (mesmo comportamento externo) | nenhum (se contrato/invariante não mudou) | pytest -q tests/training/ | não | TRUTH_BE completa |
+| C | Mudança de fluxo (ordem/estado, regras de transição) | TRAINING_USER_FLOWS.md | pytest -q tests/test_training_crud_e2e.py && pytest -q tests/training/ | se contrato mudou, sim | TRUTH_BE completa |
+| C | Mudança de UI/UX (tela/estado/texto) | TRAINING_SCREENS_SPEC.md | pytest -q tests/test_training_crud_e2e.py && pytest -q tests/test_api_routes.py && pytest -q tests/test_router.py | se contrato mudou, sim | TRUTH_BE completa |
+| D | Nova capability TRAINING (novo domínio dentro do módulo) | CONTRACT + FLOWS + SCREENS + INVARIANTS (o que aplicar) | criar testes TRUTH em tests/training/ (sem mocks) + rodar pytest -q tests/training/ | sim | TRUTH_BE completa |
+| E | Alteração de contrato TRAINING (rota/payload/response) | TRAINING_FRONT_BACK_CONTRACT.md + (FLOWS/SCREENS se afetar) | pytest -q tests/api/ && pytest -q tests/test_api_routes.py && pytest -q tests/test_router.py | sim (obrigatório) | TRUTH_BE completa |
+| E | Alteração de schema/modelos que afeta TRAINING | INVARIANTS (se regra mudou) + CONTRACT (se payload mudou) | pytest -q tests/models/ && pytest -q tests/schemas/ && pytest -q tests/training/ | se refletir em OpenAPI, sim | TRUTH_BE completa |
+
+Regras adicionais (obrigatórias):
+- Se qualquer SSOT (INVARIANTS/CONTRACT/FLOWS/SCREENS) mudar, o agente deve apontar a mudança com âncora (ID do INV/CONTRACT/FLOW/TELA) no commit/PR.
+- Se TRUTH TEST falhar: corrigir produto real (código/rotas/serviços/schema/UI). Proibido alterar teste para simular comportamento.
+- NO_MOCKS_GLOBAL: rg=0 matches em tests/training/ é pré-condição para declarar PASS válido.
+- Se a mudança afetar contrato materializado no OpenAPI, `API_SYNC_REQUIRED` passa a ser obrigatório.
+- Não é permitido declarar paridade FE↔BE concluída sem regenerar `Hb Track - Frontend/src/api/generated/*` quando houver mudança de contrato.
+
+Regra complementar de roteamento:
+- Se `Sync obrigatório = sim` e a mudança afetar contrato materializado no OpenAPI, o agente DEVE satisfazer `OPENAPI_SPEC_QUALITY` antes de executar ou aceitar `GENERATED_CLIENT_SYNC`.
+- Não é permitido declarar paridade FE↔BE concluída se o cliente gerado tiver sido produzido a partir de `openapi.json` sem lint/validate.
+
+Regras complementares de roteamento:
+- Se `Sync obrigatório = sim`, a ordem mínima é:
+  1. `OPENAPI_SPEC_QUALITY`
+  2. `CONTRACT_DIFF_GATE`
+  3. `GENERATED_CLIENT_SYNC`
+  4. `RUNTIME CONTRACT VALIDATION`
+  5. `TRUTH_BE`
+- Não é permitido declarar paridade FE↔BE concluída apenas porque o cliente FE foi regenerado.
+- Paridade FE↔BE exige:
+  - spec válida,
+  - spec compatível (ou evolução governada),
+  - cliente gerado sincronizado,
+  - runtime contract validation,
+  - backend validado por `TRUTH_BE`.
+
+#### §13.5.1 GENERATED_CLIENT_SYNC (NORMATIVO)
+
+Quando `API_SYNC_REQUIRED = sim`, a evidência mínima de convergência FE↔BE passa a incluir:
+
+1. Backend atualizado e validado;
+2. `openapi.json` regenerado;
+3. cliente FE regenerado em `Hb Track - Frontend/src/api/generated/*`;
+4. tela(s) afetada(s) ajustada(s) para consumir o cliente gerado;
+5. TRUTH_BE completa com PASS.
+
+Regra:
+- Mudança em contrato com FE ainda consumindo payload manual antigo = convergência incompleta.
+- Arquivos em `src/api/generated/*` não contam como "implementação manual"; contam como artefato derivado.
+- O código do FE que usa o cliente gerado continua sendo responsabilidade de implementação real e deve ser ajustado quando necessário.
+
+Regra adicional:
+- `GENERATED_CLIENT_SYNC` só pode ser considerado válido quando `OPENAPI_SPEC_QUALITY` também estiver satisfeito.
+- Gerar o cliente FE a partir de spec inválida NÃO conta como convergência FE↔BE.
+
+### §13.6 OPENAPI_SPEC_QUALITY (NORMATIVO)
+
+Status:
+- obrigatório para mudanças que afetem contrato materializado no OpenAPI.
+
+Objetivo:
+Garantir que mudanças de contrato no módulo TRAINING só possam ser consideradas convergidas quando a spec OpenAPI estiver tecnicamente válida.
+
+Ferramenta oficial:
+- **Redocly CLI**
+
+Comando canônico:
+```bash
+npx @redocly/cli@latest lint "Hb Track - Backend/docs/ssot/openapi.json"
+```
+
+Regra:
+Sempre que `API_SYNC_REQUIRED = sim`, o agente DEVE validar a qualidade da spec antes de regenerar ou aceitar o cliente FE gerado.
+
+Evidência mínima:
+1. `openapi.json` regenerado;
+2. stdout do lint sem erro bloqueante;
+3. referência explícita ao arquivo validado;
+4. `GENERATED_CLIENT_SYNC` executado quando aplicável;
+5. `TRUTH_BE` completa com PASS.
+
+FAIL se:
+- `openapi.json` mudar e não houver validação da spec;
+- cliente FE for regenerado a partir de spec inválida;
+- contrato for declarado convergente sem lint/validate;
+- `GENERATED_CLIENT_SYNC` ocorrer sem `OPENAPI_SPEC_QUALITY = PASS`.
+
+---
+
+## DONE_TRAINING_ATINGIDO (NORMATIVO)
+
+O módulo TRAINING só pode ser considerado **DONE** quando TODOS os gates abaixo forem aprovados.
+
+Ordem obrigatória de execução:
+
+1. `OPENAPI_SPEC_QUALITY`
+2. `CONTRACT_DIFF_GATE`
+3. `GENERATED_CLIENT_SYNC` (quando aplicável)
+4. `RUNTIME CONTRACT VALIDATION`
+5. `TRUTH_BE`
+6. `TRUTH_FE` (quando materializado)
+
+Regras:
+
+DONE é válido apenas se:
+- spec OpenAPI válida
+- nenhuma breaking change não governada
+- cliente FE gerado sincronizado (quando aplicável)
+- API real aderente à spec
+- suíte real do backend passando
+
+Critério técnico mínimo:
+
+| Gate | Resultado exigido |
+|---|---|
+| `OPENAPI_SPEC_QUALITY` | PASS |
+| `CONTRACT_DIFF_GATE` | PASS |
+| `RUNTIME CONTRACT VALIDATION` | PASS |
+| `TRUTH_BE` | PASS |
+
+Quando o frontend possuir testes automatizados:
+
+| Gate | Resultado exigido |
+|---|---|
+| `TRUTH_FE` | PASS |
+
+Promoção de baseline:
+
+A spec nova substitui `contracts/openapi/baseline/openapi_baseline.json` (baseline para `CONTRACT_DIFF_GATE`) somente após:
+
+1. `OPENAPI_SPEC_QUALITY` = PASS
+2. `CONTRACT_DIFF_GATE` = PASS
+3. `GENERATED_CLIENT_SYNC` = PASS (quando aplicável)
+4. `RUNTIME CONTRACT VALIDATION` = PASS
+5. `TRUTH_BE` = PASS
+
+Somente então: `Hb Track - Backend/docs/ssot/openapi.json` → promovido → `contracts/openapi/baseline/openapi_baseline.json`
+
+FAIL se qualquer uma das condições abaixo ocorrer:
+
+- spec inválida
+- breaking change silenciosa
+- cliente gerado desatualizado (quando `GENERATED_CLIENT_SYNC` obrigatório)
+- divergência runtime entre API e spec
+- qualquer falha na `TRUTH_SUITE`
+
+Efeito:
+
+- DONE inválido
+- execução bloqueada
+- convergência FE↔BE inválida
 
 ---
 

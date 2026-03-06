@@ -309,6 +309,11 @@ async def generic_exception_handler(request: Request, exc: Exception) -> JSONRes
         },
     )
 
+from fastapi.routing import APIRoute
+
+for route in app.routes:
+    if isinstance(route, APIRoute):
+        route.operation_id = route.name  # Usa o nome da função como ID
 
 # ============================================================================
 # Routers
@@ -363,7 +368,7 @@ async def startup_event() -> None:
     logger.warning("═══════════════════════════════════════════════════════════")
 
     logger.info(
-        "🚀 HB Tracking API %s iniciando...",
+        "🚀 HB Track API %s iniciando...",
         settings.API_VERSION_NUMBER,
         extra={
             "environment": settings.ENV,
@@ -408,9 +413,9 @@ async def startup_event() -> None:
         settings.cors_allow_headers_list,
     )
 
-    logger.info("🚀 HB Tracking API %s iniciada", settings.API_VERSION_NUMBER)
+    logger.info("🚀 HB Track API %s iniciada", settings.API_VERSION_NUMBER)
 
 
 @app.on_event("shutdown")
 async def shutdown_event() -> None:
-    logger.info("🛑 HB Tracking API encerrada")
+    logger.info("🛑 HB Track API encerrada")

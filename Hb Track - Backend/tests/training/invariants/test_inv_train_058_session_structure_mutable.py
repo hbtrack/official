@@ -250,9 +250,6 @@ class TestInvTrain058SessionStructureMutable:
         assert result.order_index == 1
         assert result.duration_minutes == 15
 
-    @pytest.mark.skip(
-        reason="PENDING: session_exercise_service não valida status da sessão antes de add/update/delete"
-    )
     @pytest.mark.asyncio
     async def test_invalid_session_readonly_rejects_add_exercise(
         self,
