@@ -1319,6 +1319,60 @@ EVIDENCE_PACK:
 
 ---
 
+## 50. Cards -- TRAINING Batch 33 -- FE Migration Generated Client + BE Fix + Sync Documental (AR_256..AR_262)
+
+> **Contexto**: Batch 33 — AR-TRAIN-072..078 (AR_256..AR_262). D×5 + B×1 + G×1: migração completa do FE para cliente gerado (api-instance.ts, hooks, componentes session, exercises, training-phase3.ts) + BE fix exports.py 503→202 (DEC-TRAIN-004) + sync documental pós-Batch 33.
+> **Correspondência Backlog**: AR-TRAIN-072 → AR_256; AR-TRAIN-073 → AR_257; AR-TRAIN-074 → AR_258; AR-TRAIN-075 → AR_259; AR-TRAIN-076 → AR_260; AR-TRAIN-077 → AR_261; AR-TRAIN-078 → AR_262
+> **Dependências obrigatórias**: AR-TRAIN-071 VERIFICADO (AR_255, Batch 32).
+
+### ✅ VERIFICADO (2026-03-07) — hb seal 256..262 exit=0
+
+| AR | AR-TRAIN | Título | Status |
+|---|---|---|---|
+| **AR_256** | TRAIN-072 | api-instance.ts: 9 singletons + fix interceptor (FE generated client) | ✅ VERIFICADO |
+| **AR_257** | TRAIN-073 | Migrar useSessions + useSessionTemplates para cliente gerado | ✅ VERIFICADO |
+| **AR_258** | TRAIN-074 | Migrar 9 componentes session para generated client | ✅ VERIFICADO |
+| **AR_259** | TRAIN-075 | Migrar useCycles + useMicrocycles + useExercises para cliente gerado | ✅ VERIFICADO |
+| **AR_260** | TRAIN-076 | Migrar exercise components + training-phase3.ts para cliente gerado | ✅ VERIFICADO |
+| **AR_261** | TRAIN-077 | Fix DEC-TRAIN-004: exports.py 503 → 202 (degraded mode) | ✅ VERIFICADO |
+| **AR_262** | TRAIN-078 | Sync documental pós-Batch 33: BACKLOG v3.7.0 + TEST_MATRIX v4.3.0 + Kanban + _INDEX v1.6.0 | ✅ VERIFICADO |
+
+---
+
+## 52. Cards -- TRAINING Batch 35 -- DONE_CONTRACT Implementation (AR_265..AR_270)
+
+> **Contexto**: Batch 35 — AR-TRAIN-081..086 (AR_265..AR_270). G×2 + A×4: DONE_CONTRACT_TRAINING.md.md registrado na cadeia canônica + criação de TRAINING_SCOPE_REGISTRY.yaml, TRAINING_STATE_MACHINE.yaml, TRAINING_PERF_LIMITS.json, traceability_training_core.csv + sync documental.
+> **Correspondência Backlog**: AR-TRAIN-081 → AR_265; AR-TRAIN-082 → AR_266; AR-TRAIN-083 → AR_267; AR-TRAIN-084 → AR_268; AR-TRAIN-085 → AR_269; AR-TRAIN-086 → AR_270
+> **Dependências obrigatórias**: AR-TRAIN-080 VERIFICADO (AR_264, Batch 34).
+
+### ✅ VERIFICADO (2026-03-08) — hb seal 265..270 exit=0
+
+| AR | AR-TRAIN | Título | Status |
+|---|---|---|---|
+| **AR_265** | TRAIN-081 | DONE_CONTRACT_TRAINING.md.md registrado na cadeia canônica: _INDEX.md v1.8.0 + entry 6b | ✅ VERIFICADO |
+| **AR_266** | TRAIN-082 | TRAINING_SCOPE_REGISTRY.yaml criado: 13 CORE + 7 EXTENDED + 2 EXPERIMENTAL | ✅ VERIFICADO |
+| **AR_267** | TRAIN-083 | TRAINING_STATE_MACHINE.yaml criado: 5 entidades stateful CORE | ✅ VERIFICADO |
+| **AR_268** | TRAIN-084 | TRAINING_PERF_LIMITS.json criado: 16 itens CORE com SLOs baseline | ✅ VERIFICADO |
+| **AR_269** | TRAIN-085 | traceability_training_core.csv criado como skeleton (9 headers, 0 dados) | ✅ VERIFICADO |
+| **AR_270** | TRAIN-086 | Sync documental pós-Batch 35: BACKLOG v3.9.0 + TEST_MATRIX v4.5.0 + Kanban + _INDEX v1.8.0 | ✅ VERIFICADO |
+
+---
+
+## 51. Cards -- TRAINING Batch 34 -- trainingAlertsSuggestionsApi + CONTRACT sync (AR_263..AR_264)
+
+> **Contexto**: Batch 34 — AR-TRAIN-079..080 (AR_263..AR_264). D/E×1 + G×1: singleton `trainingAlertsSuggestionsApi` adicionado em `api-instance.ts` (CONTRACT-TRAIN-077..085 disponível via cliente gerado) + TRAINING_FRONT_BACK_CONTRACT.md §5.10 DIVERGENTE→IMPLEMENTADO + useSuggestions.ts formalmente deferred a CAP-001 + sync documental pós-Batch 34.
+> **Correspondência Backlog**: AR-TRAIN-079 → AR_263; AR-TRAIN-080 → AR_264
+> **Dependências obrigatórias**: AR-TRAIN-078 VERIFICADO (AR_262, Batch 33).
+
+### ✅ VERIFICADO (2026-03-07) — hb seal 263..264 exit=0
+
+| AR | AR-TRAIN | Título | Status |
+|---|---|---|---|
+| **AR_263** | TRAIN-079 | trainingAlertsSuggestionsApi singleton + TRAINING_FRONT_BACK_CONTRACT.md §5.10 DIVERGENTE→IMPLEMENTADO + useSuggestions deferred CAP-001 | ✅ VERIFICADO |
+| **AR_264** | TRAIN-080 | Sync documental pós-Batch 34: BACKLOG v3.8.0 + TEST_MATRIX v4.4.0 + Kanban + _INDEX v1.7.0 | ✅ VERIFICADO |
+
+---
+
 ## 49. Cards -- TRAINING Batch 32 -- Testes Impl Wellness + Sync Documental (AR_254, AR_255)
 
 > **Contexto**: Batch 32 — AR-TRAIN-070 (AR_254) + AR-TRAIN-071 (AR_255). T+G only: testes de implementação runtime GET/PATCH wellness por ID (CONTRACT-031/032/037/038) + sync documental pós-Batch 31+32. Sem mudança de schema DB, sem migration, sem mudança de contrato openapi.

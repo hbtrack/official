@@ -1087,11 +1087,11 @@ def get_staged_ars(repo_root: Path) -> List[str]:
 def _gate_handoff_preflight(repo_root: Path) -> None:
     """
     DOC-GATE-019: soft pre-flight do contrato de handoff.
-    Executa check_handoff_contract.py contra _reports/ARQUITETO.md.
+    Executa check_handoff_contract.py contra _reports/ARQUITETO.yaml.
     Emite ⚠️  warning se falhar, mas NÃO bloqueia hb report (exit 0).
     """
     gate_script = repo_root / "scripts" / "gates" / "check_handoff_contract.py"
-    handoff_path = repo_root / "_reports" / "ARQUITETO.md"
+    handoff_path = repo_root / "_reports" / "ARQUITETO.yaml"
 
     if not gate_script.exists() or not handoff_path.exists():
         return  # gate ausente ou handoff inexistente — silencioso
@@ -1600,7 +1600,7 @@ def cmd_verify(ar_id: str) -> None:
         fail(
             E_DOD_STRICT_WARN,
             f"AR_{ar_id}: {len(_dod_warns)} WARN(s) de DoD sem waiver explícito. "
-            f"Veja result.json campo 'dod'. Corrija ou declare waiver no _reports/EXECUTOR.md.",
+            f"Veja result.json campo 'dod'. Corrija ou declare waiver no _reports/EXECUTOR.yaml.",
             exit_code=2,
         )
 
@@ -2125,8 +2125,6 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
-
 
 
 

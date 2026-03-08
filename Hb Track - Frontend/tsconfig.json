@@ -45,8 +45,9 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
-, "src/features/intake/FichaUnicaWizard/FichaUnicaWizard.tsx}"  ],
+    ".next/dev/types/**/*.ts",
+    "src/features/intake/FichaUnicaWizard/FichaUnicaWizard.tsx}"
+  ],
   "exclude": [
     "node_modules"
   ]

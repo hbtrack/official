@@ -9,19 +9,20 @@
 
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
+import { trainingApi } from '@/api/generated/api-instance';
 import {
-  TrainingSessionsAPI,
-  TrainingSession,
-  SessionFilters,
-  SessionUpdate,
   DeviationAnalysis,
   FocusValues,
   SessionClosureResponse,
+  SessionCreate,
+  SessionFilters,
+  SessionUpdate,
+  TrainingSession,
 } from '@/lib/api/trainings';
 import { sessionKeys } from '@/lib/queryKeys/sessionKeys';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useCallback, useState } from 'react';
+import { toast } from 'sonner';
 
 // ============================================================================
 // TYPES
@@ -90,8 +91,16 @@ export function useSessionsList(
   return useQuery({
     queryKey: sessionKeys.list(filters),
     queryFn: async () => {
-      const response = await TrainingSessionsAPI.listSessions(filters || {});
-      return response.items;
+      const f = filters || {};
+      const response = await trainingApi.listTrainingSessionsApiV1TrainingSessionsGet(
+        f.team_id ?? null,
+        f.season_id ?? null,
+        f.start_date ?? null,
+        f.end_date ?? null,
+        f.page,
+        f.limit,
+      );
+      return response.data.items as TrainingSession[];
     },
     staleTime: 60 * 1000, // 60 segundos
     gcTime: 5 * 60 * 1000, // 5 minutos
@@ -119,7 +128,7 @@ export function useSessionDetailQuery(
 
   return useQuery({
     queryKey: sessionKeys.detail(sessionId),
-    queryFn: () => TrainingSessionsAPI.getSession(sessionId),
+    queryFn: () => trainingApi.getTrainingSessionByIdApiV1TrainingSessionsTrainingSessionIdGet(sessionId).then(r => r.data as unknown as TrainingSession),
     staleTime: 60 * 1000,
     gcTime: 10 * 60 * 1000,
     enabled: (options?.enabled ?? true) && !!sessionId,
@@ -153,7 +162,7 @@ export function useUpdateSession() {
 
   return useMutation({
     mutationFn: ({ sessionId, data }: { sessionId: string; data: SessionUpdate }) =>
-      TrainingSessionsAPI.updateSession(sessionId, data),
+      trainingApi.updateTrainingSessionApiV1TrainingSessionsTrainingSessionIdPatch(sessionId, data as any).then(r => r.data as unknown as TrainingSession),
 
     onMutate: async ({ sessionId, data }) => {
       // 1. Cancela queries em andamento
@@ -236,8 +245,17 @@ export function useUpdateSessionFocus() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ sessionId, focus }: { sessionId: string; focus: Partial<FocusValues> }) =>
-      TrainingSessionsAPI.updateSessionFocus(sessionId, focus),
+    mutationFn: ({ sessionId, focus }: { sessionId: string; focus: Partial<FocusValues> }) => {
+      const data: Record<string, any> = {};
+      if (focus.attack_positional_pct !== undefined) data.focus_attack_positional_pct = focus.attack_positional_pct;
+      if (focus.defense_positional_pct !== undefined) data.focus_defense_positional_pct = focus.defense_positional_pct;
+      if (focus.transition_offense_pct !== undefined) data.focus_transition_offense_pct = focus.transition_offense_pct;
+      if (focus.transition_defense_pct !== undefined) data.focus_transition_defense_pct = focus.transition_defense_pct;
+      if (focus.attack_technical_pct !== undefined) data.focus_attack_technical_pct = focus.attack_technical_pct;
+      if (focus.defense_technical_pct !== undefined) data.focus_defense_technical_pct = focus.defense_technical_pct;
+      if (focus.physical_pct !== undefined) data.focus_physical_pct = focus.physical_pct;
+      return trainingApi.updateTrainingSessionApiV1TrainingSessionsTrainingSessionIdPatch(sessionId, data as any).then(r => r.data as unknown as TrainingSession);
+    },
 
     onMutate: async ({ sessionId, focus }) => {
       await queryClient.cancelQueries({ queryKey: sessionKeys.detail(sessionId) });
@@ -299,7 +317,7 @@ export function usePublishSession() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (sessionId: string) => TrainingSessionsAPI.publishSession(sessionId),
+    mutationFn: (sessionId: string) => trainingApi.publishTrainingSessionApiV1TrainingSessionsTrainingSessionIdPublishPost(sessionId).then(r => r.data as unknown as TrainingSession),
 
     onMutate: async (sessionId) => {
       await queryClient.cancelQueries({ queryKey: sessionKeys.all });
@@ -352,7 +370,7 @@ export function useCloseSession() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (sessionId: string) => TrainingSessionsAPI.closeSession(sessionId),
+    mutationFn: (sessionId: string) => trainingApi.closeTrainingSessionApiV1TrainingSessionsTrainingSessionIdClosePost(sessionId).then(r => r.data as unknown as SessionClosureResponse),
 
     onMutate: async (sessionId) => {
       await queryClient.cancelQueries({ queryKey: sessionKeys.all });
@@ -413,7 +431,7 @@ export function useDeleteSession() {
 
   return useMutation({
     mutationFn: ({ sessionId, reason }: { sessionId: string; reason: string }) =>
-      TrainingSessionsAPI.deleteSession(sessionId, reason),
+      trainingApi.deleteTrainingSessionApiV1TrainingSessionsTrainingSessionIdDelete(sessionId, reason).then(r => r.data as any),
 
     onMutate: async ({ sessionId }) => {
       // 1. Cancela queries em andamento
@@ -480,8 +498,8 @@ export function useCreateSessionMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: Parameters<typeof TrainingSessionsAPI.createSession>[0]) =>
-      TrainingSessionsAPI.createSession(data),
+    mutationFn: (data: SessionCreate) =>
+      trainingApi.createTrainingSessionApiV1TrainingSessionsPost(data as any).then(r => r.data as unknown as TrainingSession),
 
     onSuccess: (newSession) => {
       toast.success('Sessão criada com sucesso');
@@ -513,7 +531,7 @@ export function useSessionDeviationQuery(
 ) {
   return useQuery({
     queryKey: sessionKeys.deviation(sessionId),
-    queryFn: () => TrainingSessionsAPI.getSessionDeviation(sessionId),
+    queryFn: () => trainingApi.getSessionDeviationApiV1TrainingSessionsTrainingSessionIdDeviationGet(sessionId).then(r => r.data as unknown as DeviationAnalysis),
     staleTime: 5 * 60 * 1000, // 5 minutos
     enabled: (options?.enabled ?? true) && !!sessionId,
   });
@@ -531,7 +549,7 @@ export function useSaveDeviationJustification() {
 
   return useMutation({
     mutationFn: ({ sessionId, justification }: { sessionId: string; justification: string }) =>
-      TrainingSessionsAPI.saveDeviationJustification(sessionId, justification),
+      trainingApi.updateTrainingSessionApiV1TrainingSessionsTrainingSessionIdPatch(sessionId, { deviation_justification: justification } as any).then(r => r.data as unknown as TrainingSession),
 
     onSuccess: (updatedSession, { sessionId }) => {
       queryClient.setQueryData(sessionKeys.detail(sessionId), updatedSession);

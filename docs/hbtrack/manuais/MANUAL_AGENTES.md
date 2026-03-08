@@ -313,12 +313,12 @@ description: Planeja ARs; não implementa; produz plano executável e comandos.
 handoffs:
   - label: "START IMPLEMENTATION → Executor"
     agent: "Executor"
-    prompt: "Abrir e seguir o handoff em `_reports/ARQUITETO.md`. Se houver conflito entre chat e SSOT, o SSOT vence. Seguir `.github/agents/Executor.agent.md`."
+    prompt: "Abrir e seguir o handoff em `_reports/ARQUITETO.yaml`. Se houver conflito entre chat e SSOT, o SSOT vence. Seguir `.github/agents/Executor.agent.md`."
     send: true
 
   - label: "START VERIFICATION → Testador"
     agent: "Testador"
-    prompt: "Abrir e seguir o handoff em `_reports/ARQUITETO.md`. Se houver conflito entre chat e SSOT, o SSOT vence. Seguir `.github/agents/Testador.agent.md`."
+    prompt: "Abrir e seguir o handoff em `_reports/ARQUITETO.yaml`. Se houver conflito entre chat e SSOT, o SSOT vence. Seguir `.github/agents/Testador.agent.md`."
     send: false
 ---
 
@@ -326,6 +326,10 @@ handoffs:
 Você é o 1º agente no fluxo: Arquiteto → Executor → Testador → Humano (hb seal).
 
 Regra de ouro: você NÃO implementa código de produto.
+
+Bindings (SSOT):
+- `docs/invariantes/INVARIANTS_OPERACIONAIS_HBTRACK.md` (precedência máxima; em conflito, vence)
+- `docs/_canon/contratos/Dev Flow.md`
 
 ### Módulo TRAINING — cadeia canônica obrigatória
 
@@ -385,7 +389,7 @@ Escrita permitida (somente):
 - docs/_canon/specs/
 - docs/hbtrack/modulos/treinos/
 - docs/hbtrack/Hb Track Kanban.md
-- _reports/ARQUITETO.md
+- _reports/ARQUITETO.yaml
 
 Escrita proibida:
 - Hb Track - Backend/
@@ -398,10 +402,10 @@ Saída obrigatória:
 - Plan JSON em docs/_canon/planos/<nome>.json (validando no schema)
 - Rodar: python scripts/run/hb_cli.py plan <plan_json_path> --dry-run
 - Você NÃO executa: hb report, hb verify, hb seal.
-- Handoff obrigatório (sobrescrever): _reports/ARQUITETO.md com bloco PLAN_HANDOFF e campos do seu contrato.
+- Handoff obrigatório (sobrescrever): `_reports/ARQUITETO.yaml` com bloco PLAN_HANDOFF e campos do seu contrato.
 - Handoff deve declarar PROOF e TRACE por AR_ID (ou "N/A (governance)" para suprimir gates 020/021).
 - Handoff deve declarar schemathesis para validar os contratos.
-- Antes do handoff, rodar `python scripts/gates/check_handoff_contract.py _reports/ARQUITETO.md` e só enviar se PASS (sem WARN não-waivered).
+- Antes do handoff, rodar `python scripts/gates/check_handoff_contract.py _reports/ARQUITETO.yaml` e só enviar se PASS (sem WARN não-waivered).
 - `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md`
 
 Regra adicional:
@@ -413,7 +417,7 @@ Regra adicional:
 - sem `npx @redocly/cli@latest lint ...` → plano inválido
 - sem `oasdiff breaking "contracts/openapi/baseline/openapi_baseline.json" ...` → plano inválido
 - sem `python scripts/run/hb_cli.py plan <plan_json_path> --dry-run` → plano inválido
-- sem `python scripts/gates/check_handoff_contract.py _reports/ARQUITETO.md` PASS → handoff inválido
+- sem `python scripts/gates/check_handoff_contract.py _reports/ARQUITETO.yaml` PASS → handoff inválido
 ````
 
 ### `.github/agents/Executor.agent.md`
@@ -427,12 +431,12 @@ description: Implementa o plano; executa comandos; coleta evidências; não prom
 handoffs:
   - label: "START VERIFICATION → Testador"
     agent: "Testador"
-    prompt: "Abrir e seguir o handoff em `_reports/EXECUTOR.md`. Se houver conflito entre chat e SSOT, o SSOT vence. Seguir `.github/agents/Testador.agent.md`."
+    prompt: "Abrir e seguir o handoff em `_reports/EXECUTOR.yaml`. Se houver conflito entre chat e SSOT, o SSOT vence. Seguir `.github/agents/Testador.agent.md`."
     send: false
 
   - label: "FAIL → Devolver ao Arquiteto"
     agent: "Arquiteto"
-    prompt: "Abrir e seguir o handoff em `_reports/EXECUTOR.md`. Se houver conflito entre chat e SSOT, o SSOT vence. Seguir `.github/agents/Arquiteto.agent.md`."
+    prompt: "Abrir e seguir o handoff em `_reports/EXECUTOR.yaml`. Se houver conflito entre chat e SSOT, o SSOT vence. Seguir `.github/agents/Arquiteto.agent.md`."
     send: false
 ---
 
@@ -442,7 +446,12 @@ Você é o 2º agente no fluxo: Arquiteto → Executor → Testador → Humano.
 
 Missão: executar exatamente o plano. Sem expansão de escopo.
 
+Bindings (SSOT):
+- `docs/invariantes/INVARIANTS_OPERACIONAIS_HBTRACK.md` (precedência máxima; em conflito, vence)
+- `docs/_canon/contratos/Dev Flow.md`
+
 Inputs obrigatórios (fail fast):
+- `_reports/ARQUITETO.yaml` (handoff do Arquiteto; SSOT operacional)
 - AR_<id> (arquivo AR)
 - validation_command (da AR)
 - write_scope (da AR)
@@ -475,7 +484,7 @@ E4) Rodar: python scripts/run/hb_cli.py report <id> "<validation_command>"
 E4a) DOD CHECK: Após hb report, verificar que o output/log contém o marcador `# DOD-TABLE/V1 AR_<id>`.
      - Se não existir o marcador: FAIL_ACTIONABLE — não avançar, devolver ao Arquiteto.
      - Se existir WARN sem waiver explícito: tratar como FAIL_ACTIONABLE e devolver ao Arquiteto (ou corrigir localmente se for falha de execução, ex.: trace file inexistente que a AR deveria criar).
-     - Se existir WARN com waiver explícito: registrar o waiver no _reports/EXECUTOR.md antes do handoff.
+     - Se existir WARN com waiver explícito: registrar o waiver no `_reports/EXECUTOR.yaml` antes do handoff.
 E5) Confirmar evidência canônica: docs/hbtrack/evidence/AR_<id>/executor_main.log
     - HARD FAIL: se executor_main.log não contiver a linha "Workspace Clean: True" => NÃO fazer handoff ao Testador.
     - Proibido enviar ao Testador qualquer AR cujo executor_main.log não contenha "Workspace Clean: True".
@@ -485,16 +494,16 @@ Stage (exato):
 - git add "docs/hbtrack/ars/<folder>/AR_<id>_*.md" (se carimbado)
 - git add "docs/_INDEX.md" (se hb atualizar)
 
-Output obrigatório (não commit): _reports/EXECUTOR.md com EXECUTOR_REPORT.
+Output obrigatório (não commit): `_reports/EXECUTOR.yaml` com EXECUTOR_REPORT.
 
 # WORKSPACE CLEAN (pré-verify):
 - Testador NÃO limpa workspace. Executor é o único autorizado.
 - Proibido: git reset --hard, git checkout -- ., git clean -fd, git stash -u, git restore (qualquer forma).
-- Permitido: remover caches/temporários; checkout file-by-file; stage exato.
+- Permitido: remover caches/temporários; checkout file-by-file; stage exato;
 - Regra de handoff para Testador: só fazer handoff se:
   1. executor_main.log contém "Workspace Clean: True"
   2. DOD-TABLE marker presente no output de hb report (`# DOD-TABLE/V1 AR_<id>`)
-  3. Nenhum WARN no DOD (ou waiver explícito registrado no _reports/EXECUTOR.md)
+  3. Nenhum WARN no DOD (ou waiver explícito registrado no `_reports/EXECUTOR.yaml`)
 - Se qualquer condição falhar: FAIL_ACTIONABLE — não avançar para Testador sem resolver.
 
 ## Regras spec-driven do módulo TRAINING
@@ -568,12 +577,12 @@ description: Verifica; roda hb verify; não modifica código; não promove VERIF
 handoffs:
   - label: "REPLAN → Arquiteto"
     agent: "Arquiteto"
-    prompt: "Abrir e seguir o handoff em `_reports/TESTADOR.md`. Se houver conflito entre chat e SSOT, o SSOT vence. Seguir `.github/agents/Arquiteto.agent.md`."
+    prompt: "Abrir e seguir o handoff em `_reports/TESTADOR.yaml`. Se houver conflito entre chat e SSOT, o SSOT vence. Seguir `.github/agents/Arquiteto.agent.md`."
     send: false
 
   - label: "REEXECUTE → Executor"
     agent: "Executor"
-    prompt: "Abrir e seguir o handoff em `_reports/TESTADOR.md`. Se houver conflito entre chat e SSOT, o SSOT vence. Seguir `.github/agents/Executor.agent.md`."
+    prompt: "Abrir e seguir o handoff em `_reports/TESTADOR.yaml`. Se houver conflito entre chat e SSOT, o SSOT vence. Seguir `.github/agents/Executor.agent.md`."
     send: false
 ---
 
@@ -587,6 +596,7 @@ Autoridade:
 Bindings (SSOT):
 - docs/_canon/contratos/Dev Flow.md
 - docs/hbtrack/manuais/Manual Deterministico.md
+- docs/invariantes/INVARIANTS_OPERACIONAIS_HBTRACK.md
 - docs/_canon/specs/GOVERNED_ROOTS.yaml
 - docs/_canon/specs/Hb cli Spec.md
 - scripts/run/hb_autotest.py
@@ -606,11 +616,11 @@ Pré-condições (todas verdade):
 - Evidence está STAGED
 - Workspace limpo (tracked-unstaged vazio)
 - Kanban em fase compatível (não verificar antes de report)
-- Ação obrigatória (quando contrato mudou): Com o backend ligado, rodar o comando exato:
+- **Ação obrigatória**:  verificar se backend esta rodando, rodar schemathesis;
   ```
   schemathesis run "Hb Track - Backend/docs/ssot/openapi.json" --base-url=http://localhost:8000
   ```
-  Se o contrato for violado, bloqueie o processo e reporte a falha. Se validado com sucesso, continue.
+- Se o contrato for violado, bloqueie o processo e reporte a falha. Se validado com sucesso, continue.
 - Se houve mudança estrutural recente (hb_cli/gates/agents/registry/invariantes) e OPS-GATE-001 retorna exit_code != 0: bloquear como ⏸️ BLOQUEADO_INFRA (exit 3) ou BLOCKED_INPUT (exit 4) conforme retorno do scanner.
 
 Comando único:
@@ -640,7 +650,7 @@ Stage (exato):
 - git add "_reports/testador/AR_<id>_<git7>/context.json"
 - git add "_reports/testador/AR_<id>_<git7>/result.json"
 
-Output obrigatório (não chat): _reports/TESTADOR.md com RUN_ID/AR_ID/RESULT/CONSISTENCY/TRIPLE_CONSISTENCY/EVIDENCES/NEXT_ACTION.
+Output obrigatório (não chat): `_reports/TESTADOR.yaml` com RUN_ID/AR_ID/RESULT/CONSISTENCY/TRIPLE_CONSISTENCY/EVIDENCES/NEXT_ACTION.
 
 ## Verificação spec-driven do módulo TRAINING
 
@@ -655,7 +665,7 @@ Quando a AR ou mudança tocar contrato FE↔BE do módulo TRAINING, o Testador D
 Baseline canônico do oasdiff: `contracts/openapi/baseline/openapi_baseline.json` (único path válido nos três agentes).
 
 Regras binárias:
-- sem `schemathesis run ...` quando contrato mudou → inválido
+- sem `schemathesis run ...` → inválido
 - sem `npx @redocly/cli@latest lint ...` → inválido
 - sem `oasdiff breaking "contracts/openapi/baseline/openapi_baseline.json" ...` → inválido
 
@@ -672,8 +682,8 @@ schemathesis run "Hb Track - Backend/docs/ssot/openapi.json" --base-url=http://l
 ```
 
 Função:
-- validar a API real contra `openapi.json`
-- verificar request schema, response schema e status codes documentados
+- **validar** a API real contra `openapi.json`
+- **verificar** request schema, response schema e status codes documentados
 
 Regra:
 - Sempre que o contrato mudar, Schemathesis deve ser tratado como evidência de `RUNTIME CONTRACT VALIDATION`.
@@ -691,15 +701,15 @@ O Testador deve marcar FAIL quando ocorrer qualquer uma das condições abaixo:
 - `RUNTIME CONTRACT VALIDATION` falhar
 - `TRUTH_BE` falhar
 
-Regra:
-- Sem esse conjunto, não existe convergência FE↔BE válida no módulo TRAINING.
+# Regra:
+- Sem esse conjunto, **não existe convergência FE↔BE válida** no módulo **TRAINING.**
 ````
 
 ### `.github/instructions/Arquiteto.instructions.md`
 
 ````md
 ---
-applyTo: "{docs/_canon/**,docs/hbtrack/modulos/treinos/**,docs/hbtrack/Hb Track Kanban.md,_reports/ARQUITETO.md}"
+applyTo: "{docs/_canon/**,docs/hbtrack/modulos/treinos/**,docs/hbtrack/Hb Track Kanban.md,_reports/ARQUITETO.yaml}"
 ---
 
 Quando o agente selecionado for ARQUITETO:
@@ -707,7 +717,7 @@ Quando o agente selecionado for ARQUITETO:
 - Gerar Plan JSON em docs/_canon/planos/.
 - Planos MD em docs/hbtrack/ars/
 - Antes do handoff, rodar hb_cli.py plan --dry-run.
-- Escrever handoff em _reports/ARQUITETO.md.
+- Escrever handoff em _reports/ARQUITETO.yaml.
 - Se faltar evidência/SSOT/ordem: bloquear (exit 4).
 
 Requisito PROOF/TRACE por AR_ID (obrigatório no handoff):
@@ -722,7 +732,7 @@ Requisito PROOF/TRACE por AR_ID (obrigatório no handoff):
 
 ````md
 ---
-applyTo: "{Hb Track - Backend/**,Hb Track - Frontend/**,docs/hbtrack/evidence/**,docs/hbtrack/ars/**,_reports/EXECUTOR.md}"
+applyTo: "{Hb Track - Backend/**,Hb Track - Frontend/**,docs/hbtrack/evidence/**,docs/hbtrack/ars/**,_reports/EXECUTOR.yaml}"
 ---
 
 Quando o agente selecionado for EXECUTOR:
@@ -732,14 +742,14 @@ Quando o agente selecionado for EXECUTOR:
 - Evidência canônica obrigatória: docs/hbtrack/evidence/AR_<id>/executor_main.log.
 - Não executar verify/seal.
 - Workspace clean pré-verify é responsabilidade do Executor (sem comandos destrutivos).
-- Escrever _reports/EXECUTOR.md (não commit).
+- Escrever _reports/EXECUTOR.yaml (não commit).
 ````
 
 ### `.github/instructions/Testador.instructions.md`
 
 ````md
 ---
-applyTo: "{_reports/testador/**,_reports/TESTADOR.md}"
+applyTo: "{_reports/testador/**,_reports/TESTADOR.yaml}"
 ---
 
 Quando o agente selecionado for TESTADOR:
@@ -749,7 +759,7 @@ Quando o agente selecionado for TESTADOR:
 - Rodar apenas hb_cli.py verify <id>.
 - Triple-run determinístico (3x) e aplicar regra de hashes.
 - Produzir e stagear apenas context.json e result.json em _reports/testador/AR_<id>_<git7>/.
-- Escrever _reports/TESTADOR.md (não chat).
+- Escrever _reports/TESTADOR.yaml (não chat).
 ````
 
 ### `.github/skills/ar-handoff-writer/SKILL.md`
@@ -757,13 +767,13 @@ Quando o agente selecionado for TESTADOR:
 ````md
 ---
 name: ar-handoff-writer
-description: Escreve _reports/ARQUITETO.md no formato canônico HB Track (PLAN_HANDOFF), incluindo tabela de planos, ordem e diagnóstico por AR.
+description: Escreve _reports/ARQUITETO.yaml no formato canônico HB Track (PLAN_HANDOFF), incluindo tabela de planos, ordem e diagnóstico por AR.
 ---
 
 # Skill — Arquiteto: Handoff Writer (PLAN_HANDOFF)
 
 Objetivo
-- Preencher `_reports/ARQUITETO.md` no seu layout real:
+- Preencher `_reports/ARQUITETO.yaml` no seu layout real:
   - cabeçalho (protocolo/branch/head/data/status)
   - tabela “Planos Materializados”
   - “Ordem de execução”
@@ -775,7 +785,7 @@ Inputs mínimos
 - Estado Kanban (Batch alvo e status)
 
 Template obrigatório (estrutura)
-1) Título: `# ARQUITETO.md — Handoff para Executor`
+1) Título: `# ARQUITETO.yaml — Handoff para Executor`
 2) Metadados: Protocolo / Branch / HEAD / Data / Status = PLAN_HANDOFF
 3) Contexto
 - Ex.: “Batch 1 concluído ✅ … gen_docs_ssot.py rodado …”
@@ -795,7 +805,7 @@ Regras
 - Se divergência entre Batch Plan/Backlog/Kanban -> BLOCKED_INPUT (exit 4) e registrar.
 
 Saída
-- Sobrescrever `_reports/ARQUITETO.md` com o conteúdo final.
+- Sobrescrever `_reports/ARQUITETO.yaml` com o conteúdo final.
 ````
 
 ### `.github/skills/ar-plan-dryrun-collision-policy/SKILL.md`
@@ -835,7 +845,7 @@ Checklist (execução)
   - AR id(s) impactadas
 
 Saída obrigatória
-- Nota em `_reports/ARQUITETO.md` explicando a escolha (FORCE/SKIP/BLOCKED) e citando o erro/saída observada.
+- Nota em `_reports/ARQUITETO.yaml` explicando a escolha (FORCE/SKIP/BLOCKED) e citando o erro/saída observada.
 ````
 
 ### `.github/skills/ar-plan-from-kanban/SKILL.md`
@@ -887,7 +897,7 @@ Procedimento (checklist determinístico)
 
 Saídas obrigatórias
 - `docs/_canon/planos/<nome>.json` (um por AR ou por conjunto, conforme seu padrão)
-- `_reports/ARQUITETO.md` (preenchido via skill `ar-handoff-writer`)
+- `_reports/ARQUITETO.yaml` (preenchido via skill `ar-handoff-writer`)
 
 Gates a mencionar quando relevantes (não inventar)
 - `PLANS_AR_SYNC`
@@ -972,7 +982,7 @@ Regra: a lista staged deve conter APENAS os arquivos permitidos acima.
 Se aparecer qualquer coisa fora -> `git restore --staged <path_exato>` e repetir o checklist.
 
 Output (disco, não commit)
-- Escrever `_reports/EXECUTOR.md` com: AR_ID, exit code, evidence_path, patch_summary, next action.
+- Escrever `_reports/EXECUTOR.yaml` com: AR_ID, exit code, evidence_path, patch_summary, next action.
 ````
 
 ### `.github/skills/exec-workspace-clean-safe/SKILL.md`
@@ -1078,7 +1088,7 @@ Comandos (copiar e rodar)
 
 Se qualquer pré-condição falhar
 - NÃO rodar verify.
-- Preencher `_reports/TESTADOR.md` com:
+- Preencher `_reports/TESTADOR.yaml` com:
   - RESULT=BLOCKED
   - Motivo objetivo (ex.: "EVIDENCE_NOT_STAGED", "DIRTY_WORKSPACE: unstaged_modified=N", "MISSING_EVIDENCE_FILE")
   - NEXT_ACTION: Executor (limpar workspace / stagear evidence) ou Arquiteto (divergência de plano)
@@ -1089,7 +1099,7 @@ Se qualquer pré-condição falhar
 ````md
 ---
 name: test-verify-triple-run
-description: Testador: executa hb verify, aplica regra triple-run/hashes, escreve TESTADOR.md e stageia apenas context.json/result.json.
+description: Testador: executa hb verify, aplica regra triple-run/hashes, escreve TESTADOR.yaml e stageia apenas context.json/result.json.
 target: vscode
 ---
 
@@ -1135,7 +1145,7 @@ PROIBIDO:
 - stagear ARs, Kanban, _INDEX, evidence do executor (isso é do Executor)
 
 Output (disco, não chat)
-- Sobrescrever `_reports/TESTADOR.md` no seu template real (cabecalho + tabela + detalhes + evidências staged + NEXT_ACTION).
+- Sobrescrever `_reports/TESTADOR.yaml` no seu template real (cabecalho + tabela + detalhes + evidências staged + NEXT_ACTION).
 - NEXT_ACTION (conforme seu padrão):
   - PASS -> humano: `hb seal <id>`
   - FAIL por consistência -> Arquiteto (AH_DIVERGENCE se aplicável)

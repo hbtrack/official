@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HB Track Event Specification Schema",
+  "type": "object",
+  "required": ["module", "version", "status", "aggregate_root", "event_store", "events"],
+  "properties": {
+    "module": { "type": "string" },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "status": { "type": "string", "enum": ["draft_normativo", "normativo", "deprecated"] },
+    "aggregate_root": {
+      "type": "object",
+      "required": ["type", "id_type"],
+      "properties": {
+        "type": { "type": "string" },
+        "id_type": { "type": "string", "enum": ["uuid", "int", "string"] }
+      }
+    },
+    "event_store": {
+      "type": "object",
+      "required": ["required_fields"],
+      "properties": {
+        "required_fields": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "event_version", "aggregate_type", "trigger", "description", "emission_mode", "transactional", "payload", "relations", "consumers"],
+        "properties": {
+          "name": { "type": "string" },
+          "event_version": { "type": "integer", "minimum": 1 },
+          "aggregate_type": { "type": "string" },
+          "trigger": { "type": "string" },
+          "description": { "type": "string" },
+          "emission_mode": { "type": "string", "enum": ["sync", "async"] },
+          "transactional": { "type": "boolean" },
+          "payload": {
+            "type": "object",
+            "required": ["required", "optional"],
+            "properties": {
+              "required": { "type": "object", "additionalProperties": { "type": "string" } },
+              "optional": { "type": "object", "additionalProperties": { "type": "string" } }
+            }
+          },
+          "relations": {
+            "type": "object",
+            "properties": {
+              "contracts": { "type": "array", "items": { "type": "string" } },
+              "flows": { "type": "array", "items": { "type": "string" } },
+              "invariants": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "consumers": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  }
+}

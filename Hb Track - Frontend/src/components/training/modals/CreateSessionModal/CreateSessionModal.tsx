@@ -9,21 +9,18 @@
 
 'use client';
 
-import React, { useMemo, useEffect, useState, useRef } from 'react';
-import { format, setHours, setMinutes } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-import { X } from 'lucide-react';
-import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
+import { trainingApi } from '@/api/generated/api-instance';
+import { Button } from '@/components/ui/Button';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogClose,
+  DialogContent,
+  DialogTitle
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/label';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   Select,
   SelectContent,
@@ -31,14 +28,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Icons } from '@/design-system/icons';
-import { cn } from '@/lib/utils';
-import { TrainingSessionsAPI, type SessionCreate, type TrainingSession } from '@/lib/api/trainings';
-import { useAuth } from '@/lib/hooks/useAuth';
 import { useToast } from '@/context/ToastContext';
+import { Icons } from '@/design-system/icons';
+import { type SessionCreate, type TrainingSession } from '@/lib/api/trainings';
+import { useAuth } from '@/lib/hooks/useAuth';
+import { cn } from '@/lib/utils';
 import { Strategy } from '@phosphor-icons/react';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
+import { format, setHours, setMinutes } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import { X } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { CreateSessionModalProps } from './types';
 
 const SESSION_TYPES = [
@@ -118,10 +118,7 @@ export function CreateSessionModal({
 
     const syncLatestSession = async () => {
       try {
-        const response = await TrainingSessionsAPI.listSessions({
-          team_id: teamId,
-          limit: 1,
-        });
+        const response = await trainingApi.listTrainingSessionsApiV1TrainingSessionsGet(teamId ?? null, null, null, null, undefined, 1).then(r => ({ items: r.data.items, total: r.data.total }));
         if (!isActive) return;
         setLatestSession(response.items[0] ?? null);
       } catch (error) {
@@ -154,7 +151,7 @@ export function CreateSessionModal({
       ['00', '30'].map((minute) => `${String(hour).padStart(2, '0')}:${minute}`)
     ).flat();
     if (!base.includes(defaultTime)) base.push(defaultTime);
-    
+
     // Se a data selecionada for hoje, filtrar horários passados
     if (selectedDate) {
       const today = new Date().toISOString().split('T')[0];
@@ -169,7 +166,7 @@ export function CreateSessionModal({
         });
       }
     }
-    
+
     return base.sort();
   }, [defaultTime, selectedDate]);
 
@@ -266,7 +263,7 @@ export function CreateSessionModal({
         microcycle_id: microcycleId || undefined,
       };
 
-      const created = await TrainingSessionsAPI.createSession(sessionData);
+      const created = await trainingApi.createTrainingSessionApiV1TrainingSessionsPost(sessionData as any).then(r => r.data);
       onSuccess?.(created, asDraft ? 'close' : 'continue');
       onClose();
     } catch (error) {
@@ -306,227 +303,227 @@ export function CreateSessionModal({
 
         <div className="px-6 py-3">
           <form className="space-y-3" onSubmit={(e) => e.preventDefault()}>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-2">
-              <Label htmlFor="date" className="text-xs">Data *</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      'w-full justify-start text-left font-normal',
-                      !selectedDate && 'text-muted-foreground'
-                    )}
-                  >
-                    <Icons.UI.Calendar className="mr-2 h-4 w-4" />
-                    {selectedDate ? (
-                      format(selectedDate, 'dd/MM', { locale: ptBR })
-                    ) : (
-                      <span>Selecionar</span>
-                    )}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={(date) => date && setSelectedDate(date)}
-                    initialFocus
-                    locale={ptBR}
-                    disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
-                  />
-                </PopoverContent>
-              </Popover>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label htmlFor="date" className="text-xs">Data *</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        'w-full justify-start text-left font-normal',
+                        !selectedDate && 'text-muted-foreground'
+                      )}
+                    >
+                      <Icons.UI.Calendar className="mr-2 h-4 w-4" />
+                      {selectedDate ? (
+                        format(selectedDate, 'dd/MM', { locale: ptBR })
+                      ) : (
+                        <span>Selecionar</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={selectedDate}
+                      onSelect={(date) => date && setSelectedDate(date)}
+                      initialFocus
+                      locale={ptBR}
+                      disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="time" className="text-xs">Horário *</Label>
+                <Select value={selectedTime} onValueChange={setSelectedTime}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione o horário" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {timeOptions.map((option) => (
+                      <SelectItem key={option} value={option}>
+                        {option}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="time" className="text-xs">Horário *</Label>
-              <Select value={selectedTime} onValueChange={setSelectedTime}>
+              <Label htmlFor="duration" className="text-xs">Duração (minutos)</Label>
+              <div className="flex flex-wrap gap-2">
+                {DURATION_PRESETS.map((preset) => {
+                  const active = durationPreset === preset;
+                  return (
+                    <Button
+                      key={preset}
+                      type="button"
+                      variant={active ? 'default' : 'outline'}
+                      onClick={() => {
+                        setDurationPreset(preset);
+                        setCustomDuration(String(preset));
+                      }}
+                      className={cn(
+                        active ? 'bg-slate-900 text-white hover:bg-black h-5 text-[10px]' : 'text-slate-600 h-5 text-[10px]'
+                      )}
+                    >
+                      <Icons.UI.Clock className="h-1 w-1" />
+                      {preset} min
+                    </Button>
+                  );
+                })}
+                <Button
+                  type="button"
+                  variant={durationPreset === 'custom' ? 'default' : 'outline'}
+                  onClick={() => setDurationPreset('custom')}
+                  className={cn(
+                    durationPreset === 'custom'
+                      ? 'bg-slate-900 text-white hover:bg-black h-5 text-[10px]'
+                      : 'text-slate-600 h-5 text-[10px]'
+                  )}
+                >
+                  Outro...
+                </Button>
+              </div>
+              {durationPreset === 'custom' && (
+                <Input
+                  id="duration"
+                  type="number"
+                  value={customDuration}
+                  onChange={(e) => setCustomDuration(e.target.value)}
+                  placeholder="90"
+                  min="15"
+                  max="240"
+                  step="15"
+                />
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="location" className="text-xs">Local</Label>
+              <div className="flex flex-wrap gap-2">
+                {favoriteLocation && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setLocation(favoriteLocation)}
+                    className="h-5 text-[10px]"
+                  >
+                    <Icons.UI.Star className="h-1 w-1" />
+                    {favoriteLocation}
+                  </Button>
+                )}
+                {showLastLocation && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => lastLocation && setLocation(lastLocation)}
+                    className="h-5 text-[10px]"
+                  >
+                    <Icons.UI.MapPin className="h-1 w-1" />
+                  </Button>
+                )}
+                {recentLocations.slice(0, 3).map((suggestion) => (
+                  <Button
+                    key={suggestion}
+                    type="button"
+                    variant="outline"
+                    onClick={() => setLocation(suggestion)}
+                    className="h-5 text-[10px]"
+                  >
+                    {suggestion}
+                  </Button>
+                ))}
+              </div>
+              <Input
+                id="location"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="Ex: Quadra 1, Ginásio principal..."
+                className="h-8"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="type" className="text-xs">Tipo</Label>
+              <Select value={sessionType} onValueChange={setSessionType}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione o horário" />
+                  <SelectValue placeholder="Selecione o tipo" />
                 </SelectTrigger>
                 <SelectContent>
-                  {timeOptions.map((option) => (
-                    <SelectItem key={option} value={option}>
-                      {option}
+                  {SESSION_TYPES.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-          </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="duration" className="text-xs">Duração (minutos)</Label>
-            <div className="flex flex-wrap gap-2">
-              {DURATION_PRESETS.map((preset) => {
-                const active = durationPreset === preset;
-                return (
+            <div className="space-y-2">
+              <Label htmlFor="objective" className="text-xs">Objetivo *</Label>
+              <Input
+                id="objective"
+                value={objective}
+                onChange={(e) => setObjective(e.target.value)}
+                placeholder="Ex: Defesa 6:0 e transição rápida"
+                maxLength={120}
+                className="h-8"
+              />
+              <div className="flex flex-wrap gap-2">
+                {OBJECTIVE_TAGS.map((tag) => (
                   <Button
-                    key={preset}
+                    key={tag}
                     type="button"
-                    variant={active ? 'default' : 'outline'}
+                    variant="outline"
                     onClick={() => {
-                      setDurationPreset(preset);
-                      setCustomDuration(String(preset));
+                      setObjective((prev) => (prev ? `${prev} • ${tag}` : tag));
                     }}
-                    className={cn(
-                      active ? 'bg-slate-900 text-white hover:bg-black h-5 text-[10px]' : 'text-slate-600 h-5 text-[10px]'
-                    )}
+                    className="h-5 text-[10px]"
                   >
-                    <Icons.UI.Clock className="h-1 w-1" />
-                    {preset} min
+                    {tag}
                   </Button>
-                );
-              })}
+                ))}
+              </div>
+            </div>
+
+            <div className="flex gap-2 pt-4">
               <Button
                 type="button"
-                variant={durationPreset === 'custom' ? 'default' : 'outline'}
-                onClick={() => setDurationPreset('custom')}
-                className={cn(
-                  durationPreset === 'custom'
-                    ? 'bg-slate-900 text-white hover:bg-black h-5 text-[10px]'
-                    : 'text-slate-600 h-5 text-[10px]'
-                )}
+                variant="outline"
+                onClick={onClose}
+                disabled={isSubmitting}
+                className="px-4 h-7 text-xs"
               >
-                Outro...
+                Cancelar
+              </Button>
+
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => handleSubmit(true)}
+                disabled={isSubmitting || !canSubmit}
+                className="flex-1 h-7 text-xs"
+              >
+                Salvar rascunho
+              </Button>
+
+              <Button
+                type="button"
+                onClick={() => handleSubmit(false)}
+                disabled={isSubmitting || !canSubmit}
+                className="flex-1 gap-1 h-7 text-xs"
+              >
+                Salvar e continuar
+                <Icons.Navigation.Arrow className="h-3 w-3" />
               </Button>
             </div>
-            {durationPreset === 'custom' && (
-              <Input
-                id="duration"
-                type="number"
-                value={customDuration}
-                onChange={(e) => setCustomDuration(e.target.value)}
-                placeholder="90"
-                min="15"
-                max="240"
-                step="15"
-              />
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="location" className="text-xs">Local</Label>
-            <div className="flex flex-wrap gap-2">
-              {favoriteLocation && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setLocation(favoriteLocation)}
-                  className="h-5 text-[10px]"
-                >
-                  <Icons.UI.Star className="h-1 w-1" />
-                  {favoriteLocation}
-                </Button>
-              )}
-              {showLastLocation && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => lastLocation && setLocation(lastLocation)}
-                  className="h-5 text-[10px]"
-                >
-                  <Icons.UI.MapPin className="h-1 w-1" />
-                </Button>
-              )}
-              {recentLocations.slice(0, 3).map((suggestion) => (
-                <Button
-                  key={suggestion}
-                  type="button"
-                  variant="outline"
-                  onClick={() => setLocation(suggestion)}
-                  className="h-5 text-[10px]"
-                >
-                  {suggestion}
-                </Button>
-              ))}
-            </div>
-            <Input
-              id="location"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              placeholder="Ex: Quadra 1, Ginásio principal..."
-              className="h-8"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="type" className="text-xs">Tipo</Label>
-            <Select value={sessionType} onValueChange={setSessionType}>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecione o tipo" />
-              </SelectTrigger>
-              <SelectContent>
-                {SESSION_TYPES.map((type) => (
-                  <SelectItem key={type.value} value={type.value}>
-                    {type.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="objective" className="text-xs">Objetivo *</Label>
-            <Input
-              id="objective"
-              value={objective}
-              onChange={(e) => setObjective(e.target.value)}
-              placeholder="Ex: Defesa 6:0 e transição rápida"
-              maxLength={120}
-              className="h-8"
-            />
-            <div className="flex flex-wrap gap-2">
-              {OBJECTIVE_TAGS.map((tag) => (
-                <Button
-                  key={tag}
-                  type="button"
-                  variant="outline"
-                  onClick={() => {
-                    setObjective((prev) => (prev ? `${prev} • ${tag}` : tag));
-                  }}
-                  className="h-5 text-[10px]"
-                >
-                  {tag}
-                </Button>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex gap-2 pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onClose}
-              disabled={isSubmitting}
-              className="px-4 h-7 text-xs"
-            >
-              Cancelar
-            </Button>
-
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => handleSubmit(true)}
-              disabled={isSubmitting || !canSubmit}
-              className="flex-1 h-7 text-xs"
-            >
-              Salvar rascunho
-            </Button>
-
-            <Button
-              type="button"
-              onClick={() => handleSubmit(false)}
-              disabled={isSubmitting || !canSubmit}
-              className="flex-1 gap-1 h-7 text-xs"
-            >
-              Salvar e continuar
-              <Icons.Navigation.Arrow className="h-3 w-3" />
-            </Button>
-          </div>
-        </form>
+          </form>
         </div>
       </DialogContent>
     </Dialog>

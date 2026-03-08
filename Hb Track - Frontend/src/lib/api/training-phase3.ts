@@ -14,7 +14,7 @@
  * Re-exportando aliases de pending.ts (write_scope não inclui pending.ts).
  */
 
-import { apiClient } from './client';
+import { aiCoachApi, athleteTrainingApi, attendanceApi } from '@/api/generated/api-instance';
 import {
     listPendingItems as _listPendingItems,
     resolvePendingItem as _resolvePendingItem,
@@ -64,9 +64,8 @@ export type { PendingItem };
 export async function getAthleteSessionPreview(
     sessionId: string
 ): Promise<AthleteSessionPreview> {
-    return await apiClient.get<AthleteSessionPreview>(
-        `/athlete/training-sessions/${sessionId}/preview`
-    );
+    const r = await athleteTrainingApi.getTrainingPreviewApiV1AthleteTrainingSessionsSessionIdPreviewGet(sessionId);
+    return r.data as unknown as AthleteSessionPreview;
 }
 
 /**
@@ -79,11 +78,8 @@ export async function preConfirmAttendance(
     sessionId: string,
     athleteId?: string
 ): Promise<{ status: string; is_official: boolean }> {
-    const body = athleteId ? { athlete_id: athleteId } : {};
-    return await apiClient.post<{ status: string; is_official: boolean }>(
-        `/attendance/sessions/${sessionId}/preconfirm`,
-        body
-    );
+    const r = await attendanceApi.preconfirmAttendanceApiV1AttendanceSessionsSessionIdPreconfirmPost(sessionId);
+    return r.data as unknown as { status: string; is_official: boolean };
 }
 
 /**
@@ -95,10 +91,8 @@ export async function closeSessionWithAttendance(
     sessionId: string,
     data: CloseSessionInput
 ): Promise<{ closed: boolean; pending_items: PendingItem[] }> {
-    return await apiClient.post<{ closed: boolean; pending_items: PendingItem[] }>(
-        `/training-sessions/${sessionId}/close`,
-        data
-    );
+    const r = await attendanceApi.closeSessionApiV1AttendanceSessionsSessionIdClosePost(sessionId);
+    return r.data as unknown as { closed: boolean; pending_items: PendingItem[] };
 }
 
 /**
@@ -129,11 +123,8 @@ export async function aiDraftSession(
     teamId: string,
     context: object
 ): Promise<{ draft_id: string; suggested_session: object; justification: string }> {
-    return await apiClient.post<{
-        draft_id: string;
-        suggested_session: object;
-        justification: string;
-    }>('/ai/coach/suggest-session', { team_id: teamId, context });
+    const r = await aiCoachApi.suggestSessionApiV1AiCoachSuggestSessionPost({ team_id: teamId, context } as any);
+    return r.data as unknown as { draft_id: string; suggested_session: object; justification: string };
 }
 
 /**
@@ -147,10 +138,8 @@ export async function applyAIDraft(
     edits?: object
 ): Promise<{ training_session_id: string; applied: boolean }> {
     const body = edits ? { edits } : {};
-    return await apiClient.patch<{ training_session_id: string; applied: boolean }>(
-        `/ai/coach/draft/${draftId}/apply`,
-        body
-    );
+    const r = await aiCoachApi.applyDraftApiV1AiCoachDraftDraftIdApplyPatch(draftId, body as any);
+    return r.data as unknown as { training_session_id: string; applied: boolean };
 }
 
 /**
@@ -163,10 +152,8 @@ export async function aiAthleteChat(
     sessionId: string,
     message: string
 ): Promise<{ response: string; type: string }> {
-    return await apiClient.post<{ response: string; type: string }>(
-        '/ai/chat',
-        { session_id: sessionId, message }
-    );
+    const r = await aiCoachApi.chatApiV1AiChatPost({ session_id: sessionId, message } as any);
+    return r.data as unknown as { response: string; type: string };
 }
 
 /**
@@ -178,10 +165,8 @@ export async function aiAthleteChat(
 export async function aiJustifySuggestion(
     suggestionId: string
 ): Promise<{ justification: string; references: string[] }> {
-    return await apiClient.post<{ justification: string; references: string[] }>(
-        '/ai/coach/justify-suggestion',
-        { suggestion_id: suggestionId }
-    );
+    const r = await aiCoachApi.justifySuggestionApiV1AiCoachJustifySuggestionPost({ suggestion_id: suggestionId } as any);
+    return r.data as unknown as { justification: string; references: string[] };
 }
 
 /**
@@ -192,9 +177,6 @@ export async function aiJustifySuggestion(
 export async function checkWellnessContentGate(
     sessionId: string
 ): Promise<{ has_wellness: boolean; can_see_full_content: boolean; blocked_reason?: string }> {
-    return await apiClient.get<{
-        has_wellness: boolean;
-        can_see_full_content: boolean;
-        blocked_reason?: string;
-    }>(`/athlete/wellness-content-gate/${sessionId}`);
+    const r = await athleteTrainingApi.getWellnessContentGateApiV1AthleteWellnessContentGateSessionIdGet(sessionId);
+    return r.data as unknown as { has_wellness: boolean; can_see_full_content: boolean; blocked_reason?: string };
 }

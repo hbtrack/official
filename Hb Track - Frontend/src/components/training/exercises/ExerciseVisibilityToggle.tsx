@@ -8,8 +8,9 @@
 
 'use client';
 
-import React, { useState } from 'react';
-import { VisibilityMode, patchExerciseVisibility } from '@/lib/api/exercises';
+import { exercisesApi } from '@/api/generated/api-instance';
+import type { VisibilityMode } from '@/lib/api/exercises';
+import { useState } from 'react';
 
 interface ExerciseVisibilityToggleProps {
   exerciseId: string;
@@ -32,7 +33,7 @@ export function ExerciseVisibilityToggle({
     setLoading(true);
     setError(null);
     try {
-      await patchExerciseVisibility(exerciseId, newVisibility);
+      await exercisesApi.updateExerciseVisibilityApiV1ExercisesExerciseIdVisibilityPatch(exerciseId, { visibility_mode: newVisibility });
       setVisibility(newVisibility);
       onVisibilityChanged?.(newVisibility);
     } catch {

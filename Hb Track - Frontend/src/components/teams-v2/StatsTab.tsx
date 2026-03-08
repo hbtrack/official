@@ -1,17 +1,30 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import {
-  ArrowUpIcon, ArrowDownIcon, PersonIcon, CalendarIcon, InfoCircledIcon,
-  BarChartIcon, ChevronRightIcon, ExclamationTriangleIcon, CheckCircledIcon, ClockIcon,
-  TargetIcon, ActivityLogIcon, MinusIcon, ReloadIcon, MixerHorizontalIcon,
-  ChevronDownIcon, MagicWandIcon, PlusIcon, ClipboardIcon,
-  EnterFullScreenIcon, EyeOpenIcon, FileTextIcon, QuestionMarkCircledIcon, DotsHorizontalIcon
-} from '@radix-ui/react-icons';
-import { TrendingUp, TrendingDown, Dumbbell, ArrowUpRight, ArrowDownRight, HeartPulse, Brain, ArrowLeftRight, FileBarChart, Sparkles } from 'lucide-react';
+import { trainingApi } from '@/api/generated/api-instance';
 import { useTeamPermissions } from '@/lib/hooks/useTeamPermissions';
-import { TrainingSessionsAPI, TrainingSession } from '@/lib/api/trainings';
+import {
+  ActivityLogIcon,
+  BarChartIcon,
+  CalendarIcon,
+  CheckCircledIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  ClipboardIcon,
+  ClockIcon,
+  EnterFullScreenIcon,
+  ExclamationTriangleIcon,
+  EyeOpenIcon, FileTextIcon,
+  InfoCircledIcon,
+  MinusIcon,
+  PersonIcon,
+  PlusIcon,
+  QuestionMarkCircledIcon,
+  ReloadIcon,
+  TargetIcon
+} from '@radix-ui/react-icons';
+import { ArrowDownRight, ArrowLeftRight, ArrowUpRight, Brain, FileBarChart, HeartPulse, Sparkles, TrendingUp } from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 // Advanced Stats Components (lazy loaded)
 import dynamic from 'next/dynamic';
@@ -121,9 +134,9 @@ interface EmptyStateProps {
 
 const EmptyState: React.FC<EmptyStateProps> = ({ state, canCreate, onCreateTraining }) => {
   const isNoTrainings = state === 'no-trainings';
-  
+
   return (
-    <div 
+    <div
       data-testid={`stats-empty-state-${state}`}
       className="flex flex-col items-center justify-center py-16 px-4 animate-in fade-in duration-500"
     >
@@ -139,11 +152,10 @@ const EmptyState: React.FC<EmptyStateProps> = ({ state, canCreate, onCreateTrain
           </div>
         </div>
         {/* Status indicator */}
-        <div className={`absolute -bottom-1 -right-1 w-8 h-8 rounded-full flex items-center justify-center ${
-          isNoTrainings 
-            ? 'bg-slate-100 dark:bg-slate-800' 
+        <div className={`absolute -bottom-1 -right-1 w-8 h-8 rounded-full flex items-center justify-center ${isNoTrainings
+            ? 'bg-slate-100 dark:bg-slate-800'
             : 'bg-amber-100 dark:bg-amber-900/30'
-        }`}>
+          }`}>
           {isNoTrainings ? (
             <ClipboardIcon className="w-4 h-4 text-slate-500" />
           ) : (
@@ -154,8 +166,8 @@ const EmptyState: React.FC<EmptyStateProps> = ({ state, canCreate, onCreateTrain
 
       {/* Título */}
       <h3 className="text-xl font-heading font-bold text-slate-900 dark:text-white mb-3 text-center">
-        {isNoTrainings 
-          ? 'As estatísticas começam aqui' 
+        {isNoTrainings
+          ? 'As estatísticas começam aqui'
           : 'Quase lá!'
         }
       </h3>
@@ -199,7 +211,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({ state, canCreate, onCreateTrain
                 O sistema está funcionando corretamente
               </p>
               <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-                Esta tela vazia indica que ainda não há dados suficientes — não é um erro. 
+                Esta tela vazia indica que ainda não há dados suficientes — não é um erro.
                 Assim que houver treinos revisados, voce vera metricas detalhadas aqui.
               </p>
             </div>
@@ -252,14 +264,14 @@ const WeeklySummary: React.FC<WeeklySummaryProps> = ({ stats }) => {
   };
 
   const insights: Array<{ type: 'positive' | 'warning' | 'neutral'; text: string }> = [];
-  
+
   // Gerar insights baseados nos dados
   if (stats.weeklyTrend.attendanceTrend === 'up') {
     insights.push({ type: 'positive', text: 'Frequência em alta' });
   } else if (stats.weeklyTrend.attendanceTrend === 'down') {
     insights.push({ type: 'warning', text: 'Frequência em queda' });
   }
-  
+
   if (stats.wellnessSubmissionRate >= 80) {
     insights.push({ type: 'positive', text: 'Wellness aderente' });
   } else if (stats.wellnessSubmissionRate < 60) {
@@ -302,16 +314,16 @@ interface DataConfidenceBannerProps {
   wellnessRate: number;
 }
 
-const DataConfidenceBanner: React.FC<DataConfidenceBannerProps> = ({ 
-  closedSessions, 
-  totalSessions, 
-  wellnessRate 
+const DataConfidenceBanner: React.FC<DataConfidenceBannerProps> = ({
+  closedSessions,
+  totalSessions,
+  wellnessRate
 }) => {
   const pendingSessions = totalSessions - closedSessions;
   const hasIssues = pendingSessions > 0 || wellnessRate < 70;
-  
+
   if (!hasIssues) return null;
-  
+
   return (
     <div className="mb-4 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
       <div className="flex items-start gap-3">
@@ -346,14 +358,14 @@ interface StatMetricCardProps {
   zone?: 'green' | 'yellow' | 'red';
 }
 
-const StatMetricCard: React.FC<StatMetricCardProps> = ({ 
-  title, 
-  value, 
-  trend, 
+const StatMetricCard: React.FC<StatMetricCardProps> = ({
+  title,
+  value,
+  trend,
   trendDirection = 'stable',
-  subtitle, 
-  icon, 
-  progress, 
+  subtitle,
+  icon,
+  progress,
   progressColor = 'emerald',
   zone
 }) => {
@@ -436,9 +448,8 @@ const StatMetricCard: React.FC<StatMetricCardProps> = ({
       )}
       {zone && (
         <div className="mt-2 flex items-center gap-1.5">
-          <span className={`w-2 h-2 rounded-full ${
-            zone === 'green' ? 'bg-emerald-500' : zone === 'yellow' ? 'bg-amber-500' : 'bg-red-500'
-          }`} />
+          <span className={`w-2 h-2 rounded-full ${zone === 'green' ? 'bg-emerald-500' : zone === 'yellow' ? 'bg-amber-500' : 'bg-red-500'
+            }`} />
           <span className="text-[10px] font-medium text-slate-500">
             Zona {zone === 'green' ? 'ideal' : zone === 'yellow' ? 'de atenção' : 'crítica'}
           </span>
@@ -462,13 +473,13 @@ interface FeedbackItemProps {
   onAction?: () => void;
 }
 
-const FeedbackItem: React.FC<FeedbackItemProps> = ({ 
-  icon, 
-  title, 
-  desc, 
+const FeedbackItem: React.FC<FeedbackItemProps> = ({
+  icon,
+  title,
+  desc,
   type = 'info',
   actionLabel,
-  onAction 
+  onAction
 }) => {
   const getBgColor = () => {
     switch (type) {
@@ -548,7 +559,7 @@ const StatsTab: React.FC<StatsTabProps> = ({ teamId, teamName = 'Equipe', onNavi
   const [stats, setStats] = useState<TeamStats | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [periodFilter, setPeriodFilter] = useState<'7' | '14' | '21' | '30'>('7');
-  
+
   // Advanced features modals
   const [showLoadHeatmap, setShowLoadHeatmap] = useState(false);
   const [showAttendanceHeatmap, setShowAttendanceHeatmap] = useState(false);
@@ -557,10 +568,10 @@ const StatsTab: React.FC<StatsTabProps> = ({ teamId, teamName = 'Equipe', onNavi
   const [showTeamComparison, setShowTeamComparison] = useState(false);
   const [showTour, setShowTour] = useState(false);
   const [showAdvancedFeatures, setShowAdvancedFeatures] = useState(false);
-  
+
   const { canCreateTraining, canEditTraining } = useTeamPermissions(teamId);
   const canManage = canCreateTraining || canEditTraining;
-  
+
   // Check if first visit for tour
   useEffect(() => {
     const hasSeenTour = localStorage.getItem(`stats-tour-${teamId}`);
@@ -569,7 +580,7 @@ const StatsTab: React.FC<StatsTabProps> = ({ teamId, teamName = 'Equipe', onNavi
       setTimeout(() => setShowTour(true), 1000);
     }
   }, [dataState, teamId]);
-  
+
   const handleTourComplete = () => {
     localStorage.setItem(`stats-tour-${teamId}`, 'true');
     setShowTour(false);
@@ -579,41 +590,38 @@ const StatsTab: React.FC<StatsTabProps> = ({ teamId, teamName = 'Equipe', onNavi
   const fetchStats = useCallback(async () => {
     try {
       setIsRefreshing(true);
-      
+
       // Buscar treinos da equipe
-      const response = await TrainingSessionsAPI.listSessions({
-        team_id: teamId,
-        limit: 100,
-      });
-      
+      const response = await trainingApi.listTrainingSessionsApiV1TrainingSessionsGet(teamId ?? null, null, null, null, undefined, 100).then(r => ({ items: r.data.items, total: r.data.total }));
+
       const trainings = response.items || [];
       const closedTrainings = trainings.filter(t => t.status === 'readonly');
-      
+
       if (trainings.length === 0) {
         setDataState('no-trainings');
         setStats(null);
         return;
       }
-      
+
       if (closedTrainings.length === 0) {
         setDataState('trainings-not-closed');
         setStats(null);
         return;
       }
-      
+
       // Calcular estatísticas reais
       const now = new Date();
       const periodDays = parseInt(periodFilter);
       const startDate = new Date(now.getTime() - periodDays * 24 * 60 * 60 * 1000);
-      
-      const recentTrainings = closedTrainings.filter(t => 
+
+      const recentTrainings = closedTrainings.filter(t =>
         new Date(t.session_at) >= startDate
       );
-      
-      const avgDuration = closedTrainings.reduce((sum, t) => 
+
+      const avgDuration = closedTrainings.reduce((sum, t) =>
         sum + (t.duration_planned_minutes || 60), 0
       ) / closedTrainings.length;
-      
+
       // Simular algumas estatísticas (em produção viriam da API)
       const mockStats: TeamStats = {
         totalSessions: trainings.length,
@@ -650,10 +658,10 @@ const StatsTab: React.FC<StatsTabProps> = ({ teamId, teamName = 'Equipe', onNavi
           }
         ],
       };
-      
+
       setStats(mockStats);
       setDataState('has-data');
-      
+
     } catch (err) {
       console.error('Erro ao buscar estatísticas:', err);
       setDataState('no-trainings');
@@ -720,7 +728,7 @@ const StatsTab: React.FC<StatsTabProps> = ({ teamId, teamName = 'Equipe', onNavi
         onClose={() => setShowTour(false)}
         onComplete={handleTourComplete}
       />
-      
+
       {/* Advanced Modals */}
       <LoadHeatmapChart
         teamId={teamId}
@@ -769,7 +777,7 @@ const StatsTab: React.FC<StatsTabProps> = ({ teamId, teamName = 'Equipe', onNavi
           >
             <QuestionMarkCircledIcon className="w-4 h-4 text-slate-400" />
           </button>
-          
+
           {/* Period filter */}
           <div className="relative">
             <select
@@ -784,7 +792,7 @@ const StatsTab: React.FC<StatsTabProps> = ({ teamId, teamName = 'Equipe', onNavi
             </select>
             <ChevronDownIcon className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
           </div>
-          
+
           {/* Refresh button */}
           <button
             onClick={fetchStats}
@@ -858,7 +866,7 @@ const StatsTab: React.FC<StatsTabProps> = ({ teamId, teamName = 'Equipe', onNavi
             <ChevronDownIcon className={`w-4 h-4 transition-transform ${showAdvancedFeatures ? 'rotate-180' : ''}`} />
           </button>
         </div>
-        
+
         {/* Main Feature Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {/* Load Heatmap */}
@@ -872,7 +880,7 @@ const StatsTab: React.FC<StatsTabProps> = ({ teamId, teamName = 'Equipe', onNavi
             <h4 className="text-xs font-bold text-slate-900 dark:text-white mb-1">Mapa de Carga</h4>
             <p className="text-[10px] text-slate-500 leading-relaxed">Visualize carga, wellness e presença em heatmap</p>
           </button>
-          
+
           {/* Attendance Heatmap */}
           <button
             onClick={() => setShowAttendanceHeatmap(true)}
@@ -884,7 +892,7 @@ const StatsTab: React.FC<StatsTabProps> = ({ teamId, teamName = 'Equipe', onNavi
             <h4 className="text-xs font-bold text-slate-900 dark:text-white mb-1">Mapa de Presença</h4>
             <p className="text-[10px] text-slate-500 leading-relaxed">Grade atletas x sessões com indicadores</p>
           </button>
-          
+
           {/* Microcycle Report */}
           <button
             onClick={() => setShowReportModal(true)}
@@ -896,7 +904,7 @@ const StatsTab: React.FC<StatsTabProps> = ({ teamId, teamName = 'Equipe', onNavi
             <h4 className="text-xs font-bold text-slate-900 dark:text-white mb-1">Relatório PDF</h4>
             <p className="text-[10px] text-slate-500 leading-relaxed">Gere relatório do microciclo</p>
           </button>
-          
+
           {/* AI Insights */}
           <button
             onClick={() => setShowAIInsights(true)}
@@ -912,7 +920,7 @@ const StatsTab: React.FC<StatsTabProps> = ({ teamId, teamName = 'Equipe', onNavi
             <p className="text-[10px] text-slate-500 leading-relaxed">Análise automática da equipe</p>
           </button>
         </div>
-        
+
         {/* Additional Features (collapsed) */}
         {showAdvancedFeatures && (
           <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700 animate-in slide-in-from-top-2 duration-200">
@@ -1002,7 +1010,7 @@ const StatsTab: React.FC<StatsTabProps> = ({ teamId, teamName = 'Equipe', onNavi
               </BarChart>
             </ResponsiveContainer>
           </div>
-          
+
           <p className="text-[10px] text-slate-400 mt-4 text-center">
             Baseado nos treinos finalizados. Cada barra representa um microciclo de 7 dias.
           </p>
@@ -1042,9 +1050,9 @@ const StatsTab: React.FC<StatsTabProps> = ({ teamId, teamName = 'Equipe', onNavi
               type={stats.wellnessSubmissionRate >= 80 ? 'success' : 'warning'}
             />
           </div>
-          
+
           {canManage && (
-            <button 
+            <button
               onClick={() => setShowReportModal(true)}
               className="mt-8 w-full py-2.5 border border-slate-200 dark:border-slate-800 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors flex items-center justify-center gap-2"
             >

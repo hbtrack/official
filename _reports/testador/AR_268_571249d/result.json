@@ -1,0 +1,52 @@
+{
+  "ar_id": "268",
+  "validation_command": "python temp_validate_ar268.py",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "d9eaf67a5d5a27b52f5241e48a29a207b28e4c79cd0d45f853af12d209b5c5a4",
+      "hash": "d9eaf67a5d5a27b5",
+      "stdout_len": 90,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "d9eaf67a5d5a27b52f5241e48a29a207b28e4c79cd0d45f853af12d209b5c5a4",
+      "hash": "d9eaf67a5d5a27b5",
+      "stdout_len": 90,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "d9eaf67a5d5a27b52f5241e48a29a207b28e4c79cd0d45f853af12d209b5c5a4",
+      "hash": "d9eaf67a5d5a27b5",
+      "stdout_len": 90,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true,
+  "dod": {
+    "proof": "OK",
+    "trace": "OK",
+    "stitch": "OK",
+    "matrix": "N/A",
+    "warns": [],
+    "gate_errors": [
+      "DOC-GATE-019: BLOCKED_INPUT",
+      "DOC-GATE-020: BLOCKED_INPUT",
+      "DOC-GATE-021: BLOCKED_INPUT"
+    ]
+  }
+}

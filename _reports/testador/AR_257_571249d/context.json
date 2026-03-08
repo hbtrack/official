@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_257-571249d",
+  "timestamp_utc": "2026-03-07T06:35:38.399401+00:00",
+  "git": {
+    "commit": "571249db62566fcd2e6e2fb5c6c8cdb15105af67"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "257",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_257_ar-train-073_-_migrar_usesessions.ts_+_usesessiont.md"
+}

@@ -8,15 +8,15 @@
 
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { microcyclesApi } from '@/api/generated/api-instance';
 import {
-  trainingsService,
+  MicrocycleCreate,
+  MicrocycleFilters,
+  MicrocycleUpdate,
   TrainingMicrocycle,
   TrainingMicrocycleWithSessions,
-  MicrocycleFilters,
-  MicrocycleCreate,
-  MicrocycleUpdate,
 } from '@/lib/api/trainings';
+import { useCallback, useEffect, useState } from 'react';
 
 // ============================================================================
 // TYPES
@@ -77,7 +77,7 @@ export function useMicrocycles(): UseMicrocyclesReturn {
     setCurrentFilters(filters);
 
     try {
-      const data = await trainingsService.getMicrocycles(filters);
+      const data = await microcyclesApi.listTrainingMicrocyclesApiV1TrainingMicrocyclesGet(filters.team_id ?? '', filters.cycle_id ?? null, filters.start_date ?? null, filters.end_date ?? null, filters.include_deleted).then(r => r.data as unknown as TrainingMicrocycle[]);
       setState({
         microcycles: data,
         isLoading: false,
@@ -102,7 +102,7 @@ export function useMicrocycles(): UseMicrocyclesReturn {
 
   const createMicrocycle = useCallback(async (data: MicrocycleCreate): Promise<TrainingMicrocycle | null> => {
     try {
-      const newMicrocycle = await trainingsService.createMicrocycle(data);
+      const newMicrocycle = await microcyclesApi.createTrainingMicrocycleApiV1TrainingMicrocyclesPost(data as any).then(r => r.data as unknown as TrainingMicrocycle);
       // Atualiza lista localmente
       setState(prev => ({
         ...prev,
@@ -117,7 +117,7 @@ export function useMicrocycles(): UseMicrocyclesReturn {
 
   const updateMicrocycle = useCallback(async (id: string, data: MicrocycleUpdate): Promise<TrainingMicrocycle | null> => {
     try {
-      const updated = await trainingsService.updateMicrocycle(id, data);
+      const updated = await microcyclesApi.updateTrainingMicrocycleApiV1TrainingMicrocyclesMicrocycleIdPatch(id, data as any).then(r => r.data as unknown as TrainingMicrocycle);
       // Atualiza lista localmente
       setState(prev => ({
         ...prev,
@@ -132,7 +132,7 @@ export function useMicrocycles(): UseMicrocyclesReturn {
 
   const deleteMicrocycle = useCallback(async (id: string, reason: string): Promise<boolean> => {
     try {
-      await trainingsService.deleteMicrocycle(id, reason);
+      await microcyclesApi.deleteTrainingMicrocycleApiV1TrainingMicrocyclesMicrocycleIdDelete(id, reason).then(r => r.data);
       // Remove da lista localmente
       setState(prev => ({
         ...prev,
@@ -187,7 +187,7 @@ export function useMicrocycleDetail(
     setState(prev => ({ ...prev, isLoading: true, error: null }));
 
     try {
-      const data = await trainingsService.getMicrocycle(microcycleId);
+      const data = await microcyclesApi.getTrainingMicrocycleApiV1TrainingMicrocyclesMicrocycleIdGet(microcycleId).then(r => r.data as unknown as TrainingMicrocycleWithSessions);
       setState({
         microcycle: data,
         isLoading: false,
@@ -210,7 +210,7 @@ export function useMicrocycleDetail(
 
   const updateMicrocycle = useCallback(async (data: MicrocycleUpdate): Promise<TrainingMicrocycleWithSessions | null> => {
     try {
-      const updated = await trainingsService.updateMicrocycle(microcycleId, data);
+      const updated = await microcyclesApi.updateTrainingMicrocycleApiV1TrainingMicrocyclesMicrocycleIdPatch(microcycleId, data as any).then(r => r.data as unknown as TrainingMicrocycleWithSessions);
       // Atualiza estado local
       setState(prev => ({
         ...prev,
@@ -225,7 +225,7 @@ export function useMicrocycleDetail(
 
   const deleteMicrocycle = useCallback(async (reason: string): Promise<boolean> => {
     try {
-      await trainingsService.deleteMicrocycle(microcycleId, reason);
+      await microcyclesApi.deleteTrainingMicrocycleApiV1TrainingMicrocyclesMicrocycleIdDelete(microcycleId, reason).then(r => r.data);
       setState(prev => ({ ...prev, microcycle: null }));
       return true;
     } catch (err) {
@@ -280,7 +280,7 @@ export function useCurrentMicrocycle(teamId: string | undefined) {
     setError(null);
 
     try {
-      const data = await trainingsService.getCurrentMicrocycle(teamId);
+      const data = await microcyclesApi.getCurrentMicrocycleApiV1TrainingMicrocyclesTeamsTeamIdCurrentGet(teamId).then(r => r.data as unknown as TrainingMicrocycle);
       setCurrentMicrocycle(data);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao carregar microciclo atual';
@@ -331,7 +331,7 @@ export function useMicrocycleSummary(microcycleId: string | undefined) {
     setError(null);
 
     try {
-      const data = await trainingsService.getMicrocycleSummary(microcycleId);
+      const data = await microcyclesApi.getMicrocycleSummaryApiV1TrainingMicrocyclesMicrocycleIdSummaryGet(microcycleId).then(r => r.data as unknown as TrainingMicrocycleWithSessions);
       setSummary(data);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao carregar resumo';

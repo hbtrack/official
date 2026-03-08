@@ -1,0 +1,30 @@
+AR_ID: 257
+Command: python -c "
+import sys
+from pathlib import Path
+s = Path('Hb Track - Frontend/src/lib/hooks/useSessions.ts').read_text(encoding='utf-8')
+t = Path('Hb Track - Frontend/src/hooks/useSessionTemplates.ts').read_text(encoding='utf-8')
+checks = [
+  ('trainingApi' in s, 'AC1: trainingApi em useSessions'),
+  ('TrainingSessionsAPI.listSessions' not in s and 'TrainingSessionsAPI.createSession' not in s, 'AC2: trainings manual removido de useSessions'),
+  ('sessionTemplatesApi' in t or 'trainingApi' in t, 'AC3: api gerada em useSessionTemplates'),
+  ('TrainingSessionsAPI' not in t, 'AC4: TrainingSessionsAPI removido de useSessionTemplates'),
+]
+bad=[m for ok,m in checks if not ok]
+print('FAIL:',bad) or sys.exit(1) if bad else print('AC1..AC4 PASS')
+" && cd "Hb Track - Frontend" && npx tsc --noEmit 2>&1 | tail -3
+Exit Code: 0
+Timestamp UTC: 2026-03-06T17:09:00.529645+00:00
+Behavior Hash (exit+stdout+stderr): c7950ee5238ba6845dd89c9bc183f2c44810fc6427b78bfd5cd97290aaad941f
+Git HEAD: 571249db62566fcd2e6e2fb5c6c8cdb15105af67
+Python Version: 3.11.9
+Protocol Version: 1.3.0
+Workspace Clean: True
+Workspace Status: workspace_clean
+Governed Checksums (sha256): {"Hb Track - Frontend/src/api/generated/api-instance.ts": "e37078a305ffd43ed281047c25e8c5cd2b87b2208410fe22568f61fcc743981e", "Hb Track - Frontend/src/hooks/useSessionTemplates.ts": "54367d3f1ec06ff3b6303fd0cc95b196422f5b7266ba21e103a16161cb8593f5", "Hb Track - Frontend/src/lib/hooks/useSessions.ts": "35ccbb469e92712d06953a8d29c23216da5028d06a298b127cc50b9a787cccb8", "Hb Track - Frontend/tsconfig.json": "599261c8cb15bf6981f790087190afda8662bbc868527b14b5913d977cbe5ef5", "docs/hbtrack/_INDEX.md": "cca78ee4054178895da7020897e80918622eda6105078f6c2f64b20a7b909614", "docs/hbtrack/ars/features/AR_256_ar-train-072_-_api-instance.ts_9_singletons_ausent.md": "125bf5c85d8fb6af00c198522a3665d58650b65a8878ff5e282d59eec6268771", "docs/hbtrack/ars/features/AR_257_ar-train-073_-_migrar_usesessions.ts_+_usesessiont.md": "20de3f481d60ec9e7c4cf733fd041e2981e4288df1efd7b541d97ddd8783cb3f", "docs/hbtrack/evidence/AR_256/executor_main.log": "ace7d891509598397ea5dc8147a97c7cd1e1f142abf7bf853adcac7ddd5d1103", "docs/hbtrack/manuais/MANUAL_AGENTES.md": "70b8e05bf7fee592c01e0335e8c3fdc6196fcf0d2b1aeb6224ab554922265f3c", "docs/hbtrack/modulos/treinos/DOCS_TREINO.md": "DELETED"}
+
+--- STDOUT ---
+
+
+--- STDERR ---
+

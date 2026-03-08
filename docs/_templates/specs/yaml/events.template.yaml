@@ -1,0 +1,64 @@
+spec_runtime_pack/spec/_templates/events.template.yaml 
+
+module: <module_name>
+version: "0.1.0"
+status: "draft_normativo"
+
+aggregate_root:
+  type: "<aggregate_type>"
+  id_type: "uuid"
+
+event_store:
+  required_fields:
+    - event_id
+    - event_type
+    - event_version
+    - aggregate_type
+    - aggregate_id
+    - occurred_at
+    - actor_user_id
+    - payload
+
+events:
+  - name: "<event_name>"
+    event_version: 1
+    aggregate_type: "<aggregate_type>"
+    trigger: "<service_method_or_command>"
+    description: "<business_fact_description>"
+    emission_mode: "sync"
+    transactional: true
+    payload:
+      required:
+        <field_1>: "<type>"
+        <field_2>: "<type>"
+      optional:
+        <field_x>: "<type>"
+    relations:
+      contracts:
+        - "<CONTRACT-ID or endpoint>"
+      flows:
+        - "<FLOW-ID>"
+      invariants:
+        - "<INV-ID>"
+    consumers:
+      - "<projection_name>"
+      - "<analytics_use_case>"
+
+  - name: "<event_name_2>"
+    event_version: 1
+    aggregate_type: "<aggregate_type>"
+    trigger: "<service_method_or_command>"
+    description: "<business_fact_description>"
+    emission_mode: "async"
+    transactional: false
+    payload:
+      required:
+        <field_1>: "<type>"
+      optional: {}
+    relations:
+      contracts: []
+      flows: []
+      invariants: []
+    consumers: []
+
+

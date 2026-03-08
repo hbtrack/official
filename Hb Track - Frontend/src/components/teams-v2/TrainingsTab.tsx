@@ -1,17 +1,27 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import { trainingApi } from '@/api/generated/api-instance';
+import { useToast } from '@/context/ToastContext';
+import { TrainingSession } from '@/lib/api/trainings';
+import { useTeamPermissions } from '@/lib/hooks/useTeamPermissions';
 import {
-  PlusIcon, MagnifyingGlassIcon, MixerHorizontalIcon, LayoutIcon, Pencil1Icon, CopyIcon,
-  ChevronLeftIcon, ChevronRightIcon, CalendarIcon, InfoCircledIcon, ReloadIcon,
-  ClockIcon, PersonIcon, Cross2Icon, LightningBoltIcon, ChevronDownIcon,
-  DotsHorizontalIcon, TrashIcon, EyeOpenIcon
+  CalendarIcon,
+  ChevronDownIcon,
+  ChevronLeftIcon, ChevronRightIcon,
+  ClockIcon,
+  CopyIcon,
+  Cross2Icon,
+  EyeOpenIcon,
+  InfoCircledIcon,
+  LightningBoltIcon,
+  MagnifyingGlassIcon, MixerHorizontalIcon,
+  Pencil1Icon,
+  PlusIcon,
+  ReloadIcon
 } from '@radix-ui/react-icons';
 import { Dumbbell } from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
 import CreateTrainingModal from './CreateTrainingModal';
-import { TrainingSessionsAPI, TrainingSession } from '@/lib/api/trainings';
-import { useTeamPermissions } from '@/lib/hooks/useTeamPermissions';
-import { useToast } from '@/context/ToastContext';
 
 interface TrainingsTabProps {
   teamId: string;
@@ -42,7 +52,7 @@ const TrainingsTableSkeleton: React.FC = () => (
 // EMPTY STATE COMPONENT
 // ============================================================================
 
-const EmptyTrainingsState: React.FC<{ 
+const EmptyTrainingsState: React.FC<{
   onCreateTraining: () => void;
   canCreate: boolean;
   hasSearch?: boolean;
@@ -57,7 +67,7 @@ const EmptyTrainingsState: React.FC<{
     {!hasSearch && (
       <>
         <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 text-center max-w-md">
-          Crie o primeiro treino para começar o planejamento da equipe. 
+          Crie o primeiro treino para começar o planejamento da equipe.
           Organize sessões técnicas, físicas e táticas.
         </p>
         {canCreate && (
@@ -128,18 +138,18 @@ const SuggestionBanner: React.FC<{
 
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
-  return date.toLocaleDateString('pt-BR', { 
-    day: '2-digit', 
-    month: '2-digit', 
-    year: 'numeric' 
+  return date.toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
   });
 };
 
 const formatTime = (dateString: string) => {
   const date = new Date(dateString);
-  return date.toLocaleTimeString('pt-BR', { 
-    hour: '2-digit', 
-    minute: '2-digit' 
+  return date.toLocaleTimeString('pt-BR', {
+    hour: '2-digit',
+    minute: '2-digit'
   });
 };
 
@@ -148,12 +158,12 @@ const getRelativeDay = (dateString: string) => {
   const today = new Date();
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
-  
+
   today.setHours(0, 0, 0, 0);
   tomorrow.setHours(0, 0, 0, 0);
   const dateOnly = new Date(date);
   dateOnly.setHours(0, 0, 0, 0);
-  
+
   if (dateOnly.getTime() === today.getTime()) return 'Hoje';
   if (dateOnly.getTime() === tomorrow.getTime()) return 'Amanhã';
   if (dateOnly < today) return 'Passado';
@@ -204,7 +214,7 @@ const StatusBadge: React.FC<{ status: string }> = ({ status }) => {
   };
 
   const config = statusMap[status] || statusMap['draft'];
-  
+
   return (
     <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-medium border ${config.bg} ${config.text} ${config.border}`}>
       <span className={`w-1.5 h-1.5 rounded-full ${config.dot}`} />
@@ -241,12 +251,8 @@ const TrainingsTab: React.FC<TrainingsTabProps> = ({ teamId }) => {
     try {
       setIsLoading(true);
       setError('');
-      
-      const response = await TrainingSessionsAPI.listSessions({
-        team_id: teamId,
-        page,
-        limit,
-      });
+
+      const response = await trainingApi.listTrainingSessionsApiV1TrainingSessionsGet(teamId ?? null, null, null, null, page, limit).then(r => ({ items: r.data.items, total: r.data.total }));
 
       setTrainings(response.items || []);
       setTotal(response.total || 0);
@@ -272,24 +278,24 @@ const TrainingsTab: React.FC<TrainingsTabProps> = ({ teamId }) => {
   // Handler para duplicar treino
   const handleDuplicateTraining = async (training: TrainingSession) => {
     if (isDuplicating) return;
-    
+
     setIsDuplicating(training.id);
-    
+
     try {
       // Criar novo treino baseado no existente
-      const newSession = await TrainingSessionsAPI.createSession({
+      const newSession = await trainingApi.createTrainingSessionApiV1TrainingSessionsPost({
         organization_id: training.organization_id,
         team_id: training.team_id,
         session_at: new Date().toISOString(),
-        session_type: training.session_type,
+        session_type: training.session_type as any,
         main_objective: `${training.main_objective} (cópia)`,
         duration_planned_minutes: training.duration_planned_minutes,
-      });
-      
+      } as any).then(r => r.data);
+
       toast.success('Treino duplicado!', {
         description: 'Uma cópia do treino foi criada. Edite a data e detalhes.'
       });
-      
+
       fetchTrainings();
     } catch (err) {
       console.error('Erro ao duplicar:', err);
@@ -302,10 +308,10 @@ const TrainingsTab: React.FC<TrainingsTabProps> = ({ teamId }) => {
   };
 
   const totalPages = Math.ceil(total / limit);
-  
+
   // Filtrar por busca e status
   const filteredTrainings = trainings.filter(t => {
-    const matchesSearch = !searchQuery || 
+    const matchesSearch = !searchQuery ||
       t.main_objective?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       t.session_type?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = !statusFilter || t.status === statusFilter;
@@ -340,7 +346,7 @@ const TrainingsTab: React.FC<TrainingsTabProps> = ({ teamId }) => {
           </p>
         </div>
         {canCreateTraining && (
-          <button 
+          <button
             onClick={() => setShowCreateModal(true)}
             data-testid="create-training-button"
             className="flex items-center justify-center gap-2 bg-slate-900 dark:bg-slate-100 text-white dark:text-black font-semibold text-sm px-4 py-2.5 rounded-lg shadow-sm hover:opacity-90 transition-all"
@@ -372,18 +378,17 @@ const TrainingsTab: React.FC<TrainingsTabProps> = ({ teamId }) => {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className={`flex items-center gap-2 px-3 py-2 text-xs font-semibold border rounded-lg transition-colors ${
-                  showFilters || statusFilter
+                className={`flex items-center gap-2 px-3 py-2 text-xs font-semibold border rounded-lg transition-colors ${showFilters || statusFilter
                     ? 'bg-slate-900 dark:bg-slate-100 text-white dark:text-black border-transparent'
                     : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-300'
-                }`}
+                  }`}
               >
                 <MixerHorizontalIcon className="w-3.5 h-3.5" />
                 Filtros
                 {statusFilter && <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full" />}
                 <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
               </button>
-              
+
               {(searchQuery || statusFilter) && (
                 <button
                   onClick={() => {
@@ -410,18 +415,17 @@ const TrainingsTab: React.FC<TrainingsTabProps> = ({ teamId }) => {
                   <button
                     key={status}
                     onClick={() => setStatusFilter(status)}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors ${
-                      statusFilter === status
+                    className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors ${statusFilter === status
                         ? 'bg-slate-900 dark:bg-slate-100 text-white dark:text-black border-transparent'
                         : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-slate-300'
-                    }`}
+                      }`}
                   >
                     {status === '' ? 'Todos' :
-                     status === 'draft' ? 'Rascunho' :
-                     status === 'scheduled' ? 'Agendado' :
-                     status === 'in_progress' ? 'Em andamento' :
-                     status === 'pending_review' ? 'Revisao pendente' :
-                     'Finalizado'}
+                      status === 'draft' ? 'Rascunho' :
+                        status === 'scheduled' ? 'Agendado' :
+                          status === 'in_progress' ? 'Em andamento' :
+                            status === 'pending_review' ? 'Revisao pendente' :
+                              'Finalizado'}
                   </button>
                 ))}
               </div>
@@ -451,7 +455,7 @@ const TrainingsTab: React.FC<TrainingsTabProps> = ({ teamId }) => {
 
         {/* Empty State */}
         {!isLoading && !error && filteredTrainings.length === 0 && (
-          <EmptyTrainingsState 
+          <EmptyTrainingsState
             onCreateTraining={() => setShowCreateModal(true)}
             canCreate={canCreateTraining}
             hasSearch={!!searchQuery || !!statusFilter}
@@ -475,10 +479,10 @@ const TrainingsTab: React.FC<TrainingsTabProps> = ({ teamId }) => {
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   {filteredTrainings.map((training) => {
                     const relativeDay = getRelativeDay(training.session_at);
-                    
+
                     return (
-                      <tr 
-                        key={training.id} 
+                      <tr
+                        key={training.id}
                         className="group hover:bg-slate-50 dark:hover:bg-slate-900/30 transition-colors"
                       >
                         <td className="px-6 py-4">
@@ -502,13 +506,12 @@ const TrainingsTab: React.FC<TrainingsTabProps> = ({ teamId }) => {
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-2">
                             {relativeDay && (
-                              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
-                                relativeDay === 'Hoje' 
+                              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${relativeDay === 'Hoje'
                                   ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
                                   : relativeDay === 'Amanhã'
-                                  ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400'
-                                  : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
-                              }`}>
+                                    ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400'
+                                    : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+                                }`}>
                                 {relativeDay}
                               </span>
                             )}
@@ -532,7 +535,7 @@ const TrainingsTab: React.FC<TrainingsTabProps> = ({ teamId }) => {
                         </td>
                         <td className="px-6 py-4 text-right">
                           <div className="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button 
+                            <button
                               className="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
                               title="Ver detalhes"
                             >
@@ -540,13 +543,13 @@ const TrainingsTab: React.FC<TrainingsTabProps> = ({ teamId }) => {
                             </button>
                             {canEditTraining && (
                               <>
-                                <button 
+                                <button
                                   className="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
                                   title="Editar treino"
                                 >
                                   <Pencil1Icon className="w-3.5 h-3.5" />
                                 </button>
-                                <button 
+                                <button
                                   onClick={() => handleDuplicateTraining(training)}
                                   disabled={isDuplicating === training.id}
                                   className="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors disabled:opacity-50"
@@ -571,7 +574,7 @@ const TrainingsTab: React.FC<TrainingsTabProps> = ({ teamId }) => {
                 Mostrando {filteredTrainings.length} de {total} treinos
               </span>
               <div className="flex items-center gap-2">
-                <button 
+                <button
                   onClick={() => setPage(p => Math.max(1, p - 1))}
                   disabled={page === 1}
                   className="w-8 h-8 flex items-center justify-center border border-slate-200 dark:border-slate-800 rounded-lg hover:bg-white dark:hover:bg-slate-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -581,7 +584,7 @@ const TrainingsTab: React.FC<TrainingsTabProps> = ({ teamId }) => {
                 <span className="text-xs text-slate-500 px-2">
                   {page} de {totalPages || 1}
                 </span>
-                <button 
+                <button
                   onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                   disabled={page >= totalPages}
                   className="w-8 h-8 flex items-center justify-center border border-slate-200 dark:border-slate-800 rounded-lg hover:bg-white dark:hover:bg-slate-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"

@@ -807,26 +807,30 @@ TeamWellnessRankingItem:
 
 ### 5.10 Alertas e Sugestões (Step 18)
 
-Status: **DIVERGENTE_DO_SSOT** (tipos de IDs em rotas não batem com DB).
+Status: **IMPLEMENTADO**
 
 SSOT DB:
-- `training_alerts.id` é `uuid`, mas rota usa `alert_id: int`.
-- `training_suggestions.id` é `uuid`, mas rota usa `suggestion_id: int`.
-- `team_id` é `uuid`, mas rotas usam `team_id: int`.
+- `training_alerts.id` é `uuid` — corrigido por AR-TRAIN-001 (AR_126, VERIFICADO). Rota usa `alert_id: string (uuid)`.
+- `training_suggestions.id` é `uuid` — corrigido por AR-TRAIN-001 (AR_126, VERIFICADO). Rota usa `suggestion_id: string (uuid)`.
+- `team_id` é `uuid` — corrigido por AR-TRAIN-001. Rotas usam `team_id: string (uuid)`.
 
-Contratos (AS-IS expostos no OpenAPI; TO-BE deve convergir para UUIDs):
+Cliente FE gerado: `trainingAlertsSuggestionsApi` (TrainingAlertsSuggestionsApi) adicionado em AR-TRAIN-079 (Batch 34, AR_263, VERIFICADO).
+
+> **useSuggestions.ts — STATUS: DEFERRED (CAP-001)**: chama `/training-suggestions` (roteador inativo, não-canônico). Deferred a CAP-001 (autorização PO necessária). NÃO usa CONTRACT-077..085.
+
+Contratos:
 
 | ID | Método | Path | operationId | Status |
 |---|---|---|---|---|
-| CONTRACT-TRAIN-077 | GET | `/training/alerts-suggestions/alerts/team/{team_id}/active` | `get_active_alerts_api_v1_training_alerts_suggestions_alerts_team__team_id__active_get` | DIVERGENTE_DO_SSOT |
-| CONTRACT-TRAIN-078 | GET | `/training/alerts-suggestions/alerts/team/{team_id}/history` | `get_alert_history_api_v1_training_alerts_suggestions_alerts_team__team_id__history_get` | DIVERGENTE_DO_SSOT |
-| CONTRACT-TRAIN-079 | GET | `/training/alerts-suggestions/alerts/team/{team_id}/stats` | `get_alert_stats_api_v1_training_alerts_suggestions_alerts_team__team_id__stats_get` | DIVERGENTE_DO_SSOT |
-| CONTRACT-TRAIN-080 | POST | `/training/alerts-suggestions/alerts/{alert_id}/dismiss` | `dismiss_alert_api_v1_training_alerts_suggestions_alerts__alert_id__dismiss_post` | DIVERGENTE_DO_SSOT |
-| CONTRACT-TRAIN-081 | GET | `/training/alerts-suggestions/suggestions/team/{team_id}/pending` | `get_pending_suggestions_api_v1_training_alerts_suggestions_suggestions_team__team_id__pending_get` | DIVERGENTE_DO_SSOT |
-| CONTRACT-TRAIN-082 | GET | `/training/alerts-suggestions/suggestions/team/{team_id}/history` | `get_suggestion_history_api_v1_training_alerts_suggestions_suggestions_team__team_id__history_get` | DIVERGENTE_DO_SSOT |
-| CONTRACT-TRAIN-083 | GET | `/training/alerts-suggestions/suggestions/team/{team_id}/stats` | `get_suggestion_stats_api_v1_training_alerts_suggestions_suggestions_team__team_id__stats_get` | DIVERGENTE_DO_SSOT |
-| CONTRACT-TRAIN-084 | POST | `/training/alerts-suggestions/suggestions/{suggestion_id}/apply` | `apply_suggestion_api_v1_training_alerts_suggestions_suggestions__suggestion_id__apply_post` | DIVERGENTE_DO_SSOT |
-| CONTRACT-TRAIN-085 | POST | `/training/alerts-suggestions/suggestions/{suggestion_id}/dismiss` | `dismiss_suggestion_api_v1_training_alerts_suggestions_suggestions__suggestion_id__dismiss_post` | DIVERGENTE_DO_SSOT |
+| CONTRACT-TRAIN-077 | GET | `/training/alerts-suggestions/alerts/team/{team_id}/active` | `get_active_alerts_api_v1_training_alerts_suggestions_alerts_team__team_id__active_get` | IMPLEMENTADO |
+| CONTRACT-TRAIN-078 | GET | `/training/alerts-suggestions/alerts/team/{team_id}/history` | `get_alert_history_api_v1_training_alerts_suggestions_alerts_team__team_id__history_get` | IMPLEMENTADO |
+| CONTRACT-TRAIN-079 | GET | `/training/alerts-suggestions/alerts/team/{team_id}/stats` | `get_alert_stats_api_v1_training_alerts_suggestions_alerts_team__team_id__stats_get` | IMPLEMENTADO |
+| CONTRACT-TRAIN-080 | POST | `/training/alerts-suggestions/alerts/{alert_id}/dismiss` | `dismiss_alert_api_v1_training_alerts_suggestions_alerts__alert_id__dismiss_post` | IMPLEMENTADO |
+| CONTRACT-TRAIN-081 | GET | `/training/alerts-suggestions/suggestions/team/{team_id}/pending` | `get_pending_suggestions_api_v1_training_alerts_suggestions_suggestions_team__team_id__pending_get` | IMPLEMENTADO |
+| CONTRACT-TRAIN-082 | GET | `/training/alerts-suggestions/suggestions/team/{team_id}/history` | `get_suggestion_history_api_v1_training_alerts_suggestions_suggestions_team__team_id__history_get` | IMPLEMENTADO |
+| CONTRACT-TRAIN-083 | GET | `/training/alerts-suggestions/suggestions/team/{team_id}/stats` | `get_suggestion_stats_api_v1_training_alerts_suggestions_suggestions_team__team_id__stats_get` | IMPLEMENTADO |
+| CONTRACT-TRAIN-084 | POST | `/training/alerts-suggestions/suggestions/{suggestion_id}/apply` | `apply_suggestion_api_v1_training_alerts_suggestions_suggestions__suggestion_id__apply_post` | IMPLEMENTADO |
+| CONTRACT-TRAIN-085 | POST | `/training/alerts-suggestions/suggestions/{suggestion_id}/dismiss` | `dismiss_suggestion_api_v1_training_alerts_suggestions_suggestions__suggestion_id__dismiss_post` | IMPLEMENTADO |
 
 ---
 

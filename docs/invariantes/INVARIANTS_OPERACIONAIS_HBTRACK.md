@@ -47,7 +47,7 @@ Ordem de precedência para decisões operacionais (quando houver conflito):
 * Invariante Operacional: regra que deve ser verdadeira no runtime (dev/CI/prod) para o sistema ser considerado saudável e determinístico.
 * Gate: verificação automatizada (script) registrada no `GATES_REGISTRY.yaml`.
 * DoD: Definition of Done operacional por AR_ID.
-* Handoff: `_reports/ARQUITETO.md`.
+* Handoff: `_reports/*.yaml` (ex.: `_reports/ARQUITETO.yaml`).
 
 ## 2) Formato canônico de Invariante Operacional
 
@@ -162,13 +162,15 @@ introduced_in: 2026-03-04 (AR_900 — rewrap movido para `__main__` em check_han
 
 class: A
 scope: AGENTS
-statement: `_reports/ARQUITETO.md` é a única fonte de verdade operacional para Executor e Testador.
+statement: Handoff entre agentes DEVE ocorrer via arquivos `_reports/*.yaml` (ex.: `_reports/ARQUITETO.yaml`, `_reports/EXECUTOR.yaml`, `_reports/TESTADOR.yaml`). Chat não é SSOT.
 rationale: Evita inferência baseada em histórico de chat.
 enforcement:
   * `.github/agents/Executor.agent.md` e `.github/agents/Testador.agent.md` contêm a regra explícita.
   * Scanner: `check_ops_invariants.py` (INV-OPS-010) valida needles mínimos.
 evidence:
-  * `_reports/ARQUITETO.md`
+  * `_reports/ARQUITETO.yaml`
+  * `_reports/EXECUTOR.yaml`
+  * `_reports/TESTADOR.yaml`
   * `.github/agents/*.agent.md`
 failure_mode: execução fora de escopo, re-run desnecessário, drift.
 waiver_policy: Proibido.
@@ -184,7 +186,7 @@ rationale: Evita ARs incompletas e trabalho em ondas.
 enforcement:
   * DOC-GATE-019 (`check_handoff_contract.py`) e DOC-GATE-020 (`check_trace_contract.py`).
 evidence:
-  * `_reports/ARQUITETO.md` (bloco por AR_ID)
+  * `_reports/ARQUITETO.yaml` (bloco por AR_ID)
 failure_mode: WARN em DOD-TABLE, PROOF=[⚠] ou TRACE=[⚠].
 waiver_policy: Declarar `PROOF: N/A (governance)` / `TRACE: N/A (governance)` no handoff.
 owner: Arquiteto

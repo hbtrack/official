@@ -1,26 +1,35 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import {
-  PlusIcon, ArrowRightIcon, CalendarIcon, PersonIcon, GearIcon,
-  ActivityLogIcon, ClockIcon, ReloadIcon, InfoCircledIcon, RocketIcon,
-  LockClosedIcon, EnvelopeClosedIcon, StarFilledIcon, ChevronDownIcon,
-  DrawingPinFilledIcon
-} from '@radix-ui/react-icons';
-import { Dumbbell, BarChart3, Trophy } from 'lucide-react';
+import { trainingApi } from '@/api/generated/api-instance';
 import { Button } from '@/components/ui/Button';
-import { Team } from '@/types/teams-v2';
-import { teamsService } from '@/lib/api/teams';
-import { mapApiTeamToV2 } from '@/lib/adapters/teams-v2-adapter';
-import { TrainingSessionsAPI, TrainingSession } from '@/lib/api/trainings';
-import { matchesService, Match } from '@/lib/api/matches';
-import { useTeamPermissions } from '@/lib/hooks/useTeamPermissions';
 import { useToast } from '@/context/ToastContext';
-import InviteMemberModal from './InviteMemberModal';
-import CreateTrainingModal from './CreateTrainingModal';
+import { mapApiTeamToV2 } from '@/lib/adapters/teams-v2-adapter';
+import { matchesService } from '@/lib/api/matches';
+import { teamsService } from '@/lib/api/teams';
+import { useTeamPermissions } from '@/lib/hooks/useTeamPermissions';
+import { Team } from '@/types/teams-v2';
+import {
+  ActivityLogIcon,
+  ArrowRightIcon,
+  ChevronDownIcon,
+  ClockIcon,
+  DrawingPinFilledIcon,
+  EnvelopeClosedIcon,
+  GearIcon,
+  InfoCircledIcon,
+  LockClosedIcon,
+  PersonIcon,
+  PlusIcon,
+  ReloadIcon,
+  RocketIcon
+} from '@radix-ui/react-icons';
+import { BarChart3, Dumbbell, Trophy } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 import AddAthletesToTeamModal from './AddAthletesToTeamModal';
 import ConfigureTeamModal from './ConfigureTeamModal';
+import CreateTrainingModal from './CreateTrainingModal';
+import InviteMemberModal from './InviteMemberModal';
 
 interface OverviewTabProps {
   team?: Team;
@@ -217,16 +226,16 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
         teamsService.getAthletes(team.id, { active_only: true }),
         teamsService.getStaff(team.id, true)
       ]);
-      
+
       setAthletesCount(athletesResponse.items?.length || 0);
       setStaffCount(staffResponse.items?.length || 0);
-      
+
       // Verificar se há treinador ativo
       const coachExists = (staffResponse.items || []).some(
         (member: any) => member.role === 'treinador' && member.status === 'ativo'
       );
       setHasCoach(coachExists);
-      
+
       // Mapear staff para formato comum
       const staffMembers = (staffResponse.items || []).map((member: any) => {
         const name = member.full_name || 'Membro';
@@ -239,7 +248,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
           type: 'staff' as const,
         };
       });
-      
+
       // Mapear atletas para formato comum
       const athleteMembers = (athletesResponse.items || []).map((reg: any) => {
         const name = reg.athlete?.full_name || reg.full_name || 'Atleta';
@@ -252,7 +261,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
           type: 'athlete' as const,
         };
       });
-      
+
       // Combinar e limitar a 5 membros recentes (staff primeiro, depois atletas)
       const combined = [...staffMembers, ...athleteMembers].slice(0, 5);
       setRecentMembers(combined);
@@ -273,27 +282,23 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
     }
 
     setIsLoadingActivities(true);
-    
+
     try {
       const now = new Date();
-      
+
       // Fetch trainings e matches em paralelo
       const [trainingsResponse, matchesResponse] = await Promise.all([
-        TrainingSessionsAPI.listSessions({
-          team_id: currentTeam.id,
-          page: 1,
-          limit: 10,
-        }),
+        trainingApi.listTrainingSessionsApiV1TrainingSessionsGet(currentTeam.id ?? null, null, null, null, 1, 10).then(r => ({ items: r.data.items, total: r.data.total })),
         matchesService.getTeamMatches(currentTeam.id, {
           status: 'scheduled',
           page: 1,
           size: 10,
         })
       ]);
-      
+
       // Atualizar contador de treinos
       setTrainingsCount(trainingsResponse.total || 0);
-      
+
       // Transformar trainings em UnifiedActivity
       const trainingEvents: UnifiedActivity[] = (trainingsResponse.items || [])
         .filter(t => {
@@ -309,9 +314,9 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
           location: t.location,
           sessionType: t.session_type,
         }));
-      
+
       // Training events filtered
-      
+
       // Helper para combinar match_date + match_time
       const parseMatchDateTime = (matchDate: string, matchTime?: string): Date => {
         if (matchTime) {
@@ -340,9 +345,9 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
             isHome: m.is_home,
           };
         });
-      
+
       // Match events filtered
-      
+
       // Merge, ordenar cronologicamente, limitar a 4
       const allEvents = [...trainingEvents, ...matchEvents]
         .sort((a, b) => {
@@ -352,11 +357,11 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
           return a.type === 'match' ? -1 : 1;
         })
         .slice(0, 4);
-      
+
       // Final result ready
-      
+
       setUpcomingActivities(allEvents);
-      
+
     } catch (error) {
       console.error('❌ [OverviewTab] Erro ao buscar próximas atividades:', error);
       setUpcomingActivities([]); // Empty state silencioso
@@ -431,7 +436,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
         <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 to-slate-800 dark:from-slate-100 dark:to-slate-200 rounded-xl p-6 shadow-lg animate-in fade-in slide-in-from-top-2 duration-700">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 dark:bg-black/5 rounded-full -translate-y-1/2 translate-x-1/2" />
           <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 dark:bg-black/5 rounded-full translate-y-1/2 -translate-x-1/2" />
-          
+
           <div className="relative z-10 max-w-2xl space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/10 dark:bg-black/10 rounded-lg flex items-center justify-center">
@@ -442,8 +447,8 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
                   {isNewTeam ? 'Equipe criada com sucesso!' : 'Bem-vindo à sua equipe!'}
                 </h2>
                 <p className="text-sm text-slate-300 dark:text-slate-600">
-                  {isEmptyTeam 
-                    ? 'Nenhum membro foi adicionado ainda. Vamos começar?' 
+                  {isEmptyTeam
+                    ? 'Nenhum membro foi adicionado ainda. Vamos começar?'
                     : 'Este é o seu painel de comando para gestão e análise tática.'}
                 </p>
               </div>
@@ -452,7 +457,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
             {(canManageMembers || canCreateTraining || canManageTeam) && (
               <div className="flex flex-wrap gap-3 pt-2">
                 {canManageMembers && (
-                  <button 
+                  <button
                     onClick={() => setShowInviteModal(true)}
                     className="flex items-center gap-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-semibold text-xs px-4 py-2.5 rounded-lg shadow-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
                   >
@@ -461,7 +466,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
                   </button>
                 )}
                 {canCreateTraining && (
-                  <button 
+                  <button
                     onClick={() => setShowTrainingModal(true)}
                     className="flex items-center gap-2 bg-white/10 dark:bg-black/10 border border-white/20 dark:border-black/20 text-white dark:text-slate-900 font-semibold text-xs px-4 py-2.5 rounded-lg hover:bg-white/20 dark:hover:bg-black/20 transition-all"
                   >
@@ -470,7 +475,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
                   </button>
                 )}
                 {canManageTeam && (
-                  <button 
+                  <button
                     onClick={() => setShowConfigureModal(true)}
                     className="flex items-center gap-2 bg-white/10 dark:bg-black/10 border border-white/20 dark:border-black/20 text-white dark:text-slate-900 font-semibold text-xs px-4 py-2.5 rounded-lg hover:bg-white/20 dark:hover:bg-black/20 transition-all"
                   >
@@ -494,7 +499,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* COLUNA PRINCIPAL */}
         <div className="lg:col-span-2 space-y-6">
-          
+
           {/* INFORMAÇÕES DA EQUIPE */}
           <section className="bg-white dark:bg-[#0f0f0f] border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden shadow-sm">
             <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
@@ -508,7 +513,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
                 <span className="text-sm text-slate-500 dark:text-slate-400">Nome</span>
                 <span data-testid="team-name" className="text-sm font-semibold text-slate-900 dark:text-white">{currentTeam.name}</span>
               </div>
-              
+
               {currentTeam.category && (
                 <div className="flex items-center justify-between py-2 border-b border-slate-100 dark:border-slate-800">
                   <span className="text-sm text-slate-500 dark:text-slate-400">Categoria</span>
@@ -562,7 +567,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
               <p className="text-xl font-bold text-slate-900 dark:text-white">{athletesCount}</p>
               <p className="text-xs text-slate-500 dark:text-slate-400">Atletas</p>
             </div>
-            
+
             <div className="bg-white dark:bg-[#0f0f0f] border border-slate-200 dark:border-slate-800 rounded-lg p-4 text-center">
               <div className="w-10 h-10 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg flex items-center justify-center mx-auto mb-2">
                 <Dumbbell className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
@@ -570,7 +575,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
               <p className="text-xl font-bold text-slate-900 dark:text-white">{trainingsCount}</p>
               <p className="text-xs text-slate-500 dark:text-slate-400">Treinos</p>
             </div>
-            
+
             <div className="bg-white dark:bg-[#0f0f0f] border border-slate-200 dark:border-slate-800 rounded-lg p-4 text-center">
               <div className="w-10 h-10 bg-amber-50 dark:bg-amber-900/20 rounded-lg flex items-center justify-center mx-auto mb-2">
                 <BarChart3 className="w-5 h-5 text-amber-600 dark:text-amber-400" />
@@ -597,7 +602,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
                 </button>
               )}
             </div>
-            
+
             {recentMembers.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-8 px-4">
                 <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-3">
@@ -610,7 +615,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
                   Convide membros para começar a construir sua equipe.
                 </p>
                 {canManageMembers && (
-                  <button 
+                  <button
                     onClick={() => setShowInviteModal(true)}
                     className="mt-4 flex items-center gap-2 px-4 py-2 bg-slate-900 dark:bg-slate-100 text-white dark:text-black text-xs font-semibold rounded-lg hover:opacity-90 transition-all"
                   >
@@ -636,16 +641,15 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
                         </p>
                       </div>
                     </div>
-                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-tighter ${
-                      member.type === 'staff' 
-                        ? 'bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400' 
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-tighter ${member.type === 'staff'
+                        ? 'bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400'
                         : 'bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400'
-                    }`}>
+                      }`}>
                       {member.type === 'staff' ? 'Staff' : 'Atleta'}
                     </span>
                   </div>
                 ))}
-                
+
                 {/* Link Ver todos quando há mais de 5 membros */}
                 {(athletesCount + staffCount) > 5 && onNavigateToMembers && (
                   <div className="px-5 py-3 bg-slate-50 dark:bg-slate-900/20">
@@ -684,7 +688,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
 
         {/* COLUNA LATERAL */}
         <div className="space-y-6">
-          
+
           {/* PRÓXIMA ATIVIDADE */}
           <section className="bg-white dark:bg-[#0f0f0f] border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden shadow-sm">
             <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
@@ -756,7 +760,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
                     Crie o primeiro treino para iniciar o acompanhamento da equipe.
                   </p>
                   {canCreateTraining && (
-                    <button 
+                    <button
                       onClick={() => setShowTrainingModal(true)}
                       className="mt-4 flex items-center gap-2 mx-auto px-4 py-2 bg-slate-900 dark:bg-slate-100 text-white dark:text-black text-xs font-semibold rounded-lg hover:opacity-90 transition-all"
                     >
@@ -777,8 +781,8 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
                   if (filteredActivities.length === 0) {
                     const filterLabel = activityFilter === 'training' ? 'treinos' : 'jogos';
                     const IconComponent = activityFilter === 'training' ? Dumbbell : Trophy;
-                    const iconColor = activityFilter === 'training' 
-                      ? 'text-emerald-400' 
+                    const iconColor = activityFilter === 'training'
+                      ? 'text-emerald-400'
                       : 'text-amber-400';
 
                     return (
@@ -799,81 +803,81 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
                   return (
                     <div className="space-y-0 divide-y divide-slate-100 dark:divide-slate-800">
                       {filteredActivities.map((activity) => {
-                    const isTraining = activity.type === 'training';
-                    const IconComponent = isTraining ? Dumbbell : Trophy;
-                    const iconColor = isTraining 
-                      ? 'text-emerald-600 dark:text-emerald-400' 
-                      : 'text-amber-600 dark:text-amber-400';
-                    const typeLabel = isTraining ? 'Treino' : 'Jogo';
-                    const typeColor = isTraining
-                      ? 'text-emerald-600 dark:text-emerald-400'
-                      : 'text-amber-600 dark:text-amber-400';
+                        const isTraining = activity.type === 'training';
+                        const IconComponent = isTraining ? Dumbbell : Trophy;
+                        const iconColor = isTraining
+                          ? 'text-emerald-600 dark:text-emerald-400'
+                          : 'text-amber-600 dark:text-amber-400';
+                        const typeLabel = isTraining ? 'Treino' : 'Jogo';
+                        const typeColor = isTraining
+                          ? 'text-emerald-600 dark:text-emerald-400'
+                          : 'text-amber-600 dark:text-amber-400';
 
-                    // Calcular dias restantes
-                    const now = new Date();
-                    now.setHours(0, 0, 0, 0);
-                    const eventDate = new Date(activity.eventAt);
-                    eventDate.setHours(0, 0, 0, 0);
-                    const diffTime = eventDate.getTime() - now.getTime();
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    const daysText = diffDays === 0 ? 'Hoje' : diffDays === 1 ? 'Amanhã' : `Faltam ${diffDays} dias`;
+                        // Calcular dias restantes
+                        const now = new Date();
+                        now.setHours(0, 0, 0, 0);
+                        const eventDate = new Date(activity.eventAt);
+                        eventDate.setHours(0, 0, 0, 0);
+                        const diffTime = eventDate.getTime() - now.getTime();
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        const daysText = diffDays === 0 ? 'Hoje' : diffDays === 1 ? 'Amanhã' : `Faltam ${diffDays} dias`;
 
-                    // Função de navegação
-                    const handleClick = () => {
-                      if (!team?.id) return;
-                      if (isTraining) {
-                        router.push(`/teams/${team.id}/trainings`);
-                      } else {
-                        router.push(`/teams/${team.id}/trainings`);
-                      }
-                    };
+                        // Função de navegação
+                        const handleClick = () => {
+                          if (!team?.id) return;
+                          if (isTraining) {
+                            router.push(`/teams/${team.id}/trainings`);
+                          } else {
+                            router.push(`/teams/${team.id}/trainings`);
+                          }
+                        };
 
-                    return (
-                      <div 
-                        key={activity.id}
-                        data-testid="activity-item"
-                        onClick={handleClick}
-                        className="flex items-center gap-3 py-3 px-5 hover:bg-slate-50 dark:hover:bg-slate-900/30 transition-colors cursor-pointer"
-                      >
-                        {/* Ícone */}
-                        <IconComponent className={`w-4 h-4 flex-shrink-0 ${iconColor}`} />
-                        
-                        {/* Conteúdo Principal */}
-                        <div className="flex-1 min-w-0">
-                          {/* Nome do Evento */}
-                          <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
-                            {activity.title}
-                          </p>
-                          {/* Data, Hora e Local */}
-                          <div className="flex items-center gap-3 mt-0.5 text-xs text-slate-500 dark:text-slate-400">
-                            <span className="flex items-center gap-1">
-                              <ClockIcon className="w-3 h-3" />
-                              {activity.eventAt.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}
-                              {' às '}
-                              {activity.eventAt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
-                            </span>
-                            {activity.location && (
-                              <span className="flex items-center gap-1 truncate" data-testid="activity-location">
-                                <DrawingPinFilledIcon className="w-3 h-3" />
-                                {activity.location}
+                        return (
+                          <div
+                            key={activity.id}
+                            data-testid="activity-item"
+                            onClick={handleClick}
+                            className="flex items-center gap-3 py-3 px-5 hover:bg-slate-50 dark:hover:bg-slate-900/30 transition-colors cursor-pointer"
+                          >
+                            {/* Ícone */}
+                            <IconComponent className={`w-4 h-4 flex-shrink-0 ${iconColor}`} />
+
+                            {/* Conteúdo Principal */}
+                            <div className="flex-1 min-w-0">
+                              {/* Nome do Evento */}
+                              <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                                {activity.title}
+                              </p>
+                              {/* Data, Hora e Local */}
+                              <div className="flex items-center gap-3 mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+                                <span className="flex items-center gap-1">
+                                  <ClockIcon className="w-3 h-3" />
+                                  {activity.eventAt.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}
+                                  {' às '}
+                                  {activity.eventAt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                                </span>
+                                {activity.location && (
+                                  <span className="flex items-center gap-1 truncate" data-testid="activity-location">
+                                    <DrawingPinFilledIcon className="w-3 h-3" />
+                                    {activity.location}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Coluna Direita: Tipo + Countdown */}
+                            <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                              <span className={`text-xs font-semibold ${typeColor}`}>
+                                {typeLabel}
                               </span>
-                            )}
+                              <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500">
+                                {daysText}
+                              </span>
+                            </div>
                           </div>
-                        </div>
-
-                        {/* Coluna Direita: Tipo + Countdown */}
-                        <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                          <span className={`text-xs font-semibold ${typeColor}`}>
-                            {typeLabel}
-                          </span>
-                          <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500">
-                            {daysText}
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                        );
+                      })}
+                    </div>
                   );
                 })()
               )}
@@ -892,7 +896,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
                 {canManageMembers && (
                   <>
                     {/* Convidar membro por email */}
-                    <button 
+                    <button
                       onClick={() => setShowInviteModal(true)}
                       className="group w-full flex items-start gap-3 px-3 py-2.5 text-left hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
                       title="Envia convite por email para qualquer pessoa se juntar à equipe"
@@ -909,9 +913,9 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
                         </p>
                       </div>
                     </button>
-                    
+
                     {/* Adicionar atleta manualmente */}
-                    <button 
+                    <button
                       onClick={() => setShowAddAthletesModal(true)}
                       className="group w-full flex items-start gap-3 px-3 py-2.5 text-left hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
                       title="Adicionar atletas já cadastrados no sistema diretamente à equipe"
@@ -931,7 +935,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
                   </>
                 )}
                 {canCreateTraining && (
-                  <button 
+                  <button
                     onClick={() => setShowTrainingModal(true)}
                     className="group w-full flex items-start gap-3 px-3 py-2.5 text-left hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
                     title="Criar um novo treino para a equipe"
@@ -956,8 +960,8 @@ const OverviewTab: React.FC<OverviewTabProps> = ({
       </div>
 
       {/* MODAIS */}
-      <InviteMemberModal 
-        isOpen={showInviteModal} 
+      <InviteMemberModal
+        isOpen={showInviteModal}
         onClose={() => setShowInviteModal(false)}
         onSuccess={handleInviteSuccess}
         teamId={currentTeam.id}

@@ -1,0 +1,46 @@
+module: <module_name>
+version: "0.1.0"
+status: "draft_normativo"
+
+projections:
+  - name: "<projection_name>"
+    description: "<what_question_it_answers>"
+    source_events:
+      - "<event_type_1>"
+      - "<event_type_2>"
+    grain: "<one_row_per_...>"
+    fields:
+      - name: "<field_1>"
+        type: "<type>"
+      - name: "<field_2>"
+        type: "<type>"
+    refresh_mode: "async"
+    consistency_model: "eventual"
+    storage_target: "table"
+    rebuild_strategy:
+      full_rebuild: true
+      incremental: true
+    consumers:
+      endpoints:
+        - "<endpoint>"
+      screens:
+        - "<screen_name>"
+      analytics:
+        - "<metric_name>"
+
+  - name: "<projection_name_2>"
+    description: "<...>"
+    source_events:
+      - "<event_type_x>"
+    grain: "<...>"
+    fields: []
+    refresh_mode: "sync"
+    consistency_model: "strong"
+    storage_target: "table"
+    rebuild_strategy:
+      full_rebuild: false
+      incremental: true
+    consumers:
+      endpoints: []
+      screens: []
+      analytics: []

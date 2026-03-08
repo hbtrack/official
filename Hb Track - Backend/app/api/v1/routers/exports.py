@@ -13,6 +13,7 @@ from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import get_async_db
@@ -66,24 +67,26 @@ async def request_analytics_pdf_export(
         inspector = _celery_app.control.inspect(timeout=1.0)
         active = inspector.active()
         if not active:  # None ou dict vazio = sem workers ativos
-            raise HTTPException(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail={
-                    "status": "unavailable",
-                    "reason": "worker_not_active",
-                    "message": "Export service is temporarily unavailable. Celery worker is not running.",
+            return JSONResponse(
+                status_code=status.HTTP_202_ACCEPTED,
+                content={
+                    'degraded': True,
+                    'task_id': None,
+                    'message': 'Export service is temporarily unavailable. Celery worker is not running.',
+                    'estimated_ready_at': None,
                 },
             )
     except HTTPException:
         raise
     except Exception:
         # Falha na conexão com broker = worker não disponível
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail={
-                "status": "unavailable",
-                "reason": "worker_not_active",
-                "message": "Export service is temporarily unavailable. Celery worker is not running.",
+        return JSONResponse(
+            status_code=status.HTTP_202_ACCEPTED,
+            content={
+                'degraded': True,
+                'task_id': None,
+                'message': 'Export service is temporarily unavailable. Celery worker is not running.',
+                'estimated_ready_at': None,
             },
         )
 

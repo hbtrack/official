@@ -1,10 +1,28 @@
 # Módulo TRAINING — Índice de Autoridade SSOT
 
-**Versão:** v1.5.0  
-**Última revisão:** 2026-03-06  
+**Versão:** v1.8.0  
+**Última revisão:** 2026-03-08  
 **Tipo:** Navigation Index / Authority Map / Spec-Driven Change Protocol  
 **Módulo:** TRAINING  
 **Fase atual:** FASE_2 + FASE_3 REAL CONCLUÍDAS — `DONE_TRAINING_ATINGIDO = TRUE`
+
+> Changelog v1.8.0 (2026-03-08) — Batch 35 Done Contract:
+> - AR_265 (AR-TRAIN-081, G): `DONE_CONTRACT_TRAINING.md.md` registrado na cadeia canônica como camada de decisão de encerramento (DONE_TECNICO / DONE_SEMANTICO / DONE_PRODUTO).
+> - Artefatos obrigatórios criados: `TRAINING_SCOPE_REGISTRY.yaml`, `TRAINING_STATE_MACHINE.yaml`, `TRAINING_PERF_LIMITS.json`, `traceability_training_core.csv` (skeleton).
+> - ARs totais e última selagem atualizadas (até AR-TRAIN-086, Batch 35).
+
+> Changelog v1.7.0 (2026-03-07) — Batch 34 sealed:
+> - ARs totais e última selagem atualizadas (até AR-TRAIN-080, Batch 34).
+> - AR_263 (AR-TRAIN-079, D/E): `trainingAlertsSuggestionsApi` singleton adicionado em `api-instance.ts`; TRAINING_FRONT_BACK_CONTRACT.md §5.10 CONTRACT-TRAIN-077..085 DIVERGENTE→IMPLEMENTADO VERIFICADO.
+> - AR_264 (AR-TRAIN-080, G): sync documental pós-Batch 34 VERIFICADO.
+> - FE_MIGRATION_COMPLETE = TRUE (100% endpoints canônicos; useSuggestions.ts deferred a CAP-001 — roteador inativo, não-canônico).
+
+> Changelog v1.6.0 (2026-03-07) — Batch 33 sealed:
+> - ARs totais e última selagem atualizadas (até AR-TRAIN-078, Batch 33).
+> - AR_256..AR_260 (AR-TRAIN-072..076, D): FE migration completa para generated client VERIFICADO.
+> - AR_261 (AR-TRAIN-077, B): BE fix exports.py 503→202 VERIFICADO.
+> - AR_262 (AR-TRAIN-078, G): sync documental pós-Batch 33 VERIFICADO.
+> - FE_MIGRATION_COMPLETE = TRUE (exceto useSuggestions.ts — DIVERGENTE_DO_SSOT pendente).
 
 > Changelog v1.5.0 (2026-03-06) — Batch 32 sealed:
 > - ARs totais e última selagem atualizadas (até AR-TRAIN-071, Batch 32).
@@ -53,6 +71,8 @@
    - Define comportamento de UI/UX e estados de tela.
 6. `TEST_MATRIX_TRAINING.md`
    - **Autoridade operacional**: define o que conta como evidência válida, TRUTH_BE, TRUTH_FE_FUTURO, LEGACY_INVALID, API_SYNC_REQUIRED, GENERATED_CLIENT_SYNC e roteamento de impacto por mudança.
+6b. `DONE_CONTRACT_TRAINING.md.md`
+   - **Autoridade de encerramento**: define os gates `DONE_TECNICO`, `DONE_SEMANTICO` e `DONE_PRODUTO`. Governa a legitimidade de qualquer declaração de conclusão do módulo TRAINING. Camada superior de decisão — não substitui INVARIANTS, CONTRACT, FLOWS, SCREENS ou TEST_MATRIX. Atua como critério formal de aceitação de produto sobre os demais SSOTs.
 7. `AR_BACKLOG_TRAINING.md`
    - Organiza execução por ARs/Batches.
 8. `TRAINING_ROADMAP.md`
@@ -334,10 +354,10 @@ Registrar apenas:
 | ------------------------- | --------------------------------------------------------------------------------- |
 | Done Gate                 | ✅ `DONE_TRAINING_ATINGIDO (= DONE_FASE_2_ATINGIDO AND DONE_FASE_3_REAL_ATINGIDO)` |
 | Fase atual                | FASE_2 + FASE_3 REAL CONCLUÍDAS                                                   |
-| ARs totais                | 71 ARs (`AR-TRAIN-001..071`) — todas VERIFICADO (exceto OBSOLETO/REJEITADO)       |
+| ARs totais                | 86 ARs (`AR-TRAIN-001..086`) — todas VERIFICADO (exceto OBSOLETO/REJEITADO)       |
 | ARs FASE_3 REAL           | 11 ARs `[FASE_3_REAL]`: `AR-TRAIN-015..021` + `055..058`                          |
-| Última AR selada          | AR_255 (`AR-TRAIN-071`, Batch 32, 2026-03-06)                                     |
-| Frontend generated client | ✅ Estrutura materializada em `src/api/generated/`                                 |
+| Última AR selada          | AR_270 (`AR-TRAIN-086`, Batch 35, 2026-03-08)                                |
+| Frontend generated client | ✅ FE_MIGRATION_COMPLETE = TRUE (100% endpoints canônicos; `useSuggestions.ts` deferred a CAP-001) |
 | Frontend automated tests  | ⏳ Ainda não materializados                                                        |
 | Próxima revisão           | 2026-03-10                                                                        |
 

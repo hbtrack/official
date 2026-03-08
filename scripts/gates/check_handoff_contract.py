@@ -2,7 +2,7 @@
 """
 Gate: check_handoff_contract.py
 
-Valida contrato mínimo do handoff (_reports/ARQUITETO.md) e, opcionalmente,
+Valida contrato mínimo do handoff (_reports/ARQUITETO.yaml) e, opcionalmente,
 do executor_main.log.
 
 Exit codes (canônico HB Track):
@@ -13,7 +13,7 @@ Exit codes (canônico HB Track):
 Uso:
   python scripts/gates/check_handoff_contract.py [handoff_path] [executor_log_path]
 
-  handoff_path      default: _reports/ARQUITETO.md
+  handoff_path      default: _reports/ARQUITETO.yaml
   executor_log_path opcional; omitir para validar só o handoff
 """
 
@@ -234,7 +234,7 @@ def _check_log(log_text: str, ar_ids: List[str], failures: List[str]) -> None:
 
 def main(argv: List[str]) -> int:
     handoff_path = (
-        Path(argv[1]) if len(argv) > 1 and argv[1].strip() else Path("_reports/ARQUITETO.md")
+        Path(argv[1]) if len(argv) > 1 and argv[1].strip() else Path("_reports/ARQUITETO.yaml")
     )
     log_path: Optional[Path] = None
     if len(argv) > 2 and argv[2].strip():

@@ -9,16 +9,14 @@
 
 'use client';
 
-import React, { useMemo, useEffect, useState, useRef } from 'react';
-import { format, setHours, setMinutes } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { trainingApi } from '@/api/generated/api-instance';
+import { Button } from '@/components/ui/Button';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/label';
 import {
@@ -28,14 +26,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Textarea } from '@/components/ui/textarea';
-import { Icons } from '@/design-system/icons';
-import { cn } from '@/lib/utils';
-import { TrainingSessionsAPI, type SessionUpdate, type TrainingSession } from '@/lib/api/trainings';
-import { useAuth } from '@/lib/hooks/useAuth';
 import { useToast } from '@/context/ToastContext';
+import { type SessionUpdate, type TrainingSession } from '@/lib/api/trainings';
+import { useAuth } from '@/lib/hooks/useAuth';
+import React, { useEffect, useState } from 'react';
 
 interface EditSessionModalProps {
   session: TrainingSession | null;
@@ -100,7 +95,7 @@ export function EditSessionModal({ session, isOpen, onClose, onSuccess }: EditSe
         notes: formData.notes,
       };
 
-      const updatedSession = await TrainingSessionsAPI.updateSession(session.id, updateData);
+      const updatedSession = await trainingApi.updateTrainingSessionApiV1TrainingSessionsTrainingSessionIdPatch(session.id, updateData as any).then(r => r.data);
 
       toast.success('Sessão atualizada com sucesso!');
 

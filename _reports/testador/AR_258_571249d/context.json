@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_258-571249d",
+  "timestamp_utc": "2026-03-07T06:35:46.667560+00:00",
+  "git": {
+    "commit": "571249db62566fcd2e6e2fb5c6c8cdb15105af67"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "258",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_258_ar-train-074_-_migrar_componentes_session_sessione.md"
+}

@@ -1,205 +1,102 @@
-# TESTADOR — Relatório de Verificação
+# TESTADOR — Relatório de Verificação (Batch 35)
 
-**RUN_ID**: TESTADOR-AR254-AR255-a7ab568-2026-03-06
-**AR_IDs**: [254, 255]
-**AR-TRAINs**: AR-TRAIN-070, AR-TRAIN-071
-**Batch**: 32
+**RUN_ID**: TESTADOR-AR265-AR270-571249d-2026-03-08
+**AR_IDs**: [265, 266, 267, 268, 269, 270]
+**AR-TRAINs**: AR-TRAIN-081..086
+**Batch**: 35
 **Branch**: dev-changes-2
-**HEAD**: a7ab568
-**Data**: 2026-03-06
+**HEAD**: 571249d
+**Data**: 2026-03-08
 
 ---
 
-## RESULT
+## PRE-FLIGHT
 
-| Campo | AR_254 | AR_255 |
-|---|---|---|
-| RESULT | ✅ SUCESSO | ✅ SUCESSO |
-| CONSISTENCY | OK | OK |
-| TRIPLE_CONSISTENCY | OK (3/3 exit=0, hash idêntico) | OK (3/3 exit=0, hash idêntico) |
-| Hash | c7950ee5238ba684 | c7950ee5238ba684 |
-| DOD.proof | OK | OK |
-| DOD.trace | OK | OK |
-| DOD.stitch | OK | OK |
-| DOD.matrix | N/A | N/A |
-| DOD.warns | [] (zero WARNs) | [] (zero WARNs) |
-| Workspace Clean | True | True |
-| OPS-GATE-001 | PASS (exit_code=0) | PASS (exit_code=0) |
-| CONTRACT_DIFF_GATE | N/A (sem mudança openapi.json) | N/A (sem mudança openapi.json) |
-| Schemathesis | N/A (sem mudança de contrato) | N/A (sem mudança de contrato) |
+| Check | Resultado |
+|---|---|
+| Workspace clean (git diff) | ✅ CLEAN |
+| Evidence AR_265..AR_270 staged | ✅ OK (todos 6) |
+| executor_main.log WS_Clean=True (todos) | ✅ OK |
+| Exit Code 0 (todos) | ✅ OK |
+| DOD-TABLE marker AR_265..AR_270 | ✅ OK |
+| Validation Command presente (todos) | ✅ OK |
+| DOC-GATE-019/020/021 | ℹ️ BLOCKED_INPUT (waiver Arquiteto — não-bloqueante para ARs G/A) |
+| Backend UP | ✅ OK (http://localhost:8000/ → 200) |
 
 ---
 
-## PRÉ-CONDIÇÕES (verificadas)
+## SCHEMATHESIS (Runtime Contract Validation)
 
-| Condição | AR_254 | AR_255 |
-|---|---|---|
-| AR existe (`docs/hbtrack/ars/**/AR_<id>_*.md`) | ✅ | ✅ |
-| Validation Command não vazio | ✅ | ✅ |
-| Evidence `docs/hbtrack/evidence/AR_<id>/executor_main.log` existe | ✅ | ✅ |
-| Evidence staged (`git diff --cached`) | ✅ | ✅ |
-| Workspace limpo (tracked-unstaged vazio) | ✅ | ✅ |
-| executor_main.log: `Exit Code: 0` | ✅ | ✅ |
-| executor_main.log: `Workspace Clean: True` | ✅ | ✅ |
-| OPS-GATE-001 exit_code=0 | ✅ | ✅ |
-| CONTRACT_DIFF_GATE | N/A | N/A |
-| Schemathesis | N/A | N/A |
+| Campo | Valor |
+|---|---|
+| Comando | `schemathesis run "Hb Track - Backend/docs/ssot/openapi.json" --url http://localhost:8000` |
+| Versão | Schemathesis v4.10.2 |
+| Exit Code | 1 |
+| Operations | 318 selected / 318 total |
+| Resultado | 10 passed, 52 failed, 256 skipped |
+| Classificação | FALHA_PRE_EXISTENTE — Batch 35 = governance/spec only (zero mudanças em openapi.json, BE code ou FE code) |
+
+**Nota**: As 52 falhas são PRÉ-EXISTENTES e não atribuíveis ao Batch 35. A seção "FAIL de contrato spec-driven" do Testador aplica-se SOMENTE "quando a AR tocar contrato FE↔BE do módulo TRAINING". Batch 35 contém exclusivamente ARs de classe G (governance) e A (spec artifacts), sem qualquer mudança de contrato. OPENAPI_SPEC_QUALITY, CONTRACT_DIFF_GATE e GENERATED_CLIENT_SYNC são N/A.
 
 ---
 
-## TRIPLE-RUN DETALHADO
+## TRIPLE-RUN RESULTS
 
-### AR_254
-
-| Run | Exit | Hash |
-|---|---|---|
-| 1/3 | 0 | c7950ee5238ba684 |
-| 2/3 | 0 | c7950ee5238ba684 |
-| 3/3 | 0 | c7950ee5238ba684 |
-
-Hash full: `c7950ee5238ba6845dd89c9bc183f2c44810fc6427b78bfd5cd97290aaad941f`
-
-### AR_255
-
-| Run | Exit | Hash |
-|---|---|---|
-| 1/3 | 0 | c7950ee5238ba684 |
-| 2/3 | 0 | c7950ee5238ba684 |
-| 3/3 | 0 | c7950ee5238ba684 |
-
-Hash full: `c7950ee5238ba6845dd89c9bc183f2c44810fc6427b78bfd5cd97290aaad941f`
+| AR | AR-TRAIN | Classe | Run 1 | Run 2 | Run 3 | Hash Consistência | RESULTADO |
+|---|---|---|---|---|---|---|---|
+| AR_265 | AR-TRAIN-081 | G | exit=0 | exit=0 | exit=0 | `5023af5ff1e07099` ✅ | ✅ SUCESSO |
+| AR_266 | AR-TRAIN-082 | A | exit=0 | exit=0 | exit=0 | `e0ad8f80903b17db` ✅ | ✅ SUCESSO |
+| AR_267 | AR-TRAIN-083 | A | exit=0 | exit=0 | exit=0 | `8e195a79e7048726` ✅ | ✅ SUCESSO |
+| AR_268 | AR-TRAIN-084 | A | exit=0 | exit=0 | exit=0 | `d9eaf67a5d5a27b5` ✅ | ✅ SUCESSO |
+| AR_269 | AR-TRAIN-085 | A | exit=0 | exit=0 | exit=0 | `8b8895d93dafee2a` ✅ | ✅ SUCESSO |
+| AR_270 | AR-TRAIN-086 | G | exit=0 | exit=0 | exit=0 | `ea396f85447d1505` ✅ | ✅ SUCESSO |
 
 ---
 
-## EVIDÊNCIAS
+## EVIDÊNCIAS STAGED
 
-- `_reports/testador/AR_254_a7ab568/context.json` — staged ✅
-- `_reports/testador/AR_254_a7ab568/result.json` — staged ✅
-- `_reports/testador/AR_255_a7ab568/context.json` — staged ✅
-- `_reports/testador/AR_255_a7ab568/result.json` — staged ✅
+| AR | context.json | result.json |
+|---|---|---|
+| AR_265 | `_reports/testador/AR_265_571249d/context.json` ✅ | `_reports/testador/AR_265_571249d/result.json` ✅ |
+| AR_266 | `_reports/testador/AR_266_571249d/context.json` ✅ | `_reports/testador/AR_266_571249d/result.json` ✅ |
+| AR_267 | `_reports/testador/AR_267_571249d/context.json` ✅ | `_reports/testador/AR_267_571249d/result.json` ✅ |
+| AR_268 | `_reports/testador/AR_268_571249d/context.json` ✅ | `_reports/testador/AR_268_571249d/result.json` ✅ |
+| AR_269 | `_reports/testador/AR_269_571249d/context.json` ✅ | `_reports/testador/AR_269_571249d/result.json` ✅ |
+| AR_270 | `_reports/testador/AR_270_571249d/context.json` ✅ | `_reports/testador/AR_270_571249d/result.json` ✅ |
+
+---
+
+## RESULTADO FINAL
+
+| Campo | Valor |
+|---|---|
+| RESULT | ✅ SUCESSO |
+| CONSISTENCY | OK (all 6 ARs) |
+| TRIPLE_CONSISTENCY | OK — hashes idênticos em 3/3 runs para todos os 6 ARs |
+| SCHEMATHESIS | EXIT_CODE=1 — FALHA_PRE_EXISTENTE (Batch 35 = governance/spec only, N/A para FAIL de contrato) |
+| WARNs não-waivered | ZERO |
+| NEXT_ACTION | HUMANO: `hb seal` para AR_265..AR_270 (pode prosseguir) |
 
 ---
 
 ## NEXT_ACTION
 
-✅ **SUCESSO** — Humano pode executar: `hb seal 254 255`
- — Relatório de Verificação Batch 32
+**✅ SUCESSO — Batch 35 verificado. Todos os 6 triplo-runs passaram com exit=0 e hashes consistentes.**
 
-<!-- TESTADOR_REPORT -->
+Próxima ação: humano executa `hb seal` para cada AR (265..270).
 
-**RUN_ID**: TESTADOR-BATCH29-REPLAN6-a7ab568
-**AR_IDs**: [248, 249, 250, 251]
-**Batch**: 29 — AR-TRAIN-064/065/066/067
-**Branch**: dev-changes-2
-**HEAD**: a7ab568
-**Data**: 2026-03-05
-**Protocolo**: 1.3.0
+Comandos:
+```
+python scripts/run/hb_cli.py seal 265
+python scripts/run/hb_cli.py seal 266
+python scripts/run/hb_cli.py seal 267
+python scripts/run/hb_cli.py seal 268
+python scripts/run/hb_cli.py seal 269
+python scripts/run/hb_cli.py seal 270
+```
 
----
-
-## RESULT: ✅ SUCESSO TOTAL
-
-4/4 aprovadas (248, 249, 250, 251)
-
-| AR | Triple-run | Hash (short) | Consistency | Status |
-|---|---|---|---|---|
-| AR_248 | 3/3 exit=0 | `df44f0d19e2e33eb` | OK | ✅ SUCESSO |
-| AR_249 | 3/3 exit=0 | `ab5a8e330cd36314` | OK | ✅ SUCESSO (REPLAN-6) |
-| AR_250 | 3/3 exit=0 | `8a76608b9604980e` | OK | ✅ SUCESSO |
-| AR_251 | 3/3 exit=0 | `6b811a6c85bb9674` | OK | ✅ SUCESSO |
+Schemathesis: as 52 falhas pré-existentes devem ser endereçadas em batch separado (backend fixes). Não são bloqueantes para este batch de governance/spec.
 
 ---
 
-## DETALHE — AR_248 ✅
-
-**AR-TRAIN**: 064 | triple_consistency: OK
-**hash_full**: `df44f0d19e2e33ebea7f3a83e3ee4219cefb44e22e6da85e4b2dc8b9a7a82c56`
-
-| Run | Exit | Hash |
-|-----|------|------|
-| 1 | 0 | `df44f0d19e2e33eb` |
-| 2 | 0 | `df44f0d19e2e33eb` |
-| 3 | 0 | `df44f0d19e2e33eb` |
-
-DOD: PROOF[OK] TRACE[OK] STITCH[OK] MATRIX[N/A] WARNs[nenhum]
-
----
-
-## DETALHE — AR_249 ✅ (REPLAN-6)
-
-**AR-TRAIN**: 065 | triple_consistency: OK
-**hash_full**: `ab5a8e330cd36314b542230a8c0d31960eec6671b2aca605c4e2cb2acfdc98fb`
-
-| Run | Exit | Hash |
-|-----|------|------|
-| 1 | 0 | `ab5a8e330cd36314` |
-| 2 | 0 | `ab5a8e330cd36314` |
-| 3 | 0 | `ab5a8e330cd36314` |
-
-DOD: PROOF[OK] TRACE[OK] STITCH[OK] MATRIX[N/A] WARNs[nenhum]
-
-**Histórico**: Ciclo 1 REJEITADO (FLAKY_OUTPUT) — `re.sub(r' - \d+\.\d+s', '', l)` ausente no filtro.
-**Fix REPLAN-6**: `import re` + strip de timing adicionado → hash determinístico. SUCESSO no 2º ciclo.
-
----
-
-## DETALHE — AR_250 ✅
-
-**AR-TRAIN**: 066 | triple_consistency: OK
-**hash_full**: `8a76608b9604980e518df9e77d87cc288f7e4bf7e66642edbfa59877771278c1`
-
-| Run | Exit | Hash |
-|-----|------|------|
-| 1 | 0 | `8a76608b9604980e` |
-| 2 | 0 | `8a76608b9604980e` |
-| 3 | 0 | `8a76608b9604980e` |
-
-DOD: PROOF[OK] TRACE[OK] STITCH[OK] MATRIX[N/A] WARNs[nenhum]
-
----
-
-## DETALHE — AR_251 ✅
-
-**AR-TRAIN**: 067 | triple_consistency: OK
-**hash_full**: `6b811a6c85bb96745a24549718db92a1ac2970544e8331f8885c349056e9273f`
-
-| Run | Exit | Hash |
-|-----|------|------|
-| 1 | 0 | `6b811a6c85bb9674` |
-| 2 | 0 | `6b811a6c85bb9674` |
-| 3 | 0 | `6b811a6c85bb9674` |
-
-DOD: PROOF[OK] TRACE[OK] STITCH[OK] MATRIX[N/A] WARNs[nenhum]
-
----
-
-## TRIPLE_CONSISTENCY
-
-| AR | triple_consistency |
-|----|--------------------|
-| AR_248 | OK |
-| AR_249 | OK (REPLAN-6) |
-| AR_250 | OK |
-| AR_251 | OK |
-
----
-
-## EVIDENCES
-
-**Testador commitaveis (staged)**:
-- `_reports/testador/AR_248_a7ab568/context.json` OK
-- `_reports/testador/AR_248_a7ab568/result.json` OK
-- `_reports/testador/AR_249_a7ab568/context.json` OK
-- `_reports/testador/AR_249_a7ab568/result.json` OK
-- `_reports/testador/AR_250_a7ab568/context.json` OK
-- `_reports/testador/AR_250_a7ab568/result.json` OK
-- `_reports/testador/AR_251_a7ab568/context.json` OK
-- `_reports/testador/AR_251_a7ab568/result.json` OK
-
----
-
-## NEXT_ACTION
-
-### Todas aprovadas — Humano: `hb seal 248`, `hb seal 249`, `hb seal 250`, `hb seal 251`
-
-*Testador — 2026-03-05 — Batch 29 completo: AR_248 AR_249 AR_250 AR_251 todos SUCESSO. hb seal 248/249/250/251.*
+*Testador — 2026-03-08 — Batch 35 (AR_265..AR_270) ✅ SUCESSO. Triple-run completo. Zero WARNs não-waivered.*

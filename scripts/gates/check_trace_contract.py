@@ -2,7 +2,7 @@
 """
 Gate: check_trace_contract.py  —  DOC-GATE-020
 
-Valida rastreabilidade do handoff (_reports/ARQUITETO.md).
+Valida rastreabilidade do handoff (_reports/ARQUITETO.yaml).
 Gate WARN-only: nunca bloqueia execução, mas o Testador trata WARN como FAIL_ACTIONABLE.
 
 Heurística AR-centric (2 níveis):
@@ -19,7 +19,7 @@ Exit codes (canônico HB Track):
 Uso:
   python scripts/gates/check_trace_contract.py [handoff_path]
 
-  handoff_path   default: _reports/ARQUITETO.md
+  handoff_path   default: _reports/ARQUITETO.yaml
 """
 from __future__ import annotations
 
@@ -196,7 +196,7 @@ def _check_trace_warns(handoff: str) -> List[str]:
 
 def main(argv: List[str]) -> int:
     handoff_path = (
-        Path(argv[1]) if len(argv) > 1 and argv[1].strip() else Path("_reports/ARQUITETO.md")
+        Path(argv[1]) if len(argv) > 1 and argv[1].strip() else Path("_reports/ARQUITETO.yaml")
     )
 
     ok, handoff = _read_text(handoff_path)

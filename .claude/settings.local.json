@@ -49,7 +49,11 @@
       "Bash(python scripts/run/hb_cli.py plan \"docs/_canon/planos/ar_batch30_wellness_pre_fe_generated_client_068.json\" --dry-run)",
       "Bash(python scripts/run/hb_cli.py plan \"docs/_canon/planos/ar_batch32_wellness_runtime_tests_sync_070_071.json\" --dry-run)",
       "Bash(python -c \"import json; d=json.load\\(open\\(''c:/HB TRACK/scripts/run/hb_cli.py''.replace\\(''hb_cli.py'',''''\\) + ''../_policy/ar_contract.schema.json''\\)\\); print\\(json.dumps\\(d.get\\(''definitions'',d.get\\(''$defs'',{}\\)\\).get\\(''Task'',{}\\).get\\(''properties'',{}\\).get\\(''title'',{}\\), indent=2\\)\\)\")",
-      "Bash(python -c \"import json; d=json.load\\(open\\(''c:/HB TRACK/docs/_canon/contratos/ar_contract.schema.json''\\)\\); props=d.get\\(''properties'',{}\\); tasks=props.get\\(''tasks'',{}\\).get\\(''items'',{}\\).get\\(''properties'',{}\\); print\\(json.dumps\\(tasks.get\\(''title'',{}\\), indent=2\\)\\)\")"
+      "Bash(python -c \"import json; d=json.load\\(open\\(''c:/HB TRACK/docs/_canon/contratos/ar_contract.schema.json''\\)\\); props=d.get\\(''properties'',{}\\); tasks=props.get\\(''tasks'',{}\\).get\\(''items'',{}\\).get\\(''properties'',{}\\); print\\(json.dumps\\(tasks.get\\(''title'',{}\\), indent=2\\)\\)\")",
+      "Bash(for f in \"c:/HB TRACK/.contract_driven/\"*.md)",
+      "Bash(do echo \"=== $f ===\")",
+      "Read(//c/HB TRACK/**)",
+      "Bash(done)"
     ]
   }
 }

@@ -2,7 +2,7 @@
 """
 Gate: trace_stitcher.py — DOC-GATE-021
 
-Para cada AR do handoff (_reports/ARQUITETO.md):
+Para cada AR do handoff (_reports/ARQUITETO.yaml):
   - Verifica que o campo PROOF está declarado.
   - Verifica que o campo TRACE está declarado.
   - Valida que os arquivos referenciados no TRACE existem em disco.
@@ -18,7 +18,7 @@ Exit codes (canônico HB Track):
 Uso:
   python scripts/gates/trace_stitcher.py [handoff_path] [repo_root]
 
-  handoff_path  default: _reports/ARQUITETO.md
+  handoff_path  default: _reports/ARQUITETO.yaml
   repo_root     default: cwd
 """
 from __future__ import annotations
@@ -231,7 +231,7 @@ def _check_ar(ar_id: str, block: str, repo_root: Path) -> ArResult:
 
 def main(argv: List[str]) -> int:
     handoff_path = (
-        Path(argv[1]) if len(argv) > 1 and argv[1].strip() else Path("_reports/ARQUITETO.md")
+        Path(argv[1]) if len(argv) > 1 and argv[1].strip() else Path("_reports/ARQUITETO.yaml")
     )
     repo_root = (
         Path(argv[2]).resolve() if len(argv) > 2 and argv[2].strip() else Path.cwd()

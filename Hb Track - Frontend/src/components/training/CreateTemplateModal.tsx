@@ -1,19 +1,20 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import { X } from 'lucide-react';
-import { TrainingSessionsAPI, SessionTemplateCreate } from '@/lib/api/trainings';
-import { computeFocusSummary } from '@/lib/training/focus';
+import { sessionTemplatesApi } from '@/api/generated/api-instance';
 import { Button } from '@/components/ui/Button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { SliderRange as Slider } from '@/components/ui/slider-range';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Textarea } from '@/components/ui/textarea';
+import { SessionTemplateCreate } from '@/lib/api/trainings';
+import { computeFocusSummary } from '@/lib/training/focus';
+import { cn } from '@/lib/utils';
+import { useMutation } from '@tanstack/react-query';
+import { X } from 'lucide-react';
+import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { FocusDistributionPieChart } from './charts/FocusDistributionPieChart';
-import { cn } from '@/lib/utils';
 
 interface CreateTemplateModalProps {
   isOpen: boolean;
@@ -60,7 +61,7 @@ export function CreateTemplateModal({ isOpen, onClose, onSuccess }: CreateTempla
   const total = focusStatus.totalFocusRounded;
 
   const createMutation = useMutation({
-    mutationFn: (data: SessionTemplateCreate) => TrainingSessionsAPI.createSessionTemplate(data),
+    mutationFn: (data: SessionTemplateCreate) => sessionTemplatesApi.createSessionTemplateApiV1SessionTemplatesPost(data as any).then(r => r.data),
     onSuccess: () => {
       toast.success('Template criado com sucesso');
       resetForm();
@@ -127,7 +128,7 @@ export function CreateTemplateModal({ isOpen, onClose, onSuccess }: CreateTempla
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div 
+      <div
         data-testid="create-template-modal"
         role="dialog"
         aria-labelledby="create-template-title"
@@ -226,8 +227,8 @@ export function CreateTemplateModal({ isOpen, onClose, onSuccess }: CreateTempla
                         {focus[field.key].toFixed(0)}%
                       </span>
                     </div>
-                    <input 
-                      type="number" 
+                    <input
+                      type="number"
                       name={field.key}
                       value={focus[field.key]}
                       onChange={(e) => handleFocusChange(field.key, Number(e.target.value))}

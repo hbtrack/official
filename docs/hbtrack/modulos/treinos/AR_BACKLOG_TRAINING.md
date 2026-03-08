@@ -1,7 +1,7 @@
 # AR_BACKLOG_TRAINING.md — Backlog de ARs (Materialização) do Módulo TRAINING
 
 Status: ATIVO
-Versão: v3.6.0
+Versão: v3.9.0
 Tipo de Documento: AR Materialization Backlog (**apenas ARs** — sem gate, sem roadmap)  
 Módulo: TRAINING  
 Fase: FASE_2 (PRD v2.2 — 2026-02-20) + DEC-TRAIN-* (2026-02-25) + FASE_3 (2026-02-27)  
@@ -11,8 +11,36 @@ Owners:
 - Execução (Executor): (a definir)
 - Auditoria/Testes: (a definir)
 
-Última revisão: 2026-03-06  
+Última revisão: 2026-03-08  
 Próxima revisão recomendada: N/A — TRUTH SUITE 0 failed/skipped/xfailed atingido  
+
+> Changelog v3.9.0 (2026-03-08) — Batch 35 DONE_CONTRACT implementation (AR-TRAIN-081..086):
+> - Lote 25 adicionado: AR-TRAIN-081 (G) — Registrar DONE_CONTRACT_TRAINING.md.md na cadeia canônica: _INDEX.md v1.8.0 + entry 6b.
+> - Lote 25 adicionado: AR-TRAIN-082 (A) — Criar TRAINING_SCOPE_REGISTRY.yaml: 13 CORE + 7 EXTENDED + 2 EXPERIMENTAL.
+> - Lote 25 adicionado: AR-TRAIN-083 (A) — Criar TRAINING_STATE_MACHINE.yaml: 5 entidades stateful CORE.
+> - Lote 25 adicionado: AR-TRAIN-084 (A) — Criar TRAINING_PERF_LIMITS.json: 16 itens CORE com SLOs baseline.
+> - Lote 25 adicionado: AR-TRAIN-085 (A) — Criar traceability_training_core.csv skeleton: 9 headers, 0 dados.
+> - Lote 25 adicionado: AR-TRAIN-086 (G) — Sync documental pós-Batch 35.
+> - Tabela de ARs: 6 linhas adicionadas AR-TRAIN-081..086.
+> - Detalhe §8: seções AR-TRAIN-081..086 adicionadas.
+> - DONE_CONTRACT_TRAINING.md.md implementado (Batch 35 completo).
+> - Lote 24 adicionado: AR-TRAIN-079 (D/E) — trainingAlertsSuggestionsApi singleton + TRAINING_FRONT_BACK_CONTRACT.md §5.10 DIVERGENTE→IMPLEMENTADO + useSuggestions.ts deferred CAP-001.
+> - Lote 24 adicionado: AR-TRAIN-080 (G) — Sync documental pós-Batch 34.
+> - Tabela de ARs: 2 linhas adicionadas AR-TRAIN-079..080.
+> - Detalhe §8: seções AR-TRAIN-079..080 adicionadas.
+> - FE_MIGRATION_COMPLETE = TRUE (100% endpoints canônicos; useSuggestions.ts deferred a CAP-001).
+
+> Changelog v3.7.0 (2026-03-07) — Batch 33 FE migration + BE fix + documental sync (AR-TRAIN-072..078):
+> - Lote 23 adicionado: AR-TRAIN-072 (D) — api-instance.ts: 9 singletons + fix interceptor.
+> - Lote 23 adicionado: AR-TRAIN-073 (D) — Migrar useSessions + useSessionTemplates para cliente gerado.
+> - Lote 23 adicionado: AR-TRAIN-074 (D) — Migrar componentes session para generated client.
+> - Lote 23 adicionado: AR-TRAIN-075 (D) — Migrar useCycles + useMicrocycles + useExercises.
+> - Lote 23 adicionado: AR-TRAIN-076 (D) — Migrar exercise components + training-phase3.ts.
+> - Lote 23 adicionado: AR-TRAIN-077 (B) — Fix DEC-TRAIN-004 export-pdf 503 → 202.
+> - Lote 23 adicionado: AR-TRAIN-078 (G) — Sync documental pós-Batch 33.
+> - Tabela de ARs: 7 linhas adicionadas AR-TRAIN-072..078.
+> - Detalhe §8: seções AR-TRAIN-072..078 adicionadas.
+> - FE_MIGRATION_COMPLETE = TRUE (exceto useSuggestions.ts — DIVERGENTE_DO_SSOT pendente).
 
 > Changelog v3.6.0 (2026-03-06) — Batch 32 sync documental (AR-TRAIN-070/071):
 > - Lote 22 adicionado: AR-TRAIN-070 (T) — testes impl GET/PATCH wellness por ID (CONTRACT-031/032/037/038).
@@ -469,6 +497,21 @@ Decompor a materialização do módulo TRAINING em ARs pequenas, rastreáveis, t
 | AR-TRAIN-069 | B | ALTA | BE: implementar GET/PATCH wellness-pre e wellness-post por ID (fix stubs 501) | app/api/v1/routers/wellness_pre.py, app/api/v1/routers/wellness_post.py, app/services/wellness_pre_service.py, app/services/wellness_post_service.py, AR_BACKLOG_TRAINING.md, TEST_MATRIX_TRAINING.md, Hb Track Kanban.md | AR-TRAIN-068 | VERIFICADO |
 | AR-TRAIN-070 | T | ALTA | Testes impl GET/PATCH wellness por ID (CONTRACT-031/032/037/038) | tests/training/contracts/test_contract_train_029_039_wellness.py, AR_BACKLOG_TRAINING.md, TEST_MATRIX_TRAINING.md, Hb Track Kanban.md | AR-TRAIN-069 | VERIFICADO |
 | AR-TRAIN-071 | G | ALTA | Sync documental pós-Batch 31+32: BACKLOG v3.6.0 + TEST_MATRIX v4.2.0 + Kanban Batch 32 + _INDEX v1.5.0 | AR_BACKLOG_TRAINING.md, TEST_MATRIX_TRAINING.md, Hb Track Kanban.md, docs/hbtrack/modulos/treinos/_INDEX.md | AR-TRAIN-070 | VERIFICADO |
+| AR-TRAIN-072 | D | ALTA | api-instance.ts: 9 singletons + fix interceptor (cyclesApi, microcyclesApi, sessionTemplatesApi, exercisesApi, exerciseTagsApi, exerciseFavoritesApi, athleteTrainingApi, aiCoachApi, attendanceApi) | Hb Track - Frontend/src/api/generated/api-instance.ts | AR-TRAIN-071 | VERIFICADO |
+| AR-TRAIN-073 | D | ALTA | Migrar useSessions + useSessionTemplates para cliente gerado (trainingApi, sessionTemplatesApi) | src/lib/hooks/useSessions.ts, src/hooks/useSessionTemplates.ts | AR-TRAIN-072 | VERIFICADO |
+| AR-TRAIN-074 | D | ALTA | Migrar componentes session para generated client (9 componentes) | ConfiguracoesClient.tsx, CreateTemplateModal.tsx, EditTemplateModal.tsx, EditSessionModal.tsx, CreateSessionModal.tsx, CreateTrainingModal.tsx, OverviewTab.tsx, StatsTab.tsx, TrainingsTab.tsx | AR-TRAIN-073 | VERIFICADO |
+| AR-TRAIN-075 | D | ALTA | Migrar useCycles + useMicrocycles + useExercises para cliente gerado | src/lib/hooks/useCycles.ts, useMicrocycles.ts, src/hooks/useExercises.ts | AR-TRAIN-074 | VERIFICADO |
+| AR-TRAIN-076 | D | ALTA | Migrar exercise components + training-phase3.ts para cliente gerado | ExerciseACLModal.tsx, ExerciseVisibilityToggle.tsx, src/lib/api/training-phase3.ts | AR-TRAIN-075 | VERIFICADO |
+| AR-TRAIN-077 | B | ALTA | Fix DEC-TRAIN-004 export-pdf 503 → 202 (exports.py degraded mode) | Hb Track - Backend/app/api/v1/routers/exports.py | AR-TRAIN-076 | VERIFICADO |
+| AR-TRAIN-078 | G | ALTA | Sync documental pós-Batch 33: BACKLOG v3.7.0 + TEST_MATRIX v4.3.0 + Kanban Batch 33 + _INDEX v1.6.0 | AR_BACKLOG_TRAINING.md, TEST_MATRIX_TRAINING.md, Hb Track Kanban.md, docs/hbtrack/modulos/treinos/_INDEX.md | AR-TRAIN-077 | VERIFICADO |
+| AR-TRAIN-079 | D/E | ALTA | trainingAlertsSuggestionsApi singleton + TRAINING_FRONT_BACK_CONTRACT.md §5.10 DIVERGENTE→IMPLEMENTADO + useSuggestions.ts deferred CAP-001 | Hb Track - Frontend/src/api/generated/api-instance.ts, docs/hbtrack/modulos/treinos/TRAINING_FRONT_BACK_CONTRACT.md | AR-TRAIN-078 | VERIFICADO |
+| AR-TRAIN-080 | G | ALTA | Sync documental pós-Batch 34: BACKLOG v3.8.0 + TEST_MATRIX v4.4.0 + Kanban Batch 34 + _INDEX v1.7.0 | AR_BACKLOG_TRAINING.md, TEST_MATRIX_TRAINING.md, Hb Track Kanban.md, docs/hbtrack/modulos/treinos/_INDEX.md | AR-TRAIN-079 | VERIFICADO |
+| AR-TRAIN-081 | G | ALTA | DONE_CONTRACT_TRAINING.md.md registrado na cadeia canônica: _INDEX.md v1.8.0 + entry 6b | docs/hbtrack/modulos/treinos/_INDEX.md | AR-TRAIN-080 | VERIFICADO |
+| AR-TRAIN-082 | A | ALTA | TRAINING_SCOPE_REGISTRY.yaml criado: 13 CORE + 7 EXTENDED + 2 EXPERIMENTAL | docs/hbtrack/modulos/treinos/TRAINING_SCOPE_REGISTRY.yaml | AR-TRAIN-081 | VERIFICADO |
+| AR-TRAIN-083 | A | ALTA | TRAINING_STATE_MACHINE.yaml criado: 5 entidades stateful CORE | docs/hbtrack/modulos/treinos/TRAINING_STATE_MACHINE.yaml | AR-TRAIN-082 | VERIFICADO |
+| AR-TRAIN-084 | A | ALTA | TRAINING_PERF_LIMITS.json criado: 16 itens CORE com SLOs baseline | docs/hbtrack/modulos/treinos/TRAINING_PERF_LIMITS.json | AR-TRAIN-083 | VERIFICADO |
+| AR-TRAIN-085 | A | ALTA | traceability_training_core.csv criado como skeleton: 9 headers, 0 dados | docs/hbtrack/modulos/treinos/_evidence/traceability_training_core.csv | AR-TRAIN-084 | VERIFICADO |
+| AR-TRAIN-086 | G | ALTA | Sync documental pós-Batch 35: BACKLOG v3.9.0 + TEST_MATRIX v4.5.0 + Kanban Batch 35 + _INDEX v1.8.0 | AR_BACKLOG_TRAINING.md, TEST_MATRIX_TRAINING.md, Hb Track Kanban.md, docs/hbtrack/modulos/treinos/_INDEX.md | AR-TRAIN-085 | VERIFICADO |
 
 > **Critérios de classificação (BLOQUEANTE/NAO_BLOQUEANTE)** → ver `TEST_MATRIX_TRAINING.md` (definições + matriz §5)  
 > **Regra de cálculo de DONE_FASE_3_REAL_ATINGIDO**: contar apenas ARs com tag `[FASE_3_REAL]`. ARs `[FASE_3_SYNC]` (classe G/M de sync documental e stubs) **não contam**.
@@ -2863,3 +2906,257 @@ Governança pura — sincronizar BACKLOG v3.6.0, TEST_MATRIX v4.2.0, Kanban (Bat
 #### 8.3 Evidencia
 - **Evidence**: docs/hbtrack/evidence/AR_255/executor_main.log
 - **Status Final**: ✅ VERIFICADO (hb seal 255, 2026-03-06)
+
+---
+
+### AR-TRAIN-072 — api-instance.ts: 9 singletons + fix interceptor (AR_256, Batch 33)
+
+#### 8.1 Metadados
+- **Class:** D
+- **Prioridade:** ALTA
+- **AR_ID:** 256
+- **Batch:** 33
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Adicionar 9 singletons ao api-instance.ts do cliente gerado: cyclesApi, microcyclesApi, sessionTemplatesApi, exercisesApi, exerciseTagsApi, exerciseFavoritesApi, athleteTrainingApi, aiCoachApi, attendanceApi. Fix: import `from '.'` (não `from './generated'`), remoção de interceptor duplicado, remoção de `withCredentials` inválido em ConfigurationParameters.
+
+#### 8.3 Evidencia
+- **Evidence**: docs/hbtrack/evidence/AR_256/executor_main.log
+- **Status Final**: ✅ VERIFICADO (hb seal 256, 2026-03-07)
+
+---
+
+### AR-TRAIN-073 — Migrar useSessions + useSessionTemplates para cliente gerado (AR_257, Batch 33)
+
+#### 8.1 Metadados
+- **Class:** D
+- **Prioridade:** ALTA
+- **AR_ID:** 257
+- **Batch:** 33
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Migrar useSessions.ts (11 chamadas) e useSessionTemplates.ts (2 chamadas) de TrainingSessionsAPI manual para trainingApi e sessionTemplatesApi do cliente gerado.
+
+#### 8.3 Evidencia
+- **Evidence**: docs/hbtrack/evidence/AR_257/executor_main.log
+- **Status Final**: ✅ VERIFICADO (hb seal 257, 2026-03-07)
+
+---
+
+### AR-TRAIN-074 — Migrar componentes session para generated client (AR_258, Batch 33)
+
+#### 8.1 Metadados
+- **Class:** D
+- **Prioridade:** ALTA
+- **AR_ID:** 258
+- **Batch:** 33
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Migrar 9 componentes session para generated client: ConfiguracoesClient.tsx, CreateTemplateModal.tsx, EditTemplateModal.tsx, EditSessionModal.tsx, CreateSessionModal.tsx, CreateTrainingModal.tsx, OverviewTab.tsx, StatsTab.tsx, TrainingsTab.tsx.
+
+#### 8.3 Evidencia
+- **Evidence**: docs/hbtrack/evidence/AR_258/executor_main.log
+- **Status Final**: ✅ VERIFICADO (hb seal 258, 2026-03-07)
+
+---
+
+### AR-TRAIN-075 — Migrar useCycles + useMicrocycles + useExercises (AR_259, Batch 33)
+
+#### 8.1 Metadados
+- **Class:** D
+- **Prioridade:** ALTA
+- **AR_ID:** 259
+- **Batch:** 33
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Migrar useCycles.ts (cyclesApi, 8 chamadas), useMicrocycles.ts (microcyclesApi, 9 chamadas) e useExercises.ts (exercisesApi/exerciseTagsApi/exerciseFavoritesApi, 9 chamadas) para o cliente gerado.
+
+#### 8.3 Evidencia
+- **Evidence**: docs/hbtrack/evidence/AR_259/executor_main.log
+- **Status Final**: ✅ VERIFICADO (hb seal 259, 2026-03-07)
+
+---
+
+### AR-TRAIN-076 — Migrar exercise components + training-phase3.ts (AR_260, Batch 33)
+
+#### 8.1 Metadados
+- **Class:** D
+- **Prioridade:** ALTA
+- **AR_ID:** 260
+- **Batch:** 33
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Migrar ExerciseACLModal.tsx (exercisesApi, 3 chamadas), ExerciseVisibilityToggle.tsx (exercisesApi, 1 chamada) e training-phase3.ts (athleteTrainingApi + aiCoachApi + attendanceApi, 7 funções) para o cliente gerado.
+
+#### 8.3 Evidencia
+- **Evidence**: docs/hbtrack/evidence/AR_260/executor_main.log
+- **Status Final**: ✅ VERIFICADO (hb seal 260, 2026-03-07)
+
+---
+
+### AR-TRAIN-077 — Fix DEC-TRAIN-004 export-pdf 503 → 202 (AR_261, Batch 33)
+
+#### 8.1 Metadados
+- **Class:** B
+- **Prioridade:** ALTA
+- **AR_ID:** 261
+- **Batch:** 33
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Corrigir exports.py: substituir 2x `raise HTTPException(status_code=503)` por `return JSONResponse(status_code=202, content={degraded:True, ...})` implementando degraded mode conforme DEC-TRAIN-004.
+
+#### 8.3 Evidencia
+- **Evidence**: docs/hbtrack/evidence/AR_261/executor_main.log
+- **Status Final**: ✅ VERIFICADO (hb seal 261, 2026-03-07)
+
+---
+
+### AR-TRAIN-078 — Sync documental pós-Batch 33 (AR_262, Batch 33)
+
+#### 8.1 Metadados
+- **Class:** G
+- **Prioridade:** ALTA
+- **AR_ID:** 262
+- **Batch:** 33
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Governança pura — sincronizar BACKLOG v3.7.0, TEST_MATRIX v4.3.0, Kanban (Batch 33), e _INDEX v1.6.0 após Batch 33 (AR_256..AR_261). FE_MIGRATION_COMPLETE = TRUE (exceto useSuggestions.ts — DIVERGENTE_DO_SSOT pendente).
+
+#### 8.3 Evidencia
+- **Evidence**: docs/hbtrack/evidence/AR_262/executor_main.log
+- **Status Final**: ✅ VERIFICADO (hb seal 262, 2026-03-07)
+
+### AR-TRAIN-079 — trainingAlertsSuggestionsApi singleton + CONTRACT §5.10 fix (AR_263, Batch 34)
+
+#### 8.1 Metadados
+- **Class:** D/E
+- **Prioridade:** ALTA
+- **AR_ID:** 263
+- **Batch:** 34
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Adicionar `trainingAlertsSuggestionsApi` singleton em `api-instance.ts` (exposição de CONTRACT-TRAIN-077..085 via cliente gerado). Sincronizar TRAINING_FRONT_BACK_CONTRACT.md §5.10 de DIVERGENTE_DO_SSOT para IMPLEMENTADO pós AR-TRAIN-001. Formalizar useSuggestions.ts como deferred a CAP-001 (roteador inativo).
+
+#### 8.3 Evidencia
+- **Evidence**: docs/hbtrack/evidence/AR_263/executor_main.log
+- **Status Final**: ✅ VERIFICADO (hb seal 263, 2026-03-07)
+
+### AR-TRAIN-080 — Sync documental pós-Batch 34 (AR_264, Batch 34)
+
+#### 8.1 Metadados
+- **Class:** G
+- **Prioridade:** ALTA
+- **AR_ID:** 264
+- **Batch:** 34
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Governança pura — sincronizar BACKLOG v3.8.0, TEST_MATRIX v4.4.0, Kanban (Batch 34), e _INDEX v1.7.0 após Batch 34 (AR_263..AR_264). FE_MIGRATION_COMPLETE = TRUE (100% endpoints canônicos; useSuggestions.ts deferred a CAP-001).
+
+#### 8.3 Evidencia
+- **Evidence**: docs/hbtrack/evidence/AR_264/executor_main.log
+- **Status Final**: ✅ VERIFICADO (hb seal 264, 2026-03-07)
+
+### AR-TRAIN-081 — Registrar DONE_CONTRACT_TRAINING.md.md na cadeia canônica (AR_265, Batch 35)
+
+#### 8.1 Metadados
+- **Class:** G
+- **Prioridade:** ALTA
+- **AR_ID:** 265
+- **Batch:** 35
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Registrar DONE_CONTRACT_TRAINING.md.md na cadeia canônica do módulo TRAINING: _INDEX.md v1.8.0 + entry 6b. Done Contract define os gates DONE_TECNICO, DONE_SEMANTICO e DONE_PRODUTO.
+
+#### 8.3 Evidencia
+- **Evidence**: docs/hbtrack/evidence/AR_265/executor_main.log
+- **Status Final**: ✅ VERIFICADO (hb seal 265, 2026-03-08)
+
+### AR-TRAIN-082 — Criar TRAINING_SCOPE_REGISTRY.yaml (AR_266, Batch 35)
+
+#### 8.1 Metadados
+- **Class:** A
+- **Prioridade:** ALTA
+- **AR_ID:** 266
+- **Batch:** 35
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Criar TRAINING_SCOPE_REGISTRY.yaml com 13 itens CORE, 7 EXTENDED, 2 EXPERIMENTAL conforme DONE_CONTRACT §4 + §5.1.
+
+#### 8.3 Evidencia
+- **Evidence**: docs/hbtrack/evidence/AR_266/executor_main.log
+- **Status Final**: ✅ VERIFICADO (hb seal 266, 2026-03-08)
+
+### AR-TRAIN-083 — Criar TRAINING_STATE_MACHINE.yaml (AR_267, Batch 35)
+
+#### 8.1 Metadados
+- **Class:** A
+- **Prioridade:** ALTA
+- **AR_ID:** 267
+- **Batch:** 35
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Criar TRAINING_STATE_MACHINE.yaml com 5 entidades stateful CORE: TrainingSession, WellnessPre, WellnessPost, AttendanceRecord, CoachSuggestionDraft.
+
+#### 8.3 Evidencia
+- **Evidence**: docs/hbtrack/evidence/AR_267/executor_main.log
+- **Status Final**: ✅ VERIFICADO (hb seal 267, 2026-03-08)
+
+### AR-TRAIN-084 — Criar TRAINING_PERF_LIMITS.json (AR_268, Batch 35)
+
+#### 8.1 Metadados
+- **Class:** A
+- **Prioridade:** ALTA
+- **AR_ID:** 268
+- **Batch:** 35
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Criar TRAINING_PERF_LIMITS.json com 16 itens CORE + global_limits (SLOs baseline conforme DONE_CONTRACT §5.3 + §9).
+
+#### 8.3 Evidencia
+- **Evidence**: docs/hbtrack/evidence/AR_268/executor_main.log
+- **Status Final**: ✅ VERIFICADO (hb seal 268, 2026-03-08)
+
+### AR-TRAIN-085 — Criar traceability_training_core.csv skeleton (AR_269, Batch 35)
+
+#### 8.1 Metadados
+- **Class:** A
+- **Prioridade:** ALTA
+- **AR_ID:** 269
+- **Batch:** 35
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Criar _evidence/traceability_training_core.csv como skeleton com 9 headers (test_id, flow_id, screen_id, contract_id, invariant_id, selector_id, visual_baseline_id, side_effect_check_id, state_transition_id) e zero linhas de dados.
+
+#### 8.3 Evidencia
+- **Evidence**: docs/hbtrack/evidence/AR_269/executor_main.log
+- **Status Final**: ✅ VERIFICADO (hb seal 269, 2026-03-08)
+
+### AR-TRAIN-086 — Sync documental pós-Batch 35 (AR_270, Batch 35)
+
+#### 8.1 Metadados
+- **Class:** G
+- **Prioridade:** ALTA
+- **AR_ID:** 270
+- **Batch:** 35
+- **Status:** VERIFICADO
+
+#### 8.2 Objetivo
+Governança pura — sincronizar BACKLOG v3.9.0, TEST_MATRIX v4.5.0, Kanban (Batch 35), e _INDEX v1.8.0 após Batch 35 (AR_265..AR_270). DONE_CONTRACT_TRAINING.md.md implementado.
+
+#### 8.3 Evidencia
+- **Evidence**: docs/hbtrack/evidence/AR_270/executor_main.log
+- **Status Final**: ✅ VERIFICADO (hb seal 270, 2026-03-08)

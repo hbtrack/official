@@ -1,0 +1,20 @@
+# CODE GENERATED AUTOMATICALLY FROM COMMANDS SPEC
+# Source: COMMANDS_{{ module | upper }}.yaml
+# DO NOT EDIT MANUALLY
+
+from pydantic import BaseModel
+from uuid import UUID
+from datetime import datetime
+from typing import Optional, List
+
+{% for cmd in commands %}
+class {{ cmd.name | title | replace("_", "") }}Command(BaseModel):
+    """
+    Intenção: {{ cmd.description }}
+    Trigger: {{ cmd.trigger }}
+    """
+    {% for field, type in cmd.payload.items() %}
+    {{ field }}: {{ type | py_type }}
+    {% endfor %}
+
+{% endfor %}

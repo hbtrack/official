@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useEffect, useMemo, useState, useRef } from 'react';
-import { Cross2Icon, ReloadIcon, CalendarIcon, ExclamationTriangleIcon, CheckCircledIcon, ClockIcon } from '@radix-ui/react-icons';
-import { Dumbbell } from 'lucide-react';
-import { TrainingSessionsAPI, SessionCreate } from '@/lib/api/trainings';
-import { useAuth } from '@/lib/hooks/useAuth';
+import { trainingApi } from '@/api/generated/api-instance';
 import { useToast } from '@/context/ToastContext';
+import { SessionCreate } from '@/lib/api/trainings';
+import { useAuth } from '@/lib/hooks/useAuth';
+import { CalendarIcon, CheckCircledIcon, ClockIcon, Cross2Icon, ExclamationTriangleIcon, ReloadIcon } from '@radix-ui/react-icons';
+import { Dumbbell } from 'lucide-react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 interface CreateTrainingModalProps {
   isOpen: boolean;
@@ -47,12 +48,12 @@ const CreateTrainingModal: React.FC<CreateTrainingModalProps> = ({
   const [endTime, setEndTime] = useState('');
   const [trainingType, setTrainingType] = useState('quadra');
   const [location, setLocation] = useState('');
-  
+
   // Validation state
   const [dateError, setDateError] = useState('');
   const [timeError, setTimeError] = useState('');
   const [apiError, setApiError] = useState<string | null>(null);
-  
+
   // API state
   const [isCreating, setIsCreating] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -145,7 +146,7 @@ const CreateTrainingModal: React.FC<CreateTrainingModalProps> = ({
     if (!isFormValid || isCreating) return;
     setIsCreating(true);
     setApiError(null);
-    
+
     try {
       // Validar organização do usuário
       if (!user?.organization_id) {
@@ -173,8 +174,8 @@ const CreateTrainingModal: React.FC<CreateTrainingModalProps> = ({
         location: location || undefined,
       };
 
-      const newSession = await TrainingSessionsAPI.createSession(sessionData);
-      
+      const newSession = await trainingApi.createTrainingSessionApiV1TrainingSessionsPost(sessionData as any).then(r => r.data);
+
       // Sucesso - mostrar feedback visual
       setShowSuccess(true);
       toast.success('Treino criado com sucesso!', {
@@ -188,16 +189,16 @@ const CreateTrainingModal: React.FC<CreateTrainingModalProps> = ({
       }, 800);
     } catch (error: any) {
       console.error('❌ [CreateTrainingModal] Erro ao criar treino:', error);
-      
+
       // Mensagens amigáveis
       let errorMessage = 'Não foi possível criar o treino.';
-      
+
       if (error?.response?.data?.detail) {
         errorMessage = error.response.data.detail;
       } else if (error?.message) {
         errorMessage = error.message;
       }
-      
+
       // Traduzir erros técnicos
       if (errorMessage.includes('422') || errorMessage.includes('validation')) {
         errorMessage = 'Dados inválidos. Verifique as informações e tente novamente.';
@@ -206,7 +207,7 @@ const CreateTrainingModal: React.FC<CreateTrainingModalProps> = ({
       } else if (errorMessage.includes('network')) {
         errorMessage = 'Erro de conexão. Verifique sua internet.';
       }
-      
+
       setApiError(errorMessage);
     } finally {
       setIsCreating(false);
@@ -227,7 +228,7 @@ const CreateTrainingModal: React.FC<CreateTrainingModalProps> = ({
         onClick={() => !isCreating && onClose()}
       />
 
-      <div 
+      <div
         ref={modalRef}
         className="relative w-full max-w-md bg-white dark:bg-[#0f0f0f] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 border border-slate-200 dark:border-slate-800 rounded-lg"
       >
@@ -334,11 +335,10 @@ const CreateTrainingModal: React.FC<CreateTrainingModalProps> = ({
                     type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className={`w-full px-3 py-2.5 text-sm bg-white dark:bg-slate-950 border rounded-lg ${
-                      dateError
+                    className={`w-full px-3 py-2.5 text-sm bg-white dark:bg-slate-950 border rounded-lg ${dateError
                         ? 'border-red-500 dark:border-red-500 focus:ring-red-500'
                         : 'border-slate-200 dark:border-slate-800 focus:ring-slate-900 dark:focus:ring-slate-100'
-                    } focus:ring-1 outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed`}
+                      } focus:ring-1 outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed`}
                     disabled={isCreating}
                     aria-invalid={!!dateError}
                   />
@@ -353,11 +353,10 @@ const CreateTrainingModal: React.FC<CreateTrainingModalProps> = ({
                     type="time"
                     value={startTime}
                     onChange={(e) => setStartTime(e.target.value)}
-                    className={`w-full px-3 py-2.5 text-sm bg-white dark:bg-slate-950 border rounded-lg ${
-                      timeError
+                    className={`w-full px-3 py-2.5 text-sm bg-white dark:bg-slate-950 border rounded-lg ${timeError
                         ? 'border-red-500 dark:border-red-500 focus:ring-red-500'
                         : 'border-slate-200 dark:border-slate-800 focus:ring-slate-900 dark:focus:ring-slate-100'
-                    } focus:ring-1 outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed`}
+                      } focus:ring-1 outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed`}
                     disabled={isCreating}
                   />
                 </div>
@@ -373,11 +372,10 @@ const CreateTrainingModal: React.FC<CreateTrainingModalProps> = ({
                   type="time"
                   value={endTime}
                   onChange={(e) => setEndTime(e.target.value)}
-                  className={`w-full px-3 py-2.5 text-sm bg-white dark:bg-slate-950 border rounded-lg ${
-                    timeError
+                  className={`w-full px-3 py-2.5 text-sm bg-white dark:bg-slate-950 border rounded-lg ${timeError
                       ? 'border-red-500 dark:border-red-500 focus:ring-red-500'
                       : 'border-slate-200 dark:border-slate-800 focus:ring-slate-900 dark:focus:ring-slate-100'
-                  } focus:ring-1 outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed`}
+                    } focus:ring-1 outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed`}
                   disabled={isCreating}
                 />
               </div>
@@ -402,11 +400,10 @@ const CreateTrainingModal: React.FC<CreateTrainingModalProps> = ({
                       type="button"
                       onClick={() => setTrainingType(type.value)}
                       disabled={isCreating}
-                      className={`p-2.5 border rounded-lg text-left transition-all ${
-                        trainingType === type.value
+                      className={`p-2.5 border rounded-lg text-left transition-all ${trainingType === type.value
                           ? 'border-slate-900 dark:border-slate-100 bg-slate-50 dark:bg-slate-900'
                           : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
-                      } disabled:opacity-50 disabled:cursor-not-allowed`}
+                        } disabled:opacity-50 disabled:cursor-not-allowed`}
                     >
                       <div className="flex items-center gap-2">
                         <span>{type.icon}</span>

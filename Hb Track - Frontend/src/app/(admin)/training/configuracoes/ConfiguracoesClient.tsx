@@ -1,16 +1,8 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Star, MoreVertical, Pencil, Trash2, Settings } from 'lucide-react';
-import { TrainingSessionsAPI, SessionTemplate } from '@/lib/api/trainings';
-import { Button } from '@/components/ui/Button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { sessionTemplatesApi } from '@/api/generated/api-instance';
+import { CreateTemplateModal } from '@/components/training/CreateTemplateModal';
+import { EditTemplateModal } from '@/components/training/EditTemplateModal';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,11 +13,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { toast } from 'sonner';
-import { CreateTemplateModal } from '@/components/training/CreateTemplateModal';
-import { EditTemplateModal } from '@/components/training/EditTemplateModal';
-import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/context/AuthContext';
+import { SessionTemplate } from '@/lib/api/trainings';
+import { cn } from '@/lib/utils';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { MoreVertical, Pencil, Plus, Settings, Star, Trash2 } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
 const ICON_MAP: Record<string, string> = {
   target: '🎯',
@@ -75,7 +76,7 @@ export function ConfiguracoesClient() {
   // Fetch templates
   const { data: templatesData, isLoading } = useQuery({
     queryKey: ['session-templates'],
-    queryFn: () => TrainingSessionsAPI.getSessionTemplates(true),
+    queryFn: () => sessionTemplatesApi.listSessionTemplatesApiV1SessionTemplatesGet(true).then(r => r.data),
     enabled: !authLoading && canReadTemplates,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
@@ -93,7 +94,7 @@ export function ConfiguracoesClient() {
 
   // Mutations
   const toggleFavoriteMutation = useMutation({
-    mutationFn: (id: string) => TrainingSessionsAPI.toggleTemplateFavorite(id),
+    mutationFn: (id: string) => sessionTemplatesApi.toggleFavoriteTemplateApiV1SessionTemplatesTemplateIdFavoritePatch(id).then(r => r.data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['session-templates'] });
       toast.success('Favorito atualizado');
@@ -104,7 +105,7 @@ export function ConfiguracoesClient() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => TrainingSessionsAPI.deleteSessionTemplate(id),
+    mutationFn: (id: string) => sessionTemplatesApi.deleteSessionTemplateApiV1SessionTemplatesTemplateIdDelete(id).then(r => r.data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['session-templates'] });
       toast.success('Template deletado permanentemente');
@@ -165,293 +166,293 @@ export function ConfiguracoesClient() {
     <>
       <div className="flex-1 overflow-auto bg-gray-50 dark:bg-[#0a0a0a]">
         <div className="container mx-auto p-6 max-w-7xl">
-        {/* Header */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-3">
-              <Settings className="w-8 h-8 text-emerald-600" />
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-                  Configurações de Treino
-                </h1>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  Gerencie templates customizados de foco de treino
-                </p>
+          {/* Header */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-3">
+                <Settings className="w-8 h-8 text-emerald-600" />
+                <div>
+                  <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+                    Configurações de Treino
+                  </h1>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                    Gerencie templates customizados de foco de treino
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="text-right">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Templates</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                    {total}/{limit}
+                  </p>
+                </div>
+                <Button
+                  onClick={() => setShowCreateModal(true)}
+                  disabled={isLimitReached || !canCreateTemplate}
+                  className="bg-emerald-600 hover:bg-emerald-700"
+                  title={
+                    isLimitReached
+                      ? 'Limite de 50 templates atingido'
+                      : !canCreateTemplate
+                        ? 'Sem permissão para criar template'
+                        : undefined
+                  }
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Criar Template
+                </Button>
               </div>
             </div>
-            <div className="flex items-center gap-4">
-              <div className="text-right">
-                <p className="text-sm text-gray-600 dark:text-gray-400">Templates</p>
-                <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                  {total}/{limit}
+            {isLimitReached && (
+              <div className="mt-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                  ⚠️ Limite de 50 templates atingido. Delete templates existentes para criar novos.
                 </p>
               </div>
-              <Button
-                onClick={() => setShowCreateModal(true)}
-                disabled={isLimitReached || !canCreateTemplate}
-                className="bg-emerald-600 hover:bg-emerald-700"
-                title={
-                  isLimitReached
-                    ? 'Limite de 50 templates atingido'
-                    : !canCreateTemplate
-                      ? 'Sem permissão para criar template'
-                      : undefined
-                }
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Criar Template
-              </Button>
-            </div>
+            )}
           </div>
-          {isLimitReached && (
-            <div className="mt-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-              <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                ⚠️ Limite de 50 templates atingido. Delete templates existentes para criar novos.
+
+          {/* Loading State */}
+          {isLoading && (
+            <div className="flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600" />
+            </div>
+          )}
+
+          {!authLoading && !canReadTemplates && (
+            <div className="text-center py-12 bg-white dark:bg-[#0f0f0f] rounded-lg border border-gray-200 dark:border-gray-800">
+              <Settings className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                Acesso restrito
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                Você não tem permissão para visualizar templates de treino.
               </p>
             </div>
           )}
-        </div>
 
-        {/* Loading State */}
-        {isLoading && (
-          <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600" />
-          </div>
-        )}
-
-        {!authLoading && !canReadTemplates && (
-          <div className="text-center py-12 bg-white dark:bg-[#0f0f0f] rounded-lg border border-gray-200 dark:border-gray-800">
-            <Settings className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
-              Acesso restrito
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400">
-              Você não tem permissão para visualizar templates de treino.
-            </p>
-          </div>
-        )}
-
-        {/* Empty State */}
-        {!isLoading && canReadTemplates && sortedTemplates.length === 0 && (
-          <div className="text-center py-12 bg-white dark:bg-[#0f0f0f] rounded-lg border border-gray-200 dark:border-gray-800">
-            <Settings className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
-              Nenhum template criado
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
-              Crie seu primeiro template personalizado de treino
-            </p>
-            <Button
-              onClick={() => setShowCreateModal(true)}
-              disabled={!canCreateTemplate}
-              className="bg-emerald-600 hover:bg-emerald-700"
-              title={!canCreateTemplate ? 'Sem permissão para criar template' : undefined}
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Criar Primeiro Template
-            </Button>
-          </div>
-        )}
-
-        {/* Templates Table */}
-        {!isLoading && canReadTemplates && sortedTemplates.length > 0 && (
-          <div className="bg-white dark:bg-[#0f0f0f] rounded-lg border border-gray-200 dark:border-gray-800">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="border-b border-gray-200 dark:border-gray-800">
-                  <tr>
-                    <th className="text-left p-4 text-sm font-semibold text-gray-700 dark:text-gray-300 w-12">
-                      
-                    </th>
-                    <th className="text-left p-4 text-sm font-semibold text-gray-700 dark:text-gray-300 w-16">
-                      Ícone
-                    </th>
-                    <th className="text-left p-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
-                      Nome
-                    </th>
-                    <th className="text-left p-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
-                      Descrição
-                    </th>
-                    <th className="text-left p-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
-                      Focos Principais
-                    </th>
-                    <th className="text-right p-4 text-sm font-semibold text-gray-700 dark:text-gray-300 w-20">
-                      Ações
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {/* Favorites */}
-                  {favorites.map((template) => (
-                    <tr
-                      key={template.id}
-                      className="border-b border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors"
-                    >
-                      <td className="p-4">
-                        <button
-                          onClick={() => handleToggleFavorite(template)}
-                          className="transition-colors"
-                          disabled={!canFavoriteTemplate}
-                          title={!canFavoriteTemplate ? 'Sem permissão para favoritar' : undefined}
-                        >
-                          <Star
-                            className={cn(
-                              'w-5 h-5',
-                              template.is_favorite
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'text-gray-300 dark:text-gray-600'
-                            )}
-                          />
-                        </button>
-                      </td>
-                      <td className="p-4">
-                        <span className="text-3xl">{ICON_MAP[template.icon] || '📝'}</span>
-                      </td>
-                      <td className="p-4">
-                        <p className="font-semibold text-gray-900 dark:text-gray-100">{template.name}</p>
-                      </td>
-                      <td className="p-4">
-                        <p className="text-sm text-gray-600 dark:text-gray-400 truncate max-w-xs">
-                          {template.description || '-'}
-                        </p>
-                      </td>
-                      <td className="p-4">
-                        <div className="flex gap-2 flex-wrap">
-                          {getTopFocus(template).map((focus, idx) => (
-                            <span
-                              key={idx}
-                              className={cn(
-                                'px-2 py-1 rounded text-xs font-semibold',
-                                idx === 0 && 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
-                                idx === 1 &&
-                                  'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300',
-                                idx === 2 &&
-                                  'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300'
-                              )}
-                            >
-                              {focus.label} {focus.value.toFixed(0)}%
-                            </span>
-                          ))}
-                        </div>
-                      </td>
-                      <td className="p-4 text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreVertical className="w-4 h-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleEdit(template)} disabled={!canEditTemplate}>
-                              <Pencil className="w-4 h-4 mr-2" />
-                              Editar
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleDelete(template)}
-                              className="text-red-600 dark:text-red-400"
-                              disabled={!canDeleteTemplate}
-                            >
-                              <Trash2 className="w-4 h-4 mr-2" />
-                              Deletar
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </td>
-                    </tr>
-                  ))}
-
-                  {/* Divider if there are both favorites and non-favorites */}
-                  {favorites.length > 0 && nonFavorites.length > 0 && (
-                    <tr>
-                      <td colSpan={6} className="p-0">
-                        <div className="border-t-2 border-gray-300 dark:border-gray-700" />
-                      </td>
-                    </tr>
-                  )}
-
-                  {/* Non-favorites */}
-                  {nonFavorites.map((template) => (
-                    <tr
-                      key={template.id}
-                      className="border-b border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors"
-                    >
-                      <td className="p-4">
-                        <button
-                          onClick={() => handleToggleFavorite(template)}
-                          className="transition-colors"
-                          disabled={!canFavoriteTemplate}
-                          title={!canFavoriteTemplate ? 'Sem permissão para favoritar' : undefined}
-                        >
-                          <Star
-                            className={cn(
-                              'w-5 h-5',
-                              template.is_favorite
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'text-gray-300 dark:text-gray-600'
-                            )}
-                          />
-                        </button>
-                      </td>
-                      <td className="p-4">
-                        <span className="text-3xl">{ICON_MAP[template.icon] || '📝'}</span>
-                      </td>
-                      <td className="p-4">
-                        <p className="font-semibold text-gray-900 dark:text-gray-100">{template.name}</p>
-                      </td>
-                      <td className="p-4">
-                        <p className="text-sm text-gray-600 dark:text-gray-400 truncate max-w-xs">
-                          {template.description || '-'}
-                        </p>
-                      </td>
-                      <td className="p-4">
-                        <div className="flex gap-2 flex-wrap">
-                          {getTopFocus(template).map((focus, idx) => (
-                            <span
-                              key={idx}
-                              className={cn(
-                                'px-2 py-1 rounded text-xs font-semibold',
-                                idx === 0 && 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
-                                idx === 1 &&
-                                  'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300',
-                                idx === 2 &&
-                                  'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300'
-                              )}
-                            >
-                              {focus.label} {focus.value.toFixed(0)}%
-                            </span>
-                          ))}
-                        </div>
-                      </td>
-                      <td className="p-4 text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreVertical className="w-4 h-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleEdit(template)} disabled={!canEditTemplate}>
-                              <Pencil className="w-4 h-4 mr-2" />
-                              Editar
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleDelete(template)}
-                              className="text-red-600 dark:text-red-400"
-                              disabled={!canDeleteTemplate}
-                            >
-                              <Trash2 className="w-4 h-4 mr-2" />
-                              Deletar
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          {/* Empty State */}
+          {!isLoading && canReadTemplates && sortedTemplates.length === 0 && (
+            <div className="text-center py-12 bg-white dark:bg-[#0f0f0f] rounded-lg border border-gray-200 dark:border-gray-800">
+              <Settings className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                Nenhum template criado
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-4">
+                Crie seu primeiro template personalizado de treino
+              </p>
+              <Button
+                onClick={() => setShowCreateModal(true)}
+                disabled={!canCreateTemplate}
+                className="bg-emerald-600 hover:bg-emerald-700"
+                title={!canCreateTemplate ? 'Sem permissão para criar template' : undefined}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Criar Primeiro Template
+              </Button>
             </div>
-          </div>
-        )}
+          )}
+
+          {/* Templates Table */}
+          {!isLoading && canReadTemplates && sortedTemplates.length > 0 && (
+            <div className="bg-white dark:bg-[#0f0f0f] rounded-lg border border-gray-200 dark:border-gray-800">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="border-b border-gray-200 dark:border-gray-800">
+                    <tr>
+                      <th className="text-left p-4 text-sm font-semibold text-gray-700 dark:text-gray-300 w-12">
+
+                      </th>
+                      <th className="text-left p-4 text-sm font-semibold text-gray-700 dark:text-gray-300 w-16">
+                        Ícone
+                      </th>
+                      <th className="text-left p-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        Nome
+                      </th>
+                      <th className="text-left p-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        Descrição
+                      </th>
+                      <th className="text-left p-4 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        Focos Principais
+                      </th>
+                      <th className="text-right p-4 text-sm font-semibold text-gray-700 dark:text-gray-300 w-20">
+                        Ações
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* Favorites */}
+                    {favorites.map((template) => (
+                      <tr
+                        key={template.id}
+                        className="border-b border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors"
+                      >
+                        <td className="p-4">
+                          <button
+                            onClick={() => handleToggleFavorite(template)}
+                            className="transition-colors"
+                            disabled={!canFavoriteTemplate}
+                            title={!canFavoriteTemplate ? 'Sem permissão para favoritar' : undefined}
+                          >
+                            <Star
+                              className={cn(
+                                'w-5 h-5',
+                                template.is_favorite
+                                  ? 'fill-yellow-400 text-yellow-400'
+                                  : 'text-gray-300 dark:text-gray-600'
+                              )}
+                            />
+                          </button>
+                        </td>
+                        <td className="p-4">
+                          <span className="text-3xl">{ICON_MAP[template.icon] || '📝'}</span>
+                        </td>
+                        <td className="p-4">
+                          <p className="font-semibold text-gray-900 dark:text-gray-100">{template.name}</p>
+                        </td>
+                        <td className="p-4">
+                          <p className="text-sm text-gray-600 dark:text-gray-400 truncate max-w-xs">
+                            {template.description || '-'}
+                          </p>
+                        </td>
+                        <td className="p-4">
+                          <div className="flex gap-2 flex-wrap">
+                            {getTopFocus(template).map((focus, idx) => (
+                              <span
+                                key={idx}
+                                className={cn(
+                                  'px-2 py-1 rounded text-xs font-semibold',
+                                  idx === 0 && 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
+                                  idx === 1 &&
+                                  'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300',
+                                  idx === 2 &&
+                                  'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300'
+                                )}
+                              >
+                                {focus.label} {focus.value.toFixed(0)}%
+                              </span>
+                            ))}
+                          </div>
+                        </td>
+                        <td className="p-4 text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm">
+                                <MoreVertical className="w-4 h-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => handleEdit(template)} disabled={!canEditTemplate}>
+                                <Pencil className="w-4 h-4 mr-2" />
+                                Editar
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => handleDelete(template)}
+                                className="text-red-600 dark:text-red-400"
+                                disabled={!canDeleteTemplate}
+                              >
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Deletar
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </td>
+                      </tr>
+                    ))}
+
+                    {/* Divider if there are both favorites and non-favorites */}
+                    {favorites.length > 0 && nonFavorites.length > 0 && (
+                      <tr>
+                        <td colSpan={6} className="p-0">
+                          <div className="border-t-2 border-gray-300 dark:border-gray-700" />
+                        </td>
+                      </tr>
+                    )}
+
+                    {/* Non-favorites */}
+                    {nonFavorites.map((template) => (
+                      <tr
+                        key={template.id}
+                        className="border-b border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors"
+                      >
+                        <td className="p-4">
+                          <button
+                            onClick={() => handleToggleFavorite(template)}
+                            className="transition-colors"
+                            disabled={!canFavoriteTemplate}
+                            title={!canFavoriteTemplate ? 'Sem permissão para favoritar' : undefined}
+                          >
+                            <Star
+                              className={cn(
+                                'w-5 h-5',
+                                template.is_favorite
+                                  ? 'fill-yellow-400 text-yellow-400'
+                                  : 'text-gray-300 dark:text-gray-600'
+                              )}
+                            />
+                          </button>
+                        </td>
+                        <td className="p-4">
+                          <span className="text-3xl">{ICON_MAP[template.icon] || '📝'}</span>
+                        </td>
+                        <td className="p-4">
+                          <p className="font-semibold text-gray-900 dark:text-gray-100">{template.name}</p>
+                        </td>
+                        <td className="p-4">
+                          <p className="text-sm text-gray-600 dark:text-gray-400 truncate max-w-xs">
+                            {template.description || '-'}
+                          </p>
+                        </td>
+                        <td className="p-4">
+                          <div className="flex gap-2 flex-wrap">
+                            {getTopFocus(template).map((focus, idx) => (
+                              <span
+                                key={idx}
+                                className={cn(
+                                  'px-2 py-1 rounded text-xs font-semibold',
+                                  idx === 0 && 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
+                                  idx === 1 &&
+                                  'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300',
+                                  idx === 2 &&
+                                  'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300'
+                                )}
+                              >
+                                {focus.label} {focus.value.toFixed(0)}%
+                              </span>
+                            ))}
+                          </div>
+                        </td>
+                        <td className="p-4 text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm">
+                                <MoreVertical className="w-4 h-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => handleEdit(template)} disabled={!canEditTemplate}>
+                                <Pencil className="w-4 h-4 mr-2" />
+                                Editar
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => handleDelete(template)}
+                                className="text-red-600 dark:text-red-400"
+                                disabled={!canDeleteTemplate}
+                              >
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Deletar
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

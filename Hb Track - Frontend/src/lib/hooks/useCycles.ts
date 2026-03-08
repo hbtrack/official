@@ -8,15 +8,13 @@
 
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { cyclesApi } from '@/api/generated/api-instance';
 import {
-  trainingsService,
-  TrainingCycle,
-  TrainingCycleWithMicrocycles,
   CycleFilters,
-  CycleType,
-  CycleStatus,
+  TrainingCycle,
+  TrainingCycleWithMicrocycles
 } from '@/lib/api/trainings';
+import { useCallback, useEffect, useState } from 'react';
 
 // ============================================================================
 // TYPES
@@ -77,7 +75,7 @@ export function useCycles(): UseCyclesReturn {
     setCurrentFilters(filters);
 
     try {
-      const data = await trainingsService.getCycles(filters);
+      const data = await cyclesApi.listTrainingCyclesApiV1TrainingCyclesGet(filters.team_id ?? null, filters.type ?? null, filters.status ?? null, filters.include_deleted).then(r => r.data as unknown as TrainingCycle[]);
       setState({
         cycles: data,
         isLoading: false,
@@ -102,7 +100,7 @@ export function useCycles(): UseCyclesReturn {
 
   const createCycle = useCallback(async (data: any): Promise<TrainingCycle | null> => {
     try {
-      const newCycle = await trainingsService.createCycle(data);
+      const newCycle = await cyclesApi.createTrainingCycleApiV1TrainingCyclesPost(data as any).then(r => r.data as unknown as TrainingCycle);
       // Atualiza lista localmente
       setState(prev => ({
         ...prev,
@@ -117,7 +115,7 @@ export function useCycles(): UseCyclesReturn {
 
   const updateCycle = useCallback(async (id: string, data: any): Promise<TrainingCycle | null> => {
     try {
-      const updatedCycle = await trainingsService.updateCycle(id, data);
+      const updatedCycle = await cyclesApi.updateTrainingCycleApiV1TrainingCyclesCycleIdPatch(id, data as any).then(r => r.data as unknown as TrainingCycle);
       // Atualiza lista localmente
       setState(prev => ({
         ...prev,
@@ -132,7 +130,7 @@ export function useCycles(): UseCyclesReturn {
 
   const deleteCycle = useCallback(async (id: string, reason: string): Promise<boolean> => {
     try {
-      await trainingsService.deleteCycle(id, reason);
+      await cyclesApi.deleteTrainingCycleApiV1TrainingCyclesCycleIdDelete(id, reason).then(r => r.data);
       // Remove da lista localmente
       setState(prev => ({
         ...prev,
@@ -187,7 +185,7 @@ export function useCycleDetail(
     setState(prev => ({ ...prev, isLoading: true, error: null }));
 
     try {
-      const data = await trainingsService.getCycle(cycleId);
+      const data = await cyclesApi.getTrainingCycleApiV1TrainingCyclesCycleIdGet(cycleId).then(r => r.data as unknown as TrainingCycleWithMicrocycles);
       setState({
         cycle: data,
         isLoading: false,
@@ -210,7 +208,7 @@ export function useCycleDetail(
 
   const updateCycle = useCallback(async (data: any): Promise<TrainingCycleWithMicrocycles | null> => {
     try {
-      const updated = await trainingsService.updateCycle(cycleId, data);
+      const updated = await cyclesApi.updateTrainingCycleApiV1TrainingCyclesCycleIdPatch(cycleId, data as any).then(r => r.data as unknown as TrainingCycleWithMicrocycles);
       // Atualiza estado local com dados atualizados
       setState(prev => ({
         ...prev,
@@ -225,7 +223,7 @@ export function useCycleDetail(
 
   const deleteCycle = useCallback(async (reason: string): Promise<boolean> => {
     try {
-      await trainingsService.deleteCycle(cycleId, reason);
+      await cyclesApi.deleteTrainingCycleApiV1TrainingCyclesCycleIdDelete(cycleId, reason).then(r => r.data);
       setState(prev => ({ ...prev, cycle: null }));
       return true;
     } catch (err) {
@@ -280,7 +278,7 @@ export function useActiveCycles(teamId: string | undefined) {
     setError(null);
 
     try {
-      const data = await trainingsService.getActiveCycles(teamId);
+      const data = await cyclesApi.getActiveCyclesApiV1TrainingCyclesTeamsTeamIdActiveGet(teamId).then(r => r.data as unknown as TrainingCycle[]);
       setActiveCycles(data);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao carregar ciclos ativos';

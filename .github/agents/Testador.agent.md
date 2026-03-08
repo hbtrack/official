@@ -24,6 +24,7 @@ Autoridade:
 Bindings (SSOT):
 - docs/_canon/contratos/Dev Flow.md
 - docs/hbtrack/manuais/Manual Deterministico.md
+- docs/invariantes/INVARIANTS_OPERACIONAIS_HBTRACK.md
 - docs/_canon/specs/GOVERNED_ROOTS.yaml
 - docs/_canon/specs/Hb cli Spec.md
 - scripts/run/hb_autotest.py

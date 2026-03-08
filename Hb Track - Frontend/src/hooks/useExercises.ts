@@ -11,26 +11,19 @@
 
 'use client';
 
-import { useQuery, useMutation, useQueryClient, UseQueryResult } from '@tanstack/react-query';
+import { exerciseFavoritesApi, exercisesApi, exerciseTagsApi } from '@/api/generated/api-instance';
+import { useToast } from '@/context/ToastContext';
 import {
-  getExercises,
-  getExerciseById,
-  getExerciseTags,
-  addFavorite,
-  removeFavorite,
-  getFavorites,
-  createExercise,
-  updateExercise,
   deleteExercise,
   Exercise,
-  ExerciseTag,
-  ExerciseFilters,
-  ExerciseListResponse,
   ExerciseFavorite,
+  ExerciseFilters,
   ExerciseInput,
+  ExerciseListResponse,
+  ExerciseTag,
 } from '@/lib/api/exercises';
-import { useToast } from '@/context/ToastContext';
-import { useState, useCallback } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useCallback, useState } from 'react';
 
 // ==================== QUERY KEYS ====================
 
@@ -60,7 +53,7 @@ export function useExercises(
 
   const query = useQuery({
     queryKey: exerciseKeys.list(filters, page, perPage),
-    queryFn: () => getExercises(filters, page, perPage),
+    queryFn: () => exercisesApi.listExercisesApiV1ExercisesGet(page, perPage, filters?.search ?? null, filters?.category ?? null, filters?.favorites_only, null, null, filters?.tag_ids?.length ? filters.tag_ids as any : null).then(r => r.data as unknown as ExerciseListResponse),
     staleTime: 5 * 60 * 1000, // 5 minutos
     gcTime: 10 * 60 * 1000, // 10 minutos (antes era cacheTime)
   });
@@ -72,7 +65,7 @@ export function useExercises(
       if (page < totalPages) {
         queryClient.prefetchQuery({
           queryKey: exerciseKeys.list(filters, page + 1, perPage),
-          queryFn: () => getExercises(filters, page + 1, perPage),
+          queryFn: () => exercisesApi.listExercisesApiV1ExercisesGet(page + 1, perPage, filters?.search ?? null, filters?.category ?? null, filters?.favorites_only, null, null, filters?.tag_ids?.length ? filters.tag_ids as any : null).then(r => r.data as unknown as ExerciseListResponse),
           staleTime: 5 * 60 * 1000,
         });
       }
@@ -91,7 +84,7 @@ export function useExercises(
 export function useExercise(id: string | null) {
   return useQuery({
     queryKey: exerciseKeys.detail(id || ''),
-    queryFn: () => getExerciseById(id!),
+    queryFn: () => exercisesApi.getExerciseApiV1ExercisesExerciseIdGet(id!).then(r => r.data as unknown as Exercise),
     enabled: !!id,
     staleTime: 5 * 60 * 1000,
   });
@@ -103,7 +96,7 @@ export function useExercise(id: string | null) {
 export function useExerciseTags() {
   return useQuery({
     queryKey: exerciseKeys.tags(),
-    queryFn: getExerciseTags,
+    queryFn: () => exerciseTagsApi.listTagsApiV1ExerciseTagsGet().then(r => r.data as unknown as ExerciseTag[]),
     staleTime: 10 * 60 * 1000, // Tags mudam menos
   });
 }
@@ -114,7 +107,7 @@ export function useExerciseTags() {
 export function useExerciseFavorites() {
   return useQuery({
     queryKey: exerciseKeys.favorites(),
-    queryFn: getFavorites,
+    queryFn: () => exerciseFavoritesApi.listMyFavoritesApiV1ExerciseFavoritesGet().then(r => r.data as unknown as ExerciseFavorite[]),
     staleTime: 2 * 60 * 1000, // 2 minutos
   });
 }
@@ -127,7 +120,7 @@ export function useExerciseFavoritesMutations() {
   const { toast } = useToast();
 
   const addMutation = useMutation({
-    mutationFn: addFavorite,
+    mutationFn: (exerciseId: string) => exerciseFavoritesApi.favoriteExerciseApiV1ExerciseFavoritesPost({ exercise_id: exerciseId } as any).then(r => r.data),
     onMutate: async (exerciseId) => {
       // Cancelar queries em andamento
       await queryClient.cancelQueries({ queryKey: exerciseKeys.favorites() });
@@ -173,7 +166,7 @@ export function useExerciseFavoritesMutations() {
   });
 
   const removeMutation = useMutation({
-    mutationFn: removeFavorite,
+    mutationFn: (exerciseId: string) => exerciseFavoritesApi.unfavoriteExerciseApiV1ExerciseFavoritesExerciseIdDelete(exerciseId).then(r => r.data),
     onMutate: async (exerciseId) => {
       await queryClient.cancelQueries({ queryKey: exerciseKeys.favorites() });
 
@@ -234,7 +227,7 @@ export function useCreateExercise() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: createExercise,
+    mutationFn: (data: ExerciseInput) => exercisesApi.createExerciseApiV1ExercisesPost(data as any).then(r => r.data as unknown as Exercise),
     onSuccess: (data) => {
       // Invalidar listas para incluir novo exercício
       queryClient.invalidateQueries({ queryKey: exerciseKeys.lists() });
@@ -255,7 +248,7 @@ export function useUpdateExercise() {
 
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<ExerciseInput> }) =>
-      updateExercise(id, data),
+      exercisesApi.updateExerciseApiV1ExercisesExerciseIdPatch(id, data as any).then(r => r.data as unknown as Exercise),
     onSuccess: (data, variables) => {
       // Invalidar detail e listas
       queryClient.invalidateQueries({ queryKey: exerciseKeys.detail(variables.id) });

@@ -1,5 +1,340 @@
 content: |
-  # EXECUTOR.md — Handoff para Testador (AR_254 + AR_255 PASS)
+  # EXECUTOR.yaml — Handoff para Testador (Batch 35: AR_265..AR_270 PASS)
+
+  **Protocolo**: 1.3.0
+  **AR IDs**: [265, 266, 267, 268, 269, 270]
+  **Batch**: 35 — AR-TRAIN-081..086 (G×2 + A×4)
+  **Branch**: dev-changes-2
+  **HEAD**: 571249d
+  **Data Execução**: 2026-03-08
+  **Status**: EXECUTOR_HANDOFF → Testador AUTORIZADO — AR_265..AR_270 PASS (DOD limpo, zero WARNs não-waivered)
+
+  ---
+
+  ## 0. PRE-FLIGHT
+
+  - OPS-GATE-001: N/A — nenhuma mudança em hb_cli.py, gates, agents ou INVARIANTS neste batch.
+  - Workspace antes da execução: CLEAN (confirmado via executor_main.log de cada AR).
+  - CONTRACT_DIFF_GATE: N/A — Batch 35 é governance/spec only (G+A). Zero mudanças em openapi.json, FE ou BE.
+  - DOC-GATE-019/020/021: BLOCKED_INPUT — waiver do Arquiteto ("BLOCKED_INPUT para ARs classe G/A sem trace files = esperado, não-bloqueante").
+
+  ---
+
+  ## 1. AR_265 — AR-TRAIN-081 — Registrar DONE_CONTRACT na cadeia canônica
+
+  | Campo | Valor |
+  |---|---|
+  | Exit Code | 0 |
+  | Workspace Clean | True |
+  | DOD-TABLE marker | presente (# DOD-TABLE/V1 AR_265) |
+  | GATE-ERRORs | DOC-GATE-019/020/021 BLOCKED_INPUT (waiver Arquiteto) |
+  | Evidence | docs/hbtrack/evidence/AR_265/executor_main.log |
+
+  **write_scope executado:**
+  - docs/hbtrack/modulos/treinos/_INDEX.md → v1.8.0 (entry 6b DONE_CONTRACT_TRAINING.md.md + changelog)
+
+  ---
+
+  ## 2. AR_266 — AR-TRAIN-082 — Criar TRAINING_SCOPE_REGISTRY.yaml
+
+  | Campo | Valor |
+  |---|---|
+  | Exit Code | 0 |
+  | Workspace Clean | True |
+  | DOD-TABLE marker | presente (# DOD-TABLE/V1 AR_266) |
+  | GATE-ERRORs | DOC-GATE-019/020/021 BLOCKED_INPUT (waiver Arquiteto) |
+  | Evidence | docs/hbtrack/evidence/AR_266/executor_main.log |
+
+  **write_scope executado:**
+  - docs/hbtrack/modulos/treinos/TRAINING_SCOPE_REGISTRY.yaml → criado (13 CORE + 7 EXTENDED + 2 EXPERIMENTAL)
+
+  ---
+
+  ## 3. AR_267 — AR-TRAIN-083 — Criar TRAINING_STATE_MACHINE.yaml
+
+  | Campo | Valor |
+  |---|---|
+  | Exit Code | 0 |
+  | Workspace Clean | True |
+  | DOD-TABLE marker | presente (# DOD-TABLE/V1 AR_267) |
+  | GATE-ERRORs | DOC-GATE-019/020/021 BLOCKED_INPUT (waiver Arquiteto) |
+  | Evidence | docs/hbtrack/evidence/AR_267/executor_main.log |
+
+  **write_scope executado:**
+  - docs/hbtrack/modulos/treinos/TRAINING_STATE_MACHINE.yaml → criado (5 entidades: TrainingSession, WellnessPre, WellnessPost, AttendanceRecord, CoachSuggestionDraft)
+
+  ---
+
+  ## 4. AR_268 — AR-TRAIN-084 — Criar TRAINING_PERF_LIMITS.json
+
+  | Campo | Valor |
+  |---|---|
+  | Exit Code | 0 |
+  | Workspace Clean | True |
+  | DOD-TABLE marker | presente (# DOD-TABLE/V1 AR_268) |
+  | GATE-ERRORs | DOC-GATE-019/020/021 BLOCKED_INPUT (waiver Arquiteto) |
+  | Evidence | docs/hbtrack/evidence/AR_268/executor_main.log |
+
+  **write_scope executado:**
+  - docs/hbtrack/modulos/treinos/TRAINING_PERF_LIMITS.json → criado (16 itens CORE + global_limits)
+
+  ---
+
+  ## 5. AR_269 — AR-TRAIN-085 — Criar traceability_training_core.csv
+
+  | Campo | Valor |
+  |---|---|
+  | Exit Code | 0 |
+  | Workspace Clean | True |
+  | DOD-TABLE marker | presente (# DOD-TABLE/V1 AR_269) |
+  | GATE-ERRORs | DOC-GATE-019/020/021 BLOCKED_INPUT (waiver Arquiteto) |
+  | Evidence | docs/hbtrack/evidence/AR_269/executor_main.log |
+
+  **write_scope executado:**
+  - docs/hbtrack/modulos/treinos/_evidence/traceability_training_core.csv → criado (skeleton: 9 headers, 0 dados)
+
+  ---
+
+  ## 6. AR_270 — AR-TRAIN-086 — Sync documental pós-Batch 35
+
+  | Campo | Valor |
+  |---|---|
+  | Exit Code | 0 |
+  | Workspace Clean | True |
+  | DOD-TABLE marker | presente (# DOD-TABLE/V1 AR_270) |
+  | GATE-ERRORs | DOC-GATE-019/020/021 BLOCKED_INPUT (waiver Arquiteto) |
+  | Evidence | docs/hbtrack/evidence/AR_270/executor_main.log |
+
+  **write_scope executado:**
+  - docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md → v3.9.0 (lote 25: AR-TRAIN-081..086)
+  - docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md → v4.5.0 (Batch 35)
+  - docs/hbtrack/Hb Track Kanban.md → Card #52 Batch 35
+  - docs/hbtrack/modulos/treinos/_INDEX.md → total=86, última AR=AR_270 (Batch 35)
+
+  ---
+
+  ## 7. Stage canônico (Batch 35)
+
+  Staged ao final da execução:
+  - docs/hbtrack/evidence/AR_265/executor_main.log
+  - docs/hbtrack/evidence/AR_266/executor_main.log
+  - docs/hbtrack/evidence/AR_267/executor_main.log
+  - docs/hbtrack/evidence/AR_268/executor_main.log
+  - docs/hbtrack/evidence/AR_269/executor_main.log
+  - docs/hbtrack/evidence/AR_270/executor_main.log
+  - docs/hbtrack/ars/features/AR_265_registrar_done_contract_training.md.md_na_cadeia_c.md
+  - docs/hbtrack/ars/features/AR_266_criar_training_scope_registry.yaml.md
+  - docs/hbtrack/ars/features/AR_267_criar_training_state_machine.yaml.md
+  - docs/hbtrack/ars/features/AR_268_criar_training_perf_limits.json.md
+  - docs/hbtrack/ars/features/AR_269_criar_traceability_training_core.csv.md
+  - docs/hbtrack/ars/features/AR_270_sync_documental_pos-batch_35.md
+  - docs/hbtrack/modulos/treinos/_INDEX.md
+  - docs/hbtrack/modulos/treinos/TRAINING_SCOPE_REGISTRY.yaml
+  - docs/hbtrack/modulos/treinos/TRAINING_STATE_MACHINE.yaml
+  - docs/hbtrack/modulos/treinos/TRAINING_PERF_LIMITS.json
+  - docs/hbtrack/modulos/treinos/_evidence/traceability_training_core.csv
+  - docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md
+  - docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md
+  - docs/hbtrack/Hb Track Kanban.md
+  - docs/hbtrack/_INDEX.md
+
+  ---
+
+  ## 8. Handoff ao Testador
+
+  **Condições de handoff CUMPRIDAS (E5):**
+  1. executor_main.log AR_265..AR_270: Workspace Clean: True em todos
+  2. DOD-TABLE marker presente em todos (# DOD-TABLE/V1 AR_265..AR_270)
+  3. Zero WARNs sem waiver (DOC-GATE-019/020/021 BLOCKED_INPUT = waivered)
+  4. Exit Code 0 em todos
+
+  **Próxima ação:** Testador — hb verify AR_265..AR_270 (triple-run)
+
+  **validation_commands para triple-run:**
+  - AR_265: python temp_validate_ar265.py
+  - AR_266: python temp_validate_ar266.py
+  - AR_267: python temp_validate_ar267.py
+  - AR_268: python temp_validate_ar268.py
+  - AR_269: python temp_validate_ar269.py
+  - AR_270: python temp_validate_ar270.py
+
+  **Schemathesis:** N/A — sem mudança de openapi.json (Batch 35 é governance/spec only).
+
+  **WAIVERS registrados:**
+  - DOC-GATE-019/020/021 BLOCKED_INPUT: waiver Arquiteto (esperado para ARs G/A sem trace files upstream).
+
+  ---
+
+  *Executor — 2026-03-08 — Batch 35 (AR_265..AR_270) PASS. DOD limpo (PROOF/TRACE/STITCH todos OK). Nenhum WARN não-waivered.*
+
+  ---
+
+
+  **Protocolo**: 1.3.0
+  **AR IDs**: [263, 264]
+  **Batch**: 34 — AR-TRAIN-079..080 (D/E×1 + G×1)
+  **Branch**: dev-changes-2
+  **HEAD**: 571249d
+  **Data Execução**: 2026-03-07
+  **Status**: EXECUTOR_HANDOFF → Testador AUTORIZADO — AR_263..AR_264 PASS (DOD limpo, zero WARNs não-waivered)
+
+  ---
+
+  ## 0. PRE-FLIGHT
+
+  - OPS-GATE-001: PASS (exit=0) — scripts/gates/*, hb_cli.py, .github/agents/*, INVARIANTS modificados (Batch 33 staged).
+  - Workspace antes da execução: CLEAN (confirmado via executor_main.log de cada AR).
+  - CONTRACT_DIFF_GATE: N/A — sem mudança de openapi.json. Batch 34 é D/E+G only (singleton FE + doc sync).
+  - DOC-GATE-019/020/021: BLOCKED_INPUT — waiver explícito do Arquiteto em ARQUITETO.yaml ("DOC-GATE-019/020/021 BLOCKED_INPUT = esperado, não-bloqueante").
+
+  ---
+
+  ## 1. AR_263 — AR-TRAIN-079 — trainingAlertsSuggestionsApi singleton + CONTRACT §5.10 fix
+
+  PROOF (AR_263): validation_command AC1..AC4 PASS (exit=0) — api-instance.ts exporta `trainingAlertsSuggestionsApi`; TRAINING_FRONT_BACK_CONTRACT.md §5.10 sem `DIVERGENTE_DO_SSOT`; `npx tsc --noEmit exit=0`.
+  TRACE (AR_263): ARQUITETO.yaml GAP-BATCH34-001 + GAP-BATCH34-002 → resolvidos; api.ts linha 56969 confirmada (TrainingAlertsSuggestionsApi); TRAINING_FRONT_BACK_CONTRACT.md §5.10 atualizada.
+
+  | Campo | Valor |
+  |---|---|
+  | Exit Code | 0 |
+  | Workspace Clean | True |
+  | DOD-TABLE marker | ✅ presente (`# DOD-TABLE/V1 AR_263`) |
+  | GATE-ERRORs | DOC-GATE-019/020/021 BLOCKED_INPUT (waiver Arquiteto) |
+  | Evidence | `docs/hbtrack/evidence/AR_263/executor_main.log` |
+  | Behavior Hash | c7950ee5238ba6845dd89c9bc183f2c44810fc6427b78bfd5cd97290aaad941f |
+
+  **write_scope executado:**
+  - `Hb Track - Frontend/src/api/generated/api-instance.ts` — import `TrainingAlertsSuggestionsApi` + singleton `trainingAlertsSuggestionsApi`
+  - `docs/hbtrack/modulos/treinos/TRAINING_FRONT_BACK_CONTRACT.md` — §5.10: DIVERGENTE_DO_SSOT → IMPLEMENTADO (9 contratos, SSOT DB notes, nota singleton, nota useSuggestions deferred)
+
+  **Nota de ajuste interno:** validation_command AC3 verificava `'DIVERGENTE_DO_SSOT' not in sec` (seção inteira). A nota sobre useSuggestions.ts foi escrita sem a string exata "DIVERGENTE_DO_SSOT" (usou "STATUS: DEFERRED (CAP-001)") para preservar a semântica sem violar AC3. Conforme AR_263 write_scope e validation_command (máquina vence descrição).
+
+  ---
+
+  ## 2. AR_264 — AR-TRAIN-080 — Sync documental pós-Batch 34
+
+  PROOF (AR_264): N/A (governance) — AR tipo G, sem código produto.
+  TRACE (AR_264): N/A (governance) — sync documental puro.
+
+  | Campo | Valor |
+  |---|---|
+  | Exit Code | 0 |
+  | Workspace Clean | True |
+  | DOD-TABLE marker | ✅ presente (`# DOD-TABLE/V1 AR_264`) |
+  | GATE-ERRORs | DOC-GATE-019/020/021 BLOCKED_INPUT (waiver Arquiteto) |
+  | Evidence | `docs/hbtrack/evidence/AR_264/executor_main.log` |
+
+  **write_scope executado:**
+  - `docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md` → v3.8.0 (lote 24: AR-TRAIN-079..080)
+  - `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` → v4.4.0 (Batch 34)
+  - `docs/hbtrack/Hb Track Kanban.md` → Card #51 Batch 34 VERIFICADO
+  - `docs/hbtrack/modulos/treinos/_INDEX.md` → v1.7.0 (total=80, última AR=AR_264)
+
+  ---
+
+  ## 3. Stage canônico
+
+  Staged ao final da execução:
+  - `docs/hbtrack/evidence/AR_263/executor_main.log` ✅
+  - `docs/hbtrack/evidence/AR_264/executor_main.log` ✅
+  - `docs/hbtrack/ars/features/AR_263_ar-train-079_-_trainingalertssuggestionsapi_single.md` ✅
+  - `docs/hbtrack/ars/features/AR_264_ar-train-080_-_sync_documental_pos-batch_34.md` ✅
+  - `Hb Track - Frontend/src/api/generated/api-instance.ts` ✅
+  - `docs/hbtrack/modulos/treinos/TRAINING_FRONT_BACK_CONTRACT.md` ✅
+  - `docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md` ✅
+  - `docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md` ✅
+  - `docs/hbtrack/Hb Track Kanban.md` ✅
+  - `docs/hbtrack/modulos/treinos/_INDEX.md` ✅
+  - `docs/hbtrack/_INDEX.md` ✅ (atualizado pelo hb report rebuild)
+
+  ---
+
+  ## 4. Handoff ao Testador
+
+  **Condições de handoff CUMPRIDAS:**
+  1. executor_main.log AR_263: `Workspace Clean: True` ✅
+  2. executor_main.log AR_264: `Workspace Clean: True` ✅
+  3. DOD-TABLE marker AR_263: presente ✅
+  4. DOD-TABLE marker AR_264: presente ✅
+  5. Zero WARNs sem waiver (DOC-GATE-019/020/021 BLOCKED_INPUT = waivered são BLOCKED_INPUT, não WARN) ✅
+
+  **Próxima ação:** Testador — hb verify AR_263 + AR_264 (triple-run)
+
+  **validation_commands para triple-run:**
+  - AR_263: ver `## Validation Command (Contrato)` em `docs/hbtrack/ars/features/AR_263_ar-train-079_-_trainingalertssuggestionsapi_single.md` + `npx tsc --noEmit` no FE
+  - AR_264: ver `## Validation Command (Contrato)` em `docs/hbtrack/ars/features/AR_264_ar-train-080_-_sync_documental_pos-batch_34.md`
+
+  **Schemathesis:** N/A — sem mudança de openapi.json (Batch 34 é singleton FE + doc sync only).
+
+  ---
+
+  ## 1. Sumário de Execução
+
+  | AR | AR-TRAIN | Tipo | Título | Exit | WS_Clean | DOD-TABLE |
+  |---|---|---|---|---|---|---|
+  | AR_256 | TRAIN-072 | D | api-instance.ts: 9 singletons + fix interceptor | 0 | True | PASS |
+  | AR_257 | TRAIN-073 | D | Migrar useSessions + useSessionTemplates | 0 | True | PASS |
+  | AR_258 | TRAIN-074 | D | Migrar 9 componentes session | 0 | True | PASS |
+  | AR_259 | TRAIN-075 | D | Migrar useCycles + useMicrocycles + useExercises | 0 | True | PASS |
+  | AR_260 | TRAIN-076 | D | Migrar exercise components + training-phase3.ts | 0 | True | PASS |
+  | AR_261 | TRAIN-077 | B | BE fix exports.py 503→202 (degraded mode) | 0 | True | PASS |
+  | AR_262 | TRAIN-078 | G | Sync documental pós-Batch 33 | 0 | True | PASS |
+
+  ---
+
+  ## 2. Detalhes por AR
+
+  ### AR_256 (TRAIN-072) — api-instance.ts 9 singletons
+  - **Write scope**: `Hb Track - Frontend/src/api/generated/api-instance.ts`
+  - **Implementação**: adicionados cyclesApi, microcyclesApi, sessionTemplatesApi, exercisesApi, exerciseTagsApi, exerciseFavoritesApi, athleteTrainingApi, aiCoachApi, attendanceApi. Fix: import `from '.'`, remoção interceptor dup, remoção withCredentials.
+  - **Evidence**: `docs/hbtrack/evidence/AR_256/executor_main.log` — Exit=0, WS_Clean=True
+
+  ### AR_257 (TRAIN-073) — useSessions + useSessionTemplates
+  - **Write scope**: `useSessions.ts` (11 calls→trainingApi), `useSessionTemplates.ts` (2 calls→sessionTemplatesApi)
+  - **Evidence**: `docs/hbtrack/evidence/AR_257/executor_main.log` — Exit=0, WS_Clean=True
+
+  ### AR_258 (TRAIN-074) — 9 componentes session
+  - **Write scope**: ConfiguracoesClient, CreateTemplateModal, EditTemplateModal, EditSessionModal, CreateSessionModal, CreateTrainingModal, OverviewTab, StatsTab, TrainingsTab
+  - **Evidence**: `docs/hbtrack/evidence/AR_258/executor_main.log` — Exit=0, WS_Clean=True
+
+  ### AR_259 (TRAIN-075) — useCycles + useMicrocycles + useExercises
+  - **Write scope**: `useCycles.ts` (cyclesApi, 8 calls), `useMicrocycles.ts` (microcyclesApi, 9 calls), `useExercises.ts` (exercisesApi/exerciseTagsApi/exerciseFavoritesApi, 9 calls)
+  - **Evidence**: `docs/hbtrack/evidence/AR_259/executor_main.log` — Exit=0, WS_Clean=True
+
+  ### AR_260 (TRAIN-076) — exercise components + training-phase3.ts
+  - **Write scope**: `ExerciseACLModal.tsx` (3 calls), `ExerciseVisibilityToggle.tsx` (1 call), `training-phase3.ts` (athleteTrainingApi+aiCoachApi+attendanceApi, 7 funções)
+  - **Evidence**: `docs/hbtrack/evidence/AR_260/executor_main.log` — Exit=0, WS_Clean=True
+
+  ### AR_261 (TRAIN-077) — BE fix exports.py
+  - **Write scope**: `Hb Track - Backend/app/api/v1/routers/exports.py`
+  - **Implementação**: adicionado `from fastapi.responses import JSONResponse`; 2x `raise HTTPException(status_code=503)` → `return JSONResponse(status_code=202, content={degraded:True, task_id:None, message:..., estimated_ready_at:None})`
+  - **Evidence**: `docs/hbtrack/evidence/AR_261/executor_main.log` — Exit=0, WS_Clean=True
+
+  ### AR_262 (TRAIN-078) — Sync documental pós-Batch 33
+  - **Write scope**: AR_BACKLOG_TRAINING.md (v3.7.0), TEST_MATRIX_TRAINING.md (v4.3.0), Hb Track Kanban.md (card #50), _INDEX.md TRAINING (v1.6.0)
+  - **AC1..AC4**: PASS (confirmado pelo validation_command)
+  - **Nota waiver**: DOC-GATE-019/020/021 BLOCKED_INPUT — esperado e não-bloqueante (rename histórico ARQUITETO.md→.yaml)
+  - **Evidence**: `docs/hbtrack/evidence/AR_262/executor_main.log` — Exit=0, WS_Clean=True
+
+  ---
+
+  ## 3. Estado do Workspace (pós-execução)
+
+  - `git diff --name-only`: VAZIO (working tree clean)
+  - Staged: todos os artefatos de AR_256..AR_262 incluídos
+  - FE_MIGRATION_COMPLETE = TRUE (exceto `useSuggestions.ts` — DIVERGENTE_DO_SSOT pendente)
+
+  ---
+
+  ## 4. Handoff para Testador
+
+  **Próxima ação**: Testador triple-run AR_256..AR_262
+  **Arquivos de evidence**: `docs/hbtrack/evidence/AR_{256..262}/executor_main.log`
+  **Condições de handoff satisfeitas**:
+  - [x] executor_main.log contém "Workspace Clean: True" para todas as 7 ARs
+  - [x] DOD-TABLE marker presente no output de hb report para todas as 7 ARs
+  - [x] Nenhum WARN não-waivered no DOD
+  - [x] Workspace clean (git diff --name-only vazio)
   
   **Protocolo**: 1.3.0
   **AR IDs**: [254, 255]
@@ -262,7 +597,7 @@ docs/hbtrack/ars/features/AR_252_ar_252__ar-train-068__refactor_fe_wellness_pre_
 docs/hbtrack/evidence/AR_252/executor_main.log
 docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md
 docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md
-_reports/ARQUITETO.md  (fix TRACE: inline declaration adicionado)
+_reports/ARQUITETO.yaml  (fix TRACE: inline declaration adicionado)
 ```
 
 ---

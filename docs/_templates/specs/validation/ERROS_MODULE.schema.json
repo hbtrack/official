@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HB Track Domain Errors Schema",
+  "type": "object",
+  "required": ["module", "version", "status", "errors"],
+  "properties": {
+    "module": { "type": "string" },
+    "version": { "type": "string", "pattern": "^v?\\d+\\.\\d+\\.\\d+$" },
+    "status": { "type": "string", "enum": ["DRAFT_NORMATIVO", "NORMATIVO", "DEPRECATED"] },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "http_status", "description", "origin", "payload", "ux_message"],
+        "properties": {
+          "code": { "type": "string", "pattern": "^[A-Z0-9_]+$" },
+          "http_status": { "type": "integer", "enum": [400, 401, 403, 404, 409, 422, 500] },
+          "description": { "type": "string" },
+          "origin": {
+            "type": "object",
+            "required": ["command", "invariant", "contract"],
+            "properties": {
+              "command": { "type": "string" },
+              "invariant": { "type": "string" },
+              "contract": { "type": "string" }
+            }
+          },
+          "payload": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "ux_message": { "type": "string" }
+        }
+      }
+    }
+  }
+}

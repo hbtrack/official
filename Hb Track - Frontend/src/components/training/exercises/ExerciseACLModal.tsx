@@ -12,8 +12,9 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { ExerciseACLEntry, getExerciseACL, addUserToACL, removeUserFromACL } from '@/lib/api/exercises';
+import { exercisesApi } from '@/api/generated/api-instance';
+import type { ExerciseACLEntry } from '@/lib/api/exercises';
+import { useEffect, useState } from 'react';
 
 interface ExerciseACLModalProps {
   exerciseId: string;
@@ -44,8 +45,8 @@ export function ExerciseACLModal({
     setLoading(true);
     setError(null);
     try {
-      const entries = await getExerciseACL(exerciseId);
-      setAclEntries(entries);
+      const resp = await exercisesApi.listExerciseAclApiV1ExercisesExerciseIdAclGet(exerciseId);
+      setAclEntries(resp.data as unknown as ExerciseACLEntry[]);
     } catch {
       setError('Erro ao carregar lista de acesso.');
     } finally {
@@ -58,8 +59,8 @@ export function ExerciseACLModal({
     setAdding(true);
     setError(null);
     try {
-      const entry = await addUserToACL(exerciseId, newUserId.trim());
-      setAclEntries((prev) => [...prev, entry]);
+      const resp = await exercisesApi.grantExerciseAclApiV1ExercisesExerciseIdAclPost(exerciseId, { user_id: newUserId.trim() } as any);
+      setAclEntries((prev) => [...prev, resp.data as unknown as ExerciseACLEntry]);
       setNewUserId('');
     } catch {
       setError('Erro ao adicionar usuário. Verifique o ID e tente novamente.');
@@ -71,7 +72,7 @@ export function ExerciseACLModal({
   async function handleRemoveUser(userId: string) {
     setError(null);
     try {
-      await removeUserFromACL(exerciseId, userId);
+      await exercisesApi.revokeExerciseAclApiV1ExercisesExerciseIdAclUserIdDelete(exerciseId, userId);
       setAclEntries((prev) => prev.filter((e) => e.user_id !== userId));
     } catch {
       setError('Erro ao remover usuário.');
