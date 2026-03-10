@@ -29,7 +29,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useToast } from '@/context/ToastContext';
-import { Icons } from '@/design-system/icons';
+import { Icons } from '@/design/icons';
 import { type SessionCreate, type TrainingSession } from '@/lib/api/trainings';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { cn } from '@/lib/utils';

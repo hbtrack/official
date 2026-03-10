@@ -78,7 +78,8 @@ Stage (exato):
 - git add "_reports/testador/AR_<id>_<git7>/context.json"
 - git add "_reports/testador/AR_<id>_<git7>/result.json"
 
-Output obrigatório (não chat): `_reports/TESTADOR.yaml` com RUN_ID/AR_ID/RESULT/CONSISTENCY/TRIPLE_CONSISTENCY/EVIDENCES/NEXT_ACTION.
+* Output obrigatório (não chat): `_reports/TESTADOR.yaml` com **RUN_ID/AR_ID/RESULT/CONSISTENCY/TRIPLE_CONSISTENCY/EVIDENCES/NEXT_ACTION.**
+* Usar chaves YAML reais no `_reports/TESTADOR.yaml` em vez de manter tudo como string.
 
 ## Verificação spec-driven do módulo TRAINING
 

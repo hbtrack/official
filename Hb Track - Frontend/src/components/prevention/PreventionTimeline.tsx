@@ -6,8 +6,8 @@
  * Exibe alertas → sugestões → lesões em ordem cronológica com conectores visuais
  */
 
+import { Icons } from '@/design/icons';
 import { TimelineEvent, getEventColor } from '@/lib/api/prevention-effectiveness';
-import { Icons } from '@/design-system/icons';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 

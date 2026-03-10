@@ -1,10 +1,10 @@
 # AR_268 — Criar TRAINING_PERF_LIMITS.json
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
-Criar docs/hbtrack/modulos/treinos/TRAINING_PERF_LIMITS.json conforme exigido pela Seção 5.3 do DONE_CONTRACT_TRAINING.md.md.
+Criar docs/hbtrack/modulos/treinos/TRAINING_PERF_LIMITS.json conforme exigido pela Seção 5.3 do DONE_CONTRACT_TRAINING.md.
 
 Este arquivo define os limites quantitativos mínimos (SLOs) para todos os itens CORE do módulo. Sem ele, itens CORE com dependência de desempenho não são elegíveis para DONE_PRODUTO.
 
@@ -14,7 +14,7 @@ ESTRUTURA OBRIGATÓRIA DO ARQUIVO:
   "module": "TRAINING",
   "version": "v1.0.0",
   "last_revised": "2026-03-08",
-  "authority": "DONE_CONTRACT_TRAINING.md.md §5.3 + §9",
+  "authority": "DONE_CONTRACT_TRAINING.md §5.3 + §9",
   "note": "SLOs mínimos baseline — revisão via AR futura com evidência de load test",
   "limits": {
     "training_sessions_list": {
@@ -193,3 +193,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_268_571249d/result.json`
+
+### Selo Humano em 571249d
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-03-08T16:11:33.697584+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_268_571249d/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_268/executor_main.log`

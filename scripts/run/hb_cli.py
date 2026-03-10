@@ -1183,7 +1183,7 @@ def _collect_dod_status(ar_id: str, repo_root: Path) -> dict:
       }
     WARN-only: nunca lança exceção.
     """
-    handoff = repo_root / "_reports" / "ARQUITETO.md"
+    handoff = repo_root / "_reports" / "ARQUITETO.yaml"
     result: dict = {"proof": "OK", "trace": "OK", "stitch": "OK",
                     "matrix": "N/A", "warns": [], "gate_errors": []}
     _warns_set: set = set()

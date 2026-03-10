@@ -83,6 +83,6 @@ docs/hbtrack/Hb Track Kanban.md
 Testador: `python scripts/run/hb_cli.py verify 197`
 """
 
-with open(r'_reports/EXECUTOR.md', 'w', encoding='utf-8') as f:
+with open(r'_reports/EXECUTOR.yaml', 'w', encoding='utf-8') as f:
     f.write(content)
-print('EXECUTOR.md escrito com sucesso — AR_197')
+print('EXECUTOR.yaml escrito com sucesso — AR_197')

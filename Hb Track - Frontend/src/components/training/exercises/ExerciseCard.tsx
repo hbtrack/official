@@ -11,10 +11,10 @@
 
 'use client';
 
-import React from 'react';
-import Image from 'next/image';
+import { Icons } from '@/design/icons';
 import { Exercise, ExerciseTag } from '@/lib/api/exercises';
-import { Icons } from '@/design-system/icons';
+import Image from 'next/image';
+import React from 'react';
 
 interface ExerciseCardProps {
   exercise: Exercise;
@@ -360,7 +360,7 @@ export function ExerciseCardSkeleton() {
     <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
       {/* Thumbnail skeleton */}
       <div className="aspect-video bg-gray-200 dark:bg-gray-700 animate-pulse" />
-      
+
       {/* Content skeleton */}
       <div className="p-4 space-y-3">
         <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />

@@ -9,52 +9,26 @@
 
 'use client';
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { format } from 'date-fns';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useDrag } from 'react-dnd';
-import { Loader2, Save, Check, X, AlertCircle, CheckCircle, AlertTriangle, CloudDownload, Search, GripVertical, Plus, Trash, Target, Crosshair, Shield } from 'lucide-react';
-import Lottie from 'lottie-react';
-import { useToast } from '@/context/ToastContext';
-import { useTeamSeason } from '@/context/TeamSeasonContext';
-import { useSessionDetail, useDeleteSession } from '@/lib/hooks/useSessions';
-import { TrainingSessionsAPI, type SessionUpdate } from '@/lib/api/trainings';
-import { computeFocusSummary, type ApiFocusInput } from '@/lib/training/focus';
-import { useExercises } from '@/hooks/useExercises';
-import { useSessionTemplates } from '@/hooks/useSessionTemplates';
-import { useAddSessionExercise, useSessionExercises } from '@/hooks/useSessionExercises';
-import type { Exercise } from '@/lib/api/exercises';
-import { FocusDistributionEditor } from '@/components/training/focus/FocusDistributionEditor';
+import successAnimation from '@/assets/lottie/check-success.json';
 import { SessionExerciseDropZone } from '@/components/training/exercises/SessionExerciseDropZone';
-import { Icons } from '@/design-system/icons';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { FocusDistributionEditor } from '@/components/training/focus/FocusDistributionEditor';
 import {
   AlertDialog,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogCancel,
 } from '@/components/ui/alert-dialog';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/Button';
 import {
-  Dialog,
-  DialogContent,
-  DialogClose,
-  DialogTitle,
+  DialogClose
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/Input';
+import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/Tooltip';
 import {
   Select,
   SelectContent,
@@ -62,8 +36,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/Tooltip';
+import { useTeamSeason } from '@/context/TeamSeasonContext';
+import { useToast } from '@/context/ToastContext';
+import { Icons } from '@/design/icons';
+import { useExercises } from '@/hooks/useExercises';
+import { useAddSessionExercise, useSessionExercises } from '@/hooks/useSessionExercises';
+import { useSessionTemplates } from '@/hooks/useSessionTemplates';
+import type { Exercise } from '@/lib/api/exercises';
+import { TrainingSessionsAPI, type SessionUpdate } from '@/lib/api/trainings';
+import { useDeleteSession, useSessionDetail } from '@/lib/hooks/useSessions';
+import { computeFocusSummary, type ApiFocusInput } from '@/lib/training/focus';
 import { cn } from '@/lib/utils';
-import successAnimation from '@/assets/lottie/check-success.json';
+import { format } from 'date-fns';
+import Lottie from 'lottie-react';
+import { AlertTriangle, CheckCircle, Crosshair, Loader2, Shield, Target, X } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useDrag } from 'react-dnd';
 
 const SESSION_TYPES = [
   { value: 'quadra', label: 'Técnico/Tático' },
@@ -375,11 +372,11 @@ export default function SessionEditClient({
 
   const requiredFieldsOk = Boolean(
     form.date &&
-      form.time &&
-      form.location.trim() &&
-      form.session_type &&
-      form.main_objective.trim() &&
-      Number(form.duration_planned_minutes) > 0
+    form.time &&
+    form.location.trim() &&
+    form.session_type &&
+    form.main_objective.trim() &&
+    Number(form.duration_planned_minutes) > 0
   );
   const focusCanSchedule = focusIsExact || (focusIsOver && !focusSummary.missingJustification);
   const canPublish = requiredFieldsOk && focusCanSchedule && totalExercises > 0;
@@ -503,7 +500,7 @@ export default function SessionEditClient({
         setSyncStatus('idle');
         toast.success('Treino agendado com sucesso!');
         await refetch();
-        
+
         onSuccess?.();
         onClose?.();
       } else {
@@ -530,10 +527,10 @@ export default function SessionEditClient({
       await TrainingSessionsAPI.publishSession(session.id);
       setPublishSuccess(true);
       setSyncStatus('idle');
-      
+
       // Delay de confirmação visual
       await new Promise(resolve => setTimeout(resolve, 250));
-      
+
       toast.success('Treino confirmado! Os atletas agora podem visualizar o cronograma no app.', {
         icon: (
           <Lottie
@@ -545,7 +542,7 @@ export default function SessionEditClient({
       });
       await refetch();
       setIsPublishConfirmOpen(false);
-      
+
       onSuccess?.();
       onClose?.();
     } catch (err: any) {
@@ -609,10 +606,10 @@ export default function SessionEditClient({
   const focusRingColor = focusIsCritical
     ? 'text-rose-600'
     : focusIsOver
-    ? 'text-orange-500'
-    : focusIsExact
-    ? 'text-emerald-600'
-    : 'text-amber-500';
+      ? 'text-orange-500'
+      : focusIsExact
+        ? 'text-emerald-600'
+        : 'text-amber-500';
 
   // ESC handler para fechar modal
   useEffect(() => {
@@ -621,32 +618,32 @@ export default function SessionEditClient({
         onClose?.();
       }
     };
-    
+
     window.addEventListener('keydown', handleEscKey);
     return () => window.removeEventListener('keydown', handleEscKey);
   }, [isDeleteOpen, isPublishConfirmOpen, onClose]);
 
   const focusStatus = focusIsCritical
     ? {
-        tone: 'border-rose-200 bg-rose-50 text-rose-700',
-        message: 'Bloqueado. Carga crítica! Reduza os focos para garantir a segurança dos atletas.',
-      }
+      tone: 'border-rose-200 bg-rose-50 text-rose-700',
+      message: 'Bloqueado. Carga crítica! Reduza os focos para garantir a segurança dos atletas.',
+    }
     : focusIsOver
-    ? {
+      ? {
         tone: 'border-orange-200 bg-orange-50 text-orange-700',
         message:
           'Liberado. Carga elevada. Justificativa necessária para prosseguir.',
       }
-    : focusIsExact
-    ? {
-        tone: 'border-emerald-200 bg-emerald-50 text-emerald-700',
-        message: 'Liberado. Carga padrão atingida.',
-      }
-    : {
-        tone: 'border-amber-200 bg-amber-50 text-amber-700',
-        message:
-          'Bloqueado. Distribua os focos até atingir pelo menos 100% da sessão.',
-      };
+      : focusIsExact
+        ? {
+          tone: 'border-emerald-200 bg-emerald-50 text-emerald-700',
+          message: 'Liberado. Carga padrão atingida.',
+        }
+        : {
+          tone: 'border-amber-200 bg-amber-50 text-amber-700',
+          message:
+            'Bloqueado. Distribua os focos até atingir pelo menos 100% da sessão.',
+        };
 
   function LibraryExerciseItem({ exercise }: { exercise: Exercise }) {
     const [{ isDragging }, dragRef] = useDrag(
@@ -717,83 +714,31 @@ export default function SessionEditClient({
     <>
       <TooltipProvider>
         <div className="h-full flex flex-col bg-slate-50 overflow-hidden">
-        <Tabs
-          value={activeTab}
-          onValueChange={(value) => setActiveTab(value as typeof activeTab)}
-          className="flex h-full flex-col overflow-hidden"
-        >
-          {/* Header redesenhado */}
-          <header className="h-16 shrink-0 border-b border-slate-700 bg-slate-900 px-6 flex items-center justify-between">
-            {/* Esquerda: Título */}
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="min-w-0 flex flex-col">
-                <div className="flex items-center gap-2">
-                  <h2 className="text-base font-semibold text-white truncate">
-                    {form.main_objective || 'Nova Sessão'}
-                  </h2>
+          <Tabs
+            value={activeTab}
+            onValueChange={(value) => setActiveTab(value as typeof activeTab)}
+            className="flex h-full flex-col overflow-hidden"
+          >
+            {/* Header redesenhado */}
+            <header className="h-16 shrink-0 border-b border-slate-700 bg-slate-900 px-6 flex items-center justify-between">
+              {/* Esquerda: Título */}
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="min-w-0 flex flex-col">
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-base font-semibold text-white truncate">
+                      {form.main_objective || 'Nova Sessão'}
+                    </h2>
+                  </div>
+                  <p className="text-[9px] text-slate-400 uppercase tracking-widest mt-0.5">
+                    Sessão • {selectedTeam?.name || 'Sem equipe'}
+                  </p>
                 </div>
-                <p className="text-[9px] text-slate-400 uppercase tracking-widest mt-0.5">
-                  Sessão • {selectedTeam?.name || 'Sem equipe'}
-                </p>
               </div>
-            </div>
 
-            {/* Centro: Tabs */}
-            <div className="hidden md:flex">
-              <TabsList className="h-fit bg-transparent">
-                
-                <TabsTrigger
-                  value="overview"
-                  className="h-fit bg-transparent px-2 pb-1 pt-0 text-xs font-bold uppercase tracking-widest text-white transition-all duration-200 data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:font-bold rounded-none"
-                >
-                  Visão geral
-                </TabsTrigger>
-                <TabsTrigger
-                  value="focus"
-                  className="h-fit bg-transparent px-2 pb-1 pt-0 text-xs font-bold uppercase tracking-widest text-white transition-all duration-200 data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:font-bold rounded-none"
-                >
-                  Focos
-                </TabsTrigger>
-                <TabsTrigger
-                  value="exercises"
-                  className="h-fit bg-transparent px-2 pb-1 pt-0 text-xs font-bold uppercase tracking-widest text-white transition-all duration-200 data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:font-bold rounded-none"
-                >
-                  Exercícios
-                </TabsTrigger>
-                <TabsTrigger
-                  value="notes"
-                  className="h-fit bg-transparent px-2 pb-1 pt-0 text-xs font-bold uppercase tracking-widest text-white transition-all duration-200 data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:font-bold rounded-none"
-                >
-                  Notas
-                </TabsTrigger>
-              </TabsList>
-            </div>
+              {/* Centro: Tabs */}
+              <div className="hidden md:flex">
+                <TabsList className="h-fit bg-transparent">
 
-            {/* Direita: Badge de Status + Close */}
-            <div className="flex items-center gap-3 shrink-0">
-              <Badge
-                variant={getStatusVariant(session.status)}
-                className={cn(
-                  "text-[9px] font-bold uppercase tracking-widest rounded-full px-3 py-1",
-                  getStatusClasses(session.status)
-                )}
-              >
-                {STATUS_LABELS[session.status] || session.status}
-              </Badge>
-              {onClose && (
-                <DialogClose className="rounded-sm opacity-70 ring-offset-slate-900 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 disabled:pointer-events-none text-slate-400 hover:text-white">
-                  <X className="h-4 w-4" />
-                  <span className="sr-only">Fechar</span>
-                </DialogClose>
-              )}
-            </div>
-          </header>
-
-          <main className="flex-1 overflow-hidden min-h-0">
-            <div className="h-full overflow-y-auto px-6 py-8">
-              <div className="mb-6 md:hidden">
-                <TabsList className="h-fit w-full justify-between bg-transparent">
-                  
                   <TabsTrigger
                     value="overview"
                     className="h-fit bg-transparent px-2 pb-1 pt-0 text-xs font-bold uppercase tracking-widest text-white transition-all duration-200 data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:font-bold rounded-none"
@@ -820,547 +765,629 @@ export default function SessionEditClient({
                   </TabsTrigger>
                 </TabsList>
               </div>
-              <div className="mx-auto max-w-6xl space-y-8">
-                <TabsContent value="overview" className="mt-0">
-                  <div className="grid grid-cols-3 gap-4">
-                    {/* Coluna 1: Objetivos */}
-                    <div className="col-span-3 space-y-2">
-                      <Label>Objetivo principal</Label>
-                      <Input
-                        value={form.main_objective}
-                        onChange={(event) =>
-                          setForm((prev) => ({ ...prev, main_objective: event.target.value }))
-                        }
-                        disabled={!isEditable}
-                        placeholder="Defina o norte do treino"
-                        className="bg-white border-slate-300 font-semibold"
-                      />
-                    </div>
-                    
-                    <div className="col-span-3 space-y-2">
-                      <Label>Objetivo secundário</Label>
-                      <Input
-                        value={form.secondary_objective}
-                        onChange={(event) =>
-                          setForm((prev) => ({
-                            ...prev,
-                            secondary_objective: event.target.value,
-                          }))
-                        }
-                        disabled={!isEditable}
-                        className="bg-white border-slate-300"
-                        placeholder="Ex: acelerar transicão defensiva"
-                      />
-                    </div>
 
-                    {/* Coluna 2: Data/Hora/Duração */}
-                    <div className="space-y-2">
-                      <Label className="flex items-center gap-1">
-                        Data
-                        {isDateTimeLocked && (
-                          <Icons.Security.Lock className="h-3 w-3 text-slate-400" />
-                        )}
-                      </Label>
-                      <Input
-                        type="date"
-                        value={form.date}
-                        onChange={(event) =>
-                          setForm((prev) => ({ ...prev, date: event.target.value }))
-                        }
-                        disabled={!isEditable || isDateTimeLocked}
-                        className="bg-white border-slate-300"
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label className="flex items-center gap-1">
-                        Horário
-                        {isDateTimeLocked && (
-                          <Icons.Security.Lock className="h-3 w-3 text-slate-400" />
-                        )}
-                      </Label>
-                      <Input
-                        type="time"
-                        value={form.time}
-                        onChange={(event) =>
-                          setForm((prev) => ({ ...prev, time: event.target.value }))
-                        }
-                        disabled={!isEditable || isDateTimeLocked}
-                        className="bg-white border-slate-300"
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label>Duração (min)</Label>
-                      <Input
-                        type="number"
-                        min={15}
-                        max={240}
-                        step={15}
-                        value={form.duration_planned_minutes}
-                        onChange={(event) =>
-                          setForm((prev) => ({
-                            ...prev,
-                            duration_planned_minutes: event.target.value,
-                          }))
-                        }
-                        disabled={!isEditable}
-                        className="bg-white border-slate-300"
-                      />
-                    </div>
+              {/* Direita: Badge de Status + Close */}
+              <div className="flex items-center gap-3 shrink-0">
+                <Badge
+                  variant={getStatusVariant(session.status)}
+                  className={cn(
+                    "text-[9px] font-bold uppercase tracking-widest rounded-full px-3 py-1",
+                    getStatusClasses(session.status)
+                  )}
+                >
+                  {STATUS_LABELS[session.status] || session.status}
+                </Badge>
+                {onClose && (
+                  <DialogClose className="rounded-sm opacity-70 ring-offset-slate-900 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 disabled:pointer-events-none text-slate-400 hover:text-white">
+                    <X className="h-4 w-4" />
+                    <span className="sr-only">Fechar</span>
+                  </DialogClose>
+                )}
+              </div>
+            </header>
 
-                    {/* Coluna 3: Local e Tipo */}
-                    <div className="col-span-2 space-y-2">
-                      <Label>Local</Label>
-                      <Input
-                        value={form.location}
-                        onChange={(event) =>
-                          setForm((prev) => ({ ...prev, location: event.target.value }))
-                        }
-                        disabled={!isEditable}
-                        className="bg-white border-slate-300"
-                        placeholder="Ex: Ginásio principal"
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label>Tipo</Label>
-                      <Select
-                        value={form.session_type}
-                        onValueChange={(value) =>
-                          setForm((prev) => ({ ...prev, session_type: value }))
-                        }
-                        disabled={!isEditable}
-                      >
-                        <SelectTrigger className="bg-white border-slate-300">
-                          <SelectValue placeholder="Selecione o tipo" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {SESSION_TYPES.map((type) => (
-                            <SelectItem key={type.value} value={type.value}>
-                              {type.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                </TabsContent>
+            <main className="flex-1 overflow-hidden min-h-0">
+              <div className="h-full overflow-y-auto px-6 py-8">
+                <div className="mb-6 md:hidden">
+                  <TabsList className="h-fit w-full justify-between bg-transparent">
 
-                <TabsContent value="focus" className="mt-0">
-                  <div className="grid grid-cols-1 gap-4">
-                    {/* Coluna: Preview Cockpit Compacto */}
-                    <div className="space-y-4">
-                      {/* Preview Card Compacto */}
-                      <div className="rounded-lg border border-slate-200 bg-white p-4">
-                        <div className="flex items-center gap-4">
-                          {/* Ring Progress */}
-                          <div className={cn('relative h-20 w-20 shrink-0', focusRingColor)}>
-                            <div
-                              className="absolute inset-0 rounded-full"
-                              style={{
-                                background: `conic-gradient(currentColor ${focusRingProgress * 360}deg, #e2e8f0 0deg)`,
-                              }}
-                            />
-                            <div className="absolute inset-2 flex flex-col items-center justify-center rounded-full bg-white">
-                              <span className="text-xl font-bold text-slate-900">
-                                {focusSummary.totalFocusRounded}%
-                              </span>
-                              <span className="text-[8px] text-slate-400">/ 120</span>
-                            </div>
-                          </div>
-                          
-                          {/* Barra + Status */}
-                          <div className="flex-1 space-y-2">
-                            <div className="h-4 w-full overflow-hidden rounded border border-slate-200 bg-slate-50">
-                              <div className="flex h-full w-full">
-                                {focusSegments.map((segment) => {
-                                  if (segment.value <= 0) return null;
-                                  const width = focusPreviewBase > 0 ? (segment.value / focusPreviewBase) * 100 : 0;
-                                  return (
-                                    <div
-                                      key={segment.key}
-                                      className={segment.color}
-                                      style={{ width: `${width}%` }}
-                                      title={`${segment.label}: ${segment.value}%`}
-                                    />
-                                  );
-                                })}
-                                {focusTotalValue < focusPreviewBase && (
-                                  <div
-                                    className="h-full bg-slate-100"
-                                    style={{ width: `${((focusPreviewBase - focusTotalValue) / focusPreviewBase) * 100}%` }}
-                                  />
-                                )}
+                    <TabsTrigger
+                      value="overview"
+                      className="h-fit bg-transparent px-2 pb-1 pt-0 text-xs font-bold uppercase tracking-widest text-white transition-all duration-200 data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:font-bold rounded-none"
+                    >
+                      Visão geral
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="focus"
+                      className="h-fit bg-transparent px-2 pb-1 pt-0 text-xs font-bold uppercase tracking-widest text-white transition-all duration-200 data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:font-bold rounded-none"
+                    >
+                      Focos
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="exercises"
+                      className="h-fit bg-transparent px-2 pb-1 pt-0 text-xs font-bold uppercase tracking-widest text-white transition-all duration-200 data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:font-bold rounded-none"
+                    >
+                      Exercícios
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="notes"
+                      className="h-fit bg-transparent px-2 pb-1 pt-0 text-xs font-bold uppercase tracking-widest text-white transition-all duration-200 data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:font-bold rounded-none"
+                    >
+                      Notas
+                    </TabsTrigger>
+                  </TabsList>
+                </div>
+                <div className="mx-auto max-w-6xl space-y-8">
+                  <TabsContent value="overview" className="mt-0">
+                    <div className="grid grid-cols-3 gap-4">
+                      {/* Coluna 1: Objetivos */}
+                      <div className="col-span-3 space-y-2">
+                        <Label>Objetivo principal</Label>
+                        <Input
+                          value={form.main_objective}
+                          onChange={(event) =>
+                            setForm((prev) => ({ ...prev, main_objective: event.target.value }))
+                          }
+                          disabled={!isEditable}
+                          placeholder="Defina o norte do treino"
+                          className="bg-white border-slate-300 font-semibold"
+                        />
+                      </div>
+
+                      <div className="col-span-3 space-y-2">
+                        <Label>Objetivo secundário</Label>
+                        <Input
+                          value={form.secondary_objective}
+                          onChange={(event) =>
+                            setForm((prev) => ({
+                              ...prev,
+                              secondary_objective: event.target.value,
+                            }))
+                          }
+                          disabled={!isEditable}
+                          className="bg-white border-slate-300"
+                          placeholder="Ex: acelerar transicão defensiva"
+                        />
+                      </div>
+
+                      {/* Coluna 2: Data/Hora/Duração */}
+                      <div className="space-y-2">
+                        <Label className="flex items-center gap-1">
+                          Data
+                          {isDateTimeLocked && (
+                            <Icons.Security.Lock className="h-3 w-3 text-slate-400" />
+                          )}
+                        </Label>
+                        <Input
+                          type="date"
+                          value={form.date}
+                          onChange={(event) =>
+                            setForm((prev) => ({ ...prev, date: event.target.value }))
+                          }
+                          disabled={!isEditable || isDateTimeLocked}
+                          className="bg-white border-slate-300"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label className="flex items-center gap-1">
+                          Horário
+                          {isDateTimeLocked && (
+                            <Icons.Security.Lock className="h-3 w-3 text-slate-400" />
+                          )}
+                        </Label>
+                        <Input
+                          type="time"
+                          value={form.time}
+                          onChange={(event) =>
+                            setForm((prev) => ({ ...prev, time: event.target.value }))
+                          }
+                          disabled={!isEditable || isDateTimeLocked}
+                          className="bg-white border-slate-300"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>Duração (min)</Label>
+                        <Input
+                          type="number"
+                          min={15}
+                          max={240}
+                          step={15}
+                          value={form.duration_planned_minutes}
+                          onChange={(event) =>
+                            setForm((prev) => ({
+                              ...prev,
+                              duration_planned_minutes: event.target.value,
+                            }))
+                          }
+                          disabled={!isEditable}
+                          className="bg-white border-slate-300"
+                        />
+                      </div>
+
+                      {/* Coluna 3: Local e Tipo */}
+                      <div className="col-span-2 space-y-2">
+                        <Label>Local</Label>
+                        <Input
+                          value={form.location}
+                          onChange={(event) =>
+                            setForm((prev) => ({ ...prev, location: event.target.value }))
+                          }
+                          disabled={!isEditable}
+                          className="bg-white border-slate-300"
+                          placeholder="Ex: Ginásio principal"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>Tipo</Label>
+                        <Select
+                          value={form.session_type}
+                          onValueChange={(value) =>
+                            setForm((prev) => ({ ...prev, session_type: value }))
+                          }
+                          disabled={!isEditable}
+                        >
+                          <SelectTrigger className="bg-white border-slate-300">
+                            <SelectValue placeholder="Selecione o tipo" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {SESSION_TYPES.map((type) => (
+                              <SelectItem key={type.value} value={type.value}>
+                                {type.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="focus" className="mt-0">
+                    <div className="grid grid-cols-1 gap-4">
+                      {/* Coluna: Preview Cockpit Compacto */}
+                      <div className="space-y-4">
+                        {/* Preview Card Compacto */}
+                        <div className="rounded-lg border border-slate-200 bg-white p-4">
+                          <div className="flex items-center gap-4">
+                            {/* Ring Progress */}
+                            <div className={cn('relative h-20 w-20 shrink-0', focusRingColor)}>
+                              <div
+                                className="absolute inset-0 rounded-full"
+                                style={{
+                                  background: `conic-gradient(currentColor ${focusRingProgress * 360}deg, #e2e8f0 0deg)`,
+                                }}
+                              />
+                              <div className="absolute inset-2 flex flex-col items-center justify-center rounded-full bg-white">
+                                <span className="text-xl font-bold text-slate-900">
+                                  {focusSummary.totalFocusRounded}%
+                                </span>
+                                <span className="text-[8px] text-slate-400">/ 120</span>
                               </div>
                             </div>
-                            
-                            <div
-                              className={cn(
-                                'flex items-center gap-2 rounded px-2 py-1 text-[10px] font-semibold',
-                                focusStatus.tone
-                              )}
-                            >
-                              {focusIsCritical ? (
-                                <Shield className="h-3 w-3" />
-                              ) : focusIsExact ? (
-                                <CheckCircle className="h-3 w-3" />
-                              ) : (
-                                <AlertTriangle className="h-3 w-3" />
-                              )}
-                              {focusStatus.message}
+
+                            {/* Barra + Status */}
+                            <div className="flex-1 space-y-2">
+                              <div className="h-4 w-full overflow-hidden rounded border border-slate-200 bg-slate-50">
+                                <div className="flex h-full w-full">
+                                  {focusSegments.map((segment) => {
+                                    if (segment.value <= 0) return null;
+                                    const width = focusPreviewBase > 0 ? (segment.value / focusPreviewBase) * 100 : 0;
+                                    return (
+                                      <div
+                                        key={segment.key}
+                                        className={segment.color}
+                                        style={{ width: `${width}%` }}
+                                        title={`${segment.label}: ${segment.value}%`}
+                                      />
+                                    );
+                                  })}
+                                  {focusTotalValue < focusPreviewBase && (
+                                    <div
+                                      className="h-full bg-slate-100"
+                                      style={{ width: `${((focusPreviewBase - focusTotalValue) / focusPreviewBase) * 100}%` }}
+                                    />
+                                  )}
+                                </div>
+                              </div>
+
+                              <div
+                                className={cn(
+                                  'flex items-center gap-2 rounded px-2 py-1 text-[10px] font-semibold',
+                                  focusStatus.tone
+                                )}
+                              >
+                                {focusIsCritical ? (
+                                  <Shield className="h-3 w-3" />
+                                ) : focusIsExact ? (
+                                  <CheckCircle className="h-3 w-3" />
+                                ) : (
+                                  <AlertTriangle className="h-3 w-3" />
+                                )}
+                                {focusStatus.message}
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
 
-                      {/* Botões Template/Manual */}
-                      <div className="flex gap-2">
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant={focusMode === 'template' ? 'default' : 'outline'}
-                          onClick={() => setFocusMode('template')}
-                          disabled={!isEditable}
-                        >
-                          <Target className="h-3.5 w-3.5 mr-1.5" />
-                          Templates
-                        </Button>
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant={focusMode === 'manual' ? 'default' : 'outline'}
-                          onClick={() => {
-                            setFocusMode('manual');
-                            setSelectedTemplateId(null);
-                          }}
-                          disabled={!isEditable}
-                        >
-                          <Crosshair className="h-3.5 w-3.5 mr-1.5" />
-                          Manual
-                        </Button>
-                      </div>
-                      
-                      {focusMode === 'template' && (
-                        <div className="flex flex-wrap gap-2">
-                          {templatesLoading ? (
-                            <div className="text-xs text-slate-500">Carregando templates...</div>
-                          ) : templatesError ? (
-                            <div className="text-xs text-red-500">Erro ao carregar templates</div>
-                          ) : (
-                            templatesData?.templates.map((template) => (
-                              <Button
-                                key={template.id}
-                                type="button"
-                                size="sm"
-                                variant={selectedTemplateId === template.id ? "default" : "outline"}
-                                onClick={() => {
-                                  setFocusValues({
-                                    focus_attack_positional_pct: template.focus_attack_positional_pct,
-                                    focus_defense_positional_pct: template.focus_defense_positional_pct,
-                                    focus_transition_offense_pct: template.focus_transition_offense_pct,
-                                    focus_transition_defense_pct: template.focus_transition_defense_pct,
-                                    focus_attack_technical_pct: template.focus_attack_technical_pct,
-                                    focus_defense_technical_pct: template.focus_defense_technical_pct,
-                                    focus_physical_pct: template.focus_physical_pct,
-                                  });
-                                  setSelectedTemplateId(template.id);
-                                }}
-                                disabled={!isEditable}
-                                className="text-xs h-7 px-2"
-                                title={template.description || undefined}
-                              >
-                                {template.icon && <span className="mr-1">{template.icon}</span>}
-                                {template.name}
-                              </Button>
-                            ))
-                          )}
-                        </div>
-                      )}
-
-                      {/* Editor de Focos */}
-                      <FocusDistributionEditor
-                        values={focusValues}
-                        onChange={(key, value) =>
-                          setFocusValues((prev) => ({ ...prev, [key]: value }))
-                        }
-                        justification={justification}
-                        onJustificationChange={setJustification}
-                        mode="lenient"
-                        disabled={!isEditable || selectedTemplateId !== null}
-                        showBadge={false}
-                        layout="grid"
-                      />
-                    </div>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="exercises" className="mt-0">
-                  <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-                    <div className="lg:col-span-8">
-                      <SessionExerciseDropZone
-                        sessionId={sessionId}
-                        plannedDuration={Number(form.duration_planned_minutes) || 0}
-                        readOnly={!isEditable}
-                      />
-                    </div>
-                    <div className="flex h-full flex-col rounded-2xl border border-slate-200 bg-white lg:col-span-4">
-                      <div className="space-y-3 border-b border-slate-200 p-4">
-                        <div className="flex items-center gap-2">
-                          <Icons.Actions.Search className="h-4 w-4 text-slate-400" />
-                          <Input
-                            placeholder="Buscar exercício..."
-                            value={exerciseSearch}
-                            onChange={(event) => setExerciseSearch(event.target.value)}
-                            className="h-8"
-                          />
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          {(['favorites', 'recent', 'search'] as ExerciseView[]).map((view) => (
-                            <button
-                              key={view}
-                              type="button"
-                              onClick={() => setExerciseView(view)}
-                              className={cn(
-                                'rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-wide',
-                                exerciseView === view
-                                  ? 'border-slate-900 bg-slate-900 text-white'
-                                  : 'border-slate-200 text-slate-500 hover:border-slate-300'
-                              )}
-                            >
-                              {view === 'favorites' && 'Favoritos'}
-                              {view === 'recent' && 'Recentes'}
-                              {view === 'search' && 'Explorar'}
-                            </button>
-                          ))}
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          {['all', 'Técnico', 'Tático', 'Físico', 'Goleiro'].map((category) => (
-                            <button
-                              key={category}
-                              type="button"
-                              onClick={() => setCategoryFilter(category)}
-                              className={cn(
-                                'rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase',
-                                categoryFilter === category
-                                  ? 'border-slate-900 bg-slate-900 text-white'
-                                  : 'border-slate-200 text-slate-500'
-                              )}
-                            >
-                              {category === 'all' ? 'Todos' : category}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="flex-1 space-y-3 overflow-y-auto p-4 max-h-[400px]">
-                        {exerciseOptions.map((exercise) => (
-                          <LibraryExerciseItem key={exercise.id} exercise={exercise} />
-                        ))}
-                        {!exerciseOptions.length && (
-                          <div className="rounded-lg border border-dashed border-slate-200 p-6 text-center text-xs text-slate-400">
-                            Nenhum exercício encontrado.
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="notes" className="mt-0">
-                  <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                    <div className="lg:col-span-2 rounded-xl border border-slate-200 bg-white p-6">
-                      <Label>Notas do planejamento</Label>
-                      <Textarea
-                        ref={notesRef}
-                        value={notes}
-                        onChange={(event) => setNotes(event.target.value)}
-                        className="mt-2 min-h-[160px] resize-none"
-                        placeholder="Descreva observacoes, enfases e variacoes do treino..."
-                        disabled={!isEditable}
-                      />
-                    </div>
-                    <div className="rounded-xl border border-slate-200 bg-slate-50 p-6">
-                      <div className="text-xs font-bold uppercase tracking-widest text-slate-400">
-                        Sugestoes rapidas
-                      </div>
-                      <div className="mt-4 space-y-2">
-                        {NOTE_SUGGESTIONS.map((suggestion) => (
-                          <button
-                            key={suggestion}
+                        {/* Botões Template/Manual */}
+                        <div className="flex gap-2">
+                          <Button
                             type="button"
-                            onClick={() => handleAddNoteSuggestion(suggestion)}
-                            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-left text-xs font-medium text-slate-600 transition hover:border-slate-300 hover:text-slate-900"
+                            size="sm"
+                            variant={focusMode === 'template' ? 'default' : 'outline'}
+                            onClick={() => setFocusMode('template')}
                             disabled={!isEditable}
                           >
-                            {suggestion}
-                          </button>
-                        ))}
+                            <Target className="h-3.5 w-3.5 mr-1.5" />
+                            Templates
+                          </Button>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant={focusMode === 'manual' ? 'default' : 'outline'}
+                            onClick={() => {
+                              setFocusMode('manual');
+                              setSelectedTemplateId(null);
+                            }}
+                            disabled={!isEditable}
+                          >
+                            <Crosshair className="h-3.5 w-3.5 mr-1.5" />
+                            Manual
+                          </Button>
+                        </div>
+
+                        {focusMode === 'template' && (
+                          <div className="flex flex-wrap gap-2">
+                            {templatesLoading ? (
+                              <div className="text-xs text-slate-500">Carregando templates...</div>
+                            ) : templatesError ? (
+                              <div className="text-xs text-red-500">Erro ao carregar templates</div>
+                            ) : (
+                              templatesData?.templates.map((template) => (
+                                <Button
+                                  key={template.id}
+                                  type="button"
+                                  size="sm"
+                                  variant={selectedTemplateId === template.id ? "default" : "outline"}
+                                  onClick={() => {
+                                    setFocusValues({
+                                      focus_attack_positional_pct: template.focus_attack_positional_pct,
+                                      focus_defense_positional_pct: template.focus_defense_positional_pct,
+                                      focus_transition_offense_pct: template.focus_transition_offense_pct,
+                                      focus_transition_defense_pct: template.focus_transition_defense_pct,
+                                      focus_attack_technical_pct: template.focus_attack_technical_pct,
+                                      focus_defense_technical_pct: template.focus_defense_technical_pct,
+                                      focus_physical_pct: template.focus_physical_pct,
+                                    });
+                                    setSelectedTemplateId(template.id);
+                                  }}
+                                  disabled={!isEditable}
+                                  className="text-xs h-7 px-2"
+                                  title={template.description || undefined}
+                                >
+                                  {template.icon && <span className="mr-1">{template.icon}</span>}
+                                  {template.name}
+                                </Button>
+                              ))
+                            )}
+                          </div>
+                        )}
+
+                        {/* Editor de Focos */}
+                        <FocusDistributionEditor
+                          values={focusValues}
+                          onChange={(key, value) =>
+                            setFocusValues((prev) => ({ ...prev, [key]: value }))
+                          }
+                          justification={justification}
+                          onJustificationChange={setJustification}
+                          mode="lenient"
+                          disabled={!isEditable || selectedTemplateId !== null}
+                          showBadge={false}
+                          layout="grid"
+                        />
                       </div>
                     </div>
-                  </div>
-                </TabsContent>
-              </div>
-            </div>
-          </main>
+                  </TabsContent>
 
-          {/* Footer Sticky com Validação em Tempo Real */}
-          <footer className={cn(
-            "relative h-20 shrink-0 border-t border-slate-200 bg-white px-6 flex items-center justify-between gap-6 transition-opacity duration-200",
-            isPublishing && "opacity-60"
-          )}>
-            {/* Banner de Erro (aparece acima do footer) */}
-            {syncStatus === 'error' && (
-              <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-full max-w-lg px-6">
-                <div className="bg-rose-50 border border-rose-200 rounded-lg px-4 py-3 shadow-lg">
-                  <div className="flex items-start gap-3">
-                    <Icons.Status.Warning className="h-4 w-4 text-rose-600 shrink-0 mt-0.5" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-semibold text-rose-700">
-                        Falha ao salvar alterações
-                      </p>
-                      <p className="text-[10px] text-rose-600 mt-0.5">
-                        Verifique sua conexão e tente novamente.
-                      </p>
+                  <TabsContent value="exercises" className="mt-0">
+                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+                      <div className="lg:col-span-8">
+                        <SessionExerciseDropZone
+                          sessionId={sessionId}
+                          plannedDuration={Number(form.duration_planned_minutes) || 0}
+                          readOnly={!isEditable}
+                        />
+                      </div>
+                      <div className="flex h-full flex-col rounded-2xl border border-slate-200 bg-white lg:col-span-4">
+                        <div className="space-y-3 border-b border-slate-200 p-4">
+                          <div className="flex items-center gap-2">
+                            <Icons.Actions.Search className="h-4 w-4 text-slate-400" />
+                            <Input
+                              placeholder="Buscar exercício..."
+                              value={exerciseSearch}
+                              onChange={(event) => setExerciseSearch(event.target.value)}
+                              className="h-8"
+                            />
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {(['favorites', 'recent', 'search'] as ExerciseView[]).map((view) => (
+                              <button
+                                key={view}
+                                type="button"
+                                onClick={() => setExerciseView(view)}
+                                className={cn(
+                                  'rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-wide',
+                                  exerciseView === view
+                                    ? 'border-slate-900 bg-slate-900 text-white'
+                                    : 'border-slate-200 text-slate-500 hover:border-slate-300'
+                                )}
+                              >
+                                {view === 'favorites' && 'Favoritos'}
+                                {view === 'recent' && 'Recentes'}
+                                {view === 'search' && 'Explorar'}
+                              </button>
+                            ))}
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {['all', 'Técnico', 'Tático', 'Físico', 'Goleiro'].map((category) => (
+                              <button
+                                key={category}
+                                type="button"
+                                onClick={() => setCategoryFilter(category)}
+                                className={cn(
+                                  'rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase',
+                                  categoryFilter === category
+                                    ? 'border-slate-900 bg-slate-900 text-white'
+                                    : 'border-slate-200 text-slate-500'
+                                )}
+                              >
+                                {category === 'all' ? 'Todos' : category}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="flex-1 space-y-3 overflow-y-auto p-4 max-h-[400px]">
+                          {exerciseOptions.map((exercise) => (
+                            <LibraryExerciseItem key={exercise.id} exercise={exercise} />
+                          ))}
+                          {!exerciseOptions.length && (
+                            <div className="rounded-lg border border-dashed border-slate-200 p-6 text-center text-xs text-slate-400">
+                              Nenhum exercício encontrado.
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
-                      onClick={() => setSyncStatus('idle')}
-                      className="h-7 text-xs border-rose-300 text-rose-700 hover:bg-rose-100 shrink-0"
-                    >
-                      Fechar
-                    </Button>
-                  </div>
+                  </TabsContent>
+
+                  <TabsContent value="notes" className="mt-0">
+                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                      <div className="lg:col-span-2 rounded-xl border border-slate-200 bg-white p-6">
+                        <Label>Notas do planejamento</Label>
+                        <Textarea
+                          ref={notesRef}
+                          value={notes}
+                          onChange={(event) => setNotes(event.target.value)}
+                          className="mt-2 min-h-[160px] resize-none"
+                          placeholder="Descreva observacoes, enfases e variacoes do treino..."
+                          disabled={!isEditable}
+                        />
+                      </div>
+                      <div className="rounded-xl border border-slate-200 bg-slate-50 p-6">
+                        <div className="text-xs font-bold uppercase tracking-widest text-slate-400">
+                          Sugestoes rapidas
+                        </div>
+                        <div className="mt-4 space-y-2">
+                          {NOTE_SUGGESTIONS.map((suggestion) => (
+                            <button
+                              key={suggestion}
+                              type="button"
+                              onClick={() => handleAddNoteSuggestion(suggestion)}
+                              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-left text-xs font-medium text-slate-600 transition hover:border-slate-300 hover:text-slate-900"
+                              disabled={!isEditable}
+                            >
+                              {suggestion}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </TabsContent>
                 </div>
               </div>
-            )}
+            </main>
 
-            {/* Zona Esquerda: Ícone de Deletar */}
-            <div className="flex-none">
-              <button
-                onClick={() => setIsDeleteOpen(true)}
-                disabled={syncStatus === 'saving'}
-                className="flex items-center gap-2 text-slate-400 hover:text-rose-600 transition disabled:opacity-50 disabled:pointer-events-none"
-              >
-                <Icons.Actions.Delete className="h-5 w-5" />
-                <span className="text-xs font-medium hidden sm:inline">Excluir</span>
-              </button>
-            </div>
-
-            {/* Zona Centro: Validação em Tempo Real */}
-            <div className="flex-1 flex justify-center">
-              {isDraft ? (
-                <div className="max-w-sm w-full space-y-2.5">
-                  {/* Micro-indicadores */}
-                  <div className="flex items-center justify-between gap-6">
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className="flex items-center gap-1.5">
-                          <Icons.Status.Check 
-                            className={cn(
-                              "h-4 w-4 transition-colors",
-                              validationState.cargas.ok ? "text-emerald-500" : "text-slate-300"
-                            )} 
-                          />
-                          <span className="text-xs font-medium text-slate-600">Carga</span>
-                          <span className={cn(
-                            "text-xs font-bold",
-                            validationState.cargas.ok ? "text-emerald-700" : "text-slate-400"
-                          )}>
-                            {validationState.cargas.label}
-                          </span>
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className="text-xs">Distribuição de focos deve somar entre 100-120%</p>
-                      </TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className="flex items-center gap-1.5">
-                          <Icons.Status.Check 
-                            className={cn(
-                              "h-4 w-4 transition-colors",
-                              validationState.exercicios.ok ? "text-emerald-500" : "text-slate-300"
-                            )} 
-                          />
-                          <span className="text-xs font-medium text-slate-600">Exercícios</span>
-                          <span className={cn(
-                            "text-xs font-bold",
-                            validationState.exercicios.ok ? "text-emerald-700" : "text-slate-400"
-                          )}>
-                            {validationState.exercicios.label}
-                          </span>
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className="text-xs">Pelo menos 1 exercício deve ser adicionado</p>
-                      </TooltipContent>
-                    </Tooltip>
-
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className="flex items-center gap-1.5">
-                          <Icons.Status.Check 
-                            className={cn(
-                              "h-4 w-4 transition-colors",
-                              validationState.dados.ok ? "text-emerald-500" : "text-slate-300"
-                            )} 
-                          />
-                          <span className="text-xs font-medium text-slate-600">Dados</span>
-                          <span className={cn(
-                            "text-xs font-bold",
-                            validationState.dados.ok ? "text-emerald-700" : "text-slate-400"
-                          )}>
-                            {validationState.dados.label}
-                          </span>
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className="text-xs">Campos obrigatórios: objetivo, local, tipo, data e duração</p>
-                      </TooltipContent>
-                    </Tooltip>
+            {/* Footer Sticky com Validação em Tempo Real */}
+            <footer className={cn(
+              "relative h-20 shrink-0 border-t border-slate-200 bg-white px-6 flex items-center justify-between gap-6 transition-opacity duration-200",
+              isPublishing && "opacity-60"
+            )}>
+              {/* Banner de Erro (aparece acima do footer) */}
+              {syncStatus === 'error' && (
+                <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-full max-w-lg px-6">
+                  <div className="bg-rose-50 border border-rose-200 rounded-lg px-4 py-3 shadow-lg">
+                    <div className="flex items-start gap-3">
+                      <Icons.Status.Warning className="h-4 w-4 text-rose-600 shrink-0 mt-0.5" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-semibold text-rose-700">
+                          Falha ao salvar alterações
+                        </p>
+                        <p className="text-[10px] text-rose-600 mt-0.5">
+                          Verifique sua conexão e tente novamente.
+                        </p>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setSyncStatus('idle')}
+                        className="h-7 text-xs border-rose-300 text-rose-700 hover:bg-rose-100 shrink-0"
+                      >
+                        Fechar
+                      </Button>
+                    </div>
                   </div>
-
-                  {/* Barra de Progresso */}
-                  <Progress 
-                    value={validationState.percentage} 
-                    className={cn(
-                      "h-2",
-                      validationState.percentage === 100 
-                        ? "[&>div]:bg-emerald-500" 
-                        : validationState.percentage >= 66 
-                        ? "[&>div]:bg-blue-500" 
-                        : validationState.percentage >= 33 
-                        ? "[&>div]:bg-amber-500" 
-                        : "[&>div]:bg-slate-300"
-                    )}
-                  />
-                  <p className="text-[10px] text-center text-slate-500 font-medium">
-                    {validationState.percentage}% completo para agendar
-                  </p>
                 </div>
-              ) : (
-                <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 flex items-center gap-1">
-                  <CheckCircle className="h-4 w-4" />
-                  Treino Agendado
-                </span>
               )}
-            </div>
 
-            {/* Zona Direita: Ações */}
-            <div className="flex gap-3 flex-none">
-              <Button variant="ghost" onClick={handleBack}>
-                Cancelar
-              </Button>
+              {/* Zona Esquerda: Ícone de Deletar */}
+              <div className="flex-none">
+                <button
+                  onClick={() => setIsDeleteOpen(true)}
+                  disabled={syncStatus === 'saving'}
+                  className="flex items-center gap-2 text-slate-400 hover:text-rose-600 transition disabled:opacity-50 disabled:pointer-events-none"
+                >
+                  <Icons.Actions.Delete className="h-5 w-5" />
+                  <span className="text-xs font-medium hidden sm:inline">Excluir</span>
+                </button>
+              </div>
 
-              {isDraft ? (
-                <>
+              {/* Zona Centro: Validação em Tempo Real */}
+              <div className="flex-1 flex justify-center">
+                {isDraft ? (
+                  <div className="max-w-sm w-full space-y-2.5">
+                    {/* Micro-indicadores */}
+                    <div className="flex items-center justify-between gap-6">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center gap-1.5">
+                            <Icons.Status.Check
+                              className={cn(
+                                "h-4 w-4 transition-colors",
+                                validationState.cargas.ok ? "text-emerald-500" : "text-slate-300"
+                              )}
+                            />
+                            <span className="text-xs font-medium text-slate-600">Carga</span>
+                            <span className={cn(
+                              "text-xs font-bold",
+                              validationState.cargas.ok ? "text-emerald-700" : "text-slate-400"
+                            )}>
+                              {validationState.cargas.label}
+                            </span>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-xs">Distribuição de focos deve somar entre 100-120%</p>
+                        </TooltipContent>
+                      </Tooltip>
+
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center gap-1.5">
+                            <Icons.Status.Check
+                              className={cn(
+                                "h-4 w-4 transition-colors",
+                                validationState.exercicios.ok ? "text-emerald-500" : "text-slate-300"
+                              )}
+                            />
+                            <span className="text-xs font-medium text-slate-600">Exercícios</span>
+                            <span className={cn(
+                              "text-xs font-bold",
+                              validationState.exercicios.ok ? "text-emerald-700" : "text-slate-400"
+                            )}>
+                              {validationState.exercicios.label}
+                            </span>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-xs">Pelo menos 1 exercício deve ser adicionado</p>
+                        </TooltipContent>
+                      </Tooltip>
+
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="flex items-center gap-1.5">
+                            <Icons.Status.Check
+                              className={cn(
+                                "h-4 w-4 transition-colors",
+                                validationState.dados.ok ? "text-emerald-500" : "text-slate-300"
+                              )}
+                            />
+                            <span className="text-xs font-medium text-slate-600">Dados</span>
+                            <span className={cn(
+                              "text-xs font-bold",
+                              validationState.dados.ok ? "text-emerald-700" : "text-slate-400"
+                            )}>
+                              {validationState.dados.label}
+                            </span>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-xs">Campos obrigatórios: objetivo, local, tipo, data e duração</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+
+                    {/* Barra de Progresso */}
+                    <Progress
+                      value={validationState.percentage}
+                      className={cn(
+                        "h-2",
+                        validationState.percentage === 100
+                          ? "[&>div]:bg-emerald-500"
+                          : validationState.percentage >= 66
+                            ? "[&>div]:bg-blue-500"
+                            : validationState.percentage >= 33
+                              ? "[&>div]:bg-amber-500"
+                              : "[&>div]:bg-slate-300"
+                      )}
+                    />
+                    <p className="text-[10px] text-center text-slate-500 font-medium">
+                      {validationState.percentage}% completo para agendar
+                    </p>
+                  </div>
+                ) : (
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 flex items-center gap-1">
+                    <CheckCircle className="h-4 w-4" />
+                    Treino Agendado
+                  </span>
+                )}
+              </div>
+
+              {/* Zona Direita: Ações */}
+              <div className="flex gap-3 flex-none">
+                <Button variant="ghost" onClick={handleBack}>
+                  Cancelar
+                </Button>
+
+                {isDraft ? (
+                  <>
+                    <Button
+                      variant="outline"
+                      onClick={() => handleSave('draft')}
+                      disabled={!isDirty || syncStatus === 'saving'}
+                    >
+                      {syncStatus === 'saving' ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                          Salvando...
+                        </>
+                      ) : (
+                        'Salvar Rascunho'
+                      )}
+                    </Button>
+                    <Button
+                      onClick={() => handleSave('scheduled')}
+                      disabled={!canPublish || syncStatus === 'saving'}
+                      className="bg-slate-900 text-white font-bold uppercase text-[11px] tracking-widest"
+                    >
+                      {syncStatus === 'saving' ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                          Agendando...
+                        </>
+                      ) : (
+                        'Agendar Treino'
+                      )}
+                    </Button>
+                  </>
+                ) : (
                   <Button
-                    variant="outline"
-                    onClick={() => handleSave('draft')}
+                    onClick={() => handleSave('scheduled')}
                     disabled={!isDirty || syncStatus === 'saving'}
+                    className="bg-slate-900 text-white font-bold uppercase text-[11px] tracking-widest"
                   >
                     {syncStatus === 'saving' ? (
                       <>
@@ -1368,92 +1395,62 @@ export default function SessionEditClient({
                         Salvando...
                       </>
                     ) : (
-                      'Salvar Rascunho'
+                      'Salvar Alterações'
                     )}
                   </Button>
-                  <Button
-                    onClick={() => handleSave('scheduled')}
-                    disabled={!canPublish || syncStatus === 'saving'}
-                    className="bg-slate-900 text-white font-bold uppercase text-[11px] tracking-widest"
-                  >
-                    {syncStatus === 'saving' ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                        Agendando...
-                      </>
-                    ) : (
-                      'Agendar Treino'
-                    )}
-                  </Button>
-                </>
-              ) : (
-                <Button
-                  onClick={() => handleSave('scheduled')}
-                  disabled={!isDirty || syncStatus === 'saving'}
-                  className="bg-slate-900 text-white font-bold uppercase text-[11px] tracking-widest"
-                >
-                  {syncStatus === 'saving' ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                      Salvando...
-                    </>
-                  ) : (
-                    'Salvar Alterações'
-                  )}
-                </Button>
-              )}
+                )}
+              </div>
+            </footer>
+          </Tabs>
+        </div>
+
+        <AlertDialog open={isPublishConfirmOpen} onOpenChange={setIsPublishConfirmOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Agendar treino</AlertDialogTitle>
+              <AlertDialogDescription>
+                Treino agendado para {sessionDateLabel} às {sessionTimeLabel}. Confirmar publicação?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <Button onClick={handleConfirmPublish} disabled={isPublishing}>
+                Confirmar
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        <AlertDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Excluir treino</AlertDialogTitle>
+              <AlertDialogDescription>
+                Esta ação remove o treino da agenda. Informe um motivo para continuar.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <div className="space-y-2">
+              <Label>Motivo (minimo 5 caracteres)</Label>
+              <Textarea
+                value={deleteReason}
+                onChange={(event) => setDeleteReason(event.target.value)}
+                placeholder="Ex: treino cancelado, ajuste de calendario..."
+                className="min-h-[100px]"
+              />
             </div>
-          </footer>
-        </Tabs>
-      </div>
-
-      <AlertDialog open={isPublishConfirmOpen} onOpenChange={setIsPublishConfirmOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Agendar treino</AlertDialogTitle>
-            <AlertDialogDescription>
-              Treino agendado para {sessionDateLabel} às {sessionTimeLabel}. Confirmar publicação?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <Button onClick={handleConfirmPublish} disabled={isPublishing}>
-              Confirmar
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      <AlertDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Excluir treino</AlertDialogTitle>
-            <AlertDialogDescription>
-              Esta ação remove o treino da agenda. Informe um motivo para continuar.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <div className="space-y-2">
-            <Label>Motivo (minimo 5 caracteres)</Label>
-            <Textarea
-              value={deleteReason}
-              onChange={(event) => setDeleteReason(event.target.value)}
-              placeholder="Ex: treino cancelado, ajuste de calendario..."
-              className="min-h-[100px]"
-            />
-          </div>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <Button
-              onClick={handleDeleteSession}
-              disabled={isDeleting || deleteReason.trim().length < 5}
-              className="bg-rose-600 text-white hover:bg-rose-700"
-            >
-              Excluir treino
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </TooltipProvider>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <Button
+                onClick={handleDeleteSession}
+                disabled={isDeleting || deleteReason.trim().length < 5}
+                className="bg-rose-600 text-white hover:bg-rose-700"
+              >
+                Excluir treino
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </TooltipProvider>
     </>
   );
 }

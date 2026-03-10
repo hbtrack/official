@@ -1,10 +1,10 @@
 # AR_269 — Criar traceability_training_core.csv
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
-Criar docs/hbtrack/modulos/treinos/_evidence/traceability_training_core.csv conforme exigido pela Seção 5.4 e EVID-SEM-002 do DONE_CONTRACT_TRAINING.md.md.
+Criar docs/hbtrack/modulos/treinos/_evidence/traceability_training_core.csv conforme exigido pela Seção 5.4 e EVID-SEM-002 do DONE_CONTRACT_TRAINING.md.
 
 Este arquivo é o artefato canônico de rastreabilidade entre teste, fluxo, tela, contrato, invariante, seletor e baseline visual. Sem ele, DONE_SEMANTICO = FALSE.
 
@@ -21,7 +21,7 @@ O Executor DEVE:
 3. Adicionar um comentário de cabeçalho antes dos headers (como linha # — CSV não suporta formalmente, mas é aceito por ferramentas de análise):
 ```
 # TRAINING - traceability_training_core.csv
-# Autoridade: DONE_CONTRACT_TRAINING.md.md §5.4 + §7.4
+# Autoridade: DONE_CONTRACT_TRAINING.md §5.4 + §7.4
 # Versão: v1.0.0 (skeleton — sem dados)
 # Última revisão: 2026-03-08
 # Status: AGUARDANDO_TRUTH_FE_CORE
@@ -76,3 +76,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_269_571249d/result.json`
+
+### Selo Humano em 571249d
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-03-08T16:11:59.725538+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_269_571249d/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_269/executor_main.log`

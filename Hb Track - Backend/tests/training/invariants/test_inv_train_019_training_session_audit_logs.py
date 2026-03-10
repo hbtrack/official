@@ -76,7 +76,11 @@ async def test_audit_logs_for_create_update_publish_and_close(async_db):
     update_payload = TrainingSessionUpdate(notes="Atualização de audit")
     await service.update(session.id, update_payload)
 
-    published, errors = await service.publish_session(session.id)
+    published, errors = await service.schedule_session(
+        session.id,
+        starts_at=datetime.now(timezone.utc) + timedelta(hours=2),
+        ends_at=datetime.now(timezone.utc) + timedelta(hours=3, minutes=30),
+    )
     assert errors == {}
 
     result = await async_db.execute(
@@ -186,7 +190,7 @@ async def test_audit_logs_for_create_update_publish_and_close(async_db):
     )
     service = TrainingSessionService(async_db, ctx)
 
-    result = await service.close_session(session.id)
+    result = await service.finalize_session(session.id, attendance_completed=True, review_completed=True)
     assert result.success is True
 
     audit_result = await async_db.execute(

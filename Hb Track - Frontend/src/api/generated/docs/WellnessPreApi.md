@@ -94,9 +94,13 @@ const configuration = new Configuration();
 const apiInstance = new WellnessPreApi(configuration);
 
 let wellnessPreId: string; // (default to undefined)
+let xRequestID: string; // (optional) (default to undefined)
+let xOrganizationId: string; // (optional) (default to undefined)
 
 const { status, data } = await apiInstance.getWellnessPreByIdApiV1WellnessPreWellnessPreWellnessPreIdGet(
-    wellnessPreId
+    wellnessPreId,
+    xRequestID,
+    xOrganizationId
 );
 ```
 
@@ -105,6 +109,8 @@ const { status, data } = await apiInstance.getWellnessPreByIdApiV1WellnessPreWel
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
 | **wellnessPreId** | [**string**] |  | defaults to undefined|
+| **xRequestID** | [**string**] |  | (optional) defaults to undefined|
+| **xOrganizationId** | [**string**] |  | (optional) defaults to undefined|
 
 
 ### Return type
@@ -113,7 +119,7 @@ const { status, data } = await apiInstance.getWellnessPreByIdApiV1WellnessPreWel
 
 ### Authorization
 
-No authorization required
+[HTTPBearer](../README.md#HTTPBearer)
 
 ### HTTP request headers
 
@@ -340,10 +346,14 @@ const apiInstance = new WellnessPreApi(configuration);
 
 let wellnessPreId: string; // (default to undefined)
 let wellnessPreUpdate: WellnessPreUpdate; //
+let xRequestID: string; // (optional) (default to undefined)
+let xOrganizationId: string; // (optional) (default to undefined)
 
 const { status, data } = await apiInstance.updateWellnessPreApiV1WellnessPreWellnessPreWellnessPreIdPatch(
     wellnessPreId,
-    wellnessPreUpdate
+    wellnessPreUpdate,
+    xRequestID,
+    xOrganizationId
 );
 ```
 
@@ -353,6 +363,8 @@ const { status, data } = await apiInstance.updateWellnessPreApiV1WellnessPreWell
 |------------- | ------------- | ------------- | -------------|
 | **wellnessPreUpdate** | **WellnessPreUpdate**|  | |
 | **wellnessPreId** | [**string**] |  | defaults to undefined|
+| **xRequestID** | [**string**] |  | (optional) defaults to undefined|
+| **xOrganizationId** | [**string**] |  | (optional) defaults to undefined|
 
 
 ### Return type
@@ -361,7 +373,7 @@ const { status, data } = await apiInstance.updateWellnessPreApiV1WellnessPreWell
 
 ### Authorization
 
-No authorization required
+[HTTPBearer](../README.md#HTTPBearer)
 
 ### HTTP request headers
 

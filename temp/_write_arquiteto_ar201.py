@@ -1,9 +1,9 @@
-"""Escreve _reports/ARQUITETO.md com PLAN_HANDOFF para AR_201."""
+"""Escreve _reports/ARQUITETO.yaml com PLAN_HANDOFF para AR_201."""
 import os
 os.chdir(r"c:\HB TRACK")
 
 content = (
-    "# ARQUITETO.md -- PLAN_HANDOFF para AR_201\n\n"
+    "# ARQUITETO.yaml -- PLAN_HANDOFF para AR_201\n\n"
     "| Campo | Valor |\n"
     "|---|---|\n"
     "| **Protocolo** | v1.3.0 |\n"
@@ -73,6 +73,6 @@ content = (
     "- hb seal 201 -> hb seal 200 (nesta ordem)\n"
 )
 
-with open("_reports/ARQUITETO.md", "w", encoding="utf-8") as f:
+with open("_reports/ARQUITETO.yaml", "w", encoding="utf-8") as f:
     f.write(content)
-print("ARQUITETO.md written OK")
+print("ARQUITETO.yaml written OK")

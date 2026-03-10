@@ -256,12 +256,12 @@ gates:
     trigger: "pre-hb-report"
     script: "scripts/gates/check_handoff_contract.py"
     required_proofs:
-      structural: "_reports/ARQUITETO.md contém AR IDs, PRE-FLIGHT, STOP CONDITIONS, v1.3.0"
+      structural: "_reports/ARQUITETO.yaml contém AR IDs, PRE-FLIGHT, STOP CONDITIONS, v1.3.0"
       behavioral: "check_handoff_contract.py exit 0 (PASS)"
     notes: >
       Gate executado automaticamente pelo hb report como soft pre-flight
       (⚠️ warning, não bloqueia). Rodar manualmente antes de hb report quando
-      houver dúvida: python scripts/gates/check_handoff_contract.py _reports/ARQUITETO.md
+      houver dúvida: python scripts/gates/check_handoff_contract.py _reports/ARQUITETO.yaml
 
   - id: DOC-GATE-020
     name: "Trace Contract Validator"
@@ -270,7 +270,7 @@ gates:
     trigger: "pre-hb-report"
     script: "scripts/gates/check_trace_contract.py"
     required_proofs:
-      structural: "_reports/ARQUITETO.md contém TRACE por AR_ID (ou supressão explícita N/A)"
+      structural: "_reports/ARQUITETO.yaml contém TRACE por AR_ID (ou supressão explícita N/A)"
       behavioral: "check_trace_contract.py exit 0 (WARN-only, nunca bloqueia execução)"
     notes: >
       Gate WARN-only. Emite aviso por AR_ID quando há sinais comportamentais/spec
@@ -285,7 +285,7 @@ gates:
     trigger: "pre-hb-report"
     script: "scripts/gates/trace_stitcher.py"
     required_proofs:
-      structural: "_reports/ARQUITETO.md: PROOF e TRACE declarados por AR_ID"
+      structural: "_reports/ARQUITETO.yaml: PROOF e TRACE declarados por AR_ID"
       behavioral: "trace_stitcher.py exit 0 (WARN-only); arquivos TRACE existem ou AR deve criá-los"
     notes: >
       Gate WARN-only. Valida por AR_ID: PROOF declarado (ou N/A governance),

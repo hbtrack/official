@@ -37,6 +37,8 @@ from app.schemas.training_sessions import (
     TrainingSessionUpdate,
     TrainingSessionPaginatedResponse,
     SessionClosureResponse,
+    TrainingSessionScheduleRequest,
+    TrainingSessionFinalizeRequest,
 )
 from app.schemas.wellness import (
     WellnessStatusResponse,
@@ -562,25 +564,26 @@ async def scoped_restore_training_session(
 # =============================================================================
 
 @router.post(
-    "/{training_session_id}/publish",
+    "/{training_session_id}/schedule",
     response_model=TrainingSession,
-    summary="Publica sessão completa (draft → scheduled)",
-    description="Valida campos mínimos e publica a sessão para execução automática",
+    summary="Agenda sessão completa (draft → scheduled)",
+    description="Valida campos mínimos e agenda a sessão para execução automática",
     responses={
-        200: {"description": "Sessão publicada com sucesso"},
+        200: {"description": "Sessão agendada com sucesso"},
         404: {"description": "Sessão não encontrada", "model": ErrorResponse},
         401: {"description": "Token inválido ou ausente", "model": ErrorResponse},
         403: {"description": "Permissão insuficiente", "model": ErrorResponse},
         422: {"description": "Dados incompletos", "model": ErrorResponse},
     },
 )
-async def publish_training_session(
+async def schedule_training_session(
     training_session_id: UUID,
+    request_data: TrainingSessionScheduleRequest,
     db: AsyncSession = Depends(get_async_db),
     context: ExecutionContext = Depends(permission_dep(["dirigente", "coordenador", "treinador"])),
 ):
     """
-    Publica uma sessão completa (draft → scheduled).
+    Agenda uma sessão completa (draft → scheduled).
 
     **Campos mínimos obrigatórios:**
     - session_at
@@ -592,13 +595,17 @@ async def publish_training_session(
     service = TrainingSessionService(db, context)
 
     try:
-        session, errors = await service.publish_session(training_session_id)
+        session, errors = await service.schedule_session(
+            training_session_id,
+            request_data.starts_at,
+            request_data.ends_at,
+        )
         if errors:
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail={
                     "error_code": "INCOMPLETE_SCHEDULE",
-                    "message": "Sessão incompleta para publicação",
+                    "message": "Sessão incompleta para agendamento",
                     "field_errors": errors,
                 },
             )
@@ -619,20 +626,20 @@ async def publish_training_session(
         )
     except Exception as e:
         await db.rollback()
-        logger.error(f"Error publishing training session {training_session_id}: {str(e)}")
+        logger.error(f"Error scheduling training session {training_session_id}: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error publishing training session: {str(e)}"
+            detail=f"Error scheduling training session: {str(e)}"
         )
 
 @router.post(
-    "/{training_session_id}/close",
+    "/{training_session_id}/finalize",
     response_model=SessionClosureResponse,
     summary="Finaliza revisão operacional e congela a sessão",
     description="Finaliza a revisão operacional (pending_review → readonly) com validações bloqueantes",
     responses={
         200: {
-            "description": "Resposta de fechamento (success=True se fechou, False com validation se falhou)",
+            "description": "Resposta de finalização (success=True se finalizou, False com validation se falhou)",
             "model": SessionClosureResponse
         },
         404: {"description": "Sessão não encontrada", "model": ErrorResponse},
@@ -640,8 +647,9 @@ async def publish_training_session(
         403: {"description": "Permissão insuficiente", "model": ErrorResponse},
     },
 )
-async def close_training_session(
+async def finalize_training_session(
     training_session_id: UUID,
+    request_data: TrainingSessionFinalizeRequest,
     db: AsyncSession = Depends(get_async_db),
     context: ExecutionContext = Depends(permission_dep(["dirigente", "coordenador", "treinador"])),
 ):
@@ -665,7 +673,11 @@ async def close_training_session(
     service = TrainingSessionService(db, context)
 
     try:
-        result = await service.close_session(training_session_id)
+        result = await service.finalize_session(
+            training_session_id,
+            attendance_completed=request_data.attendance_completed,
+            review_completed=request_data.review_completed,
+        )
         
         if result.success:
             await db.commit()
@@ -683,10 +695,10 @@ async def close_training_session(
         
     except Exception as e:
         await db.rollback()
-        logger.error(f"Error closing training session {training_session_id}: {str(e)}")
+        logger.error(f"Error finalizing training session {training_session_id}: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error closing training session: {str(e)}"
+            detail=f"Error finalizing training session: {str(e)}"
         )
 
 

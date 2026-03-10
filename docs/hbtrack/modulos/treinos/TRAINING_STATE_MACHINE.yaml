@@ -1,13 +1,13 @@
 # TRAINING_STATE_MACHINE.yaml
 # Artefato canônico de máquina de estados — módulo TRAINING
-# Autoridade: DONE_CONTRACT_TRAINING.md.md §5.2 + INVARIANTS_TRAINING.md
+# Autoridade: DONE_CONTRACT_TRAINING.md §5.2 + INVARIANTS_TRAINING.md
 # Versão: v1.0.0
 # Última revisão: 2026-03-08
 
 module: TRAINING
 version: v1.0.0
 last_revised: 2026-03-08
-authority: DONE_CONTRACT_TRAINING.md.md §5.2
+authority: DONE_CONTRACT_TRAINING.md §5.2
 
 # Regra: transição permitida no código mas ausente aqui derruba DONE_SEMANTICO
 entities:

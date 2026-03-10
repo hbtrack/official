@@ -1,4 +1,4 @@
-"""Append AR_169/170 report to _reports/EXECUTOR.md"""
+"""Append AR_169/170 report to _reports/EXECUTOR.yaml"""
 from pathlib import Path
 
 NEW_SECTION = """
@@ -92,7 +92,7 @@ Nenhuma. AR_169 e AR_170 passaram com exit=0. Prontos para Testador.
 
 """
 
-p = Path("_reports/EXECUTOR.md")
+p = Path("_reports/EXECUTOR.yaml")
 content = p.read_text(encoding="utf-8")
 p.write_text(content + NEW_SECTION, encoding="utf-8")
 print(f"OK --- {len(content + NEW_SECTION)} chars total")

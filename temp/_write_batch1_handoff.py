@@ -59,7 +59,7 @@ Staged (git add OK, git diff --name-only = VAZIO):
 8. workspace limpo pre-verify e responsabilidade do Executor
 """
 
-with open('_reports/ARQUITETO.md', 'a', encoding='utf-8') as f:
+with open('_reports/ARQUITETO.yaml', 'a', encoding='utf-8') as f:
     f.write(content)
 
-print('Handoff BATCH1 escrito com sucesso em _reports/ARQUITETO.md')
+print('Handoff BATCH1 escrito com sucesso em _reports/ARQUITETO.yaml')

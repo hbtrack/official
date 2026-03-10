@@ -9,12 +9,12 @@
 
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
-import { format } from 'date-fns';
 import AppDrawer from '@/components/ui/AppDrawer';
 import { Badge } from '@/components/ui/badge';
-import { Icons } from '@/design-system/icons';
+import { Icons } from '@/design/icons';
 import type { TrainingSession } from '@/lib/api/trainings';
+import { format } from 'date-fns';
+import React, { useEffect, useMemo, useState } from 'react';
 
 const WEEKDAYS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 const MONTHS = [
@@ -408,11 +408,10 @@ function FilterButton({
     <button
       type="button"
       onClick={onClick}
-      className={`px-3 py-1 text-[10px] font-bold uppercase rounded-lg border transition-colors ${
-        active
+      className={`px-3 py-1 text-[10px] font-bold uppercase rounded-lg border transition-colors ${active
           ? 'bg-slate-900 text-white border-slate-900'
           : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
-      }`}
+        }`}
     >
       {label}
     </button>

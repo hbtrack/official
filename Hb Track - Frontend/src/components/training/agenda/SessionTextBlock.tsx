@@ -13,13 +13,13 @@
 
 'use client';
 
-import React, { useMemo } from 'react';
-import { useDraggable } from '@dnd-kit/core';
-import { TrainingSession } from '@/lib/api/trainings';
-import { useSessionIntelligence } from '@/hooks/useSessionIntelligence';
-import { Icons } from '@/design-system/icons';
 import { Badge } from '@/components/ui/badge';
+import { Icons } from '@/design/icons';
+import { useSessionIntelligence } from '@/hooks/useSessionIntelligence';
+import { TrainingSession } from '@/lib/api/trainings';
 import { cn } from '@/lib/utils';
+import { useDraggable } from '@dnd-kit/core';
+import { useMemo } from 'react';
 
 interface SessionTextBlockProps {
   session: TrainingSession;

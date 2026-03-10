@@ -7,16 +7,16 @@
  * Allows athletes to export their personal data in JSON or CSV format
  */
 
-import { useState } from 'react';
-import { Icons } from '@/design-system/icons';
-import { toast } from 'sonner';
-import { 
-  exportAthleteDataJSON, 
-  exportAthleteDataCSV, 
+import { Icons } from '@/design/icons';
+import {
   downloadBlob,
+  exportAthleteDataCSV,
+  exportAthleteDataJSON,
   formatFileSize,
-  type AthleteDataExportResponse 
+  type AthleteDataExportResponse
 } from '@/lib/api/athlete-export';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 export function DataExportSection() {
   const [loadingJSON, setLoadingJSON] = useState(false);
@@ -39,7 +39,7 @@ export function DataExportSection() {
       });
     } catch (error: any) {
       console.error('Export JSON error:', error);
-      
+
       if (error.response?.status === 400) {
         toast.error('Erro ao exportar', {
           description: 'Apenas atletas podem exportar seus dados',
@@ -65,13 +65,13 @@ export function DataExportSection() {
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
       const filename = `athlete_data_${timestamp}.zip`;
       downloadBlob(blob, filename);
-      
+
       toast.success('Download iniciado', {
         description: `Arquivo: ${filename}`,
       });
     } catch (error: any) {
       console.error('Export CSV error:', error);
-      
+
       if (error.response?.status === 400) {
         toast.error('Erro ao exportar', {
           description: 'Apenas atletas podem exportar seus dados',
@@ -92,12 +92,12 @@ export function DataExportSection() {
 
   const handleDownloadJSON = () => {
     if (!jsonData) return;
-    
+
     const jsonString = JSON.stringify(jsonData, null, 2);
     const blob = new Blob([jsonString], { type: 'application/json' });
     const fileName = `athlete-data-${jsonData.personal_info.full_name.replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.json`;
     downloadBlob(blob, fileName);
-    
+
     toast.success('Download JSON iniciado');
   };
 
@@ -137,7 +137,7 @@ export function DataExportSection() {
                 Direito à Portabilidade de Dados
               </p>
               <p className="text-blue-700 dark:text-blue-300">
-                Conforme LGPD Art. 18, II, você pode exportar todos os seus dados pessoais 
+                Conforme LGPD Art. 18, II, você pode exportar todos os seus dados pessoais
                 em formato estruturado para uso próprio ou transferência.
               </p>
             </div>
@@ -154,7 +154,7 @@ export function DataExportSection() {
           <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-750 rounded-lg border border-gray-200 dark:border-gray-700">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <Icons.UI.FileText className="h-4 w-4 text-gray-600 dark:text-gray-400" />        
+                <Icons.UI.FileText className="h-4 w-4 text-gray-600 dark:text-gray-400" />
                 <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">
                   Formato JSON
                 </h4>

@@ -1,4 +1,4 @@
-"""Append status update section to _reports/ARQUITETO.md"""
+"""Append status update section to _reports/ARQUITETO.yaml"""
 from pathlib import Path
 
 NEW_SECTION = """
@@ -62,7 +62,7 @@ PLAN_HANDOFF:
       git diff --cached --name-only  (confirmar isolamento de dominio)
 """
 
-p = Path("_reports/ARQUITETO.md")
+p = Path("_reports/ARQUITETO.yaml")
 content = p.read_text(encoding="utf-8")
 p.write_text(content + NEW_SECTION, encoding="utf-8")
 print(f"OK --- {len(content + NEW_SECTION)} chars total")

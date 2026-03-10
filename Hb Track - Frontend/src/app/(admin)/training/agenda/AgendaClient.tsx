@@ -6,29 +6,29 @@
 
 'use client';
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { ImportLegacyModal } from '@/components/admin/ImportLegacyModal';
 import { AgendaHeader } from '@/components/training/agenda/AgendaHeader';
-import { WeeklyAgenda } from '@/components/training/agenda/WeeklyAgenda';
 import { MonthlyAgenda } from '@/components/training/agenda/MonthlyAgenda';
+import { WeeklyAgenda } from '@/components/training/agenda/WeeklyAgenda';
 import { CreateSessionModal } from '@/components/training/modals/CreateSessionModal';
 import { SessionEditorModal } from '@/components/training/modals/SessionEditorModal';
-import { ImportLegacyModal } from '@/components/admin/ImportLegacyModal';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { useSessions, useDeleteSession } from '@/lib/hooks/useSessions';
-import { useTrainingContext } from '@/context/TrainingContext';
 import { useToast } from '@/context/ToastContext';
-import { useDebouncedSearch } from '@/lib/hooks/useDebouncedSearch';
-import { matchesSearch } from '@/lib/utils/searchUtils';
+import { useTrainingContext } from '@/context/TrainingContext';
+import { Icons } from '@/design/icons';
 import type { TrainingSession } from '@/lib/api/trainings';
-import { Search } from 'lucide-react';
+import { useDebouncedSearch } from '@/lib/hooks/useDebouncedSearch';
+import { useDeleteSession, useSessions } from '@/lib/hooks/useSessions';
+import { matchesSearch } from '@/lib/utils/searchUtils';
 import { getISOWeek } from 'date-fns';
-import { Icons } from '@/design-system/icons';
+import { Search } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 export default function AgendaClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  
+
   // URL State: ?view=week|month, ?date=YYYY-MM-DD, ?teamId=UUID, ?q=string
   const viewFromUrl = (searchParams.get('view') as 'week' | 'month') || 'week';
   const dateFromUrl = searchParams.get('date');
@@ -42,7 +42,7 @@ export default function AgendaClient() {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState(queryFromUrl);
   const [teamDropdownOpen, setTeamDropdownOpen] = useState(false);
-  
+
   // Inicializar currentWeekStart a partir de URL ou fallback
   const [currentWeekStart, setCurrentWeekStart] = useState(() => {
     // Sempre calcular a segunda-feira da semana atual se não houver date específica na URL
@@ -84,14 +84,14 @@ export default function AgendaClient() {
       setSelectedTeam(team);
     }
   }, [teamIdFromUrl, teams, selectedTeam?.id, setSelectedTeam]);
-  
+
   // Debounce search query para evitar atualizações excessivas
   const debouncedSearchQuery = useDebouncedSearch(searchQuery, 300);
-  
+
   // Filtered sessions baseado na busca (client-side)
   const filteredSessions = useMemo(() => {
     if (!debouncedSearchQuery) return sessions;
-    
+
     return sessions.filter((session) => {
       // Buscar em: main_objective, location, session_type
       return (
@@ -464,21 +464,21 @@ export default function AgendaClient() {
                 onSaveNotes={handleSaveNotes}
                 onSessionDelete={handleDeleteSession}
               />
-              
+
               {/* Empty state para busca sem resultados */}
-                {debouncedSearchQuery && filteredSessions.length === 0 && (
-                  <div className="mt-8">
-                    <EmptyState
-                      icon={<Search />}
-                      title="Nenhum treino encontrado"
-                      description={`Sua busca por "${debouncedSearchQuery}" não retornou resultados.`}
-                      action={{
-                        label: 'Limpar filtros',
-                        onClick: handleClearFilters,
-                      }}
-                    />
-                  </div>
-                )}
+              {debouncedSearchQuery && filteredSessions.length === 0 && (
+                <div className="mt-8">
+                  <EmptyState
+                    icon={<Search />}
+                    title="Nenhum treino encontrado"
+                    description={`Sua busca por "${debouncedSearchQuery}" não retornou resultados.`}
+                    action={{
+                      label: 'Limpar filtros',
+                      onClick: handleClearFilters,
+                    }}
+                  />
+                </div>
+              )}
             </>
           ) : (
             <>
@@ -493,21 +493,21 @@ export default function AgendaClient() {
                 onSessionViewExecution={handleViewDetails}
                 onSessionViewReport={handleViewReport}
               />
-              
+
               {/* Empty state para busca sem resultados */}
-                {debouncedSearchQuery && filteredSessions.length === 0 && (
-                  <div className="mt-8">
-                    <EmptyState
-                      icon={<Search />}
-                      title="Nenhum treino encontrado"
-                      description={`Sua busca por "${debouncedSearchQuery}" não retornou resultados.`}
-                      action={{
-                        label: 'Limpar filtros',
-                        onClick: handleClearFilters,
-                      }}
-                    />
-                  </div>
-                )}
+              {debouncedSearchQuery && filteredSessions.length === 0 && (
+                <div className="mt-8">
+                  <EmptyState
+                    icon={<Search />}
+                    title="Nenhum treino encontrado"
+                    description={`Sua busca por "${debouncedSearchQuery}" não retornou resultados.`}
+                    action={{
+                      label: 'Limpar filtros',
+                      onClick: handleClearFilters,
+                    }}
+                  />
+                </div>
+              )}
             </>
           )
         )}

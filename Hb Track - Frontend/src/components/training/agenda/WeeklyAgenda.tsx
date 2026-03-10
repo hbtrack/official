@@ -13,24 +13,23 @@
 
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import { TrainingSession } from '@/lib/api/trainings';
+import { useConflicts } from '@/lib/hooks/useConflicts';
 import {
   DndContext,
   DragEndEvent,
   DragOverlay,
   DragStartEvent,
   PointerSensor,
-  useDroppable,
   useDraggable,
+  useDroppable,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-import { TrainingSession } from '@/lib/api/trainings';
-import { Icons } from '@/design-system/icons';
-import { SessionTextBlock } from './SessionTextBlock';
+import React, { useMemo, useState } from 'react';
 import { SessionExpandedCard } from './SessionExpandedCard';
-import { useConflicts } from '@/lib/hooks/useConflicts';
+import { SessionTextBlock } from './SessionTextBlock';
 
 interface WeeklyAgendaProps {
   sessions: TrainingSession[];
@@ -98,7 +97,7 @@ export function WeeklyAgenda({
   // Agrupa sessões por dia
   const sessionsByDay = useMemo(() => {
     const grouped: Record<string, TrainingSession[]> = {};
-    
+
     weekDays.forEach(day => {
       const dateKey = day.toISOString().split('T')[0];
       grouped[dateKey] = [];
@@ -166,7 +165,7 @@ export function WeeklyAgenda({
   const handleFocusOnFirstTraining = () => {
     const today = new Date().toISOString().split('T')[0];
     const todaySessions = sessionsByDay[today] || [];
-    
+
     if (todaySessions.length > 0) {
       // Find the earliest session today
       const earliestSession = todaySessions.reduce((earliest, current) => {
@@ -174,7 +173,7 @@ export function WeeklyAgenda({
         const currentTime = new Date(current.session_at);
         return currentTime < earliestTime ? current : earliest;
       });
-      
+
       // Scroll to the column for today
       const todayColumn = document.querySelector(`[data-testid="weekly-day-${today}"]`);
       if (todayColumn) {
@@ -310,14 +309,14 @@ function DayColumn({
   // Smart time slots generation based on sessions
   const sessionTimes = useMemo(() => {
     if (sessions.length === 0) return { minHour: 8, maxHour: 22 };
-    
+
     let minHour = 23, maxHour = 0;
     sessions.forEach(s => {
       const hour = new Date(s.session_at).getHours();
       minHour = Math.min(minHour, hour - 1);
       maxHour = Math.max(maxHour, hour + Math.ceil((s.duration_planned_minutes || 60) / 60));
     });
-    
+
     return { minHour: Math.max(0, minHour), maxHour: Math.min(23, maxHour) };
   }, [sessions.length]);
 
@@ -416,9 +415,9 @@ function DraggableSessionCard({ session, disabled, children }: DraggableSessionC
 
   const style = transform
     ? {
-        transform: CSS.Transform.toString(transform),
-        opacity: isDragging ? 0.4 : undefined,
-      }
+      transform: CSS.Transform.toString(transform),
+      opacity: isDragging ? 0.4 : undefined,
+    }
     : undefined;
 
   return (

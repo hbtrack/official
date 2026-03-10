@@ -1,19 +1,25 @@
 # TRAINING_SCOPE_REGISTRY.yaml
 # Artefato canônico de classificação de escopo — módulo TRAINING
-# Autoridade: DONE_CONTRACT_TRAINING.md.md §4 + §5.1
-# Versão: v1.0.0
-# Última revisão: 2026-03-08
+# Autoridade: DONE_CONTRACT_TRAINING.md §4 + §5.1
+# Versão: v1.1.0
+# Última revisão: 2026-03-09
+# Reconciliação semântica: AR-TRAIN-REC-01 (AR_271) — vocabulário publish/close eliminado
 
 module: TRAINING
-version: v1.0.0
-last_revised: 2026-03-08
-authority: DONE_CONTRACT_TRAINING.md.md §4
+version: v1.1.0
+last_revised: 2026-03-09
+authority: DONE_CONTRACT_TRAINING.md §4 + §5.1
 
 # Regra: todo item sem classificação explícita é inválido para DONE_PRODUTO
 items:
   core:
     - id: training_sessions_lifecycle
-      description: Sessões de treino — CRUD completo + lifecycle (DRAFT→PUBLISHED→CLOSED)
+      description: >-
+        Sessões de treino — CRUD completo + lifecycle canônico:
+        draft -> scheduled -> in_progress -> pending_review -> readonly.
+        Os estados em maiúsculas do legado (publish/close) foram eliminados
+        por AR-TRAIN-REC-01; nenhuma operação de publicação ou fechamento
+        é válida neste módulo.
       contracts: [CONTRACT-TRAIN-001..018]
       invariants: [INV-TRAIN-001, INV-TRAIN-004, INV-TRAIN-005, INV-TRAIN-006, INV-TRAIN-008]
     - id: session_exercises
@@ -53,7 +59,10 @@ items:
       contracts: [CONTRACT-TRAIN-086..090]
       invariants: []
     - id: ai_coach_core
-      description: IA Coach — apply-draft, justify-suggestion (fluxo canônico)
+      description: >-
+        IA Coach — apply-draft, justify-suggestion (fluxo canônico).
+        Ledger imutável: Planned_State (imutável após insert), Adjustment_Logs
+        (append-only, sequence_number obrigatório), Realized_State (separado do plano).
       contracts: [CONTRACT-TRAIN-100, CONTRACT-TRAIN-102, CONTRACT-TRAIN-104, CONTRACT-TRAIN-105]
       invariants: [INV-TRAIN-079, INV-TRAIN-080, INV-TRAIN-081]
     - id: analytics_deviation

@@ -1,4 +1,4 @@
-"""Rewrite _reports/TESTADOR.md with final triple-run results."""
+"""Rewrite _reports/TESTADOR.yaml with final triple-run results."""
 from pathlib import Path
 
 content = """# TESTADOR REPORT — BATCH0-TRAINING-FULL-20260228
@@ -78,5 +78,5 @@ python scripts/run/hb_cli.py seal 173
 python scripts/run/hb_cli.py seal 174
 ```
 """
-Path("_reports/TESTADOR.md").write_text(content, encoding="utf-8")
+Path("_reports/TESTADOR.yaml").write_text(content, encoding="utf-8")
 print("OK")

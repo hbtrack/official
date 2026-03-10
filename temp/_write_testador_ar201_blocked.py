@@ -1,8 +1,8 @@
-"""Escreve _reports/TESTADOR.md com resultado BLOCKED_PRECONDITION para AR_201."""
+"""Escreve _reports/TESTADOR.yaml com resultado BLOCKED_PRECONDITION para AR_201."""
 import os
 os.chdir(r"c:\HB TRACK")
 
-content = """# TESTADOR.md — BLOCKED_PRECONDITION
+content = """# TESTADOR.yaml — BLOCKED_PRECONDITION
 
 | Campo | Valor |
 |---|---|
@@ -68,6 +68,6 @@ Arquivos tracked-unstaged a resolver:
 Após resolver: `git diff --name-only` deve retornar vazio.
 """
 
-with open("_reports/TESTADOR.md", "w", encoding="utf-8") as f:
+with open("_reports/TESTADOR.yaml", "w", encoding="utf-8") as f:
     f.write(content)
-print("TESTADOR.md written OK")
+print("TESTADOR.yaml written OK")

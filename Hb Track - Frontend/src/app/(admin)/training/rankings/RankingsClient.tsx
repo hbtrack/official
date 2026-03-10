@@ -7,18 +7,17 @@
  * Step 28.2: Feature restante - Rankings
  */
 
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { Icons } from '@/design/icons';
 import {
-  getWellnessRankings,
+  formatMonthReference,
   formatResponseRate,
-  getResponseRateColor,
   getRankIcon,
   getRateBadgeColor,
-  formatMonthReference,
-  type TeamRanking
+  getResponseRateColor,
+  getWellnessRankings
 } from '@/lib/api/rankings';
-import { Icons } from '@/design-system/icons';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 
 export function RankingsClient() {
   const [selectedMonth, setSelectedMonth] = useState<string | undefined>(undefined);

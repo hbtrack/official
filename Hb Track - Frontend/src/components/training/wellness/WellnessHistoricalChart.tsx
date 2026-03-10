@@ -9,10 +9,10 @@
 
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
-import { Icons } from '@/design-system/icons';
+import { Icons } from '@/design/icons';
 import { apiClient } from '@/lib/api/client';
+import { useQuery } from '@tanstack/react-query';
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 // ========================================
 // Interfaces
@@ -278,18 +278,18 @@ function calculateMax(data: { value: number | null }[]): number {
 
 function getTrendIcon(data: { value: number | null }[]): string {
   if (data.length < 2) return '➖';
-  
+
   const validData = data.filter((d) => d.value !== null);
   if (validData.length < 2) return '➖';
-  
+
   const firstHalf = validData.slice(0, Math.floor(validData.length / 2));
   const secondHalf = validData.slice(Math.floor(validData.length / 2));
-  
+
   const firstAvg = calculateAverage(firstHalf);
   const secondAvg = calculateAverage(secondHalf);
-  
+
   const diff = secondAvg - firstAvg;
-  
+
   if (diff > 0.5) return '📈'; // Trend up
   if (diff < -0.5) return '📉'; // Trend down
   return '➖'; // Stable

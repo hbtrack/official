@@ -7,18 +7,18 @@
  * Movido de (protected) para (admin) para manter consistência do layout
  */
 
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Icons } from '@/design-system/icons';
 import { PreventionTimeline } from '@/components/prevention/PreventionTimeline';
-import {
-  getPreventionEffectiveness,
-  formatReductionRate,
-  getReductionColor,
-  formatCategory
-} from '@/lib/api/prevention-effectiveness';
 import { useTeamSeasonOptional } from '@/context/TeamSeasonContext';
+import { Icons } from '@/design/icons';
+import {
+  formatCategory,
+  formatReductionRate,
+  getPreventionEffectiveness,
+  getReductionColor
+} from '@/lib/api/prevention-effectiveness';
+import { useQuery } from '@tanstack/react-query';
 import { format, subDays } from 'date-fns';
+import { useState } from 'react';
 
 export default function PreventionDashboardClient() {
   const context = useTeamSeasonOptional();
@@ -48,13 +48,13 @@ export default function PreventionDashboardClient() {
     return (
       <div className="flex flex-col items-center justify-center h-[60vh] text-center">
         <Icons.Status.Info className="h-16 w-16 text-gray-400 mb-4" />
-          <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            Selecione uma equipe
-          </h3>
-          <p className="text-gray-600 dark:text-gray-400">
-            Escolha uma equipe no menu superior para visualizar dados de eficácia preventiva
-          </p>
-        </div>
+        <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
+          Selecione uma equipe
+        </h3>
+        <p className="text-gray-600 dark:text-gray-400">
+          Escolha uma equipe no menu superior para visualizar dados de eficácia preventiva
+        </p>
+      </div>
     );
   }
 
@@ -70,13 +70,13 @@ export default function PreventionDashboardClient() {
     return (
       <div className="flex flex-col items-center justify-center h-[60vh] text-center">
         <Icons.Status.Error className="h-16 w-16 text-red-500 mb-4" />
-          <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            Erro ao carregar dados
-          </h3>
-          <p className="text-gray-600 dark:text-gray-400">
-            {error instanceof Error ? error.message : 'Tente novamente mais tarde'}
-          </p>
-        </div>
+        <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
+          Erro ao carregar dados
+        </h3>
+        <p className="text-gray-600 dark:text-gray-400">
+          {error instanceof Error ? error.message : 'Tente novamente mais tarde'}
+        </p>
+      </div>
     );
   }
 
@@ -187,8 +187,8 @@ export default function PreventionDashboardClient() {
             </p>
             <p className="text-xs text-gray-500 mt-1">
               {summary.injury_reduction_rate >= 50 ? 'Altamente eficaz' :
-               summary.injury_reduction_rate >= 20 ? 'Eficaz' :
-               summary.injury_reduction_rate >= 0 ? 'Moderado' : 'Sem efeito'}
+                summary.injury_reduction_rate >= 20 ? 'Eficaz' :
+                  summary.injury_reduction_rate >= 0 ? 'Moderado' : 'Sem efeito'}
             </p>
           </div>
         </div>

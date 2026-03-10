@@ -108,7 +108,7 @@ git checkout -- docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md
 - **Seções afetadas**: §5 (18 linhas FAIL/ERROR→2026-03-04), §0 (nota FASE_3 diferidos), cabeçalho (Versão + changelog v3.1.0), §9 (AR-TRAIN-053 e AR-TRAIN-054)
 - **Seções NÃO afetadas**: §10 (DONE_GATE_ATINGIDO mantido), §1–§4, §6–§8
 - **Backend/Frontend**: zero toque
-- **Dependências validadas**: AR_237 evidence existe (`docs/hbtrack/evidence/AR_237/executor_main.log` ✅); diagnóstico pytest confirmado 594p/0f (ARQUITETO.md Batch 25)
+- **Dependências validadas**: AR_237 evidence existe (`docs/hbtrack/evidence/AR_237/executor_main.log` ✅); diagnóstico pytest confirmado 594p/0f (ARQUITETO.yaml Batch 25)
 - **Risco**: mínimo — mudança aditiva/documental pura; nenhum INV-028 (DEPRECATED/NAO_APLICAVEL) alterado; nenhuma célula além da coluna de resultado nos 18 rows
 
 ---

@@ -7,7 +7,6 @@
 
 import { Suspense } from 'react';
 import { TopPerformersClient } from './TopPerformersClient';
-import { Icons } from '@/design-system/icons';
 
 export const metadata = {
   title: 'Top Performers | HB Track',

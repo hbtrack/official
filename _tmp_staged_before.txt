@@ -3,9 +3,9 @@ Hb Track - Backend/.env.example
 Hb Track - Backend/app/core/config.py
 Hb Track - Backend/app/main.py
 Hb Track - Backend/tests/unit/test_config.py
-_reports/ARQUITETO.md
-_reports/EXECUTOR.md
-_reports/TESTADOR.md
+_reports/ARQUITETO.yaml
+_reports/EXECUTOR.yaml
+_reports/TESTADOR.yaml
 _reports/testador/AR_231_b452cbf/context.json
 _reports/testador/AR_231_b452cbf/result.json
 _reports/testador/AR_233_b452cbf/context.json

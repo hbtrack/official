@@ -1,8 +1,8 @@
-"""Escreve _reports/TESTADOR.md com resultado SUCESSO para AR_201 e AR_200."""
+"""Escreve _reports/TESTADOR.yaml com resultado SUCESSO para AR_201 e AR_200."""
 import os
 os.chdir(r"c:\HB TRACK")
 
-content = """# TESTADOR.md — SUCESSO
+content = """# TESTADOR.yaml — SUCESSO
 
 | Campo | Valor |
 |---|---|
@@ -73,6 +73,6 @@ _reports/testador/AR_200_b123a58/result.json   ✅ staged
 **→ Humano**: `hb seal 201` → `hb seal 200` (nesta ordem)
 """
 
-with open("_reports/TESTADOR.md", "w", encoding="utf-8") as f:
+with open("_reports/TESTADOR.yaml", "w", encoding="utf-8") as f:
     f.write(content)
-print("TESTADOR.md written OK")
+print("TESTADOR.yaml written OK")

@@ -3,7 +3,7 @@ tests/test_check_handoff_contract.py
 Unit tests para scripts/gates/check_handoff_contract.py
 
 Cobertura mínima: PASS e FAIL determinísticos.
-Previne regressão quando o template de ARQUITETO.md for alterado.
+Previne regressão quando o template de ARQUITETO.yaml for alterado.
 """
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ from check_handoff_contract import (  # noqa: E402
 # ---------------------------------------------------------------------------
 
 HANDOFF_VALID = textwrap.dedent("""\
-    # ARQUITETO.md — HB Track
+    # ARQUITETO.yaml — HB Track
 
     <!-- ARQUITETO_REPORT -->
 
@@ -46,7 +46,7 @@ HANDOFF_VALID = textwrap.dedent("""\
 """)
 
 HANDOFF_MISSING_AR_IDS = textwrap.dedent("""\
-    # ARQUITETO.md — HB Track
+    # ARQUITETO.yaml — HB Track
 
     **Protocolo**: 1.3.0
 
@@ -60,7 +60,7 @@ HANDOFF_MISSING_AR_IDS = textwrap.dedent("""\
 HANDOFF_EMPTY = ""
 
 HANDOFF_MISSING_STOP_CONDITIONS = textwrap.dedent("""\
-    # ARQUITETO.md — HB Track
+    # ARQUITETO.yaml — HB Track
 
     **Protocolo**: 1.3.0
     AR_233
@@ -125,13 +125,13 @@ def test_check_handoff_fail_empty():
 
 
 def test_main_pass(tmp_path: Path):
-    handoff = tmp_path / "ARQUITETO.md"
+    handoff = tmp_path / "ARQUITETO.yaml"
     handoff.write_text(HANDOFF_VALID, encoding="utf-8")
     assert main(["-", str(handoff)]) == EXIT_PASS
 
 
 def test_main_fail_missing_ar_ids(tmp_path: Path):
-    handoff = tmp_path / "ARQUITETO.md"
+    handoff = tmp_path / "ARQUITETO.yaml"
     handoff.write_text(HANDOFF_MISSING_AR_IDS, encoding="utf-8")
     assert main(["-", str(handoff)]) == EXIT_FAIL_ACTIONABLE
 

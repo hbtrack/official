@@ -1,10 +1,10 @@
 {
     "module": "TRAINING",
-    "version": "v1.0.0",
-    "last_revised": "2026-03-08",
-    "authority": "DONE_CONTRACT_TRAINING.md.md §5.3 + §9",
+    "version": "v1.1.0",
+    "last_revised": "2026-03-09",
+    "authority": "DONE_CONTRACT_TRAINING.md §5.3 + §9",
     "note": "SLOs mínimos baseline — revisão via AR futura com evidência de load test",
-    "limits": {
+    "operations": {
         "training_sessions_list": {
             "scope": "CORE",
             "operation": "GET /training-sessions (paginado)",
@@ -25,20 +25,6 @@
             "operation": "POST /training-sessions",
             "max_response_time_ms": 1500,
             "p95_response_time_ms": 1200,
-            "max_payload_kb": 64
-        },
-        "training_session_publish": {
-            "scope": "CORE",
-            "operation": "POST /training-sessions/{id}/publish",
-            "max_response_time_ms": 1000,
-            "p95_response_time_ms": 800,
-            "max_payload_kb": 64
-        },
-        "training_session_close": {
-            "scope": "CORE",
-            "operation": "POST /training-sessions/{id}/close",
-            "max_response_time_ms": 2000,
-            "p95_response_time_ms": 1500,
             "max_payload_kb": 64
         },
         "attendance_list": {
@@ -114,7 +100,8 @@
             "operation": "PATCH apply-draft (CONTRACT-100)",
             "max_response_time_ms": 3000,
             "p95_response_time_ms": 2500,
-            "max_payload_kb": 64
+            "max_payload_kb": 64,
+            "note": "transacional — cria Planned_State imutavel + Adjustment_Log entry; custo inclui 2 INSERTs atomicos"
         },
         "analytics_deviation": {
             "scope": "CORE",
@@ -122,6 +109,27 @@
             "max_response_time_ms": 1500,
             "p95_response_time_ms": 1200,
             "max_payload_kb": 64
+        },
+        "training_session_schedule": {
+            "scope": "CORE",
+            "operation": "POST /training-sessions/{id}/schedule",
+            "max_response_time_ms": 1000,
+            "p95_response_time_ms": 800,
+            "max_payload_kb": 64
+        },
+        "training_session_finalize": {
+            "scope": "CORE",
+            "operation": "POST /training-sessions/{id}/finalize",
+            "max_response_time_ms": 2000,
+            "p95_response_time_ms": 1500,
+            "max_payload_kb": 64
+        },
+        "task_update_session_statuses": {
+            "scope": "CORE",
+            "operation": "Celery task — async",
+            "max_execution_time_ms": 5000,
+            "max_sessions_per_run": 1000,
+            "note": "FOR UPDATE SKIP LOCKED obrigatorio"
         }
     },
     "global_limits": {

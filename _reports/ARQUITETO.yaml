@@ -1,248 +1,266 @@
----
-titulo: ARQUITETO.yaml -- Handoff para Executor
-protocolo: 1.3.0
-branch: dev-changes-2
-head: 571249d
-data: 2026-03-08
-status: BATCH_35_READY
-# AR IDs: [265, 266, 267, 268, 269, 270]
+titulo: "ARQUITETO.yaml -- Handoff para Executor"
+protocolo: "1.3.0"
+branch: "dev-changes-2"
+head: "284e769"
+data: "2026-03-09"
+status: "PLAN_HANDOFF"
+
 ar_ids:
-  - 265
-  - 266
-  - 267
-  - 268
-  - 269
-  - 270
+  - 272
+  - 273
+  - 274
+  - 275
+  - 276
 
 pre_flight:
   workspace_clean_check:
-    - "`git status` -- confirmar que AR_264 (Batch 34) esta sealed e HEAD = 571249d ou mais recente."
-    - "`git diff HEAD` -- confirmar ausencia de mudancas de outras ARs nao relacionadas ao Batch 35."
-    - "Confirmar que BATCH_34_SEALED (AR_263..AR_264 VERIFICADO) antes de iniciar Batch 35."
-    - "Confirmar que docs/hbtrack/modulos/treinos/DONE_CONTRACT_TRAINING.md.md existe antes de iniciar AR_265."
-    - "Confirmar ausencia de TRAINING_SCOPE_REGISTRY.yaml, TRAINING_STATE_MACHINE.yaml, TRAINING_PERF_LIMITS.json, traceability_training_core.csv (arquivos devem ser criados do zero)."
-
-## STOP CONDITIONS
-
-Parar e escalar ao Arquiteto se:
-- BLOCKED_INPUT (exit 4): arquivo write_scope nao encontrado ou DONE_CONTRACT_TRAINING.md.md ausente.
-- ERROR_INFRA (exit 3): python ou yaml/json nao executaveis.
-- FAIL_ACTIONABLE (exit 2): validation_command retorna FAIL apos 3 tentativas.
-- Detectar que qualquer AR deste batch toca openapi.json ou src/api/generated/*: escalar (nao autorizado neste batch).
-- Detectar conflito de numeracao AR-TRAIN-081..086 no backlog: escalar ao Arquiteto antes de prosseguir.
-
----
-
-## CONTEXTO -- Batch 35
-
-Batch 35 implementa o DONE_CONTRACT_TRAINING.md.md: registro do documento na cadeia canonica
-e criacao dos quatro artefatos obrigatorios definidos na Secao 5 do contrato.
-
-Nenhuma mudanca de contrato FE-BE neste batch. Pipeline spec-driven NAO obrigatorio.
-Todos os ARs sao classe G (governance) ou A (spec artifact). Apenas docs/hbtrack/modulos/treinos/.
-
-Plan JSON: docs/_canon/planos/batch35_done_contract_training.json
-Dry-run: PASS (6 ARs, 0 skipped, 2026-03-08)
-
-CONTRACT_DIFF_GATE: N/A -- nenhuma mudanca em openapi.json.
-Schemathesis: N/A -- sem mudanca de contrato.
-
-TRACE: DONE_CONTRACT_TRAINING.md.md §1..16 (SSOT normativo) + AR_BACKLOG_TRAINING.md v3.8.0
-       (proximos IDs: AR-TRAIN-081..086) + _INDEX.md v1.7.0 (proxima versao: v1.8.0)
-       + TEST_MATRIX_TRAINING.md v4.4.0 (proxima: v4.5.0)
-
----
-
-## GAP ANALYSIS SUMMARY -- Batch 35
-
-| Gap ID | Tipo | Descricao | Criticidade |
-|---|---|---|---|
-| GAP-DONE-001 | Artefato ausente | TRAINING_SCOPE_REGISTRY.yaml nao existe | ALTA (bloqueia DONE_PRODUTO) |
-| GAP-DONE-002 | Artefato ausente | TRAINING_STATE_MACHINE.yaml nao existe | ALTA (bloqueia DONE_SEMANTICO) |
-| GAP-DONE-003 | Artefato ausente | TRAINING_PERF_LIMITS.json nao existe | ALTA (bloqueia DONE_PRODUTO) |
-| GAP-DONE-004 | Artefato ausente | traceability_training_core.csv nao existe | ALTA (bloqueia DONE_SEMANTICO) |
-| GAP-DONE-005 | Doc nao registrado | DONE_CONTRACT_TRAINING.md.md nao referenciado em _INDEX.md | MEDIA |
-
----
-
-## AR_265 (AR-TRAIN-081 -- G) -- Registrar DONE_CONTRACT_TRAINING.md.md na cadeia canonica
-
-PROOF (AR_265): N/A (governance)
-
-| Task | Arquivo | Operacao |
-|---|---|---|
-| 001 | docs/hbtrack/modulos/treinos/_INDEX.md | Adicionar referencia a DONE_CONTRACT_TRAINING.md.md no Mapa de Autoridade + changelog v1.8.0 |
-
-Acceptance Criteria:
-- AC1: _INDEX.md contem string 'DONE_CONTRACT_TRAINING.md.md'
-- AC2: _INDEX.md contem 'Batch 35' no changelog
-
----
-
-## AR_266 (AR-TRAIN-082 -- A) -- Criar TRAINING_SCOPE_REGISTRY.yaml
-
-PROOF (AR_266): N/A (governance)
-
-Criar docs/hbtrack/modulos/treinos/TRAINING_SCOPE_REGISTRY.yaml com classificacao
-CORE/EXTENDED/EXPERIMENTAL de todos os itens do modulo TRAINING.
-
-Acceptance Criteria:
-- AC1: arquivo existe e e YAML valido
-- AC2: module == TRAINING
-- AC3: items.core, items.extended, items.experimental presentes
-- AC4: core tem >= 8 entradas
-- AC5: cada entrada core tem id, description, contracts
-
----
-
-## AR_267 (AR-TRAIN-083 -- A) -- Criar TRAINING_STATE_MACHINE.yaml
-
-PROOF (AR_267): N/A (governance)
-
-Criar docs/hbtrack/modulos/treinos/TRAINING_STATE_MACHINE.yaml com mapa formal de estados
-para entidades stateful CORE: TrainingSession, WellnessPre, WellnessPost, AttendanceRecord, CoachSuggestionDraft.
-
-Acceptance Criteria:
-- AC1: arquivo existe e e YAML valido
-- AC2: module == TRAINING
-- AC3: entities tem >= 4 entidades
-- AC4: cada entidade tem id, scope, states, transitions
-- AC5: TrainingSession presente com DRAFT/PUBLISHED/CLOSED
-- AC6: pelo menos uma entidade tem forbidden_transitions
-- AC7: >= 4 entidades totais
-
----
-
-## AR_268 (AR-TRAIN-084 -- A) -- Criar TRAINING_PERF_LIMITS.json
-
-PROOF (AR_268): N/A (governance)
-
-Criar docs/hbtrack/modulos/treinos/TRAINING_PERF_LIMITS.json com SLOs minimos
-para todos os itens CORE do modulo.
-
-Acceptance Criteria:
-- AC1: arquivo existe e e JSON valido
-- AC2: module == TRAINING
-- AC3: limits tem >= 8 itens
-- AC4: itens CORE >= 8
-- AC5: cada item tem pelo menos um limite numerico
-- AC6: global_limits presente
-
----
-
-## AR_269 (AR-TRAIN-085 -- A) -- Criar traceability_training_core.csv
-
-PROOF (AR_269): N/A (governance)
-
-Criar docs/hbtrack/modulos/treinos/_evidence/traceability_training_core.csv como skeleton
-com apenas os 9 headers obrigatorios. Zero linhas de dados (preenchimento: fase TRUTH_FE_CORE).
-
-Headers obrigatorios:
-test_id,flow_id,screen_id,contract_id,invariant_id,selector_id,visual_baseline_id,side_effect_check_id,state_transition_id
-
-Acceptance Criteria:
-- AC1: arquivo existe em _evidence/
-- AC2: todos os 9 headers presentes
-- AC3: zero linhas de dados
-
----
-
-## AR_270 (AR-TRAIN-086 -- G) -- Sync documental pos-Batch 35
-
-PROOF (AR_270): N/A (governance)
-
-Depende de AR_265..AR_269 em SUCESSO.
-
-| Task | Arquivo | Versao Alvo |
-|---|---|---|
-| 001 | docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md | v3.9.0 |
-| 002 | docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md | v4.5.0 |
-| 003 | docs/hbtrack/Hb Track Kanban.md | card Batch 35 |
-| 004 | docs/hbtrack/modulos/treinos/_INDEX.md | v1.8.0 (apenas changelog/total -- referencia DONE_CONTRACT ja adicionada em AR_265) |
-
-Acceptance Criteria:
-- AC1: AR_BACKLOG tem v3.9.0
-- AC2: TEST_MATRIX tem v4.5.0
-- AC3: Kanban tem 'Batch 35'
-- AC4: _INDEX tem v1.8.0
-
----
-
-## Instrucoes tecnicas para o Executor
-
-### Ordem de execucao obrigatoria
-
-1. AR_265 -- registrar DONE_CONTRACT em _INDEX.md
-2. AR_266 -- criar TRAINING_SCOPE_REGISTRY.yaml
-3. AR_267 -- criar TRAINING_STATE_MACHINE.yaml
-4. AR_268 -- criar TRAINING_PERF_LIMITS.json
-5. AR_269 -- criar traceability_training_core.csv (criar diretorio _evidence/ se ausente)
-6. AR_270 -- sync documental (somente apos AR_265..AR_269 SUCESSO)
-
-### Antes de iniciar
-
-Confirmar arquivo fonte:
-```
-python -c "from pathlib import Path; p = Path('docs/hbtrack/modulos/treinos/DONE_CONTRACT_TRAINING.md.md'); assert p.exists(), 'BLOCKED: DONE_CONTRACT ausente'; print('OK:', p)"
-```
-Confirmar ausencia dos artefatos (devem ser criados do zero):
-```
-python -c "from pathlib import Path; files = ['TRAINING_SCOPE_REGISTRY.yaml','TRAINING_STATE_MACHINE.yaml','TRAINING_PERF_LIMITS.json']; base = Path('docs/hbtrack/modulos/treinos'); existing = [f for f in files if (base/f).exists()]; assert not existing, f'WARN: artefatos ja existem: {existing} -- verificar antes de sobrescrever'; print('OK: artefatos ausentes, criacao segura')"
-```
-
-### Padrao de adicao de singleton (AR_263 ZONA 1)
-
-1. No bloco de imports de api-instance.ts, adicionar `TrainingAlertsSuggestionsApi` alem dos imports existentes.
-2. Apos a linha `export const attendanceApi = ...`, antes do `export default axiosInstance`, adicionar:
-   ```typescript
-   export const trainingAlertsSuggestionsApi = new TrainingAlertsSuggestionsApi(apiConfig, apiConfig.basePath, axiosInstance);
-   ```
-3. `npx tsc --noEmit` deve passar apos a adicao.
-
-### Padrao de sync documental (AR_263 ZONA 2)
-
-Ler todo o trecho §5.10 do TRAINING_FRONT_BACK_CONTRACT.md antes de editar.
-Secao atual: linhas ~810..840. Alterar:
-- Header status: `**DIVERGENTE_DO_SSOT**` → `**IMPLEMENTADO**`
-- Bloco SSOT DB: substituir notas de divergencia (int em lugar de uuid) por notas de resolucao (fix por AR-TRAIN-001)
-- Tabela contratos: coluna Status de todos 9 contratos (077..085): `DIVERGENTE_DO_SSOT` → `IMPLEMENTADO`
-- Adicionar subitem apos tabela: nota sobre singleton gerado + nota sobre useSuggestions.ts deferred
-
----
-
-## Gates obrigatorios
-
-- DOC-GATE-003 (Governed Roots SSOT): write_scope dentro dos roots permitidos.
-- PLANS_AR_SYNC: tasks 001..004 de AR_264 sincronizam backlog, matrix e kanban.
-- Gate anti-trivial (O2.5): validation_commands incluem npx tsc --noEmit + grep estrutural.
-- Triple-run notice: Testador executara validation_commands 3x.
-- CONTRACT_DIFF_GATE: N/A -- sem mudanca de openapi.json. Declarado para suprimir gate.
-
----
-
-## Rollback
-
-Para AR_263:
-```
-git checkout -- "Hb Track - Frontend/src/api/generated/api-instance.ts"
-git checkout -- docs/hbtrack/modulos/treinos/TRAINING_FRONT_BACK_CONTRACT.md
-```
-
-Para AR_264:
-```
-git checkout -- docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md
-git checkout -- docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md
-git checkout -- "docs/hbtrack/Hb Track Kanban.md"
-git checkout -- docs/hbtrack/modulos/treinos/_INDEX.md
-```
-
----
-
-## Contexto anterior (selado -- nao re-executar)
-
-Batch 33 selado em 2026-03-07: FE migration generated client (AR_256..260) + BE fix exports.py 503→202 (AR_261) + sync documental (AR_262). Triple-run 3/3 exit=0, hash c7950ee5238ba684. hb seal executado. Todos 7/7 VERIFICADO.
-
----
-
-*Arquiteto -- 2026-03-07 -- Batch 34 READY. trainingAlertsSuggestionsApi singleton (CONTRACT-077..085 disponivel via cliente gerado) + sync CONTRACT.md §5.10 DIVERGENTE→IMPLEMENTADO + useSuggestions.ts deferred CAP-001 (D/E: AR_263) + sync documental (G: AR_264). dry-run PASS.*
+    - comando: "git status"
+      objetivo: "confirmar que AR_271 (AR-TRAIN-REC-01) esta VERIFICADO e workspace limpo."
+    - comando: "git diff --name-only"
+      objetivo: "confirmar ausencia de mudancas nao relacionadas."
+    - objetivo: "confirmar AR_271 VERIFICADO (hb seal 2026-03-09) antes de iniciar AR_272."
+    - objetivo: >
+        Confirmar presenca de:
+        docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md,
+        docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md,
+        docs/hbtrack/Hb Track Kanban.md.
+
+stop_conditions:
+  - nome: "BLOCKED_INPUT"
+    exit_code: 4
+    condicao: "arquivo write_scope nao encontrado."
+    acao: "Parar e escalar ao Arquiteto."
+  - nome: "ERROR_INFRA"
+    exit_code: 3
+    condicao: "python nao executavel."
+    acao: "Parar e escalar ao Arquiteto."
+  - nome: "FAIL_ACTIONABLE"
+    exit_code: 2
+    condicao: "validation_command retorna FAIL apos 3 tentativas."
+    acao: "Parar e escalar ao Arquiteto."
+
+contexto: >
+  Batch REC-02 ate REC-05 -- cinco ARs em sequencia.
+  AR_272 (AR-TRAIN-087, Classe G): registra formalmente AR_271 (AR-TRAIN-REC-01) como
+  VERIFICADO em todos os artefatos de rastreabilidade: AR_BACKLOG_TRAINING.md (v4.1.0),
+  TEST_MATRIX_TRAINING.md (v4.6.0) e Kanban Card 53. PROOF: N/A (governance) -- Classe G,
+  zero codigo de produto; validacao via validation_command 3-gates.
+  AR_273 (AR-TRAIN-REC-02, Classe A+G): reconciliacao contratual completa -- renomear
+  /publish->/schedule e /close->/finalize no router BE, schemas, service, openapi.json
+  (regen) e cliente FE (npm run api:sync). Criar test de state machine
+  (test_schedule_transition_guards.py, 5 testes). Pipeline spec-driven COMPLETO obrigatorio:
+  OPENAPI_SPEC_QUALITY + CONTRACT_DIFF_GATE + GENERATED_CLIENT_SYNC + schemathesis + TRUTH_BE.
+  Dependencia AR_273: AR_272 concluido (AR-TRAIN-087 VERIFICADO).
+  AR_274 (AR-TRAIN-REC-03, Classe A+G): Ledger de Sessao + Scheduler SKIP LOCKED +
+  provas de imutabilidade. Cria training_session_plans e training_session_adjustments
+  via Alembic. Adota SKIP LOCKED no batch task. Suites de teste side-effect, state machine
+  temporal, idempotencia e batch. Depende AR_273 VERIFICADO.
+  PROOF (AR_274): TRUTH_BE pytest tests/training/side_effects/ tests/training/state_machine/ tests/training/invariants/ -- 14 gates validation_command exit=0.
+  TRACE (AR_274): schema.sql ledger tables, alembic head, celery SKIP LOCKED, beat_schedule.
+  AR_275 (AR-TRAIN-REC-04, Classe A+G): Superficie TRAINING reconciliada -- lexical purge
+  /publish+/close de TRAINING_USER_FLOWS.md + TRAINING_SCREENS_SPEC.md, traceability CSV
+  preenchida com >=5 linhas, FE 3 secoes lifecycle com data-test-ids canonicos.
+  Depende AR_274 VERIFICADO.
+  PROOF (AR_275): TRUTH_FE validation_command exit=0 -- TRAINING_USER_FLOWS.md purge, traceability CSV >=5 linhas, FE 3 data-test-ids.
+  TRACE (AR_275): 10 gates validation_command exit=0, TRAINING_SCREENS_SPEC.md updated.
+  AR_276 (AR-TRAIN-REC-05, Classe A): Sunset final -- remover stubs /publish+/close do
+  router BE, openapi.json e cliente FE gerado. Garante que nenhuma rota legada subsiste.
+  Depende AR_275 VERIFICADO.
+  PROOF (AR_276): TRUTH_BE validation_command exit=0 -- openapi.json sem /publish+/close, api.ts sem hooks legados, router BE clean.
+  TRACE (AR_276): 7 gates validation_command exit=0.
+  hb plan --dry-run AR_272: PASS (2026-03-09). hb plan --dry-run AR_273: PASS (2026-03-09).
+  hb plan --dry-run AR_274: PASS (2026-03-09). hb plan --dry-run AR_275: PASS (2026-03-09).
+  hb plan --dry-run AR_276: PASS (2026-03-09).
+
+planos_materializados:
+  - ar_id: 272
+    ar_train: "AR-TRAIN-087"
+    plano_json: "docs/_canon/planos/ar_train_087_sync_documental_pos_rec01.json"
+    ar_md: "docs/hbtrack/ars/AR_272_sync_documental_pos-rec-01_backlog_v4.1.0_+_test_m.md"
+    dependencia: "AR_271 (VERIFICADO 2026-03-09)"
+  - ar_id: 273
+    ar_train: "AR-TRAIN-REC-02"
+    plano_json: "docs/_canon/planos/ar_train_rec_02_reconciliacao_contratual.json"
+    ar_md: "docs/hbtrack/ars/AR_273_reconciliacao_contratual_rec-02__schedule+_finaliz.md"
+    dependencia: "AR_272 (AR-TRAIN-087) concluido"
+  - ar_id: 274
+    ar_train: "AR-TRAIN-REC-03"
+    plano_json: "docs/_canon/planos/ar_train_rec_03_ledger_scheduler.json"
+    ar_md: "docs/hbtrack/ars/AR_274_ledger_de_sessao_+_scheduler_skip_locked_+_provas_.md"
+    dependencia: "AR_273 (AR-TRAIN-REC-02) VERIFICADO"
+  - ar_id: 275
+    ar_train: "AR-TRAIN-REC-04"
+    plano_json: "docs/_canon/planos/ar_train_rec_04_superficie_ui_flows.json"
+    ar_md: "docs/hbtrack/ars/AR_275_superficie_training_reconciliada_flows,_screens,_u.md"
+    dependencia: "AR_274 (AR-TRAIN-REC-03) VERIFICADO"
+  - ar_id: 276
+    ar_train: "AR-TRAIN-REC-05"
+    plano_json: "docs/_canon/planos/ar_train_rec_05_sunset_rotas_legadas.json"
+    ar_md: "docs/hbtrack/ars/AR_276_sunset_final_remover_stubs__publish_+__close_do_ro.md"
+    dependencia: "AR_275 (AR-TRAIN-REC-04) VERIFICADO"
+
+ordem_de_execucao:
+  - AR_272  # primeiro -- Classe G, sync documental pos-REC-01
+  - AR_273  # segundo -- Classe A+G, reconciliacao contratual (depende AR_272)
+  - AR_274  # terceiro -- Classe A+G, ledger + scheduler SKIP LOCKED (depende AR_273)
+  - AR_275  # quarto -- Classe A+G, superficie UI/Flows/Screens (depende AR_274)
+  - AR_276  # quinto -- Classe A, sunset final rotas legadas (depende AR_275)
+
+ars:
+  - ar_id: 272
+    ar_train: "AR-TRAIN-087"
+    classe: "G"
+    titulo: "Sync documental pos-REC-01: BACKLOG v4.1.0 + TEST_MATRIX v4.6.0 + Kanban VERIFICADO"
+    proof: "PROOF: N/A (governance) -- classe G, zero codigo de produto; validacao via validation_command 3-gates"
+    trace: "TRACE: N/A (governance) -- sync documental puro"
+    write_scope:
+      - "docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md"
+      - "docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md"
+      - "docs/hbtrack/Hb Track Kanban.md"
+    validation_command: |
+      python -c "import pathlib,re; b=pathlib.Path('docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md').read_text(encoding='utf-8'); m=pathlib.Path('docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md').read_text(encoding='utf-8'); k=pathlib.Path('docs/hbtrack/Hb Track Kanban.md').read_text(encoding='utf-8'); row=re.search(r'\|\s*AR-TRAIN-REC-01\s*\|[^\n]+', b); assert row and 'VERIFICADO' in row.group(), 'FAIL Gate1: AR-TRAIN-REC-01 nao VERIFICADO no backlog (ainda READY?)'; assert 'v4.1.0' in b, 'FAIL Gate1: backlog nao bumped para v4.1.0'; assert 'AR-TRAIN-REC-01' in m, 'FAIL Gate2: AR-TRAIN-REC-01 ausente em TEST_MATRIX'; assert 'v4.6.0' in m, 'FAIL Gate2: TEST_MATRIX nao bumped para v4.6.0'; idx271=k.find('AR_271'); assert idx271>=0, 'FAIL Gate3: AR_271 nao encontrado no Kanban'; assert 'VERIFICADO' in k[idx271:idx271+600], 'FAIL Gate3: AR_271 nao VERIFICADO no Kanban'; print('PASS AR_272: Gates 1-3 sync documental pos-REC-01 OK')"
+    criterios_de_aceite:
+      - "Gate 1 (backlog): AR_BACKLOG_TRAINING.md v4.1.0 com AR-TRAIN-REC-01 VERIFICADO na tabela de ARs"
+      - "Gate 2 (matrix): TEST_MATRIX_TRAINING.md v4.6.0 com entrada AR-TRAIN-REC-01 em secao 9 como VERIFICADO"
+      - "Gate 3 (kanban): Kanban Card 53 (AR_271) com status VERIFICADO (2026-03-09)"
+    gates_required:
+      - PLANS_AR_SYNC
+    schemathesis: "N/A -- classe G, zero mudancas de contrato"
+    contract_diff_gate: "N/A"
+
+  - ar_id: 273
+    ar_train: "AR-TRAIN-REC-02"
+    classe: "A+G"
+    titulo: "Reconciliacao contratual: TRAINING_FRONT_BACK_CONTRACT.md + OpenAPI /schedule+/finalize + cliente FE"
+    proof: "TRUTH_BE -- pytest Hb Track - Backend/tests/training/state_machine/test_schedule_transition_guards.py -v (5 testes PASS)"
+    trace: "TRAINING_FRONT_BACK_CONTRACT.md CONTRACT-101/102 EVIDENCIADO, openapi.json paths /schedule+/finalize com operationIds, FE api.ts hooks scheduleTrainingSession+finalizeTrainingSession, test_schedule_transition_guards.py 5 testes PASS"
+    write_scope:
+      - "docs/hbtrack/modulos/treinos/TRAINING_FRONT_BACK_CONTRACT.md"
+      - "Hb Track - Backend/app/api/v1/routers/training_sessions.py"
+      - "Hb Track - Backend/app/schemas/training_sessions.py"
+      - "Hb Track - Backend/app/services/training_session_service.py"
+      - "Hb Track - Backend/docs/ssot/openapi.json"
+      - "Hb Track - Frontend/src/api/generated/api.ts"
+      - "Hb Track - Backend/tests/training/state_machine/__init__.py"
+      - "Hb Track - Backend/tests/training/state_machine/test_schedule_transition_guards.py"
+    validation_command: |
+      python -c "import json,pathlib,re;c=pathlib.Path('docs/hbtrack/modulos/treinos/TRAINING_FRONT_BACK_CONTRACT.md').read_text('utf-8');o=json.loads(pathlib.Path('Hb Track - Backend/docs/ssot/openapi.json').read_text('utf-8'));f=pathlib.Path('Hb Track - Frontend/src/api/generated/api.ts').read_text('utf-8');p=o.get('paths',{});s=o.get('components',{}).get('schemas',{});assert not re.search(r'\|\s*CONTRACT-TRAIN-006\s*\|[^\n]+EVIDENCIADO',c),'G1a';assert not re.search(r'\|\s*CONTRACT-TRAIN-007\s*\|[^\n]+EVIDENCIADO',c),'G1b';assert '/schedule' in c,'G2a';assert '/finalize' in c,'G2b';pp=[x for x in p if 'publish' in x and 'training' in x];assert not pp,'G3a';cp=[x for x in p if x.endswith('/close') and 'training' in x];assert not cp,'G3b';sp=[x for x in p if 'schedule' in x and 'training' in x];assert sp,'G4a';fp=[x for x in p if 'finalize' in x and 'training' in x];assert fp,'G4b';assert p[sp[0]].get('post',{}).get('operationId'),'G5a';assert p[fp[0]].get('post',{}).get('operationId'),'G5b';se=s.get('TrainingSession',{}).get('properties',{}).get('status',{}).get('enum',[]);assert 'published' not in se,'G6a';assert 'closed' not in se,'G6b';sr=s.get('TrainingSessionScheduleRequest',{});assert 'properties' in sr,'G7a';sp2=sr.get('properties',{});assert 'starts_at' in sp2,'G7b';assert 'ends_at' in sp2,'G7c';fr=s.get('TrainingSessionFinalizeRequest',{});assert 'properties' in fr,'G8a';fp2=fr.get('properties',{});assert 'attendance_completed' in fp2,'G8b';assert 'review_completed' in fp2,'G8c';assert 'publishTrainingSessionApiV1TrainingSessionsTrainingSessionIdPublishPost' not in f,'G9a';assert 'closeTrainingSessionApiV1TrainingSessionsTrainingSessionIdClosePost' not in f,'G9b';assert any(x in f for x in ['scheduleTrainingSession','ScheduleTrainingSession']),'G10a';assert any(x in f for x in ['finalizeTrainingSession','FinalizeTrainingSession']),'G10b';print('PASS AR_273: Gates 1-10 OK')"
+    criterios_de_aceite:
+      - "Gate 1: TRAINING_FRONT_BACK_CONTRACT.md -- CONTRACT-006/007 sem EVIDENCIADO; /schedule /finalize presentes com EVIDENCIADO"
+      - "Gate 2: openapi.json -- sem /publish /close em training-sessions; /schedule /finalize com operationIds"
+      - "Gate 3: openapi.json schemas -- TrainingSessionScheduleRequest(starts_at,ends_at) + TrainingSessionFinalizeRequest(attendance_completed,review_completed)"
+      - "Gate 4: FE api.ts -- sem publishTrainingSession*/closeTrainingSession*; scheduleTrainingSession*/finalizeTrainingSession* presentes"
+      - "Gate 5-10: validation_command exit=0"
+      - "Gate 11 (schemathesis): smoke test PASS em /schedule e /finalize"
+      - "Gate 12 (pytest): test_schedule_transition_guards.py 5 testes PASS"
+    gates_required:
+      - OPENAPI_SPEC_QUALITY
+      - CONTRACT_DIFF_GATE
+      - GENERATED_CLIENT_SYNC
+      - RUNTIME_CONTRACT_VALIDATION
+      - TRUTH_BE
+    schemathesis: "REQUIRED -- python -m schemathesis run http://127.0.0.1:8000/api/v1/openapi.json --include-path '*/training-sessions/*/schedule' --include-path '*/training-sessions/*/finalize' --checks not_a_server_error"
+    contract_diff_gate: "REQUIRED -- oasdiff breaking 'contracts/openapi/baseline/openapi_baseline.json' 'Hb Track - Backend/docs/ssot/openapi.json'"
+    notas: >
+      openapi.json e FE api.ts sao artefatos DERIVADOS: NAO editar manualmente.
+      Executor DEVE iniciar uvicorn antes de regen openapi e api:sync.
+      oasdiff reportara breaking changes (/publish->/schedule, /close->/finalize): documentar no evidence, NAO bloquear.
+      Buscar todas as referencias a publish_session e close_session com grep antes de renomear.
+
+  - ar_id: 274
+    ar_train: "AR-TRAIN-REC-03"
+    classe: "A+G"
+    titulo: "Ledger de Sessao + Scheduler SKIP LOCKED + provas de imutabilidade"
+    proof: "TRUTH_BE -- pytest Hb Track - Backend/tests/training/side_effects/ Hb Track - Backend/tests/training/state_machine/test_adjustments_respect_session_state.py Hb Track - Backend/tests/training/invariants/ -v (todos PASS)"
+    trace: "training_session_plans e training_session_adjustments em schema.sql, alembic up HEAD, celery_tasks.py com SKIP LOCKED assertido, beat_schedule com update_training_session_statuses_task, 14 gates validation_command exit=0"
+    write_scope:
+      - "Hb Track - Backend/alembic/versions"
+      - "Hb Track - Backend/docs/ssot/schema.sql"
+      - "Hb Track - Backend/docs/ssot/alembic_state.txt"
+      - "Hb Track - Backend/app/models/training_session_plan.py"
+      - "Hb Track - Backend/app/models/training_session_adjustment.py"
+      - "Hb Track - Backend/app/core/celery_tasks.py"
+      - "Hb Track - Backend/app/services/training_session_service.py"
+      - "Hb Track - Backend/tests/training/side_effects/*"
+      - "Hb Track - Backend/tests/training/state_machine/*"
+      - "Hb Track - Backend/tests/training/invariants/*"
+    rollback_plan: |
+      git checkout -- Hb Track - Backend/docs/ssot/schema.sql
+      git checkout -- Hb Track - Backend/docs/ssot/alembic_state.txt
+    criterios_de_aceite:
+      - "Gate 1: training_session_plans e training_session_adjustments em schema.sql"
+      - "Gate 2: alembic head atingido sem pending"
+      - "Gate 3: imutabilidade (nenhum DELETE/UPDATE em training_session_plans assertido)"
+      - "Gate 4-6: pytest side_effects/ PASS"
+      - "Gate 7-8: beat_schedule com task registrada e argumento correto"
+      - "Gate 9: timestamps UTC"
+      - "Gate 10: idempotencia"
+      - "Gate 11: batch maxima 100 sessoes"
+      - "Gate 12: SKIP LOCKED em celery_tasks.py assertido"
+      - "Gate 13: openapi.json e FE sem regressao"
+      - "Gate 14: modelos training_session_plan e training_session_adjustment existem"
+    gates_required:
+      - TRUTH_BE
+    schemathesis: "N/A -- sem mudancas de endpoint HTTP"
+    contract_diff_gate: "N/A -- sem mudancas de contrato OpenAPI"
+    notas: >
+      training_session_plans e training_session_adjustments sao IMUTAVEIS (append-only).
+      Executor NAO deve criar endpoints DELETE/UPDATE para essas tabelas.
+      Celery task existente (update_training_session_statuses_task) deve ser modificada para adicionar SKIP LOCKED -- nao recriar do zero.
+
+  - ar_id: 275
+    ar_train: "AR-TRAIN-REC-04"
+    classe: "A+G"
+    titulo: "Superficie TRAINING reconciliada: Flows, Screens, traceability CSV, FE 3 secoes"
+    proof: "TRUTH_FE -- TRAINING_USER_FLOWS.md sem /publish+/close, traceability CSV >=5 linhas de dados, FE com 3 data-test-ids (training-session-planned-section, training-session-realized-section, training-session-adjustments-section), validation_command exit=0"
+    trace: "TRAINING_USER_FLOWS.md lexical purge confirmado (G1), traceability_training_core.csv >=5 linhas (G10a+G10b), FE sections data-test-ids (G7a-G7c), 10 gates validation_command exit=0"
+    write_scope:
+      - "docs/hbtrack/modulos/treinos/TRAINING_USER_FLOWS.md"
+      - "docs/hbtrack/modulos/treinos/TRAINING_SCREENS_SPEC.md"
+      - "docs/hbtrack/modulos/treinos/_evidence/traceability_training_core.csv"
+      - "Hb Track - Frontend/src/app/*/training/sessions"
+      - "Hb Track - Frontend/src/app/*/training/agenda"
+    criterios_de_aceite:
+      - "Gate 1: TRAINING_USER_FLOWS.md sem /publish sem /close (lexical purge)"
+      - "Gate 2: TRAINING_USER_FLOWS.md com lifecycle /schedule+/finalize"
+      - "Gate 3: FE sessoes -- training-session-planned-section data-test-id presente"
+      - "Gate 4: FE sessoes -- training-session-adjustments-section data-test-id presente"
+      - "Gate 7: 3 data-test-ids canonicos (planned, realized, adjustments)"
+      - "Gate 10: traceability CSV >=5 linhas de dados preenchidos"
+    gates_required:
+      - TRUTH_FE
+    schemathesis: "N/A -- sem mudancas de endpoint HTTP"
+    contract_diff_gate: "N/A -- sem mudancas de contrato OpenAPI"
+    notas: >
+      TRAINING_USER_FLOWS.md: FLOW-TRAIN-002 ainda referencia 'publish' -- Executor eliminar.
+      traceability_training_core.csv esta vazia (skeleton) -- Executor preencher com dados reais.
+      FE: SessionEditClient.tsx e AgendaClient.tsx existem; Executor adiciona data-test-ids e secoes.
+
+  - ar_id: 276
+    ar_train: "AR-TRAIN-REC-05"
+    classe: "A"
+    titulo: "Sunset final: remover stubs /publish+/close do router BE + openapi.json + cliente FE"
+    proof: "TRUTH_BE -- openapi.json sem paths /publish+/close em training-sessions, training_sessions.py sem @router.post com 'publish', api.ts sem hooks publishTrainingSession*/closeTrainingSession*, 7 gates validation_command exit=0"
+    trace: "openapi.json paths checked (G1-G3), api.ts hooks verified (G4-G6), router BE grep clean (G7), 7 gates validation_command exit=0"
+    write_scope:
+      - "Hb Track - Backend/app/api/v1/routers/training_sessions.py"
+      - "Hb Track - Backend/docs/ssot/openapi.json"
+      - "Hb Track - Frontend/src/api/generated/api.ts"
+    criterios_de_aceite:
+      - "Gate 1: openapi.json sem path /publish em training-sessions"
+      - "Gate 2: openapi.json sem path /close em training-sessions"
+      - "Gate 3: openapi.json com /schedule e /finalize presentes"
+      - "Gate 4: FE api.ts sem hook publishTrainingSession*"
+      - "Gate 5: FE api.ts sem hook closeTrainingSession*"
+      - "Gate 6: FE api.ts com scheduleTrainingSession presente"
+      - "Gate 7: router BE sem @router.post com 'publish'"
+    gates_required:
+      - TRUTH_BE
+    schemathesis: "N/A -- mudancas de remocao, sem novos endpoints"
+    contract_diff_gate: "REQUIRED -- oasdiff breaking 'contracts/openapi/baseline/openapi_baseline.json' 'Hb Track - Backend/docs/ssot/openapi.json'"
+    notas: >
+      Se AR_273 removeu /publish+/close sem preservar stubs, este AR pode ser trivial.
+      Executor verificar com grep ANTES de qualquer edicao.
+      openapi.json e api.ts sao artefatos derivados: Executor regenera via npm run api:sync.
+      oasdiff pode nao reportar breaking changes se rotas ja foram removidas em AR_273.
 

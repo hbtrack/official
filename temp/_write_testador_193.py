@@ -1,4 +1,4 @@
-content = """# TESTADOR.md — Handoff para Humano / Executor
+content = """# TESTADOR.yaml — Handoff para Humano / Executor
 
 **RUN_ID**: TESTADOR-AR193-20260301
 **AR_ID**: AR_193
@@ -22,7 +22,7 @@ O Testador **NÃO executou** `hb verify`. Pré-condição "workspace limpo (trac
 | Pré-condição | Status | Detalhe |
 |---|:---:|---|
 | AR existe (`docs/hbtrack/ars/**/AR_193_*.md`) | ✅ | `docs/hbtrack/ars/features/AR_193_test_matrix_sync_batch4_5_-_ar-train-015..021_veri.md` |
-| Validation Command não vazio | ✅ | Confirmado no EXECUTOR.md (exit code 0) |
+| Validation Command não vazio | ✅ | Confirmado no EXECUTOR.yaml (exit code 0) |
 | Evidence existe (`docs/hbtrack/evidence/AR_193/executor_main.log`) | ✅ | Presente |
 | Evidence STAGED | ✅ | `A  docs/hbtrack/evidence/AR_193/executor_main.log` |
 | **Workspace limpo (tracked-unstaged vazio)** | ❌ | **6 arquivos MM** — ver seção abaixo |
@@ -115,7 +115,7 @@ next_agent: Executor (limpar workspace MM) -> Testador
 """
 
 import os
-path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "_reports", "TESTADOR.md")
+path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "_reports", "TESTADOR.yaml")
 with open(path, "w", encoding="utf-8") as f:
     f.write(content)
 print(f"OK: {path}")

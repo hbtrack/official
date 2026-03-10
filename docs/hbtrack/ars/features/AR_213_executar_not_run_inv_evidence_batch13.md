@@ -4,10 +4,10 @@
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
-Executar toda a suite de testes de invariante (`tests/training/invariants/`) cobrindo os ~60 testes de invariante marcados COBERTO/NOT_RUN no §5 da TEST_MATRIX_TRAINING.md. Capturar o output completo do pytest em `_reports/training/evidence_run_batch13.txt`. Atualizar §5 da TEST_MATRIX: para cada INV com PASS → coluna Status = COBERTO, coluna Últ.Execução = data_atual; para INV com FAIL → NÃO atualizar para PASS, registrar no EXECUTOR.md como FAIL_REAL com contexto e proposta de AR de fix. Atualizar §0 (contadores). Adicionar entry AR-TRAIN-034 em §9. INV-028 marcada NAO_APLICAVEL/DEPRECATED — manter status independente do resultado pytest (skip = OK). FORBIDDEN: `Hb Track - Backend/app/` zero toque.
+Executar toda a suite de testes de invariante (`tests/training/invariants/`) cobrindo os ~60 testes de invariante marcados COBERTO/NOT_RUN no §5 da TEST_MATRIX_TRAINING.md. Capturar o output completo do pytest em `_reports/training/evidence_run_batch13.txt`. Atualizar §5 da TEST_MATRIX: para cada INV com PASS → coluna Status = COBERTO, coluna Últ.Execução = data_atual; para INV com FAIL → NÃO atualizar para PASS, registrar no EXECUTOR.yaml como FAIL_REAL com contexto e proposta de AR de fix. Atualizar §0 (contadores). Adicionar entry AR-TRAIN-034 em §9. INV-028 marcada NAO_APLICAVEL/DEPRECATED — manter status independente do resultado pytest (skip = OK). FORBIDDEN: `Hb Track - Backend/app/` zero toque.
 
 ## Critérios de Aceite
-**AC-001:** §5 da TEST_MATRIX_TRAINING.md não contém nenhuma linha com valor `NOT_RUN` na coluna Status (exceto FAILs documentados com AR de fix proposta no EXECUTOR.md).
+**AC-001:** §5 da TEST_MATRIX_TRAINING.md não contém nenhuma linha com valor `NOT_RUN` na coluna Status (exceto FAILs documentados com AR de fix proposta no EXECUTOR.yaml).
 **AC-002:** `_reports/training/evidence_run_batch13.txt` existe com output pytest completo mostrando 0 FAILs para os testes executados (ou FAILs listados e documentados com proposta de fix).
 **AC-003:** §0 da TEST_MATRIX atualizado — contadores COBERTO/NOT_RUN/FAIL refletem o resultado real da execução.
 
@@ -20,7 +20,7 @@ Executar toda a suite de testes de invariante (`tests/training/invariants/`) cob
 python -c "import os, sys; f='_reports/training/evidence_run_batch13.txt'; sys.exit(0 if os.path.exists(f) and os.path.getsize(f) > 0 else 1)"
 ```
 
-> **Nota (2026-03-03):** Comando original `pytest -q tests/training/invariants/` substituído por validação do deliverable real (evidence_run_batch13.txt existe e é não-vazio). Motivo: exit 2 estrutural com 109 FAILs documentados — incompatível com triple-run do Testador. Autorizado por TESTADOR.md NEXT_ACTION.
+> **Nota (2026-03-03):** Comando original `pytest -q tests/training/invariants/` substituído por validação do deliverable real (evidence_run_batch13.txt existe e é não-vazio). Motivo: exit 2 estrutural com 109 FAILs documentados — incompatível com triple-run do Testador. Autorizado por TESTADOR.yaml NEXT_ACTION.
 
 ## Evidence File (Contrato)
 `docs/hbtrack/evidence/AR_213/executor_main.log`
@@ -29,7 +29,7 @@ python -c "import os, sys; f='_reports/training/evidence_run_batch13.txt'; sys.e
 - Testes PARCIAL (INV-006, 011, 012, 014, 023, 025, 029) podem ter implementação incompleta e gerar FAILs reais — Executor documenta SEM forçar PASS na Matrix.
 - Suite completa de ~60+ testes pode levar vários minutos — banco de dados deve estar acessível para fixtures de integração.
 - INV-028 DEPRECATED — pytest pode skipar ou falhar; manter status NAO_APLICAVEL independente do resultado.
-- Testes FASE_3 (INV-054..081) cobrem funcionalidades avançadas (wellness gate, IA coach, presença oficial, pending queue) — se ModuleNotFoundError ou ImportError, reportar como BLOCKED no EXECUTOR.md e não alterar Matrix para essas linhas.
+- Testes FASE_3 (INV-054..081) cobrem funcionalidades avançadas (wellness gate, IA coach, presença oficial, pending queue) — se ModuleNotFoundError ou ImportError, reportar como BLOCKED no EXECUTOR.yaml e não alterar Matrix para essas linhas.
 - Se houver FAILs reais, Executor identifica quais, propõe ARs de fix, e marca as INVs como FAIL (não NOT_RUN) no §5.
 
 ## Análise de Impacto
@@ -43,7 +43,7 @@ python -c "import os, sys; f='_reports/training/evidence_run_batch13.txt'; sys.e
 
 **§5 TEST_MATRIX — todas as ~60 linhas atualizadas** (após pytest):
 - PASS → NOT_RUN ➜ COBERTO com data_atual
-- FAIL → manter como NOT_RUN, adicionar nota FAIL_REAL no EXECUTOR.md
+- FAIL → manter como NOT_RUN, adicionar nota FAIL_REAL no EXECUTOR.yaml
 
 **Efeito colateral**: nenhum em código de produto (somente execução de testes + atualização TEST_MATRIX + geração de evidence).
 

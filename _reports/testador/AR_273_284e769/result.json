@@ -1,0 +1,52 @@
+{
+  "ar_id": "273",
+  "validation_command": "python -c \"import json,pathlib,re;c=pathlib.Path('docs/hbtrack/modulos/treinos/TRAINING_FRONT_BACK_CONTRACT.md').read_text('utf-8');o=json.loads(pathlib.Path('Hb Track - Backend/docs/ssot/openapi.json').read_text('utf-8'));f=pathlib.Path('Hb Track - Frontend/src/api/generated/api.ts').read_text('utf-8');p=o.get('paths',{});s=o.get('components',{}).get('schemas',{});assert not re.search(r'\\|\\s*CONTRACT-TRAIN-006\\s*\\|[^\\n]+EVIDENCIADO',c),'G1a';assert not re.search(r'\\|\\s*CONTRACT-TRAIN-007\\s*\\|[^\\n]+EVIDENCIADO',c),'G1b';assert '/schedule' in c,'G2a';assert '/finalize' in c,'G2b';pp=[x for x in p if 'publish' in x and 'training' in x];assert not pp,'G3a';cp=[x for x in p if x.endswith('/close') and 'training' in x];assert not cp,'G3b';sp=[x for x in p if 'schedule' in x and 'training' in x];assert sp,'G4a';fp=[x for x in p if 'finalize' in x and 'training' in x];assert fp,'G4b';assert p[sp[0]].get('post',{}).get('operationId'),'G5a';assert p[fp[0]].get('post',{}).get('operationId'),'G5b';se=s.get('TrainingSession',{}).get('properties',{}).get('status',{}).get('enum',[]);assert 'published' not in se,'G6a';assert 'closed' not in se,'G6b';sr=s.get('TrainingSessionScheduleRequest',{});assert 'properties' in sr,'G7a';sp2=sr.get('properties',{});assert 'starts_at' in sp2,'G7b';assert 'ends_at' in sp2,'G7c';fr=s.get('TrainingSessionFinalizeRequest',{});assert 'properties' in fr,'G8a';fp2=fr.get('properties',{});assert 'attendance_completed' in fp2,'G8b';assert 'review_completed' in fp2,'G8c';assert 'publishTrainingSessionApiV1TrainingSessionsTrainingSessionIdPublishPost' not in f,'G9a';assert 'closeTrainingSessionApiV1TrainingSessionsTrainingSessionIdClosePost' not in f,'G9b';assert any(x in f for x in ['scheduleTrainingSession','ScheduleTrainingSession']),'G10a';assert any(x in f for x in ['finalizeTrainingSession','FinalizeTrainingSession']),'G10b';print('PASS AR_273: Gates 1-10 OK')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "81ca8d9271b6b2f55f7bfea80df94d0562df78dbdf6ac575f305f5522107f1ec",
+      "hash": "81ca8d9271b6b2f5",
+      "stdout_len": 27,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "81ca8d9271b6b2f55f7bfea80df94d0562df78dbdf6ac575f305f5522107f1ec",
+      "hash": "81ca8d9271b6b2f5",
+      "stdout_len": 27,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "81ca8d9271b6b2f55f7bfea80df94d0562df78dbdf6ac575f305f5522107f1ec",
+      "hash": "81ca8d9271b6b2f5",
+      "stdout_len": 27,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true,
+  "dod": {
+    "proof": "OK",
+    "trace": "OK",
+    "stitch": "OK",
+    "matrix": "N/A",
+    "warns": [],
+    "gate_errors": [
+      "DOC-GATE-019: BLOCKED_INPUT",
+      "DOC-GATE-020: BLOCKED_INPUT",
+      "DOC-GATE-021: BLOCKED_INPUT"
+    ]
+  }
+}

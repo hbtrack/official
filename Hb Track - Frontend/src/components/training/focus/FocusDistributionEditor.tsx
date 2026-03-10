@@ -28,10 +28,10 @@
 
 'use client';
 
-import React, { useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import { Icons } from '@/design/icons';
 import { computeFocusSummary, type ApiFocusInput } from '@/lib/training/focus';
-import { Icons } from '@/design-system/icons';
+import { cn } from '@/lib/utils';
+import React, { useMemo } from 'react';
 
 // Definição dos 7 campos de foco
 const FOCUS_FIELDS = [
@@ -108,8 +108,8 @@ export function FocusDistributionEditor({
     status === 'error'
       ? Icons.Status.Error
       : status === 'warning'
-      ? Icons.Status.Warning
-      : Icons.Status.Success;
+        ? Icons.Status.Warning
+        : Icons.Status.Success;
 
   const sliderContainerClass = cn(
     layout === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 gap-4' : 'space-y-3',
@@ -135,8 +135,8 @@ export function FocusDistributionEditor({
               <span
                 className={cn(
                   'text-slate-600 dark:text-slate-400 truncate',
-                  compact 
-                    ? 'text-xs w-24 min-w-[96px]' 
+                  compact
+                    ? 'text-xs w-24 min-w-[96px]'
                     : 'text-sm w-32 sm:w-40 min-w-[128px]'
                 )}
                 title={focus.label}
@@ -245,12 +245,12 @@ export function FocusDistributionEditor({
       {/* Campo de justificativa (condicional) */}
       {requiresJustification && onJustificationChange && (
         <div className="space-y-2">
-          <label 
+          <label
             htmlFor="focus-justification"
             className={cn(
               'block text-sm font-medium',
-              missingJustification 
-                ? 'text-red-700 dark:text-red-400' 
+              missingJustification
+                ? 'text-red-700 dark:text-red-400'
                 : 'text-slate-700 dark:text-slate-300'
             )}
           >

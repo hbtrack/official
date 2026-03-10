@@ -1,6 +1,6 @@
 # Pedido ao Arquiteto — PostgreSQL Upgrade Bloqueado
 
-**Documento:** `_reports/PEDIDO_AO_ARQUITETO.md`  
+**Documento:** `_reports/PEDIDO_AO_ARQUITETO.yaml`  
 **Data:** 2026-02-21 06:15 BRT  
 **Agente:** Executor  
 **Status:** ⚠️ BLOCKED_INPUT (Exit Code 4)  
@@ -310,7 +310,7 @@ ALTER TABLE wellness_post
 
 **Validation Command:** Atualizado para verificar schema + migration 0068
 
-**Executor**: Pode prosseguir com AR_157 usando HANDOFF 15 em `_reports/ARQUITETO.md`.
+**Executor**: Pode prosseguir com AR_157 usando HANDOFF 15 em `_reports/ARQUITETO.yaml`.
 
 ---
 ---

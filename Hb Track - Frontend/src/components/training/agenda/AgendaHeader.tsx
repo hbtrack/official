@@ -8,9 +8,6 @@
 
 'use client';
 
-import React from 'react';
-import { Icons } from '@/design-system/icons';
-import type { Team } from '@/lib/api/teams';
 import {
   Select,
   SelectContent,
@@ -18,6 +15,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Icons } from '@/design/icons';
+import type { Team } from '@/lib/api/teams';
 
 export type AgendaViewMode = 'week' | 'month';
 
@@ -110,11 +109,10 @@ export function AgendaHeader({
             type="button"
             aria-pressed={viewMode === 'week'}
             onClick={() => onViewModeChange('week')}
-            className={`px-2 py-1 text-[10px] font-bold uppercase rounded-md ${focusRingClasses} ${
-              viewMode === 'week'
+            className={`px-2 py-1 text-[10px] font-bold uppercase rounded-md ${focusRingClasses} ${viewMode === 'week'
                 ? 'bg-white shadow-sm text-slate-800 dark:bg-gray-100 dark:text-gray-900'
                 : 'text-slate-500 hover:text-slate-700 dark:text-gray-300 dark:hover:text-gray-100'
-            }`}
+              }`}
           >
             Semana
           </button>
@@ -122,11 +120,10 @@ export function AgendaHeader({
             type="button"
             aria-pressed={viewMode === 'month'}
             onClick={() => onViewModeChange('month')}
-            className={`px-2 py-1 text-[10px] font-bold uppercase rounded-md ${focusRingClasses} ${
-              viewMode === 'month'
+            className={`px-2 py-1 text-[10px] font-bold uppercase rounded-md ${focusRingClasses} ${viewMode === 'month'
                 ? 'bg-white shadow-sm text-slate-800 dark:bg-gray-100 dark:text-gray-900'
                 : 'text-slate-500 hover:text-slate-700 dark:text-gray-300 dark:hover:text-gray-100'
-            }`}
+              }`}
           >
             Mês
           </button>

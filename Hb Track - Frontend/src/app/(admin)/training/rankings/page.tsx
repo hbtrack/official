@@ -7,7 +7,6 @@
 
 import { Suspense } from 'react';
 import { RankingsClient } from './RankingsClient';
-import { Icons } from '@/design-system/icons';
 
 export const metadata = {
   title: 'Rankings de Equipes | HB Track',

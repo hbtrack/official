@@ -196,7 +196,7 @@ async def test_close_session_rejects_invalid_status(
     await async_db.flush()
 
     service = TrainingSessionService(async_db, exec_context)
-    result = await service.close_session(session.id)
+    result = await service.finalize_session(session.id, attendance_completed=True, review_completed=True)
 
     assert result.success is False
     assert result.validation is not None
@@ -218,7 +218,7 @@ async def test_close_session_requires_justification_when_delayed(
     await _create_attendance(async_db, test_training_session, test_team_registrations, test_user)
 
     service = TrainingSessionService(async_db, exec_context)
-    result = await service.close_session(test_training_session.id)
+    result = await service.finalize_session(test_training_session.id, attendance_completed=True, review_completed=True)
 
     assert result.success is False
     assert result.validation is not None
@@ -236,7 +236,7 @@ async def test_close_session_blocks_missing_presence(
     await async_db.flush()
 
     service = TrainingSessionService(async_db, exec_context)
-    result = await service.close_session(test_training_session.id)
+    result = await service.finalize_session(test_training_session.id, attendance_completed=False, review_completed=False)
 
     assert result.success is False
     assert result.validation is not None
@@ -258,7 +258,7 @@ async def test_close_session_allows_canceled_without_presence(
     await async_db.flush()
 
     service = TrainingSessionService(async_db, exec_context)
-    result = await service.close_session(test_training_session.id)
+    result = await service.finalize_session(test_training_session.id, attendance_completed=True, review_completed=True)
 
     assert result.success is True
     assert result.session is not None
@@ -277,7 +277,7 @@ async def test_close_session_succeeds_with_complete_presence(
     await _create_attendance(async_db, test_training_session, test_team_registrations, test_user)
 
     service = TrainingSessionService(async_db, exec_context)
-    result = await service.close_session(test_training_session.id)
+    result = await service.finalize_session(test_training_session.id, attendance_completed=True, review_completed=True)
 
     assert result.success is True
     assert result.session is not None

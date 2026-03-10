@@ -1,7 +1,7 @@
 # AR_BACKLOG_TRAINING.md — Backlog de ARs (Materialização) do Módulo TRAINING
 
 Status: ATIVO
-Versão: v3.9.0
+Versão: v4.3.0
 Tipo de Documento: AR Materialization Backlog (**apenas ARs** — sem gate, sem roadmap)  
 Módulo: TRAINING  
 Fase: FASE_2 (PRD v2.2 — 2026-02-20) + DEC-TRAIN-* (2026-02-25) + FASE_3 (2026-02-27)  
@@ -11,11 +11,32 @@ Owners:
 - Execução (Executor): (a definir)
 - Auditoria/Testes: (a definir)
 
-Última revisão: 2026-03-08  
+Última revisão: 2026-03-09  
 Próxima revisão recomendada: N/A — TRUTH SUITE 0 failed/skipped/xfailed atingido  
 
+> Changelog v4.3.0 (2026-03-09) — Batch REC-03/04/05: Planejamento AR-TRAIN-REC-03, AR-TRAIN-REC-04, AR-TRAIN-REC-05:
+> - AR-TRAIN-REC-03 adicionada ao backlog (AR_274, Class A+G, Status BACKLOG) — Ledger de Sessao + Scheduler SKIP LOCKED.
+> - AR-TRAIN-REC-04 adicionada ao backlog (AR_275, Class A+G, Status BACKLOG) — Superficie UI/Flows/Screens reconciliada.
+> - AR-TRAIN-REC-05 adicionada ao backlog (AR_276, Class A, Status BACKLOG) — Sunset final rotas legadas /publish+/close.
+> - Tabela de ARs: 3 linhas adicionadas.
+
+> Changelog v4.2.0 (2026-03-09) — Batch REC-02: Planejamento AR-TRAIN-REC-02:
+> - AR-TRAIN-REC-02 adicionada ao backlog (AR_273, Class A+G, Status BACKLOG).
+> - Tabela de ARs: 1 linha adicionada AR-TRAIN-REC-02 (dependencia AR_271+AR_272).
+
+> Changelog v4.1.0 (2026-03-09) — Batch REC-02: Sync documental pós-REC-01:
+> - AR-TRAIN-REC-01 READY->VERIFICADO (hb seal 271, 2026-03-09).
+> - Tabela de ARs: AR-TRAIN-REC-01 status atualizado para VERIFICADO.
+> - Detalhe §8 AR-TRAIN-REC-01: Status Final atualizado para VERIFICADO.
+> - Tabela de ARs: 1 linha adicionada AR-TRAIN-087 (AR_272, EM_EXECUCAO).
+
+> Changelog v4.0.0 (2026-03-09) — Batch REC-01: Reconciliação documental base (AR-TRAIN-REC-01):
+> - Lote 26 adicionado: AR-TRAIN-REC-01 (G+A) — Reconciliação canônica: eliminar PUBLISHED/CLOSED/_publish/_close de TRAINING_SCOPE_REGISTRY.yaml + TRAINING_PERF_LIMITS.json + _INDEX.md; promover lifecycle draft->scheduled->in_progress->pending_review->readonly; renomear 'limits'->'operations' em PERF_LIMITS.
+> - Tabela de ARs: 1 linha adicionada AR-TRAIN-REC-01 (AR_271).
+> - Detalhe §8: seção AR-TRAIN-REC-01 adicionada.
+
 > Changelog v3.9.0 (2026-03-08) — Batch 35 DONE_CONTRACT implementation (AR-TRAIN-081..086):
-> - Lote 25 adicionado: AR-TRAIN-081 (G) — Registrar DONE_CONTRACT_TRAINING.md.md na cadeia canônica: _INDEX.md v1.8.0 + entry 6b.
+> - Lote 25 adicionado: AR-TRAIN-081 (G) — Registrar DONE_CONTRACT_TRAINING.md na cadeia canônica: _INDEX.md v1.8.0 + entry 6b.
 > - Lote 25 adicionado: AR-TRAIN-082 (A) — Criar TRAINING_SCOPE_REGISTRY.yaml: 13 CORE + 7 EXTENDED + 2 EXPERIMENTAL.
 > - Lote 25 adicionado: AR-TRAIN-083 (A) — Criar TRAINING_STATE_MACHINE.yaml: 5 entidades stateful CORE.
 > - Lote 25 adicionado: AR-TRAIN-084 (A) — Criar TRAINING_PERF_LIMITS.json: 16 itens CORE com SLOs baseline.
@@ -23,7 +44,7 @@ Próxima revisão recomendada: N/A — TRUTH SUITE 0 failed/skipped/xfailed atin
 > - Lote 25 adicionado: AR-TRAIN-086 (G) — Sync documental pós-Batch 35.
 > - Tabela de ARs: 6 linhas adicionadas AR-TRAIN-081..086.
 > - Detalhe §8: seções AR-TRAIN-081..086 adicionadas.
-> - DONE_CONTRACT_TRAINING.md.md implementado (Batch 35 completo).
+> - DONE_CONTRACT_TRAINING.md implementado (Batch 35 completo).
 > - Lote 24 adicionado: AR-TRAIN-079 (D/E) — trainingAlertsSuggestionsApi singleton + TRAINING_FRONT_BACK_CONTRACT.md §5.10 DIVERGENTE→IMPLEMENTADO + useSuggestions.ts deferred CAP-001.
 > - Lote 24 adicionado: AR-TRAIN-080 (G) — Sync documental pós-Batch 34.
 > - Tabela de ARs: 2 linhas adicionadas AR-TRAIN-079..080.
@@ -506,12 +527,18 @@ Decompor a materialização do módulo TRAINING em ARs pequenas, rastreáveis, t
 | AR-TRAIN-078 | G | ALTA | Sync documental pós-Batch 33: BACKLOG v3.7.0 + TEST_MATRIX v4.3.0 + Kanban Batch 33 + _INDEX v1.6.0 | AR_BACKLOG_TRAINING.md, TEST_MATRIX_TRAINING.md, Hb Track Kanban.md, docs/hbtrack/modulos/treinos/_INDEX.md | AR-TRAIN-077 | VERIFICADO |
 | AR-TRAIN-079 | D/E | ALTA | trainingAlertsSuggestionsApi singleton + TRAINING_FRONT_BACK_CONTRACT.md §5.10 DIVERGENTE→IMPLEMENTADO + useSuggestions.ts deferred CAP-001 | Hb Track - Frontend/src/api/generated/api-instance.ts, docs/hbtrack/modulos/treinos/TRAINING_FRONT_BACK_CONTRACT.md | AR-TRAIN-078 | VERIFICADO |
 | AR-TRAIN-080 | G | ALTA | Sync documental pós-Batch 34: BACKLOG v3.8.0 + TEST_MATRIX v4.4.0 + Kanban Batch 34 + _INDEX v1.7.0 | AR_BACKLOG_TRAINING.md, TEST_MATRIX_TRAINING.md, Hb Track Kanban.md, docs/hbtrack/modulos/treinos/_INDEX.md | AR-TRAIN-079 | VERIFICADO |
-| AR-TRAIN-081 | G | ALTA | DONE_CONTRACT_TRAINING.md.md registrado na cadeia canônica: _INDEX.md v1.8.0 + entry 6b | docs/hbtrack/modulos/treinos/_INDEX.md | AR-TRAIN-080 | VERIFICADO |
+| AR-TRAIN-081 | G | ALTA | DONE_CONTRACT_TRAINING.md registrado na cadeia canônica: _INDEX.md v1.8.0 + entry 6b | docs/hbtrack/modulos/treinos/_INDEX.md | AR-TRAIN-080 | VERIFICADO |
 | AR-TRAIN-082 | A | ALTA | TRAINING_SCOPE_REGISTRY.yaml criado: 13 CORE + 7 EXTENDED + 2 EXPERIMENTAL | docs/hbtrack/modulos/treinos/TRAINING_SCOPE_REGISTRY.yaml | AR-TRAIN-081 | VERIFICADO |
 | AR-TRAIN-083 | A | ALTA | TRAINING_STATE_MACHINE.yaml criado: 5 entidades stateful CORE | docs/hbtrack/modulos/treinos/TRAINING_STATE_MACHINE.yaml | AR-TRAIN-082 | VERIFICADO |
 | AR-TRAIN-084 | A | ALTA | TRAINING_PERF_LIMITS.json criado: 16 itens CORE com SLOs baseline | docs/hbtrack/modulos/treinos/TRAINING_PERF_LIMITS.json | AR-TRAIN-083 | VERIFICADO |
 | AR-TRAIN-085 | A | ALTA | traceability_training_core.csv criado como skeleton: 9 headers, 0 dados | docs/hbtrack/modulos/treinos/_evidence/traceability_training_core.csv | AR-TRAIN-084 | VERIFICADO |
 | AR-TRAIN-086 | G | ALTA | Sync documental pós-Batch 35: BACKLOG v3.9.0 + TEST_MATRIX v4.5.0 + Kanban Batch 35 + _INDEX v1.8.0 | AR_BACKLOG_TRAINING.md, TEST_MATRIX_TRAINING.md, Hb Track Kanban.md, docs/hbtrack/modulos/treinos/_INDEX.md | AR-TRAIN-085 | VERIFICADO |
+| AR-TRAIN-REC-01 | G+A | ALTA | Reconciliacao: eliminar PUBLISHED/CLOSED/publish/close dos 3 artefatos de base + lifecycle canonico draft->scheduled->in_progress->pending_review->readonly + renomear 'limits'->'operations' em PERF_LIMITS | docs/hbtrack/modulos/treinos/_INDEX.md, TRAINING_SCOPE_REGISTRY.yaml, TRAINING_PERF_LIMITS.json | AR-TRAIN-086 (AR_270) VERIFICADO | VERIFICADO |
+| AR-TRAIN-087 | G | ALTA | Sync documental pos-REC-01: BACKLOG v4.1.0 + TEST_MATRIX v4.6.0 + Kanban VERIFICADO | docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md, docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md, docs/hbtrack/Hb Track Kanban.md | AR-TRAIN-REC-01 (AR_271) VERIFICADO | EM_EXECUCAO |
+| AR-TRAIN-REC-02 | A+G | ALTA | Reconciliacao contratual: TRAINING_FRONT_BACK_CONTRACT.md + OpenAPI /schedule+/finalize + cliente FE gerado | docs/hbtrack/modulos/treinos/TRAINING_FRONT_BACK_CONTRACT.md, Hb Track - Backend/app/schemas/training_sessions.py, Hb Track - Backend/app/services/training_session_service.py, Hb Track - Backend/app/api/v1/routers/training_sessions.py, Hb Track - Backend/docs/ssot/openapi.json, Hb Track - Frontend/src/api/generated/api.ts, tests/training/state_machine/ | AR-TRAIN-REC-01 (AR_271) VERIFICADO + AR-TRAIN-087 (AR_272) | BACKLOG |
+| AR-TRAIN-REC-03 | A+G | ALTA | Ledger de Sessao + Scheduler SKIP LOCKED + provas de imutabilidade (tabelas training_session_plans, training_session_adjustments, celery SKIP LOCKED) | Hb Track - Backend/alembic/versions, Hb Track - Backend/docs/ssot/schema.sql, Hb Track - Backend/app/models/training_session_plan.py, Hb Track - Backend/app/models/training_session_adjustment.py, Hb Track - Backend/app/core/celery_tasks.py, Hb Track - Backend/app/services/training_session_service.py, tests/training/side_effects/*, tests/training/state_machine/*, tests/training/invariants/* | AR-TRAIN-REC-02 (AR_273) VERIFICADO | BACKLOG |
+| AR-TRAIN-REC-04 | A+G | ALTA | Superficie TRAINING reconciliada: TRAINING_USER_FLOWS.md (lexical purge /publish+/close), TRAINING_SCREENS_SPEC.md, traceability_training_core.csv preenchida, FE 3 secoes lifecycle | docs/hbtrack/modulos/treinos/TRAINING_USER_FLOWS.md, docs/hbtrack/modulos/treinos/TRAINING_SCREENS_SPEC.md, docs/hbtrack/modulos/treinos/_evidence/traceability_training_core.csv, Hb Track - Frontend/src/app/*/training/sessions, Hb Track - Frontend/src/app/*/training/agenda | AR-TRAIN-REC-03 (AR_274) VERIFICADO | BACKLOG |
+| AR-TRAIN-REC-05 | A | ALTA | Sunset final: remover stubs /publish+/close do router BE + openapi.json + cliente FE gerado | Hb Track - Backend/app/api/v1/routers/training_sessions.py, Hb Track - Backend/docs/ssot/openapi.json, Hb Track - Frontend/src/api/generated/api.ts | AR-TRAIN-REC-04 (AR_275) VERIFICADO | BACKLOG |
 
 > **Critérios de classificação (BLOQUEANTE/NAO_BLOQUEANTE)** → ver `TEST_MATRIX_TRAINING.md` (definições + matriz §5)  
 > **Regra de cálculo de DONE_FASE_3_REAL_ATINGIDO**: contar apenas ARs com tag `[FASE_3_REAL]`. ARs `[FASE_3_SYNC]` (classe G/M de sync documental e stubs) **não contam**.
@@ -3065,7 +3092,7 @@ Governança pura — sincronizar BACKLOG v3.8.0, TEST_MATRIX v4.4.0, Kanban (Bat
 - **Evidence**: docs/hbtrack/evidence/AR_264/executor_main.log
 - **Status Final**: ✅ VERIFICADO (hb seal 264, 2026-03-07)
 
-### AR-TRAIN-081 — Registrar DONE_CONTRACT_TRAINING.md.md na cadeia canônica (AR_265, Batch 35)
+### AR-TRAIN-081 — Registrar DONE_CONTRACT_TRAINING.md na cadeia canônica (AR_265, Batch 35)
 
 #### 8.1 Metadados
 - **Class:** G
@@ -3075,7 +3102,7 @@ Governança pura — sincronizar BACKLOG v3.8.0, TEST_MATRIX v4.4.0, Kanban (Bat
 - **Status:** VERIFICADO
 
 #### 8.2 Objetivo
-Registrar DONE_CONTRACT_TRAINING.md.md na cadeia canônica do módulo TRAINING: _INDEX.md v1.8.0 + entry 6b. Done Contract define os gates DONE_TECNICO, DONE_SEMANTICO e DONE_PRODUTO.
+Registrar DONE_CONTRACT_TRAINING.md na cadeia canônica do módulo TRAINING: _INDEX.md v1.8.0 + entry 6b. Done Contract define os gates DONE_TECNICO, DONE_SEMANTICO e DONE_PRODUTO.
 
 #### 8.3 Evidencia
 - **Evidence**: docs/hbtrack/evidence/AR_265/executor_main.log
@@ -3155,8 +3182,33 @@ Criar _evidence/traceability_training_core.csv como skeleton com 9 headers (test
 - **Status:** VERIFICADO
 
 #### 8.2 Objetivo
-Governança pura — sincronizar BACKLOG v3.9.0, TEST_MATRIX v4.5.0, Kanban (Batch 35), e _INDEX v1.8.0 após Batch 35 (AR_265..AR_270). DONE_CONTRACT_TRAINING.md.md implementado.
+Governança pura — sincronizar BACKLOG v3.9.0, TEST_MATRIX v4.5.0, Kanban (Batch 35), e _INDEX v1.8.0 após Batch 35 (AR_265..AR_270). DONE_CONTRACT_TRAINING.md implementado.
 
 #### 8.3 Evidencia
 - **Evidence**: docs/hbtrack/evidence/AR_270/executor_main.log
 - **Status Final**: ✅ VERIFICADO (hb seal 270, 2026-03-08)
+
+---
+
+### AR-TRAIN-REC-01 — Reconciliação Documental: lifecycle canônico nos 3 artefatos de base TRAINING (AR_271, Batch REC)
+
+#### 8.1 Metadados
+- **Class:** G+A
+- **Prioridade:** ALTA
+- **AR_ID:** 271
+- **Batch:** REC-01
+- **Status:** READY
+
+#### 8.2 Objetivo
+Reconciliação semântica dos 3 artefatos de base do módulo TRAINING. Eliminar vocabulário legado publish/close/PUBLISHED/CLOSED. Promover lifecycle canônico `draft -> scheduled -> in_progress -> pending_review -> readonly`. Renomear chave raiz `limits` → `operations` em TRAINING_PERF_LIMITS.json. NENHUM arquivo de backend ou frontend é tocado.
+
+**Gates da OS:**
+- Gate 1 (Negative lexical): sem PUBLISHED/CLOSED/training_session_publish/training_session_close nos 3 artefatos
+- Gate 2 (Positive lifecycle): lifecycle canônico explícito em TRAINING_SCOPE_REGISTRY.yaml
+- Gate 3 (Positive ledger): ai_coach_core descreve ledger imutável (Planned_State/Adjustment_Log/append-only)
+- Gate 4 (Positive perf): TRAINING_PERF_LIMITS.json tem `operations` com training_session_schedule + training_session_finalize + task_update_session_statuses
+- Gate 5 (Positive index): _INDEX.md v1.9.0 promove artefatos reconciliados com lifecycle canônico
+
+#### 8.3 Evidencia
+- **Evidence**: docs/hbtrack/evidence/AR_271/executor_main.log
+- **Status Final**: ✅ VERIFICADO (hb seal 271, 2026-03-09)

@@ -7,16 +7,16 @@
  * Step 28.2: Feature restante - Top Performers
  */
 
-import { useParams, useSearchParams } from 'next/navigation';
+import { Icons } from '@/design/icons';
+import { formatMonthReference, formatResponseRate, getResponseRateColor, getTeamAthletes90Plus, type Athlete90Plus } from '@/lib/api/rankings';
 import { useQuery } from '@tanstack/react-query';
-import { getTeamAthletes90Plus, formatResponseRate, getResponseRateColor, formatMonthReference, type Athlete90Plus } from '@/lib/api/rankings';
-import { Icons } from '@/design-system/icons';
 import Link from 'next/link';
+import { useParams, useSearchParams } from 'next/navigation';
 
 export function TopPerformersClient() {
   const params = useParams();
   const searchParams = useSearchParams();
-  
+
   const teamId = params.teamId as string;
   const month = searchParams.get('month') || getPreviousMonth();
 
@@ -110,7 +110,7 @@ export function TopPerformersClient() {
           <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
             Outros Atletas com 90%+ ({athletes.length - 5})
           </h2>
-          
+
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
               <thead className="bg-gray-50 dark:bg-gray-900">
@@ -169,7 +169,7 @@ export function TopPerformersClient() {
             </h3>
             <div className="mt-2 text-sm text-green-700 dark:text-green-300">
               <p>
-                Atletas com taxa de resposta &gt;= 90% demonstram excelente comprometimento 
+                Atletas com taxa de resposta &gt;= 90% demonstram excelente comprometimento
                 e recebem badges automáticos. Continue incentivando a equipe!
               </p>
             </div>
@@ -237,9 +237,8 @@ function AthleteCard({ athlete, rank }: AthleteCardProps) {
           <div className="overflow-hidden h-2 text-xs flex rounded bg-gray-200 dark:bg-gray-700">
             <div
               style={{ width: `${athlete.response_rate}%` }}
-              className={`shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center ${
-                athlete.response_rate >= 95 ? 'bg-green-500' : 'bg-blue-500'
-              }`}
+              className={`shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center ${athlete.response_rate >= 95 ? 'bg-green-500' : 'bg-blue-500'
+                }`}
             />
           </div>
         </div>

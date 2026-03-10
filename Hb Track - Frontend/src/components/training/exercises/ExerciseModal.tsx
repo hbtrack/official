@@ -12,11 +12,10 @@
 
 'use client';
 
-import React from 'react';
-import { Exercise, ExerciseTag, getYouTubeEmbedUrl } from '@/lib/api/exercises';
-import { Icons } from '@/design-system/icons';
 import AppModal from '@/components/ui/AppModal';
 import { Button } from '@/components/ui/Button';
+import { Icons } from '@/design/icons';
+import { Exercise, ExerciseTag, getYouTubeEmbedUrl } from '@/lib/api/exercises';
 
 interface ExerciseModalProps {
   exercise: Exercise | null;

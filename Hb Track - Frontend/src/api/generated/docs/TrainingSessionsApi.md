@@ -4,8 +4,6 @@ All URIs are relative to *http://localhost*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**closeTrainingSessionApiV1TrainingSessionsTrainingSessionIdClosePost**](#closetrainingsessionapiv1trainingsessionstrainingsessionidclosepost) | **POST** /api/v1/training-sessions/{training_session_id}/close | Finaliza revisão operacional e congela a sessão|
-|[**closeTrainingSessionApiV1TrainingSessionsTrainingSessionIdClosePost_0**](#closetrainingsessionapiv1trainingsessionstrainingsessionidclosepost_0) | **POST** /api/v1/training-sessions/{training_session_id}/close | Finaliza revisão operacional e congela a sessão|
 |[**copyWeekSessionsApiV1TrainingSessionsCopyWeekPost**](#copyweeksessionsapiv1trainingsessionscopyweekpost) | **POST** /api/v1/training-sessions/copy-week | Copiar semana de treinos|
 |[**copyWeekSessionsApiV1TrainingSessionsCopyWeekPost_0**](#copyweeksessionsapiv1trainingsessionscopyweekpost_0) | **POST** /api/v1/training-sessions/copy-week | Copiar semana de treinos|
 |[**createTrainingSessionApiV1TrainingSessionsPost**](#createtrainingsessionapiv1trainingsessionspost) | **POST** /api/v1/training-sessions | Cria sessão de treino|
@@ -14,6 +12,8 @@ All URIs are relative to *http://localhost*
 |[**deleteTrainingSessionApiV1TrainingSessionsTrainingSessionIdDelete_0**](#deletetrainingsessionapiv1trainingsessionstrainingsessioniddelete_0) | **DELETE** /api/v1/training-sessions/{training_session_id} | Exclui sessão de treino|
 |[**duplicateTrainingSessionApiV1TrainingSessionsTrainingSessionIdDuplicatePost**](#duplicatetrainingsessionapiv1trainingsessionstrainingsessionidduplicatepost) | **POST** /api/v1/training-sessions/{training_session_id}/duplicate | Duplicar sessão de treino|
 |[**duplicateTrainingSessionApiV1TrainingSessionsTrainingSessionIdDuplicatePost_0**](#duplicatetrainingsessionapiv1trainingsessionstrainingsessionidduplicatepost_0) | **POST** /api/v1/training-sessions/{training_session_id}/duplicate | Duplicar sessão de treino|
+|[**finalizeTrainingSessionApiV1TrainingSessionsTrainingSessionIdFinalizePost**](#finalizetrainingsessionapiv1trainingsessionstrainingsessionidfinalizepost) | **POST** /api/v1/training-sessions/{training_session_id}/finalize | Finaliza revisão operacional e congela a sessão|
+|[**finalizeTrainingSessionApiV1TrainingSessionsTrainingSessionIdFinalizePost_0**](#finalizetrainingsessionapiv1trainingsessionstrainingsessionidfinalizepost_0) | **POST** /api/v1/training-sessions/{training_session_id}/finalize | Finaliza revisão operacional e congela a sessão|
 |[**getSessionDeviationApiV1TrainingSessionsTrainingSessionIdDeviationGet**](#getsessiondeviationapiv1trainingsessionstrainingsessioniddeviationget) | **GET** /api/v1/training-sessions/{training_session_id}/deviation | Análise de desvio (planejado vs executado)|
 |[**getSessionDeviationApiV1TrainingSessionsTrainingSessionIdDeviationGet_0**](#getsessiondeviationapiv1trainingsessionstrainingsessioniddeviationget_0) | **GET** /api/v1/training-sessions/{training_session_id}/deviation | Análise de desvio (planejado vs executado)|
 |[**getTrainingSessionByIdApiV1TrainingSessionsTrainingSessionIdGet**](#gettrainingsessionbyidapiv1trainingsessionstrainingsessionidget) | **GET** /api/v1/training-sessions/{training_session_id} | Obtém sessão de treino por ID|
@@ -22,10 +22,10 @@ All URIs are relative to *http://localhost*
 |[**getWellnessStatusApiV1TrainingSessionsTrainingSessionIdWellnessStatusGet_0**](#getwellnessstatusapiv1trainingsessionstrainingsessionidwellnessstatusget_0) | **GET** /api/v1/training-sessions/{training_session_id}/wellness-status | Status de wellness da sessão|
 |[**listTrainingSessionsApiV1TrainingSessionsGet**](#listtrainingsessionsapiv1trainingsessionsget) | **GET** /api/v1/training-sessions | Lista sessões de treino|
 |[**listTrainingSessionsApiV1TrainingSessionsGet_0**](#listtrainingsessionsapiv1trainingsessionsget_0) | **GET** /api/v1/training-sessions | Lista sessões de treino|
-|[**publishTrainingSessionApiV1TrainingSessionsTrainingSessionIdPublishPost**](#publishtrainingsessionapiv1trainingsessionstrainingsessionidpublishpost) | **POST** /api/v1/training-sessions/{training_session_id}/publish | Publica sessão completa (draft → scheduled)|
-|[**publishTrainingSessionApiV1TrainingSessionsTrainingSessionIdPublishPost_0**](#publishtrainingsessionapiv1trainingsessionstrainingsessionidpublishpost_0) | **POST** /api/v1/training-sessions/{training_session_id}/publish | Publica sessão completa (draft → scheduled)|
 |[**restoreTrainingSessionApiV1TrainingSessionsTrainingSessionIdRestorePost**](#restoretrainingsessionapiv1trainingsessionstrainingsessionidrestorepost) | **POST** /api/v1/training-sessions/{training_session_id}/restore | Restaura sessão de treino|
 |[**restoreTrainingSessionApiV1TrainingSessionsTrainingSessionIdRestorePost_0**](#restoretrainingsessionapiv1trainingsessionstrainingsessionidrestorepost_0) | **POST** /api/v1/training-sessions/{training_session_id}/restore | Restaura sessão de treino|
+|[**scheduleTrainingSessionApiV1TrainingSessionsTrainingSessionIdSchedulePost**](#scheduletrainingsessionapiv1trainingsessionstrainingsessionidschedulepost) | **POST** /api/v1/training-sessions/{training_session_id}/schedule | Agenda sessão completa (draft → scheduled)|
+|[**scheduleTrainingSessionApiV1TrainingSessionsTrainingSessionIdSchedulePost_0**](#scheduletrainingsessionapiv1trainingsessionstrainingsessionidschedulepost_0) | **POST** /api/v1/training-sessions/{training_session_id}/schedule | Agenda sessão completa (draft → scheduled)|
 |[**scopedCreateTrainingSessionApiV1TeamsTeamIdTrainingsPost**](#scopedcreatetrainingsessionapiv1teamsteamidtrainingspost) | **POST** /api/v1/teams/{team_id}/trainings | Criar sessao de treino (escopo equipe)|
 |[**scopedCreateTrainingSessionApiV1TeamsTeamIdTrainingsPost_0**](#scopedcreatetrainingsessionapiv1teamsteamidtrainingspost_0) | **POST** /api/v1/teams/{team_id}/trainings | Criar sessao de treino (escopo equipe)|
 |[**scopedDeleteTrainingSessionApiV1TeamsTeamIdTrainingsTrainingIdDelete**](#scopeddeletetrainingsessionapiv1teamsteamidtrainingstrainingiddelete) | **DELETE** /api/v1/teams/{team_id}/trainings/{training_id} | Excluir sessao de treino (escopo equipe)|
@@ -40,146 +40,6 @@ All URIs are relative to *http://localhost*
 |[**scopedUpdateTrainingSessionApiV1TeamsTeamIdTrainingsTrainingIdPatch_0**](#scopedupdatetrainingsessionapiv1teamsteamidtrainingstrainingidpatch_0) | **PATCH** /api/v1/teams/{team_id}/trainings/{training_id} | Atualizar sessao de treino (escopo equipe)|
 |[**updateTrainingSessionApiV1TrainingSessionsTrainingSessionIdPatch**](#updatetrainingsessionapiv1trainingsessionstrainingsessionidpatch) | **PATCH** /api/v1/training-sessions/{training_session_id} | Atualiza sessão de treino|
 |[**updateTrainingSessionApiV1TrainingSessionsTrainingSessionIdPatch_0**](#updatetrainingsessionapiv1trainingsessionstrainingsessionidpatch_0) | **PATCH** /api/v1/training-sessions/{training_session_id} | Atualiza sessão de treino|
-
-# **closeTrainingSessionApiV1TrainingSessionsTrainingSessionIdClosePost**
-> SessionClosureResponse closeTrainingSessionApiV1TrainingSessionsTrainingSessionIdClosePost()
-
-Finaliza a revisão operacional (pending_review → readonly) com validações bloqueantes
-
-### Example
-
-```typescript
-import {
-    TrainingSessionsApi,
-    Configuration
-} from './api';
-
-const configuration = new Configuration();
-const apiInstance = new TrainingSessionsApi(configuration);
-
-let trainingSessionId: string; // (default to undefined)
-let organizationId: string; // (optional) (default to undefined)
-let teamId: string; // (optional) (default to undefined)
-let athleteId: string; // (optional) (default to undefined)
-let xRequestID: string; // (optional) (default to undefined)
-let xOrganizationId: string; // (optional) (default to undefined)
-
-const { status, data } = await apiInstance.closeTrainingSessionApiV1TrainingSessionsTrainingSessionIdClosePost(
-    trainingSessionId,
-    organizationId,
-    teamId,
-    athleteId,
-    xRequestID,
-    xOrganizationId
-);
-```
-
-### Parameters
-
-|Name | Type | Description  | Notes|
-|------------- | ------------- | ------------- | -------------|
-| **trainingSessionId** | [**string**] |  | defaults to undefined|
-| **organizationId** | [**string**] |  | (optional) defaults to undefined|
-| **teamId** | [**string**] |  | (optional) defaults to undefined|
-| **athleteId** | [**string**] |  | (optional) defaults to undefined|
-| **xRequestID** | [**string**] |  | (optional) defaults to undefined|
-| **xOrganizationId** | [**string**] |  | (optional) defaults to undefined|
-
-
-### Return type
-
-**SessionClosureResponse**
-
-### Authorization
-
-[HTTPBearer](../README.md#HTTPBearer)
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-|**200** | Resposta de fechamento (success&#x3D;True se fechou, False com validation se falhou) |  -  |
-|**404** | Sessão não encontrada |  -  |
-|**401** | Token inválido ou ausente |  -  |
-|**403** | Permissão insuficiente |  -  |
-|**422** | Validation Error |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **closeTrainingSessionApiV1TrainingSessionsTrainingSessionIdClosePost_0**
-> SessionClosureResponse closeTrainingSessionApiV1TrainingSessionsTrainingSessionIdClosePost_0()
-
-Finaliza a revisão operacional (pending_review → readonly) com validações bloqueantes
-
-### Example
-
-```typescript
-import {
-    TrainingSessionsApi,
-    Configuration
-} from './api';
-
-const configuration = new Configuration();
-const apiInstance = new TrainingSessionsApi(configuration);
-
-let trainingSessionId: string; // (default to undefined)
-let organizationId: string; // (optional) (default to undefined)
-let teamId: string; // (optional) (default to undefined)
-let athleteId: string; // (optional) (default to undefined)
-let xRequestID: string; // (optional) (default to undefined)
-let xOrganizationId: string; // (optional) (default to undefined)
-
-const { status, data } = await apiInstance.closeTrainingSessionApiV1TrainingSessionsTrainingSessionIdClosePost_0(
-    trainingSessionId,
-    organizationId,
-    teamId,
-    athleteId,
-    xRequestID,
-    xOrganizationId
-);
-```
-
-### Parameters
-
-|Name | Type | Description  | Notes|
-|------------- | ------------- | ------------- | -------------|
-| **trainingSessionId** | [**string**] |  | defaults to undefined|
-| **organizationId** | [**string**] |  | (optional) defaults to undefined|
-| **teamId** | [**string**] |  | (optional) defaults to undefined|
-| **athleteId** | [**string**] |  | (optional) defaults to undefined|
-| **xRequestID** | [**string**] |  | (optional) defaults to undefined|
-| **xOrganizationId** | [**string**] |  | (optional) defaults to undefined|
-
-
-### Return type
-
-**SessionClosureResponse**
-
-### Authorization
-
-[HTTPBearer](../README.md#HTTPBearer)
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-|**200** | Resposta de fechamento (success&#x3D;True se fechou, False com validation se falhou) |  -  |
-|**404** | Sessão não encontrada |  -  |
-|**401** | Token inválido ou ausente |  -  |
-|**403** | Permissão insuficiente |  -  |
-|**422** | Validation Error |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **copyWeekSessionsApiV1TrainingSessionsCopyWeekPost**
 > Array<TrainingSession> copyWeekSessionsApiV1TrainingSessionsCopyWeekPost()
@@ -692,6 +552,154 @@ const { status, data } = await apiInstance.duplicateTrainingSessionApiV1Training
 |-------------|-------------|------------------|
 |**201** | Sessão duplicada criada |  -  |
 |**400** | Sessão muito antiga (&gt;60 dias) ou já deletada |  -  |
+|**404** | Sessão não encontrada |  -  |
+|**401** | Token inválido ou ausente |  -  |
+|**403** | Permissão insuficiente |  -  |
+|**422** | Validation Error |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **finalizeTrainingSessionApiV1TrainingSessionsTrainingSessionIdFinalizePost**
+> SessionClosureResponse finalizeTrainingSessionApiV1TrainingSessionsTrainingSessionIdFinalizePost(trainingSessionFinalizeRequest)
+
+Finaliza a revisão operacional (pending_review → readonly) com validações bloqueantes
+
+### Example
+
+```typescript
+import {
+    TrainingSessionsApi,
+    Configuration,
+    TrainingSessionFinalizeRequest
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new TrainingSessionsApi(configuration);
+
+let trainingSessionId: string; // (default to undefined)
+let trainingSessionFinalizeRequest: TrainingSessionFinalizeRequest; //
+let organizationId: string; // (optional) (default to undefined)
+let teamId: string; // (optional) (default to undefined)
+let athleteId: string; // (optional) (default to undefined)
+let xRequestID: string; // (optional) (default to undefined)
+let xOrganizationId: string; // (optional) (default to undefined)
+
+const { status, data } = await apiInstance.finalizeTrainingSessionApiV1TrainingSessionsTrainingSessionIdFinalizePost(
+    trainingSessionId,
+    trainingSessionFinalizeRequest,
+    organizationId,
+    teamId,
+    athleteId,
+    xRequestID,
+    xOrganizationId
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **trainingSessionFinalizeRequest** | **TrainingSessionFinalizeRequest**|  | |
+| **trainingSessionId** | [**string**] |  | defaults to undefined|
+| **organizationId** | [**string**] |  | (optional) defaults to undefined|
+| **teamId** | [**string**] |  | (optional) defaults to undefined|
+| **athleteId** | [**string**] |  | (optional) defaults to undefined|
+| **xRequestID** | [**string**] |  | (optional) defaults to undefined|
+| **xOrganizationId** | [**string**] |  | (optional) defaults to undefined|
+
+
+### Return type
+
+**SessionClosureResponse**
+
+### Authorization
+
+[HTTPBearer](../README.md#HTTPBearer)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Resposta de finalização (success&#x3D;True se finalizou, False com validation se falhou) |  -  |
+|**404** | Sessão não encontrada |  -  |
+|**401** | Token inválido ou ausente |  -  |
+|**403** | Permissão insuficiente |  -  |
+|**422** | Validation Error |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **finalizeTrainingSessionApiV1TrainingSessionsTrainingSessionIdFinalizePost_0**
+> SessionClosureResponse finalizeTrainingSessionApiV1TrainingSessionsTrainingSessionIdFinalizePost_0(trainingSessionFinalizeRequest)
+
+Finaliza a revisão operacional (pending_review → readonly) com validações bloqueantes
+
+### Example
+
+```typescript
+import {
+    TrainingSessionsApi,
+    Configuration,
+    TrainingSessionFinalizeRequest
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new TrainingSessionsApi(configuration);
+
+let trainingSessionId: string; // (default to undefined)
+let trainingSessionFinalizeRequest: TrainingSessionFinalizeRequest; //
+let organizationId: string; // (optional) (default to undefined)
+let teamId: string; // (optional) (default to undefined)
+let athleteId: string; // (optional) (default to undefined)
+let xRequestID: string; // (optional) (default to undefined)
+let xOrganizationId: string; // (optional) (default to undefined)
+
+const { status, data } = await apiInstance.finalizeTrainingSessionApiV1TrainingSessionsTrainingSessionIdFinalizePost_0(
+    trainingSessionId,
+    trainingSessionFinalizeRequest,
+    organizationId,
+    teamId,
+    athleteId,
+    xRequestID,
+    xOrganizationId
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **trainingSessionFinalizeRequest** | **TrainingSessionFinalizeRequest**|  | |
+| **trainingSessionId** | [**string**] |  | defaults to undefined|
+| **organizationId** | [**string**] |  | (optional) defaults to undefined|
+| **teamId** | [**string**] |  | (optional) defaults to undefined|
+| **athleteId** | [**string**] |  | (optional) defaults to undefined|
+| **xRequestID** | [**string**] |  | (optional) defaults to undefined|
+| **xOrganizationId** | [**string**] |  | (optional) defaults to undefined|
+
+
+### Return type
+
+**SessionClosureResponse**
+
+### Authorization
+
+[HTTPBearer](../README.md#HTTPBearer)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Resposta de finalização (success&#x3D;True se finalizou, False com validation se falhou) |  -  |
 |**404** | Sessão não encontrada |  -  |
 |**401** | Token inválido ou ausente |  -  |
 |**403** | Permissão insuficiente |  -  |
@@ -1231,146 +1239,6 @@ const { status, data } = await apiInstance.listTrainingSessionsApiV1TrainingSess
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **publishTrainingSessionApiV1TrainingSessionsTrainingSessionIdPublishPost**
-> TrainingSession publishTrainingSessionApiV1TrainingSessionsTrainingSessionIdPublishPost()
-
-Valida campos mínimos e publica a sessão para execução automática
-
-### Example
-
-```typescript
-import {
-    TrainingSessionsApi,
-    Configuration
-} from './api';
-
-const configuration = new Configuration();
-const apiInstance = new TrainingSessionsApi(configuration);
-
-let trainingSessionId: string; // (default to undefined)
-let organizationId: string; // (optional) (default to undefined)
-let teamId: string; // (optional) (default to undefined)
-let athleteId: string; // (optional) (default to undefined)
-let xRequestID: string; // (optional) (default to undefined)
-let xOrganizationId: string; // (optional) (default to undefined)
-
-const { status, data } = await apiInstance.publishTrainingSessionApiV1TrainingSessionsTrainingSessionIdPublishPost(
-    trainingSessionId,
-    organizationId,
-    teamId,
-    athleteId,
-    xRequestID,
-    xOrganizationId
-);
-```
-
-### Parameters
-
-|Name | Type | Description  | Notes|
-|------------- | ------------- | ------------- | -------------|
-| **trainingSessionId** | [**string**] |  | defaults to undefined|
-| **organizationId** | [**string**] |  | (optional) defaults to undefined|
-| **teamId** | [**string**] |  | (optional) defaults to undefined|
-| **athleteId** | [**string**] |  | (optional) defaults to undefined|
-| **xRequestID** | [**string**] |  | (optional) defaults to undefined|
-| **xOrganizationId** | [**string**] |  | (optional) defaults to undefined|
-
-
-### Return type
-
-**TrainingSession**
-
-### Authorization
-
-[HTTPBearer](../README.md#HTTPBearer)
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-|**200** | Sessão publicada com sucesso |  -  |
-|**404** | Sessão não encontrada |  -  |
-|**401** | Token inválido ou ausente |  -  |
-|**403** | Permissão insuficiente |  -  |
-|**422** | Dados incompletos |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **publishTrainingSessionApiV1TrainingSessionsTrainingSessionIdPublishPost_0**
-> TrainingSession publishTrainingSessionApiV1TrainingSessionsTrainingSessionIdPublishPost_0()
-
-Valida campos mínimos e publica a sessão para execução automática
-
-### Example
-
-```typescript
-import {
-    TrainingSessionsApi,
-    Configuration
-} from './api';
-
-const configuration = new Configuration();
-const apiInstance = new TrainingSessionsApi(configuration);
-
-let trainingSessionId: string; // (default to undefined)
-let organizationId: string; // (optional) (default to undefined)
-let teamId: string; // (optional) (default to undefined)
-let athleteId: string; // (optional) (default to undefined)
-let xRequestID: string; // (optional) (default to undefined)
-let xOrganizationId: string; // (optional) (default to undefined)
-
-const { status, data } = await apiInstance.publishTrainingSessionApiV1TrainingSessionsTrainingSessionIdPublishPost_0(
-    trainingSessionId,
-    organizationId,
-    teamId,
-    athleteId,
-    xRequestID,
-    xOrganizationId
-);
-```
-
-### Parameters
-
-|Name | Type | Description  | Notes|
-|------------- | ------------- | ------------- | -------------|
-| **trainingSessionId** | [**string**] |  | defaults to undefined|
-| **organizationId** | [**string**] |  | (optional) defaults to undefined|
-| **teamId** | [**string**] |  | (optional) defaults to undefined|
-| **athleteId** | [**string**] |  | (optional) defaults to undefined|
-| **xRequestID** | [**string**] |  | (optional) defaults to undefined|
-| **xOrganizationId** | [**string**] |  | (optional) defaults to undefined|
-
-
-### Return type
-
-**TrainingSession**
-
-### Authorization
-
-[HTTPBearer](../README.md#HTTPBearer)
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-|**200** | Sessão publicada com sucesso |  -  |
-|**404** | Sessão não encontrada |  -  |
-|**401** | Token inválido ou ausente |  -  |
-|**403** | Permissão insuficiente |  -  |
-|**422** | Dados incompletos |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
 # **restoreTrainingSessionApiV1TrainingSessionsTrainingSessionIdRestorePost**
 > TrainingSession restoreTrainingSessionApiV1TrainingSessionsTrainingSessionIdRestorePost()
 
@@ -1490,6 +1358,154 @@ const { status, data } = await apiInstance.restoreTrainingSessionApiV1TrainingSe
 |**403** | Permissão insuficiente |  -  |
 |**404** | Sessão não encontrada |  -  |
 |**422** | Sessão não está excluída |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **scheduleTrainingSessionApiV1TrainingSessionsTrainingSessionIdSchedulePost**
+> TrainingSession scheduleTrainingSessionApiV1TrainingSessionsTrainingSessionIdSchedulePost(trainingSessionScheduleRequest)
+
+Valida campos mínimos e agenda a sessão para execução automática
+
+### Example
+
+```typescript
+import {
+    TrainingSessionsApi,
+    Configuration,
+    TrainingSessionScheduleRequest
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new TrainingSessionsApi(configuration);
+
+let trainingSessionId: string; // (default to undefined)
+let trainingSessionScheduleRequest: TrainingSessionScheduleRequest; //
+let organizationId: string; // (optional) (default to undefined)
+let teamId: string; // (optional) (default to undefined)
+let athleteId: string; // (optional) (default to undefined)
+let xRequestID: string; // (optional) (default to undefined)
+let xOrganizationId: string; // (optional) (default to undefined)
+
+const { status, data } = await apiInstance.scheduleTrainingSessionApiV1TrainingSessionsTrainingSessionIdSchedulePost(
+    trainingSessionId,
+    trainingSessionScheduleRequest,
+    organizationId,
+    teamId,
+    athleteId,
+    xRequestID,
+    xOrganizationId
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **trainingSessionScheduleRequest** | **TrainingSessionScheduleRequest**|  | |
+| **trainingSessionId** | [**string**] |  | defaults to undefined|
+| **organizationId** | [**string**] |  | (optional) defaults to undefined|
+| **teamId** | [**string**] |  | (optional) defaults to undefined|
+| **athleteId** | [**string**] |  | (optional) defaults to undefined|
+| **xRequestID** | [**string**] |  | (optional) defaults to undefined|
+| **xOrganizationId** | [**string**] |  | (optional) defaults to undefined|
+
+
+### Return type
+
+**TrainingSession**
+
+### Authorization
+
+[HTTPBearer](../README.md#HTTPBearer)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Sessão agendada com sucesso |  -  |
+|**404** | Sessão não encontrada |  -  |
+|**401** | Token inválido ou ausente |  -  |
+|**403** | Permissão insuficiente |  -  |
+|**422** | Dados incompletos |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **scheduleTrainingSessionApiV1TrainingSessionsTrainingSessionIdSchedulePost_0**
+> TrainingSession scheduleTrainingSessionApiV1TrainingSessionsTrainingSessionIdSchedulePost_0(trainingSessionScheduleRequest)
+
+Valida campos mínimos e agenda a sessão para execução automática
+
+### Example
+
+```typescript
+import {
+    TrainingSessionsApi,
+    Configuration,
+    TrainingSessionScheduleRequest
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new TrainingSessionsApi(configuration);
+
+let trainingSessionId: string; // (default to undefined)
+let trainingSessionScheduleRequest: TrainingSessionScheduleRequest; //
+let organizationId: string; // (optional) (default to undefined)
+let teamId: string; // (optional) (default to undefined)
+let athleteId: string; // (optional) (default to undefined)
+let xRequestID: string; // (optional) (default to undefined)
+let xOrganizationId: string; // (optional) (default to undefined)
+
+const { status, data } = await apiInstance.scheduleTrainingSessionApiV1TrainingSessionsTrainingSessionIdSchedulePost_0(
+    trainingSessionId,
+    trainingSessionScheduleRequest,
+    organizationId,
+    teamId,
+    athleteId,
+    xRequestID,
+    xOrganizationId
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **trainingSessionScheduleRequest** | **TrainingSessionScheduleRequest**|  | |
+| **trainingSessionId** | [**string**] |  | defaults to undefined|
+| **organizationId** | [**string**] |  | (optional) defaults to undefined|
+| **teamId** | [**string**] |  | (optional) defaults to undefined|
+| **athleteId** | [**string**] |  | (optional) defaults to undefined|
+| **xRequestID** | [**string**] |  | (optional) defaults to undefined|
+| **xOrganizationId** | [**string**] |  | (optional) defaults to undefined|
+
+
+### Return type
+
+**TrainingSession**
+
+### Authorization
+
+[HTTPBearer](../README.md#HTTPBearer)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Sessão agendada com sucesso |  -  |
+|**404** | Sessão não encontrada |  -  |
+|**401** | Token inválido ou ausente |  -  |
+|**403** | Permissão insuficiente |  -  |
+|**422** | Dados incompletos |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

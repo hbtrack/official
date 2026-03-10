@@ -11,9 +11,9 @@
 
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import { Icons } from '@/design/icons';
 import { ExerciseTag } from '@/lib/api/exercises';
-import { Icons } from '@/design-system/icons';
+import { useMemo, useState } from 'react';
 
 interface TagFilterProps {
   tags: ExerciseTag[];
@@ -45,9 +45,9 @@ export function TagFilter({
   // Filtrar por busca
   const filteredTags = useMemo(() => {
     if (!searchTerm) return activeTags;
-    
+
     const searchLower = searchTerm.toLowerCase();
-    return activeTags.filter(tag => 
+    return activeTags.filter(tag =>
       tag.name.toLowerCase().includes(searchLower) ||
       tag.description?.toLowerCase().includes(searchLower)
     );
@@ -67,7 +67,7 @@ export function TagFilter({
 
   const handleToggleTag = (tagId: string, tag: ExerciseTag) => {
     const isSelected = selectedTagIds.includes(tagId);
-    
+
     if (isSelected) {
       // Remover tag e todos os filhos
       const idsToRemove = getAllDescendantIds(tag);
@@ -81,7 +81,7 @@ export function TagFilter({
   const handleSelectAll = (tag: ExerciseTag) => {
     const allIds = getAllDescendantIds(tag);
     const allSelected = allIds.every(id => selectedTagIds.includes(id));
-    
+
     if (allSelected) {
       onSelectedChange(selectedTagIds.filter(id => !allIds.includes(id)));
     } else {
@@ -264,7 +264,7 @@ function TagTreeItem({
 }: TagTreeItemProps) {
   const hasChildren = tag.children && tag.children.length > 0;
   const indentClass = `pl-${level * 4}`;
-  
+
   // Verificar se todos os filhos estão selecionados
   const allChildrenSelected = useMemo(() => {
     if (!hasChildren) return false;

@@ -10,7 +10,7 @@
 | **RUN_ID** | TESTADOR-AR177-AR179-SUCESSO-20260228 |
 | **GIT_SHA** | b123a58 |
 | **Timestamp** | 2026-02-28T21:15:00Z |
-| **Handoff lido** | _reports/EXECUTOR.md (EXECUTOR-BATCH2-TRAINING-20260228) |
+| **Handoff lido** | _reports/EXECUTOR.yaml (EXECUTOR-BATCH2-TRAINING-20260228) |
 
 ---
 

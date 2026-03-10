@@ -1,0 +1,52 @@
+{
+  "ar_id": "272",
+  "validation_command": "python -c \"import pathlib,re; b=pathlib.Path('docs/hbtrack/modulos/treinos/AR_BACKLOG_TRAINING.md').read_text(encoding='utf-8'); m=pathlib.Path('docs/hbtrack/modulos/treinos/TEST_MATRIX_TRAINING.md').read_text(encoding='utf-8'); k=pathlib.Path('docs/hbtrack/Hb Track Kanban.md').read_text(encoding='utf-8'); row=re.search(r'\\|\\s*AR-TRAIN-REC-01\\s*\\|[^\\n]+', b); assert row and 'VERIFICADO' in row.group(), 'FAIL Gate1: AR-TRAIN-REC-01 nao VERIFICADO no backlog (ainda READY?)'; assert 'v4.1.0' in b, 'FAIL Gate1: backlog nao bumped para v4.1.0'; assert 'AR-TRAIN-REC-01' in m, 'FAIL Gate2: AR-TRAIN-REC-01 ausente em TEST_MATRIX'; assert 'v4.6.0' in m, 'FAIL Gate2: TEST_MATRIX nao bumped para v4.6.0'; idx271=k.find('AR_271'); assert idx271>=0, 'FAIL Gate3: AR_271 nao encontrado no Kanban'; assert 'VERIFICADO' in k[idx271:idx271+600], 'FAIL Gate3: AR_271 nao VERIFICADO no Kanban'; print('PASS AR_272: Gates 1-3 sync documental pos-REC-01 OK')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "3e179f1ef189e4852bbd2eda69683263f95541c2147e2e255f2e51d60dc9c739",
+      "hash": "3e179f1ef189e485",
+      "stdout_len": 53,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "3e179f1ef189e4852bbd2eda69683263f95541c2147e2e255f2e51d60dc9c739",
+      "hash": "3e179f1ef189e485",
+      "stdout_len": 53,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "3e179f1ef189e4852bbd2eda69683263f95541c2147e2e255f2e51d60dc9c739",
+      "hash": "3e179f1ef189e485",
+      "stdout_len": 53,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true,
+  "dod": {
+    "proof": "OK",
+    "trace": "OK",
+    "stitch": "OK",
+    "matrix": "N/A",
+    "warns": [],
+    "gate_errors": [
+      "DOC-GATE-019: BLOCKED_INPUT",
+      "DOC-GATE-020: BLOCKED_INPUT",
+      "DOC-GATE-021: BLOCKED_INPUT"
+    ]
+  }
+}

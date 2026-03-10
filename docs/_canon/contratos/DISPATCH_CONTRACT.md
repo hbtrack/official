@@ -113,7 +113,7 @@ Sem isso, o token é considerado não auditável.
 
 ## 10) Integração com os handoffs `_reports/*.md`
 
-Os arquivos `_reports/ARQUITETO.md`, `_reports/EXECUTOR.md`, `_reports/TESTADOR.md` continuam sendo o handoff humano/LLM.
+Os arquivos `_reports/ARQUITETO.yaml`, `_reports/EXECUTOR.yaml`, `_reports/TESTADOR.yaml` continuam sendo o handoff humano/LLM.
 O dispatch token é o semáforo determinístico para “quem deve agir agora”.
 
 O chat NÃO é fonte de verdade do pipeline.

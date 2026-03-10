@@ -1,11 +1,8 @@
--- Schema dump generated: 2026-03-05T06:29:28.770535+00:00Z
--- Source: 191.252.185.34
-
 --
 -- PostgreSQL database dump
 --
 
-\restrict Iyh6hypJHG52m3FPapiGjOtnVF2wphYigYtdemnB1f5IA1aw6xnUJzcdSxacYJJ
+\restrict 88lZKyJshgJj4kTbLoqqKj8wJMMyfw55lUVSQoKMWM2ifir5tLuI7NMoeCLUaRO
 
 -- Dumped from database version 15.16 (Debian 15.16-1.pgdg13+1)
 -- Dumped by pg_dump version 18.1
@@ -211,6 +208,21 @@ CREATE FUNCTION public.fn_derive_phase_focus() RETURNS trigger
 --
 
 COMMENT ON FUNCTION public.fn_derive_phase_focus() IS 'Step 3: Deriva automaticamente phase_focus_* baseado no threshold de 5%';
+
+
+--
+-- Name: fn_immutable_ledger_row(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.fn_immutable_ledger_row() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+        BEGIN
+            RAISE EXCEPTION
+                'Operacao % proibida na tabela imutavel %: ledger append-only',
+                TG_OP, TG_TABLE_NAME;
+        END;
+        $$;
 
 
 --
@@ -2747,6 +2759,20 @@ CREATE TABLE public.training_pending_items (
 
 
 --
+-- Name: training_session_adjustments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.training_session_adjustments (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    plan_id uuid NOT NULL,
+    session_id uuid NOT NULL,
+    sequence_number integer NOT NULL,
+    adjustment_data jsonb NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
 -- Name: training_session_exercises; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2770,6 +2796,26 @@ CREATE TABLE public.training_session_exercises (
 --
 
 COMMENT ON TABLE public.training_session_exercises IS 'Vínculo entre sessões de treino e exercícios. ⚠️ Permite DUPLICATAS do mesmo exercício (circuitos/repetições).';
+
+
+--
+-- Name: training_session_plans; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.training_session_plans (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    session_id uuid NOT NULL,
+    draft_id uuid,
+    plan_data jsonb NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: COLUMN training_session_plans.draft_id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.training_session_plans.draft_id IS 'Referencia ao draft de IA de origem (rastreabilidade)';
 
 
 --
@@ -3857,11 +3903,27 @@ ALTER TABLE ONLY public.training_pending_items
 
 
 --
+-- Name: training_session_adjustments training_session_adjustments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.training_session_adjustments
+    ADD CONSTRAINT training_session_adjustments_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: training_session_exercises training_session_exercises_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.training_session_exercises
     ADD CONSTRAINT training_session_exercises_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: training_session_plans training_session_plans_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.training_session_plans
+    ADD CONSTRAINT training_session_plans_pkey PRIMARY KEY (id);
 
 
 --
@@ -5351,6 +5413,27 @@ CREATE INDEX ix_teams_season_id ON public.teams USING btree (season_id);
 
 
 --
+-- Name: ix_training_session_adjustments_plan_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ix_training_session_adjustments_plan_id ON public.training_session_adjustments USING btree (plan_id);
+
+
+--
+-- Name: ix_training_session_adjustments_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ix_training_session_adjustments_session_id ON public.training_session_adjustments USING btree (session_id);
+
+
+--
+-- Name: ix_training_session_plans_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX ix_training_session_plans_session_id ON public.training_session_plans USING btree (session_id);
+
+
+--
 -- Name: ix_training_sessions_organization_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -5852,6 +5935,20 @@ CREATE TRIGGER trg_teams_block_delete BEFORE DELETE ON public.teams FOR EACH ROW
 --
 
 CREATE TRIGGER trg_teams_updated_at BEFORE UPDATE ON public.teams FOR EACH ROW EXECUTE FUNCTION public.trg_set_updated_at();
+
+
+--
+-- Name: training_session_adjustments trg_training_session_adjustments_immutable; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER trg_training_session_adjustments_immutable BEFORE DELETE OR UPDATE ON public.training_session_adjustments FOR EACH ROW EXECUTE FUNCTION public.fn_immutable_ledger_row();
+
+
+--
+-- Name: training_session_plans trg_training_session_plans_immutable; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER trg_training_session_plans_immutable BEFORE DELETE OR UPDATE ON public.training_session_plans FOR EACH ROW EXECUTE FUNCTION public.fn_immutable_ledger_row();
 
 
 --
@@ -7152,6 +7249,22 @@ ALTER TABLE ONLY public.training_microcycles
 
 
 --
+-- Name: training_session_adjustments training_session_adjustments_plan_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.training_session_adjustments
+    ADD CONSTRAINT training_session_adjustments_plan_id_fkey FOREIGN KEY (plan_id) REFERENCES public.training_session_plans(id) ON DELETE RESTRICT;
+
+
+--
+-- Name: training_session_adjustments training_session_adjustments_session_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.training_session_adjustments
+    ADD CONSTRAINT training_session_adjustments_session_id_fkey FOREIGN KEY (session_id) REFERENCES public.training_sessions(id) ON DELETE RESTRICT;
+
+
+--
 -- Name: training_session_exercises training_session_exercises_exercise_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -7165,6 +7278,14 @@ ALTER TABLE ONLY public.training_session_exercises
 
 ALTER TABLE ONLY public.training_session_exercises
     ADD CONSTRAINT training_session_exercises_session_id_fkey FOREIGN KEY (session_id) REFERENCES public.training_sessions(id) ON DELETE CASCADE;
+
+
+--
+-- Name: training_session_plans training_session_plans_session_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.training_session_plans
+    ADD CONSTRAINT training_session_plans_session_id_fkey FOREIGN KEY (session_id) REFERENCES public.training_sessions(id) ON DELETE RESTRICT;
 
 
 --
@@ -7211,5 +7332,5 @@ ALTER TABLE ONLY public.wellness_reminders
 -- PostgreSQL database dump complete
 --
 
-\unrestrict Iyh6hypJHG52m3FPapiGjOtnVF2wphYigYtdemnB1f5IA1aw6xnUJzcdSxacYJJ
+\unrestrict 88lZKyJshgJj4kTbLoqqKj8wJMMyfw55lUVSQoKMWM2ifir5tLuI7NMoeCLUaRO
 

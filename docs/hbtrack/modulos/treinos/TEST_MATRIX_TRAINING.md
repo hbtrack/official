@@ -1,7 +1,7 @@
 # TEST_MATRIX_TRAINING.md — Matriz de Verificação e Rastreabilidade do Módulo TRAINING
 
 Status: DONE_GATE_ATINGIDO
-Versão: v4.5.0
+Versão: v4.6.0
 Tipo de Documento: Verification & Traceability Matrix (Normativo Operacional / SSOT)
 Módulo: TRAINING
 Fase: FASE_2 (PRD v2.2 — 2026-02-20) + AS-IS repo (2026-02-25) + DEC-TRAIN-* (2026-02-25) + FASE_3 (2026-02-27)
@@ -11,18 +11,21 @@ Owners:
 - Auditoria/Testes: (a definir)
 - Backend/Frontend: (a definir)
 
-Última revisão: 2026-03-08
+Última revisão: 2026-03-09
 Próxima revisão recomendada: N/A — TRUTH SUITE 0 failed/skipped/xfailed atingido (Batch 29)
 
+> Changelog v4.6.0 (2026-03-09) — Batch REC-02: sync documental pós-REC-01:
+> - §9: AR-TRAIN-REC-01 adicionada como VERIFICADO (Batch REC-01 — Reconciliação documental: lifecycle canônico nos 3 artefatos de base TRAINING).
+
 > Changelog v4.5.0 (2026-03-08) — Batch 35 DONE_CONTRACT artifacts:
-> - §9: AR-TRAIN-081 adicionada como VERIFICADO (Batch 35 — DONE_CONTRACT_TRAINING.md.md registrado na cadeia canônica).
+> - §9: AR-TRAIN-081 adicionada como VERIFICADO (Batch 35 — DONE_CONTRACT_TRAINING.md registrado na cadeia canônica).
 > - §9: AR-TRAIN-082 adicionada como VERIFICADO (Batch 35 — TRAINING_SCOPE_REGISTRY.yaml criado).
 > - §9: AR-TRAIN-083 adicionada como VERIFICADO (Batch 35 — TRAINING_STATE_MACHINE.yaml criado).
 > - §9: AR-TRAIN-084 adicionada como VERIFICADO (Batch 35 — TRAINING_PERF_LIMITS.json criado).
 > - §9: AR-TRAIN-085 adicionada como VERIFICADO (Batch 35 — traceability_training_core.csv criado como skeleton).
 > - §9: AR-TRAIN-086 adicionada como VERIFICADO (Batch 35 — sync documental pós-Batch 35).
 > - Nota: TRAINING_SCOPE_REGISTRY.yaml, TRAINING_STATE_MACHINE.yaml, TRAINING_PERF_LIMITS.json e traceability_training_core.csv criados.
-> - Nota: DONE_CONTRACT_TRAINING.md.md registrado na cadeia canônica (_INDEX.md v1.8.0 entry 6b).
+> - Nota: DONE_CONTRACT_TRAINING.md registrado na cadeia canônica (_INDEX.md v1.8.0 entry 6b).
 > - §9: AR-TRAIN-079 adicionada como VERIFICADO (Batch 34 — trainingAlertsSuggestionsApi singleton em api-instance.ts).
 > - §9: AR-TRAIN-080 adicionada como VERIFICADO (Batch 34 — sync documental pós-Batch 34).
 > - Nota: CONTRACT-TRAIN-077..085 convergidos para IMPLEMENTADO em TRAINING_FRONT_BACK_CONTRACT.md §5.10.
@@ -755,12 +758,13 @@ Este documento define **o que deve ser testado**, **como provar**, e **qual stat
 | AR-TRAIN-078 | G | Sync documental pós-Batch 33: BACKLOG v3.7.0 + TEST_MATRIX v4.3.0 + Kanban Batch 33 + _INDEX v1.6.0. FE_MIGRATION_COMPLETE=TRUE (exceto useSuggestions.ts — DIVERGENTE_DO_SSOT) (AR_262, Batch 33) | AR_BACKLOG_TRAINING.md, TEST_MATRIX_TRAINING.md, Hb Track Kanban.md, docs/hbtrack/modulos/treinos/_INDEX.md | docs/hbtrack/evidence/AR_262/executor_main.log | VERIFICADO |
 | AR-TRAIN-079 | D/E | trainingAlertsSuggestionsApi singleton + TRAINING_FRONT_BACK_CONTRACT.md §5.10 DIVERGENTE→IMPLEMENTADO + useSuggestions.ts deferred CAP-001 (AR_263, Batch 34) | Hb Track - Frontend/src/api/generated/api-instance.ts, docs/hbtrack/modulos/treinos/TRAINING_FRONT_BACK_CONTRACT.md | docs/hbtrack/evidence/AR_263/executor_main.log | VERIFICADO |
 | AR-TRAIN-080 | G | Sync documental pós-Batch 34: BACKLOG v3.8.0 + TEST_MATRIX v4.4.0 + Kanban Batch 34 + _INDEX v1.7.0. FE_MIGRATION_COMPLETE=TRUE (100% endpoints canônicos; useSuggestions.ts deferred a CAP-001) (AR_264, Batch 34) | AR_BACKLOG_TRAINING.md, TEST_MATRIX_TRAINING.md, Hb Track Kanban.md, docs/hbtrack/modulos/treinos/_INDEX.md | docs/hbtrack/evidence/AR_264/executor_main.log | VERIFICADO |
-| AR-TRAIN-081 | G | DONE_CONTRACT_TRAINING.md.md registrado na cadeia canônica: _INDEX.md v1.8.0 + entry 6b (AR_265, Batch 35) | docs/hbtrack/modulos/treinos/_INDEX.md | docs/hbtrack/evidence/AR_265/executor_main.log | VERIFICADO |
+| AR-TRAIN-081 | G | DONE_CONTRACT_TRAINING.md registrado na cadeia canônica: _INDEX.md v1.8.0 + entry 6b (AR_265, Batch 35) | docs/hbtrack/modulos/treinos/_INDEX.md | docs/hbtrack/evidence/AR_265/executor_main.log | VERIFICADO |
 | AR-TRAIN-082 | A | TRAINING_SCOPE_REGISTRY.yaml criado: 13 CORE + 7 EXTENDED + 2 EXPERIMENTAL (AR_266, Batch 35) | docs/hbtrack/modulos/treinos/TRAINING_SCOPE_REGISTRY.yaml | docs/hbtrack/evidence/AR_266/executor_main.log | VERIFICADO |
 | AR-TRAIN-083 | A | TRAINING_STATE_MACHINE.yaml criado: 5 entidades stateful CORE (AR_267, Batch 35) | docs/hbtrack/modulos/treinos/TRAINING_STATE_MACHINE.yaml | docs/hbtrack/evidence/AR_267/executor_main.log | VERIFICADO |
 | AR-TRAIN-084 | A | TRAINING_PERF_LIMITS.json criado: 16 itens CORE com SLOs baseline (AR_268, Batch 35) | docs/hbtrack/modulos/treinos/TRAINING_PERF_LIMITS.json | docs/hbtrack/evidence/AR_268/executor_main.log | VERIFICADO |
 | AR-TRAIN-085 | A | traceability_training_core.csv criado como skeleton: 9 headers, 0 dados (AR_269, Batch 35) | docs/hbtrack/modulos/treinos/_evidence/traceability_training_core.csv | docs/hbtrack/evidence/AR_269/executor_main.log | VERIFICADO |
 | AR-TRAIN-086 | G | Sync documental pós-Batch 35: BACKLOG v3.9.0 + TEST_MATRIX v4.5.0 + Kanban Batch 35 + _INDEX v1.8.0 (AR_270, Batch 35) | AR_BACKLOG_TRAINING.md, TEST_MATRIX_TRAINING.md, Hb Track Kanban.md, docs/hbtrack/modulos/treinos/_INDEX.md | docs/hbtrack/evidence/AR_270/executor_main.log | VERIFICADO |
+| AR-TRAIN-REC-01 | G+A | Reconciliacao documental: lifecycle canonico nos 3 artefatos de base TRAINING + eliminar PUBLISHED/CLOSED + renomear limits->operations em PERF_LIMITS (AR_271, Batch REC-01) | docs/hbtrack/modulos/treinos/_INDEX.md, TRAINING_SCOPE_REGISTRY.yaml, TRAINING_PERF_LIMITS.json | docs/hbtrack/evidence/AR_271/executor_main.log | VERIFICADO |
 
 ---
 

@@ -456,14 +456,33 @@ class TrainingSessionPaginatedResponse(BaseModel):
 
 # Novos schemas para estados e desvios (TRAINNIG.MD)
 
-class TrainingSessionCloseRequest(BaseModel):
-    """Payload para fechamento de sessão."""
+class TrainingSessionScheduleRequest(BaseModel):
+    """Payload para agendamento de sessão (draft → scheduled)."""
+    starts_at: datetime = Field(..., description="Data/hora de início da sessão")
+    ends_at: datetime = Field(..., description="Data/hora de término da sessão")
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "example": {
+                "starts_at": "2025-06-15T09:00:00Z",
+                "ends_at": "2025-06-15T10:30:00Z",
+            }
+        }
+    )
+
+
+class TrainingSessionFinalizeRequest(BaseModel):
+    """Payload para finalização de revisão operacional (pending_review → readonly)."""
+    attendance_completed: bool = Field(..., description="Confirma que presenças foram marcadas")
+    review_completed: bool = Field(..., description="Confirma que revisão operacional foi concluída")
     confirm: bool = Field(default=True, description="Confirmação de fechamento")
 
     model_config = ConfigDict(
         json_schema_extra={
             "example": {
-                "confirm": True
+                "attendance_completed": True,
+                "review_completed": True,
+                "confirm": True,
             }
         }
     )

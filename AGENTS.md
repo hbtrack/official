@@ -33,3 +33,23 @@ Regras:
 - `TRAINING_BATCH_PLAN_v1.md` não é SSOT ativo.
 - Baseline canônico do `CONTRACT_DIFF_GATE` (oasdiff): `contracts/openapi/baseline/openapi_baseline.json`.
 
+## Módulo ATLETAS — cadeia canônica
+
+Para qualquer tarefa no módulo ATLETAS, ler e obedecer esta cadeia (ordem/autoridade):
+1. `docs/hbtrack/modulos/atletas/00_ATLETAS_CROSS_LINTER_RULES.json` — constituição v1.2.7
+2. `docs/hbtrack/modulos/atletas/01_ATLETAS_OPENAPI.yaml` — contrato HTTP
+3. `docs/hbtrack/modulos/atletas/05_ATLETAS_EVENTS.asyncapi.yaml` — contrato de eventos
+4. `docs/hbtrack/modulos/atletas/08_ATLETAS_TRACEABILITY.yaml` — rastreabilidade canônica
+5. `docs/hbtrack/modulos/atletas/12_ATLETAS_EXECUTION_BINDINGS.yaml` — bindings de execução
+6. `docs/hbtrack/modulos/atletas/13_ATLETAS_DB_CONTRACT.yaml` — contrato de banco
+7. `docs/hbtrack/modulos/atletas/14_ATLETAS_UI_CONTRACT.yaml` — contrato de UI
+8. `docs/hbtrack/modulos/atletas/15_ATLETAS_INVARIANTS.yaml` — invariantes de domínio
+9. `docs/hbtrack/modulos/atletas/17_ATLETAS_PROJECTIONS.yaml` — projeções canônicas
+10. `docs/hbtrack/modulos/atletas/18_ATLETAS_SIDE_EFFECTS.yaml` — side effects
+11. `docs/hbtrack/modulos/atletas/19_ATLETAS_TEST_SCENARIOS.yaml` — cenários de teste
+
+Regras:
+- Em caso de conflito, `00_ATLETAS_CROSS_LINTER_RULES.json` + `15_ATLETAS_INVARIANTS.yaml` prevalecem.
+- `ANALISE_CONTRATOS_GAPS.md` não é SSOT ativo — é evidência histórica.
+- Não inferir nada que não esteja declarado nos contratos acima.
+

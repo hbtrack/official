@@ -42,7 +42,7 @@ AR_002 e AR_036: VERIFICADO.
 AR_059: aguardando correcao validation_command pelo Arquiteto antes de re-hb report.
 """
 
-out = pathlib.Path("_reports/TESTADOR.md")
+out = pathlib.Path("_reports/TESTADOR.yaml")
 out.write_text(content, encoding="utf-8")
-print(f"TESTADOR.md written OK ({len(content)} chars)")
+print(f"TESTADOR.yaml written OK ({len(content)} chars)")
 

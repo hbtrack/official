@@ -13,65 +13,59 @@
  * @version 4.2.2 - Ícone Volleyball + Item Competições adicionado
  */
 
-import { useState, useCallback, useMemo } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { usePathname, useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Icons } from '@/design-system/icons';
 import {
-  LayoutDashboard,
-  Users,
-  UserPlus,
-  UsersRound,
-  Trophy,
-  CalendarDays,
-  ChevronLeft,
-  TrendingUp,
-  ClipboardList,
-  ListChecks,
-  Target,
-  Loader2,
-  Settings,
-  Moon,
-  Sun,
-  Home,
-  UserCheck,
-  ClipboardCheck,
-  FileText,
-  UserCircle,
-  GitCompare,
-  History,
-  Shield,
-  Sparkles,
-  // Ícones esportivos v4.2.2
-  Volleyball,      // Para jogos (bola de handebol)
-  Activity,        // Para estatísticas e desempenho
-  Clipboard,       // Para treinos (prancheta técnica)
-  UserCog,         // Para comissão técnica
-  FileBarChart,    // Para relatórios
-  AlertCircle,     // Para indicadores de pendência
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useTheme } from '@/context/ThemeContext';
-import { useAuth } from '@/context/AuthContext';
-import { useTeamSeasonOptional } from '@/context/TeamSeasonContext';
-import { useTeams } from '@/hooks/useTeams';
-import CreateTeamModal from '@/components/teams-v2/CreateTeamModal';
-import { useQueryClient } from '@tanstack/react-query';
-import {
-  SidebarSection,
   SidebarCollapsibleSection,
   SidebarDivider,
   SidebarItem,
+  SidebarJourneyShortcuts,
+  SidebarSection,
   SidebarSubmenu,
   SidebarTeamContext,
-  SidebarJourneyShortcuts,
 } from '@/components/Sidebar';
-import { useRouteVisibility } from '@/hooks/useRouteVisibility';
+import CreateTeamModal from '@/components/teams-v2/CreateTeamModal';
+import { useAuth } from '@/context/AuthContext';
+import { useTeamSeasonOptional } from '@/context/TeamSeasonContext';
+import { useTheme } from '@/context/ThemeContext';
+import { Icons } from '@/design/icons';
 import { useJourneyShortcuts } from '@/hooks/useJourneyShortcuts';
+import { useRouteVisibility } from '@/hooks/useRouteVisibility';
+import { useTeams } from '@/hooks/useTeams';
+import { cn } from '@/lib/utils';
+import { useQueryClient } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
+import {
+  Activity,
+  CalendarDays,
+  ChevronLeft, // Para estatísticas e desempenho
+  Clipboard,
+  ClipboardCheck,
+  ClipboardList, // Para comissão técnica
+  FileBarChart,
+  GitCompare,
+  History,
+  Home,
+  LayoutDashboard,
+  ListChecks,
+  Moon,
+  Settings,
+  Sun,
+  Target,
+  TrendingUp,
+  Trophy,
+  UserCircle, // Para treinos (prancheta técnica)
+  UserCog,
+  UserPlus,
+  Users,
+  UsersRound,
+  // Ícones esportivos v4.2.2
+  Volleyball
+} from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { useCallback, useState } from 'react';
 
-interface ProfessionalSidebarProps {}
+interface ProfessionalSidebarProps { }
 
 // =============================================================================
 // CONFIGURAÇÃO DE MENUS - v4.2 Ícones corrigidos
@@ -108,14 +102,14 @@ const atletasSubmenu = [
 // Submenu Estatísticas com RBAC - ícones esportivos
 const getStatisticsSubmenu = (userRole: string | undefined) => {
   if (!userRole) return [];
-  
+
   // Atleta: apenas visão própria
   if (userRole === 'atleta') {
     return [
       { name: 'Minhas Estatísticas', href: '/statistics/me', icon: TrendingUp, tooltip: 'Seu acompanhamento pessoal' },
     ];
   }
-  
+
   // Comissão técnica e admin: visão completa
   if (['treinador', 'coordenador', 'admin', 'dirigente'].includes(userRole)) {
     return [
@@ -124,7 +118,7 @@ const getStatisticsSubmenu = (userRole: string | undefined) => {
       { name: 'Comparativos', href: '/statistics/comparativos', icon: GitCompare, tooltip: 'Comparar desempenhos' },
     ];
   }
-  
+
   return [];
 };
 
@@ -141,7 +135,7 @@ const canAccessAdmin = (role: string | undefined) => {
 const SIDEBAR_COLLAPSED_KEY = 'hbtrack-sidebar-collapsed';
 const ADMIN_SECTION_EXPANDED_KEY = 'hbtrack-admin-section-expanded';
 
-export function ProfessionalSidebar({}: ProfessionalSidebarProps) {
+export function ProfessionalSidebar({ }: ProfessionalSidebarProps) {
   // Inicializar estado colapsado do localStorage
   const [isCollapsed, setIsCollapsed] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -158,31 +152,31 @@ export function ProfessionalSidebar({}: ProfessionalSidebarProps) {
   const { theme, toggleTheme } = useTheme();
   const { user, isLoading } = useAuth();
   const queryClient = useQueryClient();
-  
+
   // Verificar permissão para criar equipe (RF6: Dirigentes, Coordenadores e Treinadores)
   // Nota: superadmin tem role_code='dirigente' + is_superadmin=true
   const canCreateTeam = user?.role === 'dirigente' || user?.role === 'coordenador' || user?.role === 'treinador';
-  
+
   // Hook para verificar se o usuário tem equipes
   const { data: teams, isLoading: teamsLoading, refetch: refetchTeams } = useTeams();
   const hasTeams = teams && teams.length > 0;
-  
+
   // Equipe ativa (selecionada ou primeira da lista)
-  const activeTeam = hasTeams 
-    ? teams.find(t => t.id === selectedTeamId) || teams[0] 
+  const activeTeam = hasTeams
+    ? teams.find(t => t.id === selectedTeamId) || teams[0]
     : null;
 
   // ═══════════════════════════════════════════════════════════════════════════
   // HOOKS DE MELHORIAS ESTRUTURAIS v4.1
   // ═══════════════════════════════════════════════════════════════════════════
-  
+
   // Contexto de temporada (opcional, pode não estar disponível)
   const teamSeasonContext = useTeamSeasonOptional();
-  
+
   // Hook de visibilidade de rotas baseada em dados
   // O hook usa internamente o contexto de equipe/temporada
   const routeVisibility = useRouteVisibility();
-  
+
   // Hook de atalhos de jornada
   const journeyData = useJourneyShortcuts();
 
@@ -200,12 +194,12 @@ export function ProfessionalSidebar({}: ProfessionalSidebarProps) {
   // Handler para clique no item Equipes
   const handleTeamsClick = useCallback(async (e: React.MouseEvent) => {
     e.preventDefault();
-    
+
     if (teamsLoading) {
       setIsCheckingTeams(true);
       const result = await refetchTeams();
       setIsCheckingTeams(false);
-      
+
       if (result.data && result.data.length > 0) {
         router.push('/teams');
       } else {
@@ -213,7 +207,7 @@ export function ProfessionalSidebar({}: ProfessionalSidebarProps) {
       }
       return;
     }
-    
+
     if (hasTeams) {
       router.push('/teams');
     } else {
@@ -258,7 +252,7 @@ export function ProfessionalSidebar({}: ProfessionalSidebarProps) {
   // Selecionar logo baseado no estado e tema
   const getLogo = () => {
     if (isCollapsed) {
-      return theme === 'dark' 
+      return theme === 'dark'
         ? '/images/logo/logo-icon-dark.svg'
         : '/images/logo/logo-icon.svg';
     }
@@ -331,19 +325,19 @@ export function ProfessionalSidebar({}: ProfessionalSidebarProps) {
       {/* Navigation */}
       <nav className="flex-1 p-2 overflow-y-auto custom-scrollbar">
         <div className="space-y-0.5">
-          
+
           {/* ═══════════════════════════════════════════════════════════════
              SEÇÃO: ATALHOS INTELIGENTES (Jornadas) - v4.1
           ═══════════════════════════════════════════════════════════════ */}
           {!isCollapsed && (
             <SidebarJourneyShortcuts isCollapsed={isCollapsed} />
           )}
-          
+
           {/* ═══════════════════════════════════════════════════════════════
              SEÇÃO: INÍCIO
           ═══════════════════════════════════════════════════════════════ */}
           <SidebarSection title="Início" isCollapsed={isCollapsed} />
-          
+
           <SidebarItem
             name="Página Inicial"
             href="/inicio"
@@ -351,7 +345,7 @@ export function ProfessionalSidebar({}: ProfessionalSidebarProps) {
             isActive={pathname === '/inicio'}
             isCollapsed={isCollapsed}
           />
-          
+
           <SidebarItem
             name="Dashboard"
             href="/dashboard"
@@ -364,7 +358,7 @@ export function ProfessionalSidebar({}: ProfessionalSidebarProps) {
              SEÇÃO: ORGANIZAÇÃO
           ═══════════════════════════════════════════════════════════════ */}
           <SidebarSection title="Organização" isCollapsed={isCollapsed} />
-          
+
           <SidebarItem
             name="Equipes"
             href="/teams"
@@ -376,7 +370,7 @@ export function ProfessionalSidebar({}: ProfessionalSidebarProps) {
             isLoading={isCheckingTeams}
             badge={teams?.length}
           />
-          
+
           <SidebarItem
             name="Calendário Geral"
             href="/calendar"
@@ -399,7 +393,7 @@ export function ProfessionalSidebar({}: ProfessionalSidebarProps) {
             badge={routeVisibility.training.count > 0 ? undefined : '!'}
             tooltip={routeVisibility.training.count > 0 ? undefined : 'Sem treinos cadastrados'}
           />
-          
+
           <SidebarSubmenu
             name="Jogos"
             icon={Volleyball}
@@ -408,7 +402,7 @@ export function ProfessionalSidebar({}: ProfessionalSidebarProps) {
             badge={routeVisibility.games.visible ? undefined : '!'}
             tooltip={routeVisibility.games.visible ? undefined : routeVisibility.games.fallbackMessage}
           />
-          
+
           <SidebarItem
             name="Competições"
             href="/competitions"
@@ -421,7 +415,7 @@ export function ProfessionalSidebar({}: ProfessionalSidebarProps) {
              SEÇÃO: DESEMPENHO
           ═══════════════════════════════════════════════════════════════ */}
           <SidebarSection title="Desempenho" isCollapsed={isCollapsed} />
-          
+
           <SidebarSubmenu
             name="Atletas"
             icon={Users}
@@ -430,7 +424,7 @@ export function ProfessionalSidebar({}: ProfessionalSidebarProps) {
             badge={routeVisibility.athletes.count > 0 ? undefined : '!'}
             tooltip={routeVisibility.athletes.count > 0 ? undefined : 'Sem atletas cadastrados'}
           />
-          
+
           {statisticsSubmenu.length > 0 && (
             <SidebarSubmenu
               name="Estatísticas"
@@ -449,7 +443,7 @@ export function ProfessionalSidebar({}: ProfessionalSidebarProps) {
             <>
               {/* Divisor visual antes da seção admin */}
               <SidebarDivider spacing="lg" />
-              
+
               <SidebarCollapsibleSection
                 title="Administração"
                 icon={Settings}
@@ -464,7 +458,7 @@ export function ProfessionalSidebar({}: ProfessionalSidebarProps) {
                   isActive={pathname === '/admin/cadastro' || pathname.startsWith('/admin/cadastro/')}
                   isCollapsed={isCollapsed}
                 />
-                
+
                 <SidebarItem
                   name="Comissão Técnica"
                   href="/admin/staff"
@@ -472,7 +466,7 @@ export function ProfessionalSidebar({}: ProfessionalSidebarProps) {
                   isActive={pathname === '/admin/staff' || pathname.startsWith('/admin/staff/')}
                   isCollapsed={isCollapsed}
                 />
-                
+
                 <SidebarItem
                   name="Histórico / Auditoria"
                   href="/history"
@@ -480,7 +474,7 @@ export function ProfessionalSidebar({}: ProfessionalSidebarProps) {
                   isActive={pathname === '/history' || pathname.startsWith('/history/')}
                   isCollapsed={isCollapsed}
                 />
-                
+
                 <SidebarItem
                   name="Configurações"
                   href="/settings"

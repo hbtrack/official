@@ -1,8 +1,8 @@
-"""Escreve _reports/EXECUTOR.md com workspace-clean adicionado ao EXECUTOR_REPORT AR_201."""
+"""Escreve _reports/EXECUTOR.yaml com workspace-clean adicionado ao EXECUTOR_REPORT AR_201."""
 import os
 os.chdir(r"c:\HB TRACK")
 
-content = """# EXECUTOR.md — EXECUTOR_REPORT
+content = """# EXECUTOR.yaml — EXECUTOR_REPORT
 
 | Campo | Valor |
 |---|---|
@@ -47,7 +47,7 @@ content = """# EXECUTOR.md — EXECUTOR_REPORT
 - Resultado: Exit Code: 0 (`PASS: AR_200 validation_command corrigida + executor_main.log Exit Code: 0`)
 - Evidence gerada: `docs/hbtrack/evidence/AR_201/executor_main.log`
 
-### E6 — Workspace Clean (pós-TESTADOR.md BLOCKED)
+### E6 — Workspace Clean (pós-TESTADOR.yaml BLOCKED)
 Testador bloqueou por DIRTY_WORKSPACE (4 arquivos tracked-unstaged).
 Resolução via `git add` file-by-file (sem comandos destrutivos):
 
@@ -100,6 +100,6 @@ docs/ssot/alembic_state.txt  ✅ staged (gen_docs_ssot)
 - `hb seal 201` → `hb seal 200` (nesta ordem)
 """
 
-with open("_reports/EXECUTOR.md", "w", encoding="utf-8") as f:
+with open("_reports/EXECUTOR.yaml", "w", encoding="utf-8") as f:
     f.write(content)
-print("EXECUTOR.md updated OK")
+print("EXECUTOR.yaml updated OK")

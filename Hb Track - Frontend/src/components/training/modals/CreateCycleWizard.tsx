@@ -13,20 +13,20 @@
 
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { X, Calendar, Target, Layers, ChevronRight, Trash2 } from 'lucide-react';
-import { format, differenceInDays, parseISO } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
-import { useDebouncedCallback } from 'use-debounce';
-import { Icons } from '@/design-system/icons';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Icons } from '@/design/icons';
+import { trainingsService, type CycleCreate, type CycleType } from '@/lib/api/trainings';
 import { cn } from '@/lib/utils';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { differenceInDays, format, parseISO } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import { Calendar, ChevronRight, Layers, Target, Trash2, X } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
-import { trainingsService, type CycleCreate, type CycleType, type TrainingCycle } from '@/lib/api/trainings';
+import { useDebouncedCallback } from 'use-debounce';
 
 // ============================================================================
 // TYPES
@@ -481,8 +481,8 @@ export function CreateCycleWizard({ isOpen, onClose, onSuccess, teamId }: Create
                   {formData.type === 'meso' ? 'Vincule a um Macrociclo' : 'Revisão Final'}
                 </h3>
                 <p className="text-sm text-slate-600 dark:text-slate-400">
-                  {formData.type === 'meso' 
-                    ? 'Selecione o macrociclo pai (obrigatório)' 
+                  {formData.type === 'meso'
+                    ? 'Selecione o macrociclo pai (obrigatório)'
                     : 'Confirme os dados antes de criar'}
                 </p>
               </div>

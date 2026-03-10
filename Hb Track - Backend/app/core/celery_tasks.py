@@ -578,6 +578,8 @@ def cleanup_expired_export_jobs_task(self) -> Dict[str, any]:
 # TRAINING SESSIONS: STATUS TRANSITIONS (SCHEDULER)
 # ==============================================================================
 
+CHUNK_SIZE = 100  # AR_274: processar em chunks para evitar SELECT * global
+
 
 @app.task(
     name="app.core.celery_tasks.update_training_session_statuses_task",
@@ -610,13 +612,13 @@ def update_training_session_statuses_task(self) -> Dict[str, any]:
         async with get_db_context() as db:
             now = datetime.now(timezone.utc)
 
-            # scheduled -> in_progress
+            # scheduled -> in_progress  (AR_274: SKIP LOCKED + chunk)
             scheduled_result = await db.execute(
                 select(TrainingSession).where(
                     TrainingSession.status == "scheduled",
                     TrainingSession.deleted_at.is_(None),
                     TrainingSession.session_at <= now,
-                )
+                ).with_for_update(skip_locked=True).limit(CHUNK_SIZE)
             )
             scheduled_sessions = scheduled_result.scalars().all()
 
@@ -626,12 +628,12 @@ def update_training_session_statuses_task(self) -> Dict[str, any]:
                     session.started_at = session.session_at
                 counters["scheduled_to_in_progress"] += 1
 
-            # in_progress -> pending_review
+            # in_progress -> pending_review  (AR_274: SKIP LOCKED + chunk)
             in_progress_result = await db.execute(
                 select(TrainingSession).where(
                     TrainingSession.status == "in_progress",
                     TrainingSession.deleted_at.is_(None),
-                )
+                ).with_for_update(skip_locked=True).limit(CHUNK_SIZE)
             )
             in_progress_sessions = in_progress_result.scalars().all()
 

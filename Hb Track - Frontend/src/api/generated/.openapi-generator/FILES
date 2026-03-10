@@ -385,8 +385,10 @@ docs/TrainingPerformanceReport.md
 docs/TrainingPerformanceTrend.md
 docs/TrainingSession.md
 docs/TrainingSessionCreate.md
+docs/TrainingSessionFinalizeRequest.md
 docs/TrainingSessionPaginatedResponse.md
 docs/TrainingSessionResponse.md
+docs/TrainingSessionScheduleRequest.md
 docs/TrainingSessionUpdate.md
 docs/TrainingSessionsApi.md
 docs/UnifiedRegistrationApi.md

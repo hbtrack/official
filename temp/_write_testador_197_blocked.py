@@ -39,7 +39,7 @@ docs/ssot/alembic_state.txt
 | Pré-condição | Status | Detalhe |
 |---|---|---|
 | AR existe | ✅ | `docs/hbtrack/ars/features/AR_197_invariants_training.md_v1.5.0_31_itens_gap_parcial.md` |
-| AR tem Validation Command | ✅ | Confirmado via EXECUTOR.md (3 checks, Exit 0) |
+| AR tem Validation Command | ✅ | Confirmado via EXECUTOR.yaml (3 checks, Exit 0) |
 | Evidence existe | ✅ | `docs/hbtrack/evidence/AR_197/executor_main.log` |
 | Evidence staged | ✅ | Presente em `git diff --cached` |
 | Workspace limpo | ❌ | **7 tracked-unstaged — BLOQUEADO** |
@@ -63,6 +63,6 @@ python scripts/run/hb_cli.py verify 197
 ```
 """
 
-out = pathlib.Path(r"_reports/TESTADOR.md")
+out = pathlib.Path(r"_reports/TESTADOR.yaml")
 out.write_text(content, encoding="utf-8")
-print("TESTADOR.md escrito — BLOCKED DIRTY_WORKSPACE AR_197")
+print("TESTADOR.yaml escrito — BLOCKED DIRTY_WORKSPACE AR_197")

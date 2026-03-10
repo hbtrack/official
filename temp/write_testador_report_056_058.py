@@ -41,7 +41,7 @@ TESTADOR_REPORT:
 ## PARA O ARQUITETO
 
 AR_059 permanece em status FALHA aguardando correcao do validation_command.
-O Executor ja descreveu o problema em EXECUTOR.md:
+O Executor ja descreveu o problema em EXECUTOR.yaml:
 - Erro: any() recebe bool em vez de iteravel
 - Correcao sugerida: remover any() da assertion, usar direto:
     assert ('Context Map' in c or 'context_map' in c.lower() or 'Mapa' in c), "FAIL: cabecalho context map ausente"
@@ -56,6 +56,6 @@ AR_058: VERIFICADO
 AR_059: REJEITADO (AH_DIVERGENCE) -> Arquiteto
 """
 
-target = pathlib.Path("_reports/TESTADOR.md")
+target = pathlib.Path("_reports/TESTADOR.yaml")
 target.write_text(content, encoding="utf-8")
 print(f"Written: {target.resolve()}")

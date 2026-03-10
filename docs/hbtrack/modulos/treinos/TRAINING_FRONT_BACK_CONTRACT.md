@@ -517,8 +517,10 @@ HTTP/1.1 202 Accepted
 | CONTRACT-TRAIN-003 | GET | `/training-sessions/{training_session_id}` | `get_training_session_by_id_api_v1_training_sessions__training_session_id__get` | — | `TrainingSession` | EVIDENCIADO | INV-TRAIN-006 |
 | CONTRACT-TRAIN-004 | PATCH | `/training-sessions/{training_session_id}` | `update_training_session_api_v1_training_sessions__training_session_id__patch` | `TrainingSessionUpdate` | `TrainingSession` | EVIDENCIADO | INV-TRAIN-004, INV-TRAIN-005, INV-TRAIN-001 |
 | CONTRACT-TRAIN-005 | DELETE | `/training-sessions/{training_session_id}?reason=` | `delete_training_session_api_v1_training_sessions__training_session_id__delete` | query `reason` | 204 | EVIDENCIADO | INV-TRAIN-008 |
-| CONTRACT-TRAIN-006 | POST | `/training-sessions/{training_session_id}/publish` | `publish_training_session_api_v1_training_sessions__training_session_id__publish_post` | `{}` | `TrainingSession` | EVIDENCIADO | INV-TRAIN-006 |
-| CONTRACT-TRAIN-007 | POST | `/training-sessions/{training_session_id}/close` | `close_training_session_api_v1_training_sessions__training_session_id__close_post` | `{}` | `SessionClosureResponse` | EVIDENCIADO | INV-TRAIN-006 |
+| CONTRACT-TRAIN-006 | POST | `/training-sessions/{training_session_id}/publish` | `publish_training_session_api_v1_training_sessions__training_session_id__publish_post` | `{}` | `TrainingSession` | DEPRECADO | INV-TRAIN-006 — substituído por CONTRACT-TRAIN-101 (/schedule) |
+| CONTRACT-TRAIN-007 | POST | `/training-sessions/{training_session_id}/close` | `close_training_session_api_v1_training_sessions__training_session_id__close_post` | `{}` | `SessionClosureResponse` | DEPRECADO | INV-TRAIN-006 — substituído por CONTRACT-TRAIN-102 (/finalize) |
+| CONTRACT-TRAIN-101 | POST | `/training-sessions/{training_session_id}/schedule` | `schedule_training_session_api_v1_training_sessions__training_session_id__schedule_post` | `TrainingSessionScheduleRequest` | `TrainingSession` | EVIDENCIADO | INV-TRAIN-006 |
+| CONTRACT-TRAIN-102 | POST | `/training-sessions/{training_session_id}/finalize` | `finalize_training_session_api_v1_training_sessions__training_session_id__finalize_post` | `TrainingSessionFinalizeRequest` | `SessionClosureResponse` | EVIDENCIADO | INV-TRAIN-006 |
 | CONTRACT-TRAIN-008 | POST | `/training-sessions/{training_session_id}/duplicate` | `duplicate_training_session_api_v1_training_sessions__training_session_id__duplicate_post` | `{}` | `TrainingSession` | EVIDENCIADO | INV-TRAIN-006 |
 | CONTRACT-TRAIN-009 | POST | `/training-sessions/{training_session_id}/restore` | `restore_training_session_api_v1_training_sessions__training_session_id__restore_post` | `{}` | `TrainingSession` | EVIDENCIADO | INV-TRAIN-008 |
 | CONTRACT-TRAIN-010 | POST | `/training-sessions/copy-week` | `copy_week_sessions_api_v1_training_sessions_copy_week_post` | query: `team_id`, `source_week_start`, `target_week_start`, `validate_focus` | `TrainingSession[]` | EVIDENCIADO | INV-TRAIN-005, INV-TRAIN-001 |
@@ -846,7 +848,7 @@ Contratos:
 |---|---|---|---|---|---|---|---|
 | CONTRACT-TRAIN-096 | GET | `/athlete/training-sessions/{session_id}/preview` | `get_athlete_session_preview` | — | `AthleteSessionPreview` | IMPLEMENTADO | INV-TRAIN-068, INV-TRAIN-069 |
 | CONTRACT-TRAIN-097 | POST | `/training-sessions/{session_id}/pre-confirm` | `pre_confirm_attendance` | `{athlete_id?: uuid}` | `{status: "pre_confirmed", is_official: false}` | IMPLEMENTADO | INV-TRAIN-063 |
-| CONTRACT-TRAIN-098 | POST | `/training-sessions/{session_id}/close` | `close_session_with_attendance` | `{attendance: AttendanceBatch, allow_pending: bool}` | `{closed: true, pending_items: PendingItem[]}` | IMPLEMENTADO | INV-TRAIN-064, INV-TRAIN-065 |
+| CONTRACT-TRAIN-098 | POST | `/training-sessions/{session_id}/close` | `close_session_with_attendance` | `{attendance: AttendanceBatch, allow_pending: bool}` | `{closed: true, pending_items: PendingItem[]}` | DEPRECADO | INV-TRAIN-064, INV-TRAIN-065 — substituído por /finalize (CONTRACT-TRAIN-102) |
 | CONTRACT-TRAIN-099 | GET | `/training/pending-items` | `list_pending_items` | query: `?team_id=&status=open` | `PendingItem[]` | IMPLEMENTADO | INV-TRAIN-066 |
 | CONTRACT-TRAIN-100 | PATCH | `/training/pending-items/{item_id}/resolve` | `resolve_pending_item` | `{resolution: string, new_status: present\|absent\|justified}` | `PendingItem` | IMPLEMENTADO | INV-TRAIN-066, INV-TRAIN-067 |
 
@@ -897,7 +899,7 @@ PendingItem:
 
 > **Nota normativa (INV-TRAIN-063):** `pre-confirm` NÃO é presença oficial.  
 > O FE DEVE exibir label distinto (ex: "Confirmou presença" vs "Presente ✓") para evitar ambiguidade.  
-> Presença oficial é registrada APENAS em `close` (CONTRACT-TRAIN-098).
+> Presença oficial é registrada APENAS em `finalize` (CONTRACT-TRAIN-102, antigo CONTRACT-TRAIN-098 `/close` — DEPRECADO).
 
 > **Nota normativa (INV-TRAIN-071, INV-TRAIN-076):** Se `wellness_status.can_see_full == false`,  
 > o FE DEVE ocultar detalhes de exercícios e mostrar prompt de wellness.  

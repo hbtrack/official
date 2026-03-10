@@ -1,4 +1,4 @@
-"""Reescreve _reports/EXECUTOR.md com relatório AR_200."""
+"""Reescreve _reports/EXECUTOR.yaml com relatório AR_200."""
 content = """# EXECUTOR_REPORT -- AR_200
 
 | Campo | Valor |
@@ -115,6 +115,6 @@ Acao para Arquiteto: corrigir janela 450 chars ou usar split por newline.
 
 import os
 os.chdir(r"c:\HB TRACK")
-with open("_reports/EXECUTOR.md", "w", encoding="utf-8") as f:
+with open("_reports/EXECUTOR.yaml", "w", encoding="utf-8") as f:
     f.write(content)
-print("EXECUTOR.md written OK")
+print("EXECUTOR.yaml written OK")

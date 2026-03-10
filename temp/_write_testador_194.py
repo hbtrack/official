@@ -1,4 +1,4 @@
-content = """# TESTADOR.md — Handoff para Humano
+content = """# TESTADOR.yaml — Handoff para Humano
 
 **RUN_ID**: TESTADOR-AR194-20260301-FINAL
 **AR_ID**: AR_194
@@ -79,6 +79,6 @@ next_agent: Humano (hb seal 194)
 *Gerado automaticamente pelo Testador — sem VERIFICADO (exclusivo do humano via `hb seal`)*
 """
 
-with open("_reports/TESTADOR.md", "w", encoding="utf-8") as f:
+with open("_reports/TESTADOR.yaml", "w", encoding="utf-8") as f:
     f.write(content)
 print("OK")

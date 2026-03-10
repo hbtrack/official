@@ -1,10 +1,10 @@
 # AR_266 — Criar TRAINING_SCOPE_REGISTRY.yaml
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
-Criar docs/hbtrack/modulos/treinos/TRAINING_SCOPE_REGISTRY.yaml conforme exigido pela Seção 5.1 do DONE_CONTRACT_TRAINING.md.md.
+Criar docs/hbtrack/modulos/treinos/TRAINING_SCOPE_REGISTRY.yaml conforme exigido pela Seção 5.1 do DONE_CONTRACT_TRAINING.md.
 
 Este arquivo classifica TODOS os itens do módulo TRAINING em exatamente um dos grupos: CORE, EXTENDED ou EXPERIMENTAL. Sem este arquivo, nenhum item CORE pode avançar para DONE_PRODUTO.
 
@@ -12,14 +12,14 @@ ESTRUTURA OBRIGATÓRIA DO ARQUIVO:
 ```yaml
 # TRAINING_SCOPE_REGISTRY.yaml
 # Artefato canônico de classificação de escopo — módulo TRAINING
-# Autoridade: DONE_CONTRACT_TRAINING.md.md §4 + §5.1
+# Autoridade: DONE_CONTRACT_TRAINING.md §4 + §5.1
 # Versão: v1.0.0
 # Última revisão: 2026-03-08
 
 module: TRAINING
 version: v1.0.0
 last_revised: 2026-03-08
-authority: DONE_CONTRACT_TRAINING.md.md §4
+authority: DONE_CONTRACT_TRAINING.md §4
 
 # Regra: todo item sem classificação explícita é inválido para DONE_PRODUTO
 items:
@@ -167,3 +167,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_266_571249d/result.json`
+
+### Selo Humano em 571249d
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-03-08T16:10:34.907865+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_266_571249d/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_266/executor_main.log`

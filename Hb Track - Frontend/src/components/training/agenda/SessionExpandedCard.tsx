@@ -13,34 +13,34 @@
 
 'use client';
 
-import React, { useMemo, useState } from 'react';
-import { X } from 'lucide-react';
-import { TrainingSession } from '@/lib/api/trainings';
-import { FocusMiniBar, useFocusData } from './FocusMiniBar';
-import { Icons } from '@/design-system/icons';
-import { useTeamDetail } from '@/hooks/useTeams';
-import { useSessionIntelligence } from '@/hooks/useSessionIntelligence';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/Button';
-import { Progress } from '@/components/ui/progress';
 import {
   AlertDialog,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogCancel,
 } from '@/components/ui/alert-dialog';
-import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/Button';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogClose,
 } from '@/components/ui/dialog';
+import { Progress } from '@/components/ui/progress';
+import { Textarea } from '@/components/ui/textarea';
+import { Icons } from '@/design/icons';
+import { useSessionIntelligence } from '@/hooks/useSessionIntelligence';
+import { useTeamDetail } from '@/hooks/useTeams';
+import { TrainingSession } from '@/lib/api/trainings';
 import { cn } from '@/lib/utils';
+import { X } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { FocusMiniBar, useFocusData } from './FocusMiniBar';
 
 interface SessionExpandedCardProps {
   session: TrainingSession | null;
@@ -217,12 +217,12 @@ export function SessionExpandedCard({
 
     // Cargas: total_focus >= 100
     const totalFocus = (session.focus_attack_positional_pct || 0) +
-                      (session.focus_defense_positional_pct || 0) +
-                      (session.focus_transition_offense_pct || 0) +
-                      (session.focus_transition_defense_pct || 0) +
-                      (session.focus_attack_technical_pct || 0) +
-                      (session.focus_defense_technical_pct || 0) +
-                      (session.focus_physical_pct || 0);
+      (session.focus_defense_positional_pct || 0) +
+      (session.focus_transition_offense_pct || 0) +
+      (session.focus_transition_defense_pct || 0) +
+      (session.focus_attack_technical_pct || 0) +
+      (session.focus_defense_technical_pct || 0) +
+      (session.focus_physical_pct || 0);
 
     const cargaOk = totalFocus >= 100;
     const exerciciosOk = !!(session.exercises_count && session.exercises_count > 0);
@@ -319,7 +319,7 @@ export function SessionExpandedCard({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent 
+      <DialogContent
         className="max-w-md p-0 gap-0"
         onPointerDownOutside={(e) => e.preventDefault()} // Impede fechar ao clicar fora
         onEscapeKeyDown={onClose} // ESC como atalho
@@ -331,228 +331,228 @@ export function SessionExpandedCard({
         {/* Container interno para controle total do layout */}
         <div className="flex flex-col">
 
-        {/* Header padronizado - sem tabs, com badge consolidada + botão X */}
-        <header className="h-16 shrink-0 border-b border-slate-700 bg-slate-900 rounded-t-lg flex items-center justify-between px-6">
-          {/* Esquerda: Ícone + Título do Tipo + Subtítulo */}
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="min-w-0 flex flex-col">
-              <div className="flex items-center gap-2">
-                {TypeIcon && <TypeIcon className="h-5 w-5 text-slate-400" />}
-                <span className="font-medium text-white">
-                  {SESSION_TYPE_TITLES[session.session_type as keyof typeof SESSION_TYPE_TITLES] || session.session_type}
+          {/* Header padronizado - sem tabs, com badge consolidada + botão X */}
+          <header className="h-16 shrink-0 border-b border-slate-700 bg-slate-900 rounded-t-lg flex items-center justify-between px-6">
+            {/* Esquerda: Ícone + Título do Tipo + Subtítulo */}
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="min-w-0 flex flex-col">
+                <div className="flex items-center gap-2">
+                  {TypeIcon && <TypeIcon className="h-5 w-5 text-slate-400" />}
+                  <span className="font-medium text-white">
+                    {SESSION_TYPE_TITLES[session.session_type as keyof typeof SESSION_TYPE_TITLES] || session.session_type}
+                  </span>
+                </div>
+                <p className="text-[9px] text-slate-400 uppercase tracking-widest mt-0.5">
+                  Sessão • {teamData?.name || 'Sem equipe'}
+                </p>
+              </div>
+            </div>
+
+            {/* Centro: Vazio (sem tabs) */}
+
+            {/* Direita: Badge Consolidada + Botão X */}
+            <div className="flex items-center gap-3">
+              <Badge
+                variant={getStatusVariant(session.status)}
+                className={cn(
+                  "text-[9px] font-bold uppercase tracking-widest rounded-full px-3 py-1",
+                  getStatusClasses(session.status)
+                )}
+              >
+                {STATUS_LABELS[session.status] || session.status}
+              </Badge>
+              <DialogClose className="rounded-sm opacity-70 ring-offset-slate-900 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 disabled:pointer-events-none text-slate-400 hover:text-white">
+                <X className="h-4 w-4" />
+                <span className="sr-only">Fechar</span>
+              </DialogClose>
+            </div>
+          </header>
+
+          {/* Corpo Técnico */}
+          <div className="space-y-4 px-6 py-4">
+            {/* Objetivo */}
+            <div>
+              <h3 className="font-semibold text-lg">{session.main_objective || 'Sem objetivo definido'}</h3>
+              {session.secondary_objective && (
+                <p className="text-sm text-muted-foreground mt-1">{session.secondary_objective}</p>
+              )}
+            </div>
+
+            {/* Logística Vertical */}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-xs">
+                <Icons.UI.Clock className="h-3 w-3" />
+                <span>
+                  {new Date(session.session_at).toLocaleTimeString('pt-BR', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                  {' • '}
+                  {session.duration_planned_minutes || 60} min
                 </span>
               </div>
-              <p className="text-[9px] text-slate-400 uppercase tracking-widest mt-0.5">
-                Sessão • {teamData?.name || 'Sem equipe'}
-              </p>
-            </div>
-          </div>
-          
-          {/* Centro: Vazio (sem tabs) */}
-          
-          {/* Direita: Badge Consolidada + Botão X */}
-          <div className="flex items-center gap-3">
-            <Badge
-              variant={getStatusVariant(session.status)}
-              className={cn(
-                "text-[9px] font-bold uppercase tracking-widest rounded-full px-3 py-1",
-                getStatusClasses(session.status)
+              {session.location && (
+                <div className="flex items-center gap-2 text-xs">
+                  <Icons.UI.MapPin className="h-3 w-3" />
+                  <span>{session.location}</span>
+                </div>
               )}
-            >
-              {STATUS_LABELS[session.status] || session.status}
-            </Badge>
-            <DialogClose className="rounded-sm opacity-70 ring-offset-slate-900 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 disabled:pointer-events-none text-slate-400 hover:text-white">
-              <X className="h-4 w-4" />
-              <span className="sr-only">Fechar</span>
-            </DialogClose>
-          </div>
-        </header>
-
-        {/* Corpo Técnico */}
-        <div className="space-y-4 px-6 py-4">
-          {/* Objetivo */}
-          <div>
-            <h3 className="font-semibold text-lg">{session.main_objective || 'Sem objetivo definido'}</h3>
-            {session.secondary_objective && (
-              <p className="text-sm text-muted-foreground mt-1">{session.secondary_objective}</p>
-            )}
-          </div>
-
-          {/* Logística Vertical */}
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-xs">
-              <Icons.UI.Clock className="h-3 w-3" />
-              <span>
-                {new Date(session.session_at).toLocaleTimeString('pt-BR', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
-                {' • '}
-                {session.duration_planned_minutes || 60} min
-              </span>
             </div>
-            {session.location && (
-              <div className="flex items-center gap-2 text-xs">
-                <Icons.UI.MapPin className="h-3 w-3" />
-                <span>{session.location}</span>
+
+            {/* Indicadores */}
+            <FocusMiniBar session={session} size="sm" />
+
+            {/* Countdown para scheduled */}
+            {countdown && (
+              <div className="flex items-center gap-2 text-sm font-medium text-blue-600">
+                <Icons.UI.Countdown className="h-4 w-4" />
+                <span>{countdown}</span>
               </div>
             )}
-          </div>
 
-          {/* Indicadores */}
-          <FocusMiniBar session={session} size="sm" />
-
-          {/* Countdown para scheduled */}
-          {countdown && (
-            <div className="flex items-center gap-2 text-sm font-medium text-blue-600">
-              <Icons.UI.Countdown className="h-4 w-4" />
-              <span>{countdown}</span>
-            </div>
-          )}
-
-          {/* Progress para in_progress */}
-          {progress !== null && (
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span>Progresso do treino</span>
-                <span>{Math.round(progress)}%</span>
+            {/* Progress para in_progress */}
+            {progress !== null && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span>Progresso do treino</span>
+                  <span>{Math.round(progress)}%</span>
+                </div>
+                <Progress value={progress} className="h-2" />
               </div>
-              <Progress value={progress} className="h-2" />
-            </div>
-          )}
+            )}
 
-          {/* Notas rápidas para in_progress */}
-          {actions && 'notes' in actions && actions.notes && (
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Notas rápidas</label>
-              <Textarea
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="Adicione observações durante o treino..."
-                className="min-h-[80px]"
-              />
-              <Button
-                onClick={handleSaveNotes}
-                disabled={savingNotes}
-                size="sm"
-                variant="outline"
-              >
-                {savingNotes ? 'Salvando...' : 'Salvar notas'}
-              </Button>
-            </div>
-          )}
-
-          {/* Chips dinâmicos de validação */}
-          {validationChips.length > 0 && (
-            <div className="space-y-2">
-              <h4 className="text-sm font-medium">Pendências</h4>
-              <div className="flex flex-wrap gap-2">
-                {validationChips.map((chip, index) => (
-                  <Badge
-                    key={index}
-                    variant={chip.type === 'error' ? 'destructive' : 'secondary'}
-                    className={cn(
-                      'cursor-pointer',
-                      chip.type === 'warning' && 'bg-amber-100 text-amber-800 border-amber-200 hover:bg-amber-200',
-                      chip.type === 'error' && 'hover:bg-red-600'
-                    )}
-                    onClick={() => {
-                      // TODO: Navegar para seção específica baseada no chip
-                      console.log(`Corrigir: ${chip.message}`);
-                    }}
-                  >
-                    <chip.icon className="h-3 w-3 mr-1" />
-                    {chip.message}
-                  </Badge>
-                ))}
+            {/* Notas rápidas para in_progress */}
+            {actions && 'notes' in actions && actions.notes && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Notas rápidas</label>
+                <Textarea
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Adicione observações durante o treino..."
+                  className="min-h-[80px]"
+                />
+                <Button
+                  onClick={handleSaveNotes}
+                  disabled={savingNotes}
+                  size="sm"
+                  variant="outline"
+                >
+                  {savingNotes ? 'Salvando...' : 'Salvar notas'}
+                </Button>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Donut para readonly */}
-          {attendanceRate !== null && (
-            <div className="space-y-2">
-              <h4 className="text-sm font-medium">Taxa de Presença</h4>
-              <div className="flex items-center gap-4">
-                <div className="relative w-16 h-16">
-                  <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
-                    <path
-                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeDasharray={`${attendanceRate}, 100`}
-                      className="text-green-500"
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex items-center justify-center text-sm font-medium">
-                    {attendanceRate}%
+            {/* Chips dinâmicos de validação */}
+            {validationChips.length > 0 && (
+              <div className="space-y-2">
+                <h4 className="text-sm font-medium">Pendências</h4>
+                <div className="flex flex-wrap gap-2">
+                  {validationChips.map((chip, index) => (
+                    <Badge
+                      key={index}
+                      variant={chip.type === 'error' ? 'destructive' : 'secondary'}
+                      className={cn(
+                        'cursor-pointer',
+                        chip.type === 'warning' && 'bg-amber-100 text-amber-800 border-amber-200 hover:bg-amber-200',
+                        chip.type === 'error' && 'hover:bg-red-600'
+                      )}
+                      onClick={() => {
+                        // TODO: Navegar para seção específica baseada no chip
+                        console.log(`Corrigir: ${chip.message}`);
+                      }}
+                    >
+                      <chip.icon className="h-3 w-3 mr-1" />
+                      {chip.message}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Donut para readonly */}
+            {attendanceRate !== null && (
+              <div className="space-y-2">
+                <h4 className="text-sm font-medium">Taxa de Presença</h4>
+                <div className="flex items-center gap-4">
+                  <div className="relative w-16 h-16">
+                    <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
+                      <path
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeDasharray={`${attendanceRate}, 100`}
+                        className="text-green-500"
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center text-sm font-medium">
+                      {attendanceRate}%
+                    </div>
+                  </div>
+                  <div className="text-sm">
+                    <div>Presentes: {session.attendance_present_count || 0}</div>
+                    <div>Total: {session.attendance_total_count || 0}</div>
                   </div>
                 </div>
-                <div className="text-sm">
-                  <div>Presentes: {session.attendance_present_count || 0}</div>
-                  <div>Total: {session.attendance_total_count || 0}</div>
-                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Progresso para draft */}
-          {draftProgress && (
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-medium">Progresso de criação</span>
-                <span>{draftProgress.percentage}%</span>
+            {/* Progresso para draft */}
+            {draftProgress && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-medium">Progresso de criação</span>
+                  <span>{draftProgress.percentage}%</span>
+                </div>
+                <div className="flex justify-between">
+                  <div className="flex items-center gap-1 text-xs">
+                    {draftProgress.cargaOk ? (
+                      <Icons.Status.CheckCircle className="h-3 w-3 text-green-500" />
+                    ) : (
+                      <Icons.Status.Error className="h-3 w-3 text-red-500" />
+                    )}
+                    <span>Carga</span>
+                  </div>
+                  <div className="flex items-center gap-1 text-xs">
+                    {draftProgress.exerciciosOk ? (
+                      <Icons.Status.CheckCircle className="h-3 w-3 text-green-500" />
+                    ) : (
+                      <Icons.Status.Error className="h-3 w-3 text-red-500" />
+                    )}
+                    <span>Exercícios</span>
+                  </div>
+                  <div className="flex items-center gap-1 text-xs">
+                    {draftProgress.dadosOk ? (
+                      <Icons.Status.CheckCircle className="h-3 w-3 text-green-500" />
+                    ) : (
+                      <Icons.Status.Error className="h-3 w-3 text-red-500" />
+                    )}
+                    <span>Dados</span>
+                  </div>
+                </div>
               </div>
-              <div className="flex justify-between">
-                <div className="flex items-center gap-1 text-xs">
-                  {draftProgress.cargaOk ? (
-                    <Icons.Status.CheckCircle className="h-3 w-3 text-green-500" />
-                  ) : (
-                    <Icons.Status.Error className="h-3 w-3 text-red-500" />
-                  )}
-                  <span>Carga</span>
-                </div>
-                <div className="flex items-center gap-1 text-xs">
-                  {draftProgress.exerciciosOk ? (
-                    <Icons.Status.CheckCircle className="h-3 w-3 text-green-500" />
-                  ) : (
-                    <Icons.Status.Error className="h-3 w-3 text-red-500" />
-                  )}
-                  <span>Exercícios</span>
-                </div>
-                <div className="flex items-center gap-1 text-xs">
-                  {draftProgress.dadosOk ? (
-                    <Icons.Status.CheckCircle className="h-3 w-3 text-green-500" />
-                  ) : (
-                    <Icons.Status.Error className="h-3 w-3 text-red-500" />
-                  )}
-                  <span>Dados</span>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
 
-        {/* Ações */}
-        <div className="flex justify-between gap-3 py-4 px-6 border-t">
-          {actions && 'secondary' in actions && actions.secondary && (
+          {/* Ações */}
+          <div className="flex justify-between gap-3 py-4 px-6 border-t">
+            {actions && 'secondary' in actions && actions.secondary && (
+              <Button
+                onClick={() => handleAction(actions.secondary.action)}
+                variant="outline"
+                size="icon"
+                aria-label="Deletar sessão"
+              >
+                <actions.secondary.icon className="h-4 w-4" />
+              </Button>
+            )}
             <Button
-              onClick={() => handleAction(actions.secondary.action)}
-              variant="outline"
-              size="icon"
-              aria-label="Deletar sessão"
+              onClick={() => handleAction(actions?.primary?.action || '')}
+              size="sm"
             >
-              <actions.secondary.icon className="h-4 w-4" />
+              {actions?.primary?.label}
             </Button>
-          )}
-          <Button
-            onClick={() => handleAction(actions?.primary?.action || '')}
-            size="sm"
-          >
-            {actions?.primary?.label}
-          </Button>
-        </div>
+          </div>
         </div>
       </DialogContent>
 

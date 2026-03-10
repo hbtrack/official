@@ -1,6 +1,6 @@
 # AR_270 — Sync documental pós-Batch 35
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -19,7 +19,7 @@ O Executor DEVE atualizar os seguintes arquivos:
    - Adicionar changelog v4.5.0 (2026-03-08) — Batch 35 DONE_CONTRACT artifacts:
      - §9: AR-TRAIN-081..086 adicionadas como VERIFICADO (Batch 35)
      - Nota: TRAINING_SCOPE_REGISTRY.yaml, TRAINING_STATE_MACHINE.yaml, TRAINING_PERF_LIMITS.json e traceability_training_core.csv criados
-     - Nota: DONE_CONTRACT_TRAINING.md.md registrado na cadeia canônica
+     - Nota: DONE_CONTRACT_TRAINING.md registrado na cadeia canônica
 
 3. **docs/hbtrack/Hb Track Kanban.md**
    - Adicionar card Batch 35 (AR_265..AR_270) com status VERIFICADO após todos os seals
@@ -77,3 +77,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_270_571249d/result.json`
+
+### Selo Humano em 571249d
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-03-08T16:12:20.781497+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_270_571249d/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_270/executor_main.log`

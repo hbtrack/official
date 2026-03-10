@@ -51,9 +51,9 @@ Thumbs.db
 
 # Agent runtime signals — ephemeral, never version (prevent dirty workspace blocking hb verify)
 _reports/dispatch/
-_reports/ARQUITETO.md
-_reports/EXECUTOR.md
-_reports/TESTADOR.md
+_reports/ARQUITETO.yaml
+_reports/EXECUTOR.yaml
+_reports/TESTADOR.yaml
 .hb_backups/
 .hb_lock
 .hb_tmp_tests/

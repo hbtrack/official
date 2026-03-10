@@ -66,6 +66,6 @@ _reports/testador/AR_197_b123a58/result.json
 **→ Humano: `hb seal 197`**
 """
 
-out = pathlib.Path(r"_reports/TESTADOR.md")
+out = pathlib.Path(r"_reports/TESTADOR.yaml")
 out.write_text(content, encoding="utf-8")
-print("TESTADOR.md escrito — SUCESSO AR_197")
+print("TESTADOR.yaml escrito — SUCESSO AR_197")

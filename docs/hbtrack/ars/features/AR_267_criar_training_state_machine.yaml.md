@@ -1,10 +1,10 @@
 # AR_267 — Criar TRAINING_STATE_MACHINE.yaml
 
-**Status**: ✅ SUCESSO
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
-Criar docs/hbtrack/modulos/treinos/TRAINING_STATE_MACHINE.yaml conforme exigido pela Seção 5.2 do DONE_CONTRACT_TRAINING.md.md.
+Criar docs/hbtrack/modulos/treinos/TRAINING_STATE_MACHINE.yaml conforme exigido pela Seção 5.2 do DONE_CONTRACT_TRAINING.md.
 
 Este arquivo define o mapa formal de estados para todas as entidades stateful CORE do módulo. Sem ele, DONE_SEMANTICO = FALSE para qualquer entidade stateful CORE.
 
@@ -12,14 +12,14 @@ ESTRUTURA OBRIGATÓRIA DO ARQUIVO:
 ```yaml
 # TRAINING_STATE_MACHINE.yaml
 # Artefato canônico de máquina de estados — módulo TRAINING
-# Autoridade: DONE_CONTRACT_TRAINING.md.md §5.2 + INVARIANTS_TRAINING.md
+# Autoridade: DONE_CONTRACT_TRAINING.md §5.2 + INVARIANTS_TRAINING.md
 # Versão: v1.0.0
 # Última revisão: 2026-03-08
 
 module: TRAINING
 version: v1.0.0
 last_revised: 2026-03-08
-authority: DONE_CONTRACT_TRAINING.md.md §5.2
+authority: DONE_CONTRACT_TRAINING.md §5.2
 
 # Regra: transição permitida no código mas ausente aqui derruba DONE_SEMANTICO
 entities:
@@ -260,3 +260,10 @@ _(Gerado por hb report)_
 **Triple-Run**: OK (3x)
 **Exit Testador**: 0 | **Exit Executor**: 0
 **TESTADOR_REPORT**: `_reports/testador/AR_267_571249d/result.json`
+
+### Selo Humano em 571249d
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-03-08T16:11:20.123975+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_267_571249d/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_267/executor_main.log`

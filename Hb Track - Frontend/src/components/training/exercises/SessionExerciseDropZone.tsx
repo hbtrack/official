@@ -20,29 +20,29 @@
 
 'use client';
 
-import { useState, useCallback } from 'react';
-import { useDrop, useDrag } from 'react-dnd';
-import { Icons } from '@/design-system/icons';
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 import {
   AlertDialog,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogCancel,
 } from '@/components/ui/alert-dialog';
-import * as api from '@/lib/api/session-exercises';
+import { Icons } from '@/design/icons';
 import {
   useBulkAddSessionExercises,
-  useReorderSessionExercises,
-  useUpdateSessionExercise,
   useRemoveSessionExercise,
+  useReorderSessionExercises,
   useSessionExercises,
+  useUpdateSessionExercise,
 } from '@/hooks/useSessionExercises';
-import type { ExerciseDragItem, EXERCISE_DRAG_TYPE } from './DraggableExerciseCard';
+import * as api from '@/lib/api/session-exercises';
+import { cn } from '@/lib/utils';
+import { useCallback, useState } from 'react';
+import { useDrag, useDrop } from 'react-dnd';
+import type { ExerciseDragItem } from './DraggableExerciseCard';
 
 // ============================================================================
 // Types

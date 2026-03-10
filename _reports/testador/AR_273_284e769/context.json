@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_273-284e769",
+  "timestamp_utc": "2026-03-09T09:01:21.614303+00:00",
+  "git": {
+    "commit": "284e7699d2cb5b941ee2a5e713ab9c222104ccaa"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "273",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_273_reconciliacao_contratual_rec-02__schedule+_finaliz.md"
+}

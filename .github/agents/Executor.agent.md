@@ -69,7 +69,8 @@ Stage (exato):
 - git add "docs/hbtrack/ars/<folder>/AR_<id>_*.md" (se carimbado)
 - git add "docs/_INDEX.md" (se hb atualizar)
 
-Output obrigatório (não commit): `_reports/EXECUTOR.yaml` com EXECUTOR_REPORT.
+* Output obrigatório (não commit): `_reports/EXECUTOR.yaml` com EXECUTOR_REPORT.
+* Usar chaves YAML reais no `_reports/EXECUTOR.yaml` em vez de manter tudo como string.
 
 # WORKSPACE CLEAN (pré-verify):
 - Testador NÃO limpa workspace. Executor é o único autorizado.

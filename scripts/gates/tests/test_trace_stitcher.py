@@ -34,7 +34,7 @@ from trace_stitcher import (  # noqa: E402
 # ---------------------------------------------------------------------------
 
 _BASE = textwrap.dedent("""\
-    # ARQUITETO.md
+    # ARQUITETO.yaml
     Protocolo: 1.3.0
     AR IDs: [232]
     ## PRE-FLIGHT
@@ -86,7 +86,7 @@ HANDOFF_SUPPRESSED = (
 )
 
 HANDOFF_NO_AR_IDS = textwrap.dedent("""\
-    # ARQUITETO.md
+    # ARQUITETO.yaml
     Protocolo: 1.3.0
     ## PRE-FLIGHT
     - git status
@@ -234,21 +234,21 @@ class TestCheckAr:
 
 def test_main_pass_full_handoff(tmp_path: Path):
     """Handoff com PROOF+TRACE explícitos → EXIT_PASS"""
-    handoff = tmp_path / "ARQUITETO.md"
+    handoff = tmp_path / "ARQUITETO.yaml"
     handoff.write_text(HANDOFF_FULL, encoding="utf-8")
     assert main(["-", str(handoff), str(tmp_path)]) == EXIT_PASS
 
 
 def test_main_pass_suppressed(tmp_path: Path):
     """Supressão N/A em ambos → EXIT_PASS, sem WARN relevante"""
-    handoff = tmp_path / "ARQUITETO.md"
+    handoff = tmp_path / "ARQUITETO.yaml"
     handoff.write_text(HANDOFF_SUPPRESSED, encoding="utf-8")
     assert main(["-", str(handoff), str(tmp_path)]) == EXIT_PASS
 
 
 def test_main_pass_even_with_warns(tmp_path: Path):
     """WARNs não mudam exit code — ainda EXIT_PASS."""
-    handoff = tmp_path / "ARQUITETO.md"
+    handoff = tmp_path / "ARQUITETO.yaml"
     handoff.write_text(HANDOFF_NO_PROOF, encoding="utf-8")
     assert main(["-", str(handoff), str(tmp_path)]) == EXIT_PASS
 
@@ -260,7 +260,7 @@ def test_main_blocked_input_nonexistent(tmp_path: Path):
 
 def test_main_warns_when_proof_absent(tmp_path: Path, capsys):
     """Handoff sem PROOF → saída contém ⚠️  WARN com AR_ID."""
-    handoff = tmp_path / "ARQUITETO.md"
+    handoff = tmp_path / "ARQUITETO.yaml"
     handoff.write_text(HANDOFF_NO_PROOF, encoding="utf-8")
     main(["-", str(handoff), str(tmp_path)])
     captured = capsys.readouterr()
@@ -270,7 +270,7 @@ def test_main_warns_when_proof_absent(tmp_path: Path, capsys):
 
 def test_main_warns_when_trace_absent(tmp_path: Path, capsys):
     """Handoff sem TRACE → saída contém ⚠️  WARN com AR_ID."""
-    handoff = tmp_path / "ARQUITETO.md"
+    handoff = tmp_path / "ARQUITETO.yaml"
     handoff.write_text(HANDOFF_NO_TRACE, encoding="utf-8")
     main(["-", str(handoff), str(tmp_path)])
     captured = capsys.readouterr()
@@ -280,7 +280,7 @@ def test_main_warns_when_trace_absent(tmp_path: Path, capsys):
 
 def test_main_no_warn_when_all_ok(tmp_path: Path, capsys):
     """Handoff completo sem arquivos TRACE para validar → sem WARN."""
-    handoff = tmp_path / "ARQUITETO.md"
+    handoff = tmp_path / "ARQUITETO.yaml"
     handoff.write_text(HANDOFF_SUPPRESSED, encoding="utf-8")
     main(["-", str(handoff), str(tmp_path)])
     captured = capsys.readouterr()

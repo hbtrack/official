@@ -1339,9 +1339,84 @@ EVIDENCE_PACK:
 
 ---
 
+## 57. Cards -- TRAINING Batch REC-05 -- Sunset Final Rotas Legadas (AR_276)
+
+> **Contexto**: AR-TRAIN-REC-05 (AR_276). A: Sunset final — remover stubs `/publish` e `/close` do router BE, openapi.json e cliente FE gerado. Garante que nenhuma rota legada subsiste após REC-03 + REC-04.
+> **Plano**: docs/_canon/planos/ar_train_rec_05_sunset_rotas_legadas.json
+> **Correspondência Backlog**: AR-TRAIN-REC-05 → AR_276
+> **Dependências obrigatórias**: AR-TRAIN-REC-04 (AR_275) VERIFICADO.
+
+### 🟡 BACKLOG — aguardando AR-TRAIN-REC-04 (AR_275) VERIFICADO
+
+| AR | AR-TRAIN | Título | Status |
+|---|---|---|---|
+| **AR_276** | TRAIN-REC-05 | Sunset final: remover stubs /publish + /close do router BE + openapi.json + cliente FE | 🟡 BACKLOG |
+
+---
+
+## 56. Cards -- TRAINING Batch REC-04 -- Superfície UI/Flows/Screens (AR_275)
+
+> **Contexto**: AR-TRAIN-REC-04 (AR_275). A+G: Superfície TRAINING reconciliada — TRAINING_USER_FLOWS.md (lexical purge /publish+/close), TRAINING_SCREENS_SPEC.md, traceability_training_core.csv preenchida, FE 3 seções lifecycle (planned, realized, adjustments) com data-test-ids canônicos.
+> **Plano**: docs/_canon/planos/ar_train_rec_04_superficie_ui_flows.json
+> **Correspondência Backlog**: AR-TRAIN-REC-04 → AR_275
+> **Dependências obrigatórias**: AR-TRAIN-REC-03 (AR_274) VERIFICADO.
+
+### 🟡 BACKLOG — aguardando AR-TRAIN-REC-03 (AR_274) VERIFICADO
+
+| AR | AR-TRAIN | Título | Status |
+|---|---|---|---|
+| **AR_275** | TRAIN-REC-04 | Superfície TRAINING reconciliada: Flows, Screens, traceability CSV, FE 3 seções | 🟡 BACKLOG |
+
+---
+
+## 55. Cards -- TRAINING Batch REC-03 -- Ledger de Sessão + Scheduler (AR_274)
+
+> **Contexto**: AR-TRAIN-REC-03 (AR_274). A+G: Ledger de Sessão + Scheduler temporal canônico (Celery Beat) + provas de imutabilidade. Cria `training_session_plans` e `training_session_adjustments` via Alembic. Adota SKIP LOCKED no batch task. Cria suites de teste de side-effect, state machine temporal, idempotência e batch.
+> **Plano**: docs/_canon/planos/ar_train_rec_03_ledger_scheduler.json
+> **Correspondência Backlog**: AR-TRAIN-REC-03 → AR_274
+> **Dependências obrigatórias**: AR-TRAIN-REC-02 (AR_273) VERIFICADO.
+
+### 🟡 BACKLOG — aguardando AR-TRAIN-REC-02 (AR_273) VERIFICADO
+
+| AR | AR-TRAIN | Título | Status |
+|---|---|---|---|
+| **AR_274** | TRAIN-REC-03 | Ledger de Sessão + Scheduler SKIP LOCKED + provas de imutabilidade | 🟡 BACKLOG |
+
+---
+
+## 54. Cards -- TRAINING Batch REC-02 -- Reconciliação Contratual (AR_273)
+
+> **Contexto**: AR-TRAIN-REC-02 (AR_273). A+G: Reconciliação contratual completa — remover /publish + /close do TRAINING_FRONT_BACK_CONTRACT.md, OpenAPI e cliente FE; introduzir /schedule (draft→scheduled) + /finalize (pending_review→readonly). Pipeline spec-driven completo: redocly-lint + oasdiff + api:sync + schemathesis + pytest state machine.
+> **Plano**: docs/_canon/planos/ar_train_rec_02_reconciliacao_contratual.json
+> **Correspondência Backlog**: AR-TRAIN-REC-02 → AR_273
+> **Dependências obrigatórias**: AR-TRAIN-REC-01 (AR_271) VERIFICADO + AR-TRAIN-087 (AR_272) concluído.
+
+### 🟡 BACKLOG — aguardando AR_272 (AR-TRAIN-087) VERIFICADO
+
+| AR | AR-TRAIN | Título | Status |
+|---|---|---|---|
+| **AR_273** | TRAIN-REC-02 | Reconciliação contratual: TRAINING_FRONT_BACK_CONTRACT.md + OpenAPI /schedule+/finalize + cliente FE | 🟡 BACKLOG |
+
+---
+
+## 53. Cards -- TRAINING Batch REC-01 -- Reconciliação Documental (AR_271)
+
+> **Contexto**: Batch REC-01 — AR-TRAIN-REC-01 (AR_271). G+A×1: Reconciliação semântica dos 3 artefatos de base do módulo TRAINING. Eliminar PUBLISHED/CLOSED/publish/close; promover lifecycle `draft->scheduled->in_progress->pending_review->readonly`; renomear `limits`→`operations` em TRAINING_PERF_LIMITS.json. NENHUM arquivo de backend ou frontend tocado.
+> **Plano**: docs/_canon/planos/ar_train_rec_01_reconciliacao_documental.json
+> **Correspondência Backlog**: AR-TRAIN-REC-01 → AR_271
+> **Dependências obrigatórias**: AR-TRAIN-086 VERIFICADO (AR_270, Batch 35).
+
+### ✅ VERIFICADO (2026-03-09) — hb seal 271 exit=0
+
+| AR | AR-TRAIN | Título | Status |
+|---|---|---|---|
+| **AR_271** | TRAIN-REC-01 | Reconciliação documental: lifecycle canônico nos 3 artefatos de base TRAINING | ✅ VERIFICADO |
+
+---
+
 ## 52. Cards -- TRAINING Batch 35 -- DONE_CONTRACT Implementation (AR_265..AR_270)
 
-> **Contexto**: Batch 35 — AR-TRAIN-081..086 (AR_265..AR_270). G×2 + A×4: DONE_CONTRACT_TRAINING.md.md registrado na cadeia canônica + criação de TRAINING_SCOPE_REGISTRY.yaml, TRAINING_STATE_MACHINE.yaml, TRAINING_PERF_LIMITS.json, traceability_training_core.csv + sync documental.
+> **Contexto**: Batch 35 — AR-TRAIN-081..086 (AR_265..AR_270). G×2 + A×4: DONE_CONTRACT_TRAINING.md registrado na cadeia canônica + criação de TRAINING_SCOPE_REGISTRY.yaml, TRAINING_STATE_MACHINE.yaml, TRAINING_PERF_LIMITS.json, traceability_training_core.csv + sync documental.
 > **Correspondência Backlog**: AR-TRAIN-081 → AR_265; AR-TRAIN-082 → AR_266; AR-TRAIN-083 → AR_267; AR-TRAIN-084 → AR_268; AR-TRAIN-085 → AR_269; AR-TRAIN-086 → AR_270
 > **Dependências obrigatórias**: AR-TRAIN-080 VERIFICADO (AR_264, Batch 34).
 
@@ -1349,7 +1424,7 @@ EVIDENCE_PACK:
 
 | AR | AR-TRAIN | Título | Status |
 |---|---|---|---|
-| **AR_265** | TRAIN-081 | DONE_CONTRACT_TRAINING.md.md registrado na cadeia canônica: _INDEX.md v1.8.0 + entry 6b | ✅ VERIFICADO |
+| **AR_265** | TRAIN-081 | DONE_CONTRACT_TRAINING.md registrado na cadeia canônica: _INDEX.md v1.8.0 + entry 6b | ✅ VERIFICADO |
 | **AR_266** | TRAIN-082 | TRAINING_SCOPE_REGISTRY.yaml criado: 13 CORE + 7 EXTENDED + 2 EXPERIMENTAL | ✅ VERIFICADO |
 | **AR_267** | TRAIN-083 | TRAINING_STATE_MACHINE.yaml criado: 5 entidades stateful CORE | ✅ VERIFICADO |
 | **AR_268** | TRAIN-084 | TRAINING_PERF_LIMITS.json criado: 16 itens CORE com SLOs baseline | ✅ VERIFICADO |

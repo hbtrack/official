@@ -1,13 +1,20 @@
 # Módulo TRAINING — Índice de Autoridade SSOT
 
-**Versão:** v1.8.0  
-**Última revisão:** 2026-03-08  
+**Versão:** v1.9.0  
+**Última revisão:** 2026-03-09  
 **Tipo:** Navigation Index / Authority Map / Spec-Driven Change Protocol  
 **Módulo:** TRAINING  
 **Fase atual:** FASE_2 + FASE_3 REAL CONCLUÍDAS — `DONE_TRAINING_ATINGIDO = TRUE`
 
+> Changelog v1.9.0 (2026-03-09) — Batch REC-01 Reconciliação Documental:
+> - AR_271 (AR-TRAIN-REC-01, G+A): reconciliação semântica dos 3 artefatos de base — vocabulário publish/close/PUBLISHED/CLOSED eliminado.
+> - Lifecycle canônico declarado formalmente: `draft -> scheduled -> in_progress -> pending_review -> readonly`.
+> - `TRAINING_SCOPE_REGISTRY.yaml` promovido a v1.1.0 (reconciliado).
+> - `TRAINING_PERF_LIMITS.json` promovido a v1.1.0 (reconciliado; chave raiz `limits`→`operations`).
+> - `ai_coach_core` declarado com ledger imutável (Planned_State, Adjustment_Logs, Realized_State).
+
 > Changelog v1.8.0 (2026-03-08) — Batch 35 Done Contract:
-> - AR_265 (AR-TRAIN-081, G): `DONE_CONTRACT_TRAINING.md.md` registrado na cadeia canônica como camada de decisão de encerramento (DONE_TECNICO / DONE_SEMANTICO / DONE_PRODUTO).
+> - AR_265 (AR-TRAIN-081, G): `DONE_CONTRACT_TRAINING.md` registrado na cadeia canônica como camada de decisão de encerramento (DONE_TECNICO / DONE_SEMANTICO / DONE_PRODUTO).
 > - Artefatos obrigatórios criados: `TRAINING_SCOPE_REGISTRY.yaml`, `TRAINING_STATE_MACHINE.yaml`, `TRAINING_PERF_LIMITS.json`, `traceability_training_core.csv` (skeleton).
 > - ARs totais e última selagem atualizadas (até AR-TRAIN-086, Batch 35).
 
@@ -71,8 +78,12 @@
    - Define comportamento de UI/UX e estados de tela.
 6. `TEST_MATRIX_TRAINING.md`
    - **Autoridade operacional**: define o que conta como evidência válida, TRUTH_BE, TRUTH_FE_FUTURO, LEGACY_INVALID, API_SYNC_REQUIRED, GENERATED_CLIENT_SYNC e roteamento de impacto por mudança.
-6b. `DONE_CONTRACT_TRAINING.md.md`
+6b. `DONE_CONTRACT_TRAINING.md`
    - **Autoridade de encerramento**: define os gates `DONE_TECNICO`, `DONE_SEMANTICO` e `DONE_PRODUTO`. Governa a legitimidade de qualquer declaração de conclusão do módulo TRAINING. Camada superior de decisão — não substitui INVARIANTS, CONTRACT, FLOWS, SCREENS ou TEST_MATRIX. Atua como critério formal de aceitação de produto sobre os demais SSOTs.
+6c. `TRAINING_SCOPE_REGISTRY.yaml` (v1.1.0 — reconciliado por AR-TRAIN-REC-01)
+   - **Registro canônico de escopo**: classificação CORE/EXTENDED/EXPERIMENTAL de todos os itens do módulo TRAINING. Lifecycle canônico: `draft -> scheduled -> in_progress -> pending_review -> readonly`. PUBLISHED/CLOSED são vocabulário obsoleto.
+6d. `TRAINING_PERF_LIMITS.json` (v1.1.0 — reconciliado por AR-TRAIN-REC-01)
+   - **SLOs mínimos baseline**: limites de performance por operação CORE. Chave raiz: `operations` (renomeada de `limits` por AR-TRAIN-REC-01). Operações canônicas incluem `training_session_schedule`, `training_session_finalize`, `task_update_session_statuses`.
 7. `AR_BACKLOG_TRAINING.md`
    - Organiza execução por ARs/Batches.
 8. `TRAINING_ROADMAP.md`

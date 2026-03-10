@@ -7,7 +7,7 @@
 **Data**: 2026-02-28  
 **Protocol**: v1.3.0  
 **RUN_ID**: EXECUTOR-BATCH2-TRAINING-20260228  
-**Handoff**: `_reports/ARQUITETO.md` secao `ARQUITETO-BATCH2-TRAINING-20260228`  
+**Handoff**: `_reports/ARQUITETO.yaml` secao `ARQUITETO-BATCH2-TRAINING-20260228`  
 **Git HEAD**: `b123a58f679bdb2264c973a4c5f7875ad4a3a66a`
 
 ---

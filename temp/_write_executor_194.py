@@ -1,4 +1,4 @@
-executor_md = """# EXECUTOR.md — Handoff para Testador
+executor_md = """# EXECUTOR.yaml — Handoff para Testador
 
 **Protocolo**: v1.3.0
 **Branch**: dev-changes-2
@@ -80,6 +80,6 @@ modified_files:
   - docs/hbtrack/modulos/treinos/TRAINING_BATCH_PLAN_v1.md
 """
 
-with open("_reports/EXECUTOR.md", "w", encoding="utf-8") as f:
+with open("_reports/EXECUTOR.yaml", "w", encoding="utf-8") as f:
     f.write(executor_md)
 print("OK")

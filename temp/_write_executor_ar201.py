@@ -1,10 +1,10 @@
-"""Escreve _reports/EXECUTOR.md com EXECUTOR_REPORT para AR_201."""
+"""Escreve _reports/EXECUTOR.yaml com EXECUTOR_REPORT para AR_201."""
 import os, datetime
 os.chdir(r"c:\HB TRACK")
 
 now = datetime.date.today().isoformat()
 
-content = f"""# EXECUTOR.md — EXECUTOR_REPORT
+content = f"""# EXECUTOR.yaml — EXECUTOR_REPORT
 
 | Campo | Valor |
 |---|---|
@@ -85,6 +85,6 @@ git add docs/hbtrack/_INDEX.md
 - Workspace contém arquivos unstaged de outras ARs (Backend/Frontend) — são pré-existentes, fora do write_scope desta AR.
 """
 
-with open("_reports/EXECUTOR.md", "w", encoding="utf-8") as f:
+with open("_reports/EXECUTOR.yaml", "w", encoding="utf-8") as f:
     f.write(content)
-print("EXECUTOR.md written OK")
+print("EXECUTOR.yaml written OK")

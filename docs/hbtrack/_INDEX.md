@@ -1,6 +1,6 @@
 # Índice de Architectural Records (ARs)
 > ⚠️ Auto-gerado por `hb plan`/`hb report`. NÃO editar manualmente.
-> Última atualização: 2026-03-08
+> Última atualização: 2026-03-09
 
 | ID | Título | Status | Evidence |
 |---|---|---|---|
@@ -250,12 +250,18 @@
 | AR_262 | AR-TRAIN-078 — Sync documental pos-Batch 33 (BACKLOG lote... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_262/executor_main.log |
 | AR_263 | AR-TRAIN-079 — trainingAlertsSuggestionsApi singleton + C... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_263/executor_main.log |
 | AR_264 | AR-TRAIN-080 — Sync documental pos-Batch 34 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_264/executor_main.log |
-| AR_265 | Registrar DONE_CONTRACT_TRAINING.md.md na cadeia canônica | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_265/executor_main.log |
-| AR_266 | Criar TRAINING_SCOPE_REGISTRY.yaml | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_266/executor_main.log |
-| AR_267 | Criar TRAINING_STATE_MACHINE.yaml | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_267/executor_main.log |
-| AR_268 | Criar TRAINING_PERF_LIMITS.json | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_268/executor_main.log |
-| AR_269 | Criar traceability_training_core.csv | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_269/executor_main.log |
-| AR_270 | Sync documental pós-Batch 35 | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_270/executor_main.log |
+| AR_265 | Registrar DONE_CONTRACT_TRAINING.md na cadeia canônica | ✅ VERIFICADO | docs/hbtrack/evidence/AR_265/executor_main.log |
+| AR_266 | Criar TRAINING_SCOPE_REGISTRY.yaml | ✅ VERIFICADO | docs/hbtrack/evidence/AR_266/executor_main.log |
+| AR_267 | Criar TRAINING_STATE_MACHINE.yaml | ✅ VERIFICADO | docs/hbtrack/evidence/AR_267/executor_main.log |
+| AR_268 | Criar TRAINING_PERF_LIMITS.json | ✅ VERIFICADO | docs/hbtrack/evidence/AR_268/executor_main.log |
+| AR_269 | Criar traceability_training_core.csv | ✅ VERIFICADO | docs/hbtrack/evidence/AR_269/executor_main.log |
+| AR_270 | Sync documental pós-Batch 35 | ✅ VERIFICADO | docs/hbtrack/evidence/AR_270/executor_main.log |
+| AR_271 | Reconciliacao documental: lifecycle canonico nos 3 artefa... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_271/executor_main.log |
+| AR_272 | Sync documental pos-REC-01: BACKLOG v4.1.0 + TEST_MATRIX ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_272/executor_main.log |
+| AR_273 | Reconciliacao contratual REC-02: /schedule+/finalize no r... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_273/executor_main.log |
+| AR_274 | Ledger de Sessao + Scheduler SKIP LOCKED + provas de imut... | ❌ FALHA | docs/hbtrack/evidence/AR_274/executor_main.log |
+| AR_275 | Superficie TRAINING reconciliada: Flows, Screens, UI ledg... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_275/executor_main.log |
+| AR_276 | Sunset final: remover stubs /publish + /close do router, ... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_276/executor_main.log |
 | AR_900 | E2E: Verificação pipeline DoD (GOVERNANCE_ONLY) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_900/executor_main.log |
 | AR_998 | Test Write Scope Section Generation | ✅ VERIFICADO | docs/hbtrack/evidence/AR_998/executor_main.log |
 | AR_999 | Exemplo: Adicionar campo birthdate em Person | ✅ VERIFICADO | docs/hbtrack/evidence/AR_999/executor_main.log |

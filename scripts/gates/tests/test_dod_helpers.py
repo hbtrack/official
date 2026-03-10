@@ -167,9 +167,9 @@ class TestCollectDodStatus:
         )
 
     def test_all_gates_pass_returns_all_ok(self, tmp_path):
-        # Cria ARQUITETO.md dummy
+        # Cria ARQUITETO.yaml dummy
         (tmp_path / "_reports").mkdir()
-        (tmp_path / "_reports" / "ARQUITETO.md").write_text("**AR IDs**: [232]")
+        (tmp_path / "_reports" / "ARQUITETO.yaml").write_text("**AR IDs**: [232]")
         ar_id = "232"
 
         with patch("hb_cli._run_gate_output", return_value=(0, self._make_ok_output(ar_id, "check_handoff"))):
@@ -183,7 +183,7 @@ class TestCollectDodStatus:
 
     def test_proof_warn_detected(self, tmp_path):
         (tmp_path / "_reports").mkdir()
-        (tmp_path / "_reports" / "ARQUITETO.md").write_text("**AR IDs**: [232]")
+        (tmp_path / "_reports" / "ARQUITETO.yaml").write_text("**AR IDs**: [232]")
 
         proof_out  = self._make_warn_output("232", "PROOF")
         ok_out     = self._make_ok_output("232", "ok_gate")
@@ -203,7 +203,7 @@ class TestCollectDodStatus:
 
     def test_blocked_input_recorded_in_gate_errors(self, tmp_path):
         (tmp_path / "_reports").mkdir()
-        (tmp_path / "_reports" / "ARQUITETO.md").write_text("**AR IDs**: [232]")
+        (tmp_path / "_reports" / "ARQUITETO.yaml").write_text("**AR IDs**: [232]")
 
         with patch("hb_cli._run_gate_output", return_value=(4, "BLOCKED_INPUT: ...")):
             result = _collect_dod_status("232", tmp_path)
@@ -213,7 +213,7 @@ class TestCollectDodStatus:
     def test_no_duplicate_warns(self, tmp_path):
         """STITCH e PROOF gate reportam a mesma WARN → deduplicar."""
         (tmp_path / "_reports").mkdir()
-        (tmp_path / "_reports" / "ARQUITETO.md").write_text("**AR IDs**: [232]")
+        (tmp_path / "_reports" / "ARQUITETO.yaml").write_text("**AR IDs**: [232]")
         dup_warn = "  ⚠️  WARN: AR_232: PROOF não declarado"
 
         with patch("hb_cli._run_gate_output", return_value=(0, dup_warn)):

@@ -82,7 +82,7 @@ Staged por AR_175 execution:
 2. Arquiteto: corrigir bug de path em test_inv_train_026, liberar AR_176
 """
 
-with open('_reports/EXECUTOR.md', 'a', encoding='utf-8') as f:
+with open('_reports/EXECUTOR.yaml', 'a', encoding='utf-8') as f:
     f.write(content)
 
-print('EXECUTOR.md updated')
+print('EXECUTOR.yaml updated')

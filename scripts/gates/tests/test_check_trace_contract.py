@@ -31,7 +31,7 @@ from check_trace_contract import (  # noqa: E402
 # ---------------------------------------------------------------------------
 
 _BASE = textwrap.dedent("""\
-    # ARQUITETO.md — HB Track
+    # ARQUITETO.yaml — HB Track
     Protocolo: 1.3.0
     AR IDs: [232]
     ## PRE-FLIGHT
@@ -55,13 +55,13 @@ HANDOFF_BEHAVIORAL_TRACE_NA = (
 )
 
 HANDOFF_NO_AR_IDS = textwrap.dedent("""\
-    # ARQUITETO.md — sem AR IDs
+    # ARQUITETO.yaml — sem AR IDs
     pytest tests/
     schema.sql alterado
 """)
 
 HANDOFF_NO_BEHAVIORAL = textwrap.dedent("""\
-    # ARQUITETO.md
+    # ARQUITETO.yaml
     Protocolo: 1.3.0
     AR IDs: [232]
     ## Bump de versão
@@ -201,14 +201,14 @@ def test_warn_message_contains_ar_id():
 
 def test_exit_pass_with_warn(tmp_path: Path):
     """WARN não muda exit code — deve retornar EXIT_PASS."""
-    handoff = tmp_path / "ARQUITETO.md"
+    handoff = tmp_path / "ARQUITETO.yaml"
     handoff.write_text(HANDOFF_BEHAVIORAL_NO_TRACE, encoding="utf-8")
     assert main(["-", str(handoff)]) == EXIT_PASS
 
 
 def test_exit_pass_no_warn(tmp_path: Path):
     """Handoff completo com TRACE → EXIT_PASS sem WARN."""
-    handoff = tmp_path / "ARQUITETO.md"
+    handoff = tmp_path / "ARQUITETO.yaml"
     handoff.write_text(HANDOFF_BEHAVIORAL_WITH_TRACE, encoding="utf-8")
     assert main(["-", str(handoff)]) == EXIT_PASS
 
@@ -221,7 +221,7 @@ def test_exit_blocked_input_file_not_found(tmp_path: Path):
 
 def test_exit_pass_suppression_na(tmp_path: Path):
     """Supressão explícita + sinais comportamentais → EXIT_PASS, sem WARN."""
-    handoff = tmp_path / "ARQUITETO.md"
+    handoff = tmp_path / "ARQUITETO.yaml"
     handoff.write_text(HANDOFF_BEHAVIORAL_TRACE_NA, encoding="utf-8")
     assert main(["-", str(handoff)]) == EXIT_PASS
 
@@ -231,7 +231,7 @@ def test_exit_pass_suppression_na(tmp_path: Path):
 # ---------------------------------------------------------------------------
 
 _TWO_ARS_ONE_WITH_TRACE = textwrap.dedent("""\
-    # ARQUITETO.md
+    # ARQUITETO.yaml
     Protocolo: 1.3.0
     AR IDs: [232, 233]
     ## PRE-FLIGHT
@@ -250,7 +250,7 @@ _TWO_ARS_ONE_WITH_TRACE = textwrap.dedent("""\
 """)
 
 _TWO_ARS_PER_AR_SUPPRESSION = textwrap.dedent("""\
-    # ARQUITETO.md
+    # ARQUITETO.yaml
     Protocolo: 1.3.0
     AR IDs: [232, 233]
     ## PRE-FLIGHT

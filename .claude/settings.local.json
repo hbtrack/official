@@ -40,7 +40,7 @@
       "Bash(python temp/_append_kanban_batches.py)",
       "Bash(python scripts/run/hb_cli.py plan docs/_canon/planos/ar_batch29_plano_final_truth_suite_063_067.json --dry-run)",
       "Bash(python scripts/run/hb_cli.py plan \"docs/_canon/planos/ar_batch29_plano_final_truth_suite_063_067.json\" --dry-run --skip-existing)",
-      "Bash(python scripts/gates/check_handoff_contract.py _reports/ARQUITETO.md)",
+      "Bash(python scripts/gates/check_handoff_contract.py _reports/ARQUITETO.yaml)",
       "Bash(python scripts/run/hb_cli.py plan docs/_canon/planos/ar_batch29_plano_final_truth_suite_063_067.json --dry-run --skip-existing)",
       "Bash(python3 -c \"import sys; [print\\(l.rstrip\\(\\)\\) for l in sys.stdin if ''AR_24'' in l or ''AR_25'' in l]\")",
       "Bash(ls \"c:\\\\HB TRACK\\\\docs\\\\hbtrack\\\\ars\\\\features\"\" | grep -E \"AR_24[89])",

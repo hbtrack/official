@@ -1,8 +1,8 @@
-"""Appends Batch 0 Training report to _reports/EXECUTOR.md"""
+"""Appends Batch 0 Training report to _reports/EXECUTOR.yaml"""
 from pathlib import Path
 
 repo_root = Path(__file__).parent.parent
-executor_md = repo_root / "_reports" / "EXECUTOR.md"
+executor_md = repo_root / "_reports" / "EXECUTOR.yaml"
 
 content = executor_md.read_text(encoding="utf-8")
 

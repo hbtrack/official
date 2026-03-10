@@ -627,19 +627,40 @@ class AICoachService:
     # Nota: nenhuma tabela de drafts dedicada existe no schema — stubs canônicos.
     # -----------------------------------------------------------------------
 
-    def apply_draft(self, draft_id: str, edits: dict | None = None) -> dict:
+    def apply_draft(
+        self,
+        draft_id: str,
+        edits: dict | None = None,
+        session_id: str | None = None,
+        db=None,
+    ) -> dict:
         """
         CONTRACT-TRAIN-102: PATCH /ai/coach/draft/{draft_id}/apply
 
         INV-TRAIN-080: draft precisa de aprovação do treinador antes de aplicar.
-        Stub canônico — sem tabela de drafts no schema. Retorna resposta canônica.
+        AR_274: quando session_id e db forem fornecidos, cria registro imutavel
+        em training_session_plans com draft_id rastreavel.
         """
-        import uuid
+        import uuid as _uuid_mod
+        plan_id = str(_uuid_mod.uuid4())
+        training_session_id = str(session_id) if session_id else str(_uuid_mod.uuid4())
+
+        if db is not None and session_id is not None:
+            from app.models.training_session_plan import TrainingSessionPlan
+            plan = TrainingSessionPlan(
+                session_id=_uuid_mod.UUID(str(session_id)),
+                draft_id=_uuid_mod.UUID(str(draft_id)) if draft_id else None,
+                plan_data=edits or {},
+            )
+            db.add(plan)
+            plan_id = str(plan.id) if plan.id else plan_id
+
         return {
-            "training_session_id": str(uuid.uuid4()),
+            "training_session_id": training_session_id,
             "applied": True,
             "draft_id": str(draft_id),
-            "note": "stub — tabela de drafts pendente de migration futura",
+            "plan_id": plan_id,
+            "note": "ledger plan criado" if db is not None else "sem db — ledger nao persistido",
         }
 
     def justify_suggestion(self, suggestion_id: str) -> dict:

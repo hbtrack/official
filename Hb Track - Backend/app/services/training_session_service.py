@@ -485,9 +485,9 @@ class TrainingSessionService:
 
         return errors
 
-    async def publish_session(self, session_id: UUID) -> tuple[TrainingSession, dict]:
+    async def schedule_session(self, session_id: UUID, starts_at: datetime, ends_at: datetime) -> tuple[TrainingSession, dict]:
         """
-        Publica um rascunho completo (draft -> scheduled).
+        Agenda um rascunho completo (draft -> scheduled).
         """
         session = await self.get_by_id(session_id)
 
@@ -499,6 +499,7 @@ class TrainingSessionService:
             return session, errors
 
         previous_status = session.status
+        session.session_at = starts_at
         session.status = "scheduled"
 
         await self.db.flush()
@@ -513,7 +514,7 @@ class TrainingSessionService:
         )
 
         logger.info(
-            f"Sessão {session_id} publicada por {self.context.user_id}"
+            f"Sessão {session_id} agendada por {self.context.user_id}"
         )
 
         return session, {}
@@ -831,11 +832,12 @@ class TrainingSessionService:
             athletes_without_presence=athletes_without_presence,
         )
 
-    async def close_session(
+    async def finalize_session(
         self,
         session_id: UUID,
         *,
-        force: bool = False,
+        attendance_completed: bool,
+        review_completed: bool,
     ) -> SessionClosureResponse:
         """
         Finaliza a revisão operacional e congela a sessão.
@@ -848,7 +850,8 @@ class TrainingSessionService:
 
         Args:
             session_id: ID da sessão
-            force: Se True, ignora validações (apenas admin) - NÃO IMPLEMENTADO
+            attendance_completed: Confirma que presenças foram marcadas
+            review_completed: Confirma que revisão operacional foi concluída
 
         Returns:
             SessionClosureResponse com success, session ou validation
@@ -901,7 +904,7 @@ class TrainingSessionService:
         await self._audit_session_action(
             session,
             action="close",
-            context={"status": session.status},
+            context={"status": session.status, "attendance_completed": attendance_completed, "review_completed": review_completed},
             old_value={"status": "pending_review"},
             new_value={"status": session.status},
         )
