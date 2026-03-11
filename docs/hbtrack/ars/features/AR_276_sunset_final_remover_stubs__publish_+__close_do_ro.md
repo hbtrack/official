@@ -1,6 +1,6 @@
 # AR_276 — Sunset final: remover stubs /publish + /close do router, openapi e FE
 
-**Status**: 🔲 PENDENTE
+**Status**: ✅ SUCESSO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -69,9 +69,71 @@ Classe A (sem mudanca documental de governanca — governo ja feito em AR_272+RE
 - openapi.json e api.ts sao DERIVADOS — NAO editar manualmente; usar regen (uvicorn + GET) e api:sync
 
 ## Análise de Impacto
-_(A ser preenchido pelo Executor)_
+
+**Diagnóstico pré-execução (grep + validação):**
+- `training_sessions.py`: zero `@router.post` com `/publish` ou `/close` — removidos pela AR_273.
+- `openapi.json`: zero paths `/publish` e `/close` em training-sessions — já derivado correto da AR_273.
+- `api.ts`: sem hooks `publishTrainingSession*` ou `closeTrainingSession*` — gerado corretamente pela AR_273 via `npm run api:sync`.
+
+**Resultado:** Todos os 7 gates do validation_command passam sem necessidade de edição de código. O sunset já foi efetivado pela execução da AR_273 (reconciliação contratual). Esta AR valida e certifica o estado final via pipeline spec-driven + validation_command.
+
+**Arquivos verificados (não modificados — já no estado correto):**
+1. `Hb Track - Backend/app/api/v1/routers/training_sessions.py` — sem stubs `/publish`/`/close`; apenas `/schedule` e `/finalize` como transições humanas.
+2. `Hb Track - Backend/docs/ssot/openapi.json` — paths `/schedule` e `/finalize` presentes; `/publish` e `/close` ausentes.
+3. `Hb Track - Frontend/src/api/generated/api.ts` — hooks `scheduleTrainingSession` e `finalizeTrainingSession` presentes; hooks legados ausentes.
+
+**Riscos mitigados:**
+- oasdiff poderá reportar breaking changes históricas (remoção de `/publish`/`/close` já feita na AR_273) — documentado e esperado per notas do Arquiteto.
+- `contracts/openapi/baseline/openapi_baseline.json` fora do write_scope — não alterado.
+
+**Pipeline spec-driven:**
+- Obrigatório por regra Executor (contrato FE↔BE tocado via openapi.json regen).
+- openapi.json já está no estado correto — regen confirmatória via uvicorn + GET necessária para evidência.
 
 ---
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
+### Execução Executor em b07ecee
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import pathlib,re,json;bk='Hb Track - Backend';o=json.loads(pathlib.Path(bk+'/docs/ssot/openapi.json').read_text('utf-8'));p=o.get('paths',{});pp=[k for k in p if 'training-session' in k];assert not any('/publish' in k for k in pp),'G1:publish path in final openapi';assert not any(k.endswith('/close') and 'training' in k for k in pp),'G2:close path in final openapi';sp=[k for k in pp if '/schedule' in k];assert sp,'G3a:schedule absent';fp=[k for k in pp if '/finalize' in k];assert fp,'G3b:finalize absent';fe=pathlib.Path('Hb Track - Frontend/src/api/generated/api.ts').read_text('utf-8');assert 'publishTrainingSessionApiV1TrainingSessionsTrainingSessionIdPublishPost' not in fe,'G4:publish hook FE';assert 'closeTrainingSessionApiV1TrainingSessionsTrainingSessionIdClosePost' not in fe,'G5:close hook FE';assert any(x in fe for x in ['scheduleTrainingSession','ScheduleTrainingSession']),'G6:schedule hook absent';router=pathlib.Path(bk+'/app/api/v1/routers/training_sessions.py').read_text('utf-8');rp=[m.group() for m in re.finditer(r'@router[.]post[(][^)]+[)]',router)];assert not any('publish' in x for x in rp),'G7:publish stub in router';print('PASS AR_276 sunset final OK')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-03-10T04:38:12.898003+00:00
+**Behavior Hash**: 9818fa908c1b08ae46a894152d93e024d8e1dc3a18b2d25ede07747cf5208f2d
+**Evidence File**: `docs/hbtrack/evidence/AR_276/executor_main.log`
+**Python Version**: 3.11.9
+
+### Execução Executor em b07ecee
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import pathlib,re,json;bk='Hb Track - Backend';o=json.loads(pathlib.Path(bk+'/docs/ssot/openapi.json').read_text('utf-8'));p=o.get('paths',{});pp=[k for k in p if 'training-session' in k];assert not any('/publish' in k for k in pp),'G1:publish path in final openapi';assert not any(k.endswith('/close') and 'training' in k for k in pp),'G2:close path in final openapi';sp=[k for k in pp if '/schedule' in k];assert sp,'G3a:schedule absent';fp=[k for k in pp if '/finalize' in k];assert fp,'G3b:finalize absent';fe=pathlib.Path('Hb Track - Frontend/src/api/generated/api.ts').read_text('utf-8');assert 'publishTrainingSessionApiV1TrainingSessionsTrainingSessionIdPublishPost' not in fe,'G4:publish hook FE';assert 'closeTrainingSessionApiV1TrainingSessionsTrainingSessionIdClosePost' not in fe,'G5:close hook FE';assert any(x in fe for x in ['scheduleTrainingSession','ScheduleTrainingSession']),'G6:schedule hook absent';router=pathlib.Path(bk+'/app/api/v1/routers/training_sessions.py').read_text('utf-8');rp=[m.group() for m in re.finditer(r'@router[.]post[(][^)]+[)]',router)];assert not any('publish' in x for x in rp),'G7:publish stub in router';print('PASS AR_276 sunset final OK')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-03-10T04:38:51.573482+00:00
+**Behavior Hash**: 9818fa908c1b08ae46a894152d93e024d8e1dc3a18b2d25ede07747cf5208f2d
+**Evidence File**: `docs/hbtrack/evidence/AR_276/executor_main.log`
+**Python Version**: 3.11.9
+
+### Execução Executor em b07ecee
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import pathlib,re,json;bk='Hb Track - Backend';o=json.loads(pathlib.Path(bk+'/docs/ssot/openapi.json').read_text('utf-8'));p=o.get('paths',{});pp=[k for k in p if 'training-session' in k];assert not any('/publish' in k for k in pp),'G1:publish path in final openapi';assert not any(k.endswith('/close') and 'training' in k for k in pp),'G2:close path in final openapi';sp=[k for k in pp if '/schedule' in k];assert sp,'G3a:schedule absent';fp=[k for k in pp if '/finalize' in k];assert fp,'G3b:finalize absent';fe=pathlib.Path('Hb Track - Frontend/src/api/generated/api.ts').read_text('utf-8');assert 'publishTrainingSessionApiV1TrainingSessionsTrainingSessionIdPublishPost' not in fe,'G4:publish hook FE';assert 'closeTrainingSessionApiV1TrainingSessionsTrainingSessionIdClosePost' not in fe,'G5:close hook FE';assert any(x in fe for x in ['scheduleTrainingSession','ScheduleTrainingSession']),'G6:schedule hook absent';router=pathlib.Path(bk+'/app/api/v1/routers/training_sessions.py').read_text('utf-8');rp=[m.group() for m in re.finditer(r'@router[.]post[(][^)]+[)]',router)];assert not any('publish' in x for x in rp),'G7:publish stub in router';print('PASS AR_276 sunset final OK')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-03-10T04:39:07.584206+00:00
+**Behavior Hash**: 9818fa908c1b08ae46a894152d93e024d8e1dc3a18b2d25ede07747cf5208f2d
+**Evidence File**: `docs/hbtrack/evidence/AR_276/executor_main.log`
+**Python Version**: 3.11.9
+
+### Execução Executor em b07ecee
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import pathlib,re,json;bk='Hb Track - Backend';o=json.loads(pathlib.Path(bk+'/docs/ssot/openapi.json').read_text('utf-8'));p=o.get('paths',{});pp=[k for k in p if 'training-session' in k];assert not any('/publish' in k for k in pp),'G1:publish path in final openapi';assert not any(k.endswith('/close') and 'training' in k for k in pp),'G2:close path in final openapi';sp=[k for k in pp if '/schedule' in k];assert sp,'G3a:schedule absent';fp=[k for k in pp if '/finalize' in k];assert fp,'G3b:finalize absent';fe=pathlib.Path('Hb Track - Frontend/src/api/generated/api.ts').read_text('utf-8');assert 'publishTrainingSessionApiV1TrainingSessionsTrainingSessionIdPublishPost' not in fe,'G4:publish hook FE';assert 'closeTrainingSessionApiV1TrainingSessionsTrainingSessionIdClosePost' not in fe,'G5:close hook FE';assert any(x in fe for x in ['scheduleTrainingSession','ScheduleTrainingSession']),'G6:schedule hook absent';router=pathlib.Path(bk+'/app/api/v1/routers/training_sessions.py').read_text('utf-8');rp=[m.group() for m in re.finditer(r'@router[.]post[(][^)]+[)]',router)];assert not any('publish' in x for x in rp),'G7:publish stub in router';print('PASS AR_276 sunset final OK')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-03-10T04:40:21.849978+00:00
+**Behavior Hash**: 9818fa908c1b08ae46a894152d93e024d8e1dc3a18b2d25ede07747cf5208f2d
+**Evidence File**: `docs/hbtrack/evidence/AR_276/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Verificacao Testador em b07ecee
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_276_b07ecee/result.json`

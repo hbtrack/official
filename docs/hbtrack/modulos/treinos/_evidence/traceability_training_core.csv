@@ -1,7 +1,13 @@
 # TRAINING - traceability_training_core.csv
 # Autoridade: DONE_CONTRACT_TRAINING.md §5.4 + §7.4
-# Versão: v1.0.0 (skeleton — sem dados)
-# Última revisão: 2026-03-08
-# Status: AGUARDANDO_TRUTH_FE_CORE
+# Versão: v1.1.0 (preenchido — AR_275)
+# Última revisão: 2026-03-09
+# Status: TRUTH_FE_CORE_PARCIAL
 # Regra: 100% dos FLOW-* P0/CORE devem ter linha aqui antes de DONE_SEMANTICO = TRUE
 test_id,flow_id,screen_id,contract_id,invariant_id,selector_id,visual_baseline_id,side_effect_check_id,state_transition_id
+T-275-001,FLOW-TRAIN-002,SCREEN-TRAIN-003,CONTRACT-TRAIN-002,INV-TRAIN-006,,,,draft_created
+T-275-002,FLOW-TRAIN-002,SCREEN-TRAIN-020,CONTRACT-TRAIN-006,INV-TRAIN-001,training-session-planned-section,,,draft_to_scheduled_via_schedule
+T-275-003,FLOW-TRAIN-017,SCREEN-TRAIN-020,CONTRACT-TRAIN-098,INV-TRAIN-064,,,attendance_batch,pending_review_to_readonly_via_finalize
+T-275-004,FLOW-TRAIN-002,SCREEN-TRAIN-020,CONTRACT-TRAIN-006,INV-TRAIN-006,training-session-realized-section,,,scheduled_to_in_progress_auto
+T-275-005,FLOW-TRAIN-003,SCREEN-TRAIN-005,CONTRACT-TRAIN-004,INV-TRAIN-004,training-session-adjustments-section,,,in_progress_editor_blocked_after_session_at
+T-275-006,FLOW-TRAIN-016,SCREEN-TRAIN-022,CONTRACT-TRAIN-096,INV-TRAIN-068,,,,athlete_view_pre_session

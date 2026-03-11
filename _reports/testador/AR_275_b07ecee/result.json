@@ -1,0 +1,48 @@
+{
+  "ar_id": "275",
+  "validation_command": "python -c \"import pathlib,re;uf=pathlib.Path('docs/hbtrack/modulos/treinos/TRAINING_USER_FLOWS.md').read_text('utf-8');ss=pathlib.Path('docs/hbtrack/modulos/treinos/TRAINING_SCREENS_SPEC.md').read_text('utf-8');assert not re.search(r'/publish|publicar.sessao|POST /publish',uf,re.I),'G1a:publish in flows';assert 'schedule' in uf.lower(),'G2a:schedule absent flows';assert 'finalize' in uf.lower(),'G2b:finalize absent flows';assert not re.search(r'/publish|POST /publish',ss,re.I),'G1b:publish in screens';tc=pathlib.Path('docs/hbtrack/modulos/treinos/_evidence/traceability_training_core.csv').read_text('utf-8');rows=[l for l in tc.splitlines() if l.strip() and not l.startswith('#')];assert len(rows)>=5,'G10a:traceability skeleton (need 5+ data rows)';assert any('SCREEN-TRAIN-020' in l or 'FLOW-TRAIN-002' in l for l in rows),'G10b:key items absent';fe=[p for p in pathlib.Path('Hb Track - Frontend/src').rglob('*.tsx') if 'training' in str(p).lower()];fec=''.join(p.read_text('utf-8',errors='ignore') for p in fe[:30]);assert 'training-session-planned-section' in fec,'G7a:planned-section';assert 'training-session-realized-section' in fec,'G7b:realized-section';assert 'training-session-adjustments-section' in fec,'G7c:adjustments-section';print('PASS AR_275 Gates 1-10 OK')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "46d57a4d6a87910cf7354fae302d4fb046617f7c5a4c297e8392e90d9448192f",
+      "hash": "46d57a4d6a87910c",
+      "stdout_len": 26,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "46d57a4d6a87910cf7354fae302d4fb046617f7c5a4c297e8392e90d9448192f",
+      "hash": "46d57a4d6a87910c",
+      "stdout_len": 26,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "46d57a4d6a87910cf7354fae302d4fb046617f7c5a4c297e8392e90d9448192f",
+      "hash": "46d57a4d6a87910c",
+      "stdout_len": 26,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true,
+  "dod": {
+    "proof": "OK",
+    "trace": "OK",
+    "stitch": "OK",
+    "matrix": "N/A",
+    "warns": [],
+    "gate_errors": []
+  }
+}

@@ -1,6 +1,6 @@
 # Índice de Architectural Records (ARs)
 > ⚠️ Auto-gerado por `hb plan`/`hb report`. NÃO editar manualmente.
-> Última atualização: 2026-03-09
+> Última atualização: 2026-03-10
 
 | ID | Título | Status | Evidence |
 |---|---|---|---|
@@ -259,9 +259,9 @@
 | AR_271 | Reconciliacao documental: lifecycle canonico nos 3 artefa... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_271/executor_main.log |
 | AR_272 | Sync documental pos-REC-01: BACKLOG v4.1.0 + TEST_MATRIX ... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_272/executor_main.log |
 | AR_273 | Reconciliacao contratual REC-02: /schedule+/finalize no r... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_273/executor_main.log |
-| AR_274 | Ledger de Sessao + Scheduler SKIP LOCKED + provas de imut... | ❌ FALHA | docs/hbtrack/evidence/AR_274/executor_main.log |
-| AR_275 | Superficie TRAINING reconciliada: Flows, Screens, UI ledg... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_275/executor_main.log |
-| AR_276 | Sunset final: remover stubs /publish + /close do router, ... | 🔲 PENDENTE | docs/hbtrack/evidence/AR_276/executor_main.log |
+| AR_274 | Ledger de Sessao + Scheduler SKIP LOCKED + provas de imut... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_274/executor_main.log |
+| AR_275 | Superficie TRAINING reconciliada: Flows, Screens, UI ledg... | ✅ VERIFICADO | docs/hbtrack/evidence/AR_275/executor_main.log |
+| AR_276 | Sunset final: remover stubs /publish + /close do router, ... | 🏗️ EM_EXECUCAO | docs/hbtrack/evidence/AR_276/executor_main.log |
 | AR_900 | E2E: Verificação pipeline DoD (GOVERNANCE_ONLY) | ✅ VERIFICADO | docs/hbtrack/evidence/AR_900/executor_main.log |
 | AR_998 | Test Write Scope Section Generation | ✅ VERIFICADO | docs/hbtrack/evidence/AR_998/executor_main.log |
 | AR_999 | Exemplo: Adicionar campo birthdate em Person | ✅ VERIFICADO | docs/hbtrack/evidence/AR_999/executor_main.log |

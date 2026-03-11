@@ -710,6 +710,7 @@ async def refresh_specific_view(
     """
     Refresh de uma materialized view específica (RF29, RD85)
     """
+
     from app.services.reports.refresh_service import RefreshService
     return RefreshService.refresh_view(db, view_name, concurrent)
 

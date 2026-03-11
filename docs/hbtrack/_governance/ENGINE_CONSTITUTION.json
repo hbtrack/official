@@ -1,0 +1,973 @@
+{
+  "meta": {
+    "schema_ref": "./ENGINE_CONSTITUTION.schema.json",
+    "version": "2.0.0",
+    "authority": "sovereign",
+    "fail_closed": true,
+    "execution_mode": "deterministic_only",
+    "status": "ACTIVE",
+    "migrated_from": "00_ATLETAS_CROSS_LINTER_RULES.json@1.2.7",
+    "migration_date": "2026-03-09"
+  },
+  "exit_codes": {
+    "0": "PASS",
+    "1": "FAIL",
+    "2": "FAIL_ACTIONABLE",
+    "3": "ERROR_INFRA",
+    "4": "BLOCKED_INPUT"
+  },
+  "execution_phases": [
+    "PRE_PLAN",
+    "POST_PLAN",
+    "POST_EXECUTION"
+  ],
+  "status_vocabulary": {
+    "values": [
+      "PASS",
+      "FAIL_ACTIONABLE",
+      "ERROR_INFRA",
+      "BLOCKED_INPUT",
+      "SKIP",
+      "WARNING",
+      "INFO"
+    ]
+  },
+  "skip_policy": {
+    "missing_checker_impl": "SKIP",
+    "description": "checker_id with no registered Python implementation produces SKIP, never FAIL or exception. Absence of impl != business failure."
+  },
+  "aggregation_policy": {
+    "fail_closed": true,
+    "any_fail_triggers_overall_fail": true,
+    "statuses_that_trigger_fail": [
+      "FAIL",
+      "FAIL_ACTIONABLE",
+      "ERROR",
+      "ERROR_INFRA",
+      "BLOCKED_INPUT"
+    ]
+  },
+  "merge_policy": {
+    "sovereign_fields": [
+      "execution_phases",
+      "exit_codes",
+      "skip_policy",
+      "aggregation_policy",
+      "merge_policy",
+      "global_type_system",
+      "rule_sets"
+    ],
+    "module_cannot_redefine_sovereign_fields": true,
+    "description": "Module delta (00_*_MODULE_RULES.json) may only extend waiver policy via module_waiver_policy.additional_cannot_waive. Sovereign fields listed above are immutable by module delta."
+  },
+  "waiver_policy": {
+    "waivers_allowed": true,
+    "waiver_file": "_reports/WAIVERS.yaml",
+    "requirements": [
+      "waiver_id",
+      "rule_id",
+      "justification",
+      "owner",
+      "expiry_date",
+      "approved_by"
+    ],
+    "cannot_waive": [
+      "DOC-004",
+      "DOC-005",
+      "DOC-001",
+      "DOC-003",
+      "TYPE-001",
+      "TYPE-002",
+      "TYPE-003",
+      "TYPE-004",
+      "TYPE-005",
+      "TYPE-006",
+      "X-001",
+      "X-002",
+      "X-003",
+      "X-004",
+      "X-008",
+      "X-010",
+      "X-012",
+      "X-015",
+      "X-016",
+      "X-017",
+      "X-018",
+      "X-019",
+      "X-020",
+      "STUB-001",
+      "STUB-002",
+      "HO-002",
+      "RP-001",
+      "RP-002",
+      "RP-003",
+      "RP-004",
+      "TIME-002",
+      "EV-008",
+      "PROJ-006",
+      "PROJ-010",
+      "SE-006",
+      "SE-009",
+      "SE-010",
+      "SE-011",
+      "SE-012"
+    ]
+  },
+  "global_type_system": {
+    "canonical_scalar_mappings": [
+      {
+        "contract_type": "uuid",
+        "openapi": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "backend_python": "UUID",
+        "frontend_typescript": "string",
+        "frontend_constraint": "string:uuid",
+        "db_sql": "uuid",
+        "serialization": "string:uuid"
+      },
+      {
+        "contract_type": "date",
+        "openapi": {
+          "type": "string",
+          "format": "date"
+        },
+        "backend_python": "date",
+        "frontend_typescript": "string",
+        "db_sql": "date",
+        "serialization": "string:date:yyyy-mm-dd"
+      },
+      {
+        "contract_type": "date-time",
+        "openapi": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "backend_python": "datetime",
+        "frontend_typescript": "string",
+        "db_sql": "timestamptz",
+        "serialization": "string:date-time:iso8601-utc-ms-z"
+      },
+      {
+        "contract_type": "integer",
+        "openapi": {
+          "type": "integer"
+        },
+        "backend_python": "int",
+        "frontend_typescript": "number",
+        "db_sql": "integer",
+        "serialization": "number:int"
+      },
+      {
+        "contract_type": "boolean",
+        "openapi": {
+          "type": "boolean"
+        },
+        "backend_python": "bool",
+        "frontend_typescript": "boolean",
+        "db_sql": "boolean",
+        "serialization": "boolean"
+      },
+      {
+        "contract_type": "decimal",
+        "openapi": {
+          "type": "string",
+          "format": "decimal"
+        },
+        "backend_python": "Decimal",
+        "frontend_typescript": "string",
+        "frontend_constraint": "string:decimal:fixed",
+        "frontend_transport_number_forbidden": true,
+        "db_sql": "numeric(10,2)",
+        "serialization": "string:decimal:fixed:precision=10:scale=2:transport=string_only:number_forbidden"
+      }
+    ],
+    "polymorphic_discrimination_defaults": {
+      "discriminator_field_name": "type",
+      "discriminator_location": "payload_root",
+      "mapping_strategy": "explicit_mapping_only",
+      "openapi_strategy": "oneOf_with_required_discriminator",
+      "backend_strategy": "pydantic_discriminated_union",
+      "frontend_strategy": "typescript_discriminated_union",
+      "db_strategy": "explicit_declared_inheritance_only",
+      "implicit_subclass_inference_forbidden": true,
+      "undeclared_discriminator_values_forbidden": true
+    },
+    "note": "TYPE-001..006 rules migrated to rule_sets.type_rules. This section retains type mapping reference data only."
+  },
+  "rule_sets": {
+    "document_shape_rules": [
+      {
+        "rule_id": "DOC-001",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_required_documents_exist",
+        "assertion": "Every required document must exist."
+      },
+      {
+        "rule_id": "DOC-002",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_required_document_metadata_fields_exist",
+        "assertion": "Every required document must expose canonical metadata fields when applicable."
+      },
+      {
+        "rule_id": "DOC-003",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_promoted_documents_do_not_contain_placeholders",
+        "assertion": "No promoted contract document may contain TODO, TBD, FIXME or placeholder markers."
+      },
+      {
+        "rule_id": "DOC-004",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_execution_bindings_validate_against_schema",
+        "assertion": "12_ATLETAS_EXECUTION_BINDINGS.yaml must strictly validate against its canonical JSON Schema before handoff generation.",
+        "failure_message": "Execution bindings document does not validate against canonical schema."
+      },
+      {
+        "rule_id": "DOC-005",
+        "severity": "error",
+        "execution_phase": "POST_PLAN",
+        "checker_id": "check_generated_documents_exist_and_have_integrity",
+        "assertion": "Every generated document must exist after planning and satisfy its minimum integrity contract. 16_ATLETAS_AGENT_HANDOFF.json must contain a valid self-referential zero-padded snapshot hash procedure and anchor_manifest.json must exist and be non-empty.",
+        "failure_message": "Generated document missing or integrity contract invalid after planning."
+      }
+    ],
+    "cross_rules": [
+      {
+        "rule_id": "X-001",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_openapi_operation_ids_are_traceable",
+        "source": "01_ATLETAS_OPENAPI.yaml",
+        "target": "08_ATLETAS_TRACEABILITY.yaml",
+        "assertion": "Every operationId in OpenAPI must exist exactly once in traceability.operations.operation_id.",
+        "failure_message": "Orphan operationId detected."
+      },
+      {
+        "rule_id": "X-002",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_traceability_operations_exist_in_openapi",
+        "source": "08_ATLETAS_TRACEABILITY.yaml",
+        "target": "01_ATLETAS_OPENAPI.yaml",
+        "assertion": "Every traceability operation_id must exist in OpenAPI.",
+        "failure_message": "Traceability references non-existent contract operation."
+      },
+      {
+        "rule_id": "X-003",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_write_operations_have_db_bindings",
+        "source": "01_ATLETAS_OPENAPI.yaml",
+        "target": "13_ATLETAS_DB_CONTRACT.yaml",
+        "assertion": "Every write operation must declare required persistence bindings and required migrations.",
+        "failure_message": "Write operation without DB contract binding."
+      },
+      {
+        "rule_id": "X-004",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_db_nullability_matches_api_write_contract",
+        "source": "13_ATLETAS_DB_CONTRACT.yaml",
+        "target": "01_ATLETAS_OPENAPI.yaml",
+        "assertion": "Non-nullable persisted fields required for create/update must be representable in request contracts or explicitly defaulted by DB/service.",
+        "failure_message": "DB nullability and API request contract mismatch."
+      },
+      {
+        "rule_id": "X-005",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_ui_fields_bind_to_openapi_properties",
+        "source": "01_ATLETAS_OPENAPI.yaml",
+        "target": "14_ATLETAS_UI_CONTRACT.yaml",
+        "assertion": "Every UI-bound input field must bind to an OpenAPI request property or explicit derived field declaration.",
+        "failure_message": "UI selector references unknown contract field."
+      },
+      {
+        "rule_id": "X-006",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_required_selectors_are_traceable",
+        "source": "14_ATLETAS_UI_CONTRACT.yaml",
+        "target": "08_ATLETAS_TRACEABILITY.yaml",
+        "assertion": "Every declared required selector must be referenced by at least one bound screen or operation path.",
+        "failure_message": "Declared selector is not traceable to execution."
+      },
+      {
+        "rule_id": "X-007",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_traceability_invariants_exist_and_are_executable",
+        "source": "08_ATLETAS_TRACEABILITY.yaml",
+        "target": "15_ATLETAS_INVARIANTS.yaml",
+        "assertion": "Every referenced invariant_id must exist and have formal_predicate plus executable_pseudocode.",
+        "failure_message": "Traceability references incomplete invariant."
+      },
+      {
+        "rule_id": "X-008",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_hard_fail_invariants_bind_to_operations_and_tests",
+        "source": "15_ATLETAS_INVARIANTS.yaml",
+        "target": "08_ATLETAS_TRACEABILITY.yaml",
+        "assertion": "Every hard_fail invariant must bind to at least one operation and one automated test.",
+        "failure_message": "Hard-fail invariant lacks enforceable execution path."
+      },
+      {
+        "rule_id": "X-009",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_bound_symbols_are_reachable_from_traceability",
+        "source": "13_ATLETAS_DB_CONTRACT.yaml",
+        "target": "08_ATLETAS_TRACEABILITY.yaml",
+        "assertion": "Every symbol in file_map.symbol_bindings must be referenced by at least one traceability implementation_binding or invariant/reference function.",
+        "failure_message": "Unreachable bound symbol."
+      },
+      {
+        "rule_id": "X-010",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_tables_in_concurrent_write_paths_declare_locking_policy",
+        "source": "13_ATLETAS_DB_CONTRACT.yaml",
+        "target": "13_ATLETAS_DB_CONTRACT.yaml",
+        "assertion": "Every table used in concurrent write paths must declare locking_policy.",
+        "failure_message": "Concurrent write path without locking strategy."
+      },
+      {
+        "rule_id": "X-011",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_ui_submit_state_policies_are_declared",
+        "source": "14_ATLETAS_UI_CONTRACT.yaml",
+        "target": "14_ATLETAS_UI_CONTRACT.yaml",
+        "assertion": "Every screen state transition must define button enabled/disabled policy for submit-like actions.",
+        "failure_message": "UI state machine incomplete for interactive action."
+      },
+      {
+        "rule_id": "X-012",
+        "severity": "error",
+        "execution_phase": "POST_PLAN",
+        "checker_id": "check_handoff_hashes_match_snapshot",
+        "source": "16_ATLETAS_AGENT_HANDOFF.json",
+        "target": "all",
+        "assertion": "Handoff manifest hashes must match current contract files before executor start.",
+        "failure_message": "Executor received stale or divergent handoff snapshot."
+      },
+      {
+        "rule_id": "X-013",
+        "severity": "error",
+        "execution_phase": "POST_PLAN",
+        "checker_id": "check_handoff_task_plan_references_only_contracted_targets",
+        "source": "16_ATLETAS_AGENT_HANDOFF.json",
+        "target": "08_ATLETAS_TRACEABILITY.yaml",
+        "assertion": "Executor task list must reference only traceability-declared operation_ids and file paths.",
+        "failure_message": "Handoff contains non-contracted implementation target."
+      },
+      {
+        "rule_id": "X-014",
+        "severity": "error",
+        "execution_phase": "POST_PLAN",
+        "checker_id": "check_generated_frontend_types_are_current",
+        "source": "01_ATLETAS_OPENAPI.yaml",
+        "target": "frontend_generated_types",
+        "assertion": "All generated frontend API types must derive from current OpenAPI snapshot.",
+        "failure_message": "Frontend types stale relative to contract."
+      },
+      {
+        "rule_id": "X-015",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_required_migrations_exist_before_execution",
+        "source": "13_ATLETAS_DB_CONTRACT.yaml",
+        "target": "alembic_state",
+        "assertion": "Required migrations in DB contract must exist and be ordered before implementation handoff.",
+        "failure_message": "Missing or unordered migration dependency."
+      },
+      {
+        "rule_id": "X-016",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_execution_bindings_are_traceable",
+        "source": "12_ATLETAS_EXECUTION_BINDINGS.yaml",
+        "target": "08_ATLETAS_TRACEABILITY.yaml",
+        "assertion": "Every executable step, bound symbol, target path or operational binding declared in execution_bindings must have a corresponding traceability entry.",
+        "failure_message": "Execution binding contains non-traceable executable step."
+      },
+      {
+        "rule_id": "X-017",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_execution_bindings_do_not_override_constitution",
+        "source": "12_ATLETAS_EXECUTION_BINDINGS.yaml",
+        "target": "00_ATLETAS_CROSS_LINTER_RULES.json",
+        "assertion": "Execution bindings must not override, relax, bypass or replace constitutional prohibitions, fail-closed rules, scope restrictions or validator requirements.",
+        "failure_message": "Execution binding attempts to override constitutional restriction."
+      },
+      {
+        "rule_id": "X-018",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_execution_bindings_prohibited_keys_are_complete",
+        "source": "12_ATLETAS_EXECUTION_BINDINGS.yaml",
+        "target": "00_ATLETAS_CROSS_LINTER_RULES.json",
+        "assertion": "The prohibited_keys array in 12_ATLETAS_EXECUTION_BINDINGS.yaml must be a complete superset of the constitutionally required prohibited execution overrides.",
+        "failure_message": "Execution bindings prohibited_keys are incomplete relative to constitutional restriction map."
+      },
+      {
+        "rule_id": "X-019",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_execution_flags_match_overwrite_policy",
+        "source": "12_ATLETAS_EXECUTION_BINDINGS.yaml",
+        "target": "08_ATLETAS_TRACEABILITY.yaml",
+        "assertion": "Execution flags in execution_bindings must be logically consistent with the structural role, implementation binding and protection intent declared in traceability for their target files and symbols.",
+        "failure_message": "Execution flags are inconsistent with traceability-declared protection intent."
+      },
+      {
+        "rule_id": "X-020",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_canonical_test_scenarios_pass_with_deterministic_report",
+        "source": "19_ATLETAS_TEST_SCENARIOS.yaml",
+        "target": "deterministic_test_report",
+        "assertion": "Implementation must satisfy all canonical scenarios declared in 19_ATLETAS_TEST_SCENARIOS.yaml, verified through deterministic test report artifacts with stable hashes and scenario-level pass/fail mapping.",
+        "failure_message": "Canonical deterministic test scenarios did not pass or deterministic report is missing/invalid."
+      }
+    ],
+    "event_rules": [
+      {
+        "rule_id": "EV-001",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_projection_event_types_exist",
+        "source": "05_ATLETAS_EVENTS.asyncapi.yaml",
+        "target": "17_ATLETAS_PROJECTIONS.yaml",
+        "assertion": "Every event_type consumed by a projection must exist in AsyncAPI messages or x-hbtrack event catalog.",
+        "failure_message": "Projection consumes undeclared event."
+      },
+      {
+        "rule_id": "EV-002",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_projection_versions_are_supported_or_upcasted",
+        "source": "17_ATLETAS_PROJECTIONS.yaml",
+        "target": "05_ATLETAS_EVENTS.asyncapi.yaml",
+        "assertion": "Every source event version used by projection must be explicitly supported or upcasted.",
+        "failure_message": "Projection version compatibility incomplete."
+      },
+      {
+        "rule_id": "EV-003",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_side_effects_reference_declared_events",
+        "source": "05_ATLETAS_EVENTS.asyncapi.yaml",
+        "target": "18_ATLETAS_SIDE_EFFECTS.yaml",
+        "assertion": "Every event-triggered side effect must reference a declared event_type and event_version.",
+        "failure_message": "Side effect bound to undeclared event."
+      },
+      {
+        "rule_id": "EV-004",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_projection_and_side_effect_handlers_are_separated",
+        "source": "17_ATLETAS_PROJECTIONS.yaml",
+        "target": "18_ATLETAS_SIDE_EFFECTS.yaml",
+        "assertion": "Projection handlers must not overlap with side-effect handlers for the same execution path.",
+        "failure_message": "Projection and side effect mixed in same handler path."
+      },
+      {
+        "rule_id": "EV-005",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_read_models_have_event_provenance",
+        "source": "05_ATLETAS_EVENTS.asyncapi.yaml",
+        "target": "17_ATLETAS_PROJECTIONS.yaml",
+        "assertion": "If source_of_truth is event_store, every read model table must have at least one event mapping or explicit derived function mapping.",
+        "failure_message": "Read model field or table without event provenance."
+      },
+      {
+        "rule_id": "EV-006",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_event_aggregate_id_type_matches_db_contract",
+        "source": "05_ATLETAS_EVENTS.asyncapi.yaml",
+        "target": "13_ATLETAS_DB_CONTRACT.yaml",
+        "assertion": "Event envelope aggregate_id type must match canonical aggregate identifier type in DB contract.",
+        "failure_message": "Aggregate ID type drift between event and persistence."
+      },
+      {
+        "rule_id": "EV-007",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_event_partition_key_matches_aggregate_id",
+        "source": "05_ATLETAS_EVENTS.asyncapi.yaml",
+        "target": "17_ATLETAS_PROJECTIONS.yaml",
+        "assertion": "Event and projection contracts must agree on aggregate_id as partition key.",
+        "failure_message": "Partition key drift detected between event and projection contracts."
+      },
+      {
+        "rule_id": "EV-008",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_upcasters_are_pure_functions",
+        "source": "05_ATLETAS_EVENTS.asyncapi.yaml",
+        "target": "implementation_code",
+        "assertion": "Upcasters must be pure functions over validated event input and constant injected defaults only.",
+        "failure_message": "Impure upcaster logic detected."
+      },
+      {
+        "rule_id": "EV-009",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_pydantic_model_construct_forbidden_in_event_pipeline",
+        "source": "implementation_code",
+        "target": "event_pipeline",
+        "assertion": "Pydantic model_construct is forbidden in event schemas, upcasters and projection pipeline.",
+        "failure_message": "Forbidden model_construct usage detected in event pipeline."
+      }
+    ],
+    "projection_rules": [
+      {
+        "rule_id": "PROJ-001",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_projection_fields_have_event_or_derived_mapping",
+        "assertion": "No read-model field may exist without source event mapping or explicit derived function."
+      },
+      {
+        "rule_id": "PROJ-002",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_projection_writes_do_not_bypass_declared_handlers",
+        "assertion": "No write to target projection table may bypass declared event handlers."
+      },
+      {
+        "rule_id": "PROJ-003",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_projection_consumed_versions_are_explicit",
+        "assertion": "Every event version consumed by a projection must be explicitly listed."
+      },
+      {
+        "rule_id": "PROJ-004",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_new_event_versions_require_compatibility_strategy",
+        "assertion": "If a new event version is introduced, replay compatibility must be declared by support list or upcaster."
+      },
+      {
+        "rule_id": "PROJ-005",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_projection_handlers_are_side_effect_free",
+        "assertion": "Projection rebuild must be replay-safe and side-effect-free."
+      },
+      {
+        "rule_id": "PROJ-006",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_projection_atomic_shell_integrity",
+        "assertion": "Projection handlers must preserve transaction_scope, idempotency guard and ledger mark shell."
+      },
+      {
+        "rule_id": "PROJ-007",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_projection_handlers_forbid_nested_transactions",
+        "assertion": "Projection handlers must not open nested or manual transactions inside executor-controlled regions."
+      },
+      {
+        "rule_id": "PROJ-008",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_projection_tables_are_write_protected",
+        "assertion": "Projection-owned tables must not be written by direct app flows outside declared projection handlers."
+      },
+      {
+        "rule_id": "PROJ-009",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_projection_idempotency_ledger_is_declared",
+        "assertion": "Projection contract must declare idempotency ledger and uniqueness key for applied events."
+      },
+      {
+        "rule_id": "PROJ-010",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_projection_accumulator_fields_declare_sequencing_dependency",
+        "assertion": "Accumulator fields in read models must declare sequencing dependency and deterministic fold strategy for out-of-order replay. Any sum, average, count, rolling metric or stateful aggregate field must specify ordering key, accumulation semantics and replay consistency policy.",
+        "failure_message": "Accumulator field lacks deterministic sequencing contract."
+      }
+    ],
+    "side_effect_rules": [
+      {
+        "rule_id": "SE-001",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_side_effect_idempotency_keys_are_declared_and_safe",
+        "assertion": "Every external side effect must declare idempotency_key derived from unique event inputs."
+      },
+      {
+        "rule_id": "SE-002",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_side_effect_replay_policy_is_declared",
+        "assertion": "Every external side effect must declare replay_policy."
+      },
+      {
+        "rule_id": "SE-003",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_side_effect_retry_policy_is_declared_when_retryable",
+        "assertion": "Every external side effect must declare error_policy and retry policy when retryable."
+      },
+      {
+        "rule_id": "SE-004",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_side_effects_are_skipped_during_projection_rebuild",
+        "assertion": "Projection rebuild paths must skip side effects unless replay_policy explicitly allows execution."
+      },
+      {
+        "rule_id": "SE-005",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_no_undeclared_external_calls_exist",
+        "assertion": "No undeclared network call or integration symbol may appear outside 18_ATLETAS_SIDE_EFFECTS.yaml or explicitly allowed adapters."
+      },
+      {
+        "rule_id": "SE-006",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_side_effect_handlers_do_not_write_read_models",
+        "assertion": "Side-effect handlers must not mutate projection tables or domain tables."
+      },
+      {
+        "rule_id": "SE-007",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_side_effect_handlers_do_not_import_projection_modules",
+        "assertion": "Side-effect handlers must not import projection modules or projection infrastructure."
+      },
+      {
+        "rule_id": "SE-008",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_side_effect_handlers_forbid_system_clock",
+        "assertion": "Side-effect handlers must not use system clock as business input."
+      },
+      {
+        "rule_id": "SE-009",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_side_effect_handlers_use_declared_integration_symbols",
+        "assertion": "Side-effect handlers must use only integration symbols declared in the side-effect contract."
+      },
+      {
+        "rule_id": "SE-010",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_side_effect_result_usage",
+        "assertion": "Side-effect handlers must preserve SideEffectResult wrapper contract and result logging shell."
+      },
+      {
+        "rule_id": "SE-011",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_side_effect_trigger_logic_equivalence",
+        "assertion": "Generated trigger logic for side effects must be semantically equivalent to the declared predicate in 18_ATLETAS_SIDE_EFFECTS.yaml.",
+        "failure_message": "Side-effect trigger predicate drift detected."
+      },
+      {
+        "rule_id": "SE-012",
+        "severity": "error",
+        "execution_phase": "POST_PLAN",
+        "checker_id": "check_side_effect_predicate_manifest_is_present",
+        "assertion": "Every side-effect consumer with trigger_condition must have a normalized predicate entry recorded in generated manifest artifacts.",
+        "failure_message": "Missing predicate manifest entry for side-effect trigger."
+      }
+    ],
+    "concurrency_rules": [
+      {
+        "rule_id": "CC-001",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_aggregates_with_concurrent_update_risk_declare_strategy",
+        "applies_to": "write_operations",
+        "assertion": "Every aggregate with concurrent update risk must declare one of: optimistic_locking, pessimistic_locking, append_only_eventing.",
+        "failure_message": "No concurrency control strategy declared."
+      },
+      {
+        "rule_id": "CC-002",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_optimistic_locking_contract_is_complete",
+        "applies_to": "optimistic_locking",
+        "assertion": "Optimistic locking requires version_column plus conflict_error_code plus retry_policy.",
+        "failure_message": "Incomplete optimistic locking contract."
+      },
+      {
+        "rule_id": "CC-003",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_ui_duplicate_submit_protection_exists",
+        "applies_to": "ui_submit_paths",
+        "assertion": "Interactive submit flows for concurrent writes must define double_click protection or equivalent client-side duplicate prevention.",
+        "failure_message": "UI duplicate submit protection missing for concurrent write path."
+      }
+    ],
+    "ui_state_rules": [
+      {
+        "rule_id": "UIST-001",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_submit_states_define_control_policy",
+        "assertion": "Every submitting state must define submit control policy.",
+        "required_values": [
+          "disabled",
+          "loading",
+          "double_click_blocked"
+        ]
+      },
+      {
+        "rule_id": "UIST-002",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_success_and_error_states_define_feedback_selector",
+        "assertion": "Every success/error state must define visible feedback selector."
+      },
+      {
+        "rule_id": "UIST-003",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_required_selectors_use_primary_strategy",
+        "assertion": "Every required selector must use data-testid as primary automation surface when ui_contract.selector_strategy.primary=data-testid."
+      }
+    ],
+    "time_determinism_rules": [
+      {
+        "rule_id": "TIME-001",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_temporal_invariants_require_reference_inputs",
+        "source": "15_ATLETAS_INVARIANTS.yaml",
+        "target": "19_ATLETAS_TEST_SCENARIOS.yaml",
+        "assertion": "Every invariant depending on temporal context must declare explicit required_inputs and canonical reference date or reference year.",
+        "failure_message": "Temporal invariant without deterministic time input."
+      },
+      {
+        "rule_id": "TIME-002",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_temporal_invariants_forbid_system_clock",
+        "source": "implementation_code",
+        "target": "15_ATLETAS_INVARIANTS.yaml",
+        "assertion": "datetime.now, date.today and system clock usage are forbidden in invariant enforcement paths unless explicitly contract-approved.",
+        "failure_message": "Non-deterministic time source detected."
+      },
+      {
+        "rule_id": "TIME-003",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_frozen_time_enabled_for_temporal_scenarios",
+        "source": "19_ATLETAS_TEST_SCENARIOS.yaml",
+        "target": "test_runtime",
+        "assertion": "Frozen time must be enabled for temporal scenarios marked deterministic_time_required.",
+        "failure_message": "Temporal scenario executed without frozen time."
+      }
+    ],
+    "test_scenario_rules": [
+      {
+        "rule_id": "TSC-001",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_test_scenarios_are_canonical_only",
+        "assertion": "Domain validation tests must use canonical scenario_ids from 19_ATLETAS_TEST_SCENARIOS.yaml."
+      },
+      {
+        "rule_id": "TSC-002",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_new_domain_scenarios_require_contract_update",
+        "assertion": "New domain scenario requires contract update before execution."
+      },
+      {
+        "rule_id": "TSC-003",
+        "severity": "warning",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_property_based_tests_do_not_redefine_domain_truth",
+        "assertion": "Property-based and fuzzing tests may be used for schema robustness only and must not redefine domain truth."
+      }
+    ],
+    "stub_anchor_rules": [
+      {
+        "rule_id": "STUB-001",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_stub_edits_stay_within_anchors",
+        "assertion": "Executor may edit only within generated anchor regions HB-BODY-START/HB-BODY-END or UI equivalent markers.",
+        "failure_message": "Unauthorized structural edit outside anchor."
+      },
+      {
+        "rule_id": "STUB-002",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_generated_symbols_are_immutable",
+        "assertion": "Generated symbol names, signatures, decorators and file paths are immutable unless regenerated by hb_plan.py.",
+        "failure_message": "Generated structure modified manually."
+      },
+      {
+        "rule_id": "STUB-003",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_no_uncontracted_public_symbols",
+        "assertion": "Executor must not create new public symbols outside traceability-declared symbols.",
+        "failure_message": "Non-contracted public symbol introduced."
+      },
+      {
+        "rule_id": "STUB-004",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_contract_hash_comment_matches_snapshot",
+        "assertion": "Every anchored file must include contract hash comment matching current handoff snapshot.",
+        "failure_message": "Anchored stub hash mismatch."
+      }
+    ],
+    "handoff_rules": [
+      {
+        "rule_id": "HO-001",
+        "severity": "error",
+        "execution_phase": "POST_PLAN",
+        "checker_id": "check_markdown_handoff_is_not_authoritative",
+        "assertion": "Markdown handoff cannot be authoritative."
+      },
+      {
+        "rule_id": "HO-002",
+        "severity": "error",
+        "execution_phase": "POST_PLAN",
+        "checker_id": "check_executor_starts_only_from_structured_manifest",
+        "assertion": "Executor can start only from structured manifest with integrity hashes."
+      },
+      {
+        "rule_id": "HO-003",
+        "severity": "error",
+        "execution_phase": "POST_PLAN",
+        "checker_id": "check_execution_blocks_on_hash_drift",
+        "assertion": "If any required artifact hash differs from snapshot, execution must be blocked."
+      },
+      {
+        "rule_id": "HO-004",
+        "severity": "error",
+        "execution_phase": "POST_PLAN",
+        "checker_id": "check_handoff_scope_is_subset_of_allowed_targets",
+        "assertion": "Executor task plan must be a subset of allowed operations and allowed file paths."
+      }
+    ],
+    "restriction_prompt_rules": [
+      {
+        "rule_id": "RP-001",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_executor_prompt_is_fail_closed",
+        "assertion": "Executor restriction prompt must declare fail_closed mode."
+      },
+      {
+        "rule_id": "RP-002",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_executor_prompt_forbids_chat_history_as_truth",
+        "assertion": "Executor restriction prompt must explicitly forbid using chat history as source of truth."
+      },
+      {
+        "rule_id": "RP-003",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_executor_prompt_requires_blocked_input_on_contract_gap",
+        "assertion": "Executor restriction prompt must explicitly require STOP and BLOCKED_INPUT behavior on missing or inconsistent contracts."
+      },
+      {
+        "rule_id": "RP-004",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_prompt_textual_compliance_with_constitution",
+        "assertion": "Executor restriction prompt text must explicitly contain the constitutional prohibitions and fail-closed mandates declared by this constitution, including prohibition of chat-history-as-truth, prohibition of out-of-contract implementation, mandatory blocked-input behavior on contract gaps, and authority of structured manifests over narrative instructions.",
+        "failure_message": "Executor restriction prompt text is not constitutionally compliant."
+      }
+    ],
+    "diff_validation_rules": [
+      {
+        "rule_id": "DIFF-001",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_only_allowed_file_paths_changed",
+        "assertion": "Only allowed_file_paths may be changed."
+      },
+      {
+        "rule_id": "DIFF-002",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_no_structural_diff_outside_anchors",
+        "assertion": "No structural diff outside anchored regions may be accepted."
+      },
+      {
+        "rule_id": "DIFF-003",
+        "severity": "error",
+        "execution_phase": "POST_EXECUTION",
+        "checker_id": "check_regenerated_files_match_template_outside_anchors",
+        "assertion": "Generated files regenerated by hb_plan.py must match expected template checksum except for anchored body regions."
+      }
+    ],
+    "type_rules": [
+      {
+        "rule_id": "TYPE-001",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_canonical_scalar_mappings_are_complete",
+        "assertion": "Every OpenAPI scalar must map to a canonical backend/frontend/db tuple."
+      },
+      {
+        "rule_id": "TYPE-002",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_uuid_fields_preserve_canonical_format_across_layers",
+        "assertion": "Fields declared as canonical UUID must preserve uuid semantics across contracts: OpenAPI string+format=uuid, DB uuid/native equivalent, backend UUID/native equivalent, frontend string constrained by contract format uuid.",
+        "failure_message": "UUID canonical format drift detected across layers."
+      },
+      {
+        "rule_id": "TYPE-003",
+        "severity": "error",
+        "execution_phase": "POST_PLAN",
+        "checker_id": "check_frontend_types_derive_from_openapi_snapshot",
+        "assertion": "Frontend generated types must derive from the current OpenAPI snapshot, never from handwritten approximation."
+      },
+      {
+        "rule_id": "TYPE-004",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_enum_consistency_across_layers",
+        "assertion": "Enum member identity must be preserved across all contract layers. For every canonical enum, member names and values must match exactly across OpenAPI, AsyncAPI/events, DB contract, backend generated types and any declared UI/domain contract usage.",
+        "failure_message": "Enum member identity drift detected across contract layers."
+      },
+      {
+        "rule_id": "TYPE-005",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_collection_element_types_preserve_canonical_mapping",
+        "assertion": "Collection element types must maintain canonical mapping consistency across all layers. Arrays/lists/JSON collections must preserve element identity, ordering policy, nullability policy and canonical scalar/enum semantics across OpenAPI, events, backend types and persistence contracts.",
+        "failure_message": "Collection element type drift detected across layers."
+      },
+      {
+        "rule_id": "TYPE-006",
+        "severity": "error",
+        "execution_phase": "PRE_PLAN",
+        "checker_id": "check_polymorphic_discriminator_strategy_is_canonical",
+        "assertion": "Polymorphic schemas using oneOf or anyOf must declare and preserve a canonical discriminator strategy across OpenAPI, backend type system, event contracts and persistence mapping. Discriminator field, discriminator values and inheritance strategy must be explicit and consistent.",
+        "failure_message": "Polymorphic discriminator strategy drift detected across layers."
+      }
+    ]
+  }
+}

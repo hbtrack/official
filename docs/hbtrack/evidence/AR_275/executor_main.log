@@ -1,0 +1,18 @@
+AR_ID: 275
+Command: python -c "import pathlib,re;uf=pathlib.Path('docs/hbtrack/modulos/treinos/TRAINING_USER_FLOWS.md').read_text('utf-8');ss=pathlib.Path('docs/hbtrack/modulos/treinos/TRAINING_SCREENS_SPEC.md').read_text('utf-8');assert not re.search(r'/publish|publicar.sessao|POST /publish',uf,re.I),'G1a:publish in flows';assert 'schedule' in uf.lower(),'G2a:schedule absent flows';assert 'finalize' in uf.lower(),'G2b:finalize absent flows';assert not re.search(r'/publish|POST /publish',ss,re.I),'G1b:publish in screens';tc=pathlib.Path('docs/hbtrack/modulos/treinos/_evidence/traceability_training_core.csv').read_text('utf-8');rows=[l for l in tc.splitlines() if l.strip() and not l.startswith('#')];assert len(rows)>=5,'G10a:traceability skeleton (need 5+ data rows)';assert any('SCREEN-TRAIN-020' in l or 'FLOW-TRAIN-002' in l for l in rows),'G10b:key items absent';fe=[p for p in pathlib.Path('Hb Track - Frontend/src').rglob('*.tsx') if 'training' in str(p).lower()];fec=''.join(p.read_text('utf-8',errors='ignore') for p in fe[:30]);assert 'training-session-planned-section' in fec,'G7a:planned-section';assert 'training-session-realized-section' in fec,'G7b:realized-section';assert 'training-session-adjustments-section' in fec,'G7c:adjustments-section';print('PASS AR_275 Gates 1-10 OK')"
+Exit Code: 0
+Timestamp UTC: 2026-03-10T03:57:07.289132+00:00
+Behavior Hash (exit+stdout+stderr): 46d57a4d6a87910cf7354fae302d4fb046617f7c5a4c297e8392e90d9448192f
+Git HEAD: b07ecee1280ae1b5af3fec1acf40f7e174ebd2c5
+Python Version: 3.11.9
+Protocol Version: 1.3.0
+Workspace Clean: True
+Workspace Status: workspace_clean
+Governed Checksums (sha256): {"Hb Track - Backend/app/api/v1/routers/reports.py": "e47b1cd73547801c713f01594215cc1f7bfd60b5cccb646d6f0f062e15ebf8ff", "Hb Track - Frontend/src/app/(admin)/training/sessions/[id]/page.tsx": "c2cfdab2be91a32443982ac48818b87f9df81f26adc974353ec5109705f22791", "docs/hbtrack/_INDEX.md": "d9ec3bfd52f974e1877a3c3b48c41569b916ee85d97c1a775ff0394c6df48273", "docs/hbtrack/ars/features/AR_247_ar_247__ar-train-063__fase_0+1_truth_suite_dupla_+.md": "6134df29579b896e85b638008a5a20d903f51805118c3ab339d62bb3c1f435a4", "docs/hbtrack/ars/features/AR_275_superficie_training_reconciliada_flows,_screens,_u.md": "a0d57059641aa4945c2ac5df10c3f7415e7e849894cc1cedda5f18b1965f6846", "docs/hbtrack/modulos/treinos/TRAINING_SCREENS_SPEC.md": "b4895ed85c4982c1398bf80f2a56f38550dac064100277ea19f40861e4b910d3", "docs/hbtrack/modulos/treinos/TRAINING_USER_FLOWS.md": "7310253ab2b15670051b906a3422c17fd96ce018fc5a70401e6ec1818b12f8f5", "docs/hbtrack/modulos/treinos/_evidence/traceability_training_core.csv": "3b700981ff9981416baef76d3e0d4bd999be3beffdd92b15b825785a0d60b7df"}
+
+--- STDOUT ---
+PASS AR_275 Gates 1-10 OK
+
+
+--- STDERR ---
+

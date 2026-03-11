@@ -1,0 +1,230 @@
+meta:
+  document_id: PROJ-ATHLETES
+  module_id: ATHLETES
+  module_version: 1.0.0
+  status: FINAL_DRAFT
+  authority_level: EXECUTIONAL_SSOT
+  description: >
+    Canonical projection contract for ATHLETES read models.
+    Read models are derived from event store only.
+    Direct CRUD-to-read-model writes are forbidden.
+
+projection_mode:
+  source_of_truth: event_store
+  read_models_are_derived: true
+  direct_crud_without_event: forbidden
+  rebuild_strategy: replay_only
+  replay_must_be_deterministic: true
+  side_effects_during_rebuild: forbidden
+
+transport_ordering:
+  broker: kafka
+  ordering_scope: per_partition_only
+  required_partition_key: aggregate_id
+  projection_order_assumption: per_aggregate_order
+  global_order_required: false
+  out_of_order_global_processing_allowed: true
+  out_of_order_same_aggregate_allowed: false
+
+event_store_contract:
+  stream_name: athletes
+  aggregate_type: athlete
+  append_only: true
+  immutable_events: true
+  required_envelope_fields:
+    - metadata.event_id
+    - metadata.event_type
+    - metadata.event_version
+    - metadata.aggregate_id
+    - metadata.stream_position
+    - metadata.occurred_at
+    - metadata.replay
+
+replay_policy:
+  full_rebuild_supported: true
+  replay_source: event_store
+  replay_requires_supported_version_or_upcaster: true
+  replay_side_effect_policy: skip_all
+  replay_checkpointing_allowed: true
+  replay_idempotent_projection_required: true
+
+read_models:
+  - read_model_id: athletes_read_model
+    description: Canonical athlete projection for queries and UI rendering
+    target_table: athletes
+    target_file: backend/app/projections/athletes_projection.py
+    target_model_symbol: AthleteModel
+    partition_key: aggregate_id
+
+    source_events:
+      - event_type: AthleteRegistered
+        supported_versions: [2]
+        legacy_versions_require_upcast:
+          - from_version: 1
+            to_version: 2
+            upcaster_symbol: upcast_athlete_registered_v1_to_v2
+            upcaster_file: backend/app/events/upcasters/athletes_upcasters.py
+
+      - event_type: AthleteUpdated
+        supported_versions: [1]
+
+      - event_type: AthleteStatusChanged
+        supported_versions: [1]
+
+    apply_order:
+      per_aggregate_stream: strict
+      cross_aggregate_order: irrelevant
+      duplicate_event_policy: ignore_if_event_id_already_applied
+
+    event_handlers:
+      - handler_id: PROJ-H-ATH-001
+        event_type: AthleteRegistered
+        event_version: 2
+        handler_symbol: apply_athlete_registered_v2
+        file_path: backend/app/projections/athletes_projection.py
+        purity: required
+        idempotency_mode: event_id_guard
+        writes:
+          mode: insert_only
+          fields:
+            - target: athletes.athlete_id
+              source: data.athlete_id
+            - target: athletes.full_name
+              source: data.full_name
+            - target: athletes.birth_date
+              source: data.birth_date
+            - target: athletes.birth_year
+              source: data.birth_year
+            - target: athletes.category_id
+              source: data.category_id
+            - target: athletes.team_id
+              source: data.team_id
+            - target: athletes.federation_id
+              source: data.federation_id
+            - target: athletes.dominant_hand
+              source: data.dominant_hand
+            - target: athletes.status
+              source: data.status
+
+      - handler_id: PROJ-H-ATH-002
+        event_type: AthleteUpdated
+        event_version: 1
+        handler_symbol: apply_athlete_updated_v1
+        file_path: backend/app/projections/athletes_projection.py
+        purity: required
+        idempotency_mode: event_id_guard
+        writes:
+          mode: partial_update_by_changed_fields
+          allowed_fields:
+            - full_name
+            - category_id
+            - team_id
+            - federation_id
+            - dominant_hand
+
+      - handler_id: PROJ-H-ATH-003
+        event_type: AthleteStatusChanged
+        event_version: 1
+        handler_symbol: apply_athlete_status_changed_v1
+        file_path: backend/app/projections/athletes_projection.py
+        purity: required
+        idempotency_mode: event_id_guard
+        writes:
+          mode: update_single_field
+          fields:
+            - target: athletes.status
+              source: data.new_status
+
+    projection_state_tracking:
+      required: true
+      applied_event_log_table: projection_applied_events
+      uniqueness_key:
+        - projection_id
+        - event_id
+      duplicate_replay_policy: skip
+      missing_event_policy: fail_actionable
+
+    query_contract_bindings:
+      bound_operations:
+        - athletes__athlete__list
+        - athletes__athlete__get
+
+    forbidden_behaviors:
+      - network_calls
+      - db_reads_outside_target_projection_context
+      - writing_to_unrelated_tables
+      - triggering_side_effects
+      - using_system_clock
+      - dynamic_schema_inference
+
+upcast_pipeline:
+  required: true
+  order_of_execution:
+    - validate_event_envelope
+    - resolve_supported_version
+    - if_legacy_version_then_apply_upcaster
+    - dispatch_to_projection_handler
+  purity_requirements:
+    upcaster_must_be_pure: true
+    projection_handler_must_be_pure: true
+    constant_injection_only: true
+    db_lookup_forbidden: true
+    network_lookup_forbidden: true
+    filesystem_lookup_forbidden: true
+    system_clock_forbidden: true
+
+projection_tables:
+  - table_name: athletes
+    source_model: athletes_read_model
+    ownership: projection_owned
+    write_policy:
+      direct_app_write_forbidden: true
+      projection_write_only: true
+
+  - table_name: projection_applied_events
+    purpose: projection idempotency ledger
+    ownership: projection_infra
+    write_policy:
+      append_only: true
+
+rebuild_contract:
+  supported: true
+  command_symbol: replay_athletes_projection
+  command_file: backend/app/projections/athletes_projection.py
+  inputs:
+    - from_stream_position
+    - to_stream_position
+    - partition_key
+  output_guarantees:
+    - target_table_matches_event_history
+    - no_side_effects_triggered
+    - duplicate_events_not_reapplied
+
+cross_contract_dependencies:
+  requires_events_contract: docs/hbtrack/modulos/atletas/05_ATLETAS_EVENTS.asyncapi.yaml
+  requires_db_contract: docs/hbtrack/modulos/atletas/13_ATLETAS_DB_CONTRACT.yaml
+  requires_traceability: docs/hbtrack/modulos/atletas/08_ATLETAS_TRACEABILITY.yaml
+  requires_invariants: docs/hbtrack/modulos/atletas/15_ATLETAS_INVARIANTS.yaml
+  requires_side_effects: docs/hbtrack/modulos/atletas/18_ATLETAS_SIDE_EFFECTS.yaml
+
+validator_bindings:
+  required_checker_ids:
+    - check_projection_event_types_exist
+    - check_projection_versions_are_supported_or_upcasted
+    - check_projection_handlers_are_side_effect_free
+    - check_upcasters_are_pure_functions
+    - check_event_partition_key_matches_aggregate_id
+    - check_projection_tables_are_write_protected
+    - check_projection_idempotency_ledger_is_declared
+
+rules:
+  - rule_id: PROJ-ATH-RULE-001
+    description: No projection handler may consume a legacy event version directly when an upcaster is required.
+  - rule_id: PROJ-ATH-RULE-002
+    description: No projection write may occur without event_id idempotency guard.
+  - rule_id: PROJ-ATH-RULE-003
+    description: The athletes table is a read model; direct application writes are forbidden.
+  - rule_id: PROJ-ATH-RULE-004
+    description: Projection replay must never execute side effects.
+  - rule_id: PROJ-ATH-RULE-005
+    description: Per-aggregate ordering depends on partition_key = aggregate_id.

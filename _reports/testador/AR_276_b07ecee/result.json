@@ -1,0 +1,48 @@
+{
+  "ar_id": "276",
+  "validation_command": "python -c \"import pathlib,re,json;bk='Hb Track - Backend';o=json.loads(pathlib.Path(bk+'/docs/ssot/openapi.json').read_text('utf-8'));p=o.get('paths',{});pp=[k for k in p if 'training-session' in k];assert not any('/publish' in k for k in pp),'G1:publish path in final openapi';assert not any(k.endswith('/close') and 'training' in k for k in pp),'G2:close path in final openapi';sp=[k for k in pp if '/schedule' in k];assert sp,'G3a:schedule absent';fp=[k for k in pp if '/finalize' in k];assert fp,'G3b:finalize absent';fe=pathlib.Path('Hb Track - Frontend/src/api/generated/api.ts').read_text('utf-8');assert 'publishTrainingSessionApiV1TrainingSessionsTrainingSessionIdPublishPost' not in fe,'G4:publish hook FE';assert 'closeTrainingSessionApiV1TrainingSessionsTrainingSessionIdClosePost' not in fe,'G5:close hook FE';assert any(x in fe for x in ['scheduleTrainingSession','ScheduleTrainingSession']),'G6:schedule hook absent';router=pathlib.Path(bk+'/app/api/v1/routers/training_sessions.py').read_text('utf-8');rp=[m.group() for m in re.finditer(r'@router[.]post[(][^)]+[)]',router)];assert not any('publish' in x for x in rp),'G7:publish stub in router';print('PASS AR_276 sunset final OK')\"",
+  "run_count": 3,
+  "runs": [
+    {
+      "run": 1,
+      "exit_code": 0,
+      "hash_full": "9818fa908c1b08ae46a894152d93e024d8e1dc3a18b2d25ede07747cf5208f2d",
+      "hash": "9818fa908c1b08ae",
+      "stdout_len": 28,
+      "stderr_len": 0
+    },
+    {
+      "run": 2,
+      "exit_code": 0,
+      "hash_full": "9818fa908c1b08ae46a894152d93e024d8e1dc3a18b2d25ede07747cf5208f2d",
+      "hash": "9818fa908c1b08ae",
+      "stdout_len": 28,
+      "stderr_len": 0
+    },
+    {
+      "run": 3,
+      "exit_code": 0,
+      "hash_full": "9818fa908c1b08ae46a894152d93e024d8e1dc3a18b2d25ede07747cf5208f2d",
+      "hash": "9818fa908c1b08ae",
+      "stdout_len": 28,
+      "stderr_len": 0
+    }
+  ],
+  "triple_consistency": "OK",
+  "testador_exit_code": 0,
+  "executor_exit_code": 0,
+  "consistency": "OK",
+  "status": "SUCESSO",
+  "ah_flags": [],
+  "evidence_pack_complete": true,
+  "rejection_reason": null,
+  "workspace_clean": true,
+  "dod": {
+    "proof": "OK",
+    "trace": "OK",
+    "stitch": "OK",
+    "matrix": "N/A",
+    "warns": [],
+    "gate_errors": []
+  }
+}

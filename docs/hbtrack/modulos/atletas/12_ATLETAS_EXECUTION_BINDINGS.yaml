@@ -1,0 +1,76 @@
+meta:
+  document_id: BIND-ATHLETES
+  module_id: ATHLETES
+  module_version: 1.0.0
+  status: DRAFT
+  authority_level: EXECUTIONAL_SSOT
+
+bindings:
+  - operation_id: athletes__athlete__create
+    backend_service: athlete_create
+    backend_handler: create_athlete
+    frontend_client_method: athletesCreate
+    mapping_strictness: strict
+    implementation_mode: contract_first
+    codegen_required: true
+    public_symbols:
+      - athlete_create
+      - create_athlete
+      - AthleteModel
+      - AthleteCreateSchema
+    private_helper_policy:
+      allowed: true
+      naming_pattern: "^_"
+      allowed_scope: inside_anchor_region_only
+      export_forbidden: true
+
+  - operation_id: athletes__athlete__list
+    backend_service: athlete_list
+    backend_handler: list_athletes
+    frontend_client_method: athletesList
+    mapping_strictness: strict
+    implementation_mode: contract_first
+    codegen_required: true
+    public_symbols:
+      - athlete_list
+      - list_athletes
+
+  - operation_id: athletes__athlete__get
+    backend_service: athlete_get
+    backend_handler: get_athlete
+    frontend_client_method: athletesGet
+    mapping_strictness: strict
+    implementation_mode: contract_first
+    codegen_required: true
+    public_symbols:
+      - athlete_get
+      - get_athlete
+
+  - operation_id: athletes__athlete__update
+    backend_service: athlete_update
+    backend_handler: update_athlete
+    frontend_client_method: athletesUpdate
+    mapping_strictness: strict
+    implementation_mode: contract_first
+    codegen_required: true
+    public_symbols:
+      - athlete_update
+      - update_athlete
+      - AthleteUpdateSchema
+    private_helper_policy:
+      allowed: true
+      naming_pattern: "^_"
+      allowed_scope: inside_anchor_region_only
+      export_forbidden: true
+
+rules:
+  - rule_id: BIND-RULE-001
+    description: Every operation_id must bind to exactly one backend_handler.
+  - rule_id: BIND-RULE-002
+    description: Every operation_id must bind to exactly one backend_service.
+  - rule_id: BIND-RULE-003
+    description: mapping_strictness must be strict for all bindings.
+  - rule_id: BIND-RULE-004
+    description: implementation_mode must be contract_first for all bindings.
+  - rule_id: BIND-RULE-005
+    description: Executor cannot rename bound symbols without updating EXECUTION_BINDINGS first.

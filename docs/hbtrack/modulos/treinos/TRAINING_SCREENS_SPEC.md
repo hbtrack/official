@@ -1,12 +1,18 @@
 # TRAINING_SCREENS_SPEC.md — Especificação de Telas do Módulo TRAINING
 
 Status: NORMATIVO_VIGENTE  
-Versão: v1.5.0
+Versão: v1.6.0
 Tipo de Documento: SSOT Normativo — Screens Spec
 Módulo: TRAINING
 Fase: FASE_2 + FASE_3 REAL — implementação concluída (2026-03-04). Itens pós-DONE: ver TRAINING_ROADMAP.md §POST-DONE.
 Autoridade: NORMATIVO_TECNICO
 Última revisão: 2026-03-05
+
+> Changelog v1.6.0 (2026-03-09):
+> - SCREEN-TRAIN-005: `overview` tab — `metadados + publish` → `metadados + agendar (schedule)`
+> - SCREEN-TRAIN-020: atualizado de PARCIAL para especificação completa com ledger (Planned/Realized/Adjustments)
+> - Índice: SCREEN-TRAIN-020 promovido (PARCIAL → EVIDENCIADO parcial/AR_275)
+> - Versão bumped: v1.5.0 → v1.6.0 (AR_275 reconciliação léxica)
 
 > Changelog v1.5.0 (2026-03-05):
 > - SCREEN-TRAIN-014/015: PARCIAL → EVIDENCIADO (UUID gap corrigido em rankings.ts; RankingsClient + TopPerformersClient evidenciados)
@@ -164,7 +170,7 @@ Regras:
 | SCREEN-TRAIN-017 | Page | `/training/configuracoes` | Treinador | EVIDENCIADO | FLOW-TRAIN-010 |
 | SCREEN-TRAIN-018 | Page | `/athlete/wellness-pre/[sessionId]` | Atleta | EVIDENCIADO | FLOW-TRAIN-005 |
 | SCREEN-TRAIN-019 | Page | `/athlete/wellness-post/[sessionId]` | Atleta | EVIDENCIADO | FLOW-TRAIN-006 |
-| SCREEN-TRAIN-020 | Page | `/training/presencas` (placeholder) | Treinador | PARCIAL | FLOW-TRAIN-004 |
+| SCREEN-TRAIN-020 | Page | `/training/sessions/[id]` (cockpit/detalhe) | Treinador | EVIDENCIADO (parcial — AR_275) | FLOW-TRAIN-002, FLOW-TRAIN-004 |
 | SCREEN-TRAIN-021 | Page | (a definir) Central de Alertas/Sugestões | Treinador | HIPOTESE | FLOW-TRAIN-015 |
 | SCREEN-TRAIN-022 | Page | `/athlete/training/[sessionId]` | Atleta | GAP | FLOW-TRAIN-016, FLOW-TRAIN-017, FLOW-TRAIN-021 |
 | SCREEN-TRAIN-023 | Page | `/training/pending-queue` | Treinador | EVIDENCIADO | FLOW-TRAIN-018 |
@@ -273,7 +279,7 @@ Evidência:
 **Contratos:** `CONTRACT-TRAIN-003`, `CONTRACT-TRAIN-004`, `CONTRACT-TRAIN-006`, `CONTRACT-TRAIN-019..024`
 
 ### Tabs internas evidenciadas
-- `overview`: metadados + publish
+- `overview`: metadados + agendar (schedule)
 - `focus`: editor de foco com templates
 - `exercises`: banco + dropzone + reorder
 - `notes`: observações e justificativas
@@ -602,19 +608,31 @@ Evidências:
 
 ---
 
-## SCREEN-TRAIN-020 — Presenças (Admin)
+## SCREEN-TRAIN-020 — Detalhe/Cockpit da Sessão (Admin)
 
-**Tipo:** Page (ou tab no editor)  
-**Rota evidenciada:** `/training/presencas` (placeholder)  
-**Fluxo:** FLOW-TRAIN-004  
-**Estado AS-IS:** PARCIAL
+**Tipo:** Page  
+**Rota:** `/training/sessions/[id]`  
+**Fluxo:** FLOW-TRAIN-002, FLOW-TRAIN-004  
+**Estado AS-IS:** EVIDENCIADO (parcial — AR_275)
 
-Regra normativa:
+### Seções do Ledger (obrigatórias)
+
+| Seção | `data-test-id` | Descrição |
+|---|---|---|
+| Planned | `training-session-planned-section` | Plano original da sessão (exercícios, focos, metas) — imutável após schedule |
+| Realized | `training-session-realized-section` | Execução real (presenças, exercícios realizados) |
+| Adjustments | `training-session-adjustments-section` | Ajustes pós-sessão (append-only) |
+
+### Regras normativas
+- Status badge exibindo exclusivamente: `draft`, `scheduled`, `in_progress`, `pending_review`, `readonly`.
+- Sem botões para transições automáticas (`scheduled→in_progress`, `in_progress→pending_review`).
+- Seção Planned: imutável após `schedule` (sem edição inline).
 - A UI deve suportar `presence_status = present|absent|justified` e respeitar `ck_attendance_absent_reason_null`:
   - `absent` ⇒ `reason_absence = NULL`
   - `justified` ⇒ `reason_absence != NULL` (TO-BE: required no frontend)
 
 Evidências:
+- `Hb Track - Frontend/src/app/(admin)/training/sessions/[id]/page.tsx` (AR_275)
 - `Hb Track - Frontend/src/app/(admin)/training/presencas/page.tsx`
 - `Hb Track - Frontend/src/components/training/attendance/AttendanceTab.tsx` (componente funcional, mas não integrado)
 

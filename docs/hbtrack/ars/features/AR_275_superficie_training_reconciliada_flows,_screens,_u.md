@@ -1,6 +1,6 @@
 # AR_275 — Superficie TRAINING reconciliada: Flows, Screens, UI ledger + traceability
 
-**Status**: 🔲 PENDENTE
+**Status**: ✅ VERIFICADO
 **Versão do Protocolo**: 1.3.0
 
 ## Descrição
@@ -79,8 +79,7 @@ RESTRICOES:
 
 ## Validation Command (Contrato)
 ```
-python -c "import pathlib,re;uf=pathlib.Path('docs/hbtrack/modulos/treinos/TRAINING_USER_FLOWS.md').read_text('utf-8');ss=pathlib.Path('docs/hbtrack/modulos/treinos/TRAINING_SCREENS_SPEC.md').read_text('utf-8');assert not re.search(r'/publish|publicar.sessao|POST /publish',uf,re.I),'G1a:publish in flows';assert 'schedule' in uf.lower(),'G2a:schedule absent flows';assert 'finalize' in uf.lower(),'G2b:finalize absent flows';assert not re.search(r'/publish|POST /publish',ss,re.I),'G1b:publish in screens';tc=pathlib.Path('docs/hbtrack/modulos/treinos/_evidence/traceability_training_core.csv').read_text('utf-8');rows=[l for l in tc.split('
-') if l.strip() and not l.startswith('#')];assert len(rows)>=5,'G10a:traceability skeleton (need 5+ data rows)';assert any('SCREEN-TRAIN-020' in l or 'FLOW-TRAIN-002' in l for l in rows),'G10b:key items absent';fe=[p for p in pathlib.Path('Hb Track - Frontend/src').rglob('*.tsx') if 'training' in str(p).lower()];fec=''.join(p.read_text('utf-8',errors='ignore') for p in fe[:30]);assert 'training-session-planned-section' in fec,'G7a:planned-section';assert 'training-session-realized-section' in fec,'G7b:realized-section';assert 'training-session-adjustments-section' in fec,'G7c:adjustments-section';print('PASS AR_275 Gates 1-10 OK')"
+python -c "import pathlib,re;uf=pathlib.Path('docs/hbtrack/modulos/treinos/TRAINING_USER_FLOWS.md').read_text('utf-8');ss=pathlib.Path('docs/hbtrack/modulos/treinos/TRAINING_SCREENS_SPEC.md').read_text('utf-8');assert not re.search(r'/publish|publicar.sessao|POST /publish',uf,re.I),'G1a:publish in flows';assert 'schedule' in uf.lower(),'G2a:schedule absent flows';assert 'finalize' in uf.lower(),'G2b:finalize absent flows';assert not re.search(r'/publish|POST /publish',ss,re.I),'G1b:publish in screens';tc=pathlib.Path('docs/hbtrack/modulos/treinos/_evidence/traceability_training_core.csv').read_text('utf-8');rows=[l for l in tc.splitlines() if l.strip() and not l.startswith('#')];assert len(rows)>=5,'G10a:traceability skeleton (need 5+ data rows)';assert any('SCREEN-TRAIN-020' in l or 'FLOW-TRAIN-002' in l for l in rows),'G10b:key items absent';fe=[p for p in pathlib.Path('Hb Track - Frontend/src').rglob('*.tsx') if 'training' in str(p).lower()];fec=''.join(p.read_text('utf-8',errors='ignore') for p in fe[:30]);assert 'training-session-planned-section' in fec,'G7a:planned-section';assert 'training-session-realized-section' in fec,'G7b:realized-section';assert 'training-session-adjustments-section' in fec,'G7c:adjustments-section';print('PASS AR_275 Gates 1-10 OK')"
 ```
 
 ## Evidence File (Contrato)
@@ -97,9 +96,62 @@ Telas-alvo: SCREEN-TRAIN-020 (detalhe/cockpit), SCREEN-TRAIN-022 (revisao/finali
 - CSS inline proibido mas alguns componentes legados podem ter — Executor NAO deve tocar legado fora do write_scope
 
 ## Análise de Impacto
-_(A ser preenchido pelo Executor)_
+
+**Arquivos modificados:**
+1. `docs/hbtrack/modulos/treinos/TRAINING_USER_FLOWS.md` — lexical purge: `/publish` → `/schedule` no CONTRACT-TRAIN-006 (FLOW-TRAIN-002), `fechar sessão` → `finalizar sessão` + `/close` → `/finalize` no FLOW-TRAIN-017; adição de seção ledger (Planned/Realized/Adjustments); bump v1.5.0 → v1.6.0.
+2. `docs/hbtrack/modulos/treinos/TRAINING_SCREENS_SPEC.md` — linha 276 (`overview: metadados + publish`) → `schedule/agendar`; SCREEN-TRAIN-020 atualizado com spec das 3 seções do ledger (planned/realized/adjustments); bump v1.5.0 → v1.6.0.
+3. `docs/hbtrack/modulos/treinos/_evidence/traceability_training_core.csv` — preenchimento com 5+ linhas de dados reais (FLOW-TRAIN-002, SCREEN-TRAIN-020, data-test-ids).
+4. `Hb Track - Frontend/src/app/(admin)/training/sessions/[id]/page.tsx` — CRIADO: SCREEN-TRAIN-020 cockpit com `data-test-id` nas 3 seções do ledger (`training-session-planned-section`, `training-session-realized-section`, `training-session-adjustments-section`).
+
+**Riscos / Observações:**
+- Nenhum arquivo de backend tocado — pipeline spec-driven NÃO é necessário (sem mudança de contrato).
+- FE: novo arquivo é Server Component sem deps externas — sem risco de regressão.
+- CSV: header já existe; apenas linhas de dados adicionadas.
+- `/close` em FLOW-TRAIN-017 sincronizado com AR_273 (que renomeou o endpoint para `/finalize`).
 
 ---
 ## Carimbo de Execução
 _(Gerado por hb report)_
 
+### Execução Executor em b07ecee
+**Status Executor**: ❌ FALHA
+**Comando**: `python -c "import pathlib,re;uf=pathlib.Path('docs/hbtrack/modulos/treinos/TRAINING_USER_FLOWS.md').read_text('utf-8');ss=pathlib.Path('docs/hbtrack/modulos/treinos/TRAINING_SCREENS_SPEC.md').read_text('utf-8');assert not re.search(r'/publish|publicar.sessao|POST /publish',uf,re.I),'G1a:publish in flows';assert 'schedule' in uf.lower(),'G2a:schedule absent flows';assert 'finalize' in uf.lower(),'G2b:finalize absent flows';assert not re.search(r'/publish|POST /publish',ss,re.I),'G1b:publish in screens';tc=pathlib.Path('docs/hbtrack/modulos/treinos/_evidence/traceability_training_core.csv').read_text('utf-8');rows=[l for l in tc.split('
+') if l.strip() and not l.startswith('#')];assert len(rows)>=5,'G10a:traceability skeleton (need 5+ data rows)';assert any('SCREEN-TRAIN-020' in l or 'FLOW-TRAIN-002' in l for l in rows),'G10b:key items absent';fe=[p for p in pathlib.Path('Hb Track - Frontend/src').rglob('*.tsx') if 'training' in str(p).lower()];fec=''.join(p.read_text('utf-8',errors='ignore') for p in fe[:30]);assert 'training-session-planned-section' in fec,'G7a:planned-section';assert 'training-session-realized-section' in fec,'G7b:realized-section';assert 'training-session-adjustments-section' in fec,'G7c:adjustments-section';print('PASS AR_275 Gates 1-10 OK')"`
+**Exit Code**: 1
+**Timestamp UTC**: 2026-03-10T03:53:12.140766+00:00
+**Behavior Hash**: f543d5802aee862ac04bcc7a69dfb2d1d22e342b5d067d16e29859b7da1503db
+**Evidence File**: `docs/hbtrack/evidence/AR_275/executor_main.log`
+**Python Version**: 3.11.9
+
+### Execução Executor em b07ecee
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import pathlib,re;uf=pathlib.Path('docs/hbtrack/modulos/treinos/TRAINING_USER_FLOWS.md').read_text('utf-8');ss=pathlib.Path('docs/hbtrack/modulos/treinos/TRAINING_SCREENS_SPEC.md').read_text('utf-8');assert not re.search(r'/publish|publicar.sessao|POST /publish',uf,re.I),'G1a:publish in flows';assert 'schedule' in uf.lower(),'G2a:schedule absent flows';assert 'finalize' in uf.lower(),'G2b:finalize absent flows';assert not re.search(r'/publish|POST /publish',ss,re.I),'G1b:publish in screens';tc=pathlib.Path('docs/hbtrack/modulos/treinos/_evidence/traceability_training_core.csv').read_text('utf-8');rows=[l for l in tc.splitlines() if l.strip() and not l.startswith('#')];assert len(rows)>=5,'G10a:traceability skeleton (need 5+ data rows)';assert any('SCREEN-TRAIN-020' in l or 'FLOW-TRAIN-002' in l for l in rows),'G10b:key items absent';fe=[p for p in pathlib.Path('Hb Track - Frontend/src').rglob('*.tsx') if 'training' in str(p).lower()];fec=''.join(p.read_text('utf-8',errors='ignore') for p in fe[:30]);assert 'training-session-planned-section' in fec,'G7a:planned-section';assert 'training-session-realized-section' in fec,'G7b:realized-section';assert 'training-session-adjustments-section' in fec,'G7c:adjustments-section';print('PASS AR_275 Gates 1-10 OK')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-03-10T03:55:53.958266+00:00
+**Behavior Hash**: 46d57a4d6a87910cf7354fae302d4fb046617f7c5a4c297e8392e90d9448192f
+**Evidence File**: `docs/hbtrack/evidence/AR_275/executor_main.log`
+**Python Version**: 3.11.9
+
+### Execução Executor em b07ecee
+**Status Executor**: 🏗️ EM_EXECUCAO
+**Comando**: `python -c "import pathlib,re;uf=pathlib.Path('docs/hbtrack/modulos/treinos/TRAINING_USER_FLOWS.md').read_text('utf-8');ss=pathlib.Path('docs/hbtrack/modulos/treinos/TRAINING_SCREENS_SPEC.md').read_text('utf-8');assert not re.search(r'/publish|publicar.sessao|POST /publish',uf,re.I),'G1a:publish in flows';assert 'schedule' in uf.lower(),'G2a:schedule absent flows';assert 'finalize' in uf.lower(),'G2b:finalize absent flows';assert not re.search(r'/publish|POST /publish',ss,re.I),'G1b:publish in screens';tc=pathlib.Path('docs/hbtrack/modulos/treinos/_evidence/traceability_training_core.csv').read_text('utf-8');rows=[l for l in tc.splitlines() if l.strip() and not l.startswith('#')];assert len(rows)>=5,'G10a:traceability skeleton (need 5+ data rows)';assert any('SCREEN-TRAIN-020' in l or 'FLOW-TRAIN-002' in l for l in rows),'G10b:key items absent';fe=[p for p in pathlib.Path('Hb Track - Frontend/src').rglob('*.tsx') if 'training' in str(p).lower()];fec=''.join(p.read_text('utf-8',errors='ignore') for p in fe[:30]);assert 'training-session-planned-section' in fec,'G7a:planned-section';assert 'training-session-realized-section' in fec,'G7b:realized-section';assert 'training-session-adjustments-section' in fec,'G7c:adjustments-section';print('PASS AR_275 Gates 1-10 OK')"`
+**Exit Code**: 0
+**Timestamp UTC**: 2026-03-10T03:57:07.289132+00:00
+**Behavior Hash**: 46d57a4d6a87910cf7354fae302d4fb046617f7c5a4c297e8392e90d9448192f
+**Evidence File**: `docs/hbtrack/evidence/AR_275/executor_main.log`
+**Python Version**: 3.11.9
+
+
+### Verificacao Testador em b07ecee
+**Status Testador**: ✅ SUCESSO
+**Consistency**: OK
+**Triple-Run**: OK (3x)
+**Exit Testador**: 0 | **Exit Executor**: 0
+**TESTADOR_REPORT**: `_reports/testador/AR_275_b07ecee/result.json`
+
+### Selo Humano em b07ecee
+**Status Humano**: ✅ VERIFICADO
+**Timestamp UTC**: 2026-03-10T04:26:14.408191+00:00
+**Motivo**: —
+**TESTADOR_REPORT**: `_reports/testador/AR_275_b07ecee/result.json`
+**Evidence File**: `docs/hbtrack/evidence/AR_275/executor_main.log`

@@ -4,10 +4,12 @@ ar_ids:
   - 272
   - 273
   - 274
+  - 275
+  - 276
 branch: "dev-changes-2"
-head: "284e769"
-data_verificacao: "2026-03-09"
-status: "FAIL"
+head: "b07ecee"
+data_verificacao: "2026-03-10"
+status: "SUCESSO"
 
 pre_flight:
   checks:
@@ -76,14 +78,7 @@ waivers_registrados:
     origem: "EXECUTOR.yaml"
     motivo: "idem DOC-GATE-019"
 
-next_action: >
-  (1) ARs 272+273: hb seal 272 && hb seal 273 (exclusivos do humano)
-  (2) AR_274: REEXECUTE → Executor (ou humano limpa workspace):
-      - git stash ou git checkout -- dos 6 arquivos tracked-unstaged
-      - Corrigir 34 errors do openapi.json (AR separada?)
-      - Instalar oasdiff + iniciar Docker (ou usar Go binary)
-      - Corrigir encoding schemathesis (PYTHONIOENCODING=utf-8 persistente)
-      - Re-executar: python scripts/run/hb_cli.py verify 274
+next_action: "hb seal 275 (exclusivo do humano)"
 
 resultado_ar273:
   AR_273:
@@ -305,3 +300,204 @@ sumario_final:
     NEXT_ACTION: hb seal 272 273 274 (exclusivo do humano; 3 ARs prontas para sealing).
     
     ARs 272+273+274 prontas para hb seal pelo humano.
+
+resultado_ar275:
+  AR_275:
+    ar_train: "AR-TRAIN-REC-04"
+    classe: "A+G"
+    result: "✅ SUCESSO"
+    triple_run_consistency: "OK"
+    exit_codes:
+      - 0
+      - 0
+      - 0
+    hashes:
+      - "46d57a4d6a87910c"
+      - "46d57a4d6a87910c"
+      - "46d57a4d6a87910c"
+    hash_full: "46d57a4d6a87910cf7354fae302d4fb046617f7c5a4c297e8392e90d9448192f"
+    stdout_summary: "PASS AR_275 Gates 1-10 OK"
+    workspace_clean: true
+    evidencia_verificada: "docs/hbtrack/evidence/AR_275/executor_main.log"
+    context_json: "_reports/testador/AR_275_b07ecee/context.json"
+    result_json: "_reports/testador/AR_275_b07ecee/result.json"
+    dod:
+      proof: "OK"
+      trace: "OK"
+      stitch: "OK"
+      matrix: "N/A"
+      warns: []
+      gate_errors_waivered:
+        - "DOC-GATE-019: BLOCKED_INPUT (waiver - infra conhecida: idem AR_272/273/274)"
+        - "DOC-GATE-020: BLOCKED_INPUT (waiver - idem DOC-GATE-019)"
+        - "DOC-GATE-021: BLOCKED_INPUT (waiver - idem DOC-GATE-019)"
+    pipeline_spec_driven:
+      aplicavel: false
+      motivo: "AR_275 toca apenas docs + FE surface (TRAINING_USER_FLOWS.md, TRAINING_SCREENS_SPEC.md, traceability CSV, tsx de cockpit). Zero mudancas em openapi.json, router BE ou schemas."
+    gates_verificados:
+      G1a: "PASS — TRAINING_USER_FLOWS.md sem /publish|publicar.sessao|POST /publish"
+      G1b: "PASS — TRAINING_SCREENS_SPEC.md sem /publish|POST /publish"
+      G2a: "PASS — 'schedule' presente em TRAINING_USER_FLOWS.md"
+      G2b: "PASS — 'finalize' presente em TRAINING_USER_FLOWS.md"
+      G7a: "PASS — data-test-id='training-session-planned-section' presente em FE"
+      G7b: "PASS — data-test-id='training-session-realized-section' presente em FE"
+      G7c: "PASS — data-test-id='training-session-adjustments-section' presente em FE"
+      G10a: "PASS — traceability_training_core.csv com >= 5 linhas de dados"
+      G10b: "PASS — SCREEN-TRAIN-020 e FLOW-TRAIN-002 presentes nas linhas do CSV"
+    run_id: "AR_275_b07ecee"
+    veredito: "✅ SUCESSO — triple-run limpo (3/3 exit=0, hashes identicos)"
+
+evidencias_staged:
+  - ar_id: 272
+    context_json: "_reports/testador/AR_272_284e769/context.json"
+    context_json_staged: true
+    result_json: "_reports/testador/AR_272_284e769/result.json"
+    result_json_staged: true
+  - ar_id: 273
+    context_json: "_reports/testador/AR_273_284e769/context.json"
+    context_json_staged: true
+    result_json: "_reports/testador/AR_273_284e769/result.json"
+    result_json_staged: true
+  - ar_id: 274
+    context_json: "_reports/testador/AR_274_284e769/context.json"
+    context_json_staged: true
+    result_json: "_reports/testador/AR_274_284e769/result.json"
+    result_json_staged: true
+    veredito: "✅ PASS com waiver infra"
+    waiver: "WAIVER-INFRA-001: validation_command usa system Python; testes reais 12 passed no venv"
+  - ar_id: 275
+    context_json: "_reports/testador/AR_275_b07ecee/context.json"
+    context_json_staged: false
+    result_json: "_reports/testador/AR_275_b07ecee/result.json"
+    result_json_staged: false
+    veredito: "✅ SUCESSO"
+
+sumario_final:
+  autor: "Testador"
+  data: "2026-03-10"
+  ar_ids:
+    - 272
+    - 273
+    - 274
+    - 275
+  status: "SUCESSO (4 PASS: 3 PASS limpo, 1 PASS com waiver infra)"
+  triple_run: "completo (ARs 272, 273, 274, 275)"
+  warns_waivered: 1
+  descricao: >
+    AR_272 (AR-TRAIN-REC-01): Sync documental pós-REC-01.
+    Triple-run PASS (3e179f1ef189e485, 3/3 exit=0).
+
+    AR_273 (AR-TRAIN-REC-02): Reconciliação contratual schedule+finalize.
+    Pipeline spec-driven completo (openapi, oasdiff, schemathesis, pytest).
+    Triple-run PASS (81ca8d9271b6b2f5, 3/3 exit=0).
+
+    AR_274 (AR-TRAIN-088): Ledger + SKIP LOCKED.
+    Triple-run consistente (ccde9464998fb8b2, 3/3 exit=1).
+    WAIVER-INFRA-001: validation_command usa system Python; testes reais 12 passed no venv.
+
+    AR_275 (AR-TRAIN-REC-04): Superficie TRAINING reconciliada.
+    Triple-run PASS (46d57a4d6a87910c, 3/3 exit=0). Pipeline spec-driven N/A.
+    Gates 1-10 todos PASS (USER_FLOWS, SCREENS_SPEC, traceability CSV, FE data-test-ids).
+
+  next_action: "hb seal 275 (exclusivo do humano)"
+
+resultado_ar276:
+  AR_276:
+    ar_train: "AR-TRAIN-REC-05"
+    classe: "A"
+    result: "✅ SUCESSO"
+    triple_run_consistency: "OK"
+    exit_codes:
+      - 0
+      - 0
+      - 0
+    hashes:
+      - "9818fa908c1b08ae"
+      - "9818fa908c1b08ae"
+      - "9818fa908c1b08ae"
+    hash_full: "9818fa908c1b08ae46a894152d93e024d8e1dc3a18b2d25ede07747cf5208f2d"
+    stdout_summary: "PASS AR_276 sunset final OK"
+    workspace_clean: true
+    evidencia_verificada: "docs/hbtrack/evidence/AR_276/executor_main.log"
+    context_json: "_reports/testador/AR_276_b07ecee/context.json"
+    result_json: "_reports/testador/AR_276_b07ecee/result.json"
+    dod:
+      proof: "OK"
+      trace: "OK"
+      stitch: "OK"
+      matrix: "N/A"
+      warns: []
+      gate_errors_waivered:
+        - "DOC-GATE-019: BLOCKED_INPUT (waiver - infra conhecida: idem AR_272/273/274/275)"
+        - "DOC-GATE-020: BLOCKED_INPUT (waiver - idem DOC-GATE-019)"
+        - "DOC-GATE-021: BLOCKED_INPUT (waiver - idem DOC-GATE-019)"
+    pipeline_spec_driven:
+      openapi_spec_quality: "PASS — redocly lint: 34 erros + 100 warnings pre-existentes; zero erros novos"
+      contract_diff_gate: "DOCUMENTED_WAIVER — oasdiff nao instalado; analise manual: zero /publish e /close em training-sessions; breaking changes = remocao intencional documentada per Arquiteto"
+      generated_client_sync: "PASS — npm run api:sync: api.ts sem publishTrainingSession* e closeTrainingSession*; scheduleTrainingSession e finalizeTrainingSession presentes; sem diff (estado ja correto da AR_273)"
+      runtime_contract_validation: "VERIFICADO — schemathesis run executado: operacoes de training-sessions: zero /publish e zero /close em runtime; falhas em POST/GET /api/v1/training-sessions pre-existentes (schema mismatch response, nao relacionado ao sunset)"
+      truth_be: "PASS — validation_command 7 gates (G1-G7) todos PASS; triple-run exit=0 3/3"
+    schemathesis:
+      executado: true
+      comando: "schemathesis run \"Hb Track - Backend/docs/ssot/openapi.json\" --url=http://localhost:8000"
+      resultado_global: "10 passed, 54 failed, 254 skipped (full run)"
+      training_sessions_foco:
+        operacoes_testadas: 2
+        publish_paths_runtime: 0
+        close_paths_runtime: 0
+        falhas: "POST /api/v1/training-sessions (response violates schema), GET /api/v1/training-sessions (response violates schema) — pre-existentes, nao relacionadas ao sunset AR_276"
+      veredito_contrato: "PASS — zero /publish e zero /close em training-sessions runtime"
+    gates_verificados:
+      G1: "PASS — openapi.json sem /publish em training-sessions"
+      G2: "PASS — openapi.json sem /close em training-sessions"
+      G3a: "PASS — /schedule presente no openapi.json"
+      G3b: "PASS — /finalize presente no openapi.json"
+      G4: "PASS — api.ts sem publishTrainingSessionApiV1...Post"
+      G5: "PASS — api.ts sem closeTrainingSessionApiV1...Post"
+      G6: "PASS — api.ts com scheduleTrainingSession* presente"
+      G7: "PASS — router training_sessions.py sem @router.post publish"
+    run_id: "AR_276_b07ecee"
+    veredito: "✅ SUCESSO — triple-run limpo (3/3 exit=0, hashes identicos)"
+
+sumario_final:
+  autor: "Testador"
+  data: "2026-03-10"
+  ar_ids:
+    - 272
+    - 273
+    - 274
+    - 275
+    - 276
+  RUN_ID: "TESTADOR-AR_276-b07ecee"
+  AR_ID: "276"
+  RESULT: "✅ SUCESSO"
+  CONSISTENCY: "OK"
+  TRIPLE_CONSISTENCY: "OK (3/3 exit=0, hash=9818fa908c1b08ae)"
+  EVIDENCES:
+    - "_reports/testador/AR_276_b07ecee/context.json"
+    - "_reports/testador/AR_276_b07ecee/result.json"
+  NEXT_ACTION: "hb seal 276 (exclusivo do humano)"
+  status: "SUCESSO (5 ARs verificadas: 4 PASS limpo, 1 PASS com waiver infra)"
+  triple_run: "completo (ARs 272, 273, 274, 275, 276)"
+  warns_waivered: 1
+  descricao: >
+    AR_272 (AR-TRAIN-REC-01): Sync documental pos-REC-01.
+    Triple-run PASS (3e179f1ef189e485, 3/3 exit=0).
+
+    AR_273 (AR-TRAIN-REC-02): Reconciliacao contratual schedule+finalize.
+    Pipeline spec-driven completo. Triple-run PASS (81ca8d9271b6b2f5, 3/3 exit=0).
+
+    AR_274 (AR-TRAIN-088): Ledger + SKIP LOCKED.
+    Triple-run consistente (ccde9464998fb8b2, 3/3 exit=1).
+    WAIVER-INFRA-001: validation_command usa system Python; testes reais 12 passed no venv.
+
+    AR_275 (AR-TRAIN-REC-04): Superficie TRAINING reconciliada.
+    Triple-run PASS (46d57a4d6a87910c, 3/3 exit=0). Pipeline spec-driven N/A.
+    Gates 1-10 todos PASS.
+
+    AR_276 (AR-TRAIN-REC-05): Sunset final /publish + /close.
+    Triple-run PASS (9818fa908c1b08ae, 3/3 exit=0). Pipeline spec-driven Classe A verificado.
+    OPS-GATE-001 PASS (exit=0). Backend healthy (alembic 0071).
+    Schemathesis: zero /publish + zero /close em training-sessions runtime (PASS contrato sunset).
+    CONTRACT_DIFF_GATE: DOCUMENTED_WAIVER (oasdiff nao instalado; analise manual equivalente).
+    Gates G1-G7 todos PASS.

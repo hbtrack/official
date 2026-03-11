@@ -1,0 +1,71 @@
+meta:
+  document_id: TEST-SCENARIOS-ATHLETES
+  module_id: ATHLETES
+  module_version: 1.0.0
+  status: DRAFT
+  authority_level: TEST_SSOT
+  executor_freedom:
+    invent_new_domain_scenarios_without_contract: forbidden
+
+scenario_policy:
+  scenario_source_of_truth: canonical_only
+  arbitrary_fuzzing_allowed: false
+  property_based_testing_allowed_only_for:
+    - schema_robustness
+    - parser_robustness
+  domain_validation_must_use_canonical_scenarios: true
+
+scenarios:
+  - scenario_id: SCN-ATH-001
+    name: atleta_cadete_masculino_valido
+    purpose: valid_create_request
+    inputs:
+      competition_reference_year: 2026
+      athlete:
+        full_name: "João Silva"
+        birth_date: "2012-03-10"
+        category_code: "U14"
+        federation_id: "FB-2026-001"
+    expected_outcome:
+      result: success
+      invariant_ids:
+        - INV-ATH-002
+
+  - scenario_id: SCN-ATH-002
+    name: atleta_categoria_incompativel_por_ano_referencia
+    purpose: invalid_create_request
+    inputs:
+      competition_reference_year: 2026
+      athlete:
+        full_name: "Pedro Souza"
+        birth_date: "2009-08-20"
+        category_code: "U14"
+    expected_outcome:
+      result: invariant_violation
+      invariant_id: INV-ATH-002
+      error_code: ATHLETE_CATEGORY_INCOMPATIBLE
+
+  - scenario_id: SCN-ATH-003
+    name: federation_id_duplicado
+    purpose: duplicate_identifier_rejection
+    preconditions:
+      existing_athlete:
+        federation_id: "FB-2026-001"
+    inputs:
+      athlete:
+        full_name: "Carlos Lima"
+        birth_date: "2011-05-10"
+        category_code: "U16"
+        federation_id: "FB-2026-001"
+    expected_outcome:
+      result: conflict
+      invariant_id: INV-ATH-001
+      error_code: ATHLETE_FEDERATION_ID_CONFLICT
+
+rules:
+  - rule_id: TSC-RULE-001
+    description: Tester must use only canonical scenario_ids for domain validation.
+  - rule_id: TSC-RULE-002
+    description: New domain scenario requires contract update before execution.
+  - rule_id: TSC-RULE-003
+    description: Fuzzing cannot redefine domain truth.

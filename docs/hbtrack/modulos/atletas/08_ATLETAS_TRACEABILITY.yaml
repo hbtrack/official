@@ -1,0 +1,199 @@
+meta:
+  document_id: TRACE-ATHLETES
+  module_id: ATHLETES
+  module_version: 1.0.0
+  status: DRAFT
+  authority_level: EXECUTIONAL_SSOT
+  description: >
+    Canonical mapping between contract HTTP, invariants, persistence,
+    UI, tests and evidence for module ATHLETES.
+  naming_policy:
+    operation_id_pattern: "athletes__<resource>__<action>"
+    service_symbol_pattern: "<resource>_<action>"
+    test_id_pattern: "test_<resource>_<action>_<expectation>"
+    selector_id_pattern: "athletes.<screen>.<element>"
+  enforcement:
+    executor_manual_symbol_creation: forbidden_without_binding
+    unbound_test_creation: forbidden
+    unbound_selector_usage: forbidden
+    unbound_migration_usage: forbidden
+
+operations:
+  - operation_id: athletes__athlete__create
+    route:
+      method: POST
+      path: /api/v1/athletes
+    invariants:
+      - INV-ATH-001
+      - INV-ATH-002
+    db_contract:
+      aggregate: athlete
+      required_tables:
+        - athletes
+      required_constraints:
+        - uq_athletes_federation_id
+      required_migrations:
+        - 20260307_1200_create_athletes_table.py
+    ui_contract:
+      screens:
+        - athletes.create
+      selectors:
+        - athletes.create.form
+        - athletes.create.submit
+        - athletes.create.name
+        - athletes.create.birth_date
+        - athletes.create.federation_id
+    tests:
+      unit:
+        - test_athlete_create_valid
+        - test_athlete_create_duplicate_federation_id_rejected
+      integration:
+        - test_post_athletes_201
+        - test_post_athletes_409_duplicate_federation_id
+      contract:
+        - test_contract_athletes_create_examples
+      e2e:
+        - test_e2e_athletes_create_success
+    evidence:
+      expected_artifacts:
+        - reports/athletes_create_unit.xml
+        - reports/athletes_create_contract.json
+        - reports/athletes_create_e2e.json
+
+  - operation_id: athletes__athlete__list
+    route:
+      method: GET
+      path: /api/v1/athletes
+    invariants:
+      - INV-ATH-010
+    db_contract:
+      aggregate: athlete
+      required_tables:
+        - athletes
+      required_indexes:
+        - idx_athletes_team_id
+    ui_contract:
+      screens:
+        - athletes.list
+      selectors:
+        - athletes.list.table
+        - athletes.list.row
+        - athletes.list.filter.team_id
+    tests:
+      integration:
+        - test_get_athletes_200
+      e2e:
+        - test_e2e_athletes_list_filters_by_team
+    evidence:
+      expected_artifacts:
+        - reports/athletes_list_contract.json
+
+  - operation_id: athletes__athlete__get
+    route:
+      method: GET
+      path: /api/v1/athletes/{athlete_id}
+    invariants: []
+    db_contract:
+      aggregate: athlete
+      required_tables:
+        - athletes
+    ui_contract:
+      screens: []
+      selectors: []
+    tests:
+      integration:
+        - test_get_athletes_athlete_id_200
+        - test_get_athletes_athlete_id_404
+    evidence:
+      expected_artifacts:
+        - reports/athletes_get_contract.json
+
+  - operation_id: athletes__athlete__update
+    route:
+      method: PATCH
+      path: /api/v1/athletes/{athlete_id}
+    invariants:
+      - INV-ATH-001
+      - INV-ATH-002
+    db_contract:
+      aggregate: athlete
+      required_tables:
+        - athletes
+      required_constraints:
+        - uq_athletes_federation_id
+    ui_contract:
+      screens: []
+      selectors: []
+    tests:
+      unit:
+        - test_athlete_update_valid
+        - test_athlete_update_duplicate_federation_id_rejected
+      integration:
+        - test_patch_athletes_athlete_id_200
+        - test_patch_athletes_athlete_id_409_duplicate_federation_id
+        - test_patch_athletes_athlete_id_404
+      contract:
+        - test_contract_athletes_update_examples
+    evidence:
+      expected_artifacts:
+        - reports/athletes_update_unit.xml
+        - reports/athletes_update_contract.json
+
+invariants:
+  - invariant_id: INV-ATH-001
+    predicate: federation_id must be unique within ATHLETES module
+    enforced_by:
+      - db_constraint: uq_athletes_federation_id
+      - integration_test: test_post_athletes_409_duplicate_federation_id
+
+  - invariant_id: INV-ATH-002
+    predicate: athlete birth_year must be in allowed set for competition_year and category_code
+    enforced_by:
+      - domain_service: athlete_create
+      - integration_test: test_post_athletes_422_invalid_category_for_age
+
+  - invariant_id: INV-ATH-010
+    predicate: list endpoint must never return soft_deleted athletes
+    enforced_by:
+      - repository_filter: deleted_at_is_null
+      - integration_test: test_get_athletes_excludes_soft_deleted
+
+database_migrations:
+  - migration_id: 20260307_1200_create_athletes_table.py
+    type: alembic
+    status: required
+    affects:
+      - athletes
+    must_run_before:
+      - athletes__athlete__create
+      - athletes__athlete__list
+
+ui_selectors:
+  - selector_id: athletes.create.form
+    screen: athletes.create
+    element_type: form
+    required: true
+  - selector_id: athletes.create.submit
+    screen: athletes.create
+    element_type: button
+    required: true
+  - selector_id: athletes.list.table
+    screen: athletes.list
+    element_type: table
+    required: true
+  - selector_id: athletes.list.row
+    screen: athletes.list
+    element_type: row
+    required: true
+
+rules:
+  - rule_id: TRACE-RULE-001
+    description: Every operation_id must bind to exactly one backend_handler.
+  - rule_id: TRACE-RULE-002
+    description: Every operation_id must bind to at least one test.
+  - rule_id: TRACE-RULE-003
+    description: Every operation with UI exposure must bind to selectors.
+  - rule_id: TRACE-RULE-004
+    description: Every write operation must bind to at least one migration or explicitly declare migration_not_required.
+  - rule_id: TRACE-RULE-005
+    description: Executor cannot rename bound symbols without updating TRACEABILITY first.

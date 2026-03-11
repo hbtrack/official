@@ -1,0 +1,471 @@
+asyncapi: 3.0.0
+
+info:
+  title: HB Track - ATHLETES Event Contract
+  version: 1.0.0
+  description: >
+    Canonical event contract for the ATHLETES module.
+    Events are immutable, append-only, and versioned.
+    Read models and side effects must consume this contract.
+
+defaultContentType: application/json
+
+servers:
+  localKafka:
+    host: broker.hbtrack.local:9092
+    protocol: kafka
+    description: Local development/event replay broker
+
+channels:
+  athleteRegisteredV1:
+    address: hbtrack.athletes.athlete-registered.v1
+    messages:
+      AthleteRegisteredV1:
+        $ref: '#/components/messages/AthleteRegisteredV1'
+
+  athleteRegisteredV2:
+    address: hbtrack.athletes.athlete-registered.v2
+    messages:
+      AthleteRegisteredV2:
+        $ref: '#/components/messages/AthleteRegisteredV2'
+
+  athleteUpdatedV1:
+    address: hbtrack.athletes.athlete-updated.v1
+    messages:
+      AthleteUpdatedV1:
+        $ref: '#/components/messages/AthleteUpdatedV1'
+
+  athleteStatusChangedV1:
+    address: hbtrack.athletes.athlete-status-changed.v1
+    messages:
+      AthleteStatusChangedV1:
+        $ref: '#/components/messages/AthleteStatusChangedV1'
+
+operations:
+  publishAthleteRegisteredV1:
+    action: send
+    channel:
+      $ref: '#/channels/athleteRegisteredV1'
+    summary: Legacy publisher for athlete registered v1
+    messages:
+      - $ref: '#/channels/athleteRegisteredV1/messages/AthleteRegisteredV1'
+
+  publishAthleteRegisteredV2:
+    action: send
+    channel:
+      $ref: '#/channels/athleteRegisteredV2'
+    summary: Canonical publisher for athlete registered v2
+    messages:
+      - $ref: '#/channels/athleteRegisteredV2/messages/AthleteRegisteredV2'
+
+  publishAthleteUpdatedV1:
+    action: send
+    channel:
+      $ref: '#/channels/athleteUpdatedV1'
+    summary: Publish athlete updated event
+    messages:
+      - $ref: '#/channels/athleteUpdatedV1/messages/AthleteUpdatedV1'
+
+  publishAthleteStatusChangedV1:
+    action: send
+    channel:
+      $ref: '#/channels/athleteStatusChangedV1'
+    summary: Publish athlete status change event
+    messages:
+      - $ref: '#/channels/athleteStatusChangedV1/messages/AthleteStatusChangedV1'
+
+  consumeAthleteRegisteredForProjection:
+    action: receive
+    channel:
+      $ref: '#/channels/athleteRegisteredV2'
+    summary: Projection consumer for athlete registered canonical event
+    messages:
+      - $ref: '#/channels/athleteRegisteredV2/messages/AthleteRegisteredV2'
+
+  consumeAthleteRegisteredLegacyForUpcast:
+    action: receive
+    channel:
+      $ref: '#/channels/athleteRegisteredV1'
+    summary: Upcast legacy athlete registered v1 into canonical v2 before projection
+    messages:
+      - $ref: '#/channels/athleteRegisteredV1/messages/AthleteRegisteredV1'
+
+  consumeAthleteStatusChangedForSideEffects:
+    action: receive
+    channel:
+      $ref: '#/channels/athleteStatusChangedV1'
+    summary: Side-effect consumer for federation sync / notification workflows
+    messages:
+      - $ref: '#/channels/athleteStatusChangedV1/messages/AthleteStatusChangedV1'
+
+components:
+  messages:
+    AthleteRegisteredV1:
+      name: AthleteRegisteredV1
+      title: Athlete registered v1
+      summary: Legacy athlete registration event without federation_id
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/AthleteRegisteredV1Envelope'
+
+    AthleteRegisteredV2:
+      name: AthleteRegisteredV2
+      title: Athlete registered v2
+      summary: Canonical athlete registration event
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/AthleteRegisteredV2Envelope'
+
+    AthleteUpdatedV1:
+      name: AthleteUpdatedV1
+      title: Athlete updated v1
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/AthleteUpdatedV1Envelope'
+
+    AthleteStatusChangedV1:
+      name: AthleteStatusChangedV1
+      title: Athlete status changed v1
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/AthleteStatusChangedV1Envelope'
+
+  schemas:
+    EventMetadata:
+      type: object
+      additionalProperties: false
+      required:
+        - event_id
+        - event_type
+        - event_version
+        - aggregate_type
+        - aggregate_id
+        - stream_name
+        - stream_position
+        - occurred_at
+        - producer
+        - causation_id
+        - correlation_id
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        event_type:
+          type: string
+        event_version:
+          type: integer
+          minimum: 1
+        aggregate_type:
+          type: string
+          const: athlete
+        aggregate_id:
+          type: string
+          format: uuid
+        stream_name:
+          type: string
+          const: athletes
+        stream_position:
+          type: integer
+          minimum: 0
+        occurred_at:
+          type: string
+          format: date-time
+        producer:
+          type: string
+        causation_id:
+          type: string
+          format: uuid
+        correlation_id:
+          type: string
+          format: uuid
+        replay:
+          type: boolean
+          default: false
+
+    AthleteRegisteredV1Data:
+      type: object
+      additionalProperties: false
+      required:
+        - athlete_id
+        - full_name
+        - birth_date
+        - birth_year
+        - category_id
+        - category_code
+        - competition_reference_year
+        - status
+      properties:
+        athlete_id:
+          type: string
+          format: uuid
+        full_name:
+          type: string
+          minLength: 3
+          maxLength: 120
+        birth_date:
+          type: string
+          format: date
+        birth_year:
+          type: integer
+        category_id:
+          type: string
+          format: uuid
+        category_code:
+          type: string
+        competition_reference_year:
+          type: integer
+        team_id:
+          type:
+            - string
+            - 'null'
+          format: uuid
+        dominant_hand:
+          type:
+            - string
+            - 'null'
+          enum: [RIGHT, LEFT, AMBIDEXTROUS, null]
+        status:
+          type: string
+          enum: [ACTIVE, INACTIVE]
+
+    AthleteRegisteredV2Data:
+      type: object
+      additionalProperties: false
+      required:
+        - athlete_id
+        - full_name
+        - birth_date
+        - birth_year
+        - category_id
+        - category_code
+        - competition_reference_year
+        - federation_id
+        - status
+      properties:
+        athlete_id:
+          type: string
+          format: uuid
+        full_name:
+          type: string
+          minLength: 3
+          maxLength: 120
+        birth_date:
+          type: string
+          format: date
+        birth_year:
+          type: integer
+        category_id:
+          type: string
+          format: uuid
+        category_code:
+          type: string
+        competition_reference_year:
+          type: integer
+        team_id:
+          type:
+            - string
+            - 'null'
+          format: uuid
+        federation_id:
+          type:
+            - string
+            - 'null'
+          maxLength: 50
+        dominant_hand:
+          type:
+            - string
+            - 'null'
+          enum: [RIGHT, LEFT, AMBIDEXTROUS, null]
+        status:
+          type: string
+          enum: [ACTIVE, INACTIVE]
+
+    AthleteUpdatedV1Data:
+      type: object
+      additionalProperties: false
+      required:
+        - athlete_id
+        - changed_fields
+      properties:
+        athlete_id:
+          type: string
+          format: uuid
+        changed_fields:
+          type: array
+          minItems: 1
+          items:
+            type: string
+        full_name:
+          type:
+            - string
+            - 'null'
+        category_id:
+          type:
+            - string
+            - 'null'
+          format: uuid
+        category_code:
+          type:
+            - string
+            - 'null'
+        team_id:
+          type:
+            - string
+            - 'null'
+          format: uuid
+        federation_id:
+          type:
+            - string
+            - 'null'
+        dominant_hand:
+          type:
+            - string
+            - 'null'
+          enum: [RIGHT, LEFT, AMBIDEXTROUS, null]
+
+    AthleteStatusChangedV1Data:
+      type: object
+      additionalProperties: false
+      required:
+        - athlete_id
+        - old_status
+        - new_status
+      properties:
+        athlete_id:
+          type: string
+          format: uuid
+        old_status:
+          type: string
+          enum: [ACTIVE, INACTIVE]
+        new_status:
+          type: string
+          enum: [ACTIVE, INACTIVE]
+
+    AthleteRegisteredV1Envelope:
+      type: object
+      additionalProperties: false
+      required:
+        - metadata
+        - data
+      properties:
+        metadata:
+          allOf:
+            - $ref: '#/components/schemas/EventMetadata'
+            - type: object
+              properties:
+                event_type:
+                  const: AthleteRegistered
+                event_version:
+                  const: 1
+        data:
+          $ref: '#/components/schemas/AthleteRegisteredV1Data'
+
+    AthleteRegisteredV2Envelope:
+      type: object
+      additionalProperties: false
+      required:
+        - metadata
+        - data
+      properties:
+        metadata:
+          allOf:
+            - $ref: '#/components/schemas/EventMetadata'
+            - type: object
+              properties:
+                event_type:
+                  const: AthleteRegistered
+                event_version:
+                  const: 2
+        data:
+          $ref: '#/components/schemas/AthleteRegisteredV2Data'
+
+    AthleteUpdatedV1Envelope:
+      type: object
+      additionalProperties: false
+      required:
+        - metadata
+        - data
+      properties:
+        metadata:
+          allOf:
+            - $ref: '#/components/schemas/EventMetadata'
+            - type: object
+              properties:
+                event_type:
+                  const: AthleteUpdated
+                event_version:
+                  const: 1
+        data:
+          $ref: '#/components/schemas/AthleteUpdatedV1Data'
+
+    AthleteStatusChangedV1Envelope:
+      type: object
+      additionalProperties: false
+      required:
+        - metadata
+        - data
+      properties:
+        metadata:
+          allOf:
+            - $ref: '#/components/schemas/EventMetadata'
+            - type: object
+              properties:
+                event_type:
+                  const: AthleteStatusChanged
+                event_version:
+                  const: 1
+        data:
+          $ref: '#/components/schemas/AthleteStatusChangedV1Data'
+
+x-hbtrack:
+  event_store:
+    source_of_truth: true
+    mode: append_only
+    immutable_events: true
+    update_existing_event_forbidden: true
+
+  schema_evolution_policy:
+    compatibility_mode: additive_or_upcast
+    breaking_change_requires_new_version: true
+    historical_replay_requires_supported_version_or_upcaster: true
+    consumer_must_declare_supported_versions: true
+
+  upcasting:
+    canonical_versions:
+      AthleteRegistered: 2
+      AthleteUpdated: 1
+      AthleteStatusChanged: 1
+
+    rules:
+      - event_type: AthleteRegistered
+        from_version: 1
+        to_version: 2
+        strategy: deterministic_upcaster
+        required: true
+        stub_symbol: upcast_athlete_registered_v1_to_v2
+        target_file: backend/app/events/upcasters/athletes_upcasters.py
+        transformation:
+          copy_fields:
+            - athlete_id
+            - full_name
+            - birth_date
+            - birth_year
+            - category_id
+            - category_code
+            - competition_reference_year
+            - team_id
+            - dominant_hand
+            - status
+          injected_fields:
+            federation_id: null
+        invariant:
+          old_event_must_remain_immutable: true
+          new_event_must_be_emitted_only_in_memory_for_projection: true
+
+  projection_contract:
+    required_file: docs/hbtrack/modulos/atletas/17_ATLETAS_PROJECTIONS.yaml
+    replay_requires_upcast_before_projection: true
+
+  side_effect_contract:
+    required_file: docs/hbtrack/modulos/atletas/18_ATLETAS_SIDE_EFFECTS.yaml
+    replay_forbidden_to_trigger_side_effects_unless_explicitly_allowed: true

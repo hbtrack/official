@@ -1,0 +1,234 @@
+{
+  "meta": {
+    "handoff_id": "HANDOFF-ATHLETES-2026-03-08-001",
+    "module_id": "ATHLETES",
+    "module_version": "1.0.0",
+    "status": "READY_FOR_EXECUTION",
+    "authority_level": "EXECUTIONAL_SSOT",
+    "issued_by": "hb_plan_bootstrap",
+    "issued_at": "2026-03-08T00:00:00Z",
+    "conversation_independent": true,
+    "constitution_version": "1.2.7",
+    "note": "This is the authoritative handoff instance for the ATHLETES module. All contracted operations are defined in the documents listed under integrity.artifacts. The executor must not derive requirements from any document outside this list."
+  },
+  "integrity": {
+    "artifacts": [
+      {
+        "file": "00_ATLETAS_CROSS_LINTER_RULES.json",
+        "path": "docs/hbtrack/modulos/atletas/00_ATLETAS_CROSS_LINTER_RULES.json",
+        "sha256": "70bba0ee10982d349f802b9d7a316a8e2b72a440e753f5a41ea681a6a345b825"
+      },
+      {
+        "file": "01_ATLETAS_OPENAPI.yaml",
+        "path": "docs/hbtrack/modulos/atletas/01_ATLETAS_OPENAPI.yaml",
+        "sha256": "0204f062f2602f5aa447e6cb5e565ce6d2ddaaf88c11778394dd4faa5dc14d85"
+      },
+      {
+        "file": "05_ATLETAS_EVENTS.asyncapi.yaml",
+        "path": "docs/hbtrack/modulos/atletas/05_ATLETAS_EVENTS.asyncapi.yaml",
+        "sha256": "badc12973a40c4948312f7c0cd363bdd79c51604117de3b0cf184ca546b6eb10"
+      },
+      {
+        "file": "08_ATLETAS_TRACEABILITY.yaml",
+        "path": "docs/hbtrack/modulos/atletas/08_ATLETAS_TRACEABILITY.yaml",
+        "sha256": "9138f0fa6aac7155c4d2b6d4d311dae5d9744c7b97010f3999faafc7f36eda78"
+      },
+      {
+        "file": "12_ATLETAS_EXECUTION_BINDINGS.yaml",
+        "path": "docs/hbtrack/modulos/atletas/12_ATLETAS_EXECUTION_BINDINGS.yaml",
+        "sha256": "03f0ffa23643cd9ecb93d51914df6ae1c7ab806881fa2759ebcd43c33cc9a0ca"
+      },
+      {
+        "file": "13_ATLETAS_DB_CONTRACT.yaml",
+        "path": "docs/hbtrack/modulos/atletas/13_ATLETAS_DB_CONTRACT.yaml",
+        "sha256": "b13f273e2a1ef2a6ea45649b72fadeea55a4e561a13200ee841d5d6b34bc9073"
+      },
+      {
+        "file": "14_ATLETAS_UI_CONTRACT.yaml",
+        "path": "docs/hbtrack/modulos/atletas/14_ATLETAS_UI_CONTRACT.yaml",
+        "sha256": "1a4127e3f01ee7a681c0f7b15044c630ced2cd9ee1a551a38965970e6f722f45"
+      },
+      {
+        "file": "15_ATLETAS_INVARIANTS.yaml",
+        "path": "docs/hbtrack/modulos/atletas/15_ATLETAS_INVARIANTS.yaml",
+        "sha256": "a974758e82e254319e8dff82a9cffccac6a95535fa9644b08c6df8faef726611"
+      },
+      {
+        "file": "17_ATLETAS_PROJECTIONS.yaml",
+        "path": "docs/hbtrack/modulos/atletas/17_ATLETAS_PROJECTIONS.yaml",
+        "sha256": "c8cfc0183eb2d1917719ee1d4cc72a65001ee195f3043a624bff7d3c5acc0a32"
+      },
+      {
+        "file": "18_ATLETAS_SIDE_EFFECTS.yaml",
+        "path": "docs/hbtrack/modulos/atletas/18_ATLETAS_SIDE_EFFECTS.yaml",
+        "sha256": "af1ae33d13b7259c7a205876eede7d3aeccfe622d409b4d5ea2bed203bfe5ee7"
+      },
+      {
+        "file": "19_ATLETAS_TEST_SCENARIOS.yaml",
+        "path": "docs/hbtrack/modulos/atletas/19_ATLETAS_TEST_SCENARIOS.yaml",
+        "sha256": "723f90370cb745bcdfed612b34e5ec1064d3b2daad3d5f5c1e0035a71036ff00"
+      },
+      {
+        "file": "20_ATLETAS_EXECUTOR_RESTRICTION_PROMPT.md",
+        "path": "docs/hbtrack/modulos/atletas/20_ATLETAS_EXECUTOR_RESTRICTION_PROMPT.md",
+        "sha256": "d7b8756d78de14fb5ed3b9bbb0f70d6a798f1f91c6f08dbe26bd5a5a455bd742"
+      }
+    ],
+    "anchor_manifest_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "snapshot_hash": "4e4be48c900c26244e25ab691741d04e2ae567036f5afc037a7948fc75701a76"
+  },
+  "execution_scope": {
+    "module_root": "docs/hbtrack/modulos/atletas",
+    "allowed_write_roots": [
+      "Hb Track - Backend/app/",
+      "Hb Track - Backend/tests/",
+      "Hb Track - Backend/db/migrations/",
+      "Hb Track - Frontend/src/"
+    ],
+    "forbidden_write_paths": [
+      "docs/hbtrack/modulos/atletas/",
+      "scripts/",
+      ".github/"
+    ]
+  },
+  "codegen_requirements": {
+    "openapi_source": "docs/hbtrack/modulos/atletas/01_ATLETAS_OPENAPI.yaml",
+    "generated_client_target": "Hb Track - Frontend/src/api/generated/",
+    "generator_tool": "openapi-generator-cli",
+    "codegen_required": true
+  },
+  "task_plan": {
+    "ordered_steps": [
+      {
+        "step_id": "STEP-001",
+        "operation_id": "athletes__athlete__create",
+        "description": "Implement POST /api/v1/athletes — create athlete endpoint",
+        "binding_file": "12_ATLETAS_EXECUTION_BINDINGS.yaml",
+        "traceability_ref": "08_ATLETAS_TRACEABILITY.yaml",
+        "backend_handler": "create_athlete",
+        "backend_service": "athlete_create",
+        "invariants": [
+          "INV-ATH-001",
+          "INV-ATH-002"
+        ]
+      },
+      {
+        "step_id": "STEP-002",
+        "operation_id": "athletes__athlete__list",
+        "description": "Implement GET /api/v1/athletes — list athletes endpoint",
+        "binding_file": "12_ATLETAS_EXECUTION_BINDINGS.yaml",
+        "traceability_ref": "08_ATLETAS_TRACEABILITY.yaml",
+        "backend_handler": "list_athletes",
+        "backend_service": "athlete_list",
+        "invariants": [
+          "INV-ATH-010"
+        ]
+      },
+      {
+        "step_id": "STEP-003",
+        "operation_id": "athletes__athlete__get",
+        "description": "Implement GET /api/v1/athletes/{athlete_id} — get athlete endpoint",
+        "binding_file": "12_ATLETAS_EXECUTION_BINDINGS.yaml",
+        "traceability_ref": "08_ATLETAS_TRACEABILITY.yaml",
+        "backend_handler": "get_athlete",
+        "backend_service": "athlete_get",
+        "invariants": []
+      },
+      {
+        "step_id": "STEP-004",
+        "operation_id": "athletes__athlete__update",
+        "description": "Implement PATCH /api/v1/athletes/{athlete_id} — update athlete endpoint",
+        "binding_file": "12_ATLETAS_EXECUTION_BINDINGS.yaml",
+        "traceability_ref": "08_ATLETAS_TRACEABILITY.yaml",
+        "backend_handler": "update_athlete",
+        "backend_service": "athlete_update",
+        "invariants": [
+          "INV-ATH-001",
+          "INV-ATH-002"
+        ]
+      },
+      {
+        "step_id": "STEP-005",
+        "operation_id": "athletes_projection_rebuild",
+        "description": "Implement projection handlers: PROJ-H-ATH-001, PROJ-H-ATH-002, PROJ-H-ATH-003",
+        "projection_file": "17_ATLETAS_PROJECTIONS.yaml",
+        "handlers": [
+          "apply_athlete_registered_v2",
+          "apply_athlete_updated_v1",
+          "apply_athlete_status_changed_v1"
+        ]
+      }
+    ]
+  },
+  "entry_gates": [
+    {
+      "gate_id": "ENTRY-001",
+      "rule": "X-001",
+      "description": "Every OpenAPI operationId must exist in TRACEABILITY",
+      "checker_id": "check_openapi_operation_ids_are_traceable",
+      "blocking": true
+    },
+    {
+      "gate_id": "ENTRY-002",
+      "rule": "X-012",
+      "description": "Handoff snapshot hashes must match current contract files",
+      "checker_id": "check_handoff_hashes_match_snapshot",
+      "blocking": true
+    },
+    {
+      "gate_id": "ENTRY-003",
+      "rule": "DOC-001",
+      "description": "All required documents must exist",
+      "checker_id": "check_required_documents_exist",
+      "blocking": true
+    }
+  ],
+  "exit_gates": [
+    {
+      "gate_id": "EXIT-001",
+      "rule": "X-020",
+      "description": "All canonical test scenarios must pass with deterministic report",
+      "checker_id": "check_canonical_test_scenarios_pass_with_deterministic_report",
+      "blocking": true
+    },
+    {
+      "gate_id": "EXIT-002",
+      "rule": "DOC-005",
+      "description": "Generated handoff and anchor_manifest must exist and have integrity",
+      "checker_id": "check_generated_documents_exist_and_have_integrity",
+      "blocking": true
+    }
+  ],
+  "prohibitions": [
+    {
+      "prohibition_id": "PROHIB-001",
+      "description": "Executor must not write outside allowed_write_roots",
+      "halt_code": "SCOPE_VIOLATION"
+    },
+    {
+      "prohibition_id": "PROHIB-002",
+      "description": "Executor must not modify contract documents in docs/hbtrack/modulos/atletas/",
+      "halt_code": "CONTRACT_TAMPERING"
+    },
+    {
+      "prohibition_id": "PROHIB-003",
+      "description": "Executor must not create uncontracted public symbols",
+      "halt_code": "UNCONTRACTED_SYMBOL"
+    },
+    {
+      "prohibition_id": "PROHIB-004",
+      "description": "Executor must not use datetime.now() / system clock in event handlers",
+      "halt_code": "TEMPORAL_NONDETERMINISM"
+    },
+    {
+      "prohibition_id": "PROHIB-005",
+      "description": "Executor must not derive competition_year from HTTP request — must read from HBTRACK_COMPETITION_YEAR config",
+      "halt_code": "UNDECLARED_STRUCTURE"
+    },
+    {
+      "prohibition_id": "PROHIB-006",
+      "description": "Executor must not compute birth_year inline — must derive from birth_date.year before emitting AthleteRegistered event",
+      "halt_code": "UNDECLARED_STRUCTURE"
+    }
+  ]
+}

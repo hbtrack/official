@@ -1,0 +1,151 @@
+meta:
+  document_id: DB-ATHLETES
+  module_id: ATHLETES
+  module_version: 1.0.0
+  status: DRAFT
+  db_engine: postgresql
+  migration_tool: alembic
+
+file_map:
+  canonical_files:
+    sqlalchemy_model_file: backend/app/models/athlete.py
+    alembic_migration_file: backend/alembic/versions/20260307_1200_create_athletes_table.py
+
+database_contract:
+  tables:
+    - table_name: athletes
+      columns:
+        - name: athlete_id
+          type: uuid
+          nullable: false
+          primary_key: true
+          default: gen_random_uuid()
+
+        - name: full_name
+          type: varchar(120)
+          nullable: false
+
+        - name: birth_date
+          type: date
+          nullable: false
+
+        - name: birth_year
+          type: integer
+          nullable: false
+          derived: "EXTRACT(YEAR FROM birth_date)"
+          derivation_policy:
+            computed_by: application_service
+            computation_point: before_emitting_AthleteRegistered_event
+            formula: "birth_year = YEAR(birth_date)"
+            http_client_must_not_send: true
+            accepted_from_request: false
+            note: >
+              birth_year is NOT part of the HTTP request body (AthleteCreateRequest).
+              The application service derives it as YEAR(birth_date) before constructing
+              the AthleteRegistered event. This is the canonical derivation point;
+              the Executor must not reimplement this logic elsewhere.
+
+        - name: category_id
+          type: uuid
+          nullable: false
+
+        - name: team_id
+          type: uuid
+          nullable: true
+
+        - name: federation_id
+          type: varchar(50)
+          nullable: true
+
+        - name: dominant_hand
+          type: varchar(20)
+          nullable: true
+          check: "dominant_hand IN ('RIGHT', 'LEFT', 'AMBIDEXTROUS')"
+
+        - name: status
+          type: varchar(20)
+          nullable: false
+          default: "'ACTIVE'"
+          check: "status IN ('ACTIVE', 'INACTIVE')"
+
+        - name: created_at
+          type: timestamp with time zone
+          nullable: false
+          default: now()
+
+        - name: deleted_at
+          type: timestamp with time zone
+          nullable: true
+          soft_delete_policy:
+            strategy: deleted_at_timestamp
+            activate_delete: "SET deleted_at = now()"
+            restore: "SET deleted_at = NULL"
+            active_filter: "deleted_at IS NULL"
+            status_field_relationship: >
+              status field (ACTIVE/INACTIVE) represents business state (eligible/suspended).
+              deleted_at represents structural removal from default views (soft delete).
+              The two are independent: an INACTIVE athlete with deleted_at IS NULL still
+              appears in default listing but cannot be assigned to lineups (INV-ATH-003).
+              A soft-deleted athlete (deleted_at IS NOT NULL) is excluded from all
+              default queries regardless of status (INV-ATH-010).
+            http_endpoint: not_yet_contracted
+            note: >
+              No DELETE endpoint is contracted in this version. Soft delete is available
+              as a persistence mechanism for future endpoint (see AR_BACKLOG_TRAINING.md).
+
+        - name: version_id
+          type: integer
+          nullable: false
+          default: 1
+          note: Optimistic locking version counter. Incremented on every UPDATE.
+
+      constraints:
+        - name: pk_athletes
+          type: primary_key
+          columns: [athlete_id]
+
+        - name: uq_athletes_federation_id
+          type: unique
+          columns: [federation_id]
+          note: >
+            Partial unique — only enforced when federation_id IS NOT NULL.
+            DDL: CREATE UNIQUE INDEX uq_athletes_federation_id ON athletes (federation_id)
+            WHERE federation_id IS NOT NULL;
+
+        - name: ck_athletes_birth_year_consistency
+          type: check
+          check: "birth_year = EXTRACT(YEAR FROM birth_date)"
+
+        - name: ck_athletes_dominant_hand
+          type: check
+          check: "dominant_hand IN ('RIGHT', 'LEFT', 'AMBIDEXTROUS')"
+
+        - name: ck_athletes_status
+          type: check
+          check: "status IN ('ACTIVE', 'INACTIVE')"
+
+        - name: ck_athletes_version_positive
+          type: check
+          check: "version_id >= 1"
+
+      indexes:
+        - name: idx_athletes_team_id
+          columns: [team_id]
+          type: btree
+          note: Supports filtered list queries by team_id (athletes__athlete__list).
+
+        - name: idx_athletes_status_deleted_at
+          columns: [status, deleted_at]
+          type: btree
+          note: Supports soft-delete filter (deleted_at IS NULL) combined with status queries.
+
+      locking_policy:
+        type: optimistic_locking
+        version_column: version_id
+        conflict_error_code: ATHLETE_OPTIMISTIC_LOCK_CONFLICT
+        retry_policy: retry_3_times_with_exponential_backoff
+        note: >
+          On UPDATE, caller must pass current version_id. If version_id in DB differs,
+          raise ATHLETE_OPTIMISTIC_LOCK_CONFLICT (HTTP 409). Retry up to 3 times with
+          exponential backoff before surfacing the conflict to the client.
+          CC-002 cannot_waive: version_column + conflict_error_code + retry_policy all required.

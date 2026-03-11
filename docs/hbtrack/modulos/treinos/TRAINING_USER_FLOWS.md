@@ -1,12 +1,17 @@
 # TRAINING_USER_FLOWS.md — Fluxos de Usuário do Módulo TRAINING
 
 Status: NORMATIVO_VIGENTE  
-Versão: v1.5.0
+Versão: v1.6.0
 Tipo de Documento: SSOT Normativo — User Flows
 Módulo: TRAINING
 Fase: FASE_2 + FASE_3 REAL — implementação concluída (2026-03-04). Itens pós-DONE: ver TRAINING_ROADMAP.md §POST-DONE.
 Autoridade: NORMATIVO_TECNICO
 Última revisão: 2026-03-05
+
+> Changelog v1.6.0 (2026-03-09):
+> - FLOW-TRAIN-002: lexical purge — rota legada publish → schedule (CONTRACT-TRAIN-006); título "publicar" → "agendar"; adicionada seção de visualização do ledger (Planned/Realized/Adjustments)
+> - FLOW-TRAIN-017: `/close` → `/finalize` (CONTRACT-TRAIN-098); semântica atualizada: "fechar sessão" → "finalizar sessão"
+> - Versão bumped: v1.5.0 → v1.6.0 (AR_275 reconciliação léxica)
 
 > Changelog v1.5.0 (2026-03-05):
 > - FLOW-TRAIN-018: GAP → EVIDENCIADO (pending-queue/page.tsx + PendingQueueTable.tsx + training-phase3.ts stubs)
@@ -170,7 +175,7 @@ Regra normativa:
 | Flow ID | Nome | Ator Primário | Prioridade | Estado AS-IS | Telas | Contratos | Invariantes | PRD |
 |---|---|---:|---:|---|---|---|---|---|
 | FLOW-TRAIN-001 | Navegar agenda semanal/mensal | Treinador | P0 | EVIDENCIADO | SCREEN-TRAIN-001 | CONTRACT-TRAIN-001 | INV-TRAIN-006 | RF-003 |
-| FLOW-TRAIN-002 | Criar sessão (draft) e publicar (scheduled) | Treinador | P0 | EVIDENCIADO | SCREEN-TRAIN-003, SCREEN-TRAIN-004 | CONTRACT-TRAIN-002, CONTRACT-TRAIN-006 | INV-TRAIN-001, INV-TRAIN-006 | US-001 |
+| FLOW-TRAIN-002 | Criar sessão (draft) e agendar (scheduled) | Treinador | P0 | EVIDENCIADO | SCREEN-TRAIN-003, SCREEN-TRAIN-004 | CONTRACT-TRAIN-002, CONTRACT-TRAIN-006 | INV-TRAIN-001, INV-TRAIN-006 | US-001 |
 | FLOW-TRAIN-003 | Editar sessão e compor treino (foco + exercícios + notas) | Treinador | P0 | EVIDENCIADO | SCREEN-TRAIN-004, SCREEN-TRAIN-005 | CONTRACT-TRAIN-004, CONTRACT-TRAIN-019..024 | INV-TRAIN-001, INV-TRAIN-004, INV-TRAIN-005 | RF-003 |
 | FLOW-TRAIN-004 | Registrar presença digital (incl. justified) | Treinador | P0 | EVIDENCIADO | SCREEN-TRAIN-020 | CONTRACT-TRAIN-025..028 | INV-TRAIN-030, INV-TRAIN-016 | US-001 |
 | FLOW-TRAIN-005 | Atleta preencher wellness pré (deadline 2h) | Atleta | P0 | EVIDENCIADO | SCREEN-TRAIN-018 | CONTRACT-TRAIN-030 | INV-TRAIN-002, INV-TRAIN-009 | US-002 |
@@ -230,7 +235,7 @@ evidencias:
 
 ---
 
-## FLOW-TRAIN-002 — Criar sessão (draft) e publicar (scheduled)
+## FLOW-TRAIN-002 — Criar sessão (draft) e agendar (scheduled)
 
 ```yaml
 id: FLOW-TRAIN-002
@@ -243,7 +248,7 @@ telas:
   - SCREEN-TRAIN-004 # SessionEditorModal
 contratos:
   - CONTRACT-TRAIN-002 # POST /training-sessions
-  - CONTRACT-TRAIN-006 # POST /training-sessions/{id}/publish
+  - CONTRACT-TRAIN-006 # POST /training-sessions/{id}/schedule
 invariantes_chave:
   - INV-TRAIN-001 # focos somam <= 120
   - INV-TRAIN-006 # status lifecycle
@@ -256,7 +261,8 @@ evidencias:
 1. Em `SCREEN-TRAIN-001`, usuário aciona “Criar sessão”.
 2. Em `SCREEN-TRAIN-003`, preenche: equipe (`team_id`), data/hora (`session_at`), tipo (`session_type`), objetivo, duração/local (quando aplicável).
 3. O sistema cria sessão via `CONTRACT-TRAIN-002` com status `draft`.
-4. Usuário abre a sessão e, ao concluir, executa “Agendar treino” → `CONTRACT-TRAIN-006` (transição para `scheduled`).
+4. Usuário abre a sessão e, ao concluir, executa “Agendar treino” → `CONTRACT-TRAIN-006` (`POST /schedule`, transição para `scheduled`).
+5. Após `scheduled`, treinador pode visualizar o ledger da sessão: seção **Planned** (plano original), **Realized** (execução real) e **Adjustments** (ajustes pós-sessão) — SCREEN-TRAIN-020.
 
 ### Exceções mínimas
 - Soma de focos > 120% → bloqueio (422/validation_error) conforme `INV-TRAIN-001`.
@@ -861,11 +867,11 @@ telas:
   - SCREEN-TRAIN-020 # /training/presencas (presença oficial pelo coach)
 contratos:
   - CONTRACT-TRAIN-097 # POST /training-sessions/{session_id}/pre-confirm
-  - CONTRACT-TRAIN-098 # POST /training-sessions/{session_id}/close (com attendance batch)
+  - CONTRACT-TRAIN-098 # POST /training-sessions/{session_id}/finalize (com attendance batch)
 invariantes_chave:
   - INV-TRAIN-063 # pre-confirm não é oficial
-  - INV-TRAIN-064 # presença oficial só no fechamento
-  - INV-TRAIN-065 # fechamento permite inconsistência como pendência
+  - INV-TRAIN-064 # presença oficial só na finalização
+  - INV-TRAIN-065 # finalização permite inconsistência como pendência
 evidencias: []
 ```
 
@@ -873,12 +879,12 @@ evidencias: []
 1. Atleta abre treino agendado e clica "Confirmar presença" (pre-confirm).
 2. FE chama `CONTRACT-TRAIN-097` → backend registra `pre_confirmed = true`, **sem marcar como presente oficialmente**.
 3. FE exibe label "Presença confirmada (não oficial)" — nunca "✓ Presente".
-4. Treinador abre SCREEN-TRAIN-020 para fechar a sessão.
+4. Treinador abre SCREEN-TRAIN-020 para finalizar a sessão.
 5. Treinador revisa lista de atletas:
    - Pré-confirmados aparecem com sugestão "presente" (mas editável).
    - Atletas sem pré-confirmação aparecem como "ausente" (editável).
-6. Treinador ajusta conforme realidade e clica "Fechar sessão".
-7. FE chama `CONTRACT-TRAIN-098` com batch de attendance + `allow_pending: true`.
+6. Treinador ajusta conforme realidade e clica "Finalizar sessão".
+7. FE chama `CONTRACT-TRAIN-098` (`POST /finalize`) com batch de attendance + `allow_pending: true`.
 8. Backend registra presenças oficiais e gera `PendingItem` para inconsistências (INV-TRAIN-065).
 
 ### Casos Negativos (anti-exemplos) `[NORMATIVO]`
@@ -886,7 +892,7 @@ evidencias: []
 | # | Cenário negativo | Resultado esperado | DEC/INV |
 |---|---|---|---|
 | NEG-017-1 | FE trata pre-confirm como presença oficial | **PROIBIDO** — pre-confirm nunca é oficial | INV-TRAIN-063 |
-| NEG-017-2 | Backend permite presença oficial sem sessão fechada | **PROIBIDO** — presença oficial só no `close` | INV-TRAIN-064 |
+| NEG-017-2 | Backend permite presença oficial sem sessão finalizada | **PROIBIDO** — presença oficial só no `finalize` | INV-TRAIN-064 |
 | NEG-017-3 | Treinador fecha sessão com atleta ausente+justificado e ambos | Backend gera PendingItem para resolver | INV-TRAIN-065 |
 
 ---

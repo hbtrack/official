@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_275-b07ecee",
+  "timestamp_utc": "2026-03-10T04:19:35.439121+00:00",
+  "git": {
+    "commit": "b07ecee1280ae1b5af3fec1acf40f7e174ebd2c5"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "275",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_275_superficie_training_reconciliada_flows,_screens,_u.md"
+}

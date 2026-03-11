@@ -1,0 +1,12 @@
+{
+  "run_id": "TESTADOR-AR_276-b07ecee",
+  "timestamp_utc": "2026-03-10T04:56:08.454068+00:00",
+  "git": {
+    "commit": "b07ecee1280ae1b5af3fec1acf40f7e174ebd2c5"
+  },
+  "environment": {
+    "python_version": "3.11.9"
+  },
+  "ar_id": "276",
+  "ar_file": "docs\\hbtrack\\ars\\features\\AR_276_sunset_final_remover_stubs__publish_+__close_do_ro.md"
+}
