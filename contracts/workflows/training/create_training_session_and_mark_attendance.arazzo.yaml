@@ -1,0 +1,24 @@
+arazzo: "1.0.0"
+
+info:
+  title: Training — Create session and mark attendance
+  version: "0.1.0"
+  summary: Orquestra criação de sessão de treino e registro de presença.
+  description: >
+    Workflow multi-step:
+    1) cria uma sessão de treino;
+    2) registra presença de um atleta na sessão criada.
+
+sourceDescriptions:
+  - name: hbtrack-http
+    type: openapi
+    url: ../../openapi/openapi.yaml
+
+workflows:
+  create_training_session_and_mark_attendance:
+    summary: Criar sessão e registrar presença.
+    steps:
+      - stepId: createTrainingSession
+        operationId: create_training_session
+      - stepId: addTrainingAttendance
+        operationId: scoped_add_training_attendance

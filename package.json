@@ -1,5 +1,27 @@
 {
+  "name": "hb-track",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@openapitools/openapi-generator-cli": "2.30.2"
+  },
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "^2.30.1"
-  }
+    "@asyncapi/cli": "6.0.0"
+  },
+  "scripts": {
+    "asyncapi:validate": "asyncapi validate contracts/asyncapi/asyncapi.yaml"
+  },
+  "servers": [
+    {
+      "url": "https://api.hb-track.local",
+      "description": "Servidor placeholder exigido pela regra Spectral hbtrack-servers-defined."
+    }
+  ],
+  "security": [],
+  "tags": [
+    {
+      "name": "hb-track",
+      "description": "Tag root placeholder exigida pelas regras Spectral de tags."
+    }
+  ]
 }

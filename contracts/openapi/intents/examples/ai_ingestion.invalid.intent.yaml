@@ -1,0 +1,12 @@
+hbtrack_api_intent:
+  module: "ai_ingestion"
+
+  # INVALID: semantic_id já existe no registry global (CANONICAL_TYPE_REGISTRY).
+  local_semantic_types:
+    - semantic_id: "identity.user.id.v1"
+      base_type: "string"
+      format: "uuid"
+      description: "Erro proposital para demonstrar o gate de contradição."
+
+  endpoints: []
+

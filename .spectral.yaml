@@ -1,0 +1,147 @@
+# HB Track — Spectral Ruleset
+# Gate: OPENAPI_POLICY_RULESET_GATE (CI_CONTRACT_GATES.md §9.6)
+#
+# Regras mínimas obrigatórias per CI_CONTRACT_GATES.md:
+#   - OpenAPI 3.1.x
+#   - proibição de versionamento por URI
+#   - operationId obrigatório
+#   - tags com descrição
+#   - paginação obrigatória para coleções quando a convenção exigir
+#   - Problem Details para respostas de erro
+#   - segurança declarada quando aplicável
+#   - naming conforme convenções canônicas
+#   - proibição de exposição silenciosa de outro módulo
+#
+# Referências normativas:
+#   .contract_driven/templates/api_rules/api_rules.yaml
+#   .contract_driven/CONTRACT_SYSTEM_LAYOUT.md §3
+#   docs/_canon/ERROR_MODEL.md
+
+extends: []
+
+rules:
+  # ── 1. Versão OpenAPI ──────────────────────────────────────────────────────
+  hbtrack-openapi-version:
+    description: >
+      O HB Track exige OpenAPI 3.1.x. Versões anteriores não são canônicas.
+    message: "openapi version must be 3.1.x — found: {{value}}"
+    severity: error
+    given: "$"
+    then:
+      field: openapi
+      function: pattern
+      functionOptions:
+        match: "^3\\.1\\."
+
+  # ── 2. operationId obrigatório ─────────────────────────────────────────────
+  hbtrack-operation-id-required:
+    description: >
+      Toda operação HTTP deve ter operationId único (CI_CONTRACT_GATES §9.6).
+      operationId é usado por Arazzo, geração de SDK e rastreabilidade.
+    message: "operationId é obrigatório em toda operação — path: {{path}}"
+    severity: error
+    given: "$.paths.*[get,post,put,patch,delete,options,head,trace]"
+    then:
+      field: operationId
+      function: defined
+
+  # ── 3. Tags com descrição ──────────────────────────────────────────────────
+  hbtrack-tag-description:
+    description: >
+      Toda tag declarada no root OpenAPI deve ter campo description.
+    message: "tag '{{value}}' sem description"
+    severity: error
+    given: "$.tags[*]"
+    then:
+      field: description
+      function: defined
+
+  # ── 4. Proibição de URI versioning ─────────────────────────────────────────
+  hbtrack-no-uri-versioning:
+    description: >
+      Versão na URI é proibida (Adidas API Guidelines).
+      Usar content negotiation ou media type para versionamento quando necessário.
+    message: "Path contém versão na URI (proibido): {{value}}"
+    severity: error
+    given: "$.paths.*~"
+    then:
+      function: pattern
+      functionOptions:
+        # Bloqueia /v1/... e /.../v1/... (versão como segmento)
+        notMatch: "(^|/)v[0-9]+(/|$)"
+
+  # ── 5. Info obrigatório ────────────────────────────────────────────────────
+  hbtrack-info-title:
+    description: "info.title é obrigatório."
+    severity: error
+    given: "$.info"
+    then:
+      field: title
+      function: defined
+
+  hbtrack-info-version:
+    description: "info.version é obrigatório."
+    severity: error
+    given: "$.info"
+    then:
+      field: version
+      function: defined
+
+  # ── 6. Servers declarados ──────────────────────────────────────────────────
+  hbtrack-servers-defined:
+    description: >
+      servers deve conter pelo menos um entry (API9:2023 Inventory Management).
+    message: "servers deve estar declarado com pelo menos 1 entry"
+    severity: error
+    given: "$"
+    then:
+      field: servers
+      function: truthy
+
+  # ── 7. Problem Details para erros ─────────────────────────────────────────
+  # Verifica que o schema problem está declarado nos components
+  hbtrack-problem-schema-declared:
+    description: >
+      O schema canônico 'problem' (RFC 7807 Problem+JSON) deve estar declarado
+      em components.schemas.problem conforme docs/_canon/ERROR_MODEL.md.
+    message: "components.schemas.problem não declarado — RFC 7807 obrigatório"
+    severity: error
+    given: "$.components.schemas"
+    then:
+      field: problem
+      function: defined
+
+  # ── 8. Segurança global explícita ─────────────────────────────────────────
+  hbtrack-security-global-explicit:
+    description: >
+      security global deve estar declarado (pode ser []) para default-deny explícito
+      (API5:2023 BFLA — nunca depender de ausência do campo como proteção).
+    message: "security global deve ser declarado explicitamente (mesmo que [])"
+    severity: warn
+    given: "$"
+    then:
+      field: security
+      function: defined
+
+  # ── 9. Naming de paths: kebab-case ────────────────────────────────────────
+  hbtrack-paths-kebab-case:
+    description: >
+      Segmentos de path devem usar kebab-case (API_RULES.yaml §canonical_conventions).
+      Parâmetros de path ({id}) são excluídos.
+    message: "Segmento de path deve ser kebab-case: {{value}}"
+    severity: warn
+    given: "$.paths.*~"
+    then:
+      function: pattern
+      functionOptions:
+        # Permite: /resource-name, /{param}, /resource/{id}/sub-resource
+        match: "^(/([a-z0-9][a-z0-9-]*|\\{[a-zA-Z][a-zA-Z0-9_]*\\}))+$"
+
+  # ── 10. Tags root devem existir quando há operações ───────────────────────
+  hbtrack-tags-array-defined:
+    description: "tags array deve estar declarado no root quando houver módulos."
+    severity: warn
+    given: "$"
+    then:
+      field: tags
+      function: defined

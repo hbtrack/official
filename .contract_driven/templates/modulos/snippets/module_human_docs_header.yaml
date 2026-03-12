@@ -1,0 +1,6 @@
+# TEMPLATE: module-header-snippet | DEST: docs/hbtrack/modulos/<module>/* (YAML frontmatter) | SOURCE: .contract_driven/templates/modulos/snippets/module_human_docs_header.yaml
+module: "{{MODULE_NAME}}"
+system_scope_ref: "../../../_canon/SYSTEM_SCOPE.md"
+handball_rules_ref: "../../../_canon/HANDBALL_RULES_DOMAIN.md"
+contract_path_ref: "../../../../contracts/openapi/paths/{{MODULE_NAME}}.yaml"
+schemas_ref: "../../../../contracts/schemas/{{MODULE_NAME}}/"

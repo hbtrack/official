@@ -1,7 +1,0 @@
-{
-  "batch_id": "batch_19",
-  "title": "Sincronização Lógica Training",
-  "ars": ["AR_TRAIN_048"],
-  "write_scope": ["Hb Track - Backend/app/models/", "Hb Track - Backend/app/services/"],
-  "validation_command": "python -m pytest tests/training/ -q --tb=no"
-}

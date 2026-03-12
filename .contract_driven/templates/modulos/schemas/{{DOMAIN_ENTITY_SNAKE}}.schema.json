@@ -1,0 +1,44 @@
+{
+  "$comment": "TEMPLATE: module-schema | DEST: contracts/schemas/<module>/<entity>.schema.json | SOURCE: .contract_driven/templates/modulos/schemas/{{DOMAIN_ENTITY_SNAKE}}.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://{{PROJECT_DOMAIN}}/schemas/{{MODULE_NAME}}/{{DOMAIN_ENTITY_SNAKE}}.schema.json",
+  "title": "{{DOMAIN_ENTITY}}",
+  "description": "Schema for {{DOMAIN_ENTITY}} in module {{MODULE_NAME}}.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable identifier."
+    },
+    "{{FIELD_NAME}}": {
+      "type": "{{FIELD_TYPE}}",
+      "description": "{{FIELD_DESCRIPTION}}"
+    }
+  },
+  "$$comment_lifecycle": "Fields below are conditional - include only when entity has lifecycle (.contract_driven/CONTRACT_SYSTEM_RULES.md section 11.1)",
+  "$$comment_status_example": {
+    "status": {
+      "type": "string",
+      "enum": ["draft", "active", "suspended", "closed"],
+      "description": "Lifecycle status - customize enum to actual entity states."
+    }
+  },
+  "$$comment_audit_example": {
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "examples": [
+    {
+      "id": "{{EXAMPLE_ID}}",
+      "{{FIELD_NAME}}": "{{FIELD_EXAMPLE_VALUE}}"
+    }
+  ]
+}

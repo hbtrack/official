@@ -1,0 +1,9 @@
+# Path items for module: matches
+# Source of truth: contracts/openapi/openapi.yaml
+# Related docs:
+# - docs/_canon/SYSTEM_SCOPE.md
+# - docs/_canon/HANDBALL_RULES_DOMAIN.md
+# - docs/hbtrack/modulos/matches/MODULE_SCOPE_MATCHES.md
+#
+# Add path items here following OpenAPI 3.1 Path Item Object spec.
+# Each path must belong exclusively to this module (LAYOUT section 6).

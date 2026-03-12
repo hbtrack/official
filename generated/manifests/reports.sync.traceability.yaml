@@ -1,0 +1,25 @@
+traceability_manifest:
+  artifact_id: reports.sync.openapi
+  compiler: hbtrack_api_policy_compiler
+  compiler_version: 0.1.0
+  generated_artifacts:
+  - path: generated/contracts/openapi/paths/reports.yaml
+    sha256: 6ab35fdd61ec9891a83f355fa632e37c7e550283ce3a9aa2e554af419b39c41e
+  generated_tree_sha256: 1d6c24c027b5b0da0740c140036d4b88e2e31117989ae141dbcd321b7a7f2fbb
+  policy_path: generated/resolved_policy/reports.sync.resolved.yaml
+  policy_sha256: 72cf09ba5f2c5a7c3b17c245ae8c36e0ece079bcb0dc3358fda7ba9dba873e2a
+  source_contracts:
+  - path: contracts/openapi/paths/reports.yaml
+    sha256: 6ab35fdd61ec9891a83f355fa632e37c7e550283ce3a9aa2e554af419b39c41e
+  source_inputs:
+  - path: .contract_driven/templates/API_RULES/ARCHITECTURE_MATRIX.yaml
+    sha256: b3a862f6cabd38f6e2b00deacad66499064897685b2c486f303365f4dc58fc8d
+  - path: .contract_driven/templates/API_RULES/MODULE_PROFILE_REGISTRY.yaml
+    sha256: af3bc0a5c458598f52fdd658b53db1b527196e06805758fb963c89423a179749
+  - path: .contract_driven/templates/API_RULES/API_RULES.yaml
+    sha256: 43b6a4899fa4043d8b26337f4b0d8bbcab191f66c42dd6d15bf51cbadaf47f1b
+  - path: .contract_driven/templates/API_RULES/CANONICAL_TYPE_REGISTRY.yaml
+    sha256: 042ec0b9db7ee7d4f9604f15d1f1bb3fb53cb2f3be18408222e7bca4afb7ef3b
+  - path: .contract_driven/DOMAIN_AXIOMS.json
+    sha256: a9ea7e57e9062b42497d6f94109fde3dd02be531668b039317f233d916cfd08e
+  source_tree_sha256: c3673070413e784ffede1495e531cc22a7c894fdc013d746150d39feeb141abd

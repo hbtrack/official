@@ -1,0 +1,105 @@
+openapi: "3.1.0"
+
+info:
+  title: HB Track API
+  version: "0.1.0"
+  description: >
+    HB Track — Plataforma sports-tech orientada a contratos para gestão e operação de handebol.
+
+    Esta especificação é a fonte primária da verdade para a interface HTTP pública do sistema.
+
+    Referências normativas — consultar antes de implementar:
+    - .contract_driven/CONTRACT_SYSTEM_LAYOUT.md   (estrutura canônica de artefatos)
+    - .contract_driven/templates/API_RULES/API_RULES.yaml    (regras, templates e validações de API)
+    - docs/_canon/SYSTEM_SCOPE.md                  (escopo e módulos canônicos)
+    - docs/_canon/ERROR_MODEL.md                   (convenção de erros RFC 7807)
+    - docs/_canon/API_CONVENTIONS.md               (convenções de API — aponta para API_RULES.yaml)
+  contact:
+    name: HB Track Team
+    email: dev@hbtrack.com
+  license:
+    name: Proprietary
+    identifier: LicenseRef-proprietary
+
+# API9:2023 — Improper Inventory Management: manter inventário de hosts/envs atualizado.
+servers:
+  - url: http://localhost:8000
+    description: Desenvolvimento local
+  - url: https://staging.hbtrack.local
+    description: Staging (placeholder — substituir por host real no deploy)
+
+# Path items são definidos por módulo em contracts/openapi/paths/<module>.yaml.
+# Adicionar referências aqui conforme cada contrato de módulo for estabelecido.
+#
+# Exemplo:
+#   /users:
+#     $ref: ./paths/users.yaml#/~1users
+#   /users/{id}:
+#     $ref: ./paths/users.yaml#/~1users~1{id}
+#
+# Módulos canônicos (16):
+#   Functional domain: users, seasons, teams, training, wellness, medical,
+#                      competitions, matches, scout, exercises, analytics,
+#                      reports, ai_ingestion
+#   Cross-cutting:     identity_access, audit, notifications
+paths: {}
+
+components:
+  parameters:
+    pageSize:
+      $ref: ./components/parameters/pageSize.yaml
+    pageToken:
+      $ref: ./components/parameters/pageToken.yaml
+
+  schemas:
+    # RFC 7807 Problem+JSON — shape canônico para todos os erros HTTP.
+    # Ver: .contract_driven/templates/API_RULES/API_RULES.yaml → design_rules.errors
+    problem:
+      $ref: ./components/schemas/shared/problem.yaml
+
+  responses: {}
+  requestBodies: {}
+  # Schemes de segurança serão definidos quando identity_access for contratado.
+  securitySchemes: {}
+  examples: {}
+
+# Segurança global vazia — placeholder explícito.
+# API5:2023 BFLA — default-deny: aplicar security requirement por operação individualmente.
+# NÃO depender deste global como proteção real.
+security: []
+
+# Tags canônicas: uma por módulo (CONTRACT_SYSTEM_LAYOUT.md §2).
+# Módulos de domínio funcional (13) + transversais (3) = 16 total.
+tags:
+  - name: users
+    description: "Pessoa, perfil e dados de identidade funcional pessoal."
+  - name: seasons
+    description: "Temporadas e ciclos competitivos."
+  - name: teams
+    description: "Equipes, comissão técnica e composição de elenco."
+  - name: training
+    description: "Sessões de treino, ciclos, cargas e presença."
+  - name: wellness
+    description: "Bem-estar, pré-treino e pós-treino conversacional."
+  - name: medical
+    description: "Saúde, lesões e histórico médico."
+  - name: competitions
+    description: "Competições, fases e classificações."
+  - name: matches
+    description: "Partidas, placar e eventos de jogo."
+  - name: scout
+    description: "Eventos de scout e análise tática."
+  - name: exercises
+    description: "Banco de exercícios e mídia associada."
+  - name: analytics
+    description: "Métricas, relatórios e dashboards analíticos."
+  - name: reports
+    description: "Exportação e relatórios operacionais."
+  - name: ai_ingestion
+    description: "Ingestão de dados para modelos de IA e coach."
+  - name: identity_access
+    description: "Autenticação, autorização, credenciais, sessões, MFA, JWT e RBAC."
+  - name: audit
+    description: "Trilha de auditoria e rastreabilidade de eventos."
+  - name: notifications
+    description: "Notificações e alertas para usuários."

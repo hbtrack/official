@@ -1,0 +1,9 @@
+# Path items for module: audit
+# Source of truth: contracts/openapi/openapi.yaml
+# Related docs:
+# - docs/_canon/SYSTEM_SCOPE.md
+# - docs/_canon/SECURITY_RULES.md
+# - docs/hbtrack/modulos/audit/MODULE_SCOPE_AUDIT.md
+#
+# Add path items here following OpenAPI 3.1 Path Item Object spec.
+# Each path must belong exclusively to this module (LAYOUT section 6).

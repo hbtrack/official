@@ -1,0 +1,57 @@
+# Path items for module: training
+# Source of truth: contracts/openapi/openapi.yaml
+# Related docs:
+# - docs/_canon/SYSTEM_SCOPE.md
+# - docs/hbtrack/modulos/training/MODULE_SCOPE_TRAINING.md
+#
+# Add path items here following OpenAPI 3.1 Path Item Object spec.
+# Each path must belong exclusively to this module (LAYOUT section 6).
+
+/api/v1/training-sessions:
+  post:
+    tags: [training]
+    summary: Criar sessão de treino
+    description: >
+      Cria uma nova sessão de treino.
+      Fonte: `Hb Track - Backend/app/api/v1/routers/training_sessions.py::create_training_session`.
+    operationId: create_training_session
+    responses:
+      "201":
+        description: Sessão criada
+      "401":
+        description: Token inválido ou ausente
+      "403":
+        description: Permissão insuficiente
+      "404":
+        description: Time não encontrado
+
+/api/v1/teams/{team_id}/trainings/{training_id}/attendance:
+  post:
+    tags: [training]
+    summary: Registrar presença no treino (escopo equipe)
+    description: >
+      Registra presença de atleta em uma sessão de treino.
+      Fonte: `Hb Track - Backend/app/api/v1/routers/attendance_scoped.py::scoped_add_training_attendance`.
+    operationId: scoped_add_training_attendance
+    parameters:
+      - name: team_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: training_id
+        in: path
+        required: true
+        schema:
+          type: string
+    responses:
+      "201":
+        description: Presença registrada
+      "401":
+        description: Token inválido ou ausente
+      "403":
+        description: Permissão insuficiente
+      "404":
+        description: Sessão não encontrada
+      "409":
+        description: Presença já registrada

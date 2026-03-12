@@ -1,0 +1,42 @@
+type: object
+additionalProperties: false
+
+required:
+  - trainingSessionId
+  - userId
+
+properties:
+  eventType:
+    type: string
+    x-domain-enum-ref: event_type
+    enum:
+      - TRAINING_ATTENDANCE_MARKED
+    description: Identificador canônico do tipo de evento.
+
+  occurredAt:
+    type: string
+    x-semantic-id: core.occurred_at.v1
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    description: Timestamp UTC (RFC-3339) de ocorrência do evento.
+
+  trainingSessionId:
+    type: string
+    x-semantic-id: training.session.id.v1
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    description: Identificador público da sessão de treino.
+
+  userId:
+    type: string
+    x-semantic-id: identity.user.id.v1
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    description: Identificador público do usuário que marcou a presença.
+
+  traceId:
+    type: string
+    pattern: "^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$"
+    description: Correlation/trace id (canônico).
+
+  requestId:
+    type: string
+    pattern: "^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$"
+    description: Correlation/request id (canônico).

@@ -1,0 +1,560 @@
+{
+  "domain_axioms":
+   {
+    "meta": {
+      "artifact_id": "DOMAIN_AXIOMS",
+      "version": "1.0.0",
+      "status": "ACTIVE",
+      "semantics_mode": "STRICT",
+      "description": "Machine-readable global invariants and domain axioms for HB Track. All technical contracts, state models, and cross-surface artifacts must conform to these axioms to be considered valid."
+    },
+    "validation_contract": {
+      "closed_world_assumption": true,
+      "unknown_enum_value_policy": "REJECT",
+      "unknown_state_transition_policy": "REJECT",
+      "unknown_format_policy": "REJECT",
+      "missing_required_error_field_policy": "REJECT",
+      "cross_surface_conflict_policy": "REJECT"
+    },
+	    "module_extension_policy": {
+	      "allow_module_extensions": true,
+	      "allowed_extension_types": [
+	        "domain_enums"
+	      ],
+	      "module_axioms_path_template": "docs/hbtrack/modulos/{module}/DOMAIN_AXIOMS_{MODULE}.json",
+	      "collision_policy": "REJECT"
+	    },
+    "global_formats": {
+      "uuid_v4": {
+        "type": "string",
+        "strict_match": true,
+        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+      },
+      "date_only": {
+        "type": "string",
+        "strict_match": true,
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+        "semantic_notes": [
+          "Represents calendar date only.",
+          "Must be used for pure date fields without time component."
+        ]
+      },
+      "timestamp_utc": {
+        "type": "string",
+        "strict_match": true,
+        "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+        "semantic_notes": [
+          "Represents UTC timestamp only.",
+          "Offset timestamps are not canonical."
+        ]
+      },
+      "email": {
+        "type": "string",
+        "strict_match": true,
+        "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
+      },
+      "slug_lower_kebab": {
+        "type": "string",
+        "strict_match": true,
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "lower_snake_case": {
+        "type": "string",
+        "strict_match": true,
+        "pattern": "^[a-z0-9]+(?:_[a-z0-9]+)*$"
+      },
+      "upper_snake_case": {
+        "type": "string",
+        "strict_match": true,
+        "pattern": "^[A-Z0-9]+(?:_[A-Z0-9]+)*$"
+      },
+      "camel_case": {
+        "type": "string",
+        "strict_match": true,
+        "pattern": "^[a-z][A-Za-z0-9]*$"
+      },
+      "trace_id": {
+        "type": "string",
+        "strict_match": true,
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$"
+      },
+      "request_id": {
+        "type": "string",
+        "strict_match": true,
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$"
+      },
+      "http_status_code": {
+        "type": "integer",
+        "strict_match": true,
+        "minimum": 100,
+        "maximum": 599
+      }
+    },
+    "global_identifier_policy": {
+      "default_entity_id": {
+        "format_ref": "uuid_v4",
+        "strict_match": true
+      },
+      "forbidden_identifier_formats": [
+        "incremental_integer_as_public_id",
+        "email_as_primary_entity_id",
+        "free_text_identifier"
+      ]
+    },
+    "global_data_invariants": {
+      "date_fields_must_use": "date_only",
+      "timestamp_fields_must_use": "timestamp_utc",
+      "public_id_fields_must_use": "uuid_v4",
+      "json_property_naming": "camel_case",
+      "document_identifier_naming": "lower_snake_case",
+      "enum_symbol_naming": "upper_snake_case"
+    },
+    "error_axioms": {
+      "public_error_shape": {
+        "schema_name": "Problem",
+        "content_type": "application/problem+json",
+        "strict_match": true
+      },
+      "required_fields": {
+        "type": {
+          "type": "string",
+          "min_length": 1
+        },
+        "title": {
+          "type": "string",
+          "min_length": 1
+        },
+        "status": {
+          "format_ref": "http_status_code"
+        },
+        "traceId": {
+          "format_ref": "trace_id"
+        }
+      },
+      "optional_fields": {
+        "detail": {
+          "type": "string"
+        },
+        "instance": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string",
+          "pattern": "^[A-Z0-9_\\-]{2,64}$"
+        },
+        "requestId": {
+          "format_ref": "request_id"
+        },
+        "errors": {
+          "type": "array"
+        }
+      },
+      "forbidden_behaviors": [
+        "missing_trace_id",
+        "error_payload_without_status",
+        "error_payload_without_title",
+        "non_problem_json_for_canonical_public_errors"
+      ]
+    },
+    "domain_enums": {
+      "match_phase": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "PRE_MATCH",
+          "FIRST_HALF",
+          "HALFTIME",
+          "SECOND_HALF",
+          "OVERTIME_FIRST_HALF",
+          "OVERTIME_HALFTIME",
+          "OVERTIME_SECOND_HALF",
+          "PENALTY_SHOOTOUT",
+          "POST_MATCH",
+          "CANCELLED"
+        ]
+      },
+      "match_state": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "DRAFT",
+          "SCHEDULED",
+          "READY",
+          "IN_PROGRESS",
+          "HALFTIME",
+          "INTERRUPTED",
+          "FINISHED",
+          "CANCELLED"
+        ]
+      },
+      "training_state": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "DRAFT",
+          "PLANNED",
+          "SCHEDULED",
+          "IN_PROGRESS",
+          "COMPLETED",
+          "CANCELLED"
+        ]
+      },
+      "competition_state": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "DRAFT",
+          "PLANNED",
+          "REGISTRATION_OPEN",
+          "REGISTRATION_CLOSED",
+          "IN_PROGRESS",
+          "FINISHED",
+          "CANCELLED"
+        ]
+      },
+      "player_role": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "GOALKEEPER",
+          "LEFT_WING",
+          "LEFT_BACK",
+          "CENTER_BACK",
+          "PIVOT",
+          "RIGHT_BACK",
+          "RIGHT_WING"
+        ]
+      },
+      "disciplinary_card": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "YELLOW_CARD",
+          "TWO_MINUTES",
+          "RED_CARD",
+          "BLUE_CARD"
+        ]
+      },
+      "timeout_type": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "TEAM_TIMEOUT",
+          "OFFICIAL_TIMEOUT"
+        ]
+      },
+      "shot_outcome": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "GOAL",
+          "SAVE",
+          "MISS",
+          "BLOCKED",
+          "POST",
+          "CROSSBAR",
+          "TURNOVER_BEFORE_SHOT"
+        ]
+      },
+	      "event_type": {
+	        "strict_match": true,
+	        "closed_set": true,
+	        "values": [
+	          "MATCH_STARTED",
+	          "MATCH_ENDED",
+	          "PHASE_CHANGED",
+	          "GOAL",
+          "SHOT_ATTEMPT",
+          "SAVE",
+          "SHOT_MISSED",
+          "BLOCK",
+          "STEAL",
+          "TURNOVER",
+          "ASSIST",
+          "FOUL_COMMITTED",
+          "FOUL_SUFFERED",
+          "SEVEN_METER_AWARDED",
+          "SEVEN_METER_CONVERTED",
+          "SEVEN_METER_MISSED",
+          "FAST_BREAK",
+          "SUSPENSION",
+          "CARD_ISSUED",
+          "TIMEOUT_CALLED",
+          "SUBSTITUTION",
+          "EXCLUSION",
+	          "INJURY",
+	          "SESSION_STARTED",
+	          "SESSION_COMPLETED"
+	        ],
+	        "module_extension_policy": {
+	          "allow_module_extensions": true,
+	          "extension_artifact_pattern": "docs/hbtrack/modulos/<module>/DOMAIN_AXIOMS_<MODULE>.json",
+	          "merge_strategy": "union_with_collision_block",
+	          "require_upper_snake_case": true
+	        }
+	      }
+	    },
+    "state_axioms": {
+      "match_state_machine": {
+        "strict_match": true,
+        "closed_set": true,
+        "initial_states": [
+          "DRAFT",
+          "SCHEDULED"
+        ],
+        "terminal_states": [
+          "FINISHED",
+          "CANCELLED"
+        ],
+	        "allowed_transitions": {
+          "DRAFT": [
+            "SCHEDULED",
+            "CANCELLED"
+          ],
+          "SCHEDULED": [
+            "READY",
+            "CANCELLED"
+          ],
+          "READY": [
+            "IN_PROGRESS",
+            "CANCELLED"
+          ],
+          "IN_PROGRESS": [
+            "HALFTIME",
+            "INTERRUPTED",
+            "FINISHED"
+          ],
+	          "HALFTIME": [
+	            "IN_PROGRESS",
+	            "INTERRUPTED",
+	            "CANCELLED"
+	          ],
+          "INTERRUPTED": [
+            "IN_PROGRESS",
+            "FINISHED",
+            "CANCELLED"
+          ],
+          "FINISHED": [],
+          "CANCELLED": []
+        },
+	        "forbidden_transitions": [
+          [
+            "SCHEDULED",
+            "FINISHED"
+          ],
+          [
+            "DRAFT",
+            "IN_PROGRESS"
+          ],
+	          [
+	            "FINISHED",
+	            "IN_PROGRESS"
+	          ],
+          [
+            "CANCELLED",
+            "IN_PROGRESS"
+          ]
+        ]
+      },
+      "training_state_machine": {
+        "strict_match": true,
+        "closed_set": true,
+        "initial_states": [
+          "DRAFT",
+          "PLANNED"
+        ],
+        "terminal_states": [
+          "COMPLETED",
+          "CANCELLED"
+        ],
+        "allowed_transitions": {
+          "DRAFT": [
+            "PLANNED",
+            "CANCELLED"
+          ],
+          "PLANNED": [
+            "SCHEDULED",
+            "CANCELLED"
+          ],
+          "SCHEDULED": [
+            "IN_PROGRESS",
+            "CANCELLED"
+          ],
+          "IN_PROGRESS": [
+            "COMPLETED",
+            "CANCELLED"
+          ],
+          "COMPLETED": [],
+          "CANCELLED": []
+        },
+        "forbidden_transitions": [
+          [
+            "DRAFT",
+            "COMPLETED"
+          ],
+          [
+            "PLANNED",
+            "COMPLETED"
+          ],
+          [
+            "SCHEDULED",
+            "COMPLETED"
+          ],
+          [
+            "COMPLETED",
+            "IN_PROGRESS"
+          ]
+        ]
+      },
+      "competition_state_machine": {
+        "strict_match": true,
+        "closed_set": true,
+        "initial_states": [
+          "DRAFT",
+          "PLANNED"
+        ],
+        "terminal_states": [
+          "FINISHED",
+          "CANCELLED"
+        ],
+        "allowed_transitions": {
+          "DRAFT": [
+            "PLANNED",
+            "CANCELLED"
+          ],
+          "PLANNED": [
+            "REGISTRATION_OPEN",
+            "CANCELLED"
+          ],
+          "REGISTRATION_OPEN": [
+            "REGISTRATION_CLOSED",
+            "CANCELLED"
+          ],
+          "REGISTRATION_CLOSED": [
+            "IN_PROGRESS",
+            "CANCELLED"
+          ],
+          "IN_PROGRESS": [
+            "FINISHED",
+            "CANCELLED"
+          ],
+          "FINISHED": [],
+          "CANCELLED": []
+        },
+        "forbidden_transitions": [
+          [
+            "DRAFT",
+            "IN_PROGRESS"
+          ],
+          [
+            "REGISTRATION_OPEN",
+            "FINISHED"
+          ],
+          [
+            "FINISHED",
+            "IN_PROGRESS"
+          ]
+        ]
+      }
+    },
+    "handball_domain_constraints": {
+      "strict_match": true,
+      "goalkeeper_rules": {
+        "player_role_value": "GOALKEEPER",
+        "forbidden_custom_role_values": true
+      },
+	      "disciplinary_progression": {
+	        "strict_match": true,
+	        "closed_set": true,
+	        "ordered_levels": [
+	          "YELLOW_CARD",
+	          "TWO_MINUTES",
+	          "RED_CARD",
+	          "BLUE_CARD"
+	        ],
+	        "allowed_transitions": {
+	          "YELLOW_CARD": [
+	            "TWO_MINUTES",
+	            "RED_CARD"
+	          ],
+	          "TWO_MINUTES": [
+	            "RED_CARD"
+	          ],
+	          "RED_CARD": [
+	            "BLUE_CARD"
+	          ],
+	          "BLUE_CARD": []
+	        },
+	        "preconditions": {
+	          "BLUE_CARD": {
+	            "requires_prior": [
+	              "RED_CARD"
+	            ]
+	          }
+	        }
+	      },
+      "match_phase_alignment": {
+        "phase_enum_ref": "match_phase",
+        "state_machine_ref": "match_state_machine",
+        "strict_match": true
+      }
+    },
+    "cross_surface_constraints": {
+      "strict_match": true,
+      "openapi": {
+        "error_schema_name": "Problem",
+        "error_content_type": "application/problem+json",
+        "date_format_ref": "date_only",
+        "timestamp_format_ref": "timestamp_utc",
+        "public_id_format_ref": "uuid_v4"
+      },
+      "asyncapi": {
+        "event_type_enum_ref": "event_type",
+        "public_id_format_ref": "uuid_v4",
+        "timestamp_format_ref": "timestamp_utc"
+      },
+      "state_models": {
+        "match_state_enum_ref": "match_state",
+        "training_state_enum_ref": "training_state",
+        "competition_state_enum_ref": "competition_state"
+      },
+      "ui_contracts": {
+        "date_format_ref": "date_only",
+        "timestamp_format_ref": "timestamp_utc",
+        "public_error_shape_ref": "Problem"
+      }
+    },
+    "normalization_policy": {
+      "derived_artifacts": {
+        "strip_volatile_lines_matching": [
+          "^\\s*//\\s*Generated at:.*$",
+          "^\\s*#\\s*Generated at:.*$",
+          "^\\s*/\\*\\s*Generated at:.*\\*/$",
+          "^\\s*//\\s*Timestamp:.*$",
+          "^\\s*#\\s*Timestamp:.*$",
+          "^\\s*//\\s*Do not edit manually\\.?$",
+          "^\\s*#\\s*Do not edit manually\\.?$"
+        ],
+        "normalize_line_endings_to": "LF",
+        "trim_trailing_whitespace": true,
+        "ensure_final_newline": true
+      }
+    },
+    "validator_contract": {
+      "required_checks": [
+        "validate_global_formats_by_regex",
+        "validate_enums_against_closed_sets",
+        "validate_state_transitions_against_axioms",
+        "validate_error_shape_required_fields",
+        "validate_cross_surface_alignment",
+        "normalize_derived_outputs_before_diff"
+      ],
+      "forbidden_validator_behaviors": [
+        "llm_interpretation_for_semantic_validity",
+        "implicit_enum_extension",
+        "silent_format_coercion",
+        "non_normalized_derived_diff_comparison"
+      ]
+    }
+  }
+}

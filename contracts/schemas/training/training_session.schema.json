@@ -1,0 +1,192 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://hbtrack.local/schemas/training/training_session.schema.json",
+  "title": "TrainingSession",
+  "description": "SSOT JSON Schema for the training_session domain entity (module: training).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "organizationId",
+    "sessionAt",
+    "sessionType",
+    "status",
+    "createdAt",
+    "updatedAt",
+    "createdByUserId"
+  ],
+  "properties": {
+    "id": { "$ref": "#/definitions/uuid_v4" },
+    "organizationId": { "$ref": "#/definitions/uuid_v4" },
+    "teamId": { "$ref": "#/definitions/uuid_v4" },
+    "seasonId": { "$ref": "#/definitions/uuid_v4" },
+    "microcycleId": { "$ref": "#/definitions/uuid_v4" },
+    "sessionAt": { "$ref": "#/definitions/timestamp_utc" },
+    "durationPlannedMinutes": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1440,
+      "description": "Planned duration in minutes."
+    },
+    "location": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "sessionType": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 32,
+      "description": "Type/category of training session (module-defined)."
+    },
+    "mainObjective": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "secondaryObjective": {
+      "type": "string"
+    },
+    "plannedLoad": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 32767,
+      "description": "Planned load indicator (module-defined scale)."
+    },
+    "groupClimate": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Group climate (1-5)."
+    },
+    "notes": {
+      "type": "string"
+    },
+    "phaseFocusDefense": { "type": "boolean" },
+    "phaseFocusAttack": { "type": "boolean" },
+    "phaseFocusTransitionOffense": { "type": "boolean" },
+    "phaseFocusTransitionDefense": { "type": "boolean" },
+    "intensityTarget": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "sessionBlock": {
+      "type": "string",
+      "maxLength": 32
+    },
+    "createdAt": { "$ref": "#/definitions/timestamp_utc" },
+    "createdByUserId": { "$ref": "#/definitions/uuid_v4" },
+    "updatedAt": { "$ref": "#/definitions/timestamp_utc" },
+    "deletedAt": {
+      "anyOf": [{ "$ref": "#/definitions/timestamp_utc" }, { "type": "null" }]
+    },
+    "deletedReason": {
+      "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }]
+    },
+    "focusAttackPositionalPct": { "$ref": "#/definitions/percent_0_100" },
+    "focusDefensePositionalPct": { "$ref": "#/definitions/percent_0_100" },
+    "focusTransitionOffensePct": { "$ref": "#/definitions/percent_0_100" },
+    "focusTransitionDefensePct": { "$ref": "#/definitions/percent_0_100" },
+    "focusAttackTechnicalPct": { "$ref": "#/definitions/percent_0_100" },
+    "focusDefenseTechnicalPct": { "$ref": "#/definitions/percent_0_100" },
+    "focusPhysicalPct": { "$ref": "#/definitions/percent_0_100" },
+    "status": {
+      "type": "string",
+      "pattern": "^[A-Z0-9]+(?:_[A-Z0-9]+)*$",
+      "description": "Lifecycle status (UPPER_SNAKE_CASE). Extensible by contract versioning."
+    },
+    "closedAt": { "$ref": "#/definitions/timestamp_utc" },
+    "closedByUserId": { "$ref": "#/definitions/uuid_v4" },
+    "deviationJustification": { "type": "string" },
+    "planningDeviationFlag": { "type": "boolean" },
+    "standalone": { "type": "boolean" },
+    "startedAt": { "$ref": "#/definitions/timestamp_utc" },
+    "endedAt": { "$ref": "#/definitions/timestamp_utc" },
+    "durationActualMinutes": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1440
+    },
+    "executionOutcome": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 32,
+      "description": "Execution outcome (module-defined)."
+    },
+    "delayMinutes": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1440
+    },
+    "cancellationReason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "postReviewCompletedAt": { "$ref": "#/definitions/timestamp_utc" },
+    "postReviewCompletedByUserId": { "$ref": "#/definitions/uuid_v4" },
+    "postReviewDeadlineAt": { "$ref": "#/definitions/timestamp_utc" }
+  },
+  "dependencies": {
+    "deletedAt": ["deletedReason"],
+    "deletedReason": ["deletedAt"]
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "deletedAt": { "type": "null" } },
+        "required": ["deletedAt"]
+      },
+      "then": {
+        "properties": { "deletedReason": { "type": "null" } }
+      }
+    },
+    {
+      "if": {
+        "properties": { "deletedAt": { "$ref": "#/definitions/timestamp_utc" } },
+        "required": ["deletedAt"]
+      },
+      "then": {
+        "properties": { "deletedReason": { "type": "string", "minLength": 1 } }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "organizationId": "550e8400-e29b-41d4-a716-446655440010",
+      "teamId": "550e8400-e29b-41d4-a716-446655440020",
+      "seasonId": "550e8400-e29b-41d4-a716-446655440030",
+      "sessionAt": "2026-03-11T19:30:00Z",
+      "durationPlannedMinutes": 90,
+      "sessionType": "quadra",
+      "mainObjective": "Transição ofensiva",
+      "status": "SCHEDULED",
+      "createdAt": "2026-03-01T12:00:00Z",
+      "updatedAt": "2026-03-10T09:15:00Z",
+      "createdByUserId": "550e8400-e29b-41d4-a716-446655440040",
+      "planningDeviationFlag": false,
+      "standalone": true,
+      "executionOutcome": "on_time",
+      "phaseFocusAttack": true,
+      "phaseFocusDefense": true,
+      "phaseFocusTransitionOffense": true,
+      "phaseFocusTransitionDefense": false
+    }
+  ],
+  "definitions": {
+    "uuid_v4": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "description": "UUID v4 (lowercase)."
+    },
+    "timestamp_utc": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+      "description": "RFC-3339 UTC timestamp (Z)."
+    },
+    "percent_0_100": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    }
+  }
+}

@@ -1,0 +1,350 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hbtrack://schemas/shared/domain_axioms.schema.json",
+  "title": "HB Track Domain Axioms Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["domain_axioms"],
+  "properties": {
+    "domain_axioms": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "meta",
+        "validation_contract",
+        "module_extension_policy",
+        "global_formats",
+        "global_identifier_policy",
+        "global_data_invariants",
+        "error_axioms",
+        "domain_enums",
+        "state_axioms",
+        "handball_domain_constraints",
+        "cross_surface_constraints",
+        "normalization_policy",
+        "validator_contract"
+      ],
+      "properties": {
+        "meta": { "$ref": "#/$defs/meta" },
+        "validation_contract": { "$ref": "#/$defs/validationContract" },
+        "module_extension_policy": { "$ref": "#/$defs/globalModuleExtensionPolicy" },
+        "global_formats": { "$ref": "#/$defs/globalFormats" },
+        "global_identifier_policy": { "$ref": "#/$defs/globalIdentifierPolicy" },
+        "global_data_invariants": { "$ref": "#/$defs/globalDataInvariants" },
+        "error_axioms": { "$ref": "#/$defs/errorAxioms" },
+        "domain_enums": { "$ref": "#/$defs/domainEnums" },
+        "state_axioms": { "$ref": "#/$defs/stateAxioms" },
+        "handball_domain_constraints": { "$ref": "#/$defs/handballDomainConstraints" },
+        "cross_surface_constraints": { "$ref": "#/$defs/crossSurfaceConstraints" },
+        "normalization_policy": { "$ref": "#/$defs/normalizationPolicy" },
+        "validator_contract": { "$ref": "#/$defs/validatorContract" }
+      }
+    }
+  },
+  "$defs": {
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "version", "status", "semantics_mode", "description"],
+      "properties": {
+        "artifact_id": { "const": "DOMAIN_AXIOMS" },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "status": { "type": "string", "enum": ["ACTIVE", "DRAFT", "DEPRECATED"] },
+        "semantics_mode": { "type": "string", "enum": ["STRICT"] },
+        "description": { "type": "string", "minLength": 1 }
+      }
+    },
+    "validationContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "closed_world_assumption",
+        "unknown_enum_value_policy",
+        "unknown_state_transition_policy",
+        "unknown_format_policy",
+        "missing_required_error_field_policy",
+        "cross_surface_conflict_policy"
+      ],
+      "properties": {
+        "closed_world_assumption": { "type": "boolean" },
+        "unknown_enum_value_policy": { "type": "string" },
+        "unknown_state_transition_policy": { "type": "string" },
+        "unknown_format_policy": { "type": "string" },
+        "missing_required_error_field_policy": { "type": "string" },
+        "cross_surface_conflict_policy": { "type": "string" }
+      }
+    },
+    "globalModuleExtensionPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allow_module_extensions", "allowed_extension_types", "module_axioms_path_template", "collision_policy"],
+      "properties": {
+        "allow_module_extensions": { "type": "boolean" },
+        "allowed_extension_types": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "module_axioms_path_template": { "type": "string", "minLength": 1 },
+        "collision_policy": { "type": "string", "minLength": 1 }
+      }
+    },
+    "formatDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "strict_match"],
+      "properties": {
+        "type": { "type": "string", "enum": ["string", "integer", "number", "boolean"] },
+        "strict_match": { "type": "boolean" },
+        "pattern": { "type": "string", "minLength": 1 },
+        "minimum": { "type": "number" },
+        "maximum": { "type": "number" },
+        "semantic_notes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      }
+    },
+    "globalFormats": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/$defs/formatDefinition" }
+    },
+    "globalIdentifierPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["default_entity_id", "forbidden_identifier_formats"],
+      "properties": {
+        "default_entity_id": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["format_ref", "strict_match"],
+          "properties": {
+            "format_ref": { "type": "string", "minLength": 1 },
+            "strict_match": { "type": "boolean" }
+          }
+        },
+        "forbidden_identifier_formats": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      }
+    },
+    "globalDataInvariants": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "date_fields_must_use",
+        "timestamp_fields_must_use",
+        "public_id_fields_must_use",
+        "json_property_naming",
+        "document_identifier_naming",
+        "enum_symbol_naming"
+      ],
+      "properties": {
+        "date_fields_must_use": { "type": "string", "minLength": 1 },
+        "timestamp_fields_must_use": { "type": "string", "minLength": 1 },
+        "public_id_fields_must_use": { "type": "string", "minLength": 1 },
+        "json_property_naming": { "type": "string", "minLength": 1 },
+        "document_identifier_naming": { "type": "string", "minLength": 1 },
+        "enum_symbol_naming": { "type": "string", "minLength": 1 }
+      }
+    },
+    "errorFieldConstraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": { "type": "string", "minLength": 1 },
+        "min_length": { "type": "integer", "minimum": 0 },
+        "pattern": { "type": "string", "minLength": 1 },
+        "format_ref": { "type": "string", "minLength": 1 }
+      }
+    },
+    "errorAxioms": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["public_error_shape", "required_fields", "optional_fields", "forbidden_behaviors"],
+      "properties": {
+        "public_error_shape": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["schema_name", "content_type", "strict_match"],
+          "properties": {
+            "schema_name": { "type": "string", "minLength": 1 },
+            "content_type": { "type": "string", "minLength": 1 },
+            "strict_match": { "type": "boolean" }
+          }
+        },
+        "required_fields": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/errorFieldConstraint" }
+        },
+        "optional_fields": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/errorFieldConstraint" }
+        },
+        "forbidden_behaviors": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true,
+          "minItems": 1
+        }
+      }
+    },
+    "moduleExtensionPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allow_module_extensions", "extension_artifact_pattern", "merge_strategy", "require_upper_snake_case"],
+      "properties": {
+        "allow_module_extensions": { "type": "boolean" },
+        "extension_artifact_pattern": { "type": "string", "minLength": 1 },
+        "merge_strategy": { "type": "string", "minLength": 1 },
+        "require_upper_snake_case": { "type": "boolean" }
+      }
+    },
+    "domainEnumDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strict_match", "closed_set", "values"],
+      "properties": {
+        "strict_match": { "type": "boolean" },
+        "closed_set": { "type": "boolean" },
+        "values": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true,
+          "minItems": 1
+        },
+        "module_extension_policy": { "$ref": "#/$defs/moduleExtensionPolicy" }
+      }
+    },
+    "domainEnums": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/$defs/domainEnumDefinition" }
+    },
+    "transitionPair": {
+      "type": "array",
+      "prefixItems": [{ "type": "string" }, { "type": "string" }],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "stateMachineDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strict_match", "closed_set", "initial_states", "terminal_states", "allowed_transitions", "forbidden_transitions"],
+      "properties": {
+        "strict_match": { "type": "boolean" },
+        "closed_set": { "type": "boolean" },
+        "initial_states": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "terminal_states": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "allowed_transitions": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "uniqueItems": true
+          }
+        },
+        "forbidden_transitions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/transitionPair" },
+          "uniqueItems": true
+        }
+      }
+    },
+    "stateAxioms": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/$defs/stateMachineDefinition" }
+    },
+    "disciplinaryProgression": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strict_match", "closed_set", "ordered_levels", "allowed_transitions", "preconditions"],
+      "properties": {
+        "strict_match": { "type": "boolean" },
+        "closed_set": { "type": "boolean" },
+        "ordered_levels": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "allowed_transitions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "uniqueItems": true
+          }
+        },
+        "preconditions": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "handballDomainConstraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strict_match", "goalkeeper_rules", "disciplinary_progression", "match_phase_alignment"],
+      "properties": {
+        "strict_match": { "type": "boolean" },
+        "goalkeeper_rules": { "type": "object", "additionalProperties": true },
+        "disciplinary_progression": { "$ref": "#/$defs/disciplinaryProgression" },
+        "match_phase_alignment": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "crossSurfaceConstraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strict_match", "openapi", "asyncapi", "state_models", "ui_contracts"],
+      "properties": {
+        "strict_match": { "type": "boolean" },
+        "openapi": { "type": "object", "additionalProperties": true },
+        "asyncapi": { "type": "object", "additionalProperties": true },
+        "state_models": { "type": "object", "additionalProperties": true },
+        "ui_contracts": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "normalizationPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["derived_artifacts"],
+      "properties": {
+        "derived_artifacts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["strip_volatile_lines_matching", "normalize_line_endings_to", "trim_trailing_whitespace", "ensure_final_newline"],
+          "properties": {
+            "strip_volatile_lines_matching": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 },
+              "uniqueItems": true
+            },
+            "normalize_line_endings_to": { "type": "string", "minLength": 1 },
+            "trim_trailing_whitespace": { "type": "boolean" },
+            "ensure_final_newline": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "validatorContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required_checks", "forbidden_validator_behaviors"],
+      "properties": {
+        "required_checks": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true,
+          "minItems": 1
+        },
+        "forbidden_validator_behaviors": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true,
+          "minItems": 1
+        }
+      }
+    }
+  }
+}
+

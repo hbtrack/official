@@ -1,0 +1,12 @@
+# Path items for module: identity_access
+# Source of truth: contracts/openapi/openapi.yaml
+# Related docs:
+# - docs/_canon/SYSTEM_SCOPE.md
+# - docs/_canon/SECURITY_RULES.md
+# - docs/hbtrack/modulos/identity_access/MODULE_SCOPE_IDENTITY_ACCESS.md
+#
+# Boundary: authentication, authorization, credentials, sessions, MFA, JWT, RBAC.
+# Boundary rule: this module must NOT redefine profile, biography or personal identity data (users module).
+#
+# Add path items here following OpenAPI 3.1 Path Item Object spec.
+# Each path must belong exclusively to this module (LAYOUT section 6).

@@ -1,0 +1,52 @@
+# Problem Details for HTTP APIs (RFC 7807)
+# SSOT (convenções/validação): `.contract_driven/DOMAIN_AXIOMS.json#error_axioms` e `.contract_driven/templates/API_RULES/API_RULES.yaml`
+type: object
+required:
+  - type
+  - title
+  - status
+  - traceId
+properties:
+  type:
+    type: string
+    format: uri
+    description: A URI reference that identifies the problem type
+    example: "https://hbtrack.com/problems/validation-error"
+  title:
+    type: string
+    description: A short, human-readable summary of the problem type
+    example: "Validation Error"
+  status:
+    type: integer
+    description: HTTP status code
+    example: 400
+  detail:
+    type: string
+    description: A human-readable explanation specific to this occurrence
+    example: "One or more fields are invalid."
+  instance:
+    type: string
+    format: uri
+    description: A URI reference that identifies the specific occurrence
+    example: "https://hbtrack.com/api/users/550e8400-e29b-41d4-a716-446655440000"
+  code:
+    type: string
+    description: Application-specific error code
+    example: "VALIDATION_ERROR"
+  traceId:
+    type: string
+    pattern: "^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$"
+    description: Distributed trace identifier
+    example: "abc-123-def"
+  errors:
+    type: array
+    description: Detailed field-level errors (when applicable)
+    items:
+      type: object
+      properties:
+        field:
+          type: string
+          example: "name"
+        message:
+          type: string
+          example: "Field is required."

@@ -1,0 +1,56 @@
+# HB Track — Redocly CLI Configuration
+# Gate: OPENAPI_ROOT_STRUCTURE_GATE (CI_CONTRACT_GATES.md §9.6)
+#
+# Instalar: npm install -g @redocly/cli
+# Executar: redocly lint contracts/openapi/openapi.yaml
+#
+# Referências normativas:
+#   .contract_driven/CONTRACT_SYSTEM_LAYOUT.md §4 (contracts/openapi/)
+#   docs/_canon/CI_CONTRACT_GATES.md §9.5
+
+apis:
+  main@v0.1.0:
+    root: contracts/openapi/openapi.yaml
+
+rules:
+  # Estrutura obrigatória
+  info-license: warn
+  info-license-url: off
+  no-invalid-media-type-examples: warn
+  no-undefined-refs: error
+  no-unresolved-refs: error
+
+  # operationId
+  operation-operationId: error
+  operation-operationId-unique: error
+  operation-operationId-url-safe: error
+
+  # Descrições
+  operation-description: warn
+  operation-summary: warn
+  tag-description: warn
+  no-empty-servers: warn
+
+  # Segurança
+  security-defined: warn
+
+  # Schema
+  no-invalid-schema-examples: warn
+  scalar-property-missing-example: off
+
+  # Path
+  path-not-include-query: error
+  path-parameters-defined: error
+  no-path-trailing-slash: error
+
+  # Compatibilidade OpenAPI 3.1
+  spec: error
+  spec-components-invalid-map-name: error
+
+extends:
+  - recommended
+
+theme:
+  openapi:
+    disableSearch: false
+    expandDefaultServerVariables: true

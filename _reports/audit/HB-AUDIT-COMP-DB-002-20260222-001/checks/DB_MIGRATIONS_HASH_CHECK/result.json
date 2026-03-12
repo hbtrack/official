@@ -1,8 +1,0 @@
-{
-  "id": "DB_MIGRATIONS_HASH_CHECK",
-  "command": "alembic heads",
-  "exit_code": 0,
-  "status": "PASS",
-  "duration_ms": 0,
-  "artifacts": ["stdout.log", "stderr.log"]
-}

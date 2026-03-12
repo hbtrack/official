@@ -1,0 +1,33 @@
+{
+  "domain_axioms_module": {
+    "meta": {
+      "artifact_id": "DOMAIN_AXIOMS_MODULE",
+      "version": "1.0.0",
+      "status": "ACTIVE",
+      "description": "DELTA_ONLY — extensões modulares do módulo training."
+    },
+    "module": "training",
+    "delta_only": true,
+    "local_invariants_may_only_restrict": true,
+    "local_invariants": {},
+    "domain_enums": {
+      "event_type": {
+        "values": [
+          {
+            "name": "TRAINING_ATTENDANCE_MARKED",
+            "semantic_id": "training.attendance.marked.v1",
+            "description": "Presença marcada em uma sessão de treino.",
+            "payload_constraints": {
+              "required_fields": ["trainingSessionId", "userId"],
+              "field_formats": {
+                "trainingSessionId": "uuid_v4",
+                "userId": "uuid_v4"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+

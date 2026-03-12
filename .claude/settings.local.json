@@ -53,7 +53,12 @@
       "Bash(for f in \"c:/HB TRACK/.contract_driven/\"*.md)",
       "Bash(do echo \"=== $f ===\")",
       "Read(//c/HB TRACK/**)",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(where ajv:*)",
+      "Bash(npm list:*)",
+      "Bash(python scripts/validate_contracts.py)",
+      "Bash(redocly --version)",
+      "Bash(spectral --version)"
     ]
   }
 }

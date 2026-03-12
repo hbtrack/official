@@ -1,0 +1,80 @@
+{
+  "pipeline_id": "HB_TRACK_CONTRACT_GATES",
+  "timestamp_utc": "2026-03-12T10:39:06Z",
+  "target": {
+    "scope": "system",
+    "module": null,
+    "openapi_root": "/mnt/c/HB TRACK/scripts/contracts/contracts/openapi/openapi.yaml",
+    "asyncapi_root": null,
+    "workflow_scope": "/mnt/c/HB TRACK/scripts/contracts/contracts/workflows"
+  },
+  "environment": {
+    "git_commit": "0645102",
+    "python_version": "3.12.3",
+    "tool_versions": {
+      "redocly": "/mnt/c/Users/davis/AppData/Roaming/npm/redocly: 15: exec: node: not found",
+      "spectral": "/mnt/c/Users/davis/AppData/Roaming/npm/spectral: 15: exec: node: not found",
+      "oasdiff": null,
+      "schemathesis": null,
+      "json_schema_validator": null,
+      "asyncapi_validator": null,
+      "arazzo_validator": null,
+      "storybook": null
+    }
+  },
+  "overall_status": "FAIL",
+  "exit_code": 4,
+  "gates": [
+    {
+      "gate_id": "AXIOM_INTEGRITY_GATE",
+      "status": "FAIL",
+      "blocking": true,
+      "exit_code": 4,
+      "blocking_code": "BLOCKED_AXIOM_INTEGRITY",
+      "summary": "Axiomas globais inválidos.",
+      "inputs": [
+        "/mnt/c/HB TRACK/scripts/contracts/.contract_driven/DOMAIN_AXIOMS.json",
+        "/mnt/c/HB TRACK/scripts/contracts/contracts/schemas/shared/domain_axioms.schema.json"
+      ],
+      "artifacts_checked": [
+        "/mnt/c/HB TRACK/scripts/contracts/.contract_driven/DOMAIN_AXIOMS.json"
+      ],
+      "evidence_files": [],
+      "violations": [
+        {
+          "code": "BLOCKED_AXIOM_FILE_NOT_FOUND",
+          "path": "$",
+          "message": "Arquivo de axiomas não encontrado.",
+          "severity": "error",
+          "details": {
+            "path": "/mnt/c/HB TRACK/scripts/contracts/.contract_driven/DOMAIN_AXIOMS.json"
+          }
+        }
+      ],
+      "metrics": {
+        "errors": 1,
+        "warnings": 0,
+        "violations": 1,
+        "duration_ms": 1
+      }
+    },
+    {
+      "gate_id": "READINESS_SUMMARY_GATE",
+      "status": "FAIL",
+      "blocking": false,
+      "exit_code": 2,
+      "blocking_code": null,
+      "summary": "Pipeline FAIL: 1 gate(s) bloqueante(s) falharam.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      }
+    }
+  ]
+}

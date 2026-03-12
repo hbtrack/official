@@ -1,0 +1,34 @@
+asyncapi: "2.6.0"
+
+info:
+  title: HB Track Async Events
+  version: "0.1.0"
+  description: >
+    Fonte primária da verdade (SSOT) para contratos de eventos assíncronos do HB Track.
+
+    Este documento existe porque há pelo menos 1 evento real documentado e
+    estendido via DOMAIN_AXIOMS modular (módulo training).
+
+defaultContentType: application/json
+
+servers:
+  localBroker:
+    url: amqp://localhost:5672
+    protocol: amqp
+    description: Desenvolvimento local (placeholder).
+  stagingBroker:
+    url: amqp://broker.staging.hbtrack.local:5672
+    protocol: amqp
+    description: Staging (placeholder — substituir por host real no deploy).
+
+channels:
+  training.attendance.marked:
+    $ref: ./channels/training_attendance_marked.yaml
+
+components:
+  schemas:
+    TrainingAttendanceMarkedPayload:
+      $ref: ./components/schemas/training_attendance_marked_payload.yaml
+  messages:
+    TrainingAttendanceMarked:
+      $ref: ./messages/training_attendance_marked.yaml

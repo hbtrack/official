@@ -1,0 +1,49 @@
+version: "1.0.0"
+
+base_types:
+  Identifier:
+    primitive_type: "string"
+    format: "uuid"
+    nullable: false
+
+  Timestamp:
+    primitive_type: "string"
+    format: "date-time"
+    nullable: false
+
+  Date:
+    primitive_type: "string"
+    format: "date"
+    nullable: false
+
+  Count:
+    primitive_type: "integer"
+    minimum: 0
+    nullable: false
+
+derived_types:
+  TrainingSessionId:
+    inherits: "Identifier"
+    semantic_id: "training.session.id.v1"
+
+  AthleteId:
+    inherits: "Identifier"
+    semantic_id: "users.athlete.id.v1"
+
+  UserId:
+    inherits: "Identifier"
+    semantic_id: "identity.user.id.v1"
+
+  OccurredAt:
+    inherits: "Timestamp"
+    semantic_id: "core.occurred_at.v1"
+
+field_bindings:
+  - field_name: "trainingSessionId"
+    canonical_type_ref: "training.session.id.v1"
+  - field_name: "athleteId"
+    canonical_type_ref: "users.athlete.id.v1"
+  - field_name: "userId"
+    canonical_type_ref: "identity.user.id.v1"
+  - field_name: "occurredAt"
+    canonical_type_ref: "core.occurred_at.v1"

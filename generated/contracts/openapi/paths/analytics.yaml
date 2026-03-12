@@ -1,0 +1,8 @@
+# Path items for module: analytics
+# Source of truth: contracts/openapi/openapi.yaml
+# Related docs:
+# - docs/_canon/SYSTEM_SCOPE.md
+# - docs/hbtrack/modulos/analytics/MODULE_SCOPE_ANALYTICS.md
+#
+# Add path items here following OpenAPI 3.1 Path Item Object spec.
+# Each path must belong exclusively to this module (LAYOUT section 6).

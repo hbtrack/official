@@ -1,0 +1,87 @@
+canonical_types:
+  base_types:
+    Count:
+      minimum: 0
+      nullable: false
+      primitive_type: integer
+    Date:
+      format: date
+      nullable: false
+      primitive_type: string
+    Identifier:
+      format: uuid
+      nullable: false
+      primitive_type: string
+    Timestamp:
+      format: date-time
+      nullable: false
+      primitive_type: string
+  derived_types:
+    AthleteId:
+      inherits: Identifier
+      semantic_id: users.athlete.id.v1
+    OccurredAt:
+      inherits: Timestamp
+      semantic_id: core.occurred_at.v1
+    TrainingSessionId:
+      inherits: Identifier
+      semantic_id: training.session.id.v1
+    UserId:
+      inherits: Identifier
+      semantic_id: identity.user.id.v1
+  field_bindings:
+  - canonical_type_ref: training.session.id.v1
+    field_name: trainingSessionId
+  - canonical_type_ref: users.athlete.id.v1
+    field_name: athleteId
+  - canonical_type_ref: identity.user.id.v1
+    field_name: userId
+  - canonical_type_ref: core.occurred_at.v1
+    field_name: occurredAt
+contract_sources:
+- contracts/openapi/paths/seasons.yaml
+inputs:
+  api_rules: .contract_driven/templates/API_RULES/API_RULES.yaml
+  architecture_matrix: .contract_driven/templates/API_RULES/ARCHITECTURE_MATRIX.yaml
+  canonical_type_registry: .contract_driven/templates/API_RULES/CANONICAL_TYPE_REGISTRY.yaml
+  domain_axioms: .contract_driven/DOMAIN_AXIOMS.json
+  module_profile_registry: .contract_driven/templates/API_RULES/MODULE_PROFILE_REGISTRY.yaml
+meta:
+  artifact_id: HBTRACK_RESOLVED_API_POLICY
+  compiler: hbtrack_api_policy_compiler
+  compiler_version: 0.1.0
+  module: seasons
+  surface: sync
+  target: openapi
+module_profile:
+  enabled_surfaces:
+  - sync
+  module_class: CRUD
+  overlays: []
+style_veto:
+  identifiers:
+    resource_ids:
+      guessability: SHOULD use unpredictable identifiers (e.g., UUID) to reduce enumeration
+      note: Não substitui autorização (BOLA).
+  naming:
+    headers:
+      casing_note: HTTP header names são case-insensitive; use Title-Case por legibilidade.
+      custom_header_policy:
+        must_not_prefix:
+        - X-
+    json_fields:
+      note: Inclui request/response bodies e erros (Problem+JSON extensions).
+      style: camelCase
+    path_template_variables:
+      must_not_include:
+      - '-'
+      style: camelCase
+    query_parameters:
+      reserved_names_policy: MUST_NOT collide with reserved identifiers (Adidas)
+      style: camelCase
+    uri_paths:
+      base_path:
+        must_not_use:
+        - /api
+      path_segments: kebab-case
+      trailing_slash: MUST_NOT

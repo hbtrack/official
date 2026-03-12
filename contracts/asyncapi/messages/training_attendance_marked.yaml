@@ -1,0 +1,7 @@
+name: training_attendance_marked
+title: Training Attendance Marked
+summary: Presença marcada em uma sessão de treino.
+contentType: application/json
+
+payload:
+  $ref: ../components/schemas/training_attendance_marked_payload.yaml

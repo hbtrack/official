@@ -1,0 +1,7 @@
+description: >
+  Evento emitido quando a presença é marcada em uma sessão de treino.
+
+publish:
+  operationId: training_attendance_marked_publish
+  message:
+    $ref: ../messages/training_attendance_marked.yaml
