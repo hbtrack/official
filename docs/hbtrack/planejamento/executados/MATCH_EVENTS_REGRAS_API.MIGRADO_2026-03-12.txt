@@ -1,0 +1,615 @@
+## MATCH EVENTS REGRAS API
+
+1. **O cliente não é dono do `matchEventId` canônico.**
+   Na superfície sync, o cliente envia `requestId` e, opcionalmente, `clientCorrelationId`.
+   O backend deduplica por `requestId`, oficializa o fato e então emite o evento com:
+
+   * `eventId` no envelope assíncrono
+   * `matchEventId` no payload canônico, se esse campo fizer parte do domínio publicado
+
+2. **`occurredAt` pertence ao payload canônico.**
+   Esse é o tempo de domínio.
+   O envelope async carrega `recordedAt` como tempo de persistência/publicação do servidor.
+   Isso evita confundir “quando aconteceu no jogo” com “quando o sistema registrou”.
+
+3. **Paridade cross-surface não significa igualdade byte a byte.**
+   Significa:
+
+   * mesmos campos semânticos do núcleo
+   * mesmos tipos canônicos
+   * mesmos nomes canônicos
+   * envelopes diferentes e obrigatórios por superfície
+
+4. **Visibilidade de campos deve ser filtrada por superfície.**
+   O schema canônico pode ter campos com política de exposição.
+   O compilador gera projeções seguras por superfície, em vez de despejar o mesmo payload integral em todo consumidor. Isso é coerente com OWASP API3:2023 sobre exposição indevida em nível de propriedade. ([OWASP][2])
+
+Eu endureceria a regra assim:
+
+```yaml
+rules:
+  - id: "HB-CROSS-SURFACE-001"
+    severity: "MUST"
+    when:
+      all:
+        - x-hb-module == "matches"
+        - x-hb-canonical-schema == "match_event_v1"
+    then:
+      enforce:
+        canonical_payload_parity_across_surfaces: true
+        identical_semantic_types: true
+        identical_field_names: true
+        surface_specific_envelope_required: true
+        sync_request_id_required: true
+        async_event_envelope_required: true
+        canonical_occurred_at_owned_by_payload: true
+        async_recorded_at_owned_by_envelope: true
+        field_visibility_filtering_by_surface: true
+    strict: true
+    override_allowed: false
+```
+
+E quebraria em sub-regras para não deixar nada implícito:
+
+```yaml
+rules:
+  - id: "HB-MATCHES-IDEMPOTENCY-001"
+    severity: "MUST"
+    when:
+      all:
+        - x-hb-module == "matches"
+        - x-hb-surface == "sync"
+        - x-hb-operation-kind == "action"
+    then:
+      require:
+        - requestId
+      enforce:
+        request_id_format: "uuid"
+        request_id_idempotency: true
+    strict: true
+    override_allowed: false
+
+  - id: "HB-MATCHES-TEMPORAL-001"
+    severity: "MUST"
+    when:
+      all:
+        - x-hb-canonical-schema == "match_event_v1"
+    then:
+      enforce:
+        payload_time_field: "occurredAt"
+        envelope_server_time_field: "recordedAt"
+        forbid_payload_transport_time_aliases: true
+    strict: true
+    override_allowed: false
+
+  - id: "HB-MATCHES-VISIBILITY-001"
+    severity: "MUST"
+    when:
+      all:
+        - x-hb-canonical-schema == "match_event_v1"
+    then:
+      enforce:
+        surface_visibility_filter: true
+    strict: true
+    override_allowed: false
+```
+
+Abaixo estão os 3 JSON Schemas materializados, já endurecidos para:
+
+* idempotência por `requestId`
+* separação entre `occurredAt` e `recordedAt`
+* paridade de payload canônico
+* visibilidade por propriedade via `x-hb-visibility`
+* sufixos canônicos (`Id`, `At`, `Count`)
+
+Observação crítica: para fechar a linhagem de ponta a ponta, o módulo sync também deve ter um **schema de resposta de comando** retornando `requestId -> matchEventId`. Como você pediu 3 schemas, entrego os 3 centrais primeiro e deixo essa resposta como próximo artefato obrigatório.
+
+### 1) `sync_command_v1.schema.json`
+
+```json
+{
+  "$id": "https://api.hbtrack.com/schemas/sync_command_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HB Track Sync Command Envelope v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "requestId",
+    "submittedAt",
+    "payload"
+  ],
+  "properties": {
+    "requestId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Client-generated idempotency key. Required for deduplication."
+    },
+    "clientCorrelationId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Optional client-side correlation identifier for tracing across retries and projections."
+    },
+    "submittedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Client submission timestamp. Transport metadata only."
+    },
+    "payload": {
+      "$ref": "https://api.hbtrack.com/schemas/match_event_v1.schema.json"
+    }
+  }
+}
+```
+
+### 2) `event_envelope_v1.schema.json`
+
+```json
+{
+  "$id": "https://api.hbtrack.com/schemas/event_envelope_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HB Track Event Envelope v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "eventId",
+    "eventType",
+    "eventVersion",
+    "producer",
+    "recordedAt",
+    "correlationId",
+    "payload"
+  ],
+  "properties": {
+    "eventId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Server-generated immutable event envelope identifier."
+    },
+    "eventType": {
+      "type": "string",
+      "const": "matches.matchEventRecorded",
+      "description": "Canonical event type for match event publication."
+    },
+    "eventVersion": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*$",
+      "description": "Envelope schema version."
+    },
+    "producer": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Canonical producer service name."
+    },
+    "recordedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Server-side persistence/publication timestamp."
+    },
+    "correlationId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Correlation identifier linking the published event to the originating sync command requestId or canonical correlation chain."
+    },
+    "payload": {
+      "$ref": "https://api.hbtrack.com/schemas/match_event_v1.schema.json"
+    }
+  }
+}
+```
+
+### 3) `match_event_v1.schema.json`
+
+```json
+{
+  "$id": "https://api.hbtrack.com/schemas/match_event_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HB Track Match Event v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "matchEventId",
+    "matchId",
+    "eventType",
+    "occurredAt",
+    "periodNumber",
+    "sequenceNumber",
+    "provenance"
+  ],
+  "properties": {
+    "matchEventId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Canonical immutable match event identifier generated by HB Track.",
+      "x-hb-visibility": ["sync", "event"]
+    },
+    "matchId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Canonical match identifier.",
+      "x-hb-visibility": ["sync", "event"]
+    },
+    "eventType": {
+      "type": "string",
+      "enum": [
+        "GOAL",
+        "YELLOW_CARD",
+        "RED_CARD",
+        "TWO_MINUTES",
+        "PENALTY_AWARDED",
+        "PENALTY_SCORED",
+        "PENALTY_MISSED",
+        "TURNOVER",
+        "STEAL",
+        "BLOCK",
+        "SAVE",
+        "TIMEOUT",
+        "SUBSTITUTION",
+        "PERIOD_STARTED",
+        "PERIOD_ENDED",
+        "MATCH_STARTED",
+        "MATCH_ENDED",
+        "EVENT_CORRECTED",
+        "EVENT_CANCELLED"
+      ],
+      "description": "Canonical domain event type.",
+      "x-hb-visibility": ["sync", "event"]
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Domain time: when the match event actually occurred. Never a transport timestamp.",
+      "x-hb-visibility": ["sync", "event"]
+    },
+    "athleteId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Canonical athlete identifier when the event is attributable to one athlete.",
+      "x-hb-visibility": ["sync", "event"]
+    },
+    "teamId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Canonical team identifier when the event is attributable to one team.",
+      "x-hb-visibility": ["sync", "event"]
+    },
+    "periodNumber": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Match period number in which the event occurred.",
+      "x-hb-visibility": ["sync", "event"]
+    },
+    "sequenceNumber": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Canonical ordering number within the match event stream.",
+      "x-hb-visibility": ["sync", "event"]
+    },
+    "clockSeconds": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Elapsed clock time in seconds within the relevant match scope.",
+      "x-hb-visibility": ["sync", "event"]
+    },
+    "videoTimestampSeconds": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Video-aligned timestamp in seconds when available.",
+      "x-hb-visibility": ["sync", "event"]
+    },
+    "correctionOfMatchEventId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "References the original event when this event is a correction or cancellation.",
+      "x-hb-visibility": ["sync", "event"]
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceType",
+        "sourceSystem",
+        "normalizationVersion"
+      ],
+      "properties": {
+        "sourceType": {
+          "type": "string",
+          "enum": [
+            "MANUAL",
+            "VIDEO_AI",
+            "EXTERNAL_PROVIDER",
+            "CSV_IMPORT",
+            "FEDERATION_FEED"
+          ],
+          "x-hb-visibility": ["sync", "event"]
+        },
+        "sourceSystem": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]*$",
+          "x-hb-visibility": ["sync", "event"]
+        },
+        "sourceRecordId": {
+          "type": "string",
+          "x-hb-visibility": ["sync"]
+        },
+        "observedAt": {
+          "type": "string",
+          "format": "date-time",
+          "x-hb-visibility": ["sync", "event"]
+        },
+        "confidenceLevel": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "x-hb-visibility": ["sync", "event"]
+        },
+        "normalizationVersion": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*$",
+          "x-hb-visibility": ["sync", "event"]
+        },
+        "provenanceMetadata": {
+          "type": "object",
+          "additionalProperties": true,
+          "x-hb-visibility": ["sync"]
+        }
+      },
+      "x-hb-visibility": ["sync", "event"]
+    }
+  }
+}
+```
+
+A decisão correta é: **não tornar `matchEventId` autoridade do cliente** e **não exigir `matchEventId` nem `sequenceNumber` no input de submissão**.
+
+Ou seja, não adotar UUID temporário do cliente como identidade canônica do fato. Isso reabre conflito de autoridade. O cliente já tem `requestId` para idempotência e rastreabilidade. O servidor é quem oficializa o fato e emite:
+
+* `matchEventId` canônico
+* `sequenceNumber` canônico
+* `processingAt`/`recordedAt`
+
+Correção estrutural:
+1. `match_event_v1` **MUST** ser o núcleo canônico **persistido/publicado**
+2. a submissão sync **MUST NOT** referenciar diretamente** `match_event_v1`
+3. a submissão usa um schema derivado de input, por exemplo `match_event_submission_v1`
+4. o resultado sync devolve o mapeamento `requestId -> matchEventId`
+
+Em termos de governança, isso significa:
+* paridade cross-surface continua existindo no **núcleo semântico**
+* mas a superfície de entrada usa uma **projeção de escrita**
+* essa projeção remove campos de autoridade do servidor
+
+Essa é a solução determinística. Não precisa de bypass, não reintroduz alucinação e mantém a autoridade onde ela deve estar.
+
+A regra normativa que falta é esta:
+
+```yaml
+rules:
+  - id: "HB-MATCHES-AUTHORITY-001"
+    severity: "MUST"
+    when:
+      all:
+        - x-hb-module == "matches"
+        - x-hb-surface == "sync"
+        - x-hb-operation-kind == "action"
+        - x-hb-canonical-schema == "match_event_v1"
+    then:
+      enforce:
+        input_schema_projection: "match_event_submission_v1"
+        forbid_client_authority_fields:
+          - matchEventId
+          - sequenceNumber
+        require_server_authority_fields_in_result:
+          - matchEventId
+          - sequenceNumber
+    strict: true
+    override_allowed: false
+```
+
+Abaixo está o artefato que você exigiu e, em seguida, a projeção de input que tecnicamente passa a ser obrigatória.
+
+## `sync_command_result_v1.schema.json`
+
+```json
+{
+  "$id": "https://api.hbtrack.com/schemas/sync_command_result_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HB Track Sync Command Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "requestId",
+    "matchEventId",
+    "sequenceNumber",
+    "deduplicated",
+    "processingAt"
+  ],
+  "properties": {
+    "requestId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "The original idempotency key submitted by the client."
+    },
+    "matchEventId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Canonical server-generated match event identifier."
+    },
+    "sequenceNumber": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Canonical server-assigned event ordering number within the match event stream."
+    },
+    "deduplicated": {
+      "type": "boolean",
+      "description": "True when this requestId had already been processed and the existing canonical result is being returned."
+    },
+    "processingAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC timestamp when the server processed or replayed the canonical command result."
+    }
+  }
+}
+```
+
+Projeção correta de input, que resolve o bloqueio técnico:
+
+## `match_event_submission_v1.schema.json`
+
+```json
+{
+  "$id": "https://api.hbtrack.com/schemas/match_event_submission_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HB Track Match Event Submission v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "matchId",
+    "eventType",
+    "occurredAt",
+    "periodNumber",
+    "provenance"
+  ],
+  "properties": {
+    "matchId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Canonical match identifier.",
+      "x-hb-visibility": ["sync"]
+    },
+    "eventType": {
+      "type": "string",
+      "enum": [
+        "GOAL",
+        "YELLOW_CARD",
+        "RED_CARD",
+        "TWO_MINUTES",
+        "PENALTY_AWARDED",
+        "PENALTY_SCORED",
+        "PENALTY_MISSED",
+        "TURNOVER",
+        "STEAL",
+        "BLOCK",
+        "SAVE",
+        "TIMEOUT",
+        "SUBSTITUTION",
+        "PERIOD_STARTED",
+        "PERIOD_ENDED",
+        "MATCH_STARTED",
+        "MATCH_ENDED",
+        "EVENT_CORRECTED",
+        "EVENT_CANCELLED"
+      ],
+      "x-hb-visibility": ["sync"]
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Domain time when the event occurred.",
+      "x-hb-visibility": ["sync"]
+    },
+    "athleteId": {
+      "type": "string",
+      "format": "uuid",
+      "x-hb-visibility": ["sync"]
+    },
+    "teamId": {
+      "type": "string",
+      "format": "uuid",
+      "x-hb-visibility": ["sync"]
+    },
+    "periodNumber": {
+      "type": "integer",
+      "minimum": 1,
+      "x-hb-visibility": ["sync"]
+    },
+    "clockSeconds": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Elapsed clock time in seconds with optional fractional precision.",
+      "x-hb-visibility": ["sync"]
+    },
+    "videoTimestampSeconds": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Video-aligned timestamp in seconds with optional fractional precision.",
+      "x-hb-visibility": ["sync"]
+    },
+    "correctionOfMatchEventId": {
+      "type": "string",
+      "format": "uuid",
+      "x-hb-visibility": ["sync"]
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceType",
+        "sourceSystem",
+        "normalizationVersion"
+      ],
+      "properties": {
+        "sourceType": {
+          "type": "string",
+          "enum": [
+            "MANUAL",
+            "VIDEO_AI",
+            "EXTERNAL_PROVIDER",
+            "CSV_IMPORT",
+            "FEDERATION_FEED"
+          ],
+          "x-hb-visibility": ["sync"]
+        },
+        "sourceSystem": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]*$",
+          "x-hb-visibility": ["sync"]
+        },
+        "sourceRecordId": {
+          "type": "string",
+          "x-hb-visibility": ["sync"]
+        },
+        "observedAt": {
+          "type": "string",
+          "format": "date-time",
+          "x-hb-visibility": ["sync"]
+        },
+        "confidenceLevel": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "x-hb-visibility": ["sync"]
+        },
+        "normalizationVersion": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]*$",
+          "x-hb-visibility": ["sync"]
+        },
+        "provenanceMetadata": {
+          "type": "object",
+          "additionalProperties": true,
+          "x-hb-visibility": ["sync"]
+        }
+      },
+      "x-hb-visibility": ["sync"]
+    }
+  }
+}
+```
+
+
+A decisão sobre autoridade de ID fica, portanto, fechada assim:
+* `requestId`: autoridade do cliente para idempotência
+* `clientCorrelationId`: autoridade opcional do cliente para rastreio
+* `matchEventId`: autoridade exclusiva do servidor
+* `sequenceNumber`: autoridade exclusiva do servidor
+
+* OBS:`clockSeconds` e `videoTimestampSeconds` para `number`, não `integer`.
+
+O compilador agora precisa reconhecer dois níveis de schema:
+* `canonical_schema` para verdade persistida/publicada
+* `input_projection_schema` para submissão sync
+
+Sem essa distinção, qualquer módulo event-first com superfície sync voltará a colapsar no mesmo paradoxo.
+
+

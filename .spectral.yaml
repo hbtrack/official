@@ -13,7 +13,7 @@
 #   - proibição de exposição silenciosa de outro módulo
 #
 # Referências normativas:
-#   .contract_driven/templates/api_rules/api_rules.yaml
+#   .contract_driven/templates/api/api_rules.yaml
 #   .contract_driven/CONTRACT_SYSTEM_LAYOUT.md §3
 #   docs/_canon/ERROR_MODEL.md
 
@@ -126,7 +126,7 @@ rules:
   # ── 9. Naming de paths: kebab-case ────────────────────────────────────────
   hbtrack-paths-kebab-case:
     description: >
-      Segmentos de path devem usar kebab-case (API_RULES.yaml §canonical_conventions).
+      Segmentos de path devem usar kebab-case (api_rules.yaml §canonical_conventions).
       Parâmetros de path ({id}) são excluídos.
     message: "Segmento de path deve ser kebab-case: {{value}}"
     severity: warn

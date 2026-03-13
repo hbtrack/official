@@ -8,14 +8,14 @@ Padronizar o design e a evolução das APIs de `{{PROJECT_NAME}}`.
 ## Fonte canônica (SSOT)
 As convenções, validações e templates canônicos de APIs vivem em:
 
-- `.contract_driven/templates/API_RULES/API_RULES.yaml`
+- `.contract_driven/templates/api/api_rules.yaml`
 
 Regras:
-- este documento **NÃO** deve duplicar regras; ele deve apenas **apontar** para `API_RULES.yaml`.
-- em caso de conflito com qualquer outra convenção, prevalece `API_RULES.yaml` (salvo exceção HB Track explícita e normativa).
-- se uma convenção necessária não estiver explícita em `API_RULES.yaml`, ela não pode ser inferida (bloquear com `BLOCKED_MISSING_API_CONVENTION`).
+- este documento **NÃO** deve duplicar regras; ele deve apenas **apontar** para `api_rules.yaml`.
+- em caso de conflito com qualquer outra convenção, prevalece `api_rules.yaml` (salvo exceção HB Track explícita e normativa).
+- se uma convenção necessária não estiver explícita em `api_rules.yaml`, ela não pode ser inferida (bloquear com `BLOCKED_MISSING_API_CONVENTION`).
 
 ## Referência
-- Regras e desempate: `API_RULES.yaml` (conflict_resolution)
-- Templates de OpenAPI: `API_RULES.yaml` (contract_templates)
-- Segurança: `API_RULES.yaml` (security_rules)
+- Regras e desempate: `api_rules.yaml` (conflict_resolution)
+- Templates de OpenAPI: `api_rules.yaml` (contract_templates)
+- Segurança: `api_rules.yaml` (security_rules)

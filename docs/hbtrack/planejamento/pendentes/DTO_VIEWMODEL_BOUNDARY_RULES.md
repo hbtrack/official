@@ -23,11 +23,6 @@ related_modules:
   - matches
   - reports
   - dashboard
-related_artifacts:
-  - docs/_ssot/openapi.json
-  - docs/_ssot/schema.sql
-  - docs/_canon/MANUAL_BACKEND_CANONICO.md
-  - docs/_canon/REGRAS_SISTEMAS.md
 
 ---
 

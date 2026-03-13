@@ -2,7 +2,7 @@
 
 Hb Track é um sistema contract-driven onde o agente cria o agente cria o contrato. O sistema deixa de depender de “guidelines interpretados” e passa a depender de uma cadeia fechada de decisão:
 
-`ARCHITECTURE_MATRIX` → `MODULE_PROFILE_REGISTRY` → `API_RULES` com gramática formal → compilador determinístico → política resolvida por superfície → contrato gerado → manifesto com hash → gates de conformidade.
+`ARCHITECTURE_MATRIX` → `MODULE_PROFILE_REGISTRY` → `api_rules` com gramática formal → compilador determinístico → política resolvida por superfície → contrato gerado → manifesto com hash → gates de conformidade.
 
 Isso incorpora os quatro endurecimentos que você exigiu:
 matriz de compatibilidade entre conjuntos de regras, tabela de sufixos canônicos, herança semântica no registro de tipos e assinatura/hash do artefato gerado.
@@ -25,16 +25,16 @@ A stack mínima canônica do HB Track fica assim:
 docs/_canon/decisions/
   HB_TRACK_ARCHITECTURE_DECISION.md
 
-.contract_driven/templates/API_RULES/
+.contract_driven/templates/api/
   ARCHITECTURE_MATRIX.yaml
   MODULE_PROFILE_REGISTRY.yaml
-  API_RULES.yaml
+  api_rules.yaml
   CANONICAL_TYPE_REGISTRY.yaml
 
-.contract_driven/templates/API_RULES/schemas/
+.contract_driven/templates/api/schemas/
   ARCHITECTURE_MATRIX.schema.json
   MODULE_PROFILE_REGISTRY.schema.json
-  API_RULES.schema.json
+  api_rules.schema.json
   CANONICAL_TYPE_REGISTRY.schema.json
   TRACEABILITY_MANIFEST.schema.json
 
@@ -81,7 +81,7 @@ O pipeline deve operar nesta ordem rígida:
 1. Validar ARCHITECTURE_MATRIX
 2. Validar MODULE_PROFILE_REGISTRY
 3. Verificar consistência MATRIX ↔ PROFILE
-4. Validar API_RULES contra schema
+4. Validar api_rules contra schema
 5. Validar CANONICAL_TYPE_REGISTRY
 6. Compilar Intent (DSL) -> contrato fonte (paths/<module>.yaml)
 7. Resolver política efetiva por módulo + superfície
@@ -174,7 +174,7 @@ modules:
 Regra determinística:
 `HYBRID` não ativa ruleset híbrido. Apenas autoriza coexistência de superfícies distintas.
 
-## 5. API_RULES.yaml — gramática formal
+## 5. api_rules.yaml — gramática formal
 
 A regra canônica não pode ser prosa. A unidade mínima precisa ser computável.
 
@@ -603,7 +603,7 @@ traceability_manifest:
   source_inputs:
     - "ARCHITECTURE_MATRIX.yaml"
     - "MODULE_PROFILE_REGISTRY.yaml"
-    - "API_RULES.yaml"
+    - "api_rules.yaml"
     - "CANONICAL_TYPE_REGISTRY.yaml"
   generated_contract_path: "generated/contracts/training.openapi.yaml"
   generated_contract_sha256: "..."
@@ -728,7 +728,7 @@ Ordem segura, sem salto de complexidade:
 Fase 1: `ARCHITECTURE_MATRIX.yaml`
 Fase 2: `MODULE_PROFILE_REGISTRY.yaml`
 Fase 3: `CANONICAL_TYPE_REGISTRY.yaml` com herança
-Fase 4: `API_RULES.yaml` com gramática formal
+Fase 4: `api_rules.yaml` com gramática formal
 Fase 5: `compile_api_policy.py`
 Fase 6: `verify_rule_compatibility.py`
 Fase 7: `verify_cross_surface_parity.py`
@@ -767,8 +767,8 @@ O comando `python3 scripts/contracts/validate/api/compile_api_policy.py --format
       "message": "Sufixo proibido `Uuid` para UUID v4 (use `...Id`).",
       "hint": "Renomeie para `...Id` (ex.: userId, athleteId).",
       "ssot_refs": [
-        { "path": ".contract_driven/templates/API_RULES/API_RULES.yaml", "pointer": "$.hbtrack_api_rules.…" },
-        { "path": ".contract_driven/templates/API_RULES/CANONICAL_TYPE_REGISTRY.yaml", "pointer": "$.field_bindings" }
+        { "path": ".contract_driven/templates/api/api_rules.yaml", "pointer": "$.hbtrack_api_rules.…" },
+        { "path": ".contract_driven/templates/api/CANONICAL_TYPE_REGISTRY.yaml", "pointer": "$.field_bindings" }
       ]
     }
   ],

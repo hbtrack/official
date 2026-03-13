@@ -1,0 +1,180 @@
+{
+    "$id": "https://api.hbtrack.com/schemas/match_event_submission_v1.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "HB Track Match Event Submission v1",
+    "description": "Input projection schema for match event submission. Excludes server-authority fields (matchEventId, sequenceNumber).",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "matchId",
+        "eventType",
+        "occurredAt",
+        "periodNumber",
+        "provenance"
+    ],
+    "properties": {
+        "matchId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Canonical match identifier.",
+            "x-hb-visibility": [
+                "sync"
+            ]
+        },
+        "eventType": {
+            "type": "string",
+            "enum": [
+                "GOAL",
+                "YELLOW_CARD",
+                "RED_CARD",
+                "TWO_MINUTES",
+                "PENALTY_AWARDED",
+                "PENALTY_SCORED",
+                "PENALTY_MISSED",
+                "TURNOVER",
+                "STEAL",
+                "BLOCK",
+                "SAVE",
+                "TIMEOUT",
+                "SUBSTITUTION",
+                "PERIOD_STARTED",
+                "PERIOD_ENDED",
+                "MATCH_STARTED",
+                "MATCH_ENDED",
+                "EVENT_CORRECTED",
+                "EVENT_CANCELLED"
+            ],
+            "description": "Domain event type.",
+            "x-hb-visibility": [
+                "sync"
+            ]
+        },
+        "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Domain time: when the match event actually occurred.",
+            "x-hb-visibility": [
+                "sync"
+            ],
+            "x-hb-temporal-role": "domain_time"
+        },
+        "athleteId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Athlete identifier when event is attributable to one athlete.",
+            "x-hb-visibility": [
+                "sync"
+            ]
+        },
+        "teamId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Team identifier when event is attributable to one team.",
+            "x-hb-visibility": [
+                "sync"
+            ]
+        },
+        "periodNumber": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Match period number in which the event occurred.",
+            "x-hb-visibility": [
+                "sync"
+            ]
+        },
+        "clockSeconds": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Elapsed clock time in seconds (decimal) within the relevant match scope.",
+            "x-hb-visibility": [
+                "sync"
+            ]
+        },
+        "videoTimestampSeconds": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Video-aligned timestamp in seconds (decimal) when available.",
+            "x-hb-visibility": [
+                "sync"
+            ]
+        },
+        "correctionOfMatchEventId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "References the original event when this event is a correction or cancellation.",
+            "x-hb-visibility": [
+                "sync"
+            ]
+        },
+        "provenance": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "sourceType",
+                "sourceSystem",
+                "normalizationVersion"
+            ],
+            "properties": {
+                "sourceType": {
+                    "type": "string",
+                    "enum": [
+                        "MANUAL",
+                        "VIDEO_AI",
+                        "EXTERNAL_PROVIDER",
+                        "CSV_IMPORT",
+                        "FEDERATION_FEED"
+                    ],
+                    "x-hb-visibility": [
+                        "sync"
+                    ]
+                },
+                "sourceSystem": {
+                    "type": "string",
+                    "pattern": "^[A-Z][A-Z0-9_]*$",
+                    "x-hb-visibility": [
+                        "sync"
+                    ]
+                },
+                "sourceRecordId": {
+                    "type": "string",
+                    "x-hb-visibility": [
+                        "sync"
+                    ]
+                },
+                "observedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "x-hb-visibility": [
+                        "sync"
+                    ]
+                },
+                "confidenceRatio": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "Confidence ratio (0-1 scale) for AI-generated or uncertain data.",
+                    "x-hb-visibility": [
+                        "sync"
+                    ]
+                },
+                "normalizationVersion": {
+                    "type": "string",
+                    "pattern": "^[1-9][0-9]*$",
+                    "x-hb-visibility": [
+                        "sync"
+                    ]
+                },
+                "provenanceMetadata": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "x-hb-visibility": [
+                        "sync"
+                    ]
+                }
+            },
+            "x-hb-visibility": [
+                "sync"
+            ]
+        }
+    }
+}

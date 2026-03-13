@@ -16,7 +16,7 @@ Este documento faz parte da trilogia **HB Track — Manual Contract-Driven**:
    - **Responsabilidade**: Scaffolds e exemplos oficiais para documentação normativa e artefatos de contrato
    - **Use quando**: Criar novos docs de módulo, contratos, ou artefatos de governança
 
-4. **.contract_driven/templates/API_RULES/API_RULES.yaml**
+4. **.contract_driven/templates/api/api_rules.yaml**
    - **Responsabilidade**: Regras, validações e templates canônicos para contratos de APIs (OpenAPI/HTTP)
    - **Use quando**: Criar/validar contratos de APIs com determinismo máximo
 
@@ -29,7 +29,7 @@ Este documento faz parte da trilogia **HB Track — Manual Contract-Driven**:
 >
 > **Não** contém nem deve conter templates de artefatos técnicos de API (root OpenAPI,
 > path modules, schemas de request/response, parâmetros de paginação, shapes de erro).
-> Esses templates vivem exclusivamente em `.contract_driven/templates/API_RULES/API_RULES.yaml`
+> Esses templates vivem exclusivamente em `.contract_driven/templates/api/api_rules.yaml`
 > (seção `contract_templates`). Este arquivo deve apenas **referenciar** — nunca duplicar.
 
 ---
@@ -552,7 +552,7 @@ Template movido para: `.contract_driven/templates/modulos/TEST_MATRIX_{{MODULE_N
 
 ## 34. Module Template — contracts/openapi/paths/{{MODULE_NAME}}.yaml
 
-Templates canônicos de OpenAPI (paths e components) vivem em `.contract_driven/templates/API_RULES/API_RULES.yaml` em `hbtrack_api_rules.contract_templates`.
+Templates canônicos de OpenAPI (paths e components) vivem em `.contract_driven/templates/api/api_rules.yaml` em `hbtrack_api_rules.contract_templates`.
 
 Regra: este arquivo não deve duplicar templates de API. Use apenas a referência acima.
 
@@ -561,7 +561,7 @@ Regra: este arquivo não deve duplicar templates de API. Use apenas a referênci
 
 ## 34A. Templates de OpenAPI Components
 
-Templates canônicos de OpenAPI Components (parameters/schemas/responses/requestBodies) vivem em `.contract_driven/templates/API_RULES/API_RULES.yaml` em `hbtrack_api_rules.contract_templates`.
+Templates canônicos de OpenAPI Components (parameters/schemas/responses/requestBodies) vivem em `.contract_driven/templates/api/api_rules.yaml` em `hbtrack_api_rules.contract_templates`.
 
 Regra: este arquivo não deve duplicar templates de API. Use apenas a referência acima.
 

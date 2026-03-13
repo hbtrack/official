@@ -1,6 +1,6 @@
 ## Prompt Operacional — Criar docs mínimas de módulo
 
-**Objetivo**: garantir o pacote mínimo de documentação normativa do módulo em `docs/hbtrack/modulos/<module>/`.
+**Objetivo**: garantir o pacote mínimo de documentação normativa do módulo em `docs/hbtrack/modulos/training/`.
 
 ### Leitura mínima obrigatória (ordem)
 1. `.contract_driven/CONTRACT_SYSTEM_RULES.md`
@@ -17,11 +17,11 @@
 
 ### Artefatos mínimos (sempre)
 Criar (ou atualizar) exatamente estes arquivos:
-- `docs/hbtrack/modulos/<module>/README.md`
-- `docs/hbtrack/modulos/<module>/MODULE_SCOPE_<MODULE>.md`
-- `docs/hbtrack/modulos/<module>/DOMAIN_RULES_<MODULE>.md`
-- `docs/hbtrack/modulos/<module>/INVARIANTS_<MODULE>.md`
-- `docs/hbtrack/modulos/<module>/TEST_MATRIX_<MODULE>.md`
+- `docs/hbtrack/modulos/training/README.md`
+- `docs/hbtrack/modulos/training//MODULE_SCOPE_TRAINING.md`
+- `docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md`
+- `docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md`
+- `docs/hbtrack/modulos/training/TEST_MATRIX_TRAINING.md`
 
 ### Regras obrigatórias
 - Todos os arquivos acima **devem** incluir o header YAML canônico (ver `.contract_driven/templates/modulos/snippets/module_human_docs_header.yaml`, referenciado por `.contract_driven/GLOBAL_TEMPLATES.md` seção 3).
@@ -29,8 +29,8 @@ Criar (ou atualizar) exatamente estes arquivos:
 - Cross-references devem apontar para:
   - `docs/_canon/SYSTEM_SCOPE.md`
   - `docs/_canon/HANDBALL_RULES_DOMAIN.md` (quando aplicável por semântica)
-  - `contracts/openapi/paths/<module>.yaml`
-  - `contracts/schemas/<module>/`
+  - `contracts/openapi/paths/TRAINING.yaml`
+  - `contracts/schemas/TRAINING/`
 
 ### Procedimento recomendado
 1. Criar primeiro o pacote mínimo acima usando as templates SSOT em `.contract_driven/templates/modulos/*` (sem placeholders não-resolvidos).

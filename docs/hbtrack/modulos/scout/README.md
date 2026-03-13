@@ -21,4 +21,4 @@ Documentar o escopo normativo do módulo `scout` e suas superfícies soberanas.
 ## Fontes globais vinculantes
 - `docs/_canon/SYSTEM_SCOPE.md`
 - `docs/_canon/HANDBALL_RULES_DOMAIN.md` (quando o gatilho de handebol aplicar)
-- SSOT de convenções/templates de API HTTP: `.contract_driven/templates/API_RULES/API_RULES.yaml`
+- SSOT de convenções/templates de API HTTP: `.contract_driven/templates/api/api_rules.yaml`

@@ -140,26 +140,26 @@ def _rel(root: pathlib.Path, path: pathlib.Path) -> str:
 
 
 def _ssot_api_rules_path(root: pathlib.Path) -> pathlib.Path:
-    p = root / ".contract_driven" / "templates" / "API_RULES" / "API_RULES.yaml"
+    p = root / ".contract_driven" / "templates" / "api_rules" / "api_rules.yaml"
     if p.exists():
         return p
     # fallback legada (antes da normalização)
     p2 = root / ".contract_driven" / "templates" / "api_rules" / "api_rules.yaml"
     if p2.exists():
         return p2
-    raise PolicyCompilerError("SSOT de API_RULES.yaml não encontrada em .contract_driven/templates/.")
+    raise PolicyCompilerError("SSOT de api_rules.yaml não encontrada em .contract_driven/templates/.")
 
 
 def _architecture_matrix_path(root: pathlib.Path) -> pathlib.Path:
-    return root / ".contract_driven" / "templates" / "API_RULES" / "ARCHITECTURE_MATRIX.yaml"
+    return root / ".contract_driven" / "templates" / "api_rules" / "ARCHITECTURE_MATRIX.yaml"
 
 
 def _module_profile_registry_path(root: pathlib.Path) -> pathlib.Path:
-    return root / ".contract_driven" / "templates" / "API_RULES" / "MODULE_PROFILE_REGISTRY.yaml"
+    return root / ".contract_driven" / "templates" / "api_rules" / "MODULE_PROFILE_REGISTRY.yaml"
 
 
 def _canonical_type_registry_path(root: pathlib.Path) -> pathlib.Path:
-    return root / ".contract_driven" / "templates" / "API_RULES" / "CANONICAL_TYPE_REGISTRY.yaml"
+    return root / ".contract_driven" / "templates" / "api_rules" / "CANONICAL_TYPE_REGISTRY.yaml"
 
 
 def _load_architecture_matrix(root: pathlib.Path) -> dict:
@@ -182,7 +182,7 @@ def _load_api_rules(root: pathlib.Path) -> dict:
     path = _ssot_api_rules_path(root)
     data = _load_yaml(path)
     if not isinstance(data, dict) or "hbtrack_api_rules" not in data:
-        raise PolicyCompilerError(f"API_RULES inválido: esperado raiz 'hbtrack_api_rules': {path}")
+        raise PolicyCompilerError(f"api_rules inválido: esperado raiz 'hbtrack_api_rules': {path}")
     return data["hbtrack_api_rules"]
 
 
@@ -278,7 +278,7 @@ def _validate_style_veto_and_semantics(
                     json_path=prop_path,
                     message=f"Field não é camelCase: {prop_name!r}.",
                     ssot_refs=[
-                        {"path": ".contract_driven/templates/API_RULES/API_RULES.yaml", "pointer": "$.hbtrack_api_rules.canonical_conventions.naming.json_fields.style"},
+                        {"path": ".contract_driven/templates/api/api_rules.yaml", "pointer": "$.hbtrack_api_rules.canonical_conventions.naming.json_fields.style"},
                         {"path": ".contract_driven/DOMAIN_AXIOMS.json", "pointer": "$.domain_axioms.normalization_policy"},
                     ],
                     hint="Renomeie o campo para camelCase (ex.: trainingSessionId).",
@@ -300,7 +300,7 @@ def _validate_style_veto_and_semantics(
                         json_path=prop_path,
                         message=f"x-semantic-id obrigatório: esperado {expected!r}, encontrado {got!r}.",
                         ssot_refs=[
-                            {"path": ".contract_driven/templates/API_RULES/CANONICAL_TYPE_REGISTRY.yaml", "pointer": "$.field_bindings"},
+                            {"path": ".contract_driven/templates/api/CANONICAL_TYPE_REGISTRY.yaml", "pointer": "$.field_bindings"},
                         ],
                         hint=f"Adicione `x-semantic-id: {expected}` no schema do campo.",
                     )
@@ -316,7 +316,7 @@ def _validate_style_veto_and_semantics(
                         json_path=prop_path,
                         message=f"semantic_id {expected!r} não existe no CANONICAL_TYPE_REGISTRY.",
                         ssot_refs=[
-                            {"path": ".contract_driven/templates/API_RULES/CANONICAL_TYPE_REGISTRY.yaml", "pointer": "$.derived_types"},
+                            {"path": ".contract_driven/templates/api/CANONICAL_TYPE_REGISTRY.yaml", "pointer": "$.derived_types"},
                         ],
                         hint="Promova este semantic_id para o registry (global) ou declare como tipo local no manifesto de intenção (quando aplicável).",
                     )
@@ -334,7 +334,7 @@ def _validate_style_veto_and_semantics(
                         json_path=prop_path,
                         message=f"x-semantic-id {got!r} não existe no CANONICAL_TYPE_REGISTRY.",
                         ssot_refs=[
-                            {"path": ".contract_driven/templates/API_RULES/CANONICAL_TYPE_REGISTRY.yaml", "pointer": "$.derived_types"},
+                            {"path": ".contract_driven/templates/api/CANONICAL_TYPE_REGISTRY.yaml", "pointer": "$.derived_types"},
                         ],
                         hint="Use um semantic_id existente ou registre um novo tipo semântico.",
                     )
@@ -367,7 +367,7 @@ def _validate_style_veto_and_semantics(
                         json_path=prop_path,
                         message="Sufixo proibido `Uuid` para UUID v4 (use `...Id`).",
                         ssot_refs=[
-                            {"path": ".contract_driven/templates/API_RULES/API_RULES.yaml", "pointer": "$.hbtrack_api_rules.canonical_conventions.identifiers"},
+                            {"path": ".contract_driven/templates/api/api_rules.yaml", "pointer": "$.hbtrack_api_rules.canonical_conventions.identifiers"},
                             {"path": ".contract_driven/DOMAIN_AXIOMS.json", "pointer": "$.domain_axioms.global_formats.uuid_v4"},
                         ],
                         hint="Renomeie para `...Id` (ex.: userId, athleteId).",
@@ -384,7 +384,7 @@ def _validate_style_veto_and_semantics(
                         json_path=prop_path,
                         message="UUID v4 deve terminar com sufixo canônico `Id` (ex.: athleteId).",
                         ssot_refs=[
-                            {"path": ".contract_driven/templates/API_RULES/API_RULES.yaml", "pointer": "$.hbtrack_api_rules.canonical_conventions.identifiers"},
+                            {"path": ".contract_driven/templates/api/api_rules.yaml", "pointer": "$.hbtrack_api_rules.canonical_conventions.identifiers"},
                         ],
                         hint="Use o sufixo `Id` para identificadores públicos (uuid v4).",
                     )
@@ -473,10 +473,10 @@ def _validate_compatibility_matrix(*, api_rules: dict, ctx: dict[str, Any]) -> N
                     rule_id="HB-COMPAT-MATRIX-STRUCT",
                     code="BLOCKED_INVALID_COMPATIBILITY_MATRIX",
                     severity="error",
-                    artifact=".contract_driven/templates/API_RULES/API_RULES.yaml",
+                    artifact=".contract_driven/templates/api/api_rules.yaml",
                     json_path="$.hbtrack_api_rules.compatibility_matrix",
                     message="compatibility_matrix deve ser lista.",
-                    ssot_refs=[{"path": ".contract_driven/templates/API_RULES/API_RULES.yaml", "pointer": "$.hbtrack_api_rules.compatibility_matrix"}],
+                    ssot_refs=[{"path": ".contract_driven/templates/api/api_rules.yaml", "pointer": "$.hbtrack_api_rules.compatibility_matrix"}],
                 )
             ],
         )
@@ -531,10 +531,10 @@ def _validate_compatibility_matrix(*, api_rules: dict, ctx: dict[str, Any]) -> N
                         rule_id=cid,
                         code="BLOCKED_INVALID_COMPATIBILITY_RULE",
                         severity="error",
-                        artifact=".contract_driven/templates/API_RULES/API_RULES.yaml",
+                        artifact=".contract_driven/templates/api/api_rules.yaml",
                         json_path=f"$.hbtrack_api_rules.compatibility_matrix[{cid}]",
                         message="Rule deve declarar `if: {all:[...]}` e `then: {require:[...]}`.",
-                        ssot_refs=[{"path": ".contract_driven/templates/API_RULES/API_RULES.yaml", "pointer": "$.hbtrack_api_rules.compatibility_matrix"}],
+                        ssot_refs=[{"path": ".contract_driven/templates/api/api_rules.yaml", "pointer": "$.hbtrack_api_rules.compatibility_matrix"}],
                     )
                 ],
             )
@@ -559,13 +559,13 @@ def _validate_compatibility_matrix(*, api_rules: dict, ctx: dict[str, Any]) -> N
             rule_id=c["compatibility_id"],
             code="FAIL_COMPATIBILITY_SAT",
             severity="error",
-            artifact=".contract_driven/templates/API_RULES/API_RULES.yaml",
+            artifact=".contract_driven/templates/api/api_rules.yaml",
             json_path="$.hbtrack_api_rules.compatibility_matrix",
             message=(
                 f"Combinação insatisfatível entre sets {c['set_a']!r} e {c['set_b']!r} "
                 f"(compatibility_id={c['compatibility_id']})."
             ),
-            ssot_refs=[{"path": ".contract_driven/templates/API_RULES/API_RULES.yaml", "pointer": "$.hbtrack_api_rules.compatibility_matrix"}],
+            ssot_refs=[{"path": ".contract_driven/templates/api/api_rules.yaml", "pointer": "$.hbtrack_api_rules.compatibility_matrix"}],
             hint="Ajuste profile/overlays/política para satisfazer a matriz. Use details.compatibility.unsat_core.",
         )
         for c in conflicts
@@ -577,7 +577,7 @@ def _validate_compatibility_matrix(*, api_rules: dict, ctx: dict[str, Any]) -> N
         summary="Matriz de compatibilidade insatisfatível (GATE-004) — fail-closed.",
         violations=violations,
         actions=[
-            "Corrigir o input (API_RULES.yaml / ARCHITECTURE_MATRIX / MODULE_PROFILE_REGISTRY / intent).",
+            "Corrigir o input (api_rules.yaml / ARCHITECTURE_MATRIX / MODULE_PROFILE_REGISTRY / intent).",
             "Reexecutar: python3 scripts/contracts/validate/api/compile_api_policy.py --all",
         ],
         details={
@@ -711,10 +711,10 @@ def compile_expected(
             "target": target,
         },
         "inputs": {
-            "architecture_matrix": ".contract_driven/templates/API_RULES/ARCHITECTURE_MATRIX.yaml",
-            "module_profile_registry": ".contract_driven/templates/API_RULES/MODULE_PROFILE_REGISTRY.yaml",
+            "architecture_matrix": ".contract_driven/templates/api/ARCHITECTURE_MATRIX.yaml",
+            "module_profile_registry": ".contract_driven/templates/api/MODULE_PROFILE_REGISTRY.yaml",
             "api_rules": _rel(root, _ssot_api_rules_path(root)),
-            "canonical_type_registry": ".contract_driven/templates/API_RULES/CANONICAL_TYPE_REGISTRY.yaml",
+            "canonical_type_registry": ".contract_driven/templates/api/CANONICAL_TYPE_REGISTRY.yaml",
             "domain_axioms": ".contract_driven/DOMAIN_AXIOMS.json",
         },
         "module_profile": {

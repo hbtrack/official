@@ -47,9 +47,6 @@ rules:
   spec: error
   spec-components-invalid-map-name: error
 
-extends:
-  - recommended
-
 theme:
   openapi:
     disableSearch: false

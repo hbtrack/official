@@ -23,7 +23,7 @@
       "email": "dev@hbtrack.com",
       "name": "HB Track Team"
     },
-    "description": "HB Track — Plataforma sports-tech orientada a contratos para gestão e operação de handebol.\nEsta especificação é a fonte primária da verdade para a interface HTTP pública do sistema.\nReferências normativas — consultar antes de implementar: - .contract_driven/CONTRACT_SYSTEM_LAYOUT.md   (estrutura canônica de artefatos) - .contract_driven/templates/API_RULES/API_RULES.yaml    (regras, templates e validações de API) - docs/_canon/SYSTEM_SCOPE.md                  (escopo e módulos canônicos) - docs/_canon/ERROR_MODEL.md                   (convenção de erros RFC 7807) - docs/_canon/API_CONVENTIONS.md               (convenções de API — aponta para API_RULES.yaml)\n",
+    "description": "HB Track — Plataforma sports-tech orientada a contratos para gestão e operação de handebol.\nEsta especificação é a fonte primária da verdade para a interface HTTP pública do sistema.\nReferências normativas — consultar antes de implementar: - .contract_driven/CONTRACT_SYSTEM_LAYOUT.md   (estrutura canônica de artefatos) - .contract_driven/templates/api/api_rules.yaml    (regras, templates e validações de API) - docs/_canon/SYSTEM_SCOPE.md                  (escopo e módulos canônicos) - docs/_canon/ERROR_MODEL.md                   (convenção de erros RFC 7807) - docs/_canon/API_CONVENTIONS.md               (convenções de API — aponta para api_rules.yaml)\n",
     "license": {
       "identifier": "LicenseRef-proprietary",
       "name": "Proprietary"

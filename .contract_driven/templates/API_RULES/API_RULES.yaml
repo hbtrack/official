@@ -1,10 +1,10 @@
 # SSOT: API HTTP rules/validation/templates
-# SOURCE: .contract_driven/templates/API_RULES/API_RULES.yaml
+# SOURCE: .contract_driven/templates/api/api_rules.yaml
 # NOTE: Este arquivo é normativo para convenções/validação/templates de API HTTP (ver CONTRACT_SYSTEM_RULES.md).
 
 hbtrack_api_rules:
   ssot: true
-  ssot_path: ".contract_driven/templates/API_RULES/API_RULES.yaml"
+  ssot_path: ".contract_driven/templates/api/api_rules.yaml"
   system: "HB Track"
   last_updated: "2026-03-11"
   language:
@@ -20,11 +20,11 @@ hbtrack_api_rules:
     hbtrack_domain_invariants:
       description: "Invariantes e regras de negócio do HB Track (docs/_canon e docs de módulo)."
     owasp_api_security_top10_2023_ptpt:
-      path: ".contract_driven/templates/API_RULES/OWASPAPI.md"
+      path: ".contract_driven/templates/api/OWASPAPI.md"
     google_api_design_aip:
-      path: ".contract_driven/templates/API_RULES/GoogleAPI.md"
+      path: ".contract_driven/templates/api/GoogleAPI.md"
     adidas_api_guidelines:
-      path: ".contract_driven/templates/API_RULES/AddidasAPI.md"
+      path: ".contract_driven/templates/api/AddidasAPI.md"
     legacy_restful_api_guidelines_external_v1:
       from: ".contract_driven/CONTRACT_SYSTEM_RULES.md#3B (migrado)"
       baseline_snapshot_date: "2026-03-11"
@@ -39,7 +39,7 @@ hbtrack_api_rules:
   contract_creation_protocol:
     goal: "Criar/alterar contratos OpenAPI com determinismo e segurança."
     required_steps:
-      - "Ler `.contract_driven/templates/API_RULES/API_RULES.yaml` e aplicar conflict_resolution."
+      - "Ler `.contract_driven/templates/api/api_rules.yaml` e aplicar conflict_resolution."
       - "Ler docs do módulo (MODULE_SCOPE / DOMAIN_RULES / INVARIANTS / PERMISSIONS quando aplicável)."
       - "Modelar recursos (nouns) e operações padrão (Get/List/Create/Patch/Delete)."
       - "Definir schemas de request/response com allowlists e `additionalProperties: false` em requests."
@@ -47,7 +47,7 @@ hbtrack_api_rules:
       - "Aplicar validações (lint/semantic) antes de aceitar o contrato como pronto."
     blocking_rules:
       - "Se o módulo não existir na taxonomia canônica: `BLOCKED_MISSING_MODULE`."
-      - "Se a convenção necessária não estiver em `API_RULES.yaml`: `BLOCKED_MISSING_API_CONVENTION`."
+      - "Se a convenção necessária não estiver em `api_rules.yaml`: `BLOCKED_MISSING_API_CONVENTION`."
       - "Se houver conflito entre fontes no mesmo nível: `BLOCKED_CONTRACT_CONFLICT`."
 
   conflict_resolution:
@@ -674,7 +674,7 @@ hbtrack_api_rules:
     openapi_path_module_yaml: |-
       # Path items for module: {{MODULE_NAME}}
       # Source of truth: contracts/openapi/openapi.yaml
-      # Canonical API rules: .contract_driven/templates/API_RULES/API_RULES.yaml
+      # Canonical API rules: .contract_driven/templates/api/api_rules.yaml
       # Related docs:
       # - docs/_canon/SYSTEM_SCOPE.md
       # - docs/hbtrack/modulos/{{MODULE_NAME}}/MODULE_SCOPE_{{MODULE_NAME_UPPER}}.md
@@ -908,7 +908,7 @@ hbtrack_api_rules:
 
       openapi_root_yaml: |-
         # Root OpenAPI document — HB Track
-        # Template canônico derivado de .contract_driven/templates/API_RULES/API_RULES.yaml
+        # Template canônico derivado de .contract_driven/templates/api/api_rules.yaml
         #   → contract_templates.openapi_root_yaml
         # Artefato soberano: contracts/openapi/openapi.yaml
         #
@@ -936,7 +936,7 @@ hbtrack_api_rules:
 
             Referências normativas — consultar antes de implementar:
             - .contract_driven/CONTRACT_SYSTEM_LAYOUT.md   (estrutura canônica de artefatos)
-            - .contract_driven/templates/API_RULES/API_RULES.yaml    (regras, templates e validações de API)
+            - .contract_driven/templates/api/api_rules.yaml    (regras, templates e validações de API)
             - docs/_canon/SYSTEM_SCOPE.md                  (escopo e módulos canônicos)
             - docs/_canon/ERROR_MODEL.md                   (convenção de erros RFC 7807)
           contact:

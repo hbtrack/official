@@ -19,10 +19,10 @@ def _make_min_repo(tmp_path: pathlib.Path) -> pathlib.Path:
     # inputs obrigatórios do compiler
     for rel in [
         ".contract_driven/DOMAIN_AXIOMS.json",
-        ".contract_driven/templates/API_RULES/ARCHITECTURE_MATRIX.yaml",
-        ".contract_driven/templates/API_RULES/MODULE_PROFILE_REGISTRY.yaml",
-        ".contract_driven/templates/API_RULES/CANONICAL_TYPE_REGISTRY.yaml",
-        ".contract_driven/templates/API_RULES/API_RULES.yaml",
+        ".contract_driven/templates/api/ARCHITECTURE_MATRIX.yaml",
+        ".contract_driven/templates/api/MODULE_PROFILE_REGISTRY.yaml",
+        ".contract_driven/templates/api/CANONICAL_TYPE_REGISTRY.yaml",
+        ".contract_driven/templates/api/api_rules.yaml",
     ]:
         _copy_file(repo_root, tmp_path, rel)
 

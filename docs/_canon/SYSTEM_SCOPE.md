@@ -84,7 +84,7 @@ O HB Track não controla implementação interna desses serviços. A integraçã
 
 ## 9. Decisões em Aberto
 
-1. **Estratégia de versioning para breaking changes pós-v1**: o HB Track proíbe versão na URI e prevê compatibilidade via content negotiation / media-type quando necessário (SSOT: `.contract_driven/templates/API_RULES/API_RULES.yaml`), mas a política de deprecação e ciclo de vida de versões antigas ainda não foi formalizada para o contexto de produção pós-v1.
+1. **Estratégia de versioning para breaking changes pós-v1**: o HB Track proíbe versão na URI e prevê compatibilidade via content negotiation / media-type quando necessário (SSOT: `.contract_driven/templates/api/api_rules.yaml`), mas a política de deprecação e ciclo de vida de versões antigas ainda não foi formalizada para o contexto de produção pós-v1.
 
 2. **Broker externo (ex: RabbitMQ) quando a escala exigir**: atualmente o Celery usa Redis como broker. A decisão de migrar para um broker dedicado (RabbitMQ, Amazon SQS) está em aberto e depende de métricas de volume de mensagens em produção.
 

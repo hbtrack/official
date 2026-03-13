@@ -49,6 +49,7 @@ Marque `[x]` se confirmado.
 - [x] `docs/_canon/HANDBALL_RULES_DOMAIN.md` existe e segue o layout canônico definido no manual
 - [x] `docs/_canon/SECURITY_RULES.md` existe e segue o layout canônico definido no manual
 - [x] `docs/_canon/security/OWASP_API_CONTROL_MATRIX.yaml` existe (matriz normativa: OWASP → declaração → evidência → gate)
+- [x] `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml` existe (matriz normativa: fontes permitidas → artefatos obrigatórios → limites de inferência → gates)
 - [x] `docs/_canon/CI_CONTRACT_GATES.md` existe e segue o layout canônico definido no manual
 - [x] `docs/_canon/TEST_STRATEGY.md` existe e segue o layout canônico definido no manual
 - [x] `docs/_canon/C4_CONTEXT.md` existe e segue o layout canônico definido no manual
@@ -131,9 +132,10 @@ Marque `[x]` só se você executou e obteve resultado real.
 - [ ] Gates de CI estão configurados e falham quando artefato obrigatório está ausente (evidência: `REQUIRED_ARTIFACT_PRESENCE_GATE` → FAIL em `python3 scripts/validate_contracts.py`)
 - [ ] Gates de CI estão configurados e falham quando artefato de módulo não referencia contrato adequadamente (evidência: `MODULE_DOC_CROSSREF_GATE` → FAIL em `python3 scripts/validate_contracts.py`)
 
-> **Evidência validate_contracts (WSL, 2026-03-13 — após B1→B7)**: `python3 scripts/validate_contracts.py` → **PASS** (exit code 0).
-> **Todos os 14 gates bloqueantes passando (100%)**:
-> `REQUIRED_ARTIFACT_PRESENCE_GATE`, `MODULE_DOC_CROSSREF_GATE`, `API_NORMATIVE_DUPLICATION_GATE`, `OWASP_API_CONTROL_MATRIX_GATE`, `PLACEHOLDER_RESIDUE_GATE`, `REF_HERMETICITY_GATE`, `OPENAPI_ROOT_STRUCTURE_GATE`, `OPENAPI_POLICY_RULESET_GATE`, `JSON_SCHEMA_VALIDATION_GATE`, `CROSS_SPEC_ALIGNMENT_GATE`, `CONTRACT_BREAKING_CHANGE_GATE`, `ASYNCAPI_VALIDATION_GATE`, `ARAZZO_VALIDATION_GATE`, `DERIVED_DRIFT_GATE`.
+> **Evidência validate_contracts (WSL, 2026-03-13)**: `python3 scripts/validate_contracts.py` → **FAIL** (exit code 3).
+> Gates PASS: `REQUIRED_ARTIFACT_PRESENCE_GATE`, `MODULE_DOC_CROSSREF_GATE`, `API_NORMATIVE_DUPLICATION_GATE`, `OWASP_API_CONTROL_MATRIX_GATE`, `MODULE_SOURCE_AUTHORITY_MATRIX_GATE`, `BOUNDARY_USERS_IDENTITY_ACCESS_GATE`, `WELLNESS_MEDICAL_BOUNDARY_GATE`, `SCOUT_TAXONOMY_GATE`, `ASYNC_REQUIRED_MODULE_GATE`, `EXTERNAL_SOURCE_AUTHORITY_GATE`, `PLACEHOLDER_RESIDUE_GATE`, `REF_HERMETICITY_GATE`, `JSON_SCHEMA_VALIDATION_GATE`, `CROSS_SPEC_ALIGNMENT_GATE`, `ARAZZO_VALIDATION_GATE`, `DERIVED_DRIFT_GATE`.
+> Falhas bloqueantes: `OPENAPI_ROOT_STRUCTURE_GATE`, `OPENAPI_POLICY_RULESET_GATE`, `CONTRACT_BREAKING_CHANGE_GATE`.
+> Falhas não-bloqueantes: `ASYNCAPI_VALIDATION_GATE` (infra: `node` ausente no WSL).
 > Ver `_reports/contract_gates/latest.json`.
 
 > **Evidência Intent compiler (WSL, 2026-03-13)**: `python3 scripts/contracts/validate/api/compile_api_intent.py --module ai_ingestion --intent contracts/openapi/intents/ai_ingestion.intent.yaml --format json` → PASS (exit code 0).
@@ -160,6 +162,13 @@ Marque `[x]` só se você executou e obteve resultado real.
 - [x] existe rotina de falha para drift entre fonte soberana e derivado (evidência: `DERIVED_DRIFT_GATE` semântico)
 - [x] existe rotina de falha quando placeholder residual aparece (evidência: `PLACEHOLDER_RESIDUE_GATE`)
 - [x] existe rotina de falha quando artefato obrigatório está ausente (evidência: `REQUIRED_ARTIFACT_PRESENCE_GATE`)
+- [x] existe rotina de falha para matriz normativa OWASP (evidência: `OWASP_API_CONTROL_MATRIX_GATE`)
+- [x] existe rotina de falha para matriz de fontes/autoridade por módulo (evidência: `MODULE_SOURCE_AUTHORITY_MATRIX_GATE`)
+- [x] existe rotina de falha para boundary `users` vs `identity_access` (evidência: `BOUNDARY_USERS_IDENTITY_ACCESS_GATE`)
+- [x] existe rotina de falha para boundary `wellness` vs `medical` (evidência: `WELLNESS_MEDICAL_BOUNDARY_GATE`)
+- [x] existe rotina de falha quando taxonomia de scout é usada sem artefato canônico (evidência: `SCOUT_TAXONOMY_GATE`)
+- [x] existe rotina de falha quando módulo com paths reais exige async/workflow e não possui artefatos (evidência: `ASYNC_REQUIRED_MODULE_GATE`)
+- [x] existe rotina de falha quando benchmark é tratado como SSOT em docs (evidência: `EXTERNAL_SOURCE_AUTHORITY_GATE`)
 - [ ] existe rotina de falha quando artefato de módulo não referencia contrato adequadamente (evidência: `MODULE_DOC_CROSSREF_GATE`)
 - [ ] existe rotina de falha quando artefato de módulo não alinha com contrato (realidade de implementação) (evidência: `CROSS_SPEC_ALIGNMENT_GATE`)
 - [ ] existe rotina de falha quando artefato de módulo não alinha com domínio do handebol (evidência: `HANDBALL_RULES_ALIGNMENT_GATE`)

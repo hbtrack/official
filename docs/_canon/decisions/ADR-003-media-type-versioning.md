@@ -9,7 +9,7 @@
 
 O HB Track expõe uma API HTTP pública. Quando breaking changes são necessárias, é preciso definir como versionar a API. As estratégias mais comuns são: versionamento via URL (`/v1/`, `/v2/`), versionamento via header `Accept` (media type) ou versionamento via query param.
 
-A SSOT de convenções/templates/validações de API (`.contract_driven/templates/API_RULES/API_RULES.yaml`) proíbe versionamento na URI e orienta compatibilidade via content negotiation / media-type quando necessário.
+A SSOT de convenções/templates/validações de API (`.contract_driven/templates/api/api_rules.yaml`) proíbe versionamento na URI e orienta compatibilidade via content negotiation / media-type quando necessário.
 
 ## Decision
 
@@ -39,6 +39,6 @@ Enquanto a plataforma estiver em v0 (pré-produção), versão não é exposta. 
 
 ## Links
 
-- SSOT de API: `.contract_driven/templates/API_RULES/API_RULES.yaml`
+- SSOT de API: `.contract_driven/templates/api/api_rules.yaml`
 - Related docs: `docs/_canon/API_CONVENTIONS.md`, `docs/_canon/CHANGE_POLICY.md`
 - Related contracts: `contracts/openapi/openapi.yaml`

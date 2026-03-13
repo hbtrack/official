@@ -16,7 +16,7 @@ Este documento faz parte da trilogia **HB Track — Manual Contract-Driven**:
    - **Responsabilidade**: Scaffolds e exemplos oficiais para documentação normativa e artefatos de contrato
    - **Use quando**: Criar novos docs de módulo, contratos, ou artefatos de governança
 
-4. **.contract_driven/templates/api_rules/api_rules.yaml**
+4. **.contract_driven/templates/api/api_rules.yaml**
    - **Responsabilidade**: Regras, validações e templates canônicos para contratos de APIs (OpenAPI/HTTP)
    - **Use quando**: Resolver conflitos de convenção e definir/validar contratos de API
 
@@ -88,7 +88,7 @@ Os artefatos abaixo são normativos e soberanos.
 - `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md`
 - `.contract_driven/CONTRACT_SYSTEM_RULES.md`
 - `.contract_driven/GLOBAL_TEMPLATES.md`
-- `.contract_driven/templates/api_rules/api_rules.yaml`
+- `.contract_driven/templates/api/api_rules.yaml`
 
 ### 3.1A SSOT de templates (scaffolds)
 Templates são scaffolds canônicos usados por agentes para criar artefatos normativos sem improviso de estrutura.
@@ -156,12 +156,12 @@ Tudo fora das listas acima é não-soberano por padrão, a menos que seja explic
 
 As regras, validações e templates canônicos para **design de API HTTP** (OpenAPI/JSON/URLs/paginação/erros/compatibilidade/segurança) estão centralizados em:
 
-- `.contract_driven/templates/api_rules/api_rules.yaml`
+- `.contract_driven/templates/api/api_rules.yaml`
 
 Regras:
-- **SSOT**: agentes **DEVEM** usar `API_RULES.yaml` como fonte primária para decisões de convenção de API.
-- **Determinismo**: se uma convenção necessária não estiver explícita em `API_RULES.yaml`, o agente **DEVE** bloquear com `BLOCKED_MISSING_API_CONVENTION`.
-- **Registry legado**: a numeração estável `(#NNN)` do baseline externo foi migrada para `hbtrack_api_rules.legacy_rule_registry` dentro de `API_RULES.yaml` (incluindo overrides por precedência).
+- **SSOT**: agentes **DEVEM** usar `api_rules.yaml` como fonte primária para decisões de convenção de API.
+- **Determinismo**: se uma convenção necessária não estiver explícita em `api_rules.yaml`, o agente **DEVE** bloquear com `BLOCKED_MISSING_API_CONVENTION`.
+- **Registry legado**: a numeração estável `(#NNN)` do baseline externo foi migrada para `hbtrack_api_rules.legacy_rule_registry` dentro de `api_rules.yaml` (incluindo overrides por precedência).
 
 ---
 
@@ -214,7 +214,7 @@ Regras:
 Ordem de precedência:
 1. `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md`
 2. `.contract_driven/CONTRACT_SYSTEM_RULES.md`
-3. `.contract_driven/templates/api_rules/api_rules.yaml` (apenas para convenções/validações/templates de API HTTP)
+3. `.contract_driven/templates/api/api_rules.yaml` (apenas para convenções/validações/templates de API HTTP)
 4. contratos técnicos válidos:
    - OpenAPI
    - JSON Schema
@@ -237,11 +237,11 @@ Conflito entre níveis:
 - o nível mais alto sempre vence
 
 ### 5A. Precedência por superfície (overrides determinísticos)
-- Convenções de design de API HTTP (OpenAPI/JSON/URLs/pagination/errors/compatibility/security/events): aplicar `.contract_driven/templates/api_rules/api_rules.yaml` como baseline/SSOT antes de qualquer orientação de menor precedência.
+- Convenções de design de API HTTP (OpenAPI/JSON/URLs/pagination/errors/compatibility/security/events): aplicar `.contract_driven/templates/api/api_rules.yaml` como baseline/SSOT antes de qualquer orientação de menor precedência.
 
 Nota do baseline:
-- O registry legado `(#NNN)` foi migrado para `API_RULES.yaml` para manter numeração estável e permitir overrides por precedência.
-- Para convenções de design de API HTTP, `API_RULES.yaml` é a fonte canônica e sobrepõe orientações conflitantes em níveis de precedência inferiores.
+- O registry legado `(#NNN)` foi migrado para `api_rules.yaml` para manter numeração estável e permitir overrides por precedência.
+- Para convenções de design de API HTTP, `api_rules.yaml` é a fonte canônica e sobrepõe orientações conflitantes em níveis de precedência inferiores.
 
 ---
 
@@ -252,7 +252,7 @@ Nota do baseline:
 2. `.contract_driven/CONTRACT_SYSTEM_RULES.md`
 3. `.contract_driven/GLOBAL_TEMPLATES.md`
 4. `.contract_driven/templates/README.md` (estrutura e contrato de uso de templates)
-5. `.contract_driven/templates/api_rules/api_rules.yaml`
+5. `.contract_driven/templates/api/api_rules.yaml`
 6. `docs/_canon/SYSTEM_SCOPE.md`
 7. `docs/_canon/API_CONVENTIONS.md`
 8. `docs/_canon/DATA_CONVENTIONS.md`
@@ -279,7 +279,7 @@ O boot mínimo continua obrigatório, mas o agente **DEVE** reduzir a leitura ao
 Perfis recomendados:
 
 - **Gerar/alterar contrato de API (OpenAPI paths)**:
-  - LAYOUT + RULES + `API_RULES.yaml`
+  - LAYOUT + RULES + `api_rules.yaml`
   - `docs/_canon/SYSTEM_SCOPE.md`
   - docs do módulo (mínimo): README / MODULE_SCOPE / DOMAIN_RULES / INVARIANTS / TEST_MATRIX
   - contratos do módulo: `contracts/openapi/openapi.yaml` + `contracts/openapi/paths/<module>.yaml` + `contracts/openapi/components/`

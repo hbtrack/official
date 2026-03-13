@@ -90,7 +90,7 @@ status: active
 
 Para contratos HTTP/OpenAPI, nomes de campos em JSON seguem **camelCase**.
 
-- **SSOT**: `.contract_driven/templates/API_RULES/API_RULES.yaml` → `hbtrack_api_rules.canonical_conventions.naming.json_fields.style`
+- **SSOT**: `.contract_driven/templates/api/api_rules.yaml` → `hbtrack_api_rules.canonical_conventions.naming.json_fields.style`
 
 Mapeamento de referência (API JSON ↔ Banco de dados):
 
@@ -378,7 +378,7 @@ Qualquer estado → READONLY (automaticamente após 60 dias da data da sessão)
 
 ## 14. Referências Cruzadas
 
-- `.contract_driven/templates/API_RULES/API_RULES.yaml` — SSOT de convenções/templates/validações de API HTTP
+- `.contract_driven/templates/api/api_rules.yaml` — SSOT de convenções/templates/validações de API HTTP
 - `API_CONVENTIONS.md` — guia/ponteiros (não-SSOT) para API
 - `CHANGE_POLICY.md` — processo formal para breaking changes de dados
 - `ERROR_MODEL.md` — modelo de erros Problem Details

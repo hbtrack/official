@@ -10,6 +10,6 @@ Este diretório contém as **templates oficiais** que antes estavam embutidas em
 - Substitua os placeholders `{{...}}`.
 
 ## Observações
-- Templates canônicos de **OpenAPI/HTTP** não vivem em `globais/` nem `modulos/`: a SSOT é `.contract_driven/templates/API_RULES/API_RULES.yaml` (`hbtrack_api_rules.contract_templates`).
+- Templates canônicos de **OpenAPI/HTTP** não vivem em `globais/` nem `modulos/`: a SSOT é `.contract_driven/templates/api/api_rules.yaml` (`hbtrack_api_rules.contract_templates`).
 - Alguns nomes de arquivos usam placeholders (ex: `MODULE_SCOPE_{{MODULE_NAME_UPPER}}.md`): ao instanciar, gere o nome final (ex: `MODULE_SCOPE_TRAINING.md`).
 - Todas as templates possuem um cabeçalho padrão (comentário) com `TEMPLATE`, `DEST` e `SOURCE` para uso determinístico por agentes.

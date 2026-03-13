@@ -1,0 +1,51 @@
+{
+    "$id": "https://api.hbtrack.com/schemas/event_envelope_v1.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "HB Track Event Envelope v1",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "eventId",
+        "eventType",
+        "eventVersion",
+        "producer",
+        "recordedAt",
+        "correlationId",
+        "payload"
+    ],
+    "properties": {
+        "eventId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Server-generated immutable event envelope identifier."
+        },
+        "eventType": {
+            "type": "string",
+            "description": "Canonical event type. Module-specific pattern, e.g., matches.matchEventRecorded."
+        },
+        "eventVersion": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$",
+            "description": "Envelope schema version."
+        },
+        "producer": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$",
+            "description": "Canonical producer service name."
+        },
+        "recordedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Server-side persistence/publication timestamp."
+        },
+        "correlationId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Correlation identifier linking the published event to the originating sync command requestId or canonical correlation chain."
+        },
+        "payload": {
+            "type": "object",
+            "description": "Module-specific event payload. Reference to canonical schema."
+        }
+    }
+}

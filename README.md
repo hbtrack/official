@@ -65,7 +65,7 @@ HB TRACK/
 │   ├── SYSTEM_SCOPE.md          # Missão, atores, macrodomínios, fora do escopo
 │   ├── ARCHITECTURE.md          # Stack canônica, princípios, camadas
 │   ├── MODULE_MAP.md            # 16 módulos, responsabilidades, dependências
-│   ├── API_CONVENTIONS.md       # Visão geral de API (SSOT em .contract_driven/templates/API_RULES/API_RULES.yaml)
+│   ├── API_CONVENTIONS.md       # Visão geral de API (SSOT em .contract_driven/templates/api/api_rules.yaml)
 │   ├── DATA_CONVENTIONS.md      # IDs, datas, enums, soft delete, convenções DB
 │   ├── ERROR_MODEL.md           # Modelo canônico de erros HTTP
 │   ├── GLOBAL_INVARIANTS.md     # Invariantes globais (INV-*)
@@ -84,8 +84,8 @@ HB TRACK/
 │   ├── CONTRACT_SYSTEM_RULES.md # Regras operacionais do sistema CDD
 │   ├── CONTRACT_SYSTEM_LAYOUT.md# Estrutura canônica de arquivos
 │   ├── GLOBAL_TEMPLATES.md      # Templates oficiais de artefatos
-│   └── API_RULES/               # SSOT de regras/templates/validações de API HTTP
-│       └── API_RULES.yaml
+│   └── api_rules/               # SSOT de regras/templates/validações de API HTTP
+│       └── api_rules.yaml
 │
 ├── scripts/                     # CLI de governança
 │   ├── run/hb_cli.py            # CLI oficial (plan, report, verify, seal, check, gates)
@@ -107,7 +107,7 @@ Para Agentes de IA, o ponto de entrada correto é:
 3. Leia **`.contract_driven/CONTRACT_SYSTEM_RULES.md`** — entenda as regras do sistema contract-driven
 4. Leia **`.contract_driven/CONTRACT_SYSTEM_LAYOUT.md`** — entenda a estrutura canônica de arquivos e artefatos
 5. Leia **`.contract_driven/GLOBAL_TEMPLATES.md`** — familiarize-se com os templates oficiais de artefatos (contratos, invariantes, etc.)
-6. Leia **`.contract_driven/templates/API_RULES/API_RULES.yaml`** — SSOT para convenções/validações/templates de API HTTP (OpenAPI/JSON/URLs/paginação/erros/segurança)
+6. Leia **`.contract_driven/templates/api/api_rules.yaml`** — SSOT para convenções/validações/templates de API HTTP (OpenAPI/JSON/URLs/paginação/erros/segurança)
 7. Leia **`docs/_canon/ARCHITECTURE.md`** — entenda a arquitetura canônica, a stack e os princípios de design
 8. Depois, navegue para o módulo em que for trabalhar: `docs/hbtrack/modulos/<módulo>/`
 
@@ -129,7 +129,7 @@ Para Agentes de IA, o ponto de entrada correto é:
 
 | Tema | Fonte canônica |
 |------|---------------|
-| Regras/templates de API HTTP (OpenAPI/JSON/URLs/paginação/erros/segurança) | `.contract_driven/templates/API_RULES/API_RULES.yaml` |
+| Regras/templates de API HTTP (OpenAPI/JSON/URLs/paginação/erros/segurança) | `.contract_driven/templates/api/api_rules.yaml` |
 | Modelo de erro HTTP | `docs/_canon/ERROR_MODEL.md` |
 | Regras globais de segurança | `docs/_canon/SECURITY_RULES.md` |
 | Convenções de dados (IDs/datas/enums/soft delete/DB naming) | `docs/_canon/DATA_CONVENTIONS.md` |

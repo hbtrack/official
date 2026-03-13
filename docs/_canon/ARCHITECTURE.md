@@ -176,10 +176,10 @@ As decisões abaixo já foram tomadas e são normativas:
 
 | Decisão | Escolha | Justificativa |
 |---------|---------|---------------|
-| Nomenclatura de campos JSON | `camelCase` | SSOT de API: `.contract_driven/templates/API_RULES/API_RULES.yaml` (`canonical_conventions.naming.json_fields.style`). |
-| Estratégia de paginação | Cursor via `pageSize` + `pageToken` (+ `nextPageToken`) | SSOT de API: `.contract_driven/templates/API_RULES/API_RULES.yaml` (`design_rules.google_aip_core.pagination`). |
+| Nomenclatura de campos JSON | `camelCase` | SSOT de API: `.contract_driven/templates/api/api_rules.yaml` (`canonical_conventions.naming.json_fields.style`). |
+| Estratégia de paginação | Cursor via `pageSize` + `pageToken` (+ `nextPageToken`) | SSOT de API: `.contract_driven/templates/api/api_rules.yaml` (`design_rules.google_aip_core.pagination`). |
 | Estratégia de IDs | UUID v4 como string | Sem IDs sequenciais expostos. UUIDs gerados pelo banco (PostgreSQL `gen_random_uuid()`) ou pela aplicação. |
-| Versioning de API | Sem versão na URI; compatibilidade via content-negotiation/media-type quando necessário | SSOT de API: `.contract_driven/templates/API_RULES/API_RULES.yaml` (`versioning_and_compatibility`). |
+| Versioning de API | Sem versão na URI; compatibilidade via content-negotiation/media-type quando necessário | SSOT de API: `.contract_driven/templates/api/api_rules.yaml` (`versioning_and_compatibility`). |
 | Soft delete | `deleted_at` + `deleted_reason` | Par obrigatório: nenhum campo `deleted_at` sem `deleted_reason` correspondente e vice-versa. |
 | Separação `users` vs `identity_access` | `users` = perfil; `identity_access` = auth/authz | Boundary explícito: mistura de responsabilidades é proibida sem ADR formal. |
 | Coexistência psycopg2 + psycopg3 | Mantida intencionalmente | Compatibilidade com SQLAlchemy e drivers de migração. Nunca remover nenhum dos dois. |
@@ -223,7 +223,7 @@ As seguintes ações são proibidas sem ADR formal aprovada:
 
 - `SYSTEM_SCOPE.md` — missão, atores, macrodomínios
 - `MODULE_MAP.md` — taxonomia técnica dos 16 módulos
-- `.contract_driven/templates/API_RULES/API_RULES.yaml` — SSOT de convenções/templates/validações de API HTTP
+- `.contract_driven/templates/api/api_rules.yaml` — SSOT de convenções/templates/validações de API HTTP
 - `API_CONVENTIONS.md` — guia/ponteiros (não-SSOT) para API
 - `DATA_CONVENTIONS.md` — convenções de dados
 - `docs/_canon/contratos/Ambiente.md` — especificação completa de ambiente (SSOT)

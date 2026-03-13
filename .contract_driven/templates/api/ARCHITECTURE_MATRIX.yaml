@@ -1,0 +1,82 @@
+version: "1.0.0"
+
+modules:
+  users:
+    allowed_module_classes: ["CRUD"]
+    allowed_surfaces: ["sync"]
+    sensitive: false
+
+  seasons:
+    allowed_module_classes: ["CRUD"]
+    allowed_surfaces: ["sync"]
+    sensitive: false
+
+  teams:
+    allowed_module_classes: ["CRUD"]
+    allowed_surfaces: ["sync"]
+    sensitive: false
+
+  training:
+    allowed_module_classes: ["CRUD", "HYBRID"]
+    allowed_surfaces: ["sync", "event"]
+    sensitive: false
+
+  wellness:
+    allowed_module_classes: ["CRUD", "HYBRID"]
+    allowed_surfaces: ["sync", "event"]
+    sensitive: true
+
+  medical:
+    allowed_module_classes: ["CRUD", "HYBRID"]
+    allowed_surfaces: ["sync", "event"]
+    sensitive: true
+
+  competitions:
+    allowed_module_classes: ["CRUD"]
+    allowed_surfaces: ["sync"]
+    sensitive: false
+
+  matches:
+    allowed_module_classes: ["CRUD", "EVENT_FIRST"]
+    allowed_surfaces: ["sync", "event"]
+    sensitive: false
+
+  scout:
+    allowed_module_classes: ["CRUD", "EVENT_FIRST"]
+    allowed_surfaces: ["sync", "event"]
+    sensitive: false
+
+  exercises:
+    allowed_module_classes: ["CRUD"]
+    allowed_surfaces: ["sync"]
+    sensitive: false
+
+  analytics:
+    allowed_module_classes: ["CRUD"]
+    allowed_surfaces: ["sync"]
+    sensitive: false
+
+  reports:
+    allowed_module_classes: ["CRUD"]
+    allowed_surfaces: ["sync"]
+    sensitive: false
+
+  ai_ingestion:
+    allowed_module_classes: ["CRUD", "EVENT_FIRST"]
+    allowed_surfaces: ["sync", "event"]
+    sensitive: true
+
+  identity_access:
+    allowed_module_classes: ["CRUD"]
+    allowed_surfaces: ["sync"]
+    sensitive: true
+
+  audit:
+    allowed_module_classes: ["CRUD", "EVENT_FIRST"]
+    allowed_surfaces: ["sync", "event"]
+    sensitive: false
+
+  notifications:
+    allowed_module_classes: ["CRUD", "EVENT_FIRST"]
+    allowed_surfaces: ["sync", "event"]
+    sensitive: false

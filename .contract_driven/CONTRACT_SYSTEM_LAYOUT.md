@@ -16,7 +16,7 @@ Este documento faz parte da trilogia **HB Track — Manual Contract-Driven**:
    - **Responsabilidade**: Scaffolds e exemplos oficiais para documentação normativa e artefatos de contrato
    - **Use quando**: Criar novos docs de módulo, contratos, ou artefatos de governança
 
-4. **.contract_driven/templates/api_rules/api_rules.yaml**
+4. **.contract_driven/templates/api/api_rules.yaml**
    - **Responsabilidade**: Regras, validações e templates canônicos para contratos de APIs (OpenAPI/HTTP)
    - **Use quando**: Definir convenções de API, segurança OWASP, semântica Google AIP e estilo Adidas
 
@@ -39,7 +39,7 @@ Ele **não** substitui:
 - a autoridade de conteúdo da documentação humana por módulo (`docs/hbtrack/modulos/<module>/...`)
 - regras operacionais (`.contract_driven/CONTRACT_SYSTEM_RULES.md`)
 - templates/scaffolds (SSOT em `.contract_driven/templates/` — ver `globais/` e `modulos/`; índice em `.contract_driven/GLOBAL_TEMPLATES.md`)
-- **convenções, regras de design HTTP e templates canônicos de API** — responsabilidade exclusiva de `.contract_driven/templates/api_rules/api_rules.yaml` (seção `contract_templates`)
+- **convenções, regras de design HTTP e templates canônicos de API** — responsabilidade exclusiva de `.contract_driven/templates/api/api_rules.yaml` (seção `contract_templates`)
 
 ---
 
@@ -50,10 +50,10 @@ Ele **não** substitui:
 | Governança do sistema de contratos | Sim | `.contract_driven/*` | N/A | `_reports/` (evidências), `generated/` (gerados) |
 | Templates globais (canon humano) | Não (scaffold) | `.contract_driven/templates/globais/*` | `.contract_driven/templates/globais/*` | N/A |
 | Templates de módulo (docs + schemas) | Não (scaffold) | `.contract_driven/templates/modulos/*` | `.contract_driven/templates/modulos/*` | N/A |
-| SSOT de API HTTP (regras/validações/templates) | Sim | `.contract_driven/templates/api_rules/api_rules.yaml` | N/A | N/A |
+| SSOT de API HTTP (regras/validações/templates) | Sim | `.contract_driven/templates/api/api_rules.yaml` | N/A | N/A |
 | Canon global (docs) | Sim | `docs/_canon/*` | `.contract_driven/templates/globais/*` | `_reports/` (evidências) |
 | Docs normativos de módulo | Sim | `docs/hbtrack/modulos/<module>/*` | `.contract_driven/templates/modulos/*` | `_reports/` (evidências) |
-| Contrato OpenAPI | Sim | `contracts/openapi/*` | `.contract_driven/templates/api_rules/api_rules.yaml` (HTTP) | `generated/openapi/*` |
+| Contrato OpenAPI | Sim | `contracts/openapi/*` | `.contract_driven/templates/api/api_rules.yaml` (HTTP) | `generated/openapi/*` |
 | Schemas de domínio (JSON Schema) | Sim | `contracts/schemas/*` | `.contract_driven/templates/modulos/schemas/*` | `generated/clients/*`, `generated/ui-types/*` |
 | Workflows (Arazzo) | Sim | `contracts/workflows/*` | N/A | `generated/*` |
 | Eventos (AsyncAPI) | Sim | `contracts/asyncapi/*` | N/A | `generated/asyncapi/*` |
@@ -274,7 +274,7 @@ Templates SSOT (scaffolds) vivem em:
 - `.contract_driven/templates/README.md`
 - `.contract_driven/templates/globais/`
 - `.contract_driven/templates/modulos/`
-- `.contract_driven/templates/api_rules/` (SSOT de convenções/validações/templates de API HTTP)
+- `.contract_driven/templates/api/` (SSOT de convenções/validações/templates de API HTTP)
 
 ### 4A.2 Global normative canon
 Estes arquivos vivem em:
@@ -359,7 +359,7 @@ Artefatos gerados/derivados podem existir para qualquer superfície, mas nunca s
 ---
 
 ## 6. Regras de layout de OpenAPI
-**Nota**: Este documento define apenas **layout/estrutura**. As convenções e regras de **design/validação** de APIs vivem em `.contract_driven/templates/api_rules/api_rules.yaml`.
+**Nota**: Este documento define apenas **layout/estrutura**. As convenções e regras de **design/validação** de APIs vivem em `.contract_driven/templates/api/api_rules.yaml`.
 - `contracts/openapi/openapi.yaml` é o entrypoint.
 - `contracts/openapi/paths/<module>.yaml` contém path items de apenas um módulo.
 - `contracts/openapi/components/schemas/shared/` contém schemas compartilhados HTTP-facing.

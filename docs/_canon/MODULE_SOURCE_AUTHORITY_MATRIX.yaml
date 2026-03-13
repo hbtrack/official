@@ -1,0 +1,498 @@
+version: "1.0.0"
+artifact: "MODULE_SOURCE_AUTHORITY_MATRIX"
+status: "active"
+scope: "global"
+
+policy:
+  objective: >
+    Definir, por módulo, (1) fontes permitidas por papel (autoridade de domínio, benchmark funcional,
+    padrão técnico), (2) artefatos contratuais obrigatórios, e (3) limites explícitos de inferência
+    para agentes. Este artefato NÃO promove fontes externas a SSOT; ele define uso permitido e
+    onde bloquear inferência.
+
+  global_principles:
+    - principle_id: "P-001-domain-authority"
+      statement: "IHF é autoridade de semântica esportiva (jogo/competição/elegibilidade)."
+    - principle_id: "P-002-benchmark-not-norm"
+      statement: "XPS e Teamworks AMS são benchmark funcional; não viram norma sozinhos."
+    - principle_id: "P-003-technical-contract-language"
+      statement: "OpenAPI/JSON Schema/AsyncAPI/Arazzo são linguagem técnica de contrato, não norma de domínio."
+    - principle_id: "P-004-oidc-boundary"
+      statement: "`identity_access` cobre authn/authz/credenciais/sessão/MFA/JWT/RBAC; não modela athlete profile."
+    - principle_id: "P-005-async-artifacts"
+      statement: "Workflow/evento exige artefato próprio: OpenAPI (HTTP), Arazzo (sequência), AsyncAPI (mensagens)."
+
+  agent_inference_policy:
+    allowed_low_risk_examples:
+      - "training_session pertence ao módulo training."
+      - "attendance liga training e users."
+      - "session_publication pode exigir workflow multi-step."
+    forbidden_examples:
+      - "mover credenciais para users."
+      - "tratar wellness como prontuário clínico."
+      - "criar KPI sem definição canônica."
+      - "deduzir taxonomia tática de scout sem glossário/taxonomia."
+
+modules:
+  users:
+    sources_allowed:
+      domain_authority:
+        - source_id: "IHF"
+          allowed_for: ["eligibility", "sports_roles"]
+      benchmark:
+        - source_id: "TEAMWORKS_AMS"
+          allowed_for: ["sports_profile_benchmark"]
+      technical_standard:
+        - source_id: "OPENAPI"
+        - source_id: "JSON_SCHEMA"
+    required_contract_artifacts:
+      - "MODULE_PROFILE"
+      - "OPENAPI"
+      - "DB_CONTRACT"
+      - "CANONICAL_TYPE_REGISTRY_LOCAL"
+      - "INVARIANTS"
+      - "TRACEABILITY"
+    inference:
+      may_infer:
+        - "profile"
+        - "sports_links"
+        - "preferences"
+        - "person_data"
+        - "team_season_relationships"
+      must_not_infer:
+        - "auth"
+        - "credentials"
+        - "session"
+        - "mfa"
+        - "jwt"
+        - "refresh_token"
+        - "password_policy"
+        - "technical_rbac"
+
+  seasons:
+    sources_allowed:
+      domain_authority:
+        - source_id: "IHF"
+          allowed_for: ["competition_regulations"]
+      benchmark: []
+      technical_standard:
+        - source_id: "OPENAPI"
+        - source_id: "JSON_SCHEMA"
+    required_contract_artifacts:
+      - "MODULE_PROFILE"
+      - "OPENAPI"
+      - "DB_CONTRACT"
+      - "INVARIANTS"
+      - "TRACEABILITY"
+    inference:
+      may_infer: ["sport_cycle", "periods", "phases", "competition_team_relationships"]
+      must_not_infer: ["authentication_rules", "match_scorekeeping_details", "medical_semantics"]
+
+  teams:
+    sources_allowed:
+      domain_authority:
+        - source_id: "IHF"
+          allowed_for: ["competition_regulations"]
+      benchmark:
+        - source_id: "XPS"
+          allowed_for: ["planning", "communication", "video_analysis_benchmark"]
+        - source_id: "TEAMWORKS_AMS"
+          allowed_for: ["roster_staff_benchmark"]
+      technical_standard:
+        - source_id: "OPENAPI"
+        - source_id: "JSON_SCHEMA"
+    required_contract_artifacts:
+      - "MODULE_PROFILE"
+      - "OPENAPI"
+      - "DB_CONTRACT"
+      - "INVARIANTS"
+      - "TRACEABILITY"
+      - "CONSUMER_CONTRACTS"
+    inference:
+      may_infer: ["roster", "sports_staff", "season_association", "category", "athlete_staff_links"]
+      must_not_infer: ["credentials", "session_policies", "personal_profile_ownership"]
+
+  training:
+    sources_allowed:
+      domain_authority: []
+      benchmark:
+        - source_id: "XPS"
+          allowed_for: ["planning_sessions_video_benchmark"]
+        - source_id: "TEAMWORKS_AMS"
+          allowed_for: ["integrated_load_benchmark"]
+      technical_standard:
+        - source_id: "OPENAPI"
+        - source_id: "ARAZZO"
+    required_contract_artifacts:
+      - "MODULE_PROFILE"
+      - "OPENAPI"
+      - "ARAZZO"
+      - "DB_CONTRACT"
+      - "UI_CONTRACT"
+      - "INVARIANTS"
+      - "TEST_SCENARIOS"
+      - "TRACEABILITY"
+    inference:
+      may_infer: ["session", "schedule", "publication", "attendance", "objectives", "microcycle", "planned_vs_actual_load"]
+      must_not_infer: ["clinical_diagnosis", "official_competition_rules", "authentication_logic"]
+
+  wellness:
+    sources_allowed:
+      domain_authority: []
+      benchmark:
+        - source_id: "TEAMWORKS_AMS"
+          allowed_for: ["wellness_benchmark"]
+        - source_id: "MONITORING_PLATFORMS"
+          allowed_for: ["wellness_monitoring_benchmark"]
+      technical_standard:
+        - source_id: "OPENAPI"
+        - source_id: "JSON_SCHEMA"
+    required_contract_artifacts:
+      - "MODULE_PROFILE"
+      - "OPENAPI"
+      - "DB_CONTRACT"
+      - "INVARIANTS"
+      - "TRACEABILITY"
+      - "PRIVACY_RULES_LOCAL"
+    inference:
+      may_infer: ["readiness", "fatigue", "sleep", "self_reported_pain", "recovery", "daily_questionnaires"]
+      must_not_infer: ["clinical_record", "treatment", "medical_return_to_play", "formal_clinical_decision"]
+
+  medical:
+    sources_allowed:
+      domain_authority:
+        - source_id: "IHF"
+          allowed_for: ["eligibility", "anti_doping_when_applicable"]
+      benchmark:
+        - source_id: "TEAMWORKS_AMS"
+          allowed_for: ["sports_medicine_benchmark"]
+      technical_standard:
+        - source_id: "OPENAPI"
+        - source_id: "JSON_SCHEMA"
+    required_contract_artifacts:
+      - "MODULE_PROFILE"
+      - "OPENAPI"
+      - "DB_CONTRACT"
+      - "INVARIANTS"
+      - "AUDIT_BINDINGS"
+      - "TRACEABILITY"
+      - "PRIVACY_RULES_LOCAL"
+    inference:
+      may_infer: ["injury", "illness", "assessment", "restriction", "return_to_play_or_training", "clinical_authorization"]
+      must_not_infer: ["generic_wellness_as_medical", "authentication_policies", "diagnosis_without_explicit_contract"]
+
+  competitions:
+    sources_allowed:
+      domain_authority:
+        - source_id: "IHF"
+          allowed_for: ["game_rules", "competition_regulations"]
+      benchmark: []
+      technical_standard:
+        - source_id: "OPENAPI"
+        - source_id: "JSON_SCHEMA"
+    required_contract_artifacts:
+      - "MODULE_PROFILE"
+      - "OPENAPI"
+      - "DB_CONTRACT"
+      - "INVARIANTS"
+      - "TRACEABILITY"
+      - "TEST_SCENARIOS"
+    inference:
+      may_infer: ["competition", "stage", "phase", "table", "registration", "calendar"]
+      must_not_infer: ["scout_detailed_events_without_own_contract", "ui_heuristics_as_domain_rule"]
+
+  matches:
+    sources_allowed:
+      domain_authority:
+        - source_id: "IHF"
+          allowed_for: ["game_rules"]
+      benchmark:
+        - source_id: "EXTERNAL_MATCH_BENCHMARK"
+          allowed_for: ["data_shape_only"]
+      technical_standard:
+        - source_id: "OPENAPI"
+        - source_id: "ASYNCAPI"
+        - source_id: "JSON_SCHEMA"
+    required_contract_artifacts:
+      - "MODULE_PROFILE"
+      - "OPENAPI"
+      - "DB_CONTRACT"
+      - "INVARIANTS"
+      - "PROJECTIONS"
+      - "TRACEABILITY"
+    inference:
+      may_infer: ["match", "score", "periods", "lineup", "official_incidents", "venue", "refereeing"]
+      must_not_infer: ["full_scout_tactical_taxonomy_without_dictionary", "credentials", "medical_rules"]
+
+  scout:
+    sources_allowed:
+      domain_authority: []
+      benchmark:
+        - source_id: "XPS"
+          allowed_for: ["video_tagging_benchmark"]
+        - source_id: "HANDBALL_SCOUT_BENCHMARKS"
+          allowed_for: ["scout_benchmark_only"]
+      technical_standard:
+        - source_id: "OPENAPI"
+        - source_id: "ASYNCAPI"
+        - source_id: "JSON_SCHEMA"
+    required_contract_artifacts:
+      - "MODULE_PROFILE"
+      - "OPENAPI"
+      - "ASYNCAPI_WHEN_EVENTS"
+      - "DB_CONTRACT"
+      - "INVARIANTS"
+      - "CANONICAL_EVENT_TAXONOMY"
+      - "TRACEABILITY"
+    inference:
+      may_infer: ["tags", "observational_events", "clips", "coding_schema", "tactical_aggregations"]
+      must_not_infer:
+        - "official_competition_statistics_without_explicit_mapping"
+        - "redefine_ihf_rules"
+        - "infer_taxonomy_without_glossary"
+
+  exercises:
+    sources_allowed:
+      domain_authority: []
+      benchmark:
+        - source_id: "XPS"
+          allowed_for: ["exercise_library_benchmark"]
+      technical_standard:
+        - source_id: "OPENAPI"
+        - source_id: "JSON_SCHEMA"
+    required_contract_artifacts:
+      - "MODULE_PROFILE"
+      - "OPENAPI"
+      - "DB_CONTRACT"
+      - "UI_CONTRACT"
+      - "INVARIANTS"
+      - "TRACEABILITY"
+    inference:
+      may_infer: ["exercise_library", "objectives", "materials", "phase", "category", "estimated_load", "session_link"]
+      must_not_infer: ["real_physiological_response", "clinical_assessment", "competition_semantics"]
+
+  analytics:
+    sources_allowed:
+      domain_authority: []
+      benchmark:
+        - source_id: "TEAMWORKS_AMS"
+          allowed_for: ["analytics_benchmark"]
+      technical_standard:
+        - source_id: "OPENAPI"
+        - source_id: "ASYNCAPI"
+        - source_id: "JSON_SCHEMA"
+    required_contract_artifacts:
+      - "MODULE_PROFILE"
+      - "OPENAPI"
+      - "DB_CONTRACT_OR_PROJECTIONS"
+      - "INVARIANTS"
+      - "REPORT_BINDINGS"
+      - "TRACEABILITY"
+    inference:
+      may_infer: ["derived_metrics", "filters", "time_windows", "granularity", "projections", "refresh_semantics"]
+      must_not_infer:
+        - "invent_kpi_without_canonical_definition"
+        - "mix_raw_dataset_with_inferred_insight"
+        - "rewrite_domain_rule"
+
+  reports:
+    sources_allowed:
+      domain_authority: []
+      benchmark:
+        - source_id: "TEAMWORKS_AMS"
+          allowed_for: ["reports_benchmark_only"]
+        - source_id: "XPS"
+          allowed_for: ["reports_benchmark_only"]
+      technical_standard:
+        - source_id: "OPENAPI"
+        - source_id: "ARAZZO"
+        - source_id: "JSON_SCHEMA"
+    required_contract_artifacts:
+      - "MODULE_PROFILE"
+      - "OPENAPI"
+      - "ARAZZO_WHEN_ASYNC_GENERATION"
+      - "DB_CONTRACT"
+      - "INVARIANTS"
+      - "TRACEABILITY"
+      - "AUDIT_BINDINGS"
+    inference:
+      may_infer: ["report_types", "parameters", "job_status", "format", "owner", "retention"]
+      must_not_infer: ["analytic_content_without_projection", "data_outside_module_boundary"]
+
+  ai_ingestion:
+    sources_allowed:
+      domain_authority: []
+      benchmark:
+        - source_id: "EXTERNAL_SPORTS_DATA_SOURCES"
+          allowed_for: ["input_data_sources"]
+      technical_standard:
+        - source_id: "OPENAPI"
+        - source_id: "ASYNCAPI"
+        - source_id: "JSON_SCHEMA"
+    required_contract_artifacts:
+      - "MODULE_PROFILE"
+      - "OPENAPI"
+      - "ASYNCAPI"
+      - "EXECUTION_BINDINGS"
+      - "DB_CONTRACT"
+      - "INVARIANTS"
+      - "SIDE_EFFECTS"
+      - "TRACEABILITY"
+    inference:
+      may_infer: ["input_schema", "source", "batch_vs_webhook", "explicit_mapping", "idempotency"]
+      must_not_infer:
+        - "implicit_parser"
+        - "prompt_deduced_semantics"
+        - "silent_normalization_without_mapping"
+        - "final_domain_ownership"
+
+  identity_access:
+    sources_allowed:
+      domain_authority: []
+      benchmark:
+        - source_id: "OWASP"
+          allowed_for: ["security_benchmark"]
+      technical_standard:
+        - source_id: "OPENID_CONNECT"
+        - source_id: "OAUTH2"
+        - source_id: "OPENAPI"
+        - source_id: "ARAZZO"
+        - source_id: "JSON_SCHEMA"
+    required_contract_artifacts:
+      - "MODULE_PROFILE"
+      - "OPENAPI"
+      - "ARAZZO"
+      - "DB_CONTRACT"
+      - "INVARIANTS"
+      - "SECURITY_CONTRACT"
+      - "AUDIT_BINDINGS"
+      - "TRACEABILITY"
+    inference:
+      may_infer: ["login", "logout", "session", "mfa", "jwt", "refresh", "technical_role_binding", "consent_flows"]
+      must_not_infer:
+        - "sports_profile"
+        - "clinical_data"
+        - "business_attributes_of_users_or_teams_or_medical"
+
+  audit:
+    sources_allowed:
+      domain_authority: []
+      benchmark:
+        - source_id: "OWASP"
+          allowed_for: ["logging_audit_benchmark"]
+      technical_standard:
+        - source_id: "OPENAPI"
+        - source_id: "ASYNCAPI"
+        - source_id: "JSON_SCHEMA"
+    required_contract_artifacts:
+      - "MODULE_PROFILE"
+      - "OPENAPI"
+      - "ASYNCAPI_WHEN_STREAM"
+      - "DB_CONTRACT"
+      - "INVARIANTS"
+      - "RETENTION_POLICY"
+      - "TRACEABILITY"
+    inference:
+      may_infer: ["actor", "action", "target", "timestamp", "correlation_id", "outcome", "origin", "before_after_when_contracted"]
+      must_not_infer:
+        - "full_sensitive_payloads"
+        - "copy_pii_phi_unnecessarily"
+        - "replace_domain_logs"
+
+  notifications:
+    sources_allowed:
+      domain_authority: []
+      benchmark: []
+      technical_standard:
+        - source_id: "ASYNCAPI"
+        - source_id: "CLOUDEVENTS"
+        - source_id: "OPENAPI"
+        - source_id: "ARAZZO"
+        - source_id: "JSON_SCHEMA"
+    required_contract_artifacts:
+      - "MODULE_PROFILE"
+      - "OPENAPI"
+      - "ASYNCAPI"
+      - "ARAZZO"
+      - "DB_CONTRACT"
+      - "INVARIANTS"
+      - "DELIVERY_CONTRACT"
+      - "TRACEABILITY"
+    inference:
+      may_infer: ["event_envelope", "channel", "recipient", "preference", "delivery_status", "retries", "templates_referenced"]
+      must_not_infer: ["undefined_domain_content", "access_policy", "origin_module_business_states"]
+
+derived_gates:
+  matrix_integrity_gate:
+    gate_id: "MODULE_SOURCE_AUTHORITY_MATRIX_GATE"
+    schema_path: "contracts/schemas/shared/module_source_authority_matrix.schema.json"
+
+  boundary_users_identity_access:
+    gate_id: "BOUNDARY_USERS_IDENTITY_ACCESS_GATE"
+    users_forbidden:
+      fields:
+        - "password_hash"
+        - "refresh_token"
+        - "mfa_secret"
+        - "last_login_ip"
+        - "jwt"
+        - "access_token"
+        - "oauth"
+      path_markers:
+        - "/login"
+        - "/logout"
+        - "/token"
+        - "/refresh"
+        - "/mfa"
+        - "/authorize"
+    identity_access_forbidden:
+      fields:
+        - "birth_date"
+        - "height"
+        - "dominant_hand"
+        - "position"
+        - "injury_history_summary"
+
+  wellness_medical_boundary:
+    gate_id: "WELLNESS_MEDICAL_BOUNDARY_GATE"
+    wellness_forbidden:
+      fields:
+        - "diagnosis"
+        - "treatment"
+        - "prescription"
+        - "procedure"
+        - "medical_record"
+        - "clinical_note"
+
+  scout_taxonomy:
+    gate_id: "SCOUT_TAXONOMY_GATE"
+    trigger_fields: ["eventType", "event_type", "tagType", "tag_type"]
+    required_taxonomy_artifact:
+      path: "docs/hbtrack/modulos/scout/CANONICAL_EVENT_TAXONOMY_SCOUT.yaml"
+
+  async_required_module:
+    gate_id: "ASYNC_REQUIRED_MODULE_GATE"
+    rules:
+      - module: "training"
+        require_arazzo_when_openapi_has_paths: true
+        require_asyncapi_when_openapi_has_paths: false
+      - module: "reports"
+        require_arazzo_when_openapi_has_paths: true
+        require_asyncapi_when_openapi_has_paths: false
+      - module: "identity_access"
+        require_arazzo_when_openapi_has_paths: true
+        require_asyncapi_when_openapi_has_paths: false
+      - module: "notifications"
+        require_arazzo_when_openapi_has_paths: true
+        require_asyncapi_when_openapi_has_paths: true
+      - module: "ai_ingestion"
+        require_arazzo_when_openapi_has_paths: false
+        require_asyncapi_when_openapi_has_paths: true
+
+  external_source_authority:
+    gate_id: "EXTERNAL_SOURCE_AUTHORITY_GATE"
+    forbidden_ssot_markers:
+      - "SSOT: XPS"
+      - "SSOT: Teamworks"
+      - "XPS é SSOT"
+      - "Teamworks é SSOT"

@@ -34,7 +34,7 @@ Este documento deve ser lido junto com:
 - `docs/_canon/CHANGE_POLICY.md`
 - `docs/_canon/TEST_STRATEGY.md`
 - `.contract_driven/DOMAIN_AXIOMS.json` (axiomas globais machine-readable)
-- `.contract_driven/templates/API_RULES/API_RULES.yaml` quando aplicável à superfície HTTP
+- `.contract_driven/templates/api/api_rules.yaml` quando aplicável à superfície HTTP
 
 ---
 
@@ -101,7 +101,7 @@ Este documento não redefine:
 - templates de contratos
 - regras de API HTTP da superfície OpenAPI
 
-Esses itens continuam sendo governados por `LAYOUT`, `RULES`, `GLOBAL_TEMPLATES` e `API_RULES.yaml`.
+Esses itens continuam sendo governados por `LAYOUT`, `RULES`, `GLOBAL_TEMPLATES` e `api_rules.yaml`.
 
 ---
 
@@ -214,11 +214,18 @@ Nenhum outro exit code é canônico sem atualização deste documento.
 A ordem canônica é:
 		0.	AXIOM_INTEGRITY_GATE
 		1.	PATH_CANONICALITY_GATE
-		2.	REQUIRED_ARTIFACT_PRESENCE_GATE
-		2A.	MODULE_DOC_CROSSREF_GATE
-		2B.	API_NORMATIVE_DUPLICATION_GATE (não-bloqueante)
-		3.	PLACEHOLDER_RESIDUE_GATE
-		4.	REF_HERMETICITY_GATE
+			2.	REQUIRED_ARTIFACT_PRESENCE_GATE
+			2A.	MODULE_DOC_CROSSREF_GATE
+			2B.	API_NORMATIVE_DUPLICATION_GATE (não-bloqueante)
+			2C.	OWASP_API_CONTROL_MATRIX_GATE
+			2D.	MODULE_SOURCE_AUTHORITY_MATRIX_GATE
+			2E.	BOUNDARY_USERS_IDENTITY_ACCESS_GATE
+			2F.	WELLNESS_MEDICAL_BOUNDARY_GATE
+			2G.	SCOUT_TAXONOMY_GATE
+			2H.	ASYNC_REQUIRED_MODULE_GATE
+			2I.	EXTERNAL_SOURCE_AUTHORITY_GATE
+			3.	PLACEHOLDER_RESIDUE_GATE
+			4.	REF_HERMETICITY_GATE
 		5.	OPENAPI_ROOT_STRUCTURE_GATE
 		6.	OPENAPI_POLICY_RULESET_GATE
 		7.	JSON_SCHEMA_VALIDATION_GATE
@@ -572,7 +579,7 @@ Blocking codes
 
 Objetivo
 
-Detectar risco de duplicação normativa de convenções/shape HTTP no canon humano (`docs/_canon/`) sem apontar a SSOT `.contract_driven/templates/API_RULES/API_RULES.yaml`.
+Detectar risco de duplicação normativa de convenções/shape HTTP no canon humano (`docs/_canon/`) sem apontar a SSOT `.contract_driven/templates/api/api_rules.yaml`.
 
 Severidade
 
@@ -588,6 +595,172 @@ Qualquer doc do canon menciona convenções/shape HTTP e não aponta a SSOT.
 
 Blocking code
 	•	WARN_API_NORMATIVE_OUTSIDE_SSOT
+
+⸻
+
+9.2C OWASP_API_CONTROL_MATRIX_GATE
+
+Objetivo
+
+Materializar OWASP como **artefato normativo canônico** (sem narrativa genérica), exigindo:
+	•	matriz estável (OWASP → declaração → evidência → gate)
+	•	estrutura validável por automação (schema)
+	•	IDs estáveis (`control_id`) e cobertura de taxonomia
+
+Artefatos
+	•	docs/_canon/security/OWASP_API_CONTROL_MATRIX.yaml
+	•	contracts/schemas/shared/owasp_api_control_matrix.schema.json
+
+Aplica quando
+
+Sempre.
+
+PASS
+
+Arquivo presente e válido contra schema; `control_id` sem duplicação; `applies_to` alinhado com a taxonomia canônica de módulos.
+
+FAIL
+
+Arquivo ausente, YAML inválido, violações de schema, `control_id` duplicado, ou desalinhamento com a taxonomia canônica.
+
+Blocking codes
+	•	BLOCKED_OWASP_CONTROL_MATRIX_MISSING
+	•	BLOCKED_OWASP_CONTROL_MATRIX_INVALID
+	•	ERROR_INFRA (schema ausente/ilegível)
+
+⸻
+
+9.2D MODULE_SOURCE_AUTHORITY_MATRIX_GATE
+
+Objetivo
+
+Materializar a matriz canônica por módulo (fontes permitidas, artefatos obrigatórios e limites de inferência),
+em formato operacional (YAML + schema), para servir de entrada determinística para gates derivados.
+
+Artefatos
+	•	docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
+	•	contracts/schemas/shared/module_source_authority_matrix.schema.json
+
+Aplica quando
+
+Sempre.
+
+PASS
+
+Arquivo presente e válido contra schema; lista de módulos alinhada com taxonomia canônica.
+
+FAIL
+
+Arquivo ausente, YAML inválido, violações de schema, ou desalinhamento com a taxonomia canônica.
+
+Blocking codes
+	•	BLOCKED_MODULE_SOURCE_AUTHORITY_MATRIX_MISSING
+	•	BLOCKED_MODULE_SOURCE_AUTHORITY_MATRIX_INVALID
+	•	ERROR_INFRA (schema ausente/ilegível)
+
+⸻
+
+9.2E BOUNDARY_USERS_IDENTITY_ACCESS_GATE
+
+Objetivo
+
+Impor boundary crítico: `users` não contém credenciais/auth; `identity_access` não contém athlete/profile.
+
+Entradas (exemplos)
+	•	contracts/openapi/paths/users.yaml
+	•	contracts/openapi/paths/identity_access.yaml
+	•	contracts/openapi/components/schemas/users/**
+	•	contracts/openapi/components/schemas/identity_access/**
+	•	contracts/schemas/users/**
+	•	contracts/schemas/identity_access/**
+	•	docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml (fonte dos marcadores proibidos)
+
+PASS
+
+Nenhum campo/rota proibida detectada nos contratos dos módulos.
+
+FAIL
+
+Qualquer campo/rota proibida detectada.
+
+Blocking code
+	•	BLOCKED_BOUNDARY_USERS_IDENTITY_ACCESS
+
+⸻
+
+9.2F WELLNESS_MEDICAL_BOUNDARY_GATE
+
+Objetivo
+
+Bloquear presença de diagnóstico/tratamento/prontuário em `wellness` (deve viver em `medical` quando aplicável).
+
+PASS
+
+Sem campos clínicos proibidos em contratos de `wellness`.
+
+FAIL
+
+Campos clínicos proibidos detectados em `wellness`.
+
+Blocking code
+	•	BLOCKED_WELLNESS_MEDICAL_BOUNDARY
+
+⸻
+
+9.2G SCOUT_TAXONOMY_GATE
+
+Objetivo
+
+Quando contratos de `scout` introduzirem campos de taxonomia (`eventType`, etc.), exigir artefato canônico de taxonomia.
+
+PASS
+
+Taxonomia não acionada, ou artefato canônico presente quando acionada.
+
+FAIL
+
+Taxonomia acionada sem artefato canônico presente.
+
+Blocking code
+	•	BLOCKED_SCOUT_TAXONOMY
+
+⸻
+
+9.2H ASYNC_REQUIRED_MODULE_GATE
+
+Objetivo
+
+Para módulos que declaram workflows/eventos, exigir Arazzo/AsyncAPI quando o módulo já tem OpenAPI com paths reais.
+
+PASS
+
+Para cada módulo aplicável com paths reais: artefatos exigidos presentes (ex.: workflow `.arazzo.yaml`).
+
+FAIL
+
+Módulo com OpenAPI paths reais sem os artefatos async/workflow exigidos.
+
+Blocking code
+	•	BLOCKED_ASYNC_REQUIRED_MODULE
+
+⸻
+
+9.2I EXTERNAL_SOURCE_AUTHORITY_GATE
+
+Objetivo
+
+Impedir que benchmarks (XPS/Teamworks) sejam tratados como SSOT em documentação canônica/de módulo.
+
+PASS
+
+Nenhum marker proibido encontrado nos docs verificados.
+
+FAIL
+
+Marker proibido encontrado.
+
+Blocking code
+	•	BLOCKED_EXTERNAL_SOURCE_AUTHORITY
 
 ⸻
 
@@ -749,7 +922,7 @@ Sempre que contracts/openapi/openapi.yaml existir.
 Entradas
 	•	contracts/openapi/openapi.yaml
 	•	.spectral.yaml
-	•	.contract_driven/templates/API_RULES/API_RULES.yaml quando aplicável
+	•	.contract_driven/templates/api/api_rules.yaml quando aplicável
 
 Ferramenta
 

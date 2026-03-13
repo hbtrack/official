@@ -1,5 +1,5 @@
 # Problem Details for HTTP APIs (RFC 7807)
-# SSOT (convenções/validação): `.contract_driven/DOMAIN_AXIOMS.json#error_axioms` e `.contract_driven/templates/API_RULES/API_RULES.yaml`
+# SSOT (convenções/validação): `.contract_driven/DOMAIN_AXIOMS.json#error_axioms` e `.contract_driven/templates/api/api_rules.yaml`
 type: object
 required:
   - type

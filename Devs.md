@@ -213,7 +213,7 @@ python scripts/contracts/validate/api/compile_api_intent.py \
 #### 2. Compilador de Política (enforcement de regras)
 
 ```powershell
-# Valida contrato contra API_RULES.yaml
+# Valida contrato contra api_rules.yaml
 python scripts/contracts/validate/api/compile_api_policy.py \
   --module training \
   --surface sync

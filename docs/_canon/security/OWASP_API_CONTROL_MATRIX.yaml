@@ -1,0 +1,797 @@
+version: "1.0.0"
+artifact: "OWASP_API_CONTROL_MATRIX"
+status: "active"
+scope: "global"
+
+applies_to:
+  - users
+  - seasons
+  - teams
+  - training
+  - wellness
+  - medical
+  - competitions
+  - matches
+  - scout
+  - exercises
+  - analytics
+  - reports
+  - ai_ingestion
+  - identity_access
+  - audit
+  - notifications
+
+policy:
+  objective: >
+    Converter OWASP API Security Top 10 (2023) em requisitos contratuais do HB Track:
+    declaração mínima (contrato de máquina + contrato humano), evidência exigida e gates automatizáveis.
+
+  interpretation_rules:
+    - "Cada controle declara onde vive: OpenAPI, contrato humano normativo, ou ambos."
+    - "Cada controle define evidência contratual mínima verificável por automação."
+    - "Quando behavioral_required=true, declaração-only não é suficiente para status VERIFIED."
+    - "Ausência de declaração normativa aplicável é falha de contrato, antes da implementação."
+    - "Nem todo gate prova comportamento runtime; gates podem validar presença, consistência e cobertura."
+
+control_matrix:
+  - control_id: "SEC-OWASP-001"
+    title: "Authentication declared for protected operations"
+    owasp_refs:
+      - "API2:2023 Broken Authentication"
+    category: "authentication"
+    severity: "critical"
+    applies_to_operation_types:
+      - "protected_read"
+      - "protected_write"
+      - "admin_operation"
+    declaration:
+      openapi:
+        required: true
+        fields:
+          - "components.securitySchemes"
+          - "security"
+      human_contract:
+        required: true
+        fields:
+          - "auth_scheme"
+          - "required_scopes_or_roles"
+          - "authentication_exceptions"
+    evidence:
+      contractual_minimum:
+        - "operation declares security requirement"
+        - "referenced security scheme exists"
+        - "required scopes or roles are listed"
+      behavioral_required: true
+      behavioral_minimum:
+        - "unauthenticated request is rejected"
+        - "invalid token is rejected"
+    gates:
+      declaration_gate: "AUTH_DECLARATION_GATE"
+      behavior_gate: "AUTH_BEHAVIOR_GATE"
+    exit_codes:
+      missing_declaration: 2
+      inconsistent_declaration: 2
+      missing_behavioral_evidence: 2
+      infra_error: 3
+
+  - control_id: "SEC-OWASP-002"
+    title: "Object-level authorization declared for resource access"
+    owasp_refs:
+      - "API1:2023 Broken Object Level Authorization"
+    category: "authorization_object"
+    severity: "critical"
+    applies_to_operation_types:
+      - "resource_by_id_read"
+      - "resource_by_id_update"
+      - "resource_by_id_delete"
+      - "nested_resource_access"
+    declaration:
+      openapi:
+        required: false
+        recommended_extensions:
+          - "x-authorization-object"
+          - "x-tenant-scope"
+      human_contract:
+        required: true
+        fields:
+          - "protected_resource"
+          - "ownership_or_scope_rule"
+          - "cross_tenant_rule"
+          - "access_denial_policy"
+    evidence:
+      contractual_minimum:
+        - "protected resource is identified"
+        - "ownership or scope rule is declared"
+        - "cross-tenant/cross-owner access rule is declared"
+      behavioral_required: true
+      behavioral_minimum:
+        - "access to foreign resource is denied"
+        - "denial response code matches policy"
+    gates:
+      declaration_gate: "OBJECT_AUTHZ_GATE"
+      behavior_gate: "OBJECT_AUTHZ_BEHAVIOR_GATE"
+    exit_codes:
+      missing_declaration: 2
+      inconsistent_declaration: 2
+      missing_behavioral_evidence: 2
+      infra_error: 3
+
+  - control_id: "SEC-OWASP-003"
+    title: "Function-level authorization declared for sensitive actions"
+    owasp_refs:
+      - "API5:2023 Broken Function Level Authorization"
+    category: "authorization_function"
+    severity: "critical"
+    applies_to_operation_types:
+      - "protected_write"
+      - "admin_operation"
+      - "sensitive_business_flow"
+    declaration:
+      openapi:
+        required: false
+        recommended_extensions:
+          - "x-required-roles"
+          - "x-required-scopes"
+      human_contract:
+        required: true
+        fields:
+          - "rbac_policy"
+          - "least_privilege_rule"
+          - "elevation_policy"
+    evidence:
+      contractual_minimum:
+        - "required roles or scopes are declared"
+        - "admin-only operations are explicitly tagged"
+      behavioral_required: true
+      behavioral_minimum:
+        - "insufficient privilege is denied"
+    gates:
+      declaration_gate: "FUNCTION_AUTHZ_GATE"
+      behavior_gate: "FUNCTION_AUTHZ_BEHAVIOR_GATE"
+    exit_codes:
+      missing_declaration: 2
+      inconsistent_declaration: 2
+      missing_behavioral_evidence: 2
+      infra_error: 3
+
+  - control_id: "SEC-OWASP-004"
+    title: "Object property allowlisting declared for write operations (BOPLA)"
+    owasp_refs:
+      - "API3:2023 Broken Object Property Level Authorization"
+    category: "object_property_level_authorization"
+    severity: "high"
+    applies_to_operation_types:
+      - "protected_write"
+      - "resource_by_id_update"
+      - "upload_operation"
+    declaration:
+      openapi:
+        required: true
+        fields:
+          - "requestBody.content.application/json.schema.additionalProperties=false"
+      human_contract:
+        required: true
+        fields:
+          - "write_allowlist_policy"
+          - "server_side_enforcement_note"
+    evidence:
+      contractual_minimum:
+        - "request schemas are closed (no additionalProperties on objects that represent writes)"
+      behavioral_required: true
+      behavioral_minimum:
+        - "unexpected property is rejected or ignored per policy"
+    gates:
+      declaration_gate: "INPUT_CONSTRAINTS_GATE"
+      behavior_gate: "INPUT_CONSTRAINTS_BEHAVIOR_GATE"
+    exit_codes:
+      missing_declaration: 2
+      inconsistent_declaration: 2
+      missing_behavioral_evidence: 2
+      infra_error: 3
+
+  - control_id: "SEC-OWASP-005"
+    title: "Input validation constraints are declared"
+    owasp_refs:
+      - "API8:2023 Security Misconfiguration"
+    category: "input_validation"
+    severity: "high"
+    applies_to_operation_types:
+      - "protected_write"
+      - "upload_operation"
+      - "integration_callback"
+    declaration:
+      openapi:
+        required: true
+        fields:
+          - "requestBody.content.*.schema"
+          - "parameters.*.schema"
+      human_contract:
+        required: true
+        fields:
+          - "validation_rules"
+          - "rejection_behavior"
+    evidence:
+      contractual_minimum:
+        - "schemas define min/max/enum/pattern when applicable"
+        - "rejection behavior is declared"
+      behavioral_required: false
+      behavioral_minimum: []
+    gates:
+      declaration_gate: "INPUT_CONSTRAINTS_GATE"
+      behavior_gate: "INPUT_CONSTRAINTS_BEHAVIOR_GATE"
+    exit_codes:
+      missing_declaration: 2
+      inconsistent_declaration: 2
+      missing_behavioral_evidence: 2
+      infra_error: 3
+
+  - control_id: "SEC-OWASP-006"
+    title: "Response data minimization declared"
+    owasp_refs:
+      - "API3:2023 Broken Object Property Level Authorization"
+    category: "response_data_minimization"
+    severity: "high"
+    applies_to_operation_types:
+      - "protected_read"
+      - "list_operation"
+      - "search_operation"
+    declaration:
+      openapi:
+        required: true
+        fields:
+          - "responses.*.content.*.schema"
+      human_contract:
+        required: true
+        fields:
+          - "response_projection_policy"
+          - "sensitive_fields_policy"
+    evidence:
+      contractual_minimum:
+        - "response schemas do not include forbidden fields for the surface"
+      behavioral_required: false
+      behavioral_minimum: []
+    gates:
+      declaration_gate: "RESPONSE_MINIMIZATION_GATE"
+      behavior_gate: "RESPONSE_MINIMIZATION_BEHAVIOR_GATE"
+    exit_codes:
+      missing_declaration: 2
+      inconsistent_declaration: 2
+      missing_behavioral_evidence: 2
+      infra_error: 3
+
+  - control_id: "SEC-OWASP-007"
+    title: "Transport security policy declared (HTTPS-only)"
+    owasp_refs:
+      - "API8:2023 Security Misconfiguration"
+    category: "transport_security"
+    severity: "high"
+    applies_to_operation_types:
+      - "public_read"
+      - "protected_read"
+      - "protected_write"
+      - "integration_callback"
+    declaration:
+      openapi:
+        required: true
+        fields:
+          - "servers.url"
+      human_contract:
+        required: true
+        fields:
+          - "https_only_policy"
+          - "hsts_policy"
+    evidence:
+      contractual_minimum:
+        - "servers use https scheme for production"
+      behavioral_required: false
+      behavioral_minimum: []
+    gates:
+      declaration_gate: "TRANSPORT_SECURITY_GATE"
+      behavior_gate: "TRANSPORT_SECURITY_BEHAVIOR_GATE"
+    exit_codes:
+      missing_declaration: 2
+      inconsistent_declaration: 2
+      missing_behavioral_evidence: 2
+      infra_error: 3
+
+  - control_id: "SEC-OWASP-008"
+    title: "Token validation policy declared"
+    owasp_refs:
+      - "API2:2023 Broken Authentication"
+    category: "token_validation_policy"
+    severity: "high"
+    applies_to_operation_types:
+      - "protected_read"
+      - "protected_write"
+      - "admin_operation"
+    declaration:
+      openapi:
+        required: false
+        recommended_extensions:
+          - "x-token-audience"
+          - "x-token-issuer"
+      human_contract:
+        required: true
+        fields:
+          - "token_issuer_policy"
+          - "token_audience_policy"
+          - "token_expiry_policy"
+    evidence:
+      contractual_minimum:
+        - "issuer and audience policy declared"
+        - "expiry and clock-skew policy declared"
+      behavioral_required: true
+      behavioral_minimum:
+        - "expired token is rejected"
+    gates:
+      declaration_gate: "TOKEN_POLICY_GATE"
+      behavior_gate: "TOKEN_POLICY_BEHAVIOR_GATE"
+    exit_codes:
+      missing_declaration: 2
+      inconsistent_declaration: 2
+      missing_behavioral_evidence: 2
+      infra_error: 3
+
+  - control_id: "SEC-OWASP-009"
+    title: "Resource consumption limits are declared"
+    owasp_refs:
+      - "API4:2023 Unrestricted Resource Consumption"
+    category: "resource_consumption"
+    severity: "high"
+    applies_to_operation_types:
+      - "list_operation"
+      - "search_operation"
+      - "upload_operation"
+      - "export_operation"
+    declaration:
+      openapi:
+        required: true
+        fields:
+          - "parameters"
+          - "responses.429"
+        recommended_extensions:
+          - "x-rate-limit"
+          - "x-burst-limit"
+          - "x-max-page-size"
+          - "x-max-payload-bytes"
+          - "x-timeout-ms"
+      human_contract:
+        required: true
+        fields:
+          - "rate_limit_policy"
+          - "pagination_policy"
+          - "payload_size_policy"
+          - "timeout_policy"
+    evidence:
+      contractual_minimum:
+        - "list/search operation declares bounded pagination"
+        - "429 response is documented for throttling when applicable"
+      behavioral_required: false
+      behavioral_minimum: []
+    gates:
+      declaration_gate: "RESOURCE_CONSUMPTION_GATE"
+      behavior_gate: "RESOURCE_CONSUMPTION_BEHAVIOR_GATE"
+    exit_codes:
+      missing_declaration: 2
+      inconsistent_declaration: 2
+      missing_behavioral_evidence: 2
+      infra_error: 3
+
+  - control_id: "SEC-OWASP-010"
+    title: "Sensitive business flow protection declared"
+    owasp_refs:
+      - "API4:2023 Unrestricted Resource Consumption"
+      - "API6:2023 Unrestricted Access to Sensitive Business Flows"
+    category: "sensitive_business_flow_protection"
+    severity: "high"
+    applies_to_operation_types:
+      - "sensitive_business_flow"
+      - "protected_write"
+    declaration:
+      openapi:
+        required: false
+        recommended_extensions:
+          - "x-abuse-protection"
+      human_contract:
+        required: true
+        fields:
+          - "abuse_protection_policy"
+          - "step_up_auth_policy"
+    evidence:
+      contractual_minimum:
+        - "flow is tagged as sensitive and has abuse protection policy"
+      behavioral_required: false
+      behavioral_minimum: []
+    gates:
+      declaration_gate: "BUSINESS_FLOW_ABUSE_GATE"
+      behavior_gate: "BUSINESS_FLOW_ABUSE_BEHAVIOR_GATE"
+    exit_codes:
+      missing_declaration: 2
+      inconsistent_declaration: 2
+      missing_behavioral_evidence: 2
+      infra_error: 3
+
+  - control_id: "SEC-OWASP-011"
+    title: "Idempotency declared for critical operations"
+    owasp_refs:
+      - "API6:2023 Unrestricted Access to Sensitive Business Flows"
+    category: "idempotency"
+    severity: "medium"
+    applies_to_operation_types:
+      - "protected_write"
+      - "sensitive_business_flow"
+    declaration:
+      openapi:
+        required: false
+        recommended_extensions:
+          - "x-idempotency-key"
+      human_contract:
+        required: true
+        fields:
+          - "idempotency_policy"
+          - "replay_window_policy"
+    evidence:
+      contractual_minimum:
+        - "idempotency policy is declared for critical writes"
+      behavioral_required: false
+      behavioral_minimum: []
+    gates:
+      declaration_gate: "IDEMPOTENCY_GATE"
+      behavior_gate: "IDEMPOTENCY_BEHAVIOR_GATE"
+    exit_codes:
+      missing_declaration: 2
+      inconsistent_declaration: 2
+      missing_behavioral_evidence: 2
+      infra_error: 3
+
+  - control_id: "SEC-OWASP-012"
+    title: "SSRF surface control declared for outbound fetches"
+    owasp_refs:
+      - "API7:2023 Server Side Request Forgery"
+    category: "ssrf_surface_control"
+    severity: "high"
+    applies_to_operation_types:
+      - "integration_callback"
+      - "upload_operation"
+    declaration:
+      openapi:
+        required: false
+        recommended_extensions:
+          - "x-outbound-fetch"
+      human_contract:
+        required: true
+        fields:
+          - "egress_allowlist_policy"
+          - "dns_rebinding_policy"
+    evidence:
+      contractual_minimum:
+        - "egress allowlist policy declared when outbound fetch exists"
+      behavioral_required: false
+      behavioral_minimum: []
+    gates:
+      declaration_gate: "SSRF_SURFACE_GATE"
+      behavior_gate: "SSRF_SURFACE_BEHAVIOR_GATE"
+    exit_codes:
+      missing_declaration: 2
+      inconsistent_declaration: 2
+      missing_behavioral_evidence: 2
+      infra_error: 3
+
+  - control_id: "SEC-OWASP-013"
+    title: "Secret exposure prevention declared"
+    owasp_refs:
+      - "API8:2023 Security Misconfiguration"
+    category: "secret_exposure"
+    severity: "high"
+    applies_to_operation_types:
+      - "protected_read"
+      - "protected_write"
+      - "integration_callback"
+    declaration:
+      openapi:
+        required: false
+        recommended_extensions:
+          - "x-secret-handling"
+      human_contract:
+        required: true
+        fields:
+          - "secrets_storage_policy"
+          - "redaction_policy"
+    evidence:
+      contractual_minimum:
+        - "secrets handling and redaction policy declared"
+      behavioral_required: false
+      behavioral_minimum: []
+    gates:
+      declaration_gate: "SECRET_EXPOSURE_GATE"
+      behavior_gate: "SECRET_EXPOSURE_BEHAVIOR_GATE"
+    exit_codes:
+      missing_declaration: 2
+      inconsistent_declaration: 2
+      missing_behavioral_evidence: 2
+      infra_error: 3
+
+  - control_id: "SEC-OWASP-014"
+    title: "Safe error contract declared (Problem+JSON, no leakage)"
+    owasp_refs:
+      - "API8:2023 Security Misconfiguration"
+    category: "safe_error_contract"
+    severity: "high"
+    applies_to_operation_types:
+      - "public_read"
+      - "protected_read"
+      - "protected_write"
+      - "integration_callback"
+    declaration:
+      openapi:
+        required: true
+        fields:
+          - "components.schemas.problem"
+          - "responses.*.content.application/problem+json"
+      human_contract:
+        required: true
+        fields:
+          - "error_disclosure_policy"
+          - "trace_id_policy"
+    evidence:
+      contractual_minimum:
+        - "Problem+JSON is declared and referenced"
+        - "no stack traces or internal identifiers are exposed by contract"
+      behavioral_required: false
+      behavioral_minimum: []
+    gates:
+      declaration_gate: "ERROR_DISCLOSURE_GATE"
+      behavior_gate: "ERROR_DISCLOSURE_BEHAVIOR_GATE"
+    exit_codes:
+      missing_declaration: 2
+      inconsistent_declaration: 2
+      missing_behavioral_evidence: 2
+      infra_error: 3
+
+  - control_id: "SEC-OWASP-015"
+    title: "Audit event declaration for security-relevant actions"
+    owasp_refs:
+      - "API9:2023 Improper Inventory Management"
+      - "API10:2023 Unsafe Consumption of APIs"
+    category: "logging_audit"
+    severity: "medium"
+    applies_to_operation_types:
+      - "admin_operation"
+      - "sensitive_business_flow"
+      - "protected_write"
+    declaration:
+      openapi:
+        required: false
+        recommended_extensions:
+          - "x-audit-event"
+      human_contract:
+        required: true
+        fields:
+          - "audit_event_type"
+          - "audit_payload_policy"
+    evidence:
+      contractual_minimum:
+        - "audit event types are declared for relevant flows"
+      behavioral_required: false
+      behavioral_minimum: []
+    gates:
+      declaration_gate: "AUDIT_EVENT_DECLARATION_GATE"
+      behavior_gate: "AUDIT_EVENT_BEHAVIOR_GATE"
+    exit_codes:
+      missing_declaration: 2
+      inconsistent_declaration: 2
+      missing_behavioral_evidence: 2
+      infra_error: 3
+
+  - control_id: "SEC-OWASP-016"
+    title: "Tenant isolation rules declared"
+    owasp_refs:
+      - "API1:2023 Broken Object Level Authorization"
+    category: "tenant_isolation"
+    severity: "critical"
+    applies_to_operation_types:
+      - "protected_read"
+      - "protected_write"
+      - "resource_by_id_read"
+      - "resource_by_id_update"
+      - "resource_by_id_delete"
+    declaration:
+      openapi:
+        required: false
+        recommended_extensions:
+          - "x-tenant-key"
+      human_contract:
+        required: true
+        fields:
+          - "tenant_boundary_definition"
+          - "cross_tenant_denial_policy"
+    evidence:
+      contractual_minimum:
+        - "tenant boundary and denial policy declared"
+      behavioral_required: true
+      behavioral_minimum:
+        - "cross-tenant access is denied"
+    gates:
+      declaration_gate: "TENANT_ISOLATION_GATE"
+      behavior_gate: "TENANT_ISOLATION_BEHAVIOR_GATE"
+    exit_codes:
+      missing_declaration: 2
+      inconsistent_declaration: 2
+      missing_behavioral_evidence: 2
+      infra_error: 3
+
+  - control_id: "SEC-OWASP-017"
+    title: "Safe pagination declared (bounded page size, cursor-based when needed)"
+    owasp_refs:
+      - "API4:2023 Unrestricted Resource Consumption"
+    category: "safe_pagination"
+    severity: "high"
+    applies_to_operation_types:
+      - "list_operation"
+      - "search_operation"
+    declaration:
+      openapi:
+        required: true
+        fields:
+          - "parameters.pageSize"
+          - "parameters.pageToken"
+      human_contract:
+        required: true
+        fields:
+          - "pagination_policy"
+          - "max_page_size"
+    evidence:
+      contractual_minimum:
+        - "page size is bounded by contract"
+      behavioral_required: false
+      behavioral_minimum: []
+    gates:
+      declaration_gate: "PAGINATION_SAFETY_GATE"
+      behavior_gate: "PAGINATION_SAFETY_BEHAVIOR_GATE"
+    exit_codes:
+      missing_declaration: 2
+      inconsistent_declaration: 2
+      missing_behavioral_evidence: 2
+      infra_error: 3
+
+  - control_id: "SEC-OWASP-018"
+    title: "Upload security policy declared"
+    owasp_refs:
+      - "API4:2023 Unrestricted Resource Consumption"
+      - "API8:2023 Security Misconfiguration"
+    category: "upload_security_policy"
+    severity: "high"
+    applies_to_operation_types:
+      - "upload_operation"
+    declaration:
+      openapi:
+        required: true
+        fields:
+          - "requestBody.content"
+          - "responses.413"
+      human_contract:
+        required: true
+        fields:
+          - "max_payload_bytes"
+          - "allowed_content_types"
+          - "malware_scanning_policy"
+    evidence:
+      contractual_minimum:
+        - "max payload and allowed content types declared"
+      behavioral_required: false
+      behavioral_minimum: []
+    gates:
+      declaration_gate: "UPLOAD_SECURITY_GATE"
+      behavior_gate: "UPLOAD_SECURITY_BEHAVIOR_GATE"
+    exit_codes:
+      missing_declaration: 2
+      inconsistent_declaration: 2
+      missing_behavioral_evidence: 2
+      infra_error: 3
+
+  - control_id: "SEC-OWASP-019"
+    title: "CORS policy declared for browser clients"
+    owasp_refs:
+      - "API8:2023 Security Misconfiguration"
+    category: "cors_policy"
+    severity: "medium"
+    applies_to_operation_types:
+      - "public_read"
+      - "protected_read"
+    declaration:
+      openapi:
+        required: false
+        recommended_extensions:
+          - "x-cors-policy"
+      human_contract:
+        required: true
+        fields:
+          - "cors_allowed_origins"
+          - "cors_credentials_policy"
+    evidence:
+      contractual_minimum:
+        - "CORS policy declared when browser clients exist"
+      behavioral_required: false
+      behavioral_minimum: []
+    gates:
+      declaration_gate: "CORS_POLICY_GATE"
+      behavior_gate: "CORS_POLICY_BEHAVIOR_GATE"
+    exit_codes:
+      missing_declaration: 2
+      inconsistent_declaration: 2
+      missing_behavioral_evidence: 2
+      infra_error: 3
+
+  - control_id: "SEC-OWASP-020"
+    title: "API lifecycle and compatibility policy declared"
+    owasp_refs:
+      - "API9:2023 Improper Inventory Management"
+    category: "api_lifecycle_versioning"
+    severity: "medium"
+    applies_to_operation_types:
+      - "public_read"
+      - "protected_read"
+      - "protected_write"
+    declaration:
+      openapi:
+        required: true
+        fields:
+          - "info.version"
+      human_contract:
+        required: true
+        fields:
+          - "deprecation_policy"
+          - "compatibility_policy"
+    evidence:
+      contractual_minimum:
+        - "versioning and deprecation policy declared"
+      behavioral_required: false
+      behavioral_minimum: []
+    gates:
+      declaration_gate: "API_LIFECYCLE_GATE"
+      behavior_gate: "API_LIFECYCLE_BEHAVIOR_GATE"
+    exit_codes:
+      missing_declaration: 2
+      inconsistent_declaration: 2
+      missing_behavioral_evidence: 2
+      infra_error: 3
+
+  - control_id: "SEC-OWASP-021"
+    title: "Threat model declared for critical flows"
+    owasp_refs:
+      - "API10:2023 Unsafe Consumption of APIs"
+    category: "threat_model_for_critical_flows"
+    severity: "low"
+    applies_to_operation_types:
+      - "sensitive_business_flow"
+      - "admin_operation"
+    declaration:
+      openapi:
+        required: false
+        recommended_extensions:
+          - "x-threat-model"
+      human_contract:
+        required: true
+        fields:
+          - "attack_surface"
+          - "mitigations"
+          - "assumptions"
+    evidence:
+      contractual_minimum:
+        - "threat model exists for critical flows"
+      behavioral_required: false
+      behavioral_minimum: []
+    gates:
+      declaration_gate: "CRITICAL_FLOW_THREAT_MODEL_GATE"
+      behavior_gate: "CRITICAL_FLOW_THREAT_MODEL_BEHAVIOR_GATE"
+    exit_codes:
+      missing_declaration: 2
+      inconsistent_declaration: 2
+      missing_behavioral_evidence: 2
+      infra_error: 3
+
+agent_rules:
+  - "Não inferir controles de segurança apenas pelo nome do endpoint."
+  - "Não marcar controle como atendido se faltar declaração normativa exigida."
+  - "Não marcar controle como atendido se a declaração OpenAPI existir mas a política humana obrigatória estiver ausente."
+  - "Quando behavioral_required=true, evidência contratual sem evidência comportamental não é suficiente para VERIFIED."

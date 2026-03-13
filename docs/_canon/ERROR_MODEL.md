@@ -13,7 +13,7 @@ Padronizar o formato de erros HTTP do HB Track usando **Problem Details for HTTP
 ## SSOT (fonte canônica)
 As regras determinísticas de shape, validação e uso do modelo de erro vivem em:
 - `.contract_driven/DOMAIN_AXIOMS.json` (seção `error_axioms`)
-- `.contract_driven/templates/API_RULES/API_RULES.yaml` (convenções HTTP/OpenAPI)
+- `.contract_driven/templates/api/api_rules.yaml` (convenções HTTP/OpenAPI)
 - `contracts/openapi/components/schemas/shared/problem.yaml` (schema OpenAPI do payload de erro)
 
 Este documento existe como ponteiro e visão humana (não-SSOT).
@@ -21,4 +21,4 @@ Este documento existe como ponteiro e visão humana (não-SSOT).
 ## Ponteiros operacionais
 - Media type canônico: `application/problem+json`
 - Shape OpenAPI: `contracts/openapi/components/schemas/shared/problem.yaml`
-- Convenções de API (SSOT): `.contract_driven/templates/API_RULES/API_RULES.yaml`
+- Convenções de API (SSOT): `.contract_driven/templates/api/api_rules.yaml`

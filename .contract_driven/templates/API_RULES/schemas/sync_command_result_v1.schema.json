@@ -1,0 +1,40 @@
+{
+    "$id": "https://api.hbtrack.com/schemas/sync_command_result_v1.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "HB Track Sync Command Result v1",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "requestId",
+        "matchEventId",
+        "sequenceNumber",
+        "deduplicated",
+        "processingAt"
+    ],
+    "properties": {
+        "requestId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The original idempotency key submitted by the client."
+        },
+        "matchEventId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Canonical server-generated match event identifier."
+        },
+        "sequenceNumber": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Canonical server-assigned event ordering number within the match event stream."
+        },
+        "deduplicated": {
+            "type": "boolean",
+            "description": "True when this requestId had already been processed and the existing canonical result is being returned."
+        },
+        "processingAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "UTC timestamp when the server processed or replayed the canonical command result."
+        }
+    }
+}

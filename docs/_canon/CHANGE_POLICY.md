@@ -255,7 +255,7 @@ Mudanças em schema do banco de dados seguem protocolo adicional:
 
 ## 11. Referências Cruzadas
 
-- `.contract_driven/templates/API_RULES/API_RULES.yaml` — SSOT de convenções/templates/validações de API HTTP
+- `.contract_driven/templates/api/api_rules.yaml` — SSOT de convenções/templates/validações de API HTTP
 - `API_CONVENTIONS.md` — guia/ponteiros (não-SSOT) para API
 - `DATA_CONVENTIONS.md` — convenções de dados e breaking changes de schema
 - `CONTRACT_SYSTEM_RULES.md` — regras operacionais do sistema contract-driven

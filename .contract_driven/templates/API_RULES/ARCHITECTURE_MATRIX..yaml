@@ -1,0 +1,125 @@
+version: 2.1.1
+artifact: ARCHITECTURE_MATRIX
+status: VALIDATION_ONLY_LOCKED
+purpose:
+- Validation-only matrix.
+- Must not be used by the agent as the primary module profile source.
+- Its job is to validate MODULE_PROFILE_REGISTRY.yaml against architectural constraints.
+validation_contract:
+  primary_module_source: MODULE_PROFILE_REGISTRY.yaml
+  forbidden_agent_behavior:
+  - read_module_class_from_this_file_instead_of_registry
+allowed_module_classes:
+- CRUD
+- EVENT_FIRST
+- HYBRID
+modules:
+  users:
+    allowed_module_classes:
+    - CRUD
+    allowed_surfaces:
+    - sync
+    sensitive: false
+  seasons:
+    allowed_module_classes:
+    - CRUD
+    allowed_surfaces:
+    - sync
+    sensitive: false
+  teams:
+    allowed_module_classes:
+    - CRUD
+    allowed_surfaces:
+    - sync
+    sensitive: false
+  training:
+    allowed_module_classes:
+    - HYBRID
+    allowed_surfaces:
+    - sync
+    - event
+    sensitive: false
+  wellness:
+    allowed_module_classes:
+    - HYBRID
+    allowed_surfaces:
+    - sync
+    - event
+    sensitive: true
+  medical:
+    allowed_module_classes:
+    - CRUD
+    allowed_surfaces:
+    - sync
+    sensitive: true
+  competitions:
+    allowed_module_classes:
+    - CRUD
+    allowed_surfaces:
+    - sync
+    sensitive: false
+  matches:
+    allowed_module_classes:
+    - EVENT_FIRST
+    allowed_surfaces:
+    - sync
+    - event
+    sensitive: false
+  scout:
+    allowed_module_classes:
+    - EVENT_FIRST
+    allowed_surfaces:
+    - sync
+    - event
+    sensitive: false
+  exercises:
+    allowed_module_classes:
+    - CRUD
+    allowed_surfaces:
+    - sync
+    sensitive: false
+  analytics:
+    allowed_module_classes:
+    - EVENT_FIRST
+    allowed_surfaces:
+    - sync
+    - event
+    sensitive: false
+  reports:
+    allowed_module_classes:
+    - HYBRID
+    allowed_surfaces:
+    - sync
+    - event
+    sensitive: false
+  ai_ingestion:
+    allowed_module_classes:
+    - CRUD
+    allowed_surfaces:
+    - sync
+    sensitive: true
+  identity_access:
+    allowed_module_classes:
+    - CRUD
+    allowed_surfaces:
+    - sync
+    sensitive: true
+  audit:
+    allowed_module_classes:
+    - EVENT_FIRST
+    allowed_surfaces:
+    - sync
+    - event
+    sensitive: false
+  notifications:
+    allowed_module_classes:
+    - EVENT_FIRST
+    allowed_surfaces:
+    - sync
+    - event
+    sensitive: false
+notes:
+- ai_ingestion is intentionally constrained to CRUD/sync in this release baseline.
+  Reclassify only via explicit architecture decision if replay-safe fact streams become
+  required.
+- wellness is HYBRID and therefore must keep both sync and event surfaces enabled.

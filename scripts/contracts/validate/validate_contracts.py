@@ -2244,7 +2244,7 @@ def _skip(gate_id: str, reason: str, dur: int = 0) -> dict:
 
 def _wsl_to_windows_path(path_str: str) -> str:
     """
-    Convert WSL path (/mnt/c/...) to Windows path (C:\...).
+    Convert WSL path (/mnt/c/...) to Windows path (C:\\...).
     If path doesn't start with /mnt/, return unchanged.
     """
     if not path_str.startswith("/mnt/"):
