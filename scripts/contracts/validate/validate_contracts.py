@@ -52,6 +52,15 @@ BLOCKED_LAYOUT_NONCOMPLIANCE = "BLOCKED_LAYOUT_NONCOMPLIANCE"
 BLOCKED_MISSING_MODULE_DOC = "BLOCKED_MISSING_MODULE_DOC"
 BLOCKED_INVALID_MODULE_DOC_HEADER = "BLOCKED_INVALID_MODULE_DOC_HEADER"
 WARN_API_NORMATIVE_OUTSIDE_SSOT = "WARN_API_NORMATIVE_OUTSIDE_SSOT"
+BLOCKED_OWASP_CONTROL_MATRIX_MISSING = "BLOCKED_OWASP_CONTROL_MATRIX_MISSING"
+BLOCKED_OWASP_CONTROL_MATRIX_INVALID = "BLOCKED_OWASP_CONTROL_MATRIX_INVALID"
+BLOCKED_MODULE_SOURCE_AUTHORITY_MATRIX_MISSING = "BLOCKED_MODULE_SOURCE_AUTHORITY_MATRIX_MISSING"
+BLOCKED_MODULE_SOURCE_AUTHORITY_MATRIX_INVALID = "BLOCKED_MODULE_SOURCE_AUTHORITY_MATRIX_INVALID"
+BLOCKED_BOUNDARY_USERS_IDENTITY_ACCESS = "BLOCKED_BOUNDARY_USERS_IDENTITY_ACCESS"
+BLOCKED_WELLNESS_MEDICAL_BOUNDARY = "BLOCKED_WELLNESS_MEDICAL_BOUNDARY"
+BLOCKED_SCOUT_TAXONOMY = "BLOCKED_SCOUT_TAXONOMY"
+BLOCKED_ASYNC_REQUIRED_MODULE = "BLOCKED_ASYNC_REQUIRED_MODULE"
+BLOCKED_EXTERNAL_SOURCE_AUTHORITY = "BLOCKED_EXTERNAL_SOURCE_AUTHORITY"
 
 BLOCKED_AXIOM_FILE_NOT_FOUND = "BLOCKED_AXIOM_FILE_NOT_FOUND"
 BLOCKED_INVALID_AXIOM_JSON = "BLOCKED_INVALID_AXIOM_JSON"
@@ -93,6 +102,15 @@ _KNOWN_BLOCKING_CODES = {
     BLOCKED_MISSING_MODULE_DOC,
     BLOCKED_INVALID_MODULE_DOC_HEADER,
     WARN_API_NORMATIVE_OUTSIDE_SSOT,
+    BLOCKED_OWASP_CONTROL_MATRIX_MISSING,
+    BLOCKED_OWASP_CONTROL_MATRIX_INVALID,
+    BLOCKED_MODULE_SOURCE_AUTHORITY_MATRIX_MISSING,
+    BLOCKED_MODULE_SOURCE_AUTHORITY_MATRIX_INVALID,
+    BLOCKED_BOUNDARY_USERS_IDENTITY_ACCESS,
+    BLOCKED_WELLNESS_MEDICAL_BOUNDARY,
+    BLOCKED_SCOUT_TAXONOMY,
+    BLOCKED_ASYNC_REQUIRED_MODULE,
+    BLOCKED_EXTERNAL_SOURCE_AUTHORITY,
     BLOCKED_AXIOM_FILE_NOT_FOUND,
     BLOCKED_INVALID_AXIOM_JSON,
     BLOCKED_AXIOM_SCHEMA_INVALID,
@@ -2161,6 +2179,10 @@ _CANONICAL_GLOBAL_DOCS: list[str] = [
     "contracts/openapi/openapi.yaml",
     "docs/_canon/CI_CONTRACT_GATES.md",
     "docs/_canon/ERROR_MODEL.md",
+    "docs/_canon/security/OWASP_API_CONTROL_MATRIX.yaml",
+    "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
+    "contracts/schemas/shared/owasp_api_control_matrix.schema.json",
+    "contracts/schemas/shared/module_source_authority_matrix.schema.json",
     ".spectral.yaml",
     "redocly.yaml",
 ]
@@ -2218,6 +2240,23 @@ def _pg(
 
 def _skip(gate_id: str, reason: str, dur: int = 0) -> dict:
     return _pg(gate_id, "SKIP_NOT_APPLICABLE", False, None, reason, [], [], [], [], dur)
+
+
+def _wsl_to_windows_path(path_str: str) -> str:
+    """
+    Convert WSL path (/mnt/c/...) to Windows path (C:\...).
+    If path doesn't start with /mnt/, return unchanged.
+    """
+    if not path_str.startswith("/mnt/"):
+        return path_str
+    # /mnt/c/foo/bar → C:\foo\bar
+    parts = path_str.split("/")
+    if len(parts) < 3:
+        return path_str
+    drive = parts[2].upper()
+    rest = "/".join(parts[3:])
+    windows_path = f"{drive}:\\" + rest.replace("/", "\\")
+    return windows_path
 
 
 def _try_tool(*cmd: str, cwd: pathlib.Path | None = None) -> tuple[int, str, str]:
@@ -2664,6 +2703,786 @@ def _g2b_api_normative_duplication(root: pathlib.Path) -> dict:
                "Sem risco detectável de duplicação normativa de API no canon.", [], checked, [], [], _ms(t0))
 
 
+def _g2c_owasp_api_control_matrix(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "OWASP_API_CONTROL_MATRIX_GATE"
+    matrix_path = root / "docs" / "_canon" / "security" / "OWASP_API_CONTROL_MATRIX.yaml"
+    schema_path = root / "contracts" / "schemas" / "shared" / "owasp_api_control_matrix.schema.json"
+
+    checked = [str(matrix_path), str(schema_path)]
+    if not matrix_path.exists():
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_OWASP_CONTROL_MATRIX_MISSING,
+            "Matriz OWASP canônica ausente (artefato normativo obrigatório).",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": BLOCKED_OWASP_CONTROL_MATRIX_MISSING,
+                "artifact": str(matrix_path.relative_to(root)),
+                "message": "Arquivo obrigatório ausente.",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    try:
+        data = _load_yaml(matrix_path)
+    except Exception as e:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_OWASP_CONTROL_MATRIX_INVALID,
+            "Matriz OWASP não é YAML parseável.",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": BLOCKED_OWASP_CONTROL_MATRIX_INVALID,
+                "artifact": str(matrix_path.relative_to(root)),
+                "message": f"Erro ao parsear YAML: {e}",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    if not isinstance(data, dict):
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_OWASP_CONTROL_MATRIX_INVALID,
+            "Matriz OWASP inválida: raiz deve ser objeto YAML.",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": BLOCKED_OWASP_CONTROL_MATRIX_INVALID,
+                "artifact": str(matrix_path.relative_to(root)),
+                "message": "Raiz do YAML deve ser um objeto (mapping).",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    if not schema_path.exists():
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            "ERROR_INFRA",
+            "Schema da matriz OWASP ausente (infra).",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": "ERROR_INFRA",
+                "artifact": str(schema_path.relative_to(root)),
+                "message": "Schema obrigatório ausente.",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    try:
+        schema = _load_json(schema_path)
+    except Exception as e:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            "ERROR_INFRA",
+            "Schema da matriz OWASP inválido (infra).",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": "ERROR_INFRA",
+                "artifact": str(schema_path.relative_to(root)),
+                "message": f"Erro ao carregar schema: {e}",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    schema_violations = validate_against_json_schema(data, schema)
+    violations: list[dict] = []
+    for v in schema_violations:
+        violations.append({
+            "blocking_code": BLOCKED_OWASP_CONTROL_MATRIX_INVALID,
+            "artifact": str(matrix_path.relative_to(root)),
+            "message": f"{v.get('path')}: {v.get('message')}",
+            "severity": v.get("severity", "error"),
+            "details": {k: v.get(k) for k in ("code", "path") if k in v},
+        })
+
+    controls = data.get("control_matrix")
+    if isinstance(controls, list):
+        ids = [c.get("control_id") for c in controls if isinstance(c, dict)]
+        seen: set[str] = set()
+        dups: list[str] = []
+        for cid in ids:
+            if not isinstance(cid, str) or not cid:
+                continue
+            if cid in seen:
+                dups.append(cid)
+            seen.add(cid)
+        if dups:
+            violations.append({
+                "blocking_code": BLOCKED_OWASP_CONTROL_MATRIX_INVALID,
+                "artifact": str(matrix_path.relative_to(root)),
+                "message": "control_id duplicado(s) na matriz OWASP.",
+                "severity": "error",
+                "details": {"duplicates": sorted(set(dups))},
+            })
+
+    canonical_modules = _load_canonical_modules_from_layout(root)
+    applies_to = data.get("applies_to")
+    if canonical_modules and isinstance(applies_to, list):
+        applies = [x for x in applies_to if isinstance(x, str)]
+        missing = sorted([m for m in canonical_modules if m not in set(applies)])
+        extra = sorted([m for m in applies if m not in set(canonical_modules)])
+        if missing or extra:
+            violations.append({
+                "blocking_code": BLOCKED_OWASP_CONTROL_MATRIX_INVALID,
+                "artifact": str(matrix_path.relative_to(root)),
+                "message": "applies_to não alinha com a taxonomia canônica de módulos.",
+                "severity": "error",
+                "details": {"missing": missing, "extra": extra},
+            })
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_OWASP_CONTROL_MATRIX_INVALID,
+            f"Matriz OWASP inválida: {len(violations)} violação(ões).",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        "Matriz OWASP presente, parseável e válida contra schema.",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
+def _load_module_source_authority_matrix(root: pathlib.Path) -> tuple[dict | None, dict | None, list[str]]:
+    matrix_path = root / "docs" / "_canon" / "MODULE_SOURCE_AUTHORITY_MATRIX.yaml"
+    schema_path = root / "contracts" / "schemas" / "shared" / "module_source_authority_matrix.schema.json"
+    checked = [str(matrix_path), str(schema_path)]
+    if not matrix_path.exists():
+        return None, None, checked
+    try:
+        data = _load_yaml(matrix_path)
+    except Exception:
+        return None, None, checked
+    if not isinstance(data, dict):
+        return None, None, checked
+    if not schema_path.exists():
+        return data, None, checked
+    try:
+        schema = _load_json(schema_path)
+    except Exception:
+        return data, None, checked
+    return data, schema, checked
+
+
+def _g2d_module_source_authority_matrix(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "MODULE_SOURCE_AUTHORITY_MATRIX_GATE"
+    matrix_path = root / "docs" / "_canon" / "MODULE_SOURCE_AUTHORITY_MATRIX.yaml"
+    schema_path = root / "contracts" / "schemas" / "shared" / "module_source_authority_matrix.schema.json"
+    checked = [str(matrix_path), str(schema_path)]
+
+    if not matrix_path.exists():
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_MODULE_SOURCE_AUTHORITY_MATRIX_MISSING,
+            "Matriz canônica de fontes/autoridade por módulo ausente (artefato normativo obrigatório).",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": BLOCKED_MODULE_SOURCE_AUTHORITY_MATRIX_MISSING,
+                "artifact": str(matrix_path.relative_to(root)),
+                "message": "Arquivo obrigatório ausente.",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    try:
+        data = _load_yaml(matrix_path)
+    except Exception as e:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_MODULE_SOURCE_AUTHORITY_MATRIX_INVALID,
+            "Matriz de fontes/autoridade não é YAML parseável.",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": BLOCKED_MODULE_SOURCE_AUTHORITY_MATRIX_INVALID,
+                "artifact": str(matrix_path.relative_to(root)),
+                "message": f"Erro ao parsear YAML: {e}",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    if not isinstance(data, dict):
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_MODULE_SOURCE_AUTHORITY_MATRIX_INVALID,
+            "Matriz inválida: raiz deve ser objeto YAML.",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": BLOCKED_MODULE_SOURCE_AUTHORITY_MATRIX_INVALID,
+                "artifact": str(matrix_path.relative_to(root)),
+                "message": "Raiz do YAML deve ser um objeto (mapping).",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    if not schema_path.exists():
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            "ERROR_INFRA",
+            "Schema da matriz de fontes/autoridade ausente (infra).",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": "ERROR_INFRA",
+                "artifact": str(schema_path.relative_to(root)),
+                "message": "Schema obrigatório ausente.",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    try:
+        schema = _load_json(schema_path)
+    except Exception as e:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            "ERROR_INFRA",
+            "Schema da matriz de fontes/autoridade inválido (infra).",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": "ERROR_INFRA",
+                "artifact": str(schema_path.relative_to(root)),
+                "message": f"Erro ao carregar schema: {e}",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    schema_violations = validate_against_json_schema(data, schema)
+    violations: list[dict] = []
+    for v in schema_violations:
+        violations.append({
+            "blocking_code": BLOCKED_MODULE_SOURCE_AUTHORITY_MATRIX_INVALID,
+            "artifact": str(matrix_path.relative_to(root)),
+            "message": f"{v.get('path')}: {v.get('message')}",
+            "severity": v.get("severity", "error"),
+            "details": {k: v.get(k) for k in ("code", "path") if k in v},
+        })
+
+    canonical_modules = _load_canonical_modules_from_layout(root)
+    modules_obj = data.get("modules")
+    if canonical_modules and isinstance(modules_obj, dict):
+        declared = sorted([k for k in modules_obj.keys() if isinstance(k, str)])
+        missing = sorted([m for m in canonical_modules if m not in set(declared)])
+        extra = sorted([m for m in declared if m not in set(canonical_modules)])
+        if missing or extra:
+            violations.append({
+                "blocking_code": BLOCKED_MODULE_SOURCE_AUTHORITY_MATRIX_INVALID,
+                "artifact": str(matrix_path.relative_to(root)),
+                "message": "modules não alinha com a taxonomia canônica de módulos.",
+                "severity": "error",
+                "details": {"missing": missing, "extra": extra},
+            })
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_MODULE_SOURCE_AUTHORITY_MATRIX_INVALID,
+            f"Matriz inválida: {len(violations)} violação(ões).",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        "Matriz de fontes/autoridade presente e válida contra schema.",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
+def _collect_property_names(obj: Any, out: set[str]) -> None:
+    if isinstance(obj, dict):
+        props = obj.get("properties")
+        if isinstance(props, dict):
+            for k in props.keys():
+                if isinstance(k, str):
+                    out.add(k)
+        for v in obj.values():
+            _collect_property_names(v, out)
+    elif isinstance(obj, list):
+        for v in obj:
+            _collect_property_names(v, out)
+
+
+def _load_yaml_or_empty(path: pathlib.Path) -> Any:
+    try:
+        return _load_yaml(path)
+    except Exception:
+        return None
+
+
+def _module_openapi_has_paths(root: pathlib.Path, module: str) -> bool:
+    p = root / "contracts" / "openapi" / "paths" / f"{module}.yaml"
+    if not p.exists():
+        return False
+    obj = _load_yaml_or_empty(p)
+    if not isinstance(obj, dict):
+        return False
+    return any(isinstance(k, str) and k.startswith("/") for k in obj.keys())
+
+
+def _module_contract_property_names(root: pathlib.Path, module: str) -> set[str]:
+    names: set[str] = set()
+    # OpenAPI components schemas (YAML)
+    comp_dir = root / "contracts" / "openapi" / "components" / "schemas" / module
+    if comp_dir.exists():
+        for p in sorted(comp_dir.rglob("*.y*ml")):
+            obj = _load_yaml_or_empty(p)
+            _collect_property_names(obj, names)
+    # OpenAPI path file (YAML)
+    path_file = root / "contracts" / "openapi" / "paths" / f"{module}.yaml"
+    if path_file.exists():
+        obj = _load_yaml_or_empty(path_file)
+        _collect_property_names(obj, names)
+    # JSON Schemas (JSON)
+    schema_dir = root / "contracts" / "schemas" / module
+    if schema_dir.exists():
+        for p in sorted(schema_dir.glob("*.json")):
+            try:
+                data = _load_json(p)
+            except Exception:
+                continue
+            _collect_property_names(data, names)
+    return names
+
+
+def _module_openapi_paths(root: pathlib.Path, module: str) -> list[str]:
+    p = root / "contracts" / "openapi" / "paths" / f"{module}.yaml"
+    obj = _load_yaml_or_empty(p)
+    if not isinstance(obj, dict):
+        return []
+    return [k for k in obj.keys() if isinstance(k, str) and k.startswith("/")]
+
+
+def _g2e_boundary_users_identity_access(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "BOUNDARY_USERS_IDENTITY_ACCESS_GATE"
+    data, _, checked = _load_module_source_authority_matrix(root)
+    if data is None:
+        return _skip(gate_id, "Matriz de fontes/autoridade ausente/ inválida — skipping boundary gate.", _ms(t0))
+
+    cfg = ((data.get("derived_gates") or {}).get("boundary_users_identity_access") or {})
+    users_forbidden = (cfg.get("users_forbidden") or {})
+    ia_forbidden = (cfg.get("identity_access_forbidden") or {})
+    forbidden_user_fields = [x for x in (users_forbidden.get("fields") or []) if isinstance(x, str)]
+    forbidden_user_path_markers = [x for x in (users_forbidden.get("path_markers") or []) if isinstance(x, str)]
+    forbidden_ia_fields = [x for x in (ia_forbidden.get("fields") or []) if isinstance(x, str)]
+
+    violations: list[dict] = []
+
+    users_names = _module_contract_property_names(root, "users")
+    hit_users = sorted([f for f in forbidden_user_fields if f in users_names])
+    if hit_users:
+        violations.append({
+            "blocking_code": BLOCKED_BOUNDARY_USERS_IDENTITY_ACCESS,
+            "artifact": "contracts/* (users)",
+            "message": "Campos de credencial/auth encontrados no boundary de `users` (proibido).",
+            "severity": "error",
+            "details": {"fields": hit_users},
+        })
+    users_paths = _module_openapi_paths(root, "users")
+    hit_path = sorted([p for p in users_paths if any(m in p for m in forbidden_user_path_markers)])
+    if hit_path:
+        violations.append({
+            "blocking_code": BLOCKED_BOUNDARY_USERS_IDENTITY_ACCESS,
+            "artifact": "contracts/openapi/paths/users.yaml",
+            "message": "Rotas de auth encontradas no módulo `users` (proibido).",
+            "severity": "error",
+            "details": {"paths": hit_path},
+        })
+
+    ia_names = _module_contract_property_names(root, "identity_access")
+    hit_ia = sorted([f for f in forbidden_ia_fields if f in ia_names])
+    if hit_ia:
+        violations.append({
+            "blocking_code": BLOCKED_BOUNDARY_USERS_IDENTITY_ACCESS,
+            "artifact": "contracts/* (identity_access)",
+            "message": "Campos de athlete/profile encontrados no boundary de `identity_access` (proibido).",
+            "severity": "error",
+            "details": {"fields": hit_ia},
+        })
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_BOUNDARY_USERS_IDENTITY_ACCESS,
+            f"{len(violations)} violação(ões) de boundary users vs identity_access.",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        "Boundaries users vs identity_access OK.",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
+def _g2f_wellness_medical_boundary(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "WELLNESS_MEDICAL_BOUNDARY_GATE"
+    data, _, checked = _load_module_source_authority_matrix(root)
+    if data is None:
+        return _skip(gate_id, "Matriz de fontes/autoridade ausente/ inválida — skipping wellness/medical boundary gate.", _ms(t0))
+
+    cfg = ((data.get("derived_gates") or {}).get("wellness_medical_boundary") or {})
+    wellness_forbidden = (cfg.get("wellness_forbidden") or {})
+    forbidden_fields = [x for x in (wellness_forbidden.get("fields") or []) if isinstance(x, str)]
+
+    wellness_names = _module_contract_property_names(root, "wellness")
+    hit = sorted([f for f in forbidden_fields if f in wellness_names])
+    if hit:
+        violations = [{
+            "blocking_code": BLOCKED_WELLNESS_MEDICAL_BOUNDARY,
+            "artifact": "contracts/* (wellness)",
+            "message": "Campos clínicos proibidos encontrados em `wellness`.",
+            "severity": "error",
+            "details": {"fields": hit},
+        }]
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_WELLNESS_MEDICAL_BOUNDARY,
+            f"{len(hit)} campo(s) clínico(s) proibido(s) em wellness.",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        "Boundary wellness vs medical OK (sem campos clínicos em wellness).",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
+def _g2g_scout_taxonomy(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "SCOUT_TAXONOMY_GATE"
+    data, _, checked = _load_module_source_authority_matrix(root)
+    if data is None:
+        return _skip(gate_id, "Matriz de fontes/autoridade ausente/ inválida — skipping scout taxonomy gate.", _ms(t0))
+
+    cfg = ((data.get("derived_gates") or {}).get("scout_taxonomy") or {})
+    triggers = [x for x in (cfg.get("trigger_fields") or []) if isinstance(x, str)]
+    req = (cfg.get("required_taxonomy_artifact") or {})
+    req_path = req.get("path") if isinstance(req, dict) else None
+
+    scout_names = _module_contract_property_names(root, "scout")
+    triggered = sorted([t for t in triggers if t in scout_names])
+    if not triggered:
+        return _pg(
+            gate_id,
+            "PASS",
+            True,
+            None,
+            "Nenhum campo de taxonomia detectado em scout; gate não exige artefato.",
+            [],
+            checked,
+            [],
+            [],
+            _ms(t0),
+        )
+
+    if not isinstance(req_path, str) or not req_path:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_SCOUT_TAXONOMY,
+            "Taxonomia de scout foi acionada mas o path canônico do artefato não está declarado na matriz.",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": BLOCKED_SCOUT_TAXONOMY,
+                "artifact": "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
+                "message": "required_taxonomy_artifact.path ausente/ inválido.",
+                "severity": "error",
+                "details": {"triggered_fields": triggered},
+            }],
+            _ms(t0),
+        )
+
+    p = root / req_path
+    if not p.exists():
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_SCOUT_TAXONOMY,
+            "Taxonomia de scout acionada mas artefato canônico está ausente.",
+            [],
+            checked + [str(p)],
+            [],
+            [{
+                "blocking_code": BLOCKED_SCOUT_TAXONOMY,
+                "artifact": req_path,
+                "message": "Artefato de taxonomia canônica ausente.",
+                "severity": "error",
+                "details": {"triggered_fields": triggered},
+            }],
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        "Taxonomia de scout acionada e artefato canônico presente.",
+        [],
+        checked + [str(p)],
+        [],
+        [],
+        _ms(t0),
+    )
+
+
+def _g2h_async_required_module(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "ASYNC_REQUIRED_MODULE_GATE"
+    data, _, checked = _load_module_source_authority_matrix(root)
+    if data is None:
+        return _skip(gate_id, "Matriz de fontes/autoridade ausente/ inválida — skipping async required gate.", _ms(t0))
+
+    cfg = ((data.get("derived_gates") or {}).get("async_required_module") or {})
+    rules = cfg.get("rules")
+    if not isinstance(rules, list):
+        return _skip(gate_id, "Regras async_required_module ausentes/ inválidas.", _ms(t0))
+
+    violations: list[dict] = []
+    for r in rules:
+        if not isinstance(r, dict):
+            continue
+        module = r.get("module")
+        if not isinstance(module, str) or not module:
+            continue
+        has_paths = _module_openapi_has_paths(root, module)
+        if not has_paths:
+            continue
+
+        need_arazzo = bool(r.get("require_arazzo_when_openapi_has_paths"))
+        need_asyncapi = bool(r.get("require_asyncapi_when_openapi_has_paths"))
+
+        if need_arazzo:
+            wf_dir = root / "contracts" / "workflows" / module
+            has_wf = wf_dir.exists() and any(wf_dir.glob("*.arazzo.y*ml"))
+            if not has_wf:
+                violations.append({
+                    "blocking_code": BLOCKED_ASYNC_REQUIRED_MODULE,
+                    "artifact": str((root / "contracts" / "workflows" / module).relative_to(root)),
+                    "message": "Módulo com OpenAPI paths exige Arazzo mas não possui workflow `.arazzo.yaml`.",
+                    "severity": "error",
+                    "details": {"module": module},
+                })
+
+        if need_asyncapi:
+            async_root = root / "contracts" / "asyncapi"
+            # Heurística determinística: filename contém o nome do módulo
+            has_any = False
+            if async_root.exists():
+                for p in sorted(async_root.rglob("*.y*ml")):
+                    rel = str(p.relative_to(async_root)).lower()
+                    if module.lower() in rel:
+                        has_any = True
+                        break
+            if not has_any:
+                violations.append({
+                    "blocking_code": BLOCKED_ASYNC_REQUIRED_MODULE,
+                    "artifact": "contracts/asyncapi/**",
+                    "message": "Módulo com OpenAPI paths exige AsyncAPI mas não há artefatos do módulo em contracts/asyncapi/.",
+                    "severity": "error",
+                    "details": {"module": module},
+                })
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_ASYNC_REQUIRED_MODULE,
+            f"{len(violations)} requisito(s) async/workflow ausente(s) para módulos com OpenAPI paths.",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        "Requisitos AsyncAPI/Arazzo atendidos para módulos com OpenAPI paths (quando aplicável).",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
+def _g2i_external_source_authority(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "EXTERNAL_SOURCE_AUTHORITY_GATE"
+    data, _, checked = _load_module_source_authority_matrix(root)
+    if data is None:
+        return _skip(gate_id, "Matriz de fontes/autoridade ausente/ inválida — skipping external source authority gate.", _ms(t0))
+
+    cfg = ((data.get("derived_gates") or {}).get("external_source_authority") or {})
+    markers = [x for x in (cfg.get("forbidden_ssot_markers") or []) if isinstance(x, str)]
+    if not markers:
+        return _skip(gate_id, "Sem forbidden_ssot_markers definidos.", _ms(t0))
+
+    violations: list[dict] = []
+    scan_dirs = [
+        root / "docs" / "hbtrack" / "modulos",
+        root / "docs" / "_canon",
+    ]
+    for d in scan_dirs:
+        if not d.exists():
+            continue
+        for p in sorted(d.rglob("*.md")):
+            try:
+                text = p.read_text(encoding="utf-8", errors="replace")
+            except Exception:
+                continue
+            for m in markers:
+                if m in text:
+                    violations.append({
+                        "blocking_code": BLOCKED_EXTERNAL_SOURCE_AUTHORITY,
+                        "artifact": str(p.relative_to(root)),
+                        "message": "Marker proibido: benchmark tratado como SSOT.",
+                        "severity": "error",
+                        "details": {"marker": m},
+                    })
+                    break
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_EXTERNAL_SOURCE_AUTHORITY,
+            f"{len(violations)} ocorrência(s) de benchmark tratado como SSOT.",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        "Nenhum benchmark tratado como SSOT nos docs verificados.",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
 def _g3_placeholder_residue(root: pathlib.Path) -> dict:
     t0 = time.monotonic()
     gate_id = "PLACEHOLDER_RESIDUE_GATE"
@@ -2763,9 +3582,12 @@ def _g5_openapi_root_structure(root: pathlib.Path) -> dict:
     redocly_cfg = root / "redocly.yaml"
     if not openapi_root.exists():
         return _skip(gate_id, "openapi.yaml ausente.", _ms(t0))
-    cmd = ["redocly", "lint", str(openapi_root)]
+    # Convert WSL paths to Windows paths for npm tools
+    openapi_root_str = _wsl_to_windows_path(str(openapi_root))
+    redocly_cfg_str = _wsl_to_windows_path(str(redocly_cfg))
+    cmd = ["redocly", "lint", openapi_root_str]
     if redocly_cfg.exists():
-        cmd += ["--config", str(redocly_cfg)]
+        cmd += ["--config", redocly_cfg_str]
     rc, stdout, stderr = _try_tool(*cmd, cwd=root)
     if rc == -1:
         return _pg(gate_id, "FAIL", True, "ERROR_INFRA",
@@ -2810,9 +3632,12 @@ def _g6_openapi_policy_ruleset(root: pathlib.Path) -> dict:
         return _skip(gate_id, "openapi.yaml ausente.", _ms(t0))
     if not spectral_cfg.exists():
         return _skip(gate_id, ".spectral.yaml ausente.", _ms(t0))
+    # Convert WSL paths to Windows paths for npm tools
+    openapi_root_str = _wsl_to_windows_path(str(openapi_root))
+    spectral_cfg_str = _wsl_to_windows_path(str(spectral_cfg))
     rc, stdout, stderr = _try_tool(
-        "spectral", "lint", str(openapi_root),
-        "--ruleset", str(spectral_cfg),
+        "spectral", "lint", openapi_root_str,
+        "--ruleset", spectral_cfg_str,
         "--format", "json",
         cwd=root,
     )
@@ -3477,6 +4302,13 @@ def run_pipeline() -> tuple[dict, int]:
     gates.append(_g2_required_artifact_presence(root))
     gates.append(_g2a_module_doc_crossrefs(root))
     gates.append(_g2b_api_normative_duplication(root))
+    gates.append(_g2c_owasp_api_control_matrix(root))
+    gates.append(_g2d_module_source_authority_matrix(root))
+    gates.append(_g2e_boundary_users_identity_access(root))
+    gates.append(_g2f_wellness_medical_boundary(root))
+    gates.append(_g2g_scout_taxonomy(root))
+    gates.append(_g2h_async_required_module(root))
+    gates.append(_g2i_external_source_authority(root))
     gates.append(_g3_placeholder_residue(root))
     gates.append(_g4_ref_hermeticity(root))
     gates.append(_g5_openapi_root_structure(root))

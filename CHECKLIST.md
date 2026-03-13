@@ -131,9 +131,9 @@ Marque `[x]` só se você executou e obteve resultado real.
 - [ ] Gates de CI estão configurados e falham quando artefato obrigatório está ausente (evidência: `REQUIRED_ARTIFACT_PRESENCE_GATE` → FAIL em `python3 scripts/validate_contracts.py`)
 - [ ] Gates de CI estão configurados e falham quando artefato de módulo não referencia contrato adequadamente (evidência: `MODULE_DOC_CROSSREF_GATE` → FAIL em `python3 scripts/validate_contracts.py`)
 
-> **Evidência validate_contracts (WSL, 2026-03-13 — após B1, B2, B3, B4, B5, B6)**: `python3 scripts/validate_contracts.py` → **FAIL** (exit code 2).
-> Gates passando (12): `REQUIRED_ARTIFACT_PRESENCE_GATE`, `MODULE_DOC_CROSSREF_GATE`, `API_NORMATIVE_DUPLICATION_GATE`, `OWASP_API_CONTROL_MATRIX_GATE`, `PLACEHOLDER_RESIDUE_GATE`, `REF_HERMETICITY_GATE`, `JSON_SCHEMA_VALIDATION_GATE`, `CROSS_SPEC_ALIGNMENT_GATE`, `CONTRACT_BREAKING_CHANGE_GATE`, `ASYNCAPI_VALIDATION_GATE`, `ARAZZO_VALIDATION_GATE`, `DERIVED_DRIFT_GATE`.
-> Falhas bloqueantes restantes (2): `OPENAPI_ROOT_STRUCTURE_GATE` (redocly lint rc=2), `OPENAPI_POLICY_RULESET_GATE` (spectral path WSL).
+> **Evidência validate_contracts (WSL, 2026-03-13 — após B1→B7)**: `python3 scripts/validate_contracts.py` → **PASS** (exit code 0).
+> **Todos os 14 gates bloqueantes passando (100%)**:
+> `REQUIRED_ARTIFACT_PRESENCE_GATE`, `MODULE_DOC_CROSSREF_GATE`, `API_NORMATIVE_DUPLICATION_GATE`, `OWASP_API_CONTROL_MATRIX_GATE`, `PLACEHOLDER_RESIDUE_GATE`, `REF_HERMETICITY_GATE`, `OPENAPI_ROOT_STRUCTURE_GATE`, `OPENAPI_POLICY_RULESET_GATE`, `JSON_SCHEMA_VALIDATION_GATE`, `CROSS_SPEC_ALIGNMENT_GATE`, `CONTRACT_BREAKING_CHANGE_GATE`, `ASYNCAPI_VALIDATION_GATE`, `ARAZZO_VALIDATION_GATE`, `DERIVED_DRIFT_GATE`.
 > Ver `_reports/contract_gates/latest.json`.
 
 > **Evidência Intent compiler (WSL, 2026-03-13)**: `python3 scripts/contracts/validate/api/compile_api_intent.py --module ai_ingestion --intent contracts/openapi/intents/ai_ingestion.intent.yaml --format json` → PASS (exit code 0).
@@ -296,13 +296,13 @@ Execução real em WSL (`/mnt/c/HB TRACK`):
 - Bloqueios principais:
   - **Node ausente** (`node: not found`) → gates `OPENAPI_ROOT_STRUCTURE_GATE` (Redocly), `OPENAPI_POLICY_RULESET_GATE` (Spectral) e `ASYNCAPI_VALIDATION_GATE` falham.
   - **Ferramentas ausentes**: `oasdiff` → `CONTRACT_BREAKING_CHANGE_GATE` falha.
-  - **Alinhamento cross-spec**: `CROSS_SPEC_ALIGNMENT_GATE` falha (ex.: `createdAt`, `closedAt`, `closedByUserId` exigem patterns canônicos).
 
 - Sinais positivos (WSL, 2026-03-13):
   - `REQUIRED_ARTIFACT_PRESENCE_GATE` → PASS (SSOT de API presente em `.contract_driven/templates/api/*`).
   - `REF_HERMETICITY_GATE` → PASS.
   - `DERIVED_DRIFT_GATE` → PASS.
   - `OWASP_API_CONTROL_MATRIX_GATE` → PASS.
+  - `CROSS_SPEC_ALIGNMENT_GATE` → PASS.
 
 **REGRAS:**
 - Atualize essa sessão com base na verificação real que você fez no repositório, com o status de cada item e evidências encontradas. No final, faça um resumo do estado operacional real e liste as ações necessárias para chegar a um estado operacional completo.
@@ -383,7 +383,7 @@ Tabela preenchida com base na verificação real executada neste ambiente (Windo
 
 # PROXIMAS TAREFAS
 
-**Ordem recomendada (WSL, 2026-03-13)**: B1 → B3 → B6 → (revalidar `python3 scripts/validate_contracts.py`).
+**Ordem recomendada (WSL, 2026-03-13)**: B1 → B3 → (revalidar `python3 scripts/validate_contracts.py`).
 
 > **Nota de ambiente (WSL, 2026-03-13)**:
 > - `node.exe` existe em `/mnt/c/Program Files/nodejs/node.exe`, mas o comando `node` não resolve no PATH (bloqueia CLIs via npm).
@@ -488,6 +488,28 @@ Tabela preenchida com base na verificação real executada neste ambiente (Windo
   - Regenerados artefatos derivados (2 arquivos): generated/contracts/openapi/paths/training.yaml, generated/manifests/training.sync.traceability.yaml
   - `CROSS_SPEC_ALIGNMENT_GATE`: PASS (validado 2026-03-13)
   - `DERIVED_DRIFT_GATE`: PASS após regeneração
+---
+
+[Tarefa]: B7 Corrigir conversão de paths WSL→Windows nos gates (OPENAPI_ROOT_STRUCTURE_GATE e OPENAPI_POLICY_RULESET_GATE)
+[Status]: **Concluída (2026-03-13)**.
+[Objetivo]: Fazer ferramentas npm (redocly, spectral) funcionarem corretamente quando executadas de dentro do WSL com paths WSL.
+[Escopo]:
+  - Adicionar função helper `_wsl_to_windows_path()` em `scripts/contracts/validate/validate_contracts.py`.
+  - Converter paths `/mnt/c/...` para `C:\...` antes de passar para redocly e spectral.
+[Critérios de aceitação]:
+  - `python3 scripts/validate_contracts.py` → `OPENAPI_ROOT_STRUCTURE_GATE` PASS. ✅
+  - `python3 scripts/validate_contracts.py` → `OPENAPI_POLICY_RULESET_GATE` PASS. ✅
+  - Pipeline completo: Overall PASS, Exit code 0. ✅
+[Validação]:
+  - `python3 scripts/validate_contracts.py`. ✅
+[Evidências]:
+  - Criada função `_wsl_to_windows_path()` que converte `/mnt/c/HB TRACK/file.yaml` → `C:\HB TRACK\file.yaml`
+  - Modificado `_g5_openapi_root_structure()` para converter paths antes de chamar redocly
+  - Modificado `_g6_openapi_policy_ruleset()` para converter paths antes de chamar spectral
+  - `OPENAPI_ROOT_STRUCTURE_GATE`: PASS (validado 2026-03-13)
+  - `OPENAPI_POLICY_RULESET_GATE`: PASS (validado 2026-03-13)
+  - Pipeline completo: **Overall: PASS, Exit code: 0** (validado 2026-03-13)
+  - **14 de 14 gates bloqueantes passando (100%)**
 ---
 
 [Tarefa]: B0 Desbloquear permissão de edição nos paths canônicos (pré-requisito de execução)
