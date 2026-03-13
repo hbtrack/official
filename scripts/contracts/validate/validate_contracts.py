@@ -2147,14 +2147,14 @@ _CANONICAL_GLOBAL_DOCS: list[str] = [
     ".contract_driven/templates/modulos/TEST_MATRIX_{{MODULE_NAME_UPPER}}.md",
     ".contract_driven/templates/modulos/snippets/module_human_docs_header.yaml",
     ".contract_driven/templates/modulos/schemas/{{DOMAIN_ENTITY_SNAKE}}.schema.json",
-    ".contract_driven/templates/API_RULES/API_RULES.yaml",
-    ".contract_driven/templates/API_RULES/ARCHITECTURE_MATRIX.yaml",
-    ".contract_driven/templates/API_RULES/MODULE_PROFILE_REGISTRY.yaml",
-    ".contract_driven/templates/API_RULES/CANONICAL_TYPE_REGISTRY.yaml",
-    ".contract_driven/templates/API_RULES/REGRAS_API.md",
-    ".contract_driven/templates/API_RULES/GoogleAPI.md",
-    ".contract_driven/templates/API_RULES/AddidasAPI.md",
-    ".contract_driven/templates/API_RULES/OWASPAPI.md",
+    ".contract_driven/templates/api/api_rules.yaml",
+    ".contract_driven/templates/api/ARCHITECTURE_MATRIX.yaml",
+    ".contract_driven/templates/api/MODULE_PROFILE_REGISTRY.yaml",
+    ".contract_driven/templates/api/CANONICAL_TYPE_REGISTRY.yaml",
+    ".contract_driven/templates/api/REGRAS_API.md",
+    ".contract_driven/templates/api/GoogleAPI.md",
+    ".contract_driven/templates/api/AddidasAPI.md",
+    ".contract_driven/templates/api/OWASPAPI.md",
     "scripts/contracts/validate/api/policy_compiler.py",
     "scripts/contracts/validate/api/compile_api_policy.py",
     "generated/README.md",
@@ -2620,7 +2620,7 @@ def _g2b_api_normative_duplication(root: pathlib.Path) -> dict:
         return _skip(gate_id, "docs/_canon ausente — gate não aplicável.", _ms(t0))
 
     # Heurística determinística: se um doc do canon menciona convenções/shape HTTP e
-    # não aponta a SSOT (`.contract_driven/templates/API_RULES/API_RULES.yaml`), sinaliza.
+    # não aponta a SSOT (`.contract_driven/templates/api/api_rules.yaml`), sinaliza.
     api_markers = [
         "application/problem+json",
         "RFC 7807",
@@ -2631,7 +2631,7 @@ def _g2b_api_normative_duplication(root: pathlib.Path) -> dict:
         "HTTP Status",
         "status code",
     ]
-    ssot_marker = ".contract_driven/templates/API_RULES/API_RULES.yaml"
+    ssot_marker = ".contract_driven/templates/api/api_rules.yaml"
     exclude = {
         canon_dir / "API_CONVENTIONS.md",
         canon_dir / "CI_CONTRACT_GATES.md",
@@ -2653,7 +2653,7 @@ def _g2b_api_normative_duplication(root: pathlib.Path) -> dict:
         violations.append({
             "blocking_code": WARN_API_NORMATIVE_OUTSIDE_SSOT,
             "artifact": str(p.relative_to(root)),
-            "message": "Documento menciona convenção/shape HTTP mas não aponta a SSOT `.contract_driven/templates/API_RULES/API_RULES.yaml` (risco de duplicação normativa).",
+            "message": "Documento menciona convenção/shape HTTP mas não aponta a SSOT `.contract_driven/templates/api/api_rules.yaml` (risco de duplicação normativa).",
             "severity": "warn",
         })
     if violations:
@@ -2727,7 +2727,9 @@ def _g4_ref_hermeticity(root: pathlib.Path) -> dict:
                     "severity": "error",
                 })
                 continue
-            target = (p.parent / ref).resolve()
+            # Separar arquivo de JSON Pointer (parte após #)
+            ref_file = ref.split("#")[0] if "#" in ref else ref
+            target = (p.parent / ref_file).resolve()
             try:
                 target.relative_to(root)
             except ValueError:

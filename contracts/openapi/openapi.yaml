@@ -10,10 +10,10 @@ info:
 
     Referências normativas — consultar antes de implementar:
     - .contract_driven/CONTRACT_SYSTEM_LAYOUT.md   (estrutura canônica de artefatos)
-    - .contract_driven/templates/API_RULES/API_RULES.yaml    (regras, templates e validações de API)
+    - .contract_driven/templates/api/api_rules.yaml    (regras, templates e validações de API)
     - docs/_canon/SYSTEM_SCOPE.md                  (escopo e módulos canônicos)
     - docs/_canon/ERROR_MODEL.md                   (convenção de erros RFC 7807)
-    - docs/_canon/API_CONVENTIONS.md               (convenções de API — aponta para API_RULES.yaml)
+    - docs/_canon/API_CONVENTIONS.md               (convenções de API — aponta para api_rules.yaml)
   contact:
     name: HB Track Team
     email: dev@hbtrack.com
@@ -31,18 +31,19 @@ servers:
 # Path items são definidos por módulo em contracts/openapi/paths/<module>.yaml.
 # Adicionar referências aqui conforme cada contrato de módulo for estabelecido.
 #
-# Exemplo:
-#   /users:
-#     $ref: ./paths/users.yaml#/~1users
-#   /users/{id}:
-#     $ref: ./paths/users.yaml#/~1users~1{id}
-#
 # Módulos canônicos (16):
 #   Functional domain: users, seasons, teams, training, wellness, medical,
 #                      competitions, matches, scout, exercises, analytics,
 #                      reports, ai_ingestion
 #   Cross-cutting:     identity_access, audit, notifications
-paths: {}
+paths:
+  # training module - path items defined in ./paths/training.yaml
+  /training-sessions:
+    $ref: ./paths/training.yaml#/~1training-sessions
+  /training-sessions/{id}:
+    $ref: ./paths/training.yaml#/~1training-sessions~1{id}
+  /training-sessions/{id}/attendance:
+    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1attendance
 
 components:
   parameters:
@@ -53,7 +54,7 @@ components:
 
   schemas:
     # RFC 7807 Problem+JSON — shape canônico para todos os erros HTTP.
-    # Ver: .contract_driven/templates/API_RULES/API_RULES.yaml → design_rules.errors
+    # Ver: .contract_driven/templates/api/api_rules.yaml → design_rules.errors
     problem:
       $ref: ./components/schemas/shared/problem.yaml
 
