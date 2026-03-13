@@ -19,6 +19,6 @@ workflows:
     summary: Criar sessão e registrar presença.
     steps:
       - stepId: createTrainingSession
-        operationId: create_training_session
+        operationId: createTrainingSession
       - stepId: addTrainingAttendance
-        operationId: scoped_add_training_attendance
+        operationId: registerTrainingAttendance

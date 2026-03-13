@@ -1,0 +1,212 @@
+# TrainingSession schema for OpenAPI
+# Source: contracts/schemas/training/training_session.schema.json
+# Related docs:
+# - docs/hbtrack/modulos/training/MODULE_SCOPE_TRAINING.md
+# - docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+# - docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+
+type: object
+additionalProperties: false
+required:
+  - id
+  - organizationId
+  - sessionAt
+  - sessionType
+  - status
+  - createdAt
+  - updatedAt
+  - createdByUserId
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    description: Stable identifier (UUID v4)
+  organizationId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  teamId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  seasonId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  microcycleId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  sessionAt:
+    type: string
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    description: RFC-3339 UTC timestamp
+  durationPlannedMinutes:
+    type: integer
+    minimum: 1
+    maximum: 1440
+    description: Planned duration in minutes
+  location:
+    type: string
+    maxLength: 120
+  sessionType:
+    type: string
+    minLength: 1
+    maxLength: 32
+    description: Type/category of training session
+  mainObjective:
+    type: string
+    maxLength: 255
+  secondaryObjective:
+    type: string
+  plannedLoad:
+    type: integer
+    minimum: 0
+    maximum: 32767
+    description: Planned load indicator (module-defined scale)
+  groupClimate:
+    type: integer
+    minimum: 1
+    maximum: 5
+    description: Group climate (1-5)
+  notes:
+    type: string
+  phaseFocusDefense:
+    type: boolean
+  phaseFocusAttack:
+    type: boolean
+  phaseFocusTransitionOffense:
+    type: boolean
+  phaseFocusTransitionDefense:
+    type: boolean
+  intensityTarget:
+    type: integer
+    minimum: 1
+    maximum: 5
+  sessionBlock:
+    type: string
+    maxLength: 32
+  createdAt:
+    type: string
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+  createdByUserId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  updatedAt:
+    type: string
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+  deletedAt:
+    type: [string, "null"]
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+  deletedReason:
+    type: [string, "null"]
+    minLength: 1
+  focusAttackPositionalPct:
+    type: number
+    minimum: 0
+    maximum: 100
+    description: DR-TRAIN-002 - soma de todos focus_*_pct ≤ 120
+  focusDefensePositionalPct:
+    type: number
+    minimum: 0
+    maximum: 100
+  focusTransitionOffensePct:
+    type: number
+    minimum: 0
+    maximum: 100
+  focusTransitionDefensePct:
+    type: number
+    minimum: 0
+    maximum: 100
+  focusAttackTechnicalPct:
+    type: number
+    minimum: 0
+    maximum: 100
+  focusDefenseTechnicalPct:
+    type: number
+    minimum: 0
+    maximum: 100
+  focusPhysicalPct:
+    type: number
+    minimum: 0
+    maximum: 100
+  status:
+    type: string
+    pattern: "^[A-Z0-9]+(?:_[A-Z0-9]+)*$"
+    description: Lifecycle status (UPPER_SNAKE_CASE) - INV-TRAIN-006
+    example: SCHEDULED
+  closedAt:
+    type: [string, "null"]
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+  closedByUserId:
+    type: [string, "null"]
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  deviationJustification:
+    type: string
+  planningDeviationFlag:
+    type: boolean
+  standalone:
+    type: boolean
+  startedAt:
+    type: [string, "null"]
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+  endedAt:
+    type: [string, "null"]
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+  durationActualMinutes:
+    type: integer
+    minimum: 1
+    maximum: 1440
+  executionOutcome:
+    type: string
+    minLength: 1
+    maxLength: 32
+  delayMinutes:
+    type: integer
+    minimum: 1
+    maximum: 1440
+  cancellationReason:
+    type: string
+    minLength: 1
+  postReviewCompletedAt:
+    type: [string, "null"]
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+  postReviewCompletedByUserId:
+    type: [string, "null"]
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  postReviewDeadlineAt:
+    type: [string, "null"]
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+
+example:
+  organizationId: "550e8400-e29b-41d4-a716-446655440010"
+  teamId: "550e8400-e29b-41d4-a716-446655440020"
+  seasonId: "550e8400-e29b-41d4-a716-446655440030"
+  sessionAt: "2026-03-11T19:30:00Z"
+  durationPlannedMinutes: 90
+  sessionType: "quadra"
+  mainObjective: "Transição ofensiva"
+  status: "SCHEDULED"
+  createdAt: "2026-03-01T12:00:00Z"
+  updatedAt: "2026-03-10T09:15:00Z"
+  createdByUserId: "550e8400-e29b-41d4-a716-446655440040"
+  planningDeviationFlag: false
+  standalone: true
+  executionOutcome: "on_time"
+  phaseFocusAttack: true
+  phaseFocusDefense: true
+  phaseFocusTransitionOffense: true
+  phaseFocusTransitionDefense: false

@@ -48,6 +48,7 @@ Marque `[x]` se confirmado.
 - [x] `docs/_canon/DOMAIN_GLOSSARY.md` existe e segue o layout canônico definido no manual
 - [x] `docs/_canon/HANDBALL_RULES_DOMAIN.md` existe e segue o layout canônico definido no manual
 - [x] `docs/_canon/SECURITY_RULES.md` existe e segue o layout canônico definido no manual
+- [x] `docs/_canon/security/OWASP_API_CONTROL_MATRIX.yaml` existe (matriz normativa: OWASP → declaração → evidência → gate)
 - [x] `docs/_canon/CI_CONTRACT_GATES.md` existe e segue o layout canônico definido no manual
 - [x] `docs/_canon/TEST_STRATEGY.md` existe e segue o layout canônico definido no manual
 - [x] `docs/_canon/C4_CONTEXT.md` existe e segue o layout canônico definido no manual
@@ -94,13 +95,13 @@ Marque `[x]` se confirmado.
 ## 4. Ferramentas instaladas
 Marque `[x]` só se o comando roda no seu ambiente.
 
-- [x] Node.js disponível no PATH (`node`) — necessário para CLIs via npm (`redocly`, `spectral`, `ajv`, `asyncapi`) (WSL wrapper criado em B1, validado 2026-03-13)
-- [x] Redocly CLI instalado (WSL wrapper criado em B1, validado 2026-03-13)
-- [x] Spectral instalado (WSL wrapper criado em B1, validado 2026-03-13)
-- [x] oasdiff instalado (WSL wrapper criado em B3, validado 2026-03-13)
+- [ ] Node.js disponível no PATH (`node`) — necessário para CLIs via npm (`redocly`, `spectral`, `ajv`, `asyncapi`) (no WSL atual: `node` não resolve; existe `node.exe` em `/mnt/c/Program Files/nodejs/node.exe`)
+- [ ] Redocly CLI instalado (no WSL atual: `redocly` existe, mas falha por `node: not found`)
+- [ ] Spectral instalado (no WSL atual: `spectral` existe, mas falha por `node: not found`)
+- [ ] oasdiff instalado (`oasdiff` não encontrado no PATH)
 - [ ] Schemathesis instalado (`schemathesis` não encontrado no PATH)
-- [x] validador JSON Schema instalado (ajv) (WSL wrapper criado em B1, validado 2026-03-13)
-- [x] validator/parser AsyncAPI instalado (WSL wrapper criado em B3, validado 2026-03-13)
+- [ ] validador JSON Schema instalado (ajv) (no WSL atual: `ajv` existe, mas falha por `node: not found`)
+- [ ] validator/parser AsyncAPI instalado (no WSL atual: `node_modules/.bin/asyncapi` existe, mas falha por `node: not found`)
 - [x] validator/linter Arazzo instalado (evidência: `ARAZZO_VALIDATION_GATE` → PASS em `python3 scripts/validate_contracts.py`)
 - [ ] Storybook disponível, se houver UI documentada
 - [x] Intent compiler disponível (`python3 scripts/contracts/validate/api/compile_api_intent.py` executa)
@@ -112,12 +113,12 @@ Marque `[x]` só se o comando roda no seu ambiente.
 ## 5. Ferramentas funcionando de verdade
 Marque `[x]` só se você executou e obteve resultado real.
 
-- [x] Redocly roda contra `contracts/openapi/openapi.yaml` (validado no WSL 2026-03-13 via wrapper)
-- [x] Spectral executa (versão/CLI disponível) (validado no WSL 2026-03-13 via wrapper)
-- [x] oasdiff roda entre duas versões da spec (baseline vs. atual; gate `CONTRACT_BREAKING_CHANGE_GATE`) (validado no WSL 2026-03-13 via wrapper, CONTRACT_BREAKING_CHANGE_GATE → PASS)
+- [ ] Redocly roda contra `contracts/openapi/openapi.yaml` (no WSL atual: bloqueado por `node` ausente)
+- [ ] Spectral executa (versão/CLI disponível) (no WSL atual: bloqueado por `node` ausente)
+- [ ] oasdiff roda entre duas versões da spec (baseline vs. atual; gate `CONTRACT_BREAKING_CHANGE_GATE`) (`oasdiff` ausente)
 - [ ] Schemathesis roda contra uma API real ou ambiente local
-- [x] JSON Schema validator (ajv) executa (help/CLI disponível) (validado no WSL 2026-03-13 via wrapper)
-- [x] AsyncAPI validator roda no contrato atual (validado no WSL 2026-03-13 via wrapper, ASYNCAPI_VALIDATION_GATE → PASS)
+- [ ] JSON Schema validator (ajv) executa (help/CLI disponível) (no WSL atual: bloqueado por `node` ausente)
+- [ ] AsyncAPI validator roda no contrato atual (no WSL atual: `node_modules/.bin/asyncapi` existe, mas falha por `node` ausente)
 - [x] Arazzo validator roda nos workflows atuais
 - [ ] Storybook build roda, se aplicável
 - [x] Intent compiler (DSL) roda e falha fechado (não toca `contracts/openapi/paths/` em erro)
@@ -130,14 +131,14 @@ Marque `[x]` só se você executou e obteve resultado real.
 - [ ] Gates de CI estão configurados e falham quando artefato obrigatório está ausente (evidência: `REQUIRED_ARTIFACT_PRESENCE_GATE` → FAIL em `python3 scripts/validate_contracts.py`)
 - [ ] Gates de CI estão configurados e falham quando artefato de módulo não referencia contrato adequadamente (evidência: `MODULE_DOC_CROSSREF_GATE` → FAIL em `python3 scripts/validate_contracts.py`)
 
-> **Evidência validate_contracts (WSL, 2026-03-13 — após B1, B2, B3, B4, B5)**: `python3 scripts/validate_contracts.py` → **FAIL** (exit code 2).
-> Gates passando: `REQUIRED_ARTIFACT_PRESENCE_GATE`, `MODULE_DOC_CROSSREF_GATE`, `API_NORMATIVE_DUPLICATION_GATE`, `PLACEHOLDER_RESIDUE_GATE`, `REF_HERMETICITY_GATE`, `JSON_SCHEMA_VALIDATION_GATE`, `CONTRACT_BREAKING_CHANGE_GATE`, `ASYNCAPI_VALIDATION_GATE`, `ARAZZO_VALIDATION_GATE`, `DERIVED_DRIFT_GATE`.
-> Falhas bloqueantes restantes: `OPENAPI_ROOT_STRUCTURE_GATE`, `OPENAPI_POLICY_RULESET_GATE`, `CROSS_SPEC_ALIGNMENT_GATE` (B6).
+> **Evidência validate_contracts (WSL, 2026-03-13 — após B1, B2, B3, B4, B5, B6)**: `python3 scripts/validate_contracts.py` → **FAIL** (exit code 2).
+> Gates passando (12): `REQUIRED_ARTIFACT_PRESENCE_GATE`, `MODULE_DOC_CROSSREF_GATE`, `API_NORMATIVE_DUPLICATION_GATE`, `OWASP_API_CONTROL_MATRIX_GATE`, `PLACEHOLDER_RESIDUE_GATE`, `REF_HERMETICITY_GATE`, `JSON_SCHEMA_VALIDATION_GATE`, `CROSS_SPEC_ALIGNMENT_GATE`, `CONTRACT_BREAKING_CHANGE_GATE`, `ASYNCAPI_VALIDATION_GATE`, `ARAZZO_VALIDATION_GATE`, `DERIVED_DRIFT_GATE`.
+> Falhas bloqueantes restantes (2): `OPENAPI_ROOT_STRUCTURE_GATE` (redocly lint rc=2), `OPENAPI_POLICY_RULESET_GATE` (spectral path WSL).
 > Ver `_reports/contract_gates/latest.json`.
 
 > **Evidência Intent compiler (WSL, 2026-03-13)**: `python3 scripts/contracts/validate/api/compile_api_intent.py --module ai_ingestion --intent contracts/openapi/intents/ai_ingestion.intent.yaml --format json` → PASS (exit code 0).
 
-> **Evidência Drift semântico (WSL, 2026-03-13)**: `python3 scripts/contracts/validate/api/compile_api_policy.py --all --check --format json` → FAIL com `drifts` (exit code 2).
+> **Evidência Drift semântico (WSL, 2026-03-13)**: `python3 scripts/contracts/validate/api/compile_api_policy.py --all --check --format json` → PASS (exit code 0).
 
 > **Evidência Redocly (Windows 11, 2026-03-12)**: `redocly lint contracts/openapi/openapi.yaml` → PASS (exit code 0). Ver `contracts/openapi/redocly_lint.log`.
 
@@ -283,7 +284,7 @@ Piloto existente: `training` (artefatos presentes), mas o estado **não está PA
 - [ ] domínio esportivo crítico está fora do documento
 - [ ] agente improvisa em vez de bloquear
 - [ ] não existe enforcement real
-- [x] contrato e derivado competem como fonte de verdade (drift detectado em `generated/` via `DERIVED_DRIFT_GATE`)
+- [ ] contrato e derivado competem como fonte de verdade (no WSL em 2026-03-13: `DERIVED_DRIFT_GATE` → PASS)
 
 ## Resultados encontrados (2026-03-13 — WSL)
 
@@ -293,11 +294,15 @@ Execução real em WSL (`/mnt/c/HB TRACK`):
 
 - `python3 scripts/validate_contracts.py` → **FAIL** (exit code 3). Ver `_reports/contract_gates/latest.json`.
 - Bloqueios principais:
-  - **Node ausente** (`node: not found`) → gates `OPENAPI_ROOT_STRUCTURE_GATE` (Redocly) e `OPENAPI_POLICY_RULESET_GATE` (Spectral) falham.
-  - **Path canônico de SSOT de API ausente** (`.contract_driven/templates/api/*`) → `REQUIRED_ARTIFACT_PRESENCE_GATE` falha (SSOT existe em `.contract_driven/templates/api_rules/*`).
-  - **Refs OpenAPI não herméticos** → `REF_HERMETICITY_GATE` falha (`$ref` não resolve em `contracts/openapi/paths/training.yaml`).
-  - **Ferramentas ausentes**: `oasdiff` (`CONTRACT_BREAKING_CHANGE_GATE`) e `asyncapi` (`ASYNCAPI_VALIDATION_GATE`).
-  - **Derivados fora de sync** em `generated/` → `DERIVED_DRIFT_GATE` falha.
+  - **Node ausente** (`node: not found`) → gates `OPENAPI_ROOT_STRUCTURE_GATE` (Redocly), `OPENAPI_POLICY_RULESET_GATE` (Spectral) e `ASYNCAPI_VALIDATION_GATE` falham.
+  - **Ferramentas ausentes**: `oasdiff` → `CONTRACT_BREAKING_CHANGE_GATE` falha.
+  - **Alinhamento cross-spec**: `CROSS_SPEC_ALIGNMENT_GATE` falha (ex.: `createdAt`, `closedAt`, `closedByUserId` exigem patterns canônicos).
+
+- Sinais positivos (WSL, 2026-03-13):
+  - `REQUIRED_ARTIFACT_PRESENCE_GATE` → PASS (SSOT de API presente em `.contract_driven/templates/api/*`).
+  - `REF_HERMETICITY_GATE` → PASS.
+  - `DERIVED_DRIFT_GATE` → PASS.
+  - `OWASP_API_CONTROL_MATRIX_GATE` → PASS.
 
 **REGRAS:**
 - Atualize essa sessão com base na verificação real que você fez no repositório, com o status de cada item e evidências encontradas. No final, faça um resumo do estado operacional real e liste as ações necessárias para chegar a um estado operacional completo.
@@ -378,41 +383,28 @@ Tabela preenchida com base na verificação real executada neste ambiente (Windo
 
 # PROXIMAS TAREFAS
 
-**Ordem recomendada (WSL, 2026-03-13)**: B1 → B2 → B3 → B4 → B5 → B6 → (revalidar `python3 scripts/validate_contracts.py`).
+**Ordem recomendada (WSL, 2026-03-13)**: B1 → B3 → B6 → (revalidar `python3 scripts/validate_contracts.py`).
 
 > **Nota de ambiente (WSL, 2026-03-13)**:
 > - `node.exe` existe em `/mnt/c/Program Files/nodejs/node.exe`, mas o comando `node` não resolve no PATH (bloqueia CLIs via npm).
 > - `redocly`, `spectral` e `ajv` existem como CLIs (npm global), mas falham com `node: not found`.
-> - `@asyncapi/cli` está declarado em `package.json`, porém `node_modules/` não está presente (gate procura `asyncapi` no PATH ou `node_modules/.bin/asyncapi`).
+> - `node_modules/.bin/asyncapi` existe, mas o comando falha por `node: not found` no WSL.
 
 > **Nota de ambiente (Windows 11, 2026-03-12)**: `redocly`, `spectral` e `ajv` disponíveis via npm global (ver `_reports/T1_PROVISIONING_RESULT.md`). `schemathesis` disponível no venv do backend.
 
 ---
 [Tarefa]: B1 Habilitar `node` no WSL (pré-requisito para gates via npm)
-[Status]: **Concluída (2026-03-13)**.
+[Status]: **Aberta (2026-03-13)**.
 [Objetivo]: Fazer `node` ficar disponível no PATH do WSL para destravar `redocly`, `spectral`, `ajv` e `asyncapi`.
 [Escopo]: Ajuste de runtime/PATH no ambiente WSL (sem alterar contratos).
-[Solução implementada]:
-  - Criados wrappers bash em `~/bin/` que chamam ferramentas npm instaladas no Windows.
-  - Wrappers utilizam `node.exe` (disponível via WSL interop) com paths Windows para módulos npm.
-  - Adicionado `~/bin` ao PATH via `~/.bashrc`.
-[Critérios de aceitação]: ✅ **ATENDIDOS**
-  - ✅ `node -v` executa no WSL → v24.12.0
-  - ✅ `redocly --version` executa no WSL → 2.21.0
-  - ✅ `spectral --version` executa no WSL → 6.15.0
-  - ✅ `ajv help` executa no WSL → mostra ajuda
+[Critérios de aceitação]:
+  - `node -v` executa no WSL.
+  - `redocly --version` e `spectral --version` executam no WSL (sem `node: not found`).
 [Validação]:
-  - `wsl bash -c 'export PATH="$HOME/bin:$PATH" && node -v'`
-  - `wsl bash -c 'export PATH="$HOME/bin:$PATH" && redocly --version'`
-  - `wsl bash -c 'export PATH="$HOME/bin:$PATH" && spectral --version'`
-  - `wsl bash -c 'export PATH="$HOME/bin:$PATH" && ajv help'`
-[Artefatos criados]:
-  - `~/bin/node` — wrapper para node.exe
-  - `~/bin/npm` — wrapper para npm
-  - `~/bin/redocly` — wrapper para redocly CLI
-  - `~/bin/spectral` — wrapper para spectral CLI
-  - `~/bin/ajv` — wrapper para ajv CLI
-  - Atualização de `~/.bashrc` com PATH configurado
+  - `node -v`
+  - `redocly --version`
+  - `spectral --version`
+  - `ajv --help`
 ---
 
 [Tarefa]: B2 Normalizar SSOT de API para o path canônico `.contract_driven/templates/api/*`
@@ -430,7 +422,7 @@ Tabela preenchida com base na verificação real executada neste ambiente (Windo
 [Critérios de aceitação]: ✅ **ATENDIDOS**
   - ✅ `python3 scripts/validate_contracts.py` → `REQUIRED_ARTIFACT_PRESENCE_GATE` **PASS**
 [Validação]:
-  - `wsl bash -c 'export PATH="$HOME/bin:$PATH" && cd /mnt/c/"HB TRACK" && python3 scripts/validate_contracts.py'`
+  - `python3 scripts/validate_contracts.py` (verificar `REQUIRED_ARTIFACT_PRESENCE_GATE`)
 [Artefatos criados]:
   - 8 arquivos em `.contract_driven/templates/api/`
   - 5 copiados de `.contract_driven/templates/API_RULES/`
@@ -438,66 +430,64 @@ Tabela preenchida com base na verificação real executada neste ambiente (Windo
 ---
 
 [Tarefa]: B3 Provisionar CLIs ausentes no WSL (`asyncapi` e `oasdiff`)
-[Status]: **Concluída (2026-03-13)**.
+[Status]: **Aberta (2026-03-13)**.
 [Objetivo]: Fazer `ASYNCAPI_VALIDATION_GATE` e `CONTRACT_BREAKING_CHANGE_GATE` executarem no WSL.
 [Escopo]:
   - Disponibilizar `asyncapi` via `node_modules/.bin/asyncapi` (instalação do `@asyncapi/cli`) ou PATH.
   - Disponibilizar `oasdiff` no PATH (Go install) ou alternativa documentada.
 [Critérios de aceitação]:
-  - `asyncapi validate contracts/asyncapi/asyncapi.yaml` executa no WSL. ✅
-  - `oasdiff` é encontrado e executa (`oasdiff --version` ou equivalente). ✅
+  - `asyncapi validate contracts/asyncapi/asyncapi.yaml` executa no WSL (exit code 0).
+  - `oasdiff` é encontrado e executa (`oasdiff --version` ou equivalente).
 [Validação]:
-  - `python3 scripts/validate_contracts.py` (verificar `ASYNCAPI_VALIDATION_GATE` e `CONTRACT_BREAKING_CHANGE_GATE`). ✅
-[Evidências]:
-  - `@asyncapi/cli@6.0.0` instalado via npm (package.json + package-lock.json)
-  - Wrapper bash criado em `~/bin/asyncapi` com conversão automática de paths WSL→Windows
-  - Wrapper bash criado em `~/bin/oasdiff` com conversão automática de paths WSL→Windows
-  - `ASYNCAPI_VALIDATION_GATE`: PASS (validado 2026-03-13)
-  - `CONTRACT_BREAKING_CHANGE_GATE`: PASS (validado 2026-03-13)
+  - `python3 scripts/validate_contracts.py` (verificar `ASYNCAPI_VALIDATION_GATE` e `CONTRACT_BREAKING_CHANGE_GATE`).
 ---
 
 [Tarefa]: B4 Corrigir `$ref` OpenAPI para serem herméticos (Gate `REF_HERMETICITY_GATE`)
 [Status]: **Concluída (2026-03-13)**.
 [Objetivo]: Eliminar `$ref` não resolvidos em `contracts/openapi/openapi.yaml` (atualmente refs de operação em `./paths/training.yaml#/...`).
 [Escopo]:
-  - Ajustar `contracts/openapi/openapi.yaml` para referenciar **Path Item** (em vez de operação) quando aplicável. ✅
-  - Confirmar que os pointers JSON (`#/~1...`) resolvem contra os arquivos em `contracts/openapi/paths/*.yaml`. ✅
+  - Ajustar refs quando necessário para apontar para artefatos/pointers existentes.
 [Critérios de aceitação]:
-  - `python3 scripts/validate_contracts.py` → `REF_HERMETICITY_GATE` PASS. ✅
+  - `python3 scripts/validate_contracts.py` → `REF_HERMETICITY_GATE` PASS.
 [Validação]:
-  - `python3 scripts/validate_contracts.py`. ✅
-[Evidências]:
-  - Corrigido `contracts/openapi/openapi.yaml`: refs agora apontam para Path Items (`$ref: ./paths/training.yaml#/~1training-sessions`) em vez de operações individuais
-  - Corrigido bug no gate: `scripts/contracts/validate/validate_contracts.py` agora separa arquivo de JSON Pointer antes de verificar existência
-  - `REF_HERMETICITY_GATE`: PASS (validado 2026-03-13)
+  - `python3 scripts/validate_contracts.py`.
 ---
 
 [Tarefa]: B5 Remover drift em `generated/` (Gate `DERIVED_DRIFT_GATE`)
 [Status]: **Concluída (2026-03-13)**.
 [Objetivo]: Regenerar artefatos derivados para que `compile_api_policy --check` fique PASS.
 [Escopo]:
-  - Regenerar `generated/` usando o compiler determinístico (não editar arquivos em `generated/` manualmente). ✅
+  - Regenerar `generated/` usando o compiler determinístico (não editar arquivos em `generated/` manualmente).
 [Critérios de aceitação]:
-  - `python3 scripts/contracts/validate/api/compile_api_policy.py --all --check --format json` retorna PASS (exit code 0). ✅
+  - `python3 scripts/contracts/validate/api/compile_api_policy.py --all --check --format json` retorna PASS (exit code 0).
 [Validação]:
-  - `python3 scripts/contracts/validate/api/compile_api_policy.py --all --format json` ✅
-  - `python3 scripts/contracts/validate/api/compile_api_policy.py --all --check --format json` ✅
-[Evidências]:
-  - Regenerados 32 arquivos em `generated/`: 16 resolved_policy + 16 manifests (todos os módulos)
-  - Compiler retornou status: PASS, mode: write
-  - Verificação pós-regeneração: status: PASS, mode: check, drifts: []
-  - `DERIVED_DRIFT_GATE`: PASS (validado 2026-03-13)
+  - `python3 scripts/contracts/validate/api/compile_api_policy.py --all --format json`
+  - `python3 scripts/contracts/validate/api/compile_api_policy.py --all --check --format json`
 ---
 
 [Tarefa]: B6 Corrigir violações de alinhamento cross-spec (Gate `CROSS_SPEC_ALIGNMENT_GATE`)
-[Status]: **Aberta (2026-03-13)**.
+[Status]: **Concluída (2026-03-13)**.
 [Objetivo]: Padronizar campos (`createdAt`, `closedAt`, `closedByUserId`, etc.) para usar os patterns/semânticas canônicas (`timestamp_utc`, `uuid_v4`) nas specs onde exigido.
 [Escopo]:
-  - Ajustar os contratos (ex.: `contracts/openapi/components/schemas/**`) para refletirem os semantic types/patterns canônicos.
+  - Ajustar os contratos (ex.: `contracts/openapi/components/schemas/**`) para refletirem os semantic types/patterns canônicos. ✅
 [Critérios de aceitação]:
-  - `python3 scripts/validate_contracts.py` → `CROSS_SPEC_ALIGNMENT_GATE` PASS (0 violações).
+  - `python3 scripts/validate_contracts.py` → `CROSS_SPEC_ALIGNMENT_GATE` PASS (0 violações). ✅
 [Validação]:
-  - `python3 scripts/validate_contracts.py` (verificar `CROSS_SPEC_ALIGNMENT_GATE`).
+  - `python3 scripts/validate_contracts.py` (verificar `CROSS_SPEC_ALIGNMENT_GATE`). ✅
+[Evidências]:
+  - Adicionados patterns canônicos em `contracts/openapi/components/schemas/training/training_session.yaml` (17 campos):
+    - timestamp_utc: sessionAt, createdAt, updatedAt, deletedAt, closedAt, startedAt, endedAt, postReviewCompletedAt, postReviewDeadlineAt
+    - uuid_v4: id, organizationId, teamId, seasonId, microcycleId, createdByUserId, closedByUserId, postReviewCompletedByUserId
+  - Adicionados patterns canônicos em `contracts/openapi/paths/training.yaml` (11 campos inline):
+    - POST /training-sessions: organizationId, teamId, seasonId, microcycleId, sessionAt
+    - PATCH /training-sessions/{id}: sessionAt
+    - POST /training-sessions/{id}/attendance: athleteId (request), attendanceId, athleteId, trainingSessionId, createdAt (response)
+  - Corrigidos operationIds em `contracts/workflows/training/create_training_session_and_mark_attendance.arazzo.yaml`:
+    - create_training_session → createTrainingSession
+    - scoped_add_training_attendance → registerTrainingAttendance
+  - Regenerados artefatos derivados (2 arquivos): generated/contracts/openapi/paths/training.yaml, generated/manifests/training.sync.traceability.yaml
+  - `CROSS_SPEC_ALIGNMENT_GATE`: PASS (validado 2026-03-13)
+  - `DERIVED_DRIFT_GATE`: PASS após regeneração
 ---
 
 [Tarefa]: B0 Desbloquear permissão de edição nos paths canônicos (pré-requisito de execução)

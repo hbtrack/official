@@ -123,18 +123,23 @@
               organizationId:
                 type: string
                 format: uuid
+                pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
               teamId:
                 type: string
                 format: uuid
+                pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
               seasonId:
                 type: string
                 format: uuid
+                pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
               microcycleId:
                 type: string
                 format: uuid
+                pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
               sessionAt:
                 type: string
                 format: date-time
+                pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
                 description: RFC-3339 UTC timestamp
               durationPlannedMinutes:
                 type: integer
@@ -320,6 +325,7 @@
               sessionAt:
                 type: string
                 format: date-time
+                pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
               durationPlannedMinutes:
                 type: integer
                 minimum: 1
@@ -486,6 +492,7 @@
               athleteId:
                 type: string
                 format: uuid
+                pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
                 x-semantic-id: users.athlete.id.v1
               present:
                 type: boolean
@@ -506,13 +513,16 @@
                 attendanceId:
                   type: string
                   format: uuid
+                  pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
                 athleteId:
                   type: string
                   format: uuid
+                  pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
                   x-semantic-id: users.athlete.id.v1
                 trainingSessionId:
                   type: string
                   format: uuid
+                  pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
                   x-semantic-id: training.session.id.v1
                 present:
                   type: boolean
@@ -524,6 +534,7 @@
                 createdAt:
                   type: string
                   format: date-time
+                  pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
       "400":
         description: Validation error
         content:
