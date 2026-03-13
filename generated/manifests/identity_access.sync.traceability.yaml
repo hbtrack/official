@@ -4,22 +4,22 @@ traceability_manifest:
   compiler_version: 0.1.0
   generated_artifacts:
   - path: generated/contracts/openapi/paths/identity_access.yaml
-    sha256: 247990e9eb1d1aecea0e065cff57eeb4711a27f69867220df090943dbfdb9af4
-  generated_tree_sha256: 3ac7dd86e9053c245ea75b1785061cf05e54ff4861b892bb0b3f9e2c041d1d31
+    sha256: 5e2c2342a4ec7987d28ce709f70480648eb966f9adeea998f95830abfd8818b5
+  generated_tree_sha256: b24dcbcbc854e93e02e709de30a4544951bb6e84ed4ff5ba5b67e75d814ab8a4
   policy_path: generated/resolved_policy/identity_access.sync.resolved.yaml
-  policy_sha256: 3f58a762f279abd8c9047aa1eef79b45675dcbbfe0e9b178b5bde3f84f110ece
+  policy_sha256: d3ca1032639a2e46146e082cf94ead5e159a03e5718bdc4ddb863112b0dbc33a
   source_contracts:
   - path: contracts/openapi/paths/identity_access.yaml
-    sha256: 247990e9eb1d1aecea0e065cff57eeb4711a27f69867220df090943dbfdb9af4
+    sha256: 5e2c2342a4ec7987d28ce709f70480648eb966f9adeea998f95830abfd8818b5
   source_inputs:
-  - path: .contract_driven/templates/API_RULES/ARCHITECTURE_MATRIX.yaml
+  - path: .contract_driven/templates/api_rules/ARCHITECTURE_MATRIX.yaml
     sha256: b3a862f6cabd38f6e2b00deacad66499064897685b2c486f303365f4dc58fc8d
-  - path: .contract_driven/templates/API_RULES/MODULE_PROFILE_REGISTRY.yaml
+  - path: .contract_driven/templates/api_rules/MODULE_PROFILE_REGISTRY.yaml
     sha256: af3bc0a5c458598f52fdd658b53db1b527196e06805758fb963c89423a179749
-  - path: .contract_driven/templates/API_RULES/API_RULES.yaml
-    sha256: 43b6a4899fa4043d8b26337f4b0d8bbcab191f66c42dd6d15bf51cbadaf47f1b
-  - path: .contract_driven/templates/API_RULES/CANONICAL_TYPE_REGISTRY.yaml
+  - path: .contract_driven/templates/api_rules/api_rules.yaml
+    sha256: 7e610fffba21b71827cd3249f042342c5f0656ffe0566df23a2efa2ab38430a0
+  - path: .contract_driven/templates/api_rules/CANONICAL_TYPE_REGISTRY.yaml
     sha256: 042ec0b9db7ee7d4f9604f15d1f1bb3fb53cb2f3be18408222e7bca4afb7ef3b
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: a9ea7e57e9062b42497d6f94109fde3dd02be531668b039317f233d916cfd08e
-  source_tree_sha256: df76c365e93abe60a638f5a10908926a5cd3fdaf09a2e4e7a738d9f5c30d734c
+  source_tree_sha256: 66e038c1a65063a239b9bbeb607d84cd1104b8e8f144cc7ea0df8b6b6bb0e51d

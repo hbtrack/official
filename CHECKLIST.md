@@ -130,9 +130,9 @@ Marque `[x]` só se você executou e obteve resultado real.
 - [ ] Gates de CI estão configurados e falham quando artefato obrigatório está ausente (evidência: `REQUIRED_ARTIFACT_PRESENCE_GATE` → FAIL em `python3 scripts/validate_contracts.py`)
 - [ ] Gates de CI estão configurados e falham quando artefato de módulo não referencia contrato adequadamente (evidência: `MODULE_DOC_CROSSREF_GATE` → FAIL em `python3 scripts/validate_contracts.py`)
 
-> **Evidência validate_contracts (WSL, 2026-03-13 — após B1, B2, B3, B4)**: `python3 scripts/validate_contracts.py` → **FAIL** (exit code 2).
-> Gates passando: `REQUIRED_ARTIFACT_PRESENCE_GATE`, `REF_HERMETICITY_GATE`, `JSON_SCHEMA_VALIDATION_GATE`, `CONTRACT_BREAKING_CHANGE_GATE`, `ASYNCAPI_VALIDATION_GATE`, `ARAZZO_VALIDATION_GATE`.
-> Falhas bloqueantes restantes: `OPENAPI_ROOT_STRUCTURE_GATE`, `OPENAPI_POLICY_RULESET_GATE`, `CROSS_SPEC_ALIGNMENT_GATE` (B6), `DERIVED_DRIFT_GATE` (B5).
+> **Evidência validate_contracts (WSL, 2026-03-13 — após B1, B2, B3, B4, B5)**: `python3 scripts/validate_contracts.py` → **FAIL** (exit code 2).
+> Gates passando: `REQUIRED_ARTIFACT_PRESENCE_GATE`, `MODULE_DOC_CROSSREF_GATE`, `API_NORMATIVE_DUPLICATION_GATE`, `PLACEHOLDER_RESIDUE_GATE`, `REF_HERMETICITY_GATE`, `JSON_SCHEMA_VALIDATION_GATE`, `CONTRACT_BREAKING_CHANGE_GATE`, `ASYNCAPI_VALIDATION_GATE`, `ARAZZO_VALIDATION_GATE`, `DERIVED_DRIFT_GATE`.
+> Falhas bloqueantes restantes: `OPENAPI_ROOT_STRUCTURE_GATE`, `OPENAPI_POLICY_RULESET_GATE`, `CROSS_SPEC_ALIGNMENT_GATE` (B6).
 > Ver `_reports/contract_gates/latest.json`.
 
 > **Evidência Intent compiler (WSL, 2026-03-13)**: `python3 scripts/contracts/validate/api/compile_api_intent.py --module ai_ingestion --intent contracts/openapi/intents/ai_ingestion.intent.yaml --format json` → PASS (exit code 0).
@@ -473,15 +473,20 @@ Tabela preenchida com base na verificação real executada neste ambiente (Windo
 ---
 
 [Tarefa]: B5 Remover drift em `generated/` (Gate `DERIVED_DRIFT_GATE`)
-[Status]: **Aberta (2026-03-13)**.
+[Status]: **Concluída (2026-03-13)**.
 [Objetivo]: Regenerar artefatos derivados para que `compile_api_policy --check` fique PASS.
 [Escopo]:
-  - Regenerar `generated/` usando o compiler determinístico (não editar arquivos em `generated/` manualmente).
+  - Regenerar `generated/` usando o compiler determinístico (não editar arquivos em `generated/` manualmente). ✅
 [Critérios de aceitação]:
-  - `python3 scripts/contracts/validate/api/compile_api_policy.py --all --check --format json` retorna PASS (exit code 0).
+  - `python3 scripts/contracts/validate/api/compile_api_policy.py --all --check --format json` retorna PASS (exit code 0). ✅
 [Validação]:
-  - `python3 scripts/contracts/validate/api/compile_api_policy.py --all --format json`
-  - `python3 scripts/contracts/validate/api/compile_api_policy.py --all --check --format json`
+  - `python3 scripts/contracts/validate/api/compile_api_policy.py --all --format json` ✅
+  - `python3 scripts/contracts/validate/api/compile_api_policy.py --all --check --format json` ✅
+[Evidências]:
+  - Regenerados 32 arquivos em `generated/`: 16 resolved_policy + 16 manifests (todos os módulos)
+  - Compiler retornou status: PASS, mode: write
+  - Verificação pós-regeneração: status: PASS, mode: check, drifts: []
+  - `DERIVED_DRIFT_GATE`: PASS (validado 2026-03-13)
 ---
 
 [Tarefa]: B6 Corrigir violações de alinhamento cross-spec (Gate `CROSS_SPEC_ALIGNMENT_GATE`)

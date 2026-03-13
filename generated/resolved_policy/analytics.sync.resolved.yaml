@@ -41,11 +41,11 @@ canonical_types:
 contract_sources:
 - contracts/openapi/paths/analytics.yaml
 inputs:
-  api_rules: .contract_driven/templates/API_RULES/API_RULES.yaml
-  architecture_matrix: .contract_driven/templates/API_RULES/ARCHITECTURE_MATRIX.yaml
-  canonical_type_registry: .contract_driven/templates/API_RULES/CANONICAL_TYPE_REGISTRY.yaml
+  api_rules: .contract_driven/templates/api_rules/api_rules.yaml
+  architecture_matrix: .contract_driven/templates/api/ARCHITECTURE_MATRIX.yaml
+  canonical_type_registry: .contract_driven/templates/api/CANONICAL_TYPE_REGISTRY.yaml
   domain_axioms: .contract_driven/DOMAIN_AXIOMS.json
-  module_profile_registry: .contract_driven/templates/API_RULES/MODULE_PROFILE_REGISTRY.yaml
+  module_profile_registry: .contract_driven/templates/api/MODULE_PROFILE_REGISTRY.yaml
 meta:
   artifact_id: HBTRACK_RESOLVED_API_POLICY
   compiler: hbtrack_api_policy_compiler

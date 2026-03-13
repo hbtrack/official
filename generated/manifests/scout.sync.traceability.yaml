@@ -4,22 +4,22 @@ traceability_manifest:
   compiler_version: 0.1.0
   generated_artifacts:
   - path: generated/contracts/openapi/paths/scout.yaml
-    sha256: a450a4e20ee2db342172c5c2a4c275ce9f66d8ba429e7a1fb584a8ebf75cd9c1
-  generated_tree_sha256: 61534a07a86549c2e7a02fb66286c52d32ffc622dab80eb32fe4c9205d4e0449
+    sha256: dfb7ba16ce7c816359cd3976db1a8551e2ce17ad7273aed8f3802d01edd3acc4
+  generated_tree_sha256: dcafe5fc73f7be0712b07adfd0a7df8b8aae754ac75c0fef58500f43a7926b13
   policy_path: generated/resolved_policy/scout.sync.resolved.yaml
-  policy_sha256: 918c4104a33b65cd5be080e8d5342f085447e6a648fdd2a5f3024ed10423e2eb
+  policy_sha256: b2fd915a4b555c032a2bb5e548b642606ae3bde472b556a9497125712c9c52b1
   source_contracts:
   - path: contracts/openapi/paths/scout.yaml
-    sha256: a450a4e20ee2db342172c5c2a4c275ce9f66d8ba429e7a1fb584a8ebf75cd9c1
+    sha256: dfb7ba16ce7c816359cd3976db1a8551e2ce17ad7273aed8f3802d01edd3acc4
   source_inputs:
-  - path: .contract_driven/templates/API_RULES/ARCHITECTURE_MATRIX.yaml
+  - path: .contract_driven/templates/api_rules/ARCHITECTURE_MATRIX.yaml
     sha256: b3a862f6cabd38f6e2b00deacad66499064897685b2c486f303365f4dc58fc8d
-  - path: .contract_driven/templates/API_RULES/MODULE_PROFILE_REGISTRY.yaml
+  - path: .contract_driven/templates/api_rules/MODULE_PROFILE_REGISTRY.yaml
     sha256: af3bc0a5c458598f52fdd658b53db1b527196e06805758fb963c89423a179749
-  - path: .contract_driven/templates/API_RULES/API_RULES.yaml
-    sha256: 43b6a4899fa4043d8b26337f4b0d8bbcab191f66c42dd6d15bf51cbadaf47f1b
-  - path: .contract_driven/templates/API_RULES/CANONICAL_TYPE_REGISTRY.yaml
+  - path: .contract_driven/templates/api_rules/api_rules.yaml
+    sha256: 7e610fffba21b71827cd3249f042342c5f0656ffe0566df23a2efa2ab38430a0
+  - path: .contract_driven/templates/api_rules/CANONICAL_TYPE_REGISTRY.yaml
     sha256: 042ec0b9db7ee7d4f9604f15d1f1bb3fb53cb2f3be18408222e7bca4afb7ef3b
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: a9ea7e57e9062b42497d6f94109fde3dd02be531668b039317f233d916cfd08e
-  source_tree_sha256: 4eaf0301b1b68ca0a8b9211f45cf05a2ec5bc30c202b55414da5117d4dfc206b
+  source_tree_sha256: 3d0e1f64ef22b790ce77610f4c7b339d14405bbda577ffea998a109dd84fbfa6

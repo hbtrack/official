@@ -13,7 +13,7 @@ traceability_manifest:
     sha256: 6ef65f5f38270bb2d877d0968f1672155b79dda9dcba2682f73c3500f2005f0e
   generated_tree_sha256: 48ad3b52629caf21a6731709c6bf7e9fc1cdcf8b57860d2bd71a5972b2211719
   policy_path: generated/resolved_policy/training.event.resolved.yaml
-  policy_sha256: 145b45b9bde725b040a2b94b9fe62f9583902a7231be7aca78871195a0f9aba9
+  policy_sha256: 1eb8138bc8cab2e64bab4af1f4e491d4f4fa0a8ae903c21a915688bc64af5d4a
   source_contracts:
   - path: contracts/asyncapi/asyncapi.yaml
     sha256: a9aaa7f9c05a7781611904944ffb629156b58710cb99e1cc91d9aaa1a5db568b
@@ -24,13 +24,13 @@ traceability_manifest:
   - path: contracts/asyncapi/components/schemas/training_attendance_marked_payload.yaml
     sha256: 6ef65f5f38270bb2d877d0968f1672155b79dda9dcba2682f73c3500f2005f0e
   source_inputs:
-  - path: .contract_driven/templates/API_RULES/ARCHITECTURE_MATRIX.yaml
+  - path: .contract_driven/templates/api_rules/ARCHITECTURE_MATRIX.yaml
     sha256: b3a862f6cabd38f6e2b00deacad66499064897685b2c486f303365f4dc58fc8d
-  - path: .contract_driven/templates/API_RULES/MODULE_PROFILE_REGISTRY.yaml
+  - path: .contract_driven/templates/api_rules/MODULE_PROFILE_REGISTRY.yaml
     sha256: af3bc0a5c458598f52fdd658b53db1b527196e06805758fb963c89423a179749
-  - path: .contract_driven/templates/API_RULES/API_RULES.yaml
-    sha256: 43b6a4899fa4043d8b26337f4b0d8bbcab191f66c42dd6d15bf51cbadaf47f1b
-  - path: .contract_driven/templates/API_RULES/CANONICAL_TYPE_REGISTRY.yaml
+  - path: .contract_driven/templates/api_rules/api_rules.yaml
+    sha256: 7e610fffba21b71827cd3249f042342c5f0656ffe0566df23a2efa2ab38430a0
+  - path: .contract_driven/templates/api_rules/CANONICAL_TYPE_REGISTRY.yaml
     sha256: 042ec0b9db7ee7d4f9604f15d1f1bb3fb53cb2f3be18408222e7bca4afb7ef3b
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: a9ea7e57e9062b42497d6f94109fde3dd02be531668b039317f233d916cfd08e
