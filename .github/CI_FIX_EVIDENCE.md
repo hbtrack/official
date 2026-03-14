@@ -26,7 +26,9 @@ npm error Missing: iconv-lite@0.6.3 from lock file
 ### 1. Regeneração do lock file
 
 ```bash
-cd /home/davis/HB-TRACK
+# Executar a partir da raiz do repositório HB-TRACK
+# Exemplo (ajustar conforme o ambiente local):
+# cd /caminho/para/HB-TRACK
 source ./setup-env.sh
 npm install  # Regenera package-lock.json sincronizado
 ```
