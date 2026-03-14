@@ -1,7 +1,7 @@
 ---
 doc_type: canon
-version: "1.0.0"
-last_reviewed: "2026-03-11"
+version: "1.1.0"
+last_reviewed: "2026-03-13"
 status: active
 ---
 
@@ -125,46 +125,36 @@ graph TD
 
 ## 6. Localização dos Contratos por Módulo
 
-Padrão de localização: `docs/hbtrack/modulos/<modulo>/`
+Documentação normativa de módulo vive em:
 
-Arquivos esperados por módulo quando materializado via processo MCP:
+- `docs/hbtrack/modulos/<module>/`
 
-| Número | Arquivo | Descrição |
-|--------|---------|-----------|
-| `00` | `00_<MODULO>_MODULE_RULES.json` | Regras do módulo, atores, dependências |
-| `01` | `01_<MODULO>_OPENAPI.yaml` | Contrato OpenAPI do módulo |
-| `04` | `04_<MODULO>_WORKFLOWS.arazzo.yaml` | Workflows Arazzo |
-| `05` | `05_<MODULO>_EVENTS.asyncapi.yaml` | Eventos AsyncAPI |
-| `06` | `06_<MODULO>_CONSUMER_CONTRACTS.md` | Contratos de consumo |
-| `08` | `08_<MODULO>_TRACEABILITY.yaml` | Rastreabilidade |
-| `12` | `12_<MODULO>_EXECUTION_BINDINGS.yaml` | Bindings de execução |
-| `13` | `13_<MODULO>_DB_CONTRACT.yaml` | Contrato de banco de dados |
-| `14` | `14_<MODULO>_UI_CONTRACT.yaml` | Contrato de UI |
-| `15` | `15_<MODULO>_INVARIANTS.yaml` | Invariantes do módulo |
-| `16` | `16_<MODULO>_AGENT_HANDOFF.json` | Handoff de agente |
-| `17` | `17_<MODULO>_PROJECTIONS.yaml` | Projeções de estado |
-| `18` | `18_<MODULO>_SIDE_EFFECTS.yaml` | Efeitos colaterais |
-| `19` | `19_<MODULO>_TEST_SCENARIOS.yaml` | Cenários de teste |
-| `20` | `20_<MODULO>_EXECUTOR_RESTRICTION_PROMPT.md` | Restrições do executor |
+Conjunto mínimo esperado por módulo (ver `.contract_driven/CONTRACT_SYSTEM_RULES.md`):
+- `README.md`
+- `MODULE_SCOPE_<MOD>.md`
+- `DOMAIN_RULES_<MOD>.md`
+- `INVARIANTS_<MOD>.md`
+- `TEST_MATRIX_<MOD>.md`
 
-Ver `CONTRACT_SYSTEM_LAYOUT.md` para lista completa e regras de nomenclatura.
+Contratos técnicos vivem em:
+- OpenAPI (por módulo): `contracts/openapi/paths/<module>.yaml`
+- JSON Schemas (por módulo): `contracts/schemas/<module>/`
+- Workflows (quando aplicável): `contracts/workflows/<module>/`
+- Eventos (quando aplicável): `contracts/asyncapi/**` (root: `contracts/asyncapi/asyncapi.yaml`)
 
-**Estado de materialização (2026-03-11):**
-
-| Módulo | Estado MCP | Observações |
-|--------|-----------|-------------|
-| `training` | Avançado | Documentação extensa em `docs/hbtrack/modulos/treinos/` |
-| `users` (subset `atletas`) | Iniciado | `docs/hbtrack/modulos/atletas/` — MCP parcial |
-| `competitions` | FASE_0 | Documentação de fase inicial completa |
-| Demais 13 módulos | Não iniciado | Aguardam processo MCP formal |
+**Readiness e completude** são avaliados pelos contract gates (ver `CI_CONTRACT_GATES.md`) e evidenciados em `_reports/contract_gates/latest.json`.
 
 ---
 
-## 7. Processo MCP (Master Materialization Plan)
+## 7. Readiness de Módulo (Contract-Driven)
 
-Ver `docs/hbtrack/modulos/MCP.md` para o processo completo de materialização de módulos.
+Um módulo é considerado **pronto para implementação** apenas quando:
+- seus artefatos mínimos de documentação existem no path canônico
+- seus contratos técnicos (quando aplicáveis) existem e passam nos gates
+- não há placeholders residuais em artefatos normativos
+- boundaries críticas (ex.: `users` vs `identity_access`) não são violadas
 
-**Regra**: módulos sem documentação MCP aprovada não podem receber ARs de implementação de funcionalidades. ARs de infraestrutura transversal são exceção com justificativa formal.
+Evolução de módulo segue `CHANGE_POLICY.md` e deve ser validada por `python3 scripts/validate_contracts.py`.
 
 ---
 
@@ -200,4 +190,4 @@ Este documento deve ser lido em conjunto com:
 - `CONTRACT_SYSTEM_LAYOUT.md` — estrutura de filesystem e nomenclatura
 - `CONTRACT_SYSTEM_RULES.md` — regras operacionais do sistema contract-driven
 - `HANDBALL_RULES_DOMAIN.md` — regras formais do handebol (relevante para `training`, `competitions`, `matches`, `scout`, `analytics`)
-- `docs/hbtrack/modulos/MCP.md` — processo de materialização de módulos
+- `CI_CONTRACT_GATES.md` — gates que determinam readiness e integridade

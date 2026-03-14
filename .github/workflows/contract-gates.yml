@@ -1,0 +1,54 @@
+name: Contract Gates
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  validate-contracts:
+    name: Validate Contract Gates
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Validate contracts
+        run: python3 scripts/validate_contracts.py
+        env:
+          CI: "true"
+
+      - name: Upload contract gates report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: contract-gates-report
+          path: _reports/contract_gates/
+          retention-days: 30
+          if-no-files-found: warn
+
+      - name: Check for contract gate failures
+        if: failure()
+        run: |
+          echo "::error::Contract validation failed. Check the uploaded artifact for details."
+          exit 1

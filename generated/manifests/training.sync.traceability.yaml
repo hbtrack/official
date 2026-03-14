@@ -4,22 +4,22 @@ traceability_manifest:
   compiler_version: 0.1.0
   generated_artifacts:
   - path: generated/contracts/openapi/paths/training.yaml
-    sha256: 4fd3eef2ab4d1060e483392479a9a7700445d754a1a2c46573734ba9a3109bd0
-  generated_tree_sha256: c66ea01b56a874db9a2849a8b6b17fc48c2bc258c667c79cbcb9111dd35484c4
+    sha256: c8d49075e338bb672dfee415329c660f74ee26e5f1e23f304f64466cc7455974
+  generated_tree_sha256: c45b3638d7f41a3365473ab44699294db4c3a01f70234baf4608d7995809515b
   policy_path: generated/resolved_policy/training.sync.resolved.yaml
-  policy_sha256: a1ba4a621af0c6ec44c6a9b8b71b265368b3ec3bd1ca500566d2ec14a71da9f8
+  policy_sha256: ac49ac30575746f9fbfb4959a85c46cff0a234110d0682f3cf4211da536af8ae
   source_contracts:
   - path: contracts/openapi/paths/training.yaml
-    sha256: 4fd3eef2ab4d1060e483392479a9a7700445d754a1a2c46573734ba9a3109bd0
+    sha256: c8d49075e338bb672dfee415329c660f74ee26e5f1e23f304f64466cc7455974
   source_inputs:
-  - path: .contract_driven/templates/api_rules/ARCHITECTURE_MATRIX.yaml
+  - path: .contract_driven/templates/api/ARCHITECTURE_MATRIX.yaml
     sha256: b3a862f6cabd38f6e2b00deacad66499064897685b2c486f303365f4dc58fc8d
-  - path: .contract_driven/templates/api_rules/MODULE_PROFILE_REGISTRY.yaml
+  - path: .contract_driven/templates/api/MODULE_PROFILE_REGISTRY.yaml
     sha256: af3bc0a5c458598f52fdd658b53db1b527196e06805758fb963c89423a179749
-  - path: .contract_driven/templates/api_rules/api_rules.yaml
-    sha256: 7e610fffba21b71827cd3249f042342c5f0656ffe0566df23a2efa2ab38430a0
-  - path: .contract_driven/templates/api_rules/CANONICAL_TYPE_REGISTRY.yaml
+  - path: .contract_driven/templates/api/api_rules.yaml
+    sha256: 2829de299d52c4a5912ee3a0489b43271d666d62a83172d3dd32b7417db15ce5
+  - path: .contract_driven/templates/api/CANONICAL_TYPE_REGISTRY.yaml
     sha256: 042ec0b9db7ee7d4f9604f15d1f1bb3fb53cb2f3be18408222e7bca4afb7ef3b
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: a9ea7e57e9062b42497d6f94109fde3dd02be531668b039317f233d916cfd08e
-  source_tree_sha256: b9aeb1026b429775f0c2fb735bb5dd5485894d6ed9ab7b0e421f64231fef9995
+  source_tree_sha256: 01294eea4bae83cb69264e49a6b1bf63b06aeeee9180af5e116eb9f203d7cca7

@@ -7,12 +7,15 @@
 | Status do sistema | Ativo — em desenvolvimento iterativo |
 | Maturidade CDD | Nível 3 — contratos de módulo + invariantes + test matrix |
 | Última revisão | 2026-03-11 |
+| **Ambiente de desenvolvimento** | **Linux/WSL (primário)** |
+
+> **⚠️ Nota Operacional:** A partir de 2026-03-13, o ambiente de desenvolvimento canônico é **Linux/WSL** (`/home/davis/HB-TRACK`). O path Windows (`C:\HB TRACK`) é mantido apenas como backup legado temporário e não deve receber edições operacionais.
 
 ---
 
 ## O que é o HB Track?
 
-O HB Track é uma plataforma de gestão esportiva voltada ao handebol indoor brasileiro. Seu modelo de desenvolvimento é **contract-driven**: nenhum componente público nasce primeiro no código. Contratos OpenAPI, invariantes documentadas e schemas canônicos precedem a implementação.
+O HB Track é uma plataforma de gestão esportiva voltada ao handebol indoor. Seu modelo de desenvolvimento é **contract-driven**: nenhum componente público nasce primeiro no código. Contratos OpenAPI, invariantes documentadas e schemas canônicos precedem a implementação.
 
 | Dimensão | Descrição |
 |----------|-----------|
@@ -46,20 +49,7 @@ O HB Track é uma plataforma de gestão esportiva voltada ao handebol indoor bra
 ## Estrutura do Repositório
 
 ```
-HB TRACK/
-├── Hb Track - Backend/          # API FastAPI + workers Celery
-│   ├── app/
-│   │   ├── api/                 # Routers FastAPI por módulo
-│   │   ├── services/            # Lógica de negócio
-│   │   ├── repositories/        # Acesso a dados (SQLAlchemy)
-│   │   └── models/              # Modelos ORM
-│   └── tests/                   # Testes backend (pytest + Schemathesis)
-│
-├── Hb Track - Frontend/         # SPA Next.js 13+ (App Router)
-│   ├── src/app/                 # Pages e layouts (App Router)
-│   ├── src/components/          # Componentes React
-│   └── src/api/generated/       # Client HTTP gerado via OpenAPI generator
-│
+HB-TRACK/
 ├── docs/_canon/                 # *** Documentação canônica normativa (ler primeiro) ***
 │   ├── README.md                # Este guia de navegação
 │   ├── SYSTEM_SCOPE.md          # Missão, atores, macrodomínios, fora do escopo
@@ -80,21 +70,104 @@ HB TRACK/
 │
 ├── docs/hbtrack/modulos/        # Documentação por módulo (training, competitions, etc.)
 │
-├── .contract_driven/            # Sistema de contratos (regras, layout, templates)
+├── .contract_driven/            # Governança contract-driven (SSOT)
 │   ├── CONTRACT_SYSTEM_RULES.md # Regras operacionais do sistema CDD
 │   ├── CONTRACT_SYSTEM_LAYOUT.md# Estrutura canônica de arquivos
 │   ├── GLOBAL_TEMPLATES.md      # Templates oficiais de artefatos
-│   └── api_rules/               # SSOT de regras/templates/validações de API HTTP
-│       └── api_rules.yaml
+│   └── templates/               # Scaffolds + SSOT de API HTTP (ver api/api_rules.yaml)
 │
-├── scripts/                     # CLI de governança
-│   ├── run/hb_cli.py            # CLI oficial (plan, report, verify, seal, check, gates)
-│   ├── run/hb_watch.py          # Dashboard de desenvolvimento
-│   └── git-hooks/pre-commit     # Enforcement de governança no commit
+├── contracts/                   # Contratos técnicos soberanos (OpenAPI/JSON Schema/Arazzo/AsyncAPI)
+├── generated/                   # Artefatos derivados (nunca editar)
+├── _reports/                    # Evidências/relatórios derivados (ex.: contract gates)
+│
+├── scripts/                     # Tooling do contract-driven
+│   ├── validate_contracts.py    # Contract gates (gera _reports/contract_gates/latest.json)
+│   └── git-hooks/pre-commit     # Enforcement no commit (roda validate_contracts)
 │
 └── infra/                       # Docker Compose e infraestrutura local
     └── docker-compose.yml
 ```
+
+---
+
+## Desenvolvimento Local (Setup)
+
+### Pré-requisitos
+
+- **WSL2** (Ubuntu 24.04+ recomendado) ou **Linux nativo**
+- **Node.js** 24.x LTS via nvm
+- **Python** 3.12+
+- **Git**
+
+### Workspace Canônico
+
+```bash
+# Clone o repositório
+git clone https://github.com/Davisermenho/Hb_Track.git ~/HB-TRACK
+cd ~/HB-TRACK
+
+# Verifique o root
+pwd  # deve retornar: /home/$USER/HB-TRACK
+git rev-parse --show-toplevel
+```
+
+### Toolchain
+
+```bash
+# Carregar toolchain WSL-native (evita wrappers Windows em $HOME/bin)
+source ./setup-env.sh
+
+# Validar ferramentas instaladas
+node --version      # v24.x
+npm --version       # 11.x
+python3 --version   # 3.12+
+redocly --version   # 2.21.x
+spectral --version  # 6.15.x
+
+# Contract gates (validação)
+python3 scripts/validate_contracts.py
+```
+
+### Instalar Dependências
+
+```bash
+# Node/npm (frontend + ferramentas de gate)
+npm ci
+
+# Python (contract gates - não requer requirements.txt neste workspace)
+python3 -m venv .venv
+source .venv/bin/activate
+python3 scripts/validate_contracts.py
+```
+
+### Comandos Principais
+
+```bash
+# Validar contratos OpenAPI/AsyncAPI
+redocly lint contracts/openapi/openapi.yaml
+spectral lint contracts/openapi/openapi.yaml
+
+# Rodar todos os contract gates (gera _reports/contract_gates/latest.json)
+python3 scripts/validate_contracts.py
+```
+
+### VS Code Remote-WSL
+
+Abra o projeto no contexto WSL para melhor desempenho:
+
+```powershell
+# Do Windows
+code \\wsl$\Ubuntu\home\davis\HB-TRACK
+```
+
+Ou diretamente do WSL:
+
+```bash
+cd ~/HB-TRACK
+code .
+```
+
+> **Importante:** Sempre trabalhe no ambiente WSL/Linux. O path Windows (`C:\HB TRACK`) é backup legado.
 
 ---
 

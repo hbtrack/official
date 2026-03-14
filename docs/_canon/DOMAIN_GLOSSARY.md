@@ -360,47 +360,36 @@ Este glossário define os termos canônicos do domínio do HB Track. Quando um t
 
 ---
 
-### AR — Architecture Record (`ar`)
-**Definição**: Registro formal de uma unidade de mudança no sistema HB Track. É a unidade mínima de trabalho do processo contract-driven: inclui proposta, contrato atualizado, implementação e evidências de verificação.
+### PR — Pull Request (`pr`)
+**Definição**: Unidade versionada de mudança revisável. É o veículo canônico para propor e aprovar alterações em contratos e documentação normativa.
 
-**Contexto**: Todo trabalho de desenvolvimento é rastreado por ARs. Um AR pode ser de feature, fix, refatoração ou documentação. Localizado em `docs/hbtrack/ars/features/AR_NNN_<slug>.md`. Segue o fluxo: RASCUNHO → APROVADO → EM_EXECUCAO → VERIFICADO → SELADO.
+**Contexto**: Um PR deve declarar o tipo de mudança (non-breaking/breaking/internal-only/documentation-only), listar módulos e artefatos afetados e anexar evidência de validação (`_reports/contract_gates/latest.json`) quando aplicável.
 
 **Módulos**: Sistema transversal (todos os módulos)
 
-**Ver também**: CHANGE_POLICY.md, hb verify, hb seal, MCP
+**Ver também**: CHANGE_POLICY.md, CI_CONTRACT_GATES.md
 
 ---
 
 ### Invariante (`invariant`)
 **Definição**: Regra de negócio imutável que deve ser sempre verdadeira no sistema, independentemente de operação, estado ou ator. Invariantes não têm exceções — se uma exceção é necessária, a invariante estava mal definida.
 
-**Contexto**: Vivem no contrato antes do código. São documentadas em `15_<MODULO>_INVARIANTS.yaml` por módulo. Classificadas por camada: A (DB constraint), B (trigger), C1 (service puro), C2 (service+DB), D (router/RBAC), E (Celery), F (OpenAPI).
+**Contexto**: Vivem no contrato antes do código. São documentadas em `docs/hbtrack/modulos/<module>/INVARIANTS_<MOD>.md` por módulo. Classificadas por camada: A (DB constraint), B (trigger), C1 (service puro), C2 (service+DB), D (router/RBAC), E (workers), F (OpenAPI).
 
 **Módulos**: Sistema transversal
 
-**Ver também**: AR, CONTRACT_SYSTEM_RULES.md
+**Ver também**: CONTRACT_SYSTEM_RULES.md
 
 ---
 
 ### SSOT — Single Source of Truth (`ssot`)
 **Definição**: Arquivo ou localização que é a única fonte de verdade para um artefato específico. Duplicação de informação canônica é proibida — toda referência aponta para o SSOT.
 
-**Contexto**: Princípio fundamental do sistema contract-driven do HB Track. Exemplos: `01_<MODULO>_OPENAPI.yaml` é o SSOT da API do módulo; este glossário é o SSOT dos termos de domínio. Modificar uma cópia sem atualizar o SSOT é uma violação.
+**Contexto**: Princípio fundamental do sistema contract-driven do HB Track. Exemplos: `contracts/openapi/openapi.yaml` é a fonte primária da superfície HTTP; `contracts/openapi/paths/<module>.yaml` contém a superfície pública por módulo; este glossário é o SSOT dos termos de domínio. Modificar uma cópia sem atualizar o SSOT é uma violação.
 
 **Módulos**: Sistema transversal
 
-**Ver também**: CONTRACT_SYSTEM_RULES.md, AR
-
----
-
-### MCP — Master Materialization Plan (`mcp`)
-**Definição**: Processo formal e sequencial de criação de toda a documentação canônica de um módulo antes de qualquer implementação de código. O MCP garante que o módulo tem contratos completos antes de receber ARs de feature.
-
-**Contexto**: Localizado em `docs/hbtrack/modulos/MCP.md`. Um módulo sem MCP aprovado não pode receber ARs de implementação. O MCP produz os artefatos de numeração 00 a 20 em `docs/hbtrack/modulos/<modulo>/`.
-
-**Módulos**: Sistema transversal
-
-**Ver também**: AR, SSOT, CONTRACT_SYSTEM_LAYOUT.md, MODULE_MAP.md
+**Ver também**: CONTRACT_SYSTEM_RULES.md, CONTRACT_SYSTEM_LAYOUT.md
 
 ---
 
@@ -411,7 +400,7 @@ Este glossário define os termos canônicos do domínio do HB Track. Quando um t
 
 **Módulos**: Sistema transversal
 
-**Ver também**: AR, SSOT, MCP, invariante, API_CONVENTIONS.md
+**Ver também**: SSOT, invariante, API_CONVENTIONS.md, CI_CONTRACT_GATES.md
 
 ---
 
@@ -437,6 +426,6 @@ Referências rápidas:
 Para adicionar um termo:
 1. Verificar se não existe entrada similar (buscar sinônimos e traduções)
 2. Seguir o formato da seção §3 (definição + contexto + módulos + ver também)
-3. Criar AR do tipo `documentation-only` se mudança for isolada
+3. Abrir PR do tipo `documentation-only` se mudança for isolada
 4. Garantir consistência com `SYSTEM_SCOPE.md`, `HANDBALL_RULES_DOMAIN.md` e contratos de módulo
 5. Se o termo afeta código (field name, enum value, table name), a mudança pode ser breaking change — ver `CHANGE_POLICY.md §4`

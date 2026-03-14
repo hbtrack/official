@@ -7,18 +7,18 @@ traceability_manifest:
     sha256: 43d5a72be4546f5c75078d93a51056fde37c86fc8c54594589dd9ecf620809df
   generated_tree_sha256: 5832fd8459a7f8c9b30889c16c0ad26f320db1e1c34343965fb2df6e9625024d
   policy_path: generated/resolved_policy/medical.sync.resolved.yaml
-  policy_sha256: 1d511c07b5a263f32763ab2a73d307c3329df092b97c0d34b9b6b155c617bae1
+  policy_sha256: 13d10e8f2a95600195fd68bd4d3584b0c97b26fb0ce96668243a4147b3499488
   source_contracts:
   - path: contracts/openapi/paths/medical.yaml
     sha256: 43d5a72be4546f5c75078d93a51056fde37c86fc8c54594589dd9ecf620809df
   source_inputs:
-  - path: .contract_driven/templates/api_rules/ARCHITECTURE_MATRIX.yaml
+  - path: .contract_driven/templates/api/ARCHITECTURE_MATRIX.yaml
     sha256: b3a862f6cabd38f6e2b00deacad66499064897685b2c486f303365f4dc58fc8d
-  - path: .contract_driven/templates/api_rules/MODULE_PROFILE_REGISTRY.yaml
+  - path: .contract_driven/templates/api/MODULE_PROFILE_REGISTRY.yaml
     sha256: af3bc0a5c458598f52fdd658b53db1b527196e06805758fb963c89423a179749
-  - path: .contract_driven/templates/api_rules/api_rules.yaml
-    sha256: 7e610fffba21b71827cd3249f042342c5f0656ffe0566df23a2efa2ab38430a0
-  - path: .contract_driven/templates/api_rules/CANONICAL_TYPE_REGISTRY.yaml
+  - path: .contract_driven/templates/api/api_rules.yaml
+    sha256: 2829de299d52c4a5912ee3a0489b43271d666d62a83172d3dd32b7417db15ce5
+  - path: .contract_driven/templates/api/CANONICAL_TYPE_REGISTRY.yaml
     sha256: 042ec0b9db7ee7d4f9604f15d1f1bb3fb53cb2f3be18408222e7bca4afb7ef3b
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: a9ea7e57e9062b42497d6f94109fde3dd02be531668b039317f233d916cfd08e

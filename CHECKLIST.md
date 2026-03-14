@@ -1,6 +1,14 @@
-Segue um checklist objetivo para verificar o que está **realmente operacional** no HB Track.
-
 # CHECKLIST — VERIFICAÇÃO REAL DAS PREMISSAS DO HB Track
+
+**REGRA FUNDAMENTAL**:ESTA CHECKLIST REPRESENTA O ESTADO REAL DO REPOSITÓRIO ATUAL E SERVE COMO BASE PARA O PLANO DE AÇÃO PARA PRONTIDÃO DO PILOTO. ATUALIZE COM BASE NA VERIFICAÇÃO REAL E USE AS SEÇÕES DE RESULTADOS ENCONTRADOS E RESUMO DO ESTADO OPERACIONAL REAL PARA DOCUMENTAR O STATUS ATUAL, IDENTIFICAR GAPS, E DEFINIR AÇÕES NECESSÁRIAS PARA AVANÇAR PARA UM ESTADO OPERACIONAL COMPLETO.
+
+Atualize esta checklist com base na verificação real que você fez no repositório, marcando cada item de acordo com o status encontrado. Use as seções de resultados encontrados e resumo do estado operacional real para documentar o status atual do repositório em relação ao manual de contratos driven, identificando claramente quais premissas estão atendidas, quais ferramentas estão funcionando, e quais gaps existem.
+
+Changelog:
+>
+>
+>
+
 
 - Leia os arquivos `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md` e `.contract_driven/CONTRACT_SYSTEM_RULES.md` para entender as premissas e regras do sistema de contratos. Depois, use este checklist para verificar o que está realmente operacional no repositório.
 
@@ -18,7 +26,7 @@ Marque `[x]` se confirmado.
   - [x] `GLOBAL_TEMPLATES.md`
 - [x] Eu aceito `api_rules.yaml` como SSOT de convenções/templates de API HTTP:
   - [x] Canonical esperado: `.contract_driven/templates/api/api_rules.yaml` (criado em 2026-03-13 — tarefa B2)
-  - [x] Origem mantida: `.contract_driven/templates/API_RULES/API_RULES.yaml` (preservado para compatibilidade)
+  - [x] Origem legada eliminada: `.contract_driven/templates/API_RULES/` (removida para evitar split-brain/duplicação normativa)
 - [x] Eu aceito a taxonomia canônica dos 16 módulos
 - [x] Eu aceito strict mode: bloquear em vez de inferir
 - [x] Eu aceito boot mínimo por tarefa
@@ -96,13 +104,13 @@ Marque `[x]` se confirmado.
 ## 4. Ferramentas instaladas
 Marque `[x]` só se o comando roda no seu ambiente.
 
-- [ ] Node.js disponível no PATH (`node`) — necessário para CLIs via npm (`redocly`, `spectral`, `ajv`, `asyncapi`) (no WSL atual: `node` não resolve; existe `node.exe` em `/mnt/c/Program Files/nodejs/node.exe`)
-- [ ] Redocly CLI instalado (no WSL atual: `redocly` existe, mas falha por `node: not found`)
-- [ ] Spectral instalado (no WSL atual: `spectral` existe, mas falha por `node: not found`)
+- [ ] Node.js **WSL-native** disponível no PATH (`node`) — necessário para CLIs via npm (`redocly`, `spectral`, `ajv`, `asyncapi`) (use `source ./setup-env.sh`)
+- [ ] Redocly CLI disponível (`redocly --version`) (preferir toolchain pinada do projeto; evite wrappers Windows)
+- [ ] Spectral disponível (`spectral --version`) (preferir toolchain pinada do projeto; evite wrappers Windows)
 - [ ] oasdiff instalado (`oasdiff` não encontrado no PATH)
 - [ ] Schemathesis instalado (`schemathesis` não encontrado no PATH)
-- [ ] validador JSON Schema instalado (ajv) (no WSL atual: `ajv` existe, mas falha por `node: not found`)
-- [ ] validator/parser AsyncAPI instalado (no WSL atual: `node_modules/.bin/asyncapi` existe, mas falha por `node: not found`)
+- [ ] validador JSON Schema instalado (ajv) (`ajv` via npm; use `source ./setup-env.sh`)
+- [ ] validator/parser AsyncAPI instalado (`asyncapi --version`) (use `source ./setup-env.sh`)
 - [x] validator/linter Arazzo instalado (evidência: `ARAZZO_VALIDATION_GATE` → PASS em `python3 scripts/validate_contracts.py`)
 - [ ] Storybook disponível, se houver UI documentada
 - [x] Intent compiler disponível (`python3 scripts/contracts/validate/api/compile_api_intent.py` executa)
@@ -114,12 +122,12 @@ Marque `[x]` só se o comando roda no seu ambiente.
 ## 5. Ferramentas funcionando de verdade
 Marque `[x]` só se você executou e obteve resultado real.
 
-- [ ] Redocly roda contra `contracts/openapi/openapi.yaml` (no WSL atual: bloqueado por `node` ausente)
-- [ ] Spectral executa (versão/CLI disponível) (no WSL atual: bloqueado por `node` ausente)
+- [ ] Redocly roda contra `contracts/openapi/openapi.yaml` (após `source ./setup-env.sh`)
+- [ ] Spectral executa (versão/CLI disponível) (após `source ./setup-env.sh`)
 - [ ] oasdiff roda entre duas versões da spec (baseline vs. atual; gate `CONTRACT_BREAKING_CHANGE_GATE`) (`oasdiff` ausente)
 - [ ] Schemathesis roda contra uma API real ou ambiente local
-- [ ] JSON Schema validator (ajv) executa (help/CLI disponível) (no WSL atual: bloqueado por `node` ausente)
-- [ ] AsyncAPI validator roda no contrato atual (no WSL atual: `node_modules/.bin/asyncapi` existe, mas falha por `node` ausente)
+- [ ] JSON Schema validator (ajv) executa (help/CLI disponível) (após `source ./setup-env.sh`)
+- [ ] AsyncAPI validator roda no contrato atual (após `source ./setup-env.sh`)
 - [x] Arazzo validator roda nos workflows atuais
 - [ ] Storybook build roda, se aplicável
 - [x] Intent compiler (DSL) roda e falha fechado (não toca `contracts/openapi/paths/` em erro)
@@ -420,11 +428,11 @@ Tabela preenchida com base na verificação real executada neste ambiente (Windo
 [Status]: **Concluída (2026-03-13)**.
 [Objetivo]: Fazer `REQUIRED_ARTIFACT_PRESENCE_GATE` passar no WSL criando os artefatos esperados no path canônico (sem mudar o conteúdo SSOT).
 [Escopo]: Criar/alinhar:
-  - `.contract_driven/templates/api/api_rules.yaml` (origem: `.contract_driven/templates/API_RULES/API_RULES.yaml`)
-  - `.contract_driven/templates/api/ARCHITECTURE_MATRIX.yaml` (origem: `.contract_driven/templates/API_RULES/ARCHITECTURE_MATRIX.yaml`)
-  - `.contract_driven/templates/api/MODULE_PROFILE_REGISTRY.yaml` (origem: `.contract_driven/templates/API_RULES/MODULE_PROFILE_REGISTRY.yaml`)
-  - `.contract_driven/templates/api/CANONICAL_TYPE_REGISTRY.yaml` (origem: `.contract_driven/templates/API_RULES/CANONICAL_TYPE_REGISTRY.yaml`)
-  - `.contract_driven/templates/api/REGRAS_API.md` (origem: `.contract_driven/templates/API_RULES/_REGRAS.md`)
+  - `.contract_driven/templates/api/api_rules.yaml` (origem histórica: `.contract_driven/templates/API_RULES/API_RULES.yaml`)
+  - `.contract_driven/templates/api/ARCHITECTURE_MATRIX.yaml` (origem histórica: `.contract_driven/templates/API_RULES/ARCHITECTURE_MATRIX.yaml`)
+  - `.contract_driven/templates/api/MODULE_PROFILE_REGISTRY.yaml` (origem histórica: `.contract_driven/templates/API_RULES/MODULE_PROFILE_REGISTRY.yaml`)
+  - `.contract_driven/templates/api/CANONICAL_TYPE_REGISTRY.yaml` (origem histórica: `.contract_driven/templates/API_RULES/CANONICAL_TYPE_REGISTRY.yaml`)
+  - `.contract_driven/templates/api/REGRAS_API.md` (origem histórica: `.contract_driven/templates/API_RULES/_REGRAS.md`)
   - `.contract_driven/templates/api/GoogleAPI.md` (criado — referências Google API Design Guide)
   - `.contract_driven/templates/api/AddidasAPI.md` (criado — referências Adidas API Guidelines)
   - `.contract_driven/templates/api/OWASPAPI.md` (criado — referências OWASP API Security Top 10)
@@ -434,7 +442,7 @@ Tabela preenchida com base na verificação real executada neste ambiente (Windo
   - `python3 scripts/validate_contracts.py` (verificar `REQUIRED_ARTIFACT_PRESENCE_GATE`)
 [Artefatos criados]:
   - 8 arquivos em `.contract_driven/templates/api/`
-  - 5 copiados de `.contract_driven/templates/API_RULES/`
+  - (origem legada `.contract_driven/templates/API_RULES/` removida posteriormente para evitar duplicação)
   - 3 criados (GoogleAPI.md, AddidasAPI.md, OWASPAPI.md)
 ---
 

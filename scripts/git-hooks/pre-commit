@@ -1,33 +1,36 @@
 #!/usr/bin/env python3
 """
 HB Track Pre-Commit Hook
-Chama: scripts/run/hb_cli.py check --mode pre-commit
-SSOT: docs/_canon/specs/Hb cli.md
-Versão: v1.0.4
+
+Governança única: contract-driven (SSOT em `.contract_driven/*`).
+
+Executa o pipeline oficial de contract gates e bloqueia commit quando houver
+falhas bloqueantes.
+
+SSOT de orquestração e semântica dos gates:
+- `docs/_canon/CI_CONTRACT_GATES.md`
 """
 
-import sys
+from __future__ import annotations
+
 import subprocess
+import sys
 from pathlib import Path
 
-def main():
+
+def main() -> int:
     # Determinar repo root (hook está em scripts/git-hooks/)
     hook_dir = Path(__file__).resolve().parent
     repo_root = hook_dir.parent.parent
-    hb_script = repo_root / "scripts" / "run" / "hb_cli.py"
-    
-    if not hb_script.exists():
-        print(f"❌ PRE-COMMIT HOOK: hb_cli.py not found at {hb_script}", file=sys.stderr)
-        sys.exit(1)
-    
-    # Executar hb check
-    result = subprocess.run(
-        [sys.executable, str(hb_script), "check", "--mode", "pre-commit"],
-        cwd=repo_root
-    )
-    
-    # Propagar exit code
-    sys.exit(result.returncode)
+
+    validate = repo_root / "scripts" / "validate_contracts.py"
+    if not validate.exists():
+        print(f"❌ PRE-COMMIT HOOK: scripts/validate_contracts.py não encontrado em {validate}", file=sys.stderr)
+        return 1
+
+    result = subprocess.run([sys.executable, str(validate)], cwd=repo_root)
+    return int(result.returncode)
+
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

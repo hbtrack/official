@@ -2,6 +2,8 @@
 
 Este documento é um guia prático para os devs do HB Track.
 
+> **⚠️ AMBIENTE LINUX-FIRST:** A partir de 2026-03-13, todos os comandos neste guia assumem **Linux/WSL** como ambiente de desenvolvimento. Comandos PowerShell são mantidos apenas como referência histórica.
+
 * Objetivos: 
    - Fornecer um manual de referência rápida.
    - Documentar as ferramentas e processos do desenvolvimento.
@@ -10,19 +12,49 @@ Este documento é um guia prático para os devs do HB Track.
 
 "In God we trust; all others must bring data." — W. Edwards Deming
 
+---
+
+## Workspace
+
+**Root canônico:** `/home/$USER/HB-TRACK` (Linux/WSL)
+
+```bash
+cd ~/HB-TRACK
+pwd  # Confirmar workspace correto
+```
+
+---
+
 ## Inicio 
 
-**PASSO 0**: Validação de Contratos — Bootstrap de Sanidade
-`scripts/contracts/validate/bootstrap_contract_tools.py`
+**PASSO 0**: Toolchain WSL-native (sem wrappers Windows) + sanity check
 
 * Objetivo: 
-   - Garantir que todas as ferramentas de validação de contratos estejam instaladas e configuradas corretamente antes de executar qualquer gate de validação.
+   - Garantir Node.js **WSL-native** no PATH (evitar `node.exe`/interop).
+   - Preferir CLIs pinadas do projeto (via `node_modules/.bin`).
+   - Evitar wrappers em `${HOME}/bin/*`.
 
-Comanndo:
+Comando:
+
+```bash
+# Linux/WSL (carrega NVM + PATH do projeto)
+source ./setup-env.sh
+
+# (Opcional) verificação rápida das ferramentas externas
+bash scripts/contract_gates/verify_tools.sh
+
+# Pipeline oficial de contract gates (gera _reports/contract_gates/latest.json)
+python3 scripts/validate_contracts.py
+```
+
+<details>
+<summary>📦 Comando PowerShell (legado - apenas referência)</summary>
 
 ```powershell
-python scripts/contracts/validate/validate_contracts.py
+# ⚠️ Legado: o ambiente canônico é WSL/Linux. Use apenas se necessário.
+python scripts/validate_contracts.py
 ```
+</details>
 
 
 
@@ -30,68 +62,37 @@ python scripts/contracts/validate/validate_contracts.py
 
 | Ferramenta | Propósito | Instalação |
 |------------|-----------|------------|
-| **Node.js** | Runtime para Redocly/Spectral | https://nodejs.org/ |
-| **npm** | Package manager | Incluído com Node.js |
-| **Go** | Runtime para oasdiff | https://go.dev/dl/ |
-| **Redocly CLI** | Validação estrutural OpenAPI | `npm install -g @redocly/cli` |
-| **Spectral CLI** | Linting de políticas OpenAPI | `npm install -g @stoplight/spectral-cli` |
+| **Node.js (WSL-native)** | Runtime para CLIs Node (Redocly/Spectral/AsyncAPI) | `nvm install` + `source ./setup-env.sh` |
+| **npm** | Package manager | Incluído com Node.js (via nvm) |
+| **Go** | Runtime para `oasdiff` (recomendado) | https://go.dev/dl/ |
+| **Redocly CLI** | Validação estrutural OpenAPI | **Preferir local** (devDependency) via `npm ci` / `npm i -D @redocly/cli` |
+| **Spectral CLI** | Linting de políticas OpenAPI | **Preferir local** (devDependency) via `npm ci` / `npm i -D @stoplight/spectral-cli` |
 | **oasdiff** | Detecção de breaking changes | `go install github.com/oasdiff/oasdiff@latest` |
 
-### Bootstrap Automático
+### Bootstrap (WSL-native)
 
-Antes de validar contratos, **sempre execute o bootstrap**:
+O bootstrap canônico do workspace é **carregar a toolchain WSL-native** e validar as ferramentas externas:
 
-```powershell
-# Verifica e instala ferramentas ausentes
-python scripts/contracts/validate/bootstrap_contract_tools.py --auto-install
-
-# Apenas verifica (sem instalação)
-python scripts/contracts/validate/bootstrap_contract_tools.py
-
-# Output JSON apenas
-python scripts/contracts/validate/bootstrap_contract_tools.py --json
+```bash
+source ./setup-env.sh
+bash scripts/contract_gates/verify_tools.sh
 ```
 
-**Exit Codes**:
-- `0`: ✓ Todas as ferramentas disponíveis — sistema pronto
-- `1`: ⚠ Ferramentas ausentes (instalação possível)
-- `2`: ⚠ Instalação automática falhou
-- `3`: ✗ Node.js/npm ausentes (instalação manual necessária)
+> Nota: o pipeline oficial não depende de wrappers Windows (`node.exe`/`oasdiff.exe`) e deve rodar no WSL.
 
-**Relatório**: `_reports/contract_gates/bootstrap.json`
+### Validação de Contratos (pipeline oficial)
 
-### Validação de Contratos
-
-Após o bootstrap bem-sucedido, execute a validação completa:
-
-```powershell
-# Windows (adiciona GOPATH/bin ao PATH)
-$env:PATH += ";C:\Users\$env:USERNAME\go\bin"
-python scripts/contracts/validate/validate_contracts.py
+```bash
+python3 scripts/validate_contracts.py
 ```
 
-**Relatório**: `_reports/contract_gates/latest.json`
+**Relatório (evidência):** `_reports/contract_gates/latest.json`
 
-### Scripts Auxiliares (Opcionais)
+### Scripts auxiliares (opcionais)
 
-Para desenvolvimento local, existem scripts shell alternativos em `scripts/contract_gates/`:
-
-```powershell
-# Configura PATH automaticamente (node_modules/.bin, GOPATH/bin)
-. scripts/contract_gates/env.ps1
-
-# Verifica todas as ferramentas
-.\scripts\contract_gates\verify_tools.ps1
-
-# Instala apenas oasdiff
-.\scripts\contract_gates\provision_oasdiff.ps1
-```
-
-**Diferença vs Bootstrap Python**:
-- Scripts shell: rápidos para uso manual local, verificação fragmentada
-- Bootstrap Python: automático, gera JSON, ideal para CI/CD
-
-**Recomendação**: Use bootstrap Python em pipelines; scripts shell para troubleshooting local.
+- `source scripts/contract_gates/env.sh` — prepara PATH (WSL-native) e expõe `node_modules/.bin`
+- `bash scripts/contract_gates/verify_tools.sh` — sanity check de CLIs
+- `bash scripts/contract_gates/provision_oasdiff.sh` — instala `oasdiff` via `go install` (se Go estiver disponível)
 
 ### Gates Críticos
 
@@ -107,14 +108,12 @@ Para desenvolvimento local, existem scripts shell alternativos em `scripts/contr
 jobs:
   validate-contracts:
     steps:
-      - name: Bootstrap Contract Tools
-        run: |
-          python scripts/contracts/validate/bootstrap_contract_tools.py --auto-install
-        continue-on-error: false
+      - name: Install Node deps (pinned)
+        run: npm ci
       
       - name: Validate Contracts
         run: |
-          python scripts/contracts/validate/validate_contracts.py
+          python3 scripts/validate_contracts.py
         continue-on-error: false
       
       - name: Upload Evidence
@@ -128,25 +127,17 @@ jobs:
 
 #### Problema: "npm não encontrado" mesmo com Node.js instalado
 
-**Solução**: O Python subprocess pode não herdar o PATH completo. O bootstrap agora usa `shell=True` no Windows para resolver isso.
+**Solução (WSL/Linux)**: rode `source ./setup-env.sh` para carregar NVM e expor `node`/`npm` no PATH.
 
 #### Problema: "oasdiff não encontrado" mesmo após instalação
 
-**Solução**: Adicione `$GOPATH/bin` ao PATH:
-
-```powershell
-# Temporário (sessão atual)
-$env:PATH += ";C:\Users\$env:USERNAME\go\bin"
-
-# Permanente (Windows)
-[Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Users\$env:USERNAME\go\bin", "User")
-```
+**Solução (WSL/Linux)**: adicione `$GOPATH/bin` ao PATH e/ou rode `bash scripts/contract_gates/provision_oasdiff.sh`.
 
 #### Problema: Gate OPENAPI_POLICY_RULESET_GATE falha
 
 **Solução**: Execute Spectral manualmente para ver detalhes:
 
-```powershell
+```bash
 spectral lint contracts/openapi/openapi.yaml --ruleset .spectral.yaml
 ```
 
@@ -277,4 +268,3 @@ python scripts/contracts/validate/api/compile_api_policy.py \
 | Atualizar baseline do OpenAPI | `gen_openapi_baseline.py` |
 
 ---
-

@@ -38,7 +38,7 @@ contracts/openapi/
 
 - **Soberania**: `contracts/openapi/openapi.yaml` é a única fonte de verdade para a interface HTTP. Nenhum código ou documento pode redefinir paths ou schemas sem alterar este contrato.
 - **Um módulo por arquivo**: cada arquivo em `paths/` pertence a exatamente um módulo canônico.
-- **Validação obrigatória**: toda alteração deve passar em `redocly lint contracts/openapi/openapi.yaml` antes de ser considerada válida.
+- **Validação obrigatória**: toda alteração deve passar em `python3 scripts/validate_contracts.py` (gates) — ou, no mínimo, em `redocly lint contracts/openapi/openapi.yaml` (após `source ./setup-env.sh`).
 - **Sem edição manual de derivados**: tipos e clients gerados a partir desta spec vivem em `generated/` e não são editados manualmente.
 
 ## Referências normativas

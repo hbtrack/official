@@ -26,10 +26,13 @@ from __future__ import annotations
 
 import dataclasses
 import datetime
+import hashlib
 import json
+import os
 import pathlib
 import platform
 import re
+import shutil
 import subprocess
 import sys
 import time
@@ -61,6 +64,10 @@ BLOCKED_WELLNESS_MEDICAL_BOUNDARY = "BLOCKED_WELLNESS_MEDICAL_BOUNDARY"
 BLOCKED_SCOUT_TAXONOMY = "BLOCKED_SCOUT_TAXONOMY"
 BLOCKED_ASYNC_REQUIRED_MODULE = "BLOCKED_ASYNC_REQUIRED_MODULE"
 BLOCKED_EXTERNAL_SOURCE_AUTHORITY = "BLOCKED_EXTERNAL_SOURCE_AUTHORITY"
+
+BLOCKED_TRACEABILITY_MANIFEST_INVALID = "BLOCKED_TRACEABILITY_MANIFEST_INVALID"
+BLOCKED_TRACEABILITY_INPUT_MISSING = "BLOCKED_TRACEABILITY_INPUT_MISSING"
+BLOCKED_TRACEABILITY_HASH_MISMATCH = "BLOCKED_TRACEABILITY_HASH_MISMATCH"
 
 BLOCKED_AXIOM_FILE_NOT_FOUND = "BLOCKED_AXIOM_FILE_NOT_FOUND"
 BLOCKED_INVALID_AXIOM_JSON = "BLOCKED_INVALID_AXIOM_JSON"
@@ -111,6 +118,9 @@ _KNOWN_BLOCKING_CODES = {
     BLOCKED_SCOUT_TAXONOMY,
     BLOCKED_ASYNC_REQUIRED_MODULE,
     BLOCKED_EXTERNAL_SOURCE_AUTHORITY,
+    BLOCKED_TRACEABILITY_MANIFEST_INVALID,
+    BLOCKED_TRACEABILITY_INPUT_MISSING,
+    BLOCKED_TRACEABILITY_HASH_MISMATCH,
     BLOCKED_AXIOM_FILE_NOT_FOUND,
     BLOCKED_INVALID_AXIOM_JSON,
     BLOCKED_AXIOM_SCHEMA_INVALID,
@@ -1706,6 +1716,121 @@ def _collect_openapi_operation_ids(openapi_root: pathlib.Path) -> set[str]:
     return ids
 
 
+_OPENAPI_HTTP_METHODS = {"get", "put", "post", "delete", "options", "head", "patch", "trace"}
+
+
+def _load_openapi_doc(path: pathlib.Path) -> Any:
+    suf = path.suffix.lower()
+    if suf == ".json":
+        return _load_json(path)
+    if suf in (".yaml", ".yml"):
+        return _load_yaml(path)
+    # OpenAPI SSOT aqui é YAML/JSON; outros formatos são erro de infra/config.
+    raise ValueError(f"OpenAPI doc com extensão não suportada: {path}")
+
+
+def _json_pointer_resolve(doc: Any, pointer: str) -> Any:
+    """
+    Resolve JSON Pointer (RFC 6901) com escapes ~0/~1.
+    Aceita pointer com ou sem prefixo '#'.
+    """
+    if not isinstance(pointer, str):
+        raise KeyError("pointer inválido")
+    p = pointer
+    if p.startswith("#"):
+        p = p[1:]
+    if p == "":
+        return doc
+    if not p.startswith("/"):
+        raise KeyError(f"pointer inválido (esperado '/'): {pointer!r}")
+    cur: Any = doc
+    for raw in p.lstrip("/").split("/"):
+        tok = raw.replace("~1", "/").replace("~0", "~")
+        if isinstance(cur, dict):
+            if tok not in cur:
+                raise KeyError(f"token ausente em dict: {tok}")
+            cur = cur[tok]
+        elif isinstance(cur, list):
+            try:
+                idx = int(tok)
+            except ValueError as e:
+                raise KeyError(f"token inválido para lista: {tok}") from e
+            cur = cur[idx]
+        else:
+            raise KeyError(f"não é possível navegar em tipo: {type(cur).__name__}")
+    return cur
+
+
+def _resolve_ref_chain(
+    *,
+    ref: str,
+    doc: Any,
+    base_dir: pathlib.Path,
+    max_depth: int = 8,
+) -> Any:
+    """
+    Resolve cadeia de `$ref` (file + fragment JSON pointer) para um nó concreto.
+    """
+    if not isinstance(ref, str) or not ref.strip():
+        raise KeyError("ref inválida")
+    cur_ref = ref.strip()
+    cur_doc = doc
+    cur_base = base_dir
+
+    for _ in range(max_depth):
+        node: Any
+        if cur_ref.startswith("#"):
+            node = _json_pointer_resolve(cur_doc, cur_ref)
+        else:
+            if "#" in cur_ref:
+                ref_path_str, frag = cur_ref.split("#", 1)
+                frag = "#" + frag
+            else:
+                ref_path_str, frag = cur_ref, ""
+            target_path = (cur_base / ref_path_str).resolve()
+            if not target_path.exists():
+                raise FileNotFoundError(f"$ref aponta para arquivo inexistente: {target_path}")
+            target_doc = _load_openapi_doc(target_path)
+            node = target_doc if not frag else _json_pointer_resolve(target_doc, frag)
+            cur_doc = target_doc
+            cur_base = target_path.parent
+
+        if isinstance(node, dict) and isinstance(node.get("$ref"), str):
+            cur_ref = node["$ref"]
+            continue
+        return node
+
+    raise ValueError("Cadeia de $ref profunda demais (possível loop).")
+
+
+def _collect_openapi_operations(root_path: pathlib.Path) -> set[tuple[str, str]]:
+    """
+    Coleta operações (method, path) a partir do OpenAPI root, resolvendo `$ref`
+    em path items quando necessário.
+    """
+    doc = _load_openapi_doc(root_path)
+    if not isinstance(doc, dict):
+        raise ValueError("OpenAPI root inválido: esperado mapping no documento.")
+    paths = doc.get("paths")
+    if not isinstance(paths, dict):
+        return set()
+
+    ops: set[tuple[str, str]] = set()
+    base_dir = root_path.parent
+    for path_key, path_item in paths.items():
+        if not isinstance(path_key, str) or not path_key:
+            continue
+        node = path_item
+        if isinstance(path_item, dict) and isinstance(path_item.get("$ref"), str):
+            node = _resolve_ref_chain(ref=path_item["$ref"], doc=doc, base_dir=base_dir)
+        if not isinstance(node, dict):
+            continue
+        for k in node.keys():
+            if isinstance(k, str) and k.lower() in _OPENAPI_HTTP_METHODS:
+                ops.add((k.lower(), path_key))
+    return ops
+
+
 def _extract_arazzo_operation_ids(arazzo_doc: Any) -> set[str]:
     # Parsing mínimo determinístico: coletar qualquer string em chaves "operationId".
     op_ids: set[str] = set()
@@ -2259,10 +2384,40 @@ def _wsl_to_windows_path(path_str: str) -> str:
     return windows_path
 
 
-def _try_tool(*cmd: str, cwd: pathlib.Path | None = None) -> tuple[int, str, str]:
+def _try_tool(
+    *cmd: str,
+    cwd: pathlib.Path | None = None,
+    env: dict[str, str] | None = None,
+) -> tuple[int, str, str]:
     """Run external tool; returns (returncode, stdout, stderr). rc=-1 means tool not found."""
     # On Windows, npm-installed CLIs are .cmd wrappers; shell=True is required to resolve them.
     use_shell = sys.platform == "win32"
+    merged_env = None
+    if env:
+        merged_env = dict(os.environ)
+        merged_env.update(env)
+    
+    # On Linux/WSL, source nvm if available to make Node.js tools accessible
+    if sys.platform == "linux" and pathlib.Path.home().joinpath(".nvm/nvm.sh").exists():
+        # Wrap command with nvm loader for npm-installed tools (node, npm, npx, and global CLIs)
+        nvm_load = ". ~/.nvm/nvm.sh && "
+        cmd_str = " ".join(f'"{c}"' if " " in c else c for c in cmd)
+        full_cmd = f'{nvm_load}{cmd_str}'
+        try:
+            result = subprocess.run(
+                ["/bin/bash", "-c", full_cmd],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                cwd=str(cwd) if cwd else None,
+                env=merged_env,
+            )
+            stdout = (result.stdout or b"").decode("utf-8", errors="replace")
+            stderr = (result.stderr or b"").decode("utf-8", errors="replace")
+            return result.returncode, stdout, stderr
+        except FileNotFoundError:
+            return -1, "", f"Tool not found: {cmd[0]}"
+    
+    # Original Windows/fallback behavior
     try:
         result = subprocess.run(
             list(cmd),
@@ -2270,6 +2425,7 @@ def _try_tool(*cmd: str, cwd: pathlib.Path | None = None) -> tuple[int, str, str
             stderr=subprocess.PIPE,
             cwd=str(cwd) if cwd else None,
             shell=use_shell,
+            env=merged_env,
         )
         stdout = (result.stdout or b"").decode("utf-8", errors="replace")
         stderr = (result.stderr or b"").decode("utf-8", errors="replace")
@@ -2312,6 +2468,190 @@ def _looks_like_node_missing(text: str) -> bool:
     return False
 
 
+def _looks_like_wsl_vsock_failure(text: str) -> bool:
+    if not isinstance(text, str) or not text:
+        return False
+    return "UtilBindVsockAnyPort" in text
+
+
+def _parse_semver_triplet(v: str) -> tuple[int, int, int] | None:
+    m = re.match(r"^v?(\d+)\.(\d+)\.(\d+)$", v.strip())
+    if not m:
+        return None
+    return (int(m.group(1)), int(m.group(2)), int(m.group(3)))
+
+
+def _find_wsl_node_bin() -> pathlib.Path | None:
+    """
+    Resolve um Node.js **WSL-native** (evita Windows interop via node.exe).
+
+    Ordem:
+    1) $HBTRACK_NODE_BIN (se definido)
+    2) `node` no PATH (somente se NÃO for /mnt/* e NÃO terminar com .exe)
+    3) $NVM_BIN/node
+    4) ~/.nvm/versions/node/<maior versão>/bin/node
+    """
+    override = os.environ.get("HBTRACK_NODE_BIN")
+    if override:
+        p = pathlib.Path(override).expanduser()
+        if p.exists():
+            return p
+
+    found = shutil.which("node")
+    if found:
+        p = pathlib.Path(found)
+        # WSL interop: normalmente expõe binários Windows em /mnt/c/.../*.exe
+        if not str(p).startswith("/mnt/") and not str(p).lower().endswith(".exe"):
+            return p
+
+    nvm_bin = os.environ.get("NVM_BIN")
+    if nvm_bin:
+        p = pathlib.Path(nvm_bin) / "node"
+        if p.exists():
+            return p
+
+    base = pathlib.Path.home() / ".nvm" / "versions" / "node"
+    if base.exists():
+        candidates: list[tuple[tuple[int, int, int], pathlib.Path]] = []
+        for d in base.iterdir():
+            if not d.is_dir():
+                continue
+            ver = _parse_semver_triplet(d.name)
+            if ver is None:
+                continue
+            node_bin = d / "bin" / "node"
+            if node_bin.exists():
+                candidates.append((ver, node_bin))
+        if candidates:
+            candidates.sort(key=lambda x: x[0])
+            return candidates[-1][1]
+
+    return None
+
+
+def _node_prefix_from_node_bin(node_bin: pathlib.Path) -> pathlib.Path | None:
+    """
+    Para instalações tipo NVM:
+      <prefix>/bin/node
+      <prefix>/lib/node_modules/...
+    """
+    try:
+        prefix = node_bin.resolve().parent.parent
+    except Exception:  # pragma: no cover
+        prefix = node_bin.parent.parent
+    lib_nm = prefix / "lib" / "node_modules"
+    return prefix if lib_nm.exists() else None
+
+
+def _resolve_node_cli_script(
+    root: pathlib.Path,
+    *,
+    tool: str,
+    node_prefix: pathlib.Path | None,
+    scope: str = "any",
+) -> pathlib.Path | None:
+    tool = tool.strip().lower()
+    local_candidates: list[pathlib.Path] = []
+    global_candidates: list[pathlib.Path] = []
+
+    if tool == "redocly":
+        local_candidates = [root / "node_modules" / "@redocly" / "cli" / "bin" / "cli.js"]
+        if node_prefix:
+            global_candidates = [node_prefix / "lib" / "node_modules" / "@redocly" / "cli" / "bin" / "cli.js"]
+    elif tool == "spectral":
+        local_candidates = [root / "node_modules" / "@stoplight" / "spectral-cli" / "dist" / "index.js"]
+        if node_prefix:
+            global_candidates = [node_prefix / "lib" / "node_modules" / "@stoplight" / "spectral-cli" / "dist" / "index.js"]
+    elif tool == "asyncapi":
+        # Prefer `bin/run` (NODE_ENV=development) para evitar strict-mode fatal do node-config no CLI.
+        local_candidates = [root / "node_modules" / "@asyncapi" / "cli" / "bin" / "run"]
+        if node_prefix:
+            global_candidates = [node_prefix / "lib" / "node_modules" / "@asyncapi" / "cli" / "bin" / "run"]
+    else:
+        return None
+
+    if scope == "local":
+        search = local_candidates
+    elif scope == "global":
+        search = global_candidates
+    else:
+        search = local_candidates + global_candidates
+
+    for p in search:
+        if p.exists():
+            return p
+    return None
+
+
+def _looks_like_node_module_resolution_failure(text: str) -> bool:
+    if not isinstance(text, str) or not text:
+        return False
+    t = text.lower()
+    # Node CJS loader common patterns
+    if "cannot find module" in t:
+        return True
+    if "module_not_found" in t:
+        return True
+    return False
+
+
+def _try_node_cli(root: pathlib.Path, *, tool: str, args: list[str], cwd: pathlib.Path | None = None) -> tuple[int, str, str]:
+    """
+    Executa CLI Node de forma WSL-native (sem wrappers Windows).
+    Retorna (rc, stdout, stderr). rc=-1 indica tool/script/node ausente.
+    """
+    node_bin = _find_wsl_node_bin()
+    if node_bin is None:
+        return -1, "", "Node.js WSL-native não encontrado (configure NVM ou instale Node no WSL)."
+    node_prefix = _node_prefix_from_node_bin(node_bin)
+
+    # Candidatos (preferir local; fallback para global NVM quando o local está corrompido).
+    local = _resolve_node_cli_script(root, tool=tool, node_prefix=None, scope="local")
+    global_ = _resolve_node_cli_script(root, tool=tool, node_prefix=node_prefix, scope="global") if node_prefix else None
+    candidates = [p for p in (local, global_) if p is not None]
+    if not candidates:
+        return -1, "", f"CLI `{tool}` não encontrada (nem local em node_modules, nem global em NVM)."
+
+    tool_env: dict[str, str] | None = None
+    if tool.strip().lower() == "asyncapi":
+        # asyncapi-cli usa `path.join(__dirname, log.dir)` (não `resolve`), então para
+        # sair do diretório do package e alcançar `/tmp`, precisamos subir até a raiz.
+        # Extra `..` são inofensivos (normalizam para `/`).
+        log_dir_rel_to_utils = "../../../../../../../../../../../../tmp/hbtrack_asyncapi_logs"
+        spectral_node_modules_paths: list[str] = []
+        local_spectral_nm = root / "node_modules" / "@stoplight" / "spectral-cli" / "node_modules"
+        if local_spectral_nm.exists():
+            spectral_node_modules_paths.append(str(local_spectral_nm))
+        if node_prefix:
+            global_spectral_nm = node_prefix / "lib" / "node_modules" / "@stoplight" / "spectral-cli" / "node_modules"
+            if global_spectral_nm.exists():
+                spectral_node_modules_paths.append(str(global_spectral_nm))
+        node_path = ":".join(spectral_node_modules_paths)
+
+        tool_env = {
+            "NODE_ENV": "development",
+            "NODE_CONFIG_STRICT_MODE": "0",
+            "SUPPRESS_NO_CONFIG_WARNING": "1",
+            # asyncapi-cli escreve logs em `__dirname/logs` por default; apontar para diretório gravável.
+            "NODE_CONFIG": json.dumps({"log": {"dir": log_dir_rel_to_utils}}, ensure_ascii=False),
+            # asyncapi-cli usa spectral internamente e pode tentar resolver formatters via require().
+            # Forçar resolution em um node_modules conhecido.
+            **({"NODE_PATH": node_path} if node_path else {}),
+        }
+
+    # 1) tentar local (se existir)
+    rc, stdout, stderr = _try_tool(str(node_bin), str(candidates[0]), *args, cwd=cwd, env=tool_env)
+    out = stdout + stderr
+    if rc == 0:
+        return rc, stdout, stderr
+
+    # 2) fallback para global NVM somente quando o erro indica toolchain local quebrada.
+    if local is not None and global_ is not None and candidates[0] == local and _looks_like_node_module_resolution_failure(out):
+        return _try_tool(str(node_bin), str(global_), *args, cwd=cwd, env=tool_env)
+
+    return rc, stdout, stderr
+
+
 def _local_node_bin(tool: str) -> pathlib.Path | None:
     root = _repo_root()
     bin_dir = root / "node_modules" / ".bin"
@@ -2334,10 +2674,29 @@ def _git_commit(root: pathlib.Path) -> str | None:
 
 
 def _tool_ver(*cmd: str) -> str | None:
+    if not cmd:
+        return None
+    tool = cmd[0]
+    # Evitar interop WSL/Windows: wrappers que chamam *.exe tendem a gerar vsock errors.
+    if tool == "oasdiff":
+        p = shutil.which("oasdiff")
+        if not p:
+            return None
+        pp = pathlib.Path(p)
+        if str(pp).startswith("/mnt/") or str(pp).lower().endswith(".exe"):
+            return None
+        try:
+            if pp.is_file() and ".exe" in pp.read_text(encoding="utf-8", errors="replace").lower():
+                return None
+        except Exception:
+            pass
+
     rc, out, err = _try_tool(*cmd)
     if rc == -1:
         return None
     text = (out or err).strip()
+    if _looks_like_wsl_vsock_failure(text):
+        return None
     return text.splitlines()[0] if text else "unknown"
 
 
@@ -3582,21 +3941,38 @@ def _g5_openapi_root_structure(root: pathlib.Path) -> dict:
     redocly_cfg = root / "redocly.yaml"
     if not openapi_root.exists():
         return _skip(gate_id, "openapi.yaml ausente.", _ms(t0))
-    # Convert WSL paths to Windows paths for npm tools
-    openapi_root_str = _wsl_to_windows_path(str(openapi_root))
-    redocly_cfg_str = _wsl_to_windows_path(str(redocly_cfg))
-    cmd = ["redocly", "lint", openapi_root_str]
+    cmd = ["lint", str(openapi_root)]
     if redocly_cfg.exists():
-        cmd += ["--config", redocly_cfg_str]
-    rc, stdout, stderr = _try_tool(*cmd, cwd=root)
+        cmd += ["--config", str(redocly_cfg)]
+    rc, stdout, stderr = _try_node_cli(root, tool="redocly", args=cmd, cwd=root)
     if rc == -1:
-        return _pg(gate_id, "FAIL", True, "ERROR_INFRA",
-                   "redocly CLI não encontrado. Instale: npm install -g @redocly/cli",
-                   [str(openapi_root)], [str(openapi_root)], [],
-                   [{"blocking_code": "ERROR_INFRA", "artifact": "redocly", "message": stderr, "severity": "error"}],
-                   _ms(t0))
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            "ERROR_INFRA",
+            "redocly CLI não disponível via toolchain WSL-native (node_modules/NVM).",
+            [str(openapi_root)],
+            [str(openapi_root)],
+            [],
+            [{"blocking_code": "ERROR_INFRA", "artifact": "redocly", "message": (stderr or stdout), "severity": "error"}],
+            _ms(t0),
+        )
     output = stdout + stderr
     if rc != 0:
+        if _looks_like_wsl_vsock_failure(output):
+            return _pg(
+                gate_id,
+                "FAIL",
+                True,
+                "ERROR_INFRA",
+                "redocly falhou por interop WSL/Windows (vsock). Use Node WSL-native e evite wrappers Windows.",
+                [str(openapi_root)],
+                [str(openapi_root)],
+                [],
+                [{"blocking_code": "ERROR_INFRA", "artifact": "redocly", "message": output.strip(), "severity": "error"}],
+                _ms(t0),
+            )
         if _looks_like_node_missing(output):
             return _pg(
                 gate_id,
@@ -3632,22 +4008,46 @@ def _g6_openapi_policy_ruleset(root: pathlib.Path) -> dict:
         return _skip(gate_id, "openapi.yaml ausente.", _ms(t0))
     if not spectral_cfg.exists():
         return _skip(gate_id, ".spectral.yaml ausente.", _ms(t0))
-    # Convert WSL paths to Windows paths for npm tools
-    openapi_root_str = _wsl_to_windows_path(str(openapi_root))
-    spectral_cfg_str = _wsl_to_windows_path(str(spectral_cfg))
-    rc, stdout, stderr = _try_tool(
-        "spectral", "lint", openapi_root_str,
-        "--ruleset", spectral_cfg_str,
-        "--format", "json",
+    rc, stdout, stderr = _try_node_cli(
+        root,
+        tool="spectral",
+        args=[
+            "lint",
+            str(openapi_root),
+            "--ruleset",
+            str(spectral_cfg),
+            "--format",
+            "json",
+        ],
         cwd=root,
     )
     if rc == -1:
-        return _pg(gate_id, "FAIL", True, "ERROR_INFRA",
-                   "spectral CLI não encontrado. Instale: npm install -g @stoplight/spectral-cli",
-                   [str(openapi_root)], [str(openapi_root)], [],
-                   [{"blocking_code": "ERROR_INFRA", "artifact": "spectral", "message": stderr, "severity": "error"}],
-                   _ms(t0))
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            "ERROR_INFRA",
+            "spectral CLI não disponível via toolchain WSL-native (node_modules/NVM).",
+            [str(openapi_root)],
+            [str(openapi_root)],
+            [],
+            [{"blocking_code": "ERROR_INFRA", "artifact": "spectral", "message": (stderr or stdout), "severity": "error"}],
+            _ms(t0),
+        )
     combined = stdout + stderr
+    if rc != 0 and _looks_like_wsl_vsock_failure(combined):
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            "ERROR_INFRA",
+            "spectral falhou por interop WSL/Windows (vsock). Use Node WSL-native e evite wrappers Windows.",
+            [str(openapi_root)],
+            [str(openapi_root)],
+            [],
+            [{"blocking_code": "ERROR_INFRA", "artifact": "spectral", "message": combined.strip(), "severity": "error"}],
+            _ms(t0),
+        )
     if rc != 0 and _looks_like_node_missing(combined):
         return _pg(
             gate_id,
@@ -3831,58 +4231,148 @@ def _g9_contract_breaking_change(root: pathlib.Path) -> dict:
         )
     if not openapi_root.exists():
         return _skip(gate_id, "openapi.yaml ausente.", _ms(t0))
-    rc, stdout, stderr = _try_tool("oasdiff", "breaking", str(baseline), str(openapi_root), cwd=root)
-    if rc == -1:
-        return _pg(gate_id, "FAIL", True, "ERROR_INFRA",
-                   "oasdiff não encontrado. Instale: go install github.com/tufin/oasdiff@latest",
-                   [str(baseline), str(openapi_root)], [str(baseline), str(openapi_root)], [],
-                   [{"blocking_code": "ERROR_INFRA", "artifact": "oasdiff", "message": stderr, "severity": "error"}],
-                   _ms(t0))
-    output = (stdout + stderr).strip()
-    if rc != 0:
-        if not output:
+    # Preferência: oasdiff WSL-native (evitar wrappers Windows que chamam oasdiff.exe).
+    oasdiff_path = shutil.which("oasdiff")
+    can_use_oasdiff = False
+    if oasdiff_path:
+        p = pathlib.Path(oasdiff_path)
+        # Bloquear interop Windows: /mnt/* e/ou binários .exe ou wrappers chamando .exe.
+        if not str(p).startswith("/mnt/") and not str(p).lower().endswith(".exe"):
+            try:
+                if p.is_file() and p.suffix.lower() in (".sh", ""):
+                    content = p.read_text(encoding="utf-8", errors="replace")
+                    if ".exe" not in content.lower():
+                        can_use_oasdiff = True
+                else:
+                    can_use_oasdiff = True
+            except Exception:
+                # Se não dá para inspecionar, ainda tentamos (pode ser binário Linux).
+                can_use_oasdiff = True
+
+    if can_use_oasdiff:
+        rc, stdout, stderr = _try_tool("oasdiff", "breaking", str(baseline), str(openapi_root), cwd=root)
+        output = (stdout + stderr).strip()
+        if rc != 0 and _looks_like_wsl_vsock_failure(output):
+            # interop detectada; cai para o fallback determinístico sem tool.
+            can_use_oasdiff = False
+        elif rc == 0:
+            return _pg(
+                gate_id,
+                "PASS",
+                True,
+                None,
+                "Nenhuma breaking change detectada (oasdiff).",
+                [str(baseline), str(openapi_root)],
+                [str(baseline), str(openapi_root)],
+                [],
+                [],
+                _ms(t0),
+            )
+        else:
+            if not output:
+                return _pg(
+                    gate_id,
+                    "FAIL",
+                    True,
+                    "ERROR_INFRA",
+                    "oasdiff falhou sem output (infra/execução).",
+                    [str(baseline), str(openapi_root)],
+                    [str(baseline), str(openapi_root)],
+                    [],
+                    [{"blocking_code": "ERROR_INFRA", "artifact": "oasdiff", "message": "no output", "severity": "error"}],
+                    _ms(t0),
+                )
+            low = output.lower()
+            if (
+                "failed to load base spec" in low
+                or "failed to load revision spec" in low
+                or "failed to parse" in low
+                or "failed to read" in low
+            ):
+                return _pg(
+                    gate_id,
+                    "FAIL",
+                    True,
+                    "ERROR_INFRA",
+                    "oasdiff não conseguiu carregar/parsear specs (baseline e/ou atual).",
+                    [str(baseline), str(openapi_root)],
+                    [str(baseline), str(openapi_root)],
+                    [],
+                    [{"blocking_code": "ERROR_INFRA", "artifact": str(baseline.relative_to(root)), "message": output, "severity": "error"}],
+                    _ms(t0),
+                )
+            lines = [ln for ln in output.splitlines() if ln.strip()]
+            violations = [
+                {"blocking_code": "BLOCKED_BREAKING_CHANGE", "artifact": str(openapi_root.relative_to(root)), "message": ln, "severity": "error"}
+                for ln in lines[:20]
+            ]
             return _pg(
                 gate_id,
                 "FAIL",
                 True,
-                "ERROR_INFRA",
-                "oasdiff falhou sem output (infra/execução).",
+                "BLOCKED_BREAKING_CHANGE",
+                f"oasdiff: {len(violations)} breaking change(s) detectada(s).",
                 [str(baseline), str(openapi_root)],
                 [str(baseline), str(openapi_root)],
                 [],
-                [{"blocking_code": "ERROR_INFRA", "artifact": "oasdiff", "message": "no output", "severity": "error"}],
+                violations,
                 _ms(t0),
             )
-        low = output.lower()
-        if (
-            "failed to load base spec" in low
-            or "failed to load revision spec" in low
-            or "failed to parse" in low
-            or "failed to read" in low
-        ):
-            return _pg(
-                gate_id,
-                "FAIL",
-                True,
-                "ERROR_INFRA",
-                "oasdiff não conseguiu carregar/parsear specs (baseline e/ou atual).",
-                [str(baseline), str(openapi_root)],
-                [str(baseline), str(openapi_root)],
-                [],
-                [{"blocking_code": "ERROR_INFRA", "artifact": str(baseline.relative_to(root)), "message": output, "severity": "error"}],
-                _ms(t0),
-            )
-        lines = [ln for ln in output.splitlines() if ln.strip()]
+
+    # Fallback determinístico (hermético): detectar remoção de operações (method+path).
+    try:
+        base_ops = _collect_openapi_operations(baseline)
+        cur_ops = _collect_openapi_operations(openapi_root)
+    except Exception as e:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            "ERROR_INFRA",
+            "Não foi possível executar breaking change gate (oasdiff indisponível e fallback falhou).",
+            [str(baseline), str(openapi_root)],
+            [str(baseline), str(openapi_root)],
+            [],
+            [{"blocking_code": "ERROR_INFRA", "artifact": "openapi", "message": str(e), "severity": "error"}],
+            _ms(t0),
+        )
+
+    removed = sorted(base_ops - cur_ops, key=lambda x: (x[1], x[0]))
+    if removed:
         violations = [
-            {"blocking_code": "BLOCKED_BREAKING_CHANGE", "artifact": str(openapi_root.relative_to(root)), "message": ln, "severity": "error"}
-            for ln in lines[:20]
+            {
+                "blocking_code": "BLOCKED_BREAKING_CHANGE",
+                "artifact": str(openapi_root.relative_to(root)),
+                "message": f"Operação removida: {m.upper()} {p}",
+                "severity": "error",
+            }
+            for (m, p) in removed[:40]
         ]
-        return _pg(gate_id, "FAIL", True, "BLOCKED_BREAKING_CHANGE",
-                   f"oasdiff: {len(violations)} breaking change(s) detectada(s).",
-                   [str(baseline), str(openapi_root)], [str(baseline), str(openapi_root)], [], violations, _ms(t0))
-    return _pg(gate_id, "PASS", True, None,
-               "Nenhuma breaking change detectada.",
-               [str(baseline), str(openapi_root)], [str(baseline), str(openapi_root)], [], [], _ms(t0))
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            "BLOCKED_BREAKING_CHANGE",
+            f"Breaking change(s) detectada(s) (fallback: {len(removed)} operação(ões) removida(s)).",
+            [str(baseline), str(openapi_root)],
+            [str(baseline), str(openapi_root)],
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        "Nenhuma breaking change detectada (fallback: nenhuma operação removida).",
+        [str(baseline), str(openapi_root)],
+        [str(baseline), str(openapi_root)],
+        [],
+        [],
+        _ms(t0),
+    )
 
 
 def _g10_transformation_feasibility(root: pathlib.Path) -> dict:
@@ -3918,26 +4408,35 @@ def _g12_asyncapi_validation(root: pathlib.Path) -> dict:
         return _skip(gate_id, "Não foi possível ler asyncapi.yaml.", _ms(t0))
     if len(content.strip()) < 50:
         return _skip(gate_id, "asyncapi.yaml é scaffolding vazio — gate não aplicável.", _ms(t0))
-    tool_cmd = ("asyncapi", "validate", str(asyncapi_root))
-    rc, stdout, stderr = _try_tool(*tool_cmd, cwd=root)
+    rc, stdout, stderr = _try_node_cli(root, tool="asyncapi", args=["validate", str(asyncapi_root)], cwd=root)
     out = stdout + stderr
-    if rc == -1 or (sys.platform == "win32" and _looks_like_windows_command_not_found("asyncapi", out)):
-        local = _local_node_bin("asyncapi")
-        if local is None:
-            return _pg(gate_id, "FAIL", False, "ERROR_INFRA",
-                       "asyncapi CLI não encontrado no PATH e node_modules/.bin/asyncapi também está ausente.",
-                       [str(asyncapi_root)], [str(asyncapi_root)], [],
-                       [{"blocking_code": "ERROR_INFRA", "artifact": "asyncapi", "message": (out or stderr), "severity": "error"}],
-                       _ms(t0))
-        rc, stdout, stderr = _try_tool(str(local), "validate", str(asyncapi_root), cwd=root)
-        out = stdout + stderr
-        if rc == -1 or (sys.platform == "win32" and _looks_like_windows_command_not_found(str(local), out)):
-            return _pg(gate_id, "FAIL", False, "ERROR_INFRA",
-                       "asyncapi CLI não executou (node_modules/.bin).",
-                       [str(asyncapi_root)], [str(asyncapi_root)], [],
-                       [{"blocking_code": "ERROR_INFRA", "artifact": str(local), "message": out, "severity": "error"}],
-                       _ms(t0))
+    if rc == -1:
+        return _pg(
+            gate_id,
+            "FAIL",
+            False,
+            "ERROR_INFRA",
+            "asyncapi CLI não disponível via toolchain WSL-native (node_modules/NVM).",
+            [str(asyncapi_root)],
+            [str(asyncapi_root)],
+            [],
+            [{"blocking_code": "ERROR_INFRA", "artifact": "asyncapi", "message": out.strip() or stderr, "severity": "error"}],
+            _ms(t0),
+        )
     if rc != 0:
+        if _looks_like_wsl_vsock_failure(out):
+            return _pg(
+                gate_id,
+                "FAIL",
+                False,
+                "ERROR_INFRA",
+                "asyncapi falhou por interop WSL/Windows (vsock). Use Node WSL-native e evite wrappers Windows.",
+                [str(asyncapi_root)],
+                [str(asyncapi_root)],
+                [],
+                [{"blocking_code": "ERROR_INFRA", "artifact": "asyncapi", "message": out.strip(), "severity": "error"}],
+                _ms(t0),
+            )
         if _looks_like_node_missing(out):
             return _pg(
                 gate_id,
@@ -4050,6 +4549,364 @@ def _g14_ui_doc_validation(root: pathlib.Path) -> dict:
                [], checked, [], [], _ms(t0))
 
 
+_SHA256_HEX_RE = re.compile(r"^[0-9a-f]{64}$")
+
+
+def _tree_hash(entries: list[dict[str, str]]) -> str:
+    h = hashlib.sha256()
+    for e in sorted(entries, key=lambda x: x["path"]):
+        h.update(e["path"].encode("utf-8"))
+        h.update(b"\0")
+        h.update(e["sha256"].encode("utf-8"))
+        h.update(b"\n")
+    return h.hexdigest()
+
+
+def _is_safe_traceability_relpath(relpath: str) -> bool:
+    if not isinstance(relpath, str) or not relpath.strip():
+        return False
+    if "\0" in relpath:
+        return False
+    if relpath.startswith("/") or relpath.startswith("\\"):
+        return False
+    if relpath.startswith("//"):
+        return False
+    if "\\" in relpath:
+        return False
+    if re.match(r"^[A-Za-z]:", relpath):
+        return False
+    parts = pathlib.PurePosixPath(relpath).parts
+    if ".." in parts:
+        return False
+    return True
+
+
+def _validate_traceability_entry_list(
+    *,
+    root: pathlib.Path,
+    manifest_rel: str,
+    list_name: str,
+    entries: Any,
+) -> tuple[list[dict[str, str]], bool, list[dict]]:
+    violations: list[dict] = []
+    if not isinstance(entries, list):
+        return (
+            [],
+            False,
+            [
+                {
+                    "blocking_code": BLOCKED_TRACEABILITY_MANIFEST_INVALID,
+                    "artifact": manifest_rel,
+                    "message": f"Campo `{list_name}` inválido: esperado lista.",
+                    "severity": "error",
+                }
+            ],
+        )
+
+    root_resolved = root.resolve()
+    ok = True
+    actual_entries: list[dict[str, str]] = []
+    seen: set[str] = set()
+    for idx, e in enumerate(entries):
+        if not isinstance(e, dict):
+            ok = False
+            violations.append(
+                {
+                    "blocking_code": BLOCKED_TRACEABILITY_MANIFEST_INVALID,
+                    "artifact": manifest_rel,
+                    "message": f"`{list_name}[{idx}]` inválido: esperado mapping com `path` e `sha256`.",
+                    "severity": "error",
+                }
+            )
+            continue
+
+        p = e.get("path")
+        s = e.get("sha256")
+        if not isinstance(p, str) or not p:
+            ok = False
+            violations.append(
+                {
+                    "blocking_code": BLOCKED_TRACEABILITY_MANIFEST_INVALID,
+                    "artifact": manifest_rel,
+                    "message": f"`{list_name}[{idx}].path` ausente/ inválido.",
+                    "severity": "error",
+                }
+            )
+            continue
+        if not _is_safe_traceability_relpath(p):
+            ok = False
+            violations.append(
+                {
+                    "blocking_code": BLOCKED_TRACEABILITY_MANIFEST_INVALID,
+                    "artifact": manifest_rel,
+                    "message": f"`{list_name}[{idx}].path` não é um path relativo seguro: {p!r}.",
+                    "severity": "error",
+                }
+            )
+            continue
+        if p in seen:
+            ok = False
+            violations.append(
+                {
+                    "blocking_code": BLOCKED_TRACEABILITY_MANIFEST_INVALID,
+                    "artifact": manifest_rel,
+                    "message": f"`{list_name}` contém path duplicado: {p!r}.",
+                    "severity": "error",
+                }
+            )
+            continue
+        seen.add(p)
+
+        full = (root / pathlib.Path(p)).resolve()
+        try:
+            full.relative_to(root_resolved)
+        except Exception:
+            ok = False
+            violations.append(
+                {
+                    "blocking_code": BLOCKED_TRACEABILITY_MANIFEST_INVALID,
+                    "artifact": manifest_rel,
+                    "message": f"`{list_name}[{idx}].path` sai do repo root: {p!r}.",
+                    "severity": "error",
+                }
+            )
+            continue
+
+        if not full.exists():
+            ok = False
+            violations.append(
+                {
+                    "blocking_code": BLOCKED_TRACEABILITY_INPUT_MISSING,
+                    "artifact": p,
+                    "message": f"Arquivo referenciado por `{list_name}` não existe: {p}",
+                    "severity": "error",
+                }
+            )
+            continue
+
+        try:
+            data = full.read_bytes()
+        except Exception as ex:  # pragma: no cover
+            ok = False
+            violations.append(
+                {
+                    "blocking_code": BLOCKED_TRACEABILITY_MANIFEST_INVALID,
+                    "artifact": p,
+                    "message": f"Falha ao ler arquivo referenciado por `{list_name}`: {p}: {ex}",
+                    "severity": "error",
+                }
+            )
+            continue
+
+        actual_sha = hashlib.sha256(data).hexdigest()
+        if not isinstance(s, str) or not _SHA256_HEX_RE.match(s):
+            ok = False
+            violations.append(
+                {
+                    "blocking_code": BLOCKED_TRACEABILITY_MANIFEST_INVALID,
+                    "artifact": manifest_rel,
+                    "message": f"`{list_name}[{idx}].sha256` inválido para {p!r}: esperado hex sha256 lowercase.",
+                    "severity": "error",
+                }
+            )
+            continue
+        if s != actual_sha:
+            ok = False
+            violations.append(
+                {
+                    "blocking_code": BLOCKED_TRACEABILITY_HASH_MISMATCH,
+                    "artifact": p,
+                    "message": f"Hash sha256 divergente para {p} (manifest={s}, atual={actual_sha}).",
+                    "severity": "error",
+                }
+            )
+            continue
+
+        actual_entries.append({"path": p, "sha256": actual_sha})
+
+    return actual_entries, ok, violations
+
+
+def _validate_traceability_manifests(root: pathlib.Path) -> tuple[list[str], list[dict]]:
+    manifests_dir = root / "generated" / "manifests"
+    if not manifests_dir.exists():
+        return [], [
+            {
+                "blocking_code": BLOCKED_TRACEABILITY_MANIFEST_INVALID,
+                "artifact": "generated/manifests/",
+                "message": "Pasta de manifests de rastreabilidade ausente (generated/manifests/).",
+                "severity": "error",
+            }
+        ]
+
+    manifests = sorted(manifests_dir.glob("*.traceability.yaml")) + sorted(manifests_dir.glob("*.traceability.yml"))
+    checked = [str(p.relative_to(root)) for p in manifests]
+    if not manifests:
+        return checked, [
+            {
+                "blocking_code": BLOCKED_TRACEABILITY_MANIFEST_INVALID,
+                "artifact": "generated/manifests/",
+                "message": "Nenhum manifest *.traceability.yaml encontrado em generated/manifests/.",
+                "severity": "error",
+            }
+        ]
+
+    root_resolved = root.resolve()
+    violations: list[dict] = []
+    for mf in manifests:
+        mf_rel = str(mf.relative_to(root))
+        try:
+            obj = _load_yaml(mf)
+        except Exception as e:
+            violations.append(
+                {
+                    "blocking_code": BLOCKED_TRACEABILITY_MANIFEST_INVALID,
+                    "artifact": mf_rel,
+                    "message": f"Manifest YAML inválido: {e}",
+                    "severity": "error",
+                }
+            )
+            continue
+        if not isinstance(obj, dict) or not isinstance(obj.get("traceability_manifest"), dict):
+            violations.append(
+                {
+                    "blocking_code": BLOCKED_TRACEABILITY_MANIFEST_INVALID,
+                    "artifact": mf_rel,
+                    "message": "Estrutura inválida: esperado mapping com `traceability_manifest` (mapping).",
+                    "severity": "error",
+                }
+            )
+            continue
+
+        tm = obj["traceability_manifest"]
+        policy_path = tm.get("policy_path")
+        policy_sha = tm.get("policy_sha256")
+        if not isinstance(policy_path, str) or not _is_safe_traceability_relpath(policy_path):
+            violations.append(
+                {
+                    "blocking_code": BLOCKED_TRACEABILITY_MANIFEST_INVALID,
+                    "artifact": mf_rel,
+                    "message": "`policy_path` ausente/ inválido no manifest.",
+                    "severity": "error",
+                }
+            )
+        else:
+            full_policy = (root / pathlib.Path(policy_path)).resolve()
+            try:
+                full_policy.relative_to(root_resolved)
+            except Exception:
+                violations.append(
+                    {
+                        "blocking_code": BLOCKED_TRACEABILITY_MANIFEST_INVALID,
+                        "artifact": mf_rel,
+                        "message": f"`policy_path` sai do repo root: {policy_path!r}.",
+                        "severity": "error",
+                    }
+                )
+            else:
+                if not full_policy.exists():
+                    violations.append(
+                        {
+                            "blocking_code": BLOCKED_TRACEABILITY_INPUT_MISSING,
+                            "artifact": policy_path,
+                            "message": f"policy_path não existe: {policy_path}",
+                            "severity": "error",
+                        }
+                    )
+                else:
+                    try:
+                        actual_policy_sha = hashlib.sha256(full_policy.read_bytes()).hexdigest()
+                    except Exception as ex:  # pragma: no cover
+                        violations.append(
+                            {
+                                "blocking_code": BLOCKED_TRACEABILITY_MANIFEST_INVALID,
+                                "artifact": policy_path,
+                                "message": f"Falha ao ler policy_path: {policy_path}: {ex}",
+                                "severity": "error",
+                            }
+                        )
+                    else:
+                        if not isinstance(policy_sha, str) or not _SHA256_HEX_RE.match(policy_sha):
+                            violations.append(
+                                {
+                                    "blocking_code": BLOCKED_TRACEABILITY_MANIFEST_INVALID,
+                                    "artifact": mf_rel,
+                                    "message": "`policy_sha256` ausente/ inválido no manifest.",
+                                    "severity": "error",
+                                }
+                            )
+                        elif policy_sha != actual_policy_sha:
+                            violations.append(
+                                {
+                                    "blocking_code": BLOCKED_TRACEABILITY_HASH_MISMATCH,
+                                    "artifact": policy_path,
+                                    "message": f"Hash sha256 divergente para policy ({policy_path}) (manifest={policy_sha}, atual={actual_policy_sha}).",
+                                    "severity": "error",
+                                }
+                            )
+
+        source_inputs_actual, ok_inputs, v_inputs = _validate_traceability_entry_list(
+            root=root, manifest_rel=mf_rel, list_name="source_inputs", entries=tm.get("source_inputs")
+        )
+        violations.extend(v_inputs)
+
+        source_contracts_actual, ok_sources, v_sources = _validate_traceability_entry_list(
+            root=root, manifest_rel=mf_rel, list_name="source_contracts", entries=tm.get("source_contracts")
+        )
+        violations.extend(v_sources)
+
+        generated_actual, ok_gen, v_gen = _validate_traceability_entry_list(
+            root=root, manifest_rel=mf_rel, list_name="generated_artifacts", entries=tm.get("generated_artifacts")
+        )
+        violations.extend(v_gen)
+
+        if ok_sources:
+            got = tm.get("source_tree_sha256")
+            expected = _tree_hash(source_contracts_actual)
+            if not isinstance(got, str) or not _SHA256_HEX_RE.match(got):
+                violations.append(
+                    {
+                        "blocking_code": BLOCKED_TRACEABILITY_MANIFEST_INVALID,
+                        "artifact": mf_rel,
+                        "message": "`source_tree_sha256` ausente/ inválido no manifest.",
+                        "severity": "error",
+                    }
+                )
+            elif got != expected:
+                violations.append(
+                    {
+                        "blocking_code": BLOCKED_TRACEABILITY_HASH_MISMATCH,
+                        "artifact": mf_rel,
+                        "message": f"source_tree_sha256 divergente (manifest={got}, atual={expected}).",
+                        "severity": "error",
+                    }
+                )
+
+        if ok_gen:
+            got = tm.get("generated_tree_sha256")
+            expected = _tree_hash(generated_actual)
+            if not isinstance(got, str) or not _SHA256_HEX_RE.match(got):
+                violations.append(
+                    {
+                        "blocking_code": BLOCKED_TRACEABILITY_MANIFEST_INVALID,
+                        "artifact": mf_rel,
+                        "message": "`generated_tree_sha256` ausente/ inválido no manifest.",
+                        "severity": "error",
+                    }
+                )
+            elif got != expected:
+                violations.append(
+                    {
+                        "blocking_code": BLOCKED_TRACEABILITY_HASH_MISMATCH,
+                        "artifact": mf_rel,
+                        "message": f"generated_tree_sha256 divergente (manifest={got}, atual={expected}).",
+                        "severity": "error",
+                    }
+                )
+
+    return checked, violations
+
+
 def _g15_derived_drift(root: pathlib.Path) -> dict:
     t0 = time.monotonic()
     gate_id = "DERIVED_DRIFT_GATE"
@@ -4092,6 +4949,21 @@ def _g15_derived_drift(root: pathlib.Path) -> dict:
                     "severity": "error",
                 }
             ],
+            _ms(t0),
+        )
+
+    checked_manifests, trace_violations = _validate_traceability_manifests(root)
+    if trace_violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_TRACEABILITY_MANIFEST_INVALID,
+            f"Manifests de rastreabilidade inválidos: {len(trace_violations)} erro(s).",
+            checked_manifests,
+            checked_manifests or [str(generated_dir)],
+            [],
+            trace_violations[:30],
             _ms(t0),
         )
 

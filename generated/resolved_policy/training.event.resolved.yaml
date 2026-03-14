@@ -44,7 +44,7 @@ contract_sources:
 - contracts/asyncapi/messages/training_attendance_marked.yaml
 - contracts/asyncapi/components/schemas/training_attendance_marked_payload.yaml
 inputs:
-  api_rules: .contract_driven/templates/api_rules/api_rules.yaml
+  api_rules: .contract_driven/templates/api/api_rules.yaml
   architecture_matrix: .contract_driven/templates/api/ARCHITECTURE_MATRIX.yaml
   canonical_type_registry: .contract_driven/templates/api/CANONICAL_TYPE_REGISTRY.yaml
   domain_axioms: .contract_driven/DOMAIN_AXIOMS.json

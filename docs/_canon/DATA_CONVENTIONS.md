@@ -302,13 +302,14 @@ Cada shape de dados tem exatamente uma fonte de verdade. Duplicação é proibid
 
 | Superfície | Fonte de Verdade |
 |-----------|-----------------|
-| HTTP API pública | `docs/hbtrack/modulos/<modulo>/01_<MODULO>_OPENAPI.yaml` |
+| HTTP API pública | `contracts/openapi/openapi.yaml` (por módulo: `contracts/openapi/paths/<module>.yaml`) |
 | Schemas reutilizáveis entre módulos | `contracts/schemas/shared/` |
 | Schemas de módulo específico | `contracts/schemas/<modulo>/` |
-| Eventos assíncronos (Celery, pub/sub) | `docs/hbtrack/modulos/<modulo>/05_<MODULO>_EVENTS.asyncapi.yaml` |
-| Estrutura de banco de dados | `docs/hbtrack/modulos/<modulo>/13_<MODULO>_DB_CONTRACT.yaml` |
+| Eventos assíncronos (pub/sub) | `contracts/asyncapi/asyncapi.yaml` (e subpastas `contracts/asyncapi/**`) |
 
 **Regra**: nenhuma superfície pode ter duas fontes primárias simultâneas. Um schema de módulo não deve virar shape compartilhado apenas por conveniência — promoção para `shared/` exige reutilização real e semântica comum.
+
+**Nota (Banco de Dados)**: este workspace governa contratos e documentação normativa. DDL/migrations vivem nos repositórios de implementação, mas devem obedecer `DATA_CONVENTIONS.md` e invariantes normativas por módulo.
 
 ---
 
@@ -382,5 +383,5 @@ Qualquer estado → READONLY (automaticamente após 60 dias da data da sessão)
 - `API_CONVENTIONS.md` — guia/ponteiros (não-SSOT) para API
 - `CHANGE_POLICY.md` — processo formal para breaking changes de dados
 - `ERROR_MODEL.md` — modelo de erros Problem Details
-- `docs/hbtrack/modulos/<modulo>/13_<MODULO>_DB_CONTRACT.yaml` — contratos de banco por módulo
+- `docs/hbtrack/modulos/<module>/INVARIANTS_<MOD>.md` — invariantes do módulo (inclui constraints críticas)
 - `HANDBALL_RULES_DOMAIN.md` — conceitos de domínio que afetam modelagem de dados (fases, eventos, composições)

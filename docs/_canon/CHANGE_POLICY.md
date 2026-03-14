@@ -1,7 +1,7 @@
 ---
 doc_type: canon
-version: "1.0.0"
-last_reviewed: "2026-03-11"
+version: "1.1.0"
+last_reviewed: "2026-03-13"
 status: active
 ---
 
@@ -9,7 +9,7 @@ status: active
 
 ## 1. Princípio Fundamental
 
-Toda mudança com impacto em contratos públicos, invariantes ou módulos deve passar por processo formal antes de implementação.
+Toda mudança com impacto em contratos públicos, invariantes ou módulos deve passar por processo formal **antes de qualquer implementação downstream**.
 
 **"Refatorar para depois corrigir o contrato" é uma violação desta política.**
 
@@ -17,7 +17,7 @@ O sistema contract-driven do HB Track garante que o contrato é a fonte de verda
 
 ---
 
-## 2. Regras Cardinais (5)
+## 2. Regras Cardinais (6)
 
 1. **Contrato antes de código**: o contrato deve ser atualizado e aprovado antes de qualquer implementação. Código que antecede o contrato é considerado não-contratado.
 
@@ -27,7 +27,9 @@ O sistema contract-driven do HB Track garante que o contrato é a fonte de verda
 
 4. **Breaking change explícita**: toda mudança incompatível com contratos vigentes deve ser classificada, documentada e comunicada a consumidores conhecidos antes de qualquer merge.
 
-5. **Docs atualizado antes de merge**: nenhum PR pode ser merged com contratos desatualizados. O pre-commit hook enforça esta regra (`scripts/git-hooks/pre-commit`).
+5. **Gates antes de merge**: nenhum PR pode ser merged com contract gates em FAIL. O hook `scripts/git-hooks/pre-commit` roda o pipeline local; CI deve executar o mesmo pipeline de forma não-bypassável (ver `CI_CONTRACT_GATES.md`).
+
+6. **SSOT único**: mudanças normativas só são aceitas nos paths canônicos definidos em `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md`. Duplicação de fonte soberana é proibida.
 
 ---
 
@@ -35,11 +37,11 @@ O sistema contract-driven do HB Track garante que o contrato é a fonte de verda
 
 | Tipo | Descrição | Processo |
 |------|-----------|----------|
-| `non-breaking` | Adicionar campo opcional, novo endpoint, novo valor em enum extensível, query param opcional com default razoável | AR normal — sem processo especial |
-| `breaking` | Remover ou renomear campo, alterar tipo, remover endpoint, alterar semântica de campo existente | AR obrigatório + ADR + notificação a consumidores |
-| `internal-only` | Refatoração sem impacto em nenhum contrato público | AR simplificado — sem revisão de arquiteto obrigatória |
-| `documentation-only` | Correção de doc sem mudança de comportamento ou contrato | PR direto sem AR — apenas revisão |
-| `hotfix` | Correção emergencial de bug crítico em produção | Processo excepcional — ver §6 |
+| `non-breaking` | Mudança compatível (adição opcional, novo endpoint, novo valor em enum extensível) | PR + contract gates PASS |
+| `breaking` | Mudança incompatível (remoção/rename/tipo/semântica) | ADR + plano de depreciação + aprovação explícita + atualização de baseline quando aplicável |
+| `internal-only` | Mudança sem impacto em contratos técnicos (`contracts/**`) nem docs normativos | PR + revisão por par |
+| `documentation-only` | Correção/clarificação de docs sem mudar contrato técnico | PR + revisão por par |
+| `hotfix` | Correção emergencial em produção (repos de implementação) | Processo excepcional — ver §6 |
 
 ---
 
@@ -78,36 +80,39 @@ O sistema contract-driven do HB Track garante que o contrato é a fonte de verda
 
 ```
 1. PROPOSTA
-   → Criar AR em docs/hbtrack/ars/ com:
-     - tipo (non-breaking | breaking | internal-only)
+   → Abrir PR com:
+     - tipo (non-breaking | breaking | internal-only | documentation-only)
      - justificativa clara
      - módulos afetados
-     - contratos a serem alterados
+     - artefatos a serem alterados (paths canônicos)
 
 2. CONTRATO
    → Atualizar contrato(s) afetado(s):
-     - OpenAPI do módulo (01_<MODULO>_OPENAPI.yaml)
-     - Invariantes (15_<MODULO>_INVARIANTS.yaml) se aplicável
-     - DB contract (13_<MODULO>_DB_CONTRACT.yaml) se aplicável
-     - Este documento, se a própria política muda
+     - OpenAPI: `contracts/openapi/openapi.yaml` e/ou `contracts/openapi/paths/<module>.yaml`
+     - JSON Schemas: `contracts/schemas/<module>/` (e/ou `contracts/schemas/shared/`)
+     - Workflows: `contracts/workflows/**` (Arazzo)
+     - Eventos: `contracts/asyncapi/**` (AsyncAPI)
+     - Docs de módulo: `docs/hbtrack/modulos/<module>/*` (invariantes, permissões, erros, state model, test matrix)
+     - Docs globais: `docs/_canon/*` quando a regra é global
 
 3. REVISÃO
-   → Para breaking changes: revisão obrigatória por arquiteto/PO
-   → Para non-breaking: revisão por par é suficiente
-   → Para internal-only: auto-revisão com evidências
+   → Para breaking changes: ADR obrigatória + revisão reforçada
+   → Para non-breaking/documentation-only: revisão por par é suficiente
+   → Para internal-only: revisão por par (checar que não houve toque em `contracts/**` nem em docs normativos)
 
 4. APROVAÇÃO
-   → AR marcado como APROVADO no backlog
-   → Para breaking: notificação a consumidores conhecidos antes de aprovação
+   → Aprovação por review do PR
+   → Para breaking: notificação a consumidores conhecidos antes do merge + registro na seção de Deprecação (§7)
 
 5. IMPLEMENTAÇÃO
-   → Código deve ser fiel ao contrato aprovado
-   → Sem desvios — se surgir necessidade de desvio, volta ao passo 2
+   → Implementações downstream (backend/frontend/workers) devem ser fiéis ao contrato merged
+   → Sem desvios — se surgir necessidade de desvio, voltar ao passo 2 (contrato) e revalidar
 
 6. VERIFICAÇÃO
-   → hb verify confirma conformidade do código com o contrato
-   → hb seal sela o AR com evidências
-   → PR merged somente após seal
+   → Rodar contract gates e anexar evidência no PR:
+     - `python3 scripts/validate_contracts.py`
+     - artefato gerado: `_reports/contract_gates/latest.json`
+   → PR merged somente com gates em PASS (ou PASS_WITH_WARNINGS quando aplicável)
 ```
 
 **Regra de travamento**: em nenhuma hipótese o passo 5 antecede o passo 4.
@@ -120,8 +125,8 @@ Mudanças emergenciais (bug crítico em produção com impacto real) podem compr
 
 1. **Justificativa documentada**: o commit deve conter `HOTFIX:` no título e descrever o impacto do bug
 2. **Escopo explicitamente limitado**: apenas a correção mínima — sem aproveitamento para refatorações
-3. **Prazo de retroatualização**: máximo de 48 horas para criar AR e atualizar toda documentação afetada
-4. **Responsável identificado**: nome do responsável pela retroatualização documentado no commit
+3. **Prazo de retroatualização**: máximo de 48 horas para abrir PR(s) de retroatualização de contrato/docs e atualizar evidências de gates
+4. **Responsável identificado**: nome do responsável pela retroatualização documentado no PR/issue
 5. **Revisão pós-hotfix**: PR de retroatualização deve ser revisado normalmente
 
 Hotfixes que introduzem breaking change **não são elegíveis para este processo excepcional** — breaking changes nunca são emergenciais por definição (têm alternativa que preserva compatibilidade).
@@ -167,7 +172,7 @@ Hotfixes que introduzem breaking change **não são elegíveis para este process
 - Novos padrões globais que afetam múltiplos módulos
 - Breaking changes em múltiplos módulos simultaneamente
 - Adição de novo módulo à taxonomia canônica
-- Mudanças no processo MCP ou nas regras do sistema contract-driven
+- Mudanças no processo de contract gates ou nas regras do sistema contract-driven
 
 ### 8.2 Localização
 
@@ -209,56 +214,29 @@ Exemplos:
 
 ## Documentos Relacionados
 - [Contratos afetados]
-- [ARs relacionados]
+- [PRs/changes relacionados]
 ```
 
 ---
 
-## 9. Processo de AR (Architecture Record)
-
-### 9.1 Localização
-
-`docs/hbtrack/ars/features/AR_NNN_<slug>.md`
-
-### 9.2 Estados de Ciclo de Vida
-
-```
-RASCUNHO → APROVADO → EM_EXECUCAO → VERIFICADO → SELADO
-```
-
-- **RASCUNHO**: AR proposto, aguardando revisão
-- **APROVADO**: contrato revisado e aprovado, pronto para implementação
-- **EM_EXECUCAO**: implementação em andamento
-- **VERIFICADO**: `hb verify` passou sem erros
-- **SELADO**: `hb seal` executado — AR imutável com evidências
-
-### 9.3 Critério de Selagem
-
-Um AR só pode ser selado (`hb seal`) quando:
-- Todos os contratos afetados estão atualizados
-- `hb verify` passa sem erros bloqueantes
-- Evidências estão em `docs/hbtrack/evidence/AR_NNN/`
-- Nenhum TODO ou placeholder não resolvido nos contratos afetados
-
----
-
-## 10. Governança de Modelos de Dados no Banco
+## 9. Governança de Modelos de Dados no Banco (implementações)
 
 Mudanças em schema do banco de dados seguem protocolo adicional:
 
-1. Migration Alembic: nome descritivo, sempre com `upgrade()` e `downgrade()`
-2. `downgrade()` DEVE ser implementado e testado — migrations sem downgrade são bloqueadas em review
-3. Migrations que alteram dados existentes requerem: script de validação pré-migração + plano de rollback documentado no AR
-4. `ssot_touches` do AR deve listar o arquivo de migration como evidência
+1. Migrations: nome descritivo e reversibilidade planejada
+2. Mudanças que alteram dados existentes exigem: script/rotina de validação pré/pós migração + plano de rollback
+3. Se a mudança impactar contrato público (OpenAPI/schemas/eventos), o contrato deve ser atualizado e validado antes do deploy
+
+**Nota**: este workspace governa contratos e docs normativas. Migrations e código vivem nos repositórios de implementação, mas não podem divergir dos contratos publicados aqui.
 
 ---
 
-## 11. Referências Cruzadas
+## 10. Referências Cruzadas
 
 - `.contract_driven/templates/api/api_rules.yaml` — SSOT de convenções/templates/validações de API HTTP
 - `API_CONVENTIONS.md` — guia/ponteiros (não-SSOT) para API
 - `DATA_CONVENTIONS.md` — convenções de dados e breaking changes de schema
 - `CONTRACT_SYSTEM_RULES.md` — regras operacionais do sistema contract-driven
 - `docs/_canon/decisions/` — registro de ADRs aprovados
-- `docs/hbtrack/ars/` — backlog e histórico de ARs
-- `scripts/run/hb_cli.py` — ferramentas `hb verify` e `hb seal`
+- `CI_CONTRACT_GATES.md` — especificação dos gates e evidências esperadas
+- `scripts/validate_contracts.py` — execução local do pipeline de contract gates

@@ -1,6 +1,6 @@
 # Path items for module: training
 # Source of truth: contracts/openapi/openapi.yaml
-# Canonical API rules: .contract_driven/templates/API_RULES/API_RULES.yaml
+# Canonical API rules: .contract_driven/templates/api/api_rules.yaml
 # Related docs:
 # - docs/_canon/SYSTEM_SCOPE.md
 # - docs/hbtrack/modulos/training/MODULE_SCOPE_TRAINING.md

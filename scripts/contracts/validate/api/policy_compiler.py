@@ -140,26 +140,22 @@ def _rel(root: pathlib.Path, path: pathlib.Path) -> str:
 
 
 def _ssot_api_rules_path(root: pathlib.Path) -> pathlib.Path:
-    p = root / ".contract_driven" / "templates" / "api_rules" / "api_rules.yaml"
+    p = root / ".contract_driven" / "templates" / "api" / "api_rules.yaml"
     if p.exists():
         return p
-    # fallback legada (antes da normalização)
-    p2 = root / ".contract_driven" / "templates" / "api_rules" / "api_rules.yaml"
-    if p2.exists():
-        return p2
-    raise PolicyCompilerError("SSOT de api_rules.yaml não encontrada em .contract_driven/templates/.")
+    raise PolicyCompilerError("SSOT de api_rules.yaml não encontrada (esperado: .contract_driven/templates/api/api_rules.yaml).")
 
 
 def _architecture_matrix_path(root: pathlib.Path) -> pathlib.Path:
-    return root / ".contract_driven" / "templates" / "api_rules" / "ARCHITECTURE_MATRIX.yaml"
+    return root / ".contract_driven" / "templates" / "api" / "ARCHITECTURE_MATRIX.yaml"
 
 
 def _module_profile_registry_path(root: pathlib.Path) -> pathlib.Path:
-    return root / ".contract_driven" / "templates" / "api_rules" / "MODULE_PROFILE_REGISTRY.yaml"
+    return root / ".contract_driven" / "templates" / "api" / "MODULE_PROFILE_REGISTRY.yaml"
 
 
 def _canonical_type_registry_path(root: pathlib.Path) -> pathlib.Path:
-    return root / ".contract_driven" / "templates" / "api_rules" / "CANONICAL_TYPE_REGISTRY.yaml"
+    return root / ".contract_driven" / "templates" / "api" / "CANONICAL_TYPE_REGISTRY.yaml"
 
 
 def _load_architecture_matrix(root: pathlib.Path) -> dict:

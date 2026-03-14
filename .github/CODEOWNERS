@@ -1,0 +1,43 @@
+# CODEOWNERS - HB Track
+# 
+# Este arquivo define ownership obrigatório para artefatos normativos e ferramentas de governança.
+# As mudanças nestes arquivos requerem aprovação explícita do(s) owner(s).
+#
+# Repositório: https://github.com/hbtrack/official
+# Documentação: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# ========================================
+# SSOT - Contract-Driven System
+# ========================================
+
+# Regras e templates do sistema contract-driven
+/.contract_driven/**  @Davisermenho
+
+# Contratos técnicos (OpenAPI/AsyncAPI/JSON Schema/Arazzo)
+/contracts/**  @Davisermenho
+
+# Documentação canônica normativa
+/docs/_canon/**  @Davisermenho
+
+# ========================================
+# Contract Gates & Validation
+# ========================================
+
+# Script principal de validação de contratos
+/scripts/validate_contracts.py  @Davisermenho
+
+# Ferramentas de validação e gates de contrato
+/scripts/contracts/validate/**  @Davisermenho
+
+# Configuração de gates no CI
+/.github/workflows/contract-gates.yml  @Davisermenho
+
+# ========================================
+# Governança e Políticas
+# ========================================
+
+# Documento de governança
+/hbtrack-governanca.md  @Davisermenho
+
+# Este próprio arquivo
+/.github/CODEOWNERS  @Davisermenho

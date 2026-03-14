@@ -9,7 +9,8 @@ if ! command -v go >/dev/null 2>&1; then
 fi
 
 echo "Instalando oasdiff via 'go install'..."
-go install github.com/tufin/oasdiff@latest
+# O path canônico mudou de tufin/oasdiff -> oasdiff/oasdiff
+go install github.com/oasdiff/oasdiff@latest
 
 echo "Verificando oasdiff..."
 oasdiff version

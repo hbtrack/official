@@ -91,7 +91,7 @@ Isso significa:
 - **Layout canônico**: `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md`
 - **Templates**: `.contract_driven/GLOBAL_TEMPLATES.md`
 - **Documentação de módulos**: `docs/hbtrack/modulos/`
-- **CLI de governança**: `scripts/run/hb_cli.py`
+- **Contract gates (validação)**: `python3 scripts/validate_contracts.py` (e hook `scripts/git-hooks/pre-commit`)
 
 ---
 
