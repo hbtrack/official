@@ -30,6 +30,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install Python dependencies
+        run: pip install -r scripts/_policy/requirements.txt
+
       - name: Install Node dependencies
         run: npm ci
 
