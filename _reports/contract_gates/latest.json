@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-03-14T04:15:04Z",
+  "timestamp_utc": "2026-03-14T06:32:43Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "a7e847d",
+    "git_commit": "e88a965",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "2.21.0",
@@ -45,7 +45,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 109
+        "duration_ms": 146
       }
     },
     {
@@ -70,7 +70,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 29
+        "duration_ms": 4
       }
     },
     {
@@ -226,7 +226,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 1
       }
     },
     {
@@ -325,7 +325,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 106
+        "duration_ms": 109
       }
     },
     {
@@ -360,7 +360,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 5
       }
     },
     {
@@ -381,7 +381,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 36
+        "duration_ms": 53
       }
     },
     {
@@ -402,7 +402,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 26
+        "duration_ms": 28
       }
     },
     {
@@ -423,7 +423,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 23
+        "duration_ms": 24
       }
     },
     {
@@ -444,7 +444,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 23
+        "duration_ms": 24
       }
     },
     {
@@ -486,7 +486,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 48
+        "duration_ms": 50
       }
     },
     {
@@ -507,7 +507,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 33
+        "duration_ms": 30
       }
     },
     {
@@ -566,7 +566,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 9
+        "duration_ms": 8
       }
     },
     {
@@ -609,7 +609,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 46
+        "duration_ms": 49
       }
     },
     {
@@ -631,7 +631,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2567
+        "duration_ms": 4448
       }
     },
     {
@@ -653,7 +653,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2700
+        "duration_ms": 2290
       }
     },
     {
@@ -831,7 +831,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 117
+        "duration_ms": 120
       }
     },
     {
@@ -855,7 +855,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 73
+        "duration_ms": 146
       }
     },
     {
@@ -913,7 +913,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3816
+        "duration_ms": 2904
       }
     },
     {
@@ -971,7 +971,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1259
+        "duration_ms": 1301
       }
     },
     {

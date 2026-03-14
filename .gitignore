@@ -14,9 +14,16 @@ __pycache__/
 .pytest_cache/
 .coverage
 
+# Arquivos do Dev - Davi Sermenho
+.dev
+.dev/
+
 # Python virtualenvs
 venv/
 .venv/
+
+#Arquivos temporarios
+temp/
 
 # Node/Frontend dependencies
 node_modules/
