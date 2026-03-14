@@ -8,6 +8,7 @@ Configuração de governança e enforcement para o repositório HB Track.
 .github/
 ├── CODEOWNERS                    # Ownership obrigatório de artefatos normativos
 ├── BRANCH_PROTECTION_SETUP.md    # Runbook de configuração de branch protection
+├── CI_FIX_EVIDENCE.md            # Evidência de correção do CI (package-lock.json sync)
 └── workflows/
     └── contract-gates.yml        # CI para validação de contratos
 ```

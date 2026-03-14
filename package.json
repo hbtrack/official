@@ -6,7 +6,9 @@
     "@openapitools/openapi-generator-cli": "2.30.2"
   },
   "devDependencies": {
-    "@asyncapi/cli": "6.0.0"
+    "@asyncapi/cli": "6.0.0",
+    "@redocly/cli": "^1.29.5",
+    "@stoplight/spectral-cli": "^6.15.0"
   },
   "scripts": {
     "asyncapi:validate": "asyncapi validate contracts/asyncapi/asyncapi.yaml"
