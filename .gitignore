@@ -68,6 +68,10 @@ nul
 # Separate local repo (do not vendor inside mono repo)
 brain-gist/
 
+# Implementation code (backend/frontend) - this is a contracts-only repo
+Hb Track - Backend/
+Hb Track - Fronted/
+
 # Generated reports (DO NOT VERSION)
 report*.json
 report*.txt
