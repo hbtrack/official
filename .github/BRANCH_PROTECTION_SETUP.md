@@ -32,13 +32,15 @@ GitHub → Repositório → Settings → Branches → Add branch protection rule
 
 **Pattern:** `main`
 
+> **Nota:** Configuração otimizada para **desenvolvedor solo** com enforcement real de CI, mantendo histórico limpo via PR sem bloqueio por aprovações.
+
 #### 2.1 Require a pull request before merging
 
 - ✅ **Require a pull request before merging** 
-  - ✅ **Require approvals:** 1 approval mínimo
-  - ✅ **Dismiss stale pull request approvals when new commits are pushed**
-  - ✅ **Require approval of the most recent reviewable push**
-  - ✅ **Require review from Code Owners** (crítico para CODEOWNERS)
+  - **Require approvals:** **0** (desenvolvedor solo — CI é o guardião)
+  - ❌ **Dismiss stale pull request approvals when new commits are pushed** (desabilitado — sem aprovações obrigatórias)
+  - ❌ **Require approval of the most recent reviewable push** (desabilitado — permite auto-merge após CI)
+  - ❌ **Require review from Code Owners** (opcional — desabilitado para solo dev)
 
 #### 2.2 Require status checks to pass before merging
 
@@ -54,12 +56,13 @@ GitHub → Repositório → Settings → Branches → Add branch protection rule
 #### 2.4 Do not allow bypassing the above settings
 
 - ✅ **Do not allow bypassing the above settings**
-  - ⚠️ Remover exceções de administradores (enforcement absoluto)
+  - ⚠️ **Exceto:** permitir bypass para administradores (você) em casos excepcionais
+  - Recomendado: manter bypass disponível para emergências, mas nunca usar no fluxo normal
 
 #### 2.5 Restrict who can push to matching branches
-
-- ✅ **Restrict who can push to matching branches**
-  - Nenhum usuário pode fazer push direto
+❌ **Restrict who can push to matching branches** (desabilitado — desenvolvedor solo)
+  - Push direto bloqueado pela regra de PR obrigatório
+  - Sem necessidade de restrição adicional de usuárioszer push direto
   - Apenas via PR aprovado
 
 #### 2.6 Block force pushes
@@ -72,21 +75,43 @@ GitHub → Repositório → Settings → Branches → Add branch protection rule
 
 ---
 
+---
+
+## Resumo da Configuração (Solo Developer)
+
+**Branch:** `main`
+
+| Configuração | Status | Justificativa |
+|---|---|---|
+| Require PR before merging | ✅ Sim | Histórico limpo + rastreabilidade |
+| Required approvals | **0** | CI é o guardião; sem segundo revisor |
+| Status checks required | ✅ `validate-contracts` | Enforcement real de qualidade |
+| Branches up to date | ✅ Sim | Evita conflitos silenciosos |
+| Conversation resolution | ✅ Sim | Comentários devem ser resolvidos |
+| Block force pushes | ✅ Sim | Auditoria íntegra |
+| Block deletions | ✅ Sim | Proteção contra perda |
+| Bypass para admin | ✅ Sim | Emergências apenas |
+
+---
+
 ### 3. Configurar proteção para `develop` (opcional, mas recomendado)
 
 **Pattern:** `develop`
 
-Aplicar as mesmas regras de `main`, exceto:
-- Permitir que `develop` requeira apenas reviews automáticas (sem CODEOWNERS obrigatório)
-- Manter `validate-contracts` como check obrigatório
+Aplicar as mesmas regras de `main`:
+- ✅ PR obrigatório (0 aprovações)(deve permitir merge após CI)
 
----
+```bash
+git checkout -b test/contract-change
+echo "# test" >> .contract_driven/CONTRACT_SYSTEM_RULES.md
+git add .
+git commit -m "test: modify SSOT"
+git push origin test/contract-change
+```
 
-## Validação
-
-Após configuração, validar:
-
-### 1. Tentar push direto para `main` (deve falhar)
+Criar PR no GitHub. **Esperado:** 
+- ✅ CI executa e passa
+- ✅ Merge permitido imediatamente (0 aprovações necessária
 
 ```bash
 git checkout main
@@ -110,12 +135,12 @@ Criar PR no GitHub. **Esperado:** merge bloqueado até aprovação do(s) codeown
 
 ### 3. Criar PR que quebra contract gates (deve falhar CI)
 
-```bash
-git checkout -b test/break-contract
-echo "invalid: yaml" >> contracts/openapi/openapi.yaml
-git add .
-git commit -m "test: break contract"
-git push origin test/break-contract
+```bMerge bloqueado mesmo com CI passando
+
+1. Verificar se ainda há aprovações obrigatórias (deve ser 0)
+2. Verificar se "Require approval of the most recent push" está desabilitado
+3. Verificar se todas as conversas foram resolvidas
+4. Para desenvolvedor solo: required approvals deve ser **0**, não 1
 ```
 
 Criar PR no GitHub. **Esperado:** 
