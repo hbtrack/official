@@ -197,15 +197,16 @@ git push origin test/break-gates
 
 ## Próximo Passo
 
-**Push para GitHub e observar execução do CI:**
+**Push da branch de feature e observar execução do CI:**
 
 ```bash
-git push origin main
+# Substitua <nome-da-branch> pela sua branch de trabalho
+git push origin <nome-da-branch>
 ```
 
-Verificar em: `https://github.com/<owner>/<repo>/actions`
+Verificar a execução do CI em: `https://github.com/<owner>/<repo>/actions`
 
-Se CI passar → aplicar branch protection conforme runbook.
+Se o CI passar na branch/PR → abrir ou aprovar PR para `main` e, após merge, aplicar branch protection conforme runbook.
 
 ---
 
