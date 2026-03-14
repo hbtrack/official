@@ -90,15 +90,15 @@ python3 scripts/validate_contracts.py
   Exit code: 0
 ```
 
-### 4. Correção do pre-commit hook
+### 4. Passo recomendado: ajuste de permissão do pre-commit hook (validado localmente; não incluso neste PR)
 
-**Problema:** Hook ignorado por falta de permissão executável no filesystem.
+**Contexto (fora deste PR):** o hook pode ser ignorado por falta de permissão executável no filesystem. Localmente, foi validado o seguinte passo recomendando ajustar a permissão:
 
 ```bash
 chmod +x scripts/git-hooks/pre-commit
 ```
 
-**Validação:**
+**Validação local (exemplo, não parte deste PR):**
 ```bash
 ls -la scripts/git-hooks/pre-commit
 # -rwxr-xr-x 1 davis davis 964 Mar 14 01:40 scripts/git-hooks/pre-commit
