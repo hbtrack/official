@@ -107,6 +107,7 @@ Regras:
 - `docs/_canon/C4_CONTEXT.md`
 - `docs/_canon/C4_CONTAINERS.md`
 - `docs/_canon/MODULE_MAP.md` (mapeamento de macrodomínios para comunicação de negócio, não taxonomia técnica canônica)
+- `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml`
 - `docs/_canon/CHANGE_POLICY.md`
 - `docs/_canon/API_CONVENTIONS.md`
 - `docs/_canon/DATA_CONVENTIONS.md`
@@ -119,6 +120,10 @@ Regras:
 - `docs/_canon/DESIGN_SYSTEM.md`
 - `docs/_canon/CI_CONTRACT_GATES.md`
 - `docs/_canon/TEST_STRATEGY.md`
+- `docs/_canon/DECISION_POLICY.md`
+- `docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md`
+- `docs/_canon/gates/README.md`
+- `docs/_canon/gates/GATES_REGISTRY.yaml`
 
 Landing/entry não-soberano:
 - `README.md` na raiz do repositório é apenas navegação/entrada. Ele não deve introduzir novas regras normativas que conflitem com o canon.
@@ -138,6 +143,7 @@ Landing/entry não-soberano:
 - `docs/hbtrack/modulos/<module>/TEST_MATRIX_<MODULE>.md`
 
 ### 3.5 Module docs when applicable
+- `docs/hbtrack/modulos/<module>/SPORT_SCIENCE_RULES_<MODULE>.md`
 - `docs/hbtrack/modulos/<module>/STATE_MODEL_<MODULE>.md`
 - `docs/hbtrack/modulos/<module>/PERMISSIONS_<MODULE>.md`
 - `docs/hbtrack/modulos/<module>/ERRORS_<MODULE>.md`
@@ -223,12 +229,13 @@ Ordem de precedência:
 5. `docs/_canon/HANDBALL_RULES_DOMAIN.md` quando uma regra derivada do esporte se aplica
 6. `docs/_canon/API_CONVENTIONS.md`, `docs/_canon/DATA_CONVENTIONS.md`, `docs/_canon/ERROR_MODEL.md`, `docs/_canon/SECURITY_RULES.md`
 7. `docs/hbtrack/modulos/<module>/DOMAIN_RULES_<MODULE>.md`
-8. `docs/hbtrack/modulos/<module>/INVARIANTS_<MODULE>.md`
-9. `docs/hbtrack/modulos/<module>/STATE_MODEL_<MODULE>.md`
-10. `docs/hbtrack/modulos/<module>/PERMISSIONS_<MODULE>.md`
-11. `docs/hbtrack/modulos/<module>/UI_CONTRACT_<MODULE>.md`
-12. implementação
-13. artefatos gerados
+8. `docs/hbtrack/modulos/<module>/SPORT_SCIENCE_RULES_<MODULE>.md`
+9. `docs/hbtrack/modulos/<module>/INVARIANTS_<MODULE>.md`
+10. `docs/hbtrack/modulos/<module>/STATE_MODEL_<MODULE>.md`
+11. `docs/hbtrack/modulos/<module>/PERMISSIONS_<MODULE>.md`
+12. `docs/hbtrack/modulos/<module>/UI_CONTRACT_<MODULE>.md`
+13. implementação
+14. artefatos gerados
 
 Conflito no mesmo nível:
 - o agente deve emitir `BLOCKED_CONTRACT_CONFLICT`
@@ -259,10 +266,11 @@ Nota do baseline:
 9. `docs/_canon/CHANGE_POLICY.md`
 10. `docs/_canon/HANDBALL_RULES_DOMAIN.md`
 11. `docs/_canon/DOMAIN_GLOSSARY.md`
-12. `docs/_canon/MODULE_MAP.md`
-13. `docs/_canon/ARCHITECTURE.md`
-14. artefatos de contrato relevantes
-15. docs de módulo relevantes
+12. `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml`
+13. `docs/_canon/MODULE_MAP.md`
+14. `docs/_canon/ARCHITECTURE.md`
+15. artefatos de contrato relevantes
+16. docs de módulo relevantes
 
 ### 6.2 Modo de boot
 O agente deve usar:
@@ -346,6 +354,7 @@ Saídas de bloqueio permitidas:
 - `BLOCKED_MISSING_INVARIANT`
 - `BLOCKED_MISSING_STATE_MODEL`
 - `BLOCKED_MISSING_PERMISSION_MODEL`
+- `BLOCKED_MISSING_SPORT_SCIENCE_RULES`
 - `BLOCKED_MISSING_UI_CONTRACT`
 - `BLOCKED_MISSING_HANDBALL_REFERENCE`
 - `BLOCKED_MISSING_TEST_MATRIX`
@@ -353,11 +362,30 @@ Saídas de bloqueio permitidas:
 - `BLOCKED_NONCANONICAL_NORMATIVE_PATH`
 - `BLOCKED_MISSING_CANON_ARTIFACT`
 - `BLOCKED_MISSING_API_CONVENTION`
+- `BLOCKED_MISSING_ARCH_DECISION`
+- `BLOCKED_REQUIRED_ARTIFACT_MISSING`
+- `BLOCKED_MISSING_AGENT_PROMPT`
+- `BLOCKED_PRE_CONTRACT_SKIPPED`
 
 Uso de `BLOCKED_MISSING_CANON_ARTIFACT`:
 - emitir quando um artefato canônico listado (governança em `.contract_driven/` ou canon global em `docs/_canon/`) for necessário para a tarefa atual e estiver ausente no path canônico, e não existir um `BLOCKED_MISSING_*` mais específico aplicável.
 
 Nenhum workaround especulativo em texto livre é permitido.
+
+Uso de `BLOCKED_MISSING_ARCH_DECISION`:
+- emitir quando existir uma decisão arquitetural classificada como `obrigatória` com `status: open` em `docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md` que afete o módulo ou seja global, e nenhuma ADR aceita a resolva.
+
+Uso de `BLOCKED_REQUIRED_ARTIFACT_MISSING`:
+- emitir quando um artefato de módulo obrigatório (conforme seção 10.1 deste documento) estiver ausente do seu path canônico e a fase pré-contrato o exigir para prosseguir.
+- Este código é específico da fase pré-contrato; para ausências detectadas fora da fase pré-contrato, usar `BLOCKED_MISSING_CANON_ARTIFACT` ou o código específico mais adequado.
+
+Uso de `BLOCKED_MISSING_AGENT_PROMPT`:
+- emitir quando o `task_type` informado não possuir um worker prompt mapeado e disponível sob `.contract_driven/agent_prompts/`.
+- O agente deve parar e registrar o bloqueio no backlog antes de qualquer tentativa de continuar.
+
+Uso de `BLOCKED_PRE_CONTRACT_SKIPPED`:
+- emitir quando um worker de contrato for acionado diretamente sem evidência de execução prévia da fase pré-contrato.
+- Ver seção 22 (Fase Pré-Contrato Obrigatória) para a regra normativa completa.
 
 ---
 
@@ -378,6 +406,7 @@ Nenhum workaround especulativo em texto livre é permitido.
 - `docs/hbtrack/modulos/<module>/STATE_MODEL_<MODULE>.md`
 - `docs/hbtrack/modulos/<module>/PERMISSIONS_<MODULE>.md`
 - `docs/hbtrack/modulos/<module>/ERRORS_<MODULE>.md`
+- `docs/hbtrack/modulos/<module>/SPORT_SCIENCE_RULES_<MODULE>.md`
 - `docs/hbtrack/modulos/<module>/SCREEN_MAP_<MODULE>.md`
 - `docs/hbtrack/modulos/<module>/UI_CONTRACT_<MODULE>.md`
 - `contracts/workflows/<MODULE>/*.arazzo.yaml`
@@ -433,7 +462,18 @@ Obrigatório quando:
 Obrigatório quando:
 - o módulo publica ou consome eventos reais
 
-### 11.8 Conditional artifact absence rule
+### 11.8 docs/hbtrack/modulos/<module>/SPORT_SCIENCE_RULES_<MODULE>.md
+Obrigatório quando o módulo depende de conteúdo técnico-científico aplicado, como:
+- métodos/protocolos formais de treino e monitoramento
+- cálculos (ex: sRPE, strain, TRIMP) e suas variáveis
+- thresholds (zonas, ranges, cutoffs) e critérios de interpretação
+- baterias de teste e critérios de prontidão/readiness
+- prescrição de força/potência/HIIT/recuperação baseada em critério
+- interpretação fisiológica/funcional que não é axioma estrutural nem regra oficial do handebol
+
+Fontes permitidas e limites de inferência externa são governados por `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml`.
+
+### 11.9 Conditional artifact absence rule
 Se um artefato aparentar ser aplicável por estas regras, mas estiver ausente, o agente não deve decidir sozinho. Ele deve emitir o código de bloqueio correspondente e parar o trabalho afetado.
 
 ---
@@ -478,6 +518,7 @@ Se não existir adaptação explícita, a regra de domínio do handebol (traduzi
 - orquestração multi-step => `contracts/workflows/**/*.arazzo.yaml`
 - contratos de eventos => `contracts/asyncapi/**/*.yaml`
 - regras de negócio do módulo => `docs/hbtrack/modulos/<module>/DOMAIN_RULES_<MODULE>.md`
+- regras técnico-científicas do módulo => `docs/hbtrack/modulos/<module>/SPORT_SCIENCE_RULES_<MODULE>.md`
 - integridade do módulo => `docs/hbtrack/modulos/<module>/INVARIANTS_<MODULE>.md`
 - estado do módulo => `docs/hbtrack/modulos/<module>/STATE_MODEL_<MODULE>.md`
 - permissões do módulo => `docs/hbtrack/modulos/<module>/PERMISSIONS_<MODULE>.md`
@@ -617,6 +658,7 @@ O modo ativo determina o conjunto mínimo de boot e o output esperado.
 - `docs/_canon/DATA_CONVENTIONS.md` se um novo schema for criado
 - `docs/_canon/MODULE_MAP.md` se o boundary do módulo estiver pouco claro
 - `docs/_canon/DOMAIN_GLOSSARY.md` se a terminologia estiver ambígua
+- `docs/hbtrack/modulos/<module>/SPORT_SCIENCE_RULES_<MODULE>.md` quando aplicável por RULES seção 11.8
 - contrato existente do módulo, se já existir
 
 **Output esperado**
@@ -642,6 +684,7 @@ O modo ativo determina o conjunto mínimo de boot e o output esperado.
 **Boot condicional**
 - `docs/_canon/HANDBALL_RULES_DOMAIN.md` se uma regra derivada do esporte for alterada
 - `docs/hbtrack/modulos/<module>/DOMAIN_RULES_<MODULE>.md`
+- `docs/hbtrack/modulos/<module>/SPORT_SCIENCE_RULES_<MODULE>.md` quando aplicável por RULES seção 11.8
 - `docs/hbtrack/modulos/<module>/INVARIANTS_<MODULE>.md`
 - `docs/hbtrack/modulos/<module>/STATE_MODEL_<MODULE>.md` se estado for alterado
 - `docs/_canon/ERROR_MODEL.md` se comportamento de erro for alterado
@@ -658,6 +701,7 @@ O modo ativo determina o conjunto mínimo de boot e o output esperado.
 - `BLOCKED_MISSING_INVARIANT`
 - `BLOCKED_MISSING_STATE_MODEL`
 - `BLOCKED_MISSING_PERMISSION_MODEL`
+- `BLOCKED_MISSING_SPORT_SCIENCE_RULES`
 - `BLOCKED_MISSING_UI_CONTRACT`
 - `BLOCKED_CONTRACT_CONFLICT`
 
@@ -672,6 +716,7 @@ O modo ativo determina o conjunto mínimo de boot e o output esperado.
 - `contracts/schemas/<MODULE>/*.schema.json`
 
 **Boot condicional**
+- `docs/hbtrack/modulos/<module>/SPORT_SCIENCE_RULES_<MODULE>.md` quando aplicável por RULES seção 11.8
 - `docs/hbtrack/modulos/<module>/STATE_MODEL_<MODULE>.md`
 - `docs/hbtrack/modulos/<module>/PERMISSIONS_<MODULE>.md`
 - `docs/hbtrack/modulos/<module>/ERRORS_<MODULE>.md`
@@ -691,6 +736,7 @@ O modo ativo determina o conjunto mínimo de boot e o output esperado.
 - `BLOCKED_MISSING_INVARIANT`
 - `BLOCKED_MISSING_STATE_MODEL`
 - `BLOCKED_MISSING_PERMISSION_MODEL`
+- `BLOCKED_MISSING_SPORT_SCIENCE_RULES`
 - `BLOCKED_MISSING_UI_CONTRACT`
 - `BLOCKED_MISSING_TEST_MATRIX`
 - `BLOCKED_MISSING_HANDBALL_REFERENCE`
@@ -706,6 +752,7 @@ O modo ativo determina o conjunto mínimo de boot e o output esperado.
 - `contracts/schemas/<MODULE>/*.schema.json`
 
 **Boot condicional**
+- `docs/hbtrack/modulos/<module>/SPORT_SCIENCE_RULES_<MODULE>.md` quando aplicável por RULES seção 11.8
 - `docs/hbtrack/modulos/<module>/STATE_MODEL_<MODULE>.md`
 - `docs/hbtrack/modulos/<module>/PERMISSIONS_<MODULE>.md`
 - `docs/hbtrack/modulos/<module>/ERRORS_<MODULE>.md`
@@ -831,6 +878,39 @@ O modo ativo determina o conjunto mínimo de boot e o output esperado.
 - carregar o restante apenas por aplicabilidade
 - se um artefato crítico estiver ausente, bloquear em vez de inferir
 - se um artefato normativo obrigatório existir fora do path canônico, tratá-lo como ausente até reconciliar ou cobrir via ADR
+
+---
+
+## 22. Fase Pré-Contrato Obrigatória
+
+### 22.1 Regra normativa
+Nenhuma tarefa contract-driven — nos modos `contract_creation_mode`, `contract_revision_mode`, `implementation_mode` ou `audit_mode` — pode acionar um worker diretamente sem ter completado com sucesso a fase pré-contrato definida em `.contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md`.
+
+O orquestrador pré-contrato é o **ponto de entrada obrigatório** para todas as tarefas de contrato.
+
+### 22.2 Condição de bloqueio
+Se um worker for acionado sem evidência de execução prévia da fase pré-contrato (Fases 0–3 de `pre_contract_orchestrator.prompt.md`), o agente deve:
+1. Parar imediatamente.
+2. Emitir `BLOCKED_PRE_CONTRACT_SKIPPED`.
+3. Requerer que a execução reinicie pelo orquestrador pré-contrato.
+
+Nenhuma exceção implícita é permitida.
+
+### 22.3 Exceção explícita
+A fase pré-contrato pode ser omitida apenas quando:
+- A tarefa for estritamente de leitura/auditoria e não produzir artefato normativo algum, **e**
+- O agente declarar explicitamente no output: `PRE_CONTRACT_SKIPPED: audit-only, no artifact produced`.
+
+Qualquer outra omissão silenciosa é proibida.
+
+### 22.4 Artefatos canônicos do orquestrador pré-contrato
+Os seguintes arquivos compõem a infraestrutura operacional da fase pré-contrato e são normativos:
+- `.contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md` — ponto de entrada obrigatório
+- `.contract_driven/agent_prompts/decision_discovery.prompt.md` — estágio Decision Discovery
+- `docs/_canon/DECISION_POLICY.md` — SSOT de política de decisões arquiteturais
+- `docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md` — registro de decisões em aberto
+
+Esses artefatos têm o mesmo nível de soberania que os artefatos listados em §3.2 (Global governance docs) e aplicam-se à governança operacional de agentes.
 
 ---
 

@@ -286,6 +286,7 @@ Arquivos canônicos:
 - `docs/_canon/SYSTEM_SCOPE.md`
 - `docs/_canon/ARCHITECTURE.md`
 - `docs/_canon/MODULE_MAP.md`
+- `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml`
 - `docs/_canon/CHANGE_POLICY.md`
 - `docs/_canon/API_CONVENTIONS.md`
 - `docs/_canon/DATA_CONVENTIONS.md`
@@ -296,11 +297,15 @@ Arquivos canônicos:
 - `docs/_canon/SECURITY_RULES.md`
 - `docs/_canon/CI_CONTRACT_GATES.md`
 - `docs/_canon/TEST_STRATEGY.md`
+- `docs/_canon/DECISION_POLICY.md`
+- `docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md`
 - `docs/_canon/C4_CONTEXT.md`
 - `docs/_canon/C4_CONTAINERS.md`
 - `docs/_canon/UI_FOUNDATIONS.md`
 - `docs/_canon/DESIGN_SYSTEM.md`
 - `docs/_canon/decisions/ADR-*.md`
+- `docs/_canon/gates/README.md`
+- `docs/_canon/gates/GATES_REGISTRY.yaml`
 
 ### 4A.3 Documentação normativa de módulo
 Estes arquivos vivem em:
@@ -311,6 +316,7 @@ Arquivos canônicos:
 - `docs/hbtrack/modulos/<module>/README.md`
 - `docs/hbtrack/modulos/<module>/MODULE_SCOPE_<MOD>.md`
 - `docs/hbtrack/modulos/<module>/DOMAIN_RULES_<MOD>.md`
+- `docs/hbtrack/modulos/<module>/SPORT_SCIENCE_RULES_<MOD>.md`
 - `docs/hbtrack/modulos/<module>/INVARIANTS_<MOD>.md`
 - `docs/hbtrack/modulos/<module>/STATE_MODEL_<MOD>.md`
 - `docs/hbtrack/modulos/<module>/PERMISSIONS_<MOD>.md`
