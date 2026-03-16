@@ -37,6 +37,8 @@ schemas_ref: "../../../../contracts/schemas/{{MODULE_NAME}}/"
 ### Artefatos condicionais (quando aplicável)
 <!-- STATE_MODEL só quando módulo tem lifecycle: ver RULES seção 11.1 -->
 - `STATE_MODEL_{{MODULE_NAME_UPPER}}.md` (quando houver lifecycle/estados)
+<!-- SPORT_SCIENCE_RULES só quando houver protocolos/cálculos/thresholds: ver RULES seção 11.8 -->
+- `SPORT_SCIENCE_RULES_{{MODULE_NAME_UPPER}}.md` (quando houver método/protocolo/cálculo/threshold técnico-científico)
 
 ## Dependências
 - Sistema: `SYSTEM_SCOPE.md`
