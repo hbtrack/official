@@ -541,6 +541,84 @@ Nenhuma superfície pode ter duas fontes primárias.
 Regra:
 Artefatos derivados nunca redefinem a fonte.
 
+
+---
+
+## 14A. Política de Domain Shapes (JSON Schema)
+
+`contracts/schemas/<module>/*.schema.json` é a superfície soberana de shapes de dados reutilizáveis por módulo. Esta seção define as regras operacionais para criação, uso e promoção de domain shapes.
+
+### 14A.1 Definições
+
+| Conceito | Definição |
+|----------|-----------|
+| **domain shape** | Representação canônica de uma entidade ou conceito de domínio, agnóstica de protocolo. Vive em `contracts/schemas/<module>/`. |
+| **HTTP DTO** | Adaptação da shape de domínio para transporte HTTP (envelopes, campos calculados, omissões de PII). Vive em `contracts/openapi/components/schemas/<module>/`. |
+
+### 14A.2 Quando criar um domain shape
+
+Criar um domain shape em `contracts/schemas/<module>/` quando:
+- a entidade for persistida ou transmitida como dado de domínio estável
+- a shape for reutilizada por mais de uma superfície (OpenAPI, AsyncAPI, Arazzo)
+- a shape representar um conceito canônico definido em `DOMAIN_RULES_<MODULE>.md`
+- a entidade tiver identidade própria (id) ou lifecycle mensurável
+
+### 14A.3 Quando NÃO criar um domain shape separado
+
+Não criar domain shape quando:
+- o conceito existir exclusivamente como DTO de request/response sem reuso semântico
+- a shape for um envelope técnico sem semântica de domínio (ex.: paginação genérica, error wrapper)
+- a entidade for totalmente inferível a partir de outra shape canônica já existente
+
+Nesses casos, a shape vive exclusivamente em `contracts/openapi/components/schemas/<module>/`.
+
+### 14A.4 Quando promover para `shared/`
+
+Usar `contracts/schemas/shared/` **somente** quando:
+- a shape for usada por 2 ou mais módulos canônicos distintos
+- não houver módulo dono claro da entidade
+- a promoção for justificada por `DOMAIN_RULES` de mais de um módulo
+
+Promoção para `shared/` requer que nenhum módulo específico reivindique ownership exclusivo. Em caso de dúvida, manter escopado ao módulo e aguardar segundo reuso real.
+
+### 14A.5 Referência direta OpenAPI → contracts/schemas/
+
+OpenAPI pode usar `` direto para `contracts/schemas/` **somente quando** todas as condições estiverem presentes:
+1. a shape é semanticamente idêntica entre domínio e HTTP (zero adaptação/envelope)
+2. o pipeline suporta $ref externo sem transformação (validado por Redocly CLI)
+3. há documentação inline (`description` ou `x-schema-ref-justification`) justificando o reuso direto
+
+Se qualquer condição falhar, usar `components/schemas/<module>/` obrigatoriamente.
+
+**Regra de conflito**: se houver divergência entre shape HTTP e shape de domínio, `components/schemas/` vence para OpenAPI e `contracts/schemas/` preserva o domínio.
+
+### 14A.6 Conformidade com DOMAIN_AXIOMS.json
+
+Todo domain shape deve ser válido segundo `DOMAIN_AXIOMS.json` e deve:
+- usar os tipos base canônicos definidos nos axiomas
+- não redefinir idiomas/formatos já padronizados (ex.: `date-time` canônico)
+- respeitar naming conventions de `CONTRACT_SYSTEM_LAYOUT.md` seção 10
+
+### 14A.7 Lifecycle e audit fields são condicionais
+
+Os fields `status`, `createdAt`, `updatedAt`, `deletedAt` e similares **não são boilerplate universal**. Incluí-los apenas quando:
+- a entidade tiver lifecycle explícito governado por `STATE_MODEL_<MODULE>.md` (ver §11.1)
+- a entidade tiver requisitos de auditoria documentados em `INVARIANTS_<MODULE>.md` ou em `docs/_canon/GLOBAL_INVARIANTS.md`
+
+Não incluir por precaução sem evidência canônica. O template em `GLOBAL_TEMPLATES.md` §35 fornece o scaffold com esses fields comentados para ativação sob demanda.
+
+### 14A.8 Bloqueios desta seção
+
+| Código | Condição |
+|--------|----------|
+| `BLOCKED_MISSING_SCHEMA` | Schema de domínio obrigatório ausente no path canônico |
+| `BLOCKED_MISSING_DOMAIN_RULE` | `DOMAIN_RULES_<MODULE>.md` ausente — sem base para criar domain shape |
+| `BLOCKED_CONTRACT_CONFLICT` | Shape HTTP e shape de domínio divergem sem adaptação explícita documentada |
+| `BLOCKED_MISSING_CANON_ARTIFACT` | `DOMAIN_AXIOMS.json` ausente quando necessário para validação |
+
+Um módulo **não está pronto para implementação** enquanto seus JSON Schemas obrigatórios não existirem e não validarem como JSON Schema (ver §16 — Contrato pronto para implementação).
+
+
 ---
 
 ## 15. Procedimento de criação de contrato
@@ -914,7 +992,7 @@ Esses artefatos têm o mesmo nível de soberania que os artefatos listados em §
 
 ---
 
-## 22. Evolution Rule
+## 23. Evolution Rule
 
 Toda mudança deve seguir esta ordem:
 1. atualizar artefato normativo

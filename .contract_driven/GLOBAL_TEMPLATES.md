@@ -581,8 +581,9 @@ Regra: este arquivo não deve duplicar templates de API. Use apenas a referênci
 
 ## 35. Module Template — contracts/schemas/{{MODULE_NAME}}/{{DOMAIN_ENTITY_SNAKE}}.schema.json
 
-**Nota sobre Lifecycle & Audit fields**: Os fields `status`, `createdAt`, `updatedAt` são **condicionais**. Incluí-los apenas quando a entidade tiver requisitos reais de lifecycle ou auditoria, conforme `.contract_driven/CONTRACT_SYSTEM_RULES.md` seção 11.1 (Matriz de aplicabilidade). O template abaixo mostra a estrutura mínima obrigatória com fields condicionais como exemplos `$$comment_*` — descomentar e customizar quando necessário.
+**Quando usar este template**: Aplicar quando a entidade for um **domain shape** — conceito canônico de domínio reutilizável, com identidade própria ou lifecycle mensurável. Para shapes exclusivamente HTTP-facing (DTOs de request/response sem reuso semântico), usar os templates de `components/schemas/` em `api_rules.yaml`. A decisão entre domain shape e HTTP DTO é governada por `.contract_driven/CONTRACT_SYSTEM_RULES.md` §14A.
 
+**Nota sobre Lifecycle & Audit fields**: Os fields `status`, `createdAt`, `updatedAt` são **condicionais**. Incluí-los apenas quando a entidade tiver requisitos reais de lifecycle ou auditoria, conforme `.contract_driven/CONTRACT_SYSTEM_RULES.md` §14A.7 e §11.1 (Matriz de aplicabilidade). O template abaixo mostra a estrutura mínima obrigatória com fields condicionais como exemplos `$$comment_*` — descomentar e customizar quando necessário.
 
 Template movido para: `.contract_driven/templates/modulos/schemas/{{DOMAIN_ENTITY_SNAKE}}.schema.json`
 

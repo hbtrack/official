@@ -394,6 +394,11 @@ Artefatos gerados/derivados podem existir para qualquer superfície, mas nunca s
 - JSON Schemas são shapes reutilizáveis de domínio/dados, não substitutos do contrato HTTP.
 - Se o mesmo conceito existir em schema OpenAPI-facing e em schema reutilizável, a soberania de cada superfície deve permanecer explícita.
 
+### 7.1 Soberania e localização de domain shapes
+`contracts/schemas/<module>/*.schema.json` é a fonte primária da verdade para shapes de dados reutilizáveis do módulo — não um arquivo opcional. Todo conceito reutilizável de domínio deve existir aqui antes de ou junto com sua projeção HTTP em `components/schemas/`.
+
+A política operacional completa — quando criar, quando não criar, quando promover para `shared/`, quando $ref direto é permitido, conformidade com axiomas e lifecycle fields — está definida em `.contract_driven/CONTRACT_SYSTEM_RULES.md` §14A (Política de Domain Shapes).
+
 ---
 
 ## 8. Regras de layout de Arazzo
