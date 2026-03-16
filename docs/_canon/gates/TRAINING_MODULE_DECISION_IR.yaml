@@ -1,0 +1,2354 @@
+ir_version: 1.1.0
+module: training
+status: active
+source: .dev/TRAINING_CANONICAL_MATRIX.md
+decision_scope: full_module
+
+module_identity:
+  mission: reduce_coach_operational_time_and_improve_training_decisions
+  unit_of_value: better_training_decision_with_less_time_and_more_context
+  operational_backbone:
+    - need
+    - objective
+    - prescription
+    - session
+    - execution
+    - response
+    - review
+    - adjustment
+  real_world_operational_value_unit: training_intervention_cycle
+  problem_statement: >
+    module degrading to session CRUD without purpose, losing value as coach
+    operational decision engine and becoming unable to represent the real
+    training intervention cycle
+  benchmarks:
+    - XPS Network
+    - Smartabase
+    - Teamworks AMS
+    - BridgeAthletic
+    - TeamBuildr
+    - Sportlyzer
+    - Handball.ai
+  not_this_module:
+    - generic_calendar_only
+    - ecommerce_style_crud
+    - isolated_session_crud
+    - ai_autonomous_prescription
+    - analytics_decision_override
+    - direct_notification_delivery
+    - audit_repository
+    - permission_definition
+  in_scope:
+    - training_sessions
+    - session_templates
+    - exercise_library
+    - attendance
+    - wellness_form
+    - internal_load
+    - availability_status
+    - athlete_override
+    - planned_vs_actual_tracking
+    - need_detection
+    - objective_management
+    - intervention_cycle
+    - feedback_management
+    - athlete_checkin
+    - eligibility_guard
+  out_of_scope:
+    - billing
+    - chat_generalist
+    - external_vendor_integration_full
+    - advanced_tactical_ontology_without_registry
+
+# ---------------------------------------------------------------------------
+# CAPABILITIES
+# ---------------------------------------------------------------------------
+capabilities:
+  - id: training.exercise_library
+    unique_governance_id: CAP-TRAINING-001
+    name: exercise_library
+    description: reusable catalog of exercises and drills
+    priority: P1
+    phase: core
+    decision_refs: [TRAIN-DEC-001]
+
+  - id: training.session_management
+    unique_governance_id: CAP-TRAINING-002
+    name: session_management
+    description: create, manage, publish and complete training sessions
+    priority: P1
+    phase: core
+    decision_refs: [TRAIN-DEC-006, TRAIN-DEC-007, TRAIN-DEC-008]
+
+  - id: training.intervention_cycle_management
+    unique_governance_id: CAP-TRAINING-003
+    name: intervention_cycle_management
+    description: manage the full training intervention cycle from need to adjustment
+    priority: P1
+    phase: core
+    decision_refs: [TRAIN-DEC-002]
+
+  - id: training.need_detection
+    unique_governance_id: CAP-TRAINING-004
+    name: need_detection
+    description: detect and register training needs with traceable origin
+    priority: P1
+    phase: core
+    decision_refs: [TRAIN-DEC-003]
+
+  - id: training.objective_management
+    unique_governance_id: CAP-TRAINING-005
+    name: objective_management
+    description: create and manage session objectives linked to needs or explicit coach rationale
+    priority: P1
+    phase: core
+    decision_refs: [TRAIN-DEC-004]
+
+  - id: training.recommendation_handling
+    unique_governance_id: CAP-TRAINING-006
+    name: recommendation_handling
+    description: receive analytics recommendations and require coach explicit acceptance
+    priority: P1
+    phase: core
+    decision_refs: [TRAIN-DEC-005, TRAIN-DEC-018]
+
+  - id: training.execution_recording
+    unique_governance_id: CAP-TRAINING-007
+    name: execution_recording
+    description: record execution of training sessions with prescription context and planned vs actual
+    priority: P1
+    phase: core
+    decision_refs: [TRAIN-DEC-009, TRAIN-DEC-010]
+
+  - id: training.live_adjustment
+    unique_governance_id: CAP-TRAINING-008
+    name: live_adjustment
+    description: record live session adjustments with structured reason
+    priority: P2
+    phase: core
+    decision_refs: [TRAIN-DEC-011]
+
+  - id: training.feedback_management
+    unique_governance_id: CAP-TRAINING-009
+    name: feedback_management
+    description: contextual feedback threads linked to operational entities with outcome
+    priority: P2
+    phase: core
+    decision_refs: [TRAIN-DEC-013, TRAIN-DEC-014]
+
+  - id: training.cycle_review
+    unique_governance_id: CAP-TRAINING-010
+    name: cycle_review
+    description: review intervention cycles with execution evidence
+    priority: P2
+    phase: core
+    decision_refs: [TRAIN-DEC-015]
+
+  - id: training.eligibility_guard
+    unique_governance_id: CAP-TRAINING-011
+    name: eligibility_guard
+    description: block ineligible athletes from executable prescriptions with audited override
+    priority: P1
+    phase: core
+    decision_refs: [TRAIN-DEC-022]
+
+  - id: training.adaptive_checkin
+    unique_governance_id: CAP-TRAINING-012
+    name: adaptive_checkin
+    description: adaptive friction check-in based on athlete wellness state
+    priority: P2
+    phase: extended
+    decision_refs: [TRAIN-DEC-025]
+
+  - id: training.continuity_management
+    unique_governance_id: CAP-TRAINING-013
+    name: continuity_management
+    description: preserve technical rationale and decisions across staff changes
+    priority: P2
+    phase: extended
+    decision_refs: [TRAIN-DEC-026]
+
+# ---------------------------------------------------------------------------
+# ENTITIES
+# ---------------------------------------------------------------------------
+entities:
+  - id: training.training_session
+    unique_governance_id: ENT-TRAINING-001
+    name: training_session
+    kind: ssot
+    description: operational unit of training within an intervention cycle
+    has_lifecycle: true
+    fields:
+      - name: id
+        unique_governance_id: FLD-TRAINING-001
+        semantic_type_ref: core.id.uuid_v4
+        required: true
+        nullable: false
+        description: public identifier
+      - name: teamId
+        unique_governance_id: FLD-TRAINING-002
+        semantic_type_ref: core.team.id
+        required: true
+        nullable: false
+        description: owning team
+      - name: scheduledStartAt
+        unique_governance_id: FLD-TRAINING-003
+        semantic_type_ref: core.time.timestamp_utc
+        required: true
+        nullable: false
+        description: planned session start
+      - name: state
+        unique_governance_id: FLD-TRAINING-004
+        semantic_type_ref: training.state
+        required: true
+        nullable: false
+        enum_ref: training.session_state_enum
+        description: lifecycle state
+      - name: sessionObjectiveIds
+        unique_governance_id: FLD-TRAINING-005
+        semantic_type_ref: training.session_objective.id_array
+        required: true
+        nullable: false
+        min_items: 1
+        description: objectives that anchor the session (min 1)
+      - name: interventionCycleRef
+        unique_governance_id: FLD-TRAINING-006
+        semantic_type_ref: training.intervention_cycle.id
+        required: true
+        nullable: false
+        description: owning intervention cycle
+      - name: responsibleStaffRef
+        unique_governance_id: FLD-TRAINING-007
+        semantic_type_ref: core.staff.id
+        required: false
+        nullable: true
+        description: responsible staff (required before publish)
+      - name: scheduledEndAt
+        unique_governance_id: FLD-TRAINING-008
+        semantic_type_ref: core.time.timestamp_utc
+        required: false
+        nullable: true
+        description: planned session end (required before publish)
+      - name: plannedContentSnapshot
+        unique_governance_id: FLD-TRAINING-009
+        semantic_type_ref: training.content_snapshot
+        required: false
+        nullable: true
+        immutable_after: PUBLISHED
+        description: immutable snapshot of planned content after publication
+      - name: createdBy
+        unique_governance_id: FLD-TRAINING-010
+        semantic_type_ref: core.actor.id
+        required: true
+        nullable: false
+        description: creator actor reference
+      - name: createdAt
+        unique_governance_id: FLD-TRAINING-011
+        semantic_type_ref: core.time.timestamp_utc
+        required: true
+        nullable: false
+        description: creation timestamp
+    relations:
+      - target_entity_ref: teams.team
+        relation_kind: many_to_one
+        ownership: source_holds_fk
+        delete_policy: restrict
+      - target_entity_ref: training.training_intervention_cycle
+        relation_kind: many_to_one
+        ownership: source_holds_fk
+        delete_policy: restrict
+    inferable:
+      - generic_catalog_metadata
+    non_inferable:
+      - publication_rules
+      - completion_rules
+      - state_transitions
+
+  - id: training.training_intervention_cycle
+    unique_governance_id: ENT-TRAINING-002
+    name: training_intervention_cycle
+    kind: ssot
+    description: sovereign unit of training intervention — need to adjustment cycle
+    has_lifecycle: true
+    fields:
+      - name: id
+        unique_governance_id: FLD-TRAINING-020
+        semantic_type_ref: core.id.uuid_v4
+        required: true
+        nullable: false
+        description: public identifier
+      - name: teamRef
+        unique_governance_id: FLD-TRAINING-021
+        semantic_type_ref: core.team.id
+        required: true
+        nullable: false
+        description: owning team
+      - name: objectiveRefs
+        unique_governance_id: FLD-TRAINING-022
+        semantic_type_ref: training.session_objective.id_array
+        required: true
+        nullable: false
+        min_items: 1
+        description: objectives driving this cycle (min 1)
+      - name: status
+        unique_governance_id: FLD-TRAINING-023
+        semantic_type_ref: training.intervention_cycle.state
+        required: true
+        nullable: false
+        enum_ref: training.intervention_cycle_state_enum
+        description: lifecycle state
+      - name: createdBy
+        unique_governance_id: FLD-TRAINING-024
+        semantic_type_ref: core.actor.id
+        required: true
+        nullable: false
+        description: creator actor reference
+      - name: createdAt
+        unique_governance_id: FLD-TRAINING-025
+        semantic_type_ref: core.time.timestamp_utc
+        required: true
+        nullable: false
+        description: creation timestamp
+    relations:
+      - target_entity_ref: teams.team
+        relation_kind: many_to_one
+        ownership: source_holds_fk
+        delete_policy: restrict
+    non_inferable:
+      - cycle_completion_rules
+      - objective_linkage_rules
+
+  - id: training.need_detected
+    unique_governance_id: ENT-TRAINING-003
+    name: need_detected
+    kind: ssot
+    description: training need with traceable origin evidence
+    has_lifecycle: true
+    fields:
+      - name: id
+        unique_governance_id: FLD-TRAINING-030
+        semantic_type_ref: core.id.uuid_v4
+        required: true
+        nullable: false
+        description: public identifier
+      - name: sourceType
+        unique_governance_id: FLD-TRAINING-031
+        semantic_type_ref: training.need_source_type
+        required: true
+        nullable: false
+        enum_ref: training.need_source_type_enum
+        description: origin category (analytics.signal | scout.signal | match.outcome | wellness.alert | medical.flag | coach.manual_observation)
+      - name: description
+        unique_governance_id: FLD-TRAINING-032
+        semantic_type_ref: core.text.medium
+        required: true
+        nullable: false
+        description: human-readable need description
+      - name: evidenceRef
+        unique_governance_id: FLD-TRAINING-033
+        semantic_type_ref: core.external_ref
+        required: false
+        nullable: true
+        description: reference to source evidence entity in origin module
+      - name: manualCoachRationale
+        unique_governance_id: FLD-TRAINING-034
+        semantic_type_ref: core.text.medium
+        required: false
+        nullable: true
+        description: explicit coach rationale (when no external evidence)
+      - name: status
+        unique_governance_id: FLD-TRAINING-035
+        semantic_type_ref: training.need_detected.state
+        required: true
+        nullable: false
+        enum_ref: training.need_detected_state_enum
+        description: lifecycle state (OPEN | LINKED_TO_OBJECTIVE | DISMISSED)
+      - name: createdAt
+        unique_governance_id: FLD-TRAINING-036
+        semantic_type_ref: core.time.timestamp_utc
+        required: true
+        nullable: false
+        description: creation timestamp
+    constraints:
+      - one_of_required: [evidenceRef, manualCoachRationale]
+    non_inferable:
+      - evidence_ref_must_point_to_valid_source_entity
+
+  - id: training.session_objective
+    unique_governance_id: ENT-TRAINING-004
+    name: session_objective
+    kind: ssot
+    description: training objective linked to a need or explicit coach rationale
+    has_lifecycle: false
+    fields:
+      - name: id
+        unique_governance_id: FLD-TRAINING-040
+        semantic_type_ref: core.id.uuid_v4
+        required: true
+        nullable: false
+        description: public identifier
+      - name: description
+        unique_governance_id: FLD-TRAINING-041
+        semantic_type_ref: core.text.medium
+        required: true
+        nullable: false
+        description: objective description
+      - name: successCriteria
+        unique_governance_id: FLD-TRAINING-042
+        semantic_type_ref: core.text.medium
+        required: true
+        nullable: false
+        description: success criteria for the objective
+      - name: needDetectedRef
+        unique_governance_id: FLD-TRAINING-043
+        semantic_type_ref: training.need_detected.id
+        required: false
+        nullable: true
+        description: linked need (one of origin refs required)
+      - name: competitiveFocusRef
+        unique_governance_id: FLD-TRAINING-044
+        semantic_type_ref: core.external_ref
+        required: false
+        nullable: true
+        description: competitive focus reference
+      - name: developmentGoalRef
+        unique_governance_id: FLD-TRAINING-045
+        semantic_type_ref: core.external_ref
+        required: false
+        nullable: true
+        description: development goal reference (owned by athletes/development module)
+      - name: manualCoachRationale
+        unique_governance_id: FLD-TRAINING-046
+        semantic_type_ref: core.text.medium
+        required: false
+        nullable: true
+        description: explicit coach rationale (when no external ref)
+    constraints:
+      - one_of_required:
+          [
+            needDetectedRef,
+            competitiveFocusRef,
+            developmentGoalRef,
+            manualCoachRationale,
+          ]
+    non_inferable:
+      - origin_linkage_rule
+
+  - id: training.recommendation
+    unique_governance_id: ENT-TRAINING-005
+    name: recommendation
+    kind: reference
+    description: analytics-generated recommendation pending coach explicit review
+    has_lifecycle: true
+    fields:
+      - name: id
+        unique_governance_id: FLD-TRAINING-050
+        semantic_type_ref: core.id.uuid_v4
+        required: true
+        nullable: false
+        description: public identifier
+      - name: sourceModule
+        unique_governance_id: FLD-TRAINING-051
+        semantic_type_ref: core.module_ref
+        required: true
+        nullable: false
+        description: module that generated the recommendation
+      - name: evidenceRef
+        unique_governance_id: FLD-TRAINING-052
+        semantic_type_ref: core.external_ref
+        required: true
+        nullable: false
+        description: evidence backing the recommendation
+      - name: signalType
+        unique_governance_id: FLD-TRAINING-053
+        semantic_type_ref: training.recommendation_signal_type
+        required: true
+        nullable: false
+        description: type of analytics signal
+      - name: status
+        unique_governance_id: FLD-TRAINING-054
+        semantic_type_ref: training.recommendation.state
+        required: true
+        nullable: false
+        enum_ref: training.recommendation_state_enum
+        description: lifecycle state (PENDING_COACH_REVIEW | ACCEPTED | DISMISSED)
+      - name: decisionRationale
+        unique_governance_id: FLD-TRAINING-055
+        semantic_type_ref: core.text.medium
+        required: false
+        nullable: true
+        description: coach rationale on accept/dismiss (required on status change)
+    non_inferable:
+      - coach_must_decide_explicitly
+      - no_auto_materialization_into_need
+
+  - id: training.execution_record
+    unique_governance_id: ENT-TRAINING-006
+    name: execution_record
+    kind: ssot
+    description: record of what was actually executed in a training session
+    has_lifecycle: false
+    fields:
+      - name: id
+        unique_governance_id: FLD-TRAINING-060
+        semantic_type_ref: core.id.uuid_v4
+        required: true
+        nullable: false
+        description: public identifier
+      - name: trainingSessionRef
+        unique_governance_id: FLD-TRAINING-061
+        semantic_type_ref: training.training_session.id
+        required: true
+        nullable: false
+        description: owning session (mandatory)
+      - name: sessionBlockRef
+        unique_governance_id: FLD-TRAINING-062
+        semantic_type_ref: training.session_block.id
+        required: false
+        nullable: true
+        description: block context (one of context refs required)
+      - name: prescriptionLineRef
+        unique_governance_id: FLD-TRAINING-063
+        semantic_type_ref: training.prescription_line.id
+        required: false
+        nullable: true
+        description: prescription context
+      - name: improvisedRationale
+        unique_governance_id: FLD-TRAINING-064
+        semantic_type_ref: core.text.medium
+        required: false
+        nullable: true
+        description: rationale for improvised execution (when no block/prescription ref)
+      - name: executedBy
+        unique_governance_id: FLD-TRAINING-065
+        semantic_type_ref: core.actor.id
+        required: true
+        nullable: false
+        description: actor who recorded the execution
+      - name: recordedAt
+        unique_governance_id: FLD-TRAINING-066
+        semantic_type_ref: core.time.timestamp_utc
+        required: true
+        nullable: false
+        description: execution record timestamp
+      - name: completionStatus
+        unique_governance_id: FLD-TRAINING-067
+        semantic_type_ref: training.execution_completion_status
+        required: true
+        nullable: false
+        description: completion status of the execution
+      - name: actualLoad
+        unique_governance_id: FLD-TRAINING-068
+        semantic_type_ref: core.numeric.load_indicator
+        required: false
+        nullable: true
+        description: actual load measured
+    constraints:
+      - one_of_required:
+          [sessionBlockRef, prescriptionLineRef, improvisedRationale]
+    non_inferable:
+      - session_must_be_published_or_in_progress
+
+  - id: training.session_adjustment
+    unique_governance_id: ENT-TRAINING-007
+    name: session_adjustment
+    kind: ssot
+    description: structured live adjustment to a training session with required reason
+    has_lifecycle: false
+    fields:
+      - name: id
+        unique_governance_id: FLD-TRAINING-070
+        semantic_type_ref: core.id.uuid_v4
+        required: true
+        nullable: false
+        description: public identifier
+      - name: trainingSessionRef
+        unique_governance_id: FLD-TRAINING-071
+        semantic_type_ref: training.training_session.id
+        required: true
+        nullable: false
+        description: adjusted session
+      - name: adjustmentType
+        unique_governance_id: FLD-TRAINING-072
+        semantic_type_ref: training.adjustment_type
+        required: true
+        nullable: false
+        enum_ref: training.adjustment_type_enum
+        description: type of adjustment (enum, open decision OD-TRAINING-003)
+      - name: originalValue
+        unique_governance_id: FLD-TRAINING-073
+        semantic_type_ref: core.text.medium
+        required: true
+        nullable: false
+        description: original value before adjustment
+      - name: newValue
+        unique_governance_id: FLD-TRAINING-074
+        semantic_type_ref: core.text.medium
+        required: true
+        nullable: false
+        description: new value after adjustment
+      - name: reasonCode
+        unique_governance_id: FLD-TRAINING-075
+        semantic_type_ref: training.adjustment_reason_code
+        required: true
+        nullable: false
+        enum_ref: training.adjustment_reason_code_enum
+        description: structured reason code (enum, open decision OD-TRAINING-003)
+      - name: reasonText
+        unique_governance_id: FLD-TRAINING-076
+        semantic_type_ref: core.text.medium
+        required: true
+        nullable: false
+        description: human-readable reason
+      - name: adjustedBy
+        unique_governance_id: FLD-TRAINING-077
+        semantic_type_ref: core.actor.id
+        required: true
+        nullable: false
+        description: actor who made the adjustment
+      - name: adjustedAt
+        unique_governance_id: FLD-TRAINING-078
+        semantic_type_ref: core.time.timestamp_utc
+        required: true
+        nullable: false
+        description: adjustment timestamp
+    non_inferable:
+      - session_must_be_in_progress_or_published
+
+  - id: training.feedback_thread
+    unique_governance_id: ENT-TRAINING-008
+    name: feedback_thread
+    kind: ssot
+    description: contextual technical feedback thread anchored to an operational entity
+    has_lifecycle: true
+    fields:
+      - name: id
+        unique_governance_id: FLD-TRAINING-080
+        semantic_type_ref: core.id.uuid_v4
+        required: true
+        nullable: false
+        description: public identifier
+      - name: targetAthleteRef
+        unique_governance_id: FLD-TRAINING-081
+        semantic_type_ref: core.athlete.id
+        required: true
+        nullable: false
+        description: athlete target of the feedback
+      - name: createdBy
+        unique_governance_id: FLD-TRAINING-082
+        semantic_type_ref: core.actor.id
+        required: true
+        nullable: false
+        description: creator actor
+      - name: content
+        unique_governance_id: FLD-TRAINING-083
+        semantic_type_ref: core.text.long
+        required: true
+        nullable: false
+        description: feedback content
+      - name: trainingSessionRef
+        unique_governance_id: FLD-TRAINING-084
+        semantic_type_ref: training.training_session.id
+        required: false
+        nullable: true
+        description: anchor — session reference (one of anchors required)
+      - name: sessionBlockRef
+        unique_governance_id: FLD-TRAINING-085
+        semantic_type_ref: training.session_block.id
+        required: false
+        nullable: true
+        description: anchor — block reference
+      - name: sessionObjectiveRef
+        unique_governance_id: FLD-TRAINING-086
+        semantic_type_ref: training.session_objective.id
+        required: false
+        nullable: true
+        description: anchor — objective reference
+      - name: evidenceRef
+        unique_governance_id: FLD-TRAINING-087
+        semantic_type_ref: core.external_ref
+        required: false
+        nullable: true
+        description: anchor — evidence reference
+      - name: status
+        unique_governance_id: FLD-TRAINING-088
+        semantic_type_ref: training.feedback_thread.state
+        required: true
+        nullable: false
+        enum_ref: training.feedback_thread_state_enum
+        description: lifecycle state (OPEN | CLOSED)
+      - name: conversationOutcome
+        unique_governance_id: FLD-TRAINING-089
+        semantic_type_ref: training.conversation_outcome
+        required: false
+        nullable: true
+        enum_ref: training.conversation_outcome_enum
+        description: outcome on close (reflection|commitment|pending_action|followup|decision) — required when closing
+    constraints:
+      - one_of_required:
+          [
+            trainingSessionRef,
+            sessionBlockRef,
+            sessionObjectiveRef,
+            evidenceRef,
+          ]
+      - required_on_close: [conversationOutcome]
+    non_inferable:
+      - anchor_must_belong_to_target_athlete_scope
+
+  - id: training.session_block
+    unique_governance_id: ENT-TRAINING-009
+    name: session_block
+    kind: ssot
+    description: structured block within a training session containing prescriptions
+    has_lifecycle: false
+    fields:
+      - name: id
+        unique_governance_id: FLD-TRAINING-090
+        semantic_type_ref: core.id.uuid_v4
+        required: true
+        nullable: false
+        description: public identifier
+      - name: trainingSessionRef
+        unique_governance_id: FLD-TRAINING-091
+        semantic_type_ref: training.training_session.id
+        required: true
+        nullable: false
+        description: owning session
+      - name: blockOrder
+        unique_governance_id: FLD-TRAINING-092
+        semantic_type_ref: core.numeric.position
+        required: true
+        nullable: false
+        description: order of block within session
+    non_inferable:
+      - block_content_schema
+
+  - id: training.attention_queue_item
+    unique_governance_id: ENT-TRAINING-010
+    name: attention_queue_item
+    kind: ssot
+    description: prioritized attention item in coach queue with severity and reason
+    has_lifecycle: true
+    fields:
+      - name: id
+        unique_governance_id: FLD-TRAINING-100
+        semantic_type_ref: core.id.uuid_v4
+        required: true
+        nullable: false
+        description: public identifier
+      - name: severityLevel
+        unique_governance_id: FLD-TRAINING-101
+        semantic_type_ref: training.severity_level
+        required: true
+        nullable: false
+        enum_ref: training.severity_level_enum
+        description: severity (critical | high | medium | low)
+      - name: reasonCode
+        unique_governance_id: FLD-TRAINING-102
+        semantic_type_ref: training.attention_reason_code
+        required: true
+        nullable: false
+        description: structured reason code
+      - name: targetEntityRef
+        unique_governance_id: FLD-TRAINING-103
+        semantic_type_ref: core.entity_ref
+        required: true
+        nullable: false
+        description: entity that triggered the attention item
+      - name: createdAt
+        unique_governance_id: FLD-TRAINING-104
+        semantic_type_ref: core.time.timestamp_utc
+        required: true
+        nullable: false
+        description: creation timestamp
+      - name: resolved
+        unique_governance_id: FLD-TRAINING-105
+        semantic_type_ref: core.boolean
+        required: true
+        nullable: false
+        description: whether item is resolved
+
+  - id: training.derived_signal
+    unique_governance_id: ENT-TRAINING-011
+    name: derived_signal
+    kind: derived
+    description: computed signal derived from immutable raw data — must not replace raw facts
+    has_lifecycle: false
+    fields:
+      - name: id
+        unique_governance_id: FLD-TRAINING-110
+        semantic_type_ref: core.id.uuid_v4
+        required: true
+        nullable: false
+        description: public identifier
+      - name: rawDataRef
+        unique_governance_id: FLD-TRAINING-111
+        semantic_type_ref: core.entity_ref
+        required: true
+        nullable: false
+        immutable: true
+        description: reference to immutable raw data source
+      - name: computedAt
+        unique_governance_id: FLD-TRAINING-112
+        semantic_type_ref: core.time.timestamp_utc
+        required: true
+        nullable: false
+        description: computation timestamp
+      - name: algorithmVersion
+        unique_governance_id: FLD-TRAINING-113
+        semantic_type_ref: core.version.semver
+        required: true
+        nullable: false
+        description: version of algorithm used for traceability
+    non_inferable:
+      - derived_must_not_replace_raw
+
+  - id: training.continuity_snapshot
+    unique_governance_id: ENT-TRAINING-012
+    name: continuity_snapshot
+    kind: ssot
+    description: technical rationale snapshot for staff continuity — must not be deleted on role change
+    has_lifecycle: false
+    fields:
+      - name: id
+        unique_governance_id: FLD-TRAINING-120
+        semantic_type_ref: core.id.uuid_v4
+        required: true
+        nullable: false
+        description: public identifier
+      - name: sessionRef
+        unique_governance_id: FLD-TRAINING-121
+        semantic_type_ref: training.training_session.id
+        required: false
+        nullable: true
+        description: referenced session (one of session/cycle ref required)
+      - name: cycleRef
+        unique_governance_id: FLD-TRAINING-122
+        semantic_type_ref: training.intervention_cycle.id
+        required: false
+        nullable: true
+        description: referenced intervention cycle
+      - name: keyDecisions
+        unique_governance_id: FLD-TRAINING-123
+        semantic_type_ref: core.text.long
+        required: true
+        nullable: false
+        description: key decisions made during the period
+      - name: openItems
+        unique_governance_id: FLD-TRAINING-124
+        semantic_type_ref: core.text.long
+        required: true
+        nullable: false
+        description: open items for incoming staff
+      - name: createdBy
+        unique_governance_id: FLD-TRAINING-125
+        semantic_type_ref: core.actor.id
+        required: true
+        nullable: false
+        description: creator actor
+      - name: createdAt
+        unique_governance_id: FLD-TRAINING-126
+        semantic_type_ref: core.time.timestamp_utc
+        required: true
+        nullable: false
+        description: creation timestamp
+    constraints:
+      - one_of_required: [sessionRef, cycleRef]
+
+# ---------------------------------------------------------------------------
+# RELATIONS
+# ---------------------------------------------------------------------------
+relations:
+  - source_entity_ref: training.training_session
+    target_entity_ref: teams.team
+    relation_kind: many_to_one
+    ownership: source_holds_fk
+    delete_policy: restrict
+    required: true
+
+  - source_entity_ref: training.training_session
+    target_entity_ref: training.training_intervention_cycle
+    relation_kind: many_to_one
+    ownership: source_holds_fk
+    delete_policy: restrict
+    required: true
+
+  - source_entity_ref: training.training_intervention_cycle
+    target_entity_ref: teams.team
+    relation_kind: many_to_one
+    ownership: source_holds_fk
+    delete_policy: restrict
+    required: true
+
+  - source_entity_ref: training.need_detected
+    target_entity_ref: training.training_intervention_cycle
+    relation_kind: many_to_one
+    ownership: source_holds_fk
+    delete_policy: restrict
+    required: false
+
+  - source_entity_ref: training.session_objective
+    target_entity_ref: training.need_detected
+    relation_kind: many_to_one
+    ownership: source_holds_fk
+    delete_policy: restrict
+    required: false
+
+  - source_entity_ref: training.execution_record
+    target_entity_ref: training.training_session
+    relation_kind: many_to_one
+    ownership: source_holds_fk
+    delete_policy: restrict
+    required: true
+
+  - source_entity_ref: training.session_adjustment
+    target_entity_ref: training.training_session
+    relation_kind: many_to_one
+    ownership: source_holds_fk
+    delete_policy: restrict
+    required: true
+
+  - source_entity_ref: training.feedback_thread
+    target_entity_ref: training.training_session
+    relation_kind: many_to_one
+    ownership: source_holds_fk
+    delete_policy: restrict
+    required: false
+
+  - source_entity_ref: training.session_block
+    target_entity_ref: training.training_session
+    relation_kind: many_to_one
+    ownership: source_holds_fk
+    delete_policy: restrict
+    required: true
+
+# ---------------------------------------------------------------------------
+# STATE MODELS
+# ---------------------------------------------------------------------------
+state_models:
+  - entity_ref: training.training_session
+    unique_governance_id: STM-TRAINING-001
+    states:
+      - DRAFT
+      - PLANNED
+      - SCHEDULED
+      - IN_PROGRESS
+      - COMPLETED
+      - CANCELLED
+      - ARCHIVED
+    initial_state: DRAFT
+    allowed_transitions:
+      - from: DRAFT
+        to: PLANNED
+      - from: DRAFT
+        to: SCHEDULED
+      - from: PLANNED
+        to: SCHEDULED
+      - from: SCHEDULED
+        to: IN_PROGRESS
+      - from: IN_PROGRESS
+        to: COMPLETED
+      - from: DRAFT
+        to: CANCELLED
+      - from: PLANNED
+        to: CANCELLED
+      - from: SCHEDULED
+        to: CANCELLED
+      - from: IN_PROGRESS
+        to: CANCELLED
+      - from: COMPLETED
+        to: ARCHIVED
+    forbidden_transitions:
+      - from: DRAFT
+        to: COMPLETED
+      - from: DRAFT
+        to: IN_PROGRESS
+      - from: COMPLETED
+        to: DRAFT
+      - from: CANCELLED
+        to: DRAFT
+      - from: CANCELLED
+        to: PLANNED
+      - from: CANCELLED
+        to: SCHEDULED
+      - from: ARCHIVED
+        to: any
+    transition_guards:
+      - transition: PLANNED->SCHEDULED
+        rule_ref: training.rule.publication_preconditions_met
+      - transition: DRAFT->SCHEDULED
+        rule_ref: training.rule.publication_preconditions_met
+      - transition: IN_PROGRESS->COMPLETED
+        rule_ref: training.rule.completion_evidence_required
+
+  - entity_ref: training.training_intervention_cycle
+    unique_governance_id: STM-TRAINING-002
+    states:
+      - OPEN
+      - IN_PROGRESS
+      - REVIEW
+      - ADJUSTED
+      - COMPLETED
+      - ARCHIVED
+    initial_state: OPEN
+    allowed_transitions:
+      - from: OPEN
+        to: IN_PROGRESS
+      - from: IN_PROGRESS
+        to: REVIEW
+      - from: REVIEW
+        to: ADJUSTED
+      - from: REVIEW
+        to: COMPLETED
+      - from: ADJUSTED
+        to: COMPLETED
+      - from: COMPLETED
+        to: ARCHIVED
+    forbidden_transitions: []
+    transition_guards:
+      - transition: IN_PROGRESS->REVIEW
+        rule_ref: training.rule.cycle_review_requires_evidence
+
+  - entity_ref: training.need_detected
+    unique_governance_id: STM-TRAINING-003
+    states:
+      - OPEN
+      - LINKED_TO_OBJECTIVE
+      - DISMISSED
+    initial_state: OPEN
+    allowed_transitions:
+      - from: OPEN
+        to: LINKED_TO_OBJECTIVE
+      - from: OPEN
+        to: DISMISSED
+    forbidden_transitions:
+      - from: DISMISSED
+        to: OPEN
+      - from: LINKED_TO_OBJECTIVE
+        to: DISMISSED
+    transition_guards: []
+
+  - entity_ref: training.recommendation
+    unique_governance_id: STM-TRAINING-004
+    states:
+      - PENDING_COACH_REVIEW
+      - ACCEPTED
+      - DISMISSED
+    initial_state: PENDING_COACH_REVIEW
+    allowed_transitions:
+      - from: PENDING_COACH_REVIEW
+        to: ACCEPTED
+      - from: PENDING_COACH_REVIEW
+        to: DISMISSED
+    forbidden_transitions:
+      - from: ACCEPTED
+        to: DISMISSED
+      - from: DISMISSED
+        to: ACCEPTED
+    transition_guards:
+      - transition: PENDING_COACH_REVIEW->ACCEPTED
+        rule_ref: training.rule.coach_explicit_decision_required
+      - transition: PENDING_COACH_REVIEW->DISMISSED
+        rule_ref: training.rule.coach_explicit_decision_required
+
+  - entity_ref: training.feedback_thread
+    unique_governance_id: STM-TRAINING-005
+    states:
+      - OPEN
+      - CLOSED
+    initial_state: OPEN
+    allowed_transitions:
+      - from: OPEN
+        to: CLOSED
+    forbidden_transitions:
+      - from: CLOSED
+        to: OPEN
+    transition_guards:
+      - transition: OPEN->CLOSED
+        rule_ref: training.rule.feedback_closure_requires_outcome
+
+  - entity_ref: training.attention_queue_item
+    unique_governance_id: STM-TRAINING-006
+    states:
+      - OPEN
+      - RESOLVED
+    initial_state: OPEN
+    allowed_transitions:
+      - from: OPEN
+        to: RESOLVED
+    forbidden_transitions: []
+    transition_guards: []
+
+# ---------------------------------------------------------------------------
+# RULES  (INV-TRAIN-* → RUL-TRAINING-*)
+# ---------------------------------------------------------------------------
+rules:
+  - id: training.rule.session_requires_objective
+    unique_governance_id: RUL-TRAINING-001
+    type: invariant
+    inv_ref: INV-TRAIN-001
+    subject_ref: training.training_session
+    statement: every training_session must reference at least one valid session_objective
+    formal_check_hint: sessionObjectiveIds min_items=1 enforced at creation and publish; returns 422 when absent
+    blocking: true
+
+  - id: training.rule.objective_requires_traceable_origin
+    unique_governance_id: RUL-TRAINING-002
+    type: invariant
+    inv_ref: INV-TRAIN-002
+    subject_ref: training.session_objective
+    statement: every session_objective must have at least one of (needDetectedRef | competitiveFocusRef | developmentGoalRef | manualCoachRationale)
+    formal_check_hint: one_of constraint enforced at creation; returns 422 when all are null
+    blocking: true
+
+  - id: training.rule.need_does_not_auto_create_session
+    unique_governance_id: RUL-TRAINING-003
+    type: boundary
+    inv_ref: INV-TRAIN-003
+    subject_ref: training.need_detected
+    statement: need_detected must not automatically trigger session creation without explicit coach action
+    formal_check_hint: no API path allows need_detected to create training_session directly
+    blocking: true
+
+  - id: training.rule.ai_only_recommends_coach_decides
+    unique_governance_id: RUL-TRAINING-004
+    type: boundary
+    inv_ref: INV-TRAIN-004
+    subject_ref: training.recommendation
+    statement: AI and analytics can only generate recommendations; coach must explicitly accept or dismiss before any training action
+    formal_check_hint: recommendation.status must transition via PENDING_COACH_REVIEW with explicit coach actor
+    blocking: true
+
+  - id: training.rule.publication_preconditions_met
+    unique_governance_id: RUL-TRAINING-005
+    type: lifecycle
+    inv_ref: INV-TRAIN-005
+    subject_ref: training.training_session
+    statement: >
+      session cannot publish without minimum trainable content:
+      sessionObjectiveIds (min 1), team_scope or athlete_scope_refs (min 1),
+      responsibleStaffRef, scheduledEndAt, session_blocks (min 1)
+    formal_check_hint: POST /training-sessions/{id}/publish returns 422 when any minimum field absent
+    blocking: true
+    precondition_refs:
+      - sessionObjectiveIds min_items=1
+      - responsibleStaffRef non-null
+      - scheduledEndAt non-null
+      - session_blocks min_items=1
+
+  - id: training.rule.execution_requires_prescription_context
+    unique_governance_id: RUL-TRAINING-006
+    type: invariant
+    inv_ref: INV-TRAIN-006
+    subject_ref: training.execution_record
+    statement: every execution_record must reference a training_session and at least one of (sessionBlockRef | prescriptionLineRef | improvisedRationale)
+    formal_check_hint: one_of constraint enforced; POST /training-sessions/{id}/execution returns 422 without context
+    blocking: true
+
+  - id: training.rule.planned_actual_must_not_merge
+    unique_governance_id: RUL-TRAINING-007
+    type: invariant
+    inv_ref: INV-TRAIN-007
+    subject_ref: training.training_session
+    statement: planned fields must never be overwritten by actual fields; plannedContentSnapshot is immutable after PUBLISHED
+    formal_check_hint: distinct planned_* and actual_* field groups; plannedContentSnapshot immutability test returns 409 on mutation
+    blocking: true
+
+  - id: training.rule.adjustment_requires_structured_reason
+    unique_governance_id: RUL-TRAINING-008
+    type: invariant
+    inv_ref: INV-TRAIN-008
+    subject_ref: training.session_adjustment
+    statement: every session_adjustment must have adjustmentType, reasonCode and reasonText
+    formal_check_hint: POST /training-sessions/{id}/adjustments returns 422 without reasonCode
+    blocking: true
+
+  - id: training.rule.completion_evidence_required
+    unique_governance_id: RUL-TRAINING-009
+    type: lifecycle
+    inv_ref: INV-TRAIN-009
+    subject_ref: training.training_session
+    statement: session cannot transition to COMPLETED without at least one of (attendance_record | post_session_note | athlete_rpe | coach_session_note | execution_record)
+    formal_check_hint: POST /training-sessions/{id}/complete returns 422 without minimum evidence
+    blocking: true
+
+  - id: training.rule.feedback_requires_anchor
+    unique_governance_id: RUL-TRAINING-010
+    type: invariant
+    inv_ref: INV-TRAIN-010
+    subject_ref: training.feedback_thread
+    statement: feedback_thread must be anchored to at least one of (trainingSessionRef | sessionBlockRef | sessionObjectiveRef | evidenceRef)
+    formal_check_hint: POST /training-sessions/{id}/feedback returns 422 without anchor_ref
+    blocking: true
+
+  - id: training.rule.cycle_review_requires_evidence
+    unique_governance_id: RUL-TRAINING-011
+    type: audit
+    inv_ref: INV-TRAIN-011
+    subject_ref: training.training_intervention_cycle
+    statement: review_outcome must reference at least one execution_record or equivalent evidence
+    formal_check_hint: review_outcome with evidence_ref present and valid
+    blocking: false
+
+  - id: training.rule.restriction_profile_read_only_in_training
+    unique_governance_id: RUL-TRAINING-014
+    type: boundary
+    inv_ref: INV-TRAIN-014
+    subject_ref: training.training_session
+    statement: restriction_profile is owned by medical module; training can only read, never write or create
+    formal_check_hint: no POST/PATCH/DELETE for restriction_profile in training module paths
+    blocking: true
+
+  - id: training.rule.analytics_cannot_mutate_training_state
+    unique_governance_id: RUL-TRAINING-015
+    type: boundary
+    inv_ref: INV-TRAIN-015
+    subject_ref: training.training_session
+    statement: analytics module cannot directly alter any sovereign state in training module
+    formal_check_hint: no API endpoint in training accepts analytics as mutating actor
+    blocking: true
+
+  - id: training.rule.status_lifecycle_closed
+    unique_governance_id: RUL-TRAINING-017
+    type: lifecycle
+    inv_ref: INV-TRAIN-017
+    subject_ref: training.training_session
+    statement: training_session status transitions are closed; no arbitrary state mutation is allowed
+    formal_check_hint: state machine tests with forbidden transitions returning 422
+    blocking: true
+
+  - id: training.rule.completed_immutable_no_destructive_edit
+    unique_governance_id: RUL-TRAINING-020
+    type: audit
+    inv_ref: INV-TRAIN-020
+    subject_ref: training.training_session
+    statement: COMPLETED sessions are immutable by destructive edit; corrections require audit_correction_record with original_snapshot
+    formal_check_hint: PATCH on COMPLETED session fields returns 409; correction requires elevated authorization
+    blocking: true
+
+  - id: training.rule.ineligible_athlete_blocked
+    unique_governance_id: RUL-TRAINING-021
+    type: authorization
+    inv_ref: INV-TRAIN-021
+    subject_ref: training.training_session
+    statement: athlete with active restriction_profile must be blocked from executable prescriptions without audited override
+    formal_check_hint: prescription for restricted athlete returns 422 without override; override generates audit_event
+    blocking: true
+
+  - id: training.rule.attention_queue_requires_severity_and_reason
+    unique_governance_id: RUL-TRAINING-027
+    type: integrity
+    inv_ref: INV-TRAIN-027
+    subject_ref: training.attention_queue_item
+    statement: every attention_queue_item must have severityLevel, reasonCode and targetEntityRef
+    formal_check_hint: creation validation enforces all three fields; alert without reason_code rejected
+    blocking: false
+
+  - id: training.rule.feedback_closure_requires_outcome
+    unique_governance_id: RUL-TRAINING-028
+    type: invariant
+    inv_ref: INV-TRAIN-028
+    subject_ref: training.feedback_thread
+    statement: feedback_thread cannot close without a conversationOutcome enum value
+    formal_check_hint: PATCH /feedback-threads/{id}/close returns 422 without conversationOutcome
+    blocking: true
+
+  - id: training.rule.relevant_decisions_audited
+    unique_governance_id: RUL-TRAINING-029
+    type: audit
+    inv_ref: INV-TRAIN-029
+    subject_ref: training.training_session
+    statement: all relevant training actions (publish, adjust, cancel, complete, override, correction) must generate audit_event
+    formal_check_hint: audit_event generated with required fields for each relevant action; no audit gap
+    blocking: true
+
+  - id: training.rule.rationale_survives_staff_change
+    unique_governance_id: RUL-TRAINING-030
+    type: audit
+    inv_ref: INV-TRAIN-030
+    subject_ref: training.continuity_snapshot
+    statement: decision_rationale and continuity_snapshot must not be deleted on staff role change
+    formal_check_hint: non-deletion test of decision_rationale on staff_handoff event
+    blocking: false
+
+  - id: training.rule.derived_signals_do_not_replace_raw_facts
+    unique_governance_id: RUL-TRAINING-036
+    type: integrity
+    inv_ref: INV-TRAIN-036
+    subject_ref: training.derived_signal
+    statement: derived_signal must reference raw_data via rawDataRef (immutable); derived must not overwrite raw
+    formal_check_hint: rawDataRef present and non-null; raw_data immutability test after creation
+    blocking: true
+
+  - id: training.rule.notifications_via_intents_only
+    unique_governance_id: RUL-TRAINING-039
+    type: boundary
+    inv_ref: INV-TRAIN-039
+    subject_ref: training.training_session
+    statement: training module must never directly deliver notifications; only emit notification_intent events
+    formal_check_hint: no direct push/sms/email paths in training OpenAPI spec
+    blocking: true
+
+  - id: training.rule.audit_via_transversal_module
+    unique_governance_id: RUL-TRAINING-040
+    type: audit
+    inv_ref: INV-TRAIN-040
+    subject_ref: training.training_session
+    statement: training module must not maintain internal audit log; all audit via structured events to audit module
+    formal_check_hint: no internal audit storage in training paths; audit_event emitted for each relevant action
+    blocking: true
+
+  - id: training.rule.identity_access_governs_permissions
+    unique_governance_id: RUL-TRAINING-041
+    type: authorization
+    inv_ref: INV-TRAIN-041
+    subject_ref: training.training_session
+    statement: training module must not define permissions independently; all permission checks reference identity_access
+    formal_check_hint: no hardcoded permission in training paths; all checks via identity_access reference
+    blocking: true
+
+  - id: training.rule.coach_explicit_decision_required
+    unique_governance_id: RUL-TRAINING-004B
+    type: authorization
+    subject_ref: training.recommendation
+    statement: recommendation cannot transition from PENDING_COACH_REVIEW without explicit coach actor action
+    formal_check_hint: no automated state change from PENDING_COACH_REVIEW; requires actor with coach role
+    blocking: true
+
+# ---------------------------------------------------------------------------
+# API USE CASES
+# ---------------------------------------------------------------------------
+api_use_cases:
+  - id: training.session.create
+    unique_governance_id: API-TRAINING-001
+    resource_ref: training_session
+    operation: create
+    purpose: create draft training session with at least one session objective
+    request_entity_refs:
+      - training.training_session
+      - training.session_objective
+    response_entity_refs:
+      - training.training_session
+    requires_state_model: true
+    decision_refs: [TRAIN-DEC-006]
+    forbidden_inference:
+      - auto_publish_on_create
+      - session_without_objective
+
+  - id: training.session.publish
+    unique_governance_id: API-TRAINING-002
+    resource_ref: training_session
+    operation: publish
+    purpose: publish session with minimum trainable content guard
+    request_entity_refs:
+      - training.training_session
+    response_entity_refs:
+      - training.training_session
+    requires_state_model: true
+    decision_refs: [TRAIN-DEC-007]
+    forbidden_inference:
+      - auto_publish_without_content_guard
+
+  - id: training.session.change_state
+    unique_governance_id: API-TRAINING-003
+    resource_ref: training_session
+    operation: state_transition
+    purpose: transition session state (start, complete, cancel, archive) via valid transitions only
+    request_entity_refs:
+      - training.training_session
+    response_entity_refs:
+      - training.training_session
+    requires_state_model: true
+    decision_refs: [TRAIN-DEC-008]
+    forbidden_inference:
+      - arbitrary_state_mutation
+
+  - id: training.execution.record
+    unique_governance_id: API-TRAINING-004
+    resource_ref: execution_record
+    operation: create
+    purpose: record what was actually executed in a session with prescription context
+    request_entity_refs:
+      - training.execution_record
+    response_entity_refs:
+      - training.execution_record
+    requires_state_model: true
+    decision_refs: [TRAIN-DEC-009]
+    forbidden_inference:
+      - execution_without_session_context
+
+  - id: training.session.complete
+    unique_governance_id: API-TRAINING-005
+    resource_ref: training_session
+    operation: complete
+    purpose: mark session COMPLETED with minimum response evidence guard
+    request_entity_refs:
+      - training.training_session
+    response_entity_refs:
+      - training.training_session
+    requires_state_model: true
+    decision_refs: [TRAIN-DEC-012]
+    forbidden_inference:
+      - complete_without_evidence
+
+  - id: training.adjustment.create
+    unique_governance_id: API-TRAINING-006
+    resource_ref: session_adjustment
+    operation: create
+    purpose: record structured live adjustment during session execution
+    request_entity_refs:
+      - training.session_adjustment
+    response_entity_refs:
+      - training.session_adjustment
+    requires_state_model: false
+    decision_refs: [TRAIN-DEC-011]
+    forbidden_inference:
+      - adjustment_without_reason
+
+  - id: training.feedback.post
+    unique_governance_id: API-TRAINING-007
+    resource_ref: feedback_thread
+    operation: create
+    purpose: create contextual feedback thread anchored to operational entity
+    request_entity_refs:
+      - training.feedback_thread
+    response_entity_refs:
+      - training.feedback_thread
+    requires_state_model: true
+    decision_refs: [TRAIN-DEC-013]
+    forbidden_inference:
+      - feedback_without_anchor
+
+  - id: training.feedback.close
+    unique_governance_id: API-TRAINING-008
+    resource_ref: feedback_thread
+    operation: close
+    purpose: close feedback thread requiring conversation_outcome
+    request_entity_refs:
+      - training.feedback_thread
+    response_entity_refs:
+      - training.feedback_thread
+    requires_state_model: true
+    decision_refs: [TRAIN-DEC-014]
+    forbidden_inference:
+      - close_without_conversation_outcome
+
+  - id: training.need.create
+    unique_governance_id: API-TRAINING-009
+    resource_ref: need_detected
+    operation: create
+    purpose: register a training need with traceable origin evidence or coach rationale
+    request_entity_refs:
+      - training.need_detected
+    response_entity_refs:
+      - training.need_detected
+    requires_state_model: true
+    decision_refs: [TRAIN-DEC-003]
+    forbidden_inference:
+      - need_without_evidence_or_rationale
+
+  - id: training.objective.create
+    unique_governance_id: API-TRAINING-010
+    resource_ref: session_objective
+    operation: create
+    purpose: create session objective linked to need or explicit coach rationale
+    request_entity_refs:
+      - training.session_objective
+    response_entity_refs:
+      - training.session_objective
+    requires_state_model: false
+    decision_refs: [TRAIN-DEC-004]
+    forbidden_inference:
+      - objective_without_origin
+
+  - id: training.prescription.check_eligibility
+    unique_governance_id: API-TRAINING-011
+    resource_ref: prescription_line
+    operation: eligibility_check
+    purpose: verify athlete eligibility before creating executable prescription
+    request_entity_refs:
+      - training.training_session
+    response_entity_refs:
+      - training.attention_queue_item
+    requires_state_model: false
+    decision_refs: [TRAIN-DEC-022]
+    forbidden_inference:
+      - prescription_without_eligibility_check
+
+# ---------------------------------------------------------------------------
+# UI FLOWS
+# ---------------------------------------------------------------------------
+ui_flows:
+  - id: training.coach.manage_session
+    unique_governance_id: UIF-TRAINING-001
+    actor: identity_access.role.coach_head
+    goal: create, edit, publish and complete training session
+    required: true
+    depends_on_use_cases:
+      - training.session.create
+      - training.session.publish
+      - training.session.complete
+    states:
+      - loading
+      - success
+      - error
+      - empty
+    decision_refs: [TRAIN-DEC-006, TRAIN-DEC-007, TRAIN-DEC-008]
+
+  - id: training.coach.manage_attention_queue
+    unique_governance_id: UIF-TRAINING-002
+    actor: identity_access.role.coach_head
+    goal: review and resolve prioritized attention queue items
+    required: true
+    depends_on_use_cases: []
+    states:
+      - loading
+      - success
+      - empty
+    decision_refs: [TRAIN-DEC-024]
+
+  - id: training.athlete.checkin
+    unique_governance_id: UIF-TRAINING-003
+    actor: identity_access.role.athlete
+    goal: submit adaptive check-in before training session with minimal friction
+    required: true
+    depends_on_use_cases: []
+    states:
+      - minimal
+      - extended
+      - submitted
+    decision_refs: [TRAIN-DEC-025]
+
+# ---------------------------------------------------------------------------
+# PERMISSIONS
+# ---------------------------------------------------------------------------
+permissions:
+  rbac_applicable: true
+  rules:
+    - actor: identity_access.role.coach_head
+      entity_ref: training.training_session
+      actions:
+        [
+          create,
+          read,
+          update,
+          publish,
+          complete,
+          cancel,
+          adjust,
+          override_restriction,
+        ]
+    - actor: identity_access.role.coach_assistant
+      entity_ref: training.training_session
+      actions: [create, read, update, publish_limited, complete]
+    - actor: identity_access.role.athlete
+      entity_ref: training.training_session
+      actions: [read_own, record_own_execution, submit_checkin]
+    - actor: identity_access.role.admin
+      entity_ref: training.training_session
+      actions: [read, audit_correction, handoff_management]
+    - actor: training.system_actor
+      entity_ref: training.training_session
+      actions:
+        [
+          auto_complete_with_guard,
+          emit_events,
+          adaptive_logic,
+          eligibility_check,
+        ]
+
+# ---------------------------------------------------------------------------
+# ERRORS
+# ---------------------------------------------------------------------------
+errors:
+  - id: training.error.session_publish_preconditions_not_met
+    unique_governance_id: ERR-TRAINING-001
+    subject_ref: training.training_session
+    error_kind: domain_error
+    trigger: attempt_to_publish_without_minimum_trainable_content
+    blocking: true
+    decision_ref: TRAIN-DEC-007
+    http_status: 422
+
+  - id: training.error.invalid_state_transition
+    unique_governance_id: ERR-TRAINING-002
+    subject_ref: training.training_session
+    error_kind: domain_error
+    trigger: attempt_to_transition_to_forbidden_state
+    blocking: true
+    decision_ref: TRAIN-DEC-008
+    http_status: 422
+
+  - id: training.error.execution_without_context
+    unique_governance_id: ERR-TRAINING-003
+    subject_ref: training.execution_record
+    error_kind: domain_error
+    trigger: attempt_to_record_execution_without_session_or_block_context
+    blocking: true
+    decision_ref: TRAIN-DEC-009
+    http_status: 422
+
+  - id: training.error.completion_without_evidence
+    unique_governance_id: ERR-TRAINING-004
+    subject_ref: training.training_session
+    error_kind: domain_error
+    trigger: attempt_to_complete_session_without_minimum_evidence
+    blocking: true
+    decision_ref: TRAIN-DEC-012
+    http_status: 422
+
+  - id: training.error.feedback_without_anchor
+    unique_governance_id: ERR-TRAINING-005
+    subject_ref: training.feedback_thread
+    error_kind: domain_error
+    trigger: attempt_to_create_feedback_without_anchor_ref
+    blocking: true
+    decision_ref: TRAIN-DEC-013
+    http_status: 422
+
+  - id: training.error.athlete_ineligible_for_prescription
+    unique_governance_id: ERR-TRAINING-006
+    subject_ref: training.training_session
+    error_kind: authorization_error
+    trigger: prescription_for_athlete_with_active_restriction_without_audited_override
+    blocking: true
+    decision_ref: TRAIN-DEC-022
+    http_status: 422
+
+  - id: training.error.planned_snapshot_mutation_forbidden
+    unique_governance_id: ERR-TRAINING-007
+    subject_ref: training.training_session
+    error_kind: integrity_error
+    trigger: attempt_to_mutate_planned_content_snapshot_after_publication
+    blocking: true
+    decision_ref: TRAIN-DEC-010
+    http_status: 409
+
+  - id: training.error.session_adjustment_without_reason
+    unique_governance_id: ERR-TRAINING-008
+    subject_ref: training.session_adjustment
+    error_kind: domain_error
+    trigger: attempt_to_create_adjustment_without_reason_code
+    blocking: true
+    decision_ref: TRAIN-DEC-011
+    http_status: 422
+
+# ---------------------------------------------------------------------------
+# EVENTS  (applicable: true — 27 events from matrix)
+# ---------------------------------------------------------------------------
+events:
+  applicable: true
+  items:
+    - id: training.event.intervention_cycle_created
+      unique_governance_id: EVT-TRAINING-001
+      name: intervention_cycle_created
+      subject_ref: training.training_intervention_cycle
+      trigger: training_intervention_cycle created by authorized coach
+      payload_entity_ref: training.training_intervention_cycle
+      decision_ref: TRAIN-DEC-002
+      contract_ref: contracts/asyncapi/messages/intervention_cycle_created.yaml
+
+    - id: training.event.intervention_cycle_completed
+      unique_governance_id: EVT-TRAINING-002
+      name: intervention_cycle_completed
+      subject_ref: training.training_intervention_cycle
+      trigger: training_intervention_cycle transitions to COMPLETED
+      payload_entity_ref: training.training_intervention_cycle
+      decision_ref: TRAIN-DEC-002
+      contract_ref: contracts/asyncapi/messages/intervention_cycle_completed.yaml
+
+    - id: training.event.need_detected_created
+      unique_governance_id: EVT-TRAINING-003
+      name: need_detected_created
+      subject_ref: training.need_detected
+      trigger: need_detected created with traceable origin
+      payload_entity_ref: training.need_detected
+      decision_ref: TRAIN-DEC-003
+      contract_ref: contracts/asyncapi/messages/need_detected_created.yaml
+
+    - id: training.event.objective_created
+      unique_governance_id: EVT-TRAINING-004
+      name: objective_created
+      subject_ref: training.session_objective
+      trigger: session_objective created by coach with origin reference
+      payload_entity_ref: training.session_objective
+      decision_ref: TRAIN-DEC-004
+      contract_ref: contracts/asyncapi/messages/objective_created.yaml
+
+    - id: training.event.need_linked_to_objective
+      unique_governance_id: EVT-TRAINING-005
+      name: need_linked_to_objective
+      subject_ref: training.need_detected
+      trigger: need_detected transitions OPEN→LINKED_TO_OBJECTIVE
+      payload_entity_ref: training.need_detected
+      decision_ref: TRAIN-DEC-004
+      contract_ref: contracts/asyncapi/messages/need_linked_to_objective.yaml
+
+    - id: training.event.recommendation_generated
+      unique_governance_id: EVT-TRAINING-006
+      name: recommendation_generated
+      subject_ref: training.recommendation
+      trigger: analytics module generates recommendation with status PENDING_COACH_REVIEW
+      payload_entity_ref: training.recommendation
+      decision_ref: TRAIN-DEC-005
+      contract_ref: contracts/asyncapi/messages/recommendation_generated.yaml
+
+    - id: training.event.recommendation_accepted
+      unique_governance_id: EVT-TRAINING-007
+      name: recommendation_accepted
+      subject_ref: training.recommendation
+      trigger: coach explicitly accepts recommendation with decisionRationale
+      payload_entity_ref: training.recommendation
+      decision_ref: TRAIN-DEC-005
+      contract_ref: contracts/asyncapi/messages/recommendation_accepted.yaml
+
+    - id: training.event.recommendation_dismissed
+      unique_governance_id: EVT-TRAINING-008
+      name: recommendation_dismissed
+      subject_ref: training.recommendation
+      trigger: coach explicitly dismisses recommendation with decisionRationale
+      payload_entity_ref: training.recommendation
+      decision_ref: TRAIN-DEC-005
+      contract_ref: contracts/asyncapi/messages/recommendation_dismissed.yaml
+
+    - id: training.event.training_session_created
+      unique_governance_id: EVT-TRAINING-009
+      name: training_session_created
+      subject_ref: training.training_session
+      trigger: training_session created in DRAFT state with session objective
+      payload_entity_ref: training.training_session
+      decision_ref: TRAIN-DEC-006
+      contract_ref: contracts/asyncapi/messages/training_session_created.yaml
+
+    - id: training.event.training_session_published
+      unique_governance_id: EVT-TRAINING-010
+      name: training_session_published
+      subject_ref: training.training_session
+      trigger: training_session transitions to SCHEDULED/PUBLISHED with minimum content guard passed
+      payload_entity_ref: training.training_session
+      decision_ref: TRAIN-DEC-007
+      contract_ref: contracts/asyncapi/messages/training_session_published.yaml
+
+    - id: training.event.training_session_status_changed
+      unique_governance_id: EVT-TRAINING-011
+      name: training_session_status_changed
+      subject_ref: training.training_session
+      trigger: training_session transitions between any valid states via allowed transition
+      payload_entity_ref: training.training_session
+      decision_ref: TRAIN-DEC-008
+      contract_ref: contracts/asyncapi/messages/training_session_status_changed.yaml
+
+    - id: training.event.execution_recorded
+      unique_governance_id: EVT-TRAINING-012
+      name: execution_recorded
+      subject_ref: training.execution_record
+      trigger: execution_record created for a session with valid prescription context
+      payload_entity_ref: training.execution_record
+      decision_ref: TRAIN-DEC-009
+      contract_ref: contracts/asyncapi/messages/execution_recorded.yaml
+
+    - id: training.event.planned_vs_actual_recorded
+      unique_governance_id: EVT-TRAINING-013
+      name: planned_vs_actual_recorded
+      subject_ref: training.training_session
+      trigger: planned vs actual comparison finalized after execution
+      payload_entity_ref: training.training_session
+      decision_ref: TRAIN-DEC-010
+      contract_ref: contracts/asyncapi/messages/planned_vs_actual_recorded.yaml
+
+    - id: training.event.session_adjusted
+      unique_governance_id: EVT-TRAINING-014
+      name: session_adjusted
+      subject_ref: training.session_adjustment
+      trigger: session_adjustment created during live execution with reasonCode
+      payload_entity_ref: training.session_adjustment
+      decision_ref: TRAIN-DEC-011
+      contract_ref: contracts/asyncapi/messages/session_adjusted.yaml
+
+    - id: training.event.training_session_completed
+      unique_governance_id: EVT-TRAINING-015
+      name: training_session_completed
+      subject_ref: training.training_session
+      trigger: training_session transitions to COMPLETED with minimum evidence guard passed
+      payload_entity_ref: training.training_session
+      decision_ref: TRAIN-DEC-012
+      contract_ref: contracts/asyncapi/messages/training_session_completed.yaml
+
+    - id: training.event.feedback_posted
+      unique_governance_id: EVT-TRAINING-016
+      name: feedback_posted
+      subject_ref: training.feedback_thread
+      trigger: feedback_thread created with anchor reference
+      payload_entity_ref: training.feedback_thread
+      decision_ref: TRAIN-DEC-013
+      contract_ref: contracts/asyncapi/messages/feedback_posted.yaml
+
+    - id: training.event.conversation_outcome_recorded
+      unique_governance_id: EVT-TRAINING-017
+      name: conversation_outcome_recorded
+      subject_ref: training.feedback_thread
+      trigger: feedback_thread closed with conversationOutcome required field
+      payload_entity_ref: training.feedback_thread
+      decision_ref: TRAIN-DEC-014
+      contract_ref: contracts/asyncapi/messages/conversation_outcome_recorded.yaml
+
+    - id: training.event.cycle_reviewed
+      unique_governance_id: EVT-TRAINING-018
+      name: cycle_reviewed
+      subject_ref: training.training_intervention_cycle
+      trigger: intervention_cycle transitions IN_PROGRESS→REVIEW with execution evidence
+      payload_entity_ref: training.training_intervention_cycle
+      decision_ref: TRAIN-DEC-015
+      contract_ref: contracts/asyncapi/messages/cycle_reviewed.yaml
+
+    - id: training.event.historical_record_corrected
+      unique_governance_id: EVT-TRAINING-019
+      name: historical_record_corrected
+      subject_ref: training.training_session
+      trigger: audit correction applied to COMPLETED session with original_snapshot preserved
+      payload_entity_ref: training.training_session
+      decision_ref: TRAIN-DEC-016
+      contract_ref: contracts/asyncapi/messages/historical_record_corrected.yaml
+
+    - id: training.event.restriction_guard_triggered
+      unique_governance_id: EVT-TRAINING-020
+      name: restriction_guard_triggered
+      subject_ref: training.training_session
+      trigger: athlete restriction_profile blocks prescription execution
+      payload_entity_ref: training.training_session
+      decision_ref: TRAIN-DEC-017
+      contract_ref: contracts/asyncapi/messages/restriction_guard_triggered.yaml
+
+    - id: training.event.notification_intent_emitted
+      unique_governance_id: EVT-TRAINING-021
+      name: notification_intent_emitted
+      subject_ref: training.training_session
+      trigger: training event triggers notification_intent for notifications module (never direct delivery)
+      payload_entity_ref: training.training_session
+      decision_ref: TRAIN-DEC-019
+      contract_ref: contracts/asyncapi/messages/notification_intent_emitted.yaml
+
+    - id: training.event.audit_event_emitted
+      unique_governance_id: EVT-TRAINING-022
+      name: audit_event_emitted
+      subject_ref: training.training_session
+      trigger: relevant training action (publish/adjust/cancel/complete/override/correction) emits structured audit_event
+      payload_entity_ref: training.training_session
+      decision_ref: TRAIN-DEC-020
+      contract_ref: contracts/asyncapi/messages/audit_event_emitted.yaml
+
+    - id: training.event.override_authorized
+      unique_governance_id: EVT-TRAINING-023
+      name: override_authorized
+      subject_ref: training.training_session
+      trigger: coach_head authorizes override of athlete restriction with elevated authorization and audit trail
+      payload_entity_ref: training.training_session
+      decision_ref: TRAIN-DEC-022
+      contract_ref: contracts/asyncapi/messages/override_authorized.yaml
+
+    - id: training.event.derived_signal_computed
+      unique_governance_id: EVT-TRAINING-024
+      name: derived_signal_computed
+      subject_ref: training.derived_signal
+      trigger: system computes derived_signal from immutable raw_data with rawDataRef preserved
+      payload_entity_ref: training.derived_signal
+      decision_ref: TRAIN-DEC-023
+      contract_ref: contracts/asyncapi/messages/derived_signal_computed.yaml
+
+    - id: training.event.attention_queue_updated
+      unique_governance_id: EVT-TRAINING-025
+      name: attention_queue_updated
+      subject_ref: training.attention_queue_item
+      trigger: attention_queue_item created or resolved with severityLevel and reasonCode
+      payload_entity_ref: training.attention_queue_item
+      decision_ref: TRAIN-DEC-024
+      contract_ref: contracts/asyncapi/messages/attention_queue_updated.yaml
+
+    - id: training.event.checkin_submitted
+      unique_governance_id: EVT-TRAINING-026
+      name: checkin_submitted
+      subject_ref: training.training_session
+      trigger: athlete submits adaptive check-in (minimal or extended variant)
+      payload_entity_ref: training.training_session
+      decision_ref: TRAIN-DEC-025
+      contract_ref: contracts/asyncapi/messages/checkin_submitted.yaml
+
+    - id: training.event.staff_handoff_recorded
+      unique_governance_id: EVT-TRAINING-027
+      name: staff_handoff_recorded
+      subject_ref: training.continuity_snapshot
+      trigger: continuity_snapshot created before staff role change
+      payload_entity_ref: training.continuity_snapshot
+      decision_ref: TRAIN-DEC-026
+      contract_ref: contracts/asyncapi/messages/staff_handoff_recorded.yaml
+
+# ---------------------------------------------------------------------------
+# INTEGRATIONS
+# ---------------------------------------------------------------------------
+integrations:
+  - id: training.handball_domain_linkage
+    unique_governance_id: INT-TRAINING-001
+    type: domain_reference
+    required: true
+
+  - id: training.medical_restriction_consumption
+    unique_governance_id: INT-TRAINING-002
+    type: read_only_consumption
+    required: true
+    source_module: medical
+    ownership_rule: medical is sovereign over restriction_profile; training reads as operational guard only
+    decision_refs: [TRAIN-DEC-017, TRAIN-DEC-022]
+
+  - id: training.analytics_signal_consumption
+    unique_governance_id: INT-TRAINING-003
+    type: signal_consumption
+    required: true
+    source_module: analytics
+    ownership_rule: analytics generates signals only; training consumes via recommendation entity; coach decides
+    decision_refs: [TRAIN-DEC-005, TRAIN-DEC-018]
+
+  - id: training.notifications_intent_emission
+    unique_governance_id: INT-TRAINING-004
+    type: event_emission
+    required: true
+    target_module: notifications
+    ownership_rule: training emits notification_intent events; notifications module handles delivery sovereignty
+    decision_refs: [TRAIN-DEC-019]
+
+  - id: training.audit_event_emission
+    unique_governance_id: INT-TRAINING-005
+    type: event_emission
+    required: true
+    target_module: audit
+    ownership_rule: audit is sovereign audit repository; training emits structured audit_events for all relevant actions
+    decision_refs: [TRAIN-DEC-016, TRAIN-DEC-020]
+
+  - id: training.identity_access_permission_enforcement
+    unique_governance_id: INT-TRAINING-006
+    type: permission_enforcement
+    required: true
+    source_module: identity_access
+    ownership_rule: identity_access defines all permissions; training enforces without redefining
+    decision_refs: [TRAIN-DEC-021]
+
+  - id: training.wellness_state_consumption
+    unique_governance_id: INT-TRAINING-007
+    type: read_only_consumption
+    required: false
+    source_module: wellness
+    ownership_rule: wellness owns wellness_state; training uses for adaptive checkin trigger logic only
+    decision_refs: [TRAIN-DEC-025]
+
+# ---------------------------------------------------------------------------
+# OPEN DECISIONS
+# ---------------------------------------------------------------------------
+open_decisions:
+  - id: OD-TRAINING-001
+    topic: canonical_type_refs_for_training_specific_semantics
+    description: >
+      Definir quais campos de entidades training-específicas (ex.: exercise.intensityZone,
+      session_block.blockType, execution_record.effortIndex) requerem $ref para tipos
+      canônicos em contracts/schemas/shared/ versus inline-enum local. Até esta decisão
+      ser tomada não é possível garantir consistência cross-surface nos schemas de treinamento.
+      Responsável: tech lead do módulo training. Critério de resolução: PR com mapeamento
+      completo de campo→$ref aceito e schemas atualizados.
+    affects_surface:
+      - contracts/schemas/training/*.schema.json
+    blocking: false
+    resolved: true
+    resolved_at: "2026-03-14"
+    resolution: >
+      DECISÃO: todos os campos training-específicos listados usam inline-enum local —
+      nenhum requer $ref para contracts/schemas/shared/ na fase atual.
+      Mapeamento campo→tipo canônico: (1) session_block.blockType → inline enum
+      [WARMUP, TECHNICAL, TACTICAL, PHYSICAL, TACTICAL_PHYSICAL, COOLDOWN, FREE];
+      (2) execution_record.effortIndex → integer 1–10 (escala RPE; training é módulo
+      soberano deste dado); (3) exercise.intensityZone → inline enum
+      [ZONE_1_RECOVERY, ZONE_2_AEROBIC_BASE, ZONE_3_AEROBIC_THRESHOLD,
+      ZONE_4_ANAEROBIC_THRESHOLD, ZONE_5_MAX].
+      Política geral: promoção para contracts/schemas/shared/ exige consumidor
+      cross-module explícito confirmado no IR desse módulo + PR com evidência de
+      $ref bidirecional aceito. Sem consumidor confirmado → inline-enum local.
+
+  - id: OD-TRAINING-002
+    topic: conversation_outcome_enum_values
+    description: define enum values for feedback_thread.conversationOutcome (reflection|commitment|pending_action|followup|decision)
+    affects_surface:
+      - contracts/schemas/training/feedback_thread.schema.json
+    blocking: false
+
+  - id: OD-TRAINING-003
+    topic: adjustment_type_and_reason_code_enum_values
+    description: define enum values for session_adjustment.adjustmentType and reasonCode
+    affects_surface:
+      - contracts/schemas/training/session_adjustment.schema.json
+    blocking: false
+
+  - id: OD-TRAINING-004
+    topic: need_source_type_enum_values
+    description: define enum values for need_detected.sourceType
+    affects_surface:
+      - contracts/schemas/training/need_detected.schema.json
+    blocking: false
+
+# ---------------------------------------------------------------------------
+# SURFACE MAPPING  (every TRAIN-DEC-* mapped; paths from Gap 1 correction)
+# ---------------------------------------------------------------------------
+surface_mapping:
+  # TRAIN-DEC-001 — Module identity
+  - decision_ref: TRAIN-DEC-001
+    target_surface: docs/hbtrack/modulos/training/README.md
+    required: true
+  - decision_ref: TRAIN-DEC-001
+    target_surface: docs/hbtrack/modulos/training/MODULE_SCOPE_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-001
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+
+  # TRAIN-DEC-002 — Intervention cycle sovereign
+  - decision_ref: TRAIN-DEC-002
+    target_surface: docs/hbtrack/modulos/training/MODULE_SCOPE_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-002
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-002
+    target_surface: contracts/schemas/training/training_session.schema.json
+    required: true
+
+  # TRAIN-DEC-003 — Need requires traceable origin
+  - decision_ref: TRAIN-DEC-003
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-003
+    target_surface: docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-003
+    target_surface: contracts/schemas/training/training_session.schema.json
+    required: true
+  - decision_ref: TRAIN-DEC-003
+    target_surface: contracts/openapi/paths/training.yaml
+    required: true
+
+  # TRAIN-DEC-004 — Objective requires linked need or rationale
+  - decision_ref: TRAIN-DEC-004
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-004
+    target_surface: docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-004
+    target_surface: contracts/schemas/training/training_session.schema.json
+    required: true
+  - decision_ref: TRAIN-DEC-004
+    target_surface: contracts/openapi/paths/training.yaml
+    required: true
+
+  # TRAIN-DEC-005 — AI recommends; coach decides
+  - decision_ref: TRAIN-DEC-005
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-005
+    target_surface: docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-005
+    target_surface: docs/hbtrack/modulos/training/PERMISSIONS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-005
+    target_surface: contracts/openapi/paths/training.yaml
+    required: true
+  - decision_ref: TRAIN-DEC-005
+    target_surface: contracts/asyncapi/messages/recommendation_generated.yaml
+    required: true
+
+  # TRAIN-DEC-006 — Session requires objective
+  - decision_ref: TRAIN-DEC-006
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-006
+    target_surface: docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-006
+    target_surface: contracts/schemas/training/training_session.schema.json
+    required: true
+  - decision_ref: TRAIN-DEC-006
+    target_surface: contracts/openapi/paths/training.yaml
+    required: true
+
+  # TRAIN-DEC-007 — Published session requires minimum content
+  - decision_ref: TRAIN-DEC-007
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-007
+    target_surface: docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-007
+    target_surface: docs/hbtrack/modulos/training/STATE_MODEL_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-007
+    target_surface: contracts/openapi/paths/training.yaml
+    required: true
+
+  # TRAIN-DEC-008 — Status lifecycle closed
+  - decision_ref: TRAIN-DEC-008
+    target_surface: docs/hbtrack/modulos/training/STATE_MODEL_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-008
+    target_surface: docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-008
+    target_surface: contracts/openapi/paths/training.yaml
+    required: true
+
+  # TRAIN-DEC-009 — Execution requires prescription context
+  - decision_ref: TRAIN-DEC-009
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-009
+    target_surface: docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-009
+    target_surface: contracts/schemas/training/training_session.schema.json
+    required: true
+  - decision_ref: TRAIN-DEC-009
+    target_surface: contracts/openapi/paths/training.yaml
+    required: true
+
+  # TRAIN-DEC-010 — Planned vs Actual mandatory
+  - decision_ref: TRAIN-DEC-010
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-010
+    target_surface: docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-010
+    target_surface: contracts/schemas/training/training_session.schema.json
+    required: true
+
+  # TRAIN-DEC-011 — Live adjustment requires structured reason
+  - decision_ref: TRAIN-DEC-011
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-011
+    target_surface: docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-011
+    target_surface: contracts/schemas/training/training_session.schema.json
+    required: true
+  - decision_ref: TRAIN-DEC-011
+    target_surface: contracts/openapi/paths/training.yaml
+    required: true
+
+  # TRAIN-DEC-012 — Completed session requires evidence
+  - decision_ref: TRAIN-DEC-012
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-012
+    target_surface: docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-012
+    target_surface: docs/hbtrack/modulos/training/STATE_MODEL_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-012
+    target_surface: contracts/openapi/paths/training.yaml
+    required: true
+
+  # TRAIN-DEC-013 — Feedback contextual and linked
+  - decision_ref: TRAIN-DEC-013
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-013
+    target_surface: docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-013
+    target_surface: contracts/schemas/training/training_session.schema.json
+    required: true
+  - decision_ref: TRAIN-DEC-013
+    target_surface: contracts/openapi/paths/training.yaml
+    required: true
+
+  # TRAIN-DEC-014 — Conversation generates operational outcome
+  - decision_ref: TRAIN-DEC-014
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-014
+    target_surface: docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-014
+    target_surface: contracts/schemas/training/training_session.schema.json
+    required: true
+  - decision_ref: TRAIN-DEC-014
+    target_surface: contracts/openapi/paths/training.yaml
+    required: true
+
+  # TRAIN-DEC-015 — Cycle review requires execution evidence
+  - decision_ref: TRAIN-DEC-015
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-015
+    target_surface: docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-015
+    target_surface: contracts/schemas/training/training_session.schema.json
+    required: false
+
+  # TRAIN-DEC-016 — Completed session immutable
+  - decision_ref: TRAIN-DEC-016
+    target_surface: docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-016
+    target_surface: docs/hbtrack/modulos/training/STATE_MODEL_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-016
+    target_surface: docs/hbtrack/modulos/training/PERMISSIONS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-016
+    target_surface: contracts/openapi/paths/training.yaml
+    required: true
+  - decision_ref: TRAIN-DEC-016
+    target_surface: contracts/asyncapi/messages/historical_record_corrected.yaml
+    required: true
+
+  # TRAIN-DEC-017 — Training consumes medical; does not sovereignize
+  - decision_ref: TRAIN-DEC-017
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-017
+    target_surface: docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-017
+    target_surface: contracts/schemas/training/training_session.schema.json
+    required: true
+  - decision_ref: TRAIN-DEC-017
+    target_surface: contracts/openapi/paths/training.yaml
+    required: true
+
+  # TRAIN-DEC-018 — Analytics recommends; coach decides
+  - decision_ref: TRAIN-DEC-018
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-018
+    target_surface: docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-018
+    target_surface: docs/hbtrack/modulos/training/PERMISSIONS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-018
+    target_surface: contracts/openapi/paths/training.yaml
+    required: true
+
+  # TRAIN-DEC-019 — Notifications via intents
+  - decision_ref: TRAIN-DEC-019
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-019
+    target_surface: docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-019
+    target_surface: contracts/asyncapi/messages/notification_intent_emitted.yaml
+    required: true
+
+  # TRAIN-DEC-020 — Audit via transversal module
+  - decision_ref: TRAIN-DEC-020
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-020
+    target_surface: docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-020
+    target_surface: contracts/asyncapi/messages/audit_event_emitted.yaml
+    required: true
+
+  # TRAIN-DEC-021 — identity_access governs permissions
+  - decision_ref: TRAIN-DEC-021
+    target_surface: docs/hbtrack/modulos/training/PERMISSIONS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-021
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-021
+    target_surface: docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+    required: true
+
+  # TRAIN-DEC-022 — Ineligible athlete blocks prescription
+  - decision_ref: TRAIN-DEC-022
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-022
+    target_surface: docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-022
+    target_surface: docs/hbtrack/modulos/training/PERMISSIONS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-022
+    target_surface: contracts/openapi/paths/training.yaml
+    required: true
+
+  # TRAIN-DEC-023 — Derived signals do not replace raw facts
+  - decision_ref: TRAIN-DEC-023
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-023
+    target_surface: docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-023
+    target_surface: contracts/schemas/training/training_session.schema.json
+    required: true
+
+  # TRAIN-DEC-024 — Attention queue prioritized
+  - decision_ref: TRAIN-DEC-024
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-024
+    target_surface: docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-024
+    target_surface: contracts/schemas/training/training_session.schema.json
+    required: true
+  - decision_ref: TRAIN-DEC-024
+    target_surface: docs/hbtrack/modulos/training/UI_CONTRACT_TRAINING.md
+    required: true
+
+  # TRAIN-DEC-025 — Adaptive check-in friction
+  - decision_ref: TRAIN-DEC-025
+    target_surface: docs/hbtrack/modulos/training/UI_CONTRACT_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-025
+    target_surface: docs/hbtrack/modulos/training/SCREEN_MAP_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-025
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+
+  # TRAIN-DEC-026 — Technical rationale survives staff change
+  - decision_ref: TRAIN-DEC-026
+    target_surface: docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-026
+    target_surface: docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md
+    required: true
+  - decision_ref: TRAIN-DEC-026
+    target_surface: contracts/schemas/training/training_session.schema.json
+    required: false
+
+# ---------------------------------------------------------------------------
+# FORBIDDEN INFERENCE GLOBAL
+# ---------------------------------------------------------------------------
+forbidden_inference_global:
+  - endpoints_not_declared
+  - states_not_declared
+  - enums_without_registry
+  - relation_ownership_not_declared
+  - publication_rules_not_declared
+  - ai_autonomous_session_creation
+  - analytics_direct_mutation_of_training_state
+  - training_defining_permissions_independently
+  - training_delivering_notifications_directly
+  - training_maintaining_internal_audit_log
+  - training_writing_restriction_profile
+  - derived_signal_replacing_raw_facts
+  - session_creation_without_objective
+  - need_auto_materializing_into_session
+  - recommendation_auto_accepted_without_coach

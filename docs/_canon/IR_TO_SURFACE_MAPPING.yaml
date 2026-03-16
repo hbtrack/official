@@ -1,0 +1,77 @@
+version: 1.0.0
+status: PROPOSED
+scope: hb_track
+artifact_type: ir_to_surface_mapping
+authority: deterministic_binding_map
+
+surfaces:
+  - ir_block: module_identity
+    target_surfaces:
+      - docs/hbtrack/modulos/<module>/README.md
+      - docs/hbtrack/modulos/<module>/MODULE_SCOPE_<MODULE>.md
+
+  - ir_block: capabilities
+    target_surfaces:
+      - docs/hbtrack/modulos/<module>/MODULE_SCOPE_<MODULE>.md
+      - docs/hbtrack/modulos/<module>/TEST_MATRIX_<MODULE>.md
+
+  - ir_block: entities
+    target_surfaces:
+      - contracts/schemas/<module>/*.schema.json
+      - docs/hbtrack/modulos/<module>/DOMAIN_RULES_<MODULE>.md
+
+  - ir_block: relations
+    target_surfaces:
+      - contracts/schemas/<module>/*.schema.json
+      - docs/hbtrack/modulos/<module>/DOMAIN_RULES_<MODULE>.md
+
+  - ir_block: state_models
+    target_surfaces:
+      - docs/hbtrack/modulos/<module>/STATE_MODEL_<MODULE>.md
+      - contracts/schemas/<module>/*.schema.json
+      - contracts/openapi/paths/<module>.yaml
+
+  - ir_block: rules
+    target_surfaces:
+      - docs/hbtrack/modulos/<module>/DOMAIN_RULES_<MODULE>.md
+      - docs/hbtrack/modulos/<module>/INVARIANTS_<MODULE>.md
+      - docs/hbtrack/modulos/<module>/TEST_MATRIX_<MODULE>.md
+
+  - ir_block: api_use_cases
+    target_surfaces:
+      - contracts/openapi/paths/<module>.yaml
+      - docs/hbtrack/modulos/<module>/TEST_MATRIX_<MODULE>.md
+
+  - ir_block: ui_flows
+    target_surfaces:
+      - docs/hbtrack/modulos/<module>/UI_CONTRACT_<MODULE>.md
+      - docs/hbtrack/modulos/<module>/SCREEN_MAP_<MODULE>.md
+
+  - ir_block: permissions
+    target_surfaces:
+      - docs/hbtrack/modulos/<module>/PERMISSIONS_<MODULE>.md
+
+  - ir_block: errors
+    target_surfaces:
+      - docs/hbtrack/modulos/<module>/ERRORS_<MODULE>.md
+
+  - ir_block: events
+    target_surfaces:
+      - contracts/asyncapi/<module>.yaml
+
+  - ir_block: integrations
+    target_surfaces:
+      - contracts/workflows/<module>/*.arazzo.yaml
+      - docs/hbtrack/modulos/<module>/DOMAIN_RULES_<MODULE>.md
+
+  - ir_block: open_decisions
+    target_surfaces:
+      - _gate_only_
+
+rules:
+  - every_applicable_ir_block_must_map_to_at_least_one_surface: true
+  - no_surface_generation_without_source_ir_block: true
+  - if_ui_flows_present_ui_contract_and_screen_map_become_applicable: true
+  - if_state_models_present_state_model_doc_becomes_applicable: true
+  - if_events_present_asyncapi_becomes_applicable: true
+  - if_permissions.rbac_applicable_true_permissions_doc_becomes_applicable: true
