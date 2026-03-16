@@ -33,8 +33,11 @@ O módulo `training` é responsável por planejamento, execução, registro e an
 ## Artefatos do módulo
 - `MODULE_SCOPE_TRAINING.md`
 - `DOMAIN_RULES_TRAINING.md`
+- `SPORT_SCIENCE_RULES_TRAINING.md`
 - `INVARIANTS_TRAINING.md`
 - `TEST_MATRIX_TRAINING.md`
+- `ARCH_DECISIONS_TRAINING.md` — registro de 46 decisões arquiteturais do módulo (promovido de `.dev/arquitetura/ARCH-DEC-TRAIN.md` em 2026-03-15)
+- `CONTRACT_TRAINING.md` — contrato canônico do módulo v1.1.0
 - `contracts/openapi/paths/training.yaml`
 - `contracts/schemas/training/*.schema.json`
 
@@ -53,6 +56,7 @@ O módulo `training` é responsável por planejamento, execução, registro e an
 ## Navegação rápida
 1. Leia `MODULE_SCOPE_TRAINING.md`
 2. Leia `DOMAIN_RULES_TRAINING.md`
-3. Leia `INVARIANTS_TRAINING.md`
-4. Leia `TEST_MATRIX_TRAINING.md`
-5. Leia os contratos do módulo
+3. Leia `SPORT_SCIENCE_RULES_TRAINING.md`
+4. Leia `INVARIANTS_TRAINING.md`
+5. Leia `TEST_MATRIX_TRAINING.md`
+6. Leia os contratos do módulo
