@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c \"import yaml; yaml.safe_load\\(open\\(''.dev/training.module_decision_ir.yaml''\\)\\); print\\(''YAML válido''\\)\")",
+      "Bash(python3 -c \":*)",
+      "Bash(wsl -d Ubuntu -e bash -c \"python3 -c \"\":*)"
+    ]
+  }
+}
