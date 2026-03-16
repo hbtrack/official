@@ -21,6 +21,8 @@ policy:
       statement: "`identity_access` cobre authn/authz/credenciais/sessão/MFA/JWT/RBAC; não modela athlete profile."
     - principle_id: "P-005-async-artifacts"
       statement: "Workflow/evento exige artefato próprio: OpenAPI (HTTP), Arazzo (sequência), AsyncAPI (mensagens)."
+    - principle_id: "P-006-sport-science-sources"
+      statement: "ACSM/Aspetar/EHF podem sustentar regras técnico-científicas em SPORT_SCIENCE_RULES; não originam axiomas estruturais nem regras oficiais do handebol (IHF)."
 
   agent_inference_policy:
     allowed_low_risk_examples:
@@ -114,7 +116,13 @@ modules:
 
   training:
     sources_allowed:
-      domain_authority: []
+      domain_authority:
+        - source_id: "EHF"
+          allowed_for: ["handball_applied_sport_science"]
+        - source_id: "ASPETAR"
+          allowed_for: ["applied_sport_science", "injury_prevention_when_applicable", "return_to_play_when_applicable"]
+        - source_id: "ACSM"
+          allowed_for: ["exercise_science", "exercise_testing_protocols", "exercise_prescription", "training_load_methods"]
       benchmark:
         - source_id: "XPS"
           allowed_for: ["planning_sessions_video_benchmark"]
@@ -129,6 +137,7 @@ modules:
       - "ARAZZO"
       - "DB_CONTRACT"
       - "UI_CONTRACT"
+      - "SPORT_SCIENCE_RULES"
       - "INVARIANTS"
       - "TEST_SCENARIOS"
       - "TRACEABILITY"
@@ -138,7 +147,11 @@ modules:
 
   wellness:
     sources_allowed:
-      domain_authority: []
+      domain_authority:
+        - source_id: "ASPETAR"
+          allowed_for: ["applied_sport_science", "monitoring_when_applicable"]
+        - source_id: "ACSM"
+          allowed_for: ["exercise_science", "exercise_prescription", "exercise_testing_protocols", "recovery_monitoring_when_applicable"]
       benchmark:
         - source_id: "TEAMWORKS_AMS"
           allowed_for: ["wellness_benchmark"]
@@ -154,6 +167,7 @@ modules:
       - "INVARIANTS"
       - "TRACEABILITY"
       - "PRIVACY_RULES_LOCAL"
+      - "SPORT_SCIENCE_RULES"
     inference:
       may_infer: ["readiness", "fatigue", "sleep", "self_reported_pain", "recovery", "daily_questionnaires"]
       must_not_infer: ["clinical_record", "treatment", "medical_return_to_play", "formal_clinical_decision"]
@@ -163,6 +177,10 @@ modules:
       domain_authority:
         - source_id: "IHF"
           allowed_for: ["eligibility", "anti_doping_when_applicable"]
+        - source_id: "ASPETAR"
+          allowed_for: ["sports_medicine_guidelines", "injury_prevention_when_applicable", "return_to_play_when_applicable"]
+        - source_id: "ACSM"
+          allowed_for: ["exercise_testing_protocols", "exercise_prescription_when_applicable"]
       benchmark:
         - source_id: "TEAMWORKS_AMS"
           allowed_for: ["sports_medicine_benchmark"]
@@ -177,6 +195,7 @@ modules:
       - "AUDIT_BINDINGS"
       - "TRACEABILITY"
       - "PRIVACY_RULES_LOCAL"
+      - "SPORT_SCIENCE_RULES"
     inference:
       may_infer: ["injury", "illness", "assessment", "restriction", "return_to_play_or_training", "clinical_authorization"]
       must_not_infer: ["generic_wellness_as_medical", "authentication_policies", "diagnosis_without_explicit_contract"]
@@ -253,7 +272,9 @@ modules:
 
   exercises:
     sources_allowed:
-      domain_authority: []
+      domain_authority:
+        - source_id: "ACSM"
+          allowed_for: ["exercise_science", "exercise_prescription", "exercise_testing_protocols"]
       benchmark:
         - source_id: "XPS"
           allowed_for: ["exercise_library_benchmark"]
@@ -265,6 +286,7 @@ modules:
       - "OPENAPI"
       - "DB_CONTRACT"
       - "UI_CONTRACT"
+      - "SPORT_SCIENCE_RULES"
       - "INVARIANTS"
       - "TRACEABILITY"
     inference:
@@ -273,7 +295,11 @@ modules:
 
   analytics:
     sources_allowed:
-      domain_authority: []
+      domain_authority:
+        - source_id: "EHF"
+          allowed_for: ["handball_applied_sport_science_when_applicable"]
+        - source_id: "ACSM"
+          allowed_for: ["exercise_science", "training_load_metrics_when_applicable", "exercise_testing_protocols"]
       benchmark:
         - source_id: "TEAMWORKS_AMS"
           allowed_for: ["analytics_benchmark"]
@@ -286,6 +312,7 @@ modules:
       - "OPENAPI"
       - "DB_CONTRACT_OR_PROJECTIONS"
       - "INVARIANTS"
+      - "SPORT_SCIENCE_RULES"
       - "REPORT_BINDINGS"
       - "TRACEABILITY"
     inference:
@@ -494,5 +521,11 @@ derived_gates:
     forbidden_ssot_markers:
       - "SSOT: XPS"
       - "SSOT: Teamworks"
+      - "SSOT: ACSM"
+      - "SSOT: Aspetar"
+      - "SSOT: EHF"
       - "XPS é SSOT"
       - "Teamworks é SSOT"
+      - "ACSM é SSOT"
+      - "Aspetar é SSOT"
+      - "EHF é SSOT"

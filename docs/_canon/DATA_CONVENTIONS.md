@@ -52,6 +52,7 @@ status: active
 - **Formato completo**: `YYYY-MM-DDTHH:MM:SSZ` — ex: `2026-03-11T14:30:00Z`
 - **Somente data (calendário)**: format `date` — ex: `2026-03-11`
 - **Timezone**: armazenamento sempre em UTC; conversão para exibição é responsabilidade do cliente
+- **Normativo**: esta seção é formalizada como decisão arquitetural em **[ADR-009](decisions/ADR-009-datetime-timezone-standard.md)** (inclui regra de `venueTimezone` IANA obrigatório em `matches`/`competitions`)
 
 ### 2.2 Quando Usar Cada Tipo
 

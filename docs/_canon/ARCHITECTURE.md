@@ -183,6 +183,33 @@ As decisões abaixo já foram tomadas e são normativas:
 | Soft delete | `deleted_at` + `deleted_reason` | Par obrigatório: nenhum campo `deleted_at` sem `deleted_reason` correspondente e vice-versa. |
 | Separação `users` vs `identity_access` | `users` = perfil; `identity_access` = auth/authz | Boundary explícito: mistura de responsabilidades é proibida sem ADR formal. |
 | Coexistência psycopg2 + psycopg3 | Mantida intencionalmente | Compatibilidade com SQLAlchemy e drivers de migração. Nunca remover nenhum dos dois. |
+| Estratégia de autenticação | JWT RS256, 15min access / 7d refresh com rotation, jti blacklist Redis | ADR-007 — SSOT completo em `decisions/ADR-007-auth-strategy.md`. |
+| Estratégia de autorização | RBAC flat 5 roles, deny-by-omission, BOLA/BOPLA/BFLA por camada | ADR-008 — SSOT completo em `decisions/ADR-008-authz-strategy.md`. |
+| Padrão de data/hora e timezone | UTC obrigatório, RFC 3339 `Z`, `venueTimezone` IANA em partidas | ADR-009 — formaliza `DATA_CONVENTIONS.md §2` como normativo. |
+| Classificação de dados sensíveis | PII / PHI / CREDENTIALS / BUSINESS_SENSITIVE com mascaramento em logs | ADR-010 — SSOT em `decisions/ADR-010-sensitive-data-policy.md`. |
+| Política de retenção | 2a auditoria, 5a PHI, indefinido histórico esportivo; purge 30d pós-exclusão | ADR-011 — SSOT em `decisions/ADR-011-retention-policy.md`. |
+| Gerenciamento de secrets | .env + VPS env vars, JWT key rotation 90 dias, GitHub Actions secrets | ADR-012 — SSOT em `decisions/ADR-012-secrets-policy.md`. |
+| Logging e observabilidade | JSON estruturado, stdout, X-Flow-ID, PHI/CREDENTIALS nunca logados | ADR-013 — SSOT em `decisions/ADR-013-logging-policy.md`. |
+| Política de deprecação | RFC 8594 headers, 90d interno / 180d externo, `deprecated: true` em OpenAPI | ADR-014 — formaliza `CHANGE_POLICY.md §7` como normativo. |
+| Log de execução de agente | JSON em `_reports/agent_execution/`, retenção 30 dias | ADR-015 — SSOT em `decisions/ADR-015-agent-execution-log.md`. |
+| Exposição MCP | Adiada para pós-v1.0 — ADR de deferral formal | ADR-016 — `decisions/ADR-016-mcp-surface.md`. |
+
+---
+
+## 6A. Estágio Decision Discovery (DSS)
+
+Antes de `contract_creation_mode` e `contract_revision_mode`, o sistema exige um estágio formal de **Decision Discovery** quando há lacuna arquitetural relevante.
+
+O estágio é regido integralmente por `docs/_canon/DECISION_POLICY.md` e operacionalizado pelo prompt `.contract_driven/agent_prompts/decision_discovery.prompt.md`.
+
+**Resumo das regras**:
+- Decision Discovery precede contratos — não substitui artefatos canônicos.
+- O DSS é apoio à decisão humana; nenhuma sugestão é executada silenciosamente.
+- Decisões aprovadas são promovidas para `docs/_canon/decisions/ADR-*.md`.
+- Decisões `obrigatórias` sem ADR aprovada bloqueiam com `BLOCKED_MISSING_ARCH_DECISION`.
+- O backlog de decisões em aberto é mantido em `docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md`.
+
+**Referência normativa**: `docs/_canon/DECISION_POLICY.md` (SSOT desta camada).
 
 ---
 
@@ -216,6 +243,7 @@ As seguintes ações são proibidas sem ADR formal aprovada:
 - Misturar responsabilidades de `users` e `identity_access`
 - Remover psycopg2 ou psycopg3 unilateralmente
 - Alterar versão canônica de Python ou PostgreSQL sem atualizar `Ambiente.md`
+- Criar/revisar contrato com decisão arquitetural `obrigatória` em aberto sem ADR aprovada (ver `ARCHITECTURE_DECISION_BACKLOG.md`)
 
 ---
 
@@ -228,3 +256,5 @@ As seguintes ações são proibidas sem ADR formal aprovada:
 - `DATA_CONVENTIONS.md` — convenções de dados
 - `docs/_canon/contratos/Ambiente.md` — especificação completa de ambiente (SSOT)
 - `.contract_driven/CONTRACT_SYSTEM_RULES.md` — regras operacionais do CDD
+- `docs/_canon/DECISION_POLICY.md` — regras do estágio Decision Discovery (DSS)
+- `docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md` — decisões arquiteturais em aberto

@@ -135,6 +135,9 @@ Hotfixes que introduzem breaking change **não são elegíveis para este process
 
 ## 7. Deprecação de APIs
 
+> Esta seção é formalizada como decisão arquitetural normativa em **[ADR-014](decisions/ADR-014-deprecation-policy.md)**.
+> Em caso de conflito entre este texto e o ADR, o ADR prevalece.
+
 ### 7.1 Sequência Formal
 
 1. Adicionar headers de deprecação nos responses do endpoint/campo afetado:
@@ -172,6 +175,7 @@ Hotfixes que introduzem breaking change **não são elegíveis para este process
 - Novos padrões globais que afetam múltiplos módulos
 - Breaking changes em múltiplos módulos simultaneamente
 - Adição de novo módulo à taxonomia canônica
+- Promoção de novo artefato normativo soberano (nova superfície SSOT / novo doc canônico por módulo)
 - Mudanças no processo de contract gates ou nas regras do sistema contract-driven
 
 ### 8.2 Localização
@@ -228,6 +232,36 @@ Mudanças em schema do banco de dados seguem protocolo adicional:
 3. Se a mudança impactar contrato público (OpenAPI/schemas/eventos), o contrato deve ser atualizado e validado antes do deploy
 
 **Nota**: este workspace governa contratos e docs normativas. Migrations e código vivem nos repositórios de implementação, mas não podem divergir dos contratos publicados aqui.
+
+---
+
+## 11. Revisão Científica Periódica (SPORT_SCIENCE_RULES)
+
+Regras registradas em `docs/hbtrack/modulos/<module>/SPORT_SCIENCE_RULES_<MODULE>.md` são baseadas em evidência técnico-científica e possuem critérios de revisão próprios, complementares ao fluxo geral desta política.
+
+### 11.1 Gatilhos de revisão
+
+Uma regra em `SPORT_SCIENCE_RULES_<MODULE>.md` deve ser revisada quando:
+- A fonte autorizada (ex: ACSM, Aspetar, EHF) publica atualização relevante que contradiz ou refina a regra.
+- Evidência de nível igual ou superior à da regra original for publicada contestando seu conteúdo.
+- O contexto de aplicabilidade (população, posição, faixa etária, fase) mudar por decisão de produto documentada em ADR.
+- O artefato atingir o ciclo de revisão declarado no campo `Observações` da tabela (ex.: "revisar anualmente").
+
+### 11.2 Processo
+
+1. Abrir PR do tipo `documentation-only` (se não houver impacto em contratos técnicos) ou `non-breaking` (se houver adição downstream).
+2. Declarar na descrição do PR: regra afetada (ID), fonte original, nova fonte/evidência, natureza da mudança.
+3. Para remoção de regra que alimenta cálculo ou decisão em contrato downstream: tratar como `breaking` e abrir ADR.
+
+### 11.3 Proibições
+
+- **Não atualizar threshold** sem nova fonte rastreável com nível de evidência igual ou superior.
+- **Não remover campo `Fonte`** de nenhuma regra existente — regra sem fonte é inválida por definição.
+- **Não promover benchmark funcional** (XPS, Teamworks) a fonte de autoridade técnico-científica neste artefato.
+
+### 11.4 Autoridade de fontes
+
+Ver `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml` para lista de `source_id` autorizados por módulo. O `EXTERNAL_SOURCE_AUTHORITY_GATE` bloqueia automaticamente marcação de fontes externas como SSOT.
 
 ---
 

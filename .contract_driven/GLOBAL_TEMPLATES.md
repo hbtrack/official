@@ -142,6 +142,7 @@ Exceções para identificadores técnicos específicos de módulo:
 - `{{PRODUCT_RULE}}` — regra de produto derivada
 - `{{MODULES}}` — módulos impactados
 - `{{RULE_REFERENCE}}` — referência à regra
+- `{{HANDBALL_SEMANTIC_APPLICABILITY}}` — `true|false` para o campo `handball_semantic_applicability` no header YAML de docs de módulo
 
 ### 1.12 Placeholders de conteúdo de módulo
 - `{{MODULE_PURPOSE}}` — propósito do módulo
@@ -156,6 +157,9 @@ Exceções para identificadores técnicos específicos de módulo:
 - `{{BUSINESS_RULES_TABLE_ROWS}}` — linhas Markdown (`| ... |`) para a tabela de regras de negócio
 - `{{HANDBALL_DERIVED_RULES_TABLE_ROWS}}` — linhas Markdown (`| ... |`) para a tabela de regras derivadas do handebol
 - `{{SOURCE}}` — fonte normativa (quando aplicável)
+
+### 1.13A Placeholders de regras técnico-científicas
+- `{{SPORT_SCIENCE_RULES_TABLE_ROWS}}` — linhas Markdown (`| ... |`) para a tabela de métodos/protocolos/cálculos/thresholds
 
 ### 1.14 Placeholders de state model
 - `{{STATE_NAME}}` — nome de estado
@@ -296,6 +300,7 @@ Use este header em:
 - `docs/hbtrack/modulos/{{MODULE_NAME}}/STATE_MODEL_{{MODULE_NAME_UPPER}}.md`
 - `docs/hbtrack/modulos/{{MODULE_NAME}}/PERMISSIONS_{{MODULE_NAME_UPPER}}.md`
 - `docs/hbtrack/modulos/{{MODULE_NAME}}/ERRORS_{{MODULE_NAME_UPPER}}.md`
+- `docs/hbtrack/modulos/{{MODULE_NAME}}/SPORT_SCIENCE_RULES_{{MODULE_NAME_UPPER}}.md`
 - `docs/hbtrack/modulos/{{MODULE_NAME}}/UI_CONTRACT_{{MODULE_NAME_UPPER}}.md`
 - `docs/hbtrack/modulos/{{MODULE_NAME}}/TEST_MATRIX_{{MODULE_NAME_UPPER}}.md`
 - `docs/hbtrack/modulos/{{MODULE_NAME}}/SCREEN_MAP_{{MODULE_NAME_UPPER}}.md`
@@ -547,6 +552,13 @@ Template movido para: `.contract_driven/templates/modulos/SCREEN_MAP_{{MODULE_NA
 
 Template movido para: `.contract_driven/templates/modulos/TEST_MATRIX_{{MODULE_NAME_UPPER}}.md`
 
+---
+
+## 33A. Module Template — docs/hbtrack/modulos/{{MODULE_NAME}}/SPORT_SCIENCE_RULES_{{MODULE_NAME_UPPER}}.md
+
+
+Template movido para: `.contract_driven/templates/modulos/SPORT_SCIENCE_RULES_{{MODULE_NAME_UPPER}}.md`
+
 
 ---
 
@@ -609,6 +621,12 @@ Template movido para: `.contract_driven/templates/modulos/schemas/{{DOMAIN_ENTIT
 - existirem eventos reais
 
 **Handball Trigger Rule**: Para a lista completa de tópicos de handebol que determinam quando `handball_rules_ref` é obrigatório no header YAML do módulo, ver `.contract_driven/CONTRACT_SYSTEM_RULES.md` seção 12 (Handball Trigger Rule).
+
+### 36.8 Usar `SPORT_SCIENCE_RULES_{{MODULE_NAME_UPPER}}.md` quando
+- o módulo depender de protocolos, cálculos, thresholds, baterias de teste, readiness, strain, HRV, força, HIIT, prescrição ou interpretação técnico-científica aplicada
+- houver risco de contaminar `DOMAIN_RULES` com critério técnico-científico
+
+**Referência**: `.contract_driven/CONTRACT_SYSTEM_RULES.md` seção 11.8 define a matriz formal de aplicabilidade para SPORT_SCIENCE_RULES.
 
 ---
 

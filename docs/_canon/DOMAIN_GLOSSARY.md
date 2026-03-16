@@ -356,6 +356,61 @@ Este glossário define os termos canônicos do domínio do HB Track. Quando um t
 
 ---
 
+### Carga Interna (`internal_load`)
+**Definição**: A resposta fisiológica e psicológica do atleta ao estímulo de treino. Representa o custo biológico imposto pelo treinamento, medido através de indicadores subjetivos (PSE/sRPE) e/ou objetivos (frequência cardíaca, HRV, lactato). Conceito complementar à carga externa.
+
+**Contexto**: Usada no módulo `training` e `analytics` para monitorar a resposta individual ao treino. A mesma carga externa pode gerar cargas internas muito diferentes entre atletas, por isso a leitura combinada é necessária. Não é sinônimo de carga de treino (que é um cálculo específico via sRPE).
+
+**Módulos**: `training`, `wellness`, `analytics`
+
+**Ver também**: Carga Externa, Carga de Treino, PSE, sRPE, HRV, Wellness
+
+---
+
+### Carga Externa (`external_load`)
+**Definição**: Parâmetros objetivos e observáveis do treino, independentes da resposta fisiológica do atleta. Exemplos: duração, distância percorrida, número de repetições, séries, contatos corporais, volume de sprints, intensidade classificada (leve/moderado/pesado).
+
+**Contexto**: No handebol, a carga externa inclui parâmetros específicos da modalidade como número de arremessos, contatos de defesa, sprints em transição e distância coberta por posição. É a dimensão planejável do treino — o que o treinador controla diretamente. A resposta do atleta a essa carga é capturada pela carga interna.
+
+**Módulos**: `training`, `analytics`
+
+**Ver também**: Carga Interna, Carga de Treino, Sessão de Treino
+
+---
+
+### sRPE — Método Session RPE (`srpe`)
+**Definição**: Método de quantificação da carga de treino que combina percepção subjetiva de esforço (PSE/Borg CR-10) com a duração da sessão em minutos. Resultado: `PSE × duração (min)` em unidades arbitrárias (UA). Também referenciado como "carga de treino por sRPE".
+
+**Contexto**: No HB Track, o cálculo de `Carga de Treino` implementa o método sRPE. O termo "sRPE" designa o método validado pela literatura; o campo `training_load` nos contratos é o valor derivado. Métodos operacionais de coleta, janelas de validade e limites de interpretação pertencem a `SPORT_SCIENCE_RULES_TRAINING.md`, não a este glossário.
+
+**Módulos**: `training`, `wellness`, `analytics`
+
+**Ver também**: PSE, Carga de Treino, Carga Interna
+
+---
+
+### HRV — Variabilidade da Frequência Cardíaca (`hrv`)
+**Definição**: Medida da variação no intervalo de tempo entre batimentos cardíacos consecutivos. Indicador objetivo de status autonômico e prontidão fisiológica do atleta. Valores mais altos geralmente indicam melhor recuperação e adaptação ao treino.
+
+**Contexto**: Não coletada diretamente pelo HB Track na versão inicial (requer dispositivo externo). Quando integrada, alimenta indicadores de readiness e recuperação. Protocolos de coleta, janelas de validade e interpretação de HRV pertencem a `SPORT_SCIENCE_RULES_TRAINING.md` ou `SPORT_SCIENCE_RULES_WELLNESS.md` (futuro), não a este glossário.
+
+**Módulos**: `wellness`, `analytics`
+
+**Ver também**: Readiness, Recuperação, Carga Interna
+
+---
+
+### Recuperação (`recovery`)
+**Definição**: Processo fisiológico e psicológico de restauração da capacidade de performance após estímulo de treino ou competição. Indica o retorno do atleta ao estado de baseline ou à capacidade de suportar nova carga sem risco aumentado.
+
+**Contexto**: Distinto de `Readiness`: readiness é a prontidão estimada para a sessão atual; recuperação é o processo que a gera. No HB Track, recuperação é monitorada indiretamente através de wellness pré-sessão, variação de PSE e tendências longitudinais. Protocolos e critérios de recuperação pertencem a `SPORT_SCIENCE_RULES_TRAINING.md`.
+
+**Módulos**: `wellness`, `training`, `analytics`
+
+**Ver também**: Readiness, Wellness, Carga Interna, HRV
+
+---
+
 ### CATEGORIA: Conceitos do Sistema Contract-Driven
 
 ---
