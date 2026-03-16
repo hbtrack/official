@@ -2282,6 +2282,7 @@ _CANONICAL_GLOBAL_DOCS: list[str] = [
     ".contract_driven/templates/modulos/MODULE_SCOPE_{{MODULE_NAME_UPPER}}.md",
     ".contract_driven/templates/modulos/DOMAIN_RULES_{{MODULE_NAME_UPPER}}.md",
     ".contract_driven/templates/modulos/INVARIANTS_{{MODULE_NAME_UPPER}}.md",
+    ".contract_driven/templates/modulos/SPORT_SCIENCE_RULES_{{MODULE_NAME_UPPER}}.md",
     ".contract_driven/templates/modulos/STATE_MODEL_{{MODULE_NAME_UPPER}}.md",
     ".contract_driven/templates/modulos/PERMISSIONS_{{MODULE_NAME_UPPER}}.md",
     ".contract_driven/templates/modulos/ERRORS_{{MODULE_NAME_UPPER}}.md",
@@ -2410,10 +2411,13 @@ def _try_tool(
                 stderr=subprocess.PIPE,
                 cwd=str(cwd) if cwd else None,
                 env=merged_env,
+                timeout=10,
             )
             stdout = (result.stdout or b"").decode("utf-8", errors="replace")
             stderr = (result.stderr or b"").decode("utf-8", errors="replace")
             return result.returncode, stdout, stderr
+        except subprocess.TimeoutExpired:
+            return -1, "", f"Tool timed out (WSL/Windows interop): {cmd[0]}"
         except FileNotFoundError:
             return -1, "", f"Tool not found: {cmd[0]}"
     
@@ -2426,10 +2430,13 @@ def _try_tool(
             cwd=str(cwd) if cwd else None,
             shell=use_shell,
             env=merged_env,
+            timeout=10,
         )
         stdout = (result.stdout or b"").decode("utf-8", errors="replace")
         stderr = (result.stderr or b"").decode("utf-8", errors="replace")
         return result.returncode, stdout, stderr
+    except subprocess.TimeoutExpired:
+        return -1, "", f"Tool timed out: {cmd[0]}"
     except FileNotFoundError:
         return -1, "", f"Tool not found: {cmd[0]}"
 
@@ -2710,6 +2717,8 @@ def _collect_refs(obj: Any, refs: list[str]) -> None:
     elif isinstance(obj, list):
         for item in obj:
             _collect_refs(item, refs)
+
+
 
 
 # ── Gate implementations ──────────────────────────────────────────────────────

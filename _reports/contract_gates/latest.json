@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-03-14T06:32:43Z",
+  "timestamp_utc": "2026-03-16T02:11:41Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,11 +9,11 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "e88a965",
+    "git_commit": "a062ea0",
     "python_version": "3.12.3",
     "tool_versions": {
-      "redocly": "2.21.0",
-      "spectral": "6.15.0",
+      "redocly": null,
+      "spectral": null,
       "oasdiff": null,
       "schemathesis": "/bin/bash: line 1: schemathesis: command not found",
       "json_schema_validator": null,
@@ -45,7 +45,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 146
+        "duration_ms": 44
       }
     },
     {
@@ -70,7 +70,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 3
       }
     },
     {
@@ -79,7 +79,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Todos os 137 artefatos obrigatórios presentes.",
+      "summary": "Todos os 138 artefatos obrigatórios presentes.",
       "inputs": [],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/README.md",
@@ -111,6 +111,7 @@
         "/home/davis/HB-TRACK/.contract_driven/templates/modulos/MODULE_SCOPE_{{MODULE_NAME_UPPER}}.md",
         "/home/davis/HB-TRACK/.contract_driven/templates/modulos/DOMAIN_RULES_{{MODULE_NAME_UPPER}}.md",
         "/home/davis/HB-TRACK/.contract_driven/templates/modulos/INVARIANTS_{{MODULE_NAME_UPPER}}.md",
+        "/home/davis/HB-TRACK/.contract_driven/templates/modulos/SPORT_SCIENCE_RULES_{{MODULE_NAME_UPPER}}.md",
         "/home/davis/HB-TRACK/.contract_driven/templates/modulos/STATE_MODEL_{{MODULE_NAME_UPPER}}.md",
         "/home/davis/HB-TRACK/.contract_driven/templates/modulos/PERMISSIONS_{{MODULE_NAME_UPPER}}.md",
         "/home/davis/HB-TRACK/.contract_driven/templates/modulos/ERRORS_{{MODULE_NAME_UPPER}}.md",
@@ -325,7 +326,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 109
+        "duration_ms": 63
       }
     },
     {
@@ -338,10 +339,12 @@
       "inputs": [],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/docs/_canon/ARCHITECTURE.md",
+        "/home/davis/HB-TRACK/docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md",
         "/home/davis/HB-TRACK/docs/_canon/C4_CONTAINERS.md",
         "/home/davis/HB-TRACK/docs/_canon/C4_CONTEXT.md",
         "/home/davis/HB-TRACK/docs/_canon/CHANGE_POLICY.md",
         "/home/davis/HB-TRACK/docs/_canon/DATA_CONVENTIONS.md",
+        "/home/davis/HB-TRACK/docs/_canon/DECISION_POLICY.md",
         "/home/davis/HB-TRACK/docs/_canon/DESIGN_SYSTEM.md",
         "/home/davis/HB-TRACK/docs/_canon/DOMAIN_GLOSSARY.md",
         "/home/davis/HB-TRACK/docs/_canon/ERROR_MODEL.md",
@@ -352,7 +355,8 @@
         "/home/davis/HB-TRACK/docs/_canon/SECURITY_RULES.md",
         "/home/davis/HB-TRACK/docs/_canon/SYSTEM_SCOPE.md",
         "/home/davis/HB-TRACK/docs/_canon/TEST_STRATEGY.md",
-        "/home/davis/HB-TRACK/docs/_canon/UI_FOUNDATIONS.md"
+        "/home/davis/HB-TRACK/docs/_canon/UI_FOUNDATIONS.md",
+        "/home/davis/HB-TRACK/docs/_canon/gates/README.md"
       ],
       "evidence_files": [],
       "violations": [],
@@ -360,7 +364,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 5
+        "duration_ms": 1
       }
     },
     {
@@ -381,7 +385,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 53
+        "duration_ms": 35
       }
     },
     {
@@ -444,7 +448,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 24
+        "duration_ms": 25
       }
     },
     {
@@ -465,7 +469,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 22
+        "duration_ms": 25
       }
     },
     {
@@ -486,7 +490,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 50
+        "duration_ms": 51
       }
     },
     {
@@ -516,9 +520,12 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Nenhum token placeholder em 40 arquivo(s) verificado(s).",
+      "summary": "Nenhum token placeholder em 43 arquivo(s) verificado(s).",
       "inputs": [],
       "artifacts_checked": [
+        "/home/davis/HB-TRACK/contracts/_waivers/CONTRACT_BREAKING_CHANGE_GATE/README.md",
+        "/home/davis/HB-TRACK/contracts/_waivers/README.md",
+        "/home/davis/HB-TRACK/contracts/_waivers/waiver.schema.json",
         "/home/davis/HB-TRACK/contracts/asyncapi/README.md",
         "/home/davis/HB-TRACK/contracts/asyncapi/asyncapi.yaml",
         "/home/davis/HB-TRACK/contracts/asyncapi/channels/training_attendance_marked.yaml",
@@ -566,7 +573,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 3
       }
     },
     {
@@ -609,7 +616,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 49
+        "duration_ms": 50
       }
     },
     {
@@ -631,7 +638,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4448
+        "duration_ms": 1857
       }
     },
     {
@@ -653,7 +660,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2290
+        "duration_ms": 1261
       }
     },
     {
@@ -805,12 +812,14 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/teams/README.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/teams/TEST_MATRIX_TEAMS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/training",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/ARCH_DECISIONS_TRAINING.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/CONTRACT_TRAINING.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/DOMAIN_AXIOMS_TRAINING.json",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/MODULE_SCOPE_TRAINING.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/README.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/SPORT_SCIENCE_RULES_TRAINING.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/training/TEST_MATRIX_TRAINING.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/users",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/users/DOMAIN_RULES_USERS.md",
@@ -831,7 +840,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 120
+        "duration_ms": 126
       }
     },
     {
@@ -855,7 +864,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 146
+        "duration_ms": 89
       }
     },
     {
@@ -913,7 +922,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2904
+        "duration_ms": 2274
       }
     },
     {
@@ -971,7 +980,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1301
+        "duration_ms": 1437
       }
     },
     {
