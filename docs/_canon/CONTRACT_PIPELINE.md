@@ -33,7 +33,7 @@ Regra:
 
 | Estágio | Autoridade obrigatória | Evidência obrigatória | Enforcement técnico | Condição de avanço |
 | --- | --- | --- | --- | --- |
-| Pre-contract | `RULES`, `LAYOUT`, `MODULE_REGISTRY`, `BOOT_PROFILES` | `_reports/agent_execution/*.json`, `_reports/evidence/boot_resolution_report.json` | pre-contract orchestrator, `PRE_CONTRACT_EVIDENCE_GATE`, `MODULE_REGISTRY_GATE` | worker destino resolvido, boot classificado e foundation pronta |
+| Pre-contract | `RULES`, `LAYOUT`, `MODULE_REGISTRY`, `BOOT_PROFILES` | `_reports/agent_execution/*.json`, `_reports/evidence/boot_resolution_report.json`, `SESSION_HANDOFF.md` (quando existir) | pre-contract orchestrator, `PRE_CONTRACT_EVIDENCE_GATE`, `MODULE_REGISTRY_GATE` | worker destino resolvido, boot classificado e foundation pronta |
 | Decision Discovery | `DECISION_POLICY`, backlog arquitetural, ADRs aceitas, DSS apenas como apoio | ADR criada/atualizada ou bloqueio explícito | `.contract_driven/agent_prompts/decision_discovery.prompt.md`, backlog/ADR workflow | nenhuma decisão obrigatória em aberto |
 | Authoring | templates SSOT, docs de módulo, contratos soberanos, `MODULE_REGISTRY.expected_surfaces` | artefatos soberanos nos paths canônicos + derivados em `generated/` | workers especializados, generators, validações locais | artefato escrito no path correto, sem inferência fora do canon |
 | Validation | `CI_CONTRACT_GATES.md`, `GATES_REGISTRY`, `TOOLCHAIN_HEALTH_POLICY` | `_reports/contract_gates/latest.json` | `validate_contracts.py`, gates oficiais, CI | nenhum gate bloqueante em `FAIL` |

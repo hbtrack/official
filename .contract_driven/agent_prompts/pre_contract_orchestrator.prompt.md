@@ -44,6 +44,21 @@ Com base em `task_type`, o orquestrador roteia para o worker correto após a fas
 
 ---
 
+### Pré-Fase — Verificação de SESSION_HANDOFF
+
+Antes de qualquer outra ação, verificar se existe `SESSION_HANDOFF.md` na raiz do projeto.
+
+- Se existir → **ler integralmente** antes de prosseguir. O handoff contém o estado da sessão anterior, bloqueios ativos, decisões pendentes e próximos passos.
+- Se não existir → criar a partir do template em `docs/_canon/templates/SESSION_HANDOFF.template.md` ao final da sessão.
+
+Ao concluir qualquer tarefa neste orquestrador, **atualizar `SESSION_HANDOFF.md`** com:
+- O que foi realizado nesta sessão
+- Estado atual do módulo/contrato trabalhado
+- Próximos passos recomendados
+- Decisões que o humano precisa tomar
+
+---
+
 ### Fase 0 — Classificação e Verificação de Entrada (padrão Routing)
 
 Executar antes de qualquer leitura de domínio ou autoria:
