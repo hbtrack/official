@@ -51,16 +51,20 @@ Ele **não** substitui:
 | Templates globais (canon humano) | Não (scaffold) | `.contract_driven/templates/globais/*` | `.contract_driven/templates/globais/*` | N/A |
 | Templates de módulo (docs + schemas) | Não (scaffold) | `.contract_driven/templates/modulos/*` | `.contract_driven/templates/modulos/*` | N/A |
 | SSOT de API HTTP (regras/validações/templates) | Sim | `.contract_driven/templates/api/api_rules.yaml` | N/A | N/A |
+| Prompts operacionais de agente | Não (executor) | `.contract_driven/agent_prompts/*` | N/A | `_reports/agent_execution/`, `_reports/evidence/boot_resolution_report.json` |
 | Canon global (docs) | Sim | `docs/_canon/*` | `.contract_driven/templates/globais/*` | `_reports/` (evidências) |
+| Registros operacionais globais | Sim | `docs/_canon/CONTRACT_PIPELINE.md`, `docs/_canon/BOOT_PROFILES.md`, `docs/_canon/TOOLCHAIN_HEALTH_POLICY.md`, `docs/_canon/MODULE_REGISTRY.yaml`, `docs/_canon/gates/GATES_REGISTRY.yaml` | N/A | `_reports/` (evidências), `generated/` (derivados) |
 | Docs normativos de módulo | Sim | `docs/hbtrack/modulos/<module>/*` | `.contract_driven/templates/modulos/*` | `_reports/` (evidências) |
-| Contrato OpenAPI | Sim | `contracts/openapi/*` | `.contract_driven/templates/api/api_rules.yaml` (HTTP) | `generated/openapi/*` |
-| Schemas de domínio (JSON Schema) | Sim | `contracts/schemas/*` | `.contract_driven/templates/modulos/schemas/*` | `generated/clients/*`, `generated/ui-types/*` |
+| DSS / apoio decisório | Não | `docs/hbtrack/decisoes/*` | N/A | `_reports/` (evidências) |
+| Contrato OpenAPI | Sim | `contracts/openapi/*` | `.contract_driven/templates/api/api_rules.yaml` (HTTP) | `generated/resolved_policy/*`, `generated/manifests/*`, `generated/contracts/openapi/*` |
+| Schemas de domínio (JSON Schema) | Sim | `contracts/schemas/*` | `.contract_driven/templates/modulos/schemas/*` | `generated/resolved_policy/*`, `generated/manifests/*`, `generated/clients/*`, `generated/ui-types/*` |
 | Workflows (Arazzo) | Sim | `contracts/workflows/*` | N/A | `generated/*` |
-| Eventos (AsyncAPI) | Sim | `contracts/asyncapi/*` | N/A | `generated/asyncapi/*` |
+| Eventos (AsyncAPI) | Sim | `contracts/asyncapi/*` | N/A | `generated/contracts/asyncapi/*`, `generated/manifests/*` |
 
 Regras:
 - `templates/*` são **SSOT de scaffold**: agentes DEVEM instanciar artefatos copiando destas fontes (não improvisar estrutura).
 - Artefatos em `_reports/` e `generated/` são sempre derivados e nunca sobrepõem fontes soberanas.
+- `docs/hbtrack/decisoes/*` é sempre não-soberano; só pode usar linguagem de autoridade com disclaimer explícito.
 
 ---
 
@@ -239,20 +243,29 @@ Local canônico obrigatório:
 
 ```text
 generated/
-  openapi/
-  asyncapi/
-  clients/
-  ui-types/
-  docs/
-  storybook/
+  contracts/
+    openapi/
+    asyncapi/
+  manifests/
+  resolved_policy/
 
 _reports/
   contract_gates/
+  agent_execution/
+  dispatch/
   test_runs/
   evidence/
 ```
 
 Nenhum artefato gerado pode ser commitado como se fosse soberano.
+
+Artefatos derivados com path canônico explícito:
+- `generated/resolved_policy/*.resolved.yaml` = política resolvida por módulo/surface;
+- `generated/manifests/*.traceability.yaml` = manifesto derivado de rastreabilidade;
+- `_reports/contract_gates/latest.json` = relatório corrente do pipeline;
+- `_reports/agent_execution/latest.json` = ponteiro derivado para a evidência pré-contrato mais recente;
+- `_reports/evidence/boot_resolution_report.json` = resolução do boot efetivamente aplicada;
+- `_reports/evidence/module_readiness_scorecard.json` = scorecard derivado de readiness.
 
 ---
 
@@ -270,6 +283,9 @@ Arquivos canônicos:
 - `.contract_driven/CONTRACT_SYSTEM_RULES.md`
 - `.contract_driven/GLOBAL_TEMPLATES.md`
 
+Artefatos operacionais não soberanos:
+- `.contract_driven/agent_prompts/*.prompt.md`
+
 Templates SSOT (scaffolds) vivem em:
 - `.contract_driven/templates/README.md`
 - `.contract_driven/templates/globais/`
@@ -286,6 +302,7 @@ Arquivos canônicos:
 - `docs/_canon/SYSTEM_SCOPE.md`
 - `docs/_canon/ARCHITECTURE.md`
 - `docs/_canon/MODULE_MAP.md`
+- `docs/_canon/MODULE_REGISTRY.yaml`
 - `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml`
 - `docs/_canon/CHANGE_POLICY.md`
 - `docs/_canon/API_CONVENTIONS.md`
@@ -295,6 +312,9 @@ Arquivos canônicos:
 - `docs/_canon/DOMAIN_GLOSSARY.md`
 - `docs/_canon/HANDBALL_RULES_DOMAIN.md`
 - `docs/_canon/SECURITY_RULES.md`
+- `docs/_canon/CONTRACT_PIPELINE.md`
+- `docs/_canon/BOOT_PROFILES.md`
+- `docs/_canon/TOOLCHAIN_HEALTH_POLICY.md`
 - `docs/_canon/CI_CONTRACT_GATES.md`
 - `docs/_canon/TEST_STRATEGY.md`
 - `docs/_canon/DECISION_POLICY.md`
@@ -306,6 +326,20 @@ Arquivos canônicos:
 - `docs/_canon/decisions/ADR-*.md`
 - `docs/_canon/gates/README.md`
 - `docs/_canon/gates/GATES_REGISTRY.yaml`
+
+### 4A.2A Documentação de apoio não soberana
+
+Estes arquivos vivem em:
+
+- `docs/hbtrack/decisoes/`
+
+Arquivos de classificação obrigatória:
+- `docs/hbtrack/decisoes/README.md`
+- `docs/hbtrack/decisoes/*.md`
+
+Regra:
+- a classificação não soberana desta pasta deve existir simultaneamente em `LAYOUT`, `RULES` e no `README` local da pasta;
+- ausência do `README` local torna a classificação ambígua e deve ser tratada como gap de governança.
 
 ### 4A.3 Documentação normativa de módulo
 Estes arquivos vivem em:

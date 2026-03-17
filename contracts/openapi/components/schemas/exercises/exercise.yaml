@@ -1,0 +1,231 @@
+# Exercise schema — full domain DTO (detail endpoint)
+# Rich domain object with all attributes. Served only at GET /exercises/{id}.
+# Related docs:
+# - docs/hbtrack/modulos/exercises/DOMAIN_RULES_EXERCISES.md
+# - docs/hbtrack/modulos/exercises/INVARIANTS_EXERCISES.md
+# - docs/hbtrack/decisoes/ARCH_DECISIONS_TRAINING.md (TRAIN-DEC-047, TRAIN-DEC-048)
+
+type: object
+additionalProperties: false
+required:
+  - id
+  - name
+  - scope
+  - sessionPhase
+  - primaryObjective
+  - physicalLoad
+  - estimatedDurationMinutes
+  - spaceRequired
+  - ageCategories
+  - skillLevel
+  - complexity
+  - minAthletes
+  - maxAthletes
+  - currentVersionId
+  - currentVersionNumber
+  - visibilityMode
+  - createdByUserId
+  - createdAt
+  - updatedAt
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  organizationId:
+    type: [string, "null"]
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    description: >
+      NULL for SYSTEM exercises. Required for ORG exercises. INV-EXB-002.
+  scope:
+    type: string
+    x-domain-enum-ref: exercise_scope
+    enum:
+      - SYSTEM
+      - ORG
+  visibilityMode:
+    type: string
+    x-domain-enum-ref: exercise_visibility_mode
+    enum:
+      - ORG_WIDE
+      - RESTRICTED
+    description: >
+      Applicable to ORG exercises only. Default: RESTRICTED.
+      SYSTEM exercises are always visible to all authenticated users.
+  name:
+    type: string
+    minLength: 3
+    maxLength: 120
+  description:
+    type: string
+    maxLength: 2000
+    description: Pedagogical description of the exercise objective and context.
+  instructions:
+    type: string
+    maxLength: 5000
+    description: Step-by-step setup and execution instructions for the coach.
+  coachingCues:
+    type: string
+    maxLength: 1000
+    description: Key coaching points to observe and communicate during execution.
+  safetyNotes:
+    type: string
+    maxLength: 500
+    description: Safety considerations, contraindications or risk warnings.
+  sessionPhase:
+    type: string
+    x-domain-enum-ref: session_block_phase
+    enum:
+      - WARMUP
+      - ACTIVATION
+      - TECHNICAL
+      - DECISION_MAKING
+      - TACTICAL
+      - REDUCED_GAME
+      - COOLDOWN
+  primaryObjective:
+    type: string
+    x-domain-enum-ref: exercise_primary_objective
+    enum:
+      - TECHNICAL
+      - TACTICAL
+      - PHYSICAL
+      - DECISION_MAKING
+      - MIXED
+  secondaryObjective:
+    type: string
+    x-domain-enum-ref: exercise_primary_objective
+    enum:
+      - TECHNICAL
+      - TACTICAL
+      - PHYSICAL
+      - DECISION_MAKING
+      - MIXED
+  gamePhases:
+    type: array
+    items:
+      type: string
+      x-domain-enum-ref: exercise_game_phase
+      enum:
+        - POSITIONAL_ATTACK
+        - POSITIONAL_DEFENSE
+        - OFFENSIVE_TRANSITION
+        - DEFENSIVE_TRANSITION
+        - SET_PIECE
+    description: Handball game phases this exercise is designed to develop.
+  ageCategories:
+    type: array
+    minItems: 1
+    items:
+      type: string
+      x-domain-enum-ref: exercise_age_category
+      enum:
+        - SUB_12
+        - SUB_14
+        - SUB_16
+        - SUB_18
+        - ADULT
+  skillLevel:
+    type: string
+    x-domain-enum-ref: exercise_skill_level
+    enum:
+      - BEGINNER
+      - INTERMEDIATE
+      - ADVANCED
+      - ELITE
+  complexity:
+    type: integer
+    minimum: 1
+    maximum: 5
+    description: Editorial complexity rating (1=simplest, 5=most complex). DR-EXB-007.
+  physicalLoad:
+    type: string
+    x-domain-enum-ref: exercise_physical_load
+    enum:
+      - LOW
+      - MEDIUM
+      - HIGH
+      - MAXIMUM
+  minAthletes:
+    type: integer
+    minimum: 1
+    maximum: 50
+  maxAthletes:
+    type: integer
+    minimum: 1
+    maximum: 50
+    description: maxAthletes >= minAthletes (INV-EXB-003).
+  estimatedDurationMinutes:
+    type: integer
+    minimum: 1
+    maximum: 180
+  spaceRequired:
+    type: string
+    x-domain-enum-ref: exercise_space_required
+    enum:
+      - HALF_COURT
+      - FULL_COURT
+      - REDUCED_AREA
+      - NO_COURT
+  materials:
+    type: array
+    items:
+      type: string
+      maxLength: 60
+    description: List of required materials (e.g., "coletes", "cones", "bolas").
+  currentVersionId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    description: Current active version UUID. TRAIN-DEC-048.
+  currentVersionNumber:
+    type: integer
+    minimum: 1
+  thumbnailUrl:
+    type: string
+    format: uri
+    maxLength: 512
+  createdByUserId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  createdAt:
+    type: string
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+  updatedAt:
+    type: string
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+  deletedAt:
+    type: [string, "null"]
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+
+example:
+  id: "550e8400-e29b-41d4-a716-446655440100"
+  organizationId: null
+  scope: "SYSTEM"
+  visibilityMode: "ORG_WIDE"
+  name: "Triangulação com finalização"
+  description: "Exercício de ataque posicional em triangulação com conclusão à baliza."
+  instructions: "1. Divide athletes in groups of 3 near the 9m line.\n2. Execute triangulation passes.\n3. Attacker receives ball and finishes."
+  coachingCues: "Timing of cuts, body positioning before shot, goalkeeper engagement."
+  sessionPhase: "TACTICAL"
+  primaryObjective: "TACTICAL"
+  gamePhases: ["POSITIONAL_ATTACK"]
+  ageCategories: ["SUB_16", "SUB_18", "ADULT"]
+  skillLevel: "INTERMEDIATE"
+  complexity: 3
+  physicalLoad: "MEDIUM"
+  minAthletes: 6
+  maxAthletes: 14
+  estimatedDurationMinutes: 12
+  spaceRequired: "HALF_COURT"
+  materials: ["bolas", "cones"]
+  currentVersionId: "550e8400-e29b-41d4-a716-446655440101"
+  currentVersionNumber: 1
+  createdByUserId: "550e8400-e29b-41d4-a716-446655440040"
+  createdAt: "2026-03-01T10:00:00Z"
+  updatedAt: "2026-03-01T10:00:00Z"

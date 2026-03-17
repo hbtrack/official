@@ -37,14 +37,78 @@ servers:
 #                      reports, ai_ingestion
 #   Cross-cutting:     identity_access, audit, notifications
 paths:
+  # GENERATED PATH INVENTORY — do not edit manually.
+  # Source: scripts/generate/gen_openapi_root_inventory.py
   # training module - path items defined in ./paths/training.yaml
   /training-sessions:
     $ref: ./paths/training.yaml#/~1training-sessions
   /training-sessions/{id}:
     $ref: ./paths/training.yaml#/~1training-sessions~1{id}
+  /training-sessions/{id}/blocks:
+    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1blocks
+  /training-sessions/{id}/blocks/{blockId}:
+    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1blocks~1{blockId}
+  /training-sessions/{id}/blocks/reorder:
+    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1blocks~1reorder
   /training-sessions/{id}/attendance:
     $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1attendance
-
+  /training-sessions/{id}/wellness-pre:
+    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1wellness-pre
+  /training-sessions/{id}/wellness-pre/{athleteId}:
+    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1wellness-pre~1{athleteId}
+  /training-sessions/{id}/wellness-post:
+    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1wellness-post
+  /training-sessions/{id}/wellness-post/{athleteId}:
+    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1wellness-post~1{athleteId}
+  /mesocycles:
+    $ref: ./paths/training.yaml#/~1mesocycles
+  /mesocycles/{id}:
+    $ref: ./paths/training.yaml#/~1mesocycles~1{id}
+  /microcycles:
+    $ref: ./paths/training.yaml#/~1microcycles
+  /microcycles/{id}:
+    $ref: ./paths/training.yaml#/~1microcycles~1{id}
+  /training-sessions/{id}/start:
+    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1start
+  /training-sessions/{id}/complete:
+    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1complete
+  /training-sessions/{id}/execution-records:
+    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1execution-records
+  /training-sessions/{id}/execution-records/{recordId}:
+    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1execution-records~1{recordId}
+  /training-sessions/{id}/feedback-threads:
+    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1feedback-threads
+  /training-sessions/{id}/objectives:
+    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1objectives
+  /training-sessions/{id}/attention-queue:
+    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1attention-queue
+  /training-sessions/{id}/cancel:
+    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1cancel
+  /training-sessions/{id}/publish:
+    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1publish
+  /training-sessions/{id}/unpublish:
+    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1unpublish
+  /training-sessions/{id}/archive:
+    $ref: ./paths/training.yaml#/~1training-sessions~1{id}~1archive
+  # exercises module - path items defined in ./paths/exercises.yaml
+  /exercises:
+    $ref: ./paths/exercises.yaml#/~1exercises
+  /exercises/{id}:
+    $ref: ./paths/exercises.yaml#/~1exercises~1{id}
+  /exercises/{id}/copy:
+    $ref: ./paths/exercises.yaml#/~1exercises~1{id}~1copy
+  /exercises/{id}/versions:
+    $ref: ./paths/exercises.yaml#/~1exercises~1{id}~1versions
+  /exercises/{id}/versions/{versionId}:
+    $ref: ./paths/exercises.yaml#/~1exercises~1{id}~1versions~1{versionId}
+  /exercises/{id}/relations:
+    $ref: ./paths/exercises.yaml#/~1exercises~1{id}~1relations
+  /exercises/{id}/relations/{relationId}:
+    $ref: ./paths/exercises.yaml#/~1exercises~1{id}~1relations~1{relationId}
+  /exercises/{id}/acl:
+    $ref: ./paths/exercises.yaml#/~1exercises~1{id}~1acl
+  /exercises/{id}/acl/{userId}:
+    $ref: ./paths/exercises.yaml#/~1exercises~1{id}~1acl~1{userId}
 components:
   parameters:
     pageSize:

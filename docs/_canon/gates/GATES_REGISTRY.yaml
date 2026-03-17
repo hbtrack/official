@@ -4,11 +4,25 @@
 # Verificado pelo REQUIRED_ARTIFACT_PRESENCE_GATE no pipeline.
 # Spec normativa completa: docs/_canon/CI_CONTRACT_GATES.md
 # -------------------------------------------------------------------------
-version: "1.0.0"
-last_reviewed: "2026-03-14"
+version: "1.1.0"
+last_reviewed: "2026-03-16"
 spec_ref: "docs/_canon/CI_CONTRACT_GATES.md"
 implementation_ref: "scripts/contracts/validate/validate_contracts.py"
 evidence_output: "_reports/contract_gates/latest.json"
+authority_refs:
+  rules_ref: ".contract_driven/CONTRACT_SYSTEM_RULES.md"
+  layout_ref: ".contract_driven/CONTRACT_SYSTEM_LAYOUT.md"
+  pipeline_ref: "docs/_canon/CONTRACT_PIPELINE.md"
+  boot_profiles_ref: "docs/_canon/BOOT_PROFILES.md"
+  toolchain_health_ref: "docs/_canon/TOOLCHAIN_HEALTH_POLICY.md"
+  module_registry_ref: "docs/_canon/MODULE_REGISTRY.yaml"
+operational_entrypoints:
+  pre_contract_orchestrator: ".contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md"
+canonicalization_policy:
+  normative_rule_required: true
+  operational_registry_required: true
+  technical_enforcement_required: true
+  prompt_is_execution_only: true
 
 gates:
   - gate_id: AXIOM_INTEGRITY_GATE
@@ -116,6 +130,22 @@ gates:
       ]
     status: active
 
+  - gate_id: MODULE_REGISTRY_GATE
+    order: "2D1"
+    name: "Module Registry Gate"
+    blocking: true
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: always
+    depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
+    description: >
+      Verifica presença e validade de `docs/_canon/MODULE_REGISTRY.yaml`.
+      O registry é a fonte determinística de status operacional, owner e superfícies esperadas
+      por módulo; deve alinhar com a taxonomia canônica de 16 módulos.
+    blocking_codes:
+      [MODULE_REGISTRY_MISSING, MODULE_REGISTRY_INVALID, MODULE_REGISTRY_MISMATCH]
+    status: active
+
   - gate_id: BOUNDARY_USERS_IDENTITY_ACCESS_GATE
     order: "2E"
     name: "Boundary Users / Identity Access Gate"
@@ -189,6 +219,71 @@ gates:
     blocking_codes: [EXTERNAL_TREATED_AS_SOVEREIGN]
     status: active
 
+  - gate_id: PRE_CONTRACT_EVIDENCE_GATE
+    order: "2J"
+    name: "Pre-Contract Evidence Gate"
+    blocking: true
+    severity: HIGH
+    parallelizable: false
+    applies_when: module_registry_has_validated_contract_or_ready_modules
+    depends_on: [MODULE_REGISTRY_GATE]
+    description: >
+      Exige evidência estruturada da fase pré-contrato em `_reports/agent_execution/`
+      para módulos com status `validated_contract` ou `implementation_ready` no MODULE_REGISTRY.
+      O boot efetivamente aplicado deve ser rastreável pelo Boot Resolution Report.
+    blocking_codes: [PRE_CONTRACT_EVIDENCE_MISSING, PRE_CONTRACT_EVIDENCE_INVALID]
+    status: active
+
+  - gate_id: SHADOW_AUTHORITY_GATE
+    order: "2K"
+    name: "Shadow Authority Gate"
+    blocking: true
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
+    description: >
+      Bloqueia documentos não-soberanos com linguagem de autoridade sem disclaimer explícito.
+      Evita que DSS, drafts ou análises paralelas sejam tratados como SSOT pelos agentes.
+    blocking_codes: [SHADOW_AUTHORITY_DETECTED]
+    status: active
+
+  - gate_id: DECISION_IR_CONFORMANCE_GATE
+    order: "2L"
+    name: "Decision IR Conformance Gate"
+    blocking: true
+    severity: HIGH
+    parallelizable: false
+    applies_when: module_registry_has_implementation_ready_decision_ir
+    depends_on: [MODULE_REGISTRY_GATE]
+    description: >
+      Valida `MODULE_DECISION_IR` em `.dev/` quando o módulo atinge `implementation_ready`
+      e declara a superfície `decision_ir` no MODULE_REGISTRY.
+    blocking_codes:
+      [
+        IR_SCHEMA_INVALID,
+        IR_UNKNOWN_MODULE,
+        IR_UNKNOWN_SEMANTIC_TYPE_REF,
+        IR_UNKNOWN_REGISTRY_REF,
+        IR_REGISTRY_DRIFT,
+        IR_ENTITY_WITHOUT_REQUIRED_FIELDS,
+        IR_FIELD_WITHOUT_CANONICAL_TYPE,
+        IR_RELATION_WITHOUT_OWNERSHIP,
+        IR_RELATION_WITHOUT_DELETE_POLICY,
+        IR_LIFECYCLE_WITHOUT_STATE_MODEL,
+        IR_INVALID_STATE_TRANSITION,
+        IR_RULE_WITHOUT_FORMAL_CHECK_HINT,
+        IR_API_USE_CASE_INCOMPLETE,
+        IR_UI_FLOW_INCOMPLETE_WHEN_UI_APPLICABLE,
+        IR_PERMISSION_MODEL_INCOMPLETE_WHEN_RBAC_APPLICABLE,
+        IR_ERROR_MODEL_INCOMPLETE_WHEN_DOMAIN_ERRORS_APPLICABLE,
+        IR_EVENT_MODEL_INCOMPLETE_WHEN_EVENTS_APPLICABLE,
+        IR_OPEN_DECISION_BLOCKING,
+        IR_SURFACE_MAPPING_INCOMPLETE,
+        IR_NON_DETERMINISTIC_MATERIALIZATION_RISK,
+      ]
+    status: active
+
   - gate_id: PLACEHOLDER_RESIDUE_GATE
     order: 3
     name: "Placeholder Residue Gate"
@@ -217,6 +312,22 @@ gates:
     blocking_codes: [REF_OUTSIDE_SOVEREIGN_GRAPH, REF_TO_DERIVED_AS_SOURCE]
     status: active
 
+  - gate_id: TOOLING_CONFIG_GATE
+    order: "4A"
+    name: "Tooling Config Gate"
+    blocking: true
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: always
+    depends_on: [REF_HERMETICITY_GATE]
+    description: >
+      Valida compatibilidade entre toolchain instalada, `package.json`, `redocly.yaml`
+      e policy de saúde da toolchain antes dos gates semânticos.
+      Em auditoria local pode retornar `DEGRADED` quando apenas `oasdiff`/`schemathesis`
+      estiverem ausentes, conforme `TOOLCHAIN_HEALTH_POLICY.md`.
+    blocking_codes: [TOOLING_CONFIG_INVALID]
+    status: active
+
   - gate_id: OPENAPI_ROOT_STRUCTURE_GATE
     order: 5
     name: "OpenAPI Root Structure Gate"
@@ -224,11 +335,26 @@ gates:
     severity: CRITICAL
     parallelizable: false
     applies_when: always
-    depends_on: [REF_HERMETICITY_GATE]
+    depends_on: [TOOLING_CONFIG_GATE]
     description: >
       O documento OpenAPI raiz deve ser estruturalmente válido, verificado via Redocly CLI.
       Garante que o bundle é legível por consumidores antes de validações semânticas.
     blocking_codes: [OPENAPI_STRUCTURE_INVALID]
+    status: active
+
+  - gate_id: OPENAPI_ROOT_MODULE_SYNC_GATE
+    order: "5A"
+    name: "OpenAPI Root / Modules Sync Gate"
+    blocking: true
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: modules_have_openapi_sync_surface
+    depends_on: [OPENAPI_ROOT_STRUCTURE_GATE, MODULE_REGISTRY_GATE]
+    description: >
+      Garante alinhamento 1:1 entre `contracts/openapi/openapi.yaml` e os path files
+      reais dos módulos em `contracts/openapi/paths/*.yaml`.
+      O inventário raiz deve continuar derivado do conjunto real de módulos/superfícies.
+    blocking_codes: [OPENAPI_ROOT_MODULE_SYNC_MISMATCH]
     status: active
 
   - gate_id: OPENAPI_POLICY_RULESET_GATE
@@ -379,7 +505,7 @@ gates:
     status: active
 
   - gate_id: ARCH_DECISION_PRESENCE_GATE
-    order: "2K"
+    order: "2M"
     name: "Architecture Decision Presence Gate"
     blocking: true
     severity: HIGH

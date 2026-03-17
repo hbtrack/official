@@ -1,0 +1,80 @@
+# Mesocycle schema — periodization meso-level
+# Module: training
+# Invariants: INV-TRAIN-037 (startDate < endDate), INV-TRAIN-054 (belongs to macrocycle),
+#             INV-TRAIN-055 (overlap allowed)
+# Domain rules: DR-TRAIN-H04 (4-level periodization)
+
+type: object
+additionalProperties: false
+required:
+  - id
+  - organizationId
+  - teamId
+  - name
+  - startDate
+  - endDate
+  - createdAt
+  - updatedAt
+  - createdByUserId
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  organizationId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  teamId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  macrocycleId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    description: Optional link to macrocycle (managed by seasons module)
+  name:
+    type: string
+    minLength: 1
+    maxLength: 120
+  cycleType:
+    type: string
+    maxLength: 32
+    description: e.g. preparation, competition, transition, recovery
+  startDate:
+    type: string
+    format: date
+    pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+    description: >
+      Start date (ISO 8601 date, ADR-009). MUST be strictly less than endDate (INV-TRAIN-037).
+  endDate:
+    type: string
+    format: date
+    pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+    description: >
+      End date (ISO 8601 date, ADR-009). MUST be strictly greater than startDate (INV-TRAIN-037).
+      Overlapping mesocycles within same team/macrocycle are allowed (INV-TRAIN-055).
+  mainObjective:
+    type: string
+    maxLength: 255
+  createdAt:
+    type: string
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+  createdByUserId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  updatedAt:
+    type: string
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+  deletedAt:
+    type: [string, "null"]
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+  deletedReason:
+    type: [string, "null"]
+    minLength: 1
+    description: Required when deletedAt is set (INV-TRAIN-008)

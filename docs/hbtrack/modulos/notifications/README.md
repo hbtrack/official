@@ -3,6 +3,11 @@ module: "notifications"
 system_scope_ref: "../../../_canon/SYSTEM_SCOPE.md"
 handball_rules_ref: "../../../_canon/HANDBALL_RULES_DOMAIN.md"
 handball_semantic_applicability: false
+type: "readme"
+module_scope_ref: "./MODULE_SCOPE_NOTIFICATIONS.md"
+domain_rules_ref: "./DOMAIN_RULES_NOTIFICATIONS.md"
+invariants_ref: "./INVARIANTS_NOTIFICATIONS.md"
+test_matrix_ref: "./TEST_MATRIX_NOTIFICATIONS.md"
 contract_path_ref: "../../../../contracts/openapi/paths/notifications.yaml"
 schemas_ref: "../../../../contracts/schemas/notifications/"
 ---

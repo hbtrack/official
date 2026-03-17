@@ -52,6 +52,10 @@ Regra: em caso de conflito entre níveis, o nível superior prevalece sempre.
 | 18 | `HANDBALL_RULES_DOMAIN.md` | Regras IHF documentadas (HBR-001..) — âncora normativa para módulos handball-sensíveis |
 | 19 | `security/OWASP_API_CONTROL_MATRIX.yaml` | Matriz normativa (OWASP → declaração → evidência → gate) para controles de segurança de API |
 | 20 | `MODULE_SOURCE_AUTHORITY_MATRIX.yaml` | Matriz normativa por módulo: fontes permitidas, artefatos obrigatórios e limites de inferência (gera gates de boundary/async/autoridade) |
+| 21 | `MODULE_REGISTRY.yaml` | Registro determinístico por módulo: status operacional, owner e superfícies esperadas para readiness e governança |
+| 22 | `TOOLCHAIN_HEALTH_POLICY.md` | Política canônica da toolchain: ferramentas obrigatórias, timeouts, degradação local e evidências |
+| 23 | `CONTRACT_PIPELINE.md` | Estágios oficiais do pipeline contract-driven, com inputs, outputs e bloqueios permitidos |
+| 24 | `BOOT_PROFILES.md` | Perfis de boot por `task_type` e formato do Boot Resolution Report |
 
 ## Ordem Recomendada de Leitura
 
@@ -67,10 +71,13 @@ Para novos colaboradores e agentes, leia nesta sequência:
 8. **`ERROR_MODEL.md`** — consulte antes de definir respostas de erro em qualquer endpoint
 9. **`DATA_CONVENTIONS.md`** — convenções de dados antes de criar qualquer schema ou migration
 10. **`CI_CONTRACT_GATES.md`** — entenda quais validações/gates tornam um contrato “pronto”
-11. **`TEST_STRATEGY.md`** — entenda evidências e níveis de teste esperados
-12. **`HANDBALL_RULES_DOMAIN.md`** — leia se for trabalhar em módulos handball-sensíveis (training, matches, competitions, scout, analytics)
-13. **`DOMAIN_GLOSSARY.md`** — consulte sempre que encontrar um termo do domínio que não é imediatamente claro
-14. **`CHANGE_POLICY.md`** — leia antes de propor qualquer alteração em artefatos normativos
+11. **`TOOLCHAIN_HEALTH_POLICY.md`** — valide a saúde da toolchain e o significado de `DEGRADED`
+12. **`CONTRACT_PIPELINE.md`** — veja os estágios formais e a condição de avanço entre eles
+13. **`BOOT_PROFILES.md`** — resolva o boot obrigatório/condicional por `task_type`
+14. **`TEST_STRATEGY.md`** — entenda evidências e níveis de teste esperados
+15. **`HANDBALL_RULES_DOMAIN.md`** — leia se for trabalhar em módulos handball-sensíveis (training, matches, competitions, scout, analytics)
+16. **`DOMAIN_GLOSSARY.md`** — consulte sempre que encontrar um termo do domínio que não é imediatamente claro
+17. **`CHANGE_POLICY.md`** — leia antes de propor qualquer alteração em artefatos normativos
 
 Após ler os canônicos globais, leia a documentação do módulo em que for trabalhar (`docs/hbtrack/modulos/<módulo>/`).
 

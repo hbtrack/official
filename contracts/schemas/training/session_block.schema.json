@@ -1,0 +1,111 @@
+{
+  "$comment": "SSOT domain shape: contracts/schemas/training/session_block.schema.json. Instantiated from .contract_driven/templates/modulos/schemas template. Module: training.",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://hbtrack.local/schemas/training/session_block.schema.json",
+  "title": "SessionBlock",
+  "description": "SSOT JSON Schema for the SessionBlock domain entity (module: training). Training block within a session — the operational DSL unit of session planning. TRAIN-DEC-049, DEFER-TRAIN-P2-006 (resolved 2026-03-16). INV-TRAIN-083: Elastic Sum Rule enforced cross-block at API level. TRAIN-DEC-047: references exercise_id + exercise_version_id, never embeds Exercise.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "sessionId",
+    "phase",
+    "orderIndex",
+    "durationMinutes",
+    "blockObjective",
+    "intensity",
+    "isOptional",
+    "createdAt",
+    "updatedAt"
+  ],
+  "properties": {
+    "id": { "$ref": "#/definitions/uuid_v4" },
+    "sessionId": {
+      "$ref": "#/definitions/uuid_v4",
+      "description": "FK to TrainingSession. Immutable after creation."
+    },
+    "phase": {
+      "type": "string",
+      "enum": ["WARMUP", "ACTIVATION", "TECHNICAL", "DECISION_MAKING", "TACTICAL", "REDUCED_GAME", "COOLDOWN"],
+      "x-domain-enum-ref": "session_block_phase",
+      "description": "Canonical session phase. DOMAIN_AXIOMS session_block_phase."
+    },
+    "orderIndex": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "0-based position within session. (sessionId, orderIndex) is unique."
+    },
+    "durationMinutes": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 240,
+      "description": "Planned block duration. INV-TRAIN-083: SUM across blocks enforced at API level."
+    },
+    "blockObjective": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 300,
+      "description": "Explicit pedagogical objective of this block."
+    },
+    "intensity": {
+      "type": "string",
+      "enum": ["LOW", "MEDIUM", "HIGH", "MAXIMUM"],
+      "x-domain-enum-ref": "session_block_intensity",
+      "description": "Planned effort level. DOMAIN_AXIOMS session_block_intensity."
+    },
+    "exerciseId": {
+      "$ref": "#/definitions/uuid_v4",
+      "description": "Optional reference to Exercise. TRAIN-DEC-047: training references, never embeds."
+    },
+    "exerciseVersionId": {
+      "$ref": "#/definitions/uuid_v4",
+      "description": "Required when exerciseId is present. TRAIN-DEC-048, INV-EXB-007."
+    },
+    "notes": {
+      "type": "string",
+      "maxLength": 1000
+    },
+    "isOptional": {
+      "type": "boolean",
+      "description": "When true, block may be skipped at execution without invalidating session."
+    },
+    "createdAt": { "$ref": "#/definitions/timestamp_utc" },
+    "updatedAt": { "$ref": "#/definitions/timestamp_utc" }
+  },
+  "if": {
+    "required": ["exerciseId"],
+    "properties": { "exerciseId": { "type": "string" } }
+  },
+  "then": {
+    "required": ["exerciseVersionId"]
+  },
+  "examples": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440500",
+      "sessionId": "550e8400-e29b-41d4-a716-446655440000",
+      "phase": "TACTICAL",
+      "orderIndex": 2,
+      "durationMinutes": 20,
+      "blockObjective": "Transição ofensiva 3x2 com finalização",
+      "intensity": "HIGH",
+      "exerciseId": "550e8400-e29b-41d4-a716-446655440100",
+      "exerciseVersionId": "550e8400-e29b-41d4-a716-446655440101",
+      "notes": "Atenção à saída da ponta direita.",
+      "isOptional": false,
+      "createdAt": "2026-03-16T10:00:00Z",
+      "updatedAt": "2026-03-16T10:00:00Z"
+    }
+  ],
+  "definitions": {
+    "uuid_v4": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "description": "UUID v4 (lowercase)."
+    },
+    "timestamp_utc": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+      "description": "RFC-3339 UTC timestamp (Z)."
+    }
+  }
+}

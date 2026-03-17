@@ -6,11 +6,10 @@ module: "{{MODULE_NAME}}"
 system_scope_ref: "../../../_canon/SYSTEM_SCOPE.md"
 handball_rules_ref: "../../../_canon/HANDBALL_RULES_DOMAIN.md"
 handball_semantic_applicability: {{HANDBALL_SEMANTIC_APPLICABILITY}}
+type: "sport-science-rules"
 contract_path_ref: "../../../../contracts/openapi/paths/{{MODULE_NAME}}.yaml"
 schemas_ref: "../../../../contracts/schemas/{{MODULE_NAME}}/"
-type: "sport-science-rules"
 ---
-
 # SPORT_SCIENCE_RULES_{{MODULE_NAME_UPPER}}.md
 
 ## Objetivo

@@ -16,12 +16,24 @@
     "createdByUserId"
   ],
   "properties": {
-    "id": { "$ref": "#/definitions/uuid_v4" },
-    "organizationId": { "$ref": "#/definitions/uuid_v4" },
-    "teamId": { "$ref": "#/definitions/uuid_v4" },
-    "seasonId": { "$ref": "#/definitions/uuid_v4" },
-    "microcycleId": { "$ref": "#/definitions/uuid_v4" },
-    "sessionAt": { "$ref": "#/definitions/timestamp_utc" },
+    "id": {
+      "$ref": "#/definitions/uuid_v4"
+    },
+    "organizationId": {
+      "$ref": "#/definitions/uuid_v4"
+    },
+    "teamId": {
+      "$ref": "#/definitions/uuid_v4"
+    },
+    "seasonId": {
+      "$ref": "#/definitions/uuid_v4"
+    },
+    "microcycleId": {
+      "$ref": "#/definitions/uuid_v4"
+    },
+    "sessionAt": {
+      "$ref": "#/definitions/timestamp_utc"
+    },
     "durationPlannedMinutes": {
       "type": "integer",
       "minimum": 1,
@@ -60,10 +72,18 @@
     "notes": {
       "type": "string"
     },
-    "phaseFocusDefense": { "type": "boolean" },
-    "phaseFocusAttack": { "type": "boolean" },
-    "phaseFocusTransitionOffense": { "type": "boolean" },
-    "phaseFocusTransitionDefense": { "type": "boolean" },
+    "phaseFocusDefense": {
+      "type": "boolean"
+    },
+    "phaseFocusAttack": {
+      "type": "boolean"
+    },
+    "phaseFocusTransitionOffense": {
+      "type": "boolean"
+    },
+    "phaseFocusTransitionDefense": {
+      "type": "boolean"
+    },
     "intensityTarget": {
       "type": "integer",
       "minimum": 1,
@@ -73,34 +93,92 @@
       "type": "string",
       "maxLength": 32
     },
-    "createdAt": { "$ref": "#/definitions/timestamp_utc" },
-    "createdByUserId": { "$ref": "#/definitions/uuid_v4" },
-    "updatedAt": { "$ref": "#/definitions/timestamp_utc" },
+    "createdAt": {
+      "$ref": "#/definitions/timestamp_utc"
+    },
+    "createdByUserId": {
+      "$ref": "#/definitions/uuid_v4"
+    },
+    "updatedAt": {
+      "$ref": "#/definitions/timestamp_utc"
+    },
     "deletedAt": {
-      "anyOf": [{ "$ref": "#/definitions/timestamp_utc" }, { "type": "null" }]
+      "anyOf": [
+        {
+          "$ref": "#/definitions/timestamp_utc"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "deletedReason": {
-      "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }]
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
-    "focusAttackPositionalPct": { "$ref": "#/definitions/percent_0_100" },
-    "focusDefensePositionalPct": { "$ref": "#/definitions/percent_0_100" },
-    "focusTransitionOffensePct": { "$ref": "#/definitions/percent_0_100" },
-    "focusTransitionDefensePct": { "$ref": "#/definitions/percent_0_100" },
-    "focusAttackTechnicalPct": { "$ref": "#/definitions/percent_0_100" },
-    "focusDefenseTechnicalPct": { "$ref": "#/definitions/percent_0_100" },
-    "focusPhysicalPct": { "$ref": "#/definitions/percent_0_100" },
+    "focusAttackPositionalPct": {
+      "$ref": "#/definitions/percent_0_100"
+    },
+    "focusDefensePositionalPct": {
+      "$ref": "#/definitions/percent_0_100"
+    },
+    "focusTransitionOffensePct": {
+      "$ref": "#/definitions/percent_0_100"
+    },
+    "focusTransitionDefensePct": {
+      "$ref": "#/definitions/percent_0_100"
+    },
+    "focusAttackTechnicalPct": {
+      "$ref": "#/definitions/percent_0_100"
+    },
+    "focusDefenseTechnicalPct": {
+      "$ref": "#/definitions/percent_0_100"
+    },
+    "focusPhysicalPct": {
+      "$ref": "#/definitions/percent_0_100"
+    },
     "status": {
       "type": "string",
-      "pattern": "^[A-Z0-9]+(?:_[A-Z0-9]+)*$",
-      "description": "Lifecycle status (UPPER_SNAKE_CASE). Extensible by contract versioning."
+      "enum": [
+        "DRAFT",
+        "SCHEDULED",
+        "PUBLISHED",
+        "IN_PROGRESS",
+        "COMPLETED",
+        "CANCELLED",
+        "ARCHIVED"
+      ],
+      "x-domain-enum-ref": "training_state",
+      "description": "Status canônico de ciclo de vida (ADR-017). 7 estados fechados."
     },
-    "closedAt": { "$ref": "#/definitions/timestamp_utc" },
-    "closedByUserId": { "$ref": "#/definitions/uuid_v4" },
-    "deviationJustification": { "type": "string" },
-    "planningDeviationFlag": { "type": "boolean" },
-    "standalone": { "type": "boolean" },
-    "startedAt": { "$ref": "#/definitions/timestamp_utc" },
-    "endedAt": { "$ref": "#/definitions/timestamp_utc" },
+    "closedAt": {
+      "$ref": "#/definitions/timestamp_utc"
+    },
+    "closedByUserId": {
+      "$ref": "#/definitions/uuid_v4"
+    },
+    "deviationJustification": {
+      "type": "string"
+    },
+    "planningDeviationFlag": {
+      "type": "boolean"
+    },
+    "standalone": {
+      "type": "boolean"
+    },
+    "startedAt": {
+      "$ref": "#/definitions/timestamp_utc"
+    },
+    "endedAt": {
+      "$ref": "#/definitions/timestamp_utc"
+    },
     "durationActualMinutes": {
       "type": "integer",
       "minimum": 1,
@@ -121,31 +199,102 @@
       "type": "string",
       "minLength": 1
     },
-    "postReviewCompletedAt": { "$ref": "#/definitions/timestamp_utc" },
-    "postReviewCompletedByUserId": { "$ref": "#/definitions/uuid_v4" },
-    "postReviewDeadlineAt": { "$ref": "#/definitions/timestamp_utc" }
+    "postReviewCompletedAt": {
+      "$ref": "#/definitions/timestamp_utc"
+    },
+    "postReviewCompletedByUserId": {
+      "$ref": "#/definitions/uuid_v4"
+    },
+    "postReviewDeadlineAt": {
+      "$ref": "#/definitions/timestamp_utc"
+    },
+    "individualizationMode": {
+      "type": "string",
+      "enum": [
+        "COLLECTIVE_UNIFORM",
+        "COLLECTIVE_WITH_VARIANTS",
+        "INDIVIDUAL_ONLY"
+      ],
+      "x-domain-enum-ref": "individualization_mode",
+      "description": "Nível de individualização da sessão. TRAIN-DEC-044. Obrigatório quando status=PUBLISHED (INV-TRAIN-086)."
+    },
+    "plannedContentSnapshot": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": true,
+      "description": "Snapshot write-once gravado na transição para PUBLISHED. Imutável após publicação. TRAIN-DEC-045. INV-TRAIN-007 / INV-TRAIN-088."
+    },
+    "objectiveOrigin": {
+      "type": "string",
+      "enum": [
+        "NEED_DETECTED",
+        "COMPETITIVE_FOCUS",
+        "DEVELOPMENT_GOAL",
+        "MANUAL_COACH_RATIONALE"
+      ],
+      "x-domain-enum-ref": "objective_origin",
+      "description": "Origem do objetivo principal. Obrigatório quando mainObjective preenchido. TRAIN-DEC-005."
+    },
+    "actualLoadRecorded": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 32767,
+      "description": "Carga real registrada após execução. TRAIN-DEC-045."
+    },
+    "continuityNotes": {
+      "type": "string",
+      "maxLength": 2000,
+      "description": "Notas de handoff para staff. OPEN-004 resolvido."
+    }
   },
   "dependencies": {
-    "deletedAt": ["deletedReason"],
-    "deletedReason": ["deletedAt"]
+    "deletedAt": [
+      "deletedReason"
+    ],
+    "deletedReason": [
+      "deletedAt"
+    ]
   },
   "allOf": [
     {
       "if": {
-        "properties": { "deletedAt": { "type": "null" } },
-        "required": ["deletedAt"]
+        "properties": {
+          "deletedAt": {
+            "type": "null"
+          }
+        },
+        "required": [
+          "deletedAt"
+        ]
       },
       "then": {
-        "properties": { "deletedReason": { "type": "null" } }
+        "properties": {
+          "deletedReason": {
+            "type": "null"
+          }
+        }
       }
     },
     {
       "if": {
-        "properties": { "deletedAt": { "$ref": "#/definitions/timestamp_utc" } },
-        "required": ["deletedAt"]
+        "properties": {
+          "deletedAt": {
+            "$ref": "#/definitions/timestamp_utc"
+          }
+        },
+        "required": [
+          "deletedAt"
+        ]
       },
       "then": {
-        "properties": { "deletedReason": { "type": "string", "minLength": 1 } }
+        "properties": {
+          "deletedReason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
       }
     }
   ],

@@ -5,9 +5,12 @@
 module: "{{MODULE_NAME}}"
 system_scope_ref: "../../../_canon/SYSTEM_SCOPE.md"
 handball_rules_ref: "../../../_canon/HANDBALL_RULES_DOMAIN.md"
+handball_semantic_applicability: {{HANDBALL_SEMANTIC_APPLICABILITY}}
 type: "ui-contract"
+contract_path_ref: "../../../../contracts/openapi/paths/{{MODULE_NAME}}.yaml"
+schemas_ref: "../../../../contracts/schemas/{{MODULE_NAME}}/"
+module_scope_ref: "./MODULE_SCOPE_{{MODULE_NAME_UPPER}}.md"
 ---
-
 # UI_CONTRACT_{{MODULE_NAME_UPPER}}.md
 
 ## Entradas

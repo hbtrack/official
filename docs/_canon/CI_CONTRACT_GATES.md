@@ -46,6 +46,7 @@ Cada gate termina em exatamente um destes estados:
 - `PASS`
 - `FAIL`
 - `SKIP_NOT_APPLICABLE`
+- `DEGRADED` (somente auditoria local com fallback explícito permitido por policy)
 
 Não existe "quase passou", "aceitável por enquanto", "warn que libera" ou equivalente para gates classificados como bloqueantes.
 
@@ -173,12 +174,12 @@ Formato obrigatório:
       "storybook": "string|null"
     }
   },
-  "overall_status": "PASS|FAIL",
+  "overall_status": "PASS|FAIL|DEGRADED|PASS_WITH_WARNINGS",
   "exit_code": 0,
   "gates": [
     {
       "gate_id": "string",
-      "status": "PASS|FAIL|SKIP_NOT_APPLICABLE",
+      "status": "PASS|FAIL|SKIP_NOT_APPLICABLE|DEGRADED",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": "string|null",
@@ -219,14 +220,20 @@ A ordem canônica é:
 			2B.	API_NORMATIVE_DUPLICATION_GATE (não-bloqueante)
 			2C.	OWASP_API_CONTROL_MATRIX_GATE
 			2D.	MODULE_SOURCE_AUTHORITY_MATRIX_GATE
+			2D1.	MODULE_REGISTRY_GATE
 			2E.	BOUNDARY_USERS_IDENTITY_ACCESS_GATE
 			2F.	WELLNESS_MEDICAL_BOUNDARY_GATE
 			2G.	SCOUT_TAXONOMY_GATE
 			2H.	ASYNC_REQUIRED_MODULE_GATE
 			2I.	EXTERNAL_SOURCE_AUTHORITY_GATE
+			2J.	PRE_CONTRACT_EVIDENCE_GATE
+			2K.	SHADOW_AUTHORITY_GATE
+			2L.	DECISION_IR_CONFORMANCE_GATE
 			3.	PLACEHOLDER_RESIDUE_GATE
 			4.	REF_HERMETICITY_GATE
+			4A.	TOOLING_CONFIG_GATE
 		5.	OPENAPI_ROOT_STRUCTURE_GATE
+		5A.	OPENAPI_ROOT_MODULE_SYNC_GATE
 		6.	OPENAPI_POLICY_RULESET_GATE
 		7.	JSON_SCHEMA_VALIDATION_GATE
 		8.	CROSS_SPEC_ALIGNMENT_GATE
@@ -862,6 +869,45 @@ PLACEHOLDER_RESIDUE_GATE
 
 ⸻
 
+9.4A TOOLING_CONFIG_GATE
+
+Objetivo
+
+Separar erro de tooling/config de erro semântico do contrato.
+
+Aplica quando
+
+Sempre.
+
+Entradas
+	•	package.json
+	•	redocly.yaml
+	•	docs/_canon/TOOLCHAIN_HEALTH_POLICY.md
+
+Ferramenta
+
+Script Python do pipeline.
+
+PASS
+	•	config compatível com a toolchain suportada
+	•	ferramentas obrigatórias disponíveis
+
+DEGRADED
+	•	execução local sem `oasdiff` e/ou `schemathesis`
+	•	fallback explícito permitido por `TOOLCHAIN_HEALTH_POLICY.md`
+
+FAIL
+
+	•	config incompatível
+	•	ferramenta obrigatória ausente em CI
+	•	ausência de `redocly`, `spectral` ou `asyncapi`
+
+Dependências
+
+REF_HERMETICITY_GATE
+
+⸻
+
 9.5 OPENAPI_ROOT_STRUCTURE_GATE
 
 Objetivo
@@ -905,7 +951,7 @@ Evidência
 
 Dependências
 
-REF_HERMETICITY_GATE
+TOOLING_CONFIG_GATE
 
 ⸻
 

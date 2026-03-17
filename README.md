@@ -137,7 +137,16 @@ npm ci
 # Python (contract gates - não requer requirements.txt neste workspace)
 python3 -m venv .venv
 source .venv/bin/activate
+.venv/bin/python -m pip install -r requirements-dev.txt
+# Tooling binária exigida pelos gates
+# - oasdiff: instalar binário Linux nativo no PATH
 python3 scripts/validate_contracts.py
+```
+
+Para a suíte local de governança:
+
+```bash
+./.venv/bin/python -m pytest -q tests/contracts/test_openapi_root_inventory.py tests/contracts/test_module_doc_governance.py
 ```
 
 ### Comandos Principais
@@ -149,6 +158,10 @@ spectral lint contracts/openapi/openapi.yaml
 
 # Rodar todos os contract gates (gera _reports/contract_gates/latest.json)
 python3 scripts/validate_contracts.py
+
+# Runtime / breaking-change toolchain
+schemathesis --version
+oasdiff --version
 ```
 
 ### VS Code Remote-WSL

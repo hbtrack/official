@@ -1,0 +1,26 @@
+{
+  "artifact_id": "HBTRACK_BOOT_RESOLUTION_REPORT",
+  "module": "training",
+  "task_type": "contract_revision",
+  "profile": "contract_revision",
+  "mandatory_reads": [
+    ".contract_driven/CONTRACT_SYSTEM_LAYOUT.md",
+    ".contract_driven/CONTRACT_SYSTEM_RULES.md",
+    "docs/_canon/SYSTEM_SCOPE.md",
+    "docs/_canon/DATA_CONVENTIONS.md",
+    "docs/_canon/ERROR_MODEL.md",
+    "docs/_canon/SECURITY_RULES.md",
+    "docs/hbtrack/modulos/training/MODULE_SCOPE_TRAINING.md",
+    "docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md",
+    "docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md"
+  ],
+  "conditional_reads": [
+    "docs/hbtrack/modulos/training/STATE_MODEL_TRAINING.md",
+    "docs/hbtrack/modulos/training/PERMISSIONS_TRAINING.md",
+    "docs/_canon/decisions/ADR-017-training-session-state-machine.md"
+  ],
+  "skipped_reads": [],
+  "worker_prompt": ".contract_driven/agent_prompts/create_openapi_contract.prompt.md",
+  "source_evidence": "_reports/agent_execution/latest.json",
+  "timestamp_utc": "2026-03-16T09:07:00Z"
+}

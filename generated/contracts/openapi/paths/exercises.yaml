@@ -1,8 +1,964 @@
 # Path items for module: exercises
 # Source of truth: contracts/openapi/openapi.yaml
 # Related docs:
-# - docs/_canon/SYSTEM_SCOPE.md
 # - docs/hbtrack/modulos/exercises/MODULE_SCOPE_EXERCISES.md
-#
-# Add path items here following OpenAPI 3.1 Path Item Object spec.
-# Each path must belong exclusively to this module (LAYOUT section 6).
+# - docs/hbtrack/modulos/exercises/DOMAIN_RULES_EXERCISES.md
+# - docs/hbtrack/modulos/exercises/INVARIANTS_EXERCISES.md
+# - docs/hbtrack/decisoes/ARCH_DECISIONS_TRAINING.md (TRAIN-DEC-047, TRAIN-DEC-048)
+
+/exercises:
+  get:
+    operationId: listExercises
+    summary: List exercises (preview DTO)
+    description: >
+      Returns a paginated list of exercises visible to the authenticated user.
+      Response uses ExercisePreview DTO (DR-EXB-008): minimal fields for fast coach scan.
+      Full attributes available at GET /exercises/{id}.
+      Filters: scope, sessionPhase, primaryObjective, physicalLoad, spaceRequired,
+      ageCategory, skillLevel, minAthletes, maxAthletes, complexityMin, complexityMax.
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: scope
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: [SYSTEM, ORG]
+      - name: sessionPhase
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: [WARMUP, ACTIVATION, TECHNICAL, DECISION_MAKING, TACTICAL, REDUCED_GAME, COOLDOWN]
+      - name: primaryObjective
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: [TECHNICAL, TACTICAL, PHYSICAL, DECISION_MAKING, MIXED]
+      - name: physicalLoad
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: [LOW, MEDIUM, HIGH, MAXIMUM]
+      - name: spaceRequired
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: [HALF_COURT, FULL_COURT, REDUCED_AREA, NO_COURT]
+      - name: ageCategory
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: [SUB_12, SUB_14, SUB_16, SUB_18, ADULT]
+        description: Filter exercises appropriate for this age category.
+      - name: skillLevel
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: [BEGINNER, INTERMEDIATE, ADVANCED, ELITE]
+      - name: minAthletes
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 50
+        description: Filter exercises where maxAthletes >= this value.
+      - name: maxAthletes
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 50
+        description: Filter exercises where minAthletes <= this value.
+      - name: complexityMax
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 5
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+    responses:
+      "200":
+        description: Paginated list of exercises (preview DTO).
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [data, total, page, pageSize]
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: "../components/schemas/exercises/exercise_preview.yaml"
+                total:
+                  type: integer
+                  minimum: 0
+                page:
+                  type: integer
+                  minimum: 1
+                pageSize:
+                  type: integer
+                  minimum: 1
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "422":
+        description: Invalid query parameters
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+
+  post:
+    operationId: createExercise
+    summary: Create a new exercise (ORG scope)
+    description: >
+      Creates a new ORG exercise. The first ExerciseVersion is created automatically
+      with versionNumber=1 and changeReason="Initial version".
+      SYSTEM exercises can only be created by platform curators (role: platform_curator).
+    security:
+      - HTTPBearer: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - name
+              - sessionPhase
+              - primaryObjective
+              - physicalLoad
+              - estimatedDurationMinutes
+              - spaceRequired
+              - ageCategories
+              - skillLevel
+              - complexity
+              - minAthletes
+              - maxAthletes
+            properties:
+              name:
+                type: string
+                minLength: 3
+                maxLength: 120
+              description:
+                type: string
+                maxLength: 2000
+              instructions:
+                type: string
+                maxLength: 5000
+              coachingCues:
+                type: string
+                maxLength: 1000
+              safetyNotes:
+                type: string
+                maxLength: 500
+              sessionPhase:
+                type: string
+                enum: [WARMUP, ACTIVATION, TECHNICAL, DECISION_MAKING, TACTICAL, REDUCED_GAME, COOLDOWN]
+              primaryObjective:
+                type: string
+                enum: [TECHNICAL, TACTICAL, PHYSICAL, DECISION_MAKING, MIXED]
+              secondaryObjective:
+                type: string
+                enum: [TECHNICAL, TACTICAL, PHYSICAL, DECISION_MAKING, MIXED]
+              gamePhases:
+                type: array
+                items:
+                  type: string
+                  enum: [POSITIONAL_ATTACK, POSITIONAL_DEFENSE, OFFENSIVE_TRANSITION, DEFENSIVE_TRANSITION, SET_PIECE]
+              ageCategories:
+                type: array
+                minItems: 1
+                items:
+                  type: string
+                  enum: [SUB_12, SUB_14, SUB_16, SUB_18, ADULT]
+              skillLevel:
+                type: string
+                enum: [BEGINNER, INTERMEDIATE, ADVANCED, ELITE]
+              complexity:
+                type: integer
+                minimum: 1
+                maximum: 5
+              physicalLoad:
+                type: string
+                enum: [LOW, MEDIUM, HIGH, MAXIMUM]
+              minAthletes:
+                type: integer
+                minimum: 1
+                maximum: 50
+              maxAthletes:
+                type: integer
+                minimum: 1
+                maximum: 50
+              estimatedDurationMinutes:
+                type: integer
+                minimum: 1
+                maximum: 180
+              spaceRequired:
+                type: string
+                enum: [HALF_COURT, FULL_COURT, REDUCED_AREA, NO_COURT]
+              materials:
+                type: array
+                items:
+                  type: string
+                  maxLength: 60
+              visibilityMode:
+                type: string
+                enum: [ORG_WIDE, RESTRICTED]
+                default: RESTRICTED
+    responses:
+      "201":
+        description: Exercise created. Returns full exercise DTO.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/exercises/exercise.yaml"
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden — insufficient role or attempting to create SYSTEM exercise without curator role.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "422":
+        description: Validation error (e.g. maxAthletes < minAthletes, invalid enum).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+
+/exercises/{id}:
+  get:
+    operationId: getExercise
+    summary: Get full exercise detail (latest version)
+    description: >
+      Returns full exercise DTO at the current version.
+      For a specific historical version use GET /exercises/{id}/versions/{versionId}.
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    responses:
+      "200":
+        description: Full exercise DTO.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/exercises/exercise.yaml"
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden — exercise ORG/RESTRICTED not visible to user.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Exercise not found or soft-deleted.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+
+  patch:
+    operationId: updateExercise
+    summary: Update exercise (creates new version)
+    description: >
+      Updates an exercise by creating a new ExerciseVersion (append-only, TRAIN-DEC-048).
+      Previous version remains accessible via GET /exercises/{id}/versions/{versionId}.
+      SYSTEM exercises: only platform_curator role. ORG exercises: only creator (DR-EXB-009).
+      changeReason is required — editorial accountability.
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - changeReason
+            properties:
+              changeReason:
+                type: string
+                minLength: 5
+                maxLength: 500
+              name:
+                type: string
+                minLength: 3
+                maxLength: 120
+              description:
+                type: string
+                maxLength: 2000
+              instructions:
+                type: string
+                maxLength: 5000
+              coachingCues:
+                type: string
+                maxLength: 1000
+              safetyNotes:
+                type: string
+                maxLength: 500
+              sessionPhase:
+                type: string
+                enum: [WARMUP, ACTIVATION, TECHNICAL, DECISION_MAKING, TACTICAL, REDUCED_GAME, COOLDOWN]
+              primaryObjective:
+                type: string
+                enum: [TECHNICAL, TACTICAL, PHYSICAL, DECISION_MAKING, MIXED]
+              secondaryObjective:
+                type: string
+                enum: [TECHNICAL, TACTICAL, PHYSICAL, DECISION_MAKING, MIXED]
+              gamePhases:
+                type: array
+                items:
+                  type: string
+                  enum: [POSITIONAL_ATTACK, POSITIONAL_DEFENSE, OFFENSIVE_TRANSITION, DEFENSIVE_TRANSITION, SET_PIECE]
+              ageCategories:
+                type: array
+                minItems: 1
+                items:
+                  type: string
+                  enum: [SUB_12, SUB_14, SUB_16, SUB_18, ADULT]
+              skillLevel:
+                type: string
+                enum: [BEGINNER, INTERMEDIATE, ADVANCED, ELITE]
+              complexity:
+                type: integer
+                minimum: 1
+                maximum: 5
+              physicalLoad:
+                type: string
+                enum: [LOW, MEDIUM, HIGH, MAXIMUM]
+              minAthletes:
+                type: integer
+                minimum: 1
+                maximum: 50
+              maxAthletes:
+                type: integer
+                minimum: 1
+                maximum: 50
+              estimatedDurationMinutes:
+                type: integer
+                minimum: 1
+                maximum: 180
+              spaceRequired:
+                type: string
+                enum: [HALF_COURT, FULL_COURT, REDUCED_AREA, NO_COURT]
+              materials:
+                type: array
+                items:
+                  type: string
+                  maxLength: 60
+              visibilityMode:
+                type: string
+                enum: [ORG_WIDE, RESTRICTED]
+    responses:
+      "200":
+        description: Updated exercise DTO (new version). Returns full exercise at new currentVersionId.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/exercises/exercise.yaml"
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden — not creator or not curator for SYSTEM exercise.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Exercise not found.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "422":
+        description: Validation error.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+
+  delete:
+    operationId: deleteExercise
+    summary: Soft-delete exercise
+    description: >
+      Soft-deletes an exercise (sets deleted_at). The exercise remains accessible
+      to session_exercise references (INV-EXB-017). SYSTEM exercises: 403 for ORG users.
+      Requires deletionReason in request body.
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - deletionReason
+            properties:
+              deletionReason:
+                type: string
+                minLength: 5
+                maxLength: 500
+    responses:
+      "204":
+        description: Exercise soft-deleted successfully.
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden — SYSTEM exercise or not creator.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Exercise not found.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+
+/exercises/{id}/copy:
+  post:
+    operationId: copyExerciseToOrg
+    summary: Copy SYSTEM exercise to ORG scope
+    description: >
+      Creates an ORG copy of a SYSTEM exercise for the authenticated user's organization.
+      The copy is a new independent exercise with scope=ORG, visibility_mode=RESTRICTED.
+      Original SYSTEM exercise is unchanged (DR-EXB-009).
+      The copy gets versionNumber=1, changeReason="Copied from SYSTEM exercise {id}".
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    responses:
+      "201":
+        description: New ORG exercise created from the SYSTEM copy.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/exercises/exercise.yaml"
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Source exercise not found.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+
+/exercises/{id}/versions:
+  get:
+    operationId: listExerciseVersions
+    summary: List all versions of an exercise
+    description: >
+      Returns all versions of an exercise in descending order (newest first).
+      Each version is the full ExerciseVersion DTO. Used for version history and
+      intentional upgrade of session templates to a new version.
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    responses:
+      "200":
+        description: List of exercise versions (newest first).
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [data, total]
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: "../components/schemas/exercises/exercise_version.yaml"
+                total:
+                  type: integer
+                  minimum: 1
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden — exercise not visible to user.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Exercise not found.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+
+/exercises/{id}/versions/{versionId}:
+  get:
+    operationId: getExerciseVersion
+    summary: Get a specific historical version
+    description: >
+      Returns a specific ExerciseVersion by versionId.
+      Used by training module to resolve exercise_version_id references in session_exercise.
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+      - name: versionId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    responses:
+      "200":
+        description: Specific exercise version.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/exercises/exercise_version.yaml"
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Exercise or version not found.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+
+/exercises/{id}/relations:
+  get:
+    operationId: listExerciseRelations
+    summary: List semantic relations of an exercise
+    description: >
+      Returns all relations where this exercise is the source (fromExerciseId).
+      Each relation includes the related exercise preview DTO for quick display.
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+      - name: relationType
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: [PROGRESSION, REGRESSION, VARIATION, CONTRAINDICATION]
+    responses:
+      "200":
+        description: List of exercise relations.
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [data]
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: "../components/schemas/exercises/exercise_relation.yaml"
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Exercise not found.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+
+  post:
+    operationId: addExerciseRelation
+    summary: Add a semantic relation between exercises
+    description: >
+      Creates a directed semantic relation from this exercise to another.
+      INV-EXB-013: (fromExerciseId, toExerciseId, relationType) must be unique.
+      INV-EXB-014: from ≠ to.
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - toExerciseId
+              - relationType
+            properties:
+              toExerciseId:
+                type: string
+                format: uuid
+                pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              relationType:
+                type: string
+                enum: [PROGRESSION, REGRESSION, VARIATION, CONTRAINDICATION]
+              notes:
+                type: string
+                maxLength: 500
+    responses:
+      "201":
+        description: Relation created.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/exercises/exercise_relation.yaml"
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden — not creator of source exercise.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Source or target exercise not found.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Relation already exists (INV-EXB-013).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "422":
+        description: Invalid (reflexive relation INV-EXB-014, or invalid enum).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+
+/exercises/{id}/relations/{relationId}:
+  delete:
+    operationId: deleteExerciseRelation
+    summary: Remove a semantic relation
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+      - name: relationId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    responses:
+      "204":
+        description: Relation deleted.
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Relation not found.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+
+/exercises/{id}/acl:
+  get:
+    operationId: getExerciseAcl
+    summary: Get ACL of a restricted ORG exercise
+    description: >
+      Returns users explicitly granted access to this exercise.
+      Only available for scope=ORG, visibility_mode=RESTRICTED (INV-EXB-010).
+      Only creator can view/manage ACL (INV-EXB-009).
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    responses:
+      "200":
+        description: ACL entries.
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [data]
+              properties:
+                data:
+                  type: array
+                  items:
+                    type: object
+                    required: [userId, grantedAt]
+                    properties:
+                      userId:
+                        type: string
+                        format: uuid
+                        pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                        x-semantic-id: identity.user.id.v1
+                      grantedAt:
+                        type: string
+                        format: date-time
+                        pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden — not creator or exercise is not RESTRICTED.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Exercise not found.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+
+  post:
+    operationId: addExerciseAclEntry
+    summary: Grant access to a user for a restricted ORG exercise
+    description: >
+      Adds a user to the ACL of a restricted exercise.
+      User must belong to same organization (INV-EXB-011).
+      Duplicate entry → 422 (INV-EXB-012).
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - userId
+            properties:
+              userId:
+                type: string
+                format: uuid
+                pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                x-semantic-id: identity.user.id.v1
+    responses:
+      "201":
+        description: ACL entry created.
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden — not creator or exercise is not RESTRICTED ORG.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Exercise or user not found.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "422":
+        description: User already in ACL or cross-org user.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+
+/exercises/{id}/acl/{userId}:
+  delete:
+    operationId: removeExerciseAclEntry
+    summary: Revoke access for a user
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    responses:
+      "204":
+        description: ACL entry removed.
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden — attempting to remove creator's own access (INV-EXB-009).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: ACL entry not found.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"

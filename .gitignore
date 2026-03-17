@@ -58,6 +58,7 @@ Thumbs.db
 
 # Agent runtime signals — ephemeral, never version (prevent dirty workspace blocking hb verify)
 _reports/dispatch/
+_reports/agent_execution/
 _reports/ARQUITETO.yaml
 _reports/EXECUTOR.yaml
 _reports/TESTADOR.yaml
@@ -147,6 +148,7 @@ htmlcov/
 !docs/hbtrack/evidence/**
 logs/
 .cache/
+_reports/agent_execution/
 
 # Testing tools / tox
 .tox/

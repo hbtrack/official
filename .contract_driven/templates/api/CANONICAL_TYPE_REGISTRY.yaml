@@ -38,6 +38,14 @@ derived_types:
     inherits: "Timestamp"
     semantic_id: "core.occurred_at.v1"
 
+  ExerciseId:
+    inherits: "Identifier"
+    semantic_id: "exercises.exercise.id.v1"
+
+  ExerciseVersionId:
+    inherits: "Identifier"
+    semantic_id: "exercises.exercise_version.id.v1"
+
 field_bindings:
   - field_name: "trainingSessionId"
     canonical_type_ref: "training.session.id.v1"
@@ -47,3 +55,7 @@ field_bindings:
     canonical_type_ref: "identity.user.id.v1"
   - field_name: "occurredAt"
     canonical_type_ref: "core.occurred_at.v1"
+  - field_name: "exerciseId"
+    canonical_type_ref: "exercises.exercise.id.v1"
+  - field_name: "exerciseVersionId"
+    canonical_type_ref: "exercises.exercise_version.id.v1"

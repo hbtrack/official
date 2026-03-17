@@ -21,4 +21,4 @@ workflows:
       - stepId: createTrainingSession
         operationId: createTrainingSession
       - stepId: addTrainingAttendance
-        operationId: registerTrainingAttendance
+        operationId: recordSessionAttendance

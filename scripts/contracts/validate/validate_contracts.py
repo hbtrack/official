@@ -27,6 +27,7 @@ from __future__ import annotations
 import dataclasses
 import datetime
 import hashlib
+import importlib.util
 import json
 import os
 import pathlib
@@ -59,11 +60,17 @@ BLOCKED_OWASP_CONTROL_MATRIX_MISSING = "BLOCKED_OWASP_CONTROL_MATRIX_MISSING"
 BLOCKED_OWASP_CONTROL_MATRIX_INVALID = "BLOCKED_OWASP_CONTROL_MATRIX_INVALID"
 BLOCKED_MODULE_SOURCE_AUTHORITY_MATRIX_MISSING = "BLOCKED_MODULE_SOURCE_AUTHORITY_MATRIX_MISSING"
 BLOCKED_MODULE_SOURCE_AUTHORITY_MATRIX_INVALID = "BLOCKED_MODULE_SOURCE_AUTHORITY_MATRIX_INVALID"
+BLOCKED_MODULE_REGISTRY_MISSING = "BLOCKED_MODULE_REGISTRY_MISSING"
+BLOCKED_MODULE_REGISTRY_INVALID = "BLOCKED_MODULE_REGISTRY_INVALID"
 BLOCKED_BOUNDARY_USERS_IDENTITY_ACCESS = "BLOCKED_BOUNDARY_USERS_IDENTITY_ACCESS"
 BLOCKED_WELLNESS_MEDICAL_BOUNDARY = "BLOCKED_WELLNESS_MEDICAL_BOUNDARY"
 BLOCKED_SCOUT_TAXONOMY = "BLOCKED_SCOUT_TAXONOMY"
 BLOCKED_ASYNC_REQUIRED_MODULE = "BLOCKED_ASYNC_REQUIRED_MODULE"
 BLOCKED_EXTERNAL_SOURCE_AUTHORITY = "BLOCKED_EXTERNAL_SOURCE_AUTHORITY"
+BLOCKED_OPENAPI_ROOT_MODULE_SYNC = "BLOCKED_OPENAPI_ROOT_MODULE_SYNC"
+BLOCKED_PRE_CONTRACT_EVIDENCE = "BLOCKED_PRE_CONTRACT_EVIDENCE"
+BLOCKED_SHADOW_AUTHORITY = "BLOCKED_SHADOW_AUTHORITY"
+BLOCKED_TOOLING_CONFIG_INVALID = "BLOCKED_TOOLING_CONFIG_INVALID"
 
 BLOCKED_TRACEABILITY_MANIFEST_INVALID = "BLOCKED_TRACEABILITY_MANIFEST_INVALID"
 BLOCKED_TRACEABILITY_INPUT_MISSING = "BLOCKED_TRACEABILITY_INPUT_MISSING"
@@ -113,11 +120,17 @@ _KNOWN_BLOCKING_CODES = {
     BLOCKED_OWASP_CONTROL_MATRIX_INVALID,
     BLOCKED_MODULE_SOURCE_AUTHORITY_MATRIX_MISSING,
     BLOCKED_MODULE_SOURCE_AUTHORITY_MATRIX_INVALID,
+    BLOCKED_MODULE_REGISTRY_MISSING,
+    BLOCKED_MODULE_REGISTRY_INVALID,
     BLOCKED_BOUNDARY_USERS_IDENTITY_ACCESS,
     BLOCKED_WELLNESS_MEDICAL_BOUNDARY,
     BLOCKED_SCOUT_TAXONOMY,
     BLOCKED_ASYNC_REQUIRED_MODULE,
     BLOCKED_EXTERNAL_SOURCE_AUTHORITY,
+    BLOCKED_OPENAPI_ROOT_MODULE_SYNC,
+    BLOCKED_PRE_CONTRACT_EVIDENCE,
+    BLOCKED_SHADOW_AUTHORITY,
+    BLOCKED_TOOLING_CONFIG_INVALID,
     BLOCKED_TRACEABILITY_MANIFEST_INVALID,
     BLOCKED_TRACEABILITY_INPUT_MISSING,
     BLOCKED_TRACEABILITY_HASH_MISMATCH,
@@ -239,6 +252,11 @@ def _repo_root() -> pathlib.Path:
     return here.parents[3] if len(here.parents) >= 4 else here.parent
 
 
+def _is_ci_environment() -> bool:
+    value = os.environ.get("CI", "").strip().lower()
+    return value not in ("", "0", "false", "no", "off")
+
+
 def _layout_path(root: pathlib.Path) -> pathlib.Path:
     return root / ".contract_driven" / "CONTRACT_SYSTEM_LAYOUT.md"
 
@@ -327,6 +345,63 @@ def _load_yaml(path: pathlib.Path) -> Any:
     except ImportError as e:  # pragma: no cover
         raise RuntimeError("PyYAML não instalado (import yaml falhou).") from e
     return yaml.safe_load(_read_text(path))
+
+
+def _module_doc_header_policy_path(root: pathlib.Path) -> pathlib.Path:
+    return root / ".contract_driven" / "templates" / "modulos" / "MODULE_DOC_HEADER_POLICY.yaml"
+
+
+def _load_module_doc_header_policy(root: pathlib.Path) -> dict | None:
+    policy_path = _module_doc_header_policy_path(root)
+    if not policy_path.exists():
+        return None
+    try:
+        policy = _load_yaml(policy_path)
+    except Exception:
+        return None
+    return policy if isinstance(policy, dict) else None
+
+
+def _infer_module_doc_type(path: pathlib.Path, module: str, policy: dict) -> str | None:
+    types = policy.get("types")
+    if not isinstance(types, dict):
+        return None
+    module_upper = module.upper()
+    for doc_type, cfg in types.items():
+        if not isinstance(cfg, dict):
+            continue
+        filenames = cfg.get("filenames") or []
+        if not isinstance(filenames, list):
+            continue
+        for pattern in filenames:
+            if not isinstance(pattern, str):
+                continue
+            expected_name = pattern.replace("{module_upper}", module_upper)
+            if path.name == expected_name:
+                return doc_type
+    return None
+
+
+def _module_doc_expected_target(root: pathlib.Path, module: str, field: str) -> tuple[pathlib.Path, bool] | None:
+    module_upper = module.upper()
+    doc_dir = root / "docs" / "hbtrack" / "modulos" / module
+    mapping: dict[str, tuple[pathlib.Path, bool]] = {
+        "system_scope_ref": (root / "docs" / "_canon" / "SYSTEM_SCOPE.md", False),
+        "handball_rules_ref": (root / "docs" / "_canon" / "HANDBALL_RULES_DOMAIN.md", False),
+        "contract_path_ref": (root / "contracts" / "openapi" / "paths" / f"{module}.yaml", False),
+        "schemas_ref": (root / "contracts" / "schemas" / module, True),
+        "module_scope_ref": (doc_dir / f"MODULE_SCOPE_{module_upper}.md", False),
+        "domain_rules_ref": (doc_dir / f"DOMAIN_RULES_{module_upper}.md", False),
+        "invariants_ref": (doc_dir / f"INVARIANTS_{module_upper}.md", False),
+        "test_matrix_ref": (doc_dir / f"TEST_MATRIX_{module_upper}.md", False),
+        "state_model_ref": (doc_dir / f"STATE_MODEL_{module_upper}.md", False),
+        "ui_contract_ref": (doc_dir / f"UI_CONTRACT_{module_upper}.md", False),
+        "screen_map_ref": (doc_dir / f"SCREEN_MAP_{module_upper}.md", False),
+        "error_model_ref": (root / "docs" / "_canon" / "ERROR_MODEL.md", False),
+        "problem_schema_ref": (root / "contracts" / "openapi" / "components" / "schemas" / "shared" / "problem.yaml", False),
+        "adr_ref": (root / "docs" / "_canon" / "decisions" / "ADR-017-training-session-state-machine.md", False),
+    }
+    return mapping.get(field)
 
 
 def load_json_file(path: str) -> dict:
@@ -1472,47 +1547,8 @@ def validate_enums_against_closed_sets(artifacts: list[str], axioms: dict) -> li
             violations.append(_violation(BLOCKED_ENUM_OUTSIDE_AXIOMS, f"Falha ao ler/parsear: {e}", artifact))
             continue
 
-        module_name = _infer_module_name(path)
-        module_axioms = None
-        if module_name:
-            try:
-                module_axioms = load_module_axioms(module_name)
-            except ValueError as e:
-                code, msg = _split_code_message(str(e), BLOCKED_INVALID_MODULE_AXIOM_EXTENSION)
-                violations.append(_violation(code, msg or "DOMAIN_AXIOMS_<MODULE>.json inválido.", artifact))
-                module_axioms = None
-
-        # Para superfícies sem namespace de módulo no path (ex: contracts/asyncapi/**),
-        # a regra canônica é validar enums contra o universo efetivo (global + extensões modulares declaradas).
-        ctx = {
-            "domain_enums": domain.domain_enums,
-            "module_extension_policy": axioms.get("module_extension_policy", {}),
-            "global_formats": axioms.get("global_formats", {}),
-        }
-        try:
-            effective_enums = merge_enum_extensions(ctx, module_axioms)
-        except ValueError as e:
-            code, _ = _split_code_message(str(e), BLOCKED_INVALID_MODULE_AXIOM_EXTENSION)
-            violations.append(_violation(code, "Extensão modular inválida.", artifact))
-            effective_enums = domain.domain_enums
-
-        if module_name is None:
-            module_axioms_by_module, errs = _load_all_module_axioms()
-            violations.extend(errs)
-            for _, mod_axioms in sorted(module_axioms_by_module.items(), key=lambda kv: kv[0]):
-                try:
-                    effective_enums = merge_enum_extensions(
-                        {
-                            "domain_enums": effective_enums,
-                            "module_extension_policy": axioms.get("module_extension_policy", {}),
-                            "global_formats": axioms.get("global_formats", {}),
-                        },
-                        mod_axioms,
-                    )
-                except ValueError as e:
-                    code, _ = _split_code_message(str(e), BLOCKED_INVALID_MODULE_AXIOM_EXTENSION)
-                    violations.append(_violation(code, "Extensão modular inválida.", artifact))
-                    break
+        # Enums são validados contra o conjunto global — extensões modulares removidas (allow_module_extensions=false).
+        effective_enums = domain.domain_enums
 
         for node_path, node in _walk(data):
             if not isinstance(node, dict):
@@ -2290,6 +2326,7 @@ _CANONICAL_GLOBAL_DOCS: list[str] = [
     ".contract_driven/templates/modulos/SCREEN_MAP_{{MODULE_NAME_UPPER}}.md",
     ".contract_driven/templates/modulos/TEST_MATRIX_{{MODULE_NAME_UPPER}}.md",
     ".contract_driven/templates/modulos/snippets/module_human_docs_header.yaml",
+    ".contract_driven/templates/modulos/MODULE_DOC_HEADER_POLICY.yaml",
     ".contract_driven/templates/modulos/schemas/{{DOMAIN_ENTITY_SNAKE}}.schema.json",
     ".contract_driven/templates/api/api_rules.yaml",
     ".contract_driven/templates/api/ARCHITECTURE_MATRIX.yaml",
@@ -2301,13 +2338,25 @@ _CANONICAL_GLOBAL_DOCS: list[str] = [
     ".contract_driven/templates/api/OWASPAPI.md",
     "scripts/contracts/validate/api/policy_compiler.py",
     "scripts/contracts/validate/api/compile_api_policy.py",
+    "scripts/contracts/validate/root_module_consistency_gate.py",
+    "scripts/contracts/validate/pre_contract_evidence_gate.py",
+    "scripts/contracts/validate/shadow_authority_gate.py",
+    "scripts/contracts/validate/tooling_config_gate.py",
     "generated/README.md",
     "contracts/openapi/openapi.yaml",
     "docs/_canon/CI_CONTRACT_GATES.md",
+    "docs/_canon/TOOLCHAIN_HEALTH_POLICY.md",
+    "docs/_canon/CONTRACT_PIPELINE.md",
+    "docs/_canon/BOOT_PROFILES.md",
     "docs/_canon/ERROR_MODEL.md",
     "docs/_canon/security/OWASP_API_CONTROL_MATRIX.yaml",
+    "docs/_canon/MODULE_REGISTRY.yaml",
     "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
+    ".contract_driven/agent_prompts/create_asyncapi_contract.prompt.md",
+    ".contract_driven/agent_prompts/create_arazzo_workflow.prompt.md",
+    ".contract_driven/agent_prompts/create_json_schema_contract.prompt.md",
     "contracts/schemas/shared/owasp_api_control_matrix.schema.json",
+    "contracts/schemas/shared/module_registry.schema.json",
     "contracts/schemas/shared/module_source_authority_matrix.schema.json",
     ".spectral.yaml",
     "redocly.yaml",
@@ -2340,7 +2389,7 @@ def _pg(
     warnings = len([v for v in violations if v.get("severity") == "warn"])
     if status == "SKIP_NOT_APPLICABLE":
         exit_code = 0
-    elif status == "PASS":
+    elif status in {"PASS", "DEGRADED"}:
         exit_code = 0
     else:
         exit_code = 2
@@ -2684,19 +2733,44 @@ def _tool_ver(*cmd: str) -> str | None:
     if not cmd:
         return None
     tool = cmd[0]
+
+    def _is_windows_interop_wrapper(path: pathlib.Path) -> bool:
+        if str(path).startswith("/mnt/") or str(path).lower().endswith(".exe"):
+            return True
+        try:
+            if not path.is_file():
+                return False
+            head = path.read_bytes()[:256]
+        except Exception:
+            return False
+        if not head.startswith(b"#!"):
+            return False
+        text = head.decode("utf-8", errors="replace").lower()
+        return any(marker in text for marker in (".exe", "cmd.exe", "powershell"))
+
     # Evitar interop WSL/Windows: wrappers que chamam *.exe tendem a gerar vsock errors.
     if tool == "oasdiff":
         p = shutil.which("oasdiff")
         if not p:
             return None
         pp = pathlib.Path(p)
-        if str(pp).startswith("/mnt/") or str(pp).lower().endswith(".exe"):
+        if _is_windows_interop_wrapper(pp):
             return None
-        try:
-            if pp.is_file() and ".exe" in pp.read_text(encoding="utf-8", errors="replace").lower():
-                return None
-        except Exception:
-            pass
+        cmd = ("oasdiff", "--version")
+
+    # Ferramentas Node.js (redocly, spectral, asyncapi): usar _try_node_cli para evitar que o
+    # PATH (após sourcing do nvm.sh) resolva para binários Windows em /mnt/c/... — o que causa
+    # freeze de 7-10 s até o timeout da subprocess.  _try_node_cli usa o caminho absoluto do
+    # node WSL-native + o script local/global, contornando inteiramente o wrapper Windows.
+    if tool in ("redocly", "spectral", "asyncapi"):
+        root = _repo_root()
+        rc, out, err = _try_node_cli(root, tool=tool, args=list(cmd[1:]), cwd=root)
+        if rc != 0:
+            return None
+        text = (out or err).strip()
+        if _looks_like_wsl_vsock_failure(text):
+            return None
+        return text.splitlines()[0] if text else "unknown"
 
     rc, out, err = _try_tool(*cmd)
     if rc == -1:
@@ -2755,6 +2829,25 @@ def _g1_path_canonicality(root: pathlib.Path) -> dict:
                     })
     asyncapi_canonical = root / "contracts" / "asyncapi" / "asyncapi.yaml"
     checked.append(str(asyncapi_canonical))
+
+    for report_dir in sorted(root.rglob("_reports")):
+        if not report_dir.is_dir():
+            continue
+        try:
+            rel = report_dir.relative_to(root)
+        except ValueError:
+            continue
+        if rel == pathlib.Path("_reports"):
+            continue
+        if any(part.startswith(".") for part in rel.parts):
+            continue
+        checked.append(str(report_dir))
+        violations.append({
+            "blocking_code": BLOCKED_LAYOUT_NONCOMPLIANCE,
+            "artifact": str(rel).replace("\\", "/") + "/",
+            "message": "Diretório `_reports` fora da raiz canônica é proibido.",
+            "severity": "error",
+        })
 
     # Canonical module-aware layout checks (SSOT = CONTRACT_SYSTEM_LAYOUT.md)
     modules = _load_canonical_modules_from_layout(root)
@@ -2883,37 +2976,49 @@ def _g2_required_artifact_presence(root: pathlib.Path) -> dict:
             missing.append(rel)
     # Module minimum docs (per RULES + operational plan)
     modules = _load_canonical_modules_from_layout(root)
-    module_min_docs: list[str] = []
+    module_required_items: list[str] = []
     if modules:
         for mod in modules:
             up = mod.upper()
-            module_min_docs.extend([
+            module_required_items.extend([
                 f"docs/hbtrack/modulos/{mod}/README.md",
                 f"docs/hbtrack/modulos/{mod}/MODULE_SCOPE_{up}.md",
                 f"docs/hbtrack/modulos/{mod}/DOMAIN_RULES_{up}.md",
                 f"docs/hbtrack/modulos/{mod}/INVARIANTS_{up}.md",
                 f"docs/hbtrack/modulos/{mod}/TEST_MATRIX_{up}.md",
+                f"contracts/openapi/paths/{mod}.yaml",
             ])
-    for rel in module_min_docs:
+            schema_dir = root / "contracts" / "schemas" / mod
+            checked.append(str(schema_dir))
+            if not schema_dir.exists() or not any(schema_dir.glob("*.schema.json")):
+                missing.append(f"contracts/schemas/{mod}/*.schema.json")
+    for rel in module_required_items:
         p = root / rel
         checked.append(str(p))
         if not p.exists():
             missing.append(rel)
     if missing:
-        violations = [
-            {
-                "blocking_code": BLOCKED_MISSING_MODULE_DOC if m.startswith("docs/hbtrack/modulos/") else "BLOCKED_MISSING_REQUIRED_ARTIFACT",
+        violations = []
+        for m in missing:
+            if m.startswith("docs/hbtrack/modulos/"):
+                code = BLOCKED_MISSING_MODULE_DOC
+            elif m.startswith("contracts/openapi/paths/"):
+                code = "BLOCKED_MISSING_OPENAPI_PATH"
+            elif m.startswith("contracts/schemas/"):
+                code = "BLOCKED_MISSING_SCHEMA"
+            else:
+                code = "BLOCKED_MISSING_REQUIRED_ARTIFACT"
+            violations.append({
+                "blocking_code": code,
                 "artifact": m,
                 "message": f"Artefato obrigatório ausente: {m}",
                 "severity": "error",
-            }
-            for m in missing
-        ]
+            })
         first_code = violations[0]["blocking_code"]
         return _pg(gate_id, "FAIL", True, first_code,
                    f"{len(missing)} artefato(s) obrigatório(s) ausente(s).",
                    [], checked, [], violations, _ms(t0))
-    total_required = len(_CANONICAL_GLOBAL_DOCS) + len(module_min_docs)
+    total_required = len(_CANONICAL_GLOBAL_DOCS) + len(module_required_items) + (len(modules) if modules else 0)
     return _pg(gate_id, "PASS", True, None,
                f"Todos os {total_required} artefatos obrigatórios presentes.",
                [], checked, [], [], _ms(t0))
@@ -2927,22 +3032,26 @@ def _g2a_module_doc_crossrefs(root: pathlib.Path) -> dict:
     modules = _load_canonical_modules_from_layout(root)
     if not modules:
         return _skip(gate_id, "Taxonomia canônica ausente — gate não aplicável.", _ms(t0))
+    policy = _load_module_doc_header_policy(root)
+    if not policy:
+        return _skip(gate_id, "MODULE_DOC_HEADER_POLICY ausente ou inválido — gate não aplicável.", _ms(t0))
+    types = policy.get("types")
+    base = policy.get("base")
+    if not isinstance(types, dict) or not isinstance(base, dict):
+        return _skip(gate_id, "MODULE_DOC_HEADER_POLICY incompleto — gate não aplicável.", _ms(t0))
 
-    required_files: list[pathlib.Path] = []
+    module_files: list[tuple[pathlib.Path, str]] = []
     for mod in modules:
-        up = mod.upper()
-        required_files.extend([
-            root / "docs" / "hbtrack" / "modulos" / mod / "README.md",
-            root / "docs" / "hbtrack" / "modulos" / mod / f"MODULE_SCOPE_{up}.md",
-            root / "docs" / "hbtrack" / "modulos" / mod / f"DOMAIN_RULES_{up}.md",
-            root / "docs" / "hbtrack" / "modulos" / mod / f"INVARIANTS_{up}.md",
-            root / "docs" / "hbtrack" / "modulos" / mod / f"TEST_MATRIX_{up}.md",
-        ])
-
-    for p in required_files:
-        checked.append(str(p))
-        if not p.exists():
+        module_dir = root / "docs" / "hbtrack" / "modulos" / mod
+        if not module_dir.exists():
             continue
+        for p in sorted(module_dir.glob("*.md")):
+            inferred_type = _infer_module_doc_type(p, mod, policy)
+            if inferred_type:
+                module_files.append((p, inferred_type))
+
+    for p, inferred_type in module_files:
+        checked.append(str(p))
         hdr = _parse_yaml_front_matter(p)
         if not hdr:
             violations.append({
@@ -2952,7 +3061,35 @@ def _g2a_module_doc_crossrefs(root: pathlib.Path) -> dict:
                 "severity": "error",
             })
             continue
+
         mod = p.parent.name
+        cfg = types.get(inferred_type) or {}
+        if not isinstance(cfg, dict):
+            continue
+        allow_missing_type = bool(cfg.get("allow_missing_type"))
+        declared_type = hdr.get("type")
+        if declared_type is not None and declared_type != inferred_type:
+            violations.append({
+                "blocking_code": BLOCKED_INVALID_MODULE_DOC_HEADER,
+                "artifact": str(p.relative_to(root)),
+                "message": f"Header `type` divergente: esperado `{inferred_type}`.",
+                "severity": "error",
+            })
+        if declared_type is None and not allow_missing_type:
+            violations.append({
+                "blocking_code": BLOCKED_INVALID_MODULE_DOC_HEADER,
+                "artifact": str(p.relative_to(root)),
+                "message": "Header `type` obrigatório ausente para doc condicional.",
+                "severity": "error",
+            })
+        elif declared_type is not None and not isinstance(declared_type, str):
+            violations.append({
+                "blocking_code": BLOCKED_INVALID_MODULE_DOC_HEADER,
+                "artifact": str(p.relative_to(root)),
+                "message": "Header `type` deve ser string.",
+                "severity": "error",
+            })
+
         if hdr.get("module") != mod:
             violations.append({
                 "blocking_code": BLOCKED_INVALID_MODULE_DOC_HEADER,
@@ -2960,7 +3097,16 @@ def _g2a_module_doc_crossrefs(root: pathlib.Path) -> dict:
                 "message": "Header `module` não corresponde ao diretório do módulo.",
                 "severity": "error",
             })
-        for key in ("system_scope_ref", "handball_rules_ref", "handball_semantic_applicability", "contract_path_ref", "schemas_ref"):
+
+        base_required = [k for k in (base.get("required") or []) if isinstance(k, str)]
+        base_optional = [k for k in (base.get("optional") or []) if isinstance(k, str)]
+        type_required = [k for k in (cfg.get("required") or []) if isinstance(k, str)]
+        type_optional = [k for k in (cfg.get("optional") or []) if isinstance(k, str)]
+        allowed_keys = set(base_required + base_optional + type_required + type_optional)
+        if allow_missing_type and "type" in allowed_keys:
+            allowed_keys.add("type")
+
+        for key in base_required + type_required:
             if key not in hdr:
                 violations.append({
                     "blocking_code": BLOCKED_INVALID_MODULE_DOC_HEADER,
@@ -2968,6 +3114,7 @@ def _g2a_module_doc_crossrefs(root: pathlib.Path) -> dict:
                     "message": f"Header YAML obrigatório ausente: {key}",
                     "severity": "error",
                 })
+
         if "handball_semantic_applicability" in hdr and not isinstance(hdr.get("handball_semantic_applicability"), bool):
             violations.append({
                 "blocking_code": BLOCKED_INVALID_MODULE_DOC_HEADER,
@@ -2975,12 +3122,43 @@ def _g2a_module_doc_crossrefs(root: pathlib.Path) -> dict:
                 "message": "Header `handball_semantic_applicability` deve ser boolean.",
                 "severity": "error",
             })
+        for key in ("updated", "updated_at"):
+            if key in hdr and not isinstance(hdr.get(key), str):
+                violations.append({
+                    "blocking_code": BLOCKED_INVALID_MODULE_DOC_HEADER,
+                    "artifact": str(p.relative_to(root)),
+                    "message": f"Header `{key}` deve ser string ISO/date-like.",
+                    "severity": "error",
+                })
+        if "adr_refs" in hdr and not (
+            isinstance(hdr.get("adr_refs"), list) and all(isinstance(v, str) for v in hdr.get("adr_refs"))
+        ):
+            violations.append({
+                "blocking_code": BLOCKED_INVALID_MODULE_DOC_HEADER,
+                "artifact": str(p.relative_to(root)),
+                "message": "Header `adr_refs` deve ser lista de strings.",
+                "severity": "error",
+            })
 
-        def _resolve_rel(field: str, expected_abs: pathlib.Path, expect_dir: bool = False) -> None:
-            rel = hdr.get(field)
-            if not isinstance(rel, str) or not rel.strip():
-                return
-            target = (p.parent / rel).resolve()
+        unknown_keys = sorted(k for k in hdr.keys() if k not in allowed_keys)
+        for key in unknown_keys:
+            violations.append({
+                "blocking_code": BLOCKED_INVALID_MODULE_DOC_HEADER,
+                "artifact": str(p.relative_to(root)),
+                "message": f"Header `{key}` não está registrado no policy do tipo `{inferred_type}`.",
+                "severity": "error",
+            })
+
+        for field, value in hdr.items():
+            if not field.endswith("_ref"):
+                continue
+            expected = _module_doc_expected_target(root, mod, field)
+            if expected is None:
+                continue
+            expected_abs, expect_dir = expected
+            if not isinstance(value, str) or not value.strip():
+                continue
+            target = (p.parent / value).resolve()
             if target != expected_abs.resolve():
                 violations.append({
                     "blocking_code": BLOCKED_INVALID_MODULE_DOC_HEADER,
@@ -2988,7 +3166,7 @@ def _g2a_module_doc_crossrefs(root: pathlib.Path) -> dict:
                     "message": f"Header `{field}` não aponta para o path canônico esperado.",
                     "severity": "error",
                 })
-                return
+                continue
             if expect_dir and not target.is_dir():
                 violations.append({
                     "blocking_code": BLOCKED_INVALID_MODULE_DOC_HEADER,
@@ -3003,11 +3181,6 @@ def _g2a_module_doc_crossrefs(root: pathlib.Path) -> dict:
                     "message": f"Header `{field}` aponta para arquivo inexistente.",
                     "severity": "error",
                 })
-
-        _resolve_rel("system_scope_ref", root / "docs" / "_canon" / "SYSTEM_SCOPE.md")
-        _resolve_rel("handball_rules_ref", root / "docs" / "_canon" / "HANDBALL_RULES_DOMAIN.md")
-        _resolve_rel("contract_path_ref", root / "contracts" / "openapi" / "paths" / f"{mod}.yaml")
-        _resolve_rel("schemas_ref", root / "contracts" / "schemas" / mod, expect_dir=True)
 
     if violations:
         return _pg(gate_id, "FAIL", True, BLOCKED_INVALID_MODULE_DOC_HEADER,
@@ -3272,6 +3445,55 @@ def _load_module_source_authority_matrix(root: pathlib.Path) -> tuple[dict | Non
     return data, schema, checked
 
 
+def _load_module_registry(root: pathlib.Path) -> tuple[dict | None, dict | None, list[str]]:
+    registry_path = root / "docs" / "_canon" / "MODULE_REGISTRY.yaml"
+    schema_path = root / "contracts" / "schemas" / "shared" / "module_registry.schema.json"
+    checked = [str(registry_path), str(schema_path)]
+    if not registry_path.exists():
+        return None, None, checked
+    try:
+        data = _load_yaml(registry_path)
+    except Exception:
+        return None, None, checked
+    if not isinstance(data, dict):
+        return None, None, checked
+    if not schema_path.exists():
+        return data, None, checked
+    try:
+        schema = _load_json(schema_path)
+    except Exception:
+        return data, None, checked
+    return data, schema, checked
+
+
+_MODULE_STATUS_ALIASES = {
+    "draft": "draft_contract",
+    "validated": "validated_contract",
+}
+
+
+def _normalize_module_registry_status(status: Any) -> Any:
+    if not isinstance(status, str):
+        return status
+    return _MODULE_STATUS_ALIASES.get(status, status)
+
+
+def _load_module_registry_entries(root: pathlib.Path) -> tuple[dict[str, dict] | None, list[str]]:
+    data, _, checked = _load_module_registry(root)
+    if not isinstance(data, dict):
+        return None, checked
+    modules_obj = data.get("modules")
+    if not isinstance(modules_obj, dict):
+        return None, checked
+    out: dict[str, dict] = {}
+    for module, entry in modules_obj.items():
+        if isinstance(module, str) and isinstance(entry, dict):
+            normalized = dict(entry)
+            normalized["status"] = _normalize_module_registry_status(entry.get("status"))
+            out[module] = normalized
+    return out, checked
+
+
 def _g2d_module_source_authority_matrix(root: pathlib.Path) -> dict:
     t0 = time.monotonic()
     gate_id = "MODULE_SOURCE_AUTHORITY_MATRIX_GATE"
@@ -3432,6 +3654,166 @@ def _g2d_module_source_authority_matrix(root: pathlib.Path) -> dict:
     )
 
 
+def _g2d1_module_registry(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "MODULE_REGISTRY_GATE"
+    registry_path = root / "docs" / "_canon" / "MODULE_REGISTRY.yaml"
+    schema_path = root / "contracts" / "schemas" / "shared" / "module_registry.schema.json"
+    checked = [str(registry_path), str(schema_path)]
+
+    if not registry_path.exists():
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_MODULE_REGISTRY_MISSING,
+            "Registry canônico de módulos ausente (artefato normativo obrigatório).",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": BLOCKED_MODULE_REGISTRY_MISSING,
+                "artifact": str(registry_path.relative_to(root)),
+                "message": "Arquivo obrigatório ausente.",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    try:
+        data = _load_yaml(registry_path)
+    except Exception as e:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_MODULE_REGISTRY_INVALID,
+            "Registry de módulos não é YAML parseável.",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": BLOCKED_MODULE_REGISTRY_INVALID,
+                "artifact": str(registry_path.relative_to(root)),
+                "message": f"Erro ao parsear YAML: {e}",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    if not isinstance(data, dict):
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_MODULE_REGISTRY_INVALID,
+            "Registry inválido: raiz deve ser objeto YAML.",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": BLOCKED_MODULE_REGISTRY_INVALID,
+                "artifact": str(registry_path.relative_to(root)),
+                "message": "Raiz do YAML deve ser um objeto (mapping).",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    if not schema_path.exists():
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            "ERROR_INFRA",
+            "Schema do MODULE_REGISTRY ausente (infra).",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": "ERROR_INFRA",
+                "artifact": str(schema_path.relative_to(root)),
+                "message": "Schema obrigatório ausente.",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    try:
+        schema = _load_json(schema_path)
+    except Exception as e:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            "ERROR_INFRA",
+            "Schema do MODULE_REGISTRY inválido (infra).",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": "ERROR_INFRA",
+                "artifact": str(schema_path.relative_to(root)),
+                "message": f"Erro ao carregar schema: {e}",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    schema_violations = validate_against_json_schema(data, schema)
+    violations: list[dict] = []
+    for v in schema_violations:
+        violations.append({
+            "blocking_code": BLOCKED_MODULE_REGISTRY_INVALID,
+            "artifact": str(registry_path.relative_to(root)),
+            "message": f"{v.get('path')}: {v.get('message')}",
+            "severity": v.get("severity", "error"),
+            "details": {k: v.get(k) for k in ("code", "path") if k in v},
+        })
+
+    canonical_modules = _load_canonical_modules_from_layout(root)
+    modules_obj = data.get("modules")
+    if canonical_modules and isinstance(modules_obj, dict):
+        declared = sorted([k for k in modules_obj.keys() if isinstance(k, str)])
+        missing = sorted([m for m in canonical_modules if m not in set(declared)])
+        extra = sorted([m for m in declared if m not in set(canonical_modules)])
+        if missing or extra:
+            violations.append({
+                "blocking_code": BLOCKED_MODULE_REGISTRY_INVALID,
+                "artifact": str(registry_path.relative_to(root)),
+                "message": "modules não alinha com a taxonomia canônica de módulos.",
+                "severity": "error",
+                "details": {"missing": missing, "extra": extra},
+            })
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_MODULE_REGISTRY_INVALID,
+            f"MODULE_REGISTRY inválido: {len(violations)} violação(ões).",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        "MODULE_REGISTRY presente e válido contra schema.",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
 def _collect_property_names(obj: Any, out: set[str]) -> None:
     if isinstance(obj, dict):
         props = obj.get("properties")
@@ -3494,6 +3876,167 @@ def _module_openapi_paths(root: pathlib.Path, module: str) -> list[str]:
     if not isinstance(obj, dict):
         return []
     return [k for k in obj.keys() if isinstance(k, str) and k.startswith("/")]
+
+
+def _openapi_root_module_refs(root: pathlib.Path) -> tuple[dict[str, set[str]], list[dict], list[str]]:
+    openapi_root = root / "contracts" / "openapi" / "openapi.yaml"
+    checked = [str(openapi_root)]
+    obj = _load_yaml_or_empty(openapi_root)
+    if not isinstance(obj, dict):
+        return {}, [], checked
+    paths_obj = obj.get("paths")
+    if not isinstance(paths_obj, dict):
+        return {}, [], checked
+
+    ref_map: dict[str, set[str]] = {}
+    violations: list[dict] = []
+    for path_key, path_item in paths_obj.items():
+        if not isinstance(path_key, str) or not path_key.startswith("/"):
+            continue
+        if not isinstance(path_item, dict):
+            violations.append({
+                "blocking_code": BLOCKED_OPENAPI_ROOT_MODULE_SYNC,
+                "artifact": str(openapi_root.relative_to(root)),
+                "message": f"Path `{path_key}` no root OpenAPI deve ser objeto contendo $ref para módulo.",
+                "severity": "error",
+            })
+            continue
+        ref = path_item.get("$ref")
+        if not isinstance(ref, str):
+            violations.append({
+                "blocking_code": BLOCKED_OPENAPI_ROOT_MODULE_SYNC,
+                "artifact": str(openapi_root.relative_to(root)),
+                "message": f"Path `{path_key}` no root OpenAPI deve delegar via $ref para contracts/openapi/paths/<module>.yaml.",
+                "severity": "error",
+            })
+            continue
+        m = re.match(r"^\./paths/([a-z0-9_]+)\.yaml#", ref)
+        if not m:
+            violations.append({
+                "blocking_code": BLOCKED_OPENAPI_ROOT_MODULE_SYNC,
+                "artifact": str(openapi_root.relative_to(root)),
+                "message": f"$ref do path `{path_key}` não aponta para ./paths/<module>.yaml: {ref}",
+                "severity": "error",
+            })
+            continue
+        ref_map.setdefault(m.group(1), set()).add(path_key)
+    return ref_map, violations, checked
+
+
+def _parse_iso8601_utc(value: Any) -> datetime.datetime | None:
+    if not isinstance(value, str) or not value.endswith("Z"):
+        return None
+    try:
+        return datetime.datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+
+
+def _load_agent_execution_log(path: pathlib.Path, root: pathlib.Path) -> tuple[dict | None, list[dict]]:
+    try:
+        data = _load_json(path)
+    except Exception as e:
+        return None, [{
+            "blocking_code": BLOCKED_PRE_CONTRACT_EVIDENCE,
+            "artifact": str(path.relative_to(root)),
+            "message": f"Arquivo de evidência de pré-contrato não é JSON válido: {e}",
+            "severity": "error",
+        }]
+
+    violations: list[dict] = []
+    if not isinstance(data, dict):
+        violations.append({
+            "blocking_code": BLOCKED_PRE_CONTRACT_EVIDENCE,
+            "artifact": str(path.relative_to(root)),
+            "message": "Raiz do log de execução deve ser objeto JSON.",
+            "severity": "error",
+        })
+        return None, violations
+
+    for field in ("schemaVersion", "sessionId", "startedAt", "endedAt", "module", "taskType", "entries"):
+        if field not in data:
+            violations.append({
+                "blocking_code": BLOCKED_PRE_CONTRACT_EVIDENCE,
+                "artifact": str(path.relative_to(root)),
+                "message": f"Campo obrigatório ausente no log: {field}",
+                "severity": "error",
+            })
+    if violations:
+        return None, violations
+
+    if _parse_iso8601_utc(data.get("startedAt")) is None or _parse_iso8601_utc(data.get("endedAt")) is None:
+        violations.append({
+            "blocking_code": BLOCKED_PRE_CONTRACT_EVIDENCE,
+            "artifact": str(path.relative_to(root)),
+            "message": "startedAt/endedAt devem estar em ISO-8601 UTC (`...Z`).",
+            "severity": "error",
+        })
+    if not isinstance(data.get("module"), str) or not data["module"]:
+        violations.append({
+            "blocking_code": BLOCKED_PRE_CONTRACT_EVIDENCE,
+            "artifact": str(path.relative_to(root)),
+            "message": "Campo `module` deve ser string não vazia.",
+            "severity": "error",
+        })
+    entries = data.get("entries")
+    if not isinstance(entries, list) or not entries:
+        violations.append({
+            "blocking_code": BLOCKED_PRE_CONTRACT_EVIDENCE,
+            "artifact": str(path.relative_to(root)),
+            "message": "Campo `entries` deve ser lista não vazia.",
+            "severity": "error",
+        })
+        return (None, violations) if violations else (data, [])
+
+    allowed_phases = {"ROUTING", "FOUNDATION_CHECK", "DECISION_DISCOVERY", "DOMAIN_ASSEMBLY", "WORKER_HANDOFF"}
+    allowed_results = {"PASS", "BLOCK", "SKIP", "HANDOFF"}
+    for idx, entry in enumerate(entries):
+        if not isinstance(entry, dict):
+            violations.append({
+                "blocking_code": BLOCKED_PRE_CONTRACT_EVIDENCE,
+                "artifact": str(path.relative_to(root)),
+                "message": f"entries[{idx}] deve ser objeto.",
+                "severity": "error",
+            })
+            continue
+        phase = entry.get("phase")
+        result = entry.get("result")
+        if phase not in allowed_phases:
+            violations.append({
+                "blocking_code": BLOCKED_PRE_CONTRACT_EVIDENCE,
+                "artifact": str(path.relative_to(root)),
+                "message": f"entries[{idx}].phase inválido: {phase!r}",
+                "severity": "error",
+            })
+        if result not in allowed_results:
+            violations.append({
+                "blocking_code": BLOCKED_PRE_CONTRACT_EVIDENCE,
+                "artifact": str(path.relative_to(root)),
+                "message": f"entries[{idx}].result inválido: {result!r}",
+                "severity": "error",
+            })
+        if _parse_iso8601_utc(entry.get("timestamp")) is None:
+            violations.append({
+                "blocking_code": BLOCKED_PRE_CONTRACT_EVIDENCE,
+                "artifact": str(path.relative_to(root)),
+                "message": f"entries[{idx}].timestamp deve estar em ISO-8601 UTC (`...Z`).",
+                "severity": "error",
+            })
+
+    return (None, violations) if violations else (data, [])
+
+
+def _load_decision_ir_runner(root: pathlib.Path):
+    module_path = root / "scripts" / "contracts" / "validate" / "decision_ir_gate.py"
+    spec = importlib.util.spec_from_file_location("hbtrack_decision_ir_gate", module_path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError("Não foi possível carregar decision_ir_gate.py.")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    runner = getattr(mod, "run_decision_ir_gate", None)
+    if runner is None:
+        raise RuntimeError("decision_ir_gate.py não expõe `run_decision_ir_gate`.")
+    return runner
 
 
 def _g2e_boundary_users_identity_access(root: pathlib.Path) -> dict:
@@ -3851,6 +4394,329 @@ def _g2i_external_source_authority(root: pathlib.Path) -> dict:
     )
 
 
+def _g2j_pre_contract_evidence(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "PRE_CONTRACT_EVIDENCE_GATE"
+    registry_entries, checked = _load_module_registry_entries(root)
+    if registry_entries is None:
+        return _skip(gate_id, "MODULE_REGISTRY ausente ou inválido — gate não aplicável.", _ms(t0))
+
+    eligible_modules = sorted([
+        module
+        for module, entry in registry_entries.items()
+        if entry.get("status") in {"validated_contract", "implementation_ready"}
+    ])
+    if not eligible_modules:
+        return _pg(
+            gate_id,
+            "PASS",
+            True,
+            None,
+            "Nenhum módulo em status validated_contract/implementation_ready exige evidência pré-contrato.",
+            [],
+            checked,
+            [],
+            [],
+            _ms(t0),
+        )
+
+    log_dir = root / "_reports" / "agent_execution"
+    checked.append(str(log_dir))
+    if not log_dir.exists():
+        violations = [{
+            "blocking_code": BLOCKED_PRE_CONTRACT_EVIDENCE,
+            "artifact": str(log_dir.relative_to(root)),
+            "message": "Diretório de evidências pré-contrato ausente para módulos validated_contract+.",
+            "severity": "error",
+            "details": {"modules": eligible_modules},
+        }]
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_PRE_CONTRACT_EVIDENCE,
+            "Evidência de pré-contrato ausente para módulos validated_contract+.",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    violations: list[dict] = []
+    evidence_files: list[str] = []
+    coverage: dict[str, bool] = {module: False for module in eligible_modules}
+    for path in sorted(log_dir.glob("*.json")):
+        checked.append(str(path))
+        data, errs = _load_agent_execution_log(path, root)
+        if errs:
+            violations.extend(errs)
+            continue
+        if not isinstance(data, dict):
+            continue
+        module = data.get("module")
+        if module not in coverage:
+            continue
+        phases = {
+            entry.get("phase"): entry.get("result")
+            for entry in (data.get("entries") or [])
+            if isinstance(entry, dict)
+        }
+        if phases.get("ROUTING") == "PASS" and phases.get("FOUNDATION_CHECK") == "PASS" and phases.get("DOMAIN_ASSEMBLY") == "PASS" and phases.get("WORKER_HANDOFF") in {"PASS", "HANDOFF"}:
+            coverage[module] = True
+            evidence_files.append(str(path))
+
+    for module, ok in coverage.items():
+        if ok:
+            continue
+        violations.append({
+            "blocking_code": BLOCKED_PRE_CONTRACT_EVIDENCE,
+            "artifact": "_reports/agent_execution/*.json",
+            "message": f"Nenhuma evidência de pré-contrato completa encontrada para o módulo `{module}`.",
+            "severity": "error",
+            "details": {"module": module},
+        })
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_PRE_CONTRACT_EVIDENCE,
+            f"{len(violations)} problema(s) de evidência pré-contrato detectado(s).",
+            [],
+            checked,
+            evidence_files,
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        f"Evidência pré-contrato presente para {len(evidence_files)} execução(ões) aplicáveis.",
+        [],
+        checked,
+        evidence_files,
+        [],
+        _ms(t0),
+    )
+
+
+def _g2k_shadow_authority(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "SHADOW_AUTHORITY_GATE"
+    shadow_dir = root / "docs" / "hbtrack" / "decisoes"
+    checked = [str(shadow_dir)]
+    if not shadow_dir.exists():
+        return _skip(gate_id, "docs/hbtrack/decisoes/ ausente — gate não aplicável.", _ms(t0))
+
+    authority_patterns = [
+        re.compile(r"\bssot\b", re.IGNORECASE),
+        re.compile(r"fonte soberana", re.IGNORECASE),
+        re.compile(r"source of truth", re.IGNORECASE),
+        re.compile(r"fonte prim[aá]ria", re.IGNORECASE),
+        re.compile(r"sem[aâ]ntica normativa", re.IGNORECASE),
+        re.compile(r"verdade autoritativa", re.IGNORECASE),
+    ]
+    disclaimer_patterns = [
+        re.compile(r"n[aã]o .*artefato can[oô]nico soberano", re.IGNORECASE),
+        re.compile(r"n[aã]o-soberan", re.IGNORECASE),
+        re.compile(r"n[aã]o substitui", re.IGNORECASE),
+        re.compile(r"fonte de racioc[ií]nio", re.IGNORECASE),
+        re.compile(r"\bdss\b", re.IGNORECASE),
+    ]
+
+    violations: list[dict] = []
+    for path in sorted(shadow_dir.glob("*.md")):
+        checked.append(str(path))
+        try:
+            text = path.read_text(encoding="utf-8", errors="replace")
+        except Exception:
+            continue
+        if not any(p.search(text) for p in authority_patterns):
+            continue
+        top = "\n".join(text.splitlines()[:40])
+        if any(p.search(top) for p in disclaimer_patterns):
+            continue
+        violations.append({
+            "blocking_code": BLOCKED_SHADOW_AUTHORITY,
+            "artifact": str(path.relative_to(root)),
+            "message": "Documento não-soberano contém linguagem de autoridade sem disclaimer explícito no topo.",
+            "severity": "error",
+        })
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_SHADOW_AUTHORITY,
+            f"{len(violations)} documento(s) com shadow authority detectado(s).",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        "Nenhum shadow authority detectado nos docs DSS verificados.",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
+def _g2l_decision_ir_conformance(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "DECISION_IR_CONFORMANCE_GATE"
+    registry_entries, checked = _load_module_registry_entries(root)
+    if registry_entries is None:
+        return _skip(gate_id, "MODULE_REGISTRY ausente ou inválido — gate não aplicável.", _ms(t0))
+
+    eligible_modules = sorted([
+        module
+        for module, entry in registry_entries.items()
+        if entry.get("status") == "implementation_ready" and "decision_ir" in set(entry.get("expected_surfaces") or [])
+    ])
+    if not eligible_modules:
+        return _skip(gate_id, "Nenhum módulo implementation_ready requer Decision IR no momento.", _ms(t0))
+
+    ir_path = root / ".dev" / "MODULE_DECISION_IR.json"
+    schema_path = root / ".dev" / "decisões" / "MODULE_DECISION_IR_SCHEMA.json"
+    checked.extend([str(ir_path), str(schema_path)])
+    if not ir_path.exists():
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            "IR_SCHEMA_INVALID",
+            "MODULE_DECISION_IR ausente para módulo implementation_ready.",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": "IR_SCHEMA_INVALID",
+                "artifact": str(ir_path.relative_to(root)),
+                "message": "Arquivo obrigatório ausente.",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    try:
+        ir_data = _load_json(ir_path)
+    except Exception as e:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            "IR_SCHEMA_INVALID",
+            f"Falha ao ler MODULE_DECISION_IR: {e}",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": "IR_SCHEMA_INVALID",
+                "artifact": str(ir_path.relative_to(root)),
+                "message": f"Erro ao parsear JSON: {e}",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    ir_module = ir_data.get("module")
+    if not isinstance(ir_module, str) or ir_module not in eligible_modules:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            "IR_UNKNOWN_MODULE",
+            "MODULE_DECISION_IR não está alinhado ao(s) módulo(s) implementation_ready do registry.",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": "IR_UNKNOWN_MODULE",
+                "artifact": str(ir_path.relative_to(root)),
+                "message": f"module={ir_module!r} não pertence ao conjunto elegível {eligible_modules}.",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    try:
+        runner = _load_decision_ir_runner(root)
+        result = runner(ir_path, schema_path)
+    except Exception as e:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            "ERROR_INFRA",
+            f"Falha ao executar decision_ir_gate.py: {e}",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": "ERROR_INFRA",
+                "artifact": "scripts/contracts/validate/decision_ir_gate.py",
+                "message": f"Erro ao carregar/executar gate: {e}",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    raw_violations = result.get("violations") or []
+    violations: list[dict] = []
+    for v in raw_violations:
+        if not isinstance(v, dict):
+            continue
+        violations.append({
+            "blocking_code": v.get("blocking_code") or v.get("code") or "IR_SCHEMA_INVALID",
+            "artifact": str(ir_path.relative_to(root)),
+            "message": v.get("message", "Violação de Decision IR."),
+            "severity": v.get("severity", "error"),
+            "details": {k: v.get(k) for k in ("path", "code") if k in v},
+        })
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            violations[0]["blocking_code"],
+            f"MODULE_DECISION_IR inválido: {len(violations)} violação(ões).",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        "MODULE_DECISION_IR válido para o(s) módulo(s) implementation_ready.",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
 def _g3_placeholder_residue(root: pathlib.Path) -> dict:
     t0 = time.monotonic()
     gate_id = "PLACEHOLDER_RESIDUE_GATE"
@@ -3943,6 +4809,87 @@ def _g4_ref_hermeticity(root: pathlib.Path) -> dict:
                [], checked, [], [], _ms(t0))
 
 
+def _g4a_tooling_config(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "TOOLING_CONFIG_GATE"
+    scripts_dir = root / "scripts"
+    if str(scripts_dir) not in sys.path:
+        sys.path.insert(0, str(scripts_dir))
+    try:
+        from contracts.validate.tooling_config_gate import evaluate_tooling_config  # type: ignore
+    except Exception as exc:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            "ERROR_INFRA",
+            f"Falha ao carregar tooling_config_gate.py: {exc}",
+            [],
+            [str(root / "scripts" / "contracts" / "validate" / "tooling_config_gate.py")],
+            [],
+            [{
+                "blocking_code": "ERROR_INFRA",
+                "artifact": "scripts/contracts/validate/tooling_config_gate.py",
+                "message": f"Erro ao importar gate de tooling: {exc}",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    result = evaluate_tooling_config(
+        root,
+        tool_versions={
+            "redocly": _tool_ver("redocly", "--version"),
+            "spectral": _tool_ver("spectral", "--version"),
+            "asyncapi": _tool_ver("asyncapi", "--version"),
+            "oasdiff": _tool_ver("oasdiff", "version"),
+            "schemathesis": _tool_ver("schemathesis", "--version"),
+        },
+        is_ci=_is_ci_environment(),
+    )
+    status = result.get("status") or "FAIL"
+    checked = list(result.get("checked") or [])
+    violations = list(result.get("violations") or [])
+    if status == "FAIL":
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_TOOLING_CONFIG_INVALID,
+            "Toolchain/config incompatível ou ferramenta obrigatória ausente.",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+    if status == "DEGRADED":
+        return _pg(
+            gate_id,
+            "DEGRADED",
+            False,
+            None,
+            "Toolchain local degradada: fallback explícito permitido apenas fora de CI.",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        "Toolchain/config compatíveis com o pipeline oficial.",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
 def _g5_openapi_root_structure(root: pathlib.Path) -> dict:
     t0 = time.monotonic()
     gate_id = "OPENAPI_ROOT_STRUCTURE_GATE"
@@ -4006,6 +4953,98 @@ def _g5_openapi_root_structure(root: pathlib.Path) -> dict:
     return _pg(gate_id, "PASS", True, None,
                "redocly lint: nenhum erro.",
                [str(openapi_root)], [str(openapi_root)], [], [], _ms(t0))
+
+
+def _g5a_openapi_root_module_sync(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "OPENAPI_ROOT_MODULE_SYNC_GATE"
+    registry_entries, checked = _load_module_registry_entries(root)
+    if registry_entries is None:
+        return _skip(gate_id, "MODULE_REGISTRY ausente ou inválido — gate não aplicável.", _ms(t0))
+
+    root_refs, ref_violations, root_checked = _openapi_root_module_refs(root)
+    checked.extend(root_checked)
+    violations: list[dict] = list(ref_violations)
+
+    modules = sorted([
+        module
+        for module, entry in registry_entries.items()
+        if "openapi_sync" in set(entry.get("expected_surfaces") or [])
+    ])
+    module_set = set(modules)
+
+    for module in modules:
+        module_paths = set(_module_openapi_paths(root, module))
+        path_file = root / "contracts" / "openapi" / "paths" / f"{module}.yaml"
+        checked.append(str(path_file))
+        root_module_paths = root_refs.get(module, set())
+        if not module_paths:
+            if root_module_paths:
+                violations.append({
+                    "blocking_code": BLOCKED_OPENAPI_ROOT_MODULE_SYNC,
+                    "artifact": str(path_file.relative_to(root)),
+                    "message": f"Root OpenAPI referencia path(s) do módulo `{module}`, mas o arquivo do módulo não contém path items reais.",
+                    "severity": "error",
+                    "details": {"extra_in_root": sorted(root_module_paths)},
+                })
+            continue
+
+        missing_in_root = sorted(module_paths - root_module_paths)
+        extra_in_root = sorted(root_module_paths - module_paths)
+        if missing_in_root:
+            violations.append({
+                "blocking_code": BLOCKED_OPENAPI_ROOT_MODULE_SYNC,
+                "artifact": str(path_file.relative_to(root)),
+                "message": f"Root OpenAPI não referencia todos os path items reais do módulo `{module}`.",
+                "severity": "error",
+                "details": {"missing_in_root": missing_in_root},
+            })
+        if extra_in_root:
+            violations.append({
+                "blocking_code": BLOCKED_OPENAPI_ROOT_MODULE_SYNC,
+                "artifact": str(path_file.relative_to(root)),
+                "message": f"Root OpenAPI referencia path(s) inexistente(s) no módulo `{module}`.",
+                "severity": "error",
+                "details": {"extra_in_root": extra_in_root},
+            })
+
+    for module, paths in sorted(root_refs.items()):
+        if module in module_set:
+            continue
+        violations.append({
+            "blocking_code": BLOCKED_OPENAPI_ROOT_MODULE_SYNC,
+            "artifact": "contracts/openapi/openapi.yaml",
+            "message": f"Root OpenAPI referencia módulo não registrado ou sem superfície openapi_sync: `{module}`.",
+            "severity": "error",
+            "details": {"paths": sorted(paths)},
+        })
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_OPENAPI_ROOT_MODULE_SYNC,
+            f"{len(violations)} divergência(s) root↔módulos detectada(s) no OpenAPI.",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        "Root OpenAPI alinhado aos path items reais dos módulos.",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
 
 
 def _g6_openapi_policy_ruleset(root: pathlib.Path) -> dict:
@@ -4230,6 +5269,7 @@ def _g8_cross_spec_alignment(root: pathlib.Path, axioms: "DomainAxioms") -> dict
 def _g9_contract_breaking_change(root: pathlib.Path) -> dict:
     t0 = time.monotonic()
     gate_id = "CONTRACT_BREAKING_CHANGE_GATE"
+    ci_environment = _is_ci_environment()
     baseline = root / "contracts" / "openapi" / "baseline" / "openapi_baseline.json"
     openapi_root = root / "contracts" / "openapi" / "openapi.yaml"
     if not baseline.exists():
@@ -4248,12 +5288,13 @@ def _g9_contract_breaking_change(root: pathlib.Path) -> dict:
         # Bloquear interop Windows: /mnt/* e/ou binários .exe ou wrappers chamando .exe.
         if not str(p).startswith("/mnt/") and not str(p).lower().endswith(".exe"):
             try:
-                if p.is_file() and p.suffix.lower() in (".sh", ""):
-                    content = p.read_text(encoding="utf-8", errors="replace")
-                    if ".exe" not in content.lower():
-                        can_use_oasdiff = True
-                else:
+                head = p.read_bytes()[:256] if p.is_file() else b""
+                if not head.startswith(b"#!"):
                     can_use_oasdiff = True
+                else:
+                    content = head.decode("utf-8", errors="replace").lower()
+                    if ".exe" not in content and "cmd.exe" not in content and "powershell" not in content:
+                        can_use_oasdiff = True
             except Exception:
                 # Se não dá para inspecionar, ainda tentamos (pode ser binário Linux).
                 can_use_oasdiff = True
@@ -4262,7 +5303,19 @@ def _g9_contract_breaking_change(root: pathlib.Path) -> dict:
         rc, stdout, stderr = _try_tool("oasdiff", "breaking", str(baseline), str(openapi_root), cwd=root)
         output = (stdout + stderr).strip()
         if rc != 0 and _looks_like_wsl_vsock_failure(output):
-            # interop detectada; cai para o fallback determinístico sem tool.
+            if ci_environment:
+                return _pg(
+                    gate_id,
+                    "FAIL",
+                    True,
+                    "ERROR_INFRA",
+                    "oasdiff é obrigatório em CI e falhou por interop/infra.",
+                    [str(baseline), str(openapi_root)],
+                    [str(baseline), str(openapi_root)],
+                    [],
+                    [{"blocking_code": "ERROR_INFRA", "artifact": "oasdiff", "message": output or "vsock/interoperability failure", "severity": "error"}],
+                    _ms(t0),
+                )
             can_use_oasdiff = False
         elif rc == 0:
             return _pg(
@@ -4328,6 +5381,20 @@ def _g9_contract_breaking_change(root: pathlib.Path) -> dict:
                 _ms(t0),
             )
 
+    if ci_environment:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            "ERROR_INFRA",
+            "oasdiff é obrigatório em CI para CONTRACT_BREAKING_CHANGE_GATE.",
+            [str(baseline), str(openapi_root)],
+            [str(baseline), str(openapi_root)],
+            [],
+            [{"blocking_code": "ERROR_INFRA", "artifact": "oasdiff", "message": "Ferramenta ausente ou indisponível no ambiente de CI.", "severity": "error"}],
+            _ms(t0),
+        )
+
     # Fallback determinístico (hermético): detectar remoção de operações (method+path).
     try:
         base_ops = _collect_openapi_operations(baseline)
@@ -4387,14 +5454,14 @@ def _g9_contract_breaking_change(root: pathlib.Path) -> dict:
 def _g10_transformation_feasibility(root: pathlib.Path) -> dict:
     t0 = time.monotonic()
     gate_id = "TRANSFORMATION_FEASIBILITY_GATE"
-    generated_dir = root / "contracts" / "generated"
+    generated_dir = root / "generated"
     if not generated_dir.exists():
-        return _skip(gate_id, "contracts/generated/ ausente — gate não aplicável.", _ms(t0))
+        return _skip(gate_id, "generated/ ausente — gate não aplicável.", _ms(t0))
     files = list(generated_dir.rglob("*"))
     if not files:
-        return _skip(gate_id, "contracts/generated/ vazio — gate não aplicável.", _ms(t0))
+        return _skip(gate_id, "generated/ vazio — gate não aplicável.", _ms(t0))
     return _pg(gate_id, "PASS", False, None,
-               f"contracts/generated/ presente com {len(files)} artefato(s).",
+               f"generated/ presente com {len(files)} artefato(s).",
                [], [str(generated_dir)], [], [], _ms(t0))
 
 
@@ -4532,8 +5599,8 @@ def _g13_arazzo_validation(root: pathlib.Path) -> dict:
 def _g14_ui_doc_validation(root: pathlib.Path) -> dict:
     t0 = time.monotonic()
     gate_id = "UI_DOC_VALIDATION_GATE"
-    contracts_dir = root / "contracts"
-    ui_contracts = list(contracts_dir.rglob("UI_CONTRACT_*.md")) if contracts_dir.exists() else []
+    module_docs_dir = root / "docs" / "hbtrack" / "modulos"
+    ui_contracts = list(module_docs_dir.rglob("UI_CONTRACT_*.md")) if module_docs_dir.exists() else []
     if not ui_contracts:
         return _skip(gate_id, "Nenhum UI_CONTRACT_*.md encontrado — gate não aplicável.", _ms(t0))
     checked = [str(p) for p in ui_contracts]
@@ -4988,6 +6055,7 @@ def _g15_derived_drift(root: pathlib.Path) -> dict:
             PolicyCompilerError,
             check_expected,
             compile_all_expected,
+            detect_global_input_recompile_gap,
         )
     except Exception as e:  # pragma: no cover
         return _pg(
@@ -5011,6 +6079,35 @@ def _g15_derived_drift(root: pathlib.Path) -> dict:
         )
 
     try:
+        global_input_gaps = detect_global_input_recompile_gap(root)
+        if global_input_gaps:
+            violations = [
+                {
+                    "blocking_code": BLOCKED_NON_NORMALIZED_DERIVED_DIFF_CHECK,
+                    "artifact": source_path,
+                    "message": "Mudança em input global detectada sem recompilação total de todos os manifests afetados.",
+                    "severity": "error",
+                    "details": {
+                        "global_input_changed_not_fully_recompiled": True,
+                        "stale_manifests": manifests,
+                    },
+                }
+                for source_path, manifests in global_input_gaps.items()
+            ]
+            evidence_files = sorted({manifest for manifests in global_input_gaps.values() for manifest in manifests})
+            return _pg(
+                gate_id,
+                "FAIL",
+                True,
+                BLOCKED_NON_NORMALIZED_DERIVED_DIFF_CHECK,
+                "Mudança em input global exige `compile_api_policy.py --all` antes do pipeline.",
+                [],
+                [str(generated_dir)],
+                evidence_files,
+                violations,
+                _ms(t0),
+            )
+
         expected = compile_all_expected(root)
         drifts = check_expected(root, expected)
     except PolicyCompilerError as e:
@@ -5076,11 +6173,15 @@ def _g16_readiness_summary(gates: list[dict]) -> dict:
     gate_id = "READINESS_SUMMARY_GATE"
     blocking_fails = [g for g in gates if g.get("blocking") and g.get("status") == "FAIL"]
     non_blocking_fails = [g for g in gates if not g.get("blocking") and g.get("status") == "FAIL"]
+    degraded = [g for g in gates if g.get("status") == "DEGRADED"]
     passes = [g for g in gates if g.get("status") == "PASS"]
     skips = [g for g in gates if g.get("status") == "SKIP_NOT_APPLICABLE"]
     if blocking_fails:
         summary = f"Pipeline FAIL: {len(blocking_fails)} gate(s) bloqueante(s) falharam."
         status = "FAIL"
+    elif degraded:
+        summary = f"Pipeline DEGRADED: {len(degraded)} gate(s) locais operaram em fallback explícito."
+        status = "DEGRADED"
     elif non_blocking_fails:
         summary = f"Pipeline PASS com avisos: {len(non_blocking_fails)} gate(s) não-bloqueante(s) falharam."
         status = "PASS"
@@ -5088,6 +6189,228 @@ def _g16_readiness_summary(gates: list[dict]) -> dict:
         summary = f"Pipeline PASS: {len(passes)} PASS, {len(skips)} SKIP."
         status = "PASS"
     return _pg(gate_id, status, False, None, summary, [], [], [], [], _ms(t0))
+
+
+def _module_real_path_count(root: pathlib.Path, module: str) -> int:
+    path_file = root / "contracts" / "openapi" / "paths" / f"{module}.yaml"
+    if not path_file.exists():
+        return 0
+    try:
+        obj = _load_yaml(path_file)
+    except Exception:
+        return 0
+    if not isinstance(obj, dict):
+        return 0
+    return len([k for k in obj.keys() if isinstance(k, str) and k.startswith("/")])
+
+
+def _module_schema_count(root: pathlib.Path, module: str) -> int:
+    schema_dir = root / "contracts" / "schemas" / module
+    if not schema_dir.exists():
+        return 0
+    return len(list(schema_dir.glob("*.schema.json")))
+
+
+def _module_asyncapi_artifact_count(root: pathlib.Path, module: str) -> int:
+    asyncapi_root = root / "contracts" / "asyncapi"
+    if not asyncapi_root.exists():
+        return 0
+    count = 0
+    for rel in ("channels", "messages", "components/schemas"):
+        base = asyncapi_root / rel
+        if not base.exists():
+            continue
+        count += len([p for p in base.glob("*.yaml") if module in p.stem])
+    return count
+
+
+def _module_workflow_count(root: pathlib.Path, module: str) -> int:
+    workflow_dir = root / "contracts" / "workflows" / module
+    if not workflow_dir.exists():
+        return 0
+    return len(list(workflow_dir.rglob("*.arazzo.yaml")))
+
+
+def _module_has_pre_contract_evidence(root: pathlib.Path, module: str) -> bool:
+    log_dir = root / "_reports" / "agent_execution"
+    if not log_dir.exists():
+        return False
+    for path in sorted(log_dir.glob("*.json")):
+        data, errs = _load_agent_execution_log(path, root)
+        if errs or not data:
+            continue
+        if data.get("module") == module:
+            return True
+    return False
+
+
+def _module_has_decision_ir(root: pathlib.Path, module: str) -> bool:
+    ir_path = root / ".dev" / "MODULE_DECISION_IR.json"
+    if not ir_path.exists():
+        return False
+    try:
+        data = _load_json(ir_path)
+    except Exception:
+        return False
+    return data.get("module") == module
+
+
+def _module_minimum_docs_present(root: pathlib.Path, module: str) -> bool:
+    module_dir = root / "docs" / "hbtrack" / "modulos" / module
+    up = module.upper()
+    required = [
+        module_dir / "README.md",
+        module_dir / f"MODULE_SCOPE_{up}.md",
+        module_dir / f"DOMAIN_RULES_{up}.md",
+        module_dir / f"INVARIANTS_{up}.md",
+        module_dir / f"TEST_MATRIX_{up}.md",
+    ]
+    return all(p.exists() for p in required)
+
+
+def _surface_status_for_module(
+    root: pathlib.Path,
+    module: str,
+    surface: str,
+    *,
+    root_ref_count: int,
+    path_count: int,
+    schema_count: int,
+    workflow_count: int,
+    asyncapi_count: int,
+    decision_ir_gate_status: str | None,
+) -> str:
+    module_dir = root / "docs" / "hbtrack" / "modulos" / module
+    up = module.upper()
+    if surface == "module_docs_minimum":
+        return "ready" if _module_minimum_docs_present(root, module) else "missing"
+    if surface == "openapi_sync":
+        path_file = root / "contracts" / "openapi" / "paths" / f"{module}.yaml"
+        if not path_file.exists():
+            return "missing"
+        if path_count == 0:
+            return "scaffold_only"
+        if root_ref_count != path_count:
+            return "drift"
+        return "ready"
+    if surface == "json_schema":
+        return "ready" if schema_count > 0 else "missing"
+    if surface == "test_matrix":
+        return "ready" if (module_dir / f"TEST_MATRIX_{up}.md").exists() else "missing"
+    if surface == "state_model":
+        return "ready" if (module_dir / f"STATE_MODEL_{up}.md").exists() else "missing"
+    if surface == "permissions":
+        return "ready" if (module_dir / f"PERMISSIONS_{up}.md").exists() else "missing"
+    if surface == "errors":
+        return "ready" if (module_dir / f"ERRORS_{up}.md").exists() else "missing"
+    if surface == "sport_science":
+        return "ready" if (module_dir / f"SPORT_SCIENCE_RULES_{up}.md").exists() else "missing"
+    if surface == "ui_contract":
+        return "ready" if (module_dir / f"UI_CONTRACT_{up}.md").exists() else "missing"
+    if surface == "asyncapi":
+        return "ready" if asyncapi_count > 0 else "missing"
+    if surface == "arazzo":
+        return "ready" if workflow_count > 0 else "missing"
+    if surface == "decision_ir":
+        if not _module_has_decision_ir(root, module):
+            return "missing"
+        return "ready" if decision_ir_gate_status == "PASS" else "drift"
+    return "unknown"
+
+
+def _write_module_readiness_scorecard(
+    root: pathlib.Path,
+    gates: list[dict],
+    *,
+    generated_at_utc: str,
+    overall_status: str,
+) -> None:
+    evidence_dir = root / "_reports" / "evidence"
+    evidence_dir.mkdir(parents=True, exist_ok=True)
+    registry_entries, _ = _load_module_registry_entries(root)
+    modules = registry_entries or {}
+    root_refs, _, _ = _openapi_root_module_refs(root)
+    gate_status = {g.get("gate_id"): g.get("status") for g in gates}
+
+    payload_modules: list[dict] = []
+    markdown_lines = [
+        "# MODULE READINESS SCORECARD",
+        "",
+        f"- Generated at: `{generated_at_utc}`",
+        f"- Pipeline status: `{overall_status}`",
+        "",
+        "| Module | Registry | Owner | Ready % | OpenAPI | Schemas | Missing / Drift |",
+        "|---|---|---|---:|---:|---:|---|",
+    ]
+
+    for module, entry in modules.items():
+        expected_surfaces = list(entry.get("expected_surfaces") or [])
+        root_ref_count = len(root_refs.get(module) or set())
+        path_count = _module_real_path_count(root, module)
+        schema_count = _module_schema_count(root, module)
+        asyncapi_count = _module_asyncapi_artifact_count(root, module)
+        workflow_count = _module_workflow_count(root, module)
+        decision_ir_gate_status = gate_status.get("DECISION_IR_CONFORMANCE_GATE")
+        surface_status = {
+            surface: _surface_status_for_module(
+                root,
+                module,
+                surface,
+                root_ref_count=root_ref_count,
+                path_count=path_count,
+                schema_count=schema_count,
+                workflow_count=workflow_count,
+                asyncapi_count=asyncapi_count,
+                decision_ir_gate_status=decision_ir_gate_status,
+            )
+            for surface in expected_surfaces
+        }
+        ready_surfaces = [s for s, status in surface_status.items() if status == "ready"]
+        missing_surfaces = [s for s, status in surface_status.items() if status != "ready"]
+        readiness_pct = int(round((len(ready_surfaces) / len(expected_surfaces)) * 100)) if expected_surfaces else 100
+
+        module_payload = {
+            "module": module,
+            "owner": entry.get("owner"),
+            "registry_status": entry.get("status"),
+            "expected_surfaces": expected_surfaces,
+            "readiness_pct": readiness_pct,
+            "surface_status": surface_status,
+            "evidence": {
+                "minimum_docs_present": _module_minimum_docs_present(root, module),
+                "openapi_root_ref_count": root_ref_count,
+                "openapi_real_path_count": path_count,
+                "schema_file_count": schema_count,
+                "asyncapi_artifact_count": asyncapi_count,
+                "workflow_count": workflow_count,
+                "pre_contract_evidence": _module_has_pre_contract_evidence(root, module),
+                "decision_ir_gate_status": decision_ir_gate_status,
+            },
+        }
+        payload_modules.append(module_payload)
+
+        missing_label = ", ".join(missing_surfaces[:4])
+        if len(missing_surfaces) > 4:
+            missing_label += f" +{len(missing_surfaces) - 4}"
+        markdown_lines.append(
+            f"| `{module}` | `{entry.get('status')}` | `{entry.get('owner')}` | {readiness_pct} | {root_ref_count}/{path_count} | {schema_count} | {missing_label or '—'} |"
+        )
+
+    payload = {
+        "artifact_id": "HBTRACK_MODULE_READINESS_SCORECARD",
+        "generated_at_utc": generated_at_utc,
+        "overall_status": overall_status,
+        "source_report": "_reports/contract_gates/latest.json",
+        "modules": payload_modules,
+    }
+    (evidence_dir / "module_readiness_scorecard.json").write_text(
+        json.dumps(payload, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    (evidence_dir / "module_readiness_scorecard.md").write_text(
+        "\n".join(markdown_lines) + "\n",
+        encoding="utf-8",
+    )
 
 
 # ── Orchestrator + main ───────────────────────────────────────────────────────
@@ -5163,6 +6486,7 @@ def run_pipeline() -> tuple[dict, int]:
         gates.append(g16)
         report = _build_report(gates, "FAIL", 4)
         report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        _write_module_readiness_scorecard(root, gates, generated_at_utc=ts, overall_status="FAIL")
         return report, 4
 
     try:
@@ -5176,23 +6500,30 @@ def run_pipeline() -> tuple[dict, int]:
         gates.append(g16)
         report = _build_report(gates, "FAIL", 4)
         report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        _write_module_readiness_scorecard(root, gates, generated_at_utc=ts, overall_status="FAIL")
         return report, 4
 
-    # G1–G15: run all gates in canonical order
+    # Gates: run all gates in canonical order
     gates.append(_g1_path_canonicality(root))
     gates.append(_g2_required_artifact_presence(root))
     gates.append(_g2a_module_doc_crossrefs(root))
     gates.append(_g2b_api_normative_duplication(root))
     gates.append(_g2c_owasp_api_control_matrix(root))
     gates.append(_g2d_module_source_authority_matrix(root))
+    gates.append(_g2d1_module_registry(root))
     gates.append(_g2e_boundary_users_identity_access(root))
     gates.append(_g2f_wellness_medical_boundary(root))
     gates.append(_g2g_scout_taxonomy(root))
     gates.append(_g2h_async_required_module(root))
     gates.append(_g2i_external_source_authority(root))
+    gates.append(_g2j_pre_contract_evidence(root))
+    gates.append(_g2k_shadow_authority(root))
+    gates.append(_g2l_decision_ir_conformance(root))
     gates.append(_g3_placeholder_residue(root))
     gates.append(_g4_ref_hermeticity(root))
+    gates.append(_g4a_tooling_config(root))
     gates.append(_g5_openapi_root_structure(root))
+    gates.append(_g5a_openapi_root_module_sync(root))
     gates.append(_g6_openapi_policy_ruleset(root))
     gates.append(_g7_json_schema_validation(root))
     gates.append(_g8_cross_spec_alignment(root, axioms))
@@ -5214,9 +6545,13 @@ def run_pipeline() -> tuple[dict, int]:
         for g in gates
         for v in (g.get("violations") or [])
     )
+    degraded = any(g.get("status") == "DEGRADED" for g in gates)
     if blocking_fails:
         overall = "FAIL"
         exit_code = 3 if error_infra else 2
+    elif degraded:
+        overall = "DEGRADED"
+        exit_code = 0
     elif any(g.get("status") == "FAIL" for g in gates):
         overall = "PASS_WITH_WARNINGS"
         exit_code = 0
@@ -5226,6 +6561,7 @@ def run_pipeline() -> tuple[dict, int]:
 
     report = _build_report(gates, overall, exit_code)
     report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    _write_module_readiness_scorecard(root, gates, generated_at_utc=ts, overall_status=overall)
     return report, exit_code
 
 

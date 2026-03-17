@@ -33,14 +33,20 @@ Este diretório é o ponto de entrada de navegação para o sistema de gates do 
 | 2B | `API_NORMATIVE_DUPLICATION_GATE` | Não (warning) | Não | Detecta duplicação normativa HTTP fora da SSOT `api_rules.yaml` | §9.2B |
 | 2C | `OWASP_API_CONTROL_MATRIX_GATE` | Sim | Não | `docs/_canon/security/OWASP_API_CONTROL_MATRIX.yaml` presente, validado por schema, IDs únicos | §9.2C |
 | 2D | `MODULE_SOURCE_AUTHORITY_MATRIX_GATE` | Sim | Não | `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml` presente, válido, alinhado com os 16 módulos | §9.2D |
+| 2D1 | `MODULE_REGISTRY_GATE` | Sim | Não | `docs/_canon/MODULE_REGISTRY.yaml` presente, válido e alinhado com a taxonomia canônica | §9.2D1 |
 | 2E | `BOUNDARY_USERS_IDENTITY_ACCESS_GATE` | Sim | Não | `users` sem credenciais/auth; `identity_access` sem athlete/profile | §9.2E |
 | 2F | `WELLNESS_MEDICAL_BOUNDARY_GATE` | Sim | Não | `wellness` sem diagnóstico/tratamento/prontuário (responsabilidade de `medical`) | §9.2F |
 | 2G | `SCOUT_TAXONOMY_GATE` | Sim | Não | Campos de taxonomia em `scout` exigem artefato canônico de taxonomia | §9.2G |
 | 2H | `ASYNC_REQUIRED_MODULE_GATE` | Sim | Não | Módulos com OpenAPI paths reais e workflows/eventos exigem Arazzo/AsyncAPI | §9.2H |
 | 2I | `EXTERNAL_SOURCE_AUTHORITY_GATE` | Sim | Não | Bloqueia benchmarks externos (XPS/Teamworks) tratados como SSOT | §9.2I |
+| 2J | `PRE_CONTRACT_EVIDENCE_GATE` | Sim | Não | Exige evidência estruturada de pré-contrato para módulos `validated_contract`/`implementation_ready` | §9.2J |
+| 2K | `SHADOW_AUTHORITY_GATE` | Sim | Não | Bloqueia docs não-soberanos com linguagem de autoridade sem disclaimer explícito | §9.2K |
+| 2L | `DECISION_IR_CONFORMANCE_GATE` | Sim | Não | Valida `MODULE_DECISION_IR` para módulos `implementation_ready` que exigem `decision_ir` | §9.2L |
 | 3 | `PLACEHOLDER_RESIDUE_GATE` | Sim | Não | Sem TODO, TBD, placeholders em artefatos prontos | §9.3 |
 | 4 | `REF_HERMETICITY_GATE` | Sim | Não | `$ref` dentro do grafo soberano permitido; sem refs para derivados como se fossem fontes | §9.4 |
+| 4A | `TOOLING_CONFIG_GATE` | Sim em CI | Não | Separa erro de tooling/config de erro semântico; local pode retornar `DEGRADED` | §9.4A |
 | 5 | `OPENAPI_ROOT_STRUCTURE_GATE` | Sim | Não | OpenAPI estruturalmente válido via Redocly CLI | §9.5 |
+| 5A | `OPENAPI_ROOT_MODULE_SYNC_GATE` | Sim | Não | Alinha `openapi.yaml` raiz aos path files reais dos módulos | §9.5A |
 | 6 | `OPENAPI_POLICY_RULESET_GATE` | Sim | Não | Regras normativas HB Track via Spectral + `.spectral.yaml` | §9.6 |
 | 7 | `JSON_SCHEMA_VALIDATION_GATE` | Sim | Não | Todos `contracts/schemas/**/*.schema.json` válidos (JSON Schema Draft 2020-12) | §9.7 |
 | 8 | `CROSS_SPEC_ALIGNMENT_GATE` | Sim | Não | Coerência semântica cross-artifact: OpenAPI × JSON Schema × AsyncAPI × Arazzo × docs | §9.8 |
@@ -52,7 +58,6 @@ Este diretório é o ponto de entrada de navegação para o sistema de gates do 
 | 14 | `UI_DOC_VALIDATION_GATE` | Sim | Sim (após pré-reqs) | Storybook build quando houver UI documentada | §9.14 |
 | 15 | `DERIVED_DRIFT_GATE` | Sim | Não | Derivados em `generated/` == fonte soberana recompilada; qualquer drift bloqueia | §9.15 |
 | 16 | `READINESS_SUMMARY_GATE` | Sim | Não | Sumário final binário — todos os gates bloqueantes aplicáveis PASS = sistema pronto | §9.16 |
-| 2J | `DECISION_IR_CONFORMANCE_GATE` | Sim | Não | Valida `MODULE_DECISION_IR` em `.dev/` — bloqueia materialização se IR for ambíguo, incompleto ou não-determinístico | §9.17 |
 
 ---
 
@@ -74,7 +79,7 @@ O pipeline gera `_reports/contract_gates/latest.json` (evidência machine-readab
 
 | Artefato | Papel |
 |----------|-------|
-| `docs/_canon/CI_CONTRACT_GATES.md` | Spec normativa completa dos 16 gates (SSOT) |
+| `docs/_canon/CI_CONTRACT_GATES.md` | Spec normativa completa do pipeline de gates (SSOT) |
 | `docs/_canon/gates/GATES_REGISTRY.yaml` | Registry machine-readable verificado pelo pipeline |
 | `scripts/contracts/validate/validate_contracts.py` | Engine Python — implementação dos gates |
 | `_reports/contract_gates/latest.json` | Evidência da última execução do pipeline |

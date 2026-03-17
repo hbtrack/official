@@ -1,0 +1,107 @@
+version: "1.0.0"
+artifact: "MODULE_REGISTRY"
+status: "active"
+scope: "global"
+
+policy:
+  objective: >
+    Declarar, de forma determinística, o status operacional de cada módulo canônico,
+    suas superfícies contratuais esperadas e o owner responsável pela evolução.
+  status_semantics:
+    scaffold: "Estrutura mínima criada; ainda não pode ser tratada como base confiável para evolução contratual."
+    draft_contract: "Artefatos mínimos existem, mas o módulo ainda admite lacunas contratuais ou ausência de superfícies reais."
+    validated_contract: "Contratos e docs locais já passaram pelos gates aplicáveis e o módulo pode evoluir com evidência pré-contrato."
+    implementation_ready: "Readiness máxima para materialização; exige pré-contrato e Decision IR conformante quando aplicável."
+  surface_catalog:
+    - module_docs_minimum
+    - openapi_sync
+    - json_schema
+    - test_matrix
+    - state_model
+    - permissions
+    - errors
+    - sport_science
+    - ui_contract
+    - arazzo
+    - asyncapi
+    - decision_ir
+
+modules:
+  users:
+    status: "draft_contract"
+    owner: "platform-core"
+    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix"]
+  seasons:
+    status: "draft_contract"
+    owner: "handball-ops"
+    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix"]
+  teams:
+    status: "draft_contract"
+    owner: "handball-ops"
+    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix"]
+  training:
+    status: "implementation_ready"
+    owner: "performance-tech"
+    expected_surfaces:
+      [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "state_model",
+        "permissions",
+        "errors",
+        "sport_science",
+        "ui_contract",
+        "arazzo",
+        "asyncapi",
+        "decision_ir",
+      ]
+  wellness:
+    status: "draft_contract"
+    owner: "performance-tech"
+    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix", "sport_science"]
+  medical:
+    status: "draft_contract"
+    owner: "performance-tech"
+    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix", "sport_science"]
+  competitions:
+    status: "draft_contract"
+    owner: "handball-ops"
+    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix"]
+  matches:
+    status: "draft_contract"
+    owner: "handball-ops"
+    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix"]
+  scout:
+    status: "draft_contract"
+    owner: "handball-ops"
+    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix", "asyncapi"]
+  exercises:
+    status: "draft_contract"
+    owner: "performance-tech"
+    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix", "permissions"]
+  analytics:
+    status: "draft_contract"
+    owner: "performance-tech"
+    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix", "asyncapi"]
+  reports:
+    status: "draft_contract"
+    owner: "performance-tech"
+    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix", "arazzo"]
+  ai_ingestion:
+    status: "draft_contract"
+    owner: "platform-core"
+    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix", "asyncapi"]
+  identity_access:
+    status: "draft_contract"
+    owner: "platform-core"
+    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix", "permissions", "arazzo"]
+  audit:
+    status: "draft_contract"
+    owner: "platform-core"
+    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix", "asyncapi"]
+  notifications:
+    status: "draft_contract"
+    owner: "platform-core"
+    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix", "asyncapi", "arazzo"]

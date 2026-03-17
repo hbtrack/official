@@ -1,0 +1,74 @@
+{
+  "$comment": "Sovereign domain shape for module users. Conservative enrichment based on MODULE_SCOPE_USERS.md, SYSTEM_SCOPE.md actor model and MODULE_SOURCE_AUTHORITY_MATRIX may_infer(profile, sports_links, preferences, team_season_relationships).",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://hbtrack.local/schemas/users/user_profile.schema.json",
+  "title": "UserProfile",
+  "description": "Profile and preference shape for the users module. Does not include credentials, session or MFA data.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "displayName", "roleLabel"],
+  "properties": {
+    "id": { "$ref": "#/definitions/uuid_v4" },
+    "organizationId": { "$ref": "#/definitions/uuid_v4" },
+    "firstName": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "lastName": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "displayName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120,
+      "description": "Canonical human-readable profile label."
+    },
+    "roleLabel": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40,
+      "description": "Functional role label mapped to the canonical RBAC actor model."
+    },
+    "positionLabel": {
+      "type": "string",
+      "maxLength": 80,
+      "description": "Optional sports position or specialization label."
+    },
+    "preferredLanguage": {
+      "type": "string",
+      "maxLength": 16,
+      "description": "User interface language preference."
+    },
+    "preferenceTags": {
+      "type": "array",
+      "items": { "type": "string", "maxLength": 40 },
+      "uniqueItems": true
+    },
+    "teamIds": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/uuid_v4" },
+      "uniqueItems": true
+    },
+    "seasonIds": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/uuid_v4" },
+      "uniqueItems": true
+    }
+  },
+  "definitions": {
+    "uuid_v4": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    }
+  },
+  "examples": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440001",
+      "organizationId": "550e8400-e29b-41d4-a716-446655440101",
+      "firstName": "Ana",
+      "lastName": "Silva",
+      "displayName": "Ana Silva",
+      "roleLabel": "athlete",
+      "positionLabel": "Left Wing",
+      "preferredLanguage": "pt-BR",
+      "preferenceTags": ["mobile", "dark-mode"],
+      "teamIds": ["550e8400-e29b-41d4-a716-446655440201"],
+      "seasonIds": ["550e8400-e29b-41d4-a716-446655440301"]
+    }
+  ]
+}

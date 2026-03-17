@@ -1,6 +1,5 @@
 {
-  "domain_axioms":
-   {
+  "domain_axioms": {
     "meta": {
       "artifact_id": "DOMAIN_AXIOMS",
       "version": "1.0.0",
@@ -16,14 +15,12 @@
       "missing_required_error_field_policy": "REJECT",
       "cross_surface_conflict_policy": "REJECT"
     },
-	    "module_extension_policy": {
-	      "allow_module_extensions": true,
-	      "allowed_extension_types": [
-	        "domain_enums"
-	      ],
-	      "module_axioms_path_template": "docs/hbtrack/modulos/{module}/DOMAIN_AXIOMS_{MODULE}.json",
-	      "collision_policy": "REJECT"
-	    },
+    "module_extension_policy": {
+      "allow_module_extensions": false,
+      "allowed_extension_types": [],
+      "module_axioms_path_template": "docs/hbtrack/modulos/{module}/DOMAIN_AXIOMS_{MODULE}.json",
+      "collision_policy": "REJECT"
+    },
     "global_formats": {
       "uuid_v4": {
         "type": "string",
@@ -192,11 +189,152 @@
         "closed_set": true,
         "values": [
           "DRAFT",
-          "PLANNED",
           "SCHEDULED",
+          "PUBLISHED",
           "IN_PROGRESS",
           "COMPLETED",
-          "CANCELLED"
+          "CANCELLED",
+          "ARCHIVED"
+        ]
+      },
+      "individualization_mode": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "COLLECTIVE_UNIFORM",
+          "COLLECTIVE_WITH_VARIANTS",
+          "INDIVIDUAL_ONLY"
+        ]
+      },
+      "objective_origin": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "NEED_DETECTED",
+          "COMPETITIVE_FOCUS",
+          "DEVELOPMENT_GOAL",
+          "MANUAL_COACH_RATIONALE"
+        ]
+      },
+      "exercise_scope": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "SYSTEM",
+          "ORG"
+        ]
+      },
+      "exercise_visibility_mode": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "ORG_WIDE",
+          "RESTRICTED"
+        ]
+      },
+      "exercise_age_category": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "SUB_12",
+          "SUB_14",
+          "SUB_16",
+          "SUB_18",
+          "ADULT"
+        ]
+      },
+      "exercise_skill_level": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "BEGINNER",
+          "INTERMEDIATE",
+          "ADVANCED",
+          "ELITE"
+        ]
+      },
+      "exercise_primary_objective": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "TECHNICAL",
+          "TACTICAL",
+          "PHYSICAL",
+          "DECISION_MAKING",
+          "MIXED"
+        ]
+      },
+      "exercise_game_phase": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "POSITIONAL_ATTACK",
+          "POSITIONAL_DEFENSE",
+          "OFFENSIVE_TRANSITION",
+          "DEFENSIVE_TRANSITION",
+          "SET_PIECE"
+        ]
+      },
+      "session_block_phase": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "WARMUP",
+          "ACTIVATION",
+          "TECHNICAL",
+          "DECISION_MAKING",
+          "TACTICAL",
+          "REDUCED_GAME",
+          "COOLDOWN"
+        ]
+      },
+      "exercise_physical_load": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "LOW",
+          "MEDIUM",
+          "HIGH",
+          "MAXIMUM"
+        ]
+      },
+      "exercise_space_required": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "HALF_COURT",
+          "FULL_COURT",
+          "REDUCED_AREA",
+          "NO_COURT"
+        ]
+      },
+      "exercise_relation_type": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "PROGRESSION",
+          "REGRESSION",
+          "VARIATION",
+          "CONTRAINDICATION"
+        ]
+      },
+      "exercise_editorial_status": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "DRAFT",
+          "ACTIVE",
+          "INACTIVE"
+        ]
+      },
+      "session_block_intensity": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "LOW",
+          "MEDIUM",
+          "HIGH",
+          "MAXIMUM"
         ]
       },
       "competition_state": {
@@ -256,14 +394,14 @@
           "TURNOVER_BEFORE_SHOT"
         ]
       },
-	      "event_type": {
-	        "strict_match": true,
-	        "closed_set": true,
-	        "values": [
-	          "MATCH_STARTED",
-	          "MATCH_ENDED",
-	          "PHASE_CHANGED",
-	          "GOAL",
+      "event_type": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "MATCH_STARTED",
+          "MATCH_ENDED",
+          "PHASE_CHANGED",
+          "GOAL",
           "SHOT_ATTEMPT",
           "SAVE",
           "SHOT_MISSED",
@@ -282,18 +420,98 @@
           "TIMEOUT_CALLED",
           "SUBSTITUTION",
           "EXCLUSION",
-	          "INJURY",
-	          "SESSION_STARTED",
-	          "SESSION_COMPLETED"
-	        ],
-	        "module_extension_policy": {
-	          "allow_module_extensions": true,
-	          "extension_artifact_pattern": "docs/hbtrack/modulos/<module>/DOMAIN_AXIOMS_<MODULE>.json",
-	          "merge_strategy": "union_with_collision_block",
-	          "require_upper_snake_case": true
-	        }
-	      }
-	    },
+          "INJURY",
+          "SESSION_STARTED",
+          "SESSION_COMPLETED",
+          "TRAINING_ATTENDANCE_MARKED"
+        ]
+      },
+      "execution_type": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "SESSION_EXECUTION",
+          "BLOCK_EXECUTION",
+          "LIVE_ADJUSTMENT",
+          "CONSTRAINT_OVERRIDE",
+          "ALTERNATE_EXERCISE",
+          "LOAD_RECALCULATION"
+        ]
+      },
+      "live_adjustment_reason_type": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "READINESS",
+          "PAIN_COMPLAINT",
+          "EQUIPMENT_UNAVAILABLE",
+          "SPACE_LIMITATION",
+          "WEATHER",
+          "TRAVEL",
+          "PLAYER_COUNT",
+          "COACH_DECISION",
+          "OTHER"
+        ]
+      },
+      "feedback_context_type": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "SESSION",
+          "BLOCK",
+          "OBJECTIVE",
+          "ATHLETE",
+          "EVIDENCE",
+          "GROUP"
+        ]
+      },
+      "conversation_outcome_type": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "REFLECTION_DOCUMENTED",
+          "COMMITMENT_MADE",
+          "FOLLOWUP_SCHEDULED",
+          "DECISION_RECORDED",
+          "PENDING_FOLLOWUP"
+        ]
+      },
+      "attention_queue_severity": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "LOW",
+          "MEDIUM",
+          "HIGH",
+          "CRITICAL"
+        ]
+      },
+      "attention_queue_reason_code": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "ELASTIC_SUM_EXCEEDED",
+          "CRITICAL_RESTRICTION_ACTIVE",
+          "RETURN_TO_PLAY_GUARD",
+          "OVERLOAD_RISK",
+          "ADHERENCE_DROP",
+          "WELLNESS_ALERT",
+          "PENDING_REVIEW_OVERDUE",
+          "EXECUTION_DEVIATION",
+          "CONSTRAINT_OVERRIDE_REQUIRED"
+        ]
+      },
+      "objective_achievement_status": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "PENDING",
+          "ACHIEVED",
+          "PARTIALLY_ACHIEVED",
+          "NOT_ACHIEVED"
+        ]
+      }
+    },
     "state_axioms": {
       "match_state_machine": {
         "strict_match": true,
@@ -306,7 +524,7 @@
           "FINISHED",
           "CANCELLED"
         ],
-	        "allowed_transitions": {
+        "allowed_transitions": {
           "DRAFT": [
             "SCHEDULED",
             "CANCELLED"
@@ -324,11 +542,11 @@
             "INTERRUPTED",
             "FINISHED"
           ],
-	          "HALFTIME": [
-	            "IN_PROGRESS",
-	            "INTERRUPTED",
-	            "CANCELLED"
-	          ],
+          "HALFTIME": [
+            "IN_PROGRESS",
+            "INTERRUPTED",
+            "CANCELLED"
+          ],
           "INTERRUPTED": [
             "IN_PROGRESS",
             "FINISHED",
@@ -337,7 +555,7 @@
           "FINISHED": [],
           "CANCELLED": []
         },
-	        "forbidden_transitions": [
+        "forbidden_transitions": [
           [
             "SCHEDULED",
             "FINISHED"
@@ -346,10 +564,10 @@
             "DRAFT",
             "IN_PROGRESS"
           ],
-	          [
-	            "FINISHED",
-	            "IN_PROGRESS"
-	          ],
+          [
+            "FINISHED",
+            "IN_PROGRESS"
+          ],
           [
             "CANCELLED",
             "IN_PROGRESS"
@@ -360,32 +578,36 @@
         "strict_match": true,
         "closed_set": true,
         "initial_states": [
-          "DRAFT",
-          "PLANNED"
+          "DRAFT"
         ],
         "terminal_states": [
-          "COMPLETED",
-          "CANCELLED"
+          "CANCELLED",
+          "ARCHIVED"
         ],
         "allowed_transitions": {
           "DRAFT": [
-            "PLANNED",
-            "CANCELLED"
-          ],
-          "PLANNED": [
             "SCHEDULED",
             "CANCELLED"
           ],
           "SCHEDULED": [
+            "PUBLISHED",
+            "DRAFT",
+            "CANCELLED"
+          ],
+          "PUBLISHED": [
             "IN_PROGRESS",
+            "SCHEDULED",
             "CANCELLED"
           ],
           "IN_PROGRESS": [
             "COMPLETED",
             "CANCELLED"
           ],
-          "COMPLETED": [],
-          "CANCELLED": []
+          "COMPLETED": [
+            "ARCHIVED"
+          ],
+          "CANCELLED": [],
+          "ARCHIVED": []
         },
         "forbidden_transitions": [
           [
@@ -393,16 +615,44 @@
             "COMPLETED"
           ],
           [
-            "PLANNED",
-            "COMPLETED"
+            "DRAFT",
+            "IN_PROGRESS"
           ],
           [
-            "SCHEDULED",
-            "COMPLETED"
+            "DRAFT",
+            "ARCHIVED"
           ],
           [
             "COMPLETED",
             "IN_PROGRESS"
+          ],
+          [
+            "COMPLETED",
+            "DRAFT"
+          ],
+          [
+            "ARCHIVED",
+            "DRAFT"
+          ],
+          [
+            "ARCHIVED",
+            "SCHEDULED"
+          ],
+          [
+            "ARCHIVED",
+            "PUBLISHED"
+          ],
+          [
+            "ARCHIVED",
+            "IN_PROGRESS"
+          ],
+          [
+            "ARCHIVED",
+            "COMPLETED"
+          ],
+          [
+            "ARCHIVED",
+            "CANCELLED"
           ]
         ]
       },
@@ -463,36 +713,36 @@
         "player_role_value": "GOALKEEPER",
         "forbidden_custom_role_values": true
       },
-	      "disciplinary_progression": {
-	        "strict_match": true,
-	        "closed_set": true,
-	        "ordered_levels": [
-	          "YELLOW_CARD",
-	          "TWO_MINUTES",
-	          "RED_CARD",
-	          "BLUE_CARD"
-	        ],
-	        "allowed_transitions": {
-	          "YELLOW_CARD": [
-	            "TWO_MINUTES",
-	            "RED_CARD"
-	          ],
-	          "TWO_MINUTES": [
-	            "RED_CARD"
-	          ],
-	          "RED_CARD": [
-	            "BLUE_CARD"
-	          ],
-	          "BLUE_CARD": []
-	        },
-	        "preconditions": {
-	          "BLUE_CARD": {
-	            "requires_prior": [
-	              "RED_CARD"
-	            ]
-	          }
-	        }
-	      },
+      "disciplinary_progression": {
+        "strict_match": true,
+        "closed_set": true,
+        "ordered_levels": [
+          "YELLOW_CARD",
+          "TWO_MINUTES",
+          "RED_CARD",
+          "BLUE_CARD"
+        ],
+        "allowed_transitions": {
+          "YELLOW_CARD": [
+            "TWO_MINUTES",
+            "RED_CARD"
+          ],
+          "TWO_MINUTES": [
+            "RED_CARD"
+          ],
+          "RED_CARD": [
+            "BLUE_CARD"
+          ],
+          "BLUE_CARD": []
+        },
+        "preconditions": {
+          "BLUE_CARD": {
+            "requires_prior": [
+              "RED_CARD"
+            ]
+          }
+        }
+      },
       "match_phase_alignment": {
         "phase_enum_ref": "match_phase",
         "state_machine_ref": "match_state_machine",

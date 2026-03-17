@@ -1,0 +1,113 @@
+# ExecutionRecord OpenAPI component
+# Source: contracts/schemas/training/execution_record.schema.json
+# TRAIN-DEC-007, TRAIN-DEC-008, TRAIN-DEC-009 | INV-TRAIN-087, INV-TRAIN-088, INV-TRAIN-089
+
+type: object
+additionalProperties: false
+required:
+  - id
+  - sessionId
+  - executionType
+  - recordedAt
+  - createdByUserId
+  - createdAt
+  - updatedAt
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  sessionId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    description: FK to TrainingSession. Immutable after creation.
+  blockId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    description: FK to SessionBlock. Required when executionType=BLOCK_EXECUTION.
+  executionType:
+    type: string
+    x-domain-enum-ref: execution_type
+    enum:
+      - SESSION_EXECUTION
+      - BLOCK_EXECUTION
+      - LIVE_ADJUSTMENT
+      - CONSTRAINT_OVERRIDE
+      - ALTERNATE_EXERCISE
+      - LOAD_RECALCULATION
+    description: >
+      Type of execution event. TRAIN-DEC-007. INV-TRAIN-087.
+      LIVE_ADJUSTMENT/CONSTRAINT_OVERRIDE require adjustmentReasonType + coachRationale.
+  recordedAt:
+    type: string
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    description: When the event occurred.
+  plannedValue:
+    type:
+      - number
+      - "null"
+    description: Planned metric value. TRAIN-DEC-008.
+  actualValue:
+    type:
+      - number
+      - "null"
+    description: Actual metric value. TRAIN-DEC-008. Never overwrites plannedValue.
+  plannedUnit:
+    type: string
+    maxLength: 32
+  actualUnit:
+    type: string
+    maxLength: 32
+  adjustmentReasonType:
+    type: string
+    x-domain-enum-ref: live_adjustment_reason_type
+    enum:
+      - READINESS
+      - PAIN_COMPLAINT
+      - EQUIPMENT_UNAVAILABLE
+      - SPACE_LIMITATION
+      - WEATHER
+      - TRAVEL
+      - PLAYER_COUNT
+      - COACH_DECISION
+      - OTHER
+    description: Required for LIVE_ADJUSTMENT/CONSTRAINT_OVERRIDE. INV-TRAIN-089.
+  coachRationale:
+    type: string
+    minLength: 5
+    maxLength: 2000
+    description: Required for LIVE_ADJUSTMENT/CONSTRAINT_OVERRIDE. INV-TRAIN-089.
+  alternateExerciseId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    description: Required when executionType=ALTERNATE_EXERCISE. TRAIN-DEC-047.
+  alternateExerciseVersionId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    description: Required when alternateExerciseId is present. TRAIN-DEC-048. INV-TRAIN-099.
+  createdByUserId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  createdAt:
+    type: string
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+  updatedAt:
+    type: string
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+
+example:
+  id: "550e8400-e29b-41d4-a716-446655440700"
+  sessionId: "550e8400-e29b-41d4-a716-446655440000"
+  executionType: "SESSION_EXECUTION"
+  recordedAt: "2026-03-16T11:00:00Z"
+  createdByUserId: "550e8400-e29b-41d4-a716-446655440040"
+  createdAt: "2026-03-16T11:00:00Z"
+  updatedAt: "2026-03-16T11:00:00Z"

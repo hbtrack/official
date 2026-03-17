@@ -5,10 +5,13 @@
 module: "{{MODULE_NAME}}"
 system_scope_ref: "../../../_canon/SYSTEM_SCOPE.md"
 handball_rules_ref: "../../../_canon/HANDBALL_RULES_DOMAIN.md"
+handball_semantic_applicability: {{HANDBALL_SEMANTIC_APPLICABILITY}}
 type: "state-model"
+contract_path_ref: "../../../../contracts/openapi/paths/{{MODULE_NAME}}.yaml"
+schemas_ref: "../../../../contracts/schemas/{{MODULE_NAME}}/"
 diagram_format: "mermaid"
+adr_ref: "../../../../docs/_canon/decisions/ADR-017-training-session-state-machine.md"
 ---
-
 # STATE_MODEL_{{MODULE_NAME_UPPER}}.md
 
 ## Objetivo

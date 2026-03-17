@@ -13,6 +13,8 @@ promoted_by: "DSS-TRAINING-003"
 
 # ARCH-DEC-TRAIN — Registro de Decisões Arquiteturais: Módulo Training
 
+> **Status canônico do arquivo:** Este documento é um DSS (Decision Support Source) consolidado — **não é artefato canônico soberano de módulo**. As docs canônicas reconhecidas pela governança para `docs/hbtrack/modulos/training/` são: `README`, `MODULE_SCOPE`, `DOMAIN_RULES`, `INVARIANTS`, `STATE_MODEL`, `PERMISSIONS`, `ERRORS`, `UI_CONTRACT`, `SCREEN_MAP` e `TEST_MATRIX`. Arquivos fora dessas listas são não-soberanos por padrão, salvo promoção explícita. O conteúdo deste arquivo serve como fonte de raciocínio (DSS), mas afirmações normativas só têm efeito canônico quando materializadas nos artefatos soberanos de módulo.
+
 - Status: Accepted
 - Data: 2026-03-15
 - Módulo: `training`
@@ -72,6 +74,9 @@ promoted_by: "DSS-TRAINING-003"
 | [TRAIN-DEC-044](#train-dec-044) | Sessão híbrida: escopo coletivo + variantes individuais embedded | Estrutura de domínio | Accepted |
 | [TRAIN-DEC-045](#train-dec-045) | `planned vs actual` é dualidade embedded; comparação é query derivada | Execução | Accepted |
 | [TRAIN-DEC-046](#train-dec-046) | `analytics` é soberano de `derived_signal`; `training` consome read-only | Boundary | Accepted |
+| [TRAIN-DEC-047](#train-dec-047) | `exercises` é módulo soberano; `training` referencia `exercise_id + exercise_version_id` | Boundary | Accepted |
+| [TRAIN-DEC-048](#train-dec-048) | Versionamento pedagógico explícito: `exercise_version` append-only; sessão histórica preserva `exercise_version_id` | Versionamento | Accepted |
+| [TRAIN-DEC-049](#train-dec-049) | `session_block` é contrato obrigatório de Fase 1 — DSL operacional da sessão com `phase`, `orderIndex`, `durationMinutes`, `intensity`, referência a `exercise_version_id`; INV-TRAIN-083 aplicado | DSL / Session | Accepted |
 
 ---
 
@@ -116,6 +121,8 @@ Need → Objective → Prescription → Session → Execution → Response → R
 
 `INV-TRAIN-001`, `INV-TRAIN-002`, `INV-TRAIN-003`
 
+> ⚠️ **Pendência de materialização:** A declaração de identidade do módulo e o backbone semântico (`Need → Objective → Prescription → Session → Execution → Response → Review → Adjustment`) precisam estar expressos em `MODULE_SCOPE_TRAINING.md` (identidade e escopo) e `DOMAIN_RULES_TRAINING.md` (backbone operacional) para ter efeito canônico. Este DSS não substitui esses artefatos soberanos. Sem essa materialização, agentes e implementações podem modelar o módulo como CRUD de sessão sem violar nenhum artefato soberano.
+
 ---
 
 ### TRAIN-DEC-002
@@ -147,6 +154,8 @@ Toda sessão deve nascer de uma `need_detected`, `goal_gap` ou `competitive_focu
 #### Invariantes vinculadas
 
 `INV-TRAIN-001`, `INV-TRAIN-002`
+
+> ⚠️ **Pendência de materialização:** O princípio de orientação a decisão (e não a cadastro) é identidade de módulo e precisa estar declarado explicitamente em `DOMAIN_RULES_TRAINING.md`. É o tipo de afirmação que orienta interpretação futura de contratos e de boundary. Sem isso, a UX pode introduzir atalhos que permitem sessões sem propósito sem violar nenhum artefato soberano formal.
 
 ---
 
@@ -239,6 +248,13 @@ Objetivo sem origem é tratado como dado incompleto.
 
 `INV-TRAIN-002`
 
+> ⚠️ **Artefatos pendentes — P0 (bloqueador Fase 1):**
+> - `.contract_driven/DOMAIN_AXIOMS.json` — adicionar enum `session_objective_origin`: `["NEED_DETECTED", "COMPETITIVE_FOCUS", "DEVELOPMENT_GOAL", "MANUAL_COACH_RATIONALE"]`
+> - `contracts/schemas/training/session_objective.schema.json` — criar (não existe)
+> - `contracts/openapi/components/schemas/training/session_objective.yaml` — criar
+>
+> `CROSS_SPEC_ALIGNMENT_GATE` bloqueará quando o schema for criado sem `x-domain-enum-ref`. §17 DoD — módulo incompleto sem schema de `session_objective`.
+
 ---
 
 ### TRAIN-DEC-006
@@ -284,6 +300,14 @@ Se for improviso documentado, deve carregar `coach_rationale` de ajuste ao vivo.
 #### Invariantes vinculadas
 
 `INV-TRAIN-006`
+
+> ⚠️ **Artefatos pendentes — P0 (bloqueador Fase 1):**
+> - `contracts/schemas/training/execution_record.schema.json` — criar
+> - `contracts/openapi/components/schemas/training/execution_record.yaml` — criar
+> - `contracts/openapi/paths/training.yaml` — endpoint `POST /training-sessions/{id}/execution-records`
+> - `.contract_driven/DOMAIN_AXIOMS.json` — enum `execution_type` se diferente dos existentes
+>
+> §17 DoD — módulo incompleto sem domain shape da entidade central de Fase 1. `CROSS_SPEC_ALIGNMENT_GATE` bloqueará na primeira implementação.
 
 ---
 
@@ -363,6 +387,13 @@ Feedback sem contexto vinculado não tem valor operacional e não deve ser aceit
 #### Invariantes vinculadas
 
 `INV-TRAIN-010`
+
+> ⚠️ **Artefatos pendentes — P0 (bloqueador Fase 1):**
+> - `contracts/schemas/training/feedback_thread.schema.json` — criar (Fase 1: reflexão estruturada com `conversation_outcome` obrigatório)
+> - `contracts/openapi/components/schemas/training/feedback_thread.yaml` — criar
+> - `.contract_driven/DOMAIN_AXIOMS.json` — enums `feedback_context_type` (sessão, bloco, objetivo, atleta, evidência) e `conversation_outcome_type`
+>
+> §17 DoD se `feedback_thread` for entidade de Fase 1. `CROSS_SPEC_ALIGNMENT_GATE` bloqueará quando schema criado sem enums fechados.
 
 ---
 
@@ -557,6 +588,8 @@ Mídia solta (não vinculada a prescrição, bloco, objetivo ou evento de avalia
 - **Positivo:** Vídeo e playbook ganham contexto operacional e são rastreáveis.
 - **Negativo:** Requer modelo de dados que suporte vinculação polimórfica de mídia.
 
+> ⚠️ **Requer ADR (P2):** ADR-021 (Media Delivery Boundary) foi emitido apenas para o módulo `exercises`. Para que `training` possa carregar vínculos de mídia (`video_clip`, `diagram`, `playbook_pattern`, `coaching_cue`), é necessário um adendo a ADR-021 ou emissão de ADR-022 estendendo a media delivery boundary ao contexto `training` e definindo a entidade `coaching_media_ref`. Sem isso, qualquer campo de mídia em contratos de `training` viola ADR-021 §5. Aplica-se à Fase 2 — não é imediato.
+
 ---
 
 ### TRAIN-DEC-018
@@ -608,6 +641,12 @@ Aderência não é apenas `attendance`. O domínio inclui:
 
 Esses objetos devem ser modelados como entidades do domínio, não como campos avulsos.
 
+> ⚠️ **Artefatos pendentes (Fase 2):**
+> - `.contract_driven/DOMAIN_AXIOMS.json` — enums `miss_reason_type` e `adherence_status_type`
+> - `contracts/schemas/training/adherence_record.schema.json` — criar na Fase 2
+>
+> Atenção: `engagement_signal` e `dropout_risk_signal` são soberanos de `analytics` (TRAIN-DEC-046) — `adherence` no módulo `training` inclui apenas os dados-fonte, não os sinais derivados. `CROSS_SPEC_ALIGNMENT_GATE` bloqueará quando schema criado sem enums fechados.
+
 ---
 
 ### TRAIN-DEC-020
@@ -615,7 +654,7 @@ Esses objetos devem ser modelados como entidades do domínio, não como campos a
 **Edição viva de sessão deve ser suportada**
 
 - **Tipo:** Execução
-- **Status:** Accepted
+- **Status:** Accepted | ⚠️ BLOCKED_CONTRACT_CONFLICT
 
 #### Contexto
 
@@ -635,6 +674,8 @@ Todos esses objetos devem gerar trilha auditável.
 #### Invariantes vinculadas
 
 `INV-TRAIN-008`, `INV-TRAIN-009`
+
+> 🚫 **BLOCKED_CONTRACT_CONFLICT ativo:** ADR-017 classifica `IN_PROGRESS` como "Não (bloqueado)" na coluna "Editável?". Este documento exige suporte a `live_session_adjustment`, `alternate_exercise`, `constraint_override` e `load_recalculation` durante a sessão em `IN_PROGRESS`. Duas fontes canônicas no mesmo nível são incompatíveis. Nenhum endpoint de ajuste ao vivo pode ser aberto antes de um adendo formal em **ADR-017** distinguindo "imutabilidade do agregado estrutural de `training_session`" de "registros de ajuste append-only (ADR-018 HYBRID)". O adendo a ADR-017 precede obrigatoriamente a abertura de qualquer contrato de ajuste ao vivo.
 
 ---
 
@@ -809,6 +850,11 @@ Tudo que entra em `attention_queue` precisa ter racional explícito. Alertas sem
 
 `INV-TRAIN-027`
 
+> ⚠️ **Artefatos pendentes — P1 (bloqueador imediato de Fase 1):** INV-TRAIN-083 (Elastic Sum Rule) já produz items de `attention_queue`. Sem schema, o formato é ad hoc e FI-013 não pode ser enforced.
+> - `.contract_driven/DOMAIN_AXIOMS.json` — enums `attention_queue_severity` (LOW, MEDIUM, HIGH, CRITICAL) e `attention_queue_reason_code`
+> - `contracts/schemas/training/attention_queue_item.schema.json` — criar
+> - `contracts/openapi/components/schemas/training/attention_queue_item.yaml` — criar
+
 ---
 
 ### TRAIN-DEC-028
@@ -894,6 +940,46 @@ Classificação das 41 invariantes segundo o tipo de enforcement:
 
 ---
 
+### TRAIN-DEC-047
+
+**`exercises` é módulo soberano; `training` referencia `exercise_id + exercise_version_id`**
+
+- Tipo: Boundary
+- Status: Accepted
+- Data: 2026-03-16
+- Resolve: OD-TRAIN-001
+
+`exercises` é um módulo de domínio separado e soberano. `training` não possui, não cria, não modifica e não replica dados de exercício. `training` consome exercícios estritamente como referência lookup: `exercise_id` + `exercise_version_id`.
+
+Boundary canônica (MODULE_MAP.md):
+- `exercises`: biblioteca de exercícios reutilizáveis — definição pura, versionamento editorial, relações semânticas.
+- `training`: sessão de treino com contexto tático, data, atletas, objetivos — evento operacional.
+
+FI-020 (decorrente): `training` não pode criar entidade de exercício. Toda criação de exercício passa pelo módulo `exercises`.
+FI-021 (decorrente): `session_exercise` sem `exercise_version_id` é inválido — referência sem versão viola integridade histórica.
+
+---
+
+### TRAIN-DEC-048
+
+**Versionamento pedagógico explícito: `exercise_version` append-only; sessão histórica preserva `exercise_version_id`**
+
+- Tipo: Versionamento
+- Status: Accepted
+- Data: 2026-03-16
+- Contexto: Avaliação arquitetural 2026-03-16 (BLOQ-01 resolvido)
+
+O módulo `exercises` mantém versionamento append-only de exercícios (Approach B). Cada edição editorial de um exercício cria uma nova `exercise_version` — os campos da versão anterior são imutáveis. `session_exercise` armazena `exercise_version_id` explícito, não apenas `exercise_id`.
+
+Consequências:
+- Sessões históricas são reprodutíveis exatamente como foram executadas, mesmo após correções editoriais.
+- Templates podem ser "atualizados" intencionalmente para referenciar uma versão mais recente do exercício — ação explícita do treinador.
+- `exercise_version_id` é obrigatório em qualquer entidade que consume exercício em contexto de execução ou planejamento fixo.
+
+Snapshot puro (Approach A — rejeitado): Resolve auditoria mas perde governança evolutiva. O treinador não saberia se a sessão foi construída com a versão corrigida ou com a versão com erro editorial. Versionamento explícito preserva ambas as capacidades.
+
+---
+
 ## Decisões Abertas
 
 | # | Questão | Impacto | Superfície afetada | Bloqueia? |
@@ -901,8 +987,8 @@ Classificação das 41 invariantes segundo o tipo de enforcement:
 | OPEN-001 | Sessão híbrida (coletiva + individual simultânea): modelo explícito ainda não formalizado | Alto | `training_session`, schema, OpenAPI | **Resolved** — ver TRAIN-DEC-044 |
 | OPEN-002 | Granularidade de `planned vs actual` na Fase 1: campo resumido ou estrutura dualista completa? | Médio | Schema, contrato API | **Resolved** — ver TRAIN-DEC-045 |
 | OPEN-003 | `dropout_risk_signal`: calculado internamente ou consumido de `analytics`? | Médio | Boundary, schema | **Resolved** — ver TRAIN-DEC-046 |
-| OPEN-004 | `staff_handoff`: entidade própria ou campo de `continuity_snapshot`? | Baixo | Schema | Não |
-| OPEN-005 | Política de tolerância para duração de blocos vs duração total da sessão | Médio | `INV-TRAIN-034`, schema | Sim |
+| OPEN-004 | `staff_handoff`: entidade própria ou campo de `continuity_snapshot`? | Baixo | Schema | **Resolved** — `continuityNotes` como campo opcional em `training_session`; `staff_handoff` dedicado diferido para Fase 3 |
+| OPEN-005 | Política de tolerância para duração de blocos vs duração total da sessão | Médio | `INV-TRAIN-083`, schema | **Resolved** — Regra de Soma Elástica; ver INV-TRAIN-083 |
 
 ---
 
@@ -916,6 +1002,52 @@ Classificação das 41 invariantes segundo o tipo de enforcement:
 > Toda decisão de contrato, schema, boundary e implementação deve ser avaliada contra essa definição. Se uma decisão reduz o módulo a CRUD de sessão, ela está errada.
 
 ---
+
+### TRAIN-DEC-049
+
+**`session_block` é contrato obrigatório de Fase 1 — DSL operacional da sessão**
+
+- **Status**: Accepted
+- **Data**: 2026-03-16
+- **Tipo**: DSL / Session Planning
+- **Resolve**: DEFER-TRAIN-P2-006 (desbloqueado por OPEN-005 / INV-TRAIN-083)
+
+**Contexto**
+
+`training_session` existe como contêiner de sessão. Sem `session_block`, o HB Track tem sessões mas não tem linguagem operacional de treino. O treinador não consegue compor blocos com intenção pedagógica, duração, ordem, intensidade e rastreabilidade de exercício. Isso impede a diferença competitiva real frente às bibliotecas de exercícios convencionais.
+
+**Decisão**
+
+`session_block` entra como contrato obrigatório da Fase 1 expandida do módulo `training`. Não é opcional. Não pode ser diferido.
+
+O contrato define:
+- `phase` — fase canônica da sessão (DOMAIN_AXIOMS `session_block_phase`)
+- `orderIndex` — posição 0-based dentro da sessão (unicidade server-side)
+- `durationMinutes` — duração planejada do bloco (INV-TRAIN-083: Elastic Sum Rule)
+- `blockObjective` — objetivo pedagógico explícito e obrigatório
+- `intensity` — nível de esforço planejado (DOMAIN_AXIOMS `session_block_intensity`)
+- `exerciseId` + `exerciseVersionId` — referência a exercício versionado (TRAIN-DEC-047, TRAIN-DEC-048); versão explícita obrigatória quando exerciseId presente
+- `notes`, `isOptional` — anotações e flag de bloco condicional
+
+**Fronteiras**
+
+- `session_block` pertence exclusivamente ao módulo `training`
+- `session_block` referencia `exercises` por ID+versão; nunca embute Exercise
+- Blocos são CRUD enquanto sessão em DRAFT/SCHEDULED/PUBLISHED (ADR-018)
+- Blocos em sessão COMPLETED/ARCHIVED tornam-se histórico imutável
+- INV-TRAIN-083 (Elastic Sum Rule) é aplicado em cada criação/atualização de bloco
+
+**Artefatos gerados**
+
+- `contracts/openapi/components/schemas/training/session_block.yaml`
+- `contracts/schemas/training/session_block.schema.json`
+- 5 endpoints em `contracts/openapi/paths/training.yaml`:
+  - `GET /training-sessions/{id}/blocks`
+  - `POST /training-sessions/{id}/blocks`
+  - `GET /training-sessions/{id}/blocks/{blockId}`
+  - `PATCH /training-sessions/{id}/blocks/{blockId}`
+  - `DELETE /training-sessions/{id}/blocks/{blockId}`
+  - `POST /training-sessions/{id}/blocks/reorder`
 
 ---
 
@@ -1358,6 +1490,15 @@ Sessões de treino precisam suportar prescrição coletiva (toda a equipe), indi
 
 `INV-TRAIN-035` (atualizado para refletir `individualization_mode`)
 
+> ⚠️ **Artefatos pendentes — P0 (bloqueador Fase 1):**
+> - `.contract_driven/DOMAIN_AXIOMS.json` — adicionar enum `individualization_mode`: `["COLLECTIVE_UNIFORM", "COLLECTIVE_WITH_VARIANTS", "INDIVIDUAL_ONLY"]`
+> - `contracts/openapi/components/schemas/training/training_session.yaml` — adicionar campo `individualizationMode` com `x-domain-enum-ref`
+> - `contracts/schemas/training/training_session.schema.json` — atualizar
+> - Recompilar manifests após DOMAIN_AXIOMS atualizado (DERIVED_DRIFT_GATE)
+> - `contracts/openapi/components/schemas/training/block_athlete_variant.yaml` — criar (Fase 2)
+>
+> `CROSS_SPEC_ALIGNMENT_GATE` bloqueará se campo implementado como string livre sem `x-domain-enum-ref`.
+
 ---
 
 ### TRAIN-DEC-045
@@ -1392,6 +1533,8 @@ A dualidade planejado/realizado é **obrigatória e embedded** — não uma enti
 #### Invariantes vinculadas
 
 `INV-TRAIN-007` (atualizado para especificar granularidade por fase)
+
+> ⚠️ **Artefato pendente — P1:** `plannedContentSnapshot` não está no schema atual de `training_session.yaml`. Sem ele, INV-TRAIN-007 não pode ser enforced via contrato — a dualidade existe na decisão mas não no artefato. Adicionar campo `plannedContentSnapshot` (write-once na transição para PUBLISHED; imutuável após) a `contracts/openapi/components/schemas/training/training_session.yaml`.
 
 ---
 
@@ -1470,6 +1613,28 @@ As decisões abaixo são registros formais do `MODULE_DECISION_IR.json`. Decisõ
 > **DECISÃO (2026-03-15):** `analytics` é o módulo soberano de computação de sinais derivados (`readiness_score`, `dropout_risk_signal`, `engagement_signal`). `training` consome esses sinais como read-only com proveniência completa. `training` não implementa cálculo de sinal internamente. Fase 2: `training` emite trigger_event → `analytics` recalcula → `training` consome resultado atualizado.
 >
 > Impacto: `INV-TRAIN-036` atualizado para especificar boundary analytics. OPEN-003 e OD-TRAIN-007 encerrados.
+
+### Resolução formal: OPEN-004
+
+> **DECISÃO (2026-03-16):** `staff_handoff` não será uma entidade separada na Fase 1. A continuidade interstaff é capturada pelo campo opcional `continuityNotes` (string, maxLength 2000) dentro de `training_session`. Esse campo registra anotações do coach e racional de decisões necessários para a memória técnica entre treinos e equipes.
+>
+> Rationale: reduz complexidade de tabelas no banco de dados da Fase 1 sem abrir mão da continuidade operacional. O campo é suficiente para UC-TRAIN-021 em Fase 1.
+>
+> Impacto: `training_session.yaml` — campo `continuityNotes` adicionado (opcional). `DEFER-TRAIN-P3-003` permanece como escopo de Fase 3 para `staff_handoff` como entidade própria de snapshot estruturado.
+
+### Resolução formal: OPEN-005
+
+> **DECISÃO (2026-03-16):** Implementação da **Regra de Soma Elástica** (INV-TRAIN-083).
+>
+> Tolerância: `MIN(durationPlannedMinutes × 0.10, 10 minutos)`.
+>
+> Dentro da tolerância: emite **Warning** no frontend + item de **baixa severidade** na `attention_queue` (campos obrigatórios conforme TRAIN-DEC-027: `severity`, `reason`, `target_entity`). Não bloqueia.
+>
+> Fora da tolerância: rejeita operação com HTTP 422, mensagem clara com excesso em minutos.
+>
+> As transições `PUBLISHED` e `COMPLETED` **não são bloqueadas** por esta regra. Rationale: respeita a autoridade soberana do treinador e a realidade imprevisível das quadras de handebol. O sistema deve alertar, nunca obstruir.
+>
+> Impacto: `INV-TRAIN-083` adicionado a `INVARIANTS_TRAINING.md`. `DEFER-TRAIN-P2-006` desbloqueado — contrato de `session_block` pode ser contratualizado em Fase 2.
 
 ---
 

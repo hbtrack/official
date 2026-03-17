@@ -36,8 +36,9 @@ contracts/openapi/
 
 ## Regras de uso
 
-- **Soberania**: `contracts/openapi/openapi.yaml` é a única fonte de verdade para a interface HTTP. Nenhum código ou documento pode redefinir paths ou schemas sem alterar este contrato.
+- **Soberania**: `contracts/openapi/openapi.yaml` continua sendo o entrypoint soberano da interface HTTP, mas o inventário em `paths:` é composto deterministicamente a partir de `contracts/openapi/paths/*.yaml`.
 - **Um módulo por arquivo**: cada arquivo em `paths/` pertence a exatamente um módulo canônico.
+- **Composição obrigatória do root**: após alterar qualquer `contracts/openapi/paths/<module>.yaml`, execute `python3 scripts/generate/gen_openapi_root_inventory.py` ou `python3 scripts/contracts/validate/api/compile_api_policy.py --all`.
 - **Validação obrigatória**: toda alteração deve passar em `python3 scripts/validate_contracts.py` (gates) — ou, no mínimo, em `redocly lint contracts/openapi/openapi.yaml` (após `source ./setup-env.sh`).
 - **Sem edição manual de derivados**: tipos e clients gerados a partir desta spec vivem em `generated/` e não são editados manualmente.
 

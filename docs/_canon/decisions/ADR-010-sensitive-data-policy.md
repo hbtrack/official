@@ -2,8 +2,9 @@
 
 - Status: Accepted
 - Date: 2026-03-15
+- Updated: 2026-03-16 (adicionadas sub-classes PHI esportivas e access_classification — TRAIN-DEC-039)
 - Deciders: Equipe HB Track
-- Tags: security, data-privacy, masking, pii, phi, lgpd
+- Tags: security, data-privacy, masking, pii, phi, lgpd, wellness, training
 - Resolves: ARCH-004
 
 ## Context
@@ -53,6 +54,34 @@ Campos sem classificação explícita são tratados como `PUBLIC` por padrão. C
 - Campos de PHI de menores são marcados com `minorConsent: true` no schema de contrato quando aplicável.
 - Política de retenção específica para menores: ver ADR-011.
 
+### Sub-classes de PHI no contexto esportivo
+
+O domínio esportivo produz dados de saúde adjacentes que não se encaixam perfeitamente em PHI clínico tradicional, mas têm risco equivalente de uso indevido. Estas sub-classes são sub-tipos de `PHI`:
+
+| Sub-classe | Descrição | Exemplos |
+|---|---|---|
+| `sensitive_health_adjacent` | Dados fisiológicos de performance que revelam estado de saúde do atleta | Readiness score, fadiga estimada, indicadores de carga aguda/crônica, HRV derivado, sleep quality/hours |
+| `sensitive_psychological` | Dados de estado mental e emocional auto-relatados | Estado emocional, motivação, estresse percebido, burnout risk signal, dropout risk signal |
+
+**Regras adicionais para sub-classes esportivas:**
+
+- `sensitive_health_adjacent` e `sensitive_psychological` nunca devem aparecer em dashboards genéricos de performance ou listagens de sessão.
+- Resumos derivados (ex.: `readiness_flag: LOW`) só podem aparecer em endpoints explicitamente projetados para aquele nível de exposição, com `access_classification` documentado.
+- Inferências de IA sobre estado do atleta baseadas nessas sub-classes têm autoridade **apenas consultiva** até revisão humana explícita (ADR-015).
+
+### Níveis de classificação de acesso para dados PHI esportivos
+
+| Nível | Descrição | Quem pode acessar |
+|---|---|---|
+| `restricted_coaching` | Dados de wellness e readiness com escopo operacional — need-to-know do treino | Coach e staff atribuídos à equipe/atleta |
+| `restricted_medical` | Dados clínicos e de lesão | Staff médico autorizado |
+| `public_aggregate` | Métricas agregadas sem granularidade individual | Qualquer role autenticado |
+
+Acesso a `sensitive_health_adjacent` e `sensitive_psychological` no contexto do módulo `training` requer:
+1. `need-to-know` operacional explícito (coach/staff atribuído à sessão ou atleta)
+2. Escopo contextual: apenas atletas da equipe/sessão atribuída ao role
+3. `access_classification`: mínimo `restricted_coaching`
+
 ### Campos obrigatoriamente classificados por módulo
 
 | Módulo | Campos PHI | Campos PII | Campos CREDENTIALS |
@@ -92,4 +121,6 @@ Campos sem classificação explícita são tratados como `PUBLIC` por padrão. C
 - Resolves: `docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md` ARCH-004
 - Related: `docs/_canon/SECURITY_RULES.md` (regra 6 — minimização), `docs/_canon/decisions/ADR-011-retention-policy.md`
 - Related: `docs/_canon/decisions/ADR-007-auth-strategy.md`, `docs/_canon/decisions/ADR-008-authz-strategy.md`
+- Related: `docs/_canon/decisions/ADR-015-agent-execution-log.md` (IA consultiva sobre dados sensíveis)
+- Promoted by: `docs/hbtrack/decisoes/ARCH_DECISIONS_TRAINING.md` TRAIN-DEC-039, TRAIN-DEC-040, TRAIN-DEC-041
 - Regulatório: LGPD Lei 13.709/2018, especialmente Art. 5° XI (dados sensíveis) e Art. 11 (tratamento de dados sensíveis)

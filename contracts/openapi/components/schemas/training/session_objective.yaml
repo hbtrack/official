@@ -1,0 +1,78 @@
+# SessionObjective OpenAPI component
+# Source: contracts/schemas/training/session_objective.schema.json
+# TRAIN-DEC-004, TRAIN-DEC-005 | INV-TRAIN-084, INV-TRAIN-085
+
+type: object
+additionalProperties: false
+required:
+  - id
+  - sessionId
+  - objectiveText
+  - origin
+  - createdByUserId
+  - createdAt
+  - updatedAt
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  sessionId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    description: FK to TrainingSession. Immutable after creation.
+  objectiveText:
+    type: string
+    minLength: 3
+    maxLength: 500
+  origin:
+    type: string
+    x-domain-enum-ref: objective_origin
+    enum:
+      - NEED_DETECTED
+      - COMPETITIVE_FOCUS
+      - DEVELOPMENT_GOAL
+      - MANUAL_COACH_RATIONALE
+    description: >
+      Causal origin of the objective. TRAIN-DEC-005. INV-TRAIN-085.
+      MANUAL_COACH_RATIONALE requires originNotes (minLength 10).
+  originNotes:
+    type: string
+    minLength: 10
+    maxLength: 1000
+    description: Required when origin=MANUAL_COACH_RATIONALE.
+  achievementStatus:
+    type: string
+    x-domain-enum-ref: objective_achievement_status
+    enum:
+      - PENDING
+      - ACHIEVED
+      - PARTIALLY_ACHIEVED
+      - NOT_ACHIEVED
+    description: Post-session assessment of objective outcome.
+  achievementNotes:
+    type: string
+    maxLength: 1000
+  createdByUserId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  createdAt:
+    type: string
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+  updatedAt:
+    type: string
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+
+example:
+  id: "550e8400-e29b-41d4-a716-446655440600"
+  sessionId: "550e8400-e29b-41d4-a716-446655440000"
+  objectiveText: "Consolidar transição ofensiva 3x2 com finalização"
+  origin: "COMPETITIVE_FOCUS"
+  achievementStatus: "ACHIEVED"
+  createdByUserId: "550e8400-e29b-41d4-a716-446655440040"
+  createdAt: "2026-03-16T10:00:00Z"
+  updatedAt: "2026-03-16T10:00:00Z"

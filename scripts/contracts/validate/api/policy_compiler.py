@@ -85,6 +85,15 @@ class ExpectedFile:
     content: bytes
 
 
+_GLOBAL_INPUT_RELATIVE_PATHS = (
+    ".contract_driven/templates/api/ARCHITECTURE_MATRIX.yaml",
+    ".contract_driven/templates/api/MODULE_PROFILE_REGISTRY.yaml",
+    ".contract_driven/templates/api/api_rules.yaml",
+    ".contract_driven/templates/api/CANONICAL_TYPE_REGISTRY.yaml",
+    ".contract_driven/DOMAIN_AXIOMS.json",
+)
+
+
 def _sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
@@ -137,6 +146,10 @@ def _dump_yaml(obj: Any) -> bytes:
 
 def _rel(root: pathlib.Path, path: pathlib.Path) -> str:
     return path.relative_to(root).as_posix()
+
+
+def _global_input_paths(root: pathlib.Path) -> list[pathlib.Path]:
+    return [root / rel for rel in _GLOBAL_INPUT_RELATIVE_PATHS]
 
 
 def _ssot_api_rules_path(root: pathlib.Path) -> pathlib.Path:
@@ -769,13 +782,7 @@ def compile_expected(
             generated_contract_entries.append({"path": dst_rel, "sha256": _sha256_bytes(src_bytes)})
 
     # hashes de inputs
-    input_paths = [
-        _architecture_matrix_path(root),
-        _module_profile_registry_path(root),
-        _ssot_api_rules_path(root),
-        _canonical_type_registry_path(root),
-        root / ".contract_driven" / "DOMAIN_AXIOMS.json",
-    ]
+    input_paths = _global_input_paths(root)
     source_inputs = [{"path": _rel(root, p), "sha256": _sha256_bytes(_read_bytes(p))} for p in input_paths]
 
     def _tree_hash(entries: list[dict[str, str]]) -> str:
@@ -857,6 +864,40 @@ def check_expected(root: pathlib.Path, expected: list[ExpectedFile]) -> list[Dri
         if not _semantic_equal(ef.relpath, got, ef.content):
             drifts.append(Drift(ef.relpath, "semantic_mismatch"))
     return drifts
+
+
+def detect_global_input_recompile_gap(root: pathlib.Path) -> dict[str, list[str]]:
+    manifests_dir = root / "generated" / "manifests"
+    if not manifests_dir.exists():
+        return {}
+
+    current_hashes = {
+        _rel(root, path): _sha256_bytes(_read_bytes(path))
+        for path in _global_input_paths(root)
+        if path.exists()
+    }
+    gaps: dict[str, set[str]] = {}
+    for manifest_path in sorted(manifests_dir.glob("*.traceability.yaml")):
+        data = _load_yaml(manifest_path)
+        manifest = data.get("traceability_manifest") if isinstance(data, dict) else None
+        inputs = manifest.get("source_inputs") if isinstance(manifest, dict) else None
+        if not isinstance(inputs, list):
+            continue
+        for item in inputs:
+            if not isinstance(item, dict):
+                continue
+            source_path = item.get("path")
+            source_hash = item.get("sha256")
+            current_hash = current_hashes.get(source_path)
+            if not isinstance(source_path, str) or current_hash is None:
+                continue
+            if not isinstance(source_hash, str) or source_hash != current_hash:
+                gaps.setdefault(source_path, set()).add(_rel(root, manifest_path))
+
+    return {
+        source_path: sorted(manifest_paths)
+        for source_path, manifest_paths in sorted(gaps.items())
+    }
 
 
 def compile_all_expected(root: pathlib.Path, *, only_modules: list[str] | None = None) -> list[ExpectedFile]:

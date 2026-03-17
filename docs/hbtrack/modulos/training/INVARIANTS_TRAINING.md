@@ -28,7 +28,7 @@ Invariantes são condições que devem permanecer verdadeiras independentemente 
 | INV-TRAIN-003 | Edição de `wellness_post` é bloqueada quando NOW ≥ `created_at` + 24h (limite não-inclusivo) | `WellnessPost` | Regra de produto | Teste de tentativa de edição após janela; validação temporal no endpoint |
 | INV-TRAIN-004 | Janela de edição depende de papel e estado: Autor (treinador) pode editar sessão "scheduled" até 10 min antes de `session_at` (não-inclusivo). Superior (coordenador/dirigente) pode editar "pending_review" até 24h após `ended_at` (não-inclusivo). | `TrainingSession` | Regra de produto + RBAC | Teste de autorização temporal por papel; tentativa de edição fora da janela |
 | INV-TRAIN-005 | Sessões com `session_at` mais antigas que 60 dias são somente leitura; qualquer tentativa de edição é bloqueada | `TrainingSession` | Regra de produto | Teste de tentativa de edição de sessão histórica; flag `readonly` computado dinamicamente |
-| INV-TRAIN-006 | Status permitido em `training_sessions`: `draft`, `scheduled`, `in_progress`, `pending_review`, `readonly` | `TrainingSession` | Regra de produto + DOMAIN_AXIOMS | Validação de enum no schema; teste de tentativa de estado inválido |
+| INV-TRAIN-006 | Status de `training_session` segue FSM fechada de 7 estados canônicos (ADR-017): `DRAFT`, `SCHEDULED`, `PUBLISHED`, `IN_PROGRESS`, `COMPLETED`, `CANCELLED`, `ARCHIVED`. Transições arbitrárias são rejeitadas. ARCHIVED é estado terminal somente-sistema (automação 60 dias pós-COMPLETED). FI-007: sessão COMPLETED é imutável por edição destrutiva. | `TrainingSession` | ADR-017 + DOMAIN_AXIOMS.json `training_state_machine` | Validação de enum no schema; teste de transição inválida (ex.: DRAFT→COMPLETED); teste de tentativa de edição destrutiva em COMPLETED |
 
 ## Regras de uso
 1. Nenhum endpoint pode violar invariantes.
@@ -41,15 +41,13 @@ Invariantes são condições que devem permanecer verdadeiras independentemente 
 - `TEST_MATRIX_TRAINING.md`
 
 ## Nota sobre workflow de estados
-O workflow alvo canônico de `TrainingSession` definido em `.contract_driven/DOMAIN_AXIOMS.json` é:
+O workflow canônico de `TrainingSession` está definido em `.contract_driven/DOMAIN_AXIOMS.json → training_state_machine` (ADR-017):
 
-**"DRAFT" → "PLANNED" → "SCHEDULED" → "IN_PROGRESS" → "COMPLETED" → "CANCELLED"**
+**DRAFT → SCHEDULED/PUBLISHED → IN_PROGRESS → COMPLETED → ARCHIVED (sistema)**
+**DRAFT/SCHEDULED/PUBLISHED/IN_PROGRESS → CANCELLED**
 
-Porém, INV-TRAIN-006 registra os estados operacionais atuais implementados: `draft`, `scheduled`, `in_progress`, `pending_review`, `readonly`.
-
-**Esta divergência está documentada em `CONTRACT_TRAINING.md` §16 (LAC-001)** e deve ser reconciliada em decisão arquitetural futura.
-          
-Controla o ciclo operacional do treino e determina permissões de edição e fechamento.
+INV-TRAIN-006 foi atualizado em 2026-03-16 para refletir os 7 estados canônicos do ADR-017.
+Divergências pré-existentes com estados legados (`pending_review`, `readonly`) foram encerradas (LAC-001 resolvido).
 
 ## INV-TRAIN-007
 Operações de datetime em tasks Celery devem usar timezone UTC (timezone.utc) para comparações e timestamps.
@@ -100,6 +98,12 @@ Analytics precisa ser acessível por staff para tomada de decisão e prevenção
 ## INV-TRAIN-016
 Endpoints de attendance exigem autenticação; rota scoped alternativa (teams/{team_id}/trainings/{id}/attendance) não é exposta no agregador.
 Presença é dado sensível operacional; não deve haver rota "paralela" exposta sem governança.
+
+## INV-TRAIN-017
+Transições de estado de `training_session` seguem exclusivamente o mapa canônico de ADR-017. Somente as seguintes transições são válidas:
+`DRAFT→SCHEDULED`, `DRAFT→CANCELLED`, `SCHEDULED→PUBLISHED`, `SCHEDULED→DRAFT`, `SCHEDULED→CANCELLED`, `PUBLISHED→IN_PROGRESS`, `PUBLISHED→SCHEDULED`, `PUBLISHED→CANCELLED`, `IN_PROGRESS→COMPLETED`, `IN_PROGRESS→CANCELLED`, `COMPLETED→ARCHIVED`.
+Qualquer outra transição (ex.: `DRAFT→COMPLETED`, `COMPLETED→IN_PROGRESS`, qualquer transição a partir de `ARCHIVED` ou `CANCELLED`) deve ser rejeitada com `422 TRAINING_INVALID_STATE_TRANSITION`.
+Fonte: ADR-017, TRAIN-DEC-026, STATE_MODEL_TRAINING.md.
 
 ## INV-TRAIN-018
 Ao criar training_session com microcycle_id:
@@ -177,8 +181,34 @@ sleep_quality deve estar entre 1 e 5 (inclusive).
 Mantém consistência com UI (escala 1–5) e com cálculos derivados (readiness).
 
 ## INV-TRAIN-035
-Nome do template é único por organização.
+Todo `training_session` DEVE declarar `individualization_mode` explicitamente (campo obrigatório).
+Valor deve ser um dos 3 modos canônicos: `COLLECTIVE_UNIFORM`, `COLLECTIVE_WITH_VARIANTS`, `INDIVIDUAL_ONLY` (TRAIN-DEC-044).
+- `COLLECTIVE_UNIFORM`: todos os atletas seguem os mesmos blocos e cargas.
+- `COLLECTIVE_WITH_VARIANTS`: mesmos blocos; variações por atleta via `block_athlete_variant`.
+- `INDIVIDUAL_ONLY`: sessão para atleta(s) específico(s) — reabilitação, return-to-play.
+Não existem dois tipos de entidade sessão (coletiva vs individual). O modo é atributo, não tipo.
+Vinculado a: `INV-TRAIN-016` (dois loops explícitos), `TRAIN-DEC-016`, `TRAIN-DEC-044`.
+
+## INV-TRAIN-082
+Nome do template de sessão é único por organização (`name` UNIQUE dentro de `organization_id`).
 Evita ambiguidade na seleção e reutilização de templates.
+(Movido de INV-TRAIN-035 em 2026-03-16 para liberar INV-TRAIN-035 para individualization_mode.)
+
+## INV-TRAIN-083
+**Regra de Soma Elástica para blocos de sessão (OPEN-005, resolvido 2026-03-16).**
+
+Constraint: `SUM(session_block.durationMinutes) ≤ durationPlannedMinutes + MIN(durationPlannedMinutes × 0.10, 10)`
+
+Comportamento dentro da tolerância:
+- Emite **Warning** visível no frontend (não é erro bloqueante).
+- Gera item de baixa severidade na `attention_queue` (campos obrigatórios: `severity`, `reason`, `target_entity` — conforme TRAIN-DEC-027).
+
+Comportamento fora da tolerância: **rejeita** a operação (422) com mensagem clara indicando o excesso em minutos.
+
+Transições **NÃO bloqueadas** por esta regra: `PUBLISHED`, `COMPLETED`.
+Rationale: respeita a autoridade soberana do treinador e a realidade imprevisível das quadras de handebol. O sistema deve alertar, não obstruir.
+
+Vinculado a: OPEN-005, TRAIN-DEC-027, INV-TRAIN-006 (FSM), `session_block` contract (DEFER-TRAIN-P2-006).
 
 ## INV-TRAIN-036
 Ranking mensal é único por (team_id, month_reference).
@@ -434,3 +464,100 @@ O treinador DEVE revisar toda proposta antes de publicar. IA é copiloto, não a
 Toda sugestão da IA para o treinador (exercício/sessão/planejamento) DEVE incluir justificativa mínima (curta e objetiva) baseada em sinais do sistema (wellness, carga recente, consistência, objetivo do microciclo, dados de jogo/scout).
 Sugestões sem justificativa NÃO PODEM ser apresentadas como recomendação (apenas como "ideia genérica" com label distinto).
 Justificativa rastreável permite ao treinador avaliar qualidade da sugestão e cria feedback loop para melhoria do modelo de IA.
+---
+
+## Invariantes — decisões arquiteturais Fase 1 (adicionadas 2026-03-16)
+
+> **Materializadas a partir de ARCH_DECISIONS_TRAINING.md (DSS). Data: 2026-03-16.**
+> Estes INV-IDs são sequência contínua após INV-TRAIN-083.
+
+## INV-TRAIN-084
+Toda `training_session` deve possuir pelo menos um `SessionObjective` com `deletedAt IS NULL` antes de transitar de `DRAFT`.
+Sessão sem objetivo operacional não tem propósito verificável e não pode ser publicada (TRAIN-DEC-004, DR-TRAIN-011).
+
+## INV-TRAIN-085
+Todo `SessionObjective` deve declarar `origin` como um dos valores canônicos: `NEED_DETECTED`, `COMPETITIVE_FOCUS`, `DEVELOPMENT_GOAL`, `MANUAL_COACH_RATIONALE`.
+Quando `origin = MANUAL_COACH_RATIONALE`, o campo `originNotes` é obrigatório (mínimo 10 caracteres).
+Objetivo sem origem é dado incompleto — rejeitar. TRAIN-DEC-005, DR-TRAIN-012, DR-TRAIN-013.
+
+## INV-TRAIN-086
+Sessão só pode transitar de `DRAFT` para `PUBLISHED` ou `SCHEDULED` se satisfizer TODOS os seguintes:
+1. Pelo menos um `SessionObjective` ativo
+2. `sessionAt` definido
+3. Pelo menos um `SessionBlock`
+4. `coach_assignment` definido
+5. `team_scope` e/ou `athlete_scope` definidos
+TRAIN-DEC-006, DR-TRAIN-014.
+
+## INV-TRAIN-087
+Toda `ExecutionRecord` deve referenciar `sessionId` (obrigatório).
+Opcionalmente pode referenciar `blockId` e/ou `prescriptionLineId`.
+`ExecutionRecord` sem contexto de sessão é inválido. TRAIN-DEC-007, DR-TRAIN-015.
+
+## INV-TRAIN-088
+Campos `plannedContent` e `actualContent` de `ExecutionRecord` são imutáveis após criação.
+`plannedContent` nunca é sobrescrito por `actualContent`.
+O sistema não pode aceitar PATCH que modifique `plannedContent` em record existente.
+TRAIN-DEC-008, DR-TRAIN-017.
+
+## INV-TRAIN-089
+`ExecutionRecord` com `executionType` em `[LIVE_ADJUSTMENT, CONSTRAINT_OVERRIDE]` exige:
+- `adjustmentReasonType` preenchido (valor do conjunto canônico `live_adjustment_reason_type`)
+- `coachRationale` preenchido (mínimo 5 caracteres)
+`ExecutionRecord` com `executionType` em `[ALTERNATE_EXERCISE, LOAD_RECALCULATION]` exige `adjustmentReasonType`.
+TRAIN-DEC-009, DR-TRAIN-018, DR-TRAIN-019.
+
+## INV-TRAIN-090
+Todo `FeedbackThread` deve ter `contextType` e `contextRefId` preenchidos.
+Feedback sem contexto operacional identificado é rejeitado (400).
+TRAIN-DEC-010, DR-TRAIN-020.
+
+## INV-TRAIN-091
+Todo `FeedbackThread` deve ter `conversationOutcome` preenchido com valor do conjunto canônico.
+Conversa sem consequência operacional é rejeitada.
+`FOLLOWUP_SCHEDULED` exige `followUpAt`. `COMMITMENT_MADE` exige `commitmentText`. `DECISION_RECORDED` exige `decisionText`.
+TRAIN-DEC-015, DR-TRAIN-021, DR-TRAIN-022.
+
+## INV-TRAIN-092
+Atleta com `restriction_profile` ativo de nível crítico ou `return_to_play_guard` ativo não pode receber prescrição executável sem override explícito auditado.
+Override deve ser registrado via módulo `audit` com `createdByUserId` de usuário com permissão de `OVERRIDE_RESTRICTION`.
+TRAIN-DEC-012, DR-TRAIN-025.
+
+## INV-TRAIN-093
+Campos derivados (`readiness_score`, `dropout_risk_signal`, `engagement_signal`) são view-only.
+Não podem ser persistidos como fonte primária de verdade.
+A fonte primária é sempre o dado coletado original.
+TRAIN-DEC-014, DR-TRAIN-028.
+
+## INV-TRAIN-094
+Todo `AttentionQueueItem` deve ter: `severity` (valores canônicos: LOW, MEDIUM, HIGH, CRITICAL), `reasonCode` (valores canônicos de `attention_queue_reason_code`), `targetEntityType` e `targetEntityId`.
+Item sem qualquer desses campos é rejeitado.
+TRAIN-DEC-027, DR-TRAIN-038.
+
+## INV-TRAIN-095
+O módulo `training` não pode entregar notificação diretamente ao atleta ou treinador.
+Deve emitir `notification_intent` para o módulo `notifications`.
+TRAIN-DEC-022, DR-TRAIN-040.
+
+## INV-TRAIN-096
+O módulo `training` deve registrar fatos auditáveis enviando eventos ao módulo `audit`.
+Operações: create/update/publish/start/complete/cancel em `training_sessions`, `execution_records`, `constraint_overrides`.
+Não pode manter trilha de auditoria informal interna ao módulo.
+TRAIN-DEC-023, DR-TRAIN-041.
+
+## INV-TRAIN-097
+O módulo `training` consome dados de `medical` (`restriction_profile`, `return_to_play_guard`) como somente leitura.
+Nenhum endpoint de `training` pode criar, editar ou deletar entidades soberanas do módulo `medical`.
+TRAIN-DEC-024, DR-TRAIN-042.
+
+## INV-TRAIN-098
+O módulo `training` consome a policy de autorização do módulo `identity_access`.
+Não redefine permissões. Guards de transição de estado e acesso a dados devem consultar policy de `identity_access`.
+TRAIN-DEC-025, DR-TRAIN-043.
+
+## INV-TRAIN-099
+O módulo `training` referencia exclusivamente `exercise_id + exercise_version_id` do módulo `exercises`.
+Nunca embute propriedades do `Exercise` diretamente em entidades de `training`.
+Sessão histórica preserva `exercise_version_id` imutavelmente — alteração de `ExerciseVersion` posterior não afeta registro histórico.
+TRAIN-DEC-047, TRAIN-DEC-048, DR-TRAIN-045.
+

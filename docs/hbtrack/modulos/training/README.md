@@ -36,10 +36,12 @@ O módulo `training` é responsável por planejamento, execução, registro e an
 - `SPORT_SCIENCE_RULES_TRAINING.md`
 - `INVARIANTS_TRAINING.md`
 - `TEST_MATRIX_TRAINING.md`
-- `ARCH_DECISIONS_TRAINING.md` — registro de 46 decisões arquiteturais do módulo (promovido de `.dev/arquitetura/ARCH-DEC-TRAIN.md` em 2026-03-15)
-- `CONTRACT_TRAINING.md` — contrato canônico do módulo v1.1.0
 - `contracts/openapi/paths/training.yaml`
 - `contracts/schemas/training/*.schema.json`
+
+## Artefatos de nível superior (fora do módulo)
+- `docs/hbtrack/decisoes/ARCH_DECISIONS_TRAINING.md` — 46 decisões arquiteturais do módulo (promovido de `.dev/` em 2026-03-15)
+- `docs/hbtrack/decisoes/CONTRACT_TRAINING.md` — contrato canônico do módulo v1.1.0
 
 ## Dependências
 - Sistema: `SYSTEM_SCOPE.md`

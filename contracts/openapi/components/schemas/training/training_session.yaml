@@ -12,6 +12,7 @@ required:
   - organizationId
   - sessionAt
   - sessionType
+  - individualizationMode
   - status
   - createdAt
   - updatedAt
@@ -65,7 +66,38 @@ properties:
     type: integer
     minimum: 0
     maximum: 32767
-    description: Planned load indicator (module-defined scale)
+    description: Planned load indicator (module-defined scale). TRAIN-DEC-045 Fase 1.
+  actualLoadRecorded:
+    type: integer
+    minimum: 0
+    maximum: 32767
+    description: >
+      Actual load recorded after session execution. TRAIN-DEC-045 Fase 1.
+      Pair of plannedLoad. Set on POST /{id}/complete. Never overwrites plannedLoad.
+  individualizationMode:
+    type: string
+    x-domain-enum-ref: individualization_mode
+    enum:
+      - COLLECTIVE_UNIFORM
+      - COLLECTIVE_WITH_VARIANTS
+      - INDIVIDUAL_ONLY
+    description: >
+      Individualization level of the session. TRAIN-DEC-044.
+      COLLECTIVE_UNIFORM: all athletes follow identical blocks/loads.
+      COLLECTIVE_WITH_VARIANTS: same blocks, per-athlete overrides via block_athlete_variant.
+      INDIVIDUAL_ONLY: session for specific athlete(s) — rehabilitation, return-to-play.
+    example: COLLECTIVE_UNIFORM
+  objectiveOrigin:
+    type: string
+    x-domain-enum-ref: objective_origin
+    enum:
+      - NEED_DETECTED
+      - COMPETITIVE_FOCUS
+      - DEVELOPMENT_GOAL
+      - MANUAL_COACH_RATIONALE
+    description: >
+      Causal origin of the session objective. TRAIN-DEC-005. FI-012: objective without origin is invalid.
+      Required when mainObjective is set.
   groupClimate:
     type: integer
     minimum: 1
@@ -73,6 +105,20 @@ properties:
     description: Group climate (1-5)
   notes:
     type: string
+  continuityNotes:
+    type: string
+    maxLength: 2000
+    description: >
+      Structured continuity notes for interstaff handoff. OPEN-004 (resolved 2026-03-16).
+      Captures coach annotations and decision rationale for continuity between sessions and staff.
+      Dedicated staff_handoff entity deferred to Phase 3 (DEFER-TRAIN-P3-003).
+  plannedContentSnapshot:
+    type: [object, "null"]
+    additionalProperties: true
+    description: >
+      Write-once snapshot captured on transition to PUBLISHED. Immutable after publication.
+      Stores planned blocks, objectives, and load at the moment of publishing. TRAIN-DEC-045.
+      INV-TRAIN-007 / INV-TRAIN-088. Cannot be overwritten once set.
   phaseFocusDefense:
     type: boolean
   phaseFocusAttack:
@@ -138,8 +184,18 @@ properties:
     maximum: 100
   status:
     type: string
-    pattern: "^[A-Z0-9]+(?:_[A-Z0-9]+)*$"
-    description: Lifecycle status (UPPER_SNAKE_CASE) - INV-TRAIN-006
+    x-domain-enum-ref: training_state
+    enum:
+      - DRAFT
+      - SCHEDULED
+      - PUBLISHED
+      - IN_PROGRESS
+      - COMPLETED
+      - CANCELLED
+      - ARCHIVED
+    description: >
+      Canonical lifecycle status (ADR-017). 7 states.
+      ARCHIVED is set by system automation (60 days post-COMPLETED). INV-TRAIN-006 (v1.0 migration).
     example: SCHEDULED
   closedAt:
     type: [string, "null"]
@@ -192,12 +248,14 @@ properties:
     pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
 
 example:
+  id: "550e8400-e29b-41d4-a716-446655440001"
   organizationId: "550e8400-e29b-41d4-a716-446655440010"
   teamId: "550e8400-e29b-41d4-a716-446655440020"
   seasonId: "550e8400-e29b-41d4-a716-446655440030"
   sessionAt: "2026-03-11T19:30:00Z"
   durationPlannedMinutes: 90
   sessionType: "quadra"
+  individualizationMode: "COLLECTIVE_UNIFORM"
   mainObjective: "Transição ofensiva"
   status: "SCHEDULED"
   createdAt: "2026-03-01T12:00:00Z"

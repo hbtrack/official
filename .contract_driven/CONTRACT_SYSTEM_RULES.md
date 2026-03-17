@@ -42,6 +42,72 @@ Estas regras governam:
 
 ---
 
+## 2A. Regra de canonização operacional
+
+Toda mudança que altera comportamento esperado do agente **DEVE** existir em 3 níveis:
+
+1. **regra normativa**
+   - define o que é obrigatório;
+   - vive em `RULES`, `LAYOUT` ou no canon global correto.
+
+2. **registro operacional**
+   - define quando a regra é lida, aplicada ou bloqueada;
+   - vive em `docs/_canon/CONTRACT_PIPELINE.md`, `docs/_canon/BOOT_PROFILES.md`,
+     `docs/_canon/gates/GATES_REGISTRY.yaml` e, quando aplicável, `docs/_canon/MODULE_REGISTRY.yaml`.
+
+3. **enforcement técnico**
+   - define como a regra é executada por generator, validator, gate, pipeline CI ou prompt operacional.
+
+Regras:
+- código executável sozinho **não** canoniza comportamento;
+- relatório isolado **não** canoniza comportamento;
+- prompt isolado **não** canoniza comportamento;
+- se uma melhoria existir apenas em código ou apenas em `_reports/`, ela ainda **não** está resolvida para o agente.
+
+### 2A.1 Regra prática de promoção
+
+Ao introduzir uma melhoria:
+- promover a substância da regra ao artefato canônico correto;
+- decidir se ela entra em boot mínimo, boot condicional ou consulta apenas por gate;
+- registrar o fluxo em pipeline / boot / gates;
+- só então ajustar generator, validator, gate, CI ou prompt.
+
+### 2A.2 Prompts não são fonte substantiva
+
+Prompts operacionais:
+- executam regras já canonizadas;
+- não criam obrigação substantiva nova por conta própria;
+- não podem ser a única fonte de uma regra que afeta comportamento do agente.
+
+Se um prompt contiver instrução sem respaldo explícito no canon, o agente deve bloquear em vez de assumir a regra como válida.
+
+### 2A.3 Matriz obrigatória de promoção ao canon
+
+| Tipo de mudança | Artefato canônico obrigatório |
+| --- | --- |
+| muda comportamento geral do agente | `.contract_driven/CONTRACT_SYSTEM_RULES.md` |
+| muda path, classificação ou soberania de artefato | `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md` |
+| muda estágio do pipeline | `docs/_canon/CONTRACT_PIPELINE.md` |
+| muda boot por tipo de tarefa | `docs/_canon/BOOT_PROFILES.md` |
+| muda toolchain, timeout, degradação ou health-check | `docs/_canon/TOOLCHAIN_HEALTH_POLICY.md` |
+| muda gate oficial | `docs/_canon/gates/GATES_REGISTRY.yaml` |
+| muda worker ou roteamento operacional | `.contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md` |
+| muda DoD por superfície | `.contract_driven/CONTRACT_SYSTEM_RULES.md` |
+| muda status ou maturidade de módulo | `docs/_canon/MODULE_REGISTRY.yaml` |
+| muda classificação de docs não soberanas | `LAYOUT` + `RULES` + `README` local da pasta afetada |
+
+### 2A.4 Regra de classificação de boot
+
+Todo novo artefato de governança promovido ao canon **DEVE** ser classificado em
+`boot_minimo`, `boot_condicional` ou `gate_only` em `docs/_canon/BOOT_PROFILES.md`.
+
+Sem essa classificação:
+- o agente não pode presumir que o artefato foi lido;
+- o prompt não pode tratá-lo como contexto carregado;
+- qualquer dependência operacional deve bloquear em vez de inferir.
+
+---
+
 ## 2B. Regras de idioma e naming
 
 **Identificadores técnicos e convenções de naming são governados por `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md`**:
@@ -107,6 +173,7 @@ Regras:
 - `docs/_canon/C4_CONTEXT.md`
 - `docs/_canon/C4_CONTAINERS.md`
 - `docs/_canon/MODULE_MAP.md` (mapeamento de macrodomínios para comunicação de negócio, não taxonomia técnica canônica)
+- `docs/_canon/MODULE_REGISTRY.yaml`
 - `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml`
 - `docs/_canon/CHANGE_POLICY.md`
 - `docs/_canon/API_CONVENTIONS.md`
@@ -119,6 +186,9 @@ Regras:
 - `docs/_canon/UI_FOUNDATIONS.md`
 - `docs/_canon/DESIGN_SYSTEM.md`
 - `docs/_canon/CI_CONTRACT_GATES.md`
+- `docs/_canon/TOOLCHAIN_HEALTH_POLICY.md`
+- `docs/_canon/CONTRACT_PIPELINE.md`
+- `docs/_canon/BOOT_PROFILES.md`
 - `docs/_canon/TEST_STRATEGY.md`
 - `docs/_canon/DECISION_POLICY.md`
 - `docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md`
@@ -127,6 +197,20 @@ Regras:
 
 Landing/entry não-soberano:
 - `README.md` na raiz do repositório é apenas navegação/entrada. Ele não deve introduzir novas regras normativas que conflitem com o canon.
+
+### 3.2A Decision support sources (não-soberanos)
+
+- `docs/hbtrack/decisoes/*.md`
+
+Classificação formal:
+- `explanation`
+- `decision_support_source`
+- `non-sovereign`
+
+Regras:
+- esses arquivos não podem atuar como SSOT;
+- vocabulário soberano (`SSOT`, `canônico`, `fonte soberana`, `source of truth`) exige disclaimer explícito no topo;
+- qualquer conflito entre DSS e fonte soberana é resolvido a favor do canon.
 
 ### 3.3 Technical contracts
 - `contracts/openapi/openapi.yaml`
@@ -257,26 +341,31 @@ Nota do baseline:
 ### 6.1 Ordem obrigatória de boot
 1. `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md`
 2. `.contract_driven/CONTRACT_SYSTEM_RULES.md`
-3. `.contract_driven/GLOBAL_TEMPLATES.md`
-4. `.contract_driven/templates/README.md` (estrutura e contrato de uso de templates)
-5. `.contract_driven/templates/api/api_rules.yaml`
-6. `docs/_canon/SYSTEM_SCOPE.md`
-7. `docs/_canon/API_CONVENTIONS.md`
-8. `docs/_canon/DATA_CONVENTIONS.md`
-9. `docs/_canon/CHANGE_POLICY.md`
-10. `docs/_canon/HANDBALL_RULES_DOMAIN.md`
-11. `docs/_canon/DOMAIN_GLOSSARY.md`
-12. `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml`
-13. `docs/_canon/MODULE_MAP.md`
-14. `docs/_canon/ARCHITECTURE.md`
-15. artefatos de contrato relevantes
-16. docs de módulo relevantes
+3. `docs/_canon/CONTRACT_PIPELINE.md`
+4. `docs/_canon/BOOT_PROFILES.md`
+5. `.contract_driven/GLOBAL_TEMPLATES.md`
+6. `.contract_driven/templates/README.md` (estrutura e contrato de uso de templates)
+7. `.contract_driven/templates/api/api_rules.yaml`
+8. `docs/_canon/SYSTEM_SCOPE.md`
+9. `docs/_canon/API_CONVENTIONS.md`
+10. `docs/_canon/DATA_CONVENTIONS.md`
+11. `docs/_canon/CHANGE_POLICY.md`
+12. `docs/_canon/HANDBALL_RULES_DOMAIN.md`
+13. `docs/_canon/DOMAIN_GLOSSARY.md`
+14. `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml`
+15. `docs/_canon/MODULE_MAP.md`
+16. `docs/_canon/ARCHITECTURE.md`
+17. artefatos de contrato relevantes
+18. docs de módulo relevantes
 
 ### 6.2 Modo de boot
 O agente deve usar:
 - boot mínimo obrigatório
 - loading condicional sob demanda
 - bloquear em vez de inferir quando um artefato crítico estiver ausente
+
+Para tarefas que resultam em validação, readiness ou handoff, o boot **DEVE** também carregar
+`docs/_canon/TOOLCHAIN_HEALTH_POLICY.md` antes do worker.
 
 ### 6.3 Condição de bloqueio no boot
 Se o agente não conseguir carregar a sequência de boot necessária para a tarefa atual, ele deve se declarar bloqueado usando um código de bloqueio válido, em vez de continuar por inferência.
@@ -304,6 +393,7 @@ Perfis recomendados:
   - docs do módulo (DOMAIN_RULES + INVARIANTS)
 
 Prompts operacionais (checklists) vivem em `.contract_driven/agent_prompts/`.
+O detalhamento autoritativo por `task_type` vive em `docs/_canon/BOOT_PROFILES.md`.
 
 ---
 
@@ -630,6 +720,7 @@ Um módulo **não está pronto para implementação** enquanto seus JSON Schemas
    - **obrigatório (API execution contract)**: rodar o compiler determinístico para gerar policy resolvida + manifesto + cópias derivadas em `generated/`
      - `python3 scripts/contracts/validate/api/compile_api_policy.py --module <module> --surface sync`
      - (quando aplicável) `python3 scripts/contracts/validate/api/compile_api_policy.py --module <module> --surface event`
+     - se qualquer input global mudar (`.contract_driven/DOMAIN_AXIOMS.json` ou `.contract_driven/templates/api/*`), a execução parcial fica proibida e o agente **DEVE** usar `python3 scripts/contracts/validate/api/compile_api_policy.py --all`
    - **fail-closed**: o compiler **DEVE** bloquear (não gera manifesto/hash) se detectar violação de style_veto, sufixo canônico ou binding `x-semantic-id` exigido
 3. criar ou atualizar JSON Schemas do módulo
 4. criar ou atualizar docs do módulo
@@ -654,6 +745,31 @@ Um contrato está pronto apenas quando todos forem verdadeiros:
 - referência explícita a `docs/_canon/HANDBALL_RULES_DOMAIN.md` quando o gatilho de handebol aplicar
 - naming e localização obedecem o layout
 - regras de idioma obedecem o layout e regras de governança
+
+### 16.1 DoD por superfície — HTTP/OpenAPI
+
+Além da lista base:
+- `TOOLING_CONFIG_GATE`, `OPENAPI_ROOT_STRUCTURE_GATE`, `OPENAPI_POLICY_RULESET_GATE` e `CONTRACT_BREAKING_CHANGE_GATE` não podem falhar;
+- root OpenAPI deve estar sincronizado com os módulos;
+- baseline e waiver machine-readable devem existir quando houver breaking change.
+
+### 16.2 DoD por superfície — AsyncAPI
+
+- channel/message/schema devem existir em path canônico;
+- `ASYNCAPI_VALIDATION_GATE` deve passar;
+- evento não pode contradizer invariantes do módulo.
+
+### 16.3 DoD por superfície — Arazzo
+
+- workflow deve referenciar apenas `operationId` soberano;
+- `ARAZZO_VALIDATION_GATE` deve passar;
+- handoff não ocorre com workflow órfão de contrato HTTP.
+
+### 16.4 DoD por superfície — Schema-only
+
+- schema valida em Draft 2020-12;
+- naming, formatos e bindings semânticos obedecem `DATA_CONVENTIONS.md` e `DOMAIN_AXIOMS.json`;
+- docs de módulo explicam o uso e a invariante do schema.
 
 ---
 
@@ -695,6 +811,11 @@ Além da seção 17:
 - Arazzo validation: `Arazzo validator/linter defined in pipeline`
 - UI docs validation when applicable: `Storybook build`
 
+Regras adicionais:
+- compatibilidade de tooling/config é validada por `TOOLING_CONFIG_GATE` antes dos gates semânticos;
+- ausência de `oasdiff` ou `Schemathesis` em CI oficial resulta em `FAIL`;
+- fora de CI, fallback só é permitido com estado explícito `DEGRADED`, conforme `docs/_canon/TOOLCHAIN_HEALTH_POLICY.md`.
+
 ### Exemplos de uso
 Para exemplos práticos de comandos de cada ferramenta, ver `.contract_driven/templates/globais/CI_CONTRACT_GATES.md` (referenciado por `.contract_driven/GLOBAL_TEMPLATES.md` seção 21).
 
@@ -718,10 +839,16 @@ Usado ao auditar completude, consistência e readiness de contratos.
 
 Regra:
 O modo ativo determina o conjunto mínimo de boot e o output esperado.
+Os perfis formais de boot e o formato do relatório ficam em `docs/_canon/BOOT_PROFILES.md`.
 
 ---
 
 ## 21. Matriz mínima de boot por tipo de tarefa
+
+**Fonte autoritativa**: `docs/_canon/BOOT_PROFILES.md`.
+
+Esta seção é um resumo operacional complementar.
+Em caso de conflito, `BOOT_PROFILES.md` prevalece.
 
 ### 21.1 Create new contract
 **Boot obrigatório**

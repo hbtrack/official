@@ -3,6 +3,11 @@ module: "scout"
 system_scope_ref: "../../../_canon/SYSTEM_SCOPE.md"
 handball_rules_ref: "../../../_canon/HANDBALL_RULES_DOMAIN.md"
 handball_semantic_applicability: true
+type: "readme"
+module_scope_ref: "./MODULE_SCOPE_SCOUT.md"
+domain_rules_ref: "./DOMAIN_RULES_SCOUT.md"
+invariants_ref: "./INVARIANTS_SCOUT.md"
+test_matrix_ref: "./TEST_MATRIX_SCOUT.md"
 contract_path_ref: "../../../../contracts/openapi/paths/scout.yaml"
 schemas_ref: "../../../../contracts/schemas/scout/"
 ---

@@ -469,12 +469,23 @@ def _check_deterministic_readiness(ir: Any) -> list[dict]:
         for binding in items:
             if not isinstance(binding, dict):
                 continue
-            surface = binding.get("surface") or "?"
-            artifact = binding.get("artifact_path") or binding.get("target") or binding.get("artifact")
+            surface = (
+                binding.get("surface")
+                or binding.get("decision_ref")
+                or binding.get("target_surface")
+                or "?"
+            )
+            artifact = (
+                binding.get("artifact_path")
+                or binding.get("target")
+                or binding.get("artifact")
+                or binding.get("target_surface")
+                or binding.get("target_surfaces")
+            )
             if not artifact:
                 violations.append(_violation(
                     IR_SURFACE_MAPPING_INCOMPLETE,
-                    f"Surface binding '{surface}' has no artifact_path / target defined.",
+                    f"Surface binding '{surface}' has no artifact path / target defined.",
                     f".surface_mapping[{surface}]",
                 ))
 

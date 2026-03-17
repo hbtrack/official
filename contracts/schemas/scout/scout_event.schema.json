@@ -1,0 +1,58 @@
+{
+  "$comment": "Sovereign domain shape for module scout. Conservative enrichment based on MODULE_SCOPE_SCOUT.md and MODULE_SOURCE_AUTHORITY_MATRIX may_infer(tags, observational_events, clips, coding_schema, tactical_aggregations).",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://hbtrack.local/schemas/scout/scout_event.schema.json",
+  "title": "ScoutEvent",
+  "description": "Tactical observation event shape for the scout module.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "matchId", "eventLabel", "recordedAt"],
+  "properties": {
+    "id": { "$ref": "#/definitions/uuid_v4" },
+    "matchId": { "$ref": "#/definitions/uuid_v4" },
+    "athleteUserId": { "$ref": "#/definitions/uuid_v4" },
+    "teamId": { "$ref": "#/definitions/uuid_v4" },
+    "eventLabel": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "tagLabels": {
+      "type": "array",
+      "items": { "type": "string", "maxLength": 80 },
+      "uniqueItems": true
+    },
+    "clipAssetRefs": {
+      "type": "array",
+      "items": { "type": "string", "maxLength": 160 },
+      "uniqueItems": true
+    },
+    "codingSchemaLabel": { "type": "string", "maxLength": 120 },
+    "tacticalAggregationLabel": { "type": "string", "maxLength": 120 },
+    "recordedAt": { "$ref": "#/definitions/timestamp_utc" }
+  },
+  "definitions": {
+    "uuid_v4": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "timestamp_utc": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    }
+  },
+  "examples": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440008",
+      "matchId": "550e8400-e29b-41d4-a716-446655440408",
+      "athleteUserId": "550e8400-e29b-41d4-a716-446655440708",
+      "teamId": "550e8400-e29b-41d4-a716-446655440208",
+      "eventLabel": "SHOT_ON_TARGET",
+      "tagLabels": ["fast-break", "left-side"],
+      "clipAssetRefs": ["clip://match/408/event/1"],
+      "codingSchemaLabel": "match-event-v1",
+      "tacticalAggregationLabel": "transition-offense",
+      "recordedAt": "2026-05-12T19:45:00Z"
+    }
+  ]
+}

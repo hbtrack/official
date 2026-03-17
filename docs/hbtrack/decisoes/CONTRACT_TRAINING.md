@@ -1,12 +1,13 @@
 # CONTRACT_TRAINING.md
-## Contrato Canônico do Módulo TRAINING — HB Track
+
+> **Status canônico do arquivo:** Este documento é um artefato histórico/de apoio — **não é artefato canônico soberano de módulo**. As fontes normativas válidas para `training` permanecem em `docs/hbtrack/modulos/training/` e nos contratos soberanos sob `contracts/`.
 
 ---
 
 **Artefato:** `CONTRACT_TRAINING`
 **Módulo:** `TRAINING`
 **Versão:** `1.1.0`
-**Status:** `APROVADO — decisões incorporadas em 2026-03-13`
+**Status:** `DEPRECIADO`
 **Data de emissão:** `2026-03-13`
 **Responsável pela aprovação:** Product Owner / Principal Architect
 **Fontes normativas:**
