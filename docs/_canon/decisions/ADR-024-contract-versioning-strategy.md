@@ -15,78 +15,66 @@ tags: [versioning, contracts, api, governance]
 O HB Track usa Contract-Driven Development (CDD). À medida que o produto evolui,
 mudanças nos contratos OpenAPI podem ser incompatíveis com consumidores existentes.
 Antes de qualquer módulo entrar em produção, é necessário definir como gerenciar
-essas mudanças sem quebrar os consumidores.
+essas mudanças.
 
-**Decisão D2 obtida:** Opção A — Manter versão antiga funcionando por 6 meses
-(URI versioning com suporte paralelo de versões).
+**Decisão D2 obtida:** Opção B — SemVer sem versões paralelas.
+Contratos têm número de versão (SemVer), mas apenas **uma versão ativa** é mantida
+em produção. Quando uma versão quebra compatibilidade, consumidores devem migrar.
 
-Escolhida porque o HB Track planeja integrações com sistemas externos (clubes,
-federações) e não pode forçar migração imediata.
+Escolhida porque o HB Track é um app interno — não há parceiros externos que
+impossibilitem coordenar a migração.
 
 ## Decisão
 
-### Estratégia: URI Versioning com Versões Paralelas
+### Estratégia: SemVer sem multi-versão
 
-Todos os endpoints do HB Track são prefixados com a versão major da API:
-
-```
-/v1/training/sessions
-/v2/training/sessions   (quando v2 for lançada)
-```
+O campo `info.version` do `contracts/openapi/openapi.yaml` segue SemVer
+(MAJOR.MINOR.PATCH). Existe sempre **apenas uma versão de contrato ativa**;
+não há prefixo URI de versão (`/v1/`, `/v2/`).
 
 ### Política de versionamento
 
-#### Quando criar nova versão major (vN → vN+1)
+#### Quando incrementar MAJOR (mudança breaking)
 - Remoção de campo obrigatório de request/response
 - Mudança de tipo de campo existente
 - Remoção de endpoint
 - Mudança semântica significativa de comportamento
 
-#### Versões menores e patches (sem quebra de compatibilidade)
-- Adição de campo opcional em response (SemVer minor: 1.1.0)
-- Correções de bug sem mudança de interface (SemVer patch: 1.0.1)
-- Adição de novo endpoint na mesma versão major
+#### Quando incrementar MINOR (mudança aditiva)
+- Adição de campo opcional em response
+- Adição de novo endpoint
 
-#### Janela de suporte
-- Versão anterior permanece ativa por **mínimo de 6 meses** após o lançamento da nova major
-- Endpoint deprecado recebe header `Sunset: <data>` em toda resposta
-- Header `Deprecation: true` + `Link: </v2/...>; rel="successor-version"` são obrigatórios
+#### Quando incrementar PATCH (correção)
+- Correções de bug sem mudança de interface
+- Melhoria de descrição/documentação
 
-### Versionamento do arquivo openapi.yaml
+### Fluxo de mudança breaking
 
-O campo `info.version` segue SemVer (MAJOR.MINOR.PATCH):
-- MAJOR = versão da API (alinhado ao prefixo URI /v{MAJOR}/)
-- MINOR = mudanças aditivas retrocompatíveis
-- PATCH = correções sem mudança de interface
-
-Versão atual ao adotar esta política: **1.0.0** (primeira versão estável formal)
+1. O agente exibe `BLOCKED_VERSIONING_MISSING` se uma mudança breaking não tiver
+   incrementado o MAJOR no `openapi.yaml`
+2. O consumidor (app mobile/web) deve ser atualizado na mesma janela de release
+3. Não há período de suporte à versão anterior
 
 ### Estrutura de paths
 
-```
-contracts/openapi/paths/
-  v1/
-    training.yaml
-    users.yaml
-    ...
-  v2/               ← criado quando primeira versão major nova for necessária
-    training.yaml
-    ...
-```
-
-A versão atual (`v1`) é mantida diretamente em `contracts/openapi/paths/` por
-retrocompatibilidade com o baseline existente. Nova versão major cria subdiretório.
+Paths mantidos diretamente em `contracts/openapi/paths/` sem prefixo de versão.
+Quando necessário (pós v1.0), subdiretórios podem ser criados por feature, não
+por versão.
 
 ## Consequências
 
 ### Positivas
-- Consumidores externos (clubes, federações) têm 6 meses para migrar
-- Nenhuma surpresa: mudanças quebradas sempre têm nova URI
-- Auditabilidade: cada versão de contrato é um artefato rastreável
+- Manutenção simples: apenas uma versão ativa
+- Sem overhead de manter N contratos paralelos em CI
+- Release cadence mais rápida
 
 ### Negativas
-- Custo de manutenção: duas versões da mesma feature ativas por até 6 meses
-- Complexidade de testes: ambas as versões precisam ser testadas
+- Mudanças breaking exigem coordenação simultânea com todos os consumers
+- Não adequado se parceiros externos precisarem de janela longa de migração
+
+### Re-avaliação
+Se surgir integração com sistema externo que não pode migrar imediatamente,
+reconsiderar para Opção A (ADR-024 revisão) com URI versioning multi-version.
 
 ### Gates gerados
 - `VERSIONING_POLICY_GATE` — verifica conformidade com esta ADR no pipeline CI
@@ -95,5 +83,4 @@ retrocompatibilidade com o baseline existente. Nova versão major cria subdiret�
 ## Referências
 - ADR-003 — Media-Type Versioning (complementar)
 - ADR-014 — Deprecation Policy
-- [RFC 8594 — The Sunset HTTP Header](https://www.rfc-editor.org/rfc/rfc8594)
 - docs/_canon/API_CONVENTIONS.md

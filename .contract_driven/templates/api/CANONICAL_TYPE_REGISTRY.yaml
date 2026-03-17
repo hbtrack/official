@@ -64,7 +64,7 @@ resolved_policies:
   versioning_strategy:
     decision_ref: D2
     adr_ref: ADR-024
-    strategy: uri_versioning_multiversion
-    description: "URI prefix versioning (/v1/, /v2/) com paralelo de versões por 6 meses mínimo"
+    strategy: semver_no_multiversion
+    description: "SemVer (MAJOR.MINOR.PATCH) sem versões paralelas — app interno, migração coordenada"
     semver_current: "1.0.0"
     resolved_at: "2026-03-17"
