@@ -544,6 +544,25 @@ gates:
     blocking_codes: [BLOCKED_FEATURE_UNREGISTERED]
     status: active
 
+  - gate_id: ADVERSARIAL_ANALYSIS_GATE
+    order: "15C"
+    name: "Adversarial Analysis Gate"
+    blocking: false
+    severity: HIGH
+    parallelizable: true
+    applies_when: always
+    depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE, FEATURE_READINESS_GATE]
+    description: >
+      Verifica se análise adversarial foi executada para módulos que já possuem
+      relatórios em `_reports/adversarial/`. Para cada relatório encontrado,
+      verifica se `overall_status = PASS`. Se qualquer relatório tiver FAIL,
+      emite BLOCKED_ADVERSARIAL_PENDING. Gate é SKIP_NOT_APPLICABLE quando
+      a pasta `_reports/adversarial/` não existe ou está vazia — nenhum módulo
+      foi ainda submetido à análise adversarial.
+      Spec normativa: docs/_canon/CONTRACT_PIPELINE.md
+    blocking_codes: [BLOCKED_ADVERSARIAL_PENDING]
+    status: active
+
   - gate_id: READINESS_SUMMARY_GATE
     order: 16
     name: "Readiness Summary Gate"

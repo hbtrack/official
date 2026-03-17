@@ -6168,6 +6168,45 @@ def _g15_derived_drift(root: pathlib.Path) -> dict:
     )
 
 
+def _g_adversarial_analysis(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "ADVERSARIAL_ANALYSIS_GATE"
+    reports_dir = root / "_reports" / "adversarial"
+    if not reports_dir.exists():
+        return _skip(gate_id, "_reports/adversarial/ ausente — nenhum módulo submetido à análise adversarial.", _ms(t0))
+    report_files = list(reports_dir.rglob("*.adversarial.json"))
+    if not report_files:
+        return _skip(gate_id, "_reports/adversarial/ vazia — nenhum relatório adversarial encontrado.", _ms(t0))
+    checked = [str(p) for p in report_files]
+    violations: list[dict] = []
+    for rpath in report_files:
+        try:
+            data = json.loads(rpath.read_text(encoding="utf-8"))
+        except Exception as e:
+            violations.append({"blocking_code": "BLOCKED_ADVERSARIAL_PENDING",
+                               "artifact": str(rpath.relative_to(root)),
+                               "message": f"Relatório adversarial não pôde ser lido: {e}",
+                               "severity": "error"})
+            continue
+        overall = data.get("overall_status")
+        if overall != "PASS":
+            module = data.get("module", "?")
+            resource = data.get("resource", "?")
+            findings = data.get("critical_findings", [])
+            violations.append({"blocking_code": "BLOCKED_ADVERSARIAL_PENDING",
+                               "artifact": str(rpath.relative_to(root)),
+                               "message": (f"Análise adversarial FAIL: módulo={module}, recurso={resource}, "
+                                           f"status={overall}, achados_críticos={len(findings)}"),
+                               "severity": "error"})
+    if violations:
+        return _pg(gate_id, "FAIL", False, "BLOCKED_ADVERSARIAL_PENDING",
+                   f"Análise adversarial: {len(violations)} relatório(s) com FAIL — handoff para implementação bloqueado.",
+                   [], checked, [], violations, _ms(t0))
+    return _pg(gate_id, "PASS", False, None,
+               f"Análise adversarial: {len(report_files)} relatório(s) — todos PASS.",
+               [], checked, [], [], _ms(t0))
+
+
 def _g_feature_readiness(root: pathlib.Path) -> dict:
     t0 = time.monotonic()
     gate_id = "FEATURE_READINESS_GATE"
@@ -6593,6 +6632,7 @@ def run_pipeline() -> tuple[dict, int]:
     gates.append(_g13_arazzo_validation(root))
     gates.append(_g14_ui_doc_validation(root))
     gates.append(_g15_derived_drift(root))
+    gates.append(_g_adversarial_analysis(root))
     gates.append(_g_feature_readiness(root))
 
     # G16: readiness summary
