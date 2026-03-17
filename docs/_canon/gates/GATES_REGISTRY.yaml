@@ -636,6 +636,24 @@ gates:
     blocking_codes: [BLOCKED_MISSING_ARCH_DECISION]
     status: active
 
+
+  - gate_id: DATA_MIGRATION_GATE
+    order: 15H
+    name: "Data Migration Gate"
+    blocking: false
+    severity: MEDIUM
+    parallelizable: true
+    applies_when: always
+    depends_on: []
+    description: >
+      Verifica se a estrategia de migracao de dados foi definida:
+      DATA_MIGRATION_POLICY.md (normativo), ADR-028 (decisao) e migrations/ (estrutura Alembic).
+      SKIP quando migrations/ nao existe (pre-implementacao).
+      FAIL (BLOCKED_MISSING_ARCH_DECISION) se apenas parte dos artefatos existe.
+      Spec normativa: docs/_canon/DATA_MIGRATION_POLICY.md
+    blocking_codes: [BLOCKED_MISSING_ARCH_DECISION]
+    status: active
+
   - gate_id: READINESS_SUMMARY_GATE
     order: 16
     name: "Readiness Summary Gate"

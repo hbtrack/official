@@ -6576,6 +6576,57 @@ def _g_deploy_readiness(root: pathlib.Path) -> dict:
                "Deploy configurado: DEPLOY_PIPELINE.md, ADR-027 e deploy.yml presentes.",
                [], checked, [], [], _ms(t0))
 
+
+def _g_data_migration(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "DATA_MIGRATION_GATE"
+    violations: list[dict] = []
+    checked: list[str] = []
+
+    policy = root / "docs" / "_canon" / "DATA_MIGRATION_POLICY.md"
+    adr_028 = root / "docs" / "_canon" / "decisions" / "ADR-028-data-migration-strategy.md"
+    migrations_dir = root / "migrations"
+
+    has_policy = policy.exists()
+    has_adr = adr_028.exists()
+    has_migrations = migrations_dir.exists()
+
+    checked += [
+        str(policy.relative_to(root)),
+        str(adr_028.relative_to(root)),
+        "migrations/",
+    ]
+
+    # Nenhum existe -> SKIP (pre-implementacao)
+    if not has_policy and not has_adr and not has_migrations:
+        return _skip(gate_id,
+                     "Nenhum artefato de migration encontrado -- pre-implementacao.",
+                     _ms(t0))
+
+    # Algum existe mas incompleto -> FAIL
+    missing = []
+    if not has_policy:
+        missing.append("docs/_canon/DATA_MIGRATION_POLICY.md")
+    if not has_adr:
+        missing.append("docs/_canon/decisions/ADR-028-data-migration-strategy.md")
+    if not has_migrations:
+        missing.append("migrations/")
+
+    if missing:
+        for m in missing:
+            violations.append({
+                "blocking_code": "BLOCKED_MISSING_ARCH_DECISION",
+                "message": f"Artefato de migration ausente: {m}",
+                "file": m,
+            })
+        return _pg(gate_id, "FAIL", False, "BLOCKED_MISSING_ARCH_DECISION",
+                   f"Migration parcialmente configurada -- {len(missing)} artefato(s) ausente(s).",
+                   violations, checked, [], [], _ms(t0))
+
+    return _pg(gate_id, "PASS", False, None,
+               "Migration configurada: DATA_MIGRATION_POLICY.md, ADR-028 e migrations/ presentes.",
+               [], checked, [], [], _ms(t0))
+
 def _g16_readiness_summary(gates: list[dict]) -> dict:
     t0 = time.monotonic()
     gate_id = "READINESS_SUMMARY_GATE"
@@ -6948,6 +6999,7 @@ def run_pipeline() -> tuple[dict, int]:
     gates.append(_g_pact_provider(root))
     gates.append(_g_code_architecture(root))
     gates.append(_g_deploy_readiness(root))
+    gates.append(_g_data_migration(root))
 
     # G16: readiness summary
     g16 = _g16_readiness_summary(gates)

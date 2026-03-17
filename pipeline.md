@@ -188,10 +188,10 @@ Session handoff:    SESSION_HANDOFF.md  (criar na Fase 2)
 
 ### Checklist F1
 
-- [ ] F1.1 — Criar `CLAUDE.md` na raiz com o conteúdo acima
-- [ ] F1.2 — Verificar que o arquivo não excede 350 linhas (limite para carregamento eficiente)
-- [ ] F1.3 — Registrar em `docs/_canon/CONTRACT_PIPELINE.md` §1 que CLAUDE.md é artefato de boot
-- [ ] F1.4 — Commitar: `feat(agent): add CLAUDE.md — reduce boot context from 60% to 4%`
+- [x] F1.1 — Criar `CLAUDE.md` na raiz com o conteúdo acima
+- [x] F1.2 — Verificar que o arquivo não excede 350 linhas (limite para carregamento eficiente)
+- [x] F1.3 — Registrar em `docs/_canon/CONTRACT_PIPELINE.md` §1 que CLAUDE.md é artefato de boot
+- [x] F1.4 — Commitar: `feat(agent): add CLAUDE.md — reduce boot context from 60% to 4%`
 
 **Critério de conclusão:** Nova sessão do Claude Code carrega CLAUDE.md automaticamente, sem necessidade de carregar manualmente os 18 artefatos
 
@@ -268,11 +268,11 @@ Se SESSION_HANDOFF.md não existir, criar a partir do template em `docs/_canon/t
 
 ### Checklist F2
 
-- [ ] F2.1 — Criar `docs/_canon/templates/SESSION_HANDOFF.template.md`
-- [ ] F2.2 — Criar `SESSION_HANDOFF.md` na raiz com o estado atual
-- [ ] F2.3 — Adicionar instrução de atualização ao `pre_contract_orchestrator.prompt.md` (Fase 4)
-- [ ] F2.4 — Documentar em `docs/_canon/CONTRACT_PIPELINE.md` §2 que SESSION_HANDOFF é evidência do estágio Pre-contract
-- [ ] F2.5 — Commitar: `feat(agent): add SESSION_HANDOFF template for cross-session continuity`
+- [x] F2.1 — Criar `docs/_canon/templates/SESSION_HANDOFF.template.md`
+- [x] F2.2 — Criar `SESSION_HANDOFF.md` na raiz com o estado atual
+- [x] F2.3 — Adicionar instrução de atualização ao `pre_contract_orchestrator.prompt.md` (Fase 4)
+- [x] F2.4 — Documentar em `docs/_canon/CONTRACT_PIPELINE.md` §2 que SESSION_HANDOFF é evidência do estágio Pre-contract
+- [x] F2.5 — Commitar: `feat(agent): add SESSION_HANDOFF template for cross-session continuity`
 
 **Critério de conclusão:** Agente inicia nova sessão lendo SESSION_HANDOFF.md e continua de onde parou
 
@@ -365,11 +365,11 @@ Ao reportar progresso, usar:
 
 ### Checklist F3
 
-- [ ] F3.1 — Criar `docs/_canon/HUMAN_INTERFACE_POLICY.md` com o conteúdo acima
-- [ ] F3.2 — Adicionar referência a HUMAN_INTERFACE_POLICY em `CLAUDE.md` §7
-- [ ] F3.3 — Adicionar como `boot_condicional` em `docs/_canon/BOOT_PROFILES.md` (sempre carregar para interações com humano)
-- [ ] F3.4 — Adicionar ao `pre_contract_orchestrator.prompt.md`: antes de qualquer comunicação com humano, verificar HUMAN_INTERFACE_POLICY
-- [ ] F3.5 — Commitar: `feat(governance): add HUMAN_INTERFACE_POLICY — product language for non-technical human`
+- [x] F3.1 — Criar `docs/_canon/HUMAN_INTERFACE_POLICY.md` com o conteúdo acima
+- [x] F3.2 — Adicionar referência a HUMAN_INTERFACE_POLICY em `CLAUDE.md` §7
+- [x] F3.3 — Adicionar como `boot_condicional` em `docs/_canon/BOOT_PROFILES.md` (sempre carregar para interações com humano)
+- [x] F3.4 — Adicionar ao `pre_contract_orchestrator.prompt.md`: antes de qualquer comunicação com humano, verificar HUMAN_INTERFACE_POLICY
+- [x] F3.5 — Commitar: `feat(governance): add HUMAN_INTERFACE_POLICY — product language for non-technical human`
 
 **Critério de conclusão:** Agente nunca usa jargão sem tradução em comunicações com o humano
 
@@ -421,12 +421,12 @@ Script que lê `FEATURE_REGISTRY.yaml` e gera `_reports/feature_readiness.json` 
 
 ### Checklist F4
 
-- [ ] F4.1 — Criar `docs/_canon/FEATURE_REGISTRY.yaml` com todas as features do módulo `training` (já implementation_ready)
-- [ ] F4.2 — Criar `scripts/generate/gen_feature_readiness_report.py`
-- [ ] F4.3 — Adicionar `FEATURE_READINESS_GATE` ao `docs/_canon/gates/GATES_REGISTRY.yaml`
-- [ ] F4.4 — Adicionar referência no `CLAUDE.md` §8 (PATHS CRÍTICOS)
-- [ ] F4.5 — Adicionar ao `validate_contracts.py` a chamada ao feature readiness gate
-- [ ] F4.6 — Commitar: `feat(governance): add FEATURE_REGISTRY — human-readable feature tracking`
+- [x] F4.1 — Criar `docs/_canon/FEATURE_REGISTRY.yaml` com todas as features do módulo `training` (já implementation_ready)
+- [x] F4.2 — Criar `scripts/generate/gen_feature_readiness_report.py`
+- [x] F4.3 — Adicionar `FEATURE_READINESS_GATE` ao `docs/_canon/gates/GATES_REGISTRY.yaml`
+- [x] F4.4 — Adicionar referência no `CLAUDE.md` §8 (PATHS CRÍTICOS)
+- [x] F4.5 — Adicionar ao `validate_contracts.py` a chamada ao feature readiness gate
+- [x] F4.6 — Commitar: `feat(governance): add FEATURE_REGISTRY — human-readable feature tracking`
 
 **Critério de conclusão:** Humano consegue ver "Funcionalidade X: 60% completa" em vez de "7/12 endpoints implementados"
 
@@ -508,13 +508,13 @@ Adicionar ao `docs/_canon/gates/GATES_REGISTRY.yaml`:
 
 ### Checklist F5
 
-- [ ] F5.1 — Criar `.contract_driven/agent_prompts/adversarial_analysis.prompt.md`
-- [ ] F5.2 — Adicionar `adversarial_analysis` ao mapa de roteamento do `pre_contract_orchestrator.prompt.md`
-- [ ] F5.3 — Adicionar `ADVERSARIAL_ANALYSIS_GATE` ao `GATES_REGISTRY.yaml`
-- [ ] F5.4 — Criar `scripts/contracts/validate/adversarial_analysis_gate.py`
-- [ ] F5.5 — Adicionar ao `validate_contracts.py` a chamada ao gate adversarial
-- [ ] F5.6 — Adicionar `BLOCKED_ADVERSARIAL_PENDING` ao `CLAUDE.md` §5
-- [ ] F5.7 — Commitar: `feat(security): add adversarial analysis worker + ADVERSARIAL_ANALYSIS_GATE`
+- [x] F5.1 — Criar `.contract_driven/agent_prompts/adversarial_analysis.prompt.md`
+- [x] F5.2 — Adicionar `adversarial_analysis` ao mapa de roteamento do `pre_contract_orchestrator.prompt.md`
+- [x] F5.3 — Adicionar `ADVERSARIAL_ANALYSIS_GATE` ao `GATES_REGISTRY.yaml`
+- [x] F5.4 — Criar `scripts/contracts/validate/adversarial_analysis_gate.py`
+- [x] F5.5 — Adicionar ao `validate_contracts.py` a chamada ao gate adversarial
+- [x] F5.6 — Adicionar `BLOCKED_ADVERSARIAL_PENDING` ao `CLAUDE.md` §5
+- [x] F5.7 — Commitar: `feat(security): add adversarial analysis worker + ADVERSARIAL_ANALYSIS_GATE`
 
 **Critério de conclusão:** Nenhum módulo pode avançar para `implementation_ready` sem análise adversarial com status PASS
 
@@ -582,12 +582,12 @@ A ser criado após decisões D1+D3 com:
 
 ### Checklist F7
 
-- [ ] F7.1 — Obter decisões D1 e D3 do humano
-- [ ] F7.2 — Criar `ADR-025-cdct-pact-strategy.md`
-- [ ] F7.3 — Criar estrutura `contracts/consumers/<consumer-name>/` se Pact ativo
-- [ ] F7.4 — Adicionar `PACT_PROVIDER_GATE` ao `GATES_REGISTRY.yaml`
-- [ ] F7.5 — Adicionar `BLOCKED_PACT_MISSING` ao `CLAUDE.md` §5 (já está — verificar)
-- [ ] F7.6 — Commitar: `feat(testing): add ADR-025 CDCT Pact strategy`
+- [x] F7.1 — Obter decisões D1 e D3 do humano
+- [x] F7.2 — Criar `ADR-025-cdct-pact-strategy.md`
+- [x] F7.3 — Criar estrutura `contracts/consumers/<consumer-name>/` se Pact ativo
+- [x] F7.4 — Adicionar `PACT_PROVIDER_GATE` ao `GATES_REGISTRY.yaml`
+- [x] F7.5 — Adicionar `BLOCKED_PACT_MISSING` ao `CLAUDE.md` §5 (já está — verificar)
+- [x] F7.6 — Commitar: `feat(testing): add ADR-025 CDCT Pact strategy`
 
 ---
 
@@ -620,13 +620,13 @@ ADR formalizando Clean Architecture com Ports & Adapters, referenciando `CODE_AR
 
 ### Checklist F8
 
-- [ ] F8.1 — Obter decisão D4 do humano
-- [ ] F8.2 — Criar `docs/_canon/CODE_ARCHITECTURE.md`
-- [ ] F8.3 — Criar `ADR-026-code-architecture.md`
-- [ ] F8.4 — Adicionar `CODE_ARCHITECTURE_GATE` ao `GATES_REGISTRY.yaml`
-- [ ] F8.5 — Criar `.contract_driven/agent_prompts/generate_code.prompt.md` (worker de geração de código)
-- [ ] F8.6 — Adicionar `generate_code` ao mapa de roteamento do orchestrator
-- [ ] F8.7 — Commitar: `feat(architecture): add CODE_ARCHITECTURE + ADR-026 + generate_code worker`
+- [x] F8.1 — Obter decisão D4 do humano
+- [x] F8.2 — Criar `docs/_canon/CODE_ARCHITECTURE.md`
+- [x] F8.3 — Criar `ADR-026-code-architecture.md`
+- [x] F8.4 — Adicionar `CODE_ARCHITECTURE_GATE` ao `GATES_REGISTRY.yaml`
+- [x] F8.5 — Criar `.contract_driven/agent_prompts/generate_code.prompt.md` (worker de geração de código)
+- [x] F8.6 — Adicionar `generate_code` ao mapa de roteamento do orchestrator
+- [x] F8.7 — Commitar: `feat(architecture): add CODE_ARCHITECTURE + ADR-026 + generate_code worker`
 
 ---
 
@@ -673,12 +673,12 @@ stages:
 
 ### Checklist F9
 
-- [ ] F9.1 — Obter decisões D5 e D6 do humano
-- [ ] F9.2 — Criar `docs/_canon/DEPLOY_PIPELINE.md`
-- [ ] F9.3 — Criar `docs/_canon/decisions/ADR-027-deploy-pipeline.md`
-- [ ] F9.4 — Criar `.github/workflows/deploy.yml`
-- [ ] F9.5 — Adicionar `DEPLOY_READINESS_GATE` ao `GATES_REGISTRY.yaml`
-- [ ] F9.6 — Commitar: `feat(deploy): add DEPLOY_PIPELINE + ADR-027 + deploy.yml`
+- [x] F9.1 — Obter decisões D5 e D6 do humano
+- [x] F9.2 — Criar `docs/_canon/DEPLOY_PIPELINE.md`
+- [x] F9.3 — Criar `docs/_canon/decisions/ADR-027-deploy-pipeline.md`
+- [x] F9.4 — Criar `.github/workflows/deploy.yml`
+- [x] F9.5 — Adicionar `DEPLOY_READINESS_GATE` ao `GATES_REGISTRY.yaml`
+- [x] F9.6 — Commitar: `feat(deploy): add DEPLOY_PIPELINE + ADR-027 + deploy.yml`
 
 ---
 
