@@ -79,12 +79,12 @@ FASE 13: Geração de Frontend (D7 necessário)
 
 ### Checklist F0
 
-- [ ] F0.1 — Executar `python3 scripts/contracts/validate/validate_contracts.py` e confirmar 32/32 PASS
-- [ ] F0.2 — Commitar todos os arquivos modificados e não rastreados (126 modified + 66 untracked)
+- [x] F0.1 — Executar `python3 scripts/contracts/validate/validate_contracts.py` e confirmar 32/32 PASS
+- [x] F0.2 — Commitar todos os arquivos modificados e não rastreados (126 modified + 66 untracked)
   - Mensagem sugerida: `chore(baseline): stabilize pre-pipeline state — all 32 gates green`
-- [ ] F0.3 — Confirmar que `_reports/contract_gates/latest.json` mostra `status: PASS, exit_code: 0`
-- [ ] F0.4 — Verificar que todos os 9 workers existem em `.contract_driven/agent_prompts/`
-- [ ] F0.5 — Confirmar que `docs/_canon/MODULE_REGISTRY.yaml` tem `training: implementation_ready`
+- [x] F0.3 — Confirmar que `_reports/contract_gates/latest.json` mostra `status: PASS, exit_code: 0`
+- [x] F0.4 — Verificar que todos os 9 workers existem em `.contract_driven/agent_prompts/`
+- [x] F0.5 — Confirmar que `docs/_canon/MODULE_REGISTRY.yaml` tem `training: implementation_ready`
 
 **Critério de conclusão:** CI green + commit limpo no branch `hb-track-contratos-driven`
 
@@ -785,9 +785,9 @@ A IA vai ler SESSION_HANDOFF.md + FEATURE_REGISTRY.yaml e responder em portuguê
 
 ### Checklist F12
 
-- [ ] F12.1 — Criar `docs/_canon/UNBLOCKING_PLAYBOOK.md`
-- [ ] F12.2 — Referenciar no `CLAUDE.md` §8
-- [ ] F12.3 — Commitar: `docs(canon): add UNBLOCKING_PLAYBOOK for human self-service`
+- [x] F12.1 — Criar `docs/_canon/UNBLOCKING_PLAYBOOK.md`
+- [x] F12.2 — Referenciar no `CLAUDE.md` §8
+- [x] F12.3 — Commitar: `docs(canon): add UNBLOCKING_PLAYBOOK for human self-service`
 
 ---
 
