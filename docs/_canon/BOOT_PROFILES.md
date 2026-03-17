@@ -35,6 +35,7 @@ Regra:
 | `docs/_canon/BOOT_PROFILES.md` | `boot_minimo` | sempre | resolver o próprio perfil de boot |
 | `docs/_canon/MODULE_REGISTRY.yaml` | `boot_minimo` | sempre | status, owner e superfícies esperadas do módulo |
 | `docs/_canon/TOOLCHAIN_HEALTH_POLICY.md` | `boot_condicional` | tarefas que executam validação, readiness, handoff ou dependem de health-check | definir `DEGRADED`, timeout e fail-closed |
+| `docs/_canon/HUMAN_INTERFACE_POLICY.md` | `boot_condicional` | sempre que o agente for comunicar algo ao humano (decisões, progresso, bloqueios) | garantir linguagem de produto, formato de decisão padronizado e vocabulário sem jargão |
 | `docs/_canon/gates/GATES_REGISTRY.yaml` | `gate_only` | auditoria, validação, readiness ou handoff | registrar bloqueios oficiais e ordem dos gates |
 
 ## 3. Perfis por `task_type`

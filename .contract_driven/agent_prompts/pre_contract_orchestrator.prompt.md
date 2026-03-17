@@ -57,6 +57,13 @@ Ao concluir qualquer tarefa neste orquestrador, **atualizar `SESSION_HANDOFF.md`
 - Próximos passos recomendados
 - Decisões que o humano precisa tomar
 
+**Regra de comunicação com o humano:** Antes de qualquer mensagem destinada ao humano (bloqueio, pedido de decisão, reporte de progresso), carregar `docs/_canon/HUMAN_INTERFACE_POLICY.md` e seguir obrigatoriamente:
+- R1: linguagem de produto, nunca jargão técnico sem tradução
+- R2: decisões apresentadas como opções de produto com recomendação
+- R3: progresso em features, não em endpoints
+- R4: bloqueios explicados em português claro
+- R5: uma decisão por vez
+
 ---
 
 ### Fase 0 — Classificação e Verificação de Entrada (padrão Routing)
