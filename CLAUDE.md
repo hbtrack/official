@@ -82,7 +82,8 @@ Canon global:           docs/_canon/
 Workers/Prompts:        .contract_driven/agent_prompts/
 Regras sistema:         .contract_driven/CONTRACT_SYSTEM_RULES.md
 Reports CI:             _reports/contract_gates/latest.json
-Feature Registry:       docs/_canon/FEATURE_REGISTRY.yaml  (criar na Fase 4)
-Session handoff:        SESSION_HANDOFF.md  (criar na Fase 2)
+Feature Registry:       docs/_canon/FEATURE_REGISTRY.yaml
+Feature Report:         _reports/feature_readiness.json
+Session handoff:        SESSION_HANDOFF.md
 Interface humana:       docs/_canon/HUMAN_INTERFACE_POLICY.md
 Playbook desbloqueio:   docs/_canon/UNBLOCKING_PLAYBOOK.md

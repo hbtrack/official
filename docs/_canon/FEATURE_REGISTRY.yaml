@@ -1,0 +1,180 @@
+# -------------------------------------------------------------------------
+# FEATURE_REGISTRY.yaml
+# Registro intermediário de funcionalidades: entre módulo (alto nível) e
+# endpoint (técnico). Cada feature representa valor entregue ao usuário.
+#
+# Status possíveis:
+#   planned      — feature identificada, sem contrato ainda
+#   in_contract  — contrato OpenAPI escrito, aguardando validação
+#   validated    — contrato validado, pronto para implementação
+#   implemented  — código implementado
+#   released     — em produção
+#
+# Autoridade: docs/_canon/CI_CONTRACT_GATES.md
+# Gate: FEATURE_READINESS_GATE
+# -------------------------------------------------------------------------
+
+version: "1.0.0"
+last_updated: "2026-03-17"
+
+features:
+
+  # ------------------------------------------------------------------
+  # MÓDULO: training
+  # Status do módulo: implementation_ready
+  # ------------------------------------------------------------------
+
+  - id: FT-001
+    name: "Criar e Listar Sessões de Treino"
+    module: training
+    description: >
+      Treinador cria uma nova sessão de treino e consulta sessões existentes
+      por data, time ou status.
+    endpoints:
+      - POST /training-sessions
+      - GET /training-sessions
+      - GET /training-sessions/{id}
+      - PATCH /training-sessions/{id}
+      - DELETE /training-sessions/{id}
+    status: validated
+    contracts:
+      - contracts/openapi/paths/training.yaml
+
+  - id: FT-002
+    name: "Controlar Estado da Sessão de Treino"
+    module: training
+    description: >
+      Treinador gerencia o ciclo de vida da sessão: publica para os atletas
+      verem, inicia quando começa o treino, conclui ao terminar,
+      cancela se necessário, e arquiva sessões antigas.
+    endpoints:
+      - POST /training-sessions/{id}/publish
+      - POST /training-sessions/{id}/unpublish
+      - POST /training-sessions/{id}/start
+      - POST /training-sessions/{id}/complete
+      - POST /training-sessions/{id}/cancel
+      - POST /training-sessions/{id}/archive
+    status: validated
+    contracts:
+      - contracts/openapi/paths/training.yaml
+
+  - id: FT-003
+    name: "Organizar Exercícios em Blocos na Sessão"
+    module: training
+    description: >
+      Treinador divide a sessão em blocos (aquecimento, parte principal,
+      volta à calma) e organiza exercícios dentro de cada bloco,
+      podendo reordenar conforme necessário.
+    endpoints:
+      - GET /training-sessions/{id}/blocks
+      - POST /training-sessions/{id}/blocks
+      - GET /training-sessions/{id}/blocks/{blockId}
+      - PATCH /training-sessions/{id}/blocks/{blockId}
+      - DELETE /training-sessions/{id}/blocks/{blockId}
+      - POST /training-sessions/{id}/blocks/reorder
+    status: validated
+    contracts:
+      - contracts/openapi/paths/training.yaml
+
+  - id: FT-004
+    name: "Marcar Presença dos Atletas no Treino"
+    module: training
+    description: >
+      Registrar quais atletas participaram de uma sessão de treino.
+      Presença é um fato imutável registrado uma vez por atleta por sessão.
+    endpoints:
+      - GET /training-sessions/{id}/attendance
+      - POST /training-sessions/{id}/attendance
+    status: validated
+    contracts:
+      - contracts/openapi/paths/training.yaml
+
+  - id: FT-005
+    name: "Registrar Bem-estar do Atleta Antes e Depois do Treino"
+    module: training
+    description: >
+      Atleta informa como se sente antes de treinar (bem-estar pré) e
+      como se sentiu depois (bem-estar pós). Treinador consulta essas
+      informações para ajustar a carga de treino.
+    endpoints:
+      - POST /training-sessions/{id}/wellness-pre
+      - GET /training-sessions/{id}/wellness-pre/{athleteId}
+      - PATCH /training-sessions/{id}/wellness-pre/{athleteId}
+      - POST /training-sessions/{id}/wellness-post
+      - GET /training-sessions/{id}/wellness-post/{athleteId}
+      - PATCH /training-sessions/{id}/wellness-post/{athleteId}
+    status: validated
+    contracts:
+      - contracts/openapi/paths/training.yaml
+
+  - id: FT-006
+    name: "Planejar Mesociclos e Microciclos de Treinamento"
+    module: training
+    description: >
+      Treinador organiza o planejamento de longo prazo em mesociclos
+      (blocos de semanas) e microciclos (semanas individuais), estruturando
+      a periodização do treinamento.
+    endpoints:
+      - GET /mesocycles
+      - POST /mesocycles
+      - GET /mesocycles/{id}
+      - PATCH /mesocycles/{id}
+      - GET /microcycles
+      - POST /microcycles
+      - GET /microcycles/{id}
+      - PATCH /microcycles/{id}
+    status: validated
+    contracts:
+      - contracts/openapi/paths/training.yaml
+
+  - id: FT-007
+    name: "Registrar o que Foi Executado no Treino"
+    module: training
+    description: >
+      Durante ou após a sessão, treinador registra o que foi efetivamente
+      executado (cargas, séries, repetições) para comparar com o planejado.
+    endpoints:
+      - GET /training-sessions/{id}/execution-records
+      - POST /training-sessions/{id}/execution-records
+      - GET /training-sessions/{id}/execution-records/{recordId}
+    status: validated
+    contracts:
+      - contracts/openapi/paths/training.yaml
+
+  - id: FT-008
+    name: "Feedback Técnico na Sessão de Treino"
+    module: training
+    description: >
+      Treinador e atletas trocam feedback técnico sobre a sessão
+      em threads de comentários vinculados diretamente ao treino.
+    endpoints:
+      - GET /training-sessions/{id}/feedback-threads
+      - POST /training-sessions/{id}/feedback-threads
+    status: validated
+    contracts:
+      - contracts/openapi/paths/training.yaml
+
+  - id: FT-009
+    name: "Definir e Acompanhar Objetivos da Sessão"
+    module: training
+    description: >
+      Treinador define objetivos específicos para cada sessão de treino
+      e acompanha se foram alcançados.
+    endpoints:
+      - GET /training-sessions/{id}/objectives
+      - POST /training-sessions/{id}/objectives
+    status: validated
+    contracts:
+      - contracts/openapi/paths/training.yaml
+
+  - id: FT-010
+    name: "Fila de Atenção do Treinador"
+    module: training
+    description: >
+      Treinador visualiza uma fila priorizada de atletas ou itens que
+      precisam de atenção especial durante ou após uma sessão.
+    endpoints:
+      - GET /training-sessions/{id}/attention-queue
+    status: validated
+    contracts:
+      - contracts/openapi/paths/training.yaml

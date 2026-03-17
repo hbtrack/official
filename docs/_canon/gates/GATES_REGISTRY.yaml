@@ -143,7 +143,11 @@ gates:
       O registry é a fonte determinística de status operacional, owner e superfícies esperadas
       por módulo; deve alinhar com a taxonomia canônica de 16 módulos.
     blocking_codes:
-      [MODULE_REGISTRY_MISSING, MODULE_REGISTRY_INVALID, MODULE_REGISTRY_MISMATCH]
+      [
+        MODULE_REGISTRY_MISSING,
+        MODULE_REGISTRY_INVALID,
+        MODULE_REGISTRY_MISMATCH,
+      ]
     status: active
 
   - gate_id: BOUNDARY_USERS_IDENTITY_ACCESS_GATE
@@ -231,7 +235,8 @@ gates:
       Exige evidência estruturada da fase pré-contrato em `_reports/agent_execution/`
       para módulos com status `validated_contract` ou `implementation_ready` no MODULE_REGISTRY.
       O boot efetivamente aplicado deve ser rastreável pelo Boot Resolution Report.
-    blocking_codes: [PRE_CONTRACT_EVIDENCE_MISSING, PRE_CONTRACT_EVIDENCE_INVALID]
+    blocking_codes:
+      [PRE_CONTRACT_EVIDENCE_MISSING, PRE_CONTRACT_EVIDENCE_INVALID]
     status: active
 
   - gate_id: SHADOW_AUTHORITY_GATE
@@ -520,6 +525,23 @@ gates:
       de qualquer contrato de produção ser criado ou revisado.
       Spec normativa: docs/_canon/DECISION_POLICY.md §2 e §3.
     blocking_codes: [BLOCKED_MISSING_ARCH_DECISION]
+    status: active
+
+  - gate_id: FEATURE_READINESS_GATE
+    order: "15B"
+    name: "Feature Readiness Gate"
+    blocking: false
+    severity: LOW
+    parallelizable: true
+    applies_when: always
+    depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
+    description: >
+      Verifica se docs/_canon/FEATURE_REGISTRY.yaml existe e é YAML válido com
+      campos obrigatórios (version, features[].id, features[].name, features[].module,
+      features[].status). Gera _reports/feature_readiness.json com completude por módulo.
+      Gate não bloqueante — ausência do FEATURE_REGISTRY produz SKIP_NOT_APPLICABLE.
+      Spec normativa: docs/_canon/CONTRACT_PIPELINE.md
+    blocking_codes: [BLOCKED_FEATURE_UNREGISTERED]
     status: active
 
   - gate_id: READINESS_SUMMARY_GATE

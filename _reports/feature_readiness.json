@@ -1,0 +1,94 @@
+{
+  "generated_at_utc": "2026-03-17T07:51:14Z",
+  "source": "docs/_canon/FEATURE_REGISTRY.yaml",
+  "registry_version": "1.0.0",
+  "summary": {
+    "total_features": 10,
+    "global_completion_pct": 50.0,
+    "by_status": {
+      "validated": 10
+    },
+    "modules_count": 1
+  },
+  "modules": {
+    "training": {
+      "total_features": 10,
+      "completion_pct": 50.0,
+      "by_status": {
+        "validated": 10
+      },
+      "features": [
+        {
+          "id": "FT-001",
+          "name": "Criar e Listar Sessões de Treino",
+          "status": "validated",
+          "status_label": "Validada",
+          "endpoints_count": 5
+        },
+        {
+          "id": "FT-002",
+          "name": "Controlar Estado da Sessão de Treino",
+          "status": "validated",
+          "status_label": "Validada",
+          "endpoints_count": 6
+        },
+        {
+          "id": "FT-003",
+          "name": "Organizar Exercícios em Blocos na Sessão",
+          "status": "validated",
+          "status_label": "Validada",
+          "endpoints_count": 6
+        },
+        {
+          "id": "FT-004",
+          "name": "Marcar Presença dos Atletas no Treino",
+          "status": "validated",
+          "status_label": "Validada",
+          "endpoints_count": 2
+        },
+        {
+          "id": "FT-005",
+          "name": "Registrar Bem-estar do Atleta Antes e Depois do Treino",
+          "status": "validated",
+          "status_label": "Validada",
+          "endpoints_count": 6
+        },
+        {
+          "id": "FT-006",
+          "name": "Planejar Mesociclos e Microciclos de Treinamento",
+          "status": "validated",
+          "status_label": "Validada",
+          "endpoints_count": 8
+        },
+        {
+          "id": "FT-007",
+          "name": "Registrar o que Foi Executado no Treino",
+          "status": "validated",
+          "status_label": "Validada",
+          "endpoints_count": 3
+        },
+        {
+          "id": "FT-008",
+          "name": "Feedback Técnico na Sessão de Treino",
+          "status": "validated",
+          "status_label": "Validada",
+          "endpoints_count": 2
+        },
+        {
+          "id": "FT-009",
+          "name": "Definir e Acompanhar Objetivos da Sessão",
+          "status": "validated",
+          "status_label": "Validada",
+          "endpoints_count": 2
+        },
+        {
+          "id": "FT-010",
+          "name": "Fila de Atenção do Treinador",
+          "status": "validated",
+          "status_label": "Validada",
+          "endpoints_count": 1
+        }
+      ]
+    }
+  }
+}

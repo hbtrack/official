@@ -6168,6 +6168,65 @@ def _g15_derived_drift(root: pathlib.Path) -> dict:
     )
 
 
+def _g_feature_readiness(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "FEATURE_READINESS_GATE"
+    registry_path = root / "docs" / "_canon" / "FEATURE_REGISTRY.yaml"
+    if not registry_path.exists():
+        return _skip(gate_id, "FEATURE_REGISTRY.yaml ausente — gate não aplicável.", _ms(t0))
+    try:
+        import yaml as _yaml  # noqa: PLC0415
+        with open(registry_path, encoding="utf-8") as _f:
+            registry = _yaml.safe_load(_f)
+    except Exception as e:
+        return _pg(gate_id, "FAIL", False, "BLOCKED_FEATURE_UNREGISTERED",
+                   f"FEATURE_REGISTRY.yaml não pôde ser lido: {e}",
+                   [], [str(registry_path)], [], [], _ms(t0))
+    violations: list[dict] = []
+    if not isinstance(registry, dict):
+        violations.append({"blocking_code": "BLOCKED_FEATURE_UNREGISTERED",
+                           "artifact": str(registry_path.relative_to(root)),
+                           "message": "FEATURE_REGISTRY.yaml não é um mapeamento YAML válido.",
+                           "severity": "error"})
+    else:
+        features = registry.get("features")
+        if not isinstance(features, list):
+            violations.append({"blocking_code": "BLOCKED_FEATURE_UNREGISTERED",
+                               "artifact": str(registry_path.relative_to(root)),
+                               "message": "Campo 'features' ausente ou inválido.",
+                               "severity": "error"})
+        else:
+            required_keys = {"id", "name", "module", "status"}
+            valid_statuses = {"planned", "in_contract", "validated", "implemented", "released"}
+            for i, ft in enumerate(features):
+                missing = required_keys - set(ft.keys())
+                if missing:
+                    violations.append({
+                        "blocking_code": "BLOCKED_FEATURE_UNREGISTERED",
+                        "artifact": str(registry_path.relative_to(root)),
+                        "message": f"Feature[{i}] '{ft.get('id', '?')}': campos obrigatórios ausentes: {sorted(missing)}",
+                        "severity": "error",
+                    })
+                if ft.get("status") not in valid_statuses:
+                    violations.append({
+                        "blocking_code": "BLOCKED_FEATURE_UNREGISTERED",
+                        "artifact": str(registry_path.relative_to(root)),
+                        "message": f"Feature '{ft.get('id', '?')}': status '{ft.get('status')}' inválido.",
+                        "severity": "error",
+                    })
+    if violations:
+        return _pg(gate_id, "FAIL", False, "BLOCKED_FEATURE_UNREGISTERED",
+                   f"FEATURE_REGISTRY.yaml inválido: {len(violations)} problema(s).",
+                   [], [str(registry_path)], [], violations, _ms(t0))
+    features_list = registry.get("features", [])
+    from collections import Counter as _Counter  # noqa: PLC0415
+    by_status = _Counter(ft.get("status") for ft in features_list)
+    summary = (f"FEATURE_REGISTRY: {len(features_list)} features — "
+               + ", ".join(f"{v} {k}" for k, v in sorted(by_status.items())))
+    return _pg(gate_id, "PASS", False, None, summary,
+               [], [str(registry_path)], [], [], _ms(t0))
+
+
 def _g16_readiness_summary(gates: list[dict]) -> dict:
     t0 = time.monotonic()
     gate_id = "READINESS_SUMMARY_GATE"
@@ -6534,6 +6593,7 @@ def run_pipeline() -> tuple[dict, int]:
     gates.append(_g13_arazzo_validation(root))
     gates.append(_g14_ui_doc_validation(root))
     gates.append(_g15_derived_drift(root))
+    gates.append(_g_feature_readiness(root))
 
     # G16: readiness summary
     g16 = _g16_readiness_summary(gates)
