@@ -563,6 +563,23 @@ gates:
     blocking_codes: [BLOCKED_ADVERSARIAL_PENDING]
     status: active
 
+  - gate_id: VERSIONING_POLICY_GATE
+    order: "15D"
+    name: "Versioning Policy Gate"
+    blocking: false
+    severity: MEDIUM
+    parallelizable: true
+    applies_when: always
+    depends_on: []
+    description: >
+      Verifica conformidade com ADR-024 (estratégia de versionamento de contratos).
+      Checa: (1) ADR-024 existe em docs/_canon/decisions/; (2) contracts/openapi/openapi.yaml
+      tem versão SemVer válida (MAJOR.MINOR.PATCH); (3) CANONICAL_TYPE_REGISTRY registra
+      versioning_strategy em resolved_policies. Emite BLOCKED_VERSIONING_MISSING se
+      ADR ou SemVer ausentes. Spec normativa: docs/_canon/decisions/ADR-024-contract-versioning-strategy.md
+    blocking_codes: [BLOCKED_VERSIONING_MISSING]
+    status: active
+
   - gate_id: READINESS_SUMMARY_GATE
     order: 16
     name: "Readiness Summary Gate"

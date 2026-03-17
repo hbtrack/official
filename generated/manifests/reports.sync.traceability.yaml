@@ -19,7 +19,7 @@ traceability_manifest:
   - path: .contract_driven/templates/api/api_rules.yaml
     sha256: 2829de299d52c4a5912ee3a0489b43271d666d62a83172d3dd32b7417db15ce5
   - path: .contract_driven/templates/api/CANONICAL_TYPE_REGISTRY.yaml
-    sha256: 0a66414171bce653ab10231d1164e441365070d63a4840bf19dbbe369df7edc8
+    sha256: afe0dffd7cb2448cf2a205716ddedafaec55730fb09901e46bcea67339fa4e3b
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: 4d1150b5460e9c0eba8846317237b2734c41f35bcab1b346643d48a2efce04a0
   source_tree_sha256: 14eae5554db3371486cf80d5b070023cbe0ff29829b8df23fff426e5f557567c

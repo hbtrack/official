@@ -2,7 +2,7 @@ openapi: "3.1.0"
 
 info:
   title: HB Track API
-  version: "0.1.0"
+  version: "1.0.0"
   description: >
     HB Track — Plataforma sports-tech orientada a contratos para gestão e operação de handebol.
 

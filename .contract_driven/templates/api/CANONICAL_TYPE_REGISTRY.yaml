@@ -59,3 +59,12 @@ field_bindings:
     canonical_type_ref: "exercises.exercise.id.v1"
   - field_name: "exerciseVersionId"
     canonical_type_ref: "exercises.exercise_version.id.v1"
+
+resolved_policies:
+  versioning_strategy:
+    decision_ref: D2
+    adr_ref: ADR-024
+    strategy: uri_versioning_multiversion
+    description: "URI prefix versioning (/v1/, /v2/) com paralelo de versões por 6 meses mínimo"
+    semver_current: "1.0.0"
+    resolved_at: "2026-03-17"

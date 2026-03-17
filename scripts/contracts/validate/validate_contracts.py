@@ -6266,6 +6266,95 @@ def _g_feature_readiness(root: pathlib.Path) -> dict:
                [], [str(registry_path)], [], [], _ms(t0))
 
 
+def _g_versioning_policy(root: pathlib.Path) -> dict:
+    """VERSIONING_POLICY_GATE — verifica conformidade com ADR-024.
+
+    PASS  : ADR-024 existe, openapi.yaml tem SemVer válido e CANONICAL_TYPE_REGISTRY
+            registra versioning_strategy em resolved_policies.
+    FAIL  : ADR-024 ausente ou openapi.yaml sem SemVer (BLOCKED_VERSIONING_MISSING).
+    DEGRADED: apenas aviso de registro no CANONICAL_TYPE_REGISTRY.
+    """
+    import re as _re
+    t0 = time.monotonic()
+    gate_id = "VERSIONING_POLICY_GATE"
+    violations: list[dict] = []
+    checked: list[str] = []
+
+    # 1. ADR-024 deve existir
+    adr_path = root / "docs" / "_canon" / "decisions" / "ADR-024-contract-versioning-strategy.md"
+    checked.append(str(adr_path.relative_to(root)))
+    if not adr_path.exists():
+        violations.append({
+            "blocking_code": "BLOCKED_VERSIONING_MISSING",
+            "artifact": str(adr_path.relative_to(root)),
+            "message": "ADR-024 ausente — estratégia de versionamento de contratos não documentada.",
+            "severity": "error",
+        })
+
+    # 2. openapi.yaml deve ter versão SemVer válida
+    openapi_path = root / "contracts" / "openapi" / "openapi.yaml"
+    checked.append(str(openapi_path.relative_to(root)))
+    if openapi_path.exists():
+        try:
+            text = openapi_path.read_text(encoding="utf-8")
+            if not _re.search(r'(?m)^\s*version:\s*["\']?(\d+\.\d+\.\d+)["\']?', text):
+                violations.append({
+                    "blocking_code": "BLOCKED_VERSIONING_MISSING",
+                    "artifact": "contracts/openapi/openapi.yaml",
+                    "message": "openapi.yaml não tem versão SemVer válida (esperado: MAJOR.MINOR.PATCH).",
+                    "severity": "error",
+                })
+        except Exception as exc:
+            violations.append({
+                "blocking_code": "BLOCKED_VERSIONING_MISSING",
+                "artifact": "contracts/openapi/openapi.yaml",
+                "message": f"Erro ao ler openapi.yaml: {exc}",
+                "severity": "error",
+            })
+    else:
+        violations.append({
+            "blocking_code": "BLOCKED_VERSIONING_MISSING",
+            "artifact": "contracts/openapi/openapi.yaml",
+            "message": "contracts/openapi/openapi.yaml ausente.",
+            "severity": "error",
+        })
+
+    # 3. CANONICAL_TYPE_REGISTRY deve registrar versioning_strategy (aviso)
+    registry_path = root / ".contract_driven" / "templates" / "api" / "CANONICAL_TYPE_REGISTRY.yaml"
+    checked.append(str(registry_path.relative_to(root)))
+    if registry_path.exists():
+        try:
+            reg_text = registry_path.read_text(encoding="utf-8")
+            if "versioning_strategy" not in reg_text:
+                violations.append({
+                    "blocking_code": "BLOCKED_VERSIONING_MISSING",
+                    "artifact": str(registry_path.relative_to(root)),
+                    "message": "CANONICAL_TYPE_REGISTRY não registra 'versioning_strategy' em resolved_policies.",
+                    "severity": "warn",
+                })
+        except Exception as exc:
+            violations.append({
+                "blocking_code": "BLOCKED_VERSIONING_MISSING",
+                "artifact": str(registry_path.relative_to(root)),
+                "message": f"Erro ao ler CANONICAL_TYPE_REGISTRY: {exc}",
+                "severity": "warn",
+            })
+
+    if violations:
+        hard_errors = [v for v in violations if v.get("severity") == "error"]
+        if hard_errors:
+            return _pg(gate_id, "FAIL", False, "BLOCKED_VERSIONING_MISSING",
+                       f"Política de versionamento: {len(hard_errors)} erro(s) — ADR-024 ou SemVer ausente.",
+                       [], checked, [], violations, _ms(t0))
+        return _pg(gate_id, "DEGRADED", False, None,
+                   f"Política de versionamento: {len(violations)} aviso(s) de conformidade.",
+                   [], checked, [], violations, _ms(t0))
+
+    return _pg(gate_id, "PASS", False, None,
+               "Política de versionamento: ADR-024 presente, SemVer válido, estratégia registrada.",
+               [], checked, [], [], _ms(t0))
+
+
 def _g16_readiness_summary(gates: list[dict]) -> dict:
     t0 = time.monotonic()
     gate_id = "READINESS_SUMMARY_GATE"
@@ -6634,6 +6723,7 @@ def run_pipeline() -> tuple[dict, int]:
     gates.append(_g15_derived_drift(root))
     gates.append(_g_adversarial_analysis(root))
     gates.append(_g_feature_readiness(root))
+    gates.append(_g_versioning_policy(root))
 
     # G16: readiness summary
     g16 = _g16_readiness_summary(gates)
