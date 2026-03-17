@@ -22,6 +22,8 @@ Toda melhoria que altera comportamento esperado do agente só entra no pipeline 
 | Registro operacional | quando ler, aplicar ou bloquear? | `docs/_canon/CONTRACT_PIPELINE.md`, `docs/_canon/BOOT_PROFILES.md`, `docs/_canon/gates/GATES_REGISTRY.yaml`, `docs/_canon/MODULE_REGISTRY.yaml` |
 | Enforcement técnico | como a regra vira comportamento executável? | generators, validators, gates, CI e prompts operacionais |
 
+**Artefato de boot canônico:** `CLAUDE.md` (raiz do projeto) é carregado automaticamente pelo agente no início de cada sessão. Ele substitui a leitura sequencial de todos os artefatos de contexto e remete às fontes canônicas on-demand. Qualquer alteração em `CLAUDE.md` requer aprovação de ADR.
+
 Regra:
 - melhoria que exista só em código, prompt ou `_reports/` ainda não faz parte do pipeline oficial;
 - prompt operacionaliza, mas não substitui a regra substantiva;
