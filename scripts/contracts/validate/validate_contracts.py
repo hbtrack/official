@@ -6627,6 +6627,46 @@ def _g_data_migration(root: pathlib.Path) -> dict:
                "Migration configurada: DATA_MIGRATION_POLICY.md, ADR-028 e migrations/ presentes.",
                [], checked, [], [], _ms(t0))
 
+
+def _g_monitoring_policy(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "MONITORING_POLICY_GATE"
+    violations: list[dict] = []
+    checked: list[str] = []
+
+    policy = root / "docs" / "_canon" / "RUNTIME_CONTRACT_MONITORING_POLICY.md"
+    adr_029 = root / "docs" / "_canon" / "decisions" / "ADR-029-runtime-monitoring.md"
+
+    has_policy = policy.exists()
+    has_adr = adr_029.exists()
+
+    checked += [
+        str(policy.relative_to(root)),
+        str(adr_029.relative_to(root)),
+    ]
+
+    # Nenhum existe -> SKIP
+    if not has_policy and not has_adr:
+        return _skip(gate_id,
+                     "Nenhum artefato de monitoramento encontrado -- pre-implementacao.",
+                     _ms(t0))
+
+    # Apenas um existe -> DEGRADED
+    if has_policy != has_adr:
+        missing = str(adr_029.relative_to(root)) if has_policy else str(policy.relative_to(root))
+        violations.append({
+            "blocking_code": "BLOCKED_MISSING_ARCH_DECISION",
+            "message": f"Artefato de monitoramento ausente: {missing}",
+            "file": missing,
+        })
+        return _pg(gate_id, "DEGRADED", False, None,
+                   "Monitoramento parcialmente configurado -- 1 artefato ausente.",
+                   violations, checked, [], [], _ms(t0))
+
+    return _pg(gate_id, "PASS", False, None,
+               "Monitoramento configurado: RUNTIME_CONTRACT_MONITORING_POLICY.md e ADR-029 presentes.",
+               [], checked, [], [], _ms(t0))
+
 def _g16_readiness_summary(gates: list[dict]) -> dict:
     t0 = time.monotonic()
     gate_id = "READINESS_SUMMARY_GATE"
@@ -7000,6 +7040,7 @@ def run_pipeline() -> tuple[dict, int]:
     gates.append(_g_code_architecture(root))
     gates.append(_g_deploy_readiness(root))
     gates.append(_g_data_migration(root))
+    gates.append(_g_monitoring_policy(root))
 
     # G16: readiness summary
     g16 = _g16_readiness_summary(gates)

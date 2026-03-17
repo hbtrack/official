@@ -654,6 +654,24 @@ gates:
     blocking_codes: [BLOCKED_MISSING_ARCH_DECISION]
     status: active
 
+
+  - gate_id: MONITORING_POLICY_GATE
+    order: 15I
+    name: "Monitoring Policy Gate"
+    blocking: false
+    severity: MEDIUM
+    parallelizable: true
+    applies_when: always
+    depends_on: []
+    description: >
+      Verifica se a politica de monitoramento de contratos em producao foi definida:
+      RUNTIME_CONTRACT_MONITORING_POLICY.md (normativo) e ADR-029 (decisao).
+      SKIP_NOT_APPLICABLE quando nenhum dos arquivos existe (pre-implementacao).
+      DEGRADED se apenas um dos dois existe.
+      Spec normativa: docs/_canon/RUNTIME_CONTRACT_MONITORING_POLICY.md
+    blocking_codes: [BLOCKED_MISSING_ARCH_DECISION]
+    status: active
+
   - gate_id: READINESS_SUMMARY_GATE
     order: 16
     name: "Readiness Summary Gate"

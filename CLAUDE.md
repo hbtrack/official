@@ -88,3 +88,4 @@ Code Architecture:      docs/_canon/CODE_ARCHITECTURE.md
 Session handoff:        SESSION_HANDOFF.md
 Interface humana:       docs/_canon/HUMAN_INTERFACE_POLICY.md
 Playbook desbloqueio:   docs/_canon/UNBLOCKING_PLAYBOOK.md
+Runtime monitoring:    docs/_canon/RUNTIME_CONTRACT_MONITORING_POLICY.md

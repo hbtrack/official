@@ -543,12 +543,12 @@ A ser criado após decisão D2 com:
 
 ### Checklist F6
 
-- [ ] F6.1 — Obter decisão D2 do humano
-- [ ] F6.2 — Criar `ADR-024-contract-versioning-strategy.md` com a estratégia escolhida
-- [ ] F6.3 — Atualizar `contracts/openapi/openapi.yaml` com versão semântica
-- [ ] F6.4 — Adicionar `VERSIONING_POLICY_GATE` ao `GATES_REGISTRY.yaml`
-- [ ] F6.5 — Registrar {{VERSIONING_STRATEGY}} resolvido no `CANONICAL_TYPE_REGISTRY.yaml`
-- [ ] F6.6 — Commitar: `feat(contracts): add ADR-024 contract versioning strategy`
+- [x] F6.1 — Obter decisão D2 do humano
+- [x] F6.2 — Criar `ADR-024-contract-versioning-strategy.md` com a estratégia escolhida
+- [x] F6.3 — Atualizar `contracts/openapi/openapi.yaml` com versão semântica
+- [x] F6.4 — Adicionar `VERSIONING_POLICY_GATE` ao `GATES_REGISTRY.yaml`
+- [x] F6.5 — Registrar {{VERSIONING_STRATEGY}} resolvido no `CANONICAL_TYPE_REGISTRY.yaml`
+- [x] F6.6 — Commitar: `feat(contracts): add ADR-024 contract versioning strategy`
 
 ---
 
@@ -705,11 +705,11 @@ Nenhuma migration pode ser aplicada sem ser validada em staging primeiro.
 
 ### Checklist F10
 
-- [ ] F10.1 — Criar `docs/_canon/DATA_MIGRATION_POLICY.md`
-- [ ] F10.2 — Criar `docs/_canon/decisions/ADR-028-data-migration-strategy.md`
-- [ ] F10.3 — Criar estrutura `migrations/` no projeto
-- [ ] F10.4 — Adicionar `DATA_MIGRATION_GATE` ao `GATES_REGISTRY.yaml`
-- [ ] F10.5 — Commitar: `feat(data): add DATA_MIGRATION_POLICY + ADR-028`
+- [x] F10.1 — Criar `docs/_canon/DATA_MIGRATION_POLICY.md`
+- [x] F10.2 — Criar `docs/_canon/decisions/ADR-028-data-migration-strategy.md`
+- [x] F10.3 — Criar estrutura `migrations/` no projeto
+- [x] F10.4 — Adicionar `DATA_MIGRATION_GATE` ao `GATES_REGISTRY.yaml`
+- [x] F10.5 — Commitar: `feat(data): add DATA_MIGRATION_POLICY + ADR-028`
 
 ---
 
@@ -746,10 +746,10 @@ Nenhuma migration pode ser aplicada sem ser validada em staging primeiro.
 
 ### Checklist F11
 
-- [ ] F11.1 — Criar `docs/_canon/RUNTIME_CONTRACT_MONITORING_POLICY.md`
-- [ ] F11.2 — Criar `docs/_canon/decisions/ADR-029-runtime-monitoring.md`
-- [ ] F11.3 — Adicionar ao `CLAUDE.md` §8 o path de relatórios de monitoramento
-- [ ] F11.4 — Commitar: `feat(monitoring): add RUNTIME_CONTRACT_MONITORING_POLICY + ADR-029`
+- [x] F11.1 — Criar `docs/_canon/RUNTIME_CONTRACT_MONITORING_POLICY.md`
+- [x] F11.2 — Criar `docs/_canon/decisions/ADR-029-runtime-monitoring.md`
+- [x] F11.3 — Adicionar ao `CLAUDE.md` §8 o path de relatórios de monitoramento
+- [x] F11.4 — Commitar: `feat(monitoring): add RUNTIME_CONTRACT_MONITORING_POLICY + ADR-029`
 
 ---
 
