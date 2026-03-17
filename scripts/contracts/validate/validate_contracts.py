@@ -6440,6 +6440,91 @@ def _g_pact_provider(root: pathlib.Path) -> dict:
                [], checked, [], [], _ms(t0))
 
 
+def _g_code_architecture(root: pathlib.Path) -> dict:
+    """CODE_ARCHITECTURE_GATE — verifica conformidade com ADR-026.
+
+    SKIP_NOT_APPLICABLE: 'Hb Track - Backend/src/' ainda não existe (pré-implementação).
+    PASS : ADR-026 + CODE_ARCHITECTURE.md existem; módulos implementation_ready têm src/<module>/.
+    FAIL : ADR-026 ou CODE_ARCHITECTURE.md ausentes (BLOCKED_MISSING_ARCH_DECISION).
+    """
+    t0 = time.monotonic()
+    gate_id = "CODE_ARCHITECTURE_GATE"
+    violations: list[dict] = []
+    checked: list[str] = []
+
+    # 1. ADR-026 deve existir
+    adr_path = root / "docs" / "_canon" / "decisions" / "ADR-026-code-architecture.md"
+    checked.append(str(adr_path.relative_to(root)))
+    if not adr_path.exists():
+        violations.append({
+            "blocking_code": "BLOCKED_MISSING_ARCH_DECISION",
+            "artifact": str(adr_path.relative_to(root)),
+            "message": "ADR-026 ausente — arquitetura de código não documentada.",
+            "severity": "error",
+        })
+
+    # 2. CODE_ARCHITECTURE.md deve existir
+    arch_path = root / "docs" / "_canon" / "CODE_ARCHITECTURE.md"
+    checked.append(str(arch_path.relative_to(root)))
+    if not arch_path.exists():
+        violations.append({
+            "blocking_code": "BLOCKED_MISSING_ARCH_DECISION",
+            "artifact": "docs/_canon/CODE_ARCHITECTURE.md",
+            "message": "CODE_ARCHITECTURE.md ausente — referência normativa da arquitetura não encontrada.",
+            "severity": "error",
+        })
+
+    # 3. Se src/ ainda não existe — SKIP (pré-implementação)
+    src_dir = root / "Hb Track - Backend" / "src"
+    if not src_dir.exists():
+        if not violations:
+            return _skip(gate_id,
+                         "'Hb Track - Backend/src/' ainda não existe — pré-implementação. "
+                         "ADR-026 e CODE_ARCHITECTURE.md presentes e prontos.",
+                         _ms(t0))
+        # ADR ou arch ausentes + sem src — reportar erros
+        hard = [v for v in violations if v.get("severity") == "error"]
+        return _pg(gate_id, "FAIL", False, "BLOCKED_MISSING_ARCH_DECISION",
+                   f"Arquitetura de código: {len(hard)} artefato(s) obrigatório(s) ausente(s).",
+                   [], checked, [], violations, _ms(t0))
+
+    # 4. Para módulos implementation_ready — verificar src/<module>/
+    registry_path = root / "docs" / "_canon" / "MODULE_REGISTRY.yaml"
+    if registry_path.exists():
+        try:
+            registry = _load_yaml(registry_path)
+            modules_section = registry.get("modules", {})
+            ready_modules = [
+                m for m, info in modules_section.items()
+                if isinstance(info, dict) and info.get("status") == "implementation_ready"
+            ]
+            for mod in ready_modules:
+                mod_src = src_dir / mod
+                checked.append(str(mod_src.relative_to(root)))
+                if not mod_src.exists():
+                    violations.append({
+                        "blocking_code": "BLOCKED_MISSING_ARCH_DECISION",
+                        "artifact": str(mod_src.relative_to(root)),
+                        "message": f"Módulo '{mod}' está implementation_ready mas src/{mod}/ não existe.",
+                        "severity": "warn",
+                    })
+        except Exception:
+            pass
+
+    hard_errors = [v for v in violations if v.get("severity") == "error"]
+    if hard_errors:
+        return _pg(gate_id, "FAIL", False, "BLOCKED_MISSING_ARCH_DECISION",
+                   f"Arquitetura de código: {len(hard_errors)} erro(s) — ADR-026 ou CODE_ARCHITECTURE.md ausente(s).",
+                   [], checked, [], violations, _ms(t0))
+    if violations:
+        return _pg(gate_id, "DEGRADED", False, None,
+                   f"Arquitetura de código: {len(violations)} aviso(s) — módulo(s) implementation_ready sem src/.",
+                   [], checked, [], violations, _ms(t0))
+    return _pg(gate_id, "PASS", False, None,
+               "Arquitetura de código: ADR-026 presente, CODE_ARCHITECTURE.md presente.",
+               [], checked, [], [], _ms(t0))
+
+
 def _g16_readiness_summary(gates: list[dict]) -> dict:
     t0 = time.monotonic()
     gate_id = "READINESS_SUMMARY_GATE"
@@ -6810,6 +6895,7 @@ def run_pipeline() -> tuple[dict, int]:
     gates.append(_g_feature_readiness(root))
     gates.append(_g_versioning_policy(root))
     gates.append(_g_pact_provider(root))
+    gates.append(_g_code_architecture(root))
 
     # G16: readiness summary
     g16 = _g16_readiness_summary(gates)

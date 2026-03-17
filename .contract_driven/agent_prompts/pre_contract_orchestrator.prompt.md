@@ -42,6 +42,7 @@ Com base em `task_type`, o orquestrador roteia para o worker correto após a fas
 | `new_ui_contract` | `.contract_driven/agent_prompts/create_ui_contract.prompt.md` |
 | `architecture_review` | `.contract_driven/agent_prompts/decision_discovery.prompt.md` |
 | `adversarial_analysis` | `.contract_driven/agent_prompts/adversarial_analysis.prompt.md` |
+| `generate_code` | `.contract_driven/agent_prompts/generate_code.prompt.md` |
 
 ---
 

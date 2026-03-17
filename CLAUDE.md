@@ -84,6 +84,7 @@ Regras sistema:         .contract_driven/CONTRACT_SYSTEM_RULES.md
 Reports CI:             _reports/contract_gates/latest.json
 Feature Registry:       docs/_canon/FEATURE_REGISTRY.yaml
 Feature Report:         _reports/feature_readiness.json
+Code Architecture:      docs/_canon/CODE_ARCHITECTURE.md
 Session handoff:        SESSION_HANDOFF.md
 Interface humana:       docs/_canon/HUMAN_INTERFACE_POLICY.md
 Playbook desbloqueio:   docs/_canon/UNBLOCKING_PLAYBOOK.md

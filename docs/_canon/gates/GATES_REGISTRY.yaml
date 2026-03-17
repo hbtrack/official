@@ -599,6 +599,25 @@ gates:
     blocking_codes: [BLOCKED_PACT_MISSING]
     status: active
 
+  - gate_id: CODE_ARCHITECTURE_GATE
+    order: "15F"
+    name: "Code Architecture Gate"
+    blocking: false
+    severity: MEDIUM
+    parallelizable: true
+    applies_when: always
+    depends_on: []
+    description: >
+      Verifica conformidade com ADR-026 (arquitetura de código Clean Architecture).
+      Checa: (1) ADR-026 existe em docs/_canon/decisions/; (2) CODE_ARCHITECTURE.md existe
+      em docs/_canon/; (3) para módulos implementation_ready no MODULE_REGISTRY,
+      verifica se a estrutura src/<module>/ existe em 'Hb Track - Backend/'.
+      SKIP_NOT_APPLICABLE quando 'Hb Track - Backend/src/' ainda não existe (pré-implementação).
+      Emite BLOCKED_MISSING_ARCH_DECISION se ADR-026 ou CODE_ARCHITECTURE.md ausentes.
+      Spec normativa: docs/_canon/CODE_ARCHITECTURE.md
+    blocking_codes: [BLOCKED_MISSING_ARCH_DECISION]
+    status: active
+
   - gate_id: READINESS_SUMMARY_GATE
     order: 16
     name: "Readiness Summary Gate"
