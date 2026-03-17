@@ -563,6 +563,7 @@ A ser criado após decisão D2 com:
 > C) App mobile + sistema legado que já existe
 > 👉 Recomendo responder isso antes de definir testes de integração
 > ⏱️ Urgência: necessário antes de configurar testes entre sistemas
+> Decisão do humano para D1 foi: A) Só o app mobile do HB Track 
 
 > 📋 DECISÃO D3 — PACT BROKER
 > Para verificar que o app não quebra quando a API muda, precisamos de um servidor de contratos Pact.
@@ -603,6 +604,7 @@ A ser criado após decisões D1+D3 com:
 > D) Outro — me diga o que você já tem ou já conhece
 > 👉 Recomendo A (Python/FastAPI) se você quer que a IA gere código mais facilmente; B (Node/NestJS) se quiser uma arquitetura mais estruturada
 > ⏱️ Urgência: necessário antes de gerar qualquer código
+> Decisão do humano para D4 foi: A) Backend: Python (FastAPI) + PostgreSQL + React Native (mobile)
 
 ### Artefato 8A — `docs/_canon/CODE_ARCHITECTURE.md`
 
@@ -815,12 +817,12 @@ A ser criado após decisão D7 com:
 
 ### Checklist F13
 
-- [ ] F13.1 — Obter decisão D7 do humano
-- [ ] F13.2 — Criar `docs/_canon/FRONTEND_CONTRACT.md`
-- [ ] F13.3 — Criar `docs/_canon/decisions/ADR-030-frontend-strategy.md`
-- [ ] F13.4 — Criar `.contract_driven/agent_prompts/generate_frontend.prompt.md`
-- [ ] F13.5 — Adicionar `generate_frontend` ao mapa de roteamento do orchestrator
-- [ ] F13.6 — Commitar: `feat(frontend): add FRONTEND_CONTRACT + ADR-030 + generate_frontend worker`
+- [x] F13.1 — Obter decisão D7 do humano
+- [x] F13.2 — Criar `docs/_canon/FRONTEND_CONTRACT.md`
+- [x] F13.3 — Criar `docs/_canon/decisions/ADR-030-frontend-strategy.md`
+- [x] F13.4 — Criar `.contract_driven/agent_prompts/generate_frontend.prompt.md`
+- [x] F13.5 — Adicionar `generate_frontend` ao mapa de roteamento do orchestrator
+- [x] F13.6 — Commitar: `feat(frontend): add FRONTEND_CONTRACT + ADR-030 + generate_frontend worker`
 
 ---
 

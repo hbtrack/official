@@ -43,6 +43,7 @@ Com base em `task_type`, o orquestrador roteia para o worker correto após a fas
 | `architecture_review` | `.contract_driven/agent_prompts/decision_discovery.prompt.md` |
 | `adversarial_analysis` | `.contract_driven/agent_prompts/adversarial_analysis.prompt.md` |
 | `generate_code` | `.contract_driven/agent_prompts/generate_code.prompt.md` |
+| `generate_frontend` | `.contract_driven/agent_prompts/generate_frontend.prompt.md` |
 
 ---
 

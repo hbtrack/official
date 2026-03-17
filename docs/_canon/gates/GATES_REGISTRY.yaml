@@ -618,7 +618,6 @@ gates:
     blocking_codes: [BLOCKED_MISSING_ARCH_DECISION]
     status: active
 
-
   - gate_id: DEPLOY_READINESS_GATE
     order: 15G
     name: "Deploy Readiness Gate"
@@ -635,7 +634,6 @@ gates:
       Spec normativa: docs/_canon/DEPLOY_PIPELINE.md
     blocking_codes: [BLOCKED_MISSING_ARCH_DECISION]
     status: active
-
 
   - gate_id: DATA_MIGRATION_GATE
     order: 15H
@@ -654,7 +652,6 @@ gates:
     blocking_codes: [BLOCKED_MISSING_ARCH_DECISION]
     status: active
 
-
   - gate_id: MONITORING_POLICY_GATE
     order: 15I
     name: "Monitoring Policy Gate"
@@ -670,6 +667,25 @@ gates:
       DEGRADED se apenas um dos dois existe.
       Spec normativa: docs/_canon/RUNTIME_CONTRACT_MONITORING_POLICY.md
     blocking_codes: [BLOCKED_MISSING_ARCH_DECISION]
+    status: active
+
+  - gate_id: FRONTEND_CONTRACT_GATE
+    order: 15J
+    name: "Frontend Contract Gate"
+    blocking: false
+    severity: MEDIUM
+    parallelizable: true
+    applies_when: "frontend/ directory exists"
+    depends_on: [OPENAPI_ROOT_MODULE_SYNC_GATE]
+    description: >
+      Verifica que o frontend consome apenas contratos definidos no OpenAPI.
+      Checa: (1) schema.d.ts gerado do OpenAPI e atualizado;
+      (2) ausência de endpoints hardcoded fora de api/hooks/;
+      (3) tipos de API derivam de schema.d.ts (sem interfaces duplicadas);
+      (4) package.json inclui script gen:api.
+      SKIP_NOT_APPLICABLE quando frontend/ não existe (pré-implementação).
+      Spec normativa: docs/_canon/FRONTEND_CONTRACT.md
+    blocking_codes: [BLOCKED_CONTRACT_CONFLICT]
     status: active
 
   - gate_id: READINESS_SUMMARY_GATE
