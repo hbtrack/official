@@ -618,6 +618,24 @@ gates:
     blocking_codes: [BLOCKED_MISSING_ARCH_DECISION]
     status: active
 
+
+  - gate_id: DEPLOY_READINESS_GATE
+    order: 15G
+    name: "Deploy Readiness Gate"
+    blocking: false
+    severity: MEDIUM
+    parallelizable: true
+    applies_when: always
+    depends_on: []
+    description: >
+      Verifica se os artefatos de deploy foram definidos:
+      DEPLOY_PIPELINE.md (normativo), ADR-027 (decisao) e deploy.yml (workflow CI/CD).
+      SKIP quando nenhum dos artefatos existe (pre-configuracao de deploy).
+      FAIL (BLOCKED_MISSING_ARCH_DECISION) se apenas parte dos artefatos existe.
+      Spec normativa: docs/_canon/DEPLOY_PIPELINE.md
+    blocking_codes: [BLOCKED_MISSING_ARCH_DECISION]
+    status: active
+
   - gate_id: READINESS_SUMMARY_GATE
     order: 16
     name: "Readiness Summary Gate"

@@ -6525,6 +6525,57 @@ def _g_code_architecture(root: pathlib.Path) -> dict:
                [], checked, [], [], _ms(t0))
 
 
+
+def _g_deploy_readiness(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "DEPLOY_READINESS_GATE"
+    violations: list[dict] = []
+    checked: list[str] = []
+
+    deploy_pipeline = root / "docs" / "_canon" / "DEPLOY_PIPELINE.md"
+    adr_027 = root / "docs" / "_canon" / "decisions" / "ADR-027-deploy-pipeline.md"
+    deploy_yml = root / ".github" / "workflows" / "deploy.yml"
+
+    has_pipeline = deploy_pipeline.exists()
+    has_adr = adr_027.exists()
+    has_yml = deploy_yml.exists()
+
+    checked += [
+        str(deploy_pipeline.relative_to(root)),
+        str(adr_027.relative_to(root)),
+        str(deploy_yml.relative_to(root)),
+    ]
+
+    # Nenhum existe -> SKIP (ainda nao foi configurado)
+    if not has_pipeline and not has_adr and not has_yml:
+        return _skip(gate_id,
+                     "Nenhum artefato de deploy encontrado -- pre-configuracao de deploy.",
+                     _ms(t0))
+
+    # Algum existe mas incompleto -> FAIL
+    missing = []
+    if not has_pipeline:
+        missing.append("docs/_canon/DEPLOY_PIPELINE.md")
+    if not has_adr:
+        missing.append("docs/_canon/decisions/ADR-027-deploy-pipeline.md")
+    if not has_yml:
+        missing.append(".github/workflows/deploy.yml")
+
+    if missing:
+        for m in missing:
+            violations.append({
+                "blocking_code": "BLOCKED_MISSING_ARCH_DECISION",
+                "message": f"Artefato de deploy ausente: {m}",
+                "file": m,
+            })
+        return _pg(gate_id, "FAIL", False, "BLOCKED_MISSING_ARCH_DECISION",
+                   f"Deploy parcialmente configurado -- {len(missing)} artefato(s) ausente(s).",
+                   violations, checked, [], [], _ms(t0))
+
+    return _pg(gate_id, "PASS", False, None,
+               "Deploy configurado: DEPLOY_PIPELINE.md, ADR-027 e deploy.yml presentes.",
+               [], checked, [], [], _ms(t0))
+
 def _g16_readiness_summary(gates: list[dict]) -> dict:
     t0 = time.monotonic()
     gate_id = "READINESS_SUMMARY_GATE"
@@ -6896,6 +6947,7 @@ def run_pipeline() -> tuple[dict, int]:
     gates.append(_g_versioning_policy(root))
     gates.append(_g_pact_provider(root))
     gates.append(_g_code_architecture(root))
+    gates.append(_g_deploy_readiness(root))
 
     # G16: readiness summary
     g16 = _g16_readiness_summary(gates)
