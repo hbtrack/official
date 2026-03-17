@@ -580,6 +580,25 @@ gates:
     blocking_codes: [BLOCKED_VERSIONING_MISSING]
     status: active
 
+  - gate_id: PACT_PROVIDER_GATE
+    order: "15E"
+    name: "Pact Provider Gate"
+    blocking: false
+    severity: HIGH
+    parallelizable: true
+    applies_when: always
+    depends_on: []
+    description: >
+      Verifica se o provider satisfaz os consumer contracts publicados no Pact Broker.
+      SKIP_NOT_APPLICABLE quando env var PACT_BROKER_BASE_URL está ausente (broker não
+      configurado) ou quando contracts/consumers/ está vazia (sem consumers registrados).
+      PASS quando todos os consumer contracts são satisfeitos pelo provider.
+      FAIL (BLOCKED_PACT_MISSING) quando algum consumer contract não é satisfeito.
+      Torna-se bloqueante após o primeiro consumer contract ser publicado no broker.
+      Spec normativa: docs/_canon/decisions/ADR-025-cdct-pact-strategy.md
+    blocking_codes: [BLOCKED_PACT_MISSING]
+    status: active
+
   - gate_id: READINESS_SUMMARY_GATE
     order: 16
     name: "Readiness Summary Gate"

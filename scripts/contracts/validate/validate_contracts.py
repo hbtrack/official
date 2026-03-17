@@ -6355,6 +6355,91 @@ def _g_versioning_policy(root: pathlib.Path) -> dict:
                [], checked, [], [], _ms(t0))
 
 
+def _g_pact_provider(root: pathlib.Path) -> dict:
+    """PACT_PROVIDER_GATE — verifica consumer contracts via Pact Broker.
+
+    SKIP_NOT_APPLICABLE:
+      - env var PACT_BROKER_BASE_URL ausente (broker não configurado)
+      - contracts/consumers/ ausente ou vazia (sem consumers registrados)
+    PASS : todos os consumer contracts satisfeitos (broker acessível + verificado)
+    FAIL : BLOCKED_PACT_MISSING se algum contrato não for satisfeito
+    """
+    import os
+    t0 = time.monotonic()
+    gate_id = "PACT_PROVIDER_GATE"
+
+    # 1. Broker configurado?
+    broker_url = os.environ.get("PACT_BROKER_BASE_URL", "").strip()
+    if not broker_url:
+        return _skip(gate_id,
+                     "PACT_BROKER_BASE_URL não configurado — Pact Broker não ativo. "
+                     "Configurar quando o primeiro consumer contract for publicado.",
+                     _ms(t0))
+
+    # 2. Consumers registrados?
+    consumers_dir = root / "contracts" / "consumers"
+    if not consumers_dir.exists():
+        return _skip(gate_id,
+                     "contracts/consumers/ ausente — nenhum consumer registrado.",
+                     _ms(t0))
+    consumers = [d for d in consumers_dir.iterdir() if d.is_dir()]
+    if not consumers:
+        return _skip(gate_id,
+                     "contracts/consumers/ vazia — nenhum consumer registrado.",
+                     _ms(t0))
+
+    # 3. Verificar via CLI pact-broker (se disponível)
+    import shutil
+    import subprocess
+    pact_bin = shutil.which("pact-broker")
+    if not pact_bin:
+        # CLI não instalada — degradar, não falhar
+        return _pg(gate_id, "DEGRADED", False, None,
+                   "pact-broker CLI não instalada — verificação de consumer contracts não executada. "
+                   "Instalar pact-broker para habilitar gate completo.",
+                   [], [str(consumers_dir)], [], [], _ms(t0))
+
+    violations: list[dict] = []
+    checked = [str(consumers_dir)]
+    try:
+        result = subprocess.run(
+            [pact_bin, "can-i-deploy",
+             "--broker-base-url", broker_url,
+             "--pacticipant", "hbtrack-app",
+             "--latest"],
+            capture_output=True, text=True, timeout=30
+        )
+        if result.returncode != 0:
+            violations.append({
+                "blocking_code": "BLOCKED_PACT_MISSING",
+                "artifact": "pact-broker/can-i-deploy",
+                "message": f"Consumer contract não satisfeito: {result.stdout.strip() or result.stderr.strip()}",
+                "severity": "error",
+            })
+    except subprocess.TimeoutExpired:
+        violations.append({
+            "blocking_code": "BLOCKED_PACT_MISSING",
+            "artifact": "pact-broker/can-i-deploy",
+            "message": "Timeout ao contactar Pact Broker — VPS Locaweb inacessível?",
+            "severity": "error",
+        })
+    except Exception as exc:
+        violations.append({
+            "blocking_code": "BLOCKED_PACT_MISSING",
+            "artifact": "pact-broker/can-i-deploy",
+            "message": f"Erro ao executar verificação Pact: {exc}",
+            "severity": "error",
+        })
+
+    if violations:
+        return _pg(gate_id, "FAIL", False, "BLOCKED_PACT_MISSING",
+                   f"Pact: consumer contract não satisfeito — deploy bloqueado.",
+                   [], checked, [], violations, _ms(t0))
+    return _pg(gate_id, "PASS", False, None,
+               f"Pact: {len(consumers)} consumer(s) verificado(s) — todos satisfeitos.",
+               [], checked, [], [], _ms(t0))
+
+
 def _g16_readiness_summary(gates: list[dict]) -> dict:
     t0 = time.monotonic()
     gate_id = "READINESS_SUMMARY_GATE"
@@ -6724,6 +6809,7 @@ def run_pipeline() -> tuple[dict, int]:
     gates.append(_g_adversarial_analysis(root))
     gates.append(_g_feature_readiness(root))
     gates.append(_g_versioning_policy(root))
+    gates.append(_g_pact_provider(root))
 
     # G16: readiness summary
     g16 = _g16_readiness_summary(gates)
