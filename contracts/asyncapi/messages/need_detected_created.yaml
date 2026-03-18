@@ -1,0 +1,6 @@
+name: need_detected_created
+title: Need Detected Created
+summary: Necessidade de treino detectada com evidência.
+contentType: application/json
+payload:
+  $ref: ../components/schemas/need_detected_created_payload.yaml

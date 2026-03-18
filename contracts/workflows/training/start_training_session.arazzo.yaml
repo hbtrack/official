@@ -1,0 +1,43 @@
+arazzo: "1.0.0"
+
+info:
+  title: Training — Start training session
+  version: "0.1.0"
+  summary: Orquestra início (execução) de sessão de treino publicada.
+  description: >
+    Workflow para iniciar execução de sessão publicada:
+    1) Verifica elegibilidade dos atletas (inelegibilidade médica ativa — INV-TRAIN-092);
+    2) Inicia a sessão — transição PUBLISHED → IN_PROGRESS.
+
+    Pré-condições:
+    - Sessão existe e está em PUBLISHED
+    - session_at atingido (INV-TRAIN-018)
+    - Ator é o coach_assignment da sessão ou coordenador
+    - Atletas com restriction_profile ativo precisam de override auditado (DR-TRAIN-025)
+
+    Pós-condições:
+    - Sessão está em IN_PROGRESS
+    - Sessão não é editável (INV-TRAIN-006, TRAIN-DEC-020 pendente)
+    - Evento training_session_started emitido ao AsyncAPI
+
+sourceDescriptions:
+  - name: hbtrack-http
+    type: openapi
+    url: ../../openapi/openapi.yaml
+
+workflows:
+  start_training_session:
+    summary: Iniciar execução de sessão de treino.
+    steps:
+      - stepId: checkIneligibilityStatus
+        description: >
+          Verifica status de inelegibilidade dos atletas da sessão.
+          Resultado pode requerer submitIneligibilityDeclaration antes de iniciar.
+        operationId: getIneligibilityStatus
+
+      - stepId: startTrainingSession
+        description: >
+          Inicia a sessão — transição PUBLISHED → IN_PROGRESS.
+          Requer session_at atingido (server-side, UTC).
+          DR-TRAIN-051: ator validado via identity_access.
+        operationId: startTrainingSession

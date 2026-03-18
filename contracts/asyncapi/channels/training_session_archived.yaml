@@ -1,0 +1,8 @@
+description: >
+  Evento emitido quando uma sessão de treino é arquivada (estado ARCHIVED após 60+ dias).
+  Transição final do ciclo de vida. Sessão fica somente leitura eternamente.
+
+publish:
+  operationId: training_session_archived_publish
+  message:
+    $ref: ../messages/training_session_archived.yaml

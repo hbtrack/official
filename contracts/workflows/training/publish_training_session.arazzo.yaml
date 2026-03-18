@@ -1,0 +1,48 @@
+arazzo: "1.0.0"
+
+info:
+  title: Training — Publish training session
+  version: "0.1.0"
+  summary: Orquestra publicação de sessão de treino para atletas.
+  description: >
+    Workflow multi-step para publicar uma sessão de treino:
+    1) Garante que a sessão tenha pelo menos 1 session_block (INV-TRAIN-086);
+    2) Garante que a sessão tenha pelo menos 1 session_objective (INV-TRAIN-084);
+    3) Executa a publicação — transição SCHEDULED → PUBLISHED (ou DRAFT → SCHEDULED → PUBLISHED em 2 passos quando campos mínimos ainda ausentes).
+
+    Pré-condições:
+    - Sessão existe e está em DRAFT ou SCHEDULED
+    - Ator tem papel treinador ou coordenador (DR-TRAIN-001, DR-TRAIN-051)
+    - Campos mínimos presentes: sessionAt, individualizationMode, coach_assignment, team_scope/athlete_scope, >= 1 SessionObjective, >= 1 SessionBlock
+
+    Pós-condições:
+    - Sessão está em PUBLISHED
+    - plannedContentSnapshot gravado e imutável (INV-TRAIN-088)
+    - Atletas podem visualizar a sessão
+
+sourceDescriptions:
+  - name: hbtrack-http
+    type: openapi
+    url: ../../openapi/openapi.yaml
+
+workflows:
+  publish_training_session:
+    summary: Publicar sessão de treino.
+    steps:
+      - stepId: addSessionBlock
+        description: >
+          Adiciona bloco à sessão quando nenhum bloco existe.
+          Condicional — executar apenas se sessão não tiver session_blocks.
+        operationId: addSessionBlock
+
+      - stepId: createSessionObjective
+        description: >
+          Cria objetivo operacional quando nenhum exists.
+          Condicional — executar apenas se sessão não tiver session_objectives.
+        operationId: createSessionObjective
+
+      - stepId: publishTrainingSession
+        description: >
+          Publica a sessão — transição para PUBLISHED.
+          Requer DR-TRAIN-051: ator com papel coach/coordinator validado via identity_access.
+        operationId: publishTrainingSession

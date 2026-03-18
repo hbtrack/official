@@ -1,26 +1,34 @@
 {
   "artifact_id": "HBTRACK_BOOT_RESOLUTION_REPORT",
+  "version": "2.0.0",
   "module": "training",
   "task_type": "contract_revision",
   "profile": "contract_revision",
   "mandatory_reads": [
-    ".contract_driven/CONTRACT_SYSTEM_LAYOUT.md",
+    "CLAUDE.md",
     ".contract_driven/CONTRACT_SYSTEM_RULES.md",
-    "docs/_canon/SYSTEM_SCOPE.md",
+    ".contract_driven/CONTRACT_SYSTEM_LAYOUT.md",
+    "docs/_canon/OPERATIONS.md",
     "docs/_canon/DATA_CONVENTIONS.md",
-    "docs/_canon/ERROR_MODEL.md",
     "docs/_canon/SECURITY_RULES.md",
     "docs/hbtrack/modulos/training/MODULE_SCOPE_TRAINING.md",
     "docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md",
-    "docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md"
+    "docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md",
+    "docs/hbtrack/modulos/training/TEST_MATRIX_TRAINING.md",
+    ".contract_driven/templates/api/api_rules.yaml",
+    "generated/resolved_policy/training.sync.resolved.yaml"
   ],
   "conditional_reads": [
+    "SESSION_HANDOFF.md",
     "docs/hbtrack/modulos/training/STATE_MODEL_TRAINING.md",
     "docs/hbtrack/modulos/training/PERMISSIONS_TRAINING.md",
-    "docs/_canon/decisions/ADR-017-training-session-state-machine.md"
+    "docs/hbtrack/modulos/training/UI_CONTRACT_TRAINING.md",
+    "docs/_canon/decisions/ADR-017-training-session-state-machine.md",
+    "docs/_canon/HANDBALL_RULES_DOMAIN.md"
   ],
   "skipped_reads": [],
   "worker_prompt": ".contract_driven/agent_prompts/create_openapi_contract.prompt.md",
-  "source_evidence": "_reports/agent_execution/latest.json",
-  "timestamp_utc": "2026-03-16T09:07:00Z"
+  "source_authority": "CLAUDE.md §7",
+  "note": "Regenerated 2026-03-17 após consolidação arquitetural",
+  "timestamp_utc": "2026-03-17T12:00:00Z"
 }

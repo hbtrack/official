@@ -1,0 +1,6 @@
+name: training_session_completed
+title: Training Session Completed
+summary: Sessão de treino concluída.
+contentType: application/json
+payload:
+  $ref: ../components/schemas/training_session_completed_payload.yaml

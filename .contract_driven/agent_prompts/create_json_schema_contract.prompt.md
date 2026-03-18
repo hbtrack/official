@@ -12,7 +12,7 @@
 ### Bloqueios
 - `BLOCKED_MISSING_MODULE`
 - `BLOCKED_MISSING_CANON_ARTIFACT`
-- `BLOCKED_FORMAT_VIOLATION`
+- `BLOCKED_SCHEMA_DRIFT`
 
 ### Saída
 - `contracts/schemas/<module>/*.schema.json` válido em Draft 2020-12

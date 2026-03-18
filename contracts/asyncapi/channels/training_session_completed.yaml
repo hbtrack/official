@@ -1,0 +1,8 @@
+description: >
+  Evento emitido quando uma sessão de treino é concluída (estado COMPLETED).
+  Dispara pós-revisão, cálculo de carga interna, e alertas para analytics.
+
+publish:
+  operationId: training_session_completed_publish
+  message:
+    $ref: ../messages/training_session_completed.yaml

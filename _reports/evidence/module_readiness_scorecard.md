@@ -1,14 +1,14 @@
 # MODULE READINESS SCORECARD
 
-- Generated at: `2026-03-17T07:31:40Z`
-- Pipeline status: `PASS`
+- Generated at: `2026-03-18T02:43:26Z`
+- Pipeline status: `FAIL`
 
 | Module | Registry | Owner | Ready % | OpenAPI | Schemas | Missing / Drift |
 |---|---|---|---:|---:|---:|---|
 | `users` | `draft_contract` | `platform-core` | 75 | 0/0 | 1 | openapi_sync |
 | `seasons` | `draft_contract` | `handball-ops` | 75 | 0/0 | 1 | openapi_sync |
 | `teams` | `draft_contract` | `handball-ops` | 75 | 0/0 | 1 | openapi_sync |
-| `training` | `implementation_ready` | `performance-tech` | 92 | 25/25 | 6 | ui_contract |
+| `training` | `validated_contract` | `performance-tech` | 83 | 25/34 | 13 | openapi_sync, decision_ir |
 | `wellness` | `draft_contract` | `performance-tech` | 60 | 0/0 | 1 | openapi_sync, sport_science |
 | `medical` | `draft_contract` | `performance-tech` | 60 | 0/0 | 1 | openapi_sync, sport_science |
 | `competitions` | `draft_contract` | `handball-ops` | 75 | 0/0 | 1 | openapi_sync |

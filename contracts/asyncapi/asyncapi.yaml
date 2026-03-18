@@ -24,6 +24,60 @@ servers:
 channels:
   training.attendance.marked:
     $ref: ./channels/training_attendance_marked.yaml
+  training.intervention_cycle.created:
+    $ref: ./channels/intervention_cycle_created.yaml
+  training.intervention_cycle.completed:
+    $ref: ./channels/intervention_cycle_completed.yaml
+  training.need.created:
+    $ref: ./channels/need_detected_created.yaml
+  training.objective.created:
+    $ref: ./channels/objective_created.yaml
+  training.need.linked_to_objective:
+    $ref: ./channels/need_linked_to_objective.yaml
+  training.recommendation.generated:
+    $ref: ./channels/recommendation_generated.yaml
+  training.recommendation.accepted:
+    $ref: ./channels/recommendation_accepted.yaml
+  training.recommendation.dismissed:
+    $ref: ./channels/recommendation_dismissed.yaml
+  training.session.created:
+    $ref: ./channels/training_session_created.yaml
+  training.session.published:
+    $ref: ./channels/training_session_published.yaml
+  training.session.started:
+    $ref: ./channels/training_session_started.yaml
+  training.session.completed:
+    $ref: ./channels/training_session_completed.yaml
+  training.session.cancelled:
+    $ref: ./channels/training_session_cancelled.yaml
+  training.session.archived:
+    $ref: ./channels/training_session_archived.yaml
+  training.objective.achieved:
+    $ref: ./channels/session_objective_achieved.yaml
+  training.execution.recorded:
+    $ref: ./channels/execution_recorded.yaml
+  training.feedback.created:
+    $ref: ./channels/feedback_thread_created.yaml
+  training.feedback.closed:
+    $ref: ./channels/feedback_thread_closed.yaml
+  training.adjustment.made:
+    $ref: ./channels/session_adjustment_made.yaml
+  training.attention.created:
+    $ref: ./channels/attention_queue_item_created.yaml
+  training.attention.resolved:
+    $ref: ./channels/attention_queue_item_resolved.yaml
+  training.prescription.ineligible:
+    $ref: ./channels/athlete_ineligible_for_prescription.yaml
+  training.prescription.adjusted:
+    $ref: ./channels/prescription_adjusted.yaml
+  training.evidence.provided:
+    $ref: ./channels/completion_evidence_provided.yaml
+  training.coach.intervention:
+    $ref: ./channels/coach_intervention_required.yaml
+  training.continuity.snapshot:
+    $ref: ./channels/continuity_snapshot_created.yaml
+  training.readiness.assessed:
+    $ref: ./channels/training_readiness_assessed.yaml
 
 components:
   schemas:

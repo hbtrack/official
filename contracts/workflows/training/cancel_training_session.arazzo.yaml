@@ -1,0 +1,43 @@
+arazzo: "1.0.0"
+
+info:
+  title: Training — Cancel training session
+  version: "0.1.0"
+  summary: Orquestra cancelamento lógico de sessão de treino.
+  description: >
+    Workflow para cancelar sessão em qualquer estado pré-terminal:
+    1) Cancela a sessão — disponível de DRAFT, SCHEDULED, PUBLISHED ou IN_PROGRESS;
+    2) Cancelamento é LÓGICO — não há exclusão física (DR-TRAIN-027);
+    3) CANCELLED é estado terminal absoluto — nenhuma transição de saída (INV-TRAIN-017).
+
+    Pré-condições:
+    - Sessão está em DRAFT, SCHEDULED, PUBLISHED ou IN_PROGRESS
+    - `cancellationReason` obrigatório (INV-TRAIN-019)
+    - Ator tem papel coach ou coordinator (DR-TRAIN-001, DR-TRAIN-051)
+
+    Pós-condições:
+    - Sessão está em CANCELLED (terminal)
+    - Registros de execução e presença parciais preservados (DR-TRAIN-027)
+    - Atletas notificados via notification_intent → módulo notifications (DR-TRAIN-040)
+    - Evento training_session_cancelled emitido ao AsyncAPI
+
+    Regra crítica (RC-1):
+    - COMPLETED → CANCELLED é proibido (INV-TRAIN-017)
+    - ARCHIVED → CANCELLED é proibido (INV-TRAIN-017)
+
+sourceDescriptions:
+  - name: hbtrack-http
+    type: openapi
+    url: ../../openapi/openapi.yaml
+
+workflows:
+  cancel_training_session:
+    summary: Cancelar sessão de treino (cancelamento lógico).
+    steps:
+      - stepId: cancelTrainingSession
+        description: >
+          Cancela a sessão com motivo obrigatório.
+          Disponível de: DRAFT, SCHEDULED, PUBLISHED, IN_PROGRESS.
+          NÃO disponível de: COMPLETED, CANCELLED, ARCHIVED.
+          DR-TRAIN-051: ator validado via identity_access antes de aceitar.
+        operationId: cancelTrainingSession

@@ -60,8 +60,8 @@ types:
       - contract_path_ref
       - schemas_ref
       - diagram_format
-      - adr_ref
-    optional: []
+    optional:
+      - decision_ir_ref
   permissions:
     filenames: ["PERMISSIONS_{module_upper}.md"]
     required:
@@ -74,9 +74,9 @@ types:
     filenames: ["ERRORS_{module_upper}.md"]
     required:
       - type
-      - error_model_ref
       - problem_schema_ref
-    optional: []
+    optional:
+      - api_rules_ref
   sport-science-rules:
     filenames: ["SPORT_SCIENCE_RULES_{module_upper}.md"]
     required:

@@ -7,7 +7,7 @@ system_scope_ref: "../../../_canon/SYSTEM_SCOPE.md"
 handball_rules_ref: "../../../_canon/HANDBALL_RULES_DOMAIN.md"
 handball_semantic_applicability: {{HANDBALL_SEMANTIC_APPLICABILITY}}
 type: "errors"
-error_model_ref: "../../../../docs/_canon/ERROR_MODEL.md"
+api_rules_ref: "../../../../../.contract_driven/templates/api/api_rules.yaml"
 problem_schema_ref: "../../../../contracts/openapi/components/schemas/shared/problem.yaml"
 ---
 # ERRORS_{{MODULE_NAME_UPPER}}.md

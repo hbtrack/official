@@ -15,10 +15,6 @@ Descrever o sistema, sua organização documental, seus contratos e a forma corr
 - `docs/_canon/MODULE_MAP.md`
 - `docs/_canon/GLOBAL_INVARIANTS.md`
 - `docs/_canon/CHANGE_POLICY.md`
-- `docs/_canon/API_CONVENTIONS.md`
-- `docs/_canon/ERROR_MODEL.md`
-- `docs/_canon/UI_FOUNDATIONS.md`
-- `docs/_canon/DESIGN_SYSTEM.md`
 - `docs/_canon/DATA_CONVENTIONS.md`
 - `docs/_canon/DOMAIN_GLOSSARY.md`
 - `docs/_canon/HANDBALL_RULES_DOMAIN.md`
@@ -44,7 +40,7 @@ A implementação deve derivar destes contratos e convenções:
 1. Leia `docs/_canon/SYSTEM_SCOPE.md`
 2. Leia `docs/_canon/ARCHITECTURE.md`
 3. Leia `docs/_canon/MODULE_MAP.md`
-4. Leia `docs/_canon/API_CONVENTIONS.md`
+4. Leia `.contract_driven/templates/api/api_rules.yaml` para convenções de API
 5. Leia `docs/_canon/HANDBALL_RULES_DOMAIN.md`
 6. Leia a pasta `contracts/`
 

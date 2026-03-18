@@ -1,0 +1,32 @@
+type: object
+additionalProperties: false
+required:
+  - eventType
+  - occurredAt
+  - feedbackThreadId
+properties:
+  eventType:
+    type: string
+    enum: [feedback_thread_created]
+  occurredAt:
+    type: string
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+  feedbackThreadId:
+    type: string
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  coachId:
+    type: string
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  athleteId:
+    type: string
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  contextType:
+    type: string
+    enum: [SESSION, BLOCK, OBJECTIVE, EVIDENCE]
+    description: "Type of operational context"
+  traceId:
+    type: string
+    pattern: "^[0-9a-f]{32}$"
+  requestId:
+    type: string
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"

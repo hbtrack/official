@@ -1,0 +1,50 @@
+arazzo: "1.0.0"
+
+info:
+  title: Training — Complete training session
+  version: "0.1.0"
+  summary: Orquestra encerramento de sessão de treino em execução.
+  description: >
+    Workflow para encerrar sessão em execução:
+    1) Registra wellness pós-treino dos atletas (opcional — encerramento não é bloqueado por falta de wellness_post);
+    2) Consolida presença oficial dos atletas (INV-TRAIN-064);
+    3) Encerra a sessão — transição IN_PROGRESS → COMPLETED.
+
+    Pré-condições:
+    - Sessão está em IN_PROGRESS
+    - Ator é coach_assignment ou coordenador (DR-TRAIN-051)
+
+    Pós-condições:
+    - Sessão está em COMPLETED (imutável por edição destrutiva — DR-TRAIN-026)
+    - Presença oficial consolidada (INV-TRAIN-064)
+    - Itens inconsistentes viram pendências (INV-TRAIN-065, INV-TRAIN-066)
+    - Evento training_session_completed emitido ao AsyncAPI
+    - analytics_cache marcado como dirty (INV-TRAIN-020)
+
+sourceDescriptions:
+  - name: hbtrack-http
+    type: openapi
+    url: ../../openapi/openapi.yaml
+
+workflows:
+  complete_training_session:
+    summary: Encerrar sessão de treino.
+    steps:
+      - stepId: submitWellnessPost
+        description: >
+          Coleta RPE, dificuldade e feedback do atleta pós-treino.
+          Condicional — encerramento NÃO é bloqueado por wellness_post ausente (INV-TRAIN-065).
+        operationId: submitWellnessPost
+
+      - stepId: recordSessionAttendance
+        description: >
+          Consolida presença oficial (presente/ausente/justificado).
+          Antes do encerramento, registros são provisórios (INV-TRAIN-064).
+        operationId: recordSessionAttendance
+
+      - stepId: completeTrainingSession
+        description: >
+          Encerra a sessão — transição IN_PROGRESS → COMPLETED.
+          Mesmo com atletas não resolvidos: encerramento permitido (INV-TRAIN-065).
+          Itens inconsistentes viram pendências em fila separada (INV-TRAIN-066).
+        operationId: completeTrainingSession

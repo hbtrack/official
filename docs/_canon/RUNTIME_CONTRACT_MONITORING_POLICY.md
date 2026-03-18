@@ -19,6 +19,9 @@ O sistema deve detectar automaticamente qualquer divergência entre o comportame
 | M5 | Taxa de erro HTTP 4xx > 20% em qualquer endpoint por 5 min | Prometheus | 10 min |
 | M6 | Contrato drift (schema em produção diverge do contrato commitado) | Gate no deploy pipeline | Bloqueio de deploy |
 
+> **Convenções HTTP**: Status codes, error model (RFC 7807), paginação e naming são definidos em
+> `.contract_driven/templates/api/api_rules.yaml` (SSOT única de convenções HTTP).
+
 ## 3. Ferramentas Recomendadas
 
 | Ferramenta | Uso | Obrigatório |
@@ -32,7 +35,7 @@ O sistema deve detectar automaticamente qualquer divergência entre o comportame
 ## 4. Middleware de Validação (FastAPI)
 
 Toda resposta da API deve ser validada contra o contrato OpenAPI antes de retornar ao cliente.
-Implementar como middleware ASGI em `Hb Track - Backend/src/shared/middleware/contract_validation.py`:
+Implementar como middleware ASGI em `src/shared/middleware/contract_validation.py`:
 
 ```python
 # Lógica esperada (a ser implementada no generate_code worker):

@@ -16,7 +16,11 @@
       "Read(//mnt/c/Users/davis/HB-TRACK/docs/hbtrack/**)",
       "Bash(find . -name *ARCH_DECISIONS_TRAINING*)",
       "Bash(find /home/davis/HB-TRACK/docs/_canon -maxdepth 3 -name *.md)",
-      "Bash(wsl -e bash -c \"ls /home/davis/HB-TRACK/docs/ 2>&1 | head -20\")"
+      "Bash(wsl -e bash -c \"ls /home/davis/HB-TRACK/docs/ 2>&1 | head -20\")",
+      "Bash(chmod +x /home/davis/HB-TRACK/scripts/hb)",
+      "Bash(bash scripts/hb help)",
+      "Bash(echo \"exitcode=$?\")",
+      "Bash(python3 scripts/contracts/validate/validate_contracts.py --stage session-start)"
     ]
   }
 }

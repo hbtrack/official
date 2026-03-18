@@ -1,0 +1,8 @@
+description: >
+  Evento emitido quando um item de attention queue é resolvido (status RESOLVED, DISMISSED, ou ESCALATED).
+  Resolve é coach decision backed by evidence.
+
+publish:
+  operationId: attention_queue_item_resolved_publish
+  message:
+    $ref: ../messages/attention_queue_item_resolved.yaml

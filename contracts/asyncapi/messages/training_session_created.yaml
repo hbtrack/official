@@ -1,0 +1,6 @@
+name: training_session_created
+title: Training Session Created
+summary: Sessão de treino criada em estado DRAFT. Evento crítico para integração.
+contentType: application/json
+payload:
+  $ref: ../components/schemas/training_session_created_payload.yaml

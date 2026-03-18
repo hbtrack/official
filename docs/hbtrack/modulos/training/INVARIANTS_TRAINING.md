@@ -23,9 +23,9 @@ Invariantes são condições que devem permanecer verdadeiras independentemente 
 ## Tabela de invariantes
 | ID | Invariante | Entidades | Fonte | Como verificar |
 |---|---|---|---|---|
-| INV-TRAIN-001 | A soma dos percentuais de foco (7 campos `focus_*_pct`) deve ser ≤ 120. Valores individuais, quando presentes, devem estar em [0..100]. | `TrainingSession` | Regra de produto | Teste unitário de validação de payload; query de auditoria para detectar violações históricas |
-| INV-TRAIN-002 | Submissão/edição de `wellness_pre` é bloqueada quando NOW ≥ `session_at` - 2h | `WellnessPre` | Regra de produto | Teste de tentativa de edição tardia; validação temporal no endpoint |
-| INV-TRAIN-003 | Edição de `wellness_post` é bloqueada quando NOW ≥ `created_at` + 24h (limite não-inclusivo) | `WellnessPost` | Regra de produto | Teste de tentativa de edição após janela; validação temporal no endpoint |
+| INV-TRAIN-001 | A soma dos percentuais de foco (7 campos `focus_*_pct`) deve ser ≤ 120.00 após arredondamento. **Política de precisão (RC-2):** cada campo é aceito com até 2 casas decimais; o servidor trunca para 2 casas (ROUND_HALF_UP) antes de calcular a soma. A comparação é feita APÓS o arredondamento. Valores individuais, quando presentes, devem estar em [0.00..100.00]. Caso de borda: 33.33 + 33.33 + 33.34 = 100.00 ✅ · 33.34 × 4 = 133.36 ❌ (422). A regra nunca rejeita por imprecisão de ponto flutuante do cliente. | `TrainingSession` | Regra de produto + RC-2 | Teste unitário de validação de payload; caso de borda com 33.33% × 3; caso overflow 1e308 (schema `maximum: 100` bloqueia) |
+| INV-TRAIN-002 | Submissão/edição de `wellness_pre` é bloqueada quando `NOW_UTC ≥ deadline_utc` onde `deadline_utc = session_at_utc - 2h + 30s` (tolerância de clock skew). **Política temporal (RC-3):** (1) toda comparação temporal usa UTC exclusivamente — client-side é apenas hint visual; (2) tolerância de ±30s para compensar clock skew entre cliente e servidor; (3) resposta de erro 400 deve incluir campo `deadline_utc` no body. | `WellnessPre` | Regra de produto + RC-3 | Teste com `frozen_time` (unittest.mock.patch); teste de clock skew (envio às deadline_utc - 29s deve passar; às deadline_utc + 31s deve rejeitar); verificar campo `deadline_utc` no erro |
+| INV-TRAIN-003 | Edição de `wellness_post` é bloqueada quando `NOW_UTC ≥ created_at_utc + 24h` (limite não-inclusivo). **Política temporal (RC-3):** mesmas regras de UTC/clock skew de INV-TRAIN-002 se aplicam. Tolerância de ±30s. Erro 400 com `deadline_utc` no body. | `WellnessPost` | Regra de produto + RC-3 | Teste de tentativa de edição após janela; validação temporal com frozen time |
 | INV-TRAIN-004 | Janela de edição depende de papel e estado: Autor (treinador) pode editar sessão "scheduled" até 10 min antes de `session_at` (não-inclusivo). Superior (coordenador/dirigente) pode editar "pending_review" até 24h após `ended_at` (não-inclusivo). | `TrainingSession` | Regra de produto + RBAC | Teste de autorização temporal por papel; tentativa de edição fora da janela |
 | INV-TRAIN-005 | Sessões com `session_at` mais antigas que 60 dias são somente leitura; qualquer tentativa de edição é bloqueada | `TrainingSession` | Regra de produto | Teste de tentativa de edição de sessão histórica; flag `readonly` computado dinamicamente |
 | INV-TRAIN-006 | Status de `training_session` segue FSM fechada de 7 estados canônicos (ADR-017): `DRAFT`, `SCHEDULED`, `PUBLISHED`, `IN_PROGRESS`, `COMPLETED`, `CANCELLED`, `ARCHIVED`. Transições arbitrárias são rejeitadas. ARCHIVED é estado terminal somente-sistema (automação 60 dias pós-COMPLETED). FI-007: sessão COMPLETED é imutável por edição destrutiva. | `TrainingSession` | ADR-017 + DOMAIN_AXIOMS.json `training_state_machine` | Validação de enum no schema; teste de transição inválida (ex.: DRAFT→COMPLETED); teste de tentativa de edição destrutiva em COMPLETED |
@@ -102,7 +102,9 @@ Presença é dado sensível operacional; não deve haver rota "paralela" exposta
 ## INV-TRAIN-017
 Transições de estado de `training_session` seguem exclusivamente o mapa canônico de ADR-017. Somente as seguintes transições são válidas:
 `DRAFT→SCHEDULED`, `DRAFT→CANCELLED`, `SCHEDULED→PUBLISHED`, `SCHEDULED→DRAFT`, `SCHEDULED→CANCELLED`, `PUBLISHED→IN_PROGRESS`, `PUBLISHED→SCHEDULED`, `PUBLISHED→CANCELLED`, `IN_PROGRESS→COMPLETED`, `IN_PROGRESS→CANCELLED`, `COMPLETED→ARCHIVED`.
-Qualquer outra transição (ex.: `DRAFT→COMPLETED`, `COMPLETED→IN_PROGRESS`, qualquer transição a partir de `ARCHIVED` ou `CANCELLED`) deve ser rejeitada com `422 TRAINING_INVALID_STATE_TRANSITION`.
+Qualquer outra transição (ex.: `DRAFT→COMPLETED`, `COMPLETED→IN_PROGRESS`, qualquer transição a partir de `ARCHIVED` ou `CANCELLED`, `PUBLISHED→DRAFT`, `IN_PROGRESS→SCHEDULED`) deve ser rejeitada com `422 TRAINING_INVALID_STATE_TRANSITION`.
+**RC-1 (matriz de transições proibidas):** ver `STATE_MODEL_TRAINING.md § "Transições explicitamente proibidas (matriz completa)"` para todos os 20 casos documentados com motivo e invariante.
+Guard de transição deve verificar estado atual no banco ANTES de aceitar operação (SELECT FOR UPDATE ou equivalente).
 Fonte: ADR-017, TRAIN-DEC-026, STATE_MODEL_TRAINING.md.
 
 ## INV-TRAIN-018
@@ -560,4 +562,25 @@ O módulo `training` referencia exclusivamente `exercise_id + exercise_version_i
 Nunca embute propriedades do `Exercise` diretamente em entidades de `training`.
 Sessão histórica preserva `exercise_version_id` imutavelmente — alteração de `ExerciseVersion` posterior não afeta registro histórico.
 TRAIN-DEC-047, TRAIN-DEC-048, DR-TRAIN-045.
+
+## INV-TRAIN-100
+**Freshness SLA para sinais derivados (M3).**
+Campos derivados (`readiness_score`, `dropout_risk_signal`, `engagement_signal`, `training_analytics_cache`) têm SLA de atualização máxima de 2 horas.
+Sinais com `calculated_at < NOW_UTC - 2h` devem ser marcados como stale (flag `is_stale: true`) e o cliente notificado.
+Após marcação como stale, o próximo acesso via API deve acionar recálculo assíncrono (Celery) com prioridade normal.
+SLA de 2h não se aplica durante `IN_PROGRESS` de sessão — nesse caso o sinal é atualizado em tempo real (event-driven).
+Trigger `tr_invalidate_analytics_cache` (INV-TRAIN-020) é o mecanismo de invalidação imediata; este INV define o SLA máximo de tolerância a staleness.
+Fonte: TRAIN-DEC-014, DR-TRAIN-028, INV-TRAIN-093.
+
+## INV-TRAIN-101
+**Soft-delete scope policy (M1).**
+Todas as entidades SSOT do módulo `training` têm soft-delete obrigatório com campos `deleted_at` e `deleted_reason` em par indissociável (INV-TRAIN-008).
+Escopo de aplicação:
+- `training_sessions`: soft-delete ✅ (confirmed)
+- `session_blocks`: soft-delete obrigatório — `order_index` deve ser recalculado após soft-delete (INV-TRAIN-045, INV-TRAIN-059)
+- `execution_records`: soft-delete obrigatório — registros de execução são auditáveis; exclusão física é proibida (DR-TRAIN-026)
+- `session_objectives`, `feedback_threads`: soft-delete obrigatório
+- `wellness_pre`, `wellness_post`: soft-delete obrigatório (unicidade soft-delete aware — INV-TRAIN-009, INV-TRAIN-010)
+Entidades de lookup (enums, tipos) são imutáveis e não têm soft-delete.
+Hard-delete é proibido para qualquer entidade listada acima. Tentativa retorna 422.
 

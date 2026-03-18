@@ -1,0 +1,38 @@
+type: object
+additionalProperties: false
+required:
+  - eventType
+  - occurredAt
+  - attentionQueueItemId
+properties:
+  eventType:
+    type: string
+    enum: [attention_queue_item_created]
+  occurredAt:
+    type: string
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+  attentionQueueItemId:
+    type: string
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  itemType:
+    type: string
+    enum:
+      [
+        wellness_alert,
+        medical_flag,
+        recovery_concern,
+        individual_performance,
+        group_dynamics,
+      ]
+  athleteId:
+    type: string
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  status:
+    type: string
+    enum: [ACTIVE]
+  traceId:
+    type: string
+    pattern: "^[0-9a-f]{32}$"
+  requestId:
+    type: string
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"

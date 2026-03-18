@@ -61,4 +61,3 @@ Este documento contém referências ao OWASP API Security Top 10, aplicáveis ao
 Todas as diretrizes OWASP relevantes estão refletidas em:
 - `docs/_canon/SECURITY_RULES.md`
 - `.contract_driven/templates/api/api_rules.yaml`
-- `docs/_canon/ERROR_MODEL.md`

@@ -1,0 +1,96 @@
+{
+  "timestamp": "2026-03-18T00:29:29.506762",
+  "cases": {
+    "A1": {
+      "test_id": "A1",
+      "desc": "module=financeiro (n\u00e3o existe nos 16 can\u00f4nicos)",
+      "bloqueio_esperado": "BLOCKED_MISSING_MODULE",
+      "veredicto": "PENDING (requires integration with orchestrator)"
+    },
+    "A2": {
+      "test_id": "A2",
+      "desc": "task_type=new_contract, worker .prompt.md n\u00e3o existe",
+      "bloqueio_esperado": "BLOCKED_MISSING_AGENT_PROMPT",
+      "veredicto": "PENDING (requires integration with orchestrator)"
+    },
+    "A3": {
+      "test_id": "A3",
+      "desc": "task_type=new_contract, DOMAIN_RULES_TRAINING.md ausente",
+      "bloqueio_esperado": "BLOCKED_REQUIRED_ARTIFACT_MISSING",
+      "veredicto": "PENDING (requires integration with orchestrator)"
+    },
+    "A4": {
+      "test_id": "A4",
+      "desc": "task_type=new_contract, ADR obrigat\u00f3ria com status 'open'",
+      "bloqueio_esperado": "BLOCKED_MISSING_ARCH_DECISION",
+      "veredicto": "PENDING (requires integration with orchestrator)"
+    },
+    "A5": {
+      "test_id": "A5",
+      "desc": "task_type=generate_code (requer PRE_CONTRACT skip)",
+      "bloqueio_esperado": "BLOCKED_PRE_CONTRACT_SKIPPED ou worker bloqueado",
+      "veredicto": "PENDING (requires integration with orchestrator)"
+    },
+    "A6": {
+      "test_id": "A6",
+      "desc": "session_start.json ausente ou stage0_exit_code\u22600",
+      "bloqueio_esperado": "PRE_CONTRACT_EVIDENCE_GATE bloqueio",
+      "veredicto": "PENDING (requires integration with orchestrator)"
+    },
+    "A7": {
+      "test_id": "A7",
+      "desc": "Worker acionado diretamente (skip de pr\u00e9-contrato)",
+      "bloqueio_esperado": "BLOCKED_PRE_CONTRACT_SKIPPED",
+      "veredicto": "PENDING (requires integration with orchestrator)"
+    },
+    "A8": {
+      "test_id": "A8",
+      "desc": "users \u2192 identity_access (cross-module scope overflow)",
+      "bloqueio_esperado": "BLOCKED_SCOPE_OVERFLOW",
+      "bloqueio_real": "BLOCKED_SCOPE_OVERFLOW",
+      "veredicto": "PASS \u2713"
+    },
+    "B1": {
+      "test_id": "B1",
+      "desc": "new_contract task_type, m\u00f3dulo=training, todos artefatos presentes",
+      "resultado_esperado": "PASS F0-F3, worker acionado",
+      "veredicto": "PENDING (requires orchestrator integration)"
+    },
+    "B2": {
+      "test_id": "B2",
+      "desc": "task_type=audit_only (audit-only task)",
+      "resultado_esperado": "PRE_CONTRACT_SKIPPED: audit-only, sem bloqueio",
+      "veredicto": "PENDING (requires orchestrator integration)"
+    },
+    "B3": {
+      "test_id": "B3",
+      "desc": "task_type=new_module (criar novo m\u00f3dulo)",
+      "resultado_esperado": "PASS com instru\u00e7\u00e3o de registry",
+      "veredicto": "PENDING (requires orchestrator integration)"
+    },
+    "C1": {
+      "test_id": "C1",
+      "desc": "task_type n\u00e3o informado (descri\u00e7\u00e3o textual)",
+      "resposta_esperada": "Perguntar task_type",
+      "veredicto": "PENDING (requires orchestrator interaction)"
+    },
+    "C2": {
+      "test_id": "C2",
+      "desc": "module=training-sessions (nome de recurso, n\u00e3o m\u00f3dulo)",
+      "resposta_esperada": "Perguntar se \u00e9 'training' module",
+      "veredicto": "PENDING (requires orchestrator interaction)"
+    },
+    "C3": {
+      "test_id": "C3",
+      "desc": "Prompt contradiz RULES \u00a75 (sem ADR)",
+      "resposta_esperada": "BLOCKED_CONTRACT_CONFLICT",
+      "veredicto": "PENDING (requires orchestrator interaction)"
+    },
+    "C4": {
+      "test_id": "C4",
+      "desc": "Artefato em path n\u00e3o-can\u00f4nico (docs/training/ em vez de docs/hbtrack/)",
+      "resposta_esperada": "BLOCKED_PATH_VIOLATION",
+      "veredicto": "PENDING (requires orchestrator interaction)"
+    }
+  }
+}

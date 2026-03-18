@@ -1,0 +1,125 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://hbtrack.local/schemas/training/athlete_chat_message.schema.json",
+    "title": "AthleteChatMessage",
+    "description": "SSOT JSON Schema for individual messages in HB Pro Coach chat conversation (module: training).",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "id",
+        "conversationId",
+        "senderRole",
+        "senderUserId",
+        "senderName",
+        "text",
+        "messageType",
+        "timestamp",
+        "createdAt",
+        "updatedAt"
+    ],
+    "properties": {
+        "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique message ID."
+        },
+        "conversationId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Reference to athlete_chat_conversation."
+        },
+        "senderRole": {
+            "type": "string",
+            "enum": [
+                "athlete",
+                "hb_pro_coach"
+            ],
+            "description": "Role of message sender."
+        },
+        "senderUserId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "User ID of sender (athlete or system coach)."
+        },
+        "senderName": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "Display name of sender (e.g., 'João Silva' or 'HB Pro Coach')."
+        },
+        "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "description": "Message content (plain text)."
+        },
+        "messageType": {
+            "type": "string",
+            "enum": [
+                "text",
+                "system_notification",
+                "training_suggestion"
+            ],
+            "description": "Type of message: text (user/coach), system_notification (automation), training_suggestion (coach suggests training)."
+        },
+        "suggestedTraining": {
+            "type": "object",
+            "additionalProperties": false,
+            "nullable": true,
+            "description": "If messageType=training_suggestion, contains training suggestion details.",
+            "properties": {
+                "trainingId": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "trainingName": {
+                    "type": "string",
+                    "maxLength": 255
+                },
+                "duration": {
+                    "type": "integer",
+                    "minimum": 15,
+                    "maximum": 180
+                },
+                "objectives": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "força",
+                            "técnica",
+                            "condicionamiento",
+                            "recuperação",
+                            "tática"
+                        ]
+                    }
+                }
+            },
+            "required": [
+                "trainingId",
+                "trainingName",
+                "duration",
+                "objectives"
+            ]
+        },
+        "isOffTopicRejection": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Internal flag: message is off-topic rejection (resposta do coach redirecionando para escopo válido)."
+        },
+        "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 timestamp when message sent."
+        },
+        "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Record creation timestamp."
+        },
+        "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Record update timestamp."
+        }
+    }
+}

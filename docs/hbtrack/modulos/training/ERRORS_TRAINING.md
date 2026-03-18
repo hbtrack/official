@@ -4,7 +4,7 @@ system_scope_ref: "../../../_canon/SYSTEM_SCOPE.md"
 handball_rules_ref: "../../../_canon/HANDBALL_RULES_DOMAIN.md"
 handball_semantic_applicability: true
 type: "errors"
-error_model_ref: "../../../../docs/_canon/ERROR_MODEL.md"
+error_model_ref: "../../../_canon/OPERATIONS.md"
 problem_schema_ref: "../../../../contracts/openapi/components/schemas/shared/problem.yaml"
 updated_at: "2026-03-16"
 ---

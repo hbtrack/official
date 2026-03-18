@@ -97,12 +97,12 @@ Este documento governa a validação de:
 Este documento não redefine:
 
 - layout de paths canônicos
-- taxonomia de módulos
+- taxonomia de módulos (SSOT única: MODULE_REGISTRY.yaml; resumo de boot em docs/_canon/AGENT_INSTRUCTIONS.md §3)
 - regras de naming
 - templates de contratos
 - regras de API HTTP da superfície OpenAPI
 
-Esses itens continuam sendo governados por `LAYOUT`, `RULES`, `GLOBAL_TEMPLATES` e `api_rules.yaml`.
+Esses itens continuam sendo governados por `MODULE_REGISTRY.yaml` (taxonomia), `LAYOUT`, `RULES`, `GLOBAL_TEMPLATES` e `api_rules.yaml`.
 
 ---
 
@@ -439,7 +439,7 @@ Dependências
 
 Objetivo
 
-Garantir que artefatos normativos e técnicos existam apenas em paths canônicos e que não haja split-brain por duplicata soberana.
+Garantir que artefatos normativos e técnicos existam apenas em paths canônicos e que não haja split-brain por duplicata soberana. Valida que a taxonomia canônica de 16 módulos em MODULE_REGISTRY.yaml está presente e correta.
 
 Aplica quando
 
@@ -447,6 +447,7 @@ Sempre.
 
 Entradas
 	•	árvore do repositório
+	•	docs/_canon/MODULE_REGISTRY.yaml (taxonomia de 16 módulos - SSOT única)
 	•	.contract_driven/CONTRACT_SYSTEM_LAYOUT.md
 	•	.contract_driven/CONTRACT_SYSTEM_RULES.md
 

@@ -1,0 +1,6 @@
+name: recommendation_generated
+title: Recommendation Generated
+summary: Recomendação de analytics gerada, pendente revisão coach.
+contentType: application/json
+payload:
+  $ref: ../components/schemas/recommendation_generated_payload.yaml

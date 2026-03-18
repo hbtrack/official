@@ -1,0 +1,8 @@
+description: >
+  Evento emitido quando uma sessão de treino inicia execução (estado IN_PROGRESS).
+  Atletas começam coleta de wellness. Módulo audit registra início.
+
+publish:
+  operationId: training_session_started_publish
+  message:
+    $ref: ../messages/training_session_started.yaml

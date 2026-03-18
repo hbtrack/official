@@ -11,7 +11,7 @@ Registrar regras que devem permanecer verdadeiras em todo o sistema.
 3. Todo payload público estável deve possuir schema correspondente.
 4. Toda mudança breaking deve ser explicitamente classificada e revisada.
 5. Toda regra de negócio derivada do handebol deve ser rastreável para `HANDBALL_RULES_DOMAIN.md`.
-6. Toda resposta de erro HTTP deve seguir `ERROR_MODEL.md`.
+6. Toda resposta de erro HTTP deve seguir o padrão RFC 7807 em `.contract_driven/templates/api/api_rules.yaml`.
 7. Toda tela que dependa de API pública deve estar alinhada ao contrato vigente.
 8. Toda permissão sensível deve estar documentada e verificável.
 

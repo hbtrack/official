@@ -41,7 +41,7 @@ Para cada endpoint contratado, verificar:
 | 6 | Vulnerable Components | Dependências externas do contrato (webhooks, callbacks) são de fontes conhecidas? | contratos AsyncAPI / Arazzo |
 | 7 | Auth Failures | ADR de auth strategy existe e cobre este módulo? Endpoints sem `security:` têm justificativa documentada (OWASP API5 BFLA)? | `docs/_canon/decisions/ADR-00*-auth*.md` |
 | 8 | Software Integrity | Contratos têm versão rastreável em `info.version`? Schemas têm `$id` canônico? | `contracts/openapi/openapi.yaml`, schemas JSON |
-| 9 | Logging Failures | Audit trail definido para operações sensíveis (write, delete, state transition)? `AUDIT_LOG_POLICY.md` cobre este módulo? | `docs/_canon/AUDIT_LOG_POLICY.md` ou ADR equivalente |
+| 9 | Logging Failures | Audit trail definido para operações sensíveis (write, delete, state transition)? Implementação de audit log documentada em `SECURITY_RULES.md` ou ADR? | `docs/_canon/SECURITY_RULES.md` ou ADR equivalente |
 | 10 | SSRF | Callbacks / webhooks têm destinos validados? Campos de URL aceitam domínios arbitrários? | contratos AsyncAPI, campos `url` no schema |
 
 **Critério de PASS:** todos os 10 controles com evidência documentada ou `N/A` justificado.
@@ -57,7 +57,7 @@ Para cada `POST` / `PUT` / `PATCH` / `DELETE` contratado:
 |--------|----------|--------------------|
 | **S**poofing | Quem pode chamar esta operação? Role está documentada? | Role listada em PERMISSIONS_<MODULE>.md |
 | **T**ampering | Inputs são validados antes de persistência? Schema tem constraints? | Schema com validation rules |
-| **R**epudiation | Existe audit log para esta operação? | Operação em AUDIT_LOG_POLICY ou ADR |
+| **R**epudiation | Existe audit log para esta operação? | Operação classificada como sensível em SECURITY_RULES.md ou ADR |
 | **I**nformation Disclosure | Response não expõe dados além do necessário? Campos sensíveis são omitidos na listagem? | Response schema mínimo |
 | **D**enial of Service | Sem rate limit = risco de DoS? Operação cara computacionalmente? | Rate limit ou justificativa |
 | **E**levation of Privilege | Operação pode ser escalada por usuário comum? BFLA possível? | Security declarada no contrato |
@@ -166,7 +166,7 @@ Se qualquer item crítico (AA1 controles 1/3/7, AA2 Spoofing/Elevation, AA3 401/
 ```
 BLOCKED_ADVERSARIAL_PENDING
 ```
-→ Reportar ao humano em linguagem de produto (HUMAN_INTERFACE_POLICY R4)
+→ Reportar ao humano em linguagem de produto (docs/_canon/AGENT_INSTRUCTIONS.md §6 R4)
 → Listar exatamente o que precisa ser corrigido no contrato antes de prosseguir
 → NÃO autorizar implementação enquanto bloqueio estiver ativo
 

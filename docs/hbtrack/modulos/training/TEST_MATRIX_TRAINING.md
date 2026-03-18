@@ -143,3 +143,114 @@ Toda superfície contratual e toda regra crítica do módulo deve ter prova corr
 
 ## Regra
 Nenhuma feature do módulo pode ser considerada pronta sem evidência mínima nesta matriz.
+
+---
+
+## Matriz — Transições Proibidas (Forbidden Transitions — RC-4)
+
+> Cobertura da FSM para todos os 20 casos proibidos documentados em `STATE_MODEL_TRAINING.md`.
+> Ferramenta: `pytest` com `@pytest.mark.parametrize`. Arquivo-alvo: `tests/training/test_forbidden_transitions.py`.
+
+| ID | Transição proibida | Erro esperado | Arquivo |
+|---|---|---|---|
+| TM-200 | `DRAFT → PUBLISHED` (salto) | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-201 | `DRAFT → IN_PROGRESS` (salto) | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-202 | `DRAFT → COMPLETED` (salto) | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-203 | `DRAFT → ARCHIVED` (salto) | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-204 | `SCHEDULED → IN_PROGRESS` (salto — sem publicar) | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-205 | `SCHEDULED → COMPLETED` (salto) | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-206 | `SCHEDULED → ARCHIVED` (salto) | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-207 | `PUBLISHED → DRAFT` (reverter sem despublicação) | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-208 | `PUBLISHED → COMPLETED` (salto — sem iniciar) | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-209 | `PUBLISHED → ARCHIVED` (salto) | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-210 | `IN_PROGRESS → DRAFT` (regresso) | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-211 | `IN_PROGRESS → SCHEDULED` (re-agendar em execução) | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-212 | `IN_PROGRESS → PUBLISHED` (regresso) | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-213 | `IN_PROGRESS → ARCHIVED` (salto) | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-214 | `COMPLETED → DRAFT` (editar sessão concluída) | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-215 | `COMPLETED → SCHEDULED` (regresso) | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-216 | `COMPLETED → PUBLISHED` (regresso) | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-217 | `COMPLETED → IN_PROGRESS` (imutabilidade pós-COMPLETED) | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-218 | `COMPLETED → CANCELLED` (cancelar histórico) | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-219 | `CANCELLED → DRAFT` (descancelar) | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-220 | `CANCELLED → SCHEDULED` | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-221 | `CANCELLED → PUBLISHED` | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-222 | `CANCELLED → IN_PROGRESS` | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-223 | `CANCELLED → COMPLETED` | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-224 | `CANCELLED → ARCHIVED` | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-225 | `ARCHIVED → DRAFT` | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-226 | `ARCHIVED → SCHEDULED` | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-227 | `ARCHIVED → PUBLISHED` | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-228 | `ARCHIVED → IN_PROGRESS` | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-229 | `ARCHIVED → COMPLETED` | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+| TM-230 | `ARCHIVED → CANCELLED` | 422 `TRAINING_INVALID_STATE_TRANSITION` | `test_forbidden_transitions.py` |
+
+> **Padrão de implementação esperado:**
+> ```python
+> FORBIDDEN_TRANSITIONS = [
+>     ("DRAFT", "PUBLISHED"), ("DRAFT", "IN_PROGRESS"), ("DRAFT", "COMPLETED"), ("DRAFT", "ARCHIVED"),
+>     ("SCHEDULED", "IN_PROGRESS"), ("SCHEDULED", "COMPLETED"), ("SCHEDULED", "ARCHIVED"),
+>     ("PUBLISHED", "DRAFT"), ("PUBLISHED", "COMPLETED"), ("PUBLISHED", "ARCHIVED"),
+>     ("IN_PROGRESS", "DRAFT"), ("IN_PROGRESS", "SCHEDULED"), ("IN_PROGRESS", "PUBLISHED"), ("IN_PROGRESS", "ARCHIVED"),
+>     ("COMPLETED", "DRAFT"), ("COMPLETED", "SCHEDULED"), ("COMPLETED", "PUBLISHED"),
+>     ("COMPLETED", "IN_PROGRESS"), ("COMPLETED", "CANCELLED"),
+>     *[("CANCELLED", s) for s in ["DRAFT","SCHEDULED","PUBLISHED","IN_PROGRESS","COMPLETED","ARCHIVED"]],
+>     *[("ARCHIVED", s) for s in ["DRAFT","SCHEDULED","PUBLISHED","IN_PROGRESS","COMPLETED","CANCELLED"]],
+> ]
+> @pytest.mark.parametrize("from_state,to_state", FORBIDDEN_TRANSITIONS)
+> def test_invalid_transition_returns_422(client, from_state, to_state):
+>     ...  # assert 422 + TRAINING_INVALID_STATE_TRANSITION
+> ```
+
+---
+
+## Matriz — Adversarial Input Suite (A3)
+
+> Arquivo-alvo: `tests/training/test_adversarial_inputs.py`
+> Princípio: o sistema deve retornar 422 para inputs inválidos, NUNCA 500.
+
+| ID | Input adversarial | Campo | Resultado esperado | Invariante |
+|---|---|---|---|---|
+| TM-300 | `focus_attack_positional_pct = -1` | focus field | 422 (schema: minimum 0) | INV-TRAIN-001 |
+| TM-301 | `focus_attack_positional_pct = 101` | focus field | 422 (schema: maximum 100) | INV-TRAIN-001 |
+| TM-302 | `focus_attack_positional_pct = 1e308` | focus field | 422 (schema: maximum 100) | INV-TRAIN-001 |
+| TM-303 | `focus_attack_positional_pct = "NaN"` | focus field | 422 (type mismatch) | INV-TRAIN-001 |
+| TM-304 | `focus_attack_positional_pct = null` (explícito) | focus field | 200 (campo opcional — null equivale a ausente) | INV-TRAIN-001 |
+| TM-305 | Soma dos 7 focus = 121 (ex.: 40+40+41) | focus sum | 422 `TRAINING_FOCUS_SUM_EXCEEDED` | INV-TRAIN-001, DR-TRAIN-002 |
+| TM-306 | Soma dos 7 focus = 120.01 (após arredondamento) | focus sum | 422 `TRAINING_FOCUS_SUM_EXCEEDED` | INV-TRAIN-001, RC-2 |
+| TM-307 | Soma dos 7 focus = 33.33 + 33.33 + 33.34 = 100.00 | focus sum edge | 200 (válido) | INV-TRAIN-001, RC-2 |
+| TM-308 | `durationPlannedMinutes = 0` | duration | 422 (schema: minimum 1) | INV-TRAIN-083 |
+| TM-309 | `durationPlannedMinutes = 1441` (24h+1min) | duration | 422 (schema: maximum 1440) | INV-TRAIN-083 |
+| TM-310 | `durationPlannedMinutes = -1` | duration | 422 (schema: minimum 1) | INV-TRAIN-083 |
+| TM-311 | `SUM(session_block.durationMinutes) > durationPlannedMinutes + 10%` | elastic sum | 422 `TRAINING_ELASTIC_SUM_EXCEEDED` | INV-TRAIN-083 |
+| TM-312 | `SUM(session_block.durationMinutes) = durationPlannedMinutes + 10% - 1min` | elastic sum tolerance | 200 + Warning + AttentionQueue LOW | INV-TRAIN-083 |
+| TM-313 | `sessionAt` no passado (>60 dias) ao criar | sessionAt | 422 (sessão histórica) | INV-TRAIN-005 |
+| TM-314 | `sessionAt` = string não-UTC (`"2026-03-17T14:00:00-03:00"`) | sessionAt | 422 (schema: pattern Z obrigatório) | INV-TRAIN-002, RC-3 |
+| TM-315 | wellness_pre submetido exatamente em `session_at - 2h + 29s` | timing | 200 (dentro da tolerância) | INV-TRAIN-002, RC-3 |
+| TM-316 | wellness_pre submetido exatamente em `session_at - 2h + 31s` | timing | 400 com `deadline_utc` no body | INV-TRAIN-002, RC-3 |
+| TM-317 | `organizationId` = UUID inválido (sem formato v4) | UUID | 422 (schema: pattern uuid-v4) | — |
+| TM-318 | Payload com campo desconhecido (`"hackerField": true`) | extra field | 422 (schema: additionalProperties: false) | — |
+| TM-319 | `session_rpe = 11` | RPE | 422 (schema/INV: max 10) | INV-TRAIN-032 |
+| TM-320 | `sleep_hours = 25` | sleep | 422 (INV: max 24) | INV-TRAIN-033 |
+| TM-321 | `sleep_quality = 0` | quality | 422 (INV: min 1) | INV-TRAIN-034 |
+| TM-322 | Body em branco `{}` no POST `/training-sessions` | required fields | 422 com lista de campos obrigatórios | — |
+
+---
+
+## Matriz — Elasticity Rule Edge Cases (M2)
+
+> Arquivo-alvo: `tests/training/test_elastic_sum.py`
+
+| ID | Cenário | `durationPlanned` | `SUM(blocks)` | Tolerância calc. | Resultado esperado |
+|---|---|---|---|---|---|
+| TM-400 | Dentro da tolerância (dentro) | 60 min | 65 min | 60 × 0.1 = 6 → max 66 | 200 + Warning + LOW |
+| TM-401 | Exato no limite (boundary) | 60 min | 66 min | max 66 | 200 + Warning + LOW |
+| TM-402 | Fora da tolerância por 1 min | 60 min | 67 min | max 66 | 422 `TRAINING_ELASTIC_SUM_EXCEEDED` |
+| TM-403 | Tolerância com MIN(10%) | 120 min | 131 min | 120 × 0.1 = 12 → max 132 | 200 + Warning + LOW |
+| TM-404 | Tolerância com cap de 10min | 120 min | 134 min | max 132 | 422 |
+| TM-405 | Sessão curta (10 min) | 10 min | 11 min | 10 × 0.1 = 1 → max 11 | 200 + Warning + LOW |
+| TM-406 | SUM < durationPlanned (sob-planejado) | 60 min | 50 min | N/A | 200 (sem restrição de mínimo) |
+| TM-407 | SUM = durationPlanned exato | 60 min | 60 min | N/A | 200 (ideal) |
+| TM-408 | SUM = 0 (nenhum bloco) | 60 min | 0 min | N/A | Depende de INV-TRAIN-086 (PUBLISHED exige >= 1 bloco) |
+| TM-409 | Transição PUBLISHED não bloqueada por elastic sum | 60 min | 67 min | exceede 10% | PUBLISHED deve ser permitida mesmo assim (INV-TRAIN-083) |
+| TM-410 | Transição COMPLETED não bloqueada por elastic sum | 60 min | 80 min | exceede | COMPLETED deve ser permitida mesmo assim (INV-TRAIN-083) |

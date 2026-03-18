@@ -1,3 +1,4 @@
+< ⚠️  UNDER REVIEW FOR C4 CONSOLIDATION (Sovereign Integrity Audit) -->
 # HB Track
 
 **Plataforma sports-tech de gestão de handebol** — operações, treinamento, jogos, competições e analytics por contratos fortes.
@@ -9,13 +10,13 @@
 | Última revisão | 2026-03-11 |
 | **Ambiente de desenvolvimento** | **Linux/WSL (primário)** |
 
-> **⚠️ Nota Operacional:** A partir de 2026-03-13, o ambiente de desenvolvimento canônico é **Linux/WSL** (`/home/davis/HB-TRACK`). O path Windows (`C:\HB TRACK`) é mantido apenas como backup legado temporário e não deve receber edições operacionais.
+> **⚠️ Nota Operacional:** A partir de 2026-03-13, o ambiente de desenvolvimento standard é **Linux/WSL** (`/home/davis/HB-TRACK`). O path Windows (`C:\HB TRACK`) é mantido apenas como backup legado temporário e não deve receber edições operacionais.
 
 ---
 
 ## O que é o HB Track?
 
-O HB Track é uma plataforma de gestão esportiva voltada ao handebol indoor. Seu modelo de desenvolvimento é **contract-driven**: nenhum componente público nasce primeiro no código. Contratos OpenAPI, invariantes documentadas e schemas canônicos precedem a implementação.
+O HB Track é uma plataforma de gestão esportiva voltada ao handebol indoor. Seu modelo de desenvolvimento é **contract-driven**: nenhum componente público nasce primeiro no código. Contratos OpenAPI, invariantes documentadas e schemas standard precedem a implementação.
 
 | Dimensão | Descrição |
 |----------|-----------|
@@ -55,9 +56,9 @@ HB-TRACK/
 │   ├── SYSTEM_SCOPE.md          # Missão, atores, macrodomínios, fora do escopo
 │   ├── ARCHITECTURE.md          # Stack canônica, princípios, camadas
 │   ├── MODULE_MAP.md            # 16 módulos, responsabilidades, dependências
-│   ├── API_CONVENTIONS.md       # Visão geral de API (SSOT em .contract_driven/templates/api/api_rules.yaml)
+│   ├── API_CONVENTIONS.md       # Visão geral de API (documentation em .contract_driven/templates/api/api_rules.yaml)
 │   ├── DATA_CONVENTIONS.md      # IDs, datas, enums, soft delete, convenções DB
-│   ├── ERROR_MODEL.md           # Modelo canônico de erros HTTP
+│   ├── ERROR_MODEL.md           # Modelo standard de erros HTTP
 │   ├── GLOBAL_INVARIANTS.md     # Invariantes globais (INV-*)
 │   ├── SECURITY_RULES.md        # Regras globais de segurança
 │   ├── CI_CONTRACT_GATES.md     # Gates de validação de contratos
@@ -70,13 +71,13 @@ HB-TRACK/
 │
 ├── docs/hbtrack/modulos/        # Documentação por módulo (training, competitions, etc.)
 │
-├── .contract_driven/            # Governança contract-driven (SSOT)
+├── .contract_driven/            # Governança contract-driven (documentation)
 │   ├── CONTRACT_SYSTEM_RULES.md # Regras operacionais do sistema CDD
 │   ├── CONTRACT_SYSTEM_LAYOUT.md# Estrutura canônica de arquivos
 │   ├── GLOBAL_TEMPLATES.md      # Templates oficiais de artefatos
-│   └── templates/               # Scaffolds + SSOT de API HTTP (ver api/api_rules.yaml)
+│   └── templates/               # Scaffolds + documentation de API HTTP (ver api/api_rules.yaml)
 │
-├── contracts/                   # Contratos técnicos soberanos (OpenAPI/JSON Schema/Arazzo/AsyncAPI)
+├── contracts/                   # Contratos técnicos authoritative (OpenAPI/JSON Schema/Arazzo/AsyncAPI)
 ├── generated/                   # Artefatos derivados (nunca editar)
 ├── _reports/                    # Evidências/relatórios derivados (ex.: contract gates)
 │
@@ -99,11 +100,11 @@ HB-TRACK/
 - **Python** 3.12+
 - **Git**
 
-### Workspace Canônico
+### Workspace Standard
 
 ```bash
 # Clone o repositório
-git clone https://github.com/Davisermenho/Hb_Track.git ~/HB-TRACK
+git clone https://github.com/hbtrack/official.git ~/HB-TRACK
 cd ~/HB-TRACK
 
 # Verifique o root
@@ -193,7 +194,7 @@ Para Agentes de IA, o ponto de entrada correto é:
 3. Leia **`.contract_driven/CONTRACT_SYSTEM_RULES.md`** — entenda as regras do sistema contract-driven
 4. Leia **`.contract_driven/CONTRACT_SYSTEM_LAYOUT.md`** — entenda a estrutura canônica de arquivos e artefatos
 5. Leia **`.contract_driven/GLOBAL_TEMPLATES.md`** — familiarize-se com os templates oficiais de artefatos (contratos, invariantes, etc.)
-6. Leia **`.contract_driven/templates/api/api_rules.yaml`** — SSOT para convenções/validações/templates de API HTTP (OpenAPI/JSON/URLs/paginação/erros/segurança)
+6. Leia **`.contract_driven/templates/api/api_rules.yaml`** — documentation para convenções/validações/templates de API HTTP (OpenAPI/JSON/URLs/paginação/erros/segurança)
 7. Leia **`docs/_canon/ARCHITECTURE.md`** — entenda a arquitetura canônica, a stack e os princípios de design
 8. Depois, navegue para o módulo em que for trabalhar: `docs/hbtrack/modulos/<módulo>/`
 
@@ -207,11 +208,11 @@ Para Agentes de IA, o ponto de entrada correto é:
 
 3. **Invariante imutável** — invariantes aprovadas (`INV-*`) só mudam por processo formal documentado. Constraints críticas vivem no banco, não apenas no código.
 
-4. **SSOT único** — uma fonte de verdade por artefato. Duplicação de informação normativa é proibida. Se existe em `docs/_canon/`, não existe também no código-fonte como comentário solto.
+4. **documentation único** — uma fonte de verdade por artefato. Duplicação de informação normativa é proibida. Se existe em `docs/_canon/`, não existe também no código-fonte como comentário solto.
 
 ---
 
-## Fontes Canônicas (SSOT)
+## Fontes Canônicas (documentation)
 
 | Tema | Fonte canônica |
 |------|---------------|
@@ -233,7 +234,7 @@ Configuração de governança e enforcement para o repositório HB Track.
 
 ```
 .github/
-├── CODEOWNERS                    # Ownership obrigatório de artefatos normativos
+├── CODEOWNERS                    # Ownership obrigatório de artefatos normatives
 ├── BRANCH_PROTECTION_SETUP.md    # Runbook de configuração de branch protection
 ├── CI_FIX_EVIDENCE.md            # Evidência de correção do CI (package-lock.json sync)
 └── workflows/
@@ -275,7 +276,7 @@ Runbook detalhado para configuração de branch protection rules no GitHub, incl
 Este setup atende aos requisitos de **hbtrack-governanca.md § 8.1**:
 
 - ✅ Branch protection + required status checks
-- ✅ CODEOWNERS para SSOT
+- ✅ CODEOWNERS para documentation
 - ✅ Bloqueio de force-push
 - ✅ CI fail-closed
 

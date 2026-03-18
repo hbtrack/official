@@ -93,10 +93,7 @@ Toda execução do pipeline deve produzir:
 - `_reports/evidence/module_readiness_scorecard.json`
 
 Quando a fase pré-contrato for executada, produzir também:
-- `_reports/agent_execution/<timestamp>_<session>.json`
-
-Quando houver resolução de boot, produzir:
-- `_reports/evidence/boot_resolution_report.json`
+- `_reports/session_start.json`
 
 Regra:
 - a evidência deve deixar claro se a policy foi lida em `boot_condicional` ou aplicada apenas por gate;

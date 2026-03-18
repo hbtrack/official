@@ -46,208 +46,13 @@ Os arquivos instanciados tornam-se normativos apenas quando criados na localiza�
 
 ---
 
-## 1. Registro de placeholders
+## 1. Referência de placeholders
 
-### 1.1 Convenção de naming
-**Todos os placeholders usam UPPER_SNAKE_CASE**: `{{PLACEHOLDER_NAME}}`
-
-Exceções para identificadores técnicos específicos de módulo:
-- `{{MODULE_NAME}}` — identificador técnico em lower_snake_case (ex: "training", "identity_access")
-- Demais placeholders derivados do módulo usam variantes em uppercase ({{MODULE_NAME_UPPER}}, {{MODULE_NAME_PASCAL}})
-- `{{HANDBALL_REFERENCE}}` — referência específica ao trecho/regra traduzida em `docs/_canon/HANDBALL_RULES_DOMAIN.md`
-
-### 1.2 Placeholders core obrigatórios
-- `{{PROJECT_NAME}}` — nome do projeto/sistema
-- `{{MODULE_NAME}}` — identificador técnico canônico lower_snake_case (ex: "training", "identity_access")
-- `{{MODULE_NAME_UPPER}}` — versão uppercase (ex: "TRAINING", "IDENTITY_ACCESS")
-- `{{MODULE_NAME_PASCAL}}` — versão PascalCase para código (ex: "Training", "IdentityAccess")
-- `{{DOMAIN_ENTITY}}` — entidade de domínio principal em linguagem natural
-- `{{DOMAIN_ENTITY_SNAKE}}` — entidade em lower_snake_case técnico
-- `{{DOMAIN_ENTITY_PASCAL}}` — entidade em PascalCase para código
-
-### 1.3 Placeholders de projeto e sistema
-- `{{CDD_MATURITY_LEVEL}}` — nível de maturidade contract-driven
-- `{{LAST_REVIEW_DATE}}` — data da última revisão
-- `{{SYSTEM_TYPE}}` — tipo de sistema
-- `{{ORG_NAME}}` — nome da organização
-- `{{TARGET_USERS}}` — usuários-alvo
-- `{{PRIMARY_MARKET}}` — mercado primário
-- `{{PROJECT_DOMAIN}}` — domínio HTTP do projeto (ex: "hbtrack.com")
-
-### 1.4 Placeholders de arquitetura
-- `{{BACKEND_STYLE}}` — estilo arquitetural backend
-- `{{FRONTEND_STYLE}}` — estilo arquitetural frontend
-- `{{DATA_STYLE}}` — estilo de persistência
-- `{{INTEGRATION_STYLE}}` — estilo de integração
-- `{{BACKEND_STACK}}` — stack tecnológica backend
-- `{{FRONTEND_STACK}}` — stack tecnológica frontend
-- `{{DATABASE_STACK}}` — stack de banco de dados
-- `{{EVENT_STACK}}` — stack de mensageria
-- `{{TEST_STACK}}` — stack de testes
-
-### 1.5 Placeholders de escopo e risco
-- `{{RESPONSIBILITIES_MD_LIST}}` — lista Markdown de responsabilidades (`- item`)
-- `{{OUT_OF_SCOPE_MD_LIST}}` — lista Markdown de itens fora do escopo (`- item`)
-- `{{EXTERNAL_DEPENDENCIES_MD_LIST}}` — lista Markdown de dependências externas (`- item`)
-- `{{KNOWN_RISKS_MD_LIST}}` — lista Markdown de riscos conhecidos (`- item`)
-- `{{OPEN_DECISIONS_MD_LIST}}` — lista Markdown de decisões em aberto (`- item`)
-
-### 1.6 Placeholders de convenções de API
-- `{{RESPONSE_ENVELOPE_POLICY}}` — política de envelopes de resposta
-- `{{PAGINATION_POLICY}}` — política de paginação
-- `{{SORT_POLICY}}` — política de ordenação
-- `{{FILTER_POLICY}}` — política de filtros
-- `{{AUTH_STRATEGY}}` — estratégia de autenticação
-- `{{AUTHZ_STRATEGY}}` — estratégia de autorização
-- `{{VERSIONING_STRATEGY}}` — estratégia de versionamento
-- `{{DEPRECATION_POLICY}}` — política de depreciação
-
-### 1.7 Placeholders de convenções de dados
-- `{{ID_STRATEGY}}` — estratégia de IDs
-- `{{DATE_TIME_STANDARD}}` — padrão de data/hora
-- `{{TIMEZONE_POLICY}}` — política de fuso horário
-- `{{ENUM_POLICY}}` — política de enums
-- `{{NULLABILITY_POLICY}}` — política de nullability
-- `{{TABLE_NAMING}}` — nomenclatura de tabelas
-- `{{FIELD_NAMING}}` — nomenclatura de campos
-
-### 1.8 Placeholders de segurança
-- `{{SENSITIVE_DATA_POLICY}}` — política de dados sensíveis
-- `{{RETENTION_POLICY}}` — política de retenção
-- `{{MASKING_POLICY}}` — política de mascaramento
-- `{{SECRETS_POLICY}}` — origem de secrets
-- `{{ROTATION_POLICY}}` — política de rotação de secrets
-- `{{LOGGING_POLICY}}` — política de logs
-
-### 1.9 Placeholders de UI e acessibilidade
-- `{{BREAKPOINT_STRATEGY}}` — estratégia de breakpoints
-- `{{TARGET_DEVICES}}` — dispositivos-alvo
-- `{{A11Y_CONTRAST_RULE}}` — regra de contraste de acessibilidade
-- `{{A11Y_LABEL_RULE}}` — regra de labels de acessibilidade
-
-### 1.10 Placeholders de erro e trace
-- `{{RESOURCE_PATH}}` — caminho do recurso HTTP
-- `{{TRACE_ID}}` — identificador de rastreamento
-- `{{ERROR_MESSAGE}}` — mensagem de erro
-- `{{ERROR_CODE}}` — código de erro
-- `{{ERROR_CASE}}` — caso de erro
-- `{{HTTP_STATUS}}` — status HTTP
-
-### 1.11 Placeholders do domínio de handebol
-- `{{RULEBOOK_TITLE}}` — título do regulamento oficial
-- `{{RULEBOOK_VERSION}}` — versão do regulamento
-- `{{RULEBOOK_EFFECTIVE_DATE}}` — data de vigência
-- `{{HANDBALL_TOPIC}}` — tema do handebol
-- `{{HANDBALL_RULE}}` — regra oficial do handebol
-- `{{PRODUCT_RULE}}` — regra de produto derivada
-- `{{MODULES}}` — módulos impactados
-- `{{RULE_REFERENCE}}` — referência à regra
-- `{{HANDBALL_SEMANTIC_APPLICABILITY}}` — `true|false` para o campo `handball_semantic_applicability` no header YAML de docs de módulo
-
-### 1.12 Placeholders de conteúdo de módulo
-- `{{MODULE_PURPOSE}}` — propósito do módulo
-- `{{MODULE_MISSION}}` — missão do módulo
-- `{{ACTORS_MD_LIST}}` — lista Markdown de atores do módulo (`- ator`)
-- `{{DOMAIN_ENTITIES_MD_LIST}}` — lista Markdown de entidades principais (`- \`Entity\``)
-- `{{IN_SCOPE_MD_LIST}}` — lista Markdown de itens dentro do escopo (`- item`)
-- `{{UPSTREAM_MODULES}}` — módulos upstream (dependências)
-- `{{DOWNSTREAM_MODULES}}` — módulos downstream (consumidores)
-
-### 1.13 Placeholders de regras de domínio
-- `{{BUSINESS_RULES_TABLE_ROWS}}` — linhas Markdown (`| ... |`) para a tabela de regras de negócio
-- `{{HANDBALL_DERIVED_RULES_TABLE_ROWS}}` — linhas Markdown (`| ... |`) para a tabela de regras derivadas do handebol
-- `{{SOURCE}}` — fonte normativa (quando aplicável)
-
-### 1.13A Placeholders de regras técnico-científicas
-- `{{SPORT_SCIENCE_RULES_TABLE_ROWS}}` — linhas Markdown (`| ... |`) para a tabela de métodos/protocolos/cálculos/thresholds
-
-### 1.14 Placeholders de state model
-- `{{STATE_NAME}}` — nome de estado
-- `{{TRIGGER_ACTIVATE}}` — gatilho de ativação
-- `{{TRIGGER_SUSPEND}}` — gatilho de suspensão
-- `{{TRIGGER_RESUME}}` — gatilho de retomada
-- `{{TRIGGER_CLOSE}}` — gatilho de encerramento
-- `{{STATE_DESCRIPTION_DRAFT}}` — descrição do estado Draft
-- `{{STATE_DESCRIPTION_ACTIVE}}` — descrição do estado Active
-- `{{STATE_DESCRIPTION_SUSPENDED}}` — descrição do estado Suspended
-- `{{STATE_DESCRIPTION_CLOSED}}` — descrição do estado Closed
-- `{{RULE}}` — regra associada à transição
-
-### 1.15 Placeholders de permissões, erros e UI
-- `{{ACTION}}` — ação/operação
-- `{{ROLE}}` — papel/perfil
-- `{{YES_NO}}` — sim/não
-- `{{NOTE}}` — nota/observação
-- `{{INPUT}}` — entrada de UI
-- `{{OUTPUT}}` — saída de UI
-- `{{SCREEN_A}}`, `{{SCREEN_B}}`, `{{SCREEN_C}}` — telas usadas em mapas de navegação
-
-### 1.16 Placeholders de teste e evidência
-- `{{STATE_TEST_TOOL}}` — ferramenta de teste de transição de estado
-- `{{BUSINESS_RULE_TOOL}}` — ferramenta de teste de regra de negócio
-- `{{INVARIANT_TEST_TOOL}}` — ferramenta de teste de invariante
-- `{{CONTRACT_TEST_TOOL}}` — ferramenta de teste contratual
-- `{{SCHEMA_TEST_TOOL}}` — ferramenta de validação de schema
-- `{{UNIT_TEST_TOOL}}` — ferramenta de teste unitário
-- `{{INTEGRATION_TEST_TOOL}}` — ferramenta de teste de integração
-- `{{E2E_TEST_TOOL}}` — ferramenta de teste E2E
-- `{{EVIDENCE}}` — evidência de teste
-- `{{AREA}}` — área de teste
-- `{{RISK_LEVEL}}` — nível de risco
-- `{{TEST_TYPE}}` — tipo de teste
-
-### 1.17 Placeholders de ADR
-- `{{ADR_NUMBER}}` — número do ADR
-- `{{DECISION_TITLE}}` — título da decisão
-- `{{DATE}}` — data
-- `{{DECIDERS}}` — tomadores de decisão
-- `{{TAGS}}` — tags
-- `{{CONTEXT}}` — contexto
-- `{{DECISION}}` — decisão
-- `{{POSITIVE_CONSEQUENCES_MD_LIST}}` — lista Markdown de consequências positivas (`- item`)
-- `{{NEGATIVE_CONSEQUENCES_MD_LIST}}` — lista Markdown de consequências negativas (`- item`)
-- `{{ALTERNATIVES_CONSIDERED_MD_LIST}}` — lista Markdown de alternativas consideradas (`- item`)
-- `{{RELATED_DOCS}}` — documentos relacionados
-- `{{RELATED_CONTRACTS}}` — contratos relacionados
-
-### 1.18 Placeholders técnicos de OpenAPI e schema
-- `{{FIELD_NAME}}` — nome de campo
-- `{{FIELD_TYPE}}` — tipo de campo
-- `{{FIELD_DESCRIPTION}}` — descrição de campo
-- `{{EXAMPLE_ID}}` — ID de exemplo
-- `{{EXAMPLE_CREATED_AT}}` — exemplo de data de criação
-- `{{EXAMPLE_UPDATED_AT}}` — exemplo de data de atualização
-- `{{FIELD_EXAMPLE_VALUE}}` — valor de exemplo de campo
-
-### 1.19 Placeholders específicos de MODULE_MAP
-- `{{RESP_ATLETAS}}`, `{{DEP_ATLETAS}}` — responsabilidade e dependências de Atletas
-- `{{RESP_EQUIPES}}`, `{{DEP_EQUIPES}}` — responsabilidade e dependências de Equipes
-- `{{RESP_TREINOS}}`, `{{DEP_TREINOS}}` — responsabilidade e dependências de Treinos
-- `{{RESP_JOGOS}}`, `{{DEP_JOGOS}}` — responsabilidade e dependências de Jogos
-- `{{RESP_COMPETICOES}}`, `{{DEP_COMPETICOES}}` — responsabilidade e dependências de Competições
-- `{{RESP_ANALYTICS}}`, `{{DEP_ANALYTICS}}` — responsabilidade e dependências de Analytics
-
-### 1.20 Placeholders de gates e CI
-- `{{API_BASE_URL}}` — URL base da API para testes
-
-### 1.21 Placeholders de glossário
-- `{{TERM}}` — termo
-- `{{DEFINITION}}` — definição
-- `{{CONTEXT}}` — contexto
-
-### 1.22 Placeholders de invariantes
-- `{{INVARIANT}}` — invariante genérica
-- `{{INVARIANTS_TABLE_ROWS}}` — linhas Markdown (`| ... |`) para a tabela de invariantes do módulo
-- `{{CHECK_METHOD}}` — método de verificação
-
-### 1.23 Placeholders de propósito geral
-- `{{PURPOSE}}` — propósito geral
-- `{{EVENT_NAME}}` — nome de evento
+**Referência completa de placeholders:** consultar [PLACEHOLDER_REGISTRY.md](PLACEHOLDER_REGISTRY.md)
 
 Regra:
 - Placeholders não resolvidos são proibidos em artefatos ready-for-implementation
-- Todos os placeholders devem usar UPPER_SNAKE_CASE exceto {{MODULE_NAME}} (lower_snake_case) e seus derivados
-- Ao criar novos placeholders, registrar primeiro nesta seção
+- Ao criar novos placeholders, registrar em PLACEHOLDER_REGISTRY.md
 
 ---
 
@@ -379,14 +184,6 @@ Template movido para: `.contract_driven/templates/globais/CHANGE_POLICY.md`
 
 ---
 
-## 12. Global Template — docs/_canon/API_CONVENTIONS.md
-
-
-Template movido para: `.contract_driven/templates/globais/API_CONVENTIONS.md`
-
-
----
-
 ## 13. Global Template — docs/_canon/DATA_CONVENTIONS.md
 
 
@@ -395,15 +192,7 @@ Template movido para: `.contract_driven/templates/globais/DATA_CONVENTIONS.md`
 
 ---
 
-## 14. Global Template — docs/_canon/ERROR_MODEL.md
-
-
-Template movido para: `.contract_driven/templates/globais/ERROR_MODEL.md`
-
-
----
-
-## 15. Global Template — docs/_canon/GLOBAL_INVARIANTS.md
+## 14. Global Template — docs/_canon/GLOBAL_INVARIANTS.md
 
 
 Template movido para: `.contract_driven/templates/globais/GLOBAL_INVARIANTS.md`
@@ -435,23 +224,7 @@ Template movido para: `.contract_driven/templates/globais/SECURITY_RULES.md`
 
 ---
 
-## 19. Global Template — docs/_canon/UI_FOUNDATIONS.md
-
-
-Template movido para: `.contract_driven/templates/globais/UI_FOUNDATIONS.md`
-
-
----
-
-## 20. Global Template — docs/_canon/DESIGN_SYSTEM.md
-
-
-Template movido para: `.contract_driven/templates/globais/DESIGN_SYSTEM.md`
-
-
----
-
-## 21. Global Template — docs/_canon/CI_CONTRACT_GATES.md
+## 18. Global Template — docs/_canon/CI_CONTRACT_GATES.md
 
 
 Template movido para: `.contract_driven/templates/globais/CI_CONTRACT_GATES.md`

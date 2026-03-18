@@ -1,0 +1,8 @@
+description: >
+  Evento emitido quando evidência de completude é fornecida (completion_evidence).
+  Tipos: post_session_survey, wellness_log_filled, recovery_tracked, objective_scored, video_review.
+
+publish:
+  operationId: completion_evidence_provided_publish
+  message:
+    $ref: ../messages/completion_evidence_provided.yaml

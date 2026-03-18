@@ -34,5 +34,4 @@ Este documento contém referências às diretrizes de API da Adidas, aplicáveis
 ## Alinhamento canônico
 
 Todas as diretrizes Adidas relevantes estão refletidas em:
-- `.contract_driven/templates/api/api_rules.yaml`
-- `docs/_canon/API_CONVENTIONS.md`
+- `.contract_driven/templates/api/api_rules.yaml` (SSOT)

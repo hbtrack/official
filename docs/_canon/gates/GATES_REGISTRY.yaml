@@ -13,7 +13,7 @@ authority_refs:
   rules_ref: ".contract_driven/CONTRACT_SYSTEM_RULES.md"
   layout_ref: ".contract_driven/CONTRACT_SYSTEM_LAYOUT.md"
   pipeline_ref: "docs/_canon/CONTRACT_PIPELINE.md"
-  boot_profiles_ref: "docs/_canon/BOOT_PROFILES.md"
+  boot_profiles_ref: ".contract_driven/BOOT_PROFILES.yaml"
   toolchain_health_ref: "docs/_canon/TOOLCHAIN_HEALTH_POLICY.md"
   module_registry_ref: "docs/_canon/MODULE_REGISTRY.yaml"
 operational_entrypoints:
@@ -51,7 +51,27 @@ gates:
     description: >
       Garante que nenhum artefato normativo existe fora do path canônico.
       Bloqueia duplicatas soberanas (dois arquivos com mesma semântica em paths distintos).
+      Valida taxonomia canônica de módulos em MODULE_REGISTRY.yaml (16 módulos únicos, formato lower_snake_case).
     blocking_codes: [PATH_NOT_CANONICAL, SOVEREIGN_DUPLICATE_DETECTED]
+    status: active
+
+  - gate_id: SCOPE_BOUNDARY_GATE
+    order: "1.5"
+    name: "Scope Boundary Gate"
+    blocking: true
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [PATH_CANONICALITY_GATE]
+    description: >
+      Detecta referências cross-module (intra-contract references para recursos de outros módulos)
+      sem autorização explícita em SCOPE_BOUNDARY_POLICY.md. Falha-safe: rejeita qualquer referência
+      que não esteja explicitamente permitida na política ou autorizada por ADR específica.
+      Integrado a Fase 1 do orchestrador pré-contrato (após carregamento de módulo).
+    blocking_codes: [BLOCKED_SCOPE_OVERFLOW]
+    implementation_script: "scripts/gates/check_scope_boundary.py"
+    policy_source: "docs/_canon/SCOPE_BOUNDARY_POLICY.md"
+    adr_reference: "docs/_canon/decisions/ADR-031-scope-boundary-validation.md"
     status: active
 
   - gate_id: REQUIRED_ARTIFACT_PRESENCE_GATE
@@ -289,6 +309,26 @@ gates:
       ]
     status: active
 
+  - gate_id: CANON_ALLOWLIST_GATE
+    order: "2N"
+    name: "Canon Allowlist Gate"
+    blocking: true
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
+    description: >
+      Garante que apenas artefatos explicitamente autorizados existam em docs/_canon/
+      e seus subdiretórios (decisions/, gates/, security/, templates/).
+      A allowlist é derivada da tabela de artefatos canônicos globais em docs/_canon/README.md.
+      Qualquer arquivo fora da allowlist é rejeitado — impede que o agente crie documentos
+      de módulo ou não-governança dentro do espaço normativo soberano.
+      Para adicionar um novo artefato ao canon, siga CHANGE_POLICY.md e atualize
+      a allowlist na implementação do gate.
+    blocking_codes: [BLOCKED_CANON_INTRUDER]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
   - gate_id: PLACEHOLDER_RESIDUE_GATE
     order: 3
     name: "Placeholder Residue Gate"
@@ -372,7 +412,7 @@ gates:
     depends_on: [OPENAPI_ROOT_STRUCTURE_GATE]
     description: >
       Regras normativas do HB Track aplicadas via Spectral e `.spectral.yaml`.
-      Garante conformidade com as convenções da API definidas em docs/_canon/API_CONVENTIONS.md.
+      Garante conformidade com as convenções da API definidas em `.contract_driven/templates/api/api_rules.yaml`.
     blocking_codes: [SPECTRAL_RULE_VIOLATION]
     status: active
 
@@ -611,8 +651,8 @@ gates:
       Verifica conformidade com ADR-026 (arquitetura de código Clean Architecture).
       Checa: (1) ADR-026 existe em docs/_canon/decisions/; (2) CODE_ARCHITECTURE.md existe
       em docs/_canon/; (3) para módulos implementation_ready no MODULE_REGISTRY,
-      verifica se a estrutura src/<module>/ existe em 'Hb Track - Backend/'.
-      SKIP_NOT_APPLICABLE quando 'Hb Track - Backend/src/' ainda não existe (pré-implementação).
+      verifica se a estrutura src/<module>/ existe em 'src/'.
+      SKIP_NOT_APPLICABLE quando 'src/' ainda não existe (pré-implementação).
       Emite BLOCKED_MISSING_ARCH_DECISION se ADR-026 ou CODE_ARCHITECTURE.md ausentes.
       Spec normativa: docs/_canon/CODE_ARCHITECTURE.md
     blocking_codes: [BLOCKED_MISSING_ARCH_DECISION]
@@ -701,3 +741,46 @@ gates:
       Gera o sumário de prontidão para o sistema em `_reports/contract_gates/latest.json`.
     blocking_codes: [BLOCKING_GATE_FAILED]
     status: active
+
+  - gate_id: HANDOFF_COHERENCE_GATE
+    order: "20A"
+    name: "Handoff Coherence Gate"
+    blocking: false
+    severity: MEDIUM
+    parallelizable: true
+    applies_when: "SESSION_HANDOFF.md exists"
+    depends_on: []
+    description: >
+      Verifica coerência de `SESSION_HANDOFF.md` com o estado atual do repositório.
+    blocking_codes: [BLOCKED_HANDOFF_INCOMPLETE]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: MODULE_STATUS_COHERENCE_GATE
+    order: "20B"
+    name: "Module Status Coherence Gate"
+    blocking: true
+    severity: HIGH
+    parallelizable: true
+    applies_when: "MODULE_REGISTRY contains elevated module statuses"
+    depends_on: []
+    description: >
+      Impede status alto (`validated_contract` ou `implementation_ready`) com
+      bloqueios adversariais ainda ativos.
+    blocking_codes: [BLOCKED_REGISTRY_MISMATCH, BLOCKED_ADVERSARIAL_PENDING]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: CROSS_MODULE_BOUNDARY_GATE
+    order: "20C"
+    name: "Cross Module Boundary Gate"
+    blocking: false
+    severity: MEDIUM
+    parallelizable: true
+    applies_when: "boundary rules defined in MODULE_SOURCE_AUTHORITY_MATRIX"
+    depends_on: []
+    description: >
+      Verifica fronteiras cross-módulo contra `MODULE_SOURCE_AUTHORITY_MATRIX`.
+    blocking_codes: [BLOCKED_SCOPE_OVERFLOW]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py

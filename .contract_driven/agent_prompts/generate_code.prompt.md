@@ -1,12 +1,24 @@
 ---
 task_type: generate_code
 version: "1.0.0"
-status: active
+status: FROZEN
+frozen_reason: "Backend paths não canonizados - awaiting real workspace structure"
 requires: [ADR-026, CODE_ARCHITECTURE.md, ADVERSARIAL_ANALYSIS_GATE=PASS]
 stack: python_fastapi_postgresql
 ---
 
 # generate_code — Worker de Geração de Código
+
+⚠️ **WORKER CONGELADO** ⚠️
+
+Este worker está temporariamente congelado até que:
+1. A estrutura real de backend seja implementada no workspace (src/<module>/)
+2. CODE_ARCHITECTURE.md seja validado empiricamente
+3. ADVERSARIAL_ANALYSIS_GATE esteja PASS para o módulo alvo
+
+**Não executar este worker até implementação da estrutura src/<module>/ no workspace.**
+
+---
 
 ## Pré-requisitos obrigatórios
 
@@ -56,7 +68,7 @@ _reports/adversarial/<module>/<resource>.adversarial.json  # resultado adversari
 Para cada entidade identificada no contrato e schemas:
 
 ```python
-# Hb Track - Backend/src/<module>/domain/entities.py
+# src/<module>/domain/entities.py
 class <Entity>(BaseModel):
     """
     Entidade: <Entity>
@@ -97,7 +109,7 @@ class <Entity>StateMachine:
 Um use case por feature do FEATURE_REGISTRY:
 
 ```python
-# Hb Track - Backend/src/<module>/application/use_cases.py
+# src/<module>/application/use_cases.py
 
 class <FeatureName>UseCase:
     """
@@ -119,7 +131,7 @@ class <FeatureName>UseCase:
 ## Fase GC4 — Geração da Camada Infrastructure
 
 ```python
-# Hb Track - Backend/src/<module>/infrastructure/models.py
+# src/<module>/infrastructure/models.py
 from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped
 import uuid
 
@@ -128,7 +140,7 @@ class <Entity>Model(Base):
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     # ... campos alinhados com JSON Schema
 
-# Hb Track - Backend/src/<module>/infrastructure/repository.py
+# src/<module>/infrastructure/repository.py
 class <Module>Repository:
     async def get_by_id(self, id: UUID) -> <Entity> | None: ...
     async def save(self, entity: <Entity>) -> <Entity>: ...
@@ -143,7 +155,7 @@ class <Module>Repository:
 Verificar cada endpoint, parâmetro, status code e response schema antes de gerar.
 
 ```python
-# Hb Track - Backend/src/<module>/interface/router.py
+# src/<module>/interface/router.py
 from fastapi import APIRouter, Depends, HTTPException, status
 
 router = APIRouter(prefix="/<module>", tags=["<module>"])

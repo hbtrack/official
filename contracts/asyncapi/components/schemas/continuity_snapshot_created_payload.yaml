@@ -1,0 +1,29 @@
+type: object
+additionalProperties: false
+required:
+  - eventType
+  - occurredAt
+  - snapshotId
+properties:
+  eventType:
+    type: string
+    enum: [continuity_snapshot_created]
+  occurredAt:
+    type: string
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+  snapshotId:
+    type: string
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  athleteId:
+    type: string
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  snapshotType:
+    type: string
+    enum: [seasonal_transition, periodization_boundary, readiness_baseline]
+    description: "Type of continuity snapshot"
+  traceId:
+    type: string
+    pattern: "^[0-9a-f]{32}$"
+  requestId:
+    type: string
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"

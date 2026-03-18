@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hbtrack/module-decision-ir.schema.json",
+  "title": "HB Track Module Decision IR Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ir_version",
+    "module",
+    "status",
+    "source",
+    "decision_scope",
+    "module_identity",
+    "capabilities",
+    "entities",
+    "relations",
+    "state_models",
+    "rules",
+    "api_use_cases",
+    "ui_flows",
+    "permissions",
+    "errors",
+    "events",
+    "integrations",
+    "open_decisions",
+    "surface_mapping",
+    "forbidden_inference_global"
+  ],
+  "properties": {
+    "ir_version": {
+      "type": "string"
+    },
+    "module": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "proposed",
+        "approved",
+        "draft"
+      ]
+    },
+    "source": {
+      "type": "string"
+    },
+    "decision_scope": {
+      "type": "string",
+      "enum": [
+        "full_module",
+        "feature",
+        "revision"
+      ]
+    },
+    "module_identity": {
+      "type": "object"
+    },
+    "capabilities": {
+      "type": "array"
+    },
+    "entities": {
+      "type": "array"
+    },
+    "relations": {
+      "type": "array"
+    },
+    "state_models": {
+      "type": "array"
+    },
+    "rules": {
+      "type": "array"
+    },
+    "api_use_cases": {
+      "type": "array"
+    },
+    "ui_flows": {
+      "type": "array"
+    },
+    "permissions": {
+      "type": "object"
+    },
+    "errors": {
+      "type": "array"
+    },
+    "events": {
+      "type": "object"
+    },
+    "integrations": {
+      "type": "array"
+    },
+    "open_decisions": {
+      "type": "array"
+    },
+    "surface_mapping": {
+      "type": "array"
+    },
+    "forbidden_inference_global": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "patch_log": {
+      "type": "object"
+    },
+    "phase_deferred": {
+      "type": "object"
+    }
+  }
+}

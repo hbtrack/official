@@ -166,3 +166,47 @@ Registrar as regras de negócio do módulo `training`.
 
 > 🚫 **BLOCKED_CONTRACT_CONFLICT:** ADR-017 classifica `IN_PROGRESS` como "Não (bloqueado)" na coluna "Editável?", mas TRAIN-DEC-020 exige suporte a `live_session_adjustment`, `alternate_exercise`, `constraint_override` e `load_recalculation` durante sessão `IN_PROGRESS`. Nenhum endpoint de ajuste ao vivo pode ser aberto antes de adendo formal em ADR-017 distinguindo imutabilidade do agregado de registros append-only. O adendo a ADR-017 precede a abertura de qualquer contrato de ajuste ao vivo.
 
+---
+
+### Regras operacionais—mitigações adversariais (adicionadas 2026-03-17)
+
+#### Performance (A4)
+
+| ID | Regra | Decisão |
+|---|---|---|
+| DR-TRAIN-050 | Validação de soma `focus_*_pct` é executada **em memória no servidor** sobre os campos do payload+estado atual — nunca via agregação DB por sessão. Latência esperada < 1ms. Se o benchmark de 1k sessões concorrentes exceder 50ms P95, o campo `focus_sum` deve ser desnormalizado (campo computado no modelo). | Performance + RC-2 |
+
+#### Fronteiras de módulo reforçadas (A5)
+
+| ID | Regra | Decisão |
+|---|---|---|
+| DR-TRAIN-051 | Todo endpoint que altera estado de `training_session` (`publish`, `unpublish`, `start`, `complete`, `cancel`, `archive`) deve validar explicitamente o papel do ator via `identity_access` antes de executar a transição. Endpoints de somente leitura validam acesso (autenticação), mas não papel. Ausência de validação de papel é bloqueada por `TRAINING_FORBIDDEN_ACTOR` (403). | A5, DR-TRAIN-043, INV-TRAIN-098 |
+| DR-TRAIN-052 | O módulo `training` não pode registrar nem atualizar `restriction_profile`, `return_to_play_guard` ou qualquer entidade clínica soberana do módulo `medical`. O endpoint `POST /{id}/ineligibility-declaration` cria uma **declaração operacional de inelegibilidade** (domínio training) — não confundir com restrição clínica. A declaração de inelegibilidade aponta para a restrição médica como referência, mas não a replica nem a altera. | A5, DR-TRAIN-042, INV-TRAIN-097 |
+| DR-TRAIN-053 | Módulo `analytics` não pode alterar estado de `training_session`. Analytics consome dados de training via eventos (read). Qualquer chamada de analytics a endpoints de escrita de training (`PATCH`, `POST /{id}/complete` etc.) deve retornar 403 — validação de papel via `identity_access`. | A5, DR-TRAIN-044, INV-TRAIN-098 |
+
+#### Convenção de nomenclatura (M5)
+
+| ID | Regra | Decisão |
+|---|---|---|
+| DR-TRAIN-054 | **Convenção canônica status vs. state:** (a) em código (Python, SQL, API, schemas JSON) usar sempre **`status`** para o campo que armazena o estado FSM; (b) em documentação de contrato (STATE_MODEL, ADR, INVARIANTS) usar **`state`** ou **`estado`** ao descrever a FSM; (c) `DECISION_IR.yaml` e outros artefatos de contrato usam `state_model` e `states` — consistente com nomenclatura de FSM. Nunca inverter nos dois contextos. Refactoramento que violar esta convenção requer revisão de contrato antes de merge. | M5 |
+
+---
+
+## Regras de HB Pro Coach (Virtual Assistant Chat)
+
+| ID | Regra | Entidades afetadas | Fonte | Observações |
+|---|---|---|---|---|
+| DR-TRAIN-COACH-01 | HB Pro Coach respostas sempre sobre handebol/treino. Tópicos permitidos: exercício (movimento, propósito, segurança), técnica de jogo (posição, arremesso, defesa), wellness (sono, nutrição, descanso, frequência), feedback histórico (treinos faltados, comentários passados), formações táticas | `athlete_chat_message` | D-UI-21 | Resposta a off-topic retorna redirecionamento educado, nunca erro/rejeição agressiva |
+| DR-TRAIN-COACH-02 | HB Pro Coach rejeita palavrões e off-topic (política, assuntos aleatórios) com resposta padrão educada: "Sou coach de handebol. Posso ajudar com exercícios, treino, wellness ou feedback. O que quer saber?" | `athlete_chat_message` | D-UI-21 | Flags internas: `isOffTopicRejection=true` (para auditoria). Nunca rejeição agressiva. |
+| DR-TRAIN-COACH-03 | HB Pro Coach entende e responde com fluência completa a linguagem natural informal de atletas (vc, pq, oq, taum, msm, etc). **NUNCA aponta ou corrige erros de digitação** — isso gera frustração. Comunica de forma elevadora: "Vejo seu comprometimento!", "Ótima pergunta!" | `athlete_chat_message` | D-UI-21 | Inclusividade + motivação são prioridade máxima. Sem flags de typo. |
+| DR-TRAIN-COACH-04 | Conversa responde ao age-group (U10, U12, U14, U16, U18, ADULT) — linguagem e complexidade adaptadas. U10/U12 usam linguagem mais simples, de incentivo lúdico; ADULTO usa linguagem técnica e orientada a performance | `athlete_chat_conversation` | D-UI-21 | Campo `athleteAgeGroup` deve ser preenchido na conversação para contexto |
+| DR-TRAIN-COACH-05 | Coach virtual oferece treino compensatório após atleta perder sessão ou solicitar objetivo específico. Atleta vê **preview**: nome + duração + objetivos (sem blocos, sem local/data). Coach encaminha sugestão **completa** (com blocos de exercícios detalhados) ao **treinador da equipe** via AsyncAPI | `training_suggestion` | D-UI-21, UIF-006 | Reduz atrito de atleta + Coach-in-Loop garantido pelo treinador (não pelo chat) |
+| DR-TRAIN-COACH-06 | **Quem aprova/rejeita é o Treinador da Equipe (não o coach virtual).** Treinador recebe notificação assíncrona com sugestão completa + contexto de wellness do atleta. Janela de aprovação: até 24h. Aprovação → treino aparece em "Sessões Agendadas" com status "Aprovado por [Nome do Treinador]". Rejeição → atleta notificado + sugestões alternativas | `training_suggestion`, AsyncAPI event | D-UI-21, UIF-006 | Coach virtual não autoriza. Segurança clínico-técnica fica com treinador responsável |
+| DR-TRAIN-COACH-07 | Max 1 sugestão de treino em estado `pending_approval` por atleta por vez. Novo pedido do atleta antes de resposta do treinador retorna mensagem: "Você já tem uma sugestão aguardando aprovação de seu treinador. Aguarde!" (409 Conflict) | `training_suggestion` | D-UI-21 | Previne spam + evita sobrecarga de notificação do treinador |
+| DR-TRAIN-COACH-08 | Feature Store engineering: Coach consulta dados históricos via `ai_ingestion` (treinos, wellness, medical, analytics) e calcula features (fatigue_score, performance_gap, injury_status). Regras especializadas em handebol (se fatigue > 7 E performance_gap.velocity > 15% ENTÃO focus = [técnica, recuperação]) geram sugestões determinísticas por posição + categoria etária. Resposta sempre contextualizada em dados reais do atleta — nunca genérica. Falha de dados → retorna resposta padrão: "Desculpa, não consegui acessar seus dados de treino agora. Tente novamente!" | `generateCoachResponse` endpoint | D-UI-21, G-06 | Garante inteligência contextual baseada em Feature Store, não LLM genérico |
+| DR-TRAIN-COACH-09 | Conversa de chat é somente-leitura (archived=true) se: (a) atleta a fecha manualmente, (b) inatividade > 30 dias. Conversas arquivadas não deletadas — consultáveis em auditoria e relatórios | `athlete_chat_conversation` | Necessidade audit | Garante rastreabilidade histórica |
+
+---
+
+## Prioridade de verdade (revisada)
+

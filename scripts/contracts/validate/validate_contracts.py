@@ -39,6 +39,8 @@ import sys
 import time
 from typing import Any
 
+import yaml
+
 
 BLOCKED_ENUM_OUTSIDE_AXIOMS = "BLOCKED_ENUM_OUTSIDE_AXIOMS"
 BLOCKED_FORMAT_VIOLATION = "BLOCKED_FORMAT_VIOLATION"
@@ -70,6 +72,7 @@ BLOCKED_EXTERNAL_SOURCE_AUTHORITY = "BLOCKED_EXTERNAL_SOURCE_AUTHORITY"
 BLOCKED_OPENAPI_ROOT_MODULE_SYNC = "BLOCKED_OPENAPI_ROOT_MODULE_SYNC"
 BLOCKED_PRE_CONTRACT_EVIDENCE = "BLOCKED_PRE_CONTRACT_EVIDENCE"
 BLOCKED_SHADOW_AUTHORITY = "BLOCKED_SHADOW_AUTHORITY"
+BLOCKED_CANON_INTRUDER = "BLOCKED_CANON_INTRUDER"
 BLOCKED_TOOLING_CONFIG_INVALID = "BLOCKED_TOOLING_CONFIG_INVALID"
 
 BLOCKED_TRACEABILITY_MANIFEST_INVALID = "BLOCKED_TRACEABILITY_MANIFEST_INVALID"
@@ -130,6 +133,7 @@ _KNOWN_BLOCKING_CODES = {
     BLOCKED_OPENAPI_ROOT_MODULE_SYNC,
     BLOCKED_PRE_CONTRACT_EVIDENCE,
     BLOCKED_SHADOW_AUTHORITY,
+    BLOCKED_CANON_INTRUDER,
     BLOCKED_TOOLING_CONFIG_INVALID,
     BLOCKED_TRACEABILITY_MANIFEST_INVALID,
     BLOCKED_TRACEABILITY_INPUT_MISSING,
@@ -263,38 +267,56 @@ def _layout_path(root: pathlib.Path) -> pathlib.Path:
 
 def _load_canonical_modules_from_layout(root: pathlib.Path) -> list[str]:
     """
-    SSOT de módulos: `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md` seção 2.
-    Extrai os módulos listados em 2.1 e 2.2 (bullets `- <module>`).
+    SSOT de módulos: `docs/_canon/MODULE_REGISTRY.yaml` (taxonomia autoritativa).
+    Extrai os módulos canônicos do registry machine-readable.
+
+    Formato esperado no MODULE_REGISTRY.yaml:
+        modules:
+          users:
+            status: "draft_contract"
+            ...
+          training:
+            status: "implementation_ready"
+            ...
+
+    Valida:
+    - Exatamente 16 módulos
+    - Formato lower_snake_case
+    - Unicidade
+
+    Falha explicitamente se não conseguir carregar ou validar.
     """
-    lp = _layout_path(root)
-    if not lp.exists():
+    registry_path = root / "docs" / "_canon" / "MODULE_REGISTRY.yaml"
+    if not registry_path.exists():
         return []
-    text = _read_text(lp)
+
+    try:
+        registry = _load_yaml(registry_path)
+    except Exception:
+        return []
+
+    if not isinstance(registry, dict):
+        return []
+
+    modules_dict = registry.get("modules", {})
+    if not isinstance(modules_dict, dict):
+        return []
+
     modules: list[str] = []
-    in_taxonomy = False
-    for line in text.splitlines():
-        if line.startswith("### 2.1 "):
-            in_taxonomy = True
-            continue
-        if line.startswith("### 2.2 "):
-            in_taxonomy = True
-            continue
-        if line.startswith("### 2.3 "):
-            break
-        if not in_taxonomy:
-            continue
-        m = re.match(r"^\s*-\s*`?([a-z0-9]+(?:_[a-z0-9]+)*)`?\s*$", line)
-        if m:
-            modules.append(m.group(1))
-    # unique, stable order
-    seen: set[str] = set()
-    out: list[str] = []
-    for mod in modules:
-        if mod in seen:
-            continue
-        seen.add(mod)
-        out.append(mod)
-    return out
+    for module_name in modules_dict.keys():
+        # Validar formato lower_snake_case
+        if re.match(r"^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$", module_name):
+            modules.append(module_name)
+
+    # Validar unicidade (não deveria ter duplicatas em dict keys, mas para garantir)
+    if len(modules) != len(set(modules)):
+        return []
+
+    # Validar contagem exata
+    if len(modules) != 16:
+        return []
+
+    return sorted(modules)
 
 
 def _parse_yaml_front_matter(path: pathlib.Path) -> dict | None:
@@ -397,7 +419,7 @@ def _module_doc_expected_target(root: pathlib.Path, module: str, field: str) -> 
         "state_model_ref": (doc_dir / f"STATE_MODEL_{module_upper}.md", False),
         "ui_contract_ref": (doc_dir / f"UI_CONTRACT_{module_upper}.md", False),
         "screen_map_ref": (doc_dir / f"SCREEN_MAP_{module_upper}.md", False),
-        "error_model_ref": (root / "docs" / "_canon" / "ERROR_MODEL.md", False),
+        "error_model_ref": (root / "docs" / "_canon" / "OPERATIONS.md", False),
         "problem_schema_ref": (root / "contracts" / "openapi" / "components" / "schemas" / "shared" / "problem.yaml", False),
         "adr_ref": (root / "docs" / "_canon" / "decisions" / "ADR-017-training-session-state-machine.md", False),
     }
@@ -1098,6 +1120,40 @@ def validate_axiom_integrity(axioms_path: str, schema_path: str) -> dict:
     # Etapa 11 — Validator contract
     result["metrics"]["checks_executed"] = 11
     result["violations"].extend(validate_validator_contract_integrity(axioms))
+
+    # FSM_COMPLETENESS: todo estado não-terminal deve ter ao menos uma transição de saída.
+    for sm_name, sm_def in (axioms.get("state_axioms") or {}).items():
+        if not isinstance(sm_def, dict):
+            continue
+        allowed = sm_def.get("allowed_transitions") or {}
+        terminal_states = set(sm_def.get("terminal_states") or [])
+        states: set[str] = set()
+        states_with_exit: set[str] = set()
+        for source, destinations in allowed.items():
+            if not isinstance(source, str) or not source:
+                continue
+            states.add(source)
+            if isinstance(destinations, list) and any(isinstance(dst, str) and dst for dst in destinations):
+                states_with_exit.add(source)
+            if isinstance(destinations, list):
+                for destination in destinations:
+                    if isinstance(destination, str) and destination:
+                        states.add(destination)
+        for state in sorted(states):
+            if state in terminal_states:
+                continue
+            if state not in states_with_exit:
+                result["violations"].append(
+                    {
+                        "blocking_code": "BLOCKED_AXIOM_VIOLATION",
+                        "path": f"state_axioms.{sm_name}.allowed_transitions.{state}",
+                        "message": (
+                            f"Estado '{state}' sem transições de saída declaradas e "
+                            "não está em terminal_states. Declare transições ou adicione a terminal_states."
+                        ),
+                        "severity": "warn",
+                    }
+                )
 
     return _finish()
 
@@ -2302,15 +2358,11 @@ _CANONICAL_GLOBAL_DOCS: list[str] = [
     ".contract_driven/templates/globais/C4_CONTAINERS.md",
     ".contract_driven/templates/globais/MODULE_MAP.md",
     ".contract_driven/templates/globais/CHANGE_POLICY.md",
-    ".contract_driven/templates/globais/API_CONVENTIONS.md",
     ".contract_driven/templates/globais/DATA_CONVENTIONS.md",
-    ".contract_driven/templates/globais/ERROR_MODEL.md",
     ".contract_driven/templates/globais/GLOBAL_INVARIANTS.md",
     ".contract_driven/templates/globais/DOMAIN_GLOSSARY.md",
     ".contract_driven/templates/globais/HANDBALL_RULES_DOMAIN.md",
     ".contract_driven/templates/globais/SECURITY_RULES.md",
-    ".contract_driven/templates/globais/UI_FOUNDATIONS.md",
-    ".contract_driven/templates/globais/DESIGN_SYSTEM.md",
     ".contract_driven/templates/globais/CI_CONTRACT_GATES.md",
     ".contract_driven/templates/globais/TEST_STRATEGY.md",
     ".contract_driven/templates/globais/decisions/ADR-0001-template.md",
@@ -2347,8 +2399,8 @@ _CANONICAL_GLOBAL_DOCS: list[str] = [
     "docs/_canon/CI_CONTRACT_GATES.md",
     "docs/_canon/TOOLCHAIN_HEALTH_POLICY.md",
     "docs/_canon/CONTRACT_PIPELINE.md",
-    "docs/_canon/BOOT_PROFILES.md",
-    "docs/_canon/ERROR_MODEL.md",
+    "docs/_canon/OPERATIONS.md",
+    "docs/_canon/UI_CONTRACT_GUIDE.md",
     "docs/_canon/security/OWASP_API_CONTROL_MATRIX.yaml",
     "docs/_canon/MODULE_REGISTRY.yaml",
     "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
@@ -2849,13 +2901,13 @@ def _g1_path_canonicality(root: pathlib.Path) -> dict:
             "severity": "error",
         })
 
-    # Canonical module-aware layout checks (SSOT = CONTRACT_SYSTEM_LAYOUT.md)
+    # Canonical module-aware layout checks (SSOT = MODULE_REGISTRY.yaml)
     modules = _load_canonical_modules_from_layout(root)
     if not modules:
         violations.append({
             "blocking_code": BLOCKED_LAYOUT_NONCOMPLIANCE,
-            "artifact": str(_layout_path(root).relative_to(root)),
-            "message": "Não foi possível carregar a taxonomia canônica de módulos do LAYOUT.",
+            "artifact": "docs/_canon/MODULE_REGISTRY.yaml",
+            "message": "Não foi possível carregar a taxonomia canônica de módulos de MODULE_REGISTRY.yaml.",
             "severity": "error",
         })
     else:
@@ -3213,7 +3265,6 @@ def _g2b_api_normative_duplication(root: pathlib.Path) -> dict:
     ]
     ssot_marker = ".contract_driven/templates/api/api_rules.yaml"
     exclude = {
-        canon_dir / "API_CONVENTIONS.md",
         canon_dir / "CI_CONTRACT_GATES.md",
     }
     for p in sorted(canon_dir.rglob("*.md")):
@@ -3391,7 +3442,7 @@ def _g2c_owasp_api_control_matrix(root: pathlib.Path) -> dict:
             violations.append({
                 "blocking_code": BLOCKED_OWASP_CONTROL_MATRIX_INVALID,
                 "artifact": str(matrix_path.relative_to(root)),
-                "message": "applies_to não alinha com a taxonomia canônica de módulos.",
+                "message": "applies_to não alinha com a taxonomia canônica de módulos (MODULE_REGISTRY.yaml).",
                 "severity": "error",
                 "details": {"missing": missing, "extra": extra},
             })
@@ -4717,6 +4768,225 @@ def _g2l_decision_ir_conformance(root: pathlib.Path) -> dict:
     )
 
 
+def _g2n_canon_allowlist(root: pathlib.Path) -> dict:
+    """
+    CANON_ALLOWLIST_GATE — garante que apenas artefatos explicitamente autorizados
+    existam em docs/_canon/ e seus subdiretórios canônicos.
+
+    Previne que o agente crie documentos não-governança dentro do diretório normativo
+    soberano, evitando que artefatos de módulo ou drafts passem a ser tratados como
+    autoritativos pelo sistema.
+
+    Allowlist derivada de docs/_canon/README.md (tabela de artefatos canônicos globais).
+    Qualquer adição ao canon requer atualização desta lista (CHANGE_POLICY.md).
+    """
+    t0 = time.monotonic()
+    gate_id = "CANON_ALLOWLIST_GATE"
+    canon_dir = root / "docs" / "_canon"
+    checked: list[str] = [str(canon_dir)]
+
+    if not canon_dir.exists():
+        return _skip(gate_id, "docs/_canon/ ausente — gate não aplicável.", _ms(t0))
+
+    # Allowlist canônica top-level (SSOT: docs/_canon/README.md tabela §Artefatos Canônicos Globais)
+    TOPLEVEL_ALLOWLIST: frozenset[str] = frozenset({
+        "README.md",
+        "OPERATIONS.md",
+        "SYSTEM_SCOPE.md",
+        "ARCHITECTURE.md",
+        "CODE_ARCHITECTURE.md",
+        "MODULE_MAP.md",
+        "GLOBAL_INVARIANTS.md",
+        "SECURITY_RULES.md",
+        "DATA_CONVENTIONS.md",
+        "CI_CONTRACT_GATES.md",
+        "TEST_STRATEGY.md",
+        "UI_CONTRACT_GUIDE.md",
+        "C4_CONTEXT.md",
+        "C4_CONTAINERS.md",
+        "CHANGE_POLICY.md",
+        "DOMAIN_GLOSSARY.md",
+        "HANDBALL_RULES_DOMAIN.md",
+        "MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
+        "MODULE_REGISTRY.yaml",
+        "TOOLCHAIN_HEALTH_POLICY.md",
+        "CONTRACT_PIPELINE.md",
+        "DECISION_POLICY.md",
+        "ARCHITECTURE_DECISION_BACKLOG.md",
+        # Adicionados por ADRs posteriores (ADR-027..ADR-030)
+        "DATA_MIGRATION_POLICY.md",
+        "DEPLOY_PIPELINE.md",
+        "RUNTIME_CONTRACT_MONITORING_POLICY.md",
+        "FRONTEND_CONTRACT.md",
+        "FEATURE_REGISTRY.yaml",
+        "IR_TO_SURFACE_MAPPING.yaml",
+    })
+
+    # Subdiretórios autorizados
+    SUBDIRS_ALLOWLIST: frozenset[str] = frozenset({"decisions", "gates", "security", "templates"})
+
+    # Allowlist gates/ — apenas artefatos do registry de gates
+    GATES_ALLOWLIST: frozenset[str] = frozenset({"GATES_REGISTRY.yaml", "README.md"})
+
+    # security/ — apenas a matriz OWASP
+    SECURITY_ALLOWLIST: frozenset[str] = frozenset({"OWASP_API_CONTROL_MATRIX.yaml"})
+
+    # templates/ — templates de sessão/handoff
+    TEMPLATES_ALLOWLIST: frozenset[str] = frozenset({"SESSION_HANDOFF.template.md"})
+
+    # decisions/ — padrão ADR-NNN-*.md
+    adr_pattern = re.compile(r"^ADR-\d{3}-.+\.md$")
+
+    violations: list[dict] = []
+
+    # --- Verifica top-level ---
+    for item in sorted(canon_dir.iterdir()):
+        checked.append(str(item.relative_to(root)))
+        if item.is_dir():
+            if item.name not in SUBDIRS_ALLOWLIST:
+                violations.append({
+                    "blocking_code": BLOCKED_CANON_INTRUDER,
+                    "artifact": str(item.relative_to(root)).replace("\\", "/") + "/",
+                    "message": (
+                        f"Subdiretório não autorizado em docs/_canon/: '{item.name}/'. "
+                        "Subdiretórios permitidos: decisions/, gates/, security/, templates/."
+                    ),
+                    "severity": "error",
+                })
+        else:
+            if item.name not in TOPLEVEL_ALLOWLIST:
+                violations.append({
+                    "blocking_code": BLOCKED_CANON_INTRUDER,
+                    "artifact": str(item.relative_to(root)).replace("\\", "/"),
+                    "message": (
+                        f"Arquivo não autorizado em docs/_canon/: '{item.name}'. "
+                        "Apenas artefatos registrados em docs/_canon/README.md são permitidos. "
+                        "Para adicionar ao canon, siga CHANGE_POLICY.md e atualize a allowlist do gate."
+                    ),
+                    "severity": "error",
+                })
+
+    # --- Verifica gates/ ---
+    gates_dir = canon_dir / "gates"
+    if gates_dir.exists():
+        for item in sorted(gates_dir.iterdir()):
+            checked.append(str(item.relative_to(root)))
+            if item.is_dir():
+                violations.append({
+                    "blocking_code": BLOCKED_CANON_INTRUDER,
+                    "artifact": str(item.relative_to(root)).replace("\\", "/") + "/",
+                    "message": f"Subdiretório não autorizado em docs/_canon/gates/: '{item.name}/'.",
+                    "severity": "error",
+                })
+            elif item.name not in GATES_ALLOWLIST:
+                violations.append({
+                    "blocking_code": BLOCKED_CANON_INTRUDER,
+                    "artifact": str(item.relative_to(root)).replace("\\", "/"),
+                    "message": (
+                        f"Arquivo não autorizado em docs/_canon/gates/: '{item.name}'. "
+                        "gates/ deve conter apenas GATES_REGISTRY.yaml e README.md. "
+                        "IRs de módulo pertencem a .dev/<MODULE>/ ou docs/hbtrack/modulos/<module>/."
+                    ),
+                    "severity": "error",
+                })
+
+    # --- Verifica security/ ---
+    security_dir = canon_dir / "security"
+    if security_dir.exists():
+        for item in sorted(security_dir.iterdir()):
+            checked.append(str(item.relative_to(root)))
+            if item.is_dir():
+                violations.append({
+                    "blocking_code": BLOCKED_CANON_INTRUDER,
+                    "artifact": str(item.relative_to(root)).replace("\\", "/") + "/",
+                    "message": f"Subdiretório não autorizado em docs/_canon/security/: '{item.name}/'.",
+                    "severity": "error",
+                })
+            elif item.name not in SECURITY_ALLOWLIST:
+                violations.append({
+                    "blocking_code": BLOCKED_CANON_INTRUDER,
+                    "artifact": str(item.relative_to(root)).replace("\\", "/"),
+                    "message": (
+                        f"Arquivo não autorizado em docs/_canon/security/: '{item.name}'. "
+                        "security/ deve conter apenas OWASP_API_CONTROL_MATRIX.yaml."
+                    ),
+                    "severity": "error",
+                })
+
+    # --- Verifica templates/ ---
+    templates_dir = canon_dir / "templates"
+    if templates_dir.exists():
+        for item in sorted(templates_dir.iterdir()):
+            checked.append(str(item.relative_to(root)))
+            if item.is_dir():
+                violations.append({
+                    "blocking_code": BLOCKED_CANON_INTRUDER,
+                    "artifact": str(item.relative_to(root)).replace("\\", "/") + "/",
+                    "message": f"Subdiretório não autorizado em docs/_canon/templates/: '{item.name}/'.",
+                    "severity": "error",
+                })
+            elif item.name not in TEMPLATES_ALLOWLIST:
+                violations.append({
+                    "blocking_code": BLOCKED_CANON_INTRUDER,
+                    "artifact": str(item.relative_to(root)).replace("\\", "/"),
+                    "message": (
+                        f"Arquivo não autorizado em docs/_canon/templates/: '{item.name}'. "
+                        "templates/ deve conter apenas SESSION_HANDOFF.template.md."
+                    ),
+                    "severity": "error",
+                })
+
+    # --- Verifica decisions/ ---
+    decisions_dir = canon_dir / "decisions"
+    if decisions_dir.exists():
+        for item in sorted(decisions_dir.iterdir()):
+            checked.append(str(item.relative_to(root)))
+            if item.is_dir():
+                violations.append({
+                    "blocking_code": BLOCKED_CANON_INTRUDER,
+                    "artifact": str(item.relative_to(root)).replace("\\", "/") + "/",
+                    "message": f"Subdiretório não autorizado em docs/_canon/decisions/: '{item.name}/'.",
+                    "severity": "error",
+                })
+            elif not adr_pattern.match(item.name):
+                violations.append({
+                    "blocking_code": BLOCKED_CANON_INTRUDER,
+                    "artifact": str(item.relative_to(root)).replace("\\", "/"),
+                    "message": (
+                        f"Arquivo em docs/_canon/decisions/ não segue padrão ADR-NNN-<slug>.md: '{item.name}'. "
+                        "Decisões arquiteturais devem ser nomeadas como ADR-031-nome-kebab.md."
+                    ),
+                    "severity": "error",
+                })
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_CANON_INTRUDER,
+            f"{len(violations)} artefato(s) não autorizado(s) detectado(s) em docs/_canon/.",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        "docs/_canon/ contém apenas artefatos autorizados.",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
 def _g3_placeholder_residue(root: pathlib.Path) -> dict:
     t0 = time.monotonic()
     gate_id = "PLACEHOLDER_RESIDUE_GATE"
@@ -5266,6 +5536,34 @@ def _g8_cross_spec_alignment(root: pathlib.Path, axioms: "DomainAxioms") -> dict
                inputs, all_artifacts, [], [], _ms(t0))
 
 
+def _find_active_waiver(root: pathlib.Path, gate_id: str) -> pathlib.Path | None:
+    waivers_dir = root / "contracts" / "_waivers"
+    if not waivers_dir.exists():
+        return None
+    now = datetime.datetime.now(datetime.timezone.utc)
+    for wpath in sorted(waivers_dir.glob("*.json")):
+        if wpath.name == "waiver.schema.json":
+            continue
+        try:
+            waiver = json.loads(wpath.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if waiver.get("gate_id") != gate_id:
+            continue
+        expires = waiver.get("expires_at_utc")
+        if expires:
+            try:
+                expiry = datetime.datetime.fromisoformat(expires.replace("Z", "+00:00"))
+            except ValueError:
+                continue
+            if expiry.tzinfo is None:
+                expiry = expiry.replace(tzinfo=datetime.timezone.utc)
+            if expiry < now:
+                continue
+        return wpath
+    return None
+
+
 def _g9_contract_breaking_change(root: pathlib.Path) -> dict:
     t0 = time.monotonic()
     gate_id = "CONTRACT_BREAKING_CHANGE_GATE"
@@ -5368,6 +5666,21 @@ def _g9_contract_breaking_change(root: pathlib.Path) -> dict:
                 {"blocking_code": "BLOCKED_BREAKING_CHANGE", "artifact": str(openapi_root.relative_to(root)), "message": ln, "severity": "error"}
                 for ln in lines[:20]
             ]
+            waiver_path = _find_active_waiver(root, gate_id)
+            if waiver_path:
+                waiver_rel = str(waiver_path.relative_to(root))
+                return _pg(
+                    gate_id,
+                    "PASS",
+                    True,
+                    None,
+                    "Breaking change detectada — waiver ativo aprovado. Ver contracts/_waivers/.",
+                    [str(baseline), str(openapi_root)],
+                    [str(baseline), str(openapi_root), waiver_rel],
+                    [waiver_rel],
+                    [],
+                    _ms(t0),
+                )
             return _pg(
                 gate_id,
                 "FAIL",
@@ -5424,6 +5737,21 @@ def _g9_contract_breaking_change(root: pathlib.Path) -> dict:
             }
             for (m, p) in removed[:40]
         ]
+        waiver_path = _find_active_waiver(root, gate_id)
+        if waiver_path:
+            waiver_rel = str(waiver_path.relative_to(root))
+            return _pg(
+                gate_id,
+                "PASS",
+                True,
+                None,
+                "Breaking change detectada — waiver ativo aprovado. Ver contracts/_waivers/.",
+                [str(baseline), str(openapi_root)],
+                [str(baseline), str(openapi_root), waiver_rel],
+                [waiver_rel],
+                [],
+                _ms(t0),
+            )
         return _pg(
             gate_id,
             "FAIL",
@@ -5599,29 +5927,83 @@ def _g13_arazzo_validation(root: pathlib.Path) -> dict:
 def _g14_ui_doc_validation(root: pathlib.Path) -> dict:
     t0 = time.monotonic()
     gate_id = "UI_DOC_VALIDATION_GATE"
-    module_docs_dir = root / "docs" / "hbtrack" / "modulos"
-    ui_contracts = list(module_docs_dir.rglob("UI_CONTRACT_*.md")) if module_docs_dir.exists() else []
+    ui_dir = root / "docs" / "hbtrack" / "modulos"
+    paths_dir = root / "contracts" / "openapi" / "paths"
+    openapi_root_f = root / "contracts" / "openapi" / "openapi.yaml"
+    if not ui_dir.exists():
+        return _skip(gate_id, "docs/hbtrack/modulos/ ausente.", _ms(t0))
+    ui_contracts = list(ui_dir.rglob("UI_CONTRACT_*.md"))
     if not ui_contracts:
-        return _skip(gate_id, "Nenhum UI_CONTRACT_*.md encontrado — gate não aplicável.", _ms(t0))
-    checked = [str(p) for p in ui_contracts]
+        return _skip(gate_id, "Nenhum UI_CONTRACT_*.md encontrado.", _ms(t0))
+    if not openapi_root_f.exists():
+        return _skip(gate_id, "openapi.yaml ausente.", _ms(t0))
+    import re as _re
+    all_openapi_text = openapi_root_f.read_text(encoding="utf-8")
+    if paths_dir.exists():
+        for p in paths_dir.rglob("*.yaml"):
+            all_openapi_text += "\n" + p.read_text(encoding="utf-8")
+    defined_ops = set(_re.findall(r"operationId:\s*(\S+)", all_openapi_text))
     violations: list[dict] = []
-    for p in ui_contracts:
-        content = p.read_text(encoding="utf-8", errors="replace")
+    checked: list[str] = []
+    operation_prefixes = (
+        "accept",
+        "add",
+        "archive",
+        "cancel",
+        "close",
+        "complete",
+        "copy",
+        "create",
+        "delete",
+        "dismiss",
+        "escalate",
+        "get",
+        "list",
+        "publish",
+        "record",
+        "remove",
+        "reorder",
+        "resolve",
+        "start",
+        "submit",
+        "unpublish",
+        "update",
+    )
+    for ui_contract in ui_contracts:
+        checked.append(str(ui_contract.relative_to(root)))
+        ui_text = ui_contract.read_text(encoding="utf-8")
         for token in _PLACEHOLDER_TOKENS:
-            if token in content:
+            if token in ui_text:
                 violations.append({
                     "blocking_code": "BLOCKED_UI_CONTRACT_PLACEHOLDER",
-                    "artifact": str(p.relative_to(root)),
+                    "artifact": str(ui_contract.relative_to(root)),
                     "message": f"Token placeholder '{token}' em UI contract.",
                     "severity": "error",
                 })
                 break
+        candidates = set(_re.findall(r"`([a-z][a-zA-Z0-9]{5,})`", ui_text))
+        op_refs = {
+            ref for ref in candidates
+            if any(char.isupper() for char in ref[1:])
+            and ref.startswith(operation_prefixes)
+        }
+        for op in sorted(op_refs):
+            if op not in defined_ops:
+                violations.append({
+                    "blocking_code": "BLOCKED_CONTRACT_CONFLICT",
+                    "artifact": str(ui_contract.relative_to(root)),
+                    "message": f"operationId '{op}' no UI contract não existe no OpenAPI.",
+                    "severity": "error",
+                })
     if violations:
-        return _pg(gate_id, "FAIL", False, "BLOCKED_UI_CONTRACT_PLACEHOLDER",
-                   f"UI contracts: {len(violations)} arquivo(s) com placeholders.",
+        blocking_code = "BLOCKED_UI_CONTRACT_PLACEHOLDER" if any(
+            v.get("blocking_code") == "BLOCKED_UI_CONTRACT_PLACEHOLDER" for v in violations
+        ) else "BLOCKED_CONTRACT_CONFLICT"
+        return _pg(gate_id, "FAIL", False, blocking_code,
+                   f"{len(violations)} problema(s) em UI contracts.",
                    [], checked, [], violations, _ms(t0))
     return _pg(gate_id, "PASS", False, None,
-               f"UI contracts: {len(ui_contracts)} arquivo(s) válido(s).",
+               f"UI contracts alinhados com OpenAPI ({len(checked)} arquivo(s)).",
                [], checked, [], [], _ms(t0))
 
 
@@ -6179,6 +6561,17 @@ def _g_adversarial_analysis(root: pathlib.Path) -> dict:
         return _skip(gate_id, "_reports/adversarial/ vazia — nenhum relatório adversarial encontrado.", _ms(t0))
     checked = [str(p) for p in report_files]
     violations: list[dict] = []
+    module_statuses: dict[str, str] = {}
+    registry_path = root / "docs" / "_canon" / "MODULE_REGISTRY.yaml"
+    if registry_path.exists():
+        try:
+            import yaml as _yaml
+            registry = _yaml.safe_load(registry_path.read_text(encoding="utf-8")) or {}
+            for module_name, module_data in (registry.get("modules") or {}).items():
+                if isinstance(module_name, str) and isinstance(module_data, dict):
+                    module_statuses[module_name] = module_data.get("status", "draft_contract")
+        except Exception:
+            module_statuses = {}
     for rpath in report_files:
         try:
             data = json.loads(rpath.read_text(encoding="utf-8"))
@@ -6189,6 +6582,14 @@ def _g_adversarial_analysis(root: pathlib.Path) -> dict:
                                "severity": "error"})
             continue
         overall = data.get("overall_status")
+        score = data.get("score", 100)
+        risks = data.get("risks") or []
+        critical_open = len([
+            risk for risk in risks
+            if isinstance(risk, dict)
+            and risk.get("severity") == "critical"
+            and risk.get("status") not in ("resolved", "accepted")
+        ])
         if overall != "PASS":
             module = data.get("module", "?")
             resource = data.get("resource", "?")
@@ -6198,13 +6599,197 @@ def _g_adversarial_analysis(root: pathlib.Path) -> dict:
                                "message": (f"Análise adversarial FAIL: módulo={module}, recurso={resource}, "
                                            f"status={overall}, achados_críticos={len(findings)}"),
                                "severity": "error"})
+        module_name = data.get("module", "")
+        module_status = module_statuses.get(module_name, "draft_contract")
+        min_score = 90 if module_status == "implementation_ready" else 80
+        if score < min_score:
+            violations.append({
+                "blocking_code": "BLOCKED_ADVERSARIAL_PENDING",
+                "artifact": str(rpath.relative_to(root)),
+                "message": f"Score {score}/100 < {min_score} exigido para status='{module_status}'.",
+                "severity": "error",
+            })
+        if module_status == "implementation_ready" and critical_open > 0:
+            violations.append({
+                "blocking_code": "BLOCKED_ADVERSARIAL_PENDING",
+                "artifact": str(rpath.relative_to(root)),
+                "message": f"{critical_open} risco(s) crítico(s) aberto(s) bloqueiam implementation_ready.",
+                "severity": "error",
+            })
     if violations:
         return _pg(gate_id, "FAIL", False, "BLOCKED_ADVERSARIAL_PENDING",
-                   f"Análise adversarial: {len(violations)} relatório(s) com FAIL — handoff para implementação bloqueado.",
+                   f"Análise adversarial: {len(violations)} violação(ões) encontradas.",
                    [], checked, [], violations, _ms(t0))
     return _pg(gate_id, "PASS", False, None,
                f"Análise adversarial: {len(report_files)} relatório(s) — todos PASS.",
                [], checked, [], [], _ms(t0))
+
+
+def _g_handoff_coherence(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "HANDOFF_COHERENCE_GATE"
+    handoff = root / "SESSION_HANDOFF.md"
+    if not handoff.exists():
+        return _skip(gate_id, "SESSION_HANDOFF.md ausente.", _ms(t0))
+    text = handoff.read_text(encoding="utf-8")
+    violations: list[dict] = []
+    import re as _re
+    match = _re.search(r"data_ultima_sessao[:\s]+(\d{4}-\d{2}-\d{2})", text)
+    if match:
+        try:
+            session_date = datetime.date.fromisoformat(match.group(1))
+            age_days = (datetime.date.today() - session_date).days
+            if age_days > 30:
+                violations.append({
+                    "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+                    "artifact": "SESSION_HANDOFF.md",
+                    "message": f"data_ultima_sessao há {age_days} dias — handoff pode estar desatualizado.",
+                    "severity": "warn",
+                })
+        except ValueError:
+            pass
+    try:
+        proc = subprocess.run(
+            ["git", "branch", "--show-current"],
+            capture_output=True,
+            text=True,
+            cwd=root,
+            timeout=5,
+            check=False,
+        )
+        current_branch = proc.stdout.strip()
+        branch_match = _re.search(r"branch_ativo[:\s]+(\S+)", text)
+        if branch_match and current_branch and branch_match.group(1) != current_branch:
+            violations.append({
+                "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+                "artifact": "SESSION_HANDOFF.md",
+                "message": f"branch_ativo='{branch_match.group(1)}' != branch atual='{current_branch}'.",
+                "severity": "warn",
+            })
+    except Exception:
+        pass
+    if violations:
+        return _pg(gate_id, "FAIL", False, "BLOCKED_HANDOFF_INCOMPLETE",
+                   f"SESSION_HANDOFF.md com {len(violations)} inconsistência(s).",
+                   [str(handoff)], [str(handoff)], [], violations, _ms(t0))
+    return _pg(gate_id, "PASS", False, None,
+               "SESSION_HANDOFF.md coerente com estado atual.",
+               [str(handoff)], [str(handoff)], [], [], _ms(t0))
+
+
+def _g_module_status_coherence(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "MODULE_STATUS_COHERENCE_GATE"
+    registry_path = root / "docs" / "_canon" / "MODULE_REGISTRY.yaml"
+    adversarial_dir = root / "_reports" / "adversarial"
+    if not registry_path.exists():
+        return _skip(gate_id, "MODULE_REGISTRY.yaml ausente.", _ms(t0))
+    try:
+        import yaml as _yaml
+        with open(registry_path, encoding="utf-8") as handle:
+            registry = _yaml.safe_load(handle) or {}
+    except Exception as exc:
+        return _pg(gate_id, "FAIL", True, "BLOCKED_REGISTRY_MISMATCH",
+                   f"Falha ao ler MODULE_REGISTRY.yaml: {exc}",
+                   [str(registry_path)], [str(registry_path)], [], [], _ms(t0))
+    violations: list[dict] = []
+    checked = [str(registry_path)]
+    high_statuses = {"validated_contract", "implementation_ready"}
+    for mod_name, mod_data in (registry.get("modules") or {}).items():
+        if not isinstance(mod_data, dict):
+            continue
+        status = mod_data.get("status", "draft_contract")
+        if status not in high_statuses or not adversarial_dir.exists():
+            continue
+        for rpath in adversarial_dir.rglob(f"*{mod_name}*.adversarial.json"):
+            checked.append(str(rpath))
+            try:
+                data = json.loads(rpath.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            overall = data.get("overall_status", "PASS")
+            critical_open = len([
+                risk for risk in (data.get("risks") or [])
+                if isinstance(risk, dict)
+                and risk.get("severity") == "critical"
+                and risk.get("status") not in ("resolved", "accepted")
+            ])
+            if overall != "PASS":
+                violations.append({
+                    "blocking_code": "BLOCKED_ADVERSARIAL_PENDING",
+                    "artifact": str(rpath.relative_to(root)),
+                    "message": (
+                        f"Módulo '{mod_name}' status='{status}' mas adversarial={overall}. "
+                        "Requer overall_status=PASS para manter este status."
+                    ),
+                    "severity": "error",
+                })
+            elif critical_open > 0 and status == "implementation_ready":
+                violations.append({
+                    "blocking_code": "BLOCKED_ADVERSARIAL_PENDING",
+                    "artifact": str(rpath.relative_to(root)),
+                    "message": (
+                        f"Módulo '{mod_name}' status='implementation_ready' com "
+                        f"{critical_open} risco(s) crítico(s) em aberto."
+                    ),
+                    "severity": "error",
+                })
+    if violations:
+        return _pg(gate_id, "FAIL", True, "BLOCKED_REGISTRY_MISMATCH",
+                   f"Status incoerente em {len(violations)} módulo(s).",
+                   [str(registry_path)], checked, [], violations, _ms(t0))
+    return _pg(gate_id, "PASS", True, None,
+               "Status de todos os módulos coerente com bloqueios adversariais.",
+               [str(registry_path)], checked, [], [], _ms(t0))
+
+
+def _g_cross_module_boundary(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "CROSS_MODULE_BOUNDARY_GATE"
+    matrix_path = root / "docs" / "_canon" / "MODULE_SOURCE_AUTHORITY_MATRIX.yaml"
+    if not matrix_path.exists():
+        return _skip(gate_id, "MODULE_SOURCE_AUTHORITY_MATRIX.yaml ausente.", _ms(t0))
+    try:
+        import yaml as _yaml
+        matrix = _yaml.safe_load(matrix_path.read_text(encoding="utf-8")) or {}
+    except Exception as exc:
+        return _skip(gate_id, f"Erro ao ler matrix: {exc}", _ms(t0))
+    import re as _re
+    violations: list[dict] = []
+    checked = [str(matrix_path)]
+    paths_dir = root / "contracts" / "openapi" / "paths"
+    if not paths_dir.exists():
+        return _skip(gate_id, "contracts/openapi/paths/ ausente.", _ms(t0))
+    for boundary in (matrix.get("boundaries") or []):
+        if not isinstance(boundary, dict):
+            continue
+        owner = boundary.get("owner_module", "")
+        forbidden_patterns = boundary.get("forbidden_write_patterns") or []
+        if not forbidden_patterns:
+            continue
+        for path_file in paths_dir.rglob("*.yaml"):
+            checked.append(str(path_file))
+            if owner and owner in path_file.stem:
+                continue
+            content = path_file.read_text(encoding="utf-8")
+            for pattern in forbidden_patterns:
+                if _re.search(pattern, content):
+                    violations.append({
+                        "blocking_code": "BLOCKED_SCOPE_OVERFLOW",
+                        "artifact": str(path_file.relative_to(root)),
+                        "message": (
+                            f"Módulo '{path_file.stem}' contém padrão proibido '{pattern}' "
+                            f"de propriedade de '{owner}'."
+                        ),
+                        "severity": "error",
+                    })
+    if violations:
+        return _pg(gate_id, "FAIL", False, "BLOCKED_SCOPE_OVERFLOW",
+                   f"{len(violations)} violação(ões) de fronteira cross-módulo.",
+                   [str(matrix_path)], checked, [], violations, _ms(t0))
+    return _pg(gate_id, "PASS", False, None,
+               "Fronteiras cross-módulo respeitadas.",
+               [str(matrix_path)], checked, [], [], _ms(t0))
 
 
 def _g_feature_readiness(root: pathlib.Path) -> dict:
@@ -6443,7 +7028,7 @@ def _g_pact_provider(root: pathlib.Path) -> dict:
 def _g_code_architecture(root: pathlib.Path) -> dict:
     """CODE_ARCHITECTURE_GATE — verifica conformidade com ADR-026.
 
-    SKIP_NOT_APPLICABLE: 'Hb Track - Backend/src/' ainda não existe (pré-implementação).
+    SKIP_NOT_APPLICABLE: 'src/' ainda não existe (pré-implementação).
     PASS : ADR-026 + CODE_ARCHITECTURE.md existem; módulos implementation_ready têm src/<module>/.
     FAIL : ADR-026 ou CODE_ARCHITECTURE.md ausentes (BLOCKED_MISSING_ARCH_DECISION).
     """
@@ -6475,11 +7060,11 @@ def _g_code_architecture(root: pathlib.Path) -> dict:
         })
 
     # 3. Se src/ ainda não existe — SKIP (pré-implementação)
-    src_dir = root / "Hb Track - Backend" / "src"
+    src_dir = root / "src"
     if not src_dir.exists():
         if not violations:
             return _skip(gate_id,
-                         "'Hb Track - Backend/src/' ainda não existe — pré-implementação. "
+                         "'src/' ainda não existe — pré-implementação. "
                          "ADR-026 e CODE_ARCHITECTURE.md presentes e prontos.",
                          _ms(t0))
         # ADR ou arch ausentes + sem src — reportar erros
@@ -6912,17 +7497,175 @@ def _write_module_readiness_scorecard(
     )
 
 
+def _gen_readiness_dashboard(
+    root: pathlib.Path,
+    gates: list[dict],
+    overall: str,
+    health: int,
+    run_id: str,
+    ts: str,
+    output_path: pathlib.Path,
+) -> None:
+    try:
+        import yaml as _yaml
+        registry_path = root / "docs" / "_canon" / "MODULE_REGISTRY.yaml"
+        modules = {}
+        if registry_path.exists():
+            modules = (_yaml.safe_load(registry_path.read_text(encoding="utf-8")) or {}).get("modules", {})
+    except Exception:
+        modules = {}
+    lines = [
+        "# Dashboard de Readiness - HB Track",
+        f"> Gerado em {ts} | run_id: `{run_id}` | health: **{health}/100** | overall: **{overall}**",
+        "",
+        "## Modulos",
+        "",
+        "| Modulo | Status | Superficies |",
+        "|---|---|---|",
+    ]
+    for name, data in (modules or {}).items():
+        if not isinstance(data, dict):
+            continue
+        status = data.get("status", "?")
+        surfaces = ", ".join(data.get("expected_surfaces") or data.get("surfaces") or [])
+        lines.append(f"| {name} | `{status}` | {surfaces} |")
+    lines += ["", "## Gates", "", "| Gate | Status | Blocking |", "|---|---|---|"]
+    for gate in gates:
+        gate_id = gate.get("gate_id", "?")
+        status = gate.get("status", "?")
+        blocking = "sim" if gate.get("blocking") else "nao"
+        lines.append(f"| {gate_id} | {status} | {blocking} |")
+    output_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _persist_pipeline_artifacts(
+    *,
+    root: pathlib.Path,
+    report_path: pathlib.Path,
+    report: dict,
+    gates: list[dict],
+    overall: str,
+    exit_code: int,
+    ts: str,
+    run_dir: pathlib.Path,
+    run_id: str,
+) -> None:
+    import shutil as _shutil
+    _shutil.copy2(report_path, run_dir / "contract_gates.json")
+    scorecard = root / "_reports" / "evidence" / "module_readiness_scorecard.json"
+    if scorecard.exists():
+        _shutil.copy2(scorecard, run_dir / "module_readiness_scorecard.json")
+
+    total = len(gates)
+    passed = len([gate for gate in gates if gate.get("status") in ("PASS", "SKIP_NOT_APPLICABLE")])
+    health = round((passed / total) * 100) if total > 0 else 0
+    health_data = {
+        "run_id": run_id,
+        "timestamp_utc": ts,
+        "health_score": health,
+        "gates_total": total,
+        "gates_passed": passed,
+        "gates_failed": len([gate for gate in gates if gate.get("status") == "FAIL"]),
+        "blocking_fails": len([gate for gate in gates if gate.get("blocking") and gate.get("status") == "FAIL"]),
+        "overall_status": overall,
+        "exit_code": exit_code,
+    }
+    (run_dir / "health.json").write_text(
+        json.dumps(health_data, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    (root / "_reports" / "pipeline_health.json").write_text(
+        json.dumps(health_data, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    history_path = root / "_reports" / "pipeline_history.jsonl"
+    history_entry = {
+        "run_id": run_id,
+        "timestamp_utc": ts,
+        "overall_status": overall,
+        "exit_code": exit_code,
+        "health_score": health,
+        "git_commit": report.get("environment", {}).get("git_commit"),
+    }
+    with open(history_path, "a", encoding="utf-8") as history_file:
+        history_file.write(json.dumps(history_entry, ensure_ascii=False) + "\n")
+    try:
+        _gen_readiness_dashboard(
+            root,
+            gates,
+            overall,
+            health,
+            run_id,
+            ts,
+            root / "_reports" / "READINESS_DASHBOARD.md",
+        )
+    except Exception:
+        pass
+
+
 # ── Orchestrator + main ───────────────────────────────────────────────────────
 
-def run_pipeline() -> tuple[dict, int]:
+def _load_gates_metadata(root: pathlib.Path) -> dict[str, dict[str, Any]]:
+    """
+    Load GATES_REGISTRY.yaml and build dict: gate_id → gate metadata.
+    
+    Returns: {gate_id: {blocking, severity, order, ...}, ...}
+    Raises: Exception if registry invalid or missing.
+    """
+    registry_path = root / "docs" / "_canon" / "gates" / "GATES_REGISTRY.yaml"
+    if not registry_path.exists():
+        raise FileNotFoundError(f"GATES_REGISTRY.yaml not found at {registry_path}")
+    
+    with open(registry_path, "r", encoding="utf-8") as f:
+        registry_data = yaml.safe_load(f)
+    
+    if not registry_data or "gates" not in registry_data:
+        raise ValueError(f"GATES_REGISTRY.yaml missing 'gates' key")
+    
+    gates_metadata = {}
+    for gate in registry_data["gates"]:
+        gate_id = gate.get("gate_id")
+        if not gate_id:
+            raise ValueError("Gate in GATES_REGISTRY.yaml missing gate_id")
+        gates_metadata[gate_id] = gate
+    
+    return gates_metadata
+
+
+def run_pipeline(
+    profile: str = "ci",
+    stage: "str | None" = None,
+    artifact: "str | None" = None,
+    module: "str | None" = None,
+) -> tuple[dict, int]:
     root = _repo_root()
     axioms_path = root / ".contract_driven" / "DOMAIN_AXIOMS.json"
     axioms_schema_path = root / "contracts" / "schemas" / "shared" / "domain_axioms.schema.json"
     report_path = root / "_reports" / "contract_gates" / "latest.json"
     report_path.parent.mkdir(parents=True, exist_ok=True)
+    _required_tools = ["python3"]
+    _optional_tools = ["redocly", "spectral", "oasdiff", "schemathesis", "asyncapi"]
+    missing_required = [tool for tool in _required_tools if not shutil.which(tool)]
+    missing_optional = [tool for tool in _optional_tools if not shutil.which(tool)]
+    if missing_required:
+        print(f"[BOOTSTRAP] ERRO: ferramentas obrigatórias ausentes: {missing_required}", file=sys.stderr)
+    if missing_optional:
+        print(f"[BOOTSTRAP] INFO: tools opcionais ausentes (gates entrarão em SKIP): {missing_optional}")
     openapi_root = root / "contracts" / "openapi" / "openapi.yaml"
     asyncapi_root_p = root / "contracts" / "asyncapi" / "asyncapi.yaml"
     ts = datetime.datetime.now(datetime.UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    import uuid as _uuid
+    run_id = datetime.datetime.now(datetime.UTC).strftime("%Y%m%dT%H%M%S") + "_" + _uuid.uuid4().hex[:6]
+    run_dir = root / "_reports" / "runs" / run_id
+    run_dir.mkdir(parents=True, exist_ok=True)
+
+    # PR3: Load GATES_REGISTRY.yaml as SSOT for gate metadata
+    try:
+        gates_metadata = _load_gates_metadata(root)
+    except Exception as e:
+        print(f"[BOOTSTRAP] ERRO: Não foi possível carregar GATES_REGISTRY.yaml: {e}", file=sys.stderr)
+        gates_metadata = {}  # Fallback (will use defaults)
 
     def _build_report(all_gates: list[dict], overall: str, exit_code: int) -> dict:
         return {
@@ -6986,6 +7729,17 @@ def run_pipeline() -> tuple[dict, int]:
         report = _build_report(gates, "FAIL", 4)
         report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         _write_module_readiness_scorecard(root, gates, generated_at_utc=ts, overall_status="FAIL")
+        _persist_pipeline_artifacts(
+            root=root,
+            report_path=report_path,
+            report=report,
+            gates=gates,
+            overall="FAIL",
+            exit_code=4,
+            ts=ts,
+            run_dir=run_dir,
+            run_id=run_id,
+        )
         return report, 4
 
     try:
@@ -7000,47 +7754,129 @@ def run_pipeline() -> tuple[dict, int]:
         report = _build_report(gates, "FAIL", 4)
         report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         _write_module_readiness_scorecard(root, gates, generated_at_utc=ts, overall_status="FAIL")
+        _persist_pipeline_artifacts(
+            root=root,
+            report_path=report_path,
+            report=report,
+            gates=gates,
+            overall="FAIL",
+            exit_code=4,
+            ts=ts,
+            run_dir=run_dir,
+            run_id=run_id,
+        )
         return report, 4
 
-    # Gates: run all gates in canonical order
-    gates.append(_g1_path_canonicality(root))
-    gates.append(_g2_required_artifact_presence(root))
-    gates.append(_g2a_module_doc_crossrefs(root))
-    gates.append(_g2b_api_normative_duplication(root))
-    gates.append(_g2c_owasp_api_control_matrix(root))
-    gates.append(_g2d_module_source_authority_matrix(root))
-    gates.append(_g2d1_module_registry(root))
-    gates.append(_g2e_boundary_users_identity_access(root))
-    gates.append(_g2f_wellness_medical_boundary(root))
-    gates.append(_g2g_scout_taxonomy(root))
-    gates.append(_g2h_async_required_module(root))
-    gates.append(_g2i_external_source_authority(root))
-    gates.append(_g2j_pre_contract_evidence(root))
-    gates.append(_g2k_shadow_authority(root))
-    gates.append(_g2l_decision_ir_conformance(root))
-    gates.append(_g3_placeholder_residue(root))
-    gates.append(_g4_ref_hermeticity(root))
-    gates.append(_g4a_tooling_config(root))
-    gates.append(_g5_openapi_root_structure(root))
-    gates.append(_g5a_openapi_root_module_sync(root))
-    gates.append(_g6_openapi_policy_ruleset(root))
-    gates.append(_g7_json_schema_validation(root))
-    gates.append(_g8_cross_spec_alignment(root, axioms))
-    gates.append(_g9_contract_breaking_change(root))
-    gates.append(_g10_transformation_feasibility(root))
-    gates.append(_g11_http_runtime_contract(root))
-    gates.append(_g12_asyncapi_validation(root))
-    gates.append(_g13_arazzo_validation(root))
-    gates.append(_g14_ui_doc_validation(root))
-    gates.append(_g15_derived_drift(root))
-    gates.append(_g_adversarial_analysis(root))
-    gates.append(_g_feature_readiness(root))
-    gates.append(_g_versioning_policy(root))
-    gates.append(_g_pact_provider(root))
-    gates.append(_g_code_architecture(root))
-    gates.append(_g_deploy_readiness(root))
-    gates.append(_g_data_migration(root))
-    gates.append(_g_monitoring_policy(root))
+    _precommit_ids = {
+        "PATH_CANONICALITY_GATE",
+        "MODULE_REGISTRY_GATE",
+        "PLACEHOLDER_RESIDUE_GATE",
+        "UI_DOC_VALIDATION_GATE",
+        "HANDOFF_COHERENCE_GATE",
+        "MODULE_STATUS_COHERENCE_GATE",
+        "AXIOM_INTEGRITY_GATE",
+        "CANON_ALLOWLIST_GATE",
+    }
+    _local_ids = _precommit_ids | {
+        "DECISION_IR_CONFORMANCE_GATE",
+        "DERIVED_DRIFT_GATE",
+        "ADVERSARIAL_ANALYSIS_GATE",
+        "FEATURE_READINESS_GATE",
+    }
+
+    # Stage-specific gate sets (Fase 0 / 1 / 2)
+    _session_start_ids = {
+        "AXIOM_INTEGRITY_GATE",
+        "HANDOFF_COHERENCE_GATE",
+        "MODULE_STATUS_COHERENCE_GATE",
+    }
+    _pre_authoring_ids = {
+        "AXIOM_INTEGRITY_GATE",
+        "MODULE_REGISTRY_GATE",
+        "REQUIRED_ARTIFACT_PRESENCE_GATE",
+        "ADVERSARIAL_ANALYSIS_GATE",
+        "CROSS_MODULE_BOUNDARY_GATE",
+    }
+    _artifact_ids = {
+        "AXIOM_INTEGRITY_GATE",
+        "PATH_CANONICALITY_GATE",
+        "PLACEHOLDER_RESIDUE_GATE",
+        "JSON_SCHEMA_VALIDATION_GATE",
+        "UI_DOC_VALIDATION_GATE",
+        "CROSS_MODULE_BOUNDARY_GATE",
+        "OPENAPI_ROOT_STRUCTURE_GATE",
+    }
+    _stage_map: "dict[str, set[str]] | None" = (
+        {"session-start": _session_start_ids, "pre-authoring": _pre_authoring_ids, "artifact": _artifact_ids}
+        if stage else None
+    )
+
+    def _maybe(gate_fn, gate_id_hint: str) -> dict:
+        if _stage_map is not None:
+            allowed_for_stage = _stage_map.get(stage, set())  # type: ignore[arg-type]
+            if gate_id_hint not in allowed_for_stage:
+                return _skip(gate_id_hint, f"Pulado no estágio '{stage}'.", 0)
+            return gate_fn()
+        if profile == "ci":
+            return gate_fn()
+        allowed = _local_ids if profile == "local" else _precommit_ids
+        if gate_id_hint in allowed:
+            return gate_fn()
+        return _skip(gate_id_hint, f"Pulado no perfil '{profile}'.", 0)
+
+    gate_plan = [
+        ("PATH_CANONICALITY_GATE", lambda: _g1_path_canonicality(root)),
+        ("REQUIRED_ARTIFACT_PRESENCE_GATE", lambda: _g2_required_artifact_presence(root)),
+        ("MODULE_DOC_CROSSREF_GATE", lambda: _g2a_module_doc_crossrefs(root)),
+        ("API_NORMATIVE_DUPLICATION_GATE", lambda: _g2b_api_normative_duplication(root)),
+        ("OWASP_API_CONTROL_MATRIX_GATE", lambda: _g2c_owasp_api_control_matrix(root)),
+        ("MODULE_SOURCE_AUTHORITY_MATRIX_GATE", lambda: _g2d_module_source_authority_matrix(root)),
+        ("MODULE_REGISTRY_GATE", lambda: _g2d1_module_registry(root)),
+        ("BOUNDARY_USERS_IDENTITY_ACCESS_GATE", lambda: _g2e_boundary_users_identity_access(root)),
+        ("WELLNESS_MEDICAL_BOUNDARY_GATE", lambda: _g2f_wellness_medical_boundary(root)),
+        ("SCOUT_TAXONOMY_GATE", lambda: _g2g_scout_taxonomy(root)),
+        ("ASYNC_REQUIRED_MODULE_GATE", lambda: _g2h_async_required_module(root)),
+        ("EXTERNAL_SOURCE_AUTHORITY_GATE", lambda: _g2i_external_source_authority(root)),
+        ("PRE_CONTRACT_EVIDENCE_GATE", lambda: _g2j_pre_contract_evidence(root)),
+        ("SHADOW_AUTHORITY_GATE", lambda: _g2k_shadow_authority(root)),
+        ("DECISION_IR_CONFORMANCE_GATE", lambda: _g2l_decision_ir_conformance(root)),
+        ("CANON_ALLOWLIST_GATE", lambda: _g2n_canon_allowlist(root)),
+        ("PLACEHOLDER_RESIDUE_GATE", lambda: _g3_placeholder_residue(root)),
+        ("REF_HERMETICITY_GATE", lambda: _g4_ref_hermeticity(root)),
+        ("TOOLING_CONFIG_GATE", lambda: _g4a_tooling_config(root)),
+        ("OPENAPI_ROOT_STRUCTURE_GATE", lambda: _g5_openapi_root_structure(root)),
+        ("OPENAPI_ROOT_MODULE_SYNC_GATE", lambda: _g5a_openapi_root_module_sync(root)),
+        ("OPENAPI_POLICY_RULESET_GATE", lambda: _g6_openapi_policy_ruleset(root)),
+        ("JSON_SCHEMA_VALIDATION_GATE", lambda: _g7_json_schema_validation(root)),
+        ("CROSS_SPEC_ALIGNMENT_GATE", lambda: _g8_cross_spec_alignment(root, axioms)),
+        ("CONTRACT_BREAKING_CHANGE_GATE", lambda: _g9_contract_breaking_change(root)),
+        ("TRANSFORMATION_FEASIBILITY_GATE", lambda: _g10_transformation_feasibility(root)),
+        ("HTTP_RUNTIME_CONTRACT_GATE", lambda: _g11_http_runtime_contract(root)),
+        ("ASYNCAPI_VALIDATION_GATE", lambda: _g12_asyncapi_validation(root)),
+        ("ARAZZO_VALIDATION_GATE", lambda: _g13_arazzo_validation(root)),
+        ("UI_DOC_VALIDATION_GATE", lambda: _g14_ui_doc_validation(root)),
+        ("DERIVED_DRIFT_GATE", lambda: _g15_derived_drift(root)),
+        ("ADVERSARIAL_ANALYSIS_GATE", lambda: _g_adversarial_analysis(root)),
+        ("FEATURE_READINESS_GATE", lambda: _g_feature_readiness(root)),
+        ("VERSIONING_POLICY_GATE", lambda: _g_versioning_policy(root)),
+        ("PACT_PROVIDER_GATE", lambda: _g_pact_provider(root)),
+        ("CODE_ARCHITECTURE_GATE", lambda: _g_code_architecture(root)),
+        ("DEPLOY_READINESS_GATE", lambda: _g_deploy_readiness(root)),
+        ("DATA_MIGRATION_GATE", lambda: _g_data_migration(root)),
+        ("MONITORING_POLICY_GATE", lambda: _g_monitoring_policy(root)),
+        ("HANDOFF_COHERENCE_GATE", lambda: _g_handoff_coherence(root)),
+        ("MODULE_STATUS_COHERENCE_GATE", lambda: _g_module_status_coherence(root)),
+        ("CROSS_MODULE_BOUNDARY_GATE", lambda: _g_cross_module_boundary(root)),
+    ]
+    for gate_id_hint, gate_fn in gate_plan:
+        gate_result = _maybe(gate_fn, gate_id_hint)
+        
+        # PR3: Consult GATES_REGISTRY for blocking status (only for non-SKIP gates)
+        if gate_id_hint in gates_metadata and gate_result.get("status") not in ("SKIP", "DEGRADED"):
+            metadata = gates_metadata[gate_id_hint]
+            gate_result["blocking"] = metadata.get("blocking", gate_result.get("blocking", False))
+        
+        gates.append(gate_result)
 
     # G16: readiness summary
     g16 = _g16_readiness_summary(gates)
@@ -7053,9 +7889,16 @@ def run_pipeline() -> tuple[dict, int]:
         for v in (g.get("violations") or [])
     )
     degraded = any(g.get("status") == "DEGRADED" for g in gates)
+    
+    # PR3: Phase-specific semantics — phase 0/1/2 must ALWAYS exit != 0 if blocking fail
+    is_phase = stage in ("session-start", "pre-authoring", "artifact")
+    
     if blocking_fails:
         overall = "FAIL"
-        exit_code = 3 if error_infra else 2
+        if is_phase:
+            exit_code = 2  # Fase 0/1/2 — strict: ANY blocking fail = exit 2
+        else:
+            exit_code = 3 if error_infra else 2  # Full CI — infrastructure errors = 3
     elif degraded:
         overall = "DEGRADED"
         exit_code = 0
@@ -7069,25 +7912,67 @@ def run_pipeline() -> tuple[dict, int]:
     report = _build_report(gates, overall, exit_code)
     report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     _write_module_readiness_scorecard(root, gates, generated_at_utc=ts, overall_status=overall)
+    _persist_pipeline_artifacts(
+        root=root,
+        report_path=report_path,
+        report=report,
+        gates=gates,
+        overall=overall,
+        exit_code=exit_code,
+        ts=ts,
+        run_dir=run_dir,
+        run_id=run_id,
+    )
     return report, exit_code
 
 
 def main() -> int:
-    report, exit_code = run_pipeline()
+    import argparse as _argparse
+
+    parser = _argparse.ArgumentParser(description="HB Track Contract Gates")
+    parser.add_argument("--profile", choices=["local", "precommit", "ci"], default=None)
+    parser.add_argument(
+        "--stage",
+        choices=["session-start", "pre-authoring", "artifact"],
+        default=None,
+        help="Executar apenas os gates da fase indicada (Fase 0/1/2).",
+    )
+    parser.add_argument("--artifact", default=None, help="Path do artefato (para --stage artifact).")
+    parser.add_argument("--module", default=None, help="Módulo alvo (para --stage pre-authoring).")
+    args, _ = parser.parse_known_args()
+    profile = args.profile or ("ci" if os.environ.get("CI") else "local")
+    stage = args.stage
+    artifact = args.artifact
+    module = args.module
+
+    _stage_labels = {
+        "session-start": "FASE 0: SESSION_BOOT",
+        "pre-authoring": "FASE 1: PRE_AUTHORING",
+        "artifact": "FASE 2: PER_ARTIFACT",
+    }
+    phase_label = _stage_labels.get(stage, "PIPELINE COMPLETO") if stage else "PIPELINE COMPLETO"
+    artifact_label = f"  |  {artifact}" if artifact else (f"  |  módulo={module}" if module else "")
+
+    sep = "═" * 62
+    print(f"\n{sep}")
+    print(f"  {phase_label}{artifact_label}")
+    print(sep)
+
+    report, exit_code = run_pipeline(profile=profile, stage=stage, artifact=artifact, module=module)
     gates = report.get("gates", [])
     overall = report.get("overall_status", "?")
 
-    sep = "-" * 62
-    print(f"\n{sep}")
+    sep2 = "-" * 62
+    print(f"\n{sep2}")
     print(f"  HB TRACK CONTRACT GATES  --  {overall}")
-    print(sep)
+    print(sep2)
     for g in gates:
         status = g.get("status", "?")
         gid = g.get("gate_id", "?")
         summary = g.get("summary", "")
         if status == "PASS":
             icon = "+"
-        elif status == "SKIP_NOT_APPLICABLE":
+        elif status in ("SKIP_NOT_APPLICABLE", "SKIP"):
             icon = "~"
         else:
             icon = "!"
@@ -7095,14 +7980,26 @@ def main() -> int:
         if status == "FAIL":
             print(f"       {summary}")
             for v in (g.get("violations") or [])[:3]:
-                print(f"       - {str(v.get('message', ''))[:100]}")
-    print(sep)
-    print(f"  Overall  : {overall}")
-    print(f"  Exit code: {exit_code}")
+                msg = str(v.get("message", ""))[:100]
+                action = v.get("action", "")
+                print(f"       - {msg}")
+                if action:
+                    print(f"         Ação: {action}")
+    print(sep2)
+    print(f"  STATUS   : {overall}")
     root = _repo_root()
     report_path = root / "_reports" / "contract_gates" / "latest.json"
     print(f"  Report   : {report_path}")
-    print(f"{sep}\n")
+    print(sep2)
+    print(f"\nDONE = exitcode 0  |  atual exitcode = {exit_code}")
+    if exit_code != 0 and stage:
+        cmds = {
+            "session-start": "hb verify",
+            "pre-authoring": f"hb check --module {module or '<mod>'}",
+            "artifact": f"hb artifact {artifact or '<path>'}",
+        }
+        print(f"Corrigir e re-executar: {cmds.get(stage, 'hb verify')}")
+    print()
     return exit_code
 
 

@@ -40,7 +40,7 @@ modules:
     owner: "handball-ops"
     expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix"]
   training:
-    status: "implementation_ready"
+    status: "validated_contract"
     owner: "performance-tech"
     expected_surfaces:
       [

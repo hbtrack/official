@@ -1,0 +1,8 @@
+description: >
+  Evento emitido quando um fio de feedback (feedback_thread) é criado entre treinador e atleta.
+  Contexto operacional: sessão, bloco, objetivo, ou evidência.
+
+publish:
+  operationId: feedback_thread_created_publish
+  message:
+    $ref: ../messages/feedback_thread_created.yaml

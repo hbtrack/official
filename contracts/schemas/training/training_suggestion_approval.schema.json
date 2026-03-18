@@ -1,0 +1,95 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://hbtrack.local/schemas/training/training_suggestion_approval.schema.json",
+    "title": "TrainingSuggestionApproval",
+    "description": "SSOT JSON Schema for training suggestion approval/rejection event (module: training). Used in AsyncAPI events for coach decision notifications.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "id",
+        "suggestionId",
+        "athleteId",
+        "coachId",
+        "decision",
+        "decidedAt"
+    ],
+    "properties": {
+        "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique approval event ID."
+        },
+        "suggestionId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Reference to training_suggestion."
+        },
+        "athleteId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Athlete who will be notified."
+        },
+        "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Organization context."
+        },
+        "coachId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Coach who made the decision."
+        },
+        "coachName": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "Display name of coach (for notification)."
+        },
+        "trainingName": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "Name of training being approved/rejected."
+        },
+        "decision": {
+            "type": "string",
+            "enum": [
+                "approved",
+                "rejected"
+            ],
+            "description": "Coach decision."
+        },
+        "feedback": {
+            "type": "string",
+            "maxLength": 1000,
+            "nullable": true,
+            "description": "Optional feedback from coach (especially useful for rejections)."
+        },
+        "generatedSessionId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "If approved, ID of generated training session (for athlete to access)."
+        },
+        "notificationChannels": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "enum": [
+                    "in_app",
+                    "push",
+                    "email"
+                ]
+            },
+            "description": "Preferred notification channels for athlete."
+        },
+        "decidedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 timestamp of coach decision."
+        },
+        "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Event creation timestamp."
+        }
+    }
+}

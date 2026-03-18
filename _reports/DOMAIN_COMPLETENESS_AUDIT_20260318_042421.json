@@ -1,0 +1,109 @@
+{
+  "timestamp": "2026-03-18T04:24:21.154066",
+  "executor": "audit_domain_completeness.py",
+  "version": "1.0.0",
+  "module": "wellness",
+  "task_type": "new_contract",
+  "dc1_determinism": true,
+  "dc2_artifacts": true,
+  "dc3_boundary": true,
+  "dc4_gaps": true,
+  "dc5_handoff": true,
+  "phase0_tests": [
+    {
+      "phase": "0",
+      "injection_name": "module_exists",
+      "expected": "F0 PASS, F1 valida artefatos",
+      "actual": "PASS",
+      "deterministic": false,
+      "passed": true
+    },
+    {
+      "phase": "0",
+      "injection_name": "task_type_known",
+      "expected": "F0 PASS, task=new_contract \u00e9 v\u00e1lido",
+      "actual": "PASS",
+      "deterministic": false,
+      "passed": true
+    },
+    {
+      "phase": "0",
+      "injection_name": "determinism_check",
+      "expected": "DC1: hash_exec1 == hash_exec2",
+      "actual": "Hash generated: f5a332b95e7b...",
+      "deterministic": true,
+      "passed": true
+    }
+  ],
+  "phase1_artifacts": {
+    "README.md": [
+      "BLOCKED_REQUIRED_ARTIFACT_MISSING",
+      "NONE",
+      true
+    ],
+    "DOMAIN_RULES_WELLNESS.md": [
+      "BLOCKED_MISSING_DOMAIN_RULE",
+      "NONE",
+      true
+    ],
+    "INVARIANTS_WELLNESS.md": [
+      "BLOCKED_MISSING_INVARIANT",
+      "NONE",
+      true
+    ],
+    "schemas": [
+      "BLOCKED_MISSING_SCHEMA",
+      "NONE",
+      [
+        "/home/davis/HB-TRACK/contracts/schemas/wellness/wellness_entry.schema.json"
+      ]
+    ]
+  },
+  "decision_discovery": [
+    {
+      "phase": "decision_discovery",
+      "injection_name": "open_adrs",
+      "expected": "Se ADR aberta: BLOCKED_MISSING_ARCH_DECISION",
+      "actual": "PASS",
+      "deterministic": false,
+      "passed": true
+    }
+  ],
+  "authoring_boundary": [
+    {
+      "phase": "authoring",
+      "injection_name": "wellness_medical_boundary",
+      "expected": "WELLNESS_MEDICAL_BOUNDARY_GATE FAIL \u2192 BLOCKED_SCOPE_OVERFLOW",
+      "actual": "Test injected: endpoint references 'diagnosisCode' (medical field)",
+      "deterministic": false,
+      "passed": true
+    }
+  ],
+  "gates_sequence": [
+    {
+      "phase": "validation",
+      "injection_name": "gate_order",
+      "expected": "Gates executadas em ordem crescente, FAIL bloqueante para sequ\u00eancia",
+      "actual": "Order correct",
+      "deterministic": false,
+      "passed": true
+    }
+  ],
+  "silent_gaps": [],
+  "handoff_required_fields": [
+    "module",
+    "task_type",
+    "resource",
+    "domain_rules",
+    "invariants",
+    "related_schemas",
+    "boundary_rules",
+    "applicable_gates",
+    "decision_state"
+  ],
+  "handoff_missing_fields": [],
+  "final_status": "PASS",
+  "total_blocks": 4,
+  "correct_blocks": 4,
+  "inference_count": 0
+}

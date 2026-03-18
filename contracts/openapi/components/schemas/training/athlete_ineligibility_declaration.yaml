@@ -1,0 +1,80 @@
+# AthleteIneligibilityDeclaration OpenAPI component
+# Source: contracts/schemas/training/athlete_ineligibility_declaration.schema.json
+# TRAIN-DEC-024 | RC-14 boundary rule
+# Stores athlete's self-declared ineligibility for a session.
+# Medical restriction_profile remains sovereign in the medical module (RC-14).
+
+type: object
+additionalProperties: false
+required:
+  - id
+  - sessionId
+  - athleteId
+  - reasonFlags
+  - declaredAt
+  - createdAt
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  sessionId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    description: FK to TrainingSession.
+  athleteId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    description: FK to User (athlete). OWASP API1:2023 — server validates this matches the authenticated athlete.
+  reasonFlags:
+    type: array
+    items:
+      type: string
+      x-domain-enum-ref: ineligibility_reason_flag
+      enum:
+        - MEDICAL_APPOINTMENT
+        - INJURY_PAIN
+        - ACTIVE_RECOVERY_ONLY
+        - TESTING_ANTI_DOPING
+        - OTHER
+    minItems: 1
+    description: >
+      One or more reasons for ineligibility. TRAIN-DEC-024.
+      OTHER requires reasonOther to be populated.
+  reasonOther:
+    type: string
+    minLength: 1
+    maxLength: 500
+    description: >
+      Required when OTHER is in reasonFlags. Free-text explanation visible to coach.
+  acknowledgedByCoach:
+    type: boolean
+    description: >
+      Set to true when coach has seen and acknowledged the declaration.
+      Updated by coach via attendance panel (UIF-003).
+  coachNote:
+    type: string
+    maxLength: 500
+    description: Optional note from coach when acknowledging the declaration.
+  declaredAt:
+    type: string
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    description: Server-side timestamp of declaration. Client-provided value is ignored.
+  createdAt:
+    type: string
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+
+example:
+  id: "550e8400-e29b-41d4-a716-446655441100"
+  sessionId: "550e8400-e29b-41d4-a716-446655440000"
+  athleteId: "550e8400-e29b-41d4-a716-446655440050"
+  reasonFlags:
+    - INJURY_PAIN
+  reasonOther: null
+  acknowledgedByCoach: false
+  declaredAt: "2026-03-17T09:30:00Z"
+  createdAt: "2026-03-17T09:30:00Z"

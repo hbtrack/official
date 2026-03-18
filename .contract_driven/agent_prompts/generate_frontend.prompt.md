@@ -1,12 +1,26 @@
 ---
 task_type: generate_frontend
 version: "1.0.0"
-status: active
+status: FROZEN
+frozen_reason: "Frontend paths não canonizados - awaiting real workspace structure"
 requires: [ADR-030, FRONTEND_CONTRACT.md, OPENAPI_ROOT_MODULE_SYNC_GATE=PASS]
 stack: react_vite_typescript
 ---
 
 # generate_frontend — Worker de Geração de Código Frontend
+
+⚠️ **WORKER CONGELADO** ⚠️
+
+Este worker está temporariamente congelado até que:
+1. A estrutura real de frontend seja implementada no workspace
+2. FRONTEND_CONTRACT.md seja validado empiricamente
+3. Stack final (React/Vite vs Next.js vs React Native) seja decidida em ADR
+
+**Não executar este worker até implementação da estrutura de frontend no workspace.**
+
+> **Nota**: Paths mencionados neste prompt (ex: `frontend/src/`) são placeholders da estrutura planejada.
+
+---
 
 ## Pré-requisitos obrigatórios
 

@@ -1,0 +1,8 @@
+description: >
+  Evento emitido quando um fio de feedback é fechado (feedback_thread.status = CLOSED).
+  Requer conversation_outcome: reflection, commitment, pending_action, followup, decision.
+
+publish:
+  operationId: feedback_thread_closed_publish
+  message:
+    $ref: ../messages/feedback_thread_closed.yaml

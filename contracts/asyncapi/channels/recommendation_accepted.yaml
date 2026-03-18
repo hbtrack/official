@@ -1,0 +1,7 @@
+description: >
+  Evento emitido quando treinador aceita uma recomendação de analytics (transição PENDING_COACH_REVIEW → ACCEPTED).
+
+publish:
+  operationId: recommendation_accepted_publish
+  message:
+    $ref: ../messages/recommendation_accepted.yaml

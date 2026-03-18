@@ -10,10 +10,9 @@ info:
 
     Referências normativas — consultar antes de implementar:
     - .contract_driven/CONTRACT_SYSTEM_LAYOUT.md   (estrutura canônica de artefatos)
-    - .contract_driven/templates/api/api_rules.yaml    (regras, templates e validações de API)
+    - .contract_driven/templates/api/api_rules.yaml    (regras, templates e validações de API — SSOT)
     - docs/_canon/SYSTEM_SCOPE.md                  (escopo e módulos canônicos)
-    - docs/_canon/ERROR_MODEL.md                   (convenção de erros RFC 7807)
-    - docs/_canon/API_CONVENTIONS.md               (convenções de API — aponta para api_rules.yaml)
+    - docs/_canon/OPERATIONS.md                    (precedência, naming, validação, modelo de erros RFC 7807)
   contact:
     name: HB Track Team
     email: dev@hbtrack.com

@@ -1,0 +1,4521 @@
+{
+  "ir_version": "2.0.0",
+  "module": "training",
+  "status": "approved",
+  "source": ".dev/TREINOS.md",
+  "decision_scope": "full_module",
+  "module_identity": {
+    "module_name": "training",
+    "domain_label": "Módulo de Treino — HB Track",
+    "sovereign_unit": "training_intervention_cycle",
+    "operational_backbone": [
+      "need",
+      "objective",
+      "prescription",
+      "session",
+      "execution",
+      "response",
+      "review",
+      "adjustment"
+    ],
+    "purpose": "Transformar contexto competitivo e dados do elenco em intervenção de treino planejada, coordenada e executável, preservando a autoridade técnica do treinador em todas as decisões de prescrição",
+    "what_it_is": [
+      "ciclo de intervenção de treino (Need → Adjustment)",
+      "motor de decisão operacional do treinador",
+      "orquestrador de planejamento, prescrição, execução e revisão",
+      "hub de continuidade técnica interstaff",
+      "wellness owns athlete check-in and readiness truth; training consumes session-context snapshot",
+      "users/staff directory owns human identity; identity_access owns auth/authz only",
+      "training_recommendation is advisory intermediary object under coach authority",
+      "review_outcome is formal review closure object",
+      "restriction_override is formal exception object under audit"
+    ],
+    "what_it_is_not": [
+      "agenda de sessões (CRUD)",
+      "sistema de monitoramento médico",
+      "sistema de analytics de performance",
+      "gerenciador de permissões",
+      "entregador direto de notificações",
+      "repositório soberano de auditoria",
+      "chatbot conversacional genérico"
+    ],
+    "benchmark_primary": "XPS Network / Sideline Sports",
+    "benchmark_ecosystem": [
+      "Smartabase",
+      "Teamworks AMS",
+      "Kitman Labs",
+      "Catapult"
+    ],
+    "benchmark_prescription": [
+      "BridgeAthletic",
+      "TeamBuildr"
+    ],
+    "benchmark_ops": "Sportlyzer",
+    "benchmark_semantic_handball": "Handball.ai",
+    "phase_scope": {
+      "phase_1": [
+        "detectar_necessidade",
+        "definir_objetivo",
+        "criar_sessao",
+        "montar_blocos",
+        "publicar_sessao",
+        "confirmar_presenca",
+        "orquestracao_contexto_wellness",
+        "registrar_execucao",
+        "feedback_contextual",
+        "ajuste_ciclo"
+      ],
+      "phase_2": [
+        "video_playbook_contextual",
+        "variantes_por_atleta",
+        "attention_queue_completa",
+        "return_to_play_guards_avancados",
+        "planned_vs_actual_avancado"
+      ],
+      "phase_3": [
+        "feedback_conversacional_estruturado",
+        "risco_abandono",
+        "recomendacoes_automaticas_assistidas",
+        "continuidade_interstaff_avancada"
+      ]
+    },
+    "sovereignty_notes": {
+      "athlete_checkin": "Wellness is sovereign; training orchestrates the operational moment and consumes readiness_snapshot_ref",
+      "human_identity": "users/staff directory is sovereign; identity_access resolves auth/authz policy only",
+      "training_recommendation": "Training is sovereign over the decision object; source modules (analytics/scout/ai_ingestion/matches) are advisory only",
+      "review_outcome": "Training is sovereign; required as formal closure evidence in cycle lifecycle",
+      "restriction_override": "Training is sovereign; requires explicit authorization + audit trail; blocked to coach_assistant"
+    }
+  },
+  "capabilities": [
+    {
+      "capability_id": "CAP-TRAIN-001",
+      "name": "Detecção de Necessidade",
+      "description": "Identificar e registrar necessidades de treino com origem rastreável: analytics, scout, match, observação do coach",
+      "phase": 1,
+      "primary_entities": [
+        "need_detected"
+      ],
+      "forbidden_behavior": "sistema criando necessidade sem evidência real ou agente autônomo sem validação do coach"
+    },
+    {
+      "capability_id": "CAP-TRAIN-002",
+      "name": "Definição de Objetivo Técnico",
+      "description": "Transformar necessidade em objetivo técnico mensurável com critérios de sucesso explícitos",
+      "phase": 1,
+      "primary_entities": [
+        "session_objective"
+      ],
+      "forbidden_behavior": "objetivo sem origem rastreável (need_detected, competitive_focus, development_goal ou manual_rationale)"
+    },
+    {
+      "capability_id": "CAP-TRAIN-003",
+      "name": "Planejamento de Ciclo e Periodização",
+      "description": "Estruturar intervenção no contexto de temporada, microciclo, fase competitiva e disponibilidade do elenco",
+      "phase": 1,
+      "primary_entities": [
+        "training_intervention_cycle",
+        "microcycle"
+      ],
+      "forbidden_behavior": "sessão sem contexto de ciclo; periodização gerenciada por Training soberanamente sem referência a seasons"
+    },
+    {
+      "capability_id": "CAP-TRAIN-004",
+      "name": "Criação e Publicação de Sessão",
+      "description": "Criar sessão com conteúdo mínimo e publicar para atletas e staff com guards de validação obrigatórios",
+      "phase": 1,
+      "primary_entities": [
+        "training_session",
+        "session_block"
+      ],
+      "forbidden_behavior": "publicação de sessão sem objetivo, escopo, responsável ou bloco; auto-publicação sem guard"
+    },
+    {
+      "capability_id": "CAP-TRAIN-005",
+      "name": "Prescrição de Exercícios e Tarefas",
+      "description": "Estruturar blocos com exercícios, tarefas técnico-táticas, parâmetros de carga e instruções de coaching",
+      "phase": 1,
+      "primary_entities": [
+        "session_block",
+        "prescription_line"
+      ],
+      "forbidden_behavior": "prescrição sem referência à exercise_library ou task_description; exercício criado diretamente em Training sem referência à biblioteca"
+    },
+    {
+      "capability_id": "CAP-TRAIN-006",
+      "name": "Gestão de Readiness e Restrições com Override Auditado",
+      "description": "Consumir snapshot contextual de readiness do módulo Wellness e restrições médicas do módulo Medical para adaptar prescrição e bloquear atletas inelegíveis, com override formal auditado quando autorizado sob autoridade explícita.",
+      "phase": 1,
+      "primary_entities": [
+        "readiness_snapshot_ref",
+        "restriction_profile_ref",
+        "restriction_override"
+      ],
+      "forbidden_behavior": "Training criar ou editar restrição médica; prescrição de atleta com restrição ativa sem override auditado"
+    },
+    {
+      "capability_id": "CAP-TRAIN-007",
+      "name": "Execução e Adesão",
+      "description": "Registrar execução de sessão, ajustes ao vivo e attendance de atletas presentes. attendance_record formaliza presença; execution_record formaliza carga real executada.",
+      "phase": 1,
+      "primary_entities": [
+        "execution_record",
+        "session_adjustment",
+        "attendance_record"
+      ],
+      "forbidden_behavior": "execução sem referência à sessão; ajuste ao vivo sem motivo estruturado; planned sobrescrito por actual"
+    },
+    {
+      "capability_id": "CAP-TRAIN-008",
+      "name": "Feedback Contextual",
+      "description": "Produzir e gerenciar feedback técnico vinculado a sessão, bloco, objetivo ou evidência; conversa gera consequência operacional",
+      "phase": 1,
+      "primary_entities": [
+        "feedback_thread",
+        "coach_note",
+        "athlete_feedback",
+        "review_outcome"
+      ],
+      "forbidden_behavior": "feedback sem âncora operacional; conversa fechada sem conversation_outcome",
+      "open_decision_note": "athlete_feedback: entidade formal a ser definida em OD-TRAIN-006; até formalização usar feedback_thread.response_content"
+    },
+    {
+      "capability_id": "CAP-TRAIN-009",
+      "name": "Revisão e Ajuste do Ciclo",
+      "description": "Comparar objetivo planejado com resposta observada e decidir manter, escalar, corrigir ou encerrar intervenção com base em evidência",
+      "phase": 1,
+      "primary_entities": [
+        "training_intervention_cycle",
+        "review_outcome",
+        "decision_rationale"
+      ],
+      "forbidden_behavior": "review_outcome sem evidência de execução; ajuste de ciclo sem decisão explícita do coach"
+    },
+    {
+      "capability_id": "CAP-TRAIN-010",
+      "name": "Continuidade Interstaff e Memória Técnica",
+      "description": "Preservar raciocínio técnico, decisões e contexto de intervenção através de mudanças de staff",
+      "phase": 3,
+      "primary_entities": [
+        "continuity_snapshot",
+        "staff_handoff",
+        "decision_rationale"
+      ],
+      "forbidden_behavior": "descarte de decision_rationale ou continuity_snapshot na troca de coach"
+    },
+    {
+      "capability_id": "CAP-TRAIN-011",
+      "name": "Revisão de Recomendação sob Autoridade do Treinador",
+      "description": "Receber training_recommendation de analytics/scout/ai_ingestion/matches, registrar aceite ou descarte sob autoridade explícita do coach. Nenhuma recomendação pode materializar-se como sessão, objetivo ou prescrição sem decisão explícita.",
+      "phase": 1,
+      "primary_entities": [
+        "training_recommendation",
+        "decision_rationale"
+      ],
+      "forbidden_behavior": "materialização automática de recommendation em sessão, objetivo ou prescrição sem decisão explícita do coach"
+    },
+    {
+      "capability_id": "CAP-TRAIN-012",
+      "name": "Override de Restrição sob Auditoria",
+      "description": "Permitir exceção formal e auditada a bloqueio de restrição somente sob autorização explícita e rastreável. Requer autorização de nível head_coach ou superior e geração de audit_event.",
+      "phase": 1,
+      "primary_entities": [
+        "restriction_override",
+        "decision_rationale"
+      ],
+      "forbidden_behavior": "quebra de restriction guard sem override formal, autorizado e auditado"
+    }
+  ],
+  "entities": [
+    {
+      "entity_id": "training_intervention_cycle",
+      "label": "Ciclo de Intervenção de Treino",
+      "sovereign": true,
+      "ownership": "training",
+      "phase": 1,
+      "lifecycle_ref": "LIFECYCLE-INTERVENTION-CYCLE",
+      "fields": [
+        {
+          "name": "id",
+          "semantic_type_ref": "uuid",
+          "required": true
+        },
+        {
+          "name": "team_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "sovereign_owner": "teams"
+        },
+        {
+          "name": "season_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false,
+          "sovereign_owner": "seasons"
+        },
+        {
+          "name": "microcycle_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false
+        },
+        {
+          "name": "title",
+          "semantic_type_ref": "string",
+          "required": true
+        },
+        {
+          "name": "objective_refs",
+          "semantic_type_ref": "uuid_array",
+          "required": true,
+          "min_items": 1
+        },
+        {
+          "name": "status",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "OPEN",
+            "IN_PROGRESS",
+            "REVIEW",
+            "ADJUSTED",
+            "COMPLETED",
+            "ARCHIVED"
+          ],
+          "required": true
+        },
+        {
+          "name": "competitive_context_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false,
+          "sovereign_owner": "competitions"
+        },
+        {
+          "name": "responsible_staff_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "sovereign_owner": "identity_access"
+        },
+        {
+          "name": "created_by",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "sovereign_owner": "users"
+        },
+        {
+          "name": "created_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "updated_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "is_deleted",
+          "semantic_type_ref": "boolean",
+          "required": true,
+          "default": false
+        }
+      ],
+      "surfaces": [
+        "DOMAIN_RULES",
+        "Schema",
+        "OpenAPI",
+        "STATE_MODEL"
+      ]
+    },
+    {
+      "entity_id": "training_session",
+      "label": "Sessão de Treino",
+      "sovereign": true,
+      "ownership": "training",
+      "phase": 1,
+      "lifecycle_ref": "LIFECYCLE-TRAINING-SESSION",
+      "fields": [
+        {
+          "name": "id",
+          "semantic_type_ref": "uuid",
+          "required": true
+        },
+        {
+          "name": "intervention_cycle_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": true
+        },
+        {
+          "name": "microcycle_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false
+        },
+        {
+          "name": "title",
+          "semantic_type_ref": "string",
+          "required": true
+        },
+        {
+          "name": "session_type",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "collective",
+            "individual",
+            "hybrid",
+            "regenerative",
+            "technical_tactical",
+            "physical",
+            "pre_match",
+            "post_match",
+            "return_progressive"
+          ],
+          "required": true
+        },
+        {
+          "name": "status",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "DRAFT",
+            "SCHEDULED",
+            "PUBLISHED",
+            "IN_PROGRESS",
+            "COMPLETED",
+            "CANCELLED",
+            "ARCHIVED"
+          ],
+          "required": true
+        },
+        {
+          "name": "session_objective_ids",
+          "semantic_type_ref": "uuid_array",
+          "required": true,
+          "min_items": 1,
+          "constraint": "INV-TRAIN-001"
+        },
+        {
+          "name": "team_scope_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false,
+          "sovereign_owner": "teams"
+        },
+        {
+          "name": "athlete_scope_refs",
+          "semantic_type_ref": "uuid_array",
+          "required": false
+        },
+        {
+          "name": "scope_constraint",
+          "description": "team_scope_ref OR athlete_scope_refs must be present when status >= PUBLISHED",
+          "semantic_type_ref": "constraint",
+          "constraint": "INV-TRAIN-005"
+        },
+        {
+          "name": "responsible_staff_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "sovereign_owner": "identity_access"
+        },
+        {
+          "name": "location",
+          "semantic_type_ref": "string",
+          "required": false
+        },
+        {
+          "name": "scheduled_start_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "scheduled_end_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "actual_start_at",
+          "semantic_type_ref": "timestamp",
+          "required": false,
+          "set_on": "IN_PROGRESS"
+        },
+        {
+          "name": "actual_end_at",
+          "semantic_type_ref": "timestamp",
+          "required": false,
+          "set_on": "COMPLETED"
+        },
+        {
+          "name": "planned_content_snapshot",
+          "semantic_type_ref": "json",
+          "required": false,
+          "immutable_after": "PUBLISHED",
+          "constraint": "INV-TRAIN-007"
+        },
+        {
+          "name": "executed_content_summary",
+          "semantic_type_ref": "json",
+          "required": false,
+          "set_on": "COMPLETED"
+        },
+        {
+          "name": "created_by",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "sovereign_owner": "users"
+        },
+        {
+          "name": "created_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "updated_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "is_deleted",
+          "semantic_type_ref": "boolean",
+          "required": true,
+          "default": false
+        }
+      ],
+      "surfaces": [
+        "DOMAIN_RULES",
+        "Schema",
+        "OpenAPI",
+        "STATE_MODEL",
+        "INVARIANTS"
+      ]
+    },
+    {
+      "entity_id": "session_block",
+      "label": "Bloco da Sessão",
+      "sovereign": true,
+      "ownership": "training",
+      "phase": 1,
+      "fields": [
+        {
+          "name": "id",
+          "semantic_type_ref": "uuid",
+          "required": true
+        },
+        {
+          "name": "training_session_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": true
+        },
+        {
+          "name": "block_type",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "warmup",
+            "main",
+            "situational",
+            "conditioning",
+            "cooldown",
+            "return_progressive",
+            "evaluation"
+          ],
+          "required": true
+        },
+        {
+          "name": "sequence_order",
+          "semantic_type_ref": "integer",
+          "required": true
+        },
+        {
+          "name": "objective",
+          "semantic_type_ref": "string",
+          "required": true
+        },
+        {
+          "name": "duration_planned_min",
+          "semantic_type_ref": "integer",
+          "required": true
+        },
+        {
+          "name": "intensity_level",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "low",
+            "moderate",
+            "high",
+            "maximal"
+          ],
+          "required": false
+        },
+        {
+          "name": "coaching_cues",
+          "semantic_type_ref": "string",
+          "required": false
+        },
+        {
+          "name": "success_criteria",
+          "semantic_type_ref": "string",
+          "required": false
+        },
+        {
+          "name": "created_by",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "sovereign_owner": "users"
+        },
+        {
+          "name": "created_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "updated_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        }
+      ],
+      "surfaces": [
+        "Schema",
+        "OpenAPI"
+      ]
+    },
+    {
+      "entity_id": "session_objective",
+      "label": "Objetivo da Sessão",
+      "sovereign": true,
+      "ownership": "training",
+      "phase": 1,
+      "fields": [
+        {
+          "name": "id",
+          "semantic_type_ref": "uuid",
+          "required": true
+        },
+        {
+          "name": "training_session_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": true
+        },
+        {
+          "name": "description",
+          "semantic_type_ref": "string",
+          "required": true
+        },
+        {
+          "name": "success_criteria",
+          "semantic_type_ref": "string",
+          "required": false
+        },
+        {
+          "name": "need_detected_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false
+        },
+        {
+          "name": "competitive_focus_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false,
+          "sovereign_owner": "scout"
+        },
+        {
+          "name": "development_goal_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false
+        },
+        {
+          "name": "manual_coach_rationale",
+          "semantic_type_ref": "string",
+          "required": false
+        },
+        {
+          "name": "origin_constraint",
+          "semantic_type_ref": "constraint",
+          "rule": "ONE OF need_detected_ref, competitive_focus_ref, development_goal_ref, manual_coach_rationale must be present",
+          "constraint": "INV-TRAIN-002"
+        },
+        {
+          "name": "created_by",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "sovereign_owner": "users"
+        },
+        {
+          "name": "created_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "updated_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        }
+      ],
+      "surfaces": [
+        "Schema",
+        "OpenAPI",
+        "INVARIANTS"
+      ]
+    },
+    {
+      "entity_id": "prescription_line",
+      "label": "Linha de Prescrição",
+      "sovereign": true,
+      "ownership": "training",
+      "phase": 1,
+      "fields": [
+        {
+          "name": "id",
+          "semantic_type_ref": "uuid",
+          "required": true
+        },
+        {
+          "name": "session_block_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": true
+        },
+        {
+          "name": "exercise_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false,
+          "sovereign_owner": "exercises"
+        },
+        {
+          "name": "task_description",
+          "semantic_type_ref": "string",
+          "required": false
+        },
+        {
+          "name": "exercise_or_task_constraint",
+          "semantic_type_ref": "constraint",
+          "rule": "exercise_ref OR task_description required"
+        },
+        {
+          "name": "target_athlete_refs",
+          "semantic_type_ref": "uuid_array",
+          "required": false
+        },
+        {
+          "name": "target_group",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "all",
+            "group_a",
+            "group_b",
+            "individual"
+          ],
+          "required": false
+        },
+        {
+          "name": "parameters",
+          "semantic_type_ref": "json",
+          "required": false,
+          "description": "reps, sets, duration, tempo, load, distance, intensity"
+        },
+        {
+          "name": "media_asset_refs",
+          "semantic_type_ref": "uuid_array",
+          "required": false
+        },
+        {
+          "name": "eligibility_guard_active",
+          "semantic_type_ref": "boolean",
+          "required": true,
+          "default": true,
+          "constraint": "INV-TRAIN-021"
+        },
+        {
+          "name": "created_by",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "sovereign_owner": "users"
+        },
+        {
+          "name": "created_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "updated_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        }
+      ],
+      "surfaces": [
+        "Schema",
+        "OpenAPI",
+        "INVARIANTS"
+      ]
+    },
+    {
+      "entity_id": "execution_record",
+      "label": "Registro de Execução",
+      "sovereign": true,
+      "ownership": "training",
+      "phase": 1,
+      "fields": [
+        {
+          "name": "id",
+          "semantic_type_ref": "uuid",
+          "required": true
+        },
+        {
+          "name": "training_session_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "constraint": "INV-TRAIN-006"
+        },
+        {
+          "name": "session_block_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false
+        },
+        {
+          "name": "prescription_line_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false
+        },
+        {
+          "name": "context_constraint",
+          "semantic_type_ref": "constraint",
+          "rule": "session_block_ref OR prescription_line_ref OR improvised_rationale required",
+          "constraint": "INV-TRAIN-006"
+        },
+        {
+          "name": "improvised_rationale",
+          "semantic_type_ref": "string",
+          "required": false
+        },
+        {
+          "name": "executed_by",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "sovereign_owner": "users",
+          "deprecated": true,
+          "replace_with": "participant_ref"
+        },
+        {
+          "name": "recorded_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "completion_status",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "completed",
+            "partial",
+            "not_executed",
+            "modified"
+          ],
+          "required": true
+        },
+        {
+          "name": "actual_load",
+          "semantic_type_ref": "json",
+          "required": false,
+          "description": "realizado: reps, sets, duration, load, etc."
+        },
+        {
+          "name": "perceived_rpe",
+          "semantic_type_ref": "integer",
+          "required": false,
+          "min": 1,
+          "max": 10
+        },
+        {
+          "name": "athlete_notes",
+          "semantic_type_ref": "string",
+          "required": false
+        },
+        {
+          "name": "raw_data_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false,
+          "description": "referência a dado bruto de sensor, se presente",
+          "immutable": true
+        },
+        {
+          "name": "is_deleted",
+          "semantic_type_ref": "boolean",
+          "required": true,
+          "default": false
+        },
+        {
+          "name": "created_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "updated_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "recorded_by",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "sovereign_owner": "users",
+          "notes": "staff member registering the execution"
+        },
+        {
+          "name": "participant_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false,
+          "sovereign_owner": "users",
+          "notes": "athlete executing; replaces implicit executed_by when scope is single athlete"
+        }
+      ],
+      "surfaces": [
+        "Schema",
+        "OpenAPI",
+        "INVARIANTS"
+      ]
+    },
+    {
+      "entity_id": "session_adjustment",
+      "label": "Ajuste ao Vivo de Sessão",
+      "sovereign": true,
+      "ownership": "training",
+      "phase": 1,
+      "fields": [
+        {
+          "name": "id",
+          "semantic_type_ref": "uuid",
+          "required": true
+        },
+        {
+          "name": "training_session_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": true
+        },
+        {
+          "name": "session_block_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false
+        },
+        {
+          "name": "adjustment_type",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "exercise_change",
+            "load_change",
+            "duration_change",
+            "order_change",
+            "group_change",
+            "cancellation_partial",
+            "scope_change"
+          ],
+          "required": true
+        },
+        {
+          "name": "original_value",
+          "semantic_type_ref": "json",
+          "required": true,
+          "immutable": true
+        },
+        {
+          "name": "new_value",
+          "semantic_type_ref": "json",
+          "required": true
+        },
+        {
+          "name": "reason_code",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "readiness",
+            "injury",
+            "equipment",
+            "climate",
+            "logistics",
+            "attendance",
+            "coach_decision",
+            "medical_restriction"
+          ],
+          "required": true,
+          "constraint": "INV-TRAIN-008"
+        },
+        {
+          "name": "reason_text",
+          "semantic_type_ref": "string",
+          "required": true,
+          "constraint": "INV-TRAIN-008"
+        },
+        {
+          "name": "adjusted_by",
+          "semantic_type_ref": "uuid_ref",
+          "required": true
+        },
+        {
+          "name": "adjusted_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "created_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "updated_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        }
+      ],
+      "surfaces": [
+        "Schema",
+        "OpenAPI",
+        "INVARIANTS"
+      ]
+    },
+    {
+      "entity_id": "need_detected",
+      "label": "Necessidade Detectada",
+      "sovereign": true,
+      "ownership": "training",
+      "phase": 1,
+      "lifecycle_ref": "LIFECYCLE-NEED-DETECTED",
+      "fields": [
+        {
+          "name": "id",
+          "semantic_type_ref": "uuid",
+          "required": true
+        },
+        {
+          "name": "source_type",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "analytics_signal",
+            "scout_signal",
+            "match_outcome",
+            "coach_observation",
+            "wellness_alert",
+            "medical_flag",
+            "development_review"
+          ],
+          "required": true
+        },
+        {
+          "name": "evidence_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false,
+          "sovereign_owner": "varies_by_source_type"
+        },
+        {
+          "name": "manual_coach_rationale",
+          "semantic_type_ref": "string",
+          "required": false
+        },
+        {
+          "name": "origin_constraint",
+          "semantic_type_ref": "constraint",
+          "rule": "evidence_ref OR manual_coach_rationale required",
+          "constraint": "INV-TRAIN-002"
+        },
+        {
+          "name": "description",
+          "semantic_type_ref": "string",
+          "required": true
+        },
+        {
+          "name": "competitive_focus",
+          "semantic_type_ref": "string",
+          "required": false
+        },
+        {
+          "name": "status",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "OPEN",
+            "LINKED_TO_OBJECTIVE",
+            "DISMISSED"
+          ],
+          "required": true
+        },
+        {
+          "name": "linked_objective_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false
+        },
+        {
+          "name": "created_by",
+          "semantic_type_ref": "uuid_ref",
+          "required": false,
+          "description": "nullable quando gerado por sistema com evidence real",
+          "sovereign_owner": "users"
+        },
+        {
+          "name": "created_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "updated_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        }
+      ],
+      "surfaces": [
+        "Schema",
+        "OpenAPI",
+        "INVARIANTS"
+      ]
+    },
+    {
+      "entity_id": "feedback_thread",
+      "label": "Thread de Feedback Técnico",
+      "sovereign": true,
+      "ownership": "training",
+      "phase": 1,
+      "lifecycle_ref": "LIFECYCLE-FEEDBACK-THREAD",
+      "fields": [
+        {
+          "name": "id",
+          "semantic_type_ref": "uuid",
+          "required": true
+        },
+        {
+          "name": "training_session_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false
+        },
+        {
+          "name": "session_block_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false
+        },
+        {
+          "name": "session_objective_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false
+        },
+        {
+          "name": "evidence_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false
+        },
+        {
+          "name": "anchor_constraint",
+          "semantic_type_ref": "constraint",
+          "rule": "ONE OF training_session_ref, session_block_ref, session_objective_ref, evidence_ref required",
+          "constraint": "INV-TRAIN-010"
+        },
+        {
+          "name": "target_athlete_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "sovereign_owner": "users"
+        },
+        {
+          "name": "created_by",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "sovereign_owner": "users"
+        },
+        {
+          "name": "thread_type",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "technical_feedback",
+            "reflection",
+            "coaching_cue",
+            "commitment",
+            "follow_up"
+          ],
+          "required": true
+        },
+        {
+          "name": "content",
+          "semantic_type_ref": "string",
+          "required": true
+        },
+        {
+          "name": "conversation_outcome",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "reflection",
+            "commitment",
+            "pending_action",
+            "followup",
+            "decision"
+          ],
+          "required": false,
+          "required_on_close": true,
+          "constraint": "INV-TRAIN-028"
+        },
+        {
+          "name": "status",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "OPEN",
+            "CLOSED"
+          ],
+          "required": true
+        },
+        {
+          "name": "created_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "updated_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "closed_at",
+          "semantic_type_ref": "timestamp",
+          "required": false
+        }
+      ],
+      "surfaces": [
+        "Schema",
+        "OpenAPI",
+        "INVARIANTS"
+      ]
+    },
+    {
+      "entity_id": "coach_note",
+      "label": "Nota do Treinador",
+      "sovereign": true,
+      "ownership": "training",
+      "phase": 1,
+      "fields": [
+        {
+          "name": "id",
+          "semantic_type_ref": "uuid",
+          "required": true
+        },
+        {
+          "name": "training_session_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false
+        },
+        {
+          "name": "training_cycle_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false
+        },
+        {
+          "name": "note_type",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "pre_session",
+            "in_session",
+            "post_session",
+            "cycle_review",
+            "decision_rationale"
+          ],
+          "required": true
+        },
+        {
+          "name": "content",
+          "semantic_type_ref": "string",
+          "required": true
+        },
+        {
+          "name": "created_by",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "sovereign_owner": "users"
+        },
+        {
+          "name": "created_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "updated_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "is_deleted",
+          "semantic_type_ref": "boolean",
+          "required": true,
+          "default": false
+        }
+      ],
+      "surfaces": [
+        "Schema",
+        "OpenAPI"
+      ]
+    },
+    {
+      "entity_id": "attention_queue_item",
+      "label": "Item da Fila de Atenção",
+      "sovereign": true,
+      "ownership": "training",
+      "phase": 1,
+      "fields": [
+        {
+          "name": "id",
+          "semantic_type_ref": "uuid",
+          "required": true
+        },
+        {
+          "name": "severity_level",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "critical",
+            "high",
+            "medium",
+            "low"
+          ],
+          "required": true,
+          "constraint": "INV-TRAIN-027"
+        },
+        {
+          "name": "reason_code",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "restriction_triggered",
+            "readiness_low",
+            "objective_overdue",
+            "adherence_low",
+            "dropout_risk",
+            "feedback_pending",
+            "handoff_pending",
+            "manual_flag"
+          ],
+          "required": true,
+          "constraint": "INV-TRAIN-027"
+        },
+        {
+          "name": "target_entity_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "constraint": "INV-TRAIN-027"
+        },
+        {
+          "name": "target_entity_type",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "athlete",
+            "training_session",
+            "feedback_thread",
+            "training_cycle"
+          ],
+          "required": true
+        },
+        {
+          "name": "description",
+          "semantic_type_ref": "string",
+          "required": true
+        },
+        {
+          "name": "resolved",
+          "semantic_type_ref": "boolean",
+          "required": true,
+          "default": false
+        },
+        {
+          "name": "resolved_at",
+          "semantic_type_ref": "timestamp",
+          "required": false
+        },
+        {
+          "name": "created_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "updated_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        }
+      ],
+      "surfaces": [
+        "Schema",
+        "OpenAPI",
+        "UI_CONTRACT",
+        "INVARIANTS"
+      ]
+    },
+    {
+      "entity_id": "decision_rationale",
+      "label": "Fundamentação de Decisão do Coach",
+      "sovereign": true,
+      "ownership": "training",
+      "phase": 1,
+      "fields": [
+        {
+          "name": "id",
+          "semantic_type_ref": "uuid",
+          "required": true
+        },
+        {
+          "name": "decision_type",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "session_publish",
+            "session_cancel",
+            "live_adjustment",
+            "restriction_override",
+            "cycle_adjust",
+            "recommendation_accept",
+            "recommendation_dismiss",
+            "session_complete"
+          ],
+          "required": true
+        },
+        {
+          "name": "subject_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": true
+        },
+        {
+          "name": "subject_type",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "training_session",
+            "training_cycle",
+            "prescription_line",
+            "recommendation"
+          ],
+          "required": true
+        },
+        {
+          "name": "actor_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "sovereign_owner": "users"
+        },
+        {
+          "name": "rationale_text",
+          "semantic_type_ref": "string",
+          "required": true
+        },
+        {
+          "name": "evidence_refs",
+          "semantic_type_ref": "uuid_array",
+          "required": false
+        },
+        {
+          "name": "created_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "updated_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "is_deleted",
+          "semantic_type_ref": "boolean",
+          "required": true,
+          "default": false,
+          "constraint": "INV-TRAIN-030"
+        }
+      ],
+      "surfaces": [
+        "Schema",
+        "OpenAPI",
+        "INVARIANTS"
+      ]
+    },
+    {
+      "entity_id": "continuity_snapshot",
+      "label": "Snapshot de Continuidade Interstaff",
+      "sovereign": true,
+      "ownership": "training",
+      "phase": 3,
+      "fields": [
+        {
+          "name": "id",
+          "semantic_type_ref": "uuid",
+          "required": true
+        },
+        {
+          "name": "session_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false
+        },
+        {
+          "name": "cycle_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false
+        },
+        {
+          "name": "scope_constraint",
+          "semantic_type_ref": "constraint",
+          "rule": "session_ref OR cycle_ref required"
+        },
+        {
+          "name": "key_decisions",
+          "semantic_type_ref": "json",
+          "required": true
+        },
+        {
+          "name": "open_items",
+          "semantic_type_ref": "json",
+          "required": false
+        },
+        {
+          "name": "coaching_context",
+          "semantic_type_ref": "string",
+          "required": false
+        },
+        {
+          "name": "created_by",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "sovereign_owner": "users"
+        },
+        {
+          "name": "created_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "updated_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        }
+      ],
+      "surfaces": [
+        "Schema",
+        "DOMAIN_RULES",
+        "INVARIANTS"
+      ]
+    },
+    {
+      "entity_id": "training_recommendation",
+      "label": "Recomendação de Treino",
+      "sovereign": true,
+      "ownership": "training",
+      "phase": 1,
+      "fields": [
+        {
+          "name": "id",
+          "semantic_type_ref": "uuid",
+          "required": true
+        },
+        {
+          "name": "source_module",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "analytics",
+            "scout",
+            "ai_ingestion",
+            "matches"
+          ],
+          "required": true
+        },
+        {
+          "name": "source_event_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false
+        },
+        {
+          "name": "recommendation_type",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "need_creation",
+            "objective_shift",
+            "session_adjustment",
+            "load_adjustment",
+            "focus_change"
+          ],
+          "required": true
+        },
+        {
+          "name": "target_scope_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false
+        },
+        {
+          "name": "payload_summary",
+          "semantic_type_ref": "json",
+          "required": true
+        },
+        {
+          "name": "status",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "PENDING_COACH_REVIEW",
+            "ACCEPTED",
+            "DISMISSED",
+            "EXPIRED"
+          ],
+          "required": true
+        },
+        {
+          "name": "reviewed_by",
+          "semantic_type_ref": "uuid_ref",
+          "required": false,
+          "sovereign_owner": "users"
+        },
+        {
+          "name": "reviewed_at",
+          "semantic_type_ref": "timestamp",
+          "required": false
+        },
+        {
+          "name": "decision_rationale_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false
+        },
+        {
+          "name": "created_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "updated_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        }
+      ],
+      "surfaces": [
+        "Schema",
+        "OpenAPI",
+        "INVARIANTS",
+        "DOMAIN_RULES"
+      ]
+    },
+    {
+      "entity_id": "review_outcome",
+      "label": "Resultado da Revisão",
+      "sovereign": true,
+      "ownership": "training",
+      "phase": 1,
+      "fields": [
+        {
+          "name": "id",
+          "semantic_type_ref": "uuid",
+          "required": true
+        },
+        {
+          "name": "training_intervention_cycle_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": true
+        },
+        {
+          "name": "review_type",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "microcycle_review",
+            "cycle_review",
+            "session_review"
+          ],
+          "required": true
+        },
+        {
+          "name": "review_summary",
+          "semantic_type_ref": "string",
+          "required": true
+        },
+        {
+          "name": "decision",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "maintain",
+            "adjust",
+            "scale",
+            "close"
+          ],
+          "required": true
+        },
+        {
+          "name": "evidence_refs",
+          "semantic_type_ref": "uuid_array",
+          "required": true,
+          "min_items": 1
+        },
+        {
+          "name": "decision_rationale_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false
+        },
+        {
+          "name": "reviewed_by",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "sovereign_owner": "users"
+        },
+        {
+          "name": "reviewed_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "created_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "updated_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        }
+      ],
+      "surfaces": [
+        "Schema",
+        "OpenAPI",
+        "INVARIANTS",
+        "DOMAIN_RULES"
+      ]
+    },
+    {
+      "entity_id": "restriction_override",
+      "label": "Override de Restrição",
+      "sovereign": true,
+      "ownership": "training",
+      "phase": 1,
+      "fields": [
+        {
+          "name": "id",
+          "semantic_type_ref": "uuid",
+          "required": true
+        },
+        {
+          "name": "athlete_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "sovereign_owner": "users"
+        },
+        {
+          "name": "training_session_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false
+        },
+        {
+          "name": "prescription_line_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false
+        },
+        {
+          "name": "scope_constraint",
+          "semantic_type_ref": "constraint",
+          "rule": "training_session_ref OR prescription_line_ref required"
+        },
+        {
+          "name": "restriction_profile_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "sovereign_owner": "medical"
+        },
+        {
+          "name": "override_reason_code",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "coach_exception",
+            "medical_clearance_exception",
+            "operational_constraint",
+            "manual_authorized_test"
+          ],
+          "required": true
+        },
+        {
+          "name": "override_reason_text",
+          "semantic_type_ref": "string",
+          "required": true
+        },
+        {
+          "name": "authorized_by",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "sovereign_owner": "users"
+        },
+        {
+          "name": "authorization_level",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "head_coach",
+            "medical_authority",
+            "admin_exception"
+          ],
+          "required": true
+        },
+        {
+          "name": "audit_event_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false,
+          "sovereign_owner": "audit"
+        },
+        {
+          "name": "authorized_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "expires_at",
+          "semantic_type_ref": "timestamp",
+          "required": false
+        },
+        {
+          "name": "created_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "updated_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        }
+      ],
+      "surfaces": [
+        "Schema",
+        "OpenAPI",
+        "INVARIANTS",
+        "PERMISSIONS",
+        "DOMAIN_RULES"
+      ]
+    },
+    {
+      "entity_id": "readiness_snapshot_ref",
+      "label": "Referência de Snapshot de Prontidão",
+      "sovereign": false,
+      "ownership": "wellness",
+      "phase": 1,
+      "notes": "Training consumes; Wellness is sovereign. Checkin soberano pertence ao módulo Wellness.",
+      "fields": [
+        {
+          "name": "id",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "sovereign_owner": "wellness"
+        },
+        {
+          "name": "athlete_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "sovereign_owner": "users"
+        },
+        {
+          "name": "session_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false
+        },
+        {
+          "name": "state_summary",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "normal",
+            "at_risk"
+          ],
+          "required": true
+        },
+        {
+          "name": "snapshot_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "created_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "updated_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        }
+      ],
+      "surfaces": [
+        "Schema",
+        "DOMAIN_RULES"
+      ]
+    },
+    {
+      "entity_id": "attendance_record",
+      "label": "Registro de Assiduidade",
+      "sovereign": true,
+      "ownership": "training",
+      "phase": 1,
+      "fields": [
+        {
+          "name": "id",
+          "semantic_type_ref": "uuid",
+          "required": true
+        },
+        {
+          "name": "training_session_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": true
+        },
+        {
+          "name": "athlete_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "sovereign_owner": "users"
+        },
+        {
+          "name": "status",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "PRESENT",
+            "ABSENT",
+            "PARTIAL",
+            "JUSTIFIED_ABSENCE"
+          ],
+          "required": true
+        },
+        {
+          "name": "justification",
+          "semantic_type_ref": "string",
+          "required": false
+        },
+        {
+          "name": "recorded_by",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "sovereign_owner": "users"
+        },
+        {
+          "name": "recorded_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "created_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "updated_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        }
+      ],
+      "surfaces": [
+        "Schema",
+        "OpenAPI",
+        "INVARIANTS"
+      ]
+    },
+    {
+      "entity_id": "athlete_feedback",
+      "label": "Resposta do Atleta",
+      "sovereign": true,
+      "ownership": "training",
+      "phase": 1,
+      "open_decision_note": "OD-TRAIN-006: scope final a ser confirmado (reflexão só vs. conversação multi-turno)",
+      "fields": [
+        {
+          "name": "id",
+          "semantic_type_ref": "uuid",
+          "required": true
+        },
+        {
+          "name": "feedback_thread_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": true
+        },
+        {
+          "name": "athlete_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "sovereign_owner": "users"
+        },
+        {
+          "name": "response_content",
+          "semantic_type_ref": "string",
+          "required": true
+        },
+        {
+          "name": "wellness_reflection_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": false,
+          "sovereign_owner": "wellness"
+        },
+        {
+          "name": "submitted_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "created_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "updated_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        }
+      ],
+      "surfaces": [
+        "Schema",
+        "OpenAPI"
+      ]
+    },
+    {
+      "entity_id": "derived_signal",
+      "label": "Sinal Derivado",
+      "sovereign": false,
+      "ownership": "training",
+      "phase": 2,
+      "notes": "Sinal computado a partir de dados soberanos; imutável após derivação; raw_data_ref preservado",
+      "fields": [
+        {
+          "name": "id",
+          "semantic_type_ref": "uuid",
+          "required": true
+        },
+        {
+          "name": "signal_type",
+          "semantic_type_ref": "enum",
+          "enum_values": [
+            "readiness_score",
+            "dropout_risk_signal",
+            "load_deviation_signal"
+          ],
+          "required": true
+        },
+        {
+          "name": "source_refs",
+          "semantic_type_ref": "uuid_array",
+          "required": true,
+          "min_items": 1
+        },
+        {
+          "name": "raw_data_ref",
+          "semantic_type_ref": "uuid_ref",
+          "required": true,
+          "notes": "immutable; raw records cannot be deleted after derivation"
+        },
+        {
+          "name": "computed_value",
+          "semantic_type_ref": "json",
+          "required": true
+        },
+        {
+          "name": "computed_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "created_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        },
+        {
+          "name": "updated_at",
+          "semantic_type_ref": "timestamp",
+          "required": true
+        }
+      ],
+      "surfaces": [
+        "Schema",
+        "INVARIANTS"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "relation_id": "REL-TRAIN-001",
+      "from": "training_session",
+      "to": "training_intervention_cycle",
+      "cardinality": "many_to_one",
+      "sovereignty": "training_session holds FK",
+      "required": true,
+      "delete_policy": "restrict — cycle cannot be deleted while sessions exist",
+      "boundary": "sovereign"
+    },
+    {
+      "relation_id": "REL-TRAIN-002",
+      "from": "session_objective",
+      "to": "training_session",
+      "cardinality": "many_to_one",
+      "sovereignty": "session_objective holds FK",
+      "required": true,
+      "delete_policy": "cascade soft delete with session",
+      "boundary": "sovereign"
+    },
+    {
+      "relation_id": "REL-TRAIN-003",
+      "from": "session_objective",
+      "to": "need_detected",
+      "cardinality": "many_to_one",
+      "sovereignty": "session_objective holds FK (optional)",
+      "required": false,
+      "delete_policy": "set null — need_detected pode ser dismissed",
+      "boundary": "sovereign",
+      "on_need_dismissed": "preserve_historical_link",
+      "notes": "Historical traceability preserved even after need dismiss"
+    },
+    {
+      "relation_id": "REL-TRAIN-004",
+      "from": "session_block",
+      "to": "training_session",
+      "cardinality": "many_to_one",
+      "sovereignty": "session_block holds FK",
+      "required": true,
+      "delete_policy": "cascade soft delete with session",
+      "boundary": "sovereign"
+    },
+    {
+      "relation_id": "REL-TRAIN-005",
+      "from": "prescription_line",
+      "to": "session_block",
+      "cardinality": "many_to_one",
+      "sovereignty": "prescription_line holds FK",
+      "required": true,
+      "delete_policy": "cascade with block",
+      "boundary": "sovereign"
+    },
+    {
+      "relation_id": "REL-TRAIN-006",
+      "from": "prescription_line",
+      "to": "exercise_ref",
+      "cardinality": "many_to_one",
+      "sovereignty": "prescription_line holds FK (optional)",
+      "required": false,
+      "delete_policy": "set null — exercise pode ser deprecated na biblioteca",
+      "boundary": "reference — exercises module is sovereign owner"
+    },
+    {
+      "relation_id": "REL-TRAIN-007",
+      "from": "execution_record",
+      "to": "training_session",
+      "cardinality": "many_to_one",
+      "sovereignty": "execution_record holds FK",
+      "required": true,
+      "delete_policy": "restrict — execução preservada mesmo com sessão cancelada",
+      "boundary": "sovereign"
+    },
+    {
+      "relation_id": "REL-TRAIN-008",
+      "from": "session_adjustment",
+      "to": "training_session",
+      "cardinality": "many_to_one",
+      "sovereignty": "session_adjustment holds FK",
+      "required": true,
+      "delete_policy": "restrict — ajuste é evidência histórica",
+      "boundary": "sovereign"
+    },
+    {
+      "relation_id": "REL-TRAIN-009",
+      "from": "feedback_thread",
+      "to": "training_session",
+      "cardinality": "many_to_one",
+      "sovereignty": "feedback_thread holds FK (optional)",
+      "required": false,
+      "delete_policy": "set null — sessão pode ser arquivada",
+      "boundary": "sovereign",
+      "on_session_archive": "preserve_historical_link",
+      "notes": "Historical link preserved; no set_null on archive"
+    },
+    {
+      "relation_id": "REL-TRAIN-010",
+      "from": "training_session",
+      "to": "team_ref",
+      "cardinality": "many_to_one",
+      "sovereignty": "training_session holds FK",
+      "required": false,
+      "delete_policy": "restrict",
+      "boundary": "reference — teams module is sovereign owner"
+    },
+    {
+      "relation_id": "REL-TRAIN-011",
+      "from": "training_intervention_cycle",
+      "to": "season_ref",
+      "cardinality": "many_to_one",
+      "sovereignty": "training_intervention_cycle holds FK",
+      "required": false,
+      "delete_policy": "set null",
+      "boundary": "reference — seasons module is sovereign owner"
+    },
+    {
+      "relation_id": "REL-TRAIN-012",
+      "from": "prescription_line",
+      "to": "restriction_profile_ref",
+      "cardinality": "many_to_one",
+      "sovereignty": "prescription_line holds FK (read-only reference)",
+      "required": false,
+      "delete_policy": "set null",
+      "boundary": "reference — medical module is sovereign owner; Training read-only"
+    },
+    {
+      "relation_id": "REL-TRAIN-013",
+      "from": "training_recommendation",
+      "to": "decision_rationale",
+      "type": "references",
+      "cardinality": "optional",
+      "sovereignty": "decision_rationale holds FK (optional)",
+      "delete_policy": "restrict — rationale preserves recommendation traceability",
+      "boundary": "sovereign"
+    },
+    {
+      "relation_id": "REL-TRAIN-014",
+      "from": "review_outcome",
+      "to": "training_intervention_cycle",
+      "type": "closes",
+      "cardinality": "many_to_one",
+      "sovereignty": "review_outcome holds FK",
+      "delete_policy": "restrict — cycle closure evidence must be preserved",
+      "boundary": "sovereign"
+    },
+    {
+      "relation_id": "REL-TRAIN-015",
+      "from": "review_outcome",
+      "to": "decision_rationale",
+      "type": "references",
+      "cardinality": "optional",
+      "sovereignty": "review_outcome holds FK (optional)",
+      "delete_policy": "restrict — review evidence preserves decision rationale linkage",
+      "boundary": "sovereign"
+    },
+    {
+      "relation_id": "REL-TRAIN-016",
+      "from": "restriction_override",
+      "to": "restriction_profile_ref",
+      "type": "overrides",
+      "cardinality": "many_to_one",
+      "sovereignty": "restriction_override holds FK (read-only reference)",
+      "delete_policy": "set null — external restriction profile may be superseded while override evidence remains",
+      "boundary": "reference — medical module is sovereign owner"
+    },
+    {
+      "relation_id": "REL-TRAIN-017",
+      "from": "restriction_override",
+      "to": "prescription_line",
+      "type": "unlocks",
+      "cardinality": "optional",
+      "sovereignty": "restriction_override holds FK (optional)",
+      "delete_policy": "set null — override evidence remains if prescription is redrafted",
+      "boundary": "sovereign"
+    },
+    {
+      "relation_id": "REL-TRAIN-018",
+      "from": "restriction_override",
+      "to": "training_session",
+      "type": "unlocks_scope",
+      "cardinality": "optional",
+      "sovereignty": "restriction_override holds FK (optional)",
+      "delete_policy": "set null — override evidence remains if session is archived",
+      "boundary": "sovereign"
+    },
+    {
+      "relation_id": "REL-TRAIN-019",
+      "from": "decision_rationale",
+      "to": "training_recommendation",
+      "type": "justifies",
+      "cardinality": "optional",
+      "sovereignty": "decision_rationale holds FK (optional)",
+      "delete_policy": "restrict — decision rationale cannot point to deleted recommendation",
+      "boundary": "sovereign"
+    },
+    {
+      "relation_id": "REL-TRAIN-020",
+      "from": "training_session",
+      "to": "readiness_snapshot_ref",
+      "type": "consumes_boundary",
+      "cardinality": "optional",
+      "sovereignty": "training_session stores consumed readiness snapshot ref (read-only boundary)",
+      "delete_policy": "set null — wellness snapshot retention may expire while session record remains",
+      "boundary": "reference — wellness module is sovereign owner",
+      "notes": "reference boundary; wellness is sovereign"
+    },
+    {
+      "relation_id": "REL-TRAIN-021",
+      "from": "execution_record",
+      "to": "participant_ref",
+      "type": "references_actor",
+      "cardinality": "optional",
+      "sovereignty": "execution_record stores participant identity ref",
+      "delete_policy": "restrict — execution evidence must preserve participant binding",
+      "boundary": "reference — users module is sovereign owner",
+      "sovereign_owner": "users"
+    },
+    {
+      "relation_id": "REL-TRAIN-022",
+      "from": "execution_record",
+      "to": "recorded_by",
+      "type": "references_actor",
+      "cardinality": "required",
+      "sovereignty": "execution_record stores recorder identity ref",
+      "delete_policy": "restrict — execution evidence must preserve recorder identity",
+      "boundary": "reference — users module is sovereign owner",
+      "sovereign_owner": "users"
+    },
+    {
+      "relation_id": "REL-TRAIN-023",
+      "from": "attendance_record",
+      "to": "training_session",
+      "type": "belongs_to",
+      "cardinality": "many_to_one",
+      "sovereignty": "attendance_record holds FK",
+      "delete_policy": "restrict — attendance is historical evidence",
+      "boundary": "sovereign"
+    },
+    {
+      "relation_id": "REL-TRAIN-024",
+      "from": "athlete_feedback",
+      "to": "feedback_thread",
+      "type": "responds_to",
+      "cardinality": "many_to_one",
+      "sovereignty": "athlete_feedback holds FK",
+      "delete_policy": "cascade soft delete with feedback thread",
+      "boundary": "sovereign"
+    }
+  ],
+  "state_models": [
+    {
+      "lifecycle_id": "LIFECYCLE-TRAINING-SESSION",
+      "entity_ref": "training_session",
+      "initial_state": "DRAFT",
+      "states": [
+        "DRAFT",
+        "SCHEDULED",
+        "PUBLISHED",
+        "IN_PROGRESS",
+        "COMPLETED",
+        "CANCELLED",
+        "ARCHIVED"
+      ],
+      "transitions": [
+        {
+          "from": "DRAFT",
+          "to": "SCHEDULED",
+          "trigger": "coach.schedule_action",
+          "guards": [
+            "scheduled_start_at present"
+          ]
+        },
+        {
+          "from": "DRAFT",
+          "to": "PUBLISHED",
+          "trigger": "coach.publish_action",
+          "guards": [
+            "INV-TRAIN-005 fields all present"
+          ]
+        },
+        {
+          "from": "SCHEDULED",
+          "to": "PUBLISHED",
+          "trigger": "coach.publish_action",
+          "guards": [
+            "INV-TRAIN-005 fields all present"
+          ]
+        },
+        {
+          "from": "PUBLISHED",
+          "to": "IN_PROGRESS",
+          "trigger": "first_execution_record_created OR coach.start_action"
+        },
+        {
+          "from": "IN_PROGRESS",
+          "to": "COMPLETED",
+          "trigger": "coach.complete_action",
+          "guards": [
+            "INV-TRAIN-009 evidence present"
+          ]
+        },
+        {
+          "from": "DRAFT",
+          "to": "CANCELLED",
+          "trigger": "coach.cancel_action"
+        },
+        {
+          "from": "SCHEDULED",
+          "to": "CANCELLED",
+          "trigger": "coach.cancel_action"
+        },
+        {
+          "from": "PUBLISHED",
+          "to": "CANCELLED",
+          "trigger": "coach.cancel_action"
+        },
+        {
+          "from": "IN_PROGRESS",
+          "to": "CANCELLED",
+          "trigger": "coach.cancel_action",
+          "guards": [
+            "logical cancel only — no hard delete; INV-TRAIN-019"
+          ]
+        },
+        {
+          "from": "COMPLETED",
+          "to": "ARCHIVED",
+          "trigger": "system.archival_policy"
+        }
+      ],
+      "forbidden_transitions": [
+        "DRAFT → COMPLETED",
+        "DRAFT → IN_PROGRESS",
+        "SCHEDULED → COMPLETED",
+        "SCHEDULED → IN_PROGRESS (sem publicação)",
+        "COMPLETED → any_editable_state",
+        "ARCHIVED → any_state"
+      ],
+      "invariants": [
+        "INV-TRAIN-017",
+        "INV-TRAIN-018",
+        "INV-TRAIN-019",
+        "INV-TRAIN-020"
+      ]
+    },
+    {
+      "lifecycle_id": "LIFECYCLE-INTERVENTION-CYCLE",
+      "entity_ref": "training_intervention_cycle",
+      "initial_state": "OPEN",
+      "states": [
+        "OPEN",
+        "IN_PROGRESS",
+        "REVIEW",
+        "ADJUSTED",
+        "COMPLETED",
+        "ARCHIVED"
+      ],
+      "transitions": [
+        {
+          "from": "OPEN",
+          "to": "IN_PROGRESS",
+          "trigger": "first_session_published"
+        },
+        {
+          "from": "IN_PROGRESS",
+          "to": "REVIEW",
+          "trigger": "coach.initiate_review"
+        },
+        {
+          "from": "REVIEW",
+          "to": "ADJUSTED",
+          "trigger": "coach.adjust_cycle",
+          "guards": [
+            "evidence_ref present"
+          ]
+        },
+        {
+          "from": "REVIEW",
+          "to": "COMPLETED",
+          "trigger": "coach.close_cycle",
+          "guards": [
+            "evidence_ref present"
+          ]
+        },
+        {
+          "from": "ADJUSTED",
+          "to": "IN_PROGRESS",
+          "trigger": "coach.continue_cycle"
+        },
+        {
+          "from": "COMPLETED",
+          "to": "ARCHIVED",
+          "trigger": "system.archival_policy"
+        }
+      ],
+      "forbidden_transitions": [
+        "OPEN → COMPLETED",
+        "COMPLETED → any_editable_state"
+      ]
+    },
+    {
+      "lifecycle_id": "LIFECYCLE-NEED-DETECTED",
+      "entity_ref": "need_detected",
+      "initial_state": "OPEN",
+      "states": [
+        "OPEN",
+        "LINKED_TO_OBJECTIVE",
+        "DISMISSED"
+      ],
+      "transitions": [
+        {
+          "from": "OPEN",
+          "to": "LINKED_TO_OBJECTIVE",
+          "trigger": "session_objective created with this need_ref"
+        },
+        {
+          "from": "OPEN",
+          "to": "DISMISSED",
+          "trigger": "coach.dismiss_action"
+        },
+        {
+          "from": "LINKED_TO_OBJECTIVE",
+          "to": "DISMISSED",
+          "trigger": "coach.dismiss_action"
+        }
+      ]
+    },
+    {
+      "lifecycle_id": "LIFECYCLE-FEEDBACK-THREAD",
+      "entity_ref": "feedback_thread",
+      "initial_state": "OPEN",
+      "states": [
+        "OPEN",
+        "CLOSED"
+      ],
+      "transitions": [
+        {
+          "from": "OPEN",
+          "to": "CLOSED",
+          "trigger": "coach.close_thread_action",
+          "guards": [
+            "conversation_outcome present; INV-TRAIN-028"
+          ]
+        }
+      ],
+      "forbidden_transitions": [
+        "CLOSED → OPEN"
+      ]
+    },
+    {
+      "lifecycle_id": "LIFECYCLE-TRAINING-RECOMMENDATION",
+      "entity_ref": "training_recommendation",
+      "initial_state": "PENDING_COACH_REVIEW",
+      "states": [
+        "PENDING_COACH_REVIEW",
+        "ACCEPTED",
+        "DISMISSED",
+        "EXPIRED"
+      ],
+      "transitions": [
+        {
+          "from": "PENDING_COACH_REVIEW",
+          "to": "ACCEPTED",
+          "trigger": "coach.accept_action",
+          "guards": [
+            "decision_rationale required or documented dismissal reason"
+          ]
+        },
+        {
+          "from": "PENDING_COACH_REVIEW",
+          "to": "DISMISSED",
+          "trigger": "coach.dismiss_action",
+          "guards": [
+            "decision_rationale required"
+          ]
+        },
+        {
+          "from": "PENDING_COACH_REVIEW",
+          "to": "EXPIRED",
+          "trigger": "system.expiry_policy",
+          "guards": []
+        }
+      ]
+    },
+    {
+      "lifecycle_id": "LIFECYCLE-RESTRICTION-OVERRIDE",
+      "entity_ref": "restriction_override",
+      "initial_state": "AUTHORIZED",
+      "states": [
+        "AUTHORIZED",
+        "EXPIRED",
+        "REVOKED"
+      ],
+      "transitions": [
+        {
+          "from": "AUTHORIZED",
+          "to": "EXPIRED",
+          "trigger": "system.expiry_check",
+          "guards": [
+            "expires_at reached"
+          ]
+        },
+        {
+          "from": "AUTHORIZED",
+          "to": "REVOKED",
+          "trigger": "admin.revoke_action",
+          "guards": [
+            "audit_event emitted"
+          ]
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "rule_id": "INV-TRAIN-001",
+      "name": "Sessão exige objetivo operacional",
+      "subject_ref": "training_session",
+      "formal_check_hint": "session_objective_ids.length >= 1",
+      "severity": "blocking",
+      "type": "business"
+    },
+    {
+      "rule_id": "INV-TRAIN-002",
+      "name": "Objetivo exige origem rastreável",
+      "subject_ref": "session_objective",
+      "formal_check_hint": "ONE OF need_detected_ref, competitive_focus_ref, development_goal_ref, manual_coach_rationale present",
+      "severity": "blocking",
+      "type": "business"
+    },
+    {
+      "rule_id": "INV-TRAIN-003",
+      "name": "Necessidade não cria sessão automaticamente",
+      "subject_ref": "need_detected",
+      "formal_check_hint": "no direct creation path from need_detected to training_session without coach action",
+      "severity": "blocking",
+      "type": "boundary"
+    },
+    {
+      "rule_id": "INV-TRAIN-004",
+      "name": "IA e analytics só recomendam; treinador decide",
+      "subject_ref": "training_recommendation",
+      "formal_check_hint": "training_recommendation.status = PENDING_COACH_REVIEW until explicit coach action; no direct mutation path to session/objective/prescription",
+      "severity": "blocking",
+      "type": "boundary",
+      "decision_ref": "OD-TRAIN-005 resolved: checkin sovereign to wellness; recommendation advisory only"
+    },
+    {
+      "rule_id": "INV-TRAIN-005",
+      "name": "Sessão publicada deve possuir conteúdo mínimo treinável",
+      "subject_ref": "training_session",
+      "formal_check_hint": "status=PUBLISHED requires: session_objective_ids>=1, scope_defined, responsible_staff_ref, scheduled_at, session_blocks>=1",
+      "severity": "blocking",
+      "type": "lifecycle"
+    },
+    {
+      "rule_id": "INV-TRAIN-006",
+      "name": "Toda execução referencia prescrição ou justificativa de improviso",
+      "subject_ref": "execution_record",
+      "formal_check_hint": "session_block_ref OR prescription_line_ref OR improvised_rationale required",
+      "severity": "blocking",
+      "type": "integrity"
+    },
+    {
+      "rule_id": "INV-TRAIN-007",
+      "name": "Planned vs Actual obrigatório para sessão executada",
+      "subject_ref": "training_session",
+      "formal_check_hint": "planned_content_snapshot immutable after PUBLISHED; executed_content_summary != planned_content_snapshot",
+      "severity": "blocking",
+      "type": "integrity"
+    },
+    {
+      "rule_id": "INV-TRAIN-008",
+      "name": "Ajuste ao vivo exige motivo estruturado",
+      "subject_ref": "session_adjustment",
+      "formal_check_hint": "reason_code (enum) AND reason_text required",
+      "severity": "blocking",
+      "type": "business"
+    },
+    {
+      "rule_id": "INV-TRAIN-009",
+      "name": "Sessão concluída exige evidência mínima de resposta",
+      "subject_ref": "training_session",
+      "formal_check_hint": "status=COMPLETED requires ONE OF: attendance_record, coach_note, execution_record, athlete_rpe",
+      "severity": "blocking",
+      "type": "lifecycle"
+    },
+    {
+      "rule_id": "INV-TRAIN-010",
+      "name": "Feedback pós-treino é contextual",
+      "subject_ref": "feedback_thread",
+      "formal_check_hint": "ONE OF training_session_ref, session_block_ref, session_objective_ref, evidence_ref required",
+      "severity": "blocking",
+      "type": "business"
+    },
+    {
+      "rule_id": "INV-TRAIN-011",
+      "name": "Revisão só pode ocorrer após execução ou evidência equivalente",
+      "subject_ref": "review_outcome",
+      "formal_check_hint": "review_outcome.evidence_refs must contain at least 1 execution_ref OR post_session_report_ref; review_outcome required before cycle state transition to ADJUSTED or COMPLETED",
+      "severity": "warning",
+      "type": "lifecycle",
+      "notes": "review_outcome is now formal entity; no implicit review allowed"
+    },
+    {
+      "rule_id": "INV-TRAIN-012",
+      "name": "Ajuste futuro depende de revisão ou decisão explícita",
+      "subject_ref": "review_outcome",
+      "formal_check_hint": "training_intervention_cycle plan changes require review_outcome with decision=adjust|scale OR manual_coach_decision with decision_rationale; no silent mutation",
+      "severity": "warning",
+      "type": "business",
+      "notes": "review_outcome OR decision_rationale required; both preferred"
+    },
+    {
+      "rule_id": "INV-TRAIN-013",
+      "name": "Training não é dono de atleta, equipe, competição ou restrição médica",
+      "subject_ref": "training",
+      "formal_check_hint": "these entities are references only; no sovereign CRUD in training module",
+      "severity": "blocking",
+      "type": "boundary"
+    },
+    {
+      "rule_id": "INV-TRAIN-014",
+      "name": "Restrição médica consumida por Training é somente leitura operacional",
+      "subject_ref": "restriction_profile_ref",
+      "formal_check_hint": "no CREATE/UPDATE/DELETE for restriction_profile in training API",
+      "severity": "blocking",
+      "type": "boundary"
+    },
+    {
+      "rule_id": "INV-TRAIN-015",
+      "name": "Analytics não altera estado soberano de Training sem comando autorizado",
+      "subject_ref": "analytics_boundary",
+      "formal_check_hint": "no direct write path from analytics to training_session, prescription_line, or session_block",
+      "severity": "blocking",
+      "type": "boundary"
+    },
+    {
+      "rule_id": "INV-TRAIN-016",
+      "name": "Exercises/Playbook fornecem conteúdo; Training governa uso contextual",
+      "subject_ref": "exercise_ref",
+      "formal_check_hint": "execution_state of exercises belongs to execution_record in Training, not to exercise entity",
+      "severity": "warning",
+      "type": "boundary"
+    },
+    {
+      "rule_id": "INV-TRAIN-017",
+      "name": "Status de sessão tem transições válidas e fechadas",
+      "subject_ref": "training_session.status",
+      "formal_check_hint": "only allowed transitions in LIFECYCLE-TRAINING-SESSION; forbidden_transitions must return 422",
+      "severity": "blocking",
+      "type": "lifecycle"
+    },
+    {
+      "rule_id": "INV-TRAIN-018",
+      "name": "Sessão publicada não pode perder campos mínimos sem rebaixamento",
+      "subject_ref": "training_session",
+      "formal_check_hint": "removing minimum required fields must either block or revert status to DRAFT",
+      "severity": "blocking",
+      "type": "lifecycle"
+    },
+    {
+      "rule_id": "INV-TRAIN-019",
+      "name": "Sessão em progresso não pode ser excluída fisicamente",
+      "subject_ref": "training_session",
+      "formal_check_hint": "status=IN_PROGRESS allows only logical cancel or completion; hard delete returns 409",
+      "severity": "blocking",
+      "type": "lifecycle"
+    },
+    {
+      "rule_id": "INV-TRAIN-020",
+      "name": "Sessão concluída é imutável no núcleo histórico",
+      "subject_ref": "training_session",
+      "formal_check_hint": "status=COMPLETED: direct field mutation returns 409; corrections via audit_correction only",
+      "severity": "blocking",
+      "type": "integrity"
+    },
+    {
+      "rule_id": "INV-TRAIN-021",
+      "name": "Atleta inelegível não pode receber prescrição executável sem override explícito",
+      "subject_ref": "prescription_line",
+      "formal_check_hint": "eligibility_guard_active=true: if restriction_profile active → block with 422; override requires restriction_override entity (authorization_level in [head_coach, medical_authority, admin_exception]) + audit_event_ref",
+      "severity": "blocking",
+      "type": "authorization",
+      "entity_ref": "restriction_override"
+    },
+    {
+      "rule_id": "INV-TRAIN-022",
+      "name": "Variante individual deve respeitar escopo e permissão",
+      "subject_ref": "prescription_line",
+      "formal_check_hint": "coach cannot create individual prescription outside team/category scope granted by identity_access",
+      "severity": "blocking",
+      "type": "authorization"
+    },
+    {
+      "rule_id": "INV-TRAIN-023",
+      "name": "Attendance e execution não podem referenciar atleta fora do escopo da sessão",
+      "subject_ref": "execution_record",
+      "formal_check_hint": "participant_ref (if set) must be in session.athlete_scope_refs or session.team_scope_ref; recorded_by must be authorized staff in session scope",
+      "severity": "blocking",
+      "type": "integrity",
+      "notes": "executed_by deprecated; use participant_ref (athlete) and recorded_by (staff)"
+    },
+    {
+      "rule_id": "INV-TRAIN-024",
+      "name": "Sobreposição crítica de agenda deve ser detectável",
+      "subject_ref": "training_session",
+      "formal_check_hint": "scheduling conflict detection for athlete/group must be available before publish",
+      "severity": "warning",
+      "type": "integrity"
+    },
+    {
+      "rule_id": "INV-TRAIN-025",
+      "name": "Toda interação pedida ao atleta deve ter propósito operacional downstream",
+      "subject_ref": "readiness_snapshot_ref",
+      "formal_check_hint": "all readiness_snapshot_ref fields consumed by training must have downstream use (attention_queue, prescription adaptation, or guard logic); training does not own checkin data",
+      "severity": "warning",
+      "type": "business",
+      "notes": "athlete_checkin sovereign to wellness; training consumes readiness_snapshot_ref only"
+    },
+    {
+      "rule_id": "INV-TRAIN-026",
+      "name": "Fricção adaptativa baseada em snapshot de prontidão do Wellness",
+      "subject_ref": "readiness_snapshot_ref",
+      "formal_check_hint": "readiness_snapshot_ref.state_summary=normal → minimal interaction flow; at_risk → extended coaching flow; training does not manage the checkin submission, only consumes result",
+      "severity": "warning",
+      "type": "business",
+      "notes": "Wellness is sovereign over checkin; training orchestrates adaptive response based on snapshot"
+    },
+    {
+      "rule_id": "INV-TRAIN-027",
+      "name": "Atenção do treinador deve ser finita e priorizada",
+      "subject_ref": "attention_queue_item",
+      "formal_check_hint": "ALL attention_queue items must have severity_level (not null), reason_code (enum), and target_entity_ref",
+      "severity": "warning",
+      "type": "business"
+    },
+    {
+      "rule_id": "INV-TRAIN-028",
+      "name": "Conversa é intervenção, não chat genérico",
+      "subject_ref": "feedback_thread",
+      "formal_check_hint": "close feedback_thread requires conversation_outcome (enum, not null)",
+      "severity": "blocking",
+      "type": "business"
+    },
+    {
+      "rule_id": "INV-TRAIN-029",
+      "name": "Toda decisão relevante deve ser rastreável",
+      "subject_ref": "decision_rationale",
+      "formal_check_hint": "publish, adjust, cancel, complete, override, correction actions must emit audit_event AND create decision_rationale",
+      "severity": "blocking",
+      "type": "audit"
+    },
+    {
+      "rule_id": "INV-TRAIN-030",
+      "name": "Justificativa humana deve sobreviver à troca de staff",
+      "subject_ref": "decision_rationale",
+      "formal_check_hint": "decision_rationale.is_deleted cannot be set to true; soft delete prohibited",
+      "severity": "blocking",
+      "type": "audit"
+    },
+    {
+      "rule_id": "INV-TRAIN-031",
+      "name": "Evidência de origem deve ser preservada",
+      "subject_ref": "need_detected",
+      "formal_check_hint": "need_detected.evidence_ref immutable after creation",
+      "severity": "blocking",
+      "type": "audit"
+    },
+    {
+      "rule_id": "INV-TRAIN-032",
+      "name": "IDs e referências cruzadas devem ser válidos no momento da transação",
+      "subject_ref": "all_entities",
+      "formal_check_hint": "FK validation at transaction time; invalid refs return 422",
+      "severity": "blocking",
+      "type": "integrity"
+    },
+    {
+      "rule_id": "INV-TRAIN-033",
+      "name": "Objetivo e tipo de sessão devem ser semanticamente compatíveis",
+      "subject_ref": "training_session",
+      "formal_check_hint": "session_type=return_progressive incompatible with objective_type=competitive_full without restriction_override; session_type field required on training_session",
+      "severity": "warning",
+      "type": "integrity",
+      "notes": "Requires objective_type field on session_objective; add to entity if not present"
+    },
+    {
+      "rule_id": "INV-TRAIN-034",
+      "name": "Blocos não podem violar duração total sem regra explícita",
+      "subject_ref": "session_block",
+      "formal_check_hint": "SUM(block.duration_planned_min) should match (scheduled_end_at - scheduled_start_at) within tolerance policy; planned_duration_min derived field acceptable",
+      "severity": "warning",
+      "type": "integrity",
+      "notes": "session.duration replaced by (scheduled_end_at - scheduled_start_at) computation or planned_duration_min field"
+    },
+    {
+      "rule_id": "INV-TRAIN-035",
+      "name": "Sessão coletiva/individual/híbrida deve ser explícita",
+      "subject_ref": "training_session",
+      "formal_check_hint": "session_type must be explicit; hybrid requires both team_scope_ref and athlete_scope_refs",
+      "severity": "warning",
+      "type": "integrity"
+    },
+    {
+      "rule_id": "INV-TRAIN-036",
+      "name": "Estados derivados não substituem dados fonte",
+      "subject_ref": "derived_signal",
+      "formal_check_hint": "derived_signal.raw_data_ref immutable; raw source records cannot be deleted after derivation; derived_signal is now formal entity (phase 2)",
+      "severity": "blocking",
+      "type": "integrity",
+      "notes": "derived_signal formalized as entity; rule now executes against formal entity"
+    },
+    {
+      "rule_id": "INV-TRAIN-037",
+      "name": "Training consome wellness e medical, mas não os soberaniza; checkin pertence a Wellness",
+      "subject_ref": "training_boundary_wellness_medical",
+      "formal_check_hint": "no sovereign CRUD on wellness_state, restriction_profile, or athlete_checkin in training API; training API exposes readiness_snapshot_ref consumption endpoint only (read); athlete_checkin POSTed to wellness module",
+      "severity": "blocking",
+      "type": "boundary",
+      "decision_ref": "OD-TRAIN-005 resolved: athlete_checkin sovereign to wellness"
+    },
+    {
+      "rule_id": "INV-TRAIN-038",
+      "name": "Training consome sinais de analytics e scout, mantendo autoridade do coach",
+      "subject_ref": "training_boundary_analytics",
+      "formal_check_hint": "all analytics/scout inputs become recommendations pending coach review",
+      "severity": "blocking",
+      "type": "boundary"
+    },
+    {
+      "rule_id": "INV-TRAIN-039",
+      "name": "Training emite notification_intents para o módulo notifications",
+      "subject_ref": "notification_intent",
+      "formal_check_hint": "no direct push/SMS/email delivery in training module; all notifications via event emission",
+      "severity": "blocking",
+      "type": "boundary"
+    },
+    {
+      "rule_id": "INV-TRAIN-040",
+      "name": "Training registra fatos auditáveis via módulo audit",
+      "subject_ref": "audit_event",
+      "formal_check_hint": "no internal audit log table in training; all audit events emitted to audit module via events",
+      "severity": "blocking",
+      "type": "audit"
+    },
+    {
+      "rule_id": "INV-TRAIN-041",
+      "name": "identity_access governa permissão; training só aplica policy decidida",
+      "subject_ref": "permission_policy",
+      "formal_check_hint": "no permission definition in training module; all authz checks reference identity_access",
+      "severity": "blocking",
+      "type": "authorization"
+    }
+  ],
+  "api_use_cases": [
+    {
+      "use_case_id": "UC-TRAIN-001",
+      "goal": "Criar ciclo de intervenção de treino",
+      "actor": "coach_head, coach_assistant",
+      "resource_ref": "training_intervention_cycles",
+      "operation": "POST",
+      "request_entity": "training_intervention_cycle_create",
+      "response_entity": "training_intervention_cycle",
+      "state_model_ref": "LIFECYCLE-INTERVENTION-CYCLE",
+      "forbidden_inference": "system cannot create cycle without coach action"
+    },
+    {
+      "use_case_id": "UC-TRAIN-002",
+      "goal": "Criar sessão de treino (DRAFT)",
+      "actor": "coach_head, coach_assistant",
+      "resource_ref": "training_sessions",
+      "operation": "POST",
+      "request_entity": "training_session_create",
+      "response_entity": "training_session",
+      "state_model_ref": "LIFECYCLE-TRAINING-SESSION",
+      "forbidden_inference": "session_objective_ids required; cannot create session without objective"
+    },
+    {
+      "use_case_id": "UC-TRAIN-003",
+      "goal": "Publicar sessão de treino",
+      "actor": "coach_head, coach_assistant",
+      "resource_ref": "training_sessions/{id}/publish",
+      "operation": "POST",
+      "request_entity": "none",
+      "response_entity": "training_session",
+      "state_model_ref": "LIFECYCLE-TRAINING-SESSION",
+      "guards": [
+        "INV-TRAIN-005 all fields present"
+      ],
+      "forbidden_inference": "cannot publish without minimum content; no auto-publish"
+    },
+    {
+      "use_case_id": "UC-TRAIN-004",
+      "goal": "Iniciar execução de sessão",
+      "actor": "coach_head, coach_assistant, system",
+      "resource_ref": "training_sessions/{id}/start",
+      "operation": "POST",
+      "request_entity": "none",
+      "response_entity": "training_session",
+      "state_model_ref": "LIFECYCLE-TRAINING-SESSION",
+      "forbidden_inference": "cannot start without published status"
+    },
+    {
+      "use_case_id": "UC-TRAIN-005",
+      "goal": "Registrar execução de bloco/prescrição",
+      "actor": "coach_head, coach_assistant, athlete (limited)",
+      "resource_ref": "training_sessions/{id}/execution-records",
+      "operation": "POST",
+      "request_entity": "execution_record_create",
+      "response_entity": "execution_record",
+      "state_model_ref": null,
+      "guards": [
+        "INV-TRAIN-006 context required"
+      ],
+      "forbidden_inference": "cannot create execution_record without training_session_ref",
+      "notes": "athlete (limited): athlete can record own execution_record on own session only; participant_ref = athlete.id; recorded_by = athlete.id when self-reporting; coach validates post-session"
+    },
+    {
+      "use_case_id": "UC-TRAIN-006",
+      "goal": "Registrar ajuste ao vivo",
+      "actor": "coach_head, coach_assistant, physical_trainer",
+      "resource_ref": "training_sessions/{id}/adjustments",
+      "operation": "POST",
+      "request_entity": "session_adjustment_create",
+      "response_entity": "session_adjustment",
+      "state_model_ref": null,
+      "guards": [
+        "INV-TRAIN-008 reason_code and reason_text required"
+      ],
+      "forbidden_inference": "cannot create adjustment without structured reason"
+    },
+    {
+      "use_case_id": "UC-TRAIN-007",
+      "goal": "Completar sessão de treino",
+      "actor": "coach_head, coach_assistant",
+      "resource_ref": "training_sessions/{id}/complete",
+      "operation": "POST",
+      "request_entity": "none",
+      "response_entity": "training_session",
+      "state_model_ref": "LIFECYCLE-TRAINING-SESSION",
+      "guards": [
+        "INV-TRAIN-009 evidence required"
+      ],
+      "forbidden_inference": "cannot complete without minimum evidence of response"
+    },
+    {
+      "use_case_id": "UC-TRAIN-008",
+      "goal": "Cancelar sessão",
+      "actor": "coach_head, coach_assistant",
+      "resource_ref": "training_sessions/{id}/cancel",
+      "operation": "POST",
+      "request_entity": "cancel_reason",
+      "response_entity": "training_session",
+      "state_model_ref": "LIFECYCLE-TRAINING-SESSION",
+      "forbidden_inference": "IN_PROGRESS cancellation is logical only; no hard delete"
+    },
+    {
+      "use_case_id": "UC-TRAIN-009",
+      "goal": "Criar feedback contextual (thread)",
+      "actor": "coach_head, coach_assistant, physical_trainer, physiotherapist",
+      "resource_ref": "feedback-threads",
+      "operation": "POST",
+      "request_entity": "feedback_thread_create",
+      "response_entity": "feedback_thread",
+      "state_model_ref": "LIFECYCLE-FEEDBACK-THREAD",
+      "guards": [
+        "INV-TRAIN-010 anchor_ref required"
+      ],
+      "forbidden_inference": "cannot create feedback without anchor; no free-form chat"
+    },
+    {
+      "use_case_id": "UC-TRAIN-010",
+      "goal": "Fechar thread de feedback com outcome",
+      "actor": "coach_head, coach_assistant",
+      "resource_ref": "feedback-threads/{id}/close",
+      "operation": "PATCH",
+      "request_entity": "feedback_thread_close",
+      "response_entity": "feedback_thread",
+      "state_model_ref": "LIFECYCLE-FEEDBACK-THREAD",
+      "guards": [
+        "INV-TRAIN-028 conversation_outcome required"
+      ],
+      "forbidden_inference": "cannot close thread without conversation_outcome"
+    },
+    {
+      "use_case_id": "UC-TRAIN-011",
+      "goal": "Criar/detectar necessidade de treino",
+      "actor": "coach_head, coach_assistant, system (with evidence)",
+      "resource_ref": "needs-detected",
+      "operation": "POST",
+      "request_entity": "need_detected_create",
+      "response_entity": "need_detected",
+      "state_model_ref": "LIFECYCLE-NEED-DETECTED",
+      "guards": [
+        "INV-TRAIN-002 evidence_ref OR manual_coach_rationale required"
+      ],
+      "forbidden_inference": "cannot create need without evidence or rationale",
+      "notes": "System creates need_detected only with evidence_ref; no automatic materialization of session or objective from need alone"
+    },
+    {
+      "use_case_id": "UC-TRAIN-012",
+      "goal": "Listar sessões de treino (filtrado por ciclo, equipe, status, data)",
+      "actor": "coach_head, coach_assistant, analyst (read-only)",
+      "resource_ref": "training_sessions",
+      "operation": "GET",
+      "request_entity": "query_params: cycle_ref, team_ref, status, date_range",
+      "response_entity": "training_session_list",
+      "state_model_ref": null,
+      "forbidden_inference": "pagination via api_rules.yaml; no inline count without total header"
+    },
+    {
+      "use_case_id": "UC-TRAIN-013",
+      "goal": "Consultar detalhe de sessão",
+      "actor": "coach_head, coach_assistant, athlete (own sessions), analyst",
+      "resource_ref": "training_sessions/{id}",
+      "operation": "GET",
+      "request_entity": "none",
+      "response_entity": "training_session_detail",
+      "state_model_ref": null,
+      "forbidden_inference": "athlete sees only sessions where they are in scope"
+    },
+    {
+      "use_case_id": "UC-TRAIN-014",
+      "goal": "Consultar snapshot de prontidão do atleta antes da sessão (proxy de consumo de Wellness)",
+      "actor": "coach_head, coach_assistant, athlete (via wellness module redirect)",
+      "resource_ref": "training_sessions/{id}/readiness-snapshot",
+      "operation": "GET",
+      "request_entity": "none",
+      "response_entity": "readiness_snapshot_ref",
+      "state_model_ref": null,
+      "guards": [
+        "INV-TRAIN-026 adaptive response based on state_summary"
+      ],
+      "forbidden_inference": "training does not own checkin submission; athlete_checkin submitted to wellness module directly; training reads readiness_snapshot_ref only",
+      "decision_ref": "OD-TRAIN-005 resolved"
+    },
+    {
+      "use_case_id": "UC-TRAIN-015",
+      "goal": "Consultar fila de atenção do treinador",
+      "actor": "coach_head, coach_assistant",
+      "resource_ref": "attention-queue",
+      "operation": "GET",
+      "request_entity": "query_params: severity, resolved, target_type",
+      "response_entity": "attention_queue_item_list",
+      "state_model_ref": null,
+      "forbidden_inference": "items without severity_level or reason_code must not appear"
+    },
+    {
+      "use_case_id": "UC-TRAIN-016",
+      "goal": "Revisar (aceitar/descartar) recomendação de treino",
+      "actor": "coach_head, coach_assistant",
+      "resource_ref": "training-recommendations/{id}/review",
+      "operation": "PATCH",
+      "request_entity": "training_recommendation_review",
+      "response_entity": "training_recommendation",
+      "state_model_ref": "LIFECYCLE-TRAINING-RECOMMENDATION",
+      "guards": [
+        "INV-TRAIN-004 decision_rationale required"
+      ],
+      "forbidden_inference": "recommendation cannot auto-materialize as session/objective/prescription without explicit ACCEPTED action by coach"
+    },
+    {
+      "use_case_id": "UC-TRAIN-017",
+      "goal": "Registrar resultado de revisão do ciclo",
+      "actor": "coach_head, coach_assistant",
+      "resource_ref": "training-intervention-cycles/{id}/review-outcomes",
+      "operation": "POST",
+      "request_entity": "review_outcome_create",
+      "response_entity": "review_outcome",
+      "state_model_ref": null,
+      "guards": [
+        "INV-TRAIN-011 evidence_refs required",
+        "INV-TRAIN-012 review_outcome triggers possible plan change"
+      ],
+      "forbidden_inference": "cannot record review_outcome without evidence_refs; no implicit review"
+    },
+    {
+      "use_case_id": "UC-TRAIN-018",
+      "goal": "Criar override de restrição (exceção auditada)",
+      "actor": "coach_head",
+      "resource_ref": "restriction-overrides",
+      "operation": "POST",
+      "request_entity": "restriction_override_create",
+      "response_entity": "restriction_override",
+      "state_model_ref": "LIFECYCLE-RESTRICTION-OVERRIDE",
+      "guards": [
+        "INV-TRAIN-021 authorization_level required",
+        "audit_event_ref emitted"
+      ],
+      "forbidden_inference": "coach_assistant cannot create restriction_override; authorization_level must be head_coach or above"
+    },
+    {
+      "use_case_id": "UC-TRAIN-019",
+      "goal": "Resolver item da fila de atenção",
+      "actor": "coach_head, coach_assistant",
+      "resource_ref": "attention-queue/{id}/resolve",
+      "operation": "PATCH",
+      "request_entity": "attention_queue_resolution",
+      "response_entity": "attention_queue_item",
+      "state_model_ref": null,
+      "guards": [
+        "resolved_by required",
+        "resolution_action required",
+        "resolution_reason required"
+      ],
+      "forbidden_inference": "cannot close attention_queue_item without resolution fields"
+    },
+    {
+      "use_case_id": "UC-TRAIN-020",
+      "goal": "Registrar assiduidade da sessão",
+      "actor": "coach_head, coach_assistant",
+      "resource_ref": "training_sessions/{id}/attendance-records",
+      "operation": "POST",
+      "request_entity": "attendance_record_create",
+      "response_entity": "attendance_record",
+      "state_model_ref": null,
+      "guards": [
+        "athlete_ref must be in session.athlete_scope_refs"
+      ],
+      "forbidden_inference": "cannot record attendance for athlete outside session scope"
+    },
+    {
+      "use_case_id": "UC-TRAIN-021",
+      "goal": "Registrar resposta do atleta ao feedback",
+      "actor": "athlete",
+      "resource_ref": "feedback-threads/{id}/athlete-feedback",
+      "operation": "POST",
+      "request_entity": "athlete_feedback_create",
+      "response_entity": "athlete_feedback",
+      "state_model_ref": null,
+      "guards": [
+        "feedback_thread must be OPEN",
+        "athlete_ref must match thread.target_athlete_ref"
+      ],
+      "forbidden_inference": "athlete can only respond to own feedback thread; response does not close thread"
+    }
+  ],
+  "ui_flows": [
+    {
+      "flow_id": "UF-TRAIN-001",
+      "name": "Detectar e registrar necessidade",
+      "actor": "coach_head",
+      "trigger": "analytics signal, match result, or coach observation",
+      "steps": [
+        "view signal/observation",
+        "create need_detected with source_type and evidence_ref",
+        "need appears in planning queue"
+      ],
+      "entities_touched": [
+        "need_detected"
+      ],
+      "phase": 1
+    },
+    {
+      "flow_id": "UF-TRAIN-002",
+      "name": "Criar ciclo e definir objetivo",
+      "actor": "coach_head, coach_assistant",
+      "trigger": "need_detected OPEN or competitive focus identified",
+      "steps": [
+        "create training_intervention_cycle",
+        "create session_objective linked to need",
+        "cycle appears in planning board"
+      ],
+      "entities_touched": [
+        "training_intervention_cycle",
+        "session_objective",
+        "need_detected"
+      ],
+      "phase": 1
+    },
+    {
+      "flow_id": "UF-TRAIN-003",
+      "name": "Montar e publicar sessão",
+      "actor": "coach_head, coach_assistant",
+      "trigger": "cycle IN_PROGRESS or new session needed",
+      "steps": [
+        "create session DRAFT",
+        "add session_blocks",
+        "add prescription_lines",
+        "check readiness/restrictions",
+        "publish session",
+        "athletes and staff notified via notifications module"
+      ],
+      "entities_touched": [
+        "training_session",
+        "session_block",
+        "prescription_line"
+      ],
+      "phase": 1
+    },
+    {
+      "flow_id": "UF-TRAIN-004",
+      "name": "Revisar prontidão antes da execução",
+      "actor": "coach_head, coach_assistant",
+      "trigger": "session published, approaching scheduled_start_at",
+      "steps": [
+        "view readiness dashboard (wellness_state from wellness module)",
+        "view restrictions (medical module)",
+        "view attention_queue",
+        "adjust session if needed (live_adjustment with reason)"
+      ],
+      "entities_touched": [
+        "attention_queue_item",
+        "session_adjustment"
+      ],
+      "phase": 1
+    },
+    {
+      "flow_id": "UF-TRAIN-005",
+      "name": "Fluxo de prontidão pré-treino (boundary wellness)",
+      "actor": "athlete",
+      "trigger": "session published and approaching start",
+      "steps": [
+        "open session",
+        "submit minimal check-in if normal state",
+        "submit extended questions if at_risk flag active",
+        "confirmation shown"
+      ],
+      "entities_touched": [
+        "readiness_snapshot_ref"
+      ],
+      "phase": 1,
+      "description": "Training abre contexto da sessão e solicita prontidão. Wellness coleta e retorna readiness_snapshot_ref. Training consome resultado para adaptar prescrição e acionar attention_queue se at_risk. Training não é dono do athlete_checkin.",
+      "boundary_note": "athlete_checkin sovereign to wellness; training consumes readiness_snapshot_ref only",
+      "decision_ref": "OD-TRAIN-005 resolved"
+    },
+    {
+      "flow_id": "UF-TRAIN-006",
+      "name": "Executar sessão e registrar ao vivo",
+      "actor": "coach_head, coach_assistant",
+      "trigger": "session IN_PROGRESS",
+      "steps": [
+        "view session plan",
+        "mark blocks as executed",
+        "record execution_records",
+        "apply live adjustments with reason_code if needed"
+      ],
+      "entities_touched": [
+        "execution_record",
+        "session_adjustment"
+      ],
+      "phase": 1
+    },
+    {
+      "flow_id": "UF-TRAIN-007",
+      "name": "Completar sessão e registrar resposta",
+      "actor": "coach_head, coach_assistant",
+      "trigger": "session execution ended",
+      "steps": [
+        "confirm attendance",
+        "record post_session coach_note",
+        "athletes record RPE and athlete_feedback",
+        "complete session (guards validate evidence)"
+      ],
+      "entities_touched": [
+        "training_session",
+        "coach_note",
+        "execution_record",
+        "athlete_feedback"
+      ],
+      "phase": 1,
+      "notes": "athlete_feedback formalized as entity; response_content required; wellness_reflection_ref optional cross-reference"
+    },
+    {
+      "flow_id": "UF-TRAIN-008",
+      "name": "Dar feedback contextual ao atleta",
+      "actor": "coach_head, coach_assistant",
+      "trigger": "session completed or specific performance observation",
+      "steps": [
+        "select athlete",
+        "create feedback_thread anchored to session/block/objective",
+        "athlete receives notification (via notifications module)",
+        "athlete reflects and responds",
+        "coach closes thread with conversation_outcome"
+      ],
+      "entities_touched": [
+        "feedback_thread"
+      ],
+      "phase": 1
+    },
+    {
+      "flow_id": "UF-TRAIN-009",
+      "name": "Revisar ciclo e ajustar plano",
+      "actor": "coach_head",
+      "trigger": "after multiple sessions executed in cycle",
+      "steps": [
+        "view cycle summary with planned vs actual",
+        "review execution evidence",
+        "create decision_rationale",
+        "adjust cycle (continue, scale, modify, or close)"
+      ],
+      "entities_touched": [
+        "training_intervention_cycle",
+        "decision_rationale",
+        "review_outcome"
+      ],
+      "phase": 1,
+      "notes": "review_outcome required as formal closure evidence; decision field drives cycle next state"
+    },
+    {
+      "flow_id": "UF-TRAIN-010",
+      "name": "Gerenciar fila de atenção",
+      "actor": "coach_head, coach_assistant",
+      "trigger": "daily access or alert notification",
+      "steps": [
+        "open attention_queue filtered by severity",
+        "review item context",
+        "take action (adjust session, contact athlete, flag for medical)",
+        "mark item as resolved"
+      ],
+      "entities_touched": [
+        "attention_queue_item"
+      ],
+      "phase": 1,
+      "resolution_fields_required": [
+        "resolved_by",
+        "resolution_action",
+        "resolution_reason"
+      ],
+      "notes": "attention_queue_item requires formal resolution; cannot be closed without resolution fields (UC-TRAIN-019)"
+    }
+  ],
+  "permissions": {
+    "roles": {
+      "coach_head": {
+        "capabilities": [
+          "full_training_crud",
+          "publish_session",
+          "cancel_session",
+          "complete_session",
+          "live_adjustment",
+          "restriction_override_with_audit",
+          "close_feedback_thread",
+          "create_cycle",
+          "review_cycle",
+          "adjust_cycle",
+          "view_all_athlete_data",
+          "accept_training_recommendation",
+          "dismiss_training_recommendation",
+          "create_review_outcome",
+          "create_restriction_override",
+          "revoke_restriction_override",
+          "resolve_attention_queue_item"
+        ],
+        "forbidden": []
+      },
+      "coach_assistant": {
+        "capabilities": [
+          "create_session_draft",
+          "update_session_draft",
+          "publish_session_with_scope",
+          "add_blocks_prescription",
+          "create_feedback_thread",
+          "record_execution",
+          "view_readiness",
+          "accept_training_recommendation",
+          "dismiss_training_recommendation",
+          "create_review_outcome",
+          "resolve_attention_queue_item"
+        ],
+        "forbidden": [
+          "cancel_published_session_without_head_approval",
+          "restriction_override",
+          "delete_decision_rationale"
+        ]
+      },
+      "physical_trainer": {
+        "capabilities": [
+          "create_conditioning_blocks",
+          "add_sc_prescription_lines",
+          "record_execution_conditioning",
+          "view_readiness",
+          "create_feedback_in_scope"
+        ],
+        "forbidden": [
+          "publish_session",
+          "restrict_override",
+          "access_medical_data"
+        ]
+      },
+      "physiotherapist": {
+        "capabilities": [
+          "read_restriction_profile",
+          "read_return_to_play_guard",
+          "create_feedback_in_scope",
+          "view_readiness"
+        ],
+        "forbidden": [
+          "edit_training_session",
+          "publish_session",
+          "override_restriction"
+        ]
+      },
+      "athlete": {
+        "capabilities": [
+          "view_own_sessions",
+          "submit_checkin",
+          "record_own_execution",
+          "respond_feedback_thread",
+          "view_own_history"
+        ],
+        "forbidden": [
+          "create_session",
+          "publish_session",
+          "complete_session",
+          "access_other_athlete_data"
+        ]
+      },
+      "analyst": {
+        "capabilities": [
+          "read_all_training_data",
+          "emit_analytics_signals_as_recommendations"
+        ],
+        "forbidden": [
+          "mutate_training_session",
+          "create_session",
+          "direct_prescription_mutation"
+        ]
+      },
+      "admin": {
+        "capabilities": [
+          "archive_sessions",
+          "manage_staff_handoff",
+          "audit_correction_authorized"
+        ],
+        "forbidden": [
+          "bypass_eligibility_guard_without_audit"
+        ]
+      }
+    },
+    "sovereign_authority": "identity_access (auth/authz policy only; human identity owner is users/staff_directory)",
+    "enforcement_policy": "training applies auth/authz decisions from identity_access; human identity and staff roster resolved from users/staff_directory module; no hardcoded permissions"
+  },
+  "errors": [
+    {
+      "error_id": "TRAIN-ERR-001",
+      "code": "SESSION_OBJECTIVE_REQUIRED",
+      "http_status": 422,
+      "trigger": "POST /training-sessions without session_objective_ids",
+      "invariant_ref": "INV-TRAIN-001"
+    },
+    {
+      "error_id": "TRAIN-ERR-002",
+      "code": "OBJECTIVE_ORIGIN_REQUIRED",
+      "http_status": 422,
+      "trigger": "POST /session-objectives without any origin field",
+      "invariant_ref": "INV-TRAIN-002"
+    },
+    {
+      "error_id": "TRAIN-ERR-003",
+      "code": "SESSION_MINIMUM_CONTENT_REQUIRED",
+      "http_status": 422,
+      "trigger": "POST /training-sessions/{id}/publish with missing minimum fields",
+      "invariant_ref": "INV-TRAIN-005"
+    },
+    {
+      "error_id": "TRAIN-ERR-004",
+      "code": "INVALID_STATUS_TRANSITION",
+      "http_status": 422,
+      "trigger": "Attempting forbidden status transition on training_session",
+      "invariant_ref": "INV-TRAIN-017"
+    },
+    {
+      "error_id": "TRAIN-ERR-005",
+      "code": "EXECUTION_CONTEXT_REQUIRED",
+      "http_status": 422,
+      "trigger": "POST execution-records without session_block_ref, prescription_line_ref or improvised_rationale",
+      "invariant_ref": "INV-TRAIN-006"
+    },
+    {
+      "error_id": "TRAIN-ERR-006",
+      "code": "PLANNED_CONTENT_IMMUTABLE",
+      "http_status": 409,
+      "trigger": "Attempt to mutate planned_content_snapshot after PUBLISHED",
+      "invariant_ref": "INV-TRAIN-007"
+    },
+    {
+      "error_id": "TRAIN-ERR-007",
+      "code": "ADJUSTMENT_REASON_REQUIRED",
+      "http_status": 422,
+      "trigger": "POST adjustments without reason_code or reason_text",
+      "invariant_ref": "INV-TRAIN-008"
+    },
+    {
+      "error_id": "TRAIN-ERR-008",
+      "code": "COMPLETION_EVIDENCE_REQUIRED",
+      "http_status": 422,
+      "trigger": "POST /training-sessions/{id}/complete without minimum evidence",
+      "invariant_ref": "INV-TRAIN-009"
+    },
+    {
+      "error_id": "TRAIN-ERR-009",
+      "code": "FEEDBACK_ANCHOR_REQUIRED",
+      "http_status": 422,
+      "trigger": "POST /feedback-threads without any anchor_ref",
+      "invariant_ref": "INV-TRAIN-010"
+    },
+    {
+      "error_id": "TRAIN-ERR-010",
+      "code": "CONVERSATION_OUTCOME_REQUIRED",
+      "http_status": 422,
+      "trigger": "PATCH /feedback-threads/{id}/close without conversation_outcome",
+      "invariant_ref": "INV-TRAIN-028"
+    },
+    {
+      "error_id": "TRAIN-ERR-011",
+      "code": "ATHLETE_INELIGIBLE_RESTRICTION",
+      "http_status": 422,
+      "trigger": "Creating prescription_line for athlete with active restriction without authorized override",
+      "invariant_ref": "INV-TRAIN-021"
+    },
+    {
+      "error_id": "TRAIN-ERR-012",
+      "code": "COMPLETED_SESSION_IMMUTABLE",
+      "http_status": 409,
+      "trigger": "Direct field mutation on training_session with status=COMPLETED",
+      "invariant_ref": "INV-TRAIN-020"
+    },
+    {
+      "error_id": "TRAIN-ERR-013",
+      "code": "IN_PROGRESS_HARD_DELETE_FORBIDDEN",
+      "http_status": 409,
+      "trigger": "Hard delete attempt on training_session with status=IN_PROGRESS",
+      "invariant_ref": "INV-TRAIN-019"
+    },
+    {
+      "error_id": "TRAIN-ERR-014",
+      "code": "NEED_ORIGIN_REQUIRED",
+      "http_status": 422,
+      "trigger": "POST /needs-detected without evidence_ref or manual_coach_rationale",
+      "invariant_ref": "INV-TRAIN-002"
+    },
+    {
+      "error_id": "TRAIN-ERR-015",
+      "code": "MEDICAL_WRITE_FORBIDDEN",
+      "http_status": 403,
+      "trigger": "Attempt to CREATE/UPDATE restriction_profile via training API",
+      "invariant_ref": "INV-TRAIN-014"
+    },
+    {
+      "error_id": "TRAIN-ERR-016",
+      "code": "ANALYTICS_DIRECT_MUTATION_FORBIDDEN",
+      "http_status": 403,
+      "trigger": "analytics actor attempting direct mutation of training_session state",
+      "invariant_ref": "INV-TRAIN-015"
+    },
+    {
+      "error_id": "TRAIN-ERR-017",
+      "code": "ATTENTION_QUEUE_FIELDS_REQUIRED",
+      "http_status": 422,
+      "trigger": "Creating attention_queue_item without severity_level or reason_code",
+      "invariant_ref": "INV-TRAIN-027"
+    },
+    {
+      "error_code": "TRAIN_RECOMMENDATION_REVIEW_REQUIRED",
+      "http_status": 422,
+      "trigger_condition": "training_recommendation.status=PENDING_COACH_REVIEW and action requires prior review",
+      "resolution": "Coach must explicitly ACCEPT or DISMISS the recommendation before proceeding"
+    },
+    {
+      "error_code": "TRAIN_REVIEW_OUTCOME_REQUIRED",
+      "http_status": 422,
+      "trigger_condition": "cycle state transition to ADJUSTED/COMPLETED attempted without review_outcome",
+      "resolution": "Create review_outcome with evidence_refs before transitioning cycle state"
+    },
+    {
+      "error_code": "TRAIN_RESTRICTION_OVERRIDE_REQUIRED",
+      "http_status": 422,
+      "trigger_condition": "athlete has active restriction_profile and no restriction_override exists for this scope",
+      "resolution": "Create restriction_override with authorization_level=head_coach or above before prescribing"
+    },
+    {
+      "error_code": "TRAIN_RESTRICTION_OVERRIDE_NOT_AUTHORIZED",
+      "http_status": 403,
+      "trigger_condition": "restriction_override creation attempted by role below head_coach",
+      "resolution": "Only head_coach, medical_authority, or admin_exception can authorize restriction_override"
+    },
+    {
+      "error_code": "TRAIN_READINESS_SNAPSHOT_REQUIRED",
+      "http_status": 422,
+      "trigger_condition": "session started without readiness_snapshot_ref and guard policy requires it",
+      "resolution": "Fetch readiness_snapshot_ref from wellness module before starting session execution"
+    },
+    {
+      "error_code": "TRAIN_ATTENTION_QUEUE_RESOLUTION_FIELDS_REQUIRED",
+      "http_status": 422,
+      "trigger_condition": "attention_queue_item closure attempted without resolved_by, resolution_action, and resolution_reason",
+      "resolution": "Provide all resolution fields when closing an attention_queue_item"
+    }
+  ],
+  "events": {
+    "emitted": [
+      {
+        "event_id": "EVT-TRAIN-001",
+        "name": "training_intervention_cycle_created",
+        "trigger": "POST /training-intervention-cycles",
+        "payload_refs": [
+          "training_intervention_cycle.id",
+          "team_ref",
+          "responsible_staff_ref"
+        ]
+      },
+      {
+        "event_id": "EVT-TRAIN-002",
+        "name": "training_session_created",
+        "trigger": "POST /training-sessions",
+        "payload_refs": [
+          "training_session.id",
+          "intervention_cycle_ref",
+          "status=DRAFT"
+        ]
+      },
+      {
+        "event_id": "EVT-TRAIN-003",
+        "name": "training_session_published",
+        "trigger": "POST /training-sessions/{id}/publish",
+        "payload_refs": [
+          "training_session.id",
+          "team_scope_ref",
+          "athlete_scope_refs",
+          "scheduled_start_at"
+        ]
+      },
+      {
+        "event_id": "EVT-TRAIN-004",
+        "name": "training_session_status_changed",
+        "trigger": "any status transition",
+        "payload_refs": [
+          "training_session.id",
+          "previous_status",
+          "new_status",
+          "actor_ref",
+          "timestamp"
+        ]
+      },
+      {
+        "event_id": "EVT-TRAIN-005",
+        "name": "training_session_completed",
+        "trigger": "POST /training-sessions/{id}/complete",
+        "payload_refs": [
+          "training_session.id",
+          "actual_end_at",
+          "actor_ref"
+        ]
+      },
+      {
+        "event_id": "EVT-TRAIN-006",
+        "name": "training_session_cancelled",
+        "trigger": "POST /training-sessions/{id}/cancel",
+        "payload_refs": [
+          "training_session.id",
+          "cancel_reason",
+          "actor_ref"
+        ]
+      },
+      {
+        "event_id": "EVT-TRAIN-007",
+        "name": "execution_recorded",
+        "trigger": "POST /training-sessions/{id}/execution-records",
+        "payload_refs": [
+          "execution_record.id",
+          "training_session_ref",
+          "completion_status",
+          "executed_by"
+        ]
+      },
+      {
+        "event_id": "EVT-TRAIN-008",
+        "name": "session_adjusted",
+        "trigger": "POST /training-sessions/{id}/adjustments",
+        "payload_refs": [
+          "session_adjustment.id",
+          "training_session_ref",
+          "adjustment_type",
+          "reason_code",
+          "adjusted_by"
+        ]
+      },
+      {
+        "event_id": "EVT-TRAIN-009",
+        "name": "feedback_posted",
+        "trigger": "POST /feedback-threads",
+        "payload_refs": [
+          "feedback_thread.id",
+          "target_athlete_ref",
+          "thread_type",
+          "anchor_ref"
+        ]
+      },
+      {
+        "event_id": "EVT-TRAIN-010",
+        "name": "conversation_outcome_recorded",
+        "trigger": "PATCH /feedback-threads/{id}/close",
+        "payload_refs": [
+          "feedback_thread.id",
+          "conversation_outcome",
+          "closed_by"
+        ]
+      },
+      {
+        "event_id": "EVT-TRAIN-011",
+        "name": "need_detected_created",
+        "trigger": "POST /needs-detected",
+        "payload_refs": [
+          "need_detected.id",
+          "source_type",
+          "evidence_ref"
+        ]
+      },
+      {
+        "event_id": "EVT-TRAIN-012",
+        "name": "need_linked_to_objective",
+        "trigger": "need_detected.status → LINKED_TO_OBJECTIVE",
+        "payload_refs": [
+          "need_detected.id",
+          "session_objective_ref"
+        ]
+      },
+      {
+        "event_id": "EVT-TRAIN-013",
+        "name": "restriction_guard_triggered",
+        "trigger": "eligibility check fails for athlete",
+        "payload_refs": [
+          "athlete_ref",
+          "restriction_profile_ref",
+          "training_session_ref",
+          "triggered_at"
+        ]
+      },
+      {
+        "event_id": "EVT-TRAIN-014",
+        "name": "override_authorized",
+        "trigger": "coach_head authorizes restriction override",
+        "payload_refs": [
+          "athlete_ref",
+          "override_reason",
+          "authorized_by",
+          "audit_event_ref"
+        ]
+      },
+      {
+        "event_id": "EVT-TRAIN-015",
+        "name": "attention_queue_updated",
+        "trigger": "new attention_queue_item created or resolved",
+        "payload_refs": [
+          "item.id",
+          "severity_level",
+          "reason_code",
+          "target_entity_ref",
+          "action=created|resolved"
+        ]
+      },
+      {
+        "event_id": "EVT-TRAIN-016",
+        "name": "notification_intent_emitted",
+        "trigger": "significant training events (publish, cancel, complete, feedback)",
+        "payload_refs": [
+          "intent_type",
+          "target_refs",
+          "trigger_event_ref",
+          "priority"
+        ],
+        "consumed_by": "notifications_module"
+      },
+      {
+        "event_id": "EVT-TRAIN-017",
+        "name": "audit_event_emitted",
+        "trigger": "all decisions: publish, adjust, cancel, complete, override, correction",
+        "payload_refs": [
+          "event_type",
+          "subject_ref",
+          "actor_ref",
+          "timestamp",
+          "payload_snapshot"
+        ],
+        "consumed_by": "audit_module"
+      },
+      {
+        "event_id": "EVT-TRAIN-018",
+        "name": "staff_handoff_recorded",
+        "trigger": "responsible_staff_ref change on active cycle",
+        "payload_refs": [
+          "cycle_ref",
+          "previous_staff_ref",
+          "new_staff_ref",
+          "continuity_snapshot_ref"
+        ]
+      },
+      {
+        "event_id": "EVT-TRAIN-019",
+        "name": "checkin_submitted",
+        "trigger": "POST /training-sessions/{id}/checkin",
+        "payload_refs": [
+          "athlete_ref",
+          "session_ref",
+          "state_summary",
+          "at_risk"
+        ],
+        "notes": "DEPRECATED as emitted: athlete_checkin is sovereign to Wellness. Training consumes EVT-EXT-001 (wellness_checkin_submitted) instead. Do not emit from training.",
+        "deprecated": true
+      },
+      {
+        "event_id": "EVT-TRAIN-020",
+        "name": "planned_vs_actual_recorded",
+        "trigger": "training_session completed with execution_records",
+        "payload_refs": [
+          "training_session.id",
+          "planned_content_snapshot_ref",
+          "execution_record_refs"
+        ]
+      },
+      {
+        "event_id": "EVT-TRAIN-021",
+        "name": "training_recommendation_created",
+        "trigger": "training_recommendation received from external module",
+        "payload_refs": [
+          "training_recommendation.id",
+          "source_module",
+          "recommendation_type",
+          "status=PENDING_COACH_REVIEW"
+        ]
+      },
+      {
+        "event_id": "EVT-TRAIN-022",
+        "name": "training_recommendation_accepted",
+        "trigger": "PATCH /training-recommendations/{id}/review with status=ACCEPTED",
+        "payload_refs": [
+          "training_recommendation.id",
+          "reviewed_by",
+          "reviewed_at",
+          "decision_rationale_ref"
+        ]
+      },
+      {
+        "event_id": "EVT-TRAIN-023",
+        "name": "training_recommendation_dismissed",
+        "trigger": "PATCH /training-recommendations/{id}/review with status=DISMISSED",
+        "payload_refs": [
+          "training_recommendation.id",
+          "reviewed_by",
+          "reviewed_at",
+          "decision_rationale_ref"
+        ]
+      },
+      {
+        "event_id": "EVT-TRAIN-024",
+        "name": "review_outcome_recorded",
+        "trigger": "POST /training-intervention-cycles/{id}/review-outcomes",
+        "payload_refs": [
+          "review_outcome.id",
+          "training_intervention_cycle_ref",
+          "review_type",
+          "decision"
+        ]
+      },
+      {
+        "event_id": "EVT-TRAIN-025",
+        "name": "restriction_override_created",
+        "trigger": "POST /restriction-overrides",
+        "payload_refs": [
+          "restriction_override.id",
+          "athlete_ref",
+          "restriction_profile_ref",
+          "authorization_level",
+          "authorized_by",
+          "authorized_at"
+        ]
+      },
+      {
+        "event_id": "EVT-TRAIN-026",
+        "name": "restriction_override_expired",
+        "trigger": "system.expiry_check: expires_at reached",
+        "payload_refs": [
+          "restriction_override.id",
+          "athlete_ref",
+          "expired_at"
+        ]
+      }
+    ],
+    "consumed": [
+      {
+        "event_id": "EVT-EXT-001",
+        "source_module": "wellness",
+        "name": "wellness_checkin_submitted (readiness_snapshot_available)",
+        "usage": "trigger readiness check before session; update checkin logic for adaptive friction",
+        "notes": "Wellness is sovereign; training consumes this to update readiness_snapshot_ref context for the session",
+        "consumed_entity": "readiness_snapshot_ref"
+      },
+      {
+        "event_id": "EVT-EXT-002",
+        "source_module": "medical",
+        "name": "medical_restriction_changed",
+        "usage": "update restriction_profile_ref; trigger eligibility re-check for active prescriptions"
+      },
+      {
+        "event_id": "EVT-EXT-003",
+        "source_module": "analytics",
+        "name": "analytics_recommendation_generated",
+        "usage": "create recommendation in PENDING_COACH_REVIEW status for coach to review"
+      },
+      {
+        "event_id": "EVT-EXT-004",
+        "source_module": "scout",
+        "name": "scout_signal_generated",
+        "usage": "trigger need_detected creation as OPEN with source_type=scout_signal"
+      },
+      {
+        "event_id": "EVT-EXT-005",
+        "source_module": "matches",
+        "name": "match_completed",
+        "usage": "trigger opportunity to create need_detected with source_type=match_outcome"
+      }
+    ]
+  },
+  "integrations": [
+    {
+      "module": "medical",
+      "relation_type": "training_consumes",
+      "data_provided_to_training": [
+        "restriction_profile",
+        "return_to_play_guard",
+        "availability_status"
+      ],
+      "data_consumed_from_training": [],
+      "ownership": "medical is sovereign; training read-only",
+      "integration_mode": "synchronous_read + event_consumption",
+      "risk_of_improper_coupling": "training creating/editing medical data — blocked by INV-TRAIN-014",
+      "invariant_refs": [
+        "INV-TRAIN-013",
+        "INV-TRAIN-014",
+        "INV-TRAIN-037"
+      ]
+    },
+    {
+      "module": "analytics",
+      "relation_type": "training_consumes_signals",
+      "data_provided_to_training": [
+        "training_recommendation (formal entity)",
+        "analytics_signal"
+      ],
+      "data_consumed_from_training": [
+        "training_session events",
+        "execution_records events",
+        "session_objectives"
+      ],
+      "ownership": "analytics sovereign over signals; training sovereign over decisions; training_recommendation is advisory object — requires explicit coach review",
+      "integration_mode": "event_driven",
+      "risk_of_improper_coupling": "analytics directly mutating training state — blocked by INV-TRAIN-015",
+      "invariant_refs": [
+        "INV-TRAIN-004",
+        "INV-TRAIN-015",
+        "INV-TRAIN-038"
+      ]
+    },
+    {
+      "module": "wellness",
+      "relation_type": "training_consumes",
+      "data_provided_to_training": [
+        "readiness_snapshot_ref (checkin result)",
+        "wellness_state summary",
+        "readiness_score"
+      ],
+      "data_consumed_from_training": [
+        "session_context_ref (to anchor checkin flow)"
+      ],
+      "ownership": "wellness is sovereign over athlete_checkin, wellness_state, and readiness truth; training consumes readiness_snapshot_ref only; training does not manage wellness data",
+      "integration_mode": "synchronous_read + event_consumption",
+      "risk_of_improper_coupling": "training managing wellness data — blocked by module boundary",
+      "invariant_refs": [
+        "INV-TRAIN-037"
+      ],
+      "decision_ref": "OD-TRAIN-005 resolved: athlete_checkin sovereign to wellness"
+    },
+    {
+      "module": "exercises",
+      "relation_type": "training_references_library",
+      "data_provided_to_training": [
+        "exercise definitions",
+        "playbook_items",
+        "media_assets"
+      ],
+      "data_consumed_from_training": [],
+      "ownership": "exercises sovereign over library; training governs contextual usage",
+      "integration_mode": "synchronous_read",
+      "risk_of_improper_coupling": "training redefining exercises or storing library state internally",
+      "invariant_refs": [
+        "INV-TRAIN-016"
+      ]
+    },
+    {
+      "module": "teams",
+      "relation_type": "training_references",
+      "data_provided_to_training": [
+        "team roster",
+        "athlete eligibility scope",
+        "staff assignments"
+      ],
+      "data_consumed_from_training": [],
+      "ownership": "teams sovereign; training uses for scope resolution",
+      "integration_mode": "synchronous_read",
+      "risk_of_improper_coupling": "training managing team roster or athlete membership",
+      "invariant_refs": [
+        "INV-TRAIN-013"
+      ]
+    },
+    {
+      "module": "seasons",
+      "relation_type": "training_references",
+      "data_provided_to_training": [
+        "season context",
+        "competitive phase",
+        "periodization anchor"
+      ],
+      "data_consumed_from_training": [],
+      "ownership": "seasons sovereign; training references for periodization",
+      "integration_mode": "synchronous_read",
+      "risk_of_improper_coupling": "training managing season calendar",
+      "invariant_refs": [
+        "INV-TRAIN-013"
+      ]
+    },
+    {
+      "module": "matches",
+      "relation_type": "training_consumes_signals",
+      "data_provided_to_training": [
+        "match_completed event",
+        "performance outcome signals"
+      ],
+      "data_consumed_from_training": [],
+      "ownership": "matches sovereign; training consumes as need_detected trigger",
+      "integration_mode": "event_consumption",
+      "risk_of_improper_coupling": "training managing match data or statistics",
+      "invariant_refs": [
+        "INV-TRAIN-038"
+      ]
+    },
+    {
+      "module": "scout",
+      "relation_type": "training_consumes_signals",
+      "data_provided_to_training": [
+        "scout_signal",
+        "competitive focus input"
+      ],
+      "data_consumed_from_training": [],
+      "ownership": "scout sovereign; training consumes as recommendation/need trigger",
+      "integration_mode": "event_consumption",
+      "risk_of_improper_coupling": "training managing scouting database",
+      "invariant_refs": [
+        "INV-TRAIN-038"
+      ]
+    },
+    {
+      "module": "notifications",
+      "relation_type": "training_emits_intents",
+      "data_provided_to_training": [],
+      "data_consumed_from_training": [
+        "notification_intent_emitted events"
+      ],
+      "ownership": "notifications sovereign over delivery; training emits intents only",
+      "integration_mode": "event_emission",
+      "risk_of_improper_coupling": "training delivering notifications directly — blocked by INV-TRAIN-039",
+      "invariant_refs": [
+        "INV-TRAIN-039"
+      ]
+    },
+    {
+      "module": "audit",
+      "relation_type": "training_emits_events",
+      "data_provided_to_training": [],
+      "data_consumed_from_training": [
+        "audit_event_emitted events"
+      ],
+      "ownership": "audit sovereign; training is emitter only",
+      "integration_mode": "event_emission",
+      "risk_of_improper_coupling": "training maintaining internal audit log — blocked by INV-TRAIN-040",
+      "invariant_refs": [
+        "INV-TRAIN-029",
+        "INV-TRAIN-040"
+      ]
+    },
+    {
+      "module": "identity_access",
+      "relation_type": "training_applies_policy",
+      "data_provided_to_training": [
+        "permission policy",
+        "role definitions"
+      ],
+      "data_consumed_from_training": [],
+      "ownership": "identity_access resolves auth/authz policy only; NOT human identity owner; human identity and staff roster sovereign to users/staff_directory module",
+      "integration_mode": "synchronous_read",
+      "risk_of_improper_coupling": "training defining or overriding permission rules — blocked by INV-TRAIN-041",
+      "invariant_refs": [
+        "INV-TRAIN-022",
+        "INV-TRAIN-041"
+      ],
+      "notes": "training applies permission decisions from identity_access; never treats identity_access as staff directory"
+    },
+    {
+      "module": "reports",
+      "relation_type": "training_emits_data",
+      "data_provided_to_training": [],
+      "data_consumed_from_training": [
+        "training_session events",
+        "execution_record events",
+        "planned_vs_actual data"
+      ],
+      "ownership": "reports consumes training outputs; does not govern training",
+      "integration_mode": "event_consumption",
+      "risk_of_improper_coupling": "reports module governing training behavior",
+      "invariant_refs": []
+    },
+    {
+      "module": "users",
+      "relation_type": "training_references_identity",
+      "data_provided_to_training": [
+        "athlete profile ref",
+        "staff directory ref",
+        "team roster membership"
+      ],
+      "data_consumed_from_training": [],
+      "ownership": "users/staff_directory is sovereign over human identity, athlete profiles, and staff roster; training reference-only",
+      "integration_mode": "synchronous_read",
+      "risk_of_improper_coupling": "training storing or managing staff/athlete identity data independently",
+      "notes": "OD-TRAIN-005 resolved: human identity belongs to users/staff directory, not identity_access"
+    }
+  ],
+  "open_decisions": [
+    {
+      "decision_id": "OD-TRAIN-001",
+      "title": "exercises/playbook como submódulo de Training ou módulo separado",
+      "description": "A biblioteca de exercícios e playbook pode ser um submódulo de Training ou um módulo independente. O boundary de soberania muda dependendo desta decisão.",
+      "impact_surfaces": [
+        "DOMAIN_RULES",
+        "Schema",
+        "OpenAPI"
+      ],
+      "blocking": false,
+      "status": "resolved",
+      "resolved_at": "2026-03-16",
+      "resolution": "exercises é módulo soberano separado, conforme MODULE_MAP.md (linha 31, fronteira crítica: exercises é lookup; training é evento operacional). training referencia exercise_id + exercise_version_id. Nenhuma refatoração de fronteira necessária. Ação: enriquecer schema do módulo exercises. Registrado como TRAIN-DEC-047.",
+      "recommendation": "módulo separado — Training apenas referencia, evitando acoplamento e supermódulo"
+    },
+    {
+      "decision_id": "OD-TRAIN-002",
+      "title": "Escopo de feedback_thread — conversação async ou reflexão estruturada apenas",
+      "description": "Se feedback_thread suporta conversação assíncrona (múltiplas mensagens) ou apenas uma reflexão estruturada com outcome. Afeta model de dados e UI.",
+      "impact_surfaces": [
+        "Schema",
+        "OpenAPI",
+        "UI_CONTRACT"
+      ],
+      "blocking": false,
+      "status": "resolved",
+      "resolved_at": "2026-03-16",
+      "resolution": "DECISÃO (arquiteto HB Track, 2026-03-16): Fase 1 = reflexão estruturada com outcome obrigatório. feedback_thread é entidade de resposta única com response_content e review_outcome; sem conversação multi-turno. Fase 3: conversação multi-turno com context thread (DEFER-TRAIN-P3-001). Entidade já criada para Fase 1 com este escopo. Nenhum contrato de Fase 1 deve implementar multi-turno.",
+      "recommendation": "Fase 1: reflexão estruturada com outcome obrigatório. Fase 3: conversação multi-turno com context thread."
+    },
+    {
+      "decision_id": "OD-TRAIN-003",
+      "title": "planned_vs_actual como entidade separada ou embedded em execution_record",
+      "description": "Comparação entre planejado e executado pode ser uma entidade própria ou derivada da comparação entre planned_content_snapshot e execution_records.",
+      "impact_surfaces": [
+        "Schema",
+        "OpenAPI"
+      ],
+      "blocking": false,
+      "status": "resolved",
+      "resolved_at": "2026-03-15",
+      "resolution": "DECISÃO (TRAIN-DEC-045): planned vs actual é dualidade embedded. planned_content_snapshot capturado na publicação, imutável. execution_records append-only acumulam o realizado. Comparação é sempre query derivada — nunca campo armazenado. Fase 1: granularidade de sessão (plannedDurationMinutes vs durationActualMinutes; plannedLoad vs actualLoadRecorded). Fase 2: granularidade de bloco/drill/atleta. INV-TRAIN-007 atualizado.",
+      "recommendation": "embedded — planned_content_snapshot imutável na sessão; execution_records acumulam o realizado. Comparação é query derivada."
+    },
+    {
+      "decision_id": "OD-TRAIN-004",
+      "title": "MVP scope: quais capacidades do Bloco 2 e 3 são obrigatórias no MVP",
+      "description": "Phase 1 inclui muitas capacidades. Confirmar quais são obrigatórias para MVP funcional vs podem ser iteração seguinte.",
+      "impact_surfaces": [
+        "all"
+      ],
+      "blocking": false,
+      "status": "resolved",
+      "recommendation": "Core MVP mínimo: UC-TRAIN-001 a UC-TRAIN-010 (phase 1). Capacidades de Bloco 2 e 3 alocadas para phases 2 e 3 conforme ir_version do module_identity."
+    },
+    {
+      "decision_id": "OD-TRAIN-005",
+      "title": "Modelo de atleta_checkin — pertence a Training ou a Wellness",
+      "description": "O check-in pré-treino usa dados de wellness e é disparado por Training. A soberania da entidade precisa ser decidida formalmente.",
+      "impact_surfaces": [
+        "DOMAIN_RULES",
+        "Schema",
+        "OpenAPI"
+      ],
+      "blocking": false,
+      "recommendation": "checkin_submission pertence a Wellness (wellness_check entity); Training dispara e consome o resultado. Training não é soberano dos dados de wellness.",
+      "status": "resolved",
+      "resolved_at": "2026-03-15",
+      "resolution": "DECISÃO: athlete_checkin é soberano do módulo Wellness. Training orquestra o momento operacional (dispara fluxo de checkin) e consome readiness_snapshot_ref. Training não persiste, não cria e não é dono de athlete_checkin. Entidade readiness_snapshot_ref adicionada ao IR como referência consumida. UC-TRAIN-014 atualizado para GET readiness-snapshot. INV-TRAIN-025, INV-TRAIN-026, INV-TRAIN-037 atualizados para refletir boundary."
+    },
+    {
+      "decision_id": "OD-TRAIN-006",
+      "title": "Escopo final de athlete_feedback — reflexão estruturada ou conversação multi-turno",
+      "description": "athlete_feedback foi formalizado como entidade, mas escopo (resposta única vs. multi-turno conversacional) ainda pendente.",
+      "impact_surfaces": [
+        "Schema",
+        "OpenAPI",
+        "UI_CONTRACT"
+      ],
+      "blocking": false,
+      "status": "resolved",
+      "resolved_at": "2026-03-16",
+      "resolution": "DECISÃO (arquiteto HB Track, 2026-03-16): Fase 1 = resposta única estruturada com response_content. athlete_feedback é entidade de feedback pontual do atleta após a sessão, sem thread conversacional. Fase 3: conversação multi-turno (DEFER-TRAIN-P3-001, alinhado com OD-TRAIN-002). Módulo soberano: training. Nenhum contrato de Fase 1 deve modelar multi-turno em athlete_feedback.",
+      "recommendation": "Fase 1: resposta única estruturada com response_content; Fase 3: conversação multi-turno. Entidade já criada para fase 1."
+    },
+    {
+      "decision_id": "OD-TRAIN-007",
+      "title": "Política exata de derived_signal — fase 2 scope e triggers",
+      "description": "derived_signal formalizado como entity de fase 2. Política de quando computar (readiness_score, dropout_risk, load_deviation) ainda pendente.",
+      "impact_surfaces": [
+        "Schema",
+        "INVARIANTS"
+      ],
+      "blocking": false,
+      "status": "resolved",
+      "resolved_at": "2026-03-15",
+      "resolution": "DECISÃO (TRAIN-DEC-046): analytics é o módulo soberano de computação de derived_signals (readiness_score, dropout_risk_signal, engagement_signal). training consome como read-only com proveniência completa (model_name, model_version, confidence_level, computed_at). training não implementa cálculo de sinal internamente. Fase 2: training emite trigger_event → analytics recalcula → training consome resultado. INV-TRAIN-036 atualizado para especificar boundary analytics.",
+      "recommendation": "analytics soberano de derived_signal; training consome read-only. Fase 2: trigger event pattern."
+    },
+    {
+      "decision_id": "OPEN-004",
+      "title": "staff_handoff: entidade própria ou campo de continuity_snapshot",
+      "description": "A transferência de contexto técnico entre staff pode ser modelada como uma entidade dedicada (staff_handoff) ou como um campo/snapshot dentro do ciclo de continuidade. A escolha afeta o schema de Fase 3 e a complexidade de busca.",
+      "impact_surfaces": [
+        "Schema",
+        "OpenAPI"
+      ],
+      "blocking": false,
+      "phase": "3",
+      "status": "resolved",
+      "resolved_at": "2026-03-16",
+      "resolution": "Fase 1: campo opcional continuityNotes (string, maxLength 2000) adicionado a training_session. Captura anotações do coach e racional de decisões para continuidade interstaff. Entidade dedicada staff_handoff permanece diferida para Fase 3 (DEFER-TRAIN-P3-003). Rationale: reduz complexidade de tabelas na Fase 1, mantendo memória técnica necessária para continuidade entre treinos.",
+      "recommendation": "Fase 3: coach_annotation como campo em training_session (simples, suficiente para Fase 1-2); staff_handoff como snapshot estruturado dedicado em Fase 3 quando continuidade interstaff for contratualizada."
+    },
+    {
+      "decision_id": "OPEN-005",
+      "title": "Política de tolerância de duração: blocos vs duração total da sessão",
+      "description": "A soma da duração dos blocos individuais de uma sessão pode exceder a duração planejada total. É necessário definir se isso é bloqueante, alertante ou permitido, e qual é a tolerância aceitável.",
+      "impact_surfaces": [
+        "Schema",
+        "INVARIANTS",
+        "OpenAPI"
+      ],
+      "blocking": false,
+      "blocks": "INV-TRAIN-083",
+      "phase": "2",
+      "status": "resolved",
+      "resolved_at": "2026-03-16",
+      "resolution": "Regra de Soma Elástica (INV-TRAIN-083): tolerância = MIN(durationPlannedMinutes × 0.10, 10 minutos). Dentro da tolerância: Warning no frontend + item de baixa severidade em attention_queue (severity, reason, target_entity obrigatórios). Fora da tolerância: rejeita com 422. Não bloqueia transições PUBLISHED ou COMPLETED. Rationale: respeita autoridade soberana do treinador e realidade imprevisível das quadras de handebol.",
+      "recommendation": "Regra proposta: SUM(block.durationMinutes) <= session.durationPlannedMinutes * 1.1. Excesso acima de 10% retorna 422. Bloqueia INV-TRAIN-034 e schema de session_block. Deve ser resolvido antes de contratar session_block em Fase 2."
+    }
+  ],
+  "surface_mapping": [
+    {
+      "decision_ref": "OD-TRAIN-001",
+      "target_surface": "docs/hbtrack/modulos/training/MODULE_SCOPE_TRAINING.md",
+      "status": "resolved",
+      "notes": "TRAIN-DEC-047: exercises é módulo separado soberano; training referencia exercise_id + exercise_version_id"
+    },
+    {
+      "decision_ref": "OD-TRAIN-002",
+      "target_surface": "contracts/schemas/training/feedback_thread.schema.json",
+      "required": true
+    },
+    {
+      "decision_ref": "OD-TRAIN-003",
+      "target_surface": "contracts/schemas/training/execution_record.schema.json",
+      "required": false
+    },
+    {
+      "decision_ref": "OD-TRAIN-004",
+      "target_surface": "docs/hbtrack/modulos/training/MODULE_SCOPE_TRAINING.md",
+      "status": "resolved"
+    },
+    {
+      "decision_ref": "OD-TRAIN-005",
+      "target_surface": "docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md",
+      "status": "resolved",
+      "notes": "athlete_checkin sovereign to wellness; readiness_snapshot_ref consumed"
+    },
+    {
+      "decision_ref": "OD-TRAIN-003",
+      "target_surface": "contracts/openapi/components/schemas/training/training_session.yaml",
+      "status": "resolved",
+      "notes": "TRAIN-DEC-045: plannedLoad + actualLoadRecorded (Fase 1); durationPlannedMinutes + durationActualMinutes (Fase 1)"
+    },
+    {
+      "decision_ref": "OD-TRAIN-007",
+      "target_surface": "docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md",
+      "status": "resolved",
+      "notes": "TRAIN-DEC-046: INV-TRAIN-036 atualizado; analytics soberano de derived_signal"
+    },
+    {
+      "decision_ref": "OPEN-004",
+      "target_surface": "contracts/openapi/components/schemas/training/training_session.yaml",
+      "status": "resolved",
+      "notes": "continuityNotes (string, maxLength 2000) adicionado como campo opcional. staff_handoff dedicado → Fase 3."
+    },
+    {
+      "decision_ref": "OPEN-005",
+      "target_surface": "docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md",
+      "status": "resolved",
+      "notes": "INV-TRAIN-083 adicionado: Regra de Soma Elástica. Bloqueio de INV-TRAIN-034 removido (era ID errado; correto: INV-TRAIN-083)."
+    },
+    {
+      "decision_ref": "training_recommendation",
+      "target_surface": "contracts/schemas/training/training_recommendation.schema.json",
+      "required": true
+    },
+    {
+      "decision_ref": "training_recommendation",
+      "target_surface": "contracts/openapi/paths/training.yaml",
+      "required": true
+    },
+    {
+      "decision_ref": "training_recommendation",
+      "target_surface": "docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md",
+      "required": true
+    },
+    {
+      "decision_ref": "review_outcome",
+      "target_surface": "contracts/schemas/training/review_outcome.schema.json",
+      "required": true
+    },
+    {
+      "decision_ref": "review_outcome",
+      "target_surface": "contracts/openapi/paths/training.yaml",
+      "required": true
+    },
+    {
+      "decision_ref": "restriction_override",
+      "target_surface": "contracts/schemas/training/restriction_override.schema.json",
+      "required": true
+    },
+    {
+      "decision_ref": "restriction_override",
+      "target_surface": "contracts/openapi/paths/training.yaml",
+      "required": true
+    },
+    {
+      "decision_ref": "restriction_override",
+      "target_surface": "docs/hbtrack/modulos/training/PERMISSIONS_TRAINING.md",
+      "required": true
+    },
+    {
+      "decision_ref": "readiness_snapshot_ref",
+      "target_surface": "contracts/schemas/training/readiness_snapshot_ref.schema.json",
+      "required": false,
+      "notes": "consumed ref; schema mirrors wellness boundary"
+    },
+    {
+      "decision_ref": "readiness_snapshot_ref",
+      "target_surface": "docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md",
+      "required": true
+    },
+    {
+      "decision_ref": "users_identity_ownership",
+      "target_surface": "docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md",
+      "required": true,
+      "notes": "human identity sovereign to users/staff_directory; identity_access for auth/authz only"
+    }
+  ],
+  "forbidden_inference_global": [
+    "Training cannot CREATE or UPDATE medical records (restriction_profile, return_to_play_guard)",
+    "Analytics and AI cannot directly CREATE, UPDATE, or DELETE training_session, session_block, or prescription_line",
+    "Training cannot OWN athlete, team, season, or competition entities — reference only",
+    "Training cannot DELIVER notifications directly — emit notification_intent events only",
+    "Training cannot MAINTAIN its own audit log — emit structured events to audit module only",
+    "Training cannot DEFINE permission rules — apply decisions from identity_access only",
+    "Completed training_sessions cannot be DIRECTLY MUTATED — corrections via versioned audit_correction only",
+    "Recommendations from analytics cannot AUTO-MATERIALIZE as sessions without explicit coach action",
+    "Derived signals (readiness_score, dropout_risk_signal) cannot REPLACE or DELETE raw source data",
+    "need_detected cannot AUTOMATICALLY create training_session without coach explicit action",
+    "feedback_thread cannot be CLOSED without conversation_outcome",
+    "session_objective cannot exist WITHOUT origin (need_ref, competitive_focus_ref, development_goal_ref, or manual_coach_rationale)",
+    "attention_queue_item cannot be created WITHOUT severity_level AND reason_code AND target_entity_ref",
+    "Athlete under active restriction cannot receive executable prescription WITHOUT authorized override AND audit_event",
+    "Training cannot OWN athlete check-in truth — athlete_checkin is sovereign to Wellness; training consumes readiness_snapshot_ref only (OD-TRAIN-005 resolved)",
+    "identity_access cannot be treated as human identity owner — human identity and staff roster are sovereign to users/staff_directory module",
+    "training_recommendation cannot bypass explicit coach review — no auto-materialization as session, objective, or prescription (INV-TRAIN-004)",
+    "review cannot exist without formal review_outcome entity — implicit or undocumented reviews are invalid (INV-TRAIN-011)",
+    "restriction cannot be broken without formal restriction_override entity — authorization_level + audit trail required (INV-TRAIN-021)"
+  ],
+  "patch_log": {
+    "patched_at": "2026-03-15",
+    "patch_session": "decisions-propagation-15patches",
+    "closed_decisions": [
+      "OD-TRAIN-005: athlete_checkin sovereign to Wellness",
+      "identidade humana pertence a users/staff directory",
+      "review_outcome é entidade formal",
+      "training_recommendation é entidade formal",
+      "restriction_override é entidade formal"
+    ],
+    "entities_added": [
+      "training_recommendation",
+      "review_outcome",
+      "restriction_override",
+      "readiness_snapshot_ref",
+      "attendance_record",
+      "athlete_feedback",
+      "derived_signal"
+    ],
+    "capabilities_added": [
+      "CAP-TRAIN-011",
+      "CAP-TRAIN-012"
+    ],
+    "use_cases_added": [
+      "UC-TRAIN-016",
+      "UC-TRAIN-017",
+      "UC-TRAIN-018",
+      "UC-TRAIN-019",
+      "UC-TRAIN-020",
+      "UC-TRAIN-021"
+    ],
+    "events_added": [
+      "EVT-TRAIN-021",
+      "EVT-TRAIN-022",
+      "EVT-TRAIN-023",
+      "EVT-TRAIN-024",
+      "EVT-TRAIN-025",
+      "EVT-TRAIN-026"
+    ]
+  },
+  "phase_deferred": {
+    "description": "Capacidades formalmente diferidas para Fase 2 ou 3. Não devem ser contratadas nem implementadas antes da fase indicada. Referência: TRAIN-DEC-028.",
+    "phase_2": [
+      {
+        "id": "DEFER-TRAIN-P2-001",
+        "capability": "video_playbook_contextual",
+        "decision_ref": "TRAIN-DEC-017",
+        "description": "video_clip, diagram, playbook_pattern e coaching_cue vinculáveis a session_objective, session_block, exercise_variant, error_pattern, feedback_thread.",
+        "blocks_contract": false
+      },
+      {
+        "id": "DEFER-TRAIN-P2-002",
+        "capability": "attention_queue_completa",
+        "decision_ref": "TRAIN-DEC-027",
+        "description": "attention_queue_item com severity_level, reason_code e target_entity_ref obrigatórios. Nenhum alerta sem essas propriedades (FI-013).",
+        "blocks_contract": false
+      },
+      {
+        "id": "DEFER-TRAIN-P2-003",
+        "capability": "return_to_play_guards_avancados",
+        "decision_ref": "TRAIN-DEC-012",
+        "description": "restriction_override com authorization_level e trilha de auditoria (FI-019). Guards progressivos de retorno ao treino.",
+        "blocks_contract": false
+      },
+      {
+        "id": "DEFER-TRAIN-P2-004",
+        "capability": "planned_vs_actual_granularidade_bloco",
+        "decision_ref": "TRAIN-DEC-045",
+        "description": "Granularidade de bloco e drill por atleta. Fase 1 contrata apenas granularidade de sessão.",
+        "blocks_contract": false
+      },
+      {
+        "id": "DEFER-TRAIN-P2-005",
+        "capability": "variantes_por_atleta",
+        "decision_ref": "TRAIN-DEC-044",
+        "description": "block_athlete_variant para sessões COLLECTIVE_WITH_VARIANTS. Fase 1: apenas individualizationMode enum declarado.",
+        "blocks_contract": false
+      },
+      {
+        "id": "DEFER-TRAIN-P2-006",
+        "capability": "session_block_contract",
+        "decision_ref": "OPEN-005",
+        "description": "Contrato de session_block incluindo Regra de Soma Elástica (INV-TRAIN-083). OPEN-005 resolvido em 2026-03-16 — desbloqueado para Fase 2.",
+        "blocks_contract": false,
+        "unblocked_by": "OPEN-005"
+      },
+      {
+        "id": "DEFER-TRAIN-P2-007",
+        "capability": "fricao_adaptativa_checkins",
+        "decision_ref": "TRAIN-DEC-018",
+        "description": "Fluxo adaptativo de check-in: estado normal → fluxo mínimo; risco/anomalia → expansão de perguntas.",
+        "blocks_contract": false
+      },
+      {
+        "id": "DEFER-TRAIN-P2-008",
+        "capability": "aderencia_entidade_primeira_classe",
+        "decision_ref": "TRAIN-DEC-019",
+        "description": "adherence_status, miss_reason, partial_completion, reschedule_window, consistency_streak, engagement_signal, dropout_risk_signal como entidades de domínio.",
+        "blocks_contract": false
+      }
+    ],
+    "phase_3": [
+      {
+        "id": "DEFER-TRAIN-P3-001",
+        "capability": "feedback_conversacional_multi_turno",
+        "decision_ref": "OD-TRAIN-002",
+        "description": "feedback_thread como conversação multi-turno. Fase 1: reflexão estruturada com outcome obrigatório.",
+        "blocks_contract": false
+      },
+      {
+        "id": "DEFER-TRAIN-P3-002",
+        "capability": "continuidade_interstaff_avancada",
+        "decision_ref": "TRAIN-DEC-021",
+        "description": "staff_handoff, continuity_snapshot, observation_log. Fase 1-2: coach_annotation simples.",
+        "blocks_contract": false
+      },
+      {
+        "id": "DEFER-TRAIN-P3-003",
+        "capability": "staff_handoff_schema",
+        "decision_ref": "OPEN-004",
+        "description": "Fase 1: continuityNotes como campo simples em training_session (OPEN-004 resolvido 2026-03-16). Fase 3: staff_handoff como entidade própria de snapshot estruturado. Contrato de Fase 3 desbloqueado pela resolução de OPEN-004.",
+        "blocks_contract": false,
+        "unblocked_by": "OPEN-004"
+      },
+      {
+        "id": "DEFER-TRAIN-P3-004",
+        "capability": "recomendacoes_automaticas_assistidas",
+        "decision_ref": "TRAIN-DEC-003",
+        "description": "training_recommendation como objeto de domínio com revisão explícita do coach. Nenhuma auto-materialização de sessão (FI-008, FI-010, FI-017).",
+        "blocks_contract": false
+      }
+    ]
+  }
+}
