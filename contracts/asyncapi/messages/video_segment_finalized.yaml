@@ -1,0 +1,13 @@
+# AsyncAPI Message: video_segment_finalized
+# Module: video
+# Domain rules: DR-VID-001, DR-VID-002, DR-VID-005
+# Decisions: ADR-033
+name: VideoSegmentFinalizedMessage
+title: Segmento de Vídeo Finalizado
+summary: Publicado quando MediaSegment é finalizado e imutável (DR-VID-005).
+description: >
+  Emitido a cada segmento mezzanine finalizado. Analytics consome para indexação.
+  Após finalizado, segmento NUNCA é modificado (DR-VID-005).
+contentType: application/json
+payload:
+  $ref: "../components/schemas/video_segment_finalized_payload.yaml"

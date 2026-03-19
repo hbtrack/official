@@ -1,0 +1,39 @@
+# AsyncAPI Payload: video_segment_finalized
+# Module: video | DR-VID-001, DR-VID-002, DR-VID-005 | ADR-033
+type: object
+required: [eventType, occurredAt, segmentId, sessionId, timecodeStart, timecodeEnd, durationMs, codecLabel]
+additionalProperties: false
+properties:
+  eventType:
+    type: string
+    const: video.segment.finalized
+  occurredAt:
+    type: string
+    format: date-time
+    x-semantic-id: core.occurred_at.v1
+  segmentId:
+    type: string
+    format: uuid
+    description: UUID do MediaSegment. Imutável após finalizado (DR-VID-005).
+  sessionId:
+    type: string
+    format: uuid
+    x-semantic-id: video.session.id.v1
+  timecodeStart:
+    type: number
+    description: Início do segmento em segundos no relógio lógico da partida (DR-VID-001).
+  timecodeEnd:
+    type: number
+    description: Fim do segmento em segundos no relógio lógico.
+  durationMs:
+    type: integer
+    minimum: 1
+    description: Duração em milissegundos.
+  codecLabel:
+    type: string
+    maxLength: 40
+    description: Codec mezzanine (ex: h264-mezzanine, hevc-mezzanine). Pipeline técnico e público derivam deste (DR-VID-002).
+  storagePath:
+    type: string
+    maxLength: 500
+    description: Caminho de storage do segmento mezzanine (URI interno, não exposto ao público).

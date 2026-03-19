@@ -1,14 +1,14 @@
 {
   "session_id": "4d672789-d33f-42d6-be4e-41e30e822ba0",
-  "session_timestamp": "2026-03-19T13:13:35.152083+00:00",
+  "session_timestamp": "2026-03-19T13:58:10.624383+00:00",
   "branch": "hb-track-contratos-driven",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "contract_execution",
-  "task_type": "readiness_promotion",
-  "module": "users",
+  "task_type": "new_contract",
+  "module": "video",
   "stage": 2,
   "write_scope": "contracts",
-  "worker_id": "readiness_promotion",
+  "worker_id": "create_openapi_contract",
   "git_user": "HB Track Agent",
   "git_email": "davis@hbtrack.local",
   "stage0_exit_code": 0,
@@ -16,10 +16,10 @@
   "stage2_artifacts": [
     {
       "path": "docs/_canon/MODULE_REGISTRY.yaml",
-      "sha256": "21fbc593e4e603582399d0ea502c0e26a711fd2cd7240e30c098b83b190dd0cc",
+      "sha256": "18a9159a3426029786f3bdfa4a6b7492311553fd0aaca5a0834d814ad171fc76",
       "created_at": "2026-03-19T12:55:41.593307+00:00",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-19T13:17:18.690763+00:00"
+      "validated_at": "2026-03-19T14:12:36.025124+00:00"
     },
     {
       "path": "contracts/openapi/paths/medical.yaml",
@@ -121,7 +121,7 @@
     },
     {
       "path": "contracts/asyncapi/asyncapi.yaml",
-      "sha256": "3ad72d6a540be06d09c3f7c560ce99334c0713cf6b50d058e4b2eaede3cd6fa0",
+      "sha256": "25e8473c9e0d052a37a320812de8f3fef0f763abb972d84a45ef7adca69e12c7",
       "created_at": "2026-03-19T13:51:10.210890+00:00",
       "gate_exit_code": 0,
       "validated_at": "2026-03-19T13:53:22.324574+00:00"
@@ -975,6 +975,136 @@
     {
       "path": "docs/hbtrack/modulos/wellness/SPORT_SCIENCE_RULES_WELLNESS.md",
       "sha256": "79398411a8bd6754cbbbbf816b045faae3c2e8385bbc34c432a1fe126f91775c",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/video_session_created.yaml",
+      "sha256": "c1c34a69ce54fe371b55032e7faa3803bda571ed9b541de83e87e27f0d194c75",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/video_session_capturing.yaml",
+      "sha256": "c6b2013862f392b6dcd402bbb4c37effea204b2f9dd8cfa05a718e159e14deb3",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/video_segment_finalized.yaml",
+      "sha256": "316d8b59e3974a86e579032a4f615bf770a94e6ced8c5c6b70281a3d8b120ef7",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/video_session_syncing.yaml",
+      "sha256": "85570ec9b9335de2117459a4439741cf88b7ba25b28e3e919f9cc504a7800d48",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/video_session_transcoding.yaml",
+      "sha256": "bb9d5212405dbb2a023ae9481e40b49b4e6a12ff50bc243239775fe79ae5d2af",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/video_clip_ready.yaml",
+      "sha256": "93fe3194acd0b246cb303845630fc238c9bc1a240fae9fc008ba2b28f543f5d5",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/video_distribution_published.yaml",
+      "sha256": "043b70522fa43f648c5af00df95320d6c5f3482239af2b8724c60502b6d8101a",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/video_session_published.yaml",
+      "sha256": "586b56e14f17219f61985e7b01e67dbe3fcba005a400e8d1c3a5a0b287197953",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/video_session_created.yaml",
+      "sha256": "6691e089feea078282e1119215836b9f4ede96a045cbb291bd16d719319992a7",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/video_session_capturing.yaml",
+      "sha256": "cb37cddb41a66731e9a8e06d06bd7dae6fc139ce9bd1e711662025fae4280513",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/video_segment_finalized.yaml",
+      "sha256": "1e90faad820d737bc46fa97d434be5290669a0c0865acb648f6286e678d798d3",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/video_session_syncing.yaml",
+      "sha256": "ff086228e6be5e6b8a9aadc349ee1929900c27c5bae6efe873904e3281128830",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/video_session_transcoding.yaml",
+      "sha256": "7252b390b440fd82b0447e7ed435e8a2a9e8afea12282022a70d112a91e41a69",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/video_clip_ready.yaml",
+      "sha256": "7373e608ad978bc19fade9e562018be7ce75123d01affa950214e993083604d1",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/video_distribution_published.yaml",
+      "sha256": "9f84978f7e506afdc79f9dc20007f2b9f4daba648667ebdcab0a10a81723736d",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/video_session_published.yaml",
+      "sha256": "aff83c6dc1451a08f01f2774642c9bf6460e5a206bdab1465a724fbfe98dc505",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/video_session_created_payload.yaml",
+      "sha256": "e796e74debca81c884eaa1fe97c0eb7ed0fa9763bf8452ed8baa42162ca7012f",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/video_session_capturing_payload.yaml",
+      "sha256": "85cec7797e7553728c6492772cc7b9959f959f510ec2e955245794eb95a1ab39",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/video_segment_finalized_payload.yaml",
+      "sha256": "d205179bb7d5b1f300f5f0ca6f490e15bef86853bc7adeb7f11527229285b7d4",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/video_session_syncing_payload.yaml",
+      "sha256": "9331527b94329d47c4342ef99d400adf9165c0e8d8c4eb3525f7e86df4e4cf5d",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/video_session_transcoding_payload.yaml",
+      "sha256": "6bc56aefe85781e2b9feb933015b55e1eb9946233c89ea61263b6b6673dfca38",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/video_clip_ready_payload.yaml",
+      "sha256": "6bf46e537ccaec8ed1db47c3ec44d2cee9829acbdf4007c028449a2db0c10275",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/video_distribution_published_payload.yaml",
+      "sha256": "befd7835134f27e01bb5b7beeef44b991e7f20dfc4c43995c1a4ff803332111b",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/video_session_published_payload.yaml",
+      "sha256": "565ac51806c2efcc7f10dfc56854da062e7f2fceb4b9fbec1789f1ff2b357d97",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/workflows/video/start_live_capture.arazzo.yaml",
+      "sha256": "85a3d0015c555fad4cef32eb44919165c5dfaf70e66d40158468a2f9ea07bc61",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/workflows/video/create_semantic_clip.arazzo.yaml",
+      "sha256": "385d2d05f592d280f218304f226dfc54dec9f23d622441ecf60549096e3f8d82",
       "gate_exit_code": 0
     }
   ],

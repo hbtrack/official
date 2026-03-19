@@ -219,7 +219,7 @@ modules:
         "arazzo",
       ]
   video:
-    status: "draft_contract"
+    status: "validated_contract"
     owner: "platform-core"
     expected_surfaces:
       [

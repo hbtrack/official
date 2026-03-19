@@ -1,0 +1,13 @@
+# AsyncAPI Message: video_session_syncing
+# Module: video
+# Domain rules: DR-VID-001, DR-VID-010
+# Decisions: ADR-033
+name: VideoSessionSyncingMessage
+title: Sincronização com Scout Iniciada
+summary: Publicado quando MatchMediaSession inicia sync temporal com scout (DR-VID-010).
+description: >
+  Emitido quando a sessão transita para SYNCING. Scout consome para resolver timecodes.
+  Em caso de conflito, scout é a referência canônica (DR-VID-010).
+contentType: application/json
+payload:
+  $ref: "../components/schemas/video_session_syncing_payload.yaml"

@@ -1,0 +1,45 @@
+# AsyncAPI Payload: video_clip_ready
+# Module: video | DR-VID-004, DR-VID-005 | ADR-033
+type: object
+required: [eventType, occurredAt, clipId, sessionId, timecodeStart, timecodeEnd, semanticContextLabel]
+additionalProperties: false
+properties:
+  eventType:
+    type: string
+    const: video.clip.ready
+  occurredAt:
+    type: string
+    format: date-time
+    x-semantic-id: core.occurred_at.v1
+  clipId:
+    type: string
+    format: uuid
+    description: UUID do ClipDefinition.
+  sessionId:
+    type: string
+    format: uuid
+    x-semantic-id: video.session.id.v1
+  timecodeStart:
+    type: number
+    description: Início do clip no relógio lógico (segundos, DR-VID-001).
+  timecodeEnd:
+    type: number
+    description: Fim do clip.
+  semanticContextLabel:
+    type: string
+    maxLength: 100
+    description: Contexto semântico do clip (DR-VID-004 — ex: "golo-7m", "falta-zona-d").
+  scoutEventId:
+    type: string
+    format: uuid
+    description: Referência ao evento scout correlacionado. Não duplica dados de scout (BOUNDARY).
+  athleteIds:
+    type: array
+    items:
+      type: string
+      format: uuid
+    description: Atletas envolvidos no clip (referências, não dados completos).
+  zoneLabel:
+    type: string
+    maxLength: 40
+    description: Zona de quadra do evento (ex: "area-6m-esq", "meia-quadra").

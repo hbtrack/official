@@ -1,0 +1,15 @@
+# AsyncAPI Channel: video.session.capturing
+# Module: video
+# Domain rules: DR-VID-001, DR-VID-003, DR-VID-007
+# Decisions: ADR-033
+
+address: video.session.capturing
+title: Captura de Vídeo Iniciada
+description: >
+  Canal de publicação quando MatchMediaSession transita para CAPTURING.
+  Sinaliza início de captura ao vivo em edge nodes. Publisher: video.
+  Consumidores: scout (para sincronização de timecode), audit.
+  Alinhado com DR-VID-003 (edge-first) e DR-VID-007 (acesso scoped por sessão).
+messages:
+  video_session_capturing_publish:
+    $ref: "../messages/video_session_capturing.yaml"

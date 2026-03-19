@@ -1,0 +1,15 @@
+# AsyncAPI Channel: video.session.transcoding
+# Module: video
+# Domain rules: DR-VID-002, DR-VID-006
+# Decisions: ADR-033
+
+address: video.session.transcoding
+title: Transcodificação Iniciada
+description: >
+  Canal de publicação quando transcodificação dos DistributionProfiles é iniciada.
+  Dual pipeline (técnico + público) disparado a partir do mezzanine (DR-VID-002).
+  Transcodificação é lazy/on-demand por DR-VID-006. Publisher: video.
+  Consumidores: notifications (progresso), audit.
+messages:
+  video_session_transcoding_publish:
+    $ref: "../messages/video_session_transcoding.yaml"

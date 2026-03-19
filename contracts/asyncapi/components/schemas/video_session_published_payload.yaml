@@ -1,0 +1,47 @@
+# AsyncAPI Payload: video_session_published
+# Module: video | DR-VID-002, DR-VID-007, DR-VID-008, DR-VID-009 | ADR-033
+type: object
+required: [eventType, occurredAt, sessionId, matchId, technicalProfileReady, publicProfileReady, publishedAt]
+additionalProperties: false
+properties:
+  eventType:
+    type: string
+    const: video.session.published
+  occurredAt:
+    type: string
+    format: date-time
+    x-semantic-id: core.occurred_at.v1
+  sessionId:
+    type: string
+    format: uuid
+    x-semantic-id: video.session.id.v1
+  matchId:
+    type: string
+    format: uuid
+    x-semantic-id: matches.match.id.v1
+  technicalProfileReady:
+    type: boolean
+    description: Pipeline técnico (baixa latência) disponível (DR-VID-002).
+  publicProfileReady:
+    type: boolean
+    description: Pipeline público (ABR/CDN) disponível (DR-VID-002).
+  syncCompletedAt:
+    type: string
+    format: date-time
+    description: Timestamp de conclusão da sincronização com scout (DR-VID-010).
+  publishedAt:
+    type: string
+    format: date-time
+    description: Timestamp em que a sessão atingiu PUBLISHED.
+  retentionPolicy:
+    type: string
+    enum: [keep_7_days, keep_30_days, archive_s3, public_forever]
+    description: Política de retenção final aplicada (DR-VID-008).
+  clipCount:
+    type: integer
+    minimum: 0
+    description: Número de clips semânticos indexados nesta sessão.
+  distributionCount:
+    type: integer
+    minimum: 0
+    description: Número de distribuições realizadas (rastreadas por DR-VID-009).

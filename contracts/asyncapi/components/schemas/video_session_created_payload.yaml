@@ -1,0 +1,35 @@
+# AsyncAPI Payload: video_session_created
+# Module: video | DR-VID-001, DR-VID-003, DR-VID-008 | ADR-033
+type: object
+required: [eventType, occurredAt, sessionId, matchId, captureMode, retentionPolicy]
+additionalProperties: false
+properties:
+  eventType:
+    type: string
+    const: video.session.created
+  occurredAt:
+    type: string
+    format: date-time
+    x-semantic-id: core.occurred_at.v1
+  sessionId:
+    type: string
+    format: uuid
+    description: UUID da MatchMediaSession criada. Imutável.
+    x-semantic-id: video.session.id.v1
+  matchId:
+    type: string
+    format: uuid
+    description: Referência à partida em matches module. Video não duplica metadados de partida.
+    x-semantic-id: matches.match.id.v1
+  captureMode:
+    type: string
+    enum: [PANORAMIC, AUTO_FOLLOW, MULTI_ANGLE]
+    description: Modo de captura selecionado (DR-VID-003 — edge-first).
+  retentionPolicy:
+    type: string
+    enum: [keep_7_days, keep_30_days, archive_s3, public_forever]
+    description: Política explícita de retenção (DR-VID-008). Padrão conservador = keep_7_days.
+  operatorUserId:
+    type: string
+    format: uuid
+    description: UUID do match_operator que criou a sessão.

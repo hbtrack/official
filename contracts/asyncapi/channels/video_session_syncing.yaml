@@ -1,0 +1,15 @@
+# AsyncAPI Channel: video.session.syncing
+# Module: video
+# Domain rules: DR-VID-001, DR-VID-010
+# Decisions: ADR-033
+
+address: video.session.syncing
+title: Sincronização com Scout Iniciada
+description: >
+  Canal de publicação quando MatchMediaSession inicia sincronização temporal com scout.
+  Permite que scout consuma eventos de timecode e valide alinhamento (DR-VID-010).
+  Publisher: video. Consumidores: scout (timecode resolution), analytics.
+  BOUNDARY: scout é referência de timecode canônico (DR-VID-010).
+messages:
+  video_session_syncing_publish:
+    $ref: "../messages/video_session_syncing.yaml"

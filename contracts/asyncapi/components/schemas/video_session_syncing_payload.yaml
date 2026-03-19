@@ -1,0 +1,34 @@
+# AsyncAPI Payload: video_session_syncing
+# Module: video | DR-VID-001, DR-VID-010 | ADR-033
+type: object
+required: [eventType, occurredAt, sessionId, matchId, segmentCount, timecodeRangeStart, timecodeRangeEnd]
+additionalProperties: false
+properties:
+  eventType:
+    type: string
+    const: video.session.syncing
+  occurredAt:
+    type: string
+    format: date-time
+    x-semantic-id: core.occurred_at.v1
+  sessionId:
+    type: string
+    format: uuid
+    x-semantic-id: video.session.id.v1
+  matchId:
+    type: string
+    format: uuid
+    x-semantic-id: matches.match.id.v1
+  segmentCount:
+    type: integer
+    minimum: 1
+    description: Quantidade de segmentos a sincronizar com scout.
+  timecodeRangeStart:
+    type: number
+    description: Início do range temporal a sincronizar (segundos, relógio lógico DR-VID-001).
+  timecodeRangeEnd:
+    type: number
+    description: Fim do range temporal.
+  scoutEventCount:
+    type: integer
+    description: Número de eventos scout a correlacionar (referência, scout é SSOT — DR-VID-010).

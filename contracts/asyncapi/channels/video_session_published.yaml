@@ -1,0 +1,15 @@
+# AsyncAPI Channel: video.session.published
+# Module: video
+# Domain rules: DR-VID-002, DR-VID-007, DR-VID-008, DR-VID-009
+# Decisions: ADR-033
+
+address: video.session.published
+title: Sessão de Vídeo Publicada (Pipeline Completo)
+description: >
+  Canal de publicação quando MatchMediaSession transita para PUBLISHED.
+  Estado final: dual pipeline (técnico + público) disponível, sincronização com scout concluída.
+  Publisher: video. Consumidores: analytics, reports, notifications, audit.
+  Sinaliza que toda a captura está disponível para consumo downstream.
+messages:
+  video_session_published_publish:
+    $ref: "../messages/video_session_published.yaml"
