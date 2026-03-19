@@ -5981,7 +5981,7 @@ def _g12_asyncapi_validation(root: pathlib.Path) -> dict:
         return _pg(
             gate_id,
             "FAIL",
-            False,
+            True,
             "ERROR_INFRA",
             "asyncapi CLI não disponível via toolchain WSL-native (node_modules/NVM).",
             [str(asyncapi_root)],
@@ -5995,7 +5995,7 @@ def _g12_asyncapi_validation(root: pathlib.Path) -> dict:
             return _pg(
                 gate_id,
                 "FAIL",
-                False,
+                True,
                 "ERROR_INFRA",
                 "asyncapi falhou por interop WSL/Windows (vsock). Use Node WSL-native e evite wrappers Windows.",
                 [str(asyncapi_root)],
@@ -6008,7 +6008,7 @@ def _g12_asyncapi_validation(root: pathlib.Path) -> dict:
             return _pg(
                 gate_id,
                 "FAIL",
-                False,
+                True,
                 "ERROR_INFRA",
                 "asyncapi existe mas Node.js não está disponível no ambiente.",
                 [str(asyncapi_root)],
@@ -6022,10 +6022,10 @@ def _g12_asyncapi_validation(root: pathlib.Path) -> dict:
             for ln in (out).splitlines()[:10]
             if ln.strip()
         ]
-        return _pg(gate_id, "FAIL", False, "BLOCKED_ASYNCAPI_INVALID",
+        return _pg(gate_id, "FAIL", True, "BLOCKED_ASYNCAPI_INVALID",
                    "asyncapi validate falhou.",
                    [str(asyncapi_root)], [str(asyncapi_root)], [], violations, _ms(t0))
-    return _pg(gate_id, "PASS", False, None,
+    return _pg(gate_id, "PASS", True, None,
                "asyncapi validate: PASS.",
                [str(asyncapi_root)], [str(asyncapi_root)], [], [], _ms(t0))
 
@@ -6085,6 +6085,47 @@ def _g13_arazzo_validation(root: pathlib.Path) -> dict:
     return _pg(gate_id, "PASS", False, None,
                f"Arazzo: {len(arazzo_files)} arquivo(s) válido(s).",
                [], checked, [], [], _ms(t0))
+
+
+def _g13a_spectral_linting(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "SPECTRAL_LINTING_GATE"
+    openapi_root = root / "contracts" / "openapi" / "openapi.yaml"
+    if not openapi_root.exists():
+        return _skip(gate_id, "contracts/openapi/openapi.yaml ausente — gate não aplicável.", _ms(t0))
+    
+    rc, stdout, stderr = _try_node_cli(root, tool="spectral", args=["lint", str(openapi_root)], cwd=root)
+    if rc == -1:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            "ERROR_INFRA",
+            "spectral CLI não disponível via toolchain WSL-native (node_modules/NVM).",
+            [str(openapi_root)],
+            [str(openapi_root)],
+            [],
+            [{"blocking_code": "ERROR_INFRA", "artifact": "spectral", "message": stderr, "severity": "error"}],
+            _ms(t0),
+        )
+    
+    output = stdout + stderr
+    
+    # spectral retorna rc=0 se não há erros, rc>0 se há erros
+    if rc != 0:
+        # Extrair linhas de erro do output
+        lines = [ln for ln in output.splitlines() if ln.strip() and any(sev in ln for sev in ["error", "warning"])]
+        violations = [
+            {"blocking_code": "BLOCKED_OPENAPI_SPECTRAL_VIOLATION", "artifact": str(openapi_root.relative_to(root)), "message": ln[:150], "severity": "error"}
+            for ln in lines[:20]
+        ]
+        return _pg(gate_id, "FAIL", True, "BLOCKED_OPENAPI_SPECTRAL_VIOLATION",
+                   f"spectral lint falhou (rc={rc}). Veja violations para detalhes.",
+                   [str(openapi_root)], [str(openapi_root)], [], violations, _ms(t0))
+    
+    return _pg(gate_id, "PASS", True, None,
+               "spectral lint: nenhum erro encontrado.",
+               [str(openapi_root)], [str(openapi_root)], [], [], _ms(t0))
 
 
 def _g14_ui_doc_validation(root: pathlib.Path) -> dict:
@@ -8495,6 +8536,13 @@ def run_pipeline(
         "DERIVED_DRIFT_GATE",
         "ADVERSARIAL_ANALYSIS_GATE",
         "FEATURE_READINESS_GATE",
+        # FIX BACKLOG_ITEM_1 (Passos E-F): Adicionar validadores externos ao default local profile
+        "OPENAPI_ROOT_STRUCTURE_GATE",         # Redocly lint (validação OpenAPI)
+        "ASYNCAPI_VALIDATION_GATE",            # AsyncAPI validate (validação AsyncAPI)
+        "ARAZZO_VALIDATION_GATE",              # Arazzo YAML parsing (validação workflows)
+        "JSON_SCHEMA_VALIDATION_GATE",         # JSON Schema validation
+        "OPENAPI_ROOT_MODULE_SYNC_GATE",       # Sincronização root OpenAPI com paths de módulos
+        "SPECTRAL_LINTING_GATE",               # FIX BACKLOG_ITEM_1 (Passo D): Spectral linting (estilos OpenAPI)
     }
 
     # Stage-specific gate sets (Fase 0 / 1 / 2)
@@ -8567,6 +8615,7 @@ def run_pipeline(
         ("HTTP_RUNTIME_CONTRACT_GATE", lambda: _g11_http_runtime_contract(root)),
         ("ASYNCAPI_VALIDATION_GATE", lambda: _g12_asyncapi_validation(root)),
         ("ARAZZO_VALIDATION_GATE", lambda: _g13_arazzo_validation(root)),
+        ("SPECTRAL_LINTING_GATE", lambda: _g13a_spectral_linting(root)),  # FIX BACKLOG_ITEM_1 (Passo D): novo gate de Spectral
         ("ARAZZO_COMPLETENESS_GATE", lambda: _g_arazzo_completeness(root)),
         ("UI_DOC_VALIDATION_GATE", lambda: _g14_ui_doc_validation(root)),
         ("DERIVED_DRIFT_GATE", lambda: _g15_derived_drift(root)),

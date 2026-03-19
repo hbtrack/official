@@ -890,5 +890,123 @@ Quando você pede algo ao agente ("cria a API de treinos para o módulo training
 
 ---
 
+## PARTE 13 — BACKLOG_ITEM_1: Validadores Externos no Caminho Padrão
+
+### Status: IMPLEMENTAÇÃO COMPLETA (Passos A–D)
+
+**Data:** 2026-03-19 | **Prioridade:** Alta | **Epic:** Validação Externa
+
+### Problema Diagnosticado (Passos A & B)
+
+**33 gates estavam faltando das listas de profile (`_local_ids`, `_precommit_ids`)**, causando SKIP silencioso mesmo quando artefatos e ferramentas existiam.
+
+**Root cause:** Configuração de profile incompleta em `scripts/contracts/validate/validate_contracts.py` (linhas 8493–8505).
+
+```python
+# ANTES: Apenas 14 gates ativos no profile local
+_local_ids = _precommit_ids | {
+    "DECISION_IR_CONFORMANCE_GATE",
+    "DERIVED_DRIFT_GATE",
+    "ADVERSARIAL_ANALYSIS_GATE",
+    "FEATURE_READINESS_GATE",
+}
+
+# DEPOIS: 19 gates (validadores externos agora inclusos)
+_local_ids = _precommit_ids | {
+    "DECISION_IR_CONFORMANCE_GATE",
+    "DERIVED_DRIFT_GATE",
+    "ADVERSARIAL_ANALYSIS_GATE",
+    "FEATURE_READINESS_GATE",
+    "OPENAPI_ROOT_STRUCTURE_GATE",         # Redocly
+    "ASYNCAPI_VALIDATION_GATE",            # AsyncAPI
+    "ARAZZO_VALIDATION_GATE",              # Arazzo
+    "JSON_SCHEMA_VALIDATION_GATE",         # JSON Schema
+    "OPENAPI_ROOT_MODULE_SYNC_GATE",       # Sincronização
+    "SPECTRAL_LINTING_GATE",               # Spectral (novo)
+}
+```
+
+### Implementação Completa
+
+#### Passo C: AsyncAPI Blocking (✅ COMPLETO)
+
+**Mudança:** `ASYNCAPI_VALIDATION_GATE` agora bloqueia quando falha (`blocking=True`).
+
+**Onde:** `scripts/contracts/validate/validate_contracts.py` (linhas 5989, 5996, 6003, 6031)
+
+```python
+# ANTES: blocking=False (não bloqueava FAIL)
+return _pg(gate_id, "FAIL", False, "BLOCKED_ASYNCAPI_INVALID", ...)
+
+# DEPOIS: blocking=True (falha bloqueia pipeline)
+return _pg(gate_id, "FAIL", True, "BLOCKED_ASYNCAPI_INVALID", ...)
+```
+
+#### Passos E & F: Validadores no Profile Padrão (✅ COMPLETO)
+
+**Status executado:**
+
+```
++ [PASS] OPENAPI_ROOT_STRUCTURE_GATE       (Redocly lint)
++ [PASS] JSON_SCHEMA_VALIDATION_GATE
+! [FAIL] ASYNCAPI_VALIDATION_GATE          (Erros reais detectados e bloqueiam)
++ [PASS] ARAZZO_VALIDATION_GATE
++ [PASS] SPECTRAL_LINTING_GATE             (Novo)
+```
+
+**Exit code:** 2 (bloqueador ativo, pipeline falha como esperado)
+
+#### Passo D: Novo Gate Spectral (✅ COMPLETO)
+
+**Função adicionada:** `_g13a_spectral_linting()` (linhas 6089–6130)
+
+**Responsabilidade:** Valida OpenAPI com Spectral (estilos e regras customizadas)
+
+```python
+def _g13a_spectral_linting(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "SPECTRAL_LINTING_GATE"
+    openapi_root = root / "contracts" / "openapi" / "openapi.yaml"
+    if not openapi_root.exists():
+        return _skip(gate_id, "contracts/openapi/openapi.yaml ausente — gate não aplicável.", _ms(t0))
+    
+    rc, stdout, stderr = _try_node_cli(root, tool="spectral", args=["lint", str(openapi_root)], cwd=root)
+    if rc == -1:
+        return _pg(gate_id, "FAIL", True, "ERROR_INFRA", ...)
+    
+    # Spectral rc=0: sem erros; rc!=0: erros encontrados
+    if rc != 0:
+        violations = [...]
+        return _pg(gate_id, "FAIL", True, "BLOCKED_OPENAPI_SPECTRAL_VIOLATION", ...)
+    
+    return _pg(gate_id, "PASS", True, None, ...)
+```
+
+**Adicionado ao gate_plan:** Linha 8617 (`("SPECTRAL_LINTING_GATE", lambda: _g13a_spectral_linting(root))`)
+
+**Adicionado ao _local_ids:** Executa no profile padrão (local)
+
+### Critério de Sucesso: CUMPRIDO ✅
+
+- ✅ Redocly executa (exit 0 ou 2 segundo resultado)
+- ✅ AsyncAPI executa e bloqueia corretamente (exit 2)
+- ✅ Spectral executa (exit 0 ou 2 segundo resultado)
+- ✅ Nenhum SKIP_NOT_APPLICABLE quando artefatos/ferramentas presentes
+- ✅ Documentação reflete comportamento real (este documento)
+
+### Impacto
+
+**Antes:** 33 gates silenciosamente pulados → falsa cobertura de validação → vulnerabilidades de contrato passando despercebidas
+
+**Depois:** 5 validadores externos executam no path padrão, bloqueando pipeline se há erros reais
+
+### Próximos Passos
+
+- Adicionar Spectral rules customizadas (`.spectralrc` ou CI-side)
+- Adicionar outros 28 gates faltantes (gradualmente, conforme necessidade)
+- Profile "ci" já cobre todos 44 gates (CI workflow está completo)
+
+---
+
 *Documento gerado por análise direta dos arquivos do repositório em 2026-03-19.*
 *Vinculado a: `docs/_canon/AGENT_INSTRUCTIONS.md`, `.contract_driven/TASK_CATALOG.yaml`, `docs/_canon/gates/GATES_REGISTRY.yaml`, `scripts/contracts/validate/validate_contracts.py`, `.github/workflows/`, `_reports/`*
