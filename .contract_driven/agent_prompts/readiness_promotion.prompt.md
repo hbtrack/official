@@ -121,6 +121,26 @@ Confirma a promoção? (sim / não)
 
 **AGUARDAR confirmação explícita do humano antes de editar qualquer arquivo.**
 
+### Gate técnico de confirmação humana (6-001 — READINESS_HUMAN_CONFIRMATION_GATE)
+
+**Antes de aceitar o "sim" do humano como confirmação válida**, executar este protocolo anti-rubber-stamp:
+
+1. **Formular 1 pergunta técnica** sobre o conteúdo real do módulo — derivada de uma das superfícies verificadas. Exemplos:
+   - "Quantos eventos AsyncAPI foram registrados para este módulo?"
+   - "Qual é o valor do campo obrigatório X no schema Y deste módulo?"
+   - "O módulo tem STATE_MODEL? Se sim, quantos estados estão definidos?"
+   - "Qual ADR rege o design de autenticação deste módulo?"
+
+2. **Aguardar resposta do humano.**
+
+3. **Verificar coerência da resposta** contra os artefatos reais inspecionados na Fase 2:
+   - ✅ Resposta coerente (coincide com artefato real) → registrar confirmação como **HUMANO_CONFIRMADO = true**
+   - ❌ Resposta incoerente ou evasiva (ex: "não sei", resposta errada) → rejeitar promoção com: `"🚫 Confirmação não-aceita: resposta não corresponde ao conteúdo real do módulo. Revise os artefatos e responda novamente."`
+
+4. **Só avançar para Fase 4 após HUMANO_CONFIRMADO = true.**
+
+> **Justificativa:** Este gate garante que confirmação humana seja substantiva, não formal. Previne a falha sistêmica onde o humano aprova sem ter lido o relatório (Parte 2 — Falha: "Confirmação humana como rubber stamp").
+
 ---
 
 ## Fase 4 — Execução da Promoção (após confirmação)

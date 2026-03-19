@@ -68,14 +68,14 @@
 | READINESS_SUMMARY_GATE | ✅ PASS |
 
 ## Próximos Passos
-1. **FASE 6 — Promoção Harmonizada:** Promover 16 módulos para `implementation_ready` com critérios unificados. Ver plano: `docs/guias/produto/PLANO_MASTER_REMEDIACAO_CONTRATUAL_2026_03_19.md`.
-2. **Módulo video — readiness_promotion:** Executar `readiness_promotion` para promover video para `implementation_ready` (requer UI Contract + sign-off)
-3. **Phase 1–7 Implementation:** Iniciar codificação conforme roadmap (14–16 semanas)  
-4. **Backend Generation:** Executar `generate_code` para cada módulo em sequência  
+1. **FASE 7 — Fechamento e Validação Final:** Executar validação final contra 11 eixos (7-001), auditoria adversarial final read-only sem regressao (7-002), e emitir FINAL_HANDOFF.md assinado (7-003). Ver plano: `docs/guias/produto/PLANO_MASTER_REMEDIACAO_CONTRATUAL_2026_03_19.md`.
+2. **Gate de confirmação humana ativo:** `READINESS_HUMAN_CONFIRMATION_GATE` implementado em `readiness_promotion.prompt.md` — qualquer futura promoção exige resposta coerente a pergunta técnica.
+3. **Phase 1–7 Implementation:** Iniciar codificação conforme roadmap (14–16 semanas)
+4. **Backend Generation:** Executar `generate_code` para cada módulo em sequência
 
-## Remediação Contratual (FASE 5 CONCLUÍDA — 2026-03-19)
+## Remediação Contratual (FASE 6 CONCLUÍDA — 2026-03-19)
 **Plano:** `docs/guias/produto/PLANO_MASTER_REMEDIACAO_CONTRATUAL_2026_03_19.md`
-**Status:** 37/38 ações (~97%)
+**Status:** 35/38 ações (Fases 0–6 completas; Fase 7: 3 itens pendentes)
 
 | Fase | Status |
 |------|--------|
@@ -84,8 +84,15 @@
 | Fase 2 — Regras | ✅ 8/8 |
 | Fase 3 — Composição | ✅ 5/5 |
 | Fase 4 — Re-validação | ✅ 4/4 |
-| Fase 5 — Adversarial | ✅ 2/2 — **CONCLUÍDA** |
-| Fase 6 — Promoção | 🔜 Próxima |
+| Fase 5 — Adversarial | ✅ 2/2 |
+| Fase 6 — Promoção | ✅ 2/2 — **CONCLUÍDA** |
+| Fase 7 — Fechamento | 🔜 Próxima (3/3 pendentes) |
+
+### Resultados da Fase 6 (Promoção Harmonizada):
+- **16/16 módulos:** todos em `implementation_ready` ✅
+- **6-001** `READINESS_HUMAN_CONFIRMATION_GATE` adicionado a `.contract_driven/agent_prompts/readiness_promotion.prompt.md` Fase 3: protocolo anti-rubber-stamp (pergunta técnica obrigatória + verificação de coerência antes de aceitar confirmação)
+- **6-002** Módulo `video` promovido: (a) `DECISION_IR_VIDEO.yaml` criado com 3 decisões arquiteturais (DEC-VID-001: AsyncAPI 8 eventos, DEC-VID-002: edge-first capture, DEC-VID-003: dual-track distribution), (b) `MODULE_REGISTRY.yaml` `validated_contract` → `implementation_ready`, (c) pipeline revalidado PASS
+- **Pipeline final:** STATUS = PASS (MODULE_STATUS_COHERENCE_GATE ✅, SURFACE_PROMOTION_COHERENCE_GATE ✅)
 
 ### Resultados da Fase 5 (Adversarial Analysis):
 - **16/16 módulos:** ADVERSARIAL_ANALYSIS_GATE = PASS (✅)
@@ -103,10 +110,10 @@
 
 
 ## Contexto Crítico (Status Final)
-- **16 módulos:** todos em `implementation_ready` ✅  
-- **Módulo video:** `validated_contract` ✅ (promovido de `draft_contract`)
+- **16/16 módulos:** todos em `implementation_ready` ✅ (video promovido 2026-03-19)
 - **Contratos:** validados e sem erros bloqueantes ✅
-- **Gates:** PASS na última execução ✅
-- **README:** [READINESS_PROMOTION_BATCH_15_MODULES_20260319.md](_reports/READINESS_PROMOTION_BATCH_15_MODULES_20260319.md)  
-- **Last Action:** video — new_contract (asyncapi + arazzo opção C, 8 eventos) PASS (2026-03-19)
+- **Gates:** PASS na última execução ✅ (MODULE_STATUS_COHERENCE_GATE + SURFACE_PROMOTION_COHERENCE_GATE)
+- **DECISION_IR_VIDEO.yaml** criado em `.contract_driven/decisions/` (3 decisões: eventos, captura edge-first, dual-track)
+- **READINESS_HUMAN_CONFIRMATION_GATE** implementado em `readiness_promotion.prompt.md` Fase 3
+- **Last Action:** video — promoção para `implementation_ready` + DECISION_IR criado (2026-03-19)
 

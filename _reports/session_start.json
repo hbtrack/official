@@ -1,14 +1,14 @@
 {
   "session_id": "4d672789-d33f-42d6-be4e-41e30e822ba0",
-  "session_timestamp": "2026-03-19T13:58:10.624383+00:00",
+  "session_timestamp": "2026-03-19T16:17:47.438703+00:00",
   "branch": "hb-track-contratos-driven",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "contract_execution",
-  "task_type": "new_contract",
-  "module": "video",
+  "task_type": "pre_contract_boot",
+  "module": "training",
   "stage": 2,
   "write_scope": "contracts",
-  "worker_id": "create_openapi_contract",
+  "worker_id": "pre_contract_orchestrator",
   "git_user": "HB Track Agent",
   "git_email": "davis@hbtrack.local",
   "stage0_exit_code": 0,
@@ -16,10 +16,10 @@
   "stage2_artifacts": [
     {
       "path": "docs/_canon/MODULE_REGISTRY.yaml",
-      "sha256": "18a9159a3426029786f3bdfa4a6b7492311553fd0aaca5a0834d814ad171fc76",
+      "sha256": "250025d419db894bf45871a2ba4a58eb493e0002520a3d1e01fc56c6a5a63b81",
       "created_at": "2026-03-19T12:55:41.593307+00:00",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-19T14:12:36.025124+00:00"
+      "validated_at": "2026-03-19T16:22:27.935080+00:00"
     },
     {
       "path": "contracts/openapi/paths/medical.yaml",
@@ -1185,9 +1185,15 @@
       "sha256": "5ab317c760294dd87c85c8617124be687415fc80f9926309c9f72bbc5ed12997",
       "created_at": "2026-03-19T16:12:22.374019+00:00",
       "gate_exit_code": 0
+    },
+    {
+      "path": ".contract_driven/decisions/DECISION_IR_VIDEO.yaml",
+      "sha256": "3967e37685fd365ed1387e9dc284568aabf7d1cd2c45e6608a9f95b863120811",
+      "created_at": "2026-03-19T16:21:25.530647+00:00",
+      "gate_exit_code": 0
     }
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-03-19T16:00:29.559614+00:00"
+  "hook_validated_at": "2026-03-19T16:15:59.460073+00:00"
 }

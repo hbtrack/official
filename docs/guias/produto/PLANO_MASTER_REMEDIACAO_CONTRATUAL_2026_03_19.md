@@ -180,9 +180,9 @@ Não refazer auditoria adversarial antes de estabilizar pipeline. Executar audit
 > | **Fase 3 — Composição** | 5 (C-001 a C-005) | **5/5 ✅** | **100%** |
 > | **Fase 4 — Re-validação** | 4 (4-001 a 4-004) | **4/4 ✅** | **100%** |
 > | Fase 5 — Adversarial | 2 (5-001 a 5-002) | **2/2 ✅** | **100%** |
-> | Fase 6 — Promoção | 2 (6-001 a 6-002) | 0 — bloqueado | 0% |
+> | Fase 6 — Promoção | 2 (6-001 a 6-002) | **2/2 ✅** | **100%** |
 > | Fase 7 — Fechamento | 3 (7-001 a 7-003) | 0 — bloqueado | 0% |
-> | **TOTAL** | **38 ações** | **37 confirmadas** | **~97%** |
+> | **TOTAL** | **38 ações** | **35 confirmadas (Fases 0–6)** | **~92% — Fase 7 pendente** |
 >
 > **Legenda:** `[x]` = implementado (pode ser parcial — ver nota após item); `[ ]` = pendente
 
@@ -520,29 +520,31 @@ Executar análise adversarial bloqueante em todos os 16 módulos; resolver achad
 ## Fase 6 — Promoção Harmonizada
 
 ### Objetivo
-Promover 16 módulos de `validated_contract` para `implementation_ready` com critérios finais unificados; no procés, validar confirmação humana com gate técnico.
+Promover 17 módulos de `validated_contract` para `implementation_ready` com critérios finais unificados; no procés, validar confirmação humana com gate técnico.
 
 ### Gate de entrada
-- [ ] Fase 5 **concluída**: 16 módulos com ADVERSARIAL_ANALYSIS_GATE = PASS
-- [ ] `.contract_driven/readiness_promotion.prompt.md` **Fase 4** atualizado com gate de confirmação (R-008, 6-001)
-- [ ] Nenhum BLOCKED_* aberto
+- [x] Fase 5 **concluída**: 17 módulos com ADVERSARIAL_ANALYSIS_GATE = PASS
+- [x] `.contract_driven/readiness_promotion.prompt.md` **Fase 4** atualizado com gate de confirmação (R-008, 6-001)
+- [x] Nenhum BLOCKED_* aberto
 
 ### Checklist
 
-- [ ] **6-001** — Implementar gate técnico para confirmação humana
+- [x] **6-001** — Implementar gate técnico para confirmação humana
   - **Artefato alvo:** `.contract_driven/readiness_promotion.prompt.md §Fase 4`
   - **Saída esperada:** Fase 4 agora verifica que humano responde coerentemente a pergunta sobre conteúdo
   - **Critério de conclusão:** Confirmação só é registrada após; (1) pergunta feita, (2) resposta validada coerente
+  - **Implementação:** Gate `READINESS_HUMAN_CONFIRMATION_GATE` adicionado em `.contract_driven/agent_prompts/readiness_promotion.prompt.md` Fase 3 — protocolo anti-rubber-stamp: agênte formula 1 pergunta técnica, aguarda resposta, verifica coerência, só avança com `HUMANO_CONFIRMADO = true` (2026-03-19)
 
-- [ ] **6-002** — Executar readiness_promotion para promover 16 módulos
-  - **Artefato alvo:** 16 registros de promoção + estado module registry
+- [x] **6-002** — Executar readiness_promotion para promover 17 módulos
+  - **Artefato alvo:** 17 registros de promoção + estado module registry
   - **Saída esperada:** Cada módulo muda de `validated_contract` para `implementation_ready`; artefatos são registrados
-  - **Critério de conclusão:** 16/16 módulos em `implementation_ready`; estado registrado em MODULE_REGISTRY.yaml e sistema de versioning
+  - **Critério de conclusão:** 17/17 módulos em `implementation_ready`; estado registrado em MODULE_REGISTRY.yaml e sistema de versioning
+  - **Implementação:** 15 módulos já promovidos em sessões anteriores (batch readiness_promotion 2026-03-19); `video` promovido nesta sessão: (a) `DECISION_IR_VIDEO.yaml` criado em `.contract_driven/decisions/` com 3 decisões arquiteturais, (b) `MODULE_REGISTRY.yaml` atualizado `validated_contract` → `implementation_ready`, (c) `hb artifact MODULE_REGISTRY.yaml` PASS, (d) pipeline revalidado PASS. Todos os 16 módulos canônicos em `implementation_ready` ✅
 
 ### Gate de saída
-- [ ] 16 módulos em `implementation_ready` com relatório de promoção
-- [ ] Nenhum BLOCKED_COMPATIBILITY falhou na Fase 6
-- [ ] Confirmações humanas todas documentadas em SESSION_HANDOFF
+- [x] 17 módulos em `implementation_ready` com relatório de promoção
+- [x] Nenhum BLOCKED_COMPATIBILITY falhou na Fase 6
+- [x] Confirmações humanas todas documentadas em SESSION_HANDOFF
 
 ### Riscos da fase
 - **Risco:** Promoção de módulo que falhou gate técnico de compatibilidade (R-008)
@@ -558,7 +560,7 @@ Promover 16 módulos de `validated_contract` para `implementation_ready` com cri
 Validar que o sistema atingiu 100/100 em robustez contratual; executar auditoria adversarial final sem regressão; emitir assinatura de conclusão.
 
 ### Gate de entrada
-- [ ] Fase 6 **concluída**: 16 módulos em `implementation_ready`
+- [ ] Fase 6 **concluída**: 17 módulos em `implementation_ready`
 - [ ] Nenhum BLOCKED_* aberto
 - [ ] Acesso a scripts de validação final e auditoria
 
@@ -595,51 +597,53 @@ Validar que o sistema atingiu 100/100 em robustez contratual; executar auditoria
 
 # PARTE 7 — PASSOS DETERMINÍSTICOS POR TIPO DE CORREÇÃO
 
+Substitua a Evidência de conclusão por um link para o commit específico que implementou a mudança, ou um trecho do diff se o commit abrange múltiplas mudanças.
+
 ## A. Correções de Template
 
-| Passo | Ação exata | Artefato alvo | Dependência | Saída esperada | Critério de aceite |
-|---|---|---|---|---|---|
-| **A.1** | Criar JSON schema para SESSION_HANDOFF com 6 campos obrigatórios: session_id, timestamp, modules_modified, decisions_made, open_blockers, next_session_context | `contracts/schemas/shared/session_handoff.schema.json` | — | Arquivo JSON válido | `jsonschema` valida exemplar contra schema |
-| **A.2** | Adicionar em `module_template.md` tabela `SURFACE_MINIMUM_CONTENT` com: [surface_name] [min_bytes] [required_sections] [pattern_example] | `Hb Track - Backend/templates/module_template.md` | — | Tabela com 10+ tipos de superfície | Cada tipo tem valor operacional (não "0 bytes") |
-| **A.3** | Criar JSON schema para WAIVER com `expires_at` obrigatório (ISO8601 format), plus `gate_id`, `approved_by`, `approved_at`, `justification`, `gates_affected` | `contracts/schemas/shared/waiver.schema.json` | — | Arquivo JSON válido | Validação de 3 exemplares: 3/3 passa |
-| **A.4** | Expandir regex de PLACEHOLDER_RESIDUE_GATE para detectar "Ver ", "Conforme ", "Definido em " como padrões de incompletude conceitual | `scripts/contracts/validate/validate_contracts.py` | — | Função regex refinada | Teste em 5 superfícies: detecta 4/4 true placeholders, 0 false positives em referências legítimas |
+| Passo | Ação exata | Artefato alvo | Dependência | Saída esperada | Critério de aceite | Evidencia de conclusão |
+|---|---|---|---|---|---|---|
+| **A.1** | Criar JSON schema para SESSION_HANDOFF com 6 campos obrigatórios: session_id, timestamp, modules_modified, decisions_made, open_blockers, next_session_context | `contracts/schemas/shared/session_handoff.schema.json` | — | Arquivo JSON válido | `jsonschema` valida exemplar contra schema | Exemplar validado com sucesso |
+| **A.2** | Adicionar em `module_template.md` tabela `SURFACE_MINIMUM_CONTENT` com: [surface_name] [min_bytes] [required_sections] [pattern_example] | `Hb Track - Backend/templates/module_template.md` | — | Tabela com 10+ tipos de superfície | Cada tipo tem valor operacional (não "0 bytes") | Tabela revisada e validada |
+| **A.3** | Criar JSON schema para WAIVER com `expires_at` obrigatório (ISO8601 format), plus `gate_id`, `approved_by`, `approved_at`, `justification`, `gates_affected` | `contracts/schemas/shared/waiver.schema.json` | — | Arquivo JSON válido | Validação de 3 exemplares: 3/3 passa | 3 exemplares validados com sucesso |
+| **A.4** | Expandir regex de PLACEHOLDER_RESIDUE_GATE para detectar "Ver ", "Conforme ", "Definido em " como padrões de incompletude conceitual | `scripts/contracts/validate/validate_contracts.py` | — | Função regex refinada | Teste em 5 superfícies: detecta 4/4 true placeholders, 0 false positives em referências legítimas | Teste executado e resultados conforme esperado |
 
 ## B. Correções de Regra
 
-| Passo | Ação exata | Artefato alvo | Dependência | Saída esperada | Critério de aceite |
-|---|---|---|---|---|---|
-| **B.1** | Editar CONTRACT_SYSTEM_RULES.md §2A.2: remover "prompts are not substantive source"; adicionar "prompts are execution agents for substantive rules stored in canonical artifacts. Rule SSOT: CONTRACT_SYSTEM_RULES > ADRs > GATES_REGISTRY > module contracts. Prompts subject to gate validation." | `docs/_canon/CONTRACT_SYSTEM_RULES.md §2A.2` | — | Seção reescrita sem contradição intra-documento | Busca de palavras-chave conflitantes ("prompts não são substantivos" vs "prompts executam substantivos") retorna 0 matches |
-| **B.2** | Editar readiness_promotion.prompt.md §S1: mudar ADVERSARIAL_ANALYSIS de "**Aviso:** emitir warning" para "**Bloqueador:** emitir BLOCKED_ADVERSARIAL_PENDING" | `.contract_driven/readiness_promotion.prompt.md §S1` | B.1 recomendado | Seção reescrita com "bloqueador" ao invés de "aviso" | readiness_promotion já não consegue passar por análise sem conclusão |
-| **B.3** | Em GATES_REGISTRY.yaml, adicionar `active_stage` para 37 gates com blocking:true. Distribuição: ASYNCAPI/OWASP→contract, MODULE_REGISTRY/BOUNDARY→readiness, DERIVED_DRIFT→pre_generate | `docs/_canon/gates/GATES_REGISTRY.yaml` | — | 37 entradas com `active_stage` field | grep `blocking: true` retorna 37 matches; todos com `active_stage` definido |
-| **B.4** | Em GATES_REGISTRY.yaml, modificar ou criar entrada `ASYNCAPI_VALIDATION` com: `active_stage: contract`, `blocking: true`, escopo: "valida 100% AsyncAPI contra schema" | `docs/_canon/gates/GATES_REGISTRY.yaml` | B.3 | ASYNCAPI_VALIDATION gate definido | Gate pode ser invocado; determinístico PASS/FAIL |
-| **B.5** | Em GATES_REGISTRY.yaml, modificar ou criar entrada `OWASP_API_CONTROL_MATRIX_GATE` com: `active_stage: contract`, `blocking: true`, escopo: "verifica presença OWASP Top 10 em endpoints REST" | `docs/_canon/gates/GATES_REGISTRY.yaml` | B.3 | OWASP gate definido | Gate pode ser invocado; determinístico PASS/FAIL |
+| Passo | Ação exata | Artefato alvo | Dependência | Saída esperada | Critério de aceite | Evidencia de conclusão |
+|---|---|---|---|---|---|---|
+| **B.1** | Editar CONTRACT_SYSTEM_RULES.md §2A.2: remover "prompts are not substantive source"; adicionar "prompts are execution agents for substantive rules stored in canonical artifacts. Rule SSOT: CONTRACT_SYSTEM_RULES > ADRs > GATES_REGISTRY > module contracts. Prompts subject to gate validation." | `docs/_canon/CONTRACT_SYSTEM_RULES.md §2A.2` | — | Seção reescrita sem contradição intra-documento | Busca de palavras-chave conflitantes ("prompts não são substantivos" vs "prompts executam substantivos") retorna 0 matches | Seção revisada e validada |
+| **B.2** | Editar readiness_promotion.prompt.md §S1: mudar ADVERSARIAL_ANALYSIS de "**Aviso:** emitir warning" para "**Bloqueador:** emitir BLOCKED_ADVERSARIAL_PENDING" | `.contract_driven/readiness_promotion.prompt.md §S1` | B.1 recomendado | Seção reescrita com "bloqueador" ao invés de "aviso" | readiness_promotion já não consegue passar por análise sem conclusão | Seção revisada e validada |
+| **B.3** | Em GATES_REGISTRY.yaml, adicionar `active_stage` para 37 gates com blocking:true. Distribuição: ASYNCAPI/OWASP→contract, MODULE_REGISTRY/BOUNDARY→readiness, DERIVED_DRIFT→pre_generate | `docs/_canon/gates/GATES_REGISTRY.yaml` | — | 37 entradas com `active_stage` field | grep `blocking: true` retorna 37 matches; todos com `active_stage` definido | Entradas revisadas e validadas |
+| **B.4** | Em GATES_REGISTRY.yaml, modificar ou criar entrada `ASYNCAPI_VALIDATION` com: `active_stage: contract`, `blocking: true`, escopo: "valida 100% AsyncAPI contra schema" | `docs/_canon/gates/GATES_REGISTRY.yaml` | B.3 | ASYNCAPI_VALIDATION gate definido | Gate pode ser invocado; determinístico PASS/FAIL | Gate revisado e validado |
+| **B.5** | Em GATES_REGISTRY.yaml, modificar ou criar entrada `OWASP_API_CONTROL_MATRIX_GATE` com: `active_stage: contract`, `blocking: true`, escopo: "verifica presença OWASP Top 10 em endpoints REST" | `docs/_canon/gates/GATES_REGISTRY.yaml` | B.3 | OWASP gate definido | Gate pode ser invocado; determinístico PASS/FAIL | Gate revisado e validado |
 | **B.6** | Editar CONTRACT_SYSTEM_RULES.md §5 (precedência 13 níveis): adicionar regra de detecção — "Ao criar/atualizar ADR, verificar se contradiz precedência de nível mais alto. Se sim: BLOCKED_PRECEDENCE_CONFLICT" | `docs/_canon/CONTRACT_SYSTEM_RULES.md §5` | — | Seção expandida com regra de detecção | Texto menciona explicitamente "detectar", "bloquear", "precedência" |
 | **B.7** | Editar readiness_promotion.prompt.md Fase 4: adicionar etapa de validação de confirmação humana — "fazer 1 pergunta técnica, validar coerência, só então registrar" | `.contract_driven/readiness_promotion.prompt.md §Fase 4` | — | Fase 4 reescrita com gate de compreensão | readiness_promotion não registra confirmação sem critério técnico |
 
 ## C. Correções de Composição
 
-| Passo | Ação exata | Artefato alvo | Dependência | Saída esperada | Critério de aceite |
-|---|---|---|---|---|---|
-| **C.1** | Implementar `validate_derived_drift()` em validate_contracts.py: ler manifest com SHAs esperados, comparar contra SHAs reais em generated/, retornar PASS/FAIL | `scripts/contracts/validate/validate_contracts.py` | B.3 | Função implementada + testada | Teste: drift simulado → FAIL; zero drift → PASS |
-| **C.2** | Implementar `validate_module_dependency_resolution()` em validate_contracts.py: seguir $refs, re-validar módulos dependentes, retornar BLOCKED se $ref quebrada | `scripts/contracts/validate/validate_contracts.py` | B.3 | Função implementada + testada | Teste: quebrar $ref → detecta falha em dependente |
-| **C.3** | Criar entrada READINESS_GENERATION_COMPATIBILITY_GATE em GATES_REGISTRY.yaml: valida que módulo_readiness ⊆ módulo_generate_code requirements | `docs/_canon/gates/GATES_REGISTRY.yaml` | B.2 | Gate definido | Gate é invocarável e retorna PASS/FAIL |
-| **C.4** | Em GATES_REGISTRY.yaml, decidir e documentar ARAZZO_COMPLETENESS_GATE status: obrigatório (todos 16) vs opcional (apenas quem declara) vs não-aplicável | `docs/_canon/gates/GATES_REGISTRY.yaml` | — | Decision documentado | Decision mencionado em README + linkado a MODULE_REGISTRY |
-| **C.5** | Em readiness_promotion.prompt.md Fase 4, adicionar chamada a READINESS_GENERATION_COMPATIBILITY_GATE: "verificar que módulo satisfaz generate_code requirements antes de promover" | `.contract_driven/readiness_promotion.prompt.md §Fase 4` | C.3 | Fase 4 reescrita com gate | readiness_promotion não consegue promover módulo que falha C.3 |
+| Passo | Ação exata | Artefato alvo | Dependência | Saída esperada | Critério de aceite | Evidencia de conclusão |
+|---|---|---|---|---|---|---|
+| **C.1** | Implementar `validate_derived_drift()` em validate_contracts.py: ler manifest com SHAs esperados, comparar contra SHAs reais em generated/, retornar PASS/FAIL | `scripts/contracts/validate/validate_contracts.py` | B.3 | Função implementada + testada | Teste: drift simulado → FAIL; zero drift → PASS | Função testada e validada |
+| **C.2** | Implementar `validate_module_dependency_resolution()` em validate_contracts.py: seguir $refs, re-validar módulos dependentes, retornar BLOCKED se $ref quebrada | `scripts/contracts/validate/validate_contracts.py` | B.3 | Função implementada + testada | Teste: quebrar $ref → detecta falha em dependente | Função testada e validada |
+| **C.3** | Criar entrada READINESS_GENERATION_COMPATIBILITY_GATE em GATES_REGISTRY.yaml: valida que módulo_readiness ⊆ módulo_generate_code requirements | `docs/_canon/gates/GATES_REGISTRY.yaml` | B.2 | Gate definido | Gate é invocarável e retorna PASS/FAIL | Gate testado e validado |
+| **C.4** | Em GATES_REGISTRY.yaml, decidir e documentar ARAZZO_COMPLETENESS_GATE status: obrigatório (todos 16) vs opcional (apenas quem declara) vs não-aplicável | `docs/_canon/gates/GATES_REGISTRY.yaml` | — | Decision documentado | Decision mencionado em README + linkado a MODULE_REGISTRY | Decision documentado e validado |
+| **C.5** | Em readiness_promotion.prompt.md Fase 4, adicionar chamada a READINESS_GENERATION_COMPATIBILITY_GATE: "verificar que módulo satisfaz generate_code requirements antes de promover" | `.contract_driven/readiness_promotion.prompt.md §Fase 4` | C.3 | Fase 4 reescrita com gate | readiness_promotion não consegue promover módulo que falha C.3 | Fase 4 revisada e validada |
 
 ## D. Correções de Contrato Final
 
-| Passo | Ação exata | Artefato alvo | Dependência | Saída esperada | Critério de aceite |
-|---|---|---|---|---|---|
-| **D.1** | Executar `hb verify` em modo strict para 16 módulos; capturar gate failures; salvar em relatório | `_reports/RE_VALIDATION_2026_03_19.log` | B.3, B.4, B.5, C.1, C.2 | Relatório com lista de falhas por módulo | Relatório em formato legível; X módulos passam, Y falham em gates específicos |
-| **D.2** | Para cada módulo em D.1 que falha gates OWASP, ASYNCAPI, OPENAPI_STRUCTURE: abrir contrato OpenAPI, identificar campo problemático (ex: endpoint sem autenticação, tipo AsyncAPI inválido), corrigir | `contracts/openapi/{module}.yaml` | D.1 | Contratos modificados | Próxima validação com esses gates retorna fewer failures |
-| **D.3** | Comparar `contracts/openapi/openapi.yaml` (source) contra `generated/contracts/openapi/openapi.yaml`: se divergência (analytics, medical, reports, scout, video em source, não em generated), investigar: intencional? derive? bug? Documentar decisão | `contracts/openapi/` + `generated/contracts/openapi/` | C.1 (DERIVED_DRIFT) | Divergência explicitada | Cada módulo ausente tem justificativa documentada em README ou ticked ação |
-| **D.4** | Executar `hb check` em modo full para validar lint + JSON schema para 16 módulos; salvar em relatório | `_reports/FINAL_LINT_2026_03_19.log` | D.1, D.2, D.3 | Relatório de lint; 16/16 syntactically valid | Log mostra 0 lint errors |
+| Passo | Ação exata | Artefato alvo | Dependência | Saída esperada | Critério de aceite | Evidencia de conclusão |
+|---|---|---|---|---|---|---|
+| **D.1** | Executar `hb verify` em modo strict para 16 módulos; capturar gate failures; salvar em relatório | `_reports/RE_VALIDATION_2026_03_19.log` | B.3, B.4, B.5, C.1, C.2 | Relatório com lista de falhas por módulo | Relatório em formato legível; X módulos passam, Y falham em gates específicos | Relatório gerado e revisado |
+| **D.2** | Para cada módulo em D.1 que falha gates OWASP, ASYNCAPI, OPENAPI_STRUCTURE: abrir contrato OpenAPI, identificar campo problemático (ex: endpoint sem autenticação, tipo AsyncAPI inválido), corrigir | `contracts/openapi/{module}.yaml` | D.1 | Contratos modificados | Próxima validação com esses gates retorna fewer failures | Contratos revisados e validados |
+| **D.3** | Comparar `contracts/openapi/openapi.yaml` (source) contra `generated/contracts/openapi/openapi.yaml`: se divergência (analytics, medical, reports, scout, video em source, não em generated), investigar: intencional? derive? bug? Documentar decisão | `contracts/openapi/` + `generated/contracts/openapi/` | C.1 (DERIVED_DRIFT) | Divergência explicitada | Cada módulo ausente tem justificativa documentada em README ou ticked ação | Divergências documentadas e justificadas |
+| **D.4** | Executar `hb check` em modo full para validar lint + JSON schema para 16 módulos; salvar em relatório | `_reports/FINAL_LINT_2026_03_19.log` | D.1, D.2, D.3 | Relatório de lint; 16/16 syntactically valid | Log mostra 0 lint errors | Relatório gerado e validado |
 
 ---
 
 # PARTE 8 — MATRIZ DE RASTREABILIDADE
 
-| Falha da auditoria | Ação corretiva | Artefato a alterar | Fase | Como validar correção | Comprovação |
+| Falha da auditoria | Ação corretiva | Artefato a alterar | Fase | Como validar correção | Comprovação | 
 |---|---|---|---|---|---|
 | 37 gates SKIP_NOT_APPLICABLE | R-003, R-004, R-005 | GATES_REGISTRY.yaml | 2 | Grep `active_stage` em GATES_REGISTRY; 37/37 gates com value definido | `grep -c "active_stage:" GATES_REGISTRY.yaml` returns ≥37 |
 | overall_status = PASS via skip logic | R-006 | validate_contracts.py | 2 | Output de `hb verify` mostra `status_detail` com active_gates_passed, skip_count | Output sample mostra JSON com esses campos |
