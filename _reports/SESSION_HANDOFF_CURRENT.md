@@ -15,16 +15,17 @@
 | HOOK_DIVERGENCE | PR4 | 5 | git core.hooksPath |
 | LEGACY_EVIDENCE_ACTIVE | PR5 | 6 | Evidence removed |
 | CONTEXT_BUDGET_OVERRUN | PR6 | 7-8 | Context reduced −75% ✅ |
+| UI_CONTRACT_SIGNOFF | Readiness Promotion | 9 | ✅ Formalmente assinado em 2026-03-19 |
 
 ## Bloqueios Ativos
 | Código | Descrição | Status |
 |--------|-----------|--------|
-| UI_CONTRACT_SIGNOFF | Await UI contract v1.1.0 SIGN-OFF | ⏳ Pending |
+| Nenhum bloqueador ativo | Pipeline CDD livre | ✅ CLEAR |
 
 ## Próximos Passos
-1. **Await UI Contract v1.1.0 SIGN-OFF** (Humano)
-2. **Optional:** Create SESSION_ARCHIVE.md (historical context PR1-6)
-3. **Phase 9:** Code generation para 15 módulos (após sign-off)
+1. **Phase 1–7 Implementation:** Começar codificação do módulo training conforme roadmap (14–16 semanas)
+2. **Cross-Module Integration:** Após training ir → `implementation_ready`, iniciar code generation para outros 15 módulos
+3. **Optional:** Create SESSION_ARCHIVE.md (historical context PR1-6)
 
 ## Contexto Crítico (Refactoring Status)
 - **SSOTs ativos:** BOOT_PROFILES.yaml, TASK_CATALOG.yaml, session_start.schema.json, GATES_REGISTRY.yaml ✅
@@ -33,5 +34,7 @@
 - **Evidence:** consolidado em _reports/session_start.json (SSOT único) ✅
 - **Tests:** 18/18 GREEN (PR6 golden suite + 13/13 baseline) ✅
 - **Stack:** Django 5.x + Django Ninja + Next.js PWA + Redis/Celery ✅
+- **Last Action:** Training module UI Contract v1.1.0 sign-off completed (2026-03-19 CDD pipeline readiness_promotion) ✅
 - **Report:** [PR6_COMPLETION_REPORT.md](_reports/PR6_COMPLETION_REPORT.md) ✅
+- **Checklist:** [SIGN_OFF_CHECKLIST_v1.1.0.md](_archive/training_noncanonical_20260319/SIGN_OFF_CHECKLIST_v1.1.0.md) ✅ SIGNED
 

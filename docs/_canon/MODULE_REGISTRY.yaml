@@ -28,19 +28,45 @@ policy:
 
 modules:
   users:
-    status: "draft_contract"
-    owner: "platform-core"
-    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix"]
-  seasons:
-    status: "draft_contract"
-    owner: "handball-ops"
-    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix"]
-  teams:
-    status: "draft_contract"
-    owner: "handball-ops"
-    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix"]
-  training:
     status: "validated_contract"
+    owner: "platform-core"
+    expected_surfaces:
+      [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "asyncapi",
+        "arazzo",
+        "permissions",
+        "decision_ir",
+      ]
+  seasons:
+    status: "validated_contract"
+    owner: "handball-ops"
+    expected_surfaces:
+      [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "asyncapi",
+        "arazzo",
+      ]
+  teams:
+    status: "validated_contract"
+    owner: "handball-ops"
+    expected_surfaces:
+      [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "asyncapi",
+        "arazzo",
+      ]
+  training:
+    status: "implementation_ready"
     owner: "performance-tech"
     expected_surfaces:
       [
@@ -58,50 +84,151 @@ modules:
         "decision_ir",
       ]
   wellness:
-    status: "draft_contract"
+    status: "validated_contract"
     owner: "performance-tech"
-    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix", "sport_science"]
+    expected_surfaces:
+      [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "sport_science",
+        "asyncapi",
+        "arazzo",
+      ]
   medical:
-    status: "draft_contract"
+    status: "validated_contract"
     owner: "performance-tech"
-    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix", "sport_science"]
+    expected_surfaces:
+      [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "sport_science",
+      ]
   competitions:
-    status: "draft_contract"
+    status: "validated_contract"
     owner: "handball-ops"
-    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix"]
+    expected_surfaces:
+      [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "asyncapi",
+        "arazzo",
+      ]
   matches:
-    status: "draft_contract"
+    status: "validated_contract"
     owner: "handball-ops"
-    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix"]
+    expected_surfaces:
+      [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "asyncapi",
+        "arazzo",
+      ]
   scout:
-    status: "draft_contract"
+    status: "validated_contract"
     owner: "handball-ops"
-    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix", "asyncapi"]
+    expected_surfaces:
+      [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "asyncapi",
+        "arazzo",
+        "permissions",
+        "decision_ir",
+      ]
   exercises:
-    status: "draft_contract"
+    status: "validated_contract"
     owner: "performance-tech"
-    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix", "permissions"]
+    expected_surfaces:
+      [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "permissions",
+      ]
   analytics:
-    status: "draft_contract"
+    status: "validated_contract"
     owner: "performance-tech"
-    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix", "asyncapi"]
+    expected_surfaces:
+      ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix"]
   reports:
-    status: "draft_contract"
+    status: "validated_contract"
     owner: "performance-tech"
-    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix", "arazzo"]
+    expected_surfaces:
+      ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix"]
   ai_ingestion:
-    status: "draft_contract"
+    status: "validated_contract"
     owner: "platform-core"
-    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix", "asyncapi"]
+    expected_surfaces:
+      [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "asyncapi",
+        "arazzo",
+      ]
   identity_access:
-    status: "draft_contract"
+    status: "validated_contract"
     owner: "platform-core"
-    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix", "permissions", "arazzo"]
+    expected_surfaces:
+      [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "permissions",
+        "arazzo",
+        "asyncapi",
+        "decision_ir",
+      ]
   audit:
-    status: "draft_contract"
+    status: "validated_contract"
     owner: "platform-core"
-    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix", "asyncapi"]
+    expected_surfaces:
+      [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "asyncapi",
+        "arazzo",
+        "permissions",
+        "decision_ir",
+      ]
   notifications:
+    status: "validated_contract"
+    owner: "platform-core"
+    expected_surfaces:
+      [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "asyncapi",
+        "arazzo",
+      ]
+  video:
     status: "draft_contract"
     owner: "platform-core"
-    expected_surfaces: ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix", "asyncapi", "arazzo"]
+    expected_surfaces:
+      [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "asyncapi",
+        "arazzo",
+        "permissions",
+        "decision_ir",
+      ]
