@@ -774,8 +774,9 @@
     },
     {
       "path": "contracts/schemas/shared/session_start.schema.json",
-      "sha256": "8f6a3fc20d6d33b2f0b3c2e12ea68787e34ee9e83b2d7292e4ce99801daad11d",
-      "gate_exit_code": 0
+      "sha256": "ee9f45c6ca2f6839bbde8e457a62bbd82e5b15f772bbbb82d64d7ad3e84b2a0a",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-19T15:44:07.422901+00:00"
     },
     {
       "path": "contracts/schemas/users/user_profile.schema.json",
@@ -1108,5 +1109,7 @@
       "gate_exit_code": 0
     }
   ],
-  "stage2_exit_code": 0
+  "stage2_exit_code": 0,
+  "hook_exit_code": 0,
+  "hook_validated_at": "2026-03-19T14:19:03.460563+00:00"
 }

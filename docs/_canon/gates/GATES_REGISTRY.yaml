@@ -29,6 +29,7 @@ gates:
     order: 0
     name: "Axiom Integrity Gate"
     blocking: true
+    active_stage: pre_contract
     severity: CRITICAL
     parallelizable: false
     applies_when: always
@@ -44,6 +45,7 @@ gates:
     order: 1
     name: "Path Canonicality Gate"
     blocking: true
+    active_stage: pre_contract
     severity: CRITICAL
     parallelizable: false
     applies_when: always
@@ -59,6 +61,7 @@ gates:
     order: "1.5"
     name: "Scope Boundary Gate"
     blocking: true
+    active_stage: pre_contract
     severity: HIGH
     parallelizable: false
     applies_when: always
@@ -78,6 +81,7 @@ gates:
     order: 2
     name: "Required Artifact Presence Gate"
     blocking: true
+    active_stage: contract
     severity: CRITICAL
     parallelizable: false
     applies_when: always
@@ -92,6 +96,7 @@ gates:
     order: "2A"
     name: "Module Doc Cross-reference Gate"
     blocking: true
+    active_stage: contract
     severity: HIGH
     parallelizable: false
     applies_when: always
@@ -120,6 +125,7 @@ gates:
     order: "2C"
     name: "OWASP API Control Matrix Gate"
     blocking: true
+    active_stage: contract
     severity: CRITICAL
     parallelizable: false
     applies_when: always
@@ -135,6 +141,7 @@ gates:
     order: "2D"
     name: "Module Source Authority Matrix Gate"
     blocking: true
+    active_stage: pre_contract
     severity: CRITICAL
     parallelizable: false
     applies_when: always
@@ -154,6 +161,7 @@ gates:
     order: "2D1"
     name: "Module Registry Gate"
     blocking: true
+    active_stage: readiness
     severity: CRITICAL
     parallelizable: false
     applies_when: always
@@ -174,6 +182,7 @@ gates:
     order: "2E"
     name: "Boundary Users / Identity Access Gate"
     blocking: true
+    active_stage: readiness
     severity: HIGH
     parallelizable: false
     applies_when: always
@@ -189,6 +198,7 @@ gates:
     order: "2F"
     name: "Wellness / Medical Boundary Gate"
     blocking: true
+    active_stage: readiness
     severity: HIGH
     parallelizable: false
     applies_when: always
@@ -204,6 +214,7 @@ gates:
     order: "2G"
     name: "Scout Taxonomy Gate"
     blocking: true
+    active_stage: readiness
     severity: HIGH
     parallelizable: false
     applies_when: module_scout_present
@@ -219,6 +230,7 @@ gates:
     order: "2H"
     name: "Async Required Module Gate"
     blocking: true
+    active_stage: contract
     severity: HIGH
     parallelizable: false
     applies_when: module_has_real_paths_and_events
@@ -233,6 +245,7 @@ gates:
     order: "2I"
     name: "External Source Authority Gate"
     blocking: true
+    active_stage: contract
     severity: CRITICAL
     parallelizable: false
     applies_when: always
@@ -248,6 +261,7 @@ gates:
     name: "Pre-Contract Evidence Gate"
     blocking: true
     severity: HIGH
+    active_stage: pre_contract
     parallelizable: false
     applies_when: module_registry_has_validated_contract_or_ready_modules
     depends_on: [MODULE_REGISTRY_GATE]
@@ -255,14 +269,22 @@ gates:
       Exige evidência estruturada da fase pré-contrato em `_reports/agent_execution/`
       para módulos com status `validated_contract` ou `implementation_ready` no MODULE_REGISTRY.
       O boot efetivamente aplicado deve ser rastreável pelo Boot Resolution Report.
+      Também valida que SESSION_HANDOFF.md existe e conforma ao schema
+      `contracts/schemas/shared/session_handoff.schema.json` (T-001).
     blocking_codes:
-      [PRE_CONTRACT_EVIDENCE_MISSING, PRE_CONTRACT_EVIDENCE_INVALID]
+      [
+        PRE_CONTRACT_EVIDENCE_MISSING,
+        PRE_CONTRACT_EVIDENCE_INVALID,
+        SESSION_HANDOFF_SCHEMA_INVALID,
+      ]
     status: active
+    schema_ref: contracts/schemas/shared/session_handoff.schema.json
 
   - gate_id: SHADOW_AUTHORITY_GATE
     order: "2K"
     name: "Shadow Authority Gate"
     blocking: true
+    active_stage: pre_contract
     severity: HIGH
     parallelizable: false
     applies_when: always
@@ -277,6 +299,7 @@ gates:
     order: "2L"
     name: "Decision IR Conformance Gate"
     blocking: true
+    active_stage: readiness
     severity: HIGH
     parallelizable: false
     applies_when: module_registry_has_implementation_ready_decision_ir
@@ -313,6 +336,7 @@ gates:
     order: "2N"
     name: "Canon Allowlist Gate"
     blocking: true
+    active_stage: pre_contract
     severity: HIGH
     parallelizable: false
     applies_when: always
@@ -333,6 +357,7 @@ gates:
     order: 3
     name: "Placeholder Residue Gate"
     blocking: true
+    active_stage: contract
     severity: HIGH
     parallelizable: false
     applies_when: always
@@ -347,6 +372,7 @@ gates:
     order: 4
     name: "Ref Hermeticity Gate"
     blocking: true
+    active_stage: contract
     severity: CRITICAL
     parallelizable: false
     applies_when: always
@@ -361,6 +387,7 @@ gates:
     order: "4A"
     name: "Tooling Config Gate"
     blocking: true
+    active_stage: pre_contract
     severity: CRITICAL
     parallelizable: false
     applies_when: always
@@ -377,6 +404,7 @@ gates:
     order: 5
     name: "OpenAPI Root Structure Gate"
     blocking: true
+    active_stage: contract
     severity: CRITICAL
     parallelizable: false
     applies_when: always
@@ -391,6 +419,7 @@ gates:
     order: "5A"
     name: "OpenAPI Root / Modules Sync Gate"
     blocking: true
+    active_stage: contract
     severity: CRITICAL
     parallelizable: false
     applies_when: modules_have_openapi_sync_surface
@@ -406,6 +435,7 @@ gates:
     order: 6
     name: "OpenAPI Policy Ruleset Gate"
     blocking: true
+    active_stage: contract
     severity: HIGH
     parallelizable: false
     applies_when: always
@@ -420,6 +450,7 @@ gates:
     order: 7
     name: "JSON Schema Validation Gate"
     blocking: true
+    active_stage: contract
     severity: CRITICAL
     parallelizable: false
     applies_when: always
@@ -434,6 +465,7 @@ gates:
     order: 8
     name: "Cross-Spec Alignment Gate"
     blocking: true
+    active_stage: contract
     severity: HIGH
     parallelizable: false
     applies_when: always
@@ -448,6 +480,7 @@ gates:
     order: 9
     name: "Contract Breaking Change Gate"
     blocking: true
+    active_stage: contract
     severity: CRITICAL
     parallelizable: false
     applies_when: baseline_present
@@ -463,6 +496,7 @@ gates:
     order: 10
     name: "Transformation Feasibility Gate"
     blocking: true
+    active_stage: contract
     severity: HIGH
     parallelizable: false
     applies_when: always
@@ -477,6 +511,7 @@ gates:
     order: 11
     name: "HTTP Runtime Contract Gate"
     blocking: true
+    active_stage: contract
     severity: HIGH
     parallelizable: false
     applies_when: runtime_available
@@ -491,6 +526,7 @@ gates:
     order: 12
     name: "AsyncAPI Validation Gate"
     blocking: true
+    active_stage: contract
     severity: HIGH
     parallelizable: true
     applies_when: asyncapi_document_present
@@ -505,6 +541,7 @@ gates:
     order: 13
     name: "Arazzo Validation Gate"
     blocking: true
+    active_stage: contract
     severity: HIGH
     parallelizable: true
     applies_when: arazzo_document_present
@@ -515,10 +552,30 @@ gates:
     blocking_codes: [ARAZZO_VALIDATION_FAILED, ARAZZO_OPERATIONID_NOT_FOUND]
     status: active
 
+  - gate_id: ARAZZO_COMPLETENESS_GATE
+    order: "13A"
+    name: "Arazzo Completeness Gate"
+    blocking: true
+    active_stage: contract
+    severity: HIGH
+    parallelizable: true
+    applies_when: arazzo_declared_in_expected_surfaces
+    depends_on: [ARAZZO_VALIDATION_GATE]
+    description: >
+      Decisão (PLANO C-004): obrigatório apenas para módulos que declaram `arazzo`
+      em `expected_surfaces` no MODULE_REGISTRY. Verifica que cada módulo elegivel
+      possui pelo menos um arquivo *.arazzo.yaml em contracts/workflows/<module>/
+      com pelo menos 1 workflow na lista `workflows`. Módulos sem a declaração
+      são ignorados (SKIP_NOT_APPLICABLE).
+    blocking_codes: [ARAZZO_COMPLETENESS_MISSING]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
   - gate_id: UI_DOC_VALIDATION_GATE
     order: 14
     name: "UI Documentation Validation Gate"
     blocking: true
+    active_stage: contract
     severity: HIGH
     parallelizable: true
     applies_when: ui_documentation_present
@@ -533,6 +590,7 @@ gates:
     order: 15
     name: "Derived Drift Gate"
     blocking: true
+    active_stage: pre_generate
     severity: CRITICAL
     parallelizable: false
     applies_when: always
@@ -553,6 +611,7 @@ gates:
     order: "2M"
     name: "Architecture Decision Presence Gate"
     blocking: true
+    active_stage: readiness
     severity: HIGH
     parallelizable: false
     applies_when: contract_creation_or_revision_mode
@@ -732,6 +791,7 @@ gates:
     order: 16
     name: "Readiness Summary Gate"
     blocking: true
+    active_stage: readiness
     severity: CRITICAL
     parallelizable: false
     applies_when: always
@@ -760,6 +820,7 @@ gates:
     order: "20B"
     name: "Module Status Coherence Gate"
     blocking: true
+    active_stage: readiness
     severity: HIGH
     parallelizable: true
     applies_when: "MODULE_REGISTRY contains elevated module statuses"
@@ -782,5 +843,62 @@ gates:
     description: >
       Verifica fronteiras cross-módulo contra `MODULE_SOURCE_AUTHORITY_MATRIX`.
     blocking_codes: [BLOCKED_SCOPE_OVERFLOW]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: WAIVER_VALIDITY_GATE
+    order: "20D"
+    name: "Waiver Validity Gate"
+    blocking: true
+    severity: HIGH
+    active_stage: pre_contract
+    parallelizable: true
+    applies_when: "waivers present in contracts/_waivers/"
+    depends_on: []
+    description: >
+      Valida todos os waivers em `contracts/_waivers/` contra o schema
+      `contracts/schemas/shared/waiver.schema.json`. Rejeita waivers com
+      `expires_at_utc` vencido (earlier than current UTC timestamp) ou nulo.
+      Waivers vencidos DEVEM ser renovados com nova justificativa ou removidos.
+    blocking_codes:
+      [WAIVER_EXPIRED, WAIVER_SCHEMA_INVALID, WAIVER_MISSING_EXPIRY]
+    status: active
+    schema_ref: contracts/schemas/shared/waiver.schema.json
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: MODULE_DEPENDENCY_RESOLUTION_GATE
+    order: "20E"
+    name: "Module Dependency Resolution Gate"
+    blocking: true
+    active_stage: contract
+    severity: HIGH
+    parallelizable: true
+    applies_when: always
+    depends_on: []
+    description: >
+      Varre todos os arquivos em contracts/ em busca de $ref externos (não-HTTP,
+      não-fragmento local). Para cada $ref resolve o caminho relativo à origem e
+      verifica a existência do arquivo alvo. Usa cache para evitar rechecagem do
+      mesmo alvo (O(n) amortizado). Não itera recursivamente nos alvos.
+    blocking_codes: [BLOCKED_DEPENDENCY_RESOLUTION]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: READINESS_GENERATION_COMPATIBILITY_GATE
+    order: "20F"
+    name: "Readiness Generation Compatibility Gate"
+    blocking: true
+    active_stage: readiness
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: module_in_implementation_ready_status
+    depends_on: [MODULE_REGISTRY_GATE]
+    description: >
+      Para cada módulo com status `implementation_ready` no MODULE_REGISTRY,
+      verifica que existe relatório de análise adversarial em
+      `_reports/adversarial/*.adversarial.json` com `overall_status == PASS`.
+      Impede promoção de módulos sem auditoria adversarial completa.
+      Implementa o PRE-CHECK adicionado em R-008 ao readiness_promotion.prompt.md.
+    blocking_codes: [READINESS_GENERATION_INCOMPATIBLE]
     status: active
     implemented_in: scripts/contracts/validate/validate_contracts.py

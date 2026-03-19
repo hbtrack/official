@@ -307,6 +307,16 @@
                     ]
                 }
             }
+        },
+        "hook_exit_code": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Exit code do pre-commit hook registrado em sessão bem-sucedida (0=sucesso). Escrito pelo hook apenas em caso de PASS."
+        },
+        "hook_validated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp ISO8601 UTC do último pre-commit hook bem-sucedido. Escrito pelo hook apenas em caso de PASS."
         }
     },
     "definitions": {

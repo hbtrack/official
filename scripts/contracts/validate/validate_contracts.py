@@ -2424,6 +2424,22 @@ _PLACEHOLDER_TOKENS: list[str] = [
     "<ENTITY>",
 ]
 
+# Regex para detectar placeholders conceituais — referências diferidas sem conteúdo real.
+# Ex: "Ver documentação de X", "Conforme definido em Y", "Definido em seção Z".
+# Whitelist: URLs (https?://), RFC/ISO references são referências legítimas, não placeholders.
+_PLACEHOLDER_CONCEPTUAL_RE = re.compile(
+    r'\b(Ver\s+(?:document|especifica[çc]|se[çc][aã]o|o\s+arquivo|a\s+documenta[çc]|cap[ií]tulo)'
+    r'|Conforme\s+(?:document|especifica[çc]|definido\s+em|descrito\s+em)'
+    r'|Definido\s+em\s+\w'
+    r'|Confira\s+em\s+\w'
+    r'|A\s+(?:ser\s+definido|completar|preencher)\b)',
+    re.IGNORECASE,
+)
+_PLACEHOLDER_CONCEPTUAL_WHITELIST_RE = re.compile(
+    r'https?://|RFC\s*\d+|ISO\s+\d+',
+    re.IGNORECASE,
+)
+
 
 def _pg(
     gate_id: str,
@@ -5026,6 +5042,7 @@ def _g3_placeholder_residue(root: pathlib.Path) -> dict:
             text = p.read_text(encoding="utf-8", errors="replace")
         except Exception:
             continue
+        token_hit = False
         for token in _PLACEHOLDER_TOKENS:
             if token in text:
                 violations.append({
@@ -5034,7 +5051,22 @@ def _g3_placeholder_residue(root: pathlib.Path) -> dict:
                     "message": f"Token placeholder '{token}' encontrado.",
                     "severity": "error",
                 })
+                token_hit = True
                 break
+        if not token_hit:
+            m = _PLACEHOLDER_CONCEPTUAL_RE.search(text)
+            if m:
+                ctx_start = max(0, m.start() - 10)
+                ctx_end = min(len(text), m.end() + 50)
+                context = text[ctx_start:ctx_end]
+                if not _PLACEHOLDER_CONCEPTUAL_WHITELIST_RE.search(context):
+                    violations.append({
+                        "blocking_code": "BLOCKED_PLACEHOLDER_RESIDUE",
+                        "artifact": str(p.relative_to(root)),
+                        "message": f"Placeholder conceitual detectado: '{m.group()}'.",
+                        "severity": "warn",
+                        "placeholder_conceptual": True,
+                    })
     if violations:
         return _pg(gate_id, "FAIL", True, "BLOCKED_PLACEHOLDER_RESIDUE",
                    f"{len(violations)} arquivo(s) com tokens placeholder.",
@@ -6963,6 +6995,257 @@ def _g_cross_module_boundary(root: pathlib.Path) -> dict:
                [str(matrix_path)], checked, [], [], _ms(t0))
 
 
+def _g_module_dependency_resolution(root: pathlib.Path) -> dict:
+    """C-002 — MODULE_DEPENDENCY_RESOLUTION_GATE.
+
+    Varre todos os arquivos em contracts/ em busca de $ref externos (não-HTTP, não-fragmento
+    local). Para cada $ref resolve o caminho relativo à origem e verifica a existência do
+    arquivo alvo. Usa um cache para evitar rechecagem do mesmo arquivo (O(n) amortizado).
+    Não itera recursivamente nos alvos (sem risco de ciclos O(n²)).
+    """
+    t0 = time.monotonic()
+    gate_id = "MODULE_DEPENDENCY_RESOLUTION_GATE"
+    contracts_dir = root / "contracts"
+    if not contracts_dir.exists():
+        return _skip(gate_id, "contracts/ ausente — gate não aplicável.", _ms(t0))
+
+    violations: list[dict] = []
+    checked: list[str] = []
+    resolved_ok: set[str] = set()   # cache: abs-path str de alvos já verificados como existentes
+    broken_seen: set[str] = set()   # evita duplicar a mesma violação
+
+    for p in sorted(contracts_dir.rglob("*")):
+        if p.suffix not in {".yaml", ".json"}:
+            continue
+        if not p.is_file():
+            continue
+        checked.append(str(p))
+        try:
+            obj = _load_json(p) if p.suffix == ".json" else _load_yaml(p)
+        except Exception:
+            continue
+
+        refs: list[str] = []
+        _collect_refs(obj, refs)
+
+        for ref in refs:
+            if not isinstance(ref, str):
+                continue
+            # Ignorar refs HTTP e fragmentos locais
+            if ref.startswith(("http://", "https://", "#")):
+                continue
+            ref_path_str = ref.split("#")[0]
+            if not ref_path_str:
+                continue
+            try:
+                target = (p.parent / ref_path_str).resolve()
+            except Exception:
+                continue
+            cache_key = str(target)
+            if cache_key in resolved_ok:
+                continue
+            if not target.exists():
+                if cache_key not in broken_seen:
+                    broken_seen.add(cache_key)
+                    violations.append({
+                        "blocking_code": "BLOCKED_DEPENDENCY_RESOLUTION",
+                        "artifact": str(p.relative_to(root)),
+                        "message": f"$ref não resolvível: '{ref}'.",
+                        "severity": "error",
+                        "details": {"ref": ref, "resolved_path": str(target)},
+                    })
+            else:
+                resolved_ok.add(cache_key)
+
+    if violations:
+        return _pg(gate_id, "FAIL", True, "BLOCKED_DEPENDENCY_RESOLUTION",
+                   f"{len(violations)} $ref(s) não resolvível(eis) detectado(s).",
+                   [], checked, [], violations, _ms(t0))
+    return _pg(gate_id, "PASS", True, None,
+               f"Todos os $refs em {len(checked)} arquivo(s) são resolvíveis.",
+               [], checked, [], [], _ms(t0))
+
+
+def _g_readiness_generation_compatibility(root: pathlib.Path) -> dict:
+    """C-003 — READINESS_GENERATION_COMPATIBILITY_GATE.
+
+    Para cada módulo com status `implementation_ready` no MODULE_REGISTRY, verifica que
+    existe relatório de análise adversarial em `_reports/adversarial/*.adversarial.json`
+    com `overall_status == PASS`. Impede promoção de modules sem auditoria adversarial.
+    Bloqueio: READINESS_GENERATION_INCOMPATIBLE.
+    """
+    t0 = time.monotonic()
+    gate_id = "READINESS_GENERATION_COMPATIBILITY_GATE"
+    registry_entries, checked = _load_module_registry_entries(root)
+    if registry_entries is None:
+        return _skip(gate_id, "MODULE_REGISTRY ausente ou inválido — gate não aplicável.", _ms(t0))
+
+    ready_modules = sorted([
+        module for module, entry in registry_entries.items()
+        if entry.get("status") == "implementation_ready"
+    ])
+    if not ready_modules:
+        return _pg(gate_id, "PASS", True, None,
+                   "Nenhum módulo em implementation_ready — gate não aplicável.",
+                   [], checked, [], [], _ms(t0))
+
+    adversarial_dir = root / "_reports" / "adversarial"
+    checked.append(str(adversarial_dir))
+    violations: list[dict] = []
+
+    for module in ready_modules:
+        report_found = False
+        report_pass = False
+        if adversarial_dir.exists():
+            for rpath in sorted(adversarial_dir.glob("*.adversarial.json")):
+                try:
+                    data = json.loads(rpath.read_text(encoding="utf-8"))
+                except Exception:
+                    continue
+                if data.get("module") == module:
+                    report_found = True
+                    if data.get("overall_status") == "PASS":
+                        report_pass = True
+                    break
+
+        if not report_found:
+            violations.append({
+                "blocking_code": "READINESS_GENERATION_INCOMPATIBLE",
+                "artifact": (
+                    str(adversarial_dir.relative_to(root))
+                    if adversarial_dir.exists()
+                    else "_reports/adversarial/"
+                ),
+                "message": (
+                    f"Módulo '{module}' está em implementation_ready mas não possui "
+                    "relatório de análise adversarial em _reports/adversarial/."
+                ),
+                "severity": "error",
+                "details": {"module": module},
+            })
+        elif not report_pass:
+            violations.append({
+                "blocking_code": "READINESS_GENERATION_INCOMPATIBLE",
+                "artifact": "_reports/adversarial/*.adversarial.json",
+                "message": (
+                    f"Módulo '{module}' está em implementation_ready "
+                    "mas análise adversarial não é PASS."
+                ),
+                "severity": "error",
+                "details": {"module": module},
+            })
+
+    if violations:
+        return _pg(gate_id, "FAIL", True, "READINESS_GENERATION_INCOMPATIBLE",
+                   f"{len(violations)} módulo(s) implementation_ready sem análise adversarial PASS.",
+                   [], checked, [], violations, _ms(t0))
+    return _pg(gate_id, "PASS", True, None,
+               f"{len(ready_modules)} módulo(s) implementation_ready com análise adversarial PASS.",
+               [], checked, [], [], _ms(t0))
+
+
+def _g_arazzo_completeness(root: pathlib.Path) -> dict:
+    """C-004 — ARAZZO_COMPLETENESS_GATE.
+
+    Decisão (conforme PLANO C-004): obrigatório apenas para módulos que declaram
+    `arazzo` em `expected_surfaces` no MODULE_REGISTRY. Módulos sem essa declaração
+    não são verificados.
+
+    Para cada módulo elegível verifica:
+    1. Diretório `contracts/workflows/<module>/` existe.
+    2. Pelo menos um arquivo `*.arazzo.yaml` presente.
+    3. Cada arquivo tem raiz YAML com campo `workflows` contendo lista não-vazia.
+    """
+    t0 = time.monotonic()
+    gate_id = "ARAZZO_COMPLETENESS_GATE"
+    registry_entries, checked = _load_module_registry_entries(root)
+    if registry_entries is None:
+        return _skip(gate_id, "MODULE_REGISTRY ausente ou inválido — gate não aplicável.", _ms(t0))
+
+    arazzo_modules = sorted([
+        module for module, entry in registry_entries.items()
+        if "arazzo" in set(entry.get("expected_surfaces") or [])
+    ])
+    if not arazzo_modules:
+        return _skip(
+            gate_id,
+            "Nenhum módulo declara 'arazzo' em expected_surfaces — gate não aplicável.",
+            _ms(t0),
+        )
+
+    violations: list[dict] = []
+    workflows_dir = root / "contracts" / "workflows"
+    checked.append(str(workflows_dir))
+
+    for module in arazzo_modules:
+        mod_dir = workflows_dir / module
+        checked.append(str(mod_dir))
+        if not mod_dir.exists() or not mod_dir.is_dir():
+            violations.append({
+                "blocking_code": "ARAZZO_COMPLETENESS_MISSING",
+                "artifact": f"contracts/workflows/{module}/",
+                "message": (
+                    f"Módulo '{module}' declara 'arazzo' em expected_surfaces "
+                    "mas diretório de workflows está ausente."
+                ),
+                "severity": "error",
+                "details": {"module": module},
+            })
+            continue
+
+        arazzo_files = list(mod_dir.glob("*.arazzo.yaml")) + list(mod_dir.glob("*.arazzo.yml"))
+        if not arazzo_files:
+            violations.append({
+                "blocking_code": "ARAZZO_COMPLETENESS_MISSING",
+                "artifact": f"contracts/workflows/{module}/",
+                "message": (
+                    f"Módulo '{module}' declara 'arazzo' em expected_surfaces "
+                    "mas nenhum arquivo *.arazzo.yaml encontrado."
+                ),
+                "severity": "error",
+                "details": {"module": module},
+            })
+            continue
+
+        for af in sorted(arazzo_files):
+            checked.append(str(af))
+            try:
+                data = _load_yaml(af)
+            except Exception as exc:
+                violations.append({
+                    "blocking_code": "ARAZZO_COMPLETENESS_MISSING",
+                    "artifact": str(af.relative_to(root)),
+                    "message": f"Arazzo workflow não parseável: {exc}",
+                    "severity": "error",
+                })
+                continue
+            if not isinstance(data, dict):
+                violations.append({
+                    "blocking_code": "ARAZZO_COMPLETENESS_MISSING",
+                    "artifact": str(af.relative_to(root)),
+                    "message": "Arazzo workflow raiz deve ser objeto YAML.",
+                    "severity": "error",
+                })
+                continue
+            # Suporta tanto `workflows` (Arazzo 1.x) quanto chave legada
+            workflows = data.get("workflows") or data.get("workflowsSpec")
+            if not workflows or not isinstance(workflows, list) or len(workflows) == 0:
+                violations.append({
+                    "blocking_code": "ARAZZO_COMPLETENESS_MISSING",
+                    "artifact": str(af.relative_to(root)),
+                    "message": "Arazzo workflow deve conter pelo menos 1 workflow na lista 'workflows'.",
+                    "severity": "error",
+                })
+
+    if violations:
+        return _pg(gate_id, "FAIL", True, "ARAZZO_COMPLETENESS_MISSING",
+                   f"{len(violations)} problema(s) de completude Arazzo.",
+                   [], checked, [], violations, _ms(t0))
+    return _pg(gate_id, "PASS", True, None,
+               f"Completude Arazzo verificada para {len(arazzo_modules)} módulo(s).",
+               [], checked, [], [], _ms(t0))
+
+
 def _g_feature_readiness(root: pathlib.Path) -> dict:
     t0 = time.monotonic()
     gate_id = "FEATURE_READINESS_GATE"
@@ -7839,6 +8122,20 @@ def run_pipeline(
         gates_metadata = {}  # Fallback (will use defaults)
 
     def _build_report(all_gates: list[dict], overall: str, exit_code: int) -> dict:
+        # R-006: status_detail composto — expõe realidade sem depender de SKIP na matemática
+        _active = [g for g in all_gates if g.get("status") not in ("SKIP_NOT_APPLICABLE", "SKIP")]
+        _active_pass = [g for g in _active if g.get("status") == "PASS"]
+        _skip = [g for g in all_gates if g.get("status") in ("SKIP_NOT_APPLICABLE", "SKIP")]
+        _critical = [
+            {"gate_id": g["gate_id"], "status": g["status"]}
+            for g in all_gates
+            if g.get("blocking") is True
+        ]
+        status_detail = {
+            "active_gates_passed": len(_active_pass),
+            "skip_count": len(_skip),
+            "critical_gates": _critical,
+        }
         return {
             "pipeline_id": "HB_TRACK_CONTRACT_GATES",
             "timestamp_utc": ts,
@@ -7864,6 +8161,7 @@ def run_pipeline(
                 },
             },
             "overall_status": overall,
+            "status_detail": status_detail,
             "exit_code": exit_code,
             "gates": all_gates,
         }
@@ -8026,6 +8324,7 @@ def run_pipeline(
         ("HTTP_RUNTIME_CONTRACT_GATE", lambda: _g11_http_runtime_contract(root)),
         ("ASYNCAPI_VALIDATION_GATE", lambda: _g12_asyncapi_validation(root)),
         ("ARAZZO_VALIDATION_GATE", lambda: _g13_arazzo_validation(root)),
+        ("ARAZZO_COMPLETENESS_GATE", lambda: _g_arazzo_completeness(root)),
         ("UI_DOC_VALIDATION_GATE", lambda: _g14_ui_doc_validation(root)),
         ("DERIVED_DRIFT_GATE", lambda: _g15_derived_drift(root)),
         ("ADVERSARIAL_ANALYSIS_GATE", lambda: _g_adversarial_analysis(root)),
@@ -8040,6 +8339,8 @@ def run_pipeline(
         ("MODULE_STATUS_COHERENCE_GATE", lambda: _g_module_status_coherence(root)),
         ("SURFACE_PROMOTION_COHERENCE_GATE", lambda: _g_surface_promotion_coherence(root)),
         ("CROSS_MODULE_BOUNDARY_GATE", lambda: _g_cross_module_boundary(root)),
+        ("MODULE_DEPENDENCY_RESOLUTION_GATE", lambda: _g_module_dependency_resolution(root)),
+        ("READINESS_GENERATION_COMPATIBILITY_GATE", lambda: _g_readiness_generation_compatibility(root)),
     ]
     for gate_id_hint, gate_fn in gate_plan:
         gate_result = _maybe(gate_fn, gate_id_hint)

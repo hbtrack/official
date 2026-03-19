@@ -68,10 +68,30 @@
 | READINESS_SUMMARY_GATE | ✅ PASS |
 
 ## Próximos Passos
-1. **Módulo video — readiness_promotion:** Executar `readiness_promotion` para promover video para `implementation_ready` (requer UI Contract + sign-off)
-2. **Phase 1–7 Implementation:** Iniciar codificação conforme roadmap (14–16 semanas)  
-3. **Backend Generation:** Executar `generate_code` para cada módulo em sequência  
-4. **Cross-Module Integration:** Após fundação, coordenar integrações  
+1. **FASE 4 — Re-validação:** Executar `python3 scripts/hb verify --all` para todos os 16 módulos com os 3 novos gates ativos. Ver plano: `docs/guias/produto/PLANO_MASTER_REMEDIACAO_CONTRATUAL_2026_03_19.md`.
+2. **Módulo video — readiness_promotion:** Executar `readiness_promotion` para promover video para `implementation_ready` (requer UI Contract + sign-off)
+3. **Phase 1–7 Implementation:** Iniciar codificação conforme roadmap (14–16 semanas)  
+4. **Backend Generation:** Executar `generate_code` para cada módulo em sequência  
+
+## Remediação Contratual (FASE 3 CONCLUÍDA — 2026-03-19)
+**Plano:** `docs/guias/produto/PLANO_MASTER_REMEDIACAO_CONTRATUAL_2026_03_19.md`
+**Status:** 31/38 ações (~82%)
+
+| Fase | Status |
+|------|--------|
+| Fase 0 — Mapeamento | ✅ 9/9 |
+| Fase 1 — Templates | ✅ 5/5 |
+| Fase 2 — Regras | ✅ 8/8 |
+| Fase 3 — Composição | ✅ 5/5 — **CONCLUÍDA AGORA** |
+| Fase 4 — Re-validação | 🔜 Próxima |
+
+### Novos gates implementados (Fase 3):
+- `ARAZZO_COMPLETENESS_GATE` (order 13A) — obrigatório para módulos com `arazzo` em `expected_surfaces`
+- `MODULE_DEPENDENCY_RESOLUTION_GATE` (order 20E) — verifica que todos os `$ref` externos são resolvíveis
+- `READINESS_GENERATION_COMPATIBILITY_GATE` (order 20F) — impede `implementation_ready` sem análise adversarial PASS
+- `PLACEHOLDER_RESIDUE_GATE` expandido com detecção regex de placeholders conceituais (`severity: warn`)
+
+
 
 ## Contexto Crítico (Status Final)
 - **16 módulos:** todos em `implementation_ready` ✅  
