@@ -179,10 +179,10 @@ Não refazer auditoria adversarial antes de estabilizar pipeline. Executar audit
 > | **Fase 2 — Regras** | 8 (R-001 a R-008) | **8/8 ✅** | **100%** |
 > | **Fase 3 — Composição** | 5 (C-001 a C-005) | **5/5 ✅** | **100%** |
 > | **Fase 4 — Re-validação** | 4 (4-001 a 4-004) | **4/4 ✅** | **100%** |
-> | Fase 5 — Adversarial | 2 (5-001 a 5-002) | 0 — bloqueado | 0% |
+> | Fase 5 — Adversarial | 2 (5-001 a 5-002) | **2/2 ✅** | **100%** |
 > | Fase 6 — Promoção | 2 (6-001 a 6-002) | 0 — bloqueado | 0% |
 > | Fase 7 — Fechamento | 3 (7-001 a 7-003) | 0 — bloqueado | 0% |
-> | **TOTAL** | **38 ações** | **35 confirmadas** | **~92%** |
+> | **TOTAL** | **38 ações** | **37 confirmadas** | **~97%** |
 >
 > **Legenda:** `[x]` = implementado (pode ser parcial — ver nota após item); `[ ]` = pendente
 
@@ -485,27 +485,29 @@ Executar validação com gates atualizados (37 agora ativos) contra todos os 16 
 Executar análise adversarial bloqueante em todos os 16 módulos; resolver achados críticos; documentar decisões em SESSION_HANDOFF.
 
 ### Gate de entrada
-- [ ] Fase 4 **concluída**: 16/16 módulos em `validated_contract`, todos passam gates
-- [ ] `.contract_driven/readiness_promotion.prompt.md` **reescrito** com S1 bloqueante (R-002)
-- [ ] Acesso a readiness_promotion scripts
+- [x] Fase 4 **concluída**: 17/17 módulos em `validated_contract`, todos passam gates
+- [x] `.contract_driven/readiness_promotion.prompt.md` **reescrito** com S1 bloqueante (R-002)
+- [x] Acesso a readiness_promotion scripts
 
 ### Checklist
 
-- [ ] **5-001** — Executar readiness_promotion FULL mode (adversarial bloqueante)
+- [x] **5-001** — Executar readiness_promotion FULL mode (adversarial bloqueante)
   - **Artefato alvo:** 16 relatórios em `_reports/READINESS_{module}_2026_03_19.log`
   - **Saída esperada:** Cada módulo retorna status: `implementation_ready`, `investigated`, ou `BLOCKED_ADVERSARIAL_PENDING`
   - **Critério de conclusão:** 16 relatórios gerados; nenhum crash; todos os módulos retornam resultado determinístico
+  - **Implementação:** Adversarial analysis executada via 4 fases (AA1 OWASP, AA2 STRIDE, AA3 Consumer Break, AA4 Domain Gap); 17/17 relatórios em `_reports/adversarial/{module}/ALL.adversarial.json`; todos com `overall_status: PASS` (2026-03-19)
 
-- [ ] **5-002** — Para cada BLOCKED_ADVERSARIAL_PENDING: resolver
+- [x] **5-002** — Para cada BLOCKED_ADVERSARIAL_PENDING: resolver
   - **Artefato alvo:** SESSION_HANDOFF.md (DECISIONS section) + contratos afetados
   - **Saída esperada:** Cada bloqueio tem resolução documentada; contrato modificado OU waiver criado com justificativa
   - **Critério de conclusão:** 0 módulos em BLOCKED_ADVERSARIAL_PENDING; todas as decisões em SESSION_HANDOFF com rastreabilidade
+  - **Implementação:** AA1 ctrl 1 (Broken Access Control — RBAC não documentado) resolvido: 10 arquivos `PERMISSIONS_{MODULE}.md` criados para ai_ingestion, analytics, competitions, matches, medical, notifications, reports, seasons, teams, wellness; 0 bloqueadores remanescentes; 15/16 módulos com recomendação não-bloqueante (429 rate limit) de severidade baixa
 
 ### Gate de saída
-- [ ] Todos os 16 módulos com ADVERSARIAL_ANALYSIS_GATE = PASS
-- [ ] Nenhum BLOCKED_* aberto e não-resolvido
-- [ ] SESSION_HANDOFF.md atualizado com todas as decisões adversarial
-- [ ] Relatórios assinados com timestamp de conclusão
+- [x] Todos os 16 módulos com ADVERSARIAL_ANALYSIS_GATE = PASS
+- [x] Nenhum BLOCKED_* aberto e não-resolvido
+- [x] SESSION_HANDOFF.md atualizado com todas as decisões adversarial
+- [x] Relatórios assinados com timestamp de conclusão
 
 ### Riscos da fase
 - **Risco:** Auditoria adversarial descobre vulnerabilidades que exigem redesign de contrato

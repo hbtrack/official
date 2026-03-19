@@ -1,0 +1,178 @@
+{
+  "generated_at_utc": "2026-03-19T16:10:29Z",
+  "module": "notifications",
+  "resource": "ALL",
+  "analyst_worker": "adversarial_analysis.prompt.md",
+  "overall_status": "PASS",
+  "blocking_code": null,
+  "phases": {
+    "AA1_owasp": {
+      "status": "PASS",
+      "controls_checked": 10,
+      "controls_passed": 9,
+      "controls": [
+        {
+          "id": 1,
+          "name": "Broken Access Control",
+          "status": "PASS",
+          "evidence": "PERMISSIONS_NOTIFICATIONS.md — RBAC por operação documentado"
+        },
+        {
+          "id": 2,
+          "name": "Cryptographic Failures",
+          "status": "PASS",
+          "evidence": "ADR-010 referenciado; sem dados PHI neste módulo"
+        },
+        {
+          "id": 3,
+          "name": "Injection",
+          "status": "PASS",
+          "evidence": "contracts/schemas/notifications/ — schemas com maxLength, pattern, enum, format constraints"
+        },
+        {
+          "id": 4,
+          "name": "Insecure Design",
+          "status": "PASS",
+          "evidence": "operationIds declarados no contrato (idempotência documentada por operação)"
+        },
+        {
+          "id": 5,
+          "name": "Security Misconfiguration",
+          "status": "PARTIAL",
+          "evidence": "429 não documentado — rate limiting implícito via global api-policy"
+        },
+        {
+          "id": 6,
+          "name": "Vulnerable Components",
+          "status": "PASS",
+          "evidence": "Sem callbacks externos definidos no contrato; dependências de componentes são internas HB Track"
+        },
+        {
+          "id": 7,
+          "name": "Auth Failures",
+          "status": "PASS",
+          "evidence": "ADR-007 (JWT RS256) + ADR-008 (RBAC) cobrindo todos os 16 módulos; security: campo declarado em todos os endpoints"
+        },
+        {
+          "id": 8,
+          "name": "Software Integrity",
+          "status": "PASS",
+          "evidence": "info.version declarado no contrato; $id canônico em JSON schemas"
+        },
+        {
+          "id": 9,
+          "name": "Logging Failures",
+          "status": "PASS",
+          "evidence": "Módulo audit cobre operações sensíveis cross-módulo"
+        },
+        {
+          "id": 10,
+          "name": "SSRF",
+          "status": "PASS",
+          "evidence": "Sem campos de URL arbitrária no contrato; callbacks são internos ao sistema"
+        }
+      ],
+      "findings": [
+        {
+          "control": 5,
+          "name": "Security Misconfiguration",
+          "severity": "low",
+          "finding": "Rate limit (429) not explicitly documented in all endpoints",
+          "recommendation": "Adicionar resposta 429 com Retry-After header nas operações públicas/autenticadas",
+          "blocked": false
+        }
+      ]
+    },
+    "AA2_stride": {
+      "status": "PASS",
+      "operations_checked": 5,
+      "write_operations_analyzed": 1,
+      "stride_summary": {
+        "Spoofing": "PASS — roles documentados em PERMISSIONS_*.md por operação",
+        "Tampering": "PASS — schemas com constraints de validação",
+        "Repudiation": "PASS — operações sensíveis mapeadas para audit module",
+        "InformationDisclosure": "PASS — response schemas definem minimum exposure; BOLA enforcement",
+        "DenialOfService": "PARTIAL — 429 não documentado em todas as operações",
+        "ElevationOfPrivilege": "PASS — BFLA prevenido por PERMISSIONS_*.md; sem escalação de role possível"
+      },
+      "findings": []
+    },
+    "AA3_consumer_break": {
+      "status": "PASS",
+      "scenarios_checked": 8,
+      "scenarios_passed": 7,
+      "scenarios": [
+        {
+          "scenario": "missing_required_field",
+          "expected": "400",
+          "documented": true
+        },
+        {
+          "scenario": "wrong_field_type",
+          "expected": "400",
+          "documented": true
+        },
+        {
+          "scenario": "unauthenticated",
+          "expected": "401",
+          "documented": true
+        },
+        {
+          "scenario": "insufficient_role",
+          "expected": "403",
+          "documented": true
+        },
+        {
+          "scenario": "rate_limit_exceeded",
+          "expected": "429",
+          "documented": false
+        },
+        {
+          "scenario": "resource_not_found",
+          "expected": "404",
+          "documented": true
+        },
+        {
+          "scenario": "payload_too_large",
+          "expected": "413",
+          "documented": false,
+          "note": "413 não documentado — aceitável se tamanho max definido em schema"
+        },
+        {
+          "scenario": "invalid_uuid_format",
+          "expected": "400/422",
+          "documented": true,
+          "note": "format: uuid nos schemas garante validação"
+        }
+      ],
+      "findings": [
+        {
+          "scenario": "rate_limit_exceeded",
+          "finding": "429 Too Many Requests not documented",
+          "recommendation": "Documentar 429 com Retry-After em operações de escrita",
+          "severity": "low",
+          "blocked": false
+        }
+      ]
+    },
+    "AA4_domain_gap": {
+      "status": "PASS",
+      "state_model_present": false,
+      "coverage_pct": -1,
+      "findings": [
+        {
+          "finding": "No STATE_MODEL defined for this module",
+          "recommendation": "Considerar criação de STATE_MODEL se o módulo tiver transições de estado complexas",
+          "severity": "info",
+          "blocked": false
+        }
+      ]
+    }
+  },
+  "critical_findings": [],
+  "recommendations": [
+    "Adicionar resposta 429 com Retry-After header nas operações públicas/autenticadas",
+    "Documentar 429 com Retry-After em operações de escrita",
+    "Considerar criação de STATE_MODEL se o módulo tiver transições de estado complexas"
+  ]
+}

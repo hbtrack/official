@@ -68,22 +68,31 @@
 | READINESS_SUMMARY_GATE | ✅ PASS |
 
 ## Próximos Passos
-1. **FASE 5 — Adversarial:** Executar auditoria adversarial bloqueante para todos os 16 módulos (`readiness_promotion` mode full). Ver plano: `docs/guias/produto/PLANO_MASTER_REMEDIACAO_CONTRATUAL_2026_03_19.md`.
+1. **FASE 6 — Promoção Harmonizada:** Promover 16 módulos para `implementation_ready` com critérios unificados. Ver plano: `docs/guias/produto/PLANO_MASTER_REMEDIACAO_CONTRATUAL_2026_03_19.md`.
 2. **Módulo video — readiness_promotion:** Executar `readiness_promotion` para promover video para `implementation_ready` (requer UI Contract + sign-off)
 3. **Phase 1–7 Implementation:** Iniciar codificação conforme roadmap (14–16 semanas)  
 4. **Backend Generation:** Executar `generate_code` para cada módulo em sequência  
 
-## Remediação Contratual (FASE 4 CONCLUÍDA — 2026-03-19)
+## Remediação Contratual (FASE 5 CONCLUÍDA — 2026-03-19)
 **Plano:** `docs/guias/produto/PLANO_MASTER_REMEDIACAO_CONTRATUAL_2026_03_19.md`
-**Status:** 35/38 ações (~92%)
+**Status:** 37/38 ações (~97%)
 
 | Fase | Status |
 |------|--------|
 | Fase 0 — Mapeamento | ✅ 9/9 |
 | Fase 1 — Templates | ✅ 5/5 |
 | Fase 2 — Regras | ✅ 8/8 |
-| Fase 3 — Composição | ✅ 5/5 — **CONCLUÍDA AGORA** |
-| Fase 4 — Re-validação | 🔜 Próxima |
+| Fase 3 — Composição | ✅ 5/5 |
+| Fase 4 — Re-validação | ✅ 4/4 |
+| Fase 5 — Adversarial | ✅ 2/2 — **CONCLUÍDA** |
+| Fase 6 — Promoção | 🔜 Próxima |
+
+### Resultados da Fase 5 (Adversarial Analysis):
+- **16/16 módulos:** ADVERSARIAL_ANALYSIS_GATE = PASS (✅)
+- **17 relatórios:** `_reports/adversarial/{module}/ALL.adversarial.json` — todos `overall_status: PASS`
+- **Resolução 5-002:** 10 arquivos `PERMISSIONS_{MODULE}.md` criados (ai_ingestion, analytics, competitions, matches, medical, notifications, reports, seasons, teams, wellness) — AA1 ctrl 1 (RBAC não documentado) resolvido
+- **Achados não-bloqueantes:** 15/16 módulos com recomendação de severidade `low` (429 rate limiting não documentado em OpenAPI)
+- **PHI/PII:** medical e wellness com controles ADR-010 validados no relatório AA1
 
 ### Novos gates implementados (Fase 3):
 - `ARAZZO_COMPLETENESS_GATE` (order 13A) — obrigatório para módulos com `arazzo` em `expected_surfaces`

@@ -1125,9 +1125,69 @@
       "sha256": "ac33fe58442230065d2472b5a2c4c1ea8c8d16b529fba70ad8036cbeb27ed945",
       "created_at": "2026-03-19T16:00:09.932815+00:00",
       "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/ai_ingestion/PERMISSIONS_AI_INGESTION.md",
+      "sha256": "024fc9e1b3a2e658186d73c827721adc0fc97c28cdc1984e3215541e62b15e56",
+      "created_at": "2026-03-19T16:11:36.758303+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/analytics/PERMISSIONS_ANALYTICS.md",
+      "sha256": "f210962d727112efdd19eebb91da33800a0adf13fa59b16d5bf04195aae99f75",
+      "created_at": "2026-03-19T16:11:45.704817+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/competitions/PERMISSIONS_COMPETITIONS.md",
+      "sha256": "0d83c3c1655aa4d143449199b7282ddbfde3a07a5f851174672f54c7f4a8c96d",
+      "created_at": "2026-03-19T16:11:50.339752+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/matches/PERMISSIONS_MATCHES.md",
+      "sha256": "f1307f79ac3619444be53b9b3c8249986fff62d0a82ff94e5c61460f4e14151c",
+      "created_at": "2026-03-19T16:11:54.908755+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/medical/PERMISSIONS_MEDICAL.md",
+      "sha256": "8a20a31c73a0b2215d5b835adb023585afa014bf5e1707a2ffdf2834249d161d",
+      "created_at": "2026-03-19T16:11:59.471120+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/notifications/PERMISSIONS_NOTIFICATIONS.md",
+      "sha256": "30503168a7e7e8bd2ec5e38b0124e9d82d566903288850e270404dc2d4091a13",
+      "created_at": "2026-03-19T16:12:03.771007+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/reports/PERMISSIONS_REPORTS.md",
+      "sha256": "00b23e4c1109f9a715e0f9ca605c22c154837e516cbafdc705690e7057504645",
+      "created_at": "2026-03-19T16:12:08.143570+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/seasons/PERMISSIONS_SEASONS.md",
+      "sha256": "17d8dba0da378dd7f94c1a5919e6edffc574c3253738e3ded523c143bd0f5fbe",
+      "created_at": "2026-03-19T16:12:12.559048+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/teams/PERMISSIONS_TEAMS.md",
+      "sha256": "d92c187167ad91a158961ba9ea69a10c2bbd17af57844f0cbd6889867314d802",
+      "created_at": "2026-03-19T16:12:17.773690+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/wellness/PERMISSIONS_WELLNESS.md",
+      "sha256": "5ab317c760294dd87c85c8617124be687415fc80f9926309c9f72bbc5ed12997",
+      "created_at": "2026-03-19T16:12:22.374019+00:00",
+      "gate_exit_code": 0
     }
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-03-19T15:44:26.024299+00:00"
+  "hook_validated_at": "2026-03-19T16:00:29.559614+00:00"
 }
