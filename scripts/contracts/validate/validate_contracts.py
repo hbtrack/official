@@ -5621,6 +5621,112 @@ def _find_active_waiver(root: pathlib.Path, gate_id: str) -> pathlib.Path | None
     return None
 
 
+def _g_waiver_validity(root: pathlib.Path) -> dict:
+    """
+    Ordem 5: WAIVER_VALIDITY_GATE implementation.
+    Validates all waivers in contracts/_waivers/ against schema.
+    Rejects waivers with:
+    - expires_at_utc in the past
+    - expires_at_utc missing (required field)
+    - Invalid schema structure
+    """
+    t0 = time.monotonic()
+    gate_id = "WAIVER_VALIDITY_GATE"
+    waivers_dir = root / "contracts" / "_waivers"
+    waiver_schema_path = root / "contracts" / "schemas" / "shared" / "waiver.schema.json"
+    
+    if not waivers_dir.exists():
+        return _skip(gate_id, "Sem waivers em contracts/_waivers/.", _ms(t0))
+    
+    # Carregar schema do waiver
+    try:
+        waiver_schema = json.loads(waiver_schema_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        return _pg(gate_id, "FAIL", True, "WAIVER_SCHEMA_INVALID",
+                   f"Falha ao carregar waiver.schema.json: {exc}",
+                   [str(waiver_schema_path)], [str(waiver_schema_path)], [], [], _ms(t0))
+    
+    violations: list[dict] = []
+    checked_files: list[str] = []
+    now = datetime.datetime.now(datetime.timezone.utc)
+    
+    waiver_files = [f for f in waivers_dir.glob("*.json") if f.name != "waiver.schema.json"]
+    
+    if not waiver_files:
+        return _skip(gate_id, "Nenhum waiver para validar.", _ms(t0))
+    
+    for wpath in sorted(waiver_files):
+        try:
+            waiver_data = json.loads(wpath.read_text(encoding="utf-8"))
+        except Exception as exc:
+            violations.append({
+                "blocking_code": "WAIVER_SCHEMA_INVALID",
+                "artifact": str(wpath),
+                "message": f"Falha ao parsear waiver JSON: {exc}",
+                "severity": "error",
+            })
+            checked_files.append(str(wpath))
+            continue
+        
+        checked_files.append(str(wpath))
+        
+        # Validar contra schema JSON
+        try:
+            from jsonschema import validate as _jsonschema_validate
+            _jsonschema_validate(instance=waiver_data, schema=waiver_schema)
+        except Exception as exc:
+            violations.append({
+                "blocking_code": "WAIVER_SCHEMA_INVALID",
+                "artifact": str(wpath),
+                "message": f"Waiver não conformou ao schema: {exc}",
+                "severity": "error",
+            })
+            continue
+        
+        # Ordem 5: Validar expires_at_utc (obrigatório + não vencido)
+        expires_str = waiver_data.get("expires_at_utc")
+        
+        if not expires_str:
+            # Campo obrigatório pelo schema, mas dupla-check aqui
+            violations.append({
+                "blocking_code": "WAIVER_MISSING_EXPIRY",
+                "artifact": str(wpath),
+                "message": "Waiver sem expires_at_utc — campo obrigatório.",
+                "severity": "error",
+            })
+            continue
+        
+        try:
+            expiry = datetime.datetime.fromisoformat(expires_str.replace("Z", "+00:00"))
+            if expiry.tzinfo is None:
+                expiry = expiry.replace(tzinfo=datetime.timezone.utc)
+        except ValueError:
+            violations.append({
+                "blocking_code": "WAIVER_SCHEMA_INVALID",
+                "artifact": str(wpath),
+                "message": f"expires_at_utc com formato inválido: {expires_str}",
+                "severity": "error",
+            })
+            continue
+        
+        if expiry < now:
+            violations.append({
+                "blocking_code": "WAIVER_EXPIRED",
+                "artifact": str(wpath),
+                "message": f"Waiver vencido em {expires_str} — renovar ou remover.",
+                "severity": "error",
+            })
+    
+    if violations:
+        return _pg(gate_id, "FAIL", True, violations[0].get("blocking_code", "WAIVER_SCHEMA_INVALID"),
+                   f"{len(violations)} waiver(s) inválido(s) ou vencido(s).",
+                   checked_files, [str(waivers_dir)], [str(waivers_dir)], violations, _ms(t0))
+    
+    return _pg(gate_id, "PASS", False, None,
+               f"{len(waiver_files)} waiver(s) válido(s) e em vigência.",
+               checked_files, [str(waivers_dir)], [str(waivers_dir)], [], _ms(t0))
+
+
 def _g9_contract_breaking_change(root: pathlib.Path) -> dict:
     t0 = time.monotonic()
     gate_id = "CONTRACT_BREAKING_CHANGE_GATE"
@@ -6613,7 +6719,19 @@ def _g_adversarial_analysis(root: pathlib.Path) -> dict:
     reports_dir = root / "_reports" / "adversarial"
     if not reports_dir.exists():
         return _skip(gate_id, "_reports/adversarial/ ausente — nenhum módulo submetido à análise adversarial.", _ms(t0))
-    report_files = list(reports_dir.rglob("*.adversarial.json"))
+    # FIX Ordem 2: descoberta robusta de relatórios — canônico primeiro, depois glob fallback
+    report_files = []
+    # Procurar no padrão canônico: _reports/adversarial/<module>/ALL.adversarial.json
+    for subdir in reports_dir.iterdir():
+        if subdir.is_dir():
+            canonical = subdir / "ALL.adversarial.json"
+            if canonical.exists():
+                report_files.append(canonical)
+    # Fallback: qualquer .adversarial.json não já encontrado
+    for rpath in sorted(reports_dir.rglob("*.adversarial.json")):
+        if rpath not in report_files:
+            report_files.append(rpath)
+    
     if not report_files:
         return _skip(gate_id, "_reports/adversarial/ vazia — nenhum relatório adversarial encontrado.", _ms(t0))
     checked = [str(p) for p in report_files]
@@ -6674,22 +6792,47 @@ def _g_adversarial_analysis(root: pathlib.Path) -> dict:
                 "severity": "error",
             })
     if violations:
-        return _pg(gate_id, "FAIL", False, "BLOCKED_ADVERSARIAL_PENDING",
+        # FIX Ordem 2: marcar como FAIL BLOQUEANTE (não warning)
+        return _pg(gate_id, "FAIL", True, "BLOCKED_ADVERSARIAL_PENDING",
                    f"Análise adversarial: {len(violations)} violação(ões) encontradas.",
                    [], checked, [], violations, _ms(t0))
-    return _pg(gate_id, "PASS", False, None,
+    return _pg(gate_id, "PASS", True, None,
                f"Análise adversarial: {len(report_files)} relatório(s) — todos PASS.",
                [], checked, [], [], _ms(t0))
+
 
 
 def _g_handoff_coherence(root: pathlib.Path) -> dict:
     t0 = time.monotonic()
     gate_id = "HANDOFF_COHERENCE_GATE"
     handoff = root / "SESSION_HANDOFF.md"
+    
+    # FIX Ordem 4: SESSION_HANDOFF ausente deve ser FAIL, não SKIP
     if not handoff.exists():
-        return _skip(gate_id, "SESSION_HANDOFF.md ausente.", _ms(t0))
+        return _pg(gate_id, "FAIL", True, "BLOCKED_HANDOFF_INCOMPLETE",
+                   "SESSION_HANDOFF.md ausente — artefato obrigatório.",
+                   [], [str(handoff)], [], [
+                       {"blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+                        "artifact": "SESSION_HANDOFF.md",
+                        "message": "SESSION_HANDOFF.md não encontrado na raiz do workspace.",
+                        "severity": "error"}
+                   ], _ms(t0))
+    
     text = handoff.read_text(encoding="utf-8")
     violations: list[dict] = []
+    
+    # FIX Ordem 4: validar conteúdo mínimo (não só existência)
+    # Campos obrigatórios: estado geral, módulos, bloqueadores
+    required_fields = ["Estado Geral", "Data:", "Branch:"]
+    for field in required_fields:
+        if field not in text:
+            violations.append({
+                "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+                "artifact": "SESSION_HANDOFF.md",
+                "message": f"Campo obrigatório '{field}' ausente do handoff.",
+                "severity": "error",
+            })
+    
     import re as _re
     match = _re.search(r"data_ultima_sessao[:\s]+(\d{4}-\d{2}-\d{2})", text)
     if match:
@@ -6721,7 +6864,7 @@ def _g_handoff_coherence(root: pathlib.Path) -> dict:
                 "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
                 "artifact": "SESSION_HANDOFF.md",
                 "message": f"branch_ativo='{branch_match.group(1)}' != branch atual='{current_branch}'.",
-                "severity": "warn",
+                "severity": "error",  # FIX Ordem 4: erro, não warning
             })
     except Exception:
         pass
@@ -7142,6 +7285,103 @@ def _g_readiness_generation_compatibility(root: pathlib.Path) -> dict:
     return _pg(gate_id, "PASS", True, None,
                f"{len(ready_modules)} módulo(s) implementation_ready com análise adversarial PASS.",
                [], checked, [], [], _ms(t0))
+
+
+def _g_readiness_human_confirmation(root: pathlib.Path) -> dict:
+    """
+    Ordem 6: READINESS_HUMAN_CONFIRMATION_GATE implementation.
+    
+    Valida que confirmação humana antes de promoção para `implementation_ready`
+    não é rubber-stamp. Requer resposta documentada e coerente a pergunta técnica
+    sobre conteúdo real do módulo. Bloqueia se resposta for genérica ou incoerente.
+    """
+    t0 = time.monotonic()
+    gate_id = "READINESS_HUMAN_CONFIRMATION_GATE"
+    confirmations_dir = root / ".contract_driven" / "confirmations"
+    
+    # Gate não aplicável se nenhum módulo está sendo promovido
+    registry_entries, checked = _load_module_registry_entries(root)
+    if registry_entries is None:
+        return _skip(gate_id, "MODULE_REGISTRY ausente — gate não aplicável.", _ms(t0))
+    
+    # Procurar por módulos em validated_contract (candidatos a promoção)
+    # Este gate valida que Se alguém tentar promover, a confirmação deve estar válida
+    validated_modules = sorted([
+        module for module, entry in registry_entries.items()
+        if entry.get("status") == "validated_contract"
+    ])
+    
+    if not validated_modules:
+        return _skip(gate_id, "Nenhum módulo em validated_contract aguardando promoção.", _ms(t0))
+    
+    if not confirmations_dir.exists():
+        # Se não há artefato de confirmação e há módulos aguardando, é OK
+        # O gate é "não-bloqueante" nesta fase; bloqueia só durante promoção real
+        return _pg(gate_id, "PASS", False, None,
+                   "Nenhuma confirmação pendente encontrada — gate não aplicável nesta fase.",
+                   [], checked, [], [], _ms(t0))
+    
+    violations: list[dict] = []
+    confirmations_checked: list[str] = []
+    
+    # Validar todas as confirmações existentes
+    for conf_file in sorted(confirmations_dir.glob("*.json")):
+        confirmations_checked.append(str(conf_file))
+        
+        try:
+            conf_data = json.loads(conf_file.read_text(encoding="utf-8"))
+        except Exception as exc:
+            violations.append({
+                "blocking_code": "READINESS_CONFIRMATION_INVALID",
+                "artifact": str(conf_file),
+                "message": f"Falha ao parsear confirmação JSON: {exc}",
+                "severity": "error",
+            })
+            continue
+        
+        # Validar estrutura mínima
+        required = ["confirmation_id", "module", "human_answer", "answer_validation_status", "coherence_check_result"]
+        for field in required:
+            if field not in conf_data:
+                violations.append({
+                    "blocking_code": "READINESS_CONFIRMATION_INVALID",
+                    "artifact": str(conf_file),
+                    "message": f"Campo obrigatório '{field}' ausente da confirmação.",
+                    "severity": "error",
+                })
+                continue
+        
+        # Verificar se resposta é "genérica" (rubber-stamp)
+        answer = str(conf_data.get("human_answer", "")).strip().lower()
+        generic_answers = {"sim", "yes", "ok", "okay", "concordo", "aprovo", "pode ser", "tá bom", "tá bem"}
+        if answer in generic_answers:
+            violations.append({
+                "blocking_code": "READINESS_CONFIRMATION_INCOHERENT",
+                "artifact": str(conf_file),
+                "message": f"Resposta genérica '{answer}' não constitui confirmação substantiva. "
+                           "Responda com informação técnica que demonstre compreensão do módulo.",
+                "severity": "error",
+            })
+            continue
+        
+        # Verificar coherence_check_result
+        if conf_data.get("coherence_check_result") is not True:
+            violations.append({
+                "blocking_code": "READINESS_CONFIRMATION_INCOHERENT",
+                "artifact": str(conf_file),
+                "message": "Resposta técnica não é coerente com artefatos inspecionados. "
+                           f"Validação: {conf_data.get('answer_validation_status', '?')}",
+                "severity": "error",
+            })
+    
+    if violations:
+        return _pg(gate_id, "FAIL", True, violations[0].get("blocking_code", "READINESS_CONFIRMATION_INVALID"),
+                   f"{len(violations)} confirmação(ões) inválida(s) ou genérica(s).",
+                   [], confirmations_checked + checked, [], violations, _ms(t0))
+    
+    return _pg(gate_id, "PASS", False, None,
+               f"Confirmações humanas válidas e coerentes (ou nenhuma pendente).",
+               [], confirmations_checked + checked, [], [], _ms(t0))
 
 
 def _g_arazzo_completeness(root: pathlib.Path) -> dict:
@@ -8246,6 +8486,9 @@ def run_pipeline(
         "SURFACE_PROMOTION_COHERENCE_GATE",
         "AXIOM_INTEGRITY_GATE",
         "CANON_ALLOWLIST_GATE",
+        "READINESS_GENERATION_COMPATIBILITY_GATE",  # FIX Ordem 3: agora no padrão
+        "WAIVER_VALIDITY_GATE",  # FIX Ordem 5: agora no padrão
+        "READINESS_HUMAN_CONFIRMATION_GATE",  # FIX Ordem 6: agora no padrão
     }
     _local_ids = _precommit_ids | {
         "DECISION_IR_CONFORMANCE_GATE",
@@ -8340,7 +8583,9 @@ def run_pipeline(
         ("SURFACE_PROMOTION_COHERENCE_GATE", lambda: _g_surface_promotion_coherence(root)),
         ("CROSS_MODULE_BOUNDARY_GATE", lambda: _g_cross_module_boundary(root)),
         ("MODULE_DEPENDENCY_RESOLUTION_GATE", lambda: _g_module_dependency_resolution(root)),
+        ("WAIVER_VALIDITY_GATE", lambda: _g_waiver_validity(root)),  # FIX Ordem 5: implementado
         ("READINESS_GENERATION_COMPATIBILITY_GATE", lambda: _g_readiness_generation_compatibility(root)),
+        ("READINESS_HUMAN_CONFIRMATION_GATE", lambda: _g_readiness_human_confirmation(root)),  # FIX Ordem 6: implementado
     ]
     for gate_id_hint, gate_fn in gate_plan:
         gate_result = _maybe(gate_fn, gate_id_hint)

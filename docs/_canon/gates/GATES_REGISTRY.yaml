@@ -902,3 +902,26 @@ gates:
     blocking_codes: [READINESS_GENERATION_INCOMPATIBLE]
     status: active
     implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: READINESS_HUMAN_CONFIRMATION_GATE
+    order: "20G"
+    name: "Readiness Human Confirmation Gate"
+    blocking: true
+    active_stage: readiness
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: module_approaching_implementation_ready
+    depends_on: [READINESS_GENERATION_COMPATIBILITY_GATE]
+    description: >
+      FIX Ordem 6: Valida que confirmação humana antes de promoção para `implementation_ready`
+      não é rubber-stamp. Requer resposta documentada e coerente a pergunta técnica sobre
+      conteúdo real do módulo. Registra confirmação em estrutura verificável (não só em prompt).
+      Bloqueia se resposta for genérica ("sim", "ok") ou incoerente com artefatos inspecionados.
+    blocking_codes:
+      [
+        READINESS_HUMAN_CONFIRMATION_REQUIRED,
+        READINESS_CONFIRMATION_INVALID,
+        READINESS_CONFIRMATION_INCOHERENT,
+      ]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py

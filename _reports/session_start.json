@@ -1,14 +1,14 @@
 {
   "session_id": "4d672789-d33f-42d6-be4e-41e30e822ba0",
-  "session_timestamp": "2026-03-19T16:17:47.438703+00:00",
+  "session_timestamp": "2026-03-19T17:14:26.201411+00:00",
   "branch": "hb-track-contratos-driven",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "contract_execution",
-  "task_type": "pre_contract_boot",
-  "module": "training",
+  "task_type": "new_contract",
+  "module": "users",
   "stage": 2,
   "write_scope": "contracts",
-  "worker_id": "pre_contract_orchestrator",
+  "worker_id": "create_openapi_contract",
   "git_user": "HB Track Agent",
   "git_email": "davis@hbtrack.local",
   "stage0_exit_code": 0,
@@ -1191,9 +1191,15 @@
       "sha256": "3967e37685fd365ed1387e9dc284568aabf7d1cd2c45e6608a9f95b863120811",
       "created_at": "2026-03-19T16:21:25.530647+00:00",
       "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/schemas/shared/readiness_confirmation.schema.json",
+      "sha256": "913df84125b1df3b271e7d40c819ae3fed10f4280d6bc1e11671f32026cd5a9c",
+      "created_at": "2026-03-19T17:52:50.869378+00:00",
+      "gate_exit_code": 0
     }
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-03-19T16:15:59.460073+00:00"
+  "hook_validated_at": "2026-03-19T16:44:06.399713+00:00"
 }

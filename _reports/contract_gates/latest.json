@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-03-19T16:22:41Z",
+  "timestamp_utc": "2026-03-19T17:52:51Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "222881f",
+    "git_commit": "129f721",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -24,8 +24,8 @@
   },
   "overall_status": "PASS",
   "status_detail": {
-    "active_gates_passed": 14,
-    "skip_count": 34,
+    "active_gates_passed": 8,
+    "skip_count": 42,
     "critical_gates": [
       {
         "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -53,7 +53,7 @@
       },
       {
         "gate_id": "MODULE_REGISTRY_GATE",
-        "status": "PASS"
+        "status": "SKIP_NOT_APPLICABLE"
       },
       {
         "gate_id": "BOUNDARY_USERS_IDENTITY_ACCESS_GATE",
@@ -85,11 +85,11 @@
       },
       {
         "gate_id": "DECISION_IR_CONFORMANCE_GATE",
-        "status": "PASS"
+        "status": "SKIP_NOT_APPLICABLE"
       },
       {
         "gate_id": "CANON_ALLOWLIST_GATE",
-        "status": "PASS"
+        "status": "SKIP_NOT_APPLICABLE"
       },
       {
         "gate_id": "PLACEHOLDER_RESIDUE_GATE",
@@ -105,7 +105,7 @@
       },
       {
         "gate_id": "OPENAPI_ROOT_STRUCTURE_GATE",
-        "status": "SKIP_NOT_APPLICABLE"
+        "status": "PASS"
       },
       {
         "gate_id": "OPENAPI_ROOT_MODULE_SYNC_GATE",
@@ -117,7 +117,7 @@
       },
       {
         "gate_id": "JSON_SCHEMA_VALIDATION_GATE",
-        "status": "SKIP_NOT_APPLICABLE"
+        "status": "PASS"
       },
       {
         "gate_id": "CROSS_SPEC_ALIGNMENT_GATE",
@@ -153,22 +153,26 @@
       },
       {
         "gate_id": "DERIVED_DRIFT_GATE",
-        "status": "PASS"
+        "status": "SKIP_NOT_APPLICABLE"
       },
       {
         "gate_id": "MODULE_STATUS_COHERENCE_GATE",
-        "status": "PASS"
-      },
-      {
-        "gate_id": "SURFACE_PROMOTION_COHERENCE_GATE",
-        "status": "PASS"
+        "status": "SKIP_NOT_APPLICABLE"
       },
       {
         "gate_id": "MODULE_DEPENDENCY_RESOLUTION_GATE",
         "status": "SKIP_NOT_APPLICABLE"
       },
       {
+        "gate_id": "WAIVER_VALIDITY_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
         "gate_id": "READINESS_GENERATION_COMPATIBILITY_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "READINESS_HUMAN_CONFIRMATION_GATE",
         "status": "SKIP_NOT_APPLICABLE"
       }
     ]
@@ -195,7 +199,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 80
+        "duration_ms": 52
       }
     },
     {
@@ -220,7 +224,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1634
+        "duration_ms": 488
       }
     },
     {
@@ -229,7 +233,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -247,7 +251,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -265,7 +269,7 @@
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -283,7 +287,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -301,7 +305,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -315,23 +319,20 @@
     },
     {
       "gate_id": "MODULE_REGISTRY_GATE",
-      "status": "PASS",
+      "status": "SKIP_NOT_APPLICABLE",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "MODULE_REGISTRY presente e válido contra schema.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
-      "artifacts_checked": [
-        "/home/davis/HB-TRACK/docs/_canon/MODULE_REGISTRY.yaml",
-        "/home/davis/HB-TRACK/contracts/schemas/shared/module_registry.schema.json"
-      ],
+      "artifacts_checked": [],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 14
+        "duration_ms": 0
       }
     },
     {
@@ -340,7 +341,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -358,7 +359,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -376,7 +377,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -394,7 +395,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -412,7 +413,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -430,7 +431,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -448,7 +449,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -462,116 +463,38 @@
     },
     {
       "gate_id": "DECISION_IR_CONFORMANCE_GATE",
-      "status": "PASS",
+      "status": "SKIP_NOT_APPLICABLE",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "MODULE_DECISION_IR válido para o(s) módulo(s) implementation_ready.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
-      "artifacts_checked": [
-        "/home/davis/HB-TRACK/docs/_canon/MODULE_REGISTRY.yaml",
-        "/home/davis/HB-TRACK/contracts/schemas/shared/module_registry.schema.json",
-        "/home/davis/HB-TRACK/.dev/MODULE_DECISION_IR.json",
-        "/home/davis/HB-TRACK/.dev/decisões/MODULE_DECISION_IR_SCHEMA.json"
-      ],
+      "artifacts_checked": [],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 14
+        "duration_ms": 0
       }
     },
     {
       "gate_id": "CANON_ALLOWLIST_GATE",
-      "status": "PASS",
+      "status": "SKIP_NOT_APPLICABLE",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "docs/_canon/ contém apenas artefatos autorizados.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
-      "artifacts_checked": [
-        "/home/davis/HB-TRACK/docs/_canon",
-        "docs/_canon/AGENT_INSTRUCTIONS.md",
-        "docs/_canon/ARCHITECTURE.md",
-        "docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md",
-        "docs/_canon/C4_CONTAINERS.md",
-        "docs/_canon/C4_CONTEXT.md",
-        "docs/_canon/CHANGE_POLICY.md",
-        "docs/_canon/CI_CONTRACT_GATES.md",
-        "docs/_canon/CODE_ARCHITECTURE.md",
-        "docs/_canon/CONTRACT_PIPELINE.md",
-        "docs/_canon/DATA_CONVENTIONS.md",
-        "docs/_canon/DATA_MIGRATION_POLICY.md",
-        "docs/_canon/DECISION_POLICY.md",
-        "docs/_canon/DEPLOY_PIPELINE.md",
-        "docs/_canon/DOMAIN_GLOSSARY.md",
-        "docs/_canon/FEATURE_REGISTRY.yaml",
-        "docs/_canon/FRONTEND_CONTRACT.md",
-        "docs/_canon/GLOBAL_INVARIANTS.md",
-        "docs/_canon/HANDBALL_RULES_DOMAIN.md",
-        "docs/_canon/IR_TO_SURFACE_MAPPING.yaml",
-        "docs/_canon/MODULE_MAP.md",
-        "docs/_canon/MODULE_REGISTRY.yaml",
-        "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
-        "docs/_canon/OPERATIONS.md",
-        "docs/_canon/README.md",
-        "docs/_canon/RUNTIME_CONTRACT_MONITORING_POLICY.md",
-        "docs/_canon/SCOPE_BOUNDARY_POLICY.md",
-        "docs/_canon/SECURITY_RULES.md",
-        "docs/_canon/SYSTEM_SCOPE.md",
-        "docs/_canon/TEST_STRATEGY.md",
-        "docs/_canon/TOOLCHAIN_HEALTH_POLICY.md",
-        "docs/_canon/UI_CONTRACT_GUIDE.md",
-        "docs/_canon/decisions",
-        "docs/_canon/gates",
-        "docs/_canon/security",
-        "docs/_canon/templates",
-        "docs/_canon/gates/GATES_REGISTRY.yaml",
-        "docs/_canon/gates/README.md",
-        "docs/_canon/security/OWASP_API_CONTROL_MATRIX.yaml",
-        "docs/_canon/templates/SESSION_HANDOFF.template.md",
-        "docs/_canon/decisions/ADR-001-contract-driven-development.md",
-        "docs/_canon/decisions/ADR-002-uuid-v4-identifiers.md",
-        "docs/_canon/decisions/ADR-003-media-type-versioning.md",
-        "docs/_canon/decisions/ADR-004-api-policy-compiler-authority.md",
-        "docs/_canon/decisions/ADR-005-sports-science-rules-module.md",
-        "docs/_canon/decisions/ADR-006-Inserção-Decision-Support-System.md",
-        "docs/_canon/decisions/ADR-007-auth-strategy.md",
-        "docs/_canon/decisions/ADR-008-authz-strategy.md",
-        "docs/_canon/decisions/ADR-009-datetime-timezone-standard.md",
-        "docs/_canon/decisions/ADR-010-sensitive-data-policy.md",
-        "docs/_canon/decisions/ADR-011-retention-policy.md",
-        "docs/_canon/decisions/ADR-012-secrets-policy.md",
-        "docs/_canon/decisions/ADR-013-logging-policy.md",
-        "docs/_canon/decisions/ADR-014-deprecation-policy.md",
-        "docs/_canon/decisions/ADR-015-agent-execution-log.md",
-        "docs/_canon/decisions/ADR-016-mcp-surface.md",
-        "docs/_canon/decisions/ADR-017-training-session-state-machine.md",
-        "docs/_canon/decisions/ADR-018-hybrid-persistence-pattern.md",
-        "docs/_canon/decisions/ADR-019-layer-separation-domain-dto-viewmodel.md",
-        "docs/_canon/decisions/ADR-021-media-delivery-boundary.md",
-        "docs/_canon/decisions/ADR-024-contract-versioning-strategy.md",
-        "docs/_canon/decisions/ADR-025-cdct-pact-strategy.md",
-        "docs/_canon/decisions/ADR-026-code-architecture.md",
-        "docs/_canon/decisions/ADR-027-deploy-pipeline.md",
-        "docs/_canon/decisions/ADR-028-data-migration-strategy.md",
-        "docs/_canon/decisions/ADR-029-runtime-monitoring.md",
-        "docs/_canon/decisions/ADR-030-frontend-strategy.md",
-        "docs/_canon/decisions/ADR-031-backend-framework.md",
-        "docs/_canon/decisions/ADR-031-scope-boundary-validation.md",
-        "docs/_canon/decisions/ADR-032-training-arch-decisions.md",
-        "docs/_canon/decisions/ADR-033-video-module-canonicalization.md",
-        "docs/_canon/decisions/README.md"
-      ],
+      "artifacts_checked": [],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 0
       }
     },
     {
@@ -580,7 +503,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Nenhum token placeholder em 343 arquivo(s) verificado(s).",
+      "summary": "Nenhum token placeholder em 344 arquivo(s) verificado(s).",
       "inputs": [],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/contracts/_waivers/CONTRACT_BREAKING_CHANGE_GATE/README.md",
@@ -878,6 +801,7 @@
         "/home/davis/HB-TRACK/contracts/schemas/shared/module_registry.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/module_source_authority_matrix.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/owasp_api_control_matrix.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/readiness_confirmation.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_start.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/shared/waiver.schema.json",
@@ -933,7 +857,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 43
+        "duration_ms": 27
       }
     },
     {
@@ -942,7 +866,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -960,7 +884,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -974,20 +898,24 @@
     },
     {
       "gate_id": "OPENAPI_ROOT_STRUCTURE_GATE",
-      "status": "SKIP_NOT_APPLICABLE",
+      "status": "PASS",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
-      "inputs": [],
-      "artifacts_checked": [],
+      "summary": "redocly lint: nenhum erro.",
+      "inputs": [
+        "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml"
+      ],
+      "artifacts_checked": [
+        "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml"
+      ],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 1968
       }
     },
     {
@@ -996,7 +924,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1014,7 +942,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1028,20 +956,65 @@
     },
     {
       "gate_id": "JSON_SCHEMA_VALIDATION_GATE",
-      "status": "SKIP_NOT_APPLICABLE",
+      "status": "PASS",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "JSON Schema: 44 arquivo(s) válido(s), 0 aviso(s).",
       "inputs": [],
-      "artifacts_checked": [],
+      "artifacts_checked": [
+        "/home/davis/HB-TRACK/contracts/schemas/ai_ingestion/ingestion_job.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/analytics/analytics_snapshot.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/audit/audit_entry.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/competitions/competition.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/exercises/exercise.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/exercises/exercise_acl.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/exercises/exercise_relation.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/exercises/exercise_version.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/identity_access/auth_session.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/matches/match.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/medical/medical_record.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/notifications/notification_delivery.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/reports/report_job.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/scout/scout_event.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/seasons/season.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/domain_axioms.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/domain_axioms_module.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/module_registry.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/module_source_authority_matrix.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/owasp_api_control_matrix.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/readiness_confirmation.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/session_start.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/waiver.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/teams/team.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/athlete_chat_conversation.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/athlete_chat_message.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/athlete_ineligibility_declaration.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/attention_queue_item.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/execution_record.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/feedback_thread.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/load_chart.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/recommendation.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/session_block.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/session_objective.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/training_session.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/training_suggestion.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/training/training_suggestion_approval.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/users/user_profile.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/video/clip_definition.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/video/distribution_profile.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/video/match_media_session.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/video/media_segment.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/wellness/wellness_entry.schema.json"
+      ],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 3
       }
     },
     {
@@ -1050,7 +1023,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1068,7 +1041,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1086,7 +1059,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1104,7 +1077,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1122,7 +1095,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1140,7 +1113,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1158,7 +1131,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1187,83 +1160,61 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 4
       }
     },
     {
       "gate_id": "DERIVED_DRIFT_GATE",
-      "status": "PASS",
+      "status": "SKIP_NOT_APPLICABLE",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "generated/ alinhado ao compiler determinístico (sem drift).",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
-      "artifacts_checked": [
-        "/home/davis/HB-TRACK/generated"
-      ],
+      "artifacts_checked": [],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2791
+        "duration_ms": 0
       }
     },
     {
       "gate_id": "ADVERSARIAL_ANALYSIS_GATE",
-      "status": "PASS",
+      "status": "SKIP_NOT_APPLICABLE",
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Análise adversarial: 17 relatório(s) — todos PASS.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
-      "artifacts_checked": [
-        "/home/davis/HB-TRACK/_reports/adversarial/users/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/identity_access/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/matches/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/exercises/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/training/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/competitions/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/teams/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/video/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/ai_ingestion/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/notifications/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/wellness/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/analytics/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/scout/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/reports/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/audit/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/seasons/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/medical/ALL.adversarial.json"
-      ],
+      "artifacts_checked": [],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 13
+        "duration_ms": 0
       }
     },
     {
       "gate_id": "FEATURE_READINESS_GATE",
-      "status": "PASS",
+      "status": "SKIP_NOT_APPLICABLE",
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "FEATURE_REGISTRY: 10 features — 10 validated",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
-      "artifacts_checked": [
-        "/home/davis/HB-TRACK/docs/_canon/FEATURE_REGISTRY.yaml"
-      ],
+      "artifacts_checked": [],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 5
+        "duration_ms": 0
       }
     },
     {
@@ -1272,7 +1223,7 @@
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1290,7 +1241,7 @@
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1308,7 +1259,7 @@
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1326,7 +1277,7 @@
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1344,7 +1295,7 @@
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1362,7 +1313,7 @@
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1376,77 +1327,11 @@
     },
     {
       "gate_id": "HANDOFF_COHERENCE_GATE",
-      "status": "PASS",
-      "blocking": false,
-      "exit_code": 0,
-      "blocking_code": null,
-      "summary": "SESSION_HANDOFF.md coerente com estado atual.",
-      "inputs": [
-        "/home/davis/HB-TRACK/SESSION_HANDOFF.md"
-      ],
-      "artifacts_checked": [
-        "/home/davis/HB-TRACK/SESSION_HANDOFF.md"
-      ],
-      "evidence_files": [],
-      "violations": [],
-      "metrics": {
-        "errors": 0,
-        "warnings": 0,
-        "violations": 0,
-        "duration_ms": 4
-      }
-    },
-    {
-      "gate_id": "MODULE_STATUS_COHERENCE_GATE",
-      "status": "PASS",
-      "blocking": true,
-      "exit_code": 0,
-      "blocking_code": null,
-      "summary": "Status de todos os módulos coerente com bloqueios adversariais.",
-      "inputs": [
-        "/home/davis/HB-TRACK/docs/_canon/MODULE_REGISTRY.yaml"
-      ],
-      "artifacts_checked": [
-        "/home/davis/HB-TRACK/docs/_canon/MODULE_REGISTRY.yaml"
-      ],
-      "evidence_files": [],
-      "violations": [],
-      "metrics": {
-        "errors": 0,
-        "warnings": 0,
-        "violations": 0,
-        "duration_ms": 11
-      }
-    },
-    {
-      "gate_id": "SURFACE_PROMOTION_COHERENCE_GATE",
-      "status": "PASS",
-      "blocking": true,
-      "exit_code": 0,
-      "blocking_code": null,
-      "summary": "Todos os módulos com status coerente com superfícies declaradas.",
-      "inputs": [
-        "/home/davis/HB-TRACK/docs/_canon/MODULE_REGISTRY.yaml"
-      ],
-      "artifacts_checked": [
-        "/home/davis/HB-TRACK/docs/_canon/MODULE_REGISTRY.yaml"
-      ],
-      "evidence_files": [],
-      "violations": [],
-      "metrics": {
-        "errors": 0,
-        "warnings": 0,
-        "violations": 0,
-        "duration_ms": 6
-      }
-    },
-    {
-      "gate_id": "CROSS_MODULE_BOUNDARY_GATE",
       "status": "SKIP_NOT_APPLICABLE",
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1459,12 +1344,88 @@
       }
     },
     {
+      "gate_id": "MODULE_STATUS_COHERENCE_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no estágio 'artifact'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      }
+    },
+    {
+      "gate_id": "SURFACE_PROMOTION_COHERENCE_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": false,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no estágio 'artifact'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      }
+    },
+    {
+      "gate_id": "CROSS_MODULE_BOUNDARY_GATE",
+      "status": "PASS",
+      "blocking": false,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Fronteiras cross-módulo respeitadas.",
+      "inputs": [
+        "/home/davis/HB-TRACK/docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml"
+      ],
+      "artifacts_checked": [
+        "/home/davis/HB-TRACK/docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml"
+      ],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 26
+      }
+    },
+    {
       "gate_id": "MODULE_DEPENDENCY_RESOLUTION_GATE",
       "status": "SKIP_NOT_APPLICABLE",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      }
+    },
+    {
+      "gate_id": "WAIVER_VALIDITY_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1482,7 +1443,25 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no estágio 'artifact'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      }
+    },
+    {
+      "gate_id": "READINESS_HUMAN_CONFIRMATION_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "Pulado no estágio 'artifact'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1500,7 +1479,7 @@
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pipeline PASS: 13 PASS, 34 SKIP.",
+      "summary": "Pipeline PASS: 7 PASS, 42 SKIP.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],

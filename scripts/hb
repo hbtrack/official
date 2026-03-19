@@ -132,6 +132,76 @@ class HBCLIv2:
         """Carregar lista de módulos canônicos dinamicamente de MODULE_REGISTRY.yaml."""
         modules = self.module_registry.get("modules", {})
         return list(modules.keys())
+
+    def _check_generate_code_eligibility(self, module: str) -> int:
+        """Validação de elegibilidade para generate_code (Ordem 1).
+
+        Regras (em sequência, bloqueante):
+        1. Módulo deve estar em 'implementation_ready' ou 'validated_contract'.
+        2. Deve existir relatório adversarial em _reports/adversarial/<module>/ALL.adversarial.json
+           ou qualquer _reports/adversarial/*<module>*.adversarial.json.
+        3. overall_status do relatório deve ser 'PASS'.
+        Retorna 0 se elegível, 1 caso contrário.
+        """
+        modules = self.module_registry.get("modules", {})
+        mod_data = modules.get(module, {})
+        mod_status = mod_data.get("status", "draft_contract")
+        eligible_statuses = {"implementation_ready", "validated_contract"}
+
+        if mod_status not in eligible_statuses:
+            print(
+                f"❌ BLOCKED_GENERATION_INELIGIBLE: módulo '{module}' está em '{mod_status}'.",
+                file=sys.stderr,
+            )
+            print(
+                f"   Requerido: {sorted(eligible_statuses)}.",
+                file=sys.stderr,
+            )
+            print(
+                "   Siga a sequência: readiness_promotion → adversarial_analysis → generate_code.",
+                file=sys.stderr,
+            )
+            return 1
+
+        # Verificar relatório adversarial
+        adversarial_dir = self.root / "_reports" / "adversarial"
+        report_found = False
+        report_pass = False
+
+        # Path canônico primeiro: _reports/adversarial/<module>/ALL.adversarial.json
+        canonical_path = adversarial_dir / module / "ALL.adversarial.json"
+        candidates = [canonical_path] + sorted(adversarial_dir.glob(f"*{module}*.adversarial.json"))
+        for rpath in candidates:
+            if not rpath.exists():
+                continue
+            try:
+                data = json.loads(rpath.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            report_found = True
+            if data.get("overall_status") == "PASS":
+                report_pass = True
+            break
+
+        if not report_found:
+            print(
+                f"❌ BLOCKED_GENERATION_INELIGIBLE: módulo '{module}' não possui relatório "
+                "de análise adversarial em _reports/adversarial/.",
+                file=sys.stderr,
+            )
+            return 1
+
+        if not report_pass:
+            print(
+                f"❌ BLOCKED_GENERATION_INELIGIBLE: módulo '{module}' tem relatório adversarial "
+                "mas overall_status != PASS. Resolva os achados antes de gerar código.",
+                file=sys.stderr,
+            )
+            return 1
+
+        print(f"✅ Elegibilidade generate_code: módulo='{module}', status='{mod_status}', adversarial=PASS")
+        return 0
+
     
     def _validate_boot_profile_id(self, profile_id: str) -> bool:
         """Validar que boot_profile_id existe em BOOT_PROFILES.yaml."""
@@ -214,6 +284,12 @@ class HBCLIv2:
         if not worker_path.exists():
             print(f"❌ Worker prompt não existe: {worker_path}", file=sys.stderr)
             return 1
+
+        # Validação 4b: elegibilidade de módulo para generate_code (BLOCKED_GENERATION_INELIGIBLE)
+        if task_type == "generate_code":
+            rc = self._check_generate_code_eligibility(module)
+            if rc != 0:
+                return rc
         
         # Validação 5: boot_profile_id é válido?
         profile_id = task_config.get("profile_id", "default")
