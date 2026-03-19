@@ -1,6 +1,6 @@
 {
   "artifact_id": "HBTRACK_MODULE_READINESS_SCORECARD",
-  "generated_at_utc": "2026-03-19T13:20:00Z",
+  "generated_at_utc": "2026-03-19T15:59:07Z",
   "overall_status": "PASS",
   "source_report": "_reports/contract_gates/latest.json",
   "modules": [
@@ -135,7 +135,7 @@
         "ui_contract": "ready",
         "arazzo": "ready",
         "asyncapi": "ready",
-        "decision_ir": "missing"
+        "decision_ir": "drift"
       },
       "evidence": {
         "minimum_docs_present": true,
@@ -537,7 +537,7 @@
     {
       "module": "video",
       "owner": "platform-core",
-      "registry_status": "draft_contract",
+      "registry_status": "validated_contract",
       "expected_surfaces": [
         "module_docs_minimum",
         "openapi_sync",
@@ -548,13 +548,13 @@
         "permissions",
         "decision_ir"
       ],
-      "readiness_pct": 75,
+      "readiness_pct": 88,
       "surface_status": {
         "module_docs_minimum": "ready",
         "openapi_sync": "ready",
         "json_schema": "ready",
         "test_matrix": "ready",
-        "asyncapi": "missing",
+        "asyncapi": "ready",
         "arazzo": "ready",
         "permissions": "ready",
         "decision_ir": "missing"
@@ -564,8 +564,8 @@
         "openapi_root_ref_count": 5,
         "openapi_real_path_count": 5,
         "schema_file_count": 4,
-        "asyncapi_artifact_count": 0,
-        "workflow_count": 3,
+        "asyncapi_artifact_count": 24,
+        "workflow_count": 5,
         "pre_contract_evidence": false,
         "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
       }

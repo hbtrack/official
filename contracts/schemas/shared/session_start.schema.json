@@ -223,7 +223,11 @@
                     "gate_exit_code": {
                         "type": "integer",
                         "description": "Exit code do gate para este artefato: 0=PASS, 1=WARN, 2=FAIL. Obrigatório após 'hb artifact'. Hook bloqueia commit se != 0.",
-                        "enum": [0, 1, 2]
+                        "enum": [
+                            0,
+                            1,
+                            2
+                        ]
                     },
                     "validated_at": {
                         "type": "string",

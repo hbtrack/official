@@ -1,0 +1,261 @@
+version: "1.0.0"
+artifact: "SURFACE_MINIMUM_CONTENT"
+description: >
+  Define critérios mínimos operacionais de completude por tipo de superfície.
+  Usado pelo SURFACE_COMPLETENESS_GATE para rejeitar superfícies presentes-mas-vazias.
+  Critério: presença + não-vazio NÃO é suficiente — cada superfície deve atingir
+  os mínimos abaixo para ser considerada válida no pipeline CDD.
+
+# Regra geral: "presente" = arquivo existe, não-vazio, e ≥ min_bytes de conteúdo substantivo
+# Conteúdo substantivo = exclui headers YAML, comentários, linhas em branco, placeholders TODO
+
+surfaces:
+  # ── Documentação de módulo ────────────────────────────────────────────────
+  readme:
+    filename_pattern: "README.md"
+    min_bytes: 800
+    required_sections:
+      - "## Objetivo"
+      - "## Responsabilidades"
+      - "## Fora do escopo"
+      - "## Artefatos do módulo"
+    example_pattern: |
+      ## Objetivo
+      <módulo> é responsável por <propósito em 1 frase>.
+      ## Responsabilidades
+      - <responsabilidade 1>
+    disqualifying_patterns:
+      - "{{MODULE_PURPOSE}}"
+      - "TODO"
+      - "TBD"
+      - "a definir"
+      - "Ver documentação"
+    notes: "README sem 'Objetivo' substantivo (> 1 frase) reprovado."
+
+  module_scope:
+    filename_pattern: "MODULE_SCOPE_*.md"
+    min_bytes: 500
+    required_sections:
+      - "## Escopo"
+      - "## Limites"
+    example_pattern: |
+      ## Escopo
+      <módulo> cobre: <domínio funcional>.
+      ## Limites
+      <módulo> NÃO é responsável por: <exclusões>.
+    disqualifying_patterns:
+      - "{{MODULE_NAME}}"
+      - "TODO"
+    notes: "Scope sem limites explícitos reprovado."
+
+  domain_rules:
+    filename_pattern: "DOMAIN_RULES_*.md"
+    min_bytes: 600
+    required_sections:
+      - "## Regras de domínio"
+    required_field_count: 3
+    example_pattern: |
+      ## Regras de domínio
+      DR-001: <regra 1>
+      DR-002: <regra 2>
+    disqualifying_patterns:
+      - "TODO"
+      - "Conforme documentação"
+      - "Ver regras de"
+    notes: "Mínimo 3 regras de domínio (DR-XXX) enumeradas."
+
+  invariants:
+    filename_pattern: "INVARIANTS_*.md"
+    min_bytes: 400
+    required_sections:
+      - "## Invariantes"
+    required_field_count: 2
+    example_pattern: |
+      ## Invariantes
+      INV-001: <condição sempre verdadeira>
+    disqualifying_patterns:
+      - "TODO"
+    notes: "Mínimo 2 invariantes (INV-XXX) enumerados."
+
+  test_matrix:
+    filename_pattern: "TEST_MATRIX_*.md"
+    min_bytes: 500
+    required_sections:
+      - "## Cenários de teste"
+    required_field_count: 3
+    example_pattern: |
+      ## Cenários de teste
+      TC-001: dado X, quando Y, então Z
+    disqualifying_patterns:
+      - "TODO"
+      - "a definir"
+    notes: "Mínimo 3 casos de teste (TC-XXX) com estrutura dado/quando/então."
+
+  permissions:
+    filename_pattern: "PERMISSIONS_*.md"
+    min_bytes: 300
+    required_sections:
+      - "## Papéis"
+      - "## Permissões"
+    example_pattern: |
+      ## Papéis
+      - admin: acesso total
+      ## Permissões
+      - POST /resource: admin
+    disqualifying_patterns:
+      - "TODO"
+    notes: "Toda permissão deve mapear papel → endpoint/ação."
+
+  state_model:
+    filename_pattern: "STATE_MODEL_*.md"
+    min_bytes: 400
+    required_sections:
+      - "## Estados"
+      - "## Transições"
+    required_field_count: 2
+    example_pattern: |
+      ## Estados
+      - RASCUNHO, ATIVO, ARQUIVADO
+      ## Transições
+      - RASCUNHO → ATIVO: quando publicado
+    disqualifying_patterns:
+      - "TODO"
+    notes: "Obrigatório apenas quando módulo tem lifecycle. Mínimo 2 estados + 1 transição."
+
+  sport_science_rules:
+    filename_pattern: "SPORT_SCIENCE_RULES_*.md"
+    min_bytes: 600
+    required_sections:
+      - "## Protocolos"
+    required_field_count: 1
+    example_pattern: |
+      ## Protocolos
+      SSR-001: <protocolo/cálculo/threshold com referência científica>
+    disqualifying_patterns:
+      - "TODO"
+      - "Ver literatura"
+    notes: "Obrigatório apenas quando módulo tem cálculos/thresholds técnico-científicos."
+
+  screen_map:
+    filename_pattern: "SCREEN_MAP_*.md"
+    min_bytes: 300
+    required_sections:
+      - "## Telas"
+    required_field_count: 1
+    example_pattern: |
+      ## Telas
+      - TELA_LISTA: lista de <entidades>
+    disqualifying_patterns:
+      - "TODO"
+    notes: "Mínimo 1 tela mapeada com nome + propósito."
+
+  # ── Contratos técnicos ─────────────────────────────────────────────────────
+  openapi:
+    filename_pattern: "*.yaml"
+    path_pattern: "contracts/openapi/"
+    min_bytes: 1000
+    required_fields:
+      - "openapi:"
+      - "info:"
+      - "paths:"
+    required_field_count_paths: 1
+    example_pattern: |
+      openapi: "3.1.0"
+      info:
+        title: <módulo> API
+      paths:
+        /resource:
+          get: ...
+    disqualifying_patterns:
+      - "TODO"
+      - "title: ''"
+    notes: "Mínimo 1 path com 1 operação documentada. Security scheme obrigatório para endpoints REST."
+
+  asyncapi:
+    filename_pattern: "*.yaml"
+    path_pattern: "contracts/asyncapi/"
+    min_bytes: 800
+    required_fields:
+      - "asyncapi:"
+      - "info:"
+      - "channels:"
+    required_field_count_channels: 1
+    disqualifying_patterns:
+      - "TODO"
+    notes: "Mínimo 1 channel com 1 mensagem documentada. Obrigatório para módulos com expected_surfaces: asyncapi."
+
+  arazzo_workflow:
+    filename_pattern: "*.arazzo.yaml"
+    path_pattern: "contracts/arazzo/"
+    min_bytes: 500
+    required_fields:
+      - "arazzo:"
+      - "workflows:"
+    required_field_count_workflows: 1
+    disqualifying_patterns:
+      - "TODO"
+    notes: "Mínimo 1 workflow com steps documentados. Veja ARAZZO_COMPLETENESS_GATE para obrigatoriedade."
+
+  json_schema:
+    filename_pattern: "*.schema.json"
+    path_pattern: "contracts/schemas/"
+    min_bytes: 200
+    required_fields:
+      - '"$schema"'
+      - '"type"'
+      - '"properties"'
+    disqualifying_patterns:
+      - '"TODO"'
+      - '"properties": {}'
+    notes: "Mínimo 2 properties definidas. additionalProperties deve ser explícito (true ou false)."
+
+  ui_contract:
+    filename_pattern: "UI_CONTRACT_*.md"
+    min_bytes: 400
+    required_sections:
+      - "## Componentes"
+      - "## Fluxos"
+    required_field_count: 2
+    disqualifying_patterns:
+      - "TODO"
+      - "Ver Figma"
+    notes: "Mínimo 2 componentes mapeados. Fluxo com estado inicial e final explícitos."
+
+  # ── Artefatos de sessão/rastreamento ──────────────────────────────────────
+  session_handoff:
+    filename_pattern: "SESSION_HANDOFF*.md"
+    path_pattern: "/"
+    min_bytes: 300
+    schema_ref: "contracts/schemas/shared/session_handoff.schema.json"
+    required_sections:
+      - "session_id"
+      - "modules_modified"
+      - "open_blockers"
+      - "next_session_context"
+    disqualifying_patterns:
+      - "TODO"
+      - "a definir"
+    notes: "Validado contra session_handoff.schema.json pelo PRE_CONTRACT_EVIDENCE_GATE."
+
+  waiver:
+    filename_pattern: "*.json"
+    path_pattern: "contracts/_waivers/"
+    min_bytes: 200
+    schema_ref: "contracts/schemas/shared/waiver.schema.json"
+    required_fields:
+      - '"waiver_id"'
+      - '"gate_id"'
+      - '"expires_at_utc"'
+      - '"justification"'
+    disqualifying_patterns:
+      - '"expires_at_utc": null'
+      - '"justification": ""'
+    notes: "expires_at_utc não pode ser null. WAIVER_VALIDITY_GATE rejeita waivers vencidos."
+
+# ── Resumo para implementação de gates ────────────────────────────────────────
+gate_implementation_notes:
+  - "SURFACE_COMPLETENESS_GATE deve verificar: (1) arquivo existe, (2) min_bytes atingido, (3) required_sections presentes, (4) sem disqualifying_patterns"
+  - "Ordem de verificação: existência → tamanho → seções → anti-patterns"
+  - "False positive mitigation: disqualifying_patterns são case-insensitive e verificados como substring"
+  - "Referências legítimas ('Ver RFC 5', 'Conforme IHF Rule 12') NÃO são disqualifying — apenas padrões genéricos sem referência específica"
+  - "Para surfaces condicionais (state_model, sport_science_rules): gate só aplica quando módulo declara surface em expected_surfaces"

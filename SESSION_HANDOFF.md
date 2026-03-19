@@ -68,14 +68,14 @@
 | READINESS_SUMMARY_GATE | ✅ PASS |
 
 ## Próximos Passos
-1. **FASE 4 — Re-validação:** Executar `python3 scripts/hb verify --all` para todos os 16 módulos com os 3 novos gates ativos. Ver plano: `docs/guias/produto/PLANO_MASTER_REMEDIACAO_CONTRATUAL_2026_03_19.md`.
+1. **FASE 5 — Adversarial:** Executar auditoria adversarial bloqueante para todos os 16 módulos (`readiness_promotion` mode full). Ver plano: `docs/guias/produto/PLANO_MASTER_REMEDIACAO_CONTRATUAL_2026_03_19.md`.
 2. **Módulo video — readiness_promotion:** Executar `readiness_promotion` para promover video para `implementation_ready` (requer UI Contract + sign-off)
 3. **Phase 1–7 Implementation:** Iniciar codificação conforme roadmap (14–16 semanas)  
 4. **Backend Generation:** Executar `generate_code` para cada módulo em sequência  
 
-## Remediação Contratual (FASE 3 CONCLUÍDA — 2026-03-19)
+## Remediação Contratual (FASE 4 CONCLUÍDA — 2026-03-19)
 **Plano:** `docs/guias/produto/PLANO_MASTER_REMEDIACAO_CONTRATUAL_2026_03_19.md`
-**Status:** 31/38 ações (~82%)
+**Status:** 35/38 ações (~92%)
 
 | Fase | Status |
 |------|--------|

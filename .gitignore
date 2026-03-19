@@ -14,6 +14,10 @@ __pycache__/
 .pytest_cache/
 .coverage
 
+# Arquivos handoof de sessão - podem conter dados sensíveis e não devem ser versionados
+SESSION_HANDOOF*
+
+
 # Arquivos do Dev - Davi Sermenho
 .dev
 .dev/
@@ -59,6 +63,7 @@ Thumbs.db
 # Agent runtime signals — ephemeral, never version (prevent dirty workspace blocking hb verify)
 _reports/dispatch/
 _reports/agent_execution/
+_reports/runs/
 _reports/ARQUITETO.yaml
 _reports/EXECUTOR.yaml
 _reports/TESTADOR.yaml

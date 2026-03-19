@@ -87,8 +87,8 @@ Verificar se foi executada para este módulo:
 - Checar se existe menção ao módulo em qualquer `SESSION_HANDOFF.md` com `task_type: adversarial_analysis`
 - Ou verificar se `_reports/session_start.json` registrou uma sessão de `adversarial_analysis` para o módulo
 
-Se não executada → **emitir aviso** (não bloquear, mas registrar como risco):
-> "⚠️ Análise adversarial não encontrada para o módulo X. Recomenda-se executar `adversarial_analysis` antes de promover para `implementation_ready`."
+Se não executada → **bloquear com `BLOCKED_ADVERSARIAL_PENDING`** (operação encerrada):
+> "🚫 BLOCKED_ADVERSARIAL_PENDING: Análise adversarial não encontrada para o módulo X. Nenhum módulo pode ser promovido para `implementation_ready` sem que `ADVERSARIAL_ANALYSIS_GATE = PASS`. Execute `adversarial_analysis` para este módulo antes de prosseguir."
 
 ---
 
@@ -124,6 +124,18 @@ Confirma a promoção? (sim / não)
 ---
 
 ## Fase 4 — Execução da Promoção (após confirmação)
+
+### PRE-CHECK — Gate READINESS_GENERATION_COMPATIBILITY_GATE
+
+Antes de efetuar qualquer alteração de arquivo, verificar que o módulo satisfaz TODOS os bloqueadores de `generate_code`:
+
+| Condição | Como verificar | Ação se falhar |
+| --- | --- | --- |
+| `ADVERSARIAL_ANALYSIS_GATE = PASS` | Conferir `_reports/adversarial/<module>.json` | Bloquear — retornar à Fase 1 de adversarial |
+| Sem decisões `status: open` que referenciem geração de código | Verificar BACKLOG e SESSION_HANDOFF | Bloquear — resolver decisões antes de prosseguir |
+| Sem `BLOCKED_MISSING_ARCH_DECISION` ativo no último `hb verify` | Conferir `_reports/contract_gates/latest.json` | Bloquear — resolver decisão arquitetural |
+
+Se qualquer condição falhar → **bloquear promoção com `READINESS_GENERATION_COMPATIBILITY_GATE = FAIL`**. Não editar nenhum arquivo. Informar o humano sobre o bloqueio e retornar à etapa anterior.
 
 ### A — Atualizar MODULE_REGISTRY.yaml
 

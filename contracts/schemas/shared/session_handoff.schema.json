@@ -1,0 +1,212 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://hbtrack.local/schemas/session_handoff.schema.json",
+    "title": "HB Track — Session Handoff",
+    "description": "Schema obrigatório para SESSION_HANDOFF.md estruturado. Garante rastreabilidade cross-sessão de decisões, módulos modificados e bloqueios abertos. Gate PRE_CONTRACT_EVIDENCE_GATE valida conformidade.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "session_id",
+        "timestamp",
+        "modules_modified",
+        "decisions_made",
+        "open_blockers",
+        "next_session_context"
+    ],
+    "properties": {
+        "session_id": {
+            "type": "string",
+            "minLength": 8,
+            "description": "Identificador único da sessão. Formato recomendado: YYYYMMDD_HHMMSS ou UUID."
+        },
+        "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp ISO8601 de quando o handoff foi gerado (ex: 2026-03-19T14:30:00Z)."
+        },
+        "modules_modified": {
+            "type": "array",
+            "description": "Lista de módulos canônicos modificados nesta sessão.",
+            "items": {
+                "type": "object",
+                "required": [
+                    "module_id",
+                    "change_summary"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                    "module_id": {
+                        "type": "string",
+                        "description": "ID canônico do módulo (ex: training, medical, scout)."
+                    },
+                    "change_summary": {
+                        "type": "string",
+                        "minLength": 5,
+                        "description": "Resumo objetivo da mudança feita no módulo."
+                    },
+                    "artifacts_changed": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Lista de artefatos (paths relativos) modificados."
+                    }
+                }
+            }
+        },
+        "decisions_made": {
+            "type": "array",
+            "description": "Decisões arquiteturais ou de produto tomadas nesta sessão.",
+            "items": {
+                "type": "object",
+                "required": [
+                    "decision_id",
+                    "summary",
+                    "rationale"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                    "decision_id": {
+                        "type": "string",
+                        "description": "Identificador da decisão (ex: ADR-042, D-2026-03-19-001)."
+                    },
+                    "summary": {
+                        "type": "string",
+                        "minLength": 10,
+                        "description": "Resumo da decisão em uma frase."
+                    },
+                    "rationale": {
+                        "type": "string",
+                        "minLength": 10,
+                        "description": "Justificativa objetiva para a decisão."
+                    },
+                    "artifacts_ref": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Artefatos que materializam ou referenciam esta decisão."
+                    }
+                }
+            }
+        },
+        "open_blockers": {
+            "type": "array",
+            "description": "Bloqueios não-resolvidos que devem ser continuados na próxima sessão.",
+            "items": {
+                "type": "object",
+                "required": [
+                    "blocker_id",
+                    "description",
+                    "severity"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                    "blocker_id": {
+                        "type": "string",
+                        "description": "Código do bloqueio (ex: BLOCKED_MISSING_ARCH_DECISION, BLOCKED_ADVERSARIAL_PENDING)."
+                    },
+                    "description": {
+                        "type": "string",
+                        "minLength": 10,
+                        "description": "Descrição do que está bloqueado e por quê."
+                    },
+                    "severity": {
+                        "type": "string",
+                        "enum": [
+                            "CRITICAL",
+                            "HIGH",
+                            "MEDIUM",
+                            "LOW"
+                        ],
+                        "description": "Severidade do bloqueio."
+                    },
+                    "resolution_path": {
+                        "type": "string",
+                        "description": "Passos necessários para resolver o bloqueio."
+                    }
+                }
+            }
+        },
+        "next_session_context": {
+            "type": "object",
+            "description": "Contexto para a próxima sessão — o que deve ser lido, continuado ou decidido.",
+            "additionalProperties": false,
+            "required": [
+                "priority_task",
+                "files_to_read"
+            ],
+            "properties": {
+                "priority_task": {
+                    "type": "string",
+                    "minLength": 10,
+                    "description": "Tarefa prioritária a executar na próxima sessão."
+                },
+                "files_to_read": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Arquivos que o agente DEVE ler antes de qualquer ação na próxima sessão."
+                },
+                "state_summary": {
+                    "type": "string",
+                    "description": "Resumo de uma frase do estado atual do pipeline para o próximo agente."
+                },
+                "warnings": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Alertas importantes para o próximo agente (ex: waivers temporários, drift detectado)."
+                }
+            }
+        }
+    },
+    "examples": [
+        {
+            "session_id": "20260319_143000",
+            "timestamp": "2026-03-19T14:30:00Z",
+            "modules_modified": [
+                {
+                    "module_id": "training",
+                    "change_summary": "Adicionado endpoint POST /sessions com schema de validação",
+                    "artifacts_changed": [
+                        "contracts/openapi/paths/training.yaml",
+                        "contracts/schemas/training/session.schema.json"
+                    ]
+                }
+            ],
+            "decisions_made": [
+                {
+                    "decision_id": "D-2026-03-19-001",
+                    "summary": "Adversarial analysis agora é pré-condição bloqueante para readiness_promotion",
+                    "rationale": "Conforme PLANO_MASTER_REMEDIACAO R-002: módulos não podem ser promovidos sem ADVERSARIAL_ANALYSIS_GATE = PASS",
+                    "artifacts_ref": [
+                        ".contract_driven/readiness_promotion.prompt.md"
+                    ]
+                }
+            ],
+            "open_blockers": [
+                {
+                    "blocker_id": "BLOCKED_MISSING_ARCH_DECISION",
+                    "description": "Decisão de ARAZZO_COMPLETENESS_GATE (obrigatório vs opcional) ainda não documentada",
+                    "severity": "MEDIUM",
+                    "resolution_path": "Executar C-004: documentar decision em GATES_REGISTRY.yaml e README"
+                }
+            ],
+            "next_session_context": {
+                "priority_task": "Implementar FASE 2 do PLANO_MASTER_REMEDIACAO: R-001 (§2A.2) e R-002 (adversarial bloqueante)",
+                "files_to_read": [
+                    "SESSION_HANDOFF.md",
+                    "docs/guias/produto/PLANO_MASTER_REMEDIACAO_CONTRATUAL_2026_03_19.md",
+                    "docs/_canon/CONTRACT_SYSTEM_RULES.md"
+                ],
+                "state_summary": "Fase 1 de remediação 80% completa. T-001 a T-005 implementados. Fase 2 é o próximo passo.",
+                "warnings": [
+                    "Waivers temporários criados em Fase 1 expiram em 2026-12-31 — revisar antes de Fase 7"
+                ]
+            }
+        }
+    ]
+}

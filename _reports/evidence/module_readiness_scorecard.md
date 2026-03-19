@@ -1,6 +1,6 @@
 # MODULE READINESS SCORECARD
 
-- Generated at: `2026-03-19T13:20:00Z`
+- Generated at: `2026-03-19T15:59:07Z`
 - Pipeline status: `PASS`
 
 | Module | Registry | Owner | Ready % | OpenAPI | Schemas | Missing / Drift |
@@ -21,4 +21,4 @@
 | `identity_access` | `implementation_ready` | `platform-core` | 75 | 8/8 | 1 | asyncapi, decision_ir |
 | `audit` | `implementation_ready` | `platform-core` | 88 | 3/3 | 1 | decision_ir |
 | `notifications` | `implementation_ready` | `platform-core` | 83 | 4/4 | 1 | asyncapi |
-| `video` | `draft_contract` | `platform-core` | 75 | 5/5 | 4 | asyncapi, decision_ir |
+| `video` | `validated_contract` | `platform-core` | 88 | 5/5 | 4 | decision_ir |

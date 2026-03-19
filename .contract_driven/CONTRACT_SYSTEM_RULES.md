@@ -53,12 +53,15 @@ Ao introduzir uma melhoria:
 - registrar o fluxo em pipeline / boot / gates;
 - só então ajustar generator, validator, gate, CI ou prompt.
 
-### 2A.2 Prompts não são fonte substantiva
+### 2A.2 Prompts são executores derivados, sujeitos a validação de gates
 
 Prompts operacionais:
-- executam regras já canonizadas;
+- são agentes de execução de regras já canonizadas em artefatos canônicos;
 - não criam obrigação substantiva nova por conta própria;
-- não podem ser a única fonte de uma regra que afeta comportamento do agente.
+- não podem ser a única fonte de uma regra que afeta comportamento do agente;
+- estão sujeitos à validação de gates e NÃO sobrepõem o canon normativo.
+
+**Hierarquia de SSOT de regras:** `CONTRACT_SYSTEM_RULES` > `ADRs` > `GATES_REGISTRY` > contratos de módulo > prompts.
 
 Se um prompt contiver instrução sem respaldo explícito no canon, o agente deve bloquear em vez de assumir a regra como válida.
 
@@ -298,6 +301,8 @@ Ordem de precedência (maior autoridade primeiro):
 
 Conflito no mesmo nível → `BLOCKED_CONTRACT_CONFLICT`.
 Conflito entre níveis → o nível mais alto (menor número) sempre vence.
+
+**Detecção de conflito de precedência:** Ao criar ou atualizar um ADR, verificar se a regra introduzida contradiz uma regra de nível mais alto nesta hierarquia. Se contradição for identificada: emitir `BLOCKED_PRECEDENCE_CONFLICT` imediatamente e não prosseguir com a criação ou modificação do artefato. Precedência não pode ser contornada por instrução de agente ou prompt operacional. Se houver ambiguidade sobre a existência de conflito: elevar para decision discovery antes de prosseguir.
 
 ### 5A. Precedência por superfície (overrides determinísticos)
 Para convenções de design de API HTTP: `api_rules.yaml` é SSOT e sobrepõe orientações em níveis inferiores (ver rank 2a acima).

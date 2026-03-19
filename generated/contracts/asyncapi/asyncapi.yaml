@@ -128,18 +128,23 @@ channels:
     $ref: ./channels/scout_event_created.yaml
   scout.session.completed:
     $ref: ./channels/scout_session_completed.yaml
-  video.capture.started:
-    $ref: ./channels/video/capture_started.yaml
-  video.distribution.failed:
-    $ref: ./channels/video/distribution_failed.yaml
+  # video module — 8 eventos canônicos (ADR-033, Opção C — cobertura completa)
+  video.session.created:
+    $ref: ./channels/video_session_created.yaml
+  video.session.capturing:
+    $ref: ./channels/video_session_capturing.yaml
+  video.segment.finalized:
+    $ref: ./channels/video_segment_finalized.yaml
+  video.session.syncing:
+    $ref: ./channels/video_session_syncing.yaml
+  video.session.transcoding:
+    $ref: ./channels/video_session_transcoding.yaml
+  video.clip.ready:
+    $ref: ./channels/video_clip_ready.yaml
   video.distribution.published:
-    $ref: ./channels/video/distribution_published.yaml
-  video.segment.ready:
-    $ref: ./channels/video/segment_ready.yaml
-  video.sync.adjustment_applied:
-    $ref: ./channels/video/sync_adjustment_applied.yaml
-  video.transcode.completed:
-    $ref: ./channels/video/transcode_completed.yaml
+    $ref: ./channels/video_distribution_published.yaml
+  video.session.published:
+    $ref: ./channels/video_session_published.yaml
 
 components:
   schemas:

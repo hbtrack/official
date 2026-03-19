@@ -141,6 +141,11 @@ paths:
     $ref: ./paths/wellness.yaml#/~1wellness~1athletes~1{athleteUserId}~1entries
   /wellness/athletes/{athleteUserId}/summary:
     $ref: ./paths/wellness.yaml#/~1wellness~1athletes~1{athleteUserId}~1summary
+  # medical module - path items defined in ./paths/medical.yaml
+  /medical/records:
+    $ref: ./paths/medical.yaml#/~1medical~1records
+  /medical/records/{recordId}:
+    $ref: ./paths/medical.yaml#/~1medical~1records~1{recordId}
   # competitions module - path items defined in ./paths/competitions.yaml
   /competitions:
     $ref: ./paths/competitions.yaml#/~1competitions
@@ -155,6 +160,15 @@ paths:
     $ref: ./paths/matches.yaml#/~1matches~1{matchId}
   /matches/{matchId}/lineup/{userId}:
     $ref: ./paths/matches.yaml#/~1matches~1{matchId}~1lineup~1{userId}
+  # scout module - path items defined in ./paths/scout.yaml
+  /scout/events:
+    $ref: ./paths/scout.yaml#/~1scout~1events
+  /scout/events/aggregations:
+    $ref: ./paths/scout.yaml#/~1scout~1events~1aggregations
+  /scout/events/{eventId}:
+    $ref: ./paths/scout.yaml#/~1scout~1events~1{eventId}
+  /scout/sessions/{matchId}/complete:
+    $ref: ./paths/scout.yaml#/~1scout~1sessions~1{matchId}~1complete
   # exercises module - path items defined in ./paths/exercises.yaml
   /exercises:
     $ref: ./paths/exercises.yaml#/~1exercises
@@ -174,6 +188,22 @@ paths:
     $ref: ./paths/exercises.yaml#/~1exercises~1{id}~1acl
   /exercises/{id}/acl/{userId}:
     $ref: ./paths/exercises.yaml#/~1exercises~1{id}~1acl~1{userId}
+  # analytics module - path items defined in ./paths/analytics.yaml
+  /analytics/snapshots:
+    $ref: ./paths/analytics.yaml#/~1analytics~1snapshots
+  /analytics/snapshots/{snapshotId}:
+    $ref: ./paths/analytics.yaml#/~1analytics~1snapshots~1{snapshotId}
+  /analytics/dashboards:
+    $ref: ./paths/analytics.yaml#/~1analytics~1dashboards
+  /analytics/query:
+    $ref: ./paths/analytics.yaml#/~1analytics~1query
+  # reports module - path items defined in ./paths/reports.yaml
+  /reports/jobs:
+    $ref: ./paths/reports.yaml#/~1reports~1jobs
+  /reports/jobs/{jobId}:
+    $ref: ./paths/reports.yaml#/~1reports~1jobs~1{jobId}
+  /reports/jobs/{jobId}/download:
+    $ref: ./paths/reports.yaml#/~1reports~1jobs~1{jobId}~1download
   # ai_ingestion module - path items defined in ./paths/ai_ingestion.yaml
   /ingestion/jobs:
     $ref: ./paths/ai_ingestion.yaml#/~1ingestion~1jobs
@@ -198,6 +228,13 @@ paths:
     $ref: ./paths/identity_access.yaml#/~1auth~1users~1{userId}~1roles
   /auth/users/{userId}/roles/{roleLabel}:
     $ref: ./paths/identity_access.yaml#/~1auth~1users~1{userId}~1roles~1{roleLabel}
+  # audit module - path items defined in ./paths/audit.yaml
+  /audit/entries:
+    $ref: ./paths/audit.yaml#/~1audit~1entries
+  /audit/entries/export:
+    $ref: ./paths/audit.yaml#/~1audit~1entries~1export
+  /audit/entries/{entryId}:
+    $ref: ./paths/audit.yaml#/~1audit~1entries~1{entryId}
   # notifications module - path items defined in ./paths/notifications.yaml
   /notifications/intents:
     $ref: ./paths/notifications.yaml#/~1notifications~1intents

@@ -1,5 +1,5 @@
 # Dashboard de Readiness - HB Track
-> Gerado em 2026-03-19T13:20:00Z | run_id: `20260319T132000_990e80` | health: **100/100** | overall: **PASS**
+> Gerado em 2026-03-19T15:59:07Z | run_id: `20260319T155907_ad71b3` | health: **100/100** | overall: **PASS**
 
 ## Modulos
 
@@ -21,7 +21,7 @@
 | identity_access | `implementation_ready` | module_docs_minimum, openapi_sync, json_schema, test_matrix, permissions, arazzo, asyncapi, decision_ir |
 | audit | `implementation_ready` | module_docs_minimum, openapi_sync, json_schema, test_matrix, asyncapi, arazzo, permissions, decision_ir |
 | notifications | `implementation_ready` | module_docs_minimum, openapi_sync, json_schema, test_matrix, asyncapi, arazzo |
-| video | `draft_contract` | module_docs_minimum, openapi_sync, json_schema, test_matrix, asyncapi, arazzo, permissions, decision_ir |
+| video | `validated_contract` | module_docs_minimum, openapi_sync, json_schema, test_matrix, asyncapi, arazzo, permissions, decision_ir |
 
 ## Gates
 
@@ -57,6 +57,7 @@
 | HTTP_RUNTIME_CONTRACT_GATE | SKIP_NOT_APPLICABLE | sim |
 | ASYNCAPI_VALIDATION_GATE | SKIP_NOT_APPLICABLE | sim |
 | ARAZZO_VALIDATION_GATE | SKIP_NOT_APPLICABLE | sim |
+| ARAZZO_COMPLETENESS_GATE | SKIP_NOT_APPLICABLE | sim |
 | UI_DOC_VALIDATION_GATE | PASS | sim |
 | DERIVED_DRIFT_GATE | SKIP_NOT_APPLICABLE | sim |
 | ADVERSARIAL_ANALYSIS_GATE | SKIP_NOT_APPLICABLE | nao |
@@ -71,4 +72,6 @@
 | MODULE_STATUS_COHERENCE_GATE | SKIP_NOT_APPLICABLE | sim |
 | SURFACE_PROMOTION_COHERENCE_GATE | SKIP_NOT_APPLICABLE | nao |
 | CROSS_MODULE_BOUNDARY_GATE | PASS | nao |
+| MODULE_DEPENDENCY_RESOLUTION_GATE | SKIP_NOT_APPLICABLE | sim |
+| READINESS_GENERATION_COMPATIBILITY_GATE | SKIP_NOT_APPLICABLE | sim |
 | READINESS_SUMMARY_GATE | PASS | nao |
