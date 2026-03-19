@@ -181,8 +181,8 @@ Não refazer auditoria adversarial antes de estabilizar pipeline. Executar audit
 > | **Fase 4 — Re-validação** | 4 (4-001 a 4-004) | **4/4 ✅** | **100%** |
 > | Fase 5 — Adversarial | 2 (5-001 a 5-002) | **2/2 ✅** | **100%** |
 > | Fase 6 — Promoção | 2 (6-001 a 6-002) | **2/2 ✅** | **100%** |
-> | Fase 7 — Fechamento | 3 (7-001 a 7-003) | 0 — bloqueado | 0% |
-> | **TOTAL** | **38 ações** | **35 confirmadas (Fases 0–6)** | **~92% — Fase 7 pendente** |
+> | Fase 7 — Fechamento | 3 (7-001 a 7-003) | **3/3 ✅** | **100%** |
+> | **TOTAL** | **38 ações** | **38/38 confirmadas ✅** | **100% — SISTEMA 100/100** |
 >
 > **Legenda:** `[x]` = implementado (pode ser parcial — ver nota após item); `[ ]` = pendente
 
@@ -520,10 +520,10 @@ Executar análise adversarial bloqueante em todos os 16 módulos; resolver achad
 ## Fase 6 — Promoção Harmonizada
 
 ### Objetivo
-Promover 17 módulos de `validated_contract` para `implementation_ready` com critérios finais unificados; no procés, validar confirmação humana com gate técnico.
+Promover 16 módulos de `validated_contract` para `implementation_ready` com critérios finais unificados; no procés, validar confirmação humana com gate técnico.
 
 ### Gate de entrada
-- [x] Fase 5 **concluída**: 17 módulos com ADVERSARIAL_ANALYSIS_GATE = PASS
+- [x] Fase 5 **concluída**: 16   módulos com ADVERSARIAL_ANALYSIS_GATE = PASS
 - [x] `.contract_driven/readiness_promotion.prompt.md` **Fase 4** atualizado com gate de confirmação (R-008, 6-001)
 - [x] Nenhum BLOCKED_* aberto
 
@@ -535,14 +535,14 @@ Promover 17 módulos de `validated_contract` para `implementation_ready` com cri
   - **Critério de conclusão:** Confirmação só é registrada após; (1) pergunta feita, (2) resposta validada coerente
   - **Implementação:** Gate `READINESS_HUMAN_CONFIRMATION_GATE` adicionado em `.contract_driven/agent_prompts/readiness_promotion.prompt.md` Fase 3 — protocolo anti-rubber-stamp: agênte formula 1 pergunta técnica, aguarda resposta, verifica coerência, só avança com `HUMANO_CONFIRMADO = true` (2026-03-19)
 
-- [x] **6-002** — Executar readiness_promotion para promover 17 módulos
-  - **Artefato alvo:** 17 registros de promoção + estado module registry
+- [x] **6-002** — Executar readiness_promotion para promover 16 módulos
+  - **Artefato alvo:** 16 registros de promoção + estado module registry
   - **Saída esperada:** Cada módulo muda de `validated_contract` para `implementation_ready`; artefatos são registrados
-  - **Critério de conclusão:** 17/17 módulos em `implementation_ready`; estado registrado em MODULE_REGISTRY.yaml e sistema de versioning
+  - **Critério de conclusão:** 16/16 módulos em `implementation_ready`; estado registrado em MODULE_REGISTRY.yaml e sistema de versioning
   - **Implementação:** 15 módulos já promovidos em sessões anteriores (batch readiness_promotion 2026-03-19); `video` promovido nesta sessão: (a) `DECISION_IR_VIDEO.yaml` criado em `.contract_driven/decisions/` com 3 decisões arquiteturais, (b) `MODULE_REGISTRY.yaml` atualizado `validated_contract` → `implementation_ready`, (c) `hb artifact MODULE_REGISTRY.yaml` PASS, (d) pipeline revalidado PASS. Todos os 16 módulos canônicos em `implementation_ready` ✅
 
 ### Gate de saída
-- [x] 17 módulos em `implementation_ready` com relatório de promoção
+- [x] 16 módulos em `implementation_ready` com relatório de promoção
 - [x] Nenhum BLOCKED_COMPATIBILITY falhou na Fase 6
 - [x] Confirmações humanas todas documentadas em SESSION_HANDOFF
 
@@ -560,32 +560,32 @@ Promover 17 módulos de `validated_contract` para `implementation_ready` com cri
 Validar que o sistema atingiu 100/100 em robustez contratual; executar auditoria adversarial final sem regressão; emitir assinatura de conclusão.
 
 ### Gate de entrada
-- [ ] Fase 6 **concluída**: 17 módulos em `implementation_ready`
-- [ ] Nenhum BLOCKED_* aberto
-- [ ] Acesso a scripts de validação final e auditoria
+- [x] Fase 6 **concluída**: 17 módulos em `implementation_ready`
+- [x] Nenhum BLOCKED_* aberto
+- [x] Acesso a scripts de validação final e auditoria
 
 ### Checklist
 
-- [ ] **7-001** — Executar validação final contra 11 eixos
+- [x] **7-001** — Executar validação final contra 11 eixos
   - **Artefato alvo:** `scripts/validation/final_validation.py` + `_reports/FINAL_VALIDATION_2026_03_19.md`
   - **Saída esperada:** Relatório com 11 eixos (robustez, clareza, acionabilidade, etc), cada um marcado como PASS vs FAIL contra critério de 100/100
   - **Critério de conclusão:** Todos os 11 eixos marcados PASS; nada marcado FAIL
 
-- [ ] **7-002** — Executar auditoria adversarial FINAL (read-only)
+- [x] **7-002** — Executar auditoria adversarial FINAL (read-only)
   - **Artefato alvo:** `_reports/FINAL_ADVERSARIAL_2026_03_19.md`
   - **Saída esperada:** Auditoria de leitura (não-bloqueante) apenas para verificar sem regressão
   - **Critério de conclusão:** Comparação com 5-001: nenhum achado novo importante entre 5-001 e 7-002
 
-- [ ] **7-003** — Crear FINAL_HANDOFF.md
+- [x] **7-003** — Crear FINAL_HANDOFF.md
   - **Artefato alvo:** `FINAL_HANDOFF.md` (raiz)
   - **Saída esperada:** Documento assinado com data/hora, verificação de 11 eixos, próximos passos
   - **Critério de conclusão:** Arquivo criado, assinado (timestamp + hash SHA de artefatos), commitado
 
 ### Gate de saída
-- [ ] FINAL_VALIDATION_2026_03_19.md: 11/11 eixos PASS
-- [ ] FINAL_ADVERSARIAL_2026_03_19.md: sem regressão detectada
-- [ ] FINAL_HANDOFF.md: criado e assinado
-- [ ] Todos os artefatos commitados em git com mensagem clara
+- [x] FINAL_VALIDATION_2026_03_19.md: 11/11 eixos PASS
+- [x] FINAL_ADVERSARIAL_2026_03_19.md: sem regressão detectada
+- [x] FINAL_HANDOFF.md: criado e assinado
+- [x] Todos os artefatos commitados em git com mensagem clara
 
 ### Riscos da fase
 - **Risco:** Validação final descobre falha que não foi pega em Fase 4-6
@@ -638,6 +638,14 @@ Substitua a Evidência de conclusão por um link para o commit específico que i
 | **D.2** | Para cada módulo em D.1 que falha gates OWASP, ASYNCAPI, OPENAPI_STRUCTURE: abrir contrato OpenAPI, identificar campo problemático (ex: endpoint sem autenticação, tipo AsyncAPI inválido), corrigir | `contracts/openapi/{module}.yaml` | D.1 | Contratos modificados | Próxima validação com esses gates retorna fewer failures | Contratos revisados e validados |
 | **D.3** | Comparar `contracts/openapi/openapi.yaml` (source) contra `generated/contracts/openapi/openapi.yaml`: se divergência (analytics, medical, reports, scout, video em source, não em generated), investigar: intencional? derive? bug? Documentar decisão | `contracts/openapi/` + `generated/contracts/openapi/` | C.1 (DERIVED_DRIFT) | Divergência explicitada | Cada módulo ausente tem justificativa documentada em README ou ticked ação | Divergências documentadas e justificadas |
 | **D.4** | Executar `hb check` em modo full para validar lint + JSON schema para 16 módulos; salvar em relatório | `_reports/FINAL_LINT_2026_03_19.log` | D.1, D.2, D.3 | Relatório de lint; 16/16 syntactically valid | Log mostra 0 lint errors | Relatório gerado e validado |
+
+# E. Atualizar o `docs/guias/produto/PIPELINE.md` 
+
+Atualize o arquivo, para refletir mudanças no processo, especialmente a introdução de gates técnicos e critérios de promoção.
+
+- Artefato alvo: `docs/guias/produto/PIPELINE.md`
+- O arquvo deve refletir o novo pipeline corrigido, incluindo as fases, gates, e critérios de promoção. Deve ser claro para um leitor que o processo agora inclui validação técnica rigorosa, gates bloqueantes, e critérios de promoção unificados.
+- Criterio de aceite: O arquivo atualizado é claro, preciso, e alinhado com as mudanças implementadas. 
 
 ---
 
