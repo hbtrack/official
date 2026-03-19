@@ -1,12 +1,15 @@
 type: object
-title: Exercise Preview
-description: Preview of exercise
+title: Team
+description: Handball team
 properties:
-  exerciseId:
+  teamId:
     type: string
+    format: uuid
   name:
     type: string
+  city:
+    type: string
 required:
-- exerciseId
+- teamId
 - name
 additionalProperties: false

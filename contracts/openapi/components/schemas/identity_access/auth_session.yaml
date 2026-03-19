@@ -1,0 +1,15 @@
+type: object
+title: Auth Session
+description: Authentication session
+properties:
+  sessionId:
+    type: string
+  token:
+    type: string
+  expiresAt:
+    type: string
+    format: date-time
+required:
+- sessionId
+- token
+additionalProperties: false

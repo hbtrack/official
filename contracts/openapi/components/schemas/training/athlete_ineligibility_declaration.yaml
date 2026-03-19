@@ -44,7 +44,7 @@ properties:
       One or more reasons for ineligibility. TRAIN-DEC-024.
       OTHER requires reasonOther to be populated.
   reasonOther:
-    type: string
+    type: [string, "null"]
     minLength: 1
     maxLength: 500
     description: >

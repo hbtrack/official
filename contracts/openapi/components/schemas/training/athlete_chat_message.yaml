@@ -1,0 +1,18 @@
+type: object
+title: Athlete Chat Message
+description: Chat message in training context
+properties:
+  messageId:
+    type: string
+  athleteId:
+    type: string
+  text:
+    type: string
+  timestamp:
+    type: string
+    format: date-time
+required:
+- messageId
+- athleteId
+- text
+additionalProperties: false

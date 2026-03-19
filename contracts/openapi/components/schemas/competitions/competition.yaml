@@ -1,15 +1,15 @@
 type: object
-title: Exercise
-description: Training exercise
+title: Competition
+description: A handball competition
 properties:
-  exerciseId:
+  competitionId:
     type: string
     format: uuid
   name:
     type: string
-  category:
+  season:
     type: string
 required:
-- exerciseId
+- competitionId
 - name
 additionalProperties: false

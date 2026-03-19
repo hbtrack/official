@@ -28,7 +28,7 @@ policy:
 
 modules:
   users:
-    status: "validated_contract"
+    status: "implementation_ready"
     owner: "platform-core"
     expected_surfaces:
       [
@@ -42,7 +42,7 @@ modules:
         "decision_ir",
       ]
   seasons:
-    status: "validated_contract"
+    status: "implementation_ready"
     owner: "handball-ops"
     expected_surfaces:
       [
@@ -54,7 +54,7 @@ modules:
         "arazzo",
       ]
   teams:
-    status: "validated_contract"
+    status: "implementation_ready"
     owner: "handball-ops"
     expected_surfaces:
       [
@@ -84,7 +84,7 @@ modules:
         "decision_ir",
       ]
   wellness:
-    status: "validated_contract"
+    status: "implementation_ready"
     owner: "performance-tech"
     expected_surfaces:
       [
@@ -97,7 +97,7 @@ modules:
         "arazzo",
       ]
   medical:
-    status: "validated_contract"
+    status: "implementation_ready"
     owner: "performance-tech"
     expected_surfaces:
       [
@@ -108,7 +108,7 @@ modules:
         "sport_science",
       ]
   competitions:
-    status: "validated_contract"
+    status: "implementation_ready"
     owner: "handball-ops"
     expected_surfaces:
       [
@@ -120,7 +120,7 @@ modules:
         "arazzo",
       ]
   matches:
-    status: "validated_contract"
+    status: "implementation_ready"
     owner: "handball-ops"
     expected_surfaces:
       [
@@ -132,7 +132,7 @@ modules:
         "arazzo",
       ]
   scout:
-    status: "validated_contract"
+    status: "implementation_ready"
     owner: "handball-ops"
     expected_surfaces:
       [
@@ -146,7 +146,7 @@ modules:
         "decision_ir",
       ]
   exercises:
-    status: "validated_contract"
+    status: "implementation_ready"
     owner: "performance-tech"
     expected_surfaces:
       [
@@ -157,17 +157,17 @@ modules:
         "permissions",
       ]
   analytics:
-    status: "validated_contract"
+    status: "implementation_ready"
     owner: "performance-tech"
     expected_surfaces:
       ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix"]
   reports:
-    status: "validated_contract"
+    status: "implementation_ready"
     owner: "performance-tech"
     expected_surfaces:
       ["module_docs_minimum", "openapi_sync", "json_schema", "test_matrix"]
   ai_ingestion:
-    status: "validated_contract"
+    status: "implementation_ready"
     owner: "platform-core"
     expected_surfaces:
       [
@@ -179,7 +179,7 @@ modules:
         "arazzo",
       ]
   identity_access:
-    status: "validated_contract"
+    status: "implementation_ready"
     owner: "platform-core"
     expected_surfaces:
       [
@@ -193,7 +193,7 @@ modules:
         "decision_ir",
       ]
   audit:
-    status: "validated_contract"
+    status: "implementation_ready"
     owner: "platform-core"
     expected_surfaces:
       [
@@ -207,7 +207,7 @@ modules:
         "decision_ir",
       ]
   notifications:
-    status: "validated_contract"
+    status: "implementation_ready"
     owner: "platform-core"
     expected_surfaces:
       [

@@ -1,8 +1,430 @@
 # Path items for module: reports
 # Source of truth: contracts/openapi/openapi.yaml
 # Related docs:
-# - docs/_canon/SYSTEM_SCOPE.md
 # - docs/hbtrack/modulos/reports/MODULE_SCOPE_REPORTS.md
+# - docs/hbtrack/modulos/reports/DOMAIN_RULES_REPORTS.md
+# - docs/hbtrack/modulos/reports/INVARIANTS_REPORTS.md
 #
-# Add path items here following OpenAPI 3.1 Path Item Object spec.
-# Each path must belong exclusively to this module (LAYOUT section 6).
+# IMPORTANTE: reports é módulo de GERAÇÃO ASSÍNCRONA de relatórios (PDF, Excel).
+# DR-RPT-001: reports é soberano de pedido, parâmetros, formato, owner, retenção.
+# DR-RPT-002: conteúdo deriva de métricas já contratadas em módulos soberanos.
+# DR-RPT-005: geração é assíncrona e auditável.
+
+/reports/jobs:
+  get:
+    operationId: listReportJobs
+    summary: List report generation jobs
+    description: >
+      Returns a paginated list of report jobs created by or accessible to the authenticated user.
+      Jobs represent asynchronous report generation requests with status tracking.
+      Filters: reportType, formatLabel, statusLabel, dateFrom, dateTo, ownerUserId (for admins).
+    security:
+      - HTTPBearer: []
+    tags:
+      - reports
+    parameters:
+      - name: reportType
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Filter by report type (e.g., "training-summary", "team-performance").
+      - name: formatLabel
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: [pdf, excel, csv, json]
+        description: Filter by output format.
+      - name: statusLabel
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: [queued, processing, completed, failed]
+        description: Filter by job status.
+      - name: dateFrom
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+        description: Filter by request date from (ISO 8601).
+      - name: dateTo
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+        description: Filter by request date until (ISO 8601).
+      - name: ownerUserId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+          x-semantic-id: identity.user.id.v1
+        description: Filter by owner (only for admin/coordinator users).
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+      - name: pageToken
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Pagination token from previous response.
+    responses:
+      "200":
+        description: Paginated list of report jobs.
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [data, nextPageToken]
+              additionalProperties: false
+              properties:
+                data:
+                  type: array
+                  items:
+                    allOf:
+                      - $ref: "../components/schemas/reports/report_job.yaml"
+                      - type: object
+                        required: [statusLabel, completedAt]
+                        properties:
+                          statusLabel:
+                            type: string
+                            enum: [queued, processing, completed, failed]
+                          errorMessage:
+                            type: string
+
+                          completedAt:
+                            type: string
+                            format: date-time
+
+                nextPageToken:
+                  type: string
+
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "422":
+        description: Invalid query parameters
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+
+  post:
+    operationId: createReportJob
+    summary: Create a new report generation job
+    description: >
+      Creates a new asynchronous report job request.
+      Job will be queued for generation and user can track status via GET /reports/jobs/{jobId}.
+      Parameters must be explicit (DR-RPT-003); implicit UI parameters cannot become silent contracts.
+      Content must derive from metrics already contracted (DR-RPT-002).
+    security:
+      - HTTPBearer: []
+    tags:
+      - reports
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [reportType, formatLabel, parameterSummary]
+            additionalProperties: false
+            properties:
+              reportType:
+                type: string
+                minLength: 1
+                maxLength: 120
+                description: Type of report (e.g., "training-summary", "team-performance", "injury-risk").
+              formatLabel:
+                type: string
+                maxLength: 40
+                enum: [pdf, excel, csv, json]
+                description: Output format for the report.
+              parameterSummary:
+                type: string
+                maxLength: 1000
+                description: Explicit parameter summary (e.g., "season=2026; team=senior-male; minSessions=5").
+              sourceMetricNames:
+                type: array
+                items:
+                  type: string
+                  maxLength: 120
+                uniqueItems: true
+
+                description: Names of analytics metrics to include (optional; otherwise auto-detected from reportType).
+              retentionLabel:
+                type: string
+                maxLength: 60
+
+                default: "90-days"
+                description: How long to keep the generated artifact (e.g., "30-days", "90-days", "permanent").
+    responses:
+      "201":
+        description: Report job created and queued for processing.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas/reports/report_job.yaml"
+                - type: object
+                  required: [statusLabel]
+                  properties:
+                    statusLabel:
+                      type: string
+                      enum: [queued]
+                      description: Job starts in queued state.
+      "400":
+        description: Invalid request (missing required fields, invalid format, or parameters).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden (user cannot create reports for this type/team).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "422":
+        description: Unprocessable entity (validation error).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+
+/reports/jobs/{jobId}:
+  get:
+    operationId: getReportJob
+    summary: Get report job status and metadata
+    description: >
+      Retrieves details of a specific report job, including current status, error messages (if failed),
+      and reference to generated artifact when completed.
+    security:
+      - HTTPBearer: []
+    tags:
+      - reports
+    parameters:
+      - name: jobId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          x-semantic-id: core.resource.id.v1
+    responses:
+      "200":
+        description: Report job details retrieved.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas/reports/report_job.yaml"
+                - type: object
+                  required: [statusLabel, completedAt]
+                  properties:
+                    statusLabel:
+                      type: string
+                      enum: [queued, processing, completed, failed]
+                    errorMessage:
+                      type: string
+
+                      description: Error details if job failed.
+                    completedAt:
+                      type: string
+                      format: date-time
+
+                      description: When job finished (success or failure).
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden (insufficient access to view this job).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Job not found
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+
+  patch:
+    operationId: updateReportJob
+    summary: Update report job (e.g., cancel or change retention)
+    description: >
+      Partially updates a report job.
+      Allows cancelling queued/processing jobs or changing retention policy for completed jobs.
+      Only job owner or admins can update.
+    security:
+      - HTTPBearer: []
+    tags:
+      - reports
+    parameters:
+      - name: jobId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          x-semantic-id: core.resource.id.v1
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              statusLabel:
+                type: string
+                enum: [cancelled]
+                description: Only "cancelled" is allowed for status changes (must be in queued or processing state).
+              retentionLabel:
+                type: string
+                maxLength: 60
+
+                description: Update retention policy (only for completed jobs).
+    responses:
+      "200":
+        description: Report job updated.
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "../components/schemas/reports/report_job.yaml"
+                - type: object
+                  required: [statusLabel, completedAt]
+                  properties:
+                    statusLabel:
+                      type: string
+                      enum: [queued, processing, completed, failed, cancelled]
+                    completedAt:
+                      type: string
+                      format: date-time
+
+      "400":
+        description: Invalid update (e.g., cannot cancel completed job).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden (insufficient update permission).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Job not found
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "422":
+        description: Unprocessable entity (validation error).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+
+/reports/jobs/{jobId}/download:
+  get:
+    operationId: downloadReportArtifact
+    summary: Download generated report artifact
+    description: >
+      Downloads the generated report file (PDF, Excel, CSV, JSON).
+      Only available for completed jobs. Returns binary content with appropriate Content-Type header.
+      IMPORTANT: does not transfer storage ownership; generatedArtifactRef is adapter to external storage (DR-RPT-004).
+    security:
+      - HTTPBearer: []
+    tags:
+      - reports
+    parameters:
+      - name: jobId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          x-semantic-id: core.resource.id.v1
+    responses:
+      "200":
+        description: Report artifact downloaded successfully.
+        content:
+          application/pdf:
+            schema:
+              type: string
+              format: binary
+          application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+            schema:
+              type: string
+              format: binary
+          text/csv:
+            schema:
+              type: string
+              format: binary
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden (insufficient access to download).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Job not found or artifact not yet generated
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "410":
+        description: Artifact no longer available (retention period expired)
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"

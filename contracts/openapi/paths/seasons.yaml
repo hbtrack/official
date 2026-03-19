@@ -1,8 +1,372 @@
-# Path items for module: seasons
+# ============================================================
+# Module: seasons — OpenAPI path items
 # Source of truth: contracts/openapi/openapi.yaml
-# Related docs:
-# - docs/_canon/SYSTEM_SCOPE.md
-# - docs/hbtrack/modulos/seasons/MODULE_SCOPE_SEASONS.md
-#
-# Add path items here following OpenAPI 3.1 Path Item Object spec.
-# Each path must belong exclusively to this module (LAYOUT section 6).
+# Docs: docs/hbtrack/modulos/seasons/MODULE_SCOPE_SEASONS.md
+# Domain rules: DR-SEAS-001..005
+# Invariants: INV-SEAS-001..004
+# ADR refs: ADR-007 (JWT RS256), ADR-008 (RBAC 5 roles), ADR-031 (Django stack)
+# ============================================================
+
+/seasons:
+  get:
+    tags:
+      - seasons
+    summary: Lista temporadas
+    description: >
+      Retorna lista paginada de temporadas da organização.
+      seasons é soberano do ciclo esportivo, janela de calendário e nomenclatura
+      da temporada (DR-SEAS-001).
+
+      OWASP API4:2023: pageSize máximo 100.
+    operationId: listSeasons
+    security:
+      - bearerAuth: []
+    parameters:
+      - name: statusLabel
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: [draft, active, archived]
+        description: Filtra por status do ciclo de vida da temporada.
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        description: Número da página (base 1).
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        description: Itens por página (máx 100).
+    responses:
+      "200":
+        description: Lista paginada de temporadas.
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [data, page, pageSize, total]
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: "../components/schemas/seasons/season.yaml"
+                page:
+                  type: integer
+                  minimum: 1
+                pageSize:
+                  type: integer
+                  minimum: 1
+                total:
+                  type: integer
+                  minimum: 0
+              additionalProperties: false
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+  post:
+    tags:
+      - seasons
+    summary: Cria temporada
+    description: >
+      Cria uma nova temporada. phaseLabels devem ser explícitos — não podem ser
+      derivados de resultados de partidas ou status de competição (DR-SEAS-002).
+      startDate deve ser <= endDate (INV-SEAS-002).
+    operationId: createSeason
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [name, startDate, endDate]
+            additionalProperties: false
+            properties:
+              name:
+                type: string
+                minLength: 1
+                maxLength: 120
+                description: Nome oficial da temporada (DR-SEAS-001).
+              sportCycleLabel:
+                type: [string, "null"]
+                maxLength: 80
+                description: >
+                  Ciclo competitivo/operacional descritivo (DR-SEAS-004).
+                  Não substitui regras de competição nem semântica médica.
+              startDate:
+                type: string
+                format: date
+                description: Data de início da temporada (INV-SEAS-002).
+              endDate:
+                type: string
+                format: date
+                description: Data de fim; deve ser >= startDate (INV-SEAS-002).
+              phaseLabels:
+                type: array
+                uniqueItems: true
+                items:
+                  type: string
+                  minLength: 1
+                  maxLength: 80
+                default: []
+                description: >
+                  Fases explícitas da temporada (DR-SEAS-002, INV-SEAS-003).
+                  Não pode ser deduzido de resultados ou status de competição.
+    responses:
+      "201":
+        description: Temporada criada com sucesso.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/seasons/season.yaml"
+      "400":
+        description: Dados inválidos (ex. endDate < startDate — INV-SEAS-002).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+/seasons/{seasonId}:
+  parameters:
+    - name: seasonId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        x-semantic-id: seasons.season.id.v1
+      description: UUID da temporada.
+
+  get:
+    tags:
+      - seasons
+    summary: Obter temporada por ID
+    description: Retorna dados completos da temporada incluindo phaseLabels, teamIds e competitionIds (DR-SEAS-003).
+    operationId: getSeason
+    security:
+      - bearerAuth: []
+    responses:
+      "200":
+        description: Dados da temporada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/seasons/season.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "404":
+        description: Temporada não encontrada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+  patch:
+    tags:
+      - seasons
+    summary: Atualizar temporada
+    description: >
+      Atualização parcial dos dados da temporada.
+      phaseLabels NÃO PODEM ser derivados de resultados (DR-SEAS-002).
+      Transição de statusLabel: draft → active → archived.
+    operationId: patchSeason
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            minProperties: 1
+            properties:
+              name:
+                type: string
+                minLength: 1
+                maxLength: 120
+              sportCycleLabel:
+                type: [string, "null"]
+                maxLength: 80
+              startDate:
+                type: string
+                format: date
+              endDate:
+                type: string
+                format: date
+              statusLabel:
+                type: string
+                enum: [draft, active, archived]
+              phaseLabels:
+                type: array
+                uniqueItems: true
+                items:
+                  type: string
+                  minLength: 1
+                  maxLength: 80
+                description: >
+                  Substitui o array completo de fases (DR-SEAS-002, INV-SEAS-003).
+                  Não pode ser inferido de resultados de partidas.
+    responses:
+      "200":
+        description: Temporada atualizada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/seasons/season.yaml"
+      "400":
+        description: Dados inválidos (ex. startDate > endDate — INV-SEAS-002).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "404":
+        description: Temporada não encontrada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+/seasons/{seasonId}/teams/{teamId}:
+  parameters:
+    - name: seasonId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        x-semantic-id: seasons.season.id.v1
+      description: UUID da temporada.
+    - name: teamId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        x-semantic-id: teams.team.id.v1
+      description: UUID da equipe a associar.
+
+  post:
+    tags:
+      - seasons
+    summary: Associar equipe à temporada
+    description: >
+      Registra vínculo explícito entre equipe e temporada (DR-SEAS-003).
+      A associação é canônica — não pode ser deduzida de competições ou partidas.
+      Duplicatas são rejeitadas (INV-SEAS-003).
+    operationId: addTeamToSeason
+    security:
+      - bearerAuth: []
+    responses:
+      "204":
+        description: Equipe associada com sucesso.
+      "400":
+        description: Equipe já associada à temporada (INV-SEAS-003).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "404":
+        description: Temporada ou equipe não encontrada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+  delete:
+    tags:
+      - seasons
+    summary: Remover equipe da temporada
+    description: >
+      Remove vínculo explícito entre equipe e temporada (DR-SEAS-003).
+      teams.teamIds é atualizado canonicamente no módulo seasons.
+    operationId: removeTeamFromSeason
+    security:
+      - bearerAuth: []
+    responses:
+      "204":
+        description: Associação removida com sucesso.
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "404":
+        description: Temporada ou associação não encontrada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"

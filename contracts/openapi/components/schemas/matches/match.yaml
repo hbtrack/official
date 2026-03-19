@@ -1,0 +1,19 @@
+type: object
+title: Match
+description: Handball match
+properties:
+  matchId:
+    type: string
+    format: uuid
+  homeTeam:
+    type: string
+  awayTeam:
+    type: string
+  date:
+    type: string
+    format: date-time
+required:
+- matchId
+- homeTeam
+- awayTeam
+additionalProperties: false

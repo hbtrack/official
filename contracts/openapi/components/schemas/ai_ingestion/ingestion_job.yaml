@@ -1,0 +1,25 @@
+type: object
+title: Ingestion Job
+description: Job for ingestingexternal data
+properties:
+  jobId:
+    type: string
+    format: uuid
+  status:
+    type: string
+    enum:
+    - pending
+    - running
+    - completed
+    - failed
+  createdAt:
+    type: string
+    format: date-time
+  updatedAt:
+    type: string
+    format: date-time
+required:
+- jobId
+- status
+- createdAt
+additionalProperties: false

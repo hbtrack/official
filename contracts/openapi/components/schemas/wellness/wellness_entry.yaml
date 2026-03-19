@@ -1,0 +1,119 @@
+title: WellnessEntry
+description: >
+  Entrada de questionário diário de wellness de um atleta.
+
+  wellness é soberano deste agregado (DR-WELL-001): readiness, fadiga, sono,
+  dor autorreferida, recuperação e questionários diários.
+
+  Boundary (INV-WELL-004):
+  - NÃO CONTÉM: diagnosis, treatment, prescription, procedure, medical_record
+    ou clinical_note — owner: medical (WELLNESS_MEDICAL_BOUNDARY_GATE)
+  - NÃO CONTÉM: presença ou execução de treino — owner: training (INV-WELL-005)
+  - CONTÉM: apenas percepção autorreferida do atleta
+
+  Invariants:
+  - INV-WELL-001: id, athleteUserId, questionnaireDate, readinessScore obrigatórios
+  - INV-WELL-002: readinessScore, fatigueScore, painScore, recoveryScore in [0..10]
+  - INV-WELL-003: sleepHours in [0..24]
+  - INV-WELL-005: trainingSessionId contextualiza coleta, não implica presença
+
+type: object
+required:
+  - id
+  - athleteUserId
+  - questionnaireDate
+  - readinessScore
+  - createdAt
+additionalProperties: false
+properties:
+  id:
+    type: string
+    format: uuid
+    description: >
+      UUID v4 da entrada. Imutável após criação (INV-WELL-001).
+    x-semantic-id: wellness.entry.id.v1
+  athleteUserId:
+    type: string
+    format: uuid
+    description: >
+      UUID do atleta proprietário da entrada. Referência ao módulo users.
+      wellness não duplica dados de perfil (DR-WELL-001).
+    x-semantic-id: identity.user.id.v1
+  trainingSessionId:
+    type:
+      - string
+      - "null"
+    format: uuid
+    description: >
+      UUID da sessão de treino relacionada (DR-WELL-003 / INV-WELL-005).
+      Contexto de coleta apenas — não representa presença, execução ou
+      autorização para treinar.
+    x-semantic-id: training.session.id.v1
+  questionnaireDate:
+    type: string
+    format: date
+    description: >
+      Data do questionário (YYYY-MM-DD). INV-WELL-001: obrigatório.
+  questionnaireLabel:
+    type:
+      - string
+      - "null"
+    maxLength: 80
+    description: >
+      Protocolo de coleta aplicado (DR-WELL-004).
+      Identifica o questionário quando múltiplos coexistirem
+      (ex: "daily-readiness", "post-session", "morning-wellness").
+  readinessScore:
+    type: integer
+    minimum: 0
+    maximum: 10
+    description: >
+      Score de prontidão autorreferida [0..10] (INV-WELL-001 obrigatório;
+      INV-WELL-002 range). Percepção do atleta — não avaliação clínica (DR-WELL-002).
+  fatigueScore:
+    type:
+      - integer
+      - "null"
+    minimum: 0
+    maximum: 10
+    description: >
+      Score de fadiga autorreferida [0..10] (INV-WELL-002).
+  painScore:
+    type:
+      - integer
+      - "null"
+    minimum: 0
+    maximum: 10
+    description: >
+      Score de dor autorreferida [0..10] (INV-WELL-002).
+      Percepção subjetiva — NÃO é diagnóstico clínico (INV-WELL-004).
+  recoveryScore:
+    type:
+      - integer
+      - "null"
+    minimum: 0
+    maximum: 10
+    description: >
+      Score de recuperação autorreferida [0..10] (INV-WELL-002).
+  sleepHours:
+    type:
+      - number
+      - "null"
+    minimum: 0
+    maximum: 24
+    description: >
+      Horas de sono reportadas [0..24] (INV-WELL-003).
+  notes:
+    type:
+      - string
+      - "null"
+    maxLength: 500
+    description: >
+      Contexto subjetivo do atleta/staff (DR-WELL-005).
+      Texto livre com limite semântico — NÃO é nota clínica, prontuário
+      ou prescrição. Boundary obrigado: WELLNESS_MEDICAL_BOUNDARY_GATE (INV-WELL-004).
+  createdAt:
+    type: string
+    format: date-time
+    description: Momento em que a entrada foi registrada (ISO 8601 UTC).
+    x-semantic-id: core.occurred_at.v1

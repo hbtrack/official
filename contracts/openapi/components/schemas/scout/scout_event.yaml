@@ -1,15 +1,16 @@
 type: object
-title: Exercise
-description: Training exercise
+title: Scout Event
+description: Scouting event record
 properties:
-  exerciseId:
+  eventId:
     type: string
     format: uuid
-  name:
+  type:
     type: string
-  category:
+  timestamp:
     type: string
+    format: date-time
 required:
-- exerciseId
-- name
+- eventId
+- type
 additionalProperties: false

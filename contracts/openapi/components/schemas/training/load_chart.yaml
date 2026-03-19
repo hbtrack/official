@@ -68,7 +68,7 @@ properties:
             Proxy load value for this date. Computed as sum(durationActualMinutes × intensityFactor)
             across all COMPLETED sessions. intensityFactor derived from focus_physical_pct.
         readinessAvg:
-          type: number
+          type: [number, "null"]
           minimum: 0
           maximum: 100
           description: Average readiness score across all athletes with wellness_pre on this date. Null if no check-ins.

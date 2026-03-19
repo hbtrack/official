@@ -1,0 +1,26 @@
+title: MediaSegment
+description: Immutable video segment
+type: object
+required: [id, sessionId, timecodeLogical, state]
+properties:
+  id:
+    type: string
+    format: uuid
+  sessionId:
+    type: string
+    format: uuid
+  timecodeLogical:
+    type: integer
+    minimum: 0
+  state:
+    type: string
+    enum: [OPEN, FINALIZED]
+  codecLabel:
+    type: string
+  bitrate:
+    type: integer
+    minimum: 100
+  createdAt:
+    type: string
+    format: date-time
+additionalProperties: false

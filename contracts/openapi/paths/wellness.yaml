@@ -1,8 +1,491 @@
-# Path items for module: wellness
+# ============================================================
+# Module: wellness — OpenAPI path items
 # Source of truth: contracts/openapi/openapi.yaml
-# Related docs:
-# - docs/_canon/SYSTEM_SCOPE.md
-# - docs/hbtrack/modulos/wellness/MODULE_SCOPE_WELLNESS.md
-#
-# Add path items here following OpenAPI 3.1 Path Item Object spec.
-# Each path must belong exclusively to this module (LAYOUT section 6).
+# Docs: docs/hbtrack/modulos/wellness/MODULE_SCOPE_WELLNESS.md
+# Domain rules: DR-WELL-001..005
+# Invariants: INV-WELL-001..005
+# Boundary gate: WELLNESS_MEDICAL_BOUNDARY_GATE (INV-WELL-004)
+# ADR refs: ADR-008 (RBAC), ADR-031 (Django stack)
+# ============================================================
+
+/wellness/entries:
+  post:
+    tags:
+      - wellness
+    summary: Registra entrada de wellness diário
+    description: >
+      Registra o questionário de wellness diário de um atleta.
+      wellness é soberano de readiness, fadiga, sono, dor autorreferida,
+      recuperação e questionários diários (DR-WELL-001).
+
+      Os dados registrados são percepção autorreferida e insumo consultivo
+      para training e analytics — não equivalem a diagnóstico, tratamento ou
+      liberação clínica (DR-WELL-002). INV-WELL-004: não pode conter campos
+      de diagnóstico, tratamento, prontuário ou nota clínica.
+
+      trainingSessionId, quando presente, apenas contextualiza a coleta em
+      torno de uma sessão; não representa presença nem autorização para treinar
+      (DR-WELL-003 / INV-WELL-005).
+
+      Acesso: atleta registra a própria entrada; coach, coordinator e admin
+      podem registrar em nome de atletas (ADR-008 RBAC).
+    operationId: createWellnessEntry
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - athleteUserId
+              - questionnaireDate
+              - readinessScore
+            properties:
+              athleteUserId:
+                type: string
+                format: uuid
+                description: >
+                  UUID do atleta. Referência ao módulo users.
+                  Atleta só pode submeter para si mesmo (BOLA — ADR-008).
+                x-semantic-id: identity.user.id.v1
+              trainingSessionId:
+                type:
+                  - string
+                  - "null"
+                format: uuid
+                description: >
+                  UUID da sessão de treino relacionada (DR-WELL-003).
+                  Contexto de coleta apenas — não implica presença ou autorização.
+                x-semantic-id: training.session.id.v1
+              questionnaireDate:
+                type: string
+                format: date
+                description: >
+                  Data do questionário (YYYY-MM-DD). INV-WELL-001: obrigatório.
+              questionnaireLabel:
+                type:
+                  - string
+                  - "null"
+                maxLength: 80
+                description: >
+                  Protocolo de coleta aplicado (DR-WELL-004).
+                  Obrigatório quando múltiplos questionários coexistirem.
+              readinessScore:
+                type: integer
+                minimum: 0
+                maximum: 10
+                description: >
+                  Score de prontidão autorreferida [0..10] (INV-WELL-001 obrigatório;
+                  INV-WELL-002 range). Percepção do atleta — não equivale a avaliação clínica.
+              fatigueScore:
+                type:
+                  - integer
+                  - "null"
+                minimum: 0
+                maximum: 10
+                description: >
+                  Score de fadiga autorreferida [0..10] (INV-WELL-002).
+              painScore:
+                type:
+                  - integer
+                  - "null"
+                minimum: 0
+                maximum: 10
+                description: >
+                  Score de dor autorreferida [0..10] (INV-WELL-002).
+                  Percepção subjetiva — NÃO é diagnóstico clínico (INV-WELL-004).
+              recoveryScore:
+                type:
+                  - integer
+                  - "null"
+                minimum: 0
+                maximum: 10
+                description: >
+                  Score de recuperação autorreferida [0..10] (INV-WELL-002).
+              sleepHours:
+                type:
+                  - number
+                  - "null"
+                minimum: 0
+                maximum: 24
+                description: >
+                  Horas de sono reportadas [0..24] (INV-WELL-003).
+              notes:
+                type:
+                  - string
+                  - "null"
+                maxLength: 500
+                description: >
+                  Contexto subjetivo do atleta/staff (DR-WELL-005).
+                  Texto livre com limite semântico — NÃO é nota clínica, prontuário
+                  ou prescrição (INV-WELL-004).
+            additionalProperties: false
+    responses:
+      "201":
+        description: Entrada de wellness criada com sucesso.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/wellness/wellness_entry.yaml"
+      "400":
+        description: >
+          Requisição inválida. Causas: athleteUserId ausente; questionnaireDate
+          inválida; readinessScore fora do intervalo [0..10]; campo clínico
+          proibido presente (INV-WELL-004).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: >
+          Papel RBAC insuficiente ou tentativa de registrar entry para outro
+          atleta sem permissão (ADR-008 BOLA).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "422":
+        description: athleteUserId não corresponde a usuário conhecido.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+  get:
+    tags:
+      - wellness
+    summary: Lista entradas de wellness
+    description: >
+      Retorna lista paginada de entradas de wellness.
+      Restrito a roles admin e coordinator sem filtro de atleta.
+      Coach vê apenas atletas da própria equipe (BOLA — ADR-008).
+      Athlete vê apenas as próprias entradas.
+
+      DR-WELL-001: wellness é soberano — dados de readiness, fadiga, sono,
+      dor e recuperação são exclusivos deste módulo.
+    operationId: listWellnessEntries
+    security:
+      - bearerAuth: []
+    parameters:
+      - name: athleteUserId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+        description: Filtra por UUID do atleta.
+      - name: questionnaireDate
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+        description: "Filtra por data exata do questionário (YYYY-MM-DD)."
+      - name: dateFrom
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+        description: "Início do intervalo de datas (YYYY-MM-DD). Inclusivo."
+      - name: dateTo
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+        description: "Fim do intervalo de datas (YYYY-MM-DD). Inclusivo."
+      - name: questionnaireLabel
+        in: query
+        required: false
+        schema:
+          type: string
+          maxLength: 80
+        description: Filtra por protocolo de questionário (DR-WELL-004).
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        description: Número da página (base 1).
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        description: Itens por página (máx 100).
+    responses:
+      "200":
+        description: Lista paginada de entradas de wellness.
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - data
+                - page
+                - pageSize
+                - total
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: "../components/schemas/wellness/wellness_entry.yaml"
+                page:
+                  type: integer
+                  minimum: 1
+                pageSize:
+                  type: integer
+                  minimum: 1
+                total:
+                  type: integer
+                  minimum: 0
+              additionalProperties: false
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+/wellness/entries/{entryId}:
+  get:
+    tags:
+      - wellness
+    summary: Obtém entrada de wellness por ID
+    description: >
+      Retorna o conteúdo completo de uma entrada de wellness.
+      Roles admin e coordinator têm acesso irrestrito.
+      Coach acessa apenas entradas de atletas da própria equipe.
+      Athlete acessa apenas as próprias entradas (BOLA — ADR-008).
+    operationId: getWellnessEntry
+    security:
+      - bearerAuth: []
+    parameters:
+      - name: entryId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID da entrada de wellness.
+    responses:
+      "200":
+        description: Entrada de wellness encontrada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/wellness/wellness_entry.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Acesso negado — BOLA (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "404":
+        description: Entrada não encontrada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+/wellness/athletes/{athleteUserId}/entries:
+  get:
+    tags:
+      - wellness
+    summary: Lista entradas de wellness de um atleta
+    description: >
+      Retorna histórico paginado de entradas de wellness de um atleta específico,
+      ordenado por questionnaireDate DESC.
+
+      Acesso: admin e coordinator acessam qualquer atleta; coach acessa atletas
+      da própria equipe; athlete acessa apenas o próprio histórico (BOLA — ADR-008).
+
+      DR-WELL-001: dados de wellness são soberania deste módulo — training e
+      analytics consomem como insumo consultivo, não têm acesso direto aos
+      dados brutos.
+    operationId: listAthleteWellnessEntries
+    security:
+      - bearerAuth: []
+    parameters:
+      - name: athleteUserId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID do atleta. Referência ao módulo users.
+      - name: dateFrom
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+        description: "Início do intervalo (YYYY-MM-DD). Inclusivo."
+      - name: dateTo
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+        description: "Fim do intervalo (YYYY-MM-DD). Inclusivo."
+      - name: questionnaireLabel
+        in: query
+        required: false
+        schema:
+          type: string
+          maxLength: 80
+        description: Filtra por protocolo de questionário (DR-WELL-004).
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        description: Número da página (base 1).
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        description: Itens por página (máx 100).
+    responses:
+      "200":
+        description: Histórico paginado de entradas de wellness do atleta.
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - data
+                - page
+                - pageSize
+                - total
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: "../components/schemas/wellness/wellness_entry.yaml"
+                page:
+                  type: integer
+                  minimum: 1
+                pageSize:
+                  type: integer
+                  minimum: 1
+                total:
+                  type: integer
+                  minimum: 0
+              additionalProperties: false
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Acesso negado — BOLA (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "404":
+        description: Atleta não encontrado.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+/wellness/athletes/{athleteUserId}/summary:
+  get:
+    tags:
+      - wellness
+    summary: Obtém resumo de wellness do atleta
+    description: >
+      Retorna resumo agregado de wellness de um atleta para um período.
+      Inclui médias de readinessScore, fatigueScore, painScore, recoveryScore
+      e sleepHours, além do trend de readiness nos últimos dias.
+
+      O resumo é insumo consultivo para training e analytics (DR-WELL-002).
+      NÃO constitui avaliação clínica, diagnóstico ou liberação médica.
+
+      Acesso: admin e coordinator acesso irrestrito; coach acessa atletas da
+      equipe; athlete acessa apenas o próprio (BOLA — ADR-008).
+    operationId: getAthleteWellnessSummary
+    security:
+      - bearerAuth: []
+    parameters:
+      - name: athleteUserId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID do atleta. Referência ao módulo users.
+      - name: dateFrom
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+        description: "Início do período de agregação (YYYY-MM-DD). Padrão: 7 dias atrás."
+      - name: dateTo
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+        description: "Fim do período de agregação (YYYY-MM-DD). Padrão: hoje."
+    responses:
+      "200":
+        description: Resumo de wellness do atleta para o período.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/wellness/wellness_summary.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Acesso negado — BOLA (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "404":
+        description: Atleta não encontrado ou sem entradas no período.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"

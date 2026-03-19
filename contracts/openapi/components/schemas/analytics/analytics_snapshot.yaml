@@ -1,0 +1,23 @@
+type: object
+title: Analytics Snapshot
+description: A snapshot of analytics data at a specific point in time.
+properties:
+  snapshotId:
+    type: string
+    format: uuid
+  timestamp:
+    type: string
+    format: date-time
+  metricName:
+    type: string
+  metricValue:
+    type: number
+  aggregationType:
+    type: string
+    enum: [sum, avg, min, max, count]
+required:
+  - snapshotId
+  - timestamp
+  - metricName
+  - metricValue
+additionalProperties: false

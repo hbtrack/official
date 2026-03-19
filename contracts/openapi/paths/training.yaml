@@ -134,14 +134,17 @@
                 type: string
                 format: uuid
                 pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                x-semantic-id: organizations.organization.id.v1
               teamId:
                 type: string
                 format: uuid
                 pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                x-semantic-id: teams.team.id.v1
               seasonId:
                 type: string
                 format: uuid
                 pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                x-semantic-id: seasons.season.id.v1
               microcycleId:
                 type: string
                 format: uuid
@@ -486,6 +489,7 @@
   get:
     tags: [training]
     summary: Get session block
+    description: Returns a specific training session block by its ID, including all exercises and configuration.
     operationId: getSessionBlock
     parameters:
       - name: id
@@ -1710,10 +1714,12 @@
                 type: string
                 format: uuid
                 pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                x-semantic-id: organizations.organization.id.v1
               teamId:
                 type: string
                 format: uuid
                 pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                x-semantic-id: teams.team.id.v1
               macrocycleId:
                 type: string
                 format: uuid
@@ -1783,6 +1789,7 @@
   get:
     tags: [training]
     summary: Get mesocycle by ID
+    description: Returns the full mesocycle details including its associated microcycles.
     operationId: getMesocycleById
     parameters:
       - name: id
@@ -2001,10 +2008,12 @@
                 type: string
                 format: uuid
                 pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                x-semantic-id: organizations.organization.id.v1
               teamId:
                 type: string
                 format: uuid
                 pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                x-semantic-id: teams.team.id.v1
               mesocycleId:
                 type: string
                 format: uuid
@@ -2085,6 +2094,7 @@
   get:
     tags: [training]
     summary: Get microcycle by ID
+    description: Returns the full microcycle details including its associated training sessions.
     operationId: getMicrocycleById
     parameters:
       - name: id
@@ -2541,6 +2551,7 @@
     tags:
       - Execution Records
     summary: Get a specific execution record
+    description: Returns a specific execution record for a training session, identified by its record ID.
     operationId: getExecutionRecord
     parameters:
       - name: id
@@ -2580,6 +2591,7 @@
     tags:
       - Feedback Threads
     summary: List feedback threads for a session
+    description: Returns all feedback threads anchored to this session. Can be filtered by context type and athlete.
     operationId: listFeedbackThreads
     parameters:
       - name: id
@@ -2692,6 +2704,7 @@
     tags:
       - Session Objectives
     summary: List objectives for a session
+    description: Returns all objectives defined for the specified training session. Every session must have at least one objective (TRAIN-DEC-004).
     operationId: listSessionObjectives
     parameters:
       - name: id
@@ -3872,6 +3885,196 @@
               $ref: ../components/schemas/shared/problem.yaml
       "404":
         description: Team, athlete, or season not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+    security:
+      - HTTPBearer: []
+
+# ---------------------------------------------------------------------------
+# HB PRO COACH — G-06 (UIF-TRAINING-006, MVP v1.1)
+# Virtual assistant chat for athletes. Feature Store integration via ai_ingestion.
+# Decision Refs: D-UI-20, D-UI-21, TRAIN-DEC-009
+# OWASP API1:2023 (BOLA): athlete can only access own conversation.
+# OWASP API5:2023 (BFLA): coach/staff may read with explicit permission.
+# ---------------------------------------------------------------------------
+
+/hb-pro-coach/conversations/{conversationId}/messages:
+  get:
+    tags: [training]
+    summary: List chat messages for a conversation
+    description: >
+      Returns paginated chat history for the given conversation.
+      OWASP API1:2023 (BOLA): athlete can only access own conversation.
+      OWASP API4:2023: pageSize capped at 100 server-side.
+      D-UI-20: default page size = 20 (last 20 messages loaded on open).
+    operationId: listChatMessages
+    parameters:
+      - name: conversationId
+        in: path
+        required: true
+        description: Unique identifier of the athlete conversation.
+        schema:
+          type: string
+          format: uuid
+          pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        description: Page number (1-based).
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        description: Number of messages per page. Max 100 (OWASP API4:2023).
+    responses:
+      "200":
+        description: Paginated list of chat messages (oldest → newest within page)
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - items
+                - total
+                - page
+                - pageSize
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: ../components/schemas/training/athlete_chat_message.yaml
+                total:
+                  type: integer
+                  minimum: 0
+                  description: Total number of messages in the conversation.
+                page:
+                  type: integer
+                  minimum: 1
+                pageSize:
+                  type: integer
+                  minimum: 1
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden — caller does not own this conversation (OWASP BOLA)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Conversation not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+    security:
+      - HTTPBearer: []
+
+/hb-pro-coach/training-suggestions:
+  post:
+    tags: [training]
+    summary: Submit a training suggestion to the athlete's coach
+    description: >
+      HB Pro Coach submits an AI-generated training suggestion for coach review.
+      Generates async notification to coach (AsyncAPI training.suggestion.created event).
+      OWASP API1:2023 (BOLA): athleteId must match authenticated user.
+      OWASP API3:2023 (BOPLA): allowlist enforced.
+      Idempotency key supported to prevent duplicate suggestions on retry.
+    operationId: submitTrainingSuggestion
+    parameters:
+      - name: Idempotency-Key
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+        description: Client idempotency key to prevent duplicate submissions on retry.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - athleteId
+              - trainingName
+              - duration
+            properties:
+              athleteId:
+                type: string
+                format: uuid
+                pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                x-semantic-id: users.athlete.id.v1
+              trainingName:
+                type: string
+                minLength: 1
+                maxLength: 120
+                description: Human-readable name for the suggested session.
+              duration:
+                type: integer
+                minimum: 1
+                maximum: 480
+                description: Suggested duration in minutes.
+              objectives:
+                type: array
+                items:
+                  type: string
+                  maxLength: 255
+                maxItems: 10
+                description: List of training objectives.
+              context:
+                type: string
+                maxLength: 1000
+                description: AI-generated justification for the suggestion (Feature Store context).
+    responses:
+      "201":
+        description: Training suggestion created and coach notification dispatched
+        headers:
+          Location:
+            description: URI of the created training suggestion
+            schema:
+              type: string
+              format: uri
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/training_suggestion.yaml
+      "400":
+        description: Validation error
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden — athleteId does not match authenticated user (OWASP BOLA)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: Duplicate idempotency key — suggestion already submitted
         content:
           application/problem+json:
             schema:

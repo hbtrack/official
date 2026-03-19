@@ -1,0 +1,16 @@
+type: object
+title: Medical Record
+description: Medical record for athlete
+properties:
+  recordId:
+    type: string
+    format: uuid
+  athleteId:
+    type: string
+  date:
+    type: string
+    format: date
+required:
+- recordId
+- athleteId
+additionalProperties: false

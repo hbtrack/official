@@ -1,8 +1,369 @@
 # Path items for module: users
 # Source of truth: contracts/openapi/openapi.yaml
+# Canonical API rules: .contract_driven/templates/api/api_rules.yaml
 # Related docs:
 # - docs/_canon/SYSTEM_SCOPE.md
 # - docs/hbtrack/modulos/users/MODULE_SCOPE_USERS.md
+# - docs/hbtrack/modulos/users/DOMAIN_RULES_USERS.md
+# - docs/hbtrack/modulos/users/INVARIANTS_USERS.md
 #
-# Add path items here following OpenAPI 3.1 Path Item Object spec.
-# Each path must belong exclusively to this module (LAYOUT section 6).
+# Each path must belong exclusively to this module (LAYOUT §6).
+# Naming conventions (api_rules.yaml canonical_conventions):
+#   - path segments: kebab-case (no /api, no /v1)
+#   - query params: camelCase
+#   - JSON fields: camelCase
+#   - OWASP API Security Top 10 (2023) compliance mandatory
+
+/users:
+  get:
+    tags: [users]
+    summary: List users
+    description: >
+      Lista perfis de usuário com paginação cursor-based.
+
+      Regras aplicadas:
+      - Paginação obrigatória (api_rules.yaml design_rules.google_aip_core.pagination)
+      - OWASP API1:2023 (BOLA): authz em nível de objeto validado server-side
+      - OWASP API4:2023: pageSize limitado (max: 100)
+      - DR-USR-001: somente perfil, vínculos e preferências — sem credenciais ou sessão
+    operationId: listUsers
+    parameters:
+      - $ref: ../components/parameters/pageSize.yaml
+      - $ref: ../components/parameters/pageToken.yaml
+      - name: organizationId
+        in: query
+        required: false
+        description: Filter by organization
+        schema:
+          type: string
+          format: uuid
+      - name: teamId
+        in: query
+        required: false
+        description: Filter by team (DR-USR-003)
+        schema:
+          type: string
+          format: uuid
+      - name: roleLabel
+        in: query
+        required: false
+        description: Filter by canonical role (DR-USR-002 / ADR-008)
+        schema:
+          type: string
+          enum:
+            - athlete
+            - coach
+            - coordinator
+            - admin
+            - member
+    responses:
+      "200":
+        description: Successful response
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [items]
+              additionalProperties: false
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: ../components/schemas/users/user_profile.yaml
+                nextPageToken:
+                  type: string
+                  description: Omit when no further pages.
+      "400":
+        description: Invalid request
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden (insufficient permissions)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+    security:
+      - {} # OWASP API5:2023 BFLA: definir security scheme quando identity_access estiver contratado
+
+  post:
+    tags: [users]
+    summary: Create user profile
+    description: >
+      Cria novo perfil de usuário.
+
+      Regras aplicadas:
+      - OWASP API3:2023 (BOPLA): allowlist de propriedades (additionalProperties: false)
+      - OWASP API5:2023 (BFLA): apenas admin/coordinator
+      - DR-USR-001: soberano de perfil, vínculos e preferências
+      - INV-USR-001: id, displayName, roleLabel obrigatórios no perfil estável
+      - INV-USR-003: campos de authn/authz nunca no payload (password_hash, jwt, etc.)
+    operationId: createUser
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - displayName
+              - roleLabel
+            properties:
+              organizationId:
+                type: string
+                format: uuid
+                pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                x-semantic-id: organizations.organization.id.v1
+              firstName:
+                type: string
+                minLength: 1
+                maxLength: 80
+              lastName:
+                type: string
+                minLength: 1
+                maxLength: 80
+              displayName:
+                type: string
+                minLength: 1
+                maxLength: 120
+                description: Canonical human-readable profile label (INV-USR-001).
+              roleLabel:
+                type: string
+                enum:
+                  - athlete
+                  - coach
+                  - coordinator
+                  - admin
+                  - member
+                description: Functional role (DR-USR-002 / ADR-008). 5 canonical actors. Roles ad hoc proibidos.
+              positionLabel:
+                type: string
+                maxLength: 80
+                description: Sports position or specialization (DR-USR-004). Does not grant authz.
+              preferredLanguage:
+                type: string
+                maxLength: 16
+                description: UI language preference (DR-USR-005).
+              preferenceTags:
+                type: array
+                items:
+                  type: string
+                  maxLength: 40
+                uniqueItems: true
+                description: Operational preference tags (INV-USR-002). No security state.
+              teamIds:
+                type: array
+                items:
+                  type: string
+                  format: uuid
+                  pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                uniqueItems: true
+                description: Explicit team bindings (DR-USR-003). Not inferred from session.
+              seasonIds:
+                type: array
+                items:
+                  type: string
+                  format: uuid
+                  pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                uniqueItems: true
+                description: Explicit season bindings (DR-USR-003). Not inferred from session.
+    responses:
+      "201":
+        description: User profile created
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/users/user_profile.yaml
+      "400":
+        description: Validation error
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden — admin/coordinator only
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: Conflict — user with same identity already exists
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+    security:
+      - {} # OWASP API5:2023 BFLA: admin/coordinator role required
+
+/users/{userId}:
+  parameters:
+    - name: userId
+      in: path
+      required: true
+      description: Stable UUID v4 identifier of the user (INV-USR-001)
+      schema:
+        type: string
+        format: uuid
+        pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+
+  get:
+    tags: [users]
+    summary: Get user profile
+    description: >
+      Retorna o perfil completo de um usuário.
+
+      Regras aplicadas:
+      - OWASP API1:2023 (BOLA): authz em nível de objeto obrigatório
+      - DR-USR-001: retorna somente perfil e vínculos soberanos — sem campos de authn
+      - INV-USR-003: nenhum campo de autenticação exposto (password_hash, jwt, etc.)
+    operationId: getUser
+    responses:
+      "200":
+        description: User profile
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/users/user_profile.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: User not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+    security:
+      - {} # OWASP API5:2023 BFLA: owner or coordinator/admin
+
+  patch:
+    tags: [users]
+    summary: Update user profile
+    description: >
+      Atualiza parcialmente o perfil de um usuário.
+
+      Regras aplicadas:
+      - OWASP API3:2023 (BOPLA): allowlist de propriedades (additionalProperties: false)
+      - OWASP API1:2023 (BOLA): authz em nível de objeto — owner ou admin/coordinator
+      - DR-USR-001: apenas campos soberanos de users; id não pode ser alterado
+      - DR-USR-002: roleLabel pode ser alterado somente por admin/coordinator
+      - INV-USR-002: teamIds/seasonIds/preferenceTags mantêm uniqueItems
+      - INV-USR-003: campos de authn nunca aceitos (password_hash, jwt, etc.)
+    operationId: patchUser
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            minProperties: 1
+            properties:
+              firstName:
+                type: string
+                minLength: 1
+                maxLength: 80
+              lastName:
+                type: string
+                minLength: 1
+                maxLength: 80
+              displayName:
+                type: string
+                minLength: 1
+                maxLength: 120
+              roleLabel:
+                type: string
+                enum:
+                  - athlete
+                  - coach
+                  - coordinator
+                  - admin
+                  - member
+                description: Requires admin/coordinator — DR-USR-002 / ADR-008. Roles ad hoc proibidos.
+              positionLabel:
+                type: string
+                maxLength: 80
+                description: Sports context only. Does not affect authz (DR-USR-004).
+              preferredLanguage:
+                type: string
+                maxLength: 16
+              preferenceTags:
+                type: array
+                items:
+                  type: string
+                  maxLength: 40
+                uniqueItems: true
+                description: INV-USR-002 — uniqueItems required.
+              teamIds:
+                type: array
+                items:
+                  type: string
+                  format: uuid
+                  pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                uniqueItems: true
+                description: DR-USR-003 — explicit bindings only; not inferred.
+              seasonIds:
+                type: array
+                items:
+                  type: string
+                  format: uuid
+                  pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                uniqueItems: true
+                description: DR-USR-003 — explicit bindings only; not inferred.
+    responses:
+      "200":
+        description: Updated user profile
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/users/user_profile.yaml
+      "400":
+        description: Validation error
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden — owner or admin/coordinator only
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: User not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+    security:
+      - {} # OWASP API5:2023 BFLA: owner or admin/coordinator

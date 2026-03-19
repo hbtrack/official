@@ -1,9 +1,475 @@
-# Path items for module: matches
+# ============================================================
+# Module: matches — OpenAPI path items
 # Source of truth: contracts/openapi/openapi.yaml
-# Related docs:
-# - docs/_canon/SYSTEM_SCOPE.md
-# - docs/_canon/HANDBALL_RULES_DOMAIN.md
-# - docs/hbtrack/modulos/matches/MODULE_SCOPE_MATCHES.md
-#
-# Add path items here following OpenAPI 3.1 Path Item Object spec.
-# Each path must belong exclusively to this module (LAYOUT section 6).
+# Docs: docs/hbtrack/modulos/matches/MODULE_SCOPE_MATCHES.md
+# Domain rules: DR-MATCH-001..005
+# Invariants: INV-MATCH-001..005
+# ADR refs: ADR-007 (JWT RS256), ADR-008 (RBAC 5 roles), ADR-031 (Django stack)
+# DEC-MATCHES-001: CRUD simples (não EVENT_FIRST)
+# DEC-MATCHES-002: statusLabel = 9 fases HBR-013
+# ============================================================
+
+/matches:
+  get:
+    tags:
+      - matches
+    summary: Lista partidas
+    description: >
+      Retorna lista paginada de partidas.
+      matches é soberano do registro oficial: competição, mandante/visitante,
+      placar, súmula e arbitragem (DR-MATCH-001).
+      Filtragem por competitionId é recomendada para limitar escopo.
+      OWASP API4:2023: pageSize máximo 100.
+    operationId: listMatches
+    security:
+      - bearerAuth: []
+    parameters:
+      - name: competitionId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+          x-semantic-id: competitions.competition.id.v1
+        description: >
+          Filtra por UUID da competição (DR-MATCH-001).
+          Partida sem competição não possui contexto oficial — uso altamente recomendado.
+      - name: statusLabel
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+            - scheduled
+            - pre_match
+            - first_half
+            - half_time
+            - second_half
+            - overtime_1
+            - overtime_2
+            - penalties
+            - completed
+            - cancelled
+        description: Filtra por fase do ciclo de vida da partida (HBR-013, DR-MATCH-004).
+      - name: homeTeamId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+          x-semantic-id: teams.team.id.v1
+        description: Filtra partidas onde equipe atua como mandante (DR-MATCH-002).
+      - name: awayTeamId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+          x-semantic-id: teams.team.id.v1
+        description: Filtra partidas onde equipe atua como visitante (DR-MATCH-002).
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        description: Número da página (base 1).
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        description: Itens por página (máx 100).
+    responses:
+      "200":
+        description: Lista paginada de partidas.
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [data, page, pageSize, total]
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: "../components/schemas/matches/match.yaml"
+                page:
+                  type: integer
+                  minimum: 1
+                pageSize:
+                  type: integer
+                  minimum: 1
+                total:
+                  type: integer
+                  minimum: 0
+              additionalProperties: false
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+  post:
+    tags:
+      - matches
+    summary: Cria partida
+    description: >
+      Cria uma nova partida vinculada a uma competição oficial.
+      competitionId é obrigatório — partida fora de competição é inválida (DR-MATCH-001).
+      homeTeamId ≠ awayTeamId — os lados mandante/visitante nunca colapsam (DR-MATCH-002, INV-MATCH-002).
+      lineupUserIds = elenco escalado oficial; não substituível por participação em scout (DR-MATCH-003).
+      scheduledAt, startedAt, endedAt formam o ciclo temporal — não reclassificar via competitions (DR-MATCH-004).
+      DEC-MATCHES-001: registro CRUD — placar e súmula alimentados pelo operador pós-jogo.
+    operationId: createMatch
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [competitionId, homeTeamId, awayTeamId, scheduledAt]
+            additionalProperties: false
+            properties:
+              competitionId:
+                type: string
+                format: uuid
+                x-semantic-id: competitions.competition.id.v1
+                description: UUID da competição à qual esta partida pertence (DR-MATCH-001, INV-MATCH-001).
+              homeTeamId:
+                type: string
+                format: uuid
+                x-semantic-id: teams.team.id.v1
+                description: UUID da equipe mandante (DR-MATCH-002, INV-MATCH-002). Deve ser ≠ awayTeamId.
+              awayTeamId:
+                type: string
+                format: uuid
+                x-semantic-id: teams.team.id.v1
+                description: UUID da equipe visitante (DR-MATCH-002, INV-MATCH-002). Deve ser ≠ homeTeamId.
+              venueLabel:
+                type: [string, "null"]
+                maxLength: 200
+                description: Nome/descrição do local da partida.
+              scheduledAt:
+                type: string
+                format: date-time
+                x-semantic-id: core.occurred_at.v1
+                description: Data e hora programadas da partida (DR-MATCH-004, INV-MATCH-001).
+              refereeNames:
+                type: array
+                uniqueItems: true
+                items:
+                  type: string
+                  minLength: 1
+                  maxLength: 120
+                default: []
+                description: Nomes dos árbitros escalados (INV-MATCH-005).
+    responses:
+      "201":
+        description: Partida criada com sucesso.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/matches/match.yaml"
+      "400":
+        description: >
+          Dados inválidos. Ex: competitionId ausente, homeTeamId == awayTeamId (INV-MATCH-002).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+/matches/{matchId}:
+  parameters:
+    - name: matchId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        x-semantic-id: matches.match.id.v1
+      description: UUID da partida.
+
+  get:
+    tags:
+      - matches
+    summary: Obter partida por ID
+    description: >
+      Retorna dados completos da partida incluindo súmula,
+      placar oficial, árbitros e lineup escalado.
+      lineupUserIds = elenco escalado oficial, não inferido de scout (DR-MATCH-003).
+    operationId: getMatch
+    security:
+      - bearerAuth: []
+    responses:
+      "200":
+        description: Dados completos da partida.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/matches/match.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "404":
+        description: Partida não encontrada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+  patch:
+    tags:
+      - matches
+    summary: Atualizar partida
+    description: >
+      Atualização parcial dos dados da partida.
+      statusLabel avança pelo ciclo de fases HBR-013 (DEC-MATCHES-002):
+      scheduled → pre_match → first_half → half_time → second_half
+      → overtime_1 → overtime_2 → penalties → completed (ou cancelled).
+      homeScore e awayScore >= 0 quando presentes (INV-MATCH-003).
+      startedAt deve ser <= endedAt quando ambos presentes (INV-MATCH-004).
+      Eventos observacionais (gols, faltas, cards) pertencem a scout (DR-MATCH-005).
+    operationId: patchMatch
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            minProperties: 1
+            properties:
+              venueLabel:
+                type: [string, "null"]
+                maxLength: 200
+              statusLabel:
+                type: string
+                enum:
+                  - scheduled
+                  - pre_match
+                  - first_half
+                  - half_time
+                  - second_half
+                  - overtime_1
+                  - overtime_2
+                  - penalties
+                  - completed
+                  - cancelled
+                description: >
+                  Fase cronológica da partida (HBR-013, DR-MATCH-004).
+                  Transição forward — nunca retroceder fases.
+              scheduledAt:
+                type: string
+                format: date-time
+                x-semantic-id: core.occurred_at.v1
+              startedAt:
+                type: [string, "null"]
+                format: date-time
+                x-semantic-id: core.occurred_at.v1
+                description: Início efetivo; deve ser <= endedAt se ambos presentes (INV-MATCH-004).
+              endedAt:
+                type: [string, "null"]
+                format: date-time
+                x-semantic-id: core.occurred_at.v1
+                description: Fim efetivo; deve ser >= startedAt (INV-MATCH-004).
+              homeScore:
+                type: [integer, "null"]
+                minimum: 0
+                description: Placar mandante (INV-MATCH-003). Registro CRUD pós-jogo (DEC-MATCHES-001).
+              awayScore:
+                type: [integer, "null"]
+                minimum: 0
+                description: Placar visitante (INV-MATCH-003). Registro CRUD pós-jogo (DEC-MATCHES-001).
+              refereeNames:
+                type: array
+                uniqueItems: true
+                items:
+                  type: string
+                  minLength: 1
+                  maxLength: 120
+                description: Substitui o array completo de árbitros (INV-MATCH-005).
+              officialIncidentIds:
+                type: array
+                uniqueItems: true
+                items:
+                  type: string
+                  format: uuid
+                description: >
+                  IDs de incidentes oficiais registrados na súmula (INV-MATCH-005).
+                  Sanções formais: amarelo, 2min, vermelho, desclassificação (HBR-003).
+    responses:
+      "200":
+        description: Partida atualizada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/matches/match.yaml"
+      "400":
+        description: Dados inválidos (ex. startedAt > endedAt, homeScore < 0).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "404":
+        description: Partida não encontrada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+/matches/{matchId}/lineup/{userId}:
+  parameters:
+    - name: matchId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        x-semantic-id: matches.match.id.v1
+      description: UUID da partida.
+    - name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        x-semantic-id: users.user.id.v1
+      description: UUID do atleta a incluir/remover do lineup.
+
+  put:
+    tags:
+      - matches
+    summary: Adicionar atleta ao lineup
+    description: >
+      Adiciona um atleta ao lineup oficial da partida (DR-MATCH-003).
+      lineupUserIds = elenco escalado oficial — participação em scout não substitui.
+      HBR-008: máximo 16 jogadores em súmula por equipe.
+      Retorna o registro completo da partida atualizado.
+    operationId: addPlayerToLineup
+    security:
+      - bearerAuth: []
+    responses:
+      "200":
+        description: Atleta adicionado ao lineup. Retorna partida atualizada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/matches/match.yaml"
+      "400":
+        description: >
+          Operação inválida. Ex: atleta já está no lineup,
+          limite HBR-008 de 16 jogadores atingido.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "404":
+        description: Partida ou usuário não encontrado.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+  delete:
+    tags:
+      - matches
+    summary: Remover atleta do lineup
+    description: >
+      Remove um atleta do lineup oficial da partida (DR-MATCH-003).
+      Operação disponível apenas enquanto statusLabel = scheduled ou pre_match.
+    operationId: removePlayerFromLineup
+    security:
+      - bearerAuth: []
+    responses:
+      "200":
+        description: Atleta removido do lineup. Retorna partida atualizada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/matches/match.yaml"
+      "400":
+        description: >
+          Operação inválida. Ex: partida já iniciada (statusLabel ≠ scheduled/pre_match),
+          atleta não está no lineup.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "404":
+        description: Partida ou usuário não encontrado.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"

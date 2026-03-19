@@ -1,0 +1,19 @@
+type: object
+title: Report Job
+description: Background job for report generation
+properties:
+  jobId:
+    type: string
+    format: uuid
+  reportType:
+    type: string
+  status:
+    type: string
+  createdAt:
+    type: string
+    format: date-time
+required:
+- jobId
+- reportType
+- status
+additionalProperties: false

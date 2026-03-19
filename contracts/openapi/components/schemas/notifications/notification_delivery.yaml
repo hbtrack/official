@@ -1,16 +1,13 @@
 type: object
-title: Problem
-description: Problem details for error responses
+title: Notification Delivery
+description: Delivery status of notification
 properties:
-  type:
+  deliveryId:
     type: string
-  title:
+  notificationId:
     type: string
   status:
-    type: integer
-  detail:
     type: string
 required:
-- type
-- title
+- deliveryId
 additionalProperties: false

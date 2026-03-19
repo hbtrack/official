@@ -1,0 +1,16 @@
+type: object
+title: Season
+description: Handball season
+properties:
+  seasonId:
+    type: string
+    format: uuid
+  year:
+    type: integer
+  startDate:
+    type: string
+    format: date
+required:
+- seasonId
+- year
+additionalProperties: false

@@ -1,0 +1,21 @@
+type: object
+title: Audit Entry
+description: Record of audited action
+properties:
+  entryId:
+    type: string
+    format: uuid
+  action:
+    type: string
+  timestamp:
+    type: string
+    format: date-time
+  userId:
+    type: string
+  resourceType:
+    type: string
+required:
+- entryId
+- action
+- timestamp
+additionalProperties: false
