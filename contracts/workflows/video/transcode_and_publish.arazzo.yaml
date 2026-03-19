@@ -1,0 +1,69 @@
+arazzo: "1.0.0"
+
+info:
+  title: Video — Transcode and Publish Distribution
+  version: "0.1.0"
+  summary: Orquestra transcodificação multi-codec e publicação em CDN/broadcast.
+  description: >
+    Workflow de transcodificação e publicação:
+    1) Transiciona sessão sincronizada para TRANSCODING;
+    2) Aguarda conclusão de todos os jobs Celery (H.264, H.265, VP9, AV1);
+    3) Cria ClipDefinitions para segmentos clipeados (se aplicável);
+    4) Publica em CDN (público) e/ou broadcast (parceiros);
+    5) Transiciona para PUBLISHED (terminal).
+
+    Requer: sessão em estado SYNCING, segmentos sincronizados, clips definidos.
+    Emite eventos: video.transcode.completed (por profile), video.distribution.published/failed.
+
+sourceDescriptions:
+  - name: hbtrack-http
+    type: openapi
+    url: ../../openapi/openapi.yaml
+
+workflows:
+  transcode_and_publish:
+    summary: Transcodificar e publicar vídeo em CDN/broadcast.
+    steps:
+      - stepId: transitionToTranscoding
+        operationId: updateSession
+        description: >
+          Transiciona sessão de SYNCING → TRANSCODING.
+          Ativa jobs Celery para transcodificação lazy (DR-VID-006).
+          Segmentos mezzanine são fonte de verdade (INV-VID-004).
+        
+      - stepId: listClipsForDistribution
+        operationId: listClips
+        description: >
+          Recupera todos ClipDefinitions associados à sessão.
+          Cada clip tem contexto semântico: scout_event_id, zone_label, athlete_ids.
+          Necessário para determinar que clips publicar.
+        
+      - stepId: createPublicDistribution
+        operationId: publishDistribution
+        description: >
+          Publica clip(s) em CDN público (PUBLIC_CDN target type).
+          Gera multi-profile ABR (H.264, H.265 mínimo).
+          Emite video.distribution.published com URLs públicas.
+          Idempotente por clip_id (INV-VID-012).
+        
+      - stepId: createBroadcastDistribution
+        operationId: publishDistribution
+        description: >
+          Publica clip(s) em broadcast para parceiros autorizados (se aplicável).
+          Tipicamente H.265 + metadados de licença.
+          Requere role admin/coordinator (PERM-VID-007).
+          Emite video.distribution.published com broadcast URLs.
+        
+      - stepId: monitorTranscodeCompletion
+        operationId: getSession
+        description: >
+          Aguarda SyncService confirmar que TRANSCODING completo.
+          Todos DistributionProfiles renditions prontos em cache/CDN.
+          Nenhum transcode job em falha crítica.
+        
+      - stepId: transitionToPublished
+        operationId: updateSession
+        description: >
+          Transiciona sessão de TRANSCODING → PUBLISHED (terminal).
+          INV-VID-002 ativa: nenhuma alteração pós-publicação.
+          Retorna sessão imutável com URLs e expiração baseada em retentionPolicy.

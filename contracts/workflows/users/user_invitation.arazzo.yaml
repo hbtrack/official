@@ -1,0 +1,116 @@
+arazzo: "1.0.0"
+info:
+  title: Convite e Ativação de Usuário
+  version: "1.0.0"
+  x-status: active
+  x-module: users
+  x-domain-rules: [DR-USR-001, DR-USR-002, DR-USR-003]
+  x-decisions: [DEC-USERS-002, DEC-USERS-003]
+
+sourceDescriptions:
+  - name: hbtrack_api
+    url: ../../openapi/openapi.yaml
+    type: openapi
+
+workflows:
+  - workflowId: user_invitation
+    summary: >
+      Fluxo de convite de usuário: admin ou coordinator cria perfil com
+      statusLabel = pending_activation (DEC-USERS-002). O usuário ativa
+      sua conta via PATCH, estabelecendo statusLabel = active.
+      roleLabel é atribuído no momento do convite (DR-USR-002, DEC-USERS-003).
+      Vínculos de equipe são explícitos e opcionais (DR-USR-003).
+    inputs:
+      type: object
+      required: [displayName, roleLabel, invitedByUserId]
+      properties:
+        displayName:
+          type: string
+          minLength: 1
+          maxLength: 120
+          description: Label legível do perfil (INV-USR-001).
+        roleLabel:
+          type: string
+          enum: [athlete, coach, coordinator, admin, member]
+          description: >
+            Papel funcional atribuído no convite (DR-USR-002, ADR-008).
+            5 actores canônicos. Apenas admin e coordinator podem definir
+            roleLabel (DEC-USERS-003).
+        organizationId:
+          type: string
+          format: uuid
+          description: Organização à qual o usuário será vinculado.
+        teamIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          uniqueItems: true
+          description: >
+            Equipes a vincular no aceite do convite (DR-USR-003, INV-USR-002).
+            Vínculos explícitos — nunca inferidos de presença ou analytics.
+        invitedByUserId:
+          type: string
+          format: uuid
+          description: >
+            UUID do usuário que originou o convite. Deve ser admin ou coordinator
+            (DEC-USERS-003).
+    steps:
+      - stepId: create_invited_user
+        description: >
+          Cria perfil de usuário com statusLabel = pending_activation (DEC-USERS-002).
+          displayName e roleLabel são obrigatórios (INV-USR-001).
+          Somente admin e coordinator podem executar este passo (PERM-USR-002).
+          INV-USR-003: payload nunca inclui password_hash, jwt ou tokens.
+        operationId: createUser
+        requestBody:
+          contentType: application/json
+          payload:
+            displayName:    $inputs.displayName
+            roleLabel:      $inputs.roleLabel
+            organizationId: $inputs.organizationId
+            statusLabel:    pending_activation
+        successCriteria:
+          - condition: $statusCode == 201
+        outputs:
+          userId: $response.body#/id
+
+      - stepId: activate_user
+        description: >
+          Usuário convidado ativa sua conta (statusLabel: active).
+          BOLA: somente o próprio usuário pode ativar seu perfil (PERM-USR-003).
+          Após ativação o perfil passa a statusLabel = active e o evento
+          user.created é publicado no canal AsyncAPI (DEC-USERS-001).
+        operationId: patchUser
+        parameters:
+          - name: userId
+            in: path
+            value: $steps.create_invited_user.outputs.userId
+        requestBody:
+          contentType: application/json
+          payload:
+            statusLabel: active
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          activatedUserId: $response.body#/id
+
+      - stepId: link_teams
+        description: >
+          Opcional — vincula usuário às equipes definidas no convite (DR-USR-003).
+          teamIds = vínculos explícitos; nunca inferidos de sessão ou analytics
+          (INV-USR-002). Pode ser omitido se teamIds não foi fornecido.
+        operationId: patchUser
+        parameters:
+          - name: userId
+            in: path
+            value: $steps.create_invited_user.outputs.userId
+        requestBody:
+          contentType: application/json
+          payload:
+            teamIds: $inputs.teamIds
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          linkedUserId: $response.body#/id
+          finalTeamIds: $response.body#/teamIds

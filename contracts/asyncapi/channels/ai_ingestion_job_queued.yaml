@@ -1,0 +1,18 @@
+# ============================================================
+# AsyncAPI Channel: ai_ingestion.job.queued
+# Module: ai_ingestion
+# Domain rules: DR-ING-001, DR-ING-004
+# ============================================================
+
+address: ai_ingestion.job.queued
+title: Job de Ingestão Enfileirado
+description: >
+  Canal de publicação de jobs de ingestão aceitos e enfileirados
+  (DR-ING-001 — ai_ingestion é soberano do intake de dados externos).
+
+  Publicado após criação bem-sucedida via:
+  - POST /ingestion/jobs
+  - POST /ingestion/jobs/{jobId}/retry
+messages:
+  ai_ingestion_job_queued_publish:
+    $ref: "../messages/ai_ingestion_job_queued.yaml"

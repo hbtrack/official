@@ -1,0 +1,3 @@
+# Arquivos excluídos do lint Redocly
+# temp/ contém artefatos de teste de gates (não são specs de produção)
+temp/

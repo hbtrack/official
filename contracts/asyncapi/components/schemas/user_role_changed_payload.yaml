@@ -1,0 +1,79 @@
+# AsyncAPI Payload Schema: user_role_changed
+# Module: users
+# Domain rules: DR-USR-002
+# Invariants: INV-USR-001, INV-USR-004
+# ADR refs: ADR-008 (RBAC flat 5 roles)
+
+type: object
+required:
+  - eventType
+  - occurredAt
+  - userId
+  - displayName
+  - previousRoleLabel
+  - newRoleLabel
+  - changedByUserId
+additionalProperties: false
+properties:
+  eventType:
+    type: string
+    const: user.role_changed
+    description: Tipo do evento. Sempre "user.role_changed".
+
+  occurredAt:
+    type: string
+    format: date-time
+    description: Timestamp UTC da alteração de role (ISO 8601).
+    x-semantic-id: core.occurred_at.v1
+
+  userId:
+    type: string
+    format: uuid
+    description: UUID do usuário cujo role foi alterado (INV-USR-001).
+    x-semantic-id: identity.user.id.v1
+
+  displayName:
+    type: string
+    minLength: 1
+    maxLength: 120
+    description: Label legível do perfil (INV-USR-001). Para contexto em consumidores.
+
+  previousRoleLabel:
+    type: string
+    enum:
+      - athlete
+      - coach
+      - coordinator
+      - admin
+      - member
+    description: >
+      Papel funcional anterior ao evento (DR-USR-002).
+      Os 5 actores canônicos (ADR-008) — roles ad hoc são proibidos.
+
+  newRoleLabel:
+    type: string
+    enum:
+      - athlete
+      - coach
+      - coordinator
+      - admin
+      - member
+    description: >
+      Novo papel funcional após a alteração (DR-USR-002, DEC-USERS-003).
+      Os 5 actores canônicos (ADR-008) — roles ad hoc são proibidos.
+
+  changedByUserId:
+    type: string
+    format: uuid
+    description: >
+      UUID do usuário (admin ou coordinator) que executou a alteração
+      (DEC-USERS-003: apenas admin e coordinator podem alterar roleLabel).
+    x-semantic-id: identity.user.id.v1
+
+  organizationId:
+    type:
+      - string
+      - "null"
+    format: uuid
+    description: UUID da organização para escopo de auditoria.
+    x-semantic-id: organizations.organization.id.v1

@@ -4,34 +4,118 @@ traceability_manifest:
   compiler_version: 0.1.0
   generated_artifacts:
   - path: generated/contracts/asyncapi/asyncapi.yaml
-    sha256: a9aaa7f9c05a7781611904944ffb629156b58710cb99e1cc91d9aaa1a5db568b
+    sha256: 3ad72d6a540be06d09c3f7c560ce99334c0713cf6b50d058e4b2eaede3cd6fa0
   - path: generated/contracts/asyncapi/channels/training_attendance_marked.yaml
     sha256: 8efb0c1c1ab11d7d8c2c846e5831fb88a0b5ef03fc659cb66de8c1eb69d3b6ce
+  - path: generated/contracts/asyncapi/channels/training_readiness_assessed.yaml
+    sha256: 892240d9765f2eaa3b86d2cbde921a7a2a8a76dc76686971a099d5a291c36fa1
+  - path: generated/contracts/asyncapi/channels/training_session_archived.yaml
+    sha256: ba8087ec67658040b0f31b41d84162a5d23faed2e5713f87a52c2c385610ffa0
+  - path: generated/contracts/asyncapi/channels/training_session_cancelled.yaml
+    sha256: 858f537b7f325eca9273152f613a72f894219f2fcf0cc1fb31621a89c0ea16a8
+  - path: generated/contracts/asyncapi/channels/training_session_completed.yaml
+    sha256: 3a339983f6aacad81ba8a579c8fcc2b355dee8fb03f1272bcd22d2de9f850f9f
+  - path: generated/contracts/asyncapi/channels/training_session_created.yaml
+    sha256: 7b5ac5ea28c462ab21a4bc1d9e2057bf5b742b4153ce9190ccb1f66dfc1811f9
+  - path: generated/contracts/asyncapi/channels/training_session_published.yaml
+    sha256: dc54f2abcdf5f08ff2d5884fba1858bd9c25123277b89440300eb5b77026706b
+  - path: generated/contracts/asyncapi/channels/training_session_started.yaml
+    sha256: d756cab67e35ec1603e30581efab0ddde5709a5d5b9e9328cfd124920ea1b50c
   - path: generated/contracts/asyncapi/messages/training_attendance_marked.yaml
     sha256: 2bd34c2c8240d2d65e7a0de406179da21ddbcd9a3708d0b14318c1f220f4f4b2
+  - path: generated/contracts/asyncapi/messages/training_readiness_assessed.yaml
+    sha256: bdc2d57be584e78d4b4c7a261665a648419f68a2835be4430dc3db2d8a4cb69e
+  - path: generated/contracts/asyncapi/messages/training_session_archived.yaml
+    sha256: 45ca11f6a03251a22d0586f3c1a523ff9c8aea5176638b4d2a1521c4e53a4f13
+  - path: generated/contracts/asyncapi/messages/training_session_cancelled.yaml
+    sha256: 61e8bb68e97f16dbf3788fe44288c7c46ed64c826ab4481cd5a7e94ecdad5824
+  - path: generated/contracts/asyncapi/messages/training_session_completed.yaml
+    sha256: ca8249435a66b9fd9d7f2df8651a5b599ab780ef45638b5da08a8c4b67ad0bc0
+  - path: generated/contracts/asyncapi/messages/training_session_created.yaml
+    sha256: 8258918f8f62e126df1156c62595cda94c17e455abf2c78100b1e711a07fa940
+  - path: generated/contracts/asyncapi/messages/training_session_published.yaml
+    sha256: c428448e9fadff4e9d74b786ae88c877ed2b80c41c16cb68978d9473ce6e734f
+  - path: generated/contracts/asyncapi/messages/training_session_started.yaml
+    sha256: ed3da0229226c39210b92a1221a5e0156195d18110537f474104a5b406adeef5
   - path: generated/contracts/asyncapi/components/schemas/training_attendance_marked_payload.yaml
     sha256: 6ef65f5f38270bb2d877d0968f1672155b79dda9dcba2682f73c3500f2005f0e
-  generated_tree_sha256: 48ad3b52629caf21a6731709c6bf7e9fc1cdcf8b57860d2bd71a5972b2211719
+  - path: generated/contracts/asyncapi/components/schemas/training_readiness_assessed_payload.yaml
+    sha256: 84f6b161b674bb8a8a80b5221b343401e36534a98e8f3baa9b788202f3468220
+  - path: generated/contracts/asyncapi/components/schemas/training_session_archived_payload.yaml
+    sha256: a9f15882e686aabdbeb6b79191e080468c9a41007f7463e7ebac72a61c021735
+  - path: generated/contracts/asyncapi/components/schemas/training_session_cancelled_payload.yaml
+    sha256: 7299b09405f6b10faa1f19975281f17f2a5b4ee9fd08b2ffed238e57408ed6cc
+  - path: generated/contracts/asyncapi/components/schemas/training_session_completed_payload.yaml
+    sha256: ba393faf5d66f65d70abf216dbfd26360a03f738a42fbda466d55149bcb8822b
+  - path: generated/contracts/asyncapi/components/schemas/training_session_created_payload.yaml
+    sha256: ae70bb270bcb079ea8ebd2fc88afc229422269885ebdbc50ec6a7ee6b69499bc
+  - path: generated/contracts/asyncapi/components/schemas/training_session_published_payload.yaml
+    sha256: a9fffba74a03f0ead589fc18514c691c5c495dab678642aa4e156a67bbdc4c29
+  - path: generated/contracts/asyncapi/components/schemas/training_session_started_payload.yaml
+    sha256: d95a3aa053439bd61bb6ab45cc82b92fb7439c39ba1ba8246fc8d6c8eb13b5a3
+  generated_tree_sha256: b1d28a02dab90883c435f332f398616ed8fd2a366cc39e811e00cf90ac4cb7ac
   policy_path: generated/resolved_policy/training.event.resolved.yaml
-  policy_sha256: 285a4fe6e3c88e49d8a4db6d78daf3adcbeacfa28faba70842aa1fe349c31893
+  policy_sha256: 3c55b1b9fef557a4dce3285ffd8396c740489ec4b1aaa368a85fe608efb16e92
   source_contracts:
   - path: contracts/asyncapi/asyncapi.yaml
-    sha256: a9aaa7f9c05a7781611904944ffb629156b58710cb99e1cc91d9aaa1a5db568b
+    sha256: 3ad72d6a540be06d09c3f7c560ce99334c0713cf6b50d058e4b2eaede3cd6fa0
   - path: contracts/asyncapi/channels/training_attendance_marked.yaml
     sha256: 8efb0c1c1ab11d7d8c2c846e5831fb88a0b5ef03fc659cb66de8c1eb69d3b6ce
+  - path: contracts/asyncapi/channels/training_readiness_assessed.yaml
+    sha256: 892240d9765f2eaa3b86d2cbde921a7a2a8a76dc76686971a099d5a291c36fa1
+  - path: contracts/asyncapi/channels/training_session_archived.yaml
+    sha256: ba8087ec67658040b0f31b41d84162a5d23faed2e5713f87a52c2c385610ffa0
+  - path: contracts/asyncapi/channels/training_session_cancelled.yaml
+    sha256: 858f537b7f325eca9273152f613a72f894219f2fcf0cc1fb31621a89c0ea16a8
+  - path: contracts/asyncapi/channels/training_session_completed.yaml
+    sha256: 3a339983f6aacad81ba8a579c8fcc2b355dee8fb03f1272bcd22d2de9f850f9f
+  - path: contracts/asyncapi/channels/training_session_created.yaml
+    sha256: 7b5ac5ea28c462ab21a4bc1d9e2057bf5b742b4153ce9190ccb1f66dfc1811f9
+  - path: contracts/asyncapi/channels/training_session_published.yaml
+    sha256: dc54f2abcdf5f08ff2d5884fba1858bd9c25123277b89440300eb5b77026706b
+  - path: contracts/asyncapi/channels/training_session_started.yaml
+    sha256: d756cab67e35ec1603e30581efab0ddde5709a5d5b9e9328cfd124920ea1b50c
   - path: contracts/asyncapi/messages/training_attendance_marked.yaml
     sha256: 2bd34c2c8240d2d65e7a0de406179da21ddbcd9a3708d0b14318c1f220f4f4b2
+  - path: contracts/asyncapi/messages/training_readiness_assessed.yaml
+    sha256: bdc2d57be584e78d4b4c7a261665a648419f68a2835be4430dc3db2d8a4cb69e
+  - path: contracts/asyncapi/messages/training_session_archived.yaml
+    sha256: 45ca11f6a03251a22d0586f3c1a523ff9c8aea5176638b4d2a1521c4e53a4f13
+  - path: contracts/asyncapi/messages/training_session_cancelled.yaml
+    sha256: 61e8bb68e97f16dbf3788fe44288c7c46ed64c826ab4481cd5a7e94ecdad5824
+  - path: contracts/asyncapi/messages/training_session_completed.yaml
+    sha256: ca8249435a66b9fd9d7f2df8651a5b599ab780ef45638b5da08a8c4b67ad0bc0
+  - path: contracts/asyncapi/messages/training_session_created.yaml
+    sha256: 8258918f8f62e126df1156c62595cda94c17e455abf2c78100b1e711a07fa940
+  - path: contracts/asyncapi/messages/training_session_published.yaml
+    sha256: c428448e9fadff4e9d74b786ae88c877ed2b80c41c16cb68978d9473ce6e734f
+  - path: contracts/asyncapi/messages/training_session_started.yaml
+    sha256: ed3da0229226c39210b92a1221a5e0156195d18110537f474104a5b406adeef5
   - path: contracts/asyncapi/components/schemas/training_attendance_marked_payload.yaml
     sha256: 6ef65f5f38270bb2d877d0968f1672155b79dda9dcba2682f73c3500f2005f0e
+  - path: contracts/asyncapi/components/schemas/training_readiness_assessed_payload.yaml
+    sha256: 84f6b161b674bb8a8a80b5221b343401e36534a98e8f3baa9b788202f3468220
+  - path: contracts/asyncapi/components/schemas/training_session_archived_payload.yaml
+    sha256: a9f15882e686aabdbeb6b79191e080468c9a41007f7463e7ebac72a61c021735
+  - path: contracts/asyncapi/components/schemas/training_session_cancelled_payload.yaml
+    sha256: 7299b09405f6b10faa1f19975281f17f2a5b4ee9fd08b2ffed238e57408ed6cc
+  - path: contracts/asyncapi/components/schemas/training_session_completed_payload.yaml
+    sha256: ba393faf5d66f65d70abf216dbfd26360a03f738a42fbda466d55149bcb8822b
+  - path: contracts/asyncapi/components/schemas/training_session_created_payload.yaml
+    sha256: ae70bb270bcb079ea8ebd2fc88afc229422269885ebdbc50ec6a7ee6b69499bc
+  - path: contracts/asyncapi/components/schemas/training_session_published_payload.yaml
+    sha256: a9fffba74a03f0ead589fc18514c691c5c495dab678642aa4e156a67bbdc4c29
+  - path: contracts/asyncapi/components/schemas/training_session_started_payload.yaml
+    sha256: d95a3aa053439bd61bb6ab45cc82b92fb7439c39ba1ba8246fc8d6c8eb13b5a3
   source_inputs:
   - path: .contract_driven/templates/api/ARCHITECTURE_MATRIX.yaml
     sha256: b3a862f6cabd38f6e2b00deacad66499064897685b2c486f303365f4dc58fc8d
   - path: .contract_driven/templates/api/MODULE_PROFILE_REGISTRY.yaml
     sha256: af3bc0a5c458598f52fdd658b53db1b527196e06805758fb963c89423a179749
   - path: .contract_driven/templates/api/api_rules.yaml
-    sha256: 2829de299d52c4a5912ee3a0489b43271d666d62a83172d3dd32b7417db15ce5
+    sha256: 33c16da25e4f1700edb979ee412eba6c0e5c57ef7c54234ba3d1c42f9293f33c
   - path: .contract_driven/templates/api/CANONICAL_TYPE_REGISTRY.yaml
-    sha256: 49054044d9511dc5faa3aabc0d343e1f1fd6086aa47ef44076dd6c4c30682ebd
+    sha256: efb1ba7de801a93cefef6fd2e58969cb683fa64528f78b0c508815bfd49fa11f
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: 4d1150b5460e9c0eba8846317237b2734c41f35bcab1b346643d48a2efce04a0
-  source_tree_sha256: a426409e88a72eda446a5ff31ed3173dc81327b63c63871f7571747a7ede1b58
+  source_tree_sha256: d7a8be1fc8a78dc8ed73b54d89e0babff36330e7126fee73404b68cdc58992b9

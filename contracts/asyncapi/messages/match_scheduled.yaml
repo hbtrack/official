@@ -1,0 +1,10 @@
+# AsyncAPI Message: match_scheduled
+# Module: matches
+# Domain rules: DR-MATCH-001, DR-MATCH-002, DR-MATCH-004
+
+name: MatchScheduled
+title: Partida Agendada
+summary: Evento publicado quando uma nova partida é agendada no sistema.
+contentType: application/json
+payload:
+  $ref: "../components/schemas/match_scheduled_payload.yaml"

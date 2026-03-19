@@ -1,0 +1,85 @@
+type: object
+additionalProperties: false
+required:
+  - eventType
+  - occurredAt
+  - entryId
+  - athleteUserId
+  - questionnaireDate
+  - readinessScore
+properties:
+  eventType:
+    type: string
+    enum:
+      - wellness.entry.created
+    description: Tipo canônico do evento. Imutável.
+  occurredAt:
+    type: string
+    format: date-time
+    description: Momento em que o evento foi gerado (ISO 8601 UTC).
+    x-semantic-id: core.occurred_at.v1
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+  entryId:
+    type: string
+    format: uuid
+    description: UUID v4 da WellnessEntry criada (INV-WELL-001).
+    x-semantic-id: wellness.entry.id.v1
+  athleteUserId:
+    type: string
+    format: uuid
+    description: UUID do atleta. Referência ao módulo users.
+    x-semantic-id: identity.user.id.v1
+  trainingSessionId:
+    type:
+      - string
+      - "null"
+    format: uuid
+    description: >
+      UUID da sessão relacionada (DR-WELL-003 / INV-WELL-005).
+      Contexto apenas — não implica presença ou autorização de treino.
+    x-semantic-id: training.session.id.v1
+  questionnaireDate:
+    type: string
+    format: date
+    description: "Data do questionário (YYYY-MM-DD). INV-WELL-001."
+  questionnaireLabel:
+    type:
+      - string
+      - "null"
+    maxLength: 80
+    description: Protocolo de coleta aplicado (DR-WELL-004).
+  readinessScore:
+    type: integer
+    minimum: 0
+    maximum: 10
+    description: Score de prontidão autorreferida [0..10] (INV-WELL-002).
+  fatigueScore:
+    type:
+      - integer
+      - "null"
+    minimum: 0
+    maximum: 10
+    description: Score de fadiga autorreferida [0..10] (INV-WELL-002).
+  painScore:
+    type:
+      - integer
+      - "null"
+    minimum: 0
+    maximum: 10
+    description: >
+      Score de dor autorreferida [0..10] (INV-WELL-002).
+      Percepção subjetiva — NÃO é diagnóstico clínico (INV-WELL-004).
+  recoveryScore:
+    type:
+      - integer
+      - "null"
+    minimum: 0
+    maximum: 10
+    description: Score de recuperação autorreferida [0..10] (INV-WELL-002).
+  sleepHours:
+    type:
+      - number
+      - "null"
+    minimum: 0
+    maximum: 24
+    description: Horas de sono reportadas [0..24] (INV-WELL-003).

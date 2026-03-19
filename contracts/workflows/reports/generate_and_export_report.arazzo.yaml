@@ -1,0 +1,76 @@
+arazzo: "1.0.0"
+
+info:
+  title: Reports — Generate and export report
+  version: "0.1.0-pending"
+  summary: >
+    Orquestra o pipeline de geração de relatório: solicitação → processamento → export.
+    BLOQUEADO: Aguarda desenvolvimento do OpenAPI de reports (atualmente stub).
+  description: >
+    Workflow para o pipeline completo de geração de relatório:
+    1) Solicita geração do relatório (assíncrono — pode levar segundos/minutos);
+    2) Aguarda processamento (polling assíncrono — ADR-031: Celery 5.x + Redis 7 como task broker);
+    3) Retorna URL de download do relatório no formato solicitado (PDF, Excel, CSV).
+
+    Tipos de relatório planejados:
+    - TEAM_PERFORMANCE: performance da equipe em período (consumindo training + wellness)
+    - ATHLETE_PROFILE: evolução individual (training + wellness + medical + exercises)
+    - SESSION_ANALYSIS: análise detalhada de uma sessão de treino
+    - LOAD_DISTRIBUTION: distribuição de carga por atleta/período
+    - COMPETITION_SUMMARY: resumo de desempenho em competição (matches + scout + analytics)
+
+    Pré-condições:
+    - Ator tem role COACH ou ANALYST (acesso a dados de performance)
+    - Período de datas válido (data_start < data_end, max range 365 dias)
+    - teamId ou athleteId deve existir e ser acessível ao ator
+
+    Pós-condições:
+    - Relatório gerado disponível via URL temporária (expiração: 24h)
+    - Relatório registrado no audit log (acesso a dados de performance é auditável)
+
+    Decisões pendentes (D4 — stack):
+    - Geração síncrona (para relatórios pequenos) vs. assíncrona com job queue
+    - Storage do PDF/Excel: S3 presigned URL vs. stream direto
+    - Retenção dos arquivos gerados (compliance/LGPD)
+
+x-status: pending-openapi
+x-blocked-by: "reports OpenAPI (currently 8-line stub — needs full endpoint development)"
+x-priority: medium
+x-related-modules:
+  - training
+  - wellness
+  - medical
+  - analytics
+  - audit
+
+sourceDescriptions:
+  - name: hbtrack-http
+    type: openapi
+    url: ../../openapi/openapi.yaml
+    # NOTE: reports endpoints not yet defined in openapi.yaml
+
+workflows:
+  generate_and_export_report:
+    summary: Gerar relatório e exportar (pendente desenvolvimento OpenAPI).
+    # PLACEHOLDER — operationIds não existem ainda
+    steps:
+      - stepId: requestReportGeneration
+        description: >
+          Solicita geração do relatório com tipo, período e filtros.
+          Retorna reportJobId para polling de status.
+          operationId: requestReport (a definir)
+        operationId: PLACEHOLDER_requestReport
+
+      - stepId: pollReportStatus
+        description: >
+          Verifica status do job de geração. Repetir até status=READY ou FAILED.
+          PENDING → aguardar e repetir. READY → prosseguir. FAILED → retornar erro.
+          operationId: getReportStatus (a definir)
+        operationId: PLACEHOLDER_getReportStatus
+
+      - stepId: downloadReport
+        description: >
+          Obtém a URL de download do relatório gerado.
+          URL temporária (24h). Registra acesso no audit log automaticamente.
+          operationId: getReportDownloadUrl (a definir)
+        operationId: PLACEHOLDER_getReportDownloadUrl

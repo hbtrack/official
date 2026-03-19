@@ -1,0 +1,52 @@
+# AsyncAPI Payload Schema: scout_session_completed
+# Module: scout
+# Domain rules: DR-SCOUT-001, DR-SCOUT-003
+# Invariants: INV-SCOUT-001
+# Decisions: DEC-SCOUT-003=C
+
+type: object
+required:
+  - eventType
+  - occurredAt
+  - matchId
+  - completedAt
+  - totalEvents
+additionalProperties: false
+properties:
+  eventType:
+    type: string
+    const: scout.session.completed
+    description: Tipo do evento. Sempre "scout.session.completed".
+
+  occurredAt:
+    type: string
+    format: date-time
+    description: >
+      Timestamp UTC de publicação do evento (ISO 8601).
+    x-semantic-id: core.occurred_at.v1
+
+  matchId:
+    type: string
+    format: uuid
+    description: >
+      UUID da partida cuja sessão de scouting foi finalizada.
+    x-semantic-id: matches.match.id.v1
+
+  completedAt:
+    type: string
+    format: date-time
+    description: >
+      Timestamp UTC de quando a sessão de scouting foi finalizada.
+
+  totalEvents:
+    type: integer
+    minimum: 0
+    description: >
+      Total de eventos de scout registrados para a partida.
+
+  notes:
+    type:
+      - string
+      - "null"
+    maxLength: 2000
+    description: Notas livres do analista sobre a sessão.

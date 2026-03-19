@@ -66,18 +66,18 @@ jobs:
             const fs = require('fs');
             const output = fs.readFileSync('audit_output.txt', 'utf8');
             const passed = output.includes('RESULTADO FINAL: ✓ PASS');
-            
+
             const comment = `## 📊 Context Efficiency Audit
-            
+
             \`\`\`
             ${output.substring(0, 2000)}
             \`\`\`
-            
+
             **Status**: ${passed ? '✅ PASS' : '❌ FAIL'}
-            
+
             [Full report](./_reports/)
             `;
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,

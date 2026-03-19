@@ -1,22 +1,14 @@
 ---
 task_type: generate_code
-version: "1.0.0"
-status: FROZEN
-frozen_reason: "Backend paths não canonizados - awaiting real workspace structure"
-requires: [ADR-026, CODE_ARCHITECTURE.md, ADVERSARIAL_ANALYSIS_GATE=PASS]
-stack: python_fastapi_postgresql
+version: "2.0.0"
+status: active
 ---
 
-# generate_code — Worker de Geração de Código
+# generate_code — Worker de Geração de Código Backend
 
-⚠️ **WORKER CONGELADO** ⚠️
-
-Este worker está temporariamente congelado até que:
-1. A estrutura real de backend seja implementada no workspace (src/<module>/)
-2. CODE_ARCHITECTURE.md seja validado empiricamente
-3. ADVERSARIAL_ANALYSIS_GATE esteja PASS para o módulo alvo
-
-**Não executar este worker até implementação da estrutura src/<module>/ no workspace.**
+> **Stack canônica:** Python 3.12 + Django 5.x + Django Ninja 1.x + PostgreSQL 16 + Django ORM
+> **Referência:** `docs/_canon/CODE_ARCHITECTURE.md` (v1.1.0) + ADR-026 + ADR-031
+> **Estrutura real:** `backend/apps/<module>/`
 
 ---
 
@@ -25,10 +17,11 @@ Este worker está temporariamente congelado até que:
 Antes de executar este worker, verificar:
 
 1. **ADR-026** existe em `docs/_canon/decisions/`
-2. **CODE_ARCHITECTURE.md** existe em `docs/_canon/`
-3. **ADVERSARIAL_ANALYSIS_GATE** PASS para o módulo/recurso alvo
-4. **Contrato OpenAPI** do módulo existe e está validado (gate OPENAPI_ROOT_MODULE_SYNC_GATE PASS)
-5. **JSON Schemas** do módulo existem em `contracts/schemas/<module>/`
+2. **ADR-031** existe em `docs/_canon/decisions/`
+3. **CODE_ARCHITECTURE.md** existe em `docs/_canon/` (versão ≥ 1.1.0)
+4. **ADVERSARIAL_ANALYSIS_GATE** PASS para o módulo/recurso alvo
+5. **Contrato OpenAPI** do módulo existe e está validado (gate `OPENAPI_ROOT_MODULE_SYNC_GATE` PASS)
+6. **JSON Schemas** do módulo existem em `contracts/schemas/<module>/`
 
 Se qualquer pré-requisito estiver ausente → emitir bloqueio correspondente e parar.
 
@@ -48,16 +41,16 @@ layer:     <camada a gerar: domain | application | infrastructure | interface | 
 
 Carregar **apenas** os artefatos necessários para o módulo/feature alvo:
 
-```python
-# Artefatos a carregar (on-demand, não todos de uma vez)
-contracts/openapi/paths/<module>.yaml          # endpoints do módulo
-contracts/schemas/<module>/                    # schemas JSON
+```
+contracts/openapi/paths/<module>.yaml              # endpoints do módulo
+contracts/schemas/<module>/                        # schemas JSON
 docs/hbtrack/modulos/<module>/
-  DOMAIN_RULES_<MODULE>.md                    # regras de negócio
-  INVARIANTS_<MODULE>.md                      # invariantes
-  STATE_MODEL_<MODULE>.md                     # FSM (se aplicável)
-  PERMISSIONS_<MODULE>.md                     # RBAC
-docs/_canon/FEATURE_REGISTRY.yaml             # feature → endpoints
+  DOMAIN_RULES_<MODULE>.md                        # regras de negócio
+  INVARIANTS_<MODULE>.md                          # invariantes
+  STATE_MODEL_<MODULE>.md                         # FSM (se aplicável)
+  PERMISSIONS_<MODULE>.md                         # RBAC
+docs/_canon/FEATURE_REGISTRY.yaml                 # feature → endpoints
+docs/_canon/CODE_ARCHITECTURE.md                  # estrutura canônica
 _reports/adversarial/<module>/<resource>.adversarial.json  # resultado adversarial
 ```
 
@@ -68,8 +61,12 @@ _reports/adversarial/<module>/<resource>.adversarial.json  # resultado adversari
 Para cada entidade identificada no contrato e schemas:
 
 ```python
-# src/<module>/domain/entities.py
-class <Entity>(BaseModel):
+# backend/apps/<module>/domain/entities.py
+from dataclasses import dataclass
+from uuid import UUID
+
+@dataclass
+class <Entity>:
     """
     Entidade: <Entity>
     Módulo: <module>
@@ -77,29 +74,29 @@ class <Entity>(BaseModel):
     """
     id: UUID
     # ... campos derivados do JSON Schema
-    
+
     def validate_invariants(self) -> None:
-        """Enforce INVARIANTS_<MODULE>.md"""
-        # invariantes implementados aqui, nunca no router
+        """Enforce INVARIANTS_<MODULE>.md — nunca validar no router"""
+        ...
 ```
 
 Para entidades com FSM (STATE_MODEL presente):
 
 ```python
-# domain/state_machine.py
-from enum import Enum
+# backend/apps/<module>/domain/state_machine.py
+from enum import StrEnum
 
-class <Entity>Status(str, Enum):
+class <Entity>Status(StrEnum):
     # estados derivados do STATE_MODEL_<MODULE>.md
-    
+
 class <Entity>StateMachine:
-    TRANSITIONS = {
+    TRANSITIONS: dict[<Entity>Status, set[<Entity>Status]] = {
         # transições válidas do STATE_MODEL
     }
-    
+
     @classmethod
-    def can_transition(cls, from_status, to_status) -> bool:
-        ...
+    def can_transition(cls, from_status: <Entity>Status, to_status: <Entity>Status) -> bool:
+        return to_status in cls.TRANSITIONS.get(from_status, set())
 ```
 
 ---
@@ -109,7 +106,9 @@ class <Entity>StateMachine:
 Um use case por feature do FEATURE_REGISTRY:
 
 ```python
-# src/<module>/application/use_cases.py
+# backend/apps/<module>/application/use_cases.py
+from ..domain.entities import <Entity>
+from ..infrastructure.repository import <Module>Repository
 
 class <FeatureName>UseCase:
     """
@@ -118,12 +117,12 @@ class <FeatureName>UseCase:
     """
     def __init__(self, repository: <Module>Repository):
         self._repo = repository
-    
-    async def execute(self, input_dto: <FeatureInput>) -> <FeatureOutput>:
+
+    def execute(self, input_dto: dict) -> <Entity>:
         # 1. Validar invariantes de domínio
         # 2. Executar lógica de negócio (DOMAIN_RULES)
         # 3. Persistir via repositório
-        # 4. Retornar output DTO
+        # 4. Retornar entidade
 ```
 
 ---
@@ -131,51 +130,73 @@ class <FeatureName>UseCase:
 ## Fase GC4 — Geração da Camada Infrastructure
 
 ```python
-# src/<module>/infrastructure/models.py
-from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped
+# backend/apps/<module>/infrastructure/models.py
 import uuid
+from django.db import models
 
-class <Entity>Model(Base):
-    __tablename__ = "<module>_<entities>"  # snake_case plural
-    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+class <Entity>Model(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     # ... campos alinhados com JSON Schema
 
-# src/<module>/infrastructure/repository.py
+    class Meta:
+        db_table = "<module>_<entities>"  # snake_case plural
+        app_label = "<module>"
+
+# backend/apps/<module>/infrastructure/repository.py
+from .models import <Entity>Model
+from ..domain.entities import <Entity>
+
 class <Module>Repository:
-    async def get_by_id(self, id: UUID) -> <Entity> | None: ...
-    async def save(self, entity: <Entity>) -> <Entity>: ...
-    async def list(self, filters: dict) -> list[<Entity>]: ...
+    def get_by_id(self, id: uuid.UUID) -> <Entity> | None:
+        try:
+            return self._to_domain(<Entity>Model.objects.get(pk=id))
+        except <Entity>Model.DoesNotExist:
+            return None
+
+    def save(self, entity: <Entity>) -> <Entity>:
+        model, _ = <Entity>Model.objects.update_or_create(pk=entity.id, defaults=self._to_model(entity))
+        return self._to_domain(model)
+
+    def list(self, filters: dict) -> list[<Entity>]:
+        return [self._to_domain(m) for m in <Entity>Model.objects.filter(**filters)]
 ```
 
 ---
 
-## Fase GC5 — Geração da Camada Interface
+## Fase GC5 — Geração da Camada Interface (Django Ninja)
 
-**REGRA CRÍTICA:** O router deve implementar EXATAMENTE o que está no contrato.
+**REGRA CRÍTICA:** O router deve implementar EXATAMENTE o que está no contrato OpenAPI.
 Verificar cada endpoint, parâmetro, status code e response schema antes de gerar.
 
 ```python
-# src/<module>/interface/router.py
-from fastapi import APIRouter, Depends, HTTPException, status
+# backend/apps/<module>/interface/api.py
+from ninja import Router
+from ninja.errors import HttpError
+from ..application.use_cases import <FeatureName>UseCase
+from ..infrastructure.repository import <Module>Repository
 
-router = APIRouter(prefix="/<module>", tags=["<module>"])
+router = Router(tags=["<module>"])
+
+def get_use_case() -> <FeatureName>UseCase:
+    return <FeatureName>UseCase(<Module>Repository())
 
 @router.post(
     "/<resource>",
-    status_code=status.HTTP_201_CREATED,
-    response_model=<ResourceOutput>,
-    # responses conforme contrato OpenAPI
-    responses={
-        400: {"model": ErrorResponse},
-        401: {"model": ErrorResponse},
-        409: {"model": ErrorResponse},
-    }
+    response={201: <ResourceOutputSchema>, 400: ErrorSchema, 401: ErrorSchema, 409: ErrorSchema},
+    auth=django_auth,  # conforme PERMISSIONS_<MODULE>.md
 )
-async def create_<resource>(
-    body: <ResourceInput>,
-    use_case: <Feature>UseCase = Depends(get_use_case),
-) -> <ResourceOutput>:
-    return await use_case.execute(body)
+def create_<resource>(request, body: <ResourceInputSchema>):
+    """Endpoint conforme contrato: POST /<module>/<resource>"""
+    use_case = get_use_case()
+    return 201, use_case.execute(body.dict())
+```
+
+Registrar o router no `backend/config/api.py`:
+
+```python
+# backend/config/api.py
+from backend.apps.<module>.interface.api import router as <module>_router
+api.add_router("/<module>", <module>_router)
 ```
 
 ---
@@ -185,8 +206,9 @@ async def create_<resource>(
 Para cada use case gerado (testes unitários):
 
 ```python
-# tests/<module>/unit/test_<feature>_use_case.py
+# backend/apps/<module>/tests/unit/test_<feature>_use_case.py
 import pytest
+from unittest.mock import MagicMock
 
 class TestCreate<Feature>:
     def test_success(self): ...
@@ -194,17 +216,17 @@ class TestCreate<Feature>:
     def test_domain_rule_violation(self): ...
 ```
 
-Para cada endpoint gerado (testes de integração):
+Para cada endpoint gerado (testes de integração com pytest-django):
 
 ```python
-# tests/<module>/integration/test_<resource>_router.py
+# backend/apps/<module>/tests/integration/test_<resource>_api.py
 import pytest
-from httpx import AsyncClient
 
+@pytest.mark.django_db
 class Test<Resource>Endpoints:
-    async def test_post_returns_201(self, client: AsyncClient): ...
-    async def test_post_invalid_returns_400(self, client: AsyncClient): ...
-    async def test_unauthorized_returns_401(self, client: AsyncClient): ...
+    def test_post_returns_201(self, client): ...
+    def test_post_invalid_returns_400(self, client): ...
+    def test_unauthorized_returns_401(self, client): ...
 ```
 
 ---
@@ -222,13 +244,14 @@ Após geração:
 🏆 CÓDIGO GERADO — <Feature em português>
 
 ✅ Arquivos criados:
-   - src/<module>/domain/entities.py (X linhas)
-   - src/<module>/application/use_cases.py (X linhas)
-   - src/<module>/infrastructure/ (X arquivos)
-   - src/<module>/interface/router.py (X linhas)
-   - tests/<module>/ (X testes)
+   - backend/apps/<module>/domain/entities.py
+   - backend/apps/<module>/application/use_cases.py
+   - backend/apps/<module>/infrastructure/models.py
+   - backend/apps/<module>/infrastructure/repository.py
+   - backend/apps/<module>/interface/api.py
+   - backend/apps/<module>/tests/ (X testes)
 
-🔄 Próximo passo: rodar pytest para validar geração
+🔄 Próximo passo: python manage.py makemigrations && pytest
 ```
 
 ---
@@ -239,7 +262,7 @@ Após geração:
 |--------|----------|
 | `BLOCKED_REQUIRED_ARTIFACT_MISSING` | Contrato OpenAPI ou schema ausente |
 | `BLOCKED_ADVERSARIAL_PENDING` | Análise adversarial não executada ou FAIL |
-| `BLOCKED_SCHEMA_DRIFT` | Schema Pydantic diverge do JSON Schema canônico |
+| `BLOCKED_SCHEMA_DRIFT` | Model Django diverge do JSON Schema canônico |
 | `BLOCKED_FEATURE_UNREGISTERED` | Feature não registrada no FEATURE_REGISTRY |
 | `BLOCKED_HANDOFF_INCOMPLETE` | Camadas anteriores não geradas na ordem correta |
 
@@ -251,4 +274,4 @@ Ao concluir a geração, atualizar `SESSION_HANDOFF.md` com:
 - Módulo e feature gerados
 - Arquivos criados e contagem de linhas
 - Status no FEATURE_REGISTRY atualizado
-- Próximos passos: testes, migration, deploy
+- Próximos passos: migrations, testes, deploy

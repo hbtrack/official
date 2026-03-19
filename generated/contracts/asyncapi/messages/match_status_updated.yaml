@@ -1,0 +1,10 @@
+# AsyncAPI Message: match_status_updated
+# Module: matches
+# Domain rules: DR-MATCH-001, DR-MATCH-004
+
+name: MatchStatusUpdated
+title: Status da Partida Atualizado
+summary: Evento publicado quando o statusLabel de uma partida avança para uma nova fase (HBR-013).
+contentType: application/json
+payload:
+  $ref: "../components/schemas/match_status_updated_payload.yaml"

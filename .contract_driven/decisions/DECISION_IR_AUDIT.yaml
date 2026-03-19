@@ -1,0 +1,112 @@
+# DECISION_IR_AUDIT.yaml
+# Decisões de implementação — módulo audit
+# Data: 2026-03-19
+# Autor: product owner via agent
+# Confirma arquitetura antes de geração de artefatos
+
+decisions:
+  - id: DEC-AUD-001
+    title: openapi_endpoint_exposure
+    question: >
+      O módulo audit deve expor endpoints de escrita via API (HTTP) ou apenas leitura?
+      E deve haver endpoint de exportação para compliance?
+    options:
+      A:
+        label: Somente leitura
+        description: >
+          GET /audit/entries + GET /audit/entries/{entryId}.
+          Escrita acontece internamente em cada módulo.
+          Simples, mas dificulta auditoria cross-module explícita.
+      B_plus_C:
+        label: Leitura + ingestão cross-module + exportação de compliance
+        description: >
+          GET /audit/entries (query com filtros), GET /audit/entries/{entryId},
+          POST /audit/entries (ingestão cross-module com actorUserId, action, target),
+          GET /audit/entries/export (export filtrado CSV/JSON para compliance/LGPD).
+          Permite que qualquer módulo registre entrada de auditoria via HTTP
+          e que admins exportem o trilho para fins regulatórios.
+      C:
+        label: Leitura + exportação (sem ingestão)
+        description: >
+          GET /audit/entries + GET /audit/entries/{entryId} + GET /audit/entries/export.
+          Exportação de compliance sem expor escrita via API.
+    chosen: B_plus_C
+    rationale: >
+      Escolha B+C: A ingestão via POST /audit/entries permite rastreabilidade cross-module
+      explícita sem acoplamento de dependência nos outros módulos — qualquer módulo com
+      role admin/coordinator pode registrar ação sensível (DR-AUD-005). A exportação
+      atende requisitos de compliance LGPD e auditoria regulatória. INV-AUD-002
+      (append-only) é preservada: POST cria entradas, nunca modifica existentes.
+      OWASP API2:2023 enforced via security bearerAuth em todos os endpoints.
+    doc_ref: >
+      DR-AUD-001, DR-AUD-005, INV-AUD-001, INV-AUD-002,
+      contracts/schemas/audit/audit_entry.schema.json, ADR-007
+
+  - id: DEC-AUD-002
+    title: access_control_policy
+    question: >
+      Quem pode ler o audit trail completo e quem tem acesso contextual?
+    options:
+      A:
+        label: Somente admin acessa o audit trail
+        description: >
+          Role admin é o único que pode listar e ler entradas de auditoria.
+          Máxima segurança, mínimo acesso distribuído.
+      B:
+        label: Admin vê tudo; coordinator com filtro contextual obrigatório
+        description: >
+          admin: acesso irrestrito a todas as entradas.
+          coordinator: acesso apenas às entradas relacionadas a recursos que gerencia;
+          os parâmetros teamId ou organizationId tornam-se obrigatórios quando
+          actorRole=coordinator. Proibido retornar entradas fora do contexto.
+      C:
+        label: Admin vê tudo; coordinator e coach veem apenas as próprias ações
+        description: >
+          admin: irrestrito.
+          coordinator + coach: somente actorUserId == self.
+    chosen: B
+    rationale: >
+      B é o modelo mais adequado para uma plataforma multi-time: coordinator precisa
+      auditar ações dentro do time que gerencia (cadastros, alterações de roster,
+      permissões) mas não tem acesso a dados de outros times/organizações.
+      Filtro contextual obrigatório (teamId ou organizationId) impede escalada horizontal
+      de acesso (OWASP API1:2023). Admin mantém visão global de compliance.
+      Coach/athlete/member não têm acesso a audit (BFLA).
+    doc_ref: >
+      ADR-008, DR-AUD-001, INV-AUD-002, PERMISSIONS_AUDIT.md, OWASP API1:2023, OWASP API5:2023
+
+  - id: DEC-AUD-003
+    title: asyncapi_events
+    question: >
+      O módulo audit deve publicar eventos assíncronos? Quais eventos?
+    options:
+      A:
+        label: Nenhum evento
+        description: >
+          audit permanece sink passivo; outros módulos escritam mas audit
+          não propaga para fora. Simples, sem overhead de mensageria adicional.
+      B:
+        label: audit.entry.created
+        description: >
+          Publica audit.entry.created para cada nova entrada registrada.
+          Útil para integração com SIEM/monitoramento de segurança externo.
+      C:
+        label: audit.entry.created + audit.entry.security_flagged
+        description: >
+          audit.entry.created: publicado para todo novo registro.
+          audit.entry.security_flagged: publicado apenas para entradas sensíveis
+          (ex.: revogação de admin, deleção em massa, login_failed, force_logout,
+          export de dados sensíveis). Distingue volume comum de alertas de segurança.
+    chosen: C
+    rationale: >
+      C distribui responsabilidade de alertas de segurança entre o audit trail
+      e os consumidores downstream (ex.: notifications, SIEM). audit.entry.created
+      é o canal de replicação (downstream sync), enquanto audit.entry.security_flagged
+      permite que notifications, analytics ou sistemas externos reajam especificamente
+      a ações sensíveis sem precisar filtrar todo o volume de auditoria.
+      DR-AUD-005 exige evidência auditável para ações sensíveis — publicar evento
+      dedicado é o mecanismo de enforcement assíncrono. ADR-031 (Celery/Redis) suporta
+      os dois canais sem infra adicional.
+    doc_ref: >
+      DR-AUD-005, INV-AUD-001, INV-AUD-005, ADR-031,
+      contracts/asyncapi/asyncapi.yaml

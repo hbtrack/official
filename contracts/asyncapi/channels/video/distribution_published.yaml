@@ -1,0 +1,14 @@
+description: >
+  Publicado quando um ClipDefinition é entregue a um destino CDN ou broadcast.
+
+  Emitido após DistributionFabric confirmar upload/publish bem-sucedido para
+  target (público, parceiro, broadcast). Inclui URL pública e metadados de
+  renditions disponíveis.
+
+  DR-VID-009: distribuição é sempre rastreada.
+  INV-VID-012: distribuição é idempotente.
+
+publish:
+  operationId: video_distribution_published_publish
+  message:
+    $ref: ../messages/video/distribution_published.yaml

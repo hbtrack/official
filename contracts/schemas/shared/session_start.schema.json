@@ -4,7 +4,7 @@
     "title": "session_start JSON Schema",
     "description": "SSOT para validação de _reports/session_start.json — produzido por 'hb verify', lido por pre-commit, git hooks e validators",
     "type": "object",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "additionalProperties": false,
     "required": [
         "session_id",
@@ -67,7 +67,16 @@
                 "new_state_model",
                 "new_ui_contract",
                 "architecture_review",
-                "decision_discovery"
+                "decision_discovery",
+                "adversarial_analysis",
+                "readiness_promotion",
+                "generate_code",
+                "audit_sovereign_integrity",
+                "audit_context_efficiency",
+                "audit_red_team_pipeline",
+                "audit_gate_coverage",
+                "audit_domain_completeness",
+                "pre_contract_boot"
             ],
             "not": {
                 "enum": [
@@ -94,7 +103,8 @@
                 "ai_ingestion",
                 "identity_access",
                 "audit",
-                "notifications"
+                "notifications",
+                "video"
             ],
             "not": {
                 "enum": [
@@ -210,9 +220,19 @@
                         "format": "date-time",
                         "description": "Timestamp de criação"
                     },
+                    "gate_exit_code": {
+                        "type": "integer",
+                        "description": "Exit code do gate para este artefato: 0=PASS, 1=WARN, 2=FAIL. Obrigatório após 'hb artifact'. Hook bloqueia commit se != 0.",
+                        "enum": [0, 1, 2]
+                    },
+                    "validated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Timestamp da última validação deste artefato"
+                    },
                     "gate_results": {
                         "type": "object",
-                        "description": "Resultados dos gates para este artefato",
+                        "description": "Resultados detalhados dos gates para este artefato (opcional, complementa gate_exit_code)",
                         "properties": {
                             "gate_name": {
                                 "type": "string"
@@ -234,7 +254,12 @@
         },
         "stage2_exit_code": {
             "type": "integer",
-            "description": "Exit code da fase 2 (execution). Obrigatório após fase 2.",
+            "description": "Exit code da fase 2 (execution). Obrigatório após fase 2. Hook bloqueia commit se presente e != 0.",
+            "minimum": 0
+        },
+        "stage3_exit_code": {
+            "type": "integer",
+            "description": "Exit code da fase 3 (validate_contracts.py full run — 44 gates). Produzido pelo agente após FASE 3. Hook bloqueia commit se presente e != 0.",
             "minimum": 0
         },
         "validator_run_id": {
@@ -288,24 +313,29 @@
         "constraints": {
             "constraint_1": "task_type nunca pode ser 'unknown'. Sempre deve ser um valor do enum.",
             "constraint_2": "module nunca pode ser 'unknown'. Sempre deve ser um dos 16 canônicos.",
-            "constraint_3": "stage0_exit_code, stage1_exit_code, stage2_exit_code devem ser preenchidos conforme progresso.",
+            "constraint_3": "stage0_exit_code, stage1_exit_code, stage2_exit_code, stage3_exit_code devem ser preenchidos conforme progresso.",
             "constraint_4": "Se qualquer stage_N_exit_code != 0, hook deve bloquear commit.",
             "constraint_5": "Se um artefato foi validado e posteriormente alterado (hash diverge), hook deve bloquear.",
+            "constraint_11": "Se qualquer artefato em stage2_artifacts tiver gate_exit_code != 0, hook deve bloquear commit.",
+            "constraint_12": "stage3_exit_code deve ser preenchido pelo agente após executar FASE 3 (validate_contracts.py full run). Hook bloqueia se presente e != 0.",
             "constraint_6": "session_id deve ser UUID v4 válido — não usar strings arbitrárias.",
             "constraint_7": "validated_at não pode ser anterior a session_timestamp.",
             "constraint_8": "write_scope não pode ser 'unknown' ou nulo — deve ser concreto.",
             "constraint_9": "Campos legados PROIBIDOS: timestamp, stages, stage0, stage1, stage2, session_meta, context, execution (use additionalProperties: false para enforcement)",
             "constraint_10": "pipeline_version deve ser exatamente '1.0.0' (compatibilidade com SSOT atual)"
         },
-        "deprecated_fields_forbidden": [
-            "timestamp (use session_timestamp)",
-            "stages (use stage com value 0|1|2)",
-            "stage0 (use stage0_exit_code)",
-            "stage1 (use stage1_exit_code)",
-            "stage2 (use stage2_exit_code)",
-            "session_meta (use top-level fields)",
-            "context (use module, task_type, branch)",
-            "execution (use stage2_artifacts)"
-        ]
+        "deprecated_fields_forbidden": {
+            "description": "Campos legados proibidos neste schema. Enforcement via additionalProperties: false na raiz.",
+            "examples": [
+                "timestamp (use session_timestamp)",
+                "stages (use stage com value 0|1|2)",
+                "stage0 (use stage0_exit_code)",
+                "stage1 (use stage1_exit_code)",
+                "stage2 (use stage2_exit_code)",
+                "session_meta (use top-level fields)",
+                "context (use module, task_type, branch)",
+                "execution (use stage2_artifacts)"
+            ]
+        }
     }
 }

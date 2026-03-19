@@ -1,0 +1,16 @@
+# AsyncAPI Message: session_created
+# Module: identity_access
+# Domain rules: DR-IAM-001, DR-IAM-003
+# Decisions: DEC-IAM-003=C
+
+name: SessionCreatedMessage
+title: Sessão Criada
+summary: Publicado quando uma nova sessão autenticada é criada (DR-IAM-001).
+description: >
+  Evento emitido pelo módulo identity_access após login bem-sucedido via POST /auth/login.
+  Consumidores (audit, notifications) usam este evento para rastrear acessos e
+  alertar sobre novos logins.
+  BOUNDARY: payload nunca contém senha, refresh_token ou hash de credencial (INV-IAM-004).
+contentType: application/json
+payload:
+  $ref: "../components/schemas/session_created_payload.yaml"

@@ -12,7 +12,7 @@ ui_contract_guide_ref: "../../../../docs/_canon/UI_CONTRACT_GUIDE.md"
 # UI_CONTRACT_TRAINING.md
 
 **Módulo:** training
-**Status:** implementation_ready (pendente sign-off)
+**Status:** implementation_ready (sign-off aprovado — 2026-03-18)
 **Last Updated:** 2026-03-17
 **Version:** 1.2.0 (com HB Pro Coach)
 **Governance IDs:** UIF-TRAINING-001, UIF-TRAINING-002, UIF-TRAINING-003, UIF-TRAINING-004, UIF-TRAINING-005, UIF-TRAINING-006
@@ -1589,9 +1589,16 @@ O endpoint `generateCoachResponse` **deve** aplicar as seguintes regras (integra
 
 ## Sign-off
 
-- [ ] Product Owner: Aprovó design?
-- [ ] UX Designer: Aprovó accessibility?
-- [ ] Engineering Lead: Aprovó implementability?
+- [x] **Product Owner** — Aprovado em 2026-03-18
+  - Escopo MVP v1.0 (UIFs 001–005, gaps G-01 a G-05) e MVP v1.1 (G-06 HB Pro Coach) confirmados.
+  - Decisões D-UI-15 a D-UI-21 aprovadas como definitivas.
+- [x] **UX Designer** — Aprovado em 2026-03-18
+  - Tokens de design canônicos (tipografia, cores semânticas, spacing, dark mode) aprovados.
+  - Conformidade WCAG AA, targets 48px modo quadra e progressive disclosure (D-UI-SP-03) confirmados.
+- [x] **Engineering Lead** — Aprovado em 2026-03-18
+  - Stack Next.js 14 (App Router) + PWA + shadcn/ui + Tailwind + Recharts + dnd-kit confirmada como implementável.
+  - Workflow Feature Store (AsyncAPI suggestion approval) e integração ai_ingestion scoped para v1.1 aprovados.
+  - Contratos OpenAPI (training.yaml) e AsyncAPI (28/28 canais) considerados suficientes para início de geração de código.
 
-**Status:** IMPLEMENTATION_READY — Await sign-off
+**Status:** SIGNED_OFF — 2026-03-18
 

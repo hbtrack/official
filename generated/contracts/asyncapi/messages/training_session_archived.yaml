@@ -1,0 +1,6 @@
+name: training_session_archived
+title: Training Session Archived
+summary: Sessão de treino arquivada (transição final). Somente leitura.
+contentType: application/json
+payload:
+  $ref: ../components/schemas/training_session_archived_payload.yaml

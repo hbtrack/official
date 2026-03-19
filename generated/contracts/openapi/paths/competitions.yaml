@@ -1,9 +1,418 @@
-# Path items for module: competitions
+# ============================================================
+# Module: competitions — OpenAPI path items
 # Source of truth: contracts/openapi/openapi.yaml
-# Related docs:
-# - docs/_canon/SYSTEM_SCOPE.md
-# - docs/_canon/HANDBALL_RULES_DOMAIN.md
-# - docs/hbtrack/modulos/competitions/MODULE_SCOPE_COMPETITIONS.md
-#
-# Add path items here following OpenAPI 3.1 Path Item Object spec.
-# Each path must belong exclusively to this module (LAYOUT section 6).
+# Docs: docs/hbtrack/modulos/competitions/MODULE_SCOPE_COMPETITIONS.md
+# Domain rules: DR-COMP-001..005
+# Invariants: INV-COMP-001..004
+# ADR refs: ADR-007 (JWT RS256), ADR-008 (RBAC 5 roles), ADR-031 (Django stack)
+# ============================================================
+
+/competitions:
+  get:
+    tags:
+      - competitions
+    summary: Lista competições
+    description: >
+      Retorna lista paginada de competições.
+      competitions é soberano da competição, estágios, inscrições e
+      calendário competitivo (DR-COMP-001).
+
+      Toda competição pertence a uma temporada explícita (DR-COMP-002) —
+      filtragem por seasonId é recomendada.
+      OWASP API4:2023: pageSize máximo 100.
+    operationId: listCompetitions
+    security:
+      - bearerAuth: []
+    parameters:
+      - name: seasonId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+        description: >
+          Filtra por UUID da temporada (DR-COMP-002).
+          Competição sem contexto temporal é inválida — uso altamente recomendado.
+      - name: statusLabel
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: [draft, active, archived]
+        description: Filtra por status do ciclo de vida da competição.
+      - name: organizationId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+        description: Filtra por UUID da organização.
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        description: Número da página (base 1).
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        description: Itens por página (máx 100).
+    responses:
+      "200":
+        description: Lista paginada de competições.
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [data, page, pageSize, total]
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: "../components/schemas/competitions/competition.yaml"
+                page:
+                  type: integer
+                  minimum: 1
+                pageSize:
+                  type: integer
+                  minimum: 1
+                total:
+                  type: integer
+                  minimum: 0
+              additionalProperties: false
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+  post:
+    tags:
+      - competitions
+    summary: Cria competição
+    description: >
+      Cria uma nova competição vinculada a uma temporada explícita.
+      seasonId é obrigatório — competição sem contexto temporal é inválida (DR-COMP-002).
+      stageLabels devem ser explícitos — UI não cria fases por inferência (DR-COMP-004).
+      registrationTeamIds são inscrições formais, não inferidas de histórico (DR-COMP-003).
+    operationId: createCompetition
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [seasonId, name, startDate]
+            additionalProperties: false
+            properties:
+              seasonId:
+                type: string
+                format: uuid
+                x-semantic-id: seasons.season.id.v1
+                description: UUID da temporada à qual esta competição pertence (DR-COMP-002, INV-COMP-001).
+              organizationId:
+                type: [string, "null"]
+                format: uuid
+                x-semantic-id: organizations.organization.id.v1
+              name:
+                type: string
+                minLength: 1
+                maxLength: 140
+                description: Nome oficial da competição (INV-COMP-001).
+              startDate:
+                type: string
+                format: date
+                description: Data de início (INV-COMP-001, INV-COMP-002).
+              endDate:
+                type: [string, "null"]
+                format: date
+                description: Data de fim; quando presente deve ser >= startDate (INV-COMP-002).
+              formatLabel:
+                type: [string, "null"]
+                maxLength: 80
+                description: Formato da competição (ex. liga, copa, torneio).
+              stageLabels:
+                type: array
+                uniqueItems: true
+                items:
+                  type: string
+                  minLength: 1
+                  maxLength: 80
+                default: []
+                description: >
+                  Fases/etapas da competição (DR-COMP-004, INV-COMP-003).
+                  Devem ser explícitos — UI não cria fases por inferência.
+              registrationTeamIds:
+                type: array
+                uniqueItems: true
+                items:
+                  type: string
+                  format: uuid
+                default: []
+                description: >
+                  Equipes inscritas formalmente (DR-COMP-003, INV-COMP-003).
+                  Não pode ser inferido de participação histórica.
+    responses:
+      "201":
+        description: Competição criada com sucesso.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/competitions/competition.yaml"
+      "400":
+        description: Dados inválidos (ex. seasonId ausente, endDate < startDate).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+/competitions/{competitionId}:
+  parameters:
+    - name: competitionId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        x-semantic-id: competitions.competition.id.v1
+      description: UUID da competição.
+
+  get:
+    tags:
+      - competitions
+    summary: Obter competição por ID
+    description: >
+      Retorna dados completos da competição incluindo stageLabels,
+      registrationTeamIds e standingsSummary.
+      standingsSummary é projeção resumida — não substitui truth oficial
+      de partidas (DR-COMP-005).
+    operationId: getCompetition
+    security:
+      - bearerAuth: []
+    responses:
+      "200":
+        description: Dados da competição.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/competitions/competition.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "404":
+        description: Competição não encontrada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+  patch:
+    tags:
+      - competitions
+    summary: Atualizar competição
+    description: >
+      Atualização parcial dos dados da competição.
+      stageLabels NÃO PODEM ser inferidos de resultados de partidas (DR-COMP-004).
+      Transição de statusLabel: draft → active → archived.
+      standingsSummary é apenas projeção resumida (DR-COMP-005).
+    operationId: patchCompetition
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            minProperties: 1
+            properties:
+              name:
+                type: string
+                minLength: 1
+                maxLength: 140
+              startDate:
+                type: string
+                format: date
+              endDate:
+                type: [string, "null"]
+                format: date
+              formatLabel:
+                type: [string, "null"]
+                maxLength: 80
+              statusLabel:
+                type: string
+                enum: [draft, active, archived]
+                description: Transição draft → active → archived.
+              stageLabels:
+                type: array
+                uniqueItems: true
+                items:
+                  type: string
+                  minLength: 1
+                  maxLength: 80
+                description: Substitui o array completo de fases (DR-COMP-004, INV-COMP-003).
+              standingsSummary:
+                type: [string, "null"]
+                maxLength: 500
+                description: >
+                  Projeção resumida de classificação (DR-COMP-005).
+                  Não substitui verdade oficial de partidas ou scout.
+    responses:
+      "200":
+        description: Competição atualizada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/competitions/competition.yaml"
+      "400":
+        description: Dados inválidos (ex. startDate > endDate).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "404":
+        description: Competição não encontrada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+/competitions/{competitionId}/teams/{teamId}:
+  parameters:
+    - name: competitionId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        x-semantic-id: competitions.competition.id.v1
+      description: UUID da competição.
+    - name: teamId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        x-semantic-id: teams.team.id.v1
+      description: UUID da equipe a inscrever.
+
+  post:
+    tags:
+      - competitions
+    summary: Inscrever equipe na competição
+    description: >
+      Registra inscrição formal de equipe na competição (DR-COMP-003).
+      A inscrição é canônica — não pode ser inferida de participação histórica ou partidas.
+      Duplicatas são rejeitadas (INV-COMP-003).
+    operationId: registerTeamInCompetition
+    security:
+      - bearerAuth: []
+    responses:
+      "204":
+        description: Equipe inscrita com sucesso.
+      "400":
+        description: Equipe já inscrita na competição (INV-COMP-003).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "404":
+        description: Competição ou equipe não encontrada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+  delete:
+    tags:
+      - competitions
+    summary: Remover equipe da competição
+    description: >
+      Remove inscrição formal de equipe da competição (DR-COMP-003).
+      registrationTeamIds é atualizado canonicamente.
+    operationId: unregisterTeamFromCompetition
+    security:
+      - bearerAuth: []
+    responses:
+      "204":
+        description: Inscrição removida com sucesso.
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "404":
+        description: Competição ou inscrição não encontrada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"

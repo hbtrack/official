@@ -1,0 +1,107 @@
+arazzo: "1.0.0"
+
+info:
+  title: Scout — Registro e Consulta de Eventos Táticos
+  version: "1.0.0"
+  summary: >
+    Orquestra o fluxo de registro de observações táticas e finalização de sessão de scouting.
+  description: >
+    Workflow que modela como um analista (coordinator/coach) registra eventos
+    observacionais táticos durante ou após uma partida de handebol e finaliza
+    a sessão de scouting (DEC-SCOUT-001=C, DEC-SCOUT-003=C).
+
+    Fluxo:
+    1) Analista cria eventos de scout via POST /scout/events (eventLabel da
+       taxonomia canônica, ancorado a matchId — DR-SCOUT-003).
+    2) Analista pode consultar agregações via GET /scout/events/aggregations.
+    3) Ao finalizar a análise, chama POST /scout/sessions/{matchId}/complete
+       → evento scout.session.completed publicado (DEC-SCOUT-003=C).
+
+    Pré-condições:
+    - Ator autenticado com role admin, coordinator ou coach (DEC-SCOUT-002=B).
+    - matchId existente no módulo matches.
+    - eventLabel pertence à CANONICAL_EVENT_TAXONOMY_SCOUT.yaml (DR-SCOUT-002).
+
+    Pós-condições:
+    - ScoutEvent registrado (INV-SCOUT-001).
+    - Evento scout.event.created publicado via AsyncAPI (DEC-SCOUT-003=C).
+    - Após completeScoutSession: scout.session.completed publicado.
+
+    Roles canônicos (ADR-008): admin | coordinator | coach | athlete | member
+
+x-status: active
+x-related-modules:
+  - matches
+  - teams
+  - users
+  - analytics
+  - notifications
+
+sourceDescriptions:
+  - name: hbtrack-http
+    type: openapi
+    url: ../../openapi/openapi.yaml
+
+workflows:
+  - workflowId: scout_observation_and_session_completion
+    summary: Registrar eventos de scout e finalizar sessão de scouting.
+    description: >
+      Workflow de observação tática: o analista registra eventos, consulta
+      agregações e finaliza a sessão de scouting da partida.
+    parameters:
+      - name: matchId
+        in: body
+        value: $inputs.matchId
+      - name: eventLabel
+        in: body
+        value: $inputs.eventLabel
+      - name: recordedAt
+        in: body
+        value: $inputs.recordedAt
+    steps:
+      - stepId: createScoutEvent
+        operationId: createScoutEvent
+        requestBody:
+          contentType: application/json
+          payload:
+            matchId: $inputs.matchId
+            athleteUserId: $inputs.athleteUserId
+            teamId: $inputs.teamId
+            eventLabel: $inputs.eventLabel
+            tagLabels: $inputs.tagLabels
+            clipAssetRefs: $inputs.clipAssetRefs
+            codingSchemaLabel: $inputs.codingSchemaLabel
+            tacticalAggregationLabel: $inputs.tacticalAggregationLabel
+            recordedAt: $inputs.recordedAt
+        successCriteria:
+          - condition: $statusCode == 201
+        outputs:
+          createdEventId: $response.body#/id
+          createdRecordedAt: $response.body#/recordedAt
+
+      - stepId: getScoutAggregations
+        operationId: getScoutAggregations
+        parameters:
+          - name: matchId
+            in: query
+            value: $inputs.matchId
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          totalEvents: $response.body#/totalEvents
+
+      - stepId: completeScoutSession
+        operationId: completeScoutSession
+        parameters:
+          - name: matchId
+            in: path
+            value: $inputs.matchId
+        requestBody:
+          contentType: application/json
+          payload:
+            notes: $inputs.sessionNotes
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          completedAt: $response.body#/completedAt
+          finalTotalEvents: $response.body#/totalEvents

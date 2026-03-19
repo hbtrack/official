@@ -1,0 +1,15 @@
+description: >
+  Publicado quando SyncService corrige divergência de timecode.
+
+  Emitido quando timecode do vídeo diverge de scout por >100ms. Inclui
+  timecode anterior (rejected), novo timecode aceito, e fonte de verdade
+  (scout_event_id). Histórico é preservado para auditoria.
+
+  DR-VID-010: sincronização com scout é referência.
+  INV-VID-010: scout timecode nunca muda.
+  INV-VID-011: sync layer resolve desalinhamento.
+
+publish:
+  operationId: video_sync_adjustment_applied_publish
+  message:
+    $ref: ../messages/video/sync_adjustment_applied.yaml

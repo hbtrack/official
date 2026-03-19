@@ -1,0 +1,10 @@
+# AsyncAPI Message: competition_phase_changed
+# Module: competitions
+# Domain rules: DR-COMP-001, DR-COMP-004
+
+name: CompetitionPhaseChanged
+title: Fase da Competição Alterada
+summary: Evento publicado quando stageLabels ou statusLabel de uma competição é alterado.
+contentType: application/json
+payload:
+  $ref: "../components/schemas/competition_phase_changed_payload.yaml"

@@ -1,0 +1,103 @@
+arazzo: "1.0.0"
+
+info:
+  title: Audit — Cross-module Audit Trail Registration
+  version: "1.0.0"
+  summary: >
+    Orquestra o fluxo de registro cross-module de uma ação sensível no audit trail.
+  description: >
+    Workflow que modela como um módulo cliente (ex.: identity_access, training)
+    registra explicitamente uma ação sensível no audit trail (DEC-AUD-001=B+C,
+    DR-AUD-005) e como consultar o status do registro.
+
+    Fluxo:
+    1) Módulo originador executa a ação principal no seu próprio domínio.
+    2) Módulo originador registra a ação via POST /audit/entries com os campos
+       obrigatórios (actorUserId, action, occurredAt) e correlationId para rastreio.
+    3) Módulo consultante pode buscar a entrada criada via GET /audit/entries/{entryId}
+       para confirmar o registro.
+
+    Pré-condições:
+    - Ator autenticado com role admin ou coordinator (DEC-AUD-002=B).
+    - actorUserId, action e occurredAt obrigatórios (INV-AUD-001).
+    - correlationId gerado pelo módulo originador para rastreio (DR-AUD-003).
+    - Se targetResourceId presente, targetResourceType também obrigatório (INV-AUD-003).
+
+    Pós-condições:
+    - AuditEntry registrado (append-only — INV-AUD-002).
+    - Evento audit.entry.created publicado via AsyncAPI (DEC-AUD-003=C).
+    - Para ações sensíveis: audit.entry.security_flagged também publicado.
+
+    Casos de uso primários (DR-AUD-005):
+    - Atribuição/revogação de role (identity_access.role_assigned/revoked)
+    - Exportação de dados sensíveis (audit.export_requested)
+    - Logout forçado (identity_access.session_force_revoked)
+    - Alteração de dados clínicos/médicos (medical.record_updated)
+    - Deleção de recursos críticos (training_session.deleted)
+
+    Roles canônicos (ADR-008): admin | coordinator | coach | athlete | member
+
+x-status: active
+x-related-modules:
+  - identity_access
+  - users
+  - training
+  - notifications
+
+sourceDescriptions:
+  - name: hbtrack-http
+    type: openapi
+    url: ../../openapi/openapi.yaml
+
+workflows:
+  - workflowId: cross_module_audit_registration
+    summary: Registrar ação sensível no audit trail cross-module.
+    description: >
+      Workflow de ingestão: o módulo cliente registra a ação no audit e confirma
+      o ID da entrada criada para fins de rastreabilidade.
+    parameters:
+      - name: actorUserId
+        in: body
+        value: $inputs.actorUserId
+      - name: action
+        in: body
+        value: $inputs.action
+      - name: occurredAt
+        in: body
+        value: $inputs.occurredAt
+      - name: correlationId
+        in: body
+        value: $inputs.correlationId
+    steps:
+      - stepId: createAuditEntry
+        operationId: createAuditEntry
+        requestBody:
+          contentType: application/json
+          payload:
+            actorUserId: $inputs.actorUserId
+            action: $inputs.action
+            occurredAt: $inputs.occurredAt
+            targetResourceId: $inputs.targetResourceId
+            targetResourceType: $inputs.targetResourceType
+            outcomeLabel: $inputs.outcomeLabel
+            originLabel: $inputs.originLabel
+            correlationId: $inputs.correlationId
+            beforeSummary: $inputs.beforeSummary
+            afterSummary: $inputs.afterSummary
+        successCriteria:
+          - condition: $statusCode == 201
+        outputs:
+          createdEntryId: $response.body#/id
+          createdOccurredAt: $response.body#/occurredAt
+
+      - stepId: confirmAuditEntry
+        operationId: getAuditEntry
+        parameters:
+          - name: entryId
+            in: path
+            value: $steps.createAuditEntry.outputs.createdEntryId
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          confirmedAction: $response.body#/action
+          confirmedActorUserId: $response.body#/actorUserId

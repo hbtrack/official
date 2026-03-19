@@ -1,0 +1,60 @@
+arazzo: "1.0.0"
+
+info:
+  title: Wellness — Athlete Daily Wellness Tracking
+  version: "1.0.0"
+  summary: >
+    Orquestra o fluxo de coleta diária de wellness de um atleta.
+  description: >
+    Workflow para o fluxo completo de rastreamento de wellness:
+    1) Atleta (ou staff) submete questionário diário;
+    2) WellnessEntry é criada com os scores autorreferidos;
+    3) Resumo de wellness do atleta é consultado para fornecer contexto a training e analytics.
+
+    Pré-condições:
+    - Atleta autenticado (ADR-007 JWT RS256)
+    - athleteUserId corresponde a usuário existente no módulo users
+    - Dados são autorreferidos: não equivalem a diagnóstico ou liberação clínica (DR-WELL-002)
+
+    Pós-condições:
+    - WellnessEntry criada com readinessScore obrigatório (INV-WELL-001)
+    - Evento wellness.entry.created publicado via AsyncAPI
+    - Resumo de wellness disponível para consulta por training e analytics
+
+    Regras de boundary ativas:
+    - WELLNESS_MEDICAL_BOUNDARY_GATE: impede campos clínicos (INV-WELL-004)
+    - INV-WELL-005: trainingSessionId é contexto, não presença ou autorização
+
+    Integração cross-module:
+    - training consume wellness.entry.created via AsyncAPI (insumo consultivo)
+    - analytics consome resumos via GET /wellness/athletes/{id}/summary
+    - medical NÃO tem acesso a dados brutos de wellness (boundary ativo)
+
+x-status: active
+x-related-modules:
+  - training
+  - analytics
+  - users
+
+sourceDescriptions:
+  - name: hbtrack-http
+    type: openapi
+    url: ../../openapi/openapi.yaml
+
+workflows:
+  athlete_daily_wellness_tracking:
+    summary: Fluxo de coleta diária de wellness do atleta.
+    steps:
+      - stepId: submitWellnessEntry
+        description: >
+          Atleta submete questionário diário de wellness.
+          readinessScore é obrigatório; demais scores são opcionais.
+          Boundary: sem campos clínicos (INV-WELL-004).
+        operationId: createWellnessEntry
+
+      - stepId: getWellnessSummary
+        description: >
+          Consulta resumo de wellness do atleta após submissão.
+          Insumo consultivo para training e analytics (DR-WELL-002).
+          Não constitui avaliação clínica ou liberação médica.
+        operationId: getAthleteWellnessSummary

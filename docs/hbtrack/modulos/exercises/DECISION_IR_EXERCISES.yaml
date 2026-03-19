@@ -1,0 +1,291 @@
+ir_version: 1.0.0
+module: exercises
+status: active
+source: docs/hbtrack/modulos/exercises/MODULE_SCOPE_EXERCISES.md
+decision_scope: full_module
+
+module_identity:
+  mission: sovereign_exercise_catalog_for_handball_training
+  unit_of_value: reusable_versioned_exercise_ready_for_training_prescription
+  operational_backbone:
+    - exercise_definition
+    - exercise_versioning
+    - semantic_relations
+    - acl_governance
+    - scope_management
+  real_world_operational_value_unit: exercise_available_for_training_prescription
+  problem_statement: >
+    Without a sovereign, versioned exercise catalog, training sessions
+    lose deterministic reproducibility — referencing "exercise X" without
+    pinning a version means the same session_exercise could mean different
+    exercises on different days, breaking performance analysis and audit trails.
+  benchmarks:
+    - XPS Network (exercise library)
+    - BridgeAthletic
+    - TeamBuildr
+    - Sportlyzer
+  not_this_module:
+    - training_session_management
+    - performance_analytics
+    - wellness_tracking
+    - athlete_profile_management
+    - notification_delivery
+    - audit_repository
+    - permission_definition
+  in_scope:
+    - exercise_creation_and_classification
+    - exercise_versioning_append_only
+    - semantic_relations_between_exercises
+    - acl_per_user_for_org_restricted_exercises
+    - scope_governance_system_vs_org
+    - copy_to_org_workflow
+    - preview_and_full_dto_exposure
+  out_of_scope:
+    - session_planning_or_scheduling
+    - athlete_execution_records
+    - wellness_or_medical_data
+    - direct_notification_dispatch
+    - analytics_computation
+
+# ---------------------------------------------------------------------------
+# CAPABILITIES
+# ---------------------------------------------------------------------------
+capabilities:
+  - id: exercises.catalog_management
+    unique_governance_id: CAP-EXB-001
+    name: catalog_management
+    description: create, classify and maintain exercises with rich pedagogical metadata
+    priority: P1
+    phase: core
+    decision_refs: [EXB-DEC-001, EXB-DEC-002]
+
+  - id: exercises.versioning
+    unique_governance_id: CAP-EXB-002
+    name: versioning
+    description: append-only versioning ensuring each exercise edit creates an immutable snapshot
+    priority: P1
+    phase: core
+    decision_refs: [EXB-DEC-003]
+
+  - id: exercises.semantic_relations
+    unique_governance_id: CAP-EXB-003
+    name: semantic_relations
+    description: typed directional relations between exercises (PROGRESSION, REGRESSION, VARIATION, CONTRAINDICATION)
+    priority: P2
+    phase: core
+    decision_refs: [EXB-DEC-004]
+
+  - id: exercises.acl_governance
+    unique_governance_id: CAP-EXB-004
+    name: acl_governance
+    description: per-user ACL for ORG exercises with visibility_mode RESTRICTED
+    priority: P1
+    phase: core
+    decision_refs: [EXB-DEC-005]
+
+  - id: exercises.copy_to_org
+    unique_governance_id: CAP-EXB-005
+    name: copy_to_org
+    description: copy a SYSTEM exercise into an ORG-owned editable copy
+    priority: P2
+    phase: core
+    decision_refs: [EXB-DEC-006]
+
+# ---------------------------------------------------------------------------
+# DECISIONS
+# ---------------------------------------------------------------------------
+decisions:
+  - id: EXB-DEC-001
+    title: Exercise classification taxonomy
+    status: accepted
+    date: "2026-03-16"
+    context: >
+      Training prescription quality depends on rich exercise metadata.
+      Coaches need to filter exercises by sessionPhase, primaryObjective,
+      physicalLoad, spaceRequired, ageCategory, skillLevel, complexity, and minAthletes.
+    decision: >
+      Exercises expose a fixed classification taxonomy with DOMAIN_AXIOMS-backed enums:
+      sessionPhase (7 values), primaryObjective (5), physicalLoad (4), spaceRequired (4),
+      ageCategory (5), skillLevel (4), complexity (1..5), minAthletes/maxAthletes (1..50).
+      Values are enumerated in DOMAIN_AXIOMS.json — modules do not redefine them.
+    consequences:
+      - All classification fields validated against DOMAIN_AXIOMS enums
+      - New taxonomy values require DOMAIN_AXIOMS update + cross-module review
+      - Preview DTO exposes key filter fields; full DTO exposes all fields
+    refs:
+      - DR-EXB-006
+      - DR-EXB-007
+      - DR-EXB-008
+      - INV-EXB-015
+      - INV-EXB-016
+
+  - id: EXB-DEC-002
+    title: SYSTEM vs ORG scope separation
+    status: accepted
+    date: "2026-03-16"
+    context: >
+      HB Track must ship with a validated exercise catalog (SYSTEM scope) curated
+      by the product team, while allowing each organization to build its own
+      private exercises (ORG scope). These two populations have different governance rules.
+    decision: >
+      scope = SYSTEM: curated by HB Track admin, visible to all authenticated users,
+      not editable by ORG users.
+      scope = ORG: owned by the creating organization, visibility governed by
+      visibility_mode (RESTRICTED default, ORG_WIDE explicit).
+      organization_id is NULL for SYSTEM, required for ORG.
+    consequences:
+      - DR-EXB-003, DR-EXB-004 are binding invariants
+      - INV-EXB-001, INV-EXB-002, INV-EXB-008 enforce scope/org_id rules
+      - ORG users copying SYSTEM exercises get full editorial control of their copy
+    refs:
+      - DR-EXB-003
+      - DR-EXB-004
+      - DR-EXB-009
+      - INV-EXB-001
+      - INV-EXB-002
+      - INV-EXB-008
+
+  - id: EXB-DEC-003
+    title: Append-only versioning for exercises (inherited from TRAIN-DEC-048)
+    status: accepted
+    date: "2026-03-16"
+    context: >
+      Training sessions must reproduce their prescriptions exactly as they were
+      when sessions ran. If an exercise could be overwritten, past sessions would
+      silently reference a different exercise than the one actually used.
+    decision: >
+      ExerciseVersion is append-only and immutable. Editing an exercise creates a
+      new version with version_number = MAX(version_number) + 1.
+      No field of an existing ExerciseVersion can be updated or deleted.
+      current_version_id on Exercise advances to the new version.
+      All old versions remain accessible via GET /exercises/{id}/versions/{versionId}.
+    consequences:
+      - INV-EXB-005, INV-EXB-006 are enforced at DB level (trigger BEFORE UPDATE)
+      - training module must always pin exercise_version_id (TRAIN-DEC-047)
+      - Storage cost grows linearly with edits — acceptable for exercise catalog cardinality
+    refs:
+      - INV-EXB-005
+      - INV-EXB-006
+      - INV-EXB-007
+      - DR-EXB-001
+      - DR-EXB-002
+
+  - id: EXB-DEC-004
+    title: Typed directional semantic relations
+    status: accepted
+    date: "2026-03-16"
+    context: >
+      Coaches need to navigate from an exercise to related alternatives
+      (progressions for more advanced athletes, regressions for injury rehab,
+      variations for session variety, contraindications for medical safety).
+      These relationships have distinct pedagogical meanings.
+    decision: >
+      ExerciseRelation is a directed typed edge: (from_id, to_id, relation_type).
+      Allowed types: PROGRESSION, REGRESSION, VARIATION, CONTRAINDICATION.
+      Reflexive relations (from_id = to_id) are invalid.
+      Duplicate tuples (from, to, type) are rejected with 422.
+      Relation visibility is inherited from the from-exercise visibility.
+    consequences:
+      - INV-EXB-013, INV-EXB-014 enforced at DB and API layer
+      - DR-EXB-005 is the authoritative rule
+      - analytics module can traverse relation graph for recommendation engine
+    refs:
+      - DR-EXB-005
+      - INV-EXB-013
+      - INV-EXB-014
+
+  - id: EXB-DEC-005
+    title: Per-user ACL for ORG RESTRICTED exercises
+    status: accepted
+    date: "2026-03-16"
+    context: >
+      An organization's coaches may want to share specific proprietary exercises
+      with selected coaches without making them visible to the whole organization.
+    decision: >
+      ExerciseACL maps (exercise_id, user_id). Valid only for ORG exercises with
+      visibility_mode = RESTRICTED. ACL on SYSTEM or ORG_WIDE exercises is invalid.
+      Tuple (exercise_id, user_id) must be unique. Users in ACL must belong to the
+      same organization as the exercise. Creator always retains access regardless of ACL.
+    consequences:
+      - INV-EXB-009 through INV-EXB-012 are binding
+      - Cross-org ACL attempts rejected with 422
+      - Changing visibility_mode to ORG_WIDE automatically makes ACL irrelevant (but not deleted)
+    refs:
+      - DR-EXB-004
+      - DR-EXB-010
+      - INV-EXB-009
+      - INV-EXB-010
+      - INV-EXB-011
+      - INV-EXB-012
+
+  - id: EXB-DEC-006
+    title: Copy-to-ORG pattern for SYSTEM exercises
+    status: accepted
+    date: "2026-03-16"
+    context: >
+      ORG users cannot edit SYSTEM exercises (INV-EXB-008), but frequently need
+      to adapt the canonical exercise for their team's specific context (e.g., adjust
+      minAthletes, add team-specific cues, change complexity rating).
+    decision: >
+      POST /exercises/{id}/copy creates a new exercise with scope = ORG, copying
+      all version fields from the SYSTEM exercise's current_version. The copy is
+      independent: src exercise changes do not propagate. The creating user becomes
+      the owner. Version history restarts at version_number = 1.
+    consequences:
+      - DR-EXB-009 governs this pattern
+      - No link maintained between original and copy (divergent after copy)
+      - ORG user can add PROGRESSION relation from copy to original post-copy if needed
+    refs:
+      - DR-EXB-009
+      - INV-EXB-008
+
+# ---------------------------------------------------------------------------
+# BOUNDARY CONTRACTS
+# ---------------------------------------------------------------------------
+boundary_contracts:
+  consumed_by:
+    - module: training
+      how: >
+        training references exercise_id + exercise_version_id in session_exercise.
+        training must not copy/cache exercise content — always reads from exercises
+        as sovereign source. (TRAIN-DEC-047, TRAIN-DEC-048)
+      contract_enforcement: INV-EXB-007
+
+    - module: analytics
+      how: >
+        analytics reads exercises read-only for usage metrics and recommendation context.
+        No writes from analytics into exercises.
+      contract_enforcement: DR-EXB-003
+
+    - module: audit
+      how: >
+        audit observes write events from exercises (create, update, delete, acl changes).
+        exercises emits domain events; audit consumes via async channel.
+      contract_enforcement: PERM-EXB-010
+
+  depends_on:
+    - module: identity_access
+      how: >
+        exercises receives JWT from identity_access and validates role + organization_id.
+        Roles (admin, coordinator, coach, athlete, member) enforced per PERMISSIONS_EXERCISES.md.
+      contract_enforcement: ADR-007, ADR-008
+
+# ---------------------------------------------------------------------------
+# OPEN QUESTIONS / FUTURE DECISIONS
+# ---------------------------------------------------------------------------
+open_questions:
+  - id: EXB-OQ-001
+    question: >
+      Should ExerciseACL support write permissions (not just read)?
+      Current model: ACL grants read access only. To edit, user must be creator.
+      Future: could support "editor" role within ACL.
+    status: deferred
+    unblocks: []
+
+  - id: EXB-OQ-002
+    question: >
+      Should exercises support "favorites" or "collections" per user/team?
+      Current model: no personal organization layer.
+      Future: could support user-level or team-level collections.
+    status: deferred
+    unblocks: []

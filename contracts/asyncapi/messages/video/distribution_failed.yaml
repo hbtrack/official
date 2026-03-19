@@ -1,0 +1,6 @@
+name: video_distribution_failed
+title: Video Distribution Failed
+summary: Falha na distribuição após exaurir retries.
+contentType: application/json
+payload:
+  $ref: ../components/schemas/video/distribution_failed_payload.yaml

@@ -1,0 +1,504 @@
+{
+  "artifact_id": "HBTRACK_MODULE_READINESS_SCORECARD",
+  "generated_at_utc": "2026-03-19T04:33:44Z",
+  "overall_status": "FAIL",
+  "source_report": "_reports/contract_gates/latest.json",
+  "modules": [
+    {
+      "module": "users",
+      "owner": "platform-core",
+      "registry_status": "validated_contract",
+      "expected_surfaces": [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix"
+      ],
+      "readiness_pct": 100,
+      "surface_status": {
+        "module_docs_minimum": "ready",
+        "openapi_sync": "ready",
+        "json_schema": "ready",
+        "test_matrix": "ready"
+      },
+      "evidence": {
+        "minimum_docs_present": true,
+        "openapi_root_ref_count": 2,
+        "openapi_real_path_count": 2,
+        "schema_file_count": 1,
+        "asyncapi_artifact_count": 0,
+        "workflow_count": 0,
+        "pre_contract_evidence": false,
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+      }
+    },
+    {
+      "module": "seasons",
+      "owner": "handball-ops",
+      "registry_status": "draft_contract",
+      "expected_surfaces": [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix"
+      ],
+      "readiness_pct": 75,
+      "surface_status": {
+        "module_docs_minimum": "ready",
+        "openapi_sync": "scaffold_only",
+        "json_schema": "ready",
+        "test_matrix": "ready"
+      },
+      "evidence": {
+        "minimum_docs_present": true,
+        "openapi_root_ref_count": 0,
+        "openapi_real_path_count": 0,
+        "schema_file_count": 1,
+        "asyncapi_artifact_count": 0,
+        "workflow_count": 0,
+        "pre_contract_evidence": false,
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+      }
+    },
+    {
+      "module": "teams",
+      "owner": "handball-ops",
+      "registry_status": "validated_contract",
+      "expected_surfaces": [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "asyncapi",
+        "arazzo"
+      ],
+      "readiness_pct": 83,
+      "surface_status": {
+        "module_docs_minimum": "ready",
+        "openapi_sync": "ready",
+        "json_schema": "ready",
+        "test_matrix": "ready",
+        "asyncapi": "missing",
+        "arazzo": "ready"
+      },
+      "evidence": {
+        "minimum_docs_present": true,
+        "openapi_root_ref_count": 4,
+        "openapi_real_path_count": 4,
+        "schema_file_count": 1,
+        "asyncapi_artifact_count": 0,
+        "workflow_count": 1,
+        "pre_contract_evidence": false,
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+      }
+    },
+    {
+      "module": "training",
+      "owner": "performance-tech",
+      "registry_status": "validated_contract",
+      "expected_surfaces": [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "state_model",
+        "permissions",
+        "errors",
+        "sport_science",
+        "ui_contract",
+        "arazzo",
+        "asyncapi",
+        "decision_ir"
+      ],
+      "readiness_pct": 92,
+      "surface_status": {
+        "module_docs_minimum": "ready",
+        "openapi_sync": "ready",
+        "json_schema": "ready",
+        "test_matrix": "ready",
+        "state_model": "ready",
+        "permissions": "ready",
+        "errors": "ready",
+        "sport_science": "ready",
+        "ui_contract": "ready",
+        "arazzo": "ready",
+        "asyncapi": "ready",
+        "decision_ir": "missing"
+      },
+      "evidence": {
+        "minimum_docs_present": true,
+        "openapi_root_ref_count": 36,
+        "openapi_real_path_count": 36,
+        "schema_file_count": 13,
+        "asyncapi_artifact_count": 24,
+        "workflow_count": 5,
+        "pre_contract_evidence": true,
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+      }
+    },
+    {
+      "module": "wellness",
+      "owner": "performance-tech",
+      "registry_status": "validated_contract",
+      "expected_surfaces": [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "sport_science",
+        "asyncapi",
+        "arazzo"
+      ],
+      "readiness_pct": 100,
+      "surface_status": {
+        "module_docs_minimum": "ready",
+        "openapi_sync": "ready",
+        "json_schema": "ready",
+        "test_matrix": "ready",
+        "sport_science": "ready",
+        "asyncapi": "ready",
+        "arazzo": "ready"
+      },
+      "evidence": {
+        "minimum_docs_present": true,
+        "openapi_root_ref_count": 4,
+        "openapi_real_path_count": 4,
+        "schema_file_count": 1,
+        "asyncapi_artifact_count": 3,
+        "workflow_count": 1,
+        "pre_contract_evidence": false,
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+      }
+    },
+    {
+      "module": "medical",
+      "owner": "performance-tech",
+      "registry_status": "draft_contract",
+      "expected_surfaces": [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "sport_science"
+      ],
+      "readiness_pct": 80,
+      "surface_status": {
+        "module_docs_minimum": "ready",
+        "openapi_sync": "scaffold_only",
+        "json_schema": "ready",
+        "test_matrix": "ready",
+        "sport_science": "ready"
+      },
+      "evidence": {
+        "minimum_docs_present": true,
+        "openapi_root_ref_count": 0,
+        "openapi_real_path_count": 0,
+        "schema_file_count": 1,
+        "asyncapi_artifact_count": 0,
+        "workflow_count": 0,
+        "pre_contract_evidence": false,
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+      }
+    },
+    {
+      "module": "competitions",
+      "owner": "handball-ops",
+      "registry_status": "draft_contract",
+      "expected_surfaces": [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix"
+      ],
+      "readiness_pct": 75,
+      "surface_status": {
+        "module_docs_minimum": "ready",
+        "openapi_sync": "scaffold_only",
+        "json_schema": "ready",
+        "test_matrix": "ready"
+      },
+      "evidence": {
+        "minimum_docs_present": true,
+        "openapi_root_ref_count": 0,
+        "openapi_real_path_count": 0,
+        "schema_file_count": 1,
+        "asyncapi_artifact_count": 0,
+        "workflow_count": 0,
+        "pre_contract_evidence": false,
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+      }
+    },
+    {
+      "module": "matches",
+      "owner": "handball-ops",
+      "registry_status": "draft_contract",
+      "expected_surfaces": [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix"
+      ],
+      "readiness_pct": 75,
+      "surface_status": {
+        "module_docs_minimum": "ready",
+        "openapi_sync": "scaffold_only",
+        "json_schema": "ready",
+        "test_matrix": "ready"
+      },
+      "evidence": {
+        "minimum_docs_present": true,
+        "openapi_root_ref_count": 0,
+        "openapi_real_path_count": 0,
+        "schema_file_count": 1,
+        "asyncapi_artifact_count": 0,
+        "workflow_count": 0,
+        "pre_contract_evidence": false,
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+      }
+    },
+    {
+      "module": "scout",
+      "owner": "handball-ops",
+      "registry_status": "draft_contract",
+      "expected_surfaces": [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "asyncapi"
+      ],
+      "readiness_pct": 60,
+      "surface_status": {
+        "module_docs_minimum": "ready",
+        "openapi_sync": "scaffold_only",
+        "json_schema": "ready",
+        "test_matrix": "ready",
+        "asyncapi": "missing"
+      },
+      "evidence": {
+        "minimum_docs_present": true,
+        "openapi_root_ref_count": 0,
+        "openapi_real_path_count": 0,
+        "schema_file_count": 1,
+        "asyncapi_artifact_count": 0,
+        "workflow_count": 0,
+        "pre_contract_evidence": false,
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+      }
+    },
+    {
+      "module": "exercises",
+      "owner": "performance-tech",
+      "registry_status": "validated_contract",
+      "expected_surfaces": [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "permissions"
+      ],
+      "readiness_pct": 100,
+      "surface_status": {
+        "module_docs_minimum": "ready",
+        "openapi_sync": "ready",
+        "json_schema": "ready",
+        "test_matrix": "ready",
+        "permissions": "ready"
+      },
+      "evidence": {
+        "minimum_docs_present": true,
+        "openapi_root_ref_count": 9,
+        "openapi_real_path_count": 9,
+        "schema_file_count": 4,
+        "asyncapi_artifact_count": 0,
+        "workflow_count": 2,
+        "pre_contract_evidence": false,
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+      }
+    },
+    {
+      "module": "analytics",
+      "owner": "performance-tech",
+      "registry_status": "draft_contract",
+      "expected_surfaces": [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "asyncapi"
+      ],
+      "readiness_pct": 60,
+      "surface_status": {
+        "module_docs_minimum": "ready",
+        "openapi_sync": "scaffold_only",
+        "json_schema": "ready",
+        "test_matrix": "ready",
+        "asyncapi": "missing"
+      },
+      "evidence": {
+        "minimum_docs_present": true,
+        "openapi_root_ref_count": 0,
+        "openapi_real_path_count": 0,
+        "schema_file_count": 1,
+        "asyncapi_artifact_count": 0,
+        "workflow_count": 0,
+        "pre_contract_evidence": false,
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+      }
+    },
+    {
+      "module": "reports",
+      "owner": "performance-tech",
+      "registry_status": "draft_contract",
+      "expected_surfaces": [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "arazzo"
+      ],
+      "readiness_pct": 80,
+      "surface_status": {
+        "module_docs_minimum": "ready",
+        "openapi_sync": "scaffold_only",
+        "json_schema": "ready",
+        "test_matrix": "ready",
+        "arazzo": "ready"
+      },
+      "evidence": {
+        "minimum_docs_present": true,
+        "openapi_root_ref_count": 0,
+        "openapi_real_path_count": 0,
+        "schema_file_count": 1,
+        "asyncapi_artifact_count": 0,
+        "workflow_count": 1,
+        "pre_contract_evidence": false,
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+      }
+    },
+    {
+      "module": "ai_ingestion",
+      "owner": "platform-core",
+      "registry_status": "draft_contract",
+      "expected_surfaces": [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "asyncapi"
+      ],
+      "readiness_pct": 60,
+      "surface_status": {
+        "module_docs_minimum": "ready",
+        "openapi_sync": "scaffold_only",
+        "json_schema": "ready",
+        "test_matrix": "ready",
+        "asyncapi": "missing"
+      },
+      "evidence": {
+        "minimum_docs_present": true,
+        "openapi_root_ref_count": 0,
+        "openapi_real_path_count": 0,
+        "schema_file_count": 1,
+        "asyncapi_artifact_count": 0,
+        "workflow_count": 0,
+        "pre_contract_evidence": false,
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+      }
+    },
+    {
+      "module": "identity_access",
+      "owner": "platform-core",
+      "registry_status": "validated_contract",
+      "expected_surfaces": [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "permissions",
+        "arazzo"
+      ],
+      "readiness_pct": 83,
+      "surface_status": {
+        "module_docs_minimum": "ready",
+        "openapi_sync": "ready",
+        "json_schema": "ready",
+        "test_matrix": "ready",
+        "permissions": "missing",
+        "arazzo": "ready"
+      },
+      "evidence": {
+        "minimum_docs_present": true,
+        "openapi_root_ref_count": 8,
+        "openapi_real_path_count": 8,
+        "schema_file_count": 1,
+        "asyncapi_artifact_count": 0,
+        "workflow_count": 1,
+        "pre_contract_evidence": false,
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+      }
+    },
+    {
+      "module": "audit",
+      "owner": "platform-core",
+      "registry_status": "draft_contract",
+      "expected_surfaces": [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "asyncapi"
+      ],
+      "readiness_pct": 60,
+      "surface_status": {
+        "module_docs_minimum": "ready",
+        "openapi_sync": "scaffold_only",
+        "json_schema": "ready",
+        "test_matrix": "ready",
+        "asyncapi": "missing"
+      },
+      "evidence": {
+        "minimum_docs_present": true,
+        "openapi_root_ref_count": 0,
+        "openapi_real_path_count": 0,
+        "schema_file_count": 1,
+        "asyncapi_artifact_count": 0,
+        "workflow_count": 0,
+        "pre_contract_evidence": false,
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+      }
+    },
+    {
+      "module": "notifications",
+      "owner": "platform-core",
+      "registry_status": "validated_contract",
+      "expected_surfaces": [
+        "module_docs_minimum",
+        "openapi_sync",
+        "json_schema",
+        "test_matrix",
+        "asyncapi",
+        "arazzo"
+      ],
+      "readiness_pct": 83,
+      "surface_status": {
+        "module_docs_minimum": "ready",
+        "openapi_sync": "ready",
+        "json_schema": "ready",
+        "test_matrix": "ready",
+        "asyncapi": "missing",
+        "arazzo": "ready"
+      },
+      "evidence": {
+        "minimum_docs_present": true,
+        "openapi_root_ref_count": 4,
+        "openapi_real_path_count": 4,
+        "schema_file_count": 1,
+        "asyncapi_artifact_count": 0,
+        "workflow_count": 1,
+        "pre_contract_evidence": false,
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+      }
+    }
+  ]
+}

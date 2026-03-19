@@ -1,38 +1,54 @@
 {
-  "$comment": "Sovereign domain shape for module seasons. Conservative enrichment based on MODULE_SCOPE_SEASONS.md and MODULE_SOURCE_AUTHORITY_MATRIX may_infer(sport_cycle, periods, phases, competition_team_relationships).",
+  "$comment": "Sovereign domain shape for module seasons. DR-SEAS-001..005 / INV-SEAS-001..004.",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://hbtrack.local/schemas/seasons/season.schema.json",
   "title": "Season",
-  "description": "Calendar and cycle shape for the seasons module.",
+  "description": "Contêiner temporal do ciclo esportivo. seasons é soberano de ciclo, fases e associações canônicas (DR-SEAS-001).",
   "type": "object",
   "additionalProperties": false,
-  "required": ["id", "name", "startDate", "endDate"],
+  "required": ["id", "name", "startDate", "endDate", "statusLabel", "phaseLabels", "teamIds", "competitionIds"],
   "properties": {
     "id": { "$ref": "#/definitions/uuid_v4" },
     "organizationId": { "$ref": "#/definitions/uuid_v4" },
     "name": { "type": "string", "minLength": 1, "maxLength": 120 },
     "sportCycleLabel": {
-      "type": "string",
+      "type": ["string", "null"],
       "maxLength": 80,
-      "description": "Human-readable cycle label for the season."
+      "description": "Ciclo competitivo/operacional descritivo (DR-SEAS-004). Não substitui regras de competição."
     },
-    "startDate": { "$ref": "#/definitions/date_only" },
-    "endDate": { "$ref": "#/definitions/date_only" },
+    "statusLabel": {
+      "type": "string",
+      "enum": ["draft", "active", "archived"],
+      "description": "Estado do ciclo de vida da temporada."
+    },
+    "startDate": {
+      "$ref": "#/definitions/date_only",
+      "description": "Data de início (INV-SEAS-001, INV-SEAS-002)."
+    },
+    "endDate": {
+      "$ref": "#/definitions/date_only",
+      "description": "Data de fim; deve ser >= startDate (INV-SEAS-002)."
+    },
     "phaseLabels": {
       "type": "array",
-      "items": { "type": "string", "maxLength": 80 },
-      "uniqueItems": true
+      "items": { "type": "string", "minLength": 1, "maxLength": 80 },
+      "uniqueItems": true,
+      "description": "Fases explícitas (DR-SEAS-002, INV-SEAS-003). Não inferidas de resultados."
     },
     "competitionIds": {
       "type": "array",
       "items": { "$ref": "#/definitions/uuid_v4" },
-      "uniqueItems": true
+      "uniqueItems": true,
+      "description": "Competições vinculadas explicitamente (DR-SEAS-003, INV-SEAS-003)."
     },
     "teamIds": {
       "type": "array",
       "items": { "$ref": "#/definitions/uuid_v4" },
-      "uniqueItems": true
-    }
+      "uniqueItems": true,
+      "description": "Equipes associadas canonicamente (DR-SEAS-003, INV-SEAS-003)."
+    },
+    "createdAt": { "$ref": "#/definitions/datetime" },
+    "updatedAt": { "$ref": "#/definitions/datetime" }
   },
   "definitions": {
     "uuid_v4": {
@@ -42,19 +58,26 @@
     "date_only": {
       "type": "string",
       "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "datetime": {
+      "type": "string",
+      "format": "date-time"
     }
   },
   "examples": [
     {
       "id": "550e8400-e29b-41d4-a716-446655440002",
       "organizationId": "550e8400-e29b-41d4-a716-446655440102",
-      "name": "Season 2026",
-      "sportCycleLabel": "Adult National Cycle",
+      "name": "Temporada 2026",
+      "sportCycleLabel": "Ciclo Nacional Adulto 2026",
+      "statusLabel": "active",
       "startDate": "2026-01-10",
       "endDate": "2026-12-20",
-      "phaseLabels": ["pre-season", "regular-season", "playoffs"],
+      "phaseLabels": ["pre-temporada", "fase-regular", "playoffs"],
       "competitionIds": ["550e8400-e29b-41d4-a716-446655440402"],
-      "teamIds": ["550e8400-e29b-41d4-a716-446655440202"]
+      "teamIds": ["550e8400-e29b-41d4-a716-446655440202"],
+      "createdAt": "2026-01-01T10:00:00Z",
+      "updatedAt": "2026-01-10T08:00:00Z"
     }
   ]
 }

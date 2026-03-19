@@ -190,6 +190,8 @@ _archived_e2e
 _archived/
 **/_archived/
 **/_archived/**
+/archive 
+archive/
 
 # Other
 coverage.xml

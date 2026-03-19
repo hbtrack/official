@@ -1,0 +1,57 @@
+arazzo: "1.0.0"
+
+info:
+  title: Video — Capture and Sync with Scout
+  version: "0.1.0"
+  summary: Orquestra captura de vídeo e sincronização de timecode com scout.
+  description: >
+    Workflow de captura e sincronização:
+    1) Cria MatchMediaSession em estado DRAFT;
+    2) Transiciona para CAPTURING (inicia edge capture);
+    3) Aguarda segmentos serem finalizados;
+    4) Transiciona para SYNCING (valida timecodes vs scout);
+    5) Retorna sessão sincronizada pronta para transcodificação.
+
+    Requer: acesso ao matchId, edge node em operação, scout events cadastrados.
+    Emite eventos: video.capture.started, video.segment.ready, video.sync.adjustment_applied.
+
+sourceDescriptions:
+  - name: hbtrack-http
+    type: openapi
+    url: ../../openapi/openapi.yaml
+
+workflows:
+  capture_and_sync:
+    summary: Capturar vídeo e sincronizar timecode com scout.
+    steps:
+      - stepId: createSessionDraft
+        operationId: createSession
+        description: >
+          Cria nova MatchMediaSession em estado DRAFT.
+          Requer: matchId, captureMode (PANORAMIC|AUTO_FOLLOW|MULTI_ANGLE), retentionPolicy.
+        
+      - stepId: transitionToCapturing
+        operationId: updateSession
+        description: >
+          Transiciona sessão de DRAFT → CAPTURING.
+          Inicia captura no edge node; emite video.capture.started.
+          
+      - stepId: ingestMediaSegments
+        operationId: ingestSegment
+        description: >
+          Loop: ingerir MediaSegments recebidos do edge node.
+          Cada segmento herda timecode_logical contíguo (INV-VID-003).
+          Continua até estado SYNCING ser sinalizado.
+        
+      - stepId: transitionToSyncing
+        operationId: updateSession
+        description: >
+          Transiciona sessão de CAPTURING → SYNCING.
+          Todos segmentos já estão finalizados; sync service valida timecodes.
+          Pode emitir video.sync.adjustment_applied se houver divergência vs scout.
+          
+      - stepId: verifySessionSynced
+        operationId: getSession
+        description: >
+          Verifica estado final: SYNCING completo ou pronto para TRANSCODING.
+          Valida que INV-VID-010 e INV-VID-011 foram satisfeitos.

@@ -1,0 +1,93 @@
+arazzo: "1.0.0"
+
+info:
+  title: Identity Access — Assign role to user
+  version: "1.0.0"
+  summary: >
+    Orquestra o fluxo de atribuição de role RBAC canônico a um usuário.
+  description: >
+    Workflow para o fluxo completo de concessão de acesso com role (ADR-008):
+    1) Listar roles atuais do usuário para verificar duplicidade;
+    2) Atribuir o role (POST /auth/users/{userId}/roles);
+    3) Emitir evento de auditoria (cross-module: audit).
+
+    Pré-condições:
+    - Ator deve ter role `admin` ou `coordinator` (ADR-008 BFLA enforcement)
+    - targetUserId deve existir no módulo users
+    - roleLabel deve ser um dos 5 canônicos do ADR-008
+
+    Pós-condições:
+    - Usuário tem o role atribuído (uniqueItems — INV-IAM-002)
+    - Entrada no audit log gerada: identity_access.role_assigned
+
+    Regras de negócio (ADR-008):
+    - Um usuário pode ter múltiplos roles simultaneamente
+    - `admin` pode atribuir qualquer role
+    - `coordinator` pode atribuir coach, athlete e member dentro da organização
+    - Atribuição de role gera entrada obrigatória no audit log (compliance)
+
+    Roles canônicos (ADR-008): admin | coordinator | coach | athlete | member
+
+x-status: active
+x-related-modules:
+  - audit
+  - users
+
+sourceDescriptions:
+  - name: hbtrack-http
+    type: openapi
+    url: ../../openapi/openapi.yaml
+
+workflows:
+  - workflowId: assign_role_to_user
+    summary: Atribuir role RBAC a um usuário.
+    parameters:
+      - name: userId
+        in: path
+        value: $inputs.userId
+      - name: roleLabel
+        in: body
+        value: $inputs.roleLabel
+    steps:
+      - stepId: checkCurrentRoles
+        operationId: listUserRoles
+        parameters:
+          - name: userId
+            in: path
+            value: $inputs.userId
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          currentRoles: $response.body#/roles
+
+      - stepId: assignRole
+        operationId: assignRole
+        parameters:
+          - name: userId
+            in: path
+            value: $inputs.userId
+        requestBody:
+          contentType: application/json
+          payload:
+            roleLabel: $inputs.roleLabel
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          updatedRoles: $response.body#/roles
+        description: >
+          Verifica se o usuário existe, está ativo e pertence à organização.
+          operationId: getIdentityUser (a definir)
+        operationId: PLACEHOLDER_getIdentityUser
+
+      - stepId: checkCurrentRoles
+        description: >
+          Lista roles atuais para verificar se role já está atribuído.
+          operationId: listUserRoles (a definir)
+        operationId: PLACEHOLDER_listUserRoles
+
+      - stepId: assignRole
+        description: >
+          Atribui o role ao usuário. Pode retornar 409 se role já atribuído.
+          Deve gerar evento identity_access.role_assigned para consumers (audit, notifications).
+          operationId: assignRoleToUser (a definir)
+        operationId: PLACEHOLDER_assignRoleToUser

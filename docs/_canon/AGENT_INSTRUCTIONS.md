@@ -4,7 +4,6 @@
 
 ## 0. LEIA PRIMEIRO
 Se existir `SESSION_HANDOFF.md` na raiz → leia ANTES de qualquer outra coisa.
-Se existir `backloggov.md` → consulte para contexto de backlog de governança.
 
 ## 1. MODO DE OPERAÇÃO
 - Boot mínimo: este arquivo + SESSION_HANDOFF.md (se existir)
@@ -21,8 +20,8 @@ Humano é leigo em desenvolvimento — comunicar em linguagem de produto, nunca 
 ## 3. 16 MÓDULOS CANÔNICOS
 > **SSOT**: `docs/_canon/MODULE_REGISTRY.yaml` — consulte para status atual de cada módulo
 
-## 4. 9 TASK TYPES → WORKERS
-> **SSOT**: `.contract_driven/TASK_CATALOG.yaml` — consulte para task routing atualizado
+## 4. TASK TYPES → WORKERS
+> **SSOT**: `.contract_driven/TASK_CATALOG.yaml` — consulte para task routing atualizado (lista completa e status)
 
 Ponto de entrada OBRIGATÓRIO para todos: `.contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md`
 

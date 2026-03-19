@@ -1,0 +1,8 @@
+description: >
+  Evento emitido quando status de preparação (readiness) é avaliado.
+  Readiness score (0–100) com componentes: sleep_quality, wellness_mood, resting_hr, yesterdays_fatigue.
+
+publish:
+  operationId: training_readiness_assessed_publish
+  message:
+    $ref: ../messages/training_readiness_assessed.yaml

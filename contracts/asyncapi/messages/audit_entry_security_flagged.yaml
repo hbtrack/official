@@ -1,0 +1,27 @@
+# AsyncAPI Message: audit_entry_security_flagged
+# Module: audit
+# Domain rules: DR-AUD-001, DR-AUD-005
+# Invariants: INV-AUD-001, INV-AUD-002, INV-AUD-004
+# Decisions: DEC-AUD-003=C
+
+name: AuditEntrySecurityFlaggedMessage
+title: Entrada de Auditoria com Flag de Segurança
+summary: >
+  Publicado para entradas de auditoria classificadas como ações sensíveis de segurança
+  (DEC-AUD-003=C, DR-AUD-005).
+description: >
+  Evento emitido pelo módulo audit em adição a audit.entry.created quando a ação
+  registrada pertence à taxonomia de ações sensíveis (permissão, autenticação,
+  exportação, suspensão, deleção em massa).
+
+  Consumidores primários:
+  - notifications: gerar alerta de segurança para admin
+  - analytics: agregar métricas de segurança
+  - SIEM externo: correlacionar ameaças
+
+  BOUNDARY:
+  - Mesmo envelope de audit.entry.created + campo securitySeverityLabel
+  - Nunca contém credenciais, tokens ou payload integral sensível (INV-AUD-004)
+contentType: application/json
+payload:
+  $ref: "../components/schemas/audit_entry_security_flagged_payload.yaml"

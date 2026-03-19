@@ -1,0 +1,60 @@
+arazzo: "1.0.0"
+
+info:
+  title: Exercises — Copy SYSTEM exercise and customize for ORG
+  version: "0.1.0"
+  summary: Copia um exercício SYSTEM para escopo ORG e personaliza para a organização.
+  description: >
+    Workflow para copiar um exercício curado da plataforma (SYSTEM) e adaptá-lo
+    para as necessidades específicas da organização:
+    1) Copia o exercício SYSTEM → novo exercício ORG independente;
+    2) Atualiza o exercício copiado com customizações locais (cria versionNumber=2);
+    3) Opcional: adiciona relações com outros exercícios da ORG.
+
+    Pré-condições:
+    - sourceExerciseId referencia um exercício SYSTEM existente
+    - Ator tem permissão de leitura do exercício SYSTEM (scope=SYSTEM: visível a todos)
+    - changeReason obrigatório no step 2 (DR-EXB accountability)
+
+    Pós-condições:
+    - Novo exercício ORG criado com scope=ORG, versionNumber=1
+    - Se step 2 executado: exercício tem versionNumber=2 com customizações
+    - Exercício SYSTEM original inalterado (DR-EXB-009)
+    - Cópia independente: alterações no SYSTEM não propagam para o ORG copy
+
+    Casos de uso:
+    - Coach adapta exercício de passe do catálogo global para o estilo tático do clube
+    - Adaptação de exercício SYSTEM para categoria etária específica
+
+sourceDescriptions:
+  - name: hbtrack-http
+    type: openapi
+    url: ../../openapi/openapi.yaml
+
+workflows:
+  copy_and_customize_exercise:
+    summary: Copiar exercício SYSTEM para ORG e customizar.
+    steps:
+      - stepId: copySystemExercise
+        description: >
+          Copia o exercício SYSTEM para o escopo da ORG autenticada.
+          Cria novo exercício com scope=ORG, visibilityMode=RESTRICTED, versionNumber=1.
+          changeReason automático: "Copied from SYSTEM exercise {id}".
+        operationId: copyExerciseToOrg
+        parameters:
+          - name: id
+            in: path
+            value: $inputs.sourceExerciseId
+        outputs:
+          newExerciseId: $response.body#/id
+
+      - stepId: customizeExercise
+        description: >
+          Personaliza o exercício copiado. Cria versionNumber=2 com as adaptações da ORG.
+          changeReason é obrigatório — descrever qual adaptação foi feita e por quê.
+          Apenas campos que precisam ser alterados devem ser enviados (PATCH semântico).
+        operationId: updateExercise
+        parameters:
+          - name: id
+            in: path
+            value: $steps.copySystemExercise.outputs.newExerciseId

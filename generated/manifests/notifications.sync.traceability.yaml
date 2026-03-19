@@ -4,22 +4,22 @@ traceability_manifest:
   compiler_version: 0.1.0
   generated_artifacts:
   - path: generated/contracts/openapi/paths/notifications.yaml
-    sha256: 01dc1c01c49875d966297bff0d4c6890a1b90104e6a8c1724f520c762e99fb9e
-  generated_tree_sha256: 209b4f6e01df96d9ccd74ff5b3d70658018830d351d546dadacf100b8079d842
+    sha256: e1728cf9ace97ac38773b96600633ad470fc37322afd0660a6334349e39196e0
+  generated_tree_sha256: a77b0027a01888b4f0f621fb8f87f07b0ca5b3929e2de0d885267c8a97ed9a6e
   policy_path: generated/resolved_policy/notifications.sync.resolved.yaml
-  policy_sha256: 2a26545257bd6934c5c3d6745bb68b1ad7753db288446ce53755cea9640b5f73
+  policy_sha256: f0ea203a23a42b746f3e74aa4c494731f13049210d71c2dfaaab866f0481916d
   source_contracts:
   - path: contracts/openapi/paths/notifications.yaml
-    sha256: 01dc1c01c49875d966297bff0d4c6890a1b90104e6a8c1724f520c762e99fb9e
+    sha256: e1728cf9ace97ac38773b96600633ad470fc37322afd0660a6334349e39196e0
   source_inputs:
   - path: .contract_driven/templates/api/ARCHITECTURE_MATRIX.yaml
     sha256: b3a862f6cabd38f6e2b00deacad66499064897685b2c486f303365f4dc58fc8d
   - path: .contract_driven/templates/api/MODULE_PROFILE_REGISTRY.yaml
     sha256: af3bc0a5c458598f52fdd658b53db1b527196e06805758fb963c89423a179749
   - path: .contract_driven/templates/api/api_rules.yaml
-    sha256: 2829de299d52c4a5912ee3a0489b43271d666d62a83172d3dd32b7417db15ce5
+    sha256: 33c16da25e4f1700edb979ee412eba6c0e5c57ef7c54234ba3d1c42f9293f33c
   - path: .contract_driven/templates/api/CANONICAL_TYPE_REGISTRY.yaml
-    sha256: 49054044d9511dc5faa3aabc0d343e1f1fd6086aa47ef44076dd6c4c30682ebd
+    sha256: efb1ba7de801a93cefef6fd2e58969cb683fa64528f78b0c508815bfd49fa11f
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: 4d1150b5460e9c0eba8846317237b2734c41f35bcab1b346643d48a2efce04a0
-  source_tree_sha256: 416549d40dbf05e5a02172042c769dbd36daac9a1edc2d9053dcf43fda5e0955
+  source_tree_sha256: a3d6bf4198aee161ada78a3124477fc696b5e531588c07040ad5c6be49db754a

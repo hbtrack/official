@@ -1,0 +1,12 @@
+description: >
+  Publicado quando distribuição falha (timeout, permissão, storage, etc).
+
+  Emitido após DistributionFabric exaurir retries para delivery. Inclui
+  motivo da falha, timestamp, e instruções de retry (manual).
+
+  DR-VID-009: distribuição é sempre rastreada.
+
+publish:
+  operationId: video_distribution_failed_publish
+  message:
+    $ref: ../messages/video/distribution_failed.yaml

@@ -1,0 +1,13 @@
+# AsyncAPI Channel: season.status_updated
+# Module: seasons
+# Domain rules: DR-SEAS-001, DR-SEAS-002, DR-SEAS-005
+
+address: season.status_updated
+title: Status da Temporada Atualizado
+description: >
+  Canal de publicação quando o statusLabel de uma temporada muda
+  (draft → active → archived).
+  seasons não é dono de scorekeeping nem de scout (DR-SEAS-005).
+messages:
+  season_status_updated_publish:
+    $ref: "../messages/season_status_updated.yaml"

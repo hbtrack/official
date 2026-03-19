@@ -64,6 +64,8 @@ Regra: em caso de conflito entre níveis, o nível superior prevalece sempre.
 | 28 | `FRONTEND_CONTRACT.md` | Contrato de frontend: componentes, eventos, integração com backend (ADR-030) |
 | 29 | `FEATURE_REGISTRY.yaml` | Registro de features e sua maturidade |
 | 30 | `IR_TO_SURFACE_MAPPING.yaml` | Mapeamento de IR (Intermediate Representation) para superfícies expostas |
+| 31 | `AGENT_INSTRUCTIONS.md` | Instruções de boot permanente para agentes — carregado em toda sessão |
+| 32 | `SCOPE_BOUNDARY_POLICY.md` | Política de fronteiras entre módulos — regras de referências permitidas/proibidas (ADR-031) |
 
 ### Subdiretórios Autorizados
 

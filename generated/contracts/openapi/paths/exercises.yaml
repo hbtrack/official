@@ -30,7 +30,16 @@
         required: false
         schema:
           type: string
-          enum: [WARMUP, ACTIVATION, TECHNICAL, DECISION_MAKING, TACTICAL, REDUCED_GAME, COOLDOWN]
+          enum:
+            [
+              WARMUP,
+              ACTIVATION,
+              TECHNICAL,
+              DECISION_MAKING,
+              TACTICAL,
+              REDUCED_GAME,
+              COOLDOWN,
+            ]
       - name: primaryObjective
         in: query
         required: false
@@ -182,7 +191,16 @@
                 maxLength: 500
               sessionPhase:
                 type: string
-                enum: [WARMUP, ACTIVATION, TECHNICAL, DECISION_MAKING, TACTICAL, REDUCED_GAME, COOLDOWN]
+                enum:
+                  [
+                    WARMUP,
+                    ACTIVATION,
+                    TECHNICAL,
+                    DECISION_MAKING,
+                    TACTICAL,
+                    REDUCED_GAME,
+                    COOLDOWN,
+                  ]
               primaryObjective:
                 type: string
                 enum: [TECHNICAL, TACTICAL, PHYSICAL, DECISION_MAKING, MIXED]
@@ -193,7 +211,14 @@
                 type: array
                 items:
                   type: string
-                  enum: [POSITIONAL_ATTACK, POSITIONAL_DEFENSE, OFFENSIVE_TRANSITION, DEFENSIVE_TRANSITION, SET_PIECE]
+                  enum:
+                    [
+                      POSITIONAL_ATTACK,
+                      POSITIONAL_DEFENSE,
+                      OFFENSIVE_TRANSITION,
+                      DEFENSIVE_TRANSITION,
+                      SET_PIECE,
+                    ]
               ageCategories:
                 type: array
                 minItems: 1
@@ -353,7 +378,16 @@
                 maxLength: 500
               sessionPhase:
                 type: string
-                enum: [WARMUP, ACTIVATION, TECHNICAL, DECISION_MAKING, TACTICAL, REDUCED_GAME, COOLDOWN]
+                enum:
+                  [
+                    WARMUP,
+                    ACTIVATION,
+                    TECHNICAL,
+                    DECISION_MAKING,
+                    TACTICAL,
+                    REDUCED_GAME,
+                    COOLDOWN,
+                  ]
               primaryObjective:
                 type: string
                 enum: [TECHNICAL, TACTICAL, PHYSICAL, DECISION_MAKING, MIXED]
@@ -364,7 +398,14 @@
                 type: array
                 items:
                   type: string
-                  enum: [POSITIONAL_ATTACK, POSITIONAL_DEFENSE, OFFENSIVE_TRANSITION, DEFENSIVE_TRANSITION, SET_PIECE]
+                  enum:
+                    [
+                      POSITIONAL_ATTACK,
+                      POSITIONAL_DEFENSE,
+                      OFFENSIVE_TRANSITION,
+                      DEFENSIVE_TRANSITION,
+                      SET_PIECE,
+                    ]
               ageCategories:
                 type: array
                 minItems: 1
@@ -760,6 +801,7 @@
   delete:
     operationId: deleteExerciseRelation
     summary: Remove a semantic relation
+    description: Removes a directed semantic relation from this exercise to another. Only the creator of the source exercise may delete its relations.
     security:
       - HTTPBearer: []
     parameters:
@@ -924,6 +966,7 @@
   delete:
     operationId: removeExerciseAclEntry
     summary: Revoke access for a user
+    description: Revokes explicit access for the specified user to a RESTRICTED exercise. Cannot remove the creator's own access (INV-EXB-009).
     security:
       - HTTPBearer: []
     parameters:

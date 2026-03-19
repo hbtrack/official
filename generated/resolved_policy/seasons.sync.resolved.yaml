@@ -20,15 +20,47 @@ canonical_types:
     AthleteId:
       inherits: Identifier
       semantic_id: users.athlete.id.v1
+    AuditEntryId:
+      inherits: Identifier
+      semantic_id: audit.entry.id.v1
+    CompetitionId:
+      inherits: Identifier
+      semantic_id: competitions.competition.id.v1
+    CorrelationId:
+      inherits: Identifier
+      nullable: true
+      semantic_id: core.correlation.id.v1
     ExerciseId:
       inherits: Identifier
       semantic_id: exercises.exercise.id.v1
     ExerciseVersionId:
       inherits: Identifier
       semantic_id: exercises.exercise_version.id.v1
+    IngestionJobId:
+      inherits: Identifier
+      semantic_id: ai_ingestion.job.id.v1
+    MatchId:
+      inherits: Identifier
+      semantic_id: matches.match.id.v1
     OccurredAt:
       inherits: Timestamp
       semantic_id: core.occurred_at.v1
+    OrganizationId:
+      inherits: Identifier
+      semantic_id: organizations.organization.id.v1
+    ResourceId:
+      inherits: Identifier
+      nullable: true
+      semantic_id: core.resource.id.v1
+    ScoutEventId:
+      inherits: Identifier
+      semantic_id: scout.event.id.v1
+    SeasonId:
+      inherits: Identifier
+      semantic_id: seasons.season.id.v1
+    TeamId:
+      inherits: Identifier
+      semantic_id: teams.team.id.v1
     TrainingSessionId:
       inherits: Identifier
       semantic_id: training.session.id.v1
@@ -48,6 +80,26 @@ canonical_types:
     field_name: exerciseId
   - canonical_type_ref: exercises.exercise_version.id.v1
     field_name: exerciseVersionId
+  - canonical_type_ref: teams.team.id.v1
+    field_name: teamId
+  - canonical_type_ref: organizations.organization.id.v1
+    field_name: organizationId
+  - canonical_type_ref: seasons.season.id.v1
+    field_name: seasonId
+  - canonical_type_ref: ai_ingestion.job.id.v1
+    field_name: jobId
+  - canonical_type_ref: competitions.competition.id.v1
+    field_name: competitionId
+  - canonical_type_ref: matches.match.id.v1
+    field_name: matchId
+  - canonical_type_ref: core.resource.id.v1
+    field_name: targetResourceId
+  - canonical_type_ref: core.correlation.id.v1
+    field_name: correlationId
+  - canonical_type_ref: audit.entry.id.v1
+    field_name: entryId
+  - canonical_type_ref: scout.event.id.v1
+    field_name: eventId
 contract_sources:
 - contracts/openapi/paths/seasons.yaml
 inputs:

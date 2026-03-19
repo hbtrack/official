@@ -1,0 +1,20 @@
+# ============================================================
+# AsyncAPI Channel: team.roster_updated
+# Module: teams
+# Domain rules: DR-TEAM-001, DR-TEAM-002
+# ============================================================
+
+address: team.roster_updated
+title: Elenco da Equipe Atualizado
+description: >
+  Canal de publicação de alterações no elenco ou comissão técnica de uma
+  equipe (DR-TEAM-001 / DR-TEAM-002 — vínculos explícitos).
+
+  Publicado após operações bem-sucedidas em:
+  - POST   /teams/{teamId}/athletes/{athleteUserId}
+  - DELETE /teams/{teamId}/athletes/{athleteUserId}
+  - POST   /teams/{teamId}/staff/{staffUserId}
+  - DELETE /teams/{teamId}/staff/{staffUserId}
+messages:
+  team_roster_updated_publish:
+    $ref: "../messages/team_roster_updated.yaml"

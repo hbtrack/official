@@ -12,6 +12,28 @@ last_reviewed: "2026-03-17"
 scope: task_routing_authority
 
 task_catalog:
+  # Grupo: Bootstrap Inicial (Fase 0)
+  pre_contract_boot:
+    task_type: pre_contract_boot
+    worker_id: pre_contract_orchestrator
+    worker_path: .contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md
+    status: active
+    description: "Validar entrada, determinar task_type correto e roteamento para pipeline"
+    profile_id: contract_execution
+    stage_allowed: [0]
+    input_requirements:
+      - module (string, mapped to MODULE_REGISTRY.yaml)
+      - task_type (string, must be active/unfrozen task in this catalog)
+      - scope_description (string, optional)
+    artifacts_produced:
+      - _reports/session_start.json
+    blocking_gates: []
+    pre_contract_exception: "PRE_CONTRACT_SELF_BOOTSTRAP"
+    notes: |
+      Este é o ponto de entrada obrigatório que precede qualquer outra tarefa de contrato.
+      Não produz artefato normativo, apenas validação e roteamento.
+      Todos os outros task_types devem ter passado por esta fase.
+
   # Grupo: Arquitetura de Módulos
   new_module:
     task_type: new_module
@@ -137,6 +159,30 @@ task_catalog:
       - docs/hbtrack/modulos/{module}/UI_CONTRACT_{module_upper}.md
     blocking_gates: [UI_DOC_VALIDATION_GATE]
 
+  # Grupo: Promoção de Maturidade
+  readiness_promotion:
+    task_type: readiness_promotion
+    worker_id: readiness_promotion
+    worker_path: .contract_driven/agent_prompts/readiness_promotion.prompt.md
+    status: active
+    description: "Promover módulo de validated_contract para implementation_ready após auditoria de superfícies e pipeline verde"
+    profile_id: contract_execution
+    stage_allowed: [3, 4]
+    input_requirements:
+      - module (string, mapped to MODULE_REGISTRY.yaml)
+    artifacts_produced:
+      - docs/_canon/MODULE_REGISTRY.yaml (status updated to implementation_ready)
+      - _reports/evidence/module_readiness_scorecard.json (updated)
+    blocking_gates:
+      - AXIOM_INTEGRITY_GATE
+      - DERIVED_DRIFT_GATE
+      - OPENAPI_ROOT_STRUCTURE_GATE
+    pre_contract_exception: null
+    notes: |
+      Único caminho formal para implementation_ready.
+      Requer: status=validated_contract + pipeline PASS + sem decisões abertas + todas as expected_surfaces presentes.
+      Habilita: generate_frontend (quando UI Contracts prontas) e evaluate de generate_code.
+
   # Grupo: Decisões Arquiteturais
   architecture_review:
     task_type: architecture_review
@@ -169,17 +215,29 @@ task_catalog:
       - ARCHITECTURE_DECISION_BACKLOG.md (updated with new decision)
     blocking_gates: []
 
-  # Tarefas futuras (congeladas por enquanto)
   generate_code:
     task_type: generate_code
     worker_id: code_generator
     worker_path: .contract_driven/agent_prompts/generate_code.prompt.md
-    status: frozen
-    description: "[FUTURO] Gerar código backend a partir de contrato. Aguarda sign-off de arquitetura."
-    profile_id: null
-    stage_allowed: []
-    reason_frozen: "Geração de código só após validação de todos os contratos + ADRs"
-    unblock_condition: "Quando training + 4 outros módulos estiverem em validated_contract"
+    status: active
+    description: "Gerar código backend (Django Ninja + Django ORM) a partir de contrato validado. Requer ADVERSARIAL_ANALYSIS_GATE=PASS."
+    profile_id: contract_execution
+    stage_allowed: [2, 3]
+    input_requirements:
+      - module (string, mapped to MODULE_REGISTRY.yaml, status=validated_contract)
+      - feature (string, mapped to FEATURE_REGISTRY.yaml)
+      - layer (enum: domain | application | infrastructure | interface | all)
+    artifacts_produced:
+      - backend/apps/{module}/domain/entities.py
+      - backend/apps/{module}/application/use_cases.py
+      - backend/apps/{module}/infrastructure/models.py
+      - backend/apps/{module}/infrastructure/repository.py
+      - backend/apps/{module}/interface/api.py
+      - backend/apps/{module}/tests/
+    blocking_gates:
+      - AXIOM_INTEGRITY_GATE
+      - OPENAPI_ROOT_STRUCTURE_GATE
+      - ADVERSARIAL_ANALYSIS_GATE
 
   generate_frontend:
     task_type: generate_frontend
@@ -191,6 +249,18 @@ task_catalog:
     stage_allowed: []
     reason_frozen: "Geração de UI só após validação de UI Contracts"
     unblock_condition: "Quando UI Contracts da v1.0 de training estiverem em implementation_ready"
+
+  # Grupo: Análise de Segurança (fase pós-contrato, pré-implementação)
+  adversarial_analysis:
+    task_type: adversarial_analysis
+    worker_id: adversarial_analysis
+    worker_path: .contract_driven/agent_prompts/adversarial_analysis.prompt.md
+    status: active
+    description: "Análise adversarial do contrato — OWASP Top 10, boundary violations, invariant fuzzing, edge cases"
+    profile_id: null
+    stage_allowed: []
+    artifacts_produced: []
+    pre_contract_exception: null
 
   # Grupo: Auditorias do Pipeline (audit-only — não produzem artefato normativo)
   audit_sovereign_integrity:

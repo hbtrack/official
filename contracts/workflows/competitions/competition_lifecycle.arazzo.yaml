@@ -1,0 +1,84 @@
+arazzo: "1.0.0"
+info:
+  title: Ciclo de Vida da Competição
+  version: "1.0.0"
+  x-status: active
+  x-module: competitions
+  x-domain-rules: [DR-COMP-001, DR-COMP-002, DR-COMP-003, DR-COMP-004, DR-COMP-005]
+
+sourceDescriptions:
+  - name: hbtrack_api
+    url: ../../openapi/openapi.yaml
+    type: openapi
+
+workflows:
+  - workflowId: competition_lifecycle
+    summary: >
+      Fluxo completo do ciclo de vida de uma competição: criação vinculada a uma
+      temporada (DR-COMP-002), inscrição formal de equipes (DR-COMP-003) e ativação.
+      stageLabels são definidos explicitamente na criação (DR-COMP-004).
+    inputs:
+      type: object
+      required: [seasonId, name, startDate, teamId]
+      properties:
+        seasonId:   { type: string, format: uuid }
+        name:       { type: string }
+        startDate:  { type: string, format: date }
+        stageLabels:
+          type: array
+          items: { type: string }
+          default: []
+        teamId:     { type: string, format: uuid }
+    steps:
+      - stepId: create_competition
+        description: >
+          Cria competição em draft vinculada à temporada (DR-COMP-002).
+          stageLabels explícitos — não inferidos de resultados (DR-COMP-004).
+          seasonId obrigatório (INV-COMP-001).
+        operationId: createCompetition
+        requestBody:
+          contentType: application/json
+          payload:
+            seasonId:    $inputs.seasonId
+            name:        $inputs.name
+            startDate:   $inputs.startDate
+            stageLabels: $inputs.stageLabels
+        successCriteria:
+          - condition: $statusCode == 201
+        outputs:
+          competitionId: $response.body#/id
+
+      - stepId: register_team
+        description: >
+          Inscrição formal de equipe na competição (DR-COMP-003).
+          registrationTeamIds é canônico — não inferido de histórico de partidas.
+        operationId: registerTeamInCompetition
+        parameters:
+          - name: competitionId
+            in: path
+            value: $steps.create_competition.outputs.competitionId
+          - name: teamId
+            in: path
+            value: $inputs.teamId
+        dependsOn: [create_competition]
+        successCriteria:
+          - condition: $statusCode == 204
+
+      - stepId: activate_competition
+        description: >
+          Promove a competição de draft para active após equipes inscritas.
+          competitions não carrega scorekeeping oficial de partidas (DR-COMP-005).
+        operationId: patchCompetition
+        parameters:
+          - name: competitionId
+            in: path
+            value: $steps.create_competition.outputs.competitionId
+        requestBody:
+          contentType: application/json
+          payload:
+            statusLabel: active
+        dependsOn: [register_team]
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          competition: $response.body

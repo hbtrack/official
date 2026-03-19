@@ -249,6 +249,72 @@ Este glossário define os termos canônicos do domínio do HB Track. Quando um t
 
 ---
 
+### Superioridade numérica (`numerical_superiority`)
+**Definição**: Situação em que uma equipe tem mais jogadores em quadra que a adversária, resultado de exclusões temporárias (suspensões de 2 minutos) aplicadas a adversários. Pode ser de 1 ou 2 jogadores a mais.
+
+**Contexto**: Evento tático registrado no scout. Uma equipe em superioridade tem vantagem estatística de conversão. Sistemas ofensivos específicos para superioridade são rastreados como padrão tático. Ver HBR-003.
+
+**Módulos**: `matches`, `scout`, `analytics`
+
+**Ver também**: Inferioridade numérica, Exclusão, HBR-003
+
+---
+
+### Inferioridade numérica (`numerical_inferiority`)
+**Definição**: Situação em que uma equipe tem menos jogadores em quadra que a adversária, resultado de exclusões ativas cumpridas por seus próprios jogadores.
+
+**Contexto**: Registrada automaticamente no scout quando há exclusões em vigor. A equipe em inferioridade geralmente recua para sistema defensivo reforçado. Análise de conversão adversária durante inferioridade é indicador tático importante. Ver HBR-003.
+
+**Módulos**: `matches`, `scout`, `analytics`
+
+**Ver também**: Superioridade numérica, Exclusão, HBR-003
+
+---
+
+### Contra-ataque (`fast_break`)
+**Definição**: Transição ofensiva rápida após recuperação de bola, com progressão antes que a defesa adversária se organize. Objetivo: criar superioridade numérica momentânea ou finalização em velocidade antes do adversário retornar à posição defensiva.
+
+**Contexto**: Evento de scout fundamental no handebol. Contra-ataques são registrados por tipo (1×0, 2×1, 3×2) e desfecho (gol, bloqueio, erro). Equipes com alta taxa de contra-ataque têm velocidade de transição superior — indicador tático chave no scout.
+
+**Módulos**: `scout`, `matches`, `analytics`
+
+**Ver também**: Ataque posicional, Sistema defensivo, Superioridade numérica
+
+---
+
+### Ataque posicional (`positional_attack`)
+**Definição**: Fase ofensiva organizada contra defesa estruturada, sem vantagem numérica ou temporal. A equipe ocupa posições pré-definidas e executa combinações táticas (passes, bloqueios, circulação) para criar espaços de finalização.
+
+**Contexto**: A maioria das finalizações em handebol ocorre no ataque posicional. Análise de eficiência ofensiva posicional (percentual de finalização, zonas de arremesso, rotações defensivas adversárias) é central no scout. Distinto do contra-ataque por não ter vantagem temporal.
+
+**Módulos**: `scout`, `matches`, `analytics`
+
+**Ver também**: Contra-ataque, Sistema ofensivo, Composição de Equipe
+
+---
+
+### Sistema defensivo (`defensive_system`)
+**Definição**: Formação tática coletiva da defesa, classificada pela posição dos defensores em relação à linha de 6 metros. Sistemas principais no handebol de elite: 6:0 (todos na linha de 6m), 5:1 (um avançado a 9m), 3:2:1 (três linhas escalonadas), 4:2 e 3:3.
+
+**Contexto**: Registrado no scout por fase de jogo. A escolha do sistema defensivo determina zonas de pressão, risco de penetração e cobertura de pivô. Análise de eficácia por sistema é indicador tático avançado no scout de adversário.
+
+**Módulos**: `scout`, `analytics`
+
+**Ver também**: Ataque posicional, Contra-ataque, Composição de Equipe
+
+---
+
+### Sistema ofensivo (`offensive_system`)
+**Definição**: Formação e esquema tático coletivo do ataque, nomeado pela posição dos jogadores (ex: 2-3-1, 3-2-1, com pivô centralizado, com dois pivôs). Define papéis posicionais (laterais, centrais, pontas, pivô) e padrões de movimentação.
+
+**Contexto**: Registrado no scout por fase e oponente. Combinado com o sistema defensivo adversário para análise de matchup. Inclui variações para superioridade numérica e situações específicas (7×6 com goleiro avançado como jogador de linha).
+
+**Módulos**: `scout`, `analytics`
+
+**Ver também**: Sistema defensivo, Ataque posicional, Composição de Equipe
+
+---
+
 ### CATEGORIA: Periodização e Planejamento
 
 ---
@@ -261,6 +327,17 @@ Este glossário define os termos canônicos do domínio do HB Track. Quando um t
 **Módulos**: `seasons`, `teams`, `training`, `competitions`
 
 **Ver também**: Mesociclo, Microciclo, Elenco
+
+---
+
+### Macrociclo (`macrocycle`)
+**Definição**: Período completo de planejamento periodizado, geralmente correspondente a uma temporada completa (6 a 12 meses). Subdivide-se em mesociclos e microciclos, contendo todas as fases: preparação geral, preparação específica, período competitivo e transição.
+
+**Contexto**: Unidade de planejamento de longo prazo. No HB Track, o macrociclo é implícito à temporada — documentos de planejamento anual são vinculados ao módulo `seasons`. Treinadores usam o conceito para estruturar a periodização anual completa.
+
+**Módulos**: `training`, `seasons`
+
+**Ver também**: Mesociclo, Microciclo, Temporada
 
 ---
 
@@ -331,6 +408,28 @@ Este glossário define os termos canônicos do domínio do HB Track. Quando um t
 **Módulos**: `wellness`, `training`, `analytics`
 
 **Ver também**: PSE, Sessão de Treino, Wellness
+
+---
+
+### Carga aguda (`acute_load`)
+**Definição**: Carga de treino acumulada nos últimos 7 dias. Representa o estresse recente imposto ao atleta. Calculada como média móvel de 7 dias da carga de treino diária (sRPE × duração em minutos).
+
+**Contexto**: Usada em conjunto com a carga crônica para calcular o índice ACWR (Acute:Chronic Workload Ratio), indicador de risco de lesão e prontidão. Carga aguda elevada sem suporte de carga crônica adequada é sinal de risco. Capacidade planejada para V2 (wellness avançado).
+
+**Módulos**: `wellness`, `analytics`
+
+**Ver também**: Carga crônica, Carga de Treino, Readiness, sRPE
+
+---
+
+### Carga crônica (`chronic_load`)
+**Definição**: Carga de treino acumulada nas últimas 4 semanas (28 dias). Representa a capacidade de treino desenvolvida pelo atleta — o "fitness" acumulado. Calculada como média móvel de 28 dias da carga de treino diária.
+
+**Contexto**: Base do modelo ACWR junto com a carga aguda. Razão ideal (aguda/crônica): 0.8–1.3 (zona segura). Abaixo de 0.8 indica destreinamento; acima de 1.5 indica zona de risco elevado de lesão. Capacidade planejada para V2 (wellness avançado).
+
+**Módulos**: `wellness`, `analytics`
+
+**Ver também**: Carga aguda, Carga de Treino, Readiness, sRPE
 
 ---
 
@@ -408,6 +507,32 @@ Este glossário define os termos canônicos do domínio do HB Track. Quando um t
 **Módulos**: `wellness`, `training`, `analytics`
 
 **Ver também**: Readiness, Wellness, Carga Interna, HRV
+
+---
+
+### CATEGORIA: Análise e Inteligência Tática
+
+---
+
+### Tagging (`tagging`)
+**Definição**: Processo de anotação manual ou assistida de eventos em vídeo ou em tempo real durante partidas, associando timestamp, tipo de evento, jogadores envolvidos e contexto tático.
+
+**Contexto**: Operação central do módulo `scout`. Analistas de vídeo realizam tagging sobre vídeo da partida; analistas de scout realizam tagging ao vivo. O resultado do tagging é a base de eventos que alimenta análises, relatórios e playlists táticas.
+
+**Módulos**: `scout`, `matches`, `ai_ingestion`
+
+**Ver também**: Dossiê de jogo, Scout, Composição de Equipe
+
+---
+
+### Dossiê de jogo (`match_dossier`)
+**Definição**: Documento compilado de análise pré-jogo sobre um adversário específico, contendo padrões táticos, sistemas de jogo, jogadores-chave, tendências estatísticas e recomendações estratégicas.
+
+**Contexto**: Produto central do fluxo de scouting de adversário (Fluxo 2 do MVP). Gerado por analistas a partir de tagging e análise de partidas anteriores do adversário. Distribuído ao staff e atletas antes da partida como ferramenta de preparação tática. Módulo `reports` é responsável pelo output final; `scout` fornece os dados.
+
+**Módulos**: `scout`, `reports`
+
+**Ver também**: Tagging, Scout, Sistema defensivo, Sistema ofensivo
 
 ---
 

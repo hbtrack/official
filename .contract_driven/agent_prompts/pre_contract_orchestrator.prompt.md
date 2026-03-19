@@ -35,7 +35,7 @@ Executar `hb verify`. Se exitcode ≠ 0 → corrigir, re-executar.
 ---
 
 ## Fases 1-4 — Pre-Authoring, Artifact, Pre-commit
-Ver [CONTRACT_PIPELINE.md](docs/_canon/CONTRACT_PIPELINE.md) para detalhes (Fases 1-2-3-4).
+Ver [CONTRACT_PIPELINE.md](../../docs/_canon/CONTRACT_PIPELINE.md) para detalhes (Fases 1-2-3-4).
 
 ### FASE 1 — Descoberta de Artefatos (bloqueante)
 
@@ -62,7 +62,7 @@ Após FASE 0, se existir artefato de contrato (ex: contracts/openapi/paths/{modu
 ---
 
 ## Fases 1-4 — Pre-Authoring, Artifact, Pre-commit
-Ver [CONTRACT_PIPELINE.md](docs/_canon/CONTRACT_PIPELINE.md) para detalhes (Fases 1-2-3-4).
+Ver [CONTRACT_PIPELINE.md](../../docs/_canon/CONTRACT_PIPELINE.md) para detalhes (Fases 1-2-3-4).
 
 ---
 

@@ -1,0 +1,16 @@
+description: >
+  Publicado quando uma nova WellnessEntry é registrada com sucesso.
+
+  Emitido pelo módulo wellness após criação via POST /wellness/entries.
+  Permite que training e analytics consumam como insumo consultivo
+  (DR-WELL-002) sem acesso direto aos dados brutos de wellness.
+
+  DR-WELL-001: wellness é soberano dos dados de readiness, fadiga, sono,
+  dor autorreferida e recuperação.
+  INV-WELL-004: evento não carrega campos clínicos (boundary gate ativo).
+  INV-WELL-005: trainingSessionId presente apenas como contexto — não implica
+  presença ou autorização de treino.
+publish:
+  operationId: wellness_entry_created_publish
+  message:
+    $ref: ../messages/wellness_entry_created.yaml

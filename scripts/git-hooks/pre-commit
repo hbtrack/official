@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
 """
-HB Track Pre-Commit Hook (v2 — Enforcement Real)
+HB Track Pre-Commit Hook (v3 — Gate Exit Code Enforcement)
 
 Validação determinística de contrato-driven pipeline antes de commit:
 1. Validar schema de _reports/session_start.json
 2. Bloquear se stage0_exit_code != 0 (boot falhou)
 3. Bloquear se stage1_exit_code != 0 (discovery falhou)
-4. Bloquear se artefato staged não está em stage2_artifacts
-5. Comparar sha256 do blob staged vs stage2_artifacts
-6. Bloquear se SESSION_HANDOFF.md falta quando há mudanças
-7. Executar validate_contracts.py --profile precommit
-8. Registrar resultado em session_start.json
+4. Bloquear se stage2_exit_code presente e != 0 (execution falhou)
+5. Bloquear se artefato staged não está em stage2_artifacts
+6. Comparar sha256 do blob staged vs stage2_artifacts
+7. Bloquear se qualquer artefato staged tem gate_exit_code != 0
+8. Bloquear se SESSION_HANDOFF.md falta quando há mudanças
+9. Executar validate_contracts.py --profile precommit
+10. Registrar resultado em session_start.json
 
 Pipeline de validação:
-  session.json → stage0/1 checks → artifacts hash → SESSION_HANDOFF → validator
+  session.json → stage0/1/2 checks → artifacts hash → gate_exit_code → SESSION_HANDOFF → validator
 """
 
 from __future__ import annotations
@@ -143,7 +145,7 @@ class HBHookValidator:
         
         try:
             result = subprocess.run(
-                ["git", "diff", "--cached", "--name-only"],
+                ["git", "diff", "--cached", "--name-only", "--diff-filter=ACMR"],
                 capture_output=True,
                 text=True,
                 cwd=self.repo_root,
@@ -164,6 +166,26 @@ class HBHookValidator:
                 sha256.update(chunk)
         return sha256.hexdigest()
     
+    def check_stage2_exit_code(self) -> bool:
+        """Bloquear se stage2_exit_code está presente e != 0 (FASE 2 falhou)."""
+        stage2_code = self.session.get("stage2_exit_code")
+
+        if stage2_code is None:
+            self.warnings.append(
+                "⚠️  HOOK: stage2_exit_code ausente (FASE 2 não completada no pipeline)\n"
+                "   Execute o pipeline completo antes de commitar"
+            )
+            return True
+
+        if stage2_code != 0:
+            self.errors.append(
+                f"❌ HOOK: Phase 2 (execution) falhou com exitcode={stage2_code}\n"
+                "   Corrija os erros de execução antes de commitar"
+            )
+            return False
+
+        return True
+
     def check_artifacts_integrity(self) -> bool:
         """
         Validar que:
@@ -213,6 +235,48 @@ class HBHookValidator:
         
         return all_ok
     
+    def check_artifact_gate_exit_codes(self) -> bool:
+        """
+        Verificar que todos os artefatos staged têm gate_exit_code == 0.
+
+        Se gate_exit_code != 0, o artefato foi registrado com gate falhando.
+        Commit bloqueado até que o artefato seja corrigido e re-registrado.
+        """
+        staged_files = self.get_staged_files()
+        if not staged_files:
+            return True
+
+        artifacts = self.session.get("stage2_artifacts", [])
+        artifact_paths = {art["path"]: art for art in artifacts}
+
+        all_ok = True
+
+        for staged_path in staged_files:
+            if staged_path not in artifact_paths:
+                # Já detectado em check_artifacts_integrity — não duplicar erro
+                continue
+
+            artifact_record = artifact_paths[staged_path]
+            gate_exit_code = artifact_record.get("gate_exit_code")
+
+            if gate_exit_code is None:
+                self.warnings.append(
+                    f"⚠️  HOOK: Artefato sem gate_exit_code registrado:\n"
+                    f"   Path: {staged_path}\n"
+                    f"   Re-registre via: hb artifact {staged_path}"
+                )
+                continue
+
+            if gate_exit_code != 0:
+                self.errors.append(
+                    f"❌ HOOK: Artefato com gate falhando (gate_exit_code={gate_exit_code}):\n"
+                    f"   Path: {staged_path}\n"
+                    f"   Corrija o gate antes de commitar: hb artifact {staged_path}"
+                )
+                all_ok = False
+
+        return all_ok
+
     def check_session_handoff_requirement(self) -> bool:
         """
         Bloquear se há mudanças em contracts/ ou docs/hbtrack/
@@ -268,14 +332,20 @@ class HBHookValidator:
         
         return result.returncode
     
-    def save_hook_exit_code(self, exit_code: int):
-        """Registrar resultado do hook em session_start.json."""
+    def save_hook_success(self):
+        """
+        Registrar sucesso do hook em session_start.json.
+
+        Chamado APENAS quando o hook passa (exit 0) — nunca em falha.
+        Evita o ciclo de sobrescritas: cada tentativa falha não altera session_start.json.
+        A evidência de falha já existe nos artefatos com gate_exit_code != 0.
+        """
         if self.session:
-            self.session["hook_exit_code"] = exit_code
+            self.session["hook_exit_code"] = 0
             self.session["hook_validated_at"] = (
                 __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat()
             )
-            
+
             try:
                 with open(self.session_file, "w") as f:
                     json.dump(self.session, f, indent=2, ensure_ascii=False)
@@ -286,7 +356,7 @@ class HBHookValidator:
     def run(self) -> int:
         """Executar pipeline completo de validação."""
         
-        print("\n══ HB TRACK PRE-COMMIT HOOK (v2 — Real Enforcement) ══\n")
+        print("\n══ HB TRACK PRE-COMMIT HOOK (v3 — Gate Exit Code Enforcement) ══\n")
         
         # Fase 1: Carregar artefatos
         print("▶ Fase 1: Carregando session e schema...")
@@ -303,21 +373,35 @@ class HBHookValidator:
         print("✅ Session válida\n")
         
         # Fase 3: Verificar exit codes dos estágios anteriores
-        print("▶ Fase 3: Verificando exit codes (stage0, stage1)...")
+        print("▶ Fase 3: Verificando exit codes (stage0, stage1, stage2)...")
         if not self.check_stage0_exit_code():
             self._print_errors_and_exit(1)
         if not self.check_stage1_exit_code():
             if self.errors:  # stage1 check pode gerar error
                 self._print_errors_and_exit(1)
             # stage1 warning é OK
+        if not self.check_stage2_exit_code():
+            if self.errors:
+                self._print_errors_and_exit(1)
+            # stage2 warning (ausente) é OK
         print("✅ Exit codes válidos\n")
-        
-        # Fase 4: Verificar integridade de artefatos
+
+        # Fase 4: Verificar integridade de artefatos (path + hash)
         print("▶ Fase 4: Verificando integridade de artefatos staged...")
         if not self.check_artifacts_integrity():
             self._print_errors_and_exit(1)
         print("✅ Artefatos íntegros\n")
-        
+
+        # Fase 4.5: Verificar gate_exit_code por artefato
+        print("▶ Fase 4.5: Verificando gate_exit_code por artefato staged...")
+        if not self.check_artifact_gate_exit_codes():
+            self._print_errors_and_exit(1)
+        if self.warnings:
+            for w in self.warnings:
+                print(w)
+            self.warnings.clear()
+        print("✅ Gate exit codes válidos\n")
+
         # Fase 5: Verificar SESSION_HANDOFF.md
         print("▶ Fase 5: Verificando SESSION_HANDOFF.md...")
         if not self.check_session_handoff_requirement():
@@ -327,27 +411,29 @@ class HBHookValidator:
         # Fase 6: Executar validator com profile precommit
         print("▶ Fase 6: Executando validator...")
         validator_exit = self.execute_validator_profile()
-        
-        # Salvar resultado
-        self.save_hook_exit_code(validator_exit)
-        
+
         if validator_exit != 0:
             print(f"\n❌ HOOK BLOQUEADO: validator retornou exit code {validator_exit}\n")
             return validator_exit
-        
+
+        # Gravar sucesso SOMENTE quando o hook passa — nunca em falha
+        self.save_hook_success()
+
         print("\n✅ PRE-COMMIT HOOK: TUDO OK — commit permitido\n")
         return 0
     
     def _print_errors_and_exit(self, exit_code: int):
-        """Imprimir erros e salvar estado."""
+        """Imprimir erros e sair sem gravar em session_start.json.
+
+        Falhas não são registradas — session_start.json só é atualizado em sucesso.
+        """
         print("\n❌ HOOK BLOQUEADO\n")
         for error in self.errors:
             print(error, file=sys.stderr)
-        
+
         for warning in self.warnings:
             print(warning, file=sys.stderr)
-        
-        self.save_hook_exit_code(exit_code)
+
         sys.exit(exit_code)
 
 

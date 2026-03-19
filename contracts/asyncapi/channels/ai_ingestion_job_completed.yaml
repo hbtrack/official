@@ -1,0 +1,19 @@
+# ============================================================
+# AsyncAPI Channel: ai_ingestion.job.completed
+# Module: ai_ingestion
+# Domain rules: DR-ING-003, DR-ING-005
+# ============================================================
+
+address: ai_ingestion.job.completed
+title: Job de Ingestão Concluído
+description: >
+  Canal de publicação de conclusão de processamento de job de ingestão.
+
+  DR-ING-003: causalidade temporal preservada (receivedAt → completedAt).
+  DR-ING-005: soberania do dado normalizado pertence ao módulo de destino
+  após conclusão — ai_ingestion não é dono do dado final de negócio.
+
+  Publicado após processamento bem-sucedido de qualquer job.
+messages:
+  ai_ingestion_job_completed_publish:
+    $ref: "../messages/ai_ingestion_job_completed.yaml"

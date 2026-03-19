@@ -312,8 +312,8 @@ def _load_canonical_modules_from_layout(root: pathlib.Path) -> list[str]:
     if len(modules) != len(set(modules)):
         return []
 
-    # Validar contagem exata
-    if len(modules) != 16:
+    # Validar contagem exata (17 módulos canônicos desde ADR-033: video module canonicalization)
+    if len(modules) != 17:
         return []
 
     return sorted(modules)
@@ -2582,6 +2582,21 @@ def _looks_like_wsl_vsock_failure(text: str) -> bool:
     return "UtilBindVsockAnyPort" in text
 
 
+def _looks_like_redocly_update_only(text: str) -> bool:
+    """Return True when redocly output contains only an update notice, no real lint errors."""
+    if not isinstance(text, str) or not text:
+        return False
+    meaningful = [
+        ln.strip()
+        for ln in text.splitlines()
+        if ln.strip() and not set(ln.strip()).issubset(set("═║╔╗╚╝ "))
+    ]
+    if not meaningful:
+        return True
+    update_keywords = ("a new version of redocly", "new version", "is available")
+    return all(any(kw in ln.lower() for kw in update_keywords) for ln in meaningful)
+
+
 def _parse_semver_triplet(v: str) -> tuple[int, int, int] | None:
     m = re.match(r"^v?(\d+)\.(\d+)\.(\d+)$", v.strip())
     if not m:
@@ -2974,7 +2989,7 @@ def _g1_path_canonicality(root: pathlib.Path) -> dict:
 
         _check_module_dirs("contracts/schemas", allow_extra={"shared"})
         _check_module_dirs("contracts/workflows", allow_extra={"_global"})
-        _check_module_dirs("contracts/openapi/components/schemas", allow_extra={"shared"})
+        _check_module_dirs("contracts/openapi/components/schemas", allow_extra={"shared", "common"})
 
         # Naming validation (best-effort) for known contract surfaces
         schema_root = root / "contracts" / "schemas"
@@ -4820,6 +4835,11 @@ def _g2n_canon_allowlist(root: pathlib.Path) -> dict:
         "FRONTEND_CONTRACT.md",
         "FEATURE_REGISTRY.yaml",
         "IR_TO_SURFACE_MAPPING.yaml",
+        # Adicionados por ADR-031 e boot permanente
+        "AGENT_INSTRUCTIONS.md",
+        "SCOPE_BOUNDARY_POLICY.md",
+        # Roadmap canônico de módulos
+        "MODULE_ROADMAP_2026_03_17.md",
     })
 
     # Subdiretórios autorizados
@@ -4834,8 +4854,9 @@ def _g2n_canon_allowlist(root: pathlib.Path) -> dict:
     # templates/ — templates de sessão/handoff
     TEMPLATES_ALLOWLIST: frozenset[str] = frozenset({"SESSION_HANDOFF.template.md"})
 
-    # decisions/ — padrão ADR-NNN-*.md
+    # decisions/ — padrão ADR-NNN-*.md (README.md é excepcionado como arquivo de suporte)
     adr_pattern = re.compile(r"^ADR-\d{3}-.+\.md$")
+    DECISIONS_EXEMPT: frozenset[str] = frozenset({"README.md"})
 
     violations: list[dict] = []
 
@@ -4948,7 +4969,7 @@ def _g2n_canon_allowlist(root: pathlib.Path) -> dict:
                     "message": f"Subdiretório não autorizado em docs/_canon/decisions/: '{item.name}/'.",
                     "severity": "error",
                 })
-            elif not adr_pattern.match(item.name):
+            elif item.name not in DECISIONS_EXEMPT and not adr_pattern.match(item.name):
                 violations.append({
                     "blocking_code": BLOCKED_CANON_INTRUDER,
                     "artifact": str(item.relative_to(root)).replace("\\", "/"),
@@ -5212,6 +5233,10 @@ def _g5_openapi_root_structure(root: pathlib.Path) -> dict:
                 [{"blocking_code": "ERROR_INFRA", "artifact": "node", "message": output.strip(), "severity": "error"}],
                 _ms(t0),
             )
+        if _looks_like_redocly_update_only(output):
+            return _pg(gate_id, "PASS", True, None,
+                       "redocly lint: nenhum erro (aviso de nova versão ignorado).",
+                       [str(openapi_root)], [str(openapi_root)], [], [], _ms(t0))
         lines = [ln for ln in output.splitlines() if ln.strip()]
         violations = [
             {"blocking_code": "BLOCKED_OPENAPI_STRUCTURE", "artifact": str(openapi_root.relative_to(root)), "message": ln, "severity": "error"}
@@ -6743,6 +6768,152 @@ def _g_module_status_coherence(root: pathlib.Path) -> dict:
                [str(registry_path)], checked, [], [], _ms(t0))
 
 
+def _g_surface_promotion_coherence(root: pathlib.Path) -> dict:
+    """
+    SURFACE_PROMOTION_COHERENCE_GATE
+
+    Detecta módulos subpromovidos: quando todas as expected_surfaces declaradas no
+    MODULE_REGISTRY estão presentes no filesystem mas o status do módulo não foi
+    atualizado. Impede que passos de promoção sejam silenciosamente ignorados.
+
+    Regras:
+    - draft_contract + todas surfaces presentes → FAIL (BLOCKED_PROMOTION_PENDING)
+      O agente criou todos os artefatos mas não atualizou MODULE_REGISTRY.yaml.
+    - validated_contract + todas surfaces presentes → PASS com warn informativo.
+      Elegível para implementation_ready, mas a promoção é decisão consciente.
+    """
+    t0 = time.monotonic()
+    gate_id = "SURFACE_PROMOTION_COHERENCE_GATE"
+    registry_path = root / "docs" / "_canon" / "MODULE_REGISTRY.yaml"
+
+    if not registry_path.exists():
+        return _skip(gate_id, "MODULE_REGISTRY.yaml ausente.", _ms(t0))
+
+    try:
+        import yaml as _yaml
+        with open(registry_path, encoding="utf-8") as _fh:
+            registry = _yaml.safe_load(_fh) or {}
+    except Exception as exc:
+        return _skip(gate_id, f"Falha ao ler MODULE_REGISTRY.yaml: {exc}", _ms(t0))
+
+    def _surface_present(module: str, surface: str) -> bool:
+        mod_upper = module.upper()
+        mod_docs = root / "docs" / "hbtrack" / "modulos" / module
+        if surface == "module_docs_minimum":
+            return (
+                (mod_docs / "README.md").exists()
+                and (mod_docs / f"DOMAIN_RULES_{mod_upper}.md").exists()
+            )
+        if surface == "openapi_sync":
+            return (root / "contracts" / "openapi" / "paths" / f"{module}.yaml").exists()
+        if surface == "json_schema":
+            d = root / "contracts" / "schemas" / module
+            return d.exists() and any(d.glob("*.json"))
+        if surface == "asyncapi":
+            channels = root / "contracts" / "asyncapi" / "channels"
+            if not channels.exists():
+                return False
+            sub = channels / module
+            if sub.exists() and any(sub.iterdir()):
+                return True
+            return any(channels.glob(f"{module}_*.yaml")) or any(channels.glob(f"{module}.*.yaml"))
+        if surface == "arazzo":
+            wd = root / "contracts" / "workflows" / module
+            return wd.exists() and any(wd.glob("*.arazzo.yaml"))
+        if surface == "state_model":
+            return (mod_docs / f"STATE_MODEL_{mod_upper}.md").exists()
+        if surface == "ui_contract":
+            return (mod_docs / f"UI_CONTRACT_{mod_upper}.md").exists()
+        if surface == "permissions":
+            return (mod_docs / f"PERMISSIONS_{mod_upper}.md").exists()
+        if surface == "test_matrix":
+            return (mod_docs / f"TEST_MATRIX_{mod_upper}.md").exists()
+        if surface == "decision_ir":
+            return (
+                root / ".contract_driven" / "decisions" / f"DECISION_IR_{mod_upper}.yaml"
+            ).exists()
+        if surface == "sport_science":
+            return (mod_docs / f"SPORT_SCIENCE_RULES_{mod_upper}.md").exists()
+        if surface == "errors":
+            return (mod_docs / f"ERRORS_{mod_upper}.md").exists()
+        return False  # superfície desconhecida = não presente
+
+    violations: list[dict] = []
+    checked = [str(registry_path)]
+
+    for mod_name, mod_data in (registry.get("modules") or {}).items():
+        if not isinstance(mod_data, dict):
+            continue
+        status = mod_data.get("status", "scaffold")
+        expected: list[str] = mod_data.get("expected_surfaces") or []
+        if not expected or status in ("scaffold", "implementation_ready"):
+            continue
+
+        missing = [s for s in expected if not _surface_present(mod_name, s)]
+        present = [s for s in expected if _surface_present(mod_name, s)]
+
+        if status == "draft_contract" and not missing:
+            violations.append({
+                "blocking_code": "BLOCKED_PROMOTION_PENDING",
+                "artifact": f"docs/_canon/MODULE_REGISTRY.yaml#{mod_name}",
+                "message": (
+                    f"Módulo '{mod_name}' tem todas as {len(expected)} superfícies "
+                    f"declaradas presentes mas status='{status}'. "
+                    f"Atualize MODULE_REGISTRY.yaml para 'validated_contract' e execute "
+                    f"'python3 scripts/hb artifact docs/_canon/MODULE_REGISTRY.yaml'."
+                ),
+                "severity": "error",
+                "details": {
+                    "module": mod_name,
+                    "current_status": status,
+                    "expected_status": "validated_contract",
+                    "surfaces_present": present,
+                    "surfaces_missing": [],
+                },
+            })
+
+        elif status == "validated_contract" and not missing:
+            violations.append({
+                "blocking_code": None,
+                "artifact": f"docs/_canon/MODULE_REGISTRY.yaml#{mod_name}",
+                "message": (
+                    f"[INFO] Módulo '{mod_name}' tem todas as {len(expected)} superfícies "
+                    f"em 'validated_contract'. Elegível para 'implementation_ready' via "
+                    f"task_type=readiness_promotion quando pronto."
+                ),
+                "severity": "warn",
+                "details": {
+                    "module": mod_name,
+                    "current_status": status,
+                    "eligible_for": "implementation_ready",
+                    "surfaces_present": present,
+                },
+            })
+
+    blocking = [v for v in violations if v.get("blocking_code")]
+    informational = [v for v in violations if not v.get("blocking_code")]
+
+    if blocking:
+        return _pg(
+            gate_id, "FAIL", True, "BLOCKED_PROMOTION_PENDING",
+            f"{len(blocking)} módulo(s) subpromovido(s): todas as superfícies presentes "
+            f"mas MODULE_REGISTRY.yaml não foi atualizado.",
+            [str(registry_path)], checked, [], violations, _ms(t0),
+        )
+    if informational:
+        return _pg(
+            gate_id, "PASS", True, None,
+            f"Sem bloqueios. {len(informational)} módulo(s) elegível(-eis) para "
+            f"promoção a implementation_ready (não bloqueante).",
+            [str(registry_path)], checked, [], violations, _ms(t0),
+        )
+    return _pg(
+        gate_id, "PASS", True, None,
+        "Todos os módulos com status coerente com superfícies declaradas.",
+        [str(registry_path)], checked, [], [], _ms(t0),
+    )
+
+
 def _g_cross_module_boundary(root: pathlib.Path) -> dict:
     t0 = time.monotonic()
     gate_id = "CROSS_MODULE_BOUNDARY_GATE"
@@ -7774,6 +7945,7 @@ def run_pipeline(
         "UI_DOC_VALIDATION_GATE",
         "HANDOFF_COHERENCE_GATE",
         "MODULE_STATUS_COHERENCE_GATE",
+        "SURFACE_PROMOTION_COHERENCE_GATE",
         "AXIOM_INTEGRITY_GATE",
         "CANON_ALLOWLIST_GATE",
     }
@@ -7866,6 +8038,7 @@ def run_pipeline(
         ("MONITORING_POLICY_GATE", lambda: _g_monitoring_policy(root)),
         ("HANDOFF_COHERENCE_GATE", lambda: _g_handoff_coherence(root)),
         ("MODULE_STATUS_COHERENCE_GATE", lambda: _g_module_status_coherence(root)),
+        ("SURFACE_PROMOTION_COHERENCE_GATE", lambda: _g_surface_promotion_coherence(root)),
         ("CROSS_MODULE_BOUNDARY_GATE", lambda: _g_cross_module_boundary(root)),
     ]
     for gate_id_hint, gate_fn in gate_plan:

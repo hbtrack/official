@@ -1,0 +1,11 @@
+{
+  "run_id": "20260319T131332_314be2",
+  "timestamp_utc": "2026-03-19T13:13:32Z",
+  "health_score": 100,
+  "gates_total": 45,
+  "gates_passed": 45,
+  "gates_failed": 0,
+  "blocking_fails": 0,
+  "overall_status": "PASS",
+  "exit_code": 0
+}

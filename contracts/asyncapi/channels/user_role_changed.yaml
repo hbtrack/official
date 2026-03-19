@@ -1,0 +1,18 @@
+# AsyncAPI Channel: user.role_changed
+# Module: users
+# Domain rules: DR-USR-002, DR-USR-004
+# Invariants: INV-USR-001, INV-USR-004
+# ADR refs: ADR-008 (RBAC flat 5 roles)
+
+address: user.role_changed
+title: Role de Usuário Alterado
+description: >
+  Canal de publicação quando o roleLabel de um usuário é alterado.
+  roleLabel é informativo (DR-USR-002): representa o papel funcional/esportivo
+  do usuário nos registros. A autorização técnica real (RBAC) é responsabilidade
+  de identity_access via JWT roles claim (ADR-008, INV-USR-004).
+  Consumidores típicos: audit (rastreamento de mudanças de role),
+  notifications (alertas de promoção/rebaixamento de papel).
+messages:
+  user_role_changed_publish:
+    $ref: "../messages/user_role_changed.yaml"

@@ -1,28 +1,982 @@
 {
-  "session_id": "20260317T234054_1dff78",
-  "task_type": "unknown",
-  "module": "unknown",
+  "session_id": "4d672789-d33f-42d6-be4e-41e30e822ba0",
+  "session_timestamp": "2026-03-19T13:13:35.152083+00:00",
   "branch": "hb-track-contratos-driven",
-  "timestamp": "2026-03-17T23:51:34.117355+00:00",
-  "stages": {
-    "stage0_exit_code": 0,
-    "stage1_exit_code": 0,
-    "stage2_artifacts": [
-      {
-        "path": "contracts/openapi/paths/training.yaml",
-        "exit_code": 0
-      }
-    ]
-  },
+  "pipeline_version": "1.0.0",
+  "boot_profile_id": "contract_execution",
+  "task_type": "readiness_promotion",
+  "module": "users",
   "stage": 2,
+  "write_scope": "contracts",
+  "worker_id": "readiness_promotion",
+  "git_user": "HB Track Agent",
+  "git_email": "davis@hbtrack.local",
+  "stage0_exit_code": 0,
+  "stage1_exit_code": 0,
   "stage2_artifacts": [
     {
-      "path": "contracts/openapi/paths/training.yaml",
-      "sha256": "13ebe50c6a9a5f24dfe095818e51cbf480743b1ed66da03c22298fd53cd704cd",
-      "created_at": "2026-03-18T01:48:16.278495+00:00",
+      "path": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "21fbc593e4e603582399d0ea502c0e26a711fd2cd7240e30c098b83b190dd0cc",
+      "created_at": "2026-03-19T12:55:41.593307+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-19T13:17:18.690763+00:00"
+    },
+    {
+      "path": "contracts/openapi/paths/medical.yaml",
+      "sha256": "d86f35a324ca8956d9fef73e883808be907227fb173c1f98728a187b9508f63d",
+      "created_at": "2026-03-19T13:14:49.355490+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-19T13:19:19.467841+00:00"
+    },
+    {
+      "path": "contracts/openapi/paths/analytics.yaml",
+      "sha256": "9650e8aeb30382189a73880b069dbf89bc113a2cbae5be73f816c60f5ba0286d",
+      "created_at": "2026-03-19T13:15:35.244124+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-19T13:19:40.217791+00:00"
+    },
+    {
+      "path": "contracts/openapi/components/schemas/analytics/analytics_snapshot.yaml",
+      "sha256": "2fb7f2291b583f0831efd415f95c0394fc120a3f265865890b161fef3aeee456",
+      "created_at": "2026-03-19T13:15:39.546805+00:00",
       "gate_exit_code": 2
+    },
+    {
+      "path": "contracts/openapi/paths/users.yaml",
+      "sha256": "fd6c084d75bdee66547d96d78ef19eadb10d64962cdd7f2ae3155ae637dc53f6",
+      "created_at": "2026-03-19T13:19:00.304341+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/paths/seasons.yaml",
+      "sha256": "ed364d6c153a989580a06cfc1e48394385c26c331b2a686ba1279103fd7a57c1",
+      "created_at": "2026-03-19T13:19:06.788702+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/paths/teams.yaml",
+      "sha256": "35b17c9abf5338226c6ab091ed7cb92c68ac1d598097cbe0f04fc79afb29d575",
+      "created_at": "2026-03-19T13:19:11.113826+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/paths/wellness.yaml",
+      "sha256": "bff9e9ada167d4e60734d2b31a15126bd3d3fb785be43704f906c31242b35f4b",
+      "created_at": "2026-03-19T13:19:15.352323+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/paths/competitions.yaml",
+      "sha256": "a60aa57b45f358c9139b2d569f765a03d3c1c37f67f1b338430287ac70d8317e",
+      "created_at": "2026-03-19T13:19:23.562919+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/paths/matches.yaml",
+      "sha256": "5c1fc7296c742a6d146fa2f82913d3fbac2cc640c78a9c5ccf426e091c7a2943",
+      "created_at": "2026-03-19T13:19:27.756828+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/paths/scout.yaml",
+      "sha256": "92bdc238f13530874414877f6b9aaf711010b7466150ae523604a47111fe57df",
+      "created_at": "2026-03-19T13:19:31.899863+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/paths/exercises.yaml",
+      "sha256": "b5fb4c67a0fffb84742f7a3fa20eedb15ea2bedee8c5235e4577d7e3a0fac648",
+      "created_at": "2026-03-19T13:19:36.141730+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/paths/reports.yaml",
+      "sha256": "123b9f77713fb516ea3aebf26e3a858dbb1f5cf77f83a59da2a5ec5d27be0f17",
+      "created_at": "2026-03-19T13:19:44.209466+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/paths/ai_ingestion.yaml",
+      "sha256": "a97e76a6455310e0a160e9dfda9835fe5fcf6baeda85e5426a1795bca0ebcc1d",
+      "created_at": "2026-03-19T13:19:48.368842+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/paths/identity_access.yaml",
+      "sha256": "06cef6d728d3acd18d7d71541c50b2438edaaaa30005a3fc979b594b44ecf93c",
+      "created_at": "2026-03-19T13:19:52.641724+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/paths/audit.yaml",
+      "sha256": "b32252c2d7a7fd8b449c21b26a635a9552dfb8155e9ee25f2e79d8a183b43564",
+      "created_at": "2026-03-19T13:19:56.730424+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/paths/notifications.yaml",
+      "sha256": "e1728cf9ace97ac38773b96600633ad470fc37322afd0660a6334349e39196e0",
+      "created_at": "2026-03-19T13:20:00.732739+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/asyncapi.yaml",
+      "sha256": "3ad72d6a540be06d09c3f7c560ce99334c0713cf6b50d058e4b2eaede3cd6fa0",
+      "created_at": "2026-03-19T13:51:10.210890+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-19T13:53:22.324574+00:00"
+    },
+    {
+      "path": "contracts/asyncapi/channels/ai_ingestion_job_completed.yaml",
+      "sha256": "b650b06b220312cf2d398508d8313edf3138642e73ff29d65bd7f0c7c7301e4d",
+      "created_at": "2026-03-19T13:51:23.609558+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/ai_ingestion_job_failed.yaml",
+      "sha256": "ad63fac528b6c950b9daa87d0d1a4043017d106361ee1c2d1f2901ca0a75b638",
+      "created_at": "2026-03-19T13:51:28.368629+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/ai_ingestion_job_queued.yaml",
+      "sha256": "77f32f9470293878a3c34d5d0e50d13df09915485ede715949c9bb5b9c618ebb",
+      "created_at": "2026-03-19T13:51:34.423076+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/audit_entry_created.yaml",
+      "sha256": "b5db8deeae0c74b7ffb8afbdbdcfdba6ee118241a96a855205cb25c37f22c370",
+      "created_at": "2026-03-19T13:51:38.944668+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/audit_entry_security_flagged.yaml",
+      "sha256": "0b3e1cea6d180d7c0629111c2be225b902cf38cfc67fede980035d1edbb9ef12",
+      "created_at": "2026-03-19T13:51:45.786012+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/competition_created.yaml",
+      "sha256": "e167e619a4f1356f19d70c44fa68a7493342893138a57e9d193ef1f30ae277c0",
+      "created_at": "2026-03-19T13:51:51.293509+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/competition_phase_changed.yaml",
+      "sha256": "ea198c971c3bf5191fecea9d7821c93ed8131082d3ae41d62a18b0a6ce1bbcf4",
+      "created_at": "2026-03-19T13:51:55.931204+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/match_scheduled.yaml",
+      "sha256": "815184e6980a10e8662645139c487d7c4eabab27e25507585708effa0dcca409",
+      "created_at": "2026-03-19T13:52:00.578147+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/match_status_updated.yaml",
+      "sha256": "378012f5c9b372e0d32871db2af34f6e8ac2fe640a0ada76a186232e107fa891",
+      "created_at": "2026-03-19T13:52:05.057671+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/notification_delivery_failed.yaml",
+      "sha256": "f1782fab841efdc50b6c3ddc0d9f9add399991cb33a9efa5cf8c413293dfdfb7",
+      "created_at": "2026-03-19T13:52:09.552222+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/notification_delivery_queued.yaml",
+      "sha256": "abe9d509c4047a64f8602704520e8272dd297fc92c8f76fb148a0aaacd697e25",
+      "created_at": "2026-03-19T13:52:14.279452+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/notification_delivery_sent.yaml",
+      "sha256": "5ef1af40f0aaba96fd5cd7ac63fea9da4c8f24e25f87293699bdc2669ec97bcc",
+      "created_at": "2026-03-19T13:52:18.958159+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/role_assigned.yaml",
+      "sha256": "4ba2bc7a6af8503c877978eecedc7672678ecfac7c9bc27e2781e4e94330e56e",
+      "created_at": "2026-03-19T13:52:23.953155+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/role_revoked.yaml",
+      "sha256": "81c764ebc276cc856ace57931fff504cb79212684743812ac90f3a1bdcc3891d",
+      "created_at": "2026-03-19T13:52:28.733540+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/scout_event_created.yaml",
+      "sha256": "a72462abfe6590350755a7e49fc8245e666d37f1095677bea3d3bc39416179e3",
+      "created_at": "2026-03-19T13:52:33.283370+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/scout_session_completed.yaml",
+      "sha256": "fff194f3565c8bc3bb55be2d0a1583a4189072e1da8e45e1cc81f918bc8298ac",
+      "created_at": "2026-03-19T13:52:37.668553+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/season_created.yaml",
+      "sha256": "a8a55542e881a91efe05d81b751105ef0e49c342a5c4b05129a11706f14f08d0",
+      "created_at": "2026-03-19T13:52:42.100916+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/season_status_updated.yaml",
+      "sha256": "421ca36d16e9d803046bfaddf08c3fb9107fd69d624f3df8759b64f622180131",
+      "created_at": "2026-03-19T13:52:46.542985+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/session_created.yaml",
+      "sha256": "517ba9dc8d6284a74f32dffd56365932d1f0200b90070912a55c206ba181ed85",
+      "created_at": "2026-03-19T13:52:51.251286+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/session_revoked.yaml",
+      "sha256": "3cf8c48656ff1898c2865a78bea42f1f876f10e04c3d9451e4cb19291ace057e",
+      "created_at": "2026-03-19T13:52:55.663975+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/team_created.yaml",
+      "sha256": "a21991f72aa342b99d5a577bfcb49ec6e50d7f3cfc9cfad9b215f98079e8386e",
+      "created_at": "2026-03-19T13:53:00.087096+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/team_roster_updated.yaml",
+      "sha256": "9074295e2b76c2ffac2b74526e5b8253ef1ff53d2c47907fd077e20fd2361ace",
+      "created_at": "2026-03-19T13:53:04.422895+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/user_created.yaml",
+      "sha256": "d462b605f50674c99eeafa1404a3547b61ddd8e420b9497725d014fe0bebe810",
+      "created_at": "2026-03-19T13:53:08.684657+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/user_role_changed.yaml",
+      "sha256": "938869bf62071e1ffac2ae60542951aac45b2646eed551aa95ec745c1af4fff8",
+      "created_at": "2026-03-19T13:53:13.087843+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/video/capture_started.yaml",
+      "sha256": "13c3b5c72f7082ebee419db7673b1c1c7b0627e968c797d5ffc8828c4b009944",
+      "created_at": "2026-03-19T13:53:17.511785+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/video/distribution_failed.yaml",
+      "sha256": "d76e4d55df5714cb7443e061c22d4837d1b6262afa1c2fbccc4fc213b39097b3",
+      "created_at": "2026-03-19T13:53:21.852879+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/video/distribution_published.yaml",
+      "sha256": "19ab86d7f5b44cd810204cd12e2dc21d9a7e550c648a06ab727f2433eb5cdebc",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/video/segment_ready.yaml",
+      "sha256": "805f5db74337985eadc49a8878ef75d2fe40e8cf23fea93ab950cd229a8e8261",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/video/sync_adjustment_applied.yaml",
+      "sha256": "dbff5b17d8ee17332e8bf6169a7452f298cfffe7999a9a8f8984809088d2ac64",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/video/transcode_completed.yaml",
+      "sha256": "f13b7f2949ead40b329fe5e1650bf4da13aecca70947d973c0fd99275ae5eeac",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/channels/wellness_entry_created.yaml",
+      "sha256": "f0533bfbab661e8694f4c307f3778c1bbde9601233ed2c81a42d95e84d640be0",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/ai_ingestion_job_completed_payload.yaml",
+      "sha256": "4ca971c738d41d2089c2f4759b177cd181eea103ad85ab2a31ea91d88774b6c0",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/ai_ingestion_job_failed_payload.yaml",
+      "sha256": "fbeaad76f3b29a44a942bbb35ed76352193aba7aa5a86e336c470a75dfd85830",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/ai_ingestion_job_queued_payload.yaml",
+      "sha256": "e22dd550d058af2031c7166c6f8d115b039584018a07fa8f2eb5d1a97e35dfac",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/athlete_ineligible_for_prescription_payload.yaml",
+      "sha256": "4645c8139c70580394a2a62611139926f95b07d3b5cf36fa4cbc4bdf22eb2ebe",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/attention_queue_item_created_payload.yaml",
+      "sha256": "7c2ed50496399f7103b7d5ebddc72257583919c4894a91a103ed7b9e3a756e56",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/attention_queue_item_resolved_payload.yaml",
+      "sha256": "b6a6bcc2c43b6965fb748fac1d2e426ea9dce665701d7012ba16a2c43ce6ef07",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/audit_entry_created_payload.yaml",
+      "sha256": "415337ea4686d26db610d062f662dbd8830bae47863d54cd2a65c03274302715",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/audit_entry_security_flagged_payload.yaml",
+      "sha256": "48b4ef8a592e58a04eacef7d281d925436792591ef4628e2383ba7cd32e4d3c5",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/coach_intervention_required_payload.yaml",
+      "sha256": "642ecc427002913980a89dc078dd63f17ebbf045e0cfac397463b74d67be3c61",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/competition_created_payload.yaml",
+      "sha256": "51a574500d029483aa06d90ec697f6e0a5f8dd775baaa88086397b11ab5da01a",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/competition_phase_changed_payload.yaml",
+      "sha256": "2f0be8f45096202c852d9949eba796cf0d9ae7b69d3b8e8d1dac5eb5ac7bcd35",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/completion_evidence_provided_payload.yaml",
+      "sha256": "63ea66a3c9703f6c72a39020fa12005f0d88bb50d1123e2de5858d2b88031f47",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/continuity_snapshot_created_payload.yaml",
+      "sha256": "7e43d737397739e789e379b02615aad80f8f58179a95e5e7dbcfdcfc5daf7cfa",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/execution_recorded_payload.yaml",
+      "sha256": "810bd14d6d3fc7986f47ac98ada6424ee9028b37cb2b02ca2c1b6a33c44e52e2",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/feedback_thread_closed_payload.yaml",
+      "sha256": "aa3f01f5f79424e3c0544784498a918bbcce13a5874733e32e6ff17f2cc7f8da",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/feedback_thread_created_payload.yaml",
+      "sha256": "f5933a031321e3b8a2d169b2f0d2c9eb48fbbaed4681dfc5554490aeab88e1ef",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/intervention_cycle_completed_payload.yaml",
+      "sha256": "f170fbac228dce1d2f63b222d2733a800c34b947bf9cd69b3ae55316acf80d34",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/intervention_cycle_created_payload.yaml",
+      "sha256": "9dfd600d87b91d6e7e588ae60eb47630cbed2e5526b9fffa80d7e2b2c6327e4b",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/match_scheduled_payload.yaml",
+      "sha256": "5e93501ab5cfb1af9eaefab1d037f114a93c43edd7056e5042659669d7868086",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/match_status_updated_payload.yaml",
+      "sha256": "0d5463466d78465994622b3a1f852cc575a1066d66acfa35d473ab61da261320",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/need_detected_created_payload.yaml",
+      "sha256": "2177358111efc8bf36be0189d350f233f11d27fc0bd66833c96062b98ee8e0ae",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/need_linked_to_objective_payload.yaml",
+      "sha256": "496f621c5e9360d4813dce3aece6d09e1266fe2b5e8d16e5e81d1be911e20a51",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/notification_delivery_failed_payload.yaml",
+      "sha256": "4278a61f7467bb59661bec359715da1f9fcf5253b34bd5e62f0d6a077c8c0a9e",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/notification_delivery_queued_payload.yaml",
+      "sha256": "0929741b056c6ca47ada353945b995e6c9e903b0c76e5d358ecb530ef65abc6c",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/notification_delivery_sent_payload.yaml",
+      "sha256": "7097bebd67c62dfbe5291f7e3e3f6032e9cf80cb5e8c008b2820f26f56927736",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/objective_created_payload.yaml",
+      "sha256": "3ad9941459d18ba1e7bdc7d079afd561aefe4ec3fe8c141e2feed63f6e9dbfdb",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/prescription_adjusted_payload.yaml",
+      "sha256": "97e0408c165a6de19a62077d33956d5816cfa3f6dcee54104de70caee0afb9f3",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/recommendation_accepted_payload.yaml",
+      "sha256": "73c974fc801cbab4cd8077d49aa490b98329537ec1d3a52c9d1bddfba8206abc",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/recommendation_dismissed_payload.yaml",
+      "sha256": "0e0454a326901c75f7c53216dab2ef0f95fc8832ed24512d1d8abe803d7fb08b",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/recommendation_generated_payload.yaml",
+      "sha256": "4589a1b08f8afe58e2d7ae053874f1f1c63c220734f8f9e8f0cce8ea2bfbeaa7",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/role_assigned_payload.yaml",
+      "sha256": "de9c9d5f0e29c5215ba894d699f72d7def09f85bb39d90d4d97af2c10cc85dc8",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/role_revoked_payload.yaml",
+      "sha256": "5653c52debb42bda8aecc8b0cfa1bbd0d0470ce8e1b0fef73ade9426d7087c13",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/scout_event_created_payload.yaml",
+      "sha256": "4ec7b71c1d6d3744855c9779ff001eef7a804d817a959869afbbc0fc8411d426",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/scout_session_completed_payload.yaml",
+      "sha256": "11536c1098c98038ceeb4974121f7d6ea462afc6375d4ea97c3dc69f153c1ecd",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/season_created_payload.yaml",
+      "sha256": "a1b0fa837fbadeecbed2804f2e7cb9c215412367658bff89190debd7a2a1f74f",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/season_status_updated_payload.yaml",
+      "sha256": "c93a210cb1c8ca659fce0a55dac0e22a527398fb9c84fafdefd25976de9c7d27",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/session_adjustment_made_payload.yaml",
+      "sha256": "18b70ca782eccecb501d9f2f59c0f14f6f75e9b73da6611603a205f7132c1a17",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/session_created_payload.yaml",
+      "sha256": "1b9de2d94262f8ac4ae16847c9fef0040723bfc9cf17e3b9f4eee66dbf21b96e",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/session_objective_achieved_payload.yaml",
+      "sha256": "786fdc9dd033dd0748fda79af18a8e512a837ade2d4ab5b6d0253dc81e2f92a5",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/session_revoked_payload.yaml",
+      "sha256": "1a81eb2c855e37f293230485be7beb5faca7b75dbb250bdccac04d59570c876e",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/team_created_payload.yaml",
+      "sha256": "0b662f6a16acf7ce566fe85321944e0fca9d24b2682ccb24f36500d9b30a94ed",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/team_roster_updated_payload.yaml",
+      "sha256": "6faa955b8200459437997de055b8f458223b12d83740a7bc4ddb9028011947b8",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/training_readiness_assessed_payload.yaml",
+      "sha256": "84f6b161b674bb8a8a80b5221b343401e36534a98e8f3baa9b788202f3468220",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/training_session_archived_payload.yaml",
+      "sha256": "a9f15882e686aabdbeb6b79191e080468c9a41007f7463e7ebac72a61c021735",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/training_session_cancelled_payload.yaml",
+      "sha256": "7299b09405f6b10faa1f19975281f17f2a5b4ee9fd08b2ffed238e57408ed6cc",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/training_session_completed_payload.yaml",
+      "sha256": "ba393faf5d66f65d70abf216dbfd26360a03f738a42fbda466d55149bcb8822b",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/training_session_created_payload.yaml",
+      "sha256": "ae70bb270bcb079ea8ebd2fc88afc229422269885ebdbc50ec6a7ee6b69499bc",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/training_session_published_payload.yaml",
+      "sha256": "a9fffba74a03f0ead589fc18514c691c5c495dab678642aa4e156a67bbdc4c29",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/training_session_started_payload.yaml",
+      "sha256": "d95a3aa053439bd61bb6ab45cc82b92fb7439c39ba1ba8246fc8d6c8eb13b5a3",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/user_created_payload.yaml",
+      "sha256": "4f5b0063cc034144a9deacf3374c37fd5ea3b796fb260d12b08b71ba7ede3d38",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/user_role_changed_payload.yaml",
+      "sha256": "eca34a00e6c01a023234182c599405ae460fcccb8358db4a613ba539e4091458",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/video/capture_started_payload.yaml",
+      "sha256": "29299c846f7a85d81e419f8357dee288c5aa8b7430d11c9145f5a6a711783382",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/video/distribution_failed_payload.yaml",
+      "sha256": "7db4a16eb603474d4e5b04de2790ed3f09bf2a3247c4d2684e20cba28433b396",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/video/distribution_published_payload.yaml",
+      "sha256": "7fe69f8cadcc14c92c50c8f2aa605a81230b2b89be228affa49a5ba48e304824",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/video/segment_ready_payload.yaml",
+      "sha256": "0919a9efe79ef53e4ba6c9f9e513d9cc0f5e5aaf0c3544f911fbc78b5db01b81",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/video/sync_adjustment_applied_payload.yaml",
+      "sha256": "060c91d434c9ca438790ebab3e51d8e3c1355c34132a6d610fc755f33b525514",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/video/transcode_completed_payload.yaml",
+      "sha256": "0692a00a9ea29180776a19372733009506931ba72b4ec00188429ca2933ac775",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/components/schemas/wellness_entry_created_payload.yaml",
+      "sha256": "505dbf6c42c0f1fd30f807379a4f8fbcf81a3b9e2884dfa4e7d3425018c47fe3",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/ai_ingestion_job_completed.yaml",
+      "sha256": "063c347fa9769e5bef69a4fc2e8871138b8ce8471842f0ba5d4f3298896047e5",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/ai_ingestion_job_failed.yaml",
+      "sha256": "29ff8cdfdf5c1abc22602e9f39c8c399c37bc1842ab6923205ddfae72687749c",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/ai_ingestion_job_queued.yaml",
+      "sha256": "d15759bbc939ed675059455cb259b77fb4a3eb958da35b6b4b41b0c19bee9e8f",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/audit_entry_created.yaml",
+      "sha256": "1e79c08f57b8c8b1d2187ee89dcc54b405846bcf2bd875db3a40470157fc3e32",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/audit_entry_security_flagged.yaml",
+      "sha256": "9eb3a362fe4b7be99c00399ad46f2c43fa2f906954d1c2648287b7ab5794a819",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/competition_created.yaml",
+      "sha256": "a16f861a520eac9ab47add90426950df601386b8a2e0adbee7756d0dfd19630a",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/competition_phase_changed.yaml",
+      "sha256": "f77a8bc07e47e8945c7a97db41744a06091c92bdabe7b26fb96bde35f1e5e59e",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/match_scheduled.yaml",
+      "sha256": "6fc97c083cb1af95ff30ca2226ff2fa04416a5a874487d063a21e1990f409381",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/match_status_updated.yaml",
+      "sha256": "f344c6fb3c8f34ce402506a2f066174a9cc353043f8bb72706dbcc7a8add3770",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/notification_delivery_failed.yaml",
+      "sha256": "58f00fa691314175137e7c96e97ce30b085fb5731216d4b3e42e77d1a41ab0d6",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/notification_delivery_queued.yaml",
+      "sha256": "68b4ee7f1e0117ecadaf4d8c61ea4a210a1e9fd378439d3608723bd85e510443",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/notification_delivery_sent.yaml",
+      "sha256": "6236220addd0d1561d30ea144b6bf89b7aba63a404f7f8ed7f036d468f5d9e6d",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/role_assigned.yaml",
+      "sha256": "12c330eea94da1a581bc974b16b7b211143e950c671e69dac025b80b92a00334",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/role_revoked.yaml",
+      "sha256": "a64136e54024a26274d8e7dda51f1f81d25e1d9a5423c2528a7dd281b6e2b0e8",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/scout_event_created.yaml",
+      "sha256": "92f8dda4b009d706ce8600a9885d3f353bbce8a7ddecfcab12925c2fd6b8747f",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/scout_session_completed.yaml",
+      "sha256": "5859085351364680bac4f1405078bb91709f3bc6a4fbb8d357dad5332f9ea336",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/season_created.yaml",
+      "sha256": "a38cbaa9b2b503d904d068c7c1373d3a188b855bfbe5163faeb09aac6f0029d8",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/season_status_updated.yaml",
+      "sha256": "29ddabe2c0b5d60eeca304d8765372f5c1cb51bfa75a226286902e3b3c7d8efb",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/session_created.yaml",
+      "sha256": "cdb80bb2e198f7b2f3f4fd408683a90371d5860a3e4a9a982e0452ae37762e81",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/session_revoked.yaml",
+      "sha256": "626e7cb415179253d1cc46cb9e65bcabc6257051b2d747a632b88e65ffec2f2b",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/team_created.yaml",
+      "sha256": "f35ab405b13da12504a6e8b46151d20c49c79939dd4b26984e913de0dd91a906",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/team_roster_updated.yaml",
+      "sha256": "95d982705c46954ffd32dd34f0769d4a81a3dd13319366ef110b19b68a0b74f8",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/user_created.yaml",
+      "sha256": "b15af02ee15fbb1b2db81046fcf391c47b397436e3cc4cabe8dac04d0a764623",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/user_role_changed.yaml",
+      "sha256": "8591574191fc195a2a37127ad7e8a98a36f537541c9c569bce2edad291f5e51b",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/video/capture_started.yaml",
+      "sha256": "e27563ee5e85cfc729ffdc03344601dbb6666c7b6c620a56de29a74d2d98ddfc",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/video/distribution_failed.yaml",
+      "sha256": "b033738ef1046b96f73da2e19f5e01e427811aa727560cc5d2749f206b6e18ef",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/video/distribution_published.yaml",
+      "sha256": "ad9d3f8f4819f8cbc6ae3807ada53746f61ea9f711c036e2e861922d00ff82d9",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/video/segment_ready.yaml",
+      "sha256": "5e98db506142659fa167ed866ff0e1160a15e82a1ea6879ca2757e7973bd2d97",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/video/sync_adjustment_applied.yaml",
+      "sha256": "1f20f90951d4967935ae01a0de9a6bbc529125c1e4008b2c5b30e53648e44809",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/video/transcode_completed.yaml",
+      "sha256": "13c9e47eed38a624845cf935af55fe0a02038a4d4283010dda2351699d453f2f",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/asyncapi/messages/wellness_entry_created.yaml",
+      "sha256": "2f1032c71b550ac2ee42ca0a2d1f10e478171df317a505a30642a71a8974df7a",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/openapi.yaml",
+      "sha256": "dca9577e649d976cd33a44d59492228a4e5e45469a01ee930f8f83ddcda84d7e",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/schemas/competitions/competition.schema.json",
+      "sha256": "55392d459263cdc2c09fc5c9971458b24b027c9a4037523c7311f82ad6a8c0d3",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/schemas/matches/match.schema.json",
+      "sha256": "471fa110266632d054518157c30514f84d1b395b3fbab317b924ffb524fb23db",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/schemas/seasons/season.schema.json",
+      "sha256": "1bf9507f654d375bdcbae1adf3487a857f9b139b46d041643b5df92cc3f34eab",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/schemas/shared/session_start.schema.json",
+      "sha256": "8f6a3fc20d6d33b2f0b3c2e12ea68787e34ee9e83b2d7292e4ce99801daad11d",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/schemas/users/user_profile.schema.json",
+      "sha256": "17a019a02bd35420520832b48bed702f4bea1f0dc4df003af7ff0fb43f0e1af3",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/schemas/video/clip_definition.schema.json",
+      "sha256": "592d1202d42996e3787830d87b21f6335965d190605aa51a0ac8fa6a02121570",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/schemas/video/distribution_profile.schema.json",
+      "sha256": "923d9fc731da2925319057b5735b2d5e5dea10d7cb4a8dd838cd4a4d3ef64f70",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/schemas/video/match_media_session.schema.json",
+      "sha256": "c8ee96579756b572a0f411d273b96e2d66d95b81274fb62674cd49a90158c5c4",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/schemas/video/media_segment.schema.json",
+      "sha256": "7e056dbb1991e9e370a67c5100685186530107737d63a95916a1b701355cfe0d",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/workflows/ai_ingestion/ingestion_job_lifecycle.arazzo.yaml",
+      "sha256": "cf7901eb6db93f19449d655715b913632c803b4f0d743c0f6314311610d50ff5",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/workflows/audit/cross_module_audit_registration.arazzo.yaml",
+      "sha256": "54c991a6a27ca6995791bcdd1bc595b742a563393f3ae4fc2a4f769decc7b2f6",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/workflows/competitions/competition_lifecycle.arazzo.yaml",
+      "sha256": "2367e593dda93ace3a0cfcdb4e7cc6384d853d3e610eb2a4a53c0a90af140dd5",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/workflows/exercises/copy_and_customize_exercise.arazzo.yaml",
+      "sha256": "c229d13da88611894d6bf2f72d102d059eb0c819fb5c657357958e39f0dd2f44",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/workflows/exercises/create_exercise_with_acl.arazzo.yaml",
+      "sha256": "e6111470d6273e2d8a986e31b1a65bf5be4a8e12cea735df86134793f42f63ba",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/workflows/identity_access/assign_role_to_user.arazzo.yaml",
+      "sha256": "453ef67043b4bb7782b6b9e59a8af2fd82d1630c4bdbec077637aa9880dc1934",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/workflows/matches/match_lifecycle.arazzo.yaml",
+      "sha256": "5ec2a7c25fe6b57b9bc18eaa811c258aec220e5835b79e9ff8ff25c47a4470dd",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/workflows/notifications/event_to_notification_delivery.arazzo.yaml",
+      "sha256": "e164c1a06d98356f234a18b0bcf57da7acfd27e7a59fc8cc4fd0f4fdf1ed8a3e",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/workflows/reports/generate_and_export_report.arazzo.yaml",
+      "sha256": "33789219eee8f98fb02a23da9c992a90eeb548929040447371ef5fb307fc32c0",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/workflows/scout/scout_observation_and_session.arazzo.yaml",
+      "sha256": "b0da69d87d26bbe470ae279a17a2130a91e385070377f83f8e7976451e1e3780",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/workflows/seasons/season_lifecycle.arazzo.yaml",
+      "sha256": "45115c42308267f7778a1843b0f60139d44d59f3eb7751be8597bb9322898837",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/workflows/teams/team_roster_management.arazzo.yaml",
+      "sha256": "b716e99a823d458ee02d0694a5f63fc62aaac64c628ca89458413588030631d2",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/workflows/users/user_invitation.arazzo.yaml",
+      "sha256": "d9aa162dbcdac8af4f7df0c40410a7532e761af568ebd03e6dba84c7c94b4791",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/workflows/video/capture_and_sync.arazzo.yaml",
+      "sha256": "e4cce2948680030952c3f9c9b6cc24a4dc09c09a60fa0029d067e9a3fd813665",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/workflows/video/semantic_clipping.arazzo.yaml",
+      "sha256": "81e79d91e97799c5e315b68ebcb769d6d9969872e990787642f4ccbe0c7fa2e6",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/workflows/video/transcode_and_publish.arazzo.yaml",
+      "sha256": "031579136cb92628cab692ad99549caa6a5381dbd6800461e1694afbffa118ab",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/workflows/wellness/athlete_wellness_tracking.arazzo.yaml",
+      "sha256": "0e2b2c29205cc3aea2d928cdcb5f468fdf895815dd21e1f7306cb0186257aceb",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/audit/PERMISSIONS_AUDIT.md",
+      "sha256": "1aa24ac42363c8484eef176fd33fdcf2523f791fbe447e2c2630e44ab9878bd6",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/exercises/DECISION_IR_EXERCISES.yaml",
+      "sha256": "e9d832b5cf336c2a8c30f00b22a3fb02c256dc6dd8f3e493d08823b44a796432",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/exercises/PERMISSIONS_EXERCISES.md",
+      "sha256": "870735059c327864572dbf8cccb408f038a2721f1370a3e48f45231139c8e7e3",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/identity_access/PERMISSIONS_IDENTITY_ACCESS.md",
+      "sha256": "c5ddad36f61e8e7e5cf3150708711ff017a2ec228299c55eb54535906879313e",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/medical/SPORT_SCIENCE_RULES_MEDICAL.md",
+      "sha256": "822f61f5515b6a0bb89d3a9d801700f39c34c69640aa4b36edfe94e5befb94cc",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/scout/CANONICAL_EVENT_TAXONOMY_SCOUT.yaml",
+      "sha256": "c5f45e62a76aacb86b645f622c58b677387636e585354068aa2220e0565ecdec",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/scout/PERMISSIONS_SCOUT.md",
+      "sha256": "0b84f4153ae81e37c0c8fb04aa2e54ee12eabe80bd8dfc1350530b4d9f9cb433",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/training/COACH_INTERACTION_FLOW_TRAINING.md",
+      "sha256": "6a05852f62f5a0e05eadeb6c5f54657e44d5eb0f83cc9b142faab0098e49d662",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/training/UI_CONTRACT_TRAINING.md",
+      "sha256": "5d04c640b3ea46e0ec84fc8fd027aea1c5b3f0c05b393367b08d1ea2b0d3d92a",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/users/PERMISSIONS_USERS.md",
+      "sha256": "7109f9bceb1fd8c1acde19d3074fbbd6e3cab0e3efc086043b1a94639f4b2597",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/video/DOMAIN_RULES_VIDEO.md",
+      "sha256": "09e948dc34882353213dab26dfea89c37a992dc3579e5d9bce798035a4447973",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/video/INVARIANTS_VIDEO.md",
+      "sha256": "37800f6c471921d00aac69a4bb5cf369d91f0b07d0288a50dc66c551b428a90e",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/video/MODULE_SCOPE_VIDEO.md",
+      "sha256": "e26c831de875eba980d03936f5a676cdf6ea80302fbd39b0ddc8781316b92913",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/video/PERMISSIONS_VIDEO.md",
+      "sha256": "4042a6bdf556ad51edc740e7abeec5e7366b04595101e15684b08943d8403836",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/video/README.md",
+      "sha256": "d0087ec61e2b422ac0d55e2f796d09302fbfc114180c38559f5c3c6b97fe83be",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/video/STATE_MODEL_VIDEO.md",
+      "sha256": "8d0f41e09c1b0f712fd7f9b3e9702ce22ea3405b08979c67c3b6e57ae3562585",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/video/TEST_MATRIX_VIDEO.md",
+      "sha256": "4a4c8c2eb2467779efec33be755da790d2e21990779923f557a0a8d9aa856400",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/wellness/SPORT_SCIENCE_RULES_WELLNESS.md",
+      "sha256": "79398411a8bd6754cbbbbf816b045faae3c2e8385bbc34c432a1fe126f91775c",
+      "gate_exit_code": 0
     }
   ],
-  "hook_exit_code": 1,
-  "hook_validated_at": "2026-03-18T04:16:21.916938+00:00"
+  "stage2_exit_code": 0
 }

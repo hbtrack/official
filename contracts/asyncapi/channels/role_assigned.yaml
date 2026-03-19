@@ -1,0 +1,17 @@
+# AsyncAPI Channel: role.assigned
+# Module: identity_access
+# Domain rules: DR-IAM-001, DR-IAM-003
+# Decisions: DEC-IAM-003=C
+# ADR refs: ADR-008 (RBAC flat 5 roles)
+
+address: role.assigned
+title: Role Atribuído
+description: >
+  Canal de publicação quando um role RBAC canônico é atribuído a um usuário.
+  Soberano de bindings técnicos de autorização (DR-IAM-001, ADR-008).
+  Publicado pelo workflow assign_role_to_user após passo assignRole (operationId: assignRole).
+  Consumidores: audit (compliance obrigatório — assign_role_to_user.arazzo.yaml),
+  notifications (alerta ao usuário sobre novo acesso concedido).
+messages:
+  role_assigned_publish:
+    $ref: "../messages/role_assigned.yaml"

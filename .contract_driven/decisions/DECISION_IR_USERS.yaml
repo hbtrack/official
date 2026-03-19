@@ -1,0 +1,83 @@
+# DECISION_IR_USERS.yaml
+# Decisões de implementação — módulo users
+# Data: 2026-03-19
+# Autor: product owner via agent
+# Confirma arquitetura antes de geração de artefatos
+
+decisions:
+  - id: DEC-USERS-001
+    title: asyncapi_events
+    question: >
+      O módulo users deve publicar eventos assíncronos? Quais eventos?
+    options:
+      A:
+        label: Nenhum evento (CRUD puro)
+        description: >
+          users permanece sync-only. Sem canais AsyncAPI.
+          Adequado se nenhum módulo downstream precisa reagir a criação/mudança de usuários.
+      B:
+        label: user.created apenas
+        description: >
+          Publica somente user.created. Mínimo viável para downstream
+          (notifications, teams) saberem de novos usuários.
+      C:
+        label: user.created + user.role_changed
+        description: >
+          Publica user.created e user.role_changed. user.role_changed notifica
+          audit e identity_access sobre mudanças de papel funcional.
+          roleLabel é informativo (ADR-008), mas mudanças devem ser rastreáveis.
+    chosen: C
+    rationale: >
+      Mudanças de roleLabel têm implicações organizacionais e devem ser auditáveis
+      (ADR-008: roleLabel informa papel funcional; identity_access gerencia JWT roles).
+      user.created é necessário para downstream (notifications welcome, teams pre-roster).
+      user.role_changed permite audit trail sem comprometer boundary users/identity_access.
+    doc_ref: "docs/hbtrack/modulos/users/DOMAIN_RULES_USERS.md, ADR-008, INV-USR-004"
+
+  - id: DEC-USERS-002
+    title: invitation_workflow
+    question: >
+      Como deve funcionar o fluxo de criação/onboarding de usuário?
+    options:
+      A:
+        label: Criação direta (user_onboarding)
+        description: >
+          Admin cria usuário diretamente com statusLabel = active.
+          CRUD puro via POST /users. Sem estado intermediário.
+      B:
+        label: Fluxo de convite (user_invitation)
+        description: >
+          Admin cria perfil com statusLabel = pending_activation. Usuário
+          ativa sua conta via PATCH. Representa ciclo de integração real de
+          membros de equipe esportiva (convite → aceite → ativação).
+    chosen: B
+    rationale: >
+      O ciclo de integração de membros em plataformas esportivas envolve convite
+      pelo staff técnico. pending_activation evita perfis "fantasmas" ativos sem
+      credenciais. Alinha com o fluxo real de onboarding de atletas e coaches.
+    doc_ref: "contracts/workflows/users/user_invitation.arazzo.yaml, DR-USR-001"
+
+  - id: DEC-USERS-003
+    title: roleLabel_governance
+    question: >
+      Quem pode alterar o roleLabel de um usuário?
+    options:
+      A:
+        label: Apenas admin
+        description: >
+          Política mais restritiva. Mudança de roleLabel é operação com implicação
+          de autorização (ADR-008) — apenas admin pode promover/rebaixar papéis.
+      B:
+        label: admin + coordinator
+        description: >
+          Coordinator pode atribuir/alterar roles dentro do contexto da sua organização.
+          Adequado para organizações onde o coordinator gerencia o staff técnico
+          sem precisar de admin global.
+    chosen: B
+    rationale: >
+      Em plataformas esportivas o coordinator é o gestor operacional da organização.
+      Delegar atribuição de roleLabel ao coordinator reduz carga do admin e alinha
+      com a realidade de clubes esportivos. roleLabel é informativo (ADR-008) —
+      o JWT roles (identity_access) é a fonte de autorização técnica real.
+      Auditável via user.role_changed event (DEC-USERS-001=C).
+    doc_ref: "docs/hbtrack/modulos/users/PERMISSIONS_USERS.md, ADR-008, DR-USR-002"

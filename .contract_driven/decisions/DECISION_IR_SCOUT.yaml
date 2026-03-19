@@ -1,0 +1,111 @@
+# DECISION_IR_SCOUT.yaml
+# Decisões de implementação — módulo scout
+# Data: 2026-03-19
+# Autor: product owner via agent
+# Confirma arquitetura antes de geração de artefatos
+
+decisions:
+  - id: DEC-SCOUT-001
+    title: openapi_endpoint_exposure
+    question: >
+      O módulo scout deve expor endpoints de apenas leitura, leitura + escrita,
+      ou também endpoint de agregações táticas?
+    options:
+      A:
+        label: Somente leitura
+        description: >
+          GET /scout/events (listagem por matchId) + GET /scout/events/{eventId}.
+          Leitura simples sem escrita ou análise via API.
+      B:
+        label: Leitura + escrita
+        description: >
+          A + POST /scout/events (criação de evento de scout).
+          Permite registrar observações táticas via API.
+      C:
+        label: Leitura + escrita + agregações táticas
+        description: >
+          B + GET /scout/events/aggregations (resumo estatístico por matchId:
+          distribuição de eventLabel, totais por atleta/equipe, tagLabels mais
+          frequentes). Viabiliza dashboards analíticos sem acoplamento a analytics.
+    chosen: C
+    rationale: >
+      C é o modelo mais completo para uma plataforma de gestão esportiva:
+      POST /scout/events permite que analistas registrem observações em tempo real
+      ou pós-jogo (DR-SCOUT-001). GET /scout/events/aggregations provê resumos
+      táticos por partida sem precisar de módulo analytics para leituras básicas
+      (ex.: total de gols por zona, distribuição de ataques por atleta).
+      INV-SCOUT-001 garante obrigatoriedade de id, matchId, eventLabel, recordedAt.
+      OWASP API5:2023 respeitado via paginação obrigatória no endpoint de listagem.
+    doc_ref: >
+      DR-SCOUT-001, DR-SCOUT-002, DR-SCOUT-003, INV-SCOUT-001, INV-SCOUT-002,
+      contracts/schemas/scout/scout_event.schema.json, ADR-007
+
+  - id: DEC-SCOUT-002
+    title: access_control_policy
+    question: >
+      Quem pode ler e escrever eventos de scout? Como funciona o controle de acesso?
+    options:
+      A:
+        label: Admin/coordinator/coach escrevem e leem; athlete/member bloqueados
+        description: >
+          admin, coordinator e coach têm acesso pleno.
+          athlete e member são bloqueados (403).
+      B:
+        label: Admin irrestrito; coordinator/coach com teamId; athlete lê seus eventos
+        description: >
+          admin: acesso irrestrito.
+          coordinator/coach: escrevem e leem com teamId obrigatório; proibido
+          cruzar time sem filtro explícito (OWASP API1:2023).
+          athlete: lê somente eventos onde athleteUserId == self; não pode criar.
+          member: bloqueado (403).
+      C:
+        label: B + coordinator sem filtro obrigatório (acesso cross-team)
+        description: >
+          B, mas coordinator pode ver eventos de qualquer time sem filtro.
+          Mais permissivo, útil para diretores de desempenho de múltiplos times.
+    chosen: B
+    rationale: >
+      B mantém isolamento de dados entre times (OWASP API1:2023, BOLA prevention).
+      coordinator/coach gerenciam scout dentro do escopo do time que operam —
+      teamId obrigatório evita vazar dados táticos de times adversários.
+      athlete poder ler seus próprios eventos de observação é natural (transparência
+      do atleta) mas sem escrita para manter integridade observacional (DR-SCOUT-003).
+      member é puramente suporte/administração e não tem contexto tático.
+      ADR-008 (RBAC plano 5 roles) é respeitado sem criação de roles novos.
+    doc_ref: >
+      ADR-008, DR-SCOUT-001, DR-SCOUT-003, INV-SCOUT-001, PERMISSIONS_SCOUT.md,
+      OWASP API1:2023, OWASP API2:2023 (BFLA)
+
+  - id: DEC-SCOUT-003
+    title: asyncapi_events
+    question: >
+      O módulo scout deve publicar eventos assíncronos? Quais eventos?
+    options:
+      A:
+        label: Nenhum evento
+        description: >
+          scout permanece apenas API HTTP síncrona.
+      B:
+        label: scout.event.created
+        description: >
+          Publica scout.event.created para cada novo evento de scout.
+          Útil para sincronização downstream (analytics, notifications).
+      C:
+        label: scout.event.created + scout.session.completed
+        description: >
+          scout.event.created: publicado por cada evento criado.
+          scout.session.completed: emitido quando o analista finaliza o bloco
+          de scouting de uma partida (sinaliza que o conjunto de observações
+          está completo e pronto para análise).
+    chosen: C
+    rationale: >
+      C permite dois padrões de consumo distintos: scout.event.created para
+      reação em tempo real a cada observação (ex.: notificar coach), e
+      scout.session.completed para processamentos batch de final de análise
+      (ex.: gerar relatório tático, acionar analytics agregado, notificar
+      atletas sobre observações do jogo). ADR-031 (Celery/Redis) suporta
+      ambos os canais sem infra adicional. DR-SCOUT-001 (scout soberano de
+      eventos observacionais) é preservado — os outros módulos apenas consomem.
+    doc_ref: >
+      DR-SCOUT-001, INV-SCOUT-001, INV-SCOUT-002, ADR-031,
+      contracts/asyncapi/asyncapi.yaml

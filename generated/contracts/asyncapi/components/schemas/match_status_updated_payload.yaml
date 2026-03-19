@@ -1,0 +1,67 @@
+# AsyncAPI Payload: match_status_updated
+# Domain rules: DR-MATCH-001, DR-MATCH-004 / INV-MATCH-001
+
+type: object
+required:
+  - eventType
+  - occurredAt
+  - matchId
+  - competitionId
+  - previousStatus
+  - newStatus
+additionalProperties: false
+properties:
+  eventType:
+    type: string
+    const: match.status_updated
+  occurredAt:
+    type: string
+    format: date-time
+    x-semantic-id: core.occurred_at.v1
+  matchId:
+    type: string
+    format: uuid
+    x-semantic-id: matches.match.id.v1
+  competitionId:
+    type: string
+    format: uuid
+    x-semantic-id: competitions.competition.id.v1
+    description: Obrigatório — contexto da competição (DR-MATCH-001).
+  previousStatus:
+    type: string
+    enum:
+      - scheduled
+      - pre_match
+      - first_half
+      - half_time
+      - second_half
+      - overtime_1
+      - overtime_2
+      - penalties
+      - completed
+      - cancelled
+    description: Fase anterior da partida (HBR-013, DEC-MATCHES-002).
+  newStatus:
+    type: string
+    enum:
+      - scheduled
+      - pre_match
+      - first_half
+      - half_time
+      - second_half
+      - overtime_1
+      - overtime_2
+      - penalties
+      - completed
+      - cancelled
+    description: >
+      Nova fase da partida após a transição (HBR-013, DR-MATCH-004).
+      Analytics e scout usam newStatus para contexto temporal de eventos.
+  homeScore:
+    type: [integer, "null"]
+    minimum: 0
+    description: Placar mandante no momento da transição (INV-MATCH-003).
+  awayScore:
+    type: [integer, "null"]
+    minimum: 0
+    description: Placar visitante no momento da transição (INV-MATCH-003).

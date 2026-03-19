@@ -1,8 +1,359 @@
 # Path items for module: medical
 # Source of truth: contracts/openapi/openapi.yaml
 # Related docs:
-# - docs/_canon/SYSTEM_SCOPE.md
 # - docs/hbtrack/modulos/medical/MODULE_SCOPE_MEDICAL.md
-#
-# Add path items here following OpenAPI 3.1 Path Item Object spec.
-# Each path must belong exclusively to this module (LAYOUT section 6).
+# - docs/hbtrack/modulos/medical/DOMAIN_RULES_MEDICAL.md
+# - docs/hbtrack/modulos/medical/INVARIANTS_MEDICAL.md
+# - docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md (ARCH-003, ARCH-004 resolved)
+
+/medical/records:
+  get:
+    operationId: listMedicalRecords
+    summary: List medical records for athletes
+    description: >
+      Returns a paginated list of medical records visible to the authenticated user.
+      Filters by team, athlete, record date range.
+      All medical data is sensitive (PII/PHI) and requires team-level authorization.
+    security:
+      - HTTPBearer: []
+    tags:
+      - medical
+    parameters:
+      - name: athleteUserId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+          x-semantic-id: users.athlete.id.v1
+        description: Filter by athlete ID (user must have team-level access).
+      - name: teamId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+          x-semantic-id: teams.team.id.v1
+        description: Filter by team ID (default to user's team).
+      - name: recordDateFrom
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+        description: Filter records from this date (inclusive).
+      - name: recordDateTo
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+        description: Filter records until this date (inclusive).
+      - name: authorizationStatus
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: [authorized_both, authorized_training_only, not_authorized]
+        description: Filter by return-to-play authorization status.
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+      - name: pageToken
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Pagination token from previous response.
+    responses:
+      "200":
+        description: Paginated list of medical records.
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [data, nextPageToken]
+              additionalProperties: false
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: "../components/schemas/medical/medical_record.yaml"
+                nextPageToken:
+                  type:
+                    - string
+                    - "null"
+                  description: Token for next page, null if no more pages.
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden (insufficient team-level access)
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "422":
+        description: Invalid query parameters
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+
+  post:
+    operationId: createMedicalRecord
+    summary: Create a new medical record
+    description: >
+      Creates a new clinical assessment and restriction record for an athlete.
+      Only team staff with medical access (MD, PT, team physician) can create records.
+      Required: id, athleteUserId, recordDate, recordLabel (per INV-MED-001).
+      Invariant INV-MED-002: returnToPlayAuthorized=true implies returnToTrainingAuthorized=true.
+    security:
+      - HTTPBearer: []
+    tags:
+      - medical
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [athleteUserId, recordDate, recordLabel]
+            additionalProperties: false
+            properties:
+              athleteUserId:
+                type: string
+                format: uuid
+                x-semantic-id: users.athlete.id.v1
+              teamId:
+                type: string
+                format: uuid
+                x-semantic-id: teams.team.id.v1
+              recordDate:
+                type: string
+                format: date
+              recordLabel:
+                type: string
+                minLength: 1
+                maxLength: 120
+              assessmentSummary:
+                type: string
+                maxLength: 1000
+              restrictionSummary:
+                type: string
+                maxLength: 1000
+              returnToTrainingAuthorized:
+                type: boolean
+              returnToPlayAuthorized:
+                type: boolean
+              clinicalNotes:
+                type: string
+                maxLength: 2000
+    responses:
+      "201":
+        description: Medical record created successfully.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/medical/medical_record.yaml"
+      "400":
+        description: Invalid request body (e.g., returnToPlayAuthorized=true but returnToTrainingAuthorized=false)
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden (insufficient medical access)
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "422":
+        description: Unprocessable entity (validation error)
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+
+/medical/records/{recordId}:
+  get:
+    operationId: getMedicalRecord
+    summary: Get a specific medical record
+    description: >
+      Retrieves a single medical record by ID.
+      Subject to team-level access control (BOLA mitigation).
+    security:
+      - HTTPBearer: []
+    tags:
+      - medical
+    parameters:
+      - name: recordId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Medical record retrieved.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/medical/medical_record.yaml"
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden (insufficient access to this record)
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Record not found
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+
+  patch:
+    operationId: updateMedicalRecord
+    summary: Update a medical record
+    description: >
+      Partially updates a medical record.
+      Only team staff with medical access can update.
+      Updating authorization fields requires clinical rationale (clinicalNotes).
+      Invariant INV-MED-002 enforced: returnToPlayAuthorized=true implies returnToTrainingAuthorized=true.
+    security:
+      - HTTPBearer: []
+    tags:
+      - medical
+    parameters:
+      - name: recordId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              recordDate:
+                type: string
+                format: date
+              recordLabel:
+                type: string
+                minLength: 1
+                maxLength: 120
+              assessmentSummary:
+                type: string
+                maxLength: 1000
+              restrictionSummary:
+                type: string
+                maxLength: 1000
+              returnToTrainingAuthorized:
+                type: boolean
+              returnToPlayAuthorized:
+                type: boolean
+              clinicalNotes:
+                type: string
+                maxLength: 2000
+    responses:
+      "200":
+        description: Medical record updated.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/medical/medical_record.yaml"
+      "400":
+        description: Invalid request or constraint violation (e.g., INV-MED-002)
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden (insufficient medical access)
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Record not found
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "422":
+        description: Unprocessable entity (validation error)
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+
+  delete:
+    operationId: deleteMedicalRecord
+    summary: Delete (soft-delete) a medical record
+    description: >
+      Marks a medical record as deleted (soft-delete).
+      Deleted records remain in audit trail for compliance and history.
+      Only team staff with medical access can delete.
+    security:
+      - HTTPBearer: []
+    tags:
+      - medical
+    parameters:
+      - name: recordId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "204":
+        description: Medical record successfully deleted (soft-delete).
+      "401":
+        description: Unauthorized
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden (insufficient medical access)
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Record not found
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"

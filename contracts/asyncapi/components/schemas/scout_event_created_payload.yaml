@@ -1,0 +1,89 @@
+# AsyncAPI Payload Schema: scout_event_created
+# Module: scout
+# Domain rules: DR-SCOUT-001, DR-SCOUT-002, DR-SCOUT-003
+# Invariants: INV-SCOUT-001, INV-SCOUT-002
+# Decisions: DEC-SCOUT-003=C
+
+type: object
+required:
+  - eventType
+  - occurredAt
+  - eventId
+  - matchId
+  - eventLabel
+additionalProperties: false
+properties:
+  eventType:
+    type: string
+    const: scout.event.created
+    description: Tipo do evento. Sempre "scout.event.created".
+
+  occurredAt:
+    type: string
+    format: date-time
+    description: >
+      Timestamp UTC do momento do registro (INV-SCOUT-001, ISO 8601).
+    x-semantic-id: core.occurred_at.v1
+
+  eventId:
+    type: string
+    format: uuid
+    description: >
+      UUID v4 do evento de scout criado (INV-SCOUT-001).
+    x-semantic-id: scout.event.id.v1
+
+  matchId:
+    type: string
+    format: uuid
+    description: >
+      UUID da partida à qual o evento está ancorado (DR-SCOUT-003).
+    x-semantic-id: matches.match.id.v1
+
+  athleteUserId:
+    type:
+      - string
+      - "null"
+    format: uuid
+    description: >
+      UUID do atleta observado. Quando presente, refina contexto.
+    x-semantic-id: identity.user.id.v1
+
+  teamId:
+    type:
+      - string
+      - "null"
+    format: uuid
+    description: UUID do time.
+    x-semantic-id: teams.team.id.v1
+
+  eventLabel:
+    type: string
+    minLength: 1
+    maxLength: 120
+    description: >
+      Rótulo do evento (DR-SCOUT-002, taxonomia canônica).
+      Ex.: SHOT_ON_TARGET, FAST_BREAK, GOAL.
+
+  tagLabels:
+    type:
+      - array
+      - "null"
+    items:
+      type: string
+      maxLength: 80
+    uniqueItems: true
+    description: Tags taxonômicas (INV-SCOUT-002: sem duplicatas).
+
+  codingSchemaLabel:
+    type:
+      - string
+      - "null"
+    maxLength: 120
+    description: Coding schema utilizado.
+
+  tacticalAggregationLabel:
+    type:
+      - string
+      - "null"
+    maxLength: 120
+    description: Rótulo de agregação tática.

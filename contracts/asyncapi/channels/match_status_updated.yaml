@@ -1,0 +1,16 @@
+# AsyncAPI Channel: match.status_updated
+# Module: matches
+# Domain rules: DR-MATCH-001, DR-MATCH-004, DR-MATCH-005
+
+address: match.status_updated
+title: Status da Partida Atualizado
+description: >
+  Canal de publicação quando o statusLabel de uma partida muda de fase.
+  Fases cronológicas conforme HBR-013 (DR-MATCH-004, DEC-MATCHES-002):
+  scheduled → pre_match → first_half → half_time → second_half
+  → overtime_1 → overtime_2 → penalties → completed (ou cancelled).
+  Eventos observacionais (gols, faltas, cards) pertencem a scout (DR-MATCH-005).
+  Analytics e scout consomem este canal para contexto temporal das partidas.
+messages:
+  match_status_updated_publish:
+    $ref: "../messages/match_status_updated.yaml"

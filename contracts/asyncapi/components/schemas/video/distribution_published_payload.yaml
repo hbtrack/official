@@ -1,0 +1,75 @@
+type: object
+additionalProperties: false
+required:
+  - eventType
+  - occurredAt
+  - clipId
+  - sessionId
+  - targetType
+  - publicUrl
+  - publishedAt
+properties:
+  eventType:
+    type: string
+    enum:
+      - video.distribution.published
+    description: Tipo canônico do evento.
+  occurredAt:
+    type: string
+    format: date-time
+    description: Momento ISO 8601 UTC da publicação.
+    x-semantic-id: core.occurred_at.v1
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+  clipId:
+    type: string
+    format: uuid
+    description: UUID do ClipDefinition publicado.
+    x-semantic-id: video.clip_definition.id.v1
+  sessionId:
+    type: string
+    format: uuid
+    description: UUID da MatchMediaSession pai.
+    x-semantic-id: video.match_media_session.id.v1
+  targetType:
+    type: string
+    enum:
+      - TECHNICAL_INTERNAL
+      - PUBLIC_CDN
+      - BROADCAST_PARTNER
+    description: Tipo de destino publicado (DR-VID-002).
+  publicUrl:
+    type: string
+    format: uri
+    description: URL pública de acesso ao clip.
+  availableRenditions:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      required:
+        - codecLabel
+        - bitrate
+      properties:
+        codecLabel:
+          type: string
+          enum:
+            - H.264
+            - H.265
+            - VP9
+            - AV1
+        bitrate:
+          type: integer
+          minimum: 100000
+    description: Array de renditions transcode disponíveis (ABR).
+  publishedAt:
+    type: string
+    format: date-time
+    description: ISO 8601 UTC da publicação confirmada.
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+  expiresAt:
+    type:
+      - string
+      - "null"
+    format: date-time
+    description: ISO 8601 UTC quando clip expira em CDN (baseado em retentionPolicy).
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"

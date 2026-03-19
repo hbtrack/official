@@ -59,6 +59,68 @@ Documentar as **3 camadas de interação** do HB Pro Coach:
 
 ---
 
+## Timeline: Sequence Diagram (3 Camadas)
+
+```mermaid
+sequenceDiagram
+    participant Atleta
+    participant IA as IA Coach
+    participant Treinador
+    participant Backend
+    
+    Note over IA: GATILHO: Falta de treino<br/>ou Performance Gap
+    
+    IA->>Backend: Consulta Feature Store
+    Backend-->>IA: Fadiga, Gap, Restrições
+    
+    rect rgb(255, 243, 224)
+    Note over IA,Treinador: CAMADA 1: IA → TREINADOR
+    IA->>Backend: POST /trainer-suggestions
+    IA-->>Treinador: Dashboard: Sugestão com dados
+    Treinador->>Treinador: Revisa sugestão
+    alt Treinador Aprova
+        Treinador->>Backend: POST /approve
+        Backend->>Backend: TrainingSession PUBLISHED
+        Backend->>Backend: emit training.suggestion.approved
+    else Treinador Edita
+        Treinador->>Backend: POST /edit & approve
+        Backend->>Backend: TrainingSession PUBLISHED
+    else Treinador Recusa
+        Treinador->>Backend: POST /reject
+    end
+    end
+    
+    rect rgb(243, 229, 245)
+    Note over Treinador,Atleta: CAMADA 2: TREINADOR → ATLETA
+    Backend->>Atleta: 📲 Notificação: Treino Atualizado
+    Atleta->>Atleta: Recebe sessão aprovada
+    end
+    
+    rect rgb(232, 245, 233)
+    Note over Atleta,IA: CAMADA 3: IA ↔ ATLETA (Optional)
+    Atleta->>IA: ❓ Por quê agachamento?
+    IA->>Backend: Query exercício + Feature Store
+    Backend-->>IA: Dados aprovação + Features
+    IA-->>Atleta: 📝 Explicação Técnica/Tática
+    Atleta->>Atleta: Entende exercício
+    end
+    
+    rect rgb(198, 230, 202)
+    Note over Treinador,Atleta: EXECUÇÃO
+    Treinador->>Atleta: Conduz treino presencial
+    Atleta->>Atleta: Executa com orientação
+    end
+    
+    rect rgb(165, 214, 167)
+    Note over IA,Atleta: MONITORAMENTO
+    IA->>Backend: Coleta dados execução
+    IA->>IA: Avalia resposta do atleta
+    IA->>IA: Planeja próximo treino
+    end
+```
+
+---
+
 ## CAMADA 1: IA → TREINADOR (Sugestão de Exercício)
 
 ### Flow Completo

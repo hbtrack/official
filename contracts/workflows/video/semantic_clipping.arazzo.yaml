@@ -1,0 +1,60 @@
+arazzo: "1.0.0"
+
+info:
+  title: Video — Semantic Clipping from Scout Events
+  version: "0.1.0"
+  summary: Orquestra criação automática de clips semânticos baseado em eventos scout.
+  description: >
+    Workflow de clipping semântico:
+    1) Recupera eventos scout de uma partida (goals, fouls, timeouts, etc.);
+    2) Para cada evento, cria ClipDefinition linkando timecode_video ao scout_event_id;
+    3) Inclui contexto: zona de quadra (zone_label), atletas envolvidos (athlete_ids), contexto placar;
+    4) Clips ficam prontos para publicação semântica (consultas por tipo de evento, atleta, zona);
+    5) Opcionalmente publica clips resumidos.
+
+    Requer: sessão em estado PUBLISHED ou TRANSCODING, scout events sincronizados,
+            MatchMediaSession.matchId referencia match com eventos scout.
+    Emite eventos: nenhum AsyncAPI; gera ClipDefinitions persistidas.
+    Referência: DR-VID-004 (clipping semântico), INV-VID-005 (exige contexto semântico).
+
+sourceDescriptions:
+  - name: hbtrack-http
+    type: openapi
+    url: ../../openapi/openapi.yaml
+
+workflows:
+  semantic_clipping:
+    summary: Criar clips semânticos a partir de eventos scout.
+    steps:
+      - stepId: getSessionDetails
+        operationId: getSession
+        description: >
+          Recupera MatchMediaSession com matchId e timecode bounds.
+          Valida que sessão está em estado PUBLISHED ou TRANSCODING+ (com segments já sincronizados).
+        
+      - stepId: queryScoutEvents
+        operationId: listScoutEvents
+        description: >
+          Recupera todos eventos scout da partida (via scout module API).
+          Cada evento tem: type (goal, foul, timeout, etc.), timecode, athlete_ids, zone.
+          Source of truth para timecode (INV-VID-010): video se readapta, não o contrário.
+        
+      - stepId: iterateScoutEventsThroughLoop
+        operationId: createClip
+        description: >
+          Para cada scout event:
+          - Calcula timecode de clip: [event.timecode - 5s, event.timecode + 10s] (window configurável);
+          - Cria ClipDefinition com:
+            - fromTimecode / toTimecode (janela de clip);
+            - scoutEventId (referência back para scout);
+            - zoneLabel (zona de quadra do evento);
+            - athleteIds (atletas envolvidos);
+            - contextLabel (goal, foul, timeout, etc.).
+          - Valida INV-VID-005 (exige contexto semântico) automatically satisfied.
+        
+      - stepId: publishClipsOptional
+        operationId: publishDistribution
+        description: >
+          Opcional: publica clips resumidos em PUBLIC_CDN para "destaques da partida".
+          Cada clip já tem metadados semânticos para busca/navegação.
+          Emite video.distribution.published para cada clip.

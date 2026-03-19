@@ -1,0 +1,15 @@
+description: >
+  Publicado quando um MediaSegment transiciona para state=FINALIZED.
+
+  Emitido após segmento ser flushed para mezzanine storage e timecode
+  validado contra scout. Consumidores (transcode pipeline, analytics) podem
+  iniciar processamento.
+
+  DR-VID-005: imutabilidade de segments após FINALIZED.
+  DR-VID-010: sincronização com scout é referência.
+  INV-VID-003: mediaSegment sem gaps temporais.
+
+publish:
+  operationId: video_segment_ready_publish
+  message:
+    $ref: ../messages/video/segment_ready.yaml

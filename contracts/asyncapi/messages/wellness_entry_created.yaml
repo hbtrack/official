@@ -1,0 +1,6 @@
+name: wellness_entry_created
+title: Wellness Entry Created
+summary: Questionário diário de wellness registrado por um atleta.
+contentType: application/json
+payload:
+  $ref: ../components/schemas/wellness_entry_created_payload.yaml

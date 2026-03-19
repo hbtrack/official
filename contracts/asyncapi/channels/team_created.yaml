@@ -1,0 +1,16 @@
+# ============================================================
+# AsyncAPI Channel: team.created
+# Module: teams
+# Domain rules: DR-TEAM-001
+# ============================================================
+
+address: team.created
+title: Equipe Criada
+description: >
+  Canal de publicação do evento de criação de equipe (DR-TEAM-001 — teams
+  é soberano do elenco, comissão, categoria e associação à temporada).
+
+  Publicado após criação bem-sucedida via POST /teams.
+messages:
+  team_created_publish:
+    $ref: "../messages/team_created.yaml"

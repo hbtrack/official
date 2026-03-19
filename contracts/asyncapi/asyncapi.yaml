@@ -78,6 +78,68 @@ channels:
     $ref: ./channels/continuity_snapshot_created.yaml
   training.readiness.assessed:
     $ref: ./channels/training_readiness_assessed.yaml
+  notification.delivery.queued:
+    $ref: ./channels/notification_delivery_queued.yaml
+  notification.delivery.sent:
+    $ref: ./channels/notification_delivery_sent.yaml
+  notification.delivery.failed:
+    $ref: ./channels/notification_delivery_failed.yaml
+  wellness.entry.created:
+    $ref: ./channels/wellness_entry_created.yaml
+  team.created:
+    $ref: ./channels/team_created.yaml
+  team.roster_updated:
+    $ref: ./channels/team_roster_updated.yaml
+  ai_ingestion.job.queued:
+    $ref: ./channels/ai_ingestion_job_queued.yaml
+  ai_ingestion.job.completed:
+    $ref: ./channels/ai_ingestion_job_completed.yaml
+  ai_ingestion.job.failed:
+    $ref: ./channels/ai_ingestion_job_failed.yaml
+  season.created:
+    $ref: ./channels/season_created.yaml
+  season.status_updated:
+    $ref: ./channels/season_status_updated.yaml
+  competition.created:
+    $ref: ./channels/competition_created.yaml
+  competition.phase_changed:
+    $ref: ./channels/competition_phase_changed.yaml
+  match.scheduled:
+    $ref: ./channels/match_scheduled.yaml
+  match.status_updated:
+    $ref: ./channels/match_status_updated.yaml
+  user.created:
+    $ref: ./channels/user_created.yaml
+  user.role_changed:
+    $ref: ./channels/user_role_changed.yaml
+  session.created:
+    $ref: ./channels/session_created.yaml
+  session.revoked:
+    $ref: ./channels/session_revoked.yaml
+  role.assigned:
+    $ref: ./channels/role_assigned.yaml
+  role.revoked:
+    $ref: ./channels/role_revoked.yaml
+  audit.entry.created:
+    $ref: ./channels/audit_entry_created.yaml
+  audit.entry.security_flagged:
+    $ref: ./channels/audit_entry_security_flagged.yaml
+  scout.event.created:
+    $ref: ./channels/scout_event_created.yaml
+  scout.session.completed:
+    $ref: ./channels/scout_session_completed.yaml
+  video.capture.started:
+    $ref: ./channels/video/capture_started.yaml
+  video.distribution.failed:
+    $ref: ./channels/video/distribution_failed.yaml
+  video.distribution.published:
+    $ref: ./channels/video/distribution_published.yaml
+  video.segment.ready:
+    $ref: ./channels/video/segment_ready.yaml
+  video.sync.adjustment_applied:
+    $ref: ./channels/video/sync_adjustment_applied.yaml
+  video.transcode.completed:
+    $ref: ./channels/video/transcode_completed.yaml
 
 components:
   schemas:

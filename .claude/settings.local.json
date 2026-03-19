@@ -20,7 +20,11 @@
       "Bash(chmod +x /home/davis/HB-TRACK/scripts/hb)",
       "Bash(bash scripts/hb help)",
       "Bash(echo \"exitcode=$?\")",
-      "Bash(python3 scripts/contracts/validate/validate_contracts.py --stage session-start)"
+      "Bash(python3 scripts/contracts/validate/validate_contracts.py --stage session-start)",
+      "Bash(python3 scripts/contracts/validate/validate_contracts.py*)",
+      "Bash(python3 scripts/hb*)",
+      "Bash(python3 scripts/contracts/validate/api/compile_api_policy.py*)",
+      "Bash(echo \"EXIT:$?\")"
     ]
   }
 }

@@ -1,0 +1,13 @@
+# AsyncAPI Channel: competition.created
+# Module: competitions
+# Domain rules: DR-COMP-001, DR-COMP-002
+
+address: competition.created
+title: Competição Criada
+description: >
+  Canal de publicação quando uma nova competição é criada.
+  Toda competição criada possui seasonId obrigatório (DR-COMP-002).
+  competitions é soberano da competição e calendário competitivo (DR-COMP-001).
+messages:
+  competition_created_publish:
+    $ref: "../messages/competition_created.yaml"

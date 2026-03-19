@@ -1,38 +1,98 @@
 {
-  "$comment": "Sovereign domain shape for module matches. Conservative enrichment based on MODULE_SCOPE_MATCHES.md and MODULE_SOURCE_AUTHORITY_MATRIX may_infer(match, score, periods, lineup, official_incidents, venue, refereeing).",
+  "$comment": "Sovereign domain shape for module matches. DR-MATCH-001..005 / INV-MATCH-001..005. DEC-MATCHES-001: CRUD. DEC-MATCHES-002: statusLabel=9 fases HBR-013.",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://hbtrack.local/schemas/matches/match.schema.json",
   "title": "Match",
   "description": "Official match record shape for the matches module.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["id", "competitionId", "homeTeamId", "awayTeamId", "scheduledAt"],
+  "required": [
+    "id",
+    "competitionId",
+    "homeTeamId",
+    "awayTeamId",
+    "statusLabel",
+    "scheduledAt",
+    "lineupUserIds",
+    "officialIncidentIds",
+    "refereeNames",
+    "createdAt",
+    "updatedAt"
+  ],
   "properties": {
     "id": { "$ref": "#/definitions/uuid_v4" },
-    "competitionId": { "$ref": "#/definitions/uuid_v4" },
-    "homeTeamId": { "$ref": "#/definitions/uuid_v4" },
-    "awayTeamId": { "$ref": "#/definitions/uuid_v4" },
-    "venueLabel": { "type": "string", "maxLength": 120 },
-    "scheduledAt": { "$ref": "#/definitions/timestamp_utc" },
-    "startedAt": { "$ref": "#/definitions/timestamp_utc" },
-    "endedAt": { "$ref": "#/definitions/timestamp_utc" },
-    "homeScore": { "type": "integer", "minimum": 0 },
-    "awayScore": { "type": "integer", "minimum": 0 },
+    "competitionId": {
+      "$ref": "#/definitions/uuid_v4",
+      "description": "Competição soberana da partida (DR-MATCH-001, INV-MATCH-001)."
+    },
+    "homeTeamId": {
+      "$ref": "#/definitions/uuid_v4",
+      "description": "Equipe mandante (DR-MATCH-002, INV-MATCH-002). Deve ser != awayTeamId."
+    },
+    "awayTeamId": {
+      "$ref": "#/definitions/uuid_v4",
+      "description": "Equipe visitante (DR-MATCH-002, INV-MATCH-002). Deve ser != homeTeamId."
+    },
+    "venueLabel": {
+      "type": ["string", "null"],
+      "maxLength": 200
+    },
+    "statusLabel": {
+      "type": "string",
+      "enum": [
+        "scheduled",
+        "pre_match",
+        "first_half",
+        "half_time",
+        "second_half",
+        "overtime_1",
+        "overtime_2",
+        "penalties",
+        "completed",
+        "cancelled"
+      ],
+      "description": "Fase cronológica HBR-013 (DR-MATCH-004, DEC-MATCHES-002)."
+    },
+    "scheduledAt": {
+      "$ref": "#/definitions/timestamp_utc",
+      "description": "Data/hora agendada (INV-MATCH-001, DR-MATCH-004)."
+    },
+    "startedAt": {
+      "oneOf": [{ "$ref": "#/definitions/timestamp_utc" }, { "type": "null" }],
+      "description": "Início efetivo; <= endedAt quando ambos presentes (INV-MATCH-004)."
+    },
+    "endedAt": {
+      "oneOf": [{ "$ref": "#/definitions/timestamp_utc" }, { "type": "null" }],
+      "description": "Fim efetivo; >= startedAt quando ambos presentes (INV-MATCH-004)."
+    },
+    "homeScore": {
+      "oneOf": [{ "type": "integer", "minimum": 0 }, { "type": "null" }],
+      "description": "Placar mandante (INV-MATCH-003). CRUD pós-jogo (DEC-MATCHES-001)."
+    },
+    "awayScore": {
+      "oneOf": [{ "type": "integer", "minimum": 0 }, { "type": "null" }],
+      "description": "Placar visitante (INV-MATCH-003). CRUD pós-jogo (DEC-MATCHES-001)."
+    },
     "lineupUserIds": {
       "type": "array",
       "items": { "$ref": "#/definitions/uuid_v4" },
-      "uniqueItems": true
+      "uniqueItems": true,
+      "description": "Elenco escalado oficial (DR-MATCH-003, INV-MATCH-005). Max 16 por equipe (HBR-008)."
     },
     "officialIncidentIds": {
       "type": "array",
       "items": { "$ref": "#/definitions/uuid_v4" },
-      "uniqueItems": true
+      "uniqueItems": true,
+      "description": "Incidentes oficiais na súmula (INV-MATCH-005, HBR-003)."
     },
     "refereeNames": {
       "type": "array",
-      "items": { "type": "string", "maxLength": 120 },
-      "uniqueItems": true
-    }
+      "items": { "type": "string", "minLength": 1, "maxLength": 120 },
+      "uniqueItems": true,
+      "description": "Árbitros da partida (INV-MATCH-005)."
+    },
+    "createdAt": { "$ref": "#/definitions/timestamp_utc" },
+    "updatedAt": { "$ref": "#/definitions/timestamp_utc" }
   },
   "definitions": {
     "uuid_v4": {
@@ -50,13 +110,21 @@
       "competitionId": "550e8400-e29b-41d4-a716-446655440407",
       "homeTeamId": "550e8400-e29b-41d4-a716-446655440207",
       "awayTeamId": "550e8400-e29b-41d4-a716-446655440208",
-      "venueLabel": "Main Arena",
+      "venueLabel": "Ginásio Central",
+      "statusLabel": "completed",
       "scheduledAt": "2026-05-12T19:30:00Z",
+      "startedAt": "2026-05-12T19:35:00Z",
+      "endedAt": "2026-05-12T21:10:00Z",
       "homeScore": 32,
       "awayScore": 29,
-      "lineupUserIds": ["550e8400-e29b-41d4-a716-446655440707"],
+      "lineupUserIds": [
+        "550e8400-e29b-41d4-a716-446655440707",
+        "550e8400-e29b-41d4-a716-446655440708"
+      ],
       "officialIncidentIds": ["550e8400-e29b-41d4-a716-446655440807"],
-      "refereeNames": ["Referee A", "Referee B"]
+      "refereeNames": ["Maria Silva", "João Costa"],
+      "createdAt": "2026-05-10T10:00:00Z",
+      "updatedAt": "2026-05-12T21:15:00Z"
     }
   ]
 }

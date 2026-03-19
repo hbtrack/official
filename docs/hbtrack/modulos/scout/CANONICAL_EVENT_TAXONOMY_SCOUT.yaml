@@ -1,0 +1,156 @@
+# CANONICAL_EVENT_TAXONOMY_SCOUT.yaml
+# Taxonomia fechada de eventos observacionais do módulo scout.
+# DR-SCOUT-002: eventLabel, tagLabels e codingSchemaLabel devem nascer
+#   de taxonomia explícita — nunca de histórico ou UI.
+# INV-SCOUT-003: campos de taxonomia verificáveis contra este arquivo.
+# Fonte: IHF (International Handball Federation) rules + prática observacional.
+#
+# Extensão: novos itens devem ser adicionados aqui via PR/ADR antes de serem
+# aceitos nos contratos. O gate SCOUT_TAXONOMY_GATE valida conformidade.
+
+version: "1.0.0"
+updated: "2026-03-19"
+
+event_labels:
+  # ── Ações ofensivas ─────────────────────────────
+  - label: GOAL
+    category: offense
+    description: Gol marcado.
+  - label: SHOT_ON_TARGET
+    category: offense
+    description: Arremesso na direção do gol (defendido ou gol).
+  - label: SHOT_OFF_TARGET
+    category: offense
+    description: Arremesso para fora do gol.
+  - label: SHOT_BLOCKED
+    category: offense
+    description: Arremesso bloqueado por defensor de quadra.
+  - label: FAST_BREAK
+    category: offense
+    description: Contra-ataque rápido após recuperação de bola.
+  - label: BREAKTHROUGH
+    category: offense
+    description: Penetração individual através da defesa.
+  - label: PIVOT_PLAY
+    category: offense
+    description: Jogada com pivô (linha de 6m).
+  - label: WING_PLAY
+    category: offense
+    description: Jogada pela ponta (ala).
+  - label: ASSIST
+    category: offense
+    description: Passe decisivo que resulta diretamente em arremesso ou gol.
+  - label: SEVEN_METER_THROW
+    category: offense
+    description: Arremesso de 7 metros (pênalti).
+
+  # ── Ações defensivas ────────────────────────────
+  - label: STEAL
+    category: defense
+    description: Roubo de bola do adversário.
+  - label: BLOCK
+    category: defense
+    description: Bloqueio defensivo de arremesso.
+  - label: INTERCEPTION
+    category: defense
+    description: Interceptação de passe adversário.
+  - label: GOALKEEPER_SAVE
+    category: defense
+    description: Defesa do goleiro.
+
+  # ── Erros e transições ─────────────────────────
+  - label: TURNOVER
+    category: error
+    description: Perda de posse de bola (erro técnico, passe errado).
+  - label: TECHNICAL_FAULT
+    category: error
+    description: Falta técnica (passos, duplo drible, invasão de área).
+  - label: BAD_PASS
+    category: error
+    description: Passe incorreto que leva a perda de posse.
+
+  # ── Disciplina ──────────────────────────────────
+  - label: TWO_MINUTE_SUSPENSION
+    category: discipline
+    description: Exclusão de 2 minutos.
+  - label: YELLOW_CARD
+    category: discipline
+    description: Cartão amarelo (advertência).
+  - label: RED_CARD
+    category: discipline
+    description: Cartão vermelho (desqualificação).
+  - label: BLUE_CARD
+    category: discipline
+    description: Cartão azul (desqualificação com relatório).
+
+  # ── Tático ──────────────────────────────────────
+  - label: TIMEOUT
+    category: tactical
+    description: Tempo técnico solicitado pelo coach.
+  - label: EMPTY_GOAL
+    category: tactical
+    description: Goleiro substituído por jogador de quadra (power play).
+  - label: SUBSTITUTION
+    category: tactical
+    description: Substituição de jogador.
+  - label: DEFENSIVE_SYSTEM_CHANGE
+    category: tactical
+    description: Mudança no sistema defensivo (ex. 6-0, 5-1, 3-2-1).
+  - label: OFFENSIVE_SYSTEM_CHANGE
+    category: tactical
+    description: Mudança no sistema ofensivo.
+
+tag_labels:
+  # ── Zona de quadra ─────────────────────────────
+  - label: left-wing
+    category: court_zone
+  - label: right-wing
+    category: court_zone
+  - label: left-back
+    category: court_zone
+  - label: right-back
+    category: court_zone
+  - label: center-back
+    category: court_zone
+  - label: pivot
+    category: court_zone
+  - label: six-meter
+    category: court_zone
+  - label: nine-meter
+    category: court_zone
+
+  # ── Situação de jogo ───────────────────────────
+  - label: fast-break
+    category: game_situation
+  - label: positional-attack
+    category: game_situation
+  - label: power-play
+    category: game_situation
+  - label: man-down
+    category: game_situation
+  - label: equal-strength
+    category: game_situation
+
+  # ── Qualificadores ─────────────────────────────
+  - label: first-half
+    category: period
+  - label: second-half
+    category: period
+  - label: overtime
+    category: period
+
+coding_schemas:
+  - label: match-event-v1
+    description: Schema padrão para eventos de partida em tempo real.
+  - label: match-review-v1
+    description: Schema para revisão pós-jogo com clipes de vídeo.
+
+tactical_aggregation_labels:
+  - label: transition-offense
+    description: Ataque em transição (contra-ataque).
+  - label: positional-offense
+    description: Ataque posicional organizado.
+  - label: organized-defense
+    description: Defesa organizada (6-0, 5-1, etc).
+  - label: pressing-defense
+    description: Defesa em pressão alta.

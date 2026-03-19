@@ -1,0 +1,70 @@
+# ============================================================
+# AsyncAPI Payload Schema: ai_ingestion_job_completed
+# Module: ai_ingestion
+# Domain rules: DR-ING-003, DR-ING-005
+# Invariants: INV-ING-002, INV-ING-005
+# ============================================================
+
+type: object
+required:
+  - eventType
+  - occurredAt
+  - jobId
+  - sourceLabel
+  - ingestionMode
+  - statusLabel
+  - receivedAt
+properties:
+  eventType:
+    type: string
+    const: ai_ingestion.job.completed
+    description: Tipo do evento. Sempre "ai_ingestion.job.completed".
+
+  occurredAt:
+    type: string
+    format: date-time
+    description: >
+      Timestamp UTC do término do processamento (completedAt).
+      DR-ING-003: occurredAt (completedAt) >= receivedAt (INV-ING-002).
+    x-semantic-id: core.occurred_at.v1
+
+  jobId:
+    type: string
+    format: uuid
+    description: UUID do job de ingestão concluído.
+    x-semantic-id: ai_ingestion.job.id.v1
+
+  sourceLabel:
+    type: string
+    minLength: 1
+    maxLength: 120
+    description: Label da fonte de dados externa.
+
+  ingestionMode:
+    type: string
+    minLength: 1
+    maxLength: 40
+    description: "Modo de ingestão (batch, webhook, file-drop)."
+
+  statusLabel:
+    type: string
+    enum:
+      - completed
+    description: Status do job no momento do evento. Sempre "completed".
+
+  receivedAt:
+    type: string
+    format: date-time
+    description: >
+      Timestamp de entrada do fato externo (DR-ING-003).
+      Preserva causalidade — receivedAt NÃO é colapsado com completedAt.
+    x-semantic-id: core.occurred_at.v1
+
+  idempotencyKey:
+    type:
+      - string
+      - "null"
+    maxLength: 120
+    description: Chave de idempotência do job (DR-ING-004).
+
+additionalProperties: false

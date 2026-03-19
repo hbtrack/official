@@ -1,0 +1,46 @@
+# AsyncAPI Payload: season_created
+# Domain rules: DR-SEAS-001, DR-SEAS-003 / INV-SEAS-001
+
+type: object
+required:
+  - eventType
+  - occurredAt
+  - seasonId
+  - name
+  - statusLabel
+  - startDate
+  - endDate
+additionalProperties: false
+properties:
+  eventType:
+    type: string
+    const: season.created
+  occurredAt:
+    type: string
+    format: date-time
+    x-semantic-id: core.occurred_at.v1
+  seasonId:
+    type: string
+    format: uuid
+    x-semantic-id: seasons.season.id.v1
+  organizationId:
+    type: [string, "null"]
+    format: uuid
+    x-semantic-id: organizations.organization.id.v1
+  name:
+    type: string
+    minLength: 1
+    maxLength: 120
+  sportCycleLabel:
+    type: [string, "null"]
+    maxLength: 80
+  statusLabel:
+    type: string
+    enum: [draft]
+    description: Temporadas novas sempre iniciam como draft.
+  startDate:
+    type: string
+    format: date
+  endDate:
+    type: string
+    format: date

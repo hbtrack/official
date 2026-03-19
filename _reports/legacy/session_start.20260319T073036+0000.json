@@ -1,0 +1,11 @@
+{
+  "stage": 2,
+  "stage2_artifacts": [
+    {
+      "path": "docs/hbtrack/modulos/identity_access/PERMISSIONS_IDENTITY_ACCESS.md",
+      "sha256": "c5ddad36f61e8e7e5cf3150708711ff017a2ec228299c55eb54535906879313e",
+      "created_at": "2026-03-19T04:34:51.056140+00:00",
+      "gate_exit_code": 2
+    }
+  ]
+}

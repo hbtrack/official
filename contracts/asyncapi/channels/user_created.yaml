@@ -1,0 +1,15 @@
+# AsyncAPI Channel: user.created
+# Module: users
+# Domain rules: DR-USR-001, DR-USR-002, DR-USR-003
+# Invariants: INV-USR-001, INV-USR-003
+
+address: user.created
+title: Usuário Criado
+description: >
+  Canal de publicação quando um novo perfil de usuário é criado no sistema.
+  Soberano de identidade de perfil (DR-USR-001). roleLabel = informativo (5 actores
+  canônicos, DR-USR-002). Vínculos teamIds/seasonIds são explícitos (DR-USR-003).
+  NUNCA expõe credentials, JWT ou tokens de autenticação (INV-USR-003).
+messages:
+  user_created_publish:
+    $ref: "../messages/user_created.yaml"

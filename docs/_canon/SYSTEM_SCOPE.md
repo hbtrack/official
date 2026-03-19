@@ -25,19 +25,35 @@ O sistema não é um microserviço. A modularidade é lógica (por domínio), n�
 
 Regras, terminologia, categorias e estrutura competitiva seguem o regulamento IHF (International Handball Federation) e suas adaptações pela Confederação Brasileira de Handebol (CBHb) quando aplicável.
 
-## 4. Atores Canônicos
+## 4. Atores Canônicos e Modelo de Autorização
 
-Os 5 papéis abaixo são os únicos reconhecidos pelo sistema de permissões (RBAC). Toda variação de papel deve ser mapeada a um destes.
+O sistema de identidade e autorização do HB Track opera em quatro camadas. A SSOT completa está em `docs/guias/IDENTITY_RBAC.md`.
 
-| Ator | Nível RBAC | Responsabilidade Principal |
-|------|-----------|---------------------------|
-| **Dirigente** | 1 (mais alto) | Gestão estratégica do clube: temporadas, equipes, usuários, relatórios executivos |
-| **Coordenador** | 2 | Coordenação de comissão técnica, aprovação de planos de treino, gestão de atletas |
-| **Treinador** | 3 | Planejamento e execução de treinos, gestão de sessões, análise de desempenho |
-| **Atleta** | 4 | Visualização de próprios dados: treinos, wellness, histórico de partidas |
-| **Membro** | 5 (mais baixo) | Acesso básico ao sistema — papel base para funções de suporte operacional |
+```
+Canonical Actor  →  Role Template  →  Permission Bundles  →  Scope Bindings  →  Policy Engine
+```
 
-**Regra**: Nenhum novo papel pode ser criado sem aprovação formal e atualização deste documento. Variações como "preparador físico" ou "analista" são mapeadas ao papel mais próximo e suas permissões adicionais são concedidas explicitamente via módulo `identity_access`.
+- **Ator Canônico**: linguagem de negócio — quem usa o sistema e para qual finalidade (ex: Head Coach, Team Doctor, Performance Analyst)
+- **Role Template**: perfil provisionável e auditável, composto por bundles (ex: `HEAD_COACH`, `TEAM_DOCTOR`)
+- **Permission Bundles**: capacidades reutilizáveis por domínio (ex: `training_plan_manage_bundle`, `medical_record_manage_bundle`)
+- **Scope Bindings**: escopos de aplicação — clube, equipe, temporada
+- **Policy Engine**: restrições contextuais ABAC (ex: treinador vê readiness mas não diagnóstico clínico)
+
+### Famílias de atores (resumo)
+
+| Família | Atores canônicos |
+|---------|-----------------|
+| Plataforma | Platform Super Admin, Tenant Admin |
+| Gestão esportiva | Executive Stakeholder, Sporting Director, Technical Coordinator |
+| Comissão técnica | Head Coach, Assistant Coach, Performance Analyst, Video Analyst, Opponent Scout, Goalkeeper Coach |
+| Performance e saúde | Strength & Conditioning Coach, Performance Scientist, Physiotherapist, Team Doctor, Nutritionist |
+| Operação e competição | Match Operator, Competition Official, Referee-Linked Official |
+| Ecossistema e mídia | Federation Operator, League Admin, Media Operator, External Partner |
+| Atletas | Athlete, Academy Athlete Guardian Proxy |
+
+**Total**: ~25 atores canônicos → ~30 permission bundles → ~20 role templates
+
+**Regra**: Nenhum role template pode ser criado sem aprovação formal e registro em `docs/guias/IDENTITY_RBAC.md`. Variações de acesso entre tenants são resolvidas por composição de bundles, nunca por criação de novos roles ad hoc. Ver IDENTITY_RBAC.md §5 para a regra arquitetural completa.
 
 ## 5. Macrodomínios de Negócio
 
@@ -60,7 +76,11 @@ Os 9 macrodomínios abaixo organizam o negócio do HB Track. Macrodomínios de n
 Os itens abaixo estão explicitamente fora do escopo do HB Track. Qualquer implementação que toque nesses domínios requer decisão formal antes de avançar.
 
 - **Arbitragem oficial de partidas**: gestão de árbitros, credenciamento, escalações de arbitragem e comunicação com federações.
-- **Transmissão e streaming ao vivo de partidas**: captura, codificação e distribuição de vídeo em tempo real.
+- **Broadcast e OTT público como domínio de negócio autônomo** (V3 / módulo `media`): plataforma de streaming pago, app OTT dedicado ao consumidor, widget público de estatísticas para portais externos, highlight pack para TV ou conteúdo de mídia como produto digital independente do sistema esportivo. Esses domínios requerem criação do módulo `media` no registry e decisão formal antes de avançar.
+
+  > **Distinção crítica:** captura técnica de vídeo na arena, biblioteca interna de partidas, clipping manual, sincronização temporal e distribuição restrita a comissão técnica, banco e tribuna **estão dentro do escopo** — são responsabilidade do módulo `video` (MVP). O que está fora do escopo é o broadcast público como domínio de produto autônomo (plataforma OTT, CDN de consumidor, monetização de audiência).
+
+
 - **Venda de ingressos e bilheteria**: e-commerce, pagamentos, emissão de ingressos e controle de acesso físico a eventos.
 
 Funcionalidades adjacentes que se aproximem desses domínios devem ser avaliadas individualmente com clareza sobre onde o sistema termina e onde o sistema externo começa.
@@ -82,13 +102,32 @@ O HB Track não controla implementação interna desses serviços. A integraçã
 
 3. **Regras de handebol sem âncora documental causam inconsistência entre módulos**: regras esportivas presentes apenas no código ou na memória do desenvolvedor não são verificáveis por agentes e criam divergência entre módulos que compartilham semântica esportiva.
 
-## 9. Decisões em Aberto
+## 9. Módulo Video (Plataforma de Mídia Integrada)
+
+O módulo `video` é responsável por captura ao vivo, ingestão, sincronização temporal com rastreamento/scouting, transcodificação, distribuição técnica interna (baixa latência) e distribuição pública/broadcast. Ver ADR-033 para decisão de canonicalization.
+
+**Responsabilidades de video:**
+- Captura na arena (edge-first, com fallback local)
+- Ingestão de feeds externos (TV, produtora, múltiplos ângulos)
+- Sincronização temporal (relógio lógico único da partida)
+- Transcodificação para perfis técnicos e de distribuição pública
+- Clipping automático e manual com índice semântico
+- Distribuição restrita a técnico/banco/tribuna
+- Distribuição pública via CDN (quando aplicável)
+
+**Não cobre (out-of-scope dentro do video):**
+- Broadcast e OTT como domínio de negócio autônomo (futuro módulo `media`)
+- Edição editorial complexa de pós-produção
+- CDN global de varejo
+- Monetização OTT avançada de assinatura
+
+## 10. Decisões em Aberto
 
 1. **Estratégia de versioning para breaking changes pós-v1**: o HB Track proíbe versão na URI e prevê compatibilidade via content negotiation / media-type quando necessário (SSOT: `.contract_driven/templates/api/api_rules.yaml`), mas a política de deprecação e ciclo de vida de versões antigas ainda não foi formalizada para o contexto de produção pós-v1.
 
 2. **Broker externo (ex: RabbitMQ) quando a escala exigir**: atualmente o Celery usa Redis como broker. A decisão de migrar para um broker dedicado (RabbitMQ, Amazon SQS) está em aberto e depende de métricas de volume de mensagens em produção.
 
-## 10. Princípios de Escopo
+## 11. Princípios de Escopo
 
 O HB Track opera sob 5 princípios que definem como o escopo deve ser interpretado e aplicado:
 
@@ -102,7 +141,7 @@ O HB Track opera sob 5 princípios que definem como o escopo deve ser interpreta
 
 5. **Bloqueio em caso de lacuna crítica** — quando faltar artefato normativo necessário, o processo deve bloquear em vez de improvisar.
 
-## 11. Critério de Aderência
+## 12. Critério de Aderência
 
 O HB Track está aderente a este documento quando:
 
@@ -112,7 +151,7 @@ O HB Track está aderente a este documento quando:
 - Suas regras derivadas do handebol estão formalmente registradas em `HANDBALL_RULES_DOMAIN.md`
 - Seus agentes de IA operam sem inventar domínio, módulo ou interface fora deste documento
 
-## 12. Referências
+## 13. Referências
 
 - `ARCHITECTURE.md` — stack, princípios e estrutura de camadas
 - `MODULE_MAP.md` — taxonomia técnica dos 16 módulos canônicos

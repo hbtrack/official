@@ -1,0 +1,6 @@
+name: training_session_started
+title: Training Session Started
+summary: Sessão de treino iniciada. Estado IN_PROGRESS.
+contentType: application/json
+payload:
+  $ref: ../components/schemas/training_session_started_payload.yaml

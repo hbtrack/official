@@ -215,6 +215,9 @@ Leia junto com:
 | ARCH-009 | Política de Log de Execução de Agente | ADR-015 | 2026-03-15 |
 | ARCH-010 | Exposição MCP — Adiada pós-v1.0 (deferred) | ADR-016 | 2026-03-15 |
 | ARCH-011 | State Machine Canônica de `training_session` | ADR-017 | 2026-03-15 |
+| D2 | Estratégia de Versionamento de Contratos — SemVer, versão única ativa | ADR-024 | 2026-03-17 |
+| D4 | Stack Backend — Django 5.x + Django Ninja 1.x + PostgreSQL 16 + Celery + Channels | ADR-031 | 2026-03-17 |
+| ARCH-012 | Video como 17º Módulo Canônico — Plataforma de Mídia Integrada | ADR-033 | 2026-03-19 |
 
 ---
 

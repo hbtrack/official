@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hbtrack.local/schemas/video/distribution_profile.schema.json",
+  "title": "DistributionProfile",
+  "description": "Recipe for transcode + packaging: codec, bitrate, renditions for a target (technical/public). References: DR-VID-002 (dual pipeline: technical + public), DR-VID-006 (lazy transcode on-demand).",
+  "type": "object",
+  "required": ["id", "profileLabel", "targetType", "codecLabel", "bitrate"],
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "profileLabel": {"type": "string", "maxLength": 80, "description": "Human-readable name (e.g., 'Technical Low Latency', 'Public ABR')"},
+    "targetType": {"type": "string", "enum": ["TECHNICAL_INTERNAL", "PUBLIC_CDN", "BROADCAST_PARTNER"], "description": "Destination type"},
+    "codecLabel": {"type": "string", "enum": ["H.264", "H.265", "VP9", "AV1"]},
+    "bitrate": {"type": "integer", "minimum": 100, "description": "Primary bitrate in kbps"},
+    "renditions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "bitrate": {"type": "integer"},
+          "resolution": {"type": "string", "pattern": "^\\d+x\\d+$"}
+        }
+      },
+      "description": "Optional ladder (ABR variants)"
+    },
+    "latencyTargetMs": {"type": ["integer", "null"], "minimum": 100, "description": "For technical: target end-to-end latency"},
+    "createdAt": {"type": "string", "format": "date-time"}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,64 @@
+# ============================================================
+# AsyncAPI Payload Schema: team_roster_updated
+# Module: teams
+# Domain rules: DR-TEAM-001, DR-TEAM-002
+# Invariants: INV-TEAM-001, INV-TEAM-002
+# ============================================================
+
+type: object
+required:
+  - eventType
+  - occurredAt
+  - teamId
+  - organizationId
+  - changeTypeLabel
+  - subjectUserId
+  - performedByUserId
+properties:
+  eventType:
+    type: string
+    const: team.roster_updated
+    description: Tipo do evento. Sempre "team.roster_updated".
+
+  occurredAt:
+    type: string
+    format: date-time
+    description: "Timestamp UTC do momento da alteração do elenco (ISO 8601)."
+    x-semantic-id: core.occurred_at.v1
+
+  teamId:
+    type: string
+    format: uuid
+    description: UUID da equipe cujo elenco foi alterado.
+    x-semantic-id: teams.team.id.v1
+
+  organizationId:
+    type: string
+    format: uuid
+    description: UUID da organização proprietária da equipe.
+    x-semantic-id: organizations.organization.id.v1
+
+  changeTypeLabel:
+    type: string
+    enum:
+      - athlete_added
+      - athlete_removed
+      - staff_added
+      - staff_removed
+    description: >
+      Tipo de alteração no elenco (DR-TEAM-002 — vínculos explícitos).
+      Permite que consumidores filtrem por tipo de operação.
+
+  subjectUserId:
+    type: string
+    format: uuid
+    description: UUID do usuário adicionado ou removido do elenco/comissão.
+    x-semantic-id: identity.user.id.v1
+
+  performedByUserId:
+    type: string
+    format: uuid
+    description: UUID do usuário que executou a operação (coordinator ou admin).
+    x-semantic-id: identity.user.id.v1
+
+additionalProperties: false

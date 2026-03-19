@@ -1,0 +1,98 @@
+# AsyncAPI Payload Schema: audit_entry_created
+# Module: audit
+# Domain rules: DR-AUD-001, DR-AUD-002, DR-AUD-003, DR-AUD-004, DR-AUD-005
+# Invariants: INV-AUD-001, INV-AUD-002, INV-AUD-003, INV-AUD-004, INV-AUD-005
+# Decisions: DEC-AUD-003=C
+
+type: object
+required:
+  - eventType
+  - occurredAt
+  - entryId
+  - actorUserId
+  - action
+additionalProperties: false
+properties:
+  eventType:
+    type: string
+    const: audit.entry.created
+    description: Tipo do evento. Sempre "audit.entry.created".
+
+  occurredAt:
+    type: string
+    format: date-time
+    description: >
+      Timestamp UTC do momento em que a ação auditada ocorreu (INV-AUD-001, ISO 8601).
+    x-semantic-id: core.occurred_at.v1
+
+  entryId:
+    type: string
+    format: uuid
+    description: >
+      UUID v4 da entrada de auditoria criada (INV-AUD-001, INV-AUD-002).
+      Imutável e único no sistema.
+    x-semantic-id: audit.entry.id.v1
+
+  actorUserId:
+    type: string
+    format: uuid
+    description: >
+      UUID do usuário que executou a ação (INV-AUD-001).
+      Referência ao módulo users. audit não duplica dados de perfil.
+    x-semantic-id: identity.user.id.v1
+
+  action:
+    type: string
+    minLength: 1
+    maxLength: 120
+    description: >
+      Rótulo da ação executada (INV-AUD-001).
+      Convenção: <module>.<entity>.<verb>
+      Ex.: training_session.updated, identity_access.role_assigned.
+
+  targetResourceId:
+    type:
+      - string
+      - "null"
+    format: uuid
+    description: >
+      UUID do recurso alvo. Quando presente, targetResourceType é obrigatório
+      (INV-AUD-003).
+    x-semantic-id: core.resource.id.v1
+
+  targetResourceType:
+    type:
+      - string
+      - "null"
+    maxLength: 80
+    description: >
+      Tipo do recurso alvo (INV-AUD-003). Ex.: training_session, user, team.
+
+  outcomeLabel:
+    type:
+      - string
+      - "null"
+    enum:
+      - success
+      - failure
+      - partial
+      - null
+    description: Resultado da ação executada.
+
+  originLabel:
+    type:
+      - string
+      - "null"
+    maxLength: 80
+    description: >
+      Origem técnica da ação (ex.: api, celery_task, webhook, admin_console, system).
+
+  correlationId:
+    type:
+      - string
+      - "null"
+    format: uuid
+    description: >
+      UUID de correlação que agrupa etapas da mesma operação distribuída (DR-AUD-003).
+      INV-AUD-005: estável entre todos os eventos da mesma operação.
+    x-semantic-id: core.correlation.id.v1

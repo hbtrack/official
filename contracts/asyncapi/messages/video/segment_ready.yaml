@@ -1,0 +1,6 @@
+name: video_segment_ready
+title: Video Segment Ready
+summary: MediaSegment finalizado e validado contra scout timecode.
+contentType: application/json
+payload:
+  $ref: ../components/schemas/video/segment_ready_payload.yaml

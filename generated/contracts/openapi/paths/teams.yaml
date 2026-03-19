@@ -1,8 +1,658 @@
-# Path items for module: teams
+# ============================================================
+# Module: teams — OpenAPI path items
 # Source of truth: contracts/openapi/openapi.yaml
-# Related docs:
-# - docs/_canon/SYSTEM_SCOPE.md
-# - docs/hbtrack/modulos/teams/MODULE_SCOPE_TEAMS.md
-#
-# Add path items here following OpenAPI 3.1 Path Item Object spec.
-# Each path must belong exclusively to this module (LAYOUT section 6).
+# Docs: docs/hbtrack/modulos/teams/MODULE_SCOPE_TEAMS.md
+# Domain rules: DR-TEAM-001..005
+# Invariants: INV-TEAM-001..004
+# ADR refs: ADR-008 (RBAC), ADR-031 (Django stack)
+# ============================================================
+
+/teams:
+  get:
+    tags:
+      - teams
+    summary: Lista equipes
+    description: >
+      Retorna lista paginada de equipes.
+      teams é soberano do elenco, comissão, categoria e associação à temporada
+      (DR-TEAM-001).
+
+      Filtros por organizationId, seasonId, categoryLabel e statusLabel.
+      OWASP API4:2023: pageSize máximo 100.
+
+      Acesso: admin e coordinator têm acesso irrestrito; coach vê apenas
+      equipes às quais está vinculado; athlete vê apenas as próprias equipes
+      (BOLA — ADR-008).
+    operationId: listTeams
+    security:
+      - bearerAuth: []
+    parameters:
+      - name: organizationId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+        description: Filtra por UUID da organização.
+      - name: seasonId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+        description: >
+          Filtra por UUID da temporada (DR-TEAM-004).
+          seasonId contextualiza a composição — não transfere soberania de seasons.
+      - name: categoryLabel
+        in: query
+        required: false
+        schema:
+          type: string
+          maxLength: 80
+        description: >
+          Filtra por categoria esportiva/competitiva (DR-TEAM-003).
+          Não é papel de autorização técnica.
+      - name: statusLabel
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+            - draft
+            - active
+            - archived
+        description: Filtra por status do ciclo de vida da equipe.
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        description: Número da página (base 1).
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        description: Itens por página (máx 100).
+    responses:
+      "200":
+        description: Lista paginada de equipes.
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - data
+                - page
+                - pageSize
+                - total
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: "../components/schemas/teams/team.yaml"
+                page:
+                  type: integer
+                  minimum: 1
+                pageSize:
+                  type: integer
+                  minimum: 1
+                total:
+                  type: integer
+                  minimum: 0
+              additionalProperties: false
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+  post:
+    tags:
+      - teams
+    summary: Cria equipe
+    description: >
+      Cria uma nova equipe com elenco e comissão inicial.
+      teams é soberano do elenco, categoria e associação à temporada (DR-TEAM-001).
+
+      athleteIds e staffUserIds são vínculos explícitos — presença em treino,
+      scout ou login não cria vínculo automaticamente (DR-TEAM-002).
+      categoryLabel é esportivo/competitivo e não pode ser usado como papel
+      de autorização técnica (DR-TEAM-003).
+
+      Pós-condições:
+      - Team criada com statusLabel=draft
+      - Evento team.created publicado via AsyncAPI
+
+      Acesso: apenas admin e coordinator (ADR-008 RBAC).
+    operationId: createTeam
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - organizationId
+              - name
+              - categoryLabel
+            properties:
+              organizationId:
+                type: string
+                format: uuid
+                description: UUID da organização proprietária da equipe.
+                x-semantic-id: organizations.organization.id.v1
+              seasonId:
+                type:
+                  - string
+                  - "null"
+                format: uuid
+                description: >
+                  UUID da temporada associada (DR-TEAM-004).
+                  Contextualiza composição — não transfere soberania de seasons
+                  (INV-TEAM-003).
+                x-semantic-id: seasons.season.id.v1
+              name:
+                type: string
+                minLength: 1
+                maxLength: 120
+                description: Nome da equipe. INV-TEAM-001 obrigatório.
+              shortName:
+                type:
+                  - string
+                  - "null"
+                maxLength: 32
+                description: Nome abreviado da equipe (opcional).
+              categoryLabel:
+                type: string
+                minLength: 1
+                maxLength: 80
+                description: >
+                  Categoria esportiva/competitiva (INV-TEAM-001 obrigatório;
+                  DR-TEAM-003 — não é papel de authz).
+              athleteIds:
+                type: array
+                uniqueItems: true
+                description: >
+                  UUIDs dos atletas vinculados (DR-TEAM-002 — vínculos explícitos).
+                  INV-TEAM-002: sem duplicidade.
+                items:
+                  type: string
+                  format: uuid
+                  x-semantic-id: identity.user.id.v1
+              staffUserIds:
+                type: array
+                uniqueItems: true
+                description: >
+                  UUIDs dos membros da comissão técnica vinculados (DR-TEAM-002).
+                  INV-TEAM-002: sem duplicidade.
+                items:
+                  type: string
+                  format: uuid
+                  x-semantic-id: identity.user.id.v1
+              rosterNotes:
+                type:
+                  - string
+                  - "null"
+                maxLength: 500
+                description: >
+                  Notas operacionais de contexto (DR-TEAM-005).
+                  NÃO pode conter credenciais, dados clínicos ou ownership pessoal.
+            additionalProperties: false
+    responses:
+      "201":
+        description: Equipe criada com statusLabel=draft.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/teams/team.yaml"
+      "400":
+        description: >
+          Requisição inválida. Causas: organizationId ausente; name vazio;
+          categoryLabel ausente; athleteIds/staffUserIds com duplicidade
+          (INV-TEAM-002).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente — requer admin ou coordinator (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "422":
+        description: organizationId ou athleteIds/staffUserIds não correspondem a entidades conhecidas.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+/teams/{teamId}:
+  get:
+    tags:
+      - teams
+    summary: Obtém equipe por ID
+    description: >
+      Retorna dados completos de uma equipe incluindo elenco e comissão.
+      Acesso: admin e coordinator irrestrito; coach e athlete veem apenas
+      equipes às quais estão vinculados (BOLA — ADR-008).
+    operationId: getTeam
+    security:
+      - bearerAuth: []
+    parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID da equipe.
+    responses:
+      "200":
+        description: Equipe encontrada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/teams/team.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Acesso negado — BOLA (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "404":
+        description: Equipe não encontrada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+  patch:
+    tags:
+      - teams
+    summary: Atualiza equipe
+    description: >
+      Atualiza parcialmente os dados de uma equipe (PATCH semântico — campos
+      não enviados permanecem inalterados).
+
+      Permite atualizar metadados, status, seasonId e substituição completa
+      de elenco/comissão. Para gerenciamento granular de membros, use os
+      endpoints dedicados de atletas e staff.
+
+      athleteIds e staffUserIds, quando enviados, SUBSTITUEM as listas
+      completas (DR-TEAM-002 — vínculos explícitos, INV-TEAM-002 uniqueItems).
+
+      Acesso: admin e coordinator (ADR-008 RBAC).
+    operationId: patchTeam
+    security:
+      - bearerAuth: []
+    parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID da equipe.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            minProperties: 1
+            properties:
+              seasonId:
+                type:
+                  - string
+                  - "null"
+                format: uuid
+                description: >
+                  UUID da temporada (DR-TEAM-004 / INV-TEAM-003).
+                  Null desvincula da temporada atual.
+                x-semantic-id: seasons.season.id.v1
+              name:
+                type: string
+                minLength: 1
+                maxLength: 120
+              shortName:
+                type:
+                  - string
+                  - "null"
+                maxLength: 32
+              categoryLabel:
+                type: string
+                minLength: 1
+                maxLength: 80
+                description: >
+                  Categoria esportiva/competitiva (DR-TEAM-003 — não é papel de authz).
+              statusLabel:
+                type: string
+                enum:
+                  - draft
+                  - active
+                  - archived
+                description: >
+                  Ciclo de vida da equipe.
+                  draft → active → archived (sem retorno de archived).
+              athleteIds:
+                type: array
+                uniqueItems: true
+                description: >
+                  Substituição completa da lista de atletas (INV-TEAM-002).
+                  DR-TEAM-002 — vínculos explícitos.
+                items:
+                  type: string
+                  format: uuid
+                  x-semantic-id: identity.user.id.v1
+              staffUserIds:
+                type: array
+                uniqueItems: true
+                description: >
+                  Substituição completa da lista de staff (INV-TEAM-002).
+                items:
+                  type: string
+                  format: uuid
+                  x-semantic-id: identity.user.id.v1
+              rosterNotes:
+                type:
+                  - string
+                  - "null"
+                maxLength: 500
+                description: >
+                  Notas operacionais (DR-TEAM-005 — sem credenciais, dados clínicos
+                  ou ownership pessoal).
+            additionalProperties: false
+    responses:
+      "200":
+        description: Equipe atualizada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/teams/team.yaml"
+      "400":
+        description: Corpo inválido ou nenhum campo informado.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "404":
+        description: Equipe não encontrada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "422":
+        description: athleteIds ou staffUserIds contêm UUIDs desconhecidos.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+/teams/{teamId}/athletes/{athleteUserId}:
+  post:
+    tags:
+      - teams
+    summary: Adiciona atleta ao elenco
+    description: >
+      Adiciona um atleta ao elenco da equipe (DR-TEAM-001 — teams é soberano
+      do elenco). Vínculo explícito — não criado por presença em treino,
+      attendance, scout ou login (DR-TEAM-002).
+
+      INV-TEAM-002: athleteIds mantém uniqueItems — operação é idempotente
+      se o atleta já estiver no elenco (retorna 200 sem erro).
+
+      Publica evento team.roster_updated via AsyncAPI.
+
+      Acesso: admin e coordinator (ADR-008 RBAC).
+    operationId: addAthleteToTeam
+    security:
+      - bearerAuth: []
+    parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID da equipe.
+      - name: athleteUserId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID do atleta a vincular. Referência ao módulo users.
+    responses:
+      "200":
+        description: Atleta vinculado (ou já estava vinculado — idempotente).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/teams/team.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "404":
+        description: Equipe ou atleta não encontrado.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+  delete:
+    tags:
+      - teams
+    summary: Remove atleta do elenco
+    description: >
+      Remove um atleta do elenco da equipe (DR-TEAM-001 / DR-TEAM-002 —
+      vínculo explícito). Operação idempotente — sem erro se atleta já não
+      estiver no elenco.
+
+      Publica evento team.roster_updated via AsyncAPI.
+
+      Acesso: admin e coordinator (ADR-008 RBAC).
+    operationId: removeAthleteFromTeam
+    security:
+      - bearerAuth: []
+    parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID da equipe.
+      - name: athleteUserId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID do atleta a desvincular.
+    responses:
+      "200":
+        description: Atleta removido (ou já não estava vinculado — idempotente).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/teams/team.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "404":
+        description: Equipe não encontrada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+/teams/{teamId}/staff/{staffUserId}:
+  post:
+    tags:
+      - teams
+    summary: Adiciona membro da comissão técnica
+    description: >
+      Adiciona um membro da comissão técnica à equipe (DR-TEAM-001 — teams
+      é soberano da comissão esportiva). Vínculo explícito — não inferido de
+      login, scout ou histórico operacional (DR-TEAM-002).
+
+      INV-TEAM-002: staffUserIds mantém uniqueItems — operação é idempotente.
+      Publica evento team.roster_updated via AsyncAPI.
+
+      Acesso: admin e coordinator (ADR-008 RBAC).
+    operationId: addStaffToTeam
+    security:
+      - bearerAuth: []
+    parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID da equipe.
+      - name: staffUserId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID do membro da comissão. Referência ao módulo users.
+    responses:
+      "200":
+        description: Staff vinculado (ou já estava vinculado — idempotente).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/teams/team.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "404":
+        description: Equipe ou usuário não encontrado.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+
+  delete:
+    tags:
+      - teams
+    summary: Remove membro da comissão técnica
+    description: >
+      Remove um membro da comissão técnica da equipe (DR-TEAM-001 / DR-TEAM-002).
+      Operação idempotente — sem erro se staff já não estiver vinculado.
+
+      Publica evento team.roster_updated via AsyncAPI.
+
+      Acesso: admin e coordinator (ADR-008 RBAC).
+    operationId: removeStaffFromTeam
+    security:
+      - bearerAuth: []
+    parameters:
+      - name: teamId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID da equipe.
+      - name: staffUserId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID do membro a desvincular.
+    responses:
+      "200":
+        description: Staff removido (ou já não estava vinculado — idempotente).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/teams/team.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"
+      "404":
+        description: Equipe não encontrada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/common/error.yaml"

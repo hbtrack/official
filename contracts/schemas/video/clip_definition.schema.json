@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hbtrack.local/schemas/video/clip_definition.schema.json",
+  "title": "ClipDefinition",
+  "description": "Semantic range cut with context (scout event, zone, athletes). References: DR-VID-004 (semantic clipping mandatory), INV-VID-006 (semantic metadata required).",
+  "type": "object",
+  "required": ["id", "sessionId", "fromTimecode", "toTimecode"],
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "sessionId": {"type": "string", "format": "uuid"},
+    "fromTimecode": {"type": "integer", "minimum": 0, "description": "Milliseconds (inclusive)"},
+    "toTimecode": {"type": "integer", "minimum": 0, "description": "Milliseconds (exclusive)"},
+    "scoutEventId": {"type": ["string", "null"], "format": "uuid", "description": "Reference to scout event that inspired this clip"},
+    "zoneLabel": {"type": ["string", "null"], "maxLength": 80, "description": "Court zone (e.g., 'LEFT_WING', 'CENTER', 'GOAL_AREA')"},
+    "athleteIds": {"type": "array", "items": {"type": "string", "format": "uuid"}, "description": "Athletes involved"},
+    "contextLabel": {"type": ["string", "null"], "maxLength": 200, "description": "Narrative context (e.g., 'Fast break 2v1')"},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "createdByUserId": {"type": "string", "format": "uuid"}
+  },
+  "additionalProperties": false
+}
