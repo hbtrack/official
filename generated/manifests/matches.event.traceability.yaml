@@ -1,5 +1,5 @@
 traceability_manifest:
-  artifact_id: training.event.asyncapi
+  artifact_id: matches.event.asyncapi
   compiler: hbtrack_api_policy_compiler
   compiler_version: 0.1.0
   generated_artifacts:
@@ -556,8 +556,8 @@ traceability_manifest:
   - path: generated/contracts/schemas/wellness/wellness_entry.schema.json
     sha256: e6b69221a1e62764a544a37a53dfa1d211df3b89799df536f9b85789b5b59c97
   generated_tree_sha256: 5b9ef497073d58bd9d898cd3d8deb2186bc9df975825ba7924d3bf1ad0c80985
-  policy_path: generated/resolved_policy/training.event.resolved.yaml
-  policy_sha256: 7def5f52b2a293d410d2ac753f294637ba38a67a61319bdd9db759af41ef52d1
+  policy_path: generated/resolved_policy/matches.event.resolved.yaml
+  policy_sha256: 1abfc38e130cfdceef8090c9b9c1c2120c58e37d1d1effbc451d5dcc302c639f
   source_contracts:
   - path: contracts/asyncapi/README.md
     sha256: 911c379f8c48a9d804be28b64039aecb958e863762051ebcad6f0eab7b1266de
