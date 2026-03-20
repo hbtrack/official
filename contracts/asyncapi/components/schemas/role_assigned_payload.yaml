@@ -1,65 +1,51 @@
-# AsyncAPI Payload Schema: role_assigned
-# Module: identity_access
-# Domain rules: DR-IAM-001, DR-IAM-003
-# Invariants: INV-IAM-002
-# Decisions: DEC-IAM-003=C
-# ADR refs: ADR-008 (RBAC flat 5 roles)
-
 type: object
 required:
-  - eventType
-  - occurredAt
-  - targetUserId
-  - roleLabel
-  - grantedByUserId
+- eventType
+- occurredAt
+- targetUserId
+- roleLabel
+- grantedByUserId
 additionalProperties: false
 properties:
   eventType:
     type: string
     const: role.assigned
     description: Tipo do evento. Sempre "role.assigned".
-
   occurredAt:
     type: string
     pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
     format: date-time
     description: Timestamp UTC do momento em que o role foi atribuído (ISO 8601).
     x-semantic-id: core.occurred_at.v1
-
   targetUserId:
     type: string
     format: uuid
-    description: >
-      UUID do usuário que recebeu o role. Referência ao módulo users (DR-IAM-002).
-      identity_access não duplica o perfil — apenas registra o binding técnico.
-    x-semantic-id: identity.user.id.v1
+    description: 'UUID do usuário que recebeu o role. Referência ao módulo users (DR-IAM-002). identity_access não duplica o perfil — apenas registra o binding técnico.
 
+      '
+    x-semantic-id: identity.user.id.v1
   roleLabel:
     type: string
     enum:
-      - admin
-      - coordinator
-      - coach
-      - athlete
-      - member
-    description: >
-      Role RBAC canônico atribuído (INV-IAM-002, ADR-008).
-      Conjunto fechado de 5 roles — deny-by-omission.
+    - admin
+    - coordinator
+    - coach
+    - athlete
+    - member
+    description: 'Role RBAC canônico atribuído (INV-IAM-002, ADR-008). Conjunto fechado de 5 roles — deny-by-omission.
 
+      '
   grantedByUserId:
     type: string
     format: uuid
-    description: >
-      UUID do usuário admin que concedeu o role. Obrigatório para rastreabilidade
-      de compliance (assign_role_to_user.arazzo.yaml, DEC-IAM-003=C).
-    x-semantic-id: identity.user.id.v1
+    description: 'UUID do usuário admin que concedeu o role. Obrigatório para rastreabilidade de compliance (assign_role_to_user.arazzo.yaml, DEC-IAM-003=C).
 
+      '
+    x-semantic-id: identity.user.id.v1
   organizationId:
-    type:
-      - string
-      - "null"
+    type: string
     format: uuid
-    description: >
-      UUID da organização no contexto da qual o role foi atribuído.
-      Null quando o role é global (ex: admin).
+    description: 'UUID da organização no contexto da qual o role foi atribuído. Null quando o role é global (ex: admin).
+
+      '
     x-semantic-id: organizations.organization.id.v1

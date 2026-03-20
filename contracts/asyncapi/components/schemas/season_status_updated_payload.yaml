@@ -1,13 +1,10 @@
-# AsyncAPI Payload: season_status_updated
-# Domain rules: DR-SEAS-001, DR-SEAS-005 / INV-SEAS-001
-
 type: object
 required:
-  - eventType
-  - occurredAt
-  - seasonId
-  - previousStatusLabel
-  - statusLabel
+- eventType
+- occurredAt
+- seasonId
+- previousStatusLabel
+- statusLabel
 additionalProperties: false
 properties:
   eventType:
@@ -22,14 +19,23 @@ properties:
     type: string
     format: uuid
     x-semantic-id: seasons.season.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   name:
-    type: [string, "null"]
+    type:
+    - string
+    - 'null'
     maxLength: 120
   previousStatusLabel:
     type: string
-    enum: [draft, active, archived]
+    enum:
+    - draft
+    - active
+    - archived
     description: Status anterior à transição.
   statusLabel:
     type: string
-    enum: [draft, active, archived]
+    enum:
+    - draft
+    - active
+    - archived
     description: Novo status após a transição (draft → active → archived).

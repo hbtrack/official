@@ -1,13 +1,10 @@
-# AsyncAPI Payload: competition_phase_changed
-# Domain rules: DR-COMP-001, DR-COMP-004 / INV-COMP-001, INV-COMP-003
-
 type: object
 required:
-  - eventType
-  - occurredAt
-  - competitionId
-  - seasonId
-  - statusLabel
+- eventType
+- occurredAt
+- competitionId
+- seasonId
+- statusLabel
 additionalProperties: false
 properties:
   eventType:
@@ -22,20 +19,33 @@ properties:
     type: string
     format: uuid
     x-semantic-id: competitions.competition.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   seasonId:
     type: string
     format: uuid
     x-semantic-id: seasons.season.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   name:
-    type: [string, "null"]
+    type:
+    - string
+    - 'null'
     maxLength: 140
   previousStatusLabel:
-    type: [string, "null"]
-    enum: [draft, active, archived, null]
+    type:
+    - string
+    - 'null'
+    enum:
+    - draft
+    - active
+    - archived
+    - null
     description: Status anterior à transição (null se apenas stageLabels foi alterado).
   statusLabel:
     type: string
-    enum: [draft, active, archived]
+    enum:
+    - draft
+    - active
+    - archived
     description: Status atual após a transição.
   stageLabels:
     type: array
@@ -43,6 +53,6 @@ properties:
     items:
       type: string
       maxLength: 80
-    description: >
-      Lista atual de fases (DR-COMP-004, INV-COMP-003).
-      Explícitas — nunca inferidas de resultados de partidas.
+    description: 'Lista atual de fases (DR-COMP-004, INV-COMP-003). Explícitas — nunca inferidas de resultados de partidas.
+
+      '

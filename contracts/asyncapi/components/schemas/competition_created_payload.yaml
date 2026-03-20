@@ -1,15 +1,12 @@
-# AsyncAPI Payload: competition_created
-# Domain rules: DR-COMP-001, DR-COMP-002 / INV-COMP-001
-
 type: object
 required:
-  - eventType
-  - occurredAt
-  - competitionId
-  - seasonId
-  - name
-  - statusLabel
-  - startDate
+- eventType
+- occurredAt
+- competitionId
+- seasonId
+- name
+- statusLabel
+- startDate
 additionalProperties: false
 properties:
   eventType:
@@ -24,13 +21,15 @@ properties:
     type: string
     format: uuid
     x-semantic-id: competitions.competition.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   seasonId:
     type: string
     format: uuid
     x-semantic-id: seasons.season.id.v1
     description: Obrigatório — competição sem temporada é inválida (DR-COMP-002).
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   organizationId:
-    type: [string, "null"]
+    type: string
     format: uuid
     x-semantic-id: organizations.organization.id.v1
   name:
@@ -38,11 +37,14 @@ properties:
     minLength: 1
     maxLength: 140
   formatLabel:
-    type: [string, "null"]
+    type:
+    - string
+    - 'null'
     maxLength: 80
   statusLabel:
     type: string
-    enum: [draft]
+    enum:
+    - draft
     description: Competições novas sempre iniciam como draft.
   startDate:
     type: string

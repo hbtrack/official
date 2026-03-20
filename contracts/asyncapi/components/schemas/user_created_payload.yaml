@@ -1,77 +1,64 @@
-# AsyncAPI Payload Schema: user_created
-# Module: users
-# Domain rules: DR-USR-001, DR-USR-002, DR-USR-003
-# Invariants: INV-USR-001, INV-USR-002, INV-USR-003
-
 type: object
 required:
-  - eventType
-  - occurredAt
-  - userId
-  - displayName
-  - roleLabel
-  - statusLabel
+- eventType
+- occurredAt
+- userId
+- displayName
+- roleLabel
+- statusLabel
 additionalProperties: false
 properties:
   eventType:
     type: string
     const: user.created
     description: Tipo do evento. Sempre "user.created".
-
   occurredAt:
     type: string
     pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
     format: date-time
     description: Timestamp UTC do momento em que o usuário foi criado (ISO 8601).
     x-semantic-id: core.occurred_at.v1
-
   userId:
     type: string
     format: uuid
     description: UUID do usuário criado (INV-USR-001). FK universal como UserId.
     x-semantic-id: identity.user.id.v1
-
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   organizationId:
-    type:
-      - string
-      - "null"
+    type: string
     format: uuid
     description: UUID da organização à qual o usuário pertence. Null se não associado.
     x-semantic-id: organizations.organization.id.v1
-
   displayName:
     type: string
     minLength: 1
     maxLength: 120
     description: Label legível do perfil (INV-USR-001). Obrigatório no perfil estável.
-
   roleLabel:
     type: string
     enum:
-      - athlete
-      - coach
-      - coordinator
-      - admin
-      - member
-    description: >
-      Papel funcional/esportivo do usuário (DR-USR-002, ADR-008).
-      INFORMATIVO — a autorização técnica real pertence a identity_access (INV-USR-004).
+    - athlete
+    - coach
+    - coordinator
+    - admin
+    - member
+    description: 'Papel funcional/esportivo do usuário (DR-USR-002, ADR-008). INFORMATIVO — a autorização técnica real pertence a identity_access (INV-USR-004).
 
+      '
   statusLabel:
     type: string
     enum:
-      - active
-      - pending_activation
-    description: >
-      Status do perfil no momento da criação. pending_activation quando criado
-      via convite (DEC-USERS-002). active quando criado diretamente por admin.
+    - active
+    - pending_activation
+    description: 'Status do perfil no momento da criação. pending_activation quando criado via convite (DEC-USERS-002). active quando criado diretamente por admin.
 
+      '
   teamIds:
     type: array
     items:
       type: string
       format: uuid
     uniqueItems: true
-    description: >
-      Vínculos de equipe no momento da criação (DR-USR-003, INV-USR-002).
-      Explícitos — nunca inferidos de presença ou analytics.
+    description: 'Vínculos de equipe no momento da criação (DR-USR-003, INV-USR-002). Explícitos — nunca inferidos de presença ou analytics.
+
+      '

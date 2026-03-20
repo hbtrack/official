@@ -1,7 +1,12 @@
-# AsyncAPI Payload: video_clip_ready
-# Module: video | DR-VID-004, DR-VID-005 | ADR-033
 type: object
-required: [eventType, occurredAt, clipId, sessionId, timecodeStart, timecodeEnd, semanticContextLabel]
+required:
+- eventType
+- occurredAt
+- clipId
+- sessionId
+- timecodeStart
+- timecodeEnd
+- semanticContextLabel
 additionalProperties: false
 properties:
   eventType:
@@ -16,6 +21,7 @@ properties:
     type: string
     format: uuid
     description: UUID do ClipDefinition.
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   sessionId:
     type: string
     pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
@@ -30,11 +36,12 @@ properties:
   semanticContextLabel:
     type: string
     maxLength: 100
-    description: "Contexto semântico do clip (DR-VID-004 — ex: golo-7m, falta-zona-d)."
+    description: 'Contexto semântico do clip (DR-VID-004 — ex: golo-7m, falta-zona-d).'
   scoutEventId:
     type: string
     format: uuid
     description: Referência ao evento scout correlacionado. Não duplica dados de scout (BOUNDARY).
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   athleteIds:
     type: array
     items:
@@ -44,4 +51,4 @@ properties:
   zoneLabel:
     type: string
     maxLength: 40
-    description: "Zona de quadra do evento (ex: area-6m-esq, meia-quadra)."
+    description: 'Zona de quadra do evento (ex: area-6m-esq, meia-quadra).'

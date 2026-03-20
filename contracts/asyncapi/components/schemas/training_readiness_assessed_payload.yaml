@@ -1,20 +1,21 @@
 type: object
 additionalProperties: false
 required:
-  - eventType
-  - occurredAt
-  - readinessId
+- eventType
+- occurredAt
+- readinessId
 properties:
   eventType:
     type: string
-    enum: [training_readiness_assessed]
+    enum:
+    - training_readiness_assessed
   occurredAt:
     type: string
     pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
     x-semantic-id: core.occurred_at.v1
   readinessId:
     type: string
-    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   athleteId:
     type: string
     pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
@@ -23,10 +24,13 @@ properties:
     type: integer
     minimum: 0
     maximum: 100
-    description: "Readiness score (0–100) with components: sleep_quality, wellness_mood, resting_hr, yesterdays_fatigue"
+    description: 'Readiness score (0–100) with components: sleep_quality, wellness_mood, resting_hr, yesterdays_fatigue'
   readinessCategory:
     type: string
-    enum: [low, moderate, high]
+    enum:
+    - low
+    - moderate
+    - high
   traceId:
     type: string
     pattern: ^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$

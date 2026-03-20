@@ -1,20 +1,20 @@
 type: object
 additionalProperties: false
 required:
-  - eventType
-  - occurredAt
-  - deliveryId
-  - recipientUserId
-  - channelLabel
-  - deliveryStatusLabel
-  - retryCount
-  - requestedAt
-  - failureReasonLabel
+- eventType
+- occurredAt
+- deliveryId
+- recipientUserId
+- channelLabel
+- deliveryStatusLabel
+- retryCount
+- requestedAt
+- failureReasonLabel
 properties:
   eventType:
     type: string
     enum:
-      - notification.delivery.failed
+    - notification.delivery.failed
     description: Tipo canônico do evento. Imutável.
   occurredAt:
     type: string
@@ -27,54 +27,54 @@ properties:
     format: uuid
     description: UUID v4 da NotificationDelivery que falhou (INV-NTF-001).
     x-semantic-id: notifications.delivery.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   recipientUserId:
     type: string
     format: uuid
     description: UUID do destinatário. Referência ao módulo users.
     x-semantic-id: identity.user.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   channelLabel:
     type: string
     enum:
-      - push
-      - email
-      - in_app
-      - sms
+    - push
+    - email
+    - in_app
+    - sms
     description: Canal que falhou na entrega.
   deliveryStatusLabel:
     type: string
     enum:
-      - failed
+    - failed
     description: Status final da entrega. Sempre failed neste evento.
   retryCount:
     type: integer
     minimum: 1
     maximum: 10
-    description: >
-      Número de tentativas esgotadas (INV-NTF-002: [0..10]).
-      Sempre >= 1 pois ao menos uma tentativa foi realizada antes de falhar.
+    description: 'Número de tentativas esgotadas (INV-NTF-002: [0..10]). Sempre >= 1 pois ao menos uma tentativa foi realizada antes de falhar.
+
+      '
   requestedAt:
     type: string
     format: date-time
     description: Momento em que a intenção foi registrada (ISO 8601 UTC).
     x-semantic-id: core.occurred_at.v1
-    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
   failureReasonLabel:
     type: string
     enum:
-      - channel_unavailable
-      - recipient_unreachable
-      - adapter_error
-      - token_invalid
-      - rate_limited
-      - timeout
-    description: >
-      Categoria de falha identificada pelo adapter (DR-NTF-005).
-      Não expõe detalhes internos do provedor externo.
+    - channel_unavailable
+    - recipient_unreachable
+    - adapter_error
+    - token_invalid
+    - rate_limited
+    - timeout
+    description: 'Categoria de falha identificada pelo adapter (DR-NTF-005). Não expõe detalhes internos do provedor externo.
+
+      '
   lastAttemptAt:
-    type:
-      - string
-      - "null"
+    type: string
     format: date-time
     description: Momento da última tentativa de entrega (ISO 8601 UTC).
     x-semantic-id: core.occurred_at.v1
-    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$

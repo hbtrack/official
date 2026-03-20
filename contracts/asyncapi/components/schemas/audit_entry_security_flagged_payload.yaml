@@ -1,120 +1,95 @@
-# AsyncAPI Payload Schema: audit_entry_security_flagged
-# Module: audit
-# Domain rules: DR-AUD-001, DR-AUD-005
-# Invariants: INV-AUD-001, INV-AUD-002, INV-AUD-004
-# Decisions: DEC-AUD-003=C
-# OWASP: API2:2023 (eventos de mudança de permissão), API7:2023 (insufficient logging)
-
 type: object
 required:
-  - eventType
-  - occurredAt
-  - entryId
-  - actorUserId
-  - action
-  - securitySeverityLabel
+- eventType
+- occurredAt
+- entryId
+- actorUserId
+- action
+- securitySeverityLabel
 additionalProperties: false
 properties:
   eventType:
     type: string
     const: audit.entry.security_flagged
     description: Tipo do evento. Sempre "audit.entry.security_flagged".
-
   occurredAt:
     type: string
     pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
     format: date-time
-    description: >
-      Timestamp UTC do momento em que a ação sensível ocorreu (INV-AUD-001, ISO 8601).
-    x-semantic-id: core.occurred_at.v1
+    description: 'Timestamp UTC do momento em que a ação sensível ocorreu (INV-AUD-001, ISO 8601).
 
+      '
+    x-semantic-id: core.occurred_at.v1
   entryId:
     type: string
     format: uuid
-    description: >
-      UUID v4 da entrada de auditoria correspondente (INV-AUD-001). Referência
-      direta a audit_entry_created_payload.entryId da mesma ação.
-    x-semantic-id: audit.entry.id.v1
+    description: 'UUID v4 da entrada de auditoria correspondente (INV-AUD-001). Referência direta a audit_entry_created_payload.entryId da mesma ação.
 
+      '
+    x-semantic-id: audit.entry.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   actorUserId:
     type: string
     format: uuid
-    description: >
-      UUID do usuário que executou a ação sensível (INV-AUD-001).
-      Referência ao módulo users.
-    x-semantic-id: identity.user.id.v1
+    description: 'UUID do usuário que executou a ação sensível (INV-AUD-001). Referência ao módulo users.
 
+      '
+    x-semantic-id: identity.user.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   action:
     type: string
     minLength: 1
     maxLength: 120
-    description: >
-      Rótulo da ação sensível (INV-AUD-001). Exemplos de ações que acionam
-      este evento (DR-AUD-005):
-      - identity_access.role_assigned / identity_access.role_revoked
-      - identity_access.session_force_revoked
-      - identity_access.login_failed
-      - audit.export_requested
-      - user.suspended
-      - <module>.bulk_delete
+    description: 'Rótulo da ação sensível (INV-AUD-001). Exemplos de ações que acionam este evento (DR-AUD-005): - identity_access.role_assigned / identity_access.role_revoked - identity_access.session_force_revoked - identity_access.login_failed - audit.export_requested - user.suspended - <module>.bulk_delete
 
+      '
   securitySeverityLabel:
     type: string
     enum:
-      - low
-      - medium
-      - high
-      - critical
-    description: >
-      Nível de severidade de segurança da ação (DEC-AUD-003=C).
-      - low: ação sensível de baixo impacto (ex.: export de 10 registros).
-      - medium: mudança de permissão ou acesso incomum.
-      - high: revogação forçada de sessão, suspensão de conta.
-      - critical: escalada de admin, bulk_delete, export de dados pessoais em massa.
+    - low
+    - medium
+    - high
+    - critical
+    description: 'Nível de severidade de segurança da ação (DEC-AUD-003=C). - low: ação sensível de baixo impacto (ex.: export de 10 registros). - medium: mudança de permissão ou acesso incomum. - high: revogação forçada de sessão, suspensão de conta. - critical: escalada de admin, bulk_delete, export de dados pessoais em massa.
 
+      '
   targetResourceId:
-    type:
-      - string
-      - "null"
+    type: string
     format: uuid
-    description: >
-      UUID do recurso alvo. Quando presente, targetResourceType obrigatório
-      (INV-AUD-003).
-    x-semantic-id: core.resource.id.v1
+    description: 'UUID do recurso alvo. Quando presente, targetResourceType obrigatório (INV-AUD-003).
 
+      '
+    x-semantic-id: core.resource.id.v1
   targetResourceType:
     type:
-      - string
-      - "null"
+    - string
+    - 'null'
     maxLength: 80
-    description: >
-      Tipo do recurso alvo (INV-AUD-003). Ex.: user, session, audit_export.
+    description: 'Tipo do recurso alvo (INV-AUD-003). Ex.: user, session, audit_export.
 
+      '
   outcomeLabel:
     type:
-      - string
-      - "null"
+    - string
+    - 'null'
     enum:
-      - success
-      - failure
-      - partial
-      - null
+    - success
+    - failure
+    - partial
+    - null
     description: Resultado da ação sensível executada.
-
   originLabel:
     type:
-      - string
-      - "null"
+    - string
+    - 'null'
     maxLength: 80
-    description: >
-      Origem técnica da ação (ex.: api, admin_console, system, celery_task).
+    description: 'Origem técnica da ação (ex.: api, admin_console, system, celery_task).
 
+      '
   correlationId:
-    type:
-      - string
-      - "null"
+    type: string
     format: uuid
-    description: >
-      UUID de correlação (DR-AUD-003, INV-AUD-005).
-      Estável entre todas as etapas da operação distribuída.
+    description: 'UUID de correlação (DR-AUD-003, INV-AUD-005). Estável entre todas as etapas da operação distribuída.
+
+      '
     x-semantic-id: core.correlation.id.v1
