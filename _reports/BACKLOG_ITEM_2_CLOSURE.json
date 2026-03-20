@@ -1,0 +1,92 @@
+{
+  "report_id": "BACKLOG_ITEM_2_CLOSURE",
+  "generated_at": "2026-03-20",
+  "scope": "BACKLOG_ITEM_2 — CROSS_SPEC_ALIGNMENT_GATE full remediation",
+  "status": "CLOSED",
+
+  "baseline": {
+    "total_violations": 542,
+    "pattern_violations": 383,
+    "enum_violations": 155,
+    "gate_status": "FAIL (waiver)",
+    "source": "_reports/BACKLOG_ITEM_2C_BASELINE.json"
+  },
+
+  "final": {
+    "total_violations": 0,
+    "pattern_violations": 0,
+    "enum_violations": 0,
+    "gate_status": "PASS (nativo, sem waiver)",
+    "pipeline_status": "PASS",
+    "survival_suite": "29 passed, 1 skipped"
+  },
+
+  "reduction": {
+    "total": "542 → 0 (-100%)",
+    "pattern": "383 → 0 (-100%)",
+    "enum": "155 → 0 (-100%)"
+  },
+
+  "items": {
+    "2A": {
+      "title": "Arazzo OperationId Links",
+      "status": "CLOSED — Não Reproduzido",
+      "result": "0 violations found. Issue was already resolved before this session."
+    },
+    "2C": {
+      "title": "Pattern/Format violations (x-domain-pattern-ref)",
+      "status": "CLOSED",
+      "sessions": ["4B", "4C", "4C.1", "4D", "4C.2.v2a", "4C.2.v2b", "4C.2.v2c"],
+      "commits": ["06820a8", "f24b956", "32da135"],
+      "violations_closed": 383,
+      "approach": [
+        "Bucket 1 (inequívoco): pattern annotation automated via v5/v6 scripts",
+        "Bucket 4 (ambíguo): decision-tree por família semântica (4D)",
+        "NOT_IN_SCHEMA: location-aware remediation (v2a–v2c)",
+        "173 cross-spec pattern violations fixed in v2c across 51 files"
+      ]
+    },
+    "2D": {
+      "title": "Enum violations (x-domain-enum-ref)",
+      "status": "CLOSED",
+      "sessions": ["4C.2.2D"],
+      "commits": ["215fda4"],
+      "violations_closed": 155,
+      "approach": [
+        "56 single-value enum → const conversions (discriminadores eventType)",
+        "91 x-domain-enum-ref annotations adicionados",
+        "+53 canonical enum definitions no DOMAIN_AXIOMS.json (84 total)",
+        "Todos valores convertidos para UPPER_SNAKE_CASE",
+        "5 bug fixes (null entries, ES→PT spelling)",
+        "Waiver removido — gate passa nativamente"
+      ],
+      "domain_axioms": {
+        "enums_before": 31,
+        "enums_after": 84,
+        "new_enums": 53
+      }
+    }
+  },
+
+  "gates_final": {
+    "AXIOM_INTEGRITY_GATE": "PASS",
+    "CROSS_SPEC_ALIGNMENT_GATE": "PASS (nativo, sem waiver)",
+    "DERIVED_DRIFT_GATE": "PASS",
+    "PIPELINE_STATUS": "PASS"
+  },
+
+  "waivers_removed": [
+    "contracts/_waivers/CROSS_SPEC_ALIGNMENT_GATE.json"
+  ],
+
+  "milestone_tag": "milestone/cross-spec-alignment-zero",
+
+  "next_recommended": {
+    "description": "Item 2C residual — pattern violations em campos NOT_IN_SCHEMA (paths, embedded schemas) fora de components/schemas/. Estes não aparecem no gate atual (0 violations) porque o gate já cobre todos os casos resolvidos. A dívida restante é de qualidade, não de conformidade.",
+    "gate_debt": "none — todos os gates PASS",
+    "optional_improvements": [
+      "Expandir pattern coverage para campos em paths/ e embedded schemas",
+      "Phase 1–7 Implementation: iniciar codificação (identity_access → users → seasons → teams)"
+    ]
+  }
+}

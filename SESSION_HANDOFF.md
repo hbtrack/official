@@ -3,10 +3,10 @@
 
 ## Estado Geral
 **Data:** 2026-03-20 | **Branch:** hb-track-contratos-driven | **CI:** PASS (todos os gates verdes)
-**✅ 4C.2.2D COMPLETO** — 155 enum violations resolvidos, CROSS_SPEC_ALIGNMENT_GATE PASS nativo
-**✅ AXIOM_INTEGRITY_GATE PASS** — 84 enums canônicos, todos em UPPER_SNAKE_CASE
-**✅ DERIVED_DRIFT_GATE PASS** — 17 manifests reparados, compiler re-executado
-**✅ Pipeline STATUS: PASS** — Todos os gates verdes, waiver CROSS_SPEC removido
+**✅ BACKLOG_ITEM_2 ENCERRADO** — 542 violations resolvidos (CROSS_SPEC: 383 pattern + 155 enum = 0)
+**✅ Pipeline STATUS: PASS** — Todos os gates verdes, zero waivers residuais
+**✅ Survival suite: PASS** — 29 passed, 1 skipped
+**🏁 Milestone:** `milestone/cross-spec-alignment-zero` — Marco CDD de conformidade contratual completa
 
 ## BACKLOG_ITEM_2 — Investigação & Pivot (2026-03-20)
 
