@@ -48,9 +48,8 @@ properties:
     maxLength: 200
   statusLabel:
     type: string
-    enum:
-    - scheduled
     description: Partidas novas sempre iniciam como scheduled (DEC-MATCHES-002).
+    const: scheduled
   scheduledAt:
     type: string
     format: date-time

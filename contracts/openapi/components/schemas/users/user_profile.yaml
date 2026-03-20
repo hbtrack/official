@@ -1,26 +1,16 @@
-# UserProfile OpenAPI component schema
-# Source: contracts/schemas/users/user_profile.schema.json
-# Related docs:
-# - docs/hbtrack/modulos/users/MODULE_SCOPE_USERS.md
-# - docs/hbtrack/modulos/users/DOMAIN_RULES_USERS.md
-# - docs/hbtrack/modulos/users/INVARIANTS_USERS.md
-#
-# Sovereign shape: profile, sports bindings, preferences.
-# Boundary: NO credentials, sessions, MFA or JWT fields (INV-USR-003, DR-USR-001).
-
 type: object
 additionalProperties: false
 required:
-  - id
-  - displayName
-  - roleLabel
-  - createdAt
-  - updatedAt
+- id
+- displayName
+- roleLabel
+- createdAt
+- updatedAt
 properties:
   id:
     type: string
     format: uuid
-    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
     description: Stable identifier (UUID v4). INV-USR-001.
   organizationId:
     type: string
@@ -43,65 +33,72 @@ properties:
   roleLabel:
     type: string
     enum:
-      - athlete
-      - coach
-      - coordinator
-      - admin
-      - member
-    description: >
-      Functional role mapped to the 5 canonical actors (DR-USR-002).
-      Does NOT represent RBAC permissions — those are governed by identity_access.
+    - ATHLETE
+    - COACH
+    - COORDINATOR
+    - ADMIN
+    - MEMBER
+    description: 'Functional role mapped to the 5 canonical actors (DR-USR-002). Does
+      NOT represent RBAC permissions — those are governed by identity_access.
+
+      '
+    x-domain-enum-ref: user_role_label
   statusLabel:
     type: string
     enum:
-      - active
-      - pending_activation
-      - suspended
-    description: >
-      Lifecycle status of the user profile (DEC-USERS-002).
-      pending_activation: created via invitation, not yet activated.
-      active: profile fully operational.
+    - ACTIVE
+    - PENDING_ACTIVATION
+    - SUSPENDED
+    description: 'Lifecycle status of the user profile (DEC-USERS-002). pending_activation:
+      created via invitation, not yet activated. active: profile fully operational.
       suspended: access revoked by admin/coordinator.
+
+      '
+    x-domain-enum-ref: user_account_status
   positionLabel:
     type: string
     maxLength: 80
-    description: >
-      Optional sports position or specialization (DR-USR-004).
-      Sports context only — does not confer authorization.
+    description: 'Optional sports position or specialization (DR-USR-004). Sports
+      context only — does not confer authorization.
+
+      '
   preferredLanguage:
     type: string
     maxLength: 16
     description: UI language preference (DR-USR-005). Not security state.
-    example: "pt-BR"
+    example: pt-BR
   preferenceTags:
     type: array
     items:
       type: string
       maxLength: 40
     uniqueItems: true
-    description: >
-      Operational preference tags (INV-USR-002, DR-USR-005).
-      Must have no duplicates. No security or consent state allowed.
+    description: 'Operational preference tags (INV-USR-002, DR-USR-005). Must have
+      no duplicates. No security or consent state allowed.
+
+      '
   teamIds:
     type: array
     items:
       type: string
       format: uuid
-      pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
     uniqueItems: true
-    description: >
-      Explicit team bindings (DR-USR-003, INV-USR-002).
-      Not inferred from session, attendance or analytics.
+    description: 'Explicit team bindings (DR-USR-003, INV-USR-002). Not inferred from
+      session, attendance or analytics.
+
+      '
   seasonIds:
     type: array
     items:
       type: string
       format: uuid
-      pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
     uniqueItems: true
-    description: >
-      Explicit season bindings (DR-USR-003, INV-USR-002).
-      Not inferred from session, attendance or analytics.
+    description: 'Explicit season bindings (DR-USR-003, INV-USR-002). Not inferred
+      from session, attendance or analytics.
+
+      '
   createdAt:
     type: string
     format: date-time

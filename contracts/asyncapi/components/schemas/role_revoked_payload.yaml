@@ -20,27 +20,30 @@ properties:
   targetUserId:
     type: string
     format: uuid
-    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
-    description: 'UUID do usuário que teve o role removido. Referência ao módulo users (DR-IAM-002).
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    description: 'UUID do usuário que teve o role removido. Referência ao módulo users
+      (DR-IAM-002).
 
       '
     x-semantic-id: identity.user.id.v1
   roleLabel:
     type: string
     enum:
-    - admin
-    - coordinator
-    - coach
-    - athlete
-    - member
-    description: 'Role RBAC canônico que foi removido (INV-IAM-002, ADR-008). identity_access é o único soberano desta operação
-      (DR-IAM-005).
+    - ADMIN
+    - COORDINATOR
+    - COACH
+    - ATHLETE
+    - MEMBER
+    description: 'Role RBAC canônico que foi removido (INV-IAM-002, ADR-008). identity_access
+      é o único soberano desta operação (DR-IAM-005).
 
       '
+    x-domain-enum-ref: user_role_label
   revokedByUserId:
     type: string
     format: uuid
-    description: 'UUID do usuário admin que removeu o role. Obrigatório para rastreabilidade de compliance (DEC-IAM-003=C).
+    description: 'UUID do usuário admin que removeu o role. Obrigatório para rastreabilidade
+      de compliance (DEC-IAM-003=C).
 
       '
     x-semantic-id: identity.user.id.v1
@@ -48,15 +51,16 @@ properties:
   revocationReason:
     type: string
     maxLength: 200
-    description: 'Justificativa opcional da remoção do role (ex: "saída do clube", "rebaixamento de permissão"). Informativo
-      — não altera o contrato técnico do binding revogado.
+    description: 'Justificativa opcional da remoção do role (ex: "saída do clube",
+      "rebaixamento de permissão"). Informativo — não altera o contrato técnico do
+      binding revogado.
 
       '
   organizationId:
     type: string
     format: uuid
-    description: 'UUID da organização no contexto da qual o role foi revogado. Null quando o role revogado era global (ex:
-      admin).
+    description: 'UUID da organização no contexto da qual o role foi revogado. Null
+      quando o role revogado era global (ex: admin).
 
       '
     x-semantic-id: organizations.organization.id.v1

@@ -33,7 +33,8 @@ properties:
   seasonId:
     type: string
     format: uuid
-    description: 'UUID da temporada associada (DR-TEAM-004 / INV-TEAM-003). Null quando não associada a nenhuma temporada.
+    description: 'UUID da temporada associada (DR-TEAM-004 / INV-TEAM-003). Null quando
+      não associada a nenhuma temporada.
 
       '
     x-semantic-id: seasons.season.id.v1
@@ -53,8 +54,9 @@ properties:
   statusLabel:
     type: string
     enum:
-    - draft
-    - active
-    - archived
+    - DRAFT
+    - ACTIVE
+    - ARCHIVED
     description: Status inicial da equipe (tipicamente "draft").
+    x-domain-enum-ref: entity_lifecycle_status
 additionalProperties: false

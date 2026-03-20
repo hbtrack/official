@@ -35,15 +35,15 @@ properties:
     description: Modo de ingestão (batch, webhook, file-drop).
   statusLabel:
     type: string
-    enum:
-    - queued
     description: Status do job no momento do evento. Sempre "queued".
+    const: queued
   idempotencyKey:
     type:
     - string
     - 'null'
     maxLength: 120
-    description: 'Chave de idempotência do job (DR-ING-004). Presente quando o job deve suportar replay seguro.
+    description: 'Chave de idempotência do job (DR-ING-004). Presente quando o job
+      deve suportar replay seguro.
 
       '
 additionalProperties: false

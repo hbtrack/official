@@ -7,8 +7,7 @@ required:
 properties:
   eventType:
     type: string
-    enum:
-    - athlete_ineligible_for_prescription
+    const: athlete_ineligible_for_prescription
   occurredAt:
     type: string
     pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
@@ -20,14 +19,15 @@ properties:
   ineligibilityReason:
     type: string
     enum:
-    - medical_contra
-    - excessive_fatigue
-    - recovery_window
-    - testing_window
-    - sabbatical
+    - MEDICAL_CONTRA
+    - EXCESSIVE_FATIGUE
+    - RECOVERY_WINDOW
+    - TESTING_WINDOW
+    - SABBATICAL
+    x-domain-enum-ref: ineligibility_reason
   ineligibilityStart:
     type: string
-    pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$'
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
   ineligibilityEnd:
     type: string
     pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$

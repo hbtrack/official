@@ -7,8 +7,7 @@ required:
 properties:
   eventType:
     type: string
-    enum:
-    - execution_recorded
+    const: execution_recorded
   occurredAt:
     type: string
     pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
@@ -25,6 +24,7 @@ properties:
     - CONSTRAINT_OVERRIDE
     - ALTERNATE_EXERCISE
     - LOAD_RECALCULATION
+    x-domain-enum-ref: execution_type
   contextId:
     type: string
     pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$

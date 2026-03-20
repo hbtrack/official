@@ -35,24 +35,26 @@ properties:
     - string
     - 'null'
     enum:
-    - draft
-    - active
-    - archived
-    - null
+    - DRAFT
+    - ACTIVE
+    - ARCHIVED
     description: Status anterior à transição (null se apenas stageLabels foi alterado).
+    x-domain-enum-ref: entity_lifecycle_status
   statusLabel:
     type: string
     enum:
-    - draft
-    - active
-    - archived
+    - DRAFT
+    - ACTIVE
+    - ARCHIVED
     description: Status atual após a transição.
+    x-domain-enum-ref: entity_lifecycle_status
   stageLabels:
     type: array
     uniqueItems: true
     items:
       type: string
       maxLength: 80
-    description: 'Lista atual de fases (DR-COMP-004, INV-COMP-003). Explícitas — nunca inferidas de resultados de partidas.
+    description: 'Lista atual de fases (DR-COMP-004, INV-COMP-003). Explícitas — nunca
+      inferidas de resultados de partidas.
 
       '

@@ -146,16 +146,19 @@
               competitionId:
                 type: string
                 format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
                 x-semantic-id: competitions.competition.id.v1
                 description: UUID da competição à qual esta partida pertence (DR-MATCH-001, INV-MATCH-001).
               homeTeamId:
                 type: string
                 format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
                 x-semantic-id: teams.team.id.v1
                 description: UUID da equipe mandante (DR-MATCH-002, INV-MATCH-002). Deve ser ≠ awayTeamId.
               awayTeamId:
                 type: string
                 format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
                 x-semantic-id: teams.team.id.v1
                 description: UUID da equipe visitante (DR-MATCH-002, INV-MATCH-002). Deve ser ≠ homeTeamId.
               venueLabel:
@@ -165,6 +168,7 @@
               scheduledAt:
                 type: string
                 format: date-time
+                pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$'
                 x-semantic-id: core.occurred_at.v1
                 description: Data e hora programadas da partida (DR-MATCH-004, INV-MATCH-001).
               refereeNames:
@@ -297,15 +301,18 @@
               scheduledAt:
                 type: string
                 format: date-time
+                pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$'
                 x-semantic-id: core.occurred_at.v1
               startedAt:
                 type: [string, "null"]
                 format: date-time
+                pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$'
                 x-semantic-id: core.occurred_at.v1
                 description: Início efetivo; deve ser <= endedAt se ambos presentes (INV-MATCH-004).
               endedAt:
                 type: [string, "null"]
                 format: date-time
+                pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$'
                 x-semantic-id: core.occurred_at.v1
                 description: Fim efetivo; deve ser >= startedAt (INV-MATCH-004).
               homeScore:

@@ -46,11 +46,12 @@ properties:
   retentionPolicy:
     type: string
     enum:
-    - keep_7_days
-    - keep_30_days
-    - archive_s3
-    - public_forever
+    - KEEP_7_DAYS
+    - KEEP_30_DAYS
+    - ARCHIVE_S3
+    - PUBLIC_FOREVER
     description: Política de retenção final aplicada (DR-VID-008).
+    x-domain-enum-ref: video_retention_policy
   clipCount:
     type: integer
     minimum: 0

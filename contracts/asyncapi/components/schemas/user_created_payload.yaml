@@ -38,31 +38,33 @@ properties:
   roleLabel:
     type: string
     enum:
-    - athlete
-    - coach
-    - coordinator
-    - admin
-    - member
-    description: 'Papel funcional/esportivo do usuário (DR-USR-002, ADR-008). INFORMATIVO — a autorização técnica real pertence
-      a identity_access (INV-USR-004).
+    - ATHLETE
+    - COACH
+    - COORDINATOR
+    - ADMIN
+    - MEMBER
+    description: 'Papel funcional/esportivo do usuário (DR-USR-002, ADR-008). INFORMATIVO
+      — a autorização técnica real pertence a identity_access (INV-USR-004).
 
       '
+    x-domain-enum-ref: user_role_label
   statusLabel:
     type: string
     enum:
-    - active
-    - pending_activation
-    description: 'Status do perfil no momento da criação. pending_activation quando criado via convite (DEC-USERS-002). active
-      quando criado diretamente por admin.
+    - ACTIVE
+    - PENDING_ACTIVATION
+    description: 'Status do perfil no momento da criação. pending_activation quando
+      criado via convite (DEC-USERS-002). active quando criado diretamente por admin.
 
       '
+    x-domain-enum-ref: user_account_status
   teamIds:
     type: array
     items:
       type: string
       format: uuid
     uniqueItems: true
-    description: 'Vínculos de equipe no momento da criação (DR-USR-003, INV-USR-002). Explícitos — nunca inferidos de presença
-      ou analytics.
+    description: 'Vínculos de equipe no momento da criação (DR-USR-003, INV-USR-002).
+      Explícitos — nunca inferidos de presença ou analytics.
 
       '

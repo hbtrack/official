@@ -37,10 +37,10 @@
     },
     {
       "path": "contracts/openapi/components/schemas/analytics/analytics_snapshot.yaml",
-      "sha256": "ac0ae4b4e427c00200b0e2cb533c3e7106f3d88b6980b2a11f7b806365754dba",
+      "sha256": "a529cbc5a9134ec47b3827e4859a652f415c77a2ef2b151c15aca0e688aef0df",
       "created_at": "2026-03-19T13:15:39.546805+00:00",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:20:55.535979+00:00"
+      "validated_at": "2026-03-20T08:19:34.325610+00:00"
     },
     {
       "path": "contracts/openapi/paths/users.yaml",
@@ -347,168 +347,195 @@
     },
     {
       "path": "contracts/asyncapi/components/schemas/ai_ingestion_job_completed_payload.yaml",
-      "sha256": "4303d26a5e93501723641d3af0356b1fca53b4c6ae77b7dd0f62c92ecccf1cf4",
+      "sha256": "822571b449fd616f367b8d444547b7e0ce7dd382fd786e46b0cf5091a19fc791",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-20T08:20:50.094632+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/ai_ingestion_job_failed_payload.yaml",
-      "sha256": "f481bdf14e6bd027ab67f3b5feac404c145e1edc763eb27951ec3b6ab351029c",
+      "sha256": "d06537b2110a7301e31a474cb691695ecd8bb97fa26c51f825ca8b51f1801380",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-20T08:20:54.958408+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/ai_ingestion_job_queued_payload.yaml",
-      "sha256": "e22dd550d058af2031c7166c6f8d115b039584018a07fa8f2eb5d1a97e35dfac",
-      "gate_exit_code": 0
+      "sha256": "2905727f55376cd2202f3b7d6116c22a872d8fa562b0c5cd6b82888251528ef6",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:20:59.535761+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/athlete_ineligible_for_prescription_payload.yaml",
-      "sha256": "7af72ac4a5dd506010d4412c109b211ff3bebc3dea0d05fab2187ed56cb583ff",
+      "sha256": "9dae92d945a2643e6ae7764cf2ae25295fef192c21a92998031559355ef90ab3",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-20T08:21:04.074136+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/attention_queue_item_created_payload.yaml",
-      "sha256": "7c2ed50496399f7103b7d5ebddc72257583919c4894a91a103ed7b9e3a756e56",
-      "gate_exit_code": 0
+      "sha256": "002c5114ab6660e0aef6aa45f09668eee59d0c2e50828d89a3a85cb1c4ba4224",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:21:08.609718+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/attention_queue_item_resolved_payload.yaml",
-      "sha256": "b6a6bcc2c43b6965fb748fac1d2e426ea9dce665701d7012ba16a2c43ce6ef07",
-      "gate_exit_code": 0
+      "sha256": "7647111a03857c0678a9482148134b2a0c3be30eba190ccfa0dc04aa71aa14b0",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:21:13.080146+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/audit_entry_created_payload.yaml",
-      "sha256": "415337ea4686d26db610d062f662dbd8830bae47863d54cd2a65c03274302715",
-      "gate_exit_code": 0
+      "sha256": "5a26fc54e80b721644308a2051e629d6c7c8180197a2523ccce90f45cc7f6fa6",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:21:17.590317+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/audit_entry_security_flagged_payload.yaml",
-      "sha256": "48b4ef8a592e58a04eacef7d281d925436792591ef4628e2383ba7cd32e4d3c5",
-      "gate_exit_code": 0
+      "sha256": "626fb221c9fb286fd81ddf4c1f11e3c88b37a0de4c2349ee45067eec85a9a554",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:21:22.212695+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/coach_intervention_required_payload.yaml",
-      "sha256": "642ecc427002913980a89dc078dd63f17ebbf045e0cfac397463b74d67be3c61",
-      "gate_exit_code": 0
+      "sha256": "ec2ff649117a6085e7309494c2aa9a1965b74830da05ef6c39b18292ddc77b4e",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:21:27.031877+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/competition_created_payload.yaml",
-      "sha256": "51a574500d029483aa06d90ec697f6e0a5f8dd775baaa88086397b11ab5da01a",
-      "gate_exit_code": 0
+      "sha256": "2c1a6853c963bd1d7aa72ea25fa8de46b135423f46ee0aef5be0dd847dc90747",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:21:31.575178+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/competition_phase_changed_payload.yaml",
-      "sha256": "2f0be8f45096202c852d9949eba796cf0d9ae7b69d3b8e8d1dac5eb5ac7bcd35",
-      "gate_exit_code": 0
+      "sha256": "d77c15a32d2c97ddd918edb60b36c0f3d8ded6726b1de0c56edb949ab917dec0",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:21:36.777599+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/completion_evidence_provided_payload.yaml",
-      "sha256": "63ea66a3c9703f6c72a39020fa12005f0d88bb50d1123e2de5858d2b88031f47",
-      "gate_exit_code": 0
+      "sha256": "d7fe1777f07fb0b45dea77b1d2c0c814de2d900b9ab5a324094cd78d80ad62cd",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:21:43.212909+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/continuity_snapshot_created_payload.yaml",
-      "sha256": "7e43d737397739e789e379b02615aad80f8f58179a95e5e7dbcfdcfc5daf7cfa",
-      "gate_exit_code": 0
+      "sha256": "1fe3505ed72ab4b66c311c3de34b3ae84560883903ed16999967fb28bb29c5ca",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:21:49.050207+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/execution_recorded_payload.yaml",
-      "sha256": "810bd14d6d3fc7986f47ac98ada6424ee9028b37cb2b02ca2c1b6a33c44e52e2",
-      "gate_exit_code": 0
+      "sha256": "6c1fb05a14d19475110731bb2a125979bc1f203b21237bc321df385fa6bb5bf5",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:21:53.826799+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/feedback_thread_closed_payload.yaml",
-      "sha256": "aa3f01f5f79424e3c0544784498a918bbcce13a5874733e32e6ff17f2cc7f8da",
-      "gate_exit_code": 0
+      "sha256": "b96828786eb3c3e3d576e93f83bd12a27f040b68db2da5e88647770139fd3616",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:21:58.655259+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/feedback_thread_created_payload.yaml",
-      "sha256": "f5933a031321e3b8a2d169b2f0d2c9eb48fbbaed4681dfc5554490aeab88e1ef",
-      "gate_exit_code": 0
+      "sha256": "f841306665c2c5452764cfa8da3e4a010e6a6da5013d75b2f562c9c6e0123460",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:22:04.265965+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/intervention_cycle_completed_payload.yaml",
-      "sha256": "f170fbac228dce1d2f63b222d2733a800c34b947bf9cd69b3ae55316acf80d34",
-      "gate_exit_code": 0
+      "sha256": "e6b4c9b0a0e4c50dd5f9930c4bdcb45fbfc5299f1ce8cac35a1d54a99655eb54",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:22:08.762395+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/intervention_cycle_created_payload.yaml",
-      "sha256": "9dfd600d87b91d6e7e588ae60eb47630cbed2e5526b9fffa80d7e2b2c6327e4b",
-      "gate_exit_code": 0
+      "sha256": "24eee8aedea3c8e5569dc6897ece5a1720edb64777b8add9ed6132041d4cf300",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:22:13.272887+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/match_scheduled_payload.yaml",
-      "sha256": "5e93501ab5cfb1af9eaefab1d037f114a93c43edd7056e5042659669d7868086",
-      "gate_exit_code": 0
+      "sha256": "ac903f7263e9e343fbd7b4850ee1e6048fd72dd32d4afd16d6865855d9ed2dec",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:22:17.962501+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/match_status_updated_payload.yaml",
-      "sha256": "0d5463466d78465994622b3a1f852cc575a1066d66acfa35d473ab61da261320",
-      "gate_exit_code": 0
+      "sha256": "3decbb1d16f68a4352a315f19c8688ad631cd22176d8ec732faf7348ac3e7e35",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:22:22.405323+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/need_detected_created_payload.yaml",
-      "sha256": "2177358111efc8bf36be0189d350f233f11d27fc0bd66833c96062b98ee8e0ae",
-      "gate_exit_code": 0
+      "sha256": "bfe0ee7c159f22d7897877626a3383e256d49052b895240fea5c6f5448658056",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:22:27.030459+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/need_linked_to_objective_payload.yaml",
-      "sha256": "496f621c5e9360d4813dce3aece6d09e1266fe2b5e8d16e5e81d1be911e20a51",
-      "gate_exit_code": 0
+      "sha256": "44d501df1600c40c79a2e8b07c681499045c025bf6b4770af8295cb38e076869",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:22:31.410150+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/notification_delivery_failed_payload.yaml",
-      "sha256": "4278a61f7467bb59661bec359715da1f9fcf5253b34bd5e62f0d6a077c8c0a9e",
-      "gate_exit_code": 0
+      "sha256": "cc7c79fb4335cb756c75a1b4b78a9fe1daa43bfb3ac4afde7fadbb3a2dbc79ea",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:22:35.799494+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/notification_delivery_queued_payload.yaml",
-      "sha256": "0929741b056c6ca47ada353945b995e6c9e903b0c76e5d358ecb530ef65abc6c",
-      "gate_exit_code": 0
+      "sha256": "f6519786adb460049c04ce3926dd83e5cb3fff39bd050865e67a3fd72dd4a9f4",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:22:41.336194+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/notification_delivery_sent_payload.yaml",
-      "sha256": "7097bebd67c62dfbe5291f7e3e3f6032e9cf80cb5e8c008b2820f26f56927736",
-      "gate_exit_code": 0
+      "sha256": "9750778863a93fa26464db85e372284bdf0b0b9388cbabd6a376dd5377406fcd",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:22:49.186322+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/objective_created_payload.yaml",
-      "sha256": "3ad9941459d18ba1e7bdc7d079afd561aefe4ec3fe8c141e2feed63f6e9dbfdb",
-      "gate_exit_code": 0
+      "sha256": "f2ec715c35e81f5464345565df9ad2d324dc9815125ea862d4a79946f63c18cc",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:22:54.224476+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/prescription_adjusted_payload.yaml",
-      "sha256": "97e0408c165a6de19a62077d33956d5816cfa3f6dcee54104de70caee0afb9f3",
-      "gate_exit_code": 0
+      "sha256": "a628fd19ef3038806126f3c61563346459c2e26a3af0f210dd357c2245208133",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:22:58.934235+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/recommendation_accepted_payload.yaml",
-      "sha256": "73c974fc801cbab4cd8077d49aa490b98329537ec1d3a52c9d1bddfba8206abc",
-      "gate_exit_code": 0
+      "sha256": "729316f7794b9274674836e971e9750b1774ebe30dbb36ec7f3d67f634d5205e",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:23:03.614477+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/recommendation_dismissed_payload.yaml",
-      "sha256": "0e0454a326901c75f7c53216dab2ef0f95fc8832ed24512d1d8abe803d7fb08b",
-      "gate_exit_code": 0
+      "sha256": "468711af28965a31dc98111616ca06f647a49bbaf2989cead0450556a8c882d6",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:23:09.139714+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/recommendation_generated_payload.yaml",
-      "sha256": "4589a1b08f8afe58e2d7ae053874f1f1c63c220734f8f9e8f0cce8ea2bfbeaa7",
-      "gate_exit_code": 0
+      "sha256": "e5508b222428497f06c80376066381fda88593b40d9d38f7bc9725db9b918624",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:23:14.341087+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/role_assigned_payload.yaml",
-      "sha256": "265a4fb9bd23f710461f9efe285284321e85dcaf3aac3c2c7bd1f3f8e2bd3516",
+      "sha256": "dafef05cdfab39cbf019c33935b7432f06556c0a4c75234d1984c5d4a738b6bb",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-20T08:23:19.321791+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/role_revoked_payload.yaml",
-      "sha256": "44e9e7e0101d5fc88fd1d87d741a18fa6adaaa183b97d4079a61166ef24ebb41",
+      "sha256": "88449f35e37b1e8d209108eee77ed40b64b475f81a352940504d98a4a2346d9a",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-20T08:23:24.769309+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/scout_event_created_payload.yaml",
@@ -523,135 +550,147 @@
     },
     {
       "path": "contracts/asyncapi/components/schemas/season_created_payload.yaml",
-      "sha256": "a1b0fa837fbadeecbed2804f2e7cb9c215412367658bff89190debd7a2a1f74f",
-      "gate_exit_code": 0
+      "sha256": "f489037c3ae071e49264406b1f25380e3bd359fc80f21364f87cb1411c109fe9",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:23:29.478270+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/season_status_updated_payload.yaml",
-      "sha256": "c93a210cb1c8ca659fce0a55dac0e22a527398fb9c84fafdefd25976de9c7d27",
-      "gate_exit_code": 0
+      "sha256": "72550bdb9fc990a679e871e02a01b14929940f2c85a395c6534141163c5a084b",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:23:36.656775+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/session_adjustment_made_payload.yaml",
-      "sha256": "18b70ca782eccecb501d9f2f59c0f14f6f75e9b73da6611603a205f7132c1a17",
-      "gate_exit_code": 0
+      "sha256": "390a586783129708d791a8adcf703feaa232adf49c9d6bc4d2cc7eaadd16ed28",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:23:42.682888+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/session_created_payload.yaml",
-      "sha256": "f7ecdbfdff78d9838bbc9d282890b68c17d1a6593736c8bc0a49979999c2e71d",
+      "sha256": "ba4c72e2d3c5d26e690d505ed10c69f4c382b1c6a088c8d887228e1de756a21b",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-20T08:23:47.628220+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/session_objective_achieved_payload.yaml",
-      "sha256": "786fdc9dd033dd0748fda79af18a8e512a837ade2d4ab5b6d0253dc81e2f92a5",
-      "gate_exit_code": 0
+      "sha256": "b154c103abedad1e0270b6c945c981b8699b358caf7363de2c0765ad644281ad",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:23:52.134400+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/session_revoked_payload.yaml",
-      "sha256": "98699ef12b6a3885c101f3abd6ba11db8ac2c1979ed304020e3e0ee878fd1034",
+      "sha256": "20254f9f029c78c46de78a9e6097706c6f683b151a130c92dc242f3f90335965",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-20T08:23:56.678680+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/team_created_payload.yaml",
-      "sha256": "0b662f6a16acf7ce566fe85321944e0fca9d24b2682ccb24f36500d9b30a94ed",
-      "gate_exit_code": 0
+      "sha256": "2bd31dbd732471632253ff38fc65642ece714fb8bbb75d4f3dab87f66ee30fa7",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:24:01.482620+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/team_roster_updated_payload.yaml",
-      "sha256": "d385f162207cffe0b75c6030ef952674609ce34fd3fc7f75fd7744959470e69c",
+      "sha256": "1e805f47e3d958f826711134a035729ca4f17d0855c34ba40acbd3c98e8b2e9e",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-20T08:24:06.552946+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/training_readiness_assessed_payload.yaml",
-      "sha256": "84f6b161b674bb8a8a80b5221b343401e36534a98e8f3baa9b788202f3468220",
-      "gate_exit_code": 0
+      "sha256": "a83a08444de15367da620acb5cfba9979f62d202f7afa6cedca7a278316961ba",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:24:13.086388+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/training_session_archived_payload.yaml",
-      "sha256": "a9f15882e686aabdbeb6b79191e080468c9a41007f7463e7ebac72a61c021735",
-      "gate_exit_code": 0
+      "sha256": "f1fac18fa2fc646b63e27373b218c4bec3224158bdb4f6d6839404a0f9f947b1",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:24:21.526322+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/training_session_cancelled_payload.yaml",
-      "sha256": "7299b09405f6b10faa1f19975281f17f2a5b4ee9fd08b2ffed238e57408ed6cc",
-      "gate_exit_code": 0
+      "sha256": "828d0378383ab009b302e9b6f07d35b42d0647bfaab0d7b8e9090e145584835b",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:24:29.322164+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/training_session_completed_payload.yaml",
-      "sha256": "2e5e2cb137aed84a1f5d92d3b421a52f807e6fc57c32cf06dfda6c7dfc338bd0",
+      "sha256": "6f942bbf7a6273bc9c41086185ebb62fea058321d05078e4d6dc321a2820052b",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-20T08:24:35.535810+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/training_session_created_payload.yaml",
-      "sha256": "ae70bb270bcb079ea8ebd2fc88afc229422269885ebdbc50ec6a7ee6b69499bc",
-      "gate_exit_code": 0
+      "sha256": "9e17d937da651102a0861a18ff624014315d6aa8f0dd48db4931614008b02e0f",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:18:16.067736+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/training_session_published_payload.yaml",
-      "sha256": "09a753f3bab2d77db61f496d0f2ad97d4f565ff3c849861cd9fa16652c97c2b2",
+      "sha256": "80f60af12de583ab951c271c899245b3f50bb31662a7c00ba395e725fc120b26",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-20T08:18:20.642497+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/training_session_started_payload.yaml",
-      "sha256": "11ca3a5e3dada6731998d944ac6d8ecbe4bff0f3dc7b62257ae3342f02ddedf0",
+      "sha256": "33ab0bc78d71c3d91edb6748d8942ba86520e47c9773bdac8044ce4ede3d0798",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-20T08:18:25.187574+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/user_created_payload.yaml",
-      "sha256": "4f5b0063cc034144a9deacf3374c37fd5ea3b796fb260d12b08b71ba7ede3d38",
-      "gate_exit_code": 0
+      "sha256": "cc384b8acb9ef2f7b8e76110e3fd807890e7c28e32a7690dfda5180c40b9ddc3",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:18:30.870570+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/user_role_changed_payload.yaml",
-      "sha256": "eca34a00e6c01a023234182c599405ae460fcccb8358db4a613ba539e4091458",
-      "gate_exit_code": 0
+      "sha256": "cccb38b384ae268918804958d2091b0d60796efa0dcec37e9763f435fc2328e4",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:18:35.484338+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/video/capture_started_payload.yaml",
-      "sha256": "429fe34163e0608e8a3d6f74db6bff552dabab9bfc5b1ee2d3cd11ccf5d29040",
+      "sha256": "f6b6741451e31a3686c8df47209225092213c25479b0cba7e8d0269774c8f1d1",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-20T08:18:39.966204+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/video/distribution_failed_payload.yaml",
-      "sha256": "324d225dcc2511fc5ce3d8f2fa8aa08120c7d7e133f26c2bc5d3bda6acd2367b",
+      "sha256": "cb99f585233513d0f0a394697ea3835d986e5f3572610c3930513859e9807109",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-20T08:18:44.426644+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/video/distribution_published_payload.yaml",
-      "sha256": "f193814de8a2bea7617522e6cea49f51d1a4d6dca553cbca30dca7c5a745b25f",
+      "sha256": "41682dd5d5b81610dd729c53ec645c3aff6a6586de2d9304672116d3959573a5",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-20T08:18:49.000617+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/video/segment_ready_payload.yaml",
-      "sha256": "614704c6d4d4be56280830800eb5b293a2b1dd1a21be154160f13fb962eb9c5b",
+      "sha256": "30d628686e8a9ccc68d66ed37f4441cf544823b75b48abd1609a27a463e26b3a",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-20T08:18:53.539054+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/video/sync_adjustment_applied_payload.yaml",
-      "sha256": "878231ed57cd0b2492fe48cc7ec12bd31039e5d8d35b9bbe773a8b3b3fc9b658",
+      "sha256": "0d33719bde35e90e6438225c29cf03b834ac70c0d9349799168b6d8c6db737f1",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-20T08:18:58.054460+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/video/transcode_completed_payload.yaml",
-      "sha256": "c0579a3dd66480d28775a60492b157e21bb5cd0297d01c0c3ce5f3d84d21b4f3",
+      "sha256": "3186894d84cc5e15155d4ff0db0153dd41ee81686c84c1b7816bef00c2bf957b",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-20T08:19:02.597386+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/wellness_entry_created_payload.yaml",
-      "sha256": "505dbf6c42c0f1fd30f807379a4f8fbcf81a3b9e2884dfa4e7d3425018c47fe3",
-      "gate_exit_code": 0
+      "sha256": "75b035978a46cac217504b4f71309be2db0dfaec2da343d3b7652096d09d0541",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:19:25.306827+00:00"
     },
     {
       "path": "contracts/asyncapi/messages/ai_ingestion_job_completed.yaml",
@@ -1149,9 +1188,9 @@
     },
     {
       "path": "contracts/asyncapi/components/schemas/video_session_created_payload.yaml",
-      "sha256": "ae532c045da09230d95d1ffb4bd6f21e1755f5d411c7c30eb4076c854d88c8c8",
+      "sha256": "53aceefe026a9df7f0ae5dffcedb66581e4132dc4fc75f6a124cc4676a3063f3",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-20T08:19:11.734508+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/video_session_capturing_payload.yaml",
@@ -1171,8 +1210,9 @@
     },
     {
       "path": "contracts/asyncapi/components/schemas/video_session_transcoding_payload.yaml",
-      "sha256": "6bc56aefe85781e2b9feb933015b55e1eb9946233c89ea61263b6b6673dfca38",
-      "gate_exit_code": 0
+      "sha256": "0043be2cfe9d5a58bcb7b1f9866be094ffbf53a94f5d5c955f5b2ee1b0468e3e",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:19:20.787622+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/video_clip_ready_payload.yaml",
@@ -1182,13 +1222,15 @@
     },
     {
       "path": "contracts/asyncapi/components/schemas/video_distribution_published_payload.yaml",
-      "sha256": "befd7835134f27e01bb5b7beeef44b991e7f20dfc4c43995c1a4ff803332111b",
-      "gate_exit_code": 0
+      "sha256": "9122a580804ac941143c4a3255ec8e7f8246eb05b03d31d7f570fd8216c476a3",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:19:07.255445+00:00"
     },
     {
       "path": "contracts/asyncapi/components/schemas/video_session_published_payload.yaml",
-      "sha256": "565ac51806c2efcc7f10dfc56854da062e7f2fceb4b9fbec1789f1ff2b357d97",
-      "gate_exit_code": 0
+      "sha256": "ae1d922d9b66113ca3e204e4477e8b525474ad7ad169dce1734cf47fe9ba9dcf",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:19:16.245703+00:00"
     },
     {
       "path": "contracts/workflows/video/start_live_capture.arazzo.yaml",
@@ -1437,8 +1479,10 @@
     },
     {
       "path": "contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml",
-      "sha256": "5893afdb5f8431c0dbc6e11e0c6f35f51b8a0186233aabc1c8e0cbedef11ffee",
-      "created_at": "2026-03-20T07:18:49.317173+00:00"
+      "sha256": "9fe431aa6afaf8d53ac86987c61f018b2903c73c2f011ec215c90dec263157eb",
+      "created_at": "2026-03-20T07:18:49.317173+00:00",
+      "validated_at": "2026-03-20T08:19:29.792551+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "contracts/openapi/components/schemas/audit/audit_entry.yaml",
@@ -1522,18 +1566,24 @@
     },
     {
       "path": "contracts/openapi/components/schemas/video/distribution_profile.yaml",
-      "sha256": "a6e45b9743233ae6da96f060c01aba7a7fc3783a0fd27a49fb0ac22dced9083d",
-      "created_at": "2026-03-20T07:18:49.317173+00:00"
+      "sha256": "83d9355f2c587c4d6a4f9790d9fa2c42a4d9910d3e0a4bb5e95f926cc40474a4",
+      "created_at": "2026-03-20T07:18:49.317173+00:00",
+      "validated_at": "2026-03-20T08:19:54.260452+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "contracts/openapi/components/schemas/video/match_media_session.yaml",
-      "sha256": "89640a0b9568f05856af90638de91d264a272a0496e46c53e666da0f1256df5f",
-      "created_at": "2026-03-20T07:18:49.317173+00:00"
+      "sha256": "a0802f47c9eadf1b7e91c6892024f1040c65779fa4205801208a450a13540361",
+      "created_at": "2026-03-20T07:18:49.317173+00:00",
+      "validated_at": "2026-03-20T08:19:59.047032+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "contracts/openapi/components/schemas/video/media_segment.yaml",
-      "sha256": "773ff9452bfcdf80fc5e011a52e01d905c3746830bb008a860ce41da07165d47",
-      "created_at": "2026-03-20T07:18:49.317173+00:00"
+      "sha256": "c2c53b05e998f05fe0964468c9b27f6c174d5ee0558363ab7d2ffbcb706a1618",
+      "created_at": "2026-03-20T07:18:49.317173+00:00",
+      "validated_at": "2026-03-20T08:20:03.694763+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "contracts/openapi/components/schemas/wellness/wellness_entry.yaml",
@@ -1542,8 +1592,10 @@
     },
     {
       "path": "contracts/openapi/components/schemas/wellness/wellness_summary.yaml",
-      "sha256": "ef6c9d4b84230f4b74c69e8c7e9cbb8ce39e1d2634c1190197d6214d5f343d83",
-      "created_at": "2026-03-20T07:18:49.317173+00:00"
+      "sha256": "cee554fccaf968e1088b2842da540253b7882121e8fef337555cfcb2cf215658",
+      "created_at": "2026-03-20T07:18:49.317173+00:00",
+      "validated_at": "2026-03-20T08:20:08.273184+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "contracts/openapi/paths/video.yaml",
@@ -1793,9 +1845,34 @@
       "sha256": "4bf09e20ff42d187e5a8f28548d1d5efe25c05393a715d5207264d48270ffa6e",
       "gate_exit_code": 0,
       "created_at": "2026-03-20T00:00:00Z"
+    },
+    {
+      "path": ".contract_driven/DOMAIN_AXIOMS.json",
+      "sha256": "c8e570173505b89d961e836cc455a66d31ce35a9025e12b677625b7a6a04446c",
+      "created_at": "2026-03-20T08:14:39.440189+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T08:20:41.912940+00:00"
+    },
+    {
+      "path": "contracts/openapi/components/schemas/training/load_chart.yaml",
+      "sha256": "2eecf92d83b758eca65e5064b8ff72999a06154174c878278b3aa1dcfc2af054",
+      "created_at": "2026-03-20T08:19:39.336300+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/components/schemas/training/training_suggestion.yaml",
+      "sha256": "8a89e4c5bcb1068164ab5f41427e971a4e0929330b18b2b20d24d7a533a8cdf1",
+      "created_at": "2026-03-20T08:19:44.508976+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/components/schemas/users/user_profile.yaml",
+      "sha256": "19b08d2575afe3dda5357eb67b6ae6a352824bdad823e68038eb329a01236362",
+      "created_at": "2026-03-20T08:19:49.268441+00:00",
+      "gate_exit_code": 0
     }
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-03-20T03:10:06.092317+00:00"
+  "hook_validated_at": "2026-03-20T07:33:49.840801+00:00"
 }

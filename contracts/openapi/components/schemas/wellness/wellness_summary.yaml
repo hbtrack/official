@@ -1,97 +1,100 @@
 title: WellnessSummary
-description: >
-  Resumo agregado de wellness de um atleta para um período.
+description: 'Resumo agregado de wellness de um atleta para um período.
 
-  Contém médias de scores autorreferidos e tendência de readiness.
-  Insumo consultivo para training e analytics (DR-WELL-002) — NÃO constitui
-  avaliação clínica, diagnóstico ou liberação médica.
+  Contém médias de scores autorreferidos e tendência de readiness. Insumo consultivo
+  para training e analytics (DR-WELL-002) — NÃO constitui avaliação clínica, diagnóstico
+  ou liberação médica.
 
-  Boundary (INV-WELL-004):
-  - NÃO CONTÉM: campos clínicos, diagnósticos ou prescrições
+  Boundary (INV-WELL-004): - NÃO CONTÉM: campos clínicos, diagnósticos ou prescrições
   - CONTÉM: apenas agregações de percepção autorreferida
 
+  '
 type: object
 required:
-  - athleteUserId
-  - dateFrom
-  - dateTo
-  - entryCount
-  - avgReadinessScore
+- athleteUserId
+- dateFrom
+- dateTo
+- entryCount
+- avgReadinessScore
 additionalProperties: false
 properties:
   athleteUserId:
     type: string
     format: uuid
-    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
     description: UUID do atleta. Referência ao módulo users.
     x-semantic-id: identity.user.id.v1
   dateFrom:
     type: string
     format: date
-    description: "Início do período de agregação (YYYY-MM-DD)."
+    description: Início do período de agregação (YYYY-MM-DD).
   dateTo:
     type: string
     format: date
-    description: "Fim do período de agregação (YYYY-MM-DD)."
+    description: Fim do período de agregação (YYYY-MM-DD).
   entryCount:
     type: integer
     minimum: 0
     description: Número de entradas no período.
   avgReadinessScore:
     type:
-      - number
-      - "null"
+    - number
+    - 'null'
     minimum: 0
     maximum: 10
-    description: >
-      Média de readinessScore no período [0..10].
-      Null se entryCount == 0 ou readinessScore ausente em todas as entradas.
+    description: 'Média de readinessScore no período [0..10]. Null se entryCount ==
+      0 ou readinessScore ausente em todas as entradas.
+
+      '
   avgFatigueScore:
     type:
-      - number
-      - "null"
+    - number
+    - 'null'
     minimum: 0
     maximum: 10
     description: Média de fatigueScore no período [0..10]. Null se sem dados.
   avgPainScore:
     type:
-      - number
-      - "null"
+    - number
+    - 'null'
     minimum: 0
     maximum: 10
-    description: >
-      Média de painScore no período [0..10].
-      Percepção subjetiva — NÃO é avaliação clínica (INV-WELL-004).
+    description: 'Média de painScore no período [0..10]. Percepção subjetiva — NÃO
+      é avaliação clínica (INV-WELL-004).
+
+      '
   avgRecoveryScore:
     type:
-      - number
-      - "null"
+    - number
+    - 'null'
     minimum: 0
     maximum: 10
     description: Média de recoveryScore no período [0..10]. Null se sem dados.
   avgSleepHours:
     type:
-      - number
-      - "null"
+    - number
+    - 'null'
     minimum: 0
     maximum: 24
     description: Média de sleepHours no período [0..24]. Null se sem dados.
   readinessTrend:
     type:
-      - string
-      - "null"
+    - string
+    - 'null'
     enum:
-      - improving
-      - stable
-      - declining
-      - "null"
-    description: >
-      Tendência de readiness com base nos últimos registros do período.
+    - IMPROVING
+    - STABLE
+    - DECLINING
+    - 'NULL'
+    description: 'Tendência de readiness com base nos últimos registros do período.
       Calculado quando entryCount >= 3. Null se dados insuficientes.
+
+      '
+    x-domain-enum-ref: wellness_readiness_trend
   lastEntryDate:
     type:
-      - string
-      - "null"
+    - string
+    - 'null'
     format: date
-    pattern: '^\d{4}-\d{2}-\d{2}$'
-    description: "Data da última entrada registrada no período (YYYY-MM-DD)."
+    pattern: ^\d{4}-\d{2}-\d{2}$
+    description: Data da última entrada registrada no período (YYYY-MM-DD).

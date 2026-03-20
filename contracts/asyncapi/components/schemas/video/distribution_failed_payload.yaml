@@ -1,20 +1,19 @@
 type: object
 additionalProperties: false
 required:
-  - eventType
-  - occurredAt
-  - clipId
-  - sessionId
-  - targetType
-  - failureReason
-  - retryCount
-  - failedAt
+- eventType
+- occurredAt
+- clipId
+- sessionId
+- targetType
+- failureReason
+- retryCount
+- failedAt
 properties:
   eventType:
     type: string
-    enum:
-      - video.distribution.failed
     description: Tipo canônico do evento.
+    const: video.distribution.failed
   occurredAt:
     type: string
     format: date-time
@@ -24,7 +23,7 @@ properties:
   clipId:
     type: string
     format: uuid
-    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
     description: UUID do ClipDefinition com falha de distribuição.
     x-semantic-id: video.clip_definition.id.v1
   sessionId:
@@ -36,20 +35,22 @@ properties:
   targetType:
     type: string
     enum:
-      - TECHNICAL_INTERNAL
-      - PUBLIC_CDN
-      - BROADCAST_PARTNER
+    - TECHNICAL_INTERNAL
+    - PUBLIC_CDN
+    - BROADCAST_PARTNER
     description: Tipo de destino onde distribuição falhou.
+    x-domain-enum-ref: video_target_type
   failureReason:
     type: string
     enum:
-      - timeout
-      - permission_denied
-      - storage_quota_exceeded
-      - network_unreachable
-      - codec_incompatibility
-      - unknown
+    - TIMEOUT
+    - PERMISSION_DENIED
+    - STORAGE_QUOTA_EXCEEDED
+    - NETWORK_UNREACHABLE
+    - CODEC_INCOMPATIBILITY
+    - UNKNOWN
     description: Motivo da falha de distribuição.
+    x-domain-enum-ref: video_distribution_failure_reason
   retryCount:
     type: integer
     minimum: 0
@@ -62,13 +63,13 @@ properties:
     pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
   nextRetryAt:
     type:
-      - string
-      - "null"
+    - string
+    - 'null'
     format: date-time
     description: ISO 8601 UTC da próxima retry (null se exaurida).
-    pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$'
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
   errorDetails:
     type:
-      - object
-      - "null"
+    - object
+    - 'null'
     description: Detalhes opcionais de erro (stacktrace, HTTP status, etc).

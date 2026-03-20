@@ -1,21 +1,20 @@
 type: object
 additionalProperties: false
 required:
-  - eventType
-  - occurredAt
-  - sessionId
-  - matchId
-  - captureMode
-  - timecodeLogicalStart
-  - timestampCaptureStart
-  - edgeNodeId
-  - technicalContactUserId
+- eventType
+- occurredAt
+- sessionId
+- matchId
+- captureMode
+- timecodeLogicalStart
+- timestampCaptureStart
+- edgeNodeId
+- technicalContactUserId
 properties:
   eventType:
     type: string
-    enum:
-      - video.capture.started
     description: Tipo canônico do evento. Imutável.
+    const: video.capture.started
   occurredAt:
     type: string
     format: date-time
@@ -37,10 +36,11 @@ properties:
   captureMode:
     type: string
     enum:
-      - PANORAMIC
-      - AUTO_FOLLOW
-      - MULTI_ANGLE
+    - PANORAMIC
+    - AUTO_FOLLOW
+    - MULTI_ANGLE
     description: Modo de captura configurado (definido ao criar session).
+    x-domain-enum-ref: video_capture_mode
   timecodeLogicalStart:
     type: integer
     minimum: 0
@@ -52,11 +52,11 @@ properties:
     pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
   edgeNodeId:
     type: string
-    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
     description: Identificador do edge node executando captura (DR-VID-003).
   technicalContactUserId:
     type: string
     format: uuid
-    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
     description: UUID do technical contact responsável (referência users module).
     x-semantic-id: identity.user.id.v1

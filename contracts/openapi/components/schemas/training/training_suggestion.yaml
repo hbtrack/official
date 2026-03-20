@@ -1,21 +1,17 @@
-# TrainingSuggestion OpenAPI component
-# UIF-TRAINING-006 HB Pro Coach — submitTrainingSuggestion G-06
-# Decision Refs: D-UI-20, D-UI-21
-
 type: object
 additionalProperties: false
 required:
-  - id
-  - athleteId
-  - trainingName
-  - duration
-  - status
-  - createdAt
+- id
+- athleteId
+- trainingName
+- duration
+- status
+- createdAt
 properties:
   id:
     type: string
     format: uuid
-    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   athleteId:
     type: string
     format: uuid
@@ -45,11 +41,12 @@ properties:
   status:
     type: string
     enum:
-      - PENDING_REVIEW
-      - APPROVED
-      - REJECTED
-      - EDITED_AND_APPROVED
+    - PENDING_REVIEW
+    - APPROVED
+    - REJECTED
+    - EDITED_AND_APPROVED
     description: Coach review status.
+    x-domain-enum-ref: training_suggestion_status
   createdAt:
     type: string
     format: date-time
@@ -58,5 +55,5 @@ properties:
   reviewedAt:
     type: string
     format: date-time
-    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
     description: When the coach reviewed the suggestion.

@@ -1,7 +1,11 @@
-# AsyncAPI Payload: video_session_created
-# Module: video | DR-VID-001, DR-VID-003, DR-VID-008 | ADR-033
 type: object
-required: [eventType, occurredAt, sessionId, matchId, captureMode, retentionPolicy]
+required:
+- eventType
+- occurredAt
+- sessionId
+- matchId
+- captureMode
+- retentionPolicy
 additionalProperties: false
 properties:
   eventType:
@@ -22,18 +26,29 @@ properties:
     type: string
     pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
     format: uuid
-    description: Referência à partida em matches module. Video não duplica metadados de partida.
+    description: Referência à partida em matches module. Video não duplica metadados
+      de partida.
     x-semantic-id: matches.match.id.v1
   captureMode:
     type: string
-    enum: [PANORAMIC, AUTO_FOLLOW, MULTI_ANGLE]
+    enum:
+    - PANORAMIC
+    - AUTO_FOLLOW
+    - MULTI_ANGLE
     description: Modo de captura selecionado (DR-VID-003 — edge-first).
+    x-domain-enum-ref: video_capture_mode
   retentionPolicy:
     type: string
-    enum: [keep_7_days, keep_30_days, archive_s3, public_forever]
-    description: Política explícita de retenção (DR-VID-008). Padrão conservador = keep_7_days.
+    enum:
+    - KEEP_7_DAYS
+    - KEEP_30_DAYS
+    - ARCHIVE_S3
+    - PUBLIC_FOREVER
+    description: Política explícita de retenção (DR-VID-008). Padrão conservador =
+      keep_7_days.
+    x-domain-enum-ref: video_retention_policy
   operatorUserId:
     type: string
     format: uuid
-    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
     description: UUID do match_operator que criou a sessão.

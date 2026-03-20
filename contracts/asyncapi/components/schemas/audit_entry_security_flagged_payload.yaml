@@ -16,15 +16,16 @@ properties:
     type: string
     pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
     format: date-time
-    description: 'Timestamp UTC do momento em que a ação sensível ocorreu (INV-AUD-001, ISO 8601).
+    description: 'Timestamp UTC do momento em que a ação sensível ocorreu (INV-AUD-001,
+      ISO 8601).
 
       '
     x-semantic-id: core.occurred_at.v1
   entryId:
     type: string
     format: uuid
-    description: 'UUID v4 da entrada de auditoria correspondente (INV-AUD-001). Referência direta a audit_entry_created_payload.entryId
-      da mesma ação.
+    description: 'UUID v4 da entrada de auditoria correspondente (INV-AUD-001). Referência
+      direta a audit_entry_created_payload.entryId da mesma ação.
 
       '
     x-semantic-id: audit.entry.id.v1
@@ -32,7 +33,8 @@ properties:
   actorUserId:
     type: string
     format: uuid
-    description: 'UUID do usuário que executou a ação sensível (INV-AUD-001). Referência ao módulo users.
+    description: 'UUID do usuário que executou a ação sensível (INV-AUD-001). Referência
+      ao módulo users.
 
       '
     x-semantic-id: identity.user.id.v1
@@ -41,27 +43,32 @@ properties:
     type: string
     minLength: 1
     maxLength: 120
-    description: 'Rótulo da ação sensível (INV-AUD-001). Exemplos de ações que acionam este evento (DR-AUD-005): - identity_access.role_assigned
-      / identity_access.role_revoked - identity_access.session_force_revoked - identity_access.login_failed - audit.export_requested
+    description: 'Rótulo da ação sensível (INV-AUD-001). Exemplos de ações que acionam
+      este evento (DR-AUD-005): - identity_access.role_assigned / identity_access.role_revoked
+      - identity_access.session_force_revoked - identity_access.login_failed - audit.export_requested
       - user.suspended - <module>.bulk_delete
 
       '
   securitySeverityLabel:
     type: string
     enum:
-    - low
-    - medium
-    - high
-    - critical
-    description: 'Nível de severidade de segurança da ação (DEC-AUD-003=C). - low: ação sensível de baixo impacto (ex.: export
-      de 10 registros). - medium: mudança de permissão ou acesso incomum. - high: revogação forçada de sessão, suspensão de
-      conta. - critical: escalada de admin, bulk_delete, export de dados pessoais em massa.
+    - LOW
+    - MEDIUM
+    - HIGH
+    - CRITICAL
+    description: 'Nível de severidade de segurança da ação (DEC-AUD-003=C). - low:
+      ação sensível de baixo impacto (ex.: export de 10 registros). - medium: mudança
+      de permissão ou acesso incomum. - high: revogação forçada de sessão, suspensão
+      de conta. - critical: escalada de admin, bulk_delete, export de dados pessoais
+      em massa.
 
       '
+    x-domain-enum-ref: security_severity_label
   targetResourceId:
     type: string
     format: uuid
-    description: 'UUID do recurso alvo. Quando presente, targetResourceType obrigatório (INV-AUD-003).
+    description: 'UUID do recurso alvo. Quando presente, targetResourceType obrigatório
+      (INV-AUD-003).
 
       '
     x-semantic-id: core.resource.id.v1
@@ -79,11 +86,11 @@ properties:
     - string
     - 'null'
     enum:
-    - success
-    - failure
-    - partial
-    - null
+    - SUCCESS
+    - FAILURE
+    - PARTIAL
     description: Resultado da ação sensível executada.
+    x-domain-enum-ref: audit_outcome_label
   originLabel:
     type:
     - string
@@ -95,7 +102,8 @@ properties:
   correlationId:
     type: string
     format: uuid
-    description: 'UUID de correlação (DR-AUD-003, INV-AUD-005). Estável entre todas as etapas da operação distribuída.
+    description: 'UUID de correlação (DR-AUD-003, INV-AUD-005). Estável entre todas
+      as etapas da operação distribuída.
 
       '
     x-semantic-id: core.correlation.id.v1

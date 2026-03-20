@@ -28,11 +28,12 @@ properties:
   destinationType:
     type: string
     enum:
-    - technical_internal
-    - cdn_public
-    - partner_api
-    - broadcast
+    - TECHNICAL_INTERNAL
+    - CDN_PUBLIC
+    - PARTNER_API
+    - BROADCAST
     description: Tipo de destino da distribuição (DR-VID-007 — escopo por sessão).
+    x-domain-enum-ref: video_destination_type
   distributedAt:
     type: string
     format: date-time
@@ -41,11 +42,12 @@ properties:
   retentionPolicy:
     type: string
     enum:
-    - keep_7_days
-    - keep_30_days
-    - archive_s3
-    - public_forever
+    - KEEP_7_DAYS
+    - KEEP_30_DAYS
+    - ARCHIVE_S3
+    - PUBLIC_FOREVER
     description: Política de retenção aplicada (DR-VID-008).
+    x-domain-enum-ref: video_retention_policy
   accessorUserId:
     type: string
     format: uuid

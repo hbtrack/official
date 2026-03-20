@@ -2,11 +2,11 @@
 > Delta-only model: current state, blockers, decisions, next actions. Historical context in SESSION_ARCHIVE.md.
 
 ## Estado Geral
-**Data:** 2026-03-20 | **Branch:** hb-track-contratos-driven | **CI:** FAIL (apenas enums — trilha 2D)
-**✅ 4C.2.v2c COMPLETO** — Pattern violations 173→0, Arazzo operationIds 4→0, DERIVED_DRIFT PASS
-**✅ CROSS_SPEC_ALIGNMENT_GATE** — 332 → 155 (-177): Pattern=0, Arazzo=0, Enum=155 (trilha 2D)
-**✅ Survival suite: PASS** — Seguro prosseguir
-**⏳ Próximo: Item 2D** — 155 enum violations (x-domain-enum-ref missing/inválido)
+**Data:** 2026-03-20 | **Branch:** hb-track-contratos-driven | **CI:** PASS (todos os gates verdes)
+**✅ 4C.2.2D COMPLETO** — 155 enum violations resolvidos, CROSS_SPEC_ALIGNMENT_GATE PASS nativo
+**✅ AXIOM_INTEGRITY_GATE PASS** — 84 enums canônicos, todos em UPPER_SNAKE_CASE
+**✅ DERIVED_DRIFT_GATE PASS** — 17 manifests reparados, compiler re-executado
+**✅ Pipeline STATUS: PASS** — Todos os gates verdes, waiver CROSS_SPEC removido
 
 ## BACKLOG_ITEM_2 — Investigação & Pivot (2026-03-20)
 
@@ -106,6 +106,61 @@ v6 foi executado corretamente como "conservador" (25 apenas). Seu impacto CROS S
 **Artefatos:**
 - [SESSION_4C_1_V6_ADD_MISSING_REPORT.json](_reports/SESSION_4C_1_V6_ADD_MISSING_REPORT.json)
 
+## Sessão 4C.2.2D — CROSS_SPEC_ALIGNMENT ENUM FULL RESOLUTION (2026-03-20)
+
+**Status: ✅ CONCLUSÃO — 155 violações resolvidas, pipeline STATUS: PASS**
+
+### Resultado
+
+| Métrica | Antes | Depois | Melhoria |
+|---------|-------|--------|---------|
+| Enum sem x-domain-enum-ref | 147 | 0 | **-100%** ✅ |
+| x-domain-enum-ref inválido | 8 | 0 | **-100%** ✅ |
+| DOMAIN_AXIOMS enums | 31 | 84 | **+53 enums** |
+| CROSS_SPEC_ALIGNMENT_GATE | WAIVER | PASS (nativo) | ✅ |
+
+### Execução
+
+**Fase 1 — Adição de 53 enums canônicos ao DOMAIN_AXIOMS:**
+- 53 novos enum definitions (todos com `strict_match: true, closed_set: true`)
+- Todos os valores em UPPER_SNAKE_CASE (exigência do AXIOM_INTEGRITY_GATE)
+- Merge: `video_codec_key` + `video_codec_label` → `video_codec`
+- Tratamento especial: valores com dígitos iniciais (`7d` → `PERIOD_7D`)
+
+**Fase 2 — Remediação das 147 violações "sem x-domain-enum-ref":**
+- 56 conversões enum single-value → `const:` (discriminadores eventType)
+- 91 adições de `x-domain-enum-ref` em campos multi-valor
+- Script: `scripts/remediate_4c2_2d_enums.py`
+
+**Fase 3 — Conversão para UPPER_SNAKE_CASE:**
+- 71 arquivos de contrato atualizados (enum values minúsculos → UPPER_SNAKE_CASE)
+- Script: `scripts/remediate_4c2_2d_uppercase.py`
+
+**Fase 4 — Bug fixes manuais:**
+- Removidos `None` (YAML null) de 3 arquivos de enum
+- Corrigido `condicionamiento` (ES) → `condicionamento` (PT) em 2 arquivos
+
+**Fase 5 — Reparo de manifests e regeneração:**
+- 17 manifests reparados (DOMAIN_AXIOMS em source_inputs de todos os 17)
+- training asyncapi payloads regenerados via `compile_api_policy --all`
+- Script: `scripts/repair_manifests.py`
+
+**Fase 6 — Waiver cleanup:**
+- Removido `contracts/_waivers/CROSS_SPEC_ALIGNMENT_GATE.json` (gate passa nativo)
+
+### Gate Status Final
+```
+AXIOM_INTEGRITY_GATE      ✅ PASS
+CROSS_SPEC_ALIGNMENT_GATE ✅ PASS (sem waiver)
+DERIVED_DRIFT_GATE        ✅ PASS
+PIPELINE STATUS           ✅ PASS
+```
+
+### Commit
+`feat(4C.2.2D): Full CROSS_SPEC_ALIGNMENT_GATE — 155 enum violations resolved`
+
+---
+
 ## Entendimento Atual — 2C Progresso
 
 **Histórico 2C:**
@@ -115,7 +170,7 @@ v6 foi executado corretamente como "conservador" (25 apenas). Seu impacto CROS S
   - Sessão 4C: ✅ Auditoria Bucket 1-restante (25 campos, v6 approved)
   - Sessão 4C.1: ✅ V6 Conservative executed (0 impacto = validação, não falha)
   - Sessão 4D: ⏳ **PRÓXIMO** — Decision-tree Bucket 4 (~330+ campos ambíguos)
-- Item 2D: ⏳ 147 enum violations (trilha separada)
+- Item 2D: ✅ **CONCLUÍDO** — 155 enum violations resolvidos (x-domain-enum-ref + UPPER_SNAKE_CASE + const)
 
 ---
 
@@ -330,7 +385,7 @@ Exemplo: `createdAt` (10x), `updatedAt` (5x), `id` (13x) aparecem em múltiplos 
 **Próximos Passos:**
 ✅ **4C.2.v2b Completo:** 18% redução total alcançada  
 ⏳  **4C.2.v2c (Recomendado):** Deep scan de 42 NOT_IN_SCHEMA via location-aware remediation
-⏳  **Item 2D:** 159 enum violations (trilha separada, `x-domain-enum-ref`)
+✅  **Item 2D:** 155 enum violations resolvidos — CROSS_SPEC_ALIGNMENT_GATE PASS nativo (sem waiver)
 
 **Contexto Anterior (Diagnostic):**
 

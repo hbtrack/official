@@ -1,0 +1,647 @@
+{
+  "execution_date": "2026-03-20",
+  "session": "4C.2.v2a",
+  "phase": "REMEDIATION_PHASES_1_3",
+  "overview": {
+    "files_modified": 42,
+    "total_fixes": 69,
+    "phase_1_type_array": 13,
+    "phase_2_add_pattern": 35,
+    "phase_3_fix_pattern": 21
+  },
+  "modifications_by_file": {
+    "audit_entry_security_flagged_payload.yaml": [
+      {
+        "field": "correlationId",
+        "phase": 1,
+        "action": "Change type from ['string', 'null'] to 'string'",
+        "old_value": [
+          "string",
+          "null"
+        ],
+        "new_value": "string"
+      },
+      {
+        "field": "targetResourceId",
+        "phase": 1,
+        "action": "Change type from ['string', 'null'] to 'string'",
+        "old_value": [
+          "string",
+          "null"
+        ],
+        "new_value": "string"
+      },
+      {
+        "field": "actorUserId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      },
+      {
+        "field": "entryId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "audit_entry_created_payload.yaml": [
+      {
+        "field": "correlationId",
+        "phase": 1,
+        "action": "Change type from ['string', 'null'] to 'string'",
+        "old_value": [
+          "string",
+          "null"
+        ],
+        "new_value": "string"
+      },
+      {
+        "field": "targetResourceId",
+        "phase": 1,
+        "action": "Change type from ['string', 'null'] to 'string'",
+        "old_value": [
+          "string",
+          "null"
+        ],
+        "new_value": "string"
+      },
+      {
+        "field": "actorUserId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      },
+      {
+        "field": "entryId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "notification_delivery_failed_payload.yaml": [
+      {
+        "field": "lastAttemptAt",
+        "phase": 1,
+        "action": "Change type from ['string', 'null'] to 'string'",
+        "old_value": [
+          "string",
+          "null"
+        ],
+        "new_value": "string"
+      },
+      {
+        "field": "deliveryId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      },
+      {
+        "field": "recipientUserId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      },
+      {
+        "field": "requestedAt",
+        "phase": 3,
+        "action": "Fix pattern: timestamp_utc",
+        "pattern_type": "timestamp_utc",
+        "old_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+        "new_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+      }
+    ],
+    "user_role_changed_payload.yaml": [
+      {
+        "field": "organizationId",
+        "phase": 1,
+        "action": "Change type from ['string', 'null'] to 'string'",
+        "old_value": [
+          "string",
+          "null"
+        ],
+        "new_value": "string"
+      },
+      {
+        "field": "userId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "role_revoked_payload.yaml": [
+      {
+        "field": "organizationId",
+        "phase": 1,
+        "action": "Change type from ['string', 'null'] to 'string'",
+        "old_value": [
+          "string",
+          "null"
+        ],
+        "new_value": "string"
+      }
+    ],
+    "user_created_payload.yaml": [
+      {
+        "field": "organizationId",
+        "phase": 1,
+        "action": "Change type from ['string', 'null'] to 'string'",
+        "old_value": [
+          "string",
+          "null"
+        ],
+        "new_value": "string"
+      },
+      {
+        "field": "userId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "season_created_payload.yaml": [
+      {
+        "field": "organizationId",
+        "phase": 1,
+        "action": "Change type from ['string', 'null'] to 'string'",
+        "old_value": [
+          "string",
+          "null"
+        ],
+        "new_value": "string"
+      },
+      {
+        "field": "seasonId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "role_assigned_payload.yaml": [
+      {
+        "field": "organizationId",
+        "phase": 1,
+        "action": "Change type from ['string', 'null'] to 'string'",
+        "old_value": [
+          "string",
+          "null"
+        ],
+        "new_value": "string"
+      }
+    ],
+    "competition_created_payload.yaml": [
+      {
+        "field": "organizationId",
+        "phase": 1,
+        "action": "Change type from ['string', 'null'] to 'string'",
+        "old_value": [
+          "string",
+          "null"
+        ],
+        "new_value": "string"
+      },
+      {
+        "field": "competitionId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      },
+      {
+        "field": "seasonId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "session_revoked_payload.yaml": [
+      {
+        "field": "revokedByUserId",
+        "phase": 1,
+        "action": "Change type from ['string', 'null'] to 'string'",
+        "old_value": [
+          "string",
+          "null"
+        ],
+        "new_value": "string"
+      }
+    ],
+    "wellness_entry_created_payload.yaml": [
+      {
+        "field": "trainingSessionId",
+        "phase": 1,
+        "action": "Change type from ['string', 'null'] to 'string'",
+        "old_value": [
+          "string",
+          "null"
+        ],
+        "new_value": "string"
+      },
+      {
+        "field": "athleteUserId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      },
+      {
+        "field": "entryId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      },
+      {
+        "field": "questionnaireDate",
+        "phase": 2,
+        "action": "Add date_only pattern",
+        "pattern_type": "date_only",
+        "new_pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+      }
+    ],
+    "match_scheduled_payload.yaml": [
+      {
+        "field": "awayTeamId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      },
+      {
+        "field": "competitionId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      },
+      {
+        "field": "homeTeamId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      },
+      {
+        "field": "scheduledAt",
+        "phase": 2,
+        "action": "Add timestamp_utc pattern",
+        "pattern_type": "timestamp_utc",
+        "new_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+      }
+    ],
+    "video_clip_ready_payload.yaml": [
+      {
+        "field": "clipId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      },
+      {
+        "field": "scoutEventId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "competition_phase_changed_payload.yaml": [
+      {
+        "field": "competitionId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      },
+      {
+        "field": "seasonId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "match_status_updated_payload.yaml": [
+      {
+        "field": "competitionId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "notification_delivery_queued_payload.yaml": [
+      {
+        "field": "deliveryId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      },
+      {
+        "field": "recipientUserId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      },
+      {
+        "field": "requestedAt",
+        "phase": 3,
+        "action": "Fix pattern: timestamp_utc",
+        "pattern_type": "timestamp_utc",
+        "old_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+        "new_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+      }
+    ],
+    "notification_delivery_sent_payload.yaml": [
+      {
+        "field": "deliveryId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      },
+      {
+        "field": "recipientUserId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      },
+      {
+        "field": "deliveredAt",
+        "phase": 3,
+        "action": "Fix pattern: timestamp_utc",
+        "pattern_type": "timestamp_utc",
+        "old_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+        "new_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+      },
+      {
+        "field": "requestedAt",
+        "phase": 3,
+        "action": "Fix pattern: timestamp_utc",
+        "pattern_type": "timestamp_utc",
+        "old_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+        "new_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+      }
+    ],
+    "scout_event_created_payload.yaml": [
+      {
+        "field": "eventId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "ai_ingestion_job_failed_payload.yaml": [
+      {
+        "field": "jobId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "ai_ingestion_job_queued_payload.yaml": [
+      {
+        "field": "jobId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "ai_ingestion_job_completed_payload.yaml": [
+      {
+        "field": "jobId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "season_status_updated_payload.yaml": [
+      {
+        "field": "seasonId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "video_segment_finalized_payload.yaml": [
+      {
+        "field": "segmentId",
+        "phase": 2,
+        "action": "Add uuid_v4 pattern",
+        "pattern_type": "uuid_v4",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "session_created_payload.yaml": [
+      {
+        "field": "expiresAt",
+        "phase": 2,
+        "action": "Add timestamp_utc pattern",
+        "pattern_type": "timestamp_utc",
+        "new_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+      }
+    ],
+    "video_session_published_payload.yaml": [
+      {
+        "field": "syncCompletedAt",
+        "phase": 2,
+        "action": "Add timestamp_utc pattern",
+        "pattern_type": "timestamp_utc",
+        "new_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+      }
+    ],
+    "attention_queue_item_resolved_payload.yaml": [
+      {
+        "field": "attentionQueueItemId",
+        "phase": 3,
+        "action": "Fix pattern: uuid_v4",
+        "pattern_type": "uuid_v4",
+        "old_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "attention_queue_item_created_payload.yaml": [
+      {
+        "field": "attentionQueueItemId",
+        "phase": 3,
+        "action": "Fix pattern: uuid_v4",
+        "pattern_type": "uuid_v4",
+        "old_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "completion_evidence_provided_payload.yaml": [
+      {
+        "field": "completionEvidenceId",
+        "phase": 3,
+        "action": "Fix pattern: uuid_v4",
+        "pattern_type": "uuid_v4",
+        "old_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "execution_recorded_payload.yaml": [
+      {
+        "field": "executionRecordId",
+        "phase": 3,
+        "action": "Fix pattern: uuid_v4",
+        "pattern_type": "uuid_v4",
+        "old_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "feedback_thread_created_payload.yaml": [
+      {
+        "field": "feedbackThreadId",
+        "phase": 3,
+        "action": "Fix pattern: uuid_v4",
+        "pattern_type": "uuid_v4",
+        "old_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "feedback_thread_closed_payload.yaml": [
+      {
+        "field": "feedbackThreadId",
+        "phase": 3,
+        "action": "Fix pattern: uuid_v4",
+        "pattern_type": "uuid_v4",
+        "old_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "intervention_cycle_completed_payload.yaml": [
+      {
+        "field": "interventionCycleId",
+        "phase": 3,
+        "action": "Fix pattern: uuid_v4",
+        "pattern_type": "uuid_v4",
+        "old_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "intervention_cycle_created_payload.yaml": [
+      {
+        "field": "interventionCycleId",
+        "phase": 3,
+        "action": "Fix pattern: uuid_v4",
+        "pattern_type": "uuid_v4",
+        "old_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "need_linked_to_objective_payload.yaml": [
+      {
+        "field": "needId",
+        "phase": 3,
+        "action": "Fix pattern: uuid_v4",
+        "pattern_type": "uuid_v4",
+        "old_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "need_detected_created_payload.yaml": [
+      {
+        "field": "needId",
+        "phase": 3,
+        "action": "Fix pattern: uuid_v4",
+        "pattern_type": "uuid_v4",
+        "old_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "session_objective_achieved_payload.yaml": [
+      {
+        "field": "objectiveId",
+        "phase": 3,
+        "action": "Fix pattern: uuid_v4",
+        "pattern_type": "uuid_v4",
+        "old_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "objective_created_payload.yaml": [
+      {
+        "field": "objectiveId",
+        "phase": 3,
+        "action": "Fix pattern: uuid_v4",
+        "pattern_type": "uuid_v4",
+        "old_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "training_readiness_assessed_payload.yaml": [
+      {
+        "field": "readinessId",
+        "phase": 3,
+        "action": "Fix pattern: uuid_v4",
+        "pattern_type": "uuid_v4",
+        "old_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "recommendation_dismissed_payload.yaml": [
+      {
+        "field": "recommendationId",
+        "phase": 3,
+        "action": "Fix pattern: uuid_v4",
+        "pattern_type": "uuid_v4",
+        "old_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "recommendation_generated_payload.yaml": [
+      {
+        "field": "recommendationId",
+        "phase": 3,
+        "action": "Fix pattern: uuid_v4",
+        "pattern_type": "uuid_v4",
+        "old_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "recommendation_accepted_payload.yaml": [
+      {
+        "field": "recommendationId",
+        "phase": 3,
+        "action": "Fix pattern: uuid_v4",
+        "pattern_type": "uuid_v4",
+        "old_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ],
+    "continuity_snapshot_created_payload.yaml": [
+      {
+        "field": "snapshotId",
+        "phase": 3,
+        "action": "Fix pattern: uuid_v4",
+        "pattern_type": "uuid_v4",
+        "old_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+        "new_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9"
+      }
+    ]
+  },
+  "expected_impact": {
+    "baseline_violations": 249,
+    "expected_after": "80-120",
+    "reduction_pct": "50%",
+    "rationale": "Fixes 37 fixable fields in phases 1-3"
+  }
+}

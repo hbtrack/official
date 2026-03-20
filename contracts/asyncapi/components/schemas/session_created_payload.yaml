@@ -28,8 +28,9 @@ properties:
   principalUserId:
     type: string
     format: uuid
-    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
-    description: 'UUID do usuário que iniciou a sessão. Referência ao módulo users. identity_access não duplica o perfil (DR-IAM-002).
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    description: 'UUID do usuário que iniciou a sessão. Referência ao módulo users.
+      identity_access não duplica o perfil (DR-IAM-002).
 
       '
     x-semantic-id: identity.user.id.v1
@@ -37,7 +38,8 @@ properties:
     type: string
     minLength: 1
     maxLength: 80
-    description: 'Contexto técnico da sessão (ex: "web-admin", "mobile-athlete"). Não pode ser deduzido de atributos esportivos (DR-IAM-003).
+    description: 'Contexto técnico da sessão (ex: "web-admin", "mobile-athlete").
+      Não pode ser deduzido de atributos esportivos (DR-IAM-003).
 
       '
   authMethodLabel:
@@ -49,20 +51,23 @@ properties:
   roleLabels:
     type: array
     uniqueItems: true
-    description: 'Roles RBAC canônicos do usuário no momento da criação da sessão (INV-IAM-002). ADR-008: modelo flat de 5 roles.
+    description: 'Roles RBAC canônicos do usuário no momento da criação da sessão
+      (INV-IAM-002). ADR-008: modelo flat de 5 roles.
 
       '
     items:
       type: string
       enum:
-      - admin
-      - coordinator
-      - coach
-      - athlete
-      - member
+      - ADMIN
+      - COORDINATOR
+      - COACH
+      - ATHLETE
+      - MEMBER
+      x-domain-enum-ref: user_role_label
   mfaSatisfied:
     type: boolean
-    description: 'Indica se MFA foi satisfeito nesta sessão (DEC-IAM-001=B opt-in). true quando o usuário completou TOTP; false ou ausente quando MFA não configurado.
+    description: 'Indica se MFA foi satisfeito nesta sessão (DEC-IAM-001=B opt-in).
+      true quando o usuário completou TOTP; false ou ausente quando MFA não configurado.
 
       '
   expiresAt:

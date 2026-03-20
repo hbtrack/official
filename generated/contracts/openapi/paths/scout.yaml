@@ -180,16 +180,19 @@
               matchId:
                 type: string
                 format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
                 description: UUID da partida à qual o evento está ancorado (DR-SCOUT-003).
                 x-semantic-id: matches.match.id.v1
               athleteUserId:
                 type: string
                 format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
                 description: UUID do atleta observado (opcional — refina contexto).
                 x-semantic-id: identity.user.id.v1
               teamId:
                 type: string
                 format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
                 description: UUID do time (DR-SCOUT-003).
                 x-semantic-id: teams.team.id.v1
               eventLabel:
@@ -227,6 +230,7 @@
               recordedAt:
                 type: string
                 format: date-time
+                pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$'
                 description: Timestamp UTC do momento do registro (INV-SCOUT-001).
                 x-semantic-id: core.occurred_at.v1
     responses:
@@ -310,6 +314,7 @@
                 matchId:
                   type: string
                   format: uuid
+                  pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
                   description: UUID da partida analisada.
                   x-semantic-id: matches.match.id.v1
                 totalEvents:
@@ -341,6 +346,7 @@
                       athleteUserId:
                         type: string
                         format: uuid
+                        pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
                       count:
                         type: integer
                         minimum: 0
@@ -485,10 +491,12 @@
                 matchId:
                   type: string
                   format: uuid
+                  pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
                   x-semantic-id: matches.match.id.v1
                 completedAt:
                   type: string
                   format: date-time
+                  pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$'
                   description: Timestamp UTC de finalização.
                 totalEvents:
                   type: integer

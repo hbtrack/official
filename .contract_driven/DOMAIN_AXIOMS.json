@@ -510,6 +510,548 @@
           "PARTIALLY_ACHIEVED",
           "NOT_ACHIEVED"
         ]
+      },
+      "ai_ingestion_job_status": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "PENDING",
+          "QUEUED",
+          "RUNNING",
+          "COMPLETED",
+          "FAILED"
+        ]
+      },
+      "analytics_aggregation_type": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "SUM",
+          "AVG",
+          "MIN",
+          "MAX",
+          "COUNT"
+        ]
+      },
+      "athlete_age_group": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "U10",
+          "U12",
+          "U14",
+          "U16",
+          "U18",
+          "ADULT"
+        ]
+      },
+      "attention_queue_status": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "ACTIVE",
+          "DISMISSED",
+          "ESCALATED",
+          "RESOLVED"
+        ]
+      },
+      "attention_queue_item_type": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "INDIVIDUAL_PERFORMANCE",
+          "WELLNESS_ALERT",
+          "GROUP_DYNAMICS",
+          "MEDICAL_FLAG",
+          "RECOVERY_CONCERN"
+        ]
+      },
+      "audit_outcome_label": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "SUCCESS",
+          "PARTIAL",
+          "FAILURE",
+          "NULL"
+        ]
+      },
+      "chat_context_screen": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "SESSION_DETAIL",
+          "ATHLETE_CHECKIN",
+          "WELLNESS_VIEW",
+          "TRAINING_SUGGESTION"
+        ]
+      },
+      "chat_conversation_status": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "ACTIVE",
+          "ARCHIVED"
+        ]
+      },
+      "chat_message_type": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "TEXT",
+          "TRAINING_SUGGESTION",
+          "SYSTEM_NOTIFICATION"
+        ]
+      },
+      "chat_sender_role": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "ATHLETE",
+          "HB_PRO_COACH"
+        ]
+      },
+      "completion_evidence_type": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "POST_SESSION_SURVEY",
+          "WELLNESS_LOG_FILLED",
+          "VIDEO_REVIEW",
+          "RECOVERY_TRACKED",
+          "OBJECTIVE_SCORED"
+        ]
+      },
+      "continuity_snapshot_type": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "READINESS_BASELINE",
+          "PERIODIZATION_BOUNDARY",
+          "SEASONAL_TRANSITION"
+        ]
+      },
+      "entity_lifecycle_status": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "DRAFT",
+          "ACTIVE",
+          "ARCHIVED",
+          "NULL"
+        ]
+      },
+      "feedback_conversation_outcome": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "REFLECTION",
+          "COMMITMENT",
+          "DECISION",
+          "FOLLOWUP",
+          "PENDING_ACTION"
+        ]
+      },
+      "ineligibility_reason": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "EXCESSIVE_FATIGUE",
+          "RECOVERY_WINDOW",
+          "MEDICAL_CONTRA",
+          "TESTING_WINDOW",
+          "SABBATICAL"
+        ]
+      },
+      "ineligibility_reason_flag": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "MEDICAL_APPOINTMENT",
+          "INJURY_PAIN",
+          "ACTIVE_RECOVERY_ONLY",
+          "TESTING_ANTI_DOPING",
+          "OTHER"
+        ]
+      },
+      "intervention_completion_status": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "COMPLETED",
+          "ADJUSTED",
+          "ARCHIVED"
+        ]
+      },
+      "intervention_timing": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "REALTIME",
+          "RETROSPECTIVE"
+        ]
+      },
+      "intervention_type": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "IMMEDIATE_FEEDBACK",
+          "SESSION_MODIFICATION_DECISION",
+          "EXECUTION_CORRECTION"
+        ]
+      },
+      "load_chart_mode": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "ATHLETE",
+          "TEAM"
+        ]
+      },
+      "load_chart_range": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "PERIOD_7D",
+          "PERIOD_30D",
+          "SEASON"
+        ]
+      },
+      "match_phase_label": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "SCHEDULED",
+          "PRE_MATCH",
+          "FIRST_HALF",
+          "HALF_TIME",
+          "SECOND_HALF",
+          "OVERTIME_1",
+          "OVERTIME_2",
+          "PENALTIES",
+          "COMPLETED",
+          "CANCELLED"
+        ]
+      },
+      "media_segment_state": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "OPEN",
+          "FINALIZED"
+        ]
+      },
+      "need_origin": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "COACH_OBSERVATION",
+          "WELLNESS_ALERT",
+          "MEDICAL_FLAG",
+          "MATCH_OUTCOME",
+          "ANALYTICS_SIGNAL",
+          "SCOUT_SIGNAL"
+        ]
+      },
+      "notification_channel": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "EMAIL",
+          "SMS",
+          "PUSH",
+          "IN_APP"
+        ]
+      },
+      "notification_delivery_status": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "QUEUED",
+          "SENT",
+          "FAILED"
+        ]
+      },
+      "notification_failure_reason": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "ADAPTER_ERROR",
+          "CHANNEL_UNAVAILABLE",
+          "RATE_LIMITED",
+          "RECIPIENT_UNREACHABLE",
+          "TIMEOUT",
+          "TOKEN_INVALID"
+        ]
+      },
+      "objective_origin_label": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "NEED_DETECTED",
+          "COMPETITIVE_FOCUS",
+          "DEVELOPMENT_GOAL",
+          "COACH_RATIONALE"
+        ]
+      },
+      "prescription_adjustment_reason": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "FATIGUE_ACCUMULATION",
+          "FITNESS_DEGRADATION",
+          "INJURY_MANAGEMENT",
+          "MEDICAL_GUIDANCE"
+        ]
+      },
+      "recommendation_action_type": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "MODIFY_FOCUS",
+          "ADD_BLOCK",
+          "REMOVE_BLOCK",
+          "ADJUST_DURATION",
+          "ADD_OBJECTIVE",
+          "ADJUST_LOAD",
+          "REVIEW_ATHLETE"
+        ]
+      },
+      "recommendation_priority": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "LOW",
+          "MEDIUM",
+          "HIGH"
+        ]
+      },
+      "recommendation_status": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "PENDING",
+          "ACCEPTED",
+          "DISMISSED"
+        ]
+      },
+      "security_severity_label": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "LOW",
+          "MEDIUM",
+          "HIGH",
+          "CRITICAL"
+        ]
+      },
+      "session_adjustment_type": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "LOAD_ADJUSTMENT",
+          "EXERCISE_CHANGE",
+          "CONSTRAINT_OVERRIDE"
+        ]
+      },
+      "session_revocation_reason": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "LOGOUT",
+          "TOKEN_EXPIRED",
+          "ADMIN_REVOKED",
+          "SECURITY_POLICY"
+        ]
+      },
+      "team_roster_change_type": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "ATHLETE_ADDED",
+          "ATHLETE_REMOVED",
+          "STAFF_ADDED",
+          "STAFF_REMOVED"
+        ]
+      },
+      "training_objective_category": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "TECNICA",
+          "TATICA",
+          "FORCA",
+          "CONDICIONAMENTO",
+          "RECUPERACAO"
+        ]
+      },
+      "training_readiness_category": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "LOW",
+          "MODERATE",
+          "HIGH"
+        ]
+      },
+      "training_suggestion_decision": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "APPROVED",
+          "REJECTED"
+        ]
+      },
+      "training_suggestion_reason": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "MISSING_SESSION",
+          "ATHLETE_REQUEST",
+          "OBJECTIVE_SPECIFIC"
+        ]
+      },
+      "training_suggestion_status": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "PENDING_REVIEW",
+          "APPROVED",
+          "EDITED_AND_APPROVED",
+          "REJECTED",
+          "PENDING_APPROVAL"
+        ]
+      },
+      "user_account_status": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "ACTIVE",
+          "PENDING_ACTIVATION",
+          "SUSPENDED"
+        ]
+      },
+      "user_role_label": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "ADMIN",
+          "COACH",
+          "COORDINATOR",
+          "ATHLETE",
+          "MEMBER"
+        ]
+      },
+      "video_capture_mode": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "AUTO_FOLLOW",
+          "MULTI_ANGLE",
+          "PANORAMIC"
+        ]
+      },
+      "video_codec_key": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "H264",
+          "H265",
+          "AV1",
+          "VP9"
+        ]
+      },
+      "video_codec_label": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "H264",
+          "H265",
+          "AV1",
+          "VP9"
+        ]
+      },
+      "video_destination_type": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "CDN_PUBLIC",
+          "BROADCAST",
+          "PARTNER_API",
+          "TECHNICAL_INTERNAL"
+        ]
+      },
+      "video_distribution_failure_reason": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "CODEC_INCOMPATIBILITY",
+          "STORAGE_QUOTA_EXCEEDED",
+          "NETWORK_UNREACHABLE",
+          "PERMISSION_DENIED",
+          "TIMEOUT",
+          "UNKNOWN"
+        ]
+      },
+      "video_retention_policy": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "KEEP_7_DAYS",
+          "KEEP_30_DAYS",
+          "KEEP_90_DAYS",
+          "ARCHIVE_S3",
+          "PUBLIC_FOREVER"
+        ]
+      },
+      "video_session_state": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "DRAFT",
+          "CAPTURING",
+          "SYNCING",
+          "TRANSCODING",
+          "PUBLISHED"
+        ]
+      },
+      "video_target_type": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "PUBLIC_CDN",
+          "BROADCAST_PARTNER",
+          "TECHNICAL_INTERNAL"
+        ]
+      },
+      "video_transcode_trigger": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "AUTOMATIC",
+          "SCHEDULED",
+          "MANUAL"
+        ]
+      },
+      "wellness_readiness_trend": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "IMPROVING",
+          "STABLE",
+          "DECLINING",
+          "NULL"
+        ]
+      },
+      "video_codec": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "H264",
+          "H265",
+          "AV1",
+          "VP9"
+        ]
       }
     },
     "state_axioms": {

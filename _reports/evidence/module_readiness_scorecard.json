@@ -1,7 +1,7 @@
 {
   "artifact_id": "HBTRACK_MODULE_READINESS_SCORECARD",
-  "generated_at_utc": "2026-03-20T05:40:09Z",
-  "overall_status": "FAIL",
+  "generated_at_utc": "2026-03-20T08:11:57Z",
+  "overall_status": "PASS",
   "source_report": "_reports/contract_gates/latest.json",
   "modules": [
     {

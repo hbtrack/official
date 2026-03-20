@@ -132,14 +132,17 @@
               athleteUserId:
                 type: string
                 format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
                 x-semantic-id: users.athlete.id.v1
               teamId:
                 type: string
                 format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
                 x-semantic-id: teams.team.id.v1
               recordDate:
                 type: string
                 format: date
+                pattern: '^\d{4}-\d{2}-\d{2}$'
               recordLabel:
                 type: string
                 minLength: 1
@@ -263,6 +266,7 @@
               recordDate:
                 type: string
                 format: date
+                pattern: '^\d{4}-\d{2}-\d{2}$'
               recordLabel:
                 type: string
                 minLength: 1

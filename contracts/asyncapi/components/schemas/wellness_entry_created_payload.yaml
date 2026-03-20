@@ -10,9 +10,8 @@ required:
 properties:
   eventType:
     type: string
-    enum:
-    - wellness.entry.created
     description: Tipo canônico do evento. Imutável.
+    const: wellness.entry.created
   occurredAt:
     type: string
     format: date-time
@@ -34,8 +33,8 @@ properties:
   trainingSessionId:
     type: string
     format: uuid
-    description: 'UUID da sessão relacionada (DR-WELL-003 / INV-WELL-005). Contexto apenas — não implica presença ou autorização
-      de treino.
+    description: 'UUID da sessão relacionada (DR-WELL-003 / INV-WELL-005). Contexto
+      apenas — não implica presença ou autorização de treino.
 
       '
     x-semantic-id: training.session.id.v1
@@ -69,7 +68,8 @@ properties:
     - 'null'
     minimum: 0
     maximum: 10
-    description: 'Score de dor autorreferida [0..10] (INV-WELL-002). Percepção subjetiva — NÃO é diagnóstico clínico (INV-WELL-004).
+    description: 'Score de dor autorreferida [0..10] (INV-WELL-002). Percepção subjetiva
+      — NÃO é diagnóstico clínico (INV-WELL-004).
 
       '
   recoveryScore:

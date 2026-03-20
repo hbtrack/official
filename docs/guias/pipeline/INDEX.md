@@ -5,11 +5,11 @@
 
 ## 📚 Suite Completa de Documentos
 
-Você solicitou um mapeamento completo do pipeline real. Aqui estão os 4 documentos gerados, cada um com foco diferente:
+Mapeamento completo do pipeline real. Aqui estão os 4 documentos gerados, cada um com foco diferente:
 
 ---
 
-### 1. 📊 **PIPELINE_MAPPING.json** (SSOT Estruturado)
+### 1. 📊 **PIPELINE_MAPPING.json**
 **Localização**: [`PIPELINE_MAPPING.json`](PIPELINE_MAPPING.json)
 
 **Conteúdo**: JSON estruturado com:

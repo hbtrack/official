@@ -28,14 +28,16 @@ properties:
   previousStatusLabel:
     type: string
     enum:
-    - draft
-    - active
-    - archived
+    - DRAFT
+    - ACTIVE
+    - ARCHIVED
     description: Status anterior à transição.
+    x-domain-enum-ref: entity_lifecycle_status
   statusLabel:
     type: string
     enum:
-    - draft
-    - active
-    - archived
+    - DRAFT
+    - ACTIVE
+    - ARCHIVED
     description: Novo status após a transição (draft → active → archived).
+    x-domain-enum-ref: entity_lifecycle_status

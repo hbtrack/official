@@ -5,7 +5,7 @@ properties:
   snapshotId:
     type: string
     format: uuid
-    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   timestamp:
     type: string
     format: date-time
@@ -15,10 +15,16 @@ properties:
     type: number
   aggregationType:
     type: string
-    enum: [sum, avg, min, max, count]
+    enum:
+    - SUM
+    - AVG
+    - MIN
+    - MAX
+    - COUNT
+    x-domain-enum-ref: analytics_aggregation_type
 required:
-  - snapshotId
-  - timestamp
-  - metricName
-  - metricValue
+- snapshotId
+- timestamp
+- metricName
+- metricValue
 additionalProperties: false

@@ -30,33 +30,36 @@ properties:
   previousStatus:
     type: string
     enum:
-    - scheduled
-    - pre_match
-    - first_half
-    - half_time
-    - second_half
-    - overtime_1
-    - overtime_2
-    - penalties
-    - completed
-    - cancelled
+    - SCHEDULED
+    - PRE_MATCH
+    - FIRST_HALF
+    - HALF_TIME
+    - SECOND_HALF
+    - OVERTIME_1
+    - OVERTIME_2
+    - PENALTIES
+    - COMPLETED
+    - CANCELLED
     description: Fase anterior da partida (HBR-013, DEC-MATCHES-002).
+    x-domain-enum-ref: match_phase_label
   newStatus:
     type: string
     enum:
-    - scheduled
-    - pre_match
-    - first_half
-    - half_time
-    - second_half
-    - overtime_1
-    - overtime_2
-    - penalties
-    - completed
-    - cancelled
-    description: 'Nova fase da partida após a transição (HBR-013, DR-MATCH-004). Analytics e scout usam newStatus para contexto temporal de eventos.
+    - SCHEDULED
+    - PRE_MATCH
+    - FIRST_HALF
+    - HALF_TIME
+    - SECOND_HALF
+    - OVERTIME_1
+    - OVERTIME_2
+    - PENALTIES
+    - COMPLETED
+    - CANCELLED
+    description: 'Nova fase da partida após a transição (HBR-013, DR-MATCH-004). Analytics
+      e scout usam newStatus para contexto temporal de eventos.
 
       '
+    x-domain-enum-ref: match_phase_label
   homeScore:
     type:
     - integer

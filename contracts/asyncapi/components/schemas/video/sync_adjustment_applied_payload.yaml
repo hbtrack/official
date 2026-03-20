@@ -1,22 +1,21 @@
 type: object
 additionalProperties: false
 required:
-  - eventType
-  - occurredAt
-  - sessionId
-  - segmentId
-  - scoutEventId
-  - timecodeBefore
-  - timecodeAfter
-  - discrepancyMs
-  - adjustedByScoutSync
-  - adjustedAt
+- eventType
+- occurredAt
+- sessionId
+- segmentId
+- scoutEventId
+- timecodeBefore
+- timecodeAfter
+- discrepancyMs
+- adjustedByScoutSync
+- adjustedAt
 properties:
   eventType:
     type: string
-    enum:
-      - video.sync.adjustment_applied
     description: Tipo canônico do evento.
+    const: video.sync.adjustment_applied
   occurredAt:
     type: string
     format: date-time
@@ -32,12 +31,12 @@ properties:
   segmentId:
     type: string
     format: uuid
-    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
     description: UUID do MediaSegment com divergência (opcional se múltiplos).
   scoutEventId:
     type: string
     format: uuid
-    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
     description: UUID do evento scout que marcou o timecode correto (INV-VID-010).
     x-semantic-id: scout.event.id.v1
   timecodeBefore:
@@ -53,9 +52,8 @@ properties:
     description: Diferença em ms (timecodeAfter - timecodeBefore).
   adjustedByScoutSync:
     type: boolean
-    enum:
-      - true
     description: Sempre true - ajuste é autônomo do sync service.
+    const: true
   adjustedAt:
     type: string
     format: date-time

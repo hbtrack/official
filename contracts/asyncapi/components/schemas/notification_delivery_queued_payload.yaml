@@ -12,9 +12,8 @@ required:
 properties:
   eventType:
     type: string
-    enum:
-    - notification.delivery.queued
     description: Tipo canônico do evento. Imutável.
+    const: notification.delivery.queued
   occurredAt:
     type: string
     format: date-time
@@ -36,16 +35,16 @@ properties:
   channelLabel:
     type: string
     enum:
-    - push
-    - email
-    - in_app
-    - sms
+    - PUSH
+    - EMAIL
+    - IN_APP
+    - SMS
     description: Canal de entrega resolvido por notifications (DR-NTF-002).
+    x-domain-enum-ref: notification_channel
   deliveryStatusLabel:
     type: string
-    enum:
-    - queued
     description: Status inicial da entrega. Será sempre queued neste evento.
+    const: queued
   notificationTemplateRef:
     type:
     - string

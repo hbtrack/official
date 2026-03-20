@@ -1,7 +1,9 @@
-# AsyncAPI Payload: video_session_transcoding
-# Module: video | DR-VID-002, DR-VID-006 | ADR-033
 type: object
-required: [eventType, occurredAt, sessionId, profileNames]
+required:
+- eventType
+- occurredAt
+- sessionId
+- profileNames
 additionalProperties: false
 properties:
   eventType:
@@ -22,11 +24,16 @@ properties:
     minItems: 1
     items:
       type: string
-    description: Nomes dos DistributionProfiles disparados (DR-VID-002 dual pipeline — inclui técnico e público).
+    description: Nomes dos DistributionProfiles disparados (DR-VID-002 dual pipeline
+      — inclui técnico e público).
   estimatedDurationMs:
     type: integer
     description: Estimativa de duração da transcodificação em ms (DR-VID-006 — lazy/on-demand).
   triggerType:
     type: string
-    enum: [manual, automatic, scheduled]
+    enum:
+    - MANUAL
+    - AUTOMATIC
+    - SCHEDULED
     description: Como a transcodificação foi disparada.
+    x-domain-enum-ref: video_transcode_trigger

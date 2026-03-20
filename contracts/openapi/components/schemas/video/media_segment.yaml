@@ -1,12 +1,16 @@
 title: MediaSegment
 description: Immutable video segment
 type: object
-required: [id, sessionId, timecodeLogical, state]
+required:
+- id
+- sessionId
+- timecodeLogical
+- state
 properties:
   id:
     type: string
     format: uuid
-    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   sessionId:
     type: string
     pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
@@ -16,7 +20,10 @@ properties:
     minimum: 0
   state:
     type: string
-    enum: [OPEN, FINALIZED]
+    enum:
+    - OPEN
+    - FINALIZED
+    x-domain-enum-ref: media_segment_state
   codecLabel:
     type: string
   bitrate:

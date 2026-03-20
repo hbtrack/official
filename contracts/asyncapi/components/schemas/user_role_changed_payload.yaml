@@ -33,31 +33,34 @@ properties:
   previousRoleLabel:
     type: string
     enum:
-    - athlete
-    - coach
-    - coordinator
-    - admin
-    - member
-    description: 'Papel funcional anterior ao evento (DR-USR-002). Os 5 actores canônicos (ADR-008) — roles ad hoc são proibidos.
+    - ATHLETE
+    - COACH
+    - COORDINATOR
+    - ADMIN
+    - MEMBER
+    description: 'Papel funcional anterior ao evento (DR-USR-002). Os 5 actores canônicos
+      (ADR-008) — roles ad hoc são proibidos.
 
       '
+    x-domain-enum-ref: user_role_label
   newRoleLabel:
     type: string
     enum:
-    - athlete
-    - coach
-    - coordinator
-    - admin
-    - member
-    description: 'Novo papel funcional após a alteração (DR-USR-002, DEC-USERS-003). Os 5 actores canônicos (ADR-008) — roles
-      ad hoc são proibidos.
+    - ATHLETE
+    - COACH
+    - COORDINATOR
+    - ADMIN
+    - MEMBER
+    description: 'Novo papel funcional após a alteração (DR-USR-002, DEC-USERS-003).
+      Os 5 actores canônicos (ADR-008) — roles ad hoc são proibidos.
 
       '
+    x-domain-enum-ref: user_role_label
   changedByUserId:
     type: string
     format: uuid
-    description: 'UUID do usuário (admin ou coordinator) que executou a alteração (DEC-USERS-003: apenas admin e coordinator
-      podem alterar roleLabel).
+    description: 'UUID do usuário (admin ou coordinator) que executou a alteração
+      (DEC-USERS-003: apenas admin e coordinator podem alterar roleLabel).
 
       '
     x-semantic-id: identity.user.id.v1
