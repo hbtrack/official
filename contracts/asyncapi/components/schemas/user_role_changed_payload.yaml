@@ -49,18 +49,22 @@ properties:
     - coordinator
     - admin
     - member
-    description: 'Novo papel funcional após a alteração (DR-USR-002, DEC-USERS-003). Os 5 actores canônicos (ADR-008) — roles ad hoc são proibidos.
+    description: 'Novo papel funcional após a alteração (DR-USR-002, DEC-USERS-003). Os 5 actores canônicos (ADR-008) — roles
+      ad hoc são proibidos.
 
       '
   changedByUserId:
     type: string
     format: uuid
-    description: 'UUID do usuário (admin ou coordinator) que executou a alteração (DEC-USERS-003: apenas admin e coordinator podem alterar roleLabel).
+    description: 'UUID do usuário (admin ou coordinator) que executou a alteração (DEC-USERS-003: apenas admin e coordinator
+      podem alterar roleLabel).
 
       '
     x-semantic-id: identity.user.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   organizationId:
     type: string
     format: uuid
     description: UUID da organização para escopo de auditoria.
     x-semantic-id: organizations.organization.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$

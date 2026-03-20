@@ -1,7 +1,11 @@
-# AsyncAPI Payload: video_distribution_published
-# Module: video | DR-VID-007, DR-VID-008, DR-VID-009 | ADR-033
 type: object
-required: [eventType, occurredAt, sessionId, profileName, destinationType, distributedAt]
+required:
+- eventType
+- occurredAt
+- sessionId
+- profileName
+- destinationType
+- distributedAt
 additionalProperties: false
 properties:
   eventType:
@@ -23,17 +27,27 @@ properties:
     description: Nome do DistributionProfile distribuído.
   destinationType:
     type: string
-    enum: [technical_internal, cdn_public, partner_api, broadcast]
+    enum:
+    - technical_internal
+    - cdn_public
+    - partner_api
+    - broadcast
     description: Tipo de destino da distribuição (DR-VID-007 — escopo por sessão).
   distributedAt:
     type: string
     format: date-time
     description: Timestamp de distribuição para auditoria obrigatória (DR-VID-009).
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
   retentionPolicy:
     type: string
-    enum: [keep_7_days, keep_30_days, archive_s3, public_forever]
+    enum:
+    - keep_7_days
+    - keep_30_days
+    - archive_s3
+    - public_forever
     description: Política de retenção aplicada (DR-VID-008).
   accessorUserId:
     type: string
     format: uuid
     description: UUID do usuário ou sistema que solicitou a distribuição (DR-VID-009).
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$

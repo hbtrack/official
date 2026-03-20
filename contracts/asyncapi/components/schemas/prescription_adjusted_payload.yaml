@@ -1,13 +1,14 @@
 type: object
 additionalProperties: false
 required:
-  - eventType
-  - occurredAt
-  - athleteId
+- eventType
+- occurredAt
+- athleteId
 properties:
   eventType:
     type: string
-    enum: [prescription_adjusted]
+    enum:
+    - prescription_adjusted
   occurredAt:
     type: string
     pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
@@ -19,15 +20,13 @@ properties:
   adjustmentReason:
     type: string
     enum:
-      [
-        fitness_degradation,
-        injury_management,
-        fatigue_accumulation,
-        medical_guidance,
-      ]
+    - fitness_degradation
+    - injury_management
+    - fatigue_accumulation
+    - medical_guidance
   descale:
     type: boolean
-    description: "True if prescription intensity/volume decreased"
+    description: True if prescription intensity/volume decreased
   traceId:
     type: string
     pattern: ^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$

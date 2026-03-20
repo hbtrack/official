@@ -34,10 +34,12 @@ properties:
   trainingSessionId:
     type: string
     format: uuid
-    description: 'UUID da sessão relacionada (DR-WELL-003 / INV-WELL-005). Contexto apenas — não implica presença ou autorização de treino.
+    description: 'UUID da sessão relacionada (DR-WELL-003 / INV-WELL-005). Contexto apenas — não implica presença ou autorização
+      de treino.
 
       '
     x-semantic-id: training.session.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   questionnaireDate:
     type: string
     format: date

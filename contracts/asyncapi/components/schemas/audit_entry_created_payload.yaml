@@ -30,7 +30,8 @@ properties:
   actorUserId:
     type: string
     format: uuid
-    description: 'UUID do usuário que executou a ação (INV-AUD-001). Referência ao módulo users. audit não duplica dados de perfil.
+    description: 'UUID do usuário que executou a ação (INV-AUD-001). Referência ao módulo users. audit não duplica dados de
+      perfil.
 
       '
     x-semantic-id: identity.user.id.v1
@@ -39,7 +40,8 @@ properties:
     type: string
     minLength: 1
     maxLength: 120
-    description: 'Rótulo da ação executada (INV-AUD-001). Convenção: <module>.<entity>.<verb> Ex.: training_session.updated, identity_access.role_assigned.
+    description: 'Rótulo da ação executada (INV-AUD-001). Convenção: <module>.<entity>.<verb> Ex.: training_session.updated,
+      identity_access.role_assigned.
 
       '
   targetResourceId:
@@ -49,6 +51,7 @@ properties:
 
       '
     x-semantic-id: core.resource.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   targetResourceType:
     type:
     - string
@@ -78,7 +81,9 @@ properties:
   correlationId:
     type: string
     format: uuid
-    description: 'UUID de correlação que agrupa etapas da mesma operação distribuída (DR-AUD-003). INV-AUD-005: estável entre todos os eventos da mesma operação.
+    description: 'UUID de correlação que agrupa etapas da mesma operação distribuída (DR-AUD-003). INV-AUD-005: estável entre
+      todos os eventos da mesma operação.
 
       '
     x-semantic-id: core.correlation.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$

@@ -34,16 +34,19 @@ properties:
   revokedAt:
     type: string
     format: date-time
-    description: 'Timestamp UTC do momento em que a sessão foi revogada (DR-IAM-004). Coincide com occurredAt quando a revogação é imediata.
+    description: 'Timestamp UTC do momento em que a sessão foi revogada (DR-IAM-004). Coincide com occurredAt quando a revogação
+      é imediata.
 
       '
   revokedByUserId:
     type: string
     format: uuid
-    description: 'UUID do usuário admin que forçou a revogação administrativa. Null quando a revogação é auto-iniciada (logout do próprio usuário).
+    description: 'UUID do usuário admin que forçou a revogação administrativa. Null quando a revogação é auto-iniciada (logout
+      do próprio usuário).
 
       '
     x-semantic-id: identity.user.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   revocationReason:
     type: string
     enum:
@@ -51,6 +54,8 @@ properties:
     - admin_revoked
     - token_expired
     - security_policy
-    description: 'Motivo da revogação (DR-IAM-004, DEC-IAM-002=B). logout: o próprio usuário encerrou a sessão. admin_revoked: admin forçou encerramento. token_expired: TTL do access token expirou. security_policy: revogação forçada por política (ex.: mudança de senha, denylist Redis).
+    description: 'Motivo da revogação (DR-IAM-004, DEC-IAM-002=B). logout: o próprio usuário encerrou a sessão. admin_revoked:
+      admin forçou encerramento. token_expired: TTL do access token expirou. security_policy: revogação forçada por política
+      (ex.: mudança de senha, denylist Redis).
 
       '

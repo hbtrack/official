@@ -51,7 +51,8 @@ properties:
     type: integer
     minimum: 1
     maximum: 10
-    description: 'Número de tentativas esgotadas (INV-NTF-002: [0..10]). Sempre >= 1 pois ao menos uma tentativa foi realizada antes de falhar.
+    description: 'Número de tentativas esgotadas (INV-NTF-002: [0..10]). Sempre >= 1 pois ao menos uma tentativa foi realizada
+      antes de falhar.
 
       '
   requestedAt:
@@ -77,4 +78,4 @@ properties:
     format: date-time
     description: Momento da última tentativa de entrega (ISO 8601 UTC).
     x-semantic-id: core.occurred_at.v1
-    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$

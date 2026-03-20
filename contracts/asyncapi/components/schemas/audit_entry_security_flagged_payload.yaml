@@ -23,7 +23,8 @@ properties:
   entryId:
     type: string
     format: uuid
-    description: 'UUID v4 da entrada de auditoria correspondente (INV-AUD-001). Referência direta a audit_entry_created_payload.entryId da mesma ação.
+    description: 'UUID v4 da entrada de auditoria correspondente (INV-AUD-001). Referência direta a audit_entry_created_payload.entryId
+      da mesma ação.
 
       '
     x-semantic-id: audit.entry.id.v1
@@ -40,7 +41,9 @@ properties:
     type: string
     minLength: 1
     maxLength: 120
-    description: 'Rótulo da ação sensível (INV-AUD-001). Exemplos de ações que acionam este evento (DR-AUD-005): - identity_access.role_assigned / identity_access.role_revoked - identity_access.session_force_revoked - identity_access.login_failed - audit.export_requested - user.suspended - <module>.bulk_delete
+    description: 'Rótulo da ação sensível (INV-AUD-001). Exemplos de ações que acionam este evento (DR-AUD-005): - identity_access.role_assigned
+      / identity_access.role_revoked - identity_access.session_force_revoked - identity_access.login_failed - audit.export_requested
+      - user.suspended - <module>.bulk_delete
 
       '
   securitySeverityLabel:
@@ -50,7 +53,9 @@ properties:
     - medium
     - high
     - critical
-    description: 'Nível de severidade de segurança da ação (DEC-AUD-003=C). - low: ação sensível de baixo impacto (ex.: export de 10 registros). - medium: mudança de permissão ou acesso incomum. - high: revogação forçada de sessão, suspensão de conta. - critical: escalada de admin, bulk_delete, export de dados pessoais em massa.
+    description: 'Nível de severidade de segurança da ação (DEC-AUD-003=C). - low: ação sensível de baixo impacto (ex.: export
+      de 10 registros). - medium: mudança de permissão ou acesso incomum. - high: revogação forçada de sessão, suspensão de
+      conta. - critical: escalada de admin, bulk_delete, export de dados pessoais em massa.
 
       '
   targetResourceId:
@@ -60,6 +65,7 @@ properties:
 
       '
     x-semantic-id: core.resource.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   targetResourceType:
     type:
     - string
@@ -93,3 +99,4 @@ properties:
 
       '
     x-semantic-id: core.correlation.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$

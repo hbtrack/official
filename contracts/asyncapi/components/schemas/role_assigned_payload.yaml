@@ -20,7 +20,8 @@ properties:
   targetUserId:
     type: string
     format: uuid
-    description: 'UUID do usuário que recebeu o role. Referência ao módulo users (DR-IAM-002). identity_access não duplica o perfil — apenas registra o binding técnico.
+    description: 'UUID do usuário que recebeu o role. Referência ao módulo users (DR-IAM-002). identity_access não duplica
+      o perfil — apenas registra o binding técnico.
 
       '
     x-semantic-id: identity.user.id.v1
@@ -38,10 +39,12 @@ properties:
   grantedByUserId:
     type: string
     format: uuid
-    description: 'UUID do usuário admin que concedeu o role. Obrigatório para rastreabilidade de compliance (assign_role_to_user.arazzo.yaml, DEC-IAM-003=C).
+    description: 'UUID do usuário admin que concedeu o role. Obrigatório para rastreabilidade de compliance (assign_role_to_user.arazzo.yaml,
+      DEC-IAM-003=C).
 
       '
     x-semantic-id: identity.user.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   organizationId:
     type: string
     format: uuid
@@ -49,3 +52,4 @@ properties:
 
       '
     x-semantic-id: organizations.organization.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$

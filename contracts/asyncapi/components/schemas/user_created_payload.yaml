@@ -29,6 +29,7 @@ properties:
     format: uuid
     description: UUID da organização à qual o usuário pertence. Null se não associado.
     x-semantic-id: organizations.organization.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   displayName:
     type: string
     minLength: 1
@@ -42,7 +43,8 @@ properties:
     - coordinator
     - admin
     - member
-    description: 'Papel funcional/esportivo do usuário (DR-USR-002, ADR-008). INFORMATIVO — a autorização técnica real pertence a identity_access (INV-USR-004).
+    description: 'Papel funcional/esportivo do usuário (DR-USR-002, ADR-008). INFORMATIVO — a autorização técnica real pertence
+      a identity_access (INV-USR-004).
 
       '
   statusLabel:
@@ -50,7 +52,8 @@ properties:
     enum:
     - active
     - pending_activation
-    description: 'Status do perfil no momento da criação. pending_activation quando criado via convite (DEC-USERS-002). active quando criado diretamente por admin.
+    description: 'Status do perfil no momento da criação. pending_activation quando criado via convite (DEC-USERS-002). active
+      quando criado diretamente por admin.
 
       '
   teamIds:
@@ -59,6 +62,7 @@ properties:
       type: string
       format: uuid
     uniqueItems: true
-    description: 'Vínculos de equipe no momento da criação (DR-USR-003, INV-USR-002). Explícitos — nunca inferidos de presença ou analytics.
+    description: 'Vínculos de equipe no momento da criação (DR-USR-003, INV-USR-002). Explícitos — nunca inferidos de presença
+      ou analytics.
 
       '

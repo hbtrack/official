@@ -36,21 +36,19 @@ properties:
       '
     x-semantic-id: matches.match.id.v1
   athleteUserId:
-    type:
-    - string
-    - 'null'
+    type: string
     format: uuid
     description: 'UUID do atleta observado. Quando presente, refina contexto.
 
       '
     x-semantic-id: identity.user.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   teamId:
-    type:
-    - string
-    - 'null'
+    type: string
     format: uuid
     description: UUID do time.
     x-semantic-id: teams.team.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   eventLabel:
     type: string
     minLength: 1
