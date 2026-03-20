@@ -451,6 +451,7 @@
                 computedAt:
                   type: string
                   format: date-time
+                  pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$'
                   description: When the query was executed.
       "400":
         description: Invalid query (invalid metric names, modules, or filter expression).

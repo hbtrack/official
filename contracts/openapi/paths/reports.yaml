@@ -106,6 +106,7 @@
                           completedAt:
                             type: string
                             format: date-time
+                            pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$'
 
                 nextPageToken:
                   type: string
@@ -258,6 +259,7 @@
                     completedAt:
                       type: string
                       format: date-time
+                      pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$'
 
                       description: When job finished (success or failure).
       "401":
@@ -332,6 +334,7 @@
                     completedAt:
                       type: string
                       format: date-time
+                      pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$'
 
       "400":
         description: Invalid update (e.g., cannot cancel completed job).

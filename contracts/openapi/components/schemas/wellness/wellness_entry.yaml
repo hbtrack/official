@@ -29,12 +29,14 @@ properties:
   id:
     type: string
     format: uuid
+    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     description: >
       UUID v4 da entrada. Imutável após criação (INV-WELL-001).
     x-semantic-id: wellness.entry.id.v1
   athleteUserId:
     type: string
     format: uuid
+    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     description: >
       UUID do atleta proprietário da entrada. Referência ao módulo users.
       wellness não duplica dados de perfil (DR-WELL-001).
@@ -44,6 +46,7 @@ properties:
       - string
       - "null"
     format: uuid
+    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     description: >
       UUID da sessão de treino relacionada (DR-WELL-003 / INV-WELL-005).
       Contexto de coleta apenas — não representa presença, execução ou
@@ -52,6 +55,7 @@ properties:
   questionnaireDate:
     type: string
     format: date
+    pattern: '^\d{4}-\d{2}-\d{2}$'
     description: >
       Data do questionário (YYYY-MM-DD). INV-WELL-001: obrigatório.
   questionnaireLabel:

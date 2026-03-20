@@ -4,19 +4,71 @@
   "title": "MediaSegment",
   "description": "Immutable fact: contiguous video segment with single timecode, codec, bitrate. References: DR-VID-001 (timecode unique), DR-VID-005 (immutability), INV-VID-005 (mezzanine source).",
   "type": "object",
-  "required": ["id", "sessionId", "timecodeLogical", "state"],
+  "required": [
+    "id",
+    "sessionId",
+    "timecodeLogical",
+    "state"
+  ],
   "properties": {
-    "id": {"type": "string", "format": "uuid"},
-    "sessionId": {"type": "string", "format": "uuid"},
-    "timecodeLogical": {"type": "integer", "minimum": 0, "description": "Milliseconds from match start (INV-VID-001: unique per session)"},
-    "timecodeLabel": {"type": "string", "maxLength": 60},
-    "state": {"type": "string", "enum": ["OPEN", "FINALIZED"], "description": "OPEN=writable, FINALIZED=immutable (DR-VID-005)"},
-    "codecLabel": {"type": "string", "maxLength": 60},
-    "bitrate": {"type": "integer", "minimum": 100, "description": "kbps"},
-    "durationMs": {"type": "integer", "minimum": 100},
-    "sourceEdgeNodeId": {"type": "string", "maxLength": 80},
-    "createdAt": {"type": "string", "format": "date-time"},
-    "finalizedAt": {"type": ["string", "null"], "format": "date-time"}
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "sessionId": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "timecodeLogical": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Milliseconds from match start (INV-VID-001: unique per session)"
+    },
+    "timecodeLabel": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "OPEN",
+        "FINALIZED"
+      ],
+      "description": "OPEN=writable, FINALIZED=immutable (DR-VID-005)"
+    },
+    "codecLabel": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "bitrate": {
+      "type": "integer",
+      "minimum": 100,
+      "description": "kbps"
+    },
+    "durationMs": {
+      "type": "integer",
+      "minimum": 100
+    },
+    "sourceEdgeNodeId": {
+      "type": "string",
+      "maxLength": 80,
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    },
+    "finalizedAt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    }
   },
   "additionalProperties": false
 }

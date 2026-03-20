@@ -31,20 +31,20 @@ workflows:
           Requer: matchId, captureMode (PANORAMIC|AUTO_FOLLOW|MULTI_ANGLE), retentionPolicy.
         
       - stepId: transitionToCapturing
-        operationId: updateSession
+        operationId: patchSession
         description: >
           Transiciona sessão de DRAFT → CAPTURING.
           Inicia captura no edge node; emite video.capture.started.
           
       - stepId: ingestMediaSegments
-        operationId: ingestSegment
+        operationId: createSegment
         description: >
           Loop: ingerir MediaSegments recebidos do edge node.
           Cada segmento herda timecode_logical contíguo (INV-VID-003).
           Continua até estado SYNCING ser sinalizado.
         
       - stepId: transitionToSyncing
-        operationId: updateSession
+        operationId: patchSession
         description: >
           Transiciona sessão de CAPTURING → SYNCING.
           Todos segmentos já estão finalizados; sync service valida timecodes.

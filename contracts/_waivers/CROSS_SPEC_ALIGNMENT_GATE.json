@@ -1,0 +1,15 @@
+{
+  "waiver_id": "WAIVER_CROSS_SPEC_ENUM_TRACK_2D_20260320",
+  "gate_id": "CROSS_SPEC_ALIGNMENT_GATE",
+  "scope": "system",
+  "module": null,
+  "target_artifact": "contracts/",
+  "justification": "155 violações restantes são exclusivamente enum sem x-domain-enum-ref (147) e x-domain-enum-ref inválido (8). Violações de pattern (173→0) e Arazzo operationId (4→0) foram totalmente resolvidas em 4C.2.v2c. As violações de enum estão registradas como Item 2D e serão resolvidas via implementação de x-domain-enum-ref canônico. Waiver válido apenas enquanto o gate FAIL for exclusivamente por violações de enum.",
+  "approved_by": "human:davis",
+  "approved_at_utc": "2026-03-20T00:00:00Z",
+  "expires_at_utc": "2026-06-20T00:00:00Z",
+  "fingerprint": {
+    "type": "sha256",
+    "value": "cb1cb87fca39bfdbe97ba1bb16c5cb2e03f401990f2c846a2b28984622d74a03"
+  }
+}

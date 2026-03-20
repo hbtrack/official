@@ -24,6 +24,7 @@ properties:
   profileId:
     type: string
     format: uuid
+    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     description: UUID do DistributionProfile transcoded.
     x-semantic-id: video.distribution_profile.id.v1
   sessionId:
@@ -55,4 +56,5 @@ properties:
     pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
   celeryJobId:
     type: string
+    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     description: ID da Celery task que executou transcode (ADR-031).

@@ -22,6 +22,7 @@ properties:
   athleteUserId:
     type: string
     format: uuid
+    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     description: UUID do atleta. Referência ao módulo users.
     x-semantic-id: identity.user.id.v1
   dateFrom:
@@ -92,4 +93,5 @@ properties:
       - string
       - "null"
     format: date
+    pattern: '^\d{4}-\d{2}-\d{2}$'
     description: "Data da última entrada registrada no período (YYYY-MM-DD)."

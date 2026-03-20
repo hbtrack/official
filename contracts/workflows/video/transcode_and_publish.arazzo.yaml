@@ -25,7 +25,7 @@ workflows:
     summary: Transcodificar e publicar vídeo em CDN/broadcast.
     steps:
       - stepId: transitionToTranscoding
-        operationId: updateSession
+        operationId: patchSession
         description: >
           Transiciona sessão de SYNCING → TRANSCODING.
           Ativa jobs Celery para transcodificação lazy (DR-VID-006).
@@ -62,7 +62,7 @@ workflows:
           Nenhum transcode job em falha crítica.
         
       - stepId: transitionToPublished
-        operationId: updateSession
+        operationId: patchSession
         description: >
           Transiciona sessão de TRANSCODING → PUBLISHED (terminal).
           INV-VID-002 ativa: nenhuma alteração pós-publicação.

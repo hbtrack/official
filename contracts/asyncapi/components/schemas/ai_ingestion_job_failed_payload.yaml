@@ -44,6 +44,7 @@ properties:
   receivedAt:
     type: string
     format: date-time
+    pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$'
     description: 'Timestamp de entrada do fato externo (DR-ING-003 — preserva causalidade).
 
       '

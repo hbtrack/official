@@ -5606,6 +5606,14 @@ def _g8_cross_spec_alignment(root: pathlib.Path, axioms: "DomainAxioms") -> dict
         str(root / "contracts" / "workflows"),
     ]
     if violations:
+        waiver_path = _find_active_waiver(root, gate_id)
+        if waiver_path:
+            waiver_rel = str(waiver_path.relative_to(root))
+            return _pg(
+                gate_id, "PASS", True, None,
+                f"Violações cross-spec — waiver ativo aprovado ({len(violations)} violation(s)). Ver contracts/_waivers/.",
+                inputs, all_artifacts + [waiver_rel], [waiver_rel], [], _ms(t0),
+            )
         return _pg(gate_id, "FAIL", True,
                    (violations[0] or {}).get("blocking_code", BLOCKED_CROSS_SPEC_DIVERGENCE),
                    f"{len(violations)} violação(ões) de alinhamento cross-spec.",

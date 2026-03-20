@@ -49,12 +49,14 @@ properties:
     type: string
     format: date-time
     description: ISO 8601 UTC do wall-clock capture start.
-    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
   edgeNodeId:
     type: string
+    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     description: Identificador do edge node executando captura (DR-VID-003).
   technicalContactUserId:
     type: string
     format: uuid
+    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     description: UUID do technical contact responsável (referência users module).
     x-semantic-id: identity.user.id.v1

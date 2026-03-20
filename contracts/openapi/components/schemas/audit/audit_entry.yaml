@@ -5,6 +5,7 @@ properties:
   entryId:
     type: string
     format: uuid
+    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
   action:
     type: string
   timestamp:
@@ -12,6 +13,7 @@ properties:
     format: date-time
   userId:
     type: string
+    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
   resourceType:
     type: string
 required:

@@ -2,16 +2,11 @@
 > Delta-only model: current state, blockers, decisions, next actions. Historical context in SESSION_ARCHIVE.md.
 
 ## Estado Geral
-**Data:** 2026-03-20 | **Branch:** hb-track-contratos-driven | **CI:** PASS
-**✅ PIPELINE STATUS: PASS** — Todos os gates bloqueantes passando
-**✅ MODULE_DOC_CROSSREF_GATE** — 35 → 0 violações (PERMISSIONS + training + video)
-**✅ ASYNCAPI_VALIDATION_GATE** — 91 erros → 0 (29 channels 2.6.0 + 3 schema parse fixes)
-**✅ ARAZZO_COMPLETENESS_GATE** — 12 violações → 0 (dict→list format em training/video/notifications/wellness)
-**✅ Survival suite: 29 passed** — Seguro prosseguir
-**🔄 BACKLOG_ITEM_2 em execução:**
-  - ✅ **Item 2A:** Encerrado como "não reproduzido" (operationIds Arazzo validados: 153 disponíveis, 0 ausentes)
-  - 🎯 **Item 2C:** ATIVO (542 violações de pattern canonical uuid_v4, timestamp_utc — diagnóstico completo)
-  - ⏳ **Item 2B:** Pronto (158 enum violations — após 2C)
+**Data:** 2026-03-20 | **Branch:** hb-track-contratos-driven | **CI:** FAIL (apenas enums — trilha 2D)
+**✅ 4C.2.v2c COMPLETO** — Pattern violations 173→0, Arazzo operationIds 4→0, DERIVED_DRIFT PASS
+**✅ CROSS_SPEC_ALIGNMENT_GATE** — 332 → 155 (-177): Pattern=0, Arazzo=0, Enum=155 (trilha 2D)
+**✅ Survival suite: PASS** — Seguro prosseguir
+**⏳ Próximo: Item 2D** — 155 enum violations (x-domain-enum-ref missing/inválido)
 
 ## BACKLOG_ITEM_2 — Investigação & Pivot (2026-03-20)
 

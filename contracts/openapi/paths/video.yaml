@@ -49,6 +49,7 @@
               matchId:
                 type: string
                 format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
                 description: >
                   UUID da partida (referência ao módulo matches).
                   x-semantic-id: sport.match.id.v1
@@ -80,6 +81,7 @@
               technicalContactUserId:
                 type: string
                 format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
                 description: >
                   UUID do Technical Analyst responsável pela sessão.
                   Opcional; pode ser atualizado via PATCH.
@@ -303,6 +305,7 @@
               technicalContactUserId:
                 type: string
                 format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     responses:
       "200":
         description: Sessão atualizada.
@@ -351,6 +354,7 @@
               sessionId:
                 type: string
                 format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
                 description: UUID da MatchMediaSession.
               timecodeLogical:
                 type: integer
@@ -380,6 +384,7 @@
                   Duração do segmento em milissegundos.
               sourceEdgeNodeId:
                 type: string
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
                 maxLength: 80
                 description: >
                   Identificador do edge node que capturou este segmento.
@@ -488,6 +493,7 @@
               sessionId:
                 type: string
                 format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
               fromTimecode:
                 type: integer
                 minimum: 0
@@ -499,6 +505,7 @@
               scoutEventId:
                 type: string
                 format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
                 description: >
                   Referência opcional a evento de scout (evento de jogo que inspirou este clip).
               zoneLabel:
@@ -615,9 +622,11 @@
               sessionId:
                 type: string
                 format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
               distributionProfileId:
                 type: string
                 format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
                 description: >
                   Profile de transcodificação (técnico ou público).
               targetLabel:
@@ -644,6 +653,7 @@
                 distributionId:
                   type: string
                   format: uuid
+                  pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
                 status:
                   type: string
                   enum: [queued, processing, published, failed]

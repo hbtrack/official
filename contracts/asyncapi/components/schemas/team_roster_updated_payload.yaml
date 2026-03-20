@@ -55,12 +55,14 @@ properties:
   subjectUserId:
     type: string
     format: uuid
+    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     description: UUID do usuário adicionado ou removido do elenco/comissão.
     x-semantic-id: identity.user.id.v1
 
   performedByUserId:
     type: string
     format: uuid
+    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
     description: UUID do usuário que executou a operação (coordinator ou admin).
     x-semantic-id: identity.user.id.v1
 

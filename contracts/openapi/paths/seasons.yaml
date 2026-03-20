@@ -116,10 +116,12 @@
               startDate:
                 type: string
                 format: date
+                pattern: '^\d{4}-\d{2}-\d{2}$'
                 description: Data de início da temporada (INV-SEAS-002).
               endDate:
                 type: string
                 format: date
+                pattern: '^\d{4}-\d{2}-\d{2}$'
                 description: Data de fim; deve ser >= startDate (INV-SEAS-002).
               phaseLabels:
                 type: array
@@ -233,9 +235,11 @@
               startDate:
                 type: string
                 format: date
+                pattern: '^\d{4}-\d{2}-\d{2}$'
               endDate:
                 type: string
                 format: date
+                pattern: '^\d{4}-\d{2}-\d{2}$'
               statusLabel:
                 type: string
                 enum: [draft, active, archived]

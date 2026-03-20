@@ -59,18 +59,18 @@ workflows:
           Solicita geração do relatório com tipo, período e filtros.
           Retorna reportJobId para polling de status.
           operationId: requestReport (a definir)
-        operationId: PLACEHOLDER_requestReport
+        operationId: createReportJob
 
       - stepId: pollReportStatus
         description: >
           Verifica status do job de geração. Repetir até status=READY ou FAILED.
           PENDING → aguardar e repetir. READY → prosseguir. FAILED → retornar erro.
           operationId: getReportStatus (a definir)
-        operationId: PLACEHOLDER_getReportStatus
+        operationId: getReportJob
 
       - stepId: downloadReport
         description: >
           Obtém a URL de download do relatório gerado.
           URL temporária (24h). Registra acesso no audit log automaticamente.
           operationId: getReportDownloadUrl (a definir)
-        operationId: PLACEHOLDER_getReportDownloadUrl
+        operationId: downloadReportArtifact

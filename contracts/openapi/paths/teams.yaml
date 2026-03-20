@@ -154,6 +154,7 @@
               organizationId:
                 type: string
                 format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
                 description: UUID da organização proprietária da equipe.
                 x-semantic-id: organizations.organization.id.v1
               seasonId:
@@ -161,6 +162,7 @@
                   - string
                   - "null"
                 format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
                 description: >
                   UUID da temporada associada (DR-TEAM-004).
                   Contextualiza composição — não transfere soberania de seasons
@@ -334,6 +336,7 @@
                   - string
                   - "null"
                 format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
                 description: >
                   UUID da temporada (DR-TEAM-004 / INV-TEAM-003).
                   Null desvincula da temporada atual.

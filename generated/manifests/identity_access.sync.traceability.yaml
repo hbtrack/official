@@ -4,13 +4,13 @@ traceability_manifest:
   compiler_version: 0.1.0
   generated_artifacts:
   - path: generated/contracts/openapi/paths/identity_access.yaml
-    sha256: 06cef6d728d3acd18d7d71541c50b2438edaaaa30005a3fc979b594b44ecf93c
-  generated_tree_sha256: 7ae3489b43952fb1d203d73f9a1dcb2cb4bcee8fbb1dbfbc46c78b3bd919258c
+    sha256: f6142d0d1095685ec4eef98394b0cb3076ebab973dbe3a58089caa34c496b4c6
+  generated_tree_sha256: b90bb558cb142460684a89a2ce1d5aa1c60497163bcb57173379f2331485bdd7
   policy_path: generated/resolved_policy/identity_access.sync.resolved.yaml
   policy_sha256: 0e6cea4ede5f8d17a12225ee0735841f02686d07583f6feb416b874d9480a56a
   source_contracts:
   - path: contracts/openapi/paths/identity_access.yaml
-    sha256: 06cef6d728d3acd18d7d71541c50b2438edaaaa30005a3fc979b594b44ecf93c
+    sha256: f6142d0d1095685ec4eef98394b0cb3076ebab973dbe3a58089caa34c496b4c6
   source_inputs:
   - path: .contract_driven/templates/api/ARCHITECTURE_MATRIX.yaml
     sha256: b3a862f6cabd38f6e2b00deacad66499064897685b2c486f303365f4dc58fc8d
@@ -22,4 +22,4 @@ traceability_manifest:
     sha256: efb1ba7de801a93cefef6fd2e58969cb683fa64528f78b0c508815bfd49fa11f
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: 4d1150b5460e9c0eba8846317237b2734c41f35bcab1b346643d48a2efce04a0
-  source_tree_sha256: 8ead051b3f755a45c5d638f3b85a58e68f2e1ee9095a90c21d773c5151b962cd
+  source_tree_sha256: 7952476680c001249b991d18638d2496a0095ef09332286b4064bffb7a6e9f7f

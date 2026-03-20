@@ -6,19 +6,43 @@
   "description": "Contêiner temporal do ciclo esportivo. seasons é soberano de ciclo, fases e associações canônicas (DR-SEAS-001).",
   "type": "object",
   "additionalProperties": false,
-  "required": ["id", "name", "startDate", "endDate", "statusLabel", "phaseLabels", "teamIds", "competitionIds"],
+  "required": [
+    "id",
+    "name",
+    "startDate",
+    "endDate",
+    "statusLabel",
+    "phaseLabels",
+    "teamIds",
+    "competitionIds"
+  ],
   "properties": {
-    "id": { "$ref": "#/definitions/uuid_v4" },
-    "organizationId": { "$ref": "#/definitions/uuid_v4" },
-    "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "id": {
+      "$ref": "#/definitions/uuid_v4"
+    },
+    "organizationId": {
+      "$ref": "#/definitions/uuid_v4"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
     "sportCycleLabel": {
-      "type": ["string", "null"],
+      "type": [
+        "string",
+        "null"
+      ],
       "maxLength": 80,
       "description": "Ciclo competitivo/operacional descritivo (DR-SEAS-004). Não substitui regras de competição."
     },
     "statusLabel": {
       "type": "string",
-      "enum": ["draft", "active", "archived"],
+      "enum": [
+        "draft",
+        "active",
+        "archived"
+      ],
       "description": "Estado do ciclo de vida da temporada."
     },
     "startDate": {
@@ -31,24 +55,38 @@
     },
     "phaseLabels": {
       "type": "array",
-      "items": { "type": "string", "minLength": 1, "maxLength": 80 },
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 80
+      },
       "uniqueItems": true,
       "description": "Fases explícitas (DR-SEAS-002, INV-SEAS-003). Não inferidas de resultados."
     },
     "competitionIds": {
       "type": "array",
-      "items": { "$ref": "#/definitions/uuid_v4" },
+      "items": {
+        "$ref": "#/definitions/uuid_v4"
+      },
       "uniqueItems": true,
       "description": "Competições vinculadas explicitamente (DR-SEAS-003, INV-SEAS-003)."
     },
     "teamIds": {
       "type": "array",
-      "items": { "$ref": "#/definitions/uuid_v4" },
+      "items": {
+        "$ref": "#/definitions/uuid_v4"
+      },
       "uniqueItems": true,
       "description": "Equipes associadas canonicamente (DR-SEAS-003, INV-SEAS-003)."
     },
-    "createdAt": { "$ref": "#/definitions/datetime" },
-    "updatedAt": { "$ref": "#/definitions/datetime" }
+    "createdAt": {
+      "$ref": "#/definitions/datetime",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    },
+    "updatedAt": {
+      "$ref": "#/definitions/datetime",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    }
   },
   "definitions": {
     "uuid_v4": {
@@ -73,9 +111,17 @@
       "statusLabel": "active",
       "startDate": "2026-01-10",
       "endDate": "2026-12-20",
-      "phaseLabels": ["pre-temporada", "fase-regular", "playoffs"],
-      "competitionIds": ["550e8400-e29b-41d4-a716-446655440402"],
-      "teamIds": ["550e8400-e29b-41d4-a716-446655440202"],
+      "phaseLabels": [
+        "pre-temporada",
+        "fase-regular",
+        "playoffs"
+      ],
+      "competitionIds": [
+        "550e8400-e29b-41d4-a716-446655440402"
+      ],
+      "teamIds": [
+        "550e8400-e29b-41d4-a716-446655440202"
+      ],
       "createdAt": "2026-01-01T10:00:00Z",
       "updatedAt": "2026-01-10T08:00:00Z"
     }

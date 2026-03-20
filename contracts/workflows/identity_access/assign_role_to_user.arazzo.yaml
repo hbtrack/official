@@ -77,17 +77,17 @@ workflows:
         description: >
           Verifica se o usuário existe, está ativo e pertence à organização.
           operationId: getIdentityUser (a definir)
-        operationId: PLACEHOLDER_getIdentityUser
+        operationId: getUser
 
       - stepId: checkCurrentRoles
         description: >
           Lista roles atuais para verificar se role já está atribuído.
           operationId: listUserRoles (a definir)
-        operationId: PLACEHOLDER_listUserRoles
+        operationId: listUserRoles
 
       - stepId: assignRole
         description: >
           Atribui o role ao usuário. Pode retornar 409 se role já atribuído.
           Deve gerar evento identity_access.role_assigned para consumers (audit, notifications).
           operationId: assignRoleToUser (a definir)
-        operationId: PLACEHOLDER_assignRoleToUser
+        operationId: assignRole

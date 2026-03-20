@@ -1,113 +1,121 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "https://hbtrack.local/schemas/training/athlete_chat_conversation.schema.json",
-    "title": "AthleteChatConversation",
-    "description": "SSOT JSON Schema for HB Pro Coach chat conversation session (module: training).",
-    "type": "object",
-    "additionalProperties": false,
-    "required": [
-        "id",
-        "athleteId",
-        "organizationId",
-        "teamId",
-        "status",
-        "messageCount",
-        "createdAt",
-        "updatedAt",
-        "lastMessageAt"
-    ],
-    "properties": {
-        "id": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Unique conversation ID."
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://hbtrack.local/schemas/training/athlete_chat_conversation.schema.json",
+  "title": "AthleteChatConversation",
+  "description": "SSOT JSON Schema for HB Pro Coach chat conversation session (module: training).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "athleteId",
+    "organizationId",
+    "teamId",
+    "status",
+    "messageCount",
+    "createdAt",
+    "updatedAt",
+    "lastMessageAt"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique conversation ID.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "athleteId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Reference to athlete user.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "organizationId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Organization context.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "teamId": {
+      "type": "string",
+      "format": "uuid",
+      "nullable": true,
+      "description": "Optional team context.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "archived"
+      ],
+      "description": "Conversation status (active or archived)."
+    },
+    "athleteAgeGroup": {
+      "type": "string",
+      "enum": [
+        "U10",
+        "U12",
+        "U14",
+        "U16",
+        "U18",
+        "ADULT"
+      ],
+      "nullable": true,
+      "description": "Age group for language adaptation."
+    },
+    "athletePosition": {
+      "type": "string",
+      "maxLength": 32,
+      "nullable": true,
+      "description": "Athlete's current position (for context-aware responses)."
+    },
+    "messageCount": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total message count in conversation."
+    },
+    "lastMessageAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of last message (for sorting/UI).",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "nullable": true,
+      "description": "Contextual data persisted from initiation.",
+      "properties": {
+        "initiatedFromScreen": {
+          "type": "string",
+          "enum": [
+            "athlete_checkin",
+            "session_detail",
+            "wellness_view",
+            "training_suggestion"
+          ],
+          "nullable": true
         },
-        "athleteId": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Reference to athlete user."
-        },
-        "organizationId": {
-            "type": "string",
-            "format": "uuid",
-            "description": "Organization context."
-        },
-        "teamId": {
-            "type": "string",
-            "format": "uuid",
-            "nullable": true,
-            "description": "Optional team context."
-        },
-        "status": {
-            "type": "string",
-            "enum": [
-                "active",
-                "archived"
-            ],
-            "description": "Conversation status (active or archived)."
-        },
-        "athleteAgeGroup": {
-            "type": "string",
-            "enum": [
-                "U10",
-                "U12",
-                "U14",
-                "U16",
-                "U18",
-                "ADULT"
-            ],
-            "nullable": true,
-            "description": "Age group for language adaptation."
-        },
-        "athletePosition": {
-            "type": "string",
-            "maxLength": 32,
-            "nullable": true,
-            "description": "Athlete's current position (for context-aware responses)."
-        },
-        "messageCount": {
-            "type": "integer",
-            "minimum": 0,
-            "description": "Total message count in conversation."
-        },
-        "lastMessageAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Timestamp of last message (for sorting/UI)."
-        },
-        "context": {
-            "type": "object",
-            "additionalProperties": false,
-            "nullable": true,
-            "description": "Contextual data persisted from initiation.",
-            "properties": {
-                "initiatedFromScreen": {
-                    "type": "string",
-                    "enum": [
-                        "athlete_checkin",
-                        "session_detail",
-                        "wellness_view",
-                        "training_suggestion"
-                    ],
-                    "nullable": true
-                },
-                "sessionId": {
-                    "type": "string",
-                    "format": "uuid",
-                    "nullable": true,
-                    "description": "If initiated from session context."
-                }
-            }
-        },
-        "createdAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Record creation timestamp."
-        },
-        "updatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Record update timestamp."
+        "sessionId": {
+          "type": "string",
+          "format": "uuid",
+          "nullable": true,
+          "description": "If initiated from session context.",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
         }
+      }
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Record creation timestamp.",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Record update timestamp.",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
     }
+  }
 }

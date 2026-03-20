@@ -4,13 +4,13 @@ traceability_manifest:
   compiler_version: 0.1.0
   generated_artifacts:
   - path: generated/contracts/openapi/paths/wellness.yaml
-    sha256: bff9e9ada167d4e60734d2b31a15126bd3d3fb785be43704f906c31242b35f4b
-  generated_tree_sha256: 28ccf1703bb89389853905d685f3b5db0eea9aac3b11ed6874305b0c28a1a3a9
+    sha256: a8b28e1e9a5b3d5036c99a38f22419ef3b5b3e497935c90e7b37befb6a4c53d1
+  generated_tree_sha256: 73e6957800a4082f36290de2d902439d79ffc80e3ccfca2b3c54d64c0ba3b5c2
   policy_path: generated/resolved_policy/wellness.sync.resolved.yaml
   policy_sha256: 51ba482057a2cbe225b9ebe13a1484582793eac82d3a9cbe9635f99080e823ac
   source_contracts:
   - path: contracts/openapi/paths/wellness.yaml
-    sha256: bff9e9ada167d4e60734d2b31a15126bd3d3fb785be43704f906c31242b35f4b
+    sha256: a8b28e1e9a5b3d5036c99a38f22419ef3b5b3e497935c90e7b37befb6a4c53d1
   source_inputs:
   - path: .contract_driven/templates/api/ARCHITECTURE_MATRIX.yaml
     sha256: b3a862f6cabd38f6e2b00deacad66499064897685b2c486f303365f4dc58fc8d
@@ -22,4 +22,4 @@ traceability_manifest:
     sha256: efb1ba7de801a93cefef6fd2e58969cb683fa64528f78b0c508815bfd49fa11f
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: 4d1150b5460e9c0eba8846317237b2734c41f35bcab1b346643d48a2efce04a0
-  source_tree_sha256: 787df324fb4c009ecb49e369768a5ed98b0f80c35d0a853c28aebc814e1f3f70
+  source_tree_sha256: 087b95459c19b24e46e014082701db2271d696a476ca407dc6e796f85fcda0c9

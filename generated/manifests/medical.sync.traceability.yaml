@@ -4,13 +4,13 @@ traceability_manifest:
   compiler_version: 0.1.0
   generated_artifacts:
   - path: generated/contracts/openapi/paths/medical.yaml
-    sha256: d86f35a324ca8956d9fef73e883808be907227fb173c1f98728a187b9508f63d
-  generated_tree_sha256: 2bb63857d6b0d871c2c42fb2421defc7f4500fd73a5024142f978868c0100e6e
+    sha256: 3fc6d8a2f63d7cbfd1f6cb0a4216bc177e1206bb282a77d7c5537af0295dfeae
+  generated_tree_sha256: 7ad096088839899304335d6682d139dd1c6301105d472903afd31c5487921668
   policy_path: generated/resolved_policy/medical.sync.resolved.yaml
   policy_sha256: 978d160c94070f0e59b29227012085d81417caee99ff43165bbd81055532e976
   source_contracts:
   - path: contracts/openapi/paths/medical.yaml
-    sha256: d86f35a324ca8956d9fef73e883808be907227fb173c1f98728a187b9508f63d
+    sha256: 3fc6d8a2f63d7cbfd1f6cb0a4216bc177e1206bb282a77d7c5537af0295dfeae
   source_inputs:
   - path: .contract_driven/templates/api/ARCHITECTURE_MATRIX.yaml
     sha256: b3a862f6cabd38f6e2b00deacad66499064897685b2c486f303365f4dc58fc8d
@@ -22,4 +22,4 @@ traceability_manifest:
     sha256: efb1ba7de801a93cefef6fd2e58969cb683fa64528f78b0c508815bfd49fa11f
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: 4d1150b5460e9c0eba8846317237b2734c41f35bcab1b346643d48a2efce04a0
-  source_tree_sha256: f4659aff54ca86812975df7fc3969c2189461c8ad3e4288d3fe22f3f14dbd980
+  source_tree_sha256: e52bd6e583b8fc91cfcc5d335ef880fad4bf6061bf389818f26b03c9e14c4d94
