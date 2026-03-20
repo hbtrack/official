@@ -278,9 +278,64 @@ Item 2D (159 enums) fica para trilha separada posterior
 - [SESSION_4C2V2A_FINAL_REPORT.md](_reports/SESSION_4C2V2A_FINAL_REPORT.md) — Relatório completo
 - Commit: `06820a8`
 
+## Sessão 4C.2.v2b — GLOBAL CANONICALIZATION (2026-03-20)
+
+**Status: ✅ REMEDIATION COMPLETED — 18% Combined Reduction Achieved**
+
+### Resultado da Remediação 4C.2.v2b
+
+| Métrica | 4C.2.v2a | Após 4C.2.v2b | Melhoria |  
+|---------|----------|--------------|---------|
+| Pattern Violations (occurrences) | 194 | 173 | **-11%** |
+| Unique Fields | 90 | 84 | **-6 (-7%)** |
+| Total Violations | 353 | 332 | **-6%** |
+
+**COMBINED (4C.2.v2a + 4C.2.v2b): 408 → 332 (-76, -18%)**
+
+### Execução da 4C.2.v2b
+
+**Fase 1: Categorização dos 90 Violations Restantes**
+- NOT_IN_SCHEMA (42): Campos não em component/schemas/
+- PATTERN_CORRECT_BUT_GATE_FAILS (31): Inconsistência entre múltiplas locações
+- PATTERN_MISSING_STILL (16): Sem padrão definido  
+- PATTERN_MISMATCH (1): Padrão errado
+
+**Fase 2: Remediação Global** (52 fixes em 42 files)
+- PATTERN_MISSING_STILL: Adicionados UUID/timestamp patterns (requestId: 28x, correlationId: 2x, teamId: 2x, others)
+- PATTERN_CORRECT_BUT_GATE_FAILS: Sincronizados tipos e patterns (athleteUserId, organizationId, seasonId, targetResourceId, trainingSessionId, lastAttemptAt)
+- PATTERN_MISMATCH: Corrigido 1 campo
+
+**Fase 3: Correção de RequestId** (28 files)
+- Identificado erro: `requestId` com UUID pattern (errado)
+- Padrão correto: `^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$` (request_id, não uuid_v4)
+- Aplicado a 28 arquivos
+
+**Artifacts:**
+- [SESSION_4C2V2B_FINAL_REPORT.md](_reports/SESSION_4C2V2B_FINAL_REPORT.md) — Relatório completo
+- [SESSION_4C2V2B_REMEDIATION_LOG.json](_reports/SESSION_4C2V2B_REMEDIATION_LOG.json) — Execution log
+- Commit: `f24b956`
+
+### Análise dos Remaining 84 Fields
+
+**Top Violators:**
+- [13x] id
+- [10x] createdAt  
+- [6x] athleteUserId
+- [6x] sessionId
+- [5x] technicalContactUserId, organizationId, matchId, updatedAt, startDate, endDate, teamId
+
+**Desafio: NOT_IN_SCHEMA (42 campos)**
+Essas violações persistem porque os campos não aparecem em `components/schemas/` mas sim em:
+- Paths (request/response na operação)
+- Embedded schemas (allOf, oneOf, anyOf)  
+- Response definitions (não-payload)
+
+Exemplo: `createdAt` (10x), `updatedAt` (5x), `id` (13x) aparecem em múltiplos contextos fora de payloads estruturados.
+
 **Próximos Passos:**
-⏳  **4C.2.v2b (Recommended):** Continuar com diagnostic analysis dos 90 violations restantes  
-⏳  **4D.2:** CONTEXT_DEPENDENT manual review (trilha alternativa)
+✅ **4C.2.v2b Completo:** 18% redução total alcançada  
+⏳  **4C.2.v2c (Recomendado):** Deep scan de 42 NOT_IN_SCHEMA via location-aware remediation
+⏳  **Item 2D:** 159 enum violations (trilha separada, `x-domain-enum-ref`)
 
 **Contexto Anterior (Diagnostic):**
 
