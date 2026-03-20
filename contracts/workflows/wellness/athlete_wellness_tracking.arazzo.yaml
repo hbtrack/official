@@ -42,7 +42,7 @@ sourceDescriptions:
     url: ../../openapi/openapi.yaml
 
 workflows:
-  athlete_daily_wellness_tracking:
+  - workflowId: athlete_daily_wellness_tracking
     summary: Fluxo de coleta diária de wellness do atleta.
     steps:
       - stepId: submitWellnessEntry

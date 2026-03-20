@@ -9,6 +9,7 @@ adr_refs:
   - "ADR-007: auth-strategy (JWT Bearer)"
   - "ADR-010: sensitive-data-policy (relatórios podem conter PHI)"
 domain_rules_ref: "./DOMAIN_RULES_REPORTS.md"
+invariants_ref: "./INVARIANTS_REPORTS.md"
 updated_at: "2026-03-19"
 ---
 

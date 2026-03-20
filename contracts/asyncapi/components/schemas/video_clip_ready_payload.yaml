@@ -28,7 +28,7 @@ properties:
   semanticContextLabel:
     type: string
     maxLength: 100
-    description: Contexto semântico do clip (DR-VID-004 — ex: "golo-7m", "falta-zona-d").
+    description: "Contexto semântico do clip (DR-VID-004 — ex: golo-7m, falta-zona-d)."
   scoutEventId:
     type: string
     format: uuid
@@ -42,4 +42,4 @@ properties:
   zoneLabel:
     type: string
     maxLength: 40
-    description: Zona de quadra do evento (ex: "area-6m-esq", "meia-quadra").
+    description: "Zona de quadra do evento (ex: area-6m-esq, meia-quadra)."

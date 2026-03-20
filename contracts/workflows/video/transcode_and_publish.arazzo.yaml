@@ -21,7 +21,7 @@ sourceDescriptions:
     url: ../../openapi/openapi.yaml
 
 workflows:
-  transcode_and_publish:
+  - workflowId: transcode_and_publish
     summary: Transcodificar e publicar vídeo em CDN/broadcast.
     steps:
       - stepId: transitionToTranscoding

@@ -2,12 +2,11 @@
 # Module: competitions
 # Domain rules: DR-COMP-001, DR-COMP-004, DR-COMP-005
 
-address: competition.phase_changed
-title: Fase da Competição Alterada
 description: >
   Canal de publicação quando stageLabels ou statusLabel de uma competição é alterado.
   stageLabels são explícitos — nunca inferidos de resultados de partidas (DR-COMP-004).
   standingsSummary não é publicado aqui — é projeção resumida, não truth oficial (DR-COMP-005).
-messages:
-  competition_phase_changed_publish:
+publish:
+  operationId: competition_phase_changed_publish
+  message:
     $ref: "../messages/competition_phase_changed.yaml"

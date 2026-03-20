@@ -21,7 +21,7 @@ sourceDescriptions:
     url: ../../openapi/openapi.yaml
 
 workflows:
-  capture_and_sync:
+  - workflowId: capture_and_sync
     summary: Capturar vídeo e sincronizar timecode com scout.
     steps:
       - stepId: createSessionDraft

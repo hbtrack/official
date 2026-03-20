@@ -3,4 +3,4 @@ title: Video Transcode Completed
 summary: DistributionProfile finalizado codificação para target type.
 contentType: application/json
 payload:
-  $ref: ../components/schemas/video/transcode_completed_payload.yaml
+  $ref: ../../components/schemas/video/transcode_completed_payload.yaml

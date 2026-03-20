@@ -4,6 +4,8 @@ system_scope_ref: "../../../_canon/SYSTEM_SCOPE.md"
 handball_rules_ref: "../../../_canon/HANDBALL_RULES_DOMAIN.md"
 handball_semantic_applicability: false
 type: "domain-rules"
+contract_path_ref: "../../../../contracts/openapi/paths/video.yaml"
+schemas_ref: "../../../../contracts/schemas/video/"
 updated: "2026-03-19"
 ---
 

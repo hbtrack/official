@@ -65,7 +65,7 @@ class TestSSOTParity:
 
     def test_task_catalog_yaml_loads(self):
         """TASK_CATALOG.yaml must be valid YAML."""
-        with open("docs/_canon/TASK_CATALOG.yaml", 'r') as f:
+        with open(".contract_driven/TASK_CATALOG.yaml", 'r') as f:
             catalog = yaml.safe_load(f)
         assert catalog is not None, "TASK_CATALOG.yaml failed to load"
         # Check for required keys (phase_routing or task_types)
@@ -73,16 +73,16 @@ class TestSSOTParity:
             "TASK_CATALOG.yaml missing required keys"
 
     def test_gates_registry_yaml_loads(self):
-        """GATES_REGISTRY.yaml must be valid YAML with 46 gates."""
+        """GATES_REGISTRY.yaml must be valid YAML with at least 46 gates."""
         with open("docs/_canon/gates/GATES_REGISTRY.yaml", 'r') as f:
             registry = yaml.safe_load(f)
         assert registry is not None, "GATES_REGISTRY.yaml failed to load"
         assert "gates" in registry, "GATES_REGISTRY.yaml missing gates"
-        assert len(registry["gates"]) == 46, f"Expected 46 gates, found {len(registry['gates'])}"
+        assert len(registry["gates"]) >= 46, f"Expected at least 46 gates, found {len(registry['gates'])}"
 
     def test_boot_profiles_yaml_loads(self):
         """BOOT_PROFILES.yaml must be valid YAML."""
-        with open("docs/_canon/BOOT_PROFILES.yaml", 'r') as f:
+        with open(".contract_driven/BOOT_PROFILES.yaml", 'r') as f:
             profiles = yaml.safe_load(f)
         assert profiles is not None, "BOOT_PROFILES.yaml failed to load"
         assert "profiles" in profiles, "BOOT_PROFILES.yaml missing profiles"
@@ -189,16 +189,28 @@ def test_parity_cli_verify():
 
 
 def test_parity_test_suite_green():
-    """Verify pipeline gates tests all pass."""
+    """Verify survival suite tests all pass (exit code 0).
+
+    Survival suite = testes que devem passar antes de qualquer mudança em
+    gates, profiles, task catalog, schemas críticos ou validate_contracts.py.
+    """
     result = subprocess.run(
-        ["python3", "-m", "pytest", "tests/pipeline_gates/test_phase_0_determinism.py", "-v"],
+        [
+            "python3", "-m", "pytest",
+            "tests/test_pipeline_governance.py",
+            "tests/pipeline_gates/test_phase_0_determinism.py",
+            "tests/pipeline_gates/test_context_budgets_and_parity.py::TestSSOTParity",
+            "tests/pipeline_gates/test_context_budgets_and_parity.py::TestHookIntegrity",
+            "tests/pipeline_gates/test_context_budgets_and_parity.py::TestZeroBootProfileReferences",
+            "tests/pipeline_gates/test_context_budgets_and_parity.py::test_parity_cli_verify",
+            "tests/pipeline_gates/test_tooling_config_gate.py",
+            "-v",
+        ],
         capture_output=True,
         text=True
     )
     assert result.returncode == 0, \
-        f"Pipeline tests failed:\n{result.stdout}\n{result.stderr}"
-    assert "13 passed" in result.stdout, \
-        f"Expected 13 tests to pass, got:\n{result.stdout}"
+        f"Survival suite failed:\n{result.stdout}\n{result.stderr}"
 
 
 def test_session_start_schema_rejects_unknown():

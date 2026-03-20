@@ -3,13 +3,12 @@
 # Domain rules: DR-IAM-001, DR-IAM-003
 # Decisions: DEC-IAM-003=C
 
-address: session.created
-title: Sessão Criada
 description: >
   Canal de publicação quando uma nova sessão autenticada é criada no sistema.
   Soberano de authn/authz (DR-IAM-001). identity_access é a única fonte que
   publica neste canal. Consumidores típicos: audit, notifications.
   NUNCA expõe hash de senha, refresh token ou credenciais armazenadas (INV-IAM-004).
-messages:
-  session_created_publish:
+publish:
+  operationId: session_created_publish
+  message:
     $ref: "../messages/session_created.yaml"

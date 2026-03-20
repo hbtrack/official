@@ -19,7 +19,7 @@ sourceDescriptions:
     url: ../../openapi/openapi.yaml
 
 workflows:
-  create_semantic_clip:
+  - workflowId: create_semantic_clip
     summary: Criar clip semântico a partir de range temporal e contexto de evento scout.
     steps:
       - stepId: listSegments

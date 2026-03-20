@@ -1,17 +1,15 @@
-# PERMISSIONS_AUDIT.md
-# Módulo: audit
-# Tabela de controle de acesso RBAC (ADR-008)
-# Decisions: DEC-AUD-002=B
-# Domain rules: DR-AUD-001
-# Invariants: INV-AUD-002
-# OWASP: API1:2023 (BOLA), API2:2023 (BFLA), API5:2023 (Function Level Auth)
-
 ---
 module: "audit"
-rbac_model: "flat_5_roles"
-adr_ref: "ADR-008"
-decision_ref: "DEC-AUD-002=B"
-updated: "2026-03-19"
+system_scope_ref: "../../../_canon/SYSTEM_SCOPE.md"
+handball_rules_ref: "../../../_canon/HANDBALL_RULES_DOMAIN.md"
+handball_semantic_applicability: false
+type: "permissions"
+domain_rules_ref: "./DOMAIN_RULES_AUDIT.md"
+invariants_ref: "./INVARIANTS_AUDIT.md"
+adr_refs:
+  - "ADR-008: authz-strategy (RBAC flat, 5 roles)"
+  - "ADR-007: auth-strategy (JWT Bearer)"
+updated_at: "2026-03-19"
 ---
 
 # PERMISSIONS_AUDIT.md

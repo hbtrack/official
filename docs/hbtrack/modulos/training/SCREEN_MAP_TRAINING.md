@@ -1,8 +1,12 @@
 ---
 module: "training"
+system_scope_ref: "../../../_canon/SYSTEM_SCOPE.md"
+handball_rules_ref: "../../../_canon/HANDBALL_RULES_DOMAIN.md"
+handball_semantic_applicability: true
 type: "screen-map"
+module_scope_ref: "./MODULE_SCOPE_TRAINING.md"
 ui_contract_ref: "./UI_CONTRACT_TRAINING.md"
-contract_path_ref: "../../../../contracts/openapi/paths/training.yaml"
+diagram_format: "mermaid"
 ---
 
 # SCREEN_MAP_TRAINING.md

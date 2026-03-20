@@ -31,7 +31,7 @@ sourceDescriptions:
     url: ../../openapi/openapi.yaml
 
 workflows:
-  cancel_training_session:
+  - workflowId: cancel_training_session
     summary: Cancelar sessão de treino (cancelamento lógico).
     steps:
       - stepId: cancelTrainingSession

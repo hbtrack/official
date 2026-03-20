@@ -1374,6 +1374,55 @@ Dependências
 
 ⸻
 
+9.13A ARAZZO_COMPLETENESS_GATE
+
+Política normativa
+
+`ARAZZO` é uma superfície contratual condicional.
+Sua completude é obrigatória apenas para módulos que a declaram explicitamente em `expected_surfaces` (MODULE_REGISTRY.yaml) e possuem workflow orquestrado definido como parte do contrato.
+Arquivos `.arazzo.yaml` com `workflows: []` (lista vazia) não satisfazem completude.
+Quando a superfície for declarada, a ausência de conteúdo válido exige workflow completo ou waiver formal temporário com expiração, dono e justificativa.
+
+Objetivo
+
+Verificar que módulos que declaram `arazzo` em `expected_surfaces` possuem pelo menos um workflow real (lista `workflows` não-vazia) em `contracts/workflows/<module>/`.
+
+Aplica quando
+
+Pelo menos um módulo declara `arazzo` em `expected_surfaces` no MODULE_REGISTRY.
+
+Entradas
+	•	docs/_canon/MODULE_REGISTRY.yaml (expected_surfaces por módulo)
+	•	contracts/workflows/<module>/*.arazzo.yaml
+
+Estados válidos por módulo
+	•	Obrigatório e preenchido: declara `arazzo` + arquivo com workflows não-vazio.
+	•	Não aplicável: não declara `arazzo` em expected_surfaces (gate ignora o módulo).
+	•	Dispensado temporariamente: declara `arazzo` + waiver formal ativo em contracts/_waivers/.
+
+Conteúdo mínimo aceitável
+
+Um arquivo `.arazzo.yaml` satisfaz completude quando contém:
+	•	campo `workflows` como lista não-vazia;
+	•	pelo menos um `workflowId` com pelo menos um `step`;
+	•	`sourceDescriptions` referenciando o OpenAPI do sistema.
+
+PASS
+
+Todos os módulos elegíveis possuem pelo menos um workflow válido, ou waiver ativo.
+
+FAIL
+
+Módulo declara `arazzo` em expected_surfaces e não possui arquivo *.arazzo.yaml, ou todos os arquivos têm workflows lista vazia.
+
+Blocking codes
+	•	ARAZZO_COMPLETENESS_MISSING
+
+Dependências
+	•	ARAZZO_VALIDATION_GATE
+
+⸻
+
 9.14 UI_DOC_VALIDATION_GATE
 
 Objetivo

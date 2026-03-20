@@ -6,7 +6,7 @@ handball_semantic_applicability: false
 type: "state-model"
 contract_path_ref: "../../../../contracts/openapi/paths/video.yaml"
 asyncapi_ref: "../../../../contracts/asyncapi/asyncapi.yaml"
-schemas_ref: "../../../../contracts/openapi/components/schemas/video/"
+schemas_ref: "../../../../contracts/schemas/video/"
 diagram_format: "mermaid"
 decision_ir_ref: "ADR-033: Video Module Canonicalization"
 updated: "2026-03-19"

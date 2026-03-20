@@ -3,4 +3,4 @@ title: Video Capture Started
 summary: MatchMediaSession iniciou captura com timecode sincronizado.
 contentType: application/json
 payload:
-  $ref: ../components/schemas/video/capture_started_payload.yaml
+  $ref: ../../components/schemas/video/capture_started_payload.yaml

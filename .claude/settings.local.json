@@ -24,7 +24,9 @@
       "Bash(python3 scripts/contracts/validate/validate_contracts.py*)",
       "Bash(python3 scripts/hb*)",
       "Bash(python3 scripts/contracts/validate/api/compile_api_policy.py*)",
-      "Bash(echo \"EXIT:$?\")"
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(npx @asyncapi/cli validate --help)",
+      "Bash(node_modules/.bin/asyncapi validate:*)"
     ]
   }
 }

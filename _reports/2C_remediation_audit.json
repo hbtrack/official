@@ -1,0 +1,4032 @@
+{
+  "total_fixes_applied": 503,
+  "files_modified": 123,
+  "failed_fixes": 0,
+  "audit_log": [
+    {
+      "file": "contracts/openapi/paths/seasons.yaml",
+      "field": "startDate",
+      "pattern_type": "date_only",
+      "old_format": "date",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/seasons.yaml",
+      "field": "startDate",
+      "pattern_type": "date_only",
+      "old_format": "date",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/seasons.yaml",
+      "field": "endDate",
+      "pattern_type": "date_only",
+      "old_format": "date",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/seasons.yaml",
+      "field": "endDate",
+      "pattern_type": "date_only",
+      "old_format": "date",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/competitions.yaml",
+      "field": "startDate",
+      "pattern_type": "date_only",
+      "old_format": "date",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/competitions.yaml",
+      "field": "startDate",
+      "pattern_type": "date_only",
+      "old_format": "date",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/wellness.yaml",
+      "field": "questionnaireDate",
+      "pattern_type": "date_only",
+      "old_format": "date",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "startDate",
+      "pattern_type": "date_only",
+      "old_format": "date",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "startDate",
+      "pattern_type": "date_only",
+      "old_format": "date",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "endDate",
+      "pattern_type": "date_only",
+      "old_format": "date",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "endDate",
+      "pattern_type": "date_only",
+      "old_format": "date",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/medical.yaml",
+      "field": "recordDate",
+      "pattern_type": "date_only",
+      "old_format": "date",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/medical.yaml",
+      "field": "recordDate",
+      "pattern_type": "date_only",
+      "old_format": "date",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/mesocycle.yaml",
+      "field": "startDate",
+      "pattern_type": "date_only",
+      "old_format": "date",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/mesocycle.yaml",
+      "field": "endDate",
+      "pattern_type": "date_only",
+      "old_format": "date",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/wellness/wellness_entry.yaml",
+      "field": "questionnaireDate",
+      "pattern_type": "date_only",
+      "old_format": "date",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/seasons/season.yaml",
+      "field": "startDate",
+      "pattern_type": "date_only",
+      "old_format": "date",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/wellness_entry_created_payload.yaml",
+      "field": "questionnaireDate",
+      "pattern_type": "date_only",
+      "old_format": "date",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/season_created_payload.yaml",
+      "field": "startDate",
+      "pattern_type": "date_only",
+      "old_format": "date",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/season_created_payload.yaml",
+      "field": "endDate",
+      "pattern_type": "date_only",
+      "old_format": "date",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/competition_created_payload.yaml",
+      "field": "startDate",
+      "pattern_type": "date_only",
+      "old_format": "date",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/users.yaml",
+      "field": "organizationId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/teams.yaml",
+      "field": "organizationId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/competitions.yaml",
+      "field": "seasonId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/scout.yaml",
+      "field": "matchId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/scout.yaml",
+      "field": "matchId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/scout.yaml",
+      "field": "matchId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/scout.yaml",
+      "field": "athleteUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/scout.yaml",
+      "field": "athleteUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/scout.yaml",
+      "field": "teamId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/notifications.yaml",
+      "field": "recipientUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/audit.yaml",
+      "field": "actorUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/audit.yaml",
+      "field": "targetResourceId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/audit.yaml",
+      "field": "correlationId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/wellness.yaml",
+      "field": "athleteUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/identity_access.yaml",
+      "field": "userId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/identity_access.yaml",
+      "field": "userId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "organizationId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "organizationId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "organizationId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "teamId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "teamId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "teamId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "seasonId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "microcycleId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "exerciseId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "exerciseId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "exerciseVersionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "exerciseVersionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "athleteId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "athleteId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "athleteId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "athleteId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "athleteId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "athleteId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "correctionByUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "correctionByUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "macrocycleId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "macrocycleId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "mesocycleId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/matches.yaml",
+      "field": "competitionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/matches.yaml",
+      "field": "homeTeamId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/matches.yaml",
+      "field": "awayTeamId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/exercises.yaml",
+      "field": "toExerciseId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/exercises.yaml",
+      "field": "userId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/exercises.yaml",
+      "field": "userId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/medical.yaml",
+      "field": "athleteUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/medical.yaml",
+      "field": "teamId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/video.yaml",
+      "field": "matchId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/video.yaml",
+      "field": "technicalContactUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/video.yaml",
+      "field": "technicalContactUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/video.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/video.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/video.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/video.yaml",
+      "field": "sourceEdgeNodeId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/video.yaml",
+      "field": "scoutEventId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/video.yaml",
+      "field": "distributionProfileId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/video.yaml",
+      "field": "distributionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/users/user_profile.yaml",
+      "field": "id",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/users/user_profile.yaml",
+      "field": "organizationId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/identity_access/auth_session.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/matches/match.yaml",
+      "field": "matchId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/exercises/exercise.yaml",
+      "field": "exerciseId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/exercises/exercise_version.yaml",
+      "field": "versionId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/exercises/exercise_version.yaml",
+      "field": "exerciseId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/exercises/exercise_preview.yaml",
+      "field": "exerciseId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/exercises/exercise_relation.yaml",
+      "field": "relationId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/exercises/exercise_relation.yaml",
+      "field": "parentId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/exercises/exercise_relation.yaml",
+      "field": "childId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/mesocycle.yaml",
+      "field": "id",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/mesocycle.yaml",
+      "field": "organizationId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/mesocycle.yaml",
+      "field": "teamId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/mesocycle.yaml",
+      "field": "macrocycleId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/mesocycle.yaml",
+      "field": "createdByUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/feedback_thread.yaml",
+      "field": "id",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/feedback_thread.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/feedback_thread.yaml",
+      "field": "contextRefId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/feedback_thread.yaml",
+      "field": "athleteId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/feedback_thread.yaml",
+      "field": "createdByUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/wellness_post.yaml",
+      "field": "id",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/wellness_post.yaml",
+      "field": "trainingSessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/wellness_post.yaml",
+      "field": "athleteId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/execution_record.yaml",
+      "field": "id",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/execution_record.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/execution_record.yaml",
+      "field": "blockId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/execution_record.yaml",
+      "field": "alternateExerciseId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/execution_record.yaml",
+      "field": "alternateExerciseVersionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/execution_record.yaml",
+      "field": "createdByUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/training_suggestion.yaml",
+      "field": "id",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/training_suggestion.yaml",
+      "field": "athleteId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/athlete_chat_message.yaml",
+      "field": "messageId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/athlete_chat_message.yaml",
+      "field": "athleteId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/athlete_ineligibility_declaration.yaml",
+      "field": "id",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/athlete_ineligibility_declaration.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/athlete_ineligibility_declaration.yaml",
+      "field": "athleteId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/session_objective.yaml",
+      "field": "id",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/session_objective.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/session_objective.yaml",
+      "field": "createdByUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/wellness_pre.yaml",
+      "field": "id",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/wellness_pre.yaml",
+      "field": "trainingSessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/wellness_pre.yaml",
+      "field": "athleteId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/microcycle.yaml",
+      "field": "id",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/microcycle.yaml",
+      "field": "organizationId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/microcycle.yaml",
+      "field": "teamId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/microcycle.yaml",
+      "field": "mesocycleId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/microcycle.yaml",
+      "field": "createdByUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/session_block.yaml",
+      "field": "id",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/session_block.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/session_block.yaml",
+      "field": "exerciseId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/session_block.yaml",
+      "field": "exerciseVersionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/training_session.yaml",
+      "field": "id",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/training_session.yaml",
+      "field": "organizationId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/training_session.yaml",
+      "field": "teamId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/training_session.yaml",
+      "field": "seasonId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/training_session.yaml",
+      "field": "microcycleId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/training_session.yaml",
+      "field": "createdByUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/recommendation.yaml",
+      "field": "id",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/recommendation.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/recommendation.yaml",
+      "field": "ruleId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/recommendation.yaml",
+      "field": "resolvedByUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/load_chart.yaml",
+      "field": "teamId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/load_chart.yaml",
+      "field": "athleteId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/load_chart.yaml",
+      "field": "seasonId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/load_chart.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/attention_queue_item.yaml",
+      "field": "id",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/attention_queue_item.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/attention_queue_item.yaml",
+      "field": "targetEntityId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/attention_queue_item.yaml",
+      "field": "resolvedByUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/competitions/competition.yaml",
+      "field": "competitionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/teams/team.yaml",
+      "field": "teamId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/video/clip_definition.yaml",
+      "field": "id",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/video/clip_definition.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/video/match_media_session.yaml",
+      "field": "id",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/video/match_media_session.yaml",
+      "field": "matchId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/video/match_media_session.yaml",
+      "field": "createdByUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/video/media_segment.yaml",
+      "field": "id",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/video/media_segment.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/video/distribution_profile.yaml",
+      "field": "id",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml",
+      "field": "jobId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/notifications/notification_delivery.yaml",
+      "field": "deliveryId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/notifications/notification_delivery.yaml",
+      "field": "notificationId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/notifications/notification_preferences.yaml",
+      "field": "userId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/shared/problem.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/wellness/wellness_entry.yaml",
+      "field": "id",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/wellness/wellness_entry.yaml",
+      "field": "athleteUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/wellness/wellness_summary.yaml",
+      "field": "athleteUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/analytics/analytics_snapshot.yaml",
+      "field": "snapshotId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/scout/scout_event.yaml",
+      "field": "eventId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/reports/report_job.yaml",
+      "field": "jobId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/audit/audit_entry.yaml",
+      "field": "entryId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/audit/audit_entry.yaml",
+      "field": "userId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/seasons/season.yaml",
+      "field": "seasonId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/medical/medical_record.yaml",
+      "field": "recordId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/medical/medical_record.yaml",
+      "field": "athleteId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/user_role_changed_payload.yaml",
+      "field": "userId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/user_role_changed_payload.yaml",
+      "field": "changedByUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/recommendation_dismissed_payload.yaml",
+      "field": "recommendationId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/recommendation_dismissed_payload.yaml",
+      "field": "coachId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/recommendation_dismissed_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/recommendation_dismissed_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/audit_entry_security_flagged_payload.yaml",
+      "field": "entryId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/audit_entry_security_flagged_payload.yaml",
+      "field": "actorUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/session_objective_achieved_payload.yaml",
+      "field": "objectiveId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/session_objective_achieved_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/session_objective_achieved_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/session_objective_achieved_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/need_linked_to_objective_payload.yaml",
+      "field": "needId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/need_linked_to_objective_payload.yaml",
+      "field": "objectiveId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/need_linked_to_objective_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/need_linked_to_objective_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/match_scheduled_payload.yaml",
+      "field": "matchId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/match_scheduled_payload.yaml",
+      "field": "competitionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/match_scheduled_payload.yaml",
+      "field": "homeTeamId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/match_scheduled_payload.yaml",
+      "field": "awayTeamId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/session_revoked_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/session_revoked_payload.yaml",
+      "field": "principalUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_session_syncing_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_session_syncing_payload.yaml",
+      "field": "matchId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_session_published_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_session_published_payload.yaml",
+      "field": "matchId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/role_revoked_payload.yaml",
+      "field": "targetUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/role_revoked_payload.yaml",
+      "field": "revokedByUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/user_created_payload.yaml",
+      "field": "userId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/recommendation_generated_payload.yaml",
+      "field": "recommendationId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/recommendation_generated_payload.yaml",
+      "field": "athleteId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/recommendation_generated_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/recommendation_generated_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/athlete_ineligible_for_prescription_payload.yaml",
+      "field": "athleteId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/athlete_ineligible_for_prescription_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/athlete_ineligible_for_prescription_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_session_capturing_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_session_capturing_payload.yaml",
+      "field": "matchId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/ai_ingestion_job_failed_payload.yaml",
+      "field": "jobId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_clip_ready_payload.yaml",
+      "field": "clipId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_clip_ready_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_clip_ready_payload.yaml",
+      "field": "scoutEventId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/continuity_snapshot_created_payload.yaml",
+      "field": "snapshotId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/continuity_snapshot_created_payload.yaml",
+      "field": "athleteId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/continuity_snapshot_created_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/continuity_snapshot_created_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/attention_queue_item_resolved_payload.yaml",
+      "field": "attentionQueueItemId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/attention_queue_item_resolved_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/attention_queue_item_resolved_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_started_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_started_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_started_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/session_created_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/session_created_payload.yaml",
+      "field": "principalUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/notification_delivery_queued_payload.yaml",
+      "field": "deliveryId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/notification_delivery_queued_payload.yaml",
+      "field": "recipientUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/need_detected_created_payload.yaml",
+      "field": "needId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/need_detected_created_payload.yaml",
+      "field": "athleteId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/need_detected_created_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/need_detected_created_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/feedback_thread_created_payload.yaml",
+      "field": "feedbackThreadId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/feedback_thread_created_payload.yaml",
+      "field": "coachId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/feedback_thread_created_payload.yaml",
+      "field": "athleteId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/feedback_thread_created_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/feedback_thread_created_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/competition_phase_changed_payload.yaml",
+      "field": "competitionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/competition_phase_changed_payload.yaml",
+      "field": "seasonId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/scout_session_completed_payload.yaml",
+      "field": "matchId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/intervention_cycle_completed_payload.yaml",
+      "field": "interventionCycleId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/intervention_cycle_completed_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/intervention_cycle_completed_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/feedback_thread_closed_payload.yaml",
+      "field": "feedbackThreadId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/feedback_thread_closed_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/feedback_thread_closed_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/match_status_updated_payload.yaml",
+      "field": "matchId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/match_status_updated_payload.yaml",
+      "field": "competitionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/notification_delivery_sent_payload.yaml",
+      "field": "deliveryId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/notification_delivery_sent_payload.yaml",
+      "field": "recipientUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/prescription_adjusted_payload.yaml",
+      "field": "athleteId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/prescription_adjusted_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/prescription_adjusted_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/ai_ingestion_job_queued_payload.yaml",
+      "field": "jobId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_session_transcoding_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/attention_queue_item_created_payload.yaml",
+      "field": "attentionQueueItemId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/attention_queue_item_created_payload.yaml",
+      "field": "athleteId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/attention_queue_item_created_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/attention_queue_item_created_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_distribution_published_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_distribution_published_payload.yaml",
+      "field": "accessorUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/season_status_updated_payload.yaml",
+      "field": "seasonId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/notification_delivery_failed_payload.yaml",
+      "field": "deliveryId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/notification_delivery_failed_payload.yaml",
+      "field": "recipientUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/execution_recorded_payload.yaml",
+      "field": "executionRecordId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/execution_recorded_payload.yaml",
+      "field": "contextId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/execution_recorded_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/execution_recorded_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_archived_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_archived_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_archived_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_segment_finalized_payload.yaml",
+      "field": "segmentId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_segment_finalized_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/wellness_entry_created_payload.yaml",
+      "field": "entryId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/wellness_entry_created_payload.yaml",
+      "field": "athleteUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_completed_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_completed_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_completed_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_attendance_marked_payload.yaml",
+      "field": "trainingSessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_attendance_marked_payload.yaml",
+      "field": "userId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_attendance_marked_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_attendance_marked_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_session_created_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_session_created_payload.yaml",
+      "field": "matchId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_session_created_payload.yaml",
+      "field": "operatorUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/completion_evidence_provided_payload.yaml",
+      "field": "completionEvidenceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/completion_evidence_provided_payload.yaml",
+      "field": "athleteId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/completion_evidence_provided_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/completion_evidence_provided_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/coach_intervention_required_payload.yaml",
+      "field": "coachId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/coach_intervention_required_payload.yaml",
+      "field": "athleteId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/coach_intervention_required_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/coach_intervention_required_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/season_created_payload.yaml",
+      "field": "seasonId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/intervention_cycle_created_payload.yaml",
+      "field": "interventionCycleId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/intervention_cycle_created_payload.yaml",
+      "field": "coachId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/intervention_cycle_created_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/intervention_cycle_created_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/objective_created_payload.yaml",
+      "field": "objectiveId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/objective_created_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/objective_created_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/objective_created_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/role_assigned_payload.yaml",
+      "field": "targetUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/role_assigned_payload.yaml",
+      "field": "grantedByUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/ai_ingestion_job_completed_payload.yaml",
+      "field": "jobId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/session_adjustment_made_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/session_adjustment_made_payload.yaml",
+      "field": "coachId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/session_adjustment_made_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/session_adjustment_made_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_readiness_assessed_payload.yaml",
+      "field": "readinessId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_readiness_assessed_payload.yaml",
+      "field": "athleteId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_readiness_assessed_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_readiness_assessed_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_published_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_published_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_published_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_cancelled_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_cancelled_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_cancelled_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/team_created_payload.yaml",
+      "field": "teamId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/team_created_payload.yaml",
+      "field": "organizationId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/competition_created_payload.yaml",
+      "field": "competitionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/competition_created_payload.yaml",
+      "field": "seasonId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/scout_event_created_payload.yaml",
+      "field": "eventId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/scout_event_created_payload.yaml",
+      "field": "matchId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/team_roster_updated_payload.yaml",
+      "field": "teamId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/team_roster_updated_payload.yaml",
+      "field": "organizationId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/team_roster_updated_payload.yaml",
+      "field": "subjectUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/team_roster_updated_payload.yaml",
+      "field": "performedByUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/recommendation_accepted_payload.yaml",
+      "field": "recommendationId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/recommendation_accepted_payload.yaml",
+      "field": "coachId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/recommendation_accepted_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/recommendation_accepted_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_created_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_created_payload.yaml",
+      "field": "teamId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_created_payload.yaml",
+      "field": "coachId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_created_payload.yaml",
+      "field": "traceId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_created_payload.yaml",
+      "field": "requestId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/audit_entry_created_payload.yaml",
+      "field": "entryId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/audit_entry_created_payload.yaml",
+      "field": "actorUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/distribution_published_payload.yaml",
+      "field": "clipId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/distribution_published_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/sync_adjustment_applied_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/sync_adjustment_applied_payload.yaml",
+      "field": "segmentId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/sync_adjustment_applied_payload.yaml",
+      "field": "scoutEventId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/distribution_failed_payload.yaml",
+      "field": "clipId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/distribution_failed_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/transcode_completed_payload.yaml",
+      "field": "profileId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/transcode_completed_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/transcode_completed_payload.yaml",
+      "field": "celeryJobId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/segment_ready_payload.yaml",
+      "field": "segmentId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/segment_ready_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/capture_started_payload.yaml",
+      "field": "sessionId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/capture_started_payload.yaml",
+      "field": "matchId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/capture_started_payload.yaml",
+      "field": "edgeNodeId",
+      "pattern_type": "uuid_v4",
+      "old_format": null,
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/capture_started_payload.yaml",
+      "field": "technicalContactUserId",
+      "pattern_type": "uuid_v4",
+      "old_format": "uuid",
+      "new_format": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/analytics.yaml",
+      "field": "computedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/scout.yaml",
+      "field": "recordedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/scout.yaml",
+      "field": "completedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/audit.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/audit.yaml",
+      "field": "exportedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "sessionAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "sessionAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "recordedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "recordedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "correctionAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "correctionAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/training.yaml",
+      "field": "observedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/reports.yaml",
+      "field": "completedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/reports.yaml",
+      "field": "completedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/reports.yaml",
+      "field": "completedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/matches.yaml",
+      "field": "scheduledAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/matches.yaml",
+      "field": "scheduledAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/paths/exercises.yaml",
+      "field": "grantedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/users/user_profile.yaml",
+      "field": "createdAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/users/user_profile.yaml",
+      "field": "updatedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/identity_access/auth_session.yaml",
+      "field": "expiresAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/mesocycle.yaml",
+      "field": "createdAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/mesocycle.yaml",
+      "field": "updatedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/feedback_thread.yaml",
+      "field": "followUpAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/feedback_thread.yaml",
+      "field": "createdAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/feedback_thread.yaml",
+      "field": "updatedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/wellness_post.yaml",
+      "field": "createdAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/wellness_post.yaml",
+      "field": "updatedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/execution_record.yaml",
+      "field": "recordedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/execution_record.yaml",
+      "field": "createdAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/execution_record.yaml",
+      "field": "updatedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/training_suggestion.yaml",
+      "field": "createdAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/training_suggestion.yaml",
+      "field": "reviewedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/athlete_ineligibility_declaration.yaml",
+      "field": "declaredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/athlete_ineligibility_declaration.yaml",
+      "field": "createdAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/session_objective.yaml",
+      "field": "createdAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/session_objective.yaml",
+      "field": "updatedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/wellness_pre.yaml",
+      "field": "createdAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/wellness_pre.yaml",
+      "field": "updatedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/microcycle.yaml",
+      "field": "createdAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/microcycle.yaml",
+      "field": "updatedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/session_block.yaml",
+      "field": "createdAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/session_block.yaml",
+      "field": "updatedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/training_session.yaml",
+      "field": "sessionAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/training_session.yaml",
+      "field": "createdAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/training_session.yaml",
+      "field": "updatedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/recommendation.yaml",
+      "field": "resolvedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/recommendation.yaml",
+      "field": "createdAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/recommendation.yaml",
+      "field": "updatedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/load_chart.yaml",
+      "field": "generatedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/attention_queue_item.yaml",
+      "field": "resolvedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/training/attention_queue_item.yaml",
+      "field": "createdAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/video/clip_definition.yaml",
+      "field": "createdAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/video/match_media_session.yaml",
+      "field": "createdAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/video/media_segment.yaml",
+      "field": "createdAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/video/distribution_profile.yaml",
+      "field": "createdAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml",
+      "field": "createdAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml",
+      "field": "updatedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/wellness/wellness_entry.yaml",
+      "field": "createdAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/openapi/components/schemas/reports/report_job.yaml",
+      "field": "createdAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/user_role_changed_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/recommendation_dismissed_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/audit_entry_security_flagged_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/session_objective_achieved_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/need_linked_to_objective_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/match_scheduled_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/match_scheduled_payload.yaml",
+      "field": "scheduledAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/session_revoked_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/session_revoked_payload.yaml",
+      "field": "revokedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_session_syncing_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_session_published_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_session_published_payload.yaml",
+      "field": "syncCompletedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_session_published_payload.yaml",
+      "field": "publishedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/role_revoked_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/user_created_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/recommendation_generated_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/athlete_ineligible_for_prescription_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_session_capturing_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_session_capturing_payload.yaml",
+      "field": "captureStartedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/ai_ingestion_job_failed_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/ai_ingestion_job_failed_payload.yaml",
+      "field": "receivedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_clip_ready_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/continuity_snapshot_created_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/attention_queue_item_resolved_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_started_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/session_created_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/session_created_payload.yaml",
+      "field": "expiresAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/notification_delivery_queued_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/notification_delivery_queued_payload.yaml",
+      "field": "requestedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/need_detected_created_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/feedback_thread_created_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/competition_phase_changed_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/scout_session_completed_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/scout_session_completed_payload.yaml",
+      "field": "completedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/intervention_cycle_completed_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/feedback_thread_closed_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/match_status_updated_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/notification_delivery_sent_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/notification_delivery_sent_payload.yaml",
+      "field": "requestedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/notification_delivery_sent_payload.yaml",
+      "field": "deliveredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/prescription_adjusted_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/ai_ingestion_job_queued_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_session_transcoding_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/attention_queue_item_created_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_distribution_published_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_distribution_published_payload.yaml",
+      "field": "distributedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/season_status_updated_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/notification_delivery_failed_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/notification_delivery_failed_payload.yaml",
+      "field": "requestedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/execution_recorded_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_archived_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_segment_finalized_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/wellness_entry_created_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_completed_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_attendance_marked_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video_session_created_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/completion_evidence_provided_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/coach_intervention_required_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/season_created_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/intervention_cycle_created_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/objective_created_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/role_assigned_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/ai_ingestion_job_completed_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/ai_ingestion_job_completed_payload.yaml",
+      "field": "receivedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/session_adjustment_made_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_readiness_assessed_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_published_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_cancelled_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/team_created_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/competition_created_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/scout_event_created_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/team_roster_updated_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/recommendation_accepted_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/training_session_created_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": null,
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/audit_entry_created_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/distribution_published_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/distribution_published_payload.yaml",
+      "field": "publishedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/sync_adjustment_applied_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/sync_adjustment_applied_payload.yaml",
+      "field": "adjustedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/distribution_failed_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/distribution_failed_payload.yaml",
+      "field": "failedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/transcode_completed_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/transcode_completed_payload.yaml",
+      "field": "completedAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/segment_ready_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    },
+    {
+      "file": "contracts/asyncapi/components/schemas/video/capture_started_payload.yaml",
+      "field": "occurredAt",
+      "pattern_type": "timestamp_utc",
+      "old_format": "date-time",
+      "new_format": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+      "status": "applied"
+    }
+  ],
+  "failed_details": []
+}

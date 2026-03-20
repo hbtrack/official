@@ -27,7 +27,7 @@ sourceDescriptions:
     url: ../../openapi/openapi.yaml
 
 workflows:
-  complete_training_session:
+  - workflowId: complete_training_session
     summary: Encerrar sessão de treino.
     steps:
       - stepId: submitWellnessPost

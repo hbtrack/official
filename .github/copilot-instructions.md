@@ -56,3 +56,23 @@ O agente não pode prosseguir quando emitir um código BLOCKED_*. Deve informar 
 - Bloqueio: explicar em linguagem de produto o que falta
 - Nunca jargão técnico sem tradução
 
+## REGRA DE OURO
+
+**MUST NOT** usar: 
+
+```bash
+git reset
+```
+ou
+
+```bash
+git rebase 
+```
+ou
+
+```bash
+ git commit --amend
+```
+**MUST NOT** rodar qualquer comando que apague histórico de commits. 
+
+**O histórico é parte do contrato e da evidência de processo.**

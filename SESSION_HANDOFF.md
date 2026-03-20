@@ -2,11 +2,59 @@
 > Delta-only model: current state, blockers, decisions, next actions. Historical context in SESSION_ARCHIVE.md.
 
 ## Estado Geral
-**Data:** 2026-03-19 | **Branch:** hb-track-contratos-driven | **CI:** PASS  
-**✅ BATCH READINESS PROMOTION COMPLETO:** 15 módulos promovidos para implementation_ready  
-**✅ 16/17 MÓDULOS EM IMPLEMENTATION_READY** — Pronto para codificação  
-**✅ Módulo video — validated_contract** (16/17 = implementation_ready; video = validated_contract)  
-**✅ Todos os bloqueadores resolvidos** — Pipeline determinístico  
+**Data:** 2026-03-20 | **Branch:** hb-track-contratos-driven | **CI:** PASS
+**✅ PIPELINE STATUS: PASS** — Todos os gates bloqueantes passando
+**✅ MODULE_DOC_CROSSREF_GATE** — 35 → 0 violações (PERMISSIONS + training + video)
+**✅ ASYNCAPI_VALIDATION_GATE** — 91 erros → 0 (29 channels 2.6.0 + 3 schema parse fixes)
+**✅ ARAZZO_COMPLETENESS_GATE** — 12 violações → 0 (dict→list format em training/video/notifications/wellness)
+**✅ Survival suite: 29 passed** — Seguro prosseguir
+**🔄 BACKLOG_ITEM_2 em execução:**
+  - ✅ **Item 2A:** Encerrado como "não reproduzido" (operationIds Arazzo validados: 153 disponíveis, 0 ausentes)
+  - 🎯 **Item 2C:** ATIVO (542 violações de pattern canonical uuid_v4, timestamp_utc — diagnóstico completo)
+  - ⏳ **Item 2B:** Pronto (158 enum violations — após 2C)
+
+## BACKLOG_ITEM_2 — Investigação & Pivot (2026-03-20)
+
+### Item 2A: Arazzo OperationId Links
+**Resultado:** ✅ ENCERRADO (Não Reproduzido / Já Resolvido)
+
+**Investigação:**
+- Diagnóstico: 153 operationIds carregados (OpenAPI root + paths/)
+- Varredura: 24 Arazzo files, todos operationIds validados
+- Violações: **0** operationIds faltando
+
+**Conclusão:** Hipótese original de 4 links quebrados foi superada durante desenvolvimento anterior. Item 2A não gera trabalho pendente. CROSS_SPEC_ALIGNMENT_GATE ativado em _precommit_ids.
+
+### Item 2C: Pattern/Format Violations — CLASSIFICADO (pronto para sessão fixing)
+**Escopo:** 383 violações de padrão canônico necessitando alignment
+
+**Análise Completa (2026-03-20):**
+Gate reportava 542 violações totais; separado em:
+- **383 pattern violations** (escopo 2C) → Esta sessão classifica, próxima executa fixing
+- **155 enum violations** (escopo 2D novo) → Trilha separada
+
+**Distribuição Pattern (383):**
+- **206 uuid_v4** (53.8%): campos Id + genérico 'id'
+  - Bucket 1 (Canônico, ~180): athleteId, organizationId, sessionId, teamId, matchId, etc.
+  - Bucket 4 (Ambíguo, ~26): campo `id` genérico, nomes não-padronizados
+- **105 timestamp_utc** (27.4%): campos com sufixo `At`
+  - Bucket 1 (Canônico, ~75): createdAt, updatedAt, completedAt, occurredAt, etc.
+  - Bucket 4 (Ambíguo, ~30): recordedAt, sessionAt, expiresAt nomes menos convencionais
+- **27 trace_id** (7.0%): traceId campo específico
+- **27 request_id** (7.0%): requestId campo específico
+- **18 date_only** (4.7%): campos com sufixo `Date`
+
+**Status conclusão desta sessão:** 
+✅ Classificação 100% explorada
+✅ Divisão 2C vs 2D cristalina  
+✅ 4 buckets identificados
+⏳ Remediação → próxima sessão (estratégia: x-domain-pattern-ref, não regex literal)
+
+### Item 2D: Enum Alignment / x-domain-enum-ref — BACKLOG ABERTO
+**Escopo:** 155 violações de enum sem `x-domain-enum-ref`
+**Tipo:** Conformidade semântica, não padrão de formato
+**Estratégia:** Normalização de axiomas, referências canônicas, possível geração automática
+**Prioridade:** Após 2C (trilhas independentes, ambas bloqueiam gateway)
 
 ## Módulo Video — validated_contract (2026-03-19)
 **Pipeline:** new_contract (asyncapi + arazzo) — FASE 2 → 6 PASS

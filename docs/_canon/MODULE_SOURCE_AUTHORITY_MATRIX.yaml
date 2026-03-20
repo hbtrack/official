@@ -449,6 +449,26 @@ modules:
       may_infer: ["event_envelope", "channel", "recipient", "preference", "delivery_status", "retries", "templates_referenced"]
       must_not_infer: ["undefined_domain_content", "access_policy", "origin_module_business_states"]
 
+  video:
+    sources_allowed:
+      domain_authority: []
+      benchmark: []
+      technical_standard:
+        - source_id: "OPENAPI"
+        - source_id: "ASYNCAPI"
+        - source_id: "ARAZZO"
+        - source_id: "JSON_SCHEMA"
+    required_contract_artifacts:
+      - "MODULE_PROFILE"
+      - "OPENAPI"
+      - "ASYNCAPI"
+      - "ARAZZO"
+      - "INVARIANTS"
+      - "PERMISSIONS"
+    inference:
+      may_infer: ["capture_session", "timecode", "segment", "distribution_target", "transcode_status"]
+      must_not_infer: ["scout_event_classification", "match_outcome", "access_policy_outside_permissions"]
+
 derived_gates:
   matrix_integrity_gate:
     gate_id: "MODULE_SOURCE_AUTHORITY_MATRIX_GATE"

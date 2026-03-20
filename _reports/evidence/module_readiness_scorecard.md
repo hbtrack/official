@@ -1,14 +1,14 @@
 # MODULE READINESS SCORECARD
 
-- Generated at: `2026-03-19T17:52:51Z`
-- Pipeline status: `PASS`
+- Generated at: `2026-03-20T04:24:09Z`
+- Pipeline status: `FAIL`
 
 | Module | Registry | Owner | Ready % | OpenAPI | Schemas | Missing / Drift |
 |---|---|---|---:|---:|---:|---|
 | `users` | `implementation_ready` | `platform-core` | 75 | 2/2 | 1 | asyncapi, decision_ir |
 | `seasons` | `implementation_ready` | `handball-ops` | 83 | 3/3 | 1 | asyncapi |
 | `teams` | `implementation_ready` | `handball-ops` | 83 | 4/4 | 1 | asyncapi |
-| `training` | `implementation_ready` | `performance-tech` | 92 | 36/36 | 13 | decision_ir |
+| `training` | `implementation_ready` | `performance-tech` | 100 | 36/36 | 13 | — |
 | `wellness` | `implementation_ready` | `performance-tech` | 100 | 4/4 | 1 | — |
 | `medical` | `implementation_ready` | `performance-tech` | 100 | 2/2 | 1 | — |
 | `competitions` | `implementation_ready` | `handball-ops` | 83 | 3/3 | 1 | asyncapi |

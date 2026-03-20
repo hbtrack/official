@@ -12,4 +12,4 @@ description: >
 publish:
   operationId: video_segment_ready_publish
   message:
-    $ref: ../messages/video/segment_ready.yaml
+    $ref: ../../messages/video/segment_ready.yaml

@@ -4,13 +4,12 @@
 # Decisions: DEC-IAM-003=C
 # ADR refs: ADR-008 (RBAC flat 5 roles)
 
-address: role.revoked
-title: Role Revogado
 description: >
   Canal de publicação quando um role RBAC canônico é removido de um usuário.
   Soberano de bindings técnicos de autorização (DR-IAM-001, ADR-008).
   Governado por identity_access — nunca por users, teams ou módulos operacionais (DR-IAM-005).
   Consumidores: audit (compliance), notifications (alerta ao usuário sobre acesso revogado).
-messages:
-  role_revoked_publish:
+publish:
+  operationId: role_revoked_publish
+  message:
     $ref: "../messages/role_revoked.yaml"

@@ -26,7 +26,7 @@ sourceDescriptions:
     url: ../../openapi/openapi.yaml
 
 workflows:
-  start_training_session:
+  - workflowId: start_training_session
     summary: Iniciar execução de sessão de treino.
     steps:
       - stepId: checkIneligibilityStatus

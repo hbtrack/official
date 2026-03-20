@@ -8,6 +8,7 @@ adr_refs:
   - "ADR-008: authz-strategy (RBAC flat, 5 roles)"
   - "ADR-007: auth-strategy (JWT Bearer)"
 domain_rules_ref: "./DOMAIN_RULES_ANALYTICS.md"
+invariants_ref: "./INVARIANTS_ANALYTICS.md"
 updated_at: "2026-03-19"
 ---
 

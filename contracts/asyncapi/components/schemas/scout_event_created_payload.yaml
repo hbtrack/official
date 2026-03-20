@@ -72,7 +72,7 @@ properties:
       type: string
       maxLength: 80
     uniqueItems: true
-    description: Tags taxonômicas (INV-SCOUT-002: sem duplicatas).
+    description: "Tags taxonômicas (INV-SCOUT-002: sem duplicatas)."
 
   codingSchemaLabel:
     type:

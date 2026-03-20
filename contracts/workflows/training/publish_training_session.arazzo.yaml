@@ -26,7 +26,7 @@ sourceDescriptions:
     url: ../../openapi/openapi.yaml
 
 workflows:
-  publish_training_session:
+  - workflowId: publish_training_session
     summary: Publicar sessão de treino.
     steps:
       - stepId: addSessionBlock

@@ -4,8 +4,6 @@
 # Domain rules: DR-TEAM-001, DR-TEAM-002
 # ============================================================
 
-address: team.roster_updated
-title: Elenco da Equipe Atualizado
 description: >
   Canal de publicação de alterações no elenco ou comissão técnica de uma
   equipe (DR-TEAM-001 / DR-TEAM-002 — vínculos explícitos).
@@ -15,6 +13,7 @@ description: >
   - DELETE /teams/{teamId}/athletes/{athleteUserId}
   - POST   /teams/{teamId}/staff/{staffUserId}
   - DELETE /teams/{teamId}/staff/{staffUserId}
-messages:
-  team_roster_updated_publish:
+publish:
+  operationId: team_roster_updated_publish
+  message:
     $ref: "../messages/team_roster_updated.yaml"

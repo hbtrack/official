@@ -3,4 +3,4 @@ title: Video Distribution Published
 summary: ClipDefinition publicado em CDN/broadcast com renditions disponíveis.
 contentType: application/json
 payload:
-  $ref: ../components/schemas/video/distribution_published_payload.yaml
+  $ref: ../../components/schemas/video/distribution_published_payload.yaml

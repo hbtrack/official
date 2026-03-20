@@ -1,8 +1,12 @@
 ---
 module: "scout"
+system_scope_ref: "../../../_canon/SYSTEM_SCOPE.md"
+handball_rules_ref: "../../../_canon/HANDBALL_RULES_DOMAIN.md"
+handball_semantic_applicability: true
 type: "permissions"
-decisions_ref: ".contract_driven/decisions/DECISION_IR_SCOUT.yaml"
-domain_rules_ref: "docs/hbtrack/modulos/scout/DOMAIN_RULES_SCOUT.md"
+domain_rules_ref: "./DOMAIN_RULES_SCOUT.md"
+invariants_ref: "./INVARIANTS_SCOUT.md"
+decisions_ref: "../../../.contract_driven/decisions/DECISION_IR_SCOUT.yaml"
 updated: "2026-03-19"
 ---
 

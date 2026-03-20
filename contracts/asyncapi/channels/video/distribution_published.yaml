@@ -11,4 +11,4 @@ description: >
 publish:
   operationId: video_distribution_published_publish
   message:
-    $ref: ../messages/video/distribution_published.yaml
+    $ref: ../../messages/video/distribution_published.yaml

@@ -9,6 +9,7 @@ adr_refs:
   - "ADR-007: auth-strategy (JWT Bearer)"
   - "ADR-010: sensitive-data-policy (dados de wellness são PII de saúde)"
 domain_rules_ref: "./DOMAIN_RULES_WELLNESS.md"
+invariants_ref: "./INVARIANTS_WELLNESS.md"
 updated_at: "2026-03-19"
 ---
 

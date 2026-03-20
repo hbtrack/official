@@ -458,6 +458,33 @@ class HBCLIv2:
         
         return 0
     
+    def cmd_survival_suite(self) -> int:
+        """Rodar suíte de sobrevivência obrigatória.
+
+        Deve passar antes de qualquer mudança em:
+        gates, profiles, task catalog, schemas críticos ou validate_contracts.py.
+        """
+        SURVIVAL_SUITE = [
+            "tests/test_pipeline_governance.py",
+            "tests/pipeline_gates/test_phase_0_determinism.py",
+            "tests/pipeline_gates/test_context_budgets_and_parity.py::TestSSOTParity",
+            "tests/pipeline_gates/test_context_budgets_and_parity.py::TestHookIntegrity",
+            "tests/pipeline_gates/test_context_budgets_and_parity.py::TestZeroBootProfileReferences",
+            "tests/pipeline_gates/test_context_budgets_and_parity.py::test_parity_cli_verify",
+            "tests/pipeline_gates/test_tooling_config_gate.py",
+        ]
+        print("\n══ SURVIVAL SUITE ══")
+        print("Testes obrigatórios antes de mudança em gates/profiles/task_catalog/schemas\n")
+        result = subprocess.run(
+            [sys.executable, "-m", "pytest", *SURVIVAL_SUITE, "-v"],
+            cwd=self.root,
+        )
+        if result.returncode == 0:
+            print("\n✅ Survival suite: PASS — seguro prosseguir.")
+        else:
+            print("\n❌ Survival suite: FAIL — não avançar sem suíte verde.")
+        return result.returncode
+
     def cmd_reset(self) -> int:
         """Limpar sessão (novo boot)."""
         print("\n══ RESET: Limpando sessão ══")
@@ -534,7 +561,13 @@ class HBCLIv2:
         
         # reset
         subparsers.add_parser("reset", help="Limpar sessão (novo boot)")
-        
+
+        # survival-suite
+        subparsers.add_parser(
+            "survival-suite",
+            help="Rodar suíte de sobrevivência (obrigatório antes de mudança em gates/profiles/schemas)",
+        )
+
         # help
         subparsers.add_parser("help", help="Mostrar ajuda")
         
@@ -555,6 +588,8 @@ class HBCLIv2:
                 return self.cmd_status()
             elif parsed_args.command == "reset":
                 return self.cmd_reset()
+            elif parsed_args.command == "survival-suite":
+                return self.cmd_survival_suite()
         except FileNotFoundError as e:
             print(f"❌ {e}", file=sys.stderr)
             return 2

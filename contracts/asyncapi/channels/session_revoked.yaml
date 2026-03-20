@@ -3,13 +3,12 @@
 # Domain rules: DR-IAM-001, DR-IAM-004, DR-IAM-005
 # Decisions: DEC-IAM-002=B, DEC-IAM-003=C
 
-address: session.revoked
-title: Sessão Revogada
 description: >
   Canal de publicação quando uma sessão autenticada é revogada (logout, expiração
   forçada por admin, ou invalidação via Redis denylist — DEC-IAM-002).
   Consumidores: audit (compliance), notifications (alerta de sessão encerrada).
   revokedAt sempre presente no payload (DR-IAM-004).
-messages:
-  session_revoked_publish:
+publish:
+  operationId: session_revoked_publish
+  message:
     $ref: "../messages/session_revoked.yaml"

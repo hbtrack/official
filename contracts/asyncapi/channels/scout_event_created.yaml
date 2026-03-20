@@ -5,8 +5,6 @@
 # Decisions: DEC-SCOUT-003=C
 # ADR refs: ADR-031 (Celery/Redis)
 
-address: scout.event.created
-title: Evento de Scout Criado
 description: >
   Canal publicado toda vez que uma nova observação tática é registrada.
   scout é soberano de eventos observacionais (DR-SCOUT-001): eventLabel,
@@ -18,6 +16,7 @@ description: >
   para reação em tempo real a observações táticas.
 
   BOUNDARY: payload nunca contém dados de autenticação ou dados clínicos.
-messages:
-  scout_event_created_publish:
+publish:
+  operationId: scout_event_created_publish
+  message:
     $ref: "../messages/scout_event_created.yaml"

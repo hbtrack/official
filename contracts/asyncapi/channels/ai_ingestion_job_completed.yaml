@@ -4,8 +4,6 @@
 # Domain rules: DR-ING-003, DR-ING-005
 # ============================================================
 
-address: ai_ingestion.job.completed
-title: Job de Ingestão Concluído
 description: >
   Canal de publicação de conclusão de processamento de job de ingestão.
 
@@ -14,6 +12,7 @@ description: >
   após conclusão — ai_ingestion não é dono do dado final de negócio.
 
   Publicado após processamento bem-sucedido de qualquer job.
-messages:
-  ai_ingestion_job_completed_publish:
+publish:
+  operationId: ai_ingestion_job_completed_publish
+  message:
     $ref: "../messages/ai_ingestion_job_completed.yaml"

@@ -18,7 +18,7 @@ sourceDescriptions:
     url: ../../openapi/openapi.yaml
 
 workflows:
-  start_live_capture:
+  - workflowId: start_live_capture
     summary: Criar sessão de mídia e iniciar captura ao vivo na arena.
     steps:
       - stepId: createMediaSession

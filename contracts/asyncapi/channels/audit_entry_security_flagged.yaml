@@ -5,8 +5,6 @@
 # Decisions: DEC-AUD-003=C
 # ADR refs: ADR-031 (Celery/Redis), ADR-007 (JWT RS256)
 
-address: audit.entry.security_flagged
-title: Entrada de Auditoria com Flag de Segurança
 description: >
   Canal publicado exclusivamente para entradas de auditoria classificadas como
   sensíveis (DEC-AUD-003=C). Diferencia o volume comum de audit.entry.created
@@ -23,6 +21,7 @@ description: >
   Consumidores: notifications (alertas de segurança), analytics, SIEM externo.
   BOUNDARY: mesmo payload de audit.entry.created com campo securitySeverityLabel
   adicional — NUNCA expõe credenciais ou payload de dado protegido.
-messages:
-  audit_entry_security_flagged_publish:
+publish:
+  operationId: audit_entry_security_flagged_publish
+  message:
     $ref: "../messages/audit_entry_security_flagged.yaml"

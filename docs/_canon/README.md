@@ -66,6 +66,7 @@ Regra: em caso de conflito entre níveis, o nível superior prevalece sempre.
 | 30 | `IR_TO_SURFACE_MAPPING.yaml` | Mapeamento de IR (Intermediate Representation) para superfícies expostas |
 | 31 | `AGENT_INSTRUCTIONS.md` | Instruções de boot permanente para agentes — carregado em toda sessão |
 | 32 | `SCOPE_BOUNDARY_POLICY.md` | Política de fronteiras entre módulos — regras de referências permitidas/proibidas (ADR-031) |
+| 33 | `SURVIVAL_SUITE_POLICY.md` | Política da suíte de sobrevivência — testes obrigatórios antes de mudança em gates/profiles/schemas |
 
 ### Subdiretórios Autorizados
 

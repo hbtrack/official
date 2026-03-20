@@ -62,6 +62,8 @@ types:
       - diagram_format
     optional:
       - decision_ir_ref
+      - adr_ref
+      - asyncapi_ref
   permissions:
     filenames: ["PERMISSIONS_{module_upper}.md"]
     required:
@@ -70,6 +72,8 @@ types:
       - invariants_ref
     optional:
       - adr_refs
+      - decisions_ref
+      - state_model_ref
   errors:
     filenames: ["ERRORS_{module_upper}.md"]
     required:
@@ -77,6 +81,7 @@ types:
       - problem_schema_ref
     optional:
       - api_rules_ref
+      - error_model_ref
   sport-science-rules:
     filenames: ["SPORT_SCIENCE_RULES_{module_upper}.md"]
     required:
@@ -93,6 +98,7 @@ types:
       - module_scope_ref
     optional:
       - screen_map_ref
+      - ui_contract_guide_ref
   screen-map:
     filenames: ["SCREEN_MAP_{module_upper}.md"]
     required:

@@ -4,8 +4,6 @@
 # Domain rules: DR-ING-003, DR-ING-004
 # ============================================================
 
-address: ai_ingestion.job.failed
-title: Job de Ingestão Falhou
 description: >
   Canal de publicação de falhas em jobs de ingestão de dados externos.
 
@@ -14,6 +12,7 @@ description: >
   DR-ING-003: causalidade temporal preservada (receivedAt → failedAt).
 
   Publicado sempre que um job transita para statusLabel=failed.
-messages:
-  ai_ingestion_job_failed_publish:
+publish:
+  operationId: ai_ingestion_job_failed_publish
+  message:
     $ref: "../messages/ai_ingestion_job_failed.yaml"

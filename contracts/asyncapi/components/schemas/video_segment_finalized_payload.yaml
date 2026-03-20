@@ -32,7 +32,7 @@ properties:
   codecLabel:
     type: string
     maxLength: 40
-    description: Codec mezzanine (ex: h264-mezzanine, hevc-mezzanine). Pipeline técnico e público derivam deste (DR-VID-002).
+    description: "Codec mezzanine (ex: h264-mezzanine, hevc-mezzanine). Pipeline técnico e público derivam deste (DR-VID-002)."
   storagePath:
     type: string
     maxLength: 500

@@ -23,7 +23,7 @@ sourceDescriptions:
     url: ../../openapi/openapi.yaml
 
 workflows:
-  semantic_clipping:
+  - workflowId: semantic_clipping
     summary: Criar clips semânticos a partir de eventos scout.
     steps:
       - stepId: getSessionDetails

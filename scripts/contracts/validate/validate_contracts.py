@@ -4367,12 +4367,17 @@ def _g2h_async_required_module(root: pathlib.Path) -> dict:
 
         if need_asyncapi:
             async_root = root / "contracts" / "asyncapi"
-            # Heurística determinística: filename contém o nome do módulo
+            # Heurística determinística: filename contém o nome do módulo.
+            # Suporta variação singular/plural (ex: "notifications" → "notification_*").
+            mod_lower = module.lower()
+            mod_variants = {mod_lower}
+            if mod_lower.endswith("s"):
+                mod_variants.add(mod_lower[:-1])  # strip trailing 's'
             has_any = False
             if async_root.exists():
                 for p in sorted(async_root.rglob("*.y*ml")):
                     rel = str(p.relative_to(async_root)).lower()
-                    if module.lower() in rel:
+                    if any(v in rel for v in mod_variants):
                         has_any = True
                         break
             if not has_any:
@@ -4560,6 +4565,21 @@ def _g2j_pre_contract_evidence(root: pathlib.Path) -> dict:
         })
 
     if violations:
+        waiver_path = _find_active_waiver(root, gate_id)
+        if waiver_path:
+            waiver_rel = str(waiver_path.relative_to(root))
+            return _pg(
+                gate_id,
+                "PASS",
+                True,
+                None,
+                "Evidência pré-contrato ausente — waiver ativo aprovado. Ver contracts/_waivers/.",
+                [],
+                checked + [waiver_rel],
+                [waiver_rel],
+                [],
+                _ms(t0),
+            )
         return _pg(
             gate_id,
             "FAIL",
@@ -4856,6 +4876,8 @@ def _g2n_canon_allowlist(root: pathlib.Path) -> dict:
         "SCOPE_BOUNDARY_POLICY.md",
         # Roadmap canônico de módulos
         "MODULE_ROADMAP_2026_03_17.md",
+        # Política de regressão obrigatória (suíte de sobrevivência)
+        "SURVIVAL_SUITE_POLICY.md",
     })
 
     # Subdiretórios autorizados
@@ -7281,7 +7303,7 @@ def _g_readiness_generation_compatibility(root: pathlib.Path) -> dict:
         report_found = False
         report_pass = False
         if adversarial_dir.exists():
-            for rpath in sorted(adversarial_dir.glob("*.adversarial.json")):
+            for rpath in sorted(adversarial_dir.glob("**/*.adversarial.json")):
                 try:
                     data = json.loads(rpath.read_text(encoding="utf-8"))
                 except Exception:
@@ -8530,6 +8552,7 @@ def run_pipeline(
         "READINESS_GENERATION_COMPATIBILITY_GATE",  # FIX Ordem 3: agora no padrão
         "WAIVER_VALIDITY_GATE",  # FIX Ordem 5: agora no padrão
         "READINESS_HUMAN_CONFIRMATION_GATE",  # FIX Ordem 6: agora no padrão
+        "CROSS_SPEC_ALIGNMENT_GATE",  # FIX BACKLOG_ITEM_2 (2A): no padrão para validação de links
     }
     _local_ids = _precommit_ids | {
         "DECISION_IR_CONFORMANCE_GATE",
@@ -8543,6 +8566,8 @@ def run_pipeline(
         "JSON_SCHEMA_VALIDATION_GATE",         # JSON Schema validation
         "OPENAPI_ROOT_MODULE_SYNC_GATE",       # Sincronização root OpenAPI com paths de módulos
         "SPECTRAL_LINTING_GATE",               # FIX BACKLOG_ITEM_1 (Passo D): Spectral linting (estilos OpenAPI)
+        # FIX BACKLOG_ITEM_2 (2A): CROSS_SPEC_ALIGNMENT_GATE para validação de links Arazzo
+        "CROSS_SPEC_ALIGNMENT_GATE",           # Validação de operationIds em Arazzo vs OpenAPI
     }
 
     # Stage-specific gate sets (Fase 0 / 1 / 2)

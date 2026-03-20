@@ -5,8 +5,6 @@
 # Decisions: DEC-SCOUT-003=C
 # ADR refs: ADR-031 (Celery/Redis)
 
-address: scout.session.completed
-title: Sessão de Scouting Finalizada
 description: >
   Canal publicado quando o analista finaliza o bloco de scouting de uma
   partida via POST /scout/sessions/{matchId}/complete (DEC-SCOUT-003=C).
@@ -20,6 +18,7 @@ description: >
 
   BOUNDARY: payload contém apenas matchId, completedAt, totalEvents e notes.
   Nenhum dado de atleta individual ou dado sensível.
-messages:
-  scout_session_completed_publish:
+publish:
+  operationId: scout_session_completed_publish
+  message:
     $ref: "../messages/scout_session_completed.yaml"

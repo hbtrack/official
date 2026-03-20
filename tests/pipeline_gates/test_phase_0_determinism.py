@@ -39,15 +39,15 @@ class TestPhase0Determinism:
     def task_catalog(self, workspace_root):
         """Carregar TASK_CATALOG.yaml."""
         import yaml
-        catalog_path = workspace_root / "docs/_canon/TASK_CATALOG.yaml"
+        catalog_path = workspace_root / ".contract_driven/TASK_CATALOG.yaml"
         with open(catalog_path) as f:
             return yaml.safe_load(f)
-    
+
     @pytest.fixture
     def boot_profiles(self, workspace_root):
         """Carregar BOOT_PROFILES.yaml."""
         import yaml
-        profiles_path = workspace_root / "docs/_canon/BOOT_PROFILES.yaml"
+        profiles_path = workspace_root / ".contract_driven/BOOT_PROFILES.yaml"
         with open(profiles_path) as f:
             return yaml.safe_load(f)
     
@@ -235,8 +235,8 @@ class TestPhase0ValidationSchemas:
     def test_boot_profiles_yaml_is_valid(self, workspace_root):
         """BOOT_PROFILES.yaml deve ser YAML válido."""
         import yaml
-        profiles_path = workspace_root / "docs/_canon/BOOT_PROFILES.yaml"
-        
+        profiles_path = workspace_root / ".contract_driven/BOOT_PROFILES.yaml"
+
         with open(profiles_path) as f:
             data = yaml.safe_load(f)
         
@@ -248,8 +248,8 @@ class TestPhase0ValidationSchemas:
     def test_task_catalog_yaml_is_valid(self, workspace_root):
         """TASK_CATALOG.yaml deve ser YAML válido e conter task types conhecidos."""
         import yaml
-        catalog_path = workspace_root / "docs/_canon/TASK_CATALOG.yaml"
-        
+        catalog_path = workspace_root / ".contract_driven/TASK_CATALOG.yaml"
+
         with open(catalog_path) as f:
             data = yaml.safe_load(f)
         

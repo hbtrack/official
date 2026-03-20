@@ -5,8 +5,6 @@
 # Decisions: DEC-AUD-003=C
 # ADR refs: ADR-031 (Celery/Redis)
 
-address: audit.entry.created
-title: Entrada de Auditoria Criada
 description: >
   Canal publicado toda vez que uma nova entrada é registrada no trilho de auditoria.
   audit é soberano da evidência operacional (DR-AUD-001): ator, ação, alvo, instante,
@@ -18,6 +16,7 @@ description: >
 
   BOUNDARY: payload nunca contém dados de autenticação (senha, token, refresh_token)
   e nunca replica payload integral de dados sensíveis (DR-AUD-002, INV-AUD-004).
-messages:
-  audit_entry_created_publish:
+publish:
+  operationId: audit_entry_created_publish
+  message:
     $ref: "../messages/audit_entry_created.yaml"

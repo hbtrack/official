@@ -6,6 +6,7 @@ handball_semantic_applicability: true
 contract_path_ref: "../../../../contracts/openapi/paths/training.yaml"
 schemas_ref: "../../../../contracts/schemas/training/"
 type: "ui-contract"
+module_scope_ref: "./MODULE_SCOPE_TRAINING.md"
 ui_contract_guide_ref: "../../../../docs/_canon/UI_CONTRACT_GUIDE.md"
 ---
 

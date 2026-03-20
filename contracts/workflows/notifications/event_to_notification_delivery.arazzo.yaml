@@ -49,7 +49,7 @@ sourceDescriptions:
     url: ../../openapi/openapi.yaml
 
 workflows:
-  event_to_notification_delivery:
+  - workflowId: event_to_notification_delivery
     summary: Pipeline de entrega de notificação.
     steps:
       - stepId: createNotificationIntent
