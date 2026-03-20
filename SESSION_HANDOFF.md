@@ -246,10 +246,59 @@ Famílias CANONICAL_* (99 campos, 236 violations):
 Impacto esperado: ~236 violations → 0 (cobrindo ~95% do Issue 2C)
 Item 2D (159 enums) fica para trilha separada posterior
 
+## Sessão 4C.2 — ✅ DIAGNÓSTICO ESTRUTURAL COMPLETO (2026-03-20)
+
+**Status: ANÁLISE ESTRUTURAL CONCLUÍDA — PRONTO PARA DECISÃO EXECUTIVA**
+
+**Execução 4C.2 — Objetivo Original Revisado:**
+- ✅ Consolidar lista v6 expandida (25 orig 4C + 99 expans 4D = 104 campos alvo)
+- ✅ Capturar baseline antes (249 pattern violations documentado)
+- ✅ Executar automação v6 v2 com patterns corrigidos (UUID v4, TIMESTAMP com `(?:\.\d{3,6})?Z$`, DATE)
+- **DESCOBERTA:** 249 → 359 violations (regressão, não redução esperada)
+- ✅ Executar diagnóstico estrutural (4C.2.v2) para entender violations
+
+**Diagnóstico Estrutural (4C.2.v2) — Achados Críticos:**
+
+### Distribuição Real das 200 Pattern Violations (90 unique fields):
+
+| Categoria | Count | Ação | Esforço |
+|-----------|-------|------|--------|
+| **Type Array (6)** | 6 | Mudar `['string', 'null']` → `'string'` | LOW |
+| **Pattern Missing (19)** | 19 | Adicionar padrão esperado | LOW |
+| **Pattern Wrong (12)** | 12 | Substituir padrão errado | MEDIUM |
+| **Subtotal Fixável** | **37** | **Fases 1-3 executáveis AGORA** | **LOW-MEDIUM** |
+| | | | |
+| **Not in Schema (42)** | 42 | Definir campo antes de aplicar pattern | HIGH |
+| **Type Wrong** | 0 | Type não é string | N/A |
+| **False Positive? (11)** | 11 | Padrão correto mas gate falha | HIGH |
+| **Subtotal Bloqueado** | **53** | **Requer decisão manual/estrutural** | **HIGH** |
+
+**Artefatos Gerados (4C.2.v2):**
+1. [SESSION_4C2_STRUCTURAL_DIAGNOSIS.json](_reports/SESSION_4C2_STRUCTURAL_DIAGNOSIS.json) — Diagnóstico completo por categoria
+2. [SESSION_4C2_REMEDIATION_STRATEGY.md](_reports/SESSION_4C2_REMEDIATION_STRATEGY.md) — 3 opções estratégicas com cálculos
+
+**Recomendação Operacional:**
+
+🎯 **OPÇÃO A (Recomendada): Execute Fases 1-3 AGORA**
+- Remediar 37 campos fixáveis (6 type array + 19 pattern missing + 12 pattern wrong)
+- Impacto esperado: 249 violations → ~80-120 (50% reduction if 70% success rate)
+- Tempo: ~30 min automação + validação
+- Risco: MÉDIO (alguns padrões podem ser mais complexos)
+
+**OPÇÃO B: Full Structural Fix**
+- Incluir 42 campos NOT_IN_SCHEMA (requer decisão per campo)
+- Timeline: 2-3 horas (requer expertise de schema)
+- Impacto: 249 → ~0-20 (se bem-sucedido)
+
+**OPÇÃO C: Skip 4C.2, Jump to 4D.2**
+- Defer pattern automation, atacar CONTEXT_DEPENDENT manualmente
+- Rationale: Se 42/90 bloqueados, maybe pattern-first não é viável
+- Timeline: 4-5 horas (domain decision-making)
+
 **Próximas Sessões (Sequência):
 
 ### Item 2D: Enum Alignment / x-domain-enum-ref — BACKLOG ABERTO
-**Escopo:** 155 violações de enum sem `x-domain-enum-ref`
+**Escopo:** 159 violações de enum sem `x-domain-enum-ref`
 **Tipo:** Conformidade semântica, não padrão de formato
 **Estratégia:** Normalização de axiomas, referências canônicas, possível geração automática
 **Prioridade:** Após 2C (trilhas independentes, ambas bloqueiam gateway)
