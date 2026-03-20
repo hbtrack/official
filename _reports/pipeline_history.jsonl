@@ -465,3 +465,16 @@
 {"run_id": "20260320T042327_b30dbd", "timestamp_utc": "2026-03-20T04:23:27Z", "overall_status": "FAIL", "exit_code": 2, "health_score": 90, "git_commit": "d01f6d4"}
 {"run_id": "20260320T042355_de8223", "timestamp_utc": "2026-03-20T04:23:55Z", "overall_status": "FAIL", "exit_code": 2, "health_score": 94, "git_commit": "d01f6d4"}
 {"run_id": "20260320T042409_23f265", "timestamp_utc": "2026-03-20T04:24:09Z", "overall_status": "FAIL", "exit_code": 2, "health_score": 94, "git_commit": "d01f6d4"}
+{"run_id": "20260320T042940_1eea3a", "timestamp_utc": "2026-03-20T04:29:40Z", "overall_status": "FAIL", "exit_code": 2, "health_score": 94, "git_commit": "d01f6d4"}
+{"run_id": "20260320T042956_59ef8d", "timestamp_utc": "2026-03-20T04:29:56Z", "overall_status": "FAIL", "exit_code": 2, "health_score": 94, "git_commit": "d01f6d4"}
+{"run_id": "20260320T043526_e3ab17", "timestamp_utc": "2026-03-20T04:35:26Z", "overall_status": "FAIL", "exit_code": 2, "health_score": 94, "git_commit": "d01f6d4"}
+{"run_id": "20260320T043636_be96c7", "timestamp_utc": "2026-03-20T04:36:36Z", "overall_status": "FAIL", "exit_code": 2, "health_score": 94, "git_commit": "d01f6d4"}
+{"run_id": "20260320T043723_74e4df", "timestamp_utc": "2026-03-20T04:37:23Z", "overall_status": "FAIL", "exit_code": 2, "health_score": 94, "git_commit": "d01f6d4"}
+{"run_id": "20260320T043824_6ee44c", "timestamp_utc": "2026-03-20T04:38:24Z", "overall_status": "FAIL", "exit_code": 2, "health_score": 96, "git_commit": "d01f6d4"}
+{"run_id": "20260320T043921_6a76d4", "timestamp_utc": "2026-03-20T04:39:21Z", "overall_status": "FAIL", "exit_code": 2, "health_score": 96, "git_commit": "d01f6d4"}
+{"run_id": "20260320T044419_2dc5ab", "timestamp_utc": "2026-03-20T04:44:19Z", "overall_status": "FAIL", "exit_code": 2, "health_score": 88, "git_commit": "714d86e"}
+{"run_id": "20260320T044543_9166aa", "timestamp_utc": "2026-03-20T04:45:43Z", "overall_status": "FAIL", "exit_code": 2, "health_score": 94, "git_commit": "714d86e"}
+{"run_id": "20260320T044844_0bf619", "timestamp_utc": "2026-03-20T04:48:44Z", "overall_status": "FAIL", "exit_code": 2, "health_score": 94, "git_commit": "714d86e"}
+{"run_id": "20260320T053707_fe0a98", "timestamp_utc": "2026-03-20T05:37:07Z", "overall_status": "FAIL", "exit_code": 2, "health_score": 94, "git_commit": "714d86e"}
+{"run_id": "20260320T053931_93b5c5", "timestamp_utc": "2026-03-20T05:39:31Z", "overall_status": "FAIL", "exit_code": 2, "health_score": 94, "git_commit": "714d86e"}
+{"run_id": "20260320T054009_61b076", "timestamp_utc": "2026-03-20T05:40:09Z", "overall_status": "FAIL", "exit_code": 2, "health_score": 94, "git_commit": "714d86e"}

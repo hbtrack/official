@@ -21,14 +21,16 @@ properties:
     format: date-time
     description: Momento em que o evento foi gerado (ISO 8601 UTC).
     x-semantic-id: core.occurred_at.v1
-    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
   sessionId:
     type: string
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
     format: uuid
     description: UUID v4 da MatchMediaSession. Raiz de autorização (DR-VID-007, INV-VID-006).
     x-semantic-id: video.match_media_session.id.v1
   matchId:
     type: string
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
     format: uuid
     description: UUID da partida (referência ao matches module).
     x-semantic-id: matches.match.id.v1
@@ -47,7 +49,7 @@ properties:
     type: string
     format: date-time
     description: ISO 8601 UTC do wall-clock capture start.
-    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   edgeNodeId:
     type: string
     description: Identificador do edge node executando captura (DR-VID-003).

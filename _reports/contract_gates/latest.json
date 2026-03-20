@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-03-20T04:24:09Z",
+  "timestamp_utc": "2026-03-20T05:40:09Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "d01f6d4",
+    "git_commit": "714d86e",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -207,7 +207,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 41
+        "duration_ms": 104
       }
     },
     {
@@ -232,7 +232,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 463
+        "duration_ms": 6887
       }
     },
     {
@@ -343,7 +343,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 14
+        "duration_ms": 15
       }
     },
     {
@@ -492,7 +492,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 9
+        "duration_ms": 13
       }
     },
     {
@@ -584,7 +584,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 2
       }
     },
     {
@@ -948,7 +948,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 28
+        "duration_ms": 58
       }
     },
     {
@@ -1006,7 +1006,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1326
+        "duration_ms": 2798
       }
     },
     {
@@ -1045,7 +1045,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 502
+        "duration_ms": 543
       }
     },
     {
@@ -1135,7 +1135,7 @@
       "blocking": true,
       "exit_code": 2,
       "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-      "summary": "304 violação(ões) de alinhamento cross-spec.",
+      "summary": "408 violação(ões) de alinhamento cross-spec.",
       "inputs": [
         "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
         "/home/davis/HB-TRACK/contracts/schemas",
@@ -1611,45 +1611,881 @@
       "violations": [
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `occurredAt` deve usar pattern canônico de timestamp_utc.",
+          "message": "Campo `jobId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/ai_ingestion_job_completed_payload.yaml",
+          "details": {
+            "field": "jobId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `receivedAt` deve usar pattern canônico de timestamp_utc.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/ai_ingestion_job_completed_payload.yaml",
+          "details": {
+            "field": "receivedAt",
+            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `jobId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/ai_ingestion_job_failed_payload.yaml",
+          "details": {
+            "field": "jobId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `receivedAt` deve usar pattern canônico de timestamp_utc.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/ai_ingestion_job_failed_payload.yaml",
+          "details": {
+            "field": "receivedAt",
+            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `jobId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/ai_ingestion_job_queued_payload.yaml",
+          "details": {
+            "field": "jobId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `attentionQueueItemId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/attention_queue_item_created_payload.yaml",
+          "details": {
+            "field": "attentionQueueItemId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `attentionQueueItemId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/attention_queue_item_resolved_payload.yaml",
+          "details": {
+            "field": "attentionQueueItemId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `actorUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/audit_entry_created_payload.yaml",
+          "details": {
+            "field": "actorUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `correlationId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/audit_entry_created_payload.yaml",
+          "details": {
+            "field": "correlationId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `entryId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/audit_entry_created_payload.yaml",
+          "details": {
+            "field": "entryId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `targetResourceId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/audit_entry_created_payload.yaml",
+          "details": {
+            "field": "targetResourceId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `actorUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/audit_entry_security_flagged_payload.yaml",
+          "details": {
+            "field": "actorUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `correlationId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/audit_entry_security_flagged_payload.yaml",
+          "details": {
+            "field": "correlationId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `entryId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/audit_entry_security_flagged_payload.yaml",
+          "details": {
+            "field": "entryId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `targetResourceId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/audit_entry_security_flagged_payload.yaml",
+          "details": {
+            "field": "targetResourceId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `competitionId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/competition_created_payload.yaml",
+          "details": {
+            "field": "competitionId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `organizationId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/competition_created_payload.yaml",
+          "details": {
+            "field": "organizationId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `seasonId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/competition_created_payload.yaml",
+          "details": {
+            "field": "seasonId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `competitionId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/competition_phase_changed_payload.yaml",
+          "details": {
+            "field": "competitionId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `seasonId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/competition_phase_changed_payload.yaml",
+          "details": {
+            "field": "seasonId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `completionEvidenceId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/completion_evidence_provided_payload.yaml",
+          "details": {
+            "field": "completionEvidenceId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `snapshotId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/continuity_snapshot_created_payload.yaml",
+          "details": {
+            "field": "snapshotId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `executionRecordId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/execution_recorded_payload.yaml",
+          "details": {
+            "field": "executionRecordId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `feedbackThreadId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/feedback_thread_closed_payload.yaml",
+          "details": {
+            "field": "feedbackThreadId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `feedbackThreadId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/feedback_thread_created_payload.yaml",
+          "details": {
+            "field": "feedbackThreadId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `interventionCycleId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/intervention_cycle_completed_payload.yaml",
+          "details": {
+            "field": "interventionCycleId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `interventionCycleId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/intervention_cycle_created_payload.yaml",
+          "details": {
+            "field": "interventionCycleId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `awayTeamId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/match_scheduled_payload.yaml",
+          "details": {
+            "field": "awayTeamId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `competitionId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/match_scheduled_payload.yaml",
+          "details": {
+            "field": "competitionId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `homeTeamId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/match_scheduled_payload.yaml",
+          "details": {
+            "field": "homeTeamId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `scheduledAt` deve usar pattern canônico de timestamp_utc.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/match_scheduled_payload.yaml",
+          "details": {
+            "field": "scheduledAt",
+            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `competitionId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/match_status_updated_payload.yaml",
+          "details": {
+            "field": "competitionId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `needId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/need_detected_created_payload.yaml",
+          "details": {
+            "field": "needId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `needId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/need_linked_to_objective_payload.yaml",
+          "details": {
+            "field": "needId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `deliveryId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/notification_delivery_failed_payload.yaml",
+          "details": {
+            "field": "deliveryId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `lastAttemptAt` deve usar pattern canônico de timestamp_utc.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/notification_delivery_failed_payload.yaml",
+          "details": {
+            "field": "lastAttemptAt",
+            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `recipientUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/notification_delivery_failed_payload.yaml",
+          "details": {
+            "field": "recipientUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `requestedAt` deve usar pattern canônico de timestamp_utc.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/notification_delivery_failed_payload.yaml",
+          "details": {
+            "field": "requestedAt",
+            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `deliveryId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/notification_delivery_queued_payload.yaml",
+          "details": {
+            "field": "deliveryId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `recipientUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/notification_delivery_queued_payload.yaml",
+          "details": {
+            "field": "recipientUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `requestedAt` deve usar pattern canônico de timestamp_utc.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/notification_delivery_queued_payload.yaml",
+          "details": {
+            "field": "requestedAt",
+            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `deliveredAt` deve usar pattern canônico de timestamp_utc.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/notification_delivery_sent_payload.yaml",
+          "details": {
+            "field": "deliveredAt",
+            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `deliveryId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/notification_delivery_sent_payload.yaml",
+          "details": {
+            "field": "deliveryId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `recipientUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/notification_delivery_sent_payload.yaml",
+          "details": {
+            "field": "recipientUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `requestedAt` deve usar pattern canônico de timestamp_utc.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/notification_delivery_sent_payload.yaml",
+          "details": {
+            "field": "requestedAt",
+            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `objectiveId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/objective_created_payload.yaml",
+          "details": {
+            "field": "objectiveId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `recommendationId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/recommendation_accepted_payload.yaml",
+          "details": {
+            "field": "recommendationId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `recommendationId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/recommendation_dismissed_payload.yaml",
+          "details": {
+            "field": "recommendationId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `recommendationId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/recommendation_generated_payload.yaml",
+          "details": {
+            "field": "recommendationId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `grantedByUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/role_assigned_payload.yaml",
+          "details": {
+            "field": "grantedByUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `organizationId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/role_assigned_payload.yaml",
+          "details": {
+            "field": "organizationId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `targetUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/role_assigned_payload.yaml",
+          "details": {
+            "field": "targetUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `organizationId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/role_revoked_payload.yaml",
+          "details": {
+            "field": "organizationId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `revokedByUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/role_revoked_payload.yaml",
+          "details": {
+            "field": "revokedByUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `targetUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/role_revoked_payload.yaml",
+          "details": {
+            "field": "targetUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `athleteUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/scout_event_created_payload.yaml",
+          "details": {
+            "field": "athleteUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `eventId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/scout_event_created_payload.yaml",
+          "details": {
+            "field": "eventId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `teamId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/scout_event_created_payload.yaml",
+          "details": {
+            "field": "teamId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `organizationId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/season_created_payload.yaml",
+          "details": {
+            "field": "organizationId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `seasonId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/season_created_payload.yaml",
+          "details": {
+            "field": "seasonId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `seasonId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/season_status_updated_payload.yaml",
+          "details": {
+            "field": "seasonId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `expiresAt` deve usar pattern canônico de timestamp_utc.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/session_created_payload.yaml",
+          "details": {
+            "field": "expiresAt",
+            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `principalUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/session_created_payload.yaml",
+          "details": {
+            "field": "principalUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `objectiveId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/session_objective_achieved_payload.yaml",
+          "details": {
+            "field": "objectiveId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `principalUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/session_revoked_payload.yaml",
+          "details": {
+            "field": "principalUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `revokedAt` deve usar pattern canônico de timestamp_utc.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/session_revoked_payload.yaml",
+          "details": {
+            "field": "revokedAt",
+            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `revokedByUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/session_revoked_payload.yaml",
+          "details": {
+            "field": "revokedByUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `seasonId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/team_created_payload.yaml",
+          "details": {
+            "field": "seasonId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `performedByUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/team_roster_updated_payload.yaml",
+          "details": {
+            "field": "performedByUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `subjectUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/team_roster_updated_payload.yaml",
+          "details": {
+            "field": "subjectUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `readinessId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/training_readiness_assessed_payload.yaml",
+          "details": {
+            "field": "readinessId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `organizationId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/user_created_payload.yaml",
+          "details": {
+            "field": "organizationId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `userId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/user_created_payload.yaml",
+          "details": {
+            "field": "userId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `changedByUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/user_role_changed_payload.yaml",
+          "details": {
+            "field": "changedByUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `organizationId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/user_role_changed_payload.yaml",
+          "details": {
+            "field": "organizationId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `userId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/user_role_changed_payload.yaml",
+          "details": {
+            "field": "userId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `edgeNodeId` deve usar pattern canônico de uuid_v4.",
           "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/video/capture_started_payload.yaml",
           "details": {
-            "field": "occurredAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+            "field": "edgeNodeId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
             "path": ""
           }
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `failedAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/video/distribution_failed_payload.yaml",
+          "message": "Campo `technicalContactUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/video/capture_started_payload.yaml",
           "details": {
-            "field": "failedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+            "field": "technicalContactUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
             "path": ""
           }
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `nextRetryAt` deve usar pattern canônico de timestamp_utc.",
+          "message": "Campo `clipId` deve usar pattern canônico de uuid_v4.",
           "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/video/distribution_failed_payload.yaml",
           "details": {
-            "field": "nextRetryAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+            "field": "clipId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
             "path": ""
           }
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `occurredAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/video/distribution_failed_payload.yaml",
+          "message": "Campo `clipId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/video/distribution_published_payload.yaml",
           "details": {
-            "field": "occurredAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+            "field": "clipId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
             "path": ""
           }
         },
@@ -1666,34 +2502,12 @@
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `occurredAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/video/distribution_published_payload.yaml",
-          "details": {
-            "field": "occurredAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `publishedAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/video/distribution_published_payload.yaml",
-          "details": {
-            "field": "publishedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `occurredAt` deve usar pattern canônico de timestamp_utc.",
+          "message": "Campo `segmentId` deve usar pattern canônico de uuid_v4.",
           "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/video/segment_ready_payload.yaml",
           "details": {
-            "field": "occurredAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+            "field": "segmentId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
             "path": ""
           }
         },
@@ -1710,67 +2524,298 @@
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `adjustedAt` deve usar pattern canônico de timestamp_utc.",
+          "message": "Campo `scoutEventId` deve usar pattern canônico de uuid_v4.",
           "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/video/sync_adjustment_applied_payload.yaml",
           "details": {
-            "field": "adjustedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+            "field": "scoutEventId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
             "path": ""
           }
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `occurredAt` deve usar pattern canônico de timestamp_utc.",
+          "message": "Campo `segmentId` deve usar pattern canônico de uuid_v4.",
           "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/video/sync_adjustment_applied_payload.yaml",
           "details": {
-            "field": "occurredAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+            "field": "segmentId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
             "path": ""
           }
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `completedAt` deve usar pattern canônico de timestamp_utc.",
+          "message": "Campo `celeryJobId` deve usar pattern canônico de uuid_v4.",
           "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/video/transcode_completed_payload.yaml",
           "details": {
-            "field": "completedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+            "field": "celeryJobId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
             "path": ""
           }
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `occurredAt` deve usar pattern canônico de timestamp_utc.",
+          "message": "Campo `profileId` deve usar pattern canônico de uuid_v4.",
           "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/video/transcode_completed_payload.yaml",
           "details": {
-            "field": "occurredAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+            "field": "profileId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
             "path": ""
           }
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `createdAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml",
+          "message": "Campo `clipId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/video_clip_ready_payload.yaml",
           "details": {
-            "field": "createdAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "field": "clipId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
             "path": ""
           }
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `updatedAt` deve usar pattern canônico de timestamp_utc.",
+          "message": "Campo `scoutEventId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/video_clip_ready_payload.yaml",
+          "details": {
+            "field": "scoutEventId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `accessorUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/video_distribution_published_payload.yaml",
+          "details": {
+            "field": "accessorUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `distributedAt` deve usar pattern canônico de timestamp_utc.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/video_distribution_published_payload.yaml",
+          "details": {
+            "field": "distributedAt",
+            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `segmentId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/video_segment_finalized_payload.yaml",
+          "details": {
+            "field": "segmentId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `operatorUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/video_session_created_payload.yaml",
+          "details": {
+            "field": "operatorUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `syncCompletedAt` deve usar pattern canônico de timestamp_utc.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/video_session_published_payload.yaml",
+          "details": {
+            "field": "syncCompletedAt",
+            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `athleteUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/wellness_entry_created_payload.yaml",
+          "details": {
+            "field": "athleteUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `entryId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/wellness_entry_created_payload.yaml",
+          "details": {
+            "field": "entryId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `questionnaireDate` deve usar pattern canônico de date_only.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/wellness_entry_created_payload.yaml",
+          "details": {
+            "field": "questionnaireDate",
+            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `trainingSessionId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/asyncapi/components/schemas/wellness_entry_created_payload.yaml",
+          "details": {
+            "field": "trainingSessionId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `jobId` deve usar pattern canônico de uuid_v4.",
           "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml",
           "details": {
-            "field": "updatedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "field": "jobId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `snapshotId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/analytics/analytics_snapshot.yaml",
+          "details": {
+            "field": "snapshotId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `entryId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/audit/audit_entry.yaml",
+          "details": {
+            "field": "entryId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `userId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/audit/audit_entry.yaml",
+          "details": {
+            "field": "userId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `competitionId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/competitions/competition.yaml",
+          "details": {
+            "field": "competitionId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `exerciseId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/exercises/exercise.yaml",
+          "details": {
+            "field": "exerciseId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `exerciseId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/exercises/exercise_preview.yaml",
+          "details": {
+            "field": "exerciseId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `childId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/exercises/exercise_relation.yaml",
+          "details": {
+            "field": "childId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `parentId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/exercises/exercise_relation.yaml",
+          "details": {
+            "field": "parentId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `relationId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/exercises/exercise_relation.yaml",
+          "details": {
+            "field": "relationId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `exerciseId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/exercises/exercise_version.yaml",
+          "details": {
+            "field": "exerciseId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `versionId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/exercises/exercise_version.yaml",
+          "details": {
+            "field": "versionId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
             "path": ""
           }
         },
@@ -1781,392 +2826,117 @@
           "details": {
             "field": "expiresAt",
             "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "actual_pattern": null,
             "path": ""
           }
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `createdAt` deve usar pattern canônico de timestamp_utc.",
+          "message": "Campo `recordId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/medical/medical_record.yaml",
+          "details": {
+            "field": "recordId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `deliveryId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/notifications/notification_delivery.yaml",
+          "details": {
+            "field": "deliveryId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `notificationId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/notifications/notification_delivery.yaml",
+          "details": {
+            "field": "notificationId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `userId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/notifications/notification_preferences.yaml",
+          "details": {
+            "field": "userId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `jobId` deve usar pattern canônico de uuid_v4.",
           "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/reports/report_job.yaml",
           "details": {
-            "field": "createdAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "field": "jobId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
             "path": ""
           }
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `createdAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/athlete_ineligibility_declaration.yaml",
+          "message": "Campo `eventId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/scout/scout_event.yaml",
           "details": {
-            "field": "createdAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "field": "eventId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
             "path": ""
           }
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `declaredAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/athlete_ineligibility_declaration.yaml",
+          "message": "Campo `seasonId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/seasons/season.yaml",
           "details": {
-            "field": "declaredAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "field": "seasonId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
             "path": ""
           }
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `createdAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/attention_queue_item.yaml",
+          "message": "Campo `messageId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/athlete_chat_message.yaml",
           "details": {
-            "field": "createdAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "field": "messageId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
             "path": ""
           }
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `resolvedAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/attention_queue_item.yaml",
-          "details": {
-            "field": "resolvedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `createdAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/execution_record.yaml",
-          "details": {
-            "field": "createdAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `recordedAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/execution_record.yaml",
-          "details": {
-            "field": "recordedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `updatedAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/execution_record.yaml",
-          "details": {
-            "field": "updatedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `createdAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/feedback_thread.yaml",
-          "details": {
-            "field": "createdAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `followUpAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/feedback_thread.yaml",
-          "details": {
-            "field": "followUpAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `updatedAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/feedback_thread.yaml",
-          "details": {
-            "field": "updatedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `generatedAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/load_chart.yaml",
-          "details": {
-            "field": "generatedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `createdAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/mesocycle.yaml",
-          "details": {
-            "field": "createdAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `updatedAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/mesocycle.yaml",
-          "details": {
-            "field": "updatedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `createdAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/microcycle.yaml",
-          "details": {
-            "field": "createdAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `updatedAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/microcycle.yaml",
-          "details": {
-            "field": "updatedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `createdAt` deve usar pattern canônico de timestamp_utc.",
+          "message": "Campo `ruleId` deve usar pattern canônico de uuid_v4.",
           "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/recommendation.yaml",
           "details": {
-            "field": "createdAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "field": "ruleId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
             "path": ""
           }
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `resolvedAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/recommendation.yaml",
-          "details": {
-            "field": "resolvedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `updatedAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/recommendation.yaml",
-          "details": {
-            "field": "updatedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `createdAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/session_block.yaml",
-          "details": {
-            "field": "createdAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `updatedAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/session_block.yaml",
-          "details": {
-            "field": "updatedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `createdAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/session_objective.yaml",
-          "details": {
-            "field": "createdAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `updatedAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/session_objective.yaml",
-          "details": {
-            "field": "updatedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `createdAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/training_session.yaml",
-          "details": {
-            "field": "createdAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `sessionAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/training_session.yaml",
-          "details": {
-            "field": "sessionAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `updatedAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/training_session.yaml",
-          "details": {
-            "field": "updatedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `createdAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/training_suggestion.yaml",
-          "details": {
-            "field": "createdAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `reviewedAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/training_suggestion.yaml",
-          "details": {
-            "field": "reviewedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `createdAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/wellness_post.yaml",
-          "details": {
-            "field": "createdAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `updatedAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/wellness_post.yaml",
-          "details": {
-            "field": "updatedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `createdAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/wellness_pre.yaml",
-          "details": {
-            "field": "createdAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `updatedAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/training/wellness_pre.yaml",
-          "details": {
-            "field": "updatedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `createdAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/users/user_profile.yaml",
-          "details": {
-            "field": "createdAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `updatedAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/users/user_profile.yaml",
-          "details": {
-            "field": "updatedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": ""
-          }
-        },
-        {
-          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `createdAt` deve usar pattern canônico de timestamp_utc.",
+          "message": "Campo `id` deve usar pattern canônico de uuid_v4.",
           "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/video/clip_definition.yaml",
           "details": {
-            "field": "createdAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "field": "id",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
             "path": ""
           }
         },
@@ -2183,23 +2953,23 @@
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `createdAt` deve usar pattern canônico de timestamp_utc.",
+          "message": "Campo `id` deve usar pattern canônico de uuid_v4.",
           "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/video/distribution_profile.yaml",
           "details": {
-            "field": "createdAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "field": "id",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
             "path": ""
           }
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `createdAt` deve usar pattern canônico de timestamp_utc.",
+          "message": "Campo `id` deve usar pattern canônico de uuid_v4.",
           "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/video/match_media_session.yaml",
           "details": {
-            "field": "createdAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "field": "id",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
             "path": ""
           }
         },
@@ -2216,23 +2986,45 @@
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `createdAt` deve usar pattern canônico de timestamp_utc.",
+          "message": "Campo `id` deve usar pattern canônico de uuid_v4.",
           "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/video/media_segment.yaml",
           "details": {
-            "field": "createdAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "field": "id",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
             "path": ""
           }
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `createdAt` deve usar pattern canônico de timestamp_utc.",
+          "message": "Campo `athleteUserId` deve usar pattern canônico de uuid_v4.",
           "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/wellness/wellness_entry.yaml",
           "details": {
-            "field": "createdAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "field": "athleteUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `id` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/wellness/wellness_entry.yaml",
+          "details": {
+            "field": "id",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `questionnaireDate` deve usar pattern canônico de date_only.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/wellness/wellness_entry.yaml",
+          "details": {
+            "field": "questionnaireDate",
+            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "actual_pattern": null,
             "path": ""
           }
         },
@@ -2242,6 +3034,17 @@
           "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/wellness/wellness_entry.yaml",
           "details": {
             "field": "trainingSessionId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": ""
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `athleteUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/components/schemas/wellness/wellness_summary.yaml",
+          "details": {
+            "field": "athleteUserId",
             "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
             "actual_pattern": null,
             "path": ""
@@ -2265,8 +3068,30 @@
           "details": {
             "field": "computedAt",
             "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "actual_pattern": null,
             "path": "/analytics/query/post/responses/200/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `actorUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/audit.yaml",
+          "details": {
+            "field": "actorUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/audit/entries/post/requestBody/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `correlationId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/audit.yaml",
+          "details": {
+            "field": "correlationId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/audit/entries/post/requestBody/content/application/json/schema"
           }
         },
         {
@@ -2276,7 +3101,18 @@
           "details": {
             "field": "occurredAt",
             "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "actual_pattern": null,
+            "path": "/audit/entries/post/requestBody/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `targetResourceId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/audit.yaml",
+          "details": {
+            "field": "targetResourceId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
             "path": "/audit/entries/post/requestBody/content/application/json/schema"
           }
         },
@@ -2287,7 +3123,7 @@
           "details": {
             "field": "exportedAt",
             "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "actual_pattern": null,
             "path": "/audit/entries/export/get/responses/200/content/application/json/schema"
           }
         },
@@ -2315,6 +3151,28 @@
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `seasonId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/competitions.yaml",
+          "details": {
+            "field": "seasonId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/competitions/post/requestBody/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `startDate` deve usar pattern canônico de date_only.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/competitions.yaml",
+          "details": {
+            "field": "startDate",
+            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "actual_pattern": null,
+            "path": "/competitions/post/requestBody/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
           "message": "Campo `endDate` deve usar pattern canônico de date_only.",
           "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/competitions.yaml",
           "details": {
@@ -2326,13 +3184,68 @@
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `grantedAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
+          "message": "Campo `startDate` deve usar pattern canônico de date_only.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/competitions.yaml",
           "details": {
-            "field": "grantedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": "/exercises/{id}/acl/get/responses/200/content/application/json/schema/properties/data/items"
+            "field": "startDate",
+            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "actual_pattern": null,
+            "path": "/competitions/{competitionId}/patch/requestBody/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `userId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/identity_access.yaml",
+          "details": {
+            "field": "userId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/auth/users/{userId}/roles/get/responses/200/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `userId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/identity_access.yaml",
+          "details": {
+            "field": "userId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/auth/users/{userId}/roles/post/responses/200/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `awayTeamId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/matches.yaml",
+          "details": {
+            "field": "awayTeamId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/matches/post/requestBody/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `competitionId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/matches.yaml",
+          "details": {
+            "field": "competitionId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/matches/post/requestBody/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `homeTeamId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/matches.yaml",
+          "details": {
+            "field": "homeTeamId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/matches/post/requestBody/content/application/json/schema"
           }
         },
         {
@@ -2342,7 +3255,7 @@
           "details": {
             "field": "scheduledAt",
             "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "actual_pattern": null,
             "path": "/matches/post/requestBody/content/application/json/schema"
           }
         },
@@ -2364,7 +3277,7 @@
           "details": {
             "field": "scheduledAt",
             "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "actual_pattern": null,
             "path": "/matches/{matchId}/patch/requestBody/content/application/json/schema"
           }
         },
@@ -2381,12 +3294,67 @@
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `athleteUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/medical.yaml",
+          "details": {
+            "field": "athleteUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/medical/records/post/requestBody/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `recordDate` deve usar pattern canônico de date_only.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/medical.yaml",
+          "details": {
+            "field": "recordDate",
+            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "actual_pattern": null,
+            "path": "/medical/records/post/requestBody/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `teamId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/medical.yaml",
+          "details": {
+            "field": "teamId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/medical/records/post/requestBody/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `recordDate` deve usar pattern canônico de date_only.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/medical.yaml",
+          "details": {
+            "field": "recordDate",
+            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "actual_pattern": null,
+            "path": "/medical/records/{recordId}/patch/requestBody/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `recipientUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/notifications.yaml",
+          "details": {
+            "field": "recipientUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/notifications/intents/post/requestBody/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
           "message": "Campo `completedAt` deve usar pattern canônico de timestamp_utc.",
           "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/reports.yaml",
           "details": {
             "field": "completedAt",
             "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "actual_pattern": null,
             "path": "/reports/jobs/get/responses/200/content/application/json/schema/properties/data/items/allOf/1"
           }
         },
@@ -2397,7 +3365,7 @@
           "details": {
             "field": "completedAt",
             "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "actual_pattern": null,
             "path": "/reports/jobs/{jobId}/get/responses/200/content/application/json/schema/allOf/1"
           }
         },
@@ -2408,8 +3376,30 @@
           "details": {
             "field": "completedAt",
             "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "actual_pattern": null,
             "path": "/reports/jobs/{jobId}/patch/responses/200/content/application/json/schema/allOf/1"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `athleteUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/scout.yaml",
+          "details": {
+            "field": "athleteUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/scout/events/post/requestBody/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `matchId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/scout.yaml",
+          "details": {
+            "field": "matchId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/scout/events/post/requestBody/content/application/json/schema"
           }
         },
         {
@@ -2419,8 +3409,41 @@
           "details": {
             "field": "recordedAt",
             "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "actual_pattern": null,
             "path": "/scout/events/post/requestBody/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `teamId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/scout.yaml",
+          "details": {
+            "field": "teamId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/scout/events/post/requestBody/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `matchId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/scout.yaml",
+          "details": {
+            "field": "matchId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/scout/events/aggregations/get/responses/200/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `athleteUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/scout.yaml",
+          "details": {
+            "field": "athleteUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/scout/events/aggregations/get/responses/200/content/application/json/schema/properties/athleteBreakdown/items"
           }
         },
         {
@@ -2430,8 +3453,74 @@
           "details": {
             "field": "completedAt",
             "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+            "actual_pattern": null,
             "path": "/scout/sessions/{matchId}/complete/post/responses/200/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `matchId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/scout.yaml",
+          "details": {
+            "field": "matchId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/scout/sessions/{matchId}/complete/post/responses/200/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `endDate` deve usar pattern canônico de date_only.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/seasons.yaml",
+          "details": {
+            "field": "endDate",
+            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "actual_pattern": null,
+            "path": "/seasons/post/requestBody/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `startDate` deve usar pattern canônico de date_only.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/seasons.yaml",
+          "details": {
+            "field": "startDate",
+            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "actual_pattern": null,
+            "path": "/seasons/post/requestBody/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `endDate` deve usar pattern canônico de date_only.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/seasons.yaml",
+          "details": {
+            "field": "endDate",
+            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "actual_pattern": null,
+            "path": "/seasons/{seasonId}/patch/requestBody/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `startDate` deve usar pattern canônico de date_only.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/seasons.yaml",
+          "details": {
+            "field": "startDate",
+            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "actual_pattern": null,
+            "path": "/seasons/{seasonId}/patch/requestBody/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `organizationId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/teams.yaml",
+          "details": {
+            "field": "organizationId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/teams/post/requestBody/content/application/json/schema"
           }
         },
         {
@@ -2458,79 +3547,134 @@
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `sessionAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "Campo `scoutEventId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/video.yaml",
           "details": {
-            "field": "sessionAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": "/training-sessions/post/requestBody/content/application/json/schema"
+            "field": "scoutEventId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/video/clips/post/requestBody/content/application/json/schema"
           }
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `correctionAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "Campo `sessionId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/video.yaml",
           "details": {
-            "field": "correctionAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": "/training-sessions/{id}/attendance/get/responses/200/content/application/json/schema/properties/items/items"
+            "field": "sessionId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/video/clips/post/requestBody/content/application/json/schema"
           }
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `recordedAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "Campo `distributionProfileId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/video.yaml",
           "details": {
-            "field": "recordedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": "/training-sessions/{id}/attendance/get/responses/200/content/application/json/schema/properties/items/items"
+            "field": "distributionProfileId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/video/distribution/post/requestBody/content/application/json/schema"
           }
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `correctionAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "Campo `sessionId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/video.yaml",
           "details": {
-            "field": "correctionAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": "/training-sessions/{id}/attendance/post/requestBody/content/application/json/schema"
+            "field": "sessionId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/video/distribution/post/requestBody/content/application/json/schema"
           }
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `observedAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "Campo `distributionId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/video.yaml",
           "details": {
-            "field": "observedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": "/training-sessions/{id}/attendance/post/requestBody/content/application/json/schema"
+            "field": "distributionId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/video/distribution/post/responses/202/content/application/json/schema"
           }
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `recordedAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "Campo `sessionId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/video.yaml",
           "details": {
-            "field": "recordedAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": "/training-sessions/{id}/attendance/post/responses/201/content/application/json/schema"
+            "field": "sessionId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/video/segments/post/requestBody/content/application/json/schema"
           }
         },
         {
           "blocking_code": "BLOCKED_FORMAT_VIOLATION",
-          "message": "Campo `sessionAt` deve usar pattern canônico de timestamp_utc.",
-          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
+          "message": "Campo `sourceEdgeNodeId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/video.yaml",
           "details": {
-            "field": "sessionAt",
-            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
-            "actual_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
-            "path": "/training-sessions/{id}/blocks/reorder/patch/requestBody/content/application/json/schema"
+            "field": "sourceEdgeNodeId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/video/segments/post/requestBody/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `matchId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/video.yaml",
+          "details": {
+            "field": "matchId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/video/sessions/post/requestBody/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `technicalContactUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/video.yaml",
+          "details": {
+            "field": "technicalContactUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/video/sessions/post/requestBody/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `technicalContactUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/video.yaml",
+          "details": {
+            "field": "technicalContactUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/video/sessions/{sessionId}/patch/requestBody/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `athleteUserId` deve usar pattern canônico de uuid_v4.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/wellness.yaml",
+          "details": {
+            "field": "athleteUserId",
+            "expected_pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+            "actual_pattern": null,
+            "path": "/wellness/entries/post/requestBody/content/application/json/schema"
+          }
+        },
+        {
+          "blocking_code": "BLOCKED_FORMAT_VIOLATION",
+          "message": "Campo `questionnaireDate` deve usar pattern canônico de date_only.",
+          "artifact": "/home/davis/HB-TRACK/contracts/openapi/paths/wellness.yaml",
+          "details": {
+            "field": "questionnaireDate",
+            "expected_pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "actual_pattern": null,
+            "path": "/wellness/entries/post/requestBody/content/application/json/schema"
           }
         },
         {
@@ -4499,10 +5643,10 @@
         }
       ],
       "metrics": {
-        "errors": 304,
+        "errors": 408,
         "warnings": 0,
-        "violations": 304,
-        "duration_ms": 1536
+        "violations": 408,
+        "duration_ms": 1651
       }
     },
     {
@@ -4578,7 +5722,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1712
+        "duration_ms": 2277
       }
     },
     {
@@ -4621,7 +5765,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 67
+        "duration_ms": 70
       }
     },
     {
@@ -4643,7 +5787,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1090
+        "duration_ms": 1129
       }
     },
     {
@@ -4681,7 +5825,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 5
       }
     },
     {
@@ -4690,7 +5834,7 @@
       "blocking": true,
       "exit_code": 2,
       "blocking_code": "BLOCKED_TRACEABILITY_MANIFEST_INVALID",
-      "summary": "Manifests de rastreabilidade inválidos: 23 erro(s).",
+      "summary": "Manifests de rastreabilidade inválidos: 10 erro(s).",
       "inputs": [
         "generated/manifests/ai_ingestion.sync.traceability.yaml",
         "generated/manifests/analytics.sync.traceability.yaml",
@@ -4733,148 +5877,70 @@
       "violations": [
         {
           "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/openapi/paths/analytics.yaml",
-          "message": "Hash sha256 divergente para contracts/openapi/paths/analytics.yaml (manifest=9650e8aeb30382189a73880b069dbf89bc113a2cbae5be73f816c60f5ba0286d, atual=02e3575224e714efefbd319f1465b183cc7d2785111eb14543a013335bcf29c8).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/openapi/paths/audit.yaml",
-          "message": "Hash sha256 divergente para contracts/openapi/paths/audit.yaml (manifest=b32252c2d7a7fd8b449c21b26a635a9552dfb8155e9ee25f2e79d8a183b43564, atual=62d02b219209eacb3acf37d7941f264369f6b6bdfa7e12c11019e1ed8cfd141c).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/openapi/paths/competitions.yaml",
-          "message": "Hash sha256 divergente para contracts/openapi/paths/competitions.yaml (manifest=a60aa57b45f358c9139b2d569f765a03d3c1c37f67f1b338430287ac70d8317e, atual=fab3ca5fd3c59fc909212c5aeb586121037800be07ff9ff63b72d9c55c078626).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/openapi/paths/exercises.yaml",
-          "message": "Hash sha256 divergente para contracts/openapi/paths/exercises.yaml (manifest=b5fb4c67a0fffb84742f7a3fa20eedb15ea2bedee8c5235e4577d7e3a0fac648, atual=5d5833e7e21058af7ee7a26bcdbb0202d85b67660a23bb9951961245ef95cb65).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/openapi/paths/identity_access.yaml",
-          "message": "Hash sha256 divergente para contracts/openapi/paths/identity_access.yaml (manifest=06cef6d728d3acd18d7d71541c50b2438edaaaa30005a3fc979b594b44ecf93c, atual=fd125f76f2edaa822e5a4b3f239f0cb83b710be636958cb1565005cf944be197).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/openapi/paths/matches.yaml",
-          "message": "Hash sha256 divergente para contracts/openapi/paths/matches.yaml (manifest=5c1fc7296c742a6d146fa2f82913d3fbac2cc640c78a9c5ccf426e091c7a2943, atual=2869235901f1be156d35faff32caea7a81be8ba56abd88a3f0410944fa77f7de).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/openapi/paths/medical.yaml",
-          "message": "Hash sha256 divergente para contracts/openapi/paths/medical.yaml (manifest=d86f35a324ca8956d9fef73e883808be907227fb173c1f98728a187b9508f63d, atual=103bbb69532a97a1444c41b5dad4a7ae693b500529be272ef018ce8c92e172b2).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/openapi/paths/notifications.yaml",
-          "message": "Hash sha256 divergente para contracts/openapi/paths/notifications.yaml (manifest=e1728cf9ace97ac38773b96600633ad470fc37322afd0660a6334349e39196e0, atual=b18ff91da1b7101567c643e0aa470c9f880e4102e62ce031688e5ec7d74e54a1).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/openapi/paths/reports.yaml",
-          "message": "Hash sha256 divergente para contracts/openapi/paths/reports.yaml (manifest=123b9f77713fb516ea3aebf26e3a858dbb1f5cf77f83a59da2a5ec5d27be0f17, atual=d8650d5d18ee878ca023201b090a55647f4d07387707d573507f189517ade3a8).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/openapi/paths/scout.yaml",
-          "message": "Hash sha256 divergente para contracts/openapi/paths/scout.yaml (manifest=92bdc238f13530874414877f6b9aaf711010b7466150ae523604a47111fe57df, atual=dd33aee8d87db60aaa016e0b6c400c0eee37d84392571ad6663b1411299bd0de).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/openapi/paths/seasons.yaml",
-          "message": "Hash sha256 divergente para contracts/openapi/paths/seasons.yaml (manifest=ed364d6c153a989580a06cfc1e48394385c26c331b2a686ba1279103fd7a57c1, atual=fb7a9a3b7b5fb802a63831056e31c50ab3142f7cfb02095ea27fefbf131ffec4).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/openapi/paths/teams.yaml",
-          "message": "Hash sha256 divergente para contracts/openapi/paths/teams.yaml (manifest=35b17c9abf5338226c6ab091ed7cb92c68ac1d598097cbe0f04fc79afb29d575, atual=33f179343b2757b10139c39f4dd2eab07b90a00221aea0dfed167a38c78949dd).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
           "artifact": "contracts/asyncapi/components/schemas/training_attendance_marked_payload.yaml",
-          "message": "Hash sha256 divergente para contracts/asyncapi/components/schemas/training_attendance_marked_payload.yaml (manifest=6ef65f5f38270bb2d877d0968f1672155b79dda9dcba2682f73c3500f2005f0e, atual=9f9b6f6af28cbd6f9df13ada94c0d1a99233bb144600f6219be81b34164e6c1f).",
+          "message": "Hash sha256 divergente para contracts/asyncapi/components/schemas/training_attendance_marked_payload.yaml (manifest=6ef65f5f38270bb2d877d0968f1672155b79dda9dcba2682f73c3500f2005f0e, atual=614b4db1700ce0501a9770b5677e79d55c7d39d5508097400bd7e97232c35da9).",
           "severity": "error"
         },
         {
           "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
           "artifact": "contracts/asyncapi/components/schemas/training_readiness_assessed_payload.yaml",
-          "message": "Hash sha256 divergente para contracts/asyncapi/components/schemas/training_readiness_assessed_payload.yaml (manifest=84f6b161b674bb8a8a80b5221b343401e36534a98e8f3baa9b788202f3468220, atual=13cbb90f345531b18c40d7fa2dfb38ff44e32c436140d624fe8cf00053b7c46e).",
+          "message": "Hash sha256 divergente para contracts/asyncapi/components/schemas/training_readiness_assessed_payload.yaml (manifest=84f6b161b674bb8a8a80b5221b343401e36534a98e8f3baa9b788202f3468220, atual=5f5533973e0a404ccf5b1f92763af3e072ff95e840bc7738bfbebb13c5160054).",
           "severity": "error"
         },
         {
           "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
           "artifact": "contracts/asyncapi/components/schemas/training_session_archived_payload.yaml",
-          "message": "Hash sha256 divergente para contracts/asyncapi/components/schemas/training_session_archived_payload.yaml (manifest=a9f15882e686aabdbeb6b79191e080468c9a41007f7463e7ebac72a61c021735, atual=4a3c32b0defc965f7557409a5d834f18f99690ef037b3e4a46971aa2f20a69f8).",
+          "message": "Hash sha256 divergente para contracts/asyncapi/components/schemas/training_session_archived_payload.yaml (manifest=a9f15882e686aabdbeb6b79191e080468c9a41007f7463e7ebac72a61c021735, atual=c7df177f6d08111e10183c3eb78978ed8384611f5323857e89d987c798baafd4).",
           "severity": "error"
         },
         {
           "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
           "artifact": "contracts/asyncapi/components/schemas/training_session_cancelled_payload.yaml",
-          "message": "Hash sha256 divergente para contracts/asyncapi/components/schemas/training_session_cancelled_payload.yaml (manifest=7299b09405f6b10faa1f19975281f17f2a5b4ee9fd08b2ffed238e57408ed6cc, atual=d91ee3aaf1c18d596854a36a2a9a30355c402bb3ec43e6bed3c6b1a4f54ddc27).",
+          "message": "Hash sha256 divergente para contracts/asyncapi/components/schemas/training_session_cancelled_payload.yaml (manifest=7299b09405f6b10faa1f19975281f17f2a5b4ee9fd08b2ffed238e57408ed6cc, atual=adaa7f3dfa1c58c83d92bc545b94ef08dbfafb1b8521760c96c0a74ae7421200).",
           "severity": "error"
         },
         {
           "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
           "artifact": "contracts/asyncapi/components/schemas/training_session_completed_payload.yaml",
-          "message": "Hash sha256 divergente para contracts/asyncapi/components/schemas/training_session_completed_payload.yaml (manifest=ba393faf5d66f65d70abf216dbfd26360a03f738a42fbda466d55149bcb8822b, atual=da60af1b8b4d4d5ddc26ec7ed948bb22477ca4a79494e51fd475a969627aef99).",
+          "message": "Hash sha256 divergente para contracts/asyncapi/components/schemas/training_session_completed_payload.yaml (manifest=ba393faf5d66f65d70abf216dbfd26360a03f738a42fbda466d55149bcb8822b, atual=ab13a74980fb2dc1507d9da31c32373a34867edab4a2f23bd2f81348e02e1f99).",
           "severity": "error"
         },
         {
           "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
           "artifact": "contracts/asyncapi/components/schemas/training_session_created_payload.yaml",
-          "message": "Hash sha256 divergente para contracts/asyncapi/components/schemas/training_session_created_payload.yaml (manifest=ae70bb270bcb079ea8ebd2fc88afc229422269885ebdbc50ec6a7ee6b69499bc, atual=8103c31168f9276bf5f97e09b8e6152838157b1af16bec2285733656855c16be).",
+          "message": "Hash sha256 divergente para contracts/asyncapi/components/schemas/training_session_created_payload.yaml (manifest=ae70bb270bcb079ea8ebd2fc88afc229422269885ebdbc50ec6a7ee6b69499bc, atual=049d0b175405a0827b7d9ca13f78d4a7e7b6c7056cf9fc8bf316fceeec111772).",
           "severity": "error"
         },
         {
           "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
           "artifact": "contracts/asyncapi/components/schemas/training_session_published_payload.yaml",
-          "message": "Hash sha256 divergente para contracts/asyncapi/components/schemas/training_session_published_payload.yaml (manifest=a9fffba74a03f0ead589fc18514c691c5c495dab678642aa4e156a67bbdc4c29, atual=1f7de37051735921ac58dff9497cb7018e5e468c9fa4be2f91583b8aeb1f2aa4).",
+          "message": "Hash sha256 divergente para contracts/asyncapi/components/schemas/training_session_published_payload.yaml (manifest=a9fffba74a03f0ead589fc18514c691c5c495dab678642aa4e156a67bbdc4c29, atual=ac615111c892b9da72eeaaa083512d0b339e3e8c860573ab7291b41e7e89765c).",
           "severity": "error"
         },
         {
           "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
           "artifact": "contracts/asyncapi/components/schemas/training_session_started_payload.yaml",
-          "message": "Hash sha256 divergente para contracts/asyncapi/components/schemas/training_session_started_payload.yaml (manifest=d95a3aa053439bd61bb6ab45cc82b92fb7439c39ba1ba8246fc8d6c8eb13b5a3, atual=8e026b75f86662a3c578326e3dec84e0eaa7055c33eb3f3af9f117e0fb1f55d7).",
+          "message": "Hash sha256 divergente para contracts/asyncapi/components/schemas/training_session_started_payload.yaml (manifest=d95a3aa053439bd61bb6ab45cc82b92fb7439c39ba1ba8246fc8d6c8eb13b5a3, atual=4749b871f63a6eeb636c9712bbee4015dca1473790c5b8b0ee8b88124139cedd).",
           "severity": "error"
         },
         {
           "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
           "artifact": "contracts/openapi/paths/training.yaml",
-          "message": "Hash sha256 divergente para contracts/openapi/paths/training.yaml (manifest=54c1bcf1ff261d34b8e179118ee8f3b03c86ce1e9f1095525af4fe7b36266cc4, atual=b9043ac752ac1c62d55f6cdacb93a3299c3205f2972889f898d5261bce9d2b59).",
+          "message": "Hash sha256 divergente para contracts/openapi/paths/training.yaml (manifest=54c1bcf1ff261d34b8e179118ee8f3b03c86ce1e9f1095525af4fe7b36266cc4, atual=c3f39917ed7e996538c8756c8f31b41f804e0b513eddc8d2b1e569180c87615c).",
           "severity": "error"
         },
         {
           "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
           "artifact": "contracts/openapi/paths/users.yaml",
-          "message": "Hash sha256 divergente para contracts/openapi/paths/users.yaml (manifest=fd6c084d75bdee66547d96d78ef19eadb10d64962cdd7f2ae3155ae637dc53f6, atual=2e5484434c8f8ace69cf87baf2d5fdfbd54f988bbd3ba165a12611cda5a6ced5).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_TRACEABILITY_HASH_MISMATCH",
-          "artifact": "contracts/openapi/paths/wellness.yaml",
-          "message": "Hash sha256 divergente para contracts/openapi/paths/wellness.yaml (manifest=bff9e9ada167d4e60734d2b31a15126bd3d3fb785be43704f906c31242b35f4b, atual=361a0730af8f5287a5ce444fd0db19e78a5d16d2e2af51884484e9667233d9ae).",
+          "message": "Hash sha256 divergente para contracts/openapi/paths/users.yaml (manifest=fd6c084d75bdee66547d96d78ef19eadb10d64962cdd7f2ae3155ae637dc53f6, atual=dc2e5c1aa76e9ca696d0986b0d27459204cf20a78c2a0a34620886d5e34024d9).",
           "severity": "error"
         }
       ],
       "metrics": {
-        "errors": 23,
+        "errors": 10,
         "warnings": 0,
-        "violations": 23,
-        "duration_ms": 51
+        "violations": 10,
+        "duration_ms": 64
       }
     },
     {
@@ -4910,7 +5976,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 10
       }
     },
     {
@@ -5060,7 +6126,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 3
       }
     },
     {
@@ -5164,7 +6230,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 7
       }
     },
     {

@@ -24,11 +24,11 @@ properties:
   organizationId:
     type: string
     format: uuid
-    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   teamId:
     type: string
     format: uuid
-    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   macrocycleId:
     type: string
     format: uuid
@@ -45,13 +45,13 @@ properties:
   startDate:
     type: string
     format: date
-    pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+    pattern: ^\d{4}-\d{2}-\d{2}$
     description: >
       Start date (ISO 8601 date, ADR-009). MUST be strictly less than endDate (INV-TRAIN-037).
   endDate:
     type: string
     format: date
-    pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+    pattern: ^\d{4}-\d{2}-\d{2}$
     description: >
       End date (ISO 8601 date, ADR-009). MUST be strictly greater than startDate (INV-TRAIN-037).
       Overlapping mesocycles within same team/macrocycle are allowed (INV-TRAIN-055).
@@ -61,15 +61,15 @@ properties:
   createdAt:
     type: string
     format: date-time
-    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
   createdByUserId:
     type: string
     format: uuid
-    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
   updatedAt:
     type: string
     format: date-time
-    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
   deletedAt:
     type: [string, "null"]
     format: date-time

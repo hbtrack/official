@@ -1,0 +1,50 @@
+{
+  "session": "4C",
+  "phase": "PASSO_2_AGGREGATION",
+  "audit_summary": {
+    "total_audited": 25,
+    "bucket1_staying": 25,
+    "bucket4_reclassified": 0,
+    "zero_undecided": true
+  },
+  "bucket1_by_confidence": {
+    "HIGH": 25,
+    "MEDIUM": 0
+  },
+  "bucket1_by_reason_code": {
+    "CANONICAL_UUID_SUFFIX": 12,
+    "CANONICAL_TIMESTAMP_SUFFIX": 11,
+    "CANONICAL_DATE_SUFFIX": 2
+  },
+  "bucket4_by_reason_code": {},
+  "v6_candidates": {
+    "high_confidence": [
+      "athleteId",
+      "captureStartedAt",
+      "coachId",
+      "completedAt",
+      "computedAt",
+      "conversationId",
+      "createdAt",
+      "createdByUserId",
+      "decidedAt",
+      "decidedByCoachId",
+      "endDate",
+      "endedAt",
+      "generatedSessionId",
+      "generatedTrainingSessionId",
+      "matchId",
+      "nextRetryAt",
+      "occurredAt",
+      "organizationId",
+      "publishedAt",
+      "sessionId",
+      "startDate",
+      "startedAt",
+      "teamId",
+      "trainingId",
+      "updatedAt"
+    ],
+    "medium_confidence": []
+  }
+}

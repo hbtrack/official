@@ -20,7 +20,7 @@ properties:
     format: date-time
     description: Momento ISO 8601 UTC da conclusão.
     x-semantic-id: core.occurred_at.v1
-    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
   profileId:
     type: string
     format: uuid
@@ -28,6 +28,7 @@ properties:
     x-semantic-id: video.distribution_profile.id.v1
   sessionId:
     type: string
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
     format: uuid
     description: UUID da MatchMediaSession pai.
     x-semantic-id: video.match_media_session.id.v1
@@ -51,7 +52,7 @@ properties:
     type: string
     format: date-time
     description: ISO 8601 UTC da conclusão da transcodificação.
-    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
   celeryJobId:
     type: string
     description: ID da Celery task que executou transcode (ADR-031).

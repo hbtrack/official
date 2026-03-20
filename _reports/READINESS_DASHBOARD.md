@@ -1,5 +1,5 @@
 # Dashboard de Readiness - HB Track
-> Gerado em 2026-03-20T04:24:09Z | run_id: `20260320T042409_23f265` | health: **94/100** | overall: **FAIL**
+> Gerado em 2026-03-20T05:40:09Z | run_id: `20260320T054009_61b076` | health: **94/100** | overall: **FAIL**
 
 ## Modulos
 

@@ -17,6 +17,7 @@ properties:
     const: competition.created
   occurredAt:
     type: string
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
     format: date-time
     x-semantic-id: core.occurred_at.v1
   competitionId:
@@ -45,4 +46,5 @@ properties:
     description: Competições novas sempre iniciam como draft.
   startDate:
     type: string
+    pattern: ^\d{4}-\d{2}-\d{2}$
     format: date

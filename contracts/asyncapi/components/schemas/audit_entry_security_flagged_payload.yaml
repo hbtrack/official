@@ -22,6 +22,7 @@ properties:
 
   occurredAt:
     type: string
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
     format: date-time
     description: >
       Timestamp UTC do momento em que a ação sensível ocorreu (INV-AUD-001, ISO 8601).
