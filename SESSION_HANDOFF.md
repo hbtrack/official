@@ -161,16 +161,18 @@ PIPELINE STATUS           ✅ PASS
 
 ---
 
-## Entendimento Atual — 2C Progresso
+## Entendimento Atual — BACKLOG_ITEM_2 ✅ ENCERRADO
 
 **Histórico 2C:**
 - Item 2A: ✅ Encerrado (não reproduzido)
-- Item 2C: 🔄 **Em execução**
+- Item 2C: ✅ **ENCERRADO** — 383 pattern violations → 0
   - Sessão 4B: ✅ Bucket 1 v5 remediation (542 → 409 violações)
   - Sessão 4C: ✅ Auditoria Bucket 1-restante (25 campos, v6 approved)
   - Sessão 4C.1: ✅ V6 Conservative executed (0 impacto = validação, não falha)
-  - Sessão 4D: ⏳ **PRÓXIMO** — Decision-tree Bucket 4 (~330+ campos ambíguos)
-- Item 2D: ✅ **CONCLUÍDO** — 155 enum violations resolvidos (x-domain-enum-ref + UPPER_SNAKE_CASE + const)
+  - Sessão 4D: ✅ Decision-tree Bucket 4 executado (7 famílias semânticas)
+  - Sessão 4C.2.v2a–v2c: ✅ 249 pattern violations → 0 (remediação automática)
+- Item 2D: ✅ **ENCERRADO** — 155 enum violations → 0 (x-domain-enum-ref + UPPER_SNAKE_CASE + const)
+- **Total:** 542 → **0** | Tag: `milestone/cross-spec-alignment-zero`
 
 ---
 
@@ -537,11 +539,12 @@ Exemplo: `createdAt` (10x), `updatedAt` (5x), `id` (13x) aparecem em múltiplos 
 ## Contexto Crítico (Status Final)
 - **17/17 módulos:** todos em `implementation_ready` ✅ (video promovido 2026-03-19)
 - **Contratos:** validados e sem erros bloqueantes ✅
-- **Gates:** PASS na última execução ✅ (MODULE_STATUS_COHERENCE_GATE + SURFACE_PROMOTION_COHERENCE_GATE)
+- **Gates:** PASS na última execução ✅ (todos os gates verdes, zero waivers)
 - **FASE 7 CONCLUÍDA — 2026-03-19:** 11/11 eixos PASS | adversarial 17/17 PASS | FINAL_HANDOFF.md assinado
+- **BACKLOG_ITEM_2 ENCERRADO — 2026-03-20:** 542 CROSS_SPEC violations → 0 | tag `milestone/cross-spec-alignment-zero`
 - **Plano de remediação:** 38/38 ações ✅ — 100% — Sistema em **100/100** robustez contratual
 - **Próxima fase:** `generate_code` ativável. Prioridade: identity_access → users → seasons → teams
-- **Last Action:** FASE 7 concluída — validação final 11/11 eixos PASS + FINAL_HANDOFF assinado (2026-03-19)
+- **Last Action:** BACKLOG_ITEM_2 encerrado — milestone `cross-spec-alignment-zero` criado (2026-03-20)
 
 
 ## REMEDIAÇÃO DE ENFORCEMENT — ORDENS 1-6 (2026-03-19)
@@ -590,6 +593,17 @@ Exemplo: `createdAt` (10x), `updatedAt` (5x), `id` (13x) aparecem em múltiplos 
 
 **Status:** TODAS AS 6 ORDENS IMPLEMENTADAS E TESTADAS ✅
 
-## Próximo Passo
-**Revalidação com 10-test suite** (arquivo `docs/guias/produto/testes.md`)
-- Régua de decisão: 9-10/10 PASSA (ready) | 7-8/10 PASSA (usable) | ≤6/10 PASSA (stop)
+## Melhorias Opcionais (Não Bloqueantes)
+
+> Estas melhorias não afetam nenhum gate atual. São qualidade de contrato e consistência futura.
+> **Não abrir nenhuma trilha de remediação até que seja explicitamente priorizado.**
+
+### 1. Hardening semântico (Bucket 4 residual)
+Campos `id` genérico e `status` sem qualificador de domínio — decisão CONTEXT_DEPENDENT.
+Requer análise manual por entidade (ex: qual `id` em `wellness` é athleteId? teamId?).
+**Impacto:** Qualidade semântica dos contratos. Não bloqueia geração de código.
+
+### 2. Pattern coverage em paths/ e embedded schemas
+383 pattern violations foram resolvidos em `components/schemas/`. Campos em `paths/` (query params,
+request bodies inline) e em embedded schemas (`allOf`, `oneOf`, `anyOf`) ficaram fora do escopo.
+**Impacto:** Cobertura mais ampla do `x-domain-pattern-ref`. Não bloqueia nenhum gate atual.
