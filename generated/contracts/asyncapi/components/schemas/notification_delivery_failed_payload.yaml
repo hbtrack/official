@@ -1,0 +1,82 @@
+type: object
+additionalProperties: false
+required:
+- eventType
+- occurredAt
+- deliveryId
+- recipientUserId
+- channelLabel
+- deliveryStatusLabel
+- retryCount
+- requestedAt
+- failureReasonLabel
+properties:
+  eventType:
+    type: string
+    description: Tipo canônico do evento. Imutável.
+    const: notification.delivery.failed
+  occurredAt:
+    type: string
+    format: date-time
+    description: Momento em que o evento foi gerado (ISO 8601 UTC).
+    x-semantic-id: core.occurred_at.v1
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  deliveryId:
+    type: string
+    format: uuid
+    description: UUID v4 da NotificationDelivery que falhou (INV-NTF-001).
+    x-semantic-id: notifications.delivery.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+  recipientUserId:
+    type: string
+    format: uuid
+    description: UUID do destinatário. Referência ao módulo users.
+    x-semantic-id: identity.user.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+  channelLabel:
+    type: string
+    enum:
+    - PUSH
+    - EMAIL
+    - IN_APP
+    - SMS
+    description: Canal que falhou na entrega.
+    x-domain-enum-ref: notification_channel
+  deliveryStatusLabel:
+    type: string
+    description: Status final da entrega. Sempre failed neste evento.
+    const: failed
+  retryCount:
+    type: integer
+    minimum: 1
+    maximum: 10
+    description: 'Número de tentativas esgotadas (INV-NTF-002: [0..10]). Sempre >=
+      1 pois ao menos uma tentativa foi realizada antes de falhar.
+
+      '
+  requestedAt:
+    type: string
+    format: date-time
+    description: Momento em que a intenção foi registrada (ISO 8601 UTC).
+    x-semantic-id: core.occurred_at.v1
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  failureReasonLabel:
+    type: string
+    enum:
+    - CHANNEL_UNAVAILABLE
+    - RECIPIENT_UNREACHABLE
+    - ADAPTER_ERROR
+    - TOKEN_INVALID
+    - RATE_LIMITED
+    - TIMEOUT
+    description: 'Categoria de falha identificada pelo adapter (DR-NTF-005). Não expõe
+      detalhes internos do provedor externo.
+
+      '
+    x-domain-enum-ref: notification_failure_reason
+  lastAttemptAt:
+    type: string
+    format: date-time
+    description: Momento da última tentativa de entrega (ISO 8601 UTC).
+    x-semantic-id: core.occurred_at.v1
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$

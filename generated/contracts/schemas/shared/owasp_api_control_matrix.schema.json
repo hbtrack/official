@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hbtrack.local/contracts/schemas/shared/owasp_api_control_matrix.schema.json",
+  "title": "HB Track — OWASP API Control Matrix (Normative)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "artifact",
+    "status",
+    "scope",
+    "applies_to",
+    "policy",
+    "control_matrix",
+    "agent_rules"
+  ],
+  "properties": {
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "artifact": { "type": "string", "const": "OWASP_API_CONTROL_MATRIX" },
+    "status": { "type": "string", "enum": ["active", "inactive"] },
+    "scope": { "type": "string", "enum": ["global"] },
+    "applies_to": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9]+(?:_[a-z0-9]+)*$" }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["objective", "interpretation_rules"],
+      "properties": {
+        "objective": { "type": "string", "minLength": 1 },
+        "interpretation_rules": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "control_matrix": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/control" }
+    },
+    "agent_rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "$defs": {
+    "declaration_channel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "fields": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "recommended_extensions": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "declaration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["openapi", "human_contract"],
+      "properties": {
+        "openapi": { "$ref": "#/$defs/declaration_channel" },
+        "human_contract": { "$ref": "#/$defs/declaration_channel" }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contractual_minimum", "behavioral_required", "behavioral_minimum"],
+      "properties": {
+        "contractual_minimum": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "behavioral_required": { "type": "boolean" },
+        "behavioral_minimum": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["declaration_gate", "behavior_gate"],
+      "properties": {
+        "declaration_gate": { "type": "string", "minLength": 1 },
+        "behavior_gate": { "type": "string", "minLength": 1 }
+      }
+    },
+    "exit_codes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["missing_declaration", "inconsistent_declaration", "missing_behavioral_evidence", "infra_error"],
+      "properties": {
+        "missing_declaration": { "type": "integer" },
+        "inconsistent_declaration": { "type": "integer" },
+        "missing_behavioral_evidence": { "type": "integer" },
+        "infra_error": { "type": "integer" }
+      }
+    },
+    "control": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "control_id",
+        "title",
+        "owasp_refs",
+        "category",
+        "severity",
+        "applies_to_operation_types",
+        "declaration",
+        "evidence",
+        "gates",
+        "exit_codes"
+      ],
+      "properties": {
+        "control_id": { "type": "string", "pattern": "^SEC-OWASP-[0-9]{3}$" },
+        "title": { "type": "string", "minLength": 1 },
+        "owasp_refs": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "category": { "type": "string", "pattern": "^[a-z_]+$" },
+        "severity": { "type": "string", "enum": ["critical", "high", "medium", "low"] },
+        "applies_to_operation_types": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "pattern": "^[a-z_]+$" }
+        },
+        "declaration": { "$ref": "#/$defs/declaration" },
+        "evidence": { "$ref": "#/$defs/evidence" },
+        "gates": { "$ref": "#/$defs/gates" },
+        "exit_codes": { "$ref": "#/$defs/exit_codes" }
+      }
+    }
+  }
+}

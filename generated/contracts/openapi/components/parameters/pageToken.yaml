@@ -1,0 +1,9 @@
+# Pagination parameter - cursor token (opaque)
+name: pageToken
+in: query
+required: false
+description: Opaque cursor token for pagination
+schema:
+  type: string
+example: "eyJvZmZzZXQiOjIwLCJzaWQiOiJ0cmFpbmluZyJ9"
+

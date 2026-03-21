@@ -124,7 +124,12 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /auth/refresh:
   post:
     tags: [identity_access]
@@ -202,7 +207,12 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /auth/sessions:
   get:
     tags: [identity_access]
@@ -257,7 +267,12 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /auth/sessions/{sessionId}:
   delete:
     tags: [identity_access]
@@ -304,7 +319,18 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /auth/users/{userId}/roles:
   get:
     tags: [identity_access]
@@ -374,7 +400,12 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   post:
     tags: [identity_access]
     summary: Assign role to user
@@ -474,7 +505,12 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /auth/users/{userId}/roles/{roleLabel}:
   delete:
     tags: [identity_access]
@@ -547,3 +583,9 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"

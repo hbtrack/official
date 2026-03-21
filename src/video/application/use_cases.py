@@ -6,8 +6,11 @@ PERMISSIONS_VIDEO.md governa quem pode chamar cada use case.
 from __future__ import annotations
 import uuid
 from datetime import datetime, timezone
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 from uuid import UUID
+
+if TYPE_CHECKING:
+    from ..infrastructure.repository import VideoRepository
 
 from ..domain.entities import (
     CaptureMode,
@@ -26,7 +29,6 @@ from ..domain.rules import (
     assert_timecode_monotonic,
 )
 from ..domain.state_machine import MatchMediaSessionStateMachine
-from ..infrastructure.repository import VideoRepository
 
 
 class CreateSessionUseCase:

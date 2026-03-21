@@ -1,0 +1,6 @@
+name: completion_evidence_provided
+title: Completion Evidence Provided
+summary: Evidência de completude fornecida.
+contentType: application/json
+payload:
+  $ref: ../components/schemas/completion_evidence_provided_payload.yaml

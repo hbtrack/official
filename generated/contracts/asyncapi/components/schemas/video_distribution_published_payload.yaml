@@ -1,0 +1,55 @@
+type: object
+required:
+- eventType
+- occurredAt
+- sessionId
+- profileName
+- destinationType
+- distributedAt
+additionalProperties: false
+properties:
+  eventType:
+    type: string
+    const: video.distribution.published
+  occurredAt:
+    type: string
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+    format: date-time
+    x-semantic-id: core.occurred_at.v1
+  sessionId:
+    type: string
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    format: uuid
+    x-semantic-id: video.session.id.v1
+  profileName:
+    type: string
+    maxLength: 80
+    description: Nome do DistributionProfile distribuído.
+  destinationType:
+    type: string
+    enum:
+    - TECHNICAL_INTERNAL
+    - CDN_PUBLIC
+    - PARTNER_API
+    - BROADCAST
+    description: Tipo de destino da distribuição (DR-VID-007 — escopo por sessão).
+    x-domain-enum-ref: video_destination_type
+  distributedAt:
+    type: string
+    format: date-time
+    description: Timestamp de distribuição para auditoria obrigatória (DR-VID-009).
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  retentionPolicy:
+    type: string
+    enum:
+    - KEEP_7_DAYS
+    - KEEP_30_DAYS
+    - ARCHIVE_S3
+    - PUBLIC_FOREVER
+    description: Política de retenção aplicada (DR-VID-008).
+    x-domain-enum-ref: video_retention_policy
+  accessorUserId:
+    type: string
+    format: uuid
+    description: UUID do usuário ou sistema que solicitou a distribuição (DR-VID-009).
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$

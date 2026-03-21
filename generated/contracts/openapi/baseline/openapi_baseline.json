@@ -1,0 +1,113 @@
+{
+  "components": {
+    "examples": {},
+    "parameters": {
+      "pageSize": {
+        "$ref": "../components/parameters/pageSize.yaml"
+      },
+      "pageToken": {
+        "$ref": "../components/parameters/pageToken.yaml"
+      }
+    },
+    "requestBodies": {},
+    "responses": {},
+    "schemas": {
+      "problem": {
+        "$ref": "../components/schemas/shared/problem.yaml"
+      }
+    },
+    "securitySchemes": {}
+  },
+  "info": {
+    "contact": {
+      "email": "dev@hbtrack.com",
+      "name": "HB Track Team"
+    },
+    "description": "HB Track — Plataforma sports-tech orientada a contratos para gestão e operação de handebol.\nEsta especificação é a fonte primária da verdade para a interface HTTP pública do sistema.\nReferências normativas — consultar antes de implementar: - .contract_driven/CONTRACT_SYSTEM_LAYOUT.md   (estrutura canônica de artefatos) - .contract_driven/templates/api/api_rules.yaml    (regras, templates e validações de API) - docs/_canon/SYSTEM_SCOPE.md                  (escopo e módulos canônicos) - docs/_canon/ERROR_MODEL.md                   (convenção de erros RFC 7807) - docs/_canon/API_CONVENTIONS.md               (convenções de API — aponta para api_rules.yaml)\n",
+    "license": {
+      "identifier": "LicenseRef-proprietary",
+      "name": "Proprietary"
+    },
+    "title": "HB Track API",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {},
+  "security": [],
+  "servers": [
+    {
+      "description": "Desenvolvimento local",
+      "url": "http://localhost:8000"
+    },
+    {
+      "description": "Staging (placeholder — substituir por host real no deploy)",
+      "url": "https://staging.hbtrack.local"
+    }
+  ],
+  "tags": [
+    {
+      "description": "Pessoa, perfil e dados de identidade funcional pessoal.",
+      "name": "users"
+    },
+    {
+      "description": "Temporadas e ciclos competitivos.",
+      "name": "seasons"
+    },
+    {
+      "description": "Equipes, comissão técnica e composição de elenco.",
+      "name": "teams"
+    },
+    {
+      "description": "Sessões de treino, ciclos, cargas e presença.",
+      "name": "training"
+    },
+    {
+      "description": "Bem-estar, pré-treino e pós-treino conversacional.",
+      "name": "wellness"
+    },
+    {
+      "description": "Saúde, lesões e histórico médico.",
+      "name": "medical"
+    },
+    {
+      "description": "Competições, fases e classificações.",
+      "name": "competitions"
+    },
+    {
+      "description": "Partidas, placar e eventos de jogo.",
+      "name": "matches"
+    },
+    {
+      "description": "Eventos de scout e análise tática.",
+      "name": "scout"
+    },
+    {
+      "description": "Banco de exercícios e mídia associada.",
+      "name": "exercises"
+    },
+    {
+      "description": "Métricas, relatórios e dashboards analíticos.",
+      "name": "analytics"
+    },
+    {
+      "description": "Exportação e relatórios operacionais.",
+      "name": "reports"
+    },
+    {
+      "description": "Ingestão de dados para modelos de IA e coach.",
+      "name": "ai_ingestion"
+    },
+    {
+      "description": "Autenticação, autorização, credenciais, sessões, MFA, JWT e RBAC.",
+      "name": "identity_access"
+    },
+    {
+      "description": "Trilha de auditoria e rastreabilidade de eventos.",
+      "name": "audit"
+    },
+    {
+      "description": "Notificações e alertas para usuários.",
+      "name": "notifications"
+    }
+  ]
+}

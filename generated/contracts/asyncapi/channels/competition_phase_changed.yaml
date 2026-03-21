@@ -1,0 +1,12 @@
+# AsyncAPI Channel: competition.phase_changed
+# Module: competitions
+# Domain rules: DR-COMP-001, DR-COMP-004, DR-COMP-005
+
+description: >
+  Canal de publicação quando stageLabels ou statusLabel de uma competição é alterado.
+  stageLabels são explícitos — nunca inferidos de resultados de partidas (DR-COMP-004).
+  standingsSummary não é publicado aqui — é projeção resumida, não truth oficial (DR-COMP-005).
+publish:
+  operationId: competition_phase_changed_publish
+  message:
+    $ref: "../messages/competition_phase_changed.yaml"

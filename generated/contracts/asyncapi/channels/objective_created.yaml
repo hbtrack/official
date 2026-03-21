@@ -1,0 +1,7 @@
+description: >
+  Evento emitido quando um objetivo de sessão é criado com origem rastreável (need, competitive focus, development goal, ou coach rationale).
+
+publish:
+  operationId: objective_created_publish
+  message:
+    $ref: ../messages/objective_created.yaml

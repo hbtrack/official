@@ -1,0 +1,14 @@
+type: object
+title: Error
+description: Standard error response
+properties:
+  code:
+    type: string
+  message:
+    type: string
+  details:
+    type: object
+required:
+- code
+- message
+additionalProperties: false

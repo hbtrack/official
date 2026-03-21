@@ -1,0 +1,14 @@
+# AsyncAPI Message: video_session_created
+# Module: video
+# Domain rules: DR-VID-001, DR-VID-003, DR-VID-008
+# Decisions: ADR-033
+name: VideoSessionCreatedMessage
+title: MatchMediaSession Criada
+summary: Publicado quando uma nova sessão de mídia é criada (state=DRAFT, DR-VID-003).
+description: >
+  Evento emitido pelo módulo video após POST /video/sessions bem-sucedido.
+  Consumidores (audit, notifications) usam para rastrear início de ciclo de vida.
+  BOUNDARY: não contém config interna de edge nodes ou CDN.
+contentType: application/json
+payload:
+  $ref: "../components/schemas/video_session_created_payload.yaml"

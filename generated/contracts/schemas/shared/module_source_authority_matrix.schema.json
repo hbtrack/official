@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hbtrack.local/contracts/schemas/shared/module_source_authority_matrix.schema.json",
+  "title": "HB Track — Module Source Authority Matrix (Normative)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "artifact", "status", "scope", "policy", "modules", "derived_gates"],
+  "properties": {
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "artifact": { "type": "string", "const": "MODULE_SOURCE_AUTHORITY_MATRIX" },
+    "status": { "type": "string", "enum": ["active", "inactive"] },
+    "scope": { "type": "string", "enum": ["global"] },
+    "policy": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["objective", "global_principles", "agent_inference_policy"],
+      "properties": {
+        "objective": { "type": "string", "minLength": 1 },
+        "global_principles": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["principle_id", "statement"],
+            "properties": {
+              "principle_id": { "type": "string", "pattern": "^P-[0-9]{3}[a-z0-9\\-]*$" },
+              "statement": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "agent_inference_policy": {
+          "type": "object",
+          "additionalProperties": true,
+          "required": ["allowed_low_risk_examples", "forbidden_examples"],
+          "properties": {
+            "allowed_low_risk_examples": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+            "forbidden_examples": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+          }
+        }
+      }
+    },
+    "modules": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/$defs/module_entry" }
+    },
+    "derived_gates": { "type": "object" }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id"],
+      "properties": {
+        "source_id": { "type": "string", "pattern": "^[A-Z0-9_]+$" },
+        "allowed_for": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "sources_allowed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain_authority", "benchmark", "technical_standard"],
+      "properties": {
+        "domain_authority": { "type": "array", "items": { "$ref": "#/$defs/source" } },
+        "benchmark": { "type": "array", "items": { "$ref": "#/$defs/source" } },
+        "technical_standard": { "type": "array", "items": { "$ref": "#/$defs/source" } }
+      }
+    },
+    "inference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["may_infer", "must_not_infer"],
+      "properties": {
+        "may_infer": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "must_not_infer": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "module_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sources_allowed", "required_contract_artifacts", "inference"],
+      "properties": {
+        "sources_allowed": { "$ref": "#/$defs/sources_allowed" },
+        "required_contract_artifacts": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "pattern": "^[A-Z0-9_]+$" }
+        },
+        "inference": { "$ref": "#/$defs/inference" }
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+# AsyncAPI Message: video_session_capturing
+# Module: video
+# Domain rules: DR-VID-001, DR-VID-003, DR-VID-007
+# Decisions: ADR-033
+name: VideoSessionCapturingMessage
+title: Captura de Vídeo Iniciada
+summary: Publicado quando MatchMediaSession transita para CAPTURING (edge nodes ativos).
+description: >
+  Emitido ao iniciar captura ao vivo. Scout consome para iniciar sincronização de timecode.
+  DR-VID-003: captura sempre começa em edge node local.
+contentType: application/json
+payload:
+  $ref: "../components/schemas/video_session_capturing_payload.yaml"

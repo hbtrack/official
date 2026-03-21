@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-03-20T08:11:57Z",
+  "timestamp_utc": "2026-03-21T01:49:00Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "32da135",
+    "git_commit": "5f97d0a",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -207,7 +207,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 181
+        "duration_ms": 62
       }
     },
     {
@@ -232,7 +232,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4079
+        "duration_ms": 1443
       }
     },
     {
@@ -343,7 +343,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 27
+        "duration_ms": 13
       }
     },
     {
@@ -492,7 +492,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 21
+        "duration_ms": 9
       }
     },
     {
@@ -584,7 +584,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 3
       }
     },
     {
@@ -593,7 +593,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Nenhum token placeholder em 345 arquivo(s) verificado(s).",
+      "summary": "Nenhum token placeholder em 351 arquivo(s) verificado(s).",
       "inputs": [],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/contracts/_waivers/CONTRACT_BREAKING_CHANGE_GATE/README.md",
@@ -810,6 +810,9 @@
         "/home/davis/HB-TRACK/contracts/openapi/components/parameters/pageSize.yaml",
         "/home/davis/HB-TRACK/contracts/openapi/components/parameters/pageToken.yaml",
         "/home/davis/HB-TRACK/contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/analytics/analytics_metric_key.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/analytics/analytics_query_request.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/analytics/analytics_query_response.yaml",
         "/home/davis/HB-TRACK/contracts/openapi/components/schemas/analytics/analytics_snapshot.yaml",
         "/home/davis/HB-TRACK/contracts/openapi/components/schemas/audit/audit_entry.yaml",
         "/home/davis/HB-TRACK/contracts/openapi/components/schemas/common/error.yaml",
@@ -873,6 +876,9 @@
         "/home/davis/HB-TRACK/contracts/openapi/paths/wellness.yaml",
         "/home/davis/HB-TRACK/contracts/schemas/README.md",
         "/home/davis/HB-TRACK/contracts/schemas/ai_ingestion/ingestion_job.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/analytics/analytics_metric_key.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/analytics/analytics_query_request.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/analytics/analytics_query_response.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/analytics/analytics_snapshot.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/audit/audit_entry.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/competitions/competition.schema.json",
@@ -948,7 +954,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 117
+        "duration_ms": 31
       }
     },
     {
@@ -1006,7 +1012,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2056
+        "duration_ms": 1866
       }
     },
     {
@@ -1045,7 +1051,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 580
+        "duration_ms": 581
       }
     },
     {
@@ -1072,10 +1078,13 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "JSON Schema: 44 arquivo(s) válido(s), 0 aviso(s).",
+      "summary": "JSON Schema: 47 arquivo(s) válido(s), 0 aviso(s).",
       "inputs": [],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/contracts/schemas/ai_ingestion/ingestion_job.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/analytics/analytics_metric_key.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/analytics/analytics_query_request.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/analytics/analytics_query_response.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/analytics/analytics_snapshot.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/audit/audit_entry.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/competitions/competition.schema.json",
@@ -1126,7 +1135,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 3
       }
     },
     {
@@ -1349,6 +1358,9 @@
         "/home/davis/HB-TRACK/contracts/openapi/components/parameters/pageSize.yaml",
         "/home/davis/HB-TRACK/contracts/openapi/components/parameters/pageToken.yaml",
         "/home/davis/HB-TRACK/contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/analytics/analytics_metric_key.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/analytics/analytics_query_request.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/analytics/analytics_query_response.yaml",
         "/home/davis/HB-TRACK/contracts/openapi/components/schemas/analytics/analytics_snapshot.yaml",
         "/home/davis/HB-TRACK/contracts/openapi/components/schemas/audit/audit_entry.yaml",
         "/home/davis/HB-TRACK/contracts/openapi/components/schemas/common/error.yaml",
@@ -1407,6 +1419,9 @@
         "/home/davis/HB-TRACK/contracts/openapi/paths/video.yaml",
         "/home/davis/HB-TRACK/contracts/openapi/paths/wellness.yaml",
         "/home/davis/HB-TRACK/contracts/schemas/ai_ingestion/ingestion_job.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/analytics/analytics_metric_key.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/analytics/analytics_query_request.schema.json",
+        "/home/davis/HB-TRACK/contracts/schemas/analytics/analytics_query_response.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/analytics/analytics_snapshot.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/audit/audit_entry.schema.json",
         "/home/davis/HB-TRACK/contracts/schemas/competitions/competition.schema.json",
@@ -1484,6 +1499,7 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/TEST_MATRIX_AI_INGESTION.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/DOMAIN_RULES_ANALYTICS.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/ERRORS_ANALYTICS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/INVARIANTS_ANALYTICS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/MODULE_SCOPE_ANALYTICS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/PERMISSIONS_ANALYTICS.md",
@@ -1613,7 +1629,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1676
+        "duration_ms": 1797
       }
     },
     {
@@ -1689,7 +1705,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2334
+        "duration_ms": 1832
       }
     },
     {
@@ -1732,7 +1748,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 58
+        "duration_ms": 56
       }
     },
     {
@@ -1754,7 +1770,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1127
+        "duration_ms": 1067
       }
     },
     {
@@ -1792,7 +1808,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 5
+        "duration_ms": 3
       }
     },
     {
@@ -1812,7 +1828,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2775
+        "duration_ms": 37728
       }
     },
     {
@@ -1848,7 +1864,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 12
+        "duration_ms": 9
       }
     },
     {
@@ -1857,7 +1873,7 @@
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "FEATURE_REGISTRY: 10 features — 10 validated",
+      "summary": "FEATURE_REGISTRY: 13 features — 3 implemented, 10 validated",
       "inputs": [],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/docs/_canon/FEATURE_REGISTRY.yaml"
@@ -1868,7 +1884,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 7
       }
     },
     {
@@ -1998,7 +2014,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 6
       }
     },
     {
@@ -2020,7 +2036,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 12
+        "duration_ms": 11
       }
     },
     {
@@ -2102,7 +2118,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 6
       }
     },
     {

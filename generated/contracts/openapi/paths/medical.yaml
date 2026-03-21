@@ -92,28 +92,33 @@
       "401":
         description: Unauthorized
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Forbidden (insufficient team-level access)
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "422":
         description: Invalid query parameters
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   post:
     operationId: createMedicalRecord
     summary: Create a new medical record
     description: >
       Creates a new clinical assessment and restriction record for an athlete.
-      Only team staff with medical access (MD, PT, team physician) can create records.
+      Only admin, coordinator, or coach can create records; athlete can only read own records and member is denied.
       Required: id, athleteUserId, recordDate, recordLabel (per INV-MED-001).
       Invariant INV-MED-002: returnToPlayAuthorized=true implies returnToTrainingAuthorized=true.
     security:
@@ -170,28 +175,39 @@
       "400":
         description: Invalid request body (e.g., returnToPlayAuthorized=true but returnToTrainingAuthorized=false)
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "401":
         description: Unauthorized
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Forbidden (insufficient medical access)
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "422":
         description: Unprocessable entity (validation error)
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /medical/records/{recordId}:
   get:
     operationId: getMedicalRecord
@@ -220,28 +236,33 @@
       "401":
         description: Unauthorized
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Forbidden (insufficient access to this record)
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Record not found
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   patch:
     operationId: updateMedicalRecord
     summary: Update a medical record
     description: >
       Partially updates a medical record.
-      Only team staff with medical access can update.
+      Only admin, coordinator, or coach can update records.
       Updating authorization fields requires clinical rationale (clinicalNotes).
       Invariant INV-MED-002 enforced: returnToPlayAuthorized=true implies returnToTrainingAuthorized=true.
     security:
@@ -294,41 +315,52 @@
       "400":
         description: Invalid request or constraint violation (e.g., INV-MED-002)
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "401":
         description: Unauthorized
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Forbidden (insufficient medical access)
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Record not found
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "422":
         description: Unprocessable entity (validation error)
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   delete:
     operationId: deleteMedicalRecord
     summary: Delete (soft-delete) a medical record
     description: >
       Marks a medical record as deleted (soft-delete).
       Deleted records remain in audit trail for compliance and history.
-      Only team staff with medical access can delete.
+      Only admin can delete records.
     security:
       - HTTPBearer: []
     tags:
@@ -346,18 +378,30 @@
       "401":
         description: Unauthorized
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Forbidden (insufficient medical access)
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Record not found
         content:
-          application/json:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"

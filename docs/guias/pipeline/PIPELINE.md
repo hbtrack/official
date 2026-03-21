@@ -1,9 +1,10 @@
 # PIPELINE DE IA/AGENTES — HB TRACK
 
-> **Documento:** Reconstrução técnica ponta a ponta do pipeline real de IA/agentes do HB Track.
-> **Método:** Análise direta de arquivos — prompts, scripts, configs, gates, registries, CI/CD.
-> **Data:** 2026-03-19 | **Branch:** `hb-track-contratos-driven` | **Status:** PASS (44/44 gates)
-> **Nível de certeza:** fato confirmado, inferência plausível ou não confirmado — indicados explicitamente.
+> **Documento:** reconstrução analítica datada do pipeline.
+> **Método:** análise direta de arquivos — prompts, scripts, configs, gates, registries, CI/CD.
+> **Nota de uso:** este arquivo preserva uma leitura analítica de 2026-03-19 e **não deve ser usado como fonte única para contagem de gates ou enforcement atual**.
+> **Fonte operacional atual:** `scripts/hb`, `scripts/contracts/validate/validate_contracts.py`, `docs/guias/pipeline/PIPELINE_SUMMARY.md`, `_reports/pipeline_health.json` e `_reports/contract_gates/latest.json`.
+> **Nível de certeza interno:** fato confirmado, inferência plausível ou não confirmado — indicados explicitamente.
 
 ---
 

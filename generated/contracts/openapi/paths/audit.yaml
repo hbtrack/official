@@ -38,7 +38,7 @@
       pageSize máximo: 200.
     operationId: listAuditEntries
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     parameters:
       - $ref: ../components/parameters/pageSize.yaml
       - $ref: ../components/parameters/pageToken.yaml
@@ -140,13 +140,13 @@
           Requisição inválida. Causas: coordinator sem teamId/organizationId (DEC-AUD-002=B);
           formato de parâmetro inválido.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
@@ -154,10 +154,15 @@
           Acesso negado. Roles coach/athlete/member não podem acessar audit trail
           (OWASP API2:2023 BFLA — DEC-AUD-002=B).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   post:
     tags:
       - audit
@@ -185,7 +190,7 @@
       - Para ações sensíveis: audit.entry.security_flagged também publicado.
     operationId: createAuditEntry
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     requestBody:
       required: true
       content:
@@ -279,13 +284,13 @@
           Requisição inválida. Causas: actorUserId/action/occurredAt ausentes (INV-AUD-001);
           targetResourceId sem targetResourceType ou vice-versa (INV-AUD-003).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
@@ -293,10 +298,21 @@
           Acesso negado. Roles coach/athlete/member não podem registrar entradas
           (OWASP API2:2023 BFLA — DEC-AUD-002=B).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /audit/entries/export:
   get:
     tags:
@@ -322,7 +338,7 @@
         (ação: audit.export_requested, outcomeLabel: success).
     operationId: exportAuditEntries
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     parameters:
       - name: occurredAfter
         in: query
@@ -407,23 +423,28 @@
           Requisição inválida. Causas: occurredAfter/occurredBefore ausentes;
           intervalo maior que 1 ano; coordinator sem teamId/organizationId.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: >
           Acesso negado (OWASP API2:2023 BFLA — DEC-AUD-002=B).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /audit/entries/{entryId}:
   get:
     tags:
@@ -443,7 +464,7 @@
       - INV-AUD-002: entradas são append-only — nunca modificadas após criação.
     operationId: getAuditEntry
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     parameters:
       - name: entryId
         in: path
@@ -462,7 +483,7 @@
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
@@ -470,12 +491,18 @@
           Acesso negado. Roles sem permissão ou coordinator tentando acessar
           entrada fora do seu contexto (OWASP API1:2023 BOLA, API2:2023 BFLA).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Entrada de auditoria não encontrada.
         content:
-          application/json:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"

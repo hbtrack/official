@@ -1,0 +1,22 @@
+# AsyncAPI Channel: audit.entry.created
+# Module: audit
+# Domain rules: DR-AUD-001, DR-AUD-003, DR-AUD-005
+# Invariants: INV-AUD-001, INV-AUD-002
+# Decisions: DEC-AUD-003=C
+# ADR refs: ADR-031 (Celery/Redis)
+
+description: >
+  Canal publicado toda vez que uma nova entrada é registrada no trilho de auditoria.
+  audit é soberano da evidência operacional (DR-AUD-001): ator, ação, alvo, instante,
+  origem, correlação e resultado. Append-only (INV-AUD-002).
+
+  Consumidores downstream (ex.: notifications, analytics, SIEM) podem usar este canal
+  para replicação e auditoria de conformidade. audit.entry.security_flagged é publicado
+  separadamente para ações sensíveis (DEC-AUD-003=C).
+
+  BOUNDARY: payload nunca contém dados de autenticação (senha, token, refresh_token)
+  e nunca replica payload integral de dados sensíveis (DR-AUD-002, INV-AUD-004).
+publish:
+  operationId: audit_entry_created_publish
+  message:
+    $ref: "../messages/audit_entry_created.yaml"

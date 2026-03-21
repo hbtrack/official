@@ -25,7 +25,7 @@
       (BOLA — ADR-008).
     operationId: listTeams
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     parameters:
       - name: organizationId
         in: query
@@ -109,16 +109,21 @@
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Papel RBAC insuficiente (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   post:
     tags:
       - teams
@@ -139,7 +144,7 @@
       Acesso: apenas admin e coordinator (ADR-008 RBAC).
     operationId: createTeam
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     requestBody:
       required: true
       content:
@@ -228,28 +233,39 @@
           categoryLabel ausente; athleteIds/staffUserIds com duplicidade
           (INV-TEAM-002).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Papel RBAC insuficiente — requer admin ou coordinator (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "422":
         description: organizationId ou athleteIds/staffUserIds não correspondem a entidades conhecidas.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /teams/{teamId}:
   get:
     tags:
@@ -261,7 +277,7 @@
       equipes às quais estão vinculados (BOLA — ADR-008).
     operationId: getTeam
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     parameters:
       - name: teamId
         in: path
@@ -280,22 +296,27 @@
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Acesso negado — BOLA (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Equipe não encontrada.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   patch:
     tags:
       - teams
@@ -314,7 +335,7 @@
       Acesso: admin e coordinator (ADR-008 RBAC).
     operationId: patchTeam
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     parameters:
       - name: teamId
         in: path
@@ -403,34 +424,45 @@
       "400":
         description: Corpo inválido ou nenhum campo informado.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Papel RBAC insuficiente (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Equipe não encontrada.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "422":
         description: athleteIds ou staffUserIds contêm UUIDs desconhecidos.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /teams/{teamId}/athletes/{athleteUserId}:
   post:
     tags:
@@ -449,7 +481,7 @@
       Acesso: admin e coordinator (ADR-008 RBAC).
     operationId: addAthleteToTeam
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     parameters:
       - name: teamId
         in: path
@@ -475,22 +507,33 @@
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Papel RBAC insuficiente (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Equipe ou atleta não encontrado.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   delete:
     tags:
       - teams
@@ -505,7 +548,7 @@
       Acesso: admin e coordinator (ADR-008 RBAC).
     operationId: removeAthleteFromTeam
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     parameters:
       - name: teamId
         in: path
@@ -531,22 +574,33 @@
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Papel RBAC insuficiente (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Equipe não encontrada.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /teams/{teamId}/staff/{staffUserId}:
   post:
     tags:
@@ -563,7 +617,7 @@
       Acesso: admin e coordinator (ADR-008 RBAC).
     operationId: addStaffToTeam
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     parameters:
       - name: teamId
         in: path
@@ -589,22 +643,33 @@
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Papel RBAC insuficiente (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Equipe ou usuário não encontrado.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   delete:
     tags:
       - teams
@@ -618,7 +683,7 @@
       Acesso: admin e coordinator (ADR-008 RBAC).
     operationId: removeStaffFromTeam
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     parameters:
       - name: teamId
         in: path
@@ -644,18 +709,30 @@
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Papel RBAC insuficiente (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Equipe não encontrada.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"

@@ -5396,6 +5396,75 @@ def _g5a_openapi_root_module_sync(root: pathlib.Path) -> dict:
     )
 
 
+def _validate_openapi_policy_contract_rules(root: pathlib.Path) -> list[dict]:
+    violations: list[dict] = []
+    paths_dir = root / "contracts" / "openapi" / "paths"
+    if not paths_dir.exists():
+        return violations
+    auth_conflict_exempt = {
+        ("/auth/login", "post"),
+        ("/auth/logout", "post"),
+        ("/auth/refresh", "post"),
+    }
+
+    for path_file in sorted(paths_dir.glob("*.yaml")):
+        rel = str(path_file.relative_to(root))
+        doc = _load_yaml_or_empty(path_file) or {}
+        if not isinstance(doc, dict):
+            continue
+        for route, path_item in doc.items():
+            if not isinstance(path_item, dict):
+                continue
+            for method, op in path_item.items():
+                if method not in {"get", "post", "put", "patch", "delete"} or not isinstance(op, dict):
+                    continue
+                responses = op.get("responses") or {}
+                security = op.get("security")
+                if isinstance(security, list) and security and "500" not in responses:
+                    violations.append({
+                        "blocking_code": "BLOCKED_OPENAPI_POLICY",
+                        "artifact": rel,
+                        "message": f"{method.upper()} {route} é operação protegida e não documenta response 500.",
+                        "severity": "error",
+                    })
+                if method in {"post", "put", "patch", "delete"} and (route, method) not in auth_conflict_exempt and "409" not in responses:
+                    violations.append({
+                        "blocking_code": "BLOCKED_OPENAPI_POLICY",
+                        "artifact": rel,
+                        "message": f"{method.upper()} {route} é mutação contratual e não documenta response 409.",
+                        "severity": "error",
+                    })
+
+    analytics_path = paths_dir / "analytics.yaml"
+    if analytics_path.exists():
+        doc = _load_yaml_or_empty(analytics_path) or {}
+        op = (((doc.get("/analytics/query") or {}).get("post")) or {}) if isinstance(doc, dict) else {}
+        if isinstance(op, dict):
+            req_schema = (
+                (((op.get("requestBody") or {}).get("content") or {}).get("application/json") or {}).get("schema")
+                or {}
+            )
+            res_schema = (
+                (((((op.get("responses") or {}).get("200") or {}).get("content") or {}).get("application/json") or {}).get("schema"))
+                or {}
+            )
+            if not (isinstance(req_schema, dict) and req_schema.get("$ref") == "../components/schemas/analytics/analytics_query_request.yaml"):
+                violations.append({
+                    "blocking_code": "BLOCKED_OPENAPI_POLICY",
+                    "artifact": str(analytics_path.relative_to(root)),
+                    "message": "/analytics/query deve referenciar analytics_query_request.yaml como request soberano.",
+                    "severity": "error",
+                })
+            if not (isinstance(res_schema, dict) and res_schema.get("$ref") == "../components/schemas/analytics/analytics_query_response.yaml"):
+                violations.append({
+                    "blocking_code": "BLOCKED_OPENAPI_POLICY",
+                    "artifact": str(analytics_path.relative_to(root)),
+                    "message": "/analytics/query deve referenciar analytics_query_response.yaml como response soberano.",
+                    "severity": "error",
+                })
+    return violations
+
+
 def _g6_openapi_policy_ruleset(root: pathlib.Path) -> dict:
     t0 = time.monotonic()
     gate_id = "OPENAPI_POLICY_RULESET_GATE"
@@ -5483,6 +5552,7 @@ def _g6_openapi_policy_ruleset(root: pathlib.Path) -> dict:
                         "message": ln.strip(),
                         "severity": "error",
                     })
+    violations.extend(_validate_openapi_policy_contract_rules(root))
     errors = [v for v in violations if v.get("severity") == "error"]
     if errors:
         return _pg(gate_id, "FAIL", True, "BLOCKED_OPENAPI_POLICY",

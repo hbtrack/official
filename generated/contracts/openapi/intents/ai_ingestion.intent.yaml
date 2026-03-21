@@ -1,0 +1,13 @@
+hbtrack_api_intent:
+  module: "ai_ingestion"
+
+  # Tipos semânticos locais (permitidos), desde que não colidam com o registry global.
+  local_semantic_types:
+    - semantic_id: "ai.ingestion.job.id.v1"
+      base_type: "string"
+      format: "uuid"
+      description: "Identificador de job de ingestão (escopo local do módulo)."
+
+  # Endpoints (opcional). Lista vazia mantém o contrato sem rotas novas.
+  endpoints: []
+

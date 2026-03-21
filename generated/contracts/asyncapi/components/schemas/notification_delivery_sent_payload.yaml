@@ -1,0 +1,74 @@
+type: object
+additionalProperties: false
+required:
+- eventType
+- occurredAt
+- deliveryId
+- recipientUserId
+- channelLabel
+- deliveryStatusLabel
+- retryCount
+- requestedAt
+- deliveredAt
+properties:
+  eventType:
+    type: string
+    description: Tipo canônico do evento. Imutável.
+    const: notification.delivery.sent
+  occurredAt:
+    type: string
+    format: date-time
+    description: Momento em que o evento foi gerado (ISO 8601 UTC).
+    x-semantic-id: core.occurred_at.v1
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  deliveryId:
+    type: string
+    format: uuid
+    description: UUID v4 da NotificationDelivery entregue (INV-NTF-001).
+    x-semantic-id: notifications.delivery.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+  recipientUserId:
+    type: string
+    format: uuid
+    description: UUID do destinatário. Referência ao módulo users.
+    x-semantic-id: identity.user.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+  channelLabel:
+    type: string
+    enum:
+    - PUSH
+    - EMAIL
+    - IN_APP
+    - SMS
+    description: Canal pelo qual a entrega foi confirmada.
+    x-domain-enum-ref: notification_channel
+  deliveryStatusLabel:
+    type: string
+    description: Status final da entrega. Sempre sent neste evento.
+    const: sent
+  retryCount:
+    type: integer
+    minimum: 0
+    maximum: 10
+    description: Número de tentativas até a entrega bem-sucedida (INV-NTF-002).
+  requestedAt:
+    type: string
+    format: date-time
+    description: Momento em que a intenção foi registrada (ISO 8601 UTC).
+    x-semantic-id: core.occurred_at.v1
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  deliveredAt:
+    type: string
+    format: date-time
+    description: 'Momento da entrega confirmada pelo adapter do canal (ISO 8601 UTC).
+      INV-NTF-003: deliveredAt >= requestedAt.
+
+      '
+    x-semantic-id: core.occurred_at.v1
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  channelAdapterRef:
+    type:
+    - string
+    - 'null'
+    maxLength: 80
+    description: Identificador do adapter externo utilizado (DR-NTF-005).

@@ -1,0 +1,6 @@
+name: recommendation_accepted
+title: Recommendation Accepted
+summary: Treinador aceitou recomendação de analytics.
+contentType: application/json
+payload:
+  $ref: ../components/schemas/recommendation_accepted_payload.yaml

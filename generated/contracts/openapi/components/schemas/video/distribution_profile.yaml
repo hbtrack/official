@@ -1,0 +1,40 @@
+title: DistributionProfile
+description: Transcode recipe
+type: object
+required:
+- id
+- profileLabel
+- targetType
+- codecLabel
+- bitrate
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+  profileLabel:
+    type: string
+    maxLength: 80
+  targetType:
+    type: string
+    enum:
+    - TECHNICAL_INTERNAL
+    - PUBLIC_CDN
+    - BROADCAST_PARTNER
+    x-domain-enum-ref: video_target_type
+  codecLabel:
+    type: string
+    enum:
+    - H264
+    - H265
+    - VP9
+    - AV1
+    x-domain-enum-ref: video_codec
+  bitrate:
+    type: integer
+    minimum: 100
+  createdAt:
+    type: string
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+    format: date-time
+additionalProperties: false

@@ -1,0 +1,65 @@
+type: object
+additionalProperties: false
+required:
+- eventType
+- occurredAt
+- sessionId
+- segmentId
+- scoutEventId
+- timecodeBefore
+- timecodeAfter
+- discrepancyMs
+- adjustedByScoutSync
+- adjustedAt
+properties:
+  eventType:
+    type: string
+    description: Tipo canônico do evento.
+    const: video.sync.adjustment_applied
+  occurredAt:
+    type: string
+    format: date-time
+    description: Momento ISO 8601 UTC do ajuste.
+    x-semantic-id: core.occurred_at.v1
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  sessionId:
+    type: string
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    format: uuid
+    description: UUID da MatchMediaSession.
+    x-semantic-id: video.match_media_session.id.v1
+  segmentId:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    description: UUID do MediaSegment com divergência (opcional se múltiplos).
+  scoutEventId:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    description: UUID do evento scout que marcou o timecode correto (INV-VID-010).
+    x-semantic-id: scout.event.id.v1
+  timecodeBefore:
+    type: integer
+    minimum: 0
+    description: Timecode lógico anterior (rejected) em ms (INV-VID-011).
+  timecodeAfter:
+    type: integer
+    minimum: 0
+    description: Novo timecode aceito em ms (scout is SSOT).
+  discrepancyMs:
+    type: integer
+    description: Diferença em ms (timecodeAfter - timecodeBefore).
+  adjustedByScoutSync:
+    type: boolean
+    description: Sempre true - ajuste é autônomo do sync service.
+    const: true
+  adjustedAt:
+    type: string
+    format: date-time
+    description: ISO 8601 UTC da aplicação do ajuste.
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  affectedSegmentCount:
+    type: integer
+    minimum: 1
+    description: Quantidade de segments afetados por esta correção.

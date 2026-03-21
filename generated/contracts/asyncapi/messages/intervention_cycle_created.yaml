@@ -1,0 +1,6 @@
+name: intervention_cycle_created
+title: Intervention Cycle Created
+summary: Ciclo de intervenção criado com status OPEN.
+contentType: application/json
+payload:
+  $ref: ../components/schemas/intervention_cycle_created_payload.yaml

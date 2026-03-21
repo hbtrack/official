@@ -2,77 +2,67 @@
 
 ## Produto
 HB Track — plataforma de gestão esportiva para handebol.
-CDD (Contract-Driven Development): contratos são SSOT antes de qualquer código.
-O humano é leigo em desenvolvimento — comunicar em linguagem de produto, nunca jargão técnico.
+CDD (Contract-Driven Development): contratos governam autoria antes de código.
+Comunicar em português claro.
 
-## Referências canônicas (ler on-demand, não tudo de uma vez)
-- **Instruções do agente:** `docs/_canon/AGENT_INSTRUCTIONS.md`
-- **Pipeline oficial:** `docs/_canon/CONTRACT_PIPELINE.md`
-- **16 módulos:** `docs/_canon/MODULE_REGISTRY.yaml`
-- **Task types → workers (SSOT):** `.contract_driven/TASK_CATALOG.yaml`
-- **Boot profiles:** `.contract_driven/BOOT_PROFILES.yaml`
-- **Gate metadata:** `docs/_canon/gates/GATES_REGISTRY.yaml`
-- **Regras detalhadas:** `.contract_driven/CONTRACT_SYSTEM_RULES.md`
-- **Layout canônico:** `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md`
+## Fontes de verdade
+- `docs/_canon/AGENT_INSTRUCTIONS.md`
+- `docs/_canon/CONTRACT_PIPELINE.md`
+- `.contract_driven/CONTRACT_SYSTEM_RULES.md`
+- `.contract_driven/TASK_CATALOG.yaml`
+- `.contract_driven/BOOT_PROFILES.yaml`
+- `docs/_canon/MODULE_REGISTRY.yaml`
+- `docs/_canon/gates/GATES_REGISTRY.yaml`
+- `scripts/hb`
+- `scripts/contracts/validate/validate_contracts.py`
 
-## Regra de boot obrigatória
-1. Se existir `SESSION_HANDOFF.md` na raiz → **ler ANTES de qualquer outra ação**
-2. Se não existir → verificar `_reports/SESSION_HANDOFF_CURRENT.md`
+## Regra de boot
+1. Se existir `SESSION_HANDOFF.md` na raiz, ler antes de qualquer ação.
+2. Se não existir, continuar como sessão nova; não inventar contexto ausente.
 
-## Pipeline CDD — Regra absoluta para tarefas de contrato
-**Para QUALQUER tarefa que crie ou modifique contratos (OpenAPI, AsyncAPI, Arazzo, JSON Schema, UI Contract, State Model, docs de módulo, decisões arquiteturais):**
+## Regra operacional para tarefas de contrato
 
-O agente DEVE usar o agent **HB Contract** (`.github/agents/hb-contract.agent.md`), que referencia o skill **hb-pipeline-orchestrator**.
+Para tarefas que criam ou alteram artefatos governados:
 
-A sequência obrigatória é:
-```
-BOOT     → Ler AGENT_INSTRUCTIONS.md + SESSION_HANDOFF.md
-PRÉ-0    → python3 scripts/hb verify --task-type pre_contract_boot --module <M>
-FASE 0   → python3 scripts/hb verify --task-type <T> --module <M>
-FASE 1   → python3 scripts/hb check --module <M>
-DECISION → Benchmark competitivo + 3 opções A/B/C + aguardar aprovação
-FASE 2   → Ler worker prompt + criar artefatos + python3 scripts/hb artifact <path>
-COMPILE  → python3 scripts/contracts/validate/api/compile_api_policy.py
-FASE 3   → python3 scripts/contracts/validate/validate_contracts.py
-FASE 4   → Atualizar MODULE_REGISTRY.yaml + python3 scripts/hb artifact docs/_canon/MODULE_REGISTRY.yaml
-FASE 5   → Atualizar SESSION_HANDOFF.md
-FASE 6   → git add <artefatos> SESSION_HANDOFF.md && git commit -m "feat(contract): <module> — <task_type> pipeline PASS"
+```text
+BOOT     -> ler AGENT_INSTRUCTIONS + SESSION_HANDOFF.md se existir
+FASE 0   -> python3 scripts/hb verify --task-type <T> --module <M>
+FASE 1   -> python3 scripts/hb check --module <M>
+FASE 2   -> ler worker prompt -> criar artefatos -> python3 scripts/hb artifact <path>
+COMPILE  -> compile_api_policy.py somente quando contrato/policy mudou
+FASE 3   -> python3 scripts/contracts/validate/validate_contracts.py
+FASE 4+  -> readiness/adversarial/generate_code somente se o task_type ou pré-condições exigirem
+FECHAMENTO -> atualizar SESSION_HANDOFF.md
+VCS      -> commit opcional conforme objetivo da sessão; o pre-commit adiciona um checkpoint extra
 ```
 
-**NUNCA pular fases. NUNCA criar artefatos antes de executar `hb verify`. NUNCA terminar sessão sem commit.**
+## Sem falsa autonomia
+
+- Worker = prompt especializado carregado pelo mesmo agente.
+- Não assumir subagente autônomo, fila ou runtime distribuído.
+- Não assumir que commit é o que faz os gates rodarem; os gates já rodam via `hb` e `validate_contracts.py`.
+
+## Handoff
+
+- `SESSION_HANDOFF.md` é o handoff operacional atual.
+- O schema `contracts/schemas/shared/session_handoff.schema.json` não deve ser tratado como o validador ativo do markdown operacional.
 
 ## Bloqueios canônicos
-O agente não pode prosseguir quando emitir um código BLOCKED_*. Deve informar o humano em português:
-- `BLOCKED_MISSING_MODULE` — módulo fora dos 16 canônicos
-- `BLOCKED_MISSING_AGENT_PROMPT` — worker não existe ou task congelada
-- `BLOCKED_REQUIRED_ARTIFACT_MISSING` — doc obrigatória ausente
-- `BLOCKED_MISSING_ARCH_DECISION` — decisão arquitetural obrigatória aberta
-- `BLOCKED_SCOPE_OVERFLOW` — referência cross-module não autorizada
-- `BLOCKED_CONTRACT_CONFLICT` — contradição entre artefatos
 
-## Comunicação
-- Sempre em português
-- Decisões arquiteturais: apresentar "📊 benchmark → 🎯 3 caminhos A/B/C → ⭐ recomendação"
-- Bloqueio: explicar em linguagem de produto o que falta
-- Nunca jargão técnico sem tradução
+Quando houver `BLOCKED_*`, informar o humano em português:
+- `BLOCKED_MISSING_MODULE`
+- `BLOCKED_MISSING_AGENT_PROMPT`
+- `BLOCKED_REQUIRED_ARTIFACT_MISSING`
+- `BLOCKED_MISSING_ARCH_DECISION`
+- `BLOCKED_SCOPE_OVERFLOW`
+- `BLOCKED_CONTRACT_CONFLICT`
 
-## REGRA DE OURO
+## Regras de ouro
 
-**MUST NOT** usar: 
-
-```bash
-git reset
-```
-ou
-
-```bash
-git rebase 
-```
-ou
-
-```bash
- git commit --amend
-```
-**MUST NOT** rodar qualquer comando que apague histórico de commits. 
-
-**O histórico é parte do contrato e da evidência de processo.**
+- Nunca pular `hb verify` antes de authoring.
+- Nunca criar artefato fora de path canônico.
+- Sempre registrar artefato com `hb artifact`.
+- Sempre ler o worker prompt correspondente.
+- Sempre atualizar `SESSION_HANDOFF.md` ao fechar a sessão.
+- Nunca reescrever a força dos gates por conveniência.
+- Nunca usar comandos destrutivos de git (`reset`, `rebase`, `commit --amend`) para mascarar estado.

@@ -1,0 +1,59 @@
+type: object
+required:
+- eventType
+- occurredAt
+- jobId
+- sourceLabel
+- ingestionMode
+- statusLabel
+- receivedAt
+properties:
+  eventType:
+    type: string
+    const: ai_ingestion.job.completed
+    description: Tipo do evento. Sempre "ai_ingestion.job.completed".
+  occurredAt:
+    type: string
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+    format: date-time
+    description: 'Timestamp UTC do término do processamento (completedAt). DR-ING-003:
+      occurredAt (completedAt) >= receivedAt (INV-ING-002).
+
+      '
+    x-semantic-id: core.occurred_at.v1
+  jobId:
+    type: string
+    format: uuid
+    description: UUID do job de ingestão concluído.
+    x-semantic-id: ai_ingestion.job.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+  sourceLabel:
+    type: string
+    minLength: 1
+    maxLength: 120
+    description: Label da fonte de dados externa.
+  ingestionMode:
+    type: string
+    minLength: 1
+    maxLength: 40
+    description: Modo de ingestão (batch, webhook, file-drop).
+  statusLabel:
+    type: string
+    description: Status do job no momento do evento. Sempre "completed".
+    const: completed
+  receivedAt:
+    type: string
+    format: date-time
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+    description: 'Timestamp de entrada do fato externo (DR-ING-003). Preserva causalidade
+      — receivedAt NÃO é colapsado com completedAt.
+
+      '
+    x-semantic-id: core.occurred_at.v1
+  idempotencyKey:
+    type:
+    - string
+    - 'null'
+    maxLength: 120
+    description: Chave de idempotência do job (DR-ING-004).
+additionalProperties: false

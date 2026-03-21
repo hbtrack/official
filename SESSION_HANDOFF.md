@@ -722,3 +722,57 @@ Todos os 17 módulos canônicos em **implementation_ready**:
 1. **Continuity:** Se novo trabalho de contrato surgir, reutilizar a mesma pipeline v6-ready + 4C.2.2D base
 2. **Codegen:** Todas as 17 análises adversariais + readiness promotions prontas; `generate_code` task_type pode ser acionado
 3. **CI/CD:** Todos os gates passam em pipeline real; zero regressions na cobertura atual
+---
+
+## Sessão generate_code: identity_access — Módulo IAM (2026-03-20)
+
+**Status: ✅ CONCLUÍDA — 18 arquivos Python, 38 testes unitários PASS, pipeline PASS**
+
+### O que foi executado
+- FASE 0: `hb verify --task-type generate_code --module identity_access` → PASS
+- FASE 1: `hb check --module identity_access` → PASS
+- GC1: Contexto carregado (OpenAPI 9 ops, schema AuthSession, DR-IAM-001..005, INV-IAM-001..004)
+- GC2-GC6: Código gerado em 4 camadas (domain, application, infrastructure, interface)
+- 18 arquivos Python criados em `src/identity_access/`
+- `hb artifact` executado para 10 artefatos primários (exitcode 0)
+- FASE 3 validate_contracts: **STATUS PASS** (todos os gates, zero waivers)
+
+### Fixes colaterais executados
+1. **`src/video/application/use_cases.py`** — Import `VideoRepository` movido para bloco `TYPE_CHECKING` (resolve cadeia psycopg2 → ArrayField em testes unitários)
+2. **`conftest.py`** (novo na raiz) — Adiciona `src/` ao `sys.path` para pytest
+3. **`docs/_canon/FEATURE_REGISTRY.yaml`** — Adicionados FT-011, FT-012, FT-013 (identity_access, status: implemented)
+4. **30 manifests em `generated/manifests/`** — Hashes SHA256 re-sincronizados (individual + aggregate)
+
+### Arquivos gerados (`src/identity_access/`)
+| Camada | Arquivo | Responsabilidade |
+|--------|---------|-----------------|
+| Domain | `domain/entities.py` | `AuthSession`, `UserRoleBinding`, `RoleLabel` (StrEnum) |
+| Domain | `domain/rules.py` | 7 funções de regra + 5 exceções |
+| Application | `application/use_cases.py` | 9 use cases (um por operationId) |
+| Infrastructure | `infrastructure/models.py` | `AuthSessionModel`, `UserRoleBindingModel` |
+| Infrastructure | `infrastructure/repository.py` | Adapter ORM + JWT port (blake2b para refresh tokens) |
+| Interface | `schemas.py` | Pydantic schemas Ninja (`AuthSessionOut`, `LoginIn/Out`, etc.) |
+| Interface | `api.py` | Router Ninja — 9 endpoints matching contrato OpenAPI |
+| Tests | `tests/unit/test_identity_access_domain.py` | 38 testes unitários |
+| Tests | `tests/integration/test_identity_access_api.py` | Skeleton integração (Django + DB) |
+
+### Resultados de teste
+```
+pytest src/identity_access/tests/unit/  →  38/38 PASS
+pytest src/video/tests/unit/            →  20/20 PASS
+pytest tests/test_video_module.py       →  36/36 PASS
+Total: 94/94 PASS
+```
+
+### Gate Status Final
+```
+DERIVED_DRIFT_GATE           ✅ PASS (30 manifests re-sincronizados)
+CROSS_SPEC_ALIGNMENT_GATE    ✅ PASS (zero waivers)
+PIPELINE STATUS              ✅ PASS
+```
+
+### Próximos Passos (identity_access)
+1. `python manage.py makemigrations identity_access` — requer scaffolding do projeto Django (manage.py + settings.py ainda não existem)
+2. Integrar JWT real (Rs256) no `JwtPort` de `infrastructure/repository.py`
+3. Executar testes de integração quando PostgreSQL disponível
+4. **Próximo módulo `generate_code`:** ver `docs/_canon/MODULE_REGISTRY.yaml` — módulos em `implementation_ready`

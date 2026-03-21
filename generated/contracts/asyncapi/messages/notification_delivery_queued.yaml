@@ -1,0 +1,6 @@
+name: notification_delivery_queued
+title: Notification Delivery Queued
+summary: Entrega de notificação criada e enfileirada para processamento assíncrono.
+contentType: application/json
+payload:
+  $ref: ../components/schemas/notification_delivery_queued_payload.yaml

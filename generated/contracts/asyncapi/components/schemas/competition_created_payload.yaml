@@ -1,0 +1,52 @@
+type: object
+required:
+- eventType
+- occurredAt
+- competitionId
+- seasonId
+- name
+- statusLabel
+- startDate
+additionalProperties: false
+properties:
+  eventType:
+    type: string
+    const: competition.created
+  occurredAt:
+    type: string
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+    format: date-time
+    x-semantic-id: core.occurred_at.v1
+  competitionId:
+    type: string
+    format: uuid
+    x-semantic-id: competitions.competition.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+  seasonId:
+    type: string
+    format: uuid
+    x-semantic-id: seasons.season.id.v1
+    description: Obrigatório — competição sem temporada é inválida (DR-COMP-002).
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+  organizationId:
+    type: string
+    format: uuid
+    x-semantic-id: organizations.organization.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+  name:
+    type: string
+    minLength: 1
+    maxLength: 140
+  formatLabel:
+    type:
+    - string
+    - 'null'
+    maxLength: 80
+  statusLabel:
+    type: string
+    description: Competições novas sempre iniciam como draft.
+    const: draft
+  startDate:
+    type: string
+    pattern: ^\d{4}-\d{2}-\d{2}$
+    format: date

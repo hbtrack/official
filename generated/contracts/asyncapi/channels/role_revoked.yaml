@@ -1,0 +1,15 @@
+# AsyncAPI Channel: role.revoked
+# Module: identity_access
+# Domain rules: DR-IAM-001, DR-IAM-003, DR-IAM-005
+# Decisions: DEC-IAM-003=C
+# ADR refs: ADR-008 (RBAC flat 5 roles)
+
+description: >
+  Canal de publicação quando um role RBAC canônico é removido de um usuário.
+  Soberano de bindings técnicos de autorização (DR-IAM-001, ADR-008).
+  Governado por identity_access — nunca por users, teams ou módulos operacionais (DR-IAM-005).
+  Consumidores: audit (compliance), notifications (alerta ao usuário sobre acesso revogado).
+publish:
+  operationId: role_revoked_publish
+  message:
+    $ref: "../messages/role_revoked.yaml"

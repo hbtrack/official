@@ -1,0 +1,8 @@
+description: >
+  Evento emitido quando uma sessão é ajustada ao vivo durante execução (estado IN_PROGRESS).
+  Ajustes: mudança de exercício, ajuste de recarga, override de constraint.
+
+publish:
+  operationId: session_adjustment_made_publish
+  message:
+    $ref: ../messages/session_adjustment_made.yaml

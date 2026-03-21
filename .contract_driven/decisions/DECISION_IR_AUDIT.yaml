@@ -37,7 +37,7 @@ decisions:
       role admin/coordinator pode registrar ação sensível (DR-AUD-005). A exportação
       atende requisitos de compliance LGPD e auditoria regulatória. INV-AUD-002
       (append-only) é preservada: POST cria entradas, nunca modifica existentes.
-      OWASP API2:2023 enforced via security bearerAuth em todos os endpoints.
+      OWASP API2:2023 enforced via security HTTPBearer em todos os endpoints protegidos.
     doc_ref: >
       DR-AUD-001, DR-AUD-005, INV-AUD-001, INV-AUD-002,
       contracts/schemas/audit/audit_entry.schema.json, ADR-007

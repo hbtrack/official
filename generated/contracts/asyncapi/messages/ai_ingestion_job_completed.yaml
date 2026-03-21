@@ -1,0 +1,18 @@
+# ============================================================
+# AsyncAPI Message: ai_ingestion_job_completed
+# Module: ai_ingestion
+# ============================================================
+
+name: AiIngestionJobCompletedMessage
+title: Job de Ingestão Concluído
+summary: >
+  Publicado quando um job de ingestão de dados externos é processado com
+  sucesso (DR-ING-003 — causalidade receivedAt → completedAt preservada).
+description: >
+  Evento emitido pelo módulo ai_ingestion após processamento bem-sucedido.
+  DR-ING-005: a soberania do dado normalizado pertence ao módulo de destino
+  — este evento sinaliza conclusão, não transferência de ownership.
+  INV-ING-002: occurredAt (completedAt) >= receivedAt garantido.
+contentType: application/json
+payload:
+  $ref: "../components/schemas/ai_ingestion_job_completed_payload.yaml"

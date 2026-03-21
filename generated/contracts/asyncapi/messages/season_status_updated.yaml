@@ -1,0 +1,10 @@
+# AsyncAPI Message: season_status_updated
+# Module: seasons
+# Domain rules: DR-SEAS-001, DR-SEAS-005
+
+name: SeasonStatusUpdated
+title: Status da Temporada Atualizado
+summary: Evento publicado quando o statusLabel de uma temporada é alterado.
+contentType: application/json
+payload:
+  $ref: "../components/schemas/season_status_updated_payload.yaml"

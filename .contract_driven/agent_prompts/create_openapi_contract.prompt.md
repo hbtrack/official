@@ -18,7 +18,9 @@
 8. `docs/hbtrack/modulos/<module>/MODULE_SCOPE_<MODULE>.md`
 9. `docs/hbtrack/modulos/<module>/DOMAIN_RULES_<MODULE>.md`
 10. `docs/hbtrack/modulos/<module>/INVARIANTS_<MODULE>.md`
-11. Contratos atuais: `contracts/openapi/openapi.yaml` + `contracts/openapi/paths/<MODULE>.yaml` (se existir)
+11. `docs/hbtrack/modulos/<module>/PERMISSIONS_<MODULE>.md` (quando existir)
+12. `docs/hbtrack/modulos/<module>/ERRORS_<MODULE>.md` (quando existir)
+13. Contratos atuais: `contracts/openapi/openapi.yaml` + `contracts/openapi/paths/<MODULE>.yaml` (se existir)
 
 ### Bloqueios (falhar cedo)
 - Se `module` não existir no LAYOUT (seção 2): **bloquear** com `BLOCKED_MISSING_MODULE`.
@@ -39,15 +41,29 @@
    - paginação conforme `api_rules` quando endpoint retornar coleção;
    - erros conforme a SSOT (ver `api_rules` + `.contract_driven/DOMAIN_AXIOMS.json` para shape de erro);
    - segurança OWASP (BOLA/BOPLA/BFLA) aplicada por operação.
+   - usar `HTTPBearer` como único scheme para operações protegidas; `bearerAuth` e `security: - {}` são proibidos.
+   - usar somente `../components/schemas/shared/problem.yaml` para erros HTTP públicos.
+   - operações públicas só podem usar `security: []` quando a descrição da operação explicar por que ela é pública.
+   - schemas de resposta de entidades estáveis devem reutilizar a shape soberana em `contracts/schemas/**` ou declarar `x-schema-ref-justification` explícita para qualquer delta HTTP.
+   - operações protegidas devem documentar `500`.
+   - operações com transição de estado, concorrência ou conflito de domínio devem documentar `409`.
+   - endpoints de query analítica não podem usar `filterExpression` textual nem `data[].additionalProperties: true`; devem usar request/response soberanos com filtros estruturados e row envelope fixo.
 7. Atualizar `contracts/openapi/openapi.yaml` apenas quando necessário (ex.: adicionar `$ref` do novo path file).
-8. Rodar o compiler determinístico (gera policy resolvida + manifesto + cópia derivada do contrato):
+8. Rodar o compiler determinístico (gera policy resolvida + manifesto + bundle derivado consumível em `generated/contracts/openapi/**`):
    - `python3 scripts/contracts/validate/api/compile_api_policy.py --module <module> --surface sync`
 9. Rodar gates:
    - `python3 scripts/validate_contracts.py`
+10. Validar objetivamente antes de concluir:
+   - zero `$ref` local quebrado em `generated/contracts/openapi/**`;
+   - `contracts/openapi/**` e `generated/contracts/openapi/**` expõem a mesma superfície;
+   - ausência total de `bearerAuth`, `security: - {}` e `common/error.yaml`;
+   - zero operações protegidas sem `500`;
+   - zero mutações contratuais sem `409` (exceto auth login/refresh/logout quando não houver conflito de recurso);
+   - zero endpoints analíticos com DSL textual solta ou response rows abertas.
 
 ### Saída
 - `contracts/openapi/paths/<MODULE>.yaml` atualizado.
 - Se necessário, `contracts/openapi/openapi.yaml` atualizado para referenciar o path file.
 - `generated/resolved_policy/<MODULE>.sync.resolved.yaml` atualizado.
-- `generated/contracts/openapi/paths/<MODULE>.yaml` atualizado (cópia derivada).
+- `generated/contracts/openapi/**` atualizado como bundle auto-contido.
 - `generated/manifests/<MODULE>.sync.traceability.yaml` atualizado.

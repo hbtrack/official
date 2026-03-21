@@ -1,0 +1,14 @@
+# AsyncAPI Channel: video.distribution.published
+# Module: video
+# Domain rules: DR-VID-007, DR-VID-008, DR-VID-009
+# Decisions: ADR-033
+
+description: >
+  Canal de publicação quando um feed é distribuído a um destino externo (CDN, parceiro).
+  Toda distribuição é rastreada com auditoria completa (DR-VID-009).
+  Publisher: video. Consumidores: audit (obrigatório), analytics, notifications.
+  BOUNDARY: acesso sempre scoped por MatchMediaSession (DR-VID-007).
+publish:
+  operationId: video_distribution_published_publish
+  message:
+    $ref: "../messages/video_distribution_published.yaml"

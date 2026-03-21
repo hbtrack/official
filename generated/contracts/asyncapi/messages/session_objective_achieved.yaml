@@ -1,0 +1,6 @@
+name: session_objective_achieved
+title: Session Objective Achieved
+summary: Objetivo de sessão marcado como alcançado.
+contentType: application/json
+payload:
+  $ref: ../components/schemas/session_objective_achieved_payload.yaml

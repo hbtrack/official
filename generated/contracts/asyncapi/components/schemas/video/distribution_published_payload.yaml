@@ -1,0 +1,78 @@
+type: object
+additionalProperties: false
+required:
+- eventType
+- occurredAt
+- clipId
+- sessionId
+- targetType
+- publicUrl
+- publishedAt
+properties:
+  eventType:
+    type: string
+    description: Tipo canônico do evento.
+    const: video.distribution.published
+  occurredAt:
+    type: string
+    format: date-time
+    description: Momento ISO 8601 UTC da publicação.
+    x-semantic-id: core.occurred_at.v1
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  clipId:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    description: UUID do ClipDefinition publicado.
+    x-semantic-id: video.clip_definition.id.v1
+  sessionId:
+    type: string
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    format: uuid
+    description: UUID da MatchMediaSession pai.
+    x-semantic-id: video.match_media_session.id.v1
+  targetType:
+    type: string
+    enum:
+    - TECHNICAL_INTERNAL
+    - PUBLIC_CDN
+    - BROADCAST_PARTNER
+    description: Tipo de destino publicado (DR-VID-002).
+    x-domain-enum-ref: video_target_type
+  publicUrl:
+    type: string
+    format: uri
+    description: URL pública de acesso ao clip.
+  availableRenditions:
+    type: array
+    minItems: 1
+    items:
+      type: object
+      required:
+      - codecLabel
+      - bitrate
+      properties:
+        codecLabel:
+          type: string
+          enum:
+          - H264
+          - H265
+          - VP9
+          - AV1
+          x-domain-enum-ref: video_codec
+        bitrate:
+          type: integer
+          minimum: 100000
+    description: Array de renditions transcode disponíveis (ABR).
+  publishedAt:
+    type: string
+    format: date-time
+    description: ISO 8601 UTC da publicação confirmada.
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  expiresAt:
+    type:
+    - string
+    - 'null'
+    format: date-time
+    description: ISO 8601 UTC quando clip expira em CDN (baseado em retentionPolicy).
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$

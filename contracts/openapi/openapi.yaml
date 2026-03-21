@@ -6,11 +6,11 @@ info:
   description: >
     HB Track — Plataforma sports-tech orientada a contratos para gestão e operação de handebol.
 
-    Esta especificação é a fonte primária da verdade para a interface HTTP pública do sistema.
+    Esta especificação é o contrato normativo e auto-suficiente da interface HTTP pública do sistema.
 
-    Referências normativas — consultar antes de implementar:
+    Referências normativas abaixo fornecem governança e rastreabilidade, mas não completam comportamento ausente no contrato:
     - .contract_driven/CONTRACT_SYSTEM_LAYOUT.md   (estrutura canônica de artefatos)
-    - .contract_driven/templates/api/api_rules.yaml    (regras, templates e validações de API — SSOT)
+    - .contract_driven/templates/api/api_rules.yaml    (governança e validações do sistema contratual)
     - docs/_canon/SYSTEM_SCOPE.md                  (escopo e módulos canônicos)
     - docs/_canon/OPERATIONS.md                    (precedência, naming, validação, modelo de erros RFC 7807)
   contact:
@@ -30,10 +30,10 @@ servers:
 # Path items são definidos por módulo em contracts/openapi/paths/<module>.yaml.
 # Adicionar referências aqui conforme cada contrato de módulo for estabelecido.
 #
-# Módulos canônicos (16):
+# Módulos canônicos (17):
 #   Functional domain: users, seasons, teams, training, wellness, medical,
 #                      competitions, matches, scout, exercises, analytics,
-#                      reports, ai_ingestion
+#                      reports, ai_ingestion, video
 #   Cross-cutting:     identity_access, audit, notifications
 paths:
   # GENERATED PATH INVENTORY — do not edit manually.
@@ -277,13 +277,8 @@ components:
       bearerFormat: JWT
   examples: {}
 
-# Segurança global vazia — placeholder explícito.
-# API5:2023 BFLA — default-deny: aplicar security requirement por operação individualmente.
-# NÃO depender deste global como proteção real.
-security: []
-
 # Tags canônicas: uma por módulo (CONTRACT_SYSTEM_LAYOUT.md §2).
-# Módulos de domínio funcional (13) + transversais (3) = 16 total.
+# Módulos de domínio funcional (14) + transversais (3) = 17 total.
 tags:
   - name: users
     description: "Pessoa, perfil e dados de identidade funcional pessoal."
@@ -317,3 +312,5 @@ tags:
     description: "Trilha de auditoria e rastreabilidade de eventos."
   - name: notifications
     description: "Notificações e alertas para usuários."
+  - name: video
+    description: "Sessões de vídeo, clips, segmentos e distribuição."

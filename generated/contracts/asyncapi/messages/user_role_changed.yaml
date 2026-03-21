@@ -1,0 +1,18 @@
+# AsyncAPI Message: user_role_changed
+# Module: users
+# Domain rules: DR-USR-002
+# Invariants: INV-USR-001, INV-USR-004
+# ADR refs: ADR-008 (RBAC flat 5 roles — roleLabel é informativo, não autoritativo)
+
+name: UserRoleChangedMessage
+title: Role de Usuário Alterado
+summary: >
+  Publicado quando o roleLabel de um usuário é alterado (DR-USR-002, ADR-008).
+description: >
+  roleLabel representa o papel funcional nos registros esportivos (DR-USR-002).
+  Apenas admin e coordinator podem alterar roleLabel (DEC-USERS-003).
+  A autorização técnica (JWT roles) é gerenciada por identity_access (ADR-008).
+  Consumidores típicos: audit (rastreamento), notifications (alertas de promoção).
+contentType: application/json
+payload:
+  $ref: "../components/schemas/user_role_changed_payload.yaml"

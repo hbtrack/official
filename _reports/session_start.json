@@ -1,14 +1,14 @@
 {
   "session_id": "4d672789-d33f-42d6-be4e-41e30e822ba0",
-  "session_timestamp": "2026-03-19T17:14:26.201411+00:00",
+  "session_timestamp": "2026-03-21T01:36:07.509961+00:00",
   "branch": "hb-track-contratos-driven",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "contract_execution",
-  "task_type": "new_contract",
-  "module": "users",
+  "task_type": "generate_code",
+  "module": "identity_access",
   "stage": 2,
   "write_scope": "contracts",
-  "worker_id": "create_openapi_contract",
+  "worker_id": "code_generator",
   "git_user": "HB Track Agent",
   "git_email": "davis@hbtrack.local",
   "stage0_exit_code": 0,
@@ -23,112 +23,115 @@
     },
     {
       "path": "contracts/openapi/paths/medical.yaml",
-      "sha256": "3fc6d8a2f63d7cbfd1f6cb0a4216bc177e1206bb282a77d7c5537af0295dfeae",
+      "sha256": "47fa300842616c6ebf82785bb51965344c5e97083c2cfe63385347375ba69e8c",
       "created_at": "2026-03-19T13:14:49.355490+00:00",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-21T01:54:57.771286+00:00"
     },
     {
       "path": "contracts/openapi/paths/analytics.yaml",
-      "sha256": "454edf112661644ceca65e12d84818fcb066838b283cf7b1181b60410be97561",
+      "sha256": "74693ed89107d215d53311f21344d1592a92a9680346f8958460da7eb3114cd9",
       "created_at": "2026-03-19T13:15:35.244124+00:00",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-21T01:54:33.038808+00:00"
     },
     {
       "path": "contracts/openapi/components/schemas/analytics/analytics_snapshot.yaml",
-      "sha256": "a529cbc5a9134ec47b3827e4859a652f415c77a2ef2b151c15aca0e688aef0df",
+      "sha256": "4abeb9761cc9b04cd6ba9a4783b46ea85bfc1632a9b3600714c73102d2d7af09",
       "created_at": "2026-03-19T13:15:39.546805+00:00",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T08:19:34.325610+00:00"
+      "validated_at": "2026-03-21T01:52:45.541636+00:00"
     },
     {
       "path": "contracts/openapi/paths/users.yaml",
-      "sha256": "fd6c084d75bdee66547d96d78ef19eadb10d64962cdd7f2ae3155ae637dc53f6",
+      "sha256": "0fb515784b9d90f9f522dde77b49cdbcb94b910e8e81609b815e02bc970251d0",
       "created_at": "2026-03-19T13:19:00.304341+00:00",
-      "gate_exit_code": 0
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T01:55:29.060974+00:00"
     },
     {
       "path": "contracts/openapi/paths/seasons.yaml",
-      "sha256": "e940f42c1ae386d38f08037f606a0a8c0c4e6e7dff6cfdad4a1ec41732c965bc",
+      "sha256": "9ce474fec155b1fae934e5dd90382d4f62922dfb9f31c1565f3a8729171629ad",
       "created_at": "2026-03-19T13:19:06.788702+00:00",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-21T01:55:15.781480+00:00"
     },
     {
       "path": "contracts/openapi/paths/teams.yaml",
-      "sha256": "c3687ef3001894f4cc2edd45e0e1e296f1f173487ea2c0c385fe03ecbdafe120",
+      "sha256": "b027bf690894524e071948062e4e6890847df8c6999fc852430d97df79246d22",
       "created_at": "2026-03-19T13:19:11.113826+00:00",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-21T01:55:20.453416+00:00"
     },
     {
       "path": "contracts/openapi/paths/wellness.yaml",
-      "sha256": "a8b28e1e9a5b3d5036c99a38f22419ef3b5b3e497935c90e7b37befb6a4c53d1",
+      "sha256": "9a19e50cea3e1a081fe08876a11ec036de1fe634d41403f18163f515a0a25120",
       "created_at": "2026-03-19T13:19:15.352323+00:00",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-21T01:55:37.465085+00:00"
     },
     {
       "path": "contracts/openapi/paths/competitions.yaml",
-      "sha256": "3e38adfefb7c69bb16b287d2d283ff370f2adfa478619c069019ba86e7d46b35",
+      "sha256": "c68d13dedf75bf07835f34c217b4ca09aa742fbd3e5782776918fa729077c8f3",
       "created_at": "2026-03-19T13:19:23.562919+00:00",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-21T01:54:41.174384+00:00"
     },
     {
       "path": "contracts/openapi/paths/matches.yaml",
-      "sha256": "620ce8070b57ec864c0318faa56a53b2c9ac455060c7bc69d41ff2413c19a2dc",
+      "sha256": "e21f3446a04b6024d370ba0bc0c0e43eaf275ff07159051dfb0421970f76f705",
       "created_at": "2026-03-19T13:19:27.756828+00:00",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-21T01:54:53.444138+00:00"
     },
     {
       "path": "contracts/openapi/paths/scout.yaml",
-      "sha256": "7403705485c3cb5d80cf916017a451fd351b60daa8fdf718ea7d7571b76dc541",
+      "sha256": "331e0cf5895b83a9a0e3ee2a02f5235b3b99c997b766ea26eab79c401fc24427",
       "created_at": "2026-03-19T13:19:31.899863+00:00",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-21T01:55:11.474168+00:00"
     },
     {
       "path": "contracts/openapi/paths/exercises.yaml",
-      "sha256": "b5fb4c67a0fffb84742f7a3fa20eedb15ea2bedee8c5235e4577d7e3a0fac648",
+      "sha256": "147e679e1a9c08aff9056bb90e5331f23e3bbe30f0c49c32948dcb34259edbcc",
       "created_at": "2026-03-19T13:19:36.141730+00:00",
-      "gate_exit_code": 0
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T01:54:45.243140+00:00"
     },
     {
       "path": "contracts/openapi/paths/reports.yaml",
-      "sha256": "747c20e3d050cb3fce76a8826fa5933b83c71d1f2e2f9e9efade9a907d139dd8",
+      "sha256": "81c05881c8b8aec3a5a122cae2972bef1531cbbe1709977cbf663cd5803d8e00",
       "created_at": "2026-03-19T13:19:44.209466+00:00",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-21T01:55:06.981153+00:00"
     },
     {
       "path": "contracts/openapi/paths/ai_ingestion.yaml",
-      "sha256": "a97e76a6455310e0a160e9dfda9835fe5fcf6baeda85e5426a1795bca0ebcc1d",
+      "sha256": "0fb7191770c47ac3b1708ed09822d0dac4b784940825f70e03bfb7872ba9b2a3",
       "created_at": "2026-03-19T13:19:48.368842+00:00",
-      "gate_exit_code": 0
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T01:54:28.996507+00:00"
     },
     {
       "path": "contracts/openapi/paths/identity_access.yaml",
-      "sha256": "f6142d0d1095685ec4eef98394b0cb3076ebab973dbe3a58089caa34c496b4c6",
+      "sha256": "c8f635a6395bb9e7ccbeeefcc9dbcb9c12d0ae8105d8ba8929e302780746b483",
       "created_at": "2026-03-19T13:19:52.641724+00:00",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-21T01:54:49.352398+00:00"
     },
     {
       "path": "contracts/openapi/paths/audit.yaml",
-      "sha256": "56994ca40b6389fab84219de1f4ab8fc2eb67565e7423f7b3a614e5006206349",
+      "sha256": "e81bd0ee808792b37fb5b58b364e2da4bb4a7277fb93457e9188f69fbca91c7a",
       "created_at": "2026-03-19T13:19:56.730424+00:00",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-21T01:54:37.106294+00:00"
     },
     {
       "path": "contracts/openapi/paths/notifications.yaml",
-      "sha256": "02537305fa6aa62572c2d9329fffa071c269dc1aa249bd8c9ae16439fe4aab2a",
+      "sha256": "86ffff17bdc3ae7cbd5bc9dc17c6cc64c13c0b5fe061228b780859d3a7dc5ed1",
       "created_at": "2026-03-19T13:20:00.732739+00:00",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-21T01:55:02.361831+00:00"
     },
     {
       "path": "contracts/asyncapi/asyncapi.yaml",
@@ -855,25 +858,27 @@
     },
     {
       "path": "contracts/openapi/openapi.yaml",
-      "sha256": "dca9577e649d976cd33a44d59492228a4e5e45469a01ee930f8f83ddcda84d7e",
-      "gate_exit_code": 0
+      "sha256": "35f427c13c4345d86d0053776ec5bc4d9213a19568957dc07c5a39c71fa39e61",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T01:54:24.857026+00:00"
     },
     {
       "path": "contracts/schemas/competitions/competition.schema.json",
-      "sha256": "e242dfb1e2ec1ba088dab2a69d326decf6aee0d03d36988ba78f5f7159ae26e4",
+      "sha256": "16438c0c9972e54b514e485bc36876cf162867fa5e45b6699de61804569fc291",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-21T01:55:58.285979+00:00"
     },
     {
       "path": "contracts/schemas/matches/match.schema.json",
-      "sha256": "471fa110266632d054518157c30514f84d1b395b3fbab317b924ffb524fb23db",
-      "gate_exit_code": 0
+      "sha256": "0794ae1db7742b9d9ddd297496342dc1caa0b8706143099b0dbf2d1b5b974c40",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T01:56:02.490430+00:00"
     },
     {
       "path": "contracts/schemas/seasons/season.schema.json",
-      "sha256": "cff87669dfd7c98cf08d529cf754f60f73fb5be1f151f0acd84b08c22dfb93fa",
+      "sha256": "f2a52eef5ecdc1531aac944d0fc3e7bfde5bccf4cb0cafc2dff866f16e965af1",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-21T01:56:06.676810+00:00"
     },
     {
       "path": "contracts/schemas/shared/session_start.schema.json",
@@ -883,8 +888,9 @@
     },
     {
       "path": "contracts/schemas/users/user_profile.schema.json",
-      "sha256": "17a019a02bd35420520832b48bed702f4bea1f0dc4df003af7ff0fb43f0e1af3",
-      "gate_exit_code": 0
+      "sha256": "e35925ca319f57bf84c03410341658e114fdfc60172f8d727ecec31958478c8d",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T02:01:03.803583+00:00"
     },
     {
       "path": "contracts/schemas/video/clip_definition.schema.json",
@@ -894,21 +900,21 @@
     },
     {
       "path": "contracts/schemas/video/distribution_profile.schema.json",
-      "sha256": "3670db5d51fa00537f4a0b8bcfaf5bde318aaf1cffdd6886d61c796d288ecdbb",
+      "sha256": "e6ab3a3744473e390eb4240054461114cf7141d961a9f57bea0e8ab7ef504209",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-21T02:01:08.119708+00:00"
     },
     {
       "path": "contracts/schemas/video/match_media_session.schema.json",
-      "sha256": "6563db887b5eb1c25153d8a9ea52ab64dce7e7cfa7926e08efa0fe7275d9d1b8",
+      "sha256": "3b11cc76ff345cc0c81948732773205445889f3f49d52eb26365f571921d0289",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-21T02:01:12.405310+00:00"
     },
     {
       "path": "contracts/schemas/video/media_segment.schema.json",
-      "sha256": "0184ed6e042ff43678d61c14eb2091a62458a63ddcc0c551ee834f351b6428c6",
+      "sha256": "3086aa60d7e9ea58dc962bd61ffe94886605367a92a0ecb0aef45f28e601915c",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T07:18:49.317173+00:00"
+      "validated_at": "2026-03-21T02:01:16.700907+00:00"
     },
     {
       "path": "contracts/workflows/ai_ingestion/ingestion_job_lifecycle.arazzo.yaml",
@@ -1252,9 +1258,10 @@
     },
     {
       "path": "contracts/schemas/shared/session_handoff.schema.json",
-      "sha256": "306a78d3e9f817d76447c5e3f1de53b778453d8ffebb1c0d790b782f59db2f29",
+      "sha256": "5cdc1bab16e0ae8b15f89a9ad7e7d1e647354390bce3a25fe1a8c2e80e1527cd",
       "created_at": "2026-03-19T15:59:58.388880+00:00",
-      "gate_exit_code": 0
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T01:56:11.001459+00:00"
     },
     {
       "path": "contracts/schemas/shared/waiver.schema.json",
@@ -1351,33 +1358,38 @@
     },
     {
       "path": "_reports/READINESS_DASHBOARD.md",
-      "sha256": "dee8be2d7c7c7c1d42d9d3ae35e49e20bfd0dc97326fe1add60ff64d5ae0a514",
+      "sha256": "83ddadc333192403cd664dfe0c5634af664a21685ebb9e2507f24bf973fcad99",
       "created_at": "2026-03-20T03:08:29.050998+00:00",
-      "validated_at": "2026-03-20T07:29:44.210685+00:00"
+      "validated_at": "2026-03-21T01:51:59.886236+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "_reports/contract_gates/latest.json",
-      "sha256": "9bddb64a4a50aca35cfa8f8abd9e86d45f05a2e25a03dbec198f3db0b639e740",
+      "sha256": "c0e2303d74643c4a2978dad8e12492206348242a8093dabc998d21f008514170",
       "created_at": "2026-03-20T03:08:29.050998+00:00",
-      "validated_at": "2026-03-20T07:29:44.210685+00:00"
+      "validated_at": "2026-03-21T01:52:04.007730+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "_reports/evidence/module_readiness_scorecard.json",
-      "sha256": "417b330f87bce754e4a054b50e4800cdabd6ac0b76b08a279c6440c66479a226",
+      "sha256": "728b073e0ab879146657da470ff5e78ed0e20257a1d7444cd269fd293743f157",
       "created_at": "2026-03-20T03:08:29.050998+00:00",
-      "validated_at": "2026-03-20T07:29:44.210685+00:00"
+      "validated_at": "2026-03-21T01:52:08.191078+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "_reports/evidence/module_readiness_scorecard.md",
-      "sha256": "1c7713e2c056271079c0897743c8450f04ba61b1e67f3502acb5449b69540e82",
+      "sha256": "59a80fae9a4e09ccba88a4c757927c4ca49a69a267afe4c9c31dabfd5699155b",
       "created_at": "2026-03-20T03:08:29.050998+00:00",
-      "validated_at": "2026-03-20T07:29:44.210685+00:00"
+      "validated_at": "2026-03-21T01:52:12.291424+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "_reports/pipeline_health.json",
-      "sha256": "c7d8f61b6dae435afdfcf613dd013d533a628e6deeb2d6c6f3b26cd47b553187",
+      "sha256": "b839629bbbcfc19d0815af669350da49fd77c9c7904446b465340195732c779a",
       "created_at": "2026-03-20T03:08:29.050998+00:00",
-      "validated_at": "2026-03-20T07:29:44.210685+00:00"
+      "validated_at": "2026-03-21T01:52:16.410716+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "_reports/pipeline_history.jsonl",
@@ -1479,30 +1491,38 @@
     },
     {
       "path": "contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml",
-      "sha256": "9fe431aa6afaf8d53ac86987c61f018b2903c73c2f011ec215c90dec263157eb",
+      "sha256": "f843e292212256ef636ec5de13c496f17b1da550c33c76969749f25f410b9a30",
       "created_at": "2026-03-20T07:18:49.317173+00:00",
-      "validated_at": "2026-03-20T08:19:29.792551+00:00",
+      "validated_at": "2026-03-21T01:52:28.845771+00:00",
       "gate_exit_code": 0
     },
     {
       "path": "contracts/openapi/components/schemas/audit/audit_entry.yaml",
-      "sha256": "800d544e4719a703d5c29ac9d34ac4de3b8e53b627e2acdd5fa2ca21eb1d659f",
-      "created_at": "2026-03-20T07:18:49.317173+00:00"
+      "sha256": "9057821093075258c86ad9ecdc5cf4155796e7ed369f6fbc4432d23022bf06b3",
+      "created_at": "2026-03-20T07:18:49.317173+00:00",
+      "validated_at": "2026-03-21T01:52:49.688164+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "contracts/openapi/components/schemas/competitions/competition.yaml",
-      "sha256": "8a7ca0605a81b3df691f283317360785f87a438a2546548b7d669d6946b65ef1",
-      "created_at": "2026-03-20T07:18:49.317173+00:00"
+      "sha256": "467d8583de890039c00683f476ffe5713172983deb9232fb26b3592b6c50e0de",
+      "created_at": "2026-03-20T07:18:49.317173+00:00",
+      "validated_at": "2026-03-21T01:52:53.870702+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "contracts/openapi/components/schemas/exercises/exercise.yaml",
-      "sha256": "f68f7ea2ce44c5ee56e74e8fc1871aaaf9fc7e190b88bde6da04a91f9f0b12a4",
-      "created_at": "2026-03-20T07:18:49.317173+00:00"
+      "sha256": "9a11941f583d22a8eaad4c35314243c8ab3f344e16f06edfe587e560adb3b398",
+      "created_at": "2026-03-20T07:18:49.317173+00:00",
+      "validated_at": "2026-03-21T01:52:58.022473+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "contracts/openapi/components/schemas/exercises/exercise_preview.yaml",
-      "sha256": "7eb7529c5c936feb2d391a13401824fc5004352ba02bfc695ab9421c7a559d69",
-      "created_at": "2026-03-20T07:18:49.317173+00:00"
+      "sha256": "cac7722851317a128bf45f63fbd3f3a2757d079f81aaf4974b49f27c92c0b624",
+      "created_at": "2026-03-20T07:18:49.317173+00:00",
+      "validated_at": "2026-03-21T01:53:02.396142+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "contracts/openapi/components/schemas/exercises/exercise_relation.yaml",
@@ -1511,18 +1531,24 @@
     },
     {
       "path": "contracts/openapi/components/schemas/exercises/exercise_version.yaml",
-      "sha256": "a20a7fad59a8292d87ce703ad71e953cacc04e59bc514b0da1e521aadd26ba5f",
-      "created_at": "2026-03-20T07:18:49.317173+00:00"
+      "sha256": "255d291cc673b6f40043559a7331b3f37ab7cea5888927b487ad3d0ac6b53dd1",
+      "created_at": "2026-03-20T07:18:49.317173+00:00",
+      "validated_at": "2026-03-21T01:53:06.641169+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "contracts/openapi/components/schemas/identity_access/auth_session.yaml",
-      "sha256": "a2a69440dc5625a75bc7afec75af626ff80c7deacbbcadd35003902b11aef225",
-      "created_at": "2026-03-20T07:18:49.317173+00:00"
+      "sha256": "1efc76528abf6388a9ab1bbd92ce8e33871ae8a9567ddeae5d3c71777a84b663",
+      "created_at": "2026-03-20T07:18:49.317173+00:00",
+      "validated_at": "2026-03-21T01:53:10.722157+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "contracts/openapi/components/schemas/medical/medical_record.yaml",
-      "sha256": "43636304df7b9e3ff632572fb8d297f8d369c71ffb73d4d340648754a3d259a3",
-      "created_at": "2026-03-20T07:18:49.317173+00:00"
+      "sha256": "863b7f97c1f065810bfab6e16ebf5463aa58597db23af2d4eb45aaa9e5e2dfd2",
+      "created_at": "2026-03-20T07:18:49.317173+00:00",
+      "validated_at": "2026-03-21T01:53:19.005007+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "contracts/openapi/components/schemas/notifications/notification_delivery.yaml",
@@ -1531,33 +1557,45 @@
     },
     {
       "path": "contracts/openapi/components/schemas/notifications/notification_preferences.yaml",
-      "sha256": "9663c58234a11e5a98845206c62bbbab5ca232c5c5d33d3f8a4b2d8fc6e20e7a",
-      "created_at": "2026-03-20T07:18:49.317173+00:00"
+      "sha256": "1802fccc409a37aa617b2d2cb3b6aa7dd3c15583fcd288d601dbe94bf801f334",
+      "created_at": "2026-03-20T07:18:49.317173+00:00",
+      "validated_at": "2026-03-21T01:53:23.098103+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "contracts/openapi/components/schemas/reports/report_job.yaml",
-      "sha256": "d128a25c7eec5f93702e37cc768d7dfa8ee2320858a760f8bc5223a58082ad4d",
-      "created_at": "2026-03-20T07:18:49.317173+00:00"
+      "sha256": "2309c6ae863c4415c1038edc8c408b1aebe2a3380de1cf7d9e4d8094a3bd893d",
+      "created_at": "2026-03-20T07:18:49.317173+00:00",
+      "validated_at": "2026-03-21T01:53:27.187015+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "contracts/openapi/components/schemas/scout/scout_event.yaml",
-      "sha256": "ef719e1c1d384d7e97bf5c089b452ddf6c76fe9e6fcad37d98b333977d35a0b5",
-      "created_at": "2026-03-20T07:18:49.317173+00:00"
+      "sha256": "ab6902418c98ae65cab61d61760c822be859a448a55499d43ee1d851fa328991",
+      "created_at": "2026-03-20T07:18:49.317173+00:00",
+      "validated_at": "2026-03-21T01:53:31.324278+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "contracts/openapi/components/schemas/seasons/season.yaml",
-      "sha256": "1090c0faca2c723f3fa408cfec94849592f0af429cfbb702fcf573c2053d38d2",
-      "created_at": "2026-03-20T07:18:49.317173+00:00"
+      "sha256": "f38143a47b97aadfb92da4a2800c987f11c3bddcd7d6ff8997bf2cbca2cfd73e",
+      "created_at": "2026-03-20T07:18:49.317173+00:00",
+      "validated_at": "2026-03-21T01:53:35.454724+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "contracts/openapi/components/schemas/training/athlete_chat_message.yaml",
-      "sha256": "52d2759ac7e84a0e0df46fa9db1d2941df07a28435309d696c66d4f46879b36f",
-      "created_at": "2026-03-20T07:18:49.317173+00:00"
+      "sha256": "c250fbf802733610e9f171bb6b597e91bfbd70ba3de32676f5ccbf6850c9285a",
+      "created_at": "2026-03-20T07:18:49.317173+00:00",
+      "validated_at": "2026-03-21T01:53:43.820120+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "contracts/openapi/components/schemas/training/recommendation.yaml",
-      "sha256": "b4ff034a82d43518553489eb6061045504aea55fe71f09ddeba4e2f353d4befe",
-      "created_at": "2026-03-20T07:18:49.317173+00:00"
+      "sha256": "a201ff94c73a331f24b5a26478b8bfdf56a6bec0904229d5aca51fe80accd5d7",
+      "created_at": "2026-03-20T07:18:49.317173+00:00",
+      "validated_at": "2026-03-21T01:17:46.593060+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "contracts/openapi/components/schemas/video/clip_definition.yaml",
@@ -1573,9 +1611,9 @@
     },
     {
       "path": "contracts/openapi/components/schemas/video/match_media_session.yaml",
-      "sha256": "a0802f47c9eadf1b7e91c6892024f1040c65779fa4205801208a450a13540361",
+      "sha256": "5fe2f64639bde7e64a145cb6b80ad9b7e7e4c204ef18802afd93851c46544b8a",
       "created_at": "2026-03-20T07:18:49.317173+00:00",
-      "validated_at": "2026-03-20T08:19:59.047032+00:00",
+      "validated_at": "2026-03-21T01:54:20.767363+00:00",
       "gate_exit_code": 0
     },
     {
@@ -1599,33 +1637,44 @@
     },
     {
       "path": "contracts/openapi/paths/video.yaml",
-      "sha256": "14d134a9a81c1b64c10529367f23cd7e2b70d0a3569ef6ce12137ac139f9a69d",
-      "created_at": "2026-03-20T07:18:49.317173+00:00"
+      "sha256": "2c3fa94045f699c9c578a3d57f16585650d22e36515606736188dad27592ba54",
+      "created_at": "2026-03-20T07:18:49.317173+00:00",
+      "validated_at": "2026-03-21T01:55:33.222281+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "contracts/schemas/training/athlete_chat_conversation.schema.json",
-      "sha256": "e8f13223e9a0a6816bd0b870640535652974d35036b9513423595e7e41c81dfa",
-      "created_at": "2026-03-20T07:18:49.317173+00:00"
+      "sha256": "e418283670dbda1784059d018dac65aac5381110ead0380297dcd29e32e5aa62",
+      "created_at": "2026-03-20T07:18:49.317173+00:00",
+      "validated_at": "2026-03-21T01:56:15.306615+00:00"
     },
     {
       "path": "contracts/schemas/training/athlete_chat_message.schema.json",
-      "sha256": "9b3d9500f3aca2537c211efa29f5fce5270b66b225132906d409108cea4c6aa9",
-      "created_at": "2026-03-20T07:18:49.317173+00:00"
+      "sha256": "45332c3ef0b9643945b5c9ef8fa1631a8cee8167b3ce934c88a98788ce6eb536",
+      "created_at": "2026-03-20T07:18:49.317173+00:00",
+      "validated_at": "2026-03-21T02:00:46.431926+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "contracts/schemas/training/recommendation.schema.json",
-      "sha256": "9c12ad4a9975d11390e9e6409d9bdca3f9b849a31a03f13a35423fd6b0fa85b5",
-      "created_at": "2026-03-20T07:18:49.317173+00:00"
+      "sha256": "8844b4e8957a9c17104a764f9ea0116d90e9ee9e9dff8ffc0708decf5d454822",
+      "created_at": "2026-03-20T07:18:49.317173+00:00",
+      "validated_at": "2026-03-21T02:00:50.680838+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "contracts/schemas/training/training_suggestion.schema.json",
-      "sha256": "0201d76868e7fb9b20872780d5f8f86514020659ffb3c5a981028eeac6a5148c",
-      "created_at": "2026-03-20T07:18:49.317173+00:00"
+      "sha256": "ca76be92c32d67ee37d21b8918c4ac0bc58df1d01d44d97770345b9d61878b26",
+      "created_at": "2026-03-20T07:18:49.317173+00:00",
+      "validated_at": "2026-03-21T02:00:55.083301+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "contracts/schemas/training/training_suggestion_approval.schema.json",
-      "sha256": "4eb77ca740b1f57a4bd1000686e346200cda2817f55c74f0f1b5581ff4af4205",
-      "created_at": "2026-03-20T07:18:49.317173+00:00"
+      "sha256": "45d77ba88b583ca41ff77458ec29a0f542c9fff396daf84d6d7a530cb38f7d42",
+      "created_at": "2026-03-20T07:18:49.317173+00:00",
+      "validated_at": "2026-03-21T02:00:59.456494+00:00",
+      "gate_exit_code": 0
     },
     {
       "path": "docs/guias/pipeline/INDEX.md",
@@ -1842,22 +1891,24 @@
     },
     {
       "path": "contracts/_waivers/CROSS_SPEC_ALIGNMENT_GATE.json",
-      "sha256": "4bf09e20ff42d187e5a8f28548d1d5efe25c05393a715d5207264d48270ffa6e",
+      "sha256": "662d1e363ed15afa6b5c971033b971ded2992c4b06bf4e89d4175f5e198190e1",
       "gate_exit_code": 0,
-      "created_at": "2026-03-20T00:00:00Z"
+      "created_at": "2026-03-20T00:00:00Z",
+      "validated_at": "2026-03-20T16:14:08.095318+00:00"
     },
     {
       "path": ".contract_driven/DOMAIN_AXIOMS.json",
-      "sha256": "c8e570173505b89d961e836cc455a66d31ce35a9025e12b677625b7a6a04446c",
+      "sha256": "d7495e17090c41af465fbf064d0bff3d084c72ba0e57f1e0d78aa3b8f0ae71eb",
       "created_at": "2026-03-20T08:14:39.440189+00:00",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-20T08:20:41.912940+00:00"
+      "validated_at": "2026-03-21T01:56:24.261426+00:00"
     },
     {
       "path": "contracts/openapi/components/schemas/training/load_chart.yaml",
-      "sha256": "2eecf92d83b758eca65e5064b8ff72999a06154174c878278b3aa1dcfc2af054",
+      "sha256": "ec06d3d94373f89f661e3ec6e0a8e1db15b035fda355353cb19d17b8307abfbf",
       "created_at": "2026-03-20T08:19:39.336300+00:00",
-      "gate_exit_code": 0
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T01:53:56.155455+00:00"
     },
     {
       "path": "contracts/openapi/components/schemas/training/training_suggestion.yaml",
@@ -1867,12 +1918,368 @@
     },
     {
       "path": "contracts/openapi/components/schemas/users/user_profile.yaml",
-      "sha256": "19b08d2575afe3dda5357eb67b6ae6a352824bdad823e68038eb329a01236362",
+      "sha256": "52281e3766a4c5f24d9d52097bfe34fa9a9cf84e7a8793c49751ab73af728884",
       "created_at": "2026-03-20T08:19:49.268441+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T01:54:16.595853+00:00"
+    },
+    {
+      "path": "src/video/domain/entities.py",
+      "sha256": "69db0818b6fdde8cf18d4f97fed4161b8bbec883a8d2a5535c4119ff1b2dcf8b",
+      "created_at": "2026-03-20T15:38:33.761440+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T15:53:06.369547+00:00"
+    },
+    {
+      "path": "src/video/domain/state_machine.py",
+      "sha256": "6717cdf01e0d26bff84e48c0eb592a3d97141b5ee5cf85ac1074a5fc727abe4a",
+      "created_at": "2026-03-20T15:38:54.244683+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T15:53:25.296329+00:00"
+    },
+    {
+      "path": "src/video/domain/rules.py",
+      "sha256": "b02bacac436ccbf500fd406817f6926fe987dc43756fd976f99665264a3d15fd",
+      "created_at": "2026-03-20T15:39:09.130913+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T15:53:30.938881+00:00"
+    },
+    {
+      "path": "src/video/infrastructure/models.py",
+      "sha256": "7c3e07579c9fd4fd1b3ca0e573a6b214615a3f5dce97b4d28034169ced9b8e12",
+      "created_at": "2026-03-20T15:39:18.451318+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T15:53:36.504636+00:00"
+    },
+    {
+      "path": "src/video/infrastructure/repository.py",
+      "sha256": "dbae1ea45622db34b2e6b1dbbbc1e3b836dba4b7b49d8e8907557d7ce9f934c0",
+      "created_at": "2026-03-20T15:39:23.865298+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T15:53:42.719116+00:00"
+    },
+    {
+      "path": "src/video/application/use_cases.py",
+      "sha256": "1bcefc1764e44a10ad08e80cc971bbd31396ca244470463e1416ab8f16b163b5",
+      "created_at": "2026-03-20T15:39:29.603954+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T15:53:54.137554+00:00"
+    },
+    {
+      "path": "src/video/schemas.py",
+      "sha256": "b02b9ffe5a1d65483168b6d0d39cdee0be5e1eb439a078aa857b19bb67888ba7",
+      "created_at": "2026-03-20T15:39:34.311019+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-20T15:54:10.002652+00:00"
+    },
+    {
+      "path": "src/video/api.py",
+      "sha256": "83153a79a735155f19ccc4dc9bffafa4a243a568e0b64fa6e71e884382d7a82f",
+      "created_at": "2026-03-20T15:39:39.144967+00:00",
+      "validated_at": "2026-03-20T15:54:17.236231+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "redocly.yaml",
+      "sha256": "fa5525356659afdcbaa10e409f1f74d664f7f9b7f5cd83f69cd8cc37aad942dd",
+      "created_at": "2026-03-20T15:42:02.947902+00:00",
+      "gate_exit_code": 2,
+      "validated_at": "2026-03-20T15:42:42.517386+00:00"
+    },
+    {
+      "path": "generated/contracts/openapi/components/schemas/training/recommendation.yaml",
+      "sha256": "a201ff94c73a331f24b5a26478b8bfdf56a6bec0904229d5aca51fe80accd5d7",
+      "created_at": "2026-03-20T15:56:20.318998+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T01:17:58.805465+00:00"
+    },
+    {
+      "path": "generated/contracts/schemas/training/recommendation.schema.json",
+      "sha256": "aca13a57de47fab66dff8ba9e3b562bfc91495cdce61e35df117d5a70a1ef818",
+      "created_at": "2026-03-21T01:17:52.578914+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "/home/davis/HB-TRACK/src/identity_access/api.py",
+      "sha256": "c64af0f0f30ce498b742d08a84223b62c94c55fd1490d2963e029dbd50af0615",
+      "created_at": "2026-03-21T01:44:11.026363+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "/home/davis/HB-TRACK/src/identity_access/application/use_cases.py",
+      "sha256": "f8cc6906fc536828258094a7ea53a7203112760032f3fd0adfa3b26ad6942bb5",
+      "created_at": "2026-03-21T01:44:19.651883+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "/home/davis/HB-TRACK/src/identity_access/apps.py",
+      "sha256": "fa2be13570f9915461e1e1ef861366caf0e96596c987f5f557bda9e01faf4687",
+      "created_at": "2026-03-21T01:44:25.102683+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "/home/davis/HB-TRACK/src/identity_access/domain/entities.py",
+      "sha256": "67839214c660ae11fcb25d11c9e1210eac2374dfa6ca3e613b583571398af960",
+      "created_at": "2026-03-21T01:44:30.035281+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "/home/davis/HB-TRACK/src/identity_access/domain/rules.py",
+      "sha256": "a31ae38eed3fae6b20133a997aa30dfde3a509f411390a49f664fedabe1c4a1b",
+      "created_at": "2026-03-21T01:44:34.944306+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "/home/davis/HB-TRACK/src/identity_access/infrastructure/models.py",
+      "sha256": "d0619c25d8a868eed8f0c7863c7e006adaed2c8a06dae09bf6c7112fa04195e4",
+      "created_at": "2026-03-21T01:44:39.580551+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "/home/davis/HB-TRACK/src/identity_access/infrastructure/repository.py",
+      "sha256": "6a57e725e16e73fe5c4aba93bb20d38cea2c11ce17bb05d100d767353a690b5d",
+      "created_at": "2026-03-21T01:44:44.802154+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "/home/davis/HB-TRACK/src/identity_access/schemas.py",
+      "sha256": "f806e972b7e6a1b92fdf5c9d5ae2936b410012a8ef1e64b140d8620f559ae48c",
+      "created_at": "2026-03-21T01:44:49.725738+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "/home/davis/HB-TRACK/src/identity_access/tests/integration/test_identity_access_api.py",
+      "sha256": "96d5d5d1addcea2d8bb6578ccc126bef5d50017fc16adf43b10e013026711d28",
+      "created_at": "2026-03-21T01:44:54.775872+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "/home/davis/HB-TRACK/src/identity_access/tests/unit/test_identity_access_domain.py",
+      "sha256": "71f3f5604af87c3ba34e085ba7141f9679c5b3585b808e9cfbeebcfc3ff598e9",
+      "created_at": "2026-03-21T01:44:59.952724+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": ".contract_driven/CONTRACT_SYSTEM_RULES.md",
+      "sha256": "896caa25deaec2c40db95560dc2cfb88bbb3894492ced9a3f2996ce0926aaeeb",
+      "created_at": "2026-03-21T01:51:08.864619+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T01:56:19.263682+00:00"
+    },
+    {
+      "path": ".contract_driven/agent_prompts/create_asyncapi_contract.prompt.md",
+      "sha256": "ba4d79abf90dcc8f14d46fe3fde2403d96fdbb2f965ba7c1e847cf5017cd99f1",
+      "created_at": "2026-03-21T01:51:18.886738+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": ".contract_driven/agent_prompts/create_openapi_contract.prompt.md",
+      "sha256": "342c68ffa7907059b64d3fc20510eb1170fc665400a6ba2897a36288b3821bd3",
+      "created_at": "2026-03-21T01:51:23.239004+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": ".contract_driven/decisions/DECISION_IR_AUDIT.yaml",
+      "sha256": "b887ad4cf2f79f001e2fc570099f88ba6c5778120a5bdc23596dd5d3aef5db42",
+      "created_at": "2026-03-21T01:51:27.820463+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": ".contract_driven/templates/api/ARCHITECTURE_MATRIX.yaml",
+      "sha256": "e39a83157782d5f544e44bb93c3a2e58c9af51ab26a7e2565e50568cbb69f4c8",
+      "created_at": "2026-03-21T01:51:32.783537+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": ".contract_driven/templates/api/MODULE_PROFILE_REGISTRY.yaml",
+      "sha256": "b86d8eb6ba8063e3ec45c688f32ea8e9813bcbcbd38aae324f43025be2dea3cb",
+      "created_at": "2026-03-21T01:51:37.332210+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": ".contract_driven/templates/api/api_rules.yaml",
+      "sha256": "7cb16dd09903635ec65e902d035a27974f2e92c5d1f8e910ca358b689296eac3",
+      "created_at": "2026-03-21T01:51:42.251890+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": ".github/agents/hb-contract.agent.md",
+      "sha256": "c645376c27459a2cd5678eed603e0088ac2fef4f9ecbe0eb1a695e47b8ed9d07",
+      "created_at": "2026-03-21T01:51:47.096884+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": ".github/copilot-instructions.md",
+      "sha256": "2503c275717b3673b7780b26af94bb6a6f472c69d33fb555049bb40b9eb901b3",
+      "created_at": "2026-03-21T01:51:51.523357+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": ".github/skills/hb-pipeline-orchestrator/SKILL.md",
+      "sha256": "33ab7f4f7418fa5dfabc34cb6ac60662d098975c09216afdc821e1dd33ce348e",
+      "created_at": "2026-03-21T01:51:55.711250+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "_reports/session_start.json",
+      "sha256": "6a4d61b164e275f3bd646d63a25542fb89f579756e2e72c52a9d0935fd92b7a3",
+      "created_at": "2026-03-21T01:52:20.608227+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "conftest.py",
+      "sha256": "6b86b4ab491441896db37a5327bc12021ad77ceb881657b826141efa880b9796",
+      "created_at": "2026-03-21T01:52:24.701740+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/components/schemas/analytics/analytics_metric_key.yaml",
+      "sha256": "2c87b4c375decf226cd07bf020bb2ccc99631b8bda8da747a738e7721aa5b05a",
+      "created_at": "2026-03-21T01:52:32.999233+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/components/schemas/analytics/analytics_query_request.yaml",
+      "sha256": "28beb019ff12264efdd0056efc9a186c6e202f8427a9b5eaddae4f23fbea986f",
+      "created_at": "2026-03-21T01:52:37.123758+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/components/schemas/analytics/analytics_query_response.yaml",
+      "sha256": "9258db87c35cb6b8878f1ee29b0510ce3f18062b67e2b470a641e951abe9a2fb",
+      "created_at": "2026-03-21T01:52:41.427838+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/components/schemas/matches/match.yaml",
+      "sha256": "f0d38d2f18f7d941921992617b0a46ea169eed2bb2e54d7b8f910350c5fdffbf",
+      "created_at": "2026-03-21T01:53:14.831287+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/components/schemas/teams/team.yaml",
+      "sha256": "b146f482738667d6b28c9d0e758ba2770ec167363ad52fa39d607453da1263fa",
+      "created_at": "2026-03-21T01:53:39.684534+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/components/schemas/training/athlete_ineligibility_declaration.yaml",
+      "sha256": "3e47df0bf77eeb5145306b657547a79dab3fd4ec83960ef8c319ff0a12fca0ba",
+      "created_at": "2026-03-21T01:53:47.945371+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/components/schemas/training/feedback_thread.yaml",
+      "sha256": "0c9ec557c21b9ce8337bc6ec97755577525d2616ed194ac6e566d6ed3ce52219",
+      "created_at": "2026-03-21T01:53:52.027448+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/components/schemas/training/mesocycle.yaml",
+      "sha256": "e2aaba69274659da278bcc77d9a39dcbb2d017acbe7f34b86d665dff336e999f",
+      "created_at": "2026-03-21T01:54:00.235804+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/components/schemas/training/microcycle.yaml",
+      "sha256": "1a7cdddec2deeaef13ac48240b04548d2f686b78d48ff9ab781ec9eae9cd5629",
+      "created_at": "2026-03-21T01:54:04.308285+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/components/schemas/training/session_block.yaml",
+      "sha256": "aed3ff0b96fd7c4bcdcbf4378d59f34723a180a70d472ef316b5675b13a7c80b",
+      "created_at": "2026-03-21T01:54:08.447507+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/components/schemas/training/training_session.yaml",
+      "sha256": "46fda3e793fd53bd7d1e86c7cc2eac8b38f7e7696e8518824955532231ab8ab2",
+      "created_at": "2026-03-21T01:54:12.548206+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/paths/training.yaml",
+      "sha256": "70d6bb1c01a0825f88f06d58098fe4d540f067123ee4a91f499f4517b22816cd",
+      "created_at": "2026-03-21T01:55:24.878155+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/schemas/analytics/analytics_metric_key.schema.json",
+      "sha256": "97259b76df02aa8d718d8ddf7ff8555eea901e8743c89625465343d23d5dd81c",
+      "created_at": "2026-03-21T01:55:41.815715+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/schemas/analytics/analytics_query_request.schema.json",
+      "sha256": "669f92efac463196248d3ffc458de1fe7abc3e231f222c85c0d2d457ae313976",
+      "created_at": "2026-03-21T01:55:45.905214+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/schemas/analytics/analytics_query_response.schema.json",
+      "sha256": "eae355ceee049c382f0c4fac064710ee57d1fad666aaaa44f12171a8d57e3f20",
+      "created_at": "2026-03-21T01:55:50.010939+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/schemas/analytics/analytics_snapshot.schema.json",
+      "sha256": "db8a9c898207e09b7cd6fa0ec9f9aa9a6b05e939909a22fdbda041a8cff8a581",
+      "created_at": "2026-03-21T01:55:54.156511+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/identity_access/api.py",
+      "sha256": "c64af0f0f30ce498b742d08a84223b62c94c55fd1490d2963e029dbd50af0615",
+      "created_at": "2026-03-21T01:56:28.436911+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T01:56:33.914122+00:00"
+    },
+    {
+      "path": "contracts/schemas/training/load_chart.schema.json",
+      "sha256": "f4cc9ba9ab5af9f134b5bff599b9c7d9f382cf9a271d93eca5ab6b04538bc253",
+      "created_at": "2026-03-21T02:00:36.439824+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T02:01:21.004710+00:00"
+    },
+    {
+      "path": "docs/hbtrack/modulos/analytics/DOMAIN_RULES_ANALYTICS.md",
+      "sha256": "42fc4b1b332b3529e9f7823e09450b2beee523d83a137d01d2b7204bd8c10888",
+      "created_at": "2026-03-21T02:01:30.464177+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/analytics/ERRORS_ANALYTICS.md",
+      "sha256": "813cb2b755cadd961c0267c62dbcbcc235c054b549a65a05ff9ecab854bf644c",
+      "created_at": "2026-03-21T02:01:34.750574+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/analytics/INVARIANTS_ANALYTICS.md",
+      "sha256": "e7255db4bad286e735675b8994429df5f56d26df8a8f8056630fa85e33721345",
+      "created_at": "2026-03-21T02:01:39.137245+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/analytics/MODULE_SCOPE_ANALYTICS.md",
+      "sha256": "fdcc5e334541bcd6dd904db2b677be817818775db01fc86179299fb3a8e8cc07",
+      "created_at": "2026-03-21T02:01:43.475150+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/analytics/README.md",
+      "sha256": "8fffe89375c2027490d6d8972238c18757f02980f5c10de709a2f84e80f4cac0",
+      "created_at": "2026-03-21T02:01:47.968936+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/analytics/TEST_MATRIX_ANALYTICS.md",
+      "sha256": "4fee12c5923592eef81d23dcb22c7b2b81cd474c9143f5bd1dfe7345050e0839",
+      "created_at": "2026-03-21T02:01:52.638219+00:00",
       "gate_exit_code": 0
     }
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-03-20T07:33:49.840801+00:00"
+  "hook_validated_at": "2026-03-21T01:19:54.440854+00:00"
 }

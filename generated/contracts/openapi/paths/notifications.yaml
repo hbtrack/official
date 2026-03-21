@@ -32,7 +32,7 @@
       - Celery task enfileirada para entrega assíncrona (ADR-031)
     operationId: createNotificationIntent
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     requestBody:
       required: true
       content:
@@ -94,28 +94,39 @@
           inválido; nem notificationTemplateRef nem eventEnvelopeRef presentes
           (INV-NTF-004).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Papel RBAC insuficiente (ADR-008 — BFLA).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "422":
         description: recipientUserId não corresponde a usuário conhecido.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /notifications/deliveries:
   get:
     tags:
@@ -130,7 +141,7 @@
       de negócio do módulo originador.
     operationId: listDeliveries
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     parameters:
       - name: recipientUserId
         in: query
@@ -222,16 +233,21 @@
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Papel RBAC insuficiente — requer admin ou coordinator (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /notifications/deliveries/{deliveryId}:
   get:
     tags:
@@ -244,7 +260,7 @@
       recipientUserId seja o próprio (BOLA — ADR-008).
     operationId: getDelivery
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     parameters:
       - name: deliveryId
         in: path
@@ -263,22 +279,27 @@
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Acesso negado — não é admin/coordinator nem o destinatário (ADR-008 BOLA).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Entrega não encontrada.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /notifications/users/{userId}/preferences:
   get:
     tags:
@@ -293,7 +314,7 @@
       acessam apenas o próprio (BOLA — ADR-008).
     operationId: getUserNotificationPreferences
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     parameters:
       - name: userId
         in: path
@@ -312,22 +333,27 @@
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Acesso negado — BOLA (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Usuário não encontrado.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   patch:
     tags:
       - notifications
@@ -340,7 +366,7 @@
       Acesso: admin atualiza qualquer usuário; demais roles apenas o próprio.
     operationId: updateUserNotificationPreferences
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     parameters:
       - name: userId
         in: path
@@ -392,24 +418,36 @@
       "400":
         description: Corpo inválido ou nenhum campo informado.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Acesso negado — BOLA (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Usuário não encontrado.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"

@@ -1,0 +1,14 @@
+# AsyncAPI Message: video_clip_ready
+# Module: video
+# Domain rules: DR-VID-004, DR-VID-005
+# Decisions: ADR-033
+name: VideoClipReadyMessage
+title: Clip Semântico Pronto
+summary: Publicado quando ClipDefinition é processado e disponível para consumo (DR-VID-004).
+description: >
+  Emitido quando clip com metadados semânticos (evento scout, zona, atletas) está pronto.
+  Analytics e reports consomem para análise de desempenho.
+  INVARIANTE: clip referencia evento scout mas não duplica seus dados.
+contentType: application/json
+payload:
+  $ref: "../components/schemas/video_clip_ready_payload.yaml"

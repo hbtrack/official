@@ -528,7 +528,7 @@ traceability_manifest:
   - path: generated/contracts/schemas/training/load_chart.schema.json
     sha256: f4cc9ba9ab5af9f134b5bff599b9c7d9f382cf9a271d93eca5ab6b04538bc253
   - path: generated/contracts/schemas/training/recommendation.schema.json
-    sha256: aca13a57de47fab66dff8ba9e3b562bfc91495cdce61e35df117d5a70a1ef818
+    sha256: 8844b4e8957a9c17104a764f9ea0116d90e9ee9e9dff8ffc0708decf5d454822
   - path: generated/contracts/schemas/training/session_block.schema.json
     sha256: 928c44b349004c5d770975b7eb4b02bf7852180b5105aa0b5cb1851241bd396d
   - path: generated/contracts/schemas/training/session_objective.schema.json
@@ -555,7 +555,7 @@ traceability_manifest:
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: generated/contracts/schemas/wellness/wellness_entry.schema.json
     sha256: e6b69221a1e62764a544a37a53dfa1d211df3b89799df536f9b85789b5b59c97
-  generated_tree_sha256: 625c85317d4047c0ead43d6fe01de8d95aee07f0123599016e8316fc4ceeef83
+  generated_tree_sha256: b9a88267065add92b3d689eda352630461e9dbe3108932fdaa7e2ce2a8679d98
   policy_path: generated/resolved_policy/users.event.resolved.yaml
   policy_sha256: 6506db62edba474136e71435df74f5732b43126d17aedd2a000e048c3555cdf2
   source_contracts:
@@ -1084,7 +1084,7 @@ traceability_manifest:
   - path: contracts/schemas/training/load_chart.schema.json
     sha256: f4cc9ba9ab5af9f134b5bff599b9c7d9f382cf9a271d93eca5ab6b04538bc253
   - path: contracts/schemas/training/recommendation.schema.json
-    sha256: aca13a57de47fab66dff8ba9e3b562bfc91495cdce61e35df117d5a70a1ef818
+    sha256: 8844b4e8957a9c17104a764f9ea0116d90e9ee9e9dff8ffc0708decf5d454822
   - path: contracts/schemas/training/session_block.schema.json
     sha256: 928c44b349004c5d770975b7eb4b02bf7852180b5105aa0b5cb1851241bd396d
   - path: contracts/schemas/training/session_objective.schema.json
@@ -1122,4 +1122,4 @@ traceability_manifest:
     sha256: efb1ba7de801a93cefef6fd2e58969cb683fa64528f78b0c508815bfd49fa11f
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: d7495e17090c41af465fbf064d0bff3d084c72ba0e57f1e0d78aa3b8f0ae71eb
-  source_tree_sha256: f709d4b9c419bcb67e04f074ad7d662c8fc656fed2850a0c25f653fd16dc3b2c
+  source_tree_sha256: 5213a6bbab9ec4cb70921527ddde24562539ae5578d2a706eb4e72e224910b8c

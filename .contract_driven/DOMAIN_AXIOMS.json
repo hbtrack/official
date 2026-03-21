@@ -922,6 +922,52 @@
           "PENDING_APPROVAL"
         ]
       },
+      "analytics_metric_key": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "READINESS_SCORE",
+          "DROPOUT_RISK_SIGNAL",
+          "ENGAGEMENT_SIGNAL"
+        ]
+      },
+      "analytics_query_scope": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "TEAM",
+          "ATHLETE"
+        ]
+      },
+      "analytics_time_window": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "LAST_7_DAYS",
+          "LAST_14_DAYS",
+          "LAST_28_DAYS",
+          "LAST_90_DAYS",
+          "LAST_YEAR",
+          "CUSTOM"
+        ]
+      },
+      "analytics_granularity": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "DAILY",
+          "WEEKLY",
+          "MONTHLY"
+        ]
+      },
+      "analytics_source_module": {
+        "strict_match": true,
+        "closed_set": true,
+        "values": [
+          "TRAINING",
+          "WELLNESS"
+        ]
+      },
       "user_account_status": {
         "strict_match": true,
         "closed_set": true,

@@ -40,7 +40,7 @@
       Paginação obrigatória. pageSize máximo: 200.
     operationId: listScoutEvents
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     parameters:
       - $ref: ../components/parameters/pageSize.yaml
       - $ref: ../components/parameters/pageToken.yaml
@@ -123,13 +123,13 @@
       "400":
         description: Parâmetros inválidos.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "401":
         description: Token JWT ausente ou inválido (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
@@ -137,10 +137,15 @@
           Sem permissão. coordinator/coach sem teamId (DEC-SCOUT-002=B),
           athlete tentando listar eventos de outro atleta, ou member (BFLA).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   post:
     tags:
       - scout
@@ -164,7 +169,7 @@
       Após criação bem-sucedida: evento scout.event.created publicado (DEC-SCOUT-003=C).
     operationId: createScoutEvent
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     requestBody:
       required: true
       content:
@@ -245,22 +250,33 @@
           Payload inválido. eventLabel não pertence à taxonomia canônica,
           tagLabels com duplicatas, ou campos obrigatórios ausentes.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "401":
         description: Token JWT ausente ou inválido.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Sem permissão (athlete/member ou coordinator/coach fora do time).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /scout/events/aggregations:
   get:
     tags:
@@ -281,7 +297,7 @@
       matchId é obrigatório — cada agregação é por partida (DR-SCOUT-003).
     operationId: getScoutAggregations
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     parameters:
       - name: matchId
         in: query
@@ -368,22 +384,27 @@
       "400":
         description: matchId ausente ou inválido.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "401":
         description: Token JWT ausente ou inválido.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Sem permissão (member, ou coordinator/coach sem teamId).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /scout/events/{eventId}:
   get:
     tags:
@@ -400,7 +421,7 @@
       - member: proibido (403).
     operationId: getScoutEvent
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     parameters:
       - name: eventId
         in: path
@@ -419,7 +440,7 @@
       "401":
         description: Token JWT ausente ou inválido.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
@@ -427,16 +448,21 @@
           Sem permissão. BOLA enforcement: 403 (não 404) quando o ator
           não tem acesso ao time/atleta do evento (OWASP API1:2023).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Evento de scout não encontrado.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /scout/sessions/{matchId}/complete:
   post:
     tags:
@@ -455,7 +481,7 @@
       Idempotente: chamar novamente para uma partida já finalizada retorna 200.
     operationId: completeScoutSession
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     parameters:
       - name: matchId
         in: path
@@ -505,18 +531,30 @@
       "401":
         description: Token JWT ausente ou inválido.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Sem permissão (athlete/member ou coordinator/coach fora do time).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Partida não encontrada.
         content:
-          application/json:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"

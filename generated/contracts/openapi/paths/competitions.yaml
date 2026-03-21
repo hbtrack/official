@@ -22,7 +22,7 @@
       OWASP API4:2023: pageSize máximo 100.
     operationId: listCompetitions
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     parameters:
       - name: seasonId
         in: query
@@ -90,16 +90,21 @@
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Papel RBAC insuficiente (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   post:
     tags:
       - competitions
@@ -111,7 +116,7 @@
       registrationTeamIds são inscrições formais, não inferidas de histórico (DR-COMP-003).
     operationId: createCompetition
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     requestBody:
       required: true
       content:
@@ -182,22 +187,33 @@
       "400":
         description: Dados inválidos (ex. seasonId ausente, endDate < startDate).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Papel RBAC insuficiente (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /competitions/{competitionId}:
   parameters:
     - name: competitionId
@@ -220,7 +236,7 @@
       de partidas (DR-COMP-005).
     operationId: getCompetition
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     responses:
       "200":
         description: Dados da competição.
@@ -231,22 +247,27 @@
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Papel RBAC insuficiente (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Competição não encontrada.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   patch:
     tags:
       - competitions
@@ -258,7 +279,7 @@
       standingsSummary é apenas projeção resumida (DR-COMP-005).
     operationId: patchCompetition
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     requestBody:
       required: true
       content:
@@ -311,28 +332,39 @@
       "400":
         description: Dados inválidos (ex. startDate > endDate).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Papel RBAC insuficiente (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Competição não encontrada.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /competitions/{competitionId}/teams/{teamId}:
   parameters:
     - name: competitionId
@@ -362,35 +394,46 @@
       Duplicatas são rejeitadas (INV-COMP-003).
     operationId: registerTeamInCompetition
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     responses:
       "204":
         description: Equipe inscrita com sucesso.
       "400":
         description: Equipe já inscrita na competição (INV-COMP-003).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Papel RBAC insuficiente (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Competição ou equipe não encontrada.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   delete:
     tags:
       - competitions
@@ -400,25 +443,37 @@
       registrationTeamIds é atualizado canonicamente.
     operationId: unregisterTeamFromCompetition
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     responses:
       "204":
         description: Inscrição removida com sucesso.
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Papel RBAC insuficiente (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Competição ou inscrição não encontrada.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"

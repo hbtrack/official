@@ -1,0 +1,19 @@
+# ============================================================
+# AsyncAPI Message: ai_ingestion_job_failed
+# Module: ai_ingestion
+# ============================================================
+
+name: AiIngestionJobFailedMessage
+title: Job de Ingestão Falhou
+summary: >
+  Publicado quando um job de ingestão de dados externos falha durante
+  o processamento (DR-ING-001 / DR-ING-004).
+description: >
+  Evento emitido pelo módulo ai_ingestion após falha de processamento.
+  Inclui errorCode e errorMessage para diagnóstico operacional.
+  DR-ING-004: idempotencyKey presente para permitir retry seguro via
+  POST /ingestion/jobs/{jobId}/retry.
+  DR-ING-003: causalidade receivedAt → occurredAt (failedAt) preservada.
+contentType: application/json
+payload:
+  $ref: "../components/schemas/ai_ingestion_job_failed_payload.yaml"

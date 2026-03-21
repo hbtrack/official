@@ -1,0 +1,16 @@
+# AsyncAPI Message: user_created
+# Module: users
+# Domain rules: DR-USR-001, DR-USR-002, DR-USR-003
+# Invariants: INV-USR-001, INV-USR-003
+
+name: UserCreatedMessage
+title: Usuário Criado
+summary: Publicado quando um novo perfil de usuário é criado no sistema (DR-USR-001).
+description: >
+  Evento emitido pelo módulo users após criação bem-sucedida via POST /users.
+  Consumidores (ex.: notifications, teams, audit) usam este evento para reagir
+  ao surgimento de novos usuários na plataforma.
+  BOUNDARY: payload nunca contém credentials, JWT ou refresh_token (INV-USR-003).
+contentType: application/json
+payload:
+  $ref: "../components/schemas/user_created_payload.yaml"

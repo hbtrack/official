@@ -134,16 +134,21 @@
       "401":
         description: Unauthorized
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "422":
         description: Invalid query parameters
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   post:
     operationId: createExercise
     summary: Create a new exercise (ORG scope)
@@ -269,22 +274,33 @@
       "401":
         description: Unauthorized
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Forbidden — insufficient role or attempting to create SYSTEM exercise without curator role.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "422":
         description: Validation error (e.g. maxAthletes < minAthletes, invalid enum).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /exercises/{id}:
   get:
     operationId: getExercise
@@ -312,22 +328,27 @@
       "401":
         description: Unauthorized
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Forbidden — exercise ORG/RESTRICTED not visible to user.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Exercise not found or soft-deleted.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   patch:
     operationId: updateExercise
     summary: Update exercise (creates new version)
@@ -455,28 +476,39 @@
       "401":
         description: Unauthorized
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Forbidden — not creator or not curator for SYSTEM exercise.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Exercise not found.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "422":
         description: Validation error.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   delete:
     operationId: deleteExercise
     summary: Soft-delete exercise
@@ -514,22 +546,33 @@
       "401":
         description: Unauthorized
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Forbidden — SYSTEM exercise or not creator.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Exercise not found.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /exercises/{id}/copy:
   post:
     operationId: copyExerciseToOrg
@@ -559,16 +602,27 @@
       "401":
         description: Unauthorized
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Source exercise not found.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /exercises/{id}/versions:
   get:
     operationId: listExerciseVersions
@@ -606,22 +660,27 @@
       "401":
         description: Unauthorized
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Forbidden — exercise not visible to user.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Exercise not found.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /exercises/{id}/versions/{versionId}:
   get:
     operationId: getExerciseVersion
@@ -656,22 +715,27 @@
       "401":
         description: Unauthorized
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Forbidden.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Exercise or version not found.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /exercises/{id}/relations:
   get:
     operationId: listExerciseRelations
@@ -711,16 +775,21 @@
       "401":
         description: Unauthorized
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Exercise not found.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   post:
     operationId: addExerciseRelation
     summary: Add a semantic relation between exercises
@@ -769,34 +838,39 @@
       "401":
         description: Unauthorized
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Forbidden — not creator of source exercise.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Source or target exercise not found.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "409":
         description: Relation already exists (INV-EXB-013).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "422":
         description: Invalid (reflexive relation INV-EXB-014, or invalid enum).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /exercises/{id}/relations/{relationId}:
   delete:
     operationId: deleteExerciseRelation
@@ -825,22 +899,33 @@
       "401":
         description: Unauthorized
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Forbidden.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Relation not found.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /exercises/{id}/acl:
   get:
     operationId: getExerciseAcl
@@ -886,22 +971,27 @@
       "401":
         description: Unauthorized
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Forbidden — not creator or exercise is not RESTRICTED.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Exercise not found.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   post:
     operationId: addExerciseAclEntry
     summary: Grant access to a user for a restricted ORG exercise
@@ -940,28 +1030,39 @@
       "401":
         description: Unauthorized
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Forbidden — not creator or exercise is not RESTRICTED ORG.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Exercise or user not found.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "422":
         description: User already in ACL or cross-org user.
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /exercises/{id}/acl/{userId}:
   delete:
     operationId: removeExerciseAclEntry
@@ -990,18 +1091,30 @@
       "401":
         description: Unauthorized
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Forbidden — attempting to remove creator's own access (INV-EXB-009).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: ACL entry not found.
         content:
-          application/json:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"

@@ -1,0 +1,27 @@
+# AsyncAPI Channel: audit.entry.security_flagged
+# Module: audit
+# Domain rules: DR-AUD-001, DR-AUD-005
+# Invariants: INV-AUD-001, INV-AUD-002, INV-AUD-004
+# Decisions: DEC-AUD-003=C
+# ADR refs: ADR-031 (Celery/Redis), ADR-007 (JWT RS256)
+
+description: >
+  Canal publicado exclusivamente para entradas de auditoria classificadas como
+  sensíveis (DEC-AUD-003=C). Diferencia o volume comum de audit.entry.created
+  dos alertas específicos de segurança.
+
+  Ações que acionam este canal (DR-AUD-005):
+  - identity_access.role_assigned / role_revoked (mudança de permissão)
+  - identity_access.session_force_revoked (revogação administrativa de sessão)
+  - identity_access.login_failed (múltiplas falhas de autenticação)
+  - audit.export_requested (exportação do audit trail)
+  - user.suspended (suspensão de conta)
+  - <module>.bulk_delete (deleção em massa de registros)
+
+  Consumidores: notifications (alertas de segurança), analytics, SIEM externo.
+  BOUNDARY: mesmo payload de audit.entry.created com campo securitySeverityLabel
+  adicional — NUNCA expõe credenciais ou payload de dado protegido.
+publish:
+  operationId: audit_entry_security_flagged_publish
+  message:
+    $ref: "../messages/audit_entry_security_flagged.yaml"

@@ -1,6 +1,6 @@
 {
   "artifact_id": "HBTRACK_MODULE_READINESS_SCORECARD",
-  "generated_at_utc": "2026-03-20T08:11:57Z",
+  "generated_at_utc": "2026-03-21T01:49:00Z",
   "overall_status": "PASS",
   "source_report": "_reports/contract_gates/latest.json",
   "modules": [
@@ -363,7 +363,7 @@
         "minimum_docs_present": true,
         "openapi_root_ref_count": 4,
         "openapi_real_path_count": 4,
-        "schema_file_count": 1,
+        "schema_file_count": 4,
         "asyncapi_artifact_count": 0,
         "workflow_count": 0,
         "pre_contract_evidence": false,

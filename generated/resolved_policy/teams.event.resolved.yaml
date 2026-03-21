@@ -1,0 +1,425 @@
+canonical_types:
+  base_types:
+    Count:
+      minimum: 0
+      nullable: false
+      primitive_type: integer
+    Date:
+      format: date
+      nullable: false
+      primitive_type: string
+    Identifier:
+      format: uuid
+      nullable: false
+      primitive_type: string
+    Timestamp:
+      format: date-time
+      nullable: false
+      primitive_type: string
+  derived_types:
+    AthleteId:
+      inherits: Identifier
+      semantic_id: users.athlete.id.v1
+    AuditEntryId:
+      inherits: Identifier
+      semantic_id: audit.entry.id.v1
+    CompetitionId:
+      inherits: Identifier
+      semantic_id: competitions.competition.id.v1
+    CorrelationId:
+      inherits: Identifier
+      nullable: true
+      semantic_id: core.correlation.id.v1
+    ExerciseId:
+      inherits: Identifier
+      semantic_id: exercises.exercise.id.v1
+    ExerciseVersionId:
+      inherits: Identifier
+      semantic_id: exercises.exercise_version.id.v1
+    IngestionJobId:
+      inherits: Identifier
+      semantic_id: ai_ingestion.job.id.v1
+    MatchId:
+      inherits: Identifier
+      semantic_id: matches.match.id.v1
+    OccurredAt:
+      inherits: Timestamp
+      semantic_id: core.occurred_at.v1
+    OrganizationId:
+      inherits: Identifier
+      semantic_id: organizations.organization.id.v1
+    ResourceId:
+      inherits: Identifier
+      nullable: true
+      semantic_id: core.resource.id.v1
+    ScoutEventId:
+      inherits: Identifier
+      semantic_id: scout.event.id.v1
+    SeasonId:
+      inherits: Identifier
+      semantic_id: seasons.season.id.v1
+    TeamId:
+      inherits: Identifier
+      semantic_id: teams.team.id.v1
+    TrainingSessionId:
+      inherits: Identifier
+      semantic_id: training.session.id.v1
+    UserId:
+      inherits: Identifier
+      semantic_id: identity.user.id.v1
+  field_bindings:
+  - canonical_type_ref: training.session.id.v1
+    field_name: trainingSessionId
+  - canonical_type_ref: users.athlete.id.v1
+    field_name: athleteId
+  - canonical_type_ref: identity.user.id.v1
+    field_name: userId
+  - canonical_type_ref: core.occurred_at.v1
+    field_name: occurredAt
+  - canonical_type_ref: exercises.exercise.id.v1
+    field_name: exerciseId
+  - canonical_type_ref: exercises.exercise_version.id.v1
+    field_name: exerciseVersionId
+  - canonical_type_ref: teams.team.id.v1
+    field_name: teamId
+  - canonical_type_ref: organizations.organization.id.v1
+    field_name: organizationId
+  - canonical_type_ref: seasons.season.id.v1
+    field_name: seasonId
+  - canonical_type_ref: ai_ingestion.job.id.v1
+    field_name: jobId
+  - canonical_type_ref: competitions.competition.id.v1
+    field_name: competitionId
+  - canonical_type_ref: matches.match.id.v1
+    field_name: matchId
+  - canonical_type_ref: core.resource.id.v1
+    field_name: targetResourceId
+  - canonical_type_ref: core.correlation.id.v1
+    field_name: correlationId
+  - canonical_type_ref: audit.entry.id.v1
+    field_name: entryId
+  - canonical_type_ref: scout.event.id.v1
+    field_name: eventId
+contract_sources:
+- contracts/asyncapi/README.md
+- contracts/asyncapi/asyncapi.yaml
+- contracts/asyncapi/asyncapi_validate.log
+- contracts/asyncapi/channels/.gitkeep
+- contracts/asyncapi/channels/ai_ingestion_job_completed.yaml
+- contracts/asyncapi/channels/ai_ingestion_job_failed.yaml
+- contracts/asyncapi/channels/ai_ingestion_job_queued.yaml
+- contracts/asyncapi/channels/athlete_ineligible_for_prescription.yaml
+- contracts/asyncapi/channels/attention_queue_item_created.yaml
+- contracts/asyncapi/channels/attention_queue_item_resolved.yaml
+- contracts/asyncapi/channels/audit_entry_created.yaml
+- contracts/asyncapi/channels/audit_entry_security_flagged.yaml
+- contracts/asyncapi/channels/coach_intervention_required.yaml
+- contracts/asyncapi/channels/competition_created.yaml
+- contracts/asyncapi/channels/competition_phase_changed.yaml
+- contracts/asyncapi/channels/completion_evidence_provided.yaml
+- contracts/asyncapi/channels/continuity_snapshot_created.yaml
+- contracts/asyncapi/channels/execution_recorded.yaml
+- contracts/asyncapi/channels/feedback_thread_closed.yaml
+- contracts/asyncapi/channels/feedback_thread_created.yaml
+- contracts/asyncapi/channels/intervention_cycle_completed.yaml
+- contracts/asyncapi/channels/intervention_cycle_created.yaml
+- contracts/asyncapi/channels/match_scheduled.yaml
+- contracts/asyncapi/channels/match_status_updated.yaml
+- contracts/asyncapi/channels/need_detected_created.yaml
+- contracts/asyncapi/channels/need_linked_to_objective.yaml
+- contracts/asyncapi/channels/notification_delivery_failed.yaml
+- contracts/asyncapi/channels/notification_delivery_queued.yaml
+- contracts/asyncapi/channels/notification_delivery_sent.yaml
+- contracts/asyncapi/channels/objective_created.yaml
+- contracts/asyncapi/channels/prescription_adjusted.yaml
+- contracts/asyncapi/channels/recommendation_accepted.yaml
+- contracts/asyncapi/channels/recommendation_dismissed.yaml
+- contracts/asyncapi/channels/recommendation_generated.yaml
+- contracts/asyncapi/channels/role_assigned.yaml
+- contracts/asyncapi/channels/role_revoked.yaml
+- contracts/asyncapi/channels/scout_event_created.yaml
+- contracts/asyncapi/channels/scout_session_completed.yaml
+- contracts/asyncapi/channels/season_created.yaml
+- contracts/asyncapi/channels/season_status_updated.yaml
+- contracts/asyncapi/channels/session_adjustment_made.yaml
+- contracts/asyncapi/channels/session_created.yaml
+- contracts/asyncapi/channels/session_objective_achieved.yaml
+- contracts/asyncapi/channels/session_revoked.yaml
+- contracts/asyncapi/channels/team_created.yaml
+- contracts/asyncapi/channels/team_roster_updated.yaml
+- contracts/asyncapi/channels/training_attendance_marked.yaml
+- contracts/asyncapi/channels/training_readiness_assessed.yaml
+- contracts/asyncapi/channels/training_session_archived.yaml
+- contracts/asyncapi/channels/training_session_cancelled.yaml
+- contracts/asyncapi/channels/training_session_completed.yaml
+- contracts/asyncapi/channels/training_session_created.yaml
+- contracts/asyncapi/channels/training_session_published.yaml
+- contracts/asyncapi/channels/training_session_started.yaml
+- contracts/asyncapi/channels/user_created.yaml
+- contracts/asyncapi/channels/user_role_changed.yaml
+- contracts/asyncapi/channels/video/capture_started.yaml
+- contracts/asyncapi/channels/video/distribution_failed.yaml
+- contracts/asyncapi/channels/video/distribution_published.yaml
+- contracts/asyncapi/channels/video/segment_ready.yaml
+- contracts/asyncapi/channels/video/sync_adjustment_applied.yaml
+- contracts/asyncapi/channels/video/transcode_completed.yaml
+- contracts/asyncapi/channels/video_clip_ready.yaml
+- contracts/asyncapi/channels/video_distribution_published.yaml
+- contracts/asyncapi/channels/video_segment_finalized.yaml
+- contracts/asyncapi/channels/video_session_capturing.yaml
+- contracts/asyncapi/channels/video_session_created.yaml
+- contracts/asyncapi/channels/video_session_published.yaml
+- contracts/asyncapi/channels/video_session_syncing.yaml
+- contracts/asyncapi/channels/video_session_transcoding.yaml
+- contracts/asyncapi/channels/wellness_entry_created.yaml
+- contracts/asyncapi/components/messageTraits/.gitkeep
+- contracts/asyncapi/components/operationTraits/.gitkeep
+- contracts/asyncapi/components/schemas/.gitkeep
+- contracts/asyncapi/components/schemas/ai_ingestion_job_completed_payload.yaml
+- contracts/asyncapi/components/schemas/ai_ingestion_job_failed_payload.yaml
+- contracts/asyncapi/components/schemas/ai_ingestion_job_queued_payload.yaml
+- contracts/asyncapi/components/schemas/athlete_ineligible_for_prescription_payload.yaml
+- contracts/asyncapi/components/schemas/attention_queue_item_created_payload.yaml
+- contracts/asyncapi/components/schemas/attention_queue_item_resolved_payload.yaml
+- contracts/asyncapi/components/schemas/audit_entry_created_payload.yaml
+- contracts/asyncapi/components/schemas/audit_entry_security_flagged_payload.yaml
+- contracts/asyncapi/components/schemas/coach_intervention_required_payload.yaml
+- contracts/asyncapi/components/schemas/competition_created_payload.yaml
+- contracts/asyncapi/components/schemas/competition_phase_changed_payload.yaml
+- contracts/asyncapi/components/schemas/completion_evidence_provided_payload.yaml
+- contracts/asyncapi/components/schemas/continuity_snapshot_created_payload.yaml
+- contracts/asyncapi/components/schemas/execution_recorded_payload.yaml
+- contracts/asyncapi/components/schemas/feedback_thread_closed_payload.yaml
+- contracts/asyncapi/components/schemas/feedback_thread_created_payload.yaml
+- contracts/asyncapi/components/schemas/intervention_cycle_completed_payload.yaml
+- contracts/asyncapi/components/schemas/intervention_cycle_created_payload.yaml
+- contracts/asyncapi/components/schemas/match_scheduled_payload.yaml
+- contracts/asyncapi/components/schemas/match_status_updated_payload.yaml
+- contracts/asyncapi/components/schemas/need_detected_created_payload.yaml
+- contracts/asyncapi/components/schemas/need_linked_to_objective_payload.yaml
+- contracts/asyncapi/components/schemas/notification_delivery_failed_payload.yaml
+- contracts/asyncapi/components/schemas/notification_delivery_queued_payload.yaml
+- contracts/asyncapi/components/schemas/notification_delivery_sent_payload.yaml
+- contracts/asyncapi/components/schemas/objective_created_payload.yaml
+- contracts/asyncapi/components/schemas/prescription_adjusted_payload.yaml
+- contracts/asyncapi/components/schemas/recommendation_accepted_payload.yaml
+- contracts/asyncapi/components/schemas/recommendation_dismissed_payload.yaml
+- contracts/asyncapi/components/schemas/recommendation_generated_payload.yaml
+- contracts/asyncapi/components/schemas/role_assigned_payload.yaml
+- contracts/asyncapi/components/schemas/role_revoked_payload.yaml
+- contracts/asyncapi/components/schemas/scout_event_created_payload.yaml
+- contracts/asyncapi/components/schemas/scout_session_completed_payload.yaml
+- contracts/asyncapi/components/schemas/season_created_payload.yaml
+- contracts/asyncapi/components/schemas/season_status_updated_payload.yaml
+- contracts/asyncapi/components/schemas/session_adjustment_made_payload.yaml
+- contracts/asyncapi/components/schemas/session_created_payload.yaml
+- contracts/asyncapi/components/schemas/session_objective_achieved_payload.yaml
+- contracts/asyncapi/components/schemas/session_revoked_payload.yaml
+- contracts/asyncapi/components/schemas/team_created_payload.yaml
+- contracts/asyncapi/components/schemas/team_roster_updated_payload.yaml
+- contracts/asyncapi/components/schemas/training_attendance_marked_payload.yaml
+- contracts/asyncapi/components/schemas/training_readiness_assessed_payload.yaml
+- contracts/asyncapi/components/schemas/training_session_archived_payload.yaml
+- contracts/asyncapi/components/schemas/training_session_cancelled_payload.yaml
+- contracts/asyncapi/components/schemas/training_session_completed_payload.yaml
+- contracts/asyncapi/components/schemas/training_session_created_payload.yaml
+- contracts/asyncapi/components/schemas/training_session_published_payload.yaml
+- contracts/asyncapi/components/schemas/training_session_started_payload.yaml
+- contracts/asyncapi/components/schemas/user_created_payload.yaml
+- contracts/asyncapi/components/schemas/user_role_changed_payload.yaml
+- contracts/asyncapi/components/schemas/video/capture_started_payload.yaml
+- contracts/asyncapi/components/schemas/video/distribution_failed_payload.yaml
+- contracts/asyncapi/components/schemas/video/distribution_published_payload.yaml
+- contracts/asyncapi/components/schemas/video/segment_ready_payload.yaml
+- contracts/asyncapi/components/schemas/video/sync_adjustment_applied_payload.yaml
+- contracts/asyncapi/components/schemas/video/transcode_completed_payload.yaml
+- contracts/asyncapi/components/schemas/video_clip_ready_payload.yaml
+- contracts/asyncapi/components/schemas/video_distribution_published_payload.yaml
+- contracts/asyncapi/components/schemas/video_segment_finalized_payload.yaml
+- contracts/asyncapi/components/schemas/video_session_capturing_payload.yaml
+- contracts/asyncapi/components/schemas/video_session_created_payload.yaml
+- contracts/asyncapi/components/schemas/video_session_published_payload.yaml
+- contracts/asyncapi/components/schemas/video_session_syncing_payload.yaml
+- contracts/asyncapi/components/schemas/video_session_transcoding_payload.yaml
+- contracts/asyncapi/components/schemas/wellness_entry_created_payload.yaml
+- contracts/asyncapi/messages/.gitkeep
+- contracts/asyncapi/messages/ai_ingestion_job_completed.yaml
+- contracts/asyncapi/messages/ai_ingestion_job_failed.yaml
+- contracts/asyncapi/messages/ai_ingestion_job_queued.yaml
+- contracts/asyncapi/messages/athlete_ineligible_for_prescription.yaml
+- contracts/asyncapi/messages/attention_queue_item_created.yaml
+- contracts/asyncapi/messages/attention_queue_item_resolved.yaml
+- contracts/asyncapi/messages/audit_entry_created.yaml
+- contracts/asyncapi/messages/audit_entry_security_flagged.yaml
+- contracts/asyncapi/messages/coach_intervention_required.yaml
+- contracts/asyncapi/messages/competition_created.yaml
+- contracts/asyncapi/messages/competition_phase_changed.yaml
+- contracts/asyncapi/messages/completion_evidence_provided.yaml
+- contracts/asyncapi/messages/continuity_snapshot_created.yaml
+- contracts/asyncapi/messages/execution_recorded.yaml
+- contracts/asyncapi/messages/feedback_thread_closed.yaml
+- contracts/asyncapi/messages/feedback_thread_created.yaml
+- contracts/asyncapi/messages/intervention_cycle_completed.yaml
+- contracts/asyncapi/messages/intervention_cycle_created.yaml
+- contracts/asyncapi/messages/match_scheduled.yaml
+- contracts/asyncapi/messages/match_status_updated.yaml
+- contracts/asyncapi/messages/need_detected_created.yaml
+- contracts/asyncapi/messages/need_linked_to_objective.yaml
+- contracts/asyncapi/messages/notification_delivery_failed.yaml
+- contracts/asyncapi/messages/notification_delivery_queued.yaml
+- contracts/asyncapi/messages/notification_delivery_sent.yaml
+- contracts/asyncapi/messages/objective_created.yaml
+- contracts/asyncapi/messages/prescription_adjusted.yaml
+- contracts/asyncapi/messages/recommendation_accepted.yaml
+- contracts/asyncapi/messages/recommendation_dismissed.yaml
+- contracts/asyncapi/messages/recommendation_generated.yaml
+- contracts/asyncapi/messages/role_assigned.yaml
+- contracts/asyncapi/messages/role_revoked.yaml
+- contracts/asyncapi/messages/scout_event_created.yaml
+- contracts/asyncapi/messages/scout_session_completed.yaml
+- contracts/asyncapi/messages/season_created.yaml
+- contracts/asyncapi/messages/season_status_updated.yaml
+- contracts/asyncapi/messages/session_adjustment_made.yaml
+- contracts/asyncapi/messages/session_created.yaml
+- contracts/asyncapi/messages/session_objective_achieved.yaml
+- contracts/asyncapi/messages/session_revoked.yaml
+- contracts/asyncapi/messages/team_created.yaml
+- contracts/asyncapi/messages/team_roster_updated.yaml
+- contracts/asyncapi/messages/training_attendance_marked.yaml
+- contracts/asyncapi/messages/training_readiness_assessed.yaml
+- contracts/asyncapi/messages/training_session_archived.yaml
+- contracts/asyncapi/messages/training_session_cancelled.yaml
+- contracts/asyncapi/messages/training_session_completed.yaml
+- contracts/asyncapi/messages/training_session_created.yaml
+- contracts/asyncapi/messages/training_session_published.yaml
+- contracts/asyncapi/messages/training_session_started.yaml
+- contracts/asyncapi/messages/user_created.yaml
+- contracts/asyncapi/messages/user_role_changed.yaml
+- contracts/asyncapi/messages/video/capture_started.yaml
+- contracts/asyncapi/messages/video/distribution_failed.yaml
+- contracts/asyncapi/messages/video/distribution_published.yaml
+- contracts/asyncapi/messages/video/segment_ready.yaml
+- contracts/asyncapi/messages/video/sync_adjustment_applied.yaml
+- contracts/asyncapi/messages/video/transcode_completed.yaml
+- contracts/asyncapi/messages/video_clip_ready.yaml
+- contracts/asyncapi/messages/video_distribution_published.yaml
+- contracts/asyncapi/messages/video_segment_finalized.yaml
+- contracts/asyncapi/messages/video_session_capturing.yaml
+- contracts/asyncapi/messages/video_session_created.yaml
+- contracts/asyncapi/messages/video_session_published.yaml
+- contracts/asyncapi/messages/video_session_syncing.yaml
+- contracts/asyncapi/messages/video_session_transcoding.yaml
+- contracts/asyncapi/messages/wellness_entry_created.yaml
+- contracts/asyncapi/operations/.gitkeep
+- contracts/schemas/README.md
+- contracts/schemas/ai_ingestion/.gitkeep
+- contracts/schemas/ai_ingestion/ingestion_job.schema.json
+- contracts/schemas/analytics/.gitkeep
+- contracts/schemas/analytics/analytics_metric_key.schema.json
+- contracts/schemas/analytics/analytics_query_request.schema.json
+- contracts/schemas/analytics/analytics_query_response.schema.json
+- contracts/schemas/analytics/analytics_snapshot.schema.json
+- contracts/schemas/audit/.gitkeep
+- contracts/schemas/audit/audit_entry.schema.json
+- contracts/schemas/competitions/.gitkeep
+- contracts/schemas/competitions/competition.schema.json
+- contracts/schemas/exercises/.gitkeep
+- contracts/schemas/exercises/exercise.schema.json
+- contracts/schemas/exercises/exercise_acl.schema.json
+- contracts/schemas/exercises/exercise_relation.schema.json
+- contracts/schemas/exercises/exercise_version.schema.json
+- contracts/schemas/identity_access/.gitkeep
+- contracts/schemas/identity_access/auth_session.schema.json
+- contracts/schemas/matches/.gitkeep
+- contracts/schemas/matches/match.schema.json
+- contracts/schemas/medical/.gitkeep
+- contracts/schemas/medical/medical_record.schema.json
+- contracts/schemas/notifications/.gitkeep
+- contracts/schemas/notifications/notification_delivery.schema.json
+- contracts/schemas/reports/.gitkeep
+- contracts/schemas/reports/report_job.schema.json
+- contracts/schemas/scout/.gitkeep
+- contracts/schemas/scout/scout_event.schema.json
+- contracts/schemas/seasons/.gitkeep
+- contracts/schemas/seasons/season.schema.json
+- contracts/schemas/shared/.gitkeep
+- contracts/schemas/shared/domain_axioms.schema.json
+- contracts/schemas/shared/domain_axioms_module.schema.json
+- contracts/schemas/shared/module_registry.schema.json
+- contracts/schemas/shared/module_source_authority_matrix.schema.json
+- contracts/schemas/shared/owasp_api_control_matrix.schema.json
+- contracts/schemas/shared/readiness_confirmation.schema.json
+- contracts/schemas/shared/session_handoff.schema.json
+- contracts/schemas/shared/session_start.schema.json
+- contracts/schemas/shared/waiver.schema.json
+- contracts/schemas/teams/.gitkeep
+- contracts/schemas/teams/team.schema.json
+- contracts/schemas/training/.gitkeep
+- contracts/schemas/training/ajv_compile.log
+- contracts/schemas/training/athlete_chat_conversation.schema.json
+- contracts/schemas/training/athlete_chat_message.schema.json
+- contracts/schemas/training/athlete_ineligibility_declaration.schema.json
+- contracts/schemas/training/attention_queue_item.schema.json
+- contracts/schemas/training/execution_record.schema.json
+- contracts/schemas/training/feedback_thread.schema.json
+- contracts/schemas/training/load_chart.schema.json
+- contracts/schemas/training/recommendation.schema.json
+- contracts/schemas/training/session_block.schema.json
+- contracts/schemas/training/session_objective.schema.json
+- contracts/schemas/training/training_session.schema.json
+- contracts/schemas/training/training_suggestion.schema.json
+- contracts/schemas/training/training_suggestion_approval.schema.json
+- contracts/schemas/users/.gitkeep
+- contracts/schemas/users/user_profile.schema.json
+- contracts/schemas/video/clip_definition.schema.json
+- contracts/schemas/video/distribution_profile.schema.json
+- contracts/schemas/video/match_media_session.schema.json
+- contracts/schemas/video/media_segment.schema.json
+- contracts/schemas/wellness/.gitkeep
+- contracts/schemas/wellness/wellness_entry.schema.json
+inputs:
+  api_rules: .contract_driven/templates/api/api_rules.yaml
+  architecture_matrix: .contract_driven/templates/api/ARCHITECTURE_MATRIX.yaml
+  canonical_type_registry: .contract_driven/templates/api/CANONICAL_TYPE_REGISTRY.yaml
+  domain_axioms: .contract_driven/DOMAIN_AXIOMS.json
+  module_profile_registry: .contract_driven/templates/api/MODULE_PROFILE_REGISTRY.yaml
+meta:
+  artifact_id: HBTRACK_RESOLVED_API_POLICY
+  compiler: hbtrack_api_policy_compiler
+  compiler_version: 0.1.0
+  module: teams
+  surface: event
+  target: asyncapi
+module_profile:
+  enabled_surfaces:
+  - sync
+  - event
+  module_class: CRUD
+  overlays: []
+style_veto:
+  identifiers:
+    resource_ids:
+      guessability: SHOULD use unpredictable identifiers (e.g., UUID) to reduce enumeration
+      note: Não substitui autorização (BOLA).
+  naming:
+    headers:
+      casing_note: HTTP header names são case-insensitive; use Title-Case por legibilidade.
+      custom_header_policy:
+        must_not_prefix:
+        - X-
+    json_fields:
+      note: Inclui request/response bodies e erros (Problem+JSON extensions).
+      style: camelCase
+    path_template_variables:
+      must_not_include:
+      - '-'
+      style: camelCase
+    query_parameters:
+      reserved_names_policy: MUST_NOT collide with reserved identifiers (Adidas)
+      style: camelCase
+    uri_paths:
+      base_path:
+        must_not_use:
+        - /api
+      path_segments: kebab-case
+      trailing_slash: MUST_NOT

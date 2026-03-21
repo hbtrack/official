@@ -20,7 +20,7 @@
       OWASP API4:2023: pageSize máximo 100.
     operationId: listSeasons
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     parameters:
       - name: statusLabel
         in: query
@@ -72,16 +72,21 @@
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Papel RBAC insuficiente (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   post:
     tags:
       - seasons
@@ -92,7 +97,7 @@
       startDate deve ser <= endDate (INV-SEAS-002).
     operationId: createSeason
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     requestBody:
       required: true
       content:
@@ -144,22 +149,33 @@
       "400":
         description: Dados inválidos (ex. endDate < startDate — INV-SEAS-002).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Papel RBAC insuficiente (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /seasons/{seasonId}:
   parameters:
     - name: seasonId
@@ -178,7 +194,7 @@
     description: Retorna dados completos da temporada incluindo phaseLabels, teamIds e competitionIds (DR-SEAS-003).
     operationId: getSeason
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     responses:
       "200":
         description: Dados da temporada.
@@ -189,22 +205,27 @@
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Papel RBAC insuficiente (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Temporada não encontrada.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   patch:
     tags:
       - seasons
@@ -215,7 +236,7 @@
       Transição de statusLabel: draft → active → archived.
     operationId: patchSeason
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     requestBody:
       required: true
       content:
@@ -263,28 +284,39 @@
       "400":
         description: Dados inválidos (ex. startDate > endDate — INV-SEAS-002).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Papel RBAC insuficiente (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Temporada não encontrada.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /seasons/{seasonId}/teams/{teamId}:
   parameters:
     - name: seasonId
@@ -314,35 +346,46 @@
       Duplicatas são rejeitadas (INV-SEAS-003).
     operationId: addTeamToSeason
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     responses:
       "204":
         description: Equipe associada com sucesso.
       "400":
         description: Equipe já associada à temporada (INV-SEAS-003).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Papel RBAC insuficiente (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Temporada ou equipe não encontrada.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   delete:
     tags:
       - seasons
@@ -352,25 +395,37 @@
       teams.teamIds é atualizado canonicamente no módulo seasons.
     operationId: removeTeamFromSeason
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     responses:
       "204":
         description: Associação removida com sucesso.
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Papel RBAC insuficiente (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Temporada ou associação não encontrada.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"

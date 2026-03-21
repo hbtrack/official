@@ -4,10 +4,10 @@ description: >
   HB Track CDD Pipeline Orchestrator. USE FOR: any contract task (new_contract,
   contract_revision, new_event, new_workflow, new_schema, new_state_model,
   new_ui_contract, new_module, architecture_review, decision_discovery,
-  adversarial_analysis, readiness_promotion).
+  adversarial_analysis, readiness_promotion, generate_code).
   Enforces the pipeline: Boot → PRÉ-0 (pre_contract_boot) → FASE 0 (hb verify) →
   FASE 1 (hb check) → Decision Discovery → FASE 2 (worker + hb artifact) →
-  COMPILE → FASE 3 (validate_contracts) → FASE 4 (readiness) → FASE 5 (handoff).
+  COMPILE → FASE 3 (validate_contracts) → FASE 4+ (task-specific follow-up) → FASE 5 (handoff).
   DO NOT USE FOR: general questions, code review, debugging, audits (audit_*).
   For audits: load the audit worker directly, skip pre_contract_orchestrator.
 ---
@@ -16,6 +16,9 @@ description: >
 
 Este skill implementa o protocolo completo do pipeline Contract-Driven Development.
 **Toda tarefa de contrato DEVE seguir esta checklist na ordem exata.**
+
+Worker = prompt especializado carregado pelo mesmo agente.
+Nao presumir subagentes autonomos, fila ou runtime distribuido.
 
 O humano é leigo em desenvolvimento — comunicar SEMPRE em português, linguagem de produto, nunca jargão técnico.
 
@@ -30,11 +33,10 @@ O humano é leigo em desenvolvimento — comunicar SEMPRE em português, linguag
 - [ ] **B1** — Ler `docs/_canon/AGENT_INSTRUCTIONS.md` (seções §0-§6)
 - [ ] **B2** — Verificar se existe `SESSION_HANDOFF.md` na raiz do workspace
   - Se existe → ler ANTES de qualquer outra ação
-  - Se não existe → verificar `_reports/SESSION_HANDOFF_CURRENT.md`
-  - Se nenhum existe → continuar sem contexto anterior (registrar)
+  - Se não existe → continuar sem contexto anterior (registrar)
 - [ ] **B3** — Identificar `task_type` e `module` a partir do pedido do humano
   - Se ambíguo → **perguntar explicitamente** (nunca inferir)
-  - task_type válidos: `pre_contract_boot` (primeira execução obrigatória), `new_contract`, `contract_revision`, `new_event`, `new_workflow`, `new_schema`, `new_state_model`, `new_ui_contract`, `new_module`, `architecture_review`, `decision_discovery`, `adversarial_analysis`, `readiness_promotion`
+  - task_type válidos: `pre_contract_boot` (primeira execução opcional de boot guiado), `new_contract`, `contract_revision`, `new_event`, `new_workflow`, `new_schema`, `new_state_model`, `new_ui_contract`, `new_module`, `architecture_review`, `decision_discovery`, `adversarial_analysis`, `readiness_promotion`, `generate_code`
   - task_type de auditoria (carregam worker diretamente, sem este skill): `audit_sovereign_integrity`, `audit_context_efficiency`, `audit_red_team_pipeline`, `audit_gate_coverage`, `audit_domain_completeness`
 
 ### Mapeamento de pedido para task_type
@@ -279,6 +281,9 @@ O humano é leigo em desenvolvimento — comunicar SEMPRE em português, linguag
 
 **Obrigatório ao final de toda sessão de contrato.**
 
+`SESSION_HANDOFF.md` e o handoff operacional atual.
+Nao tratar `contracts/schemas/shared/session_handoff.schema.json` como o validador ativo desse markdown.
+
 ### Checklist Handoff
 
 - [ ] **H.1** — Criar ou atualizar `SESSION_HANDOFF.md` na raiz com:
@@ -306,9 +311,10 @@ O humano é leigo em desenvolvimento — comunicar SEMPRE em português, linguag
 
 ---
 
-## FASE 6 — Commit (Obrigatório)
+## FASE 6 — Commit (Fechamento de versionamento)
 
-**Toda sessão DEVE terminar com um commit. Sem commit, o pipeline não tem efeito — o pre-commit hook não executa, os gates não validam, e o trabalho não entra no histórico rastreável.**
+Use commit quando a sessão precisar persistir artefatos em git.
+O pipeline já executa checkpoints via `hb` e `validate_contracts.py`; o commit adiciona o checkpoint do hook `pre-commit`.
 
 ### Checklist Commit
 
@@ -363,5 +369,5 @@ O humano é leigo em desenvolvimento — comunicar SEMPRE em português, linguag
 5. **SEMPRE ler o worker prompt ANTES de criar o artefato**
 6. **SEMPRE compilar (compile_api_policy) ANTES de validar (validate_contracts)**
 7. **SEMPRE atualizar SESSION_HANDOFF ao final**
-8. **SEMPRE fazer o commit ao final da sessão (FASE 6)**
+8. **SE a sessão for ser persistida em git, fazer o commit ao final**
 9. **Comunicação em português**, linguagem de produto, nunca jargão técnico

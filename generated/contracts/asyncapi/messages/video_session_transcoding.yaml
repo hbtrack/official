@@ -1,0 +1,13 @@
+# AsyncAPI Message: video_session_transcoding
+# Module: video
+# Domain rules: DR-VID-002, DR-VID-006
+# Decisions: ADR-033
+name: VideoSessionTranscodingMessage
+title: Transcodificação Iniciada
+summary: Publicado quando dual pipeline de transcodificação é disparado (DR-VID-002).
+description: >
+  Emitido quando a sessão transita para TRANSCODING. Transcodificação lazy/on-demand (DR-VID-006).
+  Pipeline técnico (baixa latência) e público (ABR/CDN) são executados em paralelo.
+contentType: application/json
+payload:
+  $ref: "../components/schemas/video_session_transcoding_payload.yaml"

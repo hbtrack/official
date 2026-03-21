@@ -3,17 +3,17 @@ version: "1.0.0"
 modules:
   users:
     allowed_module_classes: ["CRUD"]
-    allowed_surfaces: ["sync"]
+    allowed_surfaces: ["sync", "event"]
     sensitive: false
 
   seasons:
     allowed_module_classes: ["CRUD"]
-    allowed_surfaces: ["sync"]
+    allowed_surfaces: ["sync", "event"]
     sensitive: false
 
   teams:
     allowed_module_classes: ["CRUD"]
-    allowed_surfaces: ["sync"]
+    allowed_surfaces: ["sync", "event"]
     sensitive: false
 
   training:
@@ -33,7 +33,7 @@ modules:
 
   competitions:
     allowed_module_classes: ["CRUD"]
-    allowed_surfaces: ["sync"]
+    allowed_surfaces: ["sync", "event"]
     sensitive: false
 
   matches:
@@ -68,7 +68,7 @@ modules:
 
   identity_access:
     allowed_module_classes: ["CRUD"]
-    allowed_surfaces: ["sync"]
+    allowed_surfaces: ["sync", "event"]
     sensitive: true
 
   audit:
@@ -78,5 +78,10 @@ modules:
 
   notifications:
     allowed_module_classes: ["CRUD", "EVENT_FIRST"]
+    allowed_surfaces: ["sync", "event"]
+    sensitive: false
+
+  video:
+    allowed_module_classes: ["HYBRID"]
     allowed_surfaces: ["sync", "event"]
     sensitive: false

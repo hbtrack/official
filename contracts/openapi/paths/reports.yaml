@@ -114,22 +114,27 @@
       "401":
         description: Unauthorized
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Forbidden
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "422":
         description: Invalid query parameters
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   post:
     operationId: createReportJob
     summary: Create a new report generation job
@@ -197,28 +202,39 @@
       "400":
         description: Invalid request (missing required fields, invalid format, or parameters).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "401":
         description: Unauthorized
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Forbidden (user cannot create reports for this type/team).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "422":
         description: Unprocessable entity (validation error).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /reports/jobs/{jobId}:
   get:
     operationId: getReportJob
@@ -265,22 +281,27 @@
       "401":
         description: Unauthorized
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Forbidden (insufficient access to view this job).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Job not found
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   patch:
     operationId: updateReportJob
     summary: Update report job (e.g., cancel or change retention)
@@ -339,34 +360,45 @@
       "400":
         description: Invalid update (e.g., cannot cancel completed job).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "401":
         description: Unauthorized
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Forbidden (insufficient update permission).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Job not found
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "422":
         description: Unprocessable entity (validation error).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
-
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /reports/jobs/{jobId}/download:
   get:
     operationId: downloadReportArtifact
@@ -410,24 +442,30 @@
       "401":
         description: Unauthorized
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Forbidden (insufficient access to download).
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Job not found or artifact not yet generated
         content:
-          application/json:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"
       "410":
         description: Artifact no longer available (retention period expired)
         content:
-          application/json:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
             schema:
               $ref: "../components/schemas/shared/problem.yaml"

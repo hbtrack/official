@@ -6,7 +6,7 @@ hbtrack_api_rules:
   ssot: true
   ssot_path: ".contract_driven/templates/api/api_rules.yaml"
   system: "HB Track"
-  last_updated: "2026-03-11"
+  last_updated: "2026-03-20"
   language:
     docs: "pt-BR"
     technical_identifiers: "en-US"
@@ -198,6 +198,18 @@ hbtrack_api_rules:
         rule: "MUST check permission before confirming existence when disclosure risk exists."
         source: "Google AIP error guidance (AIP-193 summary) + OWASP BOLA"
 
+    contract_enforcement:
+      protected_operation_security:
+        scheme_name: "HTTPBearer"
+        rule: "MUST use exactly `HTTPBearer` for protected operations; aliases such as `bearerAuth` are forbidden."
+      public_operation_security:
+        rule: "Public operations MAY use `security: []`, but only when the operation description states why the endpoint is public."
+      forbidden_placeholders:
+        - "security: - {}"
+        - "securitySchemes: {}"
+      security_scheme_cardinality:
+        rule: "MUST expose a single canonical bearer scheme in the root contract when protected operations exist."
+
   design_rules:
     google_aip_core:
       standard_methods:
@@ -237,6 +249,40 @@ hbtrack_api_rules:
           reason: "string"
           domain: "string"
           metadata: "object<string,string>"
+
+  bundle_integrity_rules:
+    generated_bundle_self_contained:
+      rule: "generated/contracts/** MUST be consumable without falling back to contracts/**."
+      requirements:
+        - "MUST publish every file referenced by local $ref in the generated bundle."
+        - "MUST keep source and generated inventories aligned for every exposed surface."
+        - "MUST fail closed on broken local $ref before promoting generated artifacts."
+    error_model_uniqueness:
+      rule: "HTTP errors MUST use a single public schema: contracts/openapi/components/schemas/shared/problem.yaml."
+      forbidden_refs:
+        - "contracts/openapi/components/schemas/common/error.yaml"
+    schema_projection_rules:
+      stable_domain_entity_http_projection:
+        rule: "Stable entity responses MUST reuse the sovereign shape directly or document a justified HTTP delta."
+        allowed_patterns:
+          - "Direct $ref to contracts/schemas/<module>/*.schema.json"
+          - "HTTP component wrapper with explicit x-schema-ref-justification"
+        forbidden_patterns:
+          - "Stub response schemas that omit sovereign fields without documented transport rationale"
+    structured_query_rules:
+      analytical_query_endpoints:
+        rule: "Endpoints that execute analytical queries MUST use sovereign typed request/response schemas with structured filters and fixed row envelopes."
+        forbidden_patterns:
+          - "filterExpression: string"
+          - "additionalProperties: true em linhas de resultado"
+          - "DSL textual sem gramática soberana"
+        required_patterns:
+          - "Request schema em contracts/schemas/<module>/*query*_request.schema.json"
+          - "Response schema em contracts/schemas/<module>/*query*_response.schema.json"
+          - "Filtros estruturados com enums fechados e additionalProperties: false"
+          - "Rows com additionalProperties: false e campos nuláveis explícitos quando dimensão não se aplica"
+    exception_matrix_minimum:
+      rule: "Protected operations MUST document 500; state-changing or conflict-prone operations MUST document 409 semantics."
 
   legacy_rule_registry:
     id: "restful_api_guidelines_external_v1"
@@ -716,6 +762,12 @@ hbtrack_api_rules:
                 application/problem+json:
                   schema:
                     $ref: ../components/schemas/shared/problem.yaml
+            "500":
+              description: Internal server error
+              content:
+                application/problem+json:
+                  schema:
+                    $ref: ../components/schemas/shared/problem.yaml
 
         post:
           tags: [{{MODULE_NAME}}]
@@ -736,6 +788,18 @@ hbtrack_api_rules:
                     $ref: ../components/schemas/{{MODULE_NAME}}/{{DOMAIN_ENTITY_SNAKE}}.yaml
             "400":
               description: Validation error
+              content:
+                application/problem+json:
+                  schema:
+                    $ref: ../components/schemas/shared/problem.yaml
+            "409":
+              description: Conflict with current resource state, uniqueness constraint, or concurrent update
+              content:
+                application/problem+json:
+                  schema:
+                    $ref: ../components/schemas/shared/problem.yaml
+            "500":
+              description: Internal server error
               content:
                 application/problem+json:
                   schema:
@@ -761,6 +825,12 @@ hbtrack_api_rules:
                     $ref: ../components/schemas/{{MODULE_NAME}}/{{DOMAIN_ENTITY_SNAKE}}.yaml
             "404":
               description: Not found
+              content:
+                application/problem+json:
+                  schema:
+                    $ref: ../components/schemas/shared/problem.yaml
+            "500":
+              description: Internal server error
               content:
                 application/problem+json:
                   schema:
@@ -800,6 +870,18 @@ hbtrack_api_rules:
                 application/problem+json:
                   schema:
                     $ref: ../components/schemas/shared/problem.yaml
+            "409":
+              description: Conflict with current resource state, uniqueness constraint, or concurrent update
+              content:
+                application/problem+json:
+                  schema:
+                    $ref: ../components/schemas/shared/problem.yaml
+            "500":
+              description: Internal server error
+              content:
+                application/problem+json:
+                  schema:
+                    $ref: ../components/schemas/shared/problem.yaml
 
         delete:
           tags: [{{MODULE_NAME}}]
@@ -813,6 +895,18 @@ hbtrack_api_rules:
           responses:
             "204":
               description: Deleted
+            "409":
+              description: Conflict with current resource state, referential integrity, or concurrent update
+              content:
+                application/problem+json:
+                  schema:
+                    $ref: ../components/schemas/shared/problem.yaml
+            "500":
+              description: Internal server error
+              content:
+                application/problem+json:
+                  schema:
+                    $ref: ../components/schemas/shared/problem.yaml
 
     openapi_components:
       parameters_pageSize_yaml: |-
@@ -921,10 +1015,10 @@ hbtrack_api_rules:
         #   - OpenAPI 3.1.x obrigatório            → contract_validation.openapi_required
         #   - info.version segue semver             → canonical_conventions.versioning_and_compatibility
         #   - servers não vazio                     → API9:2023 (Improper Inventory Management)
-        #   - tags com description (16 módulos)     → CONTRACT_SYSTEM_LAYOUT.md §2 + canonical_conventions
+        #   - tags com description (17 módulos)     → CONTRACT_SYSTEM_LAYOUT.md §2 + canonical_conventions
         #   - components.schemas.problem RFC 7807   → design_rules.errors
         #   - components.parameters pageSize/Token  → design_rules.pagination (cursor-based)
-        #   - security global como placeholder      → API5:2023 BFLA (default-deny por operação)
+        #   - security scheme canônico único        → security_rules.contract_enforcement
         #   - SEM versão na URI                     → canonical_conventions.versioning_and_compatibility.uri_versioning = MUST_NOT
         #   - camelCase em JSON fields              → canonical_conventions.naming.json_fields
         #   - kebab-case em path segments           → canonical_conventions.naming.uri_paths
@@ -937,11 +1031,11 @@ hbtrack_api_rules:
           description: >
             {{PROJECT_DESCRIPTION}}
 
-            Esta especificação é a fonte primária da verdade para a interface HTTP pública do sistema.
+            Esta especificação é o contrato normativo e auto-suficiente da interface HTTP pública do sistema.
 
-            Referências normativas — consultar antes de implementar:
+            Referências normativas abaixo fornecem governança e rastreabilidade, mas não completam comportamento ausente no contrato:
             - .contract_driven/CONTRACT_SYSTEM_LAYOUT.md   (estrutura canônica de artefatos)
-            - .contract_driven/templates/api/api_rules.yaml    (regras, templates e validações de API — RFC 7807)
+            - .contract_driven/templates/api/api_rules.yaml    (governança e validações do sistema contratual)
             - docs/_canon/SYSTEM_SCOPE.md                  (escopo e módulos canônicos)
           contact:
             name: "{{TEAM_NAME}}"
@@ -979,19 +1073,15 @@ hbtrack_api_rules:
               $ref: ./components/schemas/shared/problem.yaml
           responses: {}
           requestBodies: {}
-          # Schemes de segurança definidos quando identity_access for contratado.
-          securitySchemes: {}
+          securitySchemes:
+            HTTPBearer:
+              type: http
+              scheme: bearer
+              bearerFormat: JWT
           examples: {}
 
-        # Segurança global vazia por padrão — placeholder explícito e documentado.
-        # API5:2023 BFLA — default-deny: aplicar security requirement em cada operação
-        # protegida individualmente, NÃO depender deste global como proteção real.
-        # Quando identity_access estiver contratado: adicionar o scheme em securitySchemes
-        # e aplicar security requirements por operação.
-        security: []
-
         # Tags canônicas: uma por módulo (CONTRACT_SYSTEM_LAYOUT.md §2).
-        # Módulos de domínio funcional (13) + transversais (3) = 16 total.
+        # Módulos de domínio funcional (14) + transversais (3) = 17 total.
         tags:
           - name: users
             description: "Pessoa, perfil e dados de identidade funcional pessoal."
@@ -1025,6 +1115,8 @@ hbtrack_api_rules:
             description: "Trilha de auditoria e rastreabilidade de eventos."
           - name: notifications
             description: "Notificações e alertas para usuários."
+          - name: video
+            description: "Sessões de vídeo, clips, segmentos e distribuição."
 
   contract_validation:
     openapi_required:
@@ -1032,6 +1124,8 @@ hbtrack_api_rules:
       - "MUST not introduce URI versioning (no /v1, /v2, ...)."
       - "MUST keep module boundaries: each paths/<module>.yaml only contains that module."
       - "MUST include security requirements on protected endpoints."
+      - "MUST use `HTTPBearer` as the unique protected-operation security scheme when auth is required."
+      - "MUST NOT use `bearerAuth`, `security: - {}` or secondary public error models."
       - "MUST avoid mass assignment by using explicit request schemas with allowlisted fields."
     pagination_required_for_list:
       - "MUST define pagination parameters and nextPageToken semantics from day 1."

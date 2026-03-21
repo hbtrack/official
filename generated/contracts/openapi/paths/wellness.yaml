@@ -31,7 +31,7 @@
       podem registrar em nome de atletas (ADR-008 RBAC).
     operationId: createWellnessEntry
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     requestBody:
       required: true
       content:
@@ -138,30 +138,41 @@
           inválida; readinessScore fora do intervalo [0..10]; campo clínico
           proibido presente (INV-WELL-004).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: >
           Papel RBAC insuficiente ou tentativa de registrar entry para outro
           atleta sem permissão (ADR-008 BOLA).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "422":
         description: athleteUserId não corresponde a usuário conhecido.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
   get:
     tags:
       - wellness
@@ -176,7 +187,7 @@
       dor e recuperação são exclusivos deste módulo.
     operationId: listWellnessEntries
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     parameters:
       - name: athleteUserId
         in: query
@@ -260,16 +271,21 @@
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Papel RBAC insuficiente (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /wellness/entries/{entryId}:
   get:
     tags:
@@ -282,7 +298,7 @@
       Athlete acessa apenas as próprias entradas (BOLA — ADR-008).
     operationId: getWellnessEntry
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     parameters:
       - name: entryId
         in: path
@@ -301,22 +317,27 @@
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Acesso negado — BOLA (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Entrada não encontrada.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /wellness/athletes/{athleteUserId}/entries:
   get:
     tags:
@@ -334,7 +355,7 @@
       dados brutos.
     operationId: listAthleteWellnessEntries
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     parameters:
       - name: athleteUserId
         in: path
@@ -411,22 +432,27 @@
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Acesso negado — BOLA (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Atleta não encontrado.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
-
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
 /wellness/athletes/{athleteUserId}/summary:
   get:
     tags:
@@ -444,7 +470,7 @@
       equipe; athlete acessa apenas o próprio (BOLA — ADR-008).
     operationId: getAthleteWellnessSummary
     security:
-      - bearerAuth: []
+      - HTTPBearer: []
     parameters:
       - name: athleteUserId
         in: path
@@ -477,18 +503,24 @@
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "403":
         description: Acesso negado — BOLA (ADR-008).
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
       "404":
         description: Atleta não encontrado ou sem entradas no período.
         content:
-          application/json:
+          application/problem+json:
             schema:
-              $ref: "../components/schemas/common/error.yaml"
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"

@@ -1,0 +1,54 @@
+type: object
+required:
+- eventType
+- occurredAt
+- sessionId
+- matchId
+- captureMode
+- retentionPolicy
+additionalProperties: false
+properties:
+  eventType:
+    type: string
+    const: video.session.created
+  occurredAt:
+    type: string
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+    format: date-time
+    x-semantic-id: core.occurred_at.v1
+  sessionId:
+    type: string
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    format: uuid
+    description: UUID da MatchMediaSession criada. Imutável.
+    x-semantic-id: video.session.id.v1
+  matchId:
+    type: string
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    format: uuid
+    description: Referência à partida em matches module. Video não duplica metadados
+      de partida.
+    x-semantic-id: matches.match.id.v1
+  captureMode:
+    type: string
+    enum:
+    - PANORAMIC
+    - AUTO_FOLLOW
+    - MULTI_ANGLE
+    description: Modo de captura selecionado (DR-VID-003 — edge-first).
+    x-domain-enum-ref: video_capture_mode
+  retentionPolicy:
+    type: string
+    enum:
+    - KEEP_7_DAYS
+    - KEEP_30_DAYS
+    - ARCHIVE_S3
+    - PUBLIC_FOREVER
+    description: Política explícita de retenção (DR-VID-008). Padrão conservador =
+      keep_7_days.
+    x-domain-enum-ref: video_retention_policy
+  operatorUserId:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    description: UUID do match_operator que criou a sessão.

@@ -2,13 +2,12 @@
 # Module: matches
 # Domain rules: DR-MATCH-001, DR-MATCH-002, DR-MATCH-004
 
-address: match.scheduled
-title: Partida Agendada
 description: >
   Canal de publicação quando uma nova partida é criada e agendada.
   Toda partida possui competitionId obrigatório (DR-MATCH-001).
   homeTeamId e awayTeamId são sempre distintos (DR-MATCH-002).
   scheduledAt integra o ciclo temporal oficial da partida (DR-MATCH-004).
-messages:
-  match_scheduled_publish:
+publish:
+  operationId: match_scheduled_publish
+  message:
     $ref: "../messages/match_scheduled.yaml"

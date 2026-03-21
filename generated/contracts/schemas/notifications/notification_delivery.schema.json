@@ -1,0 +1,51 @@
+{
+  "$comment": "Sovereign domain shape for module notifications. Conservative enrichment based on MODULE_SCOPE_NOTIFICATIONS.md and MODULE_SOURCE_AUTHORITY_MATRIX may_infer(event_envelope, channel, recipient, preference, delivery_status, retries, templates_referenced).",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://hbtrack.local/schemas/notifications/notification_delivery.schema.json",
+  "title": "NotificationDelivery",
+  "description": "Notification request and delivery status shape for the notifications module.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "recipientUserId", "channelLabel", "requestedAt"],
+  "properties": {
+    "id": { "$ref": "#/definitions/uuid_v4" },
+    "recipientUserId": { "$ref": "#/definitions/uuid_v4" },
+    "notificationTemplateRef": { "type": "string", "maxLength": 160 },
+    "eventEnvelopeRef": { "type": "string", "maxLength": 160 },
+    "channelLabel": { "type": "string", "minLength": 1, "maxLength": 40 },
+    "preferenceLabel": { "type": "string", "maxLength": 40 },
+    "deliveryStatusLabel": { "type": "string", "maxLength": 40 },
+    "retryCount": { "type": "integer", "minimum": 0, "maximum": 10 },
+    "requestedAt": { "$ref": "#/definitions/timestamp_utc" },
+    "deliveredAt": {
+      "anyOf": [
+        { "$ref": "#/definitions/timestamp_utc" },
+        { "type": "null" }
+      ]
+    }
+  },
+  "definitions": {
+    "uuid_v4": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "timestamp_utc": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    }
+  },
+  "examples": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440014",
+      "recipientUserId": "550e8400-e29b-41d4-a716-446655440714",
+      "notificationTemplateRef": "template://session-reminder",
+      "eventEnvelopeRef": "event://training/session-published",
+      "channelLabel": "push",
+      "preferenceLabel": "mobile-enabled",
+      "deliveryStatusLabel": "queued",
+      "retryCount": 0,
+      "requestedAt": "2026-03-16T14:30:00Z",
+      "deliveredAt": null
+    }
+  ]
+}

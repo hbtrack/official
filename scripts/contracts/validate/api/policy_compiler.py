@@ -598,39 +598,47 @@ def _validate_compatibility_matrix(*, api_rules: dict, ctx: dict[str, Any]) -> N
     )
 
 
+def _collect_contract_tree_sources(root: pathlib.Path, relpaths: list[str]) -> list[pathlib.Path]:
+    files: list[pathlib.Path] = []
+    seen: set[pathlib.Path] = set()
+    for relpath in relpaths:
+        target = root / relpath
+        if not target.exists():
+            raise PolicyCompilerError(f"Artefato contratual esperado não encontrado: {target}")
+        if target.is_file():
+            if target not in seen:
+                files.append(target)
+                seen.add(target)
+            continue
+        for path in sorted(p for p in target.rglob("*") if p.is_file()):
+            if path in seen:
+                continue
+            files.append(path)
+            seen.add(path)
+    return files
+
+
 def _openapi_sync_sources(root: pathlib.Path, module: str, *, virtual_relpaths: set[str] | None = None) -> list[pathlib.Path]:
     path_file = root / "contracts" / "openapi" / "paths" / f"{module}.yaml"
     if not path_file.exists():
         rel = _rel(root, path_file)
         if virtual_relpaths and rel in virtual_relpaths:
-            return [path_file]
+            return [path_file] + _collect_contract_tree_sources(root, ["contracts/openapi", "contracts/schemas"])
         raise PolicyCompilerError(f"Contrato OpenAPI do módulo não encontrado: {path_file}")
-    return [path_file]
+    tree_files = _collect_contract_tree_sources(root, ["contracts/openapi", "contracts/schemas"])
+    if path_file in tree_files:
+        return tree_files
+    return [path_file] + tree_files
 
 
 def _asyncapi_event_sources(root: pathlib.Path, module: str) -> list[pathlib.Path]:
     base = root / "contracts" / "asyncapi"
     if not base.exists():
         raise PolicyCompilerError("contracts/asyncapi/ ausente (surface event não disponível).")
-    candidates: list[pathlib.Path] = []
-    for rel in (
-        pathlib.Path("channels"),
-        pathlib.Path("messages"),
-        pathlib.Path("components") / "schemas",
-        pathlib.Path("operations"),
-    ):
-        d = base / rel
-        if not d.exists():
-            continue
-        candidates.extend(sorted(d.glob(f"{module}_*.yaml")))
-        candidates.extend(sorted(d.glob(f"{module}_*.yml")))
-    if not candidates:
+    sources = _collect_contract_tree_sources(root, ["contracts/asyncapi", "contracts/schemas"])
+    if not sources:
         raise PolicyCompilerError(f"Nenhum artefato AsyncAPI encontrado para o módulo `{module}`.")
-    # também amarrar no entrypoint
-    root_file = base / "asyncapi.yaml"
-    if root_file.exists():
-        return [root_file] + candidates
-    return candidates
+    return sources
 
 
 def compile_expected(
@@ -644,8 +652,8 @@ def compile_expected(
     """
     Compila policy resolvida + artefatos derivados + manifesto (tudo determinístico).
 
-    - `surface=sync` => target=openapi (paths/<module>.yaml)
-    - `surface=event` => target=asyncapi (subset por prefixo `<module>_*.yaml`)
+    - `surface=sync` => target=openapi (bundle completo em contracts/openapi + contracts/schemas)
+    - `surface=event` => target=asyncapi (bundle completo em contracts/asyncapi + contracts/schemas)
     """
     overrides = source_overrides or {}
 
@@ -684,15 +692,18 @@ def compile_expected(
     }
     _validate_compatibility_matrix(api_rules=api_rules, ctx=ctx)
 
+    validation_sources: list[pathlib.Path]
     if surface == "sync" and target == "openapi":
         source_contracts = _openapi_sync_sources(root, module, virtual_relpaths=set(overrides.keys()))
+        validation_sources = [root / "contracts" / "openapi" / "paths" / f"{module}.yaml"]
     elif surface == "event" and target == "asyncapi":
         source_contracts = _asyncapi_event_sources(root, module)
+        validation_sources = [root / "contracts" / "asyncapi" / "asyncapi.yaml"]
     else:
         raise PolicyCompilerError(f"Combinação surface/target não suportada: surface={surface} target={target}")
 
     # Enforce: compiler NÃO gera manifesto/hash para contrato que viola o style_veto/semantic bindings.
-    for src in source_contracts:
+    for src in validation_sources:
         if src.suffix.lower() not in (".yaml", ".yml"):
             continue
         rel_src = _rel(root, src)
@@ -749,9 +760,7 @@ def compile_expected(
     generated_contract_entries: list[dict[str, str]] = []
     source_contract_entries: list[dict[str, str]] = []
 
-    if target == "openapi":
-        # espelhar a árvore canônica sob generated/contracts/openapi/paths/
-        src = source_contracts[0]
+    for src in source_contracts:
         rel_src = _rel(root, src)
         try:
             rel_under_contracts = src.relative_to(root / "contracts").as_posix()
@@ -765,21 +774,6 @@ def compile_expected(
         derived.append(ExpectedFile(dst_rel, src_bytes))
         source_contract_entries.append({"path": rel_src, "sha256": _sha256_bytes(src_bytes)})
         generated_contract_entries.append({"path": dst_rel, "sha256": _sha256_bytes(src_bytes)})
-    else:
-        for src in source_contracts:
-            rel_src = _rel(root, src)
-            try:
-                rel_under_contracts = src.relative_to(root / "contracts").as_posix()
-            except Exception as e:  # pragma: no cover
-                raise PolicyCompilerError(f"Falha ao relativizar contrato sob contracts/: {src}: {e}") from e
-            dst_rel = f"generated/contracts/{rel_under_contracts}"
-            if rel_src in overrides:
-                src_bytes = overrides[rel_src]
-            else:
-                src_bytes = _read_bytes(src)
-            derived.append(ExpectedFile(dst_rel, src_bytes))
-            source_contract_entries.append({"path": rel_src, "sha256": _sha256_bytes(src_bytes)})
-            generated_contract_entries.append({"path": dst_rel, "sha256": _sha256_bytes(src_bytes)})
 
     # hashes de inputs
     input_paths = _global_input_paths(root)

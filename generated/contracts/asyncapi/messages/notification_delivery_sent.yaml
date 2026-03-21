@@ -1,0 +1,6 @@
+name: notification_delivery_sent
+title: Notification Delivery Sent
+summary: Entrega de notificação confirmada pelo adapter do canal de destino.
+contentType: application/json
+payload:
+  $ref: ../components/schemas/notification_delivery_sent_payload.yaml

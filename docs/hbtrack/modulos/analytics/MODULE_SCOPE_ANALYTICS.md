@@ -10,11 +10,15 @@ schemas_ref: "../../../../contracts/schemas/analytics/"
 # MODULE_SCOPE_ANALYTICS.md
 
 ## Responsabilidades
-- Definir as responsabilidades do módulo `analytics`.
-- Declarar limites e boundaries com outros módulos quando houver risco de sobreposição.
+- Expor apenas métricas derivadas e sinais soberanos de `analytics`.
+- Definir query, filtros estruturados, janelas temporais, granularidade, projeções e refresh sem reescrever o dado-fonte.
+- Publicar apenas superfícies contratuais com catálogo fechado de métricas e sem DSL textual implícita.
 
 ## Fora do escopo
-- Qualquer responsabilidade fora da taxonomia canônica deve ser formalizada via ADR antes de existir.
+- Cálculo, escrita ou correção do dado-fonte bruto de módulos soberanos.
+- KPI, filtro, projeção ou dimensão ad hoc sem canonização prévia.
+- Query livre baseada em string (`filterExpression`) ou resposta com colunas abertas por métrica.
 
 ## Dependências e integrações
-- Descrever integrações relevantes quando existirem (sem inferência).
+- `training` e `wellness` fornecem parte do dado-fonte consumido pelos sinais derivados canônicos atuais.
+- `identity_access` permanece soberano de autenticação e autorização; `analytics` apenas aplica a policy por operação.

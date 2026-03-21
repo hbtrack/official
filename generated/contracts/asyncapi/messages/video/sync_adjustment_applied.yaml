@@ -1,0 +1,6 @@
+name: video_sync_adjustment_applied
+title: Video Sync Adjustment Applied
+summary: Timecode ajustado em resposta a desalinhamento com scout.
+contentType: application/json
+payload:
+  $ref: ../../components/schemas/video/sync_adjustment_applied_payload.yaml

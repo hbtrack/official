@@ -615,6 +615,12 @@ Se qualquer condição falhar, usar `components/schemas/<module>/` obrigatoriame
 
 **Regra de conflito**: se houver divergência entre shape HTTP e shape de domínio, `components/schemas/` vence para OpenAPI e `contracts/schemas/` preserva o domínio.
 
+**Regra anti-amputação**: para entidades estáveis expostas em responses, `components/schemas/<module>/` não pode virar stub. Ele deve:
+- reutilizar a shape soberana diretamente; ou
+- documentar a adaptação HTTP com `x-schema-ref-justification` e explicitar o delta normativo.
+
+Ausência de fields soberanos sem justificativa explícita = `BLOCKED_CONTRACT_CONFLICT`.
+
 ### 14A.6 Conformidade com DOMAIN_AXIOMS.json
 
 Todo domain shape deve ser válido segundo `DOMAIN_AXIOMS.json` e deve:
@@ -672,6 +678,11 @@ Um contrato está pronto apenas quando todos forem verdadeiros:
 - Arazzo valida quando presente
 - AsyncAPI valida quando presente
 - zero `TODO`, `TBD`, `A definir` ou placeholders não-resolvidos
+- `generated/contracts/**` é consumível sem fallback manual para `contracts/**`
+- zero `$ref` local quebrado em bundles gerados promovidos
+- um único modelo público de erro HTTP (`shared/problem.yaml`)
+- zero `bearerAuth` e zero `security: - {}` em contratos promovidos
+- endpoints de query analítica não usam DSL textual solta nem rows abertas sem envelope soberano
 - referência explícita a `docs/hbtrack/modulos/<module>/DOMAIN_RULES_<MODULE>.md`
 - referência explícita a `docs/hbtrack/modulos/<module>/INVARIANTS_<MODULE>.md`
 - referência explícita a `docs/hbtrack/modulos/<module>/TEST_MATRIX_<MODULE>.md`
@@ -684,13 +695,19 @@ Um contrato está pronto apenas quando todos forem verdadeiros:
 Além da lista base:
 - `TOOLING_CONFIG_GATE`, `OPENAPI_ROOT_STRUCTURE_GATE`, `OPENAPI_POLICY_RULESET_GATE` e `CONTRACT_BREAKING_CHANGE_GATE` não podem falhar;
 - root OpenAPI deve estar sincronizado com os módulos;
+- operations protegidas usam somente `HTTPBearer`;
+- operations protegidas documentam `500` com `application/problem+json`;
+- mutações contratuais documentam `409` quando não forem auth login/refresh/logout;
+- operações com query analítica usam request/response soberanos com filtros estruturados e `additionalProperties: false` nas linhas de resultado;
+- responses de entidades estáveis não amputam a shape soberana sem justificativa explícita;
 - baseline e waiver machine-readable devem existir quando houver breaking change.
 
 ### 16.2 DoD por superfície — AsyncAPI
 
 - channel/message/schema devem existir em path canônico;
 - `ASYNCAPI_VALIDATION_GATE` deve passar;
-- evento não pode contradizer invariantes do módulo.
+- evento não pode contradizer invariantes do módulo;
+- bundle gerado mantém root e filesystem em sincronia, sem canais ausentes.
 
 ### 16.3 DoD por superfície — Arazzo
 

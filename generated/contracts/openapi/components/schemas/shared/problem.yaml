@@ -1,0 +1,25 @@
+type: object
+title: Problem
+description: Problem details for error responses (RFC 7807 / DOMAIN_AXIOMS error_axioms)
+properties:
+  type:
+    type: string
+    minLength: 1
+  title:
+    type: string
+    minLength: 1
+  status:
+    type: integer
+    minimum: 100
+    maximum: 599
+  detail:
+    type: string
+  traceId:
+    type: string
+    pattern: ^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$
+required:
+- type
+- title
+- status
+- traceId
+additionalProperties: false

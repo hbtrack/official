@@ -19,3 +19,5 @@ Definir a matriz mínima de testes e evidências que sustentam os contratos do m
 | TM-002 | `contracts/schemas/analytics/` | Validação JSON Schema | Sim | `_reports/contract_gates/latest.json` |
 | TM-003 | `DOMAIN_RULES_ANALYTICS.md` | Revisão normativa + testes de regra (quando existir) | Condicional | `_reports/contract_gates/latest.json` |
 | TM-004 | `INVARIANTS_ANALYTICS.md` | Teste de invariantes (quando existir) | Condicional | `_reports/contract_gates/latest.json` |
+| TM-005 | `ERRORS_ANALYTICS.md` | Revisão da matriz mínima de exceções por operação crítica | Sim | `_reports/contract_gates/latest.json` |
+| TM-006 | `analytics_query_request.schema.json` + `analytics_query_response.schema.json` | Validação de query estruturada sem DSL livre nem row shape aberto | Sim | `_reports/contract_gates/latest.json` |

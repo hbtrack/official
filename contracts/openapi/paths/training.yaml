@@ -102,9 +102,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA: definir security scheme quando identity_access estiver contratado
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA: definir security scheme quando identity_access estiver contratado
   post:
     tags: [training]
     summary: Create training session
@@ -256,9 +261,20 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA: definir security scheme quando identity_access estiver contratado
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA: definir security scheme quando identity_access estiver contratado
 /training-sessions/{id}:
   get:
     tags: [training]
@@ -303,8 +319,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
 
 # ---------------------------------------------------------------------------
 # SESSION BLOCKS — TRAIN-DEC-049 | DEFER-TRAIN-P2-006 resolved 2026-03-16
@@ -312,7 +334,6 @@
 # TRAIN-DEC-047: referencia exercise_id + exercise_version_id; nunca embute Exercise.
 # ADR-018 (HYBRID): CRUD enquanto sessão em DRAFT/SCHEDULED/PUBLISHED.
 # ---------------------------------------------------------------------------
-
 /training-sessions/{id}/blocks:
   get:
     tags: [training]
@@ -360,9 +381,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
   post:
     tags: [training]
     summary: Add block to session
@@ -482,9 +508,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
 /training-sessions/{id}/blocks/{blockId}:
   get:
     tags: [training]
@@ -529,9 +560,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
   patch:
     tags: [training]
     summary: Update session block
@@ -635,9 +671,20 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
   delete:
     tags: [training]
     summary: Remove block from session
@@ -685,9 +732,20 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
 /training-sessions/{id}/blocks/reorder:
   post:
     tags: [training]
@@ -757,9 +815,20 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
   patch:
     tags: [training]
     summary: Update training session
@@ -892,9 +961,20 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
   delete:
     tags: [training]
     summary: Delete training session
@@ -933,9 +1013,20 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
 /training-sessions/{id}/attendance:
   get:
     tags: [training]
@@ -1032,9 +1123,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
   post:
     tags: [training]
     summary: Record athlete attendance (presence_registered append-only fact)
@@ -1155,9 +1251,20 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
 /training-sessions/{id}/wellness-pre:
   post:
     tags: [training]
@@ -1249,9 +1356,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
 /training-sessions/{id}/wellness-pre/{athleteId}:
   get:
     tags: [training]
@@ -1303,9 +1415,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
   patch:
     tags: [training]
     summary: Update pre-training wellness
@@ -1377,9 +1494,20 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
 /training-sessions/{id}/wellness-post:
   post:
     tags: [training]
@@ -1480,9 +1608,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
 /training-sessions/{id}/wellness-post/{athleteId}:
   get:
     tags: [training]
@@ -1532,9 +1665,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
   patch:
     tags: [training]
     summary: Update post-training wellness
@@ -1610,9 +1748,20 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
 /mesocycles:
   get:
     tags: [training]
@@ -1680,9 +1829,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
   post:
     tags: [training]
     summary: Create mesocycle
@@ -1782,9 +1936,20 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
 /mesocycles/{id}:
   get:
     tags: [training]
@@ -1823,9 +1988,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
   patch:
     tags: [training]
     summary: Update mesocycle
@@ -1904,9 +2074,20 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
 /microcycles:
   get:
     tags: [training]
@@ -1974,9 +2155,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
   post:
     tags: [training]
     summary: Create microcycle
@@ -2087,9 +2273,20 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
 /microcycles/{id}:
   get:
     tags: [training]
@@ -2128,9 +2325,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
   patch:
     tags: [training]
     summary: Update microcycle
@@ -2212,14 +2414,25 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Session Lifecycle Transitions (TRAIN-DEC-029 HYBRID append-only facts)
 # ADR-017 FSM: DRAFT/SCHEDULED/PUBLISHED → IN_PROGRESS → COMPLETED
 # ─────────────────────────────────────────────────────────────────────────────
-
 /training-sessions/{id}/start:
   post:
     tags:
@@ -2291,9 +2504,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
 /training-sessions/{id}/complete:
   post:
     tags:
@@ -2388,8 +2606,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
 
 # ---------------------------------------------------------------------------
 # EXECUTION RECORDS — TRAIN-DEC-007, TRAIN-DEC-008, TRAIN-DEC-009
@@ -2467,6 +2691,12 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
       - HTTPBearer: []
   post:
@@ -2543,9 +2773,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
       - HTTPBearer: []
-
 /training-sessions/{id}/execution-records/{recordId}:
   get:
     tags:
@@ -2579,6 +2814,12 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
       - HTTPBearer: []
 
@@ -2643,6 +2884,12 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
       - HTTPBearer: []
   post:
@@ -2692,6 +2939,18 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
       - HTTPBearer: []
 
@@ -2739,6 +2998,12 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
       - HTTPBearer: []
   post:
@@ -2788,6 +3053,18 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
       - HTTPBearer: []
 
@@ -2852,9 +3129,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
       - HTTPBearer: []
-
 /training-sessions/{id}/cancel:
   post:
     tags:
@@ -2928,9 +3210,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
 /training-sessions/{id}/publish:
   post:
     tags:
@@ -2998,9 +3285,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
 /training-sessions/{id}/unpublish:
   post:
     tags:
@@ -3071,9 +3363,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
 /training-sessions/{id}/archive:
   post:
     tags:
@@ -3140,8 +3437,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
 
 # ---------------------------------------------------------------------------
 # RECOMMENDATIONS — ADR-006 (Coach-in-Loop), TRAIN-DEC-025
@@ -3206,9 +3509,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
       - HTTPBearer: []
-
 /training-sessions/{id}/recommendations/{recommendationId}/accept:
   post:
     tags:
@@ -3282,9 +3590,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA — G-01
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA — G-01
 /training-sessions/{id}/recommendations/{recommendationId}/dismiss:
   post:
     tags:
@@ -3361,8 +3674,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA — G-01
+      - HTTPBearer: [] # OWASP API5:2023 BFLA — G-01
 
 # ---------------------------------------------------------------------------
 # ATHLETE INELIGIBILITY — TRAIN-DEC-024, RC-14 (boundary: medical is sovereign)
@@ -3431,8 +3750,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA — G-02
+      - HTTPBearer: [] # OWASP API5:2023 BFLA — G-02
   get:
     tags:
       - Athlete Check-in
@@ -3479,6 +3804,12 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
       - HTTPBearer: []
 
@@ -3561,9 +3892,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA — G-03
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA — G-03
 /training-sessions/{id}/attention-queue/{itemId}/dismiss:
   post:
     tags:
@@ -3639,9 +3975,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA — G-03
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA — G-03
 /training-sessions/{id}/attention-queue/{itemId}/escalate:
   post:
     tags:
@@ -3726,8 +4067,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA — G-03
+      - HTTPBearer: [] # OWASP API5:2023 BFLA — G-03
 
 # ---------------------------------------------------------------------------
 # FEEDBACK THREAD CLOSE — TRAIN-DEC-010, TRAIN-DEC-015
@@ -3809,8 +4156,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA — G-04
+      - HTTPBearer: [] # OWASP API5:2023 BFLA — G-04
 
 # ---------------------------------------------------------------------------
 # LOAD CHART — D-UI-SP-04, TRAIN-DEC-025 (coach review)
@@ -3889,6 +4242,12 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
       - HTTPBearer: []
 
@@ -3899,7 +4258,6 @@
 # OWASP API1:2023 (BOLA): athlete can only access own conversation.
 # OWASP API5:2023 (BFLA): coach/staff may read with explicit permission.
 # ---------------------------------------------------------------------------
-
 /hb-pro-coach/conversations/{conversationId}/messages:
   get:
     tags: [training]
@@ -3982,9 +4340,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
       - HTTPBearer: []
-
 /hb-pro-coach/training-suggestions:
   post:
     tags: [training]
@@ -4079,5 +4442,11 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
       - HTTPBearer: []

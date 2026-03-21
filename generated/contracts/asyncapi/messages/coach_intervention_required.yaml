@@ -1,0 +1,6 @@
+name: coach_intervention_required
+title: Coach Intervention Required
+summary: Intervenção coach necessária em tempo real ou retrospectivo.
+contentType: application/json
+payload:
+  $ref: ../components/schemas/coach_intervention_required_payload.yaml

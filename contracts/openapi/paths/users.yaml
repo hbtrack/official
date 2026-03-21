@@ -91,9 +91,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA: definir security scheme quando identity_access estiver contratado
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA: definir security scheme quando identity_access estiver contratado
   post:
     tags: [users]
     summary: Create user profile
@@ -207,9 +212,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA: admin/coordinator role required
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA: admin/coordinator role required
 /users/{userId}:
   parameters:
     - name: userId
@@ -257,9 +267,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA: owner or coordinator/admin
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA: owner or coordinator/admin
   patch:
     tags: [users]
     summary: Update user profile
@@ -365,5 +380,17 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA: owner or admin/coordinator
+      - HTTPBearer: [] # OWASP API5:2023 BFLA: owner or admin/coordinator

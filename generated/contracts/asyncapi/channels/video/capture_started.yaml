@@ -1,0 +1,15 @@
+description: >
+  Publicado quando uma MatchMediaSession transiciona de DRAFT → CAPTURING.
+
+  Emitido pelo módulo video após iniciar captura no edge node. Indica que
+  timecode está sincronizado e buffer está pronto. Consumidores (scout sync,
+  analytics) podem começar a coreografar timecodes.
+
+  DR-VID-001: timecode lógico único obrigatório.
+  DR-VID-003: ingestão edge-first.
+  INV-VID-001: timecode é sempre ISO 8601 + offset lógico.
+
+publish:
+  operationId: video_capture_started_publish
+  message:
+    $ref: ../../messages/video/capture_started.yaml

@@ -1,0 +1,19 @@
+# AsyncAPI Message: scout_event_created
+# Module: scout
+# Domain rules: DR-SCOUT-001, DR-SCOUT-002, DR-SCOUT-003
+# Invariants: INV-SCOUT-001, INV-SCOUT-002
+# Decisions: DEC-SCOUT-003=C
+
+name: ScoutEventCreatedMessage
+title: Evento de Scout Criado
+summary: Publicado quando uma nova observação tática é registrada (INV-SCOUT-001).
+description: >
+  Evento emitido pelo módulo scout após registro bem-sucedido via POST /scout/events.
+  Consumidores (analytics, notifications) usam este evento para reação em tempo real.
+
+  BOUNDARY:
+  - payload nunca contém dados de autenticação ou dados clínicos
+  - eventLabel deve pertencer à CANONICAL_EVENT_TAXONOMY_SCOUT (DR-SCOUT-002)
+contentType: application/json
+payload:
+  $ref: "../components/schemas/scout_event_created_payload.yaml"
