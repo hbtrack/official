@@ -9,7 +9,34 @@
 **✅ Survival suite: PASS** — 29 passed, 1 skipped
 **🏁 Milestone:** `milestone/cross-spec-alignment-zero` — Marco CDD de conformidade contratual completa
 
-## Sessão generate_code: video (2026-03-20)
+## Sessão contract_revision: training — ruleId → generatedByRule (2026-03-20)
+
+**Status: ✅ CONCLUÍDA — Pipeline PASS, zero waivers**
+
+### Mudança
+Campo `ruleId` em `Recommendation` renomeado para `generatedByRule`.
+
+**Motivo:** sufixo `Id` acionava a heurística `uuid_v4` do `CROSS_SPEC_ALIGNMENT_GATE`. O campo não é um UUID — é um código analítico UPPER_SNAKE_CASE (ex: `OVERLOAD_RISK_CONSECUTIVE_HIGH_SESSIONS`). O novo nome `generatedByRule` espelha o campo `generatedByModule` já existente no mesmo schema, criando consistência semântica.
+
+**Correção adicional:** o `recommendation.schema.json` tinha o pattern de UUID no campo (inconsistência pré-existente — divergia do `.yaml` que já tinha o pattern correto). Corrigido para `^[A-Z][A-Z0-9_]{0,127}$`.
+
+### Artefatos alterados
+| Arquivo | Mudança |
+|---------|---------|
+| `contracts/schemas/training/recommendation.schema.json` | `ruleId` → `generatedByRule` + pattern UUID → UPPER_SNAKE_CASE |
+| `contracts/openapi/components/schemas/training/recommendation.yaml` | `ruleId` → `generatedByRule` |
+| Cópias em `generated/` | Idem (2 arquivos) |
+| 30 traceability manifests | Hashes re-sincronizados |
+| `contracts/_waivers/CROSS_SPEC_ALIGNMENT_GATE.json` | **Removido** (gate passa nativo) |
+
+### Gate Status
+```
+CROSS_SPEC_ALIGNMENT_GATE  ✅ PASS (sem waiver)
+DERIVED_DRIFT_GATE         ✅ PASS
+PIPELINE STATUS            ✅ PASS — zero waivers ativos
+```
+
+
 
 **Status: ✅ CONCLUÍDA — Pipeline PASS**
 

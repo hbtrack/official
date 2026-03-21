@@ -108,7 +108,7 @@ traceability_manifest:
   - path: generated/contracts/openapi/components/schemas/training/microcycle.yaml
     sha256: 1a7cdddec2deeaef13ac48240b04548d2f686b78d48ff9ab781ec9eae9cd5629
   - path: generated/contracts/openapi/components/schemas/training/recommendation.yaml
-    sha256: 255c2434de9f8cd54d2e3a2148a207e9815a66560806d05096e086c4bff5fced
+    sha256: a201ff94c73a331f24b5a26478b8bfdf56a6bec0904229d5aca51fe80accd5d7
   - path: generated/contracts/openapi/components/schemas/training/session_block.yaml
     sha256: aed3ff0b96fd7c4bcdcbf4378d59f34723a180a70d472ef316b5675b13a7c80b
   - path: generated/contracts/openapi/components/schemas/training/session_objective.yaml
@@ -292,7 +292,7 @@ traceability_manifest:
   - path: generated/contracts/schemas/training/load_chart.schema.json
     sha256: f4cc9ba9ab5af9f134b5bff599b9c7d9f382cf9a271d93eca5ab6b04538bc253
   - path: generated/contracts/schemas/training/recommendation.schema.json
-    sha256: 9c12ad4a9975d11390e9e6409d9bdca3f9b849a31a03f13a35423fd6b0fa85b5
+    sha256: aca13a57de47fab66dff8ba9e3b562bfc91495cdce61e35df117d5a70a1ef818
   - path: generated/contracts/schemas/training/session_block.schema.json
     sha256: 928c44b349004c5d770975b7eb4b02bf7852180b5105aa0b5cb1851241bd396d
   - path: generated/contracts/schemas/training/session_objective.schema.json
@@ -319,7 +319,7 @@ traceability_manifest:
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: generated/contracts/schemas/wellness/wellness_entry.schema.json
     sha256: e6b69221a1e62764a544a37a53dfa1d211df3b89799df536f9b85789b5b59c97
-  generated_tree_sha256: 3d59f7e38a00c0db7dec568d1ba4e559de4daba3ecdf29df64a345c90994960e
+  generated_tree_sha256: 3c0b8cd756e6be10c819ba215e9a46296bf1ed861c284a636d3a66f50a003796
   policy_path: generated/resolved_policy/reports.sync.resolved.yaml
   policy_sha256: c527da97ebc1c8afbca1d042d08ce2fcc152302d594d8ce8a96a90605228fa76
   source_contracts:
@@ -428,7 +428,7 @@ traceability_manifest:
   - path: contracts/openapi/components/schemas/training/microcycle.yaml
     sha256: 1a7cdddec2deeaef13ac48240b04548d2f686b78d48ff9ab781ec9eae9cd5629
   - path: contracts/openapi/components/schemas/training/recommendation.yaml
-    sha256: 255c2434de9f8cd54d2e3a2148a207e9815a66560806d05096e086c4bff5fced
+    sha256: a201ff94c73a331f24b5a26478b8bfdf56a6bec0904229d5aca51fe80accd5d7
   - path: contracts/openapi/components/schemas/training/session_block.yaml
     sha256: aed3ff0b96fd7c4bcdcbf4378d59f34723a180a70d472ef316b5675b13a7c80b
   - path: contracts/openapi/components/schemas/training/session_objective.yaml
@@ -612,7 +612,7 @@ traceability_manifest:
   - path: contracts/schemas/training/load_chart.schema.json
     sha256: f4cc9ba9ab5af9f134b5bff599b9c7d9f382cf9a271d93eca5ab6b04538bc253
   - path: contracts/schemas/training/recommendation.schema.json
-    sha256: 9c12ad4a9975d11390e9e6409d9bdca3f9b849a31a03f13a35423fd6b0fa85b5
+    sha256: aca13a57de47fab66dff8ba9e3b562bfc91495cdce61e35df117d5a70a1ef818
   - path: contracts/schemas/training/session_block.schema.json
     sha256: 928c44b349004c5d770975b7eb4b02bf7852180b5105aa0b5cb1851241bd396d
   - path: contracts/schemas/training/session_objective.schema.json
@@ -650,4 +650,4 @@ traceability_manifest:
     sha256: efb1ba7de801a93cefef6fd2e58969cb683fa64528f78b0c508815bfd49fa11f
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: d7495e17090c41af465fbf064d0bff3d084c72ba0e57f1e0d78aa3b8f0ae71eb
-  source_tree_sha256: 310c8bda5e409987244484001634dafaa32c84ebd84b2efb85f5a24c0b9ef6e1
+  source_tree_sha256: 9dd226c42d3bcf3f4b061e66ba4a9d62bafc0be663009e9c0334195e61f80de2

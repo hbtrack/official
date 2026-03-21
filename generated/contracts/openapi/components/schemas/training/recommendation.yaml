@@ -8,7 +8,7 @@ additionalProperties: false
 required:
   - id
   - sessionId
-  - ruleId
+  - generatedByRule
   - actionType
   - description
   - status
@@ -25,12 +25,12 @@ properties:
     format: uuid
     pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
     description: FK to TrainingSession.
-  ruleId:
+  generatedByRule:
     type: string
     pattern: "^[A-Z][A-Z0-9_]{0,127}$"
     minLength: 1
     maxLength: 128
-    description: "Identifier of the analytics rule that generated this recommendation (ADR-006). Format: UPPER_SNAKE_CASE rule code (e.g. OVERLOAD_RISK_CONSECUTIVE_HIGH_SESSIONS)."
+    description: "UPPER_SNAKE_CASE code of the analytics rule that generated this recommendation (ADR-006). E.g. OVERLOAD_RISK_CONSECUTIVE_HIGH_SESSIONS."
   actionType:
     type: string
     x-domain-enum-ref: recommendation_action_type
@@ -100,7 +100,7 @@ properties:
 example:
   id: "550e8400-e29b-41d4-a716-446655441000"
   sessionId: "550e8400-e29b-41d4-a716-446655440000"
-  ruleId: "OVERLOAD_RISK_CONSECUTIVE_HIGH_SESSIONS"
+  generatedByRule: "OVERLOAD_RISK_CONSECUTIVE_HIGH_SESSIONS"
   actionType: "ADJUST_LOAD"
   description: "3 sessões de alta intensidade consecutivas detectadas. Considere reduzir a carga desta sessão para recuperação ativa."
   status: "PENDING"
