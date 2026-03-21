@@ -467,4 +467,3 @@ features:
     status: implemented
     contracts:
       - contracts/openapi/paths/teams.yaml
-
