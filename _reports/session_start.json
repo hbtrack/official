@@ -1,11 +1,11 @@
 {
   "session_id": "4d672789-d33f-42d6-be4e-41e30e822ba0",
-  "session_timestamp": "2026-03-21T03:29:10.361296+00:00",
+  "session_timestamp": "2026-03-21T03:46:36.077513+00:00",
   "branch": "hb-track-contratos-driven",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "contract_execution",
   "task_type": "generate_code",
-  "module": "users",
+  "module": "seasons",
   "stage": 2,
   "write_scope": "contracts",
   "worker_id": "code_generator",
@@ -2325,9 +2325,65 @@
       "sha256": "ef1854bd0c05d2aba931777e8299ad66f64e163dc37911633d7144f66900a94f",
       "created_at": "2026-03-21T03:35:47.543720+00:00",
       "gate_exit_code": 0
+    },
+    {
+      "path": "src/seasons/domain/entities.py",
+      "sha256": "ad53a5dddc23ecbcd360b3d3ee07d9c317021220044ef11cf3822648fd12b2f5",
+      "created_at": "2026-03-21T03:53:01.914798+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T03:53:52.673701+00:00"
+    },
+    {
+      "path": "src/seasons/domain/rules.py",
+      "sha256": "f9841e7a37857381520f510a5e88394fe3df5a752f6d0241f3443ed4bab939e6",
+      "created_at": "2026-03-21T03:53:12.522399+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T03:53:58.219604+00:00"
+    },
+    {
+      "path": "src/seasons/application/use_cases.py",
+      "sha256": "b9fe368645d6261aefdc3d011abcac15cffb9397a341a1a084121cb1da79ccf0",
+      "created_at": "2026-03-21T03:53:17.028572+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T03:54:02.817333+00:00"
+    },
+    {
+      "path": "src/seasons/infrastructure/models.py",
+      "sha256": "c8a8882356dcb494d82ca91c4c628c8d7abe4bd7f322374928d747e93f8b1c95",
+      "created_at": "2026-03-21T03:53:21.619057+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T03:54:07.851973+00:00"
+    },
+    {
+      "path": "src/seasons/infrastructure/repository.py",
+      "sha256": "03cc8d92ca7d7d63f77dfa8aa7d106b19f6015f662d7e31f3511132cf6ad8905",
+      "created_at": "2026-03-21T03:53:27.514400+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T03:54:12.965985+00:00"
+    },
+    {
+      "path": "src/seasons/schemas.py",
+      "sha256": "f48cf53fb8c36e5d6a6ac3cca95075bf2428f7c4cf8d2947af910ebcabfd0f3e",
+      "created_at": "2026-03-21T03:53:32.422899+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T03:54:17.707962+00:00"
+    },
+    {
+      "path": "src/seasons/api.py",
+      "sha256": "5eec1b7bc8c2f30fa0ef45b2fc5cd6a7aaf9415574da281f06b63aaf999a6d79",
+      "created_at": "2026-03-21T03:53:37.269466+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T03:54:22.198563+00:00"
+    },
+    {
+      "path": "src/seasons/tests/unit/test_seasons_domain.py",
+      "sha256": "027922a01026ffe43c1ccd759e38044f4882be000543ca456e32dc139668372b",
+      "created_at": "2026-03-21T03:53:42.168293+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T03:54:27.337631+00:00"
     }
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-03-21T02:03:06.641541+00:00"
+  "hook_validated_at": "2026-03-21T03:38:07.815834+00:00"
 }

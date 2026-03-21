@@ -284,3 +284,79 @@ features:
     status: implemented
     contracts:
       - contracts/openapi/paths/users.yaml
+
+  - id: FT-018
+    name: "Listar Temporadas"
+    module: seasons
+    description: >
+      Lista paginada de temporadas com filtro opcional por statusLabel.
+      Dados públicos do contexto esportivo — todos os roles podem listar (PERM-SEA-003).
+      OWASP API4:2023: pageSize máximo 100.
+    endpoints:
+      - GET /seasons
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/seasons.yaml
+
+  - id: FT-019
+    name: "Criar Temporada"
+    module: seasons
+    description: >
+      Cria nova temporada com status inicial DRAFT.
+      phaseLabels devem ser explícitos — não deduzidos de resultados (DR-SEAS-002).
+      startDate <= endDate (INV-SEAS-002). Restrito a admin e coordinator.
+    endpoints:
+      - POST /seasons
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/seasons.yaml
+
+  - id: FT-020
+    name: "Obter Temporada"
+    module: seasons
+    description: >
+      Retorna dados completos da temporada incluindo phaseLabels, teamIds e competitionIds.
+      Dados públicos — todos os roles podem consultar (PERM-SEA-003).
+    endpoints:
+      - GET /seasons/{seasonId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/seasons.yaml
+
+  - id: FT-021
+    name: "Atualizar Temporada"
+    module: seasons
+    description: >
+      Atualização parcial dos dados da temporada. Transição de status DRAFT→ACTIVE→ARCHIVED.
+      Patches em temporadas ARCHIVED somente por admin (PERM-SEA-002).
+      patchSeason: admin e coordinator.
+    endpoints:
+      - PATCH /seasons/{seasonId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/seasons.yaml
+
+  - id: FT-022
+    name: "Associar Equipe à Temporada"
+    module: seasons
+    description: >
+      Registra vínculo explícito entre equipe e temporada (DR-SEAS-003).
+      Duplicatas rejeitadas (INV-SEAS-003). Restrito a admin e coordinator.
+    endpoints:
+      - POST /seasons/{seasonId}/teams/{teamId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/seasons.yaml
+
+  - id: FT-023
+    name: "Remover Equipe da Temporada"
+    module: seasons
+    description: >
+      Remove vínculo explícito entre equipe e temporada.
+      Temporadas ACTIVE: somente admin pode remover (PERM-SEA-001).
+      Restrito a admin e coordinator.
+    endpoints:
+      - DELETE /seasons/{seasonId}/teams/{teamId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/seasons.yaml
