@@ -360,3 +360,111 @@ features:
     status: implemented
     contracts:
       - contracts/openapi/paths/seasons.yaml
+
+  - id: FT-024
+    name: "Listar Equipes"
+    module: teams
+    description: >
+      Lista equipes com filtros (organizationId, seasonId, categoryLabel, statusLabel).
+      BOLA: coach e athlete veem apenas equipes às quais estão vinculados (PERM-TEAM-003).
+      Paginação page/pageSize (máx. 100).
+    endpoints:
+      - GET /teams
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/teams.yaml
+
+  - id: FT-025
+    name: "Criar Equipe"
+    module: teams
+    description: >
+      Cria nova equipe com status=DRAFT.
+      Restrito a admin e coordinator (BFLA, DR-TEAM-001).
+      athleteIds e staffUserIds deduplicados (INV-TEAM-002).
+    endpoints:
+      - POST /teams
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/teams.yaml
+
+  - id: FT-026
+    name: "Obter Equipe"
+    module: teams
+    description: >
+      Retorna equipe por ID.
+      BOLA: coach e athlete veem apenas equipes vinculadas (PERM-TEAM-001/003).
+    endpoints:
+      - GET /teams/{teamId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/teams.yaml
+
+  - id: FT-027
+    name: "Editar Equipe"
+    module: teams
+    description: >
+      Atualização parcial de equipe.
+      PERM-TEAM-001: coach edita apenas o próprio time.
+      Transição de status: DRAFT→ACTIVE→ARCHIVED (sem retorno).
+    endpoints:
+      - PATCH /teams/{teamId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/teams.yaml
+
+  - id: FT-028
+    name: "Adicionar Atleta ao Elenco"
+    module: teams
+    description: >
+      Vincula atleta à equipe (DR-TEAM-002).
+      Idempotente: sem erro se já estiver vinculado (INV-TEAM-002).
+      PERM-TEAM-001: coach opera apenas no próprio time.
+      Retorna 200 com Team body.
+    endpoints:
+      - POST /teams/{teamId}/athletes/{athleteUserId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/teams.yaml
+
+  - id: FT-029
+    name: "Remover Atleta do Elenco"
+    module: teams
+    description: >
+      Desvincula atleta da equipe.
+      Idempotente: sem erro se já não estiver vinculado.
+      PERM-TEAM-001: coach opera apenas no próprio time.
+      Retorna 200 com Team body.
+    endpoints:
+      - DELETE /teams/{teamId}/athletes/{athleteUserId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/teams.yaml
+
+  - id: FT-030
+    name: "Adicionar Membro da Comissão"
+    module: teams
+    description: >
+      Vincula membro da comissão esportiva à equipe (DR-TEAM-002).
+      Idempotente: sem erro se já estiver vinculado.
+      Restrito a admin e coordinator (BFLA).
+      Retorna 200 com Team body.
+    endpoints:
+      - POST /teams/{teamId}/staff/{staffUserId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/teams.yaml
+
+  - id: FT-031
+    name: "Remover Membro da Comissão"
+    module: teams
+    description: >
+      Desvincula membro da comissão esportiva da equipe.
+      Idempotente: sem erro se já não estiver vinculado.
+      Restrito a admin e coordinator (BFLA).
+      Retorna 200 com Team body.
+    endpoints:
+      - DELETE /teams/{teamId}/staff/{staffUserId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/teams.yaml
+

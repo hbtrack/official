@@ -1,11 +1,11 @@
 {
   "session_id": "4d672789-d33f-42d6-be4e-41e30e822ba0",
-  "session_timestamp": "2026-03-21T03:46:36.077513+00:00",
+  "session_timestamp": "2026-03-21T04:22:18.413099+00:00",
   "branch": "hb-track-contratos-driven",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "contract_execution",
   "task_type": "generate_code",
-  "module": "seasons",
+  "module": "teams",
   "stage": 2,
   "write_scope": "contracts",
   "worker_id": "code_generator",
@@ -2381,9 +2381,135 @@
       "created_at": "2026-03-21T03:53:42.168293+00:00",
       "gate_exit_code": 0,
       "validated_at": "2026-03-21T03:54:27.337631+00:00"
+    },
+    {
+      "path": "src/teams/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "created_at": "2026-03-21T04:30:10.250219+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T04:33:13.881249+00:00"
+    },
+    {
+      "path": "src/teams/apps.py",
+      "sha256": "cb35a4f6ba9cd736d581f78b3150021224375bee1b34025002b75cb173ae463b",
+      "created_at": "2026-03-21T04:30:22.583544+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T04:33:18.232863+00:00"
+    },
+    {
+      "path": "src/teams/domain/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "created_at": "2026-03-21T04:30:27.427337+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T04:33:22.370967+00:00"
+    },
+    {
+      "path": "src/teams/domain/entities.py",
+      "sha256": "9200599d07f2210df85b73c5a0e31d0a1b7e440f899db6e5d3069e6b165d8c3b",
+      "created_at": "2026-03-21T04:30:31.715663+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T04:33:02.236578+00:00"
+    },
+    {
+      "path": "src/teams/domain/rules.py",
+      "sha256": "75a727cffbd361f5e390b46139f1d510c64090c9782eadf31429db15f5f5c1de",
+      "created_at": "2026-03-21T04:30:35.894611+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T04:33:26.528850+00:00"
+    },
+    {
+      "path": "src/teams/application/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "created_at": "2026-03-21T04:30:40.337903+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T04:33:30.729454+00:00"
+    },
+    {
+      "path": "src/teams/application/use_cases.py",
+      "sha256": "1750c2e3e5ad10b74188e243b02903d2583c07dac71e81eda78a5dab4fc01af1",
+      "created_at": "2026-03-21T04:30:44.648296+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T04:33:35.053887+00:00"
+    },
+    {
+      "path": "src/teams/infrastructure/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "created_at": "2026-03-21T04:30:48.923996+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T04:33:39.307463+00:00"
+    },
+    {
+      "path": "src/teams/infrastructure/models.py",
+      "sha256": "8f87094b1db26c12752eaa12148eb99bf75b709aa09fcb3762a0dfb52232ac45",
+      "created_at": "2026-03-21T04:30:53.118573+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T04:33:43.496194+00:00"
+    },
+    {
+      "path": "src/teams/infrastructure/repository.py",
+      "sha256": "010a5faf4544c4c1a41989f500fccf8e18f990d9ea511a8354c2a81b84df6b01",
+      "created_at": "2026-03-21T04:30:57.323646+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T04:33:47.869447+00:00"
+    },
+    {
+      "path": "src/teams/schemas.py",
+      "sha256": "766276beb642eea3746af5957e48afe76e220453b4c3751884ef5263cfe18a37",
+      "created_at": "2026-03-21T04:31:01.603050+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T04:33:52.202805+00:00"
+    },
+    {
+      "path": "src/teams/api.py",
+      "sha256": "9319829cee627f8b310ee9acefce75446b8a2700c1e751ff7762afa40c0138d8",
+      "created_at": "2026-03-21T04:31:05.828976+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T04:33:56.411401+00:00"
+    },
+    {
+      "path": "src/teams/migrations/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "created_at": "2026-03-21T04:31:10.103257+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T04:34:00.788511+00:00"
+    },
+    {
+      "path": "src/teams/tests/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "created_at": "2026-03-21T04:31:14.327475+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T04:34:05.028688+00:00"
+    },
+    {
+      "path": "src/teams/tests/unit/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "created_at": "2026-03-21T04:31:18.634240+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T04:34:09.214378+00:00"
+    },
+    {
+      "path": "src/teams/tests/unit/test_teams_domain.py",
+      "sha256": "4910361920dbc034ff62e6a15d70764b4f5f2756841e9d7118bee0cb014db6f1",
+      "created_at": "2026-03-21T04:31:22.839394+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T04:34:13.479342+00:00"
+    },
+    {
+      "path": "src/teams/tests/integration/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "created_at": "2026-03-21T04:31:27.207926+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T04:34:17.684887+00:00"
+    },
+    {
+      "path": "src/teams/tests/integration/test_teams_api.py",
+      "sha256": "fab912a3ce73d537cb7bc7e9ee76d5cd8caf3d5a6344e15e35bc66f6040487d6",
+      "created_at": "2026-03-21T04:31:31.478821+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-21T04:34:21.966055+00:00"
     }
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-03-21T03:38:07.815834+00:00"
+  "hook_validated_at": "2026-03-21T03:58:51.853929+00:00"
 }
