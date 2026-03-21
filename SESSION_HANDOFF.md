@@ -776,3 +776,56 @@ PIPELINE STATUS              ✅ PASS
 2. Integrar JWT real (Rs256) no `JwtPort` de `infrastructure/repository.py`
 3. Executar testes de integração quando PostgreSQL disponível
 4. **Próximo módulo `generate_code`:** ver `docs/_canon/MODULE_REGISTRY.yaml` — módulos em `implementation_ready`
+
+---
+
+## Sessão generate_code: users — Módulo de Perfis (2026-03-21)
+
+**Status: ✅ CONCLUÍDA — 18 arquivos Python, 41 testes unitários PASS, pipeline PASS**
+
+### O que foi executado
+- PRÉ-0: `hb verify --task-type pre_contract_boot --module users` → PASS
+- FASE 0: `hb verify --task-type generate_code --module users` → PASS (adversarial=PASS)
+- FASE 1: `hb check --module users` → PASS
+- GC1: Contexto carregado (4 ops, schema UserProfile 12 campos, DR-USR-001..005, INV-USR-001..004, PERMISSIONS tabela completa)
+- GC2-GC6: Código gerado em 4 camadas
+- 18 arquivos Python criados em `src/users/`
+- `hb artifact` executado para 8 artefatos primários (exitcode 0)
+- FASE 3 validate_contracts: **STATUS PASS** (todos os gates, zero waivers)
+
+### Arquivos gerados (`src/users/`)
+| Camada | Arquivo | Responsabilidade |
+|--------|---------|-----------------|
+| Domain | `domain/entities.py` | `UserProfile`, `UserStatus`, `RoleLabel` (StrEnum) |
+| Domain | `domain/rules.py` | 6 funções de regra + 6 exceções |
+| Application | `application/use_cases.py` | 4 use cases (listUsers, createUser, getUser, patchUser) |
+| Infrastructure | `infrastructure/models.py` | `UserProfileModel` (JSON fields para arrays) |
+| Infrastructure | `infrastructure/repository.py` | Cursor-based pagination + upsert |
+| Interface | `schemas.py` | `UserProfileOut`, `CreateUserIn`, `PatchUserIn`, `UserListOut`, `ProblemOut` |
+| Interface | `api.py` | Router Ninja — 4 endpoints matching contrato OpenAPI |
+| Tests | `tests/unit/test_users_domain.py` | 41 testes unitários |
+| Tests | `tests/integration/test_users_api.py` | Skeleton integração (Django + DB) |
+
+### Resultados de teste
+```
+pytest src/users/tests/unit/             →  41/41 PASS
+pytest src/identity_access/tests/unit/  →  38/38 PASS
+pytest src/video/tests/unit/            →  20/20 PASS
+pytest tests/test_video_module.py       →  36/36 PASS
+Total: 135/135 PASS
+```
+
+### FEATURE_REGISTRY
+FT-014 (listUsers), FT-015 (createUser), FT-016 (getUser), FT-017 (patchUser) — status: implemented
+
+### Gate Status Final
+```
+validate_contracts    ✅ STATUS PASS (todos os gates)
+ZERO WAIVERS ATIVOS
+```
+
+### Próximos Passos (users)
+1. `python manage.py makemigrations users` — requer scaffolding Django (manage.py + settings)
+2. Integrar JWT real na extração de claims (`_get_actor_id`, `_get_actor_role`, `_get_actor_team_ids` em api.py)
+3. Implementar evento `user.role_changed` → módulo `audit` (DEC-USERS-001, PERM-USR-009)
+4. **Próximo módulo `generate_code`:** `seasons` ou `teams` (nenhuma dependência de outros módulos)

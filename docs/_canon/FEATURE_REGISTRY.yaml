@@ -227,3 +227,60 @@ features:
     status: implemented
     contracts:
       - contracts/openapi/paths/identity_access.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: users
+  # Status do módulo: implementation_ready
+  # ------------------------------------------------------------------
+
+  - id: FT-014
+    name: "Listar Perfis de Usuário"
+    module: users
+    description: >
+      Usuários autenticados (exceto member) consultam perfis cadastrados
+      com paginação cursor-based. Coach filtra apenas membros do próprio
+      time. Resultado filtrado por organizationId do JWT (BOLA / OWASP API4).
+    endpoints:
+      - GET /users
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/users.yaml
+
+  - id: FT-015
+    name: "Criar Perfil de Usuário"
+    module: users
+    description: >
+      Admin e coordinator cadastram novos perfis de usuário na plataforma.
+      Perfil criado com statusLabel=PENDING_ACTIVATION (DEC-USERS-002).
+      Campos de autenticação nunca aceitos no payload (INV-USR-003).
+    endpoints:
+      - POST /users
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/users.yaml
+
+  - id: FT-016
+    name: "Consultar Perfil de Usuário"
+    module: users
+    description: >
+      Owner sempre vê o próprio perfil; coach vê membros do seu time;
+      admin e coordinator vêem qualquer perfil (BOLA — OWASP API1:2023).
+      Sem exposição de campos de autenticação (INV-USR-003).
+    endpoints:
+      - GET /users/{userId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/users.yaml
+
+  - id: FT-017
+    name: "Atualizar Perfil de Usuário"
+    module: users
+    description: >
+      Owner atualiza o próprio perfil (exceto roleLabel); admin e coordinator
+      editam qualquer perfil e podem alterar roleLabel (PERM-USR-004).
+      Alteração de roleLabel emite evento user.role_changed (DEC-USERS-001).
+    endpoints:
+      - PATCH /users/{userId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/users.yaml

@@ -1,11 +1,11 @@
 {
   "session_id": "4d672789-d33f-42d6-be4e-41e30e822ba0",
-  "session_timestamp": "2026-03-21T01:36:07.509961+00:00",
+  "session_timestamp": "2026-03-21T03:29:10.361296+00:00",
   "branch": "hb-track-contratos-driven",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "contract_execution",
   "task_type": "generate_code",
-  "module": "identity_access",
+  "module": "users",
   "stage": 2,
   "write_scope": "contracts",
   "worker_id": "code_generator",
@@ -2277,9 +2277,57 @@
       "sha256": "4fee12c5923592eef81d23dcb22c7b2b81cd474c9143f5bd1dfe7345050e0839",
       "created_at": "2026-03-21T02:01:52.638219+00:00",
       "gate_exit_code": 0
+    },
+    {
+      "path": "src/users/domain/entities.py",
+      "sha256": "2b47da53aa7e616a6f89ee0e027ba95620bc6da35c921ca068b48eb6549c7cd2",
+      "created_at": "2026-03-21T03:35:12.197170+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/users/domain/rules.py",
+      "sha256": "5169dd8dc4b353df7bb707df0d094228ce9f9b83650f93bf438eefe209be08e9",
+      "created_at": "2026-03-21T03:35:21.481956+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/users/application/use_cases.py",
+      "sha256": "a2187cfa853eba3cb16adfc87103e12743a1a0bb44ec345a2d81b1171bd29909",
+      "created_at": "2026-03-21T03:35:25.859331+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/users/infrastructure/models.py",
+      "sha256": "eb956cb64ecde849ee06f5ca6cd5bd31110e2b506500f419feb6e73cab08603d",
+      "created_at": "2026-03-21T03:35:30.217519+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/users/infrastructure/repository.py",
+      "sha256": "e068923fb304decaf27b99622dce008a17e26a1718f31e75422314ce8a172f1e",
+      "created_at": "2026-03-21T03:35:34.585567+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/users/schemas.py",
+      "sha256": "0817911003bd46c34ce1c0afd548b009032ae2e20524f57fee6916b5f93640bb",
+      "created_at": "2026-03-21T03:35:38.924881+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/users/api.py",
+      "sha256": "dfe6824fd9d1d3722c8a8da8faecabeca2428f4f9bd5d538752358cb649322be",
+      "created_at": "2026-03-21T03:35:43.286493+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/users/tests/unit/test_users_domain.py",
+      "sha256": "ef1854bd0c05d2aba931777e8299ad66f64e163dc37911633d7144f66900a94f",
+      "created_at": "2026-03-21T03:35:47.543720+00:00",
+      "gate_exit_code": 0
     }
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-03-21T01:19:54.440854+00:00"
+  "hook_validated_at": "2026-03-21T02:03:06.641541+00:00"
 }
