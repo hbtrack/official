@@ -829,3 +829,52 @@ ZERO WAIVERS ATIVOS
 2. Integrar JWT real na extração de claims (`_get_actor_id`, `_get_actor_role`, `_get_actor_team_ids` em api.py)
 3. Implementar evento `user.role_changed` → módulo `audit` (DEC-USERS-001, PERM-USR-009)
 4. **Próximo módulo `generate_code`:** `seasons` ou `teams` (nenhuma dependência de outros módulos)
+
+---
+
+## Sessão generate_code: seasons — 6 operationIds, 67 testes PASS (2026-03-21)
+
+**Status: ✅ CONCLUÍDA — Commit 6f99f15, pipeline PASS, zero waivers**
+
+### O que foi executado
+- FASE 0: `hb verify generate_code --module seasons` → **adversarial=PASS**, `implementation_ready`
+- FASE 1: `hb check --module seasons` → **PASS**
+- GC1-GC6: Código gerado em 4 camadas (domain, application, infrastructure, interface)
+- 19 arquivos Python criados em `src/seasons/`
+- `hb artifact` executado para 8 artefatos primários (todos exitcode 0)
+- 67 testes unitários PASS (`pytest src/seasons/tests/unit/ -v`)
+- FASE 3 validate_contracts: **STATUS PASS** (todos os gates verdes, 0 waivers)
+- FEATURE_REGISTRY: FT-018..FT-023 status=implemented
+
+### Arquivos gerados
+| Camada | Arquivo | Responsabilidade |
+|--------|---------|-----------------|
+| Domain | `src/seasons/domain/entities.py` | Season dataclass + SeasonStatus (DRAFT/ACTIVE/ARCHIVED) |
+| Domain | `src/seasons/domain/rules.py` | PERM-SEA-001..003, INV-SEAS-001..004, transições de status |
+| Application | `src/seasons/application/use_cases.py` | 6 use cases (FT-018..FT-023) |
+| Infrastructure | `src/seasons/infrastructure/models.py` | SeasonModel (JSONField portável) |
+| Infrastructure | `src/seasons/infrastructure/repository.py` | Paginação page/pageSize offset-based |
+| Interface | `src/seasons/schemas.py` | Pydantic I/O schemas Ninja |
+| Interface | `src/seasons/api.py` | Router 6 endpoints BFLA guards |
+| Tests | `src/seasons/tests/unit/test_seasons_domain.py` | 67 testes unitários |
+
+### Suite acumulada
+```
+pytest src/seasons/tests/unit/          →  67/67 PASS
+pytest src/users/tests/unit/            →  41/41 PASS
+pytest src/identity_access/tests/unit/  →  38/38 PASS
+pytest src/video/tests/unit/            →  20/20 PASS
+pytest tests/test_video_module.py       →  36/36 PASS
+Total: 202/202 PASS
+```
+
+### Gate Status Final
+```
+validate_contracts    ✅ STATUS PASS (todos os gates, 0 waivers)
+pre-commit hook       ✅ PASS
+```
+
+### Próximos Passos (seasons)
+1. `python manage.py makemigrations seasons` — requer scaffolding Django
+2. Integrar JWT real (`_get_actor_role` em api.py)
+3. **Próximo módulo `generate_code`:** `teams` (dependência de seasons resolvida — teamIds já referenciados)
