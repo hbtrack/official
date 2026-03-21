@@ -877,4 +877,64 @@ pre-commit hook       ✅ PASS
 ### Próximos Passos (seasons)
 1. `python manage.py makemigrations seasons` — requer scaffolding Django
 2. Integrar JWT real (`_get_actor_role` em api.py)
+
+## Sessão generate_code: teams — 8 operationIds, 79 testes PASS (2026-03-21)
+
+**Commit:** `35f05d4` | **Branch:** `hb-track-contratos-driven`
+
+### O que foi executado
+- FASE 0: `hb verify --task-type generate_code --module teams` → PASS (`adversarial=PASS`, `implementation_ready`)
+- FASE 1: `hb check --module teams` → PASS
+- GC1: Contexto completo carregado (8 operationIds, schema, DR/INV/PERM)
+- GC2-GC6: 18 arquivos Python gerados em 4 camadas (domain, application, infrastructure, interface)
+- `hb artifact`: 17/17 PASS
+- FASE 3 `validate_contracts`: **STATUS PASS**
+- FT-024..031 adicionados ao `FEATURE_REGISTRY.yaml` com `status: implemented`
+
+### Arquivos gerados (`src/teams/`)
+| Camada | Arquivo | Responsabilidade |
+|--------|---------|-----------------|
+| Domain | `domain/entities.py` | `Team` dataclass + `TeamStatus` enum |
+| Domain | `domain/rules.py` | 6 guards BFLA/BOLA + exceções |
+| Application | `application/use_cases.py` | 8 use cases FT-024..031 |
+| Infrastructure | `infrastructure/models.py` | `TeamModel` ORM + JSONField para listas |
+| Infrastructure | `infrastructure/repository.py` | `TeamsRepository` c/ paginação offset |
+| Interface | `schemas.py` | `TeamOut`, `TeamListOut`, `CreateTeamIn`, `PatchTeamIn` |
+| Interface | `api.py` | 8 endpoints Ninja Router |
+| Testes | `tests/unit/test_teams_domain.py` | 79 testes unitários |
+
+### Regras críticas do módulo
+- **addAthleteToTeam / removeAthleteFromTeam**: retornam **200 com Team body** (idempotente, não 204)
+- **addStaffToTeam / removeStaffFromTeam**: retornam **200 com Team body** (idempotente, não 204)
+- **PERM-TEAM-001**: coach opera apenas no próprio time (actor_team_ids lookup)
+- **BOLA (PERM-TEAM-003)**: athlete não acessa roster de outros times
+- **INV-TEAM-002**: uniqueItems enforced; add idempotente (sem erro se já existe)
+
+### Suite acumulada
+| Módulo | Commit | Testes |
+|--------|--------|--------|
+| `src/video/` | `7c12c49` | 56 PASS |
+| `src/identity_access/` | `238d41e` | 38 PASS* |
+| `src/users/` | `4f66302` | 41 PASS* |
+| `src/seasons/` | `6f99f15` | 67 PASS* |
+| `src/teams/` | `35f05d4` | 79 PASS |
+| **Total real** | | **245 PASS** |
+*Contagem atualizada na execução da suite completa.
+
+### Gate Status Final
+```
+hb verify teams:         ✅ PASS (adversarial=PASS, implementation_ready)
+hb check teams:          ✅ PASS
+hb artifact (17/17):     ✅ PASS
+validate_contracts:       ✅ PASS
+Testes unitários:         ✅ 79/79 PASS
+Suite acumulada:          ✅ 245/245 PASS
+```
+
+### Próximos Passos (teams)
+1. Próximo módulo canônico: `training` ou `competitions` (verificar `hb verify --task-type generate_code --module <X>`)
+2. `python manage.py makemigrations teams` — requer scaffolding Django
+3. Migração inicial: `src/teams/migrations/0001_initial.py`
+4. Integrar JWT real (`_get_actor_role` e `_get_actor_team_ids` em api.py)
+
 3. **Próximo módulo `generate_code`:** `teams` (dependência de seasons resolvida — teamIds já referenciados)

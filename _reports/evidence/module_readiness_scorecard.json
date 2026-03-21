@@ -1,6 +1,6 @@
 {
   "artifact_id": "HBTRACK_MODULE_READINESS_SCORECARD",
-  "generated_at_utc": "2026-03-21T01:49:00Z",
+  "generated_at_utc": "2026-03-21T04:36:29Z",
   "overall_status": "PASS",
   "source_report": "_reports/contract_gates/latest.json",
   "modules": [
@@ -37,7 +37,7 @@
         "asyncapi_artifact_count": 0,
         "workflow_count": 1,
         "pre_contract_evidence": false,
-        "decision_ir_gate_status": "PASS"
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
       }
     },
     {
@@ -69,7 +69,7 @@
         "asyncapi_artifact_count": 0,
         "workflow_count": 1,
         "pre_contract_evidence": false,
-        "decision_ir_gate_status": "PASS"
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
       }
     },
     {
@@ -101,7 +101,7 @@
         "asyncapi_artifact_count": 0,
         "workflow_count": 1,
         "pre_contract_evidence": false,
-        "decision_ir_gate_status": "PASS"
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
       }
     },
     {
@@ -122,7 +122,7 @@
         "asyncapi",
         "decision_ir"
       ],
-      "readiness_pct": 100,
+      "readiness_pct": 92,
       "surface_status": {
         "module_docs_minimum": "ready",
         "openapi_sync": "ready",
@@ -135,7 +135,7 @@
         "ui_contract": "ready",
         "arazzo": "ready",
         "asyncapi": "ready",
-        "decision_ir": "ready"
+        "decision_ir": "drift"
       },
       "evidence": {
         "minimum_docs_present": true,
@@ -145,7 +145,7 @@
         "asyncapi_artifact_count": 24,
         "workflow_count": 5,
         "pre_contract_evidence": true,
-        "decision_ir_gate_status": "PASS"
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
       }
     },
     {
@@ -179,7 +179,7 @@
         "asyncapi_artifact_count": 3,
         "workflow_count": 1,
         "pre_contract_evidence": false,
-        "decision_ir_gate_status": "PASS"
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
       }
     },
     {
@@ -209,7 +209,7 @@
         "asyncapi_artifact_count": 0,
         "workflow_count": 0,
         "pre_contract_evidence": false,
-        "decision_ir_gate_status": "PASS"
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
       }
     },
     {
@@ -241,7 +241,7 @@
         "asyncapi_artifact_count": 0,
         "workflow_count": 1,
         "pre_contract_evidence": false,
-        "decision_ir_gate_status": "PASS"
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
       }
     },
     {
@@ -273,7 +273,7 @@
         "asyncapi_artifact_count": 0,
         "workflow_count": 1,
         "pre_contract_evidence": false,
-        "decision_ir_gate_status": "PASS"
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
       }
     },
     {
@@ -309,7 +309,7 @@
         "asyncapi_artifact_count": 6,
         "workflow_count": 1,
         "pre_contract_evidence": false,
-        "decision_ir_gate_status": "PASS"
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
       }
     },
     {
@@ -339,7 +339,7 @@
         "asyncapi_artifact_count": 0,
         "workflow_count": 2,
         "pre_contract_evidence": false,
-        "decision_ir_gate_status": "PASS"
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
       }
     },
     {
@@ -367,7 +367,7 @@
         "asyncapi_artifact_count": 0,
         "workflow_count": 0,
         "pre_contract_evidence": false,
-        "decision_ir_gate_status": "PASS"
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
       }
     },
     {
@@ -395,7 +395,7 @@
         "asyncapi_artifact_count": 0,
         "workflow_count": 1,
         "pre_contract_evidence": false,
-        "decision_ir_gate_status": "PASS"
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
       }
     },
     {
@@ -427,7 +427,7 @@
         "asyncapi_artifact_count": 9,
         "workflow_count": 1,
         "pre_contract_evidence": false,
-        "decision_ir_gate_status": "PASS"
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
       }
     },
     {
@@ -463,7 +463,7 @@
         "asyncapi_artifact_count": 0,
         "workflow_count": 1,
         "pre_contract_evidence": false,
-        "decision_ir_gate_status": "PASS"
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
       }
     },
     {
@@ -499,7 +499,7 @@
         "asyncapi_artifact_count": 6,
         "workflow_count": 1,
         "pre_contract_evidence": false,
-        "decision_ir_gate_status": "PASS"
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
       }
     },
     {
@@ -531,7 +531,7 @@
         "asyncapi_artifact_count": 0,
         "workflow_count": 1,
         "pre_contract_evidence": false,
-        "decision_ir_gate_status": "PASS"
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
       }
     },
     {
@@ -567,7 +567,7 @@
         "asyncapi_artifact_count": 24,
         "workflow_count": 5,
         "pre_contract_evidence": false,
-        "decision_ir_gate_status": "PASS"
+        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
       }
     }
   ]

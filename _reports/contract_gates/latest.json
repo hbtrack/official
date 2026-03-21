@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-03-21T04:35:11Z",
+  "timestamp_utc": "2026-03-21T04:36:29Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -24,8 +24,8 @@
   },
   "overall_status": "PASS",
   "status_detail": {
-    "active_gates_passed": 23,
-    "skip_count": 28,
+    "active_gates_passed": 13,
+    "skip_count": 38,
     "critical_gates": [
       {
         "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -85,7 +85,7 @@
       },
       {
         "gate_id": "DECISION_IR_CONFORMANCE_GATE",
-        "status": "PASS"
+        "status": "SKIP_NOT_APPLICABLE"
       },
       {
         "gate_id": "CANON_ALLOWLIST_GATE",
@@ -105,11 +105,11 @@
       },
       {
         "gate_id": "OPENAPI_ROOT_STRUCTURE_GATE",
-        "status": "PASS"
+        "status": "SKIP_NOT_APPLICABLE"
       },
       {
         "gate_id": "OPENAPI_ROOT_MODULE_SYNC_GATE",
-        "status": "PASS"
+        "status": "SKIP_NOT_APPLICABLE"
       },
       {
         "gate_id": "OPENAPI_POLICY_RULESET_GATE",
@@ -117,7 +117,7 @@
       },
       {
         "gate_id": "JSON_SCHEMA_VALIDATION_GATE",
-        "status": "PASS"
+        "status": "SKIP_NOT_APPLICABLE"
       },
       {
         "gate_id": "CROSS_SPEC_ALIGNMENT_GATE",
@@ -137,15 +137,11 @@
       },
       {
         "gate_id": "ASYNCAPI_VALIDATION_GATE",
-        "status": "PASS"
+        "status": "SKIP_NOT_APPLICABLE"
       },
       {
         "gate_id": "ARAZZO_VALIDATION_GATE",
-        "status": "PASS"
-      },
-      {
-        "gate_id": "SPECTRAL_LINTING_GATE",
-        "status": "PASS"
+        "status": "SKIP_NOT_APPLICABLE"
       },
       {
         "gate_id": "ARAZZO_COMPLETENESS_GATE",
@@ -157,7 +153,7 @@
       },
       {
         "gate_id": "DERIVED_DRIFT_GATE",
-        "status": "PASS"
+        "status": "SKIP_NOT_APPLICABLE"
       },
       {
         "gate_id": "MODULE_STATUS_COHERENCE_GATE",
@@ -207,7 +203,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 41
+        "duration_ms": 43
       }
     },
     {
@@ -232,7 +228,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 449
+        "duration_ms": 654
       }
     },
     {
@@ -241,7 +237,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -259,7 +255,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -277,7 +273,7 @@
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -295,7 +291,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -313,7 +309,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -352,7 +348,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -370,7 +366,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -388,7 +384,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -406,7 +402,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -424,7 +420,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -442,7 +438,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -460,7 +456,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -474,25 +470,20 @@
     },
     {
       "gate_id": "DECISION_IR_CONFORMANCE_GATE",
-      "status": "PASS",
+      "status": "SKIP_NOT_APPLICABLE",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "MODULE_DECISION_IR válido para o(s) módulo(s) implementation_ready.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
-      "artifacts_checked": [
-        "/home/davis/HB-TRACK/docs/_canon/MODULE_REGISTRY.yaml",
-        "/home/davis/HB-TRACK/contracts/schemas/shared/module_registry.schema.json",
-        "/home/davis/HB-TRACK/.dev/MODULE_DECISION_IR.json",
-        "/home/davis/HB-TRACK/.dev/decisões/MODULE_DECISION_IR_SCHEMA.json"
-      ],
+      "artifacts_checked": [],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 10
+        "duration_ms": 0
       }
     },
     {
@@ -954,7 +945,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 26
+        "duration_ms": 29
       }
     },
     {
@@ -963,7 +954,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -981,7 +972,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -995,63 +986,38 @@
     },
     {
       "gate_id": "OPENAPI_ROOT_STRUCTURE_GATE",
-      "status": "PASS",
+      "status": "SKIP_NOT_APPLICABLE",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "redocly lint: nenhum erro.",
-      "inputs": [
-        "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml"
-      ],
-      "artifacts_checked": [
-        "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml"
-      ],
+      "summary": "Pulado no perfil 'precommit'.",
+      "inputs": [],
+      "artifacts_checked": [],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1308
+        "duration_ms": 0
       }
     },
     {
       "gate_id": "OPENAPI_ROOT_MODULE_SYNC_GATE",
-      "status": "PASS",
+      "status": "SKIP_NOT_APPLICABLE",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Root OpenAPI alinhado aos path items reais dos módulos.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
-      "artifacts_checked": [
-        "/home/davis/HB-TRACK/docs/_canon/MODULE_REGISTRY.yaml",
-        "/home/davis/HB-TRACK/contracts/schemas/shared/module_registry.schema.json",
-        "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/ai_ingestion.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/analytics.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/audit.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/competitions.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/exercises.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/identity_access.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/matches.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/medical.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/notifications.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/reports.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/scout.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/seasons.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/teams.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/training.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/users.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/video.yaml",
-        "/home/davis/HB-TRACK/contracts/openapi/paths/wellness.yaml"
-      ],
+      "artifacts_checked": [],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 548
+        "duration_ms": 0
       }
     },
     {
@@ -1060,7 +1026,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1074,68 +1040,20 @@
     },
     {
       "gate_id": "JSON_SCHEMA_VALIDATION_GATE",
-      "status": "PASS",
+      "status": "SKIP_NOT_APPLICABLE",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "JSON Schema: 47 arquivo(s) válido(s), 0 aviso(s).",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
-      "artifacts_checked": [
-        "/home/davis/HB-TRACK/contracts/schemas/ai_ingestion/ingestion_job.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/analytics/analytics_metric_key.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/analytics/analytics_query_request.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/analytics/analytics_query_response.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/analytics/analytics_snapshot.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/audit/audit_entry.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/competitions/competition.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/exercises/exercise.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/exercises/exercise_acl.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/exercises/exercise_relation.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/exercises/exercise_version.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/identity_access/auth_session.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/matches/match.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/medical/medical_record.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/notifications/notification_delivery.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/reports/report_job.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/scout/scout_event.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/seasons/season.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/shared/domain_axioms.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/shared/domain_axioms_module.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/shared/module_registry.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/shared/module_source_authority_matrix.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/shared/owasp_api_control_matrix.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/shared/readiness_confirmation.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/shared/session_start.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/shared/waiver.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/teams/team.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/training/athlete_chat_conversation.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/training/athlete_chat_message.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/training/athlete_ineligibility_declaration.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/training/attention_queue_item.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/training/execution_record.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/training/feedback_thread.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/training/load_chart.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/training/recommendation.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/training/session_block.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/training/session_objective.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/training/training_session.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/training/training_suggestion.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/training/training_suggestion_approval.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/users/user_profile.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/video/clip_definition.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/video/distribution_profile.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/video/match_media_session.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/video/media_segment.schema.json",
-        "/home/davis/HB-TRACK/contracts/schemas/wellness/wellness_entry.schema.json"
-      ],
+      "artifacts_checked": [],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 0
       }
     },
     {
@@ -1629,7 +1547,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1636
+        "duration_ms": 1607
       }
     },
     {
@@ -1638,7 +1556,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1656,7 +1574,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1674,7 +1592,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1688,89 +1606,56 @@
     },
     {
       "gate_id": "ASYNCAPI_VALIDATION_GATE",
-      "status": "PASS",
+      "status": "SKIP_NOT_APPLICABLE",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "asyncapi validate: PASS.",
-      "inputs": [
-        "/home/davis/HB-TRACK/contracts/asyncapi/asyncapi.yaml"
-      ],
-      "artifacts_checked": [
-        "/home/davis/HB-TRACK/contracts/asyncapi/asyncapi.yaml"
-      ],
+      "summary": "Pulado no perfil 'precommit'.",
+      "inputs": [],
+      "artifacts_checked": [],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2749
+        "duration_ms": 0
       }
     },
     {
       "gate_id": "ARAZZO_VALIDATION_GATE",
-      "status": "PASS",
+      "status": "SKIP_NOT_APPLICABLE",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Arazzo: 24 arquivo(s) válido(s).",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
-      "artifacts_checked": [
-        "/home/davis/HB-TRACK/contracts/workflows/ai_ingestion/ingestion_job_lifecycle.arazzo.yaml",
-        "/home/davis/HB-TRACK/contracts/workflows/audit/cross_module_audit_registration.arazzo.yaml",
-        "/home/davis/HB-TRACK/contracts/workflows/competitions/competition_lifecycle.arazzo.yaml",
-        "/home/davis/HB-TRACK/contracts/workflows/exercises/copy_and_customize_exercise.arazzo.yaml",
-        "/home/davis/HB-TRACK/contracts/workflows/exercises/create_exercise_with_acl.arazzo.yaml",
-        "/home/davis/HB-TRACK/contracts/workflows/identity_access/assign_role_to_user.arazzo.yaml",
-        "/home/davis/HB-TRACK/contracts/workflows/matches/match_lifecycle.arazzo.yaml",
-        "/home/davis/HB-TRACK/contracts/workflows/notifications/event_to_notification_delivery.arazzo.yaml",
-        "/home/davis/HB-TRACK/contracts/workflows/reports/generate_and_export_report.arazzo.yaml",
-        "/home/davis/HB-TRACK/contracts/workflows/scout/scout_observation_and_session.arazzo.yaml",
-        "/home/davis/HB-TRACK/contracts/workflows/seasons/season_lifecycle.arazzo.yaml",
-        "/home/davis/HB-TRACK/contracts/workflows/teams/team_roster_management.arazzo.yaml",
-        "/home/davis/HB-TRACK/contracts/workflows/training/cancel_training_session.arazzo.yaml",
-        "/home/davis/HB-TRACK/contracts/workflows/training/complete_training_session.arazzo.yaml",
-        "/home/davis/HB-TRACK/contracts/workflows/training/create_training_session_and_mark_attendance.arazzo.yaml",
-        "/home/davis/HB-TRACK/contracts/workflows/training/publish_training_session.arazzo.yaml",
-        "/home/davis/HB-TRACK/contracts/workflows/training/start_training_session.arazzo.yaml",
-        "/home/davis/HB-TRACK/contracts/workflows/users/user_invitation.arazzo.yaml",
-        "/home/davis/HB-TRACK/contracts/workflows/video/capture_and_sync.arazzo.yaml",
-        "/home/davis/HB-TRACK/contracts/workflows/video/create_semantic_clip.arazzo.yaml",
-        "/home/davis/HB-TRACK/contracts/workflows/video/semantic_clipping.arazzo.yaml",
-        "/home/davis/HB-TRACK/contracts/workflows/video/start_live_capture.arazzo.yaml",
-        "/home/davis/HB-TRACK/contracts/workflows/video/transcode_and_publish.arazzo.yaml",
-        "/home/davis/HB-TRACK/contracts/workflows/wellness/athlete_wellness_tracking.arazzo.yaml"
-      ],
+      "artifacts_checked": [],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 60
+        "duration_ms": 0
       }
     },
     {
       "gate_id": "SPECTRAL_LINTING_GATE",
-      "status": "PASS",
-      "blocking": true,
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "spectral lint: nenhum erro encontrado.",
-      "inputs": [
-        "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml"
-      ],
-      "artifacts_checked": [
-        "/home/davis/HB-TRACK/contracts/openapi/openapi.yaml"
-      ],
+      "summary": "Pulado no perfil 'precommit'.",
+      "inputs": [],
+      "artifacts_checked": [],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1140
+        "duration_ms": 0
       }
     },
     {
@@ -1779,7 +1664,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1813,78 +1698,56 @@
     },
     {
       "gate_id": "DERIVED_DRIFT_GATE",
-      "status": "PASS",
+      "status": "SKIP_NOT_APPLICABLE",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "generated/ alinhado ao compiler determinístico (sem drift).",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
-      "artifacts_checked": [
-        "/home/davis/HB-TRACK/generated"
-      ],
+      "artifacts_checked": [],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 36638
+        "duration_ms": 0
       }
     },
     {
       "gate_id": "ADVERSARIAL_ANALYSIS_GATE",
-      "status": "PASS",
+      "status": "SKIP_NOT_APPLICABLE",
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Análise adversarial: 17 relatório(s) — todos PASS.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
-      "artifacts_checked": [
-        "/home/davis/HB-TRACK/_reports/adversarial/users/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/identity_access/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/matches/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/exercises/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/training/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/competitions/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/teams/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/video/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/ai_ingestion/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/notifications/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/wellness/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/analytics/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/scout/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/reports/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/audit/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/seasons/ALL.adversarial.json",
-        "/home/davis/HB-TRACK/_reports/adversarial/medical/ALL.adversarial.json"
-      ],
+      "artifacts_checked": [],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 15
+        "duration_ms": 0
       }
     },
     {
       "gate_id": "FEATURE_READINESS_GATE",
-      "status": "PASS",
+      "status": "SKIP_NOT_APPLICABLE",
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "FEATURE_REGISTRY: 31 features — 21 implemented, 10 validated",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
-      "artifacts_checked": [
-        "/home/davis/HB-TRACK/docs/_canon/FEATURE_REGISTRY.yaml"
-      ],
+      "artifacts_checked": [],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 14
+        "duration_ms": 0
       }
     },
     {
@@ -1893,7 +1756,7 @@
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1911,7 +1774,7 @@
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1929,7 +1792,7 @@
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1947,7 +1810,7 @@
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1965,7 +1828,7 @@
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -1983,7 +1846,7 @@
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -2014,7 +1877,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 1
       }
     },
     {
@@ -2036,7 +1899,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 11
+        "duration_ms": 10
       }
     },
     {
@@ -2067,7 +1930,7 @@
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -2085,7 +1948,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pulado no perfil 'local'.",
+      "summary": "Pulado no perfil 'precommit'.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
@@ -2118,7 +1981,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 5
       }
     },
     {
@@ -2167,7 +2030,7 @@
       "blocking": false,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pipeline PASS: 22 PASS, 28 SKIP.",
+      "summary": "Pipeline PASS: 12 PASS, 38 SKIP.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
