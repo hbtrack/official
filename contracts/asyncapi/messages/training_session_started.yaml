@@ -1,3 +1,4 @@
+messageId: training_session_started
 name: training_session_started
 title: Training Session Started
 summary: Sessão de treino iniciada. Estado IN_PROGRESS.

@@ -4,6 +4,7 @@
 # Invariants: INV-USR-001, INV-USR-004
 # ADR refs: ADR-008 (RBAC flat 5 roles — roleLabel é informativo, não autoritativo)
 
+messageId: user_role_changed
 name: UserRoleChangedMessage
 title: Role de Usuário Alterado
 summary: >

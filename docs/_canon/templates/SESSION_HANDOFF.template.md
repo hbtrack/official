@@ -1,11 +1,14 @@
 # SESSION HANDOFF — HB TRACK
-> Atualizar ao final de cada sessão produtiva. Este arquivo é lido pelo agente ANTES de qualquer outra coisa.
+> Atualizar ao final de cada sessão produtiva. Delta-only. Este arquivo é lido pelo agente ANTES de qualquer outra coisa.
 
 ## Estado Geral
 data_ultima_sessao: YYYY-MM-DD
 branch_ativo:
 ci_status: PASS | FAIL
 modulo_foco:
+fase_roadmap:
+task_id:
+resultado: DONE | PENDENTE | BLOCKED
 
 ## O Que Foi Feito (últimas 3 sessões)
 ### Sessão YYYY-MM-DD

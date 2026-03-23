@@ -256,7 +256,7 @@ traceability_manifest:
   - path: generated/contracts/schemas/shared/domain_axioms_module.schema.json
     sha256: c8bc89b19d5fcd019567156e0f40480efe238332df73e89aaede7314d7324a19
   - path: generated/contracts/schemas/shared/module_registry.schema.json
-    sha256: 69efb4969a4b85f9ab5efcbb8ba09ae5cdcb557b63e56872b7d36a59202ef02e
+    sha256: a4480665edb80aed06b3a141dcd2dec744651554d48791defa8e9bdae009e347
   - path: generated/contracts/schemas/shared/module_source_authority_matrix.schema.json
     sha256: 608a1607f07b379d7130d07d3efbd4414c3006801a28c0e5664d556d43681b60
   - path: generated/contracts/schemas/shared/owasp_api_control_matrix.schema.json
@@ -266,7 +266,7 @@ traceability_manifest:
   - path: generated/contracts/schemas/shared/session_handoff.schema.json
     sha256: 5cdc1bab16e0ae8b15f89a9ad7e7d1e647354390bce3a25fe1a8c2e80e1527cd
   - path: generated/contracts/schemas/shared/session_start.schema.json
-    sha256: 1a66309dfd3cb953894755fb823b230c05e05dd7b6ddb61c8781645074f4e85d
+    sha256: f715652e7cf48a49628d76e96b48dfc3440f4d892e70a310437e22f66e470f80
   - path: generated/contracts/schemas/shared/waiver.schema.json
     sha256: ac33fe58442230065d2472b5a2c4c1ea8c8d16b529fba70ad8036cbeb27ed945
   - path: generated/contracts/schemas/teams/.gitkeep
@@ -319,7 +319,7 @@ traceability_manifest:
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: generated/contracts/schemas/wellness/wellness_entry.schema.json
     sha256: e6b69221a1e62764a544a37a53dfa1d211df3b89799df536f9b85789b5b59c97
-  generated_tree_sha256: 440113c24607f22fbe348f0f1e5dbe6f9b516f5e5551f1ff8b55b2eb25f183bc
+  generated_tree_sha256: 3fe519a05dcfc9d813f74e1a1cd44d826f09197d57f3dc2fd4771b2fa55ec124
   policy_path: generated/resolved_policy/analytics.sync.resolved.yaml
   policy_sha256: c9ffad02f8af8a774dcf8513acf0a852e8cfc6e88dc2e41c642168472e13c85f
   source_contracts:
@@ -576,7 +576,7 @@ traceability_manifest:
   - path: contracts/schemas/shared/domain_axioms_module.schema.json
     sha256: c8bc89b19d5fcd019567156e0f40480efe238332df73e89aaede7314d7324a19
   - path: contracts/schemas/shared/module_registry.schema.json
-    sha256: 69efb4969a4b85f9ab5efcbb8ba09ae5cdcb557b63e56872b7d36a59202ef02e
+    sha256: a4480665edb80aed06b3a141dcd2dec744651554d48791defa8e9bdae009e347
   - path: contracts/schemas/shared/module_source_authority_matrix.schema.json
     sha256: 608a1607f07b379d7130d07d3efbd4414c3006801a28c0e5664d556d43681b60
   - path: contracts/schemas/shared/owasp_api_control_matrix.schema.json
@@ -586,7 +586,7 @@ traceability_manifest:
   - path: contracts/schemas/shared/session_handoff.schema.json
     sha256: 5cdc1bab16e0ae8b15f89a9ad7e7d1e647354390bce3a25fe1a8c2e80e1527cd
   - path: contracts/schemas/shared/session_start.schema.json
-    sha256: 1a66309dfd3cb953894755fb823b230c05e05dd7b6ddb61c8781645074f4e85d
+    sha256: f715652e7cf48a49628d76e96b48dfc3440f4d892e70a310437e22f66e470f80
   - path: contracts/schemas/shared/waiver.schema.json
     sha256: ac33fe58442230065d2472b5a2c4c1ea8c8d16b529fba70ad8036cbeb27ed945
   - path: contracts/schemas/teams/.gitkeep
@@ -650,4 +650,4 @@ traceability_manifest:
     sha256: efb1ba7de801a93cefef6fd2e58969cb683fa64528f78b0c508815bfd49fa11f
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: d7495e17090c41af465fbf064d0bff3d084c72ba0e57f1e0d78aa3b8f0ae71eb
-  source_tree_sha256: 8a2d4a6904fdfabc88302e9d4450deda625d2247d00a869a5f14139228994df8
+  source_tree_sha256: 4b2a37e8bd17ffe05e6e6b40e28782a67a6de5a349dbae5588824521b24f2d49

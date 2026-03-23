@@ -530,7 +530,7 @@ def render_report(results: list) -> str:
             "",
             "Todos os 11 eixos de robustez foram validados com evidência objetiva.  ",
             "Nenhum BLOCKED_* aberto. Pipeline determinístico com STATUS = PASS.  ",
-            "17/17 módulos em `implementation_ready`. Análise adversarial 17/17 PASS.",
+            "17/17 módulos em status >= `implementation_ready`. Análise adversarial 17/17 PASS.",
         ]
     else:
         lines += [

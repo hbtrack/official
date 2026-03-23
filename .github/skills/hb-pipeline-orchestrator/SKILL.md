@@ -8,7 +8,8 @@ description: >
   Enforces the pipeline: Boot → PRÉ-0 (pre_contract_boot) → FASE 0 (hb verify) →
   FASE 1 (hb check) → Decision Discovery → FASE 2 (worker + hb artifact) →
   COMPILE → FASE 3 (validate_contracts) → FASE 4+ (task-specific follow-up) → FASE 5 (handoff).
-  DO NOT USE FOR: general questions, code review, debugging, audits (audit_*).
+  DO NOT USE FOR: general questions, code review, debugging, audits (audit_*),
+  execute_roadmap_phase (use hb-roadmap-executor skill instead).
   For audits: load the audit worker directly, skip pre_contract_orchestrator.
 ---
 
@@ -34,6 +35,9 @@ O humano é leigo em desenvolvimento — comunicar SEMPRE em português, linguag
 - [ ] **B2** — Verificar se existe `SESSION_HANDOFF.md` na raiz do workspace
   - Se existe → ler ANTES de qualquer outra ação
   - Se não existe → continuar sem contexto anterior (registrar)
+- [ ] **B_MODO** — O pedido é execução de fase do ROADMAP? (infra / CI-CD / frontend / deploy / fase 0-13)
+  - Se **sim** → **PARAR este skill**. Usar skill `hb-roadmap-executor` em vez deste. Este skill CDD não se aplica a `execute_roadmap_phase`.
+  - Se **não** → continuar para B3.
 - [ ] **B3** — Identificar `task_type` e `module` a partir do pedido do humano
   - Se ambíguo → **perguntar explicitamente** (nunca inferir)
   - task_type válidos: `pre_contract_boot` (primeira execução opcional de boot guiado), `new_contract`, `contract_revision`, `new_event`, `new_workflow`, `new_schema`, `new_state_model`, `new_ui_contract`, `new_module`, `architecture_review`, `decision_discovery`, `adversarial_analysis`, `readiness_promotion`, `generate_code`
@@ -75,7 +79,7 @@ O humano é leigo em desenvolvimento — comunicar SEMPRE em português, linguag
 
 | Código | Significado | Ação |
 |---|---|---|
-| `BLOCKED_MISSING_MODULE` | Módulo não está nos 16 canônicos | Informar humano, perguntar módulo correto |
+| `BLOCKED_MISSING_MODULE` | Módulo não está nos 17 canônicos | Informar humano, perguntar módulo correto |
 | `BLOCKED_MISSING_AGENT_PROMPT` | Task_type não existe ou está congelado | Informar humano, listar task_types ativos |
 
 ---
@@ -105,7 +109,7 @@ O humano é leigo em desenvolvimento — comunicar SEMPRE em português, linguag
 
 | Código | Significado | Ação |
 |---|---|---|
-| `BLOCKED_MISSING_MODULE` | Módulo não está nos 16 canônicos | Informar humano |
+| `BLOCKED_MISSING_MODULE` | Módulo não está nos 17 canônicos | Informar humano |
 | `BLOCKED_MISSING_AGENT_PROMPT` | Worker prompt não existe ou task_type congelado | Informar humano |
 
 ---

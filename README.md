@@ -20,7 +20,7 @@ O HB Track é uma plataforma de gestão esportiva voltada ao handebol indoor. Se
 
 | Dimensão | Descrição |
 |----------|-----------|
-| Tipo de sistema | Monólito modular em camadas (FastAPI) com SPA (Next.js 13+) |
+| Tipo de sistema | Monólito modular em camadas (Django Ninja) com SPA (React + Vite) |
 | Mercado primário | Handebol indoor — Brasil |
 | Usuários-alvo | Dirigentes, Coordenadores, Treinadores, Atletas e Membros |
 | Modelo de governança | Contract-Driven Development (CDD) com hierarquia normativa explícita |
@@ -31,19 +31,19 @@ O HB Track é uma plataforma de gestão esportiva voltada ao handebol indoor. Se
 
 | Camada | Tecnologia | Versão |
 |--------|-----------|--------|
-| **Backend runtime** | Python | 3.11.9 |
-| **Framework HTTP** | FastAPI | latest compat. |
-| **ORM** | SQLAlchemy | latest compat. |
-| **Migrations** | Alembic | latest compat. |
-| **Workers assíncronos** | Celery | latest compat. |
+| **Backend runtime** | Python | 3.12 |
+| **Framework HTTP** | Django + Django Ninja | 5.x / 1.x |
+| **ORM** | Django ORM | nativo |
+| **Migrations** | Django Migrations | nativo |
+| **Workers assíncronos** | Celery | 5.x |
 | **Broker + cache** | Redis | 7 (Alpine) |
-| **Banco (VPS prod/staging)** | PostgreSQL | 15 |
-| **Banco (dev local Docker)** | PostgreSQL | 12 |
-| **Framework frontend** | Next.js | 13+ (App Router) |
+| **Banco (VPS prod/staging)** | PostgreSQL | 16 |
+| **Banco (dev local Docker)** | PostgreSQL | 16 |
+| **Framework frontend** | React + Vite | 18 / 5.x |
 | **Linguagem frontend** | TypeScript | latest compat. |
 | **Estilo** | TailwindCSS | latest compat. |
 | **Testes backend** | pytest + Schemathesis | — |
-| **Testes frontend** | Jest | — |
+| **Testes frontend** | Vitest + Playwright | — |
 
 ---
 
@@ -55,7 +55,7 @@ HB-TRACK/
 │   ├── README.md                # Este guia de navegação
 │   ├── SYSTEM_SCOPE.md          # Missão, atores, macrodomínios, fora do escopo
 │   ├── ARCHITECTURE.md          # Stack canônica, princípios, camadas
-│   ├── MODULE_MAP.md            # 16 módulos, responsabilidades, dependências
+│   ├── MODULE_MAP.md            # 17 módulos, responsabilidades, dependências
 │   ├── API_CONVENTIONS.md       # Visão geral de API (documentation em .contract_driven/templates/api/api_rules.yaml)
 │   ├── DATA_CONVENTIONS.md      # IDs, datas, enums, soft delete, convenções DB
 │   ├── ERROR_MODEL.md           # Modelo standard de erros HTTP

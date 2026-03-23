@@ -38,7 +38,7 @@ A escolha foi revisitada em 2026-03-17 ao constatar que:
 | Migrações | Django Migrations (nativo) |
 | Task queue | Celery 5.x + Redis 7 |
 | WebSocket | Django Channels 4.x + Redis |
-| Frontend | Next.js 14 (App Router) + PWA (decidido em D7 + D4-frontend) |
+| Frontend | React 18 + Vite (decidido em ADR-030 / D7 — SSOT: `FRONTEND_CONTRACT.md`) |
 | Testes | pytest + pytest-django (backend) + Jest (frontend) |
 | Containerização | Docker + Docker Compose |
 

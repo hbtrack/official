@@ -1,3 +1,4 @@
+messageId: segment_ready
 name: video_segment_ready
 title: Video Segment Ready
 summary: MediaSegment finalizado e validado contra scout timecode.

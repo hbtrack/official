@@ -4,6 +4,7 @@
 # Invariants: INV-SCOUT-001
 # Decisions: DEC-SCOUT-003=C
 
+messageId: scout_session_completed
 name: ScoutSessionCompletedMessage
 title: Sessão de Scouting Finalizada
 summary: Publicado quando o analista finaliza o bloco de scouting de uma partida.

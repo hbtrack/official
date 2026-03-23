@@ -2,6 +2,7 @@
 # Module: video
 # Domain rules: DR-VID-002, DR-VID-006
 # Decisions: ADR-033
+messageId: video_session_transcoding
 name: VideoSessionTranscodingMessage
 title: Transcodificação Iniciada
 summary: Publicado quando dual pipeline de transcodificação é disparado (DR-VID-002).

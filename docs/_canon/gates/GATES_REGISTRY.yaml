@@ -53,7 +53,7 @@ gates:
     description: >
       Garante que nenhum artefato normativo existe fora do path canônico.
       Bloqueia duplicatas soberanas (dois arquivos com mesma semântica em paths distintos).
-      Valida taxonomia canônica de módulos em MODULE_REGISTRY.yaml (16 módulos únicos, formato lower_snake_case).
+      Valida taxonomia canônica de módulos em MODULE_REGISTRY.yaml (17 módulos únicos, formato lower_snake_case).
     blocking_codes: [PATH_NOT_CANONICAL, SOVEREIGN_DUPLICATE_DETECTED]
     status: active
 
@@ -148,7 +148,7 @@ gates:
     depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
     description: >
       Verifica presença e validade de `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml`.
-      Deve estar alinhado com os 16 módulos do sistema.
+      Deve estar alinhado com os 17 módulos do sistema.
     blocking_codes:
       [
         MODULE_AUTHORITY_MATRIX_MISSING,
@@ -169,7 +169,7 @@ gates:
     description: >
       Verifica presença e validade de `docs/_canon/MODULE_REGISTRY.yaml`.
       O registry é a fonte determinística de status operacional, owner e superfícies esperadas
-      por módulo; deve alinhar com a taxonomia canônica de 16 módulos.
+      por módulo; deve alinhar com a taxonomia canônica de 17 módulos.
     blocking_codes:
       [
         MODULE_REGISTRY_MISSING,

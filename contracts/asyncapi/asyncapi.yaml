@@ -1,4 +1,5 @@
 asyncapi: "2.6.0"
+id: "urn:hbtrack:async-events"
 
 info:
   title: HB Track Async Events
@@ -8,6 +9,16 @@ info:
 
     Este documento existe porque há pelo menos 1 evento real documentado e
     estendido via DOMAIN_AXIOMS modular (módulo training).
+  contact:
+    name: HB Track Platform Team
+    url: https://hbtrack.local
+    email: platform@hbtrack.local
+  license:
+    name: Proprietary
+
+tags:
+  - name: hb-track
+    description: HB Track async events
 
 defaultContentType: application/json
 

@@ -1,16 +1,163 @@
 {
-  "generated_at_utc": "2026-03-17T07:51:14Z",
+  "generated_at_utc": "2026-03-23T13:22:13Z",
   "source": "docs/_canon/FEATURE_REGISTRY.yaml",
   "registry_version": "1.0.0",
   "summary": {
-    "total_features": 10,
-    "global_completion_pct": 50.0,
+    "total_features": 31,
+    "global_completion_pct": 66.9,
     "by_status": {
-      "validated": 10
+      "validated": 10,
+      "implemented": 21
     },
-    "modules_count": 1
+    "modules_count": 5
   },
   "modules": {
+    "identity_access": {
+      "total_features": 3,
+      "completion_pct": 75.0,
+      "by_status": {
+        "implemented": 3
+      },
+      "features": [
+        {
+          "id": "FT-011",
+          "name": "Autenticação e Gerenciamento de Tokens",
+          "status": "implemented",
+          "status_label": "Implementada",
+          "endpoints_count": 3
+        },
+        {
+          "id": "FT-012",
+          "name": "Gestão de Sessões Ativas",
+          "status": "implemented",
+          "status_label": "Implementada",
+          "endpoints_count": 3
+        },
+        {
+          "id": "FT-013",
+          "name": "Gestão de Roles RBAC",
+          "status": "implemented",
+          "status_label": "Implementada",
+          "endpoints_count": 3
+        }
+      ]
+    },
+    "seasons": {
+      "total_features": 6,
+      "completion_pct": 75.0,
+      "by_status": {
+        "implemented": 6
+      },
+      "features": [
+        {
+          "id": "FT-018",
+          "name": "Listar Temporadas",
+          "status": "implemented",
+          "status_label": "Implementada",
+          "endpoints_count": 1
+        },
+        {
+          "id": "FT-019",
+          "name": "Criar Temporada",
+          "status": "implemented",
+          "status_label": "Implementada",
+          "endpoints_count": 1
+        },
+        {
+          "id": "FT-020",
+          "name": "Obter Temporada",
+          "status": "implemented",
+          "status_label": "Implementada",
+          "endpoints_count": 1
+        },
+        {
+          "id": "FT-021",
+          "name": "Atualizar Temporada",
+          "status": "implemented",
+          "status_label": "Implementada",
+          "endpoints_count": 1
+        },
+        {
+          "id": "FT-022",
+          "name": "Associar Equipe à Temporada",
+          "status": "implemented",
+          "status_label": "Implementada",
+          "endpoints_count": 1
+        },
+        {
+          "id": "FT-023",
+          "name": "Remover Equipe da Temporada",
+          "status": "implemented",
+          "status_label": "Implementada",
+          "endpoints_count": 1
+        }
+      ]
+    },
+    "teams": {
+      "total_features": 8,
+      "completion_pct": 75.0,
+      "by_status": {
+        "implemented": 8
+      },
+      "features": [
+        {
+          "id": "FT-024",
+          "name": "Listar Equipes",
+          "status": "implemented",
+          "status_label": "Implementada",
+          "endpoints_count": 1
+        },
+        {
+          "id": "FT-025",
+          "name": "Criar Equipe",
+          "status": "implemented",
+          "status_label": "Implementada",
+          "endpoints_count": 1
+        },
+        {
+          "id": "FT-026",
+          "name": "Obter Equipe",
+          "status": "implemented",
+          "status_label": "Implementada",
+          "endpoints_count": 1
+        },
+        {
+          "id": "FT-027",
+          "name": "Editar Equipe",
+          "status": "implemented",
+          "status_label": "Implementada",
+          "endpoints_count": 1
+        },
+        {
+          "id": "FT-028",
+          "name": "Adicionar Atleta ao Elenco",
+          "status": "implemented",
+          "status_label": "Implementada",
+          "endpoints_count": 1
+        },
+        {
+          "id": "FT-029",
+          "name": "Remover Atleta do Elenco",
+          "status": "implemented",
+          "status_label": "Implementada",
+          "endpoints_count": 1
+        },
+        {
+          "id": "FT-030",
+          "name": "Adicionar Membro da Comissão",
+          "status": "implemented",
+          "status_label": "Implementada",
+          "endpoints_count": 1
+        },
+        {
+          "id": "FT-031",
+          "name": "Remover Membro da Comissão",
+          "status": "implemented",
+          "status_label": "Implementada",
+          "endpoints_count": 1
+        }
+      ]
+    },
     "training": {
       "total_features": 10,
       "completion_pct": 50.0,
@@ -86,6 +233,43 @@
           "name": "Fila de Atenção do Treinador",
           "status": "validated",
           "status_label": "Validada",
+          "endpoints_count": 1
+        }
+      ]
+    },
+    "users": {
+      "total_features": 4,
+      "completion_pct": 75.0,
+      "by_status": {
+        "implemented": 4
+      },
+      "features": [
+        {
+          "id": "FT-014",
+          "name": "Listar Perfis de Usuário",
+          "status": "implemented",
+          "status_label": "Implementada",
+          "endpoints_count": 1
+        },
+        {
+          "id": "FT-015",
+          "name": "Criar Perfil de Usuário",
+          "status": "implemented",
+          "status_label": "Implementada",
+          "endpoints_count": 1
+        },
+        {
+          "id": "FT-016",
+          "name": "Consultar Perfil de Usuário",
+          "status": "implemented",
+          "status_label": "Implementada",
+          "endpoints_count": 1
+        },
+        {
+          "id": "FT-017",
+          "name": "Atualizar Perfil de Usuário",
+          "status": "implemented",
+          "status_label": "Implementada",
           "endpoints_count": 1
         }
       ]

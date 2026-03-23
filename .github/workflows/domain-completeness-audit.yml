@@ -117,7 +117,7 @@ jobs:
       - name: Check audit results
         if: always()
         run: |
-          if grep -q "✓ PASS: 16/16" audit_output.txt; then
+          if grep -q "✓ PASS: 17/17" audit_output.txt; then
             echo "✅ All modules passed!"
             exit 0
           else

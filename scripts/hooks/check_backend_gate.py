@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 PreToolUse Hook — HB Track Backend Gate
-Bloqueia escrita em backend/apps/{module}/ se o módulo não estiver em
-validated_contract ou implementation_ready no MODULE_REGISTRY.yaml.
+Bloqueia escrita em src/{module}/ se o módulo não estiver em
+validated_contract ou em status >= implementation_ready no MODULE_REGISTRY.yaml.
 Usa apenas stdlib (sem dependências externas).
 """
 import json
@@ -10,7 +10,13 @@ import re
 import sys
 from pathlib import Path
 
-ALLOWED_STATUSES = {"validated_contract", "implementation_ready"}
+ALLOWED_STATUSES = {
+    "validated_contract",
+    "implementation_ready",
+    "implemented",
+    "staging_validated",
+    "released",
+}
 WRITE_TOOLS = {
     "editFiles",
     "replace_string_in_file",
@@ -20,6 +26,8 @@ WRITE_TOOLS = {
 }
 WORKSPACE = Path(__file__).resolve().parent.parent.parent
 REGISTRY_PATH = WORKSPACE / "docs/_canon/MODULE_REGISTRY.yaml"
+ROADMAP_EXEMPT_PREFIXES = ("src/shared/",)
+ROADMAP_EXEMPT_BASENAMES = {"tasks.py", "consumers.py", "middleware.py"}
 
 
 def get_module_status(module: str):
@@ -72,12 +80,18 @@ def main():
         if tool_name not in WRITE_TOOLS:
             sys.exit(0)
 
-        file_path = extract_file_path(event.get("toolInput", {}))
+        file_path = extract_file_path(event.get("toolInput", {})).replace("\\", "/")
         if not file_path:
             sys.exit(0)
 
-        # Só fiscaliza escritas em backend/apps/{module}/
-        match = re.search(r"backend/apps/([^/]+)/", file_path)
+        if any(file_path.startswith(prefix) for prefix in ROADMAP_EXEMPT_PREFIXES):
+            sys.exit(0)
+
+        if Path(file_path).name in ROADMAP_EXEMPT_BASENAMES and file_path.startswith("src/"):
+            sys.exit(0)
+
+        # Só fiscaliza escritas em src/{module}/
+        match = re.search(r"src/([^/]+)/", file_path)
         if not match:
             sys.exit(0)
 
@@ -95,12 +109,12 @@ def main():
             deny(
                 f"BLOCKED_REQUIRED_ARTIFACT_MISSING\n"
                 f"Módulo '{module}' está em '{status}'.\n"
-                f"Código backend exige status 'validated_contract' ou 'implementation_ready'.\n\n"
+                f"Código backend exige status 'validated_contract' ou >= 'implementation_ready'.\n\n"
                 f"Sequência obrigatória antes de gerar código:\n"
                 f"  1. Se draft_contract → promover para validated_contract (pipeline PASS)\n"
                 f"  2. readiness_promotion → implementation_ready\n"
                 f"  3. adversarial_analysis → ADVERSARIAL_ANALYSIS_GATE=PASS\n"
-                f"  4. Somente então: generate_code\n\n"
+                f"  4. Somente então: generate_code / evolução backend controlada\n\n"
                 f"Comando para iniciar: python3 scripts/hb verify --task-type readiness_promotion --module {module}"
             )
 

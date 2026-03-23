@@ -200,6 +200,7 @@ def test_parity_test_suite_green():
             sys.executable, "-m", "pytest",
             "tests/test_pipeline_governance.py",
             "tests/pipeline_gates/test_phase_0_determinism.py",
+            "tests/pipeline_gates/test_module_lifecycle_governance.py",
             "tests/pipeline_gates/test_roadmap_artifact_tracking.py",
             "tests/pipeline_gates/test_context_budgets_and_parity.py::TestSSOTParity",
             "tests/pipeline_gates/test_context_budgets_and_parity.py::TestHookIntegrity",

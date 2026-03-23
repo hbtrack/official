@@ -6,7 +6,7 @@
 ### Entrada Esperada
 | Campo             | Obrigatório | Valores |
 |------------------|-------------|---------|
-| module           | sim         | 16 canônicos (docs/_canon/MODULE_REGISTRY.yaml) |
+| module           | sim         | 17 canônicos (docs/_canon/MODULE_REGISTRY.yaml) |
 | task_type        | sim         | tipos ativos em .contract_driven/TASK_CATALOG.yaml |
 | resource         | condicional | para new_contract, contract_revision |
 | scope_description| recomendado | descrição livre |

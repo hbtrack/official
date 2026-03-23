@@ -11,6 +11,7 @@
 ## Declaração de Conclusão
 
 O sistema HB Track atingiu **100/100 em robustez contratual CDD** em 2026-03-19.
+Isso conclui a remediação contratual do pipeline CDD. **Não equivale ao DONE do produto** nem substitui o `ROADMAP.md`.
 
 Todas as 38 ações do Plano Mestre de Remediação Contratual (Fases 0–7) foram
 executadas e comitadas. O pipeline está em estado PASS determinístico, com 17/17
@@ -143,8 +144,9 @@ Hashes completos:
    - Todos os 17 módulos têm contratos prontos como SSOT
    - Prioridade sugerida: `identity_access` → `users` → `seasons` → `teams`
 
-2. **`generate_frontend`** pode ser ativado para módulos com UI Contract
-   - Verificar: `docs/hbtrack/{module}/ui/` para módulos com contratos de UI
+2. **Frontend continua no modo ROADMAP, não no worker `generate_frontend`**
+   - `generate_frontend` permanece `frozen` no TASK_CATALOG
+   - As fases 5, 8 e 11 seguem `ROADMAP.md` com implementação React + Vite
 
 3. **Gates de código** serão ativados automaticamente quando artefatos de código existirem:
    - `OPENAPI_POLICY_RULESET_GATE` — lint de OpenAPI

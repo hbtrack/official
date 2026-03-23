@@ -1,12 +1,21 @@
 ---
 doc_type: canon
-version: "1.0.0"
+version: "1.1.0"
 status: active
 decision_ref: D7
 adr_ref: ADR-030
 ---
 
 # FRONTEND_CONTRACT.md
+
+## 0. Status Operacional Atual
+
+Este documento descreve o **target-state normativo** do frontend. O worker `generate_frontend` permanece `frozen` enquanto:
+
+- `frontend/` não existir no workspace com paths canonizados
+- `package.json` não declarar a toolchain frontend real (React/Vite/Vitest/Playwright)
+- o `FRONTEND_CONTRACT_GATE` continuar em `SKIP_NOT_APPLICABLE`
+- não houver validação empírica do contrato sobre a estrutura real
 
 ## 1. Decisão de Plataforma (D7 = Opção D)
 
@@ -25,7 +34,7 @@ adr_ref: ADR-030
 | Linguagem | TypeScript |
 | Roteamento | React Router v6 |
 | Estado global | Zustand |
-| HTTP client | Axios (gerado via openapi-typescript-fetch) |
+| HTTP client | openapi-fetch |
 | Testes unitários | Vitest + Testing Library |
 | Testes E2E | Playwright |
 | Estilo | Tailwind CSS |
@@ -40,7 +49,7 @@ Todo cliente HTTP é **gerado automaticamente** a partir do contrato:
 ```bash
 # Gerar tipos TypeScript e cliente a partir do OpenAPI
 npx openapi-typescript contracts/openapi/openapi.yaml -o frontend/src/api/schema.d.ts
-npx openapi-fetch # cliente tipado gerado a partir do schema
+# client.ts instancia openapi-fetch usando os tipos gerados em schema.d.ts
 ```
 
 Qualquer endpoint novo no frontend → contrato OpenAPI deve ser atualizado primeiro.
@@ -87,7 +96,7 @@ Sem features cross-cutting — compartilhar via `shared/`.
 
 ### R3 — Sem chamadas HTTP fora de `api/hooks/`
 Todas as chamadas à API passam pelos hooks em `api/hooks/`.
-Componentes nunca chamam `axios` diretamente.
+Componentes nunca chamam `fetch` ou o client HTTP diretamente.
 
 ### R4 — Estado do servidor via React Query
 Estado derivado de dados da API → React Query (cache, loading, error).
@@ -106,6 +115,8 @@ O gate verifica que:
 2. Nenhum endpoint hardcoded em componentes (apenas via hooks)
 3. Tipos de API derivam de `schema.d.ts` (sem interfaces duplicadas)
 4. `package.json` inclui script `gen:api` para regenerar o cliente
+
+Se `frontend/` não existir, o gate deve permanecer `SKIP_NOT_APPLICABLE` e o worker continua congelado.
 
 Gate registrado em: `docs/_canon/gates/GATES_REGISTRY.yaml`
 

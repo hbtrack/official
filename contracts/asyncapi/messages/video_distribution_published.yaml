@@ -2,6 +2,7 @@
 # Module: video
 # Domain rules: DR-VID-007, DR-VID-008, DR-VID-009
 # Decisions: ADR-033
+messageId: video_distribution_published
 name: VideoDistributionPublishedMessage
 title: Distribuição de Vídeo Publicada
 summary: Publicado quando feed é distribuído a destino externo (CDN, parceiro) — DR-VID-009.

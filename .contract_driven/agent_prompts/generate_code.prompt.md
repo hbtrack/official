@@ -8,7 +8,7 @@ status: active
 
 > **Stack canônica:** Python 3.12 + Django 5.x + Django Ninja 1.x + PostgreSQL 16 + Django ORM
 > **Referência:** `docs/_canon/CODE_ARCHITECTURE.md` (v1.1.0) + ADR-026 + ADR-031
-> **Estrutura real:** `backend/apps/<module>/`
+> **Estrutura real:** `src/<module>/`
 
 ---
 
@@ -61,7 +61,7 @@ _reports/adversarial/<module>/<resource>.adversarial.json  # resultado adversari
 Para cada entidade identificada no contrato e schemas:
 
 ```python
-# backend/apps/<module>/domain/entities.py
+# src/<module>/domain/entities.py
 from dataclasses import dataclass
 from uuid import UUID
 
@@ -83,7 +83,7 @@ class <Entity>:
 Para entidades com FSM (STATE_MODEL presente):
 
 ```python
-# backend/apps/<module>/domain/state_machine.py
+# src/<module>/domain/state_machine.py
 from enum import StrEnum
 
 class <Entity>Status(StrEnum):
@@ -106,7 +106,7 @@ class <Entity>StateMachine:
 Um use case por feature do FEATURE_REGISTRY:
 
 ```python
-# backend/apps/<module>/application/use_cases.py
+# src/<module>/application/use_cases.py
 from ..domain.entities import <Entity>
 from ..infrastructure.repository import <Module>Repository
 
@@ -130,7 +130,10 @@ class <FeatureName>UseCase:
 ## Fase GC4 — Geração da Camada Infrastructure
 
 ```python
-# backend/apps/<module>/infrastructure/models.py
+# src/<module>/models.py
+from <module>.infrastructure.models import <Entity>Model  # noqa: F401
+
+# src/<module>/infrastructure/models.py
 import uuid
 from django.db import models
 
@@ -142,7 +145,7 @@ class <Entity>Model(models.Model):
         db_table = "<module>_<entities>"  # snake_case plural
         app_label = "<module>"
 
-# backend/apps/<module>/infrastructure/repository.py
+# src/<module>/infrastructure/repository.py
 from .models import <Entity>Model
 from ..domain.entities import <Entity>
 
@@ -169,7 +172,7 @@ class <Module>Repository:
 Verificar cada endpoint, parâmetro, status code e response schema antes de gerar.
 
 ```python
-# backend/apps/<module>/interface/api.py
+# src/<module>/api.py
 from ninja import Router
 from ninja.errors import HttpError
 from ..application.use_cases import <FeatureName>UseCase
@@ -191,11 +194,11 @@ def create_<resource>(request, body: <ResourceInputSchema>):
     return 201, use_case.execute(body.dict())
 ```
 
-Registrar o router no `backend/config/api.py`:
+Registrar o router no `config/urls.py`:
 
 ```python
-# backend/config/api.py
-from backend.apps.<module>.interface.api import router as <module>_router
+# config/urls.py
+from <module>.api import router as <module>_router
 api.add_router("/<module>", <module>_router)
 ```
 
@@ -206,7 +209,7 @@ api.add_router("/<module>", <module>_router)
 Para cada use case gerado (testes unitários):
 
 ```python
-# backend/apps/<module>/tests/unit/test_<feature>_use_case.py
+# src/<module>/tests/unit/test_<feature>_use_case.py
 import pytest
 from unittest.mock import MagicMock
 
@@ -219,7 +222,7 @@ class TestCreate<Feature>:
 Para cada endpoint gerado (testes de integração com pytest-django):
 
 ```python
-# backend/apps/<module>/tests/integration/test_<resource>_api.py
+# src/<module>/tests/integration/test_<resource>_api.py
 import pytest
 
 @pytest.mark.django_db
@@ -244,12 +247,14 @@ Após geração:
 🏆 CÓDIGO GERADO — <Feature em português>
 
 ✅ Arquivos criados:
-   - backend/apps/<module>/domain/entities.py
-   - backend/apps/<module>/application/use_cases.py
-   - backend/apps/<module>/infrastructure/models.py
-   - backend/apps/<module>/infrastructure/repository.py
-   - backend/apps/<module>/interface/api.py
-   - backend/apps/<module>/tests/ (X testes)
+   - src/<module>/domain/entities.py
+   - src/<module>/application/use_cases.py
+   - src/<module>/models.py
+   - src/<module>/infrastructure/models.py
+   - src/<module>/infrastructure/repository.py
+   - src/<module>/schemas.py
+   - src/<module>/api.py
+   - src/<module>/tests/ (X testes)
 
 🔄 Próximo passo: python manage.py makemigrations && pytest
 ```

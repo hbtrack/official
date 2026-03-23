@@ -1,10 +1,10 @@
 ---
-applyTo: "backend/apps/**"
+applyTo: "src/**"
 ---
 
 # Guarda de elegibilidade de backend — HB Track CDD
 
-Antes de criar ou modificar qualquer arquivo em `backend/apps/{module}/`:
+Antes de criar ou modificar qualquer arquivo em `src/{module}/`:
 
 ## Verificação obrigatória (2 passos)
 
@@ -29,3 +29,19 @@ Para gerar código, siga a sequência:
 Confirmar que `_reports/contract_gates/latest.json` contém `ADVERSARIAL_ANALYSIS_GATE: PASS`.
 
 ## Nunca gere código backend sem esses dois passos verificados.
+
+## Arquivos explicitamente fora deste escopo
+
+Este guarda aplica-se a **código de módulo em** `src/**`. Os seguintes paths pertencem ao **Modo ROADMAP** (`execute_roadmap_phase`) e não requerem `validated_contract` nem `ADVERSARIAL_ANALYSIS_GATE`:
+
+- `src/shared/` — middleware e utilitários transversais
+- `src/*/tasks.py`, `src/*/consumers.py`, `src/*/middleware.py` — infraestrutura assíncrona / auth / websocket
+- `config/` — Celery, ASGI, settings Django
+- `infra/` — Docker Compose, Nginx, scripts de deploy
+- `Dockerfile` (raiz do repositório)
+- `.github/workflows/`
+- `frontend/` — React + Vite
+- `mobile/` — React Native + Expo
+- `scripts/seed.py`, `scripts/hooks/`
+
+Criar esses artefatos diretamente, sem verificações CDD.

@@ -30,12 +30,12 @@ O sistema deve detectar automaticamente qualquer divergência entre o comportame
 | **OpenTelemetry** | Instrumentação de traces e métricas (sem vendor lock-in) | Sim (pós-v1.0) |
 | **Prometheus + Grafana** | Métricas de negócio + dashboards | Sim (pós-v1.0) |
 | **Optic** | Contract drift detection — compara tráfego real com OpenAPI | Recomendado |
-| **FastAPI middleware** | Validação inline de request/response contra schema | Sim (em implementação) |
+| **Django/ASGI middleware** | Validação inline de request/response contra schema | Sim (em implementação) |
 
-## 4. Middleware de Validação (FastAPI)
+## 4. Middleware de Validação (Django/ASGI)
 
 Toda resposta da API deve ser validada contra o contrato OpenAPI antes de retornar ao cliente.
-Implementar como middleware ASGI em `src/shared/middleware/contract_validation.py`:
+Implementar como middleware ASGI em `src/shared/middleware.py`:
 
 ```python
 # Lógica esperada (a ser implementada no generate_code worker):

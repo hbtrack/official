@@ -3,6 +3,7 @@
 # Module: ai_ingestion
 # ============================================================
 
+messageId: ai_ingestion_job_failed
 name: AiIngestionJobFailedMessage
 title: Job de Ingestão Falhou
 summary: >

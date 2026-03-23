@@ -1,3 +1,4 @@
+messageId: capture_started
 name: video_capture_started
 title: Video Capture Started
 summary: MatchMediaSession iniciou captura com timecode sincronizado.

@@ -32,7 +32,7 @@ Ele **não** substitui:
 
 ## 2. Taxonomia canônica de módulos
 
-**Fonte autoritativa**: `docs/_canon/MODULE_REGISTRY.yaml` — lista completa dos 16 módulos canônicos, status operacional e superfícies esperadas.
+**Fonte autoritativa**: `docs/_canon/MODULE_REGISTRY.yaml` — lista completa dos 17 módulos canônicos, status operacional e superfícies esperadas.
 
 Se um módulo não estiver listado no `MODULE_REGISTRY.yaml`, ele não existe.
 
@@ -185,7 +185,7 @@ Estes arquivos vivem em:
 - `docs/_canon/C4_CONTAINERS.md` — C4 containers
 
 #### 4A.2.2 Taxonomia e governança de módulos
-- `docs/_canon/MODULE_MAP.md` — mapa de 16 módulos
+- `docs/_canon/MODULE_MAP.md` — mapa de 17 módulos
 - `docs/_canon/MODULE_REGISTRY.yaml` — status operacional por módulo
 - `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml` — matriz de autoridade por módulo
 - `docs/_canon/FEATURE_REGISTRY.yaml` — registro de features
@@ -400,7 +400,7 @@ O footprint mínimo esperado de cross-references para documentação de módulo 
 - workflow files sem orquestração real
 - asyncapi files sem eventos reais
 - contratos fora das pastas canônicas
-- nomes de módulo fora da taxonomia canônica de 16 módulos
+- nomes de módulo fora da taxonomia canônica de 17 módulos
 - artefatos gerados tratados como soberanos
 - docs de módulo que não referenciam os docs globais obrigatórios quando aplicável
 
@@ -414,7 +414,7 @@ O footprint mínimo esperado de cross-references para documentação de módulo 
 
 Para o procedimento operacional completo (incluindo validação, boot sequence e critérios de readiness), veja `CONTRACT_SYSTEM_RULES.md` seção 15 (Contract Creation Procedure).
 
-1. escolher o módulo canônico na taxonomia de 16 módulos
+1. escolher o módulo canônico na taxonomia de 17 módulos
 2. criar `contracts/openapi/paths/<module>.yaml` (ver `.contract_driven/TASK_CATALOG.yaml` task `new_contract`)
 3. criar `contracts/schemas/<module>/` (ver `.contract_driven/TASK_CATALOG.yaml` task `new_schema`)
 4. avaliar `contracts/workflows/<module>/<workflow_name>.arazzo.yaml` (ver `.contract_driven/TASK_CATALOG.yaml` task `new_workflow`)
@@ -436,7 +436,7 @@ Um fluxo de criação de contrato é estruturalmente aceitável apenas quando o 
 Uma estrutura de contrato é estruturalmente válida apenas quando:
 - o artefato está na pasta canônica
 - naming segue as regras canônicas
-- o módulo pertence à lista de 16 módulos
+- o módulo pertence à lista de 17 módulos
 - soberania de superfície é respeitada
 - nenhum anti-pattern proibido está presente
 

@@ -2,6 +2,7 @@
 # Module: video
 # Domain rules: DR-VID-001, DR-VID-003, DR-VID-007
 # Decisions: ADR-033
+messageId: video_session_capturing
 name: VideoSessionCapturingMessage
 title: Captura de Vídeo Iniciada
 summary: Publicado quando MatchMediaSession transita para CAPTURING (edge nodes ativos).

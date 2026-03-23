@@ -3,6 +3,7 @@
 # Domain rules: DR-USR-001, DR-USR-002, DR-USR-003
 # Invariants: INV-USR-001, INV-USR-003
 
+messageId: user_created
 name: UserCreatedMessage
 title: Usuário Criado
 summary: Publicado quando um novo perfil de usuário é criado no sistema (DR-USR-001).

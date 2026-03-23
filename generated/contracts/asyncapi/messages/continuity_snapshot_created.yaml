@@ -1,3 +1,4 @@
+messageId: continuity_snapshot_created
 name: continuity_snapshot_created
 title: Continuity Snapshot Created
 summary: Snapshot de continuidade registrado para efeitos de continuidade periodizacional.

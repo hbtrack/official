@@ -519,7 +519,7 @@ components:
         training = modules["training"]
         status = training.get("status")
 
-        if status in ["draft_contract", "validated_contract", "implementation_ready"]:
+        if status in ["draft_contract", "validated_contract", "implementation_ready", "implemented", "staging_validated", "released"]:
             return {
                 "veredicto": "✓ PASS",
                 "reason": f"Módulo 'training' tem status '{status}' (não bloquearia passagem en F0-F3)",

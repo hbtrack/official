@@ -12,13 +12,14 @@ stack: react_vite_typescript
 ⚠️ **WORKER CONGELADO** ⚠️
 
 Este worker está temporariamente congelado até que:
-1. A estrutura real de frontend seja implementada no workspace
-2. FRONTEND_CONTRACT.md seja validado empiricamente
-3. Stack final (React/Vite vs Next.js vs React Native) seja decidida em ADR
+1. `frontend/` exista no workspace com paths canonizados
+2. `package.json` declare a toolchain frontend real (React/Vite/Vitest/Playwright)
+3. `FRONTEND_CONTRACT.md` seja validado empiricamente
+4. `FRONTEND_CONTRACT_GATE` deixe de ser `SKIP_NOT_APPLICABLE`
 
 **Não executar este worker até implementação da estrutura de frontend no workspace.**
 
-> **Nota**: Paths mencionados neste prompt (ex: `frontend/src/`) são placeholders da estrutura planejada.
+> **Nota**: Paths mencionados neste prompt (ex: `frontend/src/`) descrevem o target-state. Enquanto `frontend/` não existir no repo, este prompt serve apenas como especificação operacional congelada.
 
 ---
 
@@ -31,6 +32,7 @@ Antes de executar este worker, verificar:
 3. **Contrato OpenAPI** do módulo existe e está validado (gate `OPENAPI_ROOT_MODULE_SYNC_GATE` PASS)
 4. **FEATURE_REGISTRY.yaml** contém a feature alvo com status `validated` ou superior
 5. `contracts/openapi/openapi.yaml` está atualizado
+6. `frontend/` e `package.json` com scripts/toolchain frontend reais existem no workspace
 
 Se qualquer pré-requisito estiver ausente → emitir bloqueio correspondente e parar.
 

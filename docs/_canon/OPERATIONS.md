@@ -51,6 +51,7 @@ Regras absolutas:
 | ai_ingestion    | ingestão e processamento de dados por IA              | decisão sobre dados (pertence ao módulo de domínio)   |
 | audit           | rastreabilidade de ações no sistema                  | lógica de negócio de qualquer módulo                  |
 | notifications   | entrega de notificações                              | regras de negócio que geram as notificações           |
+| video           | captura, ingestão, clipping e distribuição técnica interna de mídia | broadcast/OTT como domínio de produto autônomo        |
 
 Regra: se um artefato sob módulo X tentar definir comportamento do domínio de módulo Y → BLOCKED_SCOPE_OVERFLOW.
 

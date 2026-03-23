@@ -2,6 +2,7 @@
 # Module: video
 # Domain rules: DR-VID-001, DR-VID-003, DR-VID-008
 # Decisions: ADR-033
+messageId: video_session_created
 name: VideoSessionCreatedMessage
 title: MatchMediaSession Criada
 summary: Publicado quando uma nova sessão de mídia é criada (state=DRAFT, DR-VID-003).

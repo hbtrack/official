@@ -103,6 +103,23 @@ BLOCKED_AXIOM_INVALID_NORMALIZATION_REGEX = "BLOCKED_AXIOM_INVALID_NORMALIZATION
 BLOCKED_AXIOM_INVALID_VALIDATOR_CONTRACT = "BLOCKED_AXIOM_INVALID_VALIDATOR_CONTRACT"
 BLOCKED_AXIOM_INTEGRITY = "BLOCKED_AXIOM_INTEGRITY"
 
+MODULE_STATUS_ORDER = (
+    "scaffold",
+    "draft_contract",
+    "validated_contract",
+    "implementation_ready",
+    "implemented",
+    "staging_validated",
+    "released",
+)
+IMPLEMENTATION_AUTHORIZED_STATUSES = {
+    "implementation_ready",
+    "implemented",
+    "staging_validated",
+    "released",
+}
+PRE_CONTRACT_EVIDENCE_STATUSES = {"validated_contract", *IMPLEMENTATION_AUTHORIZED_STATUSES}
+
 _KNOWN_BLOCKING_CODES = {
     BLOCKED_ENUM_OUTSIDE_AXIOMS,
     BLOCKED_FORMAT_VIOLATION,
@@ -280,7 +297,7 @@ def _load_canonical_modules_from_layout(root: pathlib.Path) -> list[str]:
             ...
 
     Valida:
-    - Exatamente 16 módulos
+    - Exatamente 17 módulos
     - Formato lower_snake_case
     - Unicidade
 
@@ -4491,7 +4508,7 @@ def _g2j_pre_contract_evidence(root: pathlib.Path) -> dict:
     eligible_modules = sorted([
         module
         for module, entry in registry_entries.items()
-        if entry.get("status") in {"validated_contract", "implementation_ready"}
+        if entry.get("status") in PRE_CONTRACT_EVIDENCE_STATUSES
     ])
     if not eligible_modules:
         return _pg(
@@ -4499,7 +4516,7 @@ def _g2j_pre_contract_evidence(root: pathlib.Path) -> dict:
             "PASS",
             True,
             None,
-            "Nenhum módulo em status validated_contract/implementation_ready exige evidência pré-contrato.",
+            "Nenhum módulo em status validated_contract+ exige evidência pré-contrato.",
             [],
             checked,
             [],
@@ -4688,10 +4705,10 @@ def _g2l_decision_ir_conformance(root: pathlib.Path) -> dict:
     eligible_modules = sorted([
         module
         for module, entry in registry_entries.items()
-        if entry.get("status") == "implementation_ready" and "decision_ir" in set(entry.get("expected_surfaces") or [])
+        if entry.get("status") in IMPLEMENTATION_AUTHORIZED_STATUSES and "decision_ir" in set(entry.get("expected_surfaces") or [])
     ])
     if not eligible_modules:
-        return _skip(gate_id, "Nenhum módulo implementation_ready requer Decision IR no momento.", _ms(t0))
+        return _skip(gate_id, "Nenhum módulo implementation_ready+ requer Decision IR no momento.", _ms(t0))
 
     ir_path = root / ".dev" / "MODULE_DECISION_IR.json"
     schema_path = root / ".dev" / "decisões" / "MODULE_DECISION_IR_SCHEMA.json"
@@ -4702,7 +4719,7 @@ def _g2l_decision_ir_conformance(root: pathlib.Path) -> dict:
             "FAIL",
             True,
             "IR_SCHEMA_INVALID",
-            "MODULE_DECISION_IR ausente para módulo implementation_ready.",
+            "MODULE_DECISION_IR ausente para módulo implementation_ready+.",
             [],
             checked,
             [],
@@ -4743,7 +4760,7 @@ def _g2l_decision_ir_conformance(root: pathlib.Path) -> dict:
             "FAIL",
             True,
             "IR_UNKNOWN_MODULE",
-            "MODULE_DECISION_IR não está alinhado ao(s) módulo(s) implementation_ready do registry.",
+            "MODULE_DECISION_IR não está alinhado ao(s) módulo(s) implementation_ready+ do registry.",
             [],
             checked,
             [],
@@ -4810,7 +4827,7 @@ def _g2l_decision_ir_conformance(root: pathlib.Path) -> dict:
         "PASS",
         True,
         None,
-        "MODULE_DECISION_IR válido para o(s) módulo(s) implementation_ready.",
+        "MODULE_DECISION_IR válido para o(s) módulo(s) implementation_ready+.",
         [],
         checked,
         [],
@@ -6917,7 +6934,7 @@ def _g_adversarial_analysis(root: pathlib.Path) -> dict:
                                "severity": "error"})
         module_name = data.get("module", "")
         module_status = module_statuses.get(module_name, "draft_contract")
-        min_score = 90 if module_status == "implementation_ready" else 80
+        min_score = 90 if module_status in IMPLEMENTATION_AUTHORIZED_STATUSES else 80
         if score < min_score:
             violations.append({
                 "blocking_code": "BLOCKED_ADVERSARIAL_PENDING",
@@ -6925,11 +6942,11 @@ def _g_adversarial_analysis(root: pathlib.Path) -> dict:
                 "message": f"Score {score}/100 < {min_score} exigido para status='{module_status}'.",
                 "severity": "error",
             })
-        if module_status == "implementation_ready" and critical_open > 0:
+        if module_status in IMPLEMENTATION_AUTHORIZED_STATUSES and critical_open > 0:
             violations.append({
                 "blocking_code": "BLOCKED_ADVERSARIAL_PENDING",
                 "artifact": str(rpath.relative_to(root)),
-                "message": f"{critical_open} risco(s) crítico(s) aberto(s) bloqueiam implementation_ready.",
+                "message": f"{critical_open} risco(s) crítico(s) aberto(s) bloqueiam implementation_ready+.",
                 "severity": "error",
             })
     if violations:
@@ -7035,7 +7052,7 @@ def _g_module_status_coherence(root: pathlib.Path) -> dict:
                    [str(registry_path)], [str(registry_path)], [], [], _ms(t0))
     violations: list[dict] = []
     checked = [str(registry_path)]
-    high_statuses = {"validated_contract", "implementation_ready"}
+    high_statuses = PRE_CONTRACT_EVIDENCE_STATUSES
     for mod_name, mod_data in (registry.get("modules") or {}).items():
         if not isinstance(mod_data, dict):
             continue
@@ -7065,12 +7082,12 @@ def _g_module_status_coherence(root: pathlib.Path) -> dict:
                     ),
                     "severity": "error",
                 })
-            elif critical_open > 0 and status == "implementation_ready":
+            elif critical_open > 0 and status in IMPLEMENTATION_AUTHORIZED_STATUSES:
                 violations.append({
                     "blocking_code": "BLOCKED_ADVERSARIAL_PENDING",
                     "artifact": str(rpath.relative_to(root)),
                     "message": (
-                        f"Módulo '{mod_name}' status='implementation_ready' com "
+                        f"Módulo '{mod_name}' status='{status}' com "
                         f"{critical_open} risco(s) crítico(s) em aberto."
                     ),
                     "severity": "error",
@@ -7162,7 +7179,7 @@ def _g_surface_promotion_coherence(root: pathlib.Path) -> dict:
             continue
         status = mod_data.get("status", "scaffold")
         expected: list[str] = mod_data.get("expected_surfaces") or []
-        if not expected or status in ("scaffold", "implementation_ready"):
+        if not expected or status == "scaffold" or status in IMPLEMENTATION_AUTHORIZED_STATUSES:
             continue
 
         missing = [s for s in expected if not _surface_present(mod_name, s)]
@@ -7353,7 +7370,7 @@ def _g_module_dependency_resolution(root: pathlib.Path) -> dict:
 def _g_readiness_generation_compatibility(root: pathlib.Path) -> dict:
     """C-003 — READINESS_GENERATION_COMPATIBILITY_GATE.
 
-    Para cada módulo com status `implementation_ready` no MODULE_REGISTRY, verifica que
+    Para cada módulo com status `implementation_ready+` no MODULE_REGISTRY, verifica que
     existe relatório de análise adversarial em `_reports/adversarial/*.adversarial.json`
     com `overall_status == PASS`. Impede promoção de modules sem auditoria adversarial.
     Bloqueio: READINESS_GENERATION_INCOMPATIBLE.
@@ -7366,11 +7383,11 @@ def _g_readiness_generation_compatibility(root: pathlib.Path) -> dict:
 
     ready_modules = sorted([
         module for module, entry in registry_entries.items()
-        if entry.get("status") == "implementation_ready"
+        if entry.get("status") in IMPLEMENTATION_AUTHORIZED_STATUSES
     ])
     if not ready_modules:
         return _pg(gate_id, "PASS", True, None,
-                   "Nenhum módulo em implementation_ready — gate não aplicável.",
+                   "Nenhum módulo em implementation_ready+ — gate não aplicável.",
                    [], checked, [], [], _ms(t0))
 
     adversarial_dir = root / "_reports" / "adversarial"
@@ -7401,7 +7418,7 @@ def _g_readiness_generation_compatibility(root: pathlib.Path) -> dict:
                     else "_reports/adversarial/"
                 ),
                 "message": (
-                    f"Módulo '{module}' está em implementation_ready mas não possui "
+                    f"Módulo '{module}' está em status '{registry_entries[module].get('status')}' mas não possui "
                     "relatório de análise adversarial em _reports/adversarial/."
                 ),
                 "severity": "error",
@@ -7412,7 +7429,7 @@ def _g_readiness_generation_compatibility(root: pathlib.Path) -> dict:
                 "blocking_code": "READINESS_GENERATION_INCOMPATIBLE",
                 "artifact": "_reports/adversarial/*.adversarial.json",
                 "message": (
-                    f"Módulo '{module}' está em implementation_ready "
+                    f"Módulo '{module}' está em status '{registry_entries[module].get('status')}' "
                     "mas análise adversarial não é PASS."
                 ),
                 "severity": "error",
@@ -7421,10 +7438,10 @@ def _g_readiness_generation_compatibility(root: pathlib.Path) -> dict:
 
     if violations:
         return _pg(gate_id, "FAIL", True, "READINESS_GENERATION_INCOMPATIBLE",
-                   f"{len(violations)} módulo(s) implementation_ready sem análise adversarial PASS.",
+                   f"{len(violations)} módulo(s) implementation_ready+ sem análise adversarial PASS.",
                    [], checked, [], violations, _ms(t0))
     return _pg(gate_id, "PASS", True, None,
-               f"{len(ready_modules)} módulo(s) implementation_ready com análise adversarial PASS.",
+               f"{len(ready_modules)} módulo(s) implementation_ready+ com análise adversarial PASS.",
                [], checked, [], [], _ms(t0))
 
 
@@ -7864,7 +7881,7 @@ def _g_code_architecture(root: pathlib.Path) -> dict:
     """CODE_ARCHITECTURE_GATE — verifica conformidade com ADR-026.
 
     SKIP_NOT_APPLICABLE: 'src/' ainda não existe (pré-implementação).
-    PASS : ADR-026 + CODE_ARCHITECTURE.md existem; módulos implementation_ready têm src/<module>/.
+    PASS : ADR-026 + CODE_ARCHITECTURE.md existem; módulos implementation_ready+ têm src/<module>/.
     FAIL : ADR-026 ou CODE_ARCHITECTURE.md ausentes (BLOCKED_MISSING_ARCH_DECISION).
     """
     t0 = time.monotonic()
@@ -7908,7 +7925,7 @@ def _g_code_architecture(root: pathlib.Path) -> dict:
                    f"Arquitetura de código: {len(hard)} artefato(s) obrigatório(s) ausente(s).",
                    [], checked, [], violations, _ms(t0))
 
-    # 4. Para módulos implementation_ready — verificar src/<module>/
+    # 4. Para módulos implementation_ready+ — verificar src/<module>/
     registry_path = root / "docs" / "_canon" / "MODULE_REGISTRY.yaml"
     if registry_path.exists():
         try:
@@ -7916,7 +7933,7 @@ def _g_code_architecture(root: pathlib.Path) -> dict:
             modules_section = registry.get("modules", {})
             ready_modules = [
                 m for m, info in modules_section.items()
-                if isinstance(info, dict) and info.get("status") == "implementation_ready"
+                if isinstance(info, dict) and info.get("status") in IMPLEMENTATION_AUTHORIZED_STATUSES
             ]
             for mod in ready_modules:
                 mod_src = src_dir / mod
@@ -7925,7 +7942,7 @@ def _g_code_architecture(root: pathlib.Path) -> dict:
                     violations.append({
                         "blocking_code": "BLOCKED_MISSING_ARCH_DECISION",
                         "artifact": str(mod_src.relative_to(root)),
-                        "message": f"Módulo '{mod}' está implementation_ready mas src/{mod}/ não existe.",
+                        "message": f"Módulo '{mod}' está em status '{modules_section[mod].get('status')}' mas src/{mod}/ não existe.",
                         "severity": "warn",
                     })
         except Exception:
@@ -7938,7 +7955,7 @@ def _g_code_architecture(root: pathlib.Path) -> dict:
                    [], checked, [], violations, _ms(t0))
     if violations:
         return _pg(gate_id, "DEGRADED", False, None,
-                   f"Arquitetura de código: {len(violations)} aviso(s) — módulo(s) implementation_ready sem src/.",
+                   f"Arquitetura de código: {len(violations)} aviso(s) — módulo(s) implementation_ready+ sem src/.",
                    [], checked, [], violations, _ms(t0))
     return _pg(gate_id, "PASS", False, None,
                "Arquitetura de código: ADR-026 presente, CODE_ARCHITECTURE.md presente.",

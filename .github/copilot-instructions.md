@@ -15,10 +15,26 @@ Comunicar em português claro.
 - `docs/_canon/gates/GATES_REGISTRY.yaml`
 - `scripts/hb`
 - `scripts/contracts/validate/validate_contracts.py`
+- `ROADMAP.md` (fases 0-13, critérios de done, stack canônica — Modo ROADMAP)
 
 ## Regra de boot
 1. Se existir `SESSION_HANDOFF.md` na raiz, ler antes de qualquer ação.
 2. Se não existir, continuar como sessão nova; não inventar contexto ausente.
+3. Ler `ROADMAP.md` — fase atual do projeto e estado de implementação.
+
+## Dois modos de operação
+
+### Modo CDD (contratos)
+Ponto de entrada: `pre_contract_orchestrator`. Usar `hb verify` + `hb artifact`. Ver "Regra operacional para tarefas de contrato" abaixo.
+
+### Modo ROADMAP (implementação — fases 0-13)
+Ponto de entrada: `ROADMAP.md` + `SESSION_HANDOFF.md` + `.contract_driven/agent_prompts/execute_roadmap_phase.prompt.md`.
+- **NÃO** executar `hb verify`, `hb check`, `hb artifact`
+- **NÃO** passar por `pre_contract_orchestrator`
+- Verificar Critério de Done da fase N-1 antes de iniciar fase N
+- Bloqueios: `BLOCKED_PHASE_DEPENDENCY` | `BLOCKED_CDD_PIPELINE_FAIL` | `BLOCKED_DEPLOY_REQUIRES_HUMAN` | `BLOCKED_MISSING_STACK_DECISION`
+
+**Nunca misturar os dois modos.**
 
 ## Regra operacional para tarefas de contrato
 
@@ -50,6 +66,8 @@ VCS      -> commit opcional conforme objetivo da sessão; o pre-commit adiciona 
 ## Bloqueios canônicos
 
 Quando houver `BLOCKED_*`, informar o humano em português:
+
+**Modo CDD:**
 - `BLOCKED_MISSING_MODULE`
 - `BLOCKED_MISSING_AGENT_PROMPT`
 - `BLOCKED_REQUIRED_ARTIFACT_MISSING`
@@ -57,8 +75,15 @@ Quando houver `BLOCKED_*`, informar o humano em português:
 - `BLOCKED_SCOPE_OVERFLOW`
 - `BLOCKED_CONTRACT_CONFLICT`
 
+**Modo ROADMAP:**
+- `BLOCKED_PHASE_DEPENDENCY` — Critério de Done da fase N-1 não atingido
+- `BLOCKED_CDD_PIPELINE_FAIL` — Pipeline CDD em FAIL e fase ≥ 4
+- `BLOCKED_DEPLOY_REQUIRES_HUMAN` — Deploy de produção (fases 6, 9, 12) requer aprovação
+- `BLOCKED_MISSING_STACK_DECISION` — Stack não definida para o artefato a criar
+
 ## Regras de ouro
 
+**Modo CDD:**
 - Nunca pular `hb verify` antes de authoring.
 - Nunca criar artefato fora de path canônico.
 - Sempre registrar artefato com `hb artifact`.
@@ -66,3 +91,10 @@ Quando houver `BLOCKED_*`, informar o humano em português:
 - Sempre atualizar `SESSION_HANDOFF.md` ao fechar a sessão.
 - Nunca reescrever a força dos gates por conveniência.
 - Nunca usar comandos destrutivos de git (`reset`, `rebase`, `commit --amend`) para mascarar estado.
+
+**Modo ROADMAP:**
+- Nunca iniciar fase N sem confirmar Critério de Done da fase N-1.
+- Nunca editar `frontend/src/api/schema.d.ts` manualmente — regenerar com `npm run api:generate`.
+- Nunca executar deploy de produção autonomamente (fases 6, 9, 12 — requer aprovação humana).
+- Nunca usar worker `generate_frontend` (frozen) — FASE 5 usa código React direto.
+- Nunca criar artefatos fora dos paths canônicos definidos em `execute_roadmap_phase.prompt.md`.

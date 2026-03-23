@@ -1,3 +1,4 @@
+messageId: notification_delivery_failed
 name: notification_delivery_failed
 title: Notification Delivery Failed
 summary: Entrega de notificação falhou após esgotar todas as tentativas (retryCount=max).

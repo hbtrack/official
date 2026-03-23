@@ -8,7 +8,7 @@
 
 doc_type: canon
 version: "1.0.0"
-last_reviewed: "2026-03-18"
+last_reviewed: "2026-03-23"
 scope: boot_authority
 
 profiles:
@@ -24,7 +24,7 @@ profiles:
       - docs/_canon/AGENT_INSTRUCTIONS.md§0 # "Leia Primeiro"
       - docs/_canon/AGENT_INSTRUCTIONS.md§1 # Modo de operação
       - docs/_canon/AGENT_INSTRUCTIONS.md§2 # Sistema: O que é
-      - docs/_canon/AGENT_INSTRUCTIONS.md§3 # 16 Módulos Canônicos
+      - docs/_canon/AGENT_INSTRUCTIONS.md§3 # 17 Módulos Canônicos
       - docs/_canon/AGENT_INSTRUCTIONS.md§4 # Task Types → Workers
       - docs/_canon/AGENT_INSTRUCTIONS.md§5 # Bloqueios (códigos)
       - docs/_canon/AGENT_INSTRUCTIONS.md§6 # Regras Core
@@ -79,6 +79,27 @@ profiles:
       - decision_ir_exists: true # Se executando decision_discovery, IR deve existir
     exit_on_fail: true
 
+  # Profile para execução de fases do ROADMAP (implementação — modo distinto do CDD)
+  roadmap_execution:
+    id: roadmap_execution
+    description: "Boot para execução de fase do ROADMAP (infra, CI/CD, frontend, deploy). Não usa CDD pipeline."
+    load_sequence:
+      - ./docs/_canon/AGENT_INSTRUCTIONS.md      # entrypoint §0 obrigatório
+      - ./ROADMAP.md                              # fase atual + Critério de Done
+      - ./SESSION_HANDOFF.md                      # fase declarada (se existir)
+      - docs/_canon/CODE_ARCHITECTURE.md          # estrutura canônica de código backend
+    required_sections:
+      - docs/_canon/AGENT_INSTRUCTIONS.md§0       # "Leia Primeiro"
+      - ROADMAP.md                                # seção da fase declarada
+    validations:
+      - roadmap_phase_valid: true                 # phase deve ser inteiro entre 0 e 13
+      - session_handoff_read: true                # SESSION_HANDOFF.md lido se existir
+    exit_on_fail: true
+    notes: |
+      Este profile NÃO valida task_type_in_catalog nem module_in_registry (não são aplicáveis).
+      A validação de fase anterior (Critério de Done de N-1) é responsabilidade do worker.
+      Deploy de produção (fases 6, 9, 12) requer aprovação humana — nunca executar autonomamente.
+
   # Profile para limpeza/debug (baixa autoridade)
   diagnostic:
     id: diagnostic
@@ -98,6 +119,10 @@ selection_rules:
   # Se task_type está em TASK_CATALOG.yaml com profile_id, usar esse
   - condition: "task_type.profile_id != null"
     action: "use_task_specified_profile"
+
+  # Se task_type for execução de fase do ROADMAP
+  - condition: "task_type == execute_roadmap_phase"
+    action: "use_profile:roadmap_execution"
 
   # Se task_type for contract-related (new_contract, contract_revision, new_event, new_workflow, new_schema)
   - condition: "task_type in [new_contract, contract_revision, new_event, new_workflow, new_schema]"

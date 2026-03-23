@@ -1,3 +1,4 @@
+messageId: notification_delivery_sent
 name: notification_delivery_sent
 title: Notification Delivery Sent
 summary: Entrega de notificação confirmada pelo adapter do canal de destino.

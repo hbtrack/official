@@ -3,6 +3,7 @@
 # Module: ai_ingestion
 # ============================================================
 
+messageId: ai_ingestion_job_completed
 name: AiIngestionJobCompletedMessage
 title: Job de Ingestão Concluído
 summary: >

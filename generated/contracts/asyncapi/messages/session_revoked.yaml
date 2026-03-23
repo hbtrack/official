@@ -3,6 +3,7 @@
 # Domain rules: DR-IAM-001, DR-IAM-004, DR-IAM-005
 # Decisions: DEC-IAM-002=B (Redis denylist), DEC-IAM-003=C
 
+messageId: session_revoked
 name: SessionRevokedMessage
 title: Sessão Revogada
 summary: Publicado quando uma sessão autenticada é encerrada ou revogada (DR-IAM-004, DEC-IAM-002).

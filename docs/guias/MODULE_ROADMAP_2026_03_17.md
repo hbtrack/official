@@ -1,4 +1,7 @@
 # Roadmap de Implementação — 17 Módulos do HB Track
+> **OBSOLETO PARA CONTINUIDADE OPERACIONAL.**
+> Autoridade atual: `ROADMAP.md` para execução pós-CDD e `docs/_canon/MODULE_REGISTRY.yaml` para status de módulo.
+> Este arquivo permanece apenas como registro histórico de uma fotografia intermediária de 2026-03-17/19.
 > Data: 2026-03-19 (final) | Original: 2026-03-17
 > Versão: 1.20.0 | Status: 15/17 `validated_contract`; 1 `implementation_ready` (training); 1 `draft_contract` (video)
 > Autoridade: MODULE_REGISTRY.yaml | Última atualização: Video FASE 2-4 PASS; Testes TM-001..008 (36/36 PASS)
@@ -551,4 +554,3 @@ Módulos com apenas stubs de contrato (8–12 linhas de OpenAPI placeholder). Pr
 → **CODE GENERATION v1.0 (PRÓXIMA SEMANA)** — Django/FastAPI/Next.js para training + medical/analytics/reports
 → **Boundary validation** — video↔scout (timecode), medical↔training, analytics↔training, reports↔analytics
 → **v1.1 planning** — STATE_MODEL + PERMISSIONS + additional Arazzo workflows para video + medical/analytics/reports
-

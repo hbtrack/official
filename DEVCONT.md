@@ -232,17 +232,17 @@ Hoje o agente:
 
 #### Fase 0 — Congelar a autoridade operacional
 
-- [ ] Confirmar que o **ROADMAP operacional atual** será o artefato oficial do modo implementação
-- [ ] Adicionar `ROADMAP.md` ao controle de versão se ele ainda estiver apenas no worktree
-- [ ] Adicionar `.github/skills/hb-roadmap-executor/` ao controle de versão se ele ainda estiver apenas no worktree
-- [ ] Arquivar ou desautorizar explicitamente artefatos concorrentes de roadmap/status como [docs/guias/MODULE_ROADMAP_2026_03_17.md](/home/davis/HB-TRACK/docs/guias/MODULE_ROADMAP_2026_03_17.md#L1)
-- [ ] Escopar [FINAL_HANDOFF.md](/home/davis/HB-TRACK/FINAL_HANDOFF.md#L13) explicitamente como “conclusão da remediação CDD”, não “DONE do produto”
+- [x] Confirmar que o **ROADMAP operacional atual** será o artefato oficial do modo implementação
+- [x] Adicionar `ROADMAP.md` ao controle de versão se ele ainda estiver apenas no worktree
+- [x] Adicionar `.github/skills/hb-roadmap-executor/` ao controle de versão se ele ainda estiver apenas no worktree
+- [x] Arquivar ou desautorizar explicitamente artefatos concorrentes de roadmap/status como [docs/guias/MODULE_ROADMAP_2026_03_17.md](/home/davis/HB-TRACK/docs/guias/MODULE_ROADMAP_2026_03_17.md#L1)
+- [x] Escopar [FINAL_HANDOFF.md](/home/davis/HB-TRACK/FINAL_HANDOFF.md#L13) explicitamente como “conclusão da remediação CDD”, não “DONE do produto”
 
 #### Fase 1 — Reconciliar canon e prompts
 
-- [ ] Escolher uma única stack de frontend e propagar para [docs/_canon/ARCHITECTURE.md](/home/davis/HB-TRACK/docs/_canon/ARCHITECTURE.md#L57), [docs/_canon/CODE_ARCHITECTURE.md](/home/davis/HB-TRACK/docs/_canon/CODE_ARCHITECTURE.md#L13), [README.md](/home/davis/HB-TRACK/README.md#L30) e [ROADMAP.md](/home/davis/HB-TRACK/ROADMAP.md#L64)
-- [ ] Corrigir [docs/_canon/CODE_ARCHITECTURE.md](/home/davis/HB-TRACK/docs/_canon/CODE_ARCHITECTURE.md#L187) removendo o bloco legado FastAPI/SQLAlchemy duplicado
-- [ ] Fixar `src/` como único path canônico de backend em:
+- [x] Escolher uma única stack de frontend e propagar para [docs/_canon/ARCHITECTURE.md](/home/davis/HB-TRACK/docs/_canon/ARCHITECTURE.md#L57), [docs/_canon/CODE_ARCHITECTURE.md](/home/davis/HB-TRACK/docs/_canon/CODE_ARCHITECTURE.md#L13), [README.md](/home/davis/HB-TRACK/README.md#L30) e [ROADMAP.md](/home/davis/HB-TRACK/ROADMAP.md#L64)
+- [x] Corrigir [docs/_canon/CODE_ARCHITECTURE.md](/home/davis/HB-TRACK/docs/_canon/CODE_ARCHITECTURE.md#L187) removendo o bloco legado FastAPI/SQLAlchemy duplicado
+- [x] Fixar `src/` como único path canônico de backend em:
   - [docs/_canon/CODE_ARCHITECTURE.md](/home/davis/HB-TRACK/docs/_canon/CODE_ARCHITECTURE.md#L60)
   - [.contract_driven/TASK_CATALOG.yaml](/home/davis/HB-TRACK/.contract_driven/TASK_CATALOG.yaml#L230)
   - [.contract_driven/agent_prompts/generate_code.prompt.md](/home/davis/HB-TRACK/.contract_driven/agent_prompts/generate_code.prompt.md#L11)
@@ -252,53 +252,53 @@ Hoje o agente:
 
 #### Fase 2 — Fechar o runtime do modo ROADMAP
 
-- [ ] Atualizar [contracts/schemas/shared/session_start.schema.json](/home/davis/HB-TRACK/contracts/schemas/shared/session_start.schema.json#L47) para aceitar `roadmap_execution`
-- [ ] Atualizar o mesmo schema para aceitar `execute_roadmap_phase`
-- [ ] Revisar `write_scope` para contemplar infra/frontend/mobile/deploy quando em modo ROADMAP
-- [ ] Atualizar [scripts/hb](/home/davis/HB-TRACK/scripts/hb#L308) para não gravar `write_scope: "contracts"` para toda tarefa
-- [ ] Decidir deterministicamente uma das duas opções:
-  - [ ] opção A: `scripts/hb` passa a suportar oficialmente `execute_roadmap_phase`
+- [x] Atualizar [contracts/schemas/shared/session_start.schema.json](/home/davis/HB-TRACK/contracts/schemas/shared/session_start.schema.json#L47) para aceitar `roadmap_execution`
+- [x] Atualizar o mesmo schema para aceitar `execute_roadmap_phase`
+- [x] Revisar `write_scope` para contemplar infra/frontend/mobile/deploy quando em modo ROADMAP
+- [x] Atualizar [scripts/hb](/home/davis/HB-TRACK/scripts/hb#L308) para não gravar `write_scope: "contracts"` para toda tarefa
+- [x] Decidir deterministicamente uma das duas opções:
+  - [x] opção A: `scripts/hb` passa a suportar oficialmente `execute_roadmap_phase`
   - [ ] opção B: `scripts/hb` deixa de aceitar esse task type e o modo ROADMAP ganha um executor próprio separado
-- [ ] Criar testes de paridade boot/schema para o modo ROADMAP
+- [x] Criar testes de paridade boot/schema para o modo ROADMAP
 
 #### Fase 3 — Estruturar continuidade entre sessões
 
-- [ ] Reduzir [SESSION_HANDOFF.md](/home/davis/HB-TRACK/SESSION_HANDOFF.md#L1) a um handoff realmente delta-only
-- [ ] Fazer `SESSION_HANDOFF.md` voltar a passar no budget da suíte ([tests/pipeline_gates/test_context_budgets_and_parity.py](/home/davis/HB-TRACK/tests/pipeline_gates/test_context_budgets_and_parity.py#L15))
+- [x] Reduzir [SESSION_HANDOFF.md](/home/davis/HB-TRACK/SESSION_HANDOFF.md#L1) a um handoff realmente delta-only
+- [x] Fazer `SESSION_HANDOFF.md` voltar a passar no budget da suíte ([tests/pipeline_gates/test_context_budgets_and_parity.py](/home/davis/HB-TRACK/tests/pipeline_gates/test_context_budgets_and_parity.py#L15))
 - [ ] Incluir no handoff, de forma obrigatória:
-  - [ ] `Fase ROADMAP`
-  - [ ] `task_id` atual
-  - [ ] `resultado`
+  - [x] `Fase ROADMAP`
+  - [x] `task_id` atual
+  - [x] `resultado`
   - [ ] `próxima ação permitida`
-  - [ ] `bloqueios ativos`
+  - [x] `bloqueios ativos`
 - [ ] Tornar essa estrutura validável por gate, não só por convenção textual
 - [ ] Manter o schema de handoff como validador ativo ou remover a falsa impressão de contrato se ele continuar auxiliar
 
 #### Fase 4 — Definir progresso até o DONE
 
-- [ ] Estender o lifecycle de progresso para além de `implementation_ready`
+- [x] Estender o lifecycle de progresso para além de `implementation_ready`
 - [ ] Definir um SSOT explícito para estados como:
-  - [ ] `implemented`
+  - [x] `implemented`
   - [ ] `integration_validated`
   - [ ] `staging_ready`
-  - [ ] `released`
-- [ ] Decidir se esses estados viverão em `MODULE_REGISTRY.yaml`, em novo registry operacional ou em ambos com responsabilidades distintas
-- [ ] Ligar cada estado a evidência objetiva e gate correspondente
-- [ ] Regenerar snapshots derivados como [_reports/feature_readiness.json](/home/davis/HB-TRACK/_reports/feature_readiness.json#L1) para refletir o estado real
+  - [x] `released`
+- [x] Decidir se esses estados viverão em `MODULE_REGISTRY.yaml`, em novo registry operacional ou em ambos com responsabilidades distintas
+- [x] Ligar cada estado a evidência objetiva e gate correspondente
+- [x] Regenerar snapshots derivados como [_reports/feature_readiness.json](/home/davis/HB-TRACK/_reports/feature_readiness.json#L1) para refletir o estado real
 
 #### Fase 5 — Remover ambiguidades residuais
 
-- [ ] Ajustar [README.md](/home/davis/HB-TRACK/README.md#L17) para não contradizer o canon
-- [ ] Revisar [FINAL_HANDOFF.md](/home/davis/HB-TRACK/FINAL_HANDOFF.md#L138) e remover recomendações conflitantes com o estado atual do `TASK_CATALOG`
+- [x] Ajustar [README.md](/home/davis/HB-TRACK/README.md#L17) para não contradizer o canon
+- [x] Revisar [FINAL_HANDOFF.md](/home/davis/HB-TRACK/FINAL_HANDOFF.md#L138) e remover recomendações conflitantes com o estado atual do `TASK_CATALOG`
 - [ ] Revisar artefatos de suporte em `docs/guias/` e `_reports/` que hoje competem como fonte de “estado”
 - [ ] Garantir que nenhum artefato não soberano use linguagem de SSOT sem disclaimer
 
 #### Fase 6 — Revalidar deterministicamente
 
-- [ ] Rodar `./.venv/bin/pytest -q tests/pipeline_gates/test_context_budgets_and_parity.py`
-- [ ] Rodar a survival suite de governança
-- [ ] Rodar `python3 scripts/contracts/validate/validate_contracts.py`
-- [ ] Rodar smoke test do modo ROADMAP sem erro de schema/profile
+- [x] Rodar `./.venv/bin/pytest -q tests/pipeline_gates/test_context_budgets_and_parity.py`
+- [x] Rodar a survival suite de governança
+- [x] Rodar `python3 scripts/contracts/validate/validate_contracts.py`
+- [x] Rodar smoke test do modo ROADMAP sem erro de schema/profile
 - [ ] Confirmar `git status --short` limpo para todos os artefatos de governança críticos
 
 ### Fechamento executivo

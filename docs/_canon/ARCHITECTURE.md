@@ -1,7 +1,7 @@
 ---
 doc_type: canon
 version: "1.0.0"
-last_reviewed: "2026-03-11"
+last_reviewed: "2026-03-23"
 status: active
 ---
 
@@ -34,9 +34,9 @@ Restrição: boundaries de módulo não podem ser violados por conveniência de 
 O fluxo de controle segue estritamente a hierarquia:
 
 ```
-Router (FastAPI)
+Router (Django Ninja)
   └── Service (lógica de negócio, invariantes C1/C2)
-        └── Repository (acesso a dados, SQLAlchemy)
+        └── Repository (acesso a dados, Django ORM)
               └── Database (PostgreSQL — constraints A/B)
 ```
 
@@ -58,20 +58,29 @@ O header `X-Flow-ID` é propagado em todas as camadas do sistema: requests HTTP 
 
 | Tecnologia | Versão Canônica | Papel |
 |-----------|----------------|-------|
-| Python | **3.11.9** | Runtime backend — versão mandatória local e VPS |
-| FastAPI | latest compat. | Framework HTTP — roteamento, validação de request/response |
-| SQLAlchemy | latest compat. | ORM — mapeamento objeto-relacional |
-| Alembic | latest compat. | Migrations — versionamento de schema do banco |
-| Celery | latest compat. | Workers assíncronos — tarefas background e periódicas |
+| Python | **3.12** | Runtime backend — versão mandatória local e VPS _(ADR-031)_ |
+| Django | **5.x** | Framework backend — models, admin, auth, ORM _(ADR-031)_ |
+| Django Ninja | **1.x** | HTTP API layer — roteamento, validação de request/response _(ADR-031)_ |
+| Django ORM | nativo | ORM — mapeamento objeto-relacional _(ADR-031, substitui SQLAlchemy)_ |
+| Django Migrations | nativo | Migrations — versionamento de schema do banco _(ADR-031, substitui Alembic)_ |
+| Django Channels | **4.x** | WebSocket — notificações em tempo real _(ADR-031)_ |
+| Celery | **5.x** | Workers assíncronos — tarefas background e periódicas |
 | Redis | **7 (Alpine)** | Broker Celery + cache de aplicação |
-| PostgreSQL | **15** (VPS prod/staging) / **12** (dev local Docker) | Banco relacional principal |
-| Next.js | **13+** | Framework frontend — App Router, SSR/RSC |
+| PostgreSQL | **16** | Banco relacional principal — prod/staging e dev local _(ADR-031)_ |
+| React | **18** | Framework frontend _(ADR-030, FRONTEND_CONTRACT.md)_ |
+| Vite | **5.x** | Build tool frontend _(ADR-030, FRONTEND_CONTRACT.md)_ |
 | TypeScript | latest compat. | Linguagem frontend — tipagem estática |
-| TailwindCSS | latest compat. | Estilo — utility-first CSS |
-| @dnd-kit | latest compat. | Drag & drop no frontend (treinos, planejamento) |
-| pytest | latest compat. | Framework de testes backend |
+| React Router | **v6** | Roteamento frontend _(FRONTEND_CONTRACT.md)_ |
+| Tailwind CSS | latest compat. | Estilo — utility-first CSS |
+| shadcn/ui | latest compat. | Componentes de UI _(FRONTEND_CONTRACT.md)_ |
+| Zustand | latest compat. | Estado global frontend _(FRONTEND_CONTRACT.md)_ |
+| openapi-typescript | latest compat. | Geração de tipos TypeScript a partir do contrato OpenAPI |
+| openapi-fetch | latest compat. | HTTP client frontend — gerado a partir do contrato OpenAPI _(FRONTEND_CONTRACT.md)_ |
+| pytest + pytest-django | latest compat. | Framework de testes backend |
+| Vitest + Testing Library | latest compat. | Testes unitários frontend _(FRONTEND_CONTRACT.md, substitui Jest)_ |
+| Playwright | latest compat. | Testes E2E _(FRONTEND_CONTRACT.md)_ |
 | Schemathesis | latest compat. | Testes de contrato HTTP baseados em OpenAPI |
-| Jest | latest compat. | Framework de testes frontend |
+| React Native + Expo | latest compat. | Mobile — v2.0 _(ADR-030)_ |
 
 **Regra**: alterações de versão canônica para Python e PostgreSQL requerem atualização de `docs/_canon/contratos/Ambiente.md` e aprovação formal.
 
@@ -81,8 +90,8 @@ O header `X-Flow-ID` é propagado em todas as camadas do sistema: requests HTTP 
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  Router (FastAPI)                                        │
-│  - Validação de request/response via Pydantic           │
+│  Router (Django Ninja)                         ADR-031   │
+│  - Validação de request/response via Pydantic/Schema    │
 │  - Autenticação e autorização (via identity_access)     │
 │  - Serialização e desserialização de payloads           │
 └────────────────────────┬────────────────────────────────┘
@@ -96,13 +105,13 @@ O header `X-Flow-ID` é propagado em todas as camadas do sistema: requests HTTP 
                          │
 ┌────────────────────────▼────────────────────────────────┐
 │  Repository                                              │
-│  - Acesso a dados via SQLAlchemy                        │
+│  - Acesso a dados via Django ORM                        │
 │  - Queries, filtros, paginação                          │
 │  - Sem lógica de negócio                               │
 └────────────────────────┬────────────────────────────────┘
                          │
 ┌────────────────────────▼────────────────────────────────┐
-│  Database (PostgreSQL)                                   │
+│  Database (PostgreSQL 16)                                │
 │  - Invariantes A (CHECK constraints)                    │
 │  - Invariantes B (triggers)                             │
 │  - Índices parciais para soft delete                    │
@@ -126,28 +135,27 @@ O header `X-Flow-ID` é propagado em todas as camadas do sistema: requests HTTP 
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  Pages / Layouts (Next.js App Router)                    │
-│  - Server Components (RSC) para fetch inicial           │
-│  - Client Components para interatividade                │
-│  - Roteamento baseado em sistema de arquivos            │
+│  Pages / Routes (React + React Router v6)      ADR-030   │
+│  - Componentes de página e layout                       │
+│  - Roteamento via React Router v6                       │
+│  - Estado de servidor via React Query                   │
 └────────────────────────┬────────────────────────────────┘
                          │
 ┌────────────────────────▼────────────────────────────────┐
-│  Components (React)                                      │
+│  Components (React + shadcn/ui)                          │
 │  - Componentes de UI reutilizáveis                      │
-│  - Drag & drop via @dnd-kit                             │
-│  - Estado local e global conforme complexidade          │
+│  - Estado local (useState) e global (Zustand)           │
 └────────────────────────┬────────────────────────────────┘
                          │
 ┌────────────────────────▼────────────────────────────────┐
-│  API Client (gerado via OpenAPI generator)               │
-│  - Gerado automaticamente a partir de openapi.json      │
-│  - Localização: Hb Track - Frontend/src/api/generated/  │
-│  - NUNCA editar manualmente — regenerar via script      │
+│  API Client (gerado via openapi-typescript)              │
+│  - Tipos gerados de openapi.yaml → frontend/src/api/    │
+│  - HTTP via openapi-fetch                               │
+│  - NUNCA editar manualmente — regenerar via npm run gen:api │
 └────────────────────────┬────────────────────────────────┘
                          │
 ┌────────────────────────▼────────────────────────────────┐
-│  Backend API (FastAPI)                                   │
+│  Backend API (Django Ninja)                              │
 │  - HTTP/REST sobre contratos OpenAPI                    │
 │  - JWT Bearer via header Authorization                  │
 └─────────────────────────────────────────────────────────┘
@@ -182,7 +190,7 @@ As decisões abaixo já foram tomadas e são normativas:
 | Versioning de API | Sem versão na URI; compatibilidade via content-negotiation/media-type quando necessário | SSOT de API: `.contract_driven/templates/api/api_rules.yaml` (`versioning_and_compatibility`). |
 | Soft delete | `deleted_at` + `deleted_reason` | Par obrigatório: nenhum campo `deleted_at` sem `deleted_reason` correspondente e vice-versa. |
 | Separação `users` vs `identity_access` | `users` = perfil; `identity_access` = auth/authz | Boundary explícito: mistura de responsabilidades é proibida sem ADR formal. |
-| Coexistência psycopg2 + psycopg3 | Mantida intencionalmente | Compatibilidade com SQLAlchemy e drivers de migração. Nunca remover nenhum dos dois. |
+| Coexistência psycopg2 + psycopg3 | Mantida intencionalmente | Compatibilidade com toolchain legado e utilitários de migração. Nunca remover sem validação explícita. |
 | Estratégia de autenticação | JWT RS256, 15min access / 7d refresh com rotation, jti blacklist Redis | ADR-007 — SSOT completo em `decisions/ADR-007-auth-strategy.md`. |
 | Estratégia de autorização | RBAC flat 5 roles, deny-by-omission, BOLA/BOPLA/BFLA por camada | ADR-008 — SSOT completo em `decisions/ADR-008-authz-strategy.md`. |
 | Padrão de data/hora e timezone | UTC obrigatório, RFC 3339 `Z`, `venueTimezone` IANA em partidas | ADR-009 — formaliza `DATA_CONVENTIONS.md §2` como normativo. |
@@ -221,7 +229,7 @@ Para especificação completa de ambiente, consulte `docs/_canon/contratos/Ambie
 
 | Item | Local (dev) | VPS (prod/staging) |
 |------|------------|-------------------|
-| PostgreSQL | 12 (Docker, porta **5433**) | 15 (porta **5432**) |
+| PostgreSQL | 16 (Docker, porta **5433**) | 16 (porta **5432**) |
 | Redis | 7-Alpine (porta 6379) | TBD — ver Ambiente.md §3 |
 | Container DB | `hbtrack-postgres-dev` | `postgres15` |
 | OS | Docker (Windows 11) | Ubuntu 20.04.6 LTS |
@@ -250,7 +258,7 @@ As seguintes ações são proibidas sem ADR formal aprovada:
 ## 9. Referências
 
 - `SYSTEM_SCOPE.md` — missão, atores, macrodomínios
-- `MODULE_MAP.md` — taxonomia técnica dos 16 módulos
+- `MODULE_MAP.md` — taxonomia técnica dos 17 módulos
 - `.contract_driven/templates/api/api_rules.yaml` — SSOT de convenções/templates/validações de API HTTP
 - `API_CONVENTIONS.md` — guia/ponteiros (não-SSOT) para API
 - `DATA_CONVENTIONS.md` — convenções de dados

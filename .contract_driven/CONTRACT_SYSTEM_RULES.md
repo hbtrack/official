@@ -114,10 +114,10 @@ Sem essa classificação:
 
 **A lista autoritativa de módulos válidos está definida em `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md` seção 2 (Taxonomia canônica de módulos)**.
 
-Os 16 módulos canônicos são:
+Os 17 módulos canônicos são:
 
-**Functional Domain Modules** (13):
-- `users`, `seasons`, `teams`, `training`, `wellness`, `medical`, `competitions`, `matches`, `scout`, `exercises`, `analytics`, `reports`, `ai_ingestion`
+**Functional Domain Modules** (14):
+- `users`, `seasons`, `teams`, `training`, `wellness`, `medical`, `competitions`, `matches`, `scout`, `exercises`, `analytics`, `reports`, `ai_ingestion`, `video`
 
 **Cross-Cutting Modules** (3):
 - `identity_access`, `audit`, `notifications`
@@ -843,7 +843,7 @@ Garantir que referências entre módulos (cross-module references) sejam explíc
 prevenindo acoplamento silencioso e violações de isolamento de domínio.
 
 ### Contexto
-O HB Track é um monólito modular com 16 módulos lógicos, cada um com responsabilidade de domínio clara.
+O HB Track é um monólito modular com 17 módulos lógicos, cada um com responsabilidade de domínio clara.
 Uma referência de módulo A para recurso de módulo B deve estar:
 - Explicitamente permitida em política (`docs/_canon/SCOPE_BOUNDARY_POLICY.md`), **ou**
 - Autorizada por ADR aprovada que autorize a exceção

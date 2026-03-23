@@ -4,6 +4,7 @@
 # Invariants: INV-AUD-001, INV-AUD-002, INV-AUD-004
 # Decisions: DEC-AUD-003=C
 
+messageId: audit_entry_created
 name: AuditEntryCreatedMessage
 title: Entrada de Auditoria Criada
 summary: Publicado quando uma nova entrada é registrada no trilho de auditoria (INV-AUD-002).

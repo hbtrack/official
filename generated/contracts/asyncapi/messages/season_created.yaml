@@ -2,6 +2,7 @@
 # Module: seasons
 # Domain rules: DR-SEAS-001, DR-SEAS-003
 
+messageId: season_created
 name: SeasonCreated
 title: Temporada Criada
 summary: Evento publicado quando uma nova temporada é criada no sistema.

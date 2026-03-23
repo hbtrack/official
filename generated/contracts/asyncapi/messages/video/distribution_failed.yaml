@@ -1,3 +1,4 @@
+messageId: distribution_failed
 name: video_distribution_failed
 title: Video Distribution Failed
 summary: Falha na distribuição após exaurir retries.

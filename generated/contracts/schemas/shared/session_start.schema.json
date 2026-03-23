@@ -4,7 +4,7 @@
     "title": "session_start JSON Schema",
     "description": "SSOT para validação de _reports/session_start.json — produzido por 'hb verify', lido por pre-commit, git hooks e validators",
     "type": "object",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "additionalProperties": false,
     "required": [
         "session_id",
@@ -51,7 +51,8 @@
                 "default",
                 "contract_execution",
                 "architecture_decision",
-                "diagnostic"
+                "diagnostic",
+                "roadmap_execution"
             ]
         },
         "task_type": {
@@ -71,6 +72,7 @@
                 "adversarial_analysis",
                 "readiness_promotion",
                 "generate_code",
+                "execute_roadmap_phase",
                 "audit_sovereign_integrity",
                 "audit_context_efficiency",
                 "audit_red_team_pipeline",
@@ -123,12 +125,14 @@
         },
         "write_scope": {
             "type": "string",
-            "description": "Escopo de escrita permitido nesta sessão",
+            "description": "Escopo de escrita permitido nesta sessão. ROADMAP usa 'roadmap' como guarda-chuva para infra/frontend/deploy/mobile.",
             "enum": [
                 "contracts",
+                "backend",
                 "docs",
                 "generated",
                 "migrations",
+                "roadmap",
                 "readonly"
             ]
         },

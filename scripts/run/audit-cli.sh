@@ -33,7 +33,7 @@ USAGE:
 COMMANDS:
   dc [module]   Domain Completeness Audit
                   module (opcional): wellness, teams, seasons, etc.
-                  Se omitido: testa todos 16 módulos
+                  Se omitido: testa todos 17 módulos
   
   ce            Context Efficiency Audit
                   Valida boot mínimo (orçamento + alcançabilidade)
@@ -75,7 +75,7 @@ run_dc() {
     
     if [ -z "$module" ]; then
         echo -e "${BLUE}═══════════════════════════════════════════════════════════${NC}"
-        echo -e "${BLUE}  Domain Completeness Audit — Todos os 16 módulos${NC}"
+        echo -e "${BLUE}  Domain Completeness Audit — Todos os 17 módulos${NC}"
         echo -e "${BLUE}═══════════════════════════════════════════════════════════${NC}"
         python "$AUDIT_DIR/run_all_modules_audit.py"
     else

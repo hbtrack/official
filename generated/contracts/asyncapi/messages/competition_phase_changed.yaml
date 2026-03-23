@@ -2,6 +2,7 @@
 # Module: competitions
 # Domain rules: DR-COMP-001, DR-COMP-004
 
+messageId: competition_phase_changed
 name: CompetitionPhaseChanged
 title: Fase da Competição Alterada
 summary: Evento publicado quando stageLabels ou statusLabel de uma competição é alterado.

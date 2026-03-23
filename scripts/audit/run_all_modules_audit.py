@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Executar auditoria de completude de domínio contra todos os 16 módulos.
+Executar auditoria de completude de domínio contra todos os 17 módulos.
 Gera relatório consolidado com resultados comparativos.
 """
 
@@ -34,11 +34,11 @@ def run_all_modules_audit() -> Dict[str, Dict]:
     results = {}
     
     print(f"\n{'='*80}")
-    print(f"AUDITORIA DE COMPLETUDE — 16 MÓDULOS")
+    print(f"AUDITORIA DE COMPLETUDE — 17 MÓDULOS")
     print(f"{'='*80}\n")
     
     for i, module in enumerate(modules, 1):
-        print(f"[{i:2d}/16] Auditando módulo: {module.upper():<20}", end=" ", flush=True)
+        print(f"[{i:2d}/17] Auditando módulo: {module.upper():<20}", end=" ", flush=True)
         
         try:
             auditor = DomainCompletenessAuditor(
@@ -97,7 +97,7 @@ def generate_consolidated_report(results: Dict[str, Dict]) -> str:
     
     report = []
     report.append("╔════════════════════════════════════════════════════════════════════════════╗")
-    report.append("║       AUDITORIA DE COMPLETUDE — 16 MÓDULOS HB TRACK                       ║")
+    report.append("║       AUDITORIA DE COMPLETUDE — 17 MÓDULOS HB TRACK                       ║")
     report.append("╚════════════════════════════════════════════════════════════════════════════╝")
     report.append(f"\nData: {datetime.now().isoformat()}")
     report.append(f"Executor: run_all_modules_audit.py v1.0.0")

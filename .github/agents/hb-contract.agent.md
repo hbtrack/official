@@ -67,8 +67,12 @@ Não crie artefatos antes de `hb verify`.
 | Análise adversarial | `adversarial_analysis` | `adversarial_analysis.prompt.md` |
 | Promoção de readiness | `readiness_promotion` | `readiness_promotion.prompt.md` |
 | Geração backend governada | `generate_code` | `generate_code.prompt.md` |
+| Executar fase do ROADMAP (0-13) | `execute_roadmap_phase` | `execute_roadmap_phase.prompt.md` |
 
 Se houver dúvida sobre status ativo/congelado ou estágio permitido, consultar `TASK_CATALOG.yaml`.
+
+> **Para `execute_roadmap_phase`:** usar skill `hb-roadmap-executor` (não este skill CDD).
+> Não executar `hb verify`. Não executar `pre_contract_orchestrator`.
 
 ## Pré-condições para `generate_code`
 

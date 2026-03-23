@@ -3,6 +3,7 @@
 # Module: teams
 # ============================================================
 
+messageId: team_roster_updated
 name: TeamRosterUpdatedMessage
 title: Elenco da Equipe Atualizado
 summary: >

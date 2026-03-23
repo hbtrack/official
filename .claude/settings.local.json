@@ -26,7 +26,9 @@
       "Bash(python3 scripts/contracts/validate/api/compile_api_policy.py*)",
       "Bash(echo \"EXIT:$?\")",
       "Bash(npx @asyncapi/cli validate --help)",
-      "Bash(node_modules/.bin/asyncapi validate:*)"
+      "Bash(node_modules/.bin/asyncapi validate:*)",
+      "Bash(find /home/davis/HB-TRACK/config -name *.py)",
+      "Bash(find /home/davis/HB-TRACK/src -name \"api.py\" -exec wc -l {})"
     ]
   }
 }

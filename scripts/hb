@@ -137,7 +137,7 @@ class HBCLIv2:
         """Validação de elegibilidade para generate_code (Ordem 1).
 
         Regras (em sequência, bloqueante):
-        1. Módulo deve estar em 'implementation_ready' ou 'validated_contract'.
+        1. Módulo deve estar em 'validated_contract' ou em status >= 'implementation_ready'.
         2. Deve existir relatório adversarial em _reports/adversarial/<module>/ALL.adversarial.json
            ou qualquer _reports/adversarial/*<module>*.adversarial.json.
         3. overall_status do relatório deve ser 'PASS'.
@@ -146,7 +146,13 @@ class HBCLIv2:
         modules = self.module_registry.get("modules", {})
         mod_data = modules.get(module, {})
         mod_status = mod_data.get("status", "draft_contract")
-        eligible_statuses = {"implementation_ready", "validated_contract"}
+        eligible_statuses = {
+            "validated_contract",
+            "implementation_ready",
+            "implemented",
+            "staging_validated",
+            "released",
+        }
 
         if mod_status not in eligible_statuses:
             print(
@@ -211,6 +217,36 @@ class HBCLIv2:
             print(f"   Profiles válidos: {', '.join(profiles.keys())}", file=sys.stderr)
             return False
         return True
+
+    @staticmethod
+    def _determine_write_scope(task_type: str, profile_id: str) -> str:
+        """Determinar write_scope da sessão a partir do task_type/profile."""
+        docs_tasks = {
+            "new_module",
+            "new_ui_contract",
+            "architecture_review",
+            "decision_discovery",
+            "readiness_promotion",
+        }
+        readonly_tasks = {
+            "pre_contract_boot",
+            "adversarial_analysis",
+            "audit_sovereign_integrity",
+            "audit_context_efficiency",
+            "audit_red_team_pipeline",
+            "audit_gate_coverage",
+            "audit_domain_completeness",
+        }
+
+        if profile_id == "roadmap_execution" or task_type == "execute_roadmap_phase":
+            return "roadmap"
+        if task_type == "generate_code":
+            return "backend"
+        if task_type in docs_tasks:
+            return "docs"
+        if task_type in readonly_tasks or task_type.startswith("audit_"):
+            return "readonly"
+        return "contracts"
     
     def _save_session(self):
         """Salvar session_start.json."""
@@ -313,7 +349,7 @@ class HBCLIv2:
             "task_type": task_type,
             "module": module,
             "stage": 0,
-            "write_scope": "contracts",
+            "write_scope": self._determine_write_scope(task_type, profile_id),
             "worker_id": task_config.get("worker_id"),
             "git_user": self._get_git_user(),
             "git_email": self._get_git_email(),

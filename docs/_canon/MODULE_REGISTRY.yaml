@@ -1,11 +1,19 @@
-version: 1.0.0
+version: 1.1.0
 artifact: MODULE_REGISTRY
 status: active
 scope: global
 policy:
   objective: "Declarar, de forma determin\xEDstica, o status operacional de cada m\xF3\
-    dulo can\xF4nico, suas superf\xEDcies contratuais esperadas e o owner respons\xE1\
-    vel pela evolu\xE7\xE3o.\n"
+    dulo can\xF4nico, suas superf\xEDcies contratuais esperadas, o owner respons\xE1\
+    vel pela evolu\xE7\xE3o e o lifecycle normativo de continuidade ap\xF3s `implementation_ready`.\n"
+  status_order:
+  - scaffold
+  - draft_contract
+  - validated_contract
+  - implementation_ready
+  - implemented
+  - staging_validated
+  - released
   status_semantics:
     scaffold: "Estrutura m\xEDnima criada; ainda n\xE3o pode ser tratada como base\
       \ confi\xE1vel para evolu\xE7\xE3o contratual."
@@ -14,7 +22,16 @@ policy:
     validated_contract: "Contratos e docs locais j\xE1 passaram pelos gates aplic\xE1\
       veis e o m\xF3dulo pode evoluir com evid\xEAncia pr\xE9-contrato."
     implementation_ready: "Readiness m\xE1xima para materializa\xE7\xE3o; exige pr\xE9\
-      -contrato e Decision IR conformante quando aplic\xE1vel."
+      -contrato, an\xE1lise adversarial PASS e Decision IR conformante quando aplic\xE1\
+      vel."
+    implemented: "C\xF3digo can\xF4nico materializado em `src/<module>/`, com runtime\
+      \ real e testes do m\xF3dulo presentes. Quando o m\xF3dulo existir no FEATURE_REGISTRY,\
+      \ ao menos uma feature deve estar em `implemented`."
+    staging_validated: "M\xF3dulo implementado e validado em ambiente de staging\
+      \ com evid\xEAncia operacional compat\xEDvel com `DEPLOY_PIPELINE.md` (health\
+      \ check, smoke/contract check e sem bloqueios abertos)."
+    released: "M\xF3dulo promovido para produ\xE7\xE3o com aprova\xE7\xE3o humana,\
+      \ health check verde e refer\xEAncia de rollback compat\xEDvel com `DEPLOY_PIPELINE.md`."
   surface_catalog:
   - module_docs_minimum
   - openapi_sync

@@ -1,3 +1,4 @@
+messageId: distribution_published
 name: video_distribution_published
 title: Video Distribution Published
 summary: ClipDefinition publicado em CDN/broadcast com renditions disponíveis.

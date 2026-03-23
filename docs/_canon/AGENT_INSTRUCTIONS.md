@@ -6,11 +6,12 @@
 Se existir `SESSION_HANDOFF.md` na raiz → leia ANTES de qualquer outra coisa.
 
 ## 1. MODO DE OPERAÇÃO
-- Boot mínimo: este arquivo + SESSION_HANDOFF.md (se existir)
+- Boot mínimo: este arquivo + SESSION_HANDOFF.md (se existir) + ROADMAP.md (fase atual)
 - Para regras detalhadas: `Read(".contract_driven/CONTRACT_SYSTEM_RULES.md")`
 - Para layout canônico: `Read(".contract_driven/CONTRACT_SYSTEM_LAYOUT.md")`
 - Para pipeline oficial: `Read("docs/_canon/CONTRACT_PIPELINE.md")`
 - NUNCA carregar a trilogia completa de uma vez. Ler seções específicas on-demand.
+- **Dois modos de operação existem: Modo CDD (contratos) e Modo ROADMAP (implementação). Nunca misturar.**
 
 ## 2. SISTEMA: O QUE É
 HB Track — plataforma de gestão esportiva para handebol.
@@ -23,9 +24,11 @@ Humano é leigo em desenvolvimento — comunicar em linguagem de produto, nunca 
 ## 4. TASK TYPES → WORKERS
 > **SSOT**: `.contract_driven/TASK_CATALOG.yaml` — consulte para task routing atualizado (lista completa e status)
 
-Ponto de entrada OBRIGATÓRIO para todos: `.contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md`
+Ponto de entrada para tarefas **CDD**: `.contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md`
+Para `execute_roadmap_phase`: usar worker diretamente — **NÃO passa por `pre_contract_orchestrator`**.
 
 ## 5. REGRAS CORE (árvore de decisão)
+0. **Modo ROADMAP?** (`execute_roadmap_phase` / fase 0-13 / infra / CI-CD / frontend / deploy) → ler `ROADMAP.md` + `SESSION_HANDOFF.md` + worker `.contract_driven/agent_prompts/execute_roadmap_phase.prompt.md`. **STOP — regras §5.1–§5.9 não se aplicam (modo CDD).**
 1. Existe SESSION_HANDOFF.md? → ler antes de qualquer outra coisa
 2. task_type está no mapa (§4)? → identificar worker destino
 3. módulo existe nos 17 canônicos do MODULE_REGISTRY.yaml? → prosseguir | senão → BLOCKED_MISSING_MODULE
@@ -47,7 +50,8 @@ Ponto de entrada OBRIGATÓRIO para todos: `.contract_driven/agent_prompts/pre_co
 - **Boot profiles:** `.contract_driven/BOOT_PROFILES.yaml`
 - **Gate metadata:** `docs/_canon/gates/GATES_REGISTRY.yaml`
 - **Evidence:** `_reports/session_start.json`
-- **CLI:** `scripts/hb` (hb verify | hb check | hb artifact)
+- **CLI:** `scripts/hb` (hb verify | hb check | hb artifact) — Modo CDD apenas
+- **ROADMAP:** `ROADMAP.md` (fases 0-13, critérios de done, stack canônica) — Modo ROADMAP
 - **Hook:** `scripts/git-hooks/pre-commit` (via git config core.hooksPath)
 
 Paths: [CONTRACT_PIPELINE.md](docs/_canon/CONTRACT_PIPELINE.md) | [Rules](.contract_driven/CONTRACT_SYSTEM_RULES.md) | [Workers](.contract_driven/agent_prompts)

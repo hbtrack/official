@@ -170,7 +170,7 @@ docs/_canon/
   ARCHITECTURE.md
   C4_CONTEXT.md
   C4_CONTAINERS.md
-  MODULE_REGISTRY.yaml               # 16 módulos canônicos (normativo SSOT)
+  MODULE_REGISTRY.yaml               # 17 módulos canônicos (normativo SSOT)
   MODULE_MAP.md
   CHANGE_POLICY.md
   DATA_CONVENTIONS.md
@@ -214,4 +214,3 @@ docs/hbtrack/modulos/
 | `_reports/` | derived | Evidência e gates | CONTRACT_SYSTEM_LAYOUT.md §4.1 |
 | `docs/_canon/` | system | Canon normativo global | CONTRACT_SYSTEM_LAYOUT.md §4A.2 |
 | `docs/hbtrack/modulos/<MODULE>/` | system | Module documentation | CONTRACT_SYSTEM_LAYOUT.md §4A.3 |
-

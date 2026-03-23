@@ -4,6 +4,7 @@
 # Decisions: DEC-IAM-003=C
 # ADR refs: ADR-008
 
+messageId: role_assigned
 name: RoleAssignedMessage
 title: Role Atribuído
 summary: Publicado quando um role RBAC canônico é atribuído a um usuário (ADR-008, DEC-IAM-003).

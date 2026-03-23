@@ -181,7 +181,9 @@ task_catalog:
     notes: |
       Único caminho formal para implementation_ready.
       Requer: status=validated_contract + pipeline PASS + sem decisões abertas + todas as expected_surfaces presentes.
-      Habilita: generate_frontend (quando UI Contracts prontas) e evaluate de generate_code.
+      Habilita a materialização controlada do módulo.
+      Não implica módulo implementado; estados pós-readiness vivem no MODULE_REGISTRY (`implemented`, `staging_validated`, `released`).
+      `generate_frontend` continua frozen até frontend/ existir, a toolchain real estar versionada e o FRONTEND_CONTRACT_GATE sair de SKIP.
 
   # Grupo: Decisões Arquiteturais
   architecture_review:
@@ -224,16 +226,19 @@ task_catalog:
     profile_id: contract_execution
     stage_allowed: [2, 3]
     input_requirements:
-      - module (string, mapped to MODULE_REGISTRY.yaml, status=validated_contract)
+      - module (string, mapped to MODULE_REGISTRY.yaml, status>=validated_contract)
       - feature (string, mapped to FEATURE_REGISTRY.yaml)
       - layer (enum: domain | application | infrastructure | interface | all)
+    write_scope: backend
     artifacts_produced:
-      - backend/apps/{module}/domain/entities.py
-      - backend/apps/{module}/application/use_cases.py
-      - backend/apps/{module}/infrastructure/models.py
-      - backend/apps/{module}/infrastructure/repository.py
-      - backend/apps/{module}/interface/api.py
-      - backend/apps/{module}/tests/
+      - src/{module}/domain/entities.py
+      - src/{module}/application/use_cases.py
+      - src/{module}/models.py
+      - src/{module}/infrastructure/models.py
+      - src/{module}/infrastructure/repository.py
+      - src/{module}/schemas.py
+      - src/{module}/api.py
+      - src/{module}/tests/
     blocking_gates:
       - AXIOM_INTEGRITY_GATE
       - OPENAPI_ROOT_STRUCTURE_GATE
@@ -247,8 +252,30 @@ task_catalog:
     description: "[FUTURO] Gerar componentes frontend a partir de UI Contract. Aguarda sign-off."
     profile_id: null
     stage_allowed: []
-    reason_frozen: "Geração de UI só após validação de UI Contracts"
-    unblock_condition: "Quando UI Contracts da v1.0 de training estiverem em implementation_ready"
+    reason_frozen: "Frontend real ainda não existe no workspace; contrato segue como target-state"
+    unblock_condition: "Quando frontend/ existir com paths canonizados, package.json declarar a toolchain frontend real, FRONTEND_CONTRACT_GATE sair de SKIP_NOT_APPLICABLE e houver sign-off explícito para descongelar o worker"
+
+  # Grupo: Execução de Fases do ROADMAP (implementação — modo distinto do CDD)
+  execute_roadmap_phase:
+    task_type: execute_roadmap_phase
+    worker_id: execute_roadmap_phase
+    worker_path: .contract_driven/agent_prompts/execute_roadmap_phase.prompt.md
+    status: active
+    description: "Executar tarefas de uma fase do ROADMAP (ambiente, infra, CI/CD, frontend, deploy). NÃO passa por pre_contract_orchestrator."
+    profile_id: roadmap_execution
+    stage_allowed: [0, 1, 2, 3]
+    input_requirements:
+      - module (string, mapped to MODULE_REGISTRY.yaml, módulo foco da sessão)
+      - phase (integer 0-13, obrigatório)
+      - task_id (string, ex "1.1" — opcional, se ausente executa fase completa)
+    write_scope: roadmap
+    artifacts_produced: []  # varia por fase — ver ROADMAP.md para paths canônicos
+    blocking_gates: []
+    pre_contract_exception: "ROADMAP_PHASE: não passa por pre_contract_orchestrator — modo de operação independente"
+    notes: |
+      Este task_type é o ponto de entrada para execução de todas as 14 fases do ROADMAP.md.
+      As fases são bloqueantes em cadeia: fase N só inicia após Critério de Done da fase N-1.
+      Paths canônicos de artefatos de infraestrutura definidos no worker prompt.
 
   # Grupo: Análise de Segurança (fase pós-contrato, pré-implementação)
   adversarial_analysis:

@@ -1,3 +1,4 @@
+messageId: attention_queue_item_created
 name: attention_queue_item_created
 title: Attention Queue Item Created
 summary: Item colocado na fila de atenção com status ACTIVE.

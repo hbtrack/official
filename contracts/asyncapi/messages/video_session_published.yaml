@@ -2,6 +2,7 @@
 # Module: video
 # Domain rules: DR-VID-002, DR-VID-007, DR-VID-008, DR-VID-009
 # Decisions: ADR-033
+messageId: video_session_published
 name: VideoSessionPublishedMessage
 title: Sessão de Vídeo Publicada
 summary: Publicado quando MatchMediaSession atinge estado PUBLISHED (pipeline completo).

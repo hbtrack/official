@@ -3,6 +3,7 @@
 # Module: ai_ingestion
 # ============================================================
 
+messageId: ai_ingestion_job_queued
 name: AiIngestionJobQueuedMessage
 title: Job de Ingestão Enfileirado
 summary: >

@@ -439,7 +439,7 @@ Dependências
 
 Objetivo
 
-Garantir que artefatos normativos e técnicos existam apenas em paths canônicos e que não haja split-brain por duplicata soberana. Valida que a taxonomia canônica de 16 módulos em MODULE_REGISTRY.yaml está presente e correta.
+Garantir que artefatos normativos e técnicos existam apenas em paths canônicos e que não haja split-brain por duplicata soberana. Valida que a taxonomia canônica de 17 módulos em MODULE_REGISTRY.yaml está presente e correta.
 
 Aplica quando
 
@@ -447,7 +447,7 @@ Sempre.
 
 Entradas
 	•	árvore do repositório
-	•	docs/_canon/MODULE_REGISTRY.yaml (taxonomia de 16 módulos - SSOT única)
+	•	docs/_canon/MODULE_REGISTRY.yaml (taxonomia de 17 módulos - SSOT única)
 	•	.contract_driven/CONTRACT_SYSTEM_LAYOUT.md
 	•	.contract_driven/CONTRACT_SYSTEM_RULES.md
 

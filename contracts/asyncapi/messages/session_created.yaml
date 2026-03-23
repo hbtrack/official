@@ -3,6 +3,7 @@
 # Domain rules: DR-IAM-001, DR-IAM-003
 # Decisions: DEC-IAM-003=C
 
+messageId: session_created
 name: SessionCreatedMessage
 title: Sessão Criada
 summary: Publicado quando uma nova sessão autenticada é criada (DR-IAM-001).

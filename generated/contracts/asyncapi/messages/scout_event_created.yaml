@@ -4,6 +4,7 @@
 # Invariants: INV-SCOUT-001, INV-SCOUT-002
 # Decisions: DEC-SCOUT-003=C
 
+messageId: scout_event_created
 name: ScoutEventCreatedMessage
 title: Evento de Scout Criado
 summary: Publicado quando uma nova observação tática é registrada (INV-SCOUT-001).

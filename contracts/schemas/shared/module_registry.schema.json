@@ -13,18 +13,47 @@
     "policy": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["objective", "status_semantics", "surface_catalog"],
+      "required": ["objective", "status_order", "status_semantics", "surface_catalog"],
       "properties": {
         "objective": { "type": "string", "minLength": 1 },
+        "status_order": {
+          "type": "array",
+          "minItems": 7,
+          "maxItems": 7,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "scaffold",
+              "draft_contract",
+              "validated_contract",
+              "implementation_ready",
+              "implemented",
+              "staging_validated",
+              "released"
+            ]
+          }
+        },
         "status_semantics": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["scaffold", "draft_contract", "validated_contract", "implementation_ready"],
+          "required": [
+            "scaffold",
+            "draft_contract",
+            "validated_contract",
+            "implementation_ready",
+            "implemented",
+            "staging_validated",
+            "released"
+          ],
           "properties": {
             "scaffold": { "type": "string", "minLength": 1 },
             "draft_contract": { "type": "string", "minLength": 1 },
             "validated_contract": { "type": "string", "minLength": 1 },
-            "implementation_ready": { "type": "string", "minLength": 1 }
+            "implementation_ready": { "type": "string", "minLength": 1 },
+            "implemented": { "type": "string", "minLength": 1 },
+            "staging_validated": { "type": "string", "minLength": 1 },
+            "released": { "type": "string", "minLength": 1 }
           }
         },
         "surface_catalog": {
@@ -65,7 +94,15 @@
       "properties": {
         "status": {
           "type": "string",
-          "enum": ["scaffold", "draft_contract", "validated_contract", "implementation_ready"]
+          "enum": [
+            "scaffold",
+            "draft_contract",
+            "validated_contract",
+            "implementation_ready",
+            "implemented",
+            "staging_validated",
+            "released"
+          ]
         },
         "owner": {
           "type": "string",

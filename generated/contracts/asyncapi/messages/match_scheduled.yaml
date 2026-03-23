@@ -2,6 +2,7 @@
 # Module: matches
 # Domain rules: DR-MATCH-001, DR-MATCH-002, DR-MATCH-004
 
+messageId: match_scheduled
 name: MatchScheduled
 title: Partida Agendada
 summary: Evento publicado quando uma nova partida é agendada no sistema.

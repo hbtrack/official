@@ -21,7 +21,7 @@ Este documento é o **SSOT (Single Source of Truth)** para validação de refer�
 
 ### 1.1 Isolamento por Domínio Funcional
 
-O HB Track é um monólito modular com 16 módulos lógicos. Cada módulo é autoridade em seu macrodomínio:
+O HB Track é um monólito modular com 17 módulos lógicos. Cada módulo é autoridade em seu macrodomínio:
 
 - **users**: identidade pessoal, perfil funcional, vínculo com times/temporadas
 - **identity_access**: autenticação, autorização, credenciais, sessão, MFA, JWT, RBAC

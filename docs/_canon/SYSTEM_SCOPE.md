@@ -15,7 +15,7 @@ O sistema existe para transformar regras do domínio do handebol e necessidades 
 
 ## 2. Tipo de Sistema
 
-Plataforma sports-tech de gestão de handebol — **monólito modular em camadas** (FastAPI) com SPA (Next.js 13+), dados relacionais (PostgreSQL) e workers assíncronos (Celery + Redis).
+Plataforma sports-tech de gestão de handebol — **monólito modular em camadas** (Django + Django Ninja) com SPA (React + Vite), dados relacionais (PostgreSQL) e workers assíncronos (Celery + Redis).
 
 O sistema não é um microserviço. A modularidade é lógica (por domínio), não física (por deploy independente). Boundaries entre módulos são explícitos e governados por contratos internos; não por chamadas de rede.
 
@@ -57,7 +57,7 @@ Canonical Actor  →  Role Template  →  Permission Bundles  →  Scope Binding
 
 ## 5. Macrodomínios de Negócio
 
-Os 9 macrodomínios abaixo organizam o negócio do HB Track. Macrodomínios de negócio ≠ módulos técnicos. Ver `MODULE_MAP.md` para a taxonomia técnica dos 16 módulos canônicos.
+Os 9 macrodomínios abaixo organizam o negócio do HB Track. Macrodomínios de negócio ≠ módulos técnicos. Ver `MODULE_MAP.md` para a taxonomia técnica dos 17 módulos canônicos.
 
 | Macrodomínio | Descrição |
 |-------------|-----------|
@@ -104,16 +104,16 @@ O HB Track não controla implementação interna desses serviços. A integraçã
 
 ## 9. Módulo Video (Plataforma de Mídia Integrada)
 
-O módulo `video` é responsável por captura ao vivo, ingestão, sincronização temporal com rastreamento/scouting, transcodificação, distribuição técnica interna (baixa latência) e distribuição pública/broadcast. Ver ADR-033 para decisão de canonicalization.
+O módulo `video` é responsável por captura ao vivo, ingestão, sincronização temporal com rastreamento/scouting, transcodificação, clipping e distribuição técnica interna (baixa latência). Ver ADR-033 para decisão de canonicalization.
 
 **Responsabilidades de video:**
 - Captura na arena (edge-first, com fallback local)
 - Ingestão de feeds externos (TV, produtora, múltiplos ângulos)
 - Sincronização temporal (relógio lógico único da partida)
-- Transcodificação para perfis técnicos e de distribuição pública
+- Transcodificação para perfis técnicos internos
 - Clipping automático e manual com índice semântico
 - Distribuição restrita a técnico/banco/tribuna
-- Distribuição pública via CDN (quando aplicável)
+- Preparação técnica de ativos para publicação externa somente quando houver decisão formal específica
 
 **Não cobre (out-of-scope dentro do video):**
 - Broadcast e OTT como domínio de negócio autônomo (futuro módulo `media`)
@@ -137,7 +137,7 @@ O HB Track opera sob 5 princípios que definem como o escopo deve ser interpreta
 
 3. **Domínio esportivo explícito** — toda regra derivada do handebol que impacte produto deve estar ancorada em `HANDBALL_RULES_DOMAIN.md`.
 
-4. **Escopo finito e taxonomia fechada** — o universo do sistema é limitado aos 16 módulos canônicos aprovados. Criação de módulos fora dessa lista requer decisão formal.
+4. **Escopo finito e taxonomia fechada** — o universo do sistema é limitado aos 17 módulos canônicos aprovados. Criação de módulos fora dessa lista requer decisão formal.
 
 5. **Bloqueio em caso de lacuna crítica** — quando faltar artefato normativo necessário, o processo deve bloquear em vez de improvisar.
 
@@ -145,7 +145,7 @@ O HB Track opera sob 5 princípios que definem como o escopo deve ser interpreta
 
 O HB Track está aderente a este documento quando:
 
-- Seus módulos reais pertencem à taxonomia canônica dos 16 módulos
+- Seus módulos reais pertencem à taxonomia canônica dos 17 módulos
 - Seus contratos refletem apenas superfícies dentro do escopo definido
 - Sua implementação não extrapola os limites das seções 5 e 6 deste documento
 - Suas regras derivadas do handebol estão formalmente registradas em `HANDBALL_RULES_DOMAIN.md`
@@ -154,7 +154,7 @@ O HB Track está aderente a este documento quando:
 ## 13. Referências
 
 - `ARCHITECTURE.md` — stack, princípios e estrutura de camadas
-- `MODULE_MAP.md` — taxonomia técnica dos 16 módulos canônicos
+- `MODULE_MAP.md` — taxonomia técnica dos 17 módulos canônicos
 - `HANDBALL_RULES_DOMAIN.md` — regras IHF documentadas (HBR-001..HBR-014)
 - `.contract_driven/CONTRACT_SYSTEM_RULES.md` — regras operacionais do sistema CDD
 - `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md` — estrutura canônica de arquivos

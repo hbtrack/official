@@ -1,3 +1,4 @@
+messageId: transcode_completed
 name: video_transcode_completed
 title: Video Transcode Completed
 summary: DistributionProfile finalizado codificação para target type.

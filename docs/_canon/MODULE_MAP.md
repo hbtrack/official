@@ -9,13 +9,13 @@ status: active
 
 ## 1. Nota de Taxonomia
 
-Os macrodomínios de negócio (SYSTEM_SCOPE.md §5) são agrupamentos funcionais para comunicação com stakeholders. Os 16 módulos técnicos abaixo são a taxonomia canônica do sistema. Um macrodomínio pode cruzar múltiplos módulos.
+Os macrodomínios de negócio (SYSTEM_SCOPE.md §5) são agrupamentos funcionais para comunicação com stakeholders. Os 17 módulos técnicos abaixo são a taxonomia canônica do sistema _(16 originais + `video` via ADR-033)_. Um macrodomínio pode cruzar múltiplos módulos.
 
 **Regra fundamental**: se um módulo não estiver nesta lista, ele não existe no sistema sem decisão formal registrada em `docs/_canon/decisions/`.
 
 ---
 
-## 2. Módulos Funcionais (13)
+## 2. Módulos Funcionais (14)
 
 | Módulo | Responsabilidade | Dependências | API | UI | Workers | Eventos |
 |--------|-----------------|--------------|-----|----|---------|---------|
@@ -32,6 +32,7 @@ Os macrodomínios de negócio (SYSTEM_SCOPE.md §5) são agrupamentos funcionais
 | `analytics` | Dashboards, métricas agregadas, relatórios dinâmicos, KPIs | `training`, `matches`, `wellness`, `scout` | Sim | Sim | Sim (Celery) | Nenhum |
 | `reports` | Geração de relatórios (PDF/Excel), exportação, entrega de saída | `analytics`, `matches` | Sim | Sim | Sim (Celery) | `report.ready` |
 | `ai_ingestion` | Ingestão de dados externos, integração com IA, importação em lote | Múltiplos | Sim | Não | Sim (Celery) | `ingestion.completed` |
+| `video` | Captura ao vivo, ingestão, transcodificação, distribuição de mídia e playback | `scout`, `analytics`, `training`, `audit` | Sim | Sim | Sim (Celery) | `capture.started`, `segment.ready`, `transcode.completed`, `distribution.published` |
 
 **Coluna Workers**: indica se o módulo possui tasks Celery assíncronas. Módulos sem workers operam exclusivamente de forma síncrona via requisições HTTP.
 
@@ -176,7 +177,7 @@ Se a resposta continuar ambígua após estas perguntas, a decisão deve ser form
 ## 9. Regras de Expansão do Mapa
 
 Um novo módulo só pode ser criado se todas as condições abaixo forem atendidas:
-- Não couber semanticamente em nenhum dos 16 módulos existentes
+- Não couber semanticamente em nenhum dos 17 módulos existentes
 - Não puder ser tratado como responsabilidade transversal formal já existente
 - A sobrecarga semântica em um módulo atual for comprovada com evidências
 - Houver decisão formal registrada em `docs/_canon/decisions/` antes de qualquer implementação

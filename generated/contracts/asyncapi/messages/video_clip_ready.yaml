@@ -2,6 +2,7 @@
 # Module: video
 # Domain rules: DR-VID-004, DR-VID-005
 # Decisions: ADR-033
+messageId: video_clip_ready
 name: VideoClipReadyMessage
 title: Clip Semântico Pronto
 summary: Publicado quando ClipDefinition é processado e disponível para consumo (DR-VID-004).

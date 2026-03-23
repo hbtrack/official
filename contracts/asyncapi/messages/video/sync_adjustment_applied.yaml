@@ -1,3 +1,4 @@
+messageId: sync_adjustment_applied
 name: video_sync_adjustment_applied
 title: Video Sync Adjustment Applied
 summary: Timecode ajustado em resposta a desalinhamento com scout.

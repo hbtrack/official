@@ -4,6 +4,7 @@
 # Decisions: DEC-IAM-003=C
 # ADR refs: ADR-008
 
+messageId: role_revoked
 name: RoleRevokedMessage
 title: Role Revogado
 summary: Publicado quando um role RBAC é removido de um usuário (ADR-008, DEC-IAM-003).

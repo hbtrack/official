@@ -39,7 +39,7 @@ Regra: em caso de conflito entre níveis, o nível superior prevalece sempre.
 | 3 | `SYSTEM_SCOPE.md` | Missão do sistema, 5 atores canônicos, 9 macrodomínios, o que está fora do escopo |
 | 4 | `ARCHITECTURE.md` | Stack canônica, 5 princípios arquiteturais, estrutura de camadas, ADRs registradas |
 | 5 | `CODE_ARCHITECTURE.md` | Clean Architecture, organização de pastas backend, nomenclatura |
-| 6 | `MODULE_MAP.md` | Taxonomia dos 16 módulos canônicos, responsabilidades, dependências entre módulos |
+| 6 | `MODULE_MAP.md` | Taxonomia dos 17 módulos canônicos, responsabilidades, dependências entre módulos |
 | 7 | `GLOBAL_INVARIANTS.md` | Invariantes globais (INV-*) — guardrails soberanos cross-módulo |
 | 8 | `SECURITY_RULES.md` | Regras globais de segurança — autenticação/autorização, dados sensíveis, logging, hardening |
 | 9 | `DATA_CONVENTIONS.md` | IDs, datas, enums, soft delete, naming de tabelas e campos |
@@ -85,7 +85,7 @@ Para novos colaboradores e agentes, leia nesta sequência:
 2. **`OPERATIONS.md`** — referência operacional rápida
 3. **`SYSTEM_SCOPE.md`** — entenda o que o sistema é, quem são os atores, o que está dentro e fora do escopo
 4. **`ARCHITECTURE.md`** — entenda a stack, os princípios e a estrutura de camadas
-5. **`MODULE_MAP.md`** — entenda os 16 módulos, suas responsabilidades e dependências
+5. **`MODULE_MAP.md`** — entenda os 17 módulos, suas responsabilidades e dependências
 6. **`GLOBAL_INVARIANTS.md`** — conheça guardrails globais (INV-*) antes de propor contratos ou invariantes de módulo
 7. **`SECURITY_RULES.md`** — segurança global antes de qualquer contrato público
 8. **`.contract_driven/templates/api/api_rules.yaml`** — SSOT de convenções/validações/templates de API HTTP

@@ -1,7 +1,25 @@
 # DEPLOY_PIPELINE.md
 > Documento normativo — SSOT para estratégia de deploy do HB Track.
-> Versão: 1.0.0 | Status: active | Criado: 2026-03-17
+> Versão: 1.1.0 | Status: active | Criado: 2026-03-17 | Revisado: 2026-03-23
 > Decisões: D5 = VPS Locaweb (Docker Compose) | D6 = Staging → aprovação → produção
+
+## 0. Status Operacional Atual
+
+O design de deploy está **aprovado**, mas a automação do repositório ainda está **parcial**.
+
+Artefatos presentes no repo:
+- `docs/_canon/DEPLOY_PIPELINE.md`
+- `docs/_canon/decisions/ADR-027-deploy-pipeline.md`
+- `.github/workflows/deploy.yml`
+
+Assets ainda ausentes no workspace:
+- `Dockerfile`
+- `infra/docker-compose.prod.yml`
+- `infra/nginx/nginx.conf`
+
+Regra normativa:
+- enquanto esses assets não existirem e não houver health endpoint operacional em runtime, nenhum módulo pode ser promovido para `staging_validated` ou `released` apenas com base no workflow versionado;
+- o workflow representa o **target-state** de CI/CD, não evidência suficiente de operação.
 
 ## 1. Plataforma de Deploy (D5)
 
@@ -10,70 +28,41 @@
 - Sistema operacional: Ubuntu 22.04 LTS
 - Orquestração: Docker Compose v2
 - Reverse proxy: Nginx (SSL via Let's Encrypt / Certbot)
-- Banco de dados: PostgreSQL 16 (container Docker)
-- Rede Docker: `hbtrack-net` (isolada por ambiente)
+- Banco de dados: PostgreSQL 16
+- Rede Docker: `hbtrack-net` por ambiente
 
-## 2. Ambientes
+## 2. Ambientes Alvo
 
-| Ambiente | Domínio | Branch | Deploy |
+| Ambiente | Branch | Estratégia alvo | Status atual |
 |---|---|---|---|
-| `development` | localhost | qualquer | manual (`docker compose up`) |
-| `staging` | `staging.hbtrack.<domínio>` | `main` | automático via CI/CD |
-| `production` | `hbtrack.<domínio>` | `main` (após aprovação) | manual (aprovação humana) |
+| `development` | qualquer | manual/local | disponível via setup local |
+| `staging` | `main` | automático via workflow + SSH | bloqueado até assets de deploy existirem |
+| `production` | `main` após aprovação | manual com approval gate | bloqueado até staging estar validado |
 
-## 3. Pipeline de Entrega (D6 = Opção C)
+## 3. Pipeline Alvo de Entrega
 
 ```
 [push main]
-    │
-    ▼
-[1. VALIDATE]         ← python3 validate_contracts.py (todos os gates)
-    │ PASS
-    ▼
-[2. TEST]             ← pytest (unit + integration)
-    │ PASS
-    ▼
-[3. BUILD]            ← docker build → tag com git SHA
-    │ PASS
-    ▼
-[4. DEPLOY STAGING]   ← automático: docker compose up no servidor VPS (staging)
-    │
-    ▼
-[5. APROVAÇÃO HUMANA] ← notificação enviada ao responsável
-    │                    GitHub Actions: environment protection (required reviewer)
-    │ APROVADO
-    ▼
-[6. DEPLOY PRODUÇÃO]  ← docker compose up no servidor VPS (production)
-    │
-    ▼
-[7. HEALTH CHECK]     ← GET /health → 200 OK em até 120s
-    │ FALHA
-    ▼
-[8. ROLLBACK AUTO]    ← docker compose up com imagem anterior (tag SHA-1)
+  → validate_contracts.py
+  → pytest
+  → docker build + tag SHA
+  → deploy staging
+  → GET /health = 200
+  → aprovação humana
+  → deploy produção
+  → GET /health = 200
+  → rollback para SHA anterior se falhar
 ```
 
-## 4. Regra de Aprovação
+Este fluxo só pode ser tratado como ativo de ponta a ponta quando os assets ausentes da seção 0 existirem no repo e o runtime expuser `GET /health`.
 
-- Responsável: quem fez merge na `main` **não pode** aprovar o próprio deploy
-- Aprovação expira em: 24 horas (se não aprovado, deploy é cancelado)
-- Aprovação via: GitHub Actions → Environments → `production` → required reviewers
-- Em caso de incidente crítico (hotfix): aprovação pode ser feita pelo mesmo autor com justificativa registrada
+## 4. Aprovação, Health e Rollback
 
-## 5. Health Check
+- quem fez merge na `main` não deve aprovar o próprio deploy, salvo hotfix justificado
+- health check canônico: `GET /health` com HTTP 200 e payload `{\"status\":\"ok\"}` em até 120s
+- rollback canônico: re-deploy da imagem SHA anterior em até 5 minutos
 
-- Endpoint: `GET /health`
-- Timeout: 120 segundos após container iniciar
-- Critério de sucesso: HTTP 200 + `{"status": "ok"}`
-- Critério de falha: timeout ou status ≠ 200 → rollback automático
-
-## 6. Rollback
-
-- Estratégia: re-deploy da imagem Docker com tag SHA anterior
-- Gatilho automático: health check falhar após deploy
-- Gatilho manual: qualquer membro da equipe via GitHub Actions
-- Tempo máximo de rollback: 5 minutos
-
-## 7. Variáveis de Ambiente por Ambiente
+## 5. Variáveis por Ambiente
 
 | Variável | Staging | Production |
 |---|---|---|
@@ -82,11 +71,11 @@
 | `ENV` | `staging` | `production` |
 | `SECRET_KEY` | secret de staging | secret de produção |
 
-Variáveis sensíveis armazenadas em: **GitHub Secrets** (nunca em código ou `.env` commitado).
+Segredos vivem em GitHub Secrets. Nunca em código ou `.env` versionado.
 
-## 8. Referências
+## 6. Referências
 
 - ADR: `docs/_canon/decisions/ADR-027-deploy-pipeline.md`
-- Workflow CI/CD: `.github/workflows/deploy.yml`
+- Workflow alvo: `.github/workflows/deploy.yml`
 - Arquitetura de código: `docs/_canon/CODE_ARCHITECTURE.md`
 - Pact Broker: `docs/_canon/decisions/ADR-025-cdct-pact-strategy.md`
