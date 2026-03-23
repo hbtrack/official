@@ -17,7 +17,7 @@ HB Track — plataforma de gestão esportiva para handebol.
 CDD (Contract-Driven Development): contratos são SSOT antes de qualquer código.
 Humano é leigo em desenvolvimento — comunicar em linguagem de produto, nunca em jargão técnico.
 
-## 3. 16 MÓDULOS CANÔNICOS
+## 3. 17 MÓDULOS CANÔNICOS
 > **SSOT**: `docs/_canon/MODULE_REGISTRY.yaml` — consulte para status atual de cada módulo
 
 ## 4. TASK TYPES → WORKERS
@@ -28,7 +28,7 @@ Ponto de entrada OBRIGATÓRIO para todos: `.contract_driven/agent_prompts/pre_co
 ## 5. REGRAS CORE (árvore de decisão)
 1. Existe SESSION_HANDOFF.md? → ler antes de qualquer outra coisa
 2. task_type está no mapa (§4)? → identificar worker destino
-3. módulo existe nos 16 canônicos do MODULE_REGISTRY.yaml? → prosseguir | senão → BLOCKED_MISSING_MODULE
+3. módulo existe nos 17 canônicos do MODULE_REGISTRY.yaml? → prosseguir | senão → BLOCKED_MISSING_MODULE
 4. artefatos obrigatórios do módulo existem? → prosseguir | senão → BLOCKED_REQUIRED_ARTIFACT_MISSING
 5. decisões arquiteturais bloqueantes abertas? → Fase 2 (Decision Discovery) | senão → prosseguir
 6. worker destino existe? → prosseguir | senão → BLOCKED_MISSING_AGENT_PROMPT

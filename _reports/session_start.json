@@ -1,12 +1,12 @@
 {
   "session_id": "4d672789-d33f-42d6-be4e-41e30e822ba0",
-  "session_timestamp": "2026-03-21T04:22:18.413099+00:00",
+  "session_timestamp": "2026-03-22T23:58:38.416542+00:00",
   "branch": "hb-track-contratos-driven",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "contract_execution",
   "task_type": "generate_code",
-  "module": "teams",
-  "stage": 2,
+  "module": "notifications",
+  "stage": 1,
   "write_scope": "contracts",
   "worker_id": "code_generator",
   "git_user": "HB Track Agent",
@@ -2507,9 +2507,493 @@
       "created_at": "2026-03-21T04:31:31.478821+00:00",
       "gate_exit_code": 0,
       "validated_at": "2026-03-21T04:34:21.966055+00:00"
+    },
+    {
+      "path": "docs/guias/produto/CODE.md",
+      "sha256": "a2f701eb9d3114fbc2b79da4e3407d285ac51ee6d4cf95302ade9a270e9b3737",
+      "created_at": "2026-03-21T05:29:25.220524+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/identity_access/models.py",
+      "sha256": "a44f1ec28dde69641e0760bf8a4f355de83aec2e3b8890e9674df745492fd9ad",
+      "created_at": "2026-03-22T21:48:15.239499+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-22T21:48:39.216125+00:00"
+    },
+    {
+      "path": "src/identity_access/migrations/0001_initial.py",
+      "sha256": "46731c6d1d98ff97db905fae4de2e182a7ff0a93dea99b4a6bd4a433a98782a7",
+      "created_at": "2026-03-22T21:48:23.788945+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-22T21:48:44.825154+00:00"
+    },
+    {
+      "path": "src/identity_access/tests/integration/conftest.py",
+      "sha256": "5cc77b36051f641d275b5310bc8fa8a7c142ab5e30f1d9d39df056365f1f8f82",
+      "created_at": "2026-03-22T21:48:28.381056+00:00",
+      "gate_exit_code": 0,
+      "validated_at": "2026-03-22T21:48:49.350225+00:00"
+    },
+    {
+      "path": "src/users/tests/integration/conftest.py",
+      "sha256": "dac9591ba8ef248d46b7e44d46871a5f6c6306a3fa347ec305622ebef9c2420a",
+      "created_at": "2026-03-22T21:57:00.225340+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/teams/tests/integration/conftest.py",
+      "sha256": "7a3c4df75aa9e73e30fd7e455f0d5bd702654f59fad58b6928e743f8f5c1bafe",
+      "created_at": "2026-03-22T21:58:53.029401+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/seasons/tests/integration/conftest.py",
+      "sha256": "fdf200f763ff39658e3b83a233d7134667ccb37eca22cb471d2872007c332668",
+      "created_at": "2026-03-22T21:59:00.116080+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/training/tests/integration/conftest.py",
+      "sha256": "9476f181d0f44add659065824ff938ead6a3709c044f079982ef53f795029017",
+      "created_at": "2026-03-22T22:14:49.040614+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/training/tests/unit/test_training_domain.py",
+      "sha256": "43ec6cfeb52868f9a178e7870748229d12d968c4ead6caf535921f79961ccaf5",
+      "created_at": "2026-03-22T22:14:59.460732+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/competitions/tests/integration/conftest.py",
+      "sha256": "206aec5c16ce9ddeabbbad31db301ef2e16981f2037fd45a844c2f211c0e0da7",
+      "created_at": "2026-03-22T22:20:55.660247+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/wellness/api.py",
+      "sha256": "2e72c0f84eb49676c290393954001a4460090cce9cb57b34cd50c0267e396807",
+      "created_at": "2026-03-22T22:35:50.121018+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/wellness/apps.py",
+      "sha256": "2fad56eb87d3571d1339ada971c35d2e04fd54497688da958c9dc23b0c05db71",
+      "created_at": "2026-03-22T22:36:01.419956+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/wellness/models.py",
+      "sha256": "fcc984a3dd46bc65aad0784aa6e4f3d0b34594f4de604b15e0c1c0bf17c9b9f1",
+      "created_at": "2026-03-22T22:36:08.804137+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/wellness/schemas.py",
+      "sha256": "fb325f96a11741ec4b5e96ef7b67d587e0123e8318af57940b80ce6c430cc494",
+      "created_at": "2026-03-22T22:36:14.653982+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/wellness/migrations/0001_initial.py",
+      "sha256": "4c7fd06c4c0c9a2c6e2f5b447fb93b0fc8d4e1683d1bea90d2e880b677169723",
+      "created_at": "2026-03-22T22:36:19.644797+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/wellness/tests/unit/test_wellness_domain.py",
+      "sha256": "54ccda6a65aee4dd458893296876663f720b9f33b07a77b57a2b231e59f31bd4",
+      "created_at": "2026-03-22T22:36:24.603504+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/wellness/tests/integration/conftest.py",
+      "sha256": "abbee293711f9c617e1196a9e9caaf3777e2c37550f6129f98fe5d21bd74d287",
+      "created_at": "2026-03-22T22:36:30.044854+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/medical/api.py",
+      "sha256": "528d8ffc18ae3be5045bbeee2d0e928fc09da13a9ffd4606aebb17be7b1d26da",
+      "created_at": "2026-03-22T22:41:59.710421+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/medical/apps.py",
+      "sha256": "455cc31d4e6ff602128c0bac21bcb3d07b330e1b721efcaf1ca45117be5e2212",
+      "created_at": "2026-03-22T22:42:16.514269+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/medical/models.py",
+      "sha256": "0f0d3d2e779c75cbdeee3181cdef2de878647e7ffec56d9736404a1173e093c6",
+      "created_at": "2026-03-22T22:42:23.382774+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/medical/schemas.py",
+      "sha256": "3300cb0dc83ce8a7affad9472202d905a6c3dc8dc3a8b6d0dc39419f9e03eea6",
+      "created_at": "2026-03-22T22:42:31.051317+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/medical/migrations/0001_initial.py",
+      "sha256": "1367823423c198e75991243c95d90b7f7b889d0bd425188ace3619b728497b1d",
+      "created_at": "2026-03-22T22:42:36.989960+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/medical/tests/unit/test_medical_domain.py",
+      "sha256": "021c8dcb8d43c146e9f662bced78f5f6dd61b71fe47c05edcd7c5d245092741b",
+      "created_at": "2026-03-22T22:42:43.710712+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/medical/tests/integration/conftest.py",
+      "sha256": "9b0e6e63400150c78f9e3f33923f91b693f3fc1cb2ebdbb919bc198cb5bed98c",
+      "created_at": "2026-03-22T22:42:51.670726+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/matches/api.py",
+      "sha256": "e3896c6fa598da85f24ab4c8f406e71a6d455aea455b17d8d941d50ee1af2277",
+      "created_at": "2026-03-22T22:47:03.495907+00:00",
+      "validated_at": "2026-03-22T22:48:40.515132+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/matches/apps.py",
+      "sha256": "6cc6f74e2dc64db2b3718424953ff6135a1a3f22c6827c588f54215b81389cc2",
+      "created_at": "2026-03-22T22:47:57.343396+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/matches/models.py",
+      "sha256": "af61b33f597311cc90611e0d091f3d42ce56e1433dfb16e7ccb80d1216bad6a7",
+      "created_at": "2026-03-22T22:48:07.992523+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/matches/schemas.py",
+      "sha256": "8356769b9bccf79d2bf422a82861c5d6a18df15c9eaedc4c577f3dbcdf0c862a",
+      "created_at": "2026-03-22T22:48:13.725725+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/matches/migrations/0001_initial.py",
+      "sha256": "5d1d776dd895e55c06c2cce017b7eb1de52902ddbe96b89613d4725df75dc7ae",
+      "created_at": "2026-03-22T22:48:19.249325+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/matches/tests/unit/test_matches_domain.py",
+      "sha256": "7e918fbd8bacf24e5630853c0e77d71dd323f7129925b7a140391b7960336cf7",
+      "created_at": "2026-03-22T22:48:24.509231+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/matches/tests/integration/conftest.py",
+      "sha256": "a11aa623fc8c9a68f6aa01b2dcd5d20ca6b4e4f10eac7bea5694e8f62757521c",
+      "created_at": "2026-03-22T22:48:29.403903+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/scout/domain/entities.py",
+      "sha256": "5a862e4e9bddcad9e0e04ff69aeee9e8c99e57e82cb5af1385e8a35a3be553f1",
+      "created_at": "2026-03-22T22:55:45.260953+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/scout/domain/rules.py",
+      "sha256": "9e0d4987580b24ca6a6e4de65e89b50937517b8d6303d3dd874827063474184e",
+      "created_at": "2026-03-22T22:55:54.290017+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/scout/infrastructure/models.py",
+      "sha256": "e3b1043d6b4e4d20963b7165bf085c9eee130f65c0e0014aeafb83842ac85470",
+      "created_at": "2026-03-22T22:56:01.306101+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/scout/infrastructure/repository.py",
+      "sha256": "9ff3e46067d26401d25836334275f71837d342f3f12861d0b4cda0b241f4b0a1",
+      "created_at": "2026-03-22T22:56:06.409048+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/scout/application/use_cases.py",
+      "sha256": "c9911eaf0965acf7b7fcc49f59a0c2d0a89433c5466bbe4c52eaf8db73da462f",
+      "created_at": "2026-03-22T22:56:11.513916+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/scout/schemas.py",
+      "sha256": "1347b57b626e99771dbcc746ade4af465c5e8093927c3cef6beb6ba9e3728372",
+      "created_at": "2026-03-22T22:56:16.010163+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/scout/api.py",
+      "sha256": "dce02b19927294f3238628d82154a2b525e857c65fc170bea33ced3c2fd6ecf7",
+      "created_at": "2026-03-22T22:56:20.503088+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/exercises/domain/entities.py",
+      "sha256": "5c09ec10d005d34b0397f6e13bad28bb2ff80f531a9a8b3ab99c0e0ef5c7228e",
+      "created_at": "2026-03-22T23:14:43.820660+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/exercises/domain/rules.py",
+      "sha256": "4b133a7339cefc77a8bff10569566795cecb79e827592873d240056f74eb5373",
+      "created_at": "2026-03-22T23:14:54.154272+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/exercises/infrastructure/models.py",
+      "sha256": "942cd5429d7346f13a44256614bdd64f7b4b6858455f9ac2d0997a107da51037",
+      "created_at": "2026-03-22T23:15:00.078016+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/exercises/infrastructure/repository.py",
+      "sha256": "ee0d87d995579c116b527fecc1b0a371f52d90f77eb08c082ddab0076925531a",
+      "created_at": "2026-03-22T23:15:08.987401+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/exercises/application/use_cases.py",
+      "sha256": "a90c05e50289d3f58b1ceef717bd9147fcea37b50b2a4ec120a2f21af216df89",
+      "created_at": "2026-03-22T23:15:14.222095+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/exercises/schemas.py",
+      "sha256": "f092fa634fb22b3f1dcb7f6c65b859981f4fff667e93a19010dceef32d46171d",
+      "created_at": "2026-03-22T23:15:18.796027+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/exercises/api.py",
+      "sha256": "6060141619c43390d4009e913616b9fa72deb79c69cfedc0e2e51cc94cf105aa",
+      "created_at": "2026-03-22T23:15:23.191366+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/analytics/domain/entities.py",
+      "sha256": "2482ef4193cce5bc6815d8d775bf7bc9e4101f9e139972bd6c6e4c031ca924a5",
+      "created_at": "2026-03-22T23:22:56.058840+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/analytics/domain/rules.py",
+      "sha256": "8318f992f5bfeeca1d6841ffede82557037890bf2f3c08f89c95a3f6a1185ab0",
+      "created_at": "2026-03-22T23:23:06.068416+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/analytics/infrastructure/models.py",
+      "sha256": "f01e98ffcf5c2bc825303094f9669f99ea84bd8037a745fa867b08ce2cd04b32",
+      "created_at": "2026-03-22T23:23:10.760059+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/analytics/infrastructure/repository.py",
+      "sha256": "687e20c010050ae8117926dd05de77fc2f016afe8233d27ea47fecc0d91e16f0",
+      "created_at": "2026-03-22T23:23:16.921255+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/analytics/application/use_cases.py",
+      "sha256": "0f4b1f3003567dbbfa43dcd30edeb38f5afce0ceb2fcc4d52d28aea6c628d0bf",
+      "created_at": "2026-03-22T23:23:26.252213+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/analytics/schemas.py",
+      "sha256": "f28fc4988bdb7506075b3950665f98b49bc9e0df1923b9af69727d4a3e32743a",
+      "created_at": "2026-03-22T23:23:34.991774+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/analytics/api.py",
+      "sha256": "207571f2b579968a4ee7787521f2115c70bc664e6116b726aa737337371f6e8e",
+      "created_at": "2026-03-22T23:23:40.751075+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/reports/domain/entities.py",
+      "sha256": "2245e3b5774738ec65504aa2dec4fb3d17343f183f368a7079cb1bed62b99e22",
+      "created_at": "2026-03-22T23:28:00.804963+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/reports/domain/rules.py",
+      "sha256": "eb9f94b26bc659ac377aee2a8cc1d40e306979da3fdbc0349a48bd2633e40cee",
+      "created_at": "2026-03-22T23:28:08.961671+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/reports/infrastructure/models.py",
+      "sha256": "c2ede8ed90f3edc425c5dc3fc73eedaa2c29c06eec7498ee8bd276e0eb1239b9",
+      "created_at": "2026-03-22T23:28:14.833044+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/reports/infrastructure/repository.py",
+      "sha256": "980fc1f63a4fa16c3cf08700d74c3881acd7e8f17fbf8a2e0d8a8eafae2ad6f6",
+      "created_at": "2026-03-22T23:28:19.514178+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/reports/application/use_cases.py",
+      "sha256": "9a5ef2a84f15e414c5e3662dacc652913a8e166a08f1e8d45a58f678e091f353",
+      "created_at": "2026-03-22T23:28:24.430074+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/reports/schemas.py",
+      "sha256": "1a1029cf1d80142fbf644b3886ace1a1d54c722154615c87ee1eaf02cc63b1da",
+      "created_at": "2026-03-22T23:28:28.873426+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/reports/api.py",
+      "sha256": "8b66ad395fe1703697b342d89cb471d031acef66c2eabee6b6619cb19379a08a",
+      "created_at": "2026-03-22T23:28:33.267122+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/ai_ingestion/domain/entities.py",
+      "sha256": "ede7423eab24cdda7582f4e27fdae11d0f944534b398be14b873a040d3e4ff29",
+      "created_at": "2026-03-22T23:35:53.108502+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/ai_ingestion/domain/rules.py",
+      "sha256": "94826320de0c6055afd3813147296b9796b226f5e30fce66bfcc9618f479930b",
+      "created_at": "2026-03-22T23:36:05.912791+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/ai_ingestion/infrastructure/models.py",
+      "sha256": "a7259f2db3760ef57245f63a5db310e429c89cf12bd778dc5dc8a186dc53f5aa",
+      "created_at": "2026-03-22T23:36:14.038754+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/ai_ingestion/infrastructure/repository.py",
+      "sha256": "e8e80ac043b7a6a73ab46aa907cf8c5f8e04fe8e7ced0d89bf78fe5755ef51d6",
+      "created_at": "2026-03-22T23:36:21.176480+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/ai_ingestion/application/use_cases.py",
+      "sha256": "767a05392f3f43debf5e34663f16bd0a6e74a577e105c275c75c284b0238958f",
+      "created_at": "2026-03-22T23:36:27.532131+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/ai_ingestion/api.py",
+      "sha256": "65fb7a8603ab23a861e43605dc345cbad22c5a18fa78dd51589cc61e979bcc56",
+      "created_at": "2026-03-22T23:36:32.771787+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/ai_ingestion/migrations/0001_initial.py",
+      "sha256": "84b1cc27305ba0a3ba6cccf3dcd605f532bef70147f815bbc6d6ed16727195ea",
+      "created_at": "2026-03-22T23:36:43.999521+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/audit/domain/entities.py",
+      "sha256": "6041b0a624a603557db91bdd4bf6d506729d96bdda9537ccce889c7209c4f0b7",
+      "created_at": "2026-03-22T23:44:19.552607+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/audit/domain/rules.py",
+      "sha256": "bbab3ab1f3bbd04a46e55da3170193fb51d18738571774af634aeefc536f8a29",
+      "created_at": "2026-03-22T23:44:28.724544+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/audit/infrastructure/models.py",
+      "sha256": "73a29d6972a35379b12778fb699ea7197b2c8cb980bd72287b5bf575b3ac3790",
+      "created_at": "2026-03-22T23:44:33.660401+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/audit/infrastructure/repository.py",
+      "sha256": "4c4429dc7a854576092a03a1b7faaf7c7fc85bb661e72814f0a4d831719a3e65",
+      "created_at": "2026-03-22T23:44:38.506360+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/audit/application/use_cases.py",
+      "sha256": "f641a412c7bda0dd56c61ce858c28117a4ca0a36e6ec77d455baff257590a097",
+      "created_at": "2026-03-22T23:44:43.138130+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/audit/api.py",
+      "sha256": "65b976a332350f99e2f43587b8dfe14c74694368f769b44dff25d68cec3735eb",
+      "created_at": "2026-03-22T23:44:47.983972+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/audit/migrations/0001_initial.py",
+      "sha256": "1e5286bd5e0d8f1c177418fd44d82cadfea7f46551e78fa7a15feb42d960a543",
+      "created_at": "2026-03-22T23:44:52.656586+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/notifications/domain/entities.py",
+      "sha256": "db939b47aece5b65983eee43d3710676007a3fe94f8b9fc173e485e901fcf03a",
+      "created_at": "2026-03-22T23:49:37.574121+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/notifications/domain/rules.py",
+      "sha256": "f0ebdf1ee4572604abfd05173d5ea35a92322ec34f1cabc504849170788c4728",
+      "created_at": "2026-03-22T23:49:56.879427+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/notifications/infrastructure/models.py",
+      "sha256": "1a0045d8cf7b2404c97c896a7ca838d2186f79217769b21f36e38078d5966aeb",
+      "created_at": "2026-03-22T23:50:06.230102+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/notifications/infrastructure/repository.py",
+      "sha256": "080ed650387a52bface625a9a7d2a27d7bb6ba0d1374a48eb3174a5e16163439",
+      "created_at": "2026-03-22T23:50:12.850400+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/notifications/application/use_cases.py",
+      "sha256": "5552dba8d8baa61a27633337bb34ec8aafe54e5dbca4aef5e37a4bfa75ad4cf1",
+      "created_at": "2026-03-22T23:50:19.403013+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/notifications/api.py",
+      "sha256": "68d59419d7ac560b3b4dfe52776294f6a5d1ccb71bbb30897ecbfe784a853e0d",
+      "created_at": "2026-03-22T23:50:24.693761+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "src/notifications/migrations/0001_initial.py",
+      "sha256": "a4cf5ff01bed80a09ed998e8045c02be31e088b9aa4c1d0e03f4130fc84e7895",
+      "created_at": "2026-03-22T23:50:29.545896+00:00",
+      "gate_exit_code": 0
     }
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-03-21T04:36:33.673429+00:00"
+  "hook_validated_at": "2026-03-21T07:21:55.437914+00:00"
 }

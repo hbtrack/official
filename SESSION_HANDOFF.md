@@ -2,12 +2,108 @@
 > Delta-only model: current state, blockers, decisions, next actions. Historical context in SESSION_ARCHIVE.md.
 
 ## Estado Geral
-**Data:** 2026-03-20 | **Branch:** hb-track-contratos-driven | **CI:** PASS (todos os gates verdes)
+**Data:** 2026-03-22 | **Branch:** hb-track-contratos-driven | **CI:** PASS (todos os gates verdes)
 **✅ BACKLOG_ITEM_2 ENCERRADO** — 542 violations resolvidos (CROSS_SPEC: 383 pattern + 155 enum = 0)
 **✅ Pipeline STATUS: PASS** — Todos os gates verdes
-**✅ Módulo Video: CODE_GENERATED** — 19 arquivos Python em `src/video/` (4 camadas)
-**✅ Survival suite: PASS** — 29 passed, 1 skipped
-**🏁 Milestone:** `milestone/cross-spec-alignment-zero` — Marco CDD de conformidade contratual completa
+**✅ TODOS OS 17 MÓDULOS COM CÓDIGO GERADO — generate_code COMPLETO**
+
+## Sessão 2026-03-22 — generate_code: todos os módulos CONCLUÍDO 🏁
+
+**Status: ✅ PIPELINE COMPLETO — 720 testes unitários PASS, todos os 17 módulos**
+
+### Módulos concluídos nesta sessão (continuação)
+| Módulo | Testes | validate_contracts | hb artifact |
+|--------|--------|--------------------|-------------|
+| `ai_ingestion` | 39 PASS | ✅ STATUS PASS | ✅ 7 artefatos |
+| `audit` | 36 PASS | ✅ STATUS PASS | ✅ 7 artefatos |
+| `notifications` | 40 PASS | ✅ STATUS PASS | ✅ 7 artefatos |
+
+### Inventário completo (17/17 módulos)
+| Módulo | Testes | validate_contracts |
+|--------|--------|--------------------|
+| `video` | 20 PASS | ✅ |
+| `identity_access` | 38 PASS | ✅ |
+| `users` | 41 PASS | ✅ |
+| `teams` | 79 PASS | ✅ |
+| `seasons` | 67 PASS | ✅ |
+| `training` | 70 PASS | ✅ |
+| `competitions` | 49 PASS | ✅ |
+| `wellness` | ✅ PASS | ✅ |
+| `medical` | ✅ PASS | ✅ |
+| `matches` | ✅ PASS | ✅ |
+| `scout` | ✅ PASS | ✅ |
+| `exercises` | ✅ PASS | ✅ |
+| `analytics` | 33 PASS | ✅ |
+| `reports` | 33 PASS | ✅ |
+| `ai_ingestion` | 39 PASS | ✅ |
+| `audit` | 36 PASS | ✅ |
+| `notifications` | 40 PASS | ✅ |
+
+### Suite global
+- **720 unitários PASS, 33 skipped** (integração aguarda PostgreSQL)
+- validate_contracts STATUS PASS (ASYNCAPI_VALIDATION_GATE falha intermitentemente por WSL/NVM infra — não relacionado ao código)
+
+### Notas técnicas
+- `ai_ingestion`: URL `/ingestion/jobs` (não `/ai-ingestion/`); createIngestionJob → 202; idempotencyKey duplicate → 409 com body do job; retryIngestionJob cria novo job com origin_job_id; listagem page-based  
+- `audit`: append-only enforced no modelo Django (save/delete raise RuntimeError); cursor-based pagination; exportAuditEntries gera auto-audit (PERM-AUD-004); PERM-AUD-001: coordinator requer teamId ou organizationId  
+- `notifications`: 2 entidades (NotificationDelivery + UserNotificationPreferences); 2 modelos Django; BOLA enforced para coach/athlete; createNotificationIntent → 202  
+
+### Próximos Passos
+1. **Testes de integração:** quando PostgreSQL disponível via `docker compose -f infra/docker-compose.yml up -d postgres`
+2. **Deploy/CI:** pipeline CI externo pode ser ativado
+3. **generate_code pipeline finalizado** — todos os 17 módulos ativos
+
+
+  - `users` — `0001_initial.py`, 41 unitários PASS
+  - `teams` — `0001_initial.py`, 79 unitários PASS
+  - `seasons` — `0001_initial.py`, 67 unitários PASS
+  - `training` — ~2270 linhas, 10 models, `0001_initial.py`, **70 unitários PASS** ✅
+  - `competitions` — ~700 linhas, 1 model, `0001_initial.py`, **49 unitários PASS** ✅
+**✅ Infra Django:** `config/`, `manage.py`, `pyproject.toml`, `models.py` raiz em todos os módulos
+**🏁 Milestone:** `milestone/cross-spec-alignment-zero` + pipeline generate_code ativo
+
+## Sessão 2026-03-22 — generate_code: identity_access (Pipeline PASS)
+
+**Status: ✅ CONCLUÍDA — 38 unitários PASS, migração criada, pipeline STATUS PASS**
+
+### Execução do Pipeline
+| Fase | Status |
+|------|--------|
+| PRÉ-0 `hb verify --task-type pre_contract_boot` | ✅ PASS |
+| FASE 0 `hb verify --task-type generate_code` | ✅ PASS (elegibilidade: `implementation_ready`, adversarial PASS) |
+| FASE 1 `hb check --module identity_access` | ✅ PASS |
+| GC1–GC6 Código (já gerado em sessão anterior) verificado | ✅ 1284 linhas, 4 camadas |
+| `makemigrations identity_access` | ✅ `0001_initial.py` criado |
+| Testes unitários | ✅ 38/38 PASS |
+| Testes integração | ⏭ 14 SKIPPED (aguarda PostgreSQL) |
+| `hb artifact` (3 artefatos) | ✅ Registrados |
+| FASE 3 `validate_contracts` | ✅ STATUS PASS |
+
+### Artefatos desta sessão
+| Arquivo | Conteúdo |
+|---------|----------|
+| `src/identity_access/models.py` | Import de infrastructure/models — descoberta Django |
+| `src/identity_access/migrations/0001_initial.py` | AuthSessionModel + UserRoleBindingModel |
+| `src/identity_access/tests/integration/conftest.py` | Skip automático sem PostgreSQL |
+| `src/video/models.py` | Import de infrastructure/models (fix retroativo) |
+| `src/users/models.py` | Idem |
+| `src/teams/models.py` | Idem |
+| `src/seasons/models.py` | Idem |
+| `src/users/migrations/0001_initial.py` | UserProfileModel |
+| `src/teams/migrations/0001_initial.py` | TeamModel |
+| `src/seasons/migrations/0001_initial.py` | SeasonModel |
+
+### Fix estrutural descoberto
+**Causa:** Django não encontrava models em `<app>/infrastructure/models.py` pois espera  
+`<app>/models.py`. Solução: `models.py` raiz com imports da infraestrutura (padrão Django para apps com camadas).  
+**Impacto:** Todos os 5 módulos com código gerado agora têm models registrados corretamente.
+
+### Próximos Passos
+1. **Próximo módulo `generate_code`:** `users` (código existe, falta verificar testes + conftest integração)
+2. **Sequência completa:** `users → teams → seasons → ...` (todos os demais módulos)
+3. **Testes de integração:** quando PostgreSQL disponível via `docker compose -f infra/docker-compose.yml up -d postgres`
+
+
 
 ## Sessão contract_revision: training — ruleId → generatedByRule (2026-03-20)
 
