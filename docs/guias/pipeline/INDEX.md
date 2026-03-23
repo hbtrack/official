@@ -1,4 +1,5 @@
 # PIPELINE DOCUMENTATION INDEX
+> Documento de apoio humano, não canônico e não soberano. Serve como índice analítico de material histórico do pipeline.
 > Mapa de documentação do pipeline HB TRACK • 2026-03-20
 
 ---

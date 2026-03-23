@@ -20,6 +20,7 @@ status: active
 | Prompts operacionais          | Não      | `.contract_driven/agent_prompts/`          | `_reports/agent_execution/`            |
 | Canon global (docs)           | Sim      | `docs/_canon/*`                            | `_reports/`                            |
 | Docs normativos de módulo     | Sim      | `docs/hbtrack/modulos/<module>/*`          | `_reports/`                            |
+| Estudos e ideação humana      | Não      | `docs/guias/*`                             | N/A                                    |
 | Contrato OpenAPI              | Sim      | `contracts/openapi/*`                      | `generated/resolved_policy/*`          |
 | Schemas de domínio (JSON Schema)| Sim    | `contracts/schemas/*`                      | `generated/`, `generated/ui-types/`    |
 | Workflows (Arazzo)            | Sim      | `contracts/workflows/*`                    | `generated/*`                          |
@@ -28,8 +29,10 @@ status: active
 
 Regras absolutas:
 - `_reports/` e `generated/` são sempre derivados. Nunca sobrepõem fontes soberanas.
+- `docs/guias/` é material humano de estudo/ideação. Nunca define SSOT, DONE, status operacional ou próxima ação permitida.
 - Templates em `.contract_driven/templates/` são scaffold — agentes instanciam a partir deles.
 - `docs/hbtrack/decisoes/` nunca tem linguagem de autoridade sem disclaimer explícito.
+- `docs/guias/` nunca pode usar linguagem de SSOT/autoridade sem disclaimer explícito no topo.
 
 ## §2 BOUNDARY RULES CRÍTICOS DE MÓDULOS
 

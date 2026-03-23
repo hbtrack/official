@@ -27,7 +27,7 @@ Regras, terminologia, categorias e estrutura competitiva seguem o regulamento IH
 
 ## 4. Atores Canônicos e Modelo de Autorização
 
-O sistema de identidade e autorização do HB Track opera em quatro camadas. A SSOT completa está em `docs/guias/IDENTITY_RBAC.md`.
+O sistema de identidade e autorização do HB Track opera em quatro camadas. O resumo normativo está nesta seção; decisões globais de autorização vivem em `docs/_canon/decisions/ADR-008-authz-strategy.md` e o detalhamento operacional do módulo vive em `docs/hbtrack/modulos/identity_access/PERMISSIONS_IDENTITY_ACCESS.md`.
 
 ```
 Canonical Actor  →  Role Template  →  Permission Bundles  →  Scope Bindings  →  Policy Engine
@@ -53,7 +53,7 @@ Canonical Actor  →  Role Template  →  Permission Bundles  →  Scope Binding
 
 **Total**: ~25 atores canônicos → ~30 permission bundles → ~20 role templates
 
-**Regra**: Nenhum role template pode ser criado sem aprovação formal e registro em `docs/guias/IDENTITY_RBAC.md`. Variações de acesso entre tenants são resolvidas por composição de bundles, nunca por criação de novos roles ad hoc. Ver IDENTITY_RBAC.md §5 para a regra arquitetural completa.
+**Regra**: Nenhum role template pode ser criado sem aprovação formal e atualização dos artefatos canônicos de `identity_access` quando aplicável. Variações de acesso entre tenants são resolvidas por composição de bundles, nunca por criação de novos roles ad hoc.
 
 ## 5. Macrodomínios de Negócio
 

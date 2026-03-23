@@ -82,7 +82,7 @@ O header `X-Flow-ID` é propagado em todas as camadas do sistema: requests HTTP 
 | Schemathesis | latest compat. | Testes de contrato HTTP baseados em OpenAPI |
 | React Native + Expo | latest compat. | Mobile — v2.0 _(ADR-030)_ |
 
-**Regra**: alterações de versão canônica para Python e PostgreSQL requerem atualização de `docs/_canon/contratos/Ambiente.md` e aprovação formal.
+**Regra**: alterações de versão canônica para Python e PostgreSQL requerem atualização deste documento e, quando houver impacto operacional, de `docs/_canon/DEPLOY_PIPELINE.md`, além de aprovação formal.
 
 ---
 
@@ -223,19 +223,19 @@ O estágio é regido integralmente por `docs/_canon/DECISION_POLICY.md` e operac
 
 ## 7. Ambiente Local vs. Produção
 
-Para especificação completa de ambiente, consulte `docs/_canon/contratos/Ambiente.md` — esse documento é o SSOT para toda questão de infraestrutura.
+Este documento consolida o baseline atual de ambiente. Não existe um `Ambiente.md` separado e soberano; detalhes operacionais adicionais de deploy vivem em `docs/_canon/DEPLOY_PIPELINE.md`.
 
 **Resumo de referência rápida**:
 
 | Item | Local (dev) | VPS (prod/staging) |
 |------|------------|-------------------|
 | PostgreSQL | 16 (Docker, porta **5433**) | 16 (porta **5432**) |
-| Redis | 7-Alpine (porta 6379) | TBD — ver Ambiente.md §3 |
+| Redis | 7-Alpine (porta 6379) | TBD — registrar baseline final em `DEPLOY_PIPELINE.md` |
 | Container DB | `hbtrack-postgres-dev` | `postgres15` |
 | OS | Docker (Windows 11) | Ubuntu 20.04.6 LTS |
 | Python | 3.11.9 | 3.11.9 |
 
-**Regra**: nenhum deploy, backup ou migration no VPS sem confirmar versão do PostgreSQL em `docs/_canon/contratos/Ambiente.md`.
+**Regra**: nenhum deploy, backup ou migration no VPS sem confirmar a versão vigente do PostgreSQL neste documento e no `DEPLOY_PIPELINE.md`, quando aplicável.
 
 ---
 
@@ -250,7 +250,7 @@ As seguintes ações são proibidas sem ADR formal aprovada:
 - Criar regra esportiva sem rastreio para `HANDBALL_RULES_DOMAIN.md`
 - Misturar responsabilidades de `users` e `identity_access`
 - Remover psycopg2 ou psycopg3 unilateralmente
-- Alterar versão canônica de Python ou PostgreSQL sem atualizar `Ambiente.md`
+- Alterar versão canônica de Python ou PostgreSQL sem atualizar este documento e o `DEPLOY_PIPELINE.md` quando houver impacto operacional
 - Criar/revisar contrato com decisão arquitetural `obrigatória` em aberto sem ADR aprovada (ver `ARCHITECTURE_DECISION_BACKLOG.md`)
 
 ---
@@ -262,7 +262,7 @@ As seguintes ações são proibidas sem ADR formal aprovada:
 - `.contract_driven/templates/api/api_rules.yaml` — SSOT de convenções/templates/validações de API HTTP
 - `API_CONVENTIONS.md` — guia/ponteiros (não-SSOT) para API
 - `DATA_CONVENTIONS.md` — convenções de dados
-- `docs/_canon/contratos/Ambiente.md` — especificação completa de ambiente (SSOT)
+- `docs/_canon/DEPLOY_PIPELINE.md` — detalhes operacionais e status atual de deploy
 - `.contract_driven/CONTRACT_SYSTEM_RULES.md` — regras operacionais do CDD
 - `docs/_canon/DECISION_POLICY.md` — regras do estágio Decision Discovery (DSS)
 - `docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md` — decisões arquiteturais em aberto

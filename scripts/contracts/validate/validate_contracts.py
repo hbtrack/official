@@ -367,7 +367,20 @@ def _parse_yaml_front_matter(path: pathlib.Path) -> dict | None:
         obj = yaml.safe_load(header)
     except Exception:
         return None
-    return obj if isinstance(obj, dict) else None
+    return _normalize_yaml_front_matter_obj(obj) if isinstance(obj, dict) else None
+
+
+def _normalize_yaml_front_matter_obj(value: Any) -> Any:
+    """Converte objetos YAML para escalares JSON-friendly antes da validação."""
+    if isinstance(value, dict):
+        return {str(key): _normalize_yaml_front_matter_obj(val) for key, val in value.items()}
+    if isinstance(value, list):
+        return [_normalize_yaml_front_matter_obj(item) for item in value]
+    if isinstance(value, datetime.datetime):
+        return value.isoformat()
+    if isinstance(value, datetime.date):
+        return value.isoformat()
+    return value
 
 
 def _read_text(path: pathlib.Path) -> str:
@@ -4627,10 +4640,14 @@ def _g2j_pre_contract_evidence(root: pathlib.Path) -> dict:
 def _g2k_shadow_authority(root: pathlib.Path) -> dict:
     t0 = time.monotonic()
     gate_id = "SHADOW_AUTHORITY_GATE"
-    shadow_dir = root / "docs" / "hbtrack" / "decisoes"
-    checked = [str(shadow_dir)]
-    if not shadow_dir.exists():
-        return _skip(gate_id, "docs/hbtrack/decisoes/ ausente — gate não aplicável.", _ms(t0))
+    shadow_dirs = [
+        root / "docs" / "hbtrack" / "decisoes",
+        root / "docs" / "guias",
+    ]
+    existing_shadow_dirs = [path for path in shadow_dirs if path.exists()]
+    checked = [str(path) for path in shadow_dirs]
+    if not existing_shadow_dirs:
+        return _skip(gate_id, "Nenhum diretório não-soberano monitorado encontrado.", _ms(t0))
 
     authority_patterns = [
         re.compile(r"\bssot\b", re.IGNORECASE),
@@ -4642,30 +4659,36 @@ def _g2k_shadow_authority(root: pathlib.Path) -> dict:
     ]
     disclaimer_patterns = [
         re.compile(r"n[aã]o .*artefato can[oô]nico soberano", re.IGNORECASE),
-        re.compile(r"n[aã]o-soberan", re.IGNORECASE),
+        re.compile(r"n[aã]o[- ]soberan", re.IGNORECASE),
+        re.compile(r"n[aã]o[- ]can[oô]nic", re.IGNORECASE),
+        re.compile(r"n[aã]o .*ssot", re.IGNORECASE),
+        re.compile(r"material de estudo", re.IGNORECASE),
+        re.compile(r"apoio humano", re.IGNORECASE),
+        re.compile(r"n[aã]o .*autoridade", re.IGNORECASE),
         re.compile(r"n[aã]o substitui", re.IGNORECASE),
         re.compile(r"fonte de racioc[ií]nio", re.IGNORECASE),
         re.compile(r"\bdss\b", re.IGNORECASE),
     ]
 
     violations: list[dict] = []
-    for path in sorted(shadow_dir.glob("*.md")):
-        checked.append(str(path))
-        try:
-            text = path.read_text(encoding="utf-8", errors="replace")
-        except Exception:
-            continue
-        if not any(p.search(text) for p in authority_patterns):
-            continue
-        top = "\n".join(text.splitlines()[:40])
-        if any(p.search(top) for p in disclaimer_patterns):
-            continue
-        violations.append({
-            "blocking_code": BLOCKED_SHADOW_AUTHORITY,
-            "artifact": str(path.relative_to(root)),
-            "message": "Documento não-soberano contém linguagem de autoridade sem disclaimer explícito no topo.",
-            "severity": "error",
-        })
+    for shadow_dir in existing_shadow_dirs:
+        for path in sorted(shadow_dir.rglob("*.md")):
+            checked.append(str(path))
+            try:
+                text = path.read_text(encoding="utf-8", errors="replace")
+            except Exception:
+                continue
+            if not any(p.search(text) for p in authority_patterns):
+                continue
+            top = "\n".join(text.splitlines()[:40])
+            if any(p.search(top) for p in disclaimer_patterns):
+                continue
+            violations.append({
+                "blocking_code": BLOCKED_SHADOW_AUTHORITY,
+                "artifact": str(path.relative_to(root)),
+                "message": "Documento não-soberano contém linguagem de autoridade sem disclaimer explícito no topo.",
+                "severity": "error",
+            })
 
     if violations:
         return _pg(
@@ -6964,12 +6987,13 @@ def _g_handoff_coherence(root: pathlib.Path) -> dict:
     t0 = time.monotonic()
     gate_id = "HANDOFF_COHERENCE_GATE"
     handoff = root / "SESSION_HANDOFF.md"
+    schema_path = root / "contracts" / "schemas" / "shared" / "session_handoff.schema.json"
     
     # FIX Ordem 4: SESSION_HANDOFF ausente deve ser FAIL, não SKIP
     if not handoff.exists():
         return _pg(gate_id, "FAIL", True, "BLOCKED_HANDOFF_INCOMPLETE",
                    "SESSION_HANDOFF.md ausente — artefato obrigatório.",
-                   [], [str(handoff)], [], [
+                   [], [str(handoff), str(schema_path)], [], [
                        {"blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
                         "artifact": "SESSION_HANDOFF.md",
                         "message": "SESSION_HANDOFF.md não encontrado na raiz do workspace.",
@@ -6977,25 +7001,68 @@ def _g_handoff_coherence(root: pathlib.Path) -> dict:
                    ], _ms(t0))
     
     text = handoff.read_text(encoding="utf-8")
+    checked = [str(handoff), str(schema_path)]
     violations: list[dict] = []
-    
-    # FIX Ordem 4: validar conteúdo mínimo (não só existência)
-    # Campos obrigatórios: estado geral, módulos, bloqueadores
-    required_fields = ["Estado Geral", "Data:", "Branch:"]
-    for field in required_fields:
-        if field not in text:
+
+    front_matter = _parse_yaml_front_matter(handoff)
+    if front_matter is None:
+        violations.append({
+            "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+            "artifact": "SESSION_HANDOFF.md",
+            "message": "Front matter YAML obrigatório ausente ou inválido em SESSION_HANDOFF.md.",
+            "severity": "error",
+        })
+
+    if not schema_path.exists():
+        violations.append({
+            "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+            "artifact": str(schema_path.relative_to(root)),
+            "message": "Schema ativo de handoff ausente.",
+            "severity": "error",
+        })
+    elif front_matter is not None:
+        try:
+            import jsonschema  # type: ignore
+
+            schema = _load_json(schema_path)
+            validator = jsonschema.Draft202012Validator(schema)
+            errors = sorted(validator.iter_errors(front_matter), key=lambda err: list(err.absolute_path))
+            for error in errors:
+                path_str = ".".join(str(part) for part in error.absolute_path) or "$"
+                violations.append({
+                    "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+                    "artifact": "SESSION_HANDOFF.md",
+                    "message": f"Front matter inválido em {path_str}: {error.message}",
+                    "severity": "error",
+                })
+        except Exception as exc:
             violations.append({
                 "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
                 "artifact": "SESSION_HANDOFF.md",
-                "message": f"Campo obrigatório '{field}' ausente do handoff.",
+                "message": f"Falha ao validar front matter contra session_handoff.schema.json: {exc}",
+                "severity": "error",
+            })
+
+    required_sections = [
+        "## Estado Geral",
+        "## O que foi feito",
+        "## Próxima ação permitida",
+        "## Bloqueios ativos",
+    ]
+    for section in required_sections:
+        if section not in text:
+            violations.append({
+                "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+                "artifact": "SESSION_HANDOFF.md",
+                "message": f"Seção obrigatória '{section}' ausente do handoff.",
                 "severity": "error",
             })
     
     import re as _re
-    match = _re.search(r"data_ultima_sessao[:\s]+(\d{4}-\d{2}-\d{2})", text)
-    if match:
+    session_date_raw = front_matter.get("data_ultima_sessao") if isinstance(front_matter, dict) else None
+    if session_date_raw:
         try:
-            session_date = datetime.date.fromisoformat(match.group(1))
+            session_date = datetime.date.fromisoformat(str(session_date_raw))
             age_days = (datetime.date.today() - session_date).days
             if age_days > 30:
                 violations.append({
@@ -7016,12 +7083,12 @@ def _g_handoff_coherence(root: pathlib.Path) -> dict:
             check=False,
         )
         current_branch = proc.stdout.strip()
-        branch_match = _re.search(r"branch_ativo[:\s]+(\S+)", text)
-        if branch_match and current_branch and branch_match.group(1) != current_branch:
+        branch_value = front_matter.get("branch_ativo") if isinstance(front_matter, dict) else None
+        if branch_value and current_branch and str(branch_value) != current_branch:
             violations.append({
                 "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
                 "artifact": "SESSION_HANDOFF.md",
-                "message": f"branch_ativo='{branch_match.group(1)}' != branch atual='{current_branch}'.",
+                "message": f"branch_ativo='{branch_value}' != branch atual='{current_branch}'.",
                 "severity": "error",  # FIX Ordem 4: erro, não warning
             })
     except Exception:
@@ -7029,10 +7096,10 @@ def _g_handoff_coherence(root: pathlib.Path) -> dict:
     if violations:
         return _pg(gate_id, "FAIL", False, "BLOCKED_HANDOFF_INCOMPLETE",
                    f"SESSION_HANDOFF.md com {len(violations)} inconsistência(s).",
-                   [str(handoff)], [str(handoff)], [], violations, _ms(t0))
+                   checked, checked, [], violations, _ms(t0))
     return _pg(gate_id, "PASS", False, None,
                "SESSION_HANDOFF.md coerente com estado atual.",
-               [str(handoff)], [str(handoff)], [], [], _ms(t0))
+               checked, checked, [], [], _ms(t0))
 
 
 def _g_module_status_coherence(root: pathlib.Path) -> dict:

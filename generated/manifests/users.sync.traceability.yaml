@@ -264,7 +264,7 @@ traceability_manifest:
   - path: generated/contracts/schemas/shared/readiness_confirmation.schema.json
     sha256: 913df84125b1df3b271e7d40c819ae3fed10f4280d6bc1e11671f32026cd5a9c
   - path: generated/contracts/schemas/shared/session_handoff.schema.json
-    sha256: 5cdc1bab16e0ae8b15f89a9ad7e7d1e647354390bce3a25fe1a8c2e80e1527cd
+    sha256: 78f27c4be384f46efa85274d067f47030bc2837c8841c213b4a6b554b739616b
   - path: generated/contracts/schemas/shared/session_start.schema.json
     sha256: f715652e7cf48a49628d76e96b48dfc3440f4d892e70a310437e22f66e470f80
   - path: generated/contracts/schemas/shared/waiver.schema.json
@@ -319,7 +319,7 @@ traceability_manifest:
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: generated/contracts/schemas/wellness/wellness_entry.schema.json
     sha256: e6b69221a1e62764a544a37a53dfa1d211df3b89799df536f9b85789b5b59c97
-  generated_tree_sha256: 3fe519a05dcfc9d813f74e1a1cd44d826f09197d57f3dc2fd4771b2fa55ec124
+  generated_tree_sha256: b265282267b4b3e2bc1c641d098d4ac50a539961e28446739cc45aac93814ee6
   policy_path: generated/resolved_policy/users.sync.resolved.yaml
   policy_sha256: 1f8f8bf7e8c79d221038e1c8787f53bbc52cf1d461e126bf6c7c7e91960f0ddf
   source_contracts:
@@ -584,7 +584,7 @@ traceability_manifest:
   - path: contracts/schemas/shared/readiness_confirmation.schema.json
     sha256: 913df84125b1df3b271e7d40c819ae3fed10f4280d6bc1e11671f32026cd5a9c
   - path: contracts/schemas/shared/session_handoff.schema.json
-    sha256: 5cdc1bab16e0ae8b15f89a9ad7e7d1e647354390bce3a25fe1a8c2e80e1527cd
+    sha256: 78f27c4be384f46efa85274d067f47030bc2837c8841c213b4a6b554b739616b
   - path: contracts/schemas/shared/session_start.schema.json
     sha256: f715652e7cf48a49628d76e96b48dfc3440f4d892e70a310437e22f66e470f80
   - path: contracts/schemas/shared/waiver.schema.json
@@ -650,4 +650,4 @@ traceability_manifest:
     sha256: efb1ba7de801a93cefef6fd2e58969cb683fa64528f78b0c508815bfd49fa11f
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: d7495e17090c41af465fbf064d0bff3d084c72ba0e57f1e0d78aa3b8f0ae71eb
-  source_tree_sha256: 4b2a37e8bd17ffe05e6e6b40e28782a67a6de5a349dbae5588824521b24f2d49
+  source_tree_sha256: 190ed12ff8087726c831fd371bb988d877fe292c3d9c55549aa40d1bd9191838

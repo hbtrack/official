@@ -1,4 +1,5 @@
 # PLANO MESTRE DE REMEDIAÇÃO CONTRATUAL — HB TRACK
+> Documento de apoio humano, não canônico e não soberano. Serve como registro histórico de remediação; não substitui o canon ativo nem o roadmap operacional vigente.
 **Data:** 2026-03-19  
 **Auditor de remediação:** Pipeline CDD + Validação estrutural  
 **Escopo:** Correção de 47→100/100 em robustez contratual  

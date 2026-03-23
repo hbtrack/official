@@ -1,4 +1,5 @@
 # Roadmap de Implementação — 17 Módulos do HB Track
+> Documento histórico, não canônico e não soberano.
 > **OBSOLETO PARA CONTINUIDADE OPERACIONAL.**
 > Autoridade atual: `ROADMAP.md` para execução pós-CDD e `docs/_canon/MODULE_REGISTRY.yaml` para status de módulo.
 > Este arquivo permanece apenas como registro histórico de uma fotografia intermediária de 2026-03-17/19.

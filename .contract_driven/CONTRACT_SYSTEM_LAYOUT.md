@@ -14,6 +14,7 @@ Ele governa:
 - `contracts/workflows/`
 - `contracts/asyncapi/`
 - paths canônicos para documentação humana normativa relacionada ao sistema de contratos
+- classificação operacional de paths humanos não soberanos usados apenas para estudo, ideação ou evidência
 
 Ele **não** substitui:
 - a autoridade de conteúdo da documentação humana global (`docs/_canon/README.md` como canon; `README.md` como landing/entry; além de `SYSTEM_SCOPE.md`, `ARCHITECTURE.md`, `C4_CONTEXT.md`, `C4_CONTAINERS.md`, `UI_CONTRACT_GUIDE.md`, etc.)
@@ -141,6 +142,13 @@ Artefatos derivados com path canônico explícito:
 - `generated/manifests/*.traceability.yaml` = manifesto derivado de rastreabilidade;
 - `_reports/contract_gates/latest.json` = relatório corrente do pipeline;
 - `_reports/evidence/module_readiness_scorecard.json` = scorecard derivado de readiness.
+
+### 4.2 Paths humanos não soberanos
+
+Os paths abaixo são permitidos, mas nunca são fonte de autoridade operacional:
+
+- `docs/guias/` = material humano de estudo, ideação e exploração; não substitui o canon nem docs normativas de módulo
+- `_reports/` = relatórios, evidências e snapshots derivados; não define escopo, status soberano ou próxima ação permitida
 
 ---
 

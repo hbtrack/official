@@ -2,212 +2,90 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://hbtrack.local/schemas/session_handoff.schema.json",
     "title": "HB Track — Session Handoff",
-    "description": "Schema para payload estruturado de handoff de sessão. Serve como contrato auxiliar para representações serializadas e referências derivadas de continuidade, sem substituir o markdown operacional SESSION_HANDOFF.md usado pelo fluxo atual.",
-    "$comment": "No enforcement protegido atual, o markdown SESSION_HANDOFF.md e validado separadamente por HANDOFF_COHERENCE_GATE e pelo hook pre-commit. Este schema nao deve ser lido como o validador ativo desse markdown.",
+    "description": "Schema ativo para o front matter YAML obrigatório de SESSION_HANDOFF.md. O HANDOFF_COHERENCE_GATE valida esse front matter contra este contrato antes de aceitar a continuidade entre sessões.",
+    "$comment": "Este schema governa apenas o front matter YAML do markdown operacional SESSION_HANDOFF.md. O corpo textual continua delta-only e deve manter as seções exigidas pelo template canônico.",
     "type": "object",
     "additionalProperties": false,
     "required": [
-        "session_id",
-        "timestamp",
-        "modules_modified",
-        "decisions_made",
-        "open_blockers",
-        "next_session_context"
+        "data_ultima_sessao",
+        "branch_ativo",
+        "ci_status",
+        "modulo_foco",
+        "fase_roadmap",
+        "task_id",
+        "resultado",
+        "proxima_acao_permitida",
+        "bloqueios_ativos"
     ],
     "properties": {
-        "session_id": {
+        "data_ultima_sessao": {
             "type": "string",
-            "minLength": 8,
-            "description": "Identificador único da sessão. Formato recomendado: YYYYMMDD_HHMMSS ou UUID."
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "description": "Data ISO (YYYY-MM-DD) da última sessão consolidada neste handoff."
         },
-        "timestamp": {
+        "branch_ativo": {
             "type": "string",
-            "format": "date-time",
-            "description": "Timestamp ISO8601 de quando o handoff foi gerado (ex: 2026-03-19T14:30:00Z)."
+            "minLength": 1,
+            "description": "Branch Git em que o handoff foi gerado."
         },
-        "modules_modified": {
-            "type": "array",
-            "description": "Lista de módulos canônicos modificados nesta sessão.",
-            "items": {
-                "type": "object",
-                "required": [
-                    "module_id",
-                    "change_summary"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                    "module_id": {
-                        "type": "string",
-                        "description": "ID canônico do módulo (ex: training, medical, scout)."
-                    },
-                    "change_summary": {
-                        "type": "string",
-                        "minLength": 5,
-                        "description": "Resumo objetivo da mudança feita no módulo."
-                    },
-                    "artifacts_changed": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "description": "Lista de artefatos (paths relativos) modificados."
-                    }
-                }
-            }
-        },
-        "decisions_made": {
-            "type": "array",
-            "description": "Decisões arquiteturais ou de produto tomadas nesta sessão.",
-            "items": {
-                "type": "object",
-                "required": [
-                    "decision_id",
-                    "summary",
-                    "rationale"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                    "decision_id": {
-                        "type": "string",
-                        "description": "Identificador da decisão (ex: ADR-042, D-2026-03-19-001)."
-                    },
-                    "summary": {
-                        "type": "string",
-                        "minLength": 10,
-                        "description": "Resumo da decisão em uma frase."
-                    },
-                    "rationale": {
-                        "type": "string",
-                        "minLength": 10,
-                        "description": "Justificativa objetiva para a decisão."
-                    },
-                    "artifacts_ref": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        },
-                        "description": "Artefatos que materializam ou referenciam esta decisão."
-                    }
-                }
-            }
-        },
-        "open_blockers": {
-            "type": "array",
-            "description": "Bloqueios não-resolvidos que devem ser continuados na próxima sessão.",
-            "items": {
-                "type": "object",
-                "required": [
-                    "blocker_id",
-                    "description",
-                    "severity"
-                ],
-                "additionalProperties": false,
-                "properties": {
-                    "blocker_id": {
-                        "type": "string",
-                        "description": "Código do bloqueio (ex: BLOCKED_MISSING_ARCH_DECISION, BLOCKED_ADVERSARIAL_PENDING)."
-                    },
-                    "description": {
-                        "type": "string",
-                        "minLength": 10,
-                        "description": "Descrição do que está bloqueado e por quê."
-                    },
-                    "severity": {
-                        "type": "string",
-                        "enum": [
-                            "CRITICAL",
-                            "HIGH",
-                            "MEDIUM",
-                            "LOW"
-                        ],
-                        "description": "Severidade do bloqueio."
-                    },
-                    "resolution_path": {
-                        "type": "string",
-                        "description": "Passos necessários para resolver o bloqueio."
-                    }
-                }
-            }
-        },
-        "next_session_context": {
-            "type": "object",
-            "description": "Contexto para a próxima sessão — o que deve ser lido, continuado ou decidido.",
-            "additionalProperties": false,
-            "required": [
-                "priority_task",
-                "files_to_read"
+        "ci_status": {
+            "type": "string",
+            "enum": [
+                "PASS",
+                "FAIL",
+                "UNKNOWN"
             ],
-            "properties": {
-                "priority_task": {
-                    "type": "string",
-                    "minLength": 10,
-                    "description": "Tarefa prioritária a executar na próxima sessão."
-                },
-                "files_to_read": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "description": "Arquivos que o agente DEVE ler antes de qualquer ação na próxima sessão."
-                },
-                "state_summary": {
-                    "type": "string",
-                    "description": "Resumo de uma frase do estado atual do pipeline para o próximo agente."
-                },
-                "warnings": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "description": "Alertas importantes para o próximo agente (ex: waivers temporários, drift detectado)."
-                }
+            "description": "Estado consolidado da validação disponível no fechamento da sessão."
+        },
+        "modulo_foco": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Módulo, trilha ou área principal focada na sessão."
+        },
+        "fase_roadmap": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Fase atual do ROADMAP operacional."
+        },
+        "task_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Identificador da tarefa atual ou último task_id concluído."
+        },
+        "resultado": {
+            "type": "string",
+            "enum": [
+                "DONE",
+                "PENDENTE",
+                "BLOCKED"
+            ],
+            "description": "Resultado consolidado da sessão no ponto em que o handoff foi gerado."
+        },
+        "proxima_acao_permitida": {
+            "type": "string",
+            "minLength": 10,
+            "description": "Próxima ação objetiva permitida para a sessão seguinte."
+        },
+        "bloqueios_ativos": {
+            "type": "array",
+            "description": "Lista de bloqueios ainda ativos. Use lista vazia quando não houver bloqueios.",
+            "items": {
+                "type": "string",
+                "minLength": 3
             }
         }
     },
     "examples": [
         {
-            "session_id": "20260319_143000",
-            "timestamp": "2026-03-19T14:30:00Z",
-            "modules_modified": [
-                {
-                    "module_id": "training",
-                    "change_summary": "Adicionado endpoint POST /sessions com schema de validação",
-                    "artifacts_changed": [
-                        "contracts/openapi/paths/training.yaml",
-                        "contracts/schemas/training/session.schema.json"
-                    ]
-                }
-            ],
-            "decisions_made": [
-                {
-                    "decision_id": "D-2026-03-19-001",
-                    "summary": "Adversarial analysis agora é pré-condição bloqueante para readiness_promotion",
-                    "rationale": "Conforme PLANO_MASTER_REMEDIACAO R-002: módulos não podem ser promovidos sem ADVERSARIAL_ANALYSIS_GATE = PASS",
-                    "artifacts_ref": [
-                        ".contract_driven/readiness_promotion.prompt.md"
-                    ]
-                }
-            ],
-            "open_blockers": [
-                {
-                    "blocker_id": "BLOCKED_MISSING_ARCH_DECISION",
-                    "description": "Decisão de ARAZZO_COMPLETENESS_GATE (obrigatório vs opcional) ainda não documentada",
-                    "severity": "MEDIUM",
-                    "resolution_path": "Executar C-004: documentar decision em GATES_REGISTRY.yaml e README"
-                }
-            ],
-            "next_session_context": {
-                "priority_task": "Implementar FASE 2 do PLANO_MASTER_REMEDIACAO: R-001 (§2A.2) e R-002 (adversarial bloqueante)",
-                "files_to_read": [
-                    "SESSION_HANDOFF.md",
-                    "docs/guias/produto/PLANO_MASTER_REMEDIACAO_CONTRATUAL_2026_03_19.md",
-                    "docs/_canon/CONTRACT_SYSTEM_RULES.md"
-                ],
-                "state_summary": "Fase 1 de remediação 80% completa. T-001 a T-005 implementados. Fase 2 é o próximo passo.",
-                "warnings": [
-                    "Waivers temporários criados em Fase 1 expiram em 2026-12-31 — revisar antes de Fase 7"
-                ]
-            }
+            "data_ultima_sessao": "2026-03-23",
+            "branch_ativo": "hb-track-contratos-driven",
+            "ci_status": "PASS",
+            "modulo_foco": "governance",
+            "fase_roadmap": 1,
+            "task_id": "phase-1-foundation",
+            "resultado": "PENDENTE",
+            "proxima_acao_permitida": "Executar a Fase 1 do ROADMAP.md com foco em infraestrutura base e revalidar os gates.",
+            "bloqueios_ativos": []
         }
     ]
 }

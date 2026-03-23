@@ -1,6 +1,6 @@
 # HB Track — Perfis de Usuário e Modelo de Permissões
 > Fonte: `_archive/chat.md` (seção 3) | Versão: 1.0.0 | 2026-03-18
-> SSOT para decisões de `identity_access`, `permissions` e RBAC de qualquer módulo.
+> Documento de apoio humano, não canônico e não soberano. Serve para estudo e exploração de perfis; não substitui ADRs, canon global ou docs normativos do módulo `identity_access`.
 
 ---
 

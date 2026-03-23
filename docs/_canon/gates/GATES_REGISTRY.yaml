@@ -269,16 +269,12 @@ gates:
       Exige evidência estruturada da fase pré-contrato em `_reports/agent_execution/`
       para módulos com status `validated_contract` ou `implementation_ready` no MODULE_REGISTRY.
       O boot efetivamente aplicado deve ser rastreável pelo Boot Resolution Report.
-      Também valida que SESSION_HANDOFF.md existe e conforma ao schema
-      `contracts/schemas/shared/session_handoff.schema.json` (T-001).
     blocking_codes:
       [
         PRE_CONTRACT_EVIDENCE_MISSING,
         PRE_CONTRACT_EVIDENCE_INVALID,
-        SESSION_HANDOFF_SCHEMA_INVALID,
       ]
     status: active
-    schema_ref: contracts/schemas/shared/session_handoff.schema.json
 
   - gate_id: SHADOW_AUTHORITY_GATE
     order: "2K"
@@ -811,10 +807,13 @@ gates:
     applies_when: "SESSION_HANDOFF.md exists"
     depends_on: []
     description: >
-      Verifica coerência de `SESSION_HANDOFF.md` com o estado atual do repositório.
+      Verifica coerência de `SESSION_HANDOFF.md` com o estado atual do repositório
+      e valida o front matter YAML obrigatório contra
+      `contracts/schemas/shared/session_handoff.schema.json`.
     blocking_codes: [BLOCKED_HANDOFF_INCOMPLETE]
     status: active
     implemented_in: scripts/contracts/validate/validate_contracts.py
+    schema_ref: contracts/schemas/shared/session_handoff.schema.json
 
   - gate_id: MODULE_STATUS_COHERENCE_GATE
     order: "20B"

@@ -228,14 +228,15 @@ surfaces:
     min_bytes: 300
     schema_ref: "contracts/schemas/shared/session_handoff.schema.json"
     required_sections:
-      - "session_id"
-      - "modules_modified"
-      - "open_blockers"
-      - "next_session_context"
+      - "fase_roadmap"
+      - "task_id"
+      - "resultado"
+      - "proxima_acao_permitida"
+      - "bloqueios_ativos"
     disqualifying_patterns:
       - "TODO"
       - "a definir"
-    notes: "Validado contra session_handoff.schema.json pelo PRE_CONTRACT_EVIDENCE_GATE."
+    notes: "Validado contra session_handoff.schema.json pelo HANDOFF_COHERENCE_GATE."
 
   waiver:
     filename_pattern: "*.json"

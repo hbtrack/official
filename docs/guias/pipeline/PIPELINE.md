@@ -1,5 +1,6 @@
 # PIPELINE DE IA/AGENTES — HB TRACK
 
+> Documento de apoio humano, não canônico e não soberano. Serve para reconstrução analítica do pipeline; não substitui `scripts/hb`, `scripts/contracts/validate/validate_contracts.py`, `docs/_canon/` ou `_reports/contract_gates/latest.json`.
 > **Documento:** reconstrução analítica datada do pipeline.
 > **Método:** análise direta de arquivos — prompts, scripts, configs, gates, registries, CI/CD.
 > **Nota de uso:** este arquivo preserva uma leitura analítica de 2026-03-19 e **não deve ser usado como fonte única para contagem de gates ou enforcement atual**.

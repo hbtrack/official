@@ -1,4 +1,5 @@
 # BACKLOG ITEM 2 — CROSS_SPEC_ALIGNMENT_GATE Validação Real
+> Documento de apoio humano, não canônico e não soberano. Serve para investigação histórica e registro de execução; não substitui o canon nem os gates ativos.
 
 ## Status: INVESTIGAÇÃO COMPLETA — PIVOT PARA ITEM 2C
 
@@ -232,4 +233,3 @@ Após os 3 sub-itens:
 ## Pronto para começar?
 
 Confirme a ordem e estratégia (especialmente: Automático vs Manual para cada sub-item).
-

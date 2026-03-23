@@ -4,18 +4,106 @@ from __future__ import annotations
 
 import datetime
 import json
+from pathlib import Path
 
 from scripts.contracts.validate import validate_contracts as gates
 
 
+def _write_structured_handoff(
+    root: Path,
+    *,
+    date_value: str,
+    branch: str = "main",
+    next_action: str = "Executar o próximo bloco validado do roadmap.",
+) -> None:
+    handoff = root / "SESSION_HANDOFF.md"
+    handoff.write_text(
+        f"""---
+data_ultima_sessao: {date_value}
+branch_ativo: {branch}
+ci_status: PASS
+modulo_foco: governance
+fase_roadmap: 1
+task_id: phase-1
+resultado: PENDENTE
+proxima_acao_permitida: {next_action}
+bloqueios_ativos: []
+---
+# SESSION HANDOFF — HB TRACK
+
+## Estado Geral
+**Data:** {date_value} | **Branch:** {branch} | **CI:** PASS
+
+## O que foi feito
+- item
+
+## Próxima ação permitida
+- {next_action}
+
+## Bloqueios ativos
+- Nenhum.
+""",
+        encoding="utf-8",
+    )
+
+
 def test_handoff_coherence_detects_stale_date(tmp_path):
-    handoff = tmp_path / "SESSION_HANDOFF.md"
-    handoff.write_text("data_ultima_sessao: 2020-01-01\nbranch_ativo: main\n", encoding="utf-8")
+    contracts_dir = tmp_path / "contracts" / "schemas" / "shared"
+    contracts_dir.mkdir(parents=True)
+    schema_src = Path("contracts/schemas/shared/session_handoff.schema.json")
+    (contracts_dir / "session_handoff.schema.json").write_text(
+        schema_src.read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+    _write_structured_handoff(tmp_path, date_value="2020-01-01")
 
     result = gates._g_handoff_coherence(tmp_path)
 
     assert result["status"] == "FAIL"
     assert any("BLOCKED_HANDOFF_INCOMPLETE" in str(item) for item in result.get("violations", []))
+
+
+def test_handoff_coherence_rejects_missing_next_action(tmp_path):
+    contracts_dir = tmp_path / "contracts" / "schemas" / "shared"
+    contracts_dir.mkdir(parents=True)
+    schema_src = Path("contracts/schemas/shared/session_handoff.schema.json")
+    (contracts_dir / "session_handoff.schema.json").write_text(
+        schema_src.read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+    handoff = tmp_path / "SESSION_HANDOFF.md"
+    handoff.write_text(
+        f"""---
+data_ultima_sessao: {datetime.date.today().isoformat()}
+branch_ativo: main
+ci_status: PASS
+modulo_foco: governance
+fase_roadmap: 1
+task_id: phase-1
+resultado: PENDENTE
+bloqueios_ativos: []
+---
+# SESSION HANDOFF — HB TRACK
+
+## Estado Geral
+**Data:** {datetime.date.today().isoformat()} | **Branch:** main | **CI:** PASS
+
+## O que foi feito
+- item
+
+## Próxima ação permitida
+- item
+
+## Bloqueios ativos
+- Nenhum.
+""",
+        encoding="utf-8",
+    )
+
+    result = gates._g_handoff_coherence(tmp_path)
+
+    assert result["status"] == "FAIL"
+    assert any("proxima_acao_permitida" in str(item) for item in result.get("violations", []))
 
 
 def test_module_status_coherence_blocks_with_adversarial_fail(tmp_path):
@@ -100,3 +188,32 @@ def test_waiver_engine_accepts_valid_waiver(tmp_path, monkeypatch):
 
     assert result["status"] == "PASS"
     assert "waiver ativo" in result["summary"].lower()
+
+
+def test_shadow_authority_detects_docs_guias_without_disclaimer(tmp_path):
+    guias = tmp_path / "docs" / "guias"
+    guias.mkdir(parents=True)
+    (guias / "BAD_GUIDE.md").write_text(
+        "# Guia\n> SSOT para decisões futuras.\n",
+        encoding="utf-8",
+    )
+
+    result = gates._g2k_shadow_authority(tmp_path)
+
+    assert result["status"] == "FAIL"
+    assert any("docs/guias/BAD_GUIDE.md" in str(item) for item in result.get("violations", []))
+
+
+def test_canon_does_not_delegate_to_guias_or_missing_environment_doc():
+    system_scope = Path("docs/_canon/SYSTEM_SCOPE.md").read_text(encoding="utf-8")
+    global_invariants = Path("docs/_canon/GLOBAL_INVARIANTS.md").read_text(encoding="utf-8")
+    architecture = Path("docs/_canon/ARCHITECTURE.md").read_text(encoding="utf-8")
+
+    assert "docs/guias/IDENTITY_RBAC.md" not in system_scope
+    assert "docs/guias/MVP_SCOPE.md" not in global_invariants
+    assert "docs/_canon/contratos/Ambiente.md" not in architecture
+
+
+def test_non_sovereign_roots_have_readme_disclaimers():
+    assert Path("docs/guias/README.md").exists()
+    assert Path("_reports/README.md").exists()

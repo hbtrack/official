@@ -1,5 +1,7 @@
 # CODE.md — Análise de Governança da Implementação Backend
 
+> Documento de apoio humano, não canônico e não soberano. Serve para análise histórica; não substitui `docs/_canon/`, `.contract_driven/` nem o código implementado.
+
 > **Tipo:** Análise arquitetural
 > **Escopo:** Implementação backend no sistema Contract-Driven Development do HB Track
 > **Versão:** 1.0.0 — 2026-03-21

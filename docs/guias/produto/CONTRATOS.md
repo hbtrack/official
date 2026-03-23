@@ -1,4 +1,5 @@
 # Auditoria de Contratos Finais — HB Track API
+> Documento de apoio humano, não canônico e não soberano. Serve para auditoria histórica e análise; não substitui `contracts/`, `docs/_canon/` nem docs normativas de módulo.
 **Data:** 2026-03-19
 **Auditor:** Claude (postura: auditor sênior de contratos, sem benefício da dúvida)
 **Escopo:** Contratos finais gerados — `contracts/openapi/openapi.yaml` + `contracts/openapi/paths/*.yaml` + `contracts/openapi/components/schemas/*`

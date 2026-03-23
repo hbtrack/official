@@ -32,9 +32,9 @@ Registrar regras que devem permanecer verdadeiras em todo o sistema.
 | GI-001 | Nenhuma rota pública fora do OpenAPI | Global | contracts/openapi/openapi.yaml | Redocly lint + revisão de paths |
 | GI-002 | Sem versionamento na URI | API HTTP | .contract_driven/templates/api/api_rules.yaml | Spectral ruleset + revisão |
 | GI-003 | Erros seguem RFC 7807 + extensões aprovadas | API HTTP | .contract_driven/DOMAIN_AXIOMS.json + problem.yaml | Lint + testes de contrato |
-| GI-004 | Componentes críticos de jogo declaram modo degradado | matches, scout, video | docs/guias/MVP_SCOPE.md | Revisão de design de módulo |
-| GI-005 | Eventos de jogo têm garantia de entrega — retransmissão obrigatória | matches, scout | docs/guias/MVP_SCOPE.md | Teste de resiliência |
-| GI-006 | Armazenamento de vídeo e eventos de partida é redundante | video, matches | docs/guias/MVP_SCOPE.md | Revisão de arquitetura |
+| GI-004 | Componentes críticos de jogo declaram modo degradado | matches, scout, video | `GLOBAL_INVARIANTS.md` §Operação ao vivo | Revisão de design de módulo |
+| GI-005 | Eventos de jogo têm garantia de entrega — retransmissão obrigatória | matches, scout | `GLOBAL_INVARIANTS.md` §Operação ao vivo | Teste de resiliência |
+| GI-006 | Armazenamento de vídeo e eventos de partida é redundante | video, matches | `GLOBAL_INVARIANTS.md` §Operação ao vivo | Revisão de arquitetura |
 | GI-007 | Todo módulo live declara SLA de latência no contrato | matches, scout, analytics | SLA-LIVE-001..003 abaixo | Revisão de contrato |
 
 ---

@@ -1,44 +1,27 @@
-# SESSION HANDOFF — HB TRACK
-> Atualizar ao final de cada sessão produtiva. Delta-only. Este arquivo é lido pelo agente ANTES de qualquer outra coisa.
-
-## Estado Geral
+---
 data_ultima_sessao: YYYY-MM-DD
 branch_ativo:
-ci_status: PASS | FAIL
+ci_status: PASS | FAIL | UNKNOWN
 modulo_foco:
-fase_roadmap:
+fase_roadmap: 0
 task_id:
 resultado: DONE | PENDENTE | BLOCKED
+proxima_acao_permitida:
+bloqueios_ativos: []
+---
+# SESSION HANDOFF — HB TRACK
+> Atualizar ao final de cada sessão produtiva. Delta-only. Este arquivo é lido antes de qualquer outra ação.
 
-## O Que Foi Feito (últimas 3 sessões)
-### Sessão YYYY-MM-DD
-- [ ] item completado
-- [ ] item completado
+## Estado Geral
+**Data:** YYYY-MM-DD | **Branch:** <branch> | **CI:** PASS
+**Módulo foco:** <module> | **Fase ROADMAP:** <fase> | **task_id:** <task> | **Resultado:** <resultado>
 
-## Próximos Passos (ordenados por prioridade)
-1.
-2.
-3.
+## O que foi feito
+- item objetivo 1
+- item objetivo 2
 
-## Decisões Pendentes do Humano
-| Decisão | Contexto | Urgência |
-|---------|----------|---------|
-|         |          |         |
+## Próxima ação permitida
+- descrever a próxima ação executável, sem ambiguidade
 
-## Bloqueios Ativos
-| Código | Módulo | Descrição | Próxima ação |
-|--------|--------|-----------|-------------|
-|        |        |           |             |
-
-## Contratos em Andamento
-| Módulo | Recurso | Status | Próximo passo |
-|--------|---------|--------|--------------|
-|        |         |        |              |
-
-## ADRs Recentes (últimas 5)
-| ADR | Título | Status |
-|-----|--------|--------|
-|     |        |        |
-
-## Contexto Importante
-(Qualquer decisão, acordo ou restrição que o agente precisa saber que não está nos arquivos canônicos)
+## Bloqueios ativos
+- `Nenhum.` ou lista objetiva de bloqueios com código e resolução

@@ -127,4 +127,4 @@ Os 16 módulos canônicos atuais cobrem:
 5. → Criar AsyncAPI para eventos de ciclo de vida de mídia
 6. → Validar gates
 
-Reference: `docs/guias/video.md` (visão conceitual da arquitetura de mídia)
+Reference: `docs/guias/video.md` (apoio conceitual não canônico da arquitetura de mídia)

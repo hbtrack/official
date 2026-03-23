@@ -1,5 +1,6 @@
 # HB Track — PRD Oficial
 
+> Documento de apoio humano, não canônico e não soberano. Serve para consolidar estudo de produto; não substitui `docs/_canon/`, `ROADMAP.md` ou os artefatos normativos de módulo.
 > Versão: 1.0.0  
 > Data: 2026-03-19  
 > Natureza: documento oficial de referência para produto, design, engenharia e agentes de implementação  

@@ -258,30 +258,31 @@ Hoje o agente:
 - [x] Atualizar [scripts/hb](/home/davis/HB-TRACK/scripts/hb#L308) para não gravar `write_scope: "contracts"` para toda tarefa
 - [x] Decidir deterministicamente uma das duas opções:
   - [x] opção A: `scripts/hb` passa a suportar oficialmente `execute_roadmap_phase`
-  - [ ] opção B: `scripts/hb` deixa de aceitar esse task type e o modo ROADMAP ganha um executor próprio separado
+  - [x] opção B: descartada por decisão operacional; o runtime oficial do modo ROADMAP permanece integrado a `scripts/hb`
 - [x] Criar testes de paridade boot/schema para o modo ROADMAP
 
 #### Fase 3 — Estruturar continuidade entre sessões
 
 - [x] Reduzir [SESSION_HANDOFF.md](/home/davis/HB-TRACK/SESSION_HANDOFF.md#L1) a um handoff realmente delta-only
 - [x] Fazer `SESSION_HANDOFF.md` voltar a passar no budget da suíte ([tests/pipeline_gates/test_context_budgets_and_parity.py](/home/davis/HB-TRACK/tests/pipeline_gates/test_context_budgets_and_parity.py#L15))
-- [ ] Incluir no handoff, de forma obrigatória:
-  - [x] `Fase ROADMAP`
-  - [x] `task_id` atual
+- [x] Promover o handoff para uma estrutura mínima obrigatória e validável por gate, preferencialmente com front matter YAML no topo de [SESSION_HANDOFF.md](/home/davis/HB-TRACK/SESSION_HANDOFF.md#L1)
+  - [x] `fase_roadmap`
+  - [x] `task_id`
   - [x] `resultado`
-  - [ ] `próxima ação permitida`
-  - [x] `bloqueios ativos`
-- [ ] Tornar essa estrutura validável por gate, não só por convenção textual
-- [ ] Manter o schema de handoff como validador ativo ou remover a falsa impressão de contrato se ele continuar auxiliar
+  - [x] `proxima_acao_permitida`
+  - [x] `bloqueios_ativos`
+- [x] Atualizar [docs/_canon/templates/SESSION_HANDOFF.template.md](/home/davis/HB-TRACK/docs/_canon/templates/SESSION_HANDOFF.template.md#L1) e [SESSION_HANDOFF.md](/home/davis/HB-TRACK/SESSION_HANDOFF.md#L1) para usar exatamente a mesma estrutura obrigatória
+- [x] Atualizar o `HANDOFF_COHERENCE_GATE` em [scripts/contracts/validate/validate_contracts.py](/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py#L6960) para parsear e validar essa estrutura, em vez de depender só de convenção textual rasa
+- [x] Alinhar [contracts/schemas/shared/session_handoff.schema.json](/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json#L1) e [docs/_canon/gates/GATES_REGISTRY.yaml](/home/davis/HB-TRACK/docs/_canon/gates/GATES_REGISTRY.yaml#L260) ao enforcement real: se o schema continuar auxiliar, isso deve ficar explícito e sem promessa de validação ativa; se virar ativo, o gate deve consumi-lo de fato
 
 #### Fase 4 — Definir progresso até o DONE
 
 - [x] Estender o lifecycle de progresso para além de `implementation_ready`
-- [ ] Definir um SSOT explícito para estados como:
+- [x] Definir um SSOT explícito para os estados canônicos pós-`implementation_ready`:
   - [x] `implemented`
-  - [ ] `integration_validated`
-  - [ ] `staging_ready`
+  - [x] `staging_validated`
   - [x] `released`
+- [x] Descartar os rótulos não canônicos `integration_validated` e `staging_ready`; quando necessários, tratá-los como evidência operacional ou terminologia legada, nunca como novos estados oficiais
 - [x] Decidir se esses estados viverão em `MODULE_REGISTRY.yaml`, em novo registry operacional ou em ambos com responsabilidades distintas
 - [x] Ligar cada estado a evidência objetiva e gate correspondente
 - [x] Regenerar snapshots derivados como [_reports/feature_readiness.json](/home/davis/HB-TRACK/_reports/feature_readiness.json#L1) para refletir o estado real
@@ -290,8 +291,17 @@ Hoje o agente:
 
 - [x] Ajustar [README.md](/home/davis/HB-TRACK/README.md#L17) para não contradizer o canon
 - [x] Revisar [FINAL_HANDOFF.md](/home/davis/HB-TRACK/FINAL_HANDOFF.md#L138) e remover recomendações conflitantes com o estado atual do `TASK_CATALOG`
-- [ ] Revisar artefatos de suporte em `docs/guias/` e `_reports/` que hoje competem como fonte de “estado”
-- [ ] Garantir que nenhum artefato não soberano use linguagem de SSOT sem disclaimer
+- [x] Classificar explicitamente `docs/guias/` como material humano de estudo/ideação, não canônico e não soberano, e `_reports/` como artefatos derivados/evidência
+- [x] Criar `README` de raiz em `docs/guias/` e `_reports/` com disclaimer operacional claro para impedir leitura desses diretórios como SSOT
+- [x] Remover linguagem de SSOT/autoridade dos guias que ainda a usam, em especial:
+  - [x] [docs/guias/IDENTITY_RBAC.md](/home/davis/HB-TRACK/docs/guias/IDENTITY_RBAC.md#L1)
+  - [x] [docs/guias/MVP_SCOPE.md](/home/davis/HB-TRACK/docs/guias/MVP_SCOPE.md#L1)
+  - [x] [docs/guias/USER_PROFILES.md](/home/davis/HB-TRACK/docs/guias/USER_PROFILES.md#L1)
+- [x] Revisar todas as referências de `docs/_canon/**` para `docs/guias/**` e remover qualquer delegação normativa; quando a referência for mantida, ela deve ser explicitamente marcada como apoio não canônico
+  - [x] Corrigir [docs/_canon/SYSTEM_SCOPE.md](/home/davis/HB-TRACK/docs/_canon/SYSTEM_SCOPE.md#L30)
+  - [x] Corrigir [docs/_canon/GLOBAL_INVARIANTS.md](/home/davis/HB-TRACK/docs/_canon/GLOBAL_INVARIANTS.md#L35)
+- [x] Estender o `SHADOW_AUTHORITY_GATE` em [scripts/contracts/validate/validate_contracts.py](/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py#L4621) para cobrir `docs/guias/**`, não só `docs/hbtrack/decisoes/**`
+- [x] Corrigir em [docs/_canon/ARCHITECTURE.md](/home/davis/HB-TRACK/docs/_canon/ARCHITECTURE.md#L226) a referência inexistente `docs/_canon/contratos/Ambiente.md`, apontando para artefato real ou removendo a falsa SSOT de infraestrutura
 
 #### Fase 6 — Revalidar deterministicamente
 
@@ -299,7 +309,25 @@ Hoje o agente:
 - [x] Rodar a survival suite de governança
 - [x] Rodar `python3 scripts/contracts/validate/validate_contracts.py`
 - [x] Rodar smoke test do modo ROADMAP sem erro de schema/profile
-- [ ] Confirmar `git status --short` limpo para todos os artefatos de governança críticos
+- [x] Após concluir as pendências das Fases 3 e 5, rerodar a bateria de governança:
+  - [x] `./.venv/bin/pytest -q tests/pipeline_gates/test_context_budgets_and_parity.py`
+  - [x] survival suite de governança
+  - [x] `python3 scripts/contracts/validate/validate_contracts.py`
+  - [x] smoke test do modo ROADMAP
+- [x] Substituir o critério genérico de “repo limpo” por uma allowlist explícita de governança crítica e fechar a auditoria apenas quando esse conjunto estiver limpo e versionado:
+  - [x] `docs/_canon/**`
+  - [x] `.contract_driven/**`
+  - [x] `contracts/schemas/shared/**`
+  - [x] `scripts/hb`
+  - [x] `scripts/contracts/validate/validate_contracts.py`
+  - [x] `scripts/hooks/check_backend_gate.py`
+  - [x] `SESSION_HANDOFF.md`
+  - [x] `ROADMAP.md`
+  - [x] `DEVCONT.md`
+  - [x] `tests/pipeline_gates/**`
+  - [x] `generated/manifests/**`
+  - [x] `generated/contracts/schemas/shared/**`
+  - [x] `_reports/contract_gates/latest.json`
 
 ### Fechamento executivo
 

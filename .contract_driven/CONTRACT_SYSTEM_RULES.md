@@ -193,6 +193,21 @@ Regras:
 - vocabulário soberano (`SSOT`, `canônico`, `fonte soberana`, `source of truth`) exige disclaimer explícito no topo;
 - qualquer conflito entre DSS e fonte soberana é resolvido a favor do canon.
 
+### 3.2B Guias de estudo humano (não-soberanos)
+
+- `docs/guias/*.md`
+
+Classificação formal:
+- `study_source`
+- `human_ideation`
+- `non-sovereign`
+
+Regras:
+- esses arquivos existem para estudo, exploração e novas ideias do humano;
+- não podem definir escopo oficial, status de módulo, próxima ação permitida, DONE ou SSOT;
+- qualquer uso de vocabulário soberano exige disclaimer explícito no topo;
+- qualquer conflito entre `docs/guias/` e fontes soberanas é resolvido a favor do canon e dos docs normativos de módulo.
+
 ### 3.3 Technical contracts
 - `contracts/openapi/openapi.yaml`
 - `contracts/openapi/paths/*.yaml`

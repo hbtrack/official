@@ -1,4 +1,5 @@
 # Analise de Robustez dos Contratos Finais
+> Documento de apoio humano, não canônico e não soberano. Serve para análise histórica do bundle contratual; não substitui `contracts/`, `docs/_canon/` ou `.contract_driven/`.
 
 **Data:** 2026-03-20  
 **Escopo principal auditado:** `contracts/**` e `generated/contracts/**`  

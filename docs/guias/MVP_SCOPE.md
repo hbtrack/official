@@ -1,13 +1,13 @@
 # HB Track — Escopo por Fase: MVP, V2 e V3
 > Fonte: `_archive/chat.md` (seção 4 + PRD) | Versão: 1.0.0 | 2026-03-18
-> SSOT para decisões de escopo de módulo. Consultar antes de expandir qualquer contrato.
+> Documento de apoio humano, não canônico e não soberano. Serve para estudo e exploração de escopo; não substitui `docs/_canon/`, `ROADMAP.md` ou o registry de módulos.
 
 ---
 
 ## Regra de uso
 
-Antes de adicionar uma capacidade a um módulo, verificar aqui se ela pertence ao MVP, V2 ou V3.
-Capacidades de fases futuras não devem entrar no contrato atual — registrar como backlog no módulo.
+Antes de adicionar uma capacidade a um módulo, usar este material apenas como referência exploratória.
+O escopo operacional vigente deve ser decidido pelo canon ativo e pelos artefatos de roadmap já promovidos.
 
 ---
 

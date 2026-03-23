@@ -1,15 +1,16 @@
 # HB Track — Modelo de Identidade, Autorização e RBAC
 > Fonte: `_archive/gaps.md` (análise arquitetural de identidade) | Versão: 1.0.0 | 2026-03-19
-> SSOT para o modelo de autorização. Consultar antes de implementar qualquer lógica de permissão.
+> Documento de apoio humano, não canônico e não soberano. Serve para estudo e ideação; não substitui `docs/_canon/` nem `docs/hbtrack/modulos/identity_access/`.
 
 ---
 
 ## Regra de uso
 
-Este documento define o modelo de identidade e autorização do HB Track. Qualquer implementação
-de permissão, role, bundle ou política de acesso deve estar ancorada aqui.
+Este documento resume hipóteses e modelos úteis para evolução de identidade e autorização.
+Qualquer implementação de permissão, role, bundle ou política de acesso deve se ancorar
+nos artefatos canônicos ativos do módulo `identity_access` e nas ADRs aprovadas.
 
-Referência canônica em `docs/_canon/SYSTEM_SCOPE.md §4`. Módulo responsável pela implementação: `identity_access`.
+Referência canônica atual: `docs/_canon/SYSTEM_SCOPE.md §4`, `docs/_canon/decisions/ADR-008-authz-strategy.md` e `docs/hbtrack/modulos/identity_access/PERMISSIONS_IDENTITY_ACCESS.md`.
 
 ---
 
