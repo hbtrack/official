@@ -5,6 +5,7 @@ Tests validate that refactoring budgets are enforced and critical parity is main
 import os
 import json
 import subprocess
+import sys
 import yaml
 from pathlib import Path
 
@@ -196,9 +197,10 @@ def test_parity_test_suite_green():
     """
     result = subprocess.run(
         [
-            "python3", "-m", "pytest",
+            sys.executable, "-m", "pytest",
             "tests/test_pipeline_governance.py",
             "tests/pipeline_gates/test_phase_0_determinism.py",
+            "tests/pipeline_gates/test_roadmap_artifact_tracking.py",
             "tests/pipeline_gates/test_context_budgets_and_parity.py::TestSSOTParity",
             "tests/pipeline_gates/test_context_budgets_and_parity.py::TestHookIntegrity",
             "tests/pipeline_gates/test_context_budgets_and_parity.py::TestZeroBootProfileReferences",
