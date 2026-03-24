@@ -9,13 +9,17 @@
     "required": [
         "data_ultima_sessao",
         "branch_ativo",
+        "modo_operacao",
         "ci_status",
         "modulo_foco",
         "fase_roadmap",
+        "task_type",
+        "boot_profile_id",
         "task_id",
         "resultado",
         "proxima_acao_permitida",
-        "bloqueios_ativos"
+        "bloqueios_ativos",
+        "evidence_paths"
     ],
     "properties": {
         "data_ultima_sessao": {
@@ -27,6 +31,14 @@
             "type": "string",
             "minLength": 1,
             "description": "Branch Git em que o handoff foi gerado."
+        },
+        "modo_operacao": {
+            "type": "string",
+            "enum": [
+                "CDD",
+                "ROADMAP"
+            ],
+            "description": "Modo operacional consolidado neste handoff."
         },
         "ci_status": {
             "type": "string",
@@ -46,6 +58,22 @@
             "type": "integer",
             "minimum": 0,
             "description": "Fase atual do ROADMAP operacional."
+        },
+        "task_type": {
+            "type": "string",
+            "minLength": 1,
+            "description": "task_type operacional associado ao estado consolidado."
+        },
+        "boot_profile_id": {
+            "type": "string",
+            "enum": [
+                "default",
+                "contract_execution",
+                "architecture_decision",
+                "diagnostic",
+                "roadmap_execution"
+            ],
+            "description": "Boot profile declarado para o estado consolidado."
         },
         "task_id": {
             "type": "string",
@@ -73,19 +101,35 @@
                 "type": "string",
                 "minLength": 3
             }
+        },
+        "evidence_paths": {
+            "type": "array",
+            "minItems": 1,
+            "description": "Paths de evidência usados para sustentar o estado do handoff.",
+            "items": {
+                "type": "string",
+                "minLength": 10
+            }
         }
     },
     "examples": [
         {
             "data_ultima_sessao": "2026-03-23",
             "branch_ativo": "hb-track-contratos-driven",
+            "modo_operacao": "ROADMAP",
             "ci_status": "PASS",
             "modulo_foco": "governance",
             "fase_roadmap": 1,
+            "task_type": "execute_roadmap_phase",
+            "boot_profile_id": "roadmap_execution",
             "task_id": "phase-1-foundation",
             "resultado": "PENDENTE",
             "proxima_acao_permitida": "Executar a Fase 1 do ROADMAP.md com foco em infraestrutura base e revalidar os gates.",
-            "bloqueios_ativos": []
+            "bloqueios_ativos": [],
+            "evidence_paths": [
+                "_reports/runs/20260323T190000_ab12cd/contract_gates.json",
+                "_reports/runs/20260323T190000_ab12cd/health.json"
+            ]
         }
     ]
 }

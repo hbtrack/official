@@ -16,24 +16,330 @@
         "$ref": "../components/schemas/shared/problem.yaml"
       }
     },
-    "securitySchemes": {}
+    "securitySchemes": {
+      "HTTPBearer": {
+        "bearerFormat": "JWT",
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
   },
   "info": {
     "contact": {
       "email": "dev@hbtrack.com",
       "name": "HB Track Team"
     },
-    "description": "HB Track — Plataforma sports-tech orientada a contratos para gestão e operação de handebol.\nEsta especificação é a fonte primária da verdade para a interface HTTP pública do sistema.\nReferências normativas — consultar antes de implementar: - .contract_driven/CONTRACT_SYSTEM_LAYOUT.md   (estrutura canônica de artefatos) - .contract_driven/templates/api/api_rules.yaml    (regras, templates e validações de API) - docs/_canon/SYSTEM_SCOPE.md                  (escopo e módulos canônicos) - docs/_canon/ERROR_MODEL.md                   (convenção de erros RFC 7807) - docs/_canon/API_CONVENTIONS.md               (convenções de API — aponta para api_rules.yaml)\n",
+    "description": "HB Track — Plataforma sports-tech orientada a contratos para gestão e operação de handebol.\nEsta especificação é o contrato normativo e auto-suficiente da interface HTTP pública do sistema.\nReferências normativas abaixo fornecem governança e rastreabilidade, mas não completam comportamento ausente no contrato: - .contract_driven/CONTRACT_SYSTEM_LAYOUT.md   (estrutura canônica de artefatos) - .contract_driven/templates/api/api_rules.yaml    (governança e validações do sistema contratual) - docs/_canon/SYSTEM_SCOPE.md                  (escopo e módulos canônicos) - docs/_canon/OPERATIONS.md                    (precedência, naming, validação, modelo de erros RFC 7807)\n",
     "license": {
       "identifier": "LicenseRef-proprietary",
       "name": "Proprietary"
     },
     "title": "HB Track API",
-    "version": "0.1.0"
+    "version": "1.0.0"
   },
   "openapi": "3.1.0",
-  "paths": {},
-  "security": [],
+  "paths": {
+    "/analytics/dashboards": {
+      "$ref": "../paths/analytics.yaml#/~1analytics~1dashboards"
+    },
+    "/analytics/query": {
+      "$ref": "../paths/analytics.yaml#/~1analytics~1query"
+    },
+    "/analytics/snapshots": {
+      "$ref": "../paths/analytics.yaml#/~1analytics~1snapshots"
+    },
+    "/analytics/snapshots/{snapshotId}": {
+      "$ref": "../paths/analytics.yaml#/~1analytics~1snapshots~1{snapshotId}"
+    },
+    "/audit/entries": {
+      "$ref": "../paths/audit.yaml#/~1audit~1entries"
+    },
+    "/audit/entries/export": {
+      "$ref": "../paths/audit.yaml#/~1audit~1entries~1export"
+    },
+    "/audit/entries/{entryId}": {
+      "$ref": "../paths/audit.yaml#/~1audit~1entries~1{entryId}"
+    },
+    "/auth/login": {
+      "$ref": "../paths/identity_access.yaml#/~1auth~1login"
+    },
+    "/auth/logout": {
+      "$ref": "../paths/identity_access.yaml#/~1auth~1logout"
+    },
+    "/auth/me": {
+      "$ref": "../paths/identity_access.yaml#/~1auth~1me"
+    },
+    "/auth/refresh": {
+      "$ref": "../paths/identity_access.yaml#/~1auth~1refresh"
+    },
+    "/auth/sessions": {
+      "$ref": "../paths/identity_access.yaml#/~1auth~1sessions"
+    },
+    "/auth/sessions/{sessionId}": {
+      "$ref": "../paths/identity_access.yaml#/~1auth~1sessions~1{sessionId}"
+    },
+    "/auth/users/{userId}/roles": {
+      "$ref": "../paths/identity_access.yaml#/~1auth~1users~1{userId}~1roles"
+    },
+    "/auth/users/{userId}/roles/{roleLabel}": {
+      "$ref": "../paths/identity_access.yaml#/~1auth~1users~1{userId}~1roles~1{roleLabel}"
+    },
+    "/competitions": {
+      "$ref": "../paths/competitions.yaml#/~1competitions"
+    },
+    "/competitions/{competitionId}": {
+      "$ref": "../paths/competitions.yaml#/~1competitions~1{competitionId}"
+    },
+    "/competitions/{competitionId}/teams/{teamId}": {
+      "$ref": "../paths/competitions.yaml#/~1competitions~1{competitionId}~1teams~1{teamId}"
+    },
+    "/exercises": {
+      "$ref": "../paths/exercises.yaml#/~1exercises"
+    },
+    "/exercises/{id}": {
+      "$ref": "../paths/exercises.yaml#/~1exercises~1{id}"
+    },
+    "/exercises/{id}/acl": {
+      "$ref": "../paths/exercises.yaml#/~1exercises~1{id}~1acl"
+    },
+    "/exercises/{id}/acl/{userId}": {
+      "$ref": "../paths/exercises.yaml#/~1exercises~1{id}~1acl~1{userId}"
+    },
+    "/exercises/{id}/copy": {
+      "$ref": "../paths/exercises.yaml#/~1exercises~1{id}~1copy"
+    },
+    "/exercises/{id}/relations": {
+      "$ref": "../paths/exercises.yaml#/~1exercises~1{id}~1relations"
+    },
+    "/exercises/{id}/relations/{relationId}": {
+      "$ref": "../paths/exercises.yaml#/~1exercises~1{id}~1relations~1{relationId}"
+    },
+    "/exercises/{id}/versions": {
+      "$ref": "../paths/exercises.yaml#/~1exercises~1{id}~1versions"
+    },
+    "/exercises/{id}/versions/{versionId}": {
+      "$ref": "../paths/exercises.yaml#/~1exercises~1{id}~1versions~1{versionId}"
+    },
+    "/hb-pro-coach/conversations/{conversationId}/messages": {
+      "$ref": "../paths/training.yaml#/~1hb-pro-coach~1conversations~1{conversationId}~1messages"
+    },
+    "/hb-pro-coach/training-suggestions": {
+      "$ref": "../paths/training.yaml#/~1hb-pro-coach~1training-suggestions"
+    },
+    "/ingestion/jobs": {
+      "$ref": "../paths/ai_ingestion.yaml#/~1ingestion~1jobs"
+    },
+    "/ingestion/jobs/{jobId}": {
+      "$ref": "../paths/ai_ingestion.yaml#/~1ingestion~1jobs~1{jobId}"
+    },
+    "/ingestion/jobs/{jobId}/retry": {
+      "$ref": "../paths/ai_ingestion.yaml#/~1ingestion~1jobs~1{jobId}~1retry"
+    },
+    "/matches": {
+      "$ref": "../paths/matches.yaml#/~1matches"
+    },
+    "/matches/{matchId}": {
+      "$ref": "../paths/matches.yaml#/~1matches~1{matchId}"
+    },
+    "/matches/{matchId}/lineup/{userId}": {
+      "$ref": "../paths/matches.yaml#/~1matches~1{matchId}~1lineup~1{userId}"
+    },
+    "/medical/records": {
+      "$ref": "../paths/medical.yaml#/~1medical~1records"
+    },
+    "/medical/records/{recordId}": {
+      "$ref": "../paths/medical.yaml#/~1medical~1records~1{recordId}"
+    },
+    "/mesocycles": {
+      "$ref": "../paths/training.yaml#/~1mesocycles"
+    },
+    "/mesocycles/{id}": {
+      "$ref": "../paths/training.yaml#/~1mesocycles~1{id}"
+    },
+    "/microcycles": {
+      "$ref": "../paths/training.yaml#/~1microcycles"
+    },
+    "/microcycles/{id}": {
+      "$ref": "../paths/training.yaml#/~1microcycles~1{id}"
+    },
+    "/notifications/deliveries": {
+      "$ref": "../paths/notifications.yaml#/~1notifications~1deliveries"
+    },
+    "/notifications/deliveries/{deliveryId}": {
+      "$ref": "../paths/notifications.yaml#/~1notifications~1deliveries~1{deliveryId}"
+    },
+    "/notifications/intents": {
+      "$ref": "../paths/notifications.yaml#/~1notifications~1intents"
+    },
+    "/notifications/users/{userId}/preferences": {
+      "$ref": "../paths/notifications.yaml#/~1notifications~1users~1{userId}~1preferences"
+    },
+    "/reports/jobs": {
+      "$ref": "../paths/reports.yaml#/~1reports~1jobs"
+    },
+    "/reports/jobs/{jobId}": {
+      "$ref": "../paths/reports.yaml#/~1reports~1jobs~1{jobId}"
+    },
+    "/reports/jobs/{jobId}/download": {
+      "$ref": "../paths/reports.yaml#/~1reports~1jobs~1{jobId}~1download"
+    },
+    "/scout/events": {
+      "$ref": "../paths/scout.yaml#/~1scout~1events"
+    },
+    "/scout/events/aggregations": {
+      "$ref": "../paths/scout.yaml#/~1scout~1events~1aggregations"
+    },
+    "/scout/events/{eventId}": {
+      "$ref": "../paths/scout.yaml#/~1scout~1events~1{eventId}"
+    },
+    "/scout/sessions/{matchId}/complete": {
+      "$ref": "../paths/scout.yaml#/~1scout~1sessions~1{matchId}~1complete"
+    },
+    "/seasons": {
+      "$ref": "../paths/seasons.yaml#/~1seasons"
+    },
+    "/seasons/{seasonId}": {
+      "$ref": "../paths/seasons.yaml#/~1seasons~1{seasonId}"
+    },
+    "/seasons/{seasonId}/teams/{teamId}": {
+      "$ref": "../paths/seasons.yaml#/~1seasons~1{seasonId}~1teams~1{teamId}"
+    },
+    "/teams": {
+      "$ref": "../paths/teams.yaml#/~1teams"
+    },
+    "/teams/{teamId}": {
+      "$ref": "../paths/teams.yaml#/~1teams~1{teamId}"
+    },
+    "/teams/{teamId}/athletes/{athleteUserId}": {
+      "$ref": "../paths/teams.yaml#/~1teams~1{teamId}~1athletes~1{athleteUserId}"
+    },
+    "/teams/{teamId}/staff/{staffUserId}": {
+      "$ref": "../paths/teams.yaml#/~1teams~1{teamId}~1staff~1{staffUserId}"
+    },
+    "/training-sessions": {
+      "$ref": "../paths/training.yaml#/~1training-sessions"
+    },
+    "/training-sessions/{id}": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}"
+    },
+    "/training-sessions/{id}/archive": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1archive"
+    },
+    "/training-sessions/{id}/attendance": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1attendance"
+    },
+    "/training-sessions/{id}/attention-queue": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1attention-queue"
+    },
+    "/training-sessions/{id}/attention-queue/{itemId}/dismiss": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1attention-queue~1{itemId}~1dismiss"
+    },
+    "/training-sessions/{id}/attention-queue/{itemId}/escalate": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1attention-queue~1{itemId}~1escalate"
+    },
+    "/training-sessions/{id}/attention-queue/{itemId}/resolve": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1attention-queue~1{itemId}~1resolve"
+    },
+    "/training-sessions/{id}/blocks": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1blocks"
+    },
+    "/training-sessions/{id}/blocks/reorder": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1blocks~1reorder"
+    },
+    "/training-sessions/{id}/blocks/{blockId}": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1blocks~1{blockId}"
+    },
+    "/training-sessions/{id}/cancel": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1cancel"
+    },
+    "/training-sessions/{id}/complete": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1complete"
+    },
+    "/training-sessions/{id}/execution-records": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1execution-records"
+    },
+    "/training-sessions/{id}/execution-records/{recordId}": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1execution-records~1{recordId}"
+    },
+    "/training-sessions/{id}/feedback-threads": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1feedback-threads"
+    },
+    "/training-sessions/{id}/feedback-threads/{threadId}/close": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1feedback-threads~1{threadId}~1close"
+    },
+    "/training-sessions/{id}/ineligibility": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1ineligibility"
+    },
+    "/training-sessions/{id}/objectives": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1objectives"
+    },
+    "/training-sessions/{id}/publish": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1publish"
+    },
+    "/training-sessions/{id}/recommendations": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1recommendations"
+    },
+    "/training-sessions/{id}/recommendations/{recommendationId}/accept": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1recommendations~1{recommendationId}~1accept"
+    },
+    "/training-sessions/{id}/recommendations/{recommendationId}/dismiss": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1recommendations~1{recommendationId}~1dismiss"
+    },
+    "/training-sessions/{id}/start": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1start"
+    },
+    "/training-sessions/{id}/unpublish": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1unpublish"
+    },
+    "/training-sessions/{id}/wellness-post": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1wellness-post"
+    },
+    "/training-sessions/{id}/wellness-post/{athleteId}": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1wellness-post~1{athleteId}"
+    },
+    "/training-sessions/{id}/wellness-pre": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1wellness-pre"
+    },
+    "/training-sessions/{id}/wellness-pre/{athleteId}": {
+      "$ref": "../paths/training.yaml#/~1training-sessions~1{id}~1wellness-pre~1{athleteId}"
+    },
+    "/training/load-chart": {
+      "$ref": "../paths/training.yaml#/~1training~1load-chart"
+    },
+    "/users": {
+      "$ref": "../paths/users.yaml#/~1users"
+    },
+    "/users/{userId}": {
+      "$ref": "../paths/users.yaml#/~1users~1{userId}"
+    },
+    "/video/clips": {
+      "$ref": "../paths/video.yaml#/~1video~1clips"
+    },
+    "/video/distribution": {
+      "$ref": "../paths/video.yaml#/~1video~1distribution"
+    },
+    "/video/segments": {
+      "$ref": "../paths/video.yaml#/~1video~1segments"
+    },
+    "/video/sessions": {
+      "$ref": "../paths/video.yaml#/~1video~1sessions"
+    },
+    "/video/sessions/{sessionId}": {
+      "$ref": "../paths/video.yaml#/~1video~1sessions~1{sessionId}"
+    },
+    "/wellness/athletes/{athleteUserId}/entries": {
+      "$ref": "../paths/wellness.yaml#/~1wellness~1athletes~1{athleteUserId}~1entries"
+    },
+    "/wellness/athletes/{athleteUserId}/summary": {
+      "$ref": "../paths/wellness.yaml#/~1wellness~1athletes~1{athleteUserId}~1summary"
+    },
+    "/wellness/entries": {
+      "$ref": "../paths/wellness.yaml#/~1wellness~1entries"
+    },
+    "/wellness/entries/{entryId}": {
+      "$ref": "../paths/wellness.yaml#/~1wellness~1entries~1{entryId}"
+    }
+  },
   "servers": [
     {
       "description": "Desenvolvimento local",
@@ -108,6 +414,10 @@
     {
       "description": "Notificações e alertas para usuários.",
       "name": "notifications"
+    },
+    {
+      "description": "Sessões de vídeo, clips, segmentos e distribuição.",
+      "name": "video"
     }
   ]
 }

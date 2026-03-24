@@ -218,6 +218,200 @@ class HBCLIv2:
             return False
         return True
 
+    def _resolve_profile_path(self, raw_path: str) -> pathlib.Path:
+        normalized = raw_path[2:] if raw_path.startswith("./") else raw_path
+        return self.root / normalized
+
+    def _validate_boot_profile_structure(self, profile_id: str) -> tuple[bool, bool]:
+        """Garantir que o profile referencie apenas paths válidos e resolvíveis."""
+        profiles = self.boot_profiles.get("profiles", {})
+        profile = profiles.get(profile_id, {})
+        paths_ok = True
+        sections_ok = True
+
+        for raw_path in profile.get("load_sequence", []):
+            path = self._resolve_profile_path(str(raw_path))
+            if not path.exists():
+                print(
+                    f"❌ load_sequence inválido em BOOT_PROFILES.yaml: '{raw_path}' não existe",
+                    file=sys.stderr,
+                )
+                paths_ok = False
+
+        for raw_section in profile.get("required_sections", []):
+            section_ref = str(raw_section)
+            path_part = section_ref.split("§", 1)[0]
+            if path_part in {"GATES_REGISTRY.yaml", "CONTRACT_PIPELINE.md", "DECISION_POLICY.md"}:
+                path_part = {
+                    "GATES_REGISTRY.yaml": "docs/_canon/gates/GATES_REGISTRY.yaml",
+                    "CONTRACT_PIPELINE.md": "docs/_canon/CONTRACT_PIPELINE.md",
+                    "DECISION_POLICY.md": "docs/_canon/DECISION_POLICY.md",
+                }[path_part]
+            path = self._resolve_profile_path(path_part)
+            if not path.exists():
+                print(
+                    f"❌ required_sections inválido em BOOT_PROFILES.yaml: '{section_ref}' aponta para arquivo ausente",
+                    file=sys.stderr,
+                )
+                sections_ok = False
+
+        return paths_ok, sections_ok
+
+    def _apply_selection_rules(self, task_type: str) -> str:
+        """
+        Aplica selection_rules de BOOT_PROFILES.yaml para determinar o profile_id
+        correto para o task_type dado. TASK_CATALOG é a fonte de autoridade —
+        este método serve apenas para conferência de coerência.
+        """
+        task_catalog = self.task_catalog.get("task_catalog", {})
+        explicit = (task_catalog.get(task_type) or {}).get("profile_id")
+        if explicit:
+            return explicit
+        # Regras declarativas de BOOT_PROFILES.yaml §selection_rules
+        if task_type == "execute_roadmap_phase":
+            return "roadmap_execution"
+        contract_tasks = {"new_contract", "contract_revision", "new_event", "new_workflow", "new_schema"}
+        if task_type in contract_tasks:
+            return "contract_execution"
+        if task_type in {"architecture_review", "decision_discovery"}:
+            return "architecture_decision"
+        return "default"
+
+    def _check_stage_allowed(self, task_type: str, stage: int) -> bool:
+        """
+        Valida que o stage atual está em stage_allowed para o task_type.
+        Lista vazia em stage_allowed significa sem restrição de stage.
+        Emite aviso quando stage não está na lista; não bloqueia hard (stage_allowed
+        descreve o estágio de EXECUÇÃO do worker, não necessariamente o de boot).
+        """
+        task_catalog = self.task_catalog.get("task_catalog", {})
+        stage_allowed = (task_catalog.get(task_type) or {}).get("stage_allowed", [])
+        if not stage_allowed:
+            return True  # Sem restrição declarada
+        if stage not in stage_allowed:
+            print(
+                f"⚠️  ROUTING: task_type '{task_type}' declara stage_allowed={stage_allowed}; "
+                f"stage atual={stage}. Worker pode exigir avanço de estágio — consulte TASK_CATALOG.yaml.",
+                file=sys.stderr,
+            )
+            return False
+        return True
+
+    def _validate_required_section_content(self, profile_id: str) -> bool:
+        """
+        Verifica conteúdo mínimo das required_sections além de existência de path.
+        Falha (exit 1) se arquivo obrigatório está vazio.
+        Emite aviso (não falha hard) se heading numérica (§0, §1...) não localizada.
+        Garante que boot não seja 'verde' apenas por existência de arquivo.
+        """
+        profiles = self.boot_profiles.get("profiles", {})
+        profile = profiles.get(profile_id, {})
+        all_good = True
+
+        for raw in profile.get("required_sections", []):
+            ref = str(raw)
+            if "§" not in ref:
+                path = self._resolve_profile_path(ref)
+                if path.exists():
+                    try:
+                        if not path.read_text(encoding="utf-8", errors="replace").strip():
+                            print(f"❌ Artefato obrigatório '{ref}' está vazio.", file=sys.stderr)
+                            all_good = False
+                    except OSError:
+                        pass  # Erros de path capturados por _validate_boot_profile_structure
+                continue
+
+            path_part, section_marker = ref.split("§", 1)
+            path = self._resolve_profile_path(path_part)
+            if not path.exists():
+                continue  # Capturado por _validate_boot_profile_structure
+
+            try:
+                content = path.read_text(encoding="utf-8", errors="replace")
+            except OSError as exc:
+                print(f"❌ Falha ao ler '{path_part}': {exc}", file=sys.stderr)
+                all_good = False
+                continue
+
+            if not content.strip():
+                print(f"❌ '{path_part}' está vazio mas requer seção §{section_marker}.", file=sys.stderr)
+                all_good = False
+                continue
+
+            # Verificação de heading para seções numéricas (§0, §1, §2...)
+            if section_marker.isdigit():
+                found = any(
+                    f"{h}{section_marker}." in content or f"{h}{section_marker} " in content
+                    for h in ("## ", "# ")
+                )
+                if not found:
+                    print(
+                        f"⚠️  '{path_part}§{section_marker}': heading '## {section_marker}.' não localizada. "
+                        "Seção pode ter sido renumerada ou usa formato diferente.",
+                        file=sys.stderr,
+                    )
+                    # Aviso informativo — não falha hard
+
+        return all_good
+
+    def _validate_profile_validations(self, profile_id: str) -> bool:
+        """
+        Aplica o bloco 'validations' do profile de boot além de verificação de path.
+        Regras implementadas:
+          - session_handoff_read: SESSION_HANDOFF.md não pode estar vazio se existir
+          - roadmap_phase_valid: ROADMAP.md deve existir e ter seções de fase
+        Retorna False quando exit_on_fail=true e uma validação obrigatória falha.
+        """
+        profiles = self.boot_profiles.get("profiles", {})
+        profile = profiles.get(profile_id, {})
+        raw_validations = profile.get("validations", {})
+
+        # Normalizar: lista-de-dicts → dict plano
+        if isinstance(raw_validations, list):
+            flat: dict = {}
+            for item in raw_validations:
+                if isinstance(item, dict):
+                    flat.update(item)
+            raw_validations = flat
+
+        all_good = True
+
+        # session_handoff_read: true — SESSION_HANDOFF.md, se existir, deve ser não-vazio
+        if raw_validations.get("session_handoff_read") is True:
+            handoff = self.root / "SESSION_HANDOFF.md"
+            if handoff.exists():
+                if not handoff.read_text(encoding="utf-8", errors="replace").strip():
+                    print(
+                        "❌ SESSION_HANDOFF.md existe mas está vazio. "
+                        "Preencha ou remova o arquivo antes de continuar.",
+                        file=sys.stderr,
+                    )
+                    all_good = False
+                else:
+                    print("✅ SESSION_HANDOFF.md presente e não-vazio.")
+            else:
+                print("ℹ️  SESSION_HANDOFF.md ausente — boot inicial de sessão (aceitável).")
+
+        # roadmap_phase_valid: true — ROADMAP.md deve existir e ter estrutura de fases
+        if raw_validations.get("roadmap_phase_valid") is True:
+            roadmap = self.root / "ROADMAP.md"
+            if not roadmap.exists():
+                print(
+                    "❌ ROADMAP.md obrigatório para profile 'roadmap_execution' mas não existe.",
+                    file=sys.stderr,
+                )
+                all_good = False
+            else:
+                road_content = roadmap.read_text(encoding="utf-8", errors="replace")
+                if not any(m in road_content for m in ("## Fase", "## FASE", "## Phase", "# Fase")):
+                    print(
+                        "⚠️  ROADMAP.md existe mas ausência de seções '## Fase N' detectadas.",
+                        file=sys.stderr,
+                    )
+                    # Aviso informativo — formato pode variar
+
+        return all_good
+
     @staticmethod
     def _determine_write_scope(task_type: str, profile_id: str) -> str:
         """Determinar write_scope da sessão a partir do task_type/profile."""
@@ -277,24 +471,30 @@ class HBCLIv2:
         except Exception:
             return "unknown"
     
-    def cmd_verify(self, task_type: str, module: str) -> int:
+    def cmd_verify(
+        self,
+        task_type: str,
+        module: Optional[str],
+        roadmap_phase: Optional[int] = None,
+        roadmap_task_id: Optional[str] = None,
+    ) -> int:
         """
         FASE 0: SESSION_BOOT
-        
+
         Validar que task_type e module são válidos.
         Criar/atualizar session_start.json.
         """
         print("\n══ FASE 0: SESSION_BOOT ══")
-        
+
         # Validação 1: task_type existe em TASK_CATALOG?
         task_catalog = self.task_catalog.get("task_catalog", {})
         if task_type not in task_catalog:
             print(f"❌ task_type '{task_type}' não registrado em TASK_CATALOG.yaml", file=sys.stderr)
             print(f"   Registrados: {', '.join(task_catalog.keys())}", file=sys.stderr)
             return 1
-        
+
         task_config = task_catalog[task_type]
-        
+
         # Validação 2: status é active?
         status = task_config.get("status")
         if status == "frozen":
@@ -307,14 +507,23 @@ class HBCLIv2:
         elif status != "active":
             print(f"❌ task_type '{task_type}' status={status} (esperado: active)", file=sys.stderr)
             return 1
-        
-        # Validação 3: module está em MODULE_REGISTRY.yaml (dinâmico)?
+
+        # Validação 3: module — obrigatório exceto para execute_roadmap_phase
+        is_roadmap_mode = (task_type == "execute_roadmap_phase")
         canonical_modules = self._get_canonical_modules()
-        if module not in canonical_modules:
+        if module is None and not is_roadmap_mode:
+            print(
+                f"❌ --module é obrigatório para task_type='{task_type}'.",
+                file=sys.stderr,
+            )
+            print(f"   Canônicos: {', '.join(canonical_modules)}", file=sys.stderr)
+            return 1
+        module_valid = True
+        if module is not None and module not in canonical_modules:
             print(f"❌ module '{module}' não é canônico", file=sys.stderr)
             print(f"   Canônicos: {', '.join(canonical_modules)}", file=sys.stderr)
             return 1
-        
+
         # Validação 4: worker_path existe?
         worker_path = self.root / task_config.get("worker_path", "")
         if not worker_path.exists():
@@ -326,34 +535,88 @@ class HBCLIv2:
             rc = self._check_generate_code_eligibility(module)
             if rc != 0:
                 return rc
-        
+
         # Validação 5: boot_profile_id é válido?
-        profile_id = task_config.get("profile_id", "default")
+        # Nota: profile_id=null em TASK_CATALOG (ex: audit tasks) → fallback para "default"
+        profile_id = task_config.get("profile_id") or "default"
         if not self._validate_boot_profile_id(profile_id):
             return 1
-        
+        boot_paths_valid, required_sections_valid = self._validate_boot_profile_structure(profile_id)
+        if not boot_paths_valid or not required_sections_valid:
+            return 1
+
+        # Validação 5b: selection_rules — coerência informativa (TASK_CATALOG prevalece)
+        selected_by_rules = self._apply_selection_rules(task_type)
+        if selected_by_rules != profile_id:
+            print(
+                f"⚠️  selection_rules → '{selected_by_rules}' vs TASK_CATALOG → '{profile_id}' "
+                "— TASK_CATALOG é a fonte de autoridade e prevalece.",
+                file=sys.stderr,
+            )
+
+        # Validação 5c: required_sections — conteúdo mínimo (falha hard para arquivo vazio)
+        if not self._validate_required_section_content(profile_id):
+            return 1
+
+        # Validação 5d: bloco validations (SESSION_HANDOFF.md, ROADMAP.md)
+        validations_ok = self._validate_profile_validations(profile_id)
+        exit_on_fail = self.boot_profiles.get("profiles", {}).get(profile_id, {}).get("exit_on_fail", True)
+        if not validations_ok and exit_on_fail:
+            return 1
+
+        # Validação 5e: stage_allowed — informativo (hb verify opera em stage 0)
+        self._check_stage_allowed(task_type, 0)
+
+        # Derivar campos de modo
+        operation_mode = "ROADMAP" if profile_id == "roadmap_execution" else "CDD"
+        module_focus = module  # pode ser None em modo ROADMAP sem --module
+
         # Tudo OK — criar/atualizar sessão
-        print(f"✅ task_type='{task_type}' (active, worker exists)")
-        print(f"✅ module='{module}' (canonical)")
-        print(f"✅ boot_profile_id='{profile_id}' (valid)")
-        
+        if module is not None:
+            print(f"✅ task_type='{task_type}' (active, worker exists)")
+            print(f"✅ module='{module}' (canonical)")
+        else:
+            print(f"✅ task_type='{task_type}' (active, worker exists) [modo ROADMAP sem módulo fixo]")
+        print(f"✅ boot_profile_id='{profile_id}' (valid) | operation_mode={operation_mode}")
+        print("✅ boot_profile structure (paths + required_sections resolvíveis)")
+
         # Inicializar/atualizar session
         if "session_id" not in self.session:
             self.session["session_id"] = str(uuid.uuid4())
-        
-        self.session.update({
+
+        session_update: dict = {
             "session_timestamp": datetime.now(timezone.utc).isoformat(),
             "branch": self._get_git_branch(),
             "pipeline_version": "1.0.0",
             "boot_profile_id": profile_id,
             "task_type": task_type,
-            "module": module,
             "stage": 0,
             "write_scope": self._determine_write_scope(task_type, profile_id),
             "worker_id": task_config.get("worker_id"),
             "git_user": self._get_git_user(),
             "git_email": self._get_git_email(),
-        })
+            "operation_mode": operation_mode,
+            "stage0_validation_results": {
+                "task_type_valid": True,
+                "module_valid": module_valid,
+                "worker_exists": True,
+                "boot_profile_exists": True,
+                "boot_paths_valid": boot_paths_valid,
+                "required_sections_resolvable": required_sections_valid,
+            },
+        }
+
+        # Campos opcionais — incluir apenas quando disponíveis
+        if module is not None:
+            session_update["module"] = module
+        if module_focus is not None:
+            session_update["module_focus"] = module_focus
+        if roadmap_phase is not None:
+            session_update["roadmap_phase"] = roadmap_phase
+        if roadmap_task_id is not None:
+            session_update["roadmap_task_id"] = roadmap_task_id
+
+        self.session.update(session_update)
         
         # Validar contra schema
         if not self._validate_session_against_schema():
@@ -393,7 +656,12 @@ class HBCLIv2:
             return 1
         
         print(f"✅ Sessão validada: task_type={self.session.get('task_type')}, module={module}")
-        
+
+        # Validação informativa de stage_allowed para stage 1
+        task_type_s = self.session.get("task_type", "")
+        if task_type_s:
+            self._check_stage_allowed(task_type_s, 1)
+
         # Atualizar stage
         self.session["stage"] = 1
         self._save_session()
@@ -417,7 +685,12 @@ class HBCLIv2:
         Validar artefato. Fazer upsert com hash SHA-256.
         """
         print(f"\n══ FASE 2: PER_ARTIFACT | {artifact_path} ══")
-        
+
+        # Validação informativa de stage_allowed para stage 2
+        task_type_a = self.session.get("task_type", "")
+        if task_type_a:
+            self._check_stage_allowed(task_type_a, 2)
+
         artifact_full = self.root / artifact_path
         if not artifact_full.exists():
             print(f"❌ Artefato não existe: {artifact_path}", file=sys.stderr)
@@ -456,19 +729,49 @@ class HBCLIv2:
         # Atualizar resultado do gate
         artifact_obj = next(a for a in artifacts if a["path"] == artifact_path)
         artifact_obj["gate_exit_code"] = result.returncode
+        # Persistir stage2_exit_code no estado da sessão (substitui pelo exit code mais recente)
+        self.session["stage2_exit_code"] = result.returncode
         self._save_session()
-        
+
         print(f"\nDONE = exitcode 0  |  atual exitcode = {result.returncode}\n")
         return result.returncode
-    
+
+    def cmd_stage3(self) -> int:
+        """
+        FASE 3: VALIDATE_CONTRACTS (full run)
+
+        Roda validate_contracts.py completo e persiste stage3_exit_code na sessão.
+        Deve ser executado após todos os artefatos terem sido criados e registrados.
+        """
+        print("\n══ FASE 3: VALIDATE_CONTRACTS (full run) ══")
+
+        if "task_type" not in self.session:
+            print("❌ Sessão não inicializada. Execute 'hb verify' antes de 'hb stage3'.", file=sys.stderr)
+            return 1
+
+        print("Rodando validate_contracts.py --profile ci ...")
+        result = subprocess.run(
+            [sys.executable, str(self.validator_script), "--profile", "ci"],
+            capture_output=False,
+            cwd=self.root,
+        )
+
+        self.session["stage3_exit_code"] = result.returncode
+        self._save_session()
+
+        status = "✅ PASS" if result.returncode == 0 else f"❌ FAIL (exit {result.returncode})"
+        print(f"\nstage3_exit_code={result.returncode} | {status}")
+        print(f"\nDONE = exitcode 0  |  atual exitcode = {result.returncode}\n")
+        return result.returncode
+
     def cmd_status(self) -> int:
         """Mostrar status completo da sessão."""
         print("\n══ ESTADO COMPLETO DO PIPELINE ══\n")
-        
+
         if not self.session:
             print("❌ Nenhuma sessão ativa")
             return 1
-        
+
         print(f"Session ID: {self.session.get('session_id', 'N/A')}")
         print(f"Task Type: {self.session.get('task_type', 'N/A')}")
         print(f"Module: {self.session.get('module', 'N/A')}")
@@ -498,7 +801,9 @@ class HBCLIv2:
         """Rodar suíte de sobrevivência obrigatória.
 
         Deve passar antes de qualquer mudança em:
-        gates, profiles, task catalog, schemas críticos ou validate_contracts.py.
+        gates, profiles, task catalog, schemas críticos, validate_contracts.py,
+        bridge docs (.github/skills, .github/copilot-instructions.md), prompts
+        (.contract_driven/agent_prompts/**) ou templates (docs/_canon/templates/**).
         """
         SURVIVAL_SUITE = [
             "tests/test_pipeline_governance.py",
@@ -508,9 +813,13 @@ class HBCLIv2:
             "tests/pipeline_gates/test_context_budgets_and_parity.py::TestZeroBootProfileReferences",
             "tests/pipeline_gates/test_context_budgets_and_parity.py::test_parity_cli_verify",
             "tests/pipeline_gates/test_tooling_config_gate.py",
+            # FASE 3 — modelo único de estado de sessão
+            "tests/pipeline_gates/test_session_state_phase3.py",
+            # FASE 4 — paridade schema/template/skills/prompts
+            "tests/pipeline_gates/test_schema_template_parity_phase4.py",
         ]
         print("\n══ SURVIVAL SUITE ══")
-        print("Testes obrigatórios antes de mudança em gates/profiles/task_catalog/schemas\n")
+        print("Testes obrigatórios antes de mudança em gates/profiles/task_catalog/schemas/bridge-docs\n")
         result = subprocess.run(
             [sys.executable, "-m", "pytest", *SURVIVAL_SUITE, "-v"],
             cwd=self.root,
@@ -582,7 +891,12 @@ class HBCLIv2:
         # verify
         verify_p = subparsers.add_parser("verify", help="Fase 0: Boot e validação de sessão")
         verify_p.add_argument("--task-type", required=True, help="Task type (deve estar em TASK_CATALOG)")
-        verify_p.add_argument("--module", required=True, help="Módulo canônico (um dos 16)")
+        verify_p.add_argument("--module", required=False, default=None,
+                              help="Módulo canônico (um dos 17). Obrigatório exceto para execute_roadmap_phase.")
+        verify_p.add_argument("--roadmap-phase", type=int, default=None,
+                              help="Fase do ROADMAP em execução (0-13). Usado apenas em modo ROADMAP.")
+        verify_p.add_argument("--roadmap-task-id", default=None,
+                              help="Identificador da tarefa roadmap (ex: 'phase-1-foundation').")
         
         # check
         check_p = subparsers.add_parser("check", help="Fase 1: Validação de módulo")
@@ -604,6 +918,12 @@ class HBCLIv2:
             help="Rodar suíte de sobrevivência (obrigatório antes de mudança em gates/profiles/schemas)",
         )
 
+        # stage3 — validar contratos (full run) e registrar stage3_exit_code
+        subparsers.add_parser(
+            "stage3",
+            help="FASE 3: rodar validate_contracts.py completo e registrar stage3_exit_code",
+        )
+
         # help
         subparsers.add_parser("help", help="Mostrar ajuda")
         
@@ -615,7 +935,12 @@ class HBCLIv2:
         
         try:
             if parsed_args.command == "verify":
-                return self.cmd_verify(parsed_args.task_type, parsed_args.module)
+                return self.cmd_verify(
+                    parsed_args.task_type,
+                    parsed_args.module,
+                    roadmap_phase=getattr(parsed_args, "roadmap_phase", None),
+                    roadmap_task_id=getattr(parsed_args, "roadmap_task_id", None),
+                )
             elif parsed_args.command == "check":
                 return self.cmd_check(parsed_args.module)
             elif parsed_args.command == "artifact":
@@ -626,6 +951,8 @@ class HBCLIv2:
                 return self.cmd_reset()
             elif parsed_args.command == "survival-suite":
                 return self.cmd_survival_suite()
+            elif parsed_args.command == "stage3":
+                return self.cmd_stage3()
         except FileNotFoundError as e:
             print(f"❌ {e}", file=sys.stderr)
             return 2

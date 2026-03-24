@@ -1,3 +1,13 @@
+---
+doc_type: canon
+version: "1.1.0"
+status: active
+created: "2026-03-17"
+last_reviewed: "2026-03-23"
+decision_ref: D5, D6
+state_semantics: target-state
+---
+
 # DEPLOY_PIPELINE.md
 > Documento normativo — SSOT para estratégia de deploy do HB Track.
 > Versão: 1.1.0 | Status: active | Criado: 2026-03-17 | Revisado: 2026-03-23

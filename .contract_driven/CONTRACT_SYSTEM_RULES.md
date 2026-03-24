@@ -179,6 +179,25 @@ Regras:
 Landing/entry não-soberano:
 - `README.md` na raiz do repositório é apenas navegação/entrada. Ele não deve introduzir novas regras normativas que conflitem com o canon.
 
+### 3.2C Bridge docs (não-soberanos) — PROIBIÇÕES EXPLÍCITAS
+
+Bridge docs são artefatos de ponte operacional que ajudam a orientar agentes e humanos, mas **não possuem autoridade normativa**. Incluem:
+
+- `.github/copilot-instructions.md`
+- `CLAUDE.md`
+- `.github/skills/**/*.md`
+- `AGENTS.md` (quando presente)
+
+**Proibições absolutas para bridge docs:**
+
+1. **Não podem redefinir schemas**: qualquer instrução que contradiga `contracts/schemas/shared/*.schema.json` é nula de pleno direito.
+2. **Não podem redefinir gates**: qualquer gate citado em bridge doc que conflite com `docs/_canon/gates/GATES_REGISTRY.yaml` ou com a implementação em `validate_contracts.py` é ignorado.
+3. **Não podem redefinir políticas canônicas**: qualquer política que contradiga `docs/_canon/` ou `.contract_driven/CONTRACT_SYSTEM_RULES.md` é nula de pleno direito.
+4. **Não podem declarar-se soberanos**: proibido usar linguagem de SSOT, "fonte de verdade", "canônico" ou "autoritativo" sem banner `BRIDGE ONLY — NON-SOVEREIGN` explícito.
+5. **Só podem repetir regras ativas**: bridge docs são permitidos apenas para sintetizar, pontuar e pontuar em português o que o enforcement e o canon já estabelecem.
+
+Violação detectada → `BLOCKED_BRIDGE_OVERRIDE`. Gate: `SHADOW_AUTHORITY_GATE`.
+
 ### 3.2A Decision support sources (não-soberanos)
 
 - `docs/hbtrack/decisoes/*.md`
@@ -297,7 +316,22 @@ Regras:
 
 ## 5. Precedência em caso de conflito
 
-Ordem de precedência (maior autoridade primeiro):
+### 5.0 Cadeia de precedência de autoridade (OFICIAL — idêntica em AGENT_INSTRUCTIONS.md)
+
+Em qualquer conflito de regra, schema, gate ou política, a resolução segue esta ordem (maior autoridade primeiro):
+
+```
+1. enforcement executável     scripts/hb, validate_contracts.py, gates ativos
+2. schemas ativos             contracts/schemas/shared/*.schema.json
+3. canon                      docs/_canon/ + .contract_driven/CONTRACT_SYSTEM_RULES.md
+4. bridge docs                .github/copilot-instructions.md, CLAUDE.md, skills/**
+5. artefatos derivados        DEVCONT.md, compilance.md, ADVERSARIAL.md, ANALISEARQUITETURA.md
+6. legado                     _archive/, _reports/evidence/, docs/guias/
+```
+
+**Regra de ouro**: bridge docs e artefatos derivados **nunca** podem redefinir, sobrepor ou contradizer itens dos níveis 1–3. Se houver divergência, o nível mais alto prevalece sempre. Bridge docs só podem **repetir** o que o enforcement e o canon já estabelecem.
+
+### 5.1 Ordem de precedência detalhada por artefato
 1. `DOMAIN_AXIOMS.json` — invariantes machine-readable, nunca sobrescritos
 2. `.contract_driven/CONTRACT_SYSTEM_RULES.md` (este arquivo) — regras operacionais vinculantes
    2a. `.contract_driven/templates/api/api_rules.yaml` — convenções de API HTTP
@@ -403,7 +437,7 @@ Saídas de bloqueio permitidas:
 - `BLOCKED_REQUIRED_ARTIFACT_MISSING`
 - `BLOCKED_MISSING_AGENT_PROMPT`
 - `BLOCKED_PRE_CONTRACT_SKIPPED` [→ docs/_canon/AGENT_INSTRUCTIONS.md §4]
-- `BLOCKED_SCOPE_OVERFLOW` [→ ADR-031]
+- `BLOCKED_SCOPE_OVERFLOW` [→ ADR-034]
 
 Uso de `BLOCKED_MISSING_CANON_ARTIFACT`:
 - emitir quando um artefato canônico listado (governança em `.contract_driven/` ou canon global em `docs/_canon/`) for necessário para a tarefa atual e estiver ausente no path canônico, e não existir um `BLOCKED_MISSING_*` mais específico aplicável.
@@ -835,6 +869,16 @@ Os seguintes arquivos compõem a infraestrutura operacional da fase pré-contrat
 
 Esses artefatos têm o mesmo nível de soberania que os artefatos listados em §3.2 (Global governance docs) e aplicam-se à governança operacional de agentes.
 
+### 22.5 Backfill explícito para legado
+Quando um módulo legado já existe em status `validated_contract+`, mas não possui log pré-contrato histórico,
+é permitido um único backfill machine-readable em `_reports/agent_execution/*.json` para restabelecer continuidade.
+
+Condições obrigatórias:
+- `evidence_mode` deve ser `baseline_backfill`;
+- o arquivo deve listar `reconstructed_from` com paths soberanos realmente inspecionados;
+- o backfill nunca pode fingir ser transcrição histórica de sessão humana;
+- o backfill só serve para fechar lacuna de continuidade do legado; sessões futuras continuam exigindo evidência normal de execução.
+
 ---
 
 ## 23. Evolution Rule
@@ -941,5 +985,5 @@ Quando precisar adicionar uma referência cross-module não permitida:
 - **Policy SSOT**: `docs/_canon/SCOPE_BOUNDARY_POLICY.md`
 - **Gate metadata**: `docs/_canon/gates/GATES_REGISTRY.yaml` (SCOPE_BOUNDARY_GATE)
 - **Validator script**: `scripts/gates/check_scope_boundary.py`
-- **ADR de criação**: `docs/_canon/decisions/ADR-031-scope-boundary-validation.md`
+- **ADR de criação**: `docs/_canon/decisions/ADR-034-scope-boundary-validation.md`
 - **Related rules**: §2C (Taxonomia de módulos), §9 (Códigos de bloqueio)

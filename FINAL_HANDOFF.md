@@ -1,5 +1,7 @@
 # FINAL HANDOFF — HB Track CDD Pipeline
 
+> ⚠️ **ARTEFATO DERIVADO — NON-SOVEREIGN**: Este arquivo é um handoff histórico derivado. Não possui autoridade normativa. Em caso de conflito, prevalecem: `scripts/hb` + `validate_contracts.py` > `contracts/schemas/` > `docs/_canon/` > `.contract_driven/CONTRACT_SYSTEM_RULES.md` > este arquivo.
+
 **Data de conclusão:** 2026-03-19T16:34:07Z  
 **Branch:** `hb-track-contratos-driven`  
 **Commit HEAD (Fase 6):** `29ef81e`  

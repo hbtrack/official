@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-HB Track Pre-Commit Hook (v3 — Gate Exit Code Enforcement)
+HB Track Pre-Commit Hook (v4 — Governance Path Enforcement)
 
 Validação determinística de contrato-driven pipeline antes de commit:
 1. Validar schema de _reports/session_start.json
@@ -12,10 +12,20 @@ Validação determinística de contrato-driven pipeline antes de commit:
 7. Bloquear se qualquer artefato staged tem gate_exit_code != 0
 8. Bloquear se SESSION_HANDOFF.md falta quando há mudanças
 9. Executar validate_contracts.py --profile precommit
-10. Registrar resultado em session_start.json
+10. Se mudanças em GOVERNANCE_PATHS: rodar survival-suite + paridade schema/template/skills
+11. Registrar resultado em session_start.json
+
+GOVERNANCE_PATHS (rastreados por integridade de governânça):
+  .contract_driven/**
+  docs/_canon/**
+  .github/copilot-instructions.md
+  .github/skills/**
+  scripts/contracts/validate/**
+  scripts/hb
+  contracts/schemas/shared/**
 
 Pipeline de validação:
-  session.json → stage0/1/2 checks → artifacts hash → gate_exit_code → SESSION_HANDOFF → validator
+  session.json → stage0/1/2 checks → artifacts hash → gate_exit_code → SESSION_HANDOFF → validator → [governance check]
 """
 
 from __future__ import annotations
@@ -31,6 +41,23 @@ import jsonschema
 
 class HBHookValidator:
     """Validador de pre-commit com enforcement de contract-driven."""
+
+    # Paths de governança que ativam verificações extras de integridade
+    GOVERNANCE_PATHS = (
+        ".contract_driven/",
+        "docs/_canon/",
+        ".github/copilot-instructions.md",
+        ".github/skills/",
+        "scripts/contracts/validate/",
+        "scripts/hb",
+        "contracts/schemas/shared/",
+    )
+
+    # Paths de artefatos governados pelo pipeline CDD
+    CONTRACT_PATHS = (
+        "contracts/",
+        "docs/hbtrack/",
+    )
     
     def __init__(self):
         """Inicializar paths e carregar SSOTs."""
@@ -138,25 +165,42 @@ class HBHookValidator:
         
         return True
     
-    def get_staged_files(self, in_scope: List[str] | None = None) -> List[str]:
-        """Obter lista de arquivos staged para commit."""
-        if in_scope is None:
-            in_scope = ["contracts/", "docs/hbtrack/"]
-        
+    def _get_all_staged_files(self) -> List[str]:
+        """Obter todos os arquivos staged (qualquer path)."""
         try:
             result = subprocess.run(
                 ["git", "diff", "--cached", "--name-only", "--diff-filter=ACMR"],
                 capture_output=True,
                 text=True,
                 cwd=self.repo_root,
-                check=True
+                check=True,
             )
-            
-            staged = result.stdout.strip().split("\n")
-            return [f for f in staged if f and any(f.startswith(scope) for scope in in_scope)]
+            return [f for f in result.stdout.strip().split("\n") if f]
         except Exception as e:
             self.errors.append(f"❌ HOOK: Erro ao listar arquivos staged: {e}")
             return []
+
+    def get_staged_files(self, in_scope: List[str] | None = None) -> List[str]:
+        """Obter lista de arquivos staged para commit no escopo CONTRACT_PATHS."""
+        scopes = in_scope if in_scope is not None else list(self.CONTRACT_PATHS)
+        staged = self._get_all_staged_files()
+        return [f for f in staged if any(f.startswith(scope) for scope in scopes)]
+
+    def get_staged_governance_files(self) -> List[str]:
+        """Obter arquivos staged que pertencem a GOVERNANCE_PATHS."""
+        staged = self._get_all_staged_files()
+        result = []
+        for f in staged:
+            for gpath in self.GOVERNANCE_PATHS:
+                if gpath.endswith("/"):
+                    if f.startswith(gpath):
+                        result.append(f)
+                        break
+                else:
+                    if f == gpath or f.startswith(gpath + "/"):
+                        result.append(f)
+                        break
+        return result
     
     def calculate_file_hash(self, file_path: Path) -> str:
         """Calcular SHA-256 de arquivo."""
@@ -314,6 +358,87 @@ class HBHookValidator:
         
         return True
     
+    def check_governance_integrity(self) -> bool:
+        """
+        Verificações de integridade e coerência para mudanças em GOVERNANCE_PATHS.
+
+        Ativado apenas quando arquivos de governança são staged.
+        Executa:
+          1. survival-suite — testes obrigatórios de governança
+          2. paridade schema x template x skills (test_schema_template_parity_phase4)
+          3. validação cruzada SESSION_HANDOFF ↔ session_start (test_session_state_phase3)
+        """
+        gov_files = self.get_staged_governance_files()
+        if not gov_files:
+            return True  # Nenhuma mudança de governança — skip
+
+        print(
+            f"\n══ HOOK: Governança detectada — {len(gov_files)} arquivo(s) em GOVERNANCE_PATHS ══"
+        )
+        for f in gov_files:
+            print(f"   📁 {f}")
+        print()
+
+        hb_script = self.repo_root / "scripts" / "hb"
+
+        # 1. Survival suite
+        print("▶ HOOK [Gov 1/3]: Rodando survival-suite...")
+        result = subprocess.run(
+            [sys.executable, str(hb_script), "survival-suite"],
+            cwd=self.repo_root,
+        )
+        if result.returncode != 0:
+            self.errors.append(
+                "❌ HOOK: survival-suite FAIL — mude de governança exige survival-suite verde.\n"
+                "   Corrija os testes antes de commitar."
+            )
+            return False
+        print("✅ survival-suite PASS\n")
+
+        # 2. Paridade schema x template x skills
+        print("▶ HOOK [Gov 2/3]: Paridade schema/template/skills...")
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "pytest",
+                "tests/pipeline_gates/test_schema_template_parity_phase4.py",
+                "-q",
+                "--tb=short",
+            ],
+            cwd=self.repo_root,
+        )
+        if result.returncode != 0:
+            self.errors.append(
+                "❌ HOOK: Paridade schema/template/skills FAIL.\n"
+                "   Algum bridge doc ou skill diverge do schema ativo. Corrija antes de commitar."
+            )
+            return False
+        print("✅ Paridade schema/template/skills PASS\n")
+
+        # 3. Validação cruzada SESSION_HANDOFF ↔ session_start
+        print("▶ HOOK [Gov 3/3]: Validação cruzada SESSION_HANDOFF ↔ session_start...")
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "pytest",
+                "tests/pipeline_gates/test_session_state_phase3.py",
+                "-q",
+                "--tb=short",
+            ],
+            cwd=self.repo_root,
+        )
+        if result.returncode != 0:
+            self.errors.append(
+                "❌ HOOK: Validação cruzada SESSION_HANDOFF ↔ session_start FAIL.\n"
+                "   State de sessão incoerente. Execute 'hb verify' e atualize SESSION_HANDOFF.md."
+            )
+            return False
+        print("✅ Validação cruzada SESSION_HANDOFF ↔ session_start PASS\n")
+
+        return True
+
     def execute_validator_profile(self) -> int:
         """Executar validate_contracts.py --profile precommit."""
         if not self.validator_script.exists():
@@ -356,7 +481,7 @@ class HBHookValidator:
     def run(self) -> int:
         """Executar pipeline completo de validação."""
         
-        print("\n══ HB TRACK PRE-COMMIT HOOK (v3 — Gate Exit Code Enforcement) ══\n")
+        print("\n══ HB TRACK PRE-COMMIT HOOK (v4 — Governance Path Enforcement) ══\n")
         
         # Fase 1: Carregar artefatos
         print("▶ Fase 1: Carregando session e schema...")
@@ -407,9 +532,15 @@ class HBHookValidator:
         if not self.check_session_handoff_requirement():
             self._print_errors_and_exit(1)
         print("✅ SESSION_HANDOFF.md presente\n")
-        
-        # Fase 6: Executar validator com profile precommit
-        print("▶ Fase 6: Executando validator...")
+
+        # Fase 6: Verificações de integridade para mudanças de governança
+        print("▶ Fase 6: Verificando integridade de governança (GOVERNANCE_PATHS)...")
+        if not self.check_governance_integrity():
+            self._print_errors_and_exit(1)
+        print("✅ Governança íntegra\n")
+
+        # Fase 7: Executar validator com profile precommit
+        print("▶ Fase 7: Executando validator...")
         validator_exit = self.execute_validator_profile()
 
         if validator_exit != 0:

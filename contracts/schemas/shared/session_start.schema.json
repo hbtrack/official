@@ -4,7 +4,7 @@
     "title": "session_start JSON Schema",
     "description": "SSOT para validação de _reports/session_start.json — produzido por 'hb verify', lido por pre-commit, git hooks e validators",
     "type": "object",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "additionalProperties": false,
     "required": [
         "session_id",
@@ -13,11 +13,26 @@
         "pipeline_version",
         "boot_profile_id",
         "task_type",
-        "module",
         "stage",
         "write_scope",
         "worker_id"
     ],
+    "if": {
+        "properties": {
+            "task_type": {
+                "const": "execute_roadmap_phase"
+            }
+        },
+        "required": [
+            "task_type"
+        ]
+    },
+    "then": {},
+    "else": {
+        "required": [
+            "module"
+        ]
+    },
     "properties": {
         "session_id": {
             "type": "string",
@@ -260,6 +275,32 @@
                 }
             }
         },
+        "operation_mode": {
+            "type": "string",
+            "description": "Modo operacional da sessão: CDD (tarefas de contrato) ou ROADMAP (fases de implementação). Derivado do boot_profile_id.",
+            "enum": [
+                "CDD",
+                "ROADMAP"
+            ]
+        },
+        "module_focus": {
+            "type": "string",
+            "description": "Módulo ou área de foco em modo ROADMAP. Espelha modulo_foco do SESSION_HANDOFF.md.",
+            "minLength": 1,
+            "maxLength": 64
+        },
+        "roadmap_phase": {
+            "type": "integer",
+            "description": "Fase atual do ROADMAP (0-13). Espelha fase_roadmap do SESSION_HANDOFF.md.",
+            "minimum": 0,
+            "maximum": 13
+        },
+        "roadmap_task_id": {
+            "type": "string",
+            "description": "Identificador da tarefa roadmap em execução. Espelha task_id do SESSION_HANDOFF.md.",
+            "minLength": 1,
+            "maxLength": 128
+        },
         "stage2_exit_code": {
             "type": "integer",
             "description": "Exit code da fase 2 (execution). Obrigatório após fase 2. Hook bloqueia commit se presente e != 0.",
@@ -267,7 +308,7 @@
         },
         "stage3_exit_code": {
             "type": "integer",
-            "description": "Exit code da fase 3 (validate_contracts.py full run — 44 gates). Produzido pelo agente após FASE 3. Hook bloqueia commit se presente e != 0.",
+            "description": "Exit code da fase 3 (validate_contracts.py full run). Produzido pelo agente após FASE 3. Hook bloqueia commit se presente e != 0.",
             "minimum": 0
         },
         "validator_run_id": {
@@ -330,7 +371,7 @@
     "definitions": {
         "constraints": {
             "constraint_1": "task_type nunca pode ser 'unknown'. Sempre deve ser um valor do enum.",
-            "constraint_2": "module nunca pode ser 'unknown'. Sempre deve ser um dos 16 canônicos.",
+            "constraint_2": "module nunca pode ser 'unknown'. Para execute_roadmap_phase é opcional; para todos os outros task_types é obrigatório e deve ser um dos 17 canônicos.",
             "constraint_3": "stage0_exit_code, stage1_exit_code, stage2_exit_code, stage3_exit_code devem ser preenchidos conforme progresso.",
             "constraint_4": "Se qualquer stage_N_exit_code != 0, hook deve bloquear commit.",
             "constraint_5": "Se um artefato foi validado e posteriormente alterado (hash diverge), hook deve bloquear.",

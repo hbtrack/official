@@ -1,11 +1,29 @@
 ---
 doc_type: canon
-version: "1.0.0"
-last_reviewed: "2026-03-11"
+version: "1.1.0"
+last_reviewed: "2026-03-23"
 status: active
+state_semantics: governance
 ---
 
 # Escopo do Sistema — HB Track
+
+## 0. Objetivo e limite de autoridade
+
+Este documento define:
+
+- missao do sistema;
+- escopo funcional aprovado;
+- atores e macrodominios de negocio;
+- limites externos do produto;
+- o que exige decisao formal antes de entrar no sistema.
+
+Ele nao prova runtime atual. Para isso, usar:
+
+- `ARCHITECTURE.md`;
+- `C4_CONTAINERS.md`;
+- `CODE_ARCHITECTURE.md`;
+- o proprio repo (`src/`, `config/`, `infra/`).
 
 ## 1. Missão
 
@@ -15,9 +33,15 @@ O sistema existe para transformar regras do domínio do handebol e necessidades 
 
 ## 2. Tipo de Sistema
 
-Plataforma sports-tech de gestão de handebol — **monólito modular em camadas** (Django + Django Ninja) com SPA (React + Vite), dados relacionais (PostgreSQL) e workers assíncronos (Celery + Redis).
+O HB Track e uma plataforma sports-tech de gestao de handebol com **monolito modular em camadas** como base arquitetural.
 
-O sistema não é um microserviço. A modularidade é lógica (por domínio), não física (por deploy independente). Boundaries entre módulos são explícitos e governados por contratos internos; não por chamadas de rede.
+Leitura correta deste escopo:
+
+- backend monolitico Django + Django Ninja esta materializado no repo;
+- frontend web e processamento assíncrono fazem parte do **escopo aprovado**, mas ainda dependem de materializacao para serem tratados como runtime atual;
+- boundaries entre modulos sao logicas e governadas por contratos e docs normativas, nao por chamadas de rede.
+
+O sistema nao e um microservico. A modularidade continua sendo logica, nao fisica.
 
 ## 3. Mercado Primário
 
@@ -93,6 +117,8 @@ Funcionalidades adjacentes que se aproximem desses domínios devem ser avaliadas
 | Storage externo para arquivos e mídia | Integrado via adapter interno | `reports`, `ai_ingestion` |
 
 O HB Track não controla implementação interna desses serviços. A integração é encapsulada no módulo responsável e não deve vazar para outros módulos.
+
+Regra de leitura: a presenca desta dependencia no escopo **nao** prova adapter externo ativo no runtime atual; ela apenas define que a boundary e legitima dentro do produto.
 
 ## 8. Riscos Documentados
 

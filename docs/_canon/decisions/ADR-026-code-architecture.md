@@ -1,14 +1,21 @@
 ---
 adr_id: ADR-026
 title: "Code Architecture — Clean Architecture + Ports & Adapters"
-status: accepted
+status: superseded
 date: "2026-03-17"
 deciders: [product-owner, tech-lead]
 decision: D4
+state_semantics: governance
+supersedes: []
+superseded_by: [ADR-031]
+related_adrs: [ADR-030]
 tags: [architecture, clean-architecture, fastapi, python, postgresql]
 ---
 
 # ADR-026 — Arquitetura de Código
+
+> Status operacional: `superseded` para definição de stack desde 2026-03-17 por [ADR-031](ADR-031-backend-framework.md).
+> Este ADR permanece apenas como registro da decisão original e dos princípios de organização em camadas.
 
 ## Contexto
 
@@ -32,6 +39,8 @@ Os contratos OpenAPI em `contracts/openapi/` são os **Ports** da camada Interfa
 Nenhuma lógica de negócio vive no router. Nenhum detalhe de infra vive no domain.
 
 ### Stack completa
+
+> Conteúdo histórico. A stack abaixo não é mais a stack vigente do repositório.
 
 Backend: Python 3.12 + FastAPI + SQLAlchemy 2.x async + PostgreSQL 16 + Alembic
 Frontend: React Native (Expo)

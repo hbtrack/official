@@ -4,6 +4,7 @@ version: "1.1.0"
 status: active
 decision_ref: D7
 adr_ref: ADR-030
+state_semantics: target-state
 ---
 
 # FRONTEND_CONTRACT.md

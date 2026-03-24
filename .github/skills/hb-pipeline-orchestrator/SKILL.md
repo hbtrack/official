@@ -15,6 +15,8 @@ description: >
 
 # HB Track — Pipeline Orchestrator (CDD)
 
+> ⚠️ **BRIDGE ONLY — NON-SOVEREIGN**: Este skill é uma ponte operacional. Não define regras, schemas, gates ou políticas canônicas. Em caso de conflito, prevalecem nesta ordem: enforcement executável (`scripts/hb`, `validate_contracts.py`) > schemas ativos (`contracts/schemas/`) > canon (`docs/_canon/`) > este skill.
+
 Este skill implementa o protocolo completo do pipeline Contract-Driven Development.
 **Toda tarefa de contrato DEVE seguir esta checklist na ordem exata.**
 
@@ -71,7 +73,7 @@ O humano é leigo em desenvolvimento — comunicar SEMPRE em português, linguag
   - Este passo valida que: (a) módulo existe, (b) task_type será permitido, (c) worker correspondente existe
 - [ ] **PRE0.3** — Confirmar saída:
   ```
-  ✅ Pre-contract boot validado: module=<M>, task_type_target=<T>, worker=<W>
+  ✅ Pre-contract boot validado: module=<M>, task_type=<T>, worker=<W>
   ```
 - [ ] **PRE0.4** — Avançar para FASE 0 com o task_type específico confirmado
 
@@ -285,31 +287,45 @@ O humano é leigo em desenvolvimento — comunicar SEMPRE em português, linguag
 
 **Obrigatório ao final de toda sessão de contrato.**
 
-`SESSION_HANDOFF.md` e o handoff operacional atual.
-Nao tratar `contracts/schemas/shared/session_handoff.schema.json` como o validador ativo desse markdown.
+`SESSION_HANDOFF.md` é o handoff operacional atual. O front matter YAML é validado por `contracts/schemas/shared/session_handoff.schema.json` via `HANDOFF_COHERENCE_GATE` em `validate_contracts.py`. Use o template em `docs/_canon/templates/SESSION_HANDOFF.template.md`.
 
 ### Checklist Handoff
 
-- [ ] **H.1** — Criar ou atualizar `SESSION_HANDOFF.md` na raiz com:
+- [ ] **H.1** — Criar ou atualizar `SESSION_HANDOFF.md` na raiz com front matter YAML válido (obrigatório — validado por `HANDOFF_COHERENCE_GATE`):
   ```markdown
+  ---
+  data_ultima_sessao: "YYYY-MM-DD"
+  branch_ativo: "<branch>"
+  modo_operacao: CDD
+  ci_status: PASS
+  modulo_foco: "<modulo>"
+  fase_roadmap: <N>
+  task_type: "<task_type>"
+  boot_profile_id: contract_authoring
+  task_id: "<task_id>"
+  resultado: DONE
+  proxima_acao_permitida: "<próxima ação objetiva — mín. 10 chars>"
+  bloqueios_ativos: []
+  evidence_paths:
+    - "_reports/runs/<run_id>/contract_gates.json"
+  ---
   # SESSION HANDOFF — HB TRACK
+
   ## Estado Geral
-  **Data:** <YYYY-MM-DD> | **Branch:** <branch> | **CI:** <status>
-  **Módulo trabalhado:** <module>
-  **Task type:** <task_type>
-  **Resultado:** Pipeline PASS/FAIL
+  **Data:** <YYYY-MM-DD> | **Branch:** <branch> | **CI:** PASS
+  **Módulo:** <module> | **Task type:** <task_type>
 
   ## O que foi feito
   - [lista de artefatos criados/modificados]
 
-  ## Decisões tomadas
-  - [lista de decisões com referência ao DECISION_IR]
+  ## Evidências
+  - `_reports/runs/<run_id>/contract_gates.json`
 
-  ## Próximos passos
-  - [o que falta fazer]
+  ## Próxima ação permitida
+  [próximo passo objetivamente descrito]
 
   ## Bloqueios ativos
-  - [se houver]
+  Nenhum.
   ```
 - [ ] **H.2** — Informar humano do resultado final em linguagem de produto
 

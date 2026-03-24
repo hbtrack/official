@@ -133,7 +133,7 @@ _reports/
   dispatch/                    # Dispatch de tarefas
   evidence/                    # Evidência de readiness
     module_readiness_scorecard.json
-    boot_resolution_report.json
+    boot_resolution_report.json  # LEGADO — marcado com _legacy:true; não governa o fluxo ativo
   runs/                        # Histórico de execuções
     20260317T205708_5e6898/
     20260317T205844_e1a6c4/

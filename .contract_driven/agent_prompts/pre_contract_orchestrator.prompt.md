@@ -77,7 +77,7 @@ Emitir por fase:
   worker_destino: <prompt ou NONE>
 ```
 
-Publicar `_reports/session_start.json` com resultado (PASS/BLOCKED/SKIP).
+`_reports/session_start.json` é gravado por `hb verify` (FASE 0) com todos os campos do schema `session_start.schema.json` v1.3.0 (`session_id`, `task_type`, `module`, `operation_mode`, etc.). O orchestrator não grava esse arquivo diretamente — apenas roteia para `hb verify`.
 
 ---
 

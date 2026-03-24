@@ -1,5 +1,7 @@
 # HB TRACK — Claude Instructions
 
+> ⚠️ **BRIDGE ONLY — NON-SOVEREIGN**: Este arquivo é uma ponte operacional para o agente Claude. Não define regras, schemas, gates ou políticas canônicas. Em caso de conflito, prevalecem nesta ordem: enforcement executável (`scripts/hb`, `validate_contracts.py`) > schemas ativos (`contracts/schemas/`) > canon (`docs/_canon/`) > este arquivo.
+
 > Instruções canônicas em `docs/_canon/AGENT_INSTRUCTIONS.md` — ler esse arquivo primeiro.
 
 ## Boot mínimo

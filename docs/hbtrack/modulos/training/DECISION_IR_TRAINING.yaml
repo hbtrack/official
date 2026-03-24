@@ -1,3 +1,6 @@
+# LEGACY MIRROR — NON-SOVEREIGN
+# Fonte canônica atual: .contract_driven/decisions/DECISION_IR_TRAINING.yaml
+# Este arquivo permanece apenas como contexto de módulo durante a migração do legado.
 ir_version: 1.1.0
 module: training
 status: active

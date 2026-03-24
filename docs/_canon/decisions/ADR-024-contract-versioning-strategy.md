@@ -83,4 +83,4 @@ reconsiderar para Opção A (ADR-024 revisão) com URI versioning multi-version.
 ## Referências
 - ADR-003 — Media-Type Versioning (complementar)
 - ADR-014 — Deprecation Policy
-- docs/_canon/API_CONVENTIONS.md
+- docs/_canon/OPERATIONS.md

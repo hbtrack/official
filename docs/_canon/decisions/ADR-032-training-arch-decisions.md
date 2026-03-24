@@ -1580,7 +1580,7 @@ Até a Fase 2 estar implementada, sinais são consumidos via pull no momento da 
 
 ## Decisões Abertas Formais (OD-TRAIN)
 
-As decisões abaixo são registros formais do `MODULE_DECISION_IR.json`. Decisões com `status: resolved` já foram incorporadas ao contrato.
+As decisões abaixo são registros formais do `.contract_driven/decisions/DECISION_IR_TRAINING.yaml`. Decisões com `status: resolved` já foram incorporadas ao contrato.
 
 | ID | Título | Status | Bloqueia? | Resolução / Recomendação |
 |---|---|---|---|---|
@@ -1640,7 +1640,7 @@ As decisões abaixo são registros formais do `MODULE_DECISION_IR.json`. Decisõ
 
 ## Inferências Globalmente Proibidas
 
-As seguintes inferências estão explicitamente proibidas no módulo `training`, conforme `MODULE_DECISION_IR.json → forbidden_inference_global`. Qualquer agente, gerador ou implementação que inferir esses comportamentos deve bloquear com erro explícito.
+As seguintes inferências estão explicitamente proibidas no módulo `training`, conforme `.contract_driven/decisions/DECISION_IR_TRAINING.yaml → forbidden_inference_global`. Qualquer agente, gerador ou implementação que inferir esses comportamentos deve bloquear com erro explícito.
 
 | # | Inferência Proibida |
 |---|---|
@@ -1681,4 +1681,4 @@ Resumo das políticas da plataforma que incidem sobre o módulo `training`:
 
 ---
 
-*Gerado em: 2026-03-15 | Fontes: `.dev/arquitetura/Arquitetura Treinos.md`, `HB_TRACK_ARCHITECTURE_DECISION.md`, `HB_TRACK_PERSISTENCE_POLICY.md`, `INGESTION_PROVIDER_CONTRACT.md`, `DTO_VIEWMODEL_BOUNDARY_RULES.md`, `SENSITIVE_DOMAIN_GOVERNANCE.md`, `MODULE_DECISION_IR.json`*
+*Gerado em: 2026-03-15 | Fontes: `.dev/arquitetura/Arquitetura Treinos.md`, `HB_TRACK_ARCHITECTURE_DECISION.md`, `HB_TRACK_PERSISTENCE_POLICY.md`, `INGESTION_PROVIDER_CONTRACT.md`, `DTO_VIEWMODEL_BOUNDARY_RULES.md`, `SENSITIVE_DOMAIN_GOVERNANCE.md`, `.contract_driven/decisions/DECISION_IR_TRAINING.yaml`*

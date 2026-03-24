@@ -46,7 +46,7 @@ contracts/openapi/
 
 - Layout canônico: `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md` seções 4 e 6
 - SSOT de regras/templates/validações de API HTTP: `.contract_driven/templates/api/api_rules.yaml`
-- Guia/ponteiros (API): `docs/_canon/API_CONVENTIONS.md`
-- Modelo de erro HTTP: `docs/_canon/ERROR_MODEL.md`
+- Guia/ponteiros (API): `docs/_canon/OPERATIONS.md`
+- Modelo de erro HTTP: `docs/_canon/OPERATIONS.md` + `contracts/openapi/components/schemas/shared/problem.yaml`
 - Ferramenta de validação: Redocly CLI (`redocly lint contracts/openapi/openapi.yaml`)
 - Ferramenta de rulesets: Spectral (`spectral lint contracts/openapi/openapi.yaml --ruleset .spectral.yaml`)

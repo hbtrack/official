@@ -1,59 +1,83 @@
+---
+doc_type: canon
+version: "1.1.0"
+last_reviewed: "2026-03-23"
+status: active
+state_semantics: governance
+---
+
 # C4_CONTAINERS.md
 
-## Objetivo
-Descrever os containers principais do **HB Track**.
+## 0. Objetivo e limite de autoridade
+
+Este C4 descreve containers relevantes para implementacao e deploy **sem vender target-state como runtime atual**.
+
+Ele nao substitui:
+
+- [ARCHITECTURE.md](./ARCHITECTURE.md) para leitura macro;
+- [CODE_ARCHITECTURE.md](./CODE_ARCHITECTURE.md) para estrutura do backend;
+- [FRONTEND_CONTRACT.md](./FRONTEND_CONTRACT.md) para frontend aprovado;
+- [DEPLOY_PIPELINE.md](./DEPLOY_PIPELINE.md) para deploy alvo.
+
+## 1. Containers atuais comprovados
+
+| Container | Evidencia | Papel atual |
+|-----------|-----------|-------------|
+| Backend monolitico | `config/urls.py`, `config/settings.py`, `src/<module>/` | API HTTP Django + Django Ninja com 17 apps montados em um unico processo logico |
+| PostgreSQL local | `infra/docker-compose.yml` | banco de desenvolvimento materializado no repo |
+| Redis local | `infra/docker-compose.yml` | servico de apoio provisionado; ainda nao prova worker Celery em execucao |
+
+## 2. Containers aprovados, mas nao materializados
+
+| Container | Fonte de aprovacao | Motivo de ainda nao ser runtime atual |
+|-----------|--------------------|---------------------------------------|
+| Frontend web SPA | `ADR-030`, `FRONTEND_CONTRACT.md` | `frontend/` nao existe e `package.json` nao declara toolchain de frontend real |
+| Worker assíncrono | `ADR-031` | nao existe `config/celery.py` nem `src/<module>/tasks.py` |
+| Endpoint WebSocket | `ADR-031` | nao existe configuracao Channels no backend atual |
+| Object storage adapter | `SYSTEM_SCOPE.md`, `DEPLOY_PIPELINE.md` | boundary aprovada, mas sem implementacao comprovada no repo |
+
+## 3. Diagrama de containers
 
 ```mermaid
 flowchart TB
-  user["Usuários"]
+  user["Usuarios de negocio"]
 
-  subgraph platform["HB Track"]
-    web["Web App / Frontend"]
-    api["API Backend"]
-    db["Banco de Dados"]
-    files["Armazenamento de Arquivos"]
-    jobs["Workers / Jobs"]
+  subgraph current["Current-state comprovado"]
+    api["Backend Django + Django Ninja"]
+    db["PostgreSQL local"]
+    redis["Redis local provisionado"]
   end
 
-  extNotif["Serviço de Notificação"]
-  extBroker["Broker/Event Bus"]
+  subgraph target["Target-state aprovado"]
+    web["Frontend web"]
+    worker["Worker Celery"]
+    ws["Endpoint WebSocket / Channels"]
+    storage["Storage externo"]
+  end
 
-  user --> web
-  web --> api
+  user --> api
   api --> db
-  api --> files
-  api --> jobs
-  jobs --> db
-  api --> extNotif
-  jobs --> extBroker
+  api -. infra provisionada .-> redis
+
+  user -. aprovado .-> web
+  web -. aprovado .-> api
+  api -. aprovado .-> worker
+  api -. aprovado .-> ws
+  api -. boundary aprovada .-> storage
 ```
 
-## Containers
+Legenda: setas solidas representam runtime comprovado no repo; setas tracejadas representam target-state ou boundary aprovada sem materializacao local suficiente.
 
-### Web App / Frontend
-- Responsabilidade: interface do usuário.
-- Entrada: contratos OpenAPI e tipos/clients gerados quando aplicável.
-- Saída: chamadas HTTP, upload e comandos do usuário.
+## 4. Regras de leitura
 
-### API Backend
-- Responsabilidade: regras de aplicação e exposição dos contratos HTTP.
-- Entrada: requests, autenticação, payloads.
-- Saída: responses, persistência e eventos quando aplicável.
+- ausencia de container materializado bloqueia qualquer afirmacao de operacao end-to-end;
+- frontend e worker nao podem ser tratados como ativos em handoff, readiness ou DONE sem arquivos e validacoes correspondentes;
+- Redis provisionado sem Celery configurado nao equivale a fila assíncrona em producao;
+- deploy so pode tratar `staging` ou `production` como operacionais quando `GET /health` existir e o pipeline de deploy tiver assets reais.
 
-### Banco de Dados
-- Responsabilidade: persistência transacional.
+## 5. Referencias
 
-### Armazenamento de Arquivos
-- Responsabilidade: anexos, mídia e relatórios.
-
-### Workers / Jobs
-- Responsabilidade: tarefas assíncronas, cálculos e integrações.
-
-## Relações Críticas
-- Frontend consome apenas contratos públicos.
-- Backend implementa contratos; a implementação não redefine o contrato.
-- Jobs não alteram semântica pública sem mudança contratual.
-
-## Observações
-- Detalhes de infraestrutura, provedores e integrações externas devem ser registrados em ADRs quando relevantes.
-
+- [ARCHITECTURE.md](./ARCHITECTURE.md)
+- [CODE_ARCHITECTURE.md](./CODE_ARCHITECTURE.md)
+- [FRONTEND_CONTRACT.md](./FRONTEND_CONTRACT.md)
+- [DEPLOY_PIPELINE.md](./DEPLOY_PIPELINE.md)

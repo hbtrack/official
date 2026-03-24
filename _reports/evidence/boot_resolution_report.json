@@ -1,4 +1,6 @@
 {
+  "_legacy": true,
+  "_legacy_notice": "ARTEFATO LEGADO — NÃO GOVERNA O FLUXO ATIVO. Substituido por _reports/session_start.json como estado operacional vivo (FASE 3 do AGENT_COMPLIANCE_EXECUTION_PLAN.md). Mantido apenas como referência histórica.",
   "artifact_id": "HBTRACK_BOOT_RESOLUTION_REPORT",
   "version": "2.0.0",
   "module": "training",

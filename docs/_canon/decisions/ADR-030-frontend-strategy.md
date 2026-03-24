@@ -1,9 +1,23 @@
+---
+adr_id: ADR-030
+title: "Frontend Strategy"
+status: accepted
+date: "2026-03-17"
+deciders: [product-owner, tech-lead]
+decision: D7
+state_semantics: governance
+supersedes: []
+superseded_by: []
+related_adrs: [ADR-031]
+---
+
 # ADR-030 — Frontend Strategy
 
 **Status:** accepted
 **Data:** 2026-03-17
 **Decision ref:** D7
 **Decidido por:** humano (recomendação aplicada: Opção D)
+**Relação com ADR-031:** este ADR define frontend. ADR-031 não o supersede; apenas o referencia na stack consolidada.
 
 ---
 

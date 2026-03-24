@@ -580,7 +580,7 @@ Este glossário define os termos canônicos do domínio do HB Track. Quando um t
 
 **Módulos**: Sistema transversal
 
-**Ver também**: SSOT, invariante, API_CONVENTIONS.md, CI_CONTRACT_GATES.md
+**Ver também**: SSOT, invariante, OPERATIONS.md, CI_CONTRACT_GATES.md
 
 ---
 

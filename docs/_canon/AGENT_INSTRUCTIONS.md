@@ -10,6 +10,7 @@ Se existir `SESSION_HANDOFF.md` na raiz → leia ANTES de qualquer outra coisa.
 - Para regras detalhadas: `Read(".contract_driven/CONTRACT_SYSTEM_RULES.md")`
 - Para layout canônico: `Read(".contract_driven/CONTRACT_SYSTEM_LAYOUT.md")`
 - Para pipeline oficial: `Read("docs/_canon/CONTRACT_PIPELINE.md")`
+- Perfis formais de boot vivem em `.contract_driven/BOOT_PROFILES.yaml`; todos os `load_sequence` são resolvidos a partir da raiz do repositório e falham se o path não existir.
 - NUNCA carregar a trilogia completa de uma vez. Ler seções específicas on-demand.
 - **Dois modos de operação existem: Modo CDD (contratos) e Modo ROADMAP (implementação). Nunca misturar.**
 
@@ -55,3 +56,18 @@ Para `execute_roadmap_phase`: usar worker diretamente — **NÃO passa por `pre_
 - **Hook:** `scripts/git-hooks/pre-commit` (via git config core.hooksPath)
 
 Paths: [CONTRACT_PIPELINE.md](docs/_canon/CONTRACT_PIPELINE.md) | [Rules](.contract_driven/CONTRACT_SYSTEM_RULES.md) | [Workers](.contract_driven/agent_prompts)
+
+## 8. CADEIA DE PRECEDÊNCIA DE AUTORIDADE (idêntica em CONTRACT_SYSTEM_RULES.md §5.0)
+
+Em qualquer conflito de regra, schema, gate ou política, a resolução segue esta ordem (maior autoridade primeiro):
+
+```
+1. enforcement executável     scripts/hb, validate_contracts.py, gates ativos
+2. schemas ativos             contracts/schemas/shared/*.schema.json
+3. canon                      docs/_canon/ + .contract_driven/CONTRACT_SYSTEM_RULES.md
+4. bridge docs                .github/copilot-instructions.md, CLAUDE.md, skills/**
+5. artefatos derivados        DEVCONT.md, compilance.md, ADVERSARIAL.md, ANALISEARQUITETURA.md
+6. legado                     _archive/, _reports/evidence/, docs/guias/
+```
+
+**Regra de ouro**: bridge docs e artefatos derivados (níveis 4–6) **nunca** podem redefinir, sobrepor ou contradizer os itens dos níveis 1–3. Bridge docs só podem **repetir** o que o enforcement e o canon já estabelecem. Qualquer divergência é resolvida sempre a favor do nível mais alto.

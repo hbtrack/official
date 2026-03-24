@@ -1,13 +1,13 @@
 {
   "artifact_id": "HBTRACK_MODULE_READINESS_SCORECARD",
-  "generated_at_utc": "2026-03-23T13:54:38Z",
+  "generated_at_utc": "2026-03-24T05:13:09Z",
   "overall_status": "PASS",
   "source_report": "_reports/contract_gates/latest.json",
   "modules": [
     {
       "module": "users",
       "owner": "platform-core",
-      "registry_status": "implementation_ready",
+      "registry_status": "implemented",
       "expected_surfaces": [
         "module_docs_minimum",
         "openapi_sync",
@@ -18,32 +18,32 @@
         "permissions",
         "decision_ir"
       ],
-      "readiness_pct": 75,
+      "readiness_pct": 100,
       "surface_status": {
         "module_docs_minimum": "ready",
         "openapi_sync": "ready",
         "json_schema": "ready",
         "test_matrix": "ready",
-        "asyncapi": "missing",
+        "asyncapi": "ready",
         "arazzo": "ready",
         "permissions": "ready",
-        "decision_ir": "missing"
+        "decision_ir": "ready"
       },
       "evidence": {
         "minimum_docs_present": true,
         "openapi_root_ref_count": 2,
         "openapi_real_path_count": 2,
         "schema_file_count": 1,
-        "asyncapi_artifact_count": 0,
+        "asyncapi_artifact_count": 4,
         "workflow_count": 1,
-        "pre_contract_evidence": false,
-        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+        "pre_contract_evidence": true,
+        "decision_ir_gate_status": "PASS"
       }
     },
     {
       "module": "seasons",
       "owner": "handball-ops",
-      "registry_status": "implementation_ready",
+      "registry_status": "implemented",
       "expected_surfaces": [
         "module_docs_minimum",
         "openapi_sync",
@@ -52,13 +52,13 @@
         "asyncapi",
         "arazzo"
       ],
-      "readiness_pct": 83,
+      "readiness_pct": 100,
       "surface_status": {
         "module_docs_minimum": "ready",
         "openapi_sync": "ready",
         "json_schema": "ready",
         "test_matrix": "ready",
-        "asyncapi": "missing",
+        "asyncapi": "ready",
         "arazzo": "ready"
       },
       "evidence": {
@@ -66,16 +66,16 @@
         "openapi_root_ref_count": 3,
         "openapi_real_path_count": 3,
         "schema_file_count": 1,
-        "asyncapi_artifact_count": 0,
+        "asyncapi_artifact_count": 4,
         "workflow_count": 1,
-        "pre_contract_evidence": false,
-        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+        "pre_contract_evidence": true,
+        "decision_ir_gate_status": "PASS"
       }
     },
     {
       "module": "teams",
       "owner": "handball-ops",
-      "registry_status": "implementation_ready",
+      "registry_status": "implemented",
       "expected_surfaces": [
         "module_docs_minimum",
         "openapi_sync",
@@ -84,13 +84,13 @@
         "asyncapi",
         "arazzo"
       ],
-      "readiness_pct": 83,
+      "readiness_pct": 100,
       "surface_status": {
         "module_docs_minimum": "ready",
         "openapi_sync": "ready",
         "json_schema": "ready",
         "test_matrix": "ready",
-        "asyncapi": "missing",
+        "asyncapi": "ready",
         "arazzo": "ready"
       },
       "evidence": {
@@ -98,16 +98,16 @@
         "openapi_root_ref_count": 4,
         "openapi_real_path_count": 4,
         "schema_file_count": 1,
-        "asyncapi_artifact_count": 0,
+        "asyncapi_artifact_count": 4,
         "workflow_count": 1,
-        "pre_contract_evidence": false,
-        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+        "pre_contract_evidence": true,
+        "decision_ir_gate_status": "PASS"
       }
     },
     {
       "module": "training",
       "owner": "performance-tech",
-      "registry_status": "implementation_ready",
+      "registry_status": "implemented",
       "expected_surfaces": [
         "module_docs_minimum",
         "openapi_sync",
@@ -122,7 +122,7 @@
         "asyncapi",
         "decision_ir"
       ],
-      "readiness_pct": 92,
+      "readiness_pct": 100,
       "surface_status": {
         "module_docs_minimum": "ready",
         "openapi_sync": "ready",
@@ -135,23 +135,23 @@
         "ui_contract": "ready",
         "arazzo": "ready",
         "asyncapi": "ready",
-        "decision_ir": "drift"
+        "decision_ir": "ready"
       },
       "evidence": {
         "minimum_docs_present": true,
         "openapi_root_ref_count": 36,
         "openapi_real_path_count": 36,
         "schema_file_count": 13,
-        "asyncapi_artifact_count": 24,
+        "asyncapi_artifact_count": 16,
         "workflow_count": 5,
         "pre_contract_evidence": true,
-        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+        "decision_ir_gate_status": "PASS"
       }
     },
     {
       "module": "wellness",
       "owner": "performance-tech",
-      "registry_status": "implementation_ready",
+      "registry_status": "implemented",
       "expected_surfaces": [
         "module_docs_minimum",
         "openapi_sync",
@@ -176,16 +176,16 @@
         "openapi_root_ref_count": 4,
         "openapi_real_path_count": 4,
         "schema_file_count": 1,
-        "asyncapi_artifact_count": 3,
+        "asyncapi_artifact_count": 2,
         "workflow_count": 1,
-        "pre_contract_evidence": false,
-        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+        "pre_contract_evidence": true,
+        "decision_ir_gate_status": "PASS"
       }
     },
     {
       "module": "medical",
       "owner": "performance-tech",
-      "registry_status": "implementation_ready",
+      "registry_status": "implemented",
       "expected_surfaces": [
         "module_docs_minimum",
         "openapi_sync",
@@ -208,14 +208,14 @@
         "schema_file_count": 1,
         "asyncapi_artifact_count": 0,
         "workflow_count": 0,
-        "pre_contract_evidence": false,
-        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+        "pre_contract_evidence": true,
+        "decision_ir_gate_status": "PASS"
       }
     },
     {
       "module": "competitions",
       "owner": "handball-ops",
-      "registry_status": "implementation_ready",
+      "registry_status": "implemented",
       "expected_surfaces": [
         "module_docs_minimum",
         "openapi_sync",
@@ -224,13 +224,13 @@
         "asyncapi",
         "arazzo"
       ],
-      "readiness_pct": 83,
+      "readiness_pct": 100,
       "surface_status": {
         "module_docs_minimum": "ready",
         "openapi_sync": "ready",
         "json_schema": "ready",
         "test_matrix": "ready",
-        "asyncapi": "missing",
+        "asyncapi": "ready",
         "arazzo": "ready"
       },
       "evidence": {
@@ -238,16 +238,16 @@
         "openapi_root_ref_count": 3,
         "openapi_real_path_count": 3,
         "schema_file_count": 1,
-        "asyncapi_artifact_count": 0,
+        "asyncapi_artifact_count": 4,
         "workflow_count": 1,
-        "pre_contract_evidence": false,
-        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+        "pre_contract_evidence": true,
+        "decision_ir_gate_status": "PASS"
       }
     },
     {
       "module": "matches",
       "owner": "handball-ops",
-      "registry_status": "implementation_ready",
+      "registry_status": "implemented",
       "expected_surfaces": [
         "module_docs_minimum",
         "openapi_sync",
@@ -256,13 +256,13 @@
         "asyncapi",
         "arazzo"
       ],
-      "readiness_pct": 83,
+      "readiness_pct": 100,
       "surface_status": {
         "module_docs_minimum": "ready",
         "openapi_sync": "ready",
         "json_schema": "ready",
         "test_matrix": "ready",
-        "asyncapi": "missing",
+        "asyncapi": "ready",
         "arazzo": "ready"
       },
       "evidence": {
@@ -270,16 +270,16 @@
         "openapi_root_ref_count": 3,
         "openapi_real_path_count": 3,
         "schema_file_count": 1,
-        "asyncapi_artifact_count": 0,
+        "asyncapi_artifact_count": 4,
         "workflow_count": 1,
-        "pre_contract_evidence": false,
-        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+        "pre_contract_evidence": true,
+        "decision_ir_gate_status": "PASS"
       }
     },
     {
       "module": "scout",
       "owner": "handball-ops",
-      "registry_status": "implementation_ready",
+      "registry_status": "implemented",
       "expected_surfaces": [
         "module_docs_minimum",
         "openapi_sync",
@@ -290,7 +290,7 @@
         "permissions",
         "decision_ir"
       ],
-      "readiness_pct": 88,
+      "readiness_pct": 100,
       "surface_status": {
         "module_docs_minimum": "ready",
         "openapi_sync": "ready",
@@ -299,23 +299,23 @@
         "asyncapi": "ready",
         "arazzo": "ready",
         "permissions": "ready",
-        "decision_ir": "missing"
+        "decision_ir": "ready"
       },
       "evidence": {
         "minimum_docs_present": true,
         "openapi_root_ref_count": 4,
         "openapi_real_path_count": 4,
         "schema_file_count": 1,
-        "asyncapi_artifact_count": 6,
+        "asyncapi_artifact_count": 4,
         "workflow_count": 1,
-        "pre_contract_evidence": false,
-        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+        "pre_contract_evidence": true,
+        "decision_ir_gate_status": "PASS"
       }
     },
     {
       "module": "exercises",
       "owner": "performance-tech",
-      "registry_status": "implementation_ready",
+      "registry_status": "implemented",
       "expected_surfaces": [
         "module_docs_minimum",
         "openapi_sync",
@@ -338,14 +338,14 @@
         "schema_file_count": 4,
         "asyncapi_artifact_count": 0,
         "workflow_count": 2,
-        "pre_contract_evidence": false,
-        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+        "pre_contract_evidence": true,
+        "decision_ir_gate_status": "PASS"
       }
     },
     {
       "module": "analytics",
       "owner": "performance-tech",
-      "registry_status": "implementation_ready",
+      "registry_status": "implemented",
       "expected_surfaces": [
         "module_docs_minimum",
         "openapi_sync",
@@ -366,14 +366,14 @@
         "schema_file_count": 4,
         "asyncapi_artifact_count": 0,
         "workflow_count": 0,
-        "pre_contract_evidence": false,
-        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+        "pre_contract_evidence": true,
+        "decision_ir_gate_status": "PASS"
       }
     },
     {
       "module": "reports",
       "owner": "performance-tech",
-      "registry_status": "implementation_ready",
+      "registry_status": "implemented",
       "expected_surfaces": [
         "module_docs_minimum",
         "openapi_sync",
@@ -394,14 +394,14 @@
         "schema_file_count": 1,
         "asyncapi_artifact_count": 0,
         "workflow_count": 1,
-        "pre_contract_evidence": false,
-        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+        "pre_contract_evidence": true,
+        "decision_ir_gate_status": "PASS"
       }
     },
     {
       "module": "ai_ingestion",
       "owner": "platform-core",
-      "registry_status": "implementation_ready",
+      "registry_status": "implemented",
       "expected_surfaces": [
         "module_docs_minimum",
         "openapi_sync",
@@ -424,16 +424,16 @@
         "openapi_root_ref_count": 3,
         "openapi_real_path_count": 3,
         "schema_file_count": 1,
-        "asyncapi_artifact_count": 9,
+        "asyncapi_artifact_count": 6,
         "workflow_count": 1,
-        "pre_contract_evidence": false,
-        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+        "pre_contract_evidence": true,
+        "decision_ir_gate_status": "PASS"
       }
     },
     {
       "module": "identity_access",
       "owner": "platform-core",
-      "registry_status": "implementation_ready",
+      "registry_status": "implemented",
       "expected_surfaces": [
         "module_docs_minimum",
         "openapi_sync",
@@ -444,7 +444,7 @@
         "asyncapi",
         "decision_ir"
       ],
-      "readiness_pct": 75,
+      "readiness_pct": 100,
       "surface_status": {
         "module_docs_minimum": "ready",
         "openapi_sync": "ready",
@@ -452,24 +452,24 @@
         "test_matrix": "ready",
         "permissions": "ready",
         "arazzo": "ready",
-        "asyncapi": "missing",
-        "decision_ir": "missing"
+        "asyncapi": "ready",
+        "decision_ir": "ready"
       },
       "evidence": {
         "minimum_docs_present": true,
         "openapi_root_ref_count": 8,
         "openapi_real_path_count": 8,
         "schema_file_count": 1,
-        "asyncapi_artifact_count": 0,
+        "asyncapi_artifact_count": 8,
         "workflow_count": 1,
-        "pre_contract_evidence": false,
-        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+        "pre_contract_evidence": true,
+        "decision_ir_gate_status": "PASS"
       }
     },
     {
       "module": "audit",
       "owner": "platform-core",
-      "registry_status": "implementation_ready",
+      "registry_status": "implemented",
       "expected_surfaces": [
         "module_docs_minimum",
         "openapi_sync",
@@ -480,7 +480,7 @@
         "permissions",
         "decision_ir"
       ],
-      "readiness_pct": 88,
+      "readiness_pct": 100,
       "surface_status": {
         "module_docs_minimum": "ready",
         "openapi_sync": "ready",
@@ -489,23 +489,23 @@
         "asyncapi": "ready",
         "arazzo": "ready",
         "permissions": "ready",
-        "decision_ir": "missing"
+        "decision_ir": "ready"
       },
       "evidence": {
         "minimum_docs_present": true,
         "openapi_root_ref_count": 3,
         "openapi_real_path_count": 3,
         "schema_file_count": 1,
-        "asyncapi_artifact_count": 6,
+        "asyncapi_artifact_count": 4,
         "workflow_count": 1,
-        "pre_contract_evidence": false,
-        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+        "pre_contract_evidence": true,
+        "decision_ir_gate_status": "PASS"
       }
     },
     {
       "module": "notifications",
       "owner": "platform-core",
-      "registry_status": "implementation_ready",
+      "registry_status": "implemented",
       "expected_surfaces": [
         "module_docs_minimum",
         "openapi_sync",
@@ -514,13 +514,13 @@
         "asyncapi",
         "arazzo"
       ],
-      "readiness_pct": 83,
+      "readiness_pct": 100,
       "surface_status": {
         "module_docs_minimum": "ready",
         "openapi_sync": "ready",
         "json_schema": "ready",
         "test_matrix": "ready",
-        "asyncapi": "missing",
+        "asyncapi": "ready",
         "arazzo": "ready"
       },
       "evidence": {
@@ -528,16 +528,16 @@
         "openapi_root_ref_count": 4,
         "openapi_real_path_count": 4,
         "schema_file_count": 1,
-        "asyncapi_artifact_count": 0,
+        "asyncapi_artifact_count": 6,
         "workflow_count": 1,
-        "pre_contract_evidence": false,
-        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+        "pre_contract_evidence": true,
+        "decision_ir_gate_status": "PASS"
       }
     },
     {
       "module": "video",
       "owner": "platform-core",
-      "registry_status": "implementation_ready",
+      "registry_status": "implemented",
       "expected_surfaces": [
         "module_docs_minimum",
         "openapi_sync",
@@ -548,7 +548,7 @@
         "permissions",
         "decision_ir"
       ],
-      "readiness_pct": 88,
+      "readiness_pct": 100,
       "surface_status": {
         "module_docs_minimum": "ready",
         "openapi_sync": "ready",
@@ -557,17 +557,17 @@
         "asyncapi": "ready",
         "arazzo": "ready",
         "permissions": "ready",
-        "decision_ir": "missing"
+        "decision_ir": "ready"
       },
       "evidence": {
         "minimum_docs_present": true,
         "openapi_root_ref_count": 5,
         "openapi_real_path_count": 5,
         "schema_file_count": 4,
-        "asyncapi_artifact_count": 24,
+        "asyncapi_artifact_count": 16,
         "workflow_count": 5,
-        "pre_contract_evidence": false,
-        "decision_ir_gate_status": "SKIP_NOT_APPLICABLE"
+        "pre_contract_evidence": true,
+        "decision_ir_gate_status": "PASS"
       }
     }
   ]

@@ -31,6 +31,8 @@ Consolidar os estágios oficiais do fluxo contract-driven, com autoridade, evid�
 ## 3. Regras de Transição
 - Sem pular estágios; nenhuma implementação antes de Validation + Readiness
 - Output derivado vive em `generated/` ou `_reports/`
+- `_reports/contract_gates/latest.json` e os dashboards globais só podem ser atualizados por execução completa do pipeline (`profile=ci`, sem `--stage`); execuções parciais devem escrever relatórios escopados sem sobrescrever o baseline canônico.
+- Logs de pré-contrato legados só podem ser aceitos como `baseline_backfill` quando declararem explicitamente `reconstructed_from`; sem isso, o módulo continua sem continuidade comprovada.
 - Mudança em input global exige `python3 scripts/contracts/validate/api/compile_api_policy.py --all` antes de re-validar
 - Lifecycle normativo de módulo:
   - `draft_contract` → `validated_contract`: superfícies esperadas presentes + gates verdes
@@ -44,3 +46,19 @@ Alteração no fluxo: registrar em RULES + PIPELINE + `.contract_driven/BOOT_PRO
 
 ## 5. Enforcement Técnico
 Prompts operacionalizam; não substituem o canon. Conflito prompt ↔ canon deve bloquear.
+
+## 6. Paridade Registry × Executor
+
+Regra: todo gate inline em `validate_contracts.py` deve constar em `GATES_REGISTRY.yaml`.
+Gates com `integrated_in_validate_contracts: false` são passos externos por design.
+Teste obrigatório em CI: `tests/pipeline_gates/test_gate_registry_parity.py`.
+
+Estado apurado 2026-03-23 (FASE 1):
+
+| Gate | Decisão |
+|------|---------|
+| `SPECTRAL_LINTING_GATE` | Adicionado ao registry (order 13B) |
+| `SURFACE_PROMOTION_COHERENCE_GATE` | Adicionado ao registry (order 20B1) |
+| `SCOPE_BOUNDARY_GATE` | `integrated_in_validate_contracts: false` — passo pré-contrato externo |
+| `ARCH_DECISION_PRESENCE_GATE` | `status: deferred` — implementar quando priorizado |
+| `FRONTEND_CONTRACT_GATE` | `status: deferred` — implementar junto com Fase 5 (frontend/) |

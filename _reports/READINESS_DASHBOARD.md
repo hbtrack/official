@@ -1,80 +1,82 @@
 # Dashboard de Readiness - HB Track
-> Gerado em 2026-03-23T13:54:38Z | run_id: `20260323T135438_0b5239` | health: **100/100** | overall: **PASS**
+> Gerado em 2026-03-24T05:13:09Z | run_id: `20260324T051309_9c7118` | health: **100/100** | overall: **PASS**
 
 ## Modulos
 
 | Modulo | Status | Superficies |
 |---|---|---|
-| users | `implementation_ready` | module_docs_minimum, openapi_sync, json_schema, test_matrix, asyncapi, arazzo, permissions, decision_ir |
-| seasons | `implementation_ready` | module_docs_minimum, openapi_sync, json_schema, test_matrix, asyncapi, arazzo |
-| teams | `implementation_ready` | module_docs_minimum, openapi_sync, json_schema, test_matrix, asyncapi, arazzo |
-| training | `implementation_ready` | module_docs_minimum, openapi_sync, json_schema, test_matrix, state_model, permissions, errors, sport_science, ui_contract, arazzo, asyncapi, decision_ir |
-| wellness | `implementation_ready` | module_docs_minimum, openapi_sync, json_schema, test_matrix, sport_science, asyncapi, arazzo |
-| medical | `implementation_ready` | module_docs_minimum, openapi_sync, json_schema, test_matrix, sport_science |
-| competitions | `implementation_ready` | module_docs_minimum, openapi_sync, json_schema, test_matrix, asyncapi, arazzo |
-| matches | `implementation_ready` | module_docs_minimum, openapi_sync, json_schema, test_matrix, asyncapi, arazzo |
-| scout | `implementation_ready` | module_docs_minimum, openapi_sync, json_schema, test_matrix, asyncapi, arazzo, permissions, decision_ir |
-| exercises | `implementation_ready` | module_docs_minimum, openapi_sync, json_schema, test_matrix, permissions |
-| analytics | `implementation_ready` | module_docs_minimum, openapi_sync, json_schema, test_matrix |
-| reports | `implementation_ready` | module_docs_minimum, openapi_sync, json_schema, test_matrix |
-| ai_ingestion | `implementation_ready` | module_docs_minimum, openapi_sync, json_schema, test_matrix, asyncapi, arazzo |
-| identity_access | `implementation_ready` | module_docs_minimum, openapi_sync, json_schema, test_matrix, permissions, arazzo, asyncapi, decision_ir |
-| audit | `implementation_ready` | module_docs_minimum, openapi_sync, json_schema, test_matrix, asyncapi, arazzo, permissions, decision_ir |
-| notifications | `implementation_ready` | module_docs_minimum, openapi_sync, json_schema, test_matrix, asyncapi, arazzo |
-| video | `implementation_ready` | module_docs_minimum, openapi_sync, json_schema, test_matrix, asyncapi, arazzo, permissions, decision_ir |
+| users | `implemented` | module_docs_minimum, openapi_sync, json_schema, test_matrix, asyncapi, arazzo, permissions, decision_ir |
+| seasons | `implemented` | module_docs_minimum, openapi_sync, json_schema, test_matrix, asyncapi, arazzo |
+| teams | `implemented` | module_docs_minimum, openapi_sync, json_schema, test_matrix, asyncapi, arazzo |
+| training | `implemented` | module_docs_minimum, openapi_sync, json_schema, test_matrix, state_model, permissions, errors, sport_science, ui_contract, arazzo, asyncapi, decision_ir |
+| wellness | `implemented` | module_docs_minimum, openapi_sync, json_schema, test_matrix, sport_science, asyncapi, arazzo |
+| medical | `implemented` | module_docs_minimum, openapi_sync, json_schema, test_matrix, sport_science |
+| competitions | `implemented` | module_docs_minimum, openapi_sync, json_schema, test_matrix, asyncapi, arazzo |
+| matches | `implemented` | module_docs_minimum, openapi_sync, json_schema, test_matrix, asyncapi, arazzo |
+| scout | `implemented` | module_docs_minimum, openapi_sync, json_schema, test_matrix, asyncapi, arazzo, permissions, decision_ir |
+| exercises | `implemented` | module_docs_minimum, openapi_sync, json_schema, test_matrix, permissions |
+| analytics | `implemented` | module_docs_minimum, openapi_sync, json_schema, test_matrix |
+| reports | `implemented` | module_docs_minimum, openapi_sync, json_schema, test_matrix |
+| ai_ingestion | `implemented` | module_docs_minimum, openapi_sync, json_schema, test_matrix, asyncapi, arazzo |
+| identity_access | `implemented` | module_docs_minimum, openapi_sync, json_schema, test_matrix, permissions, arazzo, asyncapi, decision_ir |
+| audit | `implemented` | module_docs_minimum, openapi_sync, json_schema, test_matrix, asyncapi, arazzo, permissions, decision_ir |
+| notifications | `implemented` | module_docs_minimum, openapi_sync, json_schema, test_matrix, asyncapi, arazzo |
+| video | `implemented` | module_docs_minimum, openapi_sync, json_schema, test_matrix, asyncapi, arazzo, permissions, decision_ir |
 
 ## Gates
 
 | Gate | Status | Blocking |
 |---|---|---|
 | AXIOM_INTEGRITY_GATE | PASS | sim |
-| PATH_CANONICALITY_GATE | SKIP_NOT_APPLICABLE | sim |
-| REQUIRED_ARTIFACT_PRESENCE_GATE | SKIP_NOT_APPLICABLE | sim |
-| MODULE_DOC_CROSSREF_GATE | SKIP_NOT_APPLICABLE | sim |
-| API_NORMATIVE_DUPLICATION_GATE | SKIP_NOT_APPLICABLE | nao |
-| OWASP_API_CONTROL_MATRIX_GATE | SKIP_NOT_APPLICABLE | sim |
-| MODULE_SOURCE_AUTHORITY_MATRIX_GATE | SKIP_NOT_APPLICABLE | sim |
-| MODULE_REGISTRY_GATE | SKIP_NOT_APPLICABLE | sim |
-| BOUNDARY_USERS_IDENTITY_ACCESS_GATE | SKIP_NOT_APPLICABLE | sim |
-| WELLNESS_MEDICAL_BOUNDARY_GATE | SKIP_NOT_APPLICABLE | sim |
-| SCOUT_TAXONOMY_GATE | SKIP_NOT_APPLICABLE | sim |
-| ASYNC_REQUIRED_MODULE_GATE | SKIP_NOT_APPLICABLE | sim |
-| EXTERNAL_SOURCE_AUTHORITY_GATE | SKIP_NOT_APPLICABLE | sim |
-| PRE_CONTRACT_EVIDENCE_GATE | SKIP_NOT_APPLICABLE | sim |
-| SHADOW_AUTHORITY_GATE | SKIP_NOT_APPLICABLE | sim |
-| DECISION_IR_CONFORMANCE_GATE | SKIP_NOT_APPLICABLE | sim |
-| CANON_ALLOWLIST_GATE | SKIP_NOT_APPLICABLE | sim |
-| PLACEHOLDER_RESIDUE_GATE | SKIP_NOT_APPLICABLE | sim |
-| REF_HERMETICITY_GATE | SKIP_NOT_APPLICABLE | sim |
-| TOOLING_CONFIG_GATE | SKIP_NOT_APPLICABLE | sim |
-| OPENAPI_ROOT_STRUCTURE_GATE | SKIP_NOT_APPLICABLE | sim |
-| OPENAPI_ROOT_MODULE_SYNC_GATE | SKIP_NOT_APPLICABLE | sim |
-| OPENAPI_POLICY_RULESET_GATE | SKIP_NOT_APPLICABLE | sim |
-| JSON_SCHEMA_VALIDATION_GATE | SKIP_NOT_APPLICABLE | sim |
-| CROSS_SPEC_ALIGNMENT_GATE | SKIP_NOT_APPLICABLE | sim |
-| CONTRACT_BREAKING_CHANGE_GATE | SKIP_NOT_APPLICABLE | sim |
-| TRANSFORMATION_FEASIBILITY_GATE | SKIP_NOT_APPLICABLE | sim |
+| PATH_CANONICALITY_GATE | PASS | sim |
+| REQUIRED_ARTIFACT_PRESENCE_GATE | PASS | sim |
+| MODULE_DOC_CROSSREF_GATE | PASS | sim |
+| API_NORMATIVE_DUPLICATION_GATE | PASS | nao |
+| OWASP_API_CONTROL_MATRIX_GATE | PASS | sim |
+| MODULE_SOURCE_AUTHORITY_MATRIX_GATE | PASS | sim |
+| MODULE_REGISTRY_GATE | PASS | sim |
+| BOUNDARY_USERS_IDENTITY_ACCESS_GATE | PASS | sim |
+| WELLNESS_MEDICAL_BOUNDARY_GATE | PASS | sim |
+| SCOUT_TAXONOMY_GATE | PASS | sim |
+| ASYNC_REQUIRED_MODULE_GATE | PASS | sim |
+| EXTERNAL_SOURCE_AUTHORITY_GATE | PASS | sim |
+| PRE_CONTRACT_EVIDENCE_GATE | PASS | sim |
+| SHADOW_AUTHORITY_GATE | PASS | sim |
+| DECISION_IR_CONFORMANCE_GATE | PASS | sim |
+| CANON_ALLOWLIST_GATE | PASS | sim |
+| PLACEHOLDER_RESIDUE_GATE | PASS | sim |
+| REF_HERMETICITY_GATE | PASS | sim |
+| TOOLING_CONFIG_GATE | PASS | sim |
+| OPENAPI_ROOT_STRUCTURE_GATE | PASS | sim |
+| OPENAPI_ROOT_MODULE_SYNC_GATE | PASS | sim |
+| OPENAPI_POLICY_RULESET_GATE | PASS | sim |
+| JSON_SCHEMA_VALIDATION_GATE | PASS | sim |
+| CROSS_SPEC_ALIGNMENT_GATE | PASS | sim |
+| CONTRACT_BREAKING_CHANGE_GATE | PASS | sim |
+| TRANSFORMATION_FEASIBILITY_GATE | PASS | sim |
 | HTTP_RUNTIME_CONTRACT_GATE | SKIP_NOT_APPLICABLE | sim |
-| ASYNCAPI_VALIDATION_GATE | SKIP_NOT_APPLICABLE | sim |
-| ARAZZO_VALIDATION_GATE | SKIP_NOT_APPLICABLE | sim |
-| SPECTRAL_LINTING_GATE | SKIP_NOT_APPLICABLE | nao |
-| ARAZZO_COMPLETENESS_GATE | SKIP_NOT_APPLICABLE | sim |
-| UI_DOC_VALIDATION_GATE | SKIP_NOT_APPLICABLE | sim |
-| DERIVED_DRIFT_GATE | SKIP_NOT_APPLICABLE | sim |
-| ADVERSARIAL_ANALYSIS_GATE | SKIP_NOT_APPLICABLE | nao |
-| FEATURE_READINESS_GATE | SKIP_NOT_APPLICABLE | nao |
-| VERSIONING_POLICY_GATE | SKIP_NOT_APPLICABLE | nao |
+| ASYNCAPI_VALIDATION_GATE | PASS | sim |
+| ARAZZO_VALIDATION_GATE | PASS | sim |
+| SPECTRAL_LINTING_GATE | PASS | sim |
+| ARAZZO_COMPLETENESS_GATE | PASS | sim |
+| UI_DOC_VALIDATION_GATE | PASS | sim |
+| DERIVED_DRIFT_GATE | PASS | sim |
+| ADVERSARIAL_ANALYSIS_GATE | PASS | nao |
+| FEATURE_READINESS_GATE | PASS | nao |
+| VERSIONING_POLICY_GATE | PASS | nao |
 | PACT_PROVIDER_GATE | SKIP_NOT_APPLICABLE | nao |
-| CODE_ARCHITECTURE_GATE | SKIP_NOT_APPLICABLE | nao |
-| DEPLOY_READINESS_GATE | SKIP_NOT_APPLICABLE | nao |
-| DATA_MIGRATION_GATE | SKIP_NOT_APPLICABLE | nao |
-| MONITORING_POLICY_GATE | SKIP_NOT_APPLICABLE | nao |
-| HANDOFF_COHERENCE_GATE | PASS | nao |
+| CODE_ARCHITECTURE_GATE | PASS | nao |
+| DEPLOY_READINESS_GATE | PASS | nao |
+| DATA_MIGRATION_GATE | PASS | nao |
+| MONITORING_POLICY_GATE | PASS | nao |
+| HANDOFF_COHERENCE_GATE | PASS | sim |
 | MODULE_STATUS_COHERENCE_GATE | PASS | sim |
-| SURFACE_PROMOTION_COHERENCE_GATE | SKIP_NOT_APPLICABLE | nao |
-| CROSS_MODULE_BOUNDARY_GATE | SKIP_NOT_APPLICABLE | nao |
-| MODULE_DEPENDENCY_RESOLUTION_GATE | SKIP_NOT_APPLICABLE | sim |
-| WAIVER_VALIDITY_GATE | SKIP_NOT_APPLICABLE | sim |
-| READINESS_GENERATION_COMPATIBILITY_GATE | SKIP_NOT_APPLICABLE | sim |
+| SURFACE_PROMOTION_COHERENCE_GATE | PASS | sim |
+| CROSS_MODULE_BOUNDARY_GATE | PASS | nao |
+| MODULE_DEPENDENCY_RESOLUTION_GATE | PASS | sim |
+| WAIVER_VALIDITY_GATE | PASS | sim |
+| READINESS_GENERATION_COMPATIBILITY_GATE | PASS | sim |
 | READINESS_HUMAN_CONFIRMATION_GATE | SKIP_NOT_APPLICABLE | sim |
+| FEATURE_COVERAGE_GATE | PASS | sim |
+| LEGACY_CRITICAL_PATH_GATE | PASS | sim |
 | READINESS_SUMMARY_GATE | PASS | nao |

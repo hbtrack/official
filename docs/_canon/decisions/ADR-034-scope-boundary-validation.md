@@ -1,14 +1,18 @@
 ---
-adr_id: ADR-031
+adr_id: ADR-034
 title: "Scope Boundary Validation — Detectar Referências Cross-Module"
 status: proposed
 date: "2026-03-18"
 deciders: [tech-lead, platform-architect]
 decision: D5.3
+state_semantics: governance
+supersedes: []
+superseded_by: []
+related_adrs: [ADR-031]
 tags: [governance, pipeline, validation, scope, cdd]
 ---
 
-# ADR-031 — Validação de Boundary entre Módulos
+# ADR-034 — Validação de Boundary entre Módulos
 
 ## Contexto
 
@@ -198,7 +202,7 @@ Fase 1 — Descoberta de Artefatos
 - Pro: rápido, sem novos artefatos
 - Con: code escatterd, não centralizável, não rastreável
 
-### **Opção Recomendada: #ADR-031 (proposta above)**
+### **Opção Recomendada: #ADR-034 (proposta above)**
 - Oferece balanço entre segurança (block early) e flexibilidade (policy + ADR exceptions)
 
 ## Artefato Normativo
@@ -228,7 +232,7 @@ Fase 1 — Descoberta de Artefatos
 
 ## Dependências e Ordem de Implementação
 
-1. **Pré-requisito**: ADR-031 discussão e aprovação
+1. **Pré-requisito**: ADR-034 discussão e aprovação
 2. **Passo 1**: Criar SCOPE_BOUNDARY_POLICY.md (16 módulos × allowed/forbidden/exceptions)
 3. **Passo 2**: Criar check_scope_boundary.py validator
 3. **Passo 3**: Atualizar RULES §9 + docs/_canon/AGENT_INSTRUCTIONS.md §5

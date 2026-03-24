@@ -40,5 +40,5 @@ Enquanto a plataforma estiver em v0 (pré-produção), versão não é exposta. 
 ## Links
 
 - SSOT de API: `.contract_driven/templates/api/api_rules.yaml`
-- Related docs: `docs/_canon/API_CONVENTIONS.md`, `docs/_canon/CHANGE_POLICY.md`
+- Related docs: `docs/_canon/OPERATIONS.md`, `docs/_canon/CHANGE_POLICY.md`
 - Related contracts: `contracts/openapi/openapi.yaml`

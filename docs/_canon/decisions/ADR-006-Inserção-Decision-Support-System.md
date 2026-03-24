@@ -21,7 +21,7 @@ Criar uma camada formal de **Decision Support System (DSS)** dentro do fluxo con
 
 2. **DSS como apoio, não como SSOT** — o DSS gera proposta estruturada (contexto, problema, alternativas, recomendação, trade-offs, riscos, impacto em canon/contratos), mas a decisão final pertence ao humano. Nenhuma sugestão do DSS pode ser executada silenciosamente.
 
-3. **Promoção obrigatória** — toda decisão aprovada deve ser promovida para `docs/_canon/decisions/ADR-*.md` e, quando necessário, refletida em `ARCHITECTURE.md`, `API_CONVENTIONS.md`, `DATA_CONVENTIONS.md`, `SECURITY_RULES.md` e contratos técnicos.
+3. **Promoção obrigatória** — toda decisão aprovada deve ser promovida para `docs/_canon/decisions/ADR-*.md` e, quando necessário, refletida em `ARCHITECTURE.md`, `OPERATIONS.md`, `DATA_CONVENTIONS.md`, `SECURITY_RULES.md` e contratos técnicos.
 
 4. **Checklist mínima de lacunas arquiteturais** — o DSS deve avaliar obrigatoriamente os seguintes tópicos antes de qualquer contrato de produção:
    `AUTH_STRATEGY`, `AUTHZ_STRATEGY`, `VERSIONING_STRATEGY`, `DEPRECATION_POLICY`, `DATE_TIME_STANDARD`, `TIMEZONE_POLICY`, `SENSITIVE_DATA_POLICY`, `RETENTION_POLICY`, `MASKING_POLICY`, `SECRETS_POLICY`, `ROTATION_POLICY`, `LOGGING_POLICY`.

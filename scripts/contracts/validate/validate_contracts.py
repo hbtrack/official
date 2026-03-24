@@ -4,7 +4,8 @@ HB Track -- validate_contracts.py
 Contrato mínimo (sem interpretação livre):
 - Este script consome `.contract_driven/DOMAIN_AXIOMS.json` e aplica validações determinísticas.
 - As funções públicas abaixo DEVEM existir com as assinaturas exatas (pipeline contract).
-- O script gera evidência machine-readable em `_reports/contract_gates/latest.json`.
+- Execução completa (`profile=ci`, sem `--stage`) atualiza `_reports/contract_gates/latest.json`.
+- Execuções parciais devem gerar evidência machine-readable em caminho escopado sob `_reports/contract_gates/`.
 
 Blocking codes que o script deve conhecer:
   BLOCKED_ENUM_OUTSIDE_AXIOMS
@@ -102,6 +103,8 @@ BLOCKED_AXIOM_INVALID_NORMALIZATION_POLICY = "BLOCKED_AXIOM_INVALID_NORMALIZATIO
 BLOCKED_AXIOM_INVALID_NORMALIZATION_REGEX = "BLOCKED_AXIOM_INVALID_NORMALIZATION_REGEX"
 BLOCKED_AXIOM_INVALID_VALIDATOR_CONTRACT = "BLOCKED_AXIOM_INVALID_VALIDATOR_CONTRACT"
 BLOCKED_AXIOM_INTEGRITY = "BLOCKED_AXIOM_INTEGRITY"
+BLOCKED_FEATURE_COVERAGE_MISSING = "BLOCKED_FEATURE_COVERAGE_MISSING"
+BLOCKED_LEGACY_IN_CRITICAL_PATH = "BLOCKED_LEGACY_IN_CRITICAL_PATH"  # FASE 7
 
 MODULE_STATUS_ORDER = (
     "scaffold",
@@ -178,6 +181,8 @@ _KNOWN_BLOCKING_CODES = {
     BLOCKED_AXIOM_INVALID_NORMALIZATION_REGEX,
     BLOCKED_AXIOM_INVALID_VALIDATOR_CONTRACT,
     BLOCKED_AXIOM_INTEGRITY,
+    BLOCKED_FEATURE_COVERAGE_MISSING,
+    BLOCKED_LEGACY_IN_CRITICAL_PATH,  # FASE 7
 }
 
 
@@ -2544,32 +2549,8 @@ def _try_tool(
     if env:
         merged_env = dict(os.environ)
         merged_env.update(env)
-    
-    # On Linux/WSL, source nvm if available to make Node.js tools accessible
-    if sys.platform == "linux" and pathlib.Path.home().joinpath(".nvm/nvm.sh").exists():
-        # Wrap command with nvm loader for npm-installed tools (node, npm, npx, and global CLIs)
-        nvm_load = ". ~/.nvm/nvm.sh && "
-        cmd_str = " ".join(f'"{c}"' if " " in c else c for c in cmd)
-        full_cmd = f'{nvm_load}{cmd_str}'
-        try:
-            result = subprocess.run(
-                ["/bin/bash", "-c", full_cmd],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                cwd=str(cwd) if cwd else None,
-                env=merged_env,
-                timeout=10,
-            )
-            stdout = (result.stdout or b"").decode("utf-8", errors="replace")
-            stderr = (result.stderr or b"").decode("utf-8", errors="replace")
-            return result.returncode, stdout, stderr
-        except subprocess.TimeoutExpired:
-            return -1, "", f"Tool timed out (WSL/Windows interop): {cmd[0]}"
-        except FileNotFoundError:
-            return -1, "", f"Tool not found: {cmd[0]}"
-    
-    # Original Windows/fallback behavior
-    try:
+
+    def _run_direct() -> tuple[int, str, str]:
         result = subprocess.run(
             list(cmd),
             stdout=subprocess.PIPE,
@@ -2577,14 +2558,39 @@ def _try_tool(
             cwd=str(cwd) if cwd else None,
             shell=use_shell,
             env=merged_env,
-            timeout=10,
+            timeout=30,
         )
         stdout = (result.stdout or b"").decode("utf-8", errors="replace")
         stderr = (result.stderr or b"").decode("utf-8", errors="replace")
         return result.returncode, stdout, stderr
+
+    try:
+        return _run_direct()
     except subprocess.TimeoutExpired:
         return -1, "", f"Tool timed out: {cmd[0]}"
     except FileNotFoundError:
+        node_tool = pathlib.Path(cmd[0]).name in {"node", "npm", "npx"}
+        nvm_path = pathlib.Path.home().joinpath(".nvm/nvm.sh")
+        if sys.platform == "linux" and node_tool and nvm_path.exists():
+            nvm_load = ". ~/.nvm/nvm.sh && "
+            cmd_str = " ".join(f'"{c}"' if " " in c else c for c in cmd)
+            full_cmd = f"{nvm_load}{cmd_str}"
+            try:
+                result = subprocess.run(
+                    ["/bin/bash", "-c", full_cmd],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    cwd=str(cwd) if cwd else None,
+                    env=merged_env,
+                    timeout=30,
+                )
+                stdout = (result.stdout or b"").decode("utf-8", errors="replace")
+                stderr = (result.stderr or b"").decode("utf-8", errors="replace")
+                return result.returncode, stdout, stderr
+            except subprocess.TimeoutExpired:
+                return -1, "", f"Tool timed out (nvm fallback): {cmd[0]}"
+            except FileNotFoundError:
+                return -1, "", f"Tool not found: {cmd[0]}"
         return -1, "", f"Tool not found: {cmd[0]}"
 
 
@@ -4090,6 +4096,23 @@ def _load_agent_execution_log(path: pathlib.Path, root: pathlib.Path) -> tuple[d
             "message": "Campo `module` deve ser string não vazia.",
             "severity": "error",
         })
+    evidence_mode = data.get("evidence_mode", "live_session")
+    if evidence_mode not in {"live_session", "baseline_backfill"}:
+        violations.append({
+            "blocking_code": BLOCKED_PRE_CONTRACT_EVIDENCE,
+            "artifact": str(path.relative_to(root)),
+            "message": f"evidence_mode inválido: {evidence_mode!r}",
+            "severity": "error",
+        })
+    if evidence_mode == "baseline_backfill":
+        reconstructed_from = data.get("reconstructed_from")
+        if not isinstance(reconstructed_from, list) or not reconstructed_from:
+            violations.append({
+                "blocking_code": BLOCKED_PRE_CONTRACT_EVIDENCE,
+                "artifact": str(path.relative_to(root)),
+                "message": "baseline_backfill exige `reconstructed_from` não vazio.",
+                "severity": "error",
+            })
     entries = data.get("entries")
     if not isinstance(entries, list) or not entries:
         violations.append({
@@ -4149,6 +4172,46 @@ def _load_decision_ir_runner(root: pathlib.Path):
     if runner is None:
         raise RuntimeError("decision_ir_gate.py não expõe `run_decision_ir_gate`.")
     return runner
+
+
+def _load_structured_doc(path: pathlib.Path):
+    if path.suffix == ".json":
+        return _load_json(path)
+    return _load_yaml(path)
+
+
+def _canonical_decision_ir_path(root: pathlib.Path, module: str) -> pathlib.Path:
+    return root / ".contract_driven" / "decisions" / f"DECISION_IR_{module.upper()}.yaml"
+
+
+def _module_surface_present(root: pathlib.Path, module: str, surface: str) -> bool:
+    module_dir = root / "docs" / "hbtrack" / "modulos" / module
+    up = module.upper()
+    if surface == "module_docs_minimum":
+        return _module_minimum_docs_present(root, module)
+    if surface == "openapi_sync":
+        return (root / "contracts" / "openapi" / "paths" / f"{module}.yaml").exists()
+    if surface == "json_schema":
+        return _module_schema_count(root, module) > 0
+    if surface == "test_matrix":
+        return (module_dir / f"TEST_MATRIX_{up}.md").exists()
+    if surface == "state_model":
+        return (module_dir / f"STATE_MODEL_{up}.md").exists()
+    if surface == "permissions":
+        return (module_dir / f"PERMISSIONS_{up}.md").exists()
+    if surface == "errors":
+        return (module_dir / f"ERRORS_{up}.md").exists()
+    if surface == "sport_science":
+        return (module_dir / f"SPORT_SCIENCE_RULES_{up}.md").exists()
+    if surface == "ui_contract":
+        return (module_dir / f"UI_CONTRACT_{up}.md").exists()
+    if surface == "asyncapi":
+        return _module_asyncapi_artifact_count(root, module) > 0
+    if surface == "arazzo":
+        return _module_workflow_count(root, module) > 0
+    if surface == "decision_ir":
+        return _module_has_decision_ir(root, module)
+    return False
 
 
 def _g2e_boundary_users_identity_access(root: pathlib.Path) -> dict:
@@ -4637,6 +4700,31 @@ def _g2j_pre_contract_evidence(root: pathlib.Path) -> dict:
     )
 
 
+# Caminhos raiz soberanos: markdowns nestes prefixos são normativos por design e excluídos do scan
+_ROOT_SOVEREIGN_PREFIXES: tuple[str, ...] = (
+    "docs/_canon",
+    ".contract_driven",
+    ".github",
+    "_archive",
+    "temp",
+    "_reports",
+)
+
+
+# Prefixos de nomes de arquivos de raiz que são artefatos operacionais/planejamento — excluídos do scan de shadow authority
+_ROOT_OPERATIONAL_SKIP_PREFIXES: tuple[str, ...] = (
+    "SESSION_HANDOFF",          # estado operacional de continuidade
+    "ROADMAP",                  # roadmap oficial do produto
+    "FINAL_HANDOFF",            # handoff operacional
+    "HISTORICO",                # registro histórico
+    "README",                   # readme padrão
+    "AGENT_COMPLIANCE",         # plano de execução de compliance
+    "AGENT.",                   # agent.md bridge
+    "plano",                    # planejamento
+    "design",                   # doc de design
+)
+
+
 def _g2k_shadow_authority(root: pathlib.Path) -> dict:
     t0 = time.monotonic()
     gate_id = "SHADOW_AUTHORITY_GATE"
@@ -4646,7 +4734,22 @@ def _g2k_shadow_authority(root: pathlib.Path) -> dict:
     ]
     existing_shadow_dirs = [path for path in shadow_dirs if path.exists()]
     checked = [str(path) for path in shadow_dirs]
-    if not existing_shadow_dirs:
+
+    # FASE 7: também varrer markdowns diretamente na raiz de repo (fora de áreas soberanas)
+    root_md_files = sorted(
+        p for p in root.glob("*.md")
+        if not any(
+            str(p.relative_to(root)).startswith(pfx)
+            for pfx in _ROOT_SOVEREIGN_PREFIXES
+        )
+        and not any(
+            p.name.startswith(pfx) or p.name.lower().startswith(pfx.lower())
+            for pfx in _ROOT_OPERATIONAL_SKIP_PREFIXES
+        )
+    )
+    checked.extend(str(p) for p in root_md_files)
+
+    if not existing_shadow_dirs and not root_md_files:
         return _skip(gate_id, "Nenhum diretório não-soberano monitorado encontrado.", _ms(t0))
 
     authority_patterns = [
@@ -4668,27 +4771,42 @@ def _g2k_shadow_authority(root: pathlib.Path) -> dict:
         re.compile(r"n[aã]o substitui", re.IGNORECASE),
         re.compile(r"fonte de racioc[ií]nio", re.IGNORECASE),
         re.compile(r"\bdss\b", re.IGNORECASE),
+        # FASE 7: padrões em inglês para bridge docs
+        re.compile(r"non[- ]sovereign", re.IGNORECASE),
+        re.compile(r"bridge\s+only", re.IGNORECASE),
     ]
 
+    def _scan_md(path: pathlib.Path) -> dict | None:
+        """Retorna violação se o arquivo contém authority pattern sem disclaimer, else None."""
+        try:
+            text = path.read_text(encoding="utf-8", errors="replace")
+        except Exception:
+            return None
+        if not any(p.search(text) for p in authority_patterns):
+            return None
+        top = "\n".join(text.splitlines()[:40])
+        if any(p.search(top) for p in disclaimer_patterns):
+            return None
+        return {
+            "blocking_code": BLOCKED_SHADOW_AUTHORITY,
+            "artifact": str(path.relative_to(root)),
+            "message": "Documento não-soberano contém linguagem de autoridade sem disclaimer explícito no topo.",
+            "severity": "error",
+        }
+
     violations: list[dict] = []
+    # Scan de dirs shadow existentes (comportamento original)
     for shadow_dir in existing_shadow_dirs:
         for path in sorted(shadow_dir.rglob("*.md")):
             checked.append(str(path))
-            try:
-                text = path.read_text(encoding="utf-8", errors="replace")
-            except Exception:
-                continue
-            if not any(p.search(text) for p in authority_patterns):
-                continue
-            top = "\n".join(text.splitlines()[:40])
-            if any(p.search(top) for p in disclaimer_patterns):
-                continue
-            violations.append({
-                "blocking_code": BLOCKED_SHADOW_AUTHORITY,
-                "artifact": str(path.relative_to(root)),
-                "message": "Documento não-soberano contém linguagem de autoridade sem disclaimer explícito no topo.",
-                "severity": "error",
-            })
+            v = _scan_md(path)
+            if v:
+                violations.append(v)
+    # FASE 7: scan de markdowns de raiz
+    for path in root_md_files:
+        v = _scan_md(path)
+        if v:
+            violations.append(v)
 
     if violations:
         return _pg(
@@ -4732,104 +4850,72 @@ def _g2l_decision_ir_conformance(root: pathlib.Path) -> dict:
     ])
     if not eligible_modules:
         return _skip(gate_id, "Nenhum módulo implementation_ready+ requer Decision IR no momento.", _ms(t0))
-
-    ir_path = root / ".dev" / "MODULE_DECISION_IR.json"
-    schema_path = root / ".dev" / "decisões" / "MODULE_DECISION_IR_SCHEMA.json"
-    checked.extend([str(ir_path), str(schema_path)])
-    if not ir_path.exists():
-        return _pg(
-            gate_id,
-            "FAIL",
-            True,
-            "IR_SCHEMA_INVALID",
-            "MODULE_DECISION_IR ausente para módulo implementation_ready+.",
-            [],
-            checked,
-            [],
-            [{
+    violations: list[dict] = []
+    for module in eligible_modules:
+        ir_path = _canonical_decision_ir_path(root, module)
+        checked.append(str(ir_path))
+        if not ir_path.exists():
+            violations.append({
                 "blocking_code": "IR_SCHEMA_INVALID",
                 "artifact": str(ir_path.relative_to(root)),
-                "message": "Arquivo obrigatório ausente.",
+                "message": f"Decision IR canônico ausente para o módulo `{module}`.",
                 "severity": "error",
-            }],
-            _ms(t0),
-        )
+            })
+            continue
 
-    try:
-        ir_data = _load_json(ir_path)
-    except Exception as e:
-        return _pg(
-            gate_id,
-            "FAIL",
-            True,
-            "IR_SCHEMA_INVALID",
-            f"Falha ao ler MODULE_DECISION_IR: {e}",
-            [],
-            checked,
-            [],
-            [{
+        try:
+            ir_data = _load_structured_doc(ir_path)
+        except Exception as e:
+            violations.append({
                 "blocking_code": "IR_SCHEMA_INVALID",
                 "artifact": str(ir_path.relative_to(root)),
-                "message": f"Erro ao parsear JSON: {e}",
+                "message": f"Falha ao ler Decision IR canônico: {e}",
                 "severity": "error",
-            }],
-            _ms(t0),
-        )
+            })
+            continue
 
-    ir_module = ir_data.get("module")
-    if not isinstance(ir_module, str) or ir_module not in eligible_modules:
-        return _pg(
-            gate_id,
-            "FAIL",
-            True,
-            "IR_UNKNOWN_MODULE",
-            "MODULE_DECISION_IR não está alinhado ao(s) módulo(s) implementation_ready+ do registry.",
-            [],
-            checked,
-            [],
-            [{
+        if not isinstance(ir_data, dict):
+            violations.append({
+                "blocking_code": "IR_SCHEMA_INVALID",
+                "artifact": str(ir_path.relative_to(root)),
+                "message": "Decision IR deve ser objeto/dicionário no topo.",
+                "severity": "error",
+            })
+            continue
+
+        decisions = ir_data.get("decisions")
+        if isinstance(decisions, list) and decisions:
+            continue
+
+        ir_module = ir_data.get("module")
+        if ir_module != module:
+            violations.append({
                 "blocking_code": "IR_UNKNOWN_MODULE",
                 "artifact": str(ir_path.relative_to(root)),
-                "message": f"module={ir_module!r} não pertence ao conjunto elegível {eligible_modules}.",
+                "message": f"module={ir_module!r} diverge do módulo esperado `{module}`.",
                 "severity": "error",
-            }],
-            _ms(t0),
-        )
-
-    try:
-        runner = _load_decision_ir_runner(root)
-        result = runner(ir_path, schema_path)
-    except Exception as e:
-        return _pg(
-            gate_id,
-            "FAIL",
-            True,
-            "ERROR_INFRA",
-            f"Falha ao executar decision_ir_gate.py: {e}",
-            [],
-            checked,
-            [],
-            [{
-                "blocking_code": "ERROR_INFRA",
-                "artifact": "scripts/contracts/validate/decision_ir_gate.py",
-                "message": f"Erro ao carregar/executar gate: {e}",
+            })
+        if not isinstance(ir_data.get("status"), str) or not ir_data.get("status"):
+            violations.append({
+                "blocking_code": "IR_SCHEMA_INVALID",
+                "artifact": str(ir_path.relative_to(root)),
+                "message": "Campo obrigatório `status` ausente ou vazio.",
                 "severity": "error",
-            }],
-            _ms(t0),
-        )
-
-    raw_violations = result.get("violations") or []
-    violations: list[dict] = []
-    for v in raw_violations:
-        if not isinstance(v, dict):
-            continue
-        violations.append({
-            "blocking_code": v.get("blocking_code") or v.get("code") or "IR_SCHEMA_INVALID",
-            "artifact": str(ir_path.relative_to(root)),
-            "message": v.get("message", "Violação de Decision IR."),
-            "severity": v.get("severity", "error"),
-            "details": {k: v.get(k) for k in ("path", "code") if k in v},
-        })
+            })
+        if not isinstance(ir_data.get("decision_scope"), str) or not ir_data.get("decision_scope"):
+            violations.append({
+                "blocking_code": "IR_SCHEMA_INVALID",
+                "artifact": str(ir_path.relative_to(root)),
+                "message": "Campo obrigatório `decision_scope` ausente ou vazio.",
+                "severity": "error",
+            })
+        if not ir_data.get("source"):
+            violations.append({
+                "blocking_code": "IR_SCHEMA_INVALID",
+                "artifact": str(ir_path.relative_to(root)),
+                "message": "Campo obrigatório `source` ausente ou vazio.",
+                "severity": "error",
+            })
 
     if violations:
         return _pg(
@@ -4837,7 +4923,7 @@ def _g2l_decision_ir_conformance(root: pathlib.Path) -> dict:
             "FAIL",
             True,
             violations[0]["blocking_code"],
-            f"MODULE_DECISION_IR inválido: {len(violations)} violação(ões).",
+            f"Decision IR canônico inválido: {len(violations)} violação(ões).",
             [],
             checked,
             [],
@@ -4850,7 +4936,7 @@ def _g2l_decision_ir_conformance(root: pathlib.Path) -> dict:
         "PASS",
         True,
         None,
-        "MODULE_DECISION_IR válido para o(s) módulo(s) implementation_ready+.",
+        f"Decision IR canônico válido para {len(eligible_modules)} módulo(s) implementation_ready+.",
         [],
         checked,
         [],
@@ -4918,6 +5004,11 @@ def _g2n_canon_allowlist(root: pathlib.Path) -> dict:
         "MODULE_ROADMAP_2026_03_17.md",
         # Política de regressão obrigatória (suíte de sobrevivência)
         "SURVIVAL_SUITE_POLICY.md",
+        # Adicionados por ANALISEARQUITETURA.md FASE 4 — artefatos de runtime e componentes
+        "C4_COMPONENTS_BACKEND.md",
+        "INTEGRATION_FLOWS.md",
+        "RUNTIME_CURRENT_STATE.md",
+        "ADR_INDEX.md",
     })
 
     # Subdiretórios autorizados
@@ -7046,6 +7137,7 @@ def _g_handoff_coherence(root: pathlib.Path) -> dict:
     required_sections = [
         "## Estado Geral",
         "## O que foi feito",
+        "## Evidências",
         "## Próxima ação permitida",
         "## Bloqueios ativos",
     ]
@@ -7064,7 +7156,17 @@ def _g_handoff_coherence(root: pathlib.Path) -> dict:
         try:
             session_date = datetime.date.fromisoformat(str(session_date_raw))
             age_days = (datetime.date.today() - session_date).days
-            if age_days > 30:
+            if age_days < 0:
+                violations.append({
+                    "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+                    "artifact": "SESSION_HANDOFF.md",
+                    "message": (
+                        f"data_ultima_sessao '{session_date}' está no futuro "
+                        f"({abs(age_days)} dia(s) à frente de hoje) — handoff inválido."
+                    ),
+                    "severity": "error",
+                })
+            elif age_days > 30:
                 violations.append({
                     "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
                     "artifact": "SESSION_HANDOFF.md",
@@ -7093,11 +7195,168 @@ def _g_handoff_coherence(root: pathlib.Path) -> dict:
             })
     except Exception:
         pass
+    if isinstance(front_matter, dict):
+        mode = front_matter.get("modo_operacao")
+        task_type = str(front_matter.get("task_type") or "")
+        boot_profile = front_matter.get("boot_profile_id")
+        if mode == "ROADMAP":
+            if task_type != "execute_roadmap_phase":
+                violations.append({
+                    "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+                    "artifact": "SESSION_HANDOFF.md",
+                    "message": "modo_operacao=ROADMAP exige task_type=execute_roadmap_phase.",
+                    "severity": "error",
+                })
+            if boot_profile != "roadmap_execution":
+                violations.append({
+                    "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+                    "artifact": "SESSION_HANDOFF.md",
+                    "message": "modo_operacao=ROADMAP exige boot_profile_id=roadmap_execution.",
+                    "severity": "error",
+                })
+        if mode == "CDD" and boot_profile == "roadmap_execution":
+            violations.append({
+                "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+                "artifact": "SESSION_HANDOFF.md",
+                "message": "modo_operacao=CDD não pode usar boot_profile_id=roadmap_execution.",
+                "severity": "error",
+            })
+
+        result_value = front_matter.get("resultado")
+        blockers = front_matter.get("bloqueios_ativos") or []
+        if result_value == "DONE" and blockers:
+            violations.append({
+                "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+                "artifact": "SESSION_HANDOFF.md",
+                "message": "resultado=DONE não pode coexistir com bloqueios_ativos não vazios.",
+                "severity": "error",
+            })
+        if result_value == "BLOCKED" and not blockers:
+            violations.append({
+                "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+                "artifact": "SESSION_HANDOFF.md",
+                "message": "resultado=BLOCKED exige ao menos um item em bloqueios_ativos.",
+                "severity": "error",
+            })
+
+        evidence_paths = front_matter.get("evidence_paths") or []
+        report_evidence: dict | None = None
+        for raw_path in evidence_paths:
+            evidence_rel = pathlib.Path(str(raw_path))
+            evidence_abs = root / evidence_rel
+            checked.append(str(evidence_abs))
+            if not evidence_abs.exists():
+                violations.append({
+                    "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+                    "artifact": "SESSION_HANDOFF.md",
+                    "message": f"Evidência declarada não existe: {raw_path}",
+                    "severity": "error",
+                })
+                continue
+            if evidence_abs.suffix != ".json":
+                continue
+            try:
+                evidence_data = _load_json(evidence_abs)
+            except Exception as exc:
+                violations.append({
+                    "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+                    "artifact": "SESSION_HANDOFF.md",
+                    "message": f"Evidência JSON inválida em {raw_path}: {exc}",
+                    "severity": "error",
+                })
+                continue
+            if evidence_data.get("pipeline_id") == "HB_TRACK_CONTRACT_GATES":
+                report_evidence = evidence_data
+
+        ci_status = front_matter.get("ci_status")
+        if ci_status != "UNKNOWN":
+            if report_evidence is None:
+                violations.append({
+                    "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+                    "artifact": "SESSION_HANDOFF.md",
+                    "message": "ci_status diferente de UNKNOWN exige relatório de gates em evidence_paths.",
+                    "severity": "error",
+                })
+            else:
+                execution_context = report_evidence.get("execution_context") or {}
+                if execution_context.get("canonical_scope") != "full_pipeline":
+                    violations.append({
+                        "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+                        "artifact": "SESSION_HANDOFF.md",
+                        "message": "Handoff só pode usar relatório de gates com canonical_scope=full_pipeline.",
+                        "severity": "error",
+                    })
+                overall = report_evidence.get("overall_status")
+                if ci_status == "PASS" and overall != "PASS":
+                    violations.append({
+                        "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+                        "artifact": "SESSION_HANDOFF.md",
+                        "message": f"ci_status=PASS diverge do relatório canônico ({overall}).",
+                        "severity": "error",
+                    })
+                if ci_status == "FAIL" and overall == "PASS":
+                    violations.append({
+                        "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+                        "artifact": "SESSION_HANDOFF.md",
+                        "message": "ci_status=FAIL diverge do relatório canônico PASS.",
+                        "severity": "error",
+                    })
+
+    # Validação cruzada com _reports/session_start.json (FASE 3 — unified session state)
+    session_json_path = root / "_reports" / "session_start.json"
+    if session_json_path.exists() and isinstance(front_matter, dict):
+        try:
+            session_data = _load_json(session_json_path)
+            _cross_checks = [
+                ("operation_mode", "modo_operacao", "modo de operação"),
+                ("module_focus", "modulo_foco", "módulo foco"),
+            ]
+            for sess_field, hoff_field, label in _cross_checks:
+                sess_val = session_data.get(sess_field)
+                hoff_val = front_matter.get(hoff_field)
+                if sess_val and hoff_val and sess_val != hoff_val:
+                    violations.append({
+                        "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+                        "artifact": "SESSION_HANDOFF.md",
+                        "message": (
+                            f"Divergência de {label}: "
+                            f"session_start.{sess_field}='{sess_val}'"
+                            f" != SESSION_HANDOFF.{hoff_field}='{hoff_val}'."
+                        ),
+                        "severity": "error",
+                    })
+            sess_phase = session_data.get("roadmap_phase")
+            hoff_phase = front_matter.get("fase_roadmap")
+            if sess_phase is not None and hoff_phase is not None and sess_phase != hoff_phase:
+                violations.append({
+                    "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+                    "artifact": "SESSION_HANDOFF.md",
+                    "message": (
+                        f"Divergência de fase: session_start.roadmap_phase={sess_phase}"
+                        f" != SESSION_HANDOFF.fase_roadmap={hoff_phase}."
+                    ),
+                    "severity": "error",
+                })
+            sess_tid = session_data.get("roadmap_task_id")
+            hoff_tid = front_matter.get("task_id")
+            if sess_tid and hoff_tid and sess_tid != hoff_tid:
+                violations.append({
+                    "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+                    "artifact": "SESSION_HANDOFF.md",
+                    "message": (
+                        f"Divergência de task_id: session_start.roadmap_task_id='{sess_tid}'"
+                        f" != SESSION_HANDOFF.task_id='{hoff_tid}'."
+                    ),
+                    "severity": "error",
+                })
+        except Exception:
+            pass  # session_start.json inacessível ou malformado — cross-check ignorado
+
     if violations:
-        return _pg(gate_id, "FAIL", False, "BLOCKED_HANDOFF_INCOMPLETE",
+        return _pg(gate_id, "FAIL", True, "BLOCKED_HANDOFF_INCOMPLETE",
                    f"SESSION_HANDOFF.md com {len(violations)} inconsistência(s).",
                    checked, checked, [], violations, _ms(t0))
-    return _pg(gate_id, "PASS", False, None,
+    return _pg(gate_id, "PASS", True, None,
                "SESSION_HANDOFF.md coerente com estado atual.",
                checked, checked, [], [], _ms(t0))
 
@@ -7124,7 +7383,31 @@ def _g_module_status_coherence(root: pathlib.Path) -> dict:
         if not isinstance(mod_data, dict):
             continue
         status = mod_data.get("status", "draft_contract")
-        if status not in high_statuses or not adversarial_dir.exists():
+        if status not in high_statuses:
+            continue
+        expected_surfaces = list(mod_data.get("expected_surfaces") or [])
+        missing_surfaces = [surface for surface in expected_surfaces if not _module_surface_present(root, mod_name, surface)]
+        if missing_surfaces:
+            violations.append({
+                "blocking_code": "BLOCKED_REGISTRY_MISMATCH",
+                "artifact": f"docs/_canon/MODULE_REGISTRY.yaml#{mod_name}",
+                "message": (
+                    f"Módulo '{mod_name}' está em status '{status}' mas ainda não materializa "
+                    f"as superfícies esperadas: {', '.join(missing_surfaces)}."
+                ),
+                "severity": "error",
+            })
+        if not _module_has_pre_contract_evidence(root, mod_name):
+            violations.append({
+                "blocking_code": BLOCKED_PRE_CONTRACT_EVIDENCE,
+                "artifact": "_reports/agent_execution/*.json",
+                "message": (
+                    f"Módulo '{mod_name}' está em status '{status}' sem evidência mínima "
+                    "de continuidade pré-contrato."
+                ),
+                "severity": "error",
+            })
+        if not adversarial_dir.exists():
             continue
         for rpath in adversarial_dir.rglob(f"*{mod_name}*.adversarial.json"):
             checked.append(str(rpath))
@@ -7196,48 +7479,6 @@ def _g_surface_promotion_coherence(root: pathlib.Path) -> dict:
     except Exception as exc:
         return _skip(gate_id, f"Falha ao ler MODULE_REGISTRY.yaml: {exc}", _ms(t0))
 
-    def _surface_present(module: str, surface: str) -> bool:
-        mod_upper = module.upper()
-        mod_docs = root / "docs" / "hbtrack" / "modulos" / module
-        if surface == "module_docs_minimum":
-            return (
-                (mod_docs / "README.md").exists()
-                and (mod_docs / f"DOMAIN_RULES_{mod_upper}.md").exists()
-            )
-        if surface == "openapi_sync":
-            return (root / "contracts" / "openapi" / "paths" / f"{module}.yaml").exists()
-        if surface == "json_schema":
-            d = root / "contracts" / "schemas" / module
-            return d.exists() and any(d.glob("*.json"))
-        if surface == "asyncapi":
-            channels = root / "contracts" / "asyncapi" / "channels"
-            if not channels.exists():
-                return False
-            sub = channels / module
-            if sub.exists() and any(sub.iterdir()):
-                return True
-            return any(channels.glob(f"{module}_*.yaml")) or any(channels.glob(f"{module}.*.yaml"))
-        if surface == "arazzo":
-            wd = root / "contracts" / "workflows" / module
-            return wd.exists() and any(wd.glob("*.arazzo.yaml"))
-        if surface == "state_model":
-            return (mod_docs / f"STATE_MODEL_{mod_upper}.md").exists()
-        if surface == "ui_contract":
-            return (mod_docs / f"UI_CONTRACT_{mod_upper}.md").exists()
-        if surface == "permissions":
-            return (mod_docs / f"PERMISSIONS_{mod_upper}.md").exists()
-        if surface == "test_matrix":
-            return (mod_docs / f"TEST_MATRIX_{mod_upper}.md").exists()
-        if surface == "decision_ir":
-            return (
-                root / ".contract_driven" / "decisions" / f"DECISION_IR_{mod_upper}.yaml"
-            ).exists()
-        if surface == "sport_science":
-            return (mod_docs / f"SPORT_SCIENCE_RULES_{mod_upper}.md").exists()
-        if surface == "errors":
-            return (mod_docs / f"ERRORS_{mod_upper}.md").exists()
-        return False  # superfície desconhecida = não presente
-
     violations: list[dict] = []
     checked = [str(registry_path)]
 
@@ -7249,8 +7490,8 @@ def _g_surface_promotion_coherence(root: pathlib.Path) -> dict:
         if not expected or status == "scaffold" or status in IMPLEMENTATION_AUTHORIZED_STATUSES:
             continue
 
-        missing = [s for s in expected if not _surface_present(mod_name, s)]
-        present = [s for s in expected if _surface_present(mod_name, s)]
+        missing = [s for s in expected if not _module_surface_present(root, mod_name, s)]
+        present = [s for s in expected if _module_surface_present(root, mod_name, s)]
 
         if status == "draft_contract" and not missing:
             violations.append({
@@ -8171,6 +8412,219 @@ def _g_monitoring_policy(root: pathlib.Path) -> dict:
                "Monitoramento configurado: RUNTIME_CONTRACT_MONITORING_POLICY.md e ADR-029 presentes.",
                [], checked, [], [], _ms(t0))
 
+def _g_feature_coverage(root: pathlib.Path) -> dict:
+    """FEATURE_COVERAGE_GATE — todo módulo `implemented` no MODULE_REGISTRY deve ter
+    ao menos uma feature com status `implemented` no FEATURE_REGISTRY.
+
+    SKIP_NOT_APPLICABLE: MODULE_REGISTRY ou FEATURE_REGISTRY ausente/inválido.
+    PASS : todos os módulos implemented têm cobertura mínima.
+    FAIL : um ou mais módulos implemented sem nenhuma feature implemented.
+    """
+    t0 = time.monotonic()
+    gate_id = "FEATURE_COVERAGE_GATE"
+
+    registry_path = root / "docs" / "_canon" / "MODULE_REGISTRY.yaml"
+    feature_path = root / "docs" / "_canon" / "FEATURE_REGISTRY.yaml"
+    checked = [str(registry_path), str(feature_path)]
+
+    if not registry_path.exists():
+        return _skip(gate_id, "MODULE_REGISTRY.yaml ausente — gate não aplicável.", _ms(t0))
+    if not feature_path.exists():
+        return _skip(gate_id, "FEATURE_REGISTRY.yaml ausente — gate não aplicável.", _ms(t0))
+
+    try:
+        registry = _load_yaml(registry_path)
+    except Exception as e:
+        return _pg(gate_id, "FAIL", True, BLOCKED_FEATURE_COVERAGE_MISSING,
+                   f"MODULE_REGISTRY.yaml inválido: {e}", [], checked, [], [], _ms(t0))
+
+    try:
+        feature_registry = _load_yaml(feature_path)
+    except Exception as e:
+        return _pg(gate_id, "FAIL", True, BLOCKED_FEATURE_COVERAGE_MISSING,
+                   f"FEATURE_REGISTRY.yaml inválido: {e}", [], checked, [], [], _ms(t0))
+
+    if not isinstance(registry, dict) or not isinstance(registry.get("modules"), dict):
+        return _skip(gate_id, "MODULE_REGISTRY.yaml sem chave 'modules' — gate não aplicável.", _ms(t0))
+    if not isinstance(feature_registry, dict) or not isinstance(feature_registry.get("features"), list):
+        return _skip(gate_id, "FEATURE_REGISTRY.yaml sem chave 'features' — gate não aplicável.", _ms(t0))
+
+    # Módulos com status=implemented
+    implemented_modules = [
+        m for m, entry in registry["modules"].items()
+        if isinstance(entry, dict) and entry.get("status") == "implemented"
+    ]
+
+    # Features implemented por módulo
+    features_by_module: dict[str, list[str]] = {}
+    for ft in feature_registry["features"]:
+        if not isinstance(ft, dict):
+            continue
+        mod = ft.get("module")
+        status = ft.get("status")
+        if isinstance(mod, str) and mod and status == "implemented":
+            features_by_module.setdefault(mod, []).append(str(ft.get("id", "?")))
+
+    violations: list[dict] = []
+    for module in sorted(implemented_modules):
+        covered = features_by_module.get(module, [])
+        if not covered:
+            violations.append({
+                "blocking_code": BLOCKED_FEATURE_COVERAGE_MISSING,
+                "artifact": str(feature_path.relative_to(root)),
+                "message": (
+                    f"Módulo `{module}` tem status `implemented` no MODULE_REGISTRY mas não possui "
+                    "nenhuma feature com status `implemented` no FEATURE_REGISTRY."
+                ),
+                "severity": "error",
+                "details": {"module": module},
+            })
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_FEATURE_COVERAGE_MISSING,
+            f"{len(violations)} módulo(s) implemented sem cobertura de feature.",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    total_covered = len([m for m in implemented_modules if features_by_module.get(m)])
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        f"Cobertura de features OK: {total_covered}/{len(implemented_modules)} módulos implemented cobertos.",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
+def _g_legacy_isolation(root: pathlib.Path) -> dict:
+    """LEGACY_CRITICAL_PATH_GATE — FASE 7.
+
+    Garante que artefatos legados conhecidos:
+      1. _reports/evidence/boot_resolution_report.json → tem ``"_legacy": true``
+      2. scripts/hbtrack_lint/__init__.py → contém aviso de LEGACY/legado/deprecated
+      3. Nenhum arquivo do caminho crítico (scripts/hb, validate_contracts.py) referencia hbtrack_lint
+
+    SKIP_NOT_APPLICABLE: nenhum artefato legado encontrado (ambiente sem legado — ok em CI limpo).
+    PASS: todos os artefatos legados estão marcados e isolados.
+    FAIL: artefato legado sem marcador ou referenciado no caminho crítico.
+    """
+    t0 = time.monotonic()
+    gate_id = "LEGACY_CRITICAL_PATH_GATE"
+
+    boot_report = root / "_reports" / "evidence" / "boot_resolution_report.json"
+    hbtrack_lint_init = root / "scripts" / "hbtrack_lint" / "__init__.py"
+    critical_files = [
+        root / "scripts" / "hb",
+        root / "scripts" / "contracts" / "validate" / "validate_contracts.py",
+    ]
+    checked = [str(boot_report), str(hbtrack_lint_init)] + [str(p) for p in critical_files]
+
+    any_legacy_present = boot_report.exists() or hbtrack_lint_init.exists()
+    if not any_legacy_present:
+        return _skip(gate_id, "Nenhum artefato legado monitorado encontrado.", _ms(t0))
+
+    violations: list[dict] = []
+
+    # 1. boot_resolution_report.json deve ter "_legacy": true
+    if boot_report.exists():
+        try:
+            import json as _json
+            data = _json.loads(boot_report.read_text(encoding="utf-8"))
+            if not data.get("_legacy"):
+                violations.append({
+                    "blocking_code": BLOCKED_LEGACY_IN_CRITICAL_PATH,
+                    "artifact": str(boot_report.relative_to(root)),
+                    "message": (
+                        "boot_resolution_report.json existe mas não tem '_legacy: true'. "
+                        "Marcar como legado para impedir reintrodução no fluxo ativo."
+                    ),
+                    "severity": "error",
+                })
+        except Exception as exc:
+            violations.append({
+                "blocking_code": BLOCKED_LEGACY_IN_CRITICAL_PATH,
+                "artifact": str(boot_report.relative_to(root)),
+                "message": f"Falha ao ler boot_resolution_report.json: {exc}",
+                "severity": "error",
+            })
+
+    # 2. scripts/hbtrack_lint/__init__.py deve mencionar LEGACY/legado/deprecated
+    if hbtrack_lint_init.exists():
+        try:
+            text = hbtrack_lint_init.read_text(encoding="utf-8", errors="replace")
+            if not re.search(r"LEGACY|legado|deprecated", text, re.IGNORECASE):
+                violations.append({
+                    "blocking_code": BLOCKED_LEGACY_IN_CRITICAL_PATH,
+                    "artifact": str(hbtrack_lint_init.relative_to(root)),
+                    "message": (
+                        "scripts/hbtrack_lint/__init__.py não contém aviso LEGACY/legado/deprecated. "
+                        "Marcar explicitamente para documentar o status de legado."
+                    ),
+                    "severity": "error",
+                })
+        except Exception:
+            pass
+
+    # 3. Caminhos críticos não devem importar hbtrack_lint
+    for crit_path in critical_files:
+        if not crit_path.exists():
+            continue
+        try:
+            text = crit_path.read_text(encoding="utf-8", errors="replace")
+        except Exception:
+            continue
+        if re.search(r"(?:import|from)\s+hbtrack_lint", text):
+            violations.append({
+                "blocking_code": BLOCKED_LEGACY_IN_CRITICAL_PATH,
+                "artifact": str(crit_path.relative_to(root)),
+                "message": (
+                    f"Caminho crítico '{crit_path.name}' importa 'hbtrack_lint' (legado). "
+                    "Remover ou isolar import para impedir reintrodução no fluxo ativo."
+                ),
+                "severity": "error",
+            })
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_LEGACY_IN_CRITICAL_PATH,
+            f"{len(violations)} artefato(s) legado(s) sem isolamento adequado.",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        "Isolamento de legado OK: artefatos marcados e fora do caminho crítico.",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
 def _g16_readiness_summary(gates: list[dict]) -> dict:
     t0 = time.monotonic()
     gate_id = "READINESS_SUMMARY_GATE"
@@ -8218,12 +8672,32 @@ def _module_asyncapi_artifact_count(root: pathlib.Path, module: str) -> int:
     asyncapi_root = root / "contracts" / "asyncapi"
     if not asyncapi_root.exists():
         return 0
+    singular = module
+    if module.endswith("ies"):
+        singular = module[:-3] + "y"
+    elif module.endswith("es"):
+        singular = module[:-2]
+    elif module.endswith("s"):
+        singular = module[:-1]
+
+    def _matches(path: pathlib.Path) -> bool:
+        try:
+            text = path.read_text(encoding="utf-8", errors="replace")
+        except Exception:
+            return False
+        header = "\n".join(text.splitlines()[:8])
+        comment_match = re.search(r"^#\s*Module:\s*([a-z0-9_]+)\s*$", header, re.MULTILINE)
+        if comment_match and comment_match.group(1) == module:
+            return True
+        normalized_stem = path.stem.replace("-", "_")
+        return normalized_stem.startswith(f"{module}_") or normalized_stem.startswith(f"{singular}_")
+
     count = 0
-    for rel in ("channels", "messages", "components/schemas"):
+    for rel in ("channels", "messages"):
         base = asyncapi_root / rel
         if not base.exists():
             continue
-        count += len([p for p in base.glob("*.yaml") if module in p.stem])
+        count += len([p for p in base.rglob("*.yaml") if _matches(p)])
     return count
 
 
@@ -8248,14 +8722,19 @@ def _module_has_pre_contract_evidence(root: pathlib.Path, module: str) -> bool:
 
 
 def _module_has_decision_ir(root: pathlib.Path, module: str) -> bool:
-    ir_path = root / ".dev" / "MODULE_DECISION_IR.json"
+    ir_path = _canonical_decision_ir_path(root, module)
     if not ir_path.exists():
         return False
     try:
-        data = _load_json(ir_path)
+        data = _load_structured_doc(ir_path)
     except Exception:
         return False
-    return data.get("module") == module
+    if not isinstance(data, dict):
+        return False
+    if data.get("module") == module:
+        return True
+    decisions = data.get("decisions")
+    return isinstance(decisions, list) and len(decisions) > 0
 
 
 def _module_minimum_docs_present(root: pathlib.Path, module: str) -> bool:
@@ -8283,10 +8762,8 @@ def _surface_status_for_module(
     asyncapi_count: int,
     decision_ir_gate_status: str | None,
 ) -> str:
-    module_dir = root / "docs" / "hbtrack" / "modulos" / module
-    up = module.upper()
     if surface == "module_docs_minimum":
-        return "ready" if _module_minimum_docs_present(root, module) else "missing"
+        return "ready" if _module_surface_present(root, module, surface) else "missing"
     if surface == "openapi_sync":
         path_file = root / "contracts" / "openapi" / "paths" / f"{module}.yaml"
         if not path_file.exists():
@@ -8297,25 +8774,25 @@ def _surface_status_for_module(
             return "drift"
         return "ready"
     if surface == "json_schema":
-        return "ready" if schema_count > 0 else "missing"
+        return "ready" if _module_surface_present(root, module, surface) else "missing"
     if surface == "test_matrix":
-        return "ready" if (module_dir / f"TEST_MATRIX_{up}.md").exists() else "missing"
+        return "ready" if _module_surface_present(root, module, surface) else "missing"
     if surface == "state_model":
-        return "ready" if (module_dir / f"STATE_MODEL_{up}.md").exists() else "missing"
+        return "ready" if _module_surface_present(root, module, surface) else "missing"
     if surface == "permissions":
-        return "ready" if (module_dir / f"PERMISSIONS_{up}.md").exists() else "missing"
+        return "ready" if _module_surface_present(root, module, surface) else "missing"
     if surface == "errors":
-        return "ready" if (module_dir / f"ERRORS_{up}.md").exists() else "missing"
+        return "ready" if _module_surface_present(root, module, surface) else "missing"
     if surface == "sport_science":
-        return "ready" if (module_dir / f"SPORT_SCIENCE_RULES_{up}.md").exists() else "missing"
+        return "ready" if _module_surface_present(root, module, surface) else "missing"
     if surface == "ui_contract":
-        return "ready" if (module_dir / f"UI_CONTRACT_{up}.md").exists() else "missing"
+        return "ready" if _module_surface_present(root, module, surface) else "missing"
     if surface == "asyncapi":
-        return "ready" if asyncapi_count > 0 else "missing"
+        return "ready" if _module_surface_present(root, module, surface) else "missing"
     if surface == "arazzo":
-        return "ready" if workflow_count > 0 else "missing"
+        return "ready" if _module_surface_present(root, module, surface) else "missing"
     if surface == "decision_ir":
-        if not _module_has_decision_ir(root, module):
+        if not _module_surface_present(root, module, surface):
             return "missing"
         return "ready" if decision_ir_gate_status == "PASS" else "drift"
     return "unknown"
@@ -8563,6 +9040,17 @@ def run_pipeline(
     axioms_schema_path = root / "contracts" / "schemas" / "shared" / "domain_axioms.schema.json"
     report_path = root / "_reports" / "contract_gates" / "latest.json"
     report_path.parent.mkdir(parents=True, exist_ok=True)
+    canonical_full_run = stage is None and profile == "ci"
+    scoped_report_path = report_path
+    if not canonical_full_run:
+        scope_bits: list[str] = []
+        if stage:
+            scope_bits.append(f"stage-{stage}")
+        if profile:
+            scope_bits.append(profile)
+        if not scope_bits:
+            scope_bits.append("partial")
+        scoped_report_path = report_path.parent / f"{'.'.join(scope_bits)}.latest.json"
     _required_tools = ["python3"]
     _optional_tools = ["redocly", "spectral", "oasdiff", "schemathesis", "asyncapi"]
     missing_required = [tool for tool in _required_tools if not shutil.which(tool)]
@@ -8626,10 +9114,40 @@ def run_pipeline(
                 },
             },
             "overall_status": overall,
+            "execution_context": {
+                "profile": profile,
+                "stage": stage,
+                "canonical_scope": "full_pipeline" if canonical_full_run else "partial_validation",
+            },
+            "report_artifacts": {
+                "scoped_report_path": str(scoped_report_path),
+                "canonical_report_path": str(report_path),
+                "run_dir": str(run_dir),
+            },
             "status_detail": status_detail,
             "exit_code": exit_code,
             "gates": all_gates,
         }
+
+    def _write_report_artifacts(report: dict, overall: str, exit_code: int, gates_out: list[dict]) -> None:
+        scoped_report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        (run_dir / "contract_gates.json").write_text(
+            json.dumps(report, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
+        if canonical_full_run:
+            _write_module_readiness_scorecard(root, gates_out, generated_at_utc=ts, overall_status=overall)
+            _persist_pipeline_artifacts(
+                root=root,
+                report_path=scoped_report_path,
+                report=report,
+                gates=gates_out,
+                overall=overall,
+                exit_code=exit_code,
+                ts=ts,
+                run_dir=run_dir,
+                run_id=run_id,
+            )
 
     # G0: AXIOM_INTEGRITY_GATE (blocking — prerequisite for all others)
     axiom_gate = validate_axiom_integrity(str(axioms_path), str(axioms_schema_path))
@@ -8661,19 +9179,7 @@ def run_pipeline(
         g16 = _g16_readiness_summary(gates)
         gates.append(g16)
         report = _build_report(gates, "FAIL", 4)
-        report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-        _write_module_readiness_scorecard(root, gates, generated_at_utc=ts, overall_status="FAIL")
-        _persist_pipeline_artifacts(
-            root=root,
-            report_path=report_path,
-            report=report,
-            gates=gates,
-            overall="FAIL",
-            exit_code=4,
-            ts=ts,
-            run_dir=run_dir,
-            run_id=run_id,
-        )
+        _write_report_artifacts(report, "FAIL", 4, gates)
         return report, 4
 
     try:
@@ -8686,19 +9192,7 @@ def run_pipeline(
         g16 = _g16_readiness_summary(gates)
         gates.append(g16)
         report = _build_report(gates, "FAIL", 4)
-        report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-        _write_module_readiness_scorecard(root, gates, generated_at_utc=ts, overall_status="FAIL")
-        _persist_pipeline_artifacts(
-            root=root,
-            report_path=report_path,
-            report=report,
-            gates=gates,
-            overall="FAIL",
-            exit_code=4,
-            ts=ts,
-            run_dir=run_dir,
-            run_id=run_id,
-        )
+        _write_report_artifacts(report, "FAIL", 4, gates)
         return report, 4
 
     _precommit_ids = {
@@ -8822,6 +9316,8 @@ def run_pipeline(
         ("WAIVER_VALIDITY_GATE", lambda: _g_waiver_validity(root)),  # FIX Ordem 5: implementado
         ("READINESS_GENERATION_COMPATIBILITY_GATE", lambda: _g_readiness_generation_compatibility(root)),
         ("READINESS_HUMAN_CONFIRMATION_GATE", lambda: _g_readiness_human_confirmation(root)),  # FIX Ordem 6: implementado
+        ("FEATURE_COVERAGE_GATE", lambda: _g_feature_coverage(root)),
+        ("LEGACY_CRITICAL_PATH_GATE", lambda: _g_legacy_isolation(root)),  # FASE 7
     ]
     for gate_id_hint, gate_fn in gate_plan:
         gate_result = _maybe(gate_fn, gate_id_hint)
@@ -8865,19 +9361,7 @@ def run_pipeline(
         exit_code = 0
 
     report = _build_report(gates, overall, exit_code)
-    report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    _write_module_readiness_scorecard(root, gates, generated_at_utc=ts, overall_status=overall)
-    _persist_pipeline_artifacts(
-        root=root,
-        report_path=report_path,
-        report=report,
-        gates=gates,
-        overall=overall,
-        exit_code=exit_code,
-        ts=ts,
-        run_dir=run_dir,
-        run_id=run_id,
-    )
+    _write_report_artifacts(report, overall, exit_code, gates)
     return report, exit_code
 
 
@@ -8942,8 +9426,10 @@ def main() -> int:
                     print(f"         Ação: {action}")
     print(sep2)
     print(f"  STATUS   : {overall}")
-    root = _repo_root()
-    report_path = root / "_reports" / "contract_gates" / "latest.json"
+    report_path = report.get("report_artifacts", {}).get("scoped_report_path")
+    if not report_path:
+        root = _repo_root()
+        report_path = str(root / "_reports" / "contract_gates" / "latest.json")
     print(f"  Report   : {report_path}")
     print(sep2)
     print(f"\nDONE = exitcode 0  |  atual exitcode = {exit_code}")

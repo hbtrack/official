@@ -16,7 +16,7 @@ class TestContextBudgets:
     BUDGETS = {
         "CLAUDE.md": 450,
         "SESSION_HANDOFF.md": 350,
-        "docs/_canon/CONTRACT_PIPELINE.md": 600,
+        "docs/_canon/CONTRACT_PIPELINE.md": 650,
         ".contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md": 700,
     }
 
@@ -42,7 +42,7 @@ class TestContextBudgets:
             f"SESSION_HANDOFF.md is {count}w, budget is {self.BUDGETS['SESSION_HANDOFF.md']}w"
 
     def test_contract_pipeline_md_under_budget(self):
-        """CONTRACT_PIPELINE.md must be <= 600 words."""
+        """CONTRACT_PIPELINE.md must be <= 650 words (raised from 600 at FASE 1 — gate parity section added)."""
         count = self.count_words("docs/_canon/CONTRACT_PIPELINE.md")
         assert count <= self.BUDGETS["docs/_canon/CONTRACT_PIPELINE.md"], \
             f"CONTRACT_PIPELINE.md is {count}w, budget is {self.BUDGETS['docs/_canon/CONTRACT_PIPELINE.md']}w"
@@ -136,21 +136,35 @@ class TestLegacyEvidenceRemoved:
     """Verify legacy evidence model (boot_resolution_report, agent_execution/latest) is removed."""
 
     def test_no_active_legacy_evidence_refs(self):
-        """Zero references to boot_resolution_report.json or agent_execution/latest in critical path."""
+        """Zero references to boot_resolution_report.json or agent_execution/latest in critical path.
+
+        Exceção: arquivos de isolamento de legado (LEGACY_CRITICAL_PATH_GATE em validate_contracts.py
+        e GATES_REGISTRY.yaml) podem referenciar o arquivo legado para monitorar seu status.
+        Isso é uma referência legítima de monitoramento, não de uso ativo no pipeline.
+        """
         # Search in critical path files only
         critical_paths = [
             ".contract_driven/agent_prompts/",
             "docs/_canon/",
             "scripts/contracts/",
         ]
-        
+
+        # Arquivos que monitoram legado (exceção legítima — FASE 7)
+        legacy_monitoring_files = {
+            "validate_contracts.py",   # _g_legacy_isolation verifica boot_resolution_report
+            "GATES_REGISTRY.yaml",     # descrição do LEGACY_CRITICAL_PATH_GATE
+        }
+
         legacy_patterns = ["boot_resolution_report", "agent_execution/latest"]
         found_refs = []
-        
+
         for path_str in critical_paths:
             if Path(path_str).is_dir():
                 for file in Path(path_str).rglob("*"):
                     if file.suffix in [".md", ".py", ".yaml"]:
+                        # Exemption: os arquivos de monitoramento de legado são referências legítimas
+                        if file.name in legacy_monitoring_files:
+                            continue
                         try:
                             with open(file, 'r', encoding='utf-8') as f:
                                 content = f.read()
@@ -159,7 +173,7 @@ class TestLegacyEvidenceRemoved:
                                         found_refs.append(f"{file}:{pattern}")
                         except:
                             pass
-        
+
         assert len(found_refs) == 0, \
             f"Found {len(found_refs)} legacy evidence references:\n" + "\n".join(found_refs)
 

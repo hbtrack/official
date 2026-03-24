@@ -37,6 +37,18 @@ task_id:  <ex: "1.1", "2.3"> (opcional — se ausente, executar todas as tarefas
 
 ---
 
+## Estado de sessão (opcional — recomendado)
+
+Para registrar o estado operacional desta fase em `_reports/session_start.json`:
+```bash
+python3 scripts/hb verify --task-type execute_roadmap_phase --roadmap-phase <N>
+# Opcional: --roadmap-task-id <task_id>
+```
+Grava `operation_mode=ROADMAP`, `roadmap_phase=<N>` e `roadmap_task_id` na sessão.
+Não substitui os pré-requisitos acima. Não usar `hb check` nem `hb artifact` para artefatos de infra.
+
+---
+
 ## Mapa de fases
 
 Ler a seção correspondente no ROADMAP.md antes de executar:
@@ -150,7 +162,13 @@ O pipeline CDD valida contratos — a verificação de infra é via health check
    c. Verificar critério local da tarefa
    d. Emitir status
 4. Ao final: verificar Critério de Done da fase completa conforme ROADMAP.md
-5. Atualizar `SESSION_HANDOFF.md` com estado atual
+5. Criar ou atualizar `SESSION_HANDOFF.md` na raiz usando o template `docs/_canon/templates/SESSION_HANDOFF.template.md`.
+   O front matter YAML é validado pelo `HANDOFF_COHERENCE_GATE` contra `session_handoff.schema.json`. Campos obrigatórios:
+   `data_ultima_sessao`, `branch_ativo`, `modo_operacao: ROADMAP`, `ci_status`, `modulo_foco`, `fase_roadmap`,
+   `task_type: execute_roadmap_phase`, `boot_profile_id: roadmap_execution`, `task_id`, `resultado`,
+   `proxima_acao_permitida` (mín. 10 chars), `bloqueios_ativos`, `evidence_paths` (mín. 1 entrada).
+   Seções obrigatórias no corpo: `## Estado Geral`, `## O que foi feito`, `## Evidências`,
+   `## Próxima ação permitida`, `## Bloqueios ativos`.
 
 ---
 

@@ -28,9 +28,8 @@ Este documento deve ser lido junto com:
 
 - `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md`
 - `.contract_driven/CONTRACT_SYSTEM_RULES.md`
-- `docs/_canon/API_CONVENTIONS.md`
 - `docs/_canon/DATA_CONVENTIONS.md`
-- `docs/_canon/ERROR_MODEL.md`
+- `docs/_canon/OPERATIONS.md`
 - `docs/_canon/CHANGE_POLICY.md`
 - `docs/_canon/TEST_STRATEGY.md`
 - `.contract_driven/DOMAIN_AXIOMS.json` (axiomas globais machine-readable)
@@ -1075,8 +1074,8 @@ Entradas
 	•	docs modulares
 	•	domain axioms: `.contract_driven/DOMAIN_AXIOMS.json`
 	•	axiomas modulares: `docs/hbtrack/modulos/<module>/DOMAIN_AXIOMS_<MODULE>.json` (quando existir e permitido por política)
-	•	ERROR_MODEL.md
-	•	API_CONVENTIONS.md
+	•	OPERATIONS.md
+	•	`.contract_driven/templates/api/api_rules.yaml`
 	•	DATA_CONVENTIONS.md
 
 Executor

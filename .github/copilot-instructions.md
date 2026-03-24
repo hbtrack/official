@@ -1,5 +1,7 @@
 # HB TRACK — Copilot Instructions
 
+> ⚠️ **BRIDGE ONLY — NON-SOVEREIGN**: Este arquivo é uma ponte operacional para o agente Copilot. Não define regras, schemas, gates ou políticas canônicas. Em caso de conflito, prevalecem nesta ordem: enforcement executável (`scripts/hb`, `validate_contracts.py`) > schemas ativos (`contracts/schemas/`) > canon (`docs/_canon/`) > este arquivo.
+
 ## Produto
 HB Track — plataforma de gestão esportiva para handebol.
 CDD (Contract-Driven Development): contratos governam autoria antes de código.
@@ -29,7 +31,8 @@ Ponto de entrada: `pre_contract_orchestrator`. Usar `hb verify` + `hb artifact`.
 
 ### Modo ROADMAP (implementação — fases 0-13)
 Ponto de entrada: `ROADMAP.md` + `SESSION_HANDOFF.md` + `.contract_driven/agent_prompts/execute_roadmap_phase.prompt.md`.
-- **NÃO** executar `hb verify`, `hb check`, `hb artifact`
+- `hb verify --task-type execute_roadmap_phase --roadmap-phase <N>` **pode** ser usado para registrar estado de sessão (opcional mas recomendado)
+- **NÃO** executar `hb check` nem `hb artifact` sobre artefatos de infraestrutura
 - **NÃO** passar por `pre_contract_orchestrator`
 - Verificar Critério de Done da fase N-1 antes de iniciar fase N
 - Bloqueios: `BLOCKED_PHASE_DEPENDENCY` | `BLOCKED_CDD_PIPELINE_FAIL` | `BLOCKED_DEPLOY_REQUIRES_HUMAN` | `BLOCKED_MISSING_STACK_DECISION`
@@ -61,7 +64,8 @@ VCS      -> commit opcional conforme objetivo da sessão; o pre-commit adiciona 
 ## Handoff
 
 - `SESSION_HANDOFF.md` é o handoff operacional atual.
-- O schema `contracts/schemas/shared/session_handoff.schema.json` não deve ser tratado como o validador ativo do markdown operacional.
+- `contracts/schemas/shared/session_handoff.schema.json` **é** o validador ativo do front matter YAML de `SESSION_HANDOFF.md` — usado pelo `HANDOFF_COHERENCE_GATE` em `validate_contracts.py`.
+- O front matter deve ser válido contra esse schema; usar `docs/_canon/templates/SESSION_HANDOFF.template.md` como base.
 
 ## Bloqueios canônicos
 

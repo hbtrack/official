@@ -1,5 +1,7 @@
 # Auditoria de Continuidade de Desenvolvimento Assistido por IA — HB Track
 
+> ⚠️ **ARTEFATO DERIVADO — NON-SOVEREIGN**: Este arquivo é uma auditoria derivada. Não possui autoridade normativa. Não deve ser usado para redefinir schemas, gates, contratos ou políticas canônicas. Em caso de conflito, prevalecem: `scripts/hb` + `validate_contracts.py` > `contracts/schemas/` > `docs/_canon/` > `.contract_driven/CONTRACT_SYSTEM_RULES.md` > este arquivo.
+
 ## PARTE 1 — Visão geral do desenvolvimento assistido por IA
 
 Hoje o HB Track é conduzido por um sistema em camadas. A camada mais forte é a de **governança CDD**: o agente é orientado por boot instructions, regras de canonização, registries, gates, matrizes de autoridade e prompts operacionais. Essa camada está bem representada por [docs/_canon/AGENT_INSTRUCTIONS.md](/home/davis/HB-TRACK/docs/_canon/AGENT_INSTRUCTIONS.md#L5), [.contract_driven/CONTRACT_SYSTEM_RULES.md](/home/davis/HB-TRACK/.contract_driven/CONTRACT_SYSTEM_RULES.md#L26), [docs/_canon/CONTRACT_PIPELINE.md](/home/davis/HB-TRACK/docs/_canon/CONTRACT_PIPELINE.md#L11), [docs/_canon/gates/GATES_REGISTRY.yaml](/home/davis/HB-TRACK/docs/_canon/gates/GATES_REGISTRY.yaml#L1), [docs/_canon/MODULE_REGISTRY.yaml](/home/davis/HB-TRACK/docs/_canon/MODULE_REGISTRY.yaml#L1) e [.contract_driven/TASK_CATALOG.yaml](/home/davis/HB-TRACK/.contract_driven/TASK_CATALOG.yaml#L1).

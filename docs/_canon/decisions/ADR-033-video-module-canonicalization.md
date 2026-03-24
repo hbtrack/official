@@ -113,7 +113,7 @@ Os 16 módulos canônicos atuais cobrem:
 
 ## Decisões Relacionadas
 
-- **ADR-031**: Scope Boundary Validation — detecta violações cross-module
+- **ADR-034**: Scope Boundary Validation — detecta violações cross-module
 - **ADR-025**: CDCT/Pact Strategy — testes de boundary contracts
 - **ADR-024**: Contract Versioning — versionamento de APIs de video
 - **ADR-007/008**: Auth/Authz — aplicadas a endpoints de video

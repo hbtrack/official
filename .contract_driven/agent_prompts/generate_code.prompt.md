@@ -16,6 +16,7 @@ status: active
 
 Antes de executar este worker, verificar:
 
+0. **`hb verify` executado** para este módulo: `_reports/session_start.json` existe com `task_type=generate_code` e `module=<M>` (gravado pelo orchestrator via FASE 0)
 1. **ADR-026** existe em `docs/_canon/decisions/`
 2. **ADR-031** existe em `docs/_canon/decisions/`
 3. **CODE_ARCHITECTURE.md** existe em `docs/_canon/` (versão ≥ 1.1.0)
@@ -275,7 +276,12 @@ Após geração:
 
 ## Atualização de SESSION_HANDOFF
 
-Ao concluir a geração, atualizar `SESSION_HANDOFF.md` com:
+Ao concluir a geração, atualizar `SESSION_HANDOFF.md` usando o template `docs/_canon/templates/SESSION_HANDOFF.template.md`.
+O front matter YAML é validado pelo `HANDOFF_COHERENCE_GATE` contra `session_handoff.schema.json`.
+Campos obrigatórios: `modo_operacao: CDD`, `task_type: generate_code`, `boot_profile_id: contract_authoring`,
+`evidence_paths` (mín. 1 entrada), `proxima_acao_permitida` (mín. 10 chars).
+Seções obrigatórias: `## Estado Geral`, `## O que foi feito`, `## Evidências`, `## Próxima ação permitida`, `## Bloqueios ativos`.
+Conteúdo:
 - Módulo e feature gerados
 - Arquivos criados e contagem de linhas
 - Status no FEATURE_REGISTRY atualizado

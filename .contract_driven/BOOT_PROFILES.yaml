@@ -10,6 +10,7 @@ doc_type: canon
 version: "1.0.0"
 last_reviewed: "2026-03-23"
 scope: boot_authority
+path_resolution: repo_root_relative
 
 profiles:
   # Profile padrão: leitura mínima para começar
@@ -17,9 +18,9 @@ profiles:
     id: default
     description: "Boot mínimo para agent. Sempre carregado independentemente de tarefa."
     load_sequence:
-      - ./docs/_canon/AGENT_INSTRUCTIONS.md # Entrypoint (§0-§2 obrigatórios)
-      - ./OPERATIONS.md # Referência operacional rápida
-      - ./README.md # Guia de navegação
+      - docs/_canon/AGENT_INSTRUCTIONS.md # Entrypoint (§0-§2 obrigatórios)
+      - docs/_canon/OPERATIONS.md # Referência operacional rápida
+      - docs/_canon/README.md # Guia de navegação
     required_sections:
       - docs/_canon/AGENT_INSTRUCTIONS.md§0 # "Leia Primeiro"
       - docs/_canon/AGENT_INSTRUCTIONS.md§1 # Modo de operação
@@ -39,9 +40,9 @@ profiles:
     id: contract_execution
     description: "Boot para task de contrato (new_contract, new_event, etc)."
     load_sequence:
-      - ./docs/_canon/AGENT_INSTRUCTIONS.md
-      - ./OPERATIONS.md
-      - ./CONTRACT_PIPELINE.md # Estágios formais do pipeline
+      - docs/_canon/AGENT_INSTRUCTIONS.md
+      - docs/_canon/OPERATIONS.md
+      - docs/_canon/CONTRACT_PIPELINE.md # Estágios formais do pipeline
       - contracts/schemas/shared/session_start.schema.json # Validar sessão
       - .contract_driven/CONTRACT_SYSTEM_RULES.md
       - docs/_canon/gates/GATES_REGISTRY.yaml
@@ -51,7 +52,7 @@ profiles:
       - docs/_canon/AGENT_INSTRUCTIONS.md§4
       - docs/_canon/AGENT_INSTRUCTIONS.md§5
       - docs/_canon/AGENT_INSTRUCTIONS.md§6
-      - CONTRACT_PIPELINE.md§1 # Pipeline de Fases
+      - docs/_canon/CONTRACT_PIPELINE.md§1 # Pipeline de Fases
       - GATES_REGISTRY.yaml§metadata # Gate metadata
     validations:
       - session_start_valid: true # _reports/session_start.json deve ser JSON válido
@@ -65,16 +66,16 @@ profiles:
     id: architecture_decision
     description: "Boot para task de Decision Discovery (decision_discovery)."
     load_sequence:
-      - ./docs/_canon/AGENT_INSTRUCTIONS.md
-      - ./OPERATIONS.md
-      - ./ARCHITECTURE_DECISION_BACKLOG.md
-      - ./DECISION_POLICY.md
+      - docs/_canon/AGENT_INSTRUCTIONS.md
+      - docs/_canon/OPERATIONS.md
+      - docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md
+      - docs/_canon/DECISION_POLICY.md
       - docs/_canon/gates/GATES_REGISTRY.yaml
     required_sections:
       - docs/_canon/AGENT_INSTRUCTIONS.md§0
       - docs/_canon/AGENT_INSTRUCTIONS.md§1
       - docs/_canon/AGENT_INSTRUCTIONS.md§2
-      - DECISION_POLICY.md§triggers # Quando Decision Discovery é obrigatório
+      - docs/_canon/DECISION_POLICY.md§2 # Quando Decision Discovery é obrigatório
     validations:
       - decision_ir_exists: true # Se executando decision_discovery, IR deve existir
     exit_on_fail: true
@@ -84,9 +85,9 @@ profiles:
     id: roadmap_execution
     description: "Boot para execução de fase do ROADMAP (infra, CI/CD, frontend, deploy). Não usa CDD pipeline."
     load_sequence:
-      - ./docs/_canon/AGENT_INSTRUCTIONS.md      # entrypoint §0 obrigatório
-      - ./ROADMAP.md                              # fase atual + Critério de Done
-      - ./SESSION_HANDOFF.md                      # fase declarada (se existir)
+      - docs/_canon/AGENT_INSTRUCTIONS.md      # entrypoint §0 obrigatório
+      - ROADMAP.md                              # fase atual + Critério de Done
+      - SESSION_HANDOFF.md                      # fase declarada (se existir)
       - docs/_canon/CODE_ARCHITECTURE.md          # estrutura canônica de código backend
     required_sections:
       - docs/_canon/AGENT_INSTRUCTIONS.md§0       # "Leia Primeiro"
@@ -105,8 +106,8 @@ profiles:
     id: diagnostic
     description: "Boot para tarefas de diagnóstico (hb status, hb check). Sem write_scope."
     load_sequence:
-      - ./docs/_canon/AGENT_INSTRUCTIONS.md
-      - ./OPERATIONS.md
+      - docs/_canon/AGENT_INSTRUCTIONS.md
+      - docs/_canon/OPERATIONS.md
       - .contract_driven/CONTRACT_SYSTEM_RULES.md
     required_sections:
       - docs/_canon/AGENT_INSTRUCTIONS.md§0
@@ -159,6 +160,8 @@ integration:
     3. Executar validações do profile selecionado
     4. Exit != 0 se validação falhar e exit_on_fail=true
     5. Se passou, carregar cada arquivo em load_sequence
+    6. Todos os paths em load_sequence são relativos à raiz do repositório
+    7. required_sections nunca pode apontar para arquivo fora do path resolvido
 
   # Como o orchestrator valida
   orchestrator_validation: |

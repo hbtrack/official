@@ -92,7 +92,7 @@ def _render_header(doc_type: str, template_name: str) -> str:
             ("invariants_ref", "./INVARIANTS_{{MODULE_NAME_UPPER}}.md"),
         ]),
         "errors": OrderedDict([
-            ("error_model_ref", "../../../../docs/_canon/ERROR_MODEL.md"),
+            ("error_model_ref", "../../../../docs/_canon/OPERATIONS.md"),
             ("problem_schema_ref", "../../../../contracts/openapi/components/schemas/shared/problem.yaml"),
         ]),
         "sport-science-rules": OrderedDict([

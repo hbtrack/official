@@ -1,4 +1,7 @@
 RELATÓRIO DE COMPLIANCE: Agente vs PIPELINE.md
+
+> ⚠️ **ARTEFATO DERIVADO — NON-SOVEREIGN**: Este arquivo é um relatório de compliance derivado. Não possui autoridade normativa. Não deve ser usado para redefinir schemas, gates, contratos ou políticas canônicas. Em caso de conflito, prevalecem: `scripts/hb` + `validate_contracts.py` > `contracts/schemas/` > `docs/_canon/` > `.contract_driven/CONTRACT_SYSTEM_RULES.md` > este arquivo.
+
 Escopo da auditoria
 Validação do comportamento do agente durante a criação do módulo scout contra as exigências formais documentadas em PIPELINE.md.
 

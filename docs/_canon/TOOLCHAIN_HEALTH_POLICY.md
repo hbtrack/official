@@ -88,9 +88,11 @@ Quando `DEGRADED` ocorrer, o relatório deve expor:
 
 ## 4. Evidência obrigatória
 
-Toda execução do pipeline deve produzir:
+Toda execução completa do pipeline (`profile=ci`, sem `--stage`) deve produzir:
 - `_reports/contract_gates/latest.json`
 - `_reports/evidence/module_readiness_scorecard.json`
+
+Execuções parciais (`--stage` ou profiles limitados) devem produzir apenas relatórios escopados em `_reports/contract_gates/` e `_reports/runs/`, sem sobrescrever o baseline canônico.
 
 Quando a fase pré-contrato for executada, produzir também:
 - `_reports/session_start.json`

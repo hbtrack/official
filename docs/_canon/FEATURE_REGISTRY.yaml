@@ -15,12 +15,12 @@
 # -------------------------------------------------------------------------
 
 version: "1.0.0"
-last_updated: "2026-03-17"
+last_updated: "2026-03-23"
 
 features:
   # ------------------------------------------------------------------
   # MÓDULO: training
-  # Status do módulo: implementation_ready
+  # Status do módulo: implemented
   # ------------------------------------------------------------------
 
   - id: FT-001
@@ -35,7 +35,7 @@ features:
       - GET /training-sessions/{id}
       - PATCH /training-sessions/{id}
       - DELETE /training-sessions/{id}
-    status: validated
+    status: implemented
     contracts:
       - contracts/openapi/paths/training.yaml
 
@@ -53,7 +53,7 @@ features:
       - POST /training-sessions/{id}/complete
       - POST /training-sessions/{id}/cancel
       - POST /training-sessions/{id}/archive
-    status: validated
+    status: implemented
     contracts:
       - contracts/openapi/paths/training.yaml
 
@@ -71,7 +71,7 @@ features:
       - PATCH /training-sessions/{id}/blocks/{blockId}
       - DELETE /training-sessions/{id}/blocks/{blockId}
       - POST /training-sessions/{id}/blocks/reorder
-    status: validated
+    status: implemented
     contracts:
       - contracts/openapi/paths/training.yaml
 
@@ -84,7 +84,7 @@ features:
     endpoints:
       - GET /training-sessions/{id}/attendance
       - POST /training-sessions/{id}/attendance
-    status: validated
+    status: implemented
     contracts:
       - contracts/openapi/paths/training.yaml
 
@@ -102,7 +102,7 @@ features:
       - POST /training-sessions/{id}/wellness-post
       - GET /training-sessions/{id}/wellness-post/{athleteId}
       - PATCH /training-sessions/{id}/wellness-post/{athleteId}
-    status: validated
+    status: implemented
     contracts:
       - contracts/openapi/paths/training.yaml
 
@@ -122,7 +122,7 @@ features:
       - POST /microcycles
       - GET /microcycles/{id}
       - PATCH /microcycles/{id}
-    status: validated
+    status: implemented
     contracts:
       - contracts/openapi/paths/training.yaml
 
@@ -136,7 +136,7 @@ features:
       - GET /training-sessions/{id}/execution-records
       - POST /training-sessions/{id}/execution-records
       - GET /training-sessions/{id}/execution-records/{recordId}
-    status: validated
+    status: implemented
     contracts:
       - contracts/openapi/paths/training.yaml
 
@@ -149,7 +149,7 @@ features:
     endpoints:
       - GET /training-sessions/{id}/feedback-threads
       - POST /training-sessions/{id}/feedback-threads
-    status: validated
+    status: implemented
     contracts:
       - contracts/openapi/paths/training.yaml
 
@@ -162,7 +162,7 @@ features:
     endpoints:
       - GET /training-sessions/{id}/objectives
       - POST /training-sessions/{id}/objectives
-    status: validated
+    status: implemented
     contracts:
       - contracts/openapi/paths/training.yaml
 
@@ -174,13 +174,13 @@ features:
       precisam de atenção especial durante ou após uma sessão.
     endpoints:
       - GET /training-sessions/{id}/attention-queue
-    status: validated
+    status: implemented
     contracts:
       - contracts/openapi/paths/training.yaml
 
   # ------------------------------------------------------------------
   # MÓDULO: identity_access
-  # Status do módulo: implementation_ready
+  # Status do módulo: implemented
   # ------------------------------------------------------------------
 
   - id: FT-011
@@ -230,7 +230,7 @@ features:
 
   # ------------------------------------------------------------------
   # MÓDULO: users
-  # Status do módulo: implementation_ready
+  # Status do módulo: implemented
   # ------------------------------------------------------------------
 
   - id: FT-014
@@ -467,3 +467,242 @@ features:
     status: implemented
     contracts:
       - contracts/openapi/paths/teams.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: wellness
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-032
+    name: "Registrar e Consultar Entradas de Bem-estar"
+    module: wellness
+    description: >
+      Atleta registra entradas de bem-estar subjetivo (humor, carga
+      percebida, qualidade do sono). Treinador e coordenador consultam
+      entradas associadas aos atletas do time.
+    endpoints:
+      - GET /wellness/entries
+      - POST /wellness/entries
+      - GET /wellness/entries/{entryId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/wellness.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: medical
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-033
+    name: "Registrar e Consultar Prontuários Médicos"
+    module: medical
+    description: >
+      Profissional de saúde registra e consulta prontuários médicos de
+      atletas. Acesso restrito por RBAC (OWASP API1 + API5).
+    endpoints:
+      - GET /medical/records
+      - POST /medical/records
+      - GET /medical/records/{recordId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/medical.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: competitions
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-034
+    name: "Gerenciar Competições e Equipes Participantes"
+    module: competitions
+    description: >
+      Admin e coordenador criam e gerenciam competições, registrando
+      equipes participantes e seus dados de inscrição.
+    endpoints:
+      - GET /competitions
+      - POST /competitions
+      - GET /competitions/{competitionId}
+      - POST /competitions/{competitionId}/teams/{teamId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/competitions.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: matches
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-035
+    name: "Agendar Partidas e Gerenciar Escalações"
+    module: matches
+    description: >
+      Admin e coordenador agendam partidas entre equipes e registram
+      as escalações (lineup) dos jogadores convocados.
+    endpoints:
+      - GET /matches
+      - POST /matches
+      - GET /matches/{matchId}
+      - POST /matches/{matchId}/lineup/{userId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/matches.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: scout
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-036
+    name: "Registrar e Agregar Eventos de Scout"
+    module: scout
+    description: >
+      Analista registra eventos técnico-táticos de partidas (gols,
+      assistências, faltas, erros). Treinador consulta agregações
+      estatísticas por atleta ou equipe.
+    endpoints:
+      - GET /scout/events
+      - POST /scout/events
+      - GET /scout/events/aggregations
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/scout.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: exercises
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-037
+    name: "Catalogar e Copiar Exercícios"
+    module: exercises
+    description: >
+      Treinador cria e mantém catálogo de exercícios reutilizáveis,
+      podendo copiar exercícios existentes para criar variações.
+    endpoints:
+      - GET /exercises
+      - POST /exercises
+      - GET /exercises/{id}
+      - POST /exercises/{id}/copy
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/exercises.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: analytics
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-038
+    name: "Gerar e Consultar Snapshots Analíticos"
+    module: analytics
+    description: >
+      Sistema gera e persiste snapshots de métricas de desempenho
+      (carga, presença, bem-estar). Treinador consulta dashboards
+      baseados nos snapshots.
+    endpoints:
+      - GET /analytics/snapshots
+      - POST /analytics/snapshots
+      - GET /analytics/dashboards
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/analytics.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: reports
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-039
+    name: "Gerar e Baixar Relatórios"
+    module: reports
+    description: >
+      Usuário autorizado solicita geração de relatório (PDF, CSV).
+      Sistema processa em background e disponibiliza para download.
+    endpoints:
+      - GET /reports/jobs
+      - POST /reports/jobs
+      - GET /reports/jobs/{jobId}
+      - GET /reports/jobs/{jobId}/download
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/reports.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: ai_ingestion
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-040
+    name: "Ingestão Assíncrona de Dados por IA"
+    module: ai_ingestion
+    description: >
+      Operador submete jobs de ingestão de dados externos (scouts,
+      relatórios) para processamento por pipeline de IA. Pode retentar
+      jobs com falha.
+    endpoints:
+      - GET /ingestion/jobs
+      - POST /ingestion/jobs
+      - GET /ingestion/jobs/{jobId}
+      - POST /ingestion/jobs/{jobId}/retry
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/ai_ingestion.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: audit
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-041
+    name: "Consultar e Exportar Trilha de Auditoria"
+    module: audit
+    description: >
+      Admin consulta entradas da trilha de auditoria com filtros (ator,
+      ação, módulo, intervalo de datas) e exporta para análise forense.
+    endpoints:
+      - GET /audit/entries
+      - GET /audit/entries/export
+      - GET /audit/entries/{entryId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/audit.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: notifications
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-042
+    name: "Gerenciar Intenções e Entregas de Notificação"
+    module: notifications
+    description: >
+      Sistema registra intenções de notificação (push, email, in-app)
+      e rastreia entregas. Usuário consulta o histórico de entregas
+      recebidas.
+    endpoints:
+      - POST /notifications/intents
+      - GET /notifications/deliveries
+      - GET /notifications/deliveries/{deliveryId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/notifications.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: video
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-043
+    name: "Gerenciar Sessões e Segmentos de Vídeo"
+    module: video
+    description: >
+      Analista e treinador criam sessões de vídeo vinculadas a partidas
+      ou treinos, adicionando segmentos anotados para revisão técnica.
+    endpoints:
+      - GET /video/sessions
+      - POST /video/sessions
+      - GET /video/sessions/{sessionId}
+      - POST /video/segments
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/video.yaml

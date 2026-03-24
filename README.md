@@ -53,18 +53,16 @@ O HB Track é uma plataforma de gestão esportiva voltada ao handebol indoor. Se
 HB-TRACK/
 ├── docs/_canon/                 # *** Documentação canônica normativa (ler primeiro) ***
 │   ├── README.md                # Este guia de navegação
+│   ├── OPERATIONS.md            # Referência operacional consolidada
 │   ├── SYSTEM_SCOPE.md          # Missão, atores, macrodomínios, fora do escopo
 │   ├── ARCHITECTURE.md          # Stack canônica, princípios, camadas
 │   ├── MODULE_MAP.md            # 17 módulos, responsabilidades, dependências
-│   ├── API_CONVENTIONS.md       # Visão geral de API (documentation em .contract_driven/templates/api/api_rules.yaml)
 │   ├── DATA_CONVENTIONS.md      # IDs, datas, enums, soft delete, convenções DB
-│   ├── ERROR_MODEL.md           # Modelo standard de erros HTTP
 │   ├── GLOBAL_INVARIANTS.md     # Invariantes globais (INV-*)
 │   ├── SECURITY_RULES.md        # Regras globais de segurança
 │   ├── CI_CONTRACT_GATES.md     # Gates de validação de contratos
 │   ├── TEST_STRATEGY.md         # Estratégia canônica de testes
-│   ├── UI_FOUNDATIONS.md        # Fundamentos de UI/UX
-│   ├── DESIGN_SYSTEM.md         # Design system (tokens, componentes)
+│   ├── UI_CONTRACT_GUIDE.md     # Fundamentos canônicos de UI/UX
 │   ├── C4_CONTEXT.md            # C4 — Contexto
 │   ├── C4_CONTAINERS.md         # C4 — Containers
 │   └── HANDBALL_RULES_DOMAIN.md # 14 regras IHF documentadas
@@ -217,7 +215,7 @@ Para Agentes de IA, o ponto de entrada correto é:
 | Tema | Fonte canônica |
 |------|---------------|
 | Regras/templates de API HTTP (OpenAPI/JSON/URLs/paginação/erros/segurança) | `.contract_driven/templates/api/api_rules.yaml` |
-| Modelo de erro HTTP | `docs/_canon/ERROR_MODEL.md` |
+| Modelo de erro HTTP | `docs/_canon/OPERATIONS.md` + `contracts/openapi/components/schemas/shared/problem.yaml` |
 | Regras globais de segurança | `docs/_canon/SECURITY_RULES.md` |
 | Convenções de dados (IDs/datas/enums/soft delete/DB naming) | `docs/_canon/DATA_CONVENTIONS.md` |
 | Política de mudança | `docs/_canon/CHANGE_POLICY.md` |

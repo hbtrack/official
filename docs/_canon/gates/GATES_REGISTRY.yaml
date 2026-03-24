@@ -4,8 +4,8 @@
 # Verificado pelo REQUIRED_ARTIFACT_PRESENCE_GATE no pipeline.
 # Spec normativa completa: docs/_canon/CI_CONTRACT_GATES.md
 # -------------------------------------------------------------------------
-version: "1.1.0"
-last_reviewed: "2026-03-16"
+version: "1.2.0"
+last_reviewed: "2026-03-23"
 spec_ref: "docs/_canon/CI_CONTRACT_GATES.md"
 implementation_ref: "scripts/contracts/validate/validate_contracts.py"
 evidence_output: "_reports/contract_gates/latest.json"
@@ -71,11 +71,19 @@ gates:
       sem autorização explícita em SCOPE_BOUNDARY_POLICY.md. Falha-safe: rejeita qualquer referência
       que não esteja explicitamente permitida na política ou autorizada por ADR específica.
       Integrado a Fase 1 do orchestrador pré-contrato (após carregamento de módulo).
+      NOTA: este gate é executado como passo pré-contrato via script dedicado, NÃO como
+      gate inline de validate_contracts.py. Ver integrated_in_validate_contracts abaixo.
     blocking_codes: [BLOCKED_SCOPE_OVERFLOW]
     implementation_script: "scripts/gates/check_scope_boundary.py"
     policy_source: "docs/_canon/SCOPE_BOUNDARY_POLICY.md"
-    adr_reference: "docs/_canon/decisions/ADR-031-scope-boundary-validation.md"
+    adr_reference: "docs/_canon/decisions/ADR-034-scope-boundary-validation.md"
     status: active
+    integrated_in_validate_contracts: false
+    integration_note: >
+      Por design, este gate é invocado como passo separado pelo orchestrador pré-contrato
+      (scripts/gates/check_scope_boundary.py), não como gate inline do pipeline CI.
+      validate_contracts.py verifica SCOPE_BOUNDARY_POLICY.md via REQUIRED_ARTIFACT_PRESENCE_GATE
+      mas não executa a validação semântica de fronteira.
 
   - gate_id: REQUIRED_ARTIFACT_PRESENCE_GATE
     order: 2
@@ -270,10 +278,7 @@ gates:
       para módulos com status `validated_contract` ou `implementation_ready` no MODULE_REGISTRY.
       O boot efetivamente aplicado deve ser rastreável pelo Boot Resolution Report.
     blocking_codes:
-      [
-        PRE_CONTRACT_EVIDENCE_MISSING,
-        PRE_CONTRACT_EVIDENCE_INVALID,
-      ]
+      [PRE_CONTRACT_EVIDENCE_MISSING, PRE_CONTRACT_EVIDENCE_INVALID]
     status: active
 
   - gate_id: SHADOW_AUTHORITY_GATE
@@ -301,8 +306,9 @@ gates:
     applies_when: module_registry_has_implementation_ready_decision_ir
     depends_on: [MODULE_REGISTRY_GATE]
     description: >
-      Valida `MODULE_DECISION_IR` em `.dev/` quando o módulo atinge `implementation_ready`
-      e declara a superfície `decision_ir` no MODULE_REGISTRY.
+      Valida `DECISION_IR_<MODULE>.yaml` em `.contract_driven/decisions/`
+      quando o módulo atinge `implementation_ready` e declara a superfície
+      `decision_ir` no MODULE_REGISTRY.
     blocking_codes:
       [
         IR_SCHEMA_INVALID,
@@ -567,6 +573,25 @@ gates:
     status: active
     implemented_in: scripts/contracts/validate/validate_contracts.py
 
+  - gate_id: SPECTRAL_LINTING_GATE
+    order: "13B"
+    name: "Spectral Linting Gate"
+    blocking: true
+    active_stage: contract
+    severity: HIGH
+    parallelizable: true
+    applies_when: openapi_document_present
+    depends_on: [ARAZZO_VALIDATION_GATE]
+    description: >
+      Executa `spectral lint` diretamente sobre `contracts/openapi/openapi.yaml`
+      via toolchain WSL-native (node_modules/NVM). Complementa OPENAPI_POLICY_RULESET_GATE
+      (que aplica regras Redocly) com linting nativo Spectral para detectar violações de
+      estilo OpenAPI não cobertas pelo ruleset customizado. SKIP_NOT_APPLICABLE quando
+      `contracts/openapi/openapi.yaml` está ausente. Adicionado em FIX BACKLOG_ITEM_1 (Passo D).
+    blocking_codes: [BLOCKED_OPENAPI_SPECTRAL_VIOLATION, ERROR_INFRA]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
   - gate_id: UI_DOC_VALIDATION_GATE
     order: 14
     name: "UI Documentation Validation Gate"
@@ -620,7 +645,13 @@ gates:
       de qualquer contrato de produção ser criado ou revisado.
       Spec normativa: docs/_canon/DECISION_POLICY.md §2 e §3.
     blocking_codes: [BLOCKED_MISSING_ARCH_DECISION]
-    status: active
+    status: deferred
+    deferred_reason: >
+      Não implementado em validate_contracts.py. O arquivo ARCHITECTURE_DECISION_BACKLOG.md
+      existe mas o gate semântico (parse de criticidade=obrigatória + status=open) ainda não
+      foi criado. Decisão FASE 1: manter como deferred até implementação explícita ser priorizada.
+      Não causa falha silenciosa — ausência de implementação é agora rastreável.
+    deferred_since: "2026-03-23"
 
   - gate_id: FEATURE_READINESS_GATE
     order: "15B"
@@ -781,7 +812,13 @@ gates:
       SKIP_NOT_APPLICABLE quando frontend/ não existe (pré-implementação).
       Spec normativa: docs/_canon/FRONTEND_CONTRACT.md
     blocking_codes: [BLOCKED_CONTRACT_CONFLICT]
-    status: active
+    status: deferred
+    deferred_reason: >
+      Não implementado em validate_contracts.py. O diretório frontend/ não existe
+      (pré-implementação, Fase 5 do ROADMAP). O gate sempre retornaria SKIP_NOT_APPLICABLE
+      até a Fase 5 criar o frontend React. Decisão FASE 1: manter como deferred até
+      que frontend/ seja criado e o gate seja implementado junto com o código.
+    deferred_since: "2026-03-23"
 
   - gate_id: READINESS_SUMMARY_GATE
     order: 16
@@ -801,7 +838,7 @@ gates:
   - gate_id: HANDOFF_COHERENCE_GATE
     order: "20A"
     name: "Handoff Coherence Gate"
-    blocking: false
+    blocking: true
     severity: MEDIUM
     parallelizable: true
     applies_when: "SESSION_HANDOFF.md exists"
@@ -810,6 +847,8 @@ gates:
       Verifica coerência de `SESSION_HANDOFF.md` com o estado atual do repositório
       e valida o front matter YAML obrigatório contra
       `contracts/schemas/shared/session_handoff.schema.json`.
+      Exige `evidence_paths` reais e, para `ci_status=PASS`, um relatório
+      canônico de pipeline completo como base rastreável do handoff.
     blocking_codes: [BLOCKED_HANDOFF_INCOMPLETE]
     status: active
     implemented_in: scripts/contracts/validate/validate_contracts.py
@@ -826,8 +865,30 @@ gates:
     depends_on: []
     description: >
       Impede status alto (`validated_contract` ou `implementation_ready`) com
-      bloqueios adversariais ainda ativos.
+      bloqueios adversariais ainda ativos, superfícies esperadas ausentes
+      ou evidência mínima de continuidade ausente.
     blocking_codes: [BLOCKED_REGISTRY_MISMATCH, BLOCKED_ADVERSARIAL_PENDING]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: SURFACE_PROMOTION_COHERENCE_GATE
+    order: "20B1"
+    name: "Surface Promotion Coherence Gate"
+    blocking: true
+    active_stage: readiness
+    severity: HIGH
+    parallelizable: true
+    applies_when: "module with expected_surfaces in MODULE_REGISTRY"
+    depends_on: [MODULE_REGISTRY_GATE]
+    description: >
+      Detecta módulos subpromovidos: quando todas as expected_surfaces declaradas no
+      MODULE_REGISTRY estão presentes no filesystem mas o status do módulo não foi
+      atualizado. Falha (BLOCKED_PROMOTION_PENDING) se módulo com status 'draft_contract'
+      tem todas as superfícies criadas — o agente deve atualizar MODULE_REGISTRY.yaml.
+      Emite warning informativo (não bloqueante) para módulos 'validated_contract'
+      elegíveis para 'implementation_ready'. Não penaliza módulos em scaffold ou
+      já em statuses de implementação autorizados.
+    blocking_codes: [BLOCKED_PROMOTION_PENDING]
     status: active
     implemented_in: scripts/contracts/validate/validate_contracts.py
 
@@ -922,5 +983,45 @@ gates:
         READINESS_CONFIRMATION_INVALID,
         READINESS_CONFIRMATION_INCOHERENT,
       ]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: FEATURE_COVERAGE_GATE
+    order: "20H"
+    name: "Feature Coverage Gate"
+    blocking: true
+    active_stage: registry_coherence
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [MODULE_REGISTRY_GATE, FEATURE_READINESS_GATE]
+    description: >
+      FASE 6 — Garante rastreabilidade completa: todo módulo com status `implemented`
+      no MODULE_REGISTRY deve ter ao menos uma feature com status `implemented` no
+      FEATURE_REGISTRY. Implementa a regra incondicional definida em
+      MODULE_REGISTRY.yaml status_semantics.implemented. Bloqueia se qualquer módulo
+      implemented não tiver cobertura mínima de feature. Gate é SKIP_NOT_APPLICABLE
+      quando MODULE_REGISTRY ou FEATURE_REGISTRY estão ausentes.
+    blocking_codes: [BLOCKED_FEATURE_COVERAGE_MISSING]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: LEGACY_CRITICAL_PATH_GATE
+    order: "20I"
+    name: "Legacy Critical Path Gate"
+    blocking: true
+    active_stage: registry_coherence
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: []
+    description: >
+      FASE 7 — Garante isolamento de artefatos legados: boot_resolution_report.json
+      deve ter "_legacy: true"; scripts/hbtrack_lint/__init__.py deve conter aviso
+      LEGACY/legado/deprecated; nenhum arquivo do caminho crítico (scripts/hb,
+      validate_contracts.py) deve referenciar hbtrack_lint. SKIP quando nenhum dos
+      artefatos legados monitorados existe. Impede reintrodução de legado no fluxo
+      ativo em novas sessões.
+    blocking_codes: [BLOCKED_LEGACY_IN_CRITICAL_PATH]
     status: active
     implemented_in: scripts/contracts/validate/validate_contracts.py

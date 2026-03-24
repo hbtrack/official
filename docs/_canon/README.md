@@ -65,8 +65,12 @@ Regra: em caso de conflito entre níveis, o nível superior prevalece sempre.
 | 29 | `FEATURE_REGISTRY.yaml` | Registro de features e sua maturidade |
 | 30 | `IR_TO_SURFACE_MAPPING.yaml` | Mapeamento de IR (Intermediate Representation) para superfícies expostas |
 | 31 | `AGENT_INSTRUCTIONS.md` | Instruções de boot permanente para agentes — carregado em toda sessão |
-| 32 | `SCOPE_BOUNDARY_POLICY.md` | Política de fronteiras entre módulos — regras de referências permitidas/proibidas (ADR-031) |
+| 32 | `SCOPE_BOUNDARY_POLICY.md` | Política de fronteiras entre módulos — regras de referências permitidas/proibidas (ADR-034) |
 | 33 | `SURVIVAL_SUITE_POLICY.md` | Política da suíte de sobrevivência — testes obrigatórios antes de mudança em gates/profiles/schemas |
+| 34 | `C4_COMPONENTS_BACKEND.md` | C4 — Componentes do backend: detalhamento dos 17 módulos, camadas internas e dependências (current-state) |
+| 35 | `RUNTIME_CURRENT_STATE.md` | Inventário factual do runtime atual: o que existe, o que é só contrato, o que é target-state (current-state) |
+| 36 | `INTEGRATION_FLOWS.md` | Flows críticos de integração cross-módulo: auth, training→wellness→analytics, notifications, video/scout, ai_ingestion (governance) |
+| 37 | `ADR_INDEX.md` | Índice unificado de todas as ADRs com status, supersession e tema — referência rápida sem ambiguidade |
 
 ### Subdiretórios Autorizados
 

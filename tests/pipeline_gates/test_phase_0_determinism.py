@@ -279,11 +279,18 @@ class TestPhase0ValidationSchemas:
         assert "properties" in schema
         assert "required" in schema
         
-        # Verificar campos obrigatórios críticos
+        # Verificar campos obrigatórios críticos (sempre requeridos)
         required_fields = schema["required"]
-        critical_fields = ["session_id", "task_type", "module", "stage", "write_scope"]
-        for field in critical_fields:
+        # Nota: 'module' foi tornado condicional em v1.3.0 (não requerido para execute_roadmap_phase)
+        always_required = ["session_id", "task_type", "stage", "write_scope"]
+        for field in always_required:
             assert field in required_fields, f"Campo crítico {field} não está em 'required'"
+        # 'module' deve existir em properties (disponível mas condicional via if/then/else)
+        assert "module" in schema.get("properties", {}), (
+            "'module' deve existir em 'properties' do schema (mesmo sendo condicional)"
+        )
+        # Schema v1.3.0+ deve ter if/then/else para module condicional
+        assert "if" in schema, "Schema deve ter condicional 'if' para module (v1.3.0+)"
 
     def test_gates_registry_loads_and_ui_doc_gate_is_blocking(self, workspace_root):
         """🟢 PR3: GATES_REGISTRY.yaml carrega e UI_DOC_VALIDATION_GATE.blocking=true."""

@@ -23,6 +23,8 @@ types:
       - schemas_ref
     optional:
       - state_model_ref
+      - permissions_ref
+      - errors_ref
   module-scope:
     filenames: ["MODULE_SCOPE_{module_upper}.md"]
     allow_missing_type: true

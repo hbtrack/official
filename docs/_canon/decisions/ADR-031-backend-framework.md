@@ -1,11 +1,29 @@
+---
+adr_id: ADR-031
+title: "Backend Framework: Django Ninja"
+status: accepted
+date: "2026-03-17"
+deciders: [product-owner, tech-lead]
+decision: D4
+state_semantics: governance
+supersedes: [ADR-026, ADR-028]
+superseded_by: []
+related_adrs: [ADR-030, ADR-034]
+implementation_status: partially_materialized
+---
+
 # ADR-031 — Backend Framework: Django Ninja
 
 **Status:** accepted
 **Data:** 2026-03-17
 **Decisores:** Humano (D4 backend — decisão 2026-03-17)
 **Supersede (parcialmente):** ADR-026 §1 Stack (FastAPI → Django Ninja), ADR-028 §Ferramenta (Alembic → Django Migrations)
+**Relação com ADR-030:** ADR-030 continua soberana para frontend; este ADR apenas referencia a decisão de frontend já aceita.
 
 ---
+
+> Semântica deste artefato: `governance`.
+> Este ADR registra a decisão aceita de stack backend. Nem todos os componentes listados abaixo já estão materializados no workspace; quando houver diferença, a implementação comprovada prevalece como `current-state` e este documento permanece como `target-state` aprovado para o backend.
 
 ## Contexto
 
@@ -28,7 +46,7 @@ A escolha foi revisitada em 2026-03-17 ao constatar que:
 
 **Framework backend:** Django 5.x + Django Ninja 1.x
 
-**Stack completa (substitui §1 do ADR-026):**
+**Stack completa aprovada (substitui §1 do ADR-026):**
 
 | Camada | Tecnologia |
 |--------|-----------|
@@ -39,11 +57,13 @@ A escolha foi revisitada em 2026-03-17 ao constatar que:
 | Task queue | Celery 5.x + Redis 7 |
 | WebSocket | Django Channels 4.x + Redis |
 | Frontend | React 18 + Vite (decidido em ADR-030 / D7 — SSOT: `FRONTEND_CONTRACT.md`) |
-| Testes | pytest + pytest-django (backend) + Jest (frontend) |
+| Testes | pytest + pytest-django (backend) + frontend conforme ADR-030 / `FRONTEND_CONTRACT.md` |
 | Containerização | Docker + Docker Compose |
 
 **Ferramenta de migração:** Django Migrations substitui Alembic (ADR-028 §Ferramenta).
 A ESTRATÉGIA de migração do ADR-028 (staging obrigatório, reversibilidade, zero-downtime) permanece válida — apenas a ferramenta muda.
+
+**Nota sobre materialização:** O workspace já adotou Django/Django Ninja como baseline documental, mas workers, WebSocket, assets de frontend e algumas automações de deploy ainda podem existir apenas como target-state aprovado. A presença deste ADR não constitui prova de implementação.
 
 **Nota sobre arquivos existentes:** O arquivo `migrations/training/versions/20260317_001_create_training_tables.py` (Alembic) é um ARTEFATO DE REFERÊNCIA de schema — não será executado. As migrações reais serão Django Migrations em `src/training/migrations/` quando a implementação começar.
 
@@ -72,6 +92,12 @@ A ESTRATÉGIA de migração do ADR-028 (staging obrigatório, reversibilidade, z
 - `DATABASE_URL` usa formato Django: `django.db.backends.postgresql` (não `postgresql+asyncpg`)
 - Pasta `migrations/<module>/` existente (Alembic) é referência — não executar
 - Django é síncrono por padrão; operações async via Django Ninja async views quando necessário
+
+**Target-state ainda não comprovado apenas por este ADR:**
+- workers Celery ativos em todos os módulos marcados como assíncronos;
+- WebSocket/Channels operacional em runtime;
+- assets de frontend e pipeline de frontend materializados no workspace;
+- automação de deploy pronta para promover `staging` ou `production`.
 
 ---
 

@@ -11,7 +11,7 @@ scope: "global"
 
 ## Objetivo
 
-Definir as regras explícitas de cross-module references permitidas no HB Track, mitigando vulnerabilidades de scope overflow (falhas de isolamento entre domínios) detectadas na auditoria red team (ADR-031).
+Definir as regras explícitas de cross-module references permitidas no HB Track, mitigando vulnerabilidades de scope overflow (falhas de isolamento entre domínios) detectadas na auditoria red team (ADR-034).
 
 Este documento é o **SSOT (Single Source of Truth)** para validação de referências cross-module em tempo de pre-contrato (Fase 1 do orchestrador).
 
@@ -914,7 +914,7 @@ Esta policy é auditada automaticamente:
 
 ## 7. Referências e Links
 
-- **ADR-031**: "Scope Boundary Validation — Detectar Referências Cross-Module" → Define gate de validação (orchestrator F1.5)
+- **ADR-034**: "Scope Boundary Validation — Detectar Referências Cross-Module" → Define gate de validação (orchestrator F1.5)
 - **MODULE_REGISTRY.yaml**: Status operacional de cada módulo
 - **MODULE_SOURCE_AUTHORITY_MATRIX.yaml**: Fonte de autoridade por módulo (IHF, ACSM, etc.)
 - **SYSTEM_SCOPE.md**: Escopo geral do sistema, macrodomínios, fora-de-escopo

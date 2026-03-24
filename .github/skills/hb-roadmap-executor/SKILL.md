@@ -10,6 +10,8 @@ description: >
 
 # HB Track — ROADMAP Phase Executor
 
+> ⚠️ **BRIDGE ONLY — NON-SOVEREIGN**: Este skill é uma ponte operacional. Não define regras, schemas, gates ou políticas canônicas. Em caso de conflito, prevalecem nesta ordem: enforcement executável (`scripts/hb`, `validate_contracts.py`) > schemas ativos (`contracts/schemas/`) > canon (`docs/_canon/`) > este skill.
+
 Este skill implementa o protocolo completo de execução de fases do ROADMAP.
 **Toda execução de fase DEVE seguir esta checklist na ordem exata.**
 
@@ -121,9 +123,26 @@ Usar os paths canônicos definidos em `execute_roadmap_phase.prompt.md`. Nunca c
 ### Checklist Fechamento
 
 - [ ] **F1** — Verificar Critério de Done da fase completa conforme `ROADMAP.md`
-- [ ] **F2** — Criar ou atualizar `SESSION_HANDOFF.md` na raiz com:
+- [ ] **F2** — Criar ou atualizar `SESSION_HANDOFF.md` na raiz com front matter YAML válido (obrigatório — validado por `HANDOFF_COHERENCE_GATE`):
   ```markdown
+  ---
+  data_ultima_sessao: "YYYY-MM-DD"
+  branch_ativo: "<branch>"
+  modo_operacao: ROADMAP
+  ci_status: PASS
+  modulo_foco: "<módulo ou área principal>"
+  fase_roadmap: <N>
+  task_type: execute_roadmap_phase
+  boot_profile_id: roadmap_execution
+  task_id: "<task_id ou 'completa'>"
+  resultado: DONE
+  proxima_acao_permitida: "<próxima ação objetiva — mín. 10 chars>"
+  bloqueios_ativos: []
+  evidence_paths:
+    - "_reports/runs/<run_id>/contract_gates.json"
+  ---
   # SESSION HANDOFF — HB TRACK
+
   ## Estado Geral
   **Data:** <YYYY-MM-DD> | **Branch:** <branch>
   **Fase ROADMAP:** <N> | **task_id:** <ID ou "completa">
@@ -132,14 +151,14 @@ Usar os paths canônicos definidos em `execute_roadmap_phase.prompt.md`. Nunca c
   ## O que foi feito
   - [lista de artefatos criados/modificados]
 
-  ## Critério de Done da fase
-  - [ATINGIDO|PENDENTE — listar o que falta]
+  ## Evidências
+  - `_reports/runs/<run_id>/contract_gates.json`
 
-  ## Próximos passos
-  - [fase N+1 ou aguardar instrução humana]
+  ## Próxima ação permitida
+  [fase N+1 ou aguardar instrução humana]
 
   ## Bloqueios ativos
-  - [se houver]
+  Nenhum.
   ```
 - [ ] **F3** — Emitir ao humano:
   ```

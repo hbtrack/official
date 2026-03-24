@@ -268,7 +268,6 @@ Ver `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml` para lista de `source_id` 
 ## 10. Referências Cruzadas
 
 - `.contract_driven/templates/api/api_rules.yaml` — SSOT de convenções/templates/validações de API HTTP
-- `API_CONVENTIONS.md` — guia/ponteiros (não-SSOT) para API
 - `DATA_CONVENTIONS.md` — convenções de dados e breaking changes de schema
 - `CONTRACT_SYSTEM_RULES.md` — regras operacionais do sistema contract-driven
 - `docs/_canon/decisions/` — registro de ADRs aprovados

@@ -1,12 +1,11 @@
 {
   "session_id": "4d672789-d33f-42d6-be4e-41e30e822ba0",
-  "session_timestamp": "2026-03-23T13:54:38.721797+00:00",
+  "session_timestamp": "2026-03-24T05:14:42.208217+00:00",
   "branch": "hb-track-contratos-driven",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "roadmap_execution",
   "task_type": "execute_roadmap_phase",
-  "module": "training",
-  "stage": 2,
+  "stage": 0,
   "write_scope": "roadmap",
   "worker_id": "execute_roadmap_phase",
   "git_user": "HB Track Agent",
@@ -907,9 +906,9 @@
     },
     {
       "path": "contracts/schemas/shared/session_start.schema.json",
-      "sha256": "f715652e7cf48a49628d76e96b48dfc3440f4d892e70a310437e22f66e470f80",
+      "sha256": "c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-23T14:02:07.083139+00:00"
+      "validated_at": "2026-03-24T04:32:36.357232+00:00"
     },
     {
       "path": "contracts/schemas/users/user_profile.schema.json",
@@ -1291,10 +1290,10 @@
     },
     {
       "path": "contracts/schemas/shared/session_handoff.schema.json",
-      "sha256": "5cdc1bab16e0ae8b15f89a9ad7e7d1e647354390bce3a25fe1a8c2e80e1527cd",
+      "sha256": "e40c3048c7b1351712dc7cb154bdab66c0f087823a6dbe918f9320113ec4d714",
       "created_at": "2026-03-19T15:59:58.388880+00:00",
       "gate_exit_code": 0,
-      "validated_at": "2026-03-21T01:56:11.001459+00:00"
+      "validated_at": "2026-03-24T04:32:28.845504+00:00"
     },
     {
       "path": "contracts/schemas/shared/waiver.schema.json",
@@ -3211,9 +3210,39 @@
       "sha256": "a4480665edb80aed06b3a141dcd2dec744651554d48791defa8e9bdae009e347",
       "created_at": "2026-03-23T14:02:07.082332+00:00",
       "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/README.md",
+      "sha256": "ac7fe69b8b5fc9c580de4bfee6f0fa8f64822048ab6622e078f5db64e54e396f",
+      "created_at": "2026-03-24T04:32:48.003245+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/baseline/openapi_baseline.json",
+      "sha256": "54191aa346261a996feb3bd9c9a3a36d658a5627379f9ca62b0886c2f320243b",
+      "created_at": "2026-03-24T04:32:51.277505+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/training/DECISION_IR_TRAINING.yaml",
+      "sha256": "fbc83fc18c9a2edd0a375e4182269cf2c163bc1a3fbda235d5528af097c73f28",
+      "created_at": "2026-03-24T04:32:54.587344+00:00",
+      "gate_exit_code": 0
     }
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-03-23T13:36:02.843841+00:00"
+  "hook_validated_at": "2026-03-23T14:31:22.719285+00:00",
+  "stage0_validation_results": {
+    "task_type_valid": true,
+    "module_valid": true,
+    "worker_exists": true,
+    "boot_profile_exists": true,
+    "boot_paths_valid": true,
+    "required_sections_resolvable": true
+  },
+  "operation_mode": "ROADMAP",
+  "roadmap_phase": 0,
+  "roadmap_task_id": "agent-compliance-fase8",
+  "stage3_exit_code": 2
 }

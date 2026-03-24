@@ -89,7 +89,7 @@ decisions:
           Vídeo distribuído somente para banco de dados tático, tribuna e
           comissão técnica. Sem suporte a broadcasting externo no v1.
       B:
-        label: Dual-track: técnica interna + pública (CDN)
+        label: "Dual-track: técnica interna + pública (CDN)"
         description: >
           Track técnico: banco tático, tribuna, comissão (baixa latência, acesso
           restrito). Track público: broadcasting via CDN (alta disponibilidade,
