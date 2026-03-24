@@ -35,6 +35,9 @@ def _make_min_repo(tmp_path: pathlib.Path) -> pathlib.Path:
     ]:
         _copy_file(repo_root, tmp_path, rel)
 
+    # contracts/schemas deve existir (_asyncapi_event_sources verifica presença)
+    (tmp_path / "contracts" / "schemas").mkdir(parents=True, exist_ok=True)
+
     return tmp_path
 
 
@@ -58,7 +61,9 @@ def test_compile_blocks_uuid_suffix_violation(tmp_path: pathlib.Path):
 
     with pytest.raises(PolicyCompilerError) as exc:
         compile_expected(root, module="training", surface="event")
-    assert "sufixo proibido `Uuid`" in str(exc.value)
+    # A mensagem detalhada está em exc.value.violations, não no summary genérico
+    violations_text = " ".join(v.message for v in exc.value.violations)
+    assert "Sufixo proibido" in violations_text and "Uuid" in violations_text
 
 
 def test_compile_blocks_missing_semantic_id_binding(tmp_path: pathlib.Path):
@@ -71,5 +76,7 @@ def test_compile_blocks_missing_semantic_id_binding(tmp_path: pathlib.Path):
 
     with pytest.raises(PolicyCompilerError) as exc:
         compile_expected(root, module="training", surface="event")
-    assert "x-semantic-id obrigatório" in str(exc.value)
+    # A mensagem detalhada está em exc.value.violations, não no summary genérico
+    violations_text = " ".join(v.message for v in exc.value.violations)
+    assert "x-semantic-id" in violations_text and "obrigatório" in violations_text
 

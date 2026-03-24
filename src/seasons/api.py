@@ -123,6 +123,8 @@ def create_season(request, payload: CreateSeasonIn):
         raise HttpError(HTTPStatus.FORBIDDEN, str(exc))
     except InvalidDateRange as exc:
         raise HttpError(HTTPStatus.BAD_REQUEST, str(exc))
+    except ValueError as exc:
+        raise HttpError(HTTPStatus.UNPROCESSABLE_ENTITY, str(exc))
     return HTTPStatus.CREATED, _season_to_out(season)
 
 

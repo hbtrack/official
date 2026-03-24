@@ -698,7 +698,9 @@ def compile_expected(
         validation_sources = [root / "contracts" / "openapi" / "paths" / f"{module}.yaml"]
     elif surface == "event" and target == "asyncapi":
         source_contracts = _asyncapi_event_sources(root, module)
-        validation_sources = [root / "contracts" / "asyncapi" / "asyncapi.yaml"]
+        # Validar todos os artefatos AsyncAPI (root + messages + components/schemas),
+        # não apenas asyncapi.yaml, para enforcement de style_veto e semantic bindings.
+        validation_sources = source_contracts
     else:
         raise PolicyCompilerError(f"Combinação surface/target não suportada: surface={surface} target={target}")
 

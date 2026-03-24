@@ -7,7 +7,24 @@ from __future__ import annotations
 
 import uuid
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import ArrayField
+
+
+class HBTrackUser(AbstractUser):
+    """
+    Custom User model com UUID primary key.
+    AUTH_USER_MODEL = "identity_access.HBTrackUser"
+    Garante que user.pk é sempre um UUID válido (required por identity_access.repository).
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    class Meta:
+        db_table = "identity_access_users"
+        app_label = "identity_access"
+
+    def __str__(self) -> str:
+        return self.email or self.username
 
 
 class AuthSessionModel(models.Model):

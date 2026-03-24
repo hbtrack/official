@@ -36,12 +36,18 @@ canonical_types:
     ExerciseVersionId:
       inherits: Identifier
       semantic_id: exercises.exercise_version.id.v1
+    IdentitySessionId:
+      inherits: Identifier
+      semantic_id: identity.session.id.v1
     IngestionJobId:
       inherits: Identifier
       semantic_id: ai_ingestion.job.id.v1
     MatchId:
       inherits: Identifier
       semantic_id: matches.match.id.v1
+    NotificationDeliveryId:
+      inherits: Identifier
+      semantic_id: notifications.delivery.id.v1
     OccurredAt:
       inherits: Timestamp
       semantic_id: core.occurred_at.v1
@@ -67,6 +73,24 @@ canonical_types:
     UserId:
       inherits: Identifier
       semantic_id: identity.user.id.v1
+    VideoClipDefinitionId:
+      inherits: Identifier
+      semantic_id: video.clip_definition.id.v1
+    VideoDistributionProfileId:
+      inherits: Identifier
+      semantic_id: video.distribution_profile.id.v1
+    VideoMatchMediaSessionId:
+      inherits: Identifier
+      semantic_id: video.match_media_session.id.v1
+    VideoMediaSegmentId:
+      inherits: Identifier
+      semantic_id: video.media_segment.id.v1
+    VideoSessionId:
+      inherits: Identifier
+      semantic_id: video.session.id.v1
+    WellnessEntryId:
+      inherits: Identifier
+      semantic_id: wellness.entry.id.v1
   field_bindings:
   - canonical_type_ref: training.session.id.v1
     field_name: trainingSessionId
@@ -96,10 +120,10 @@ canonical_types:
     field_name: targetResourceId
   - canonical_type_ref: core.correlation.id.v1
     field_name: correlationId
-  - canonical_type_ref: audit.entry.id.v1
-    field_name: entryId
   - canonical_type_ref: scout.event.id.v1
     field_name: eventId
+  - canonical_type_ref: notifications.delivery.id.v1
+    field_name: deliveryId
 contract_sources:
 - contracts/openapi/README.md
 - contracts/openapi/baseline/openapi_baseline.json

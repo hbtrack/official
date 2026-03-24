@@ -58,7 +58,8 @@ router = Router(tags=["identity_access"])
 
 
 def _get_repo() -> IdentityAccessRepository:
-    return IdentityAccessRepository()
+    from .infrastructure.jwt_adapter import JWTAdapter
+    return IdentityAccessRepository(jwt_port=JWTAdapter())
 
 
 def _session_to_out(s) -> dict:

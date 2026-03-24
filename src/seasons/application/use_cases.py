@@ -59,7 +59,7 @@ class ListSeasonsUseCase:
 
     def execute(self, inp: ListSeasonsInput) -> ListSeasonsOutput:
         effective_page_size = min(max(inp.page_size, 1), 100)
-        effective_page = max(inp.page, 1)
+        effective_page = min(max(inp.page, 1), 10_000)  # cap: previne overflow de OFFSET no PostgreSQL
 
         # Normaliza filtro de status para uppercase (entidade usa DRAFT/ACTIVE/ARCHIVED)
         status_filter = inp.status_label.upper() if inp.status_label else None

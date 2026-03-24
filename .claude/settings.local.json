@@ -28,7 +28,8 @@
       "Bash(npx @asyncapi/cli validate --help)",
       "Bash(node_modules/.bin/asyncapi validate:*)",
       "Bash(find /home/davis/HB-TRACK/config -name *.py)",
-      "Bash(find /home/davis/HB-TRACK/src -name \"api.py\" -exec wc -l {})"
+      "Bash(find /home/davis/HB-TRACK/src -name \"api.py\" -exec wc -l {})",
+      "Bash(ssh -i ~/.ssh/hbtrack_deploy -o StrictHostKeyChecking=no deploy@191.252.185.34 \":*)"
     ]
   }
 }

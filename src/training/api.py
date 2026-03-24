@@ -10,6 +10,7 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
+from django.db import DataError, IntegrityError
 from ninja import Router
 from ninja.errors import HttpError
 
@@ -205,7 +206,7 @@ def list_training_sessions(
                 team_id=team_id,
                 season_id=season_id,
                 status=status,
-                page_size=min(page_size, 100),
+                page_size=min(max(page_size, 1), 100),
                 page_token=page_token,
             )
         )
@@ -265,6 +266,8 @@ def create_training_session(request, body: CreateTrainingSessionIn):
         raise HttpError(403, str(exc))
     except ValueError as exc:
         raise HttpError(422, str(exc))
+    except (IntegrityError, DataError) as exc:
+        raise HttpError(422, f"Dados inválidos: violação de restrição do banco — {exc}")
     return 201, _session_to_out(session)
 
 
@@ -770,6 +773,8 @@ def create_mesocycle(request, body: CreateMesocycleIn):
         raise HttpError(403, str(exc))
     except ValueError as exc:
         raise HttpError(422, str(exc))
+    except (IntegrityError, DataError) as exc:
+        raise HttpError(422, f"Dados inválidos: violação de restrição do banco — {exc}")
     return 201, MesocycleOut(
         id=meso.id,
         organization_id=meso.organization_id,
@@ -860,6 +865,8 @@ def create_microcycle(request, body: CreateMicrocycleIn):
         raise HttpError(403, str(exc))
     except ValueError as exc:
         raise HttpError(422, str(exc))
+    except IntegrityError as exc:
+        raise HttpError(422, f"Dados inválidos: violação de restrição do banco — {exc}")
     return 201, MicrocycleOut(
         id=micro.id,
         organization_id=micro.organization_id,

@@ -115,7 +115,7 @@ def list_teams(
     except InsufficientPrivilege as exc:
         raise HttpError(403, str(exc))
     return 200, TeamListOut(
-        data=[_team_to_out(t) for t in result.teams],
+        data=[_team_to_out(t) for t in result.data],
         page=result.page,
         page_size=result.page_size,
         total=result.total,
@@ -145,6 +145,8 @@ def create_team(request, payload: CreateTeamIn):
         )
     except InsufficientPrivilege as exc:
         raise HttpError(403, str(exc))
+    except ValueError as exc:
+        raise HttpError(422, str(exc))
     return 201, _team_to_out(team)
 
 

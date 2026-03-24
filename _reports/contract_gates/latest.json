@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-03-24T05:44:26Z",
+  "timestamp_utc": "2026-03-24T16:22:51Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "d632015",
+    "git_commit": "c2b3ea6",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -22,7 +22,7 @@
       "storybook": null
     }
   },
-  "overall_status": "FAIL",
+  "overall_status": "PASS",
   "execution_context": {
     "profile": "ci",
     "stage": null,
@@ -31,10 +31,10 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260324T054426_843e54"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260324T162251_ffce96"
   },
   "status_detail": {
-    "active_gates_passed": 48,
+    "active_gates_passed": 50,
     "skip_count": 3,
     "critical_gates": [
       {
@@ -171,7 +171,7 @@
       },
       {
         "gate_id": "HANDOFF_COHERENCE_GATE",
-        "status": "FAIL"
+        "status": "PASS"
       },
       {
         "gate_id": "MODULE_STATUS_COHERENCE_GATE",
@@ -207,7 +207,7 @@
       }
     ]
   },
-  "exit_code": 2,
+  "exit_code": 0,
   "gates": [
     {
       "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -229,7 +229,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 71
+        "duration_ms": 83
       }
     },
     {
@@ -254,7 +254,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7975
+        "duration_ms": 10116
       }
     },
     {
@@ -459,7 +459,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 13
+        "duration_ms": 11
       }
     },
     {
@@ -589,7 +589,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 162
+        "duration_ms": 177
       }
     },
     {
@@ -632,6 +632,7 @@
         "/home/davis/HB-TRACK/docs/_canon/TEST_STRATEGY.md",
         "/home/davis/HB-TRACK/docs/_canon/TOOLCHAIN_HEALTH_POLICY.md",
         "/home/davis/HB-TRACK/docs/_canon/UI_CONTRACT_GUIDE.md",
+        "/home/davis/HB-TRACK/docs/_canon/VPS_SETUP.md",
         "/home/davis/HB-TRACK/docs/_canon/gates/README.md",
         "/home/davis/HB-TRACK/docs/_canon/templates/SESSION_HANDOFF.template.md"
       ],
@@ -641,7 +642,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 11
+        "duration_ms": 14
       }
     },
     {
@@ -662,7 +663,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 47
+        "duration_ms": 48
       }
     },
     {
@@ -683,7 +684,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 36
+        "duration_ms": 40
       }
     },
     {
@@ -704,7 +705,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 16
+        "duration_ms": 19
       }
     },
     {
@@ -725,7 +726,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 87
+        "duration_ms": 94
       }
     },
     {
@@ -746,7 +747,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 54
+        "duration_ms": 57
       }
     },
     {
@@ -767,7 +768,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 46
+        "duration_ms": 49
       }
     },
     {
@@ -788,7 +789,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 309
+        "duration_ms": 419
       }
     },
     {
@@ -809,7 +810,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 41
+        "duration_ms": 46
       }
     },
     {
@@ -868,7 +869,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 12
+        "duration_ms": 8
       }
     },
     {
@@ -926,7 +927,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 36
+        "duration_ms": 55
       }
     },
     {
@@ -953,7 +954,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 131
+        "duration_ms": 167
       }
     },
     {
@@ -1002,6 +1003,7 @@
         "docs/_canon/TEST_STRATEGY.md",
         "docs/_canon/TOOLCHAIN_HEALTH_POLICY.md",
         "docs/_canon/UI_CONTRACT_GUIDE.md",
+        "docs/_canon/VPS_SETUP.md",
         "docs/_canon/decisions",
         "docs/_canon/gates",
         "docs/_canon/security",
@@ -1049,7 +1051,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 5
       }
     },
     {
@@ -1419,7 +1421,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 99
+        "duration_ms": 50
       }
     },
     {
@@ -1505,7 +1507,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 766
+        "duration_ms": 819
       }
     },
     {
@@ -1528,7 +1530,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2772
+        "duration_ms": 2884
       }
     },
     {
@@ -1550,7 +1552,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2416
+        "duration_ms": 4979
       }
     },
     {
@@ -1589,7 +1591,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 585
+        "duration_ms": 661
       }
     },
     {
@@ -1629,7 +1631,7 @@
         "errors": 0,
         "warnings": 1,
         "violations": 1,
-        "duration_ms": 2251
+        "duration_ms": 2085
       }
     },
     {
@@ -1695,7 +1697,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 35
+        "duration_ms": 2
       }
     },
     {
@@ -2189,7 +2191,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1834
+        "duration_ms": 2108
       }
     },
     {
@@ -2213,7 +2215,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1948
+        "duration_ms": 1912
       }
     },
     {
@@ -2233,7 +2235,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 16
+        "duration_ms": 5
       }
     },
     {
@@ -2273,7 +2275,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 24186
+        "duration_ms": 5631
       }
     },
     {
@@ -2316,7 +2318,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 83
+        "duration_ms": 85
       }
     },
     {
@@ -2338,7 +2340,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1663
+        "duration_ms": 1219
       }
     },
     {
@@ -2394,7 +2396,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 88
+        "duration_ms": 72
       }
     },
     {
@@ -2414,7 +2416,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 13
+        "duration_ms": 5
       }
     },
     {
@@ -2434,7 +2436,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 40066
+        "duration_ms": 48126
       }
     },
     {
@@ -2470,7 +2472,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 13
+        "duration_ms": 32
       }
     },
     {
@@ -2490,7 +2492,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 20
+        "duration_ms": 23
       }
     },
     {
@@ -2512,7 +2514,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 5
       }
     },
     {
@@ -2568,7 +2570,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 10
       }
     },
     {
@@ -2590,7 +2592,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 1
       }
     },
     {
@@ -2612,7 +2614,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 1
       }
     },
     {
@@ -2638,47 +2640,36 @@
     },
     {
       "gate_id": "HANDOFF_COHERENCE_GATE",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": true,
-      "exit_code": 2,
-      "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-      "summary": "SESSION_HANDOFF.md com 2 inconsistência(s).",
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "SESSION_HANDOFF.md coerente com estado atual.",
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_done_legacy_phase7.py",
-        "/home/davis/HB-TRACK/docs/_canon/gates/GATES_REGISTRY.yaml",
-        "/home/davis/HB-TRACK/_reports/COMPLIANCE_CERTIFICATION_20260324.md"
+        "/home/davis/HB-TRACK/Dockerfile",
+        "/home/davis/HB-TRACK/infra/docker-compose.prod.yml",
+        "/home/davis/HB-TRACK/infra/nginx/nginx.conf",
+        "/home/davis/HB-TRACK/.github/workflows/deploy.yml",
+        "/home/davis/HB-TRACK/docs/_canon/VPS_SETUP.md"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_done_legacy_phase7.py",
-        "/home/davis/HB-TRACK/docs/_canon/gates/GATES_REGISTRY.yaml",
-        "/home/davis/HB-TRACK/_reports/COMPLIANCE_CERTIFICATION_20260324.md"
+        "/home/davis/HB-TRACK/Dockerfile",
+        "/home/davis/HB-TRACK/infra/docker-compose.prod.yml",
+        "/home/davis/HB-TRACK/infra/nginx/nginx.conf",
+        "/home/davis/HB-TRACK/.github/workflows/deploy.yml",
+        "/home/davis/HB-TRACK/docs/_canon/VPS_SETUP.md"
       ],
       "evidence_files": [],
-      "violations": [
-        {
-          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-          "artifact": "SESSION_HANDOFF.md",
-          "message": "ci_status=PASS diverge do relatório canônico (FAIL).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-          "artifact": "SESSION_HANDOFF.md",
-          "message": "Divergência de módulo foco: session_start.module_focus='training' != SESSION_HANDOFF.modulo_foco='governance'.",
-          "severity": "error"
-        }
-      ],
+      "violations": [],
       "metrics": {
-        "errors": 2,
+        "errors": 0,
         "warnings": 0,
-        "violations": 2,
-        "duration_ms": 11
+        "violations": 0,
+        "duration_ms": 47
       }
     },
     {
@@ -2700,7 +2691,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 184
+        "duration_ms": 267
       }
     },
     {
@@ -2744,7 +2735,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 24
+        "duration_ms": 26
       }
     },
     {
@@ -3106,7 +3097,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 932
+        "duration_ms": 1198
       }
     },
     {
@@ -3130,7 +3121,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 18
       }
     },
     {
@@ -3152,7 +3143,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 16
+        "duration_ms": 22
       }
     },
     {
@@ -3170,7 +3161,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 8
       }
     },
     {
@@ -3191,7 +3182,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 26
+        "duration_ms": 32
       }
     },
     {
@@ -3214,16 +3205,16 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 5
+        "duration_ms": 18
       }
     },
     {
       "gate_id": "READINESS_SUMMARY_GATE",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": false,
-      "exit_code": 2,
+      "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pipeline FAIL: 1 gate(s) bloqueante(s) falharam.",
+      "summary": "Pipeline PASS: 49 PASS, 3 SKIP.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],

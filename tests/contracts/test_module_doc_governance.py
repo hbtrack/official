@@ -109,6 +109,8 @@ def _make_minimal_contract_repo(tmp_path: pathlib.Path) -> pathlib.Path:
     _write(tmp_path / "docs" / "_canon" / "SYSTEM_SCOPE.md", "# SYSTEM_SCOPE\n")
     _write(tmp_path / "docs" / "_canon" / "HANDBALL_RULES_DOMAIN.md", "# HANDBALL\n")
     _make_layout(tmp_path, ["users"])
+    # MODULE_REGISTRY.yaml é a SSOT de módulos canônicos (requer exatamente 17 módulos)
+    _copy(repo_root, tmp_path, "docs/_canon/MODULE_REGISTRY.yaml")
     _write(tmp_path / "contracts" / "openapi" / "openapi.yaml", 'openapi: "3.1.0"\ninfo:\n  title: X\n  version: "0.1.0"\npaths:\n  {}\ncomponents:\n  schemas: {}\n')
     _write(tmp_path / "contracts" / "openapi" / "paths" / "users.yaml", "# scaffold\n")
     _write(tmp_path / "contracts" / "schemas" / "users" / "user.schema.json", "{}\n")
