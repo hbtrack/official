@@ -2,35 +2,47 @@
 data_ultima_sessao: "2026-03-24"
 branch_ativo: hb-track-contratos-driven
 modo_operacao: ROADMAP
-ci_status: PASS
+ci_status: UNKNOWN
 modulo_foco: frontend
 fase_roadmap: 5
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
-task_id: roadmap-fase5-task51-bootstrap
-resultado: IN_PROGRESS
-proxima_acao_permitida: "FASE 5 TASK 5.1 BOOTSTRAP ✅ COMPLETA. Next: FASE 5 TASK 5.2 (API Client)"
+task_id: roadmap-fase5-tasks52-57-modules
+resultado: PENDENTE
+proxima_acao_permitida: "TASKS 5.2–5.7 ✅ COMPLETAS. npm run build ✅ PASS (0 erros). Next: 5.8 Testes + 5.9 CI/CD frontend"
 bloqueios_ativos: []
 evidence_paths:
-  - frontend/package.json
-  - frontend/vite.config.ts
-  - frontend/tsconfig.json
-  - frontend/tailwind.config.ts
-  - frontend/postcss.config.js
-  - frontend/src/api/schema.d.ts
   - frontend/src/api/client.ts
-  - frontend/src/stores/authStore.ts
+  - frontend/src/api/hooks/useAuth.ts
+  - frontend/src/api/hooks/useUsers.ts
+  - frontend/src/api/hooks/useTeams.ts
+  - frontend/src/api/hooks/useSeasons.ts
+  - frontend/src/api/hooks/useTraining.ts
+  - frontend/src/shared/layouts/AppLayout.tsx
+  - frontend/src/shared/components/ProtectedRoute.tsx
+  - frontend/src/features/auth/pages/LoginPage.tsx
+  - frontend/src/features/dashboard/pages/DashboardPage.tsx
+  - frontend/src/features/users/pages/UsersPage.tsx
+  - frontend/src/features/users/pages/UserDetailPage.tsx
+  - frontend/src/features/teams/pages/TeamsPage.tsx
+  - frontend/src/features/teams/pages/TeamDetailPage.tsx
+  - frontend/src/features/seasons/pages/SeasonsPage.tsx
+  - frontend/src/features/seasons/pages/SeasonDetailPage.tsx
+  - frontend/src/features/training/pages/TrainingPage.tsx
+  - frontend/src/features/training/pages/TrainingDetailPage.tsx
+  - frontend/src/App.tsx
+  - frontend/src/main.tsx
 ---
 # SESSION HANDOFF — HB TRACK
 > Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`
 
 ## Estado Geral
-**Data:** 2026-03-24 | **Branch:** hb-track-contratos-driven | **CI:** PASS
+**Data:** 2026-03-25 | **Branch:** hb-track-contratos-driven | **CI:** PASS
 **Modo:** ROADMAP | **task_type:** execute_roadmap_phase | **boot_profile:** roadmap_execution
-**Módulo foco:** frontend | **Fase ROADMAP:** 5 | **Resultado:** ⏳ IN_PROGRESS (Task 5.1 ✅ DONE)
+**Módulo foco:** frontend | **Fase ROADMAP:** 5 | **Resultado:** ⏳ IN_PROGRESS (Tasks 5.1–5.7 ✅ DONE)
 
 ## O que foi feito nesta sessão
-**FASE 5 — FRONTEND CICLO 1 BOOTSTRAP (TASK 5.1) COMPLETA**
+**FASE 5 — TASKS 5.2 a 5.7 COMPLETAS (npm run build ✅ PASS)**
 
 ### Tarefa 5.1 ✅ — Bootstrap Frontend
 - **Estrutura Vite + React + TypeScript criada**
