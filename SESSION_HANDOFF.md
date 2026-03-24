@@ -2,51 +2,94 @@
 data_ultima_sessao: "2026-03-24"
 branch_ativo: hb-track-contratos-driven
 modo_operacao: ROADMAP
-ci_status: PASS
-modulo_foco: governance
-fase_roadmap: 0
+ci_status: UNKNOWN
+modulo_foco: infra
+fase_roadmap: 3
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
-task_id: agent-compliance-fase8
+task_id: roadmap-fase3-vps-provisioning
 resultado: DONE
-proxima_acao_permitida: Iniciar FASE 1 do ROADMAP.md (Foundation — ambiente, dependências, CI base).
+proxima_acao_permitida: "Iniciar FASE 4 do ROADMAP.md (Ciclo 1 integrado em staging — E2E, RBAC, performance)."
 bloqueios_ativos: []
 evidence_paths:
-  - _reports/contract_gates/latest.json
-  - tests/pipeline_gates/test_done_legacy_phase7.py
-  - docs/_canon/gates/GATES_REGISTRY.yaml
-  - _reports/COMPLIANCE_CERTIFICATION_20260324.md
+  - Dockerfile
+  - requirements.txt
+  - infra/docker-compose.prod.yml
+  - infra/nginx/nginx.conf
+  - infra/nginx/nginx.staging.conf
+  - infra/env/.env.staging.template
+  - infra/env/.env.production.template
+  - infra/scripts/rollback.sh
+  - .github/workflows/deploy.yml
+  - docs/_canon/VPS_SETUP.md
 ---
 # SESSION HANDOFF — HB TRACK
 > Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`
 
 ## Estado Geral
-**Data:** 2026-03-24 | **Branch:** hb-track-contratos-driven | **CI:** PASS
+**Data:** 2026-03-24 | **Branch:** hb-track-contratos-driven | **CI:** UNKNOWN
 **Modo:** ROADMAP | **task_type:** execute_roadmap_phase | **boot_profile:** roadmap_execution
-**Módulo foco:** governance | **Fase ROADMAP:** 0 | **Resultado:** DONE
+**Módulo foco:** infra | **Fase ROADMAP:** 3 | **Resultado:** DONE
 
 ## O que foi feito
 
-### AGENT_COMPLIANCE_EXECUTION_PLAN.md — FASE 8 [COMPLETO]
-- `validate_contracts.py --profile ci`: **50 PASS, 0 FAIL, 3 SKIP — STATUS: PASS**.
-- `hb survival-suite`: **93 passed, 1 skipped — PASS**.
-- Bateria de paridade (governance, context_budgets, phase_0, module_lifecycle, roadmap_boot): **44 passed**.
-- Suite completa `pipeline_gates/`: **268 passed, 1 skipped — zero regressões**.
-- Correções aplicadas: `compile_api_policy --all` (regenerar manifests), SESSION_HANDOFF.md (data, ci_status, task_id), session_start.json (module_focus limpo para execute_roadmap_phase sem módulo fixo).
-- Congelamento da Fase 0 removido: enforcement permanente via `pre-commit` v4 + `contract-gates.yml` + testes de paridade.
-- Certificação registrada em `_reports/COMPLIANCE_CERTIFICATION_20260324.md`.
-- `AGENT_COMPLIANCE_EXECUTION_PLAN.md` FASE 8: todos os itens marcados `[x]`.
+### FASE 3 — Infraestrutura Docker + CI/CD + VPS Provisioning [COMPLETO]
 
-### FASES 0–7 [COMPLETAS]
-Banners/precedência, paridade registry/executor, boot enforcement, estado único, bridge docs, pre-commit/CI, feature coverage, isolamento de legado.
+#### Tarefa 3.1 — Dockerfile multi-stage ✅
+- `Dockerfile` — builder (`python:3.12-slim`) + runtime minimal, non-root user `hbtrack`
+- Venv criado em `/app/.venv` (shebang correto após cópia entre stages)
+- ENTRYPOINT: gunicorn config.asgi:application + UvicornWorker
+
+#### Tarefa 3.2 — requirements.txt ✅
+- Criado com dependências de produção
+- `django-ninja>=1.3.0` (fix `ForwardRef._evaluate()` no Python 3.12)
+
+#### Tarefa 3.3 — docker-compose.prod.yml ✅
+- 7 serviços: api, celery_worker, celery_beat, postgres:16, redis:7, nginx, certbot
+- `entrypoint:` (não `command:`) para sobrescrever ENTRYPOINT do Dockerfile
+- `env_file: ../.env` (relativo ao arquivo compose em `infra/`)
+
+#### Tarefa 3.4 — config/settings.py + config/urls.py ✅
+- `django.contrib.staticfiles` adicionado ao INSTALLED_APPS
+- `STATIC_URL`, `STATIC_ROOT` configurados
+- `GET /health` verifica PostgreSQL + Redis, retorna 200/503
+
+#### Tarefa 3.5 — Nginx ✅
+- `infra/nginx/nginx.conf` — reverse proxy + SSL (handballtrack.app)
+- `infra/nginx/nginx.staging.conf` — idem para staging.handballtrack.app
+- HTTP→HTTPS redirect, TLS 1.2/1.3, rate limiting, WebSocket upgrade, headers de segurança
+
+#### Tarefa 3.6 — Templates .env ✅
+- `infra/env/.env.staging.template` — todas as variáveis com placeholder CHANGE_ME_*
+- `infra/env/.env.production.template` — idem para produção
+
+#### Tarefa 3.7 — GitHub Actions deploy.yml ✅
+- Corrigido: `VPS_HOST` → `VPS_HOST_STAGING` / `VPS_HOST_PRODUCTION`
+- Corrigido: `docker compose` → `docker compose -f infra/docker-compose.prod.yml`
+- Corrigido: rollback lê `PREV_SHA` de `.last_sha` (não `.env.deploy`)
+- Build context corrigido: `./Hb Track - Backend` → `.`
+
+#### Tarefa 3.8 — VPS Provisioning (Locaweb 191.252.185.34) ✅
+- Docker Engine + Compose instalados, usuário `hbtrack` criado com grupo docker
+- UFW: portas 22, 80, 443 abertas
+- `/opt/hbtrack/staging/.env` preenchido com credenciais reais
+- Imagem construída localmente no VPS, stack iniciada
+- SSL gerado via certbot standalone para `staging.handballtrack.app`
+- GitHub Actions secrets adicionados: VPS_SSH_KEY, VPS_HOST_STAGING, VPS_USER, STAGING_URL
+
+#### Tarefa 3.9 — rollback.sh ✅
+- `infra/scripts/rollback.sh` — rollback seguro por SHA
+
+#### Tarefa 3.10 — VPS Setup Docs ✅
+- `docs/_canon/VPS_SETUP.md` — runbook de provisionamento
 
 ## Evidências
-- `_reports/contract_gates/latest.json` — 50 PASS, overall: PASS
-- `_reports/COMPLIANCE_CERTIFICATION_20260324.md` — relatório final auditável
-- `tests/pipeline_gates/` — 268 passed, 1 skipped
-
-## Próxima ação permitida
-Iniciar **FASE 1 do ROADMAP.md** (Foundation — ambiente, dependências, CI base).
+- `https://staging.handballtrack.app/health` → HTTP 200 `{"status":"ok","db":"ok","redis":"ok"}`
+- Stack docker: api (healthy), postgres (healthy), redis (healthy), nginx (up), certbot (up)
+- GitHub Actions secrets configurados no repositório `hbtrack/official`
 
 ## Bloqueios ativos
 Nenhum.
+
+## Próxima ação permitida
+Iniciar **FASE 4 do ROADMAP.md** (Ciclo 1 integrado em staging — E2E, RBAC, performance).

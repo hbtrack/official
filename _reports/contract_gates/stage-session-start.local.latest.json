@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-03-24T05:14:42Z",
+  "timestamp_utc": "2026-03-24T14:45:48Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "1c82af2",
+    "git_commit": "d632015",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/stage-session-start.local.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260324T051442_c1fee8"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260324T144548_6f2d2f"
   },
   "status_detail": {
     "active_gates_passed": 4,
@@ -980,18 +980,30 @@
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_done_legacy_phase7.py",
-        "/home/davis/HB-TRACK/docs/_canon/gates/GATES_REGISTRY.yaml",
-        "/home/davis/HB-TRACK/_reports/COMPLIANCE_CERTIFICATION_20260324.md"
+        "/home/davis/HB-TRACK/Dockerfile",
+        "/home/davis/HB-TRACK/requirements.txt",
+        "/home/davis/HB-TRACK/infra/docker-compose.prod.yml",
+        "/home/davis/HB-TRACK/infra/nginx/nginx.conf",
+        "/home/davis/HB-TRACK/infra/nginx/nginx.staging.conf",
+        "/home/davis/HB-TRACK/infra/env/.env.staging.template",
+        "/home/davis/HB-TRACK/infra/env/.env.production.template",
+        "/home/davis/HB-TRACK/infra/scripts/rollback.sh",
+        "/home/davis/HB-TRACK/.github/workflows/deploy.yml",
+        "/home/davis/HB-TRACK/docs/_canon/VPS_SETUP.md"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
-        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_done_legacy_phase7.py",
-        "/home/davis/HB-TRACK/docs/_canon/gates/GATES_REGISTRY.yaml",
-        "/home/davis/HB-TRACK/_reports/COMPLIANCE_CERTIFICATION_20260324.md"
+        "/home/davis/HB-TRACK/Dockerfile",
+        "/home/davis/HB-TRACK/requirements.txt",
+        "/home/davis/HB-TRACK/infra/docker-compose.prod.yml",
+        "/home/davis/HB-TRACK/infra/nginx/nginx.conf",
+        "/home/davis/HB-TRACK/infra/nginx/nginx.staging.conf",
+        "/home/davis/HB-TRACK/infra/env/.env.staging.template",
+        "/home/davis/HB-TRACK/infra/env/.env.production.template",
+        "/home/davis/HB-TRACK/infra/scripts/rollback.sh",
+        "/home/davis/HB-TRACK/.github/workflows/deploy.yml",
+        "/home/davis/HB-TRACK/docs/_canon/VPS_SETUP.md"
       ],
       "evidence_files": [],
       "violations": [],
@@ -999,7 +1011,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 18
+        "duration_ms": 8
       }
     },
     {
@@ -1021,7 +1033,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 332
+        "duration_ms": 341
       }
     },
     {

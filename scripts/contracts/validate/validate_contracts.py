@@ -5009,6 +5009,8 @@ def _g2n_canon_allowlist(root: pathlib.Path) -> dict:
         "INTEGRATION_FLOWS.md",
         "RUNTIME_CURRENT_STATE.md",
         "ADR_INDEX.md",
+        # Adicionado FASE 3 — runbook de provisionamento VPS
+        "VPS_SETUP.md",
     })
 
     # Subdiretórios autorizados

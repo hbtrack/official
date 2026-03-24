@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-03-24T05:03:12Z",
+  "timestamp_utc": "2026-03-24T05:19:53Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -22,7 +22,7 @@
       "storybook": null
     }
   },
-  "overall_status": "FAIL",
+  "overall_status": "PASS",
   "execution_context": {
     "profile": "precommit",
     "stage": null,
@@ -31,10 +31,10 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/precommit.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260324T050312_35e8ec"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260324T051953_2b0c94"
   },
   "status_detail": {
-    "active_gates_passed": 11,
+    "active_gates_passed": 13,
     "skip_count": 40,
     "critical_gates": [
       {
@@ -171,7 +171,7 @@
       },
       {
         "gate_id": "HANDOFF_COHERENCE_GATE",
-        "status": "FAIL"
+        "status": "PASS"
       },
       {
         "gate_id": "MODULE_STATUS_COHERENCE_GATE",
@@ -207,7 +207,7 @@
       }
     ]
   },
-  "exit_code": 2,
+  "exit_code": 0,
   "gates": [
     {
       "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -229,7 +229,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 49
+        "duration_ms": 42
       }
     },
     {
@@ -254,7 +254,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 792
+        "duration_ms": 520
       }
     },
     {
@@ -365,7 +365,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 17
+        "duration_ms": 18
       }
     },
     {
@@ -975,7 +975,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 32
+        "duration_ms": 31
       }
     },
     {
@@ -1577,7 +1577,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1774
+        "duration_ms": 1733
       }
     },
     {
@@ -1890,11 +1890,11 @@
     },
     {
       "gate_id": "HANDOFF_COHERENCE_GATE",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": true,
-      "exit_code": 2,
-      "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-      "summary": "SESSION_HANDOFF.md com 4 inconsistência(s).",
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "SESSION_HANDOFF.md coerente com estado atual.",
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
@@ -1912,36 +1912,11 @@
         "/home/davis/HB-TRACK/_reports/COMPLIANCE_CERTIFICATION_20260324.md"
       ],
       "evidence_files": [],
-      "violations": [
-        {
-          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-          "artifact": "SESSION_HANDOFF.md",
-          "message": "ci_status=PASS diverge do relatório canônico (FAIL).",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-          "artifact": "SESSION_HANDOFF.md",
-          "message": "Divergência de módulo foco: session_start.module_focus='training' != SESSION_HANDOFF.modulo_foco='governance'.",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-          "artifact": "SESSION_HANDOFF.md",
-          "message": "Divergência de fase: session_start.roadmap_phase=3 != SESSION_HANDOFF.fase_roadmap=0.",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-          "artifact": "SESSION_HANDOFF.md",
-          "message": "Divergência de task_id: session_start.roadmap_task_id='fase3-unified-state' != SESSION_HANDOFF.task_id='agent-compliance-fase8'.",
-          "severity": "error"
-        }
-      ],
+      "violations": [],
       "metrics": {
-        "errors": 4,
+        "errors": 0,
         "warnings": 0,
-        "violations": 4,
+        "violations": 0,
         "duration_ms": 4
       }
     },
@@ -1964,7 +1939,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 169
+        "duration_ms": 160
       }
     },
     {
@@ -2068,7 +2043,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 17
+        "duration_ms": 16
       }
     },
     {
@@ -2086,7 +2061,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 6
       }
     },
     {
@@ -2127,11 +2102,11 @@
     },
     {
       "gate_id": "READINESS_SUMMARY_GATE",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": false,
-      "exit_code": 2,
+      "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pipeline FAIL: 1 gate(s) bloqueante(s) falharam.",
+      "summary": "Pipeline PASS: 12 PASS, 40 SKIP.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],

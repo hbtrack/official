@@ -90,7 +90,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: ./Hb Track - Backend
+          context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
 
@@ -109,14 +109,14 @@ jobs:
       - name: Deploy to staging via SSH
         uses: appleboy/ssh-action@v1
         with:
-          host: ${{ secrets.VPS_HOST }}
+          host: ${{ secrets.VPS_HOST_STAGING }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd /opt/hbtrack/staging
-            echo "IMAGE_TAG=${{ needs.build.outputs.image_sha }}" > .env.deploy
-            docker compose pull
-            docker compose up -d --force-recreate
+            sed -i "s|^IMAGE_TAG=.*|IMAGE_TAG=${{ needs.build.outputs.image_sha }}|" .env
+            docker compose -f infra/docker-compose.prod.yml pull
+            docker compose -f infra/docker-compose.prod.yml up -d --force-recreate
       - name: Health check — staging
         run: |
           echo "Aguardando staging inicializar..."
@@ -160,18 +160,17 @@ jobs:
       - name: Deploy to production via SSH
         uses: appleboy/ssh-action@v1
         with:
-          host: ${{ secrets.VPS_HOST }}
+          host: ${{ secrets.VPS_HOST_PRODUCTION }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd /opt/hbtrack/production
             # Salvar SHA anterior para rollback
-            PREV_SHA=$(cat .last_sha 2>/dev/null || echo "")
-            echo "${{ needs.build.outputs.image_sha }}" > .last_sha
-            echo "PREV_SHA=$PREV_SHA" >> .env.deploy
-            echo "IMAGE_TAG=${{ needs.build.outputs.image_sha }}" > .env.deploy
-            docker compose pull
-            docker compose up -d --force-recreate
+            PREV_SHA=$(grep "^IMAGE_TAG=" .env | cut -d= -f2 || echo "")
+            echo "$PREV_SHA" > .last_sha
+            sed -i "s|^IMAGE_TAG=.*|IMAGE_TAG=${{ needs.build.outputs.image_sha }}|" .env
+            docker compose -f infra/docker-compose.prod.yml pull
+            docker compose -f infra/docker-compose.prod.yml up -d --force-recreate
       - name: Health check — production
         id: healthcheck
         run: |
@@ -196,12 +195,12 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             cd /opt/hbtrack/production
-            PREV_SHA=$(grep PREV_SHA .env.deploy | cut -d= -f2)
+            PREV_SHA=$(cat .last_sha 2>/dev/null || echo "")
             if [ -n "$PREV_SHA" ]; then
               echo "⏪ Rollback para SHA $PREV_SHA"
-              echo "IMAGE_TAG=$PREV_SHA" > .env.deploy
-              docker compose pull
-              docker compose up -d --force-recreate
+              sed -i "s|^IMAGE_TAG=.*|IMAGE_TAG=$PREV_SHA|" .env
+              docker compose -f infra/docker-compose.prod.yml pull
+              docker compose -f infra/docker-compose.prod.yml up -d --force-recreate
             else
               echo "⚠️ Sem SHA anterior para rollback"
             fi

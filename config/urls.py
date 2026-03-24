@@ -2,6 +2,9 @@
 URL configuration — HB Track
 Monta os routers Django Ninja de cada módulo.
 """
+import json
+
+from django.http import HttpResponse
 from django.urls import path
 from ninja import NinjaAPI
 
@@ -43,6 +46,36 @@ api.add_router("/ingestion", ingestion_router)
 api.add_router("/audit", audit_router)
 api.add_router("/notifications", notifications_router)
 
+
+def health_check(request):
+    """GET /health — verifica PostgreSQL e Redis."""
+    import django.db
+    import redis as redis_lib
+    import os
+
+    db_status = "ok"
+    redis_status = "ok"
+    http_status = 200
+
+    try:
+        django.db.connection.ensure_connection()
+    except Exception:
+        db_status = "error"
+        http_status = 503
+
+    try:
+        redis_url = os.environ.get("REDIS_URL", "redis://localhost:6379/0")
+        r = redis_lib.from_url(redis_url, socket_connect_timeout=2)
+        r.ping()
+    except Exception:
+        redis_status = "error"
+        http_status = 503
+
+    payload = json.dumps({"status": "ok" if http_status == 200 else "degraded", "db": db_status, "redis": redis_status})
+    return HttpResponse(payload, content_type="application/json", status=http_status)
+
+
 urlpatterns = [
+    path("health", health_check),
     path("api/", api.urls),
 ]
