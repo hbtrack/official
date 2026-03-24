@@ -16,7 +16,7 @@ export function DashboardPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">
-          Olá{user?.displayName ? `, ${user.displayName}` : ''}!
+          Olá{user?.username ? `, ${user.username}` : ''}!
         </h1>
         <p className="text-sm text-gray-500 mt-1">Bem-vindo ao HB Track — Gestão Esportiva de Handebol.</p>
       </div>
@@ -33,6 +33,6 @@ export function DashboardPage() {
           </Link>
         ))}
       </div>
-    </div>
+    </div >
   );
 }
