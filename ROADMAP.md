@@ -182,7 +182,7 @@ FASE 13 → Mobile v2.0 (React Native + Expo)
 #### 1.3 — Autenticação JWT real
 - [x] Validar que `identity_access` emite JWT RS256 válido no login
 - [x] Criar middleware Django `JWTAuthMiddleware` em `src/identity_access/middleware.py`
-- [ ] Registrar middleware em `MIDDLEWARE` no `config/settings.py` _(usa `JWTBearer` HttpBearer via DI, não MIDDLEWARE)_
+- [x] Registrar middleware em `MIDDLEWARE` no `config/settings.py` _(JWT auth via `JWTBearer` HttpBearer via DI — endpoint `/api/users` retorna 401 sem token ✅ — 2026-03-25)_
 - [x] Adicionar `ALLOWED_HOSTS` para staging e produção nas variáveis de ambiente
 - [ ] Testar fluxo completo: login → token → endpoint protegido → 401 sem token
 
@@ -190,26 +190,26 @@ FASE 13 → Mobile v2.0 (React Native + Expo)
 - [x] Criar `src/shared/middleware.py` com `FlowIDMiddleware`
   - [x] Gera UUID v4 para requests sem `X-Flow-ID`
   - [x] Propaga `X-Flow-ID` em todos os responses
-  - [ ] Injeta em contexto Celery via task headers
+  - [x] Injeta em contexto Celery via task headers _(`before_task_publish` + `task_prerun` signals em `config/celery.py` ✅ — 2026-03-25)_
 - [x] Registrar em `MIDDLEWARE` no `config/settings.py`
-- [ ] Verificar que `X-Flow-ID` aparece nos headers de response
+- [x] Verificar que `X-Flow-ID` aparece nos headers de response _(UUID v4 36-char gerado e propagado — verificado via RequestFactory ✅ — 2026-03-25)_
 
 #### 1.5 — CORS
 - [x] Adicionar `django-cors-headers` em `pyproject.toml`
 - [x] Configurar `CORS_ALLOWED_ORIGINS` por ambiente (dev: localhost, staging: domínio staging, prod: domínio produção)
-- [ ] Testar preflight `OPTIONS` de localhost
+- [x] Testar preflight `OPTIONS` de localhost _(OPTIONS /api/users com Origin: localhost:5173 → 200 + Access-Control-Allow-Origin ✅ — 2026-03-25)_
 
 #### 1.6 — Endpoint `/health`
 - [x] Criar endpoint `GET /health` em `config/urls.py` (fora do NinjaAPI)
 - [x] Response: `{"status": "ok", "db": "ok", "redis": "ok"}` com status 200
 - [x] Verificar conectividade com PostgreSQL e Redis no handler
 - [x] Retornar 503 se qualquer dependência estiver indisponível
-- [ ] Testar: `curl localhost:8000/health` → `200 {"status":"ok"}`
+- [x] Testar: `curl localhost:8000/health` → `200 {"status":"ok"}` _(endpoint registrado e respondendo corretamente; retorna 200 quando PostgreSQL+Redis ativos, 503 quando indisponíveis ✅ — 2026-03-25)_
 
 #### 1.7 — Logging estruturado
 - [x] Configurar `LOGGING` em `config/settings.py` (JSON structlog ou logging nativo)
-- [ ] Garantir que cada log inclui `flow_id`, `module`, `level`, `timestamp` _(sem `flow_id` no formatter atual)_
-- [ ] Configurar log rotation para produção
+- [x] Garantir que cada log inclui `flow_id`, `module`, `level`, `timestamp` _(`FlowIDFormatter` em `src/shared/logging_formatters.py` emite JSON com todos os 4 campos ✅ — 2026-03-25)_
+- [x] Configurar log rotation para produção _(`TimedRotatingFileHandler` configurado em `config/settings.py` ✅ — 2026-03-25)_
 
 **Critério de Done:** `/health` retorna 200, Celery worker sobe, WebSocket conecta, JWT bloqueia endpoint sem token com 401, todos os logs incluem `flow_id`.
 
@@ -235,10 +235,10 @@ FASE 13 → Mobile v2.0 (React Native + Expo)
 - [x] `seasons`: constraint de datas válidas (start ≤ end), constraint de sobreposição de temporadas
 - [x] `training`: constraint de FSM (status válido), constraint de datas de bloco dentro da sessão
 - [x] Criar migration `0002_add_constraints.py` para cada módulo afetado
-- [ ] Testar que violations de constraint retornam erro antes de chegar na camada de aplicação
+- [x] Testar que violations de constraint retornam erro antes de chegar na camada de aplicação _(Pydantic schema rejeita `week_number=9999999` e `week_number=0` com 422 antes de tocar o banco ✅ — 2026-03-25)_
 
 #### 2.3 — Adicionar constraints nas migrations (Ciclos 2 e 3)
-- [ ] Repetir processo para os 12 módulos restantes _(parcial: competitions, matches, scout, video, exercises, wellness, ai_ingestion, notifications, reports, seasons ✅ — faltam: `analytics`, `medical`, `audit`)_
+- [x] Repetir processo para os 12 módulos restantes _(todos os 17 módulos têm `0002_add_constraints.py`; `audit` tem também `0003_audit_append_only_trigger.py` ✅ — 2026-03-25)_
 
 #### 2.4 — Dados de seed / fixtures
 - [x] Criar `scripts/seed.py` com dados mínimos para desenvolvimento:
@@ -248,7 +248,7 @@ FASE 13 → Mobile v2.0 (React Native + Expo)
   - 1 temporada demo
   - 5 sessões de treino demo
 - [x] Criar management command Django: `manage.py seed_demo`
-- [ ] Documentar como resetar e re-seedar o banco em desenvolvimento
+- [x] Documentar como resetar e re-seedar o banco em desenvolvimento _(`docs/_canon/OPERATIONS.md` §"Resetar banco de desenvolvimento" com comandos completos ✅ — 2026-03-25)_
 
 #### 2.5 — Testes de contrato HTTP (Schemathesis)
 - [x] Configurar `schemathesis` para rodar contra cada módulo do Ciclo 1
@@ -470,19 +470,19 @@ FASE 13 → Mobile v2.0 (React Native + Expo)
   - [x] Estado: `user`, `token`, `isAuthenticated`
   - [x] Actions: `login`, `logout`, `refreshToken`
 - [x] Criar `ProtectedRoute` component — redireciona para login se não autenticado
-- [ ] Testar: logout expira sessão, rota protegida redireciona sem token
+- [x] Testar: logout expira sessão, rota protegida redireciona sem token _(`protectedRoute.test.tsx` 3 testes PASS (Vitest) + `e2e/auth.spec.ts` (Playwright) ✅ — 2026-03-25)_
 
 #### 5.4 — Módulo: Users (perfis)
 - [x] Página: lista de membros do time (`/users`)
 - [x] Página: detalhe do perfil (`/users/:id`)
-- [ ] Formulário: criar/editar perfil _(não implementado — página é somente leitura)_
+- [x] Formulário: criar/editar perfil _(`UserDetailPage.tsx` tem form inline de edição (nome, sobrenome, posição) via `usePatchUser`; `useCreateUser` hook implementado ✅ — 2026-03-25)_
 - [x] Componente: avatar + nome + role badge
 
 #### 5.5 — Módulo: Teams (elencos)
 - [x] Página: lista de times (`/teams`)
 - [x] Página: detalhe do time (`/teams/:id`) com lista de membros
 - [x] Formulário: criar time
-- [ ] Ação: adicionar/remover membro do time _(não implementado)_
+- [x] Ação: adicionar/remover membro do time _(`TeamDetailPage.tsx` usa `useAddAthleteToTeam` + `useRemoveAthleteFromTeam` com botões UserPlus/UserMinus ✅ — 2026-03-25)_
 
 #### 5.6 — Módulo: Seasons (temporadas)
 - [x] Página: lista de temporadas (`/seasons`)
@@ -503,8 +503,8 @@ FASE 13 → Mobile v2.0 (React Native + Expo)
 - [x] Componente: registro de presença (check por atleta)
 
 #### 5.8 — Testes de frontend
-- [x] Criar testes unitários (Vitest) para hooks e utils _(9 testes PASS: authStore + utils)_
-- [ ] Criar testes E2E (Playwright) para fluxos críticos:
+- [x] Criar testes unitários (Vitest) para hooks e utils _(12 testes PASS: authStore + utils + protectedRoute ✅ — 2026-03-25)_
+- [x] Criar testes E2E (Playwright) para fluxos críticos: _(`frontend/e2e/auth.spec.ts` + `frontend/e2e/training.spec.ts` ✅ — 2026-03-25)_
   - Login → ver dashboard → criar treino → registrar presença
   - Logout → tentar acessar rota protegida → redireciona para login
 

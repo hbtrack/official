@@ -1,6 +1,6 @@
 {
   "session_id": "70731b2d-c614-4cd5-944b-564b0917df00",
-  "session_timestamp": "2026-03-24T16:49:04.439829+00:00",
+  "session_timestamp": "2026-03-25T19:55:04.528725+00:00",
   "branch": "hb-track-contratos-driven",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "roadmap_execution",
@@ -22,5 +22,8 @@
   "roadmap_phase": 5,
   "stage0_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-03-24T20:44:38.063950+00:00"
+  "hook_validated_at": "2026-03-25T12:19:41.748339+00:00",
+  "module": "training",
+  "module_focus": "training",
+  "stage3_exit_code": 0
 }
