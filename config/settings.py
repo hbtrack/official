@@ -4,9 +4,23 @@ Stack: Django 5.x + Django Ninja 1.x + PostgreSQL 16 + Celery 5 + Channels 4
 Referência: ADR-031-backend-framework.md
 """
 import os
+import sys
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Carrega .env da raiz do projeto (dev/local — não sobrescreve variáveis já definidas)
+try:
+    from dotenv import load_dotenv
+    load_dotenv(BASE_DIR / ".env", override=False)
+except ImportError:
+    pass  # python-dotenv opcional em produção (variáveis declaradas externamente)
+
+# Garante que src/ esteja no path independente de como Django é iniciado
+# (manage.py, gunicorn, uvicorn, celery, etc.)
+_SRC_DIR = str(BASE_DIR / "src")
+if _SRC_DIR not in sys.path:
+    sys.path.insert(0, _SRC_DIR)
 
 SECRET_KEY = os.environ.get(
     "SECRET_KEY",
@@ -56,6 +70,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "shared.middleware.SecurityHeadersMiddleware",
     "shared.middleware.FlowIDMiddleware",
+    "shared.middleware.JWTClaimsMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -139,27 +154,51 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOW_CREDENTIALS = True
 
 # ── Logging estruturado ──────────────────────────────────────────────────────
+_LOG_DIR = BASE_DIR / "logs"
+_LOG_DIR.mkdir(exist_ok=True)
+
+_handlers: dict = {
+    "console": {
+        "class": "logging.StreamHandler",
+        "formatter": "flow_json",
+    },
+}
+
+# Rotação de arquivos em produção (não em DEBUG)
+if not DEBUG:
+    _handlers["file"] = {
+        "class": "logging.handlers.TimedRotatingFileHandler",
+        "filename": str(_LOG_DIR / "hbtrack.log"),
+        "when": "midnight",
+        "backupCount": 30,          # 30 dias de retenção
+        "encoding": "utf-8",
+        "formatter": "flow_json",
+    }
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
-        "json": {
-            "()": "logging.Formatter",
-            "fmt": '{"time": "%(asctime)s", "level": "%(levelname)s", "module": "%(name)s", "message": "%(message)s"}',
+        "flow_json": {
+            # FlowIDFormatter: injeta flow_id em cada linha de log (FASE 1.7)
+            "()": "shared.logging_formatters.FlowIDFormatter",
         },
     },
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-            "formatter": "json",
-        },
-    },
+    "handlers": _handlers,
     "root": {
-        "handlers": ["console"],
+        "handlers": list(_handlers.keys()),
         "level": os.environ.get("LOG_LEVEL", "INFO"),
     },
     "loggers": {
-        "django": {"handlers": ["console"], "level": "WARNING", "propagate": False},
-        "celery": {"handlers": ["console"], "level": "INFO", "propagate": False},
+        "django": {
+            "handlers": list(_handlers.keys()),
+            "level": "WARNING",
+            "propagate": False,
+        },
+        "celery": {
+            "handlers": list(_handlers.keys()),
+            "level": "INFO",
+            "propagate": False,
+        },
     },
 }

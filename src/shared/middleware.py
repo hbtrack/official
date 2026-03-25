@@ -62,3 +62,48 @@ class FlowIDMiddleware:
         response = self.get_response(request)
         response["X-Flow-ID"] = flow_id
         return response
+
+
+class JWTClaimsMiddleware:
+    """
+    Middleware Django que extrai claims do Bearer JWT e popula atributos do request.
+    Deve vir DEPOIS do FlowIDMiddleware na cadeia.
+
+    Popula (quando token válido):
+      request._actor_id          — UUID do sub (para users/api.py)
+      request._principal_user_id — mesmo UUID (para identity_access/api.py)
+      request._session_id        — UUID da sessão do token
+      request._actor_role        — primeiro role ou None
+      request._role_labels       — lista de roles
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        auth_header = request.headers.get("Authorization", "")
+        if auth_header.startswith("Bearer "):
+            token = auth_header[len("Bearer "):]
+            try:
+                from src.identity_access.infrastructure.jwt_adapter import JWTAdapter
+                import uuid as _uuid
+
+                payload = JWTAdapter().verify_access_token(token)
+                if payload:
+                    sub = payload.get("sub")
+                    session_id = payload.get("session_id")
+                    roles = payload.get("roles") or []
+
+                    if sub:
+                        actor_uuid = _uuid.UUID(str(sub))
+                        request._actor_id = actor_uuid
+                        request._principal_user_id = actor_uuid
+                    if session_id:
+                        request._session_id = _uuid.UUID(str(session_id))
+                    request._role_labels = roles
+                    request._actor_role = roles[0] if roles else None
+            except Exception:
+                pass  # token inválido → atributos não preenchidos → 401 nos endpoints
+
+        return self.get_response(request)
+

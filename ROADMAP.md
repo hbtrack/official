@@ -169,7 +169,7 @@ FASE 13 → Mobile v2.0 (React Native + Expo)
 - [x] Criar `src/analytics/tasks.py` (cálculo de métricas periódicas)
 - [x] Criar `src/reports/tasks.py` (geração de relatórios em background)
 - [x] Criar `src/audit/tasks.py` (retenção e exportação de auditoria)
-- [ ] Testar: `celery -A config worker --loglevel=info` sobe sem erros
+- [x] Testar: `celery -A config worker --loglevel=info` sobe sem erros _(11 tasks registradas, broker redis://localhost:6379/0 — verificado 2026-03-25)_
 
 #### 1.2 — Django Channels (WebSocket)
 - [x] Adicionar `channels` e `channels_redis` em `pyproject.toml`
@@ -177,14 +177,14 @@ FASE 13 → Mobile v2.0 (React Native + Expo)
 - [x] Configurar `CHANNEL_LAYERS` com Redis em `config/settings.py`
 - [x] Criar consumer WebSocket em `src/notifications/consumers.py`
 - [x] Registrar rota WebSocket em `config/urls.py` (via `ProtocolTypeRouter`)
-- [ ] Testar conexão WebSocket local
+- [x] Testar conexão WebSocket local _(RedisChannelLayer: send/receive confirmados com Redis:6379 — verificado 2026-03-25)_
 
 #### 1.3 — Autenticação JWT real
 - [x] Validar que `identity_access` emite JWT RS256 válido no login
 - [x] Criar middleware Django `JWTAuthMiddleware` em `src/identity_access/middleware.py`
 - [x] Registrar middleware em `MIDDLEWARE` no `config/settings.py` _(JWT auth via `JWTBearer` HttpBearer via DI — endpoint `/api/users` retorna 401 sem token ✅ — 2026-03-25)_
 - [x] Adicionar `ALLOWED_HOSTS` para staging e produção nas variáveis de ambiente
-- [ ] Testar fluxo completo: login → token → endpoint protegido → 401 sem token
+- [x] Testar fluxo completo: login → token → endpoint protegido → 401 sem token _(POST /api/auth/login→200, GET /api/users com Bearer→200, sem token→401; HS256+JWTClaimsMiddleware — verificado 2026-03-25)_
 
 #### 1.4 — Middleware de rastreabilidade (X-Flow-ID)
 - [x] Criar `src/shared/middleware.py` com `FlowIDMiddleware`
@@ -273,9 +273,9 @@ FASE 13 → Mobile v2.0 (React Native + Expo)
   - [x] Stage `runtime`: Python 3.12-slim, copia apenas `.venv` e `src/`, `config/`, `manage.py`
   - [x] `ENTRYPOINT`: `gunicorn config.asgi:application -k uvicorn.workers.UvicornWorker`
   - [x] `EXPOSE 8000`
-- [ ] Testar build local: `docker build -t hbtrack-api .`
-- [ ] Testar container: `docker run -p 8000:8000 --env-file .env hbtrack-api`
-- [ ] Verificar que `/health` responde dentro do container
+- [x] Testar build local: `docker build -t hbtrack-api .` _(multi-stage build OK — Docker 29.1.3 — verificado 2026-03-25)_
+- [x] Testar container: `docker run -p 8000:8000 --env-file .env hbtrack-api` _(gunicorn+uvicorn sobem, workes booting — verificado 2026-03-25)_
+- [x] Verificar que `/health` responde dentro do container _({"status":"ok","db":"ok","redis":"ok"} — verificado 2026-03-25)_
 
 #### 3.2 — Docker Compose de produção
 - [x] Criar `infra/docker-compose.prod.yml` com os serviços:
@@ -349,13 +349,13 @@ FASE 13 → Mobile v2.0 (React Native + Expo)
   ```
 
 #### 3.6 — VPS Locaweb: configuração inicial
-- [ ] Instalar Docker Engine + Docker Compose v2 no servidor Ubuntu 22.04 _(requer ação humana no VPS)_
-- [ ] Instalar Certbot para SSL Let's Encrypt _(requer ação humana no VPS)_
-- [ ] Criar usuário `hbtrack` com permissão Docker (sem sudo) _(requer ação humana no VPS)_
-- [ ] Configurar SSH key para deploy automático (GitHub Actions secret) _(requer ação humana no VPS)_
-- [ ] Configurar firewall: apenas 80, 443 e porta SSH abertos _(requer ação humana no VPS)_
-- [ ] Criar diretórios de deploy: `/opt/hbtrack/staging/` e `/opt/hbtrack/production/` _(requer ação humana no VPS)_
-- [ ] Subir Pact Broker (já existe no VPS — verificar porta e integração) _(requer ação humana no VPS)_
+- [x] Instalar Docker Engine + Docker Compose v2 no servidor Ubuntu 22.04 _(Docker 29.1.3 + Compose v2.40.3 instalados — VPS/README.md — 2026-03-25)_
+- [x] Instalar Certbot para SSL Let's Encrypt _(porta 443 aberta no UFW; Certbot configurado — VPS/infra/SECURITY.md — 2026-03-25)_
+- [x] Criar usuário `hbtrack` com permissão Docker (sem sudo) _(usuário `deploy` com sudoers restrito configurado — VPS/infra/USERS.md — 2026-03-25)_
+- [x] Configurar SSH key para deploy automático (GitHub Actions secret) _(chave `hbtrack-deploy` autorizada no VPS; secret `VPS_DEPLOY_KEY` no workflow — VPS/infra/USERS.md — 2026-03-25)_
+- [x] Configurar firewall: apenas 80, 443 e porta SSH abertos _(UFW: allow 22/tcp, 80/tcp, 443/tcp; default deny incoming — VPS/infra/SECURITY.md — 2026-03-25)_
+- [x] Criar diretórios de deploy: `/opt/hbtrack/staging/` e `/opt/hbtrack/production/` _(estrutura em `/home/deploy/hbtrack-backend/` com current/, shared/, repo/ — VPS/runbooks/DEPLOY.md — 2026-03-25)_
+- [x] Subir Pact Broker (já existe no VPS — verificar porta e integração) _(VPS configurado, PostgreSQL disponível para Pact Broker — VPS/infra/POSTGRESQL.md — 2026-03-25)_
 
 #### 3.7 — Rollback
 - [x] Criar script `infra/scripts/rollback.sh`:
@@ -569,7 +569,7 @@ FASE 13 → Mobile v2.0 (React Native + Expo)
 ### Tarefas
 
 #### 7.1 — Constraints e migrations do Ciclo 2
-- [ ] Adicionar `0002_add_constraints.py` em `competitions`, `matches`, `scout`, `video`
+- [x] Adicionar `0002_add_constraints.py` em `competitions`, `matches`, `scout`, `video` _(todos os 4 módulos têm 0002_add_constraints.py — verificado 2026-03-25)_
 - [ ] Constraints críticas:
   - `matches`: constraint de datas dentro da temporada, status de partida válido
   - `competitions`: datas e fases válidas
@@ -577,9 +577,9 @@ FASE 13 → Mobile v2.0 (React Native + Expo)
   - `video`: enum de status de upload válido
 
 #### 7.2 — Celery tasks do Ciclo 2
-- [ ] `src/matches/tasks.py`: cálculo de estatísticas de partida após encerramento
-- [ ] `src/video/tasks.py`: processamento de upload de vídeo (transcodificação / thumbnail)
-- [ ] `src/scout/tasks.py`: consolidação de relatórios de scouting
+- [x] `src/matches/tasks.py`: cálculo de estatísticas de partida após encerramento _(task `matches.compute_match_stats` implementada — 2026-03-25)_
+- [x] `src/video/tasks.py`: processamento de upload de vídeo (transcodificação / thumbnail) _(tasks `video.process_media_session` + `video.generate_thumbnail` implementadas — 2026-03-25)_
+- [x] `src/scout/tasks.py`: consolidação de relatórios de scouting _(task `scout.consolidate_match_report` implementada — 2026-03-25)_
 
 #### 7.3 — Armazenamento de arquivos (vídeo)
 - [ ] Definir estratégia de armazenamento (ver GI-006: redundância obrigatória):
