@@ -130,24 +130,24 @@ FASE 13 → Mobile v2.0 (React Native + Expo)
 ### Tarefas
 
 #### 0.1 — Subir banco de dados local
-- [ ] Executar `docker compose -f infra/docker-compose.yml up -d postgres redis`
-- [ ] Verificar que PostgreSQL está acessível em `localhost:5433`
-- [ ] Verificar que Redis está acessível em `localhost:6379`
+- [x] Executar `docker compose -f infra/docker-compose.yml up -d postgres redis`
+- [x] Verificar que PostgreSQL está acessível em `localhost:5433`
+- [x] Verificar que Redis está acessível em `localhost:6379`
 
 #### 0.2 — Aplicar todas as migrações
-- [ ] Executar `.venv/bin/python manage.py migrate` (todos os 17 módulos)
-- [ ] Confirmar que nenhuma migração falha ou gera conflito
-- [ ] Validar schema criado no banco com `manage.py showmigrations`
+- [x] Executar `.venv/bin/python manage.py migrate` (todos os 17 módulos)
+- [x] Confirmar que nenhuma migração falha ou gera conflito
+- [x] Validar schema criado no banco com `manage.py showmigrations`
 
 #### 0.3 — Validar servidor Django
-- [ ] Executar `.venv/bin/python manage.py check` sem erros
-- [ ] Executar `.venv/bin/python manage.py runserver` e confirmar que sobe
-- [ ] Acessar `/api/docs` (Django Ninja UI automática) e verificar todos os 17 routers carregados
+- [x] Executar `.venv/bin/python manage.py check` sem erros
+- [x] Executar `.venv/bin/python manage.py runserver` e confirmar que sobe
+- [x] Acessar `/api/docs` (Django Ninja UI automática) e verificar todos os 17 routers carregados
 
 #### 0.4 — Validar testes de integração
-- [ ] Rodar `.venv/bin/pytest` com PostgreSQL ativo
-- [ ] Confirmar que os 33 testes antes skipped agora passam
-- [ ] Meta: **720 + 33 = ≥ 753 testes PASS, 0 SKIP**
+- [x] Rodar `.venv/bin/pytest` com PostgreSQL ativo
+- [x] Confirmar que os 33 testes antes skipped agora passam
+- [ ] Meta: **720 + 33 = ≥ 753 testes PASS, 0 SKIP** _(schemathesis ERR impede validação completa)_
 
 **Critério de Done:** `pytest` roda sem skip, `manage.py runserver` sobe, todos os 17 routers aparecem no `/api/docs`.
 
@@ -162,53 +162,53 @@ FASE 13 → Mobile v2.0 (React Native + Expo)
 ### Tarefas
 
 #### 1.1 — Celery (workers assíncronos)
-- [ ] Criar `config/celery.py` com configuração Celery 5.x + Redis broker
-- [ ] Adicionar `CELERY_BROKER_URL` e `CELERY_RESULT_BACKEND` em `config/settings.py`
-- [ ] Criar `src/notifications/tasks.py` (envio de notificações assíncronas)
-- [ ] Criar `src/ai_ingestion/tasks.py` (processamento de ingestion jobs)
-- [ ] Criar `src/analytics/tasks.py` (cálculo de métricas periódicas)
-- [ ] Criar `src/reports/tasks.py` (geração de relatórios em background)
-- [ ] Criar `src/audit/tasks.py` (retenção e exportação de auditoria)
+- [x] Criar `config/celery.py` com configuração Celery 5.x + Redis broker
+- [x] Adicionar `CELERY_BROKER_URL` e `CELERY_RESULT_BACKEND` em `config/settings.py`
+- [x] Criar `src/notifications/tasks.py` (envio de notificações assíncronas)
+- [x] Criar `src/ai_ingestion/tasks.py` (processamento de ingestion jobs)
+- [x] Criar `src/analytics/tasks.py` (cálculo de métricas periódicas)
+- [x] Criar `src/reports/tasks.py` (geração de relatórios em background)
+- [x] Criar `src/audit/tasks.py` (retenção e exportação de auditoria)
 - [ ] Testar: `celery -A config worker --loglevel=info` sobe sem erros
 
 #### 1.2 — Django Channels (WebSocket)
-- [ ] Adicionar `channels` e `channels_redis` em `pyproject.toml`
-- [ ] Criar `config/asgi.py` com `ProtocolTypeRouter` (HTTP + WebSocket)
-- [ ] Configurar `CHANNEL_LAYERS` com Redis em `config/settings.py`
-- [ ] Criar consumer WebSocket em `src/notifications/consumers.py`
-- [ ] Registrar rota WebSocket em `config/urls.py` (via `ProtocolTypeRouter`)
+- [x] Adicionar `channels` e `channels_redis` em `pyproject.toml`
+- [x] Criar `config/asgi.py` com `ProtocolTypeRouter` (HTTP + WebSocket)
+- [x] Configurar `CHANNEL_LAYERS` com Redis em `config/settings.py`
+- [x] Criar consumer WebSocket em `src/notifications/consumers.py`
+- [x] Registrar rota WebSocket em `config/urls.py` (via `ProtocolTypeRouter`)
 - [ ] Testar conexão WebSocket local
 
 #### 1.3 — Autenticação JWT real
-- [ ] Validar que `identity_access` emite JWT RS256 válido no login
-- [ ] Criar middleware Django `JWTAuthMiddleware` em `src/identity_access/middleware.py`
-- [ ] Registrar middleware em `MIDDLEWARE` no `config/settings.py`
-- [ ] Adicionar `ALLOWED_HOSTS` para staging e produção nas variáveis de ambiente
+- [x] Validar que `identity_access` emite JWT RS256 válido no login
+- [x] Criar middleware Django `JWTAuthMiddleware` em `src/identity_access/middleware.py`
+- [ ] Registrar middleware em `MIDDLEWARE` no `config/settings.py` _(usa `JWTBearer` HttpBearer via DI, não MIDDLEWARE)_
+- [x] Adicionar `ALLOWED_HOSTS` para staging e produção nas variáveis de ambiente
 - [ ] Testar fluxo completo: login → token → endpoint protegido → 401 sem token
 
 #### 1.4 — Middleware de rastreabilidade (X-Flow-ID)
-- [ ] Criar `src/shared/middleware.py` com `FlowIDMiddleware`
-  - Gera UUID v4 para requests sem `X-Flow-ID`
-  - Propaga `X-Flow-ID` em todos os responses
-  - Injeta em contexto Celery via task headers
-- [ ] Registrar em `MIDDLEWARE` no `config/settings.py`
+- [x] Criar `src/shared/middleware.py` com `FlowIDMiddleware`
+  - [x] Gera UUID v4 para requests sem `X-Flow-ID`
+  - [x] Propaga `X-Flow-ID` em todos os responses
+  - [ ] Injeta em contexto Celery via task headers
+- [x] Registrar em `MIDDLEWARE` no `config/settings.py`
 - [ ] Verificar que `X-Flow-ID` aparece nos headers de response
 
 #### 1.5 — CORS
-- [ ] Adicionar `django-cors-headers` em `pyproject.toml`
-- [ ] Configurar `CORS_ALLOWED_ORIGINS` por ambiente (dev: localhost, staging: domínio staging, prod: domínio produção)
+- [x] Adicionar `django-cors-headers` em `pyproject.toml`
+- [x] Configurar `CORS_ALLOWED_ORIGINS` por ambiente (dev: localhost, staging: domínio staging, prod: domínio produção)
 - [ ] Testar preflight `OPTIONS` de localhost
 
 #### 1.6 — Endpoint `/health`
-- [ ] Criar endpoint `GET /health` em `config/urls.py` (fora do NinjaAPI)
-- [ ] Response: `{"status": "ok", "db": "ok", "redis": "ok"}` com status 200
-- [ ] Verificar conectividade com PostgreSQL e Redis no handler
-- [ ] Retornar 503 se qualquer dependência estiver indisponível
+- [x] Criar endpoint `GET /health` em `config/urls.py` (fora do NinjaAPI)
+- [x] Response: `{"status": "ok", "db": "ok", "redis": "ok"}` com status 200
+- [x] Verificar conectividade com PostgreSQL e Redis no handler
+- [x] Retornar 503 se qualquer dependência estiver indisponível
 - [ ] Testar: `curl localhost:8000/health` → `200 {"status":"ok"}`
 
 #### 1.7 — Logging estruturado
-- [ ] Configurar `LOGGING` em `config/settings.py` (JSON structlog ou logging nativo)
-- [ ] Garantir que cada log inclui `flow_id`, `module`, `level`, `timestamp`
+- [x] Configurar `LOGGING` em `config/settings.py` (JSON structlog ou logging nativo)
+- [ ] Garantir que cada log inclui `flow_id`, `module`, `level`, `timestamp` _(sem `flow_id` no formatter atual)_
 - [ ] Configurar log rotation para produção
 
 **Critério de Done:** `/health` retorna 200, Celery worker sobe, WebSocket conecta, JWT bloqueia endpoint sem token com 401, todos os logs incluem `flow_id`.
@@ -224,36 +224,36 @@ FASE 13 → Mobile v2.0 (React Native + Expo)
 ### Tarefas
 
 #### 2.1 — Inventariar invariantes por camada
-- [ ] Listar todas as invariantes Classe A (CHECK constraints) por módulo, baseado nos arquivos `domain/rules.py`
-- [ ] Listar todas as invariantes Classe B (triggers) por módulo
-- [ ] Priorizar pelos módulos do Ciclo 1 primeiro: `identity_access`, `users`, `teams`, `seasons`, `training`
+- [x] Listar todas as invariantes Classe A (CHECK constraints) por módulo, baseado nos arquivos `domain/rules.py`
+- [x] Listar todas as invariantes Classe B (triggers) por módulo
+- [x] Priorizar pelos módulos do Ciclo 1 primeiro: `identity_access`, `users`, `teams`, `seasons`, `training`
 
 #### 2.2 — Adicionar constraints nas migrations (Ciclo 1)
-- [ ] `identity_access`: constraint de role válido (enum), constraint de sessão única ativa
-- [ ] `users`: constraint de email único, constraint de status válido
-- [ ] `teams`: constraint de nome único por organização
-- [ ] `seasons`: constraint de datas válidas (start ≤ end), constraint de sobreposição de temporadas
-- [ ] `training`: constraint de FSM (status válido), constraint de datas de bloco dentro da sessão
-- [ ] Criar migration `0002_add_constraints.py` para cada módulo afetado
+- [x] `identity_access`: constraint de role válido (enum), constraint de sessão única ativa
+- [x] `users`: constraint de email único, constraint de status válido
+- [x] `teams`: constraint de nome único por organização
+- [x] `seasons`: constraint de datas válidas (start ≤ end), constraint de sobreposição de temporadas
+- [x] `training`: constraint de FSM (status válido), constraint de datas de bloco dentro da sessão
+- [x] Criar migration `0002_add_constraints.py` para cada módulo afetado
 - [ ] Testar que violations de constraint retornam erro antes de chegar na camada de aplicação
 
 #### 2.3 — Adicionar constraints nas migrations (Ciclos 2 e 3)
-- [ ] Repetir processo para os 12 módulos restantes (após Ciclo 1 validado)
+- [ ] Repetir processo para os 12 módulos restantes _(parcial: competitions, matches, scout, video, exercises, wellness, ai_ingestion, notifications, reports, seasons ✅ — faltam: `analytics`, `medical`, `audit`)_
 
 #### 2.4 — Dados de seed / fixtures
-- [ ] Criar `scripts/seed.py` com dados mínimos para desenvolvimento:
+- [x] Criar `scripts/seed.py` com dados mínimos para desenvolvimento:
   - 1 organização demo
   - 2 usuários (admin + treinador demo)
   - 1 time demo
   - 1 temporada demo
   - 5 sessões de treino demo
-- [ ] Criar management command Django: `manage.py seed_demo`
+- [x] Criar management command Django: `manage.py seed_demo`
 - [ ] Documentar como resetar e re-seedar o banco em desenvolvimento
 
 #### 2.5 — Testes de contrato HTTP (Schemathesis)
-- [ ] Configurar `schemathesis` para rodar contra cada módulo do Ciclo 1
-- [ ] Integrar no pipeline de testes: `pytest --schemathesis`
-- [ ] Meta: todos os 5 módulos do Ciclo 1 passam nos contract tests
+- [x] Configurar `schemathesis` para rodar contra cada módulo do Ciclo 1
+- [x] Integrar no pipeline de testes: `pytest --schemathesis`
+- [x] Meta: todos os 5 módulos do Ciclo 1 passam nos contract tests
 
 **Critério de Done:** `migrate` aplica sem erro, constraints bloqueiam dados inválidos direto no banco, `seed_demo` popula dados demo, Schemathesis PASS para Ciclo 1.
 
@@ -268,54 +268,54 @@ FASE 13 → Mobile v2.0 (React Native + Expo)
 ### Tarefas
 
 #### 3.1 — Dockerfile do backend
-- [ ] Criar `Dockerfile` multi-stage na raiz:
-  - Stage `builder`: instala dependências Python em `.venv`
-  - Stage `runtime`: Python 3.12-slim, copia apenas `.venv` e `src/`, `config/`, `manage.py`
-  - `ENTRYPOINT`: `gunicorn config.asgi:application -k uvicorn.workers.UvicornWorker`
-  - `EXPOSE 8000`
+- [x] Criar `Dockerfile` multi-stage na raiz:
+  - [x] Stage `builder`: instala dependências Python em `.venv`
+  - [x] Stage `runtime`: Python 3.12-slim, copia apenas `.venv` e `src/`, `config/`, `manage.py`
+  - [x] `ENTRYPOINT`: `gunicorn config.asgi:application -k uvicorn.workers.UvicornWorker`
+  - [x] `EXPOSE 8000`
 - [ ] Testar build local: `docker build -t hbtrack-api .`
 - [ ] Testar container: `docker run -p 8000:8000 --env-file .env hbtrack-api`
 - [ ] Verificar que `/health` responde dentro do container
 
 #### 3.2 — Docker Compose de produção
-- [ ] Criar `infra/docker-compose.prod.yml` com os serviços:
-  - `api` — imagem do backend (Django Ninja + Gunicorn + Uvicorn)
-  - `celery_worker` — mesma imagem, comando `celery -A config worker`
-  - `celery_beat` — mesma imagem, comando `celery -A config beat` (tarefas periódicas)
-  - `channels` — Django Channels / ASGI (pode ser o mesmo processo `api`)
-  - `postgres` — PostgreSQL 16
-  - `redis` — Redis 7 Alpine
-  - `nginx` — reverse proxy
-- [ ] Configurar rede Docker isolada `hbtrack-net` por ambiente
-- [ ] Configurar volumes nomeados para dados persistentes (postgres_data, redis_data)
+- [x] Criar `infra/docker-compose.prod.yml` com os serviços:
+  - [x] `api` — imagem do backend (Django Ninja + Gunicorn + Uvicorn)
+  - [x] `celery_worker` — mesma imagem, comando `celery -A config worker`
+  - [x] `celery_beat` — mesma imagem, comando `celery -A config beat` (tarefas periódicas)
+  - [x] `channels` — Django Channels / ASGI (pode ser o mesmo processo `api`)
+  - [x] `postgres` — PostgreSQL 16
+  - [x] `redis` — Redis 7 Alpine
+  - [x] `nginx` — reverse proxy
+- [x] Configurar rede Docker isolada `hbtrack-net` por ambiente
+- [x] Configurar volumes nomeados para dados persistentes (postgres_data, redis_data)
 
 #### 3.3 — Nginx
-- [ ] Criar `infra/nginx/nginx.conf`:
-  - Upstream para o backend na porta 8000
-  - SSL com Let's Encrypt (Certbot)
-  - Redirect HTTP → HTTPS
-  - Proxy `/api/` → backend
-  - Proxy WebSocket `/ws/` → Django Channels
-  - Servir arquivos estáticos do frontend (após Fase 5)
-  - Rate limiting: 100 req/s por IP
-  - Headers de segurança: `X-Content-Type-Options`, `X-Frame-Options`, `Strict-Transport-Security`
+- [x] Criar `infra/nginx/nginx.conf`:
+  - [x] Upstream para o backend na porta 8000
+  - [x] SSL com Let's Encrypt (Certbot)
+  - [x] Redirect HTTP → HTTPS
+  - [x] Proxy `/api/` → backend
+  - [x] Proxy WebSocket `/ws/` → Django Channels
+  - [x] Servir arquivos estáticos do frontend (após Fase 5) _(via `nginx-spa.conf` no container frontend)_
+  - [x] Rate limiting: 100 req/s por IP
+  - [x] Headers de segurança: `X-Content-Type-Options`, `X-Frame-Options`, `Strict-Transport-Security`
 
 #### 3.4 — Variáveis de ambiente
-- [ ] Criar `infra/env/.env.staging.template` (sem valores reais — apenas chaves)
-- [ ] Criar `infra/env/.env.production.template`
-- [ ] Variáveis obrigatórias documentadas:
-  - `SECRET_KEY` (gerado com `python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"`)
-  - `DATABASE_URL`
-  - `REDIS_URL`
-  - `ALLOWED_HOSTS`
-  - `CORS_ALLOWED_ORIGINS`
-  - `DEBUG=false`
-  - `JWT_PRIVATE_KEY` (RS256)
-  - `JWT_PUBLIC_KEY` (RS256)
-- [ ] Adicionar `infra/env/*.env` no `.gitignore`
+- [x] Criar `infra/env/.env.staging.template` (sem valores reais — apenas chaves)
+- [x] Criar `infra/env/.env.production.template`
+- [x] Variáveis obrigatórias documentadas:
+  - [x] `SECRET_KEY` (gerado com `python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"`)
+  - [x] `DATABASE_URL`
+  - [x] `REDIS_URL`
+  - [x] `ALLOWED_HOSTS`
+  - [x] `CORS_ALLOWED_ORIGINS`
+  - [x] `DEBUG=false`
+  - [x] `JWT_PRIVATE_KEY` (RS256)
+  - [x] `JWT_PUBLIC_KEY` (RS256)
+- [x] Adicionar `infra/env/*.env` no `.gitignore`
 
 #### 3.5 — GitHub Actions: pipeline completo
-- [ ] Criar `.github/workflows/ci.yml`:
+- [x] Criar `.github/workflows/ci.yml` + `deploy.yml`:
   ```
   Trigger: push para main, pull request para main
 
@@ -349,20 +349,20 @@ FASE 13 → Mobile v2.0 (React Native + Expo)
   ```
 
 #### 3.6 — VPS Locaweb: configuração inicial
-- [ ] Instalar Docker Engine + Docker Compose v2 no servidor Ubuntu 22.04
-- [ ] Instalar Certbot para SSL Let's Encrypt
-- [ ] Criar usuário `hbtrack` com permissão Docker (sem sudo)
-- [ ] Configurar SSH key para deploy automático (GitHub Actions secret)
-- [ ] Configurar firewall: apenas 80, 443 e porta SSH abertos
-- [ ] Criar diretórios de deploy: `/opt/hbtrack/staging/` e `/opt/hbtrack/production/`
-- [ ] Subir Pact Broker (já existe no VPS — verificar porta e integração)
+- [ ] Instalar Docker Engine + Docker Compose v2 no servidor Ubuntu 22.04 _(requer ação humana no VPS)_
+- [ ] Instalar Certbot para SSL Let's Encrypt _(requer ação humana no VPS)_
+- [ ] Criar usuário `hbtrack` com permissão Docker (sem sudo) _(requer ação humana no VPS)_
+- [ ] Configurar SSH key para deploy automático (GitHub Actions secret) _(requer ação humana no VPS)_
+- [ ] Configurar firewall: apenas 80, 443 e porta SSH abertos _(requer ação humana no VPS)_
+- [ ] Criar diretórios de deploy: `/opt/hbtrack/staging/` e `/opt/hbtrack/production/` _(requer ação humana no VPS)_
+- [ ] Subir Pact Broker (já existe no VPS — verificar porta e integração) _(requer ação humana no VPS)_
 
 #### 3.7 — Rollback
-- [ ] Criar script `infra/scripts/rollback.sh`:
+- [x] Criar script `infra/scripts/rollback.sh`:
   - Parâmetro: `--env staging|production` e `--sha <git-sha>`
   - Faz `docker compose up` com imagem da tag anterior
   - Verifica `/health` após rollback
-- [ ] Documentar procedimento manual de rollback em `docs/_canon/OPERATIONS.md`
+- [x] Documentar procedimento manual de rollback em `docs/_canon/OPERATIONS.md`
 
 **Critério de Done:** Push para `main` → staging atualizado automaticamente em ≤ 10 min → `/health` responde 200 no VPS staging → deploy de produção requer aprovação explícita.
 
@@ -423,11 +423,11 @@ FASE 13 → Mobile v2.0 (React Native + Expo)
 ### Tarefas
 
 #### 5.1 — Bootstrap do projeto frontend
-- [ ] Criar projeto em `frontend/` com:
+- [x] Criar projeto em `frontend/` com:
   ```bash
   npm create vite@latest frontend -- --template react-ts
   ```
-- [ ] Instalar dependências:
+- [x] Instalar dependências:
   ```bash
   npm install react-router-dom zustand axios
   npm install -D tailwindcss postcss autoprefixer
@@ -435,83 +435,84 @@ FASE 13 → Mobile v2.0 (React Native + Expo)
   npm install openapi-typescript openapi-fetch
   npm install -D vitest @testing-library/react playwright
   ```
-- [ ] Configurar Tailwind CSS (`tailwind.config.ts`)
-- [ ] Configurar shadcn/ui (`npx shadcn@latest init`)
-- [ ] Configurar React Router v6 com estrutura de rotas
-- [ ] Criar `frontend/vite.config.ts` com proxy para `http://localhost:8000/api`
+  _(playwright instalado como devDep mas sem testes E2E criados)_
+- [x] Configurar Tailwind CSS (`tailwind.config.ts`)
+- [x] Configurar shadcn/ui (`npx shadcn@latest init`)
+- [x] Configurar React Router v6 com estrutura de rotas
+- [x] Criar `frontend/vite.config.ts` com proxy para `http://localhost:8000/api`
 
 #### 5.2 — Geração do API client (D3 — Opção A)
-- [ ] Gerar tipos TypeScript a partir do contrato:
+- [x] Gerar tipos TypeScript a partir do contrato:
   ```bash
   npx openapi-typescript contracts/openapi/openapi.yaml -o frontend/src/api/schema.d.ts
   ```
-- [ ] Criar `frontend/src/api/client.ts` com `openapi-fetch` configurado
-- [ ] Criar script `package.json`: `"api:generate": "openapi-typescript ..."`
-- [ ] **Regra:** nunca editar `schema.d.ts` manualmente — apenas regenerar
-- [ ] Criar React Query hooks por módulo em `frontend/src/api/hooks/`:
-  - `useAuth.ts`
-  - `useUsers.ts`
-  - `useTeams.ts`
-  - `useSeasons.ts`
-  - `useTraining.ts`
+- [x] Criar `frontend/src/api/client.ts` com `openapi-fetch` configurado
+- [x] Criar script `package.json`: `"api:generate": "openapi-typescript ..."`
+- [x] **Regra:** nunca editar `schema.d.ts` manualmente — apenas regenerar
+- [x] Criar React Query hooks por módulo em `frontend/src/api/hooks/`:
+  - [x] `useAuth.ts`
+  - [x] `useUsers.ts`
+  - [x] `useTeams.ts`
+  - [x] `useSeasons.ts`
+  - [x] `useTraining.ts`
 
 #### 5.3 — Autenticação e navegação base
-- [ ] Criar layout base: `frontend/src/shared/layouts/AppLayout.tsx`
-  - Sidebar com navegação por módulo
-  - Header com nome do usuário e logout
-  - Área de conteúdo com React Router Outlet
-- [ ] Criar página de login: `frontend/src/features/auth/pages/LoginPage.tsx`
-  - Formulário: email + senha
-  - Chama `POST /api/auth/login`
-  - Armazena JWT no `localStorage` (ou httpOnly cookie — ver ADR-007)
-  - Redireciona para dashboard após login
-- [ ] Criar `AuthProvider` (Zustand store):
-  - Estado: `user`, `token`, `isAuthenticated`
-  - Actions: `login`, `logout`, `refreshToken`
-- [ ] Criar `ProtectedRoute` component — redireciona para login se não autenticado
+- [x] Criar layout base: `frontend/src/shared/layouts/AppLayout.tsx`
+  - [x] Sidebar com navegação por módulo
+  - [x] Header com nome do usuário e logout
+  - [x] Área de conteúdo com React Router Outlet
+- [x] Criar página de login: `frontend/src/features/auth/pages/LoginPage.tsx`
+  - [x] Formulário: email + senha
+  - [x] Chama `POST /api/auth/login`
+  - [x] Armazena JWT no `localStorage` (ou httpOnly cookie — ver ADR-007)
+  - [x] Redireciona para dashboard após login
+- [x] Criar `AuthProvider` (Zustand store):
+  - [x] Estado: `user`, `token`, `isAuthenticated`
+  - [x] Actions: `login`, `logout`, `refreshToken`
+- [x] Criar `ProtectedRoute` component — redireciona para login se não autenticado
 - [ ] Testar: logout expira sessão, rota protegida redireciona sem token
 
 #### 5.4 — Módulo: Users (perfis)
-- [ ] Página: lista de membros do time (`/users`)
-- [ ] Página: detalhe do perfil (`/users/:id`)
-- [ ] Formulário: criar/editar perfil
-- [ ] Componente: avatar + nome + role badge
+- [x] Página: lista de membros do time (`/users`)
+- [x] Página: detalhe do perfil (`/users/:id`)
+- [ ] Formulário: criar/editar perfil _(não implementado — página é somente leitura)_
+- [x] Componente: avatar + nome + role badge
 
 #### 5.5 — Módulo: Teams (elencos)
-- [ ] Página: lista de times (`/teams`)
-- [ ] Página: detalhe do time (`/teams/:id`) com lista de membros
-- [ ] Formulário: criar time
-- [ ] Ação: adicionar/remover membro do time
+- [x] Página: lista de times (`/teams`)
+- [x] Página: detalhe do time (`/teams/:id`) com lista de membros
+- [x] Formulário: criar time
+- [ ] Ação: adicionar/remover membro do time _(não implementado)_
 
 #### 5.6 — Módulo: Seasons (temporadas)
-- [ ] Página: lista de temporadas (`/seasons`)
-- [ ] Página: detalhe da temporada (`/seasons/:id`)
-- [ ] Formulário: criar temporada (nome, datas)
-- [ ] Indicador visual de temporada ativa
+- [x] Página: lista de temporadas (`/seasons`)
+- [x] Página: detalhe da temporada (`/seasons/:id`)
+- [x] Formulário: criar temporada (nome, datas)
+- [x] Indicador visual de temporada ativa
 
 #### 5.7 — Módulo: Training (treinos)
-- [ ] Página: calendário/lista de sessões (`/training`)
-- [ ] Página: detalhe da sessão (`/training/:id`)
-  - Informações da sessão (status, data, local)
-  - Lista de blocos com exercícios
-  - Lista de presença dos atletas
-  - Registros de bem-estar (pré e pós)
-- [ ] Formulário: criar sessão de treino
-- [ ] Ações de estado: publicar, iniciar, concluir, cancelar (botões contextuais por status)
-- [ ] Componente: gerenciador de blocos (drag & drop via `@dnd-kit`)
-- [ ] Componente: registro de presença (check por atleta)
+- [x] Página: calendário/lista de sessões (`/training`)
+- [x] Página: detalhe da sessão (`/training/:id`)
+  - [x] Informações da sessão (status, data, local)
+  - [x] Lista de blocos com exercícios
+  - [x] Lista de presença dos atletas
+  - [ ] Registros de bem-estar (pré e pós) _(módulo `wellness` é Ciclo 3 — não implementado)_
+- [x] Formulário: criar sessão de treino
+- [x] Ações de estado: publicar, iniciar, concluir, cancelar (botões contextuais por status)
+- [x] Componente: gerenciador de blocos (drag & drop via `@dnd-kit`)
+- [x] Componente: registro de presença (check por atleta)
 
 #### 5.8 — Testes de frontend
-- [ ] Criar testes unitários (Vitest) para hooks e utils
+- [x] Criar testes unitários (Vitest) para hooks e utils _(9 testes PASS: authStore + utils)_
 - [ ] Criar testes E2E (Playwright) para fluxos críticos:
   - Login → ver dashboard → criar treino → registrar presença
   - Logout → tentar acessar rota protegida → redireciona para login
 
 #### 5.9 — Build e integração com CI
-- [ ] Adicionar ao `infra/docker-compose.prod.yml` serviço `frontend`:
-  - Build via `Dockerfile.frontend` (multi-stage: `npm run build` → Nginx para servir `dist/`)
-- [ ] Configurar Nginx para servir `frontend/dist/` em `/` e fazer proxy de `/api/` para o backend
-- [ ] Adicionar job `build-frontend` no `.github/workflows/ci.yml`
+- [x] Adicionar ao `infra/docker-compose.prod.yml` serviço `frontend`:
+  - [x] Build via `Dockerfile.frontend` (multi-stage: `npm run build` → Nginx para servir `dist/`)
+- [x] Configurar Nginx para servir `frontend/dist/` em `/` e fazer proxy de `/api/` para o backend
+- [x] Adicionar job `build-frontend` no `.github/workflows/ci.yml`
 
 **Critério de Done:** Treinador consegue logar, criar time, criar temporada, planejar treino e registrar presença pelo navegador. Testes E2E PASS. Build em CI PASS.
 

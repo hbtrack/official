@@ -7,9 +7,10 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 from decimal import Decimal
-from typing import List, Optional
+from typing import Annotated, List, Optional
 
 from ninja import Schema
+from pydantic import Field
 
 
 # ---------------------------------------------------------------------------
@@ -284,11 +285,15 @@ class CreateMesocycleIn(Schema):
 # Microcycle schemas
 # ---------------------------------------------------------------------------
 
+# SmallIntegerField range; domain rule: >= 1
+_WeekNumber = Annotated[int, Field(ge=1, le=32767)]
+
+
 class MicrocycleOut(Schema):
     id: uuid.UUID
     organization_id: uuid.UUID
     mesocycle_id: uuid.UUID
-    week_number: int
+    week_number: _WeekNumber
     started_at: datetime
     ended_at: datetime
     created_at: datetime
@@ -307,7 +312,7 @@ class MicrocycleListOut(Schema):
 class CreateMicrocycleIn(Schema):
     organization_id: uuid.UUID
     mesocycle_id: uuid.UUID
-    week_number: int
+    week_number: _WeekNumber
     started_at: datetime
     ended_at: datetime
     team_id: Optional[uuid.UUID] = None

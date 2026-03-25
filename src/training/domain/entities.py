@@ -508,3 +508,5 @@ class Microcycle:
             raise ValueError("startedAt deve ser anterior a endedAt")
         if self.week_number < 1:
             raise ValueError("weekNumber deve ser >= 1")
+        if self.week_number > 32767:
+            raise ValueError("weekNumber deve ser <= 32767 (SmallIntegerField)")

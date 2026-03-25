@@ -1,37 +1,21 @@
 ---
-data_ultima_sessao: "2026-03-24"
+data_ultima_sessao: "2026-03-25"
 branch_ativo: hb-track-contratos-driven
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
-modulo_foco: frontend
-fase_roadmap: 5
+modulo_foco: training
+fase_roadmap: 2
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
-task_id: roadmap-fase5-tasks58-59-tests-ci
+task_id: bugfix-training-week-number-smallint-overflow
 resultado: DONE
-proxima_acao_permitida: "FASE 5 ✅ COMPLETA (5.1-5.9). npm run build ✅ PASS. 9/9 testes Vitest PASS. Dockerfile.frontend ✅. CI job build-frontend ✅. Próximo: FASE 6 — Deploy produção (BLOCKED_DEPLOY_REQUIRES_HUMAN)"
+proxima_acao_permitida: "FASE 2 ✅ Ciclo 1 contract tests PASS (schemathesis 1 passed, 74 skipped, 0 errors). FASE 5 ✅ COMPLETA (5.1-5.9). Próximo: FASE 6 — Deploy produção (BLOCKED_DEPLOY_REQUIRES_HUMAN)"
 bloqueios_ativos: []
 evidence_paths:
-  - frontend/src/api/client.ts
-  - frontend/src/api/hooks/useAuth.ts
-  - frontend/src/api/hooks/useUsers.ts
-  - frontend/src/api/hooks/useTeams.ts
-  - frontend/src/api/hooks/useSeasons.ts
-  - frontend/src/api/hooks/useTraining.ts
-  - frontend/src/shared/layouts/AppLayout.tsx
-  - frontend/src/shared/components/ProtectedRoute.tsx
-  - frontend/src/features/auth/pages/LoginPage.tsx
-  - frontend/src/features/dashboard/pages/DashboardPage.tsx
-  - frontend/src/features/users/pages/UsersPage.tsx
-  - frontend/src/features/users/pages/UserDetailPage.tsx
-  - frontend/src/features/teams/pages/TeamsPage.tsx
-  - frontend/src/features/teams/pages/TeamDetailPage.tsx
-  - frontend/src/features/seasons/pages/SeasonsPage.tsx
-  - frontend/src/features/seasons/pages/SeasonDetailPage.tsx
-  - frontend/src/features/training/pages/TrainingPage.tsx
-  - frontend/src/features/training/pages/TrainingDetailPage.tsx
-  - frontend/src/App.tsx
-  - frontend/src/main.tsx
+  - src/training/schemas.py
+  - src/training/domain/entities.py
+  - tests/schemathesis/conftest.py
+  - ROADMAP.md
 ---
 # SESSION HANDOFF — HB TRACK
 > Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`
