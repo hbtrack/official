@@ -118,6 +118,7 @@ def seed_demo_data(transactional_db):
                 "organization_id": ORG_ID,
                 "team_id": TEAM_ID,
                 "season_id": SEASON_ID,
+                "created_by_user_id": ADMIN_ID,
                 "session_at": session_at,
                 "session_type": session_types[i % len(session_types)],
                 "main_objective": f"Sessão demo #{i}",
@@ -135,16 +136,23 @@ def seed_demo_data(transactional_db):
     }
 
 
+def _warm_up_django(client):
+    """Warm-up do Django: primeira requsição inicializa DB connections,
+    caches internos e imports lazy — não contabilizada nos testes de tempo."""
+    client.get("/api/training/training-sessions")
+
+
 class TestPerformancePhase4:
     """Testes de performance — FASE 4"""
 
     def test_list_training_sessions_response_time(self, seed_demo_data):
         """Validar que GET /api/training-sessions/ responde em < 200ms"""
         client = Client()
-        
-        # Medir tempo de resposta
+        _warm_up_django(client)
+
+        # Medir tempo de resposta após warm-up
         start = time.perf_counter()
-        response = client.get("/api/training-sessions/")
+        response = client.get("/api/training/training-sessions")
         elapsed_ms = (time.perf_counter() - start) * 1000
         
         assert response.status_code == 200, f"Expected 200, got {response.status_code}"
@@ -156,7 +164,7 @@ class TestPerformancePhase4:
         client = Client()
         
         start = time.perf_counter()
-        response = client.get("/api/teams/")
+        response = client.get("/api/teams")
         elapsed_ms = (time.perf_counter() - start) * 1000
         
         assert response.status_code == 200
@@ -168,7 +176,7 @@ class TestPerformancePhase4:
         client = Client()
         
         start = time.perf_counter()
-        response = client.get("/api/seasons/")
+        response = client.get("/api/seasons")
         elapsed_ms = (time.perf_counter() - start) * 1000
         
         assert response.status_code == 200

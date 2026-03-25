@@ -29,6 +29,25 @@ def _postgres_available() -> bool:
         return False
 
 
+@pytest.fixture(autouse=True, scope="session")
+def _patch_flush_allow_cascade():
+    """Necessário para PostgreSQL: TRUNCATE no teardown transacional falha com
+    FeatureNotSupported quando tabelas intermediárias (auth_user_groups,
+    auth_user_user_permissions) têm FK sem CASCADE.
+    Django define allow_cascade=False por padrão quando available_apps is None.
+    """
+    from django.core.management.commands import flush as flush_module
+    original_handle = flush_module.Command.handle
+
+    def _handle_with_cascade(self, **options):
+        options["allow_cascade"] = True
+        return original_handle(self, **options)
+
+    flush_module.Command.handle = _handle_with_cascade
+    yield
+    flush_module.Command.handle = original_handle
+
+
 @pytest.fixture(scope="session")
 def django_db_setup():
     """Skip integration tests if PostgreSQL is not available."""

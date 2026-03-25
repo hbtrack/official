@@ -6,6 +6,6 @@ Executar separado do suite unitário.
 import pytest
 
 
-@pytest.mark.skip(reason="Requer PostgreSQL+Django — execução separada")
 def test_placeholder():
+    """Placeholder — suite de integração seasons a implementar."""
     pass

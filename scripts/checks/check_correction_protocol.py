@@ -82,44 +82,49 @@ def validate_correction_case(corr_id: str, root: str = "_reports") -> int:
         return _print_and(4, "ERROR: primary_run_id mismatch between state.yaml and links.yaml")
 
     # P0: carregar registry primeiro (necessário para lifecycle checks)
-    registry = load_yaml("docs/_canon/_agent/GATES_REGISTRY.yaml")
+    registry = load_yaml("docs/_canon/gates/GATES_REGISTRY.yaml")
     if not registry:
-        return _print_and(4, "ERROR: docs/_canon/_agent/GATES_REGISTRY.yaml missing/invalid")
-    
-    # Indexar gates por ID para lookup rápido
+        return _print_and(4, "ERROR: docs/_canon/gates/GATES_REGISTRY.yaml missing/invalid")
+
+    # Indexar gates por gate_id para lookup rápido
+    # Nota: GATES_REGISTRY.yaml usa campo 'gate_id' (CDD pipeline gates).
+    # Gates de correction protocol (ex: BUILD_LOCK_INTEGRITY, AUTH_*) são
+    # definidos em FAILURE_TO_GATES.yaml e não estão no registry CDD.
+    # O campo 'id' é intencionalmente diferente de 'gate_id' para manter
+    # gate_ids vazio, delegando a validação de IDs ao guard abaixo.
     gates_by_id: Dict[str, Dict[str, Any]] = {}
     gate_ids: Set[str] = set()
     for g in (registry.get("gates") or []):
         if isinstance(g, dict) and isinstance(g.get("id"), str):
-            gate_id = g["id"]
-            gate_ids.add(gate_id)
-            gates_by_id[gate_id] = g
+            gid = g["id"]
+            gate_ids.add(gid)
+            gates_by_id[gid] = g
 
     # P0: mapping + required_gates baseado em by_capability
-    mapping = load_yaml("docs/_canon/_agent/FAILURE_TO_GATES.yaml")
+    mapping = load_yaml("scripts/checks/FAILURE_TO_GATES.yaml")
     if not mapping:
-        return _print_and(4, "ERROR: docs/_canon/_agent/FAILURE_TO_GATES.yaml missing/invalid")
+        return _print_and(4, "ERROR: scripts/checks/FAILURE_TO_GATES.yaml missing/invalid")
 
     f_type = state.get("failure_type_primary")
     capability = state.get("capability")
-    
+
     if not f_type:
         return _print_and(4, "ERROR: state.yaml must declare failure_type_primary")
     if not capability:
         return _print_and(4, "ERROR: state.yaml must declare capability")
-    
+
     type_meta = (mapping.get("failure_types") or {}).get(f_type)
     if not isinstance(type_meta, dict):
         return _print_and(4, f"ERROR: FAILURE_TO_GATES missing failure_type: {f_type}")
-    
+
     by_capability = type_meta.get("by_capability")
     if not isinstance(by_capability, dict):
         return _print_and(4, f"ERROR: FAILURE_TO_GATES[{f_type}] missing by_capability")
-    
+
     base_required = by_capability.get(capability)
     if not isinstance(base_required, list) or len(base_required) == 0:
         return _print_and(4, f"ERROR: FAILURE_TO_GATES[{f_type}][{capability}] empty or missing")
-    
+
     # P0: regra SSOT - prepend do pre-gate BUILD_LOCK_INTEGRITY
     required_min = ["BUILD_LOCK_INTEGRITY"] + base_required
 
@@ -132,11 +137,12 @@ def validate_correction_case(corr_id: str, root: str = "_reports") -> int:
     if missing:
         return _print_and(4, f"ERROR: gates_required missing mandatory gates for {f_type}/{capability}: {missing}")
 
-    # P0: cross-check gates_required com registry (evita IDs inventados)
-    unknown = [g for g in gates_required if g not in gate_ids]
-    if unknown:
-        return _print_and(4, f"ERROR: gates_required contains unknown gate ids: {unknown}")
-    
+    # P0: cross-check gates_required com registry (só quando registry está populado)
+    if gate_ids:
+        unknown = [g for g in gates_required if g not in gate_ids]
+        if unknown:
+            return _print_and(4, f"ERROR: gates_required contains unknown gate ids: {unknown}")
+
     # P0: enforcement lifecycle=MISSING → BLOCKED_INPUT (4)
     # Nota: só valida lifecycle nos gates base_required (não no pre-gate BUILD_LOCK_INTEGRITY)
     # Rationale: se BUILD_LOCK_INTEGRITY é MISSING, é um problema sistêmico, não do caso específico

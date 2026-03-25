@@ -147,7 +147,7 @@ FASE 13 → Mobile v2.0 (React Native + Expo)
 #### 0.4 — Validar testes de integração
 - [x] Rodar `.venv/bin/pytest` com PostgreSQL ativo
 - [x] Confirmar que os 33 testes antes skipped agora passam
-- [ ] Meta: **720 + 33 = ≥ 753 testes PASS, 0 SKIP** _(schemathesis ERR impede validação completa)_
+- [x] Meta: **720 + 33 = ≥ 753 testes PASS, 0 SKIP** _(1142 + 1 schemathesis = 1143 PASS, 0 SKIP — 2026-03-25)_
 
 **Critério de Done:** `pytest` roda sem skip, `manage.py runserver` sobe, todos os 17 routers aparecem no `/api/docs`.
 
