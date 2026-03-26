@@ -22,49 +22,10 @@ evidence_paths:
 
 ## Estado Geral
 **Data:** 2026-03-25 | **Branch:** hb-track-contratos-driven | **CI:** UNKNOWN
-**Modo:** ROADMAP | **fase:** 5 | **Resultado:** DONE
+**Modo:** ROADMAP | **task_type:** execute_roadmap_phase | **boot_profile:** roadmap_execution
+**Módulo foco:** ci_cd_deploy | **Fase ROADMAP:** 4 | **Resultado:** PENDENTE
 
-## O que foi feito nesta sessão (continuação)
-**Verificação dos itens bloqueados por infra — Docker + VPS disponíveis**
-
-### Itens marcados `[x]` (verificados com infra disponível):
-| ROADMAP | Item | Evidência |
-|---------|------|-----------|
-| L172 | Celery worker sobe | 11 tasks, broker=redis://localhost:6379 ✅ |
-| L180 | WebSocket local | RedisChannelLayer: send/receive OK ✅ |
-| L187 | JWT flow completo | login→200, /api/users com token→200, sem token→401 ✅ |
-| L276 | docker build | hbtrack-api:latest buildado OK ✅ |
-| L277 | docker container | gunicorn+uvicorn sobem ✅ |
-| L278 | /health no container | {"status":"ok","db":"ok","redis":"ok"} ✅ |
-| L352 | Docker Engine VPS | Docker 29.1.3 + Compose v2.40.3 ✅ |
-| L353 | Certbot SSL | porta 443 UFW + Certbot configurado ✅ |
-| L354 | deploy user | usuário `deploy` com sudoers restrito ✅ |
-| L355 | SSH key deploy | chave `hbtrack-deploy` autorizada ✅ |
-| L356 | Firewall | UFW: allow 22/80/443, deny incoming ✅ |
-| L357 | Diretórios deploy | /home/deploy/hbtrack-backend/{current,shared,repo} ✅ |
-| L358 | Pact Broker | PostgreSQL disponível no VPS ✅ |
-| L572 | 0002 constraints Ciclo2 | competitions/matches/scout/video têm 0002 ✅ |
-| L580 | matches/tasks.py | matches.compute_match_stats ✅ |
-| L581 | video/tasks.py | video.process_media_session + generate_thumbnail ✅ |
-| L582 | scout/tasks.py | scout.consolidate_match_report ✅ |
-
-### Implementações novas nesta sessão:
-- `src/identity_access/infrastructure/jwt_adapter.py` — suporte HS256 (dev) + RS256 (prod), leitura dinâmica de env vars
-- `src/shared/middleware.py` — `JWTClaimsMiddleware` popula `request._actor_id`, `request._session_id`, `request._role_labels` a partir do Bearer JWT
-- `config/settings.py` — dotenv carregado automaticamente + JWTClaimsMiddleware registrado
-
-### Testes passando:
-- `tests/test_fase1_validation.py`: 11 PASS ✅
-- Ciclo 2 tasks: 37 PASS ✅
-
-## Próxima ação permitida
-- FASE 4: precisa de staging funcional no VPS (CI/CD com GitHub Actions)
-- FASE 6: deploy de produção (BLOCKED_DEPLOY_REQUIRES_HUMAN)
-- Quando pronto: `git push` com `VPS_DEPLOY_KEY` configurado no GitHub → testa CI/CD
-
-## Bloqueios ativos
-Nenhum bloqueio canônico ativo. FASE 6+ requer aprovação humana para deploy.
-## O que foi feito nesta sessão
+## O que foi feito
 **CHECK LIST DE CONFORMIDADE — FASE 1 a FASE 5 (não FASE 6)**
 
 ### Itens marcados `[x]` (confirmados implementados):

@@ -192,6 +192,7 @@ jobs:
   session-handoff-crossval:
     name: Validação Cruzada SESSION_HANDOFF ↔ session_start
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     needs: detect-governance-change
     if: needs.detect-governance-change.outputs.governance_changed == 'true'
 

@@ -177,6 +177,7 @@ def test_waiver_engine_accepts_valid_waiver(tmp_path, monkeypatch):
         encoding="utf-8",
     )
 
+    monkeypatch.delenv("CI", raising=False)
     original_which = gates.shutil.which
     monkeypatch.setattr(
         gates.shutil,

@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-03-26T01:23:27Z",
+  "timestamp_utc": "2026-03-26T05:56:36Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "7b3ead7",
+    "git_commit": "bbd863e",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260326T012327_0a93f5"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260326T055636_665fab"
   },
   "status_detail": {
     "active_gates_passed": 50,
@@ -229,7 +229,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 38
+        "duration_ms": 63
       }
     },
     {
@@ -254,7 +254,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1007
+        "duration_ms": 1405
       }
     },
     {
@@ -459,7 +459,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 9
       }
     },
     {
@@ -589,7 +589,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 113
+        "duration_ms": 118
       }
     },
     {
@@ -663,7 +663,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 39
+        "duration_ms": 52
       }
     },
     {
@@ -684,7 +684,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 33
+        "duration_ms": 39
       }
     },
     {
@@ -705,7 +705,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 14
+        "duration_ms": 17
       }
     },
     {
@@ -726,7 +726,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 77
+        "duration_ms": 95
       }
     },
     {
@@ -747,7 +747,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 48
+        "duration_ms": 58
       }
     },
     {
@@ -768,7 +768,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 43
+        "duration_ms": 44
       }
     },
     {
@@ -789,7 +789,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 294
+        "duration_ms": 297
       }
     },
     {
@@ -810,7 +810,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 33
+        "duration_ms": 32
       }
     },
     {
@@ -927,7 +927,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 23
+        "duration_ms": 22
       }
     },
     {
@@ -954,7 +954,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 118
+        "duration_ms": 115
       }
     },
     {
@@ -1421,7 +1421,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 31
+        "duration_ms": 28
       }
     },
     {
@@ -1507,7 +1507,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 709
+        "duration_ms": 723
       }
     },
     {
@@ -1530,7 +1530,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1048
+        "duration_ms": 1131
       }
     },
     {
@@ -1552,7 +1552,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1349
+        "duration_ms": 1246
       }
     },
     {
@@ -1591,7 +1591,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 531
+        "duration_ms": 560
       }
     },
     {
@@ -1631,7 +1631,7 @@
         "errors": 0,
         "warnings": 1,
         "violations": 1,
-        "duration_ms": 1429
+        "duration_ms": 1637
       }
     },
     {
@@ -2191,7 +2191,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1668
+        "duration_ms": 1711
       }
     },
     {
@@ -2215,7 +2215,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1645
+        "duration_ms": 1686
       }
     },
     {
@@ -2275,7 +2275,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2662
+        "duration_ms": 1581
       }
     },
     {
@@ -2318,7 +2318,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 63
+        "duration_ms": 60
       }
     },
     {
@@ -2340,7 +2340,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 982
+        "duration_ms": 984
       }
     },
     {
@@ -2436,7 +2436,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 39842
+        "duration_ms": 40748
       }
     },
     {
@@ -2472,7 +2472,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 14
       }
     },
     {
@@ -2492,7 +2492,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 19
+        "duration_ms": 24
       }
     },
     {
@@ -2570,7 +2570,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 8
       }
     },
     {
@@ -2649,19 +2649,15 @@
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/ROADMAP.md",
-        "/home/davis/HB-TRACK/src/identity_access/infrastructure/jwt_adapter.py",
-        "/home/davis/HB-TRACK/src/shared/middleware.py",
-        "/home/davis/HB-TRACK/config/settings.py",
-        "/home/davis/HB-TRACK/docs/_canon/OPERATIONS.md"
+        "/home/davis/HB-TRACK/.github/workflows/deploy.yml",
+        "/home/davis/HB-TRACK/.github/workflows/ci.yml"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/ROADMAP.md",
-        "/home/davis/HB-TRACK/src/identity_access/infrastructure/jwt_adapter.py",
-        "/home/davis/HB-TRACK/src/shared/middleware.py",
-        "/home/davis/HB-TRACK/config/settings.py",
-        "/home/davis/HB-TRACK/docs/_canon/OPERATIONS.md"
+        "/home/davis/HB-TRACK/.github/workflows/deploy.yml",
+        "/home/davis/HB-TRACK/.github/workflows/ci.yml"
       ],
       "evidence_files": [],
       "violations": [],
@@ -2669,7 +2665,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 6
       }
     },
     {
@@ -2691,7 +2687,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 157
+        "duration_ms": 187
       }
     },
     {
@@ -2713,7 +2709,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 7
       }
     },
     {
@@ -2735,7 +2731,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 22
+        "duration_ms": 23
       }
     },
     {
@@ -3097,7 +3093,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 876
+        "duration_ms": 903
       }
     },
     {
@@ -3121,7 +3117,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 5
+        "duration_ms": 6
       }
     },
     {
@@ -3143,7 +3139,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 16
+        "duration_ms": 17
       }
     },
     {
@@ -3182,7 +3178,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 25
+        "duration_ms": 26
       }
     },
     {
@@ -3205,7 +3201,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 4
       }
     },
     {

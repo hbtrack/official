@@ -33,7 +33,7 @@ jobs:
           cache: pip
 
       - name: Install validation dependencies
-        run: pip install -r requirements-dev.txt
+        run: pip install -r requirements-dev.txt -r scripts/_policy/requirements.txt
 
       - name: Run contract validation
         run: python3 scripts/contracts/validate/validate_contracts.py
