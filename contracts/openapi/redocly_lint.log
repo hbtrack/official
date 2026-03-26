@@ -1,0 +1,10 @@
+date=2026-03-12
+command=redocly lint contracts/openapi/openapi.yaml
+exit_code=0
+
+output:
+no errors
+
+notes:
+- Evidência complementar: `_reports/contract_gates/latest.json` contém gate `OPENAPI_ROOT_STRUCTURE_GATE` com `status=PASS` e `summary="redocly lint: nenhum erro."`.
+- PASS do lint estrutural não implica que `contracts/openapi/openapi.yaml` já tenha rotas reais (atualmente `paths: {}`).

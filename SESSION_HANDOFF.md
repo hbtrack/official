@@ -25,7 +25,7 @@ evidence_paths:
 **Modo:** ROADMAP | **Fase ROADMAP:** 4 | **Resultado:** PENDENTE
 
 ## O que foi feito
-Checklist FASE 1-5: 14 itens verificados — JWT auth, Celery X-Flow-ID, CORS, /health, logs, constraints 0002, Docker local, VPS infra, Playwright E2E. Celery tasks Ciclo 2: `matches.compute_match_stats`, `video.process_media_session`, `video.generate_thumbnail`, `scout.consolidate_match_report`. 37 backend + 12 frontend Vitest PASS.
+Checklist FASE 1-5: 14 itens verificados — JWT auth, Celery X-Flow-ID, CORS, /health, logs, constraints 0002, Docker local, VPS infra, Playwright E2E. Celery tasks Ciclo 2: `matches.compute_match_stats`, `video.process_media_session`, `video.generate_thumbnail`, `scout.consolidate_match_report`. 37 backend + 12 frontend Vitest PASS. CI fix: DERIVED_DRIFT_GATE — 7 artefatos gitignored adicionados (contracts/openapi/*.log, generated/contracts/**) + .gitignore exceptions.
 
 ## Evidências
 - ROADMAP.md: 14 itens `[ ]` → `[x]` (FASE 1-5)

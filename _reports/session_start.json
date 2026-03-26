@@ -22,9 +22,9 @@
   "roadmap_phase": 4,
   "stage0_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-03-26T07:50:43.159081+00:00",
+  "hook_validated_at": "2026-03-26T09:44:42.388760+00:00",
   "module_focus": "training",
-  "stage3_exit_code": 2,
+  "stage3_exit_code": 0,
   "roadmap_task_id": "roadmap-fase4-staging-validation",
   "module": "training",
   "stage2_artifacts": [
@@ -44,6 +44,18 @@
       "path": "contracts/schemas/training/ajv_compile.log",
       "sha256": "d0532788ca81ebd548a3883c83a074e4781a82cce26813f5dc3b56b8579c33c2",
       "created_at": "2026-03-26T08:21:38.546432+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/redocly_lint.log",
+      "sha256": "6ee11b6d54838065f400e15059268b96d2db8afe75cd954fb66322af3ffdc3c4",
+      "created_at": "2026-03-26T11:08:25.068130+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/spectral_lint.log",
+      "sha256": "20dacc396fb2ab9ddaf802b5703aa67218b93ac39fae1fd982294d0798f65328",
+      "created_at": "2026-03-26T11:08:38.343345+00:00",
       "gate_exit_code": 0
     }
   ],

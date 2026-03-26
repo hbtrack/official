@@ -1,0 +1,12 @@
+date=2026-03-12
+command=spectral lint contracts/openapi/openapi.yaml --ruleset .spectral.yaml
+exit_code=0
+
+output:
+No results with a severity of 'error' found!
+
+notes:
+- Spectral lint executado com sucesso usando ruleset em `.spectral.yaml`.
+- Nenhum erro ou warning reportado.
+- Ruleset atual alinhado com `.contract_driven/API_RULES/API_RULES.yaml` (SSOT de convenções de API).
+- Gate 2 (OPENAPI_POLICY_RULESET_GATE) operacional.

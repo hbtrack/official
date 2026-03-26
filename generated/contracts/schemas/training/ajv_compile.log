@@ -1,0 +1,11 @@
+date=2026-03-12
+command=ajv compile -s contracts/schemas/training/*.schema.json
+exit_code=0
+
+output:
+schema contracts/schemas/training/training_session.schema.json is valid
+
+notes:
+- AJV CLI executed successfully with Node runtime available.
+- Schema validation PASSED after migration to draft-07 (http://json-schema.org/draft-07/schema#).
+- Gate 5 (JSON Schema SSOT) is now operational for module 'training'.

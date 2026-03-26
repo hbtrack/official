@@ -6,6 +6,8 @@ docs/scripts/consolidated_report.json
 docs/_generated/
 # Exception: canonical JSON schemas inside contracts/ (required by REQUIRED_ARTIFACT_PRESENCE_GATE)
 !contracts/schemas/**/*.schema.json
+# Exception: canonical schemas inside generated/contracts/ (referenced by traceability manifests — DERIVED_DRIFT_GATE)
+!generated/contracts/**/*.schema.json
 
 # Build/test artifacts
 build/
@@ -59,6 +61,8 @@ Thumbs.db
 !docs/hbtrack/evidence/**/*.log
 # Exception: validation logs inside contracts/ referenced by drift manifests
 !contracts/**/*.log
+# Exception: validation logs inside generated/contracts/ referenced by traceability manifests (DERIVED_DRIFT_GATE)
+!generated/contracts/**/*.log
 .cache/
 
 # Local runtime/generated dirs
@@ -97,6 +101,8 @@ docs/scripts/consolidated_report.json
 docs/_generated/
 # Exception: canonical JSON schemas inside contracts/ (required by REQUIRED_ARTIFACT_PRESENCE_GATE)
 !contracts/schemas/**/*.schema.json
+# Exception: canonical schemas inside generated/contracts/ (referenced by traceability manifests — DERIVED_DRIFT_GATE)
+!generated/contracts/**/*.schema.json
 
 # Build/test artifacts
 build/
@@ -159,6 +165,8 @@ htmlcov/
 !docs/hbtrack/evidence/**
 # Exception: validation logs inside contracts/ referenced by drift manifests
 !contracts/**/*.log
+# Exception: validation logs inside generated/contracts/ referenced by traceability manifests (DERIVED_DRIFT_GATE)
+!generated/contracts/**/*.log
 logs/
 .cache/
 # _reports/agent_execution/ tracked: baseline_backfill evidence required by PRE_CONTRACT_EVIDENCE_GATE
