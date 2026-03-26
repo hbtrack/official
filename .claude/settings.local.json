@@ -1,35 +1,6 @@
 {
   "permissions": {
     "allow": [
-      "Bash(python3 -c \"import yaml; yaml.safe_load\\(open\\(''.dev/training.module_decision_ir.yaml''\\)\\); print\\(''YAML válido''\\)\")",
-      "Bash(python3 -c \":*)",
-      "Bash(wsl -d Ubuntu -e bash -c \"python3 -c \"\":*)",
-      "Bash(wsl -d Ubuntu -e bash -c \"cd /home/davis/HB-TRACK && python3 scripts/validate_contracts.py 2>&1 | tail -40\")",
-      "Bash(wsl -d Ubuntu -e bash -c \"cd /home/davis/HB-TRACK && python3 scripts/validate_contracts.py 2>&1 | grep -A 20 ''CROSS_SPEC_ALIGNMENT''\")",
-      "Bash(wsl -d Ubuntu -e bash -c \"cd /home/davis/HB-TRACK && python3 scripts/validate_contracts.py 2>&1 | tail -30\")",
-      "Bash(wsl -e bash -c \"cd /home/davis/HB-TRACK && find . -name ''MODULE_DECISION_IR.json'' -not -path ''./.git/*'' -not -path ''./node_modules/*'' 2>/dev/null\")",
-      "Bash(wsl -e bash -c \"cd /home/davis/HB-TRACK && python3 scripts/contracts/validate/validate_contracts.py 2>&1 | grep -B 5 ''READINESS_SUMMARY\\\\|FAIL\\\\|WARN\\\\|exercises''\")",
-      "Bash(find /home/davis/HB-TRACK/.contract_driven/templates -name *.md)",
-      "Bash(cat .contract_driven/templates/modulos/schemas/*.schema.json)",
-      "Bash(wsl -e bash -c \"cd /home/davis/HB-TRACK && python3 scripts/contracts/validate/validate_contracts.py 2>&1 | grep -E ''\\(PASS|FAIL|BLOCK|WARN|Overall|JSON_SCHEMA\\)''\")",
-      "Read(///wsl$/Ubuntu/home/davis/HB-TRACK/**)",
-      "Read(//mnt/c/Users/davis/HB-TRACK/docs/hbtrack/**)",
-      "Bash(find . -name *ARCH_DECISIONS_TRAINING*)",
-      "Bash(find /home/davis/HB-TRACK/docs/_canon -maxdepth 3 -name *.md)",
-      "Bash(wsl -e bash -c \"ls /home/davis/HB-TRACK/docs/ 2>&1 | head -20\")",
-      "Bash(chmod +x /home/davis/HB-TRACK/scripts/hb)",
-      "Bash(bash scripts/hb help)",
-      "Bash(echo \"exitcode=$?\")",
-      "Bash(python3 scripts/contracts/validate/validate_contracts.py --stage session-start)",
-      "Bash(python3 scripts/contracts/validate/validate_contracts.py*)",
-      "Bash(python3 scripts/hb*)",
-      "Bash(python3 scripts/contracts/validate/api/compile_api_policy.py*)",
-      "Bash(echo \"EXIT:$?\")",
-      "Bash(npx @asyncapi/cli validate --help)",
-      "Bash(node_modules/.bin/asyncapi validate:*)",
-      "Bash(find /home/davis/HB-TRACK/config -name *.py)",
-      "Bash(find /home/davis/HB-TRACK/src -name \"api.py\" -exec wc -l {})",
-      "Bash(ssh -i ~/.ssh/hbtrack_deploy -o StrictHostKeyChecking=no deploy@191.252.185.34 \":*)"
     ]
   }
 }
