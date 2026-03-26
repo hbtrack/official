@@ -58,33 +58,6 @@ jobs:
           cp audit_output.txt "_reports/CE_AUDIT_$(date -u +%Y%m%d_%H%M%S).txt" 2>/dev/null || true
           echo "Report saved to _reports/"
 
-      - name: Comment on PR (if triggered from PR)
-        if: github.event_name == 'pull_request' && always()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require('fs');
-            const output = fs.readFileSync('audit_output.txt', 'utf8');
-            const passed = output.includes('RESULTADO FINAL: ✓ PASS');
-
-            const comment = `## 📊 Context Efficiency Audit
-
-            \`\`\`
-            ${output.substring(0, 2000)}
-            \`\`\`
-
-            **Status**: ${passed ? '✅ PASS' : '❌ FAIL'}
-
-            [Full report](./_reports/)
-            `;
-
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: comment
-            });
-
       - name: Upload audit artifact
         if: always()
         uses: actions/upload-artifact@v4
