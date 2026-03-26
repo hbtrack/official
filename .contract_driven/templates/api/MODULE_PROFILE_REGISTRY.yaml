@@ -3,24 +3,27 @@ version: "1.0.0"
 modules:
   users:
     module_class: "CRUD"
-    enabled_surfaces: ["sync"]
+    enabled_surfaces: ["sync", "event"]
     overlays: []
     contract_targets:
       sync: "openapi"
+      event: "asyncapi"
 
   seasons:
     module_class: "CRUD"
-    enabled_surfaces: ["sync"]
+    enabled_surfaces: ["sync", "event"]
     overlays: []
     contract_targets:
       sync: "openapi"
+      event: "asyncapi"
 
   teams:
     module_class: "CRUD"
-    enabled_surfaces: ["sync"]
+    enabled_surfaces: ["sync", "event"]
     overlays: []
     contract_targets:
       sync: "openapi"
+      event: "asyncapi"
 
   training:
     module_class: "HYBRID"
@@ -32,10 +35,11 @@ modules:
 
   wellness:
     module_class: "HYBRID"
-    enabled_surfaces: ["sync"]
+    enabled_surfaces: ["sync", "event"]
     overlays: ["sensitive_overlay"]
     contract_targets:
       sync: "openapi"
+      event: "asyncapi"
 
   medical:
     module_class: "CRUD"
@@ -46,24 +50,27 @@ modules:
 
   competitions:
     module_class: "CRUD"
-    enabled_surfaces: ["sync"]
+    enabled_surfaces: ["sync", "event"]
     overlays: []
     contract_targets:
       sync: "openapi"
+      event: "asyncapi"
 
   matches:
     module_class: "CRUD"
-    enabled_surfaces: ["sync"]
+    enabled_surfaces: ["sync", "event"]
     overlays: []
     contract_targets:
       sync: "openapi"
+      event: "asyncapi"
 
   scout:
     module_class: "CRUD"
-    enabled_surfaces: ["sync"]
+    enabled_surfaces: ["sync", "event"]
     overlays: []
     contract_targets:
       sync: "openapi"
+      event: "asyncapi"
 
   exercises:
     module_class: "CRUD"
@@ -88,29 +95,40 @@ modules:
 
   ai_ingestion:
     module_class: "CRUD"
-    enabled_surfaces: ["sync"]
+    enabled_surfaces: ["sync", "event"]
     overlays: ["sensitive_overlay"]
     contract_targets:
       sync: "openapi"
+      event: "asyncapi"
 
   identity_access:
     module_class: "CRUD"
-    enabled_surfaces: ["sync"]
+    enabled_surfaces: ["sync", "event"]
     overlays: ["sensitive_overlay"]
     contract_targets:
       sync: "openapi"
+      event: "asyncapi"
 
   audit:
     module_class: "CRUD"
-    enabled_surfaces: ["sync"]
+    enabled_surfaces: ["sync", "event"]
     overlays: []
     contract_targets:
       sync: "openapi"
+      event: "asyncapi"
 
   notifications:
     module_class: "CRUD"
-    enabled_surfaces: ["sync"]
+    enabled_surfaces: ["sync", "event"]
     overlays: []
     contract_targets:
       sync: "openapi"
+      event: "asyncapi"
 
+  video:
+    module_class: "HYBRID"
+    enabled_surfaces: ["sync", "event"]
+    overlays: []
+    contract_targets:
+      sync: "openapi"
+      event: "asyncapi"

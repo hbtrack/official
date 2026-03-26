@@ -1,0 +1,56 @@
+{
+  "$comment": "Sovereign domain shape for module teams. Conservative enrichment based on MODULE_SCOPE_TEAMS.md and MODULE_SOURCE_AUTHORITY_MATRIX may_infer(roster, sports_staff, season_association, category, athlete_staff_links).",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://hbtrack.local/schemas/teams/team.schema.json",
+  "title": "Team",
+  "description": "Roster and category shape for the teams module.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "organizationId", "name", "categoryLabel"],
+  "properties": {
+    "id": { "$ref": "#/definitions/uuid_v4" },
+    "organizationId": { "$ref": "#/definitions/uuid_v4" },
+    "seasonId": { "$ref": "#/definitions/uuid_v4" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "shortName": { "type": "string", "maxLength": 32 },
+    "categoryLabel": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "description": "Human-readable category or competitive level."
+    },
+    "athleteIds": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/uuid_v4" },
+      "uniqueItems": true
+    },
+    "staffUserIds": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/uuid_v4" },
+      "uniqueItems": true
+    },
+    "rosterNotes": {
+      "type": "string",
+      "maxLength": 500
+    }
+  },
+  "definitions": {
+    "uuid_v4": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    }
+  },
+  "examples": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440003",
+      "organizationId": "550e8400-e29b-41d4-a716-446655440103",
+      "seasonId": "550e8400-e29b-41d4-a716-446655440303",
+      "name": "HB Track U18",
+      "shortName": "HBU18",
+      "categoryLabel": "U18",
+      "athleteIds": ["550e8400-e29b-41d4-a716-446655440503"],
+      "staffUserIds": ["550e8400-e29b-41d4-a716-446655440603"],
+      "rosterNotes": "Primary roster for the season."
+    }
+  ]
+}

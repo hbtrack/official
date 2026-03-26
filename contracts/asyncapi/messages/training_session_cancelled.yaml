@@ -1,0 +1,7 @@
+messageId: training_session_cancelled
+name: training_session_cancelled
+title: Training Session Cancelled
+summary: Sessão de treino cancelada. Transição de qualquer estado pré-terminal.
+contentType: application/json
+payload:
+  $ref: ../components/schemas/training_session_cancelled_payload.yaml

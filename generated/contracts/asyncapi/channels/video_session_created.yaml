@@ -1,0 +1,14 @@
+# AsyncAPI Channel: video.session.created
+# Module: video
+# Domain rules: DR-VID-001, DR-VID-003, DR-VID-008
+# Decisions: ADR-033 (video canonicalization)
+
+description: >
+  Canal de publicação quando uma nova MatchMediaSession é criada (state=DRAFT).
+  Soberano do ciclo de vida de vídeo (DR-VID-003). Publisher: video.
+  Consumidores típicos: audit, notifications, analytics.
+  BOUNDARY: não expõe credenciais de edge nodes ou configurações internas de CDN.
+publish:
+  operationId: video_session_created_publish
+  message:
+    $ref: "../messages/video_session_created.yaml"

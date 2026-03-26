@@ -1,0 +1,108 @@
+# DECISION_IR_VIDEO.yaml
+# Decisões de implementação — módulo video
+# Data: 2026-03-19
+# Autor: product owner via agent
+# Confirma arquitetura antes de geração de artefatos
+
+decisions:
+  - id: DEC-VID-001
+    title: asyncapi_event_granularity
+    question: >
+      Qual nível de granularidade para eventos AsyncAPI do módulo video?
+      Opções variam de alta coesão (poucos eventos, payloads ricos) a
+      baixa coesão (muitos eventos atômicos, rastreabilidade máxima).
+    options:
+      A:
+        label: 4 eventos coarse-grained
+        description: >
+          session_started, session_completed, clip_ready, distribution_published.
+          Simples, menor volume de mensagens. Perde granularidade de estado
+          intermediário (capturing, syncing, transcoding).
+      B:
+        label: 6 eventos com estados intermediários
+        description: >
+          Adiciona session_capturing e session_syncing ao conjunto A.
+          Cobre o ciclo de vida de captura, mas omite transcodificação.
+      C:
+        label: 8 eventos cobrindo ciclo de vida completo
+        description: >
+          session_created, session_capturing, segment_finalized,
+          session_syncing, session_transcoding, clip_ready,
+          distribution_published, session_published.
+          Cobertura total dos estados do STATE_MODEL_VIDEO.
+          Permite analytics, scouting e monitoramento de pipeline com
+          granularidade temporal precisa.
+    chosen: C
+    rationale: >
+      O módulo video tem 8 estados no STATE_MODEL (criado, capturando,
+      sincronizando, transcodificando, clipe pronto, distribuído, publicado,
+      falha). Cada estado gera evento concreto para consumidores downstream
+      (analytics, notifications, scout). Opção C garante que nenhum estado
+      fica invisível para o barramento de eventos, alinhado com ADR-014
+      (event-driven architecture) e com o princípio de rastreabilidade completa.
+      Artefatos criados: 8 canais + 8 mensagens + 8 schemas de payload.
+    doc_ref: >
+      docs/hbtrack/modulos/video/STATE_MODEL_VIDEO.md,
+      contracts/asyncapi/channels/video_*.yaml (8 arquivos),
+      SESSION_HANDOFF.md (DEC-VID-001)
+
+  - id: DEC-VID-002
+    title: capture_architecture
+    question: >
+      Qual arquitetura para captura de vídeo ao vivo: edge-first com
+      fallback local ou cloud-first com buffer local?
+    options:
+      A:
+        label: Cloud-first com buffer local
+        description: >
+          Captura envia diretamente para cloud; buffer local apenas em
+          caso de falha de conectividade. Simplicidade operacional, mas
+          dependente de conectividade estável na arena.
+      B:
+        label: Edge-first com fallback local
+        description: >
+          Captura primária no dispositivo edge (câmera/servidor local da arena).
+          Upload para cloud após estabilização. Funciona offline ou com
+          conectividade limitada. Resiliente a falhas de rede.
+    chosen: B
+    rationale: >
+      Arenas de handebol — especialmente fora de grandes centros — frequentemente
+      têm conectividade instável. Edge-first garante que nenhuma sessão de vídeo
+      é perdida por falha de rede. O workflow start_live_capture.arazzo.yaml
+      implementa edge-first com sincronização posterior via session_syncing.
+      Alinhado com DOMAIN_RULES_VIDEO.md (DR-VID-003: edge resilience) e
+      com o STATE_MODEL (estado syncing explícito).
+    doc_ref: >
+      docs/hbtrack/modulos/video/DOMAIN_RULES_VIDEO.md,
+      contracts/workflows/video/start_live_capture.arazzo.yaml,
+      contracts/workflows/video/capture_and_sync.arazzo.yaml
+
+  - id: DEC-VID-003
+    title: distribution_model
+    question: >
+      O módulo video deve suportar distribuição dual-track (técnica + pública)
+      ou apenas distribuição técnica interna?
+    options:
+      A:
+        label: Apenas distribuição técnica interna
+        description: >
+          Vídeo distribuído somente para banco de dados tático, tribuna e
+          comissão técnica. Sem suporte a broadcasting externo no v1.
+      B:
+        label: "Dual-track: técnica interna + pública (CDN)"
+        description: >
+          Track técnico: banco tático, tribuna, comissão (baixa latência, acesso
+          restrito). Track público: broadcasting via CDN (alta disponibilidade,
+          perfis múltiplos de qualidade). Cada track tem distribution_profile
+          canônico.
+    chosen: B
+    rationale: >
+      O produto HB Track tem como stakeholders tanto comissão técnica quanto
+      fãs e imprensa. A separação em dual-track segrega requisitos de latência
+      (baixa para técnico) de requisitos de disponibilidade (alta para público).
+      O schema distribution_profile.schema.json implementa esta separação.
+      Scope declarado em MODULE_SCOPE_VIDEO.md e DOMAIN_RULES_VIDEO.md.
+    doc_ref: >
+      docs/hbtrack/modulos/video/MODULE_SCOPE_VIDEO.md,
+      contracts/schemas/video/distribution_profile.schema.json,
+      contracts/asyncapi/channels/video_distribution_published.yaml

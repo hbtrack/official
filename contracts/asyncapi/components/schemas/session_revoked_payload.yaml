@@ -1,0 +1,66 @@
+type: object
+required:
+- eventType
+- occurredAt
+- sessionId
+- principalUserId
+- revokedAt
+- revocationReason
+additionalProperties: false
+properties:
+  eventType:
+    type: string
+    const: session.revoked
+    description: Tipo do evento. Sempre "session.revoked".
+  occurredAt:
+    type: string
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+    format: date-time
+    description: Timestamp UTC do momento da revogação (ISO 8601).
+    x-semantic-id: core.occurred_at.v1
+  sessionId:
+    type: string
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    format: uuid
+    description: UUID v4 da sessão revogada (INV-IAM-001).
+    x-semantic-id: identity.session.id.v1
+  principalUserId:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    description: 'UUID do usuário proprietário da sessão revogada. Referência ao módulo
+      users (DR-IAM-002).
+
+      '
+    x-semantic-id: identity.user.id.v1
+  revokedAt:
+    type: string
+    format: date-time
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+    description: 'Timestamp UTC do momento em que a sessão foi revogada (DR-IAM-004).
+      Coincide com occurredAt quando a revogação é imediata.
+
+      '
+  revokedByUserId:
+    type: string
+    format: uuid
+    description: 'UUID do usuário admin que forçou a revogação administrativa. Null
+      quando a revogação é auto-iniciada (logout do próprio usuário).
+
+      '
+    x-semantic-id: identity.user.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+  revocationReason:
+    type: string
+    enum:
+    - LOGOUT
+    - ADMIN_REVOKED
+    - TOKEN_EXPIRED
+    - SECURITY_POLICY
+    description: 'Motivo da revogação (DR-IAM-004, DEC-IAM-002=B). logout: o próprio
+      usuário encerrou a sessão. admin_revoked: admin forçou encerramento. token_expired:
+      TTL do access token expirou. security_policy: revogação forçada por política
+      (ex.: mudança de senha, denylist Redis).
+
+      '
+    x-domain-enum-ref: session_revocation_reason

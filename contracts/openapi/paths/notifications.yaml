@@ -1,8 +1,453 @@
-# Path items for module: notifications
+# ============================================================
+# Module: notifications — OpenAPI path items
 # Source of truth: contracts/openapi/openapi.yaml
-# Related docs:
-# - docs/_canon/SYSTEM_SCOPE.md
-# - docs/hbtrack/modulos/notifications/MODULE_SCOPE_NOTIFICATIONS.md
-#
-# Add path items here following OpenAPI 3.1 Path Item Object spec.
-# Each path must belong exclusively to this module (LAYOUT section 6).
+# Docs: docs/hbtrack/modulos/notifications/MODULE_SCOPE_NOTIFICATIONS.md
+# Domain rules: DR-NTF-001..005
+# Invariants: INV-NTF-001..005
+# ADR refs: ADR-031 (stack: Celery 5 + Redis 7)
+# ============================================================
+
+/notifications/intents:
+  post:
+    tags:
+      - notifications
+    summary: Cria intenção de notificação
+    description: >
+      Registra uma intenção de notificação emitida por outro módulo da plataforma.
+      O módulo notifications é soberano sobre o envelope de entrega (DR-NTF-001):
+      decide canal, destinatário, template e gerencia o lifecycle de entrega.
+
+      Outros módulos emitem intenção/evento — notifications decide canal e lifecycle
+      (DR-NTF-002). Pelo menos um dentre notificationTemplateRef e eventEnvelopeRef
+      deve estar presente (INV-NTF-004).
+
+      Pré-condições:
+      - Usuário autenticado com role admin, coordinator ou coach (ADR-008)
+      - recipientUserId corresponde a usuário existente no módulo users
+      - notificationTemplateRef ou eventEnvelopeRef deve estar presente
+
+      Pós-condições:
+      - NotificationDelivery criado com deliveryStatusLabel=queued
+      - Evento notification.delivery.queued publicado via AsyncAPI
+      - Celery task enfileirada para entrega assíncrona (ADR-031)
+    operationId: createNotificationIntent
+    security:
+      - HTTPBearer: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - recipientUserId
+              - channelLabel
+            properties:
+              recipientUserId:
+                type: string
+                format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+                description: >
+                  UUID do usuário destinatário. Referência ao módulo users.
+                  x-semantic-id: identity.user.id.v1
+                x-semantic-id: identity.user.id.v1
+              channelLabel:
+                type: string
+                enum:
+                  - push
+                  - email
+                  - in_app
+                  - sms
+                description: >
+                  Canal preferencial de entrega. notifications resolve fallback
+                  para in_app se canal indisponível (DR-NTF-002).
+              notificationTemplateRef:
+                type: string
+                maxLength: 120
+                description: >
+                  Referência ao template de mensagem (DR-NTF-003).
+                  Obrigatório quando eventEnvelopeRef ausente (INV-NTF-004).
+              eventEnvelopeRef:
+                type: string
+                maxLength: 120
+                description: >
+                  Referência ao envelope de evento origem (DR-NTF-003).
+                  Obrigatório quando notificationTemplateRef ausente (INV-NTF-004).
+              preferenceLabel:
+                type: string
+                maxLength: 80
+                description: >
+                  Label de preferência de canal do destinatário (DR-NTF-004).
+                  Influencia resolução de canal, mas não substitui authz de
+                  identity_access.
+            additionalProperties: false
+    responses:
+      "202":
+        description: Intenção de notificação aceita e enfileirada para entrega.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/notifications/notification_delivery.yaml"
+      "400":
+        description: >
+          Requisição inválida. Causas: recipientUserId ausente; channelLabel
+          inválido; nem notificationTemplateRef nem eventEnvelopeRef presentes
+          (INV-NTF-004).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Papel RBAC insuficiente (ADR-008 — BFLA).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "422":
+        description: recipientUserId não corresponde a usuário conhecido.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+/notifications/deliveries:
+  get:
+    tags:
+      - notifications
+    summary: Lista entregas de notificação
+    description: >
+      Retorna lista paginada de entregas de notificação.
+      Restrito a roles admin e coordinator (ADR-008 RBAC). Suporta filtros por
+      recipientUserId, channelLabel, deliveryStatusLabel e intervalo de datas.
+
+      DR-NTF-005: NotificationDelivery não carrega policy de acesso nem estado
+      de negócio do módulo originador.
+    operationId: listDeliveries
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: recipientUserId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+        description: Filtra por UUID do destinatário.
+      - name: channelLabel
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+            - push
+            - email
+            - in_app
+            - sms
+        description: Filtra por canal de entrega.
+      - name: deliveryStatusLabel
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+            - queued
+            - sent
+            - failed
+            - retrying
+        description: Filtra por status de entrega.
+      - name: requestedAtFrom
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+        description: Início do intervalo (ISO 8601 UTC). Inclusivo.
+      - name: requestedAtTo
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+        description: Fim do intervalo (ISO 8601 UTC). Inclusivo.
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        description: Número da página (base 1).
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        description: Itens por página (máx 100).
+    responses:
+      "200":
+        description: Lista paginada de entregas.
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - data
+                - page
+                - pageSize
+                - total
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: "../components/schemas/notifications/notification_delivery.yaml"
+                page:
+                  type: integer
+                  minimum: 1
+                pageSize:
+                  type: integer
+                  minimum: 1
+                total:
+                  type: integer
+                  minimum: 0
+              additionalProperties: false
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Papel RBAC insuficiente — requer admin ou coordinator (ADR-008).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+/notifications/deliveries/{deliveryId}:
+  get:
+    tags:
+      - notifications
+    summary: Obtém entrega de notificação por ID
+    description: >
+      Retorna o estado completo de uma entrega de notificação.
+      Roles admin e coordinator têm acesso irrestrito.
+      Roles coach, athlete e member acessam apenas entregas cujo
+      recipientUserId seja o próprio (BOLA — ADR-008).
+    operationId: getDelivery
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: deliveryId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID da entrega de notificação.
+    responses:
+      "200":
+        description: Entrega encontrada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/notifications/notification_delivery.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Acesso negado — não é admin/coordinator nem o destinatário (ADR-008 BOLA).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Entrega não encontrada.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+/notifications/users/{userId}/preferences:
+  get:
+    tags:
+      - notifications
+    summary: Obtém preferências de notificação do usuário
+    description: >
+      Retorna as preferências de canal de notificação de um usuário.
+      DR-NTF-004: preferenceLabel influencia resolução de canal, mas não
+      substitui policy de authz de identity_access.
+
+      Acesso: admin e coordinator acessam qualquer usuário; roles inferiores
+      acessam apenas o próprio (BOLA — ADR-008).
+    operationId: getUserNotificationPreferences
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID do usuário. Referência ao módulo users.
+    responses:
+      "200":
+        description: Preferências do usuário.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/notifications/notification_preferences.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Acesso negado — BOLA (ADR-008).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Usuário não encontrado.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+  patch:
+    tags:
+      - notifications
+    summary: Atualiza preferências de notificação do usuário
+    description: >
+      Atualiza parcialmente as preferências de canal de notificação de um usuário.
+      DR-NTF-004: preferências influenciam decisão de canal; não têm poder de
+      authz. Campos não enviados permanecem inalterados (PATCH semântico).
+
+      Acesso: admin atualiza qualquer usuário; demais roles apenas o próprio.
+    operationId: updateUserNotificationPreferences
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID do usuário. Referência ao módulo users.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            minProperties: 1
+            properties:
+              pushEnabled:
+                type: boolean
+                description: Permite receber notificações push (FCM/APNs).
+              emailEnabled:
+                type: boolean
+                description: Permite receber notificações por e-mail.
+              inAppEnabled:
+                type: boolean
+                description: Permite receber notificações in-app.
+              smsEnabled:
+                type: boolean
+                description: "Permite receber notificações por SMS (reservado — sem gateway no MVP)."
+              quietHoursStart:
+                type:
+                  - string
+                  - "null"
+                pattern: "^([01]\\d|2[0-3]):[0-5]\\d$"
+                description: "Início do período silencioso (HH:MM, hora local). Null desativa."
+              quietHoursEnd:
+                type:
+                  - string
+                  - "null"
+                pattern: "^([01]\\d|2[0-3]):[0-5]\\d$"
+                description: "Fim do período silencioso (HH:MM, hora local). Null desativa."
+            additionalProperties: false
+    responses:
+      "200":
+        description: Preferências atualizadas.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/notifications/notification_preferences.yaml"
+      "400":
+        description: Corpo inválido ou nenhum campo informado.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Acesso negado — BOLA (ADR-008).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Usuário não encontrado.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"

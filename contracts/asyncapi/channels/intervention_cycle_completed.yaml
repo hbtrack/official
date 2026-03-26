@@ -1,0 +1,8 @@
+description: >
+  Evento emitido quando um ciclo de intervenção (intervention cycle) é concluído.
+  Estado: OPEN → IN_PROGRESS → REVIEW → ADJUSTED → COMPLETED → ARCHIVED
+
+publish:
+  operationId: intervention_cycle_completed_publish
+  message:
+    $ref: ../messages/intervention_cycle_completed.yaml

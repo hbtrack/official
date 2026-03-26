@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://hbtrack.local/schemas/analytics/analytics_metric_key.schema.json",
+  "title": "AnalyticsMetricKey",
+  "description": "Closed catalog of canonical derived metrics currently exposed by the analytics module.",
+  "type": "string",
+  "x-domain-enum-ref": "analytics_metric_key",
+  "enum": [
+    "READINESS_SCORE",
+    "DROPOUT_RISK_SIGNAL",
+    "ENGAGEMENT_SIGNAL"
+  ]
+}

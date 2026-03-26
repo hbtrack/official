@@ -1,0 +1,20 @@
+# ============================================================
+# AsyncAPI Message: team_roster_updated
+# Module: teams
+# ============================================================
+
+messageId: team_roster_updated
+name: TeamRosterUpdatedMessage
+title: Elenco da Equipe Atualizado
+summary: >
+  Publicado quando um atleta ou membro da comissão é adicionado ou removido
+  do elenco da equipe (DR-TEAM-001, DR-TEAM-002).
+description: >
+  Evento emitido pelo módulo teams após alteração explícita de vínculo no
+  elenco. Inclui o tipo de mudança (athlete_added/removed, staff_added/removed),
+  o usuário afetado e o executor da operação.
+  Consumidores (ex.: training, attendance, notifications) usam este evento
+  para refletir mudanças de elenco em seus próprios domínios.
+contentType: application/json
+payload:
+  $ref: "../components/schemas/team_roster_updated_payload.yaml"

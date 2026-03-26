@@ -1,0 +1,11 @@
+{
+  "package_name": "hbtrack_decision_ir_package",
+  "version": "1.0.0",
+  "files": [
+    "MANUAL_PESQUISA_IMPLEMENTACAO.md",
+    "MODULE_DECISION_IR_SCHEMA.json",
+    "DECISION_IR_CONFORMANCE_GATE.md",
+    "IR_TO_SURFACE_MAPPING.yaml",
+    "training.module_decision_ir.yaml"
+  ]
+}

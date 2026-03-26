@@ -1,0 +1,126 @@
+arazzo: "1.0.0"
+info:
+  title: Ciclo de Vida da Partida
+  version: "1.0.0"
+  x-status: active
+  x-module: matches
+  x-domain-rules: [DR-MATCH-001, DR-MATCH-002, DR-MATCH-003, DR-MATCH-004, DR-MATCH-005]
+  x-decisions: [DEC-MATCHES-001, DEC-MATCHES-002]
+
+sourceDescriptions:
+  - name: hbtrack_api
+    url: ../../openapi/openapi.yaml
+    type: openapi
+
+workflows:
+  - workflowId: match_lifecycle
+    summary: >
+      Fluxo completo do ciclo de vida de uma partida: agendamento vinculado a uma
+      competição (DR-MATCH-001), gestão de lineup oficial (DR-MATCH-003) e
+      progressão pelas fases cronológicas HBR-013 (DR-MATCH-004).
+      Registro CRUD — placar inserido pelo operador pós-jogo (DEC-MATCHES-001).
+    inputs:
+      type: object
+      required: [competitionId, homeTeamId, awayTeamId, scheduledAt]
+      properties:
+        competitionId:
+          type: string
+          format: uuid
+          description: Competição soberana da partida (DR-MATCH-001).
+        homeTeamId:
+          type: string
+          format: uuid
+          description: Equipe mandante; deve ser != awayTeamId (DR-MATCH-002).
+        awayTeamId:
+          type: string
+          format: uuid
+          description: Equipe visitante; deve ser != homeTeamId (DR-MATCH-002).
+        scheduledAt:
+          type: string
+          format: date-time
+          description: Data/hora agendada (DR-MATCH-004).
+        athleteUserId:
+          type: string
+          format: uuid
+          description: Atleta a incluir no lineup oficial (DR-MATCH-003).
+        homeScore:
+          type: integer
+          minimum: 0
+          description: Placar mandante pós-jogo (INV-MATCH-003, DEC-MATCHES-001).
+        awayScore:
+          type: integer
+          minimum: 0
+          description: Placar visitante pós-jogo (INV-MATCH-003, DEC-MATCHES-001).
+    steps:
+      - stepId: schedule_match
+        description: >
+          Cria partida agendada vinculada à competição (DR-MATCH-001).
+          homeTeamId ≠ awayTeamId — lados nunca colapsam (DR-MATCH-002, INV-MATCH-002).
+          Resultado: statusLabel = scheduled.
+        operationId: createMatch
+        requestBody:
+          contentType: application/json
+          payload:
+            competitionId: $inputs.competitionId
+            homeTeamId:    $inputs.homeTeamId
+            awayTeamId:    $inputs.awayTeamId
+            scheduledAt:   $inputs.scheduledAt
+        successCriteria:
+          - condition: $statusCode == 201
+        outputs:
+          matchId: $response.body#/id
+
+      - stepId: add_athlete_to_lineup
+        description: >
+          Adiciona atleta ao lineup oficial (DR-MATCH-003, INV-MATCH-005).
+          lineupUserIds = elenco escalado; participação em scout não substitui.
+          HBR-008: máximo 16 jogadores em súmula por equipe.
+        operationId: addPlayerToLineup
+        parameters:
+          - name: matchId
+            in: path
+            value: $steps.schedule_match.outputs.matchId
+          - name: userId
+            in: path
+            value: $inputs.athleteUserId
+        successCriteria:
+          - condition: $statusCode == 200
+
+      - stepId: start_match
+        description: >
+          Avança statusLabel para first_half — inicia ciclo temporal (DR-MATCH-004, HBR-013).
+          startedAt é registrado neste momento.
+        operationId: patchMatch
+        parameters:
+          - name: matchId
+            in: path
+            value: $steps.schedule_match.outputs.matchId
+        requestBody:
+          contentType: application/json
+          payload:
+            statusLabel: first_half
+        successCriteria:
+          - condition: $statusCode == 200
+
+      - stepId: complete_match
+        description: >
+          Registra placar oficial e encerra a partida (DEC-MATCHES-001, INV-MATCH-003).
+          homeScore e awayScore >= 0. endedAt registrado pelo operador.
+          Eventos observacionais (gols, faltas) pertencem a scout (DR-MATCH-005).
+        operationId: patchMatch
+        parameters:
+          - name: matchId
+            in: path
+            value: $steps.schedule_match.outputs.matchId
+        requestBody:
+          contentType: application/json
+          payload:
+            statusLabel: completed
+            homeScore: $inputs.homeScore
+            awayScore: $inputs.awayScore
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          completedMatchId: $response.body#/id
+          finalHomeScore:   $response.body#/homeScore
+          finalAwayScore:   $response.body#/awayScore

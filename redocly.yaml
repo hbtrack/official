@@ -17,7 +17,6 @@ rules:
   info-license: warn
   info-license-url: off
   no-invalid-media-type-examples: warn
-  no-undefined-refs: error
   no-unresolved-refs: error
 
   # operationId
@@ -32,6 +31,8 @@ rules:
   no-empty-servers: warn
 
   # Segurança
+  # Validado no root (openapi.yaml define securitySchemes.HTTPBearer);
+  # path files são sempre referenciados pelo root e não declaram securitySchemes.
   security-defined: warn
 
   # Schema
@@ -44,8 +45,16 @@ rules:
   no-path-trailing-slash: error
 
   # Compatibilidade OpenAPI 3.1
-  spec: error
+  struct: error
   spec-components-invalid-map-name: error
+
+overrides:
+  - files:
+      - "contracts/openapi/paths/**/*.yaml"
+    rules:
+      # Path files são componentes de $ref — securitySchemes está no root (openapi.yaml).
+      # Validar security-defined em arquivos isolados gera falso positivo no VS Code.
+      security-defined: off
 
 theme:
   openapi:

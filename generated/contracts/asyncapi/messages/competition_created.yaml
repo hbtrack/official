@@ -1,0 +1,11 @@
+# AsyncAPI Message: competition_created
+# Module: competitions
+# Domain rules: DR-COMP-001, DR-COMP-002
+
+messageId: competition_created
+name: CompetitionCreated
+title: Competição Criada
+summary: Evento publicado quando uma nova competição é criada no sistema.
+contentType: application/json
+payload:
+  $ref: "../components/schemas/competition_created_payload.yaml"

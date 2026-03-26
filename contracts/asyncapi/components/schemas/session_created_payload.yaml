@@ -1,0 +1,79 @@
+type: object
+required:
+- eventType
+- occurredAt
+- sessionId
+- principalUserId
+- sessionScopeLabel
+- authMethodLabel
+- roleLabels
+additionalProperties: false
+properties:
+  eventType:
+    type: string
+    const: session.created
+    description: Tipo do evento. Sempre "session.created".
+  occurredAt:
+    type: string
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+    format: date-time
+    description: Timestamp UTC do momento em que a sessão foi criada (ISO 8601).
+    x-semantic-id: core.occurred_at.v1
+  sessionId:
+    type: string
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    format: uuid
+    description: UUID v4 da sessão criada (INV-IAM-001). Imutável após criação.
+    x-semantic-id: identity.session.id.v1
+  principalUserId:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    description: 'UUID do usuário que iniciou a sessão. Referência ao módulo users.
+      identity_access não duplica o perfil (DR-IAM-002).
+
+      '
+    x-semantic-id: identity.user.id.v1
+  sessionScopeLabel:
+    type: string
+    minLength: 1
+    maxLength: 80
+    description: 'Contexto técnico da sessão (ex: "web-admin", "mobile-athlete").
+      Não pode ser deduzido de atributos esportivos (DR-IAM-003).
+
+      '
+  authMethodLabel:
+    type: string
+    maxLength: 40
+    description: 'Método de autenticação utilizado (ex: "jwt-bearer", "oauth2-pkce").
+
+      '
+  roleLabels:
+    type: array
+    uniqueItems: true
+    description: 'Roles RBAC canônicos do usuário no momento da criação da sessão
+      (INV-IAM-002). ADR-008: modelo flat de 5 roles.
+
+      '
+    items:
+      type: string
+      enum:
+      - ADMIN
+      - COORDINATOR
+      - COACH
+      - ATHLETE
+      - MEMBER
+      x-domain-enum-ref: user_role_label
+  mfaSatisfied:
+    type: boolean
+    description: 'Indica se MFA foi satisfeito nesta sessão (DEC-IAM-001=B opt-in).
+      true quando o usuário completou TOTP; false ou ausente quando MFA não configurado.
+
+      '
+  expiresAt:
+    type: string
+    format: date-time
+    description: 'Timestamp UTC de expiração do access token emitido (ADR-007).
+
+      '
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$

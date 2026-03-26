@@ -1,0 +1,1027 @@
+# -------------------------------------------------------------------------
+# GATES_REGISTRY.yaml
+# Registry machine-readable dos gates de validação do HB Track.
+# Verificado pelo REQUIRED_ARTIFACT_PRESENCE_GATE no pipeline.
+# Spec normativa completa: docs/_canon/CI_CONTRACT_GATES.md
+# -------------------------------------------------------------------------
+version: "1.2.0"
+last_reviewed: "2026-03-23"
+spec_ref: "docs/_canon/CI_CONTRACT_GATES.md"
+implementation_ref: "scripts/contracts/validate/validate_contracts.py"
+evidence_output: "_reports/contract_gates/latest.json"
+authority_refs:
+  rules_ref: ".contract_driven/CONTRACT_SYSTEM_RULES.md"
+  layout_ref: ".contract_driven/CONTRACT_SYSTEM_LAYOUT.md"
+  pipeline_ref: "docs/_canon/CONTRACT_PIPELINE.md"
+  boot_profiles_ref: ".contract_driven/BOOT_PROFILES.yaml"
+  toolchain_health_ref: "docs/_canon/TOOLCHAIN_HEALTH_POLICY.md"
+  module_registry_ref: "docs/_canon/MODULE_REGISTRY.yaml"
+operational_entrypoints:
+  pre_contract_orchestrator: ".contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md"
+canonicalization_policy:
+  normative_rule_required: true
+  operational_registry_required: true
+  technical_enforcement_required: true
+  prompt_is_execution_only: true
+
+gates:
+  - gate_id: AXIOM_INTEGRITY_GATE
+    order: 0
+    name: "Axiom Integrity Gate"
+    blocking: true
+    active_stage: pre_contract
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: always
+    depends_on: []
+    description: >
+      Valida `.contract_driven/DOMAIN_AXIOMS.json` — integridade estrutural e semântica
+      dos axiomas globais. Sem axiomas válidos nenhum gate subsequente tem significado.
+    blocking_codes:
+      [AXIOM_FILE_MISSING, AXIOM_SCHEMA_INVALID, AXIOM_DUPLICATE_ID]
+    status: active
+
+  - gate_id: PATH_CANONICALITY_GATE
+    order: 1
+    name: "Path Canonicality Gate"
+    blocking: true
+    active_stage: pre_contract
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: always
+    depends_on: [AXIOM_INTEGRITY_GATE]
+    description: >
+      Garante que nenhum artefato normativo existe fora do path canônico.
+      Bloqueia duplicatas soberanas (dois arquivos com mesma semântica em paths distintos).
+      Valida taxonomia canônica de módulos em MODULE_REGISTRY.yaml (17 módulos únicos, formato lower_snake_case).
+    blocking_codes: [PATH_NOT_CANONICAL, SOVEREIGN_DUPLICATE_DETECTED]
+    status: active
+
+  - gate_id: SCOPE_BOUNDARY_GATE
+    order: "1.5"
+    name: "Scope Boundary Gate"
+    blocking: true
+    active_stage: pre_contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [PATH_CANONICALITY_GATE]
+    description: >
+      Detecta referências cross-module (intra-contract references para recursos de outros módulos)
+      sem autorização explícita em SCOPE_BOUNDARY_POLICY.md. Falha-safe: rejeita qualquer referência
+      que não esteja explicitamente permitida na política ou autorizada por ADR específica.
+      Integrado a Fase 1 do orchestrador pré-contrato (após carregamento de módulo).
+      NOTA: este gate é executado como passo pré-contrato via script dedicado, NÃO como
+      gate inline de validate_contracts.py. Ver integrated_in_validate_contracts abaixo.
+    blocking_codes: [BLOCKED_SCOPE_OVERFLOW]
+    implementation_script: "scripts/gates/check_scope_boundary.py"
+    policy_source: "docs/_canon/SCOPE_BOUNDARY_POLICY.md"
+    adr_reference: "docs/_canon/decisions/ADR-034-scope-boundary-validation.md"
+    status: active
+    integrated_in_validate_contracts: false
+    integration_note: >
+      Por design, este gate é invocado como passo separado pelo orchestrador pré-contrato
+      (scripts/gates/check_scope_boundary.py), não como gate inline do pipeline CI.
+      validate_contracts.py verifica SCOPE_BOUNDARY_POLICY.md via REQUIRED_ARTIFACT_PRESENCE_GATE
+      mas não executa a validação semântica de fronteira.
+
+  - gate_id: REQUIRED_ARTIFACT_PRESENCE_GATE
+    order: 2
+    name: "Required Artifact Presence Gate"
+    blocking: true
+    active_stage: contract
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: always
+    depends_on: [PATH_CANONICALITY_GATE]
+    description: >
+      Verifica presença obrigatória de artefatos globais e por módulo.
+      A lista canônica é mantida no código-fonte de validate_contracts.py (_REQUIRED_ARTIFACTS).
+    blocking_codes: [REQUIRED_ARTIFACT_MISSING]
+    status: active
+
+  - gate_id: MODULE_DOC_CROSSREF_GATE
+    order: "2A"
+    name: "Module Doc Cross-reference Gate"
+    blocking: true
+    active_stage: contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
+    description: >
+      Garante header YAML canônico nos docs de módulo.
+      Cross-refs devem apontar para paths soberanos (não derivados).
+    blocking_codes: [MODULE_DOC_MISSING_HEADER, CROSSREF_POINTS_TO_DERIVED]
+    status: active
+
+  - gate_id: API_NORMATIVE_DUPLICATION_GATE
+    order: "2B"
+    name: "API Normative Duplication Gate"
+    blocking: false
+    severity: WARNING
+    parallelizable: false
+    applies_when: always
+    depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
+    description: >
+      Detecta duplicação normativa HTTP fora da SSOT `api_rules.yaml`.
+      Não-bloqueante: emite warning para revisão humana.
+    blocking_codes: []
+    status: active
+
+  - gate_id: OWASP_API_CONTROL_MATRIX_GATE
+    order: "2C"
+    name: "OWASP API Control Matrix Gate"
+    blocking: true
+    active_stage: contract
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: always
+    depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
+    description: >
+      Verifica presença e validade de `docs/_canon/security/OWASP_API_CONTROL_MATRIX.yaml`.
+      IDs devem ser únicos; schema deve ser válido.
+    blocking_codes:
+      [OWASP_MATRIX_MISSING, OWASP_MATRIX_SCHEMA_INVALID, OWASP_DUPLICATE_ID]
+    status: active
+
+  - gate_id: MODULE_SOURCE_AUTHORITY_MATRIX_GATE
+    order: "2D"
+    name: "Module Source Authority Matrix Gate"
+    blocking: true
+    active_stage: pre_contract
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: always
+    depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
+    description: >
+      Verifica presença e validade de `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml`.
+      Deve estar alinhado com os 17 módulos do sistema.
+    blocking_codes:
+      [
+        MODULE_AUTHORITY_MATRIX_MISSING,
+        MODULE_AUTHORITY_MATRIX_INVALID,
+        MODULE_AUTHORITY_MISMATCH,
+      ]
+    status: active
+
+  - gate_id: MODULE_REGISTRY_GATE
+    order: "2D1"
+    name: "Module Registry Gate"
+    blocking: true
+    active_stage: readiness
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: always
+    depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
+    description: >
+      Verifica presença e validade de `docs/_canon/MODULE_REGISTRY.yaml`.
+      O registry é a fonte determinística de status operacional, owner e superfícies esperadas
+      por módulo; deve alinhar com a taxonomia canônica de 17 módulos.
+    blocking_codes:
+      [
+        MODULE_REGISTRY_MISSING,
+        MODULE_REGISTRY_INVALID,
+        MODULE_REGISTRY_MISMATCH,
+      ]
+    status: active
+
+  - gate_id: BOUNDARY_USERS_IDENTITY_ACCESS_GATE
+    order: "2E"
+    name: "Boundary Users / Identity Access Gate"
+    blocking: true
+    active_stage: readiness
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
+    description: >
+      Garante separação de responsabilidades entre os módulos `users` e `identity_access`.
+      O módulo `users` não pode conter credenciais/auth; `identity_access` não pode
+      conter athlete/profile (responsabilidade de `users`).
+    blocking_codes: [BOUNDARY_VIOLATION_USERS_IDENTITY]
+    status: active
+
+  - gate_id: WELLNESS_MEDICAL_BOUNDARY_GATE
+    order: "2F"
+    name: "Wellness / Medical Boundary Gate"
+    blocking: true
+    active_stage: readiness
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
+    description: >
+      Garante separação entre `wellness` e `medical`.
+      O módulo `wellness` não pode conter diagnóstico, tratamento ou prontuário
+      (responsabilidade exclusiva de `medical`).
+    blocking_codes: [BOUNDARY_VIOLATION_WELLNESS_MEDICAL]
+    status: active
+
+  - gate_id: SCOUT_TAXONOMY_GATE
+    order: "2G"
+    name: "Scout Taxonomy Gate"
+    blocking: true
+    active_stage: readiness
+    severity: HIGH
+    parallelizable: false
+    applies_when: module_scout_present
+    depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
+    description: >
+      Campos de taxonomia no módulo `scout` exigem um artefato canônico de taxonomia.
+      Sem o artefato canônico, campos de taxonomia são considerados inválidos.
+    blocking_codes:
+      [SCOUT_TAXONOMY_ARTIFACT_MISSING, SCOUT_TAXONOMY_FIELD_UNREGISTERED]
+    status: active
+
+  - gate_id: ASYNC_REQUIRED_MODULE_GATE
+    order: "2H"
+    name: "Async Required Module Gate"
+    blocking: true
+    active_stage: contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: module_has_real_paths_and_events
+    depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
+    description: >
+      Módulos com OpenAPI paths reais e workflows/eventos exigem artefatos Arazzo e/ou AsyncAPI.
+      Bloqueia se o módulo declara eventos mas não possui especificação AsyncAPI.
+    blocking_codes: [ASYNC_SPEC_MISSING_FOR_MODULE]
+    status: active
+
+  - gate_id: EXTERNAL_SOURCE_AUTHORITY_GATE
+    order: "2I"
+    name: "External Source Authority Gate"
+    blocking: true
+    active_stage: contract
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: always
+    depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
+    description: >
+      Bloqueia benchmarks externos (XPS, Teamworks) tratados como SSOT soberana.
+      Dados externos devem ser explicitamente marcados como externos no MODULE_SOURCE_AUTHORITY_MATRIX.
+    blocking_codes: [EXTERNAL_TREATED_AS_SOVEREIGN]
+    status: active
+
+  - gate_id: PRE_CONTRACT_EVIDENCE_GATE
+    order: "2J"
+    name: "Pre-Contract Evidence Gate"
+    blocking: true
+    severity: HIGH
+    active_stage: pre_contract
+    parallelizable: false
+    applies_when: module_registry_has_validated_contract_or_ready_modules
+    depends_on: [MODULE_REGISTRY_GATE]
+    description: >
+      Exige evidência estruturada da fase pré-contrato em `_reports/agent_execution/`
+      para módulos com status `validated_contract` ou `implementation_ready` no MODULE_REGISTRY.
+      O boot efetivamente aplicado deve ser rastreável pelo Boot Resolution Report.
+    blocking_codes:
+      [PRE_CONTRACT_EVIDENCE_MISSING, PRE_CONTRACT_EVIDENCE_INVALID]
+    status: active
+
+  - gate_id: SHADOW_AUTHORITY_GATE
+    order: "2K"
+    name: "Shadow Authority Gate"
+    blocking: true
+    active_stage: pre_contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
+    description: >
+      Bloqueia documentos não-soberanos com linguagem de autoridade sem disclaimer explícito.
+      Evita que DSS, drafts ou análises paralelas sejam tratados como SSOT pelos agentes.
+    blocking_codes: [SHADOW_AUTHORITY_DETECTED]
+    status: active
+
+  - gate_id: DECISION_IR_CONFORMANCE_GATE
+    order: "2L"
+    name: "Decision IR Conformance Gate"
+    blocking: true
+    active_stage: readiness
+    severity: HIGH
+    parallelizable: false
+    applies_when: module_registry_has_implementation_ready_decision_ir
+    depends_on: [MODULE_REGISTRY_GATE]
+    description: >
+      Valida `DECISION_IR_<MODULE>.yaml` em `.contract_driven/decisions/`
+      quando o módulo atinge `implementation_ready` e declara a superfície
+      `decision_ir` no MODULE_REGISTRY.
+    blocking_codes:
+      [
+        IR_SCHEMA_INVALID,
+        IR_UNKNOWN_MODULE,
+        IR_UNKNOWN_SEMANTIC_TYPE_REF,
+        IR_UNKNOWN_REGISTRY_REF,
+        IR_REGISTRY_DRIFT,
+        IR_ENTITY_WITHOUT_REQUIRED_FIELDS,
+        IR_FIELD_WITHOUT_CANONICAL_TYPE,
+        IR_RELATION_WITHOUT_OWNERSHIP,
+        IR_RELATION_WITHOUT_DELETE_POLICY,
+        IR_LIFECYCLE_WITHOUT_STATE_MODEL,
+        IR_INVALID_STATE_TRANSITION,
+        IR_RULE_WITHOUT_FORMAL_CHECK_HINT,
+        IR_API_USE_CASE_INCOMPLETE,
+        IR_UI_FLOW_INCOMPLETE_WHEN_UI_APPLICABLE,
+        IR_PERMISSION_MODEL_INCOMPLETE_WHEN_RBAC_APPLICABLE,
+        IR_ERROR_MODEL_INCOMPLETE_WHEN_DOMAIN_ERRORS_APPLICABLE,
+        IR_EVENT_MODEL_INCOMPLETE_WHEN_EVENTS_APPLICABLE,
+        IR_OPEN_DECISION_BLOCKING,
+        IR_SURFACE_MAPPING_INCOMPLETE,
+        IR_NON_DETERMINISTIC_MATERIALIZATION_RISK,
+      ]
+    status: active
+
+  - gate_id: CANON_ALLOWLIST_GATE
+    order: "2N"
+    name: "Canon Allowlist Gate"
+    blocking: true
+    active_stage: pre_contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
+    description: >
+      Garante que apenas artefatos explicitamente autorizados existam em docs/_canon/
+      e seus subdiretórios (decisions/, gates/, security/, templates/).
+      A allowlist é derivada da tabela de artefatos canônicos globais em docs/_canon/README.md.
+      Qualquer arquivo fora da allowlist é rejeitado — impede que o agente crie documentos
+      de módulo ou não-governança dentro do espaço normativo soberano.
+      Para adicionar um novo artefato ao canon, siga CHANGE_POLICY.md e atualize
+      a allowlist na implementação do gate.
+    blocking_codes: [BLOCKED_CANON_INTRUDER]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: PLACEHOLDER_RESIDUE_GATE
+    order: 3
+    name: "Placeholder Residue Gate"
+    blocking: true
+    active_stage: contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
+    description: >
+      Nenhum artefato pronto pode conter TODO, TBD ou strings de placeholder.
+      Garante que apenas artefatos completos e revisados entram no pipeline.
+    blocking_codes: [PLACEHOLDER_DETECTED]
+    status: active
+
+  - gate_id: REF_HERMETICITY_GATE
+    order: 4
+    name: "Ref Hermeticity Gate"
+    blocking: true
+    active_stage: contract
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: always
+    depends_on: [PLACEHOLDER_RESIDUE_GATE]
+    description: >
+      `$ref` dentro do grafo soberano é permitido; `$ref` apontando para fora do grafo
+      ou para derivados tratados como fonte é bloqueado. Garante hermeticidade do grafo.
+    blocking_codes: [REF_OUTSIDE_SOVEREIGN_GRAPH, REF_TO_DERIVED_AS_SOURCE]
+    status: active
+
+  - gate_id: TOOLING_CONFIG_GATE
+    order: "4A"
+    name: "Tooling Config Gate"
+    blocking: true
+    active_stage: pre_contract
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: always
+    depends_on: [REF_HERMETICITY_GATE]
+    description: >
+      Valida compatibilidade entre toolchain instalada, `package.json`, `redocly.yaml`
+      e policy de saúde da toolchain antes dos gates semânticos.
+      Em auditoria local pode retornar `DEGRADED` quando apenas `oasdiff`/`schemathesis`
+      estiverem ausentes, conforme `TOOLCHAIN_HEALTH_POLICY.md`.
+    blocking_codes: [TOOLING_CONFIG_INVALID]
+    status: active
+
+  - gate_id: OPENAPI_ROOT_STRUCTURE_GATE
+    order: 5
+    name: "OpenAPI Root Structure Gate"
+    blocking: true
+    active_stage: contract
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: always
+    depends_on: [TOOLING_CONFIG_GATE]
+    description: >
+      O documento OpenAPI raiz deve ser estruturalmente válido, verificado via Redocly CLI.
+      Garante que o bundle é legível por consumidores antes de validações semânticas.
+    blocking_codes: [OPENAPI_STRUCTURE_INVALID]
+    status: active
+
+  - gate_id: OPENAPI_ROOT_MODULE_SYNC_GATE
+    order: "5A"
+    name: "OpenAPI Root / Modules Sync Gate"
+    blocking: true
+    active_stage: contract
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: modules_have_openapi_sync_surface
+    depends_on: [OPENAPI_ROOT_STRUCTURE_GATE, MODULE_REGISTRY_GATE]
+    description: >
+      Garante alinhamento 1:1 entre `contracts/openapi/openapi.yaml` e os path files
+      reais dos módulos em `contracts/openapi/paths/*.yaml`.
+      O inventário raiz deve continuar derivado do conjunto real de módulos/superfícies.
+    blocking_codes: [OPENAPI_ROOT_MODULE_SYNC_MISMATCH]
+    status: active
+
+  - gate_id: OPENAPI_POLICY_RULESET_GATE
+    order: 6
+    name: "OpenAPI Policy Ruleset Gate"
+    blocking: true
+    active_stage: contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [OPENAPI_ROOT_STRUCTURE_GATE]
+    description: >
+      Regras normativas do HB Track aplicadas via Spectral e `.spectral.yaml`.
+      Garante conformidade com as convenções da API definidas em `.contract_driven/templates/api/api_rules.yaml`.
+    blocking_codes: [SPECTRAL_RULE_VIOLATION]
+    status: active
+
+  - gate_id: JSON_SCHEMA_VALIDATION_GATE
+    order: 7
+    name: "JSON Schema Validation Gate"
+    blocking: true
+    active_stage: contract
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: always
+    depends_on: [REF_HERMETICITY_GATE]
+    description: >
+      Todos os artefatos em `contracts/schemas/**/*.schema.json` devem ser válidos
+      conforme JSON Schema Draft 2020-12.
+    blocking_codes: [SCHEMA_VALIDATION_FAILED]
+    status: active
+
+  - gate_id: CROSS_SPEC_ALIGNMENT_GATE
+    order: 8
+    name: "Cross-Spec Alignment Gate"
+    blocking: true
+    active_stage: contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [OPENAPI_POLICY_RULESET_GATE, JSON_SCHEMA_VALIDATION_GATE]
+    description: >
+      Coerência semântica cross-artifact: OpenAPI × JSON Schema × AsyncAPI × Arazzo × docs.
+      Detecta divergências onde specs diferentes descrevem o mesmo recurso de formas incompatíveis.
+    blocking_codes: [CROSS_SPEC_MISALIGNMENT]
+    status: active
+
+  - gate_id: CONTRACT_BREAKING_CHANGE_GATE
+    order: 9
+    name: "Contract Breaking Change Gate"
+    blocking: true
+    active_stage: contract
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: baseline_present
+    depends_on: [CROSS_SPEC_ALIGNMENT_GATE]
+    description: >
+      Detecta breaking changes HTTP via oasdiff comparando contra baseline.
+      Qualquer breaking change exige waiver machine-readable com fingerprint SHA-256.
+      Waivers em `contracts/_waivers/CONTRACT_BREAKING_CHANGE_GATE/`.
+    blocking_codes: [BREAKING_CHANGE_DETECTED_WITHOUT_WAIVER]
+    status: active
+
+  - gate_id: TRANSFORMATION_FEASIBILITY_GATE
+    order: 10
+    name: "Transformation Feasibility Gate"
+    blocking: true
+    active_stage: contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [CROSS_SPEC_ALIGNMENT_GATE]
+    description: >
+      O contrato deve ser transformável e a geração de derivados deve ser determinística
+      (idempotente). Executa geração de derivados e compara o resultado com a execução anterior.
+    blocking_codes: [TRANSFORMATION_NONDETERMINISTIC, TRANSFORMATION_FAILED]
+    status: active
+
+  - gate_id: HTTP_RUNTIME_CONTRACT_GATE
+    order: 11
+    name: "HTTP Runtime Contract Gate"
+    blocking: true
+    active_stage: contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: runtime_available
+    depends_on: [TRANSFORMATION_FEASIBILITY_GATE]
+    description: >
+      Schemathesis testa conformidade do runtime HTTP com o contrato, usando seed fixa,
+      reset de estado completo entre testes e fixtures conhecidas.
+    blocking_codes: [RUNTIME_CONTRACT_VIOLATION]
+    status: active
+
+  - gate_id: ASYNCAPI_VALIDATION_GATE
+    order: 12
+    name: "AsyncAPI Validation Gate"
+    blocking: true
+    active_stage: contract
+    severity: HIGH
+    parallelizable: true
+    applies_when: asyncapi_document_present
+    depends_on: [CROSS_SPEC_ALIGNMENT_GATE]
+    description: >
+      O parser AsyncAPI valida o documento quando há pelo menos um evento real declarado.
+      Paralelizável com gates 13 e 14 após pré-requisitos satisfeitos.
+    blocking_codes: [ASYNCAPI_VALIDATION_FAILED]
+    status: active
+
+  - gate_id: ARAZZO_VALIDATION_GATE
+    order: 13
+    name: "Arazzo Validation Gate"
+    blocking: true
+    active_stage: contract
+    severity: HIGH
+    parallelizable: true
+    applies_when: arazzo_document_present
+    depends_on: [CROSS_SPEC_ALIGNMENT_GATE]
+    description: >
+      O parser Arazzo valida os workflows; todos os operationIds referenciados devem
+      existir no documento OpenAPI. Paralelizável com gates 12 e 14.
+    blocking_codes: [ARAZZO_VALIDATION_FAILED, ARAZZO_OPERATIONID_NOT_FOUND]
+    status: active
+
+  - gate_id: ARAZZO_COMPLETENESS_GATE
+    order: "13A"
+    name: "Arazzo Completeness Gate"
+    blocking: true
+    active_stage: contract
+    severity: HIGH
+    parallelizable: true
+    applies_when: arazzo_declared_in_expected_surfaces
+    depends_on: [ARAZZO_VALIDATION_GATE]
+    description: >
+      Decisão (PLANO C-004): obrigatório apenas para módulos que declaram `arazzo`
+      em `expected_surfaces` no MODULE_REGISTRY. Verifica que cada módulo elegivel
+      possui pelo menos um arquivo *.arazzo.yaml em contracts/workflows/<module>/
+      com pelo menos 1 workflow na lista `workflows`. Módulos sem a declaração
+      são ignorados (SKIP_NOT_APPLICABLE).
+    blocking_codes: [ARAZZO_COMPLETENESS_MISSING]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: SPECTRAL_LINTING_GATE
+    order: "13B"
+    name: "Spectral Linting Gate"
+    blocking: true
+    active_stage: contract
+    severity: HIGH
+    parallelizable: true
+    applies_when: openapi_document_present
+    depends_on: [ARAZZO_VALIDATION_GATE]
+    description: >
+      Executa `spectral lint` diretamente sobre `contracts/openapi/openapi.yaml`
+      via toolchain WSL-native (node_modules/NVM). Complementa OPENAPI_POLICY_RULESET_GATE
+      (que aplica regras Redocly) com linting nativo Spectral para detectar violações de
+      estilo OpenAPI não cobertas pelo ruleset customizado. SKIP_NOT_APPLICABLE quando
+      `contracts/openapi/openapi.yaml` está ausente. Adicionado em FIX BACKLOG_ITEM_1 (Passo D).
+    blocking_codes: [BLOCKED_OPENAPI_SPECTRAL_VIOLATION, ERROR_INFRA]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: UI_DOC_VALIDATION_GATE
+    order: 14
+    name: "UI Documentation Validation Gate"
+    blocking: true
+    active_stage: contract
+    severity: HIGH
+    parallelizable: true
+    applies_when: ui_documentation_present
+    depends_on: [CROSS_SPEC_ALIGNMENT_GATE]
+    description: >
+      Executa `storybook build` quando houver UI documentada.
+      Paralelizável com gates 12 e 13.
+    blocking_codes: [UI_DOC_BUILD_FAILED]
+    status: active
+
+  - gate_id: DERIVED_DRIFT_GATE
+    order: 15
+    name: "Derived Drift Gate"
+    blocking: true
+    active_stage: pre_generate
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: always
+    depends_on:
+      [
+        ASYNCAPI_VALIDATION_GATE,
+        ARAZZO_VALIDATION_GATE,
+        UI_DOC_VALIDATION_GATE,
+        TRANSFORMATION_FEASIBILITY_GATE,
+      ]
+    description: >
+      Os artefatos derivados em `generated/` devem ser estritamente iguais à recompilação
+      da fonte soberana. Qualquer drift (diferença) é considerado violação crítica.
+    blocking_codes: [DERIVED_DRIFT_DETECTED]
+    status: active
+
+  - gate_id: ARCH_DECISION_PRESENCE_GATE
+    order: "2M"
+    name: "Architecture Decision Presence Gate"
+    blocking: true
+    active_stage: readiness
+    severity: HIGH
+    parallelizable: false
+    applies_when: contract_creation_or_revision_mode
+    depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
+    description: >
+      Verifica que não há decisão arquitetural classificada como `obrigatória` em aberto
+      em `docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md` para o módulo sendo contratado.
+      Se uma entrada com criticidade `obrigatória` e status `open` for encontrada para o
+      módulo alvo, o gate falha. A decisão deve ser promovida para ADR aprovada antes
+      de qualquer contrato de produção ser criado ou revisado.
+      Spec normativa: docs/_canon/DECISION_POLICY.md §2 e §3.
+    blocking_codes: [BLOCKED_MISSING_ARCH_DECISION]
+    status: deferred
+    deferred_reason: >
+      Não implementado em validate_contracts.py. O arquivo ARCHITECTURE_DECISION_BACKLOG.md
+      existe mas o gate semântico (parse de criticidade=obrigatória + status=open) ainda não
+      foi criado. Decisão FASE 1: manter como deferred até implementação explícita ser priorizada.
+      Não causa falha silenciosa — ausência de implementação é agora rastreável.
+    deferred_since: "2026-03-23"
+
+  - gate_id: FEATURE_READINESS_GATE
+    order: "15B"
+    name: "Feature Readiness Gate"
+    blocking: false
+    severity: LOW
+    parallelizable: true
+    applies_when: always
+    depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
+    description: >
+      Verifica se docs/_canon/FEATURE_REGISTRY.yaml existe e é YAML válido com
+      campos obrigatórios (version, features[].id, features[].name, features[].module,
+      features[].status). Gera _reports/feature_readiness.json com completude por módulo.
+      Gate não bloqueante — ausência do FEATURE_REGISTRY produz SKIP_NOT_APPLICABLE.
+      Spec normativa: docs/_canon/CONTRACT_PIPELINE.md
+    blocking_codes: [BLOCKED_FEATURE_UNREGISTERED]
+    status: active
+
+  - gate_id: ADVERSARIAL_ANALYSIS_GATE
+    order: "15C"
+    name: "Adversarial Analysis Gate"
+    blocking: false
+    severity: HIGH
+    parallelizable: true
+    applies_when: always
+    depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE, FEATURE_READINESS_GATE]
+    description: >
+      Verifica se análise adversarial foi executada para módulos que já possuem
+      relatórios em `_reports/adversarial/`. Para cada relatório encontrado,
+      verifica se `overall_status = PASS`. Se qualquer relatório tiver FAIL,
+      emite BLOCKED_ADVERSARIAL_PENDING. Gate é SKIP_NOT_APPLICABLE quando
+      a pasta `_reports/adversarial/` não existe ou está vazia — nenhum módulo
+      foi ainda submetido à análise adversarial.
+      Spec normativa: docs/_canon/CONTRACT_PIPELINE.md
+    blocking_codes: [BLOCKED_ADVERSARIAL_PENDING]
+    status: active
+
+  - gate_id: VERSIONING_POLICY_GATE
+    order: "15D"
+    name: "Versioning Policy Gate"
+    blocking: false
+    severity: MEDIUM
+    parallelizable: true
+    applies_when: always
+    depends_on: []
+    description: >
+      Verifica conformidade com ADR-024 (estratégia de versionamento de contratos).
+      Checa: (1) ADR-024 existe em docs/_canon/decisions/; (2) contracts/openapi/openapi.yaml
+      tem versão SemVer válida (MAJOR.MINOR.PATCH); (3) CANONICAL_TYPE_REGISTRY registra
+      versioning_strategy em resolved_policies. Emite BLOCKED_VERSIONING_MISSING se
+      ADR ou SemVer ausentes. Spec normativa: docs/_canon/decisions/ADR-024-contract-versioning-strategy.md
+    blocking_codes: [BLOCKED_VERSIONING_MISSING]
+    status: active
+
+  - gate_id: PACT_PROVIDER_GATE
+    order: "15E"
+    name: "Pact Provider Gate"
+    blocking: false
+    severity: HIGH
+    parallelizable: true
+    applies_when: always
+    depends_on: []
+    description: >
+      Verifica se o provider satisfaz os consumer contracts publicados no Pact Broker.
+      SKIP_NOT_APPLICABLE quando env var PACT_BROKER_BASE_URL está ausente (broker não
+      configurado) ou quando contracts/consumers/ está vazia (sem consumers registrados).
+      PASS quando todos os consumer contracts são satisfeitos pelo provider.
+      FAIL (BLOCKED_PACT_MISSING) quando algum consumer contract não é satisfeito.
+      Torna-se bloqueante após o primeiro consumer contract ser publicado no broker.
+      Spec normativa: docs/_canon/decisions/ADR-025-cdct-pact-strategy.md
+    blocking_codes: [BLOCKED_PACT_MISSING]
+    status: active
+
+  - gate_id: CODE_ARCHITECTURE_GATE
+    order: "15F"
+    name: "Code Architecture Gate"
+    blocking: false
+    severity: MEDIUM
+    parallelizable: true
+    applies_when: always
+    depends_on: []
+    description: >
+      Verifica conformidade com ADR-026 (arquitetura de código Clean Architecture).
+      Checa: (1) ADR-026 existe em docs/_canon/decisions/; (2) CODE_ARCHITECTURE.md existe
+      em docs/_canon/; (3) para módulos implementation_ready no MODULE_REGISTRY,
+      verifica se a estrutura src/<module>/ existe em 'src/'.
+      SKIP_NOT_APPLICABLE quando 'src/' ainda não existe (pré-implementação).
+      Emite BLOCKED_MISSING_ARCH_DECISION se ADR-026 ou CODE_ARCHITECTURE.md ausentes.
+      Spec normativa: docs/_canon/CODE_ARCHITECTURE.md
+    blocking_codes: [BLOCKED_MISSING_ARCH_DECISION]
+    status: active
+
+  - gate_id: DEPLOY_READINESS_GATE
+    order: 15G
+    name: "Deploy Readiness Gate"
+    blocking: false
+    severity: MEDIUM
+    parallelizable: true
+    applies_when: always
+    depends_on: []
+    description: >
+      Verifica se os artefatos de deploy foram definidos:
+      DEPLOY_PIPELINE.md (normativo), ADR-027 (decisao) e deploy.yml (workflow CI/CD).
+      SKIP quando nenhum dos artefatos existe (pre-configuracao de deploy).
+      FAIL (BLOCKED_MISSING_ARCH_DECISION) se apenas parte dos artefatos existe.
+      Spec normativa: docs/_canon/DEPLOY_PIPELINE.md
+    blocking_codes: [BLOCKED_MISSING_ARCH_DECISION]
+    status: active
+
+  - gate_id: DATA_MIGRATION_GATE
+    order: 15H
+    name: "Data Migration Gate"
+    blocking: false
+    severity: MEDIUM
+    parallelizable: true
+    applies_when: always
+    depends_on: []
+    description: >
+      Verifica se a estrategia de migracao de dados foi definida:
+      DATA_MIGRATION_POLICY.md (normativo), ADR-028 (decisao) e migrations/ (estrutura Alembic).
+      SKIP quando migrations/ nao existe (pre-implementacao).
+      FAIL (BLOCKED_MISSING_ARCH_DECISION) se apenas parte dos artefatos existe.
+      Spec normativa: docs/_canon/DATA_MIGRATION_POLICY.md
+    blocking_codes: [BLOCKED_MISSING_ARCH_DECISION]
+    status: active
+
+  - gate_id: MONITORING_POLICY_GATE
+    order: 15I
+    name: "Monitoring Policy Gate"
+    blocking: false
+    severity: MEDIUM
+    parallelizable: true
+    applies_when: always
+    depends_on: []
+    description: >
+      Verifica se a politica de monitoramento de contratos em producao foi definida:
+      RUNTIME_CONTRACT_MONITORING_POLICY.md (normativo) e ADR-029 (decisao).
+      SKIP_NOT_APPLICABLE quando nenhum dos arquivos existe (pre-implementacao).
+      DEGRADED se apenas um dos dois existe.
+      Spec normativa: docs/_canon/RUNTIME_CONTRACT_MONITORING_POLICY.md
+    blocking_codes: [BLOCKED_MISSING_ARCH_DECISION]
+    status: active
+
+  - gate_id: FRONTEND_CONTRACT_GATE
+    order: 15J
+    name: "Frontend Contract Gate"
+    blocking: false
+    severity: MEDIUM
+    parallelizable: true
+    applies_when: "frontend/ directory exists"
+    depends_on: [OPENAPI_ROOT_MODULE_SYNC_GATE]
+    description: >
+      Verifica que o frontend consome apenas contratos definidos no OpenAPI.
+      Checa: (1) schema.d.ts gerado do OpenAPI e atualizado;
+      (2) ausência de endpoints hardcoded fora de api/hooks/;
+      (3) tipos de API derivam de schema.d.ts (sem interfaces duplicadas);
+      (4) package.json inclui script gen:api.
+      SKIP_NOT_APPLICABLE quando frontend/ não existe (pré-implementação).
+      Spec normativa: docs/_canon/FRONTEND_CONTRACT.md
+    blocking_codes: [BLOCKED_CONTRACT_CONFLICT]
+    status: deferred
+    deferred_reason: >
+      Não implementado em validate_contracts.py. O diretório frontend/ não existe
+      (pré-implementação, Fase 5 do ROADMAP). O gate sempre retornaria SKIP_NOT_APPLICABLE
+      até a Fase 5 criar o frontend React. Decisão FASE 1: manter como deferred até
+      que frontend/ seja criado e o gate seja implementado junto com o código.
+    deferred_since: "2026-03-23"
+
+  - gate_id: READINESS_SUMMARY_GATE
+    order: 16
+    name: "Readiness Summary Gate"
+    blocking: true
+    active_stage: readiness
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: always
+    depends_on: all_preceding_gates
+    description: >
+      Gate final binário. PASS somente se todos os gates bloqueantes aplicáveis forem PASS.
+      Gera o sumário de prontidão para o sistema em `_reports/contract_gates/latest.json`.
+    blocking_codes: [BLOCKING_GATE_FAILED]
+    status: active
+
+  - gate_id: HANDOFF_COHERENCE_GATE
+    order: "20A"
+    name: "Handoff Coherence Gate"
+    blocking: true
+    severity: MEDIUM
+    parallelizable: true
+    applies_when: "SESSION_HANDOFF.md exists"
+    depends_on: []
+    description: >
+      Verifica coerência de `SESSION_HANDOFF.md` com o estado atual do repositório
+      e valida o front matter YAML obrigatório contra
+      `contracts/schemas/shared/session_handoff.schema.json`.
+      Exige `evidence_paths` reais e, para `ci_status=PASS`, um relatório
+      canônico de pipeline completo como base rastreável do handoff.
+    blocking_codes: [BLOCKED_HANDOFF_INCOMPLETE]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+    schema_ref: contracts/schemas/shared/session_handoff.schema.json
+
+  - gate_id: MODULE_STATUS_COHERENCE_GATE
+    order: "20B"
+    name: "Module Status Coherence Gate"
+    blocking: true
+    active_stage: readiness
+    severity: HIGH
+    parallelizable: true
+    applies_when: "MODULE_REGISTRY contains elevated module statuses"
+    depends_on: []
+    description: >
+      Impede status alto (`validated_contract` ou `implementation_ready`) com
+      bloqueios adversariais ainda ativos, superfícies esperadas ausentes
+      ou evidência mínima de continuidade ausente.
+    blocking_codes: [BLOCKED_REGISTRY_MISMATCH, BLOCKED_ADVERSARIAL_PENDING]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: SURFACE_PROMOTION_COHERENCE_GATE
+    order: "20B1"
+    name: "Surface Promotion Coherence Gate"
+    blocking: true
+    active_stage: readiness
+    severity: HIGH
+    parallelizable: true
+    applies_when: "module with expected_surfaces in MODULE_REGISTRY"
+    depends_on: [MODULE_REGISTRY_GATE]
+    description: >
+      Detecta módulos subpromovidos: quando todas as expected_surfaces declaradas no
+      MODULE_REGISTRY estão presentes no filesystem mas o status do módulo não foi
+      atualizado. Falha (BLOCKED_PROMOTION_PENDING) se módulo com status 'draft_contract'
+      tem todas as superfícies criadas — o agente deve atualizar MODULE_REGISTRY.yaml.
+      Emite warning informativo (não bloqueante) para módulos 'validated_contract'
+      elegíveis para 'implementation_ready'. Não penaliza módulos em scaffold ou
+      já em statuses de implementação autorizados.
+    blocking_codes: [BLOCKED_PROMOTION_PENDING]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: CROSS_MODULE_BOUNDARY_GATE
+    order: "20C"
+    name: "Cross Module Boundary Gate"
+    blocking: false
+    severity: MEDIUM
+    parallelizable: true
+    applies_when: "boundary rules defined in MODULE_SOURCE_AUTHORITY_MATRIX"
+    depends_on: []
+    description: >
+      Verifica fronteiras cross-módulo contra `MODULE_SOURCE_AUTHORITY_MATRIX`.
+    blocking_codes: [BLOCKED_SCOPE_OVERFLOW]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: WAIVER_VALIDITY_GATE
+    order: "20D"
+    name: "Waiver Validity Gate"
+    blocking: true
+    severity: HIGH
+    active_stage: pre_contract
+    parallelizable: true
+    applies_when: "waivers present in contracts/_waivers/"
+    depends_on: []
+    description: >
+      Valida todos os waivers em `contracts/_waivers/` contra o schema
+      `contracts/schemas/shared/waiver.schema.json`. Rejeita waivers com
+      `expires_at_utc` vencido (earlier than current UTC timestamp) ou nulo.
+      Waivers vencidos DEVEM ser renovados com nova justificativa ou removidos.
+    blocking_codes:
+      [WAIVER_EXPIRED, WAIVER_SCHEMA_INVALID, WAIVER_MISSING_EXPIRY]
+    status: active
+    schema_ref: contracts/schemas/shared/waiver.schema.json
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: MODULE_DEPENDENCY_RESOLUTION_GATE
+    order: "20E"
+    name: "Module Dependency Resolution Gate"
+    blocking: true
+    active_stage: contract
+    severity: HIGH
+    parallelizable: true
+    applies_when: always
+    depends_on: []
+    description: >
+      Varre todos os arquivos em contracts/ em busca de $ref externos (não-HTTP,
+      não-fragmento local). Para cada $ref resolve o caminho relativo à origem e
+      verifica a existência do arquivo alvo. Usa cache para evitar rechecagem do
+      mesmo alvo (O(n) amortizado). Não itera recursivamente nos alvos.
+    blocking_codes: [BLOCKED_DEPENDENCY_RESOLUTION]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: READINESS_GENERATION_COMPATIBILITY_GATE
+    order: "20F"
+    name: "Readiness Generation Compatibility Gate"
+    blocking: true
+    active_stage: readiness
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: module_in_implementation_ready_status
+    depends_on: [MODULE_REGISTRY_GATE]
+    description: >
+      Para cada módulo com status `implementation_ready` no MODULE_REGISTRY,
+      verifica que existe relatório de análise adversarial em
+      `_reports/adversarial/*.adversarial.json` com `overall_status == PASS`.
+      Impede promoção de módulos sem auditoria adversarial completa.
+      Implementa o PRE-CHECK adicionado em R-008 ao readiness_promotion.prompt.md.
+    blocking_codes: [READINESS_GENERATION_INCOMPATIBLE]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: READINESS_HUMAN_CONFIRMATION_GATE
+    order: "20G"
+    name: "Readiness Human Confirmation Gate"
+    blocking: true
+    active_stage: readiness
+    severity: CRITICAL
+    parallelizable: false
+    applies_when: module_approaching_implementation_ready
+    depends_on: [READINESS_GENERATION_COMPATIBILITY_GATE]
+    description: >
+      FIX Ordem 6: Valida que confirmação humana antes de promoção para `implementation_ready`
+      não é rubber-stamp. Requer resposta documentada e coerente a pergunta técnica sobre
+      conteúdo real do módulo. Registra confirmação em estrutura verificável (não só em prompt).
+      Bloqueia se resposta for genérica ("sim", "ok") ou incoerente com artefatos inspecionados.
+    blocking_codes:
+      [
+        READINESS_HUMAN_CONFIRMATION_REQUIRED,
+        READINESS_CONFIRMATION_INVALID,
+        READINESS_CONFIRMATION_INCOHERENT,
+      ]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: FEATURE_COVERAGE_GATE
+    order: "20H"
+    name: "Feature Coverage Gate"
+    blocking: true
+    active_stage: registry_coherence
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [MODULE_REGISTRY_GATE, FEATURE_READINESS_GATE]
+    description: >
+      FASE 6 — Garante rastreabilidade completa: todo módulo com status `implemented`
+      no MODULE_REGISTRY deve ter ao menos uma feature com status `implemented` no
+      FEATURE_REGISTRY. Implementa a regra incondicional definida em
+      MODULE_REGISTRY.yaml status_semantics.implemented. Bloqueia se qualquer módulo
+      implemented não tiver cobertura mínima de feature. Gate é SKIP_NOT_APPLICABLE
+      quando MODULE_REGISTRY ou FEATURE_REGISTRY estão ausentes.
+    blocking_codes: [BLOCKED_FEATURE_COVERAGE_MISSING]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: LEGACY_CRITICAL_PATH_GATE
+    order: "20I"
+    name: "Legacy Critical Path Gate"
+    blocking: true
+    active_stage: registry_coherence
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: []
+    description: >
+      FASE 7 — Garante isolamento de artefatos legados: boot_resolution_report.json
+      deve ter "_legacy: true"; scripts/hbtrack_lint/__init__.py deve conter aviso
+      LEGACY/legado/deprecated; nenhum arquivo do caminho crítico (scripts/hb,
+      validate_contracts.py) deve referenciar hbtrack_lint. SKIP quando nenhum dos
+      artefatos legados monitorados existe. Impede reintrodução de legado no fluxo
+      ativo em novas sessões.
+    blocking_codes: [BLOCKED_LEGACY_IN_CRITICAL_PATH]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py

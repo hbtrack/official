@@ -1,0 +1,62 @@
+# WellnessPre schema — pre-training wellness submission
+# Module: training
+# Invariants: INV-TRAIN-002, INV-TRAIN-009, INV-TRAIN-033, INV-TRAIN-034
+# Sport science: SS-TRAIN-003 (2h window), SS-TRAIN-005 (sleep_quality), SS-TRAIN-006 (sleep_hours)
+# Domain rules: DR-TRAIN-004
+
+type: object
+additionalProperties: false
+required:
+  - id
+  - trainingSessionId
+  - athleteId
+  - sleepQuality
+  - sleepHours
+  - createdAt
+  - updatedAt
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  trainingSessionId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    x-semantic-id: training.session.id.v1
+  athleteId:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    x-semantic-id: users.athlete.id.v1
+  sleepQuality:
+    type: integer
+    minimum: 1
+    maximum: 5
+    description: >
+      Sleep quality scale 1–5: 1=very poor, 5=excellent.
+      Hooper 1995 / SS-TRAIN-005. Enforced by INV-TRAIN-034.
+  sleepHours:
+    type: number
+    minimum: 0
+    maximum: 24
+    description: >
+      Self-reported hours of sleep. Domain [0, 24].
+      SS-TRAIN-006. Enforced by INV-TRAIN-033.
+  createdAt:
+    type: string
+    format: date-time
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+    description: RFC-3339 UTC timestamp (ADR-009)
+  updatedAt:
+    type: string
+    format: date-time
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  deletedAt:
+    type: [string, "null"]
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+  deletedReason:
+    type: [string, "null"]
+    minLength: 1
+    description: Required when deletedAt is set (INV-TRAIN-008)

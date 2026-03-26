@@ -3,6 +3,11 @@ module: "audit"
 system_scope_ref: "../../../_canon/SYSTEM_SCOPE.md"
 handball_rules_ref: "../../../_canon/HANDBALL_RULES_DOMAIN.md"
 handball_semantic_applicability: false
+type: "readme"
+module_scope_ref: "./MODULE_SCOPE_AUDIT.md"
+domain_rules_ref: "./DOMAIN_RULES_AUDIT.md"
+invariants_ref: "./INVARIANTS_AUDIT.md"
+test_matrix_ref: "./TEST_MATRIX_AUDIT.md"
 contract_path_ref: "../../../../contracts/openapi/paths/audit.yaml"
 schemas_ref: "../../../../contracts/schemas/audit/"
 ---

@@ -1,0 +1,18 @@
+# AsyncAPI Message: scout_session_completed
+# Module: scout
+# Domain rules: DR-SCOUT-001, DR-SCOUT-003
+# Invariants: INV-SCOUT-001
+# Decisions: DEC-SCOUT-003=C
+
+messageId: scout_session_completed
+name: ScoutSessionCompletedMessage
+title: Sessão de Scouting Finalizada
+summary: Publicado quando o analista finaliza o bloco de scouting de uma partida.
+description: >
+  Evento emitido pelo módulo scout após POST /scout/sessions/{matchId}/complete.
+  Sinaliza que o conjunto de observações está completo para processamento batch.
+  Consumidores (analytics, notifications) usam este evento para gerar relatórios
+  táticos e notificar stakeholders.
+contentType: application/json
+payload:
+  $ref: "../components/schemas/scout_session_completed_payload.yaml"

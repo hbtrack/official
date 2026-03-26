@@ -1,0 +1,83 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://hbtrack.local/schemas/shared/readiness_confirmation.schema.json",
+    "title": "HB Track — Readiness Promotion Confirmation Record",
+    "description": "Schema canônico para registro de confirmação humana na promoção de módulo. Armazena pergunta técnica, resposta e validação.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "confirmation_id",
+        "module",
+        "task_type",
+        "confirmed_at_utc",
+        "confirmed_by",
+        "technical_question",
+        "human_answer",
+        "answer_validation_status",
+        "coherence_check_result"
+    ],
+    "properties": {
+        "confirmation_id": {
+            "type": "string",
+            "minLength": 8,
+            "description": "ID único da confirmação (ex: CONFIRM_<module>_<timestamp>)."
+        },
+        "module": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Nome do módulo sendo promovido."
+        },
+        "task_type": {
+            "type": "string",
+            "enum": [
+                "readiness_promotion"
+            ],
+            "description": "Tipo de tarefa que exigiu confirmação."
+        },
+        "confirmed_at_utc": {
+            "type": "string",
+            "description": "Timestamp ISO8601 UTC quando confirmação foi registrada (ex: 2026-03-19T14:00:00Z)."
+        },
+        "confirmed_by": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Identificador do agente/humano que confirmou (nome, email, ou agent_id)."
+        },
+        "technical_question": {
+            "type": "string",
+            "minLength": 20,
+            "description": "Pergunta técnica formulada sobre o módulo (derivada de artefatos reais inspecionados)."
+        },
+        "human_answer": {
+            "type": "string",
+            "minLength": 5,
+            "description": "Resposta fornecida pelo humano à pergunta técnica."
+        },
+        "answer_validation_status": {
+            "type": "string",
+            "enum": [
+                "valid",
+                "invalid",
+                "incoherent",
+                "generic"
+            ],
+            "description": "Validação sintática da resposta: valid (responde a pergunta), invalid (malformada), incoherent (não corresponde a artefatos), generic (sim/ok/não)."
+        },
+        "coherence_check_result": {
+            "type": "boolean",
+            "description": "True se resposta é coerente com artefatos inspecionados; false caso contrário."
+        },
+        "validation_details": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Detalhes opcionais da validação (ex: expected_answer, actual_answer_semantic, match_score)."
+        },
+        "surfaces_inspected": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "Superfícies que foram inspecionadas antes da pergunta técnica."
+        }
+    }
+}

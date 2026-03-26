@@ -1,0 +1,16 @@
+# ============================================================
+# AsyncAPI Message: team_created
+# Module: teams
+# ============================================================
+
+messageId: team_created
+name: TeamCreatedMessage
+title: Equipe Criada
+summary: Publicado quando uma nova equipe é criada (DR-TEAM-001).
+description: >
+  Evento emitido pelo módulo teams após a criação bem-sucedida de uma equipe.
+  Consumidores (ex.: notifications, training) usam este evento para reagir
+  ao surgimento de novas equipes na plataforma.
+contentType: application/json
+payload:
+  $ref: "../components/schemas/team_created_payload.yaml"

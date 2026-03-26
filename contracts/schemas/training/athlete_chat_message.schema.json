@@ -1,0 +1,134 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://hbtrack.local/schemas/training/athlete_chat_message.schema.json",
+  "title": "AthleteChatMessage",
+  "description": "SSOT JSON Schema for individual messages in HB Pro Coach chat conversation (module: training).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "conversationId",
+    "senderRole",
+    "senderUserId",
+    "senderName",
+    "text",
+    "messageType",
+    "timestamp",
+    "createdAt",
+    "updatedAt"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique message ID.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "conversationId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Reference to athlete_chat_conversation.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "senderRole": {
+      "type": "string",
+      "enum": [
+        "ATHLETE",
+        "HB_PRO_COACH"
+      ],
+      "description": "Role of message sender.",
+      "x-domain-enum-ref": "chat_sender_role"
+    },
+    "senderUserId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "User ID of sender (athlete or system coach).",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "senderName": {
+      "type": "string",
+      "maxLength": 255,
+      "description": "Display name of sender (e.g., 'João Silva' or 'HB Pro Coach')."
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000,
+      "description": "Message content (plain text)."
+    },
+    "messageType": {
+      "type": "string",
+      "enum": [
+        "TEXT",
+        "SYSTEM_NOTIFICATION",
+        "TRAINING_SUGGESTION"
+      ],
+      "description": "Type of message: text (user/coach), system_notification (automation), training_suggestion (coach suggests training).",
+      "x-domain-enum-ref": "chat_message_type"
+    },
+    "suggestedTraining": {
+      "type": "object",
+      "additionalProperties": false,
+      "nullable": true,
+      "description": "If messageType=training_suggestion, contains training suggestion details.",
+      "properties": {
+        "trainingId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "trainingName": {
+          "type": "string",
+          "maxLength": 255
+        },
+        "duration": {
+          "type": "integer",
+          "minimum": 15,
+          "maximum": 180
+        },
+        "objectives": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "FORCA",
+              "TECNICA",
+              "CONDICIONAMENTO",
+              "RECUPERACAO",
+              "TATICA"
+            ],
+            "x-domain-enum-ref": "training_objective_category"
+          }
+        }
+      },
+      "required": [
+        "trainingId",
+        "trainingName",
+        "duration",
+        "objectives"
+      ]
+    },
+    "isOffTopicRejection": {
+      "type": "boolean",
+      "nullable": true,
+      "description": "Internal flag: message is off-topic rejection (resposta do coach redirecionando para escopo válido)."
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when message sent."
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Record creation timestamp.",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Record update timestamp.",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    }
+  }
+}

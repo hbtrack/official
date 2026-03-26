@@ -1,0 +1,59 @@
+type: object
+additionalProperties: false
+required:
+- id
+- athleteId
+- trainingName
+- duration
+- status
+- createdAt
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+  athleteId:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    x-semantic-id: users.athlete.id.v1
+  trainingName:
+    type: string
+    minLength: 1
+    maxLength: 120
+    description: Human-readable name of the suggested training session.
+  duration:
+    type: integer
+    minimum: 1
+    maximum: 480
+    description: Suggested duration in minutes.
+  objectives:
+    type: array
+    items:
+      type: string
+      maxLength: 255
+    maxItems: 10
+    description: List of training objectives for the session.
+  context:
+    type: string
+    maxLength: 1000
+    description: AI-generated justification/context for the suggestion.
+  status:
+    type: string
+    enum:
+    - PENDING_REVIEW
+    - APPROVED
+    - REJECTED
+    - EDITED_AND_APPROVED
+    description: Coach review status.
+    x-domain-enum-ref: training_suggestion_status
+  createdAt:
+    type: string
+    format: date-time
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+    description: RFC-3339 UTC timestamp.
+  reviewedAt:
+    type: string
+    format: date-time
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+    description: When the coach reviewed the suggestion.

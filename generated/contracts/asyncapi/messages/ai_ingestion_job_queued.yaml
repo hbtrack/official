@@ -1,0 +1,20 @@
+# ============================================================
+# AsyncAPI Message: ai_ingestion_job_queued
+# Module: ai_ingestion
+# ============================================================
+
+messageId: ai_ingestion_job_queued
+name: AiIngestionJobQueuedMessage
+title: Job de Ingestão Enfileirado
+summary: >
+  Publicado quando um novo job de ingestão de dados externos é aceito
+  e enfileirado para processamento (DR-ING-001).
+description: >
+  Evento emitido pelo módulo ai_ingestion após criação bem-sucedida de um job
+  via POST /ingestion/jobs ou POST /ingestion/jobs/{jobId}/retry.
+  Consumidores podem usar este evento para monitorar o ciclo de vida dos
+  jobs de ingestão.
+  DR-ING-004: idempotencyKey presente quando o job suporta replay seguro.
+contentType: application/json
+payload:
+  $ref: "../components/schemas/ai_ingestion_job_queued_payload.yaml"

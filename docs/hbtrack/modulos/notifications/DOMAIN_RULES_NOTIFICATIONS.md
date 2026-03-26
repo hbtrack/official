@@ -5,12 +5,31 @@ handball_rules_ref: "../../../_canon/HANDBALL_RULES_DOMAIN.md"
 handball_semantic_applicability: false
 contract_path_ref: "../../../../contracts/openapi/paths/notifications.yaml"
 schemas_ref: "../../../../contracts/schemas/notifications/"
+type: "domain-rules"
+updated: "2026-03-16"
 ---
 
 # DOMAIN_RULES_NOTIFICATIONS.md
 
-## Regras de domínio
-Ainda não há regras específicas registradas para este módulo.
+## Objetivo
+Registrar as regras de negócio do módulo `notifications`.
 
-Regra operacional:
-- Quando uma regra existir, registrá-la aqui e refletir a implicação nos contratos (OpenAPI/Schema/Workflow/Eventos) da superfície correta.
+## Fonte do domínio
+- `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml`
+- `contracts/schemas/notifications/notification_delivery.schema.json`
+- `docs/hbtrack/modulos/notifications/INVARIANTS_NOTIFICATIONS.md`
+- Artefatos assíncronos do módulo (`AsyncAPI`, `Arazzo`) quando aplicável
+
+## Regras de negócio
+| ID | Regra | Entidade afetada | Fonte | Observações |
+|---|---|---|---|---|
+| DR-NTF-001 | `notifications` é soberano do envelope de entrega: canal, destinatário, preferências, template referenciado, estado de entrega e retries. | `NotificationDelivery` | Authority matrix `notifications` | Módulo de entrega, não de negócio-fonte |
+| DR-NTF-002 | Módulos de negócio emitem intenção/evento; `notifications` decide canal e lifecycle de entrega sem absorver o estado de negócio do módulo originador. | `NotificationDelivery` | Authority matrix `must_not_infer` | Boundary com módulos emissores |
+| DR-NTF-003 | `notificationTemplateRef` e `eventEnvelopeRef` são referências contratuais da mensagem e substituem conteúdo ad hoc não documentado. | `NotificationDelivery` | Authority matrix `templates_referenced`, `event_envelope` | Conteúdo rastreável |
+| DR-NTF-004 | `preferenceLabel` influencia seleção de canal/entrega, mas não substitui policy de acesso definida em `identity_access`. | `NotificationDelivery` | Authority matrix `must_not_infer` | Preferência ≠ autorização |
+| DR-NTF-005 | Detalhes do provedor externo permanecem encapsulados por adapter interno; `notifications` expõe apenas contrato estável de entrega. | `NotificationDelivery` | `SYSTEM_SCOPE.md` | Isolamento de integração |
+
+## Limites de inferência
+- Não inventar conteúdo de negócio fora de `template`/`event envelope` contratados.
+- Não mover política de acesso ou estado de domínio para `notifications`.
+- Não expor semântica específica do provedor externo como parte do contrato público.

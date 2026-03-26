@@ -9,6 +9,7 @@ Definir como contratos, documentação e implementação evoluem.
 1. Mudança pública começa no contrato.
 2. Mudança de regra de negócio começa na documentação do domínio.
 3. Mudança de arquitetura significativa exige ADR.
+3A. Promoção de novo artefato normativo (nova superfície SSOT) exige ADR.
 4. Mudança breaking exige classificação explícita.
 5. Mudança em módulo deve atualizar sua documentação local mínima.
 

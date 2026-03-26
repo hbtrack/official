@@ -1,0 +1,74 @@
+{
+  "session": "4C",
+  "status": "CONCLU\u00cdDO",
+  "date": "2026-03-20",
+  "audit_results": {
+    "total_audited": 25,
+    "bucket1_staying": 25,
+    "bucket4_reclassified": 0,
+    "undecided": 0,
+    "zero_undecided": true
+  },
+  "confidence_distribution": {
+    "HIGH": 25,
+    "MEDIUM": 0,
+    "HIGH_percentage": 100,
+    "MEDIUM_percentage": 0
+  },
+  "v6_candidates": {
+    "high_confidence_count": 25,
+    "high_confidence_fields": [
+      "athleteId",
+      "captureStartedAt",
+      "coachId",
+      "completedAt",
+      "computedAt",
+      "conversationId",
+      "createdAt",
+      "createdByUserId",
+      "decidedAt",
+      "decidedByCoachId",
+      "endDate",
+      "endedAt",
+      "generatedSessionId",
+      "generatedTrainingSessionId",
+      "matchId",
+      "nextRetryAt",
+      "occurredAt",
+      "organizationId",
+      "publishedAt",
+      "sessionId",
+      "startDate",
+      "startedAt",
+      "teamId",
+      "trainingId",
+      "updatedAt"
+    ],
+    "medium_confidence_count": 0,
+    "medium_confidence_fields": [],
+    "total_v6_candidates": 25
+  },
+  "reason_code_distribution": {
+    "CANONICAL_UUID_SUFFIX": 12,
+    "CANONICAL_TIMESTAMP_SUFFIX": 11,
+    "CANONICAL_DATE_SUFFIX": 2
+  },
+  "quality_gate_result": "PASS",
+  "operational_decision": {
+    "recommendation": "PROSSEGUIR COM V6",
+    "confidence_level": "ALTA",
+    "candidates_for_v6_immediate": 25,
+    "candidates_for_v6_needs_review": 0,
+    "rationale": "Todos os 25 campos s\u00e3o da lista de 31 inequ\u00edvocos, com HIGH confidence (100%). Reason codes bem distribu\u00eddos (UUID 48%, Timestamp 44%, Date 8%). Zero ambiguidade detectada. Recomenda\u00e7\u00e3o: implementar v6 com estes 25 campos."
+  },
+  "next_steps": {
+    "immediate": "Implementar v6 com patterns dos 25 campos HIGH-confidence",
+    "blocked_by": "Nenhum",
+    "depends_on": "Nada"
+  },
+  "artifacts_generated": [
+    "_reports/BACKLOG_2C_SESSION_4C_RAW_AUDIT.json",
+    "_reports/BACKLOG_2C_SESSION_4C_AGGREGATED.json",
+    "_reports/BACKLOG_2C_SESSION_4C_FINAL_REPORT.json (este)"
+  ]
+}

@@ -1,0 +1,8 @@
+description: >
+  Evento emitido quando uma sessão de treino é cancelada (estado CANCELLED de qualquer estado pré-terminal).
+  Notifica atletas. Audit registra razão de cancelamento.
+
+publish:
+  operationId: training_session_cancelled_publish
+  message:
+    $ref: ../messages/training_session_cancelled.yaml

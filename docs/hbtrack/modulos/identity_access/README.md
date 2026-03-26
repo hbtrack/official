@@ -3,6 +3,11 @@ module: "identity_access"
 system_scope_ref: "../../../_canon/SYSTEM_SCOPE.md"
 handball_rules_ref: "../../../_canon/HANDBALL_RULES_DOMAIN.md"
 handball_semantic_applicability: false
+type: "readme"
+module_scope_ref: "./MODULE_SCOPE_IDENTITY_ACCESS.md"
+domain_rules_ref: "./DOMAIN_RULES_IDENTITY_ACCESS.md"
+invariants_ref: "./INVARIANTS_IDENTITY_ACCESS.md"
+test_matrix_ref: "./TEST_MATRIX_IDENTITY_ACCESS.md"
 contract_path_ref: "../../../../contracts/openapi/paths/identity_access.yaml"
 schemas_ref: "../../../../contracts/schemas/identity_access/"
 ---

@@ -1,4 +1,5 @@
 asyncapi: "2.6.0"
+id: "urn:hbtrack:async-events"
 
 info:
   title: HB Track Async Events
@@ -8,6 +9,16 @@ info:
 
     Este documento existe porque há pelo menos 1 evento real documentado e
     estendido via DOMAIN_AXIOMS modular (módulo training).
+  contact:
+    name: HB Track Platform Team
+    url: https://hbtrack.local
+    email: platform@hbtrack.local
+  license:
+    name: Proprietary
+
+tags:
+  - name: hb-track
+    description: HB Track async events
 
 defaultContentType: application/json
 
@@ -24,6 +35,127 @@ servers:
 channels:
   training.attendance.marked:
     $ref: ./channels/training_attendance_marked.yaml
+  training.intervention_cycle.created:
+    $ref: ./channels/intervention_cycle_created.yaml
+  training.intervention_cycle.completed:
+    $ref: ./channels/intervention_cycle_completed.yaml
+  training.need.created:
+    $ref: ./channels/need_detected_created.yaml
+  training.objective.created:
+    $ref: ./channels/objective_created.yaml
+  training.need.linked_to_objective:
+    $ref: ./channels/need_linked_to_objective.yaml
+  training.recommendation.generated:
+    $ref: ./channels/recommendation_generated.yaml
+  training.recommendation.accepted:
+    $ref: ./channels/recommendation_accepted.yaml
+  training.recommendation.dismissed:
+    $ref: ./channels/recommendation_dismissed.yaml
+  training.session.created:
+    $ref: ./channels/training_session_created.yaml
+  training.session.published:
+    $ref: ./channels/training_session_published.yaml
+  training.session.started:
+    $ref: ./channels/training_session_started.yaml
+  training.session.completed:
+    $ref: ./channels/training_session_completed.yaml
+  training.session.cancelled:
+    $ref: ./channels/training_session_cancelled.yaml
+  training.session.archived:
+    $ref: ./channels/training_session_archived.yaml
+  training.objective.achieved:
+    $ref: ./channels/session_objective_achieved.yaml
+  training.execution.recorded:
+    $ref: ./channels/execution_recorded.yaml
+  training.feedback.created:
+    $ref: ./channels/feedback_thread_created.yaml
+  training.feedback.closed:
+    $ref: ./channels/feedback_thread_closed.yaml
+  training.adjustment.made:
+    $ref: ./channels/session_adjustment_made.yaml
+  training.attention.created:
+    $ref: ./channels/attention_queue_item_created.yaml
+  training.attention.resolved:
+    $ref: ./channels/attention_queue_item_resolved.yaml
+  training.prescription.ineligible:
+    $ref: ./channels/athlete_ineligible_for_prescription.yaml
+  training.prescription.adjusted:
+    $ref: ./channels/prescription_adjusted.yaml
+  training.evidence.provided:
+    $ref: ./channels/completion_evidence_provided.yaml
+  training.coach.intervention:
+    $ref: ./channels/coach_intervention_required.yaml
+  training.continuity.snapshot:
+    $ref: ./channels/continuity_snapshot_created.yaml
+  training.readiness.assessed:
+    $ref: ./channels/training_readiness_assessed.yaml
+  notification.delivery.queued:
+    $ref: ./channels/notification_delivery_queued.yaml
+  notification.delivery.sent:
+    $ref: ./channels/notification_delivery_sent.yaml
+  notification.delivery.failed:
+    $ref: ./channels/notification_delivery_failed.yaml
+  wellness.entry.created:
+    $ref: ./channels/wellness_entry_created.yaml
+  team.created:
+    $ref: ./channels/team_created.yaml
+  team.roster_updated:
+    $ref: ./channels/team_roster_updated.yaml
+  ai_ingestion.job.queued:
+    $ref: ./channels/ai_ingestion_job_queued.yaml
+  ai_ingestion.job.completed:
+    $ref: ./channels/ai_ingestion_job_completed.yaml
+  ai_ingestion.job.failed:
+    $ref: ./channels/ai_ingestion_job_failed.yaml
+  season.created:
+    $ref: ./channels/season_created.yaml
+  season.status_updated:
+    $ref: ./channels/season_status_updated.yaml
+  competition.created:
+    $ref: ./channels/competition_created.yaml
+  competition.phase_changed:
+    $ref: ./channels/competition_phase_changed.yaml
+  match.scheduled:
+    $ref: ./channels/match_scheduled.yaml
+  match.status_updated:
+    $ref: ./channels/match_status_updated.yaml
+  user.created:
+    $ref: ./channels/user_created.yaml
+  user.role_changed:
+    $ref: ./channels/user_role_changed.yaml
+  session.created:
+    $ref: ./channels/session_created.yaml
+  session.revoked:
+    $ref: ./channels/session_revoked.yaml
+  role.assigned:
+    $ref: ./channels/role_assigned.yaml
+  role.revoked:
+    $ref: ./channels/role_revoked.yaml
+  audit.entry.created:
+    $ref: ./channels/audit_entry_created.yaml
+  audit.entry.security_flagged:
+    $ref: ./channels/audit_entry_security_flagged.yaml
+  scout.event.created:
+    $ref: ./channels/scout_event_created.yaml
+  scout.session.completed:
+    $ref: ./channels/scout_session_completed.yaml
+  # video module — 8 eventos canônicos (ADR-033, Opção C — cobertura completa)
+  video.session.created:
+    $ref: ./channels/video_session_created.yaml
+  video.session.capturing:
+    $ref: ./channels/video_session_capturing.yaml
+  video.segment.finalized:
+    $ref: ./channels/video_segment_finalized.yaml
+  video.session.syncing:
+    $ref: ./channels/video_session_syncing.yaml
+  video.session.transcoding:
+    $ref: ./channels/video_session_transcoding.yaml
+  video.clip.ready:
+    $ref: ./channels/video_clip_ready.yaml
+  video.distribution.published:
+    $ref: ./channels/video_distribution_published.yaml
+  video.session.published:
+    $ref: ./channels/video_session_published.yaml
 
 components:
   schemas:

@@ -1,0 +1,7 @@
+description: >
+  Evento emitido quando treinador rejeita uma recomendação de analytics (transição PENDING_COACH_REVIEW → DISMISSED).
+
+publish:
+  operationId: recommendation_dismissed_publish
+  message:
+    $ref: ../messages/recommendation_dismissed.yaml

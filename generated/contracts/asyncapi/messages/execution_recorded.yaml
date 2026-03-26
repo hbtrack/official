@@ -1,0 +1,7 @@
+messageId: execution_recorded
+name: execution_recorded
+title: Execution Recorded
+summary: Fato de execução imutável registrado. Append-only.
+contentType: application/json
+payload:
+  $ref: ../components/schemas/execution_recorded_payload.yaml

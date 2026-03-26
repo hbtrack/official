@@ -4,6 +4,10 @@ report*.txt
 validation_report.txt
 docs/scripts/consolidated_report.json
 docs/_generated/
+# Exception: canonical JSON schemas inside contracts/ (required by REQUIRED_ARTIFACT_PRESENCE_GATE)
+!contracts/schemas/**/*.schema.json
+# Exception: canonical schemas inside generated/contracts/ (referenced by traceability manifests — DERIVED_DRIFT_GATE)
+!generated/contracts/**/*.schema.json
 
 # Build/test artifacts
 build/
@@ -13,6 +17,10 @@ dist/
 __pycache__/
 .pytest_cache/
 .coverage
+
+# Arquivos handoof de sessão - podem conter dados sensíveis e não devem ser versionados
+SESSION_HANDOOF*
+
 
 # Arquivos do Dev - Davi Sermenho
 .dev
@@ -51,6 +59,10 @@ Thumbs.db
 # Logs and caches
 *.log
 !docs/hbtrack/evidence/**/*.log
+# Exception: validation logs inside contracts/ referenced by drift manifests
+!contracts/**/*.log
+# Exception: validation logs inside generated/contracts/ referenced by traceability manifests (DERIVED_DRIFT_GATE)
+!generated/contracts/**/*.log
 .cache/
 
 # Local runtime/generated dirs
@@ -58,6 +70,8 @@ Thumbs.db
 
 # Agent runtime signals — ephemeral, never version (prevent dirty workspace blocking hb verify)
 _reports/dispatch/
+# _reports/agent_execution/ tracked: baseline_backfill evidence required by PRE_CONTRACT_EVIDENCE_GATE
+_reports/runs/
 _reports/ARQUITETO.yaml
 _reports/EXECUTOR.yaml
 _reports/TESTADOR.yaml
@@ -85,6 +99,10 @@ report*.txt
 validation_report.txt
 docs/scripts/consolidated_report.json
 docs/_generated/
+# Exception: canonical JSON schemas inside contracts/ (required by REQUIRED_ARTIFACT_PRESENCE_GATE)
+!contracts/schemas/**/*.schema.json
+# Exception: canonical schemas inside generated/contracts/ (referenced by traceability manifests — DERIVED_DRIFT_GATE)
+!generated/contracts/**/*.schema.json
 
 # Build/test artifacts
 build/
@@ -145,8 +163,13 @@ htmlcov/
 # Logs and caches
 *.log
 !docs/hbtrack/evidence/**
+# Exception: validation logs inside contracts/ referenced by drift manifests
+!contracts/**/*.log
+# Exception: validation logs inside generated/contracts/ referenced by traceability manifests (DERIVED_DRIFT_GATE)
+!generated/contracts/**/*.log
 logs/
 .cache/
+# _reports/agent_execution/ tracked: baseline_backfill evidence required by PRE_CONTRACT_EVIDENCE_GATE
 
 # Testing tools / tox
 .tox/
@@ -188,6 +211,8 @@ _archived_e2e
 _archived/
 **/_archived/
 **/_archived/**
+/archive 
+archive/
 
 # Other
 coverage.xml

@@ -1,0 +1,14 @@
+# AsyncAPI Message: video_session_published
+# Module: video
+# Domain rules: DR-VID-002, DR-VID-007, DR-VID-008, DR-VID-009
+# Decisions: ADR-033
+messageId: video_session_published
+name: VideoSessionPublishedMessage
+title: Sessão de Vídeo Publicada
+summary: Publicado quando MatchMediaSession atinge estado PUBLISHED (pipeline completo).
+description: >
+  Estado final do ciclo de vida. Dual pipeline disponível, sync com scout concluída.
+  Analytics, reports, notifications e audit consomem este evento downstream.
+contentType: application/json
+payload:
+  $ref: "../components/schemas/video_session_published_payload.yaml"

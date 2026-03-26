@@ -3,6 +3,11 @@ module: "ai_ingestion"
 system_scope_ref: "../../../_canon/SYSTEM_SCOPE.md"
 handball_rules_ref: "../../../_canon/HANDBALL_RULES_DOMAIN.md"
 handball_semantic_applicability: false
+type: "readme"
+module_scope_ref: "./MODULE_SCOPE_AI_INGESTION.md"
+domain_rules_ref: "./DOMAIN_RULES_AI_INGESTION.md"
+invariants_ref: "./INVARIANTS_AI_INGESTION.md"
+test_matrix_ref: "./TEST_MATRIX_AI_INGESTION.md"
 contract_path_ref: "../../../../contracts/openapi/paths/ai_ingestion.yaml"
 schemas_ref: "../../../../contracts/schemas/ai_ingestion/"
 ---

@@ -1,0 +1,37 @@
+# AsyncAPI Payload: video_session_capturing
+# Module: video | DR-VID-001, DR-VID-003, DR-VID-007 | ADR-033
+type: object
+required: [eventType, occurredAt, sessionId, matchId, edgeNodeCount, captureStartedAt]
+additionalProperties: false
+properties:
+  eventType:
+    type: string
+    const: video.session.capturing
+  occurredAt:
+    type: string
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+    format: date-time
+    x-semantic-id: core.occurred_at.v1
+  sessionId:
+    type: string
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    format: uuid
+    x-semantic-id: video.session.id.v1
+  matchId:
+    type: string
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    format: uuid
+    x-semantic-id: matches.match.id.v1
+  edgeNodeCount:
+    type: integer
+    minimum: 1
+    description: Número de edge nodes ativos (DR-VID-003 — pelo menos 1).
+  captureStartedAt:
+    type: string
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+    format: date-time
+    description: Timestamp UTC de início de captura no edge (relógio sincronizado DR-VID-001).
+  timecodeOrigin:
+    type: string
+    format: date-time
+    description: Timestamp T=0 do relógio lógico da partida (DR-VID-001).

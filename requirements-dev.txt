@@ -1,0 +1,9 @@
+# HB Track — Python development/test dependencies
+# Scope: governance tooling and the local contract test suite.
+# Install with:
+#   ./.venv/bin/python -m pip install -r requirements-dev.txt
+
+pytest==9.0.2
+pytest-django==4.9.0
+PyYAML==6.0.3
+schemathesis==4.12.1

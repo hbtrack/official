@@ -1,0 +1,7 @@
+messageId: intervention_cycle_completed
+name: intervention_cycle_completed
+title: Intervention Cycle Completed
+summary: Ciclo de intervenção concluído após análise e revisão coach.
+contentType: application/json
+payload:
+  $ref: ../components/schemas/intervention_cycle_completed_payload.yaml

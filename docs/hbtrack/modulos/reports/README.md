@@ -3,6 +3,11 @@ module: "reports"
 system_scope_ref: "../../../_canon/SYSTEM_SCOPE.md"
 handball_rules_ref: "../../../_canon/HANDBALL_RULES_DOMAIN.md"
 handball_semantic_applicability: false
+type: "readme"
+module_scope_ref: "./MODULE_SCOPE_REPORTS.md"
+domain_rules_ref: "./DOMAIN_RULES_REPORTS.md"
+invariants_ref: "./INVARIANTS_REPORTS.md"
+test_matrix_ref: "./TEST_MATRIX_REPORTS.md"
 contract_path_ref: "../../../../contracts/openapi/paths/reports.yaml"
 schemas_ref: "../../../../contracts/schemas/reports/"
 ---

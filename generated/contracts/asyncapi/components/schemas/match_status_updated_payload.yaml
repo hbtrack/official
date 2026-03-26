@@ -1,0 +1,74 @@
+type: object
+required:
+- eventType
+- occurredAt
+- matchId
+- competitionId
+- previousStatus
+- newStatus
+additionalProperties: false
+properties:
+  eventType:
+    type: string
+    const: match.status_updated
+  occurredAt:
+    type: string
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+    format: date-time
+    x-semantic-id: core.occurred_at.v1
+  matchId:
+    type: string
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    format: uuid
+    x-semantic-id: matches.match.id.v1
+  competitionId:
+    type: string
+    format: uuid
+    x-semantic-id: competitions.competition.id.v1
+    description: Obrigatório — contexto da competição (DR-MATCH-001).
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+  previousStatus:
+    type: string
+    enum:
+    - SCHEDULED
+    - PRE_MATCH
+    - FIRST_HALF
+    - HALF_TIME
+    - SECOND_HALF
+    - OVERTIME_1
+    - OVERTIME_2
+    - PENALTIES
+    - COMPLETED
+    - CANCELLED
+    description: Fase anterior da partida (HBR-013, DEC-MATCHES-002).
+    x-domain-enum-ref: match_phase_label
+  newStatus:
+    type: string
+    enum:
+    - SCHEDULED
+    - PRE_MATCH
+    - FIRST_HALF
+    - HALF_TIME
+    - SECOND_HALF
+    - OVERTIME_1
+    - OVERTIME_2
+    - PENALTIES
+    - COMPLETED
+    - CANCELLED
+    description: 'Nova fase da partida após a transição (HBR-013, DR-MATCH-004). Analytics
+      e scout usam newStatus para contexto temporal de eventos.
+
+      '
+    x-domain-enum-ref: match_phase_label
+  homeScore:
+    type:
+    - integer
+    - 'null'
+    minimum: 0
+    description: Placar mandante no momento da transição (INV-MATCH-003).
+  awayScore:
+    type:
+    - integer
+    - 'null'
+    minimum: 0
+    description: Placar visitante no momento da transição (INV-MATCH-003).

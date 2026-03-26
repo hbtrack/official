@@ -1,0 +1,70 @@
+type: object
+additionalProperties: false
+required:
+- eventType
+- occurredAt
+- deliveryId
+- recipientUserId
+- channelLabel
+- deliveryStatusLabel
+- retryCount
+- requestedAt
+properties:
+  eventType:
+    type: string
+    description: Tipo canônico do evento. Imutável.
+    const: notification.delivery.queued
+  occurredAt:
+    type: string
+    format: date-time
+    description: Momento em que o evento foi gerado (ISO 8601 UTC).
+    x-semantic-id: core.occurred_at.v1
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  deliveryId:
+    type: string
+    format: uuid
+    description: UUID v4 da NotificationDelivery criada (INV-NTF-001).
+    x-semantic-id: notifications.delivery.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+  recipientUserId:
+    type: string
+    format: uuid
+    description: UUID do destinatário. Referência ao módulo users.
+    x-semantic-id: identity.user.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+  channelLabel:
+    type: string
+    enum:
+    - PUSH
+    - EMAIL
+    - IN_APP
+    - SMS
+    description: Canal de entrega resolvido por notifications (DR-NTF-002).
+    x-domain-enum-ref: notification_channel
+  deliveryStatusLabel:
+    type: string
+    description: Status inicial da entrega. Será sempre queued neste evento.
+    const: queued
+  notificationTemplateRef:
+    type:
+    - string
+    - 'null'
+    maxLength: 120
+    description: Referência ao template de mensagem (DR-NTF-003).
+  eventEnvelopeRef:
+    type:
+    - string
+    - 'null'
+    maxLength: 120
+    description: Referência ao envelope do evento originador (DR-NTF-003).
+  retryCount:
+    type: integer
+    minimum: 0
+    maximum: 0
+    description: Sempre 0 no momento do enfileiramento (INV-NTF-002).
+  requestedAt:
+    type: string
+    format: date-time
+    description: Momento em que a intenção foi registrada (ISO 8601 UTC).
+    x-semantic-id: core.occurred_at.v1
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$

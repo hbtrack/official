@@ -1,26 +1,7 @@
 # CONTRACT_SYSTEM_LAYOUT.md
 
-## 0. Índice cruzado
-
-Este documento faz parte da trilogia **HB Track — Manual Contract-Driven**:
-
-1. **.contract_driven/CONTRACT_SYSTEM_LAYOUT.md** (este arquivo)
-   - **Responsabilidade**: Estrutura canônica de filesystem, taxonomia de módulos, convenções de nomenclatura, regras de localização de artefatos
-   - **Use quando**: Definir onde criar artefatos, validar nomes de módulos, checar regras de naming
-
-2. **.contract_driven/CONTRACT_SYSTEM_RULES.md**
-   - **Responsabilidade**: Regras operacionais, hierarquia de precedência, boot protocol do agente, códigos de bloqueio, ferramentas de validação, procedimentos de evolução
-   - **Use quando**: Entender como criar/modificar contratos, determinar precedência em conflitos, comportamento de bloqueio, passos de validação
-
-3. **.contract_driven/GLOBAL_TEMPLATES.md**
-   - **Responsabilidade**: Scaffolds e exemplos oficiais para documentação normativa e artefatos de contrato
-   - **Use quando**: Criar novos docs de módulo, contratos, ou artefatos de governança
-
-4. **.contract_driven/templates/api/api_rules.yaml**
-   - **Responsabilidade**: Regras, validações e templates canônicos para contratos de APIs (OpenAPI/HTTP)
-   - **Use quando**: Definir convenções de API, segurança OWASP, semântica Google AIP e estilo Adidas
-
-**Regra de navegação**: Estes arquivos devem ser lidos em conjunto. Referências cruzadas entre eles são explícitas e vinculantes.
+> Referência completa de filesystem e naming. Carregar on-demand, não no boot.
+> Para referência rápida operacional: `docs/_canon/OPERATIONS.md`
 
 ---
 
@@ -33,9 +14,10 @@ Ele governa:
 - `contracts/workflows/`
 - `contracts/asyncapi/`
 - paths canônicos para documentação humana normativa relacionada ao sistema de contratos
+- classificação operacional de paths humanos não soberanos usados apenas para estudo, ideação ou evidência
 
 Ele **não** substitui:
-- a autoridade de conteúdo da documentação humana global (`docs/_canon/README.md` como canon; `README.md` como landing/entry; além de `SYSTEM_SCOPE.md`, `ARCHITECTURE.md`, `C4_CONTEXT.md`, `C4_CONTAINERS.md`, `UI_FOUNDATIONS.md`, `DESIGN_SYSTEM.md`, etc.)
+- a autoridade de conteúdo da documentação humana global (`docs/_canon/README.md` como canon; `README.md` como landing/entry; além de `SYSTEM_SCOPE.md`, `ARCHITECTURE.md`, `C4_CONTEXT.md`, `C4_CONTAINERS.md`, `UI_CONTRACT_GUIDE.md`, etc.)
 - a autoridade de conteúdo da documentação humana por módulo (`docs/hbtrack/modulos/<module>/...`)
 - regras operacionais (`.contract_driven/CONTRACT_SYSTEM_RULES.md`)
 - templates/scaffolds (SSOT em `.contract_driven/templates/` — ver `globais/` e `modulos/`; índice em `.contract_driven/GLOBAL_TEMPLATES.md`)
@@ -43,50 +25,19 @@ Ele **não** substitui:
 
 ---
 
-## 1A. Tabela única de classificação de artefatos
+## 1A. Soberania de artefatos
 
-| Classe | Soberano? | Path canônico | Template SSOT | Derivados (obrigatório) |
-|---|---:|---|---|---|
-| Governança do sistema de contratos | Sim | `.contract_driven/*` | N/A | `_reports/` (evidências), `generated/` (gerados) |
-| Templates globais (canon humano) | Não (scaffold) | `.contract_driven/templates/globais/*` | `.contract_driven/templates/globais/*` | N/A |
-| Templates de módulo (docs + schemas) | Não (scaffold) | `.contract_driven/templates/modulos/*` | `.contract_driven/templates/modulos/*` | N/A |
-| SSOT de API HTTP (regras/validações/templates) | Sim | `.contract_driven/templates/api/api_rules.yaml` | N/A | N/A |
-| Canon global (docs) | Sim | `docs/_canon/*` | `.contract_driven/templates/globais/*` | `_reports/` (evidências) |
-| Docs normativos de módulo | Sim | `docs/hbtrack/modulos/<module>/*` | `.contract_driven/templates/modulos/*` | `_reports/` (evidências) |
-| Contrato OpenAPI | Sim | `contracts/openapi/*` | `.contract_driven/templates/api/api_rules.yaml` (HTTP) | `generated/openapi/*` |
-| Schemas de domínio (JSON Schema) | Sim | `contracts/schemas/*` | `.contract_driven/templates/modulos/schemas/*` | `generated/clients/*`, `generated/ui-types/*` |
-| Workflows (Arazzo) | Sim | `contracts/workflows/*` | N/A | `generated/*` |
-| Eventos (AsyncAPI) | Sim | `contracts/asyncapi/*` | N/A | `generated/asyncapi/*` |
-
-Regras:
-- `templates/*` são **SSOT de scaffold**: agentes DEVEM instanciar artefatos copiando destas fontes (não improvisar estrutura).
-- Artefatos em `_reports/` e `generated/` são sempre derivados e nunca sobrepõem fontes soberanas.
+> Ver `docs/_canon/OPERATIONS.md §1` — fonte autoritativa. Esta seção removida para evitar drift.
 
 ---
 
 ## 2. Taxonomia canônica de módulos
 
-Se um módulo não estiver listado aqui, ele não existe.
+**Fonte autoritativa**: `docs/_canon/MODULE_REGISTRY.yaml` — lista completa dos 17 módulos canônicos, status operacional e superfícies esperadas.
 
-### 2.1 Módulos de domínio funcional
-- `users`
-- `seasons`
-- `teams`
-- `training`
-- `wellness`
-- `medical`
-- `competitions`
-- `matches`
-- `scout`
-- `exercises`
-- `analytics`
-- `reports`
-- `ai_ingestion`
+Se um módulo não estiver listado no `MODULE_REGISTRY.yaml`, ele não existe.
 
-### 2.2 Módulos transversais formais
-- `identity_access`
-- `audit`
-- `notifications`
+Referência rápida de boot: `docs/_canon/AGENT_INSTRUCTIONS.md §3` (resumo derivado)
 
 ### 2.3 Boundary crítico
 - `users` = domínio de pessoa/profile
@@ -135,102 +86,33 @@ Exemplos de identificadores proibidos:
 
 ---
 
-## 4. Árvore canônica de contratos
+## 4. Árvore canônica de contratos (paths obrigatórios)
+
+Referência completa de estrutura de filesystem: [CONTRACT_FILESYSTEM_REFERENCE.md](CONTRACT_FILESYSTEM_REFERENCE.md) (documento técnico)
+
+**Paths canônicos obrigatórios**:
 
 ```text
 contracts/
   openapi/
     openapi.yaml
     paths/
-      users.yaml
-      seasons.yaml
-      teams.yaml
-      training.yaml
-      wellness.yaml
-      medical.yaml
-      competitions.yaml
-      matches.yaml
-      scout.yaml
-      exercises.yaml
-      analytics.yaml
-      reports.yaml
-      ai_ingestion.yaml
-      identity_access.yaml
-      audit.yaml
-      notifications.yaml
+      *.yaml (um por módulo)
     components/
       schemas/
-        shared/
-        users/
-        seasons/
-        teams/
-        training/
-        wellness/
-        medical/
-        competitions/
-        matches/
-        scout/
-        exercises/
-        analytics/
-        reports/
-        ai_ingestion/
-        identity_access/
-        audit/
-        notifications/
       parameters/
       responses/
       requestBodies/
       securitySchemes/
-      examples/
-
   schemas/
-    shared/
-    users/
-    seasons/
-    teams/
-    training/
-    wellness/
-    medical/
-    competitions/
-    matches/
-    scout/
-    exercises/
-    analytics/
-    reports/
-    ai_ingestion/
-    identity_access/
-    audit/
-    notifications/
-
+    <MODULE>/ (um por módulo)
   workflows/
-    _global/
-    users/
-    seasons/
-    teams/
-    training/
-    wellness/
-    medical/
-    competitions/
-    matches/
-    scout/
-    exercises/
-    analytics/
-    reports/
-    ai_ingestion/
-    identity_access/
-    audit/
-    notifications/
-
+    <MODULE>/ (um por módulo)
   asyncapi/
-    asyncapi.yaml
-    channels/
-    operations/
-    messages/
-    components/
-      schemas/
-      messageTraits/
-      operationTraits/
+    *.yaml (por layer/feature)
 ```
+
+Regra: Artefatos de contrato devem respeitar estritamente esta estrutura. Desvios requerem ADR explícito.
 
 ### 4.1 Local canônico para artefatos derivados
 Artefatos derivados devem viver fora das fontes soberanas de contrato.
@@ -239,20 +121,34 @@ Local canônico obrigatório:
 
 ```text
 generated/
-  openapi/
-  asyncapi/
-  clients/
-  ui-types/
-  docs/
-  storybook/
+  contracts/
+    openapi/
+    asyncapi/
+  manifests/
+  resolved_policy/
 
 _reports/
   contract_gates/
+  agent_execution/
+  dispatch/
   test_runs/
   evidence/
 ```
 
 Nenhum artefato gerado pode ser commitado como se fosse soberano.
+
+Artefatos derivados com path canônico explícito:
+- `generated/resolved_policy/*.resolved.yaml` = política resolvida por módulo/surface;
+- `generated/manifests/*.traceability.yaml` = manifesto derivado de rastreabilidade;
+- `_reports/contract_gates/latest.json` = relatório corrente do pipeline;
+- `_reports/evidence/module_readiness_scorecard.json` = scorecard derivado de readiness.
+
+### 4.2 Paths humanos não soberanos
+
+Os paths abaixo são permitidos, mas nunca são fonte de autoridade operacional:
+
+- `docs/guias/` = material humano de estudo, ideação e exploração; não substitui o canon nem docs normativas de módulo
+- `_reports/` = relatórios, evidências e snapshots derivados; não define escopo, status soberano ou próxima ação permitida
 
 ---
 
@@ -270,6 +166,9 @@ Arquivos canônicos:
 - `.contract_driven/CONTRACT_SYSTEM_RULES.md`
 - `.contract_driven/GLOBAL_TEMPLATES.md`
 
+Artefatos operacionais não soberanos:
+- `.contract_driven/agent_prompts/*.prompt.md`
+
 Templates SSOT (scaffolds) vivem em:
 - `.contract_driven/templates/README.md`
 - `.contract_driven/templates/globais/`
@@ -277,30 +176,77 @@ Templates SSOT (scaffolds) vivem em:
 - `.contract_driven/templates/api/` (SSOT de convenções/validações/templates de API HTTP)
 
 ### 4A.2 Global normative canon
+
 Estes arquivos vivem em:
 
 - `docs/_canon/`
 
-Arquivos canônicos:
-- `docs/_canon/README.md`
-- `docs/_canon/SYSTEM_SCOPE.md`
-- `docs/_canon/ARCHITECTURE.md`
-- `docs/_canon/MODULE_MAP.md`
-- `docs/_canon/CHANGE_POLICY.md`
-- `docs/_canon/API_CONVENTIONS.md`
-- `docs/_canon/DATA_CONVENTIONS.md`
-- `docs/_canon/ERROR_MODEL.md`
-- `docs/_canon/GLOBAL_INVARIANTS.md`
-- `docs/_canon/DOMAIN_GLOSSARY.md`
-- `docs/_canon/HANDBALL_RULES_DOMAIN.md`
-- `docs/_canon/SECURITY_RULES.md`
-- `docs/_canon/CI_CONTRACT_GATES.md`
-- `docs/_canon/TEST_STRATEGY.md`
-- `docs/_canon/C4_CONTEXT.md`
-- `docs/_canon/C4_CONTAINERS.md`
-- `docs/_canon/UI_FOUNDATIONS.md`
-- `docs/_canon/DESIGN_SYSTEM.md`
-- `docs/_canon/decisions/ADR-*.md`
+**Arquivos canônicos autorizados** (SSOT: `scripts/contracts/validate/validate_contracts.py` função `_g2n_canon_allowlist`):
+
+#### 4A.2.1 Documentação de arquitetura e sistema
+- `docs/_canon/README.md` — índice e navigação
+- `docs/_canon/OPERATIONS.md` — referência operacional
+- `docs/_canon/SYSTEM_SCOPE.md` — missão e atores
+- `docs/_canon/ARCHITECTURE.md` — stack e princípios
+- `docs/_canon/CODE_ARCHITECTURE.md` — organização backend
+- `docs/_canon/C4_CONTEXT.md` — C4 context
+- `docs/_canon/C4_CONTAINERS.md` — C4 containers
+
+#### 4A.2.2 Taxonomia e governança de módulos
+- `docs/_canon/MODULE_MAP.md` — mapa de 17 módulos
+- `docs/_canon/MODULE_REGISTRY.yaml` — status operacional por módulo
+- `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml` — matriz de autoridade por módulo
+- `docs/_canon/FEATURE_REGISTRY.yaml` — registro de features
+
+#### 4A.2.3 Regras globais (normas transversais)
+- `docs/_canon/SECURITY_RULES.md` — autenticação, autorização, secrets, dados sensíveis
+- `docs/_canon/DATA_CONVENTIONS.md` — IDs, datas, enums, naming
+- `docs/_canon/GLOBAL_INVARIANTS.md` — invariantes cross-módulo
+- `docs/_canon/HANDBALL_RULES_DOMAIN.md` — regras IHF documentadas
+
+#### 4A.2.4 Contratos e qualidade
+- `docs/_canon/CI_CONTRACT_GATES.md` — gates de validação
+- `docs/_canon/CONTRACT_PIPELINE.md` — estágios do pipeline CDD
+- `docs/_canon/TEST_STRATEGY.md` — estratégia de testes
+
+#### 4A.2.5 Decisões e políticas
+- `docs/_canon/CHANGE_POLICY.md` — processo de mudança
+- `docs/_canon/DECISION_POLICY.md` — regras DSS
+- `docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md` — backlog arquitetural
+- `docs/_canon/decisions/ADR-*.md` — decisões aprovadas (padrão: `ADR-NNN-<slug>.md`)
+
+#### 4A.2.6 Guias UI e Frontend
+- `docs/_canon/UI_CONTRACT_GUIDE.md` — fundamentos, tokens, componentes
+
+#### 4A.2.7 Políticas operacionais (adicionadas por ADR-027..ADR-030)
+- `docs/_canon/DATA_MIGRATION_POLICY.md` — estratégia de migrations (ADR-028)
+- `docs/_canon/DEPLOY_PIPELINE.md` — pipeline de deploy (ADR-027)
+- `docs/_canon/RUNTIME_CONTRACT_MONITORING_POLICY.md` — monitoramento (ADR-029)
+- `docs/_canon/FRONTEND_CONTRACT.md` — contrato de frontend (ADR-030)
+- `docs/_canon/TOOLCHAIN_HEALTH_POLICY.md` — saúde da toolchain
+- `docs/_canon/IR_TO_SURFACE_MAPPING.yaml` — mapeamento IR → superfícies
+
+#### 4A.2.8 Gates e segurança
+- `docs/_canon/gates/GATES_REGISTRY.yaml` — registro de gates
+- `docs/_canon/gates/README.md` — documentação de gates
+- `docs/_canon/security/OWASP_API_CONTROL_MATRIX.yaml` — matriz de controles OWASP
+
+#### 4A.2.9 Templates canônicos
+- `docs/_canon/templates/SESSION_HANDOFF.template.md` — template de handoff de sessão
+
+### 4A.2A Documentação de apoio não soberana
+
+Estes arquivos vivem em:
+
+- `docs/hbtrack/decisoes/`
+
+Arquivos de classificação obrigatória:
+- `docs/hbtrack/decisoes/README.md`
+- `docs/hbtrack/decisoes/*.md`
+
+Regra:
+- a classificação não soberana desta pasta deve existir simultaneamente em `LAYOUT`, `RULES` e no `README` local da pasta;
+- ausência do `README` local torna a classificação ambígua e deve ser tratada como gap de governança.
 
 ### 4A.3 Documentação normativa de módulo
 Estes arquivos vivem em:
@@ -311,6 +257,7 @@ Arquivos canônicos:
 - `docs/hbtrack/modulos/<module>/README.md`
 - `docs/hbtrack/modulos/<module>/MODULE_SCOPE_<MOD>.md`
 - `docs/hbtrack/modulos/<module>/DOMAIN_RULES_<MOD>.md`
+- `docs/hbtrack/modulos/<module>/SPORT_SCIENCE_RULES_<MOD>.md`
 - `docs/hbtrack/modulos/<module>/INVARIANTS_<MOD>.md`
 - `docs/hbtrack/modulos/<module>/STATE_MODEL_<MOD>.md`
 - `docs/hbtrack/modulos/<module>/PERMISSIONS_<MOD>.md`
@@ -333,6 +280,8 @@ Artefatos canônicos ausentes:
 ---
 
 ## 5. Soberania por camada
+
+> Esta seção define soberania por **superfície de contrato** (HTTP, schemas, eventos, workflows). Para hierarquia de precedência entre arquivos de governança, ver `.contract_driven/CONTRACT_SYSTEM_RULES.md §5`.
 
 ### 5.1 Interface pública HTTP
 Fonte primária da verdade:
@@ -388,6 +337,11 @@ Artefatos gerados/derivados podem existir para qualquer superfície, mas nunca s
 - JSON Schemas são shapes reutilizáveis de domínio/dados, não substitutos do contrato HTTP.
 - Se o mesmo conceito existir em schema OpenAPI-facing e em schema reutilizável, a soberania de cada superfície deve permanecer explícita.
 
+### 7.1 Soberania e localização de domain shapes
+`contracts/schemas/<module>/*.schema.json` é a fonte primária da verdade para shapes de dados reutilizáveis do módulo — não um arquivo opcional. Todo conceito reutilizável de domínio deve existir aqui antes de ou junto com sua projeção HTTP em `components/schemas/`.
+
+A política operacional completa — quando criar, quando não criar, quando promover para `shared/`, quando $ref direto é permitido, conformidade com axiomas e lifecycle fields — está definida em `.contract_driven/CONTRACT_SYSTEM_RULES.md` §14A (Política de Domain Shapes).
+
 ---
 
 ## 8. Regras de layout de Arazzo
@@ -425,7 +379,7 @@ Artefatos gerados/derivados podem existir para qualquer superfície, mas nunca s
 - `contracts/asyncapi/<layer>/<name>.yaml`
 
 ### 10.6 Human documentation names
-- docs globais podem usar nomes canônicos em uppercase (`SYSTEM_SCOPE.md`, `API_CONVENTIONS.md`)
+- docs globais podem usar nomes canônicos em uppercase (`SYSTEM_SCOPE.md`, `DATA_CONVENTIONS.md`)
 - docs de módulo podem usar placeholders canônicos em uppercase (`DOMAIN_RULES_<MOD>.md`, etc.)
 - dentro desses docs, identificadores técnicos referenciados permanecem em inglês
 
@@ -454,7 +408,7 @@ O footprint mínimo esperado de cross-references para documentação de módulo 
 - workflow files sem orquestração real
 - asyncapi files sem eventos reais
 - contratos fora das pastas canônicas
-- nomes de módulo fora da taxonomia canônica de 16 módulos
+- nomes de módulo fora da taxonomia canônica de 17 módulos
 - artefatos gerados tratados como soberanos
 - docs de módulo que não referenciam os docs globais obrigatórios quando aplicável
 
@@ -462,14 +416,19 @@ O footprint mínimo esperado de cross-references para documentação de módulo 
 
 ## 13. Fluxo de criação de contrato (estrutural)
 
-**Este fluxo define ONDE criar artefatos (estrutura de filesystem e naming)**. Para o procedimento operacional completo (incluindo validação, boot sequence e critérios de readiness), veja `CONTRACT_SYSTEM_RULES.md` seção 15 (Contract Creation Procedure).
+**Este fluxo define ONDE criar artefatos (estrutura de filesystem e naming)**. 
 
-1. escolher o módulo canônico na taxonomia de 16 módulos
-2. criar `contracts/openapi/paths/<module>.yaml`
-3. criar `contracts/schemas/<module>/`
-4. avaliar `contracts/workflows/<module>/`
-5. avaliar `contracts/asyncapi/<module>.yaml`
-6. linkar a documentação humana do módulo a `SYSTEM_SCOPE.md` e, quando aplicável, `HANDBALL_RULES_DOMAIN.md`
+> **SSOT de task routing**: `.contract_driven/TASK_CATALOG.yaml` — define paths exatos em `artifacts_produced` para cada `task_type`. Este documento descreve as regras estruturais; consulte o catálogo para mapeamento autoritário de task_type → paths.
+
+Para o procedimento operacional completo (incluindo validação, boot sequence e critérios de readiness), veja `CONTRACT_SYSTEM_RULES.md` seção 15 (Contract Creation Procedure).
+
+1. escolher o módulo canônico na taxonomia de 17 módulos
+2. criar `contracts/openapi/paths/<module>.yaml` (ver `.contract_driven/TASK_CATALOG.yaml` task `new_contract`)
+3. criar `contracts/schemas/<module>/` (ver `.contract_driven/TASK_CATALOG.yaml` task `new_schema`)
+4. avaliar `contracts/workflows/<module>/<workflow_name>.arazzo.yaml` (ver `.contract_driven/TASK_CATALOG.yaml` task `new_workflow`)
+5. avaliar `contracts/asyncapi/<module>/<event_name>.yaml` (ver `.contract_driven/TASK_CATALOG.yaml` task `new_event`)
+6. criar documentação de módulo: `STATE_MODEL_<MOD>.md`, `UI_CONTRACT_<MOD>.md` (ver `.contract_driven/TASK_CATALOG.yaml` tasks `new_state_model`, `new_ui_contract`)
+7. linkar a documentação humana do módulo a `SYSTEM_SCOPE.md` e, quando aplicável, `HANDBALL_RULES_DOMAIN.md`
 
 ### 13.1 Structural Output Expectation
 Um fluxo de criação de contrato é estruturalmente aceitável apenas quando o artefato:
@@ -485,7 +444,7 @@ Um fluxo de criação de contrato é estruturalmente aceitável apenas quando o 
 Uma estrutura de contrato é estruturalmente válida apenas quando:
 - o artefato está na pasta canônica
 - naming segue as regras canônicas
-- o módulo pertence à lista de 16 módulos
+- o módulo pertence à lista de 17 módulos
 - soberania de superfície é respeitada
 - nenhum anti-pattern proibido está presente
 

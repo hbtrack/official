@@ -1,0 +1,62 @@
+type: object
+required:
+- eventType
+- occurredAt
+- teamId
+- organizationId
+- name
+- categoryLabel
+- statusLabel
+properties:
+  eventType:
+    type: string
+    const: team.created
+    description: Tipo do evento. Sempre "team.created".
+  occurredAt:
+    type: string
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+    format: date-time
+    description: Timestamp UTC do momento em que a equipe foi criada (ISO 8601).
+    x-semantic-id: core.occurred_at.v1
+  teamId:
+    type: string
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    format: uuid
+    description: UUID da equipe criada (DR-TEAM-001).
+    x-semantic-id: teams.team.id.v1
+  organizationId:
+    type: string
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    format: uuid
+    description: UUID da organização proprietária.
+    x-semantic-id: organizations.organization.id.v1
+  seasonId:
+    type: string
+    format: uuid
+    description: 'UUID da temporada associada (DR-TEAM-004 / INV-TEAM-003). Null quando
+      não associada a nenhuma temporada.
+
+      '
+    x-semantic-id: seasons.season.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+  name:
+    type: string
+    minLength: 1
+    maxLength: 120
+    description: Nome da equipe criada.
+  categoryLabel:
+    type: string
+    minLength: 1
+    maxLength: 80
+    description: 'Categoria esportiva/competitiva (DR-TEAM-003 — não é papel de authz).
+
+      '
+  statusLabel:
+    type: string
+    enum:
+    - DRAFT
+    - ACTIVE
+    - ARCHIVED
+    description: Status inicial da equipe (tipicamente "draft").
+    x-domain-enum-ref: entity_lifecycle_status
+additionalProperties: false

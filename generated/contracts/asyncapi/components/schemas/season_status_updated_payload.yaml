@@ -1,0 +1,43 @@
+type: object
+required:
+- eventType
+- occurredAt
+- seasonId
+- previousStatusLabel
+- statusLabel
+additionalProperties: false
+properties:
+  eventType:
+    type: string
+    const: season.status_updated
+  occurredAt:
+    type: string
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+    format: date-time
+    x-semantic-id: core.occurred_at.v1
+  seasonId:
+    type: string
+    format: uuid
+    x-semantic-id: seasons.season.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+  name:
+    type:
+    - string
+    - 'null'
+    maxLength: 120
+  previousStatusLabel:
+    type: string
+    enum:
+    - DRAFT
+    - ACTIVE
+    - ARCHIVED
+    description: Status anterior à transição.
+    x-domain-enum-ref: entity_lifecycle_status
+  statusLabel:
+    type: string
+    enum:
+    - DRAFT
+    - ACTIVE
+    - ARCHIVED
+    description: Novo status após a transição (draft → active → archived).
+    x-domain-enum-ref: entity_lifecycle_status

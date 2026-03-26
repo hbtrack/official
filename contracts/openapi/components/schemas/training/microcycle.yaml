@@ -1,0 +1,88 @@
+# Microcycle schema — periodization micro-level (weekly)
+# Module: training
+# Invariants: INV-TRAIN-043 (weekStart < weekEnd), INV-TRAIN-054 (belongs to mesocycle),
+#             INV-TRAIN-056 (dates contained within mesocycle parent),
+#             INV-TRAIN-057 (sessions link to microcycle or are standalone)
+# Domain rules: DR-TRAIN-H04 (4-level periodization)
+
+type: object
+additionalProperties: false
+required:
+  - id
+  - organizationId
+  - mesocycleId
+  - name
+  - weekStart
+  - weekEnd
+  - createdAt
+  - updatedAt
+  - createdByUserId
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  organizationId:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    x-semantic-id: organizations.organization.id.v1
+  teamId:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    x-semantic-id: teams.team.id.v1
+  mesocycleId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    description: >
+      Parent mesocycle (INV-TRAIN-054: microcycle MUST belong to a valid mesocycle).
+      Microcycle dates MUST be fully contained within the mesocycle parent (INV-TRAIN-056).
+  name:
+    type: string
+    minLength: 1
+    maxLength: 120
+  weekStart:
+    type: string
+    format: date
+    pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+    description: >
+      Week start date (ISO 8601 date, ADR-009).
+      MUST be strictly less than weekEnd (INV-TRAIN-043).
+      MUST be within mesocycle parent interval (INV-TRAIN-056).
+  weekEnd:
+    type: string
+    format: date
+    pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+    description: >
+      Week end date (ISO 8601 date, ADR-009).
+      MUST be strictly greater than weekStart (INV-TRAIN-043).
+      MUST be within mesocycle parent interval (INV-TRAIN-056).
+  weekNumber:
+    type: integer
+    minimum: 1
+    description: Optional sequential week number within the mesocycle
+  mainObjective:
+    type: string
+    maxLength: 255
+  createdAt:
+    type: string
+    format: date-time
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  createdByUserId:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+  updatedAt:
+    type: string
+    format: date-time
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  deletedAt:
+    type: [string, "null"]
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+  deletedReason:
+    type: [string, "null"]
+    minLength: 1
+    description: Required when deletedAt is set (INV-TRAIN-008)

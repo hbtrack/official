@@ -1,0 +1,241 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://hbtrack.local/schemas/training/training_suggestion.schema.json",
+  "title": "TrainingSuggestion",
+  "description": "SSOT JSON Schema for HB Pro Coach training suggestions pending coach approval (module: training).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "athleteId",
+    "organizationId",
+    "coachId",
+    "trainingName",
+    "duration",
+    "objectives",
+    "context",
+    "status",
+    "suggestedAt",
+    "createdAt",
+    "updatedAt"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique suggestion ID.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "athleteId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Reference to athlete.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "organizationId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Organization context.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "teamId": {
+      "type": "string",
+      "format": "uuid",
+      "nullable": true,
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "coachId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Assigned coach (head coach or assistant coach) awaiting decision.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "trainingName": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 255,
+      "description": "Training session name (e.g., 'FORÇA - PONTA (45min)')."
+    },
+    "duration": {
+      "type": "integer",
+      "minimum": 15,
+      "maximum": 180,
+      "description": "Planned duration in minutes."
+    },
+    "objectives": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "FORCA",
+          "TECNICA",
+          "CONDICIONAMENTO",
+          "RECUPERACAO",
+          "TATICA"
+        ],
+        "x-domain-enum-ref": "training_objective_category"
+      },
+      "minItems": 1,
+      "maxItems": 5,
+      "description": "Training objectives."
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "nullable": true,
+      "description": "Detailed description of training blocks and activities."
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Contextual data about why suggestion was made.",
+      "properties": {
+        "reason": {
+          "type": "string",
+          "enum": [
+            "MISSING_SESSION",
+            "ATHLETE_REQUEST",
+            "OBJECTIVE_SPECIFIC"
+          ],
+          "description": "Why coaching suggested this training.",
+          "x-domain-enum-ref": "training_suggestion_reason"
+        },
+        "missingSessions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "date": {
+                "type": "string",
+                "format": "date"
+              },
+              "plannedSessionId": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              }
+            },
+            "required": [
+              "date",
+              "plannedSessionId"
+            ]
+          },
+          "nullable": true,
+          "description": "If reason=missing_session, list of missed session dates."
+        },
+        "athleteObjective": {
+          "type": "string",
+          "maxLength": 255,
+          "nullable": true,
+          "description": "If reason=objective_specific, what athlete asked for."
+        },
+        "athleteWellnessAtRequest": {
+          "type": "object",
+          "additionalProperties": false,
+          "nullable": true,
+          "properties": {
+            "heartRate": {
+              "type": "integer",
+              "minimum": 40,
+              "maximum": 220,
+              "nullable": true
+            },
+            "rpeScore": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 10,
+              "nullable": true
+            },
+            "sleepHours": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 12,
+              "nullable": true
+            },
+            "discomfortAreas": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "nullable": true
+            }
+          }
+        }
+      },
+      "required": [
+        "reason"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "PENDING_APPROVAL",
+        "APPROVED",
+        "REJECTED"
+      ],
+      "description": "Current approval status.",
+      "x-domain-enum-ref": "training_suggestion_status"
+    },
+    "approvalResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "nullable": true,
+      "description": "Coach's approval/rejection details (if status != pending).",
+      "properties": {
+        "decidedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+        },
+        "decidedByCoachId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "decision": {
+          "type": "string",
+          "enum": [
+            "APPROVED",
+            "REJECTED"
+          ],
+          "x-domain-enum-ref": "training_suggestion_decision"
+        },
+        "feedback": {
+          "type": "string",
+          "maxLength": 500,
+          "nullable": true,
+          "description": "Optional coach feedback."
+        }
+      },
+      "required": [
+        "decidedAt",
+        "decidedByCoachId",
+        "decision"
+      ]
+    },
+    "generatedTrainingSessionId": {
+      "type": "string",
+      "format": "uuid",
+      "nullable": true,
+      "description": "If approved, reference to generated training_session.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "suggestedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when coach suggested training.",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    }
+  }
+}

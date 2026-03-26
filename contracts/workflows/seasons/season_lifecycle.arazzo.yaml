@@ -1,0 +1,78 @@
+arazzo: "1.0.0"
+info:
+  title: Ciclo de Vida da Temporada
+  version: "1.0.0"
+  x-status: active
+  x-module: seasons
+  x-domain-rules: [DR-SEAS-001, DR-SEAS-002, DR-SEAS-003, DR-SEAS-004, DR-SEAS-005]
+
+sourceDescriptions:
+  - name: hbtrack_api
+    url: ../../openapi/openapi.yaml
+    type: openapi
+
+workflows:
+  - workflowId: season_lifecycle
+    summary: >
+      Fluxo completo do ciclo de vida de uma temporada: criação (draft),
+      associação de equipes (DR-SEAS-003) e ativação da temporada.
+    inputs:
+      type: object
+      required: [name, startDate, endDate]
+      properties:
+        name:         { type: string }
+        startDate:    { type: string, format: date }
+        endDate:      { type: string, format: date }
+        teamId:       { type: string, format: uuid }
+    steps:
+      - stepId: create_season
+        description: >
+          Cria temporada em draft. phaseLabels devem ser explícitos (DR-SEAS-002).
+          startDate <= endDate (INV-SEAS-002).
+        operationId: createSeason
+        requestBody:
+          contentType: application/json
+          payload:
+            name:        $inputs.name
+            startDate:   $inputs.startDate
+            endDate:     $inputs.endDate
+            phaseLabels: []
+        successCriteria:
+          - condition: $statusCode == 201
+        outputs:
+          seasonId: $response.body#/id
+
+      - stepId: add_team_to_season
+        description: >
+          Associa equipe à temporada de forma explícita e canônica (DR-SEAS-003).
+          Dependência: teamId deve ser UUID de equipe existente.
+        operationId: addTeamToSeason
+        parameters:
+          - name: seasonId
+            in: path
+            value: $steps.create_season.outputs.seasonId
+          - name: teamId
+            in: path
+            value: $inputs.teamId
+        dependsOn: [create_season]
+        successCriteria:
+          - condition: $statusCode == 204
+
+      - stepId: activate_season
+        description: >
+          Promove a temporada de draft para active após equipes associadas.
+          seasons não é dono de scorekeeping nem de scout (DR-SEAS-005).
+        operationId: patchSeason
+        parameters:
+          - name: seasonId
+            in: path
+            value: $steps.create_season.outputs.seasonId
+        requestBody:
+          contentType: application/json
+          payload:
+            statusLabel: active
+        dependsOn: [add_team_to_season]
+        successCriteria:
+          - condition: $statusCode == 200
+        outputs:
+          season: $response.body

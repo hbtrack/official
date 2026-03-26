@@ -23,12 +23,15 @@ def main(argv: list[str] | None = None) -> int:
         sys.path.insert(0, str(scripts_dir))
 
     from contracts.validate.api.policy_compiler import (  # noqa: PLC0415
+        Drift,
         PolicyCompilerError,
         check_expected,
         compile_all_expected,
         compile_expected,
+        detect_global_input_recompile_gap,
         write_expected,
     )
+    from generate.gen_openapi_root_inventory import sync_openapi_root  # noqa: PLC0415
 
     ap = argparse.ArgumentParser(description="Compila policy de API e gera manifests determinísticos em generated/.")
     ap.add_argument("--module", help="Módulo (lower_snake_case).")
@@ -44,6 +47,26 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
 
     try:
+        global_input_gaps = detect_global_input_recompile_gap(root)
+        if not args.all and global_input_gaps:
+            payload = {
+                "artifact_id": "HBTRACK_API_POLICY_COMPILER_RESULT",
+                "status": "FAIL",
+                "mode": "check" if args.check else "write",
+                "global_input_changed_not_fully_recompiled": True,
+                "impacted_global_inputs": global_input_gaps,
+                "actions": [
+                    "Rodar `python3 scripts/contracts/validate/api/compile_api_policy.py --all`.",
+                ],
+            }
+            if args.format == "json":
+                print(json.dumps(payload, ensure_ascii=False))
+            else:
+                for source_path, manifests in global_input_gaps.items():
+                    print(f"GLOBAL_INPUT_DRIFT: {source_path} -> {', '.join(manifests)}")
+                print("FAIL: mudança em input global exige recompilação total (--all).")
+            return 2
+
         if args.all:
             expected = compile_all_expected(root)
         else:
@@ -53,6 +76,9 @@ def main(argv: list[str] | None = None) -> int:
 
         if args.check:
             drifts = check_expected(root, expected)
+            openapi_sync = sync_openapi_root(root, check_only=True)
+            if openapi_sync.changed:
+                drifts.append(Drift(openapi_sync.relpath, openapi_sync.reason or "openapi_root_inventory_out_of_sync"))
             if drifts:
                 if args.format == "json":
                     print(
@@ -61,6 +87,7 @@ def main(argv: list[str] | None = None) -> int:
                                 "artifact_id": "HBTRACK_API_POLICY_COMPILER_RESULT",
                                 "status": "FAIL",
                                 "mode": "check",
+                                "global_input_changed_not_fully_recompiled": False,
                                 "drifts": [{"relpath": d.relpath, "reason": d.reason} for d in drifts],
                             },
                             ensure_ascii=False,
@@ -79,6 +106,7 @@ def main(argv: list[str] | None = None) -> int:
                             "artifact_id": "HBTRACK_API_POLICY_COMPILER_RESULT",
                             "status": "PASS",
                             "mode": "check",
+                            "global_input_changed_not_fully_recompiled": False,
                             "drifts": [],
                         },
                         ensure_ascii=False,
@@ -90,6 +118,9 @@ def main(argv: list[str] | None = None) -> int:
             return 0
 
         written = write_expected(root, expected)
+        openapi_sync = sync_openapi_root(root, check_only=False)
+        if openapi_sync.changed:
+            written.append(openapi_sync.relpath)
         if args.format == "json":
             print(
                 json.dumps(
@@ -97,6 +128,7 @@ def main(argv: list[str] | None = None) -> int:
                         "artifact_id": "HBTRACK_API_POLICY_COMPILER_RESULT",
                         "status": "PASS",
                         "mode": "check" if args.check else "write",
+                        "global_input_changed_not_fully_recompiled": False,
                         "written": written,
                     },
                     ensure_ascii=False,

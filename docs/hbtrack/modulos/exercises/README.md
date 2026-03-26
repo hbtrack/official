@@ -3,6 +3,11 @@ module: "exercises"
 system_scope_ref: "../../../_canon/SYSTEM_SCOPE.md"
 handball_rules_ref: "../../../_canon/HANDBALL_RULES_DOMAIN.md"
 handball_semantic_applicability: false
+type: "readme"
+module_scope_ref: "./MODULE_SCOPE_EXERCISES.md"
+domain_rules_ref: "./DOMAIN_RULES_EXERCISES.md"
+invariants_ref: "./INVARIANTS_EXERCISES.md"
+test_matrix_ref: "./TEST_MATRIX_EXERCISES.md"
 contract_path_ref: "../../../../contracts/openapi/paths/exercises.yaml"
 schemas_ref: "../../../../contracts/schemas/exercises/"
 ---

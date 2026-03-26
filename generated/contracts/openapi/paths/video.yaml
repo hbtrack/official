@@ -1,0 +1,735 @@
+# ============================================================
+# Module: video — OpenAPI path items
+# Source of truth: contracts/openapi/openapi.yaml
+# Docs: docs/hbtrack/modulos/video/MODULE_SCOPE_VIDEO.md
+# Domain rules: DR-VID-001..010
+# Invariants: INV-VID-001..012
+# ADR refs: ADR-033 (video module canonicalization)
+# ============================================================
+
+/video/sessions:
+  post:
+    tags:
+      - video
+    summary: Criar MatchMediaSession para uma partida
+    description: >
+      Cria uma nova sessão de mídia para captura/ingest de uma partida.
+      MatchMediaSession é o agregado principal que orquestra todo o ciclo de vida
+      de vídeo: captura → ingest → sincronização → transcodificação → distribuição.
+
+      Pré-condições:
+      - Usuário autenticado com role admin, coordinator ou coach (ADR-008, PERMISSIONS_VIDEO.md)
+      - matchId deve corresponder a uma partida existente em matches module
+      - captureMode válido (PANORAMIC, AUTO_FOLLOW, MULTI_ANGLE)
+
+      Pós-condições:
+      - MatchMediaSession criado com state=DRAFT
+      - Edge nodes podem ser registrados posteriormente via POST /video/sessions/{sessionId}/edge-nodes
+      - Evento session.created publicado via AsyncAPI
+
+      Referências normativas:
+      - DR-VID-001: Cada segment deve ter timecode único obrigatório
+      - DR-VID-003: Captura começa em edge nodes (não na nuvem)
+      - DR-VID-008: Retenção explícita (padrão: 7 dias)
+    operationId: createSession
+    security:
+      - HTTPBearer: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - matchId
+              - captureMode
+              - retentionPolicy
+            properties:
+              matchId:
+                type: string
+                format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+                description: >
+                  UUID da partida (referência ao módulo matches).
+                  x-semantic-id: matches.match.id.v1
+                x-semantic-id: matches.match.id.v1
+              captureMode:
+                type: string
+                enum:
+                  - PANORAMIC
+                  - AUTO_FOLLOW
+                  - MULTI_ANGLE
+                description: >
+                  Modo de captura determinado pelo operador de partida.
+                  - PANORAMIC: visão fixa frontal
+                  - AUTO_FOLLOW: câmera robótica acompanhando bola
+                  - MULTI_ANGLE: múltiplos ângulos sincronizados
+              retentionPolicy:
+                type: string
+                enum:
+                  - keep_7_days
+                  - keep_30_days
+                  - keep_90_days
+                  - archive_s3
+                  - public_forever
+                description: >
+                  Política de retenção de mídia (DR-VID-008: obrigatório explícito).
+                  - keep_7_days: padrão conservador (expiração automática)
+                  - archive_s3: arquivamento em cold storage
+                  - public_forever: retenção indefinida para público
+              technicalContactUserId:
+                type: string
+                format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+                description: >
+                  UUID do Technical Analyst responsável pela sessão.
+                  Opcional; pode ser atualizado via PATCH.
+    responses:
+      "201":
+        description: MatchMediaSession criado com sucesso.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/video/match_media_session.yaml"
+      "400":
+        description: >
+          Requisição inválida (matchId ausente, captureMode inválido, etc).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: >
+          Papel RBAC insuficiente — requer admin, coordinator ou coach.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "422":
+        description: matchId não corresponde a partida existente.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+  get:
+    tags:
+      - video
+    summary: Listar MatchMediaSessions com filtros
+    description: >
+      Retorna lista paginada de sessões de mídia.
+      Filtros: matchId, state, createdByUserId, dateRange.
+      Paginação conforme api_rules (page, pageSize máx 100).
+
+      Acesso: admin, coordinator e coach conforme escopo da partida; athlete apenas sessões de partidas às quais já tem acesso; member apenas partidas públicas.
+    operationId: listSessions
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: matchId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+        description: Filtra por UUID da partida.
+      - name: state
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+            - DRAFT
+            - CAPTURING
+            - SYNCING
+            - TRANSCODING
+            - PUBLISHED
+        description: Filtra por estado da sessão.
+      - name: createdAtFrom
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+        description: Início do intervalo de criação (ISO 8601 UTC).
+      - name: createdAtTo
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+        description: Fim do intervalo de criação (ISO 8601 UTC).
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+    responses:
+      "200":
+        description: Lista paginada de sessões.
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - data
+                - total
+                - page
+                - pageSize
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: "../components/schemas/video/match_media_session.yaml"
+                total:
+                  type: integer
+                  minimum: 0
+                page:
+                  type: integer
+                  minimum: 1
+                pageSize:
+                  type: integer
+                  minimum: 1
+              additionalProperties: false
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+/video/sessions/{sessionId}:
+  get:
+    tags:
+      - video
+    summary: Obter MatchMediaSession por ID
+    description: >
+      Retorna o estado completo de uma sessão de mídia.
+      Incluindo: state, timecode atual, segments já finalizados, transcodificações ativas.
+
+      Acesso: admin, coordinator e coach conforme escopo da partida; athlete somente quando a partida for acessível; member somente em partidas públicas (BOLA — INV-VID-007).
+    operationId: getSession
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: sessionId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID da MatchMediaSession.
+    responses:
+      "200":
+        description: Sessão encontrada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/video/match_media_session.yaml"
+      "401":
+        description: Token ausente ou expirado.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Acesso negado — BOLA (não é admin/coordinator nem criador).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Sessão não encontrada.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+  patch:
+    tags:
+      - video
+    summary: Atualizar MatchMediaSession (metadados)
+    description: >
+      Atualiza metadados: technicalContactUserId, retentionPolicy, estado.
+      Não permite alterar matchId ou captureMode após criação (imutáveis, INV-VID-005).
+
+      Transições de estado permitidas:
+      - DRAFT → CAPTURING (iniciar captura)
+      - CAPTURING → SYNCING (finalizar captura, começar sincronização)
+      - SYNCING → TRANSCODING (sincronização confirmada)
+      - TRANSCODING → PUBLISHED (transcodificação completa, pronto para distribuição)
+    operationId: patchSession
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: sessionId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              state:
+                type: string
+                enum:
+                  - CAPTURING
+                  - SYNCING
+                  - TRANSCODING
+                  - PUBLISHED
+              retentionPolicy:
+                type: string
+                enum:
+                  - keep_7_days
+                  - keep_30_days
+                  - keep_90_days
+                  - archive_s3
+                  - public_forever
+              technicalContactUserId:
+                type: string
+                format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    responses:
+      "200":
+        description: Sessão atualizada.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/video/match_media_session.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+/video/segments:
+  post:
+    tags:
+      - video
+    summary: Ingerir novo MediaSegment
+    description: >
+      Registra um novo segmento de mídia (trecho de vídeo com timecode).
+      Emitido por edge nodes durante captura ao vivo.
+
+      Pré-condições:
+      - sessionId deve corresponder a MatchMediaSession existente com state=CAPTURING
+      - timecode deve ser >= session.lastTimecode (ordem monotônica)
+      - Ao menos um dentre codec, bitrate, durationMs deve estar presente
+
+      Pós-condições:
+      - MediaSegment criado com state=OPEN
+      - Evento segment.ready publicado via AsyncAPI
+      - Segment pode ser transcodificado lazy (DR-VID-006)
+
+      Referências normativas:
+      - DR-VID-001: Timecode obrigatório e único
+      - DR-VID-005: Segments são imutáveis após FINALIZED
+    operationId: createSegment
+    security:
+      - HTTPBearer: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - sessionId
+              - timecodeLogical
+              - timecodeLabel
+            properties:
+              sessionId:
+                type: string
+                format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+                description: UUID da MatchMediaSession.
+              timecodeLogical:
+                type: integer
+                minimum: 0
+                description: >
+                  Offset em milissegundos desde início da partida.
+                  Obrigatório e único por sessão (INV-VID-001).
+              timecodeLabel:
+                type: string
+                maxLength: 60
+                description: >
+                  Representação human-readable (ex: "00:23:45" ou "Q2 05:30").
+              codecLabel:
+                type: string
+                maxLength: 60
+                description: >
+                  Identificador do codec usado (ex: "H.264", "H.265", "VP9").
+              bitrate:
+                type: integer
+                minimum: 100
+                description: >
+                  Taxa de bits em kbps (ex: 2500 para 2,5 Mbps).
+              durationMs:
+                type: integer
+                minimum: 100
+                description: >
+                  Duração do segmento em milissegundos.
+              sourceEdgeNodeId:
+                type: string
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+                maxLength: 80
+                description: >
+                  Identificador do edge node que capturou este segmento.
+    responses:
+      "201":
+        description: MediaSegment criado.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/video/media_segment.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+  get:
+    tags:
+      - video
+    summary: Listar MediaSegments de uma sessão
+    description: >
+      Retorna lista de segmentos de mídia para uma sessão específica.
+      Filtro obrigatório: sessionId.
+      Opcional: state (OPEN, FINALIZED), timecodeRange.
+    operationId: listSegments
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: sessionId
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Filtra por sessionId.
+      - name: state
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+            - OPEN
+            - FINALIZED
+        description: Filtra por estado do segmento.
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+    responses:
+      "200":
+        description: Lista paginada de segmentos.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: "../components/schemas/video/media_segment.yaml"
+                total:
+                  type: integer
+                page:
+                  type: integer
+                pageSize:
+                  type: integer
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+/video/clips:
+  post:
+    tags:
+      - video
+    summary: Criar ClipDefinition (recorte semântico)
+    description: >
+      Define um recorte semântico de vídeo com contexto (evento scout, zona, atletas).
+      Referência normativa: DR-VID-004 (clipping semântico obrigatório).
+
+      Pré-condições:
+      - sessionId deve corresponder a MatchMediaSession existente
+      - fromTimecode < toTimecode
+      - Ao menos um dentre scoutEventId, zoneLabel, athleteIds deve estar presente
+
+      Pós-condições:
+      - ClipDefinition criado e indexável
+      - Transcodificação lazy pode ser acionada para este clip
+    operationId: createClip
+    security:
+      - HTTPBearer: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - sessionId
+              - fromTimecode
+              - toTimecode
+            properties:
+              sessionId:
+                type: string
+                format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+              fromTimecode:
+                type: integer
+                minimum: 0
+                description: Timecode inicial em ms (inclusive).
+              toTimecode:
+                type: integer
+                minimum: 0
+                description: Timecode final em ms (exclusive).
+              scoutEventId:
+                type: string
+                format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+                description: >
+                  Referência opcional a evento de scout (evento de jogo que inspirou este clip).
+              zoneLabel:
+                type: string
+                maxLength: 80
+                description: >
+                  Zona de quadra (ex: "LEFT_WING", "CENTER", "RIGHT_WING", "GOAL_AREA").
+              athleteIds:
+                type: array
+                items:
+                  type: string
+                  format: uuid
+                description: >
+                  UUIDs de atletas envolvidos neste clip.
+              contextLabel:
+                type: string
+                maxLength: 200
+                description: >
+                  Contexto narrativo (ex: "Fast break 2v1", "Defensive setup").
+    responses:
+      "201":
+        description: ClipDefinition criado.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/video/clip_definition.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+  get:
+    tags:
+      - video
+    summary: Listar ClipDefinitions
+    description: >
+      Retorna clips indexados. Filtros: sessionId (obrigatório), scoutEventId, zoneLabel.
+    operationId: listClips
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: sessionId
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: scoutEventId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: zoneLabel
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+    responses:
+      "200":
+        description: Lista paginada de clips.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: "../components/schemas/video/clip_definition.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+/video/distribution:
+  post:
+    tags:
+      - video
+    summary: Publicar para distribuição (técnico ou público)
+    description: >
+      Inicia distribuição de uma sessão/clip para um destino (interno, CDN, parceiro).
+      Referência normativa: DR-VID-009 (distribuição é sempre rastreada).
+
+      Pré-condições:
+      - sessionId com state=PUBLISHED (ready)
+      - distributionProfileId com codec/bitrate/renditions válidos
+
+      Pós-condições:
+      - Evento distribution.published emitido
+      - Auditoria de acesso registrada (quem, quando, duração, qualidade)
+    operationId: publishDistribution
+    security:
+      - HTTPBearer: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - sessionId
+              - distributionProfileId
+              - targetLabel
+            properties:
+              sessionId:
+                type: string
+                format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+              distributionProfileId:
+                type: string
+                format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+                description: >
+                  Profile de transcodificação (técnico ou público).
+              targetLabel:
+                type: string
+                enum:
+                  - TECHNICAL_INTERNAL
+                  - PUBLIC_CDN
+                  - BROADCAST_PARTNER
+                description: >
+                  Destino: interno para banco, CDN público, ou streaming de broadcast.
+              externalPartnerRef:
+                type: string
+                maxLength: 120
+                description: >
+                  Identificador do parceiro externo (quando targetLabel=BROADCAST_PARTNER).
+    responses:
+      "202":
+        description: Distribuição aceita e enfileirada.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                distributionId:
+                  type: string
+                  format: uuid
+                  pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+                status:
+                  type: string
+                  enum: [queued, processing, published, failed]
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"

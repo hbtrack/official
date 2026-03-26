@@ -1,8 +1,459 @@
 # Path items for module: analytics
 # Source of truth: contracts/openapi/openapi.yaml
 # Related docs:
-# - docs/_canon/SYSTEM_SCOPE.md
 # - docs/hbtrack/modulos/analytics/MODULE_SCOPE_ANALYTICS.md
+# - docs/hbtrack/modulos/analytics/DOMAIN_RULES_ANALYTICS.md
+# - docs/hbtrack/modulos/analytics/INVARIANTS_ANALYTICS.md
 #
-# Add path items here following OpenAPI 3.1 Path Item Object spec.
-# Each path must belong exclusively to this module (LAYOUT section 6).
+# IMPORTANTE: analytics é módulo de MÉTRICAS DERIVADAS, não source of truth.
+# DR-ANL-001: analytics é soberano apenas de filtros, janelas temporais, granularidade, projeções.
+# DR-ANL-005: analytics não reescreve regras de negócio de módulos soberanos.
+
+/analytics/snapshots:
+  get:
+    operationId: listAnalyticsSnapshots
+    summary: List analytics snapshots (derived metrics)
+    description: >
+      Returns a paginated list of analytics snapshots (derived metrics).
+      Snapshots are computed extracts with explicit time windows, granularity, and source module provenance.
+      IMPORTANT: analytics does not own raw data; all snapshots declare sourceModuleLabels.
+      Filters: sourceModule, metricKey, timeWindow, granularity, dateFrom, dateTo.
+    security:
+      - HTTPBearer: []
+    tags:
+      - analytics
+    parameters:
+      - name: sourceModule
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: [TRAINING, WELLNESS]
+        description: Filter by source module for the canonical derived signals currently supported.
+      - name: metricKey
+        in: query
+        required: false
+        schema:
+          $ref: "../components/schemas/analytics/analytics_metric_key.yaml"
+        description: Filter by canonical metric key.
+      - name: timeWindow
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+            [
+              LAST_7_DAYS,
+              LAST_14_DAYS,
+              LAST_28_DAYS,
+              LAST_90_DAYS,
+              LAST_YEAR,
+              CUSTOM,
+            ]
+        description: Filter by time window label.
+      - name: granularity
+        in: query
+        required: false
+        schema:
+          type: string
+          enum: [DAILY, WEEKLY, MONTHLY]
+        description: Filter by granularity label.
+      - name: dateFrom
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+        description: Filter snapshots computed from this date (ISO 8601).
+      - name: dateTo
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+        description: Filter snapshots computed until this date (ISO 8601).
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+      - name: pageToken
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Pagination token from previous response.
+    responses:
+      "200":
+        description: Paginated list of analytics snapshots.
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [data, nextPageToken]
+              additionalProperties: false
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: "../components/schemas/analytics/analytics_snapshot.yaml"
+                nextPageToken:
+                  type: string
+                  description: Token for next page, null if no more pages.
+      "401":
+        description: Unauthorized
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden (team-level access control)
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "422":
+        description: Invalid query parameters
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+  post:
+    operationId: createAnalyticsSnapshot
+    summary: Create a new analytics snapshot
+    description: >
+      Creates a new derived metric snapshot.
+      Snapshot must declare: metricKey, sourceModuleLabels, timeWindowLabel, granularityLabel, refreshModeLabel.
+      IMPORTANT: All KPIs must have canonical definition before becoming contract (DR-ANL-002).
+      Only admin, coordinator and coach can create staff-level snapshots.
+    security:
+      - HTTPBearer: []
+    tags:
+      - analytics
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              [
+                metricKey,
+                sourceModuleLabels,
+                timeWindowLabel,
+                granularityLabel,
+                refreshModeLabel,
+              ]
+            additionalProperties: false
+            properties:
+              metricKey:
+                $ref: "../components/schemas/analytics/analytics_metric_key.yaml"
+              sourceModuleLabels:
+                type: array
+                items:
+                  type: string
+                  enum: [TRAINING, WELLNESS]
+                uniqueItems: true
+                minItems: 1
+                description: List of source modules (e.g., ["TRAINING", "WELLNESS"]).
+              timeWindowLabel:
+                type: string
+                enum:
+                  [
+                    LAST_7_DAYS,
+                    LAST_14_DAYS,
+                    LAST_28_DAYS,
+                    LAST_90_DAYS,
+                    LAST_YEAR,
+                    CUSTOM,
+                  ]
+                description: Time window label used to compute this snapshot.
+              granularityLabel:
+                type: string
+                enum: [DAILY, WEEKLY, MONTHLY]
+                description: Granularity label used to compute this snapshot.
+              filterSummary:
+                type: string
+                maxLength: 500
+                description: Summary of filters applied (e.g., "team=senior-male, minTrainingSessions=5").
+              projectionKey:
+                type: string
+                maxLength: 80
+                description: Projection/dashboard key for grouping (e.g., "team-load-overview").
+              refreshModeLabel:
+                type: string
+                maxLength: 40
+                enum: [scheduled, on_demand, streaming]
+                description: How snapshot is refreshed (scheduled daily, on-demand query, streaming).
+    responses:
+      "201":
+        description: Analytics snapshot created successfully.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/analytics/analytics_snapshot.yaml"
+      "400":
+        description: Invalid request (missing required fields or invalid refresh mode).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "401":
+        description: Unauthorized
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden (insufficient staff analytics access)
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "422":
+        description: Unprocessable entity (validation error)
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with existing snapshot identity or incompatible canonical metadata
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+/analytics/snapshots/{snapshotId}:
+  get:
+    operationId: getAnalyticsSnapshot
+    summary: Get a specific analytics snapshot
+    description: >
+      Retrieves a single snapshot by ID.
+      Snapshot includes all metadata: source modules, time window, granularity, refresh mode, computed timestamp.
+    security:
+      - HTTPBearer: []
+    tags:
+      - analytics
+    parameters:
+      - name: snapshotId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          x-semantic-id: core.resource.id.v1
+    responses:
+      "200":
+        description: Analytics snapshot retrieved.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/analytics/analytics_snapshot.yaml"
+      "401":
+        description: Unauthorized
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden (team-level access)
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Snapshot not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+/analytics/dashboards:
+  get:
+    operationId: listAnalyticsDashboards
+    summary: List available analytics dashboards/projections
+    description: >
+      Returns list of available dashboard projections and their metadata.
+      Each dashboard is a named collection of related metrics (e.g., "team-load-overview", "athlete-readiness-tracker").
+      Dashboards define which snapshots are grouped together for visualization.
+    security:
+      - HTTPBearer: []
+    tags:
+      - analytics
+    parameters:
+      - name: projectionType
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+            [
+              team_overview,
+              athlete_readiness,
+              injury_risk,
+              training_load,
+              performance_trend,
+            ]
+        description: Filter dashboards by projection type/category.
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+      - name: pageToken
+        in: query
+        required: false
+        schema:
+          type: string
+    responses:
+      "200":
+        description: List of available dashboards.
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [data, nextPageToken]
+              additionalProperties: false
+              properties:
+                data:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      [
+                        projectionKey,
+                        projectionType,
+                        displayName,
+                        description,
+                        sourceModuleLabels,
+                      ]
+                    additionalProperties: false
+                    properties:
+                      projectionKey:
+                        type: string
+                        description: Unique key for projectionKey (for snapshot filtering).
+                      projectionType:
+                        type: string
+                        enum:
+                          [
+                            team_overview,
+                            athlete_readiness,
+                            injury_risk,
+                            training_load,
+                            performance_trend,
+                          ]
+                      displayName:
+                        type: string
+                        description: Human-friendly dashboard name.
+                      description:
+                        type: string
+                        description: What this dashboard visualizes and why.
+                      sourceModuleLabels:
+                        type: array
+                        items:
+                          type: string
+                          enum: [TRAINING, WELLNESS]
+                        description: Modules this dashboard depends on.
+                nextPageToken:
+                  type: string
+      "401":
+        description: Unauthorized
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+/analytics/query:
+  post:
+    operationId: queryAnalyticsData
+    summary: Execute advanced analytics query
+    description: >
+      Execute a structured analytics query across canonical derived signals.
+      Query uses a sovereign request schema with closed metric catalog and structured filters.
+      IMPORTANT: This endpoint returns derived data only; never use to modify source data.
+    security:
+      - HTTPBearer: []
+    tags:
+      - analytics
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/schemas/analytics/analytics_query_request.yaml"
+    responses:
+      "200":
+        description: Query results (time-series or aggregated metrics).
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/analytics/analytics_query_response.yaml"
+      "400":
+        description: Invalid query payload or malformed request structure.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "401":
+        description: Unauthorized
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Forbidden (insufficient access to source modules)
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "422":
+        description: Unprocessable entity (invalid metric key, source module, or time window combination)
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict between declared scope and structured filters
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"

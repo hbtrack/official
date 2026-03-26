@@ -54,9 +54,19 @@
       - name: status
         in: query
         required: false
-        description: Filter by status (e.g., DRAFT, SCHEDULED, IN_PROGRESS, PENDING_REVIEW, READONLY)
+        description: >
+          Filter by canonical status (ADR-017). One of: DRAFT, SCHEDULED, PUBLISHED,
+          IN_PROGRESS, COMPLETED, CANCELLED, ARCHIVED.
         schema:
           type: string
+          enum:
+            - DRAFT
+            - SCHEDULED
+            - PUBLISHED
+            - IN_PROGRESS
+            - COMPLETED
+            - CANCELLED
+            - ARCHIVED
     responses:
       "200":
         description: Successful response
@@ -92,9 +102,14 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA: definir security scheme quando identity_access estiver contratado
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA: definir security scheme quando identity_access estiver contratado
   post:
     tags: [training]
     summary: Create training session
@@ -123,15 +138,18 @@
               organizationId:
                 type: string
                 format: uuid
-                pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+                x-semantic-id: organizations.organization.id.v1
               teamId:
                 type: string
                 format: uuid
-                pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+                x-semantic-id: teams.team.id.v1
               seasonId:
                 type: string
                 format: uuid
                 pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                x-semantic-id: seasons.season.id.v1
               microcycleId:
                 type: string
                 format: uuid
@@ -243,9 +261,20 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA: definir security scheme quando identity_access estiver contratado
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA: definir security scheme quando identity_access estiver contratado
 /training-sessions/{id}:
   get:
     tags: [training]
@@ -290,9 +319,516 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
 
+# ---------------------------------------------------------------------------
+# SESSION BLOCKS — TRAIN-DEC-049 | DEFER-TRAIN-P2-006 resolved 2026-03-16
+# DSL operacional da sessão. INV-TRAIN-083 (Elastic Sum Rule) enforced.
+# TRAIN-DEC-047: referencia exercise_id + exercise_version_id; nunca embute Exercise.
+# ADR-018 (HYBRID): CRUD enquanto sessão em DRAFT/SCHEDULED/PUBLISHED.
+# ---------------------------------------------------------------------------
+/training-sessions/{id}/blocks:
+  get:
+    tags: [training]
+    summary: List session blocks
+    description: >
+      Lista todos os blocos de uma sessão em ordem de orderIndex.
+      TRAIN-DEC-049. OWASP API1:2023 (BOLA): authz por sessão validado server-side.
+    operationId: listSessionBlocks
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Training session ID
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Ordered list of session blocks
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [data]
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: ../components/schemas/training/session_block.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Session not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+  post:
+    tags: [training]
+    summary: Add block to session
+    description: >
+      Adiciona um novo bloco à sessão. Permitido apenas quando sessão em DRAFT, SCHEDULED ou PUBLISHED.
+      INV-TRAIN-083 (Elastic Sum Rule): SUM(durationMinutes) ≤ durationPlannedMinutes + MIN(durationPlannedMinutes × 0.10, 10).
+      Violação dentro da tolerância → 200 com Warning. Fora da tolerância → 422.
+      TRAIN-DEC-047: exerciseVersionId obrigatório quando exerciseId presente.
+      OWASP API1:2023 (BOLA), API3:2023 (broken object property level authz).
+    operationId: addSessionBlock
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Training session ID
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - phase
+              - orderIndex
+              - durationMinutes
+              - blockObjective
+              - intensity
+              - isOptional
+            properties:
+              phase:
+                type: string
+                x-domain-enum-ref: session_block_phase
+                enum:
+                  - WARMUP
+                  - ACTIVATION
+                  - TECHNICAL
+                  - DECISION_MAKING
+                  - TACTICAL
+                  - REDUCED_GAME
+                  - COOLDOWN
+              orderIndex:
+                type: integer
+                minimum: 0
+              durationMinutes:
+                type: integer
+                minimum: 1
+                maximum: 240
+              blockObjective:
+                type: string
+                minLength: 3
+                maxLength: 300
+              intensity:
+                type: string
+                x-domain-enum-ref: session_block_intensity
+                enum:
+                  - LOW
+                  - MEDIUM
+                  - HIGH
+                  - MAXIMUM
+              exerciseId:
+                type: string
+                format: uuid
+                pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                x-semantic-id: exercises.exercise.id.v1
+              exerciseVersionId:
+                type: string
+                format: uuid
+                pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                x-semantic-id: exercises.exercise_version.id.v1
+                description: Required when exerciseId is present. TRAIN-DEC-048.
+              notes:
+                type: string
+                maxLength: 1000
+              isOptional:
+                type: boolean
+    responses:
+      "201":
+        description: Block created
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/session_block.yaml
+      "422":
+        description: >
+          Validation error. Includes: Elastic Sum Rule violation (INV-TRAIN-083),
+          exerciseVersionId missing when exerciseId present (TRAIN-DEC-048),
+          session not in mutable state.
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Session not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: Conflict — orderIndex already taken (use reorder endpoint)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+/training-sessions/{id}/blocks/{blockId}:
+  get:
+    tags: [training]
+    summary: Get session block
+    description: Returns a specific training session block by its ID, including all exercises and configuration.
+    operationId: getSessionBlock
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: blockId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Session block
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/session_block.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Block or session not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+  patch:
+    tags: [training]
+    summary: Update session block
+    description: >
+      Atualiza campos de um bloco existente. Permitido apenas quando sessão em DRAFT, SCHEDULED ou PUBLISHED.
+      INV-TRAIN-083 reaplicado após atualização de durationMinutes.
+      exerciseVersionId obrigatório se exerciseId for alterado ou já presente. TRAIN-DEC-048.
+    operationId: updateSessionBlock
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: blockId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            minProperties: 1
+            properties:
+              phase:
+                type: string
+                x-domain-enum-ref: session_block_phase
+                enum:
+                  - WARMUP
+                  - ACTIVATION
+                  - TECHNICAL
+                  - DECISION_MAKING
+                  - TACTICAL
+                  - REDUCED_GAME
+                  - COOLDOWN
+              durationMinutes:
+                type: integer
+                minimum: 1
+                maximum: 240
+              blockObjective:
+                type: string
+                minLength: 3
+                maxLength: 300
+              intensity:
+                type: string
+                x-domain-enum-ref: session_block_intensity
+                enum:
+                  - LOW
+                  - MEDIUM
+                  - HIGH
+                  - MAXIMUM
+              exerciseId:
+                type: string
+                format: uuid
+                pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                x-semantic-id: exercises.exercise.id.v1
+              exerciseVersionId:
+                type: string
+                format: uuid
+                pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                x-semantic-id: exercises.exercise_version.id.v1
+              notes:
+                type: string
+                maxLength: 1000
+              isOptional:
+                type: boolean
+    responses:
+      "200":
+        description: Updated block
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/session_block.yaml
+      "422":
+        description: Validation error (INV-TRAIN-083, TRAIN-DEC-048, immutable session state)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Block or session not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+  delete:
+    tags: [training]
+    summary: Remove block from session
+    description: >
+      Remove um bloco da sessão. Permitido apenas quando sessão em DRAFT, SCHEDULED ou PUBLISHED.
+      Hard delete (bloco não é fato histórico neste estado). ADR-018.
+    operationId: deleteSessionBlock
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: blockId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "204":
+        description: Block removed
+      "422":
+        description: Session in immutable state (IN_PROGRESS, COMPLETED, ARCHIVED, CANCELLED)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Block or session not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+/training-sessions/{id}/blocks/reorder:
+  post:
+    tags: [training]
+    summary: Reorder session blocks
+    description: >
+      Reordena todos os blocos da sessão em uma única operação atômica.
+      Recebe lista completa de IDs na nova ordem. Server reatribui orderIndex 0..N-1.
+      Permitido apenas quando sessão em DRAFT, SCHEDULED ou PUBLISHED.
+    operationId: reorderSessionBlocks
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required: [blockIds]
+            properties:
+              blockIds:
+                type: array
+                items:
+                  type: string
+                  format: uuid
+                minItems: 1
+                description: Complete ordered list of all block IDs for this session.
+    responses:
+      "200":
+        description: Reordered blocks in new order
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [data]
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: ../components/schemas/training/session_block.yaml
+      "422":
+        description: blockIds do not match session's blocks, or session in immutable state
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Session not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
   patch:
     tags: [training]
     summary: Update training session
@@ -383,7 +919,17 @@
                 type: string
               status:
                 type: string
-                pattern: "^[A-Z0-9]+(?:_[A-Z0-9]+)*$"
+                enum:
+                  - DRAFT
+                  - SCHEDULED
+                  - PUBLISHED
+                  - IN_PROGRESS
+                  - COMPLETED
+                  - CANCELLED
+                description: >
+                  Transition to canonical state (ADR-017). ARCHIVED is set by system
+                  automation only (after 60 days post-COMPLETED). Client-initiable
+                  transitions only (see ADR-017 transition table).
     responses:
       "200":
         description: Updated
@@ -415,9 +961,20 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
   delete:
     tags: [training]
     summary: Delete training session
@@ -456,25 +1013,139 @@
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
-
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
 /training-sessions/{id}/attendance:
-  post:
+  get:
     tags: [training]
-    summary: Register athlete attendance
+    summary: List attendance records for a session
     description: >
-      Registra presença de atleta em sessão de treino.
-
-      Regras aplicadas:
-      - OWASP API1:2023 (BOLA): validar que athleteId pertence à equipe/sessão
-      - OWASP API6:2023: proteger contra abuso (rate limit recomendado)
-    operationId: registerTrainingAttendance
+      Returns all presence_registered facts for the session (TRAIN-DEC-029 HYBRID).
+      INV-TRAIN-016: requires authentication; no unscoped parallel route.
+      INV-TRAIN-064: official attendance consolidated at POST /{id}/complete.
+      Before completion, records are provisional.
+    operationId: listSessionAttendance
     parameters:
       - name: id
         in: path
         required: true
-        description: Training session ID
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Attendance list
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - items
+              properties:
+                items:
+                  type: array
+                  items:
+                    type: object
+                    additionalProperties: false
+                    required:
+                      - athleteId
+                      - status
+                      - recordedAt
+                    properties:
+                      athleteId:
+                        type: string
+                        format: uuid
+                        pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+                        x-semantic-id: users.athlete.id.v1
+                      status:
+                        type: string
+                        enum:
+                          - PRESENT
+                          - ABSENT
+                          - JUSTIFIED
+                          - PRECONFIRMED
+                        description: >
+                          INV-TRAIN-063: PRECONFIRMED = athlete self-report, not official.
+                          INV-TRAIN-064: PRESENT/ABSENT/JUSTIFIED consolidated at complete.
+                      recordedAt:
+                        type: string
+                        format: date-time
+                        pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+                      source:
+                        type: string
+                        enum:
+                          - coach_input
+                          - athlete_selfcheck
+                          - correction
+                        description: INV-TRAIN-030 — correction requires correctionByUserId.
+                      correctionByUserId:
+                        type: string
+                        format: uuid
+                        pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                        description: Required when source=correction (INV-TRAIN-030).
+                      correctionAt:
+                        type: string
+                        format: date-time
+                        pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+                        description: Required when source=correction (INV-TRAIN-030).
+                      justificationReason:
+                        type: string
+                        maxLength: 255
+                        description: Reason when status=JUSTIFIED.
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+  post:
+    tags: [training]
+    summary: Record athlete attendance (presence_registered append-only fact)
+    description: >
+      Appends a presence_registered fact (TRAIN-DEC-029 HYBRID).
+      Emits TRAINING_ATTENDANCE_MARKED event.
+      INV-TRAIN-063: athletes may PRECONFIRM before session; not official.
+      INV-TRAIN-064: official consolidation at POST /{id}/complete.
+      INV-TRAIN-030: source=correction requires correctionByUserId + correctionAt.
+      TRAIN-DEC-037: observedAt ≠ ingested_at; server sets ingested_at = now().
+    operationId: recordSessionAttendance
+    parameters:
+      - name: id
+        in: path
+        required: true
         schema:
           type: string
           format: uuid
@@ -487,54 +1158,75 @@
             additionalProperties: false
             required:
               - athleteId
-              - present
+              - status
             properties:
               athleteId:
                 type: string
                 format: uuid
-                pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
                 x-semantic-id: users.athlete.id.v1
-              present:
-                type: boolean
-              arrivalTime:
+              status:
+                type: string
+                enum:
+                  - PRESENT
+                  - ABSENT
+                  - JUSTIFIED
+                  - PRECONFIRMED
+                description: PRECONFIRMED allowed before session start (INV-TRAIN-063).
+              source:
+                type: string
+                enum:
+                  - coach_input
+                  - athlete_selfcheck
+                  - correction
+                default: coach_input
+              correctionByUserId:
+                type: string
+                format: uuid
+                pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                description: Required when source=correction (INV-TRAIN-030).
+              correctionAt:
                 type: string
                 format: date-time
-              notes:
+                pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+                description: Required when source=correction (INV-TRAIN-030).
+              justificationReason:
                 type: string
-                maxLength: 500
+                maxLength: 255
+                description: Required when status=JUSTIFIED.
+              observedAt:
+                type: string
+                format: date-time
+                pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+                description: >
+                  When the presence fact was observed. TRAIN-DEC-037.
+                  If omitted, server uses now(). Use for retroactive corrections.
     responses:
       "201":
-        description: Attendance registered
+        description: Attendance fact recorded
         content:
           application/json:
             schema:
               type: object
+              additionalProperties: false
+              required:
+                - athleteId
+                - status
+                - recordedAt
               properties:
-                attendanceId:
-                  type: string
-                  format: uuid
-                  pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
                 athleteId:
                   type: string
                   format: uuid
-                  pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                  pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
                   x-semantic-id: users.athlete.id.v1
-                trainingSessionId:
+                status:
                   type: string
-                  format: uuid
-                  pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
-                  x-semantic-id: training.session.id.v1
-                present:
-                  type: boolean
-                arrivalTime:
-                  type: string
-                  format: date-time
-                notes:
-                  type: string
-                createdAt:
+                recordedAt:
                   type: string
                   format: date-time
                   pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+                source:
+                  type: string
       "400":
         description: Validation error
         content:
@@ -554,16 +1246,3207 @@
             schema:
               $ref: ../components/schemas/shared/problem.yaml
       "404":
+        description: Session not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+/training-sessions/{id}/wellness-pre:
+  post:
+    tags: [training]
+    summary: Submit pre-training wellness
+    description: >
+      Atleta submete wellness pré-treino para a sessão.
+
+      Regras aplicadas:
+      - SS-TRAIN-003 / INV-TRAIN-002: bloqueado se NOW ≥ session_at - 2h (DR-TRAIN-004)
+      - INV-TRAIN-009: único por (training_session_id, athlete_id) — conflito → 409
+      - OWASP API1:2023 (BOLA): atleta só pode submeter para si mesmo
+      - OWASP API5:2023 (BFLA): staff pode submeter em nome do atleta com permissão explícita
+    operationId: submitWellnessPre
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Training session ID
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - athleteId
+              - sleepQuality
+              - sleepHours
+            properties:
+              athleteId:
+                type: string
+                format: uuid
+                pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+                x-semantic-id: users.athlete.id.v1
+              sleepQuality:
+                type: integer
+                minimum: 1
+                maximum: 5
+                description: "Sleep quality 1–5: 1=very poor, 5=excellent (SS-TRAIN-005, INV-TRAIN-034)"
+              sleepHours:
+                type: number
+                minimum: 0
+                maximum: 24
+                description: "Self-reported sleep hours [0, 24] (SS-TRAIN-006, INV-TRAIN-033)"
+    responses:
+      "201":
+        description: Wellness pre submitted
+        headers:
+          Location:
+            description: URI of the created resource
+            schema:
+              type: string
+              format: uri
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/wellness_pre.yaml
+      "400":
+        description: Validation error or submission outside allowed window (DR-TRAIN-004 / SS-TRAIN-003)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden (BOLA — athlete submitting for another athlete)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
         description: Training session or athlete not found
         content:
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
       "409":
-        description: Attendance already registered
+        description: Wellness pre already submitted for this athlete/session (INV-TRAIN-009)
         content:
           application/problem+json:
             schema:
               $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
     security:
-      - {} # OWASP API5:2023 BFLA
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+/training-sessions/{id}/wellness-pre/{athleteId}:
+  get:
+    tags: [training]
+    summary: Get pre-training wellness for athlete
+    description: >
+      Retorna wellness pré-treino de um atleta para a sessão.
+
+      Regras aplicadas:
+      - OWASP API1:2023 (BOLA): atleta vê apenas próprio registro; staff com permissão vê qualquer
+      - INV-TRAIN-026: acesso de staff a dados de atleta registrado em audit_log (LGPD)
+    operationId: getWellnessPre
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Training session ID
+        schema:
+          type: string
+          format: uuid
+      - name: athleteId
+        in: path
+        required: true
+        description: Athlete user ID
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Wellness pre record
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/wellness_pre.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden (BOLA)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Training session, athlete, or wellness record not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+  patch:
+    tags: [training]
+    summary: Update pre-training wellness
+    description: >
+      Atualiza wellness pré-treino. Bloqueado fora da janela de submissão (INV-TRAIN-002).
+
+      Regras aplicadas:
+      - INV-TRAIN-002 / SS-TRAIN-003: bloqueado se NOW ≥ session_at - 2h → 400
+      - OWASP API3:2023 (BOPLA): allowlist de propriedades
+      - OWASP API1:2023 (BOLA): apenas o próprio atleta ou staff com permissão
+    operationId: updateWellnessPre
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: athleteId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              sleepQuality:
+                type: integer
+                minimum: 1
+                maximum: 5
+              sleepHours:
+                type: number
+                minimum: 0
+                maximum: 24
+    responses:
+      "200":
+        description: Updated
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/wellness_pre.yaml
+      "400":
+        description: Validation error or update outside allowed window (INV-TRAIN-002)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden (BOLA)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+/training-sessions/{id}/wellness-post:
+  post:
+    tags: [training]
+    summary: Submit post-training wellness
+    description: >
+      Atleta submete wellness pós-treino (RPE + carga efetiva).
+      internal_load é calculado server-side: minutesEffective × sessionRpe (SS-TRAIN-001, INV-TRAIN-021).
+
+      Regras aplicadas:
+      - INV-TRAIN-010: único por (training_session_id, athlete_id)
+      - INV-TRAIN-032 / SS-TRAIN-002: sessionRpe ∈ [0, 10]
+      - INV-TRAIN-070: aceita notes para registro conversacional
+      - OWASP API1:2023 (BOLA): atleta submete para si mesmo
+    operationId: submitWellnessPost
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Training session ID
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - athleteId
+              - sessionRpe
+              - minutesEffective
+            properties:
+              athleteId:
+                type: string
+                format: uuid
+                pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+                x-semantic-id: users.athlete.id.v1
+              sessionRpe:
+                type: number
+                minimum: 0
+                maximum: 10
+                description: >
+                  Session RPE CR-10 scale. Collect 20–30 min post-session (SS-TRAIN-002).
+                  Domain [0, 10] — INV-TRAIN-032. Fora do domínio → 400.
+              minutesEffective:
+                type: integer
+                minimum: 1
+                maximum: 1440
+                description: >
+                  Effective session duration in minutes.
+                  Used to compute internal_load = minutesEffective × sessionRpe (SS-TRAIN-001).
+              notes:
+                type: string
+                maxLength: 500
+                description: "Optional conversational feedback (INV-TRAIN-070)"
+    responses:
+      "201":
+        description: Wellness post submitted
+        headers:
+          Location:
+            description: URI of the created resource
+            schema:
+              type: string
+              format: uri
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/wellness_post.yaml
+      "400":
+        description: Validation error (e.g., sessionRpe out of range — INV-TRAIN-032)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden (BOLA — athlete submitting for another)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Training session or athlete not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: Wellness post already submitted for this athlete/session (INV-TRAIN-010)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+/training-sessions/{id}/wellness-post/{athleteId}:
+  get:
+    tags: [training]
+    summary: Get post-training wellness for athlete
+    description: >
+      Retorna wellness pós-treino de um atleta para a sessão.
+
+      Regras:
+      - OWASP API1:2023 (BOLA): atleta vê apenas próprio; staff com permissão vê qualquer
+      - INV-TRAIN-026: acesso de staff registrado em audit_log (LGPD)
+    operationId: getWellnessPost
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: athleteId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Wellness post record
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/wellness_post.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden (BOLA)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Training session, athlete, or wellness record not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+  patch:
+    tags: [training]
+    summary: Update post-training wellness
+    description: >
+      Atualiza wellness pós-treino. Bloqueado após janela de 24h (INV-TRAIN-003 / SS-TRAIN-004).
+      internal_load é recalculado server-side ao atualizar sessionRpe ou minutesEffective.
+
+      Regras:
+      - INV-TRAIN-003 / SS-TRAIN-004: bloqueado se NOW ≥ created_at + 24h → 400
+      - OWASP API3:2023 (BOPLA): allowlist de propriedades
+      - OWASP API1:2023 (BOLA): apenas o próprio atleta ou staff com permissão
+    operationId: updateWellnessPost
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: athleteId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              sessionRpe:
+                type: number
+                minimum: 0
+                maximum: 10
+              minutesEffective:
+                type: integer
+                minimum: 1
+                maximum: 1440
+              notes:
+                type: string
+                maxLength: 500
+    responses:
+      "200":
+        description: Updated (internalLoad recalculated server-side)
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/wellness_post.yaml
+      "400":
+        description: Validation error or update outside 24h window (INV-TRAIN-003 / SS-TRAIN-004)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden (BOLA)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+/mesocycles:
+  get:
+    tags: [training]
+    summary: List mesocycles
+    description: >
+      Lista mesociclos com paginação cursor-based.
+
+      Regras:
+      - OWASP API1:2023 (BOLA): filtrado por organização/equipe do solicitante
+      - OWASP API4:2023: pageSize limitado (max: 100)
+    operationId: listMesocycles
+    parameters:
+      - $ref: ../components/parameters/pageSize.yaml
+      - $ref: ../components/parameters/pageToken.yaml
+      - name: organizationId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: teamId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: macrocycleId
+        in: query
+        required: false
+        description: Filter by parent macrocycle (managed by seasons module)
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Successful response
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [items]
+              additionalProperties: false
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: ../components/schemas/training/mesocycle.yaml
+                nextPageToken:
+                  type: string
+      "400":
+        description: Invalid request
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+  post:
+    tags: [training]
+    summary: Create mesocycle
+    description: >
+      Cria novo mesociclo de periodização.
+
+      Regras:
+      - INV-TRAIN-037: startDate MUST be strictly before endDate → 400 se violado
+      - INV-TRAIN-055: sobreposição de datas com outros mesociclos da mesma equipe é PERMITIDA
+      - DR-TRAIN-H04: periodização em 4 níveis (macrociclo → mesociclo → microciclo → sessão)
+      - OWASP API3:2023 (BOPLA): allowlist de propriedades
+      - OWASP API5:2023 (BFLA): apenas treinador ou coordenador
+    operationId: createMesocycle
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - organizationId
+              - teamId
+              - name
+              - startDate
+              - endDate
+            properties:
+              organizationId:
+                type: string
+                format: uuid
+                pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+                x-semantic-id: organizations.organization.id.v1
+              teamId:
+                type: string
+                format: uuid
+                pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+                x-semantic-id: teams.team.id.v1
+              macrocycleId:
+                type: string
+                format: uuid
+                pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                description: Optional link to macrocycle (managed by seasons module)
+              name:
+                type: string
+                minLength: 1
+                maxLength: 120
+              cycleType:
+                type: string
+                maxLength: 32
+              startDate:
+                type: string
+                format: date
+                pattern: ^\d{4}-\d{2}-\d{2}$
+                description: "ISO 8601 date (ADR-009). MUST be < endDate (INV-TRAIN-037)."
+              endDate:
+                type: string
+                format: date
+                pattern: ^\d{4}-\d{2}-\d{2}$
+                description: "ISO 8601 date (ADR-009). MUST be > startDate (INV-TRAIN-037)."
+              mainObjective:
+                type: string
+                maxLength: 255
+    responses:
+      "201":
+        description: Created
+        headers:
+          Location:
+            description: URI of the created mesocycle
+            schema:
+              type: string
+              format: uri
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/mesocycle.yaml
+      "400":
+        description: Validation error (e.g., startDate >= endDate — INV-TRAIN-037)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden (requires treinador or coordenador role)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Referenced resource not found (e.g., teamId, macrocycleId)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+/mesocycles/{id}:
+  get:
+    tags: [training]
+    summary: Get mesocycle by ID
+    description: Returns the full mesocycle details including its associated microcycles.
+    operationId: getMesocycleById
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Mesocycle details
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/mesocycle.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden (BOLA)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+  patch:
+    tags: [training]
+    summary: Update mesocycle
+    description: >
+      Atualiza mesociclo (atualização parcial).
+
+      Regras:
+      - INV-TRAIN-037: startDate MUST be < endDate se ambos enviados
+      - OWASP API3:2023 (BOPLA): allowlist de propriedades
+    operationId: updateMesocycle
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              name:
+                type: string
+                minLength: 1
+                maxLength: 120
+              cycleType:
+                type: string
+                maxLength: 32
+              startDate:
+                type: string
+                format: date
+                pattern: ^\d{4}-\d{2}-\d{2}$
+              endDate:
+                type: string
+                format: date
+                pattern: ^\d{4}-\d{2}-\d{2}$
+              mainObjective:
+                type: string
+                maxLength: 255
+              macrocycleId:
+                type: string
+                format: uuid
+                pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    responses:
+      "200":
+        description: Updated
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/mesocycle.yaml
+      "400":
+        description: Validation error (e.g., startDate >= endDate — INV-TRAIN-037)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+/microcycles:
+  get:
+    tags: [training]
+    summary: List microcycles
+    description: >
+      Lista microciclos com paginação cursor-based.
+
+      Regras:
+      - OWASP API1:2023 (BOLA): filtrado por organização/equipe do solicitante
+      - OWASP API4:2023: pageSize limitado (max: 100)
+    operationId: listMicrocycles
+    parameters:
+      - $ref: ../components/parameters/pageSize.yaml
+      - $ref: ../components/parameters/pageToken.yaml
+      - name: organizationId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: teamId
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+      - name: mesocycleId
+        in: query
+        required: false
+        description: Filter by parent mesocycle
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Successful response
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [items]
+              additionalProperties: false
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: ../components/schemas/training/microcycle.yaml
+                nextPageToken:
+                  type: string
+      "400":
+        description: Invalid request
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+  post:
+    tags: [training]
+    summary: Create microcycle
+    description: >
+      Cria novo microciclo (semana de treinamento).
+
+      Regras:
+      - INV-TRAIN-054: mesocycleId MUST reference a valid mesocycle
+      - INV-TRAIN-043: weekStart MUST be strictly before weekEnd → 400 se violado
+      - INV-TRAIN-056: weekStart e weekEnd MUST be fully contained within parent mesocycle interval → 422 se violado
+      - DR-TRAIN-H04: 4-level periodization (macro → meso → micro → sessão)
+      - OWASP API3:2023 (BOPLA): allowlist de propriedades
+    operationId: createMicrocycle
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - organizationId
+              - mesocycleId
+              - name
+              - weekStart
+              - weekEnd
+            properties:
+              organizationId:
+                type: string
+                format: uuid
+                pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+                x-semantic-id: organizations.organization.id.v1
+              teamId:
+                type: string
+                format: uuid
+                pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+                x-semantic-id: teams.team.id.v1
+              mesocycleId:
+                type: string
+                format: uuid
+                pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              name:
+                type: string
+                minLength: 1
+                maxLength: 120
+              weekStart:
+                type: string
+                format: date
+                pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+                description: >
+                  Week start date (ISO 8601, ADR-009).
+                  MUST be < weekEnd (INV-TRAIN-043).
+                  MUST be within mesocycle interval (INV-TRAIN-056).
+              weekEnd:
+                type: string
+                format: date
+                pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+                description: >
+                  Week end date (ISO 8601, ADR-009).
+                  MUST be > weekStart (INV-TRAIN-043).
+                  MUST be within mesocycle interval (INV-TRAIN-056).
+              weekNumber:
+                type: integer
+                minimum: 1
+              mainObjective:
+                type: string
+                maxLength: 255
+    responses:
+      "201":
+        description: Created
+        headers:
+          Location:
+            description: URI of the created microcycle
+            schema:
+              type: string
+              format: uri
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/microcycle.yaml
+      "400":
+        description: Validation error (e.g., weekStart >= weekEnd — INV-TRAIN-043)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden (requires treinador or coordenador role)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Referenced resource not found (e.g., mesocycleId, teamId)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Microcycle dates outside parent mesocycle interval (INV-TRAIN-056)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+/microcycles/{id}:
+  get:
+    tags: [training]
+    summary: Get microcycle by ID
+    description: Returns the full microcycle details including its associated training sessions.
+    operationId: getMicrocycleById
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Microcycle details
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/microcycle.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden (BOLA)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+  patch:
+    tags: [training]
+    summary: Update microcycle
+    description: >
+      Atualiza microciclo (atualização parcial).
+
+      Regras:
+      - INV-TRAIN-043: weekStart MUST be < weekEnd se ambos enviados
+      - INV-TRAIN-056: datas atualizadas MUST permanecer dentro do intervalo do mesociclo pai
+      - OWASP API3:2023 (BOPLA): allowlist de propriedades
+    operationId: updateMicrocycle
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              name:
+                type: string
+                minLength: 1
+                maxLength: 120
+              weekStart:
+                type: string
+                format: date
+                pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+              weekEnd:
+                type: string
+                format: date
+                pattern: "^\\d{4}-\\d{2}-\\d{2}$"
+              weekNumber:
+                type: integer
+                minimum: 1
+              mainObjective:
+                type: string
+                maxLength: 255
+    responses:
+      "200":
+        description: Updated
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/microcycle.yaml
+      "400":
+        description: Validation error (e.g., weekStart >= weekEnd — INV-TRAIN-043)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Updated dates outside parent mesocycle interval (INV-TRAIN-056)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Session Lifecycle Transitions (TRAIN-DEC-029 HYBRID append-only facts)
+# ADR-017 FSM: DRAFT/SCHEDULED/PUBLISHED → IN_PROGRESS → COMPLETED
+# ─────────────────────────────────────────────────────────────────────────────
+/training-sessions/{id}/start:
+  post:
+    tags:
+      - Training Sessions
+    summary: Start a training session (transition to IN_PROGRESS)
+    description: >
+      Triggers the SESSION_STARTED append-only fact (TRAIN-DEC-029).
+      Allowed from PUBLISHED or SCHEDULED. Sets startedAt = now (server-side).
+      ADR-017 FSM.
+    operationId: startTrainingSession
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: false
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              delayMinutes:
+                type: integer
+                minimum: 0
+                maximum: 1440
+                description: Actual delay relative to scheduled sessionAt (if any).
+              coachNotes:
+                type: string
+                maxLength: 500
+                description: Optional coach annotation at session start.
+    responses:
+      "200":
+        description: Session transitioned to IN_PROGRESS
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/training_session.yaml
+      "400":
+        description: Invalid transition (e.g., session is COMPLETED or CANCELLED)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden (role does not allow starting this session)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: Conflict — session already IN_PROGRESS
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+/training-sessions/{id}/complete:
+  post:
+    tags:
+      - Training Sessions
+    summary: Complete a training session (transition to COMPLETED)
+    description: >
+      Triggers the SESSION_COMPLETED append-only fact (TRAIN-DEC-029).
+      Allowed from IN_PROGRESS only. Sets endedAt = now (server-side).
+      Captures Fase 1 planned vs actual: actualLoadRecorded, durationActualMinutes (TRAIN-DEC-045).
+      planned_content_snapshot frozen at PUBLISHED — never overwritten (FI-007).
+      INV-TRAIN-019: audit_log appended.
+    operationId: completeTrainingSession
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - durationActualMinutes
+            properties:
+              durationActualMinutes:
+                type: integer
+                minimum: 1
+                maximum: 1440
+                description: Actual session duration in minutes. TRAIN-DEC-045 Fase 1.
+              actualLoadRecorded:
+                type: integer
+                minimum: 0
+                maximum: 32767
+                description: Actual load recorded. Pair of plannedLoad. TRAIN-DEC-045 Fase 1.
+              planningDeviationFlag:
+                type: boolean
+                description: True if execution deviated significantly from plan.
+              deviationJustification:
+                type: string
+                maxLength: 500
+                description: >
+                  Required when planningDeviationFlag is true. INV-TRAIN-011.
+                  Minimum 50 characters for significant deviations.
+              executionOutcome:
+                type: string
+                minLength: 1
+                maxLength: 32
+                description: Structured outcome label (e.g., on_time, delayed, partial, interrupted).
+              coachNotes:
+                type: string
+                maxLength: 1000
+                description: Coach qualitative annotation (decision_rationale). TRAIN-DEC-021.
+    responses:
+      "200":
+        description: Session transitioned to COMPLETED
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/training_session.yaml
+      "400":
+        description: Validation error (e.g., deviationJustification required when flag=true)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: Conflict — session not IN_PROGRESS
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+
+# ---------------------------------------------------------------------------
+# EXECUTION RECORDS — TRAIN-DEC-007, TRAIN-DEC-008, TRAIN-DEC-009
+# Append-only execution facts. planned vs actual duality preserved.
+# Live adjustments require structured reason (TRAIN-DEC-009).
+# ADR-018 (HYBRID): append-only during IN_PROGRESS.
+# ---------------------------------------------------------------------------
+/training-sessions/{id}/execution-records:
+  get:
+    tags:
+      - Execution Records
+    summary: List execution records for a session
+    description: >
+      Returns all execution records for a session.
+      ExecutionRecord cannot exist without session context (TRAIN-DEC-007).
+    operationId: listExecutionRecords
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: executionType
+        in: query
+        schema:
+          type: string
+          x-domain-enum-ref: execution_type
+          enum:
+            - SESSION_EXECUTION
+            - BLOCK_EXECUTION
+            - LIVE_ADJUSTMENT
+            - CONSTRAINT_OVERRIDE
+            - ALTERNATE_EXERCISE
+            - LOAD_RECALCULATION
+      - name: blockId
+        in: query
+        schema:
+          type: string
+          format: uuid
+      - name: athleteId
+        in: query
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: List of execution records
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - data
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: ../components/schemas/training/execution_record.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Session not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: []
+  post:
+    tags:
+      - Execution Records
+    summary: Create an execution record for a session
+    description: >
+      Append-only execution fact. sessionId is immutable after creation (TRAIN-DEC-007).
+      planned vs actual fields are preserved separately (TRAIN-DEC-008).
+      LIVE_ADJUSTMENT and CONSTRAINT_OVERRIDE require adjustmentReasonType + coachRationale (TRAIN-DEC-009).
+      Idempotency key supported (TRAIN-DEC-038).
+      Produces audit_event (TRAIN-DEC-023).
+    operationId: createExecutionRecord
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: Idempotency-Key
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+        description: Client-supplied idempotency key (TRAIN-DEC-038).
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/training/execution_record.yaml
+    responses:
+      "201":
+        description: Execution record created
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/execution_record.yaml
+      "400":
+        description: Validation error (e.g., missing required reason for adjustment)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Session not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: Conflict — duplicate idempotency key
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "422":
+        description: Unprocessable entity — constraint violation
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: []
+/training-sessions/{id}/execution-records/{recordId}:
+  get:
+    tags:
+      - Execution Records
+    summary: Get a specific execution record
+    description: Returns a specific execution record for a training session, identified by its record ID.
+    operationId: getExecutionRecord
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: recordId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Execution record
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/execution_record.yaml
+      "404":
+        description: Not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: []
+
+# ---------------------------------------------------------------------------
+# FEEDBACK THREADS — TRAIN-DEC-010, TRAIN-DEC-015
+# Must be anchored to operational context. Must produce conversation outcome.
+# ---------------------------------------------------------------------------
+/training-sessions/{id}/feedback-threads:
+  get:
+    tags:
+      - Feedback Threads
+    summary: List feedback threads for a session
+    description: Returns all feedback threads anchored to this session. Can be filtered by context type and athlete.
+    operationId: listFeedbackThreads
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: contextType
+        in: query
+        schema:
+          type: string
+          x-domain-enum-ref: feedback_context_type
+          enum:
+            - SESSION
+            - BLOCK
+            - OBJECTIVE
+            - ATHLETE
+            - EVIDENCE
+            - GROUP
+      - name: athleteId
+        in: query
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: List of feedback threads
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - data
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: ../components/schemas/training/feedback_thread.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: []
+  post:
+    tags:
+      - Feedback Threads
+    summary: Create a feedback thread for a session
+    description: >
+      Feedback must reference an operational context (TRAIN-DEC-010).
+      Must produce a conversationOutcome (TRAIN-DEC-015).
+      Feedback without context or outcome is rejected.
+    operationId: createFeedbackThread
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/training/feedback_thread.yaml
+    responses:
+      "201":
+        description: Feedback thread created
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/feedback_thread.yaml
+      "400":
+        description: Validation error (missing context or outcome)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: []
+
+# ---------------------------------------------------------------------------
+# SESSION OBJECTIVES — TRAIN-DEC-004, TRAIN-DEC-005
+# Every session must have at least one. Every objective must have traceable origin.
+# ---------------------------------------------------------------------------
+/training-sessions/{id}/objectives:
+  get:
+    tags:
+      - Session Objectives
+    summary: List objectives for a session
+    description: Returns all objectives defined for the specified training session. Every session must have at least one objective (TRAIN-DEC-004).
+    operationId: listSessionObjectives
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: List of session objectives
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - data
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: ../components/schemas/training/session_objective.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: []
+  post:
+    tags:
+      - Session Objectives
+    summary: Add an objective to a session
+    description: >
+      Session must have at least one objective before transitioning from DRAFT (TRAIN-DEC-006).
+      Objective must declare a traceable origin (TRAIN-DEC-005).
+      MANUAL_COACH_RATIONALE origin requires originNotes (min 10 chars).
+    operationId: createSessionObjective
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/training/session_objective.yaml
+    responses:
+      "201":
+        description: Objective created
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/session_objective.yaml
+      "400":
+        description: Validation error (missing origin or originNotes for MANUAL)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: []
+
+# ---------------------------------------------------------------------------
+# ATTENTION QUEUE — TRAIN-DEC-027, INV-TRAIN-083
+# Finite and prioritized. Severity + reason + target always required.
+# ---------------------------------------------------------------------------
+/training-sessions/{id}/attention-queue:
+  get:
+    tags:
+      - Attention Queue
+    summary: List attention queue items for a session
+    description: >
+      Returns items requiring coach attention.
+      All items have explicit severity, structuredReason, and targetEntity (TRAIN-DEC-027).
+    operationId: listAttentionQueueItems
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: severity
+        in: query
+        schema:
+          type: string
+          x-domain-enum-ref: attention_queue_severity
+          enum:
+            - LOW
+            - MEDIUM
+            - HIGH
+            - CRITICAL
+      - name: resolved
+        in: query
+        schema:
+          type: boolean
+        description: Filter by resolved status. Default false (active items only).
+    responses:
+      "200":
+        description: List of attention queue items
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - data
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: ../components/schemas/training/attention_queue_item.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: []
+/training-sessions/{id}/cancel:
+  post:
+    tags:
+      - Training Sessions
+    summary: Cancel a training session
+    description: >
+      Structured cancellation. Allowed from DRAFT, SCHEDULED, PUBLISHED, IN_PROGRESS.
+      COMPLETED and ARCHIVED cannot be cancelled (ADR-017 FSM — FI-007).
+      Produces audit_event (TRAIN-DEC-023). Emits notification_intent (TRAIN-DEC-022).
+      IN_PROGRESS: physical deletion forbidden — logical cancel only (TRAIN-DEC-013).
+    operationId: cancelTrainingSession
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - cancellationReason
+            properties:
+              cancellationReason:
+                type: string
+                minLength: 1
+                maxLength: 500
+                description: Structured cancellation reason. Required (TRAIN-DEC-013).
+              notifyAthletes:
+                type: boolean
+                description: If true, emit notification_intent to athletes (TRAIN-DEC-022).
+    responses:
+      "200":
+        description: Session transitioned to CANCELLED
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/training_session.yaml
+      "400":
+        description: Validation error (e.g., missing cancellationReason)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: Conflict — session COMPLETED or ARCHIVED (ADR-017 forbidden transition)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+/training-sessions/{id}/publish:
+  post:
+    tags:
+      - Training Sessions
+    summary: Publish a training session (SCHEDULED → PUBLISHED)
+    description: >
+      Triggers transition SCHEDULED→PUBLISHED (ADR-017 FSM). Captures
+      plannedContentSnapshot (immutable write-once — TRAIN-DEC-045, INV-TRAIN-088).
+      Requires individualizationMode, sessionAt, and at least one session_objective
+      (INV-TRAIN-086). Emits notification_intent to athletes (TRAIN-DEC-022).
+      Produces audit_event (TRAIN-DEC-023). STATE_MODEL_TRAINING.md §Transitions.
+    operationId: publishTrainingSession
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: false
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              notifyAthletes:
+                type: boolean
+                description: If true, emit notification_intent to athletes (TRAIN-DEC-022).
+    responses:
+      "200":
+        description: Session transitioned to PUBLISHED
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/training_session.yaml
+      "400":
+        description: Validation error (missing required fields for publication — INV-TRAIN-086)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden (role does not allow publishing)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: Conflict — session not in SCHEDULED state (ADR-017 forbidden transition)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+/training-sessions/{id}/unpublish:
+  post:
+    tags:
+      - Training Sessions
+    summary: Unpublish a training session (PUBLISHED → SCHEDULED)
+    description: >
+      Triggers transition PUBLISHED→SCHEDULED (ADR-017 FSM, explicit depublication).
+      Removes athlete visibility. plannedContentSnapshot is cleared on unpublish
+      to allow new snapshot on next PUBLISHED transition (TRAIN-DEC-045).
+      Emits notification_intent (TRAIN-DEC-022). Produces audit_event (TRAIN-DEC-023).
+    operationId: unpublishTrainingSession
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: false
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              reason:
+                type: string
+                maxLength: 500
+                description: Optional coach rationale for unpublishing.
+              notifyAthletes:
+                type: boolean
+                description: If true, emit notification_intent (TRAIN-DEC-022).
+    responses:
+      "200":
+        description: Session transitioned to SCHEDULED
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/training_session.yaml
+      "400":
+        description: Validation error
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: Conflict — session not in PUBLISHED state (ADR-017 forbidden transition)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+/training-sessions/{id}/archive:
+  post:
+    tags:
+      - Training Sessions
+    summary: Archive a training session (COMPLETED → ARCHIVED)
+    description: >
+      Explicitly triggers COMPLETED→ARCHIVED (ADR-017 FSM). This transition also
+      occurs automatically 60 days after COMPLETED. Only allowed from COMPLETED.
+      ARCHIVED is a terminal read-only state. Produces audit_event (TRAIN-DEC-023).
+    operationId: archiveTrainingSession
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: false
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              archiveReason:
+                type: string
+                maxLength: 500
+                description: Optional reason for explicit archiving before the 60-day automatic window.
+    responses:
+      "200":
+        description: Session transitioned to ARCHIVED
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/training_session.yaml
+      "400":
+        description: Validation error
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: Conflict — session not in COMPLETED state (ADR-017 forbidden transition)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA
+
+# ---------------------------------------------------------------------------
+# RECOMMENDATIONS — ADR-006 (Coach-in-Loop), TRAIN-DEC-025
+# Coach must review and accept/dismiss analytics recommendations.
+# Recommendations are generated by ai_ingestion module and read by training.
+# ---------------------------------------------------------------------------
+/training-sessions/{id}/recommendations:
+  get:
+    tags:
+      - Recommendations
+    summary: List analytics recommendations for a session
+    description: >
+      Returns analytics recommendations generated for this session (ADR-006 Coach-in-Loop).
+      Recommendations are read-only in this endpoint — accept/dismiss via dedicated action endpoints.
+      OWASP API1:2023 (BOLA): only recommendations belonging to session {id} are returned.
+    operationId: listRecommendations
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: status
+        in: query
+        schema:
+          type: string
+          enum:
+            - PENDING
+            - ACCEPTED
+            - DISMISSED
+        description: Filter by recommendation status. Default PENDING.
+    responses:
+      "200":
+        description: List of recommendations
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - data
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: ../components/schemas/training/recommendation.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Session not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: []
+/training-sessions/{id}/recommendations/{recommendationId}/accept:
+  post:
+    tags:
+      - Recommendations
+    summary: Accept an analytics recommendation
+    description: >
+      Coach accepts a PENDING recommendation (ADR-006 Coach-in-Loop).
+      Transitions recommendation status from PENDING to ACCEPTED.
+      Produces audit_event. Only the assigned coach or head coach may accept.
+      OWASP API5:2023 (BFLA): role-based authorization enforced server-side.
+    operationId: acceptRecommendation
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: recommendationId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: false
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              coachNote:
+                type: string
+                maxLength: 500
+                description: Optional note from coach when accepting the recommendation.
+    responses:
+      "200":
+        description: Recommendation accepted
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/recommendation.yaml
+      "400":
+        description: Validation error
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden — actor not authorized to accept recommendations
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Session or recommendation not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: Conflict — recommendation not in PENDING status
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA — G-01
+/training-sessions/{id}/recommendations/{recommendationId}/dismiss:
+  post:
+    tags:
+      - Recommendations
+    summary: Dismiss an analytics recommendation
+    description: >
+      Coach dismisses a PENDING recommendation (ADR-006 Coach-in-Loop).
+      Transitions recommendation status from PENDING to DISMISSED.
+      dismissalReason is required — prevents silent discards (TRAIN-DEC-025).
+      Produces audit_event. OWASP API5:2023 (BFLA): role-based authorization enforced.
+    operationId: dismissRecommendation
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: recommendationId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - dismissalReason
+            properties:
+              dismissalReason:
+                type: string
+                minLength: 1
+                maxLength: 500
+                description: Required reason for dismissal. Prevents silent discards (TRAIN-DEC-025).
+    responses:
+      "200":
+        description: Recommendation dismissed
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/recommendation.yaml
+      "400":
+        description: Validation error (e.g., missing dismissalReason)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Session or recommendation not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: Conflict — recommendation not in PENDING status
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA — G-01
+
+# ---------------------------------------------------------------------------
+# ATHLETE INELIGIBILITY — TRAIN-DEC-024, RC-14 (boundary: medical is sovereign)
+# Declared by athlete at check-in. Training module stores declaration only —
+# medical restriction_profile remains sovereign in medical module.
+# ---------------------------------------------------------------------------
+/training-sessions/{id}/ineligibility:
+  post:
+    tags:
+      - Athlete Check-in
+    summary: Submit athlete ineligibility declaration for a session
+    description: >
+      Athlete declares ineligibility for this session (TRAIN-DEC-024).
+      This endpoint stores the training-side declaration only.
+      Medical restriction_profile remains sovereign in the medical module (RC-14 boundary rule).
+      Allowed only while session is PUBLISHED or IN_PROGRESS.
+      OWASP API1:2023 (BOLA): athlete can only declare for themselves.
+    operationId: submitIneligibilityDeclaration
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/training/athlete_ineligibility_declaration.yaml
+    responses:
+      "201":
+        description: Ineligibility declaration submitted
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/athlete_ineligibility_declaration.yaml
+      "400":
+        description: Validation error (e.g., missing reasonFlags)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden — athlete can only submit for themselves
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Session not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: Conflict — session not in PUBLISHED or IN_PROGRESS state
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA — G-02
+  get:
+    tags:
+      - Athlete Check-in
+    summary: Get athlete ineligibility status for a session
+    description: >
+      Returns the current ineligibility declaration for the authenticated athlete in this session.
+      Coach may query for any athlete in their team (PERMISSIONS_TRAINING.md).
+    operationId: getIneligibilityStatus
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: athleteId
+        in: query
+        schema:
+          type: string
+          format: uuid
+        description: Coach-only. Query ineligibility for a specific athlete. Defaults to self.
+    responses:
+      "200":
+        description: Ineligibility declaration (or absence of one)
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/athlete_ineligibility_declaration.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Session or declaration not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: []
+
+# ---------------------------------------------------------------------------
+# ATTENTION QUEUE ACTIONS — TRAIN-DEC-027, INV-TRAIN-083
+# Each action requires evidence/reason. Status transitions are final per item.
+# ---------------------------------------------------------------------------
+/training-sessions/{id}/attention-queue/{itemId}/resolve:
+  post:
+    tags:
+      - Attention Queue
+    summary: Resolve an attention queue item
+    description: >
+      Coach marks an attention queue item as RESOLVED (TRAIN-DEC-027).
+      resolutionEvidence is required — documents what action was taken.
+      Produces audit_event. OWASP API5:2023 (BFLA): coach role required.
+    operationId: resolveAttentionQueueItem
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: itemId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - resolutionEvidence
+            properties:
+              resolutionEvidence:
+                type: string
+                minLength: 1
+                maxLength: 1000
+                description: Required description of action taken to resolve the alert (TRAIN-DEC-027).
+    responses:
+      "200":
+        description: Attention queue item resolved
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/attention_queue_item.yaml
+      "400":
+        description: Validation error (e.g., missing resolutionEvidence)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden — coach role required
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Session or attention queue item not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: Conflict — item already actioned
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA — G-03
+/training-sessions/{id}/attention-queue/{itemId}/dismiss:
+  post:
+    tags:
+      - Attention Queue
+    summary: Dismiss an attention queue item
+    description: >
+      Coach dismisses an attention queue item (TRAIN-DEC-027).
+      dismissalReason is required — prevents silent ignoring of alerts.
+      Produces audit_event. OWASP API5:2023 (BFLA): coach role required.
+    operationId: dismissAttentionQueueItem
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: itemId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - dismissalReason
+            properties:
+              dismissalReason:
+                type: string
+                minLength: 1
+                maxLength: 500
+                description: Required reason for dismissal. Audit trail (TRAIN-DEC-027).
+    responses:
+      "200":
+        description: Attention queue item dismissed
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/attention_queue_item.yaml
+      "400":
+        description: Validation error (e.g., missing dismissalReason)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden — coach role required
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Session or attention queue item not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: Conflict — item already actioned
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA — G-03
+/training-sessions/{id}/attention-queue/{itemId}/escalate:
+  post:
+    tags:
+      - Attention Queue
+    summary: Escalate an attention queue item to coordinator/medical
+    description: >
+      Coach escalates an attention queue item (TRAIN-DEC-027).
+      escalationTarget indicates destination module (medical, coordinator).
+      escalationNote required. Produces cross-module event for target module.
+      Produces audit_event. OWASP API5:2023 (BFLA): coach role required.
+    operationId: escalateAttentionQueueItem
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: itemId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - escalationTarget
+              - escalationNote
+            properties:
+              escalationTarget:
+                type: string
+                enum:
+                  - MEDICAL
+                  - COORDINATOR
+                  - HEAD_COACH
+                description: Module or role receiving the escalation.
+              escalationNote:
+                type: string
+                minLength: 1
+                maxLength: 1000
+                description: Required context for the escalation recipient.
+    responses:
+      "200":
+        description: Attention queue item escalated
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/attention_queue_item.yaml
+      "400":
+        description: Validation error (e.g., missing escalationNote)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden — coach role required
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Session or attention queue item not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: Conflict — item already actioned
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA — G-03
+
+# ---------------------------------------------------------------------------
+# FEEDBACK THREAD CLOSE — TRAIN-DEC-010, TRAIN-DEC-015
+# Closing a thread marks the conversation outcome as finalized.
+# ---------------------------------------------------------------------------
+/training-sessions/{id}/feedback-threads/{threadId}/close:
+  post:
+    tags:
+      - Feedback Threads
+    summary: Close a feedback thread
+    description: >
+      Marks a feedback thread as closed (TRAIN-DEC-010, TRAIN-DEC-015).
+      resolutionSummary required — documents final outcome of the conversation.
+      A closed thread is read-only. Produces audit_event.
+      OWASP API5:2023 (BFLA): only the coach who created the thread or head_coach may close.
+    operationId: closeFeedbackThread
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: threadId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - resolutionSummary
+            properties:
+              resolutionSummary:
+                type: string
+                minLength: 1
+                maxLength: 1000
+                description: Required summary of conversation outcome (TRAIN-DEC-015).
+    responses:
+      "200":
+        description: Feedback thread closed
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/feedback_thread.yaml
+      "400":
+        description: Validation error (e.g., missing resolutionSummary)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden — only thread creator or head_coach may close
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Session or feedback thread not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: Conflict — thread already closed
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: [] # OWASP API5:2023 BFLA — G-04
+
+# ---------------------------------------------------------------------------
+# LOAD CHART — D-UI-SP-04, TRAIN-DEC-025 (coach review)
+# Aggregated load × readiness data for periodization planning.
+# Desktop-only view (D-UI-16). Read-only analytics endpoint.
+# ---------------------------------------------------------------------------
+/training/load-chart:
+  get:
+    tags:
+      - Analytics
+    summary: Get aggregated load and readiness chart data
+    description: >
+      Returns aggregated training load and readiness data for periodization planning.
+      Inspired by ATL/CTL model (D-UI-SP-04). Desktop-only view (D-UI-16 escritório context).
+      Either teamId or athleteId is required (not both).
+      OWASP API1:2023 (BOLA): data scoped to caller's organization and team.
+      OWASP API4:2023: date range limited to max 365 days.
+    operationId: getLoadChart
+    parameters:
+      - name: teamId
+        in: query
+        schema:
+          type: string
+          format: uuid
+        description: Required when querying team data. Mutually exclusive with athleteId.
+      - name: athleteId
+        in: query
+        schema:
+          type: string
+          format: uuid
+        description: Required when querying individual athlete data. Mutually exclusive with teamId.
+      - name: range
+        in: query
+        schema:
+          type: string
+          enum:
+            - 7d
+            - 30d
+            - season
+          default: 30d
+        description: Time range for chart data. 'season' uses current active season boundaries.
+      - name: seasonId
+        in: query
+        schema:
+          type: string
+          format: uuid
+        description: Required when range=season. Identifies the season to query.
+    responses:
+      "200":
+        description: Load chart data
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/load_chart.yaml
+      "400":
+        description: Validation error (e.g., neither teamId nor athleteId provided, or both provided)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden — caller not authorized for requested team/athlete data
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Team, athlete, or season not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: []
+
+# ---------------------------------------------------------------------------
+# HB PRO COACH — G-06 (UIF-TRAINING-006, MVP v1.1)
+# Virtual assistant chat for athletes. Feature Store integration via ai_ingestion.
+# Decision Refs: D-UI-20, D-UI-21, TRAIN-DEC-009
+# OWASP API1:2023 (BOLA): athlete can only access own conversation.
+# OWASP API5:2023 (BFLA): coach/staff may read with explicit permission.
+# ---------------------------------------------------------------------------
+/hb-pro-coach/conversations/{conversationId}/messages:
+  get:
+    tags: [training]
+    summary: List chat messages for a conversation
+    description: >
+      Returns paginated chat history for the given conversation.
+      OWASP API1:2023 (BOLA): athlete can only access own conversation.
+      OWASP API4:2023: pageSize capped at 100 server-side.
+      D-UI-20: default page size = 20 (last 20 messages loaded on open).
+    operationId: listChatMessages
+    parameters:
+      - name: conversationId
+        in: path
+        required: true
+        description: Unique identifier of the athlete conversation.
+        schema:
+          type: string
+          format: uuid
+          pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        description: Page number (1-based).
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+        description: Number of messages per page. Max 100 (OWASP API4:2023).
+    responses:
+      "200":
+        description: Paginated list of chat messages (oldest → newest within page)
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - items
+                - total
+                - page
+                - pageSize
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: ../components/schemas/training/athlete_chat_message.yaml
+                total:
+                  type: integer
+                  minimum: 0
+                  description: Total number of messages in the conversation.
+                page:
+                  type: integer
+                  minimum: 1
+                pageSize:
+                  type: integer
+                  minimum: 1
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden — caller does not own this conversation (OWASP BOLA)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "404":
+        description: Conversation not found
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: []
+/hb-pro-coach/training-suggestions:
+  post:
+    tags: [training]
+    summary: Submit a training suggestion to the athlete's coach
+    description: >
+      HB Pro Coach submits an AI-generated training suggestion for coach review.
+      Generates async notification to coach (AsyncAPI training.suggestion.created event).
+      OWASP API1:2023 (BOLA): athleteId must match authenticated user.
+      OWASP API3:2023 (BOPLA): allowlist enforced.
+      Idempotency key supported to prevent duplicate suggestions on retry.
+    operationId: submitTrainingSuggestion
+    parameters:
+      - name: Idempotency-Key
+        in: header
+        required: false
+        schema:
+          type: string
+          maxLength: 128
+        description: Client idempotency key to prevent duplicate submissions on retry.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - athleteId
+              - trainingName
+              - duration
+            properties:
+              athleteId:
+                type: string
+                format: uuid
+                pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+                x-semantic-id: users.athlete.id.v1
+              trainingName:
+                type: string
+                minLength: 1
+                maxLength: 120
+                description: Human-readable name for the suggested session.
+              duration:
+                type: integer
+                minimum: 1
+                maximum: 480
+                description: Suggested duration in minutes.
+              objectives:
+                type: array
+                items:
+                  type: string
+                  maxLength: 255
+                maxItems: 10
+                description: List of training objectives.
+              context:
+                type: string
+                maxLength: 1000
+                description: AI-generated justification for the suggestion (Feature Store context).
+    responses:
+      "201":
+        description: Training suggestion created and coach notification dispatched
+        headers:
+          Location:
+            description: URI of the created training suggestion
+            schema:
+              type: string
+              format: uri
+        content:
+          application/json:
+            schema:
+              $ref: ../components/schemas/training/training_suggestion.yaml
+      "400":
+        description: Validation error
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "401":
+        description: Unauthenticated
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "403":
+        description: Forbidden — athleteId does not match authenticated user (OWASP BOLA)
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "409":
+        description: Duplicate idempotency key — suggestion already submitted
+        content:
+          application/problem+json:
+            schema:
+              $ref: ../components/schemas/shared/problem.yaml
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+    security:
+      - HTTPBearer: []

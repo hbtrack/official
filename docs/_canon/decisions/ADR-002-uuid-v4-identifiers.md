@@ -34,5 +34,5 @@ Esta decisão está documentada em `docs/_canon/DATA_CONVENTIONS.md` como conven
 
 ## Links
 
-- Related docs: `docs/_canon/DATA_CONVENTIONS.md`, `docs/_canon/API_CONVENTIONS.md`
+- Related docs: `docs/_canon/DATA_CONVENTIONS.md`, `docs/_canon/OPERATIONS.md`
 - Related contracts: `contracts/openapi/openapi.yaml`, `contracts/openapi/components/parameters/`

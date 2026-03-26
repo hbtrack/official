@@ -1,26 +1,7 @@
 # CONTRACT_SYSTEM_RULES.md
 
-## 0. Índice cruzado
-
-Este documento faz parte da trilogia **HB Track — Manual Contract-Driven**:
-
-1. **.contract_driven/CONTRACT_SYSTEM_LAYOUT.md**
-   - **Responsabilidade**: Estrutura canônica de filesystem, taxonomia de módulos, convenções de nomenclatura, regras de localização de artefatos
-   - **Use quando**: Definir onde criar artefatos, validar nomes de módulos, checar regras de naming
-
-2. **.contract_driven/CONTRACT_SYSTEM_RULES.md** (este arquivo)
-   - **Responsabilidade**: Regras operacionais, hierarquia de precedência, boot protocol do agente, códigos de bloqueio, ferramentas de validação, procedimentos de evolução
-   - **Use quando**: Entender como criar/modificar contratos, determinar precedência em conflitos, comportamento de bloqueio, passos de validação
-
-3. **.contract_driven/GLOBAL_TEMPLATES.md**
-   - **Responsabilidade**: Scaffolds e exemplos oficiais para documentação normativa e artefatos de contrato
-   - **Use quando**: Criar novos docs de módulo, contratos, ou artefatos de governança
-
-4. **.contract_driven/templates/api/api_rules.yaml**
-   - **Responsabilidade**: Regras, validações e templates canônicos para contratos de APIs (OpenAPI/HTTP)
-   - **Use quando**: Resolver conflitos de convenção e definir/validar contratos de API
-
-**Regra de navegação**: Estes arquivos devem ser lidos em conjunto. Referências cruzadas entre eles são explícitas e vinculantes.
+> Referência completa de regras operacionais. Carregar on-demand, não no boot.
+> Para referência rápida operacional: `docs/_canon/OPERATIONS.md`
 
 ---
 
@@ -39,6 +20,75 @@ Estas regras governam:
 - consumo de contratos por agentes de IA
 - artefatos derivados de contrato
 - definição de readiness para implementação
+
+---
+
+## 2A. Regra de canonização operacional
+
+Toda mudança que altera comportamento esperado do agente **DEVE** existir em 3 níveis:
+
+1. **regra normativa**
+   - define o que é obrigatório;
+   - vive em `RULES`, `LAYOUT` ou no canon global correto.
+
+2. **registro operacional**
+   - define quando a regra é lida, aplicada ou bloqueada;
+   - vive em `docs/_canon/CONTRACT_PIPELINE.md`, `.contract_driven/BOOT_PROFILES.yaml` (boot profiles),
+     `docs/_canon/gates/GATES_REGISTRY.yaml` e, quando aplicável, `docs/_canon/MODULE_REGISTRY.yaml`.
+
+3. **enforcement técnico**
+   - define como a regra é executada por generator, validator, gate, pipeline CI ou prompt operacional.
+
+Regras:
+- código executável sozinho **não** canoniza comportamento;
+- relatório isolado **não** canoniza comportamento;
+- prompt isolado **não** canoniza comportamento;
+- se uma melhoria existir apenas em código ou apenas em `_reports/`, ela ainda **não** está resolvida para o agente.
+
+### 2A.1 Regra prática de promoção
+
+Ao introduzir uma melhoria:
+- promover a substância da regra ao artefato canônico correto;
+- decidir se ela entra em boot mínimo, boot condicional ou consulta apenas por gate;
+- registrar o fluxo em pipeline / boot / gates;
+- só então ajustar generator, validator, gate, CI ou prompt.
+
+### 2A.2 Prompts são executores derivados, sujeitos a validação de gates
+
+Prompts operacionais:
+- são agentes de execução de regras já canonizadas em artefatos canônicos;
+- não criam obrigação substantiva nova por conta própria;
+- não podem ser a única fonte de uma regra que afeta comportamento do agente;
+- estão sujeitos à validação de gates e NÃO sobrepõem o canon normativo.
+
+**Hierarquia de SSOT de regras:** `CONTRACT_SYSTEM_RULES` > `ADRs` > `GATES_REGISTRY` > contratos de módulo > prompts.
+
+Se um prompt contiver instrução sem respaldo explícito no canon, o agente deve bloquear em vez de assumir a regra como válida.
+
+### 2A.3 Matriz obrigatória de promoção ao canon
+
+| Tipo de mudança | Artefato canônico obrigatório |
+| --- | --- |
+| muda comportamento geral do agente | `.contract_driven/CONTRACT_SYSTEM_RULES.md` |
+| muda path, classificação ou soberania de artefato | `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md` |
+| muda estágio do pipeline | `docs/_canon/CONTRACT_PIPELINE.md` |
+| muda boot por tipo de tarefa | `.contract_driven/BOOT_PROFILES.yaml` |
+| muda toolchain, timeout, degradação ou health-check | `docs/_canon/TOOLCHAIN_HEALTH_POLICY.md` |
+| muda gate oficial | `docs/_canon/gates/GATES_REGISTRY.yaml` |
+| muda worker ou roteamento operacional | `.contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md` |
+| muda DoD por superfície | `.contract_driven/CONTRACT_SYSTEM_RULES.md` |
+| muda status ou maturidade de módulo | `docs/_canon/MODULE_REGISTRY.yaml` |
+| muda classificação de docs não soberanas | `LAYOUT` + `RULES` + `README` local da pasta afetada |
+
+### 2A.4 Regra de classificação de boot
+
+Todo novo artefato de governança promovido ao canon **DEVE** ser classificado em
+`boot_minimo`, `boot_condicional` ou `gate_only` em `.contract_driven/BOOT_PROFILES.yaml`.
+
+Sem essa classificação:
+- o agente não pode presumir que o artefato foi lido;
+- o prompt não pode tratá-lo como contexto carregado;
+- qualquer dependência operacional deve bloquear em vez de inferir.
 
 ---
 
@@ -64,10 +114,10 @@ Estas regras governam:
 
 **A lista autoritativa de módulos válidos está definida em `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md` seção 2 (Taxonomia canônica de módulos)**.
 
-Os 16 módulos canônicos são:
+Os 17 módulos canônicos são:
 
-**Functional Domain Modules** (13):
-- `users`, `seasons`, `teams`, `training`, `wellness`, `medical`, `competitions`, `matches`, `scout`, `exercises`, `analytics`, `reports`, `ai_ingestion`
+**Functional Domain Modules** (14):
+- `users`, `seasons`, `teams`, `training`, `wellness`, `medical`, `competitions`, `matches`, `scout`, `exercises`, `analytics`, `reports`, `ai_ingestion`, `video`
 
 **Cross-Cutting Modules** (3):
 - `identity_access`, `audit`, `notifications`
@@ -107,21 +157,75 @@ Regras:
 - `docs/_canon/C4_CONTEXT.md`
 - `docs/_canon/C4_CONTAINERS.md`
 - `docs/_canon/MODULE_MAP.md` (mapeamento de macrodomínios para comunicação de negócio, não taxonomia técnica canônica)
+- `docs/_canon/MODULE_REGISTRY.yaml`
+- `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml`
 - `docs/_canon/CHANGE_POLICY.md`
-- `docs/_canon/API_CONVENTIONS.md`
+- `.contract_driven/templates/api/api_rules.yaml` (SSOT de convenções HTTP/OpenAPI)
 - `docs/_canon/DATA_CONVENTIONS.md`
-- `docs/_canon/ERROR_MODEL.md`
 - `docs/_canon/GLOBAL_INVARIANTS.md`
 - `docs/_canon/DOMAIN_GLOSSARY.md`
 - `docs/_canon/HANDBALL_RULES_DOMAIN.md`
 - `docs/_canon/SECURITY_RULES.md`
-- `docs/_canon/UI_FOUNDATIONS.md`
-- `docs/_canon/DESIGN_SYSTEM.md`
+- `docs/_canon/UI_CONTRACT_GUIDE.md`
 - `docs/_canon/CI_CONTRACT_GATES.md`
+- `docs/_canon/TOOLCHAIN_HEALTH_POLICY.md`
+- `docs/_canon/CONTRACT_PIPELINE.md`
 - `docs/_canon/TEST_STRATEGY.md`
+- `docs/_canon/DECISION_POLICY.md`
+- `docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md`
+- `docs/_canon/gates/README.md`
+- `docs/_canon/gates/GATES_REGISTRY.yaml`
 
 Landing/entry não-soberano:
 - `README.md` na raiz do repositório é apenas navegação/entrada. Ele não deve introduzir novas regras normativas que conflitem com o canon.
+
+### 3.2C Bridge docs (não-soberanos) — PROIBIÇÕES EXPLÍCITAS
+
+Bridge docs são artefatos de ponte operacional que ajudam a orientar agentes e humanos, mas **não possuem autoridade normativa**. Incluem:
+
+- `.github/copilot-instructions.md`
+- `CLAUDE.md`
+- `.github/skills/**/*.md`
+- `AGENTS.md` (quando presente)
+
+**Proibições absolutas para bridge docs:**
+
+1. **Não podem redefinir schemas**: qualquer instrução que contradiga `contracts/schemas/shared/*.schema.json` é nula de pleno direito.
+2. **Não podem redefinir gates**: qualquer gate citado em bridge doc que conflite com `docs/_canon/gates/GATES_REGISTRY.yaml` ou com a implementação em `validate_contracts.py` é ignorado.
+3. **Não podem redefinir políticas canônicas**: qualquer política que contradiga `docs/_canon/` ou `.contract_driven/CONTRACT_SYSTEM_RULES.md` é nula de pleno direito.
+4. **Não podem declarar-se soberanos**: proibido usar linguagem de SSOT, "fonte de verdade", "canônico" ou "autoritativo" sem banner `BRIDGE ONLY — NON-SOVEREIGN` explícito.
+5. **Só podem repetir regras ativas**: bridge docs são permitidos apenas para sintetizar, pontuar e pontuar em português o que o enforcement e o canon já estabelecem.
+
+Violação detectada → `BLOCKED_BRIDGE_OVERRIDE`. Gate: `SHADOW_AUTHORITY_GATE`.
+
+### 3.2A Decision support sources (não-soberanos)
+
+- `docs/hbtrack/decisoes/*.md`
+
+Classificação formal:
+- `explanation`
+- `decision_support_source`
+- `non-sovereign`
+
+Regras:
+- esses arquivos não podem atuar como SSOT;
+- vocabulário soberano (`SSOT`, `canônico`, `fonte soberana`, `source of truth`) exige disclaimer explícito no topo;
+- qualquer conflito entre DSS e fonte soberana é resolvido a favor do canon.
+
+### 3.2B Guias de estudo humano (não-soberanos)
+
+- `docs/guias/*.md`
+
+Classificação formal:
+- `study_source`
+- `human_ideation`
+- `non-sovereign`
+
+Regras:
+- esses arquivos existem para estudo, exploração e novas ideias do humano;
+- não podem definir escopo oficial, status de módulo, próxima ação permitida, DONE ou SSOT;
+- qualquer uso de vocabulário soberano exige disclaimer explícito no topo;
+- qualquer conflito entre `docs/guias/` e fontes soberanas é resolvido a favor do canon e dos docs normativos de módulo.
 
 ### 3.3 Technical contracts
 - `contracts/openapi/openapi.yaml`
@@ -138,6 +242,7 @@ Landing/entry não-soberano:
 - `docs/hbtrack/modulos/<module>/TEST_MATRIX_<MODULE>.md`
 
 ### 3.5 Module docs when applicable
+- `docs/hbtrack/modulos/<module>/SPORT_SCIENCE_RULES_<MODULE>.md`
 - `docs/hbtrack/modulos/<module>/STATE_MODEL_<MODULE>.md`
 - `docs/hbtrack/modulos/<module>/PERMISSIONS_<MODULE>.md`
 - `docs/hbtrack/modulos/<module>/ERRORS_<MODULE>.md`
@@ -211,91 +316,61 @@ Regras:
 
 ## 5. Precedência em caso de conflito
 
-Ordem de precedência:
-1. `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md`
-2. `.contract_driven/CONTRACT_SYSTEM_RULES.md`
-3. `.contract_driven/templates/api/api_rules.yaml` (apenas para convenções/validações/templates de API HTTP)
-4. contratos técnicos válidos:
-   - OpenAPI
-   - JSON Schema
-   - Arazzo
-   - AsyncAPI
-5. `docs/_canon/HANDBALL_RULES_DOMAIN.md` quando uma regra derivada do esporte se aplica
-6. `docs/_canon/API_CONVENTIONS.md`, `docs/_canon/DATA_CONVENTIONS.md`, `docs/_canon/ERROR_MODEL.md`, `docs/_canon/SECURITY_RULES.md`
-7. `docs/hbtrack/modulos/<module>/DOMAIN_RULES_<MODULE>.md`
+### 5.0 Cadeia de precedência de autoridade (OFICIAL — idêntica em AGENT_INSTRUCTIONS.md)
+
+Em qualquer conflito de regra, schema, gate ou política, a resolução segue esta ordem (maior autoridade primeiro):
+
+```
+1. enforcement executável     scripts/hb, validate_contracts.py, gates ativos
+2. schemas ativos             contracts/schemas/shared/*.schema.json
+3. canon                      docs/_canon/ + .contract_driven/CONTRACT_SYSTEM_RULES.md
+4. bridge docs                .github/copilot-instructions.md, CLAUDE.md, skills/**
+5. artefatos derivados        DEVCONT.md, compilance.md, ADVERSARIAL.md, ANALISEARQUITETURA.md
+6. legado                     _archive/, _reports/evidence/, docs/guias/
+```
+
+**Regra de ouro**: bridge docs e artefatos derivados **nunca** podem redefinir, sobrepor ou contradizer itens dos níveis 1–3. Se houver divergência, o nível mais alto prevalece sempre. Bridge docs só podem **repetir** o que o enforcement e o canon já estabelecem.
+
+### 5.1 Ordem de precedência detalhada por artefato
+1. `DOMAIN_AXIOMS.json` — invariantes machine-readable, nunca sobrescritos
+2. `.contract_driven/CONTRACT_SYSTEM_RULES.md` (este arquivo) — regras operacionais vinculantes
+   2a. `.contract_driven/templates/api/api_rules.yaml` — convenções de API HTTP
+3. `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md` — layout canônico de filesystem
+4. contratos técnicos válidos (OpenAPI > JSON Schema > AsyncAPI > Arazzo)
+   4a. `docs/_canon/HANDBALL_RULES_DOMAIN.md` — quando gatilho esportivo ativo
+5. `.contract_driven/templates/api/api_rules.yaml`, `docs/_canon/DATA_CONVENTIONS.md`, `docs/_canon/SECURITY_RULES.md`, `docs/_canon/OPERATIONS.md`
+6. `docs/hbtrack/modulos/<module>/DOMAIN_RULES_<MODULE>.md`
+7. `docs/hbtrack/modulos/<module>/SPORT_SCIENCE_RULES_<MODULE>.md`
 8. `docs/hbtrack/modulos/<module>/INVARIANTS_<MODULE>.md`
 9. `docs/hbtrack/modulos/<module>/STATE_MODEL_<MODULE>.md`
 10. `docs/hbtrack/modulos/<module>/PERMISSIONS_<MODULE>.md`
 11. `docs/hbtrack/modulos/<module>/UI_CONTRACT_<MODULE>.md`
 12. implementação
-13. artefatos gerados
+13. `generated/` e `_reports/` — derivados, sem autoridade sobre 1–12
 
-Conflito no mesmo nível:
-- o agente deve emitir `BLOCKED_CONTRACT_CONFLICT`
+Conflito no mesmo nível → `BLOCKED_CONTRACT_CONFLICT`.
+Conflito entre níveis → o nível mais alto (menor número) sempre vence.
 
-Conflito entre níveis:
-- o nível mais alto sempre vence
+**Detecção de conflito de precedência:** Ao criar ou atualizar um ADR, verificar se a regra introduzida contradiz uma regra de nível mais alto nesta hierarquia. Se contradição for identificada: emitir `BLOCKED_PRECEDENCE_CONFLICT` imediatamente e não prosseguir com a criação ou modificação do artefato. Precedência não pode ser contornada por instrução de agente ou prompt operacional. Se houver ambiguidade sobre a existência de conflito: elevar para decision discovery antes de prosseguir.
 
 ### 5A. Precedência por superfície (overrides determinísticos)
-- Convenções de design de API HTTP (OpenAPI/JSON/URLs/pagination/errors/compatibility/security/events): aplicar `.contract_driven/templates/api/api_rules.yaml` como baseline/SSOT antes de qualquer orientação de menor precedência.
-
-Nota do baseline:
-- O registry legado `(#NNN)` foi migrado para `api_rules.yaml` para manter numeração estável e permitir overrides por precedência.
-- Para convenções de design de API HTTP, `api_rules.yaml` é a fonte canônica e sobrepõe orientações conflitantes em níveis de precedência inferiores.
+Para convenções de design de API HTTP: `api_rules.yaml` é SSOT e sobrepõe orientações em níveis inferiores (ver rank 2a acima).
 
 ---
 
 ## 6. Protocolo de boot do agente
 
-### 6.1 Ordem obrigatória de boot
-1. `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md`
-2. `.contract_driven/CONTRACT_SYSTEM_RULES.md`
-3. `.contract_driven/GLOBAL_TEMPLATES.md`
-4. `.contract_driven/templates/README.md` (estrutura e contrato de uso de templates)
-5. `.contract_driven/templates/api/api_rules.yaml`
-6. `docs/_canon/SYSTEM_SCOPE.md`
-7. `docs/_canon/API_CONVENTIONS.md`
-8. `docs/_canon/DATA_CONVENTIONS.md`
-9. `docs/_canon/CHANGE_POLICY.md`
-10. `docs/_canon/HANDBALL_RULES_DOMAIN.md`
-11. `docs/_canon/DOMAIN_GLOSSARY.md`
-12. `docs/_canon/MODULE_MAP.md`
-13. `docs/_canon/ARCHITECTURE.md`
-14. artefatos de contrato relevantes
-15. docs de módulo relevantes
-
-### 6.2 Modo de boot
+### 6.1 Modo de boot
 O agente deve usar:
 - boot mínimo obrigatório
 - loading condicional sob demanda
 - bloquear em vez de inferir quando um artefato crítico estiver ausente
 
-### 6.3 Condição de bloqueio no boot
+Para tarefas que resultam em validação, readiness ou handoff, o boot **DEVE** também carregar
+`docs/_canon/TOOLCHAIN_HEALTH_POLICY.md` antes do worker.
+
+### 6.2 Condição de bloqueio no boot
 Se o agente não conseguir carregar a sequência de boot necessária para a tarefa atual, ele deve se declarar bloqueado usando um código de bloqueio válido, em vez de continuar por inferência.
-
-### 6.4 Perfis de leitura por tarefa (contexto mínimo suficiente)
-O boot mínimo continua obrigatório, mas o agente **DEVE** reduzir a leitura ao mínimo necessário para a tarefa (carregar sob demanda).
-
-Perfis recomendados:
-
-- **Gerar/alterar contrato de API (OpenAPI paths)**:
-  - LAYOUT + RULES + `api_rules.yaml`
-  - `docs/_canon/SYSTEM_SCOPE.md`
-  - docs do módulo (mínimo): README / MODULE_SCOPE / DOMAIN_RULES / INVARIANTS / TEST_MATRIX
-  - contratos do módulo: `contracts/openapi/openapi.yaml` + `contracts/openapi/paths/<module>.yaml` + `contracts/openapi/components/`
-
-- **Gerar docs mínimas de módulo**:
-  - LAYOUT + RULES + `GLOBAL_TEMPLATES.md` (índice/regras)
-  - templates: `.contract_driven/templates/modulos/*`
-  - `docs/_canon/SYSTEM_SCOPE.md`
-  - `docs/_canon/HANDBALL_RULES_DOMAIN.md` quando o gatilho aplicar
-
-- **Gerar schema de domínio (contracts/schemas)**:
-  - LAYOUT + RULES + `.contract_driven/DOMAIN_AXIOMS.json`
-  - template: `.contract_driven/templates/modulos/schemas/{{DOMAIN_ENTITY_SNAKE}}.schema.json`
-  - docs do módulo (DOMAIN_RULES + INVARIANTS)
-
-Prompts operacionais (checklists) vivem em `.contract_driven/agent_prompts/`.
 
 ---
 
@@ -338,26 +413,51 @@ Artefato ausente => bloquear.
 
 ## 9. Códigos de bloqueio
 
+> MAPEAMENTO COM docs/_canon/AGENT_INSTRUCTIONS.md §4: BLOCKED_PRE_CONTRACT_SKIPPED, BLOCKED_MISSING_OPENAPI_PATH, BLOCKED_MISSING_HANDBALL_REFERENCE, BLOCKED_MISSING_API_CONVENTION → promovidos para docs/_canon/AGENT_INSTRUCTIONS.md §4.
+> Demais códigos exclusivos desta seção = subcasos de BLOCKED_REQUIRED_ARTIFACT_MISSING.
+> Em conflito com docs/_canon/AGENT_INSTRUCTIONS.md §4, docs/_canon/AGENT_INSTRUCTIONS.md §4 prevalece.
+
 Saídas de bloqueio permitidas:
 - `BLOCKED_MISSING_MODULE`
-- `BLOCKED_MISSING_OPENAPI_PATH`
+- `BLOCKED_MISSING_OPENAPI_PATH` [→ docs/_canon/AGENT_INSTRUCTIONS.md §4]
 - `BLOCKED_MISSING_SCHEMA`
 - `BLOCKED_MISSING_DOMAIN_RULE`
 - `BLOCKED_MISSING_INVARIANT`
 - `BLOCKED_MISSING_STATE_MODEL`
 - `BLOCKED_MISSING_PERMISSION_MODEL`
+- `BLOCKED_MISSING_SPORT_SCIENCE_RULES`
 - `BLOCKED_MISSING_UI_CONTRACT`
-- `BLOCKED_MISSING_HANDBALL_REFERENCE`
+- `BLOCKED_MISSING_HANDBALL_REFERENCE` [→ docs/_canon/AGENT_INSTRUCTIONS.md §4]
 - `BLOCKED_MISSING_TEST_MATRIX`
 - `BLOCKED_CONTRACT_CONFLICT`
 - `BLOCKED_NONCANONICAL_NORMATIVE_PATH`
 - `BLOCKED_MISSING_CANON_ARTIFACT`
-- `BLOCKED_MISSING_API_CONVENTION`
+- `BLOCKED_MISSING_API_CONVENTION` [→ docs/_canon/AGENT_INSTRUCTIONS.md §4]
+- `BLOCKED_MISSING_ARCH_DECISION`
+- `BLOCKED_REQUIRED_ARTIFACT_MISSING`
+- `BLOCKED_MISSING_AGENT_PROMPT`
+- `BLOCKED_PRE_CONTRACT_SKIPPED` [→ docs/_canon/AGENT_INSTRUCTIONS.md §4]
+- `BLOCKED_SCOPE_OVERFLOW` [→ ADR-034]
 
 Uso de `BLOCKED_MISSING_CANON_ARTIFACT`:
 - emitir quando um artefato canônico listado (governança em `.contract_driven/` ou canon global em `docs/_canon/`) for necessário para a tarefa atual e estiver ausente no path canônico, e não existir um `BLOCKED_MISSING_*` mais específico aplicável.
 
 Nenhum workaround especulativo em texto livre é permitido.
+
+Uso de `BLOCKED_MISSING_ARCH_DECISION`:
+- emitir quando existir uma decisão arquitetural classificada como `obrigatória` com `status: open` em `docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md` que afete o módulo ou seja global, e nenhuma ADR aceita a resolva.
+
+Uso de `BLOCKED_REQUIRED_ARTIFACT_MISSING`:
+- emitir quando um artefato de módulo obrigatório (conforme seção 10.1 deste documento) estiver ausente do seu path canônico e a fase pré-contrato o exigir para prosseguir.
+- Este código é específico da fase pré-contrato; para ausências detectadas fora da fase pré-contrato, usar `BLOCKED_MISSING_CANON_ARTIFACT` ou o código específico mais adequado.
+
+Uso de `BLOCKED_MISSING_AGENT_PROMPT`:
+- emitir quando o `task_type` informado não possuir um worker prompt mapeado e disponível sob `.contract_driven/agent_prompts/`.
+- O agente deve parar e registrar o bloqueio no backlog antes de qualquer tentativa de continuar.
+
+Uso de `BLOCKED_PRE_CONTRACT_SKIPPED`:
+- emitir quando um worker de contrato for acionado diretamente sem evidência de execução prévia da fase pré-contrato.
+- Ver seção 22 (Fase Pré-Contrato Obrigatória) para a regra normativa completa.
 
 ---
 
@@ -378,6 +478,7 @@ Nenhum workaround especulativo em texto livre é permitido.
 - `docs/hbtrack/modulos/<module>/STATE_MODEL_<MODULE>.md`
 - `docs/hbtrack/modulos/<module>/PERMISSIONS_<MODULE>.md`
 - `docs/hbtrack/modulos/<module>/ERRORS_<MODULE>.md`
+- `docs/hbtrack/modulos/<module>/SPORT_SCIENCE_RULES_<MODULE>.md`
 - `docs/hbtrack/modulos/<module>/SCREEN_MAP_<MODULE>.md`
 - `docs/hbtrack/modulos/<module>/UI_CONTRACT_<MODULE>.md`
 - `contracts/workflows/<MODULE>/*.arazzo.yaml`
@@ -433,7 +534,18 @@ Obrigatório quando:
 Obrigatório quando:
 - o módulo publica ou consome eventos reais
 
-### 11.8 Conditional artifact absence rule
+### 11.8 docs/hbtrack/modulos/<module>/SPORT_SCIENCE_RULES_<MODULE>.md
+Obrigatório quando o módulo depende de conteúdo técnico-científico aplicado, como:
+- métodos/protocolos formais de treino e monitoramento
+- cálculos (ex: sRPE, strain, TRIMP) e suas variáveis
+- thresholds (zonas, ranges, cutoffs) e critérios de interpretação
+- baterias de teste e critérios de prontidão/readiness
+- prescrição de força/potência/HIIT/recuperação baseada em critério
+- interpretação fisiológica/funcional que não é axioma estrutural nem regra oficial do handebol
+
+Fontes permitidas e limites de inferência externa são governados por `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml`.
+
+### 11.9 Conditional artifact absence rule
 Se um artefato aparentar ser aplicável por estas regras, mas estiver ausente, o agente não deve decidir sozinho. Ele deve emitir o código de bloqueio correspondente e parar o trabalho afetado.
 
 ---
@@ -478,6 +590,7 @@ Se não existir adaptação explícita, a regra de domínio do handebol (traduzi
 - orquestração multi-step => `contracts/workflows/**/*.arazzo.yaml`
 - contratos de eventos => `contracts/asyncapi/**/*.yaml`
 - regras de negócio do módulo => `docs/hbtrack/modulos/<module>/DOMAIN_RULES_<MODULE>.md`
+- regras técnico-científicas do módulo => `docs/hbtrack/modulos/<module>/SPORT_SCIENCE_RULES_<MODULE>.md`
 - integridade do módulo => `docs/hbtrack/modulos/<module>/INVARIANTS_<MODULE>.md`
 - estado do módulo => `docs/hbtrack/modulos/<module>/STATE_MODEL_<MODULE>.md`
 - permissões do módulo => `docs/hbtrack/modulos/<module>/PERMISSIONS_<MODULE>.md`
@@ -500,6 +613,90 @@ Nenhuma superfície pode ter duas fontes primárias.
 Regra:
 Artefatos derivados nunca redefinem a fonte.
 
+
+---
+
+## 14A. Política de Domain Shapes (JSON Schema)
+
+`contracts/schemas/<module>/*.schema.json` é a superfície soberana de shapes de dados reutilizáveis por módulo. Esta seção define as regras operacionais para criação, uso e promoção de domain shapes.
+
+### 14A.1 Definições
+
+| Conceito | Definição |
+|----------|-----------|
+| **domain shape** | Representação canônica de uma entidade ou conceito de domínio, agnóstica de protocolo. Vive em `contracts/schemas/<module>/`. |
+| **HTTP DTO** | Adaptação da shape de domínio para transporte HTTP (envelopes, campos calculados, omissões de PII). Vive em `contracts/openapi/components/schemas/<module>/`. |
+
+### 14A.2 Quando criar um domain shape
+
+Criar um domain shape em `contracts/schemas/<module>/` quando:
+- a entidade for persistida ou transmitida como dado de domínio estável
+- a shape for reutilizada por mais de uma superfície (OpenAPI, AsyncAPI, Arazzo)
+- a shape representar um conceito canônico definido em `DOMAIN_RULES_<MODULE>.md`
+- a entidade tiver identidade própria (id) ou lifecycle mensurável
+
+### 14A.3 Quando NÃO criar um domain shape separado
+
+Não criar domain shape quando:
+- o conceito existir exclusivamente como DTO de request/response sem reuso semântico
+- a shape for um envelope técnico sem semântica de domínio (ex.: paginação genérica, error wrapper)
+- a entidade for totalmente inferível a partir de outra shape canônica já existente
+
+Nesses casos, a shape vive exclusivamente em `contracts/openapi/components/schemas/<module>/`.
+
+### 14A.4 Quando promover para `shared/`
+
+Usar `contracts/schemas/shared/` **somente** quando:
+- a shape for usada por 2 ou mais módulos canônicos distintos
+- não houver módulo dono claro da entidade
+- a promoção for justificada por `DOMAIN_RULES` de mais de um módulo
+
+Promoção para `shared/` requer que nenhum módulo específico reivindique ownership exclusivo. Em caso de dúvida, manter escopado ao módulo e aguardar segundo reuso real.
+
+### 14A.5 Referência direta OpenAPI → contracts/schemas/
+
+OpenAPI pode usar `` direto para `contracts/schemas/` **somente quando** todas as condições estiverem presentes:
+1. a shape é semanticamente idêntica entre domínio e HTTP (zero adaptação/envelope)
+2. o pipeline suporta $ref externo sem transformação (validado por Redocly CLI)
+3. há documentação inline (`description` ou `x-schema-ref-justification`) justificando o reuso direto
+
+Se qualquer condição falhar, usar `components/schemas/<module>/` obrigatoriamente.
+
+**Regra de conflito**: se houver divergência entre shape HTTP e shape de domínio, `components/schemas/` vence para OpenAPI e `contracts/schemas/` preserva o domínio.
+
+**Regra anti-amputação**: para entidades estáveis expostas em responses, `components/schemas/<module>/` não pode virar stub. Ele deve:
+- reutilizar a shape soberana diretamente; ou
+- documentar a adaptação HTTP com `x-schema-ref-justification` e explicitar o delta normativo.
+
+Ausência de fields soberanos sem justificativa explícita = `BLOCKED_CONTRACT_CONFLICT`.
+
+### 14A.6 Conformidade com DOMAIN_AXIOMS.json
+
+Todo domain shape deve ser válido segundo `DOMAIN_AXIOMS.json` e deve:
+- usar os tipos base canônicos definidos nos axiomas
+- não redefinir idiomas/formatos já padronizados (ex.: `date-time` canônico)
+- respeitar naming conventions de `CONTRACT_SYSTEM_LAYOUT.md` seção 10
+
+### 14A.7 Lifecycle e audit fields são condicionais
+
+Os fields `status`, `createdAt`, `updatedAt`, `deletedAt` e similares **não são boilerplate universal**. Incluí-los apenas quando:
+- a entidade tiver lifecycle explícito governado por `STATE_MODEL_<MODULE>.md` (ver §11.1)
+- a entidade tiver requisitos de auditoria documentados em `INVARIANTS_<MODULE>.md` ou em `docs/_canon/GLOBAL_INVARIANTS.md`
+
+Não incluir por precaução sem evidência canônica. O template em `GLOBAL_TEMPLATES.md` §35 fornece o scaffold com esses fields comentados para ativação sob demanda.
+
+### 14A.8 Bloqueios desta seção
+
+| Código | Condição |
+|--------|----------|
+| `BLOCKED_MISSING_SCHEMA` | Schema de domínio obrigatório ausente no path canônico |
+| `BLOCKED_MISSING_DOMAIN_RULE` | `DOMAIN_RULES_<MODULE>.md` ausente — sem base para criar domain shape |
+| `BLOCKED_CONTRACT_CONFLICT` | Shape HTTP e shape de domínio divergem sem adaptação explícita documentada |
+| `BLOCKED_MISSING_CANON_ARTIFACT` | `DOMAIN_AXIOMS.json` ausente quando necessário para validação |
+
+Um módulo **não está pronto para implementação** enquanto seus JSON Schemas obrigatórios não existirem e não validarem como JSON Schema (ver §16 — Contrato pronto para implementação).
+
+
 ---
 
 ## 15. Procedimento de criação de contrato
@@ -511,6 +708,7 @@ Artefatos derivados nunca redefinem a fonte.
    - **obrigatório (API execution contract)**: rodar o compiler determinístico para gerar policy resolvida + manifesto + cópias derivadas em `generated/`
      - `python3 scripts/contracts/validate/api/compile_api_policy.py --module <module> --surface sync`
      - (quando aplicável) `python3 scripts/contracts/validate/api/compile_api_policy.py --module <module> --surface event`
+     - se qualquer input global mudar (`.contract_driven/DOMAIN_AXIOMS.json` ou `.contract_driven/templates/api/*`), a execução parcial fica proibida e o agente **DEVE** usar `python3 scripts/contracts/validate/api/compile_api_policy.py --all`
    - **fail-closed**: o compiler **DEVE** bloquear (não gera manifesto/hash) se detectar violação de style_veto, sufixo canônico ou binding `x-semantic-id` exigido
 3. criar ou atualizar JSON Schemas do módulo
 4. criar ou atualizar docs do módulo
@@ -529,12 +727,48 @@ Um contrato está pronto apenas quando todos forem verdadeiros:
 - Arazzo valida quando presente
 - AsyncAPI valida quando presente
 - zero `TODO`, `TBD`, `A definir` ou placeholders não-resolvidos
+- `generated/contracts/**` é consumível sem fallback manual para `contracts/**`
+- zero `$ref` local quebrado em bundles gerados promovidos
+- um único modelo público de erro HTTP (`shared/problem.yaml`)
+- zero `bearerAuth` e zero `security: - {}` em contratos promovidos
+- endpoints de query analítica não usam DSL textual solta nem rows abertas sem envelope soberano
 - referência explícita a `docs/hbtrack/modulos/<module>/DOMAIN_RULES_<MODULE>.md`
 - referência explícita a `docs/hbtrack/modulos/<module>/INVARIANTS_<MODULE>.md`
 - referência explícita a `docs/hbtrack/modulos/<module>/TEST_MATRIX_<MODULE>.md`
 - referência explícita a `docs/_canon/HANDBALL_RULES_DOMAIN.md` quando o gatilho de handebol aplicar
 - naming e localização obedecem o layout
 - regras de idioma obedecem o layout e regras de governança
+
+### 16.1 DoD por superfície — HTTP/OpenAPI
+
+Além da lista base:
+- `TOOLING_CONFIG_GATE`, `OPENAPI_ROOT_STRUCTURE_GATE`, `OPENAPI_POLICY_RULESET_GATE` e `CONTRACT_BREAKING_CHANGE_GATE` não podem falhar;
+- root OpenAPI deve estar sincronizado com os módulos;
+- operations protegidas usam somente `HTTPBearer`;
+- operations protegidas documentam `500` com `application/problem+json`;
+- mutações contratuais documentam `409` quando não forem auth login/refresh/logout;
+- operações com query analítica usam request/response soberanos com filtros estruturados e `additionalProperties: false` nas linhas de resultado;
+- responses de entidades estáveis não amputam a shape soberana sem justificativa explícita;
+- baseline e waiver machine-readable devem existir quando houver breaking change.
+
+### 16.2 DoD por superfície — AsyncAPI
+
+- channel/message/schema devem existir em path canônico;
+- `ASYNCAPI_VALIDATION_GATE` deve passar;
+- evento não pode contradizer invariantes do módulo;
+- bundle gerado mantém root e filesystem em sincronia, sem canais ausentes.
+
+### 16.3 DoD por superfície — Arazzo
+
+- workflow deve referenciar apenas `operationId` soberano;
+- `ARAZZO_VALIDATION_GATE` deve passar;
+- handoff não ocorre com workflow órfão de contrato HTTP.
+
+### 16.4 DoD por superfície — Schema-only
+
+- schema valida em Draft 2020-12;
+- naming, formatos e bindings semânticos obedecem `DATA_CONVENTIONS.md` e `DOMAIN_AXIOMS.json`;
+- docs de módulo explicam o uso e a invariante do schema.
 
 ---
 
@@ -576,6 +810,11 @@ Além da seção 17:
 - Arazzo validation: `Arazzo validator/linter defined in pipeline`
 - UI docs validation when applicable: `Storybook build`
 
+Regras adicionais:
+- compatibilidade de tooling/config é validada por `TOOLING_CONFIG_GATE` antes dos gates semânticos;
+- ausência de `oasdiff` ou `Schemathesis` em CI oficial resulta em `FAIL`;
+- fora de CI, fallback só é permitido com estado explícito `DEGRADED`, conforme `docs/_canon/TOOLCHAIN_HEALTH_POLICY.md`.
+
 ### Exemplos de uso
 Para exemplos práticos de comandos de cada ferramenta, ver `.contract_driven/templates/globais/CI_CONTRACT_GATES.md` (referenciado por `.contract_driven/GLOBAL_TEMPLATES.md` seção 21).
 
@@ -583,258 +822,66 @@ Para exemplos práticos de comandos de cada ferramenta, ver `.contract_driven/te
 
 ## 20. Modos de operação do agente
 
-O agente opera apenas nos seguintes modos formais:
+O agente opera usando `task_type` canônicos definidos em `docs/_canon/AGENT_INSTRUCTIONS.md §4`:
 
-### 20.1 `contract_creation_mode`
-Usado ao criar um novo artefato de contrato.
-
-### 20.2 `contract_revision_mode`
-Usado ao revisar ou alterar um artefato de contrato existente.
-
-### 20.3 `implementation_mode`
-Usado ao implementar software a partir de contratos já definidos.
-
-### 20.4 `audit_mode`
-Usado ao auditar completude, consistência e readiness de contratos.
+- `new_contract` — criar novo artefato de contrato
+- `contract_revision` — revisar ou alterar contrato existente
+- `generate_code` — implementar software a partir de contratos
+- `new_module`, `new_event`, `new_workflow`, `new_schema`, `new_state_model`, `new_ui_contract`, `architecture_review` — ver docs/_canon/AGENT_INSTRUCTIONS.md §4
 
 Regra:
-O modo ativo determina o conjunto mínimo de boot e o output esperado.
+O `task_type` ativo determina qual worker é acionado e qual perfil de boot é carregado.
+Os perfis formais de boot ficam em `.contract_driven/BOOT_PROFILES.yaml` (quando implementado).
+O formato do relatório de boot está em `docs/_canon/OPERATIONS.md`.
 
 ---
 
-## 21. Matriz mínima de boot por tipo de tarefa
+---
 
-### 21.1 Create new contract
-**Boot obrigatório**
-- `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md`
-- `.contract_driven/CONTRACT_SYSTEM_RULES.md`
-- template aplicável
-- `docs/_canon/SYSTEM_SCOPE.md`
-- `docs/_canon/API_CONVENTIONS.md`
+## 22. Fase Pré-Contrato Obrigatória
 
-**Boot condicional**
-- `docs/_canon/HANDBALL_RULES_DOMAIN.md` se o gatilho de handebol aplicar
-- `docs/_canon/DATA_CONVENTIONS.md` se um novo schema for criado
-- `docs/_canon/MODULE_MAP.md` se o boundary do módulo estiver pouco claro
-- `docs/_canon/DOMAIN_GLOSSARY.md` se a terminologia estiver ambígua
-- contrato existente do módulo, se já existir
+### 22.1 Regra normativa
+Nenhuma tarefa contract-driven pode acionar um worker diretamente sem ter completado com sucesso a fase pré-contrato definida em `.contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md`.
 
-**Output esperado**
-- contrato criado na localização canônica
-- nenhum placeholder proibido
-- linkagem explícita para documentos obrigatórios
+O orquestrador pré-contrato é o **ponto de entrada obrigatório** para todas as tarefas de contrato.
 
-**Possíveis códigos de bloqueio**
-- `BLOCKED_MISSING_MODULE`
-- `BLOCKED_MISSING_OPENAPI_PATH`
-- `BLOCKED_MISSING_SCHEMA`
-- `BLOCKED_MISSING_HANDBALL_REFERENCE`
-- `BLOCKED_CONTRACT_CONFLICT`
+### 22.2 Condição de bloqueio
+Se um worker for acionado sem evidência de execução prévia da fase pré-contrato (Fases 0–3 de `pre_contract_orchestrator.prompt.md`), o agente deve:
+1. Parar imediatamente.
+2. Emitir `BLOCKED_PRE_CONTRACT_SKIPPED`.
+3. Requerer que a execução reinicie pelo orquestrador pré-contrato.
 
-### 21.2 Review / change existing contract
-**Boot obrigatório**
-- `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md`
-- `.contract_driven/CONTRACT_SYSTEM_RULES.md`
-- contrato-alvo
-- `docs/_canon/CHANGE_POLICY.md`
-- `docs/_canon/API_CONVENTIONS.md`
+Nenhuma exceção implícita é permitida.
 
-**Boot condicional**
-- `docs/_canon/HANDBALL_RULES_DOMAIN.md` se uma regra derivada do esporte for alterada
-- `docs/hbtrack/modulos/<module>/DOMAIN_RULES_<MODULE>.md`
-- `docs/hbtrack/modulos/<module>/INVARIANTS_<MODULE>.md`
-- `docs/hbtrack/modulos/<module>/STATE_MODEL_<MODULE>.md` se estado for alterado
-- `docs/_canon/ERROR_MODEL.md` se comportamento de erro for alterado
-- `docs/hbtrack/modulos/<module>/PERMISSIONS_<MODULE>.md` se comportamento de acesso for alterado
-- `docs/hbtrack/modulos/<module>/UI_CONTRACT_<MODULE>.md` se comportamento de UI for alterado
+### 22.3 Exceção explícita
+A fase pré-contrato pode ser omitida apenas quando:
+- A tarefa for estritamente de leitura/auditoria e não produzir artefato normativo algum, **e**
+- O agente declarar explicitamente no output: `PRE_CONTRACT_SKIPPED: audit-only, no artifact produced`.
 
-**Output esperado**
-- classificação explícita breaking/non-breaking
-- contract diff claro
-- update consistente dos artefatos afetados
+Qualquer outra omissão silenciosa é proibida.
 
-**Possíveis códigos de bloqueio**
-- `BLOCKED_MISSING_DOMAIN_RULE`
-- `BLOCKED_MISSING_INVARIANT`
-- `BLOCKED_MISSING_STATE_MODEL`
-- `BLOCKED_MISSING_PERMISSION_MODEL`
-- `BLOCKED_MISSING_UI_CONTRACT`
-- `BLOCKED_CONTRACT_CONFLICT`
+### 22.4 Artefatos canônicos do orquestrador pré-contrato
+Os seguintes arquivos compõem a infraestrutura operacional da fase pré-contrato e são normativos:
+- `.contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md` — ponto de entrada obrigatório
+- `.contract_driven/agent_prompts/decision_discovery.prompt.md` — estágio Decision Discovery
+- `docs/_canon/DECISION_POLICY.md` — SSOT de política de decisões arquiteturais
+- `docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md` — registro de decisões em aberto
 
-### 21.3 Implement module guided by contract
-**Boot obrigatório**
-- `.contract_driven/CONTRACT_SYSTEM_RULES.md`
-- `docs/_canon/SYSTEM_SCOPE.md`
-- `docs/hbtrack/modulos/<module>/MODULE_SCOPE_<MODULE>.md`
-- `docs/hbtrack/modulos/<module>/DOMAIN_RULES_<MODULE>.md`
-- `docs/hbtrack/modulos/<module>/INVARIANTS_<MODULE>.md`
-- `contracts/openapi/paths/<MODULE>.yaml`
-- `contracts/schemas/<MODULE>/*.schema.json`
+Esses artefatos têm o mesmo nível de soberania que os artefatos listados em §3.2 (Global governance docs) e aplicam-se à governança operacional de agentes.
 
-**Boot condicional**
-- `docs/hbtrack/modulos/<module>/STATE_MODEL_<MODULE>.md`
-- `docs/hbtrack/modulos/<module>/PERMISSIONS_<MODULE>.md`
-- `docs/hbtrack/modulos/<module>/ERRORS_<MODULE>.md`
-- `docs/hbtrack/modulos/<module>/UI_CONTRACT_<MODULE>.md`
-- `docs/hbtrack/modulos/<module>/TEST_MATRIX_<MODULE>.md`
-- `docs/_canon/HANDBALL_RULES_DOMAIN.md` if handball trigger applies
-- `contracts/workflows/<MODULE>/*.arazzo.yaml`
-- `contracts/asyncapi/<MODULE>.yaml`
+### 22.5 Backfill explícito para legado
+Quando um módulo legado já existe em status `validated_contract+`, mas não possui log pré-contrato histórico,
+é permitido um único backfill machine-readable em `_reports/agent_execution/*.json` para restabelecer continuidade.
 
-**Output esperado**
-- implementação sem interface pública inventada
-- código alinhado ao contrato
-- nenhum field/state/event inferido fora da documentação
-
-**Possíveis códigos de bloqueio**
-- `BLOCKED_MISSING_DOMAIN_RULE`
-- `BLOCKED_MISSING_INVARIANT`
-- `BLOCKED_MISSING_STATE_MODEL`
-- `BLOCKED_MISSING_PERMISSION_MODEL`
-- `BLOCKED_MISSING_UI_CONTRACT`
-- `BLOCKED_MISSING_TEST_MATRIX`
-- `BLOCKED_MISSING_HANDBALL_REFERENCE`
-
-### 21.4 Audit module
-**Boot obrigatório**
-- `.contract_driven/CONTRACT_SYSTEM_RULES.md`
-- `docs/hbtrack/modulos/<module>/MODULE_SCOPE_<MODULE>.md`
-- `docs/hbtrack/modulos/<module>/DOMAIN_RULES_<MODULE>.md`
-- `docs/hbtrack/modulos/<module>/INVARIANTS_<MODULE>.md`
-- `docs/hbtrack/modulos/<module>/TEST_MATRIX_<MODULE>.md`
-- `contracts/openapi/paths/<MODULE>.yaml`
-- `contracts/schemas/<MODULE>/*.schema.json`
-
-**Boot condicional**
-- `docs/hbtrack/modulos/<module>/STATE_MODEL_<MODULE>.md`
-- `docs/hbtrack/modulos/<module>/PERMISSIONS_<MODULE>.md`
-- `docs/hbtrack/modulos/<module>/ERRORS_<MODULE>.md`
-- `docs/hbtrack/modulos/<module>/UI_CONTRACT_<MODULE>.md`
-- `docs/_canon/HANDBALL_RULES_DOMAIN.md`
-- `contracts/workflows/<MODULE>/*.arazzo.yaml`
-- `contracts/asyncapi/<MODULE>.yaml`
-- `docs/_canon/CI_CONTRACT_GATES.md`
-
-**Output esperado**
-- `PASS`, `FAIL`, or `BLOCKED`
-- lista exata de conflitos
-- referência explícita ao artefato violado
-
-**Possíveis códigos de bloqueio**
-- qualquer código `BLOCKED_MISSING_*` que corresponda ao artefato obrigatório ausente
-- `BLOCKED_CONTRACT_CONFLICT`
-
-### 21.5 Create Arazzo workflow
-**Boot obrigatório**
-- `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md`
-- `.contract_driven/CONTRACT_SYSTEM_RULES.md`
-- `contracts/openapi/openapi.yaml`
-- `contracts/openapi/paths/<MODULE>.yaml`
-
-**Boot condicional**
-- `docs/hbtrack/modulos/<module>/DOMAIN_RULES_<MODULE>.md`
-- `docs/hbtrack/modulos/<module>/STATE_MODEL_<MODULE>.md`
-- `docs/_canon/HANDBALL_RULES_DOMAIN.md` se o fluxo depender de regra do esporte
-
-**Output esperado**
-- workflow apenas quando multi-step for real
-- steps linkados a operações OpenAPI existentes
-
-**Possíveis códigos de bloqueio**
-- `BLOCKED_MISSING_OPENAPI_PATH`
-- `BLOCKED_MISSING_DOMAIN_RULE`
-- `BLOCKED_MISSING_STATE_MODEL`
-- `BLOCKED_MISSING_HANDBALL_REFERENCE`
-- `BLOCKED_CONTRACT_CONFLICT`
-
-### 21.6 Create AsyncAPI contract
-**Boot obrigatório**
-- `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md`
-- `.contract_driven/CONTRACT_SYSTEM_RULES.md`
-- contexto do evento
-- contrato do módulo afetado
-
-**Boot condicional**
-- `docs/hbtrack/modulos/<module>/DOMAIN_RULES_<MODULE>.md`
-- `docs/hbtrack/modulos/<module>/INVARIANTS_<MODULE>.md`
-- `docs/hbtrack/modulos/<module>/STATE_MODEL_<MODULE>.md`
-- `docs/_canon/HANDBALL_RULES_DOMAIN.md` se o evento carregar semântica esportiva
-
-**Output esperado**
-- evento apenas quando existir evento real
-- payload estável e rastreável
-
-**Possíveis códigos de bloqueio**
-- `BLOCKED_MISSING_MODULE`
-- `BLOCKED_MISSING_DOMAIN_RULE`
-- `BLOCKED_MISSING_INVARIANT`
-- `BLOCKED_MISSING_STATE_MODEL`
-- `BLOCKED_MISSING_HANDBALL_REFERENCE`
-- `BLOCKED_CONTRACT_CONFLICT`
-
-### 21.7 Create UI contract
-**Boot obrigatório**
-- `docs/hbtrack/modulos/<module>/MODULE_SCOPE_<MODULE>.md`
-- `docs/hbtrack/modulos/<module>/DOMAIN_RULES_<MODULE>.md`
-- `contracts/openapi/paths/<MODULE>.yaml`
-- `contracts/schemas/<MODULE>/*.schema.json`
-
-**Boot condicional**
-- `docs/hbtrack/modulos/<module>/STATE_MODEL_<MODULE>.md`
-- `docs/hbtrack/modulos/<module>/ERRORS_<MODULE>.md`
-- `docs/hbtrack/modulos/<module>/PERMISSIONS_<MODULE>.md`
-- `docs/_canon/HANDBALL_RULES_DOMAIN.md` se regra do esporte impactar comportamento de UI
-- `docs/_canon/UI_FOUNDATIONS.md`
-- `docs/_canon/DESIGN_SYSTEM.md`
-
-**Output esperado**
-- inputs
-- outputs
-- states
-- actions
-- errors
-- permissions
-- nenhum comportamento inventado
-
-**Possíveis códigos de bloqueio**
-- `BLOCKED_MISSING_DOMAIN_RULE`
-- `BLOCKED_MISSING_STATE_MODEL`
-- `BLOCKED_MISSING_PERMISSION_MODEL`
-- `BLOCKED_MISSING_HANDBALL_REFERENCE`
-- `BLOCKED_CONTRACT_CONFLICT`
-
-### 21.8 Create state model
-**Boot obrigatório**
-- `docs/hbtrack/modulos/<module>/DOMAIN_RULES_<MODULE>.md`
-- `docs/hbtrack/modulos/<module>/INVARIANTS_<MODULE>.md`
-
-**Boot condicional**
-- `contracts/openapi/paths/<MODULE>.yaml`
-- `docs/hbtrack/modulos/<module>/ERRORS_<MODULE>.md`
-- `docs/_canon/HANDBALL_RULES_DOMAIN.md` se o gatilho de handebol aplicar
-
-**Output esperado**
-- named states
-- valid transitions
-- triggers
-- invalid-transition errors
-
-**Possíveis códigos de bloqueio**
-- `BLOCKED_MISSING_DOMAIN_RULE`
-- `BLOCKED_MISSING_INVARIANT`
-- `BLOCKED_MISSING_HANDBALL_REFERENCE`
-- `BLOCKED_CONTRACT_CONFLICT`
-
-### 21.9 Final operational rule
-- não carregar tudo toda vez
-- carregar o conjunto mínimo obrigatório
-- carregar o restante apenas por aplicabilidade
-- se um artefato crítico estiver ausente, bloquear em vez de inferir
-- se um artefato normativo obrigatório existir fora do path canônico, tratá-lo como ausente até reconciliar ou cobrir via ADR
+Condições obrigatórias:
+- `evidence_mode` deve ser `baseline_backfill`;
+- o arquivo deve listar `reconstructed_from` com paths soberanos realmente inspecionados;
+- o backfill nunca pode fingir ser transcrição histórica de sessão humana;
+- o backfill só serve para fechar lacuna de continuidade do legado; sessões futuras continuam exigindo evidência normal de execução.
 
 ---
 
-## 22. Evolution Rule
+## 23. Evolution Rule
 
 Toda mudança deve seguir esta ordem:
 1. atualizar artefato normativo
@@ -845,3 +892,98 @@ Toda mudança deve seguir esta ordem:
 6. revisar impacto
 
 Implementation-first seguido de documentação depois é proibido.
+
+---
+
+## 24. Validação de Scope Boundary — Cross-Module References
+
+### Objetivo
+Garantir que referências entre módulos (cross-module references) sejam explícitas e autorizadas,
+prevenindo acoplamento silencioso e violações de isolamento de domínio.
+
+### Contexto
+O HB Track é um monólito modular com 17 módulos lógicos, cada um com responsabilidade de domínio clara.
+Uma referência de módulo A para recurso de módulo B deve estar:
+- Explicitamente permitida em política (`docs/_canon/SCOPE_BOUNDARY_POLICY.md`), **ou**
+- Autorizada por ADR aprovada que autorize a exceção
+
+Sem uma das duas → **BLOCKED_SCOPE_OVERFLOW**
+
+### Regra Principal
+
+Nenhuma referência cross-module é permitida sem justificativa explícita.
+
+**Fail-safe**: quando há dúvida, rejeitar a referência.
+
+### Tipos de Referências Detectadas
+
+1. **JSON Schema `$ref`**: `#/components/schemas/users/User`, `identity_access/Identity.schema.json`
+2. **OpenAPI `operationId`**: formato `module.operation` (ex: `training.publishSession`)
+3. **AsyncAPI channels**: formato `module.event` (ex: `analytics.kpi_computed`)
+4. **Arazzo `sourceDescription.$ref`**: referências de workflow entre operações
+
+### Política de Autorização
+
+A lista autoritativa de permissões está em `docs/_canon/SCOPE_BOUNDARY_POLICY.md` §2.
+
+Cada módulo define:
+- `allowed_references`: lista de módulos de destino permitidos + razão + exemplos
+- `forbidden_references`: lista de módulos de destino explicitamente proibidos
+- `exceptions`: ADRs específicas que autorizam violations excepcionais
+
+### Validação Operacional
+
+Gate: `SCOPE_BOUNDARY_GATE` (ordem 1.5 em GATES_REGISTRY.yaml)
+- Fase: 1 (Fase de descoberta de artefatos pré-contrato)
+- Script: `scripts/gates/check_scope_boundary.py`
+- Failure code: `BLOCKED_SCOPE_OVERFLOW`
+
+Pseudocódigo:
+```
+para cada reference em artifact:
+  target_module = parse_module_from_reference(reference)
+  
+  se target_module == origem_module:
+    continue  # intra-module OK
+  
+  se target_module in allowed_references[origin_module]:
+    continue  # permitido
+  
+  se target_module tem ADR de exception em SCOPE_BOUNDARY_POLICY:
+    validar ADR existe e é accepted
+    se sim: continue | senão: BLOCKED_SCOPE_OVERFLOW
+  
+  # violação
+  return BLOCKED_SCOPE_OVERFLOW
+```
+
+### Exemplos
+
+**✓ PERMITIDO**:
+- `users` → `seasons` (atleta vinculado a temporada)
+- `training` → `exercises` (exercícios executados em sessão)
+- `analytics` → qualquer módulo funcional (agregação de dados)
+
+**✗ BLOQUEADO**:
+- `users` → `identity_access` (users nunca define autenticação)
+- `training` → `competitions` (training não orquestra competições)
+- `identity_access` → `training` (cross-cutting nunca depende de funcional)
+
+### Evolução
+
+Quando precisar adicionar uma referência cross-module não permitida:
+
+1. Avaliar: é realmente necessário ou pode ser refatorado?
+2. Se necessário:
+   - Criar ADR (ex: ADR-032: "Allow training → competitions for eligibility")
+   - Descrever por que é necessário e quais proteções será implementadas
+   - Submeter ADR para revisão
+   - Após aceitar: atualizar `SCOPE_BOUNDARY_POLICY.md` com exceção + link à ADR
+
+### Referências
+
+- **Policy SSOT**: `docs/_canon/SCOPE_BOUNDARY_POLICY.md`
+- **Gate metadata**: `docs/_canon/gates/GATES_REGISTRY.yaml` (SCOPE_BOUNDARY_GATE)
+- **Validator script**: `scripts/gates/check_scope_boundary.py`
+- **ADR de criação**: `docs/_canon/decisions/ADR-034-scope-boundary-validation.md`
+- **Related rules**: §2C (Taxonomia de módulos), §9 (Códigos de bloqueio)

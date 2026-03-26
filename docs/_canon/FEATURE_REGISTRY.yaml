@@ -1,0 +1,708 @@
+# -------------------------------------------------------------------------
+# FEATURE_REGISTRY.yaml
+# Registro intermediário de funcionalidades: entre módulo (alto nível) e
+# endpoint (técnico). Cada feature representa valor entregue ao usuário.
+#
+# Status possíveis:
+#   planned      — feature identificada, sem contrato ainda
+#   in_contract  — contrato OpenAPI escrito, aguardando validação
+#   validated    — contrato validado, pronto para implementação
+#   implemented  — código implementado
+#   released     — em produção
+#
+# Autoridade: docs/_canon/CI_CONTRACT_GATES.md
+# Gate: FEATURE_READINESS_GATE
+# -------------------------------------------------------------------------
+
+version: "1.0.0"
+last_updated: "2026-03-23"
+
+features:
+  # ------------------------------------------------------------------
+  # MÓDULO: training
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-001
+    name: "Criar e Listar Sessões de Treino"
+    module: training
+    description: >
+      Treinador cria uma nova sessão de treino e consulta sessões existentes
+      por data, time ou status.
+    endpoints:
+      - POST /training-sessions
+      - GET /training-sessions
+      - GET /training-sessions/{id}
+      - PATCH /training-sessions/{id}
+      - DELETE /training-sessions/{id}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/training.yaml
+
+  - id: FT-002
+    name: "Controlar Estado da Sessão de Treino"
+    module: training
+    description: >
+      Treinador gerencia o ciclo de vida da sessão: publica para os atletas
+      verem, inicia quando começa o treino, conclui ao terminar,
+      cancela se necessário, e arquiva sessões antigas.
+    endpoints:
+      - POST /training-sessions/{id}/publish
+      - POST /training-sessions/{id}/unpublish
+      - POST /training-sessions/{id}/start
+      - POST /training-sessions/{id}/complete
+      - POST /training-sessions/{id}/cancel
+      - POST /training-sessions/{id}/archive
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/training.yaml
+
+  - id: FT-003
+    name: "Organizar Exercícios em Blocos na Sessão"
+    module: training
+    description: >
+      Treinador divide a sessão em blocos (aquecimento, parte principal,
+      volta à calma) e organiza exercícios dentro de cada bloco,
+      podendo reordenar conforme necessário.
+    endpoints:
+      - GET /training-sessions/{id}/blocks
+      - POST /training-sessions/{id}/blocks
+      - GET /training-sessions/{id}/blocks/{blockId}
+      - PATCH /training-sessions/{id}/blocks/{blockId}
+      - DELETE /training-sessions/{id}/blocks/{blockId}
+      - POST /training-sessions/{id}/blocks/reorder
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/training.yaml
+
+  - id: FT-004
+    name: "Marcar Presença dos Atletas no Treino"
+    module: training
+    description: >
+      Registrar quais atletas participaram de uma sessão de treino.
+      Presença é um fato imutável registrado uma vez por atleta por sessão.
+    endpoints:
+      - GET /training-sessions/{id}/attendance
+      - POST /training-sessions/{id}/attendance
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/training.yaml
+
+  - id: FT-005
+    name: "Registrar Bem-estar do Atleta Antes e Depois do Treino"
+    module: training
+    description: >
+      Atleta informa como se sente antes de treinar (bem-estar pré) e
+      como se sentiu depois (bem-estar pós). Treinador consulta essas
+      informações para ajustar a carga de treino.
+    endpoints:
+      - POST /training-sessions/{id}/wellness-pre
+      - GET /training-sessions/{id}/wellness-pre/{athleteId}
+      - PATCH /training-sessions/{id}/wellness-pre/{athleteId}
+      - POST /training-sessions/{id}/wellness-post
+      - GET /training-sessions/{id}/wellness-post/{athleteId}
+      - PATCH /training-sessions/{id}/wellness-post/{athleteId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/training.yaml
+
+  - id: FT-006
+    name: "Planejar Mesociclos e Microciclos de Treinamento"
+    module: training
+    description: >
+      Treinador organiza o planejamento de longo prazo em mesociclos
+      (blocos de semanas) e microciclos (semanas individuais), estruturando
+      a periodização do treinamento.
+    endpoints:
+      - GET /mesocycles
+      - POST /mesocycles
+      - GET /mesocycles/{id}
+      - PATCH /mesocycles/{id}
+      - GET /microcycles
+      - POST /microcycles
+      - GET /microcycles/{id}
+      - PATCH /microcycles/{id}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/training.yaml
+
+  - id: FT-007
+    name: "Registrar o que Foi Executado no Treino"
+    module: training
+    description: >
+      Durante ou após a sessão, treinador registra o que foi efetivamente
+      executado (cargas, séries, repetições) para comparar com o planejado.
+    endpoints:
+      - GET /training-sessions/{id}/execution-records
+      - POST /training-sessions/{id}/execution-records
+      - GET /training-sessions/{id}/execution-records/{recordId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/training.yaml
+
+  - id: FT-008
+    name: "Feedback Técnico na Sessão de Treino"
+    module: training
+    description: >
+      Treinador e atletas trocam feedback técnico sobre a sessão
+      em threads de comentários vinculados diretamente ao treino.
+    endpoints:
+      - GET /training-sessions/{id}/feedback-threads
+      - POST /training-sessions/{id}/feedback-threads
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/training.yaml
+
+  - id: FT-009
+    name: "Definir e Acompanhar Objetivos da Sessão"
+    module: training
+    description: >
+      Treinador define objetivos específicos para cada sessão de treino
+      e acompanha se foram alcançados.
+    endpoints:
+      - GET /training-sessions/{id}/objectives
+      - POST /training-sessions/{id}/objectives
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/training.yaml
+
+  - id: FT-010
+    name: "Fila de Atenção do Treinador"
+    module: training
+    description: >
+      Treinador visualiza uma fila priorizada de atletas ou itens que
+      precisam de atenção especial durante ou após uma sessão.
+    endpoints:
+      - GET /training-sessions/{id}/attention-queue
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/training.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: identity_access
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-011
+    name: "Autenticação e Gerenciamento de Tokens"
+    module: identity_access
+    description: >
+      Usuário autentica com email + senha, recebe JWT de acesso (RS256) e
+      refresh token opaco. Pode renovar o par de tokens (rotação obrigatória
+      OWASP API2:2023) e encerrar a própria sessão.
+    endpoints:
+      - POST /auth/login
+      - POST /auth/logout
+      - POST /auth/refresh
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/identity_access.yaml
+
+  - id: FT-012
+    name: "Gestão de Sessões Ativas"
+    module: identity_access
+    description: >
+      Usuário consulta sua sessão ativa (claims técnicos, MFA, roles).
+      Admin lista e revoga sessões de qualquer usuário — com controle BOLA
+      e BFLA conforme OWASP API Security Top 10.
+    endpoints:
+      - GET /auth/me
+      - GET /auth/sessions
+      - DELETE /auth/sessions/{sessionId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/identity_access.yaml
+
+  - id: FT-013
+    name: "Gestão de Roles RBAC"
+    module: identity_access
+    description: >
+      Admin gerencia o binding de roles RBAC canônicos (ADR-008):
+      consulta, atribui e revoga roles de usuários. Proteção de invariante:
+      o último admin da plataforma não pode ter o role revogado.
+    endpoints:
+      - GET /auth/users/{userId}/roles
+      - POST /auth/users/{userId}/roles
+      - DELETE /auth/users/{userId}/roles/{roleLabel}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/identity_access.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: users
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-014
+    name: "Listar Perfis de Usuário"
+    module: users
+    description: >
+      Usuários autenticados (exceto member) consultam perfis cadastrados
+      com paginação cursor-based. Coach filtra apenas membros do próprio
+      time. Resultado filtrado por organizationId do JWT (BOLA / OWASP API4).
+    endpoints:
+      - GET /users
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/users.yaml
+
+  - id: FT-015
+    name: "Criar Perfil de Usuário"
+    module: users
+    description: >
+      Admin e coordinator cadastram novos perfis de usuário na plataforma.
+      Perfil criado com statusLabel=PENDING_ACTIVATION (DEC-USERS-002).
+      Campos de autenticação nunca aceitos no payload (INV-USR-003).
+    endpoints:
+      - POST /users
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/users.yaml
+
+  - id: FT-016
+    name: "Consultar Perfil de Usuário"
+    module: users
+    description: >
+      Owner sempre vê o próprio perfil; coach vê membros do seu time;
+      admin e coordinator vêem qualquer perfil (BOLA — OWASP API1:2023).
+      Sem exposição de campos de autenticação (INV-USR-003).
+    endpoints:
+      - GET /users/{userId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/users.yaml
+
+  - id: FT-017
+    name: "Atualizar Perfil de Usuário"
+    module: users
+    description: >
+      Owner atualiza o próprio perfil (exceto roleLabel); admin e coordinator
+      editam qualquer perfil e podem alterar roleLabel (PERM-USR-004).
+      Alteração de roleLabel emite evento user.role_changed (DEC-USERS-001).
+    endpoints:
+      - PATCH /users/{userId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/users.yaml
+
+  - id: FT-018
+    name: "Listar Temporadas"
+    module: seasons
+    description: >
+      Lista paginada de temporadas com filtro opcional por statusLabel.
+      Dados públicos do contexto esportivo — todos os roles podem listar (PERM-SEA-003).
+      OWASP API4:2023: pageSize máximo 100.
+    endpoints:
+      - GET /seasons
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/seasons.yaml
+
+  - id: FT-019
+    name: "Criar Temporada"
+    module: seasons
+    description: >
+      Cria nova temporada com status inicial DRAFT.
+      phaseLabels devem ser explícitos — não deduzidos de resultados (DR-SEAS-002).
+      startDate <= endDate (INV-SEAS-002). Restrito a admin e coordinator.
+    endpoints:
+      - POST /seasons
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/seasons.yaml
+
+  - id: FT-020
+    name: "Obter Temporada"
+    module: seasons
+    description: >
+      Retorna dados completos da temporada incluindo phaseLabels, teamIds e competitionIds.
+      Dados públicos — todos os roles podem consultar (PERM-SEA-003).
+    endpoints:
+      - GET /seasons/{seasonId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/seasons.yaml
+
+  - id: FT-021
+    name: "Atualizar Temporada"
+    module: seasons
+    description: >
+      Atualização parcial dos dados da temporada. Transição de status DRAFT→ACTIVE→ARCHIVED.
+      Patches em temporadas ARCHIVED somente por admin (PERM-SEA-002).
+      patchSeason: admin e coordinator.
+    endpoints:
+      - PATCH /seasons/{seasonId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/seasons.yaml
+
+  - id: FT-022
+    name: "Associar Equipe à Temporada"
+    module: seasons
+    description: >
+      Registra vínculo explícito entre equipe e temporada (DR-SEAS-003).
+      Duplicatas rejeitadas (INV-SEAS-003). Restrito a admin e coordinator.
+    endpoints:
+      - POST /seasons/{seasonId}/teams/{teamId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/seasons.yaml
+
+  - id: FT-023
+    name: "Remover Equipe da Temporada"
+    module: seasons
+    description: >
+      Remove vínculo explícito entre equipe e temporada.
+      Temporadas ACTIVE: somente admin pode remover (PERM-SEA-001).
+      Restrito a admin e coordinator.
+    endpoints:
+      - DELETE /seasons/{seasonId}/teams/{teamId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/seasons.yaml
+
+  - id: FT-024
+    name: "Listar Equipes"
+    module: teams
+    description: >
+      Lista equipes com filtros (organizationId, seasonId, categoryLabel, statusLabel).
+      BOLA: coach e athlete veem apenas equipes às quais estão vinculados (PERM-TEAM-003).
+      Paginação page/pageSize (máx. 100).
+    endpoints:
+      - GET /teams
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/teams.yaml
+
+  - id: FT-025
+    name: "Criar Equipe"
+    module: teams
+    description: >
+      Cria nova equipe com status=DRAFT.
+      Restrito a admin e coordinator (BFLA, DR-TEAM-001).
+      athleteIds e staffUserIds deduplicados (INV-TEAM-002).
+    endpoints:
+      - POST /teams
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/teams.yaml
+
+  - id: FT-026
+    name: "Obter Equipe"
+    module: teams
+    description: >
+      Retorna equipe por ID.
+      BOLA: coach e athlete veem apenas equipes vinculadas (PERM-TEAM-001/003).
+    endpoints:
+      - GET /teams/{teamId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/teams.yaml
+
+  - id: FT-027
+    name: "Editar Equipe"
+    module: teams
+    description: >
+      Atualização parcial de equipe.
+      PERM-TEAM-001: coach edita apenas o próprio time.
+      Transição de status: DRAFT→ACTIVE→ARCHIVED (sem retorno).
+    endpoints:
+      - PATCH /teams/{teamId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/teams.yaml
+
+  - id: FT-028
+    name: "Adicionar Atleta ao Elenco"
+    module: teams
+    description: >
+      Vincula atleta à equipe (DR-TEAM-002).
+      Idempotente: sem erro se já estiver vinculado (INV-TEAM-002).
+      PERM-TEAM-001: coach opera apenas no próprio time.
+      Retorna 200 com Team body.
+    endpoints:
+      - POST /teams/{teamId}/athletes/{athleteUserId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/teams.yaml
+
+  - id: FT-029
+    name: "Remover Atleta do Elenco"
+    module: teams
+    description: >
+      Desvincula atleta da equipe.
+      Idempotente: sem erro se já não estiver vinculado.
+      PERM-TEAM-001: coach opera apenas no próprio time.
+      Retorna 200 com Team body.
+    endpoints:
+      - DELETE /teams/{teamId}/athletes/{athleteUserId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/teams.yaml
+
+  - id: FT-030
+    name: "Adicionar Membro da Comissão"
+    module: teams
+    description: >
+      Vincula membro da comissão esportiva à equipe (DR-TEAM-002).
+      Idempotente: sem erro se já estiver vinculado.
+      Restrito a admin e coordinator (BFLA).
+      Retorna 200 com Team body.
+    endpoints:
+      - POST /teams/{teamId}/staff/{staffUserId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/teams.yaml
+
+  - id: FT-031
+    name: "Remover Membro da Comissão"
+    module: teams
+    description: >
+      Desvincula membro da comissão esportiva da equipe.
+      Idempotente: sem erro se já não estiver vinculado.
+      Restrito a admin e coordinator (BFLA).
+      Retorna 200 com Team body.
+    endpoints:
+      - DELETE /teams/{teamId}/staff/{staffUserId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/teams.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: wellness
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-032
+    name: "Registrar e Consultar Entradas de Bem-estar"
+    module: wellness
+    description: >
+      Atleta registra entradas de bem-estar subjetivo (humor, carga
+      percebida, qualidade do sono). Treinador e coordenador consultam
+      entradas associadas aos atletas do time.
+    endpoints:
+      - GET /wellness/entries
+      - POST /wellness/entries
+      - GET /wellness/entries/{entryId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/wellness.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: medical
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-033
+    name: "Registrar e Consultar Prontuários Médicos"
+    module: medical
+    description: >
+      Profissional de saúde registra e consulta prontuários médicos de
+      atletas. Acesso restrito por RBAC (OWASP API1 + API5).
+    endpoints:
+      - GET /medical/records
+      - POST /medical/records
+      - GET /medical/records/{recordId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/medical.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: competitions
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-034
+    name: "Gerenciar Competições e Equipes Participantes"
+    module: competitions
+    description: >
+      Admin e coordenador criam e gerenciam competições, registrando
+      equipes participantes e seus dados de inscrição.
+    endpoints:
+      - GET /competitions
+      - POST /competitions
+      - GET /competitions/{competitionId}
+      - POST /competitions/{competitionId}/teams/{teamId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/competitions.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: matches
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-035
+    name: "Agendar Partidas e Gerenciar Escalações"
+    module: matches
+    description: >
+      Admin e coordenador agendam partidas entre equipes e registram
+      as escalações (lineup) dos jogadores convocados.
+    endpoints:
+      - GET /matches
+      - POST /matches
+      - GET /matches/{matchId}
+      - POST /matches/{matchId}/lineup/{userId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/matches.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: scout
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-036
+    name: "Registrar e Agregar Eventos de Scout"
+    module: scout
+    description: >
+      Analista registra eventos técnico-táticos de partidas (gols,
+      assistências, faltas, erros). Treinador consulta agregações
+      estatísticas por atleta ou equipe.
+    endpoints:
+      - GET /scout/events
+      - POST /scout/events
+      - GET /scout/events/aggregations
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/scout.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: exercises
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-037
+    name: "Catalogar e Copiar Exercícios"
+    module: exercises
+    description: >
+      Treinador cria e mantém catálogo de exercícios reutilizáveis,
+      podendo copiar exercícios existentes para criar variações.
+    endpoints:
+      - GET /exercises
+      - POST /exercises
+      - GET /exercises/{id}
+      - POST /exercises/{id}/copy
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/exercises.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: analytics
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-038
+    name: "Gerar e Consultar Snapshots Analíticos"
+    module: analytics
+    description: >
+      Sistema gera e persiste snapshots de métricas de desempenho
+      (carga, presença, bem-estar). Treinador consulta dashboards
+      baseados nos snapshots.
+    endpoints:
+      - GET /analytics/snapshots
+      - POST /analytics/snapshots
+      - GET /analytics/dashboards
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/analytics.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: reports
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-039
+    name: "Gerar e Baixar Relatórios"
+    module: reports
+    description: >
+      Usuário autorizado solicita geração de relatório (PDF, CSV).
+      Sistema processa em background e disponibiliza para download.
+    endpoints:
+      - GET /reports/jobs
+      - POST /reports/jobs
+      - GET /reports/jobs/{jobId}
+      - GET /reports/jobs/{jobId}/download
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/reports.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: ai_ingestion
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-040
+    name: "Ingestão Assíncrona de Dados por IA"
+    module: ai_ingestion
+    description: >
+      Operador submete jobs de ingestão de dados externos (scouts,
+      relatórios) para processamento por pipeline de IA. Pode retentar
+      jobs com falha.
+    endpoints:
+      - GET /ingestion/jobs
+      - POST /ingestion/jobs
+      - GET /ingestion/jobs/{jobId}
+      - POST /ingestion/jobs/{jobId}/retry
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/ai_ingestion.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: audit
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-041
+    name: "Consultar e Exportar Trilha de Auditoria"
+    module: audit
+    description: >
+      Admin consulta entradas da trilha de auditoria com filtros (ator,
+      ação, módulo, intervalo de datas) e exporta para análise forense.
+    endpoints:
+      - GET /audit/entries
+      - GET /audit/entries/export
+      - GET /audit/entries/{entryId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/audit.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: notifications
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-042
+    name: "Gerenciar Intenções e Entregas de Notificação"
+    module: notifications
+    description: >
+      Sistema registra intenções de notificação (push, email, in-app)
+      e rastreia entregas. Usuário consulta o histórico de entregas
+      recebidas.
+    endpoints:
+      - POST /notifications/intents
+      - GET /notifications/deliveries
+      - GET /notifications/deliveries/{deliveryId}
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/notifications.yaml
+
+  # ------------------------------------------------------------------
+  # MÓDULO: video
+  # Status do módulo: implemented
+  # ------------------------------------------------------------------
+
+  - id: FT-043
+    name: "Gerenciar Sessões e Segmentos de Vídeo"
+    module: video
+    description: >
+      Analista e treinador criam sessões de vídeo vinculadas a partidas
+      ou treinos, adicionando segmentos anotados para revisão técnica.
+    endpoints:
+      - GET /video/sessions
+      - POST /video/sessions
+      - GET /video/sessions/{sessionId}
+      - POST /video/segments
+    status: implemented
+    contracts:
+      - contracts/openapi/paths/video.yaml

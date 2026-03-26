@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hbtrack.local/schemas/waiver.schema.json",
+  "title": "HB Track — Contract Gate Waiver",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "waiver_id",
+    "gate_id",
+    "scope",
+    "module",
+    "target_artifact",
+    "justification",
+    "approved_by",
+    "approved_at_utc",
+    "expires_at_utc",
+    "fingerprint"
+  ],
+  "properties": {
+    "waiver_id": { "type": "string", "minLength": 8 },
+    "gate_id": { "type": "string", "minLength": 1 },
+    "scope": { "type": "string", "enum": ["system", "module"] },
+    "module": { "type": ["string", "null"] },
+    "target_artifact": { "type": "string", "minLength": 1 },
+    "justification": { "type": "string", "minLength": 20 },
+    "approved_by": { "type": "string", "minLength": 1 },
+    "approved_at_utc": { "type": "string" },
+    "expires_at_utc": { "type": ["string", "null"] },
+    "fingerprint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "value"],
+      "properties": {
+        "type": { "type": "string", "enum": ["sha256"] },
+        "value": { "type": "string", "pattern": "^[0-9a-fA-F]{64}$" }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "scope": { "const": "system" } } },
+      "then": { "properties": { "module": { "type": "null" } } }
+    },
+    {
+      "if": { "properties": { "scope": { "const": "module" } } },
+      "then": { "properties": { "module": { "type": "string", "minLength": 1 } } }
+    }
+  ]
+}

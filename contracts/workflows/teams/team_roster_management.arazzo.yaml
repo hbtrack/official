@@ -1,0 +1,128 @@
+# ============================================================
+# Arazzo Workflow: team_roster_management
+# Module: teams
+# x-status: active
+# Domain rules: DR-TEAM-001, DR-TEAM-002
+# Invariants: INV-TEAM-001, INV-TEAM-002, INV-TEAM-004
+# ============================================================
+
+arazzo: "1.0.0"
+info:
+  title: Gerenciamento de Elenco e Comissão Técnica
+  summary: >
+    Workflow de criação de equipe e gerenciamento de vínculos de elenco.
+    teams é soberano do elenco, comissão, categoria e associação à temporada
+    (DR-TEAM-001). Todos os vínculos são EXPLÍCITOS — presença em treino,
+    attendance, scout ou login não cria vínculo automaticamente (DR-TEAM-002).
+  version: "1.0.0"
+  x-status: active
+  x-module: teams
+  x-domain-rules:
+    - DR-TEAM-001
+    - DR-TEAM-002
+    - DR-TEAM-003
+    - DR-TEAM-004
+    - DR-TEAM-005
+
+sourceDescriptions:
+  - name: hbtrack_api
+    url: ../../openapi/openapi.yaml
+    type: openapi
+
+workflows:
+  - workflowId: create_team_and_assemble_roster
+    summary: "Cria equipe e monta elenco inicial"
+    description: >
+      Workflow principal de onboarding de equipe:
+      1. Coordinator/admin cria a equipe (statusLabel=draft)
+      2. Atletas são vinculados explicitamente ao elenco (INV-TEAM-002 uniqueItems)
+      3. Staff é vinculado explicitamente à comissão técnica
+      INV-TEAM-004: nenhuma etapa pode incluir credenciais, dados clínicos
+      ou ownership de perfil pessoal.
+    inputs:
+      type: object
+      required:
+        - organizationId
+        - name
+        - categoryLabel
+        - athleteUserId
+        - staffUserId
+      properties:
+        organizationId:
+          type: string
+          format: uuid
+          x-semantic-id: organizations.organization.id.v1
+        seasonId:
+          type: string
+          format: uuid
+          x-semantic-id: seasons.season.id.v1
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        categoryLabel:
+          type: string
+          minLength: 1
+          maxLength: 80
+          description: >
+            DR-TEAM-003: categoria esportiva/competitiva — não é papel de authz.
+        athleteUserId:
+          type: string
+          format: uuid
+          description: Atleta inicial para vincular ao elenco.
+          x-semantic-id: identity.user.id.v1
+        staffUserId:
+          type: string
+          format: uuid
+          description: Membro da comissão técnica inicial.
+          x-semantic-id: identity.user.id.v1
+    steps:
+      - stepId: create_team
+        description: >
+          Cria a equipe com statusLabel=draft. Requer papel admin ou coordinator
+          (ADR-008 RBAC).
+        operationId: createTeam
+        requestBody:
+          contentType: application/json
+          payload:
+            organizationId: $inputs.organizationId
+            seasonId: $inputs.seasonId
+            name: $inputs.name
+            categoryLabel: $inputs.categoryLabel
+        successCriteria:
+          - condition: $statusCode == 201
+        outputs:
+          teamId: $response.body#/id
+
+      - stepId: add_athlete_to_roster
+        description: >
+          Vincula atleta ao elenco (DR-TEAM-002 — vínculo explícito).
+          INV-TEAM-002: idempotente se já vinculado.
+        operationId: addAthleteToTeam
+        parameters:
+          - name: teamId
+            in: path
+            value: $steps.create_team.outputs.teamId
+          - name: athleteUserId
+            in: path
+            value: $inputs.athleteUserId
+        successCriteria:
+          - condition: $statusCode == 200
+
+      - stepId: add_staff_to_team
+        description: >
+          Vincula membro da comissão técnica (DR-TEAM-001 / DR-TEAM-002).
+          INV-TEAM-002: idempotente se já vinculado.
+        operationId: addStaffToTeam
+        parameters:
+          - name: teamId
+            in: path
+            value: $steps.create_team.outputs.teamId
+          - name: staffUserId
+            in: path
+            value: $inputs.staffUserId
+        successCriteria:
+          - condition: $statusCode == 200
+
+    outputs:
+      teamId: $steps.create_team.outputs.teamId

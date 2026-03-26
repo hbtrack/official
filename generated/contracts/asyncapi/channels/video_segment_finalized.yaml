@@ -1,0 +1,14 @@
+# AsyncAPI Channel: video.segment.finalized
+# Module: video
+# Domain rules: DR-VID-001, DR-VID-002, DR-VID-005
+# Decisions: ADR-033
+
+description: >
+  Canal de publicação quando um MediaSegment é finalizado (imutável por DR-VID-005).
+  Emitido para cada segmento mezzanine disponível para transcodificação.
+  Publisher: video. Consumidores: analytics (indexação), clip pipeline.
+  INVARIANTE: após finalizado, segmento nunca é modificado (DR-VID-005).
+publish:
+  operationId: video_segment_finalized_publish
+  message:
+    $ref: "../messages/video_segment_finalized.yaml"

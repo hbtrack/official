@@ -1,0 +1,7 @@
+messageId: session_adjustment_made
+name: session_adjustment_made
+title: Session Adjustment Made
+summary: Ajuste ao vivo realizado durante execução de sessão (estado IN_PROGRESS).
+contentType: application/json
+payload:
+  $ref: ../components/schemas/session_adjustment_made_payload.yaml

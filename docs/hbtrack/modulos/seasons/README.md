@@ -3,6 +3,11 @@ module: "seasons"
 system_scope_ref: "../../../_canon/SYSTEM_SCOPE.md"
 handball_rules_ref: "../../../_canon/HANDBALL_RULES_DOMAIN.md"
 handball_semantic_applicability: false
+type: "readme"
+module_scope_ref: "./MODULE_SCOPE_SEASONS.md"
+domain_rules_ref: "./DOMAIN_RULES_SEASONS.md"
+invariants_ref: "./INVARIANTS_SEASONS.md"
+test_matrix_ref: "./TEST_MATRIX_SEASONS.md"
 contract_path_ref: "../../../../contracts/openapi/paths/seasons.yaml"
 schemas_ref: "../../../../contracts/schemas/seasons/"
 ---

@@ -1,0 +1,67 @@
+# DECISION_IR_MATCHES.yaml
+# Decisões de implementação — módulo matches
+# Data: 2026-03-19
+# Autor: product owner via agent
+# Confirma arquitetura antes de geração de artefatos
+
+decisions:
+  - id: DEC-MATCHES-001
+    title: module_class
+    question: >
+      O módulo matches deve ser implementado como CRUD simples ou EVENT_FIRST?
+    options:
+      A:
+        label: CRUD simples
+        description: >
+          Operador preenche/atualiza o registro da partida diretamente.
+          Sem matchEventId, sem sequenceNumber. Endpoints REST padrão.
+          Adequado para registro pós-jogo ou atualização manual de status.
+      B:
+        label: EVENT_FIRST
+        description: >
+          Registro via eventos atomizados com matchEventId, sequenceNumber.
+          Suporte a deduplicação. Adequado para rastreamento em tempo real.
+    chosen: A
+    rationale: >
+      HB Track v1.x foca em gestão operacional, não rastreamento em tempo real.
+      CRUD cobre os casos de uso: agendar partida, registrar placar, atualizar súmula.
+      EVENT_FIRST é escopo de scout (DR-MATCH-005) e fase futura (v2.x).
+    doc_ref: "docs/hbtrack/modulos/matches/MODULE_SCOPE_MATCHES.md, DR-MATCH-001..005"
+
+  - id: DEC-MATCHES-002
+    title: statusLabel_enum
+    question: >
+      O statusLabel da partida deve usar 4 estados genéricos ou 9 fases HBR-013?
+    options:
+      A:
+        label: 4 estados genéricos
+        enum: [scheduled, in_progress, completed, cancelled]
+        description: >
+          Simples, independente de regras de handebol.
+          Não representa granularidade temporal real do jogo.
+      B:
+        label: 9 fases HBR-013
+        enum:
+          - scheduled
+          - pre_match
+          - first_half
+          - half_time
+          - second_half
+          - overtime_1
+          - overtime_2
+          - penalties
+          - completed
+          - cancelled
+        description: >
+          Fases cronológicas completas conforme HBR-013.
+          Suporta analytics, scout e notificações com granularidade real.
+          Exemplo: analytics sabe se o gol foi no overtime_2, scout sabe
+          em qual fase clipar.
+    chosen: B
+    rationale: >
+      As fases do jogo são informação de produto — não jargão técnico.
+      Analytics e scout consomem statusLabel para contexto temporal.
+      HBR-013 é o registro canônico oficial. DR-MATCH-004 protege o ciclo temporal.
+    doc_ref: >
+      docs/hbtrack/modulos/matches/INVARIANTS_MATCHES.md (INV-MATCH-001..005),
+      docs/_canon/HANDBALL_RULES_DOMAIN.md (HBR-013)

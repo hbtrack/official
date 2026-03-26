@@ -43,7 +43,20 @@ Perfis são um ponto de partida; o modelo autoritativo de permissões deve exist
 - operador
 - leitura restrita
 
+## Decisões Arquiteturais de Segurança (ADRs Normativas)
+
+> As regras abaixo são elevadas a status normativo pelos ADRs correspondentes.
+> Em caso de conflict, o ADR prevalece sobre descrições textuais neste arquivo.
+
+| Área | ADR | Sumário |
+|------|-----|-------|
+| Autenticação (JWT) | [ADR-007](decisions/ADR-007-auth-strategy.md) | RS256, claims mínimas, 15min access / 7d refresh, jti blacklist Redis |
+| Autorização (RBAC) | [ADR-008](decisions/ADR-008-authz-strategy.md) | RBAC flat 5 roles, deny-by-omission, BOLA/BOPLA/BFLA por camada |
+| Dados Sensíveis (PII/PHI) | [ADR-010](decisions/ADR-010-sensitive-data-policy.md) | Taxonomia 4 classes, mascaramento em logs, restrição PHI em analytics |
+| Secrets e Rotação | [ADR-012](decisions/ADR-012-secrets-policy.md) | .env em dev, env vars VPS prod, JWT key rotation 90 dias |
+| Logging e Observabilidade | [ADR-013](decisions/ADR-013-logging-policy.md) | JSON estruturado, X-Flow-ID, PHI/CREDENTIALS nunca logados |
+
 ## Segredos e Configuração
-- origem: secret manager do ambiente (proibido commitar segredos no repositório)
-- rotação: definida por política de infraestrutura (registrar em ADR quando necessário)
-- logs: não registrar segredos nem dados sensíveis; mascarar identificadores quando apropriado
+- origem: secret manager do ambiente (proibido commitar segredos no repositório) — ver **ADR-012**
+- rotação: JWT keys 90 dias, DB credentials 90 dias — definido em **ADR-012**
+- logs: não registrar segredos nem dados sensíveis; mascarar identificadores quando apropriado — regras detalhadas em **ADR-013**

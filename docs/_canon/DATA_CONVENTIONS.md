@@ -52,6 +52,7 @@ status: active
 - **Formato completo**: `YYYY-MM-DDTHH:MM:SSZ` — ex: `2026-03-11T14:30:00Z`
 - **Somente data (calendário)**: format `date` — ex: `2026-03-11`
 - **Timezone**: armazenamento sempre em UTC; conversão para exibição é responsabilidade do cliente
+- **Normativo**: esta seção é formalizada como decisão arquitetural em **[ADR-009](decisions/ADR-009-datetime-timezone-standard.md)** (inclui regra de `venueTimezone` IANA obrigatório em `matches`/`competitions`)
 
 ### 2.2 Quando Usar Cada Tipo
 
@@ -380,8 +381,7 @@ Qualquer estado → READONLY (automaticamente após 60 dias da data da sessão)
 ## 14. Referências Cruzadas
 
 - `.contract_driven/templates/api/api_rules.yaml` — SSOT de convenções/templates/validações de API HTTP
-- `API_CONVENTIONS.md` — guia/ponteiros (não-SSOT) para API
 - `CHANGE_POLICY.md` — processo formal para breaking changes de dados
-- `ERROR_MODEL.md` — modelo de erros Problem Details
+- `OPERATIONS.md` — shape de erro Problem Details e validações operacionais
 - `docs/hbtrack/modulos/<module>/INVARIANTS_<MOD>.md` — invariantes do módulo (inclui constraints críticas)
 - `HANDBALL_RULES_DOMAIN.md` — conceitos de domínio que afetam modelagem de dados (fases, eventos, composições)

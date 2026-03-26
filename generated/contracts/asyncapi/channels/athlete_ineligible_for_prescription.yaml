@@ -1,0 +1,8 @@
+description: >
+  Evento emitido quando um atleta é marcado como inelegível para prescrição de treino.
+  Razões: medical_contra, excessive_fatigue, recovery_window, testing_window, sabbatical.
+
+publish:
+  operationId: athlete_ineligible_for_prescription_publish
+  message:
+    $ref: ../messages/athlete_ineligible_for_prescription.yaml

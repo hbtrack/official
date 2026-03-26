@@ -1,0 +1,67 @@
+type: object
+additionalProperties: false
+required:
+- eventType
+- occurredAt
+- segmentId
+- sessionId
+- timecodeLogical
+- state
+- codec
+- duration
+- timestampFinalized
+properties:
+  eventType:
+    type: string
+    description: Tipo canônico do evento.
+    const: video.segment.ready
+  occurredAt:
+    type: string
+    format: date-time
+    description: Momento ISO 8601 UTC da finalização.
+    x-semantic-id: core.occurred_at.v1
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  segmentId:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    description: UUID v4 do MediaSegment (INV-VID-005, DR-VID-005).
+    x-semantic-id: video.media_segment.id.v1
+  sessionId:
+    type: string
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    format: uuid
+    description: UUID da MatchMediaSession pai (INV-VID-006).
+    x-semantic-id: video.match_media_session.id.v1
+  timecodeLogical:
+    type: integer
+    minimum: 0
+    description: Timecode lógico único em ms (INV-VID-001, INV-VID-003).
+  state:
+    type: string
+    description: Estado invariante para este evento.
+    const: FINALIZED
+  codec:
+    type: string
+    enum:
+    - H264
+    - H265
+    - VP9
+    - AV1
+    description: Codec do segmento de captura (mezzanine).
+    x-domain-enum-ref: video_codec
+  duration:
+    type: integer
+    minimum: 0
+    description: Duração do segmento em ms.
+  timestampFinalized:
+    type: string
+    format: date-time
+    description: ISO 8601 UTC quando flushed para storage.
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  storageAssetId:
+    type:
+    - string
+    - 'null'
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    description: Identificador da asset em object storage (mezzanine).

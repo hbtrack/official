@@ -1,0 +1,124 @@
+# SessionBlock schema — training block within a session (module: training)
+# TRAIN-DEC-049: session_block is Fase 1 mandatory contract.
+# DEFER-TRAIN-P2-006: resolved 2026-03-16.
+# INV-TRAIN-083: Elastic Sum Rule — SUM(durationMinutes) enforced at API level.
+# TRAIN-DEC-047: exerciseId + exerciseVersionId reference only; never embeds Exercise.
+# ADR-018 (HYBRID): session_block is CRUD (mutable while session in DRAFT/SCHEDULED/PUBLISHED).
+
+type: object
+additionalProperties: false
+required:
+  - id
+  - sessionId
+  - phase
+  - orderIndex
+  - durationMinutes
+  - blockObjective
+  - intensity
+  - isOptional
+  - createdAt
+  - updatedAt
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  sessionId:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    description: FK to TrainingSession. Immutable after creation.
+  phase:
+    type: string
+    x-domain-enum-ref: session_block_phase
+    enum:
+      - WARMUP
+      - ACTIVATION
+      - TECHNICAL
+      - DECISION_MAKING
+      - TACTICAL
+      - REDUCED_GAME
+      - COOLDOWN
+    description: >
+      Canonical session phase. DOMAIN_AXIOMS session_block_phase. DR-EXB-H03.
+      Defines pedagogical intent of the block within the session structure.
+  orderIndex:
+    type: integer
+    minimum: 0
+    description: >
+      0-based position of this block within the session.
+      Uniqueness of (sessionId, orderIndex) enforced server-side.
+      Reordering via POST /training-sessions/{id}/blocks/reorder.
+  durationMinutes:
+    type: integer
+    minimum: 1
+    maximum: 240
+    description: >
+      Planned duration of this block in minutes.
+      INV-TRAIN-083 (Elastic Sum Rule): SUM across all session blocks must not exceed
+      session.durationPlannedMinutes + MIN(durationPlannedMinutes × 0.10, 10).
+      Violation outside tolerance → 422. Within tolerance → Warning.
+  blockObjective:
+    type: string
+    minLength: 3
+    maxLength: 300
+    description: Explicit pedagogical objective of this block. Required — captures training intent.
+  intensity:
+    type: string
+    x-domain-enum-ref: session_block_intensity
+    enum:
+      - LOW
+      - MEDIUM
+      - HIGH
+      - MAXIMUM
+    description: Planned effort level for this block. DOMAIN_AXIOMS session_block_intensity.
+  exerciseId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    x-semantic-id: exercises.exercise.id.v1
+    description: >
+      Reference to Exercise (sovereign module). Optional — a block may represent
+      a free-form phase without a specific catalogued exercise.
+      TRAIN-DEC-047: training references, never embeds.
+  exerciseVersionId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    x-semantic-id: exercises.exercise_version.id.v1
+    description: >
+      Required when exerciseId is present. Explicit version reference preserves
+      reproducibility of historical sessions (TRAIN-DEC-048, INV-EXB-007).
+      Blocks without exerciseId must omit this field.
+  notes:
+    type: string
+    maxLength: 1000
+    description: Coach annotations for this block (tactical cues, adaptations, reminders).
+  isOptional:
+    type: boolean
+    description: >
+      When true, this block may be skipped at execution time without invalidating
+      the session. Used for conditional blocks (e.g. weather-dependent outdoor drill).
+  createdAt:
+    type: string
+    format: date-time
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  updatedAt:
+    type: string
+    format: date-time
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+
+example:
+  id: "550e8400-e29b-41d4-a716-446655440500"
+  sessionId: "550e8400-e29b-41d4-a716-446655440000"
+  phase: "TACTICAL"
+  orderIndex: 2
+  durationMinutes: 20
+  blockObjective: "Transição ofensiva 3x2 com finalização"
+  intensity: "HIGH"
+  exerciseId: "550e8400-e29b-41d4-a716-446655440100"
+  exerciseVersionId: "550e8400-e29b-41d4-a716-446655440101"
+  notes: "Atenção à saída da ponta direita. Ajustar se > 8 atletas presentes."
+  isOptional: false
+  createdAt: "2026-03-16T10:00:00Z"
+  updatedAt: "2026-03-16T10:00:00Z"

@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hbtrack://schemas/shared/domain_axioms_module.schema.json",
+  "title": "HB Track Module Domain Axioms (Extensions)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["domain_axioms_module"],
+  "$defs": {
+    "event_type_value": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "semantic_id", "description", "payload_constraints"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "semantic_id": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "minLength": 1 },
+        "payload_constraints": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["required_fields", "field_formats"],
+          "properties": {
+            "required_fields": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 },
+              "uniqueItems": true
+            },
+            "field_formats": {
+              "type": "object",
+              "additionalProperties": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    },
+    "domain_enum_value": {
+      "oneOf": [
+        { "type": "string", "minLength": 1 },
+        { "$ref": "#/$defs/event_type_value" }
+      ]
+    }
+  },
+  "properties": {
+    "domain_axioms_module": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["meta", "module", "delta_only", "local_invariants_may_only_restrict", "domain_enums"],
+      "properties": {
+        "meta": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["artifact_id", "version", "status"],
+          "properties": {
+            "artifact_id": { "type": "string", "const": "DOMAIN_AXIOMS_MODULE" },
+            "version": { "type": "string", "minLength": 1 },
+            "status": { "type": "string", "enum": ["ACTIVE", "DRAFT", "DEPRECATED"] },
+            "description": { "type": "string" }
+          }
+        },
+        "module": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Nome do módulo canônico (ex: training, matches, identity_access)."
+        },
+        "delta_only": {
+          "type": "boolean",
+          "const": true,
+          "description": "Regime DELTA_ONLY: este arquivo só pode declarar deltas (nunca re-definir axiomas globais)."
+        },
+        "local_invariants_may_only_restrict": {
+          "type": "boolean",
+          "const": true,
+          "description": "Regime de restrição: invariantes locais podem apenas restringir, nunca enfraquecer globais."
+        },
+        "local_invariants": {
+          "type": "object",
+          "description": "Invariantes locais (DELTA_ONLY). Estrutura exata é aplicada por contrato do pipeline; sem interpretação livre.",
+          "additionalProperties": true
+        },
+        "domain_enums": {
+          "type": "object",
+          "description": "Extensões modulares de enums globais (somente quando permitido por domain_axioms.module_extension_policy).",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["values"],
+            "properties": {
+              "values": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": { "$ref": "#/$defs/domain_enum_value" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

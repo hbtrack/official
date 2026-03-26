@@ -1,9 +1,508 @@
-# Path items for module: audit
+# ============================================================
+# Module: audit — OpenAPI path items
 # Source of truth: contracts/openapi/openapi.yaml
-# Related docs:
-# - docs/_canon/SYSTEM_SCOPE.md
-# - docs/_canon/SECURITY_RULES.md
-# - docs/hbtrack/modulos/audit/MODULE_SCOPE_AUDIT.md
+# Docs: docs/hbtrack/modulos/audit/MODULE_SCOPE_AUDIT.md
+# Domain rules: DR-AUD-001..005
+# Invariants: INV-AUD-001..005
+# Decisions: DEC-AUD-001=B+C, DEC-AUD-002=B, DEC-AUD-003=C
+# ADR refs: ADR-007 (JWT RS256), ADR-008 (RBAC), ADR-031 (stack)
+# OWASP: API1:2023 (BOLA), API2:2023 (BFLA), API4:2023 (rate limit)
 #
-# Add path items here following OpenAPI 3.1 Path Item Object spec.
-# Each path must belong exclusively to this module (LAYOUT section 6).
+# Endpoints:
+#   GET  /audit/entries              — listAuditEntries
+#   POST /audit/entries              — createAuditEntry (cross-module ingestão)
+#   GET  /audit/entries/{entryId}    — getAuditEntry
+#   GET  /audit/entries/export       — exportAuditEntries (compliance/LGPD)
+# ============================================================
+
+/audit/entries:
+  get:
+    tags:
+      - audit
+    summary: Lista entradas de auditoria
+    description: >
+      Lista entradas do trilho de auditoria imutável com paginação cursor-based.
+
+      Regras de acesso (DEC-AUD-002=B):
+      - admin: acesso irrestrito; pode listar todas as entradas sem filtro obrigatório.
+      - coordinator: filtro teamId ou organizationId obrigatório para evitar
+        escalada de acesso horizontal (OWASP API1:2023).
+      - coach/athlete/member: proibido (403 BFLA — OWASP API2:2023).
+
+      Regras de domínio:
+      - DR-AUD-001: audit é soberano do trilho imutável (ator, ação, alvo, instante).
+      - DR-AUD-004: audit não substitui a verdade dos módulos de origem.
+      - INV-AUD-002: entradas são append-only — retornadas em ordem cronológica DESC.
+
+      Paginação obrigatória (api_rules.yaml design_rules.google_aip_core.pagination).
+      pageSize máximo: 200.
+    operationId: listAuditEntries
+    security:
+      - HTTPBearer: []
+    parameters:
+      - $ref: ../components/parameters/pageSize.yaml
+      - $ref: ../components/parameters/pageToken.yaml
+      - name: actorUserId
+        in: query
+        required: false
+        description: Filtra entradas pelo UUID do ator (quem executou a ação).
+        schema:
+          type: string
+          format: uuid
+      - name: targetResourceId
+        in: query
+        required: false
+        description: Filtra entradas pelo UUID do recurso alvo da ação.
+        schema:
+          type: string
+          format: uuid
+      - name: targetResourceType
+        in: query
+        required: false
+        description: Filtra entradas pelo tipo de recurso alvo (ex. training_session, user).
+        schema:
+          type: string
+          maxLength: 80
+      - name: action
+        in: query
+        required: false
+        description: >
+          Filtra por tipo de ação (ex. training_session.updated, user.role_assigned).
+        schema:
+          type: string
+          maxLength: 120
+      - name: teamId
+        in: query
+        required: false
+        description: >
+          Filtra entradas relacionadas a um time específico.
+          Obrigatório quando o ator autenticado tem role coordinator (DEC-AUD-002=B).
+        schema:
+          type: string
+          format: uuid
+      - name: organizationId
+        in: query
+        required: false
+        description: >
+          Filtra entradas relacionadas a uma organização específica.
+          Obrigatório quando o ator autenticado tem role coordinator (DEC-AUD-002=B)
+          e teamId não fornecido.
+        schema:
+          type: string
+          format: uuid
+      - name: occurredAfter
+        in: query
+        required: false
+        description: Filtra entradas com occurredAt >= occurredAfter (ISO 8601 UTC).
+        schema:
+          type: string
+          format: date-time
+      - name: occurredBefore
+        in: query
+        required: false
+        description: Filtra entradas com occurredAt <= occurredBefore (ISO 8601 UTC).
+        schema:
+          type: string
+          format: date-time
+      - name: correlationId
+        in: query
+        required: false
+        description: >
+          Filtra entradas pelo correlationId (DR-AUD-003).
+          Retorna todas as etapas técnicas e funcionais de uma operação distribuída.
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Lista de entradas de auditoria retornada com sucesso.
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - items
+              additionalProperties: false
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: "../components/schemas/audit/audit_entry.yaml"
+                  description: Entradas de auditoria em ordem cronológica decrescente (occurredAt DESC).
+                nextPageToken:
+                  type:
+                    - string
+                    - "null"
+                  description: Token de paginação para a próxima página. Null quando não há mais entradas.
+                  maxLength: 256
+      "400":
+        description: >
+          Requisição inválida. Causas: coordinator sem teamId/organizationId (DEC-AUD-002=B);
+          formato de parâmetro inválido.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: >
+          Acesso negado. Roles coach/athlete/member não podem acessar audit trail
+          (OWASP API2:2023 BFLA — DEC-AUD-002=B).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+  post:
+    tags:
+      - audit
+    summary: Registra entrada de auditoria
+    description: >
+      Registra uma nova entrada imutável no trilho de auditoria (ingestão cross-module).
+      Permite que outros módulos registrem ações sensíveis explicitamente via HTTP
+      sem acoplamento direto (DEC-AUD-001=B+C, DR-AUD-005).
+
+      Regras de acesso (DEC-AUD-002=B):
+      - admin: pode registrar qualquer entrada do sistema.
+      - coordinator: pode registrar entradas relacionadas a recursos que gerencia.
+      - coach/athlete/member: proibido (403 BFLA).
+
+      Regras de domínio:
+      - INV-AUD-001: id, actorUserId, action e occurredAt são obrigatórios.
+      - INV-AUD-002: append-only — POST cria, nunca atualiza entrada existente.
+      - INV-AUD-003: se targetResourceId presente, targetResourceType obrigatório.
+      - DR-AUD-002: beforeSummary/afterSummary são resumos saneados, não payloads integrais.
+      - DR-AUD-003: correlationId agrupa etapas da mesma operação distribuída.
+
+      Pós-condições:
+      - AuditEntry criado com status imutável (append-only).
+      - Evento audit.entry.created publicado via AsyncAPI (DEC-AUD-003=C).
+      - Para ações sensíveis: audit.entry.security_flagged também publicado.
+    operationId: createAuditEntry
+    security:
+      - HTTPBearer: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - actorUserId
+              - action
+              - occurredAt
+            additionalProperties: false
+            properties:
+              actorUserId:
+                type: string
+                format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+                description: >
+                  UUID do usuário que executou a ação (INV-AUD-001).
+                  Referência ao módulo users.
+                x-semantic-id: identity.user.id.v1
+              action:
+                type: string
+                minLength: 1
+                maxLength: 120
+                description: >
+                  Rótulo da ação executada (INV-AUD-001).
+                  Padrão: <module>.<entity>.<verb> (ex. training_session.updated,
+                  identity_access.role_assigned, user.force_logout).
+              occurredAt:
+                type: string
+                format: date-time
+                pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$'
+                description: Timestamp UTC da ação (INV-AUD-001). ISO 8601.
+                x-semantic-id: core.occurred_at.v1
+              targetResourceId:
+                type: string
+                format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+                description: >
+                  UUID do recurso alvo da ação (INV-AUD-003).
+                  Obrigatório quando targetResourceType estiver presente.
+                x-semantic-id: core.resource.id.v1
+              targetResourceType:
+                type: string
+                maxLength: 80
+                description: >
+                  Tipo do recurso alvo (INV-AUD-003).
+                  Obrigatório quando targetResourceId estiver presente.
+                  Ex.: training_session, user, team, competition.
+              outcomeLabel:
+                type: string
+                enum:
+                  - success
+                  - failure
+                  - partial
+                description: Resultado da ação executada.
+              originLabel:
+                type: string
+                maxLength: 80
+                description: >
+                  Origem técnica da ação (ex.: api, celery_task, webhook, admin_console).
+              correlationId:
+                type: string
+                format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+                description: >
+                  UUID de correlação para agrupar etapas da mesma operação distribuída
+                  (DR-AUD-003, INV-AUD-005). Deve ser gerado pelo módulo originador.
+                x-semantic-id: core.correlation.id.v1
+              beforeSummary:
+                type: string
+                maxLength: 1000
+                description: >
+                  Resumo saneado do estado anterior à ação (DR-AUD-002, INV-AUD-004).
+                  NUNCA cópia integral de payload sensível.
+              afterSummary:
+                type: string
+                maxLength: 1000
+                description: >
+                  Resumo saneado do estado posterior à ação (DR-AUD-002, INV-AUD-004).
+                  NUNCA cópia integral de payload sensível.
+    responses:
+      "201":
+        description: Entrada de auditoria criada com sucesso.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/audit/audit_entry.yaml"
+      "400":
+        description: >
+          Requisição inválida. Causas: actorUserId/action/occurredAt ausentes (INV-AUD-001);
+          targetResourceId sem targetResourceType ou vice-versa (INV-AUD-003).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: >
+          Acesso negado. Roles coach/athlete/member não podem registrar entradas
+          (OWASP API2:2023 BFLA — DEC-AUD-002=B).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+/audit/entries/export:
+  get:
+    tags:
+      - audit
+    summary: Exporta entradas de auditoria para compliance
+    description: >
+      Exporta entradas de auditoria filtradas em formato JSON ou CSV para fins de
+      compliance e LGPD (DEC-AUD-001=B+C). Endpoint síncrono com limite máximo de
+      registros por exportação.
+
+      Regras de acesso (DEC-AUD-002=B):
+      - admin: pode exportar qualquer intervalo sem filtro obrigatório.
+      - coordinator: filtro teamId ou organizationId obrigatório.
+      - coach/athlete/member: proibido (403 BFLA — OWASP API2:2023).
+
+      Pré-condições:
+      - occurredAfter e occurredBefore são obrigatórios para limitar o volume.
+      - Máximo de 10.000 registros por exportação. Para volumes maiores, usar paginação
+        via GET /audit/entries.
+
+      Pós-condições:
+      - Log desta exportação gerado automaticamente no próprio audit trail
+        (ação: audit.export_requested, outcomeLabel: success).
+    operationId: exportAuditEntries
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: occurredAfter
+        in: query
+        required: true
+        description: Início do intervalo temporal de exportação (ISO 8601 UTC).
+        schema:
+          type: string
+          format: date-time
+      - name: occurredBefore
+        in: query
+        required: true
+        description: Fim do intervalo temporal de exportação (ISO 8601 UTC).
+        schema:
+          type: string
+          format: date-time
+      - name: format
+        in: query
+        required: false
+        description: Formato de exportação. Default json.
+        schema:
+          type: string
+          enum:
+            - json
+            - csv
+          default: json
+      - name: teamId
+        in: query
+        required: false
+        description: >
+          Filtra exportação por time. Obrigatório quando ator é coordinator
+          (DEC-AUD-002=B).
+        schema:
+          type: string
+          format: uuid
+      - name: organizationId
+        in: query
+        required: false
+        description: >
+          Filtra exportação por organização. Obrigatório quando ator é coordinator
+          e teamId não fornecido (DEC-AUD-002=B).
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Exportação gerada com sucesso.
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - entries
+                - exportedCount
+                - exportedAt
+              additionalProperties: false
+              properties:
+                entries:
+                  type: array
+                  maxItems: 10000
+                  items:
+                    $ref: "../components/schemas/audit/audit_entry.yaml"
+                exportedCount:
+                  type: integer
+                  minimum: 0
+                  description: Número total de entradas exportadas.
+                exportedAt:
+                  type: string
+                  format: date-time
+                  pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$'
+                  description: Timestamp UTC do momento da exportação.
+                truncated:
+                  type: boolean
+                  description: >
+                    Indica se a exportação foi truncada no limite de 10.000 registros.
+                    Se true, refinar o intervalo ou usar paginação via GET /audit/entries.
+          text/csv:
+            schema:
+              type: string
+              description: Entradas de auditoria em formato CSV (RFC 4180).
+      "400":
+        description: >
+          Requisição inválida. Causas: occurredAfter/occurredBefore ausentes;
+          intervalo maior que 1 ano; coordinator sem teamId/organizationId.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: >
+          Acesso negado (OWASP API2:2023 BFLA — DEC-AUD-002=B).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+/audit/entries/{entryId}:
+  get:
+    tags:
+      - audit
+    summary: Obtém entrada de auditoria por ID
+    description: >
+      Retorna os detalhes completos de uma entrada de auditoria específica.
+
+      Regras de acesso (DEC-AUD-002=B):
+      - admin: pode acessar qualquer entrada.
+      - coordinator: pode acessar apenas entradas relacionadas a recursos que gerencia
+        (OWASP API1:2023 BOLA).
+      - coach/athlete/member: proibido (403 BFLA — OWASP API2:2023).
+
+      Regras de domínio:
+      - DR-AUD-001: audit é soberano do trilho imutável.
+      - INV-AUD-002: entradas são append-only — nunca modificadas após criação.
+    operationId: getAuditEntry
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: entryId
+        in: path
+        required: true
+        description: UUID v4 da entrada de auditoria (INV-AUD-001).
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Entrada de auditoria retornada com sucesso.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/audit/audit_entry.yaml"
+      "401":
+        description: Token ausente ou expirado (ADR-007).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: >
+          Acesso negado. Roles sem permissão ou coordinator tentando acessar
+          entrada fora do seu contexto (OWASP API1:2023 BOLA, API2:2023 BFLA).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Entrada de auditoria não encontrada.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"

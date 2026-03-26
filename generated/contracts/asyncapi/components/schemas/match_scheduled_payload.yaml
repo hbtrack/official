@@ -1,0 +1,58 @@
+type: object
+required:
+- eventType
+- occurredAt
+- matchId
+- competitionId
+- homeTeamId
+- awayTeamId
+- statusLabel
+- scheduledAt
+additionalProperties: false
+properties:
+  eventType:
+    type: string
+    const: match.scheduled
+  occurredAt:
+    type: string
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+    format: date-time
+    x-semantic-id: core.occurred_at.v1
+  matchId:
+    type: string
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    format: uuid
+    x-semantic-id: matches.match.id.v1
+  competitionId:
+    type: string
+    format: uuid
+    x-semantic-id: competitions.competition.id.v1
+    description: Obrigatório — partida sem competição é inválida (DR-MATCH-001).
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+  homeTeamId:
+    type: string
+    format: uuid
+    x-semantic-id: teams.team.id.v1
+    description: Equipe mandante (DR-MATCH-002). Sempre != awayTeamId.
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+  awayTeamId:
+    type: string
+    format: uuid
+    x-semantic-id: teams.team.id.v1
+    description: Equipe visitante (DR-MATCH-002). Sempre != homeTeamId.
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+  venueLabel:
+    type:
+    - string
+    - 'null'
+    maxLength: 200
+  statusLabel:
+    type: string
+    description: Partidas novas sempre iniciam como scheduled (DEC-MATCHES-002).
+    const: scheduled
+  scheduledAt:
+    type: string
+    format: date-time
+    x-semantic-id: core.occurred_at.v1
+    description: Data e hora agendada (DR-MATCH-004, INV-MATCH-001).
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$

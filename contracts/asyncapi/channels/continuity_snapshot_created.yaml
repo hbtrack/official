@@ -1,0 +1,8 @@
+description: >
+  Evento emitido quando um snapshot de continuidade é registrado.
+  Snapshot: série histórica comprimida de estado de atleta para efeitos de continuidade (seasonal/periodization).
+
+publish:
+  operationId: continuity_snapshot_created_publish
+  message:
+    $ref: ../messages/continuity_snapshot_created.yaml

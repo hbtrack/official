@@ -1,0 +1,21 @@
+date=2026-03-12
+command=asyncapi validate contracts/asyncapi/asyncapi.yaml
+exit_code=0
+
+output:
+File contracts/asyncapi/asyncapi.yaml is valid but has (itself and/or referenced documents) governance issues.
+
+warnings(6):
+- asyncapi-id: AsyncAPI document should have "id" field
+- asyncapi2-tags: AsyncAPI object should have non-empty "tags" array
+- asyncapi-info-contact: Info object should have "contact" object
+- asyncapi-info-license: Info object should have "license" object
+- asyncapi2-message-messageId: Message should have "messageId" field (2 occurrences)
+
+information(3):
+- asyncapi-latest-version: Recommended update to "3.1.0" version
+- asyncapi-unused-component: Potentially unused components detected (2 occurrences)
+
+notes:
+- Exit code 0 (PASS): nenhum erro.
+- Há avisos de governança; corrigir é recomendável, mas não bloqueante para o Gate 12.

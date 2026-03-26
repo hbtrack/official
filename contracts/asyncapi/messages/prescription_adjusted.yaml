@@ -1,0 +1,7 @@
+messageId: prescription_adjusted
+name: prescription_adjusted
+title: Prescription Adjusted
+summary: Prescrição de treino ajustada (descrescente).
+contentType: application/json
+payload:
+  $ref: ../components/schemas/prescription_adjusted_payload.yaml

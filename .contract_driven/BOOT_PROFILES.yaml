@@ -1,0 +1,174 @@
+---
+# BOOT_PROFILES.yaml
+# SSOT único para profiles de boot do agente
+# Cada profile define: quais artefatos carregar, em que ordem, validações obrigatórias
+# Referência: docs/_canon/AGENT_INSTRUCTIONS.md §0 (leia isto ANTES de qualquer coisa)
+# Versão: 1.0.0
+# Status: active
+
+doc_type: canon
+version: "1.0.0"
+last_reviewed: "2026-03-23"
+scope: boot_authority
+path_resolution: repo_root_relative
+
+profiles:
+  # Profile padrão: leitura mínima para começar
+  default:
+    id: default
+    description: "Boot mínimo para agent. Sempre carregado independentemente de tarefa."
+    load_sequence:
+      - docs/_canon/AGENT_INSTRUCTIONS.md # Entrypoint (§0-§2 obrigatórios)
+      - docs/_canon/OPERATIONS.md # Referência operacional rápida
+      - docs/_canon/README.md # Guia de navegação
+    required_sections:
+      - docs/_canon/AGENT_INSTRUCTIONS.md§0 # "Leia Primeiro"
+      - docs/_canon/AGENT_INSTRUCTIONS.md§1 # Modo de operação
+      - docs/_canon/AGENT_INSTRUCTIONS.md§2 # Sistema: O que é
+      - docs/_canon/AGENT_INSTRUCTIONS.md§3 # 17 Módulos Canônicos
+      - docs/_canon/AGENT_INSTRUCTIONS.md§4 # Task Types → Workers
+      - docs/_canon/AGENT_INSTRUCTIONS.md§5 # Bloqueios (códigos)
+      - docs/_canon/AGENT_INSTRUCTIONS.md§6 # Regras Core
+    validations:
+      - task_type_in_catalog: true # Task type deve existir em TASK_CATALOG.yaml
+      - module_in_registry: true # Módulo deve existir em MODULE_REGISTRY.yaml
+      - worker_prompt_exists: true # Prompt do worker deve estar em .contract_driven/agent_prompts/
+    exit_on_fail: true # Se alguma validação falhar, exit != 0
+
+  # Profile para execução de contrato
+  contract_execution:
+    id: contract_execution
+    description: "Boot para task de contrato (new_contract, new_event, etc)."
+    load_sequence:
+      - docs/_canon/AGENT_INSTRUCTIONS.md
+      - docs/_canon/OPERATIONS.md
+      - docs/_canon/CONTRACT_PIPELINE.md # Estágios formais do pipeline
+      - contracts/schemas/shared/session_start.schema.json # Validar sessão
+      - .contract_driven/CONTRACT_SYSTEM_RULES.md
+      - docs/_canon/gates/GATES_REGISTRY.yaml
+    required_sections:
+      - docs/_canon/AGENT_INSTRUCTIONS.md§0
+      - docs/_canon/AGENT_INSTRUCTIONS.md§3
+      - docs/_canon/AGENT_INSTRUCTIONS.md§4
+      - docs/_canon/AGENT_INSTRUCTIONS.md§5
+      - docs/_canon/AGENT_INSTRUCTIONS.md§6
+      - docs/_canon/CONTRACT_PIPELINE.md§1 # Pipeline de Fases
+      - GATES_REGISTRY.yaml§metadata # Gate metadata
+    validations:
+      - session_start_valid: true # _reports/session_start.json deve ser JSON válido
+      - task_type_active: true # Task type não pode ser "frozen" em TASK_CATALOG.yaml
+      - boot_profile_in_session: true # _reports/session_start.json deve ter boot_profile_id
+      - stage_in_range: [0, 1, 2] # Stage só pode ser 0, 1, ou 2
+    exit_on_fail: true
+
+  # Profile para decisões arquiteturais (DSS)
+  architecture_decision:
+    id: architecture_decision
+    description: "Boot para task de Decision Discovery (decision_discovery)."
+    load_sequence:
+      - docs/_canon/AGENT_INSTRUCTIONS.md
+      - docs/_canon/OPERATIONS.md
+      - docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md
+      - docs/_canon/DECISION_POLICY.md
+      - docs/_canon/gates/GATES_REGISTRY.yaml
+    required_sections:
+      - docs/_canon/AGENT_INSTRUCTIONS.md§0
+      - docs/_canon/AGENT_INSTRUCTIONS.md§1
+      - docs/_canon/AGENT_INSTRUCTIONS.md§2
+      - docs/_canon/DECISION_POLICY.md§2 # Quando Decision Discovery é obrigatório
+    validations:
+      - decision_ir_exists: true # Se executando decision_discovery, IR deve existir
+    exit_on_fail: true
+
+  # Profile para execução de fases do ROADMAP (implementação — modo distinto do CDD)
+  roadmap_execution:
+    id: roadmap_execution
+    description: "Boot para execução de fase do ROADMAP (infra, CI/CD, frontend, deploy). Não usa CDD pipeline."
+    load_sequence:
+      - docs/_canon/AGENT_INSTRUCTIONS.md      # entrypoint §0 obrigatório
+      - ROADMAP.md                              # fase atual + Critério de Done
+      - SESSION_HANDOFF.md                      # fase declarada (se existir)
+      - docs/_canon/CODE_ARCHITECTURE.md          # estrutura canônica de código backend
+    required_sections:
+      - docs/_canon/AGENT_INSTRUCTIONS.md§0       # "Leia Primeiro"
+      - ROADMAP.md                                # seção da fase declarada
+    validations:
+      - roadmap_phase_valid: true                 # phase deve ser inteiro entre 0 e 13
+      - session_handoff_read: true                # SESSION_HANDOFF.md lido se existir
+    exit_on_fail: true
+    notes: |
+      Este profile NÃO valida task_type_in_catalog nem module_in_registry (não são aplicáveis).
+      A validação de fase anterior (Critério de Done de N-1) é responsabilidade do worker.
+      Deploy de produção (fases 6, 9, 12) requer aprovação humana — nunca executar autonomamente.
+
+  # Profile para limpeza/debug (baixa autoridade)
+  diagnostic:
+    id: diagnostic
+    description: "Boot para tarefas de diagnóstico (hb status, hb check). Sem write_scope."
+    load_sequence:
+      - docs/_canon/AGENT_INSTRUCTIONS.md
+      - docs/_canon/OPERATIONS.md
+      - .contract_driven/CONTRACT_SYSTEM_RULES.md
+    required_sections:
+      - docs/_canon/AGENT_INSTRUCTIONS.md§0
+    validations:
+      - none_required: true # Diagnóstico não falha por falta de artefatos
+    exit_on_fail: false
+
+# Regras de seleção de profile
+selection_rules:
+  # Se task_type está em TASK_CATALOG.yaml com profile_id, usar esse
+  - condition: "task_type.profile_id != null"
+    action: "use_task_specified_profile"
+
+  # Se task_type for execução de fase do ROADMAP
+  - condition: "task_type == execute_roadmap_phase"
+    action: "use_profile:roadmap_execution"
+
+  # Se task_type for contract-related (new_contract, contract_revision, new_event, new_workflow, new_schema)
+  - condition: "task_type in [new_contract, contract_revision, new_event, new_workflow, new_schema]"
+    action: "use_profile:contract_execution"
+
+  # Se task_type for decision-related
+  - condition: "task_type in [architecture_review, decision_discovery]"
+    action: "use_profile:architecture_decision"
+
+  # Default
+  - condition: "always"
+    action: "use_profile:default"
+
+# Mapeamento de phase para profile
+phase_profiles:
+  phase_0_boot:
+    profile_id: default
+    description: "Determina task_type, module, worker. Seleciona profile real para fase 1."
+
+  phase_1_discovery:
+    profile_id: "conditional" # Depende de seleção em phase_0_boot
+    description: "Carregar artefatos de decisão, precedência, bloqueios."
+
+  phase_2_execution:
+    profile_id: "conditional" # Depende de task_type
+    description: "Executar worker com contexto montado."
+
+# Instruções de integração
+integration:
+  # Como o agente carrega profile
+  load_mechanism: |
+    1. Ler SESSION_HANDOFF.md para boot_profile_id
+    2. Se not found, usar phase_0_boot (default)
+    3. Executar validações do profile selecionado
+    4. Exit != 0 se validação falhar e exit_on_fail=true
+    5. Se passou, carregar cada arquivo em load_sequence
+    6. Todos os paths em load_sequence são relativos à raiz do repositório
+    7. required_sections nunca pode apontar para arquivo fora do path resolvido
+
+  # Como o orchestrator valida
+  orchestrator_validation: |
+    pre_contract_orchestrator.prompt.md:
+    - phase_0_boot: ler SESSION_HANDOFF.md, validar task_type + module
+    - phase_0_boot: validar worker_prompt_exists (se task_type in TASK_CATALOG.yaml)
+    - phase_0_boot: selecionar profile via selection_rules
+    - phase_1_discovery: carregar profile selecionado, validar required_sections
+    - phase_1_discovery: se exit_on_fail=true e validation failed, return BLOCKED_*
+    - phase_2_execution: montar contexto, chamar worker

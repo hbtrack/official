@@ -1,0 +1,142 @@
+type: object
+additionalProperties: false
+required:
+- mode
+- range
+- points
+- generatedAt
+properties:
+  mode:
+    type: string
+    enum:
+    - TEAM
+    - ATHLETE
+    description: Aggregation mode. 'team' = team average; 'athlete' = individual.
+    x-domain-enum-ref: load_chart_mode
+  teamId:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    x-semantic-id: teams.team.id.v1
+    description: Populated when mode=team.
+  athleteId:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    x-semantic-id: users.athlete.id.v1
+    description: Populated when mode=athlete.
+  range:
+    type: string
+    enum:
+    - PERIOD_7D
+    - PERIOD_30D
+    - SEASON
+    description: Time window of the chart data.
+    x-domain-enum-ref: load_chart_range
+  seasonId:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    x-semantic-id: seasons.season.id.v1
+    description: Populated when range=season.
+  points:
+    type: array
+    description: 'Ordered list of daily data points (ascending by date). Proxy for
+      ATL (Acute Training Load) × readiness (D-UI-SP-04).
+
+      '
+    items:
+      type: object
+      additionalProperties: false
+      required:
+      - date
+      - sessionCount
+      - loadValue
+      - readinessAvg
+      properties:
+        date:
+          type: string
+          format: date
+          description: ISO 8601 date (UTC). One entry per calendar day.
+        sessionCount:
+          type: integer
+          minimum: 0
+          description: Number of COMPLETED sessions on this date.
+        loadValue:
+          type: number
+          minimum: 0
+          description: 'Proxy load value for this date. Computed as sum(durationActualMinutes
+            × intensityFactor) across all COMPLETED sessions. intensityFactor derived
+            from focus_physical_pct.
+
+            '
+        readinessAvg:
+          type:
+          - number
+          - 'null'
+          minimum: 0
+          maximum: 100
+          description: Average readiness score across all athletes with wellness_pre
+            on this date. Null if no check-ins.
+        athletesWithAlert:
+          type: integer
+          minimum: 0
+          description: Number of athletes with an ACTIVE attention_queue_item on this
+            date.
+        sessions:
+          type: array
+          description: Mini-cards for the session detail popover (UIF-005 [2]).
+          items:
+            type: object
+            additionalProperties: false
+            required:
+            - sessionId
+            - title
+            - durationActualMinutes
+            properties:
+              sessionId:
+                type: string
+                format: uuid
+                pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+              title:
+                type: string
+                minLength: 1
+                maxLength: 200
+              durationActualMinutes:
+                type: integer
+                minimum: 0
+  generatedAt:
+    type: string
+    format: date-time
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+    description: Server-side timestamp of computation. Client uses for cache invalidation.
+example:
+  mode: team
+  teamId: 550e8400-e29b-41d4-a716-446655440010
+  range: 7d
+  points:
+  - date: '2026-03-11'
+    sessionCount: 1
+    loadValue: 72.5
+    readinessAvg: 78.4
+    athletesWithAlert: 0
+    sessions:
+    - sessionId: 550e8400-e29b-41d4-a716-446655440001
+      title: Treino técnico — ataque posicional
+      durationActualMinutes: 90
+  - date: '2026-03-12'
+    sessionCount: 0
+    loadValue: 0
+    readinessAvg: null
+    athletesWithAlert: 0
+    sessions: []
+  - date: '2026-03-13'
+    sessionCount: 1
+    loadValue: 95.0
+    readinessAvg: 65.2
+    athletesWithAlert: 2
+    sessions:
+    - sessionId: 550e8400-e29b-41d4-a716-446655440002
+      title: Treino físico — resistência aeróbia
+      durationActualMinutes: 110
+  generatedAt: '2026-03-17T14:00:00Z'

@@ -1,0 +1,111 @@
+version: "1.0.0"
+artifact: "MODULE_DOC_HEADER_POLICY"
+base:
+  required:
+    - module
+    - system_scope_ref
+    - handball_rules_ref
+    - handball_semantic_applicability
+  optional:
+    - type
+    - updated
+    - updated_at
+types:
+  readme:
+    filenames: ["README.md"]
+    allow_missing_type: true
+    required:
+      - module_scope_ref
+      - domain_rules_ref
+      - invariants_ref
+      - test_matrix_ref
+      - contract_path_ref
+      - schemas_ref
+    optional:
+      - state_model_ref
+      - permissions_ref
+      - errors_ref
+  module-scope:
+    filenames: ["MODULE_SCOPE_{module_upper}.md"]
+    allow_missing_type: true
+    required:
+      - contract_path_ref
+      - schemas_ref
+    optional:
+      - decisions_ref
+  domain-rules:
+    filenames: ["DOMAIN_RULES_{module_upper}.md"]
+    required:
+      - type
+      - contract_path_ref
+      - schemas_ref
+    optional: []
+  invariants:
+    filenames: ["INVARIANTS_{module_upper}.md"]
+    required:
+      - type
+      - contract_path_ref
+      - schemas_ref
+    optional: []
+  test-matrix:
+    filenames: ["TEST_MATRIX_{module_upper}.md"]
+    allow_missing_type: true
+    required:
+      - contract_path_ref
+      - schemas_ref
+    optional:
+      - coverage_baseline
+  state-model:
+    filenames: ["STATE_MODEL_{module_upper}.md"]
+    required:
+      - type
+      - contract_path_ref
+      - schemas_ref
+      - diagram_format
+    optional:
+      - decision_ir_ref
+      - adr_ref
+      - asyncapi_ref
+  permissions:
+    filenames: ["PERMISSIONS_{module_upper}.md"]
+    required:
+      - type
+      - domain_rules_ref
+      - invariants_ref
+    optional:
+      - adr_refs
+      - decisions_ref
+      - state_model_ref
+  errors:
+    filenames: ["ERRORS_{module_upper}.md"]
+    required:
+      - type
+      - problem_schema_ref
+    optional:
+      - api_rules_ref
+      - error_model_ref
+  sport-science-rules:
+    filenames: ["SPORT_SCIENCE_RULES_{module_upper}.md"]
+    required:
+      - type
+      - contract_path_ref
+      - schemas_ref
+    optional: []
+  ui-contract:
+    filenames: ["UI_CONTRACT_{module_upper}.md"]
+    required:
+      - type
+      - contract_path_ref
+      - schemas_ref
+      - module_scope_ref
+    optional:
+      - screen_map_ref
+      - ui_contract_guide_ref
+  screen-map:
+    filenames: ["SCREEN_MAP_{module_upper}.md"]
+    required:
+      - type
+      - module_scope_ref
+      - ui_contract_ref
+      - diagram_format
+    optional: []

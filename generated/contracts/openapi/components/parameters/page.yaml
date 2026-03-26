@@ -1,0 +1,10 @@
+# Pagination parameter - page number
+name: page
+in: query
+required: false
+description: Page number (0-indexed)
+schema:
+  type: integer
+  minimum: 0
+  default: 0
+example: 0

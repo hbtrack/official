@@ -1,0 +1,56 @@
+{
+  "timestamp": "2026-03-18T01:43:08.842147",
+  "ce1_budget_respected": true,
+  "ce2_pointers_traceable": true,
+  "ce3_no_orphan_rules": true,
+  "ce4_no_redundancy": true,
+  "ce5_no_implicit_defaults": true,
+  "final_status": "PASS",
+  "artifacts_checked": {
+    "AGENT_INSTRUCTIONS.md": {
+      "words": 378,
+      "budget": 450,
+      "status": "PASS",
+      "delta": -72
+    },
+    "CONTRACT_PIPELINE.md": {
+      "words": 338,
+      "budget": 600,
+      "status": "PASS",
+      "delta": -262
+    },
+    "pre_contract_orchestrator.prompt.md": {
+      "words": 394,
+      "budget": 700,
+      "status": "PASS",
+      "delta": -306
+    }
+  },
+  "total_words_boot": 1110,
+  "critical_rules_checked": [
+    {
+      "rule": "Bloqueios can\u00f4nicos (19 c\u00f3digos)",
+      "reachable": true,
+      "hops": 1
+    },
+    {
+      "rule": "Mapa task_type \u2192 worker",
+      "reachable": true,
+      "hops": 1
+    },
+    {
+      "rule": "Condi\u00e7\u00e3o de bloqueio de fase pr\u00e9-contrato",
+      "reachable": true,
+      "hops": 1
+    },
+    {
+      "rule": "Ordem de preced\u00eancia de conflito",
+      "reachable": true,
+      "hops": 1
+    }
+  ],
+  "orphan_rules": [],
+  "redundancies": [],
+  "implicit_defaults": [],
+  "errors": []
+}

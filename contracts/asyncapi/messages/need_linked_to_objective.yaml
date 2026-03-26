@@ -1,0 +1,7 @@
+messageId: need_linked_to_objective
+name: need_linked_to_objective
+title: Need Linked to Objective
+summary: Necessidade vinculada a objetivo de sessão.
+contentType: application/json
+payload:
+  $ref: ../components/schemas/need_linked_to_objective_payload.yaml

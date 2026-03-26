@@ -1,0 +1,400 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "contracts/schemas/shared/session_start.schema.json",
+    "title": "session_start JSON Schema",
+    "description": "SSOT para validação de _reports/session_start.json — produzido por 'hb verify', lido por pre-commit, git hooks e validators",
+    "type": "object",
+    "version": "1.3.0",
+    "additionalProperties": false,
+    "required": [
+        "session_id",
+        "session_timestamp",
+        "branch",
+        "pipeline_version",
+        "boot_profile_id",
+        "task_type",
+        "stage",
+        "write_scope",
+        "worker_id"
+    ],
+    "if": {
+        "properties": {
+            "task_type": {
+                "const": "execute_roadmap_phase"
+            }
+        },
+        "required": [
+            "task_type"
+        ]
+    },
+    "then": {},
+    "else": {
+        "required": [
+            "module"
+        ]
+    },
+    "properties": {
+        "session_id": {
+            "type": "string",
+            "description": "UUID v4 único desta sessão",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "session_timestamp": {
+            "type": "string",
+            "description": "ISO 8601 timestamp de criação da sessão",
+            "format": "date-time"
+        },
+        "branch": {
+            "type": "string",
+            "description": "Git branch ativo",
+            "minLength": 1,
+            "maxLength": 128
+        },
+        "pipeline_version": {
+            "type": "string",
+            "description": "Versão do pipeline que criou esta sessão",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$",
+            "examples": [
+                "1.0.0",
+                "2.1.0"
+            ]
+        },
+        "boot_profile_id": {
+            "type": "string",
+            "description": "ID do profile de boot utilizado (referência a BOOT_PROFILES.yaml)",
+            "enum": [
+                "default",
+                "contract_execution",
+                "architecture_decision",
+                "diagnostic",
+                "roadmap_execution"
+            ]
+        },
+        "task_type": {
+            "type": "string",
+            "description": "Tipo de tarefa (referência a TASK_CATALOG.yaml)",
+            "enum": [
+                "new_module",
+                "new_contract",
+                "contract_revision",
+                "new_event",
+                "new_workflow",
+                "new_schema",
+                "new_state_model",
+                "new_ui_contract",
+                "architecture_review",
+                "decision_discovery",
+                "adversarial_analysis",
+                "readiness_promotion",
+                "generate_code",
+                "execute_roadmap_phase",
+                "audit_sovereign_integrity",
+                "audit_context_efficiency",
+                "audit_red_team_pipeline",
+                "audit_gate_coverage",
+                "audit_domain_completeness",
+                "pre_contract_boot"
+            ],
+            "not": {
+                "enum": [
+                    "unknown"
+                ]
+            }
+        },
+        "module": {
+            "type": "string",
+            "description": "Módulo canônico (referência a MODULE_REGISTRY.yaml). Não pode ser 'unknown'.",
+            "enum": [
+                "users",
+                "seasons",
+                "teams",
+                "training",
+                "wellness",
+                "medical",
+                "competitions",
+                "matches",
+                "scout",
+                "exercises",
+                "analytics",
+                "reports",
+                "ai_ingestion",
+                "identity_access",
+                "audit",
+                "notifications",
+                "video"
+            ],
+            "not": {
+                "enum": [
+                    "unknown"
+                ]
+            }
+        },
+        "stage": {
+            "type": "integer",
+            "description": "Estágio do pipeline: 0=boot, 1=discovery, 2=execution",
+            "enum": [
+                0,
+                1,
+                2
+            ]
+        },
+        "write_scope": {
+            "type": "string",
+            "description": "Escopo de escrita permitido nesta sessão. ROADMAP usa 'roadmap' como guarda-chuva para infra/frontend/deploy/mobile.",
+            "enum": [
+                "contracts",
+                "backend",
+                "docs",
+                "generated",
+                "migrations",
+                "roadmap",
+                "readonly"
+            ]
+        },
+        "worker_id": {
+            "type": "string",
+            "description": "ID do worker que será executado (se stage >= 1)",
+            "minLength": 1,
+            "maxLength": 64
+        },
+        "stage0_exit_code": {
+            "type": "integer",
+            "description": "Exit code da fase 0 (boot). Obrigatório após fase 0.",
+            "minimum": 0
+        },
+        "stage0_validation_results": {
+            "type": "object",
+            "description": "Resultados das validações de fase 0",
+            "properties": {
+                "task_type_valid": {
+                    "type": "boolean",
+                    "description": "task_type existe em TASK_CATALOG.yaml e status=active"
+                },
+                "module_valid": {
+                    "type": "boolean",
+                    "description": "module existe em MODULE_REGISTRY.yaml"
+                },
+                "worker_exists": {
+                    "type": "boolean",
+                    "description": "worker_prompt_path existe no filesystem"
+                },
+                "boot_profile_exists": {
+                    "type": "boolean",
+                    "description": "boot_profile_id existe em BOOT_PROFILES.yaml"
+                }
+            }
+        },
+        "stage1_exit_code": {
+            "type": "integer",
+            "description": "Exit code da fase 1 (discovery). Obrigatório após fase 1.",
+            "minimum": 0
+        },
+        "stage1_validation_results": {
+            "type": "object",
+            "description": "Resultados das validações de fase 1",
+            "properties": {
+                "profile_loaded": {
+                    "type": "boolean",
+                    "description": "Boot profile foi carregado com sucesso"
+                },
+                "required_sections_validated": {
+                    "type": "boolean",
+                    "description": "Todas as seções obrigatórias do profile foram encontradas"
+                },
+                "no_blockers": {
+                    "type": "boolean",
+                    "description": "Não há bloqueios abertos que impeçam execução"
+                }
+            }
+        },
+        "stage2_artifacts": {
+            "type": "array",
+            "description": "Lista de artefatos produzidos na fase 2 (se aplicável)",
+            "items": {
+                "type": "object",
+                "required": [
+                    "path",
+                    "sha256"
+                ],
+                "properties": {
+                    "path": {
+                        "type": "string",
+                        "description": "Caminho do artefato produzido (relativo ao workspace)",
+                        "examples": [
+                            "contracts/openapi/paths/training/session.yaml"
+                        ]
+                    },
+                    "sha256": {
+                        "type": "string",
+                        "description": "Hash SHA-256 do conteúdo do arquivo",
+                        "pattern": "^[a-f0-9]{64}$"
+                    },
+                    "size_bytes": {
+                        "type": "integer",
+                        "description": "Tamanho do arquivo em bytes",
+                        "minimum": 0
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Timestamp de criação"
+                    },
+                    "gate_exit_code": {
+                        "type": "integer",
+                        "description": "Exit code do gate para este artefato: 0=PASS, 1=WARN, 2=FAIL. Obrigatório após 'hb artifact'. Hook bloqueia commit se != 0.",
+                        "enum": [
+                            0,
+                            1,
+                            2
+                        ]
+                    },
+                    "validated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Timestamp da última validação deste artefato"
+                    },
+                    "gate_results": {
+                        "type": "object",
+                        "description": "Resultados detalhados dos gates para este artefato (opcional, complementa gate_exit_code)",
+                        "properties": {
+                            "gate_name": {
+                                "type": "string"
+                            },
+                            "status": {
+                                "enum": [
+                                    "PASS",
+                                    "FAIL",
+                                    "PASS_WITH_WARNINGS"
+                                ]
+                            },
+                            "exit_code": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "operation_mode": {
+            "type": "string",
+            "description": "Modo operacional da sessão: CDD (tarefas de contrato) ou ROADMAP (fases de implementação). Derivado do boot_profile_id.",
+            "enum": [
+                "CDD",
+                "ROADMAP"
+            ]
+        },
+        "module_focus": {
+            "type": "string",
+            "description": "Módulo ou área de foco em modo ROADMAP. Espelha modulo_foco do SESSION_HANDOFF.md.",
+            "minLength": 1,
+            "maxLength": 64
+        },
+        "roadmap_phase": {
+            "type": "integer",
+            "description": "Fase atual do ROADMAP (0-13). Espelha fase_roadmap do SESSION_HANDOFF.md.",
+            "minimum": 0,
+            "maximum": 13
+        },
+        "roadmap_task_id": {
+            "type": "string",
+            "description": "Identificador da tarefa roadmap em execução. Espelha task_id do SESSION_HANDOFF.md.",
+            "minLength": 1,
+            "maxLength": 128
+        },
+        "stage2_exit_code": {
+            "type": "integer",
+            "description": "Exit code da fase 2 (execution). Obrigatório após fase 2. Hook bloqueia commit se presente e != 0.",
+            "minimum": 0
+        },
+        "stage3_exit_code": {
+            "type": "integer",
+            "description": "Exit code da fase 3 (validate_contracts.py full run). Produzido pelo agente após FASE 3. Hook bloqueia commit se presente e != 0.",
+            "minimum": 0
+        },
+        "validator_run_id": {
+            "type": "string",
+            "description": "ID único do run do validator que criou esta sessão",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+        },
+        "validated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp da última validação"
+        },
+        "git_user": {
+            "type": "string",
+            "description": "Git user.name que iniciou a sessão",
+            "minLength": 1
+        },
+        "git_email": {
+            "type": "string",
+            "format": "email",
+            "description": "Git user.email que iniciou a sessão"
+        },
+        "metadata": {
+            "type": "object",
+            "description": "Metadados adicionais",
+            "properties": {
+                "ci_environment": {
+                    "type": "string",
+                    "enum": [
+                        "local",
+                        "github_actions",
+                        "unknown"
+                    ]
+                },
+                "python_version": {
+                    "type": "string",
+                    "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                },
+                "toolchain_health": {
+                    "type": "string",
+                    "enum": [
+                        "healthy",
+                        "degraded",
+                        "failed"
+                    ]
+                }
+            }
+        },
+        "hook_exit_code": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Exit code do pre-commit hook registrado em sessão bem-sucedida (0=sucesso). Escrito pelo hook apenas em caso de PASS."
+        },
+        "hook_validated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp ISO8601 UTC do último pre-commit hook bem-sucedido. Escrito pelo hook apenas em caso de PASS."
+        }
+    },
+    "definitions": {
+        "constraints": {
+            "constraint_1": "task_type nunca pode ser 'unknown'. Sempre deve ser um valor do enum.",
+            "constraint_2": "module nunca pode ser 'unknown'. Para execute_roadmap_phase é opcional; para todos os outros task_types é obrigatório e deve ser um dos 17 canônicos.",
+            "constraint_3": "stage0_exit_code, stage1_exit_code, stage2_exit_code, stage3_exit_code devem ser preenchidos conforme progresso.",
+            "constraint_4": "Se qualquer stage_N_exit_code != 0, hook deve bloquear commit.",
+            "constraint_5": "Se um artefato foi validado e posteriormente alterado (hash diverge), hook deve bloquear.",
+            "constraint_11": "Se qualquer artefato em stage2_artifacts tiver gate_exit_code != 0, hook deve bloquear commit.",
+            "constraint_12": "stage3_exit_code deve ser preenchido pelo agente após executar FASE 3 (validate_contracts.py full run). Hook bloqueia se presente e != 0.",
+            "constraint_6": "session_id deve ser UUID v4 válido — não usar strings arbitrárias.",
+            "constraint_7": "validated_at não pode ser anterior a session_timestamp.",
+            "constraint_8": "write_scope não pode ser 'unknown' ou nulo — deve ser concreto.",
+            "constraint_9": "Campos legados PROIBIDOS: timestamp, stages, stage0, stage1, stage2, session_meta, context, execution (use additionalProperties: false para enforcement)",
+            "constraint_10": "pipeline_version deve ser exatamente '1.0.0' (compatibilidade com SSOT atual)"
+        },
+        "deprecated_fields_forbidden": {
+            "description": "Campos legados proibidos neste schema. Enforcement via additionalProperties: false na raiz.",
+            "examples": [
+                "timestamp (use session_timestamp)",
+                "stages (use stage com value 0|1|2)",
+                "stage0 (use stage0_exit_code)",
+                "stage1 (use stage1_exit_code)",
+                "stage2 (use stage2_exit_code)",
+                "session_meta (use top-level fields)",
+                "context (use module, task_type, branch)",
+                "execution (use stage2_artifacts)"
+            ]
+        }
+    }
+}

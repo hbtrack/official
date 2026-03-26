@@ -31,12 +31,28 @@ O módulo `training` é responsável por planejamento, execução, registro e an
 - Analytics e dashboards (responsabilidade do módulo `analytics`)
 
 ## Artefatos do módulo
+
+### Domínio e Escopo
 - `MODULE_SCOPE_TRAINING.md`
 - `DOMAIN_RULES_TRAINING.md`
+- `SPORT_SCIENCE_RULES_TRAINING.md`
 - `INVARIANTS_TRAINING.md`
 - `TEST_MATRIX_TRAINING.md`
-- `contracts/openapi/paths/training.yaml`
-- `contracts/schemas/training/*.schema.json`
+
+### Contratos Técnicos
+- `contracts/openapi/paths/training.yaml` — API REST contract (27 endpoints)
+- `contracts/asyncapi/channels/training_*.yaml` — 27 async events (SSOT)
+- `contracts/asyncapi/messages/training_*.yaml` — Message definitions
+- `contracts/asyncapi/components/schemas/*_payload.yaml` — Event payload schemas
+- `contracts/schemas/training/*.schema.json` — Entity schemas
+
+### Documentação de Design
+- `UI_CONTRACT_TRAINING.md` — 3 UI flows (Session Planning, Athlete Check-in, Coach Review)
+- `ARCH_DECISIONS_TRAINING.md` — 30+ decisões arquiteturais compiladas (SSOT: TRAINING_MODULE_DECISION_IR.yaml)
+
+## Artefatos de nível superior (fora do módulo)
+- `docs/_canon/ARCH_DECISIONS_TRAINING.md` — compilação de decisões arquiteturais do módulo
+- `docs/_canon/gates/TRAINING_MODULE_DECISION_IR.yaml` — SSOT contracts IR (27 eventos, 12 entidades, 40+ regras)
 
 ## Dependências
 - Sistema: `SYSTEM_SCOPE.md`
@@ -53,6 +69,7 @@ O módulo `training` é responsável por planejamento, execução, registro e an
 ## Navegação rápida
 1. Leia `MODULE_SCOPE_TRAINING.md`
 2. Leia `DOMAIN_RULES_TRAINING.md`
-3. Leia `INVARIANTS_TRAINING.md`
-4. Leia `TEST_MATRIX_TRAINING.md`
-5. Leia os contratos do módulo
+3. Leia `SPORT_SCIENCE_RULES_TRAINING.md`
+4. Leia `INVARIANTS_TRAINING.md`
+5. Leia `TEST_MATRIX_TRAINING.md`
+6. Leia os contratos do módulo

@@ -1,0 +1,7 @@
+messageId: attention_queue_item_created
+name: attention_queue_item_created
+title: Attention Queue Item Created
+summary: Item colocado na fila de atenção com status ACTIVE.
+contentType: application/json
+payload:
+  $ref: ../components/schemas/attention_queue_item_created_payload.yaml

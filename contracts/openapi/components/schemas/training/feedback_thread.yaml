@@ -1,0 +1,105 @@
+# FeedbackThread OpenAPI component
+# Source: contracts/schemas/training/feedback_thread.schema.json
+# TRAIN-DEC-010, TRAIN-DEC-015 | INV-TRAIN-090, INV-TRAIN-091
+
+type: object
+additionalProperties: false
+required:
+  - id
+  - sessionId
+  - contextType
+  - contextRefId
+  - conversationOutcome
+  - createdByUserId
+  - createdAt
+  - updatedAt
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  sessionId:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    description: FK to TrainingSession.
+  contextType:
+    type: string
+    x-domain-enum-ref: feedback_context_type
+    enum:
+      - SESSION
+      - BLOCK
+      - OBJECTIVE
+      - ATHLETE
+      - EVIDENCE
+      - GROUP
+    description: >
+      Context anchor for this feedback. TRAIN-DEC-010. INV-TRAIN-090.
+      ATHLETE requires athleteId.
+  contextRefId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    description: ID of the referenced entity.
+  athleteId:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    x-semantic-id: users.athlete.id.v1
+    description: Required when contextType=ATHLETE. INV-TRAIN-090.
+  content:
+    type: string
+    minLength: 1
+    maxLength: 5000
+  conversationOutcome:
+    type: string
+    x-domain-enum-ref: conversation_outcome_type
+    enum:
+      - REFLECTION_DOCUMENTED
+      - COMMITMENT_MADE
+      - FOLLOWUP_SCHEDULED
+      - DECISION_RECORDED
+      - PENDING_FOLLOWUP
+    description: >
+      Mandatory outcome classification. TRAIN-DEC-015. INV-TRAIN-091.
+      FOLLOWUP_SCHEDULED requires followUpAt.
+      COMMITMENT_MADE requires commitmentText.
+      DECISION_RECORDED requires decisionText.
+  followUpAt:
+    type: string
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    description: Required when conversationOutcome=FOLLOWUP_SCHEDULED.
+  commitmentText:
+    type: string
+    minLength: 1
+    maxLength: 1000
+    description: Required when conversationOutcome=COMMITMENT_MADE.
+  decisionText:
+    type: string
+    minLength: 1
+    maxLength: 1000
+    description: Required when conversationOutcome=DECISION_RECORDED.
+  createdByUserId:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+  createdAt:
+    type: string
+    format: date-time
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  updatedAt:
+    type: string
+    format: date-time
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+
+example:
+  id: "550e8400-e29b-41d4-a716-446655440800"
+  sessionId: "550e8400-e29b-41d4-a716-446655440000"
+  contextType: "SESSION"
+  contextRefId: "550e8400-e29b-41d4-a716-446655440000"
+  conversationOutcome: "REFLECTION_DOCUMENTED"
+  content: "Bom nível de concentração coletiva."
+  createdByUserId: "550e8400-e29b-41d4-a716-446655440040"
+  createdAt: "2026-03-16T12:00:00Z"
+  updatedAt: "2026-03-16T12:00:00Z"

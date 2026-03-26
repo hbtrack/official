@@ -1,0 +1,17 @@
+type: object
+title: Team
+description: Handball team
+properties:
+  teamId:
+    type: string
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    format: uuid
+    x-semantic-id: teams.team.id.v1
+  name:
+    type: string
+  city:
+    type: string
+required:
+- teamId
+- name
+additionalProperties: false

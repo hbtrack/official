@@ -1,0 +1,21 @@
+type: object
+title: Athlete Chat Message
+description: Chat message in training context
+properties:
+  messageId:
+    type: string
+    pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+  athleteId:
+    type: string
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    x-semantic-id: users.athlete.id.v1
+  text:
+    type: string
+  timestamp:
+    type: string
+    format: date-time
+required:
+- messageId
+- athleteId
+- text
+additionalProperties: false

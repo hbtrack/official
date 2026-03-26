@@ -1,0 +1,79 @@
+# WellnessPost schema — post-training wellness submission
+# Module: training
+# Invariants: INV-TRAIN-003, INV-TRAIN-010, INV-TRAIN-021, INV-TRAIN-032, INV-TRAIN-070
+# Sport science: SS-TRAIN-001 (sRPE formula), SS-TRAIN-002 (RPE CR-10), SS-TRAIN-004 (24h window)
+# Domain rules: DR-TRAIN-005
+
+type: object
+additionalProperties: false
+required:
+  - id
+  - trainingSessionId
+  - athleteId
+  - sessionRpe
+  - minutesEffective
+  - internalLoad
+  - createdAt
+  - updatedAt
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  trainingSessionId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    x-semantic-id: training.session.id.v1
+  athleteId:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    x-semantic-id: users.athlete.id.v1
+  sessionRpe:
+    type: number
+    minimum: 0
+    maximum: 10
+    description: >
+      Session Rating of Perceived Exertion — Borg CR-10 scale.
+      Collect 20–30 min post-session. Domain [0, 10].
+      Foster 2001 / SS-TRAIN-002. Enforced by INV-TRAIN-032.
+  minutesEffective:
+    type: integer
+    minimum: 1
+    maximum: 1440
+    description: >
+      Effective session duration in minutes (actual time under load).
+      Used as input to sRPE formula: internal_load = minutesEffective × sessionRpe.
+      SS-TRAIN-001. Enforced by INV-TRAIN-021.
+  internalLoad:
+    type: number
+    minimum: 0
+    readOnly: true
+    description: >
+      Computed server-side: minutesEffective × sessionRpe (AU — arbitrary units).
+      Foster method / SS-TRAIN-001. Trigger tr_calculate_internal_load (INV-TRAIN-021).
+      Client MUST NOT send this field; it is ignored if present in input.
+  notes:
+    type: string
+    maxLength: 500
+    description: >
+      Optional free-text feedback (RPE, perceived difficulty, soreness, comments).
+      INV-TRAIN-070: post-session recording can be conversational.
+  createdAt:
+    type: string
+    format: date-time
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+    description: RFC-3339 UTC timestamp (ADR-009). Edit window = createdAt + 24h (INV-TRAIN-003).
+  updatedAt:
+    type: string
+    format: date-time
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  deletedAt:
+    type: [string, "null"]
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+  deletedReason:
+    type: [string, "null"]
+    minLength: 1
+    description: Required when deletedAt is set (INV-TRAIN-008)

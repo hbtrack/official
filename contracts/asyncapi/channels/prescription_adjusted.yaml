@@ -1,0 +1,8 @@
+description: >
+  Evento emitido quando uma prescrição de treino é ajustada (decrescente).
+  Razores: fitness degradation, injury management, fatigue accumulation, medical guidance.
+
+publish:
+  operationId: prescription_adjusted_publish
+  message:
+    $ref: ../messages/prescription_adjusted.yaml

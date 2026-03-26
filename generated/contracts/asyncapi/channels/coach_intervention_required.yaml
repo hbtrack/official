@@ -1,0 +1,8 @@
+description: >
+  Evento emitido quando um coach intervém pessoalmente em tempo real ou restrospectivo.
+  Intervenção: feedback imediato, correção de execução, decisão de modificação de sessão.
+
+publish:
+  operationId: coach_intervention_required_publish
+  message:
+    $ref: ../messages/coach_intervention_required.yaml

@@ -93,6 +93,7 @@ rules:
       servers deve conter pelo menos um entry (API9:2023 Inventory Management).
     message: "servers deve estar declarado com pelo menos 1 entry"
     severity: error
+    formats: [oas3]
     given: "$"
     then:
       field: servers
@@ -118,6 +119,7 @@ rules:
       (API5:2023 BFLA — nunca depender de ausência do campo como proteção).
     message: "security global deve ser declarado explicitamente (mesmo que [])"
     severity: warn
+    formats: [oas3]
     given: "$"
     then:
       field: security
@@ -141,6 +143,7 @@ rules:
   hbtrack-tags-array-defined:
     description: "tags array deve estar declarado no root quando houver módulos."
     severity: warn
+    formats: [oas3]
     given: "$"
     then:
       field: tags

@@ -1,0 +1,18 @@
+# AsyncAPI Message: role_assigned
+# Module: identity_access
+# Domain rules: DR-IAM-001, DR-IAM-003
+# Decisions: DEC-IAM-003=C
+# ADR refs: ADR-008
+
+messageId: role_assigned
+name: RoleAssignedMessage
+title: Role Atribuído
+summary: Publicado quando um role RBAC canônico é atribuído a um usuário (ADR-008, DEC-IAM-003).
+description: >
+  Evento emitido pelo módulo identity_access após execução bem-sucedida do passo
+  assignRole no workflow assign_role_to_user.
+  grantedByUserId identifica quem concedeu o role (rastreabilidade obrigatória — audit).
+  roleLabel é um dos 5 canônicos do ADR-008: admin | coordinator | coach | athlete | member.
+contentType: application/json
+payload:
+  $ref: "../components/schemas/role_assigned_payload.yaml"

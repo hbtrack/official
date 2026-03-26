@@ -1,0 +1,14 @@
+# AsyncAPI Channel: video.clip.ready
+# Module: video
+# Domain rules: DR-VID-004, DR-VID-005
+# Decisions: ADR-033
+
+description: >
+  Canal de publicação quando um ClipDefinition é processado e disponível.
+  Clip sempre carrega metadados semânticos (evento scout, zona, atletas) — DR-VID-004.
+  Publisher: video. Consumidores: analytics (análise de desempenho), reports, scout.
+  BOUNDARY: clip referencia eventos de scout mas não duplica dados de scout.
+publish:
+  operationId: video_clip_ready_publish
+  message:
+    $ref: "../messages/video_clip_ready.yaml"

@@ -38,6 +38,88 @@ derived_types:
     inherits: "Timestamp"
     semantic_id: "core.occurred_at.v1"
 
+  ExerciseId:
+    inherits: "Identifier"
+    semantic_id: "exercises.exercise.id.v1"
+
+  ExerciseVersionId:
+    inherits: "Identifier"
+    semantic_id: "exercises.exercise_version.id.v1"
+
+  TeamId:
+    inherits: "Identifier"
+    semantic_id: "teams.team.id.v1"
+
+  OrganizationId:
+    inherits: "Identifier"
+    semantic_id: "organizations.organization.id.v1"
+
+  SeasonId:
+    inherits: "Identifier"
+    semantic_id: "seasons.season.id.v1"
+
+  IngestionJobId:
+    inherits: "Identifier"
+    semantic_id: "ai_ingestion.job.id.v1"
+
+  CompetitionId:
+    inherits: "Identifier"
+    semantic_id: "competitions.competition.id.v1"
+
+  MatchId:
+    inherits: "Identifier"
+    semantic_id: "matches.match.id.v1"
+
+  ResourceId:
+    inherits: "Identifier"
+    nullable: true
+    semantic_id: "core.resource.id.v1"
+
+  CorrelationId:
+    inherits: "Identifier"
+    nullable: true
+    semantic_id: "core.correlation.id.v1"
+
+  AuditEntryId:
+    inherits: "Identifier"
+    semantic_id: "audit.entry.id.v1"
+
+  ScoutEventId:
+    inherits: "Identifier"
+    semantic_id: "scout.event.id.v1"
+
+  NotificationDeliveryId:
+    inherits: "Identifier"
+    semantic_id: "notifications.delivery.id.v1"
+
+  IdentitySessionId:
+    inherits: "Identifier"
+    semantic_id: "identity.session.id.v1"
+
+  VideoSessionId:
+    inherits: "Identifier"
+    semantic_id: "video.session.id.v1"
+
+  VideoClipDefinitionId:
+    inherits: "Identifier"
+    semantic_id: "video.clip_definition.id.v1"
+
+  VideoMatchMediaSessionId:
+    inherits: "Identifier"
+    semantic_id: "video.match_media_session.id.v1"
+
+  VideoDistributionProfileId:
+    inherits: "Identifier"
+    semantic_id: "video.distribution_profile.id.v1"
+
+  VideoMediaSegmentId:
+    inherits: "Identifier"
+    semantic_id: "video.media_segment.id.v1"
+
+  WellnessEntryId:
+    inherits: "Identifier"
+    semantic_id: "wellness.entry.id.v1"
+
 field_bindings:
   - field_name: "trainingSessionId"
     canonical_type_ref: "training.session.id.v1"
@@ -47,3 +129,36 @@ field_bindings:
     canonical_type_ref: "identity.user.id.v1"
   - field_name: "occurredAt"
     canonical_type_ref: "core.occurred_at.v1"
+  - field_name: "exerciseId"
+    canonical_type_ref: "exercises.exercise.id.v1"
+  - field_name: "exerciseVersionId"
+    canonical_type_ref: "exercises.exercise_version.id.v1"
+  - field_name: "teamId"
+    canonical_type_ref: "teams.team.id.v1"
+  - field_name: "organizationId"
+    canonical_type_ref: "organizations.organization.id.v1"
+  - field_name: "seasonId"
+    canonical_type_ref: "seasons.season.id.v1"
+  - field_name: "jobId"
+    canonical_type_ref: "ai_ingestion.job.id.v1"
+  - field_name: "competitionId"
+    canonical_type_ref: "competitions.competition.id.v1"
+  - field_name: "matchId"
+    canonical_type_ref: "matches.match.id.v1"
+  - field_name: "targetResourceId"
+    canonical_type_ref: "core.resource.id.v1"
+  - field_name: "correlationId"
+    canonical_type_ref: "core.correlation.id.v1"
+  - field_name: "eventId"
+    canonical_type_ref: "scout.event.id.v1"
+  - field_name: "deliveryId"
+    canonical_type_ref: "notifications.delivery.id.v1"
+
+resolved_policies:
+  versioning_strategy:
+    decision_ref: D2
+    adr_ref: ADR-024
+    strategy: semver_no_multiversion
+    description: "SemVer (MAJOR.MINOR.PATCH) sem versões paralelas — app interno, migração coordenada"
+    semver_current: "1.0.0"
+    resolved_at: "2026-03-17"

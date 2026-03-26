@@ -3,9 +3,9 @@
 # MODULE_MAP.md
 
 ## Nota de Taxonomia
-Este template modela **macrodomínios de negócio** para comunicação com stakeholders, não a taxonomia técnica canônica de 16 módulos definida em `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md` seção 2.
+Este template modela **macrodomínios de negócio** para comunicação com stakeholders, não a taxonomia técnica canônica de 17 módulos definida em `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md` seção 2.
 
-Para mapeamento técnico-canônico dos 16 módulos, consultar:
+Para mapeamento técnico-canônico dos 17 módulos, consultar:
 - `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md` seção 2 (Canonical Module Taxonomy)
 - `docs/_canon/ARCHITECTURE.md` ou ADR específico se houver mapeamento formal macrodomínio→módulo(s)
 

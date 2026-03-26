@@ -1,0 +1,16 @@
+scene_id,execution_mode,paid_generation_allowed,max_attempts,retry_recommended_seconds,notes
+M1-02,veo_realista,true,2,4,Cena critica com reserva autorizada de retry.
+M2-01,veo_realista,true,1,0,Cena base sem retry pago autorizado.
+M2-02,veo_realista,true,1,0,Cena base sem retry pago autorizado.
+M2-03,veo_realista,true,2,4,Cena critica com reserva autorizada de retry.
+M4-01,veo_realista,true,1,0,Cena base sem retry pago autorizado.
+M4-02,motion_design,false,0,0,Hibrida. Nao deve consumir Veo no MVP.
+M5-01,veo_realista,true,1,0,Cena base sem retry pago autorizado.
+M5-02,veo_realista,true,1,0,Cena base sem retry pago autorizado.
+M6-02,veo_realista,true,1,0,Cena base sem retry pago autorizado.
+M6-03,veo_realista,true,1,0,Cena base sem retry pago autorizado.
+M6-04,veo_realista,true,1,0,Cena base sem retry pago autorizado.
+M7-01,veo_realista,true,1,0,Cena base sem retry pago autorizado.
+M7-02,veo_realista,true,1,0,Cena base sem retry pago autorizado.
+M7-03,motion_design,false,0,0,Hibrida. Nao deve consumir Veo no MVP.
+EN-03,veo_realista,true,2,4,Cena critica com reserva autorizada de retry.

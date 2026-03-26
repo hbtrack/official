@@ -1,0 +1,15 @@
+{
+  "waiver_id": "WAIVER_PRE_CONTRACT_EVIDENCE_ANTECEDE_GATE_20260319",
+  "gate_id": "PRE_CONTRACT_EVIDENCE_GATE",
+  "scope": "system",
+  "module": null,
+  "target_artifact": "_reports/agent_execution",
+  "justification": "15 modulos promovidos a implementation_ready antes da implementacao do gate PRE_CONTRACT_EVIDENCE_GATE. O mecanismo de logging do hb verify foi implementado em 2026-03-16; esses modulos foram promovidos antes dessa data. Evidencia retroativa seria ficticia. Waiver valido ate proxima janela de governanca trimestral.",
+  "approved_by": "human:davis",
+  "approved_at_utc": "2026-03-19T00:00:00Z",
+  "expires_at_utc": "2026-06-19T00:00:00Z",
+  "fingerprint": {
+    "type": "sha256",
+    "value": "88efd13c2bddf0461267fb73594a9e7d49c9797c698caf1610ede9c0579a35ae"
+  }
+}

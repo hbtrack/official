@@ -1,0 +1,60 @@
+type: object
+additionalProperties: false
+required:
+- eventType
+- occurredAt
+- profileId
+- sessionId
+- codecLabel
+- bitrate
+- outputStoragePath
+- completedAt
+properties:
+  eventType:
+    type: string
+    description: Tipo canônico do evento.
+    const: video.transcode.completed
+  occurredAt:
+    type: string
+    format: date-time
+    description: Momento ISO 8601 UTC da conclusão.
+    x-semantic-id: core.occurred_at.v1
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  profileId:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    description: UUID do DistributionProfile transcoded.
+    x-semantic-id: video.distribution_profile.id.v1
+  sessionId:
+    type: string
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    format: uuid
+    description: UUID da MatchMediaSession pai.
+    x-semantic-id: video.match_media_session.id.v1
+  codecLabel:
+    type: string
+    enum:
+    - H264
+    - H265
+    - VP9
+    - AV1
+    description: Codec da rendition transcoded (DR-VID-002).
+    x-domain-enum-ref: video_codec
+  bitrate:
+    type: integer
+    minimum: 100000
+    maximum: 50000000
+    description: Bitrate nominal em bps (bits per second).
+  outputStoragePath:
+    type: string
+    description: Path ou S3 URI da rendition transcoded.
+  completedAt:
+    type: string
+    format: date-time
+    description: ISO 8601 UTC da conclusão da transcodificação.
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  celeryJobId:
+    type: string
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    description: ID da Celery task que executou transcode (ADR-031).

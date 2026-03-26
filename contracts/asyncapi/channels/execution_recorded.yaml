@@ -1,0 +1,8 @@
+description: >
+  Evento emitido quando um execution_record é criado (fato imutável de execução).
+  Tipos: SESSION_EXECUTION, BLOCK_EXECUTION, LIVE_ADJUSTMENT, CONSTRAINT_OVERRIDE, ALTERNATE_EXERCISE, LOAD_RECALCULATION.
+
+publish:
+  operationId: execution_recorded_publish
+  message:
+    $ref: ../messages/execution_recorded.yaml

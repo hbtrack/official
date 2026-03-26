@@ -5,16 +5,15 @@
 module: "{{MODULE_NAME}}"
 system_scope_ref: "../../../_canon/SYSTEM_SCOPE.md"
 handball_rules_ref: "../../../_canon/HANDBALL_RULES_DOMAIN.md"
+handball_semantic_applicability: {{HANDBALL_SEMANTIC_APPLICABILITY}}
+type: "readme"
 module_scope_ref: "./MODULE_SCOPE_{{MODULE_NAME_UPPER}}.md"
 domain_rules_ref: "./DOMAIN_RULES_{{MODULE_NAME_UPPER}}.md"
 invariants_ref: "./INVARIANTS_{{MODULE_NAME_UPPER}}.md"
-# Condicional - somente quando módulo tem lifecycle (RULES 11.1)
-# state_model_ref: "./STATE_MODEL_{{MODULE_NAME_UPPER}}.md"
 test_matrix_ref: "./TEST_MATRIX_{{MODULE_NAME_UPPER}}.md"
-openapi_ref: "../../../../contracts/openapi/paths/{{MODULE_NAME}}.yaml"
+contract_path_ref: "../../../../contracts/openapi/paths/{{MODULE_NAME}}.yaml"
 schemas_ref: "../../../../contracts/schemas/{{MODULE_NAME}}/"
 ---
-
 # {{MODULE_NAME}}
 
 ## Objetivo
@@ -37,6 +36,8 @@ schemas_ref: "../../../../contracts/schemas/{{MODULE_NAME}}/"
 ### Artefatos condicionais (quando aplicável)
 <!-- STATE_MODEL só quando módulo tem lifecycle: ver RULES seção 11.1 -->
 - `STATE_MODEL_{{MODULE_NAME_UPPER}}.md` (quando houver lifecycle/estados)
+<!-- SPORT_SCIENCE_RULES só quando houver protocolos/cálculos/thresholds: ver RULES seção 11.8 -->
+- `SPORT_SCIENCE_RULES_{{MODULE_NAME_UPPER}}.md` (quando houver método/protocolo/cálculo/threshold técnico-científico)
 
 ## Dependências
 - Sistema: `SYSTEM_SCOPE.md`

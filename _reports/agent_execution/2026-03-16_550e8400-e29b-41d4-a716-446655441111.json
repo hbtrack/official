@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "1.0",
+  "sessionId": "550e8400-e29b-41d4-a716-446655441111",
+  "startedAt": "2026-03-16T09:00:00Z",
+  "endedAt": "2026-03-16T09:07:00Z",
+  "module": "training",
+  "taskType": "contract_revision",
+  "entries": [
+    {
+      "timestamp": "2026-03-16T09:00:10Z",
+      "phase": "ROUTING",
+      "result": "PASS",
+      "blocksEmitted": [],
+      "artifactsRead": [
+        ".contract_driven/CONTRACT_SYSTEM_LAYOUT.md",
+        ".contract_driven/CONTRACT_SYSTEM_RULES.md",
+        ".contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md"
+      ],
+      "workerDest": ".contract_driven/agent_prompts/create_openapi_contract.prompt.md",
+      "decisionsConsulted": [],
+      "notes": "Módulo e task_type roteados sem bloqueio."
+    },
+    {
+      "timestamp": "2026-03-16T09:02:00Z",
+      "phase": "FOUNDATION_CHECK",
+      "result": "PASS",
+      "blocksEmitted": [],
+      "artifactsRead": [
+        "docs/hbtrack/modulos/training/MODULE_SCOPE_TRAINING.md",
+        "docs/hbtrack/modulos/training/DOMAIN_RULES_TRAINING.md",
+        "docs/hbtrack/modulos/training/INVARIANTS_TRAINING.md",
+        "docs/hbtrack/modulos/training/TEST_MATRIX_TRAINING.md"
+      ],
+      "workerDest": ".contract_driven/agent_prompts/create_openapi_contract.prompt.md",
+      "decisionsConsulted": [
+        "TRAIN-DEC-047",
+        "TRAIN-DEC-048"
+      ],
+      "notes": "Artefatos mínimos presentes e sem bloqueio de backlog obrigatório."
+    },
+    {
+      "timestamp": "2026-03-16T09:04:30Z",
+      "phase": "DOMAIN_ASSEMBLY",
+      "result": "PASS",
+      "blocksEmitted": [],
+      "artifactsRead": [
+        "docs/_canon/SYSTEM_SCOPE.md",
+        "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
+        "docs/hbtrack/modulos/training/STATE_MODEL_TRAINING.md",
+        "docs/hbtrack/modulos/training/PERMISSIONS_TRAINING.md"
+      ],
+      "workerDest": ".contract_driven/agent_prompts/create_openapi_contract.prompt.md",
+      "decisionsConsulted": [
+        "ADR-017",
+        "ADR-018"
+      ],
+      "notes": "Contexto de domínio montado com boundary e state model carregados."
+    },
+    {
+      "timestamp": "2026-03-16T09:07:00Z",
+      "phase": "WORKER_HANDOFF",
+      "result": "HANDOFF",
+      "blocksEmitted": [],
+      "artifactsRead": [
+        "contracts/openapi/paths/training.yaml",
+        "contracts/openapi/openapi.yaml"
+      ],
+      "workerDest": ".contract_driven/agent_prompts/create_openapi_contract.prompt.md",
+      "decisionsConsulted": [
+        "ADR-017",
+        "ADR-018"
+      ],
+      "notes": "Pré-contrato concluído e handoff autorizado para revisão contratual."
+    }
+  ]
+}

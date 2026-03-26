@@ -1,0 +1,8 @@
+description: >
+  Evento emitido quando uma sessão de treino é publicada (estado SCHEDULED/PUBLISHED).
+  Atletas recebem notificação. Analytics começa coleta de sinais.
+
+publish:
+  operationId: training_session_published_publish
+  message:
+    $ref: ../messages/training_session_published.yaml

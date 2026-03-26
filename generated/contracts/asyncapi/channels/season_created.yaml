@@ -1,0 +1,12 @@
+# AsyncAPI Channel: season.created
+# Module: seasons
+# Domain rules: DR-SEAS-001, DR-SEAS-003
+
+description: >
+  Canal de publicação quando uma nova temporada é criada.
+  Publicado após criação bem-sucedida via POST /seasons.
+  seasons é soberano do ciclo esportivo (DR-SEAS-001).
+publish:
+  operationId: season_created_publish
+  message:
+    $ref: "../messages/season_created.yaml"

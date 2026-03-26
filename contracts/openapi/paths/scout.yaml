@@ -1,9 +1,560 @@
-# Path items for module: scout
+# ============================================================
+# Module: scout — OpenAPI path items
 # Source of truth: contracts/openapi/openapi.yaml
-# Related docs:
-# - docs/_canon/SYSTEM_SCOPE.md
-# - docs/_canon/HANDBALL_RULES_DOMAIN.md
-# - docs/hbtrack/modulos/scout/MODULE_SCOPE_SCOUT.md
+# Docs: docs/hbtrack/modulos/scout/MODULE_SCOPE_SCOUT.md
+# Domain rules: DR-SCOUT-001..005
+# Invariants: INV-SCOUT-001..004
+# Decisions: DEC-SCOUT-001=C, DEC-SCOUT-002=B, DEC-SCOUT-003=C
+# ADR refs: ADR-007 (JWT RS256), ADR-008 (RBAC), ADR-031 (stack)
+# OWASP: API1:2023 (BOLA), API2:2023 (BFLA), API5:2023 (rate limit)
 #
-# Add path items here following OpenAPI 3.1 Path Item Object spec.
-# Each path must belong exclusively to this module (LAYOUT section 6).
+# Endpoints:
+#   GET  /scout/events                  — listScoutEvents
+#   POST /scout/events                  — createScoutEvent
+#   GET  /scout/events/{eventId}        — getScoutEvent
+#   GET  /scout/events/aggregations     — getScoutAggregations
+#   POST /scout/sessions/{matchId}/complete — completeScoutSession
+# ============================================================
+
+/scout/events:
+  get:
+    tags:
+      - scout
+    summary: Lista eventos de scout
+    description: >
+      Lista eventos de scout (observações táticas) com paginação cursor-based.
+
+      Regras de acesso (DEC-SCOUT-002=B):
+      - admin: acesso irrestrito.
+      - coordinator/coach: teamId obrigatório para evitar escalada horizontal
+        (OWASP API1:2023). Retorna apenas eventos do time indicado.
+      - athlete: retorna apenas eventos onde athleteUserId == self.
+      - member: proibido (403 BFLA — OWASP API2:2023).
+
+      Regras de domínio:
+      - DR-SCOUT-001: scout é soberano de tags, eventos observacionais, clipes,
+        coding schema e agregações táticas.
+      - DR-SCOUT-003: todo evento de scout está ancorado a matchId.
+      - INV-SCOUT-001: id, matchId, eventLabel e recordedAt obrigatórios.
+
+      Paginação obrigatória. pageSize máximo: 200.
+    operationId: listScoutEvents
+    security:
+      - HTTPBearer: []
+    parameters:
+      - $ref: ../components/parameters/pageSize.yaml
+      - $ref: ../components/parameters/pageToken.yaml
+      - name: matchId
+        in: query
+        required: false
+        description: >
+          Filtra eventos pelo UUID da partida (DR-SCOUT-003).
+          Altamente recomendado para consultas performáticas.
+        schema:
+          type: string
+          format: uuid
+      - name: athleteUserId
+        in: query
+        required: false
+        description: Filtra eventos pelo UUID do atleta observado.
+        schema:
+          type: string
+          format: uuid
+      - name: teamId
+        in: query
+        required: false
+        description: >
+          Filtra eventos pelo UUID do time.
+          Obrigatório quando actorRole é coordinator ou coach (DEC-SCOUT-002=B).
+        schema:
+          type: string
+          format: uuid
+      - name: eventLabel
+        in: query
+        required: false
+        description: >
+          Filtra por tipo de evento (ex.: SHOT_ON_TARGET, FAST_BREAK).
+          Deve ser um dos valores da CANONICAL_EVENT_TAXONOMY_SCOUT (DR-SCOUT-002).
+        schema:
+          type: string
+          maxLength: 120
+      - name: codingSchemaLabel
+        in: query
+        required: false
+        description: "Filtra por coding schema (ex.: match-event-v1)."
+        schema:
+          type: string
+          maxLength: 120
+      - name: recordedAfter
+        in: query
+        required: false
+        description: Filtra eventos registrados após este timestamp (ISO 8601 UTC).
+        schema:
+          type: string
+          format: date-time
+      - name: recordedBefore
+        in: query
+        required: false
+        description: Filtra eventos registrados antes deste timestamp (ISO 8601 UTC).
+        schema:
+          type: string
+          format: date-time
+    responses:
+      "200":
+        description: Lista paginada de eventos de scout.
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - items
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: "../components/schemas/scout/scout_event.yaml"
+                nextPageToken:
+                  type: string
+                  description: Token para a próxima página (cursor-based).
+                totalCount:
+                  type: integer
+                  minimum: 0
+                  description: Total de registros disponíveis para a query.
+      "400":
+        description: Parâmetros inválidos.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "401":
+        description: Token JWT ausente ou inválido (ADR-007).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: >
+          Sem permissão. coordinator/coach sem teamId (DEC-SCOUT-002=B),
+          athlete tentando listar eventos de outro atleta, ou member (BFLA).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+  post:
+    tags:
+      - scout
+    summary: Cria evento de scout
+    description: >
+      Registra uma nova observação tática de scout (DEC-SCOUT-001=C).
+
+      Regras de acesso (DEC-SCOUT-002=B):
+      - admin: pode criar eventos para qualquer time.
+      - coordinator/coach: pode criar eventos para o time que gerencia (teamId deve
+        corresponder a um time que o ator opera).
+      - athlete/member: proibido (403 BFLA).
+
+      Regras de domínio:
+      - DR-SCOUT-001: scout é soberano de eventos observacionais.
+      - DR-SCOUT-002: eventLabel e tagLabels devem ser da taxonomia canônica.
+      - DR-SCOUT-003: matchId obrigatório — ancora evento à partida.
+      - INV-SCOUT-001: id, matchId, eventLabel, recordedAt obrigatórios.
+      - INV-SCOUT-002: tagLabels e clipAssetRefs sem duplicatas.
+
+      Após criação bem-sucedida: evento scout.event.created publicado (DEC-SCOUT-003=C).
+    operationId: createScoutEvent
+    security:
+      - HTTPBearer: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required:
+              - matchId
+              - eventLabel
+              - recordedAt
+            properties:
+              matchId:
+                type: string
+                format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+                description: UUID da partida à qual o evento está ancorado (DR-SCOUT-003).
+                x-semantic-id: matches.match.id.v1
+              athleteUserId:
+                type: string
+                format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+                description: UUID do atleta observado (opcional — refina contexto).
+                x-semantic-id: identity.user.id.v1
+              teamId:
+                type: string
+                format: uuid
+                pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+                description: UUID do time (DR-SCOUT-003).
+                x-semantic-id: teams.team.id.v1
+              eventLabel:
+                type: string
+                minLength: 1
+                maxLength: 120
+                description: >
+                  Rótulo do evento observado (DR-SCOUT-002). Deve pertencer
+                  à CANONICAL_EVENT_TAXONOMY_SCOUT.yaml.
+              tagLabels:
+                type: array
+                items:
+                  type: string
+                  maxLength: 80
+                uniqueItems: true
+                description: >
+                  Tags taxonômicas associadas (INV-SCOUT-002: sem duplicatas).
+              clipAssetRefs:
+                type: array
+                items:
+                  type: string
+                  maxLength: 160
+                uniqueItems: true
+                description: >
+                  Referências a clipes de vídeo/evidência (INV-SCOUT-002: sem duplicatas).
+                  scout não é dono do storage subjacente (DR-SCOUT-004).
+              codingSchemaLabel:
+                type: string
+                maxLength: 120
+                description: Coding schema utilizado (ex. match-event-v1).
+              tacticalAggregationLabel:
+                type: string
+                maxLength: 120
+                description: Rótulo de agregação tática (ex. transition-offense).
+              recordedAt:
+                type: string
+                format: date-time
+                pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$'
+                description: Timestamp UTC do momento do registro (INV-SCOUT-001).
+                x-semantic-id: core.occurred_at.v1
+    responses:
+      "201":
+        description: Evento de scout criado.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/scout/scout_event.yaml"
+      "400":
+        description: >
+          Payload inválido. eventLabel não pertence à taxonomia canônica,
+          tagLabels com duplicatas, ou campos obrigatórios ausentes.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "401":
+        description: Token JWT ausente ou inválido.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Sem permissão (athlete/member ou coordinator/coach fora do time).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+/scout/events/aggregations:
+  get:
+    tags:
+      - scout
+    summary: Agregações táticas de scout por partida
+    description: >
+      Retorna resumo estatístico dos eventos de scout para uma partida
+      (DEC-SCOUT-001=C): distribuição de eventLabel, totais por atleta,
+      tagLabels mais frequentes. Viabiliza dashboards analíticos sem
+      acoplamento ao módulo analytics.
+
+      Regras de acesso (DEC-SCOUT-002=B):
+      - admin: irrestrito.
+      - coordinator/coach: teamId obrigatório.
+      - athlete: pode ver agregações de partidas em que participou.
+      - member: proibido (403).
+
+      matchId é obrigatório — cada agregação é por partida (DR-SCOUT-003).
+    operationId: getScoutAggregations
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: matchId
+        in: query
+        required: true
+        description: UUID da partida para a qual calcular agregações.
+        schema:
+          type: string
+          format: uuid
+      - name: teamId
+        in: query
+        required: false
+        description: >
+          Filtra agregações por time.
+          Obrigatório quando actorRole é coordinator ou coach (DEC-SCOUT-002=B).
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Agregações táticas por partida.
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - matchId
+                - totalEvents
+                - eventLabelDistribution
+              properties:
+                matchId:
+                  type: string
+                  format: uuid
+                  pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+                  description: UUID da partida analisada.
+                  x-semantic-id: matches.match.id.v1
+                totalEvents:
+                  type: integer
+                  minimum: 0
+                  description: Total de eventos de scout para a partida.
+                eventLabelDistribution:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - eventLabel
+                      - count
+                    properties:
+                      eventLabel:
+                        type: string
+                      count:
+                        type: integer
+                        minimum: 0
+                  description: Distribuição de quantidade por eventLabel.
+                athleteBreakdown:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - athleteUserId
+                      - count
+                    properties:
+                      athleteUserId:
+                        type: string
+                        format: uuid
+                        pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+                      count:
+                        type: integer
+                        minimum: 0
+                  description: Total de eventos por atleta.
+                topTagLabels:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - tagLabel
+                      - count
+                    properties:
+                      tagLabel:
+                        type: string
+                      count:
+                        type: integer
+                        minimum: 0
+                  description: Tags mais frequentes na partida.
+      "400":
+        description: matchId ausente ou inválido.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "401":
+        description: Token JWT ausente ou inválido.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Sem permissão (member, ou coordinator/coach sem teamId).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+/scout/events/{eventId}:
+  get:
+    tags:
+      - scout
+    summary: Busca evento de scout por ID
+    description: >
+      Retorna um evento de scout pelo UUID. OWASP API1:2023 (BOLA):
+      o backend DEVE verificar que o ator tem acesso ao time/atleta do evento.
+
+      Regras de acesso (DEC-SCOUT-002=B):
+      - admin: irrestrito.
+      - coordinator/coach: somente eventos de times que gerencia.
+      - athlete: somente eventos onde athleteUserId == self.
+      - member: proibido (403).
+    operationId: getScoutEvent
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: eventId
+        in: path
+        required: true
+        description: UUID do evento de scout.
+        schema:
+          type: string
+          format: uuid
+    responses:
+      "200":
+        description: Evento de scout encontrado.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/schemas/scout/scout_event.yaml"
+      "401":
+        description: Token JWT ausente ou inválido.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: >
+          Sem permissão. BOLA enforcement: 403 (não 404) quando o ator
+          não tem acesso ao time/atleta do evento (OWASP API1:2023).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Evento de scout não encontrado.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+/scout/sessions/{matchId}/complete:
+  post:
+    tags:
+      - scout
+    summary: Finaliza sessão de scouting de uma partida
+    description: >
+      Sinaliza que o analista finalizou o bloco de scouting de uma partida
+      (DEC-SCOUT-003=C). Após esta chamada, o evento scout.session.completed
+      é publicado via AsyncAPI, acionando processamentos downstream.
+
+      Regras de acesso (DEC-SCOUT-002=B):
+      - admin: irrestrito.
+      - coordinator/coach: somente para partidas do time que gerencia.
+      - athlete/member: proibido (403).
+
+      Idempotente: chamar novamente para uma partida já finalizada retorna 200.
+    operationId: completeScoutSession
+    security:
+      - HTTPBearer: []
+    parameters:
+      - name: matchId
+        in: path
+        required: true
+        description: UUID da partida cuja sessão de scouting será finalizada.
+        schema:
+          type: string
+          format: uuid
+    requestBody:
+      required: false
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            properties:
+              notes:
+                type: string
+                maxLength: 2000
+                description: Notas livres do analista sobre a sessão de scouting.
+    responses:
+      "200":
+        description: Sessão de scouting finalizada (ou já estava finalizada).
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - matchId
+                - completedAt
+                - totalEvents
+              properties:
+                matchId:
+                  type: string
+                  format: uuid
+                  pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+                  x-semantic-id: matches.match.id.v1
+                completedAt:
+                  type: string
+                  format: date-time
+                  pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$'
+                  description: Timestamp UTC de finalização.
+                totalEvents:
+                  type: integer
+                  minimum: 0
+                  description: Total de eventos registrados para a partida.
+      "401":
+        description: Token JWT ausente ou inválido.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "403":
+        description: Sem permissão (athlete/member ou coordinator/coach fora do time).
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "404":
+        description: Partida não encontrada.
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "500":
+        description: Internal server error
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"
+      "409":
+        description: Conflict with current resource state, uniqueness constraint, referential integrity, or concurrent update
+        content:
+          application/problem+json:
+            schema:
+              $ref: "../components/schemas/shared/problem.yaml"

@@ -1,0 +1,8 @@
+description: >
+  Evento emitido quando um ciclo de intervenção (intervention cycle) é criado.
+  Ciclo de intervenção: unidade soberana de ajuste de treino para atender necessidades detectadas.
+
+publish:
+  operationId: intervention_cycle_created_publish
+  message:
+    $ref: ../messages/intervention_cycle_created.yaml

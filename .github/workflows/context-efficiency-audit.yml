@@ -1,0 +1,76 @@
+name: Context Efficiency Audit
+
+on:
+  # Executar todo dia 1º de cada mês às 09:00 UTC
+  schedule:
+    - cron: "0 9 1 * *"
+
+  # Permitir disparo manual via GitHub Actions
+  workflow_dispatch:
+    inputs:
+      verbose:
+        description: "Modo verbose com detalhes completos"
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  context_efficiency_audit:
+    name: Context Efficiency Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Run context efficiency audit
+        id: audit
+        run: |
+          python scripts/audit/run_context_efficiency_audit.py > audit_output.txt 2>&1
+          exit_code=$?
+          cat audit_output.txt
+          echo "exit_code=$exit_code" >> $GITHUB_OUTPUT
+          exit $exit_code
+
+      - name: Generate audit report
+        if: always()
+        id: report
+        run: |
+          cp audit_output.txt "_reports/CE_AUDIT_$(date -u +%Y%m%d_%H%M%S).txt" 2>/dev/null || true
+          echo "Report saved to _reports/"
+
+      - name: Upload audit artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: context-efficiency-audit-${{ github.run_id }}
+          path: |
+            audit_output.txt
+            _reports/CE_AUDIT_*.txt
+          retention-days: 365
+
+      - name: Set job status
+        if: failure()
+        run: |
+          echo "❌ Context Efficiency Audit FAILED"
+          echo "See logs above for details"
+          exit 1

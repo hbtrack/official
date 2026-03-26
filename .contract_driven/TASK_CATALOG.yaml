@@ -1,0 +1,384 @@
+---
+# TASK_CATALOG.yaml
+# SSOT único para task types do sistema
+# Mapeia: task_type → worker_prompt → status (active/frozen/disabled) → profile
+# Versão: 1.0.0
+# Status: active
+# Referência: docs/_canon/AGENT_INSTRUCTIONS.md §4 "9 TASK TYPES → WORKERS" (source of truth anterior, DEPRECATED em favor deste)
+
+doc_type: canon
+version: "1.0.0"
+last_reviewed: "2026-03-17"
+scope: task_routing_authority
+
+task_catalog:
+  # Grupo: Bootstrap Inicial (Fase 0)
+  pre_contract_boot:
+    task_type: pre_contract_boot
+    worker_id: pre_contract_orchestrator
+    worker_path: .contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md
+    status: active
+    description: "Validar entrada, determinar task_type correto e roteamento para pipeline"
+    profile_id: contract_execution
+    stage_allowed: [0]
+    input_requirements:
+      - module (string, mapped to MODULE_REGISTRY.yaml)
+      - task_type (string, must be active/unfrozen task in this catalog)
+      - scope_description (string, optional)
+    artifacts_produced:
+      - _reports/session_start.json
+    blocking_gates: []
+    pre_contract_exception: "PRE_CONTRACT_SELF_BOOTSTRAP"
+    notes: |
+      Este é o ponto de entrada obrigatório que precede qualquer outra tarefa de contrato.
+      Não produz artefato normativo, apenas validação e roteamento.
+      Todos os outros task_types devem ter passado por esta fase.
+
+  # Grupo: Arquitetura de Módulos
+  new_module:
+    task_type: new_module
+    worker_id: create_module_docs
+    worker_path: .contract_driven/agent_prompts/create_module_docs.prompt.md
+    status: active
+    description: "Criar documentação estruturada de novo módulo"
+    profile_id: contract_execution
+    stage_allowed: [0, 1, 2]
+    input_requirements:
+      - module_name (string, max 32 chars)
+      - module_context (string, max 1000 chars)
+    artifacts_produced:
+      - docs/hbtrack/modulos/{module_name}/README.md
+      - docs/hbtrack/modulos/{module_name}/DOMAIN_RULES_{module_upper}.md
+    blocking_gates: []
+
+  # Grupo: Especificações (Contratos)
+  new_contract:
+    task_type: new_contract
+    worker_id: create_openapi_contract
+    worker_path: .contract_driven/agent_prompts/create_openapi_contract.prompt.md
+    status: active
+    description: "Criar novo contrato OpenAPI (HTTP API)"
+    profile_id: contract_execution
+    stage_allowed: [0, 1, 2]
+    input_requirements:
+      - module (string, mapped to MODULE_REGISTRY.yaml)
+      - resource (string, max 64 chars)
+      - method (enum: GET|POST|PUT|PATCH|DELETE)
+    artifacts_produced:
+      - contracts/openapi/paths/{module}.yaml
+    blocking_gates: [SCHEMA_CONSISTENCY_GATE, DOMAIN_AXIOM_GATE]
+
+  contract_revision:
+    task_type: contract_revision
+    worker_id: create_openapi_contract
+    worker_path: .contract_driven/agent_prompts/create_openapi_contract.prompt.md
+    status: active
+    description: "Revisar/alterar contrato OpenAPI existente"
+    profile_id: contract_execution
+    stage_allowed: [0, 1, 2]
+    input_requirements:
+      - contract_path (string, existing path in contracts/openapi/)
+      - change_type (enum: extend|fix|deprecate|version)
+    artifacts_produced:
+      - contracts/openapi/paths/{module}.yaml (modified)
+    blocking_gates: [SCHEMA_CONSISTENCY_GATE, BACKWARD_COMPATIBILITY_GATE]
+
+  new_event:
+    task_type: new_event
+    worker_id: create_asyncapi_contract
+    worker_path: .contract_driven/agent_prompts/create_asyncapi_contract.prompt.md
+    status: active
+    description: "Criar novo contrato AsyncAPI (Event)"
+    profile_id: contract_execution
+    stage_allowed: [0, 1, 2]
+    input_requirements:
+      - module (string, mapped to MODULE_REGISTRY.yaml)
+      - event_name (string, max 64 chars)
+    artifacts_produced:
+      - contracts/asyncapi/channels/{module}/{event_name}.yaml
+    blocking_gates: [SCHEMA_CONSISTENCY_GATE, DOMAIN_AXIOM_GATE]
+
+  new_workflow:
+    task_type: new_workflow
+    worker_id: create_arazzo_workflow
+    worker_path: .contract_driven/agent_prompts/create_arazzo_workflow.prompt.md
+    status: active
+    description: "Criar novo workflow multi-step (Arazzo)"
+    profile_id: contract_execution
+    stage_allowed: [0, 1, 2]
+    input_requirements:
+      - module (string, mapped to MODULE_REGISTRY.yaml)
+      - workflow_name (string, max 64 chars)
+      - steps (list of step objects)
+    artifacts_produced:
+      - contracts/workflows/{module}/{workflow_name}.arazzo.yaml
+    blocking_gates: [CONTRACT_EXIST_GATE]
+
+  new_schema:
+    task_type: new_schema
+    worker_id: create_json_schema_contract
+    worker_path: .contract_driven/agent_prompts/create_json_schema_contract.prompt.md
+    status: active
+    description: "Criar novo JSON Schema"
+    profile_id: contract_execution
+    stage_allowed: [0, 1, 2]
+    input_requirements:
+      - module (string, mapped to MODULE_REGISTRY.yaml)
+      - schema_name (string, max 64 chars)
+    artifacts_produced:
+      - contracts/schemas/{module}/{schema_name}.schema.json
+    blocking_gates: [SCHEMA_STRUCTURE_GATE]
+
+  new_state_model:
+    task_type: new_state_model
+    worker_id: create_state_model
+    worker_path: .contract_driven/agent_prompts/create_state_model.prompt.md
+    status: active
+    description: "Criar novo State Model (FSM)"
+    profile_id: contract_execution
+    stage_allowed: [0, 1, 2]
+    input_requirements:
+      - module (string, mapped to MODULE_REGISTRY.yaml)
+      - model_name (string, max 64 chars)
+    artifacts_produced:
+      - docs/hbtrack/modulos/{module}/STATE_MODEL_{module_upper}.md
+    blocking_gates: []
+
+  new_ui_contract:
+    task_type: new_ui_contract
+    worker_id: create_ui_contract
+    worker_path: .contract_driven/agent_prompts/create_ui_contract.prompt.md
+    status: active
+    description: "Criar novo contrato UI"
+    profile_id: contract_execution
+    stage_allowed: [0, 1, 2]
+    input_requirements:
+      - module (string, mapped to MODULE_REGISTRY.yaml)
+      - screen_name (string, max 64 chars)
+    artifacts_produced:
+      - docs/hbtrack/modulos/{module}/UI_CONTRACT_{module_upper}.md
+    blocking_gates: [UI_DOC_VALIDATION_GATE]
+
+  # Grupo: Promoção de Maturidade
+  readiness_promotion:
+    task_type: readiness_promotion
+    worker_id: readiness_promotion
+    worker_path: .contract_driven/agent_prompts/readiness_promotion.prompt.md
+    status: active
+    description: "Promover módulo de validated_contract para implementation_ready após auditoria de superfícies e pipeline verde"
+    profile_id: contract_execution
+    stage_allowed: [3, 4]
+    input_requirements:
+      - module (string, mapped to MODULE_REGISTRY.yaml)
+    artifacts_produced:
+      - docs/_canon/MODULE_REGISTRY.yaml (status updated to implementation_ready)
+      - _reports/evidence/module_readiness_scorecard.json (updated)
+    blocking_gates:
+      - AXIOM_INTEGRITY_GATE
+      - DERIVED_DRIFT_GATE
+      - OPENAPI_ROOT_STRUCTURE_GATE
+    pre_contract_exception: null
+    notes: |
+      Único caminho formal para implementation_ready.
+      Requer: status=validated_contract + pipeline PASS + sem decisões abertas + todas as expected_surfaces presentes.
+      Habilita a materialização controlada do módulo.
+      Não implica módulo implementado; estados pós-readiness vivem no MODULE_REGISTRY (`implemented`, `staging_validated`, `released`).
+      `generate_frontend` continua frozen até frontend/ existir, a toolchain real estar versionada e o FRONTEND_CONTRACT_GATE sair de SKIP.
+
+  # Grupo: Decisões Arquiteturais
+  architecture_review:
+    task_type: architecture_review
+    worker_id: decision_discovery
+    worker_path: .contract_driven/agent_prompts/decision_discovery.prompt.md
+    status: active
+    description: "Analisar decisão arquitetural aberta"
+    profile_id: architecture_decision
+    stage_allowed: [1, 2]
+    input_requirements:
+      - decision_id (string, format ADR-*)
+      - context (string, max 2000 chars)
+    artifacts_produced:
+      - docs/_canon/decisions/ADR-*.md
+      - docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md (updated)
+    blocking_gates: []
+
+  decision_discovery:
+    task_type: decision_discovery
+    worker_id: decision_discovery
+    worker_path: .contract_driven/agent_prompts/decision_discovery.prompt.md
+    status: active
+    description: "Descobrir decisão implícita em artefato"
+    profile_id: architecture_decision
+    stage_allowed: [1]
+    input_requirements:
+      - artifact_path (string, existing path)
+      - scope (string, max 500 chars)
+    artifacts_produced:
+      - ARCHITECTURE_DECISION_BACKLOG.md (updated with new decision)
+    blocking_gates: []
+
+  generate_code:
+    task_type: generate_code
+    worker_id: code_generator
+    worker_path: .contract_driven/agent_prompts/generate_code.prompt.md
+    status: active
+    description: "Gerar código backend (Django Ninja + Django ORM) a partir de contrato validado. Requer ADVERSARIAL_ANALYSIS_GATE=PASS."
+    profile_id: contract_execution
+    stage_allowed: [2, 3]
+    input_requirements:
+      - module (string, mapped to MODULE_REGISTRY.yaml, status>=validated_contract)
+      - feature (string, mapped to FEATURE_REGISTRY.yaml)
+      - layer (enum: domain | application | infrastructure | interface | all)
+    write_scope: backend
+    artifacts_produced:
+      - src/{module}/domain/entities.py
+      - src/{module}/application/use_cases.py
+      - src/{module}/models.py
+      - src/{module}/infrastructure/models.py
+      - src/{module}/infrastructure/repository.py
+      - src/{module}/schemas.py
+      - src/{module}/api.py
+      - src/{module}/tests/
+    blocking_gates:
+      - AXIOM_INTEGRITY_GATE
+      - OPENAPI_ROOT_STRUCTURE_GATE
+      - ADVERSARIAL_ANALYSIS_GATE
+
+  generate_frontend:
+    task_type: generate_frontend
+    worker_id: frontend_generator
+    worker_path: .contract_driven/agent_prompts/generate_frontend.prompt.md
+    status: frozen
+    description: "[FUTURO] Gerar componentes frontend a partir de UI Contract. Aguarda sign-off."
+    profile_id: null
+    stage_allowed: []
+    reason_frozen: "Frontend real ainda não existe no workspace; contrato segue como target-state"
+    unblock_condition: "Quando frontend/ existir com paths canonizados, package.json declarar a toolchain frontend real, FRONTEND_CONTRACT_GATE sair de SKIP_NOT_APPLICABLE e houver sign-off explícito para descongelar o worker"
+
+  # Grupo: Execução de Fases do ROADMAP (implementação — modo distinto do CDD)
+  execute_roadmap_phase:
+    task_type: execute_roadmap_phase
+    worker_id: execute_roadmap_phase
+    worker_path: .contract_driven/agent_prompts/execute_roadmap_phase.prompt.md
+    status: active
+    description: "Executar tarefas de uma fase do ROADMAP (ambiente, infra, CI/CD, frontend, deploy). NÃO passa por pre_contract_orchestrator."
+    profile_id: roadmap_execution
+    stage_allowed: [0, 1, 2, 3]
+    input_requirements:
+      - module (string, mapped to MODULE_REGISTRY.yaml, módulo foco da sessão)
+      - phase (integer 0-13, obrigatório)
+      - task_id (string, ex "1.1" — opcional, se ausente executa fase completa)
+    write_scope: roadmap
+    artifacts_produced: []  # varia por fase — ver ROADMAP.md para paths canônicos
+    blocking_gates: []
+    pre_contract_exception: "ROADMAP_PHASE: não passa por pre_contract_orchestrator — modo de operação independente"
+    notes: |
+      Este task_type é o ponto de entrada para execução de todas as 14 fases do ROADMAP.md.
+      As fases são bloqueantes em cadeia: fase N só inicia após Critério de Done da fase N-1.
+      Paths canônicos de artefatos de infraestrutura definidos no worker prompt.
+
+  # Grupo: Análise de Segurança (fase pós-contrato, pré-implementação)
+  adversarial_analysis:
+    task_type: adversarial_analysis
+    worker_id: adversarial_analysis
+    worker_path: .contract_driven/agent_prompts/adversarial_analysis.prompt.md
+    status: active
+    description: "Análise adversarial do contrato — OWASP Top 10, boundary violations, invariant fuzzing, edge cases"
+    profile_id: null
+    stage_allowed: []
+    artifacts_produced: []
+    pre_contract_exception: null
+
+  # Grupo: Auditorias do Pipeline (audit-only — não produzem artefato normativo)
+  audit_sovereign_integrity:
+    task_type: audit_sovereign_integrity
+    worker_id: audit_sovereign_integrity
+    worker_path: .contract_driven/agent_prompts/audit_sovereign_integrity.prompt.md
+    status: active
+    description: "Detectar duplicação de autoridade e artefatos soberanos ausentes (estrutural)"
+    profile_id: null
+    stage_allowed: []
+    artifacts_produced: []
+    pre_contract_exception: "PRE_CONTRACT_SKIPPED: audit-only, no artifact produced"
+
+  audit_context_efficiency:
+    task_type: audit_context_efficiency
+    worker_id: audit_context_efficiency
+    worker_path: .contract_driven/agent_prompts/audit_context_efficiency.prompt.md
+    status: active
+    description: "Medir orçamento de contexto do boot e alcançabilidade de regras críticas"
+    profile_id: null
+    stage_allowed: []
+    artifacts_produced: []
+    pre_contract_exception: "PRE_CONTRACT_SKIPPED: audit-only, no artifact produced"
+
+  audit_red_team_pipeline:
+    task_type: audit_red_team_pipeline
+    worker_id: audit_red_team_pipeline
+    worker_path: .contract_driven/agent_prompts/audit_red_team_pipeline.prompt.md
+    status: active
+    description: "Red team estruturado — encontrar aprovações indevidas e bloqueios errados"
+    profile_id: null
+    stage_allowed: []
+    artifacts_produced: []
+    pre_contract_exception: "PRE_CONTRACT_SKIPPED: audit-only, no artifact produced"
+
+  audit_gate_coverage:
+    task_type: audit_gate_coverage
+    worker_id: audit_gate_coverage
+    worker_path: .contract_driven/agent_prompts/audit_gate_coverage.prompt.md
+    status: active
+    description: "Mapear cobertura de RULES §2–§23 contra gates bloqueantes (rubrica com score)"
+    profile_id: null
+    stage_allowed: []
+    artifacts_produced: []
+    pre_contract_exception: "PRE_CONTRACT_SKIPPED: audit-only, no artifact produced"
+
+  audit_domain_completeness:
+    task_type: audit_domain_completeness
+    worker_id: audit_domain_completeness
+    worker_path: .contract_driven/agent_prompts/audit_domain_completeness.prompt.md
+    status: active
+    description: "Simulação de uso real — ciclo completo de módulo com injeção de borda"
+    profile_id: null
+    stage_allowed: []
+    artifacts_produced: []
+    pre_contract_exception: "PRE_CONTRACT_SKIPPED: audit-only, no artifact produced"
+
+# Validações de roteamento
+routing_validation:
+  rule_1: |
+    task_type deve estar neste SSOT. Se não está, retorna BLOCKED_FEATURE_UNREGISTERED.
+
+  rule_2: |
+    Se status = frozen, retorna BLOCKED_FEATURE_UNREGISTERED com contexto descongelamento.
+
+  rule_3: |
+    Se status = disabled, retorna BLOCKED_FEATURE_UNREGISTERED (permanentemente).
+
+  rule_4: |
+    Se status = active:
+      - Validar que worker_path existe no filesystem
+      - Validar que profile_id existe em BOOT_PROFILES.yaml
+      - Extrair input_requirements e validar SESSION_HANDOFF.md
+      - Se passou, carregar worker prompt
+
+  rule_5: |
+    Pre-flight checks antes de qualquer worker:
+    - Verificar que stage está em stage_allowed
+    - Verificar que artifacts esperados podem ser escritos
+    - Verificar que blocking_gates não têm FAIL material
+
+# Matriz de operacionalidade por fase
+phase_routing:
+  phase_0_boot:
+    task: "Determinar task_type concreto, validar contra TASK_CATALOG"
+    exit_condition: "task_type found AND status = active AND worker_path exists"
+
+  phase_1_discovery:
+    task: "Carregar profile_id do BOOT_PROFILES.yaml, montar contexto"
+    exit_condition: "profile carregado E required_sections validadas"
+
+  phase_2_execution:
+    task: "Executar worker, produzir artifacts listados em artifacts_produced"
+    exit_condition: "Worker exitcode = 0 E artifacts criados E gates passaram"

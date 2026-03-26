@@ -1,0 +1,13 @@
+description: >
+  Publicado quando uma nova NotificationDelivery é criada com status=queued.
+
+  Emitido pelo módulo notifications após aceitar uma intenção de notificação
+  via POST /notifications/intents. Indica que o pipeline de entrega foi
+  iniciado e a tarefa Celery foi enfileirada (ADR-031: Celery 5 + Redis 7).
+
+  DR-NTF-001: notifications é soberano do envelope de entrega.
+  DR-NTF-002: a decisão de canal já foi tomada neste ponto.
+publish:
+  operationId: notification_delivery_queued_publish
+  message:
+    $ref: ../messages/notification_delivery_queued.yaml

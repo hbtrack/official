@@ -1,0 +1,11 @@
+{
+  "run_id": "20260319T043451_dc5398",
+  "timestamp_utc": "2026-03-19T04:34:51Z",
+  "health_score": 95,
+  "gates_total": 44,
+  "gates_passed": 42,
+  "gates_failed": 2,
+  "blocking_fails": 1,
+  "overall_status": "FAIL",
+  "exit_code": 2
+}

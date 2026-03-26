@@ -1,0 +1,15 @@
+description: >
+  Publicado quando um DistributionProfile conclui transcodificação.
+
+  Emitido após Celery job finalizar encoding de um profile (H.264, H.265, VP9, AV1).
+  Indica que rendition está pronta para cache/CDN. Consumidores (distribution fabric,
+  public API) podem servir rendition.
+
+  DR-VID-002: dual pipeline (técnico + público).
+  DR-VID-006: transcodificação lazy.
+  INV-VID-004: transcode profile resulta em mezzanine.
+
+publish:
+  operationId: video_transcode_completed_publish
+  message:
+    $ref: ../../messages/video/transcode_completed.yaml

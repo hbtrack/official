@@ -20,15 +20,77 @@ canonical_types:
     AthleteId:
       inherits: Identifier
       semantic_id: users.athlete.id.v1
+    AuditEntryId:
+      inherits: Identifier
+      semantic_id: audit.entry.id.v1
+    CompetitionId:
+      inherits: Identifier
+      semantic_id: competitions.competition.id.v1
+    CorrelationId:
+      inherits: Identifier
+      nullable: true
+      semantic_id: core.correlation.id.v1
+    ExerciseId:
+      inherits: Identifier
+      semantic_id: exercises.exercise.id.v1
+    ExerciseVersionId:
+      inherits: Identifier
+      semantic_id: exercises.exercise_version.id.v1
+    IdentitySessionId:
+      inherits: Identifier
+      semantic_id: identity.session.id.v1
+    IngestionJobId:
+      inherits: Identifier
+      semantic_id: ai_ingestion.job.id.v1
+    MatchId:
+      inherits: Identifier
+      semantic_id: matches.match.id.v1
+    NotificationDeliveryId:
+      inherits: Identifier
+      semantic_id: notifications.delivery.id.v1
     OccurredAt:
       inherits: Timestamp
       semantic_id: core.occurred_at.v1
+    OrganizationId:
+      inherits: Identifier
+      semantic_id: organizations.organization.id.v1
+    ResourceId:
+      inherits: Identifier
+      nullable: true
+      semantic_id: core.resource.id.v1
+    ScoutEventId:
+      inherits: Identifier
+      semantic_id: scout.event.id.v1
+    SeasonId:
+      inherits: Identifier
+      semantic_id: seasons.season.id.v1
+    TeamId:
+      inherits: Identifier
+      semantic_id: teams.team.id.v1
     TrainingSessionId:
       inherits: Identifier
       semantic_id: training.session.id.v1
     UserId:
       inherits: Identifier
       semantic_id: identity.user.id.v1
+    VideoClipDefinitionId:
+      inherits: Identifier
+      semantic_id: video.clip_definition.id.v1
+    VideoDistributionProfileId:
+      inherits: Identifier
+      semantic_id: video.distribution_profile.id.v1
+    VideoMatchMediaSessionId:
+      inherits: Identifier
+      semantic_id: video.match_media_session.id.v1
+    VideoMediaSegmentId:
+      inherits: Identifier
+      semantic_id: video.media_segment.id.v1
+    VideoSessionId:
+      inherits: Identifier
+      semantic_id: video.session.id.v1
+    WellnessEntryId:
+      inherits: Identifier
+      semantic_id: wellness.entry.id.v1
   field_bindings:
   - canonical_type_ref: training.session.id.v1
     field_name: trainingSessionId
@@ -38,8 +100,189 @@ canonical_types:
     field_name: userId
   - canonical_type_ref: core.occurred_at.v1
     field_name: occurredAt
+  - canonical_type_ref: exercises.exercise.id.v1
+    field_name: exerciseId
+  - canonical_type_ref: exercises.exercise_version.id.v1
+    field_name: exerciseVersionId
+  - canonical_type_ref: teams.team.id.v1
+    field_name: teamId
+  - canonical_type_ref: organizations.organization.id.v1
+    field_name: organizationId
+  - canonical_type_ref: seasons.season.id.v1
+    field_name: seasonId
+  - canonical_type_ref: ai_ingestion.job.id.v1
+    field_name: jobId
+  - canonical_type_ref: competitions.competition.id.v1
+    field_name: competitionId
+  - canonical_type_ref: matches.match.id.v1
+    field_name: matchId
+  - canonical_type_ref: core.resource.id.v1
+    field_name: targetResourceId
+  - canonical_type_ref: core.correlation.id.v1
+    field_name: correlationId
+  - canonical_type_ref: scout.event.id.v1
+    field_name: eventId
+  - canonical_type_ref: notifications.delivery.id.v1
+    field_name: deliveryId
 contract_sources:
+- contracts/openapi/README.md
+- contracts/openapi/baseline/openapi_baseline.json
+- contracts/openapi/components/examples/.gitkeep
+- contracts/openapi/components/parameters/page.yaml
+- contracts/openapi/components/parameters/pageSize.yaml
+- contracts/openapi/components/parameters/pageToken.yaml
+- contracts/openapi/components/requestBodies/.gitkeep
+- contracts/openapi/components/responses/.gitkeep
+- contracts/openapi/components/schemas/ai_ingestion/.gitkeep
+- contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml
+- contracts/openapi/components/schemas/analytics/.gitkeep
+- contracts/openapi/components/schemas/analytics/analytics_metric_key.yaml
+- contracts/openapi/components/schemas/analytics/analytics_query_request.yaml
+- contracts/openapi/components/schemas/analytics/analytics_query_response.yaml
+- contracts/openapi/components/schemas/analytics/analytics_snapshot.yaml
+- contracts/openapi/components/schemas/audit/.gitkeep
+- contracts/openapi/components/schemas/audit/audit_entry.yaml
+- contracts/openapi/components/schemas/common/error.yaml
+- contracts/openapi/components/schemas/competitions/.gitkeep
+- contracts/openapi/components/schemas/competitions/competition.yaml
+- contracts/openapi/components/schemas/exercises/.gitkeep
+- contracts/openapi/components/schemas/exercises/exercise.yaml
+- contracts/openapi/components/schemas/exercises/exercise_preview.yaml
+- contracts/openapi/components/schemas/exercises/exercise_relation.yaml
+- contracts/openapi/components/schemas/exercises/exercise_version.yaml
+- contracts/openapi/components/schemas/identity_access/.gitkeep
+- contracts/openapi/components/schemas/identity_access/auth_session.yaml
+- contracts/openapi/components/schemas/matches/.gitkeep
+- contracts/openapi/components/schemas/matches/match.yaml
+- contracts/openapi/components/schemas/medical/.gitkeep
+- contracts/openapi/components/schemas/medical/medical_record.yaml
+- contracts/openapi/components/schemas/notifications/.gitkeep
+- contracts/openapi/components/schemas/notifications/notification_delivery.yaml
+- contracts/openapi/components/schemas/notifications/notification_preferences.yaml
+- contracts/openapi/components/schemas/reports/.gitkeep
+- contracts/openapi/components/schemas/reports/report_job.yaml
+- contracts/openapi/components/schemas/scout/.gitkeep
+- contracts/openapi/components/schemas/scout/scout_event.yaml
+- contracts/openapi/components/schemas/seasons/.gitkeep
+- contracts/openapi/components/schemas/seasons/season.yaml
+- contracts/openapi/components/schemas/shared/problem.yaml
+- contracts/openapi/components/schemas/teams/.gitkeep
+- contracts/openapi/components/schemas/teams/team.yaml
+- contracts/openapi/components/schemas/training/.gitkeep
+- contracts/openapi/components/schemas/training/athlete_chat_message.yaml
+- contracts/openapi/components/schemas/training/athlete_ineligibility_declaration.yaml
+- contracts/openapi/components/schemas/training/attention_queue_item.yaml
+- contracts/openapi/components/schemas/training/execution_record.yaml
+- contracts/openapi/components/schemas/training/feedback_thread.yaml
+- contracts/openapi/components/schemas/training/load_chart.yaml
+- contracts/openapi/components/schemas/training/mesocycle.yaml
+- contracts/openapi/components/schemas/training/microcycle.yaml
+- contracts/openapi/components/schemas/training/recommendation.yaml
+- contracts/openapi/components/schemas/training/session_block.yaml
+- contracts/openapi/components/schemas/training/session_objective.yaml
+- contracts/openapi/components/schemas/training/training_session.yaml
+- contracts/openapi/components/schemas/training/training_suggestion.yaml
+- contracts/openapi/components/schemas/training/wellness_post.yaml
+- contracts/openapi/components/schemas/training/wellness_pre.yaml
+- contracts/openapi/components/schemas/users/.gitkeep
+- contracts/openapi/components/schemas/users/user_profile.yaml
+- contracts/openapi/components/schemas/video/clip_definition.yaml
+- contracts/openapi/components/schemas/video/distribution_profile.yaml
+- contracts/openapi/components/schemas/video/match_media_session.yaml
+- contracts/openapi/components/schemas/video/media_segment.yaml
+- contracts/openapi/components/schemas/wellness/.gitkeep
+- contracts/openapi/components/schemas/wellness/wellness_entry.yaml
+- contracts/openapi/components/schemas/wellness/wellness_summary.yaml
+- contracts/openapi/components/securitySchemes/.gitkeep
+- contracts/openapi/intents/README.md
+- contracts/openapi/intents/ai_ingestion.intent.yaml
+- contracts/openapi/intents/examples/ai_ingestion.invalid.intent.yaml
+- contracts/openapi/openapi.yaml
+- contracts/openapi/paths/ai_ingestion.yaml
+- contracts/openapi/paths/analytics.yaml
+- contracts/openapi/paths/audit.yaml
+- contracts/openapi/paths/competitions.yaml
+- contracts/openapi/paths/exercises.yaml
+- contracts/openapi/paths/identity_access.yaml
+- contracts/openapi/paths/matches.yaml
+- contracts/openapi/paths/medical.yaml
+- contracts/openapi/paths/notifications.yaml
+- contracts/openapi/paths/reports.yaml
+- contracts/openapi/paths/scout.yaml
+- contracts/openapi/paths/seasons.yaml
+- contracts/openapi/paths/teams.yaml
+- contracts/openapi/paths/training.yaml
 - contracts/openapi/paths/users.yaml
+- contracts/openapi/paths/video.yaml
+- contracts/openapi/paths/wellness.yaml
+- contracts/openapi/redocly_lint.log
+- contracts/openapi/spectral_lint.log
+- contracts/schemas/README.md
+- contracts/schemas/ai_ingestion/.gitkeep
+- contracts/schemas/ai_ingestion/ingestion_job.schema.json
+- contracts/schemas/analytics/.gitkeep
+- contracts/schemas/analytics/analytics_metric_key.schema.json
+- contracts/schemas/analytics/analytics_query_request.schema.json
+- contracts/schemas/analytics/analytics_query_response.schema.json
+- contracts/schemas/analytics/analytics_snapshot.schema.json
+- contracts/schemas/audit/.gitkeep
+- contracts/schemas/audit/audit_entry.schema.json
+- contracts/schemas/competitions/.gitkeep
+- contracts/schemas/competitions/competition.schema.json
+- contracts/schemas/exercises/.gitkeep
+- contracts/schemas/exercises/exercise.schema.json
+- contracts/schemas/exercises/exercise_acl.schema.json
+- contracts/schemas/exercises/exercise_relation.schema.json
+- contracts/schemas/exercises/exercise_version.schema.json
+- contracts/schemas/identity_access/.gitkeep
+- contracts/schemas/identity_access/auth_session.schema.json
+- contracts/schemas/matches/.gitkeep
+- contracts/schemas/matches/match.schema.json
+- contracts/schemas/medical/.gitkeep
+- contracts/schemas/medical/medical_record.schema.json
+- contracts/schemas/notifications/.gitkeep
+- contracts/schemas/notifications/notification_delivery.schema.json
+- contracts/schemas/reports/.gitkeep
+- contracts/schemas/reports/report_job.schema.json
+- contracts/schemas/scout/.gitkeep
+- contracts/schemas/scout/scout_event.schema.json
+- contracts/schemas/seasons/.gitkeep
+- contracts/schemas/seasons/season.schema.json
+- contracts/schemas/shared/.gitkeep
+- contracts/schemas/shared/domain_axioms.schema.json
+- contracts/schemas/shared/domain_axioms_module.schema.json
+- contracts/schemas/shared/module_registry.schema.json
+- contracts/schemas/shared/module_source_authority_matrix.schema.json
+- contracts/schemas/shared/owasp_api_control_matrix.schema.json
+- contracts/schemas/shared/readiness_confirmation.schema.json
+- contracts/schemas/shared/session_handoff.schema.json
+- contracts/schemas/shared/session_start.schema.json
+- contracts/schemas/shared/waiver.schema.json
+- contracts/schemas/teams/.gitkeep
+- contracts/schemas/teams/team.schema.json
+- contracts/schemas/training/.gitkeep
+- contracts/schemas/training/ajv_compile.log
+- contracts/schemas/training/athlete_chat_conversation.schema.json
+- contracts/schemas/training/athlete_chat_message.schema.json
+- contracts/schemas/training/athlete_ineligibility_declaration.schema.json
+- contracts/schemas/training/attention_queue_item.schema.json
+- contracts/schemas/training/execution_record.schema.json
+- contracts/schemas/training/feedback_thread.schema.json
+- contracts/schemas/training/load_chart.schema.json
+- contracts/schemas/training/recommendation.schema.json
+- contracts/schemas/training/session_block.schema.json
+- contracts/schemas/training/session_objective.schema.json
+- contracts/schemas/training/training_session.schema.json
+- contracts/schemas/training/training_suggestion.schema.json
+- contracts/schemas/training/training_suggestion_approval.schema.json
+- contracts/schemas/users/.gitkeep
+- contracts/schemas/users/user_profile.schema.json
+- contracts/schemas/video/clip_definition.schema.json
+- contracts/schemas/video/distribution_profile.schema.json
+- contracts/schemas/video/match_media_session.schema.json
+- contracts/schemas/video/media_segment.schema.json
+- contracts/schemas/wellness/.gitkeep
+- contracts/schemas/wellness/wellness_entry.schema.json
 inputs:
   api_rules: .contract_driven/templates/api/api_rules.yaml
   architecture_matrix: .contract_driven/templates/api/ARCHITECTURE_MATRIX.yaml
@@ -56,6 +299,7 @@ meta:
 module_profile:
   enabled_surfaces:
   - sync
+  - event
   module_class: CRUD
   overlays: []
 style_veto:

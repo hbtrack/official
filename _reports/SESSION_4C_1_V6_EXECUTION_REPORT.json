@@ -1,0 +1,69 @@
+{
+  "session": "4C.1",
+  "phase": "V6_ROBUST_PARSING",
+  "execution": {
+    "axioms_source": ".contract_driven/DOMAIN_AXIOMS.json",
+    "parsing_method": "YAML SafeLoad + Direct Property Modification",
+    "fields_targeted": {
+      "uuid": [
+        "conversationId",
+        "trainingId",
+        "createdByUserId",
+        "organizationId",
+        "matchId",
+        "generatedSessionId",
+        "athleteId",
+        "sessionId",
+        "decidedByCoachId",
+        "coachId",
+        "teamId",
+        "generatedTrainingSessionId"
+      ],
+      "timestamp": [
+        "publishedAt",
+        "nextRetryAt",
+        "completedAt",
+        "captureStartedAt",
+        "decidedAt",
+        "occurredAt",
+        "startedAt",
+        "endedAt",
+        "updatedAt",
+        "createdAt",
+        "computedAt"
+      ],
+      "date": [
+        "startDate",
+        "endDate"
+      ],
+      "total": 25
+    },
+    "patterns": {
+      "uuid_v4": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "timestamp_utc": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$",
+      "date_only": "^\\d{4}-\\d{2}-\\d{2}$"
+    }
+  },
+  "results": {
+    "files_processed": 290,
+    "files_modified": 1,
+    "total_replacements": 1,
+    "replacements_by_type": {
+      "timestamp": 1,
+      "uuid": 0,
+      "date": 0
+    },
+    "no_field_outside_25": true,
+    "conservative_mode": true,
+    "parsing_safe": true
+  },
+  "details": [
+    {
+      "file": "contracts/asyncapi/components/schemas/video/distribution_failed_payload.yaml",
+      "field": "nextRetryAt",
+      "type": "timestamp",
+      "old_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$",
+      "new_pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+messageId: continuity_snapshot_created
+name: continuity_snapshot_created
+title: Continuity Snapshot Created
+summary: Snapshot de continuidade registrado para efeitos de continuidade periodizacional.
+contentType: application/json
+payload:
+  $ref: ../components/schemas/continuity_snapshot_created_payload.yaml

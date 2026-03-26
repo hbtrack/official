@@ -3,6 +3,13 @@ module: "analytics"
 system_scope_ref: "../../../_canon/SYSTEM_SCOPE.md"
 handball_rules_ref: "../../../_canon/HANDBALL_RULES_DOMAIN.md"
 handball_semantic_applicability: false
+type: "readme"
+module_scope_ref: "./MODULE_SCOPE_ANALYTICS.md"
+domain_rules_ref: "./DOMAIN_RULES_ANALYTICS.md"
+invariants_ref: "./INVARIANTS_ANALYTICS.md"
+test_matrix_ref: "./TEST_MATRIX_ANALYTICS.md"
+permissions_ref: "./PERMISSIONS_ANALYTICS.md"
+errors_ref: "./ERRORS_ANALYTICS.md"
 contract_path_ref: "../../../../contracts/openapi/paths/analytics.yaml"
 schemas_ref: "../../../../contracts/schemas/analytics/"
 ---

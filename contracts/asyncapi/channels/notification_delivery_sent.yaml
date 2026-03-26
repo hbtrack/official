@@ -1,0 +1,14 @@
+description: >
+  Publicado quando uma NotificationDelivery é confirmada como entregue
+  com status=sent.
+
+  Emitido pelo módulo notifications após confirmação de entrega bem-sucedida
+  pelo adapter do canal (push: FCM/APNs ACK; email: SMTP accepted; in_app:
+  gravado no feed). ADR-031: entrega assíncrona via Celery + Redis.
+
+  DR-NTF-001: notifications é soberano do envelope de entrega.
+  DR-NTF-005: este evento não carrega policy de acesso nem estado do originador.
+publish:
+  operationId: notification_delivery_sent_publish
+  message:
+    $ref: ../messages/notification_delivery_sent.yaml

@@ -1,0 +1,8 @@
+description: >
+  Evento emitido quando um item é colocado na attention queue (attention_queue_item.status = ACTIVE).
+  Tipos: wellness_alert, medical_flag, recovery_concern, individual_performance, group_dynamics.
+
+publish:
+  operationId: attention_queue_item_created_publish
+  message:
+    $ref: ../messages/attention_queue_item_created.yaml

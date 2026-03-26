@@ -1,0 +1,14 @@
+# AsyncAPI Message: video_distribution_published
+# Module: video
+# Domain rules: DR-VID-007, DR-VID-008, DR-VID-009
+# Decisions: ADR-033
+messageId: video_distribution_published
+name: VideoDistributionPublishedMessage
+title: Distribuição de Vídeo Publicada
+summary: Publicado quando feed é distribuído a destino externo (CDN, parceiro) — DR-VID-009.
+description: >
+  Toda distribuição externa gera este evento (DR-VID-009) para auditoria obrigatória.
+  Acesso scoped por MatchMediaSession (DR-VID-007). Retenção conforme retentionPolicy (DR-VID-008).
+contentType: application/json
+payload:
+  $ref: "../components/schemas/video_distribution_published_payload.yaml"

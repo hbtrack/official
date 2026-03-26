@@ -1,0 +1,132 @@
+# ============================================================
+# Arazzo Workflow: ingestion_job_lifecycle
+# Module: ai_ingestion
+# x-status: active
+# Domain rules: DR-ING-001..005
+# Invariants: INV-ING-001..005
+# ============================================================
+
+arazzo: "1.0.0"
+info:
+  title: Ciclo de Vida de Job de Ingestão
+  summary: >
+    Workflow de criação e retry de jobs de ingestão de dados externos.
+    ai_ingestion é soberano do intake: fonte, modo, schema de entrada,
+    mapeamento explícito, binding e idempotência (DR-ING-001).
+
+    Normalização automatizada exige payloadSchemaRef + mappingProfile
+    explícitos — sem parser implícito ou transformação silenciosa (DR-ING-002).
+    idempotencyKey garante replay seguro (DR-ING-004).
+    ai_ingestion NÃO é dono do dado final após normalização (DR-ING-005).
+  version: "1.0.0"
+  x-status: active
+  x-module: ai_ingestion
+  x-domain-rules:
+    - DR-ING-001
+    - DR-ING-002
+    - DR-ING-003
+    - DR-ING-004
+    - DR-ING-005
+
+sourceDescriptions:
+  - name: hbtrack_api
+    url: ../../openapi/openapi.yaml
+    type: openapi
+
+workflows:
+  - workflowId: create_and_monitor_ingestion_job
+    summary: "Cria job de ingestão e reprocessa em caso de falha"
+    description: >
+      Workflow principal de intake de dados externos:
+      1. Cria o job de ingestão com sourceLabel, ingestionMode e mapeamento
+         explícito (DR-ING-002 / INV-ING-003 — payloadSchemaRef + mappingProfile)
+      2. Monitora o estado via getIngestionJob (statusLabel: queued → processing → completed | failed)
+      3. Em caso de falha, executa retry via retryIngestionJob (DR-ING-004 — idempotencyKey)
+
+      INV-ING-003: normalização automatizada exige mapeamento explícito.
+      INV-ING-004: idempotencyKey estável para jobs sujeitos a replay.
+      INV-ING-005: ai_ingestion não se declara dono do dado normalizado.
+    inputs:
+      type: object
+      required:
+        - sourceLabel
+        - ingestionMode
+      properties:
+        sourceLabel:
+          type: string
+          minLength: 1
+          maxLength: 120
+          description: "Label da fonte externa. DR-ING-001."
+        ingestionMode:
+          type: string
+          minLength: 1
+          maxLength: 40
+          description: >
+            Modo de ingestão (batch, webhook, file-drop).
+            INV-ING-003: se normalize, payloadSchemaRef + mappingProfile obrigatórios.
+        payloadSchemaRef:
+          type: string
+          maxLength: 255
+          description: Referência ao schema de entrada. DR-ING-002.
+        mappingProfile:
+          type: string
+          maxLength: 120
+          description: Perfil de mapeamento explícito. DR-ING-002.
+        idempotencyKey:
+          type: string
+          maxLength: 120
+          description: "Chave de idempotência para replay seguro. DR-ING-004."
+        executionBindingLabel:
+          type: string
+          maxLength: 80
+          description: Binding de execução explícito. DR-ING-001.
+
+    steps:
+      - stepId: create_ingestion_job
+        description: >
+          Cria e enfileira o job de ingestão (statusLabel=queued).
+          Requer admin ou coordinator (ADR-008). Retorna 202 Accepted.
+          DR-ING-002: payloadSchemaRef + mappingProfile obrigatórios se normalizer.
+        operationId: createIngestionJob
+        requestBody:
+          contentType: application/json
+          payload:
+            sourceLabel: $inputs.sourceLabel
+            ingestionMode: $inputs.ingestionMode
+            payloadSchemaRef: $inputs.payloadSchemaRef
+            mappingProfile: $inputs.mappingProfile
+            idempotencyKey: $inputs.idempotencyKey
+            executionBindingLabel: $inputs.executionBindingLabel
+        successCriteria:
+          - condition: $statusCode == 202
+        outputs:
+          jobId: $response.body#/id
+          statusLabel: $response.body#/statusLabel
+
+      - stepId: get_ingestion_job_status
+        description: >
+          Verifica o status atual do job (queued → processing → completed | failed).
+          DR-ING-003: receivedAt e completedAt preservados separadamente.
+        operationId: getIngestionJob
+        parameters:
+          - name: jobId
+            in: path
+            value: $steps.create_ingestion_job.outputs.jobId
+        successCriteria:
+          - condition: $statusCode == 200
+
+      - stepId: retry_failed_job
+        description: >
+          Reprocessa o job se statusLabel=failed (DR-ING-004 — idempotencyKey
+          garante replay seguro sem reprocessamento duplicado).
+          Este step é condicional — executado apenas quando o job falhou.
+        operationId: retryIngestionJob
+        parameters:
+          - name: jobId
+            in: path
+            value: $steps.create_ingestion_job.outputs.jobId
+        successCriteria:
+          - condition: $statusCode == 202
+
+    outputs:
+      jobId: $steps.create_ingestion_job.outputs.jobId

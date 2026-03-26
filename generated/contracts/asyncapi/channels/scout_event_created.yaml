@@ -1,0 +1,22 @@
+# AsyncAPI Channel: scout.event.created
+# Module: scout
+# Domain rules: DR-SCOUT-001, DR-SCOUT-002, DR-SCOUT-003
+# Invariants: INV-SCOUT-001, INV-SCOUT-002
+# Decisions: DEC-SCOUT-003=C
+# ADR refs: ADR-031 (Celery/Redis)
+
+description: >
+  Canal publicado toda vez que uma nova observação tática é registrada.
+  scout é soberano de eventos observacionais (DR-SCOUT-001): eventLabel,
+  tagLabels, codingSchemaLabel, tacticalAggregationLabel são propriedade
+  exclusiva deste módulo.
+
+  Todo evento está ancorado a matchId (DR-SCOUT-003).
+  Consumidores downstream (analytics, notifications) podem usar este canal
+  para reação em tempo real a observações táticas.
+
+  BOUNDARY: payload nunca contém dados de autenticação ou dados clínicos.
+publish:
+  operationId: scout_event_created_publish
+  message:
+    $ref: "../messages/scout_event_created.yaml"

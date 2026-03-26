@@ -1,0 +1,7 @@
+description: >
+  Evento emitido quando um objetivo de sessão é marcado como alcançado (session_objective.achieved_flag = true).
+
+publish:
+  operationId: session_objective_achieved_publish
+  message:
+    $ref: ../messages/session_objective_achieved.yaml

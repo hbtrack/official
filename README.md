@@ -1,3 +1,4 @@
+< ⚠️  UNDER REVIEW FOR C4 CONSOLIDATION (Sovereign Integrity Audit) -->
 # HB Track
 
 **Plataforma sports-tech de gestão de handebol** — operações, treinamento, jogos, competições e analytics por contratos fortes.
@@ -9,17 +10,17 @@
 | Última revisão | 2026-03-11 |
 | **Ambiente de desenvolvimento** | **Linux/WSL (primário)** |
 
-> **⚠️ Nota Operacional:** A partir de 2026-03-13, o ambiente de desenvolvimento canônico é **Linux/WSL** (`/home/davis/HB-TRACK`). O path Windows (`C:\HB TRACK`) é mantido apenas como backup legado temporário e não deve receber edições operacionais.
+> **⚠️ Nota Operacional:** A partir de 2026-03-13, o ambiente de desenvolvimento standard é **Linux/WSL** (`/home/davis/HB-TRACK`). O path Windows (`C:\HB TRACK`) é mantido apenas como backup legado temporário e não deve receber edições operacionais.
 
 ---
 
 ## O que é o HB Track?
 
-O HB Track é uma plataforma de gestão esportiva voltada ao handebol indoor. Seu modelo de desenvolvimento é **contract-driven**: nenhum componente público nasce primeiro no código. Contratos OpenAPI, invariantes documentadas e schemas canônicos precedem a implementação.
+O HB Track é uma plataforma de gestão esportiva voltada ao handebol indoor. Seu modelo de desenvolvimento é **contract-driven**: nenhum componente público nasce primeiro no código. Contratos OpenAPI, invariantes documentadas e schemas standard precedem a implementação.
 
 | Dimensão | Descrição |
 |----------|-----------|
-| Tipo de sistema | Monólito modular em camadas (FastAPI) com SPA (Next.js 13+) |
+| Tipo de sistema | Monólito modular em camadas (Django Ninja) com SPA (React + Vite) |
 | Mercado primário | Handebol indoor — Brasil |
 | Usuários-alvo | Dirigentes, Coordenadores, Treinadores, Atletas e Membros |
 | Modelo de governança | Contract-Driven Development (CDD) com hierarquia normativa explícita |
@@ -30,19 +31,19 @@ O HB Track é uma plataforma de gestão esportiva voltada ao handebol indoor. Se
 
 | Camada | Tecnologia | Versão |
 |--------|-----------|--------|
-| **Backend runtime** | Python | 3.11.9 |
-| **Framework HTTP** | FastAPI | latest compat. |
-| **ORM** | SQLAlchemy | latest compat. |
-| **Migrations** | Alembic | latest compat. |
-| **Workers assíncronos** | Celery | latest compat. |
+| **Backend runtime** | Python | 3.12 |
+| **Framework HTTP** | Django + Django Ninja | 5.x / 1.x |
+| **ORM** | Django ORM | nativo |
+| **Migrations** | Django Migrations | nativo |
+| **Workers assíncronos** | Celery | 5.x |
 | **Broker + cache** | Redis | 7 (Alpine) |
-| **Banco (VPS prod/staging)** | PostgreSQL | 15 |
-| **Banco (dev local Docker)** | PostgreSQL | 12 |
-| **Framework frontend** | Next.js | 13+ (App Router) |
+| **Banco (VPS prod/staging)** | PostgreSQL | 16 |
+| **Banco (dev local Docker)** | PostgreSQL | 16 |
+| **Framework frontend** | React + Vite | 18 / 5.x |
 | **Linguagem frontend** | TypeScript | latest compat. |
 | **Estilo** | TailwindCSS | latest compat. |
 | **Testes backend** | pytest + Schemathesis | — |
-| **Testes frontend** | Jest | — |
+| **Testes frontend** | Vitest + Playwright | — |
 
 ---
 
@@ -52,31 +53,29 @@ O HB Track é uma plataforma de gestão esportiva voltada ao handebol indoor. Se
 HB-TRACK/
 ├── docs/_canon/                 # *** Documentação canônica normativa (ler primeiro) ***
 │   ├── README.md                # Este guia de navegação
+│   ├── OPERATIONS.md            # Referência operacional consolidada
 │   ├── SYSTEM_SCOPE.md          # Missão, atores, macrodomínios, fora do escopo
 │   ├── ARCHITECTURE.md          # Stack canônica, princípios, camadas
-│   ├── MODULE_MAP.md            # 16 módulos, responsabilidades, dependências
-│   ├── API_CONVENTIONS.md       # Visão geral de API (SSOT em .contract_driven/templates/api/api_rules.yaml)
+│   ├── MODULE_MAP.md            # 17 módulos, responsabilidades, dependências
 │   ├── DATA_CONVENTIONS.md      # IDs, datas, enums, soft delete, convenções DB
-│   ├── ERROR_MODEL.md           # Modelo canônico de erros HTTP
 │   ├── GLOBAL_INVARIANTS.md     # Invariantes globais (INV-*)
 │   ├── SECURITY_RULES.md        # Regras globais de segurança
 │   ├── CI_CONTRACT_GATES.md     # Gates de validação de contratos
 │   ├── TEST_STRATEGY.md         # Estratégia canônica de testes
-│   ├── UI_FOUNDATIONS.md        # Fundamentos de UI/UX
-│   ├── DESIGN_SYSTEM.md         # Design system (tokens, componentes)
+│   ├── UI_CONTRACT_GUIDE.md     # Fundamentos canônicos de UI/UX
 │   ├── C4_CONTEXT.md            # C4 — Contexto
 │   ├── C4_CONTAINERS.md         # C4 — Containers
 │   └── HANDBALL_RULES_DOMAIN.md # 14 regras IHF documentadas
 │
 ├── docs/hbtrack/modulos/        # Documentação por módulo (training, competitions, etc.)
 │
-├── .contract_driven/            # Governança contract-driven (SSOT)
+├── .contract_driven/            # Governança contract-driven (documentation)
 │   ├── CONTRACT_SYSTEM_RULES.md # Regras operacionais do sistema CDD
 │   ├── CONTRACT_SYSTEM_LAYOUT.md# Estrutura canônica de arquivos
 │   ├── GLOBAL_TEMPLATES.md      # Templates oficiais de artefatos
-│   └── templates/               # Scaffolds + SSOT de API HTTP (ver api/api_rules.yaml)
+│   └── templates/               # Scaffolds + documentation de API HTTP (ver api/api_rules.yaml)
 │
-├── contracts/                   # Contratos técnicos soberanos (OpenAPI/JSON Schema/Arazzo/AsyncAPI)
+├── contracts/                   # Contratos técnicos authoritative (OpenAPI/JSON Schema/Arazzo/AsyncAPI)
 ├── generated/                   # Artefatos derivados (nunca editar)
 ├── _reports/                    # Evidências/relatórios derivados (ex.: contract gates)
 │
@@ -99,11 +98,11 @@ HB-TRACK/
 - **Python** 3.12+
 - **Git**
 
-### Workspace Canônico
+### Workspace Standard
 
 ```bash
 # Clone o repositório
-git clone https://github.com/Davisermenho/Hb_Track.git ~/HB-TRACK
+git clone https://github.com/hbtrack/official.git ~/HB-TRACK
 cd ~/HB-TRACK
 
 # Verifique o root
@@ -137,7 +136,16 @@ npm ci
 # Python (contract gates - não requer requirements.txt neste workspace)
 python3 -m venv .venv
 source .venv/bin/activate
+.venv/bin/python -m pip install -r requirements-dev.txt
+# Tooling binária exigida pelos gates
+# - oasdiff: instalar binário Linux nativo no PATH
 python3 scripts/validate_contracts.py
+```
+
+Para a suíte local de governança:
+
+```bash
+./.venv/bin/python -m pytest -q tests/contracts/test_openapi_root_inventory.py tests/contracts/test_module_doc_governance.py
 ```
 
 ### Comandos Principais
@@ -149,6 +157,10 @@ spectral lint contracts/openapi/openapi.yaml
 
 # Rodar todos os contract gates (gera _reports/contract_gates/latest.json)
 python3 scripts/validate_contracts.py
+
+# Runtime / breaking-change toolchain
+schemathesis --version
+oasdiff --version
 ```
 
 ### VS Code Remote-WSL
@@ -180,7 +192,7 @@ Para Agentes de IA, o ponto de entrada correto é:
 3. Leia **`.contract_driven/CONTRACT_SYSTEM_RULES.md`** — entenda as regras do sistema contract-driven
 4. Leia **`.contract_driven/CONTRACT_SYSTEM_LAYOUT.md`** — entenda a estrutura canônica de arquivos e artefatos
 5. Leia **`.contract_driven/GLOBAL_TEMPLATES.md`** — familiarize-se com os templates oficiais de artefatos (contratos, invariantes, etc.)
-6. Leia **`.contract_driven/templates/api/api_rules.yaml`** — SSOT para convenções/validações/templates de API HTTP (OpenAPI/JSON/URLs/paginação/erros/segurança)
+6. Leia **`.contract_driven/templates/api/api_rules.yaml`** — documentation para convenções/validações/templates de API HTTP (OpenAPI/JSON/URLs/paginação/erros/segurança)
 7. Leia **`docs/_canon/ARCHITECTURE.md`** — entenda a arquitetura canônica, a stack e os princípios de design
 8. Depois, navegue para o módulo em que for trabalhar: `docs/hbtrack/modulos/<módulo>/`
 
@@ -194,16 +206,16 @@ Para Agentes de IA, o ponto de entrada correto é:
 
 3. **Invariante imutável** — invariantes aprovadas (`INV-*`) só mudam por processo formal documentado. Constraints críticas vivem no banco, não apenas no código.
 
-4. **SSOT único** — uma fonte de verdade por artefato. Duplicação de informação normativa é proibida. Se existe em `docs/_canon/`, não existe também no código-fonte como comentário solto.
+4. **documentation único** — uma fonte de verdade por artefato. Duplicação de informação normativa é proibida. Se existe em `docs/_canon/`, não existe também no código-fonte como comentário solto.
 
 ---
 
-## Fontes Canônicas (SSOT)
+## Fontes Canônicas (documentation)
 
 | Tema | Fonte canônica |
 |------|---------------|
 | Regras/templates de API HTTP (OpenAPI/JSON/URLs/paginação/erros/segurança) | `.contract_driven/templates/api/api_rules.yaml` |
-| Modelo de erro HTTP | `docs/_canon/ERROR_MODEL.md` |
+| Modelo de erro HTTP | `docs/_canon/OPERATIONS.md` + `contracts/openapi/components/schemas/shared/problem.yaml` |
 | Regras globais de segurança | `docs/_canon/SECURITY_RULES.md` |
 | Convenções de dados (IDs/datas/enums/soft delete/DB naming) | `docs/_canon/DATA_CONVENTIONS.md` |
 | Política de mudança | `docs/_canon/CHANGE_POLICY.md` |
@@ -220,7 +232,7 @@ Configuração de governança e enforcement para o repositório HB Track.
 
 ```
 .github/
-├── CODEOWNERS                    # Ownership obrigatório de artefatos normativos
+├── CODEOWNERS                    # Ownership obrigatório de artefatos normatives
 ├── BRANCH_PROTECTION_SETUP.md    # Runbook de configuração de branch protection
 ├── CI_FIX_EVIDENCE.md            # Evidência de correção do CI (package-lock.json sync)
 └── workflows/
@@ -262,7 +274,7 @@ Runbook detalhado para configuração de branch protection rules no GitHub, incl
 Este setup atende aos requisitos de **hbtrack-governanca.md § 8.1**:
 
 - ✅ Branch protection + required status checks
-- ✅ CODEOWNERS para SSOT
+- ✅ CODEOWNERS para documentation
 - ✅ Bloqueio de force-push
 - ✅ CI fail-closed
 

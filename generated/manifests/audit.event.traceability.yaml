@@ -1,0 +1,1125 @@
+traceability_manifest:
+  artifact_id: audit.event.asyncapi
+  compiler: hbtrack_api_policy_compiler
+  compiler_version: 0.1.0
+  generated_artifacts:
+  - path: generated/contracts/asyncapi/README.md
+    sha256: 911c379f8c48a9d804be28b64039aecb958e863762051ebcad6f0eab7b1266de
+  - path: generated/contracts/asyncapi/asyncapi.yaml
+    sha256: c78822715dc601018e44e981ab4aa1d3a3ce7ba219c21e77d9156c6b4635ba4a
+  - path: generated/contracts/asyncapi/asyncapi_validate.log
+    sha256: 009084f6c52fb17114e7bb182789ffc5e39dd3a035f036cba9cf25c30ea7bd17
+  - path: generated/contracts/asyncapi/channels/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/asyncapi/channels/ai_ingestion_job_completed.yaml
+    sha256: 44bbbecbf6b25c61c27c5e467ae5b340381b2f9c5cb878c0c2ff59632a659aec
+  - path: generated/contracts/asyncapi/channels/ai_ingestion_job_failed.yaml
+    sha256: 6e643d77cb6a2f71863760363285b46f17ff250c84e977efe2c24127f187ef0d
+  - path: generated/contracts/asyncapi/channels/ai_ingestion_job_queued.yaml
+    sha256: 15f01acc38eb86b19a2c2f37bdcca70e609738a5509749d88bb3f887d13169fb
+  - path: generated/contracts/asyncapi/channels/athlete_ineligible_for_prescription.yaml
+    sha256: c575173295dee119c390c00eb5420803d6974a6b374c1844663a0bc5117f9e3b
+  - path: generated/contracts/asyncapi/channels/attention_queue_item_created.yaml
+    sha256: 0d575c0e85c06730ba3dc2c7f96561f7d6b3bc5d4729449ed9b5db2f9c771121
+  - path: generated/contracts/asyncapi/channels/attention_queue_item_resolved.yaml
+    sha256: 1dcdd50875a7f49af1ef5cfc1a8512787d89d0f1ad5629732583e0daeb76847c
+  - path: generated/contracts/asyncapi/channels/audit_entry_created.yaml
+    sha256: bb7eb84c31e493f60fcb7e12f08df976159f577000fbc7f6e0a6be0ff0a08044
+  - path: generated/contracts/asyncapi/channels/audit_entry_security_flagged.yaml
+    sha256: b3e951531822cfdc241f950dad1304c1197275493bc2b73d4b4113548b62f214
+  - path: generated/contracts/asyncapi/channels/coach_intervention_required.yaml
+    sha256: 3f29660ff9d2edb38c90d1c5f9e392f46697ff5cd9cbf52f33875e96014dc3df
+  - path: generated/contracts/asyncapi/channels/competition_created.yaml
+    sha256: a5d03d8aefa070778985e1d538407330406303a2e1582d737c24669ef9f8d53d
+  - path: generated/contracts/asyncapi/channels/competition_phase_changed.yaml
+    sha256: 0ac8603f5ecf9b0132ff2a55956c30f87c2e43ef9f6a9ed59cd57d5c159f3a02
+  - path: generated/contracts/asyncapi/channels/completion_evidence_provided.yaml
+    sha256: 8aa7555f33c9f901555d43ec8dd3c884c9b0f02b58c8f918c947490e9e9f786a
+  - path: generated/contracts/asyncapi/channels/continuity_snapshot_created.yaml
+    sha256: 6451c309178f9f392c5329c3ad6ccd596151a6239a14d02e3f250d9e7729285c
+  - path: generated/contracts/asyncapi/channels/execution_recorded.yaml
+    sha256: ec53af9a6064b16f9b13a96e70c0dbac3e8e99bb4961bec214a915bbb888c3b6
+  - path: generated/contracts/asyncapi/channels/feedback_thread_closed.yaml
+    sha256: 861adc48b42c3f1773d66e7d6dc9e93e0570ecb04f54bb4e5ae2c19557c4f8ae
+  - path: generated/contracts/asyncapi/channels/feedback_thread_created.yaml
+    sha256: 33861674cbd3e7f8c877c3ca7bd7bc1596724f9b1df7da82356a2073f7b0e8c1
+  - path: generated/contracts/asyncapi/channels/intervention_cycle_completed.yaml
+    sha256: a441eba040b230b6973ec4b5f21640fb80f62c10b9f935a230aeab850a70219d
+  - path: generated/contracts/asyncapi/channels/intervention_cycle_created.yaml
+    sha256: 98243d079bab8eac8e303396f7eb1163f6f4158a39bb12173e6468f8abf4faa3
+  - path: generated/contracts/asyncapi/channels/match_scheduled.yaml
+    sha256: 3ec3b17de393f6a700d51b240e8d64c0712d7f1eb1ebd9de11901a52ec3a3420
+  - path: generated/contracts/asyncapi/channels/match_status_updated.yaml
+    sha256: 7025debf6bc5d1ef32233461c78d79b4f1e6b1727f343fafa7b738a161ba2c0f
+  - path: generated/contracts/asyncapi/channels/need_detected_created.yaml
+    sha256: 77c8cad0cd033abb15bbd49dade13f13baea542c41cf49217439e29aa8140d1c
+  - path: generated/contracts/asyncapi/channels/need_linked_to_objective.yaml
+    sha256: a6ea91bdc45661546fc6687fe99a268706d67ad7afa78783c1151fe29a987be9
+  - path: generated/contracts/asyncapi/channels/notification_delivery_failed.yaml
+    sha256: f1782fab841efdc50b6c3ddc0d9f9add399991cb33a9efa5cf8c413293dfdfb7
+  - path: generated/contracts/asyncapi/channels/notification_delivery_queued.yaml
+    sha256: abe9d509c4047a64f8602704520e8272dd297fc92c8f76fb148a0aaacd697e25
+  - path: generated/contracts/asyncapi/channels/notification_delivery_sent.yaml
+    sha256: 5ef1af40f0aaba96fd5cd7ac63fea9da4c8f24e25f87293699bdc2669ec97bcc
+  - path: generated/contracts/asyncapi/channels/objective_created.yaml
+    sha256: 1127e8489fb08d53d6afe9a27029ad6f2d3f4c70bcbc4fa340b2d3baa7c1ca26
+  - path: generated/contracts/asyncapi/channels/prescription_adjusted.yaml
+    sha256: 22b0b8a86e20930908693b1b34364b1147f54ebe6732eec5e0593d915cdf3ae3
+  - path: generated/contracts/asyncapi/channels/recommendation_accepted.yaml
+    sha256: 1c6778c4c197a42f3703c03d8f80283e22b9db2a5fbb61a62dd27fdc9af6f9f4
+  - path: generated/contracts/asyncapi/channels/recommendation_dismissed.yaml
+    sha256: eef99eac421dd629bf4ed6c9847be1a2f307f8cec07e6139e8ada6d7e3f9fc70
+  - path: generated/contracts/asyncapi/channels/recommendation_generated.yaml
+    sha256: fec28e693ca29c53f53f7a60e1bf25cd6e231ae9f7f2ace120de1cf1dd1ec9ac
+  - path: generated/contracts/asyncapi/channels/role_assigned.yaml
+    sha256: ac6208f70f8d563d17156d5066b052842693bfb18980f4eb1b317ccdede4b0b8
+  - path: generated/contracts/asyncapi/channels/role_revoked.yaml
+    sha256: df2505b302205cc108910234c174c45b515f17a6e37a627671b8fa085d7ad0c9
+  - path: generated/contracts/asyncapi/channels/scout_event_created.yaml
+    sha256: 7b3e0598735c94b92b1f67e1d71e8c353dd0301bffb94957149e6929c7591958
+  - path: generated/contracts/asyncapi/channels/scout_session_completed.yaml
+    sha256: acff88a1d180bcbe33629990f4532458301b7d46e61e8c6be7bf1012068fa840
+  - path: generated/contracts/asyncapi/channels/season_created.yaml
+    sha256: 9e1cf271ce3c44b93fe2c07077372b16048d7f90d806b635a9de4175a3dbe47d
+  - path: generated/contracts/asyncapi/channels/season_status_updated.yaml
+    sha256: be8f41a4c176edebc8b7fb4938db925ab6256d86fbbaa4ed93608dfcc13318e5
+  - path: generated/contracts/asyncapi/channels/session_adjustment_made.yaml
+    sha256: e3f1ccb3acaaf404a6ce6ac9037bcb782f62101ef1af2694a339598dd8cf2ecb
+  - path: generated/contracts/asyncapi/channels/session_created.yaml
+    sha256: b0db0bf26cd3d08b3081140da2c859d6861dcbdd67e1b09db022b717f92304e5
+  - path: generated/contracts/asyncapi/channels/session_objective_achieved.yaml
+    sha256: c6233be2a7fe929d00455f904d1f93e4ee194947cb4004a3efa7da82eaf41a96
+  - path: generated/contracts/asyncapi/channels/session_revoked.yaml
+    sha256: dc058c44a7a43bfa592c77e68d4ca204e52d6f69ee0ac27c3f8cc611fc2c73ab
+  - path: generated/contracts/asyncapi/channels/team_created.yaml
+    sha256: 84f99b1f6eee6083990ee58a3a01ae6ee5f792cc507ecbc4ec92802ec4eaf3dc
+  - path: generated/contracts/asyncapi/channels/team_roster_updated.yaml
+    sha256: d1e4a79cc33a3e79101d996b55ebfd02ceab40022060ee6da79109858a32f926
+  - path: generated/contracts/asyncapi/channels/training_attendance_marked.yaml
+    sha256: 8efb0c1c1ab11d7d8c2c846e5831fb88a0b5ef03fc659cb66de8c1eb69d3b6ce
+  - path: generated/contracts/asyncapi/channels/training_readiness_assessed.yaml
+    sha256: 892240d9765f2eaa3b86d2cbde921a7a2a8a76dc76686971a099d5a291c36fa1
+  - path: generated/contracts/asyncapi/channels/training_session_archived.yaml
+    sha256: ba8087ec67658040b0f31b41d84162a5d23faed2e5713f87a52c2c385610ffa0
+  - path: generated/contracts/asyncapi/channels/training_session_cancelled.yaml
+    sha256: 858f537b7f325eca9273152f613a72f894219f2fcf0cc1fb31621a89c0ea16a8
+  - path: generated/contracts/asyncapi/channels/training_session_completed.yaml
+    sha256: 3a339983f6aacad81ba8a579c8fcc2b355dee8fb03f1272bcd22d2de9f850f9f
+  - path: generated/contracts/asyncapi/channels/training_session_created.yaml
+    sha256: 7b5ac5ea28c462ab21a4bc1d9e2057bf5b742b4153ce9190ccb1f66dfc1811f9
+  - path: generated/contracts/asyncapi/channels/training_session_published.yaml
+    sha256: dc54f2abcdf5f08ff2d5884fba1858bd9c25123277b89440300eb5b77026706b
+  - path: generated/contracts/asyncapi/channels/training_session_started.yaml
+    sha256: d756cab67e35ec1603e30581efab0ddde5709a5d5b9e9328cfd124920ea1b50c
+  - path: generated/contracts/asyncapi/channels/user_created.yaml
+    sha256: 1e9b2b9131933e190d5a7fc8c1dfeadfe4e860e132d0fa21082e7826cb77eb54
+  - path: generated/contracts/asyncapi/channels/user_role_changed.yaml
+    sha256: 563af688f860602f2feb275fb834c7a0d98ec0a1192a306a58842c3153a17243
+  - path: generated/contracts/asyncapi/channels/video/capture_started.yaml
+    sha256: c253a06ef7b9042efcffaf0d2a2354c8b0e3fa1cf9036c967995301e7b3c2334
+  - path: generated/contracts/asyncapi/channels/video/distribution_failed.yaml
+    sha256: 9ded1df4b600b97b163278e985bdec1e2826554824cb89cf440981b86f7bcb8a
+  - path: generated/contracts/asyncapi/channels/video/distribution_published.yaml
+    sha256: 4ca4a794bf6bed95b9acf67814ff8a2e315547d7f7a1244b71df5b90d78f0def
+  - path: generated/contracts/asyncapi/channels/video/segment_ready.yaml
+    sha256: f24e5166901b9b903233ec8984898a64b63b080f1bf1443d7c1b44fb1a47be17
+  - path: generated/contracts/asyncapi/channels/video/sync_adjustment_applied.yaml
+    sha256: 086aee5ec3a4db41d6f3ad8591087ee2025ef4a045725cd49c97200026d8f222
+  - path: generated/contracts/asyncapi/channels/video/transcode_completed.yaml
+    sha256: 7272e181c759ff4796111430a2ef0c71358b002b1a600eace50e3993f226be91
+  - path: generated/contracts/asyncapi/channels/video_clip_ready.yaml
+    sha256: 715fcc63cd4576aac6f988d01750417a61926722191d9527f750b14dbe3f0232
+  - path: generated/contracts/asyncapi/channels/video_distribution_published.yaml
+    sha256: b97c6c683a98c85c2b6b45fbfca156c40a2536229f5084df9bbc2db74f8a5568
+  - path: generated/contracts/asyncapi/channels/video_segment_finalized.yaml
+    sha256: 5fcc579c00aa163650621dc229b31d1fc3892048fbe65f5d5bdcf7b62aee7fcb
+  - path: generated/contracts/asyncapi/channels/video_session_capturing.yaml
+    sha256: 15e37f172c2ffa771e2fc779356fd488f139ebd2c117a046dcf958744e3aa51b
+  - path: generated/contracts/asyncapi/channels/video_session_created.yaml
+    sha256: 944d357e43ac6aef3139fde0259a622058f070fb41efb571117b71c420b6020d
+  - path: generated/contracts/asyncapi/channels/video_session_published.yaml
+    sha256: 4b80e0c3e0a7acb6ad1ab31b17d2b958c019148ab8cbf5bc46b97fe9f9f442cc
+  - path: generated/contracts/asyncapi/channels/video_session_syncing.yaml
+    sha256: 7a330301e2ec54bc8e6f3dacbd68cfcd92523c9fcbc621c720068e7ba694e3af
+  - path: generated/contracts/asyncapi/channels/video_session_transcoding.yaml
+    sha256: 803f284611f03f1eb00bf3bd8a0bd754285cd58adad7ca42799c54830fb3f64a
+  - path: generated/contracts/asyncapi/channels/wellness_entry_created.yaml
+    sha256: f0533bfbab661e8694f4c307f3778c1bbde9601233ed2c81a42d95e84d640be0
+  - path: generated/contracts/asyncapi/components/messageTraits/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/asyncapi/components/operationTraits/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/asyncapi/components/schemas/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/asyncapi/components/schemas/ai_ingestion_job_completed_payload.yaml
+    sha256: 822571b449fd616f367b8d444547b7e0ce7dd382fd786e46b0cf5091a19fc791
+  - path: generated/contracts/asyncapi/components/schemas/ai_ingestion_job_failed_payload.yaml
+    sha256: d06537b2110a7301e31a474cb691695ecd8bb97fa26c51f825ca8b51f1801380
+  - path: generated/contracts/asyncapi/components/schemas/ai_ingestion_job_queued_payload.yaml
+    sha256: 2905727f55376cd2202f3b7d6116c22a872d8fa562b0c5cd6b82888251528ef6
+  - path: generated/contracts/asyncapi/components/schemas/athlete_ineligible_for_prescription_payload.yaml
+    sha256: 9dae92d945a2643e6ae7764cf2ae25295fef192c21a92998031559355ef90ab3
+  - path: generated/contracts/asyncapi/components/schemas/attention_queue_item_created_payload.yaml
+    sha256: 002c5114ab6660e0aef6aa45f09668eee59d0c2e50828d89a3a85cb1c4ba4224
+  - path: generated/contracts/asyncapi/components/schemas/attention_queue_item_resolved_payload.yaml
+    sha256: 7647111a03857c0678a9482148134b2a0c3be30eba190ccfa0dc04aa71aa14b0
+  - path: generated/contracts/asyncapi/components/schemas/audit_entry_created_payload.yaml
+    sha256: 5a26fc54e80b721644308a2051e629d6c7c8180197a2523ccce90f45cc7f6fa6
+  - path: generated/contracts/asyncapi/components/schemas/audit_entry_security_flagged_payload.yaml
+    sha256: 626fb221c9fb286fd81ddf4c1f11e3c88b37a0de4c2349ee45067eec85a9a554
+  - path: generated/contracts/asyncapi/components/schemas/coach_intervention_required_payload.yaml
+    sha256: ec2ff649117a6085e7309494c2aa9a1965b74830da05ef6c39b18292ddc77b4e
+  - path: generated/contracts/asyncapi/components/schemas/competition_created_payload.yaml
+    sha256: 2c1a6853c963bd1d7aa72ea25fa8de46b135423f46ee0aef5be0dd847dc90747
+  - path: generated/contracts/asyncapi/components/schemas/competition_phase_changed_payload.yaml
+    sha256: d77c15a32d2c97ddd918edb60b36c0f3d8ded6726b1de0c56edb949ab917dec0
+  - path: generated/contracts/asyncapi/components/schemas/completion_evidence_provided_payload.yaml
+    sha256: d7fe1777f07fb0b45dea77b1d2c0c814de2d900b9ab5a324094cd78d80ad62cd
+  - path: generated/contracts/asyncapi/components/schemas/continuity_snapshot_created_payload.yaml
+    sha256: 1fe3505ed72ab4b66c311c3de34b3ae84560883903ed16999967fb28bb29c5ca
+  - path: generated/contracts/asyncapi/components/schemas/execution_recorded_payload.yaml
+    sha256: 6c1fb05a14d19475110731bb2a125979bc1f203b21237bc321df385fa6bb5bf5
+  - path: generated/contracts/asyncapi/components/schemas/feedback_thread_closed_payload.yaml
+    sha256: b96828786eb3c3e3d576e93f83bd12a27f040b68db2da5e88647770139fd3616
+  - path: generated/contracts/asyncapi/components/schemas/feedback_thread_created_payload.yaml
+    sha256: f841306665c2c5452764cfa8da3e4a010e6a6da5013d75b2f562c9c6e0123460
+  - path: generated/contracts/asyncapi/components/schemas/intervention_cycle_completed_payload.yaml
+    sha256: e6b4c9b0a0e4c50dd5f9930c4bdcb45fbfc5299f1ce8cac35a1d54a99655eb54
+  - path: generated/contracts/asyncapi/components/schemas/intervention_cycle_created_payload.yaml
+    sha256: 24eee8aedea3c8e5569dc6897ece5a1720edb64777b8add9ed6132041d4cf300
+  - path: generated/contracts/asyncapi/components/schemas/match_scheduled_payload.yaml
+    sha256: ac903f7263e9e343fbd7b4850ee1e6048fd72dd32d4afd16d6865855d9ed2dec
+  - path: generated/contracts/asyncapi/components/schemas/match_status_updated_payload.yaml
+    sha256: 3decbb1d16f68a4352a315f19c8688ad631cd22176d8ec732faf7348ac3e7e35
+  - path: generated/contracts/asyncapi/components/schemas/need_detected_created_payload.yaml
+    sha256: bfe0ee7c159f22d7897877626a3383e256d49052b895240fea5c6f5448658056
+  - path: generated/contracts/asyncapi/components/schemas/need_linked_to_objective_payload.yaml
+    sha256: 44d501df1600c40c79a2e8b07c681499045c025bf6b4770af8295cb38e076869
+  - path: generated/contracts/asyncapi/components/schemas/notification_delivery_failed_payload.yaml
+    sha256: cc7c79fb4335cb756c75a1b4b78a9fe1daa43bfb3ac4afde7fadbb3a2dbc79ea
+  - path: generated/contracts/asyncapi/components/schemas/notification_delivery_queued_payload.yaml
+    sha256: f6519786adb460049c04ce3926dd83e5cb3fff39bd050865e67a3fd72dd4a9f4
+  - path: generated/contracts/asyncapi/components/schemas/notification_delivery_sent_payload.yaml
+    sha256: 9750778863a93fa26464db85e372284bdf0b0b9388cbabd6a376dd5377406fcd
+  - path: generated/contracts/asyncapi/components/schemas/objective_created_payload.yaml
+    sha256: f2ec715c35e81f5464345565df9ad2d324dc9815125ea862d4a79946f63c18cc
+  - path: generated/contracts/asyncapi/components/schemas/prescription_adjusted_payload.yaml
+    sha256: a628fd19ef3038806126f3c61563346459c2e26a3af0f210dd357c2245208133
+  - path: generated/contracts/asyncapi/components/schemas/recommendation_accepted_payload.yaml
+    sha256: 729316f7794b9274674836e971e9750b1774ebe30dbb36ec7f3d67f634d5205e
+  - path: generated/contracts/asyncapi/components/schemas/recommendation_dismissed_payload.yaml
+    sha256: 468711af28965a31dc98111616ca06f647a49bbaf2989cead0450556a8c882d6
+  - path: generated/contracts/asyncapi/components/schemas/recommendation_generated_payload.yaml
+    sha256: e5508b222428497f06c80376066381fda88593b40d9d38f7bc9725db9b918624
+  - path: generated/contracts/asyncapi/components/schemas/role_assigned_payload.yaml
+    sha256: dafef05cdfab39cbf019c33935b7432f06556c0a4c75234d1984c5d4a738b6bb
+  - path: generated/contracts/asyncapi/components/schemas/role_revoked_payload.yaml
+    sha256: 88449f35e37b1e8d209108eee77ed40b64b475f81a352940504d98a4a2346d9a
+  - path: generated/contracts/asyncapi/components/schemas/scout_event_created_payload.yaml
+    sha256: 9c1845c3c065a380c0d66bccf42b94d69173404a9a69adc7b46e51419aec5513
+  - path: generated/contracts/asyncapi/components/schemas/scout_session_completed_payload.yaml
+    sha256: 0ee4dc9af99b9093ebfe1689a4dbbdc194b9279dfa3d226ab234be721bd5fcb2
+  - path: generated/contracts/asyncapi/components/schemas/season_created_payload.yaml
+    sha256: f489037c3ae071e49264406b1f25380e3bd359fc80f21364f87cb1411c109fe9
+  - path: generated/contracts/asyncapi/components/schemas/season_status_updated_payload.yaml
+    sha256: 72550bdb9fc990a679e871e02a01b14929940f2c85a395c6534141163c5a084b
+  - path: generated/contracts/asyncapi/components/schemas/session_adjustment_made_payload.yaml
+    sha256: 390a586783129708d791a8adcf703feaa232adf49c9d6bc4d2cc7eaadd16ed28
+  - path: generated/contracts/asyncapi/components/schemas/session_created_payload.yaml
+    sha256: ba4c72e2d3c5d26e690d505ed10c69f4c382b1c6a088c8d887228e1de756a21b
+  - path: generated/contracts/asyncapi/components/schemas/session_objective_achieved_payload.yaml
+    sha256: b154c103abedad1e0270b6c945c981b8699b358caf7363de2c0765ad644281ad
+  - path: generated/contracts/asyncapi/components/schemas/session_revoked_payload.yaml
+    sha256: 20254f9f029c78c46de78a9e6097706c6f683b151a130c92dc242f3f90335965
+  - path: generated/contracts/asyncapi/components/schemas/team_created_payload.yaml
+    sha256: 2bd31dbd732471632253ff38fc65642ece714fb8bbb75d4f3dab87f66ee30fa7
+  - path: generated/contracts/asyncapi/components/schemas/team_roster_updated_payload.yaml
+    sha256: 1e805f47e3d958f826711134a035729ca4f17d0855c34ba40acbd3c98e8b2e9e
+  - path: generated/contracts/asyncapi/components/schemas/training_attendance_marked_payload.yaml
+    sha256: 2fd0e502e928fd95fd716ba4c9110e92afaa989ae0714832312c3d1a7db39b43
+  - path: generated/contracts/asyncapi/components/schemas/training_readiness_assessed_payload.yaml
+    sha256: a83a08444de15367da620acb5cfba9979f62d202f7afa6cedca7a278316961ba
+  - path: generated/contracts/asyncapi/components/schemas/training_session_archived_payload.yaml
+    sha256: f1fac18fa2fc646b63e27373b218c4bec3224158bdb4f6d6839404a0f9f947b1
+  - path: generated/contracts/asyncapi/components/schemas/training_session_cancelled_payload.yaml
+    sha256: 828d0378383ab009b302e9b6f07d35b42d0647bfaab0d7b8e9090e145584835b
+  - path: generated/contracts/asyncapi/components/schemas/training_session_completed_payload.yaml
+    sha256: 6f942bbf7a6273bc9c41086185ebb62fea058321d05078e4d6dc321a2820052b
+  - path: generated/contracts/asyncapi/components/schemas/training_session_created_payload.yaml
+    sha256: 9e17d937da651102a0861a18ff624014315d6aa8f0dd48db4931614008b02e0f
+  - path: generated/contracts/asyncapi/components/schemas/training_session_published_payload.yaml
+    sha256: 80f60af12de583ab951c271c899245b3f50bb31662a7c00ba395e725fc120b26
+  - path: generated/contracts/asyncapi/components/schemas/training_session_started_payload.yaml
+    sha256: 33ab0bc78d71c3d91edb6748d8942ba86520e47c9773bdac8044ce4ede3d0798
+  - path: generated/contracts/asyncapi/components/schemas/user_created_payload.yaml
+    sha256: cc384b8acb9ef2f7b8e76110e3fd807890e7c28e32a7690dfda5180c40b9ddc3
+  - path: generated/contracts/asyncapi/components/schemas/user_role_changed_payload.yaml
+    sha256: cccb38b384ae268918804958d2091b0d60796efa0dcec37e9763f435fc2328e4
+  - path: generated/contracts/asyncapi/components/schemas/video/capture_started_payload.yaml
+    sha256: f6b6741451e31a3686c8df47209225092213c25479b0cba7e8d0269774c8f1d1
+  - path: generated/contracts/asyncapi/components/schemas/video/distribution_failed_payload.yaml
+    sha256: cb99f585233513d0f0a394697ea3835d986e5f3572610c3930513859e9807109
+  - path: generated/contracts/asyncapi/components/schemas/video/distribution_published_payload.yaml
+    sha256: 41682dd5d5b81610dd729c53ec645c3aff6a6586de2d9304672116d3959573a5
+  - path: generated/contracts/asyncapi/components/schemas/video/segment_ready_payload.yaml
+    sha256: 30d628686e8a9ccc68d66ed37f4441cf544823b75b48abd1609a27a463e26b3a
+  - path: generated/contracts/asyncapi/components/schemas/video/sync_adjustment_applied_payload.yaml
+    sha256: 0d33719bde35e90e6438225c29cf03b834ac70c0d9349799168b6d8c6db737f1
+  - path: generated/contracts/asyncapi/components/schemas/video/transcode_completed_payload.yaml
+    sha256: 3186894d84cc5e15155d4ff0db0153dd41ee81686c84c1b7816bef00c2bf957b
+  - path: generated/contracts/asyncapi/components/schemas/video_clip_ready_payload.yaml
+    sha256: 5ffcd8232e3b34c9e7af4ec080c08413d95f019f9494b30d71c1cc9930c588b1
+  - path: generated/contracts/asyncapi/components/schemas/video_distribution_published_payload.yaml
+    sha256: 9122a580804ac941143c4a3255ec8e7f8246eb05b03d31d7f570fd8216c476a3
+  - path: generated/contracts/asyncapi/components/schemas/video_segment_finalized_payload.yaml
+    sha256: abf833590466043956e55443ca21bfcf99a14bd3733549353387677162fe37ff
+  - path: generated/contracts/asyncapi/components/schemas/video_session_capturing_payload.yaml
+    sha256: 5d4fc6be0f460e726aa9b9de68bf4bb26c7a37d50085a3b65f4dbc034ef6f1b7
+  - path: generated/contracts/asyncapi/components/schemas/video_session_created_payload.yaml
+    sha256: 53aceefe026a9df7f0ae5dffcedb66581e4132dc4fc75f6a124cc4676a3063f3
+  - path: generated/contracts/asyncapi/components/schemas/video_session_published_payload.yaml
+    sha256: ae1d922d9b66113ca3e204e4477e8b525474ad7ad169dce1734cf47fe9ba9dcf
+  - path: generated/contracts/asyncapi/components/schemas/video_session_syncing_payload.yaml
+    sha256: abfe17b8632ddceb9c21b724d3d3eab2ea2c8668a7370b216f01985d7b738af1
+  - path: generated/contracts/asyncapi/components/schemas/video_session_transcoding_payload.yaml
+    sha256: 0043be2cfe9d5a58bcb7b1f9866be094ffbf53a94f5d5c955f5b2ee1b0468e3e
+  - path: generated/contracts/asyncapi/components/schemas/wellness_entry_created_payload.yaml
+    sha256: 75b035978a46cac217504b4f71309be2db0dfaec2da343d3b7652096d09d0541
+  - path: generated/contracts/asyncapi/messages/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/asyncapi/messages/ai_ingestion_job_completed.yaml
+    sha256: b1bac1f03b74a5287b8fa1154b6d74f938c747348f0c7d5454af645b5928d405
+  - path: generated/contracts/asyncapi/messages/ai_ingestion_job_failed.yaml
+    sha256: 4659828c2ab4b9257b7c518fa90b04bc9675b5185b1e7da2501953e2c9382a8f
+  - path: generated/contracts/asyncapi/messages/ai_ingestion_job_queued.yaml
+    sha256: 32b8d7a2a5471e525bfb05a5c7ecea5a31f5bc2acfba61ae67468d65bd5df6de
+  - path: generated/contracts/asyncapi/messages/athlete_ineligible_for_prescription.yaml
+    sha256: 1e49a8e85c4bdb341d4e12bae8995e3fd156ed87fed84ebf30cfa5c196d0a856
+  - path: generated/contracts/asyncapi/messages/attention_queue_item_created.yaml
+    sha256: 3ec7a37bc99df575acec6764d7a49c65671865bebab06d35a8bc5596ec05312d
+  - path: generated/contracts/asyncapi/messages/attention_queue_item_resolved.yaml
+    sha256: 103694c186381e5f27ec763aee5eeb1492bec71d45518b92b17c6e3725fe4e2f
+  - path: generated/contracts/asyncapi/messages/audit_entry_created.yaml
+    sha256: f2b1f32d81c296a1a288c34dfcdbe1c3642653ba47cab03601138c90e96ad804
+  - path: generated/contracts/asyncapi/messages/audit_entry_security_flagged.yaml
+    sha256: c6f724bb05ca40559d3e4a4241b45ffc263cb14891c8030d4dda9e828f493396
+  - path: generated/contracts/asyncapi/messages/coach_intervention_required.yaml
+    sha256: 2126e452597cf2d58b190c351e30f52074a318ae85955321391ca2225ea0d390
+  - path: generated/contracts/asyncapi/messages/competition_created.yaml
+    sha256: c0e0c4c72098342987beb8be2c6794ba41dba9edc31c482a28c389fdf5cd3c17
+  - path: generated/contracts/asyncapi/messages/competition_phase_changed.yaml
+    sha256: 577360af0f1d97f485e6b108f497895b060453a841fd470db6a8afe6baa4383f
+  - path: generated/contracts/asyncapi/messages/completion_evidence_provided.yaml
+    sha256: 5495a1b7f5bd0064b7137bffc5381b3a70f2169b9bb619d77f0a74afeeb8f175
+  - path: generated/contracts/asyncapi/messages/continuity_snapshot_created.yaml
+    sha256: 816d81299ea5b4361c2dcc5fa71d8a13b3f993a1439d2fc867db1c5ce006e200
+  - path: generated/contracts/asyncapi/messages/execution_recorded.yaml
+    sha256: b8533ad899f9decab7517be923f792d5be57820454affb5f3e072869a2ddd7bc
+  - path: generated/contracts/asyncapi/messages/feedback_thread_closed.yaml
+    sha256: 5feb4d7a924705c7d3e968adc418e53d37f5c9111735be5e32366d653def2a00
+  - path: generated/contracts/asyncapi/messages/feedback_thread_created.yaml
+    sha256: a511792145d96c92d41907d43f7c781ab353340aaa8640aa0e666ee41bbc4a9c
+  - path: generated/contracts/asyncapi/messages/intervention_cycle_completed.yaml
+    sha256: 728e3d496b8a1ffa8a12d1e252b1f0e64d3791255ba3bb578894e5f26a866951
+  - path: generated/contracts/asyncapi/messages/intervention_cycle_created.yaml
+    sha256: 5cb3dba649a00bbdfe05fd6823ab1685857def3c97f98d84d83e9e2f66fa9d91
+  - path: generated/contracts/asyncapi/messages/match_scheduled.yaml
+    sha256: cc117155dcacf9c78987dc54882f9e3adc683871dbe1655907d81b21520380a6
+  - path: generated/contracts/asyncapi/messages/match_status_updated.yaml
+    sha256: 8f20dc746287f0263930ad6e026e659611febabfa68b2d3c9d4629a6ac35e89b
+  - path: generated/contracts/asyncapi/messages/need_detected_created.yaml
+    sha256: 19d25edd7127e41d5b8e25baff81bc496e7e67d90cf60d49c053a064e6fcda5c
+  - path: generated/contracts/asyncapi/messages/need_linked_to_objective.yaml
+    sha256: f2c3f3cf1fb9d7ef26e392a9677504be733496e599e089e4980a4edca866022a
+  - path: generated/contracts/asyncapi/messages/notification_delivery_failed.yaml
+    sha256: 43bb5c1db3fcb1ec0ea0c1da277e427118d4ba66658c86a28f79caa27b2feed0
+  - path: generated/contracts/asyncapi/messages/notification_delivery_queued.yaml
+    sha256: 32ea796826428eb3bc8918c55f0b4d3150487240672f00d0da6e65bb9b6e838a
+  - path: generated/contracts/asyncapi/messages/notification_delivery_sent.yaml
+    sha256: c791d171a6557d03d1f4a2cc63fc4a51f7b93b99b87de4f9e819757f6ac80170
+  - path: generated/contracts/asyncapi/messages/objective_created.yaml
+    sha256: 558b749ebfe9847415f2aeba0f82fa62939a278e779bd1e1083d84288f51c443
+  - path: generated/contracts/asyncapi/messages/prescription_adjusted.yaml
+    sha256: becab5f2897f752513d550ce0c653900074c11eb7b57f4f49a3a9fd6ad98bd08
+  - path: generated/contracts/asyncapi/messages/recommendation_accepted.yaml
+    sha256: 07abf3d094f4bae236066a2e15e058ef0d36eefa1a7f172a42ae7d9cc00678f5
+  - path: generated/contracts/asyncapi/messages/recommendation_dismissed.yaml
+    sha256: 1403b3bca222b7ef314c3c7936547e6e74e1a4fe0e79e5df918b598d47bb103f
+  - path: generated/contracts/asyncapi/messages/recommendation_generated.yaml
+    sha256: ed095ff4a83706d3153c133349005e07c38c274febb5fa2b7d344c3d595998df
+  - path: generated/contracts/asyncapi/messages/role_assigned.yaml
+    sha256: 5981f3fcdf9ec7907e77df2345d78ce7dd54f62d333fa2e2bf2672e5f4e3de9f
+  - path: generated/contracts/asyncapi/messages/role_revoked.yaml
+    sha256: 73aa371c5328b1eb2cab0e51042ebbbca37be1dfd5693e7ea501d5101248b79f
+  - path: generated/contracts/asyncapi/messages/scout_event_created.yaml
+    sha256: 2e2989887f863659e2e3730de6169aa531ae0b4d4b335eb5e38cad76a3f92eba
+  - path: generated/contracts/asyncapi/messages/scout_session_completed.yaml
+    sha256: 6667cb1b567c48aac23539db61575f8e9d50d6c4fea0263e12ad797847412dc5
+  - path: generated/contracts/asyncapi/messages/season_created.yaml
+    sha256: 9211d056e81640aa4c396abbf459fdc9bb6ab10f6bbd7f95acc7c5c35a605a01
+  - path: generated/contracts/asyncapi/messages/season_status_updated.yaml
+    sha256: 30701303fe7dab9e6ffbbd2b2b1ced01a4e56c64a589b24abd4a28b9db49d0bc
+  - path: generated/contracts/asyncapi/messages/session_adjustment_made.yaml
+    sha256: 40a0cea939bf99302339dcc2b5f4f647bb49cc1df9a06d286cd1f9211fe82a7c
+  - path: generated/contracts/asyncapi/messages/session_created.yaml
+    sha256: 697a1792934eee5408058d4893994dcbce5e18577e8c8bfc5a020f6cf7f87b12
+  - path: generated/contracts/asyncapi/messages/session_objective_achieved.yaml
+    sha256: 5f84dc15039e99dc116c571d3339064f101428af85a667a4ede35925994bcc95
+  - path: generated/contracts/asyncapi/messages/session_revoked.yaml
+    sha256: 8bb58b1ad8a775e25488fdd94d21755f281bc32abadb23cb9c534b218adf9fa1
+  - path: generated/contracts/asyncapi/messages/team_created.yaml
+    sha256: 8318906608e3085e986155f275350ddbacafd421a3d082bbed8dd32cd8adc229
+  - path: generated/contracts/asyncapi/messages/team_roster_updated.yaml
+    sha256: 1747c1dba8a6fdd0b7a781aae0ec439287de76c771084ef21c4dec48f681b9e7
+  - path: generated/contracts/asyncapi/messages/training_attendance_marked.yaml
+    sha256: 2730139e590f1312c0caf2438c5178fb0f97a632321fd69a96b0253cbbbdfac0
+  - path: generated/contracts/asyncapi/messages/training_readiness_assessed.yaml
+    sha256: 22958d1ffffc8c8e96c2df70b7573926a0e90e7c23cf16aae88ed5aab0e941b0
+  - path: generated/contracts/asyncapi/messages/training_session_archived.yaml
+    sha256: ca125921b5b0638b1502222e67b43cc827103c99458936a401c11129daf43b39
+  - path: generated/contracts/asyncapi/messages/training_session_cancelled.yaml
+    sha256: ac1e4d613c5ef5574993f02b3f75b7fe96f1f5f1e06c91766e8046912407c0de
+  - path: generated/contracts/asyncapi/messages/training_session_completed.yaml
+    sha256: 9d5427d67ce7a9c9c7132d45dbd4465640f2eb22febe2640817959c921417450
+  - path: generated/contracts/asyncapi/messages/training_session_created.yaml
+    sha256: 7b2954090283cd2b8ea1b16d403f1d020fbc73c2df090f09fe7842eefe4f5896
+  - path: generated/contracts/asyncapi/messages/training_session_published.yaml
+    sha256: 4f78217ca9840f02024401657af592b3505b2ec8ff6f3c4d1e6b42a22d97ece8
+  - path: generated/contracts/asyncapi/messages/training_session_started.yaml
+    sha256: da6f7422e458310aabecd0467e55eb8838381f4be38be137714fbb7432692f5e
+  - path: generated/contracts/asyncapi/messages/user_created.yaml
+    sha256: c7ad616086e1cda85974fa2c3e3ffaf7b796e4bea769a79e48fc8fa086773f7e
+  - path: generated/contracts/asyncapi/messages/user_role_changed.yaml
+    sha256: 0a49233c82f6a7fe7ab8f0873a984eb25b43c66b80d2d5e0606dc97aee0dbfe2
+  - path: generated/contracts/asyncapi/messages/video/capture_started.yaml
+    sha256: 9bd187c899ef4fd30d02056730048af658dcae825aa6a73a50261cab621cfa45
+  - path: generated/contracts/asyncapi/messages/video/distribution_failed.yaml
+    sha256: eeb339b2468a505a4579207b80490519a9b004142bd6921c81b41a104a1ab7c4
+  - path: generated/contracts/asyncapi/messages/video/distribution_published.yaml
+    sha256: 12e7db1093ec3f35dbfad9ac8caec4c9f350601f248b238e4018f04708474932
+  - path: generated/contracts/asyncapi/messages/video/segment_ready.yaml
+    sha256: c1f7dc89861692e87fd309082fe281a8e0e167526410faa811b1bacd2cc5638c
+  - path: generated/contracts/asyncapi/messages/video/sync_adjustment_applied.yaml
+    sha256: f95102884f8f1355c69098cd33cbdbc0839b944143e48f87b22b9eed26d5a786
+  - path: generated/contracts/asyncapi/messages/video/transcode_completed.yaml
+    sha256: c804d846dc9d7804551de9b41a5b6a1a7579d3abfd3853247bbe2cd881edf486
+  - path: generated/contracts/asyncapi/messages/video_clip_ready.yaml
+    sha256: 2ff43da223a16e15e94c30d6bb5135c1eff10c6dd9083ec73dca4cbfb1702a12
+  - path: generated/contracts/asyncapi/messages/video_distribution_published.yaml
+    sha256: b2f8aa7166c2e22f280b45615c9d16dc2cc5d724c8ef84b3c358f2aa35662955
+  - path: generated/contracts/asyncapi/messages/video_segment_finalized.yaml
+    sha256: 00bac3d7423da7340b983c4ab4f011690bfac15fa3df2978b12b7d02212808cb
+  - path: generated/contracts/asyncapi/messages/video_session_capturing.yaml
+    sha256: d6d608e4efcdd6e32b558cf9093cd1f6ab502105bf20b0760ca2d79f9d1d4622
+  - path: generated/contracts/asyncapi/messages/video_session_created.yaml
+    sha256: ec7b918ecdf3337abddf0a53c975946d788dde4ea77ba5ca9e4eb5926a1eb679
+  - path: generated/contracts/asyncapi/messages/video_session_published.yaml
+    sha256: e5ce2052859300c0256231d7054d68ef6304a6fff77a92994f4384108b08f3a1
+  - path: generated/contracts/asyncapi/messages/video_session_syncing.yaml
+    sha256: 5efa6168224a3bb7d3c66e0ae4b75c9a8f67ec7858f83646c53d90ff887696df
+  - path: generated/contracts/asyncapi/messages/video_session_transcoding.yaml
+    sha256: 529846717202251e846e54ecb9e82773a926d714822a99fde1cf470fce874b7b
+  - path: generated/contracts/asyncapi/messages/wellness_entry_created.yaml
+    sha256: 335f24799e66615c7606e43af5a211c39895263d656600cb7829e61b623a0f08
+  - path: generated/contracts/asyncapi/operations/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/README.md
+    sha256: 1f66b2ef2a8167c45879530cfe491688846b42e43e960405988ea5ea5a8fd5a1
+  - path: generated/contracts/schemas/ai_ingestion/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/ai_ingestion/ingestion_job.schema.json
+    sha256: 255e479c9f94317ba748f2ab09a636b1c805a842d255a4865bdef30914d085d3
+  - path: generated/contracts/schemas/analytics/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/analytics/analytics_metric_key.schema.json
+    sha256: 97259b76df02aa8d718d8ddf7ff8555eea901e8743c89625465343d23d5dd81c
+  - path: generated/contracts/schemas/analytics/analytics_query_request.schema.json
+    sha256: 669f92efac463196248d3ffc458de1fe7abc3e231f222c85c0d2d457ae313976
+  - path: generated/contracts/schemas/analytics/analytics_query_response.schema.json
+    sha256: eae355ceee049c382f0c4fac064710ee57d1fad666aaaa44f12171a8d57e3f20
+  - path: generated/contracts/schemas/analytics/analytics_snapshot.schema.json
+    sha256: db8a9c898207e09b7cd6fa0ec9f9aa9a6b05e939909a22fdbda041a8cff8a581
+  - path: generated/contracts/schemas/audit/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/audit/audit_entry.schema.json
+    sha256: 124e4d382777a6e8000338e0a212d92dc836048d02487f96ace1c9e8e24a775b
+  - path: generated/contracts/schemas/competitions/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/competitions/competition.schema.json
+    sha256: 16438c0c9972e54b514e485bc36876cf162867fa5e45b6699de61804569fc291
+  - path: generated/contracts/schemas/exercises/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/exercises/exercise.schema.json
+    sha256: 07694a5d58f1a260df76d33b1588690e0ef5439fc8f006499f147d699548a9b1
+  - path: generated/contracts/schemas/exercises/exercise_acl.schema.json
+    sha256: cbf3b897dc0735a26f2a14e30e569a7e67e3d46a879a41e5933308c583ec14f1
+  - path: generated/contracts/schemas/exercises/exercise_relation.schema.json
+    sha256: cffd6a53a2f65f2a785eef6bf5eb45c9af2498596cbed23337147a6f2a3a6572
+  - path: generated/contracts/schemas/exercises/exercise_version.schema.json
+    sha256: 4cd54ad3b175b14a39563aef2a1ef5dc32d31bb539433f41a50c4ea83181cd5d
+  - path: generated/contracts/schemas/identity_access/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/identity_access/auth_session.schema.json
+    sha256: f4a97edf2c6dcc88a79ce2bd2a19bd503ffbf6fcb197ef19fa0e01b48f33629a
+  - path: generated/contracts/schemas/matches/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/matches/match.schema.json
+    sha256: 0794ae1db7742b9d9ddd297496342dc1caa0b8706143099b0dbf2d1b5b974c40
+  - path: generated/contracts/schemas/medical/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/medical/medical_record.schema.json
+    sha256: e7b65125cbe7f9419f6a8173b8209327d2362a6201ea1cc9e7bb13c0da69fc25
+  - path: generated/contracts/schemas/notifications/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/notifications/notification_delivery.schema.json
+    sha256: 6b085893c9670ea2d23f27cfac6b8dc26a4ab0652a82fb3f33860e36436ca502
+  - path: generated/contracts/schemas/reports/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/reports/report_job.schema.json
+    sha256: cb181a5444546c5e9d9f440cca9cf9a40089f061d0b888f1a8d1ab216fcc56dd
+  - path: generated/contracts/schemas/scout/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/scout/scout_event.schema.json
+    sha256: 4dac87f80d2fef7676f6f121273c4b1e5c60479f9fa46281e4588b109ce36991
+  - path: generated/contracts/schemas/seasons/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/seasons/season.schema.json
+    sha256: f2a52eef5ecdc1531aac944d0fc3e7bfde5bccf4cb0cafc2dff866f16e965af1
+  - path: generated/contracts/schemas/shared/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/shared/domain_axioms.schema.json
+    sha256: d002b4c07c9b93c9763ddc31910c0562df76a7545c9427ec00e139adb92e70e8
+  - path: generated/contracts/schemas/shared/domain_axioms_module.schema.json
+    sha256: c8bc89b19d5fcd019567156e0f40480efe238332df73e89aaede7314d7324a19
+  - path: generated/contracts/schemas/shared/module_registry.schema.json
+    sha256: a4480665edb80aed06b3a141dcd2dec744651554d48791defa8e9bdae009e347
+  - path: generated/contracts/schemas/shared/module_source_authority_matrix.schema.json
+    sha256: 608a1607f07b379d7130d07d3efbd4414c3006801a28c0e5664d556d43681b60
+  - path: generated/contracts/schemas/shared/owasp_api_control_matrix.schema.json
+    sha256: 4baa33b8c068766787e79991cee6d29193900c79f3010ca5bde5e93601ffe812
+  - path: generated/contracts/schemas/shared/readiness_confirmation.schema.json
+    sha256: 913df84125b1df3b271e7d40c819ae3fed10f4280d6bc1e11671f32026cd5a9c
+  - path: generated/contracts/schemas/shared/session_handoff.schema.json
+    sha256: e40c3048c7b1351712dc7cb154bdab66c0f087823a6dbe918f9320113ec4d714
+  - path: generated/contracts/schemas/shared/session_start.schema.json
+    sha256: c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b
+  - path: generated/contracts/schemas/shared/waiver.schema.json
+    sha256: ac33fe58442230065d2472b5a2c4c1ea8c8d16b529fba70ad8036cbeb27ed945
+  - path: generated/contracts/schemas/teams/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/teams/team.schema.json
+    sha256: 81ae5bd4f1892e0e7307a27894a0c70fed91943fd530adcfe34eac12a4e326d1
+  - path: generated/contracts/schemas/training/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/training/ajv_compile.log
+    sha256: d0532788ca81ebd548a3883c83a074e4781a82cce26813f5dc3b56b8579c33c2
+  - path: generated/contracts/schemas/training/athlete_chat_conversation.schema.json
+    sha256: e418283670dbda1784059d018dac65aac5381110ead0380297dcd29e32e5aa62
+  - path: generated/contracts/schemas/training/athlete_chat_message.schema.json
+    sha256: 45332c3ef0b9643945b5c9ef8fa1631a8cee8167b3ce934c88a98788ce6eb536
+  - path: generated/contracts/schemas/training/athlete_ineligibility_declaration.schema.json
+    sha256: 01bdc8cccc811e564f0689984b0a8aa3dbf0b34c8c6606218b68f25596dad654
+  - path: generated/contracts/schemas/training/attention_queue_item.schema.json
+    sha256: f9954309f509e82cbeda1c396b1cb98de69bbd5a988712b0d5f2a580a0ed3dbe
+  - path: generated/contracts/schemas/training/execution_record.schema.json
+    sha256: d220a106255e1a71e88babb9145a62e2c86e7d534aa5bf7d25906cb395cae075
+  - path: generated/contracts/schemas/training/feedback_thread.schema.json
+    sha256: 95246edbbb123f647e34021e16c770e642002d1704a34cdb0b6a96d3c88c107e
+  - path: generated/contracts/schemas/training/load_chart.schema.json
+    sha256: f4cc9ba9ab5af9f134b5bff599b9c7d9f382cf9a271d93eca5ab6b04538bc253
+  - path: generated/contracts/schemas/training/recommendation.schema.json
+    sha256: 8844b4e8957a9c17104a764f9ea0116d90e9ee9e9dff8ffc0708decf5d454822
+  - path: generated/contracts/schemas/training/session_block.schema.json
+    sha256: 928c44b349004c5d770975b7eb4b02bf7852180b5105aa0b5cb1851241bd396d
+  - path: generated/contracts/schemas/training/session_objective.schema.json
+    sha256: 58119fbcfd86ef0cdd9286f07040c6897ae5a4327d6053892962237df9343546
+  - path: generated/contracts/schemas/training/training_session.schema.json
+    sha256: 63c0a2b6c5f567640aa7507c7bde8676ea418f4dbd979ba39975f27002e5104a
+  - path: generated/contracts/schemas/training/training_suggestion.schema.json
+    sha256: ca76be92c32d67ee37d21b8918c4ac0bc58df1d01d44d97770345b9d61878b26
+  - path: generated/contracts/schemas/training/training_suggestion_approval.schema.json
+    sha256: 45d77ba88b583ca41ff77458ec29a0f542c9fff396daf84d6d7a530cb38f7d42
+  - path: generated/contracts/schemas/users/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/users/user_profile.schema.json
+    sha256: e35925ca319f57bf84c03410341658e114fdfc60172f8d727ecec31958478c8d
+  - path: generated/contracts/schemas/video/clip_definition.schema.json
+    sha256: ccdd706892001ce41a28b7a158e89dedc2a91adb5ab0e557b81f2c223ff49873
+  - path: generated/contracts/schemas/video/distribution_profile.schema.json
+    sha256: e6ab3a3744473e390eb4240054461114cf7141d961a9f57bea0e8ab7ef504209
+  - path: generated/contracts/schemas/video/match_media_session.schema.json
+    sha256: 3b11cc76ff345cc0c81948732773205445889f3f49d52eb26365f571921d0289
+  - path: generated/contracts/schemas/video/media_segment.schema.json
+    sha256: 3086aa60d7e9ea58dc962bd61ffe94886605367a92a0ecb0aef45f28e601915c
+  - path: generated/contracts/schemas/wellness/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/wellness/wellness_entry.schema.json
+    sha256: e6b69221a1e62764a544a37a53dfa1d211df3b89799df536f9b85789b5b59c97
+  generated_tree_sha256: 61f439365b0010998f27e62f6a1aca644aba90d18c6861bb8aa5b59f98f91b7b
+  policy_path: generated/resolved_policy/audit.event.resolved.yaml
+  policy_sha256: c1ead2335087b66fba486863e9404c56c82df9ba0ebb5262f508aaefbbd0eda0
+  source_contracts:
+  - path: contracts/asyncapi/README.md
+    sha256: 911c379f8c48a9d804be28b64039aecb958e863762051ebcad6f0eab7b1266de
+  - path: contracts/asyncapi/asyncapi.yaml
+    sha256: c78822715dc601018e44e981ab4aa1d3a3ce7ba219c21e77d9156c6b4635ba4a
+  - path: contracts/asyncapi/asyncapi_validate.log
+    sha256: 009084f6c52fb17114e7bb182789ffc5e39dd3a035f036cba9cf25c30ea7bd17
+  - path: contracts/asyncapi/channels/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/asyncapi/channels/ai_ingestion_job_completed.yaml
+    sha256: 44bbbecbf6b25c61c27c5e467ae5b340381b2f9c5cb878c0c2ff59632a659aec
+  - path: contracts/asyncapi/channels/ai_ingestion_job_failed.yaml
+    sha256: 6e643d77cb6a2f71863760363285b46f17ff250c84e977efe2c24127f187ef0d
+  - path: contracts/asyncapi/channels/ai_ingestion_job_queued.yaml
+    sha256: 15f01acc38eb86b19a2c2f37bdcca70e609738a5509749d88bb3f887d13169fb
+  - path: contracts/asyncapi/channels/athlete_ineligible_for_prescription.yaml
+    sha256: c575173295dee119c390c00eb5420803d6974a6b374c1844663a0bc5117f9e3b
+  - path: contracts/asyncapi/channels/attention_queue_item_created.yaml
+    sha256: 0d575c0e85c06730ba3dc2c7f96561f7d6b3bc5d4729449ed9b5db2f9c771121
+  - path: contracts/asyncapi/channels/attention_queue_item_resolved.yaml
+    sha256: 1dcdd50875a7f49af1ef5cfc1a8512787d89d0f1ad5629732583e0daeb76847c
+  - path: contracts/asyncapi/channels/audit_entry_created.yaml
+    sha256: bb7eb84c31e493f60fcb7e12f08df976159f577000fbc7f6e0a6be0ff0a08044
+  - path: contracts/asyncapi/channels/audit_entry_security_flagged.yaml
+    sha256: b3e951531822cfdc241f950dad1304c1197275493bc2b73d4b4113548b62f214
+  - path: contracts/asyncapi/channels/coach_intervention_required.yaml
+    sha256: 3f29660ff9d2edb38c90d1c5f9e392f46697ff5cd9cbf52f33875e96014dc3df
+  - path: contracts/asyncapi/channels/competition_created.yaml
+    sha256: a5d03d8aefa070778985e1d538407330406303a2e1582d737c24669ef9f8d53d
+  - path: contracts/asyncapi/channels/competition_phase_changed.yaml
+    sha256: 0ac8603f5ecf9b0132ff2a55956c30f87c2e43ef9f6a9ed59cd57d5c159f3a02
+  - path: contracts/asyncapi/channels/completion_evidence_provided.yaml
+    sha256: 8aa7555f33c9f901555d43ec8dd3c884c9b0f02b58c8f918c947490e9e9f786a
+  - path: contracts/asyncapi/channels/continuity_snapshot_created.yaml
+    sha256: 6451c309178f9f392c5329c3ad6ccd596151a6239a14d02e3f250d9e7729285c
+  - path: contracts/asyncapi/channels/execution_recorded.yaml
+    sha256: ec53af9a6064b16f9b13a96e70c0dbac3e8e99bb4961bec214a915bbb888c3b6
+  - path: contracts/asyncapi/channels/feedback_thread_closed.yaml
+    sha256: 861adc48b42c3f1773d66e7d6dc9e93e0570ecb04f54bb4e5ae2c19557c4f8ae
+  - path: contracts/asyncapi/channels/feedback_thread_created.yaml
+    sha256: 33861674cbd3e7f8c877c3ca7bd7bc1596724f9b1df7da82356a2073f7b0e8c1
+  - path: contracts/asyncapi/channels/intervention_cycle_completed.yaml
+    sha256: a441eba040b230b6973ec4b5f21640fb80f62c10b9f935a230aeab850a70219d
+  - path: contracts/asyncapi/channels/intervention_cycle_created.yaml
+    sha256: 98243d079bab8eac8e303396f7eb1163f6f4158a39bb12173e6468f8abf4faa3
+  - path: contracts/asyncapi/channels/match_scheduled.yaml
+    sha256: 3ec3b17de393f6a700d51b240e8d64c0712d7f1eb1ebd9de11901a52ec3a3420
+  - path: contracts/asyncapi/channels/match_status_updated.yaml
+    sha256: 7025debf6bc5d1ef32233461c78d79b4f1e6b1727f343fafa7b738a161ba2c0f
+  - path: contracts/asyncapi/channels/need_detected_created.yaml
+    sha256: 77c8cad0cd033abb15bbd49dade13f13baea542c41cf49217439e29aa8140d1c
+  - path: contracts/asyncapi/channels/need_linked_to_objective.yaml
+    sha256: a6ea91bdc45661546fc6687fe99a268706d67ad7afa78783c1151fe29a987be9
+  - path: contracts/asyncapi/channels/notification_delivery_failed.yaml
+    sha256: f1782fab841efdc50b6c3ddc0d9f9add399991cb33a9efa5cf8c413293dfdfb7
+  - path: contracts/asyncapi/channels/notification_delivery_queued.yaml
+    sha256: abe9d509c4047a64f8602704520e8272dd297fc92c8f76fb148a0aaacd697e25
+  - path: contracts/asyncapi/channels/notification_delivery_sent.yaml
+    sha256: 5ef1af40f0aaba96fd5cd7ac63fea9da4c8f24e25f87293699bdc2669ec97bcc
+  - path: contracts/asyncapi/channels/objective_created.yaml
+    sha256: 1127e8489fb08d53d6afe9a27029ad6f2d3f4c70bcbc4fa340b2d3baa7c1ca26
+  - path: contracts/asyncapi/channels/prescription_adjusted.yaml
+    sha256: 22b0b8a86e20930908693b1b34364b1147f54ebe6732eec5e0593d915cdf3ae3
+  - path: contracts/asyncapi/channels/recommendation_accepted.yaml
+    sha256: 1c6778c4c197a42f3703c03d8f80283e22b9db2a5fbb61a62dd27fdc9af6f9f4
+  - path: contracts/asyncapi/channels/recommendation_dismissed.yaml
+    sha256: eef99eac421dd629bf4ed6c9847be1a2f307f8cec07e6139e8ada6d7e3f9fc70
+  - path: contracts/asyncapi/channels/recommendation_generated.yaml
+    sha256: fec28e693ca29c53f53f7a60e1bf25cd6e231ae9f7f2ace120de1cf1dd1ec9ac
+  - path: contracts/asyncapi/channels/role_assigned.yaml
+    sha256: ac6208f70f8d563d17156d5066b052842693bfb18980f4eb1b317ccdede4b0b8
+  - path: contracts/asyncapi/channels/role_revoked.yaml
+    sha256: df2505b302205cc108910234c174c45b515f17a6e37a627671b8fa085d7ad0c9
+  - path: contracts/asyncapi/channels/scout_event_created.yaml
+    sha256: 7b3e0598735c94b92b1f67e1d71e8c353dd0301bffb94957149e6929c7591958
+  - path: contracts/asyncapi/channels/scout_session_completed.yaml
+    sha256: acff88a1d180bcbe33629990f4532458301b7d46e61e8c6be7bf1012068fa840
+  - path: contracts/asyncapi/channels/season_created.yaml
+    sha256: 9e1cf271ce3c44b93fe2c07077372b16048d7f90d806b635a9de4175a3dbe47d
+  - path: contracts/asyncapi/channels/season_status_updated.yaml
+    sha256: be8f41a4c176edebc8b7fb4938db925ab6256d86fbbaa4ed93608dfcc13318e5
+  - path: contracts/asyncapi/channels/session_adjustment_made.yaml
+    sha256: e3f1ccb3acaaf404a6ce6ac9037bcb782f62101ef1af2694a339598dd8cf2ecb
+  - path: contracts/asyncapi/channels/session_created.yaml
+    sha256: b0db0bf26cd3d08b3081140da2c859d6861dcbdd67e1b09db022b717f92304e5
+  - path: contracts/asyncapi/channels/session_objective_achieved.yaml
+    sha256: c6233be2a7fe929d00455f904d1f93e4ee194947cb4004a3efa7da82eaf41a96
+  - path: contracts/asyncapi/channels/session_revoked.yaml
+    sha256: dc058c44a7a43bfa592c77e68d4ca204e52d6f69ee0ac27c3f8cc611fc2c73ab
+  - path: contracts/asyncapi/channels/team_created.yaml
+    sha256: 84f99b1f6eee6083990ee58a3a01ae6ee5f792cc507ecbc4ec92802ec4eaf3dc
+  - path: contracts/asyncapi/channels/team_roster_updated.yaml
+    sha256: d1e4a79cc33a3e79101d996b55ebfd02ceab40022060ee6da79109858a32f926
+  - path: contracts/asyncapi/channels/training_attendance_marked.yaml
+    sha256: 8efb0c1c1ab11d7d8c2c846e5831fb88a0b5ef03fc659cb66de8c1eb69d3b6ce
+  - path: contracts/asyncapi/channels/training_readiness_assessed.yaml
+    sha256: 892240d9765f2eaa3b86d2cbde921a7a2a8a76dc76686971a099d5a291c36fa1
+  - path: contracts/asyncapi/channels/training_session_archived.yaml
+    sha256: ba8087ec67658040b0f31b41d84162a5d23faed2e5713f87a52c2c385610ffa0
+  - path: contracts/asyncapi/channels/training_session_cancelled.yaml
+    sha256: 858f537b7f325eca9273152f613a72f894219f2fcf0cc1fb31621a89c0ea16a8
+  - path: contracts/asyncapi/channels/training_session_completed.yaml
+    sha256: 3a339983f6aacad81ba8a579c8fcc2b355dee8fb03f1272bcd22d2de9f850f9f
+  - path: contracts/asyncapi/channels/training_session_created.yaml
+    sha256: 7b5ac5ea28c462ab21a4bc1d9e2057bf5b742b4153ce9190ccb1f66dfc1811f9
+  - path: contracts/asyncapi/channels/training_session_published.yaml
+    sha256: dc54f2abcdf5f08ff2d5884fba1858bd9c25123277b89440300eb5b77026706b
+  - path: contracts/asyncapi/channels/training_session_started.yaml
+    sha256: d756cab67e35ec1603e30581efab0ddde5709a5d5b9e9328cfd124920ea1b50c
+  - path: contracts/asyncapi/channels/user_created.yaml
+    sha256: 1e9b2b9131933e190d5a7fc8c1dfeadfe4e860e132d0fa21082e7826cb77eb54
+  - path: contracts/asyncapi/channels/user_role_changed.yaml
+    sha256: 563af688f860602f2feb275fb834c7a0d98ec0a1192a306a58842c3153a17243
+  - path: contracts/asyncapi/channels/video/capture_started.yaml
+    sha256: c253a06ef7b9042efcffaf0d2a2354c8b0e3fa1cf9036c967995301e7b3c2334
+  - path: contracts/asyncapi/channels/video/distribution_failed.yaml
+    sha256: 9ded1df4b600b97b163278e985bdec1e2826554824cb89cf440981b86f7bcb8a
+  - path: contracts/asyncapi/channels/video/distribution_published.yaml
+    sha256: 4ca4a794bf6bed95b9acf67814ff8a2e315547d7f7a1244b71df5b90d78f0def
+  - path: contracts/asyncapi/channels/video/segment_ready.yaml
+    sha256: f24e5166901b9b903233ec8984898a64b63b080f1bf1443d7c1b44fb1a47be17
+  - path: contracts/asyncapi/channels/video/sync_adjustment_applied.yaml
+    sha256: 086aee5ec3a4db41d6f3ad8591087ee2025ef4a045725cd49c97200026d8f222
+  - path: contracts/asyncapi/channels/video/transcode_completed.yaml
+    sha256: 7272e181c759ff4796111430a2ef0c71358b002b1a600eace50e3993f226be91
+  - path: contracts/asyncapi/channels/video_clip_ready.yaml
+    sha256: 715fcc63cd4576aac6f988d01750417a61926722191d9527f750b14dbe3f0232
+  - path: contracts/asyncapi/channels/video_distribution_published.yaml
+    sha256: b97c6c683a98c85c2b6b45fbfca156c40a2536229f5084df9bbc2db74f8a5568
+  - path: contracts/asyncapi/channels/video_segment_finalized.yaml
+    sha256: 5fcc579c00aa163650621dc229b31d1fc3892048fbe65f5d5bdcf7b62aee7fcb
+  - path: contracts/asyncapi/channels/video_session_capturing.yaml
+    sha256: 15e37f172c2ffa771e2fc779356fd488f139ebd2c117a046dcf958744e3aa51b
+  - path: contracts/asyncapi/channels/video_session_created.yaml
+    sha256: 944d357e43ac6aef3139fde0259a622058f070fb41efb571117b71c420b6020d
+  - path: contracts/asyncapi/channels/video_session_published.yaml
+    sha256: 4b80e0c3e0a7acb6ad1ab31b17d2b958c019148ab8cbf5bc46b97fe9f9f442cc
+  - path: contracts/asyncapi/channels/video_session_syncing.yaml
+    sha256: 7a330301e2ec54bc8e6f3dacbd68cfcd92523c9fcbc621c720068e7ba694e3af
+  - path: contracts/asyncapi/channels/video_session_transcoding.yaml
+    sha256: 803f284611f03f1eb00bf3bd8a0bd754285cd58adad7ca42799c54830fb3f64a
+  - path: contracts/asyncapi/channels/wellness_entry_created.yaml
+    sha256: f0533bfbab661e8694f4c307f3778c1bbde9601233ed2c81a42d95e84d640be0
+  - path: contracts/asyncapi/components/messageTraits/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/asyncapi/components/operationTraits/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/asyncapi/components/schemas/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/asyncapi/components/schemas/ai_ingestion_job_completed_payload.yaml
+    sha256: 822571b449fd616f367b8d444547b7e0ce7dd382fd786e46b0cf5091a19fc791
+  - path: contracts/asyncapi/components/schemas/ai_ingestion_job_failed_payload.yaml
+    sha256: d06537b2110a7301e31a474cb691695ecd8bb97fa26c51f825ca8b51f1801380
+  - path: contracts/asyncapi/components/schemas/ai_ingestion_job_queued_payload.yaml
+    sha256: 2905727f55376cd2202f3b7d6116c22a872d8fa562b0c5cd6b82888251528ef6
+  - path: contracts/asyncapi/components/schemas/athlete_ineligible_for_prescription_payload.yaml
+    sha256: 9dae92d945a2643e6ae7764cf2ae25295fef192c21a92998031559355ef90ab3
+  - path: contracts/asyncapi/components/schemas/attention_queue_item_created_payload.yaml
+    sha256: 002c5114ab6660e0aef6aa45f09668eee59d0c2e50828d89a3a85cb1c4ba4224
+  - path: contracts/asyncapi/components/schemas/attention_queue_item_resolved_payload.yaml
+    sha256: 7647111a03857c0678a9482148134b2a0c3be30eba190ccfa0dc04aa71aa14b0
+  - path: contracts/asyncapi/components/schemas/audit_entry_created_payload.yaml
+    sha256: 5a26fc54e80b721644308a2051e629d6c7c8180197a2523ccce90f45cc7f6fa6
+  - path: contracts/asyncapi/components/schemas/audit_entry_security_flagged_payload.yaml
+    sha256: 626fb221c9fb286fd81ddf4c1f11e3c88b37a0de4c2349ee45067eec85a9a554
+  - path: contracts/asyncapi/components/schemas/coach_intervention_required_payload.yaml
+    sha256: ec2ff649117a6085e7309494c2aa9a1965b74830da05ef6c39b18292ddc77b4e
+  - path: contracts/asyncapi/components/schemas/competition_created_payload.yaml
+    sha256: 2c1a6853c963bd1d7aa72ea25fa8de46b135423f46ee0aef5be0dd847dc90747
+  - path: contracts/asyncapi/components/schemas/competition_phase_changed_payload.yaml
+    sha256: d77c15a32d2c97ddd918edb60b36c0f3d8ded6726b1de0c56edb949ab917dec0
+  - path: contracts/asyncapi/components/schemas/completion_evidence_provided_payload.yaml
+    sha256: d7fe1777f07fb0b45dea77b1d2c0c814de2d900b9ab5a324094cd78d80ad62cd
+  - path: contracts/asyncapi/components/schemas/continuity_snapshot_created_payload.yaml
+    sha256: 1fe3505ed72ab4b66c311c3de34b3ae84560883903ed16999967fb28bb29c5ca
+  - path: contracts/asyncapi/components/schemas/execution_recorded_payload.yaml
+    sha256: 6c1fb05a14d19475110731bb2a125979bc1f203b21237bc321df385fa6bb5bf5
+  - path: contracts/asyncapi/components/schemas/feedback_thread_closed_payload.yaml
+    sha256: b96828786eb3c3e3d576e93f83bd12a27f040b68db2da5e88647770139fd3616
+  - path: contracts/asyncapi/components/schemas/feedback_thread_created_payload.yaml
+    sha256: f841306665c2c5452764cfa8da3e4a010e6a6da5013d75b2f562c9c6e0123460
+  - path: contracts/asyncapi/components/schemas/intervention_cycle_completed_payload.yaml
+    sha256: e6b4c9b0a0e4c50dd5f9930c4bdcb45fbfc5299f1ce8cac35a1d54a99655eb54
+  - path: contracts/asyncapi/components/schemas/intervention_cycle_created_payload.yaml
+    sha256: 24eee8aedea3c8e5569dc6897ece5a1720edb64777b8add9ed6132041d4cf300
+  - path: contracts/asyncapi/components/schemas/match_scheduled_payload.yaml
+    sha256: ac903f7263e9e343fbd7b4850ee1e6048fd72dd32d4afd16d6865855d9ed2dec
+  - path: contracts/asyncapi/components/schemas/match_status_updated_payload.yaml
+    sha256: 3decbb1d16f68a4352a315f19c8688ad631cd22176d8ec732faf7348ac3e7e35
+  - path: contracts/asyncapi/components/schemas/need_detected_created_payload.yaml
+    sha256: bfe0ee7c159f22d7897877626a3383e256d49052b895240fea5c6f5448658056
+  - path: contracts/asyncapi/components/schemas/need_linked_to_objective_payload.yaml
+    sha256: 44d501df1600c40c79a2e8b07c681499045c025bf6b4770af8295cb38e076869
+  - path: contracts/asyncapi/components/schemas/notification_delivery_failed_payload.yaml
+    sha256: cc7c79fb4335cb756c75a1b4b78a9fe1daa43bfb3ac4afde7fadbb3a2dbc79ea
+  - path: contracts/asyncapi/components/schemas/notification_delivery_queued_payload.yaml
+    sha256: f6519786adb460049c04ce3926dd83e5cb3fff39bd050865e67a3fd72dd4a9f4
+  - path: contracts/asyncapi/components/schemas/notification_delivery_sent_payload.yaml
+    sha256: 9750778863a93fa26464db85e372284bdf0b0b9388cbabd6a376dd5377406fcd
+  - path: contracts/asyncapi/components/schemas/objective_created_payload.yaml
+    sha256: f2ec715c35e81f5464345565df9ad2d324dc9815125ea862d4a79946f63c18cc
+  - path: contracts/asyncapi/components/schemas/prescription_adjusted_payload.yaml
+    sha256: a628fd19ef3038806126f3c61563346459c2e26a3af0f210dd357c2245208133
+  - path: contracts/asyncapi/components/schemas/recommendation_accepted_payload.yaml
+    sha256: 729316f7794b9274674836e971e9750b1774ebe30dbb36ec7f3d67f634d5205e
+  - path: contracts/asyncapi/components/schemas/recommendation_dismissed_payload.yaml
+    sha256: 468711af28965a31dc98111616ca06f647a49bbaf2989cead0450556a8c882d6
+  - path: contracts/asyncapi/components/schemas/recommendation_generated_payload.yaml
+    sha256: e5508b222428497f06c80376066381fda88593b40d9d38f7bc9725db9b918624
+  - path: contracts/asyncapi/components/schemas/role_assigned_payload.yaml
+    sha256: dafef05cdfab39cbf019c33935b7432f06556c0a4c75234d1984c5d4a738b6bb
+  - path: contracts/asyncapi/components/schemas/role_revoked_payload.yaml
+    sha256: 88449f35e37b1e8d209108eee77ed40b64b475f81a352940504d98a4a2346d9a
+  - path: contracts/asyncapi/components/schemas/scout_event_created_payload.yaml
+    sha256: 9c1845c3c065a380c0d66bccf42b94d69173404a9a69adc7b46e51419aec5513
+  - path: contracts/asyncapi/components/schemas/scout_session_completed_payload.yaml
+    sha256: 0ee4dc9af99b9093ebfe1689a4dbbdc194b9279dfa3d226ab234be721bd5fcb2
+  - path: contracts/asyncapi/components/schemas/season_created_payload.yaml
+    sha256: f489037c3ae071e49264406b1f25380e3bd359fc80f21364f87cb1411c109fe9
+  - path: contracts/asyncapi/components/schemas/season_status_updated_payload.yaml
+    sha256: 72550bdb9fc990a679e871e02a01b14929940f2c85a395c6534141163c5a084b
+  - path: contracts/asyncapi/components/schemas/session_adjustment_made_payload.yaml
+    sha256: 390a586783129708d791a8adcf703feaa232adf49c9d6bc4d2cc7eaadd16ed28
+  - path: contracts/asyncapi/components/schemas/session_created_payload.yaml
+    sha256: ba4c72e2d3c5d26e690d505ed10c69f4c382b1c6a088c8d887228e1de756a21b
+  - path: contracts/asyncapi/components/schemas/session_objective_achieved_payload.yaml
+    sha256: b154c103abedad1e0270b6c945c981b8699b358caf7363de2c0765ad644281ad
+  - path: contracts/asyncapi/components/schemas/session_revoked_payload.yaml
+    sha256: 20254f9f029c78c46de78a9e6097706c6f683b151a130c92dc242f3f90335965
+  - path: contracts/asyncapi/components/schemas/team_created_payload.yaml
+    sha256: 2bd31dbd732471632253ff38fc65642ece714fb8bbb75d4f3dab87f66ee30fa7
+  - path: contracts/asyncapi/components/schemas/team_roster_updated_payload.yaml
+    sha256: 1e805f47e3d958f826711134a035729ca4f17d0855c34ba40acbd3c98e8b2e9e
+  - path: contracts/asyncapi/components/schemas/training_attendance_marked_payload.yaml
+    sha256: 2fd0e502e928fd95fd716ba4c9110e92afaa989ae0714832312c3d1a7db39b43
+  - path: contracts/asyncapi/components/schemas/training_readiness_assessed_payload.yaml
+    sha256: a83a08444de15367da620acb5cfba9979f62d202f7afa6cedca7a278316961ba
+  - path: contracts/asyncapi/components/schemas/training_session_archived_payload.yaml
+    sha256: f1fac18fa2fc646b63e27373b218c4bec3224158bdb4f6d6839404a0f9f947b1
+  - path: contracts/asyncapi/components/schemas/training_session_cancelled_payload.yaml
+    sha256: 828d0378383ab009b302e9b6f07d35b42d0647bfaab0d7b8e9090e145584835b
+  - path: contracts/asyncapi/components/schemas/training_session_completed_payload.yaml
+    sha256: 6f942bbf7a6273bc9c41086185ebb62fea058321d05078e4d6dc321a2820052b
+  - path: contracts/asyncapi/components/schemas/training_session_created_payload.yaml
+    sha256: 9e17d937da651102a0861a18ff624014315d6aa8f0dd48db4931614008b02e0f
+  - path: contracts/asyncapi/components/schemas/training_session_published_payload.yaml
+    sha256: 80f60af12de583ab951c271c899245b3f50bb31662a7c00ba395e725fc120b26
+  - path: contracts/asyncapi/components/schemas/training_session_started_payload.yaml
+    sha256: 33ab0bc78d71c3d91edb6748d8942ba86520e47c9773bdac8044ce4ede3d0798
+  - path: contracts/asyncapi/components/schemas/user_created_payload.yaml
+    sha256: cc384b8acb9ef2f7b8e76110e3fd807890e7c28e32a7690dfda5180c40b9ddc3
+  - path: contracts/asyncapi/components/schemas/user_role_changed_payload.yaml
+    sha256: cccb38b384ae268918804958d2091b0d60796efa0dcec37e9763f435fc2328e4
+  - path: contracts/asyncapi/components/schemas/video/capture_started_payload.yaml
+    sha256: f6b6741451e31a3686c8df47209225092213c25479b0cba7e8d0269774c8f1d1
+  - path: contracts/asyncapi/components/schemas/video/distribution_failed_payload.yaml
+    sha256: cb99f585233513d0f0a394697ea3835d986e5f3572610c3930513859e9807109
+  - path: contracts/asyncapi/components/schemas/video/distribution_published_payload.yaml
+    sha256: 41682dd5d5b81610dd729c53ec645c3aff6a6586de2d9304672116d3959573a5
+  - path: contracts/asyncapi/components/schemas/video/segment_ready_payload.yaml
+    sha256: 30d628686e8a9ccc68d66ed37f4441cf544823b75b48abd1609a27a463e26b3a
+  - path: contracts/asyncapi/components/schemas/video/sync_adjustment_applied_payload.yaml
+    sha256: 0d33719bde35e90e6438225c29cf03b834ac70c0d9349799168b6d8c6db737f1
+  - path: contracts/asyncapi/components/schemas/video/transcode_completed_payload.yaml
+    sha256: 3186894d84cc5e15155d4ff0db0153dd41ee81686c84c1b7816bef00c2bf957b
+  - path: contracts/asyncapi/components/schemas/video_clip_ready_payload.yaml
+    sha256: 5ffcd8232e3b34c9e7af4ec080c08413d95f019f9494b30d71c1cc9930c588b1
+  - path: contracts/asyncapi/components/schemas/video_distribution_published_payload.yaml
+    sha256: 9122a580804ac941143c4a3255ec8e7f8246eb05b03d31d7f570fd8216c476a3
+  - path: contracts/asyncapi/components/schemas/video_segment_finalized_payload.yaml
+    sha256: abf833590466043956e55443ca21bfcf99a14bd3733549353387677162fe37ff
+  - path: contracts/asyncapi/components/schemas/video_session_capturing_payload.yaml
+    sha256: 5d4fc6be0f460e726aa9b9de68bf4bb26c7a37d50085a3b65f4dbc034ef6f1b7
+  - path: contracts/asyncapi/components/schemas/video_session_created_payload.yaml
+    sha256: 53aceefe026a9df7f0ae5dffcedb66581e4132dc4fc75f6a124cc4676a3063f3
+  - path: contracts/asyncapi/components/schemas/video_session_published_payload.yaml
+    sha256: ae1d922d9b66113ca3e204e4477e8b525474ad7ad169dce1734cf47fe9ba9dcf
+  - path: contracts/asyncapi/components/schemas/video_session_syncing_payload.yaml
+    sha256: abfe17b8632ddceb9c21b724d3d3eab2ea2c8668a7370b216f01985d7b738af1
+  - path: contracts/asyncapi/components/schemas/video_session_transcoding_payload.yaml
+    sha256: 0043be2cfe9d5a58bcb7b1f9866be094ffbf53a94f5d5c955f5b2ee1b0468e3e
+  - path: contracts/asyncapi/components/schemas/wellness_entry_created_payload.yaml
+    sha256: 75b035978a46cac217504b4f71309be2db0dfaec2da343d3b7652096d09d0541
+  - path: contracts/asyncapi/messages/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/asyncapi/messages/ai_ingestion_job_completed.yaml
+    sha256: b1bac1f03b74a5287b8fa1154b6d74f938c747348f0c7d5454af645b5928d405
+  - path: contracts/asyncapi/messages/ai_ingestion_job_failed.yaml
+    sha256: 4659828c2ab4b9257b7c518fa90b04bc9675b5185b1e7da2501953e2c9382a8f
+  - path: contracts/asyncapi/messages/ai_ingestion_job_queued.yaml
+    sha256: 32b8d7a2a5471e525bfb05a5c7ecea5a31f5bc2acfba61ae67468d65bd5df6de
+  - path: contracts/asyncapi/messages/athlete_ineligible_for_prescription.yaml
+    sha256: 1e49a8e85c4bdb341d4e12bae8995e3fd156ed87fed84ebf30cfa5c196d0a856
+  - path: contracts/asyncapi/messages/attention_queue_item_created.yaml
+    sha256: 3ec7a37bc99df575acec6764d7a49c65671865bebab06d35a8bc5596ec05312d
+  - path: contracts/asyncapi/messages/attention_queue_item_resolved.yaml
+    sha256: 103694c186381e5f27ec763aee5eeb1492bec71d45518b92b17c6e3725fe4e2f
+  - path: contracts/asyncapi/messages/audit_entry_created.yaml
+    sha256: f2b1f32d81c296a1a288c34dfcdbe1c3642653ba47cab03601138c90e96ad804
+  - path: contracts/asyncapi/messages/audit_entry_security_flagged.yaml
+    sha256: c6f724bb05ca40559d3e4a4241b45ffc263cb14891c8030d4dda9e828f493396
+  - path: contracts/asyncapi/messages/coach_intervention_required.yaml
+    sha256: 2126e452597cf2d58b190c351e30f52074a318ae85955321391ca2225ea0d390
+  - path: contracts/asyncapi/messages/competition_created.yaml
+    sha256: c0e0c4c72098342987beb8be2c6794ba41dba9edc31c482a28c389fdf5cd3c17
+  - path: contracts/asyncapi/messages/competition_phase_changed.yaml
+    sha256: 577360af0f1d97f485e6b108f497895b060453a841fd470db6a8afe6baa4383f
+  - path: contracts/asyncapi/messages/completion_evidence_provided.yaml
+    sha256: 5495a1b7f5bd0064b7137bffc5381b3a70f2169b9bb619d77f0a74afeeb8f175
+  - path: contracts/asyncapi/messages/continuity_snapshot_created.yaml
+    sha256: 816d81299ea5b4361c2dcc5fa71d8a13b3f993a1439d2fc867db1c5ce006e200
+  - path: contracts/asyncapi/messages/execution_recorded.yaml
+    sha256: b8533ad899f9decab7517be923f792d5be57820454affb5f3e072869a2ddd7bc
+  - path: contracts/asyncapi/messages/feedback_thread_closed.yaml
+    sha256: 5feb4d7a924705c7d3e968adc418e53d37f5c9111735be5e32366d653def2a00
+  - path: contracts/asyncapi/messages/feedback_thread_created.yaml
+    sha256: a511792145d96c92d41907d43f7c781ab353340aaa8640aa0e666ee41bbc4a9c
+  - path: contracts/asyncapi/messages/intervention_cycle_completed.yaml
+    sha256: 728e3d496b8a1ffa8a12d1e252b1f0e64d3791255ba3bb578894e5f26a866951
+  - path: contracts/asyncapi/messages/intervention_cycle_created.yaml
+    sha256: 5cb3dba649a00bbdfe05fd6823ab1685857def3c97f98d84d83e9e2f66fa9d91
+  - path: contracts/asyncapi/messages/match_scheduled.yaml
+    sha256: cc117155dcacf9c78987dc54882f9e3adc683871dbe1655907d81b21520380a6
+  - path: contracts/asyncapi/messages/match_status_updated.yaml
+    sha256: 8f20dc746287f0263930ad6e026e659611febabfa68b2d3c9d4629a6ac35e89b
+  - path: contracts/asyncapi/messages/need_detected_created.yaml
+    sha256: 19d25edd7127e41d5b8e25baff81bc496e7e67d90cf60d49c053a064e6fcda5c
+  - path: contracts/asyncapi/messages/need_linked_to_objective.yaml
+    sha256: f2c3f3cf1fb9d7ef26e392a9677504be733496e599e089e4980a4edca866022a
+  - path: contracts/asyncapi/messages/notification_delivery_failed.yaml
+    sha256: 43bb5c1db3fcb1ec0ea0c1da277e427118d4ba66658c86a28f79caa27b2feed0
+  - path: contracts/asyncapi/messages/notification_delivery_queued.yaml
+    sha256: 32ea796826428eb3bc8918c55f0b4d3150487240672f00d0da6e65bb9b6e838a
+  - path: contracts/asyncapi/messages/notification_delivery_sent.yaml
+    sha256: c791d171a6557d03d1f4a2cc63fc4a51f7b93b99b87de4f9e819757f6ac80170
+  - path: contracts/asyncapi/messages/objective_created.yaml
+    sha256: 558b749ebfe9847415f2aeba0f82fa62939a278e779bd1e1083d84288f51c443
+  - path: contracts/asyncapi/messages/prescription_adjusted.yaml
+    sha256: becab5f2897f752513d550ce0c653900074c11eb7b57f4f49a3a9fd6ad98bd08
+  - path: contracts/asyncapi/messages/recommendation_accepted.yaml
+    sha256: 07abf3d094f4bae236066a2e15e058ef0d36eefa1a7f172a42ae7d9cc00678f5
+  - path: contracts/asyncapi/messages/recommendation_dismissed.yaml
+    sha256: 1403b3bca222b7ef314c3c7936547e6e74e1a4fe0e79e5df918b598d47bb103f
+  - path: contracts/asyncapi/messages/recommendation_generated.yaml
+    sha256: ed095ff4a83706d3153c133349005e07c38c274febb5fa2b7d344c3d595998df
+  - path: contracts/asyncapi/messages/role_assigned.yaml
+    sha256: 5981f3fcdf9ec7907e77df2345d78ce7dd54f62d333fa2e2bf2672e5f4e3de9f
+  - path: contracts/asyncapi/messages/role_revoked.yaml
+    sha256: 73aa371c5328b1eb2cab0e51042ebbbca37be1dfd5693e7ea501d5101248b79f
+  - path: contracts/asyncapi/messages/scout_event_created.yaml
+    sha256: 2e2989887f863659e2e3730de6169aa531ae0b4d4b335eb5e38cad76a3f92eba
+  - path: contracts/asyncapi/messages/scout_session_completed.yaml
+    sha256: 6667cb1b567c48aac23539db61575f8e9d50d6c4fea0263e12ad797847412dc5
+  - path: contracts/asyncapi/messages/season_created.yaml
+    sha256: 9211d056e81640aa4c396abbf459fdc9bb6ab10f6bbd7f95acc7c5c35a605a01
+  - path: contracts/asyncapi/messages/season_status_updated.yaml
+    sha256: 30701303fe7dab9e6ffbbd2b2b1ced01a4e56c64a589b24abd4a28b9db49d0bc
+  - path: contracts/asyncapi/messages/session_adjustment_made.yaml
+    sha256: 40a0cea939bf99302339dcc2b5f4f647bb49cc1df9a06d286cd1f9211fe82a7c
+  - path: contracts/asyncapi/messages/session_created.yaml
+    sha256: 697a1792934eee5408058d4893994dcbce5e18577e8c8bfc5a020f6cf7f87b12
+  - path: contracts/asyncapi/messages/session_objective_achieved.yaml
+    sha256: 5f84dc15039e99dc116c571d3339064f101428af85a667a4ede35925994bcc95
+  - path: contracts/asyncapi/messages/session_revoked.yaml
+    sha256: 8bb58b1ad8a775e25488fdd94d21755f281bc32abadb23cb9c534b218adf9fa1
+  - path: contracts/asyncapi/messages/team_created.yaml
+    sha256: 8318906608e3085e986155f275350ddbacafd421a3d082bbed8dd32cd8adc229
+  - path: contracts/asyncapi/messages/team_roster_updated.yaml
+    sha256: 1747c1dba8a6fdd0b7a781aae0ec439287de76c771084ef21c4dec48f681b9e7
+  - path: contracts/asyncapi/messages/training_attendance_marked.yaml
+    sha256: 2730139e590f1312c0caf2438c5178fb0f97a632321fd69a96b0253cbbbdfac0
+  - path: contracts/asyncapi/messages/training_readiness_assessed.yaml
+    sha256: 22958d1ffffc8c8e96c2df70b7573926a0e90e7c23cf16aae88ed5aab0e941b0
+  - path: contracts/asyncapi/messages/training_session_archived.yaml
+    sha256: ca125921b5b0638b1502222e67b43cc827103c99458936a401c11129daf43b39
+  - path: contracts/asyncapi/messages/training_session_cancelled.yaml
+    sha256: ac1e4d613c5ef5574993f02b3f75b7fe96f1f5f1e06c91766e8046912407c0de
+  - path: contracts/asyncapi/messages/training_session_completed.yaml
+    sha256: 9d5427d67ce7a9c9c7132d45dbd4465640f2eb22febe2640817959c921417450
+  - path: contracts/asyncapi/messages/training_session_created.yaml
+    sha256: 7b2954090283cd2b8ea1b16d403f1d020fbc73c2df090f09fe7842eefe4f5896
+  - path: contracts/asyncapi/messages/training_session_published.yaml
+    sha256: 4f78217ca9840f02024401657af592b3505b2ec8ff6f3c4d1e6b42a22d97ece8
+  - path: contracts/asyncapi/messages/training_session_started.yaml
+    sha256: da6f7422e458310aabecd0467e55eb8838381f4be38be137714fbb7432692f5e
+  - path: contracts/asyncapi/messages/user_created.yaml
+    sha256: c7ad616086e1cda85974fa2c3e3ffaf7b796e4bea769a79e48fc8fa086773f7e
+  - path: contracts/asyncapi/messages/user_role_changed.yaml
+    sha256: 0a49233c82f6a7fe7ab8f0873a984eb25b43c66b80d2d5e0606dc97aee0dbfe2
+  - path: contracts/asyncapi/messages/video/capture_started.yaml
+    sha256: 9bd187c899ef4fd30d02056730048af658dcae825aa6a73a50261cab621cfa45
+  - path: contracts/asyncapi/messages/video/distribution_failed.yaml
+    sha256: eeb339b2468a505a4579207b80490519a9b004142bd6921c81b41a104a1ab7c4
+  - path: contracts/asyncapi/messages/video/distribution_published.yaml
+    sha256: 12e7db1093ec3f35dbfad9ac8caec4c9f350601f248b238e4018f04708474932
+  - path: contracts/asyncapi/messages/video/segment_ready.yaml
+    sha256: c1f7dc89861692e87fd309082fe281a8e0e167526410faa811b1bacd2cc5638c
+  - path: contracts/asyncapi/messages/video/sync_adjustment_applied.yaml
+    sha256: f95102884f8f1355c69098cd33cbdbc0839b944143e48f87b22b9eed26d5a786
+  - path: contracts/asyncapi/messages/video/transcode_completed.yaml
+    sha256: c804d846dc9d7804551de9b41a5b6a1a7579d3abfd3853247bbe2cd881edf486
+  - path: contracts/asyncapi/messages/video_clip_ready.yaml
+    sha256: 2ff43da223a16e15e94c30d6bb5135c1eff10c6dd9083ec73dca4cbfb1702a12
+  - path: contracts/asyncapi/messages/video_distribution_published.yaml
+    sha256: b2f8aa7166c2e22f280b45615c9d16dc2cc5d724c8ef84b3c358f2aa35662955
+  - path: contracts/asyncapi/messages/video_segment_finalized.yaml
+    sha256: 00bac3d7423da7340b983c4ab4f011690bfac15fa3df2978b12b7d02212808cb
+  - path: contracts/asyncapi/messages/video_session_capturing.yaml
+    sha256: d6d608e4efcdd6e32b558cf9093cd1f6ab502105bf20b0760ca2d79f9d1d4622
+  - path: contracts/asyncapi/messages/video_session_created.yaml
+    sha256: ec7b918ecdf3337abddf0a53c975946d788dde4ea77ba5ca9e4eb5926a1eb679
+  - path: contracts/asyncapi/messages/video_session_published.yaml
+    sha256: e5ce2052859300c0256231d7054d68ef6304a6fff77a92994f4384108b08f3a1
+  - path: contracts/asyncapi/messages/video_session_syncing.yaml
+    sha256: 5efa6168224a3bb7d3c66e0ae4b75c9a8f67ec7858f83646c53d90ff887696df
+  - path: contracts/asyncapi/messages/video_session_transcoding.yaml
+    sha256: 529846717202251e846e54ecb9e82773a926d714822a99fde1cf470fce874b7b
+  - path: contracts/asyncapi/messages/wellness_entry_created.yaml
+    sha256: 335f24799e66615c7606e43af5a211c39895263d656600cb7829e61b623a0f08
+  - path: contracts/asyncapi/operations/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/README.md
+    sha256: 1f66b2ef2a8167c45879530cfe491688846b42e43e960405988ea5ea5a8fd5a1
+  - path: contracts/schemas/ai_ingestion/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/ai_ingestion/ingestion_job.schema.json
+    sha256: 255e479c9f94317ba748f2ab09a636b1c805a842d255a4865bdef30914d085d3
+  - path: contracts/schemas/analytics/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/analytics/analytics_metric_key.schema.json
+    sha256: 97259b76df02aa8d718d8ddf7ff8555eea901e8743c89625465343d23d5dd81c
+  - path: contracts/schemas/analytics/analytics_query_request.schema.json
+    sha256: 669f92efac463196248d3ffc458de1fe7abc3e231f222c85c0d2d457ae313976
+  - path: contracts/schemas/analytics/analytics_query_response.schema.json
+    sha256: eae355ceee049c382f0c4fac064710ee57d1fad666aaaa44f12171a8d57e3f20
+  - path: contracts/schemas/analytics/analytics_snapshot.schema.json
+    sha256: db8a9c898207e09b7cd6fa0ec9f9aa9a6b05e939909a22fdbda041a8cff8a581
+  - path: contracts/schemas/audit/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/audit/audit_entry.schema.json
+    sha256: 124e4d382777a6e8000338e0a212d92dc836048d02487f96ace1c9e8e24a775b
+  - path: contracts/schemas/competitions/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/competitions/competition.schema.json
+    sha256: 16438c0c9972e54b514e485bc36876cf162867fa5e45b6699de61804569fc291
+  - path: contracts/schemas/exercises/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/exercises/exercise.schema.json
+    sha256: 07694a5d58f1a260df76d33b1588690e0ef5439fc8f006499f147d699548a9b1
+  - path: contracts/schemas/exercises/exercise_acl.schema.json
+    sha256: cbf3b897dc0735a26f2a14e30e569a7e67e3d46a879a41e5933308c583ec14f1
+  - path: contracts/schemas/exercises/exercise_relation.schema.json
+    sha256: cffd6a53a2f65f2a785eef6bf5eb45c9af2498596cbed23337147a6f2a3a6572
+  - path: contracts/schemas/exercises/exercise_version.schema.json
+    sha256: 4cd54ad3b175b14a39563aef2a1ef5dc32d31bb539433f41a50c4ea83181cd5d
+  - path: contracts/schemas/identity_access/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/identity_access/auth_session.schema.json
+    sha256: f4a97edf2c6dcc88a79ce2bd2a19bd503ffbf6fcb197ef19fa0e01b48f33629a
+  - path: contracts/schemas/matches/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/matches/match.schema.json
+    sha256: 0794ae1db7742b9d9ddd297496342dc1caa0b8706143099b0dbf2d1b5b974c40
+  - path: contracts/schemas/medical/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/medical/medical_record.schema.json
+    sha256: e7b65125cbe7f9419f6a8173b8209327d2362a6201ea1cc9e7bb13c0da69fc25
+  - path: contracts/schemas/notifications/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/notifications/notification_delivery.schema.json
+    sha256: 6b085893c9670ea2d23f27cfac6b8dc26a4ab0652a82fb3f33860e36436ca502
+  - path: contracts/schemas/reports/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/reports/report_job.schema.json
+    sha256: cb181a5444546c5e9d9f440cca9cf9a40089f061d0b888f1a8d1ab216fcc56dd
+  - path: contracts/schemas/scout/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/scout/scout_event.schema.json
+    sha256: 4dac87f80d2fef7676f6f121273c4b1e5c60479f9fa46281e4588b109ce36991
+  - path: contracts/schemas/seasons/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/seasons/season.schema.json
+    sha256: f2a52eef5ecdc1531aac944d0fc3e7bfde5bccf4cb0cafc2dff866f16e965af1
+  - path: contracts/schemas/shared/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/shared/domain_axioms.schema.json
+    sha256: d002b4c07c9b93c9763ddc31910c0562df76a7545c9427ec00e139adb92e70e8
+  - path: contracts/schemas/shared/domain_axioms_module.schema.json
+    sha256: c8bc89b19d5fcd019567156e0f40480efe238332df73e89aaede7314d7324a19
+  - path: contracts/schemas/shared/module_registry.schema.json
+    sha256: a4480665edb80aed06b3a141dcd2dec744651554d48791defa8e9bdae009e347
+  - path: contracts/schemas/shared/module_source_authority_matrix.schema.json
+    sha256: 608a1607f07b379d7130d07d3efbd4414c3006801a28c0e5664d556d43681b60
+  - path: contracts/schemas/shared/owasp_api_control_matrix.schema.json
+    sha256: 4baa33b8c068766787e79991cee6d29193900c79f3010ca5bde5e93601ffe812
+  - path: contracts/schemas/shared/readiness_confirmation.schema.json
+    sha256: 913df84125b1df3b271e7d40c819ae3fed10f4280d6bc1e11671f32026cd5a9c
+  - path: contracts/schemas/shared/session_handoff.schema.json
+    sha256: e40c3048c7b1351712dc7cb154bdab66c0f087823a6dbe918f9320113ec4d714
+  - path: contracts/schemas/shared/session_start.schema.json
+    sha256: c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b
+  - path: contracts/schemas/shared/waiver.schema.json
+    sha256: ac33fe58442230065d2472b5a2c4c1ea8c8d16b529fba70ad8036cbeb27ed945
+  - path: contracts/schemas/teams/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/teams/team.schema.json
+    sha256: 81ae5bd4f1892e0e7307a27894a0c70fed91943fd530adcfe34eac12a4e326d1
+  - path: contracts/schemas/training/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/training/ajv_compile.log
+    sha256: d0532788ca81ebd548a3883c83a074e4781a82cce26813f5dc3b56b8579c33c2
+  - path: contracts/schemas/training/athlete_chat_conversation.schema.json
+    sha256: e418283670dbda1784059d018dac65aac5381110ead0380297dcd29e32e5aa62
+  - path: contracts/schemas/training/athlete_chat_message.schema.json
+    sha256: 45332c3ef0b9643945b5c9ef8fa1631a8cee8167b3ce934c88a98788ce6eb536
+  - path: contracts/schemas/training/athlete_ineligibility_declaration.schema.json
+    sha256: 01bdc8cccc811e564f0689984b0a8aa3dbf0b34c8c6606218b68f25596dad654
+  - path: contracts/schemas/training/attention_queue_item.schema.json
+    sha256: f9954309f509e82cbeda1c396b1cb98de69bbd5a988712b0d5f2a580a0ed3dbe
+  - path: contracts/schemas/training/execution_record.schema.json
+    sha256: d220a106255e1a71e88babb9145a62e2c86e7d534aa5bf7d25906cb395cae075
+  - path: contracts/schemas/training/feedback_thread.schema.json
+    sha256: 95246edbbb123f647e34021e16c770e642002d1704a34cdb0b6a96d3c88c107e
+  - path: contracts/schemas/training/load_chart.schema.json
+    sha256: f4cc9ba9ab5af9f134b5bff599b9c7d9f382cf9a271d93eca5ab6b04538bc253
+  - path: contracts/schemas/training/recommendation.schema.json
+    sha256: 8844b4e8957a9c17104a764f9ea0116d90e9ee9e9dff8ffc0708decf5d454822
+  - path: contracts/schemas/training/session_block.schema.json
+    sha256: 928c44b349004c5d770975b7eb4b02bf7852180b5105aa0b5cb1851241bd396d
+  - path: contracts/schemas/training/session_objective.schema.json
+    sha256: 58119fbcfd86ef0cdd9286f07040c6897ae5a4327d6053892962237df9343546
+  - path: contracts/schemas/training/training_session.schema.json
+    sha256: 63c0a2b6c5f567640aa7507c7bde8676ea418f4dbd979ba39975f27002e5104a
+  - path: contracts/schemas/training/training_suggestion.schema.json
+    sha256: ca76be92c32d67ee37d21b8918c4ac0bc58df1d01d44d97770345b9d61878b26
+  - path: contracts/schemas/training/training_suggestion_approval.schema.json
+    sha256: 45d77ba88b583ca41ff77458ec29a0f542c9fff396daf84d6d7a530cb38f7d42
+  - path: contracts/schemas/users/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/users/user_profile.schema.json
+    sha256: e35925ca319f57bf84c03410341658e114fdfc60172f8d727ecec31958478c8d
+  - path: contracts/schemas/video/clip_definition.schema.json
+    sha256: ccdd706892001ce41a28b7a158e89dedc2a91adb5ab0e557b81f2c223ff49873
+  - path: contracts/schemas/video/distribution_profile.schema.json
+    sha256: e6ab3a3744473e390eb4240054461114cf7141d961a9f57bea0e8ab7ef504209
+  - path: contracts/schemas/video/match_media_session.schema.json
+    sha256: 3b11cc76ff345cc0c81948732773205445889f3f49d52eb26365f571921d0289
+  - path: contracts/schemas/video/media_segment.schema.json
+    sha256: 3086aa60d7e9ea58dc962bd61ffe94886605367a92a0ecb0aef45f28e601915c
+  - path: contracts/schemas/wellness/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/wellness/wellness_entry.schema.json
+    sha256: e6b69221a1e62764a544a37a53dfa1d211df3b89799df536f9b85789b5b59c97
+  source_inputs:
+  - path: .contract_driven/templates/api/ARCHITECTURE_MATRIX.yaml
+    sha256: e39a83157782d5f544e44bb93c3a2e58c9af51ab26a7e2565e50568cbb69f4c8
+  - path: .contract_driven/templates/api/MODULE_PROFILE_REGISTRY.yaml
+    sha256: b86d8eb6ba8063e3ec45c688f32ea8e9813bcbcbd38aae324f43025be2dea3cb
+  - path: .contract_driven/templates/api/api_rules.yaml
+    sha256: 7cb16dd09903635ec65e902d035a27974f2e92c5d1f8e910ca358b689296eac3
+  - path: .contract_driven/templates/api/CANONICAL_TYPE_REGISTRY.yaml
+    sha256: 4bf1ce3c5df5ac92e41bff3a645cbe27919db575608b49d6e811a0079b2d1375
+  - path: .contract_driven/DOMAIN_AXIOMS.json
+    sha256: d7495e17090c41af465fbf064d0bff3d084c72ba0e57f1e0d78aa3b8f0ae71eb
+  source_tree_sha256: e0428e6b851e22e8c68af7b2705877d839f80a7f7f2e470de13d8a72bd84301e

@@ -1,0 +1,8 @@
+description: >
+  Evento emitido quando uma necessidade de treino é detectada com evidência rastreável.
+  Origem: analytics.signal, scout.signal, match.outcome, wellness.alert, medical.flag, coach.manual_observation
+
+publish:
+  operationId: need_detected_created_publish
+  message:
+    $ref: ../messages/need_detected_created.yaml

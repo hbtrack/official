@@ -28,9 +28,8 @@ Este documento deve ser lido junto com:
 
 - `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md`
 - `.contract_driven/CONTRACT_SYSTEM_RULES.md`
-- `docs/_canon/API_CONVENTIONS.md`
 - `docs/_canon/DATA_CONVENTIONS.md`
-- `docs/_canon/ERROR_MODEL.md`
+- `docs/_canon/OPERATIONS.md`
 - `docs/_canon/CHANGE_POLICY.md`
 - `docs/_canon/TEST_STRATEGY.md`
 - `.contract_driven/DOMAIN_AXIOMS.json` (axiomas globais machine-readable)
@@ -46,6 +45,7 @@ Cada gate termina em exatamente um destes estados:
 - `PASS`
 - `FAIL`
 - `SKIP_NOT_APPLICABLE`
+- `DEGRADED` (somente auditoria local com fallback explícito permitido por policy)
 
 Não existe "quase passou", "aceitável por enquanto", "warn que libera" ou equivalente para gates classificados como bloqueantes.
 
@@ -96,12 +96,12 @@ Este documento governa a validação de:
 Este documento não redefine:
 
 - layout de paths canônicos
-- taxonomia de módulos
+- taxonomia de módulos (SSOT única: MODULE_REGISTRY.yaml; resumo de boot em docs/_canon/AGENT_INSTRUCTIONS.md §3)
 - regras de naming
 - templates de contratos
 - regras de API HTTP da superfície OpenAPI
 
-Esses itens continuam sendo governados por `LAYOUT`, `RULES`, `GLOBAL_TEMPLATES` e `api_rules.yaml`.
+Esses itens continuam sendo governados por `MODULE_REGISTRY.yaml` (taxonomia), `LAYOUT`, `RULES`, `GLOBAL_TEMPLATES` e `api_rules.yaml`.
 
 ---
 
@@ -173,12 +173,12 @@ Formato obrigatório:
       "storybook": "string|null"
     }
   },
-  "overall_status": "PASS|FAIL",
+  "overall_status": "PASS|FAIL|DEGRADED|PASS_WITH_WARNINGS",
   "exit_code": 0,
   "gates": [
     {
       "gate_id": "string",
-      "status": "PASS|FAIL|SKIP_NOT_APPLICABLE",
+      "status": "PASS|FAIL|SKIP_NOT_APPLICABLE|DEGRADED",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": "string|null",
@@ -219,14 +219,20 @@ A ordem canônica é:
 			2B.	API_NORMATIVE_DUPLICATION_GATE (não-bloqueante)
 			2C.	OWASP_API_CONTROL_MATRIX_GATE
 			2D.	MODULE_SOURCE_AUTHORITY_MATRIX_GATE
+			2D1.	MODULE_REGISTRY_GATE
 			2E.	BOUNDARY_USERS_IDENTITY_ACCESS_GATE
 			2F.	WELLNESS_MEDICAL_BOUNDARY_GATE
 			2G.	SCOUT_TAXONOMY_GATE
 			2H.	ASYNC_REQUIRED_MODULE_GATE
 			2I.	EXTERNAL_SOURCE_AUTHORITY_GATE
+			2J.	PRE_CONTRACT_EVIDENCE_GATE
+			2K.	SHADOW_AUTHORITY_GATE
+			2L.	DECISION_IR_CONFORMANCE_GATE
 			3.	PLACEHOLDER_RESIDUE_GATE
 			4.	REF_HERMETICITY_GATE
+			4A.	TOOLING_CONFIG_GATE
 		5.	OPENAPI_ROOT_STRUCTURE_GATE
+		5A.	OPENAPI_ROOT_MODULE_SYNC_GATE
 		6.	OPENAPI_POLICY_RULESET_GATE
 		7.	JSON_SCHEMA_VALIDATION_GATE
 		8.	CROSS_SPEC_ALIGNMENT_GATE
@@ -432,7 +438,7 @@ Dependências
 
 Objetivo
 
-Garantir que artefatos normativos e técnicos existam apenas em paths canônicos e que não haja split-brain por duplicata soberana.
+Garantir que artefatos normativos e técnicos existam apenas em paths canônicos e que não haja split-brain por duplicata soberana. Valida que a taxonomia canônica de 17 módulos em MODULE_REGISTRY.yaml está presente e correta.
 
 Aplica quando
 
@@ -440,6 +446,7 @@ Sempre.
 
 Entradas
 	•	árvore do repositório
+	•	docs/_canon/MODULE_REGISTRY.yaml (taxonomia de 17 módulos - SSOT única)
 	•	.contract_driven/CONTRACT_SYSTEM_LAYOUT.md
 	•	.contract_driven/CONTRACT_SYSTEM_RULES.md
 
@@ -862,6 +869,45 @@ PLACEHOLDER_RESIDUE_GATE
 
 ⸻
 
+9.4A TOOLING_CONFIG_GATE
+
+Objetivo
+
+Separar erro de tooling/config de erro semântico do contrato.
+
+Aplica quando
+
+Sempre.
+
+Entradas
+	•	package.json
+	•	redocly.yaml
+	•	docs/_canon/TOOLCHAIN_HEALTH_POLICY.md
+
+Ferramenta
+
+Script Python do pipeline.
+
+PASS
+	•	config compatível com a toolchain suportada
+	•	ferramentas obrigatórias disponíveis
+
+DEGRADED
+	•	execução local sem `oasdiff` e/ou `schemathesis`
+	•	fallback explícito permitido por `TOOLCHAIN_HEALTH_POLICY.md`
+
+FAIL
+
+	•	config incompatível
+	•	ferramenta obrigatória ausente em CI
+	•	ausência de `redocly`, `spectral` ou `asyncapi`
+
+Dependências
+
+REF_HERMETICITY_GATE
+
+⸻
+
 9.5 OPENAPI_ROOT_STRUCTURE_GATE
 
 Objetivo
@@ -905,7 +951,7 @@ Evidência
 
 Dependências
 
-REF_HERMETICITY_GATE
+TOOLING_CONFIG_GATE
 
 ⸻
 
@@ -1028,8 +1074,8 @@ Entradas
 	•	docs modulares
 	•	domain axioms: `.contract_driven/DOMAIN_AXIOMS.json`
 	•	axiomas modulares: `docs/hbtrack/modulos/<module>/DOMAIN_AXIOMS_<MODULE>.json` (quando existir e permitido por política)
-	•	ERROR_MODEL.md
-	•	API_CONVENTIONS.md
+	•	OPERATIONS.md
+	•	`.contract_driven/templates/api/api_rules.yaml`
 	•	DATA_CONVENTIONS.md
 
 Executor
@@ -1324,6 +1370,55 @@ Evidência
 Dependências
 	•	OPENAPI_ROOT_STRUCTURE_GATE
 	•	CROSS_SPEC_ALIGNMENT_GATE
+
+⸻
+
+9.13A ARAZZO_COMPLETENESS_GATE
+
+Política normativa
+
+`ARAZZO` é uma superfície contratual condicional.
+Sua completude é obrigatória apenas para módulos que a declaram explicitamente em `expected_surfaces` (MODULE_REGISTRY.yaml) e possuem workflow orquestrado definido como parte do contrato.
+Arquivos `.arazzo.yaml` com `workflows: []` (lista vazia) não satisfazem completude.
+Quando a superfície for declarada, a ausência de conteúdo válido exige workflow completo ou waiver formal temporário com expiração, dono e justificativa.
+
+Objetivo
+
+Verificar que módulos que declaram `arazzo` em `expected_surfaces` possuem pelo menos um workflow real (lista `workflows` não-vazia) em `contracts/workflows/<module>/`.
+
+Aplica quando
+
+Pelo menos um módulo declara `arazzo` em `expected_surfaces` no MODULE_REGISTRY.
+
+Entradas
+	•	docs/_canon/MODULE_REGISTRY.yaml (expected_surfaces por módulo)
+	•	contracts/workflows/<module>/*.arazzo.yaml
+
+Estados válidos por módulo
+	•	Obrigatório e preenchido: declara `arazzo` + arquivo com workflows não-vazio.
+	•	Não aplicável: não declara `arazzo` em expected_surfaces (gate ignora o módulo).
+	•	Dispensado temporariamente: declara `arazzo` + waiver formal ativo em contracts/_waivers/.
+
+Conteúdo mínimo aceitável
+
+Um arquivo `.arazzo.yaml` satisfaz completude quando contém:
+	•	campo `workflows` como lista não-vazia;
+	•	pelo menos um `workflowId` com pelo menos um `step`;
+	•	`sourceDescriptions` referenciando o OpenAPI do sistema.
+
+PASS
+
+Todos os módulos elegíveis possuem pelo menos um workflow válido, ou waiver ativo.
+
+FAIL
+
+Módulo declara `arazzo` em expected_surfaces e não possui arquivo *.arazzo.yaml, ou todos os arquivos têm workflows lista vazia.
+
+Blocking codes
+	•	ARAZZO_COMPLETENESS_MISSING
+
+Dependências
+	•	ARAZZO_VALIDATION_GATE
 
 ⸻
 

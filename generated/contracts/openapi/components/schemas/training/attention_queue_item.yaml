@@ -1,0 +1,82 @@
+# AttentionQueueItem OpenAPI component
+# Source: contracts/schemas/training/attention_queue_item.schema.json
+# TRAIN-DEC-027 | INV-TRAIN-083, INV-TRAIN-094
+
+type: object
+additionalProperties: false
+required:
+  - id
+  - sessionId
+  - severity
+  - reasonCode
+  - targetEntityType
+  - targetEntityId
+  - message
+  - createdAt
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  sessionId:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+  severity:
+    type: string
+    x-domain-enum-ref: attention_queue_severity
+    enum:
+      - LOW
+      - MEDIUM
+      - HIGH
+      - CRITICAL
+    description: Triage severity level. INV-TRAIN-094.
+  reasonCode:
+    type: string
+    x-domain-enum-ref: attention_queue_reason_code
+    enum:
+      - ELASTIC_SUM_EXCEEDED
+      - CRITICAL_RESTRICTION_ACTIVE
+      - RETURN_TO_PLAY_GUARD
+      - OVERLOAD_RISK
+      - ADHERENCE_DROP
+      - WELLNESS_ALERT
+      - PENDING_REVIEW_OVERDUE
+      - EXECUTION_DEVIATION
+      - CONSTRAINT_OVERRIDE_REQUIRED
+    description: Machine-readable categorization. INV-TRAIN-094.
+  targetEntityType:
+    type: string
+    minLength: 1
+    maxLength: 64
+    description: Entity type in focus (e.g. session, block, athlete).
+  targetEntityId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  message:
+    type: string
+    minLength: 1
+    maxLength: 500
+  resolvedAt:
+    type: string
+    format: date-time
+    pattern: "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+  resolvedByUserId:
+    type: string
+    format: uuid
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+  createdAt:
+    type: string
+    format: date-time
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+
+example:
+  id: "550e8400-e29b-41d4-a716-446655440900"
+  sessionId: "550e8400-e29b-41d4-a716-446655440000"
+  severity: "HIGH"
+  reasonCode: "ELASTIC_SUM_EXCEEDED"
+  targetEntityType: "session"
+  targetEntityId: "550e8400-e29b-41d4-a716-446655440000"
+  message: "Soma dos blocos excede duração planejada da sessão em 15min."
+  createdAt: "2026-03-16T10:00:00Z"

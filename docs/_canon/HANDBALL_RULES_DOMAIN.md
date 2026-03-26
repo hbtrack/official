@@ -292,7 +292,7 @@ Este documento deve ser atualizado quando:
 ## 8. Referências
 
 - `SYSTEM_SCOPE.md` — missão, atores, macrodomínios
-- `MODULE_MAP.md` — taxonomia técnica dos 16 módulos
+- `MODULE_MAP.md` — taxonomia técnica dos 17 módulos
 - `DATA_CONVENTIONS.md` — convenções de enums, IDs e campos
 - `.contract_driven/CONTRACT_SYSTEM_RULES.md` — regras operacionais do CDD
 - `.contract_driven/09A - Rules of the Game_Indoor Handball_E.pdf` — rulebook IHF (fonte primária)

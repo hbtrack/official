@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hbtrack.local/schemas/video/match_media_session.schema.json",
+  "title": "MatchMediaSession",
+  "description": "Root aggregated entity orchestrating video capture→ingest→sync→transcode→distribution. References: DR-VID-001..010, INV-VID-001..012.",
+  "type": "object",
+  "required": [
+    "id",
+    "matchId",
+    "state",
+    "captureMode",
+    "retentionPolicy",
+    "createdAt",
+    "createdByUserId"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "matchId": {
+      "type": "string",
+      "format": "uuid",
+      "x-semantic-id": "matches.match.id.v1",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "DRAFT",
+        "CAPTURING",
+        "SYNCING",
+        "TRANSCODING",
+        "PUBLISHED"
+      ],
+      "x-domain-enum-ref": "video_session_state"
+    },
+    "captureMode": {
+      "type": "string",
+      "enum": [
+        "PANORAMIC",
+        "AUTO_FOLLOW",
+        "MULTI_ANGLE"
+      ],
+      "x-domain-enum-ref": "video_capture_mode"
+    },
+    "retentionPolicy": {
+      "type": "string",
+      "enum": [
+        "KEEP_7_DAYS",
+        "KEEP_30_DAYS",
+        "KEEP_90_DAYS",
+        "ARCHIVE_S3",
+        "PUBLIC_FOREVER"
+      ],
+      "x-domain-enum-ref": "video_retention_policy"
+    },
+    "lastTimecode": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "technicalContactUserId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    },
+    "createdByUserId": {
+      "type": "string",
+      "format": "uuid",
+      "x-semantic-id": "identity.user.id.v1",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "captureStartedAt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    },
+    "syncCompletedAt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    },
+    "transcodeCompletedAt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    },
+    "publishedAt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    },
+    "segmentCount": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "totalDurationMs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "activeTranscodeJobCount": {
+      "type": "integer",
+      "minimum": 0
+    }
+  },
+  "additionalProperties": false
+}

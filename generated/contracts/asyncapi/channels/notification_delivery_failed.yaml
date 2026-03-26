@@ -1,0 +1,15 @@
+description: >
+  Publicado quando uma NotificationDelivery esgota todas as tentativas de
+  entrega e atinge status=failed.
+
+  Emitido pelo módulo notifications após retryCount atingir o limite (máx 10,
+  INV-NTF-002) sem confirmação de entrega. Permite que sistemas de observabilidade
+  e auditoria detectem falhas de entrega.
+
+  ADR-031: retry gerenciado pela task Celery com backoff exponencial.
+  DR-NTF-001: notifications é soberano sobre a decisão de failure.
+  DR-NTF-005: este evento não carrega policy de acesso nem estado do originador.
+publish:
+  operationId: notification_delivery_failed_publish
+  message:
+    $ref: ../messages/notification_delivery_failed.yaml

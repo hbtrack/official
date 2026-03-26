@@ -1,0 +1,60 @@
+{
+  "project_name": "codex_video_pipeline_mvp",
+  "source_project_dir": "./projeto_video",
+  "required_source_files": [
+    "plano_cenas.csv",
+    "config_video.json",
+    "prompts_video.md",
+    "narracao.txt",
+    "legendas.srt"
+  ],
+  "visual_generation": {
+    "provider": "Vertex AI",
+    "model": "Veo 3.1 Fast",
+    "delivery_mode": "API",
+    "resolution": "1080p",
+    "aspect_ratio": "16:9",
+    "audio": false,
+    "prompt_language": "en",
+    "allowed_request_lengths_s": [
+      4,
+      6,
+      8
+    ],
+    "price_usd_per_s": 0.1,
+    "project_rate_limit_requests_per_min": 50
+  },
+  "tts": {
+    "provider": "Piper",
+    "mode": "local",
+    "cost_brl": 0.0
+  },
+  "assembly": {
+    "tool": "FFmpeg",
+    "cost_brl": 0.0
+  },
+  "finishing": {
+    "tool": "DaVinci Resolve Free",
+    "optional": true,
+    "cost_brl": 0.0
+  },
+  "budget_guard": {
+    "hard_cap_brl": 70.0,
+    "operational_fx_brl_per_usd": 5.8,
+    "operational_cost_brl_per_s": 0.58,
+    "base_authorized_seconds": 108,
+    "retry_reserve_seconds": 12,
+    "max_paid_seconds": 120,
+    "retry_policy": "Reserva total maxima de 12 segundos pagos. Recomendacao padrao: 4s em M1-02, 4s em M2-03 e 4s em EN-03.",
+    "stop_condition": "Bloquear qualquer nova chamada paga quando o acumulado atingir 120 segundos faturaveis ou R$ 69,60 projetados."
+  },
+  "required_logs": [
+    "logs/geracao_log.csv",
+    "logs/render_log.txt"
+  ],
+  "vertex_required_env": [
+    "GOOGLE_CLOUD_PROJECT",
+    "GOOGLE_APPLICATION_CREDENTIALS",
+    "VERTEX_LOCATION"
+  ]
+}

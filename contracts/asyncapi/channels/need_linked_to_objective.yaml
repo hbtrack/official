@@ -1,0 +1,7 @@
+description: >
+  Evento emitido quando uma necessidade é vinculada a um objetivo (need_detected transição OPEN → LINKED_TO_OBJECTIVE).
+
+publish:
+  operationId: need_linked_to_objective_publish
+  message:
+    $ref: ../messages/need_linked_to_objective.yaml

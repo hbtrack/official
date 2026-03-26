@@ -1,0 +1,2 @@
+# HTTP projection is semantically identical to the sovereign domain shape.
+$ref: "../../../../schemas/identity_access/auth_session.schema.json"

@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hbtrack.local/schemas/video/distribution_profile.schema.json",
+  "title": "DistributionProfile",
+  "description": "Recipe for transcode + packaging: codec, bitrate, renditions for a target (technical/public). References: DR-VID-002 (dual pipeline: technical + public), DR-VID-006 (lazy transcode on-demand).",
+  "type": "object",
+  "required": [
+    "id",
+    "profileLabel",
+    "targetType",
+    "codecLabel",
+    "bitrate"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "profileLabel": {
+      "type": "string",
+      "maxLength": 80,
+      "description": "Human-readable name (e.g., 'Technical Low Latency', 'Public ABR')"
+    },
+    "targetType": {
+      "type": "string",
+      "enum": [
+        "TECHNICAL_INTERNAL",
+        "PUBLIC_CDN",
+        "BROADCAST_PARTNER"
+      ],
+      "description": "Destination type",
+      "x-domain-enum-ref": "video_target_type"
+    },
+    "codecLabel": {
+      "type": "string",
+      "enum": [
+        "H264",
+        "H265",
+        "VP9",
+        "AV1"
+      ],
+      "x-domain-enum-ref": "video_codec"
+    },
+    "bitrate": {
+      "type": "integer",
+      "minimum": 100,
+      "description": "Primary bitrate in kbps"
+    },
+    "renditions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "bitrate": {
+            "type": "integer"
+          },
+          "resolution": {
+            "type": "string",
+            "pattern": "^\\d+x\\d+$"
+          }
+        }
+      },
+      "description": "Optional ladder (ABR variants)"
+    },
+    "latencyTargetMs": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 100,
+      "description": "For technical: target end-to-end latency"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3,6})?Z$"
+    }
+  },
+  "additionalProperties": false
+}

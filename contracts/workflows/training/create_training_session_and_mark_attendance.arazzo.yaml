@@ -15,10 +15,10 @@ sourceDescriptions:
     url: ../../openapi/openapi.yaml
 
 workflows:
-  create_training_session_and_mark_attendance:
+  - workflowId: create_training_session_and_mark_attendance
     summary: Criar sessão e registrar presença.
     steps:
       - stepId: createTrainingSession
         operationId: createTrainingSession
       - stepId: addTrainingAttendance
-        operationId: registerTrainingAttendance
+        operationId: recordSessionAttendance

@@ -1,0 +1,8 @@
+description: >
+  Evento emitido quando uma sessão de treino é criada (estado DRAFT).
+  Evento crítico para integração downstream: wellness, analytics, notifications.
+
+publish:
+  operationId: training_session_created_publish
+  message:
+    $ref: ../messages/training_session_created.yaml

@@ -1,0 +1,136 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://hbtrack.local/schemas/shared/waiver.schema.json",
+    "title": "HB Track — Contract Gate Waiver",
+    "description": "Schema canônico para waivers de gates contratuais. Todo waiver DEVE ter expires_at_utc. Gate WAIVER_VALIDITY_GATE rejeita waivers vencidos. Schema completo também disponível em contracts/_waivers/waiver.schema.json.",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "waiver_id",
+        "gate_id",
+        "scope",
+        "module",
+        "target_artifact",
+        "justification",
+        "approved_by",
+        "approved_at_utc",
+        "expires_at_utc",
+        "fingerprint"
+    ],
+    "properties": {
+        "waiver_id": {
+            "type": "string",
+            "minLength": 8,
+            "description": "Identificador único do waiver."
+        },
+        "gate_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "ID do gate sendo dispensado (ex: ASYNCAPI_VALIDATION_GATE)."
+        },
+        "scope": {
+            "type": "string",
+            "enum": [
+                "system",
+                "module"
+            ],
+            "description": "Abrangência do waiver: system (todos os módulos) ou module (módulo específico)."
+        },
+        "module": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "description": "Módulo alvo quando scope=module. Null quando scope=system."
+        },
+        "target_artifact": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Path relativo do artefato que gerou a necessidade de waiver."
+        },
+        "justification": {
+            "type": "string",
+            "minLength": 20,
+            "description": "Justificativa objetiva para o waiver. Mínimo 20 caracteres."
+        },
+        "approved_by": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Quem aprovou (nome/papel/agente)."
+        },
+        "approved_at_utc": {
+            "type": "string",
+            "description": "Timestamp ISO8601 UTC da aprovação (ex: 2026-03-19T14:00:00Z)."
+        },
+        "expires_at_utc": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "description": "Data de expiração ISO8601 UTC. OBRIGATÓRIO fornecer valor não-nulo para waivers com prazo. Waivers vencidos são rejeitados pelo WAIVER_VALIDITY_GATE."
+        },
+        "gates_affected": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "Lista de gate_ids adicionais afetados por este waiver (além do gate_id principal)."
+        },
+        "fingerprint": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "type",
+                "value"
+            ],
+            "description": "Hash do artefato no momento da aprovação (prova de integridade).",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "sha256"
+                    ]
+                },
+                "value": {
+                    "type": "string",
+                    "pattern": "^[0-9a-fA-F]{64}$"
+                }
+            }
+        }
+    },
+    "allOf": [
+        {
+            "if": {
+                "properties": {
+                    "scope": {
+                        "const": "system"
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "module": {
+                        "type": "null"
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "scope": {
+                        "const": "module"
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "module": {
+                        "type": "string",
+                        "minLength": 1
+                    }
+                }
+            }
+        }
+    ]
+}

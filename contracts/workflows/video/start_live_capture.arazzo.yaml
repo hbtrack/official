@@ -1,0 +1,35 @@
+arazzo: "1.0.0"
+
+info:
+  title: Video — Iniciar Captura ao Vivo
+  version: "0.1.0"
+  summary: Orquestra criação da sessão de mídia e início de captura ao vivo.
+  description: >
+    Workflow multi-step para o fluxo principal do Match Operator:
+    1) Cria MatchMediaSession (state=DRAFT) para a partida;
+    2) Registra edge nodes disponíveis na arena;
+    3) Inicia captura ao vivo (state=CAPTURING).
+    Alinhado com DR-VID-003 (edge-first) e DR-VID-001 (timecode único).
+    ADR-033: video como 17º módulo canônico.
+
+sourceDescriptions:
+  - name: hbtrack-http
+    type: openapi
+    url: ../../openapi/openapi.yaml
+
+workflows:
+  - workflowId: start_live_capture
+    summary: Criar sessão de mídia e iniciar captura ao vivo na arena.
+    steps:
+      - stepId: createMediaSession
+        operationId: createSession
+        description: >
+          Cria MatchMediaSession com state=DRAFT para a partida indicada.
+          Requer matchId válido (partida existente em matches module).
+          Requer captureMode e retentionPolicy explícitos (DR-VID-008).
+      - stepId: startCapture
+        operationId: patchSession
+        description: >
+          Transita MatchMediaSession de DRAFT para CAPTURING.
+          Ativa edge nodes e inicia relógio lógico da partida (DR-VID-001).
+          Emite evento video.session.capturing via AsyncAPI após transição.

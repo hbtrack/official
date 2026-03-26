@@ -1,0 +1,73 @@
+arazzo: "1.0.0"
+
+info:
+  title: Notifications — Event to delivery pipeline
+  version: "1.0.0"
+  summary: >
+    Orquestra o pipeline de entrega de notificações: evento de negócio → intent → delivery.
+  description: >
+    Workflow para o pipeline completo de notificação:
+    1) Evento de negócio chega de outro módulo (via AsyncAPI);
+    2) Cria NotificationIntent (módulo notifications é soberano sobre este agregado);
+    3) Resolve canal de entrega (push, email, sms, in-app) por preferências do usuário;
+    4) Executa a entrega e registra status (SENT, FAILED, PENDING).
+
+    Pré-condições:
+    - Evento de negócio válido e reconhecido (eventType deve estar no catálogo)
+    - Destinatário existe e tem configuração de notificação ativa
+    - Canal de entrega disponível (push: device token válido; email: endereço confirmado)
+
+    Pós-condições:
+    - NotificationDelivery criado com deliveryStatusLabel=queued
+    - Evento notification.delivery.queued publicado (AsyncAPI)
+    - Retry automático para FAILED em canais transacionais (email, push)
+    - Log de entrega disponível para auditoria
+
+    Eventos de negócio que disparam notificações (exemplos cross-module):
+    - training.session_published → notifica atletas convocados
+    - training.session_cancelled → notifica atletas afetados
+    - training.ineligibility_declared → notifica coach e coordenador
+    - identity_access.role_assigned → notifica usuário de nova permissão
+    - medical.restriction_profile_created → notifica coach responsável
+
+    Canais suportados:
+    - PUSH: via FCM/APNs (ADR-031 stack: Celery 5 + Redis 7)
+    - EMAIL: transacional (adapter isolado — DR-NTF-005)
+    - IN_APP: feed de notificações no app (fallback canal)
+    - SMS: reservado — sem gateway SMS no MVP (ADR-031)
+
+x-status: active
+x-related-modules:
+  - training
+  - identity_access
+  - medical
+  - audit
+
+sourceDescriptions:
+  - name: hbtrack-http
+    type: openapi
+    url: ../../openapi/openapi.yaml
+
+workflows:
+  - workflowId: event_to_notification_delivery
+    summary: Pipeline de entrega de notificação.
+    steps:
+      - stepId: createNotificationIntent
+        description: >
+          Cria o NotificationDelivery a partir do evento de negócio recebido.
+          Mapeia eventType → template de mensagem + canal preferencial.
+          Enfileira task Celery para entrega assíncrona (ADR-031).
+        operationId: createNotificationIntent
+
+      - stepId: resolveDeliveryChannel
+        description: >
+          Resolve qual canal usar com base nas preferências do destinatário.
+          Fallback: IN_APP se canal preferencial indisponível (DR-NTF-002).
+        operationId: getUserNotificationPreferences
+
+      - stepId: deliverNotification
+        description: >
+          Executa a entrega no canal resolvido e registra status.
+          SENT → finaliza pipeline. FAILED → enfileira retry (implementação interna Celery).
+          Publica notification.delivery.sent ou notification.delivery.failed via AsyncAPI.
+        operationId: createNotificationIntent

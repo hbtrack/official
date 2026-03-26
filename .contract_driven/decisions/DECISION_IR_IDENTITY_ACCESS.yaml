@@ -1,0 +1,100 @@
+# DECISION_IR_IDENTITY_ACCESS.yaml
+# Decisões de implementação — módulo identity_access
+# Data: 2026-03-19
+# Autor: product owner via agent
+# Confirma arquitetura antes de geração de artefatos
+
+decisions:
+  - id: DEC-IAM-001
+    title: mfa_policy
+    question: >
+      Como deve funcionar a autenticação multifator (MFA) no módulo identity_access?
+    options:
+      A:
+        label: Sem MFA (MVP simples)
+        description: >
+          Email + senha é suficiente. mfaRequired sempre false.
+          Adequado para MVP onde nenhuma camada adicional de segurança é exigida.
+      B:
+        label: MFA opcional (opt-in por usuário)
+        description: >
+          Cada usuário pode ativar TOTP (ex.: Google Authenticator).
+          mfaRequired controlado por flag da conta do usuário.
+          Se ativo, o campo mfaSatisfied deve ser validado no login e refresh.
+      C:
+        label: MFA obrigatório para admin e coordinator
+        description: >
+          Admin e coordinator precisam de TOTP obrigatoriamente.
+          Coach/athlete/member continuam com só senha.
+          Atende segurança para papéis de gestão (OWASP API2:2023).
+    chosen: B
+    rationale: >
+      MFA opt-in balanceia segurança e usabilidade para uma plataforma esportiva.
+      Administradores e coordenadores têm interesse em ativar MFA para seus perfis
+      sensíveis, mas forçar TOTP para athletes e members seria friccionar o acesso
+      diário sem ganho proporcional de segurança. mfaRequired/mfaSatisfied já existem
+      no schema AuthSession — a decisão opt-in usa esses campos nativamente sem alteração
+      de contrato. OWASP API2:2023 é atendido via JWT RS256 (ADR-007) + refresh rotation.
+    doc_ref: "contracts/schemas/identity_access/auth_session.schema.json, ADR-007, INV-IAM-001"
+
+  - id: DEC-IAM-002
+    title: token_revocation_strategy
+    question: >
+      Como invalidar JWTs antes do prazo de expiração após logout ou revogação?
+    options:
+      A:
+        label: Apenas expiração curta (sem revogação ativa)
+        description: >
+          Access token com TTL curto (~15 min). Logout invalida refresh token,
+          mas o JWT continua válido até expirar. Sem infra extra.
+      B:
+        label: Redis denylist
+        description: >
+          JWTs revogados (jti claim) são inseridos num set no Redis.
+          Cada request verifica a lista antes de processar. Revogação imediata.
+          Acrescenta latência O(1) e depende do Redis estar disponível.
+      C:
+        label: Versão de token no banco
+        description: >
+          AuthSession tem campo token_version. Incrementar invalida tokens antigos.
+          Sem Redis extra, mas adiciona 1 query ao banco por request autenticado.
+    chosen: B
+    rationale: >
+      Redis já faz parte do stack (Celery 5.x usa Redis como broker, ADR-031).
+      Reutilizar a infraestrutura existente para denylist não acrescenta nova dependência.
+      Revogação imediata é importante em contextos esportivos onde dispositivos perdidos
+      ou acessos suspeitos requerem invalidação rápida de sessão. A latência O(1)
+      do Redis é aceitável. jti claim deve ser incluído nos JWTs emitidos (ADR-007).
+    doc_ref: "ADR-007, ADR-031, contracts/openapi/paths/identity_access.yaml"
+
+  - id: DEC-IAM-003
+    title: asyncapi_events
+    question: >
+      O módulo identity_access deve publicar eventos assíncronos? Quais eventos?
+    options:
+      A:
+        label: Nenhum evento
+        description: >
+          identity_access permanece puramente síncrono.
+          Audit log via chamada direta a partir de cada endpoint.
+      B:
+        label: Apenas eventos de sessão
+        description: >
+          Publica session.created e session.revoked.
+          Suficiente para audit trail básico e notificações de login.
+      C:
+        label: Sessão + role
+        description: >
+          Publica session.created, session.revoked, role.assigned e role.revoked.
+          Audit completo, rastreabilidade total de mudanças de acesso.
+          Módulo audit e notifications consomem os 4 canais.
+    chosen: C
+    rationale: >
+      Mudanças de role (assign e revoke) são eventos críticos para compliance e
+      auditoria de segurança em plataformas com RBAC. O módulo audit precisa
+      rastrear quem atribuiu/removeu roles e quando. notifications pode alertar
+      usuários sobre mudanças de acesso. sessions created/revoked permitem
+      monitoramento de acessos simultâneos e detecção de sessões suspeitas.
+      identity_access já tem o workflow assign_role_to_user — publicar role.assigned
+      e role.revoked fecha o ciclo de rastreabilidade sem overhead técnico extra.
+    doc_ref: "contracts/workflows/identity_access/assign_role_to_user.arazzo.yaml, ADR-008, DR-IAM-001"

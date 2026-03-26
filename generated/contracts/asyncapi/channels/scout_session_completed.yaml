@@ -1,0 +1,24 @@
+# AsyncAPI Channel: scout.session.completed
+# Module: scout
+# Domain rules: DR-SCOUT-001, DR-SCOUT-003
+# Invariants: INV-SCOUT-001
+# Decisions: DEC-SCOUT-003=C
+# ADR refs: ADR-031 (Celery/Redis)
+
+description: >
+  Canal publicado quando o analista finaliza o bloco de scouting de uma
+  partida via POST /scout/sessions/{matchId}/complete (DEC-SCOUT-003=C).
+
+  Este evento sinaliza que o conjunto de observações está completo e pronto
+  para processamento batch. Consumidores downstream (analytics, notifications)
+  podem usar este canal para:
+  - Gerar relatórios táticos agregados
+  - Notificar atletas/coaches sobre disponibilidade de análise
+  - Acionar pipelines de analytics
+
+  BOUNDARY: payload contém apenas matchId, completedAt, totalEvents e notes.
+  Nenhum dado de atleta individual ou dado sensível.
+publish:
+  operationId: scout_session_completed_publish
+  message:
+    $ref: "../messages/scout_session_completed.yaml"

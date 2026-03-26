@@ -1,0 +1,49 @@
+type: object
+required:
+- eventType
+- occurredAt
+- jobId
+- sourceLabel
+- ingestionMode
+- statusLabel
+properties:
+  eventType:
+    type: string
+    const: ai_ingestion.job.queued
+    description: Tipo do evento. Sempre "ai_ingestion.job.queued".
+  occurredAt:
+    type: string
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+    format: date-time
+    description: Timestamp UTC do momento em que o job foi enfileirado (ISO 8601).
+    x-semantic-id: core.occurred_at.v1
+  jobId:
+    type: string
+    format: uuid
+    description: UUID do job de ingestão enfileirado (DR-ING-001).
+    x-semantic-id: ai_ingestion.job.id.v1
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+  sourceLabel:
+    type: string
+    minLength: 1
+    maxLength: 120
+    description: Label da fonte de dados externa (INV-ING-001).
+  ingestionMode:
+    type: string
+    minLength: 1
+    maxLength: 40
+    description: Modo de ingestão (batch, webhook, file-drop).
+  statusLabel:
+    type: string
+    description: Status do job no momento do evento. Sempre "queued".
+    const: queued
+  idempotencyKey:
+    type:
+    - string
+    - 'null'
+    maxLength: 120
+    description: 'Chave de idempotência do job (DR-ING-004). Presente quando o job
+      deve suportar replay seguro.
+
+      '
+additionalProperties: false

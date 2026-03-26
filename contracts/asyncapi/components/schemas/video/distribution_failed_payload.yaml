@@ -1,0 +1,75 @@
+type: object
+additionalProperties: false
+required:
+- eventType
+- occurredAt
+- clipId
+- sessionId
+- targetType
+- failureReason
+- retryCount
+- failedAt
+properties:
+  eventType:
+    type: string
+    description: Tipo canônico do evento.
+    const: video.distribution.failed
+  occurredAt:
+    type: string
+    format: date-time
+    description: Momento ISO 8601 UTC da falha.
+    x-semantic-id: core.occurred_at.v1
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  clipId:
+    type: string
+    format: uuid
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    description: UUID do ClipDefinition com falha de distribuição.
+    x-semantic-id: video.clip_definition.id.v1
+  sessionId:
+    type: string
+    pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+    format: uuid
+    description: UUID da MatchMediaSession pai.
+    x-semantic-id: video.match_media_session.id.v1
+  targetType:
+    type: string
+    enum:
+    - TECHNICAL_INTERNAL
+    - PUBLIC_CDN
+    - BROADCAST_PARTNER
+    description: Tipo de destino onde distribuição falhou.
+    x-domain-enum-ref: video_target_type
+  failureReason:
+    type: string
+    enum:
+    - TIMEOUT
+    - PERMISSION_DENIED
+    - STORAGE_QUOTA_EXCEEDED
+    - NETWORK_UNREACHABLE
+    - CODEC_INCOMPATIBILITY
+    - UNKNOWN
+    description: Motivo da falha de distribuição.
+    x-domain-enum-ref: video_distribution_failure_reason
+  retryCount:
+    type: integer
+    minimum: 0
+    maximum: 5
+    description: Número de tentativas exauridas.
+  failedAt:
+    type: string
+    format: date-time
+    description: ISO 8601 UTC quando última tentativa falhou.
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  nextRetryAt:
+    type:
+    - string
+    - 'null'
+    format: date-time
+    description: ISO 8601 UTC da próxima retry (null se exaurida).
+    pattern: ^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$
+  errorDetails:
+    type:
+    - object
+    - 'null'
+    description: Detalhes opcionais de erro (stacktrace, HTTP status, etc).

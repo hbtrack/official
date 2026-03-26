@@ -1,0 +1,1066 @@
+{
+    "metadata": {
+        "date": "2026-03-20",
+        "status": "active",
+        "authority_refs": {
+            "pipeline": "docs/_canon/CONTRACT_PIPELINE.md",
+            "gates": "docs/_canon/gates/GATES_REGISTRY.yaml",
+            "task_catalog": ".contract_driven/TASK_CATALOG.yaml",
+            "boot_profiles": ".contract_driven/BOOT_PROFILES.yaml",
+            "module_registry": "docs/_canon/MODULE_REGISTRY.yaml",
+            "rules": ".contract_driven/CONTRACT_SYSTEM_RULES.md",
+            "layout": ".contract_driven/CONTRACT_SYSTEM_LAYOUT.md"
+        }
+    },
+    "pipeline_structure": {
+        "phases": [
+            {
+                "phase_id": "pre_contract",
+                "order": 0,
+                "name": "Pre-Contract Foundation",
+                "purpose": "Validar entrada, determinar task_type correto, carregar boot profile, validar MODULE_REGISTRY",
+                "gates": [
+                    "AXIOM_INTEGRITY_GATE",
+                    "PATH_CANONICALITY_GATE",
+                    "SCOPE_BOUNDARY_GATE",
+                    "MODULE_SOURCE_AUTHORITY_MATRIX_GATE",
+                    "MODULE_REGISTRY_GATE",
+                    "PRE_CONTRACT_EVIDENCE_GATE",
+                    "SHADOW_AUTHORITY_GATE",
+                    "CANON_ALLOWLIST_GATE",
+                    "TOOLING_CONFIG_GATE"
+                ],
+                "mandatory_entry": true,
+                "blocking_criteria": "any gate blocking"
+            },
+            {
+                "phase_id": "decision_discovery",
+                "order": 1,
+                "name": "Architecture Decision Discovery",
+                "purpose": "Analisar decisões arquiteturais abertas, criar/atualizar ADRs",
+                "gates": [],
+                "boot_profile": "architecture_decision",
+                "task_types": [
+                    "architecture_review"
+                ],
+                "blocking_criteria": "decisões abertas não resolvidas"
+            },
+            {
+                "phase_id": "authoring",
+                "order": 2,
+                "name": "Authoring & Artifact Generation",
+                "purpose": "Criar artefatos de contrato (OpenAPI, AsyncAPI, Arazzo, Schemas, UIs, Docs)",
+                "gates": [
+                    "REQUIRED_ARTIFACT_PRESENCE_GATE",
+                    "MODULE_DOC_CROSSREF_GATE"
+                ],
+                "task_types": [
+                    "new_module",
+                    "new_contract",
+                    "contract_revision",
+                    "new_event",
+                    "new_workflow",
+                    "new_schema",
+                    "new_state_model",
+                    "new_ui_contract"
+                ],
+                "output_location": "contracts/, docs/hbtrack/modulos/, generated/",
+                "requires_worker_prompt": true,
+                "blocking_criteria": "artefato não escrito no path canônico"
+            },
+            {
+                "phase_id": "validation",
+                "order": 3,
+                "name": "Contract Validation",
+                "purpose": "Executar todos os gates de validação semântica e sintática",
+                "gates": [
+                    "API_NORMATIVE_DUPLICATION_GATE",
+                    "OWASP_API_CONTROL_MATRIX_GATE",
+                    "BOUNDARY_USERS_IDENTITY_ACCESS_GATE",
+                    "WELLNESS_MEDICAL_BOUNDARY_GATE",
+                    "SCOUT_TAXONOMY_GATE",
+                    "ASYNC_REQUIRED_MODULE_GATE",
+                    "EXTERNAL_SOURCE_AUTHORITY_GATE",
+                    "DECISION_IR_CONFORMANCE_GATE",
+                    "PLACEHOLDER_RESIDUE_GATE",
+                    "REF_HERMETICITY_GATE"
+                ],
+                "script": "python3 scripts/contracts/validate/validate_contracts.py",
+                "output_report": "_reports/contract_gates/latest.json",
+                "blocking_criteria": "any blocking gate fails"
+            },
+            {
+                "phase_id": "readiness",
+                "order": 4,
+                "name": "Module Readiness & Promotion",
+                "purpose": "Validar que módulo elegível para implementation_ready (todas superfícies presentes, testes verdes, 0 decisões abertas)",
+                "gates": [
+                    "MODULE_REGISTRY_GATE",
+                    "PRE_CONTRACT_EVIDENCE_GATE"
+                ],
+                "task_types": [
+                    "readiness_promotion"
+                ],
+                "output": "MODULE_REGISTRY.yaml atualizado com status=implementation_ready",
+                "blocking_criteria": "superfícies faltando ou decisões abertas"
+            },
+            {
+                "phase_id": "implementation_handoff",
+                "order": 5,
+                "name": "Implementation Handoff",
+                "purpose": "Registrar evidência final pré-contrato, liberar para codificação",
+                "gates": [],
+                "output": "SESSION_HANDOFF.md finalizado, git commit",
+                "blocking_criteria": "nenhuma — handoff é registro de evidência"
+            }
+        ],
+        "compilation_step": {
+            "purpose": "Aplicar policies globais e reconfiguração pós-mudança de artefatos globais",
+            "script": "python3 scripts/contracts/validate/api/compile_api_policy.py",
+            "trigger": "após mudança em artefatos globais (DOMAIN_AXIOMS.json, api_rules.yaml, etc.)",
+            "required_before_revalidation": true
+        },
+        "maximum_concurrent_gates": 3,
+        "note": "Sem pular fases; nenhuma implementação antes de Validation + Readiness"
+    },
+    "gates_summary": {
+        "total_gates": 21,
+        "blocking": 19,
+        "non_blocking": 2,
+        "by_stage": {
+            "pre_contract": 9,
+            "authoring": 2,
+            "validation": 10,
+            "readiness": 2
+        },
+        "definition_source": "docs/_canon/gates/GATES_REGISTRY.yaml",
+        "enforcement_script": "scripts/contracts/validate/validate_contracts.py",
+        "gates": [
+            {
+                "gate_id": "AXIOM_INTEGRITY_GATE",
+                "order": 0,
+                "blocking": true,
+                "active_stage": "pre_contract",
+                "severity": "CRITICAL",
+                "depends_on": [],
+                "purpose": "Valida integridade de DOMAIN_AXIOMS.json"
+            },
+            {
+                "gate_id": "PATH_CANONICALITY_GATE",
+                "order": 1,
+                "blocking": true,
+                "active_stage": "pre_contract",
+                "severity": "CRITICAL",
+                "depends_on": [
+                    "AXIOM_INTEGRITY_GATE"
+                ],
+                "purpose": "Garante que artefatos existem apenas em paths canônicos"
+            },
+            {
+                "gate_id": "SCOPE_BOUNDARY_GATE",
+                "order": "1.5",
+                "blocking": true,
+                "active_stage": "pre_contract",
+                "severity": "HIGH",
+                "depends_on": [
+                    "PATH_CANONICALITY_GATE"
+                ],
+                "purpose": "Detecta cross-module refs não autorizadas"
+            },
+            {
+                "gate_id": "REQUIRED_ARTIFACT_PRESENCE_GATE",
+                "order": 2,
+                "blocking": true,
+                "active_stage": "contract",
+                "severity": "CRITICAL",
+                "depends_on": [
+                    "PATH_CANONICALITY_GATE"
+                ],
+                "purpose": "Verifica presença de artefatos obrigatórios globais e por módulo"
+            },
+            {
+                "gate_id": "MODULE_DOC_CROSSREF_GATE",
+                "order": "2A",
+                "blocking": true,
+                "active_stage": "contract",
+                "severity": "HIGH",
+                "depends_on": [
+                    "REQUIRED_ARTIFACT_PRESENCE_GATE"
+                ],
+                "purpose": "Garante headers canônicos em docs de módulo"
+            },
+            {
+                "gate_id": "API_NORMATIVE_DUPLICATION_GATE",
+                "order": "2B",
+                "blocking": false,
+                "active_stage": "contract",
+                "severity": "WARNING",
+                "depends_on": [
+                    "REQUIRED_ARTIFACT_PRESENCE_GATE"
+                ],
+                "purpose": "Detecta duplicação HTTP fora da SSOT"
+            },
+            {
+                "gate_id": "OWASP_API_CONTROL_MATRIX_GATE",
+                "order": "2C",
+                "blocking": true,
+                "active_stage": "contract",
+                "severity": "CRITICAL",
+                "depends_on": [
+                    "REQUIRED_ARTIFACT_PRESENCE_GATE"
+                ],
+                "purpose": "Valida segurança OWASP"
+            },
+            {
+                "gate_id": "MODULE_SOURCE_AUTHORITY_MATRIX_GATE",
+                "order": "2D",
+                "blocking": true,
+                "active_stage": "pre_contract",
+                "severity": "CRITICAL",
+                "depends_on": [
+                    "REQUIRED_ARTIFACT_PRESENCE_GATE"
+                ],
+                "purpose": "Verifica MODULE_SOURCE_AUTHORITY_MATRIX.yaml"
+            },
+            {
+                "gate_id": "MODULE_REGISTRY_GATE",
+                "order": "2D1",
+                "blocking": true,
+                "active_stage": "readiness",
+                "severity": "CRITICAL",
+                "depends_on": [
+                    "REQUIRED_ARTIFACT_PRESENCE_GATE"
+                ],
+                "purpose": "Valida MODULE_REGISTRY.yaml status e expected_surfaces"
+            },
+            {
+                "gate_id": "BOUNDARY_USERS_IDENTITY_ACCESS_GATE",
+                "order": "2E",
+                "blocking": true,
+                "active_stage": "readiness",
+                "severity": "HIGH",
+                "depends_on": [
+                    "REQUIRED_ARTIFACT_PRESENCE_GATE"
+                ],
+                "purpose": "Garante separação users vs identity_access"
+            },
+            {
+                "gate_id": "WELLNESS_MEDICAL_BOUNDARY_GATE",
+                "order": "2F",
+                "blocking": true,
+                "active_stage": "readiness",
+                "severity": "HIGH",
+                "depends_on": [
+                    "REQUIRED_ARTIFACT_PRESENCE_GATE"
+                ],
+                "purpose": "Garante separação wellness vs medical"
+            },
+            {
+                "gate_id": "SCOUT_TAXONOMY_GATE",
+                "order": "2G",
+                "blocking": true,
+                "active_stage": "readiness",
+                "severity": "HIGH",
+                "depends_on": [
+                    "REQUIRED_ARTIFACT_PRESENCE_GATE"
+                ],
+                "purpose": "Valida scout taxonomy artefato"
+            },
+            {
+                "gate_id": "ASYNC_REQUIRED_MODULE_GATE",
+                "order": "2H",
+                "blocking": true,
+                "active_stage": "contract",
+                "severity": "HIGH",
+                "depends_on": [
+                    "REQUIRED_ARTIFACT_PRESENCE_GATE"
+                ],
+                "purpose": "Exige AsyncAPI para módulos com eventos"
+            },
+            {
+                "gate_id": "EXTERNAL_SOURCE_AUTHORITY_GATE",
+                "order": "2I",
+                "blocking": true,
+                "active_stage": "contract",
+                "severity": "CRITICAL",
+                "depends_on": [
+                    "REQUIRED_ARTIFACT_PRESENCE_GATE"
+                ],
+                "purpose": "Bloqueia sources externas como SSOT soberana"
+            },
+            {
+                "gate_id": "PRE_CONTRACT_EVIDENCE_GATE",
+                "order": "2J",
+                "blocking": true,
+                "active_stage": "pre_contract",
+                "severity": "HIGH",
+                "depends_on": [
+                    "MODULE_REGISTRY_GATE"
+                ],
+                "purpose": "Valida evidência de fase pré-contrato e SESSION_HANDOFF.md"
+            },
+            {
+                "gate_id": "SHADOW_AUTHORITY_GATE",
+                "order": "2K",
+                "blocking": true,
+                "active_stage": "pre_contract",
+                "severity": "HIGH",
+                "depends_on": [
+                    "REQUIRED_ARTIFACT_PRESENCE_GATE"
+                ],
+                "purpose": "Bloqueia docs não-soberanos com linguagem de autoridade"
+            },
+            {
+                "gate_id": "DECISION_IR_CONFORMANCE_GATE",
+                "order": "2L",
+                "blocking": true,
+                "active_stage": "readiness",
+                "severity": "HIGH",
+                "depends_on": [
+                    "MODULE_REGISTRY_GATE"
+                ],
+                "purpose": "Valida MODULE_DECISION_IR quando applicable"
+            },
+            {
+                "gate_id": "CANON_ALLOWLIST_GATE",
+                "order": "2N",
+                "blocking": true,
+                "active_stage": "pre_contract",
+                "severity": "HIGH",
+                "depends_on": [
+                    "REQUIRED_ARTIFACT_PRESENCE_GATE"
+                ],
+                "purpose": "Garante apenas artefatos autorizados em docs/_canon/"
+            },
+            {
+                "gate_id": "PLACEHOLDER_RESIDUE_GATE",
+                "order": 3,
+                "blocking": true,
+                "active_stage": "contract",
+                "severity": "HIGH",
+                "depends_on": [
+                    "REQUIRED_ARTIFACT_PRESENCE_GATE"
+                ],
+                "purpose": "Bloqueia TODO/TBD em artefatos prontos"
+            },
+            {
+                "gate_id": "REF_HERMETICITY_GATE",
+                "order": 4,
+                "blocking": true,
+                "active_stage": "contract",
+                "severity": "CRITICAL",
+                "depends_on": [
+                    "PLACEHOLDER_RESIDUE_GATE"
+                ],
+                "purpose": "Garante refs hermético (não aponta fora do grafo soberano)"
+            },
+            {
+                "gate_id": "TOOLING_CONFIG_GATE",
+                "order": "4A",
+                "blocking": true,
+                "active_stage": "pre_contract",
+                "severity": "CRITICAL",
+                "depends_on": [
+                    "REF_HERMETICITY_GATE"
+                ],
+                "purpose": "Valida compatibilidade toolchain"
+            }
+        ]
+    },
+    "task_types": {
+        "total_active": 14,
+        "definition_source": ".contract_driven/TASK_CATALOG.yaml",
+        "catalog": [
+            {
+                "task_type": "pre_contract_boot",
+                "status": "active",
+                "worker_id": "pre_contract_orchestrator",
+                "worker_prompt": ".contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md",
+                "profile": "contract_execution",
+                "stages_allowed": [
+                    0
+                ],
+                "purpose": "Validar entrada, determinar task_type e roteamento",
+                "artifacts_produced": [
+                    "_reports/session_start.json"
+                ]
+            },
+            {
+                "task_type": "new_module",
+                "status": "active",
+                "worker_id": "create_module_docs",
+                "worker_prompt": ".contract_driven/agent_prompts/create_module_docs.prompt.md",
+                "profile": "contract_execution",
+                "stages_allowed": [
+                    0,
+                    1,
+                    2
+                ],
+                "purpose": "Criar documentação estruturada de novo módulo",
+                "artifacts_produced": [
+                    "docs/hbtrack/modulos/{module_name}/README.md",
+                    "docs/hbtrack/modulos/{module_name}/DOMAIN_RULES_{module_upper}.md"
+                ]
+            },
+            {
+                "task_type": "new_contract",
+                "status": "active",
+                "worker_id": "create_openapi_contract",
+                "worker_prompt": ".contract_driven/agent_prompts/create_openapi_contract.prompt.md",
+                "profile": "contract_execution",
+                "stages_allowed": [
+                    0,
+                    1,
+                    2
+                ],
+                "purpose": "Criar novo contrato OpenAPI (HTTP API)",
+                "artifacts_produced": [
+                    "contracts/openapi/paths/{module}.yaml"
+                ],
+                "blocking_gates": [
+                    "SCHEMA_CONSISTENCY_GATE",
+                    "DOMAIN_AXIOM_GATE"
+                ]
+            },
+            {
+                "task_type": "contract_revision",
+                "status": "active",
+                "worker_id": "create_openapi_contract",
+                "worker_prompt": ".contract_driven/agent_prompts/create_openapi_contract.prompt.md",
+                "profile": "contract_execution",
+                "stages_allowed": [
+                    0,
+                    1,
+                    2
+                ],
+                "purpose": "Revisar/alterar contrato OpenAPI existente",
+                "artifacts_produced": [
+                    "contracts/openapi/paths/{module}.yaml (modified)"
+                ],
+                "blocking_gates": [
+                    "SCHEMA_CONSISTENCY_GATE",
+                    "BACKWARD_COMPATIBILITY_GATE"
+                ]
+            },
+            {
+                "task_type": "new_event",
+                "status": "active",
+                "worker_id": "create_asyncapi_contract",
+                "worker_prompt": ".contract_driven/agent_prompts/create_asyncapi_contract.prompt.md",
+                "profile": "contract_execution",
+                "stages_allowed": [
+                    0,
+                    1,
+                    2
+                ],
+                "purpose": "Criar novo contrato AsyncAPI (Event)",
+                "artifacts_produced": [
+                    "contracts/asyncapi/channels/{module}/{event_name}.yaml"
+                ],
+                "blocking_gates": [
+                    "SCHEMA_CONSISTENCY_GATE",
+                    "DOMAIN_AXIOM_GATE"
+                ]
+            },
+            {
+                "task_type": "new_workflow",
+                "status": "active",
+                "worker_id": "create_arazzo_workflow",
+                "worker_prompt": ".contract_driven/agent_prompts/create_arazzo_workflow.prompt.md",
+                "profile": "contract_execution",
+                "stages_allowed": [
+                    0,
+                    1,
+                    2
+                ],
+                "purpose": "Criar novo workflow multi-step (Arazzo)",
+                "artifacts_produced": [
+                    "contracts/workflows/{module}/{workflow_name}.arazzo.yaml"
+                ]
+            },
+            {
+                "task_type": "new_schema",
+                "status": "active",
+                "worker_id": "create_json_schema_contract",
+                "worker_prompt": ".contract_driven/agent_prompts/create_json_schema_contract.prompt.md",
+                "profile": "contract_execution",
+                "stages_allowed": [
+                    0,
+                    1,
+                    2
+                ],
+                "purpose": "Criar novo JSON Schema",
+                "artifacts_produced": [
+                    "contracts/schemas/{module}/{schema_name}.schema.json"
+                ]
+            },
+            {
+                "task_type": "new_state_model",
+                "status": "active",
+                "worker_id": "create_state_model",
+                "worker_prompt": ".contract_driven/agent_prompts/create_state_model.prompt.md",
+                "profile": "contract_execution",
+                "stages_allowed": [
+                    0,
+                    1,
+                    2
+                ],
+                "purpose": "Criar novo State Model (FSM)",
+                "artifacts_produced": [
+                    "docs/hbtrack/modulos/{module}/STATE_MODEL_{module_upper}.md"
+                ]
+            },
+            {
+                "task_type": "new_ui_contract",
+                "status": "active",
+                "worker_id": "create_ui_contract",
+                "worker_prompt": ".contract_driven/agent_prompts/create_ui_contract.prompt.md",
+                "profile": "contract_execution",
+                "stages_allowed": [
+                    0,
+                    1,
+                    2
+                ],
+                "purpose": "Criar novo contrato UI",
+                "artifacts_produced": [
+                    "docs/hbtrack/modulos/{module}/UI_CONTRACT_{module_upper}.md"
+                ]
+            },
+            {
+                "task_type": "readiness_promotion",
+                "status": "active",
+                "worker_id": "readiness_promotion",
+                "worker_prompt": ".contract_driven/agent_prompts/readiness_promotion.prompt.md",
+                "profile": "contract_execution",
+                "stages_allowed": [
+                    3,
+                    4
+                ],
+                "purpose": "Promover módulo de validated_contract → implementation_ready",
+                "artifacts_produced": [
+                    "docs/_canon/MODULE_REGISTRY.yaml (updated)",
+                    "_reports/evidence/module_readiness_scorecard.json"
+                ],
+                "note": "Único caminho formal para implementation_ready"
+            },
+            {
+                "task_type": "architecture_review",
+                "status": "active",
+                "worker_id": "decision_discovery",
+                "worker_prompt": ".contract_driven/agent_prompts/decision_discovery.prompt.md",
+                "profile": "architecture_decision",
+                "stages_allowed": [
+                    1,
+                    2
+                ],
+                "purpose": "Analisar decisão arquitetural aberta",
+                "artifacts_produced": [
+                    "docs/_canon/decisions/ADR-*.md",
+                    "docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md"
+                ]
+            },
+            {
+                "task_type": "audit_context_efficiency",
+                "status": "active",
+                "worker_id": "audit_context_efficiency",
+                "worker_prompt": ".contract_driven/agent_prompts/audit_context_efficiency.prompt.md",
+                "profile": "diagnostic",
+                "purpose": "Auditar eficiência de contexto (não crítico para pipeline)"
+            },
+            {
+                "task_type": "audit_domain_completeness",
+                "status": "active",
+                "worker_id": "audit_domain_completeness",
+                "worker_prompt": ".contract_driven/agent_prompts/audit_domain_completeness.prompt.md",
+                "profile": "diagnostic",
+                "purpose": "Auditar completude de domínio (não crítico para pipeline)"
+            },
+            {
+                "task_type": "audit_red_team",
+                "status": "active",
+                "worker_id": "audit_red_team_pipeline",
+                "worker_prompt": ".contract_driven/agent_prompts/audit_red_team_pipeline.prompt.md",
+                "profile": "diagnostic",
+                "purpose": "Auditoria adversarial do pipeline (não crítico)"
+            },
+            {
+                "task_type": "adversarial_analysis",
+                "status": "active",
+                "worker_id": "adversarial_analysis",
+                "worker_prompt": ".contract_driven/agent_prompts/adversarial_analysis.prompt.md",
+                "profile": "diagnostic",
+                "purpose": "Análise adversarial (não crítico)"
+            }
+        ]
+    },
+    "modules": {
+        "total_canonical": 16,
+        "definition_source": "docs/_canon/MODULE_REGISTRY.yaml",
+        "status_semantics": {
+            "scaffold": "Estrutura mínima criada, não confiável ainda",
+            "draft_contract": "Artefatos mínimos existem, lacunas contratuais permitidas",
+            "validated_contract": "Passed gates, pode evoluir com confiança",
+            "implementation_ready": "Readiness máxima, pronto para materialização"
+        },
+        "canonical_surfaces": [
+            "module_docs_minimum",
+            "openapi_sync",
+            "json_schema",
+            "test_matrix",
+            "state_model",
+            "permissions",
+            "errors",
+            "sport_science",
+            "ui_contract",
+            "arazzo",
+            "asyncapi",
+            "decision_ir"
+        ],
+        "modules": [
+            {
+                "module": "users",
+                "status": "implementation_ready",
+                "owner": "platform-core",
+                "expected_surfaces": [
+                    "module_docs_minimum",
+                    "openapi_sync",
+                    "json_schema",
+                    "test_matrix",
+                    "asyncapi",
+                    "arazzo",
+                    "permissions",
+                    "decision_ir"
+                ]
+            },
+            {
+                "module": "seasons",
+                "status": "implementation_ready",
+                "owner": "handball-ops",
+                "expected_surfaces": [
+                    "module_docs_minimum",
+                    "openapi_sync",
+                    "json_schema",
+                    "test_matrix",
+                    "asyncapi",
+                    "arazzo"
+                ]
+            },
+            {
+                "module": "teams",
+                "status": "implementation_ready",
+                "owner": "handball-ops",
+                "expected_surfaces": [
+                    "module_docs_minimum",
+                    "openapi_sync",
+                    "json_schema",
+                    "test_matrix",
+                    "asyncapi",
+                    "arazzo"
+                ]
+            },
+            {
+                "module": "training",
+                "status": "implementation_ready",
+                "owner": "performance-tech",
+                "expected_surfaces": [
+                    "module_docs_minimum",
+                    "openapi_sync",
+                    "json_schema",
+                    "test_matrix",
+                    "state_model",
+                    "permissions",
+                    "errors",
+                    "sport_science",
+                    "ui_contract",
+                    "arazzo",
+                    "asyncapi",
+                    "decision_ir"
+                ]
+            },
+            {
+                "module": "wellness",
+                "status": "implementation_ready",
+                "owner": "performance-tech",
+                "expected_surfaces": [
+                    "module_docs_minimum",
+                    "openapi_sync",
+                    "json_schema",
+                    "test_matrix",
+                    "sport_science",
+                    "asyncapi",
+                    "arazzo"
+                ]
+            },
+            {
+                "module": "medical",
+                "status": "implementation_ready",
+                "owner": "performance-tech",
+                "expected_surfaces": [
+                    "module_docs_minimum",
+                    "openapi_sync",
+                    "json_schema",
+                    "test_matrix",
+                    "sport_science"
+                ]
+            },
+            {
+                "module": "competitions",
+                "status": "implementation_ready",
+                "owner": "handball-ops",
+                "expected_surfaces": [
+                    "module_docs_minimum",
+                    "openapi_sync",
+                    "json_schema",
+                    "test_matrix",
+                    "asyncapi",
+                    "arazzo"
+                ]
+            },
+            {
+                "module": "matches",
+                "status": "implementation_ready",
+                "owner": "handball-ops",
+                "expected_surfaces": [
+                    "module_docs_minimum",
+                    "openapi_sync",
+                    "json_schema",
+                    "test_matrix",
+                    "asyncapi",
+                    "arazzo"
+                ]
+            },
+            {
+                "module": "scout",
+                "status": "implementation_ready",
+                "owner": "handball-ops",
+                "expected_surfaces": [
+                    "module_docs_minimum",
+                    "openapi_sync",
+                    "json_schema",
+                    "test_matrix",
+                    "asyncapi",
+                    "arazzo",
+                    "permissions",
+                    "decision_ir"
+                ]
+            },
+            {
+                "module": "exercises",
+                "status": "implementation_ready",
+                "owner": "performance-tech",
+                "expected_surfaces": [
+                    "module_docs_minimum",
+                    "openapi_sync",
+                    "json_schema",
+                    "test_matrix",
+                    "permissions"
+                ]
+            },
+            {
+                "module": "analytics",
+                "status": "implementation_ready",
+                "owner": "performance-tech",
+                "expected_surfaces": [
+                    "module_docs_minimum",
+                    "openapi_sync",
+                    "json_schema",
+                    "test_matrix"
+                ]
+            },
+            {
+                "module": "reports",
+                "status": "implementation_ready",
+                "owner": "performance-tech",
+                "expected_surfaces": [
+                    "module_docs_minimum",
+                    "openapi_sync",
+                    "json_schema",
+                    "test_matrix"
+                ]
+            },
+            {
+                "module": "ai_ingestion",
+                "status": "implementation_ready",
+                "owner": "platform-core",
+                "expected_surfaces": [
+                    "module_docs_minimum",
+                    "openapi_sync",
+                    "json_schema",
+                    "test_matrix",
+                    "asyncapi",
+                    "arazzo"
+                ]
+            },
+            {
+                "module": "identity_access",
+                "status": "implementation_ready",
+                "owner": "platform-core",
+                "expected_surfaces": [
+                    "module_docs_minimum",
+                    "openapi_sync",
+                    "json_schema",
+                    "test_matrix",
+                    "permissions",
+                    "arazzo",
+                    "asyncapi",
+                    "decision_ir"
+                ]
+            },
+            {
+                "module": "audit",
+                "status": "implementation_ready",
+                "owner": "platform-core",
+                "expected_surfaces": [
+                    "module_docs_minimum",
+                    "openapi_sync",
+                    "json_schema",
+                    "test_matrix",
+                    "asyncapi",
+                    "arazzo",
+                    "permissions",
+                    "decision_ir"
+                ]
+            },
+            {
+                "module": "notifications",
+                "status": "implementation_ready",
+                "owner": "platform-core",
+                "expected_surfaces": [
+                    "module_docs_minimum",
+                    "openapi_sync",
+                    "json_schema",
+                    "test_matrix",
+                    "asyncapi",
+                    "arazzo"
+                ]
+            },
+            {
+                "module": "video",
+                "status": "implementation_ready",
+                "owner": "platform-core",
+                "expected_surfaces": [
+                    "module_docs_minimum",
+                    "openapi_sync",
+                    "json_schema",
+                    "test_matrix",
+                    "asyncapi",
+                    "arazzo",
+                    "permissions",
+                    "decision_ir"
+                ]
+            }
+        ]
+    },
+    "boot_profiles": {
+        "total": 4,
+        "definition_source": ".contract_driven/BOOT_PROFILES.yaml",
+        "profiles": [
+            {
+                "profile_id": "default",
+                "description": "Boot mínimo para qualquer agent",
+                "load_sequence": [
+                    "docs/_canon/AGENT_INSTRUCTIONS.md",
+                    "docs/_canon/OPERATIONS.md",
+                    "README.md"
+                ],
+                "required_sections": [
+                    "AGENT_INSTRUCTIONS.md§0 (Leia Primeiro)",
+                    "AGENT_INSTRUCTIONS.md§1 (Modo de operação)",
+                    "AGENT_INSTRUCTIONS.md§2 (Sistema: O que é)",
+                    "AGENT_INSTRUCTIONS.md§3 (16 Módulos Canônicos)",
+                    "AGENT_INSTRUCTIONS.md§4 (Task Types → Workers)",
+                    "AGENT_INSTRUCTIONS.md§5 (Bloqueios)",
+                    "AGENT_INSTRUCTIONS.md§6 (Regras Core)"
+                ],
+                "validations": [
+                    "task_type_in_catalog",
+                    "module_in_registry",
+                    "worker_prompt_exists"
+                ],
+                "exit_on_fail": true
+            },
+            {
+                "profile_id": "contract_execution",
+                "description": "Boot para task de contrato (new_contract, new_event, etc)",
+                "load_sequence": [
+                    "docs/_canon/AGENT_INSTRUCTIONS.md",
+                    "docs/_canon/OPERATIONS.md",
+                    "docs/_canon/CONTRACT_PIPELINE.md",
+                    "contracts/schemas/shared/session_start.schema.json",
+                    ".contract_driven/CONTRACT_SYSTEM_RULES.md",
+                    "docs/_canon/gates/GATES_REGISTRY.yaml"
+                ],
+                "required_sections": [
+                    "AGENT_INSTRUCTIONS.md§0,3,4,5,6",
+                    "CONTRACT_PIPELINE.md§1 (Pipeline de Fases)",
+                    "GATES_REGISTRY.yaml§metadata"
+                ],
+                "validations": [
+                    "session_start_valid",
+                    "task_type_active",
+                    "boot_profile_in_session",
+                    "stage_in_range"
+                ],
+                "exit_on_fail": true
+            },
+            {
+                "profile_id": "architecture_decision",
+                "description": "Boot para Decision Discovery",
+                "load_sequence": [
+                    "docs/_canon/AGENT_INSTRUCTIONS.md",
+                    "docs/_canon/OPERATIONS.md",
+                    "docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md",
+                    "docs/_canon/DECISION_POLICY.md",
+                    "docs/_canon/gates/GATES_REGISTRY.yaml"
+                ],
+                "required_sections": [
+                    "AGENT_INSTRUCTIONS.md§0,1,2",
+                    "DECISION_POLICY.md§triggers"
+                ],
+                "validations": [
+                    "decision_ir_exists"
+                ],
+                "exit_on_fail": true
+            },
+            {
+                "profile_id": "diagnostic",
+                "description": "Boot para diagnóstico (hb status, hb check)",
+                "load_sequence": [
+                    "docs/_canon/AGENT_INSTRUCTIONS.md",
+                    "docs/_canon/OPERATIONS.md",
+                    ".contract_driven/CONTRACT_SYSTEM_RULES.md"
+                ],
+                "required_sections": [
+                    "AGENT_INSTRUCTIONS.md§0"
+                ],
+                "validations": [],
+                "exit_on_fail": false
+            }
+        ]
+    },
+    "worker_prompts": {
+        "total": 18,
+        "location": ".contract_driven/agent_prompts/",
+        "workers": [
+            "pre_contract_orchestrator.prompt.md",
+            "create_module_docs.prompt.md",
+            "create_openapi_contract.prompt.md",
+            "create_asyncapi_contract.prompt.md",
+            "create_arazzo_workflow.prompt.md",
+            "create_json_schema_contract.prompt.md",
+            "create_state_model.prompt.md",
+            "create_ui_contract.prompt.md",
+            "readiness_promotion.prompt.md",
+            "decision_discovery.prompt.md",
+            "audit_context_efficiency.prompt.md",
+            "audit_domain_completeness.prompt.md",
+            "audit_gate_coverage.prompt.md",
+            "audit_red_team_pipeline.prompt.md",
+            "audit_sovereign_integrity.prompt.md",
+            "adversarial_analysis.prompt.md",
+            "generate_code.prompt.md",
+            "generate_frontend.prompt.md"
+        ]
+    },
+    "ci_cd_workflows": {
+        "location": ".github/workflows/",
+        "total": 4,
+        "workflows": [
+            {
+                "name": "contract-gates.yml",
+                "trigger": "push to main/develop, pull_request",
+                "stages": [
+                    "validate-contracts (python3 scripts/contracts/validate/validate_contracts.py)"
+                ],
+                "critical_to_pipeline": true
+            },
+            {
+                "name": "deploy.yml",
+                "trigger": "push to main, workflow_dispatch",
+                "stages": [
+                    "validate (contract gates)",
+                    "test (backend tests)",
+                    "build (Docker image)"
+                ],
+                "critical_to_pipeline": true
+            },
+            {
+                "name": "context-efficiency-audit.yml",
+                "trigger": "schedule, workflow_dispatch",
+                "stages": [
+                    "audit_context_efficiency"
+                ],
+                "critical_to_pipeline": false
+            },
+            {
+                "name": "domain-completeness-audit.yml",
+                "trigger": "schedule, workflow_dispatch",
+                "stages": [
+                    "audit_domain_completeness"
+                ],
+                "critical_to_pipeline": false
+            }
+        ]
+    },
+    "canonical_paths": {
+        "contracts": {
+            "openapi": {
+                "root": "contracts/openapi/openapi.yaml",
+                "paths": "contracts/openapi/paths/{module}.yaml (16 files, um por módulo)",
+                "components": "contracts/openapi/components/ (schemas, parameters, responses, securitySchemes)"
+            },
+            "schemas": {
+                "root": "contracts/schemas/",
+                "structure": "contracts/schemas/{module}/{schema_name}.schema.json"
+            },
+            "workflows": {
+                "root": "contracts/workflows/",
+                "structure": "contracts/workflows/{module}/{workflow_name}.arazzo.yaml"
+            },
+            "asyncapi": {
+                "root": "contracts/asyncapi/asyncapi.yaml",
+                "structure": "contracts/asyncapi/channels/{module}/{event_name}.yaml"
+            }
+        },
+        "documentation": {
+            "canon": "docs/_canon/ (SSOT normativa global)",
+            "module_docs": "docs/hbtrack/modulos/{module}/",
+            "gates": "docs/_canon/gates/",
+            "decisions": "docs/_canon/decisions/ADR-*.md",
+            "security": "docs/_canon/security/"
+        },
+        "generated": {
+            "reports": "_reports/contract_gates/latest.json, _reports/evidence/",
+            "code": "generated/ (derivados de contratos)"
+        },
+        "configuration": {
+            "axioms": ".contract_driven/DOMAIN_AXIOMS.json (SSOT semântica)",
+            "rules": ".contract_driven/CONTRACT_SYSTEM_RULES.md",
+            "layout": ".contract_driven/CONTRACT_SYSTEM_LAYOUT.md",
+            "task_catalog": ".contract_driven/TASK_CATALOG.yaml",
+            "boot_profiles": ".contract_driven/BOOT_PROFILES.yaml"
+        }
+    },
+    "orchestration_flow": {
+        "entry_point": "pre_contract_boot → determina task_type",
+        "routing": "task_type → worker_id → worker_prompt (.contract_driven/agent_prompts/)",
+        "validation": "TODAS as fases passam gates antes de avançar",
+        "gate_execution_order": "Fases 0,1,2,3,4 executam gates em ordem (ver PHASES acima)",
+        "artifact_validation": "python3 scripts/contracts/validate/validate_contracts.py → _reports/contract_gates/latest.json",
+        "no_bypass_rule": "Sem pular fases, sem implementação antes de Validation+Readiness"
+    },
+    "key_constraints": {
+        "16_canonical_modules": "Não pode ser modificado sem ADR",
+        "9_task_types_core": "new_contract, new_event, new_workflow, new_schema, new_state_model, new_ui_contract, new_module, contract_revision, pre_contract_boot, readiness_promotion, architecture_review (+ 3 auditorias)",
+        "21_gates": "Todos devem passar em forma de ordem de dependência para avançar",
+        "ssot_paths": "Contratos em contracts/, docs globais em docs/_canon/, docs de módulo em docs/hbtrack/modulos/{module}/",
+        "worker_prompt_required": "Toda task_type != pre_contract_boot exige worker_prompt em .contract_driven/agent_prompts/",
+        "boot_profile_mandatory": "Toda tarefa carrega um boot_profile; validações falham se profile não passar"
+    },
+    "quality_gates_status": {
+        "date": "2026-03-20",
+        "all_blocking_gates": "PASS",
+        "non_blocking_warnings": 0,
+        "ci_status": "PASS"
+    }
+}

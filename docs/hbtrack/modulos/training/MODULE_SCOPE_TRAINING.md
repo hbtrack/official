@@ -47,7 +47,7 @@ O módulo `training` existe para suportar o ciclo completo de planejamento, exec
 
 ## Saídas
 - Responses HTTP (sessões criadas, atualizadas, listadas)
-- Mudanças de estado de sessões (draft → scheduled → in_progress → pending_review → readonly)
+- Mudanças de estado de sessões (ADR-017 FSM: DRAFT → SCHEDULED/PUBLISHED → IN_PROGRESS → COMPLETED → ARCHIVED; cancelável de qualquer estado pré-terminal)
 - Dados de carga e volume consumidos por `analytics`
 - Histórico de wellness para análise de sobrecarga
 
@@ -78,3 +78,68 @@ O módulo `training` existe para suportar o ciclo completo de planejamento, exec
 1. O módulo não deve assumir responsabilidades de outro módulo sem decisão explícita.
 2. O módulo não deve expor comportamento fora do seu contrato.
 3. Toda exceção de escopo deve ser registrada formalmente.
+
+---
+
+## Identidade de módulo (TRAIN-DEC-001, TRAIN-DEC-002)
+
+> **Materializado em 2026-03-16 a partir de ARCH_DECISIONS_TRAINING.md (DSS).**
+
+### Unidade soberana
+
+A unidade soberana do módulo **não** é `TrainingSession`. É `training_intervention_cycle`.
+
+A `training_session` é um artefato interno do ciclo de intervenção.
+
+### Backbone operacional
+
+```
+Need → Objective → Prescription → Session → Execution → Response → Review → Adjustment
+```
+
+Toda sessão **deve** nascer de uma `need_detected`, `goal_gap` ou `competitive_focus`. O sistema pergunta "qual necessidade isso resolve?" antes de "qual é a duração?". Sessão sem objetivo operacional explícito é inválida.
+
+### Orientação a decisão (não a cadastro)
+
+O módulo é orientado à **decisão do treinador**, não ao preenchimento de formulários. Analytics e IA produzem `recommendations` e `signals` — nunca decisões de prescrição. A materialização de `training_session` a partir de recomendação exige ato explícito de treinador autorizado.
+
+## Entidades do domínio (atualizado 2026-03-16)
+
+### Fase 1 — Núcleo obrigatório
+- `TrainingSession` — sessão planejada ou executada (FSM: DRAFT→SCHEDULED/PUBLISHED→IN_PROGRESS→COMPLETED→ARCHIVED)
+- `SessionBlock` — DSL operacional da sessão; define phase, order, duration, intensity (TRAIN-DEC-049, INV-TRAIN-083)
+- `SessionObjective` — objetivo operacional obrigatório; exige `origin` rastreável (TRAIN-DEC-004, TRAIN-DEC-005)
+- `ExecutionRecord` — fato de execução append-only; preserva `planned vs actual` imutavelmente (TRAIN-DEC-007, TRAIN-DEC-008)
+- `FeedbackThread` — conversa técnica contextual com `conversationOutcome` obrigatório (TRAIN-DEC-010, TRAIN-DEC-015)
+- `AttentionQueueItem` — item de atenção finita com `severity`, `reasonCode` e `targetEntity` obrigatórios (TRAIN-DEC-027)
+- `WellnessPre` — dados de wellness pré-treino
+- `WellnessPost` — dados de wellness pós-treino (RPE, fadiga, carga interna)
+- `Periodization` — macrociclo → mesociclo → microciclo → sessão
+
+### Fase 2 (planejado)
+- `AdherenceRecord` — aderência de primeira classe: miss_reason, partial_completion, consistency_streak (TRAIN-DEC-019)
+- `DropoutRiskSignal` — derivado soberano de `analytics`; training consome read-only (TRAIN-DEC-046)
+
+## Fronteiras de módulo (atualizado 2026-03-16)
+
+| Boundary | Regra | Decisão |
+|---|---|---|
+| `notifications` | `training` emite `notification_intent`; não entrega diretamente | TRAIN-DEC-022 |
+| `audit` | `training` emite `audit_event`; não mantém trilha interna | TRAIN-DEC-023 |
+| `medical` | `training` consome `restriction_profile` e `return_to_play_guard` como somente leitura | TRAIN-DEC-024 |
+| `identity_access` | `identity_access` é fonte soberana de policy; `training` apenas aplica | TRAIN-DEC-025 |
+| `analytics` | `analytics` é soberano de `derived_signal`; `training` consome read-only | TRAIN-DEC-046 |
+| `exercises` | `exercises` é módulo soberano; `training` referencia `exercise_id + exercise_version_id` | TRAIN-DEC-047 |
+
+## Fases de implementação (TRAIN-DEC-028)
+
+**Fase 1 — Núcleo operacional:**
+- Detectar necessidade → Definir objetivo → Criar sessão → Montar blocos → Publicar
+- Confirmar presença → Registrar execução → Feedback contextual → Ajuste de ciclo
+
+**Fase 2 — Precisão e contexto expandido:**
+- Vídeo/playbook contextual, variantes por atleta, `attention_queue` completa
+- Guards de retorno progressivo avançados, `planned vs actual` avançado
+
+**Fase 3 — IA e analytics integrados:**
+- `dropout_risk_signal`, recomendações de periodização, análise de aderência avançada

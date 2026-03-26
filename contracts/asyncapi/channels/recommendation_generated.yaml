@@ -1,0 +1,8 @@
+description: >
+  Evento emitido quando módulo analytics gera uma recomendação com status PENDING_COACH_REVIEW.
+  Coach deve revisar explicitamente antes de materializar em ação.
+
+publish:
+  operationId: recommendation_generated_publish
+  message:
+    $ref: ../messages/recommendation_generated.yaml

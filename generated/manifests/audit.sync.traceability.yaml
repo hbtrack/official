@@ -3,23 +3,651 @@ traceability_manifest:
   compiler: hbtrack_api_policy_compiler
   compiler_version: 0.1.0
   generated_artifacts:
+  - path: generated/contracts/openapi/README.md
+    sha256: ac7fe69b8b5fc9c580de4bfee6f0fa8f64822048ab6622e078f5db64e54e396f
+  - path: generated/contracts/openapi/baseline/openapi_baseline.json
+    sha256: 54191aa346261a996feb3bd9c9a3a36d658a5627379f9ca62b0886c2f320243b
+  - path: generated/contracts/openapi/components/examples/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/openapi/components/parameters/page.yaml
+    sha256: 3c52f89ede31aedc1de2cbe17fea85a90d673506a7956f6bcec19c64e6afb53d
+  - path: generated/contracts/openapi/components/parameters/pageSize.yaml
+    sha256: d4d237077b6be70690447f7d930f19f2078814cd90317a46e635f269f020874f
+  - path: generated/contracts/openapi/components/parameters/pageToken.yaml
+    sha256: cec6da49ab3691400d9c570f7cb1b78874e1846259b7af02f72b67403930225d
+  - path: generated/contracts/openapi/components/requestBodies/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/openapi/components/responses/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/openapi/components/schemas/ai_ingestion/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml
+    sha256: f843e292212256ef636ec5de13c496f17b1da550c33c76969749f25f410b9a30
+  - path: generated/contracts/openapi/components/schemas/analytics/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/openapi/components/schemas/analytics/analytics_metric_key.yaml
+    sha256: 2c87b4c375decf226cd07bf020bb2ccc99631b8bda8da747a738e7721aa5b05a
+  - path: generated/contracts/openapi/components/schemas/analytics/analytics_query_request.yaml
+    sha256: 28beb019ff12264efdd0056efc9a186c6e202f8427a9b5eaddae4f23fbea986f
+  - path: generated/contracts/openapi/components/schemas/analytics/analytics_query_response.yaml
+    sha256: 9258db87c35cb6b8878f1ee29b0510ce3f18062b67e2b470a641e951abe9a2fb
+  - path: generated/contracts/openapi/components/schemas/analytics/analytics_snapshot.yaml
+    sha256: 4abeb9761cc9b04cd6ba9a4783b46ea85bfc1632a9b3600714c73102d2d7af09
+  - path: generated/contracts/openapi/components/schemas/audit/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/openapi/components/schemas/audit/audit_entry.yaml
+    sha256: 9057821093075258c86ad9ecdc5cf4155796e7ed369f6fbc4432d23022bf06b3
+  - path: generated/contracts/openapi/components/schemas/common/error.yaml
+    sha256: bc4035a89df1c0779b5a8b8ca7097c5784abe1eb60a6c5d86d0dafbdc8c6baac
+  - path: generated/contracts/openapi/components/schemas/competitions/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/openapi/components/schemas/competitions/competition.yaml
+    sha256: 467d8583de890039c00683f476ffe5713172983deb9232fb26b3592b6c50e0de
+  - path: generated/contracts/openapi/components/schemas/exercises/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/openapi/components/schemas/exercises/exercise.yaml
+    sha256: 9a11941f583d22a8eaad4c35314243c8ab3f344e16f06edfe587e560adb3b398
+  - path: generated/contracts/openapi/components/schemas/exercises/exercise_preview.yaml
+    sha256: cac7722851317a128bf45f63fbd3f3a2757d079f81aaf4974b49f27c92c0b624
+  - path: generated/contracts/openapi/components/schemas/exercises/exercise_relation.yaml
+    sha256: c53064b589d0ae9aaacc42cec73ebc004a396344a036cf851323f24e0709a6dc
+  - path: generated/contracts/openapi/components/schemas/exercises/exercise_version.yaml
+    sha256: 255d291cc673b6f40043559a7331b3f37ab7cea5888927b487ad3d0ac6b53dd1
+  - path: generated/contracts/openapi/components/schemas/identity_access/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/openapi/components/schemas/identity_access/auth_session.yaml
+    sha256: 1efc76528abf6388a9ab1bbd92ce8e33871ae8a9567ddeae5d3c71777a84b663
+  - path: generated/contracts/openapi/components/schemas/matches/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/openapi/components/schemas/matches/match.yaml
+    sha256: f0d38d2f18f7d941921992617b0a46ea169eed2bb2e54d7b8f910350c5fdffbf
+  - path: generated/contracts/openapi/components/schemas/medical/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/openapi/components/schemas/medical/medical_record.yaml
+    sha256: 863b7f97c1f065810bfab6e16ebf5463aa58597db23af2d4eb45aaa9e5e2dfd2
+  - path: generated/contracts/openapi/components/schemas/notifications/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/openapi/components/schemas/notifications/notification_delivery.yaml
+    sha256: a2c4706bd47523a6a361133f758d262746c7f71b734f6735abcfda697a18c623
+  - path: generated/contracts/openapi/components/schemas/notifications/notification_preferences.yaml
+    sha256: 1802fccc409a37aa617b2d2cb3b6aa7dd3c15583fcd288d601dbe94bf801f334
+  - path: generated/contracts/openapi/components/schemas/reports/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/openapi/components/schemas/reports/report_job.yaml
+    sha256: 2309c6ae863c4415c1038edc8c408b1aebe2a3380de1cf7d9e4d8094a3bd893d
+  - path: generated/contracts/openapi/components/schemas/scout/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/openapi/components/schemas/scout/scout_event.yaml
+    sha256: ab6902418c98ae65cab61d61760c822be859a448a55499d43ee1d851fa328991
+  - path: generated/contracts/openapi/components/schemas/seasons/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/openapi/components/schemas/seasons/season.yaml
+    sha256: f38143a47b97aadfb92da4a2800c987f11c3bddcd7d6ff8997bf2cbca2cfd73e
+  - path: generated/contracts/openapi/components/schemas/shared/problem.yaml
+    sha256: 1ead30b37a2c3334cd43869bb06b53ada25db88638b2edcdeb26c5836f925500
+  - path: generated/contracts/openapi/components/schemas/teams/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/openapi/components/schemas/teams/team.yaml
+    sha256: b146f482738667d6b28c9d0e758ba2770ec167363ad52fa39d607453da1263fa
+  - path: generated/contracts/openapi/components/schemas/training/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/openapi/components/schemas/training/athlete_chat_message.yaml
+    sha256: c250fbf802733610e9f171bb6b597e91bfbd70ba3de32676f5ccbf6850c9285a
+  - path: generated/contracts/openapi/components/schemas/training/athlete_ineligibility_declaration.yaml
+    sha256: 3e47df0bf77eeb5145306b657547a79dab3fd4ec83960ef8c319ff0a12fca0ba
+  - path: generated/contracts/openapi/components/schemas/training/attention_queue_item.yaml
+    sha256: 55ead38e3fb295eb9d821febd82578fde407d78f582fd35de4a74a439de9d4fd
+  - path: generated/contracts/openapi/components/schemas/training/execution_record.yaml
+    sha256: 8459a0968c9070fe29c04be7f3e74e8d8c814635c23101ce043f9dea896c25cd
+  - path: generated/contracts/openapi/components/schemas/training/feedback_thread.yaml
+    sha256: 0c9ec557c21b9ce8337bc6ec97755577525d2616ed194ac6e566d6ed3ce52219
+  - path: generated/contracts/openapi/components/schemas/training/load_chart.yaml
+    sha256: ec06d3d94373f89f661e3ec6e0a8e1db15b035fda355353cb19d17b8307abfbf
+  - path: generated/contracts/openapi/components/schemas/training/mesocycle.yaml
+    sha256: e2aaba69274659da278bcc77d9a39dcbb2d017acbe7f34b86d665dff336e999f
+  - path: generated/contracts/openapi/components/schemas/training/microcycle.yaml
+    sha256: 1a7cdddec2deeaef13ac48240b04548d2f686b78d48ff9ab781ec9eae9cd5629
+  - path: generated/contracts/openapi/components/schemas/training/recommendation.yaml
+    sha256: a201ff94c73a331f24b5a26478b8bfdf56a6bec0904229d5aca51fe80accd5d7
+  - path: generated/contracts/openapi/components/schemas/training/session_block.yaml
+    sha256: aed3ff0b96fd7c4bcdcbf4378d59f34723a180a70d472ef316b5675b13a7c80b
+  - path: generated/contracts/openapi/components/schemas/training/session_objective.yaml
+    sha256: d49251587a87b0eb67d796ca7f4cc5f1993d6eba448626dd17ebfb08ce10bb69
+  - path: generated/contracts/openapi/components/schemas/training/training_session.yaml
+    sha256: 46fda3e793fd53bd7d1e86c7cc2eac8b38f7e7696e8518824955532231ab8ab2
+  - path: generated/contracts/openapi/components/schemas/training/training_suggestion.yaml
+    sha256: 8a89e4c5bcb1068164ab5f41427e971a4e0929330b18b2b20d24d7a533a8cdf1
+  - path: generated/contracts/openapi/components/schemas/training/wellness_post.yaml
+    sha256: 9c0c28f3cfad8c0ce1e2a068102c5721f8079f60c79f9005d0ab07877d2df3ce
+  - path: generated/contracts/openapi/components/schemas/training/wellness_pre.yaml
+    sha256: 948d23fd19a5fd4394395d72cbbc5dc0dee2c64d929f859970d4381a4ba2178d
+  - path: generated/contracts/openapi/components/schemas/users/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/openapi/components/schemas/users/user_profile.yaml
+    sha256: 52281e3766a4c5f24d9d52097bfe34fa9a9cf84e7a8793c49751ab73af728884
+  - path: generated/contracts/openapi/components/schemas/video/clip_definition.yaml
+    sha256: 9e1077861d66ee866a25134b08d60a7a37b6146b325011baea2c14ce72d1adef
+  - path: generated/contracts/openapi/components/schemas/video/distribution_profile.yaml
+    sha256: 83d9355f2c587c4d6a4f9790d9fa2c42a4d9910d3e0a4bb5e95f926cc40474a4
+  - path: generated/contracts/openapi/components/schemas/video/match_media_session.yaml
+    sha256: 5fe2f64639bde7e64a145cb6b80ad9b7e7e4c204ef18802afd93851c46544b8a
+  - path: generated/contracts/openapi/components/schemas/video/media_segment.yaml
+    sha256: c2c53b05e998f05fe0964468c9b27f6c174d5ee0558363ab7d2ffbcb706a1618
+  - path: generated/contracts/openapi/components/schemas/wellness/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/openapi/components/schemas/wellness/wellness_entry.yaml
+    sha256: b55f2e8c119c4448b63ba543773a2e600a353a4bbb4d6d04adcdf2aed52bd08d
+  - path: generated/contracts/openapi/components/schemas/wellness/wellness_summary.yaml
+    sha256: cee554fccaf968e1088b2842da540253b7882121e8fef337555cfcb2cf215658
+  - path: generated/contracts/openapi/components/securitySchemes/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/openapi/intents/README.md
+    sha256: d9acc59dd2ffc7c3ea6aab66fd22f82ed2d12693dd7471459c261d44e1659b60
+  - path: generated/contracts/openapi/intents/ai_ingestion.intent.yaml
+    sha256: e3c4821e5ca59b9e115c3f421782cb493c4ad677770e27a475e70f67240fa607
+  - path: generated/contracts/openapi/intents/examples/ai_ingestion.invalid.intent.yaml
+    sha256: d73b3e2bb4f5e090c525026fadaa513f936df7839471c0fb631ec44d9e37600b
+  - path: generated/contracts/openapi/openapi.yaml
+    sha256: 35f427c13c4345d86d0053776ec5bc4d9213a19568957dc07c5a39c71fa39e61
+  - path: generated/contracts/openapi/paths/ai_ingestion.yaml
+    sha256: 0fb7191770c47ac3b1708ed09822d0dac4b784940825f70e03bfb7872ba9b2a3
+  - path: generated/contracts/openapi/paths/analytics.yaml
+    sha256: 74693ed89107d215d53311f21344d1592a92a9680346f8958460da7eb3114cd9
   - path: generated/contracts/openapi/paths/audit.yaml
-    sha256: 3117a266a16e50a2566e88b4422b61bafdabb110217f93eb8919926c5dd49432
-  generated_tree_sha256: 64f312e18298eec51f7a232602eb558ec5730135c9f201d188a60cf1ffdc33ec
+    sha256: e81bd0ee808792b37fb5b58b364e2da4bb4a7277fb93457e9188f69fbca91c7a
+  - path: generated/contracts/openapi/paths/competitions.yaml
+    sha256: c68d13dedf75bf07835f34c217b4ca09aa742fbd3e5782776918fa729077c8f3
+  - path: generated/contracts/openapi/paths/exercises.yaml
+    sha256: 147e679e1a9c08aff9056bb90e5331f23e3bbe30f0c49c32948dcb34259edbcc
+  - path: generated/contracts/openapi/paths/identity_access.yaml
+    sha256: c8f635a6395bb9e7ccbeeefcc9dbcb9c12d0ae8105d8ba8929e302780746b483
+  - path: generated/contracts/openapi/paths/matches.yaml
+    sha256: e21f3446a04b6024d370ba0bc0c0e43eaf275ff07159051dfb0421970f76f705
+  - path: generated/contracts/openapi/paths/medical.yaml
+    sha256: 47fa300842616c6ebf82785bb51965344c5e97083c2cfe63385347375ba69e8c
+  - path: generated/contracts/openapi/paths/notifications.yaml
+    sha256: 86ffff17bdc3ae7cbd5bc9dc17c6cc64c13c0b5fe061228b780859d3a7dc5ed1
+  - path: generated/contracts/openapi/paths/reports.yaml
+    sha256: 81c05881c8b8aec3a5a122cae2972bef1531cbbe1709977cbf663cd5803d8e00
+  - path: generated/contracts/openapi/paths/scout.yaml
+    sha256: 331e0cf5895b83a9a0e3ee2a02f5235b3b99c997b766ea26eab79c401fc24427
+  - path: generated/contracts/openapi/paths/seasons.yaml
+    sha256: 9ce474fec155b1fae934e5dd90382d4f62922dfb9f31c1565f3a8729171629ad
+  - path: generated/contracts/openapi/paths/teams.yaml
+    sha256: b027bf690894524e071948062e4e6890847df8c6999fc852430d97df79246d22
+  - path: generated/contracts/openapi/paths/training.yaml
+    sha256: 70d6bb1c01a0825f88f06d58098fe4d540f067123ee4a91f499f4517b22816cd
+  - path: generated/contracts/openapi/paths/users.yaml
+    sha256: 0fb515784b9d90f9f522dde77b49cdbcb94b910e8e81609b815e02bc970251d0
+  - path: generated/contracts/openapi/paths/video.yaml
+    sha256: 2c3fa94045f699c9c578a3d57f16585650d22e36515606736188dad27592ba54
+  - path: generated/contracts/openapi/paths/wellness.yaml
+    sha256: 9a19e50cea3e1a081fe08876a11ec036de1fe634d41403f18163f515a0a25120
+  - path: generated/contracts/openapi/redocly_lint.log
+    sha256: 6ee11b6d54838065f400e15059268b96d2db8afe75cd954fb66322af3ffdc3c4
+  - path: generated/contracts/openapi/spectral_lint.log
+    sha256: 20dacc396fb2ab9ddaf802b5703aa67218b93ac39fae1fd982294d0798f65328
+  - path: generated/contracts/schemas/README.md
+    sha256: 1f66b2ef2a8167c45879530cfe491688846b42e43e960405988ea5ea5a8fd5a1
+  - path: generated/contracts/schemas/ai_ingestion/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/ai_ingestion/ingestion_job.schema.json
+    sha256: 255e479c9f94317ba748f2ab09a636b1c805a842d255a4865bdef30914d085d3
+  - path: generated/contracts/schemas/analytics/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/analytics/analytics_metric_key.schema.json
+    sha256: 97259b76df02aa8d718d8ddf7ff8555eea901e8743c89625465343d23d5dd81c
+  - path: generated/contracts/schemas/analytics/analytics_query_request.schema.json
+    sha256: 669f92efac463196248d3ffc458de1fe7abc3e231f222c85c0d2d457ae313976
+  - path: generated/contracts/schemas/analytics/analytics_query_response.schema.json
+    sha256: eae355ceee049c382f0c4fac064710ee57d1fad666aaaa44f12171a8d57e3f20
+  - path: generated/contracts/schemas/analytics/analytics_snapshot.schema.json
+    sha256: db8a9c898207e09b7cd6fa0ec9f9aa9a6b05e939909a22fdbda041a8cff8a581
+  - path: generated/contracts/schemas/audit/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/audit/audit_entry.schema.json
+    sha256: 124e4d382777a6e8000338e0a212d92dc836048d02487f96ace1c9e8e24a775b
+  - path: generated/contracts/schemas/competitions/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/competitions/competition.schema.json
+    sha256: 16438c0c9972e54b514e485bc36876cf162867fa5e45b6699de61804569fc291
+  - path: generated/contracts/schemas/exercises/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/exercises/exercise.schema.json
+    sha256: 07694a5d58f1a260df76d33b1588690e0ef5439fc8f006499f147d699548a9b1
+  - path: generated/contracts/schemas/exercises/exercise_acl.schema.json
+    sha256: cbf3b897dc0735a26f2a14e30e569a7e67e3d46a879a41e5933308c583ec14f1
+  - path: generated/contracts/schemas/exercises/exercise_relation.schema.json
+    sha256: cffd6a53a2f65f2a785eef6bf5eb45c9af2498596cbed23337147a6f2a3a6572
+  - path: generated/contracts/schemas/exercises/exercise_version.schema.json
+    sha256: 4cd54ad3b175b14a39563aef2a1ef5dc32d31bb539433f41a50c4ea83181cd5d
+  - path: generated/contracts/schemas/identity_access/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/identity_access/auth_session.schema.json
+    sha256: f4a97edf2c6dcc88a79ce2bd2a19bd503ffbf6fcb197ef19fa0e01b48f33629a
+  - path: generated/contracts/schemas/matches/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/matches/match.schema.json
+    sha256: 0794ae1db7742b9d9ddd297496342dc1caa0b8706143099b0dbf2d1b5b974c40
+  - path: generated/contracts/schemas/medical/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/medical/medical_record.schema.json
+    sha256: e7b65125cbe7f9419f6a8173b8209327d2362a6201ea1cc9e7bb13c0da69fc25
+  - path: generated/contracts/schemas/notifications/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/notifications/notification_delivery.schema.json
+    sha256: 6b085893c9670ea2d23f27cfac6b8dc26a4ab0652a82fb3f33860e36436ca502
+  - path: generated/contracts/schemas/reports/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/reports/report_job.schema.json
+    sha256: cb181a5444546c5e9d9f440cca9cf9a40089f061d0b888f1a8d1ab216fcc56dd
+  - path: generated/contracts/schemas/scout/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/scout/scout_event.schema.json
+    sha256: 4dac87f80d2fef7676f6f121273c4b1e5c60479f9fa46281e4588b109ce36991
+  - path: generated/contracts/schemas/seasons/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/seasons/season.schema.json
+    sha256: f2a52eef5ecdc1531aac944d0fc3e7bfde5bccf4cb0cafc2dff866f16e965af1
+  - path: generated/contracts/schemas/shared/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/shared/domain_axioms.schema.json
+    sha256: d002b4c07c9b93c9763ddc31910c0562df76a7545c9427ec00e139adb92e70e8
+  - path: generated/contracts/schemas/shared/domain_axioms_module.schema.json
+    sha256: c8bc89b19d5fcd019567156e0f40480efe238332df73e89aaede7314d7324a19
+  - path: generated/contracts/schemas/shared/module_registry.schema.json
+    sha256: a4480665edb80aed06b3a141dcd2dec744651554d48791defa8e9bdae009e347
+  - path: generated/contracts/schemas/shared/module_source_authority_matrix.schema.json
+    sha256: 608a1607f07b379d7130d07d3efbd4414c3006801a28c0e5664d556d43681b60
+  - path: generated/contracts/schemas/shared/owasp_api_control_matrix.schema.json
+    sha256: 4baa33b8c068766787e79991cee6d29193900c79f3010ca5bde5e93601ffe812
+  - path: generated/contracts/schemas/shared/readiness_confirmation.schema.json
+    sha256: 913df84125b1df3b271e7d40c819ae3fed10f4280d6bc1e11671f32026cd5a9c
+  - path: generated/contracts/schemas/shared/session_handoff.schema.json
+    sha256: e40c3048c7b1351712dc7cb154bdab66c0f087823a6dbe918f9320113ec4d714
+  - path: generated/contracts/schemas/shared/session_start.schema.json
+    sha256: c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b
+  - path: generated/contracts/schemas/shared/waiver.schema.json
+    sha256: ac33fe58442230065d2472b5a2c4c1ea8c8d16b529fba70ad8036cbeb27ed945
+  - path: generated/contracts/schemas/teams/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/teams/team.schema.json
+    sha256: 81ae5bd4f1892e0e7307a27894a0c70fed91943fd530adcfe34eac12a4e326d1
+  - path: generated/contracts/schemas/training/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/training/ajv_compile.log
+    sha256: d0532788ca81ebd548a3883c83a074e4781a82cce26813f5dc3b56b8579c33c2
+  - path: generated/contracts/schemas/training/athlete_chat_conversation.schema.json
+    sha256: e418283670dbda1784059d018dac65aac5381110ead0380297dcd29e32e5aa62
+  - path: generated/contracts/schemas/training/athlete_chat_message.schema.json
+    sha256: 45332c3ef0b9643945b5c9ef8fa1631a8cee8167b3ce934c88a98788ce6eb536
+  - path: generated/contracts/schemas/training/athlete_ineligibility_declaration.schema.json
+    sha256: 01bdc8cccc811e564f0689984b0a8aa3dbf0b34c8c6606218b68f25596dad654
+  - path: generated/contracts/schemas/training/attention_queue_item.schema.json
+    sha256: f9954309f509e82cbeda1c396b1cb98de69bbd5a988712b0d5f2a580a0ed3dbe
+  - path: generated/contracts/schemas/training/execution_record.schema.json
+    sha256: d220a106255e1a71e88babb9145a62e2c86e7d534aa5bf7d25906cb395cae075
+  - path: generated/contracts/schemas/training/feedback_thread.schema.json
+    sha256: 95246edbbb123f647e34021e16c770e642002d1704a34cdb0b6a96d3c88c107e
+  - path: generated/contracts/schemas/training/load_chart.schema.json
+    sha256: f4cc9ba9ab5af9f134b5bff599b9c7d9f382cf9a271d93eca5ab6b04538bc253
+  - path: generated/contracts/schemas/training/recommendation.schema.json
+    sha256: 8844b4e8957a9c17104a764f9ea0116d90e9ee9e9dff8ffc0708decf5d454822
+  - path: generated/contracts/schemas/training/session_block.schema.json
+    sha256: 928c44b349004c5d770975b7eb4b02bf7852180b5105aa0b5cb1851241bd396d
+  - path: generated/contracts/schemas/training/session_objective.schema.json
+    sha256: 58119fbcfd86ef0cdd9286f07040c6897ae5a4327d6053892962237df9343546
+  - path: generated/contracts/schemas/training/training_session.schema.json
+    sha256: 63c0a2b6c5f567640aa7507c7bde8676ea418f4dbd979ba39975f27002e5104a
+  - path: generated/contracts/schemas/training/training_suggestion.schema.json
+    sha256: ca76be92c32d67ee37d21b8918c4ac0bc58df1d01d44d97770345b9d61878b26
+  - path: generated/contracts/schemas/training/training_suggestion_approval.schema.json
+    sha256: 45d77ba88b583ca41ff77458ec29a0f542c9fff396daf84d6d7a530cb38f7d42
+  - path: generated/contracts/schemas/users/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/users/user_profile.schema.json
+    sha256: e35925ca319f57bf84c03410341658e114fdfc60172f8d727ecec31958478c8d
+  - path: generated/contracts/schemas/video/clip_definition.schema.json
+    sha256: ccdd706892001ce41a28b7a158e89dedc2a91adb5ab0e557b81f2c223ff49873
+  - path: generated/contracts/schemas/video/distribution_profile.schema.json
+    sha256: e6ab3a3744473e390eb4240054461114cf7141d961a9f57bea0e8ab7ef504209
+  - path: generated/contracts/schemas/video/match_media_session.schema.json
+    sha256: 3b11cc76ff345cc0c81948732773205445889f3f49d52eb26365f571921d0289
+  - path: generated/contracts/schemas/video/media_segment.schema.json
+    sha256: 3086aa60d7e9ea58dc962bd61ffe94886605367a92a0ecb0aef45f28e601915c
+  - path: generated/contracts/schemas/wellness/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: generated/contracts/schemas/wellness/wellness_entry.schema.json
+    sha256: e6b69221a1e62764a544a37a53dfa1d211df3b89799df536f9b85789b5b59c97
+  generated_tree_sha256: c2ce3213f04b89faf65c5965247031a0d1397642486825803a64f367a1f0b287
   policy_path: generated/resolved_policy/audit.sync.resolved.yaml
-  policy_sha256: a20d8b8628cd757ba8911f63db68851f7fc6cb25f98a0715b52aa7d505923c9b
+  policy_sha256: 3ebfe36de768f2fdb3e27f9b4171ab7d7668e4e965e22b63ead9a38fc0f4754a
   source_contracts:
+  - path: contracts/openapi/README.md
+    sha256: ac7fe69b8b5fc9c580de4bfee6f0fa8f64822048ab6622e078f5db64e54e396f
+  - path: contracts/openapi/baseline/openapi_baseline.json
+    sha256: 54191aa346261a996feb3bd9c9a3a36d658a5627379f9ca62b0886c2f320243b
+  - path: contracts/openapi/components/examples/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/openapi/components/parameters/page.yaml
+    sha256: 3c52f89ede31aedc1de2cbe17fea85a90d673506a7956f6bcec19c64e6afb53d
+  - path: contracts/openapi/components/parameters/pageSize.yaml
+    sha256: d4d237077b6be70690447f7d930f19f2078814cd90317a46e635f269f020874f
+  - path: contracts/openapi/components/parameters/pageToken.yaml
+    sha256: cec6da49ab3691400d9c570f7cb1b78874e1846259b7af02f72b67403930225d
+  - path: contracts/openapi/components/requestBodies/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/openapi/components/responses/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/openapi/components/schemas/ai_ingestion/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml
+    sha256: f843e292212256ef636ec5de13c496f17b1da550c33c76969749f25f410b9a30
+  - path: contracts/openapi/components/schemas/analytics/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/openapi/components/schemas/analytics/analytics_metric_key.yaml
+    sha256: 2c87b4c375decf226cd07bf020bb2ccc99631b8bda8da747a738e7721aa5b05a
+  - path: contracts/openapi/components/schemas/analytics/analytics_query_request.yaml
+    sha256: 28beb019ff12264efdd0056efc9a186c6e202f8427a9b5eaddae4f23fbea986f
+  - path: contracts/openapi/components/schemas/analytics/analytics_query_response.yaml
+    sha256: 9258db87c35cb6b8878f1ee29b0510ce3f18062b67e2b470a641e951abe9a2fb
+  - path: contracts/openapi/components/schemas/analytics/analytics_snapshot.yaml
+    sha256: 4abeb9761cc9b04cd6ba9a4783b46ea85bfc1632a9b3600714c73102d2d7af09
+  - path: contracts/openapi/components/schemas/audit/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/openapi/components/schemas/audit/audit_entry.yaml
+    sha256: 9057821093075258c86ad9ecdc5cf4155796e7ed369f6fbc4432d23022bf06b3
+  - path: contracts/openapi/components/schemas/common/error.yaml
+    sha256: bc4035a89df1c0779b5a8b8ca7097c5784abe1eb60a6c5d86d0dafbdc8c6baac
+  - path: contracts/openapi/components/schemas/competitions/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/openapi/components/schemas/competitions/competition.yaml
+    sha256: 467d8583de890039c00683f476ffe5713172983deb9232fb26b3592b6c50e0de
+  - path: contracts/openapi/components/schemas/exercises/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/openapi/components/schemas/exercises/exercise.yaml
+    sha256: 9a11941f583d22a8eaad4c35314243c8ab3f344e16f06edfe587e560adb3b398
+  - path: contracts/openapi/components/schemas/exercises/exercise_preview.yaml
+    sha256: cac7722851317a128bf45f63fbd3f3a2757d079f81aaf4974b49f27c92c0b624
+  - path: contracts/openapi/components/schemas/exercises/exercise_relation.yaml
+    sha256: c53064b589d0ae9aaacc42cec73ebc004a396344a036cf851323f24e0709a6dc
+  - path: contracts/openapi/components/schemas/exercises/exercise_version.yaml
+    sha256: 255d291cc673b6f40043559a7331b3f37ab7cea5888927b487ad3d0ac6b53dd1
+  - path: contracts/openapi/components/schemas/identity_access/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/openapi/components/schemas/identity_access/auth_session.yaml
+    sha256: 1efc76528abf6388a9ab1bbd92ce8e33871ae8a9567ddeae5d3c71777a84b663
+  - path: contracts/openapi/components/schemas/matches/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/openapi/components/schemas/matches/match.yaml
+    sha256: f0d38d2f18f7d941921992617b0a46ea169eed2bb2e54d7b8f910350c5fdffbf
+  - path: contracts/openapi/components/schemas/medical/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/openapi/components/schemas/medical/medical_record.yaml
+    sha256: 863b7f97c1f065810bfab6e16ebf5463aa58597db23af2d4eb45aaa9e5e2dfd2
+  - path: contracts/openapi/components/schemas/notifications/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/openapi/components/schemas/notifications/notification_delivery.yaml
+    sha256: a2c4706bd47523a6a361133f758d262746c7f71b734f6735abcfda697a18c623
+  - path: contracts/openapi/components/schemas/notifications/notification_preferences.yaml
+    sha256: 1802fccc409a37aa617b2d2cb3b6aa7dd3c15583fcd288d601dbe94bf801f334
+  - path: contracts/openapi/components/schemas/reports/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/openapi/components/schemas/reports/report_job.yaml
+    sha256: 2309c6ae863c4415c1038edc8c408b1aebe2a3380de1cf7d9e4d8094a3bd893d
+  - path: contracts/openapi/components/schemas/scout/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/openapi/components/schemas/scout/scout_event.yaml
+    sha256: ab6902418c98ae65cab61d61760c822be859a448a55499d43ee1d851fa328991
+  - path: contracts/openapi/components/schemas/seasons/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/openapi/components/schemas/seasons/season.yaml
+    sha256: f38143a47b97aadfb92da4a2800c987f11c3bddcd7d6ff8997bf2cbca2cfd73e
+  - path: contracts/openapi/components/schemas/shared/problem.yaml
+    sha256: 1ead30b37a2c3334cd43869bb06b53ada25db88638b2edcdeb26c5836f925500
+  - path: contracts/openapi/components/schemas/teams/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/openapi/components/schemas/teams/team.yaml
+    sha256: b146f482738667d6b28c9d0e758ba2770ec167363ad52fa39d607453da1263fa
+  - path: contracts/openapi/components/schemas/training/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/openapi/components/schemas/training/athlete_chat_message.yaml
+    sha256: c250fbf802733610e9f171bb6b597e91bfbd70ba3de32676f5ccbf6850c9285a
+  - path: contracts/openapi/components/schemas/training/athlete_ineligibility_declaration.yaml
+    sha256: 3e47df0bf77eeb5145306b657547a79dab3fd4ec83960ef8c319ff0a12fca0ba
+  - path: contracts/openapi/components/schemas/training/attention_queue_item.yaml
+    sha256: 55ead38e3fb295eb9d821febd82578fde407d78f582fd35de4a74a439de9d4fd
+  - path: contracts/openapi/components/schemas/training/execution_record.yaml
+    sha256: 8459a0968c9070fe29c04be7f3e74e8d8c814635c23101ce043f9dea896c25cd
+  - path: contracts/openapi/components/schemas/training/feedback_thread.yaml
+    sha256: 0c9ec557c21b9ce8337bc6ec97755577525d2616ed194ac6e566d6ed3ce52219
+  - path: contracts/openapi/components/schemas/training/load_chart.yaml
+    sha256: ec06d3d94373f89f661e3ec6e0a8e1db15b035fda355353cb19d17b8307abfbf
+  - path: contracts/openapi/components/schemas/training/mesocycle.yaml
+    sha256: e2aaba69274659da278bcc77d9a39dcbb2d017acbe7f34b86d665dff336e999f
+  - path: contracts/openapi/components/schemas/training/microcycle.yaml
+    sha256: 1a7cdddec2deeaef13ac48240b04548d2f686b78d48ff9ab781ec9eae9cd5629
+  - path: contracts/openapi/components/schemas/training/recommendation.yaml
+    sha256: a201ff94c73a331f24b5a26478b8bfdf56a6bec0904229d5aca51fe80accd5d7
+  - path: contracts/openapi/components/schemas/training/session_block.yaml
+    sha256: aed3ff0b96fd7c4bcdcbf4378d59f34723a180a70d472ef316b5675b13a7c80b
+  - path: contracts/openapi/components/schemas/training/session_objective.yaml
+    sha256: d49251587a87b0eb67d796ca7f4cc5f1993d6eba448626dd17ebfb08ce10bb69
+  - path: contracts/openapi/components/schemas/training/training_session.yaml
+    sha256: 46fda3e793fd53bd7d1e86c7cc2eac8b38f7e7696e8518824955532231ab8ab2
+  - path: contracts/openapi/components/schemas/training/training_suggestion.yaml
+    sha256: 8a89e4c5bcb1068164ab5f41427e971a4e0929330b18b2b20d24d7a533a8cdf1
+  - path: contracts/openapi/components/schemas/training/wellness_post.yaml
+    sha256: 9c0c28f3cfad8c0ce1e2a068102c5721f8079f60c79f9005d0ab07877d2df3ce
+  - path: contracts/openapi/components/schemas/training/wellness_pre.yaml
+    sha256: 948d23fd19a5fd4394395d72cbbc5dc0dee2c64d929f859970d4381a4ba2178d
+  - path: contracts/openapi/components/schemas/users/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/openapi/components/schemas/users/user_profile.yaml
+    sha256: 52281e3766a4c5f24d9d52097bfe34fa9a9cf84e7a8793c49751ab73af728884
+  - path: contracts/openapi/components/schemas/video/clip_definition.yaml
+    sha256: 9e1077861d66ee866a25134b08d60a7a37b6146b325011baea2c14ce72d1adef
+  - path: contracts/openapi/components/schemas/video/distribution_profile.yaml
+    sha256: 83d9355f2c587c4d6a4f9790d9fa2c42a4d9910d3e0a4bb5e95f926cc40474a4
+  - path: contracts/openapi/components/schemas/video/match_media_session.yaml
+    sha256: 5fe2f64639bde7e64a145cb6b80ad9b7e7e4c204ef18802afd93851c46544b8a
+  - path: contracts/openapi/components/schemas/video/media_segment.yaml
+    sha256: c2c53b05e998f05fe0964468c9b27f6c174d5ee0558363ab7d2ffbcb706a1618
+  - path: contracts/openapi/components/schemas/wellness/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/openapi/components/schemas/wellness/wellness_entry.yaml
+    sha256: b55f2e8c119c4448b63ba543773a2e600a353a4bbb4d6d04adcdf2aed52bd08d
+  - path: contracts/openapi/components/schemas/wellness/wellness_summary.yaml
+    sha256: cee554fccaf968e1088b2842da540253b7882121e8fef337555cfcb2cf215658
+  - path: contracts/openapi/components/securitySchemes/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/openapi/intents/README.md
+    sha256: d9acc59dd2ffc7c3ea6aab66fd22f82ed2d12693dd7471459c261d44e1659b60
+  - path: contracts/openapi/intents/ai_ingestion.intent.yaml
+    sha256: e3c4821e5ca59b9e115c3f421782cb493c4ad677770e27a475e70f67240fa607
+  - path: contracts/openapi/intents/examples/ai_ingestion.invalid.intent.yaml
+    sha256: d73b3e2bb4f5e090c525026fadaa513f936df7839471c0fb631ec44d9e37600b
+  - path: contracts/openapi/openapi.yaml
+    sha256: 35f427c13c4345d86d0053776ec5bc4d9213a19568957dc07c5a39c71fa39e61
+  - path: contracts/openapi/paths/ai_ingestion.yaml
+    sha256: 0fb7191770c47ac3b1708ed09822d0dac4b784940825f70e03bfb7872ba9b2a3
+  - path: contracts/openapi/paths/analytics.yaml
+    sha256: 74693ed89107d215d53311f21344d1592a92a9680346f8958460da7eb3114cd9
   - path: contracts/openapi/paths/audit.yaml
-    sha256: 3117a266a16e50a2566e88b4422b61bafdabb110217f93eb8919926c5dd49432
+    sha256: e81bd0ee808792b37fb5b58b364e2da4bb4a7277fb93457e9188f69fbca91c7a
+  - path: contracts/openapi/paths/competitions.yaml
+    sha256: c68d13dedf75bf07835f34c217b4ca09aa742fbd3e5782776918fa729077c8f3
+  - path: contracts/openapi/paths/exercises.yaml
+    sha256: 147e679e1a9c08aff9056bb90e5331f23e3bbe30f0c49c32948dcb34259edbcc
+  - path: contracts/openapi/paths/identity_access.yaml
+    sha256: c8f635a6395bb9e7ccbeeefcc9dbcb9c12d0ae8105d8ba8929e302780746b483
+  - path: contracts/openapi/paths/matches.yaml
+    sha256: e21f3446a04b6024d370ba0bc0c0e43eaf275ff07159051dfb0421970f76f705
+  - path: contracts/openapi/paths/medical.yaml
+    sha256: 47fa300842616c6ebf82785bb51965344c5e97083c2cfe63385347375ba69e8c
+  - path: contracts/openapi/paths/notifications.yaml
+    sha256: 86ffff17bdc3ae7cbd5bc9dc17c6cc64c13c0b5fe061228b780859d3a7dc5ed1
+  - path: contracts/openapi/paths/reports.yaml
+    sha256: 81c05881c8b8aec3a5a122cae2972bef1531cbbe1709977cbf663cd5803d8e00
+  - path: contracts/openapi/paths/scout.yaml
+    sha256: 331e0cf5895b83a9a0e3ee2a02f5235b3b99c997b766ea26eab79c401fc24427
+  - path: contracts/openapi/paths/seasons.yaml
+    sha256: 9ce474fec155b1fae934e5dd90382d4f62922dfb9f31c1565f3a8729171629ad
+  - path: contracts/openapi/paths/teams.yaml
+    sha256: b027bf690894524e071948062e4e6890847df8c6999fc852430d97df79246d22
+  - path: contracts/openapi/paths/training.yaml
+    sha256: 70d6bb1c01a0825f88f06d58098fe4d540f067123ee4a91f499f4517b22816cd
+  - path: contracts/openapi/paths/users.yaml
+    sha256: 0fb515784b9d90f9f522dde77b49cdbcb94b910e8e81609b815e02bc970251d0
+  - path: contracts/openapi/paths/video.yaml
+    sha256: 2c3fa94045f699c9c578a3d57f16585650d22e36515606736188dad27592ba54
+  - path: contracts/openapi/paths/wellness.yaml
+    sha256: 9a19e50cea3e1a081fe08876a11ec036de1fe634d41403f18163f515a0a25120
+  - path: contracts/openapi/redocly_lint.log
+    sha256: 6ee11b6d54838065f400e15059268b96d2db8afe75cd954fb66322af3ffdc3c4
+  - path: contracts/openapi/spectral_lint.log
+    sha256: 20dacc396fb2ab9ddaf802b5703aa67218b93ac39fae1fd982294d0798f65328
+  - path: contracts/schemas/README.md
+    sha256: 1f66b2ef2a8167c45879530cfe491688846b42e43e960405988ea5ea5a8fd5a1
+  - path: contracts/schemas/ai_ingestion/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/ai_ingestion/ingestion_job.schema.json
+    sha256: 255e479c9f94317ba748f2ab09a636b1c805a842d255a4865bdef30914d085d3
+  - path: contracts/schemas/analytics/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/analytics/analytics_metric_key.schema.json
+    sha256: 97259b76df02aa8d718d8ddf7ff8555eea901e8743c89625465343d23d5dd81c
+  - path: contracts/schemas/analytics/analytics_query_request.schema.json
+    sha256: 669f92efac463196248d3ffc458de1fe7abc3e231f222c85c0d2d457ae313976
+  - path: contracts/schemas/analytics/analytics_query_response.schema.json
+    sha256: eae355ceee049c382f0c4fac064710ee57d1fad666aaaa44f12171a8d57e3f20
+  - path: contracts/schemas/analytics/analytics_snapshot.schema.json
+    sha256: db8a9c898207e09b7cd6fa0ec9f9aa9a6b05e939909a22fdbda041a8cff8a581
+  - path: contracts/schemas/audit/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/audit/audit_entry.schema.json
+    sha256: 124e4d382777a6e8000338e0a212d92dc836048d02487f96ace1c9e8e24a775b
+  - path: contracts/schemas/competitions/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/competitions/competition.schema.json
+    sha256: 16438c0c9972e54b514e485bc36876cf162867fa5e45b6699de61804569fc291
+  - path: contracts/schemas/exercises/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/exercises/exercise.schema.json
+    sha256: 07694a5d58f1a260df76d33b1588690e0ef5439fc8f006499f147d699548a9b1
+  - path: contracts/schemas/exercises/exercise_acl.schema.json
+    sha256: cbf3b897dc0735a26f2a14e30e569a7e67e3d46a879a41e5933308c583ec14f1
+  - path: contracts/schemas/exercises/exercise_relation.schema.json
+    sha256: cffd6a53a2f65f2a785eef6bf5eb45c9af2498596cbed23337147a6f2a3a6572
+  - path: contracts/schemas/exercises/exercise_version.schema.json
+    sha256: 4cd54ad3b175b14a39563aef2a1ef5dc32d31bb539433f41a50c4ea83181cd5d
+  - path: contracts/schemas/identity_access/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/identity_access/auth_session.schema.json
+    sha256: f4a97edf2c6dcc88a79ce2bd2a19bd503ffbf6fcb197ef19fa0e01b48f33629a
+  - path: contracts/schemas/matches/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/matches/match.schema.json
+    sha256: 0794ae1db7742b9d9ddd297496342dc1caa0b8706143099b0dbf2d1b5b974c40
+  - path: contracts/schemas/medical/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/medical/medical_record.schema.json
+    sha256: e7b65125cbe7f9419f6a8173b8209327d2362a6201ea1cc9e7bb13c0da69fc25
+  - path: contracts/schemas/notifications/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/notifications/notification_delivery.schema.json
+    sha256: 6b085893c9670ea2d23f27cfac6b8dc26a4ab0652a82fb3f33860e36436ca502
+  - path: contracts/schemas/reports/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/reports/report_job.schema.json
+    sha256: cb181a5444546c5e9d9f440cca9cf9a40089f061d0b888f1a8d1ab216fcc56dd
+  - path: contracts/schemas/scout/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/scout/scout_event.schema.json
+    sha256: 4dac87f80d2fef7676f6f121273c4b1e5c60479f9fa46281e4588b109ce36991
+  - path: contracts/schemas/seasons/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/seasons/season.schema.json
+    sha256: f2a52eef5ecdc1531aac944d0fc3e7bfde5bccf4cb0cafc2dff866f16e965af1
+  - path: contracts/schemas/shared/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/shared/domain_axioms.schema.json
+    sha256: d002b4c07c9b93c9763ddc31910c0562df76a7545c9427ec00e139adb92e70e8
+  - path: contracts/schemas/shared/domain_axioms_module.schema.json
+    sha256: c8bc89b19d5fcd019567156e0f40480efe238332df73e89aaede7314d7324a19
+  - path: contracts/schemas/shared/module_registry.schema.json
+    sha256: a4480665edb80aed06b3a141dcd2dec744651554d48791defa8e9bdae009e347
+  - path: contracts/schemas/shared/module_source_authority_matrix.schema.json
+    sha256: 608a1607f07b379d7130d07d3efbd4414c3006801a28c0e5664d556d43681b60
+  - path: contracts/schemas/shared/owasp_api_control_matrix.schema.json
+    sha256: 4baa33b8c068766787e79991cee6d29193900c79f3010ca5bde5e93601ffe812
+  - path: contracts/schemas/shared/readiness_confirmation.schema.json
+    sha256: 913df84125b1df3b271e7d40c819ae3fed10f4280d6bc1e11671f32026cd5a9c
+  - path: contracts/schemas/shared/session_handoff.schema.json
+    sha256: e40c3048c7b1351712dc7cb154bdab66c0f087823a6dbe918f9320113ec4d714
+  - path: contracts/schemas/shared/session_start.schema.json
+    sha256: c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b
+  - path: contracts/schemas/shared/waiver.schema.json
+    sha256: ac33fe58442230065d2472b5a2c4c1ea8c8d16b529fba70ad8036cbeb27ed945
+  - path: contracts/schemas/teams/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/teams/team.schema.json
+    sha256: 81ae5bd4f1892e0e7307a27894a0c70fed91943fd530adcfe34eac12a4e326d1
+  - path: contracts/schemas/training/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/training/ajv_compile.log
+    sha256: d0532788ca81ebd548a3883c83a074e4781a82cce26813f5dc3b56b8579c33c2
+  - path: contracts/schemas/training/athlete_chat_conversation.schema.json
+    sha256: e418283670dbda1784059d018dac65aac5381110ead0380297dcd29e32e5aa62
+  - path: contracts/schemas/training/athlete_chat_message.schema.json
+    sha256: 45332c3ef0b9643945b5c9ef8fa1631a8cee8167b3ce934c88a98788ce6eb536
+  - path: contracts/schemas/training/athlete_ineligibility_declaration.schema.json
+    sha256: 01bdc8cccc811e564f0689984b0a8aa3dbf0b34c8c6606218b68f25596dad654
+  - path: contracts/schemas/training/attention_queue_item.schema.json
+    sha256: f9954309f509e82cbeda1c396b1cb98de69bbd5a988712b0d5f2a580a0ed3dbe
+  - path: contracts/schemas/training/execution_record.schema.json
+    sha256: d220a106255e1a71e88babb9145a62e2c86e7d534aa5bf7d25906cb395cae075
+  - path: contracts/schemas/training/feedback_thread.schema.json
+    sha256: 95246edbbb123f647e34021e16c770e642002d1704a34cdb0b6a96d3c88c107e
+  - path: contracts/schemas/training/load_chart.schema.json
+    sha256: f4cc9ba9ab5af9f134b5bff599b9c7d9f382cf9a271d93eca5ab6b04538bc253
+  - path: contracts/schemas/training/recommendation.schema.json
+    sha256: 8844b4e8957a9c17104a764f9ea0116d90e9ee9e9dff8ffc0708decf5d454822
+  - path: contracts/schemas/training/session_block.schema.json
+    sha256: 928c44b349004c5d770975b7eb4b02bf7852180b5105aa0b5cb1851241bd396d
+  - path: contracts/schemas/training/session_objective.schema.json
+    sha256: 58119fbcfd86ef0cdd9286f07040c6897ae5a4327d6053892962237df9343546
+  - path: contracts/schemas/training/training_session.schema.json
+    sha256: 63c0a2b6c5f567640aa7507c7bde8676ea418f4dbd979ba39975f27002e5104a
+  - path: contracts/schemas/training/training_suggestion.schema.json
+    sha256: ca76be92c32d67ee37d21b8918c4ac0bc58df1d01d44d97770345b9d61878b26
+  - path: contracts/schemas/training/training_suggestion_approval.schema.json
+    sha256: 45d77ba88b583ca41ff77458ec29a0f542c9fff396daf84d6d7a530cb38f7d42
+  - path: contracts/schemas/users/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/users/user_profile.schema.json
+    sha256: e35925ca319f57bf84c03410341658e114fdfc60172f8d727ecec31958478c8d
+  - path: contracts/schemas/video/clip_definition.schema.json
+    sha256: ccdd706892001ce41a28b7a158e89dedc2a91adb5ab0e557b81f2c223ff49873
+  - path: contracts/schemas/video/distribution_profile.schema.json
+    sha256: e6ab3a3744473e390eb4240054461114cf7141d961a9f57bea0e8ab7ef504209
+  - path: contracts/schemas/video/match_media_session.schema.json
+    sha256: 3b11cc76ff345cc0c81948732773205445889f3f49d52eb26365f571921d0289
+  - path: contracts/schemas/video/media_segment.schema.json
+    sha256: 3086aa60d7e9ea58dc962bd61ffe94886605367a92a0ecb0aef45f28e601915c
+  - path: contracts/schemas/wellness/.gitkeep
+    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  - path: contracts/schemas/wellness/wellness_entry.schema.json
+    sha256: e6b69221a1e62764a544a37a53dfa1d211df3b89799df536f9b85789b5b59c97
   source_inputs:
   - path: .contract_driven/templates/api/ARCHITECTURE_MATRIX.yaml
-    sha256: b3a862f6cabd38f6e2b00deacad66499064897685b2c486f303365f4dc58fc8d
+    sha256: e39a83157782d5f544e44bb93c3a2e58c9af51ab26a7e2565e50568cbb69f4c8
   - path: .contract_driven/templates/api/MODULE_PROFILE_REGISTRY.yaml
-    sha256: af3bc0a5c458598f52fdd658b53db1b527196e06805758fb963c89423a179749
+    sha256: b86d8eb6ba8063e3ec45c688f32ea8e9813bcbcbd38aae324f43025be2dea3cb
   - path: .contract_driven/templates/api/api_rules.yaml
-    sha256: 2829de299d52c4a5912ee3a0489b43271d666d62a83172d3dd32b7417db15ce5
+    sha256: 7cb16dd09903635ec65e902d035a27974f2e92c5d1f8e910ca358b689296eac3
   - path: .contract_driven/templates/api/CANONICAL_TYPE_REGISTRY.yaml
-    sha256: 042ec0b9db7ee7d4f9604f15d1f1bb3fb53cb2f3be18408222e7bca4afb7ef3b
+    sha256: 4bf1ce3c5df5ac92e41bff3a645cbe27919db575608b49d6e811a0079b2d1375
   - path: .contract_driven/DOMAIN_AXIOMS.json
-    sha256: a9ea7e57e9062b42497d6f94109fde3dd02be531668b039317f233d916cfd08e
-  source_tree_sha256: 4cca1048c51b38aa50852191d75dc2d73a27924a54c382e3c0b06073929bf782
+    sha256: d7495e17090c41af465fbf064d0bff3d084c72ba0e57f1e0d78aa3b8f0ae71eb
+  source_tree_sha256: 9c18769545f7176c73ab1aa875b40709e8fea203e90a344b4da5a86840e2f157
