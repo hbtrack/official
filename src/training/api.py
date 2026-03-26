@@ -867,6 +867,12 @@ def create_microcycle(request, body: CreateMicrocycleIn):
         raise HttpError(422, str(exc))
     except IntegrityError as exc:
         raise HttpError(422, f"Dados inválidos: violação de restrição do banco — {exc}")
+    except Exception as exc:
+        # Captura DataError (smallint out of range) e outros erros de DB não mapeados
+        from django.db.utils import DataError
+        if isinstance(exc, DataError):
+            raise HttpError(422, f"Valor fora do intervalo permitido — {exc}")
+        raise
     return 201, MicrocycleOut(
         id=micro.id,
         organization_id=micro.organization_id,

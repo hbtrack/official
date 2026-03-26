@@ -287,6 +287,8 @@ class CreateMesocycleIn(Schema):
 
 # SmallIntegerField range; domain rule: >= 1
 _WeekNumber = Annotated[int, Field(ge=1, le=32767)]
+# SmallIntegerField range for planned_sessions_count (nullable)
+_PlannedCount = Annotated[int, Field(ge=0, le=32767)]
 
 
 class MicrocycleOut(Schema):
@@ -301,7 +303,7 @@ class MicrocycleOut(Schema):
     team_id: Optional[uuid.UUID] = None
     name: Optional[str] = None
     objective: Optional[str] = None
-    planned_sessions_count: Optional[int] = None
+    planned_sessions_count: Optional[_PlannedCount] = None
     notes: Optional[str] = None
 
 
@@ -318,7 +320,7 @@ class CreateMicrocycleIn(Schema):
     team_id: Optional[uuid.UUID] = None
     name: Optional[str] = None
     objective: Optional[str] = None
-    planned_sessions_count: Optional[int] = None
+    planned_sessions_count: Optional[_PlannedCount] = None
     notes: Optional[str] = None
 
 

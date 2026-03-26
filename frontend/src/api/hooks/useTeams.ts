@@ -32,7 +32,8 @@ export function useCreateTeam() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (body: { name: string; city?: string }) => {
-      const { data, error } = await apiClient.POST('/teams', { body });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data, error } = await apiClient.POST('/teams', { body: body as any });
       if (error) throw error;
       return data!;
     },
@@ -41,3 +42,40 @@ export function useCreateTeam() {
     },
   });
 }
+
+export function useAddAthleteToTeam(teamId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (athleteUserId: string) => {
+      const { data, error } = await apiClient.POST(
+        '/teams/{teamId}/athletes/{athleteUserId}',
+        { params: { path: { teamId, athleteUserId } } },
+      );
+      if (error) throw error;
+      return data!;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['teams', teamId] });
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    },
+  });
+}
+
+export function useRemoveAthleteFromTeam(teamId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (athleteUserId: string) => {
+      const { data, error } = await apiClient.DELETE(
+        '/teams/{teamId}/athletes/{athleteUserId}',
+        { params: { path: { teamId, athleteUserId } } },
+      );
+      if (error) throw error;
+      return data!;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['teams', teamId] });
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    },
+  });
+}
+

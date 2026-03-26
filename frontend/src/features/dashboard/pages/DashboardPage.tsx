@@ -1,5 +1,5 @@
+import { Calendar, Dumbbell, Shield, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Users, Shield, Calendar, Dumbbell } from 'lucide-react';
 import { useAuthStore } from '../../../stores/authStore';
 
 const CARDS = [
