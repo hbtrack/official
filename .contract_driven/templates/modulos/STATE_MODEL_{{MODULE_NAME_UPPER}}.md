@@ -10,7 +10,7 @@ type: "state-model"
 contract_path_ref: "../../../../contracts/openapi/paths/{{MODULE_NAME}}.yaml"
 schemas_ref: "../../../../contracts/schemas/{{MODULE_NAME}}/"
 diagram_format: "mermaid"
-decision_ir_ref: "Adicionar referência DECISION_IR_{{MODULE_NAME_UPPER}}.yaml se aplicável a este módulo"
+decision_ir_ref: "{{DECISION_IR_REF}}"
 ---
 # STATE_MODEL_{{MODULE_NAME_UPPER}}.md
 
