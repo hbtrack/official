@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-03-26"
-branch_ativo: hb-track-contratos-driven
+branch_ativo: main
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
 modulo_foco: training
@@ -9,9 +9,8 @@ task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: roadmap-fase4-staging-validation
 resultado: PENDENTE
-proxima_acao_permitida: "Aguardar CI PR #3 → merge → staging deploy → validações FASE 4."
-bloqueios_ativos:
-  - "BLOCKED_DEPLOY_REQUIRES_HUMAN: PR #3 requer aprovação humana"
+proxima_acao_permitida: "CI verde em main → deploy automático staging → validações FASE 4."
+bloqueios_ativos: []
 evidence_paths:
   - ROADMAP.md
   - .github/workflows/deploy.yml
