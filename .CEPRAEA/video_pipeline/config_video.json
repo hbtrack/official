@@ -1,6 +1,6 @@
 {
   "project_name": "codex_video_pipeline_mvp",
-  "source_project_dir": "/home/davis/HB-TRACK/projeto_video",
+  "source_project_dir": "./projeto_video",
   "required_source_files": [
     "plano_cenas.csv",
     "config_video.json",
