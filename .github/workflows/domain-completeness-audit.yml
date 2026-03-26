@@ -26,7 +26,6 @@ jobs:
     permissions:
       contents: read
       checks: write
-      pull-requests: write
 
     steps:
       - name: Checkout repository
@@ -79,40 +78,6 @@ jobs:
             _reports/DOMAIN_COMPLETENESS_*.md
             _reports/DOMAIN_COMPLETENESS_*.json
           retention-days: 90
-
-      - name: Comment on PR with results (if running on PR)
-        if: github.event_name == 'pull_request' && always()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require('fs');
-            const output = fs.readFileSync('audit_output.txt', 'utf8');
-
-            // Extrair sumário do relatório
-            const summaryMatch = output.match(/✓ PASS: (\d+)\/(\d+)/);
-            const failMatch = output.match(/✗ FAIL: (\d+)\/(\d+)/);
-
-            let comment = '## 🔍 Domain Completeness Audit Results\n\n';
-
-            if (summaryMatch) {
-              const [, passed, total] = summaryMatch;
-              comment += `**Status**: ✅ All ${total} modules passed!\n\n`;
-            } else if (failMatch) {
-              const [, failed, total] = failMatch;
-              comment += `**Status**: ⚠️ ${failed}/${total} modules failed\n\n`;
-            }
-
-            comment += '### Audit Report\n```\n';
-            comment += output.split('\n').slice(0, 50).join('\n');
-            comment += '\n```\n';
-            comment += '\n_Full reports available in artifacts._\n';
-
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: comment
-            });
 
       - name: Check audit results
         if: always()
