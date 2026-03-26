@@ -6,7 +6,7 @@
 # Update policy: security patches only (no minor/major bumps without testing).
 
 # YAML parser (required by policy_lib.py)
-PyYAML==6.0.1
+PyYAML==6.0.3
 
 # JSON Schema validator (required by policy_lib.py)
 jsonschema==4.21.1
