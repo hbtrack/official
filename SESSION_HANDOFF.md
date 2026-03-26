@@ -64,14 +64,6 @@ evidence_paths:
 
 ## Bloqueios ativos
 Nenhum bloqueio canônico ativo. FASE 6+ requer aprovação humana para deploy.
-# SESSION HANDOFF — HB TRACK
-> Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`
-
-## Estado Geral
-**Data:** 2026-03-25 | **Branch:** hb-track-contratos-driven | **CI:** PARTIAL
-**Modo:** ROADMAP | **task_type:** execute_roadmap_phase | **boot_profile:** roadmap_execution
-**Módulo foco:** checklist-conformidade | **Fase ROADMAP:** 5 | **Resultado:** DONE
-
 ## O que foi feito nesta sessão
 **CHECK LIST DE CONFORMIDADE — FASE 1 a FASE 5 (não FASE 6)**
 
