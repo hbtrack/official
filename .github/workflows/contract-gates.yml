@@ -151,7 +151,9 @@ jobs:
           cache: "npm"
 
       - name: Install Python dependencies
-        run: pip install -r scripts/_policy/requirements.txt pytest
+        run: |
+          pip install -r scripts/_policy/requirements.txt pytest
+          pip install schemathesis==4.12.1
 
       - name: Install Node dependencies
         run: npm ci
@@ -234,7 +236,9 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: pip install -r scripts/_policy/requirements.txt pytest
+        run: |
+          pip install -r scripts/_policy/requirements.txt pytest
+          pip install schemathesis==4.12.1
 
       - name: Install Node dependencies
         run: npm ci

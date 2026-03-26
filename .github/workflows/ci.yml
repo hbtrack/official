@@ -80,6 +80,11 @@ jobs:
       DEBUG: "false"
       ALLOWED_HOSTS: localhost,127.0.0.1
       DATABASE_URL: postgres://hbtrack:testpassword@localhost:5432/hbtrack_test
+      DB_NAME: hbtrack_test
+      DB_USER: hbtrack
+      DB_PASSWORD: testpassword
+      DB_HOST: localhost
+      DB_PORT: "5432"
       REDIS_URL: redis://localhost:6379/0
       CELERY_BROKER_URL: redis://localhost:6379/1
       CELERY_RESULT_BACKEND: redis://localhost:6379/2
