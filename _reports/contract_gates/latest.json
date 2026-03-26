@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-03-26T08:16:53Z",
+  "timestamp_utc": "2026-03-26T09:40:26Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "df87ff7",
+    "git_commit": "09ee1ae",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260326T081653_33f12a"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260326T094026_498fff"
   },
   "status_detail": {
     "active_gates_passed": 50,
@@ -229,7 +229,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 101
+        "duration_ms": 73
       }
     },
     {
@@ -254,7 +254,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2422
+        "duration_ms": 2226
       }
     },
     {
@@ -459,7 +459,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 9
+        "duration_ms": 8
       }
     },
     {
@@ -589,7 +589,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 138
+        "duration_ms": 124
       }
     },
     {
@@ -642,7 +642,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 4
       }
     },
     {
@@ -663,7 +663,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 45
+        "duration_ms": 40
       }
     },
     {
@@ -684,7 +684,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 38
+        "duration_ms": 34
       }
     },
     {
@@ -705,7 +705,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 16
+        "duration_ms": 15
       }
     },
     {
@@ -726,7 +726,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 85
+        "duration_ms": 86
       }
     },
     {
@@ -747,7 +747,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 53
+        "duration_ms": 52
       }
     },
     {
@@ -768,7 +768,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 50
+        "duration_ms": 42
       }
     },
     {
@@ -789,7 +789,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 441
+        "duration_ms": 292
       }
     },
     {
@@ -810,7 +810,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 56
+        "duration_ms": 32
       }
     },
     {
@@ -869,7 +869,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 9
+        "duration_ms": 8
       }
     },
     {
@@ -927,7 +927,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 47
+        "duration_ms": 23
       }
     },
     {
@@ -954,7 +954,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 144
+        "duration_ms": 116
       }
     },
     {
@@ -1051,7 +1051,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 2
       }
     },
     {
@@ -1421,7 +1421,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 81
+        "duration_ms": 34
       }
     },
     {
@@ -1507,7 +1507,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 811
+        "duration_ms": 684
       }
     },
     {
@@ -1530,7 +1530,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2672
+        "duration_ms": 1523
       }
     },
     {
@@ -1552,7 +1552,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 666
+        "duration_ms": 674
       }
     },
     {
@@ -1591,7 +1591,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 565
+        "duration_ms": 546
       }
     },
     {
@@ -1631,7 +1631,7 @@
         "errors": 0,
         "warnings": 1,
         "violations": 1,
-        "duration_ms": 1554
+        "duration_ms": 1586
       }
     },
     {
@@ -2191,7 +2191,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1717
+        "duration_ms": 1719
       }
     },
     {
@@ -2215,7 +2215,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1688
+        "duration_ms": 1701
       }
     },
     {
@@ -2235,7 +2235,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 2
       }
     },
     {
@@ -2275,7 +2275,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1829
+        "duration_ms": 1634
       }
     },
     {
@@ -2318,7 +2318,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 59
+        "duration_ms": 60
       }
     },
     {
@@ -2340,7 +2340,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1079
+        "duration_ms": 1067
       }
     },
     {
@@ -2396,7 +2396,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 63
+        "duration_ms": 60
       }
     },
     {
@@ -2436,7 +2436,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 42248
+        "duration_ms": 40152
       }
     },
     {
@@ -2472,7 +2472,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 18
+        "duration_ms": 9
       }
     },
     {
@@ -2492,7 +2492,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 23
+        "duration_ms": 20
       }
     },
     {
@@ -2570,7 +2570,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 9
+        "duration_ms": 7
       }
     },
     {
@@ -2665,7 +2665,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 16
+        "duration_ms": 3
       }
     },
     {
@@ -2687,7 +2687,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 202
+        "duration_ms": 163
       }
     },
     {
@@ -2709,7 +2709,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 6
       }
     },
     {
@@ -2731,7 +2731,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 24
+        "duration_ms": 22
       }
     },
     {
@@ -3093,7 +3093,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 971
+        "duration_ms": 908
       }
     },
     {
@@ -3117,7 +3117,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 9
+        "duration_ms": 6
       }
     },
     {
@@ -3201,7 +3201,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 3
       }
     },
     {
