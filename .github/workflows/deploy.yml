@@ -285,9 +285,12 @@ jobs:
 
             echo "⏳ Aguardando API inicializar (30s)..."
             sleep 30
-            docker compose -f infra/docker-compose.prod.yml exec -T api \
-              python manage.py migrate --noinput 2>&1 \
-              || echo "⚠️ Migration falhou — app pode ainda estar inicializando"
+
+            echo "--- STATUS DOS CONTAINERS ---"
+            docker compose -f infra/docker-compose.prod.yml ps
+
+            echo "--- LOGS DO CONTAINER API (últimas 80 linhas) ---"
+            docker compose -f infra/docker-compose.prod.yml logs api --tail=80 2>&1 || true
 
             echo "✅ Deploy staging concluído — IMAGE_TAG=${SHORT_SHA}"
 
@@ -305,6 +308,22 @@ jobs:
           done
           echo "❌ Health check falhou após 120s"
           exit 1
+
+      - name: Diagnóstico — logs container api (em caso de falha)
+        if: failure()
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST_STAGING }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /opt/hbtrack/staging
+            echo "--- CONTAINER STATUS ---"
+            docker compose -f infra/docker-compose.prod.yml ps 2>&1 || true
+            echo "--- LOGS API (100 linhas) ---"
+            docker compose -f infra/docker-compose.prod.yml logs api --tail=100 2>&1 || true
+            echo "--- LOGS NGINX (30 linhas) ---"
+            docker compose -f infra/docker-compose.prod.yml logs nginx --tail=30 2>&1 || true
 
   # ─────────────────────────────────────────────────────────────
   # ETAPA 5: Aprovação humana obrigatória antes de produção
