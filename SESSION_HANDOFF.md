@@ -1,22 +1,21 @@
 ---
 data_ultima_sessao: "2026-03-25"
-branch_ativo: hb-track-contratos-driven
+branch_ativo: main
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
-modulo_foco: training
-fase_roadmap: 5
+modulo_foco: ci_cd_deploy
+fase_roadmap: 4
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
-task_id: roadmap-checklist-conformidade-fase1-5
-resultado: DONE
-proxima_acao_permitida: "FASE 3.6 VPS ✅ COMPLETA. L172/L180/L187/L276-278 ✅ verificados. OPERATIONS.md §7 (reset/reseed DB local) documentado. Bloqueio restante: FASE 4 aguarda staging funcional (PostgreSQL+Redis+Docker no VPS). Próximo: conectar GitHub Actions ao VPS, testar CI/CD, ou iniciar FASE 6 deploy produção."
-bloqueios_ativos: []
+task_id: roadmap-fase4-staging-validation
+resultado: PENDENTE
+proxima_acao_permitida: "PR #3 aberto (hb-track-contratos-driven -> main). Aguardar CI passar e aprovação humana para merge. Após merge: staging deploy em https://staging.handballtrack.app. Então executar validações FASE 4."
+bloqueios_ativos:
+  - "BLOCKED_DEPLOY_REQUIRES_HUMAN: PR #3 (hb-track-contratos-driven -> main) precisa ser aprovado em github.com/hbtrack/official"
 evidence_paths:
   - ROADMAP.md
-  - src/identity_access/infrastructure/jwt_adapter.py
-  - src/shared/middleware.py
-  - config/settings.py
-  - docs/_canon/OPERATIONS.md
+  - .github/workflows/deploy.yml
+  - .github/workflows/ci.yml
 ---
 # SESSION HANDOFF — HB TRACK
 > Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`
