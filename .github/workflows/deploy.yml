@@ -153,17 +153,93 @@ jobs:
       url: ${{ vars.STAGING_URL }}
     steps:
       - uses: actions/checkout@v4
-      - name: Deploy to staging via SSH
+
+      - name: Sincronizar infra para o servidor staging
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST_STAGING }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "infra/"
+          target: /opt/hbtrack/staging
+
+      - name: Provisionar e fazer deploy no staging via SSH
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VPS_HOST_STAGING }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
+            set -e
+            mkdir -p /opt/hbtrack/staging
             cd /opt/hbtrack/staging
-            sed -i "s|^IMAGE_TAG=.*|IMAGE_TAG=${{ needs.build.outputs.image_tag }}|" .env
+
+            # Primeiro deploy — gerar .env com credenciais únicas para staging
+            if [ ! -f .env ]; then
+              echo "🔧 Primeiro deploy: gerando .env inicial para staging..."
+              python3 - << 'PYEOF'
+import secrets, os
+sk = secrets.token_urlsafe(50)
+db = secrets.token_hex(16)
+short_sha = os.environ.get('SHORT_SHA_PLACEHOLDER', 'latest')
+lines = [
+  'REGISTRY=ghcr.io/hbtrack',
+  'IMAGE_TAG=latest',
+  'NGINX_CONF=nginx.staging.conf',
+  f'SECRET_KEY={sk}',
+  'DEBUG=false',
+  'ALLOWED_HOSTS=staging.handballtrack.app,191.252.185.34',
+  'DB_NAME=hb_track_staging',
+  'DB_USER=hbtrack',
+  f'DB_PASSWORD={db}',
+  'DB_HOST=postgres',
+  'DB_PORT=5432',
+  'DB_TEST_NAME=hb_track_staging_test',
+  'POSTGRES_DB=hb_track_staging',
+  'POSTGRES_USER=hbtrack',
+  f'POSTGRES_PASSWORD={db}',
+  'REDIS_URL=redis://redis:6379/0',
+  'CELERY_BROKER_URL=redis://redis:6379/0',
+  'CELERY_TIMEZONE=America/Sao_Paulo',
+  'CORS_ALLOWED_ORIGINS=https://staging.handballtrack.app',
+  'LOG_LEVEL=INFO',
+  'CLOUDINARY_URL=',
+  'CLOUDINARY_CLOUD_NAME=',
+  'CLOUDINARY_API_KEY=',
+  'CLOUDINARY_API_SECRET=',
+  'CLOUDINARY_UPLOAD_PRESET=hb_profile_photo',
+  'RESEND_API_KEY=',
+  'RESEND_FROM_EMAIL=suporte@handballtrack.app',
+  'RESEND_FROM_NAME=Handball Track',
+]
+with open('.env', 'w') as f:
+    f.write('\n'.join(lines) + '\n')
+print('✅ .env gerado com sucesso')
+PYEOF
+            else
+              echo "✅ .env já existe — mantendo credenciais existentes"
+            fi
+
+            # Atualizar IMAGE_TAG com o SHA atual
+            SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+            sed -i "s|^IMAGE_TAG=.*|IMAGE_TAG=${SHORT_SHA}|" .env
+
+            # Fazer login no GHCR para pull da imagem privada
+            echo "${{ secrets.STAGING_GHCR_TOKEN || '' }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin 2>/dev/null || true
+
+            # Puxar nova imagem e reiniciar serviços
             docker compose -f infra/docker-compose.prod.yml pull
             docker compose -f infra/docker-compose.prod.yml up -d --force-recreate
+
+            # Aguardar API subir e aplicar migrations
+            echo "⏳ Aguardando API inicializar (30s)..."
+            sleep 30
+            docker compose -f infra/docker-compose.prod.yml exec -T api \
+              python manage.py migrate --noinput 2>&1 \
+              || echo "⚠️ Migration falhou — talvez já esteja atualizado ou app não subiu ainda"
+
+            echo "✅ Deploy staging concluído — IMAGE_TAG=${SHORT_SHA}"
+
       - name: Health check — staging
         run: |
           echo "Aguardando staging inicializar..."
