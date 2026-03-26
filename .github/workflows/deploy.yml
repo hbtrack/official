@@ -168,7 +168,7 @@ jobs:
             # Salvar SHA anterior para rollback
             PREV_SHA=$(grep "^IMAGE_TAG=" .env | cut -d= -f2 || echo "")
             echo "$PREV_SHA" > .last_sha
-            sed -i "s|^IMAGE_TAG=.*|IMAGE_TAG=${{ needs.build.outputs.image_sha }}|" .env
+            sed -i "s|^IMAGE_TAG=.*|IMAGE_TAG=${{ needs.build.outputs.image_tag }}|" .env
             docker compose -f infra/docker-compose.prod.yml pull
             docker compose -f infra/docker-compose.prod.yml up -d --force-recreate
       - name: Health check — production
