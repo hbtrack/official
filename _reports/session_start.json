@@ -1,7 +1,7 @@
 {
   "session_id": "70731b2d-c614-4cd5-944b-564b0917df00",
-  "session_timestamp": "2026-03-26T07:19:40.509377+00:00",
-  "branch": "main",
+  "session_timestamp": "2026-03-26T07:50:02.389402+00:00",
+  "branch": "hb-track-contratos-driven",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "roadmap_execution",
   "task_type": "execute_roadmap_phase",
@@ -23,8 +23,8 @@
   "stage0_exit_code": 0,
   "hook_exit_code": 0,
   "hook_validated_at": "2026-03-26T06:19:55.186867+00:00",
-  "module_focus": "ci_cd_deploy",
-  "stage3_exit_code": 0,
+  "module_focus": "training",
+  "stage3_exit_code": 2,
   "roadmap_task_id": "roadmap-fase4-staging-validation",
   "module": "training"
 }

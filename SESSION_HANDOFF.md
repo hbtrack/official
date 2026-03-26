@@ -1,9 +1,9 @@
 ---
 data_ultima_sessao: "2026-03-25"
-branch_ativo: main
+branch_ativo: hb-track-contratos-driven
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
-modulo_foco: ci_cd_deploy
+modulo_foco: training
 fase_roadmap: 4
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
