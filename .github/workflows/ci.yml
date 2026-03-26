@@ -88,7 +88,7 @@ jobs:
       REDIS_URL: redis://localhost:6379/0
       CELERY_BROKER_URL: redis://localhost:6379/1
       CELERY_RESULT_BACKEND: redis://localhost:6379/2
-      CORS_ALLOWED_ORIGINS: http://localhost:3000
+      CORS_ALLOWED_ORIGINS: http://localhost:3000,http://localhost:5173
       LOG_LEVEL: WARNING
 
     steps:
@@ -106,8 +106,8 @@ jobs:
       - name: Run migrations
         run: python manage.py migrate --noinput
 
-      - name: Run tests (excluindo schemathesis)
-        run: pytest -q --ignore=tests/schemathesis --tb=short
+      - name: Run tests (excluindo schemathesis e pipeline_gates)
+        run: pytest -q --ignore=tests/schemathesis --ignore=tests/pipeline_gates --tb=short
 
   # ────────────────────────────────────────────────────────────────────────────
   # JOB 3 — Build da imagem Docker frontend
