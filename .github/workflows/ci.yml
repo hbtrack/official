@@ -36,7 +36,7 @@ jobs:
         run: pip install -r requirements-dev.txt -r scripts/_policy/requirements.txt
 
       - name: Run contract validation
-        run: python3 scripts/contracts/validate/validate_contracts.py
+        run: python3 scripts/contracts/validate/validate_contracts.py --profile precommit
 
       - name: Lint OpenAPI specs (Redocly)
         run: |
