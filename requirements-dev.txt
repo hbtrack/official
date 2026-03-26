@@ -4,5 +4,6 @@
 #   ./.venv/bin/python -m pip install -r requirements-dev.txt
 
 pytest==9.0.2
+pytest-django==4.9.0
 PyYAML==6.0.3
 schemathesis==4.12.1
