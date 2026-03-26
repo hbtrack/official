@@ -36,7 +36,13 @@ def _patch_flush_allow_cascade():
     auth_user_user_permissions) têm FK sem CASCADE.
     Django define allow_cascade=False por padrão quando available_apps is None.
     """
-    from django.core.management.commands import flush as flush_module
+    try:
+        from django.core.management.commands import flush as flush_module
+    except ImportError:
+        # Django não instalado (ex: jobs de CI de governança) — fixture no-op
+        yield
+        return
+
     original_handle = flush_module.Command.handle
 
     def _handle_with_cascade(self, **options):

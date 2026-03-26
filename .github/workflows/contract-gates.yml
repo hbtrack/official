@@ -101,7 +101,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install pytest pyyaml
+      - run: pip install -r scripts/_policy/requirements.txt pytest
       - run: pytest tests/test_pipeline_governance.py -v
 
   architecture-drift-check:
@@ -118,13 +118,13 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install pyyaml
+        run: pip install -r scripts/_policy/requirements.txt pytest
 
       - name: Run architecture drift checker
         run: python3 scripts/audit/check_architecture_docs.py --json
 
       - name: Run architecture drift regression tests
-        run: pip install pytest && pytest tests/pipeline_gates/test_architecture_drift.py -v
+        run: pytest tests/pipeline_gates/test_architecture_drift.py -v
 
   # ── Governance Enforcement: só roda em mudanças de GOVERNANCE_PATHS ───────
   governance-enforcement:
