@@ -113,3 +113,56 @@ Ausência de artefato obrigatório → BLOCKED_REQUIRED_ARTIFACT_MISSING. Parar.
 | Branches de git              | kebab-case      | `feat/training-session-endpoint`     |
 
 Violação de naming em path de contrato soberano → BLOCKED_PATH_VIOLATION.
+
+---
+
+## §7 DESENVOLVIMENTO LOCAL — RESET E RESEED DO BANCO
+
+### Pré-requisitos
+
+- PostgreSQL rodando em `localhost:5433` (ou `DB_HOST`/`DB_PORT` configurados)
+- Virtualenv ativo: `.venv/bin/activate`
+
+### Resetar banco de desenvolvimento
+
+```bash
+# 1. Dropar e recriar o banco de desenvolvimento
+psql -h localhost -p 5433 -U hbtrack_dev -d postgres -c "DROP DATABASE IF EXISTS hb_track_dev;"
+psql -h localhost -p 5433 -U hbtrack_dev -d postgres -c "CREATE DATABASE hb_track_dev;"
+
+# 2. Aplicar todas as migrations
+python manage.py migrate
+
+# 3. Popular com dados demo
+python manage.py seed_demo
+```
+
+### Resetar banco de testes (unittest)
+
+O banco de testes (`hb_track_test`) é criado e destruído automaticamente pelo pytest.
+Para forçar recriação:
+
+```bash
+python -m pytest --reuse-db=false src/ tests/
+```
+
+### Seed manual (sem reset)
+
+Se o banco já existe e você só quer adicionar dados demo:
+
+```bash
+python manage.py seed_demo
+```
+
+O comando `seed_demo` é idempotente: não duplica registros se executado mais de uma vez (verifica por `username`/`name` antes de criar).
+
+### Dados criados pelo seed_demo
+
+| Recurso         | Valor demo                          |
+|-----------------|-------------------------------------|
+| Usuário admin   | `admin@hbtrack.dev` / senha: `admin123` |
+| Usuário treinador | `coach@hbtrack.dev` / senha: `coach123` |
+| Time demo       | `Handebol Demo FC`                  |
+| Temporada demo  | `Temporada 2026`                    |
+| Sessões treino  | 5 sessões de treino demo            |
+
