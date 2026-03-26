@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "1.1",
+  "sessionId": "9485edbb-d3fa-594a-91c3-42b1e5829be2",
+  "startedAt": "2026-03-23T14:51:42Z",
+  "endedAt": "2026-03-23T14:51:42Z",
+  "module": "wellness",
+  "taskType": "pre_contract_boot",
+  "evidence_mode": "baseline_backfill",
+  "reconstructed_from": [
+    ".contract_driven/CONTRACT_SYSTEM_RULES.md",
+    "docs/_canon/CONTRACT_PIPELINE.md",
+    "docs/hbtrack/modulos/wellness/README.md",
+    "docs/hbtrack/modulos/wellness/DOMAIN_RULES_WELLNESS.md",
+    "contracts/openapi/paths/wellness.yaml"
+  ],
+  "entries": [
+    {
+      "timestamp": "2026-03-23T14:51:42Z",
+      "phase": "ROUTING",
+      "result": "PASS",
+      "blocksEmitted": [],
+      "artifactsRead": [
+        ".contract_driven/CONTRACT_SYSTEM_LAYOUT.md",
+        ".contract_driven/CONTRACT_SYSTEM_RULES.md",
+        ".contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md"
+      ],
+      "workerDest": "baseline_backfill",
+      "decisionsConsulted": [],
+      "notes": "Backfill explícito de continuidade para módulo legado; não é transcrição histórica."
+    },
+    {
+      "timestamp": "2026-03-23T14:51:42Z",
+      "phase": "FOUNDATION_CHECK",
+      "result": "PASS",
+      "blocksEmitted": [],
+      "artifactsRead": [
+        "docs/hbtrack/modulos/wellness/MODULE_SCOPE_WELLNESS.md",
+        "docs/hbtrack/modulos/wellness/DOMAIN_RULES_WELLNESS.md",
+        "docs/hbtrack/modulos/wellness/INVARIANTS_WELLNESS.md",
+        "docs/hbtrack/modulos/wellness/TEST_MATRIX_WELLNESS.md"
+      ],
+      "workerDest": "baseline_backfill",
+      "decisionsConsulted": [],
+      "notes": "Artefatos mínimos reconstituídos a partir do canon vigente."
+    },
+    {
+      "timestamp": "2026-03-23T14:51:42Z",
+      "phase": "DOMAIN_ASSEMBLY",
+      "result": "PASS",
+      "blocksEmitted": [],
+      "artifactsRead": [
+        "docs/_canon/SYSTEM_SCOPE.md",
+        "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
+        "contracts/openapi/paths/wellness.yaml"
+      ],
+      "workerDest": "baseline_backfill",
+      "decisionsConsulted": [],
+      "notes": "Contexto soberano reconstituído para continuidade segura do legado."
+    },
+    {
+      "timestamp": "2026-03-23T14:51:42Z",
+      "phase": "WORKER_HANDOFF",
+      "result": "HANDOFF",
+      "blocksEmitted": [],
+      "artifactsRead": [
+        "contracts/openapi/paths/wellness.yaml"
+      ],
+      "workerDest": "baseline_backfill",
+      "decisionsConsulted": [],
+      "notes": "Backfill concluído para permitir continuidade explícita entre sessões futuras."
+    }
+  ]
+}

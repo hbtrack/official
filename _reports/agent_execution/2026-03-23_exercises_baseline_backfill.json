@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "1.1",
+  "sessionId": "144286f1-7c68-5e58-b9bc-a3ddb3c827c8",
+  "startedAt": "2026-03-23T14:51:42Z",
+  "endedAt": "2026-03-23T14:51:42Z",
+  "module": "exercises",
+  "taskType": "pre_contract_boot",
+  "evidence_mode": "baseline_backfill",
+  "reconstructed_from": [
+    ".contract_driven/CONTRACT_SYSTEM_RULES.md",
+    "docs/_canon/CONTRACT_PIPELINE.md",
+    "docs/hbtrack/modulos/exercises/README.md",
+    "docs/hbtrack/modulos/exercises/DOMAIN_RULES_EXERCISES.md",
+    "contracts/openapi/paths/exercises.yaml"
+  ],
+  "entries": [
+    {
+      "timestamp": "2026-03-23T14:51:42Z",
+      "phase": "ROUTING",
+      "result": "PASS",
+      "blocksEmitted": [],
+      "artifactsRead": [
+        ".contract_driven/CONTRACT_SYSTEM_LAYOUT.md",
+        ".contract_driven/CONTRACT_SYSTEM_RULES.md",
+        ".contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md"
+      ],
+      "workerDest": "baseline_backfill",
+      "decisionsConsulted": [],
+      "notes": "Backfill explícito de continuidade para módulo legado; não é transcrição histórica."
+    },
+    {
+      "timestamp": "2026-03-23T14:51:42Z",
+      "phase": "FOUNDATION_CHECK",
+      "result": "PASS",
+      "blocksEmitted": [],
+      "artifactsRead": [
+        "docs/hbtrack/modulos/exercises/MODULE_SCOPE_EXERCISES.md",
+        "docs/hbtrack/modulos/exercises/DOMAIN_RULES_EXERCISES.md",
+        "docs/hbtrack/modulos/exercises/INVARIANTS_EXERCISES.md",
+        "docs/hbtrack/modulos/exercises/TEST_MATRIX_EXERCISES.md"
+      ],
+      "workerDest": "baseline_backfill",
+      "decisionsConsulted": [],
+      "notes": "Artefatos mínimos reconstituídos a partir do canon vigente."
+    },
+    {
+      "timestamp": "2026-03-23T14:51:42Z",
+      "phase": "DOMAIN_ASSEMBLY",
+      "result": "PASS",
+      "blocksEmitted": [],
+      "artifactsRead": [
+        "docs/_canon/SYSTEM_SCOPE.md",
+        "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
+        "contracts/openapi/paths/exercises.yaml"
+      ],
+      "workerDest": "baseline_backfill",
+      "decisionsConsulted": [],
+      "notes": "Contexto soberano reconstituído para continuidade segura do legado."
+    },
+    {
+      "timestamp": "2026-03-23T14:51:42Z",
+      "phase": "WORKER_HANDOFF",
+      "result": "HANDOFF",
+      "blocksEmitted": [],
+      "artifactsRead": [
+        "contracts/openapi/paths/exercises.yaml"
+      ],
+      "workerDest": "baseline_backfill",
+      "decisionsConsulted": [],
+      "notes": "Backfill concluído para permitir continuidade explícita entre sessões futuras."
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 ---
-data_ultima_sessao: "2026-03-25"
+data_ultima_sessao: "2026-03-26"
 branch_ativo: hb-track-contratos-driven
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
