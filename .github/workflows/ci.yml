@@ -26,6 +26,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Sincronizar branch_ativo no SESSION_HANDOFF
+        run: |
+          CURRENT="${{ github.head_ref || github.ref_name }}"
+          if [ -n "$CURRENT" ] && [ -f SESSION_HANDOFF.md ]; then
+            sed -i "s|^branch_ativo:.*|branch_ativo: ${CURRENT}|" SESSION_HANDOFF.md
+          fi
+
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
