@@ -281,9 +281,31 @@ jobs:
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin 2>/dev/null || true
 
             docker compose -f infra/docker-compose.prod.yml pull
-            # Reset completo dos volumes em staging para evitar mismatch de credenciais DB
-            echo "🔄 Resetando volumes Docker (staging — dados efêmeros)..."
-            docker compose -f infra/docker-compose.prod.yml down -v 2>/dev/null || true
+
+            # Reset apenas volumes de DB/Redis — preservar certificados SSL
+            echo "🔄 Parando containers e resetando volumes de dados..."
+            docker compose -f infra/docker-compose.prod.yml down 2>/dev/null || true
+            docker volume rm hbtrack-prod_postgres_data hbtrack-prod_redis_data 2>/dev/null || true
+
+            # Gerar certificado SSL se ausente (porta 80 livre após down)
+            if ! docker run --rm -v hbtrack-prod_certbot_conf:/etc/letsencrypt alpine \
+                test -f /etc/letsencrypt/live/staging.handballtrack.app/fullchain.pem 2>/dev/null; then
+              echo "📜 Certificado SSL ausente — gerando via certbot standalone..."
+              docker run --rm \
+                -v hbtrack-prod_certbot_conf:/etc/letsencrypt \
+                -v hbtrack-prod_certbot_www:/var/www/certbot \
+                -p 80:80 \
+                certbot/certbot certonly \
+                --standalone \
+                --non-interactive \
+                --agree-tos \
+                --email suporte@handballtrack.app \
+                -d staging.handballtrack.app
+              echo "✅ Certificado SSL gerado com sucesso"
+            else
+              echo "✅ Certificado SSL existente — mantendo"
+            fi
+
             docker compose -f infra/docker-compose.prod.yml up -d
 
             echo "⏳ Aguardando API inicializar (30s)..."
