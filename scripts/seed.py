@@ -142,6 +142,7 @@ def seed():
                 "organization_id": ORG_ID,
                 "team_id": TEAM_ID,
                 "season_id": SEASON_ID,
+                "created_by_user_id": COACH_ID,
                 "session_at": session_at,
                 "session_type": stype,
                 "main_objective": f"Sessão demo #{i} — {stype}",
