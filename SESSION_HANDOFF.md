@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-03-26"
-branch_ativo: fix/postgres-credential-reset
+branch_ativo: main
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
 modulo_foco: training
