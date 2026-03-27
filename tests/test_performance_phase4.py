@@ -136,10 +136,31 @@ def seed_demo_data(transactional_db):
     }
 
 
-def _warm_up_django(client):
+def _make_jwt(user_id: uuid.UUID, role: str = "admin") -> str:
+    """Gera JWT válido para uso nos testes de performance."""
+    from identity_access.infrastructure.jwt_adapter import JWTAdapter
+    from identity_access.domain.entities import AuthSession
+    from datetime import datetime, timezone
+
+    session = AuthSession(
+        id=uuid.uuid4(),
+        principal_user_id=user_id,
+        session_scope_label="full",
+        role_labels=[role],
+        auth_method_label="password",
+        mfa_required=False,
+        mfa_satisfied=True,
+        issued_at=datetime.now(tz=timezone.utc),
+        expires_at=datetime.now(tz=timezone.utc),
+        revoked_at=None,
+    )
+    return JWTAdapter().issue_access_token(session)
+
+
+def _warm_up_django(client, auth_header: str):
     """Warm-up do Django: primeira requsição inicializa DB connections,
     caches internos e imports lazy — não contabilizada nos testes de tempo."""
-    client.get("/api/training/training-sessions")
+    client.get("/api/training/training-sessions", HTTP_AUTHORIZATION=auth_header)
 
 
 class TestPerformancePhase4:
@@ -147,38 +168,44 @@ class TestPerformancePhase4:
 
     def test_list_training_sessions_response_time(self, seed_demo_data):
         """Validar que GET /api/training-sessions/ responde em < 200ms"""
+        token = _make_jwt(COACH_ID, "coach")
+        auth = f"Bearer {token}"
         client = Client()
-        _warm_up_django(client)
+        _warm_up_django(client, auth)
 
         # Medir tempo de resposta após warm-up
         start = time.perf_counter()
-        response = client.get("/api/training/training-sessions")
+        response = client.get("/api/training/training-sessions", HTTP_AUTHORIZATION=auth)
         elapsed_ms = (time.perf_counter() - start) * 1000
-        
+
         assert response.status_code == 200, f"Expected 200, got {response.status_code}"
         assert elapsed_ms < 200, f"Response time {elapsed_ms:.2f}ms exceeds 200ms threshold"
         print(f"✅ GET /api/training-sessions/ — {elapsed_ms:.2f}ms (< 200ms)")
 
     def test_list_teams_response_time(self, seed_demo_data):
         """Validar que GET /api/teams/ responde em < 200ms"""
+        token = _make_jwt(COACH_ID, "coach")
+        auth = f"Bearer {token}"
         client = Client()
-        
+
         start = time.perf_counter()
-        response = client.get("/api/teams")
+        response = client.get("/api/teams", HTTP_AUTHORIZATION=auth)
         elapsed_ms = (time.perf_counter() - start) * 1000
-        
+
         assert response.status_code == 200
         assert elapsed_ms < 200, f"Response time {elapsed_ms:.2f}ms exceeds 200ms threshold"
         print(f"✅ GET /api/teams/ — {elapsed_ms:.2f}ms (< 200ms)")
 
     def test_list_seasons_response_time(self, seed_demo_data):
         """Validar que GET /api/seasons/ responde em < 200ms"""
+        token = _make_jwt(COACH_ID, "coach")
+        auth = f"Bearer {token}"
         client = Client()
-        
+
         start = time.perf_counter()
-        response = client.get("/api/seasons")
+        response = client.get("/api/seasons", HTTP_AUTHORIZATION=auth)
         elapsed_ms = (time.perf_counter() - start) * 1000
-        
+
         assert response.status_code == 200
         assert elapsed_ms < 200, f"Response time {elapsed_ms:.2f}ms exceeds 200ms threshold"
         print(f"✅ GET /api/seasons/ — {elapsed_ms:.2f}ms (< 200ms)")

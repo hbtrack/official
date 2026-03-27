@@ -47,15 +47,14 @@ router = Router(tags=["teams"])
 
 
 def _get_actor_role(request) -> RoleLabel:
-    """
-    Stub: extrai RoleLabel do JWT validado.
-    Substituir por integração real com identity_access.
-    """
-    role = getattr(request, "_actor_role", "admin")
-    try:
-        return RoleLabel(role)
-    except ValueError:
-        return RoleLabel.MEMBER
+    """Extrai RoleLabel do JWT validado."""
+    role = getattr(request, "_actor_role", None)
+    if role:
+        try:
+            return RoleLabel(role)
+        except ValueError:
+            return RoleLabel.MEMBER
+    raise HttpError(401, "Unauthenticated")
 
 
 def _get_actor_team_ids(request) -> list[UUID]:
