@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-03-26"
-branch_ativo: chore/sync-handoff-main
+branch_ativo: fix/seed-training-session-created-by
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
 modulo_foco: training
