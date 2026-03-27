@@ -6189,11 +6189,59 @@ def _g10_transformation_feasibility(root: pathlib.Path) -> dict:
                [], [str(generated_dir)], [], [], _ms(t0))
 
 
-def _g11_http_runtime_contract(_root: pathlib.Path) -> dict:
-    return _skip(
-        "HTTP_RUNTIME_CONTRACT_GATE",
-        "Gate requer servidor live — sempre SKIP em ambiente local/CI.",
-    )
+def _g11_http_runtime_contract(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "HTTP_RUNTIME_CONTRACT_GATE"
+    staging_url = os.environ.get("HB_STAGING_URL", "").strip()
+    if not staging_url:
+        return _skip(gate_id, "HB_STAGING_URL não definida — gate não aplicável em ambiente local.", _ms(t0))
+
+    openapi_path = root / "contracts" / "openapi" / "openapi.yaml"
+    if not openapi_path.exists():
+        return _skip(gate_id, "contracts/openapi/openapi.yaml ausente.", _ms(t0))
+
+    schema_url = staging_url.rstrip("/") + "/api/openapi.json"
+    cmd = [
+        sys.executable, "-m", "schemathesis", "run",
+        schema_url,
+        "--base-url", staging_url.rstrip("/"),
+        "--include-path-regex", r"^/api/(auth|users|teams|seasons|training)/",
+        "--checks", "not_a_server_error,response_schema_conformance",
+        "--hypothesis-max-examples", "5",
+        "--exit-first",
+        "--no-color",
+    ]
+    try:
+        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=120, cwd=str(root))
+        output = (proc.stdout + proc.stderr).strip()
+    except FileNotFoundError:
+        return _pg(gate_id, "FAIL", True, "ERROR_INFRA",
+                   "schemathesis não instalado. Execute: pip install schemathesis",
+                   [], [], [],
+                   [{"blocking_code": "ERROR_INFRA", "artifact": "schemathesis", "message": "schemathesis not found", "severity": "error"}],
+                   _ms(t0))
+    except subprocess.TimeoutExpired:
+        return _pg(gate_id, "FAIL", True, "ERROR_INFRA",
+                   "schemathesis excedeu timeout de 120s.",
+                   [], [], [],
+                   [{"blocking_code": "ERROR_INFRA", "artifact": staging_url, "message": "timeout", "severity": "error"}],
+                   _ms(t0))
+
+    if proc.returncode != 0:
+        violations = [
+            {"blocking_code": "BLOCKED_RUNTIME_VIOLATION", "artifact": staging_url,
+             "message": line, "severity": "error"}
+            for line in output.splitlines()
+            if line.strip() and any(kw in line for kw in ("FAILED", "Error", "error", "violation", "5xx"))
+        ][:10] or [{"blocking_code": "BLOCKED_RUNTIME_VIOLATION", "artifact": staging_url,
+                    "message": output[:500], "severity": "error"}]
+        return _pg(gate_id, "FAIL", True, "BLOCKED_RUNTIME_VIOLATION",
+                   f"API em {staging_url} viola contrato OpenAPI.",
+                   [str(openapi_path)], [str(openapi_path)], [], violations, _ms(t0))
+
+    return _pg(gate_id, "PASS", True, None,
+               f"API em {staging_url} conforme contrato OpenAPI (Ciclo 1).",
+               [str(openapi_path)], [str(openapi_path)], [], [], _ms(t0))
 
 
 def _g12_asyncapi_validation(root: pathlib.Path) -> dict:

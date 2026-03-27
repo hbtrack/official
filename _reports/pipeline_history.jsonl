@@ -1239,3 +1239,5 @@
 {"run_id": "20260326T113301_b366ee", "timestamp_utc": "2026-03-26T11:33:01Z", "overall_status": "PASS", "exit_code": 0, "health_score": 100, "git_commit": "5a7ba1d"}
 {"run_id": "20260326T113359_8670d1", "timestamp_utc": "2026-03-26T11:33:59Z", "overall_status": "PASS", "exit_code": 0, "health_score": 100, "git_commit": "5a7ba1d"}
 {"run_id": "20260326T113703_fb488a", "timestamp_utc": "2026-03-26T11:37:03Z", "overall_status": "PASS", "exit_code": 0, "health_score": 100, "git_commit": "64bda2d"}
+{"run_id": "20260327T220555_3963ef", "timestamp_utc": "2026-03-27T22:05:55Z", "overall_status": "FAIL", "exit_code": 2, "health_score": 96, "git_commit": "68f5b6e"}
+{"run_id": "20260327T220657_fe7cb8", "timestamp_utc": "2026-03-27T22:06:57Z", "overall_status": "FAIL", "exit_code": 2, "health_score": 96, "git_commit": "68f5b6e"}

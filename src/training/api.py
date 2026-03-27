@@ -117,7 +117,7 @@ def _get_actor_id(request) -> uuid.UUID:
     actor_id = getattr(request, "_actor_id", None)
     if actor_id:
         return uuid.UUID(str(actor_id))
-    return uuid.uuid4()
+    raise HttpError(401, "Unauthenticated")
 
 
 # ---------------------------------------------------------------------------
