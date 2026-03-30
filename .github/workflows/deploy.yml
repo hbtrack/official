@@ -364,9 +364,28 @@ jobs:
       HB_STAGING_URL: https://staging.handballtrack.app
     steps:
       - uses: actions/checkout@v4
+      - name: Sincronizar branch_ativo no SESSION_HANDOFF
+        run: |
+          CURRENT="${{ github.head_ref || github.ref_name }}"
+          if [ -n "$CURRENT" ] && [ -f SESSION_HANDOFF.md ]; then
+            sed -i "s|^branch_ativo:.*|branch_ativo: ${CURRENT}|" SESSION_HANDOFF.md
+          fi
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install oasdiff
+        run: |
+          curl -fsSL https://github.com/oasdiff/oasdiff/releases/download/v1.12.3/oasdiff_1.12.3_linux_amd64.tar.gz -o "$RUNNER_TEMP/oasdiff.tar.gz"
+          mkdir -p "$RUNNER_TEMP/oasdiff-extract"
+          tar -xzf "$RUNNER_TEMP/oasdiff.tar.gz" -C "$RUNNER_TEMP/oasdiff-extract"
+          install -m 0755 "$(find "$RUNNER_TEMP/oasdiff-extract" -type f -name oasdiff | head -n1)" "$RUNNER_TEMP/oasdiff"
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+      - name: Install Node dependencies
+        run: npm ci
       - name: Install Python dependencies
         run: pip install -r requirements-dev.txt
       - name: Run HTTP_RUNTIME_CONTRACT_GATE
