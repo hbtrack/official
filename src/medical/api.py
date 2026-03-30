@@ -27,26 +27,27 @@ _repo = MedicalRecordRepository()
 
 
 def _role(request) -> RoleLabel:
-    val = getattr(request, "auth", None)
-    if val is None:
-        return RoleLabel.MEMBER
-    if isinstance(val, dict):
-        return RoleLabel(val.get("role", "member"))
-    return RoleLabel(getattr(val, "role", "member"))
+    """Extrai RoleLabel do JWT validado."""
+    role = getattr(request, "_actor_role", None)
+    if role:
+        try:
+            return RoleLabel(role)
+        except ValueError:
+            return RoleLabel.MEMBER
+    raise HttpError(401, "Unauthenticated")
 
 
 def _actor_id(request) -> uuid.UUID:
-    val = getattr(request, "auth", None)
-    if val is None:
-        return uuid.uuid4()
-    if isinstance(val, dict):
-        return uuid.UUID(val.get("sub", str(uuid.uuid4())))
-    return uuid.UUID(str(getattr(val, "sub", uuid.uuid4())))
+    """Extrai actor_id do JWT validado."""
+    actor_id = getattr(request, "_actor_id", None)
+    if actor_id:
+        return uuid.UUID(str(actor_id))
+    raise HttpError(401, "Unauthenticated")
 
 
 @router.get(
     "/records",
-    response={200: MedicalRecordListOut, 403: ErrorOut, 422: ErrorOut, 500: ErrorOut},
+    response={200: MedicalRecordListOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut, 500: ErrorOut},
     operation_id="listMedicalRecords",
     summary="Lista registros médicos",
 )
@@ -85,7 +86,7 @@ def list_medical_records(
 
 @router.post(
     "/records",
-    response={201: MedicalRecordOut, 400: ErrorOut, 403: ErrorOut, 409: ErrorOut, 422: ErrorOut, 500: ErrorOut},
+    response={201: MedicalRecordOut, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut, 409: ErrorOut, 422: ErrorOut, 500: ErrorOut},
     operation_id="createMedicalRecord",
     summary="Cria registro médico",
 )
@@ -116,7 +117,7 @@ def create_medical_record(request, payload: CreateMedicalRecordIn):
 
 @router.get(
     "/records/{record_id}",
-    response={200: MedicalRecordOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut},
+    response={200: MedicalRecordOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut},
     operation_id="getMedicalRecord",
     summary="Obtém registro médico por ID",
 )
@@ -135,7 +136,7 @@ def get_medical_record(request, record_id: uuid.UUID):
 
 @router.patch(
     "/records/{record_id}",
-    response={200: MedicalRecordOut, 400: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut, 422: ErrorOut, 500: ErrorOut},
+    response={200: MedicalRecordOut, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut, 422: ErrorOut, 500: ErrorOut},
     operation_id="updateMedicalRecord",
     summary="Atualiza registro médico",
 )
@@ -166,7 +167,7 @@ def update_medical_record(request, record_id: uuid.UUID, payload: UpdateMedicalR
 
 @router.delete(
     "/records/{record_id}",
-    response={204: None, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut, 500: ErrorOut},
+    response={204: None, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut, 500: ErrorOut},
     operation_id="deleteMedicalRecord",
     summary="Soft-delete de registro médico (somente admin)",
 )

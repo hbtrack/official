@@ -45,6 +45,15 @@ from .schemas import (
 router = Router(tags=["video"])
 
 
+def _get_actor_id(request):
+    """Extrai actor_id do JWT validado."""
+    import uuid as _uuid
+    actor_id = getattr(request, "_actor_id", None)
+    if actor_id:
+        return _uuid.UUID(str(actor_id))
+    raise HttpError(401, "Unauthenticated")
+
+
 def _get_repo() -> VideoRepository:
     return VideoRepository()
 
@@ -121,10 +130,7 @@ def create_session(request, body: CreateSessionIn):
     PERMISSIONS: admin, coordinator, coach (PERMISSIONS_VIDEO.md)
     """
     # TODO: extrair user_id do JWT quando identity_access estiver implementado
-    created_by = getattr(request, "auth", None)
-    if created_by is None:
-        import uuid as _uuid
-        created_by = _uuid.uuid4()  # placeholder até integração JWT
+    created_by = _get_actor_id(request)
 
     try:
         session = CreateSessionUseCase(_get_repo()).execute(
@@ -294,10 +300,7 @@ def create_clip(request, body: CreateClipIn):
     POST /video/clips
     PERMISSIONS: admin, coordinator, coach, athlete (INV-VID-005)
     """
-    user_id = getattr(request, "auth", None)
-    if user_id is None:
-        import uuid as _uuid
-        user_id = _uuid.uuid4()
+    user_id = _get_actor_id(request)
 
     try:
         clip = CreateClipUseCase(_get_repo()).execute(
@@ -364,10 +367,7 @@ def publish_distribution(request, body: PublishDistributionIn):
     PERMISSIONS: admin, coordinator, coach (DR-VID-009, PERM-VID-007)
     INV-VID-012: Idempotente por distributionProfileId
     """
-    user_id = getattr(request, "auth", None)
-    if user_id is None:
-        import uuid as _uuid
-        user_id = _uuid.uuid4()
+    user_id = _get_actor_id(request)
 
     try:
         dist = PublishDistributionUseCase(_get_repo()).execute(

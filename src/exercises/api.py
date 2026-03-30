@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import Optional
 from uuid import UUID
 from ninja import Router
+from ninja.errors import HttpError
 from django.http import HttpRequest
 from exercises.application.use_cases import (
     CreateExercise, ListExercises, GetExercise, UpdateExercise, DeleteExercise,
@@ -24,16 +25,22 @@ _repo = ExerciseRepository()
 
 
 def _get_role(request: HttpRequest) -> RoleLabel:
-    try:
-        return RoleLabel(getattr(request, "actor_role", "admin"))
-    except ValueError:
-        return RoleLabel.ADMIN
+    """Extrai RoleLabel do JWT validado."""
+    role = getattr(request, "_actor_role", None)
+    if role:
+        try:
+            return RoleLabel(role)
+        except ValueError:
+            return RoleLabel.MEMBER
+    raise HttpError(401, "Unauthenticated")
 
 
 def _get_actor_id(request: HttpRequest) -> UUID:
-    import uuid
-    v = getattr(request, "actor_id", None)
-    return UUID(str(v)) if v else uuid.uuid4()
+    """Extrai actor_id do JWT validado."""
+    actor_id = getattr(request, "_actor_id", None)
+    if actor_id:
+        return UUID(str(actor_id))
+    raise HttpError(401, "Unauthenticated")
 
 
 def _get_org_id(request: HttpRequest) -> Optional[UUID]:
@@ -41,7 +48,7 @@ def _get_org_id(request: HttpRequest) -> Optional[UUID]:
     return UUID(str(v)) if v else None
 
 
-@router.get("", response={200: ExerciseListOut, 403: ErrorOut})
+@router.get("", response={200: ExerciseListOut, 401: ErrorOut, 403: ErrorOut})
 def list_exercises(request: HttpRequest, scope: Optional[str] = None,
                    sessionPhase: Optional[str] = None, primaryObjective: Optional[str] = None,
                    physicalLoad: Optional[str] = None, spaceRequired: Optional[str] = None,
@@ -56,7 +63,7 @@ def list_exercises(request: HttpRequest, scope: Optional[str] = None,
     return 200, ExerciseListOut(items=out_items, page=page, pageSize=pageSize, total=total)
 
 
-@router.post("", response={201: ExerciseOut, 403: ErrorOut, 422: ErrorOut})
+@router.post("", response={201: ExerciseOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut})
 def create_exercise(request: HttpRequest, payload: CreateExerciseIn):
     role, actor_id, org_id = _get_role(request), _get_actor_id(request), _get_org_id(request)
     uc = CreateExercise(_repo)
@@ -79,7 +86,7 @@ def create_exercise(request: HttpRequest, payload: CreateExerciseIn):
     return 201, ExerciseOut.from_domain(exercise)
 
 
-@router.get("/{exercise_id}", response={200: ExerciseOut, 403: ErrorOut, 404: ErrorOut})
+@router.get("/{exercise_id}", response={200: ExerciseOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_exercise(request: HttpRequest, exercise_id: UUID):
     role, actor_id, org_id = _get_role(request), _get_actor_id(request), _get_org_id(request)
     try:
@@ -91,7 +98,7 @@ def get_exercise(request: HttpRequest, exercise_id: UUID):
     return 200, ExerciseOut.from_domain(exercise)
 
 
-@router.put("/{exercise_id}", response={200: ExerciseOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
+@router.put("/{exercise_id}", response={200: ExerciseOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def update_exercise(request: HttpRequest, exercise_id: UUID, payload: UpdateExerciseIn):
     role, actor_id = _get_role(request), _get_actor_id(request)
     try:
@@ -116,7 +123,7 @@ def update_exercise(request: HttpRequest, exercise_id: UUID, payload: UpdateExer
     return 200, ExerciseOut.from_domain(exercise)
 
 
-@router.delete("/{exercise_id}", response={204: None, 403: ErrorOut, 404: ErrorOut})
+@router.delete("/{exercise_id}", response={204: None, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def delete_exercise(request: HttpRequest, exercise_id: UUID, payload: DeleteExerciseIn):
     role, actor_id = _get_role(request), _get_actor_id(request)
     try:
@@ -128,7 +135,7 @@ def delete_exercise(request: HttpRequest, exercise_id: UUID, payload: DeleteExer
     return 204, None
 
 
-@router.post("/{exercise_id}/copy", response={201: ExerciseOut, 403: ErrorOut, 404: ErrorOut})
+@router.post("/{exercise_id}/copy", response={201: ExerciseOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def copy_exercise_to_org(request: HttpRequest, exercise_id: UUID):
     role, actor_id, org_id = _get_role(request), _get_actor_id(request), _get_org_id(request)
     try:
@@ -140,7 +147,7 @@ def copy_exercise_to_org(request: HttpRequest, exercise_id: UUID):
     return 201, ExerciseOut.from_domain(exercise)
 
 
-@router.get("/{exercise_id}/versions", response={200: list, 403: ErrorOut, 404: ErrorOut})
+@router.get("/{exercise_id}/versions", response={200: list, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def list_exercise_versions(request: HttpRequest, exercise_id: UUID):
     role, actor_id, org_id = _get_role(request), _get_actor_id(request), _get_org_id(request)
     try:
@@ -152,7 +159,7 @@ def list_exercise_versions(request: HttpRequest, exercise_id: UUID):
     return 200, [ExerciseVersionOut.from_domain(v).dict() for v in versions]
 
 
-@router.get("/{exercise_id}/versions/{version_id}", response={200: ExerciseVersionOut, 403: ErrorOut, 404: ErrorOut})
+@router.get("/{exercise_id}/versions/{version_id}", response={200: ExerciseVersionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_exercise_version(request: HttpRequest, exercise_id: UUID, version_id: UUID):
     role, actor_id, org_id = _get_role(request), _get_actor_id(request), _get_org_id(request)
     try:
@@ -164,7 +171,7 @@ def get_exercise_version(request: HttpRequest, exercise_id: UUID, version_id: UU
     return 200, ExerciseVersionOut.from_domain(version)
 
 
-@router.get("/{exercise_id}/relations", response={200: list, 403: ErrorOut, 404: ErrorOut})
+@router.get("/{exercise_id}/relations", response={200: list, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def list_exercise_relations(request: HttpRequest, exercise_id: UUID):
     role, actor_id, org_id = _get_role(request), _get_actor_id(request), _get_org_id(request)
     try:
@@ -176,7 +183,7 @@ def list_exercise_relations(request: HttpRequest, exercise_id: UUID):
     return 200, [ExerciseRelationOut.from_domain(r).dict() for r in relations]
 
 
-@router.post("/{exercise_id}/relations", response={201: ExerciseRelationOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
+@router.post("/{exercise_id}/relations", response={201: ExerciseRelationOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def add_exercise_relation(request: HttpRequest, exercise_id: UUID, payload: AddRelationIn):
     role, actor_id = _get_role(request), _get_actor_id(request)
     try:
@@ -193,7 +200,7 @@ def add_exercise_relation(request: HttpRequest, exercise_id: UUID, payload: AddR
 
 
 @router.delete("/{exercise_id}/relations/{to_exercise_id}/{relation_type}",
-               response={204: None, 403: ErrorOut, 404: ErrorOut})
+               response={204: None, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def delete_exercise_relation(request: HttpRequest, exercise_id: UUID,
                               to_exercise_id: UUID, relation_type: str):
     role, actor_id = _get_role(request), _get_actor_id(request)
@@ -206,7 +213,7 @@ def delete_exercise_relation(request: HttpRequest, exercise_id: UUID,
     return 204, None
 
 
-@router.get("/{exercise_id}/acl", response={200: list, 403: ErrorOut, 404: ErrorOut})
+@router.get("/{exercise_id}/acl", response={200: list, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_exercise_acl(request: HttpRequest, exercise_id: UUID):
     role, actor_id = _get_role(request), _get_actor_id(request)
     try:
@@ -218,7 +225,7 @@ def get_exercise_acl(request: HttpRequest, exercise_id: UUID):
     return 200, [ExerciseACLEntryOut.from_domain(a).dict() for a in entries]
 
 
-@router.post("/{exercise_id}/acl", response={201: ExerciseACLEntryOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
+@router.post("/{exercise_id}/acl", response={201: ExerciseACLEntryOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def add_exercise_acl_entry(request: HttpRequest, exercise_id: UUID, payload: AddACLEntryIn):
     role, actor_id, org_id = _get_role(request), _get_actor_id(request), _get_org_id(request)
     try:
@@ -232,7 +239,7 @@ def add_exercise_acl_entry(request: HttpRequest, exercise_id: UUID, payload: Add
     return 201, ExerciseACLEntryOut.from_domain(entry)
 
 
-@router.delete("/{exercise_id}/acl/{user_id}", response={204: None, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
+@router.delete("/{exercise_id}/acl/{user_id}", response={204: None, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def remove_exercise_acl_entry(request: HttpRequest, exercise_id: UUID, user_id: UUID):
     role, actor_id = _get_role(request), _get_actor_id(request)
     try:

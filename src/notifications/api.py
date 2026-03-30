@@ -3,6 +3,7 @@ from typing import Optional
 from uuid import UUID
 from datetime import datetime
 from ninja import Router
+from ninja.errors import HttpError
 from django.http import HttpRequest
 
 from notifications.application.use_cases import (
@@ -30,16 +31,24 @@ router = Router(tags=["notifications"])
 
 
 def _get_role(request: HttpRequest) -> str:
-    return getattr(request, "role_label", "member")
+    """Extrai role do JWT validado."""
+    role = getattr(request, "_actor_role", None)
+    if role:
+        return role
+    raise HttpError(401, "Unauthenticated")
 
 
 def _get_user_id(request: HttpRequest) -> UUID:
-    return getattr(request, "user_id", UUID("00000000-0000-4000-8000-000000000000"))
+    """Extrai user_id do JWT validado."""
+    user_id = getattr(request, "_actor_id", None)
+    if user_id:
+        return UUID(str(user_id))
+    raise HttpError(401, "Unauthenticated")
 
 
 @router.post(
     "/intents",
-    response={202: NotificationDeliveryOut, 400: ErrorOut, 403: ErrorOut},
+    response={202: NotificationDeliveryOut, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut},
 )
 def create_notification_intent(request: HttpRequest, payload: CreateNotificationIntentIn):
     role = _get_role(request)
@@ -62,7 +71,7 @@ def create_notification_intent(request: HttpRequest, payload: CreateNotification
 
 @router.get(
     "/deliveries",
-    response={200: DeliveryListOut, 403: ErrorOut},
+    response={200: DeliveryListOut, 401: ErrorOut, 403: ErrorOut},
 )
 def list_deliveries(
     request: HttpRequest,
@@ -101,7 +110,7 @@ def list_deliveries(
 
 @router.get(
     "/deliveries/{delivery_id}",
-    response={200: NotificationDeliveryOut, 403: ErrorOut, 404: ErrorOut},
+    response={200: NotificationDeliveryOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut},
 )
 def get_delivery(request: HttpRequest, delivery_id: UUID):
     role = _get_role(request)
@@ -122,7 +131,7 @@ def get_delivery(request: HttpRequest, delivery_id: UUID):
 
 @router.get(
     "/users/{user_id}/preferences",
-    response={200: UserNotificationPreferencesOut, 403: ErrorOut},
+    response={200: UserNotificationPreferencesOut, 401: ErrorOut, 403: ErrorOut},
 )
 def get_user_notification_preferences(request: HttpRequest, user_id: UUID):
     role = _get_role(request)
@@ -141,7 +150,7 @@ def get_user_notification_preferences(request: HttpRequest, user_id: UUID):
 
 @router.patch(
     "/users/{user_id}/preferences",
-    response={200: UserNotificationPreferencesOut, 400: ErrorOut, 403: ErrorOut},
+    response={200: UserNotificationPreferencesOut, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut},
 )
 def update_user_notification_preferences(
     request: HttpRequest, user_id: UUID, payload: UpdateNotificationPreferencesIn

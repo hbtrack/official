@@ -28,27 +28,28 @@ _repo = WellnessEntryRepository()
 
 
 def _role(request) -> RoleLabel:
-    val = getattr(request, "auth", None)
-    if val is None:
-        return RoleLabel.MEMBER
-    if isinstance(val, dict):
-        return RoleLabel(val.get("role", "member"))
-    return RoleLabel(getattr(val, "role", "member"))
+    """Extrai RoleLabel do JWT validado."""
+    role = getattr(request, "_actor_role", None)
+    if role:
+        try:
+            return RoleLabel(role)
+        except ValueError:
+            return RoleLabel.MEMBER
+    raise HttpError(401, "Unauthenticated")
 
 
 def _actor_id(request) -> uuid.UUID:
-    val = getattr(request, "auth", None)
-    if val is None:
-        return uuid.uuid4()
-    if isinstance(val, dict):
-        return uuid.UUID(val.get("sub", str(uuid.uuid4())))
-    return uuid.UUID(str(getattr(val, "sub", uuid.uuid4())))
+    """Extrai actor_id do JWT validado."""
+    actor_id = getattr(request, "_actor_id", None)
+    if actor_id:
+        return uuid.UUID(str(actor_id))
+    raise HttpError(401, "Unauthenticated")
 
 
 # POST /wellness/entries
 @router.post(
     "/entries",
-    response={201: WellnessEntryOut, 400: ErrorOut, 403: ErrorOut, 409: ErrorOut, 500: ErrorOut},
+    response={201: WellnessEntryOut, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut, 409: ErrorOut, 500: ErrorOut},
     operation_id="createWellnessEntry",
     summary="Registra entrada de wellness diário",
 )
@@ -81,7 +82,7 @@ def create_wellness_entry(request, payload: CreateWellnessEntryIn):
 # GET /wellness/entries
 @router.get(
     "/entries",
-    response={200: WellnessEntryListOut, 403: ErrorOut, 500: ErrorOut},
+    response={200: WellnessEntryListOut, 401: ErrorOut, 403: ErrorOut, 500: ErrorOut},
     operation_id="listWellnessEntries",
     summary="Lista entradas de wellness",
 )
@@ -123,7 +124,7 @@ def list_wellness_entries(
 # GET /wellness/entries/{entryId}
 @router.get(
     "/entries/{entry_id}",
-    response={200: WellnessEntryOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut},
+    response={200: WellnessEntryOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut},
     operation_id="getWellnessEntry",
     summary="Obtém entrada de wellness por ID",
 )
@@ -143,7 +144,7 @@ def get_wellness_entry(request, entry_id: uuid.UUID):
 # GET /wellness/athletes/{athleteUserId}/entries
 @router.get(
     "/athletes/{athlete_user_id}/entries",
-    response={200: WellnessEntryListOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut},
+    response={200: WellnessEntryListOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut},
     operation_id="listAthleteWellnessEntries",
     summary="Lista entradas de wellness de um atleta",
 )
@@ -183,7 +184,7 @@ def list_athlete_wellness_entries(
 # GET /wellness/athletes/{athleteUserId}/summary
 @router.get(
     "/athletes/{athlete_user_id}/summary",
-    response={200: WellnessSummaryOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut},
+    response={200: WellnessSummaryOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut},
     operation_id="getAthleteWellnessSummary",
     summary="Obtém resumo de wellness do atleta",
 )

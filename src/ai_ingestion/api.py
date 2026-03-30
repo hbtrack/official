@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import Optional
 from uuid import UUID
 from ninja import Router
+from ninja.errors import HttpError
 from django.http import HttpRequest
 
 from ai_ingestion.application.use_cases import (
@@ -27,10 +28,14 @@ router = Router(tags=["ai_ingestion"])
 
 
 def _get_role(request: HttpRequest) -> str:
-    return getattr(request, "role_label", "member")
+    """Extrai role do JWT validado."""
+    role = getattr(request, "_actor_role", None)
+    if role:
+        return role
+    raise HttpError(401, "Unauthenticated")
 
 
-@router.get("/jobs", response={200: IngestionJobListOut, 403: ErrorOut})
+@router.get("/jobs", response={200: IngestionJobListOut, 401: ErrorOut, 403: ErrorOut})
 def list_ingestion_jobs(
     request: HttpRequest,
     page: int = 1,
@@ -58,7 +63,7 @@ def list_ingestion_jobs(
         return 403, ErrorOut(detail=str(e))
 
 
-@router.post("/jobs", response={202: IngestionJobOut, 403: ErrorOut, 409: IngestionJobOut})
+@router.post("/jobs", response={202: IngestionJobOut, 401: ErrorOut, 403: ErrorOut, 409: IngestionJobOut})
 def create_ingestion_job(request: HttpRequest, payload: CreateIngestionJobIn):
     role = _get_role(request)
     repo = IngestionJobRepository()
@@ -78,7 +83,7 @@ def create_ingestion_job(request: HttpRequest, payload: CreateIngestionJobIn):
         return 403, ErrorOut(detail=str(e))
 
 
-@router.get("/jobs/{job_id}", response={200: IngestionJobOut, 403: ErrorOut, 404: ErrorOut})
+@router.get("/jobs/{job_id}", response={200: IngestionJobOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_ingestion_job(request: HttpRequest, job_id: UUID):
     role = _get_role(request)
     repo = IngestionJobRepository()
@@ -93,7 +98,7 @@ def get_ingestion_job(request: HttpRequest, job_id: UUID):
 
 @router.post(
     "/jobs/{job_id}/retry",
-    response={202: IngestionJobOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut},
+    response={202: IngestionJobOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut},
 )
 def retry_ingestion_job(request: HttpRequest, job_id: UUID):
     role = _get_role(request)

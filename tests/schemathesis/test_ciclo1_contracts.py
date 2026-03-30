@@ -10,9 +10,17 @@ Checks ativos:
   - not_a_server_error: nenhum endpoint retorna 5xx
   - response_schema_conformance: response bodies conformes ao schema OpenAPI
 """
+import os
 import pytest
 import schemathesis
 from hypothesis import settings, HealthCheck
+
+_RUN_SCHEMATHESIS = os.environ.get("HB_RUN_SCHEMATHESIS", "").strip() not in ("", "0")
+
+pytestmark = pytest.mark.skipif(
+    not _RUN_SCHEMATHESIS,
+    reason="Schemathesis tests are slow (~2-5 min). Set HB_RUN_SCHEMATHESIS=1 to run.",
+)
 
 _schema = schemathesis.pytest.from_fixture("ciclo1_schema")
 

@@ -3,6 +3,7 @@ from typing import Optional
 from uuid import UUID
 
 from ninja import Router
+from ninja.errors import HttpError
 from django.http import HttpRequest
 
 from .schemas import (
@@ -28,15 +29,22 @@ _query_uc = QueryAnalyticsData(_repo)
 
 
 def _role(request: HttpRequest) -> RoleLabel:
-    return RoleLabel(getattr(request, "role", "coach"))
+    """Extrai RoleLabel do JWT validado."""
+    role = getattr(request, "_actor_role", None)
+    if role:
+        try:
+            return RoleLabel(role)
+        except ValueError:
+            return RoleLabel.MEMBER
+    raise HttpError(401, "Unauthenticated")
 
 
 def _uid(request: HttpRequest) -> UUID:
-    uid = getattr(request, "user_id", None)
-    if uid is None:
-        import uuid
-        return uuid.uuid4()
-    return UUID(str(uid)) if not isinstance(uid, UUID) else uid
+    """Extrai actor_id do JWT validado."""
+    actor_id = getattr(request, "_actor_id", None)
+    if actor_id:
+        return UUID(str(actor_id))
+    raise HttpError(401, "Unauthenticated")
 
 
 @router.get("/snapshots", response={200: SnapshotListOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut})
