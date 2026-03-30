@@ -166,3 +166,118 @@ O comando `seed_demo` é idempotente: não duplica registros se executado mais d
 | Temporada demo  | `Temporada 2026`                    |
 | Sessões treino  | 5 sessões de treino demo            |
 
+---
+
+## §8 INFRAESTRUTURA DE DEPLOY — CHECKLIST DE CONFIGURAÇÃO
+
+> Fonte autoritativa para configuração do ambiente staging e produção.
+> O pipeline CI/CD (`HTTP_RUNTIME_CONTRACT_GATE`) só valida a API ao vivo se a infraestrutura abaixo estiver corretamente configurada.
+
+### 8.1 — DNS (GoDaddy — handballtrack.app)
+
+Registros obrigatórios no painel DNS do domínio `handballtrack.app`:
+
+| Tipo | Nome      | Valor                    | TTL |
+|------|-----------|--------------------------|-----|
+| `A`  | `staging` | `[IP público do VPS]`    | 600 |
+| `A`  | `@`       | `[IP público do VPS]`    | 600 |
+| `A`  | `www`     | `[IP público do VPS]`    | 600 |
+
+**Como verificar propagação DNS:**
+```bash
+dig staging.handballtrack.app +short
+# Deve retornar o IP do VPS Locaweb
+```
+
+**Propagação:** entre 5 e 30 minutos após criação do registro.
+
+---
+
+### 8.2 — VPS Locaweb (Ubuntu 22.04)
+
+**Pré-requisitos já configurados (FASE 3):**
+- Docker Engine + Docker Compose v2 instalados
+- Usuário `deploy` com permissão Docker
+- Firewall UFW: portas 22, 80, 443 abertas
+- Chave SSH do GitHub Actions configurada
+
+**Checklist antes do primeiro deploy:**
+
+```bash
+# 1. Verificar que Docker está rodando
+sudo systemctl status docker
+
+# 2. Verificar conectividade de saída (para pull de imagem)
+curl -s https://ghcr.io
+
+# 3. Verificar portas abertas
+sudo ufw status
+
+# 4. Verificar diretório de deploy
+ls /home/deploy/hbtrack-backend/
+```
+
+---
+
+### 8.3 — SSL/TLS (Let's Encrypt via Certbot)
+
+**Pré-requisito:** DNS propagado (§8.1 completo) e portas 80/443 abertas.
+
+```bash
+# Instalar SSL para staging
+sudo certbot --nginx -d staging.handballtrack.app
+
+# Instalar SSL para produção (quando chegar a FASE 6)
+sudo certbot --nginx -d handballtrack.app -d www.handballtrack.app
+```
+
+**Renovação automática** (verificar se está configurada):
+```bash
+sudo systemctl status certbot.timer
+# Deve mostrar: active (waiting)
+```
+
+---
+
+### 8.4 — Verificação end-to-end do staging
+
+Execute na ordem. Cada item deve passar antes do próximo:
+
+```bash
+# 1. DNS resolve
+dig staging.handballtrack.app +short
+# Resultado esperado: IP do VPS
+
+# 2. HTTP redireciona para HTTPS
+curl -I http://staging.handballtrack.app
+# Resultado esperado: 301 Location: https://...
+
+# 3. HTTPS responde
+curl -I https://staging.handballtrack.app
+# Resultado esperado: 200 OK
+
+# 4. Health check da aplicação
+curl https://staging.handballtrack.app/health
+# Resultado esperado: {"status":"ok","db":"ok","redis":"ok"}
+
+# 5. OpenAPI schema acessível (ativa o HTTP_RUNTIME_CONTRACT_GATE)
+curl -I https://staging.handballtrack.app/api/openapi.json
+# Resultado esperado: 200 OK
+```
+
+Quando o item 5 passar, o `HTTP_RUNTIME_CONTRACT_GATE` será ativado automaticamente no próximo deploy e validará a API via Schemathesis.
+
+---
+
+### 8.5 — Critério de Done da infraestrutura (FASE 4)
+
+| Verificação | Comando | Resultado esperado |
+|-------------|---------|-------------------|
+| DNS propagado | `dig staging.handballtrack.app +short` | IP do VPS |
+| HTTPS ativo | `curl -I https://staging.handballtrack.app` | `200 OK` |
+| App saudável | `curl .../health` | `{"status":"ok"}` |
+| Contrato acessível | `curl .../api/openapi.json` | `200 OK` |
+| Schemathesis PASS | CI job `contract-conformance` | `success` |
+
+Todos os 5 itens devem estar verdes para FASE 4 ser declarada Done.
+
