@@ -15,7 +15,6 @@ evidence_paths:
   - ROADMAP.md
   - .github/workflows/deploy.yml
   - scripts/contracts/validate/validate_contracts.py
-  - .CEPRAEA/RELATÓRIO.md
 ---
 # SESSION HANDOFF — HB TRACK
 > Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`
