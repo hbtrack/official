@@ -6201,8 +6201,16 @@ def _g11_http_runtime_contract(root: pathlib.Path) -> dict:
         return _skip(gate_id, "contracts/openapi/openapi.yaml ausente.", _ms(t0))
 
     schema_url = staging_url.rstrip("/") + "/api/openapi.json"
+    # schemathesis v4 usa CLI `st run` (sem __main__.py — `python -m schemathesis` não funciona)
+    st_cli = shutil.which("st") or shutil.which("schemathesis")
+    if not st_cli:
+        return _pg(gate_id, "FAIL", True, "ERROR_INFRA",
+                   "schemathesis CLI (`st`) não encontrada. Execute: pip install schemathesis",
+                   [], [], [],
+                   [{"blocking_code": "ERROR_INFRA", "artifact": "schemathesis", "message": "st CLI not found", "severity": "error"}],
+                   _ms(t0))
     cmd = [
-        sys.executable, "-m", "schemathesis", "run",
+        st_cli, "run",
         schema_url,
         "--base-url", staging_url.rstrip("/"),
         "--include-path-regex", r"^/api/(auth|users|teams|seasons|training)/",
