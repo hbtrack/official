@@ -6212,7 +6212,7 @@ def _g11_http_runtime_contract(root: pathlib.Path) -> dict:
     cmd = [
         st_cli, "run",
         schema_url,
-        "--base-url", staging_url.rstrip("/"),
+        "--url", staging_url.rstrip("/"),
         "--include-path-regex", r"^/api/(auth|users|teams|seasons|training)/",
         "--checks", "not_a_server_error,response_schema_conformance",
         "--hypothesis-max-examples", "5",
