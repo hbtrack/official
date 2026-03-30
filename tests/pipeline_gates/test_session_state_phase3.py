@@ -52,13 +52,14 @@ def _load_session_schema() -> dict:
         return json.load(f)
 
 
-def _run_hb(*args):
+def _run_hb(*args, timeout=120):
     import subprocess as sp
     return sp.run(
         [sys.executable, str(HB_SCRIPT)] + list(args),
         capture_output=True,
         text=True,
         cwd=str(REPO_ROOT),
+        timeout=timeout,
     )
 
 

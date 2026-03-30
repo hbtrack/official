@@ -56,10 +56,14 @@ def _patch_flush_allow_cascade():
 
 @pytest.fixture(scope="session")
 def django_db_setup():
-    """Skip integration tests if PostgreSQL is not available."""
+    """Override pytest-django database setup.
+
+    Most tests in this repo are contract/governance tests that don't need DB.
+    Tests requiring DB (schemathesis, integration) should skip gracefully
+    or be run with explicit infrastructure: docker compose up postgres.
+    """
     if not _postgres_available():
         pytest.skip(
             "PostgreSQL não disponível. "
             "Inicie com: docker compose -f infra/docker-compose.yml up -d postgres"
         )
-    # pytest-django (_django_db_helper) handles setup_test_environment() and setup_databases()
