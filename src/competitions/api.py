@@ -46,14 +46,14 @@ _repo = CompetitionRepository()
 
 
 def _role(request) -> RoleLabel:
-    """Extrai role do JWT claim. Fallback para MEMBER quando não autenticado."""
-    val = getattr(request, "auth", None)
-    if val is None:
-        return RoleLabel.MEMBER
-    if isinstance(val, dict):
-        return RoleLabel(val.get("role", "member"))
-    role_attr = getattr(val, "role", "member")
-    return RoleLabel(role_attr)
+    """Extrai RoleLabel do JWT validado."""
+    role = getattr(request, "_actor_role", None)
+    if role:
+        try:
+            return RoleLabel(role)
+        except ValueError:
+            return RoleLabel.MEMBER
+    raise HttpError(401, "Unauthenticated")
 
 
 # ---------------------------------------------------------------------------

@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import Optional
 from uuid import UUID
 from ninja import Router
+from ninja.errors import HttpError
 from django.http import HttpRequest
 from exercises.application.use_cases import (
     CreateExercise, ListExercises, GetExercise, UpdateExercise, DeleteExercise,
@@ -24,16 +25,22 @@ _repo = ExerciseRepository()
 
 
 def _get_role(request: HttpRequest) -> RoleLabel:
-    try:
-        return RoleLabel(getattr(request, "actor_role", "admin"))
-    except ValueError:
-        return RoleLabel.ADMIN
+    """Extrai RoleLabel do JWT validado."""
+    role = getattr(request, "_actor_role", None)
+    if role:
+        try:
+            return RoleLabel(role)
+        except ValueError:
+            return RoleLabel.MEMBER
+    raise HttpError(401, "Unauthenticated")
 
 
 def _get_actor_id(request: HttpRequest) -> UUID:
-    import uuid
-    v = getattr(request, "actor_id", None)
-    return UUID(str(v)) if v else uuid.uuid4()
+    """Extrai actor_id do JWT validado."""
+    actor_id = getattr(request, "_actor_id", None)
+    if actor_id:
+        return UUID(str(actor_id))
+    raise HttpError(401, "Unauthenticated")
 
 
 def _get_org_id(request: HttpRequest) -> Optional[UUID]:

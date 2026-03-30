@@ -3,6 +3,7 @@ from typing import Optional
 from uuid import UUID
 
 from ninja import Router
+from ninja.errors import HttpError
 from django.http import HttpRequest
 
 from scout.application.use_cases import (
@@ -23,19 +24,22 @@ _repo = ScoutEventRepository()
 
 
 def _get_role(request: HttpRequest) -> RoleLabel:
-    role_str = getattr(request, "actor_role", "admin")
-    try:
-        return RoleLabel(role_str)
-    except ValueError:
-        return RoleLabel.ADMIN
+    """Extrai RoleLabel do JWT validado."""
+    role = getattr(request, "_actor_role", None)
+    if role:
+        try:
+            return RoleLabel(role)
+        except ValueError:
+            return RoleLabel.MEMBER
+    raise HttpError(401, "Unauthenticated")
 
 
 def _get_actor_id(request: HttpRequest) -> UUID:
-    actor_id = getattr(request, "actor_id", None)
-    if actor_id is None:
-        import uuid
-        return uuid.uuid4()
-    return UUID(str(actor_id))
+    """Extrai actor_id do JWT validado."""
+    actor_id = getattr(request, "_actor_id", None)
+    if actor_id:
+        return UUID(str(actor_id))
+    raise HttpError(401, "Unauthenticated")
 
 
 def _get_team_ids(request: HttpRequest):

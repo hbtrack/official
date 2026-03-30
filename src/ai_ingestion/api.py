@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import Optional
 from uuid import UUID
 from ninja import Router
+from ninja.errors import HttpError
 from django.http import HttpRequest
 
 from ai_ingestion.application.use_cases import (
@@ -27,7 +28,11 @@ router = Router(tags=["ai_ingestion"])
 
 
 def _get_role(request: HttpRequest) -> str:
-    return getattr(request, "role_label", "member")
+    """Extrai role do JWT validado."""
+    role = getattr(request, "_actor_role", None)
+    if role:
+        return role
+    raise HttpError(401, "Unauthenticated")
 
 
 @router.get("/jobs", response={200: IngestionJobListOut, 403: ErrorOut})

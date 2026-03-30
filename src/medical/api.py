@@ -27,21 +27,22 @@ _repo = MedicalRecordRepository()
 
 
 def _role(request) -> RoleLabel:
-    val = getattr(request, "auth", None)
-    if val is None:
-        return RoleLabel.MEMBER
-    if isinstance(val, dict):
-        return RoleLabel(val.get("role", "member"))
-    return RoleLabel(getattr(val, "role", "member"))
+    """Extrai RoleLabel do JWT validado."""
+    role = getattr(request, "_actor_role", None)
+    if role:
+        try:
+            return RoleLabel(role)
+        except ValueError:
+            return RoleLabel.MEMBER
+    raise HttpError(401, "Unauthenticated")
 
 
 def _actor_id(request) -> uuid.UUID:
-    val = getattr(request, "auth", None)
-    if val is None:
-        return uuid.uuid4()
-    if isinstance(val, dict):
-        return uuid.UUID(val.get("sub", str(uuid.uuid4())))
-    return uuid.UUID(str(getattr(val, "sub", uuid.uuid4())))
+    """Extrai actor_id do JWT validado."""
+    actor_id = getattr(request, "_actor_id", None)
+    if actor_id:
+        return uuid.UUID(str(actor_id))
+    raise HttpError(401, "Unauthenticated")
 
 
 @router.get(

@@ -106,11 +106,14 @@ router = Router(tags=["training"])
 # ---------------------------------------------------------------------------
 
 def _get_actor_role(request) -> RoleLabel:
-    role = getattr(request, "_actor_role", "admin")
-    try:
-        return RoleLabel(role)
-    except ValueError:
-        return RoleLabel.MEMBER
+    """Extrai RoleLabel do JWT validado."""
+    role = getattr(request, "_actor_role", None)
+    if role:
+        try:
+            return RoleLabel(role)
+        except ValueError:
+            return RoleLabel.MEMBER
+    raise HttpError(401, "Unauthenticated")
 
 
 def _get_actor_id(request) -> uuid.UUID:

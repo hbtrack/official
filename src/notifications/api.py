@@ -3,6 +3,7 @@ from typing import Optional
 from uuid import UUID
 from datetime import datetime
 from ninja import Router
+from ninja.errors import HttpError
 from django.http import HttpRequest
 
 from notifications.application.use_cases import (
@@ -30,11 +31,19 @@ router = Router(tags=["notifications"])
 
 
 def _get_role(request: HttpRequest) -> str:
-    return getattr(request, "role_label", "member")
+    """Extrai role do JWT validado."""
+    role = getattr(request, "_actor_role", None)
+    if role:
+        return role
+    raise HttpError(401, "Unauthenticated")
 
 
 def _get_user_id(request: HttpRequest) -> UUID:
-    return getattr(request, "user_id", UUID("00000000-0000-4000-8000-000000000000"))
+    """Extrai user_id do JWT validado."""
+    user_id = getattr(request, "_actor_id", None)
+    if user_id:
+        return UUID(str(user_id))
+    raise HttpError(401, "Unauthenticated")
 
 
 @router.post(
