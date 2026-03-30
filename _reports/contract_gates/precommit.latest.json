@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-03-30T10:55:20Z",
+  "timestamp_utc": "2026-03-30T11:00:11Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "37a5c14",
+    "git_commit": "999c6a1",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -22,7 +22,7 @@
       "storybook": null
     }
   },
-  "overall_status": "FAIL",
+  "overall_status": "PASS",
   "execution_context": {
     "profile": "precommit",
     "stage": null,
@@ -31,10 +31,10 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/precommit.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260330T105520_c75b07"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260330T110011_8646e2"
   },
   "status_detail": {
-    "active_gates_passed": 11,
+    "active_gates_passed": 13,
     "skip_count": 40,
     "critical_gates": [
       {
@@ -171,7 +171,7 @@
       },
       {
         "gate_id": "HANDOFF_COHERENCE_GATE",
-        "status": "FAIL"
+        "status": "PASS"
       },
       {
         "gate_id": "MODULE_STATUS_COHERENCE_GATE",
@@ -207,7 +207,7 @@
       }
     ]
   },
-  "exit_code": 2,
+  "exit_code": 0,
   "gates": [
     {
       "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -229,7 +229,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 73
+        "duration_ms": 46
       }
     },
     {
@@ -254,7 +254,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2677
+        "duration_ms": 1201
       }
     },
     {
@@ -365,7 +365,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 14
+        "duration_ms": 15
       }
     },
     {
@@ -976,7 +976,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 29
+        "duration_ms": 31
       }
     },
     {
@@ -1578,7 +1578,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1762
+        "duration_ms": 1740
       }
     },
     {
@@ -1724,7 +1724,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 3
       }
     },
     {
@@ -1891,11 +1891,11 @@
     },
     {
       "gate_id": "HANDOFF_COHERENCE_GATE",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": true,
-      "exit_code": 2,
-      "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-      "summary": "SESSION_HANDOFF.md com 1 inconsistência(s).",
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "SESSION_HANDOFF.md coerente com estado atual.",
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
@@ -1911,18 +1911,11 @@
         "/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py"
       ],
       "evidence_files": [],
-      "violations": [
-        {
-          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-          "artifact": "SESSION_HANDOFF.md",
-          "message": "branch_ativo='main' != branch atual='fix/seed-training-session-created-by'.",
-          "severity": "error"
-        }
-      ],
+      "violations": [],
       "metrics": {
-        "errors": 1,
+        "errors": 0,
         "warnings": 0,
-        "violations": 1,
+        "violations": 0,
         "duration_ms": 3
       }
     },
@@ -1945,7 +1938,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 166
+        "duration_ms": 160
       }
     },
     {
@@ -2027,7 +2020,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 5
       }
     },
     {
@@ -2049,7 +2042,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 17
+        "duration_ms": 16
       }
     },
     {
@@ -2108,11 +2101,11 @@
     },
     {
       "gate_id": "READINESS_SUMMARY_GATE",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": false,
-      "exit_code": 2,
+      "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pipeline FAIL: 1 gate(s) bloqueante(s) falharam.",
+      "summary": "Pipeline PASS: 12 PASS, 40 SKIP.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
