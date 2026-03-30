@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-03-27"
-branch_ativo: fix/schemathesis-url-flag
+branch_ativo: fix/schemathesis-cli-flags
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
 modulo_foco: training

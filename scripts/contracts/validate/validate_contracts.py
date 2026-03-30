@@ -6215,8 +6215,7 @@ def _g11_http_runtime_contract(root: pathlib.Path) -> dict:
         "--url", staging_url.rstrip("/"),
         "--include-path-regex", r"^/api/(auth|users|teams|seasons|training)/",
         "--checks", "not_a_server_error,response_schema_conformance",
-        "--hypothesis-max-examples", "5",
-        "--exit-first",
+        "--max-examples", "5",
         "--no-color",
     ]
     try:
