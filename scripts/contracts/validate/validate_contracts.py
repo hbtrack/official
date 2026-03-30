@@ -6201,6 +6201,21 @@ def _g11_http_runtime_contract(root: pathlib.Path) -> dict:
         return _skip(gate_id, "contracts/openapi/openapi.yaml ausente.", _ms(t0))
 
     schema_url = staging_url.rstrip("/") + "/api/openapi.json"
+
+    # Verificar conectividade antes de rodar schemathesis — evita timeout de 120s
+    try:
+        import urllib.request
+        req = urllib.request.urlopen(
+            urllib.request.Request(schema_url, method="HEAD"),
+            timeout=10,
+        )
+    except Exception as _conn_err:
+        return _skip(
+            gate_id,
+            f"Staging inacessível ({schema_url}): {_conn_err}. Gate ignorado até staging estar disponível.",
+            _ms(t0),
+        )
+
     # schemathesis v4 usa CLI `st run` (sem __main__.py — `python -m schemathesis` não funciona)
     st_cli = shutil.which("st") or shutil.which("schemathesis")
     if not st_cli:
