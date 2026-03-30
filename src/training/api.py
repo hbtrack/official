@@ -187,7 +187,7 @@ def _block_to_out(b) -> SessionBlockOut:
 # GET /training-sessions — listTrainingSessions
 # ---------------------------------------------------------------------------
 
-@router.get("/training-sessions", response={200: TrainingSessionListOut, 400: ErrorOut, 403: ErrorOut})
+@router.get("/training-sessions", response={200: TrainingSessionListOut, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut})
 def list_training_sessions(
     request,
     organization_id: Optional[uuid.UUID] = None,
@@ -227,7 +227,7 @@ def list_training_sessions(
 
 @router.post(
     "/training-sessions",
-    response={201: TrainingSessionOut, 400: ErrorOut, 403: ErrorOut, 422: ErrorOut},
+    response={201: TrainingSessionOut, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut, 422: ErrorOut},
 )
 def create_training_session(request, body: CreateTrainingSessionIn):
     repo = TrainingSessionRepository()
@@ -280,7 +280,7 @@ def create_training_session(request, body: CreateTrainingSessionIn):
 
 @router.get(
     "/training-sessions/{id}",
-    response={200: TrainingSessionOut, 403: ErrorOut, 404: ErrorOut},
+    response={200: TrainingSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut},
 )
 def get_training_session(request, id: uuid.UUID):
     repo = TrainingSessionRepository()
@@ -323,32 +323,32 @@ def _do_transition(request, id: uuid.UUID, target_status: TrainingSessionStatus)
     return TransitionOut(id=session.id, status=session.status.value, updated_at=session.updated_at)
 
 
-@router.post("/training-sessions/{id}/publish", response={200: TransitionOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
+@router.post("/training-sessions/{id}/publish", response={200: TransitionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def publish_training_session(request, id: uuid.UUID):
     return 200, _do_transition(request, id, TrainingSessionStatus.PUBLISHED)
 
 
-@router.post("/training-sessions/{id}/unpublish", response={200: TransitionOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
+@router.post("/training-sessions/{id}/unpublish", response={200: TransitionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def unpublish_training_session(request, id: uuid.UUID):
     return 200, _do_transition(request, id, TrainingSessionStatus.SCHEDULED)
 
 
-@router.post("/training-sessions/{id}/start", response={200: TransitionOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
+@router.post("/training-sessions/{id}/start", response={200: TransitionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def start_training_session(request, id: uuid.UUID):
     return 200, _do_transition(request, id, TrainingSessionStatus.IN_PROGRESS)
 
 
-@router.post("/training-sessions/{id}/complete", response={200: TransitionOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
+@router.post("/training-sessions/{id}/complete", response={200: TransitionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def complete_training_session(request, id: uuid.UUID):
     return 200, _do_transition(request, id, TrainingSessionStatus.COMPLETED)
 
 
-@router.post("/training-sessions/{id}/cancel", response={200: TransitionOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
+@router.post("/training-sessions/{id}/cancel", response={200: TransitionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def cancel_training_session(request, id: uuid.UUID):
     return 200, _do_transition(request, id, TrainingSessionStatus.CANCELLED)
 
 
-@router.post("/training-sessions/{id}/archive", response={200: TransitionOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
+@router.post("/training-sessions/{id}/archive", response={200: TransitionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut})
 def archive_training_session(request, id: uuid.UUID):
     return 200, _do_transition(request, id, TrainingSessionStatus.ARCHIVED)
 
@@ -359,7 +359,7 @@ def archive_training_session(request, id: uuid.UUID):
 
 @router.get(
     "/training-sessions/{id}/blocks",
-    response={200: SessionBlockListOut, 403: ErrorOut, 404: ErrorOut},
+    response={200: SessionBlockListOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut},
 )
 def list_session_blocks(request, id: uuid.UUID):
     session_repo = TrainingSessionRepository()
@@ -381,7 +381,7 @@ def list_session_blocks(request, id: uuid.UUID):
 
 @router.post(
     "/training-sessions/{id}/blocks",
-    response={201: SessionBlockOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut, 409: ErrorOut},
+    response={201: SessionBlockOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut, 409: ErrorOut},
 )
 def add_session_block(request, id: uuid.UUID, body: AddSessionBlockIn):
     session_repo = TrainingSessionRepository()
@@ -430,7 +430,7 @@ def get_session_block(request, id: uuid.UUID, block_id: uuid.UUID):
 
 @router.patch(
     "/training-sessions/{id}/blocks/{block_id}",
-    response={200: SessionBlockOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut},
+    response={200: SessionBlockOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut},
 )
 def update_session_block(request, id: uuid.UUID, block_id: uuid.UUID, body: UpdateSessionBlockIn):
     session_repo = TrainingSessionRepository()
@@ -462,7 +462,7 @@ def update_session_block(request, id: uuid.UUID, block_id: uuid.UUID, body: Upda
 
 @router.delete(
     "/training-sessions/{id}/blocks/{block_id}",
-    response={204: None, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut},
+    response={204: None, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut},
 )
 def delete_session_block(request, id: uuid.UUID, block_id: uuid.UUID):
     session_repo = TrainingSessionRepository()
@@ -490,7 +490,7 @@ def delete_session_block(request, id: uuid.UUID, block_id: uuid.UUID):
 
 @router.post(
     "/training-sessions/{id}/wellness-pre",
-    response={201: WellnessPreOut, 400: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut},
+    response={201: WellnessPreOut, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut},
 )
 def submit_wellness_pre(request, id: uuid.UUID, body: SubmitWellnessPreIn):
     session_repo = TrainingSessionRepository()
@@ -539,7 +539,7 @@ def submit_wellness_pre(request, id: uuid.UUID, body: SubmitWellnessPreIn):
 
 @router.post(
     "/training-sessions/{id}/wellness-post",
-    response={201: WellnessPostOut, 400: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut},
+    response={201: WellnessPostOut, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut},
 )
 def submit_wellness_post(request, id: uuid.UUID, body: SubmitWellnessPostIn):
     session_repo = TrainingSessionRepository()
@@ -614,7 +614,7 @@ def list_execution_records(request, id: uuid.UUID):
 
 @router.post(
     "/training-sessions/{id}/execution-records",
-    response={201: ExecutionRecordOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut},
+    response={201: ExecutionRecordOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut},
 )
 def create_execution_record(request, id: uuid.UUID, body: CreateExecutionRecordIn):
     session_repo = TrainingSessionRepository()
@@ -694,7 +694,7 @@ def list_session_objectives(request, id: uuid.UUID):
 
 @router.post(
     "/training-sessions/{id}/objectives",
-    response={201: SessionObjectiveOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut},
+    response={201: SessionObjectiveOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 422: ErrorOut},
 )
 def create_session_objective(request, id: uuid.UUID, body: CreateSessionObjectiveIn):
     session_repo = TrainingSessionRepository()
@@ -755,7 +755,7 @@ def list_mesocycles(request, organization_id: Optional[uuid.UUID] = None):
     ])
 
 
-@router.post("/mesocycles", response={201: MesocycleOut, 403: ErrorOut, 422: ErrorOut})
+@router.post("/mesocycles", response={201: MesocycleOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut})
 def create_mesocycle(request, body: CreateMesocycleIn):
     repo = MesocycleRepository()
     try:
@@ -845,7 +845,7 @@ def list_microcycles(
     ])
 
 
-@router.post("/microcycles", response={201: MicrocycleOut, 403: ErrorOut, 422: ErrorOut})
+@router.post("/microcycles", response={201: MicrocycleOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut})
 def create_microcycle(request, body: CreateMicrocycleIn):
     repo = MicrocycleRepository()
     try:

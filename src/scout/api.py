@@ -46,7 +46,7 @@ def _get_team_ids(request: HttpRequest):
     return getattr(request, "actor_team_ids", []) or []
 
 
-@router.get("/events", response={200: ScoutEventListOut, 403: ErrorOut, 400: ErrorOut})
+@router.get("/events", response={200: ScoutEventListOut, 401: ErrorOut, 403: ErrorOut, 400: ErrorOut})
 def list_scout_events(
     request: HttpRequest,
     matchId: Optional[UUID] = None,
@@ -76,7 +76,7 @@ def list_scout_events(
     return 200, ScoutEventListOut(items=out_items, totalCount=total)
 
 
-@router.post("/events", response={201: ScoutEventOut, 403: ErrorOut, 400: ErrorOut})
+@router.post("/events", response={201: ScoutEventOut, 401: ErrorOut, 403: ErrorOut, 400: ErrorOut})
 def create_scout_event(request: HttpRequest, payload: CreateScoutEventIn):
     role = _get_role(request)
     uc = CreateScoutEvent(_repo)
@@ -106,7 +106,7 @@ def create_scout_event(request: HttpRequest, payload: CreateScoutEventIn):
     return 201, ScoutEventOut.from_domain(event)
 
 
-@router.get("/events/aggregations", response={200: ScoutAggregationsOut, 403: ErrorOut, 400: ErrorOut})
+@router.get("/events/aggregations", response={200: ScoutAggregationsOut, 401: ErrorOut, 403: ErrorOut, 400: ErrorOut})
 def get_scout_aggregations(
     request: HttpRequest,
     matchId: UUID,
@@ -126,7 +126,7 @@ def get_scout_aggregations(
     )
 
 
-@router.get("/events/{event_id}", response={200: ScoutEventOut, 403: ErrorOut, 404: ErrorOut})
+@router.get("/events/{event_id}", response={200: ScoutEventOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_scout_event(request: HttpRequest, event_id: UUID):
     role = _get_role(request)
     actor_id = _get_actor_id(request)
@@ -146,7 +146,7 @@ def get_scout_event(request: HttpRequest, event_id: UUID):
     return 200, ScoutEventOut.from_domain(event)
 
 
-@router.post("/sessions/{match_id}/complete", response={200: CompleteSessionOut, 403: ErrorOut, 404: ErrorOut})
+@router.post("/sessions/{match_id}/complete", response={200: CompleteSessionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def complete_scout_session(
     request: HttpRequest,
     match_id: UUID,

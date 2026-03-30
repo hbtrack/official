@@ -47,7 +47,7 @@ def _actor_id(request) -> uuid.UUID:
 
 @router.get(
     "/records",
-    response={200: MedicalRecordListOut, 403: ErrorOut, 422: ErrorOut, 500: ErrorOut},
+    response={200: MedicalRecordListOut, 401: ErrorOut, 403: ErrorOut, 422: ErrorOut, 500: ErrorOut},
     operation_id="listMedicalRecords",
     summary="Lista registros médicos",
 )
@@ -86,7 +86,7 @@ def list_medical_records(
 
 @router.post(
     "/records",
-    response={201: MedicalRecordOut, 400: ErrorOut, 403: ErrorOut, 409: ErrorOut, 422: ErrorOut, 500: ErrorOut},
+    response={201: MedicalRecordOut, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut, 409: ErrorOut, 422: ErrorOut, 500: ErrorOut},
     operation_id="createMedicalRecord",
     summary="Cria registro médico",
 )
@@ -117,7 +117,7 @@ def create_medical_record(request, payload: CreateMedicalRecordIn):
 
 @router.get(
     "/records/{record_id}",
-    response={200: MedicalRecordOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut},
+    response={200: MedicalRecordOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut},
     operation_id="getMedicalRecord",
     summary="Obtém registro médico por ID",
 )
@@ -136,7 +136,7 @@ def get_medical_record(request, record_id: uuid.UUID):
 
 @router.patch(
     "/records/{record_id}",
-    response={200: MedicalRecordOut, 400: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut, 422: ErrorOut, 500: ErrorOut},
+    response={200: MedicalRecordOut, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut, 422: ErrorOut, 500: ErrorOut},
     operation_id="updateMedicalRecord",
     summary="Atualiza registro médico",
 )
@@ -167,7 +167,7 @@ def update_medical_record(request, record_id: uuid.UUID, payload: UpdateMedicalR
 
 @router.delete(
     "/records/{record_id}",
-    response={204: None, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut, 500: ErrorOut},
+    response={204: None, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut, 500: ErrorOut},
     operation_id="deleteMedicalRecord",
     summary="Soft-delete de registro médico (somente admin)",
 )

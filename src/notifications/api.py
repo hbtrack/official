@@ -48,7 +48,7 @@ def _get_user_id(request: HttpRequest) -> UUID:
 
 @router.post(
     "/intents",
-    response={202: NotificationDeliveryOut, 400: ErrorOut, 403: ErrorOut},
+    response={202: NotificationDeliveryOut, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut},
 )
 def create_notification_intent(request: HttpRequest, payload: CreateNotificationIntentIn):
     role = _get_role(request)
@@ -71,7 +71,7 @@ def create_notification_intent(request: HttpRequest, payload: CreateNotification
 
 @router.get(
     "/deliveries",
-    response={200: DeliveryListOut, 403: ErrorOut},
+    response={200: DeliveryListOut, 401: ErrorOut, 403: ErrorOut},
 )
 def list_deliveries(
     request: HttpRequest,
@@ -110,7 +110,7 @@ def list_deliveries(
 
 @router.get(
     "/deliveries/{delivery_id}",
-    response={200: NotificationDeliveryOut, 403: ErrorOut, 404: ErrorOut},
+    response={200: NotificationDeliveryOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut},
 )
 def get_delivery(request: HttpRequest, delivery_id: UUID):
     role = _get_role(request)
@@ -131,7 +131,7 @@ def get_delivery(request: HttpRequest, delivery_id: UUID):
 
 @router.get(
     "/users/{user_id}/preferences",
-    response={200: UserNotificationPreferencesOut, 403: ErrorOut},
+    response={200: UserNotificationPreferencesOut, 401: ErrorOut, 403: ErrorOut},
 )
 def get_user_notification_preferences(request: HttpRequest, user_id: UUID):
     role = _get_role(request)
@@ -150,7 +150,7 @@ def get_user_notification_preferences(request: HttpRequest, user_id: UUID):
 
 @router.patch(
     "/users/{user_id}/preferences",
-    response={200: UserNotificationPreferencesOut, 400: ErrorOut, 403: ErrorOut},
+    response={200: UserNotificationPreferencesOut, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut},
 )
 def update_user_notification_preferences(
     request: HttpRequest, user_id: UUID, payload: UpdateNotificationPreferencesIn

@@ -49,7 +49,7 @@ def _actor_id(request) -> uuid.UUID:
 # POST /wellness/entries
 @router.post(
     "/entries",
-    response={201: WellnessEntryOut, 400: ErrorOut, 403: ErrorOut, 409: ErrorOut, 500: ErrorOut},
+    response={201: WellnessEntryOut, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut, 409: ErrorOut, 500: ErrorOut},
     operation_id="createWellnessEntry",
     summary="Registra entrada de wellness diário",
 )
@@ -82,7 +82,7 @@ def create_wellness_entry(request, payload: CreateWellnessEntryIn):
 # GET /wellness/entries
 @router.get(
     "/entries",
-    response={200: WellnessEntryListOut, 403: ErrorOut, 500: ErrorOut},
+    response={200: WellnessEntryListOut, 401: ErrorOut, 403: ErrorOut, 500: ErrorOut},
     operation_id="listWellnessEntries",
     summary="Lista entradas de wellness",
 )
@@ -124,7 +124,7 @@ def list_wellness_entries(
 # GET /wellness/entries/{entryId}
 @router.get(
     "/entries/{entry_id}",
-    response={200: WellnessEntryOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut},
+    response={200: WellnessEntryOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut},
     operation_id="getWellnessEntry",
     summary="Obtém entrada de wellness por ID",
 )
@@ -144,7 +144,7 @@ def get_wellness_entry(request, entry_id: uuid.UUID):
 # GET /wellness/athletes/{athleteUserId}/entries
 @router.get(
     "/athletes/{athlete_user_id}/entries",
-    response={200: WellnessEntryListOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut},
+    response={200: WellnessEntryListOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut},
     operation_id="listAthleteWellnessEntries",
     summary="Lista entradas de wellness de um atleta",
 )
@@ -184,7 +184,7 @@ def list_athlete_wellness_entries(
 # GET /wellness/athletes/{athleteUserId}/summary
 @router.get(
     "/athletes/{athlete_user_id}/summary",
-    response={200: WellnessSummaryOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut},
+    response={200: WellnessSummaryOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut},
     operation_id="getAthleteWellnessSummary",
     summary="Obtém resumo de wellness do atleta",
 )

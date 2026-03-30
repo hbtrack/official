@@ -36,7 +36,7 @@ def _get_role(request: HttpRequest) -> str:
     raise HttpError(401, "Unauthenticated")
 
 
-@router.get("/entries", response={200: AuditEntryListOut, 400: ErrorOut, 403: ErrorOut})
+@router.get("/entries", response={200: AuditEntryListOut, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut})
 def list_audit_entries(
     request: HttpRequest,
     actorUserId: Optional[UUID] = None,
@@ -78,7 +78,7 @@ def list_audit_entries(
         return 400, ErrorOut(detail=str(e))
 
 
-@router.post("/entries", response={201: AuditEntryOut, 400: ErrorOut, 403: ErrorOut})
+@router.post("/entries", response={201: AuditEntryOut, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut})
 def create_audit_entry(request: HttpRequest, payload: CreateAuditEntryIn):
     role = _get_role(request)
     repo = AuditEntryRepository()
@@ -103,7 +103,7 @@ def create_audit_entry(request: HttpRequest, payload: CreateAuditEntryIn):
         return 400, ErrorOut(detail=str(e))
 
 
-@router.get("/entries/export", response={200: ExportOut, 400: ErrorOut, 403: ErrorOut})
+@router.get("/entries/export", response={200: ExportOut, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut})
 def export_audit_entries(
     request: HttpRequest,
     occurredAfter: datetime,
@@ -135,7 +135,7 @@ def export_audit_entries(
         return 400, ErrorOut(detail=str(e))
 
 
-@router.get("/entries/{entry_id}", response={200: AuditEntryOut, 403: ErrorOut, 404: ErrorOut})
+@router.get("/entries/{entry_id}", response={200: AuditEntryOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut})
 def get_audit_entry(request: HttpRequest, entry_id: UUID):
     role = _get_role(request)
     repo = AuditEntryRepository()

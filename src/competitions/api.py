@@ -62,7 +62,7 @@ def _role(request) -> RoleLabel:
 
 @router.get(
     "",
-    response={200: CompetitionListOut, 403: ErrorOut, 500: ErrorOut},
+    response={200: CompetitionListOut, 401: ErrorOut, 403: ErrorOut, 500: ErrorOut},
     operation_id="listCompetitions",
     summary="Lista competições",
 )
@@ -102,7 +102,7 @@ def list_competitions(
 
 @router.post(
     "",
-    response={201: CompetitionOut, 400: ErrorOut, 403: ErrorOut, 409: ErrorOut, 500: ErrorOut},
+    response={201: CompetitionOut, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut, 409: ErrorOut, 500: ErrorOut},
     operation_id="createCompetition",
     summary="Cria competição",
 )
@@ -135,7 +135,7 @@ def create_competition(request, payload: CreateCompetitionIn):
 
 @router.get(
     "/{competition_id}",
-    response={200: CompetitionOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut},
+    response={200: CompetitionOut, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 500: ErrorOut},
     operation_id="getCompetition",
     summary="Obter competição por ID",
 )
@@ -158,7 +158,7 @@ def get_competition(request, competition_id: uuid.UUID):
 
 @router.patch(
     "/{competition_id}",
-    response={200: CompetitionOut, 400: ErrorOut, 403: ErrorOut, 404: ErrorOut,
+    response={200: CompetitionOut, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut, 404: ErrorOut,
               409: ErrorOut, 500: ErrorOut},
     operation_id="patchCompetition",
     summary="Atualizar competição",
@@ -194,7 +194,7 @@ def patch_competition(request, competition_id: uuid.UUID, payload: PatchCompetit
 
 @router.post(
     "/{competition_id}/teams/{team_id}",
-    response={204: None, 400: ErrorOut, 403: ErrorOut, 404: ErrorOut,
+    response={204: None, 401: ErrorOut, 400: ErrorOut, 403: ErrorOut, 404: ErrorOut,
               409: ErrorOut, 500: ErrorOut},
     operation_id="registerTeamInCompetition",
     summary="Inscrever equipe na competição",
@@ -220,7 +220,7 @@ def register_team(request, competition_id: uuid.UUID, team_id: uuid.UUID):
 
 @router.delete(
     "/{competition_id}/teams/{team_id}",
-    response={204: None, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut, 500: ErrorOut},
+    response={204: None, 401: ErrorOut, 403: ErrorOut, 404: ErrorOut, 409: ErrorOut, 500: ErrorOut},
     operation_id="unregisterTeamFromCompetition",
     summary="Remover equipe da competição",
 )
