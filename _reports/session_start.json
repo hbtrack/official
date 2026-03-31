@@ -1,11 +1,11 @@
 {
   "session_id": "70731b2d-c614-4cd5-944b-564b0917df00",
-  "session_timestamp": "2026-03-26T07:50:02.389402+00:00",
-  "branch": "hb-track-contratos-driven",
+  "session_timestamp": "2026-03-31T08:10:56.150525+00:00",
+  "branch": "main",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "roadmap_execution",
   "task_type": "execute_roadmap_phase",
-  "stage": 2,
+  "stage": 0,
   "write_scope": "roadmap",
   "worker_id": "execute_roadmap_phase",
   "git_user": "HB Track Agent",
@@ -19,13 +19,13 @@
     "boot_paths_valid": true,
     "required_sections_resolvable": true
   },
-  "roadmap_phase": 4,
+  "roadmap_phase": 5,
   "stage0_exit_code": 0,
   "hook_exit_code": 0,
   "hook_validated_at": "2026-03-27T23:10:14.973783+00:00",
   "module_focus": "training",
   "stage3_exit_code": 2,
-  "roadmap_task_id": "roadmap-fase4-staging-validation",
+  "roadmap_task_id": "roadmap-fase5-frontend-ciclo1",
   "module": "training",
   "stage2_artifacts": [
     {
