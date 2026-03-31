@@ -16,10 +16,11 @@ import schemathesis
 from hypothesis import settings, HealthCheck
 
 _RUN_SCHEMATHESIS = os.environ.get("HB_RUN_SCHEMATHESIS", "").strip() not in ("", "0")
+_MAX_EXAMPLES = int(os.environ.get("HB_SCHEMATHESIS_MAX_EXAMPLES", "10"))
 
 pytestmark = pytest.mark.skipif(
     not _RUN_SCHEMATHESIS,
-    reason="Schemathesis tests are slow (~2-5 min). Set HB_RUN_SCHEMATHESIS=1 to run.",
+    reason="Set HB_RUN_SCHEMATHESIS=1 to run Schemathesis contract tests.",
 )
 
 _schema = schemathesis.pytest.from_fixture("ciclo1_schema")
@@ -28,7 +29,7 @@ _CICLO1_PREFIXES = ("/api/auth", "/api/users", "/api/teams", "/api/seasons", "/a
 
 
 @_schema.parametrize()
-@settings(max_examples=10, suppress_health_check=[HealthCheck.too_slow], deadline=None)
+@settings(max_examples=_MAX_EXAMPLES, suppress_health_check=[HealthCheck.too_slow], deadline=None)
 @pytest.mark.django_db(transaction=True)
 def test_ciclo1_api_contracts(case):
     """
@@ -38,7 +39,7 @@ def test_ciclo1_api_contracts(case):
       - Nenhum endpoint retorna HTTP 5xx
       - Response bodies estão conformes ao schema OpenAPI declarado
 
-    max_examples=10 localmente; CI usa max_examples=50 via HB_SCHEMATHESIS_EXAMPLES.
+    max_examples defaults to 10 and can be overridden via HB_SCHEMATHESIS_MAX_EXAMPLES.
     """
     if not any(case.path.startswith(p) for p in _CICLO1_PREFIXES):
         pytest.skip(f"Non-Ciclo 1 endpoint: {case.path}")

@@ -86,6 +86,8 @@ jobs:
       SECRET_KEY: ci-secret-key-for-testing-only-not-real
       DEBUG: "false"
       ALLOWED_HOSTS: localhost,127.0.0.1
+      HB_RUN_SCHEMATHESIS: "1"
+      HB_SCHEMATHESIS_MAX_EXAMPLES: "10"
       DATABASE_URL: postgres://hbtrack:testpassword@localhost:5432/hbtrack_test
       DB_NAME: hbtrack_test
       DB_USER: hbtrack
@@ -109,14 +111,14 @@ jobs:
           python-version: "3.12"
           cache: pip
 
-      - name: Install dependencies
+      - name: Install dependencies (inclui schemathesis)
         run: pip install -r requirements.txt -r requirements-dev.txt
 
       - name: Run migrations
         run: python manage.py migrate --noinput
 
-      - name: Run tests (excluindo schemathesis e pipeline_gates)
-        run: pytest -q --ignore=tests/schemathesis --ignore=tests/pipeline_gates --tb=short
+      - name: Run tests (inclui schemathesis; exclui pipeline_gates)
+        run: pytest -q --ignore=tests/pipeline_gates --tb=short
 
   # ────────────────────────────────────────────────────────────────────────────
   # JOB 3 — Build da imagem Docker frontend
