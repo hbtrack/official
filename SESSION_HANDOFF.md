@@ -1,6 +1,6 @@
 ---
 data_ultima_sessao: "2026-03-31"
-branch_ativo: fix/schemathesis-timeout
+branch_ativo: fix/gaps-02-05-gap-a
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
 modulo_foco: training
@@ -9,7 +9,7 @@ task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: roadmap-fase4-staging-validation
 resultado: PENDENTE
-proxima_acao_permitida: "Finalizar GAP-03 (pipeline_gates no CI) → GAP-04 (HANDOFF_COHERENCE) → GAP-05 (arquivar handoffs) → merge."
+proxima_acao_permitida: "PR #28 aprovado e mergeado → FASE 5 Frontend Ciclo 1."
 bloqueios_ativos: []
 evidence_paths:
   - ROADMAP.md
@@ -22,7 +22,7 @@ evidence_paths:
 > Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`
 
 ## Estado Geral
-**Data:** 2026-03-31 | **Branch:** fix/schemathesis-timeout | **CI:** PASS
+**Data:** 2026-03-31 | **Branch:** fix/gaps-02-05-gap-a | **CI:** pendente (PR #28)
 **Modo:** ROADMAP | **Fase:** 4 | **Resultado:** EM ANDAMENTO (CDD GAP fixes)
 
 ## O que foi feito nesta sessão
