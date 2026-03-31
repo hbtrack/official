@@ -7,6 +7,7 @@ import json
 from django.http import HttpResponse
 from django.urls import path
 from ninja import NinjaAPI
+from ninja.errors import HttpError, ValidationError as NinjaValidationError
 
 from video.api import router as video_router
 from identity_access.api import router as identity_access_router
@@ -27,6 +28,60 @@ from audit.api import router as audit_router
 from notifications.api import router as notifications_router
 
 api = NinjaAPI(title="HB Track API", version="1.0.0")
+
+# ---------------------------------------------------------------------------
+# Exception handlers globais — garante que TODOS os erros retornam RFC 9457
+# ProblemOut com Content-Type: application/problem+json, conforme os contratos
+# OpenAPI declaram para respostas 4xx/5xx.
+# ---------------------------------------------------------------------------
+
+_HTTP_STATUS_TITLES: dict[int, str] = {
+    400: "Bad Request",
+    401: "Unauthorized",
+    403: "Forbidden",
+    404: "Not Found",
+    405: "Method Not Allowed",
+    409: "Conflict",
+    422: "Unprocessable Entity",
+    429: "Too Many Requests",
+    500: "Internal Server Error",
+}
+
+
+def _problem_response(status: int, detail: str) -> HttpResponse:
+    title = _HTTP_STATUS_TITLES.get(status, "Error")
+    body = json.dumps({
+        "type": "about:blank",
+        "title": title,
+        "status": status,
+        "detail": detail,
+    })
+    return HttpResponse(body, content_type="application/problem+json", status=status)
+
+
+@api.exception_handler(HttpError)
+def _on_http_error(request, exc: HttpError) -> HttpResponse:
+    """Converte HttpError para ProblemOut RFC 9457."""
+    return _problem_response(exc.status_code, str(exc.message))
+
+
+@api.exception_handler(NinjaValidationError)
+def _on_validation_error(request, exc: NinjaValidationError) -> HttpResponse:
+    """Converte erros de validação Pydantic/Ninja para ProblemOut RFC 9457.
+
+    O campo ``detail`` é uma string legível (RFC 9457 §3.1), não uma lista.
+    """
+    errors = exc.errors if hasattr(exc, "errors") else []
+    parts: list[str] = []
+    for e in errors if isinstance(errors, list) else []:
+        if isinstance(e, dict):
+            loc = ".".join(str(segment) for segment in e.get("loc", []))
+            msg = e.get("msg", "")
+            parts.append(f"{loc}: {msg}" if loc else msg)
+        else:
+            parts.append(str(e))
+    detail = "; ".join(parts) or "Validation failed"
+    return _problem_response(422, detail)
 
 api.add_router("/video", video_router)
 api.add_router("/auth", identity_access_router)

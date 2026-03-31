@@ -467,7 +467,20 @@ class HBCLIv2:
                 text=True,
                 check=True
             )
-            return result.stdout.strip()
+            branch = result.stdout.strip()
+            if branch:
+                return branch
+            # Detached HEAD (CI checkout): tentar GITHUB_HEAD_REF, GITHUB_REF_NAME ou ref
+            for env_var in ("GITHUB_HEAD_REF", "GITHUB_REF_NAME"):
+                val = os.environ.get(env_var, "").strip()
+                if val:
+                    return val
+            result2 = subprocess.run(
+                ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+                capture_output=True, text=True
+            )
+            ref = result2.stdout.strip()
+            return ref if ref and ref != "HEAD" else "detached"
         except Exception:
             return "unknown"
     
