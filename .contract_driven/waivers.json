@@ -1,1 +1,42 @@
-[]
+[
+    {
+        "waiver_id": "W-001",
+        "gate": "HTTP_RUNTIME_CONTRACT_GATE",
+        "scope": "tests/schemathesis",
+        "reason": "Schemathesis requer PostgreSQL + Redis + servidor Django em execução. No CI, roda com HB_RUN_SCHEMATHESIS=1 e max_examples=10. Localmente requer flag explícita.",
+        "created": "2026-03-31",
+        "expires": "2026-06-30",
+        "status": "active",
+        "mitigation": "Schemathesis habilitado no CI com services PostgreSQL+Redis. Validação local opcional via flag."
+    },
+    {
+        "waiver_id": "W-002",
+        "gate": "PIPELINE_GATES_SLOW_TEST",
+        "scope": "tests/pipeline_gates/test_session_state_phase3.py::TestStage23ExitCodes",
+        "reason": "Executa hb stage3 que roda validate_contracts --profile ci completo (~2-5 min). Marcado @pytest.mark.slow e excluído do CI com -m 'not slow'.",
+        "created": "2026-03-31",
+        "expires": "2026-06-30",
+        "status": "active",
+        "mitigation": "Teste roda localmente sem marker filter. CI exclui apenas os marcados slow."
+    },
+    {
+        "waiver_id": "W-003",
+        "gate": "ENDPOINT_PARITY_GATE",
+        "scope": "training",
+        "reason": "Delta de 27 endpoints entre OpenAPI (53 ops) e api.py (26 rotas). Endpoints de periodização avançada, feedback threads, execution records serão implementados em fases futuras do ROADMAP.",
+        "created": "2026-03-31",
+        "expires": "2026-09-30",
+        "status": "active",
+        "mitigation": "Schemathesis valida apenas endpoints implementados. Endpoints pendentes são de fases 7+."
+    },
+    {
+        "waiver_id": "W-004",
+        "gate": "IDENTITY_ACCESS_FEATURES",
+        "scope": "identity_access",
+        "reason": "Password reset e MFA (TOTP) não implementados. Endpoints ausentes no contrato OpenAPI e no código.",
+        "created": "2026-03-31",
+        "expires": "2026-05-31",
+        "status": "active",
+        "mitigation": "Será endereçado antes de deploy produção v0.1 (FASE 6). Contrato será revisado primeiro via CDD."
+    }
+]

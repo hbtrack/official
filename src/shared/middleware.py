@@ -107,3 +107,88 @@ class JWTClaimsMiddleware:
 
         return self.get_response(request)
 
+
+# ── Rate Limiting ─────────────────────────────────────────────────────────────
+
+import time
+from collections import defaultdict
+from django.http import JsonResponse
+
+
+class RateLimitMiddleware:
+    """
+    Rate limiter in-memory por IP (sliding window).
+
+    Configuração via settings:
+      RATE_LIMIT_REQUESTS  — máximo de requests por janela (default: 100)
+      RATE_LIMIT_WINDOW    — segundos da janela (default: 60)
+      RATE_LIMIT_AUTH_REQUESTS — máximo para /auth/ (default: 20)
+      RATE_LIMIT_AUTH_WINDOW   — janela para /auth/ (default: 60)
+
+    Retorna 429 + Problem+JSON (RFC 9457) quando excedido.
+    OWASP API4:2023 — Unrestricted Resource Consumption.
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+        self._buckets: dict[str, list[float]] = defaultdict(list)
+
+        from django.conf import settings
+        self._global_limit = getattr(settings, "RATE_LIMIT_REQUESTS", 100)
+        self._global_window = getattr(settings, "RATE_LIMIT_WINDOW", 60)
+        self._auth_limit = getattr(settings, "RATE_LIMIT_AUTH_REQUESTS", 20)
+        self._auth_window = getattr(settings, "RATE_LIMIT_AUTH_WINDOW", 60)
+
+    def _get_client_ip(self, request) -> str:
+        xff = request.META.get("HTTP_X_FORWARDED_FOR")
+        if xff:
+            return xff.split(",")[0].strip()
+        return request.META.get("REMOTE_ADDR", "unknown")
+
+    def _is_rate_limited(self, key: str, limit: int, window: int) -> bool:
+        now = time.monotonic()
+        bucket = self._buckets[key]
+
+        # Remover timestamps fora da janela
+        cutoff = now - window
+        self._buckets[key] = [ts for ts in bucket if ts > cutoff]
+        bucket = self._buckets[key]
+
+        if len(bucket) >= limit:
+            return True
+
+        bucket.append(now)
+        return False
+
+    def __call__(self, request):
+        ip = self._get_client_ip(request)
+        path = request.path_info
+
+        # Endpoints de autenticação têm limite mais restrito
+        if path.startswith("/api/auth/"):
+            key = f"auth:{ip}"
+            limit, window = self._auth_limit, self._auth_window
+        else:
+            key = f"global:{ip}"
+            limit, window = self._global_limit, self._global_window
+
+        if self._is_rate_limited(key, limit, window):
+            return JsonResponse(
+                {
+                    "type": "https://hbtrack.dev/errors/rate-limit-exceeded",
+                    "title": "Too Many Requests",
+                    "status": 429,
+                    "detail": f"Rate limit exceeded. Try again in {window}s.",
+                    "traceId": get_current_flow_id(),
+                },
+                status=429,
+                content_type="application/problem+json",
+            )
+
+        response = self.get_response(request)
+        response["X-RateLimit-Limit"] = str(limit)
+        response["X-RateLimit-Remaining"] = str(
+            max(0, limit - len(self._buckets.get(key, [])))
+        )
+        return response
+

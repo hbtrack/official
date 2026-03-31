@@ -70,8 +70,15 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "shared.middleware.SecurityHeadersMiddleware",
     "shared.middleware.FlowIDMiddleware",
+    "shared.middleware.RateLimitMiddleware",
     "shared.middleware.JWTClaimsMiddleware",
 ]
+
+# ── Rate Limiting (OWASP API4:2023) ──────────────────────────────────────────
+RATE_LIMIT_REQUESTS = int(os.environ.get("RATE_LIMIT_REQUESTS", "100"))
+RATE_LIMIT_WINDOW = int(os.environ.get("RATE_LIMIT_WINDOW", "60"))
+RATE_LIMIT_AUTH_REQUESTS = int(os.environ.get("RATE_LIMIT_AUTH_REQUESTS", "20"))
+RATE_LIMIT_AUTH_WINDOW = int(os.environ.get("RATE_LIMIT_AUTH_WINDOW", "60"))
 
 ROOT_URLCONF = "config.urls"
 
