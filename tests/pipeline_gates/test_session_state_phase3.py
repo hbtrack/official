@@ -505,8 +505,13 @@ Teste de cross-validation FASE 3.
 # ===========================================================================
 # 5. stage2_exit_code e stage3 — hb stage3 via subprocesso
 # ===========================================================================
+@pytest.mark.slow
 class TestStage23ExitCodes:
-    """Testa que stage2 e stage3 exit codes são persistidos na sessão."""
+    """Testa que stage2 e stage3 exit codes são persistidos na sessão.
+
+    Marcado como slow: chama `hb stage3` que executa validate_contracts.py --profile ci
+    (todos os 53 gates + tooling externo). Pode levar 2-5 min. Excluído do CI padrão.
+    """
 
     def test_stage3_command_exists_and_runs(self):
         """hb stage3 deve ser reconhecido e executar validate_contracts completo."""

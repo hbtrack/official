@@ -33,6 +33,15 @@ jobs:
             sed -i "s|^branch_ativo:.*|branch_ativo: ${CURRENT}|" SESSION_HANDOFF.md
           fi
 
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install Node.js tooling (redocly, spectral, asyncapi)
+        run: npm ci --ignore-scripts
+
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
@@ -42,12 +51,8 @@ jobs:
       - name: Install validation dependencies
         run: pip install -r requirements-dev.txt -r scripts/_policy/requirements.txt
 
-      - name: Run contract validation
+      - name: Run contract validation (todos os gates de tooling habilitados)
         run: python3 scripts/contracts/validate/validate_contracts.py --profile precommit
-
-      - name: Lint OpenAPI specs (Redocly)
-        run: |
-          npx --yes @redocly/cli@latest lint contracts/ --format=github-actions 2>/dev/null || echo "redocly lint optional"
 
   # ────────────────────────────────────────────────────────────────────────────
   # JOB 2 — Testes unitários e de integração
@@ -117,8 +122,8 @@ jobs:
       - name: Run migrations
         run: python manage.py migrate --noinput
 
-      - name: Run tests (inclui schemathesis; exclui pipeline_gates)
-        run: pytest -q --ignore=tests/pipeline_gates --tb=short
+      - name: Run tests (inclui schemathesis e pipeline_gates; exclui slow)
+        run: pytest -q -m "not slow" --tb=short
 
   # ────────────────────────────────────────────────────────────────────────────
   # JOB 3 — Build da imagem Docker frontend

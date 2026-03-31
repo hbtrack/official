@@ -9282,6 +9282,17 @@ def run_pipeline(
         "WAIVER_VALIDITY_GATE",  # FIX Ordem 5: agora no padrão
         "READINESS_HUMAN_CONFIRMATION_GATE",  # FIX Ordem 6: agora no padrão
         "CROSS_SPEC_ALIGNMENT_GATE",  # FIX BACKLOG_ITEM_2 (2A): no padrão para validação de links
+        # GAP-02: Gates de tooling adicionados ao perfil precommit (ferramentas instaladas no CI via npm ci)
+        "REF_HERMETICITY_GATE",                # sem tool externo — puro Python
+        "OPENAPI_ROOT_STRUCTURE_GATE",         # redocly lint
+        "OPENAPI_ROOT_MODULE_SYNC_GATE",       # redocly / estrutura root
+        "JSON_SCHEMA_VALIDATION_GATE",         # JSON Schema validation
+        "OPENAPI_POLICY_RULESET_GATE",         # spectral lint (com .spectral.yaml)
+        "SPECTRAL_LINTING_GATE",               # spectral lint (sem ruleset)
+        "ASYNCAPI_VALIDATION_GATE",            # asyncapi validate
+        "ARAZZO_VALIDATION_GATE",              # Arazzo YAML parsing
+        "ARAZZO_COMPLETENESS_GATE",            # Arazzo completeness
+        "TOOLING_CONFIG_GATE",                 # redocly.yaml / .spectral.yaml presentes
     }
     _local_ids = _precommit_ids | {
         "DECISION_IR_CONFORMANCE_GATE",
