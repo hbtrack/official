@@ -67,10 +67,14 @@ class HBHookValidator:
             self.repo_root / "contracts" / "schemas" / "shared" / "session_start.schema.json"
         )
         self.validator_script = self.repo_root / "scripts" / "contracts" / "validate" / "validate_contracts.py"
-        
+
+        # Preferir Python da venv se disponível (git hook usa /usr/bin/python3 que pode não ter pytest)
+        _venv_python = self.repo_root / ".venv" / "bin" / "python"
+        self.python_bin = str(_venv_python) if _venv_python.exists() else sys.executable
+
         self.session: Dict[str, Any] = {}
         self.schema: Dict[str, Any] = {}
-        
+
         self.errors: List[str] = []
         self.warnings: List[str] = []
     
@@ -384,7 +388,7 @@ class HBHookValidator:
         # 1. Survival suite
         print("▶ HOOK [Gov 1/3]: Rodando survival-suite...")
         result = subprocess.run(
-            [sys.executable, str(hb_script), "survival-suite"],
+            [self.python_bin, str(hb_script), "survival-suite"],
             cwd=self.repo_root,
         )
         if result.returncode != 0:
@@ -399,7 +403,7 @@ class HBHookValidator:
         print("▶ HOOK [Gov 2/3]: Paridade schema/template/skills...")
         result = subprocess.run(
             [
-                sys.executable,
+                self.python_bin,
                 "-m",
                 "pytest",
                 "tests/pipeline_gates/test_schema_template_parity_phase4.py",
@@ -420,7 +424,7 @@ class HBHookValidator:
         print("▶ HOOK [Gov 3/3]: Validação cruzada SESSION_HANDOFF ↔ session_start...")
         result = subprocess.run(
             [
-                sys.executable,
+                self.python_bin,
                 "-m",
                 "pytest",
                 "tests/pipeline_gates/test_session_state_phase3.py",
@@ -451,7 +455,7 @@ class HBHookValidator:
         print("\n══ HOOK: Executando validate_contracts.py --profile precommit ══\n")
         
         result = subprocess.run(
-            [sys.executable, str(self.validator_script), "--profile", "precommit"],
+            [self.python_bin, str(self.validator_script), "--profile", "precommit"],
             cwd=self.repo_root
         )
         
