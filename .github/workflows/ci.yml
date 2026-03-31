@@ -119,6 +119,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Configurar git hooks path (requerido por TestHookIntegrity)
+        run: git config core.hooksPath scripts/git-hooks
+
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
