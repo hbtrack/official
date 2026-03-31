@@ -9,7 +9,7 @@ adr_refs:
   - "ADR-007: auth-strategy (JWT Bearer)"
 domain_rules_ref: "./DOMAIN_RULES_TRAINING.md"
 invariants_ref: "./INVARIANTS_TRAINING.md"
-updated_at: "2026-03-16"
+updated_at: "2026-03-31"
 ---
 
 # PERMISSIONS_TRAINING.md
@@ -58,6 +58,18 @@ updated_at: "2026-03-16"
 | `listSessionObjectives` | ✅ | ✅ | ✅ | ✅ (própria sessão) | ❌ | — |
 | `createSessionObjective` | ✅ | ✅ | ✅ | ❌ | ❌ | Requer origin e ObjectiveType válidos |
 | `listAttentionQueueItems` | ✅ | ✅ | ✅ | ❌ | ❌ | Fila técnica — não exposta a athletes |
+| `resolveAttentionQueueItem` | ✅ | ✅ | ✅ | ❌ | ❌ | Marca item como resolvido após ação corretiva |
+| `dismissAttentionQueueItem` | ✅ | ✅ | ✅ | ❌ | ❌ | Descarta item sem ação (ex.: falso positivo) |
+| `escalateAttentionQueueItem` | ✅ | ✅ | ✅ | ❌ | ❌ | Escala item para coordinator/medical; gera notificação |
+| `listRecommendations` | ✅ | ✅ | ✅ | ✅ (própria sessão) | ❌ | Recomendações DSS para a sessão |
+| `acceptRecommendation` | ✅ | ✅ | ✅ | ❌ | ❌ | Coach aceita recomendação DSS; aplica ajuste |
+| `dismissRecommendation` | ✅ | ✅ | ✅ | ❌ | ❌ | Coach descarta recomendação DSS com justificativa |
+| `submitIneligibilityDeclaration` | ✅ | ✅ | ✅ | ✅ (própria) | ❌ | Declara atleta inelegível para sessão (restrição médica ou auto-reporte) |
+| `getIneligibilityStatus` | ✅ | ✅ | ✅ | ✅ (próprio) | ❌ | Consulta status de inelegibilidade do atleta na sessão |
+| `closeFeedbackThread` | ✅ | ✅ | ✅ | ❌ | ❌ | Encerra thread de feedback — somente staff (DR-TRAIN-019) |
+| `getLoadChart` | ✅ | ✅ | ✅ | ✅ (próprio time) | ❌ | Dados agregados de carga e prontidão; athlete vê apenas dados de si no time |
+| `listChatMessages` | ✅ | ✅ | ✅ | ✅ (própria conversa) | ❌ | BOLA: athlete acessa apenas conversas em que é participante |
+| `submitTrainingSuggestion` | ✅ | ✅ | ❌ | ✅ | ❌ | Athlete envia sugestão ao coach; coach não envia sugestão a si mesmo |
 | `listMesocycles` | ✅ | ✅ | ✅ | ✅ (leitura) | ❌ | — |
 | `createMesocycle` | ✅ | ✅ | ✅ | ❌ | ❌ | — |
 | `getMesocycleById` | ✅ | ✅ | ✅ | ✅ (leitura) | ❌ | — |

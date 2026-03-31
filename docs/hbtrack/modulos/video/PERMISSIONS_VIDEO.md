@@ -11,7 +11,7 @@ adr_refs:
 domain_rules_ref: "./DOMAIN_RULES_VIDEO.md"
 invariants_ref: "./INVARIANTS_VIDEO.md"
 state_model_ref: "./STATE_MODEL_VIDEO.md"
-updated_at: "2026-03-19"
+updated_at: "2026-03-31"
 ---
 
 # PERMISSIONS_VIDEO.md
@@ -31,20 +31,20 @@ updated_at: "2026-03-19"
 
 ## Tabela de Permissões por Operação
 
+> **Alinhamento canônico:** esta tabela reflete exatamente os 9 `operationId` declarados em
+> `contracts/openapi/paths/video.yaml`. Última reconciliação: 2026-03-31.
+
 | Operação (operationId) | admin | coordinator | coach | athlete | member | Observação |
 |---|---|---|---|---|---|---|
 | `createSession` | ✅ | ✅ | ✅ | ❌ | ❌ | Cria nova MatchMediaSession em estado DRAFT (DR-VID-001); requer acesso à partida matchId |
 | `listSessions` | ✅ | ✅ | ✅ | ✅ | ✅ (filtered) | Todos autenticados; resultado filtrado por matchId scope (INV-VID-006); member vê apenas partidas públicas |
 | `getSession` | ✅ | ✅ | ✅ | ✅ (se matchId acessível) | ✅ (se partida pública) | BOLA: usuário deve ter acesso à partida; scope = MatchMediaSession (INV-VID-006) |
-| `updateSession` | ✅ | ✅ | ✅ (se estado < SYNCING) | ❌ | ❌ | Altera campos editáveis (retentionPolicy, captureMode, etc.) antes de SYNCING (INV-VID-007); PUBLISHED é irrevogável (INV-VID-002) |
-| `transitionSession` | ✅ | ✅ | ✅ | ❌ | ❌ | Muda estado (DRAFT→CAPTURING→SYNCING→TRANSCODING→PUBLISHED) via PATCH operação (STATE_MODEL_VIDEO.md) |
-| `ingestSegment` | ✅ | ✅ | ✅ (edge node service account) | ❌ | ❌ | POST /segments: apenas durante estado CAPTURING; tipicamente via edge service account autenticado (DR-VID-003) |
+| `patchSession` | ✅ | ✅ | ✅ (se estado < SYNCING) | ❌ | ❌ | Altera campos editáveis e/ou transiciona estado (retentionPolicy, captureMode, status); PUBLISHED é irrevogável (INV-VID-002, STATE_MODEL_VIDEO.md) |
+| `createSegment` | ✅ | ✅ | ✅ (edge node service account) | ❌ | ❌ | POST /segments: apenas durante estado CAPTURING; tipicamente via edge service account autenticado (DR-VID-003) |
+| `listSegments` | ✅ | ✅ | ✅ | ✅ (se matchId acessível) | ✅ (se partida pública) | Filtro obrigatório: sessionId; visibilidade herdada da MatchMediaSession (INV-VID-006) |
 | `createClip` | ✅ | ✅ | ✅ | ✅ | ❌ | Cria ClipDefinition (semântico, com scout_event_id ou zone_label); athlete pode criar clips para análise pessoal (INV-VID-005) |
 | `listClips` | ✅ | ✅ | ✅ | ✅ | ✅ (herdado da sessão) | Visibilidade herdada da MatchMediaSession pai (INV-VID-006) |
-| `getClip` | ✅ | ✅ | ✅ | ✅ | ✅ (herdado) | BOLA: acesso ao clip = acesso à sessão pai |
 | `publishDistribution` | ✅ | ✅ | ✅ | ❌ | ❌ | POST /distribution: publica clip em CDN/broadcast para target type (DR-VID-009); requer aprovação ou role admin/coordinator |
-| `listDistributions` | ✅ | ✅ | ✅ | ✅ | ✅ (herdado) | Visibilidade herdada; public links visíveis a all; audit log acessível apenas a admin/coordinator |
-| `getDistribution` | ✅ | ✅ | ✅ | ✅ | ✅ (se público) | BOLA: acesso ao distribution = acesso à sessão + permissão targetType |
 
 ---
 
