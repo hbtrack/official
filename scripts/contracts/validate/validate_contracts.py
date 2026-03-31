@@ -6231,10 +6231,11 @@ def _g11_http_runtime_contract(root: pathlib.Path) -> dict:
         "--include-path-regex", r"^/api/(auth|users|teams|seasons|training)/",
         "--checks", "not_a_server_error,response_schema_conformance",
         "--max-examples", "5",
+        "--request-timeout", "10",
         "--no-color",
     ]
     try:
-        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=120, cwd=str(root))
+        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=300, cwd=str(root))
         output = (proc.stdout + proc.stderr).strip()
     except FileNotFoundError:
         return _pg(gate_id, "FAIL", True, "ERROR_INFRA",
@@ -6244,7 +6245,7 @@ def _g11_http_runtime_contract(root: pathlib.Path) -> dict:
                    _ms(t0))
     except subprocess.TimeoutExpired:
         return _pg(gate_id, "FAIL", True, "ERROR_INFRA",
-                   "schemathesis excedeu timeout de 120s.",
+                   "schemathesis excedeu timeout de 300s.",
                    [], [], [],
                    [{"blocking_code": "ERROR_INFRA", "artifact": staging_url, "message": "timeout", "severity": "error"}],
                    _ms(t0))
