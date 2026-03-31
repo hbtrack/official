@@ -78,7 +78,7 @@ def _session_to_out(s) -> dict:
 
 
 def _problem(status: int, title: str, detail: str = "") -> dict:
-    return {"title": title, "status": status, "detail": detail or None}
+    return {"type": "about:blank", "title": title, "status": status, "detail": detail or None}
 
 
 # ── FT-011: Autenticação ──────────────────────────────────────────────────────

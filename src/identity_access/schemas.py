@@ -80,7 +80,7 @@ class AssignRoleIn(Schema):
 
 class ProblemOut(Schema):
     """RFC 9457 Problem Details — application/problem+json."""
-    type: Optional[str] = None
+    type: str = "about:blank"
     title: str
     status: int
     detail: Optional[str] = None
