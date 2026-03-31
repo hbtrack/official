@@ -2558,7 +2558,7 @@ def _try_tool(
             cwd=str(cwd) if cwd else None,
             shell=use_shell,
             env=merged_env,
-            timeout=30,
+            timeout=90,
         )
         stdout = (result.stdout or b"").decode("utf-8", errors="replace")
         stderr = (result.stderr or b"").decode("utf-8", errors="replace")
@@ -2582,7 +2582,7 @@ def _try_tool(
                     stderr=subprocess.PIPE,
                     cwd=str(cwd) if cwd else None,
                     env=merged_env,
-                    timeout=30,
+                    timeout=90,
                 )
                 stdout = (result.stdout or b"").decode("utf-8", errors="replace")
                 stderr = (result.stderr or b"").decode("utf-8", errors="replace")
