@@ -1,5 +1,5 @@
 ---
-data_ultima_sessao: "2026-03-27"
+data_ultima_sessao: "2026-03-31"
 branch_ativo: fix/schemathesis-timeout
 modo_operacao: ROADMAP
 ci_status: UNKNOWN
@@ -8,63 +8,51 @@ fase_roadmap: 4
 task_type: execute_roadmap_phase
 boot_profile_id: roadmap_execution
 task_id: roadmap-fase4-staging-validation
-resultado: DONE
-proxima_acao_permitida: "Rodar testes de integração com Schemathesis em staging → CI verde → merge → deploy."
+resultado: PENDENTE
+proxima_acao_permitida: "Finalizar GAP-03 (pipeline_gates no CI) → GAP-04 (HANDOFF_COHERENCE) → GAP-05 (arquivar handoffs) → merge."
 bloqueios_ativos: []
 evidence_paths:
   - ROADMAP.md
-  - .github/workflows/deploy.yml
+  - .github/workflows/ci.yml
+  - config/urls.py
   - scripts/contracts/validate/validate_contracts.py
+  - _reports/contract_gates/precommit.latest.json
 ---
 # SESSION HANDOFF — HB TRACK
 > Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`
 
 ## Estado Geral
-**Data:** 2026-03-27 | **Branch:** docs/infra-deploy-checklist | **CI:** UNKNOWN
-**Modo:** ROADMAP | **Fase ROADMAP:** 4 | **Resultado:** CONCLUÍDO (auth enforcement)
+**Data:** 2026-03-31 | **Branch:** fix/schemathesis-timeout | **CI:** PASS
+**Modo:** ROADMAP | **Fase:** 4 | **Resultado:** EM ANDAMENTO (CDD GAP fixes)
 
 ## O que foi feito nesta sessão
 
-### Auditoria de conformidade
-Auditoria completa do projeto identificou vulnerabilidade crítica: **13 de 17 módulos** tinham auth stubs que aceitavam requisições anônimas (retornavam `uuid4()`, `RoleLabel.MEMBER`, ou defaults como `"admin"`/`"member"` em vez de lançar 401).
+### GAP-01 — Schemathesis habilitado no CI ✅ (commit ab23d6a)
+- `config/urls.py`: handlers globais RFC 9457 (`HttpError` + `NinjaValidationError`) — corrigiu 19 falhas de response_schema_conformance
+- CI: removido `--ignore=tests/schemathesis`; adicionado `HB_RUN_SCHEMATHESIS=1`/`HB_SCHEMATHESIS_MAX_EXAMPLES=10`
+- Resultado: 884 testes PASS + 1 schemathesis PASS (0 regressões)
 
-### Correção sistemática de auth — 13 módulos corrigidos
-Todos os helpers `_get_role`/`_get_actor_id`/`_role`/`_uid` foram reescritos para seguir o padrão de referência (teams/seasons): verificar `request._actor_role` / `request._actor_id` (populados pelo `JWTClaimsMiddleware`), lançar `HttpError(401, "Unauthenticated")` se ausentes.
+### GAP-02 — Tooling de contratos no CI ✅ (em staging)
+- CI: adicionado `npm ci` no job `validate` para instalar redocly/spectral/asyncapi
+- `validate_contracts.py`: gates de tooling adicionados ao perfil `precommit` (antes só em `local`)
+- Resultado local: 22 gates PASS no precommit (antes 11)
 
-**Módulos corrigidos:**
-- `src/training/api.py` — `_get_actor_role` (defaultava "admin")
-- `src/matches/api.py` — `_role()` e `_actor_id()` (usavam `request.auth`)
-- `src/medical/api.py` — `_role()` e `_actor_id()` (usavam `request.auth`, crítico para LGPD)
-- `src/wellness/api.py` — `_role()` e `_actor_id()` (usavam `request.auth`)
-- `src/scout/api.py` — `_get_role()` e `_get_actor_id()` + import HttpError
-- `src/competitions/api.py` — `_role()` + import HttpError
-- `src/analytics/api.py` — `_role()` e `_uid()` + import HttpError
-- `src/exercises/api.py` — `_get_role()` e `_get_actor_id()` + import HttpError
-- `src/reports/api.py` — `_role()` e `_uid()` + import HttpError
-- `src/video/api.py` — adicionado `_get_actor_id()` helper, substituídos 3 inline `uuid4()`
-- `src/audit/api.py` — `_get_role()` + import HttpError
-- `src/notifications/api.py` — `_get_role()` e `_get_user_id()` + import HttpError
-- `src/ai_ingestion/api.py` — `_get_role()` + import HttpError
-
-**Módulos já corretos (sem alteração):** teams, seasons, users, identity_access
-
-### Validação
-- **393 testes passando**, 0 falhas (excluindo 2 problemas pré-existentes: schemathesis `django_db` marker, `TestStage23ExitCodes` hang)
-- Zero stubs de auth restantes: grep por `uuid4()`, `"admin"`, `"member"`, `request.auth` em `src/*/api.py` retorna vazio
+### GAP-03 — pipeline_gates no CI 🔄 (in progress)
+- `test_session_state_phase3.py::TestStage23ExitCodes` — chama `hb stage3` (valida contratos completo, lento/trava no WSL)
+- `test_context_budgets.py` — SESSION_HANDOFF.md acima do budget de 350 palavras (corrigido nesta sessão)
+- Ação: marcar TestStage23ExitCodes com mark.slow e excluir do CI; remover `--ignore=tests/pipeline_gates`
 
 ## Evidências
-- `.CEPRAEA/RELATÓRIO.md` — relatório completo da auditoria
-- `src/*/api.py` (13 módulos) — auth enforcement corrigido
-- 393 testes passam sem falha
+- `config/urls.py` — exception handlers RFC 9457
+- `.github/workflows/ci.yml` — schemathesis + tooling habilitados
+- `scripts/contracts/validate/validate_contracts.py` — perfil precommit ampliado
 
 ## Próxima ação permitida
-1. Commit das alterações de auth
-2. Rodar Schemathesis em staging para validar que API rejeita 401 sem token
-3. Prosseguir com FASE 4 restante (RBAC testing, contract conformance)
+1. Concluir GAP-03 (pipeline_gates no CI)
+2. GAP-04: corrigir HANDOFF_COHERENCE_GATE (session_start.json divergência)
+3. GAP-05: arquivar 6 SESSION_HANDOFF_*.md da raiz para `_archive/`
+4. Merge do branch fix/schemathesis-timeout → main
 
 ## Bloqueios ativos
-- `BLOCKED_DEPLOY_REQUIRES_HUMAN` — VPS Locaweb (FASE 4 validação staging)
+- `BLOCKED_DEPLOY_REQUIRES_HUMAN` — validação em staging VPS requer aprovação humana
 
-## Problemas pré-existentes (não relacionados a esta sessão)
-- `tests/schemathesis/test_ciclo1_contracts.py` — falta `django_db` marker
-- `tests/pipeline_gates/test_session_state_phase3.py::TestStage23ExitCodes` — trava (subprocesso bloqueante)
