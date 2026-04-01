@@ -1930,6 +1930,20 @@ Rollback:
 
 - remover gate e restaurar bundle flow anterior
 
+Estado atual no sistema:
+
+- implementado e validado em 2026-04-01
+
+Evidencias validadas:
+
+- `BLOCKED_CONTEXT_BUNDLE_STALE` adicionado em `validate_contracts.py`
+- `_g_context_bundle_freshness()` implementado e adicionado ao `gate_plan`, `_precommit_ids` e `_local_ids`
+- Gate registrado em `GATES_REGISTRY.yaml` (ordem `20J`, `blocking: true`, `status: active`)
+- `pytest tests/pipeline_gates/test_context_bundle_freshness_gate.py -q` em `PASS` com `10 passed`
+- `pytest tests/pipeline_gates/test_gate_registry_parity.py -q` em `PASS` com `8 passed`
+- `python3 scripts/validate_contracts.py --profile ci` — `CONTEXT_BUNDLE_FRESHNESS_GATE` → `PASS`
+- commit `dbfa8e3` em `main`
+
 ## B8. Runtime real e merge hardening
 
 ### B8-001 - Endurecer ruleset do GitHub
@@ -2511,7 +2525,7 @@ Evidencia minima ja confirmada para os itens acima:
 
 Ordem remanescente obrigatoria a partir do estado atual:
 
-29. B7-002
+29. ~~B7-002~~ — DONE (2026-04-01, commit dbfa8e3)
 30. B-OPS-006
 31. B8-001
 32. B8-002
@@ -2545,7 +2559,8 @@ Regras de interpretacao desta ordem:
 - `B-OPS-004` entra como baseline permanente: `.env` de staging/producao deixa de ser bootstrapado inline e passa a ser renderizado deterministicamente do contrato operacional, com falha fechada se faltar valor obrigatorio
 - `B-OPS-005` entra como baseline permanente: segredos operacionais ativos passam a exigir metadata estruturada de rotacao/presenca/uso e ADR nao pode carregar secret obrigatorio apenas em prose
 - `B7-001` entra como baseline permanente: implementacao do agente em modulo/feature passa a ter bundle compilado e rastreavel em `compiled_context/<module>/<feature>.json`
-- a proxima acao correta no sistema atual passa a ser `B7-002`
+- `B7-002` entra como baseline permanente: bundle stale bloqueia tasks de implementacao via `CONTEXT_BUNDLE_FRESHNESS_GATE` (DONE 2026-04-01)
+- a proxima acao correta no sistema atual passa a ser `B-OPS-006`
 - qualquer mudanca na ordem acima exige nova validacao completa do pipeline e atualizacao desta secao
 
 ## 6. Definition of Done do backlog
