@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-01T06:04:10Z",
+  "timestamp_utc": "2026-04-01T07:06:59Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -22,7 +22,7 @@
       "storybook": null
     }
   },
-  "overall_status": "PASS",
+  "overall_status": "FAIL",
   "execution_context": {
     "profile": "local",
     "stage": "session-start",
@@ -31,11 +31,11 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/stage-session-start.local.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260401T060410_f45e56"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260401T070659_4af586"
   },
   "status_detail": {
-    "active_gates_passed": 5,
-    "skip_count": 60,
+    "active_gates_passed": 2,
+    "skip_count": 62,
     "critical_gates": [
       {
         "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -99,7 +99,7 @@
       },
       {
         "gate_id": "ARCH_DECISION_PRESENCE_GATE",
-        "status": "PASS"
+        "status": "SKIP_NOT_APPLICABLE"
       },
       {
         "gate_id": "CANON_ALLOWLIST_GATE",
@@ -219,7 +219,7 @@
       },
       {
         "gate_id": "HANDOFF_COHERENCE_GATE",
-        "status": "PASS"
+        "status": "FAIL"
       },
       {
         "gate_id": "MODULE_STATUS_COHERENCE_GATE",
@@ -252,10 +252,14 @@
       {
         "gate_id": "LEGACY_CRITICAL_PATH_GATE",
         "status": "SKIP_NOT_APPLICABLE"
+      },
+      {
+        "gate_id": "CONTEXT_BUNDLE_FRESHNESS_GATE",
+        "status": "SKIP_NOT_APPLICABLE"
       }
     ]
   },
-  "exit_code": 0,
+  "exit_code": 2,
   "gates": [
     {
       "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -277,7 +281,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 76
+        "duration_ms": 42
       }
     },
     {
@@ -552,23 +556,20 @@
     },
     {
       "gate_id": "ARCH_DECISION_PRESENCE_GATE",
-      "status": "PASS",
+      "status": "SKIP_NOT_APPLICABLE",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Nenhuma decisão arquitetural obrigatória pendente para o módulo 'reports'.",
+      "summary": "task_type atual 'execute_roadmap_phase' não exige gate.",
       "inputs": [],
-      "artifacts_checked": [
-        "/home/davis/HB-TRACK/docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md",
-        "/home/davis/HB-TRACK/_reports/session_start.json"
-      ],
+      "artifacts_checked": [],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1
+        "duration_ms": 0
       }
     },
     {
@@ -1239,36 +1240,47 @@
     },
     {
       "gate_id": "HANDOFF_COHERENCE_GATE",
-      "status": "PASS",
+      "status": "FAIL",
       "blocking": true,
-      "exit_code": 0,
-      "blocking_code": null,
-      "summary": "SESSION_HANDOFF.md coerente com estado atual.",
+      "exit_code": 2,
+      "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+      "summary": "SESSION_HANDOFF.md com 2 inconsistência(s).",
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/src/reports/api.py",
-        "/home/davis/HB-TRACK/src/reports/schemas.py",
-        "/home/davis/HB-TRACK/src/reports/generated/api.py",
-        "/home/davis/HB-TRACK/tests/parity/test_reports_codegen_parity.py"
+        "/home/davis/HB-TRACK/docs/_canon/gates/GATES_REGISTRY.yaml",
+        "/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_context_bundle_freshness_gate.py"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/src/reports/api.py",
-        "/home/davis/HB-TRACK/src/reports/schemas.py",
-        "/home/davis/HB-TRACK/src/reports/generated/api.py",
-        "/home/davis/HB-TRACK/tests/parity/test_reports_codegen_parity.py"
+        "/home/davis/HB-TRACK/docs/_canon/gates/GATES_REGISTRY.yaml",
+        "/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_context_bundle_freshness_gate.py"
       ],
       "evidence_files": [],
-      "violations": [],
+      "violations": [
+        {
+          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+          "artifact": "SESSION_HANDOFF.md",
+          "message": "Divergência de modo de operação: session_start.operation_mode='ROADMAP' != SESSION_HANDOFF.modo_operacao='CDD'.",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+          "artifact": "SESSION_HANDOFF.md",
+          "message": "Divergência de fase: session_start.roadmap_phase=3 != SESSION_HANDOFF.fase_roadmap=5.",
+          "severity": "error"
+        }
+      ],
       "metrics": {
-        "errors": 0,
+        "errors": 2,
         "warnings": 0,
-        "violations": 0,
-        "duration_ms": 11
+        "violations": 2,
+        "duration_ms": 4
       }
     },
     {
@@ -1290,7 +1302,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 237
+        "duration_ms": 165
       }
     },
     {
@@ -1438,12 +1450,30 @@
       }
     },
     {
-      "gate_id": "READINESS_SUMMARY_GATE",
-      "status": "PASS",
-      "blocking": false,
+      "gate_id": "CONTEXT_BUNDLE_FRESHNESS_GATE",
+      "status": "SKIP_NOT_APPLICABLE",
+      "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Pipeline PASS: 4 PASS, 60 SKIP.",
+      "summary": "Pulado no estágio 'session-start'.",
+      "inputs": [],
+      "artifacts_checked": [],
+      "evidence_files": [],
+      "violations": [],
+      "metrics": {
+        "errors": 0,
+        "warnings": 0,
+        "violations": 0,
+        "duration_ms": 0
+      }
+    },
+    {
+      "gate_id": "READINESS_SUMMARY_GATE",
+      "status": "FAIL",
+      "blocking": false,
+      "exit_code": 2,
+      "blocking_code": null,
+      "summary": "Pipeline FAIL: 1 gate(s) bloqueante(s) falharam.",
       "inputs": [],
       "artifacts_checked": [],
       "evidence_files": [],
