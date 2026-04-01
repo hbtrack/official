@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-01T07:08:33Z",
+  "timestamp_utc": "2026-04-01T07:28:48Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "dbfa8e3",
+    "git_commit": "bd0dbab",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/precommit.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260401T070833_512841"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260401T072848_17da36"
   },
   "status_detail": {
     "active_gates_passed": 36,
@@ -281,7 +281,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 67
+        "duration_ms": 58
       }
     },
     {
@@ -306,7 +306,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2735
+        "duration_ms": 2583
       }
     },
     {
@@ -417,7 +417,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 16
+        "duration_ms": 17
       }
     },
     {
@@ -582,7 +582,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1
+        "duration_ms": 0
       }
     },
     {
@@ -694,7 +694,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 4
       }
     },
     {
@@ -984,7 +984,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 46
+        "duration_ms": 53
       }
     },
     {
@@ -1012,7 +1012,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 57
+        "duration_ms": 71
       }
     },
     {
@@ -1055,7 +1055,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 48
+        "duration_ms": 54
       }
     },
     {
@@ -1071,16 +1071,23 @@
       "artifacts_checked": [
         "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml",
         "git status --porcelain --untracked-files=all",
+        "/home/davis/HB-TRACK/.CEPRAEA/BACKLOG_EXECUTAVEL_DETERMINISTICO.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/execute_roadmap_phase.prompt.md",
+        "/home/davis/HB-TRACK/.github/skills/hb-roadmap-executor/SKILL.md",
+        "/home/davis/HB-TRACK/CLAUDE.md",
+        "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/_reports/READINESS_DASHBOARD.md",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/precommit.latest.json",
-        "/home/davis/HB-TRACK/_reports/contract_gates/stage-artifact.local.latest.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/stage-session-start.local.latest.json",
         "/home/davis/HB-TRACK/_reports/evidence/module_readiness_scorecard.json",
         "/home/davis/HB-TRACK/_reports/evidence/module_readiness_scorecard.md",
         "/home/davis/HB-TRACK/_reports/pipeline_health.json",
         "/home/davis/HB-TRACK/_reports/pipeline_history.jsonl",
-        "/home/davis/HB-TRACK/_reports/session_start.json"
+        "/home/davis/HB-TRACK/_reports/session_start.json",
+        "/home/davis/HB-TRACK/compiled_context/ops/deploy.json",
+        "/home/davis/HB-TRACK/compiled_context/ops/runtime.json",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_ops_bundle_required_for_roadmap.py"
       ],
       "evidence_files": [],
       "violations": [],
@@ -1088,7 +1095,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 37
+        "duration_ms": 74
       }
     },
     {
@@ -1104,16 +1111,23 @@
       "artifacts_checked": [
         "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml",
         "git status --porcelain --untracked-files=all",
+        "/home/davis/HB-TRACK/.CEPRAEA/BACKLOG_EXECUTAVEL_DETERMINISTICO.md",
+        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/execute_roadmap_phase.prompt.md",
+        "/home/davis/HB-TRACK/.github/skills/hb-roadmap-executor/SKILL.md",
+        "/home/davis/HB-TRACK/CLAUDE.md",
+        "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/_reports/READINESS_DASHBOARD.md",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/precommit.latest.json",
-        "/home/davis/HB-TRACK/_reports/contract_gates/stage-artifact.local.latest.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/stage-session-start.local.latest.json",
         "/home/davis/HB-TRACK/_reports/evidence/module_readiness_scorecard.json",
         "/home/davis/HB-TRACK/_reports/evidence/module_readiness_scorecard.md",
         "/home/davis/HB-TRACK/_reports/pipeline_health.json",
         "/home/davis/HB-TRACK/_reports/pipeline_history.jsonl",
-        "/home/davis/HB-TRACK/_reports/session_start.json"
+        "/home/davis/HB-TRACK/_reports/session_start.json",
+        "/home/davis/HB-TRACK/compiled_context/ops/deploy.json",
+        "/home/davis/HB-TRACK/compiled_context/ops/runtime.json",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_ops_bundle_required_for_roadmap.py"
       ],
       "evidence_files": [],
       "violations": [],
@@ -1121,7 +1135,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 35
+        "duration_ms": 29
       }
     },
     {
@@ -1166,7 +1180,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 100
+        "duration_ms": 97
       }
     },
     {
@@ -1195,7 +1209,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 127
+        "duration_ms": 125
       }
     },
     {
@@ -1240,7 +1254,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 94
+        "duration_ms": 89
       }
     },
     {
@@ -1285,7 +1299,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 95
+        "duration_ms": 89
       }
     },
     {
@@ -1330,7 +1344,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 95
+        "duration_ms": 88
       }
     },
     {
@@ -1700,7 +1714,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 64
+        "duration_ms": 29
       }
     },
     {
@@ -1786,7 +1800,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 777
+        "duration_ms": 796
       }
     },
     {
@@ -1809,7 +1823,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2490
+        "duration_ms": 2718
       }
     },
     {
@@ -1831,7 +1845,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2059
+        "duration_ms": 2504
       }
     },
     {
@@ -1870,7 +1884,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 796
+        "duration_ms": 699
       }
     },
     {
@@ -1910,7 +1924,7 @@
         "errors": 0,
         "warnings": 1,
         "violations": 1,
-        "duration_ms": 1913
+        "duration_ms": 2002
       }
     },
     {
@@ -2476,7 +2490,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1844
+        "duration_ms": 1925
       }
     },
     {
@@ -2500,7 +2514,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 26
+        "duration_ms": 31
       }
     },
     {
@@ -2576,7 +2590,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3123
+        "duration_ms": 2782
       }
     },
     {
@@ -2619,7 +2633,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 88
+        "duration_ms": 78
       }
     },
     {
@@ -2641,7 +2655,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1446
+        "duration_ms": 1369
       }
     },
     {
@@ -2697,7 +2711,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 70
+        "duration_ms": 69
       }
     },
     {
@@ -2717,7 +2731,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 46
+        "duration_ms": 9
       }
     },
     {
@@ -2893,17 +2907,17 @@
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/docs/_canon/gates/GATES_REGISTRY.yaml",
-        "/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_context_bundle_freshness_gate.py"
+        "/home/davis/HB-TRACK/compiled_context/ops/deploy.json",
+        "/home/davis/HB-TRACK/compiled_context/ops/runtime.json",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_ops_bundle_required_for_roadmap.py"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-        "/home/davis/HB-TRACK/docs/_canon/gates/GATES_REGISTRY.yaml",
-        "/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_context_bundle_freshness_gate.py"
+        "/home/davis/HB-TRACK/compiled_context/ops/deploy.json",
+        "/home/davis/HB-TRACK/compiled_context/ops/runtime.json",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_ops_bundle_required_for_roadmap.py"
       ],
       "evidence_files": [],
       "violations": [],
@@ -2911,7 +2925,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 48
+        "duration_ms": 16
       }
     },
     {
@@ -2933,7 +2947,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 266
+        "duration_ms": 205
       }
     },
     {
@@ -2955,7 +2969,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 9
+        "duration_ms": 7
       }
     },
     {
@@ -3015,7 +3029,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 14
+        "duration_ms": 10
       }
     },
     {
@@ -3037,7 +3051,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 57
+        "duration_ms": 20
       }
     },
     {
@@ -3055,7 +3069,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 9
+        "duration_ms": 7
       }
     },
     {
@@ -3100,9 +3114,22 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "1 bundle(s) frescos — todos os inputs batem com os hashes registrados.",
+      "summary": "3 bundle(s) frescos — todos os inputs batem com os hashes registrados.",
       "inputs": [],
       "artifacts_checked": [
+        "compiled_context/ops/deploy.json",
+        "docs/_canon/graph/ops/deploy_contract.yaml",
+        "docs/_canon/graph/ops/environment_catalog.yaml",
+        "docs/_canon/graph/ops/secrets_catalog.yaml",
+        "docs/_canon/graph/ops/github_actions_catalog.yaml",
+        "docs/_canon/SYNC_MANIFEST.yaml",
+        "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+        "compiled_context/ops/runtime.json",
+        "docs/_canon/graph/ops/service_topology.yaml",
+        "docs/_canon/graph/ops/runtime_endpoints.yaml",
+        "docs/_canon/graph/ops/environment_catalog.yaml",
+        "docs/_canon/SYNC_MANIFEST.yaml",
+        "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
         "compiled_context/reports/FT-039.json",
         "docs/_canon/FEATURE_REGISTRY.yaml",
         "docs/_canon/MODULE_REGISTRY.yaml",
@@ -3119,7 +3146,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 29
+        "duration_ms": 3
       }
     },
     {
