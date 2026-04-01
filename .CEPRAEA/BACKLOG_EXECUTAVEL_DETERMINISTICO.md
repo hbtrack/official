@@ -2541,7 +2541,7 @@ Ordem remanescente obrigatoria a partir do estado atual:
 
 29. ~~B7-002~~ — DONE (2026-04-01, commit dbfa8e3)
 30. ~~B-OPS-006~~ — DONE (2026-04-01)
-31. B8-001
+31. ~~B8-001~~ — DONE (2026-04-01, GitHub API PUT ruleset 13901517)
 32. B8-002
 33. B9-001
 34. B9-002
