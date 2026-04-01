@@ -63,6 +63,11 @@ O humano é leigo em desenvolvimento — comunicar SEMPRE em português, linguag
 - [ ] **P4** — Se `phase in [6, 9, 12]` (deploy de produção):
   - Emitir `BLOCKED_DEPLOY_REQUIRES_HUMAN`
   - Informar humano: preparar artefatos e confirmar staging verde; o acionamento do deploy é humano via GitHub Actions com `required_reviewers`
+- [ ] **P5** — Se a tarefa envolve infra/deploy/CI-CD/VPS (tipicamente fases 3, 6, 9, 12):
+  - Ler `compiled_context/ops/deploy.json` antes de qualquer ação de deploy/ambiente/secrets
+  - Ler `compiled_context/ops/runtime.json` antes de qualquer ação de topologia/VPS/endpoints
+  - Se bundles ausentes ou `CONTEXT_BUNDLE_FRESHNESS_GATE` em FAIL: emitir `BLOCKED_OPS_BUNDLE_STALE` e informar humano
+  - **Nunca inferir dados de infra (secrets, endpoints, topologia) sem bundle fresco**
 
 ### Bloqueios possíveis nesta fase
 
@@ -71,6 +76,7 @@ O humano é leigo em desenvolvimento — comunicar SEMPRE em português, linguag
 | `BLOCKED_PHASE_DEPENDENCY` | Critério de Done da fase N-1 não atingido | Listar o que falta, informar humano |
 | `BLOCKED_CDD_PIPELINE_FAIL` | Pipeline CDD em FAIL (fase ≥ 4) | Informar humano, aguardar correção |
 | `BLOCKED_DEPLOY_REQUIRES_HUMAN` | Fase 6, 9 ou 12 — deploy de produção | Preparar artefatos, aguardar aprovação humana |
+| `BLOCKED_OPS_BUNDLE_STALE` | Bundle ops ausente ou stale em task de infra/deploy | Recompilar bundles ops, informar humano |
 
 ---
 

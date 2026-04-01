@@ -39,3 +39,7 @@ Tarefas de implementação de fases do produto: ambiente, infraestrutura, códig
 - `schema.d.ts` **NUNCA** é editado manualmente — apenas regenerar com `npm run api:generate`
 - Deploy de produção **requer aprovação humana explícita** — nunca executar autonomamente
 - Waivers ativos: verificar `.contract_driven/waivers.json` antes de iniciar qualquer pipeline
+- **Tasks de infra/deploy/CI-CD/VPS:** ler bundles operacionais frescos antes de qualquer ação:
+  - `compiled_context/ops/deploy.json` → secrets, CI/CD, fluxo de deploy, ambientes
+  - `compiled_context/ops/runtime.json` → topologia de serviços, endpoints, VPS
+  - Nunca inferir dados de infra sem bundle fresco. Se ausente ou stale: emitir `BLOCKED_OPS_BUNDLE_STALE`

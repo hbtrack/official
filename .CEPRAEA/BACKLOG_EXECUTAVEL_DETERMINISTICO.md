@@ -1835,6 +1835,20 @@ Rollback:
 
 - restaurar leitura direta dos artefatos operacionais dispersos
 
+Estado atual no sistema:
+
+- implementado e validado em 2026-04-01
+
+Evidencias validadas:
+
+- `compiled_context/ops/deploy.json` criado com inputs de `docs/_canon/graph/ops/` (hashes validados)
+- `compiled_context/ops/runtime.json` criado com inputs de topologia/endpoints (hashes validados)
+- `execute_roadmap_phase.prompt.md` atualizado com pré-requisito P5 (bundle ops)
+- `SKILL.md` do hb-roadmap-executor atualizado com checklist P5 e `BLOCKED_OPS_BUNDLE_STALE`
+- `CLAUDE.md` atualizado com regra transversal de bundle ops
+- `pytest tests/pipeline_gates/test_ops_bundle_required_for_roadmap.py -q` em `PASS` com `15 passed`
+- `pytest tests/pipeline_gates/test_context_bundle_freshness_gate.py -q` em `PASS` com `10 passed` (sem regressão)
+
 ## B7. Bundle compilado para o agente
 
 ### B7-001 - Criar compiler de bundle por modulo/feature
@@ -2526,7 +2540,7 @@ Evidencia minima ja confirmada para os itens acima:
 Ordem remanescente obrigatoria a partir do estado atual:
 
 29. ~~B7-002~~ — DONE (2026-04-01, commit dbfa8e3)
-30. B-OPS-006
+30. ~~B-OPS-006~~ — DONE (2026-04-01)
 31. B8-001
 32. B8-002
 33. B9-001
@@ -2560,7 +2574,8 @@ Regras de interpretacao desta ordem:
 - `B-OPS-005` entra como baseline permanente: segredos operacionais ativos passam a exigir metadata estruturada de rotacao/presenca/uso e ADR nao pode carregar secret obrigatorio apenas em prose
 - `B7-001` entra como baseline permanente: implementacao do agente em modulo/feature passa a ter bundle compilado e rastreavel em `compiled_context/<module>/<feature>.json`
 - `B7-002` entra como baseline permanente: bundle stale bloqueia tasks de implementacao via `CONTEXT_BUNDLE_FRESHNESS_GATE` (DONE 2026-04-01)
-- a proxima acao correta no sistema atual passa a ser `B-OPS-006`
+- `B-OPS-006` entra como baseline permanente: tasks de infra/deploy/CI-CD/VPS devem consumir `compiled_context/ops/deploy.json` e `compiled_context/ops/runtime.json` sem inferência — `BLOCKED_OPS_BUNDLE_STALE` se stale (DONE 2026-04-01)
+- a proxima acao correta no sistema atual passa a ser `B8-001`
 - qualquer mudanca na ordem acima exige nova validacao completa do pipeline e atualizacao desta secao
 
 ## 6. Definition of Done do backlog

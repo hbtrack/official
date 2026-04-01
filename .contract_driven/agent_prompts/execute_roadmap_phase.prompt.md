@@ -23,6 +23,10 @@ Antes de executar qualquer tarefa desta fase:
    - Fases 0–3 (infraestrutura): verificar mas não bloquear se infra ainda ausente
    - Fases 4+: PASS obrigatório antes de continuar
 5. **Waivers ativos?** → verificar `.contract_driven/waivers.json` antes de iniciar pipeline
+6. **Tasks de infra/deploy/CI-CD/VPS (fases 3, 6, 9, 12)?** → ler bundle operacional fresco antes de qualquer ação:
+   - `compiled_context/ops/deploy.json` — deploy, CI/CD, ambiente, secrets
+   - `compiled_context/ops/runtime.json` — topologia de serviços, endpoints, VPS
+   - Se os bundles estiverem ausentes ou stale (`CONTEXT_BUNDLE_FRESHNESS_GATE` FAIL): reportar bloqueio ao humano. Não inferir dados de infra sem bundle fresco.
 
 Se qualquer pré-requisito crítico falhar → reportar ao humano e aguardar instrução. Nunca inventar o estado da fase anterior.
 
