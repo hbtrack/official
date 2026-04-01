@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass, field
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from decimal import Decimal
 from typing import Optional
 
@@ -45,8 +45,8 @@ class WellnessEntry:
     sleep_hours: Optional[Decimal] = None
     notes: Optional[str] = None
 
-    created_at: datetime = field(default_factory=lambda: datetime.utcnow())
-    updated_at: datetime = field(default_factory=lambda: datetime.utcnow())
+    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
     def validate_no_clinical_field(self, field_name: str) -> None:
         """INV-WELL-004: levanta ValueError se field_name for campo clínico proibido."""

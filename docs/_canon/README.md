@@ -1,7 +1,7 @@
 ---
 doc_type: canon
-version: "2.0.0"
-last_reviewed: "2026-03-17"
+version: "2.2.0"
+last_reviewed: "2026-04-01"
 status: active
 ---
 
@@ -71,6 +71,15 @@ Regra: em caso de conflito entre níveis, o nível superior prevalece sempre.
 | 35 | `RUNTIME_CURRENT_STATE.md` | Inventário factual do runtime atual: o que existe, o que é só contrato, o que é target-state (current-state) |
 | 36 | `INTEGRATION_FLOWS.md` | Flows críticos de integração cross-módulo: auth, training→wellness→analytics, notifications, video/scout, ai_ingestion (governance) |
 | 37 | `ADR_INDEX.md` | Índice unificado de todas as ADRs com status, supersession e tema — referência rápida sem ambiguidade |
+| 38 | `DOC_USAGE_MANIFEST.yaml` | Manifesto determinístico de uso, owner_source, consumers e freshness da documentação soberana e modular |
+| 39 | `SOURCE_AUTHORITY_GRAPH.yaml` | Grafo soberano de owner_source por conceito, classificação e regra de resolução de conflito |
+| 40 | `SYNC_MANIFEST.yaml` | Manifesto determinístico de propagação obrigatória: source_master, consumers mandatórios e bloqueio de atualização parcial |
+| 41 | `graph/ops/environment_catalog.yaml` | Catalogo soberano de ambientes e variaveis operacionais por ambiente |
+| 42 | `graph/ops/secrets_catalog.yaml` | Catalogo soberano de GitHub secrets/vars e secrets de runtime |
+| 43 | `graph/ops/service_topology.yaml` | Topologia soberana de servicos operacionais, dependencias e exposicao |
+| 44 | `graph/ops/deploy_contract.yaml` | Contrato soberano do fluxo de deploy, health, promotion e rollback |
+| 45 | `graph/ops/runtime_endpoints.yaml` | Endpoints soberanos de runtime por ambiente, incluindo health e OpenAPI |
+| 46 | `graph/ops/github_actions_catalog.yaml` | Catalogo soberano do workflow de deploy, jobs e insumos GitHub Actions |
 
 ### Subdiretórios Autorizados
 
@@ -78,6 +87,7 @@ Regra: em caso de conflito entre níveis, o nível superior prevalece sempre.
 - **`gates/`** — GATES_REGISTRY.yaml (registry de gates) e README.md
 - **`security/`** — OWASP_API_CONTROL_MATRIX.yaml (matriz de controles)
 - **`templates/`** — SESSION_HANDOFF.template.md (template de handoff)
+- **`graph/`** — IR estruturado global (`global_rules.yaml`, `global_policies.yaml`, `lifecycle.yaml`, `source_map.yaml`) e contratos operacionais em `graph/ops/*.yaml`
 
 > **Nota**: `BOOT_PROFILES.yaml` e `TASK_CATALOG.yaml` foram movidos para `.contract_driven/` — veja [docs/_canon/AGENT_INSTRUCTIONS.md](AGENT_INSTRUCTIONS.md) §7 para referência atualizada.
 
@@ -126,4 +136,4 @@ Isso significa:
 
 ---
 
-*Última revisão: 2026-03-17*
+*Última revisão: 2026-03-31*

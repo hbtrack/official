@@ -69,6 +69,8 @@ Se um prompt contiver instrução sem respaldo explícito no canon, o agente dev
 
 | Tipo de mudança | Artefato canônico obrigatório |
 | --- | --- |
+| muda owner source por conceito, classificação soberano/derived/bridge/runtime_extension ou resolução de conflito | `docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml` |
+| muda ambiente, secrets, topologia de servicos, deploy ou endpoints operacionais | `docs/_canon/graph/ops/` |
 | muda comportamento geral do agente | `.contract_driven/CONTRACT_SYSTEM_RULES.md` |
 | muda path, classificação ou soberania de artefato | `.contract_driven/CONTRACT_SYSTEM_LAYOUT.md` |
 | muda estágio do pipeline | `docs/_canon/CONTRACT_PIPELINE.md` |
@@ -158,6 +160,8 @@ Regras:
 - `docs/_canon/C4_CONTAINERS.md`
 - `docs/_canon/MODULE_MAP.md` (mapeamento de macrodomínios para comunicação de negócio, não taxonomia técnica canônica)
 - `docs/_canon/MODULE_REGISTRY.yaml`
+- `docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml`
+- `docs/_canon/graph/ops/`
 - `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml`
 - `docs/_canon/CHANGE_POLICY.md`
 - `.contract_driven/templates/api/api_rules.yaml` (SSOT de convenções HTTP/OpenAPI)
@@ -178,6 +182,9 @@ Regras:
 
 Landing/entry não-soberano:
 - `README.md` na raiz do repositório é apenas navegação/entrada. Ele não deve introduzir novas regras normativas que conflitem com o canon.
+
+Owner source por conceito e classificação de superfície (`sovereign`, `derived`, `bridge`, `runtime_extension`) são definidos em `docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml`.
+Quando existir SSOT estruturado em `docs/_canon/graph/ops/`, documentos operacionais e workflow nao podem redefinir ambiente, secret, deploy ou endpoint via inferencia livre.
 
 ### 3.2C Bridge docs (não-soberanos) — PROIBIÇÕES EXPLÍCITAS
 
@@ -826,6 +833,10 @@ O agente opera usando `task_type` canônicos definidos em `docs/_canon/AGENT_INS
 
 - `new_contract` — criar novo artefato de contrato
 - `contract_revision` — revisar ou alterar contrato existente
+- `readiness_promotion` — promover módulo validado para `implementation_ready`
+- `implementation_promotion` — promover módulo `implementation_ready` para `implemented`
+- `staging_promotion` — promover módulo `implemented` para `staging_validated`
+- `release_promotion` — promover módulo `staging_validated` para `released`
 - `generate_code` — implementar software a partir de contratos
 - `new_module`, `new_event`, `new_workflow`, `new_schema`, `new_state_model`, `new_ui_contract`, `architecture_review` — ver docs/_canon/AGENT_INSTRUCTIONS.md §4
 

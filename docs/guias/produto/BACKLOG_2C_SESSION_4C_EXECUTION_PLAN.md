@@ -1,4 +1,5 @@
 # Sessão 4C — Plano de Execução
+> Documento de apoio humano, não canônico e não soberano. Serve para registro histórico de execução; não substitui `ROADMAP.md`, `docs/_canon/`, `.contract_driven/` ou o handoff operacional.
 
 **Status:** ✅ PRONTO PARA EXECUÇÃO  
 **Data de Aprovação:** 2026-03-20  
@@ -166,4 +167,3 @@ Se alguma métrica acende ⚠️ ou ❌:
 - [ ] Reportar status em SESSION_HANDOFF.md
 
 **Nota:** Não itere o design. Não redesenhe a taxonomia durante execução. Não mude o formato JSON. Execute como definido.
-

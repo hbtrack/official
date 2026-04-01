@@ -1,0 +1,583 @@
+version: "1.2.0"
+artifact: "OPS_ENVIRONMENT_CATALOG"
+status: active
+scope: operations
+
+environments:
+  development:
+    mode: local_workspace
+    deploy_dir: null
+    github_environment: null
+    env_templates: []
+    runtime_env_files:
+      - ".env"
+    hostnames:
+      - "localhost"
+      - "127.0.0.1"
+    urls:
+      health: "http://localhost:8000/health"
+      openapi: "http://localhost:8000/api/openapi.json"
+      docs: "http://localhost:8000/api/docs"
+
+  staging:
+    mode: vps_compose
+    deploy_dir: "/opt/hbtrack/staging"
+    github_environment: "staging"
+    env_templates:
+      - "infra/env/.env.staging.template"
+    runtime_env_files:
+      - "/opt/hbtrack/staging/.env"
+    nginx_conf: "infra/nginx/nginx.staging.conf"
+    hostnames:
+      - "staging.handballtrack.app"
+      - "191.252.185.34"
+    urls:
+      health: "https://staging.handballtrack.app/health"
+      openapi: "https://staging.handballtrack.app/api/openapi.json"
+      docs: "https://staging.handballtrack.app/api/docs"
+
+  production:
+    mode: vps_compose
+    deploy_dir: "/opt/hbtrack/production"
+    github_environment: "production"
+    env_templates:
+      - "infra/env/.env.production.template"
+    runtime_env_files:
+      - "/opt/hbtrack/production/.env"
+    nginx_conf: "infra/nginx/nginx.conf"
+    hostnames:
+      - "handballtrack.app"
+      - "www.handballtrack.app"
+      - "api.handballtrack.app"
+    urls:
+      health: "https://api.handballtrack.app/health"
+      openapi: "https://api.handballtrack.app/api/openapi.json"
+      docs: "https://api.handballtrack.app/api/docs"
+
+variables:
+  - name: REGISTRY
+    category: deployment
+    required_in: ["staging", "production"]
+    sources:
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: IMAGE_TAG
+    category: deployment
+    required_in: ["staging", "production"]
+    sources:
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: NGINX_CONF
+    category: deployment
+    required_in: ["staging", "production"]
+    sources:
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: SECRET_KEY
+    category: secret
+    required_in: ["development", "staging", "production"]
+    sources:
+      - "config/settings.py"
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: DEBUG
+    category: application
+    required_in: ["development", "staging", "production"]
+    sources:
+      - "config/settings.py"
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: ALLOWED_HOSTS
+    category: application
+    required_in: ["development", "staging", "production"]
+    sources:
+      - "config/settings.py"
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: DB_NAME
+    category: database
+    required_in: ["development", "staging", "production"]
+    sources:
+      - "config/settings.py"
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: DB_USER
+    category: database
+    required_in: ["development", "staging", "production"]
+    sources:
+      - "config/settings.py"
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: DB_PASSWORD
+    category: secret
+    required_in: ["development", "staging", "production"]
+    sources:
+      - "config/settings.py"
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: DB_HOST
+    category: database
+    required_in: ["development", "staging", "production"]
+    sources:
+      - "config/settings.py"
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: DB_PORT
+    category: database
+    required_in: ["development", "staging", "production"]
+    sources:
+      - "config/settings.py"
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: DB_TEST_NAME
+    category: database
+    required_in: ["development", "staging", "production"]
+    sources:
+      - "config/settings.py"
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: POSTGRES_DB
+    category: database_container
+    required_in: ["staging", "production"]
+    sources:
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: POSTGRES_USER
+    category: database_container
+    required_in: ["staging", "production"]
+    sources:
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: POSTGRES_PASSWORD
+    category: secret
+    required_in: ["staging", "production"]
+    sources:
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: REDIS_URL
+    category: async_runtime
+    required_in: ["development", "staging", "production"]
+    sources:
+      - "config/settings.py"
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: CELERY_BROKER_URL
+    category: async_runtime
+    required_in: ["development", "staging", "production"]
+    sources:
+      - "config/settings.py"
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: CELERY_RESULT_BACKEND
+    category: ci_shim
+    required_in: []
+    ci_only: true
+    sources:
+      - ".github/workflows/deploy.yml"
+    runtime_note: "Compatibilidade do job de testes; o runtime usa django-db em config/settings.py."
+
+  - name: CELERY_TIMEZONE
+    category: async_runtime
+    required_in: ["staging", "production"]
+    sources:
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: CORS_ALLOWED_ORIGINS
+    category: application
+    required_in: ["development", "staging", "production"]
+    sources:
+      - "config/settings.py"
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: LOG_LEVEL
+    category: observability
+    required_in: ["development", "staging", "production"]
+    sources:
+      - "config/settings.py"
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: DATABASE_URL
+    category: ci_shim
+    required_in: []
+    ci_only: true
+    sources:
+      - ".github/workflows/deploy.yml"
+    runtime_note: "Exportado no job de testes; config/settings.py nao usa DATABASE_URL para o runtime Django."
+
+  - name: JWT_ALGORITHM
+    category: ci_shim
+    required_in: []
+    ci_only: true
+    sources:
+      - ".github/workflows/deploy.yml"
+
+  - name: JWT_SECRET
+    category: ci_shim
+    required_in: []
+    ci_only: true
+    sources:
+      - ".github/workflows/deploy.yml"
+
+  - name: CLOUDINARY_URL
+    category: external_provider
+    required_in: ["staging", "production"]
+    sources:
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: CLOUDINARY_CLOUD_NAME
+    category: external_provider
+    required_in: ["staging", "production"]
+    sources:
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: CLOUDINARY_API_KEY
+    category: secret
+    required_in: ["staging", "production"]
+    sources:
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: CLOUDINARY_API_SECRET
+    category: secret
+    required_in: ["staging", "production"]
+    sources:
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: JWT_PRIVATE_KEY
+    category: secret
+    required_in: ["staging", "production"]
+    sources:
+      - "src/identity_access/infrastructure/jwt_adapter.py"
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: JWT_PUBLIC_KEY
+    category: secret
+    required_in: ["staging", "production"]
+    sources:
+      - "src/identity_access/infrastructure/jwt_adapter.py"
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: CLOUDINARY_UPLOAD_PRESET
+    category: external_provider
+    required_in: ["staging", "production"]
+    sources:
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: RESEND_API_KEY
+    category: secret
+    required_in: ["staging", "production"]
+    sources:
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: RESEND_FROM_EMAIL
+    category: external_provider
+    required_in: ["staging", "production"]
+    sources:
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: RESEND_FROM_NAME
+    category: external_provider
+    required_in: ["staging", "production"]
+    sources:
+      - ".github/workflows/deploy.yml"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+  - name: GEMINI_API_KEY
+    category: secret
+    required_in: ["staging", "production"]
+    sources:
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+
+template_contracts:
+  staging:
+    output_path: "infra/env/.env.staging.template"
+    title: "HB Track — Staging Environment Template"
+    copy_instruction: "Copiar para /opt/hbtrack/staging/.env e preencher todos os CHANGE_ME_*"
+    warning_instruction: "NUNCA commitar este arquivo com valores reais preenchidos."
+    sections:
+      - title: "Docker / Registry"
+        entries:
+          - name: REGISTRY
+            value: "ghcr.io/hbtrack"
+          - name: IMAGE_TAG
+            value: "latest"
+
+      - title: "Nginx config (staging usa nginx.staging.conf; produção usa nginx.conf)"
+        entries:
+          - name: NGINX_CONF
+            value: "nginx.staging.conf"
+
+      - title: "Django"
+        comment_lines:
+          - "Gerar com: python -c \"import secrets; print(secrets.token_urlsafe(50))\""
+        entries:
+          - name: SECRET_KEY
+            value: "CHANGE_ME_DJANGO_SECRET_KEY_50_CHARS_MINIMUM"
+          - name: DEBUG
+            value: "false"
+          - name: ALLOWED_HOSTS
+            value: "staging.handballtrack.app"
+
+      - title: "Database (Django app)"
+        entries:
+          - name: DB_NAME
+            value: "hb_track"
+          - name: DB_USER
+            value: "hbtrack"
+          - name: DB_PASSWORD
+            value: "CHANGE_ME_STRONG_DB_PASSWORD"
+          - name: DB_HOST
+            value: "postgres"
+          - name: DB_PORT
+            value: "5432"
+          - name: DB_TEST_NAME
+            value: "hb_track_test"
+
+      - title: "Database (PostgreSQL container)"
+        comment_lines:
+          - "Deve ser idêntico a DB_NAME / DB_USER / DB_PASSWORD acima"
+        entries:
+          - name: POSTGRES_DB
+            value: "hb_track"
+          - name: POSTGRES_USER
+            value: "hbtrack"
+          - name: POSTGRES_PASSWORD
+            value: "CHANGE_ME_STRONG_DB_PASSWORD"
+
+      - title: "Redis / Celery"
+        entries:
+          - name: REDIS_URL
+            value: "redis://redis:6379/0"
+          - name: CELERY_BROKER_URL
+            value: "redis://redis:6379/0"
+          - name: CELERY_TIMEZONE
+            value: "America/Sao_Paulo"
+
+      - title: "CORS"
+        entries:
+          - name: CORS_ALLOWED_ORIGINS
+            value: "https://staging.handballtrack.app"
+
+      - title: "Logging"
+        entries:
+          - name: LOG_LEVEL
+            value: "INFO"
+
+      - title: "JWT / RS256"
+        comment_lines:
+          - "Gerar com: openssl genrsa -out private.pem 2048 && openssl rsa -in private.pem -pubout -out public.pem"
+          - "Armazenar como PEM base64 sem quebras ou multiline literal conforme ADR-012."
+        entries:
+          - name: JWT_PRIVATE_KEY
+            value: "CHANGE_ME_BASE64_PEM_PRIVATE_KEY"
+          - name: JWT_PUBLIC_KEY
+            value: "CHANGE_ME_BASE64_PEM_PUBLIC_KEY"
+
+      - title: "Cloudinary (uploads de imagem)"
+        comment_lines:
+          - "Obter em: https://cloudinary.com/console"
+        entries:
+          - name: CLOUDINARY_URL
+            value: "CHANGE_ME_cloudinary://API_KEY:API_SECRET@CLOUD_NAME"
+          - name: CLOUDINARY_CLOUD_NAME
+            value: "CHANGE_ME_CLOUD_NAME"
+          - name: CLOUDINARY_API_KEY
+            value: "CHANGE_ME_API_KEY"
+          - name: CLOUDINARY_API_SECRET
+            value: "CHANGE_ME_API_SECRET"
+          - name: CLOUDINARY_UPLOAD_PRESET
+            value: "hb_profile_photo"
+
+      - title: "E-mail (Resend)"
+        comment_lines:
+          - "Obter em: https://resend.com/api-keys"
+        entries:
+          - name: RESEND_API_KEY
+            value: "CHANGE_ME_RESEND_API_KEY"
+          - name: RESEND_FROM_EMAIL
+            value: "suporte@handballtrack.app"
+          - name: RESEND_FROM_NAME
+            value: "Handball Track"
+
+      - title: "AI / Google Gemini"
+        comment_lines:
+          - "Obter em: https://aistudio.google.com/app/apikey"
+        entries:
+          - name: GEMINI_API_KEY
+            value: "CHANGE_ME_GEMINI_API_KEY"
+
+  production:
+    output_path: "infra/env/.env.production.template"
+    title: "HB Track — Production Environment Template"
+    copy_instruction: "Copiar para /opt/hbtrack/production/.env e preencher todos os CHANGE_ME_*"
+    warning_instruction: "NUNCA commitar este arquivo com valores reais preenchidos."
+    sections:
+      - title: "Docker / Registry"
+        entries:
+          - name: REGISTRY
+            value: "ghcr.io/hbtrack"
+          - name: IMAGE_TAG
+            value: "latest"
+
+      - title: "Nginx config"
+        entries:
+          - name: NGINX_CONF
+            value: "nginx.conf"
+
+      - title: "Django"
+        comment_lines:
+          - "Gerar com: python -c \"import secrets; print(secrets.token_urlsafe(50))\""
+        entries:
+          - name: SECRET_KEY
+            value: "CHANGE_ME_DJANGO_SECRET_KEY_50_CHARS_MINIMUM"
+          - name: DEBUG
+            value: "false"
+          - name: ALLOWED_HOSTS
+            value: "handballtrack.app,www.handballtrack.app"
+
+      - title: "Database (Django app)"
+        entries:
+          - name: DB_NAME
+            value: "hb_track"
+          - name: DB_USER
+            value: "hbtrack"
+          - name: DB_PASSWORD
+            value: "CHANGE_ME_STRONG_DB_PASSWORD"
+          - name: DB_HOST
+            value: "postgres"
+          - name: DB_PORT
+            value: "5432"
+          - name: DB_TEST_NAME
+            value: "hb_track_test"
+
+      - title: "Database (PostgreSQL container)"
+        comment_lines:
+          - "Deve ser idêntico a DB_NAME / DB_USER / DB_PASSWORD acima"
+        entries:
+          - name: POSTGRES_DB
+            value: "hb_track"
+          - name: POSTGRES_USER
+            value: "hbtrack"
+          - name: POSTGRES_PASSWORD
+            value: "CHANGE_ME_STRONG_DB_PASSWORD"
+
+      - title: "Redis / Celery"
+        entries:
+          - name: REDIS_URL
+            value: "redis://redis:6379/0"
+          - name: CELERY_BROKER_URL
+            value: "redis://redis:6379/0"
+          - name: CELERY_TIMEZONE
+            value: "America/Sao_Paulo"
+
+      - title: "CORS"
+        entries:
+          - name: CORS_ALLOWED_ORIGINS
+            value: "https://handballtrack.app,https://www.handballtrack.app"
+
+      - title: "Logging"
+        entries:
+          - name: LOG_LEVEL
+            value: "WARNING"
+
+      - title: "JWT / RS256"
+        comment_lines:
+          - "Gerar com: openssl genrsa -out private.pem 2048 && openssl rsa -in private.pem -pubout -out public.pem"
+          - "Armazenar como PEM base64 sem quebras ou multiline literal conforme ADR-012."
+        entries:
+          - name: JWT_PRIVATE_KEY
+            value: "CHANGE_ME_BASE64_PEM_PRIVATE_KEY"
+          - name: JWT_PUBLIC_KEY
+            value: "CHANGE_ME_BASE64_PEM_PUBLIC_KEY"
+
+      - title: "Cloudinary (uploads de imagem)"
+        comment_lines:
+          - "Obter em: https://cloudinary.com/console"
+        entries:
+          - name: CLOUDINARY_URL
+            value: "CHANGE_ME_cloudinary://API_KEY:API_SECRET@CLOUD_NAME"
+          - name: CLOUDINARY_CLOUD_NAME
+            value: "CHANGE_ME_CLOUD_NAME"
+          - name: CLOUDINARY_API_KEY
+            value: "CHANGE_ME_API_KEY"
+          - name: CLOUDINARY_API_SECRET
+            value: "CHANGE_ME_API_SECRET"
+          - name: CLOUDINARY_UPLOAD_PRESET
+            value: "hb_profile_photo"
+
+      - title: "E-mail (Resend)"
+        comment_lines:
+          - "Obter em: https://resend.com/api-keys"
+        entries:
+          - name: RESEND_API_KEY
+            value: "CHANGE_ME_RESEND_API_KEY"
+          - name: RESEND_FROM_EMAIL
+            value: "suporte@handballtrack.app"
+          - name: RESEND_FROM_NAME
+            value: "Handball Track"
+
+      - title: "AI / Google Gemini"
+        comment_lines:
+          - "Obter em: https://aistudio.google.com/app/apikey"
+        entries:
+          - name: GEMINI_API_KEY
+            value: "CHANGE_ME_GEMINI_API_KEY"

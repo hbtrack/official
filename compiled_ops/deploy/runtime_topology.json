@@ -1,0 +1,338 @@
+{
+  "artifact_id": "HBTRACK_OPS_RUNTIME_TOPOLOGY",
+  "compiler": "hbtrack_ops_contract_compiler",
+  "compiler_version": "0.1.0",
+  "deploy_contract": {
+    "env_rendering": {
+      "env_prefix": "HB_ENV_",
+      "fallback_rules": [
+        "POSTGRES_PASSWORD <- DB_PASSWORD",
+        "CLOUDINARY_URL <- CLOUDINARY_API_KEY + CLOUDINARY_API_SECRET + CLOUDINARY_CLOUD_NAME"
+      ],
+      "generated_targets": {
+        "production": {
+          "runtime_output": "/opt/hbtrack/production/.env",
+          "workspace_output": ".deploy/production.env"
+        },
+        "staging": {
+          "runtime_output": "/opt/hbtrack/staging/.env",
+          "workspace_output": ".deploy/staging.env"
+        }
+      },
+      "image_tag_source": "needs.build.outputs.image_tag",
+      "injector_ref": "scripts/deploy/inject_env.sh",
+      "missing_value_policy": "fail_closed",
+      "provider": "github_environment_scoped_secrets_and_vars",
+      "renderer_ref": "scripts/deploy/render_env_from_contract.py"
+    },
+    "health_checks": {
+      "production": {
+        "expected_http_status": 200,
+        "interval_seconds": 5,
+        "max_attempts": 24,
+        "url": "https://api.handballtrack.app/health"
+      },
+      "staging": {
+        "expected_http_status": 200,
+        "interval_seconds": 5,
+        "max_attempts": 24,
+        "url": "https://staging.handballtrack.app/health"
+      }
+    },
+    "pre_checks": [
+      {
+        "command": "python3 scripts/contracts/validate/validate_contracts.py",
+        "id": "OPS-DEPLOY-001",
+        "name": "validate_contracts",
+        "workflow_job": "validate"
+      },
+      {
+        "command": "pytest -q --ignore=tests/schemathesis --ignore=tests/pipeline_gates --tb=short",
+        "id": "OPS-DEPLOY-002",
+        "name": "run_tests",
+        "workflow_job": "test"
+      },
+      {
+        "command": "docker/build-push-action@v5",
+        "id": "OPS-DEPLOY-003",
+        "name": "build_images",
+        "workflow_job": "build"
+      }
+    ],
+    "promotion_flow": [
+      "validate",
+      "test",
+      "build",
+      "deploy-staging",
+      "health-check-staging",
+      "contract-conformance",
+      "approve",
+      "deploy-production",
+      "health-check-production"
+    ],
+    "rollback": {
+      "previous_sha_marker": ".last_sha",
+      "script_ref": "infra/scripts/rollback.sh",
+      "timeout_target_minutes": 5,
+      "workflow_mode": "automatic_on_production_health_failure"
+    }
+  },
+  "environments": {
+    "development": {
+      "deploy_dir": null,
+      "env_templates": [],
+      "github_environment": null,
+      "hostnames": [
+        "localhost",
+        "127.0.0.1"
+      ],
+      "mode": "local_workspace",
+      "runtime_env_files": [
+        ".env"
+      ],
+      "urls": {
+        "docs": "http://localhost:8000/api/docs",
+        "health": "http://localhost:8000/health",
+        "openapi": "http://localhost:8000/api/openapi.json"
+      }
+    },
+    "production": {
+      "deploy_dir": "/opt/hbtrack/production",
+      "env_templates": [
+        "infra/env/.env.production.template"
+      ],
+      "github_environment": "production",
+      "hostnames": [
+        "handballtrack.app",
+        "www.handballtrack.app",
+        "api.handballtrack.app"
+      ],
+      "mode": "vps_compose",
+      "nginx_conf": "infra/nginx/nginx.conf",
+      "runtime_env_files": [
+        "/opt/hbtrack/production/.env"
+      ],
+      "urls": {
+        "docs": "https://api.handballtrack.app/api/docs",
+        "health": "https://api.handballtrack.app/health",
+        "openapi": "https://api.handballtrack.app/api/openapi.json"
+      }
+    },
+    "staging": {
+      "deploy_dir": "/opt/hbtrack/staging",
+      "env_templates": [
+        "infra/env/.env.staging.template"
+      ],
+      "github_environment": "staging",
+      "hostnames": [
+        "staging.handballtrack.app",
+        "191.252.185.34"
+      ],
+      "mode": "vps_compose",
+      "nginx_conf": "infra/nginx/nginx.staging.conf",
+      "runtime_env_files": [
+        "/opt/hbtrack/staging/.env"
+      ],
+      "urls": {
+        "docs": "https://staging.handballtrack.app/api/docs",
+        "health": "https://staging.handballtrack.app/health",
+        "openapi": "https://staging.handballtrack.app/api/openapi.json"
+      }
+    }
+  },
+  "runtime_endpoints": [
+    {
+      "implementation_ref": "config/urls.py#health_check",
+      "kind": "health",
+      "name": "health",
+      "path": "/health",
+      "urls": {
+        "development": "http://localhost:8000/health",
+        "production": "https://api.handballtrack.app/health",
+        "staging": "https://staging.handballtrack.app/health"
+      }
+    },
+    {
+      "implementation_ref": "config/urls.py#api",
+      "kind": "openapi",
+      "name": "openapi_schema",
+      "path": "/api/openapi.json",
+      "urls": {
+        "development": "http://localhost:8000/api/openapi.json",
+        "production": "https://api.handballtrack.app/api/openapi.json",
+        "staging": "https://staging.handballtrack.app/api/openapi.json"
+      }
+    },
+    {
+      "implementation_ref": "config/urls.py#api",
+      "kind": "documentation",
+      "name": "api_docs",
+      "path": "/api/docs",
+      "urls": {
+        "development": "http://localhost:8000/api/docs",
+        "production": "https://api.handballtrack.app/api/docs",
+        "staging": "https://staging.handballtrack.app/api/docs"
+      }
+    },
+    {
+      "implementation_ref": "docs/_canon/decisions/ADR-025-cdct-pact-strategy.md",
+      "kind": "contract_broker",
+      "name": "pact_broker",
+      "path": "/",
+      "urls": {
+        "production": "http://<VPS_IP>:9292",
+        "staging": "http://<VPS_IP>:9292"
+      }
+    }
+  ],
+  "services": {
+    "api": {
+      "compose_service": "api",
+      "depends_on": [
+        "postgres",
+        "redis"
+      ],
+      "deployment_type": "compose_service",
+      "environments": [
+        "staging",
+        "production"
+      ],
+      "evidence_refs": [
+        "infra/docker-compose.prod.yml",
+        "infra/nginx/nginx.conf",
+        "config/urls.py"
+      ],
+      "ingress_paths": [
+        "/api/",
+        "/api/auth/",
+        "/health",
+        "/ws/"
+      ],
+      "internal_endpoint": "http://api:8000"
+    },
+    "beat": {
+      "compose_service": "celery_beat",
+      "depends_on": [
+        "postgres",
+        "redis"
+      ],
+      "deployment_type": "compose_service",
+      "environments": [
+        "staging",
+        "production"
+      ],
+      "evidence_refs": [
+        "infra/docker-compose.prod.yml"
+      ]
+    },
+    "certbot": {
+      "compose_service": "certbot",
+      "deployment_type": "compose_service",
+      "environments": [
+        "staging",
+        "production"
+      ],
+      "evidence_refs": [
+        "infra/docker-compose.prod.yml"
+      ]
+    },
+    "frontend": {
+      "compose_service": "frontend",
+      "depends_on": [
+        "api"
+      ],
+      "deployment_type": "compose_service",
+      "environments": [
+        "staging",
+        "production"
+      ],
+      "evidence_refs": [
+        "infra/docker-compose.prod.yml"
+      ],
+      "ingress_paths": [
+        "/"
+      ]
+    },
+    "nginx": {
+      "compose_service": "nginx",
+      "deployment_type": "compose_service",
+      "environments": [
+        "staging",
+        "production"
+      ],
+      "evidence_refs": [
+        "infra/docker-compose.prod.yml",
+        "infra/nginx/nginx.conf",
+        "infra/nginx/nginx.staging.conf"
+      ],
+      "tls": {
+        "certbot_volumes": [
+          "certbot_www",
+          "certbot_conf"
+        ]
+      }
+    },
+    "pact_broker": {
+      "compose_service": null,
+      "deployment_type": "external_same_vps",
+      "environments": [
+        "staging",
+        "production"
+      ],
+      "evidence_refs": [
+        "docs/_canon/decisions/ADR-025-cdct-pact-strategy.md",
+        "scripts/contracts/validate/validate_contracts.py"
+      ],
+      "internal_url": "http://<VPS_IP>:9292"
+    },
+    "postgres": {
+      "compose_service": "postgres",
+      "deployment_type": "compose_service",
+      "environments": [
+        "staging",
+        "production"
+      ],
+      "evidence_refs": [
+        "infra/docker-compose.prod.yml"
+      ],
+      "persistence": {
+        "volume": "postgres_data"
+      }
+    },
+    "redis": {
+      "compose_service": "redis",
+      "deployment_type": "compose_service",
+      "environments": [
+        "staging",
+        "production"
+      ],
+      "evidence_refs": [
+        "infra/docker-compose.prod.yml"
+      ],
+      "persistence": {
+        "volume": "redis_data"
+      }
+    },
+    "worker": {
+      "compose_service": "celery_worker",
+      "depends_on": [
+        "postgres",
+        "redis"
+      ],
+      "deployment_type": "compose_service",
+      "environments": [
+        "staging",
+        "production"
+      ],
+      "evidence_refs": [
+        "infra/docker-compose.prod.yml"
+      ]
+    }
+  },
+  "source_refs": [
+    "docs/_canon/graph/ops/environment_catalog.yaml",
+    "docs/_canon/graph/ops/service_topology.yaml",
+    "docs/_canon/graph/ops/deploy_contract.yaml",
+    "docs/_canon/graph/ops/runtime_endpoints.yaml"
+  ]
+}

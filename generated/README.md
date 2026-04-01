@@ -12,4 +12,4 @@ Subpastas (atuais):
 - `generated/resolved_policy/` — política resolvida por módulo + surface.
 - `generated/contracts/` — cópias derivadas dos contratos SSOT (para consumo/integrações).
 - `generated/manifests/` — manifestos de rastreabilidade (hash + insumos).
-
+- `generated/source_graph/` — bundles e contract views derivados do source graph estruturado de módulos piloto.

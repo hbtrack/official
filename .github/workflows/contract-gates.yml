@@ -31,9 +31,14 @@ jobs:
             governance:
               - '.contract_driven/**'
               - 'docs/_canon/**'
+              - '.github/agents/**'
               - '.github/copilot-instructions.md'
+              - '.github/instructions/**'
               - '.github/skills/**'
+              - 'CLAUDE.md'
+              - '.codex'
               - 'scripts/contracts/validate/**'
+              - 'scripts/compile/**'
               - 'scripts/hb'
               - 'contracts/schemas/shared/**'
 
@@ -64,6 +69,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install Python dependencies
+        # Keep local parity with scripts/bootstrap/dev_contract_env.sh
         run: |
           pip install -r scripts/_policy/requirements.txt
           pip install schemathesis==4.12.1
@@ -77,7 +83,17 @@ jobs:
           echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
 
       - name: Install Node dependencies
+        # Keep local parity with scripts/bootstrap/dev_contract_env.sh
         run: npm ci
+
+      - name: Check source graph derived artifacts
+        run: python3 scripts/compile/compile_source_graph.py --module reports --check
+
+      - name: Check ops contract derived artifacts
+        run: python3 scripts/compile/compile_ops_contracts.py --check
+
+      - name: Check compiled context bundles
+        run: python3 scripts/compile/compile_context_bundle.py --module reports --check
 
       - name: Validate contracts
         run: python3 scripts/validate_contracts.py

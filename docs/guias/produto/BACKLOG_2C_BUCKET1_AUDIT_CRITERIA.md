@@ -1,4 +1,5 @@
 # Bucket 1 Remanescente — Critério de Auditoria
+> Documento de apoio humano, não canônico e não soberano. Serve para critério histórico de auditoria; não substitui `.contract_driven/DOMAIN_AXIOMS.json`, `docs/_canon/` ou contratos vigentes.
 
 **Sessão:** 4C (próxima)  
 **Objetivo:** Reclassificar 132 campos Bucket 1-restante  
@@ -353,6 +354,5 @@ git commit -m "audit(2C-4C): 132 Bucket 1-remanescente reclassificados, taxonomi
 | "Tudo é HIGH, muito fácil" | 100% HIGH | ❌ Verificar se audit foi superficial | ❌ FAIL |
 
 A meta é **encerrar a incerteza com rastreabilidade**, não ser perfeito. A confidence é ferramenta para priorizar v6, não julgamento de qualidade.
-
 
 

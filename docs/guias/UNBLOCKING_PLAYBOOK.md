@@ -1,12 +1,14 @@
 ---
-doc_type: canon
+doc_type: guide
 version: "1.0.0"
-status: active
+status: derived_reference
 created_at: "2026-03-17"
 ---
 
 # UNBLOCKING_PLAYBOOK.md
 ## Guia de Primeiros Socorros — Pipeline Travado
+
+> Documento de apoio humano, não canônico e não soberano. Serve como playbook auxiliar de desbloqueio; não substitui `docs/_canon/AGENT_INSTRUCTIONS.md`, `scripts/hb`, `scripts/contracts/validate/validate_contracts.py` ou `_reports/contract_gates/latest.json`.
 
 > Use este guia quando algo travar no desenvolvimento do HB Track.
 > Nenhum jargão técnico — se precisar de mais contexto, pergunte para a IA em português.

@@ -1,4 +1,5 @@
 # HB Track — Resumo Executivo do PRD
+> Documento de apoio humano, não canônico e não soberano. Serve para resumo executivo histórico; não substitui `docs/_canon/`, `ROADMAP.md`, `docs/hbtrack/modulos/` ou o PRD normativo vigente.
 
 > Data: 2026-03-19  
 > Documento principal: `docs/guias/produto/PRD_OFICIAL_HB_TRACK.md`
@@ -43,4 +44,3 @@ Congelar o MVP como `HB Track Coach`, resolver primeiro os gaps estruturais de `
 3. A IA conversacional do atleta será apenas coach esportivo ou também apoio emocional?
 4. Offline no scout ao vivo é obrigatório no MVP?
 5. Quais metas numéricas oficiais serão usadas no piloto?
-

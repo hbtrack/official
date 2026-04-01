@@ -10,12 +10,14 @@ Antes de criar ou modificar qualquer arquivo em `src/{module}/`:
 
 **Passo 1 — Verificar `docs/_canon/MODULE_REGISTRY.yaml`:**
 ```yaml
-# O módulo precisa estar em uma destas categorias:
-status: "validated_contract"   # mínimo para generate_code
-status: "implementation_ready"  # ideal — passou por readiness_promotion
+# O módulo precisa estar em implementation_ready ou acima:
+status: "implementation_ready"
+status: "implemented"
+status: "staging_validated"
+status: "released"
 ```
 
-Se o status for `draft_contract` ou inferior → **PARAR e emitir:**
+Se o status for `validated_contract` ou inferior → **PARAR e emitir:**
 ```
 BLOCKED_REQUIRED_ARTIFACT_MISSING
 Módulo '<module>' está em '<status>'.
@@ -32,7 +34,7 @@ Confirmar que `_reports/contract_gates/latest.json` contém `ADVERSARIAL_ANALYSI
 
 ## Arquivos explicitamente fora deste escopo
 
-Este guarda aplica-se a **código de módulo em** `src/**`. Os seguintes paths pertencem ao **Modo ROADMAP** (`execute_roadmap_phase`) e não requerem `validated_contract` nem `ADVERSARIAL_ANALYSIS_GATE`:
+Este guarda aplica-se a **código de módulo em** `src/**`. Os seguintes paths pertencem ao **Modo ROADMAP** (`execute_roadmap_phase`) e não requerem `implementation_ready` nem `ADVERSARIAL_ANALYSIS_GATE`:
 
 - `src/shared/` — middleware e utilitários transversais
 - `src/*/tasks.py`, `src/*/consumers.py`, `src/*/middleware.py` — infraestrutura assíncrona / auth / websocket

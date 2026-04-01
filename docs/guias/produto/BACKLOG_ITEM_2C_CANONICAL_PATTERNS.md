@@ -1,8 +1,9 @@
 # BACKLOG ITEM 2C-1 — Consolidação de Patterns Canônicos
+> Documento de apoio humano, não canônico e não soberano. Serve para consolidação analítica de patterns; não substitui `.contract_driven/DOMAIN_AXIOMS.json`, `docs/_canon/` ou contratos vigentes.
 
 **Data:** 2026-03-20  
-**Status:** REFERÊNCIA NORMATIVA — Fonte Única de Verdade  
-**Fonte:** `.contract_driven/DOMAIN_AXIOMS.json`
+**Status:** REGISTRO ANALÍTICO DERIVADO  
+**Fonte normativa relacionada:** `.contract_driven/DOMAIN_AXIOMS.json`
 
 ---
 

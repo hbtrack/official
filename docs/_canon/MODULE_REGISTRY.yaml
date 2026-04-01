@@ -28,18 +28,22 @@ policy:
     implementation_ready:
       "Readiness m\xE1xima para materializa\xE7\xE3o; exige pr\xE9\
       -contrato, an\xE1lise adversarial PASS e Decision IR conformante quando aplic\xE1\
-      vel."
+      vel. A sa\xEDda formal deste estado rumo a `implemented` ocorre apenas via\
+      \ `implementation_promotion`."
     implemented:
       "C\xF3digo can\xF4nico materializado em `src/<module>/`, com runtime\
       \ real e testes do m\xF3dulo presentes. Todo m\xF3dulo em status `implemented`\
-      \ deve ter ao menos uma feature em status `implemented` em FEATURE_REGISTRY.yaml."
+      \ deve ter ao menos uma feature em status `implemented` em FEATURE_REGISTRY.yaml.\
+      \ A promo\xE7\xE3o formal para este status ocorre apenas via `implementation_promotion`."
     staging_validated:
       "M\xF3dulo implementado e validado em ambiente de staging\
       \ com evid\xEAncia operacional compat\xEDvel com `DEPLOY_PIPELINE.md` (health\
-      \ check, smoke/contract check e sem bloqueios abertos)."
+      \ check, smoke/contract check e sem bloqueios abertos). A promo\xE7\xE3o\
+      \ formal para este status ocorre apenas via `staging_promotion`."
     released:
       "M\xF3dulo promovido para produ\xE7\xE3o com aprova\xE7\xE3o humana,\
-      \ health check verde e refer\xEAncia de rollback compat\xEDvel com `DEPLOY_PIPELINE.md`."
+      \ health check verde e refer\xEAncia de rollback compat\xEDvel com `DEPLOY_PIPELINE.md`.\
+      \ A promo\xE7\xE3o formal para este status ocorre apenas via `release_promotion`."
   surface_catalog:
     - module_docs_minimum
     - openapi_sync

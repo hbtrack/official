@@ -1,0 +1,86 @@
+version: "1.0.0"
+artifact: "GLOBAL_RULES_IR"
+status: active
+scope: global
+
+rules:
+  - rule_id: "GR-001"
+    concept: "operation_modes_are_exclusive"
+    statement: "Modo CDD e modo ROADMAP nunca podem ser executados no mesmo fluxo."
+    source_refs:
+      - "docs/_canon/AGENT_INSTRUCTIONS.md"
+      - ".contract_driven/CONTRACT_SYSTEM_RULES.md"
+    consumers:
+      - ".contract_driven/TASK_CATALOG.yaml"
+      - "scripts/hb"
+
+  - rule_id: "GR-002"
+    concept: "verify_before_contract_work"
+    statement: "Toda tarefa de contrato deve começar com `hb verify`."
+    source_refs:
+      - "docs/_canon/AGENT_INSTRUCTIONS.md"
+      - "docs/_canon/CONTRACT_PIPELINE.md"
+    consumers:
+      - "scripts/hb"
+      - ".contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md"
+
+  - rule_id: "GR-003"
+    concept: "artifact_revalidation_required"
+    statement: "Toda alteração em artefato canônico deve ser seguida por `hb artifact <path>`."
+    source_refs:
+      - "docs/_canon/AGENT_INSTRUCTIONS.md"
+      - "docs/_canon/CONTRACT_PIPELINE.md"
+    consumers:
+      - "scripts/hb"
+      - "scripts/contracts/validate/validate_contracts.py"
+
+  - rule_id: "GR-004"
+    concept: "no_implementation_before_readiness"
+    statement: "Nenhuma implementação pode avançar antes de Validation + Readiness."
+    source_refs:
+      - "docs/_canon/CONTRACT_PIPELINE.md"
+      - "docs/_canon/MODULE_REGISTRY.yaml"
+    consumers:
+      - "scripts/hb"
+      - ".contract_driven/TASK_CATALOG.yaml"
+
+  - rule_id: "GR-005"
+    concept: "shared_global_rules_must_point_to_canon"
+    statement: "Documentação de módulo não pode redefinir regra global compartilhada; deve apontar para o canon."
+    source_refs:
+      - "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml"
+      - "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+    consumers:
+      - "docs/hbtrack/modulos/"
+      - "scripts/contracts/validate/validate_contracts.py"
+
+  - rule_id: "GR-006"
+    concept: "runtime_current_state_is_derived"
+    statement: "RUNTIME_CURRENT_STATE.md é derivado do workspace real e não admite edição manual."
+    source_refs:
+      - "docs/_canon/RUNTIME_CURRENT_STATE.md"
+      - "scripts/generate/docs/gen_runtime_current_state.py"
+    consumers:
+      - "scripts/audit/check_architecture_docs.py"
+      - "scripts/contracts/validate/validate_contracts.py"
+
+  - rule_id: "GR-007"
+    concept: "ops_contracts_are_structured_sources"
+    statement: "Ambiente, secrets, topologia, deploy e endpoints de runtime devem viver em `docs/_canon/graph/ops/`, nunca apenas em markdown livre ou shell inline."
+    source_refs:
+      - "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+      - "docs/_canon/graph/ops/deploy_contract.yaml"
+    consumers:
+      - "docs/_canon/DEPLOY_PIPELINE.md"
+      - "docs/_canon/VPS_SETUP.md"
+      - "docs/_canon/OPERATIONS.md"
+
+  - rule_id: "GR-008"
+    concept: "ops_inputs_must_refresh_ops_graph"
+    statement: "Mudanca em workflow de deploy, templates de ambiente, compose, nginx, rollback ou runtime config deve atualizar `docs/_canon/graph/ops/` no mesmo changeset."
+    source_refs:
+      - "docs/_canon/SYNC_MANIFEST.yaml"
+      - "docs/_canon/graph/source_map.yaml"
+    consumers:
+      - "scripts/contracts/validate/validate_contracts.py"
+      - "tests/pipeline_gates/test_ops_source_graph_integrity.py"

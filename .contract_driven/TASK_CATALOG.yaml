@@ -167,7 +167,7 @@ task_catalog:
     status: active
     description: "Promover módulo de validated_contract para implementation_ready após auditoria de superfícies e pipeline verde"
     profile_id: contract_execution
-    stage_allowed: [3, 4]
+    stage_allowed: [0, 3, 4]
     input_requirements:
       - module (string, mapped to MODULE_REGISTRY.yaml)
     artifacts_produced:
@@ -185,6 +185,76 @@ task_catalog:
       Não implica módulo implementado; estados pós-readiness vivem no MODULE_REGISTRY (`implemented`, `staging_validated`, `released`).
       `generate_frontend` continua frozen até frontend/ existir, a toolchain real estar versionada e o FRONTEND_CONTRACT_GATE sair de SKIP.
 
+  implementation_promotion:
+    task_type: implementation_promotion
+    worker_id: implementation_promotion
+    worker_path: .contract_driven/agent_prompts/implementation_promotion.prompt.md
+    status: active
+    description: "Promover módulo de implementation_ready para implemented após comprovação de código materializado, runtime/testes reais e feature coverage mínima."
+    profile_id: contract_execution
+    stage_allowed: [0, 4, 5]
+    input_requirements:
+      - module (string, mapped to MODULE_REGISTRY.yaml, status=implementation_ready)
+    artifacts_produced:
+      - docs/_canon/MODULE_REGISTRY.yaml (status updated to implemented)
+      - SESSION_HANDOFF.md (promotion recorded)
+    blocking_gates:
+      - AXIOM_INTEGRITY_GATE
+      - CODE_ARCHITECTURE_GATE
+      - ADVERSARIAL_ANALYSIS_GATE
+      - FEATURE_COVERAGE_GATE
+    pre_contract_exception: null
+    notes: |
+      Único caminho formal para implemented.
+      Requer: status=implementation_ready + pipeline PASS + evidência real em src/<module>/ + testes do módulo + ao menos uma feature implemented no FEATURE_REGISTRY.yaml.
+      Módulo não pode ser promovido para implemented por edição manual isolada do registry.
+
+  staging_promotion:
+    task_type: staging_promotion
+    worker_id: staging_promotion
+    worker_path: .contract_driven/agent_prompts/staging_promotion.prompt.md
+    status: active
+    description: "Promover módulo de implemented para staging_validated após evidência real de staging, health check e rollback referenciado."
+    profile_id: contract_execution
+    stage_allowed: [0, 5, 6]
+    input_requirements:
+      - module (string, mapped to MODULE_REGISTRY.yaml, status=implemented)
+    artifacts_produced:
+      - docs/_canon/MODULE_REGISTRY.yaml (status updated to staging_validated)
+      - SESSION_HANDOFF.md (staging promotion recorded)
+    blocking_gates:
+      - DEPLOY_READINESS_GATE
+      - HTTP_RUNTIME_CONTRACT_GATE
+      - WAIVER_VALIDITY_GATE
+    pre_contract_exception: null
+    notes: |
+      Único caminho formal para staging_validated.
+      Requer: status=implemented + pipeline PASS + evidência real de staging + health check + rollback referenciado.
+      Workflow versionado sozinho não basta para promover o módulo.
+
+  release_promotion:
+    task_type: release_promotion
+    worker_id: release_promotion
+    worker_path: .contract_driven/agent_prompts/release_promotion.prompt.md
+    status: active
+    description: "Promover módulo de staging_validated para released após aprovação humana rastreável, produção saudável e rollback referenciado."
+    profile_id: contract_execution
+    stage_allowed: [0, 6, 7]
+    input_requirements:
+      - module (string, mapped to MODULE_REGISTRY.yaml, status=staging_validated)
+    artifacts_produced:
+      - docs/_canon/MODULE_REGISTRY.yaml (status updated to released)
+      - SESSION_HANDOFF.md (release promotion recorded)
+    blocking_gates:
+      - DEPLOY_READINESS_GATE
+      - HANDOFF_COHERENCE_GATE
+      - WAIVER_VALIDITY_GATE
+    pre_contract_exception: null
+    notes: |
+      Único caminho formal para released.
+      Requer: status=staging_validated + pipeline PASS + aprovação humana registrada + produção saudável + rollback referenciado.
+      Nenhum módulo pode ser liberado por inferência do agente.
+
   # Grupo: Decisões Arquiteturais
   architecture_review:
     task_type: architecture_review
@@ -193,7 +263,7 @@ task_catalog:
     status: active
     description: "Analisar decisão arquitetural aberta"
     profile_id: architecture_decision
-    stage_allowed: [1, 2]
+    stage_allowed: [0, 1, 2]
     input_requirements:
       - decision_id (string, format ADR-*)
       - context (string, max 2000 chars)
@@ -209,7 +279,7 @@ task_catalog:
     status: active
     description: "Descobrir decisão implícita em artefato"
     profile_id: architecture_decision
-    stage_allowed: [1]
+    stage_allowed: [0, 1]
     input_requirements:
       - artifact_path (string, existing path)
       - scope (string, max 500 chars)
@@ -222,11 +292,11 @@ task_catalog:
     worker_id: code_generator
     worker_path: .contract_driven/agent_prompts/generate_code.prompt.md
     status: active
-    description: "Gerar código backend (Django Ninja + Django ORM) a partir de contrato validado. Requer ADVERSARIAL_ANALYSIS_GATE=PASS."
+    description: "Gerar código backend (Django Ninja + Django ORM) somente para módulo em implementation_ready+ e com ADVERSARIAL_ANALYSIS_GATE=PASS."
     profile_id: contract_execution
-    stage_allowed: [2, 3]
+    stage_allowed: [0, 2, 3]
     input_requirements:
-      - module (string, mapped to MODULE_REGISTRY.yaml, status>=validated_contract)
+      - module (string, mapped to MODULE_REGISTRY.yaml, status>=implementation_ready)
       - feature (string, mapped to FEATURE_REGISTRY.yaml)
       - layer (enum: domain | application | infrastructure | interface | all)
     write_scope: backend
@@ -366,6 +436,7 @@ routing_validation:
   rule_5: |
     Pre-flight checks antes de qualquer worker:
     - Verificar que stage está em stage_allowed
+    - Todo task_type iniciado por `hb verify` MUST incluir `0` em `stage_allowed`
     - Verificar que artifacts esperados podem ser escritos
     - Verificar que blocking_gates não têm FAIL material
 

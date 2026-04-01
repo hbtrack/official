@@ -1,0 +1,48 @@
+version: "1.0.0"
+status: active
+module: reports
+
+errors:
+  - id: ERR-RPT-401-UNAUTHENTICATED
+    kind: transport
+    http_status: 401
+    source_ref: "../../../../../src/reports/api.py#_role"
+    operations:
+      - listReportJobs
+      - createReportJob
+      - getReportJob
+      - updateReportJob
+      - downloadReportArtifact
+  - id: ERR-RPT-403-INSUFFICIENT-PRIVILEGE
+    kind: domain
+    http_status: 403
+    exception_ref: "../../../../../src/reports/domain/rules.py#InsufficientPrivilege"
+    operations:
+      - listReportJobs
+      - createReportJob
+      - getReportJob
+      - updateReportJob
+      - downloadReportArtifact
+  - id: ERR-RPT-404-NOT-FOUND
+    kind: domain
+    http_status: 404
+    exception_ref: "../../../../../src/reports/domain/rules.py#ReportJobNotFound"
+    operations:
+      - getReportJob
+      - updateReportJob
+      - downloadReportArtifact
+  - id: ERR-RPT-409-CONFLICT
+    kind: domain
+    http_status: 409
+    exception_ref: "../../../../../src/reports/domain/rules.py#ReportJobConflict"
+    operations:
+      - updateReportJob
+      - downloadReportArtifact
+  - id: ERR-RPT-422-VALIDATION
+    kind: validation
+    http_status: 422
+    source_ref: "../../../../../src/reports/domain/entities.py#validate_invariants"
+    operations:
+      - listReportJobs
+      - createReportJob
+      - updateReportJob

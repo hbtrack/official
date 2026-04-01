@@ -2,7 +2,7 @@
 """
 PreToolUse Hook — HB Track Backend Gate
 Bloqueia escrita em src/{module}/ se o módulo não estiver em
-validated_contract ou em status >= implementation_ready no MODULE_REGISTRY.yaml.
+implementation_ready ou acima no MODULE_REGISTRY.yaml.
 Usa apenas stdlib (sem dependências externas).
 """
 import json
@@ -11,7 +11,6 @@ import sys
 from pathlib import Path
 
 ALLOWED_STATUSES = {
-    "validated_contract",
     "implementation_ready",
     "implemented",
     "staging_validated",
@@ -28,6 +27,7 @@ WORKSPACE = Path(__file__).resolve().parent.parent.parent
 REGISTRY_PATH = WORKSPACE / "docs/_canon/MODULE_REGISTRY.yaml"
 ROADMAP_EXEMPT_PREFIXES = ("src/shared/",)
 ROADMAP_EXEMPT_BASENAMES = {"tasks.py", "consumers.py", "middleware.py"}
+INTERNAL_BLOCK_CODE = "BLOCKED_BACKEND_GATE_INTERNAL"
 
 
 def get_module_status(module: str):
@@ -68,11 +68,15 @@ def deny(reason: str):
     sys.exit(2)
 
 
+def deny_internal(reason: str):
+    deny(f"{INTERNAL_BLOCK_CODE}\n{reason}")
+
+
 def main():
     try:
         raw = sys.stdin.read().strip()
         if not raw:
-            sys.exit(0)
+            deny_internal("Evento do hook vazio ou ausente.")
 
         event = json.loads(raw)
         tool_name = event.get("toolName", "")
@@ -109,7 +113,7 @@ def main():
             deny(
                 f"BLOCKED_REQUIRED_ARTIFACT_MISSING\n"
                 f"Módulo '{module}' está em '{status}'.\n"
-                f"Código backend exige status 'validated_contract' ou >= 'implementation_ready'.\n\n"
+                f"Código backend exige status 'implementation_ready' ou superior.\n\n"
                 f"Sequência obrigatória antes de gerar código:\n"
                 f"  1. Se draft_contract → promover para validated_contract (pipeline PASS)\n"
                 f"  2. readiness_promotion → implementation_ready\n"
@@ -121,11 +125,10 @@ def main():
         # Status OK — permite
         sys.exit(0)
 
-    except json.JSONDecodeError:
-        sys.exit(0)  # Não bloqueia em erro de parse
+    except json.JSONDecodeError as exc:
+        deny_internal(f"Evento do hook inválido (JSON): {exc.msg}")
     except Exception as e:
-        print(f"check_backend_gate warning: {e}", file=sys.stderr)
-        sys.exit(0)  # Fail-open: não quebra o agente em erros do hook
+        deny_internal(f"Erro interno no backend gate: {e}")
 
 
 if __name__ == "__main__":

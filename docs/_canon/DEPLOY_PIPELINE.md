@@ -1,91 +1,134 @@
 ---
 doc_type: canon
-version: "1.1.0"
+version: "1.2.2"
 status: active
 created: "2026-03-17"
-last_reviewed: "2026-03-23"
+last_reviewed: "2026-04-01"
 decision_ref: D5, D6
-state_semantics: target-state
+state_semantics: current-state
 ---
 
 # DEPLOY_PIPELINE.md
-> Documento normativo — SSOT para estratégia de deploy do HB Track.
-> Versão: 1.1.0 | Status: active | Criado: 2026-03-17 | Revisado: 2026-03-23
-> Decisões: D5 = VPS Locaweb (Docker Compose) | D6 = Staging → aprovação → produção
+> Documento normativo do fluxo de deploy do HB Track.
+> SSOT estruturado complementar: `docs/_canon/graph/ops/`.
 
-## 0. Status Operacional Atual
+## 0. Autoridade
 
-O design de deploy está **aprovado**, mas a automação do repositório ainda está **parcial**.
+Este documento nao e o source master de ambiente, secrets, topologia ou endpoints.
+Esses conceitos vivem em:
 
-Artefatos presentes no repo:
-- `docs/_canon/DEPLOY_PIPELINE.md`
-- `docs/_canon/decisions/ADR-027-deploy-pipeline.md`
+- `docs/_canon/graph/ops/environment_catalog.yaml`
+- `docs/_canon/graph/ops/secrets_catalog.yaml`
+- `docs/_canon/graph/ops/service_topology.yaml`
+- `docs/_canon/graph/ops/deploy_contract.yaml`
+- `docs/_canon/graph/ops/runtime_endpoints.yaml`
+- `docs/_canon/graph/ops/github_actions_catalog.yaml`
+
+Este arquivo consolida a politica e o fluxo operacional aprovados por ADRs sobre o estado real do repositorio.
+
+## 1. Baseline operacional atual
+
+Artefatos presentes e ativos no workspace:
+
 - `.github/workflows/deploy.yml`
-
-Assets ainda ausentes no workspace:
 - `Dockerfile`
 - `infra/docker-compose.prod.yml`
 - `infra/nginx/nginx.conf`
+- `infra/nginx/nginx.staging.conf`
+- `infra/scripts/rollback.sh`
+- `infra/env/.env.staging.template`
+- `infra/env/.env.production.template`
+- `config/urls.py`
 
 Regra normativa:
-- enquanto esses assets não existirem e não houver health endpoint operacional em runtime, nenhum módulo pode ser promovido para `staging_validated` ou `released` apenas com base no workflow versionado;
-- o workflow representa o **target-state** de CI/CD, não evidência suficiente de operação.
 
-## 1. Plataforma de Deploy (D5)
+- promocao para `staging_validated` exige health check real em staging
+- promocao para `released` exige aprovacao humana e health check real em producao
+- rollback canonicamente aceito e o definido em `infra/scripts/rollback.sh`
+- o workflow vigente renderiza `.env` via `scripts/deploy/inject_env.sh` e `scripts/deploy/render_env_from_contract.py`, com falha fechada se faltar valor obrigatorio
 
-**Escolha:** VPS Locaweb — mesmo servidor que hospeda o Pact Broker.
+## 2. Plataforma e ambientes
 
-- Sistema operacional: Ubuntu 22.04 LTS
-- Orquestração: Docker Compose v2
-- Reverse proxy: Nginx (SSL via Let's Encrypt / Certbot)
-- Banco de dados: PostgreSQL 16
-- Rede Docker: `hbtrack-net` por ambiente
+Plataforma aprovada por `ADR-027`:
 
-## 2. Ambientes Alvo
+- VPS Locaweb
+- Docker Compose v2
+- Nginx como reverse proxy
+- PostgreSQL 16
+- Redis 7
+- Certbot para TLS
 
-| Ambiente | Branch | Estratégia alvo | Status atual |
-|---|---|---|---|
-| `development` | qualquer | manual/local | disponível via setup local |
-| `staging` | `main` | automático via workflow + SSH | bloqueado até assets de deploy existirem |
-| `production` | `main` após aprovação | manual com approval gate | bloqueado até staging estar validado |
+Ambientes:
 
-## 3. Pipeline Alvo de Entrega
+| Ambiente | Runtime | Diretorio | URL base |
+| --- | --- | --- | --- |
+| `development` | workspace local | repo local | `http://localhost:8000` |
+| `staging` | VPS + Compose | `/opt/hbtrack/staging` | `https://staging.handballtrack.app` |
+| `production` | VPS + Compose | `/opt/hbtrack/production` | `https://api.handballtrack.app` |
+
+## 3. Fluxo canonicamente aceito
 
 ```
-[push main]
-  → validate_contracts.py
-  → pytest
-  → docker build + tag SHA
-  → deploy staging
-  → GET /health = 200
-  → aprovação humana
-  → deploy produção
-  → GET /health = 200
-  → rollback para SHA anterior se falhar
+push main
+  -> validate
+  -> test
+  -> build
+  -> deploy-staging
+  -> GET /health em staging
+  -> HTTP runtime contract validation
+  -> aprovacao humana
+  -> deploy-production
+  -> GET /health em producao
+  -> rollback automatico se o health falhar
 ```
 
-Este fluxo só pode ser tratado como ativo de ponta a ponta quando os assets ausentes da seção 0 existirem no repo e o runtime expuser `GET /health`.
+## 4. Health, evidencias e rollback
 
-## 4. Aprovação, Health e Rollback
+Health endpoints canonicos:
 
-- quem fez merge na `main` não deve aprovar o próprio deploy, salvo hotfix justificado
-- health check canônico: `GET /health` com HTTP 200 e payload `{\"status\":\"ok\"}` em até 120s
-- rollback canônico: re-deploy da imagem SHA anterior em até 5 minutos
+- staging: `https://staging.handballtrack.app/health`
+- producao: `https://api.handballtrack.app/health`
 
-## 5. Variáveis por Ambiente
+Endpoints operacionais complementares:
 
-| Variável | Staging | Production |
-|---|---|---|
-| `DATABASE_URL` | `postgres://...staging` | `postgres://...prod` |
-| `PACT_BROKER_BASE_URL` | `http://<VPS_IP>:9292` | `http://<VPS_IP>:9292` |
-| `ENV` | `staging` | `production` |
-| `SECRET_KEY` | secret de staging | secret de produção |
+- OpenAPI local/live: `.../api/openapi.json`
+- Docs live: `.../api/docs`
+- Pact Broker interno: `http://<VPS_IP>:9292`
 
-Segredos vivem em GitHub Secrets. Nunca em código ou `.env` versionado.
+Evidencias minimas:
 
-## 6. Referências
+- `_reports/contract_gates/latest.json`
+- workflow `.github/workflows/deploy.yml`
+- `infra/scripts/rollback.sh`
+- resposta HTTP 200 dos health checks do ambiente alvo
 
-- ADR: `docs/_canon/decisions/ADR-027-deploy-pipeline.md`
-- Workflow alvo: `.github/workflows/deploy.yml`
-- Arquitetura de código: `docs/_canon/CODE_ARCHITECTURE.md`
-- Pact Broker: `docs/_canon/decisions/ADR-025-cdct-pact-strategy.md`
+Rollback aceito:
+
+- automatico no job de producao quando o health check falha
+- manual via `infra/scripts/rollback.sh --env <staging|production> --sha <git-sha>`
+
+## 5. Renderizacao deterministica de `.env`
+
+Fluxo aceito:
+
+- o `target-state` operacional para ambientes remotos passa a ser `.env` renderizado por contrato, nunca bootstrapado manualmente no workflow
+- GitHub Environment fornece secrets/vars reais do ambiente alvo
+- `scripts/deploy/inject_env.sh` chama `scripts/deploy/render_env_from_contract.py`
+- secrets operacionais ativos no runtime atual incluem JWT RS256, DB, Cloudinary, Resend e Gemini; a rotacao/verificacao deles e contratual em `scripts/ops/rotate_keys.sh`
+- o renderer resolve placeholders do template derivado em `infra/env/` usando os fragments compilados em `compiled_ops/deploy/`
+- se faltar valor obrigatorio, o job falha fechado antes do SSH/deploy
+- o `.env` resolvido passa a ser artefato efemero do job e e sincronizado para `/opt/hbtrack/<env>/.env`
+
+Consequencia normativa:
+
+- `.github/workflows/deploy.yml` deixa de ser source manual de variaveis operacionais
+- qualquer mudanca no workflow, templates de env, compose, nginx, rollback, renderer ou runtime config deve atualizar `docs/_canon/graph/ops/` no mesmo changeset
+
+## 6. Referencias
+
+- `docs/_canon/decisions/ADR-025-cdct-pact-strategy.md`
+- `docs/_canon/decisions/ADR-027-deploy-pipeline.md`
+- `docs/_canon/graph/ops/deploy_contract.yaml`
+- `docs/_canon/graph/ops/runtime_endpoints.yaml`
+- `docs/_canon/graph/ops/service_topology.yaml`
+- `.github/workflows/deploy.yml`

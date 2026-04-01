@@ -14,6 +14,10 @@ updated_at: "2026-03-19"
 
 # PERMISSIONS_AUDIT.md
 
+> **Nota canônica:** O módulo `identity_access` é a fonte soberana de autenticação e autorização.
+> Este artefato **documenta** como `audit` aplica a policy global de acesso, sem redefinir roles, JWT ou sessão.
+> Roles canônicos: `admin`, `coordinator`, `coach`, `athlete`, `member` (ADR-008; ADR-007 para JWT/session).
+
 ## Modelo de acesso (DEC-AUD-002=B)
 
 **admin**: acesso irrestrito a todas as entradas do trilho de auditoria, sem filtros obrigatórios.

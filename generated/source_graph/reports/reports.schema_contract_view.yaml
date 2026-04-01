@@ -1,0 +1,64 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: reports
+entity: ReportJob
+primary_schema_ref: contracts/schemas/reports/report_job.schema.json
+openapi_projection_ref: contracts/openapi/components/schemas/reports/report_job.yaml
+required:
+- id
+- reportType
+- ownerUserId
+sovereign_fields:
+- name: id
+  runtime_name: id
+  required: true
+  type: uuid_v4
+- name: ownerUserId
+  runtime_name: owner_user_id
+  required: true
+  type: uuid_v4
+- name: reportType
+  runtime_name: report_type
+  required: true
+  type: string
+- name: formatLabel
+  runtime_name: format_label
+  required: false
+  type: string
+- name: parameterSummary
+  runtime_name: parameter_summary
+  required: false
+  type: string
+- name: sourceMetricNames
+  runtime_name: source_metric_names
+  required: false
+  type: string[]
+- name: generatedArtifactRef
+  runtime_name: generated_artifact_ref
+  required: false
+  type: string
+- name: retentionLabel
+  runtime_name: retention_label
+  required: false
+  type: string
+- name: requestedAt
+  runtime_name: requested_at
+  required: false
+  type: timestamp_utc
+runtime_extension_fields:
+- name: statusLabel
+  runtime_name: status_label
+  type: enum
+  allowed_values:
+  - queued
+  - processing
+  - completed
+  - failed
+  - cancelled
+- name: completedAt
+  runtime_name: completed_at
+  type: timestamp_utc
+- name: errorMessage
+  runtime_name: error_message
+  type: string

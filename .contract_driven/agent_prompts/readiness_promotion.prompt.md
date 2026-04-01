@@ -49,7 +49,7 @@ Ler `docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md` e filtrar pelo módulo:
 
 | Check | Critério | Falha |
 |---|---|---|
-| Sem decisões `status: open` ou `status: blocked` para o módulo | BACKLOG | Bloquear: "Existem decisões arquiteturais em aberto para o módulo X: [lista]. Resolver antes de promover." |
+| `ARCH_DECISION_PRESENCE_GATE` = `PASS` e sem decisões `status: open`, `blocked`, `in_discovery` ou `pending_approval` para o módulo | BACKLOG + `_reports/contract_gates/latest.json` | Bloquear: "Existem decisões arquiteturais pendentes para o módulo X: [lista]. Resolver antes de promover." |
 
 ---
 

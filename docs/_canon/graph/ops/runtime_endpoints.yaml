@@ -1,0 +1,48 @@
+version: "1.0.0"
+artifact: "OPS_RUNTIME_ENDPOINTS"
+status: active
+scope: operations
+
+environments:
+  development:
+    base_url: "http://localhost:8000"
+  staging:
+    base_url: "https://staging.handballtrack.app"
+  production:
+    base_url: "https://api.handballtrack.app"
+
+endpoints:
+  - name: "health"
+    kind: "health"
+    path: "/health"
+    implementation_ref: "config/urls.py#health_check"
+    urls:
+      development: "http://localhost:8000/health"
+      staging: "https://staging.handballtrack.app/health"
+      production: "https://api.handballtrack.app/health"
+
+  - name: "openapi_schema"
+    kind: "openapi"
+    path: "/api/openapi.json"
+    implementation_ref: "config/urls.py#api"
+    urls:
+      development: "http://localhost:8000/api/openapi.json"
+      staging: "https://staging.handballtrack.app/api/openapi.json"
+      production: "https://api.handballtrack.app/api/openapi.json"
+
+  - name: "api_docs"
+    kind: "documentation"
+    path: "/api/docs"
+    implementation_ref: "config/urls.py#api"
+    urls:
+      development: "http://localhost:8000/api/docs"
+      staging: "https://staging.handballtrack.app/api/docs"
+      production: "https://api.handballtrack.app/api/docs"
+
+  - name: "pact_broker"
+    kind: "contract_broker"
+    path: "/"
+    implementation_ref: "docs/_canon/decisions/ADR-025-cdct-pact-strategy.md"
+    urls:
+      staging: "http://<VPS_IP>:9292"
+      production: "http://<VPS_IP>:9292"

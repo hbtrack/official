@@ -95,19 +95,19 @@
                     allOf:
                       - $ref: "../components/schemas/reports/report_job.yaml"
                       - type: object
-                        required: [statusLabel, completedAt]
+                        required: [statusLabel]
                         properties:
                           statusLabel:
                             type: string
-                            enum: [queued, processing, completed, failed]
+                            enum: [queued, processing, completed, failed, cancelled]
                           errorMessage:
                             type: string
-
+                            description: Error details if job failed.
                           completedAt:
                             type: string
                             format: date-time
                             pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$'
-
+                            description: When job finished (success, failure or cancellation).
                 nextPageToken:
                   type: string
 
@@ -263,21 +263,19 @@
               allOf:
                 - $ref: "../components/schemas/reports/report_job.yaml"
                 - type: object
-                  required: [statusLabel, completedAt]
+                  required: [statusLabel]
                   properties:
                     statusLabel:
                       type: string
-                      enum: [queued, processing, completed, failed]
+                      enum: [queued, processing, completed, failed, cancelled]
                     errorMessage:
                       type: string
-
                       description: Error details if job failed.
                     completedAt:
                       type: string
                       format: date-time
                       pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$'
-
-                      description: When job finished (success or failure).
+                      description: When job finished (success, failure or cancellation).
       "401":
         description: Unauthorized
         content:
@@ -347,15 +345,19 @@
               allOf:
                 - $ref: "../components/schemas/reports/report_job.yaml"
                 - type: object
-                  required: [statusLabel, completedAt]
+                  required: [statusLabel]
                   properties:
                     statusLabel:
                       type: string
                       enum: [queued, processing, completed, failed, cancelled]
+                    errorMessage:
+                      type: string
+                      description: Error details if job failed.
                     completedAt:
                       type: string
                       format: date-time
                       pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3,6})?Z$'
+                      description: When job finished (success, failure or cancellation).
 
       "400":
         description: Invalid update (e.g., cannot cancel completed job).

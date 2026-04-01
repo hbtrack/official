@@ -1,0 +1,81 @@
+version: "1.2.0"
+artifact: "OPS_GITHUB_ACTIONS_CATALOG"
+status: active
+scope: operations
+
+workflows:
+  deploy_pipeline:
+    workflow_ref: ".github/workflows/deploy.yml"
+    triggers:
+      - "push:main"
+      - "workflow_dispatch"
+    github_environments:
+      - "staging"
+      - "production"
+    required_secrets:
+      - "GITHUB_TOKEN"
+      - "VPS_HOST_STAGING"
+      - "VPS_HOST_PRODUCTION"
+      - "VPS_USER"
+      - "VPS_SSH_KEY"
+      - "SECRET_KEY"
+      - "DB_PASSWORD"
+      - "JWT_PRIVATE_KEY"
+      - "JWT_PUBLIC_KEY"
+      - "CLOUDINARY_CLOUD_NAME"
+      - "CLOUDINARY_API_KEY"
+      - "CLOUDINARY_API_SECRET"
+      - "RESEND_API_KEY"
+      - "GEMINI_API_KEY"
+    required_variables:
+      - "STAGING_URL"
+      - "PRODUCTION_URL"
+    jobs:
+      - id: "validate"
+        purpose: "contract_and_governance_validation"
+      - id: "test"
+        purpose: "runtime_and_unit_tests"
+        service_containers:
+          - "postgres"
+          - "redis"
+        ci_only_env:
+          - "DATABASE_URL"
+          - "CELERY_RESULT_BACKEND"
+          - "JWT_ALGORITHM"
+          - "JWT_SECRET"
+      - id: "build"
+        purpose: "build_and_push_images"
+      - id: "deploy-staging"
+        purpose: "staging_sync_and_deploy"
+        runtime_secret_inputs:
+          - "SECRET_KEY"
+          - "DB_PASSWORD"
+          - "POSTGRES_PASSWORD"
+          - "JWT_PRIVATE_KEY"
+          - "JWT_PUBLIC_KEY"
+          - "CLOUDINARY_CLOUD_NAME"
+          - "CLOUDINARY_API_KEY"
+          - "CLOUDINARY_API_SECRET"
+          - "CLOUDINARY_URL"
+          - "RESEND_API_KEY"
+          - "GEMINI_API_KEY"
+      - id: "contract-conformance"
+        purpose: "live_http_contract_validation"
+        runtime_env:
+          - "HB_STAGING_URL"
+      - id: "approve"
+        purpose: "human_gate_before_production"
+      - id: "deploy-production"
+        purpose: "production_release_and_rollback"
+        runtime_secret_inputs:
+          - "SECRET_KEY"
+          - "DB_PASSWORD"
+          - "POSTGRES_PASSWORD"
+          - "JWT_PRIVATE_KEY"
+          - "JWT_PUBLIC_KEY"
+          - "CLOUDINARY_CLOUD_NAME"
+          - "CLOUDINARY_API_KEY"
+          - "CLOUDINARY_API_SECRET"
+          - "CLOUDINARY_URL"
+          - "RESEND_API_KEY"
+          - "GEMINI_API_KEY"

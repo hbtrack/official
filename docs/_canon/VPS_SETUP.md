@@ -1,147 +1,140 @@
 # HB Track — VPS Setup (Staging e Production)
 
-> Documento operacional para provisionamento manual do servidor.
-> Requer aprovação humana antes de executar em produção (BLOCKED_DEPLOY_REQUIRES_HUMAN).
+> Runbook operacional. SSOT estruturado: `docs/_canon/graph/ops/`.
+> Este arquivo nao redefine ambiente, secrets, topologia ou deploy; ele operacionaliza o que ja esta catalogado.
 
-## Pré-requisitos
+## 0. Fontes obrigatorias
 
-- Ubuntu 22.04 LTS (64-bit)
-- Mínimo: 2 vCPU, 4 GB RAM, 40 GB SSD
-- Acesso SSH como root na primeira configuração
+Antes de provisionar a VPS, consulte:
 
----
+- `docs/_canon/graph/ops/environment_catalog.yaml`
+- `docs/_canon/graph/ops/secrets_catalog.yaml`
+- `docs/_canon/graph/ops/service_topology.yaml`
+- `docs/_canon/graph/ops/deploy_contract.yaml`
+- `docs/_canon/graph/ops/runtime_endpoints.yaml`
+- `docs/_canon/graph/ops/github_actions_catalog.yaml`
 
-## 1. Usuário e permissões
+## 1. Pre-requisitos
+
+- Ubuntu 22.04 LTS
+- Docker Engine >= 24
+- Docker Compose v2
+- portas 22, 80 e 443 liberadas
+- dois diretorios de deploy: `/opt/hbtrack/staging` e `/opt/hbtrack/production`
+
+## 2. Usuario e diretorios
 
 ```bash
-# Criar usuário sem sudo para rodar a aplicação
 useradd -m -s /bin/bash hbtrack
 usermod -aG docker hbtrack
-
-# Diretórios de deploy
 mkdir -p /opt/hbtrack/staging /opt/hbtrack/production
 chown -R hbtrack:hbtrack /opt/hbtrack
 ```
 
----
-
-## 2. Docker Engine + Compose v2
+## 3. Docker, Compose e Certbot
 
 ```bash
-# Instalar Docker via script oficial
 curl -fsSL https://get.docker.com | sh
-
-# Verificar
-docker --version          # >= 24.x
-docker compose version    # >= 2.x
-```
-
----
-
-## 3. Certbot (Let's Encrypt)
-
-```bash
+docker --version
+docker compose version
 apt-get install -y certbot
-# Gerar certificado (substituir handballtrack.app)
-certbot certonly --standalone -d handballtrack.app --non-interactive --agree-tos -m admin@handballtrack.app
-
-# Renovação automática (já incluída na instalação do certbot)
 systemctl status certbot.timer
 ```
 
----
-
-## 4. Firewall (UFW)
+## 4. Firewall
 
 ```bash
-ufw allow 22/tcp    # SSH
-ufw allow 80/tcp    # HTTP (redirect para HTTPS)
-ufw allow 443/tcp   # HTTPS
+ufw allow 22/tcp
+ufw allow 80/tcp
+ufw allow 443/tcp
 ufw enable
 ufw status
 ```
 
----
+## 5. GitHub Actions: secrets e variables
 
-## 5. SSH key para GitHub Actions
+Secrets canonicos no GitHub:
 
-No servidor (como root):
-```bash
-# Gerar par de chaves dedicado para CI/CD
-ssh-keygen -t ed25519 -C "github-actions-hbtrack" -f /root/.ssh/hbtrack_deploy -N ""
-cat /root/.ssh/hbtrack_deploy.pub >> /home/hbtrack/.ssh/authorized_keys
-chmod 700 /home/hbtrack/.ssh
-chmod 600 /home/hbtrack/.ssh/authorized_keys
+| Secret | Finalidade |
+| --- | --- |
+| `VPS_SSH_KEY` | chave privada para `appleboy/ssh-action` e `scp-action` |
+| `VPS_HOST_STAGING` | alvo SSH do staging |
+| `VPS_HOST_PRODUCTION` | alvo SSH da producao |
+| `VPS_USER` | usuario remoto de deploy |
+| `GITHUB_TOKEN` | acesso ao GHCR |
 
-# Exibir chave privada para copiar para o secret do GitHub
-cat /root/.ssh/hbtrack_deploy
-```
+Variables canonicas no GitHub:
 
-No repositório GitHub, adicionar os secrets:
-| Secret | Valor |
-|--------|-------|
-| `VPS_SSH_KEY` | Conteúdo da chave privada acima |
-| `VPS_HOST_STAGING` | IP ou hostname do servidor staging |
-| `VPS_HOST_PRODUCTION` | IP ou hostname do servidor production |
-| `VPS_USER` | `hbtrack` |
+| Variable | Exemplo |
+| --- | --- |
+| `STAGING_URL` | `https://staging.handballtrack.app` |
+| `PRODUCTION_URL` | `https://api.handballtrack.app` |
 
----
+## 6. .env por ambiente
 
-## 6. Repositório e arquivos no servidor
+Templates versionados:
 
-```bash
-# Como usuário hbtrack
-su - hbtrack
-cd /opt/hbtrack/staging  # ou /production
+- staging: `infra/env/.env.staging.template`
+- producao: `infra/env/.env.production.template`
 
-# Clonar repositório
-git clone https://github.com/hbtrack/official.git .
+Arquivos de runtime:
 
-# Criar .env a partir do template
-cp infra/env/.env.staging.template .env
-# Editar .env e preencher todos os CHANGE_ME_* com valores reais
-nano .env
-```
+- staging: `/opt/hbtrack/staging/.env`
+- producao: `/opt/hbtrack/production/.env`
 
----
+Regra:
+
+- o catalogo de variaveis obrigatorias e o de `docs/_canon/graph/ops/environment_catalog.yaml`
+- secrets e rotacao seguem `docs/_canon/graph/ops/secrets_catalog.yaml`
+- `.env` de staging/producao deve ser renderizado por `scripts/deploy/inject_env.sh` a partir do source graph operacional
+- se faltar valor obrigatorio no environment GitHub alvo, o renderer falha fechado e o deploy nao prossegue
+
+Secrets de environment GitHub obrigatorios para `staging` e `production`:
+
+- `SECRET_KEY`
+- `DB_PASSWORD`
+- `JWT_PRIVATE_KEY`
+- `JWT_PUBLIC_KEY`
+- `CLOUDINARY_CLOUD_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
+- `RESEND_API_KEY`
+- `GEMINI_API_KEY`
+
+Observacoes:
+
+- `POSTGRES_PASSWORD` pode ser omitido e herdara `DB_PASSWORD`
+- `CLOUDINARY_URL` pode ser omitido e sera derivado das credenciais Cloudinary
+- planejamento de rotacao/verificacao passa por `bash scripts/ops/rotate_keys.sh --secret <NAME> --environment <staging|production> --format json`
 
 ## 7. Primeiro deploy manual
 
 ```bash
+su - hbtrack
 cd /opt/hbtrack/staging
-
-# Logar no GitHub Container Registry
-echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u GITHUB_USER --password-stdin
-
-# Subir os serviços
+git clone https://github.com/hbtrack/official.git .
+export HB_ENV_SECRET_KEY='...'
+export HB_ENV_DB_PASSWORD='...'
+export HB_ENV_JWT_PRIVATE_KEY='...'
+export HB_ENV_JWT_PUBLIC_KEY='...'
+export HB_ENV_CLOUDINARY_CLOUD_NAME='...'
+export HB_ENV_CLOUDINARY_API_KEY='...'
+export HB_ENV_CLOUDINARY_API_SECRET='...'
+export HB_ENV_RESEND_API_KEY='...'
+export HB_ENV_GEMINI_API_KEY='...'
+bash scripts/deploy/inject_env.sh staging /opt/hbtrack/staging/.env latest
 docker compose -f infra/docker-compose.prod.yml pull
 docker compose -f infra/docker-compose.prod.yml up -d
-
-# Verificar
 docker compose -f infra/docker-compose.prod.yml ps
-curl http://localhost:8000/health
+curl https://staging.handballtrack.app/health
 ```
 
----
+## 8. Checklist de prontidao
 
-## 8. Variáveis de ambiente do GitHub Actions
-
-Adicionar como **Variables** (não secrets — não são sensíveis):
-| Variable | Exemplo |
-|----------|---------|
-| `STAGING_URL` | `https://staging.hbtrack.app` |
-| `PRODUCTION_URL` | `https://api.hbtrack.app` |
-
----
-
-## Checklist de prontidão
-
-- [ ] Docker Engine >= 24 instalado
-- [ ] Compose v2 instalado
-- [ ] Certbot configurado e certificado gerado
-- [ ] Usuário `hbtrack` criado com permissão Docker
-- [ ] `/opt/hbtrack/staging/` e `/opt/hbtrack/production/` criados
-- [ ] `.env` preenchido em cada ambiente (sem CHANGE_ME_*)
-- [ ] SSH key adicionada aos secrets do GitHub
-- [ ] Firewall UFW ativo (22, 80, 443)
-- [ ] Health check responde: `curl https://handballtrack.app/health`
+- [ ] Docker e Compose instalados
+- [ ] Certbot funcional
+- [ ] usuario `hbtrack` com acesso ao Docker
+- [ ] diretorios `/opt/hbtrack/staging` e `/opt/hbtrack/production` criados
+- [ ] secrets e variables do GitHub configurados
+- [ ] `.env` renderizado por ambiente com os valores do catalogo
+- [ ] health endpoint responde conforme `docs/_canon/graph/ops/runtime_endpoints.yaml`

@@ -1,4 +1,6 @@
 # AUDITORIA DE ROBUSTEZ CONTRATUAL — HB TRACK
+> Documento de apoio humano, não canônico e não soberano. Serve para auditoria histórica e análise adversarial; não substitui `contracts/`, `docs/_canon/`, `.contract_driven/` ou os gates ativos.
+
 **Data:** 2026-03-19
 **Auditor:** Análise adversarial estrutural — mecanismos normativos e operacionais
 **Escopo:** Sistema CDD completo — templates + regras + contratos gerados + pipeline de validação

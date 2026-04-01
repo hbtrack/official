@@ -1,0 +1,101 @@
+version: "1.0.0"
+artifact: "OPS_SERVICE_TOPOLOGY"
+status: active
+scope: operations
+
+services:
+  frontend:
+    deployment_type: compose_service
+    compose_service: "frontend"
+    environments: ["staging", "production"]
+    depends_on:
+      - "api"
+    ingress_paths:
+      - "/"
+    evidence_refs:
+      - "infra/docker-compose.prod.yml"
+
+  api:
+    deployment_type: compose_service
+    compose_service: "api"
+    environments: ["staging", "production"]
+    depends_on:
+      - "postgres"
+      - "redis"
+    internal_endpoint: "http://api:8000"
+    ingress_paths:
+      - "/api/"
+      - "/api/auth/"
+      - "/health"
+      - "/ws/"
+    evidence_refs:
+      - "infra/docker-compose.prod.yml"
+      - "infra/nginx/nginx.conf"
+      - "config/urls.py"
+
+  worker:
+    deployment_type: compose_service
+    compose_service: "celery_worker"
+    environments: ["staging", "production"]
+    depends_on:
+      - "postgres"
+      - "redis"
+    evidence_refs:
+      - "infra/docker-compose.prod.yml"
+
+  beat:
+    deployment_type: compose_service
+    compose_service: "celery_beat"
+    environments: ["staging", "production"]
+    depends_on:
+      - "postgres"
+      - "redis"
+    evidence_refs:
+      - "infra/docker-compose.prod.yml"
+
+  postgres:
+    deployment_type: compose_service
+    compose_service: "postgres"
+    environments: ["staging", "production"]
+    persistence:
+      volume: "postgres_data"
+    evidence_refs:
+      - "infra/docker-compose.prod.yml"
+
+  redis:
+    deployment_type: compose_service
+    compose_service: "redis"
+    environments: ["staging", "production"]
+    persistence:
+      volume: "redis_data"
+    evidence_refs:
+      - "infra/docker-compose.prod.yml"
+
+  nginx:
+    deployment_type: compose_service
+    compose_service: "nginx"
+    environments: ["staging", "production"]
+    tls:
+      certbot_volumes:
+        - "certbot_www"
+        - "certbot_conf"
+    evidence_refs:
+      - "infra/docker-compose.prod.yml"
+      - "infra/nginx/nginx.conf"
+      - "infra/nginx/nginx.staging.conf"
+
+  certbot:
+    deployment_type: compose_service
+    compose_service: "certbot"
+    environments: ["staging", "production"]
+    evidence_refs:
+      - "infra/docker-compose.prod.yml"
+
+  pact_broker:
+    deployment_type: external_same_vps
+    compose_service: null
+    environments: ["staging", "production"]
+    internal_url: "http://<VPS_IP>:9292"
+    evidence_refs:
+      - "docs/_canon/decisions/ADR-025-cdct-pact-strategy.md"
+      - "scripts/contracts/validate/validate_contracts.py"

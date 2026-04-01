@@ -18,10 +18,23 @@ Para v0, há uma arquitetura VPS single-node sem Vault. A política deve ser pra
 
 | Ambiente | Mecanismo | Responsabilidade |
 |----------|-----------|-----------------|
-| Desenvolvimento local | `.env` (gitignored) com template em `.env.example` | Desenvolvedor |
+| Desenvolvimento local | `.env` (gitignored) | Desenvolvedor |
 | CI/CD (GitHub Actions) | GitHub Actions `secrets.*` — nunca hardcoded em workflow YAML | Mantenedor do repositório |
-| Staging/Produção (VPS) | Variáveis de ambiente do SO injetadas pelo script de deploy | `scripts/deploy/inject_env.sh` (infra) |
+| Staging/Producao (VPS) | `/opt/hbtrack/<env>/.env` renderizado deterministicamente por `scripts/deploy/inject_env.sh` a partir do source graph operacional + GitHub environment secrets/vars | Mantenedor de operacoes |
 | Testes automatizados | `.env.test` (gitignored) ou variáveis de ambiente | Pipeline CI |
+
+SSOT estruturado vigente:
+
+- `docs/_canon/graph/ops/environment_catalog.yaml`
+- `docs/_canon/graph/ops/secrets_catalog.yaml`
+- `docs/_canon/graph/ops/github_actions_catalog.yaml`
+
+Regra:
+
+- este ADR registra a politica de decisao
+- o catalogo operacional de nomes e locais de secret vive em `docs/_canon/graph/ops/`
+- alteracao em workflow, template, compose ou runtime que mude secret/variavel obrigatoria deve atualizar o source graph operacional no mesmo changeset
+- deploy nao pode mais bootstrapar `.env` inline; o renderer operacional falha fechado se faltar valor obrigatorio
 
 **Regra inviolável**: nenhum secret ou valor de credential pode aparecer em:
 - Qualquer arquivo versionado no repositório git (incluindo branches de feature, fixup commits)
@@ -31,15 +44,58 @@ Para v0, há uma arquitetura VPS single-node sem Vault. A política deve ser pra
 
 ### Variáveis de ambiente canônicas
 
-| Variável | Tipo | Módulo | Rotação |
-|----------|------|--------|---------|
-| `DATABASE_URL` | DSN PostgreSQL | todos | 90 dias |
-| `REDIS_URL` | DSN Redis | `identity_access`, workers | 90 dias |
-| `JWT_PRIVATE_KEY` | PEM RSA-2048 privada (base64 ou multiline) | `identity_access` | 90 dias |
-| `JWT_PUBLIC_KEY` | PEM RSA-2048 pública (base64 ou multiline) | todos (verificação) | com `JWT_PRIVATE_KEY` |
-| `SECRET_KEY` | String aleatória ≥ 32 bytes | aplicação (CSRF, sessões) | 180 dias |
-| `SENTRY_DSN` | URL de telemetria | infra | never (rotate on leak) |
-| `SMTP_*` | Credenciais de e-mail | `notifications` | on rotation do provedor |
+O inventário obrigatório do sistema atual não vive mais em prose livre.
+
+- runtime secrets vigentes: `docs/_canon/graph/ops/secrets_catalog.yaml`
+- deploy/GitHub Environment secrets vigentes: `docs/_canon/graph/ops/github_actions_catalog.yaml`
+- qualquer nome obrigatório ausente desses catálogos bloqueia o pipeline
+- qualquer nome citado abaixo e ausente do catálogo deve ser tratado como drift documental
+
+### Inventário runtime vigente
+
+<!-- OPS_RUNTIME_SECRETS_BEGIN -->
+- `SECRET_KEY`
+- `DB_PASSWORD`
+- `POSTGRES_PASSWORD`
+- `JWT_PRIVATE_KEY`
+- `JWT_PUBLIC_KEY`
+- `CLOUDINARY_URL`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
+- `RESEND_API_KEY`
+- `GEMINI_API_KEY`
+- `PACT_BROKER_BASE_URL`
+- `PACT_BROKER_TOKEN`
+<!-- OPS_RUNTIME_SECRETS_END -->
+
+### Inventário GitHub Actions / Environment vigente
+
+<!-- OPS_GITHUB_SECRETS_BEGIN -->
+- `GITHUB_TOKEN`
+- `VPS_HOST_STAGING`
+- `VPS_HOST_PRODUCTION`
+- `VPS_USER`
+- `VPS_SSH_KEY`
+- `SECRET_KEY`
+- `DB_PASSWORD`
+- `POSTGRES_PASSWORD`
+- `JWT_PRIVATE_KEY`
+- `JWT_PUBLIC_KEY`
+- `CLOUDINARY_CLOUD_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
+- `CLOUDINARY_URL`
+- `RESEND_API_KEY`
+- `GEMINI_API_KEY`
+- `PACT_BROKER_TOKEN`
+<!-- OPS_GITHUB_SECRETS_END -->
+
+Nota de compatibilidade:
+
+- `DATABASE_URL` ainda aparece no job de testes do workflow, mas o runtime Django usa `DB_*` em `config/settings.py`
+- isso e catalogado em `docs/_canon/graph/ops/environment_catalog.yaml` como `ci_only`
+- `JWT_SECRET` e `JWT_ALGORITHM=HS256` permanecem exclusivos do job de testes e nao fazem parte do contrato operacional de staging/producao
+- `SENTRY_DSN` e credenciais SMTP nao fazem parte do sistema operacional vigente; se passarem a ser obrigatorios, devem entrar primeiro no source graph operacional
 
 ### Geração e armazenamento de chaves JWT
 
@@ -57,6 +113,12 @@ Para v0, há uma arquitetura VPS single-node sem Vault. A política deve ser pra
 | `SECRET_KEY` da aplicação | 180 dias | Imediato em suspeita de comprometimento |
 | Tokens de API de terceiros | Conforme provedor | Imediato em caso de exposição |
 
+Contrato operacional de rotação:
+
+- comando soberano de planejamento/checagem: `scripts/ops/rotate_keys.sh`
+- source of truth de periodicidade/owner/triggers: `docs/_canon/graph/ops/secrets_catalog.yaml`
+- qualquer alteração de período, ator ou trigger deve atualizar o catálogo no mesmo changeset
+
 Rotação de chave JWT requer:
 1. Gerar novo par de chaves.
 2. Publicar nova chave pública em `/.well-known/jwks.json` (manter chave antiga por 15 minutos para draining de tokens em voo).
@@ -72,14 +134,15 @@ Rotação de chave JWT requer:
 
 | Versão | Ação |
 |--------|------|
-| v0 (atual) | `.env` + VPS env vars + GitHub Actions secrets |
-| v0.5 | Script de rotação automatizada (`scripts/ops/rotate_keys.sh`) |
+| v0 (atual) | `.env` + templates versionados + GitHub Actions secrets/vars + source graph operacional |
+| v0.5 | compiler operacional para render de templates e validacao deterministica |
 | v1.0 | Avaliar HashiCorp Vault ou AWS Secrets Manager se escala justificar |
 
 ## Consequences
 
 ### Positive
-- `.env.example` com template evita ambiguidade sobre quais variáveis são necessárias.
+- `docs/_canon/graph/ops/` elimina ambiguidade sobre nomes, locais e consumidores de secrets.
+- `scripts/deploy/render_env_from_contract.py` + `scripts/deploy/inject_env.sh` removem bootstrap manual e tornam o `.env` de VPS derivado do contrato operacional.
 - Rotação trimestral de chaves JWT com draining seguro minimiza janela de exposição.
 - Caminho claro de evolução para vault sem reescrita de código.
 
@@ -87,6 +150,27 @@ Rotação de chave JWT requer:
 - Sem vault, não há controle de acesso granular a secrets individuais para v0.
 - Rotação manual requer disciplina operacional e documentação de procedimento.
 - `JWT_PRIVATE_KEY` como variável de ambiente (vs. arquivo em disco) pode ser exposta via `/proc/*/environ` em Linux — trade-off aceitável para v0.
+- Enquanto GitHub Environments não estiverem completos com todos os secrets obrigatórios, o deploy falhará fechado ao renderizar `.env`.
+
+### Convenção operacional vigente para GitHub Environments
+
+Nos jobs de deploy, os secrets abaixo devem existir no environment GitHub correspondente (`staging` ou `production`) com o mesmo nome canônico do runtime:
+
+- `SECRET_KEY`
+- `DB_PASSWORD`
+- `JWT_PRIVATE_KEY`
+- `JWT_PUBLIC_KEY`
+- `CLOUDINARY_CLOUD_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
+- `RESEND_API_KEY`
+- `GEMINI_API_KEY`
+
+Regras:
+
+- `POSTGRES_PASSWORD` pode ser omitido no GitHub Environment e, nesse caso, será derivado de `DB_PASSWORD` pelo renderer operacional
+- `CLOUDINARY_URL` pode ser omitido no GitHub Environment e, nesse caso, será derivado de `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` e `CLOUDINARY_CLOUD_NAME`
+- os jobs `deploy-staging` e `deploy-production` nao podem hardcodar valor de secret; a ligacao deve ser `${{ secrets.<NAME> }}`
 
 ## Alternatives Considered
 

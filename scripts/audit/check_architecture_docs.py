@@ -610,6 +610,79 @@ def check_health_endpoint_claim(root: Path) -> CheckResult:
     )
 
 
+def check_runtime_current_state_generated(root: Path) -> CheckResult:
+    """
+    CHECK 7: RUNTIME_CURRENT_STATE.md deve ser idêntico à saída do gerador canônico.
+    """
+    generator_path = root / "scripts" / "generate" / "docs" / "gen_runtime_current_state.py"
+    runtime_doc_path = root / "docs" / "_canon" / "RUNTIME_CURRENT_STATE.md"
+
+    if not generator_path.exists():
+        return CheckResult(
+            name="runtime_current_state_generated",
+            status="SKIP",
+            message="Gerador canônico de RUNTIME_CURRENT_STATE.md ausente — check ignorado.",
+        )
+
+    if not runtime_doc_path.exists():
+        return CheckResult(
+            name="runtime_current_state_generated",
+            status="FAIL",
+            message="RUNTIME_CURRENT_STATE.md ausente.",
+            details=["docs/_canon/RUNTIME_CURRENT_STATE.md"],
+        )
+
+    import importlib.util
+
+    try:
+        spec = importlib.util.spec_from_file_location("hbtrack_runtime_current_state_gen", generator_path)
+        if spec is None or spec.loader is None:
+            raise RuntimeError("spec/loader indisponível")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+    except Exception as exc:
+        return CheckResult(
+            name="runtime_current_state_generated",
+            status="ERROR",
+            message=f"Falha ao carregar gerador canônico: {exc}",
+        )
+
+    render = getattr(module, "generate_runtime_current_state", None)
+    normalize = getattr(module, "_normalize", None)
+    if render is None or normalize is None:
+        return CheckResult(
+            name="runtime_current_state_generated",
+            status="ERROR",
+            message="Gerador canônico não expõe generate_runtime_current_state/_normalize.",
+        )
+
+    try:
+        generated = normalize(render(root))
+        current = normalize(runtime_doc_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        return CheckResult(
+            name="runtime_current_state_generated",
+            status="ERROR",
+            message=f"Falha ao comparar RUNTIME_CURRENT_STATE.md com o gerador: {exc}",
+        )
+
+    if current != generated:
+        return CheckResult(
+            name="runtime_current_state_generated",
+            status="FAIL",
+            message="RUNTIME_CURRENT_STATE.md não corresponde ao gerador canônico.",
+            details=[
+                "Execute: python3 scripts/generate/docs/gen_runtime_current_state.py --write",
+            ],
+        )
+
+    return CheckResult(
+        name="runtime_current_state_generated",
+        status="PASS",
+        message="RUNTIME_CURRENT_STATE.md está sincronizado com o gerador canônico.",
+    )
+
+
 # ── Runner principal ──────────────────────────────────────────────────────────
 
 def run_all_checks(root: Path) -> ArchDriftReport:
@@ -623,6 +696,7 @@ def run_all_checks(root: Path) -> ArchDriftReport:
         check_no_async_runtime_claims,
         check_module_registry_coherence,
         check_health_endpoint_claim,
+        check_runtime_current_state_generated,
     ]
 
     for check_fn in checks_to_run:

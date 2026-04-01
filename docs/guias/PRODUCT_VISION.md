@@ -1,6 +1,6 @@
 # HB Track — Visão de Produto
 > Fonte: `_archive/chat.md` (conversa de produto original) | Versão: 1.0.0 | 2026-03-18
-> Este documento é referência canônica de produto. Atualizar via ADR quando a visão mudar.
+> Documento de apoio humano, não canônico e não soberano. Serve para visão e análise histórica de produto; não substitui `docs/_canon/`, `ROADMAP.md`, `docs/hbtrack/modulos/` ou ADRs canônicas.
 
 ---
 
@@ -14,7 +14,7 @@ gestão técnica, dados oficiais, mídia e competição.
 gera duplicação de cadastro, reconciliação manual, perda de contexto entre treino/jogo/física/tática
 e baixa velocidade de decisão.
 
-**Proposta central:** uma única fonte de verdade para o handebol — do treino à competição, do
+**Proposta central:** uma visão unificada para o handebol — do treino à competição, do
 atleta à federação, do sensor ao insight.
 
 ---

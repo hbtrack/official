@@ -2,6 +2,11 @@
 
 `docs/guias/` é material humano de estudo, ideação e exploração.
 
+Banner obrigatório para cada `*.md` deste diretório:
+- `Documento de apoio humano, não canônico e não soberano.`
+- deve apontar para o source master correspondente
+- não pode se apresentar como `canon`, `referência canônica` ou `fonte única de verdade`
+
 Regras:
 - não é canon;
 - não é SSOT;

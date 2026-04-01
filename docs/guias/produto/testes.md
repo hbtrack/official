@@ -1,3 +1,5 @@
+> Documento de apoio humano, não canônico e não soberano. Serve para checklist histórico de correções; não substitui `docs/_canon/`, `.contract_driven/`, `scripts/hb` ou os gates ativos.
+
 Segue a ordem certa para corrigir, focada só no que ainda está quebrando o enforcement real.
 
 ## Ordem 1 — Bloquear `generate_code` no caminho padrão
@@ -384,4 +386,3 @@ O resumo em uma linha é:
 **Você ainda não está livre, mas agora sabe exatamente do que ainda não está livre.**
 
 Se quiser, eu posso transformar os seus 10 resultados em uma lista priorizada de correções “ordem 1, 2, 3, 4, 5, 6”, com critério de aceite binário para cada uma.
-

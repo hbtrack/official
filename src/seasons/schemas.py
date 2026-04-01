@@ -10,6 +10,7 @@ from typing import Optional
 from uuid import UUID
 
 from ninja import Schema
+from pydantic import ConfigDict
 
 
 class SeasonOut(Schema):
@@ -27,9 +28,7 @@ class SeasonOut(Schema):
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 
-    class Config:
-        # Mapeia atributos snake_case da entidade para camelCase no JSON
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class SeasonListOut(Schema):

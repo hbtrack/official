@@ -57,6 +57,10 @@ Perfis são um ponto de partida; o modelo autoritativo de permissões deve exist
 | Logging e Observabilidade | [ADR-013](decisions/ADR-013-logging-policy.md) | JSON estruturado, X-Flow-ID, PHI/CREDENTIALS nunca logados |
 
 ## Segredos e Configuração
-- origem: secret manager do ambiente (proibido commitar segredos no repositório) — ver **ADR-012**
-- rotação: JWT keys 90 dias, DB credentials 90 dias — definido em **ADR-012**
+- inventário operacional vigente: `docs/_canon/graph/ops/secrets_catalog.yaml` e `docs/_canon/graph/ops/github_actions_catalog.yaml`
+- renderização runtime: `scripts/deploy/inject_env.sh` e `scripts/deploy/render_env_from_contract.py`
+- rotação determinística: `scripts/ops/rotate_keys.sh --secret <NAME> --environment <staging|production> --format json`
+- origem: secret manager do ambiente ou GitHub Environment (proibido commitar segredos no repositório) — ver **ADR-012**
 - logs: não registrar segredos nem dados sensíveis; mascarar identificadores quando apropriado — regras detalhadas em **ADR-013**
+- nenhum workflow de deploy pode hardcodar valor de secret operacional; deploy só pode consumir `${{ secrets.* }}` nos jobs `deploy-staging` e `deploy-production`
+- nenhum secret obrigatório pode existir apenas em prose; se for obrigatório no sistema atual, deve existir no source graph operacional no mesmo changeset

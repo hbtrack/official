@@ -1,4 +1,5 @@
 # PIPELINE_QUICK_REFERENCE.md
+> Documento de apoio humano, não canônico e não soberano. Serve para consulta rápida do pipeline; não substitui `scripts/hb`, `scripts/contracts/validate/validate_contracts.py`, `docs/_canon/`, `.contract_driven/` ou `_reports/contract_gates/latest.json`.
 > Consulta rápida do fluxo executável • Atualizado: 2026-03-20
 
 ---

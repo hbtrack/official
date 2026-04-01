@@ -1,4 +1,5 @@
 # HB TRACK — PIPELINE SUMMARY (current execution)
+> Documento de apoio humano, não canônico e não soberano. Serve para resumo auxiliar do pipeline; não substitui `scripts/hb`, `scripts/contracts/validate/validate_contracts.py`, `docs/_canon/`, `.contract_driven/` ou `_reports/contract_gates/latest.json`.
 > Referência rápida do pipeline executável • Atualizado: 2026-03-20
 
 ---

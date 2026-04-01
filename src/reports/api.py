@@ -10,8 +10,8 @@ from .schemas import (
     ReportJobOut, ReportJobListOut, CreateReportJobIn, UpdateReportJobIn, ErrorOut,
 )
 from .domain.rules import RoleLabel, InsufficientPrivilege, ReportJobNotFound, ReportJobConflict
-from .infrastructure.repository import ReportJobRepository
-from .application.use_cases import (
+from .generated.infrastructure.repository import ReportJobRepository
+from .generated.application.use_cases import (
     ListReportJobs, CreateReportJob, GetReportJob, UpdateReportJob, DownloadReportArtifact,
 )
 

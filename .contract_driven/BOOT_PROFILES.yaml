@@ -3,12 +3,13 @@
 # SSOT único para profiles de boot do agente
 # Cada profile define: quais artefatos carregar, em que ordem, validações obrigatórias
 # Referência: docs/_canon/AGENT_INSTRUCTIONS.md §0 (leia isto ANTES de qualquer coisa)
+# Sincronismo soberano: docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml + docs/_canon/SYNC_MANIFEST.yaml
 # Versão: 1.0.0
 # Status: active
 
 doc_type: canon
 version: "1.0.0"
-last_reviewed: "2026-03-23"
+last_reviewed: "2026-03-31"
 scope: boot_authority
 path_resolution: repo_root_relative
 
@@ -162,6 +163,8 @@ integration:
     5. Se passou, carregar cada arquivo em load_sequence
     6. Todos os paths em load_sequence são relativos à raiz do repositório
     7. required_sections nunca pode apontar para arquivo fora do path resolvido
+    8. Mudanças em AGENT_INSTRUCTIONS.md/TASK_CATALOG.yaml devem preservar este arquivo em
+       paridade com SOURCE_AUTHORITY_GRAPH.yaml e SYNC_MANIFEST.yaml
 
   # Como o orchestrator valida
   orchestrator_validation: |

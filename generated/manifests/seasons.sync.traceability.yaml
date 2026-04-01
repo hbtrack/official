@@ -74,7 +74,7 @@ traceability_manifest:
   - path: generated/contracts/openapi/components/schemas/reports/.gitkeep
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: generated/contracts/openapi/components/schemas/reports/report_job.yaml
-    sha256: 2309c6ae863c4415c1038edc8c408b1aebe2a3380de1cf7d9e4d8094a3bd893d
+    sha256: 849194eda757c9514e399b4f9113bdebbfbe30276f2847500732a7ca6564b037
   - path: generated/contracts/openapi/components/schemas/scout/.gitkeep
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: generated/contracts/openapi/components/schemas/scout/scout_event.yaml
@@ -168,7 +168,7 @@ traceability_manifest:
   - path: generated/contracts/openapi/paths/notifications.yaml
     sha256: 86ffff17bdc3ae7cbd5bc9dc17c6cc64c13c0b5fe061228b780859d3a7dc5ed1
   - path: generated/contracts/openapi/paths/reports.yaml
-    sha256: 81c05881c8b8aec3a5a122cae2972bef1531cbbe1709977cbf663cd5803d8e00
+    sha256: 970872eee0b197bbb9415d8113de40cf4bbf0b47220eb438547512bf1d70329f
   - path: generated/contracts/openapi/paths/scout.yaml
     sha256: 331e0cf5895b83a9a0e3ee2a02f5235b3b99c997b766ea26eab79c401fc24427
   - path: generated/contracts/openapi/paths/seasons.yaml
@@ -266,7 +266,7 @@ traceability_manifest:
   - path: generated/contracts/schemas/shared/session_handoff.schema.json
     sha256: e40c3048c7b1351712dc7cb154bdab66c0f087823a6dbe918f9320113ec4d714
   - path: generated/contracts/schemas/shared/session_start.schema.json
-    sha256: c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b
+    sha256: 5b1197961597cf6464f7dba620d73faa8e3f1331ae92347d2b142fd2f2a2cb1f
   - path: generated/contracts/schemas/shared/waiver.schema.json
     sha256: ac33fe58442230065d2472b5a2c4c1ea8c8d16b529fba70ad8036cbeb27ed945
   - path: generated/contracts/schemas/teams/.gitkeep
@@ -319,7 +319,7 @@ traceability_manifest:
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: generated/contracts/schemas/wellness/wellness_entry.schema.json
     sha256: e6b69221a1e62764a544a37a53dfa1d211df3b89799df536f9b85789b5b59c97
-  generated_tree_sha256: c2ce3213f04b89faf65c5965247031a0d1397642486825803a64f367a1f0b287
+  generated_tree_sha256: 4ab38566ccce6449746ca540c717c17bd36feacfc98513490e59521126dde4df
   policy_path: generated/resolved_policy/seasons.sync.resolved.yaml
   policy_sha256: 3fdf4c0ae3836ca9f067c559494db0c1a076902c28486a050a5df41d02653f69
   source_contracts:
@@ -394,7 +394,7 @@ traceability_manifest:
   - path: contracts/openapi/components/schemas/reports/.gitkeep
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: contracts/openapi/components/schemas/reports/report_job.yaml
-    sha256: 2309c6ae863c4415c1038edc8c408b1aebe2a3380de1cf7d9e4d8094a3bd893d
+    sha256: 849194eda757c9514e399b4f9113bdebbfbe30276f2847500732a7ca6564b037
   - path: contracts/openapi/components/schemas/scout/.gitkeep
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: contracts/openapi/components/schemas/scout/scout_event.yaml
@@ -488,7 +488,7 @@ traceability_manifest:
   - path: contracts/openapi/paths/notifications.yaml
     sha256: 86ffff17bdc3ae7cbd5bc9dc17c6cc64c13c0b5fe061228b780859d3a7dc5ed1
   - path: contracts/openapi/paths/reports.yaml
-    sha256: 81c05881c8b8aec3a5a122cae2972bef1531cbbe1709977cbf663cd5803d8e00
+    sha256: 970872eee0b197bbb9415d8113de40cf4bbf0b47220eb438547512bf1d70329f
   - path: contracts/openapi/paths/scout.yaml
     sha256: 331e0cf5895b83a9a0e3ee2a02f5235b3b99c997b766ea26eab79c401fc24427
   - path: contracts/openapi/paths/seasons.yaml
@@ -586,7 +586,7 @@ traceability_manifest:
   - path: contracts/schemas/shared/session_handoff.schema.json
     sha256: e40c3048c7b1351712dc7cb154bdab66c0f087823a6dbe918f9320113ec4d714
   - path: contracts/schemas/shared/session_start.schema.json
-    sha256: c9081790c5574ae0f0a0f0ef41d22eb132b0935a621a97d44260f1a00b16517b
+    sha256: 5b1197961597cf6464f7dba620d73faa8e3f1331ae92347d2b142fd2f2a2cb1f
   - path: contracts/schemas/shared/waiver.schema.json
     sha256: ac33fe58442230065d2472b5a2c4c1ea8c8d16b529fba70ad8036cbeb27ed945
   - path: contracts/schemas/teams/.gitkeep
@@ -650,4 +650,4 @@ traceability_manifest:
     sha256: 4bf1ce3c5df5ac92e41bff3a645cbe27919db575608b49d6e811a0079b2d1375
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: d7495e17090c41af465fbf064d0bff3d084c72ba0e57f1e0d78aa3b8f0ae71eb
-  source_tree_sha256: 9c18769545f7176c73ab1aa875b40709e8fea203e90a344b4da5a86840e2f157
+  source_tree_sha256: 6ac2300a603de402728aa89bfbe336b8b8fe8c476910a4510af02a397f3bb2b0

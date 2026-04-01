@@ -1,60 +1,51 @@
 ---
-data_ultima_sessao: "2026-03-31"
+data_ultima_sessao: "2026-04-01"
 branch_ativo: main
-modo_operacao: ROADMAP
+modo_operacao: CDD
 ci_status: UNKNOWN
-modulo_foco: training
+modulo_foco: reports
 fase_roadmap: 5
-task_type: execute_roadmap_phase
-boot_profile_id: roadmap_execution
-task_id: roadmap-fase5-frontend-ciclo1
+task_type: generate_code
+boot_profile_id: contract_execution
+task_id: B7-002-context-bundle-freshness-gate
 resultado: DONE
-proxima_acao_permitida: "Preencher MODULE_SCOPE stubs (13 módulos) e iniciar FASE 5 Frontend Ciclo 1."
+proxima_acao_permitida: "Executar B8-001 para endurecer ruleset do GitHub (merge-blocking)."
 bloqueios_ativos: []
 evidence_paths:
-  - docs/hbtrack/modulos/video/PERMISSIONS_VIDEO.md
-  - docs/hbtrack/modulos/training/PERMISSIONS_TRAINING.md
-  - contracts/openapi/paths/video.yaml
-  - contracts/openapi/paths/training.yaml
+  - "_reports/contract_gates/latest.json"
+  - "docs/_canon/gates/GATES_REGISTRY.yaml"
+  - "scripts/contracts/validate/validate_contracts.py"
+  - "tests/pipeline_gates/test_context_bundle_freshness_gate.py"
 ---
 # SESSION HANDOFF — HB TRACK
-> Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`
+> Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`.
 
 ## Estado Geral
-**Data:** 2026-03-31 | **Branch:** main | **CI:** UNKNOWN
-**Modo:** ROADMAP | **Fase:** 5 | **Resultado:** DONE
+**Data:** 2026-04-01 | **Branch:** main | **CI:** UNKNOWN
+**Modo:** CDD | **task_type:** generate_code | **boot_profile:** contract_execution
+**Módulo foco:** reports | **Fase ROADMAP:** 5 | **task_id:** B7-002-context-bundle-freshness-gate | **Resultado:** DONE
 
-## O que foi feito nesta sessão
-
-### Auditoria docs/hbtrack/modulos/ — 17 módulos verificados
-Comparação operationId-por-operationId entre contratos OpenAPI e PERMISSIONS docs.
-
-### PERMISSIONS_VIDEO.md — reconciliado (12 → 9 operações)
-- Removidas 4 operações inexistentes no contrato: `transitionSession`, `getClip`, `listDistributions`, `getDistribution`
-- Renomeadas 2 para nome canônico: `updateSession` → `patchSession`, `ingestSegment` → `createSegment`
-- Adicionada 1 não documentada: `listSegments`
-- Diff final: 9/9 operationIds alinhados com `video.yaml`
-
-### PERMISSIONS_TRAINING.md — completado (41 → 53 operações)
-Adicionadas 12 operações que existiam no contrato mas não estavam documentadas:
-- DSS: `listRecommendations`, `acceptRecommendation`, `dismissRecommendation`
-- Elegibilidade: `submitIneligibilityDeclaration`, `getIneligibilityStatus`
-- Fila de atenção: `resolveAttentionQueueItem`, `dismissAttentionQueueItem`, `escalateAttentionQueueItem`
-- Feedback: `closeFeedbackThread`
-- Analytics/Comunicação: `getLoadChart`, `listChatMessages`, `submitTrainingSuggestion`
-- Diff final: 53/53 operationIds alinhados com `training.yaml`
-
-### Gaps restantes identificados (não corrigidos nesta sessão)
-- 13 MODULE_SCOPE_*.md são stubs (~20 linhas template) — users, seasons, teams, wellness, medical, competitions, matches, scout, reports, ai_ingestion, identity_access, audit, notifications
-- DOMAIN_RULES_TRAINING.md sem campo `updated` no frontmatter
+## O que foi feito
+- `B7-002`: criado o `CONTEXT_BUNDLE_FRESHNESS_GATE`.
+  - `BLOCKED_CONTEXT_BUNDLE_STALE` adicionado ao `validate_contracts.py`.
+  - `_g_context_bundle_freshness()` implementado e adicionado ao `gate_plan`, `_precommit_ids` e `_local_ids`.
+  - Gate registrado em `docs/_canon/gates/GATES_REGISTRY.yaml` (ordem `20J`, `blocking: true`, `status: active`).
+  - 10 testes em `tests/pipeline_gates/test_context_bundle_freshness_gate.py` — **10 passed**.
+  - `test_gate_registry_parity.py` — **8 passed** (sem regressão).
+  - Pipeline `--profile ci`: `CONTEXT_BUNDLE_FRESHNESS_GATE` → **PASS**.
 
 ## Evidências
-- `docs/hbtrack/modulos/video/PERMISSIONS_VIDEO.md` — 9/9 ops vs `video.yaml`
-- `docs/hbtrack/modulos/training/PERMISSIONS_TRAINING.md` — 53/53 ops vs `training.yaml`
+- `_reports/contract_gates/latest.json`
+- `docs/_canon/gates/GATES_REGISTRY.yaml`
+- `scripts/contracts/validate/validate_contracts.py`
+- `tests/pipeline_gates/test_context_bundle_freshness_gate.py`
+
+## Notas de contexto
+- `DERIVED_DRIFT_GATE` permanece FAIL (pré-existente, não causado por B7-002).
+- Pipeline geral permanece FAIL pelo drift pré-existente.
 
 ## Próxima ação permitida
-Preencher MODULE_SCOPE stubs (13 módulos) e/ou iniciar FASE 5 Frontend Ciclo 1.
+Executar `B8-001` para endurecer ruleset do GitHub (merge-blocking requer aprovação humana: `BLOCKED_DEPLOY_REQUIRES_HUMAN`).
 
 ## Bloqueios ativos
 Nenhum.
-

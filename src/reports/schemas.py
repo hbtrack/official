@@ -1,59 +1,18 @@
 from __future__ import annotations
-from typing import List, Optional
-from uuid import UUID
-from datetime import datetime
-from ninja import Schema
 
+# Canonical runtime adapter: reports now composes the generated contract layer.
+from .generated.schemas import (
+    CreateReportJobIn,
+    ErrorOut,
+    ReportJobListOut,
+    ReportJobOut,
+    UpdateReportJobIn,
+)
 
-class ReportJobOut(Schema):
-    id: UUID
-    owner_user_id: UUID
-    report_type: str
-    format_label: Optional[str] = None
-    parameter_summary: Optional[str] = None
-    source_metric_names: List[str]
-    generated_artifact_ref: Optional[str] = None
-    retention_label: Optional[str] = None
-    status_label: str
-    requested_at: datetime
-    completed_at: Optional[datetime] = None
-    error_message: Optional[str] = None
-
-    @classmethod
-    def from_domain(cls, job) -> "ReportJobOut":
-        return cls(
-            id=job.id,
-            owner_user_id=job.owner_user_id,
-            report_type=job.report_type,
-            format_label=job.format_label,
-            parameter_summary=job.parameter_summary,
-            source_metric_names=job.source_metric_names,
-            generated_artifact_ref=job.generated_artifact_ref,
-            retention_label=job.retention_label,
-            status_label=job.status_label,
-            requested_at=job.requested_at,
-            completed_at=job.completed_at,
-            error_message=job.error_message,
-        )
-
-
-class ReportJobListOut(Schema):
-    data: List[ReportJobOut]
-    nextPageToken: Optional[str] = None
-
-
-class CreateReportJobIn(Schema):
-    reportType: str
-    formatLabel: str
-    parameterSummary: str
-    sourceMetricNames: Optional[List[str]] = None
-    retentionLabel: str = "90-days"
-
-
-class UpdateReportJobIn(Schema):
-    statusLabel: Optional[str] = None
-    retentionLabel: Optional[str] = None
-
-
-class ErrorOut(Schema):
-    detail: str
+__all__ = [
+    "ReportJobOut",
+    "ReportJobListOut",
+    "CreateReportJobIn",
+    "UpdateReportJobIn",
+    "ErrorOut",
+]

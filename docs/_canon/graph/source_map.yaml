@@ -1,0 +1,58 @@
+version: "1.0.0"
+artifact: "GLOBAL_SOURCE_MAP_IR"
+status: active
+scope: global
+
+concepts:
+  operation_modes:
+    ir_file: "docs/_canon/graph/global_rules.yaml"
+    source_refs:
+      - "docs/_canon/AGENT_INSTRUCTIONS.md"
+      - ".contract_driven/CONTRACT_SYSTEM_RULES.md"
+
+  contract_entrypoints:
+    ir_file: "docs/_canon/graph/global_rules.yaml"
+    source_refs:
+      - "docs/_canon/AGENT_INSTRUCTIONS.md"
+      - "scripts/hb"
+
+  authority_precedence:
+    ir_file: "docs/_canon/graph/global_policies.yaml"
+    source_refs:
+      - "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+      - "docs/_canon/AGENT_INSTRUCTIONS.md"
+
+  generation_policies:
+    ir_file: "docs/_canon/graph/global_policies.yaml"
+    source_refs:
+      - ".contract_driven/TASK_CATALOG.yaml"
+      - "scripts/generate/docs/gen_runtime_current_state.py"
+
+  module_lifecycle:
+    ir_file: "docs/_canon/graph/lifecycle.yaml"
+    source_refs:
+      - "docs/_canon/CONTRACT_PIPELINE.md"
+      - "docs/_canon/MODULE_REGISTRY.yaml"
+
+  pipeline_stages:
+    ir_file: "docs/_canon/graph/lifecycle.yaml"
+    source_refs:
+      - "docs/_canon/CONTRACT_PIPELINE.md"
+      - "docs/_canon/CI_CONTRACT_GATES.md"
+
+  operational_contracts:
+    ir_file: "docs/_canon/graph/global_rules.yaml"
+    source_refs:
+      - "docs/_canon/graph/ops/environment_catalog.yaml"
+      - "docs/_canon/graph/ops/secrets_catalog.yaml"
+      - "docs/_canon/graph/ops/service_topology.yaml"
+      - "docs/_canon/graph/ops/deploy_contract.yaml"
+      - "docs/_canon/graph/ops/runtime_endpoints.yaml"
+      - "docs/_canon/graph/ops/github_actions_catalog.yaml"
+
+  operational_lifecycle:
+    ir_file: "docs/_canon/graph/lifecycle.yaml"
+    source_refs:
+      - "docs/_canon/DEPLOY_PIPELINE.md"
+      - "docs/_canon/graph/ops/deploy_contract.yaml"
+      - "docs/_canon/graph/ops/runtime_endpoints.yaml"

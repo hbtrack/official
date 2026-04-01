@@ -1,4 +1,5 @@
 # HB TRACK — PIPELINE REAL MAP
+> Documento de apoio humano, não canônico e não soberano. Serve para mapa analítico do fluxo executável; não substitui `scripts/hb`, `scripts/contracts/validate/validate_contracts.py`, `docs/_canon/`, `.contract_driven/` ou `_reports/contract_gates/latest.json`.
 > Mapa do fluxo executável atual • Atualizado: 2026-03-20
 
 ---

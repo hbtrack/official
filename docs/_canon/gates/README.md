@@ -1,7 +1,7 @@
 ---
 doc_type: canon
 version: "1.0.0"
-last_reviewed: "2026-03-14"
+last_reviewed: "2026-03-31"
 status: active
 cross_refs:
   system_scope: "docs/_canon/SYSTEM_SCOPE.md"
@@ -42,6 +42,12 @@ Este diretório é o ponto de entrada de navegação para o sistema de gates do 
 | 2J | `PRE_CONTRACT_EVIDENCE_GATE` | Sim | Não | Exige evidência estruturada de pré-contrato para módulos `validated_contract+` (inclui `baseline_backfill` explícito para legado) | §9.2J |
 | 2K | `SHADOW_AUTHORITY_GATE` | Sim | Não | Bloqueia docs não-soberanos com linguagem de autoridade sem disclaimer explícito | §9.2K |
 | 2L | `DECISION_IR_CONFORMANCE_GATE` | Sim | Não | Valida `DECISION_IR_<MODULE>.yaml` em `.contract_driven/decisions/` para módulos `implementation_ready+` que exigem `decision_ir` | §9.2L |
+| 2N | `CANON_ALLOWLIST_GATE` | Sim | Não | Restringe `docs/_canon/` à allowlist autorizada pelo canon global | §9.2N |
+| 2N1 | `DOC_USAGE_GATE` | Sim | Sim | Exige owner_source, consumers e update triggers para toda doc em `docs/_canon/**` e `docs/hbtrack/modulos/**` | §9.2N1 |
+| 2N2 | `CANON_CONTRACT_DRIVEN_PARITY_GATE` | Sim | Não | Garante paridade mínima entre `docs/_canon`, `.contract_driven` e o executor real | §9.2N2 |
+| 2N3 | `HBTRACK_CANON_PARITY_GATE` | Sim | Não | Garante paridade mínima entre `docs/hbtrack/modulos` e o canon global | §9.2N3 |
+| 2N4 | `IMPACT_ANALYSIS_GATE` | Sim | Não | Calcula, via `SYNC_MANIFEST.yaml`, quais consumers obrigatórios foram impactados pela changeset atual | §9.2N4 |
+| 2N5 | `PARTIAL_UPDATE_GATE` | Sim | Não | Bloqueia changeset que altera source_master soberano sem os consumers bloqueantes sincronizados | §9.2N5 |
 | 3 | `PLACEHOLDER_RESIDUE_GATE` | Sim | Não | Sem TODO, TBD, placeholders em artefatos prontos | §9.3 |
 | 4 | `REF_HERMETICITY_GATE` | Sim | Não | `$ref` dentro do grafo soberano permitido; sem refs para derivados como se fossem fontes | §9.4 |
 | 4A | `TOOLING_CONFIG_GATE` | Sim em CI | Não | Separa erro de tooling/config de erro semântico; local pode retornar `DEGRADED` | §9.4A |
@@ -90,4 +96,4 @@ Execuções parciais geram relatórios escopados em `_reports/contract_gates/` e
 
 ---
 
-*Última revisão: 2026-03-14*
+*Última revisão: 2026-03-31*

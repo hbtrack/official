@@ -1,3 +1,5 @@
+> Documento de apoio humano, não canônico e não soberano. Serve para backlog histórico de melhorias; não substitui `ROADMAP.md`, `docs/_canon/`, `.contract_driven/` ou o handoff operacional.
+
 ## BACKLOG DE MELHORIAS E TESTES RECOMENDADOS
 
 A lógica é simples: prioridade alta é o que ainda pode reabrir buraco real. Prioridade média melhora confiança operacional. Prioridade baixa melhora governança e legibilidade, mas não muda o núcleo de segurança do pipeline.

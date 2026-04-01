@@ -1,4 +1,5 @@
 # Integração de Auditorias ao CI/CD — Sumário Executivo
+> Documento de apoio humano, não canônico e não soberano. Serve para sumário histórico de auditoria; não substitui `.github/workflows/`, `scripts/`, `docs/_canon/` ou `_reports/contract_gates/latest.json`.
 
 **Data**: 18 de março de 2026  
 **Status**: ✅ **COMPLETA E OPERACIONAL**
@@ -206,4 +207,3 @@ Para forçar que PRs passem nas auditorias:
 - ✅ Local + CI/CD (desenvolvimento ágil)
 
 **Próximo**: Fazer deploy do workflow no repositório remoto (GitHub).
-

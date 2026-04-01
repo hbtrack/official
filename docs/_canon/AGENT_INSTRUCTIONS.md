@@ -47,6 +47,9 @@ Para `execute_roadmap_phase`: usar worker diretamente — **NÃO passa por `pre_
 
 ## 7. SSOT CRÍTICOS (on-demand)
 - **Module taxonomy:** `docs/_canon/MODULE_REGISTRY.yaml`
+- **Source authority graph:** `docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml`
+- **Structured global IR:** `docs/_canon/graph/global_rules.yaml`, `docs/_canon/graph/global_policies.yaml`, `docs/_canon/graph/lifecycle.yaml`, `docs/_canon/graph/source_map.yaml`
+- **Structured ops IR:** `docs/_canon/graph/ops/environment_catalog.yaml`, `docs/_canon/graph/ops/secrets_catalog.yaml`, `docs/_canon/graph/ops/service_topology.yaml`, `docs/_canon/graph/ops/deploy_contract.yaml`, `docs/_canon/graph/ops/runtime_endpoints.yaml`, `docs/_canon/graph/ops/github_actions_catalog.yaml`
 - **Task routing:** `.contract_driven/TASK_CATALOG.yaml`
 - **Boot profiles:** `.contract_driven/BOOT_PROFILES.yaml`
 - **Gate metadata:** `docs/_canon/gates/GATES_REGISTRY.yaml`
@@ -71,3 +74,6 @@ Em qualquer conflito de regra, schema, gate ou política, a resolução segue es
 ```
 
 **Regra de ouro**: bridge docs e artefatos derivados (níveis 4–6) **nunca** podem redefinir, sobrepor ou contradizer os itens dos níveis 1–3. Bridge docs só podem **repetir** o que o enforcement e o canon já estabelecem. Qualquer divergência é resolvida sempre a favor do nível mais alto.
+
+Owner source por conceito e classificação (`sovereign`, `derived`, `bridge`, `runtime_extension`) são governados por `docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml`.
+Deploy, ambiente, secrets, topologia de servicos e endpoints de runtime nao podem ser inferidos de markdown livre quando houver SSOT estruturado em `docs/_canon/graph/ops/`.

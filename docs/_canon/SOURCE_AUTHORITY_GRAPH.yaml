@@ -1,0 +1,218 @@
+version: "1.0.0"
+artifact: "SOURCE_AUTHORITY_GRAPH"
+status: "active"
+scope: "global"
+
+policy:
+  objective: >
+    Declarar, por conceito crítico, qual artefato é o owner_source soberano,
+    qual classificação o conceito possui no sistema e como conflitos de autoridade
+    devem ser resolvidos sem inferência livre do agente.
+
+  classification_vocab:
+    sovereign: "Define a regra primária do conceito; conflito abaixo deste nível bloqueia."
+    derived: "Artefato gerado ou relatório derivado; nunca redefine regra soberana."
+    bridge: "Ponte operacional para agentes/humanos; só pode repetir regras ativas."
+    runtime_extension: "Estado ou evidência produzida em execução; depende de fonte soberana prévia."
+
+  conflict_resolution:
+    precedence_order:
+      - "enforcement_executable"
+      - "active_schemas"
+      - "source_authority_graph"
+      - "concept_owner_source"
+      - "bridge_docs"
+      - "derived_artifacts"
+      - "legacy_or_study"
+    partial_update_policy: "blocked"
+    prompt_override_policy: "forbidden"
+    conflict_rule: >
+      Em qualquer divergência, vence o nível mais alto da precedence_order.
+      Se o owner_source do conceito não estiver alinhado com seus consumers críticos,
+      a mudança deve bloquear até revalidação completa.
+
+concepts:
+  source_authority_governance:
+    owner_source: "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+    classification: sovereign
+    artifacts:
+      - "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+    consumers:
+      - "docs/_canon/AGENT_INSTRUCTIONS.md"
+      - "docs/_canon/CONTRACT_PIPELINE.md"
+      - ".contract_driven/CONTRACT_SYSTEM_RULES.md"
+      - "docs/_canon/DOC_USAGE_MANIFEST.yaml"
+      - "docs/_canon/SYNC_MANIFEST.yaml"
+
+  contract_system_rules:
+    owner_source: ".contract_driven/CONTRACT_SYSTEM_RULES.md"
+    classification: sovereign
+    artifacts:
+      - ".contract_driven/CONTRACT_SYSTEM_RULES.md"
+    consumers:
+      - "docs/_canon/AGENT_INSTRUCTIONS.md"
+      - "docs/_canon/CONTRACT_PIPELINE.md"
+      - ".contract_driven/BOOT_PROFILES.yaml"
+      - "scripts/contracts/validate/validate_contracts.py"
+
+  contract_system_layout:
+    owner_source: ".contract_driven/CONTRACT_SYSTEM_LAYOUT.md"
+    classification: sovereign
+    artifacts:
+      - ".contract_driven/CONTRACT_SYSTEM_LAYOUT.md"
+    consumers:
+      - ".contract_driven/BOOT_PROFILES.yaml"
+      - ".contract_driven/CONTRACT_SYSTEM_RULES.md"
+      - "scripts/contracts/validate/validate_contracts.py"
+
+  agent_boot_and_precedence:
+    owner_source: "docs/_canon/AGENT_INSTRUCTIONS.md"
+    classification: sovereign
+    artifacts:
+      - "docs/_canon/AGENT_INSTRUCTIONS.md"
+    consumers:
+      - ".contract_driven/BOOT_PROFILES.yaml"
+      - ".github/copilot-instructions.md"
+      - "CLAUDE.md"
+      - ".github/skills/"
+
+  task_routing_and_boot_profiles:
+    owner_source: ".contract_driven/TASK_CATALOG.yaml"
+    classification: sovereign
+    artifacts:
+      - ".contract_driven/TASK_CATALOG.yaml"
+      - ".contract_driven/BOOT_PROFILES.yaml"
+    consumers:
+      - "docs/_canon/AGENT_INSTRUCTIONS.md"
+      - "scripts/hb"
+      - ".contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md"
+
+  pipeline_stage_semantics:
+    owner_source: "docs/_canon/CONTRACT_PIPELINE.md"
+    classification: sovereign
+    artifacts:
+      - "docs/_canon/CONTRACT_PIPELINE.md"
+    consumers:
+      - "scripts/hb"
+      - "scripts/contracts/validate/validate_contracts.py"
+      - ".contract_driven/TASK_CATALOG.yaml"
+
+  gate_metadata_and_blocking_rules:
+    owner_source: "docs/_canon/gates/GATES_REGISTRY.yaml"
+    classification: sovereign
+    artifacts:
+      - "docs/_canon/gates/GATES_REGISTRY.yaml"
+    consumers:
+      - "scripts/contracts/validate/validate_contracts.py"
+      - "tests/pipeline_gates/test_gate_registry_parity.py"
+      - "docs/_canon/CI_CONTRACT_GATES.md"
+
+  module_lifecycle_registry:
+    owner_source: "docs/_canon/MODULE_REGISTRY.yaml"
+    classification: sovereign
+    artifacts:
+      - "docs/_canon/MODULE_REGISTRY.yaml"
+      - "docs/_canon/FEATURE_REGISTRY.yaml"
+    consumers:
+      - "docs/_canon/AGENT_INSTRUCTIONS.md"
+      - "docs/_canon/CONTRACT_PIPELINE.md"
+      - "scripts/contracts/validate/validate_contracts.py"
+
+  module_external_source_limits:
+    owner_source: "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml"
+    classification: sovereign
+    artifacts:
+      - "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml"
+    consumers:
+      - ".contract_driven/CONTRACT_SYSTEM_RULES.md"
+      - "docs/hbtrack/modulos/"
+      - "scripts/contracts/validate/validate_contracts.py"
+
+  http_api_contract_rules:
+    owner_source: ".contract_driven/templates/api/api_rules.yaml"
+    classification: sovereign
+    artifacts:
+      - ".contract_driven/templates/api/api_rules.yaml"
+      - "contracts/openapi/openapi.yaml"
+    consumers:
+      - ".contract_driven/agent_prompts/create_openapi_contract.prompt.md"
+      - "scripts/contracts/validate/api/policy_compiler.py"
+      - "scripts/contracts/validate/validate_contracts.py"
+
+  module_doc_templates:
+    owner_source: ".contract_driven/templates/modulos/"
+    classification: sovereign
+    artifacts:
+      - ".contract_driven/templates/modulos/"
+      - "docs/hbtrack/modulos/"
+    consumers:
+      - ".contract_driven/agent_prompts/create_module_docs.prompt.md"
+      - ".contract_driven/agent_prompts/create_state_model.prompt.md"
+      - ".contract_driven/agent_prompts/create_ui_contract.prompt.md"
+
+  bridge_agent_docs:
+    owner_source: ".contract_driven/CONTRACT_SYSTEM_RULES.md"
+    classification: bridge
+    artifacts:
+      - ".github/copilot-instructions.md"
+      - "CLAUDE.md"
+      - ".github/agents/"
+      - ".github/skills/"
+      - ".github/instructions/"
+      - ".codex"
+    consumers:
+      - "scripts/contracts/validate/validate_contracts.py"
+      - "tests/pipeline_gates/test_agent_compliance_phase0.py"
+
+  derived_reports_and_analysis:
+    owner_source: "scripts/contracts/validate/validate_contracts.py"
+    classification: derived
+    artifacts:
+      - "_reports/"
+      - ".CEPRAEA/"
+    consumers:
+      - "SESSION_HANDOFF.md"
+      - "docs/_canon/OPERATIONS.md"
+      - "docs/_canon/RUNTIME_CURRENT_STATE.md"
+
+  session_runtime_state:
+    owner_source: "contracts/schemas/shared/session_start.schema.json"
+    classification: runtime_extension
+    artifacts:
+      - "_reports/session_start.json"
+      - "SESSION_HANDOFF.md"
+    consumers:
+      - "docs/_canon/AGENT_INSTRUCTIONS.md"
+      - ".contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md"
+      - "scripts/contracts/validate/validate_contracts.py"
+
+  operational_runtime_contracts:
+    owner_source: "docs/_canon/graph/ops/"
+    classification: sovereign
+    artifacts:
+      - "docs/_canon/graph/ops/environment_catalog.yaml"
+      - "docs/_canon/graph/ops/secrets_catalog.yaml"
+      - "docs/_canon/graph/ops/service_topology.yaml"
+      - "docs/_canon/graph/ops/deploy_contract.yaml"
+      - "docs/_canon/graph/ops/runtime_endpoints.yaml"
+      - "docs/_canon/graph/ops/github_actions_catalog.yaml"
+    consumers:
+      - ".github/workflows/deploy.yml"
+      - "docs/_canon/DEPLOY_PIPELINE.md"
+      - "docs/_canon/VPS_SETUP.md"
+      - "docs/_canon/OPERATIONS.md"
+      - "docs/_canon/decisions/ADR-012-secrets-policy.md"
+      - "scripts/deploy/render_env_from_contract.py"
+      - "scripts/deploy/inject_env.sh"
+      - "scripts/ops/rotate_keys.sh"
+      - "infra/env/.env.staging.template"
+      - "infra/env/.env.production.template"
+      - "compiled_ops/deploy/staging.env.fragment"
+      - "compiled_ops/deploy/production.env.fragment"
+      - "compiled_ops/deploy/secrets_catalog.json"
+      - "compiled_ops/deploy/runtime_topology.json"
+      - "compiled_ops/deploy/impact_report.json"
+      - "tests/pipeline_gates/test_ops_source_graph_integrity.py"
+      - "tests/pipeline_gates/test_ops_contract_compiler.py"
+      - "tests/pipeline_gates/test_deploy_env_rendering_flow.py"
+      - "tests/pipeline_gates/test_secret_rotation_contract.py"

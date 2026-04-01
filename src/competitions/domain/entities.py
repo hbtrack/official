@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass, field
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from enum import Enum
 from typing import List, Optional
 
@@ -44,8 +44,8 @@ class Competition:
     registration_team_ids: List[uuid.UUID] = field(default_factory=list)
     standings_summary: Optional[str] = None
 
-    created_at: datetime = field(default_factory=lambda: datetime.utcnow())
-    updated_at: datetime = field(default_factory=lambda: datetime.utcnow())
+    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
     def validate_invariants(self) -> None:
         # INV-COMP-001: campos obrigatórios (garantido por tipagem, mas defensivo)

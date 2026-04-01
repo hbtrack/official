@@ -1,4 +1,5 @@
 # Domain Completeness Auditor — Guia de Uso
+> Documento de apoio humano, não canônico e não soberano. Serve para apoio operacional de auditoria; não substitui `scripts/audit/`, `docs/_canon/` ou os gates ativos do pipeline.
 
 **Arquivo**: `scripts/audit/run_domain_completeness.py`  
 **Versão**: 1.0.0  

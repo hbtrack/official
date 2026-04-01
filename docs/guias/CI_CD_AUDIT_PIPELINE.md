@@ -1,4 +1,5 @@
 # CI/CD Audit Pipeline — HB Track
+> Documento de apoio humano, não canônico e não soberano. Serve para referência auxiliar de CI/CD; não substitui `.github/workflows/`, `scripts/`, `docs/_canon/` ou `_reports/contract_gates/latest.json`.
 
 Integração automática de auditorias de qualidade no pipeline de deployable.
 
@@ -284,4 +285,3 @@ print(auditor.generate_report())
 - **Workflow config**: Ver `.github/workflows/` 
 - **Rules sources**: Ver `docs/_canon/AGENT_INSTRUCTIONS.md`
 - **Gate definitions**: Ver `docs/_canon/gates/GATES_REGISTRY.yaml`
-

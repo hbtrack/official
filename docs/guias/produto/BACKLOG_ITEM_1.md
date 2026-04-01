@@ -1,4 +1,5 @@
 # BACKLOG ITEM 1 — Executar Validadores Externos no Caminho Padrão
+> Documento de apoio humano, não canônico e não soberano. Serve para registro histórico de correção; não substitui `scripts/contracts/validate/validate_contracts.py`, `docs/_canon/` ou os gates ativos.
 
 ## Status: IMPLEMENTAÇÃO COMPLETA (Passos A–G)
 
@@ -185,4 +186,3 @@ Atualizar `docs/guias/produto/PIPELINE.md`:
 - ✅ Exit code é não-zero quando há bloqueador FAIL
 
 ---
-

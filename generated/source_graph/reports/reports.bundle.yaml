@@ -1,0 +1,352 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_BUNDLE
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: reports
+graph_root: docs/hbtrack/modulos/reports/graph
+inputs:
+- relpath: contracts/openapi/components/schemas/reports/report_job.yaml
+  sha256: 849194eda757c9514e399b4f9113bdebbfbe30276f2847500732a7ca6564b037
+- relpath: contracts/openapi/paths/reports.yaml
+  sha256: 970872eee0b197bbb9415d8113de40cf4bbf0b47220eb438547512bf1d70329f
+- relpath: contracts/schemas/reports/.gitkeep
+  sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+- relpath: contracts/schemas/reports/report_job.schema.json
+  sha256: cb181a5444546c5e9d9f440cca9cf9a40089f061d0b888f1a8d1ab216fcc56dd
+- relpath: docs/_canon/MODULE_REGISTRY.yaml
+  sha256: 5f672cfcc0214aa57dd41c19f105b307e6c10cabf297862099bfc01b8a0ead4b
+- relpath: docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
+  sha256: e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680
+- relpath: docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml
+  sha256: c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1
+- relpath: docs/_canon/graph/global_policies.yaml
+  sha256: 4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2
+- relpath: docs/_canon/graph/global_rules.yaml
+  sha256: 02f75652679e4e5c981f177b6bc57f77e26b1a360e4452a2828bda448f349f07
+- relpath: docs/_canon/graph/lifecycle.yaml
+  sha256: 654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5
+- relpath: docs/hbtrack/modulos/reports/DOMAIN_RULES_REPORTS.md
+  sha256: c0de115088d057b5ad40c9f4face04f3cb0ca9cd52f7e8d3027ded3ff8f24c53
+- relpath: docs/hbtrack/modulos/reports/INVARIANTS_REPORTS.md
+  sha256: 0b03212371e786864c9ab369bcde0b30c9ab532f7225d5e1b0b00baba9cbaca6
+- relpath: docs/hbtrack/modulos/reports/MODULE_SCOPE_REPORTS.md
+  sha256: e76d2add4ae2479d4c82a7f682fe4855b850fe3ca6eac4a3bb0c5f2220ac2d45
+- relpath: docs/hbtrack/modulos/reports/PERMISSIONS_REPORTS.md
+  sha256: 89e9b17825fb06c8f245e7570e1e651e03b3491e453970099f02cb940ea24e75
+- relpath: docs/hbtrack/modulos/reports/README.md
+  sha256: 7cc338dfe10a24fb768a761ca0e066792412e8d4385038288317a0c300f36b8b
+- relpath: docs/hbtrack/modulos/reports/TEST_MATRIX_REPORTS.md
+  sha256: e3837a50c4d32a5034ebfe6b58c7a6954359e085eb2f7a02cb274cdacba44412
+- relpath: docs/hbtrack/modulos/reports/graph/endpoints.yaml
+  sha256: 037825b74bf96d3ef812d5cf24a2563f2acec30d7a94c5c88612a90021d91f3b
+- relpath: docs/hbtrack/modulos/reports/graph/entities.yaml
+  sha256: b53b60807ab5c82318113f569ef16710603eeed9a7617ba0b10127b793cf6dcb
+- relpath: docs/hbtrack/modulos/reports/graph/errors.yaml
+  sha256: fea1492d2407d2a6f9b37019db1004e56e2a3bb09e15ae0d610ddcfa40e72702
+- relpath: docs/hbtrack/modulos/reports/graph/module_manifest.yaml
+  sha256: 17b1b6f857d951a3a48fd3af16a99d50fe9d93cc21ea7b53c59e2b90572115a1
+- relpath: docs/hbtrack/modulos/reports/graph/test_obligations.yaml
+  sha256: abe7cbdd7c642754d1deb103f519219ac3e27b31fe554bd81ce0b61bbba51e46
+- relpath: src/reports/api.py
+  sha256: 1ba71c9ec03c8ddaa6fd48ac5c2fcc4590f5fd9ea32ab2302dccde9fe12b413b
+- relpath: src/reports/application/use_cases.py
+  sha256: 9a5ef2a84f15e414c5e3662dacc652913a8e166a08f1e8d45a58f678e091f353
+- relpath: src/reports/domain/entities.py
+  sha256: 2245e3b5774738ec65504aa2dec4fb3d17343f183f368a7079cb1bed62b99e22
+- relpath: src/reports/domain/rules.py
+  sha256: eb9f94b26bc659ac377aee2a8cc1d40e306979da3fdbc0349a48bd2633e40cee
+- relpath: src/reports/tests/unit/test_reports.py
+  sha256: b7a31d76e56c298449f613c578e2f28c6f9fec09045199534a42fde58f1258a5
+module_manifest:
+  version: 1.0.0
+  status: active
+  module: reports
+  phase: source_graph_pilot
+  global_refs:
+    source_authority_graph: ../../../../_canon/SOURCE_AUTHORITY_GRAPH.yaml
+    global_rules: ../../../../_canon/graph/global_rules.yaml
+    global_policies: ../../../../_canon/graph/global_policies.yaml
+    lifecycle: ../../../../_canon/graph/lifecycle.yaml
+    module_registry: ../../../../_canon/MODULE_REGISTRY.yaml
+    module_source_authority_matrix: ../../../../_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
+  module_docs:
+    readme: ../README.md
+    scope: ../MODULE_SCOPE_REPORTS.md
+    domain_rules: ../DOMAIN_RULES_REPORTS.md
+    invariants: ../INVARIANTS_REPORTS.md
+    permissions: ../PERMISSIONS_REPORTS.md
+    test_matrix: ../TEST_MATRIX_REPORTS.md
+  contract_surfaces:
+    openapi_paths: ../../../../../contracts/openapi/paths/reports.yaml
+    sovereign_schema_dir: ../../../../../contracts/schemas/reports/
+    primary_schema: ../../../../../contracts/schemas/reports/report_job.schema.json
+    openapi_projection: ../../../../../contracts/openapi/components/schemas/reports/report_job.yaml
+  runtime_surfaces:
+    api_router: ../../../../../src/reports/api.py
+    domain_entity: ../../../../../src/reports/domain/entities.py
+    domain_rules: ../../../../../src/reports/domain/rules.py
+    use_cases: ../../../../../src/reports/application/use_cases.py
+    unit_tests: ../../../../../src/reports/tests/unit/test_reports.py
+  structured_ir:
+    entities: ./entities.yaml
+    endpoints: ./endpoints.yaml
+    errors: ./errors.yaml
+    test_obligations: ./test_obligations.yaml
+  known_gaps:
+  - A shape base do OpenAPI agora referencia o schema soberano; o overlay de runtime
+    (statusLabel/completedAt/errorMessage) ainda depende de enforcement dedicado em
+    B3-002.
+entities:
+  ReportJob:
+    schema_ref: ../../../../../contracts/schemas/reports/report_job.schema.json
+    runtime_entity_ref: ../../../../../src/reports/domain/entities.py#ReportJob
+    docs_refs:
+    - ../DOMAIN_RULES_REPORTS.md
+    - ../INVARIANTS_REPORTS.md
+    sovereign_fields:
+    - name: id
+      runtime_name: id
+      required: true
+      type: uuid_v4
+    - name: ownerUserId
+      runtime_name: owner_user_id
+      required: true
+      type: uuid_v4
+    - name: reportType
+      runtime_name: report_type
+      required: true
+      type: string
+    - name: formatLabel
+      runtime_name: format_label
+      required: false
+      type: string
+    - name: parameterSummary
+      runtime_name: parameter_summary
+      required: false
+      type: string
+    - name: sourceMetricNames
+      runtime_name: source_metric_names
+      required: false
+      type: string[]
+    - name: generatedArtifactRef
+      runtime_name: generated_artifact_ref
+      required: false
+      type: string
+    - name: retentionLabel
+      runtime_name: retention_label
+      required: false
+      type: string
+    - name: requestedAt
+      runtime_name: requested_at
+      required: false
+      type: timestamp_utc
+    runtime_extension_fields:
+    - name: statusLabel
+      runtime_name: status_label
+      type: enum
+      allowed_values:
+      - queued
+      - processing
+      - completed
+      - failed
+      - cancelled
+    - name: completedAt
+      runtime_name: completed_at
+      type: timestamp_utc
+    - name: errorMessage
+      runtime_name: error_message
+      type: string
+endpoints:
+- operation_id: listReportJobs
+  method: GET
+  path: /reports/jobs
+  openapi_ref: ../../../../../contracts/openapi/paths/reports.yaml#/reports/jobs/get
+  runtime_handler_ref: ../../../../../src/reports/api.py#list_report_jobs
+  use_case_ref: ../../../../../src/reports/application/use_cases.py#ListReportJobs
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 422
+  - 500
+- operation_id: createReportJob
+  method: POST
+  path: /reports/jobs
+  openapi_ref: ../../../../../contracts/openapi/paths/reports.yaml#/reports/jobs/post
+  runtime_handler_ref: ../../../../../src/reports/api.py#create_report_job
+  use_case_ref: ../../../../../src/reports/application/use_cases.py#CreateReportJob
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 422
+  - 409
+  - 500
+- operation_id: getReportJob
+  method: GET
+  path: /reports/jobs/{jobId}
+  openapi_ref: ../../../../../contracts/openapi/paths/reports.yaml#/reports/jobs/{jobId}/get
+  runtime_handler_ref: ../../../../../src/reports/api.py#get_report_job
+  use_case_ref: ../../../../../src/reports/application/use_cases.py#GetReportJob
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+- operation_id: updateReportJob
+  method: PATCH
+  path: /reports/jobs/{jobId}
+  openapi_ref: ../../../../../contracts/openapi/paths/reports.yaml#/reports/jobs/{jobId}/patch
+  runtime_handler_ref: ../../../../../src/reports/api.py#update_report_job
+  use_case_ref: ../../../../../src/reports/application/use_cases.py#UpdateReportJob
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  roles_denied:
+  - athlete
+  - member
+  owner_scoped_roles:
+  - coach
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 404
+  - 409
+  - 422
+- operation_id: downloadReportArtifact
+  method: GET
+  path: /reports/jobs/{jobId}/download
+  openapi_ref: ../../../../../contracts/openapi/paths/reports.yaml#/reports/jobs/{jobId}/download/get
+  runtime_handler_ref: ../../../../../src/reports/api.py#download_report_artifact
+  use_case_ref: ../../../../../src/reports/application/use_cases.py#DownloadReportArtifact
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - coach
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 409
+errors:
+- id: ERR-RPT-401-UNAUTHENTICATED
+  kind: transport
+  http_status: 401
+  source_ref: ../../../../../src/reports/api.py#_role
+  operations:
+  - listReportJobs
+  - createReportJob
+  - getReportJob
+  - updateReportJob
+  - downloadReportArtifact
+- id: ERR-RPT-403-INSUFFICIENT-PRIVILEGE
+  kind: domain
+  http_status: 403
+  exception_ref: ../../../../../src/reports/domain/rules.py#InsufficientPrivilege
+  operations:
+  - listReportJobs
+  - createReportJob
+  - getReportJob
+  - updateReportJob
+  - downloadReportArtifact
+- id: ERR-RPT-404-NOT-FOUND
+  kind: domain
+  http_status: 404
+  exception_ref: ../../../../../src/reports/domain/rules.py#ReportJobNotFound
+  operations:
+  - getReportJob
+  - updateReportJob
+  - downloadReportArtifact
+- id: ERR-RPT-409-CONFLICT
+  kind: domain
+  http_status: 409
+  exception_ref: ../../../../../src/reports/domain/rules.py#ReportJobConflict
+  operations:
+  - updateReportJob
+  - downloadReportArtifact
+- id: ERR-RPT-422-VALIDATION
+  kind: validation
+  http_status: 422
+  source_ref: ../../../../../src/reports/domain/entities.py#validate_invariants
+  operations:
+  - listReportJobs
+  - createReportJob
+  - updateReportJob
+test_obligations:
+- id: RPT-TO-001
+  scope: sovereign_schema
+  artifact_ref: ../../../../../contracts/schemas/reports/report_job.schema.json
+  verification: JSON Schema validation via contract gates
+  evidence_refs:
+  - ../../../../../_reports/contract_gates/latest.json
+- id: RPT-TO-002
+  scope: openapi_contract
+  artifact_ref: ../../../../../contracts/openapi/paths/reports.yaml
+  verification: OpenAPI lint and contract-gate validation
+  evidence_refs:
+  - ../../../../../_reports/contract_gates/latest.json
+- id: RPT-TO-003
+  scope: domain_invariants
+  artifact_ref: ../../../../../src/reports/tests/unit/test_reports.py
+  covers:
+  - INV-RPT-001
+  - INV-RPT-002
+  - INV-RPT-003
+  - INV-RPT-004
+  verification: Unit tests for ReportJob invariants
+  evidence_refs:
+  - ../../../../../src/reports/tests/unit/test_reports.py
+- id: RPT-TO-004
+  scope: permissions_and_bola
+  artifact_ref: ../../../../../src/reports/tests/unit/test_reports.py
+  covers:
+  - DR-RPT-005
+  - PERM-REP-002
+  - PERM-REP-003
+  verification: Unit tests for RBAC, owner scoping and conflict paths
+  evidence_refs:
+  - ../../../../../src/reports/tests/unit/test_reports.py
+- id: RPT-TO-005
+  scope: source_graph_integrity
+  artifact_ref: ../../../../../tests/pipeline_gates/test_reports_source_graph_integrity.py
+  verification: Pipeline gate enforces parity between graph, docs, contracts and runtime
+    refs
+  evidence_refs:
+  - ../../../../../tests/pipeline_gates/test_reports_source_graph_integrity.py

@@ -20,9 +20,10 @@ Antes de executar este worker, verificar:
 1. **ADR-026** existe em `docs/_canon/decisions/`
 2. **ADR-031** existe em `docs/_canon/decisions/`
 3. **CODE_ARCHITECTURE.md** existe em `docs/_canon/` (versão ≥ 1.1.0)
-4. **ADVERSARIAL_ANALYSIS_GATE** PASS para o módulo/recurso alvo
-5. **Contrato OpenAPI** do módulo existe e está validado (gate `OPENAPI_ROOT_MODULE_SYNC_GATE` PASS)
-6. **JSON Schemas** do módulo existem em `contracts/schemas/<module>/`
+4. **MODULE_REGISTRY** declara o módulo em `implementation_ready` ou acima
+5. **ADVERSARIAL_ANALYSIS_GATE** PASS para o módulo/recurso alvo
+6. **Contrato OpenAPI** do módulo existe e está validado (gate `OPENAPI_ROOT_MODULE_SYNC_GATE` PASS)
+7. **JSON Schemas** do módulo existem em `contracts/schemas/<module>/`
 
 Se qualquer pré-requisito estiver ausente → emitir bloqueio correspondente e parar.
 

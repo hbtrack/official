@@ -1,4 +1,5 @@
-# MODULO VIDEO 
+# MODULO VIDEO
+> Documento de apoio humano, não canônico e não soberano. Serve para exploração de arquitetura de mídia; não substitui `docs/_canon/`, `ROADMAP.md`, `docs/hbtrack/modulos/` ou decisões canônicas de módulo.
 
  No **Hb Track**  as decisões de transmissão e streaming ao vivo, devem ser como um desenho deliberadamente diferente do mercado atual. O mercado maduro hoje continua dividido em camadas especializadas: Spiideo explicita análise e streaming como produtos adjacentes; Hudl separa captura/livestream de análise; KINEXON se posiciona fortemente em tracking em tempo real; Sportradar se posiciona como backbone de dados ao vivo e APIs. O Hb Track parte de uma premissa diferente: **vídeo, tracking, eventos, carga e distribuição são partes do mesmo sistema operacional do handebol**, e não domínios integrados depois por APIs ou workflow humano. ([Spiideo][1])
 

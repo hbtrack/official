@@ -4,8 +4,8 @@
 # Verificado pelo REQUIRED_ARTIFACT_PRESENCE_GATE no pipeline.
 # Spec normativa completa: docs/_canon/CI_CONTRACT_GATES.md
 # -------------------------------------------------------------------------
-version: "1.2.0"
-last_reviewed: "2026-03-23"
+version: "1.2.2"
+last_reviewed: "2026-03-31"
 spec_ref: "docs/_canon/CI_CONTRACT_GATES.md"
 implementation_ref: "scripts/contracts/validate/validate_contracts.py"
 evidence_output: "_reports/contract_gates/latest.json"
@@ -355,6 +355,183 @@ gates:
     status: active
     implemented_in: scripts/contracts/validate/validate_contracts.py
 
+  - gate_id: DOC_USAGE_GATE
+    order: "2N1"
+    name: "Doc Usage Gate"
+    blocking: true
+    active_stage: contract
+    severity: HIGH
+    parallelizable: true
+    applies_when: always
+    depends_on: [CANON_ALLOWLIST_GATE]
+    description: >
+      Verifica `docs/_canon/DOC_USAGE_MANIFEST.yaml` e garante cobertura total de
+      `docs/_canon/**` e `docs/hbtrack/modulos/**`. Falha quando um documento fica
+      sem owner_source, sem consumer válido, sem update trigger, fora do manifesto
+      ou coberto por múltiplas regras.
+    blocking_codes: [BLOCKED_DOC_USAGE_INVALID]
+    status: active
+
+  - gate_id: CANON_CONTRACT_DRIVEN_PARITY_GATE
+    order: "2N2"
+    name: "Canon Contract Driven Parity Gate"
+    blocking: true
+    active_stage: pre_contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [DOC_USAGE_GATE]
+    description: >
+      Garante paridade mínima entre `docs/_canon` e os SSOTs operacionais em
+      `.contract_driven`, cobrindo: `AGENT_INSTRUCTIONS.md` ↔ `BOOT_PROFILES.yaml` e
+      `TASK_CATALOG.yaml`; `CONTRACT_PIPELINE.md` ↔ `TASK_CATALOG.yaml` e `scripts/hb`;
+      `DECISION_POLICY.md` ↔ `decision_discovery.prompt.md`; `GATES_REGISTRY.yaml` ↔
+      `scripts/contracts/validate/validate_contracts.py`.
+    blocking_codes: [BLOCKED_CANON_CONTRACT_DRIVEN_PARITY]
+    status: active
+
+  - gate_id: HBTRACK_CANON_PARITY_GATE
+    order: "2N3"
+    name: "HBTrack Canon Parity Gate"
+    blocking: true
+    active_stage: pre_contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on:
+      [
+        DOC_USAGE_GATE,
+        CANON_CONTRACT_DRIVEN_PARITY_GATE,
+        MODULE_REGISTRY_GATE,
+        MODULE_SOURCE_AUTHORITY_MATRIX_GATE,
+      ]
+    description: >
+      Garante paridade mínima entre `docs/hbtrack/modulos` e o canon global.
+      Bloqueia módulo fora do registry/matrix, docs de permissão que não apontam
+      para `identity_access` como policy global soberana e state models sem âncora
+      canônica (`adr_ref` ou `decision_ir_ref`).
+    blocking_codes: [BLOCKED_HBTRACK_CANON_PARITY]
+    status: active
+
+  - gate_id: IMPACT_ANALYSIS_GATE
+    order: "2N4"
+    name: "Impact Analysis Gate"
+    blocking: true
+    active_stage: pre_contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on:
+      [
+        DOC_USAGE_GATE,
+        CANON_CONTRACT_DRIVEN_PARITY_GATE,
+        HBTRACK_CANON_PARITY_GATE,
+      ]
+    description: >
+      Resolve a changeset atual contra `docs/_canon/SYNC_MANIFEST.yaml` e determina,
+      sem interpretação livre, quais regras de sincronismo foram impactadas por
+      mudanças em `source_master` ou `source_inputs`.
+    blocking_codes: [BLOCKED_SYNC_IMPACT_UNRESOLVED]
+    status: active
+
+  - gate_id: PARTIAL_UPDATE_GATE
+    order: "2N5"
+    name: "Partial Update Gate"
+    blocking: true
+    active_stage: pre_contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [IMPACT_ANALYSIS_GATE]
+    description: >
+      Bloqueia atualização parcial: se um `source_master` soberano mudar, os
+      `blocking_consumers` declarados em `docs/_canon/SYNC_MANIFEST.yaml`
+      devem aparecer sincronizados na mesma changeset.
+    blocking_codes: [BLOCKED_SYNC_PARTIAL_UPDATE]
+    status: active
+
+  - gate_id: OPS_CANON_PARITY_GATE
+    order: "2N6"
+    name: "Ops Canon Parity Gate"
+    blocking: true
+    active_stage: pre_contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [PARTIAL_UPDATE_GATE]
+    description: >
+      Garante que o source graph operacional, os consumidores canônicos de ops
+      e os artefatos compilados permaneçam em paridade. Bloqueia ausência de
+      inputs soberanos de `docs/_canon/graph/ops/`, drift no
+      `SOURCE_AUTHORITY_GRAPH.yaml`, no `SYNC_MANIFEST.yaml`, nos docs de ops
+      e no `compiled_ops/deploy/impact_report.json`.
+    blocking_codes: [BLOCKED_OPS_CANON_PARITY]
+    status: active
+
+  - gate_id: ENV_TEMPLATE_EQUIVALENCE_GATE
+    order: "2N7"
+    name: "Env Template Equivalence Gate"
+    blocking: true
+    active_stage: pre_contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [OPS_CANON_PARITY_GATE]
+    description: >
+      Reexecuta o compiler operacional e garante equivalência total entre os
+      templates de ambiente, os fragments de deploy e o resultado esperado
+      derivado do SSOT operacional.
+    blocking_codes: [BLOCKED_ENV_TEMPLATE_EQUIVALENCE]
+    status: active
+
+  - gate_id: DEPLOY_WORKFLOW_ENV_PARITY_GATE
+    order: "2N8"
+    name: "Deploy Workflow Env Parity Gate"
+    blocking: true
+    active_stage: pre_contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [OPS_CANON_PARITY_GATE]
+    description: >
+      Garante paridade entre `.github/workflows/deploy.yml`, o contrato de
+      deploy operacional e o catálogo GitHub operacional. Bloqueia drift em
+      jobs, triggers, secrets, variables, environments e health checks.
+    blocking_codes: [BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY]
+    status: active
+
+  - gate_id: SECRETS_CATALOG_GATE
+    order: "2N9"
+    name: "Secrets Catalog Gate"
+    blocking: true
+    active_stage: pre_contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [OPS_CANON_PARITY_GATE, ENV_TEMPLATE_EQUIVALENCE_GATE]
+    description: >
+      Valida o catálogo de secrets/variables operacionais contra o catálogo
+      GitHub, os templates reais de ambiente e o artefato compilado
+      `compiled_ops/deploy/secrets_catalog.json`.
+    blocking_codes: [BLOCKED_SECRETS_CATALOG_INVALID]
+    status: active
+
+  - gate_id: SERVICE_TOPOLOGY_PARITY_GATE
+    order: "2N10"
+    name: "Service Topology Parity Gate"
+    blocking: true
+    active_stage: pre_contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [OPS_CANON_PARITY_GATE]
+    description: >
+      Garante que a topologia soberana de serviços continue em paridade com
+      `infra/docker-compose.prod.yml`, `infra/nginx/*.conf`, `config/urls.py`
+      e `compiled_ops/deploy/runtime_topology.json`.
+    blocking_codes: [BLOCKED_SERVICE_TOPOLOGY_PARITY]
+    status: active
+
   - gate_id: PLACEHOLDER_RESIDUE_GATE
     order: 3
     name: "Placeholder Residue Gate"
@@ -476,6 +653,23 @@ gates:
       Coerência semântica cross-artifact: OpenAPI × JSON Schema × AsyncAPI × Arazzo × docs.
       Detecta divergências onde specs diferentes descrevem o mesmo recurso de formas incompatíveis.
     blocking_codes: [CROSS_SPEC_MISALIGNMENT]
+    status: active
+
+  - gate_id: OPENAPI_SCHEMA_EQUIVALENCE_GATE
+    order: "8A"
+    name: "OpenAPI Schema Equivalence Gate"
+    blocking: true
+    active_stage: contract
+    severity: HIGH
+    parallelizable: false
+    applies_when: source_graph_schema_view_present
+    depends_on: [CROSS_SPEC_ALIGNMENT_GATE]
+    description: >
+      Para módulos com `generated/source_graph/*/*.schema_contract_view.yaml`, garante que
+      a projeção OpenAPI base seja ref direto ao schema soberano e que qualquer overlay em
+      `contracts/openapi/paths/*.yaml` adicione apenas campos de runtime explicitamente
+      autorizados no source graph. Projection drift vira erro técnico detectável.
+    blocking_codes: [BLOCKED_OPENAPI_SCHEMA_EQUIVALENCE]
     status: active
 
   - gate_id: CONTRACT_BREAKING_CHANGE_GATE
@@ -624,7 +818,9 @@ gates:
       ]
     description: >
       Os artefatos derivados em `generated/` devem ser estritamente iguais à recompilação
-      da fonte soberana. Qualquer drift (diferença) é considerado violação crítica.
+      da fonte soberana. Inclui também `docs/_canon/RUNTIME_CURRENT_STATE.md`, que deve
+      permanecer idêntico ao gerador canônico em `scripts/generate/docs/gen_runtime_current_state.py`.
+      Qualquer drift (diferença) é considerado violação crítica.
     blocking_codes: [DERIVED_DRIFT_DETECTED]
     status: active
 
@@ -632,26 +828,22 @@ gates:
     order: "2M"
     name: "Architecture Decision Presence Gate"
     blocking: true
-    active_stage: readiness
+    active_stage: decision_discovery
     severity: HIGH
     parallelizable: false
-    applies_when: contract_creation_or_revision_mode
+    applies_when: contract_creation_or_revision_mode_or_readiness_or_generate_code
     depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
     description: >
-      Verifica que não há decisão arquitetural classificada como `obrigatória` em aberto
-      em `docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md` para o módulo sendo contratado.
-      Se uma entrada com criticidade `obrigatória` e status `open` for encontrada para o
-      módulo alvo, o gate falha. A decisão deve ser promovida para ADR aprovada antes
-      de qualquer contrato de produção ser criado ou revisado.
+      Verifica que não há decisão arquitetural classificada como `obrigatória` com status
+      `open`, `blocked`, `in_discovery` ou `pending_approval` em
+      `docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md` para o módulo alvo ou com escopo global.
+      Se uma entrada pendente for encontrada, o gate falha com
+      `BLOCKED_MISSING_ARCH_DECISION`. A decisão deve ser promovida para ADR aprovada
+      antes de criar/revisar contratos, promover o módulo para `implementation_ready`
+      ou acionar `generate_code`.
       Spec normativa: docs/_canon/DECISION_POLICY.md §2 e §3.
     blocking_codes: [BLOCKED_MISSING_ARCH_DECISION]
-    status: deferred
-    deferred_reason: >
-      Não implementado em validate_contracts.py. O arquivo ARCHITECTURE_DECISION_BACKLOG.md
-      existe mas o gate semântico (parse de criticidade=obrigatória + status=open) ainda não
-      foi criado. Decisão FASE 1: manter como deferred até implementação explícita ser priorizada.
-      Não causa falha silenciosa — ausência de implementação é agora rastreável.
-    deferred_since: "2026-03-23"
+    status: active
 
   - gate_id: FEATURE_READINESS_GATE
     order: "15B"
@@ -1023,5 +1215,26 @@ gates:
       artefatos legados monitorados existe. Impede reintrodução de legado no fluxo
       ativo em novas sessões.
     blocking_codes: [BLOCKED_LEGACY_IN_CRITICAL_PATH]
+    status: active
+    implemented_in: scripts/contracts/validate/validate_contracts.py
+
+  - gate_id: CONTEXT_BUNDLE_FRESHNESS_GATE
+    order: "20J"
+    name: "Context Bundle Freshness Gate"
+    blocking: true
+    active_stage: registry_coherence
+    severity: HIGH
+    parallelizable: false
+    applies_when: always
+    depends_on: [LEGACY_CRITICAL_PATH_GATE]
+    description: >
+      B7-002 — Impede uso de bundle de contexto defasado em tasks de implementação.
+      Para cada arquivo em compiled_context/**/*.json, verifica os hashes SHA-256
+      registrados no campo "inputs" contra os arquivos reais no repositório.
+      SKIP_NOT_APPLICABLE quando compiled_context/ não existe ou está vazio.
+      PASS quando todos os inputs batem com o hash registrado.
+      FAIL (bloqueante) quando qualquer input diverge ou está ausente, indicando
+      que o bundle precisa ser recompilado antes de continuar a implementação.
+    blocking_codes: [BLOCKED_CONTEXT_BUNDLE_STALE]
     status: active
     implemented_in: scripts/contracts/validate/validate_contracts.py

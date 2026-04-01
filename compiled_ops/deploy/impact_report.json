@@ -1,0 +1,107 @@
+{
+  "artifact_id": "HBTRACK_OPS_IMPACT_REPORT",
+  "blocked_partial_update": true,
+  "compiler": "hbtrack_ops_contract_compiler",
+  "compiler_version": "0.1.0",
+  "impacted_domains": [
+    "operations"
+  ],
+  "impacted_modules": [],
+  "inputs": [
+    {
+      "relpath": "docs/_canon/graph/ops/environment_catalog.yaml",
+      "sha256": "1cee8db6560ade2d886f00aab8f0efa11ddb447e05f96d7eafe7720706aa14bb"
+    },
+    {
+      "relpath": "docs/_canon/graph/ops/secrets_catalog.yaml",
+      "sha256": "3cd802e113b0b9150299af278552c3f544771d7b33f0625706b750efae3b3625"
+    },
+    {
+      "relpath": "docs/_canon/graph/ops/service_topology.yaml",
+      "sha256": "7df4d1facf16e509eb61530a515a0183ac5cba29aceb2cf51e37d9d3a4b5ecb7"
+    },
+    {
+      "relpath": "docs/_canon/graph/ops/deploy_contract.yaml",
+      "sha256": "014c91920fe9d3aaf45b089b1e5b4068321df90c7570061d3dc9d7812fd9c77e"
+    },
+    {
+      "relpath": "docs/_canon/graph/ops/runtime_endpoints.yaml",
+      "sha256": "b1b0e8868ba652384cee995c7798a8700e374b52e06963c9011d1f281d37cd64"
+    },
+    {
+      "relpath": "docs/_canon/graph/ops/github_actions_catalog.yaml",
+      "sha256": "545c11d310fc235151d3995ba4434dc1be186f397366233a79fec96515702697"
+    }
+  ],
+  "known_deviations": [],
+  "obsolete_artifacts": [],
+  "outputs": [
+    "infra/env/.env.staging.template",
+    "infra/env/.env.production.template",
+    "compiled_ops/deploy/staging.env.fragment",
+    "compiled_ops/deploy/production.env.fragment",
+    "compiled_ops/deploy/secrets_catalog.json",
+    "compiled_ops/deploy/runtime_topology.json",
+    "compiled_ops/deploy/impact_report.json"
+  ],
+  "regenerated_agent_bundles": [],
+  "regenerated_contracts": [
+    "infra/env/.env.staging.template",
+    "infra/env/.env.production.template",
+    "compiled_ops/deploy/secrets_catalog.json",
+    "compiled_ops/deploy/runtime_topology.json"
+  ],
+  "required_tests": [
+    "python3 scripts/compile/compile_ops_contracts.py --check",
+    "python3 -m pytest tests/pipeline_gates/test_ops_contract_compiler.py -q",
+    "python3 scripts/validate_contracts.py --profile ci"
+  ],
+  "scope": "operations",
+  "source_fingerprint": "f273cb8084c8365c02f164d4ac326c60ee5fcea4a8382d798a7a19a9d67e76ac",
+  "template_parity_hints": [
+    {
+      "environment": "staging",
+      "expected_hosts": [
+        "191.252.185.34",
+        "staging.handballtrack.app"
+      ],
+      "template_hosts": [
+        "staging.handballtrack.app"
+      ],
+      "type": "allowed_hosts_mismatch"
+    },
+    {
+      "environment": "production",
+      "expected_hosts": [
+        "api.handballtrack.app",
+        "handballtrack.app",
+        "www.handballtrack.app"
+      ],
+      "template_hosts": [
+        "handballtrack.app",
+        "www.handballtrack.app"
+      ],
+      "type": "allowed_hosts_mismatch"
+    },
+    {
+      "environment": "production",
+      "expected_origin": "https://api.handballtrack.app",
+      "template_origins": [
+        "https://handballtrack.app",
+        "https://www.handballtrack.app"
+      ],
+      "type": "cors_origin_mismatch"
+    }
+  ],
+  "upstream_operational_inputs": [
+    ".github/workflows/deploy.yml",
+    "infra/env/.env.staging.template",
+    "infra/env/.env.production.template",
+    "infra/docker-compose.prod.yml",
+    "infra/nginx/nginx.conf",
+    "infra/nginx/nginx.staging.conf",
+    "infra/scripts/rollback.sh",
+    "config/settings.py",
+    "config/urls.py"
+  ]
+}

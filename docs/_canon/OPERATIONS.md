@@ -19,6 +19,7 @@ status: active
 | Templates de scaffold         | Não      | `.contract_driven/templates/`              | N/A                                    |
 | Prompts operacionais          | Não      | `.contract_driven/agent_prompts/`          | `_reports/agent_execution/`            |
 | Canon global (docs)           | Sim      | `docs/_canon/*`                            | `_reports/`                            |
+| Contratos operacionais estruturados | Sim | `docs/_canon/graph/ops/*`                  | `DEPLOY_PIPELINE.md`, `VPS_SETUP.md`   |
 | Docs normativos de módulo     | Sim      | `docs/hbtrack/modulos/<module>/*`          | `_reports/`                            |
 | Estudos e ideação humana      | Não      | `docs/guias/*`                             | N/A                                    |
 | Contrato OpenAPI              | Sim      | `contracts/openapi/*`                      | `generated/resolved_policy/*`          |
@@ -172,6 +173,17 @@ O comando `seed_demo` é idempotente: não duplica registros se executado mais d
 
 > Fonte autoritativa para configuração do ambiente staging e produção.
 > O pipeline CI/CD (`HTTP_RUNTIME_CONTRACT_GATE`) só valida a API ao vivo se a infraestrutura abaixo estiver corretamente configurada.
+> SSOT estruturado complementar: `docs/_canon/graph/ops/`.
+
+Segredos operacionais ativos no sistema atual:
+- banco/runtime Django (`SECRET_KEY`, `DB_PASSWORD`, `POSTGRES_PASSWORD`)
+- JWT RS256 (`JWT_PRIVATE_KEY`, `JWT_PUBLIC_KEY`)
+- provedores ativos (`CLOUDINARY_*`, `RESEND_API_KEY`, `GEMINI_API_KEY`)
+- credenciais de operacao (`VPS_SSH_KEY`, `PACT_BROKER_TOKEN`)
+
+Regra:
+- qualquer rotacao ou auditoria desses segredos deve partir de `docs/_canon/graph/ops/secrets_catalog.yaml`
+- a entrada operacional deterministica e `scripts/ops/rotate_keys.sh`
 
 ### 8.1 — DNS (GoDaddy — handballtrack.app)
 
@@ -280,4 +292,3 @@ Quando o item 5 passar, o `HTTP_RUNTIME_CONTRACT_GATE` será ativado automaticam
 | Schemathesis PASS | CI job `contract-conformance` | `success` |
 
 Todos os 5 itens devem estar verdes para FASE 4 ser declarada Done.
-

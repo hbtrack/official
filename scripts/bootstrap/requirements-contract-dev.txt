@@ -1,0 +1,6 @@
+# HB Track — bootstrap local mínimo para governança/contratos
+# Este arquivo deve permanecer alinhado com os prerequisitos da CI.
+
+-r ../../requirements.txt
+-r ../../requirements-dev.txt
+-r ../_policy/requirements.txt

@@ -79,6 +79,7 @@ BLOCKED_TOOLING_CONFIG_INVALID = "BLOCKED_TOOLING_CONFIG_INVALID"
 BLOCKED_TRACEABILITY_MANIFEST_INVALID = "BLOCKED_TRACEABILITY_MANIFEST_INVALID"
 BLOCKED_TRACEABILITY_INPUT_MISSING = "BLOCKED_TRACEABILITY_INPUT_MISSING"
 BLOCKED_TRACEABILITY_HASH_MISMATCH = "BLOCKED_TRACEABILITY_HASH_MISMATCH"
+BLOCKED_OPENAPI_SCHEMA_EQUIVALENCE = "BLOCKED_OPENAPI_SCHEMA_EQUIVALENCE"
 
 BLOCKED_AXIOM_FILE_NOT_FOUND = "BLOCKED_AXIOM_FILE_NOT_FOUND"
 BLOCKED_INVALID_AXIOM_JSON = "BLOCKED_INVALID_AXIOM_JSON"
@@ -105,6 +106,16 @@ BLOCKED_AXIOM_INVALID_VALIDATOR_CONTRACT = "BLOCKED_AXIOM_INVALID_VALIDATOR_CONT
 BLOCKED_AXIOM_INTEGRITY = "BLOCKED_AXIOM_INTEGRITY"
 BLOCKED_FEATURE_COVERAGE_MISSING = "BLOCKED_FEATURE_COVERAGE_MISSING"
 BLOCKED_LEGACY_IN_CRITICAL_PATH = "BLOCKED_LEGACY_IN_CRITICAL_PATH"  # FASE 7
+BLOCKED_CONTEXT_BUNDLE_STALE = "BLOCKED_CONTEXT_BUNDLE_STALE"  # B7-002
+BLOCKED_DOC_USAGE_INVALID = "BLOCKED_DOC_USAGE_INVALID"
+BLOCKED_HBTRACK_CANON_PARITY = "BLOCKED_HBTRACK_CANON_PARITY"
+BLOCKED_SYNC_IMPACT_UNRESOLVED = "BLOCKED_SYNC_IMPACT_UNRESOLVED"
+BLOCKED_SYNC_PARTIAL_UPDATE = "BLOCKED_SYNC_PARTIAL_UPDATE"
+BLOCKED_OPS_CANON_PARITY = "BLOCKED_OPS_CANON_PARITY"
+BLOCKED_ENV_TEMPLATE_EQUIVALENCE = "BLOCKED_ENV_TEMPLATE_EQUIVALENCE"
+BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY = "BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY"
+BLOCKED_SECRETS_CATALOG_INVALID = "BLOCKED_SECRETS_CATALOG_INVALID"
+BLOCKED_SERVICE_TOPOLOGY_PARITY = "BLOCKED_SERVICE_TOPOLOGY_PARITY"
 
 MODULE_STATUS_ORDER = (
     "scaffold",
@@ -158,6 +169,7 @@ _KNOWN_BLOCKING_CODES = {
     BLOCKED_TRACEABILITY_MANIFEST_INVALID,
     BLOCKED_TRACEABILITY_INPUT_MISSING,
     BLOCKED_TRACEABILITY_HASH_MISMATCH,
+    BLOCKED_OPENAPI_SCHEMA_EQUIVALENCE,
     BLOCKED_AXIOM_FILE_NOT_FOUND,
     BLOCKED_INVALID_AXIOM_JSON,
     BLOCKED_AXIOM_SCHEMA_INVALID,
@@ -183,6 +195,15 @@ _KNOWN_BLOCKING_CODES = {
     BLOCKED_AXIOM_INTEGRITY,
     BLOCKED_FEATURE_COVERAGE_MISSING,
     BLOCKED_LEGACY_IN_CRITICAL_PATH,  # FASE 7
+    BLOCKED_DOC_USAGE_INVALID,
+    BLOCKED_HBTRACK_CANON_PARITY,
+    BLOCKED_SYNC_IMPACT_UNRESOLVED,
+    BLOCKED_SYNC_PARTIAL_UPDATE,
+    BLOCKED_OPS_CANON_PARITY,
+    BLOCKED_ENV_TEMPLATE_EQUIVALENCE,
+    BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+    BLOCKED_SECRETS_CATALOG_INVALID,
+    BLOCKED_SERVICE_TOPOLOGY_PARITY,
 }
 
 
@@ -2435,6 +2456,8 @@ _CANONICAL_GLOBAL_DOCS: list[str] = [
     "docs/_canon/TOOLCHAIN_HEALTH_POLICY.md",
     "docs/_canon/CONTRACT_PIPELINE.md",
     "docs/_canon/OPERATIONS.md",
+    "docs/_canon/DOC_USAGE_MANIFEST.yaml",
+    "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
     "docs/_canon/UI_CONTRACT_GUIDE.md",
     "docs/_canon/security/OWASP_API_CONTROL_MATRIX.yaml",
     "docs/_canon/MODULE_REGISTRY.yaml",
@@ -4945,6 +4968,123 @@ def _g2l_decision_ir_conformance(root: pathlib.Path) -> dict:
     )
 
 
+def _g2m_arch_decision_presence(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "ARCH_DECISION_PRESENCE_GATE"
+    backlog_path = root / "docs" / "_canon" / "ARCHITECTURE_DECISION_BACKLOG.md"
+    session_path = root / "_reports" / "session_start.json"
+    checked = [str(backlog_path), str(session_path)]
+
+    if not backlog_path.exists():
+        return _skip(gate_id, "ARCHITECTURE_DECISION_BACKLOG.md ausente.", _ms(t0))
+
+    task_type = ""
+    module = ""
+    if session_path.exists():
+        try:
+            session = json.loads(session_path.read_text(encoding="utf-8"))
+            task_type = str(session.get("task_type") or "").strip()
+            module = str(session.get("module") or session.get("module_focus") or "").strip()
+        except Exception:
+            task_type = ""
+            module = ""
+
+    relevant_task_types = {
+        "new_contract",
+        "contract_revision",
+        "new_event",
+        "new_workflow",
+        "new_schema",
+        "new_state_model",
+        "new_ui_contract",
+        "readiness_promotion",
+        "generate_code",
+    }
+    if task_type not in relevant_task_types:
+        return _skip(gate_id, f"task_type atual '{task_type or 'N/A'}' não exige gate.", _ms(t0))
+    if not module:
+        return _skip(gate_id, "Sessão atual sem módulo-alvo para avaliar backlog arquitetural.", _ms(t0))
+
+    text = backlog_path.read_text(encoding="utf-8")
+    section_matches = list(re.finditer(r"(?m)^###\s+(ARCH-\d+)\s+—\s+(.+)$", text))
+    pending_statuses = {"open", "blocked", "in_discovery", "pending_approval"}
+    violations: list[dict] = []
+
+    for idx, match in enumerate(section_matches):
+        start = match.start()
+        end = section_matches[idx + 1].start() if idx + 1 < len(section_matches) else text.find("\n## 3.", start)
+        if end == -1:
+            end = len(text)
+        section = text[start:end]
+        fields: dict[str, str] = {}
+        for line in section.splitlines():
+            row = re.match(r"^\|\s*([^|]+?)\s*\|\s*(.+?)\s*\|$", line)
+            if not row:
+                continue
+            key = row.group(1).strip().lower()
+            value = row.group(2).strip()
+            if set(key) == {"-"}:
+                continue
+            fields[key] = value
+
+        criticidade = re.sub(r"[*`]", "", fields.get("criticidade", "")).strip().lower()
+        status_raw = fields.get("status", "")
+        status_match = re.match(r"([a-zA-Z_]+)", status_raw)
+        status = (status_match.group(1).lower() if status_match else status_raw.strip().lower())
+        affected = fields.get("módulos afetados", fields.get("modulos afetados", ""))
+        affected_modules = {
+            token.strip()
+            for token in re.findall(r"`([^`]+)`", affected)
+            if token.strip()
+        }
+        affects_all = any(token in affected.lower() for token in ("todos", "transversal", "global"))
+
+        if criticidade != "obrigatória" or status not in pending_statuses:
+            continue
+        if not affects_all and module not in affected_modules:
+            continue
+
+        decision_id = fields.get("id", match.group(1))
+        violations.append(
+            {
+                "blocking_code": "BLOCKED_MISSING_ARCH_DECISION",
+                "artifact": str(backlog_path.relative_to(root)),
+                "message": (
+                    f"Decisão arquitetural obrigatória pendente para módulo '{module}': "
+                    f"{decision_id} ({status})."
+                ),
+                "severity": "error",
+            }
+        )
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            "BLOCKED_MISSING_ARCH_DECISION",
+            f"{len(violations)} decisão(ões) arquitetural(is) obrigatória(s) pendente(s) para o módulo '{module}'.",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        f"Nenhuma decisão arquitetural obrigatória pendente para o módulo '{module}'.",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
 def _g2n_canon_allowlist(root: pathlib.Path) -> dict:
     """
     CANON_ALLOWLIST_GATE — garante que apenas artefatos explicitamente autorizados
@@ -4969,6 +5109,8 @@ def _g2n_canon_allowlist(root: pathlib.Path) -> dict:
     TOPLEVEL_ALLOWLIST: frozenset[str] = frozenset({
         "README.md",
         "OPERATIONS.md",
+        "SOURCE_AUTHORITY_GRAPH.yaml",
+        "SYNC_MANIFEST.yaml",
         "SYSTEM_SCOPE.md",
         "ARCHITECTURE.md",
         "CODE_ARCHITECTURE.md",
@@ -4987,6 +5129,7 @@ def _g2n_canon_allowlist(root: pathlib.Path) -> dict:
         "MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
         "MODULE_REGISTRY.yaml",
         "TOOLCHAIN_HEALTH_POLICY.md",
+        "DOC_USAGE_MANIFEST.yaml",
         "CONTRACT_PIPELINE.md",
         "DECISION_POLICY.md",
         "ARCHITECTURE_DECISION_BACKLOG.md",
@@ -5014,10 +5157,26 @@ def _g2n_canon_allowlist(root: pathlib.Path) -> dict:
     })
 
     # Subdiretórios autorizados
-    SUBDIRS_ALLOWLIST: frozenset[str] = frozenset({"decisions", "gates", "security", "templates"})
+    SUBDIRS_ALLOWLIST: frozenset[str] = frozenset({"decisions", "gates", "graph", "security", "templates"})
 
     # Allowlist gates/ — apenas artefatos do registry de gates
     GATES_ALLOWLIST: frozenset[str] = frozenset({"GATES_REGISTRY.yaml", "README.md"})
+
+    # graph/ — IR estruturado global soberano e contratos operacionais estruturados
+    GRAPH_ALLOWLIST: frozenset[str] = frozenset({
+        "global_rules.yaml",
+        "global_policies.yaml",
+        "lifecycle.yaml",
+        "source_map.yaml",
+    })
+    OPS_GRAPH_ALLOWLIST: frozenset[str] = frozenset({
+        "environment_catalog.yaml",
+        "secrets_catalog.yaml",
+        "service_topology.yaml",
+        "deploy_contract.yaml",
+        "runtime_endpoints.yaml",
+        "github_actions_catalog.yaml",
+    })
 
     # security/ — apenas a matriz OWASP
     SECURITY_ALLOWLIST: frozenset[str] = frozenset({"OWASP_API_CONTROL_MATRIX.yaml"})
@@ -5041,7 +5200,7 @@ def _g2n_canon_allowlist(root: pathlib.Path) -> dict:
                     "artifact": str(item.relative_to(root)).replace("\\", "/") + "/",
                     "message": (
                         f"Subdiretório não autorizado em docs/_canon/: '{item.name}/'. "
-                        "Subdiretórios permitidos: decisions/, gates/, security/, templates/."
+                        "Subdiretórios permitidos: decisions/, gates/, graph/, security/, templates/."
                     ),
                     "severity": "error",
                 })
@@ -5101,6 +5260,56 @@ def _g2n_canon_allowlist(root: pathlib.Path) -> dict:
                     "message": (
                         f"Arquivo não autorizado em docs/_canon/security/: '{item.name}'. "
                         "security/ deve conter apenas OWASP_API_CONTROL_MATRIX.yaml."
+                    ),
+                    "severity": "error",
+                })
+
+    # --- Verifica graph/ ---
+    graph_dir = canon_dir / "graph"
+    if graph_dir.exists():
+        for item in sorted(graph_dir.iterdir()):
+            checked.append(str(item.relative_to(root)))
+            if item.is_dir():
+                if item.name == "ops":
+                    for subitem in sorted(item.iterdir()):
+                        checked.append(str(subitem.relative_to(root)))
+                        if subitem.is_dir():
+                            violations.append({
+                                "blocking_code": BLOCKED_CANON_INTRUDER,
+                                "artifact": str(subitem.relative_to(root)).replace("\\", "/") + "/",
+                                "message": f"Subdiretório não autorizado em docs/_canon/graph/ops/: '{subitem.name}/'.",
+                                "severity": "error",
+                            })
+                        elif subitem.name not in OPS_GRAPH_ALLOWLIST:
+                            violations.append({
+                                "blocking_code": BLOCKED_CANON_INTRUDER,
+                                "artifact": str(subitem.relative_to(root)).replace("\\", "/"),
+                                "message": (
+                                    f"Arquivo não autorizado em docs/_canon/graph/ops/: '{subitem.name}'. "
+                                    "graph/ops/ deve conter apenas environment_catalog.yaml, secrets_catalog.yaml, "
+                                    "service_topology.yaml, deploy_contract.yaml, runtime_endpoints.yaml e "
+                                    "github_actions_catalog.yaml."
+                                ),
+                                "severity": "error",
+                            })
+                    continue
+                violations.append({
+                    "blocking_code": BLOCKED_CANON_INTRUDER,
+                    "artifact": str(item.relative_to(root)).replace("\\", "/") + "/",
+                    "message": (
+                        f"Subdiretório não autorizado em docs/_canon/graph/: '{item.name}/'. "
+                        "Apenas ops/ e os arquivos IR globais são permitidos."
+                    ),
+                    "severity": "error",
+                })
+            elif item.name not in GRAPH_ALLOWLIST:
+                violations.append({
+                    "blocking_code": BLOCKED_CANON_INTRUDER,
+                    "artifact": str(item.relative_to(root)).replace("\\", "/"),
+                    "message": (
+                        f"Arquivo não autorizado em docs/_canon/graph/: '{item.name}'. "
+                        "graph/ deve conter apenas global_rules.yaml, global_policies.yaml, lifecycle.yaml, "
+                        "source_map.yaml e o subdiretório ops/."
                     ),
                     "severity": "error",
                 })
@@ -5171,6 +5380,2205 @@ def _g2n_canon_allowlist(root: pathlib.Path) -> dict:
         True,
         None,
         "docs/_canon/ contém apenas artefatos autorizados.",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
+def _g2o_doc_usage(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "DOC_USAGE_GATE"
+    scripts_dir = root / "scripts"
+    if str(scripts_dir) not in sys.path:
+        sys.path.insert(0, str(scripts_dir))
+    try:
+        from contracts.validate.doc_usage_gate import evaluate_doc_usage  # type: ignore
+    except Exception as exc:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            "ERROR_INFRA",
+            f"Falha ao carregar doc_usage_gate.py: {exc}",
+            [],
+            [str(root / "scripts" / "contracts" / "validate" / "doc_usage_gate.py")],
+            [],
+            [{
+                "blocking_code": "ERROR_INFRA",
+                "artifact": "scripts/contracts/validate/doc_usage_gate.py",
+                "message": f"Erro ao importar gate de uso/freshness de docs: {exc}",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    result = evaluate_doc_usage(root)
+    status = result.get("status") or "FAIL"
+    checked = list(result.get("checked") or [])
+    violations = list(result.get("violations") or [])
+    summary = result.get("summary") or "Validação de uso/freshness de documentação."
+
+    if status == "SKIP_NOT_APPLICABLE":
+        return _skip(gate_id, summary, _ms(t0))
+    if status == "FAIL":
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_DOC_USAGE_INVALID,
+            summary,
+            [str(root / "docs" / "_canon" / "DOC_USAGE_MANIFEST.yaml")],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        summary,
+        [str(root / "docs" / "_canon" / "DOC_USAGE_MANIFEST.yaml")],
+        checked,
+        [],
+        violations,
+        _ms(t0),
+    )
+
+
+def _g2p_canon_contract_driven_parity(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "CANON_CONTRACT_DRIVEN_PARITY_GATE"
+    blocking_code = "BLOCKED_CANON_CONTRACT_DRIVEN_PARITY"
+
+    required_files = {
+        "agent_instructions": root / "docs" / "_canon" / "AGENT_INSTRUCTIONS.md",
+        "contract_pipeline": root / "docs" / "_canon" / "CONTRACT_PIPELINE.md",
+        "decision_policy": root / "docs" / "_canon" / "DECISION_POLICY.md",
+        "gates_registry": root / "docs" / "_canon" / "gates" / "GATES_REGISTRY.yaml",
+        "boot_profiles": root / ".contract_driven" / "BOOT_PROFILES.yaml",
+        "task_catalog": root / ".contract_driven" / "TASK_CATALOG.yaml",
+        "decision_prompt": root / ".contract_driven" / "agent_prompts" / "decision_discovery.prompt.md",
+        "validator": root / "scripts" / "contracts" / "validate" / "validate_contracts.py",
+        "hb_cli": root / "scripts" / "hb",
+    }
+    checked = [str(path) for path in required_files.values()]
+
+    missing = [path for path in required_files.values() if not path.exists()]
+    if missing:
+        violations = [
+            {
+                "blocking_code": blocking_code,
+                "artifact": str(path.relative_to(root)),
+                "message": "Artefato obrigatório de paridade ausente.",
+                "severity": "error",
+            }
+            for path in missing
+        ]
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            blocking_code,
+            f"{len(missing)} artefato(s) obrigatório(s) de paridade ausente(s).",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    texts = {name: path.read_text(encoding="utf-8") for name, path in required_files.items()}
+    registry = yaml.safe_load(texts["gates_registry"]) or {}
+    active_gate_ids = [
+        gate.get("gate_id")
+        for gate in registry.get("gates", [])
+        if gate.get("status") == "active"
+        and gate.get("integrated_in_validate_contracts", True) is not False
+    ]
+
+    violations: list[dict] = []
+
+    def _v(name: str, message: str) -> None:
+        violations.append(
+            {
+                "blocking_code": blocking_code,
+                "artifact": str(required_files[name].relative_to(root)),
+                "message": message,
+                "severity": "error",
+            }
+        )
+
+    if "BOOT_PROFILES.yaml" not in texts["agent_instructions"] or "TASK_CATALOG.yaml" not in texts["agent_instructions"]:
+        _v("agent_instructions", "AGENT_INSTRUCTIONS.md não referencia BOOT_PROFILES.yaml e TASK_CATALOG.yaml.")
+
+    if "docs/_canon/AGENT_INSTRUCTIONS.md" not in texts["boot_profiles"]:
+        _v("boot_profiles", "BOOT_PROFILES.yaml não referencia AGENT_INSTRUCTIONS.md como boot canônico.")
+
+    if "docs/_canon/AGENT_INSTRUCTIONS.md" not in texts["task_catalog"]:
+        _v("task_catalog", "TASK_CATALOG.yaml não referencia AGENT_INSTRUCTIONS.md.")
+
+    if "TASK_CATALOG.yaml" not in texts["contract_pipeline"] or "scripts/hb" not in texts["contract_pipeline"]:
+        _v("contract_pipeline", "CONTRACT_PIPELINE.md não referencia TASK_CATALOG.yaml e scripts/hb.")
+
+    if "decision_discovery.prompt.md" not in texts["decision_policy"]:
+        _v("decision_policy", "DECISION_POLICY.md não referencia decision_discovery.prompt.md.")
+
+    for expected in (
+        "docs/_canon/DECISION_POLICY.md",
+        "docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md",
+        "BLOCKED_MISSING_ARCH_DECISION",
+    ):
+        if expected not in texts["decision_prompt"]:
+            _v("decision_prompt", f"decision_discovery.prompt.md não referencia '{expected}'.")
+
+    missing_gate_ids = [
+        gate_id_value
+        for gate_id_value in active_gate_ids
+        if gate_id_value and gate_id_value not in texts["validator"]
+    ]
+    if missing_gate_ids:
+        _v(
+            "validator",
+            "validate_contracts.py não referencia todos os gate_id ativos do registry: "
+            + ", ".join(sorted(missing_gate_ids)[:10]),
+        )
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            blocking_code,
+            f"{len(violations)} violação(ões) de paridade canon↔contract_driven detectada(s).",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        "Paridade mínima entre docs/_canon, .contract_driven e executor validada.",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
+def _g2q_hbtrack_canon_parity(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "HBTRACK_CANON_PARITY_GATE"
+    checked: list[str] = []
+    violations: list[dict] = []
+
+    registry_entries, registry_checked = _load_module_registry_entries(root)
+    checked.extend(registry_checked)
+    matrix_data, _, matrix_checked = _load_module_source_authority_matrix(root)
+    checked.extend(matrix_checked)
+
+    if registry_entries is None:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_HBTRACK_CANON_PARITY,
+            "MODULE_REGISTRY.yaml ausente ou inválido para paridade docs/hbtrack ↔ canon.",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": BLOCKED_HBTRACK_CANON_PARITY,
+                "artifact": "docs/_canon/MODULE_REGISTRY.yaml",
+                "message": "Não foi possível carregar o registry canônico de módulos.",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    matrix_modules_obj = (matrix_data or {}).get("modules") if isinstance(matrix_data, dict) else None
+    if not isinstance(matrix_modules_obj, dict):
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_HBTRACK_CANON_PARITY,
+            "MODULE_SOURCE_AUTHORITY_MATRIX.yaml ausente ou inválido para paridade docs/hbtrack ↔ canon.",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": BLOCKED_HBTRACK_CANON_PARITY,
+                "artifact": "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
+                "message": "Não foi possível carregar a matriz canônica de autoridade por módulo.",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    module_root = root / "docs" / "hbtrack" / "modulos"
+    checked.append(str(module_root))
+    if not module_root.exists():
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_HBTRACK_CANON_PARITY,
+            "docs/hbtrack/modulos/ ausente.",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": BLOCKED_HBTRACK_CANON_PARITY,
+                "artifact": "docs/hbtrack/modulos/",
+                "message": "Diretório de documentação de módulos ausente.",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    registry_modules = set(registry_entries.keys())
+    matrix_modules = {
+        module for module, entry in matrix_modules_obj.items() if isinstance(module, str) and isinstance(entry, dict)
+    }
+    module_dirs = sorted(path for path in module_root.iterdir() if path.is_dir())
+    module_dir_names = {path.name for path in module_dirs}
+
+    for module in sorted(module_dir_names - registry_modules):
+        violations.append({
+            "blocking_code": BLOCKED_HBTRACK_CANON_PARITY,
+            "artifact": str((module_root / module).relative_to(root)).replace("\\", "/") + "/",
+            "message": "Diretório de módulo existe em docs/hbtrack, mas não está registrado em MODULE_REGISTRY.yaml.",
+            "severity": "error",
+        })
+
+    for module in sorted(module_dir_names - matrix_modules):
+        violations.append({
+            "blocking_code": BLOCKED_HBTRACK_CANON_PARITY,
+            "artifact": str((module_root / module).relative_to(root)).replace("\\", "/") + "/",
+            "message": "Diretório de módulo existe em docs/hbtrack, mas não está registrado em MODULE_SOURCE_AUTHORITY_MATRIX.yaml.",
+            "severity": "error",
+        })
+
+    for module in sorted(registry_modules - module_dir_names):
+        violations.append({
+            "blocking_code": BLOCKED_HBTRACK_CANON_PARITY,
+            "artifact": "docs/_canon/MODULE_REGISTRY.yaml",
+            "message": f"Módulo '{module}' está no registry canônico, mas não possui diretório em docs/hbtrack/modulos/.",
+            "severity": "error",
+        })
+
+    def _add_violation(path: pathlib.Path, message: str) -> None:
+        violations.append({
+            "blocking_code": BLOCKED_HBTRACK_CANON_PARITY,
+            "artifact": str(path.relative_to(root)),
+            "message": message,
+            "severity": "error",
+        })
+
+    def _resolve_optional_ref(doc_path: pathlib.Path, field_name: str, value: Any) -> None:
+        if not isinstance(value, str) or not value.strip():
+            return
+        ref = value.strip()
+        if not ("/" in ref or ref.startswith(".") or ref.endswith((".md", ".yaml", ".yml", ".json"))):
+            return
+        target = (doc_path.parent / ref).resolve()
+        try:
+            target.relative_to(root)
+        except ValueError:
+            _add_violation(doc_path, f"Header `{field_name}` aponta para fora do repositório.")
+            return
+        if not target.exists():
+            _add_violation(doc_path, f"Header `{field_name}` aponta para artefato canônico inexistente.")
+
+    for module in sorted(module_dir_names & registry_modules & matrix_modules):
+        module_dir = module_root / module
+        upper = module.upper()
+
+        permissions_doc = module_dir / f"PERMISSIONS_{upper}.md"
+        if permissions_doc.exists():
+            checked.append(str(permissions_doc))
+            text = permissions_doc.read_text(encoding="utf-8", errors="replace")
+            text_lower = text.lower()
+            if module == "identity_access":
+                if "fonte soberana" not in text_lower or not any(
+                    term in text_lower for term in ("autenticação", "autorização")
+                ):
+                    _add_violation(
+                        permissions_doc,
+                        "PERMISSIONS do módulo identity_access deve declarar explicitamente soberania canônica de autenticação/autorização.",
+                    )
+                for marker in ("adr-007", "adr-008"):
+                    if marker not in text_lower:
+                        _add_violation(
+                            permissions_doc,
+                            f"PERMISSIONS do módulo identity_access deve referenciar {marker.upper()} por ser policy global soberana.",
+                        )
+            else:
+                if "identity_access" not in text_lower or "fonte soberana" not in text_lower:
+                    _add_violation(
+                        permissions_doc,
+                        "PERMISSIONS de módulo derivado deve apontar explicitamente para `identity_access` como fonte soberana global.",
+                    )
+                for marker in ("adr-007", "adr-008"):
+                    if marker not in text_lower:
+                        _add_violation(
+                            permissions_doc,
+                            f"PERMISSIONS de módulo derivado deve referenciar {marker.upper()} ao aplicar policy global de auth/authz.",
+                        )
+                if re.search(r"este m[oó]dulo [ée] a fonte soberana de ", text_lower):
+                    _add_violation(
+                        permissions_doc,
+                        "PERMISSIONS de módulo derivado não pode se declarar fonte soberana global de auth/authz.",
+                    )
+                if re.search(rf"m[oó]dulo `?{re.escape(module)}`? [ée] a fonte soberana de ", text_lower):
+                    _add_violation(
+                        permissions_doc,
+                        "PERMISSIONS de módulo derivado não pode atribuir soberania global ao próprio módulo.",
+                    )
+
+        state_model_doc = module_dir / f"STATE_MODEL_{upper}.md"
+        if state_model_doc.exists():
+            checked.append(str(state_model_doc))
+            header = _parse_yaml_front_matter(state_model_doc)
+            if not header:
+                _add_violation(
+                    state_model_doc,
+                    "STATE_MODEL deve possuir YAML front matter válido para ancoragem canônica.",
+                )
+                continue
+            adr_ref = header.get("adr_ref")
+            decision_ir_ref = header.get("decision_ir_ref")
+            if not any(isinstance(value, str) and value.strip() for value in (adr_ref, decision_ir_ref)):
+                _add_violation(
+                    state_model_doc,
+                    "STATE_MODEL deve apontar para uma âncora canônica via `adr_ref` ou `decision_ir_ref`.",
+                )
+            _resolve_optional_ref(state_model_doc, "adr_ref", adr_ref)
+            _resolve_optional_ref(state_model_doc, "decision_ir_ref", decision_ir_ref)
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_HBTRACK_CANON_PARITY,
+            f"Paridade docs/hbtrack ↔ canon com {len(violations)} violação(ões).",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        "Paridade mínima entre docs/hbtrack/modulos e o canon global OK.",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
+def _looks_like_sync_glob(value: str) -> bool:
+    return any(token in value for token in ("*", "?", "["))
+
+
+def _normalize_relpath(value: str) -> str:
+    return value.replace("\\", "/").strip()
+
+
+def _resolve_sync_ref(root: pathlib.Path, ref: str) -> list[str]:
+    ref = _normalize_relpath(ref)
+    if _looks_like_sync_glob(ref):
+        return sorted(
+            path.relative_to(root).as_posix()
+            for path in root.glob(ref)
+            if path.exists()
+        )
+
+    target = root / ref
+    if target.exists():
+        return [ref]
+    return []
+
+
+def _sync_ref_matches_path(ref: str, relpath: str) -> bool:
+    ref = _normalize_relpath(ref)
+    relpath = _normalize_relpath(relpath)
+
+    if _looks_like_sync_glob(ref):
+        return pathlib.PurePosixPath(relpath).match(ref)
+
+    if relpath == ref:
+        return True
+
+    return relpath.startswith(ref.rstrip("/") + "/")
+
+
+def _parse_git_name_only(stdout: str) -> list[str]:
+    return sorted({
+        _normalize_relpath(line)
+        for line in stdout.splitlines()
+        if _normalize_relpath(line)
+    })
+
+
+def _parse_git_porcelain(stdout: str) -> list[str]:
+    changed: set[str] = set()
+    for line in stdout.splitlines():
+        if len(line) < 4:
+            continue
+        payload = line[3:].strip()
+        if " -> " in payload:
+            payload = payload.split(" -> ", 1)[1].strip()
+        payload = _normalize_relpath(payload)
+        if payload:
+            changed.add(payload)
+    return sorted(changed)
+
+
+def _determine_sync_changeset(root: pathlib.Path) -> tuple[list[str], list[str], list[dict[str, Any]], str]:
+    checked: list[str] = []
+    violations: list[dict[str, Any]] = []
+
+    env_json = os.environ.get("HB_CHANGED_PATHS_JSON")
+    if env_json:
+        checked.append("env:HB_CHANGED_PATHS_JSON")
+        try:
+            payload = json.loads(env_json)
+        except Exception as exc:
+            violations.append({
+                "artifact": "env:HB_CHANGED_PATHS_JSON",
+                "message": f"HB_CHANGED_PATHS_JSON inválido: {exc}",
+                "severity": "error",
+            })
+            return [], checked, violations, "env_invalid"
+        if not isinstance(payload, list) or not all(isinstance(item, str) and item.strip() for item in payload):
+            violations.append({
+                "artifact": "env:HB_CHANGED_PATHS_JSON",
+                "message": "HB_CHANGED_PATHS_JSON deve ser uma lista JSON de paths relativos não vazios.",
+                "severity": "error",
+            })
+            return [], checked, violations, "env_invalid"
+        return sorted({_normalize_relpath(item) for item in payload}), checked, violations, "env"
+
+    rc, stdout, stderr = _try_tool("git", "status", "--porcelain", "--untracked-files=all", cwd=root)
+    checked.append("git status --porcelain --untracked-files=all")
+    if rc == 0:
+        changed = _parse_git_porcelain(stdout)
+        if changed:
+            return changed, checked, violations, "git_status"
+    elif rc not in {-1}:
+        violations.append({
+            "artifact": ".git",
+            "message": f"Falha ao obter changeset via git status: {stderr.strip() or stdout.strip() or 'erro desconhecido'}",
+            "severity": "error",
+        })
+        return [], checked, violations, "git_status_error"
+
+    base_ref = os.environ.get("HB_SYNC_DIFF_BASE") or os.environ.get("GITHUB_BASE_REF")
+    if base_ref:
+        checked.append(f"git merge-base {base_ref} HEAD")
+        rc_base, merge_base, _ = _try_tool("git", "merge-base", base_ref, "HEAD", cwd=root)
+        if rc_base == 0:
+            base_sha = merge_base.strip()
+            rc_diff, diff_out, diff_err = _try_tool(
+                "git",
+                "diff",
+                "--name-only",
+                "--diff-filter=ACMR",
+                f"{base_sha}..HEAD",
+                cwd=root,
+            )
+            checked.append(f"git diff --name-only --diff-filter=ACMR {base_sha}..HEAD")
+            if rc_diff == 0:
+                changed = _parse_git_name_only(diff_out)
+                if changed:
+                    return changed, checked, violations, "git_merge_base"
+            elif rc_diff not in {-1}:
+                violations.append({
+                    "artifact": ".git",
+                    "message": f"Falha ao obter diff via merge-base: {diff_err.strip() or diff_out.strip() or 'erro desconhecido'}",
+                    "severity": "error",
+                })
+                return [], checked, violations, "git_merge_base_error"
+
+    rc_prev, _, _ = _try_tool("git", "rev-parse", "--verify", "HEAD~1", cwd=root)
+    checked.append("git rev-parse --verify HEAD~1")
+    if rc_prev == 0:
+        rc_diff, diff_out, diff_err = _try_tool(
+            "git",
+            "diff",
+            "--name-only",
+            "--diff-filter=ACMR",
+            "HEAD~1..HEAD",
+            cwd=root,
+        )
+        checked.append("git diff --name-only --diff-filter=ACMR HEAD~1..HEAD")
+        if rc_diff == 0:
+            return _parse_git_name_only(diff_out), checked, violations, "git_head_parent"
+        if rc_diff not in {-1}:
+            violations.append({
+                "artifact": ".git",
+                "message": f"Falha ao obter diff HEAD~1..HEAD: {diff_err.strip() or diff_out.strip() or 'erro desconhecido'}",
+                "severity": "error",
+            })
+            return [], checked, violations, "git_head_parent_error"
+
+    return [], checked, violations, "no_changes_detected"
+
+
+def _load_sync_manifest(root: pathlib.Path) -> tuple[dict[str, Any] | None, list[str], list[dict[str, Any]]]:
+    manifest_path = root / "docs" / "_canon" / "SYNC_MANIFEST.yaml"
+    checked = [str(manifest_path)]
+    violations: list[dict[str, Any]] = []
+
+    if not manifest_path.exists():
+        violations.append({
+            "artifact": "docs/_canon/SYNC_MANIFEST.yaml",
+            "message": "SYNC_MANIFEST.yaml ausente.",
+            "severity": "error",
+        })
+        return None, checked, violations
+
+    try:
+        manifest = _load_yaml(manifest_path) or {}
+    except Exception as exc:
+        violations.append({
+            "artifact": "docs/_canon/SYNC_MANIFEST.yaml",
+            "message": f"Falha ao carregar YAML: {exc}",
+            "severity": "error",
+        })
+        return None, checked, violations
+
+    if not isinstance(manifest, dict):
+        violations.append({
+            "artifact": "docs/_canon/SYNC_MANIFEST.yaml",
+            "message": "SYNC_MANIFEST.yaml deve conter objeto YAML no topo.",
+            "severity": "error",
+        })
+        return None, checked, violations
+
+    rules = manifest.get("rules")
+    if not isinstance(rules, list) or not rules:
+        violations.append({
+            "artifact": "docs/_canon/SYNC_MANIFEST.yaml",
+            "message": "Campo `rules` deve ser lista não vazia.",
+            "severity": "error",
+        })
+        return None, checked, violations
+
+    for index, rule in enumerate(rules):
+        artifact = f"docs/_canon/SYNC_MANIFEST.yaml::rules[{index}]"
+        if not isinstance(rule, dict):
+            violations.append({
+                "artifact": artifact,
+                "message": "Toda regra deve ser objeto.",
+                "severity": "error",
+            })
+            continue
+
+        rule_id = rule.get("rule_id")
+        source_master = rule.get("source_master")
+        source_inputs = rule.get("source_inputs") or []
+        change_types = rule.get("change_types") or []
+        required_consumers = rule.get("required_consumers") or []
+        blocking_consumers = rule.get("blocking_consumers") or required_consumers
+        validation_commands = rule.get("validation_commands") or []
+
+        if not isinstance(rule_id, str) or not rule_id.strip():
+            violations.append({"artifact": artifact, "message": "rule_id é obrigatório.", "severity": "error"})
+        if not isinstance(source_master, str) or not source_master.strip():
+            violations.append({"artifact": artifact, "message": "source_master é obrigatório.", "severity": "error"})
+        elif not _resolve_sync_ref(root, source_master):
+            violations.append({
+                "artifact": artifact,
+                "message": f"source_master não resolve no repositório: {source_master}",
+                "severity": "error",
+            })
+
+        if not isinstance(source_inputs, list):
+            violations.append({"artifact": artifact, "message": "source_inputs deve ser lista.", "severity": "error"})
+            source_inputs = []
+        for ref in source_inputs:
+            if not isinstance(ref, str) or not ref.strip() or not _resolve_sync_ref(root, ref):
+                violations.append({
+                    "artifact": artifact,
+                    "message": f"source_input inválido ou não resolvido: {ref}",
+                    "severity": "error",
+                })
+
+        if not isinstance(change_types, list) or not change_types or not all(isinstance(item, str) and item.strip() for item in change_types):
+            violations.append({
+                "artifact": artifact,
+                "message": "change_types deve ser lista não vazia de strings.",
+                "severity": "error",
+            })
+
+        if not isinstance(required_consumers, list) or not required_consumers:
+            violations.append({
+                "artifact": artifact,
+                "message": "required_consumers deve ser lista não vazia.",
+                "severity": "error",
+            })
+            required_consumers = []
+        for ref in required_consumers:
+            if not isinstance(ref, str) or not ref.strip() or not _resolve_sync_ref(root, ref):
+                violations.append({
+                    "artifact": artifact,
+                    "message": f"required_consumer inválido ou não resolvido: {ref}",
+                    "severity": "error",
+                })
+
+        if not isinstance(blocking_consumers, list) or not blocking_consumers:
+            violations.append({
+                "artifact": artifact,
+                "message": "blocking_consumers deve ser lista não vazia.",
+                "severity": "error",
+            })
+            blocking_consumers = []
+        for ref in blocking_consumers:
+            if not isinstance(ref, str) or not ref.strip() or not _resolve_sync_ref(root, ref):
+                violations.append({
+                    "artifact": artifact,
+                    "message": f"blocking_consumer inválido ou não resolvido: {ref}",
+                    "severity": "error",
+                })
+        if set(blocking_consumers) - set(required_consumers):
+            violations.append({
+                "artifact": artifact,
+                "message": "blocking_consumers deve ser subconjunto de required_consumers.",
+                "severity": "error",
+            })
+
+        if not isinstance(validation_commands, list) or not validation_commands or not all(
+            isinstance(item, str) and item.strip() for item in validation_commands
+        ):
+            violations.append({
+                "artifact": artifact,
+                "message": "validation_commands deve ser lista não vazia de strings.",
+                "severity": "error",
+            })
+
+    return manifest, checked, violations
+
+
+def _analyze_sync_manifest(root: pathlib.Path) -> tuple[dict[str, Any] | None, list[str], list[dict[str, Any]]]:
+    manifest, checked, violations = _load_sync_manifest(root)
+    if manifest is None or violations:
+        return None, checked, violations
+
+    changed_paths, changeset_checked, changeset_violations, changeset_source = _determine_sync_changeset(root)
+    checked.extend(changeset_checked)
+    if changeset_violations:
+        return None, checked, changeset_violations
+
+    impacted_rules: list[dict[str, Any]] = []
+    for rule in manifest.get("rules") or []:
+        source_refs = [rule["source_master"], *(rule.get("source_inputs") or [])]
+        matched_sources = sorted({
+            path
+            for path in changed_paths
+            for ref in source_refs
+            if _sync_ref_matches_path(ref, path)
+        })
+        if not matched_sources:
+            continue
+
+        required_consumers = list(rule.get("required_consumers") or [])
+        blocking_consumers = list(rule.get("blocking_consumers") or required_consumers)
+        changed_required = sorted({
+            ref
+            for ref in required_consumers
+            if any(_sync_ref_matches_path(ref, path) for path in changed_paths)
+        })
+        changed_blocking = sorted({
+            ref
+            for ref in blocking_consumers
+            if any(_sync_ref_matches_path(ref, path) for path in changed_paths)
+        })
+        missing_blocking = sorted(ref for ref in blocking_consumers if ref not in changed_blocking)
+
+        impacted_rules.append({
+            "rule_id": rule["rule_id"],
+            "source_master": rule["source_master"],
+            "source_kind": rule.get("source_kind"),
+            "changed_sources": matched_sources,
+            "required_consumers": required_consumers,
+            "blocking_consumers": blocking_consumers,
+            "changed_required_consumers": changed_required,
+            "changed_blocking_consumers": changed_blocking,
+            "missing_blocking_consumers": missing_blocking,
+            "validation_commands": list(rule.get("validation_commands") or []),
+        })
+
+    return {
+        "manifest_path": "docs/_canon/SYNC_MANIFEST.yaml",
+        "changeset_source": changeset_source,
+        "changed_paths": changed_paths,
+        "impacted_rules": impacted_rules,
+    }, checked, []
+
+
+def _g2r_impact_analysis(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "IMPACT_ANALYSIS_GATE"
+
+    analysis, checked, errors = _analyze_sync_manifest(root)
+    if errors:
+        violations = [
+            {
+                "blocking_code": BLOCKED_SYNC_IMPACT_UNRESOLVED,
+                "artifact": err["artifact"],
+                "message": err["message"],
+                "severity": err.get("severity", "error"),
+            }
+            for err in errors
+        ]
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_SYNC_IMPACT_UNRESOLVED,
+            f"{len(violations)} problema(s) impediram a análise determinística de impacto.",
+            [str(root / "docs" / "_canon" / "SYNC_MANIFEST.yaml")],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    assert analysis is not None
+    impacted_rules = analysis["impacted_rules"]
+    artifacts_checked = checked + [str(root / rel) for rel in analysis["changed_paths"]]
+
+    if not analysis["changed_paths"]:
+        return _pg(
+            gate_id,
+            "PASS",
+            True,
+            None,
+            "Nenhuma changeset observável; análise de impacto não aplicou regras de sincronismo.",
+            [str(root / "docs" / "_canon" / "SYNC_MANIFEST.yaml")],
+            artifacts_checked,
+            [],
+            [],
+            _ms(t0),
+        )
+
+    if not impacted_rules:
+        return _pg(
+            gate_id,
+            "PASS",
+            True,
+            None,
+            "Changeset observada, mas nenhum source_master/source_input soberano foi alterado.",
+            [str(root / "docs" / "_canon" / "SYNC_MANIFEST.yaml")],
+            artifacts_checked,
+            [],
+            [],
+            _ms(t0),
+        )
+
+    impacted_count = len(impacted_rules)
+    blocking_targets = sum(len(rule["blocking_consumers"]) for rule in impacted_rules)
+    violations = [
+        {
+            "blocking_code": BLOCKED_SYNC_IMPACT_UNRESOLVED,
+            "artifact": rule["source_master"],
+            "message": (
+                f"Regra `{rule['rule_id']}` impactada por {len(rule['changed_sources'])} source change(s); "
+                f"{len(rule['blocking_consumers'])} consumer(s) bloqueante(s) declarados."
+            ),
+            "severity": "warn",
+        }
+        for rule in impacted_rules
+    ]
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        f"{impacted_count} regra(s) de sincronismo impactada(s); {blocking_targets} consumer(s) bloqueante(s) rastreados.",
+        [str(root / "docs" / "_canon" / "SYNC_MANIFEST.yaml")],
+        artifacts_checked,
+        [],
+        violations,
+        _ms(t0),
+    )
+
+
+def _g2s_partial_update(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "PARTIAL_UPDATE_GATE"
+
+    analysis, checked, errors = _analyze_sync_manifest(root)
+    if errors:
+        violations = [
+            {
+                "blocking_code": BLOCKED_SYNC_PARTIAL_UPDATE,
+                "artifact": err["artifact"],
+                "message": err["message"],
+                "severity": err.get("severity", "error"),
+            }
+            for err in errors
+        ]
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_SYNC_PARTIAL_UPDATE,
+            f"{len(violations)} problema(s) impediram validar atualização parcial.",
+            [str(root / "docs" / "_canon" / "SYNC_MANIFEST.yaml")],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    assert analysis is not None
+    impacted_rules = analysis["impacted_rules"]
+    artifacts_checked = checked + [str(root / rel) for rel in analysis["changed_paths"]]
+
+    if not analysis["changed_paths"] or not impacted_rules:
+        return _pg(
+            gate_id,
+            "PASS",
+            True,
+            None,
+            "Nenhum source_master/source_input soberano alterado; não há atualização parcial a bloquear.",
+            [str(root / "docs" / "_canon" / "SYNC_MANIFEST.yaml")],
+            artifacts_checked,
+            [],
+            [],
+            _ms(t0),
+        )
+
+    violations: list[dict[str, Any]] = []
+    for rule in impacted_rules:
+        missing = rule["missing_blocking_consumers"]
+        if not missing:
+            continue
+        violations.append({
+            "blocking_code": BLOCKED_SYNC_PARTIAL_UPDATE,
+            "artifact": rule["source_master"],
+            "message": (
+                f"Regra `{rule['rule_id']}` alterou source soberano sem propagar para "
+                f"{len(missing)} consumer(s) bloqueante(s): {', '.join(missing)}"
+            ),
+            "severity": "error",
+        })
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_SYNC_PARTIAL_UPDATE,
+            f"{len(violations)} regra(s) com atualização parcial detectada(s).",
+            [str(root / "docs" / "_canon" / "SYNC_MANIFEST.yaml")],
+            artifacts_checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        f"{len(impacted_rules)} regra(s) impactada(s) com propagação bloqueante completa.",
+        [str(root / "docs" / "_canon" / "SYNC_MANIFEST.yaml")],
+        artifacts_checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
+def _ops_graph_paths(root: pathlib.Path) -> dict[str, pathlib.Path]:
+    ops_root = root / "docs" / "_canon" / "graph" / "ops"
+    return {
+        "environment_catalog": ops_root / "environment_catalog.yaml",
+        "secrets_catalog": ops_root / "secrets_catalog.yaml",
+        "service_topology": ops_root / "service_topology.yaml",
+        "deploy_contract": ops_root / "deploy_contract.yaml",
+        "runtime_endpoints": ops_root / "runtime_endpoints.yaml",
+        "github_actions_catalog": ops_root / "github_actions_catalog.yaml",
+    }
+
+
+def _ops_compiled_paths(root: pathlib.Path) -> dict[str, pathlib.Path]:
+    return {
+        "staging_template": root / "infra" / "env" / ".env.staging.template",
+        "production_template": root / "infra" / "env" / ".env.production.template",
+        "staging_fragment": root / "compiled_ops" / "deploy" / "staging.env.fragment",
+        "production_fragment": root / "compiled_ops" / "deploy" / "production.env.fragment",
+        "secrets_catalog_json": root / "compiled_ops" / "deploy" / "secrets_catalog.json",
+        "runtime_topology_json": root / "compiled_ops" / "deploy" / "runtime_topology.json",
+        "impact_report_json": root / "compiled_ops" / "deploy" / "impact_report.json",
+    }
+
+
+def _ops_doc_paths(root: pathlib.Path) -> dict[str, pathlib.Path]:
+    return {
+        "deploy_pipeline": root / "docs" / "_canon" / "DEPLOY_PIPELINE.md",
+        "vps_setup": root / "docs" / "_canon" / "VPS_SETUP.md",
+        "operations": root / "docs" / "_canon" / "OPERATIONS.md",
+        "adr_012": root / "docs" / "_canon" / "decisions" / "ADR-012-secrets-policy.md",
+        "source_authority_graph": root / "docs" / "_canon" / "SOURCE_AUTHORITY_GRAPH.yaml",
+        "sync_manifest": root / "docs" / "_canon" / "SYNC_MANIFEST.yaml",
+        "workflow": root / ".github" / "workflows" / "deploy.yml",
+        "compose": root / "infra" / "docker-compose.prod.yml",
+        "nginx_staging": root / "infra" / "nginx" / "nginx.staging.conf",
+        "nginx_production": root / "infra" / "nginx" / "nginx.conf",
+        "urls": root / "config" / "urls.py",
+        "settings": root / "config" / "settings.py",
+        "rollback": root / "infra" / "scripts" / "rollback.sh",
+    }
+
+
+def _parse_env_assignments(path: pathlib.Path) -> tuple[dict[str, str], list[dict[str, Any]]]:
+    values: dict[str, str] = {}
+    violations: list[dict[str, Any]] = []
+    if not path.exists():
+        return values, [{
+            "artifact": str(path),
+            "message": "Arquivo de ambiente ausente.",
+            "severity": "error",
+        }]
+    for lineno, raw_line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        if "=" not in raw_line:
+            violations.append({
+                "artifact": str(path),
+                "message": f"Linha {lineno} inválida — esperado VAR=valor.",
+                "severity": "error",
+            })
+            continue
+        name, value = raw_line.split("=", 1)
+        name = name.strip()
+        if not re.match(r"^[A-Z][A-Z0-9_]*$", name):
+            violations.append({
+                "artifact": str(path),
+                "message": f"Linha {lineno} possui nome de variável inválido: {name!r}.",
+                "severity": "error",
+            })
+            continue
+        values[name] = value
+    return values, violations
+
+
+def _template_contract_values(template_doc: dict[str, Any]) -> dict[str, str]:
+    return {
+        entry["name"]: entry["value"]
+        for section in template_doc.get("sections", [])
+        if isinstance(section, dict)
+        for entry in section.get("entries", [])
+        if isinstance(entry, dict) and isinstance(entry.get("name"), str)
+    }
+
+
+def _load_ops_compiler_api(root: pathlib.Path):
+    compiler_path = root / "scripts" / "compile" / "compile_ops_contracts.py"
+    if not compiler_path.exists():
+        raise RuntimeError(f"Compiler operacional ausente: {compiler_path}")
+    spec = importlib.util.spec_from_file_location("hbtrack_ops_contract_compiler_runtime", compiler_path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError("spec/loader indisponível para compile_ops_contracts.py")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    compile_expected = getattr(module, "compile_expected", None)
+    check_expected = getattr(module, "check_expected", None)
+    if compile_expected is None or check_expected is None:
+        raise RuntimeError("compile_expected/check_expected ausentes em compile_ops_contracts.py")
+    return compile_expected, check_expected
+
+
+def _load_ops_operational_bundle(root: pathlib.Path) -> tuple[dict[str, Any] | None, list[str], list[dict[str, Any]]]:
+    checked: list[str] = []
+    violations: list[dict[str, Any]] = []
+    payload: dict[str, Any] = {}
+
+    for name, path in _ops_graph_paths(root).items():
+        checked.append(str(path.relative_to(root)))
+        if not path.exists():
+            violations.append({
+                "artifact": str(path.relative_to(root)),
+                "message": "Artefato operacional soberano ausente.",
+                "severity": "error",
+            })
+            continue
+        try:
+            data = _load_yaml(path)
+        except Exception as exc:
+            violations.append({
+                "artifact": str(path.relative_to(root)),
+                "message": f"Falha ao carregar YAML operacional: {exc}",
+                "severity": "error",
+            })
+            continue
+        if not isinstance(data, dict):
+            violations.append({
+                "artifact": str(path.relative_to(root)),
+                "message": "YAML operacional deve ser mapping.",
+                "severity": "error",
+            })
+            continue
+        payload[name] = data
+
+    for name, path in _ops_compiled_paths(root).items():
+        checked.append(str(path.relative_to(root)))
+        if not path.exists():
+            violations.append({
+                "artifact": str(path.relative_to(root)),
+                "message": "Artefato operacional compilado ausente.",
+                "severity": "error",
+            })
+            continue
+        if path.suffix == ".json":
+            try:
+                payload[name] = _load_json(path)
+            except Exception as exc:
+                violations.append({
+                    "artifact": str(path.relative_to(root)),
+                    "message": f"JSON operacional inválido: {exc}",
+                    "severity": "error",
+                })
+        else:
+            payload[name] = path.read_text(encoding="utf-8")
+
+    for name, path in _ops_doc_paths(root).items():
+        checked.append(str(path.relative_to(root)))
+        if not path.exists():
+            violations.append({
+                "artifact": str(path.relative_to(root)),
+                "message": "Artefato operacional auxiliar ausente.",
+                "severity": "error",
+            })
+            continue
+        if path.suffix in {".yaml", ".yml"}:
+            try:
+                payload[name] = _load_yaml(path)
+            except Exception as exc:
+                violations.append({
+                    "artifact": str(path.relative_to(root)),
+                    "message": f"Falha ao carregar YAML auxiliar: {exc}",
+                    "severity": "error",
+                })
+        else:
+            payload[name] = path.read_text(encoding="utf-8")
+
+    if violations:
+        return None, checked, violations
+    return payload, checked, []
+
+
+def _workflow_job_name_set(workflow_doc: dict[str, Any]) -> set[str]:
+    jobs = workflow_doc.get("jobs") or {}
+    if not isinstance(jobs, dict):
+        return set()
+    return {name for name, value in jobs.items() if isinstance(name, str) and isinstance(value, dict)}
+
+
+def _workflow_secret_refs(text: str) -> set[str]:
+    return set(re.findall(r"secrets\.([A-Z0-9_]+)", text))
+
+
+def _workflow_var_refs(text: str) -> set[str]:
+    return set(re.findall(r"vars\.([A-Z0-9_]+)", text))
+
+
+def _extract_marked_secret_inventory(text: str, start_marker: str, end_marker: str) -> tuple[list[str], bool]:
+    pattern = re.compile(re.escape(start_marker) + r"(.*?)" + re.escape(end_marker), re.S)
+    match = pattern.search(text)
+    if not match:
+        return [], False
+    names: list[str] = []
+    for line in match.group(1).splitlines():
+        stripped = line.strip()
+        bullet = re.match(r"-\s*`([A-Z0-9_]+)`\s*$", stripped)
+        if bullet:
+            names.append(bullet.group(1))
+    return names, True
+
+
+def _workflow_job_doc(workflow_doc: dict[str, Any], job_id: str) -> dict[str, Any] | None:
+    jobs = workflow_doc.get("jobs")
+    if not isinstance(jobs, dict):
+        return None
+    job = jobs.get(job_id)
+    return job if isinstance(job, dict) else None
+
+
+def _workflow_step_by_name(job_doc: dict[str, Any], step_name: str) -> dict[str, Any] | None:
+    steps = job_doc.get("steps")
+    if not isinstance(steps, list):
+        return None
+    for step in steps:
+        if isinstance(step, dict) and step.get("name") == step_name:
+            return step
+    return None
+
+
+def _g2t_ops_canon_parity(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "OPS_CANON_PARITY_GATE"
+
+    payload, checked, load_violations = _load_ops_operational_bundle(root)
+    if load_violations:
+        violations = [
+            {
+                "blocking_code": BLOCKED_OPS_CANON_PARITY,
+                "artifact": item["artifact"],
+                "message": item["message"],
+                "severity": item.get("severity", "error"),
+            }
+            for item in load_violations
+        ]
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_OPS_CANON_PARITY,
+            f"{len(violations)} problema(s) impediram validar a paridade operacional canônica.",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    assert payload is not None
+    violations: list[dict[str, Any]] = []
+    source_authority = payload["source_authority_graph"]
+    sync_manifest = payload["sync_manifest"]
+    impact_report = payload["impact_report_json"]
+
+    expected_artifacts = {
+        "docs/_canon/graph/ops/environment_catalog.yaml",
+        "docs/_canon/graph/ops/secrets_catalog.yaml",
+        "docs/_canon/graph/ops/service_topology.yaml",
+        "docs/_canon/graph/ops/deploy_contract.yaml",
+        "docs/_canon/graph/ops/runtime_endpoints.yaml",
+        "docs/_canon/graph/ops/github_actions_catalog.yaml",
+    }
+    expected_generated_consumers = {
+        "infra/env/.env.staging.template",
+        "infra/env/.env.production.template",
+        "compiled_ops/deploy/staging.env.fragment",
+        "compiled_ops/deploy/production.env.fragment",
+        "compiled_ops/deploy/secrets_catalog.json",
+        "compiled_ops/deploy/runtime_topology.json",
+        "compiled_ops/deploy/impact_report.json",
+    }
+
+    ops_concept = ((source_authority or {}).get("concepts") or {}).get("operational_runtime_contracts")
+    if not isinstance(ops_concept, dict):
+        violations.append({
+            "blocking_code": BLOCKED_OPS_CANON_PARITY,
+            "artifact": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+            "message": "Conceito `operational_runtime_contracts` ausente no SOURCE_AUTHORITY_GRAPH.",
+            "severity": "error",
+        })
+    else:
+        if ops_concept.get("owner_source") != "docs/_canon/graph/ops/":
+            violations.append({
+                "blocking_code": BLOCKED_OPS_CANON_PARITY,
+                "artifact": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+                "message": "owner_source de `operational_runtime_contracts` deve ser `docs/_canon/graph/ops/`.",
+                "severity": "error",
+            })
+        concept_artifacts = set(ops_concept.get("artifacts") or [])
+        if concept_artifacts != expected_artifacts:
+            violations.append({
+                "blocking_code": BLOCKED_OPS_CANON_PARITY,
+                "artifact": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+                "message": "SOURCE_AUTHORITY_GRAPH diverge da lista soberana de artefatos operacionais.",
+                "severity": "error",
+            })
+        concept_consumers = set(ops_concept.get("consumers") or [])
+        missing_generated = sorted(expected_generated_consumers - concept_consumers)
+        if missing_generated:
+            violations.append({
+                "blocking_code": BLOCKED_OPS_CANON_PARITY,
+                "artifact": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+                "message": "Consumers gerados ausentes em `operational_runtime_contracts`: " + ", ".join(missing_generated),
+                "severity": "error",
+            })
+
+    ops_sync = None
+    for rule in (sync_manifest.get("rules") or []):
+        if isinstance(rule, dict) and rule.get("rule_id") == "OPS_SOURCE_GRAPH_SYNC":
+            ops_sync = rule
+            break
+    if not isinstance(ops_sync, dict):
+        violations.append({
+            "blocking_code": BLOCKED_OPS_CANON_PARITY,
+            "artifact": "docs/_canon/SYNC_MANIFEST.yaml",
+            "message": "Regra `OPS_SOURCE_GRAPH_SYNC` ausente.",
+            "severity": "error",
+        })
+    else:
+        if ops_sync.get("source_master") != "docs/_canon/graph/ops/":
+            violations.append({
+                "blocking_code": BLOCKED_OPS_CANON_PARITY,
+                "artifact": "docs/_canon/SYNC_MANIFEST.yaml",
+                "message": "OPS_SOURCE_GRAPH_SYNC deve usar `docs/_canon/graph/ops/` como source_master.",
+                "severity": "error",
+            })
+        blocking_consumers = set(ops_sync.get("blocking_consumers") or [])
+        missing_blocking = sorted(expected_generated_consumers - blocking_consumers)
+        if missing_blocking:
+            violations.append({
+                "blocking_code": BLOCKED_OPS_CANON_PARITY,
+                "artifact": "docs/_canon/SYNC_MANIFEST.yaml",
+                "message": "Consumers compilados ausentes em OPS_SOURCE_GRAPH_SYNC.blocking_consumers: " + ", ".join(missing_blocking),
+                "severity": "error",
+            })
+        validation_commands = set(ops_sync.get("validation_commands") or [])
+        for command in (
+            "python3 scripts/compile/compile_ops_contracts.py --check",
+            "python3 -m pytest tests/pipeline_gates/test_ops_contract_compiler.py -q",
+        ):
+            if command not in validation_commands:
+                violations.append({
+                    "blocking_code": BLOCKED_OPS_CANON_PARITY,
+                    "artifact": "docs/_canon/SYNC_MANIFEST.yaml",
+                    "message": f"Comando obrigatório ausente em OPS_SOURCE_GRAPH_SYNC.validation_commands: {command}",
+                    "severity": "error",
+                })
+
+    for key in ("deploy_pipeline", "vps_setup", "operations", "adr_012"):
+        if "docs/_canon/graph/ops/" not in payload[key]:
+            violations.append({
+                "blocking_code": BLOCKED_OPS_CANON_PARITY,
+                "artifact": str(_ops_doc_paths(root)[key].relative_to(root)),
+                "message": "Documento operacional canônico não referencia o SSOT `docs/_canon/graph/ops/`.",
+                "severity": "error",
+            })
+
+    if set(item.get("relpath") for item in impact_report.get("inputs", [])) != expected_artifacts:
+        violations.append({
+            "blocking_code": BLOCKED_OPS_CANON_PARITY,
+            "artifact": "compiled_ops/deploy/impact_report.json",
+            "message": "impact_report.json não reflete exatamente os inputs soberanos de ops.",
+            "severity": "error",
+        })
+    if set(impact_report.get("outputs", [])) != expected_generated_consumers | {
+        "compiled_ops/deploy/staging.env.fragment",
+        "compiled_ops/deploy/production.env.fragment",
+    }:
+        pass
+
+    expected_outputs = {
+        "infra/env/.env.staging.template",
+        "infra/env/.env.production.template",
+        "compiled_ops/deploy/staging.env.fragment",
+        "compiled_ops/deploy/production.env.fragment",
+        "compiled_ops/deploy/secrets_catalog.json",
+        "compiled_ops/deploy/runtime_topology.json",
+        "compiled_ops/deploy/impact_report.json",
+    }
+    if set(impact_report.get("outputs", [])) != expected_outputs:
+        violations.append({
+            "blocking_code": BLOCKED_OPS_CANON_PARITY,
+            "artifact": "compiled_ops/deploy/impact_report.json",
+            "message": "impact_report.json não reflete exatamente os outputs operacionais obrigatórios.",
+            "severity": "error",
+        })
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_OPS_CANON_PARITY,
+            f"Paridade canônica operacional com {len(violations)} violação(ões).",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        "Paridade entre source graph operacional, consumidores canônicos e artefatos compilados validada.",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
+def _g2u_env_template_equivalence(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "ENV_TEMPLATE_EQUIVALENCE_GATE"
+    checked = [str(path.relative_to(root)) for path in _ops_graph_paths(root).values()] + [
+        str(path.relative_to(root))
+        for key, path in _ops_compiled_paths(root).items()
+        if key in {"staging_template", "production_template", "staging_fragment", "production_fragment"}
+    ]
+
+    try:
+        compile_expected, check_expected = _load_ops_compiler_api(root)
+        expected = compile_expected(root)
+        drifts = check_expected(root, expected)
+    except Exception as exc:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_ENV_TEMPLATE_EQUIVALENCE,
+            f"Falha ao validar equivalência dos templates de ambiente: {exc}",
+            [],
+            checked,
+            [],
+            [{
+                "blocking_code": BLOCKED_ENV_TEMPLATE_EQUIVALENCE,
+                "artifact": "scripts/compile/compile_ops_contracts.py",
+                "message": f"Não foi possível carregar/executar o compiler operacional: {exc}",
+                "severity": "error",
+            }],
+            _ms(t0),
+        )
+
+    relevant_prefixes = (
+        "infra/env/.env.staging.template",
+        "infra/env/.env.production.template",
+        "compiled_ops/deploy/staging.env.fragment",
+        "compiled_ops/deploy/production.env.fragment",
+    )
+    relevant_drifts = [drift for drift in drifts if drift.relpath in relevant_prefixes]
+    violations: list[dict[str, Any]] = []
+    for drift in relevant_drifts:
+        violations.append({
+            "blocking_code": BLOCKED_ENV_TEMPLATE_EQUIVALENCE,
+            "artifact": drift.relpath,
+            "message": f"Artefato de ambiente diverge do compiler operacional ({drift.reason}).",
+            "severity": "error",
+        })
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_ENV_TEMPLATE_EQUIVALENCE,
+            f"{len(violations)} drift(s) detectado(s) entre templates/fragments e o compiler operacional.",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        "Templates de ambiente e fragments de deploy equivalentes ao compiler operacional.",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
+def _g2v_deploy_workflow_env_parity(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "DEPLOY_WORKFLOW_ENV_PARITY_GATE"
+    payload, checked, load_violations = _load_ops_operational_bundle(root)
+    if load_violations:
+        violations = [
+            {
+                "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+                "artifact": item["artifact"],
+                "message": item["message"],
+                "severity": item.get("severity", "error"),
+            }
+            for item in load_violations
+        ]
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+            f"{len(violations)} problema(s) impediram validar a paridade do workflow de deploy.",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    assert payload is not None
+    workflow = payload["workflow"]
+    workflow_text = _ops_doc_paths(root)["workflow"].read_text(encoding="utf-8")
+    if not isinstance(workflow, dict):
+        workflow = _load_yaml(_ops_doc_paths(root)["workflow"])
+    workflow_text = _ops_doc_paths(root)["workflow"].read_text(encoding="utf-8")
+    env_catalog = payload["environment_catalog"]
+    deploy_contract = payload["deploy_contract"]
+    gh_catalog = payload["github_actions_catalog"]
+    violations: list[dict[str, Any]] = []
+    env_rendering = deploy_contract.get("env_rendering") or {}
+
+    deploy_pipeline = ((gh_catalog.get("workflows") or {}).get("deploy_pipeline") or {})
+    job_ids = _workflow_job_name_set(workflow)
+    catalog_jobs = {job.get("id") for job in deploy_pipeline.get("jobs", []) if isinstance(job, dict)}
+
+    if deploy_pipeline.get("workflow_ref") != ".github/workflows/deploy.yml":
+        violations.append({
+            "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+            "artifact": "docs/_canon/graph/ops/github_actions_catalog.yaml",
+            "message": "workflow_ref do catálogo GitHub deve apontar para .github/workflows/deploy.yml.",
+            "severity": "error",
+        })
+
+    expected_triggers = {"push:main", "workflow_dispatch"}
+    if set(deploy_pipeline.get("triggers", [])) != expected_triggers:
+        violations.append({
+            "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+            "artifact": "docs/_canon/graph/ops/github_actions_catalog.yaml",
+            "message": "Triggers do catálogo GitHub divergem do contrato esperado.",
+            "severity": "error",
+        })
+
+    missing_jobs = sorted({job for job in catalog_jobs if isinstance(job, str)} - job_ids)
+    if missing_jobs:
+        violations.append({
+            "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+            "artifact": ".github/workflows/deploy.yml",
+            "message": "Jobs catalogados ausentes no workflow: " + ", ".join(missing_jobs),
+            "severity": "error",
+        })
+
+    for precheck in deploy_contract.get("pre_checks", []):
+        if not isinstance(precheck, dict):
+            continue
+        workflow_job = precheck.get("workflow_job")
+        if workflow_job not in job_ids:
+            violations.append({
+                "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+                "artifact": "docs/_canon/graph/ops/deploy_contract.yaml",
+                "message": f"pre_check `{precheck.get('id')}` referencia workflow_job inexistente: {workflow_job}",
+                "severity": "error",
+            })
+
+    secret_refs = _workflow_secret_refs(workflow_text)
+    for secret_name in deploy_pipeline.get("required_secrets", []):
+        if secret_name not in secret_refs:
+            violations.append({
+                "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+                "artifact": ".github/workflows/deploy.yml",
+                "message": f"Workflow não referencia o secret obrigatório `{secret_name}`.",
+                "severity": "error",
+            })
+
+    var_refs = _workflow_var_refs(workflow_text)
+    for var_name in deploy_pipeline.get("required_variables", []):
+        if var_name not in var_refs:
+            violations.append({
+                "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+                "artifact": ".github/workflows/deploy.yml",
+                "message": f"Workflow não referencia a variável obrigatória `{var_name}`.",
+                "severity": "error",
+            })
+
+    contract_job = _workflow_job_doc(workflow, "contract-conformance")
+    contract_job_env = contract_job.get("env") if isinstance(contract_job, dict) else {}
+    runtime_env_names = set((next((job.get("runtime_env", []) for job in deploy_pipeline.get("jobs", []) if isinstance(job, dict) and job.get("id") == "contract-conformance"), [])))
+    if "HB_STAGING_URL" in runtime_env_names and "HB_STAGING_URL" not in (contract_job_env or {}):
+        violations.append({
+            "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+            "artifact": ".github/workflows/deploy.yml",
+            "message": "contract-conformance deve expor `HB_STAGING_URL` no env do job.",
+            "severity": "error",
+        })
+
+    for env_name, job_id in (("staging", "deploy-staging"), ("production", "deploy-production")):
+        job_doc = _workflow_job_doc(workflow, job_id)
+        if not isinstance(job_doc, dict):
+            continue
+        expected_step_name = f"Render {env_name} .env from operational contract"
+        render_step = _workflow_step_by_name(job_doc, expected_step_name)
+        if not isinstance(render_step, dict):
+            violations.append({
+                "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+                "artifact": ".github/workflows/deploy.yml",
+                "message": f"Job `{job_id}` precisa conter step `{expected_step_name}`.",
+                "severity": "error",
+            })
+            continue
+        job_env = render_step.get("env") or {}
+        if not isinstance(job_env, dict):
+            violations.append({
+                "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+                "artifact": ".github/workflows/deploy.yml",
+                "message": f"Step `{expected_step_name}` deve declarar `env` como mapping para secrets operacionais.",
+                "severity": "error",
+            })
+            continue
+        expected_inputs = next(
+            (
+                list(job.get("runtime_secret_inputs") or [])
+                for job in deploy_pipeline.get("jobs", [])
+                if isinstance(job, dict) and job.get("id") == job_id
+            ),
+            [],
+        )
+        for secret_name in expected_inputs:
+            env_key = f"HB_ENV_{secret_name}"
+            expected_value = f"${{{{ secrets.{secret_name} }}}}"
+            actual_value = job_env.get(env_key)
+            if actual_value != expected_value:
+                violations.append({
+                    "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+                    "artifact": ".github/workflows/deploy.yml",
+                    "message": (
+                        f"Job `{job_id}` deve mapear `{env_key}` para `{expected_value}`; "
+                        f"atual={actual_value!r}."
+                    ),
+                    "severity": "error",
+                })
+        for key, value in job_env.items():
+            if not isinstance(key, str) or not key.startswith("HB_ENV_"):
+                continue
+            if not isinstance(value, str) or "secrets." not in value:
+                violations.append({
+                    "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+                    "artifact": ".github/workflows/deploy.yml",
+                    "message": f"Job `{job_id}` contém binding operacional hardcoded para `{key}`.",
+                    "severity": "error",
+                })
+
+    for env_name, job_id, var_name in (
+        ("staging", "deploy-staging", "STAGING_URL"),
+        ("production", "approve", "PRODUCTION_URL"),
+    ):
+        job_doc = _workflow_job_doc(workflow, job_id)
+        if not isinstance(job_doc, dict):
+            continue
+        environment_doc = job_doc.get("environment") or {}
+        if not isinstance(environment_doc, dict):
+            violations.append({
+                "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+                "artifact": ".github/workflows/deploy.yml",
+                "message": f"Job `{job_id}` deve declarar `environment` estruturado.",
+                "severity": "error",
+            })
+            continue
+        if environment_doc.get("name") != env_name:
+            violations.append({
+                "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+                "artifact": ".github/workflows/deploy.yml",
+                "message": f"Job `{job_id}` deve usar environment.name=`{env_name}`.",
+                "severity": "error",
+            })
+        if environment_doc.get("url") != f"${{{{ vars.{var_name} }}}}":
+            violations.append({
+                "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+                "artifact": ".github/workflows/deploy.yml",
+                "message": f"Job `{job_id}` deve usar vars.{var_name} como URL do environment.",
+                "severity": "error",
+            })
+
+    flow_items = set(deploy_contract.get("promotion_flow", []))
+    expected_job_flow = {"validate", "test", "build", "deploy-staging", "contract-conformance", "approve", "deploy-production"}
+    if not expected_job_flow <= flow_items:
+        violations.append({
+            "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+            "artifact": "docs/_canon/graph/ops/deploy_contract.yaml",
+            "message": "promotion_flow deve incluir validate/test/build/deploy-staging/contract-conformance/approve/deploy-production.",
+            "severity": "error",
+        })
+    elif not expected_job_flow <= job_ids:
+        violations.append({
+            "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+            "artifact": ".github/workflows/deploy.yml",
+            "message": "Workflow não contém todos os jobs exigidos pelo promotion_flow operacional.",
+            "severity": "error",
+        })
+
+    for marker in ("Health check — staging", "Health check — production"):
+        if marker not in workflow_text:
+            violations.append({
+                "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+                "artifact": ".github/workflows/deploy.yml",
+                "message": f"Workflow não contém a etapa `{marker}` exigida pelo contrato operacional.",
+                "severity": "error",
+            })
+
+    renderer_ref = env_rendering.get("renderer_ref")
+    injector_ref = env_rendering.get("injector_ref")
+    if not isinstance(renderer_ref, str) or not (root / renderer_ref).exists():
+        violations.append({
+            "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+            "artifact": "docs/_canon/graph/ops/deploy_contract.yaml",
+            "message": "env_rendering.renderer_ref deve apontar para script existente.",
+            "severity": "error",
+        })
+    if not isinstance(injector_ref, str) or not (root / injector_ref).exists():
+        violations.append({
+            "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+            "artifact": "docs/_canon/graph/ops/deploy_contract.yaml",
+            "message": "env_rendering.injector_ref deve apontar para script existente.",
+            "severity": "error",
+        })
+    elif injector_ref not in workflow_text:
+        violations.append({
+            "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+            "artifact": ".github/workflows/deploy.yml",
+            "message": f"Workflow não referencia `{injector_ref}` conforme contrato operacional.",
+            "severity": "error",
+        })
+
+    generated_targets = env_rendering.get("generated_targets") or {}
+    for env_name in ("staging", "production"):
+        env_target = generated_targets.get(env_name) or {}
+        workspace_output = env_target.get("workspace_output")
+        runtime_output = env_target.get("runtime_output")
+        if not isinstance(workspace_output, str) or workspace_output not in workflow_text:
+            violations.append({
+                "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+                "artifact": ".github/workflows/deploy.yml",
+                "message": f"Workflow não referencia workspace_output de `{env_name}`.",
+                "severity": "error",
+            })
+        if not isinstance(runtime_output, str):
+            violations.append({
+                "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+                "artifact": "docs/_canon/graph/ops/deploy_contract.yaml",
+                "message": f"env_rendering.generated_targets.{env_name}.runtime_output ausente/inválido.",
+                "severity": "error",
+            })
+
+    for env_name in ("staging", "production"):
+        if f"scripts/deploy/inject_env.sh {env_name}" not in workflow_text:
+            violations.append({
+                "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+                "artifact": ".github/workflows/deploy.yml",
+                "message": f"Workflow não executa `scripts/deploy/inject_env.sh {env_name}`.",
+                "severity": "error",
+            })
+
+    for legacy_marker in (
+        'echo "REGISTRY=',
+        'echo "SECRET_KEY=',
+        "if [ ! -f .env ]",
+        "grep -qvP",
+    ):
+        if legacy_marker in workflow_text:
+            violations.append({
+                "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+                "artifact": ".github/workflows/deploy.yml",
+                "message": f"Workflow ainda contém bootstrap/regeneração inline legado (`{legacy_marker}`).",
+                "severity": "error",
+            })
+
+    for env_name in ("staging", "production"):
+        expected_url = (((env_catalog.get("environments") or {}).get(env_name) or {}).get("urls") or {}).get("health")
+        actual_url = ((deploy_contract.get("health_checks") or {}).get(env_name) or {}).get("url")
+        if expected_url != actual_url:
+            violations.append({
+                "blocking_code": BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+                "artifact": "docs/_canon/graph/ops/deploy_contract.yaml",
+                "message": f"health_checks.{env_name}.url diverge do environment_catalog ({actual_url!r} != {expected_url!r}).",
+                "severity": "error",
+            })
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_DEPLOY_WORKFLOW_ENV_PARITY,
+            f"Paridade do workflow de deploy com {len(violations)} violação(ões).",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        "Workflow de deploy alinhado ao catálogo GitHub e ao contrato operacional.",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
+def _g2w_secrets_catalog(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "SECRETS_CATALOG_GATE"
+    payload, checked, load_violations = _load_ops_operational_bundle(root)
+    if load_violations:
+        violations = [
+            {
+                "blocking_code": BLOCKED_SECRETS_CATALOG_INVALID,
+                "artifact": item["artifact"],
+                "message": item["message"],
+                "severity": item.get("severity", "error"),
+            }
+            for item in load_violations
+        ]
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_SECRETS_CATALOG_INVALID,
+            f"{len(violations)} problema(s) impediram validar o catálogo de secrets.",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    assert payload is not None
+    env_catalog = payload["environment_catalog"]
+    secrets_catalog = payload["secrets_catalog"]
+    gh_catalog = payload["github_actions_catalog"]
+    compiled_secrets = payload["secrets_catalog_json"]
+    violations: list[dict[str, Any]] = []
+
+    gh_required_secrets = set(((gh_catalog.get("workflows") or {}).get("deploy_pipeline") or {}).get("required_secrets", []))
+    gh_required_vars = set(((gh_catalog.get("workflows") or {}).get("deploy_pipeline") or {}).get("required_variables", []))
+    github_secret_entries = [entry for entry in ((secrets_catalog.get("github_actions") or {}).get("secrets") or []) if isinstance(entry, dict)]
+    runtime_secret_entries = [entry for entry in (secrets_catalog.get("runtime_secrets") or []) if isinstance(entry, dict)]
+    secret_names = {entry.get("name") for entry in github_secret_entries}
+    variable_names = {entry.get("name") for entry in ((secrets_catalog.get("github_actions") or {}).get("variables") or []) if isinstance(entry, dict)}
+    runtime_secret_names = {entry.get("name") for entry in runtime_secret_entries}
+    workflow_text = payload["workflow"]
+    adr_text = payload["adr_012"]
+
+    missing_required_secrets = sorted(name for name in gh_required_secrets if name not in secret_names)
+    if missing_required_secrets:
+        violations.append({
+            "blocking_code": BLOCKED_SECRETS_CATALOG_INVALID,
+            "artifact": "docs/_canon/graph/ops/secrets_catalog.yaml",
+            "message": "required_secrets do catálogo GitHub ausentes em secrets_catalog: " + ", ".join(missing_required_secrets),
+            "severity": "error",
+        })
+
+    missing_required_vars = sorted(name for name in gh_required_vars if name not in variable_names)
+    if missing_required_vars:
+        violations.append({
+            "blocking_code": BLOCKED_SECRETS_CATALOG_INVALID,
+            "artifact": "docs/_canon/graph/ops/secrets_catalog.yaml",
+            "message": "required_variables do catálogo GitHub ausentes em secrets_catalog: " + ", ".join(missing_required_vars),
+            "severity": "error",
+        })
+
+    def _require_rotation_metadata(item: dict[str, Any], *, artifact_label: str, name: str) -> None:
+        rotation_ref = item.get("rotation_ref")
+        if not isinstance(rotation_ref, str) or not rotation_ref.strip():
+            violations.append({
+                "blocking_code": BLOCKED_SECRETS_CATALOG_INVALID,
+                "artifact": artifact_label,
+                "message": f"Secret `{name}` sem rotation_ref estruturado.",
+                "severity": "error",
+            })
+        else:
+            rotation_path = root / rotation_ref
+            if not rotation_path.exists():
+                violations.append({
+                    "blocking_code": BLOCKED_SECRETS_CATALOG_INVALID,
+                    "artifact": artifact_label,
+                    "message": f"rotation_ref inexistente para secret `{name}`: {rotation_ref}",
+                    "severity": "error",
+                })
+        command_ref = item.get("rotation_command_ref")
+        if not isinstance(command_ref, str) or not command_ref.strip():
+            violations.append({
+                "blocking_code": BLOCKED_SECRETS_CATALOG_INVALID,
+                "artifact": artifact_label,
+                "message": f"Secret `{name}` sem rotation_command_ref estruturado.",
+                "severity": "error",
+            })
+        else:
+            command_path = root / command_ref
+            if not command_path.exists():
+                violations.append({
+                    "blocking_code": BLOCKED_SECRETS_CATALOG_INVALID,
+                    "artifact": artifact_label,
+                    "message": f"rotation_command_ref inexistente para secret `{name}`: {command_ref}",
+                    "severity": "error",
+                })
+        period = item.get("rotation_period_days")
+        if not isinstance(period, int) or period <= 0:
+            violations.append({
+                "blocking_code": BLOCKED_SECRETS_CATALOG_INVALID,
+                "artifact": artifact_label,
+                "message": f"Secret `{name}` precisa declarar rotation_period_days > 0.",
+                "severity": "error",
+            })
+        actor = item.get("rotation_actor")
+        if not isinstance(actor, str) or not actor.strip():
+            violations.append({
+                "blocking_code": BLOCKED_SECRETS_CATALOG_INVALID,
+                "artifact": artifact_label,
+                "message": f"Secret `{name}` precisa declarar rotation_actor.",
+                "severity": "error",
+            })
+        rotate_on = item.get("rotate_on")
+        if not isinstance(rotate_on, list) or not rotate_on or not all(isinstance(value, str) and value.strip() for value in rotate_on):
+            violations.append({
+                "blocking_code": BLOCKED_SECRETS_CATALOG_INVALID,
+                "artifact": artifact_label,
+                "message": f"Secret `{name}` precisa declarar rotate_on não vazio.",
+                "severity": "error",
+            })
+
+    for entry in github_secret_entries:
+        name = entry.get("name")
+        kind = entry.get("kind")
+        if not isinstance(name, str):
+            continue
+        if kind in {"ssh_credential", "ssh_private_key", "runtime_environment_secret", "contract_broker_credential"}:
+            _require_rotation_metadata(entry, artifact_label="docs/_canon/graph/ops/secrets_catalog.yaml", name=name)
+
+    if compiled_secrets.get("github_actions_workflow_ref") != ".github/workflows/deploy.yml":
+        violations.append({
+            "blocking_code": BLOCKED_SECRETS_CATALOG_INVALID,
+            "artifact": "compiled_ops/deploy/secrets_catalog.json",
+            "message": "github_actions_workflow_ref compilado deve apontar para .github/workflows/deploy.yml.",
+            "severity": "error",
+        })
+
+    template_contracts = env_catalog.get("template_contracts") or {}
+    template_vars = {
+        env_name: set(_template_contract_values(template_doc).keys())
+        for env_name, template_doc in template_contracts.items()
+        if isinstance(template_doc, dict)
+    }
+
+    for item in runtime_secret_entries:
+        name = item.get("name")
+        if not isinstance(name, str):
+            continue
+        _require_rotation_metadata(item, artifact_label="docs/_canon/graph/ops/secrets_catalog.yaml", name=name)
+        storage_modes = item.get("storage_modes") or {}
+        if not isinstance(storage_modes, dict):
+            continue
+        for env_name, storage_mode in storage_modes.items():
+            if env_name not in {"staging", "production"}:
+                continue
+            if not isinstance(storage_mode, str) or not storage_mode.endswith(".env"):
+                continue
+            if name not in template_vars.get(env_name, set()):
+                violations.append({
+                    "blocking_code": BLOCKED_SECRETS_CATALOG_INVALID,
+                    "artifact": "docs/_canon/graph/ops/secrets_catalog.yaml",
+                    "message": f"Secret `{name}` usa {env_name} .env como storage_mode, mas não está no template do ambiente.",
+                    "severity": "error",
+                })
+
+    ops_runtime_inventory, runtime_marker_found = _extract_marked_secret_inventory(
+        adr_text,
+        "<!-- OPS_RUNTIME_SECRETS_BEGIN -->",
+        "<!-- OPS_RUNTIME_SECRETS_END -->",
+    )
+    if not runtime_marker_found:
+        violations.append({
+            "blocking_code": BLOCKED_SECRETS_CATALOG_INVALID,
+            "artifact": "docs/_canon/decisions/ADR-012-secrets-policy.md",
+            "message": "ADR-012 precisa declarar inventário runtime entre OPS_RUNTIME_SECRETS_BEGIN/END.",
+            "severity": "error",
+        })
+    elif set(ops_runtime_inventory) != runtime_secret_names:
+        violations.append({
+            "blocking_code": BLOCKED_SECRETS_CATALOG_INVALID,
+            "artifact": "docs/_canon/decisions/ADR-012-secrets-policy.md",
+            "message": "Inventário runtime em ADR-012 diverge do catálogo estruturado de runtime_secrets.",
+            "severity": "error",
+        })
+
+    ops_github_inventory, github_marker_found = _extract_marked_secret_inventory(
+        adr_text,
+        "<!-- OPS_GITHUB_SECRETS_BEGIN -->",
+        "<!-- OPS_GITHUB_SECRETS_END -->",
+    )
+    if not github_marker_found:
+        violations.append({
+            "blocking_code": BLOCKED_SECRETS_CATALOG_INVALID,
+            "artifact": "docs/_canon/decisions/ADR-012-secrets-policy.md",
+            "message": "ADR-012 precisa declarar inventário GitHub entre OPS_GITHUB_SECRETS_BEGIN/END.",
+            "severity": "error",
+        })
+    elif set(ops_github_inventory) != secret_names:
+        violations.append({
+            "blocking_code": BLOCKED_SECRETS_CATALOG_INVALID,
+            "artifact": "docs/_canon/decisions/ADR-012-secrets-policy.md",
+            "message": "Inventário GitHub em ADR-012 diverge do catálogo estruturado github_actions.secrets.",
+            "severity": "error",
+        })
+
+    deploy_runtime_secret_inputs = set()
+    for job in (((gh_catalog.get("workflows") or {}).get("deploy_pipeline") or {}).get("jobs") or []):
+        if not isinstance(job, dict):
+            continue
+        if job.get("id") not in {"deploy-staging", "deploy-production"}:
+            continue
+        deploy_runtime_secret_inputs.update(job.get("runtime_secret_inputs") or [])
+    uncataloged_runtime_inputs = sorted(name for name in deploy_runtime_secret_inputs if name not in secret_names)
+    if uncataloged_runtime_inputs:
+        violations.append({
+            "blocking_code": BLOCKED_SECRETS_CATALOG_INVALID,
+            "artifact": "docs/_canon/graph/ops/github_actions_catalog.yaml",
+            "message": "runtime_secret_inputs referencia secret sem entrada em github_actions.secrets: " + ", ".join(uncataloged_runtime_inputs),
+            "severity": "error",
+        })
+
+    if "SENTRY_DSN" in workflow_text or "SMTP_PASSWORD" in workflow_text or "SMTP_USERNAME" in workflow_text:
+        violations.append({
+            "blocking_code": BLOCKED_SECRETS_CATALOG_INVALID,
+            "artifact": ".github/workflows/deploy.yml",
+            "message": "Workflow de deploy referencia secret não operacionalizado no source graph atual.",
+            "severity": "error",
+        })
+
+    compiled_runtime_templates = compiled_secrets.get("runtime_env_templates") or {}
+    expected_runtime_templates = {
+        "staging": "infra/env/.env.staging.template",
+        "production": "infra/env/.env.production.template",
+    }
+    if compiled_runtime_templates != expected_runtime_templates:
+        violations.append({
+            "blocking_code": BLOCKED_SECRETS_CATALOG_INVALID,
+            "artifact": "compiled_ops/deploy/secrets_catalog.json",
+            "message": "runtime_env_templates compilado diverge do contrato operacional esperado.",
+            "severity": "error",
+        })
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_SECRETS_CATALOG_INVALID,
+            f"Catálogo de secrets com {len(violations)} violação(ões).",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        "Catálogo de secrets alinhado ao catálogo GitHub, templates e artefato compilado.",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
+def _g2x_service_topology_parity(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "SERVICE_TOPOLOGY_PARITY_GATE"
+    payload, checked, load_violations = _load_ops_operational_bundle(root)
+    if load_violations:
+        violations = [
+            {
+                "blocking_code": BLOCKED_SERVICE_TOPOLOGY_PARITY,
+                "artifact": item["artifact"],
+                "message": item["message"],
+                "severity": item.get("severity", "error"),
+            }
+            for item in load_violations
+        ]
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_SERVICE_TOPOLOGY_PARITY,
+            f"{len(violations)} problema(s) impediram validar a topologia de serviços.",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    assert payload is not None
+    topology = payload["service_topology"]
+    compose = payload["compose"]
+    runtime_topology = payload["runtime_topology_json"]
+    urls_text = payload["urls"]
+    nginx_staging = payload["nginx_staging"]
+    nginx_production = payload["nginx_production"]
+    violations: list[dict[str, Any]] = []
+
+    services = topology.get("services") or {}
+    compose_services = (compose.get("services") or {}) if isinstance(compose, dict) else {}
+    compose_service_names = {name for name, doc in compose_services.items() if isinstance(name, str) and isinstance(doc, dict)}
+
+    if set((runtime_topology.get("services") or {}).keys()) != set(services.keys()):
+        violations.append({
+            "blocking_code": BLOCKED_SERVICE_TOPOLOGY_PARITY,
+            "artifact": "compiled_ops/deploy/runtime_topology.json",
+            "message": "runtime_topology compilado diverge dos serviços soberanos.",
+            "severity": "error",
+        })
+
+    for service_name, service_doc in services.items():
+        if not isinstance(service_doc, dict):
+            continue
+        deployment_type = service_doc.get("deployment_type")
+        compose_service = service_doc.get("compose_service")
+        if deployment_type == "compose_service":
+            if not isinstance(compose_service, str) or compose_service not in compose_service_names:
+                violations.append({
+                    "blocking_code": BLOCKED_SERVICE_TOPOLOGY_PARITY,
+                    "artifact": "infra/docker-compose.prod.yml",
+                    "message": f"Serviço `{service_name}` referencia compose_service inexistente: {compose_service}",
+                    "severity": "error",
+                })
+                continue
+            compose_doc = compose_services.get(compose_service) or {}
+            actual_depends_on_obj = compose_doc.get("depends_on") or {}
+            if isinstance(actual_depends_on_obj, dict):
+                actual_depends_on = set(actual_depends_on_obj.keys())
+            elif isinstance(actual_depends_on_obj, list):
+                actual_depends_on = set(actual_depends_on_obj)
+            else:
+                actual_depends_on = set()
+            expected_depends_on = set(service_doc.get("depends_on") or [])
+            if not expected_depends_on <= actual_depends_on:
+                violations.append({
+                    "blocking_code": BLOCKED_SERVICE_TOPOLOGY_PARITY,
+                    "artifact": "infra/docker-compose.prod.yml",
+                    "message": f"Serviço `{compose_service}` não atende depends_on soberano ({sorted(expected_depends_on)}).",
+                    "severity": "error",
+                })
+
+            if service_name == "frontend":
+                expose = set(compose_doc.get("expose") or [])
+                if "80" not in expose:
+                    violations.append({
+                        "blocking_code": BLOCKED_SERVICE_TOPOLOGY_PARITY,
+                        "artifact": "infra/docker-compose.prod.yml",
+                        "message": "Serviço frontend deve expor a porta 80 conforme topologia soberana.",
+                        "severity": "error",
+                    })
+
+            if service_name == "api":
+                expose = set(compose_doc.get("expose") or [])
+                if "8000" not in expose:
+                    violations.append({
+                        "blocking_code": BLOCKED_SERVICE_TOPOLOGY_PARITY,
+                        "artifact": "infra/docker-compose.prod.yml",
+                        "message": "Serviço api deve expor a porta 8000 conforme topologia soberana.",
+                        "severity": "error",
+                    })
+                for marker in ('location /api/', 'location /api/auth/', 'location /health', 'location /ws/'):
+                    if marker not in nginx_staging or marker not in nginx_production:
+                        violations.append({
+                            "blocking_code": BLOCKED_SERVICE_TOPOLOGY_PARITY,
+                            "artifact": "infra/nginx/nginx*.conf",
+                            "message": f"Marker `{marker}` ausente em um dos nginx confs exigidos pela topologia soberana.",
+                            "severity": "error",
+                        })
+                if 'path("health", health_check)' not in urls_text or 'path("api/", api.urls)' not in urls_text:
+                    violations.append({
+                        "blocking_code": BLOCKED_SERVICE_TOPOLOGY_PARITY,
+                        "artifact": "config/urls.py",
+                        "message": "config/urls.py não expõe `health` e `api/` conforme runtime_endpoints/topologia.",
+                        "severity": "error",
+                    })
+
+            if service_name in {"postgres", "redis"}:
+                persistence = service_doc.get("persistence") or {}
+                volume_name = persistence.get("volume")
+                volumes = compose.get("volumes") or {}
+                if volume_name and volume_name not in volumes:
+                    violations.append({
+                        "blocking_code": BLOCKED_SERVICE_TOPOLOGY_PARITY,
+                        "artifact": "infra/docker-compose.prod.yml",
+                        "message": f"Volume `{volume_name}` exigido por `{service_name}` não existe no compose.",
+                        "severity": "error",
+                    })
+
+        elif deployment_type == "external_same_vps":
+            if compose_service is not None:
+                violations.append({
+                    "blocking_code": BLOCKED_SERVICE_TOPOLOGY_PARITY,
+                    "artifact": "docs/_canon/graph/ops/service_topology.yaml",
+                    "message": f"Serviço externo `{service_name}` não deve declarar compose_service.",
+                    "severity": "error",
+                })
+
+    nginx_doc = compose_services.get("nginx") or {}
+    nginx_volumes = "\n".join(str(item) for item in (nginx_doc.get("volumes") or []))
+    if "./nginx/${NGINX_CONF:-nginx.conf}:/etc/nginx/nginx.conf:ro" not in nginx_volumes:
+        violations.append({
+            "blocking_code": BLOCKED_SERVICE_TOPOLOGY_PARITY,
+            "artifact": "infra/docker-compose.prod.yml",
+            "message": "Serviço nginx deve montar `./nginx/${NGINX_CONF:-nginx.conf}:/etc/nginx/nginx.conf:ro`.",
+            "severity": "error",
+        })
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_SERVICE_TOPOLOGY_PARITY,
+            f"Topologia de serviços com {len(violations)} violação(ões).",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        "Topologia soberana de serviços alinhada ao compose, nginx e runtime compilado.",
         [],
         checked,
         [],
@@ -5824,6 +8232,254 @@ def _g8_cross_spec_alignment(root: pathlib.Path, axioms: "DomainAxioms") -> dict
     return _pg(gate_id, "PASS", True, None,
                "Alinhamento cross-spec: PASS.",
                inputs, all_artifacts, [], [], _ms(t0))
+
+
+def _walk_openapi_schema_nodes(node: Any, path: str = "$") -> list[tuple[str, dict[str, Any]]]:
+    found: list[tuple[str, dict[str, Any]]] = []
+    if isinstance(node, dict):
+        found.append((path, node))
+        for key, value in node.items():
+            found.extend(_walk_openapi_schema_nodes(value, f"{path}.{key}"))
+    elif isinstance(node, list):
+        for idx, value in enumerate(node):
+            found.extend(_walk_openapi_schema_nodes(value, f"{path}[{idx}]"))
+    return found
+
+
+def _g8a_openapi_schema_equivalence(root: pathlib.Path) -> dict:
+    t0 = time.monotonic()
+    gate_id = "OPENAPI_SCHEMA_EQUIVALENCE_GATE"
+    generated_root = root / "generated" / "source_graph"
+    schema_views = sorted(generated_root.glob("*/*.schema_contract_view.yaml")) if generated_root.exists() else []
+    if not schema_views:
+        return _skip(gate_id, "Sem source graph schema view ativo em generated/source_graph/.", _ms(t0))
+
+    checked: list[str] = []
+    violations: list[dict[str, Any]] = []
+
+    for schema_view_path in schema_views:
+        module = schema_view_path.parent.name
+        manifest_path = root / "docs" / "hbtrack" / "modulos" / module / "graph" / "module_manifest.yaml"
+        checked.extend([str(schema_view_path.relative_to(root)), str(manifest_path.relative_to(root))])
+
+        try:
+            schema_view = _load_yaml(schema_view_path)
+            manifest = _load_yaml(manifest_path)
+        except Exception as exc:
+            violations.append({
+                "blocking_code": BLOCKED_OPENAPI_SCHEMA_EQUIVALENCE,
+                "artifact": str(schema_view_path.relative_to(root)),
+                "message": f"Falha ao carregar source graph/schema view do módulo `{module}`: {exc}",
+                "severity": "error",
+            })
+            continue
+
+        primary_schema_rel = schema_view.get("primary_schema_ref")
+        component_rel = schema_view.get("openapi_projection_ref")
+        runtime_fields = {
+            field.get("name")
+            for field in (schema_view.get("runtime_extension_fields") or [])
+            if isinstance(field, dict)
+        }
+        sovereign_fields = {
+            field.get("name")
+            for field in (schema_view.get("sovereign_fields") or [])
+            if isinstance(field, dict)
+        }
+        if not isinstance(primary_schema_rel, str) or not isinstance(component_rel, str):
+            violations.append({
+                "blocking_code": BLOCKED_OPENAPI_SCHEMA_EQUIVALENCE,
+                "artifact": str(schema_view_path.relative_to(root)),
+                "message": f"Schema view do módulo `{module}` sem refs obrigatórias de schema/projeção.",
+                "severity": "error",
+            })
+            continue
+
+        component_path = root / component_rel
+        primary_schema_path = root / primary_schema_rel
+        graph_dir = manifest_path.parent
+        openapi_paths_rel = (((manifest.get("contract_surfaces") or {}).get("openapi_paths")))
+        if not isinstance(openapi_paths_rel, str):
+            violations.append({
+                "blocking_code": BLOCKED_OPENAPI_SCHEMA_EQUIVALENCE,
+                "artifact": str(manifest_path.relative_to(root)),
+                "message": f"module_manifest do módulo `{module}` sem contract_surfaces.openapi_paths.",
+                "severity": "error",
+            })
+            continue
+        openapi_paths_path = (graph_dir / openapi_paths_rel).resolve()
+        if not openapi_paths_path.exists():
+            openapi_paths_path = (root / openapi_paths_rel).resolve()
+        checked.extend([
+            str(component_path.relative_to(root)),
+            str(primary_schema_path.relative_to(root)),
+            str(openapi_paths_path.relative_to(root)) if openapi_paths_path.exists() else openapi_paths_rel,
+        ])
+
+        if not component_path.exists() or not primary_schema_path.exists() or not openapi_paths_path.exists():
+            violations.append({
+                "blocking_code": BLOCKED_OPENAPI_SCHEMA_EQUIVALENCE,
+                "artifact": component_rel,
+                "message": f"Artefatos de equivalência ausentes para o módulo `{module}`.",
+                "severity": "error",
+            })
+            continue
+
+        try:
+            component_obj = _load_yaml(component_path)
+            openapi_paths_obj = _load_yaml(openapi_paths_path)
+        except Exception as exc:
+            violations.append({
+                "blocking_code": BLOCKED_OPENAPI_SCHEMA_EQUIVALENCE,
+                "artifact": str(component_path.relative_to(root)),
+                "message": f"Falha ao carregar OpenAPI do módulo `{module}`: {exc}",
+                "severity": "error",
+            })
+            continue
+
+        expected_component_ref = pathlib.Path(
+            os.path.relpath(primary_schema_path, component_path.parent)
+        ).as_posix()
+        if component_obj != {"$ref": expected_component_ref}:
+            violations.append({
+                "blocking_code": BLOCKED_OPENAPI_SCHEMA_EQUIVALENCE,
+                "artifact": str(component_path.relative_to(root)),
+                "message": (
+                    f"Projection drift no componente OpenAPI de `{module}`: esperado ref direto "
+                    f"para `{expected_component_ref}`."
+                ),
+                "severity": "error",
+            })
+
+        expected_path_ref = pathlib.Path(os.path.relpath(component_path, openapi_paths_path.parent)).as_posix()
+        usage_count = 0
+        for path_str, path_item in openapi_paths_obj.items():
+            if not isinstance(path_str, str) or not path_str.startswith("/") or not isinstance(path_item, dict):
+                continue
+            for method, operation in path_item.items():
+                if not isinstance(operation, dict):
+                    continue
+                responses = operation.get("responses")
+                if not isinstance(responses, dict):
+                    continue
+                for status_code, response in responses.items():
+                    if not isinstance(response, dict):
+                        continue
+                    content = response.get("content")
+                    if not isinstance(content, dict):
+                        continue
+                    application_json = content.get("application/json")
+                    if not isinstance(application_json, dict):
+                        continue
+                    schema = application_json.get("schema")
+                    if not isinstance(schema, dict):
+                        continue
+                    for node_path, node in _walk_openapi_schema_nodes(schema):
+                        if not isinstance(node, dict):
+                            continue
+                        if node.get("$ref") == expected_path_ref:
+                            usage_count += 1
+                            continue
+                        all_of = node.get("allOf")
+                        if not isinstance(all_of, list) or not all_of:
+                            continue
+                        first = all_of[0]
+                        if not isinstance(first, dict) or first.get("$ref") != expected_path_ref:
+                            continue
+                        usage_count += 1
+                        if len(all_of) != 2:
+                            violations.append({
+                                "blocking_code": BLOCKED_OPENAPI_SCHEMA_EQUIVALENCE,
+                                "artifact": str(openapi_paths_path.relative_to(root)),
+                                "message": (
+                                    f"Overlay OpenAPI inválido em `{module}` para {path_str} {method.upper()} "
+                                    f"{status_code}: esperado allOf com 2 itens."
+                                ),
+                                "severity": "error",
+                            })
+                            continue
+                        overlay = all_of[1]
+                        if not isinstance(overlay, dict):
+                            violations.append({
+                                "blocking_code": BLOCKED_OPENAPI_SCHEMA_EQUIVALENCE,
+                                "artifact": str(openapi_paths_path.relative_to(root)),
+                                "message": (
+                                    f"Overlay OpenAPI inválido em `{module}` para {path_str} {method.upper()} "
+                                    f"{status_code}: segundo item de allOf deve ser objeto."
+                                ),
+                                "severity": "error",
+                            })
+                            continue
+                        properties = overlay.get("properties") or {}
+                        if not isinstance(properties, dict):
+                            violations.append({
+                                "blocking_code": BLOCKED_OPENAPI_SCHEMA_EQUIVALENCE,
+                                "artifact": str(openapi_paths_path.relative_to(root)),
+                                "message": (
+                                    f"Overlay OpenAPI inválido em `{module}` para {path_str} {method.upper()} "
+                                    f"{status_code}: properties deve ser mapping."
+                                ),
+                                "severity": "error",
+                            })
+                            continue
+                        prop_keys = set(properties.keys())
+                        required_keys = set(overlay.get("required") or [])
+                        invalid_props = sorted(prop_keys - runtime_fields)
+                        invalid_required = sorted(required_keys - runtime_fields)
+                        leaked_sovereign = sorted(prop_keys & sovereign_fields)
+                        if invalid_props or invalid_required or leaked_sovereign:
+                            details: list[str] = []
+                            if invalid_props:
+                                details.append(f"properties fora do overlay runtime: {invalid_props}")
+                            if invalid_required:
+                                details.append(f"required fora do overlay runtime: {invalid_required}")
+                            if leaked_sovereign:
+                                details.append(f"campos soberanos redefinidos no overlay: {leaked_sovereign}")
+                            violations.append({
+                                "blocking_code": BLOCKED_OPENAPI_SCHEMA_EQUIVALENCE,
+                                "artifact": str(openapi_paths_path.relative_to(root)),
+                                "message": (
+                                    f"Projection drift em `{module}` para {path_str} {method.upper()} {status_code}: "
+                                    + "; ".join(details)
+                                ),
+                                "severity": "error",
+                                "details": {"schema_path": node_path},
+                            })
+
+        if usage_count == 0:
+            violations.append({
+                "blocking_code": BLOCKED_OPENAPI_SCHEMA_EQUIVALENCE,
+                "artifact": str(openapi_paths_path.relative_to(root)),
+                "message": f"Nenhuma resposta OpenAPI de `{module}` referencia `{expected_path_ref}`.",
+                "severity": "error",
+            })
+
+    if violations:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_OPENAPI_SCHEMA_EQUIVALENCE,
+            f"{len(violations)} violação(ões) de equivalência OpenAPI × schema soberano.",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        f"Equivalência OpenAPI × schema soberano: {len(schema_views)} módulo(s) validado(s).",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
 
 
 def _find_active_waiver(root: pathlib.Path, gate_id: str) -> pathlib.Path | None:
@@ -6877,6 +9533,8 @@ def _g15_derived_drift(root: pathlib.Path) -> dict:
     t0 = time.monotonic()
     gate_id = "DERIVED_DRIFT_GATE"
     generated_dir = root / "generated"
+    runtime_doc = root / "docs" / "_canon" / "RUNTIME_CURRENT_STATE.md"
+    runtime_generator = root / "scripts" / "generate" / "docs" / "gen_runtime_current_state.py"
     if not generated_dir.exists():
         return _pg(
             gate_id,
@@ -6930,6 +9588,103 @@ def _g15_derived_drift(root: pathlib.Path) -> dict:
             checked_manifests or [str(generated_dir)],
             [],
             trace_violations[:30],
+            _ms(t0),
+        )
+
+    runtime_checked = [str(runtime_doc), str(runtime_generator)]
+    if not runtime_generator.exists():
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_NON_NORMALIZED_DERIVED_DIFF_CHECK,
+            "Gerador canônico de RUNTIME_CURRENT_STATE.md ausente.",
+            checked_manifests,
+            checked_manifests + runtime_checked,
+            [],
+            [
+                {
+                    "blocking_code": BLOCKED_NON_NORMALIZED_DERIVED_DIFF_CHECK,
+                    "artifact": str(runtime_generator.relative_to(root)),
+                    "message": "Artefato derivado current-state não possui gerador canônico.",
+                    "severity": "error",
+                }
+            ],
+            _ms(t0),
+        )
+
+    if not runtime_doc.exists():
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_NON_NORMALIZED_DERIVED_DIFF_CHECK,
+            "RUNTIME_CURRENT_STATE.md ausente.",
+            checked_manifests,
+            checked_manifests + runtime_checked,
+            [],
+            [
+                {
+                    "blocking_code": BLOCKED_NON_NORMALIZED_DERIVED_DIFF_CHECK,
+                    "artifact": str(runtime_doc.relative_to(root)),
+                    "message": "Documento current-state derivado ausente.",
+                    "severity": "error",
+                }
+            ],
+            _ms(t0),
+        )
+
+    try:
+        spec = importlib.util.spec_from_file_location("hbtrack_runtime_current_state_gen", runtime_generator)
+        if spec is None or spec.loader is None:
+            raise RuntimeError("spec/loader indisponível")
+        runtime_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(runtime_module)
+        render_runtime = getattr(runtime_module, "generate_runtime_current_state", None)
+        normalize_runtime = getattr(runtime_module, "_normalize", None)
+        if render_runtime is None or normalize_runtime is None:
+            raise RuntimeError("generate_runtime_current_state/_normalize ausentes")
+        generated_runtime = normalize_runtime(render_runtime(root))
+        current_runtime = normalize_runtime(runtime_doc.read_text(encoding="utf-8"))
+    except Exception as e:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_NON_NORMALIZED_DERIVED_DIFF_CHECK,
+            f"Falha ao validar derivação de RUNTIME_CURRENT_STATE.md: {e}",
+            checked_manifests,
+            checked_manifests + runtime_checked,
+            [],
+            [
+                {
+                    "blocking_code": BLOCKED_NON_NORMALIZED_DERIVED_DIFF_CHECK,
+                    "artifact": str(runtime_generator.relative_to(root)),
+                    "message": f"Não foi possível validar o current-state derivado: {e}",
+                    "severity": "error",
+                }
+            ],
+            _ms(t0),
+        )
+
+    if current_runtime != generated_runtime:
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_NON_NORMALIZED_DERIVED_DIFF_CHECK,
+            "RUNTIME_CURRENT_STATE.md diverge do gerador canônico.",
+            checked_manifests,
+            checked_manifests + runtime_checked,
+            [str(runtime_doc.relative_to(root))],
+            [
+                {
+                    "blocking_code": BLOCKED_NON_NORMALIZED_DERIVED_DIFF_CHECK,
+                    "artifact": str(runtime_doc.relative_to(root)),
+                    "message": "Drift detectado em RUNTIME_CURRENT_STATE.md. Regerar: python3 scripts/generate/docs/gen_runtime_current_state.py --write",
+                    "severity": "error",
+                }
+            ],
             _ms(t0),
         )
 
@@ -8698,6 +11453,135 @@ def _g_legacy_isolation(root: pathlib.Path) -> dict:
     )
 
 
+def _g_context_bundle_freshness(root: pathlib.Path) -> dict:
+    """CONTEXT_BUNDLE_FRESHNESS_GATE — B7-002.
+
+    Impede uso de bundle de contexto defasado em tasks de implementação.
+    Para cada arquivo em compiled_context/**/*.json, verifica os hashes SHA-256
+    registrados no campo "inputs" contra os arquivos reais no repositório.
+
+    SKIP_NOT_APPLICABLE: compiled_context/ não existe ou não tem nenhum *.json.
+    PASS: todos os inputs batem com o hash registrado.
+    FAIL: qualquer input diverge ou está ausente — bundle stale.
+    """
+    import hashlib as _hashlib
+
+    t0 = time.monotonic()
+    gate_id = "CONTEXT_BUNDLE_FRESHNESS_GATE"
+
+    bundle_dir = root / "compiled_context"
+    if not bundle_dir.exists():
+        return _skip(gate_id, "compiled_context/ ausente — gate não aplicável.", _ms(t0))
+
+    bundle_files = sorted(bundle_dir.rglob("*.json"))
+    if not bundle_files:
+        return _skip(gate_id, "compiled_context/ sem bundles *.json — gate não aplicável.", _ms(t0))
+
+    violations: list[dict] = []
+    checked: list[str] = []
+
+    for bundle_path in bundle_files:
+        bundle_relpath = str(bundle_path.relative_to(root))
+        checked.append(bundle_relpath)
+
+        try:
+            bundle_data = json.loads(bundle_path.read_text(encoding="utf-8"))
+        except Exception as exc:
+            violations.append({
+                "blocking_code": BLOCKED_CONTEXT_BUNDLE_STALE,
+                "artifact": bundle_relpath,
+                "message": f"Bundle ilegível: {exc}. Recompilar com compile_context_bundle.py.",
+                "severity": "error",
+            })
+            continue
+
+        inputs = bundle_data.get("inputs")
+        if not isinstance(inputs, list):
+            violations.append({
+                "blocking_code": BLOCKED_CONTEXT_BUNDLE_STALE,
+                "artifact": bundle_relpath,
+                "message": "Bundle sem campo 'inputs' (lista). Recompilar com compile_context_bundle.py.",
+                "severity": "error",
+            })
+            continue
+
+        for entry in inputs:
+            if not isinstance(entry, dict):
+                continue
+            relpath = entry.get("relpath", "")
+            stored_hash = entry.get("sha256", "")
+            if not relpath or not stored_hash:
+                continue
+
+            input_path = root / relpath
+            checked.append(str(input_path.relative_to(root)))
+
+            if not input_path.exists():
+                violations.append({
+                    "blocking_code": BLOCKED_CONTEXT_BUNDLE_STALE,
+                    "artifact": bundle_relpath,
+                    "message": (
+                        f"Input '{relpath}' ausente no disco. "
+                        "Bundle stale — recompilar com compile_context_bundle.py."
+                    ),
+                    "severity": "error",
+                })
+                continue
+
+            try:
+                content = input_path.read_bytes()
+                actual_hash = _hashlib.sha256(content).hexdigest()
+            except Exception as exc:
+                violations.append({
+                    "blocking_code": BLOCKED_CONTEXT_BUNDLE_STALE,
+                    "artifact": bundle_relpath,
+                    "message": f"Falha ao calcular SHA-256 de '{relpath}': {exc}",
+                    "severity": "error",
+                })
+                continue
+
+            if actual_hash != stored_hash:
+                violations.append({
+                    "blocking_code": BLOCKED_CONTEXT_BUNDLE_STALE,
+                    "artifact": bundle_relpath,
+                    "message": (
+                        f"Input '{relpath}' alterado desde a última compilação "
+                        f"(armazenado: {stored_hash[:12]}…, atual: {actual_hash[:12]}…). "
+                        "Recompilar: python3 scripts/compile/compile_context_bundle.py "
+                        f"--module {bundle_data.get('module', '<module>')}."
+                    ),
+                    "severity": "error",
+                })
+
+    if violations:
+        stale_bundles = len({v["artifact"] for v in violations})
+        return _pg(
+            gate_id,
+            "FAIL",
+            True,
+            BLOCKED_CONTEXT_BUNDLE_STALE,
+            f"{stale_bundles} bundle(s) defasado(s). Recompilar antes de continuar a implementação.",
+            [],
+            checked,
+            [],
+            violations,
+            _ms(t0),
+        )
+
+    return _pg(
+        gate_id,
+        "PASS",
+        True,
+        None,
+        f"{len(bundle_files)} bundle(s) frescos — todos os inputs batem com os hashes registrados.",
+        [],
+        checked,
+        [],
+        [],
+        _ms(t0),
+    )
+
+
 def _g16_readiness_summary(gates: list[dict]) -> dict:
     t0 = time.monotonic()
     gate_id = "READINESS_SUMMARY_GATE"
@@ -9278,10 +12162,22 @@ def run_pipeline(
         "SURFACE_PROMOTION_COHERENCE_GATE",
         "AXIOM_INTEGRITY_GATE",
         "CANON_ALLOWLIST_GATE",
+        "DOC_USAGE_GATE",
+        "CANON_CONTRACT_DRIVEN_PARITY_GATE",
+        "HBTRACK_CANON_PARITY_GATE",
+        "IMPACT_ANALYSIS_GATE",
+        "PARTIAL_UPDATE_GATE",
+        "OPS_CANON_PARITY_GATE",
+        "ENV_TEMPLATE_EQUIVALENCE_GATE",
+        "DEPLOY_WORKFLOW_ENV_PARITY_GATE",
+        "SECRETS_CATALOG_GATE",
+        "SERVICE_TOPOLOGY_PARITY_GATE",
+        "ARCH_DECISION_PRESENCE_GATE",
         "READINESS_GENERATION_COMPATIBILITY_GATE",  # FIX Ordem 3: agora no padrão
         "WAIVER_VALIDITY_GATE",  # FIX Ordem 5: agora no padrão
         "READINESS_HUMAN_CONFIRMATION_GATE",  # FIX Ordem 6: agora no padrão
         "CROSS_SPEC_ALIGNMENT_GATE",  # FIX BACKLOG_ITEM_2 (2A): no padrão para validação de links
+        "OPENAPI_SCHEMA_EQUIVALENCE_GATE",
         # GAP-02: Gates de tooling adicionados ao perfil precommit (ferramentas instaladas no CI via npm ci)
         "REF_HERMETICITY_GATE",                # sem tool externo — puro Python
         "OPENAPI_ROOT_STRUCTURE_GATE",         # redocly lint
@@ -9293,12 +12189,20 @@ def run_pipeline(
         "ARAZZO_VALIDATION_GATE",              # Arazzo YAML parsing
         "ARAZZO_COMPLETENESS_GATE",            # Arazzo completeness
         "TOOLING_CONFIG_GATE",                 # redocly.yaml / .spectral.yaml presentes
+        "CONTEXT_BUNDLE_FRESHNESS_GATE",       # B7-002: bundle stale detection
     }
     _local_ids = _precommit_ids | {
         "DECISION_IR_CONFORMANCE_GATE",
         "DERIVED_DRIFT_GATE",
         "ADVERSARIAL_ANALYSIS_GATE",
         "FEATURE_READINESS_GATE",
+        "IMPACT_ANALYSIS_GATE",
+        "PARTIAL_UPDATE_GATE",
+        "OPS_CANON_PARITY_GATE",
+        "ENV_TEMPLATE_EQUIVALENCE_GATE",
+        "DEPLOY_WORKFLOW_ENV_PARITY_GATE",
+        "SECRETS_CATALOG_GATE",
+        "SERVICE_TOPOLOGY_PARITY_GATE",
         # FIX BACKLOG_ITEM_1 (Passos E-F): Adicionar validadores externos ao default local profile
         "OPENAPI_ROOT_STRUCTURE_GATE",         # Redocly lint (validação OpenAPI)
         "ASYNCAPI_VALIDATION_GATE",            # AsyncAPI validate (validação AsyncAPI)
@@ -9308,11 +12212,13 @@ def run_pipeline(
         "SPECTRAL_LINTING_GATE",               # FIX BACKLOG_ITEM_1 (Passo D): Spectral linting (estilos OpenAPI)
         # FIX BACKLOG_ITEM_2 (2A): CROSS_SPEC_ALIGNMENT_GATE para validação de links Arazzo
         "CROSS_SPEC_ALIGNMENT_GATE",           # Validação de operationIds em Arazzo vs OpenAPI
+        "OPENAPI_SCHEMA_EQUIVALENCE_GATE",
     }
 
     # Stage-specific gate sets (Fase 0 / 1 / 2)
     _session_start_ids = {
         "AXIOM_INTEGRITY_GATE",
+        "ARCH_DECISION_PRESENCE_GATE",
         "HANDOFF_COHERENCE_GATE",
         "MODULE_STATUS_COHERENCE_GATE",
     }
@@ -9366,7 +12272,18 @@ def run_pipeline(
         ("PRE_CONTRACT_EVIDENCE_GATE", lambda: _g2j_pre_contract_evidence(root)),
         ("SHADOW_AUTHORITY_GATE", lambda: _g2k_shadow_authority(root)),
         ("DECISION_IR_CONFORMANCE_GATE", lambda: _g2l_decision_ir_conformance(root)),
+        ("ARCH_DECISION_PRESENCE_GATE", lambda: _g2m_arch_decision_presence(root)),
         ("CANON_ALLOWLIST_GATE", lambda: _g2n_canon_allowlist(root)),
+        ("DOC_USAGE_GATE", lambda: _g2o_doc_usage(root)),
+        ("CANON_CONTRACT_DRIVEN_PARITY_GATE", lambda: _g2p_canon_contract_driven_parity(root)),
+        ("HBTRACK_CANON_PARITY_GATE", lambda: _g2q_hbtrack_canon_parity(root)),
+        ("IMPACT_ANALYSIS_GATE", lambda: _g2r_impact_analysis(root)),
+        ("PARTIAL_UPDATE_GATE", lambda: _g2s_partial_update(root)),
+        ("OPS_CANON_PARITY_GATE", lambda: _g2t_ops_canon_parity(root)),
+        ("ENV_TEMPLATE_EQUIVALENCE_GATE", lambda: _g2u_env_template_equivalence(root)),
+        ("DEPLOY_WORKFLOW_ENV_PARITY_GATE", lambda: _g2v_deploy_workflow_env_parity(root)),
+        ("SECRETS_CATALOG_GATE", lambda: _g2w_secrets_catalog(root)),
+        ("SERVICE_TOPOLOGY_PARITY_GATE", lambda: _g2x_service_topology_parity(root)),
         ("PLACEHOLDER_RESIDUE_GATE", lambda: _g3_placeholder_residue(root)),
         ("REF_HERMETICITY_GATE", lambda: _g4_ref_hermeticity(root)),
         ("TOOLING_CONFIG_GATE", lambda: _g4a_tooling_config(root)),
@@ -9375,6 +12292,7 @@ def run_pipeline(
         ("OPENAPI_POLICY_RULESET_GATE", lambda: _g6_openapi_policy_ruleset(root)),
         ("JSON_SCHEMA_VALIDATION_GATE", lambda: _g7_json_schema_validation(root)),
         ("CROSS_SPEC_ALIGNMENT_GATE", lambda: _g8_cross_spec_alignment(root, axioms)),
+        ("OPENAPI_SCHEMA_EQUIVALENCE_GATE", lambda: _g8a_openapi_schema_equivalence(root)),
         ("CONTRACT_BREAKING_CHANGE_GATE", lambda: _g9_contract_breaking_change(root)),
         ("TRANSFORMATION_FEASIBILITY_GATE", lambda: _g10_transformation_feasibility(root)),
         ("HTTP_RUNTIME_CONTRACT_GATE", lambda: _g11_http_runtime_contract(root)),
@@ -9402,6 +12320,7 @@ def run_pipeline(
         ("READINESS_HUMAN_CONFIRMATION_GATE", lambda: _g_readiness_human_confirmation(root)),  # FIX Ordem 6: implementado
         ("FEATURE_COVERAGE_GATE", lambda: _g_feature_coverage(root)),
         ("LEGACY_CRITICAL_PATH_GATE", lambda: _g_legacy_isolation(root)),  # FASE 7
+        ("CONTEXT_BUNDLE_FRESHNESS_GATE", lambda: _g_context_bundle_freshness(root)),  # B7-002
     ]
     for gate_id_hint, gate_fn in gate_plan:
         gate_result = _maybe(gate_fn, gate_id_hint)

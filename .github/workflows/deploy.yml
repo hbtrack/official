@@ -83,6 +83,7 @@ jobs:
           - 6379:6379
 
     env:
+      # Fixtures locais do job de teste. Nao representam contrato operacional de deploy.
       SECRET_KEY: ci-secret-key-for-testing-only-not-real
       DEBUG: "false"
       ALLOWED_HOSTS: localhost,127.0.0.1
@@ -124,10 +125,13 @@ jobs:
       contents: read
       packages: write
     outputs:
-      image_tag: ${{ steps.meta.outputs.tags }}
+      image_tag: ${{ steps.deploy-tag.outputs.image_tag }}
       image_sha: ${{ github.sha }}
     steps:
       - uses: actions/checkout@v4
+      - name: Compute deploy image tag
+        id: deploy-tag
+        run: echo "image_tag=$(echo "${GITHUB_SHA}" | cut -c1-7)" >> "$GITHUB_OUTPUT"
       - name: Set image metadata
         id: meta
         uses: docker/metadata-action@v5
@@ -177,6 +181,26 @@ jobs:
       url: ${{ vars.STAGING_URL }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Render staging .env from operational contract
+        env:
+          HB_ENV_SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          HB_ENV_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          HB_ENV_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          HB_ENV_JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
+          HB_ENV_JWT_PUBLIC_KEY: ${{ secrets.JWT_PUBLIC_KEY }}
+          HB_ENV_CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          HB_ENV_CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          HB_ENV_CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+          HB_ENV_CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL }}
+          HB_ENV_RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          HB_ENV_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          mkdir -p .deploy
+          bash scripts/deploy/inject_env.sh staging .deploy/staging.env "${{ needs.build.outputs.image_tag }}"
 
       - name: Sincronizar infra para o servidor staging
         uses: appleboy/scp-action@v0.1.7
@@ -187,6 +211,15 @@ jobs:
           source: "infra/"
           target: /opt/hbtrack/staging
 
+      - name: Sincronizar .env renderizado para o servidor staging
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST_STAGING }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: ".deploy/staging.env"
+          target: /opt/hbtrack/staging
+
       - name: Provisionar e fazer deploy no staging via SSH
         uses: appleboy/ssh-action@v1
         with:
@@ -195,90 +228,10 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             set -e
-            mkdir -p /opt/hbtrack/staging
+            mkdir -p /opt/hbtrack/staging /opt/hbtrack/staging/.deploy
             cd /opt/hbtrack/staging
-
-            if [ ! -f .env ]; then
-              echo "🔧 Primeiro deploy: gerando .env inicial para staging..."
-              SK=$(python3 -c "import secrets; print(secrets.token_urlsafe(50))")
-              DB=$(python3 -c "import secrets; print(secrets.token_hex(16))")
-              {
-                echo "REGISTRY=ghcr.io/hbtrack"
-                echo "IMAGE_TAG=latest"
-                echo "NGINX_CONF=nginx.staging.conf"
-                echo "SECRET_KEY=${SK}"
-                echo "DEBUG=false"
-                echo "ALLOWED_HOSTS=staging.handballtrack.app,191.252.185.34"
-                echo "DB_NAME=hb_track_staging"
-                echo "DB_USER=hbtrack"
-                echo "DB_PASSWORD=${DB}"
-                echo "DB_HOST=postgres"
-                echo "DB_PORT=5432"
-                echo "DB_TEST_NAME=hb_track_staging_test"
-                echo "POSTGRES_DB=hb_track_staging"
-                echo "POSTGRES_USER=hbtrack"
-                echo "POSTGRES_PASSWORD=${DB}"
-                echo "REDIS_URL=redis://redis:6379/0"
-                echo "CELERY_BROKER_URL=redis://redis:6379/0"
-                echo "CELERY_TIMEZONE=America/Sao_Paulo"
-                echo "CORS_ALLOWED_ORIGINS=https://staging.handballtrack.app"
-                echo "LOG_LEVEL=INFO"
-                echo "CLOUDINARY_URL="
-                echo "CLOUDINARY_CLOUD_NAME="
-                echo "CLOUDINARY_API_KEY="
-                echo "CLOUDINARY_API_SECRET="
-                echo "CLOUDINARY_UPLOAD_PRESET=hb_profile_photo"
-                echo "RESEND_API_KEY="
-                echo "RESEND_FROM_EMAIL=suporte@handballtrack.app"
-                echo "RESEND_FROM_NAME=Handball Track"
-              } > .env
-              echo "✅ .env gerado com sucesso"
-            else
-              echo "✅ .env já existe — mantendo credenciais existentes"
-            fi
-
-            SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
-            sed -i "s|^IMAGE_TAG=.*|IMAGE_TAG=${SHORT_SHA}|" .env
-
-            # Validar .env: se tiver linhas sem VAR= (ex: PEM key multi-linha), regenerar
-            if grep -qvP '^\s*(#.*|[A-Za-z_][A-Za-z0-9_]*=.*)?\s*$' .env 2>/dev/null; then
-              echo "⚠️ .env corrompido (formato inválido detectado) — regenerando..."
-              SK=$(python3 -c "import secrets; print(secrets.token_urlsafe(50))")
-              DB=$(python3 -c "import secrets; print(secrets.token_hex(16))")
-              {
-                echo "REGISTRY=ghcr.io/hbtrack"
-                echo "IMAGE_TAG=${SHORT_SHA}"
-                echo "NGINX_CONF=nginx.staging.conf"
-                echo "SECRET_KEY=${SK}"
-                echo "DEBUG=false"
-                echo "ALLOWED_HOSTS=staging.handballtrack.app,191.252.185.34"
-                echo "DB_NAME=hb_track_staging"
-                echo "DB_USER=hbtrack"
-                echo "DB_PASSWORD=${DB}"
-                echo "DB_HOST=postgres"
-                echo "DB_PORT=5432"
-                echo "DB_TEST_NAME=hb_track_staging_test"
-                echo "POSTGRES_DB=hb_track_staging"
-                echo "POSTGRES_USER=hbtrack"
-                echo "POSTGRES_PASSWORD=${DB}"
-                echo "REDIS_URL=redis://redis:6379/0"
-                echo "CELERY_BROKER_URL=redis://redis:6379/0"
-                echo "CELERY_TIMEZONE=America/Sao_Paulo"
-                echo "CORS_ALLOWED_ORIGINS=https://staging.handballtrack.app"
-                echo "LOG_LEVEL=INFO"
-                echo "CLOUDINARY_URL="
-                echo "CLOUDINARY_CLOUD_NAME="
-                echo "CLOUDINARY_API_KEY="
-                echo "CLOUDINARY_API_SECRET="
-                echo "CLOUDINARY_UPLOAD_PRESET=hb_profile_photo"
-                echo "RESEND_API_KEY="
-                echo "RESEND_FROM_EMAIL=suporte@handballtrack.app"
-                echo "RESEND_FROM_NAME=Handball Track"
-              } > .env
-              echo "✅ .env regenerado com credenciais novas"
-            else
-              echo "✅ .env válido — credenciais existentes mantidas"
-            fi
+            install -m 600 .deploy/staging.env .env
+            rm -f .deploy/staging.env
 
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin 2>/dev/null || true
 
@@ -319,7 +272,7 @@ jobs:
             echo "--- LOGS DO CONTAINER API (últimas 80 linhas) ---"
             docker compose -f infra/docker-compose.prod.yml logs api --tail=80 2>&1 || true
 
-            echo "✅ Deploy staging concluído — IMAGE_TAG=${SHORT_SHA}"
+            echo "✅ Deploy staging concluído — IMAGE_TAG=${{ needs.build.outputs.image_tag }}"
 
       - name: Health check — staging
         run: |
@@ -414,8 +367,46 @@ jobs:
     name: "7. Deploy → Production"
     runs-on: ubuntu-latest
     needs: approve
+    environment:
+      name: production
+      url: ${{ vars.PRODUCTION_URL }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Render production .env from operational contract
+        env:
+          HB_ENV_SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          HB_ENV_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          HB_ENV_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          HB_ENV_JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
+          HB_ENV_JWT_PUBLIC_KEY: ${{ secrets.JWT_PUBLIC_KEY }}
+          HB_ENV_CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+          HB_ENV_CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+          HB_ENV_CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+          HB_ENV_CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL }}
+          HB_ENV_RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          HB_ENV_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          mkdir -p .deploy
+          bash scripts/deploy/inject_env.sh production .deploy/production.env "${{ needs.build.outputs.image_tag }}"
+      - name: Sincronizar infra para o servidor production
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST_PRODUCTION }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "infra/"
+          target: /opt/hbtrack/production
+      - name: Sincronizar .env renderizado para o servidor production
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST_PRODUCTION }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: ".deploy/production.env"
+          target: /opt/hbtrack/production
       - name: Deploy to production via SSH
         uses: appleboy/ssh-action@v1
         with:
@@ -423,11 +414,14 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
+            set -e
+            mkdir -p /opt/hbtrack/production /opt/hbtrack/production/.deploy
             cd /opt/hbtrack/production
             # Salvar SHA anterior para rollback
             PREV_SHA=$(grep "^IMAGE_TAG=" .env | cut -d= -f2 || echo "")
             echo "$PREV_SHA" > .last_sha
-            sed -i "s|^IMAGE_TAG=.*|IMAGE_TAG=${{ needs.build.outputs.image_tag }}|" .env
+            install -m 600 .deploy/production.env .env
+            rm -f .deploy/production.env
             docker compose -f infra/docker-compose.prod.yml pull
             docker compose -f infra/docker-compose.prod.yml up -d --force-recreate
       - name: Health check — production

@@ -1,16 +1,16 @@
 {
-  "session_id": "70731b2d-c614-4cd5-944b-564b0917df00",
-  "session_timestamp": "2026-03-31T10:49:19.570819+00:00",
+  "session_id": "320b190f-3ae8-4046-8989-8e9fb9a0f4be",
+  "session_timestamp": "2026-04-01T06:04:10.176520+00:00",
   "branch": "main",
   "pipeline_version": "1.0.0",
-  "boot_profile_id": "roadmap_execution",
-  "task_type": "execute_roadmap_phase",
+  "boot_profile_id": "contract_execution",
+  "task_type": "generate_code",
   "stage": 0,
-  "write_scope": "roadmap",
-  "worker_id": "execute_roadmap_phase",
+  "write_scope": "backend",
+  "worker_id": "code_generator",
   "git_user": "HB Track Agent",
   "git_email": "davis@hbtrack.local",
-  "operation_mode": "ROADMAP",
+  "operation_mode": "CDD",
   "stage0_validation_results": {
     "task_type_valid": true,
     "module_valid": true,
@@ -19,58 +19,7 @@
     "boot_paths_valid": true,
     "required_sections_resolvable": true
   },
-  "roadmap_phase": 5,
-  "stage0_exit_code": 0,
-  "hook_exit_code": 0,
-  "hook_validated_at": "2026-03-31T09:28:14.473870+00:00",
-  "module_focus": "training",
-  "stage3_exit_code": 2,
-  "roadmap_task_id": "roadmap-fase5-frontend-ciclo1",
-  "module": "training",
-  "stage2_artifacts": [
-    {
-      "path": "contracts/asyncapi/asyncapi_validate.log",
-      "sha256": "009084f6c52fb17114e7bb182789ffc5e39dd3a035f036cba9cf25c30ea7bd17",
-      "created_at": "2026-03-26T08:18:30.458623+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "contracts/schemas/reports/report_job.schema.json",
-      "sha256": "cb181a5444546c5e9d9f440cca9cf9a40089f061d0b888f1a8d1ab216fcc56dd",
-      "created_at": "2026-03-26T08:21:32.252406+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "contracts/schemas/training/ajv_compile.log",
-      "sha256": "d0532788ca81ebd548a3883c83a074e4781a82cce26813f5dc3b56b8579c33c2",
-      "created_at": "2026-03-26T08:21:38.546432+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "contracts/openapi/redocly_lint.log",
-      "sha256": "6ee11b6d54838065f400e15059268b96d2db8afe75cd954fb66322af3ffdc3c4",
-      "created_at": "2026-03-26T11:08:25.068130+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "contracts/openapi/spectral_lint.log",
-      "sha256": "20dacc396fb2ab9ddaf802b5703aa67218b93ac39fae1fd982294d0798f65328",
-      "created_at": "2026-03-26T11:08:38.343345+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/training/PERMISSIONS_TRAINING.md",
-      "sha256": "0a1344e55487f618076a4c67e95abf4100686e8c9476771ca5e6e59ba9017870",
-      "created_at": "2026-03-31T09:26:03.743409+00:00",
-      "gate_exit_code": 0,
-      "validated_at": "2026-03-31T09:26:20.386229+00:00"
-    },
-    {
-      "path": "docs/hbtrack/modulos/video/PERMISSIONS_VIDEO.md",
-      "sha256": "5f4d9acd05eca46a571b9e477ccb0822ffde0631b4ff37b30dc2a17c652217d5",
-      "created_at": "2026-03-31T09:26:38.419092+00:00",
-      "gate_exit_code": 0
-    }
-  ],
-  "stage2_exit_code": 0
+  "module": "reports",
+  "module_focus": "reports",
+  "stage0_exit_code": 0
 }

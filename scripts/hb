@@ -20,8 +20,11 @@ Referência: .dev/planejamento/execut.md (Fase 2 — PR2)
 """
 
 import argparse
+import importlib.util
 import json
+import os
 import pathlib
+import shutil
 import subprocess
 import sys
 from typing import Optional, Dict, Any
@@ -35,6 +38,10 @@ import jsonschema
 
 class HBCLIv2:
     """CLI v2 com validação determinística contra SSOTs."""
+
+    LOCAL_TOOLCHAIN_BLOCK_CODE = "BLOCKED_LOCAL_TOOLCHAIN_MISSING"
+    STAGE_NOT_ALLOWED_BLOCK_CODE = "BLOCKED_STAGE_NOT_ALLOWED"
+    LOCAL_CONTRACT_VENV = ".venv-contract"
     
     def __init__(self):
         """Inicializar paths e carregar SSOTs."""
@@ -42,6 +49,10 @@ class HBCLIv2:
         self.session_file = self.root / "_reports/session_start.json"
         self.legacy_session_dir = self.root / "_reports/legacy"
         self.validator_script = self.root / "scripts/contracts/validate/validate_contracts.py"
+        self.source_graph_compiler_script = self.root / "scripts/compile/compile_source_graph.py"
+        self.ops_contract_compiler_script = self.root / "scripts/compile/compile_ops_contracts.py"
+        self.context_bundle_compiler_script = self.root / "scripts/compile/compile_context_bundle.py"
+        self.local_contract_venv = self.root / self.LOCAL_CONTRACT_VENV
         
         # Carregar SSOTs dos novos paths (.contract_driven)
         self.boot_profiles = self._load_yaml(self.root / ".contract_driven/BOOT_PROFILES.yaml")
@@ -83,6 +94,126 @@ class HBCLIv2:
             raise FileNotFoundError(f"Schema não encontrado: {path}")
         with open(path) as f:
             return json.load(f)
+
+    def _local_contract_python_candidates(self) -> list[pathlib.Path]:
+        candidates = [
+            self.local_contract_venv / "bin" / "python",
+            self.local_contract_venv / "Scripts" / "python.exe",
+            pathlib.Path(sys.executable),
+        ]
+        seen: set[str] = set()
+        unique: list[pathlib.Path] = []
+        for candidate in candidates:
+            key = str(candidate)
+            if key in seen:
+                continue
+            seen.add(key)
+            unique.append(candidate)
+        return unique
+
+    @staticmethod
+    def _missing_python_modules(python_bin: pathlib.Path, modules: tuple[str, ...]) -> list[str]:
+        if not python_bin.exists() or not modules:
+            return []
+        result = subprocess.run(
+            [
+                str(python_bin),
+                "-c",
+                (
+                    "import importlib.util, json, sys; "
+                    "mods=sys.argv[1:]; "
+                    "missing=[m for m in mods if importlib.util.find_spec(m) is None]; "
+                    "print(json.dumps(missing)); "
+                    "raise SystemExit(0 if not missing else 1)"
+                ),
+                *modules,
+            ],
+            capture_output=True,
+            text=True,
+        )
+        output = result.stdout.strip() or "[]"
+        try:
+            return json.loads(output)
+        except json.JSONDecodeError:
+            return list(modules)
+
+    def _build_tool_env(self) -> dict[str, str]:
+        env = os.environ.copy()
+        tool_dirs = [
+            self.local_contract_venv / "bin",
+            self.local_contract_venv / "Scripts",
+            self.root / "node_modules" / ".bin",
+        ]
+        current_path = env.get("PATH", "")
+        prefixes = [str(path) for path in tool_dirs if path.exists()]
+        if prefixes:
+            joined = os.pathsep.join(prefixes)
+            env["PATH"] = f"{joined}{os.pathsep}{current_path}" if current_path else joined
+        return env
+
+    def _missing_cli_tools(self, tools: tuple[str, ...]) -> list[str]:
+        if not tools:
+            return []
+        env = self._build_tool_env()
+        tool_path = env.get("PATH", "")
+        missing = [tool for tool in tools if shutil.which(tool, path=tool_path) is None]
+        return missing
+
+    def _missing_cli_groups(self, groups: tuple[tuple[str, ...], ...]) -> list[str]:
+        if not groups:
+            return []
+        env = self._build_tool_env()
+        tool_path = env.get("PATH", "")
+        missing: list[str] = []
+        for group in groups:
+            if not any(shutil.which(tool, path=tool_path) for tool in group):
+                missing.append(" / ".join(group))
+        return missing
+
+    def _resolve_python_with_modules(self, modules: tuple[str, ...]) -> Optional[pathlib.Path]:
+        for candidate in self._local_contract_python_candidates():
+            if not candidate.exists():
+                continue
+            if not self._missing_python_modules(candidate, modules):
+                return candidate
+        return None
+
+    def _ensure_local_contract_env(
+        self,
+        command_name: str,
+        *,
+        python_modules: tuple[str, ...] = (),
+        cli_tools: tuple[str, ...] = (),
+        cli_groups: tuple[tuple[str, ...], ...] = (),
+    ) -> Optional[pathlib.Path]:
+        python_bin = self._resolve_python_with_modules(python_modules)
+        missing_parts: list[str] = []
+
+        if python_bin is None and python_modules:
+            missing_parts.append(f"módulos Python ausentes: {', '.join(python_modules)}")
+
+        missing_tools = self._missing_cli_tools(cli_tools)
+        if missing_tools:
+            missing_parts.append(f"CLIs ausentes: {', '.join(missing_tools)}")
+
+        missing_groups = self._missing_cli_groups(cli_groups)
+        if missing_groups:
+            missing_parts.append(f"grupos de CLI ausentes: {', '.join(missing_groups)}")
+
+        if missing_parts:
+            print(
+                f"❌ {self.LOCAL_TOOLCHAIN_BLOCK_CODE}: ambiente local de contratos incompleto para '{command_name}'.",
+                file=sys.stderr,
+            )
+            for part in missing_parts:
+                print(f"   - {part}", file=sys.stderr)
+            print(
+                "   Execute: bash scripts/bootstrap/dev_contract_env.sh",
+                file=sys.stderr,
+            )
+            return None
+
+        return python_bin or pathlib.Path(sys.executable)
     
     def _load_session(self) -> Dict[str, Any]:
         """Carregar session_start.json ou retornar dict vazio."""
@@ -137,7 +268,7 @@ class HBCLIv2:
         """Validação de elegibilidade para generate_code (Ordem 1).
 
         Regras (em sequência, bloqueante):
-        1. Módulo deve estar em 'validated_contract' ou em status >= 'implementation_ready'.
+        1. Módulo deve estar em status >= 'implementation_ready'.
         2. Deve existir relatório adversarial em _reports/adversarial/<module>/ALL.adversarial.json
            ou qualquer _reports/adversarial/*<module>*.adversarial.json.
         3. overall_status do relatório deve ser 'PASS'.
@@ -147,7 +278,6 @@ class HBCLIv2:
         mod_data = modules.get(module, {})
         mod_status = mod_data.get("status", "draft_contract")
         eligible_statuses = {
-            "validated_contract",
             "implementation_ready",
             "implemented",
             "staging_validated",
@@ -206,6 +336,189 @@ class HBCLIv2:
             return 1
 
         print(f"✅ Elegibilidade generate_code: módulo='{module}', status='{mod_status}', adversarial=PASS")
+        return 0
+
+    def _check_implementation_promotion_eligibility(self, module: str) -> int:
+        """Validação de elegibilidade para implementation_promotion.
+
+        Regras (em sequência, bloqueante):
+        1. Módulo deve estar exatamente em `implementation_ready`.
+        2. Deve existir relatório adversarial PASS para o módulo.
+        3. Deve existir pelo menos uma feature `implemented` em FEATURE_REGISTRY.yaml.
+        4. Deve existir evidência mínima de runtime em `src/<module>/`.
+        """
+        modules = self.module_registry.get("modules", {})
+        mod_data = modules.get(module, {})
+        mod_status = mod_data.get("status", "draft_contract")
+        if mod_status != "implementation_ready":
+            print(
+                f"❌ BLOCKED_IMPLEMENTATION_PROMOTION_INELIGIBLE: módulo '{module}' está em '{mod_status}'.",
+                file=sys.stderr,
+            )
+            print(
+                "   Requerido: status exato `implementation_ready`.",
+                file=sys.stderr,
+            )
+            print(
+                "   Siga a sequência: readiness_promotion → generate_code → implementation_promotion.",
+                file=sys.stderr,
+            )
+            return 1
+
+        adversarial_dir = self.root / "_reports" / "adversarial"
+        canonical_path = adversarial_dir / module / "ALL.adversarial.json"
+        candidates = [canonical_path] + sorted(adversarial_dir.glob(f"*{module}*.adversarial.json"))
+        report_found = False
+        report_pass = False
+        for rpath in candidates:
+            if not rpath.exists():
+                continue
+            try:
+                data = json.loads(rpath.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            report_found = True
+            if data.get("overall_status") == "PASS":
+                report_pass = True
+            break
+
+        if not report_found:
+            print(
+                f"❌ BLOCKED_IMPLEMENTATION_PROMOTION_INELIGIBLE: módulo '{module}' não possui relatório "
+                "de análise adversarial em _reports/adversarial/.",
+                file=sys.stderr,
+            )
+            return 1
+
+        if not report_pass:
+            print(
+                f"❌ BLOCKED_IMPLEMENTATION_PROMOTION_INELIGIBLE: módulo '{module}' tem relatório adversarial "
+                "mas overall_status != PASS.",
+                file=sys.stderr,
+            )
+            return 1
+
+        feature_registry_path = self.root / "docs" / "_canon" / "FEATURE_REGISTRY.yaml"
+        try:
+            feature_registry = self._load_yaml(feature_registry_path)
+        except Exception as exc:
+            print(
+                f"❌ BLOCKED_IMPLEMENTATION_PROMOTION_INELIGIBLE: FEATURE_REGISTRY.yaml indisponível ({exc}).",
+                file=sys.stderr,
+            )
+            return 1
+
+        features = feature_registry.get("features", [])
+        has_implemented_feature = any(
+            isinstance(entry, dict)
+            and entry.get("module") == module
+            and entry.get("status") == "implemented"
+            for entry in features
+        )
+        if not has_implemented_feature:
+            print(
+                f"❌ BLOCKED_IMPLEMENTATION_PROMOTION_INELIGIBLE: módulo '{module}' não possui "
+                "feature com status `implemented` em FEATURE_REGISTRY.yaml.",
+                file=sys.stderr,
+            )
+            return 1
+
+        src_dir = self.root / "src" / module
+        required_paths = [
+            src_dir / "api.py",
+            src_dir / "schemas.py",
+            src_dir / "tests",
+        ]
+        missing = [str(path.relative_to(self.root)) for path in required_paths if not path.exists()]
+        if missing:
+            print(
+                f"❌ BLOCKED_IMPLEMENTATION_PROMOTION_INELIGIBLE: evidência mínima de runtime ausente para '{module}'.",
+                file=sys.stderr,
+            )
+            for rel in missing:
+                print(f"   - faltando: {rel}", file=sys.stderr)
+            return 1
+
+        print(
+            f"✅ Elegibilidade implementation_promotion: módulo='{module}', status='{mod_status}', "
+            "adversarial=PASS, feature_coverage=OK, runtime=OK"
+        )
+        return 0
+
+    def _load_latest_contract_report(self) -> tuple[dict | None, str | None]:
+        report_path = self.root / "_reports" / "contract_gates" / "latest.json"
+        if not report_path.exists():
+            return None, f"relatório ausente: {report_path.relative_to(self.root)}"
+        try:
+            return self._load_json(report_path), None
+        except Exception as exc:
+            return None, str(exc)
+
+    @staticmethod
+    def _gate_status(report: dict, gate_id: str) -> str | None:
+        for gate in report.get("gates", []):
+            if gate.get("gate_id") == gate_id:
+                return gate.get("status")
+        return None
+
+    def _check_runtime_promotion_report_prereqs(self, block_code: str) -> tuple[dict | None, int]:
+        report, error = self._load_latest_contract_report()
+        if report is None:
+            print(f"❌ {block_code}: relatório de gates indisponível ({error}).", file=sys.stderr)
+            return None, 1
+        if report.get("overall_status") != "PASS":
+            print(f"❌ {block_code}: _reports/contract_gates/latest.json não está em PASS.", file=sys.stderr)
+            return None, 1
+        if self._gate_status(report, "DEPLOY_READINESS_GATE") != "PASS":
+            print(f"❌ {block_code}: DEPLOY_READINESS_GATE não está em PASS.", file=sys.stderr)
+            return None, 1
+        return report, 0
+
+    def _check_staging_promotion_eligibility(self, module: str) -> int:
+        modules = self.module_registry.get("modules", {})
+        mod_data = modules.get(module, {})
+        mod_status = mod_data.get("status", "draft_contract")
+        if mod_status != "implemented":
+            print(
+                f"❌ BLOCKED_STAGING_PROMOTION_INELIGIBLE: módulo '{module}' está em '{mod_status}'.",
+                file=sys.stderr,
+            )
+            print("   Requerido: status exato `implemented`.", file=sys.stderr)
+            return 1
+        report, rc = self._check_runtime_promotion_report_prereqs("BLOCKED_STAGING_PROMOTION_INELIGIBLE")
+        if rc != 0:
+            return rc
+        http_status = self._gate_status(report, "HTTP_RUNTIME_CONTRACT_GATE")
+        if http_status not in {"PASS", "SKIP_NOT_APPLICABLE"}:
+            print(
+                "❌ BLOCKED_STAGING_PROMOTION_INELIGIBLE: HTTP_RUNTIME_CONTRACT_GATE não está elegível.",
+                file=sys.stderr,
+            )
+            return 1
+        print(
+            f"✅ Elegibilidade staging_promotion: módulo='{module}', status='{mod_status}', "
+            "pipeline=PASS, deploy_readiness=PASS"
+        )
+        return 0
+
+    def _check_release_promotion_eligibility(self, module: str) -> int:
+        modules = self.module_registry.get("modules", {})
+        mod_data = modules.get(module, {})
+        mod_status = mod_data.get("status", "draft_contract")
+        if mod_status != "staging_validated":
+            print(
+                f"❌ BLOCKED_RELEASE_PROMOTION_INELIGIBLE: módulo '{module}' está em '{mod_status}'.",
+                file=sys.stderr,
+            )
+            print("   Requerido: status exato `staging_validated`.", file=sys.stderr)
+            return 1
+        _, rc = self._check_runtime_promotion_report_prereqs("BLOCKED_RELEASE_PROMOTION_INELIGIBLE")
+        if rc != 0:
+            return rc
+        print(
+            f"✅ Elegibilidade release_promotion: módulo='{module}', status='{mod_status}', "
+            "pipeline=PASS, deploy_readiness=PASS"
+        )
         return 0
 
     
@@ -281,8 +594,7 @@ class HBCLIv2:
         """
         Valida que o stage atual está em stage_allowed para o task_type.
         Lista vazia em stage_allowed significa sem restrição de stage.
-        Emite aviso quando stage não está na lista; não bloqueia hard (stage_allowed
-        descreve o estágio de EXECUÇÃO do worker, não necessariamente o de boot).
+        Quando stage não está na lista, emite código de bloqueio explícito.
         """
         task_catalog = self.task_catalog.get("task_catalog", {})
         stage_allowed = (task_catalog.get(task_type) or {}).get("stage_allowed", [])
@@ -290,8 +602,8 @@ class HBCLIv2:
             return True  # Sem restrição declarada
         if stage not in stage_allowed:
             print(
-                f"⚠️  ROUTING: task_type '{task_type}' declara stage_allowed={stage_allowed}; "
-                f"stage atual={stage}. Worker pode exigir avanço de estágio — consulte TASK_CATALOG.yaml.",
+                f"❌ {self.STAGE_NOT_ALLOWED_BLOCK_CODE}: task_type '{task_type}' declara "
+                f"stage_allowed={stage_allowed}; stage atual={stage} fora da janela permitida.",
                 file=sys.stderr,
             )
             return False
@@ -421,6 +733,9 @@ class HBCLIv2:
             "architecture_review",
             "decision_discovery",
             "readiness_promotion",
+            "implementation_promotion",
+            "staging_promotion",
+            "release_promotion",
         }
         readonly_tasks = {
             "pre_contract_boot",
@@ -548,6 +863,18 @@ class HBCLIv2:
             rc = self._check_generate_code_eligibility(module)
             if rc != 0:
                 return rc
+        elif task_type == "implementation_promotion":
+            rc = self._check_implementation_promotion_eligibility(module)
+            if rc != 0:
+                return rc
+        elif task_type == "staging_promotion":
+            rc = self._check_staging_promotion_eligibility(module)
+            if rc != 0:
+                return rc
+        elif task_type == "release_promotion":
+            rc = self._check_release_promotion_eligibility(module)
+            if rc != 0:
+                return rc
 
         # Validação 5: boot_profile_id é válido?
         # Nota: profile_id=null em TASK_CATALOG (ex: audit tasks) → fallback para "default"
@@ -577,8 +904,9 @@ class HBCLIv2:
         if not validations_ok and exit_on_fail:
             return 1
 
-        # Validação 5e: stage_allowed — informativo (hb verify opera em stage 0)
-        self._check_stage_allowed(task_type, 0)
+        # Validação 5e: stage_allowed — bloqueante
+        if not self._check_stage_allowed(task_type, 0):
+            return 1
 
         # Derivar campos de modo
         operation_mode = "ROADMAP" if profile_id == "roadmap_execution" else "CDD"
@@ -670,10 +998,11 @@ class HBCLIv2:
         
         print(f"✅ Sessão validada: task_type={self.session.get('task_type')}, module={module}")
 
-        # Validação informativa de stage_allowed para stage 1
+        # Validação bloqueante de stage_allowed para stage 1
         task_type_s = self.session.get("task_type", "")
         if task_type_s:
-            self._check_stage_allowed(task_type_s, 1)
+            if not self._check_stage_allowed(task_type_s, 1):
+                return 1
 
         # Atualizar stage
         self.session["stage"] = 1
@@ -699,10 +1028,11 @@ class HBCLIv2:
         """
         print(f"\n══ FASE 2: PER_ARTIFACT | {artifact_path} ══")
 
-        # Validação informativa de stage_allowed para stage 2
+        # Validação bloqueante de stage_allowed para stage 2
         task_type_a = self.session.get("task_type", "")
         if task_type_a:
-            self._check_stage_allowed(task_type_a, 2)
+            if not self._check_stage_allowed(task_type_a, 2):
+                return 1
 
         artifact_full = self.root / artifact_path
         if not artifact_full.exists():
@@ -762,11 +1092,28 @@ class HBCLIv2:
             print("❌ Sessão não inicializada. Execute 'hb verify' antes de 'hb stage3'.", file=sys.stderr)
             return 1
 
+        python_bin = self._ensure_local_contract_env(
+            "hb stage3",
+            python_modules=("yaml", "jsonschema", "schemathesis"),
+            cli_tools=("oasdiff", "redocly", "spectral", "asyncapi"),
+            cli_groups=(("st", "schemathesis"),),
+        )
+        if python_bin is None:
+            return 2
+
+        for module in self._discover_source_graph_modules():
+            print(f"Verificando source graph derivado: {module}")
+            compile_result = self._run_source_graph_compiler(python_bin, module=module, check=True)
+            if compile_result != 0:
+                print(f"❌ Source graph compiler check falhou para `{module}`.", file=sys.stderr)
+                return compile_result
+
         print("Rodando validate_contracts.py --profile ci ...")
         result = subprocess.run(
-            [sys.executable, str(self.validator_script), "--profile", "ci"],
+            [str(python_bin), str(self.validator_script), "--profile", "ci"],
             capture_output=False,
             cwd=self.root,
+            env=self._build_tool_env(),
         )
 
         self.session["stage3_exit_code"] = result.returncode
@@ -807,8 +1154,65 @@ class HBCLIv2:
                 code = art.get("gate_exit_code", "?")
                 status = "✅" if code == 0 else f"❌ ({code})"
                 print(f"  {status} {art['path']} (hash: {art['sha256'][:8]}...)")
-        
+
         return 0
+
+    def cmd_compile_source_graph(self, module: str, *, check: bool = False) -> int:
+        """Compilar/verificar source graph derivado de um módulo piloto."""
+        mode_label = "CHECK" if check else "WRITE"
+        print(f"\n══ SOURCE GRAPH COMPILER | {module} | {mode_label} ══")
+
+        python_bin = self._ensure_local_contract_env(
+            "hb compile-source-graph",
+            python_modules=("yaml",),
+        )
+        if python_bin is None:
+            return 2
+
+        result = self._run_source_graph_compiler(python_bin, module=module, check=check)
+        if result == 0:
+            print("\n✅ Source graph compiler: PASS")
+        else:
+            print("\n❌ Source graph compiler: FAIL")
+        return result
+
+    def cmd_compile_ops_contracts(self, *, check: bool = False) -> int:
+        """Compilar/verificar derivados dos contratos operacionais."""
+        mode_label = "CHECK" if check else "WRITE"
+        print(f"\n══ OPS CONTRACT COMPILER | {mode_label} ══")
+
+        python_bin = self._ensure_local_contract_env(
+            "hb compile-ops-contracts",
+            python_modules=("yaml",),
+        )
+        if python_bin is None:
+            return 2
+
+        result = self._run_ops_contract_compiler(python_bin, check=check)
+        if result == 0:
+            print("\n✅ Ops contract compiler: PASS")
+        else:
+            print("\n❌ Ops contract compiler: FAIL")
+        return result
+
+    def cmd_compile_context_bundle(self, module: str, *, check: bool = False) -> int:
+        """Compilar/verificar bundles determinísticos por módulo/feature."""
+        mode_label = "CHECK" if check else "WRITE"
+        print(f"\n══ CONTEXT BUNDLE COMPILER | {module} | {mode_label} ══")
+
+        python_bin = self._ensure_local_contract_env(
+            "hb compile-context-bundle",
+            python_modules=("yaml",),
+        )
+        if python_bin is None:
+            return 2
+
+        result = self._run_context_bundle_compiler(python_bin, module=module, check=check)
+        if result == 0:
+            print("\n✅ Context bundle compiler: PASS")
+        else:
+            print("\n❌ Context bundle compiler: FAIL")
+        return result
     
     def cmd_survival_suite(self) -> int:
         """Rodar suíte de sobrevivência obrigatória.
@@ -833,9 +1237,16 @@ class HBCLIv2:
         ]
         print("\n══ SURVIVAL SUITE ══")
         print("Testes obrigatórios antes de mudança em gates/profiles/task_catalog/schemas/bridge-docs\n")
+        python_bin = self._ensure_local_contract_env(
+            "hb survival-suite",
+            python_modules=("pytest",),
+        )
+        if python_bin is None:
+            return 2
         result = subprocess.run(
-            [sys.executable, "-m", "pytest", *SURVIVAL_SUITE, "-v"],
+            [str(python_bin), "-m", "pytest", *SURVIVAL_SUITE, "-v"],
             cwd=self.root,
+            env=self._build_tool_env(),
         )
         if result.returncode == 0:
             print("\n✅ Survival suite: PASS — seguro prosseguir.")
@@ -863,6 +1274,64 @@ class HBCLIv2:
             for chunk in iter(lambda: f.read(8192), b""):
                 sha256.update(chunk)
         return sha256.hexdigest()
+
+    def _discover_source_graph_modules(self) -> list[str]:
+        modules: list[str] = []
+        base = self.root / "docs" / "hbtrack" / "modulos"
+        if not base.exists():
+            return modules
+        for manifest in sorted(base.glob("*/graph/module_manifest.yaml")):
+            modules.append(manifest.parent.parent.name)
+        return modules
+
+    def _run_source_graph_compiler(self, python_bin: pathlib.Path, *, module: str, check: bool) -> int:
+        command = [
+            str(python_bin),
+            str(self.source_graph_compiler_script),
+            "--module",
+            module,
+        ]
+        if check:
+            command.append("--check")
+        result = subprocess.run(
+            command,
+            capture_output=False,
+            cwd=self.root,
+            env=self._build_tool_env(),
+        )
+        return result.returncode
+
+    def _run_ops_contract_compiler(self, python_bin: pathlib.Path, *, check: bool) -> int:
+        command = [
+            str(python_bin),
+            str(self.ops_contract_compiler_script),
+        ]
+        if check:
+            command.append("--check")
+        result = subprocess.run(
+            command,
+            capture_output=False,
+            cwd=self.root,
+            env=self._build_tool_env(),
+        )
+        return result.returncode
+
+    def _run_context_bundle_compiler(self, python_bin: pathlib.Path, *, module: str, check: bool) -> int:
+        command = [
+            str(python_bin),
+            str(self.context_bundle_compiler_script),
+            "--module",
+            module,
+        ]
+        if check:
+            command.append("--check")
+        result = subprocess.run(
+            command,
+            capture_output=False,
+            cwd=self.root,
+            env=self._build_tool_env(),
+        )
+        return result.returncode
     
     @staticmethod
     def _get_git_user() -> str:
@@ -937,6 +1406,26 @@ class HBCLIv2:
             help="FASE 3: rodar validate_contracts.py completo e registrar stage3_exit_code",
         )
 
+        compile_graph_p = subparsers.add_parser(
+            "compile-source-graph",
+            help="Compilar ou verificar os derivados do source graph de um módulo",
+        )
+        compile_graph_p.add_argument("--module", required=True, help="Módulo com source graph ativo")
+        compile_graph_p.add_argument("--check", action="store_true", help="Não escreve; apenas verifica drift")
+
+        compile_ops_p = subparsers.add_parser(
+            "compile-ops-contracts",
+            help="Compilar ou verificar os derivados dos contratos operacionais",
+        )
+        compile_ops_p.add_argument("--check", action="store_true", help="Não escreve; apenas verifica drift")
+
+        compile_context_p = subparsers.add_parser(
+            "compile-context-bundle",
+            help="Compilar ou verificar bundles determinísticos por módulo/feature",
+        )
+        compile_context_p.add_argument("--module", required=True, help="Módulo com source graph ativo")
+        compile_context_p.add_argument("--check", action="store_true", help="Não escreve; apenas verifica drift")
+
         # help
         subparsers.add_parser("help", help="Mostrar ajuda")
         
@@ -966,6 +1455,12 @@ class HBCLIv2:
                 return self.cmd_survival_suite()
             elif parsed_args.command == "stage3":
                 return self.cmd_stage3()
+            elif parsed_args.command == "compile-source-graph":
+                return self.cmd_compile_source_graph(parsed_args.module, check=parsed_args.check)
+            elif parsed_args.command == "compile-ops-contracts":
+                return self.cmd_compile_ops_contracts(check=parsed_args.check)
+            elif parsed_args.command == "compile-context-bundle":
+                return self.cmd_compile_context_bundle(parsed_args.module, check=parsed_args.check)
         except FileNotFoundError as e:
             print(f"❌ {e}", file=sys.stderr)
             return 2

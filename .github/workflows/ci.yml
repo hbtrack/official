@@ -40,6 +40,7 @@ jobs:
           cache: npm
 
       - name: Install Node.js tooling (redocly, spectral, asyncapi)
+        # Keep local parity with scripts/bootstrap/dev_contract_env.sh
         run: npm ci --ignore-scripts
 
       - name: Set up Python 3.12
@@ -49,6 +50,7 @@ jobs:
           cache: pip
 
       - name: Install validation dependencies
+        # Keep local parity with scripts/bootstrap/dev_contract_env.sh
         run: pip install -r requirements-dev.txt -r scripts/_policy/requirements.txt
 
       - name: Install oasdiff

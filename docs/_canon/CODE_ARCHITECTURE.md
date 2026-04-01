@@ -35,6 +35,11 @@ src/
     api.py
     schemas.py
     models.py
+    generated/                 # somente modulos participantes do codegen deterministico
+      domain/
+      application/
+      infrastructure/
+      tests/
     domain/
       entities.py
       rules.py
@@ -64,6 +69,10 @@ Todos os 17 modulos canônicos possuem backend app materializado em `src/<module
 - `migrations/`;
 - `tests/`.
 
+Adicionalmente, modulos que entram no pipeline de codegen deterministico podem materializar
+uma zona derivada em `src/<module>/generated/`. No estado atual, esse layout esta ativo
+para o piloto `reports`.
+
 ## 2. Mapeamento de camadas
 
 | Camada | Arquivos atuais | Responsabilidade |
@@ -72,6 +81,7 @@ Todos os 17 modulos canônicos possuem backend app materializado em `src/<module
 | Application / Use Cases | `src/<module>/application/use_cases.py` | orquestrar casos de uso, permissao, fluxo e chamadas ao repositorio |
 | Domain | `src/<module>/domain/entities.py`, `rules.py`, `state_machine.py` | modelagem de entidade, invariantes e transicoes de estado |
 | Infrastructure | `src/<module>/infrastructure/repository.py`, `models.py` | persistencia, queries e adaptacao ao Django ORM |
+| Generated | `src/<module>/generated/**` | codigo estrutural derivado do source graph e dos contratos soberanos; nunca fonte de verdade |
 | Django app surface | `src/<module>/models.py`, `apps.py`, `migrations/` | exposicao do app para o runtime Django |
 
 Leitura correta: a narrativa antiga de `Service` deve ser interpretada como **Application / Use Cases**.
@@ -93,6 +103,10 @@ Fontes soberanas que este documento **consome**, mas nao substitui:
 - `docs/hbtrack/modulos/<module>/INVARIANTS_<MODULE>.md`;
 - `docs/hbtrack/modulos/<module>/STATE_MODEL_<MODULE>.md` quando existir;
 - `docs/hbtrack/modulos/<module>/PERMISSIONS_<MODULE>.md`.
+
+Quando `src/<module>/generated/` existir, ele deve ser tratado como derivado do source graph
+compilado, dos contratos soberanos em `contracts/**` e das docs normativas do modulo. Nenhum
+arquivo em `generated/` pode introduzir regras, campos ou fluxos nao presentes nesses artefatos.
 
 ## 4. Ausencias atuais que o agente nao pode assumir
 
@@ -116,6 +130,9 @@ Consequencia operacional:
 - `application/use_cases.py` e a camada de orquestracao principal;
 - `domain/` nao depende de `infrastructure/`;
 - testes do modulo vivem em `src/<module>/tests/`, nao em `tests/<module>/`;
+- `src/<module>/generated/` e zona derivada; adaptadores canônicos podem compor essa camada, mas a
+  autoridade continua em `docs/_canon`, `.contract_driven`, `docs/hbtrack/modulos/<module>/` e
+  `contracts/**`;
 - quando uma feature virar codigo canônico, `FEATURE_REGISTRY.yaml` deve sair de `validated` para `implemented`.
 
 ## 6. Referencias

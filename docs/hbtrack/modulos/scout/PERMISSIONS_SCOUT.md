@@ -12,6 +12,10 @@ updated: "2026-03-19"
 
 # PERMISSIONS_SCOUT.md
 
+> **Nota canônica:** O módulo `identity_access` é a fonte soberana de autenticação e autorização.
+> Este artefato **documenta** como `scout` aplica a policy global, sem redefinir roles ou credenciais.
+> Roles canônicos: `admin`, `coordinator`, `coach`, `athlete`, `member` (ADR-008; ADR-007 para JWT/session).
+
 ## Objetivo
 Registra as regras de controle de acesso do módulo `scout` derivadas das decisões
 DEC-SCOUT-001=C, DEC-SCOUT-002=B, DEC-SCOUT-003=C e dos ADRs de autenticação/autorização.

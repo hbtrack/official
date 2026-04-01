@@ -25,8 +25,8 @@
 
 1. **Verificar se `module` existe** em docs/_canon/MODULE_REGISTRY.yaml (registrado em taxonomia). Se não existir: `BLOCKED_MISSING_MODULE`.
 2. **Verificar backlog**: consultar `ARCHITECTURE_DECISION_BACKLOG.md` para o módulo alvo.
-   - Se houver entrada com `criticidade: obrigatória` e `status: open` → emitir `BLOCKED_MISSING_ARCH_DECISION` e não prosseguir para contrato sem resolução.
-   - Se houver entradas `importante` em aberto → listar como aviso, prosseguir apenas com aprovação humana explícita.
+   - Se houver entrada com `criticidade: obrigatória` e `status: open`, `blocked`, `in_discovery` ou `pending_approval` → emitir `BLOCKED_MISSING_ARCH_DECISION` e não prosseguir para contrato sem resolução.
+   - Se houver entradas `importante` pendentes (`open`, `blocked`, `in_discovery`, `pending_approval`) → listar como aviso, prosseguir apenas com aprovação humana explícita.
 3. **Verificar checklist mínima** conforme `DECISION_POLICY.md` §4 se `task_type = new_contract`:
    - Para cada tópico da checklist: checar se existe ADR aceita ou seção canônica resolvida.
    - Tópicos `obrigatórios` sem evidência → adicionar ao relatório de decisões pendentes.

@@ -1,7 +1,7 @@
 ---
 doc_type: canon
 version: "1.0.0"
-last_reviewed: "2026-03-11"
+last_reviewed: "2026-03-31"
 status: active
 ---
 
@@ -228,6 +228,12 @@ A ordem canônica é:
 			2J.	PRE_CONTRACT_EVIDENCE_GATE
 			2K.	SHADOW_AUTHORITY_GATE
 			2L.	DECISION_IR_CONFORMANCE_GATE
+			2N.	CANON_ALLOWLIST_GATE
+			2N1.	DOC_USAGE_GATE
+			2N2.	CANON_CONTRACT_DRIVEN_PARITY_GATE
+			2N3.	HBTRACK_CANON_PARITY_GATE
+			2N4.	IMPACT_ANALYSIS_GATE
+			2N5.	PARTIAL_UPDATE_GATE
 			3.	PLACEHOLDER_RESIDUE_GATE
 			4.	REF_HERMETICITY_GATE
 			4A.	TOOLING_CONFIG_GATE
@@ -768,6 +774,124 @@ Marker proibido encontrado.
 
 Blocking code
 	•	BLOCKED_EXTERNAL_SOURCE_AUTHORITY
+
+⸻
+
+9.2N CANON_ALLOWLIST_GATE
+
+Objetivo
+
+Impedir a criação de artefatos não autorizados dentro de `docs/_canon/`.
+
+PASS
+
+Somente arquivos e subdiretórios explicitamente autorizados existem no canon global.
+
+FAIL
+
+Qualquer intruso fora da allowlist canônica.
+
+Blocking code
+	•	BLOCKED_CANON_INTRUDER
+
+⸻
+
+9.2N1 DOC_USAGE_GATE
+
+Objetivo
+
+Garantir que toda documentação em `docs/_canon/**` e `docs/hbtrack/modulos/**`
+tenha owner_source, consumers válidos e update triggers determinísticos.
+
+PASS
+
+Todo documento está coberto pelo `DOC_USAGE_MANIFEST.yaml` com regra única e válida.
+
+FAIL
+
+Documento órfão, ambíguo, com consumer inválido ou sem trigger de atualização.
+
+Blocking code
+	•	BLOCKED_DOC_USAGE_INVALID
+
+⸻
+
+9.2N2 CANON_CONTRACT_DRIVEN_PARITY_GATE
+
+Objetivo
+
+Validar a paridade mínima entre `docs/_canon`, `.contract_driven` e o executor real.
+
+PASS
+
+Entrypoints, boot, pipeline, decisões e registry de gates permanecem coerentes.
+
+FAIL
+
+Qualquer drift mínimo entre canon, `.contract_driven` e `validate_contracts.py`.
+
+Blocking code
+	•	BLOCKED_CANON_CONTRACT_DRIVEN_PARITY
+
+⸻
+
+9.2N3 HBTRACK_CANON_PARITY_GATE
+
+Objetivo
+
+Validar a paridade mínima entre `docs/hbtrack/modulos` e o canon global.
+
+PASS
+
+Docs modulares respeitam registry, authority matrix e âncoras canônicas.
+
+FAIL
+
+Módulo fora do registry, permissão sem policy soberana ou state model sem âncora canônica.
+
+Blocking code
+	•	BLOCKED_HBTRACK_CANON_PARITY
+
+⸻
+
+9.2N4 IMPACT_ANALYSIS_GATE
+
+Objetivo
+
+Resolver a changeset atual contra `docs/_canon/SYNC_MANIFEST.yaml` e determinar,
+sem interpretação livre, quais regras de sincronismo foram impactadas.
+
+PASS
+
+Toda mudança observada em `source_master` ou `source_inputs` é classificada em regra(s)
+de sincronismo conhecida(s), com consumers obrigatórios resolvidos deterministicamente.
+
+FAIL
+
+Manifesto inválido, changeset ilegível ou source_master alterado sem análise determinística possível.
+
+Blocking code
+	•	BLOCKED_SYNC_IMPACT_UNRESOLVED
+
+⸻
+
+9.2N5 PARTIAL_UPDATE_GATE
+
+Objetivo
+
+Bloquear atualização parcial: se um `source_master` soberano mudar, seus
+`blocking_consumers` devem aparecer sincronizados na mesma changeset.
+
+PASS
+
+Toda regra impactada tem seus consumers bloqueantes atualizados na mesma changeset.
+
+FAIL
+
+Há source master alterado sem propagação completa para os consumers bloqueantes declarados.
+
+Blocking code
+	•	BLOCKED_SYNC_PARTIAL_UPDATE
 
 ⸻
 

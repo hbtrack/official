@@ -1,4 +1,5 @@
 # CI/CD Integration — Domain Completeness Auditor
+> Documento de apoio humano, não canônico e não soberano. Serve para registro histórico de integração; não substitui `.github/workflows/`, `scripts/`, `docs/_canon/` ou `_reports/contract_gates/latest.json`.
 
 **Data**: 2026-03-18  
 **Status**: ✅ IMPLEMENTADO  

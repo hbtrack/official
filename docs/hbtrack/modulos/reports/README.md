@@ -23,6 +23,15 @@ Documentar o escopo normativo do módulo `reports` e suas superfícies soberanas
 - Workflows (Arazzo): `contracts/workflows/reports/` (quando aplicável)
 - Eventos (AsyncAPI): `contracts/asyncapi/` (quando aplicável)
 
+## Source graph estruturado
+- Manifesto do módulo: `docs/hbtrack/modulos/reports/graph/module_manifest.yaml`
+- Entidades: `docs/hbtrack/modulos/reports/graph/entities.yaml`
+- Endpoints: `docs/hbtrack/modulos/reports/graph/endpoints.yaml`
+- Erros: `docs/hbtrack/modulos/reports/graph/errors.yaml`
+- Obrigações de teste: `docs/hbtrack/modulos/reports/graph/test_obligations.yaml`
+
+Este conjunto é o IR estruturado piloto do módulo `reports`. Até o compiler entrar, ele deve permanecer alinhado com `contracts/`, `src/reports/` e os documentos normativos do módulo.
+
 ## Fontes globais vinculantes
 - `docs/_canon/SYSTEM_SCOPE.md`
 - `docs/_canon/HANDBALL_RULES_DOMAIN.md` (quando o gatilho de handebol aplicar)

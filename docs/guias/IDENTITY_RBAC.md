@@ -10,7 +10,7 @@ Este documento resume hipóteses e modelos úteis para evolução de identidade 
 Qualquer implementação de permissão, role, bundle ou política de acesso deve se ancorar
 nos artefatos canônicos ativos do módulo `identity_access` e nas ADRs aprovadas.
 
-Referência canônica atual: `docs/_canon/SYSTEM_SCOPE.md §4`, `docs/_canon/decisions/ADR-008-authz-strategy.md` e `docs/hbtrack/modulos/identity_access/PERMISSIONS_IDENTITY_ACCESS.md`.
+Artefatos normativos atuais: `docs/_canon/SYSTEM_SCOPE.md §4`, `docs/_canon/decisions/ADR-008-authz-strategy.md` e `docs/hbtrack/modulos/identity_access/PERMISSIONS_IDENTITY_ACCESS.md`.
 
 ---
 

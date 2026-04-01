@@ -1,4 +1,5 @@
 # BACKLOG_ITEM_2 — Decisão de Escopo (2026-03-20)
+> Documento de apoio humano, não canônico e não soberano. Serve para registro histórico de decisão de escopo; não substitui `docs/_canon/`, `.contract_driven/` ou o backlog operacional vigente.
 
 ## Resumo Executivo
 
