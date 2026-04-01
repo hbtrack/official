@@ -2,7 +2,7 @@
   "artifact_id": "HBTRACK_OPS_DEPLOY_CONTEXT_BUNDLE",
   "compiler": "hbtrack_ops_context_bundle_compiler",
   "compiler_version": "0.1.0",
-  "compiled_at": "2026-04-01T00:00:00Z",
+  "compiled_at": "2026-04-01T15:30:39Z",
   "scope": "ops/deploy",
   "description": "Bundle operacional compilado para tasks de deploy, CI/CD e ambiente. Consumir este bundle antes de qualquer tarefa de roadmap que altere infra, deploy ou CI.",
   "source_fingerprint": "00b204071a2dc4427b9ef56281673eca0c9567f9754bdfd94ce16276988ae61c",
@@ -13,19 +13,19 @@
     },
     {
       "relpath": "docs/_canon/graph/ops/environment_catalog.yaml",
-      "sha256": "1cee8db6560ade2d886f00aab8f0efa11ddb447e05f96d7eafe7720706aa14bb"
+      "sha256": "9c0dd6a31e2677df25745b24e8623bca1a96ba56c0b1ac5c70e7dcee6eea2555"
     },
     {
       "relpath": "docs/_canon/graph/ops/secrets_catalog.yaml",
-      "sha256": "3cd802e113b0b9150299af278552c3f544771d7b33f0625706b750efae3b3625"
+      "sha256": "c1cb6feeeb6296f42532723d37fb08aee0a052058b703092f09613a532a4ced0"
     },
     {
       "relpath": "docs/_canon/graph/ops/github_actions_catalog.yaml",
-      "sha256": "545c11d310fc235151d3995ba4434dc1be186f397366233a79fec96515702697"
+      "sha256": "3a6681cb410b0b437a5f732117ab9569955a13633939ed995d5d96a03f122d9a"
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "62c1cbe9a0077cbc7ad5ddbde84c0d6baf0157b44497e486e97969155ba37f6f"
+      "sha256": "54bb7fe6b4033586b6223502a1236a2ceb65afbd805d909c96f219dcad7bd9aa"
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",

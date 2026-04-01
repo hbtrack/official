@@ -1,7 +1,9 @@
-version: 1.2.0
+version: 1.2.1
 artifact: MODULE_REGISTRY
 status: active
 scope: global
+# B8-002: runtime gates (HTTP_RUNTIME_CONTRACT_GATE, PACT_PROVIDER_GATE) são
+# pré-requisito para promoção ao estado `released` conforme CONTRACT_PIPELINE.md §7.
 policy:
   objective:
     "Declarar, de forma determin\xEDstica, o status operacional de cada m\xF3\

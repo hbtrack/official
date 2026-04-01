@@ -1,13 +1,15 @@
 ---
 doc_type: canon
-version: "1.0.0"
-last_reviewed: "2026-03-31"
+version: "1.0.1"
+last_reviewed: "2026-04-01"
 status: active
 cross_refs:
   system_scope: "docs/_canon/SYSTEM_SCOPE.md"
   spec_completa: "docs/_canon/CI_CONTRACT_GATES.md"
   registry_machine_readable: "docs/_canon/gates/GATES_REGISTRY.yaml"
   implementation: "scripts/contracts/validate/validate_contracts.py"
+# B8-002: HTTP_RUNTIME_CONTRACT_GATE e PACT_PROVIDER_GATE são gates de runtime
+# obrigatórios antes de `released`. Ver CONTRACT_PIPELINE.md §7.
 ---
 
 # Gates de Validação — Índice Rápido

@@ -273,17 +273,17 @@
       }
     },
     "pact_broker": {
-      "compose_service": null,
+      "compose_file": "infra/docker-compose.pact-broker.yml",
       "deployment_type": "external_same_vps",
       "environments": [
-        "staging",
-        "production"
+        "staging"
       ],
       "evidence_refs": [
         "docs/_canon/decisions/ADR-025-cdct-pact-strategy.md",
+        "infra/docker-compose.pact-broker.yml",
         "scripts/contracts/validate/validate_contracts.py"
       ],
-      "internal_url": "http://<VPS_IP>:9292"
+      "internal_url": "http://staging.handballtrack.app:9292"
     },
     "postgres": {
       "compose_service": "postgres",

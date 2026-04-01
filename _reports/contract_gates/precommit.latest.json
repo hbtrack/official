@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-01T07:28:48Z",
+  "timestamp_utc": "2026-04-01T07:41:04Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "bd0dbab",
+    "git_commit": "93c9bc3",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/precommit.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260401T072848_17da36"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260401T074104_4ea403"
   },
   "status_detail": {
     "active_gates_passed": 36,
@@ -281,7 +281,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 58
+        "duration_ms": 48
       }
     },
     {
@@ -306,7 +306,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2583
+        "duration_ms": 3699
       }
     },
     {
@@ -417,7 +417,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 17
+        "duration_ms": 20
       }
     },
     {
@@ -582,7 +582,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 4
       }
     },
     {
@@ -694,7 +694,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 6
       }
     },
     {
@@ -984,7 +984,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 53
+        "duration_ms": 54
       }
     },
     {
@@ -1012,7 +1012,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 71
+        "duration_ms": 60
       }
     },
     {
@@ -1055,7 +1055,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 54
+        "duration_ms": 38
       }
     },
     {
@@ -1072,22 +1072,9 @@
         "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml",
         "git status --porcelain --untracked-files=all",
         "/home/davis/HB-TRACK/.CEPRAEA/BACKLOG_EXECUTAVEL_DETERMINISTICO.md",
-        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/execute_roadmap_phase.prompt.md",
-        "/home/davis/HB-TRACK/.github/skills/hb-roadmap-executor/SKILL.md",
-        "/home/davis/HB-TRACK/CLAUDE.md",
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
-        "/home/davis/HB-TRACK/_reports/READINESS_DASHBOARD.md",
-        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/precommit.latest.json",
-        "/home/davis/HB-TRACK/_reports/contract_gates/stage-session-start.local.latest.json",
-        "/home/davis/HB-TRACK/_reports/evidence/module_readiness_scorecard.json",
-        "/home/davis/HB-TRACK/_reports/evidence/module_readiness_scorecard.md",
-        "/home/davis/HB-TRACK/_reports/pipeline_health.json",
-        "/home/davis/HB-TRACK/_reports/pipeline_history.jsonl",
-        "/home/davis/HB-TRACK/_reports/session_start.json",
-        "/home/davis/HB-TRACK/compiled_context/ops/deploy.json",
-        "/home/davis/HB-TRACK/compiled_context/ops/runtime.json",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_ops_bundle_required_for_roadmap.py"
+        "/home/davis/HB-TRACK/_reports/session_start.json"
       ],
       "evidence_files": [],
       "violations": [],
@@ -1095,7 +1082,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 74
+        "duration_ms": 60
       }
     },
     {
@@ -1112,22 +1099,9 @@
         "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml",
         "git status --porcelain --untracked-files=all",
         "/home/davis/HB-TRACK/.CEPRAEA/BACKLOG_EXECUTAVEL_DETERMINISTICO.md",
-        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/execute_roadmap_phase.prompt.md",
-        "/home/davis/HB-TRACK/.github/skills/hb-roadmap-executor/SKILL.md",
-        "/home/davis/HB-TRACK/CLAUDE.md",
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
-        "/home/davis/HB-TRACK/_reports/READINESS_DASHBOARD.md",
-        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/precommit.latest.json",
-        "/home/davis/HB-TRACK/_reports/contract_gates/stage-session-start.local.latest.json",
-        "/home/davis/HB-TRACK/_reports/evidence/module_readiness_scorecard.json",
-        "/home/davis/HB-TRACK/_reports/evidence/module_readiness_scorecard.md",
-        "/home/davis/HB-TRACK/_reports/pipeline_health.json",
-        "/home/davis/HB-TRACK/_reports/pipeline_history.jsonl",
-        "/home/davis/HB-TRACK/_reports/session_start.json",
-        "/home/davis/HB-TRACK/compiled_context/ops/deploy.json",
-        "/home/davis/HB-TRACK/compiled_context/ops/runtime.json",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_ops_bundle_required_for_roadmap.py"
+        "/home/davis/HB-TRACK/_reports/session_start.json"
       ],
       "evidence_files": [],
       "violations": [],
@@ -1135,7 +1109,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 29
+        "duration_ms": 28
       }
     },
     {
@@ -1180,7 +1154,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 97
+        "duration_ms": 108
       }
     },
     {
@@ -1209,7 +1183,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 125
+        "duration_ms": 166
       }
     },
     {
@@ -1254,7 +1228,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 89
+        "duration_ms": 95
       }
     },
     {
@@ -1299,7 +1273,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 89
+        "duration_ms": 95
       }
     },
     {
@@ -1344,7 +1318,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 88
+        "duration_ms": 96
       }
     },
     {
@@ -1714,7 +1688,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 29
+        "duration_ms": 85
       }
     },
     {
@@ -1800,7 +1774,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 796
+        "duration_ms": 844
       }
     },
     {
@@ -1823,7 +1797,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2718
+        "duration_ms": 2318
       }
     },
     {
@@ -1845,7 +1819,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2504
+        "duration_ms": 2552
       }
     },
     {
@@ -1884,7 +1858,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 699
+        "duration_ms": 703
       }
     },
     {
@@ -1924,7 +1898,7 @@
         "errors": 0,
         "warnings": 1,
         "violations": 1,
-        "duration_ms": 2002
+        "duration_ms": 1949
       }
     },
     {
@@ -1990,7 +1964,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 4
       }
     },
     {
@@ -2490,7 +2464,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1925
+        "duration_ms": 1751
       }
     },
     {
@@ -2514,7 +2488,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 31
+        "duration_ms": 26
       }
     },
     {
@@ -2590,7 +2564,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2782
+        "duration_ms": 3068
       }
     },
     {
@@ -2633,7 +2607,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 78
+        "duration_ms": 62
       }
     },
     {
@@ -2655,7 +2629,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1369
+        "duration_ms": 1501
       }
     },
     {
@@ -2711,7 +2685,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 69
+        "duration_ms": 62
       }
     },
     {
@@ -2731,7 +2705,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 9
+        "duration_ms": 6
       }
     },
     {
@@ -2925,7 +2899,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 16
+        "duration_ms": 15
       }
     },
     {
@@ -2947,7 +2921,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 205
+        "duration_ms": 180
       }
     },
     {
@@ -2969,7 +2943,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 8
       }
     },
     {
@@ -3029,7 +3003,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 10
+        "duration_ms": 7
       }
     },
     {
@@ -3051,7 +3025,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 20
+        "duration_ms": 21
       }
     },
     {
@@ -3146,7 +3120,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 5
       }
     },
     {

@@ -2,14 +2,14 @@
   "artifact_id": "HBTRACK_OPS_RUNTIME_CONTEXT_BUNDLE",
   "compiler": "hbtrack_ops_context_bundle_compiler",
   "compiler_version": "0.1.0",
-  "compiled_at": "2026-04-01T00:00:00Z",
+  "compiled_at": "2026-04-01T15:30:39Z",
   "scope": "ops/runtime",
   "description": "Bundle operacional compilado para tasks de VPS, topologia de serviços e endpoints de runtime. Consumir este bundle antes de qualquer tarefa de roadmap que altere infra ou serviços.",
   "source_fingerprint": "9c7694f09c5e57d3e7b63827b5301365dbd72e0382c18a5e82f197f01ad7a6b4",
   "inputs": [
     {
       "relpath": "docs/_canon/graph/ops/service_topology.yaml",
-      "sha256": "7df4d1facf16e509eb61530a515a0183ac5cba29aceb2cf51e37d9d3a4b5ecb7"
+      "sha256": "ab94d726e9f39cd957883d70a1acf49bc138178b567061114d03aacac2511524"
     },
     {
       "relpath": "docs/_canon/graph/ops/runtime_endpoints.yaml",
@@ -17,11 +17,11 @@
     },
     {
       "relpath": "docs/_canon/graph/ops/environment_catalog.yaml",
-      "sha256": "1cee8db6560ade2d886f00aab8f0efa11ddb447e05f96d7eafe7720706aa14bb"
+      "sha256": "9c0dd6a31e2677df25745b24e8623bca1a96ba56c0b1ac5c70e7dcee6eea2555"
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "62c1cbe9a0077cbc7ad5ddbde84c0d6baf0157b44497e486e97969155ba37f6f"
+      "sha256": "54bb7fe6b4033586b6223502a1236a2ceb65afbd805d909c96f219dcad7bd9aa"
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",

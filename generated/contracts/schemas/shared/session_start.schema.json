@@ -2,7 +2,7 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "contracts/schemas/shared/session_start.schema.json",
     "title": "session_start JSON Schema",
-    "description": "SSOT para validação de _reports/session_start.json — produzido por 'hb verify', lido por pre-commit, git hooks e validators",
+    "description": "SSOT para validação de _reports/session_start.json — produzido por 'hb verify', lido por pre-commit, git hooks e validators. B8-002: runtime gates (HTTP_RUNTIME_CONTRACT_GATE, PACT_PROVIDER_GATE) obrigatórios antes de released.",
     "type": "object",
     "version": "1.3.0",
     "additionalProperties": false,

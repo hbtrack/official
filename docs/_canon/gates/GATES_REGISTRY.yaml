@@ -3,9 +3,11 @@
 # Registry machine-readable dos gates de validação do HB Track.
 # Verificado pelo REQUIRED_ARTIFACT_PRESENCE_GATE no pipeline.
 # Spec normativa completa: docs/_canon/CI_CONTRACT_GATES.md
+# B8-002: HTTP_RUNTIME_CONTRACT_GATE e PACT_PROVIDER_GATE são gates obrigatórios
+#   antes de `released` (ver CONTRACT_PIPELINE.md §7 e DEPLOY_PIPELINE.md §2.5).
 # -------------------------------------------------------------------------
-version: "1.2.2"
-last_reviewed: "2026-03-31"
+version: "1.2.3"
+last_reviewed: "2026-04-01"
 spec_ref: "docs/_canon/CI_CONTRACT_GATES.md"
 implementation_ref: "scripts/contracts/validate/validate_contracts.py"
 evidence_output: "_reports/contract_gates/latest.json"

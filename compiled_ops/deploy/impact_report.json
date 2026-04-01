@@ -10,15 +10,15 @@
   "inputs": [
     {
       "relpath": "docs/_canon/graph/ops/environment_catalog.yaml",
-      "sha256": "1cee8db6560ade2d886f00aab8f0efa11ddb447e05f96d7eafe7720706aa14bb"
+      "sha256": "9c0dd6a31e2677df25745b24e8623bca1a96ba56c0b1ac5c70e7dcee6eea2555"
     },
     {
       "relpath": "docs/_canon/graph/ops/secrets_catalog.yaml",
-      "sha256": "3cd802e113b0b9150299af278552c3f544771d7b33f0625706b750efae3b3625"
+      "sha256": "c1cb6feeeb6296f42532723d37fb08aee0a052058b703092f09613a532a4ced0"
     },
     {
       "relpath": "docs/_canon/graph/ops/service_topology.yaml",
-      "sha256": "7df4d1facf16e509eb61530a515a0183ac5cba29aceb2cf51e37d9d3a4b5ecb7"
+      "sha256": "ab94d726e9f39cd957883d70a1acf49bc138178b567061114d03aacac2511524"
     },
     {
       "relpath": "docs/_canon/graph/ops/deploy_contract.yaml",
@@ -30,7 +30,7 @@
     },
     {
       "relpath": "docs/_canon/graph/ops/github_actions_catalog.yaml",
-      "sha256": "545c11d310fc235151d3995ba4434dc1be186f397366233a79fec96515702697"
+      "sha256": "3a6681cb410b0b437a5f732117ab9569955a13633939ed995d5d96a03f122d9a"
     }
   ],
   "known_deviations": [],
@@ -57,7 +57,7 @@
     "python3 scripts/validate_contracts.py --profile ci"
   ],
   "scope": "operations",
-  "source_fingerprint": "f273cb8084c8365c02f164d4ac326c60ee5fcea4a8382d798a7a19a9d67e76ac",
+  "source_fingerprint": "41315c9a91625d61b0c48a5d8720305b13766be817b29a0791569258a1c8cd7d",
   "template_parity_hints": [
     {
       "environment": "staging",

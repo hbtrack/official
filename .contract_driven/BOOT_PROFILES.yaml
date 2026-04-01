@@ -6,6 +6,8 @@
 # Sincronismo soberano: docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml + docs/_canon/SYNC_MANIFEST.yaml
 # Versão: 1.0.0
 # Status: active
+# B8-002: HTTP_RUNTIME_CONTRACT_GATE e PACT_PROVIDER_GATE são obrigatórios antes de `released`.
+#   Ver docs/_canon/CONTRACT_PIPELINE.md §7.
 
 doc_type: canon
 version: "1.0.0"
@@ -86,16 +88,16 @@ profiles:
     id: roadmap_execution
     description: "Boot para execução de fase do ROADMAP (infra, CI/CD, frontend, deploy). Não usa CDD pipeline."
     load_sequence:
-      - docs/_canon/AGENT_INSTRUCTIONS.md      # entrypoint §0 obrigatório
-      - ROADMAP.md                              # fase atual + Critério de Done
-      - SESSION_HANDOFF.md                      # fase declarada (se existir)
-      - docs/_canon/CODE_ARCHITECTURE.md          # estrutura canônica de código backend
+      - docs/_canon/AGENT_INSTRUCTIONS.md # entrypoint §0 obrigatório
+      - ROADMAP.md # fase atual + Critério de Done
+      - SESSION_HANDOFF.md # fase declarada (se existir)
+      - docs/_canon/CODE_ARCHITECTURE.md # estrutura canônica de código backend
     required_sections:
-      - docs/_canon/AGENT_INSTRUCTIONS.md§0       # "Leia Primeiro"
-      - ROADMAP.md                                # seção da fase declarada
+      - docs/_canon/AGENT_INSTRUCTIONS.md§0 # "Leia Primeiro"
+      - ROADMAP.md # seção da fase declarada
     validations:
-      - roadmap_phase_valid: true                 # phase deve ser inteiro entre 0 e 13
-      - session_handoff_read: true                # SESSION_HANDOFF.md lido se existir
+      - roadmap_phase_valid: true # phase deve ser inteiro entre 0 e 13
+      - session_handoff_read: true # SESSION_HANDOFF.md lido se existir
     exit_on_fail: true
     notes: |
       Este profile NÃO valida task_type_in_catalog nem module_in_registry (não são aplicáveis).

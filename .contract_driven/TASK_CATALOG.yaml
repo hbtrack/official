@@ -5,6 +5,8 @@
 # Versão: 1.0.0
 # Status: active
 # Referência: docs/_canon/AGENT_INSTRUCTIONS.md §4 "9 TASK TYPES → WORKERS" (source of truth anterior, DEPRECATED em favor deste)
+# B8-002: gates HTTP_RUNTIME_CONTRACT_GATE e PACT_PROVIDER_GATE são pré-requisito
+#         para promoção ao estado `released`. Ver docs/_canon/CONTRACT_PIPELINE.md §7.
 
 doc_type: canon
 version: "1.0.0"
@@ -339,7 +341,7 @@ task_catalog:
       - phase (integer 0-13, obrigatório)
       - task_id (string, ex "1.1" — opcional, se ausente executa fase completa)
     write_scope: roadmap
-    artifacts_produced: []  # varia por fase — ver ROADMAP.md para paths canônicos
+    artifacts_produced: [] # varia por fase — ver ROADMAP.md para paths canônicos
     blocking_gates: []
     pre_contract_exception: "ROADMAP_PHASE: não passa por pre_contract_orchestrator — modo de operação independente"
     notes: |

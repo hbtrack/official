@@ -1,6 +1,6 @@
 ---
 doc_type: canon
-version: "1.2.2"
+version: "1.3.0"
 status: active
 created: "2026-03-17"
 last_reviewed: "2026-04-01"
@@ -33,6 +33,7 @@ Artefatos presentes e ativos no workspace:
 - `.github/workflows/deploy.yml`
 - `Dockerfile`
 - `infra/docker-compose.prod.yml`
+- `infra/docker-compose.pact-broker.yml`
 - `infra/nginx/nginx.conf`
 - `infra/nginx/nginx.staging.conf`
 - `infra/scripts/rollback.sh`
@@ -75,12 +76,19 @@ push main
   -> build
   -> deploy-staging
   -> GET /health em staging
-  -> HTTP runtime contract validation
+  -> HTTP_RUNTIME_CONTRACT_GATE (HB_STAGING_URL obrigatoria)
+  -> PACT_PROVIDER_GATE (PACT_BROKER_BASE_URL obrigatoria — ADR-025)
   -> aprovacao humana
   -> deploy-production
   -> GET /health em producao
   -> rollback automatico se o health falhar
 ```
+
+Pact Broker:
+
+- provisionado na VPS via `infra/docker-compose.pact-broker.yml` (porta 9292)
+- URL configurada como GitHub variable `PACT_BROKER_BASE_URL` (B8-002)
+- estrategia CDCT: ADR-025
 
 ## 4. Health, evidencias e rollback
 

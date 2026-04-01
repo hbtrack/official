@@ -1,4 +1,4 @@
-version: "1.2.0"
+version: "1.3.0"
 artifact: "OPS_ENVIRONMENT_CATALOG"
 status: active
 scope: operations
@@ -258,6 +258,22 @@ variables:
     sources:
       - ".github/workflows/deploy.yml"
 
+  - name: PACT_BROKER_BASE_URL
+    category: ci_shim
+    required_in: []
+    ci_only: true
+    sources:
+      - ".github/workflows/deploy.yml"
+    runtime_note: "GitHub variable passada ao job contract-conformance para ativar PACT_PROVIDER_GATE (ADR-025). Nao e variavel do app Django."
+
+  - name: PACT_BROKER_TOKEN
+    category: ci_shim
+    required_in: []
+    ci_only: true
+    sources:
+      - ".github/workflows/deploy.yml"
+    runtime_note: "GitHub secret passado ao job contract-conformance para autenticacao do Pact Broker (ADR-025). Nao e variavel do app Django."
+
   - name: CLOUDINARY_URL
     category: external_provider
     required_in: ["staging", "production"]
@@ -368,7 +384,7 @@ template_contracts:
 
       - title: "Django"
         comment_lines:
-          - "Gerar com: python -c \"import secrets; print(secrets.token_urlsafe(50))\""
+          - 'Gerar com: python -c "import secrets; print(secrets.token_urlsafe(50))"'
         entries:
           - name: SECRET_KEY
             value: "CHANGE_ME_DJANGO_SECRET_KEY_50_CHARS_MINIMUM"
@@ -461,6 +477,8 @@ template_contracts:
       - title: "AI / Google Gemini"
         comment_lines:
           - "Obter em: https://aistudio.google.com/app/apikey"
+          - "B8-002: PACT_BROKER_BASE_URL e PACT_BROKER_TOKEN são CI-only (GitHub vars/secrets)."
+          - "Não fazem parte deste .env — ver ADR-025 e ADR-012."
         entries:
           - name: GEMINI_API_KEY
             value: "CHANGE_ME_GEMINI_API_KEY"
@@ -485,7 +503,7 @@ template_contracts:
 
       - title: "Django"
         comment_lines:
-          - "Gerar com: python -c \"import secrets; print(secrets.token_urlsafe(50))\""
+          - 'Gerar com: python -c "import secrets; print(secrets.token_urlsafe(50))"'
         entries:
           - name: SECRET_KEY
             value: "CHANGE_ME_DJANGO_SECRET_KEY_50_CHARS_MINIMUM"
@@ -578,6 +596,8 @@ template_contracts:
       - title: "AI / Google Gemini"
         comment_lines:
           - "Obter em: https://aistudio.google.com/app/apikey"
+          - "B8-002: PACT_BROKER_BASE_URL e PACT_BROKER_TOKEN são CI-only (GitHub vars/secrets)."
+          - "Não fazem parte deste .env — ver ADR-025 e ADR-012."
         entries:
           - name: GEMINI_API_KEY
             value: "CHANGE_ME_GEMINI_API_KEY"

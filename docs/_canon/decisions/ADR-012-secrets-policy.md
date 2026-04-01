@@ -96,6 +96,8 @@ Nota de compatibilidade:
 - isso e catalogado em `docs/_canon/graph/ops/environment_catalog.yaml` como `ci_only`
 - `JWT_SECRET` e `JWT_ALGORITHM=HS256` permanecem exclusivos do job de testes e nao fazem parte do contrato operacional de staging/producao
 - `SENTRY_DSN` e credenciais SMTP nao fazem parte do sistema operacional vigente; se passarem a ser obrigatorios, devem entrar primeiro no source graph operacional
+- `PACT_BROKER_BASE_URL` e gerenciado como GitHub **variable** (nao secret), pois nao e sensivel — URL publica do broker; configurado em B8-002
+- `PACT_BROKER_TOKEN` e gerenciado como GitHub **secret** — credencial de autenticacao do Pact Broker auto-hospedado (ADR-025)
 
 ### Geração e armazenamento de chaves JWT
 

@@ -133,9 +133,10 @@ def _render_env_template(template_doc: dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def _render_env_fragment(env_name: str, template_doc: dict[str, Any], source_relpath: str) -> str:
+def _render_env_fragment(env_name: str, template_doc: dict[str, Any], source_relpath: str, catalog_version: str = "") -> str:
+    version_line = f" | catalog_version: {catalog_version}" if catalog_version else ""
     lines = [
-        f"# Generated from {source_relpath} [{env_name}]",
+        f"# Generated from {source_relpath} [{env_name}]{version_line}",
         "# Do not edit manually.",
     ]
     for section in template_doc["sections"]:
@@ -478,11 +479,13 @@ def compile_expected(root: Path) -> list[ExpectedFile]:
         "staging",
         environment_catalog["template_contracts"]["staging"],
         "docs/_canon/graph/ops/environment_catalog.yaml",
+        catalog_version=environment_catalog.get("version", ""),
     )
     production_fragment = _render_env_fragment(
         "production",
         environment_catalog["template_contracts"]["production"],
         "docs/_canon/graph/ops/environment_catalog.yaml",
+        catalog_version=environment_catalog.get("version", ""),
     )
 
     secrets_catalog_payload = _build_secrets_catalog(

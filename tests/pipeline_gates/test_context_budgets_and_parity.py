@@ -16,7 +16,7 @@ class TestContextBudgets:
     BUDGETS = {
         "CLAUDE.md": 450,
         "SESSION_HANDOFF.md": 350,
-        "docs/_canon/CONTRACT_PIPELINE.md": 650,
+        "docs/_canon/CONTRACT_PIPELINE.md": 900,  # raised from 650 — B8-002 §7 (runtime gates) added
         ".contract_driven/agent_prompts/pre_contract_orchestrator.prompt.md": 700,
     }
 
@@ -42,7 +42,7 @@ class TestContextBudgets:
             f"SESSION_HANDOFF.md is {count}w, budget is {self.BUDGETS['SESSION_HANDOFF.md']}w"
 
     def test_contract_pipeline_md_under_budget(self):
-        """CONTRACT_PIPELINE.md must be <= 650 words (raised from 600 at FASE 1 — gate parity section added)."""
+        """CONTRACT_PIPELINE.md must be <= 900 words (raised from 650 at B8-002 — §7 runtime gates added)."""
         count = self.count_words("docs/_canon/CONTRACT_PIPELINE.md")
         assert count <= self.BUDGETS["docs/_canon/CONTRACT_PIPELINE.md"], \
             f"CONTRACT_PIPELINE.md is {count}w, budget is {self.BUDGETS['docs/_canon/CONTRACT_PIPELINE.md']}w"

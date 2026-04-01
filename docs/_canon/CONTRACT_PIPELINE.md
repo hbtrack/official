@@ -1,7 +1,7 @@
 ---
 doc_type: canon
-version: "1.2.1"
-last_reviewed: "2026-03-31"
+version: "1.3.0"
+last_reviewed: "2026-04-01"
 status: active
 ---
 
@@ -67,3 +67,27 @@ Estado apurado 2026-03-23 (FASE 1):
 | `SCOPE_BOUNDARY_GATE` | `integrated_in_validate_contracts: false` — passo pré-contrato externo |
 | `ARCH_DECISION_PRESENCE_GATE` | ativo — bloqueia backlog arquitetural obrigatório pendente para contrato/readiness/generate_code |
 | `FRONTEND_CONTRACT_GATE` | `status: deferred` — implementar junto com Fase 5 (frontend/) |
+
+## 7. Gates de Runtime — pré-requisito para `released`
+
+Os gates abaixo são obrigatórios no pipeline de deploy antes de qualquer promoção para `released`.
+Ambos rodam no job `contract-conformance` (Etapa 5 de `deploy.yml`), que é pré-condição para `approve` e `deploy-production`.
+
+| Gate | Env var ativadora | Comportamento sem a var | Quando vira PASS/FAIL |
+|------|-------------------|------------------------|----------------------|
+| `HTTP_RUNTIME_CONTRACT_GATE` | `HB_STAGING_URL` | `SKIP_NOT_APPLICABLE` | PASS quando staging responde e schema está em conformidade; FAIL em divergência |
+| `PACT_PROVIDER_GATE` | `PACT_BROKER_BASE_URL` | `SKIP_NOT_APPLICABLE` | PASS quando todos os consumer contracts são satisfeitos; DEGRADED se CLI não instalada |
+
+### Configuração
+
+- `HB_STAGING_URL`: hardcoded como `https://staging.handballtrack.app` em `deploy.yml` job `contract-conformance`.
+- `PACT_BROKER_BASE_URL`: GitHub secret `PACT_BROKER_BASE_URL` → configurar após provisionar o Pact Broker na VPS (`infra/docker-compose.pact-broker.yml`).
+- `PACT_BROKER_TOKEN`: GitHub secret `PACT_BROKER_TOKEN` → credencial de autenticação do broker.
+
+### Infraestrutura do Pact Broker
+
+- Arquivo: `infra/docker-compose.pact-broker.yml`
+- Estratégia: auto-hospedado na VPS Locaweb (ADR-025)
+- Porta: `9292`
+- Consumer registrado: `hbtrack-app` (`contracts/consumers/hbtrack-app/`)
+- Consumer contracts: gerados pelo app e publicados diretamente no broker (não versionados no repositório)

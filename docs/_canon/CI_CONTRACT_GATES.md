@@ -1,8 +1,10 @@
 ---
 doc_type: canon
-version: "1.0.0"
-last_reviewed: "2026-03-31"
+version: "1.0.1"
+last_reviewed: "2026-04-01"
 status: active
+# B8-002: HTTP_RUNTIME_CONTRACT_GATE e PACT_PROVIDER_GATE declarados como obrigatórios
+# antes de `released`. Ver docs/_canon/CONTRACT_PIPELINE.md §7.
 ---
 
 # CI_CONTRACT_GATES.md

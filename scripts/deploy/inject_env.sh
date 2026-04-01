@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# B8-002 — Este script injeta variáveis de ambiente de aplicação (Django) em .env.
+# PACT_BROKER_BASE_URL e PACT_BROKER_TOKEN NÃO são injetados por este script.
+# Essas variáveis são CI-only e passadas via GitHub Actions vars/secrets ao job
+# `contract-conformance` do deploy.yml (ADR-025).
+
 if [[ $# -lt 3 ]]; then
   echo "usage: $0 <staging|production> <output-path> <image-tag>" >&2
   exit 2

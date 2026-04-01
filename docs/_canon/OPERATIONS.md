@@ -290,5 +290,6 @@ Quando o item 5 passar, o `HTTP_RUNTIME_CONTRACT_GATE` será ativado automaticam
 | App saudável | `curl .../health` | `{"status":"ok"}` |
 | Contrato acessível | `curl .../api/openapi.json` | `200 OK` |
 | Schemathesis PASS | CI job `contract-conformance` | `success` |
+| Pact Broker ativo | `curl http://<VPS_IP>:9292/diagnostic/status/heartbeat` | `{"ok":true}` |
 
-Todos os 5 itens devem estar verdes para FASE 4 ser declarada Done.
+Todos os 6 itens devem estar verdes para a infraestrutura ser considerada pronta para B8-002 (Pact Broker provisionado, `PACT_BROKER_BASE_URL` configurada, `PACT_PROVIDER_GATE` saindo de SKIP).

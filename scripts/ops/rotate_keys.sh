@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# B8-002 — PACT_BROKER_TOKEN foi adicionado ao secrets_catalog.yaml como runtime_secret
+# da categoria contract_broker com rotation_period_days=90 e rotation_actor=maintainer_operations.
+# Este script verifica e documenta o contrato de rotação do PACT_BROKER_TOKEN da mesma
+# forma que demais secrets runtime (ADR-012, ADR-025).
+
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
 SECRET_NAME=""

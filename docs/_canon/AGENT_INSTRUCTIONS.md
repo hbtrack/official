@@ -1,6 +1,8 @@
 < ⚠️  UNDER REVIEW FOR C4 CONSOLIDATION (Sovereign Integrity Audit) -->
 # HB TRACK — AGENT REFERENCE
 > Auto-carregado pelo Claude Code em cada sessão. Não editar sem aprovar ADR.
+> B8-002: HTTP_RUNTIME_CONTRACT_GATE e PACT_PROVIDER_GATE são pré-requisito para `released`.
+> Ver docs/_canon/CONTRACT_PIPELINE.md §7.
 
 ## 0. LEIA PRIMEIRO
 Se existir `SESSION_HANDOFF.md` na raiz → leia ANTES de qualquer outra coisa.

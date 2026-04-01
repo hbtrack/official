@@ -13,7 +13,7 @@ inputs:
 - relpath: contracts/schemas/reports/report_job.schema.json
   sha256: cb181a5444546c5e9d9f440cca9cf9a40089f061d0b888f1a8d1ab216fcc56dd
 - relpath: docs/_canon/MODULE_REGISTRY.yaml
-  sha256: 5f672cfcc0214aa57dd41c19f105b307e6c10cabf297862099bfc01b8a0ead4b
+  sha256: bed74af95778cb977c5d18f765d1b38477ddad242c1c0480a5ab8ff84a0b9505
 - relpath: docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml
   sha256: e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680
 - relpath: docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml

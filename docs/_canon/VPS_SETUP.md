@@ -19,15 +19,15 @@ Antes de provisionar a VPS, consulte:
 - Ubuntu 22.04 LTS
 - Docker Engine >= 24
 - Docker Compose v2
-- portas 22, 80 e 443 liberadas
-- dois diretorios de deploy: `/opt/hbtrack/staging` e `/opt/hbtrack/production`
+- portas 22, 80, 443 e 9292 liberadas
+- tres diretorios de servico: `/opt/hbtrack/staging`, `/opt/hbtrack/production`, `/opt/hbtrack/pact-broker`
 
 ## 2. Usuario e diretorios
 
 ```bash
 useradd -m -s /bin/bash hbtrack
 usermod -aG docker hbtrack
-mkdir -p /opt/hbtrack/staging /opt/hbtrack/production
+mkdir -p /opt/hbtrack/staging /opt/hbtrack/production /opt/hbtrack/pact-broker
 chown -R hbtrack:hbtrack /opt/hbtrack
 ```
 
@@ -129,12 +129,30 @@ docker compose -f infra/docker-compose.prod.yml ps
 curl https://staging.handballtrack.app/health
 ```
 
-## 8. Checklist de prontidao
+## 8. Pact Broker (CDCT — ADR-025)
+
+Provisionar apos os servicos principais de staging e production:
+
+```bash
+mkdir -p /opt/hbtrack/pact-broker
+# copiar infra/docker-compose.pact-broker.yml para /opt/hbtrack/pact-broker/docker-compose.yml
+# criar /opt/hbtrack/pact-broker/.env com PACT_BROKER_DB_PASSWORD, PACT_BROKER_BASIC_AUTH_PASSWORD
+cd /opt/hbtrack/pact-broker
+docker compose up -d
+curl http://localhost:9292/diagnostic/status/heartbeat
+```
+
+Configurar no GitHub Actions (repository variable):
+- `PACT_BROKER_BASE_URL` = `http://<VPS_IP>:9292`
+- `PACT_BROKER_TOKEN` (secret) = credencial de acesso ao broker
+
+## 9. Checklist de prontidao
 
 - [ ] Docker e Compose instalados
 - [ ] Certbot funcional
 - [ ] usuario `hbtrack` com acesso ao Docker
-- [ ] diretorios `/opt/hbtrack/staging` e `/opt/hbtrack/production` criados
-- [ ] secrets e variables do GitHub configurados
+- [ ] diretorios `/opt/hbtrack/staging`, `/opt/hbtrack/production` e `/opt/hbtrack/pact-broker` criados
+- [ ] secrets e variables do GitHub configurados (incluindo `PACT_BROKER_BASE_URL`)
 - [ ] `.env` renderizado por ambiente com os valores do catalogo
 - [ ] health endpoint responde conforme `docs/_canon/graph/ops/runtime_endpoints.yaml`
+- [ ] Pact Broker acessivel em `http://<VPS_IP>:9292/diagnostic/status/heartbeat`

@@ -149,3 +149,20 @@ def test_deploy_workflow_uses_contract_renderer_and_has_no_inline_bootstrap():
     assert env_rendering["generated_targets"]["production"]["workspace_output"] == ".deploy/production.env"
 
     assert "render_env_from_contract.py" in inject_text
+
+
+def test_contract_conformance_job_declares_pact_broker_vars():
+    """B8-002: job contract-conformance deve declarar PACT_BROKER_BASE_URL e PACT_BROKER_TOKEN."""
+    import yaml as _yaml
+
+    workflow = _yaml.safe_load(WORKFLOW_PATH.read_text(encoding="utf-8"))
+    jobs = workflow.get("jobs", {})
+    conformance_job = jobs.get("contract-conformance", {})
+    env = conformance_job.get("env", {}) or {}
+
+    assert "PACT_BROKER_BASE_URL" in env, (
+        "contract-conformance job deve declarar PACT_BROKER_BASE_URL via vars.PACT_BROKER_BASE_URL"
+    )
+    assert "PACT_BROKER_TOKEN" in env, (
+        "contract-conformance job deve declarar PACT_BROKER_TOKEN via secrets.PACT_BROKER_TOKEN"
+    )

@@ -1,108 +1,116 @@
 {
-  "session_id": "320b190f-3ae8-4046-8989-8e9fb9a0f4be",
-  "session_timestamp": "2026-04-01T06:04:10.176520+00:00",
-  "branch": "main",
-  "pipeline_version": "1.0.0",
-  "boot_profile_id": "contract_execution",
-  "task_type": "generate_code",
-  "stage": 2,
-  "write_scope": "backend",
-  "worker_id": "code_generator",
-  "git_user": "HB Track Agent",
-  "git_email": "davis@hbtrack.local",
-  "operation_mode": "CDD",
-  "stage0_validation_results": {
-    "task_type_valid": true,
-    "module_valid": true,
-    "worker_exists": true,
-    "boot_profile_exists": true,
-    "boot_paths_valid": true,
-    "required_sections_resolvable": true
-  },
-  "module": "reports",
-  "module_focus": "reports",
-  "stage0_exit_code": 0,
-  "stage2_artifacts": [
-    {
-      "path": "contracts/openapi/components/schemas/reports/report_job.yaml",
-      "sha256": "849194eda757c9514e399b4f9113bdebbfbe30276f2847500732a7ca6564b037",
-      "created_at": "2026-04-01T07:04:34.406631+00:00",
-      "gate_exit_code": 0
+    "session_id": "320b190f-3ae8-4046-8989-8e9fb9a0f4be",
+    "session_timestamp": "2026-04-01T15:48:07.249773+00:00",
+    "branch": "main",
+    "pipeline_version": "1.0.0",
+    "boot_profile_id": "contract_execution",
+    "task_type": "generate_code",
+    "stage": 2,
+    "write_scope": "contracts",
+    "worker_id": "generate_code",
+    "git_user": "HB Track Agent",
+    "git_email": "davis@hbtrack.local",
+    "operation_mode": "CDD",
+    "stage0_validation_results": {
+        "task_type_valid": true,
+        "module_valid": true,
+        "worker_exists": true,
+        "boot_profile_exists": true,
+        "boot_paths_valid": true,
+        "required_sections_resolvable": true
     },
-    {
-      "path": "contracts/openapi/paths/reports.yaml",
-      "sha256": "970872eee0b197bbb9415d8113de40cf4bbf0b47220eb438547512bf1d70329f",
-      "created_at": "2026-04-01T07:04:51.049740+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "contracts/schemas/shared/session_start.schema.json",
-      "sha256": "5b1197961597cf6464f7dba620d73faa8e3f1331ae92347d2b142fd2f2a2cb1f",
-      "created_at": "2026-04-01T07:04:55.983735+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/audit/PERMISSIONS_AUDIT.md",
-      "sha256": "6f5180bc376f572aeacd74df7eec85df516daa80a7dded08b147d39d9d75b70c",
-      "created_at": "2026-04-01T07:04:59.900424+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/reports/DOMAIN_RULES_REPORTS.md",
-      "sha256": "c0de115088d057b5ad40c9f4face04f3cb0ca9cd52f7e8d3027ded3ff8f24c53",
-      "created_at": "2026-04-01T07:05:03.473944+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/reports/README.md",
-      "sha256": "7cc338dfe10a24fb768a761ca0e066792412e8d4385038288317a0c300f36b8b",
-      "created_at": "2026-04-01T07:05:07.105700+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/reports/TEST_MATRIX_REPORTS.md",
-      "sha256": "e3837a50c4d32a5034ebfe6b58c7a6954359e085eb2f7a02cb274cdacba44412",
-      "created_at": "2026-04-01T07:05:11.625853+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/reports/graph/endpoints.yaml",
-      "sha256": "037825b74bf96d3ef812d5cf24a2563f2acec30d7a94c5c88612a90021d91f3b",
-      "created_at": "2026-04-01T07:05:15.179845+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/reports/graph/entities.yaml",
-      "sha256": "b53b60807ab5c82318113f569ef16710603eeed9a7617ba0b10127b793cf6dcb",
-      "created_at": "2026-04-01T07:05:18.764730+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/reports/graph/errors.yaml",
-      "sha256": "fea1492d2407d2a6f9b37019db1004e56e2a3bb09e15ae0d610ddcfa40e72702",
-      "created_at": "2026-04-01T07:05:22.272655+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/reports/graph/module_manifest.yaml",
-      "sha256": "17b1b6f857d951a3a48fd3af16a99d50fe9d93cc21ea7b53c59e2b90572115a1",
-      "created_at": "2026-04-01T07:05:25.725259+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/reports/graph/test_obligations.yaml",
-      "sha256": "abe7cbdd7c642754d1deb103f519219ac3e27b31fe554bd81ce0b61bbba51e46",
-      "created_at": "2026-04-01T07:05:29.293200+00:00",
-      "gate_exit_code": 0
-    },
-    {
-      "path": "docs/hbtrack/modulos/scout/PERMISSIONS_SCOUT.md",
-      "sha256": "c22308659eee342752db15585c4d5020604ca905e94880351fa8683a4c3f02ce",
-      "created_at": "2026-04-01T07:05:32.594094+00:00",
-      "gate_exit_code": 0
-    }
-  ],
-  "stage2_exit_code": 0,
-  "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-01T07:29:08.302803+00:00"
+    "module": "reports",
+    "module_focus": "reports",
+    "stage0_exit_code": 0,
+    "stage2_artifacts": [
+        {
+            "path": "contracts/openapi/components/schemas/reports/report_job.yaml",
+            "sha256": "849194eda757c9514e399b4f9113bdebbfbe30276f2847500732a7ca6564b037",
+            "created_at": "2026-04-01T07:04:34.406631+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "contracts/openapi/paths/reports.yaml",
+            "sha256": "970872eee0b197bbb9415d8113de40cf4bbf0b47220eb438547512bf1d70329f",
+            "created_at": "2026-04-01T07:04:51.049740+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "contracts/schemas/shared/session_start.schema.json",
+            "sha256": "ebbb646ce228ed33d75605327428e684cf54ea301ecc9597fa12fef46533548d",
+            "created_at": "2026-04-01T07:04:55.983735+00:00",
+            "gate_exit_code": 0,
+            "validated_at": "2026-04-01T15:51:11.099442+00:00"
+        },
+        {
+            "path": "docs/hbtrack/modulos/audit/PERMISSIONS_AUDIT.md",
+            "sha256": "6f5180bc376f572aeacd74df7eec85df516daa80a7dded08b147d39d9d75b70c",
+            "created_at": "2026-04-01T07:04:59.900424+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/reports/DOMAIN_RULES_REPORTS.md",
+            "sha256": "c0de115088d057b5ad40c9f4face04f3cb0ca9cd52f7e8d3027ded3ff8f24c53",
+            "created_at": "2026-04-01T07:05:03.473944+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/reports/README.md",
+            "sha256": "7cc338dfe10a24fb768a761ca0e066792412e8d4385038288317a0c300f36b8b",
+            "created_at": "2026-04-01T07:05:07.105700+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/reports/TEST_MATRIX_REPORTS.md",
+            "sha256": "e3837a50c4d32a5034ebfe6b58c7a6954359e085eb2f7a02cb274cdacba44412",
+            "created_at": "2026-04-01T07:05:11.625853+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/reports/graph/endpoints.yaml",
+            "sha256": "037825b74bf96d3ef812d5cf24a2563f2acec30d7a94c5c88612a90021d91f3b",
+            "created_at": "2026-04-01T07:05:15.179845+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/reports/graph/entities.yaml",
+            "sha256": "b53b60807ab5c82318113f569ef16710603eeed9a7617ba0b10127b793cf6dcb",
+            "created_at": "2026-04-01T07:05:18.764730+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/reports/graph/errors.yaml",
+            "sha256": "fea1492d2407d2a6f9b37019db1004e56e2a3bb09e15ae0d610ddcfa40e72702",
+            "created_at": "2026-04-01T07:05:22.272655+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/reports/graph/module_manifest.yaml",
+            "sha256": "17b1b6f857d951a3a48fd3af16a99d50fe9d93cc21ea7b53c59e2b90572115a1",
+            "created_at": "2026-04-01T07:05:25.725259+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/reports/graph/test_obligations.yaml",
+            "sha256": "abe7cbdd7c642754d1deb103f519219ac3e27b31fe554bd81ce0b61bbba51e46",
+            "created_at": "2026-04-01T07:05:29.293200+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/scout/PERMISSIONS_SCOUT.md",
+            "sha256": "c22308659eee342752db15585c4d5020604ca905e94880351fa8683a4c3f02ce",
+            "created_at": "2026-04-01T07:05:32.594094+00:00",
+            "gate_exit_code": 0
+        },
+        {
+            "path": "docs/hbtrack/modulos/README.md",
+            "sha256": "bb55f75f154918d9871c1d680573b45c29a22f874d1c122363401b94a2aac0c2",
+            "created_at": "2026-04-01T15:51:31.012543+00:00",
+            "gate_exit_code": 0
+        }
+    ],
+    "stage2_exit_code": 0,
+    "hook_exit_code": 0,
+    "hook_validated_at": "2026-04-01T07:41:25.532764+00:00",
+    "stage3_exit_code": 0
 }

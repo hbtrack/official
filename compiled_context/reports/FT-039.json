@@ -91,7 +91,7 @@
     },
     {
       "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
-      "sha256": "5f672cfcc0214aa57dd41c19f105b307e6c10cabf297862099bfc01b8a0ead4b"
+      "sha256": "bed74af95778cb977c5d18f765d1b38477ddad242c1c0480a5ab8ff84a0b9505"
     },
     {
       "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
@@ -99,11 +99,11 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "62c1cbe9a0077cbc7ad5ddbde84c0d6baf0157b44497e486e97969155ba37f6f"
+      "sha256": "54bb7fe6b4033586b6223502a1236a2ceb65afbd805d909c96f219dcad7bd9aa"
     },
     {
       "relpath": "generated/source_graph/reports/reports.bundle.yaml",
-      "sha256": "d49646a52cad0f21ba1eebf350f7fbad49cb74c28793aa7bf7329d30fffc320e"
+      "sha256": "953529f75c4692af870dd4d015c53710d143a0838e96b33734b9e5d72a2ef648"
     },
     {
       "relpath": "generated/source_graph/reports/reports.schema_contract_view.yaml",
@@ -115,7 +115,7 @@
     },
     {
       "relpath": "generated/source_graph/reports/impact_report.json",
-      "sha256": "0f4f84d95baa468f490d348aaa5441eaa79425b0cdc1af311060f3f14abd605f"
+      "sha256": "58416204d079ecb9a22277b2f4f236734df02064dc78aa64a19e589d39d7be7d"
     }
   ],
   "module": "reports",
@@ -144,7 +144,7 @@
     "unit_tests": "src/reports/tests/unit/test_reports.py",
     "use_cases": "src/reports/application/use_cases.py"
   },
-  "source_fingerprint": "9a71340f857e9ee989f395b1ae3e3fbd7b84998054fdb5de5713256220c68b22",
+  "source_fingerprint": "5e0b1aa24278de7cc4268d64713ad375f230396f7b1f46a0a986e5ee1df9e7e6",
   "source_graph": {
     "entities": {
       "ReportJob": {
@@ -321,7 +321,7 @@
       "known_gaps": [
         "A shape base do OpenAPI agora referencia o schema soberano; o overlay de runtime (statusLabel/completedAt/errorMessage) ainda depende de enforcement dedicado em B3-002."
       ],
-      "source_fingerprint": "573fa7868781f629eb4075be73bd2b5c59857a5d1a8227be08f716f56a832897"
+      "source_fingerprint": "f6de40ce33436367f52cc9abc016bf7474db917c9cc60d55569c1f2c76b5c265"
     },
     "openapi_contract_view": {
       "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",

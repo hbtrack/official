@@ -16,6 +16,9 @@ Mudanças em v2:
 - hb reset para limpar sessão  
 - Validação contra SSOTs antes de executar
 
+B8-002: HTTP_RUNTIME_CONTRACT_GATE e PACT_PROVIDER_GATE são obrigatórios antes de `released`.
+Ver docs/_canon/CONTRACT_PIPELINE.md §7 para detalhes.
+
 Referência: .dev/planejamento/execut.md (Fase 2 — PR2)
 """
 

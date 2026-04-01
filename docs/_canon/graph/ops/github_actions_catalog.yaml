@@ -63,6 +63,9 @@ workflows:
         purpose: "live_http_contract_validation"
         runtime_env:
           - "HB_STAGING_URL"
+          - "PACT_BROKER_BASE_URL"
+        runtime_secret_inputs:
+          - "PACT_BROKER_TOKEN"
       - id: "approve"
         purpose: "human_gate_before_production"
       - id: "deploy-production"

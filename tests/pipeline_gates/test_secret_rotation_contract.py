@@ -89,3 +89,22 @@ def test_deploy_workflow_gate_fails_for_hardcoded_runtime_secret(monkeypatch):
 
     assert result["status"] == "FAIL", result
     assert any("HB_ENV_SECRET_KEY" in item["message"] for item in result["violations"])
+
+
+def test_pact_broker_token_is_catalogued_with_rotation_policy():
+    """B8-002: PACT_BROKER_TOKEN deve estar no secrets_catalog com rotation_period_days definido."""
+    import yaml as _yaml
+
+    catalog_path = ROOT / "docs" / "_canon" / "graph" / "ops" / "secrets_catalog.yaml"
+    catalog = _yaml.safe_load(catalog_path.read_text(encoding="utf-8")) or {}
+
+    runtime_secrets = catalog.get("runtime_secrets") or []
+    pact_entry = next((s for s in runtime_secrets if isinstance(s, dict) and s.get("name") == "PACT_BROKER_TOKEN"), None)
+
+    assert pact_entry is not None, "PACT_BROKER_TOKEN deve estar em runtime_secrets do secrets_catalog.yaml"
+    assert isinstance(pact_entry.get("rotation_period_days"), int) and pact_entry["rotation_period_days"] > 0, (
+        "PACT_BROKER_TOKEN deve ter rotation_period_days > 0"
+    )
+    assert pact_entry.get("rotation_command_ref") == "scripts/ops/rotate_keys.sh", (
+        "rotation_command_ref de PACT_BROKER_TOKEN deve apontar para rotate_keys.sh"
+    )

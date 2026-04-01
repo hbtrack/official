@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-01T07:28:24Z",
+  "timestamp_utc": "2026-04-01T15:45:08Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "bd0dbab",
+    "git_commit": "9abae17",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,11 +31,11 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260401T072824_64b3c1"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260401T154508_b82b0f"
   },
   "status_detail": {
-    "active_gates_passed": 61,
-    "skip_count": 3,
+    "active_gates_passed": 60,
+    "skip_count": 4,
     "critical_gates": [
       {
         "gate_id": "AXIOM_INTEGRITY_GATE",
@@ -99,7 +99,7 @@
       },
       {
         "gate_id": "ARCH_DECISION_PRESENCE_GATE",
-        "status": "PASS"
+        "status": "SKIP_NOT_APPLICABLE"
       },
       {
         "gate_id": "CANON_ALLOWLIST_GATE",
@@ -215,11 +215,11 @@
       },
       {
         "gate_id": "DERIVED_DRIFT_GATE",
-        "status": "FAIL"
+        "status": "PASS"
       },
       {
         "gate_id": "HANDOFF_COHERENCE_GATE",
-        "status": "PASS"
+        "status": "FAIL"
       },
       {
         "gate_id": "MODULE_STATUS_COHERENCE_GATE",
@@ -281,7 +281,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 100
+        "duration_ms": 145
       }
     },
     {
@@ -306,7 +306,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2180
+        "duration_ms": 5429
       }
     },
     {
@@ -513,7 +513,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 10
+        "duration_ms": 32
       }
     },
     {
@@ -643,7 +643,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 137
+        "duration_ms": 345
       }
     },
     {
@@ -696,7 +696,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 15
       }
     },
     {
@@ -717,7 +717,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 48
+        "duration_ms": 64
       }
     },
     {
@@ -738,7 +738,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 58
+        "duration_ms": 52
       }
     },
     {
@@ -759,7 +759,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 22
+        "duration_ms": 26
       }
     },
     {
@@ -780,7 +780,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 102
+        "duration_ms": 158
       }
     },
     {
@@ -801,7 +801,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 62
+        "duration_ms": 72
       }
     },
     {
@@ -822,7 +822,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 52
+        "duration_ms": 87
       }
     },
     {
@@ -843,7 +843,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 391
+        "duration_ms": 921
       }
     },
     {
@@ -864,7 +864,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 37
+        "duration_ms": 70
       }
     },
     {
@@ -923,7 +923,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 15
+        "duration_ms": 19
       }
     },
     {
@@ -981,7 +981,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 33
+        "duration_ms": 100
       }
     },
     {
@@ -1008,28 +1008,25 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 123
+        "duration_ms": 223
       }
     },
     {
       "gate_id": "ARCH_DECISION_PRESENCE_GATE",
-      "status": "PASS",
+      "status": "SKIP_NOT_APPLICABLE",
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Nenhuma decisão arquitetural obrigatória pendente para o módulo 'reports'.",
+      "summary": "task_type atual 'execute_roadmap_phase' não exige gate.",
       "inputs": [],
-      "artifacts_checked": [
-        "/home/davis/HB-TRACK/docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md",
-        "/home/davis/HB-TRACK/_reports/session_start.json"
-      ],
+      "artifacts_checked": [],
       "evidence_files": [],
       "violations": [],
       "metrics": {
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 1
       }
     },
     {
@@ -1141,7 +1138,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 16
       }
     },
     {
@@ -1431,7 +1428,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 47
+        "duration_ms": 108
       }
     },
     {
@@ -1459,7 +1456,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 48
+        "duration_ms": 100
       }
     },
     {
@@ -1502,7 +1499,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 36
+        "duration_ms": 71
       }
     },
     {
@@ -1511,17 +1508,16 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Changeset observada, mas nenhum source_master/source_input soberano foi alterado.",
+      "summary": "8 regra(s) de sincronismo impactada(s); 41 consumer(s) bloqueante(s) rastreados.",
       "inputs": [
         "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml",
         "git status --porcelain --untracked-files=all",
-        "/home/davis/HB-TRACK/.CEPRAEA/BACKLOG_EXECUTAVEL_DETERMINISTICO.md",
-        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/execute_roadmap_phase.prompt.md",
-        "/home/davis/HB-TRACK/.github/skills/hb-roadmap-executor/SKILL.md",
-        "/home/davis/HB-TRACK/CLAUDE.md",
+        "/home/davis/HB-TRACK/.contract_driven/BOOT_PROFILES.yaml",
+        "/home/davis/HB-TRACK/.contract_driven/TASK_CATALOG.yaml",
+        "/home/davis/HB-TRACK/.github/workflows/deploy.yml",
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/_reports/READINESS_DASHBOARD.md",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
@@ -1534,15 +1530,132 @@
         "/home/davis/HB-TRACK/_reports/session_start.json",
         "/home/davis/HB-TRACK/compiled_context/ops/deploy.json",
         "/home/davis/HB-TRACK/compiled_context/ops/runtime.json",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_ops_bundle_required_for_roadmap.py"
+        "/home/davis/HB-TRACK/compiled_context/reports/FT-039.json",
+        "/home/davis/HB-TRACK/compiled_ops/deploy/impact_report.json",
+        "/home/davis/HB-TRACK/compiled_ops/deploy/production.env.fragment",
+        "/home/davis/HB-TRACK/compiled_ops/deploy/runtime_topology.json",
+        "/home/davis/HB-TRACK/compiled_ops/deploy/secrets_catalog.json",
+        "/home/davis/HB-TRACK/compiled_ops/deploy/staging.env.fragment",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/session_start.schema.json",
+        "/home/davis/HB-TRACK/docs/_canon/AGENT_INSTRUCTIONS.md",
+        "/home/davis/HB-TRACK/docs/_canon/CI_CONTRACT_GATES.md",
+        "/home/davis/HB-TRACK/docs/_canon/CONTRACT_PIPELINE.md",
+        "/home/davis/HB-TRACK/docs/_canon/DEPLOY_PIPELINE.md",
+        "/home/davis/HB-TRACK/docs/_canon/MODULE_REGISTRY.yaml",
+        "/home/davis/HB-TRACK/docs/_canon/OPERATIONS.md",
+        "/home/davis/HB-TRACK/docs/_canon/RUNTIME_CURRENT_STATE.md",
+        "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml",
+        "/home/davis/HB-TRACK/docs/_canon/VPS_SETUP.md",
+        "/home/davis/HB-TRACK/docs/_canon/decisions/ADR-012-secrets-policy.md",
+        "/home/davis/HB-TRACK/docs/_canon/gates/GATES_REGISTRY.yaml",
+        "/home/davis/HB-TRACK/docs/_canon/gates/README.md",
+        "/home/davis/HB-TRACK/docs/_canon/graph/ops/environment_catalog.yaml",
+        "/home/davis/HB-TRACK/docs/_canon/graph/ops/github_actions_catalog.yaml",
+        "/home/davis/HB-TRACK/docs/_canon/graph/ops/secrets_catalog.yaml",
+        "/home/davis/HB-TRACK/docs/_canon/graph/ops/service_topology.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/README.md",
+        "/home/davis/HB-TRACK/generated/contracts/schemas/shared/session_start.schema.json",
+        "/home/davis/HB-TRACK/generated/manifests/ai_ingestion.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/ai_ingestion.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/analytics.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/audit.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/audit.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/competitions.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/competitions.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/exercises.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/identity_access.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/identity_access.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/matches.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/matches.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/medical.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/notifications.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/notifications.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/reports.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/scout.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/scout.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/seasons.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/seasons.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/teams.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/teams.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/training.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/training.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/users.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/users.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/video.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/video.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/wellness.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/wellness.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/reports/impact_report.json",
+        "/home/davis/HB-TRACK/generated/source_graph/reports/reports.bundle.yaml",
+        "/home/davis/HB-TRACK/infra/docker-compose.pact-broker.yml",
+        "/home/davis/HB-TRACK/infra/env/.env.production.template",
+        "/home/davis/HB-TRACK/infra/env/.env.staging.template",
+        "/home/davis/HB-TRACK/scripts/compile/compile_ops_contracts.py",
+        "/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py",
+        "/home/davis/HB-TRACK/scripts/deploy/inject_env.sh",
+        "/home/davis/HB-TRACK/scripts/deploy/render_env_from_contract.py",
+        "/home/davis/HB-TRACK/scripts/hb",
+        "/home/davis/HB-TRACK/scripts/ops/rotate_keys.sh",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_context_budgets_and_parity.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_deploy_env_rendering_flow.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_secret_rotation_contract.py"
       ],
       "evidence_files": [],
-      "violations": [],
+      "violations": [
+        {
+          "blocking_code": "BLOCKED_SYNC_IMPACT_UNRESOLVED",
+          "artifact": "docs/_canon/graph/ops/",
+          "message": "Regra `OPS_SOURCE_GRAPH_SYNC` impactada por 7 source change(s); 18 consumer(s) bloqueante(s) declarados.",
+          "severity": "warn"
+        },
+        {
+          "blocking_code": "BLOCKED_SYNC_IMPACT_UNRESOLVED",
+          "artifact": "docs/_canon/AGENT_INSTRUCTIONS.md",
+          "message": "Regra `AGENT_INSTRUCTIONS_SYNC` impactada por 1 source change(s); 1 consumer(s) bloqueante(s) declarados.",
+          "severity": "warn"
+        },
+        {
+          "blocking_code": "BLOCKED_SYNC_IMPACT_UNRESOLVED",
+          "artifact": ".contract_driven/TASK_CATALOG.yaml",
+          "message": "Regra `TASK_CATALOG_SYNC` impactada por 2 source change(s); 4 consumer(s) bloqueante(s) declarados.",
+          "severity": "warn"
+        },
+        {
+          "blocking_code": "BLOCKED_SYNC_IMPACT_UNRESOLVED",
+          "artifact": "docs/_canon/CONTRACT_PIPELINE.md",
+          "message": "Regra `CONTRACT_PIPELINE_SYNC` impactada por 1 source change(s); 4 consumer(s) bloqueante(s) declarados.",
+          "severity": "warn"
+        },
+        {
+          "blocking_code": "BLOCKED_SYNC_IMPACT_UNRESOLVED",
+          "artifact": "docs/_canon/gates/GATES_REGISTRY.yaml",
+          "message": "Regra `GATES_REGISTRY_SYNC` impactada por 1 source change(s); 3 consumer(s) bloqueante(s) declarados.",
+          "severity": "warn"
+        },
+        {
+          "blocking_code": "BLOCKED_SYNC_IMPACT_UNRESOLVED",
+          "artifact": "docs/_canon/MODULE_REGISTRY.yaml",
+          "message": "Regra `MODULE_REGISTRY_SYNC` impactada por 1 source change(s); 4 consumer(s) bloqueante(s) declarados.",
+          "severity": "warn"
+        },
+        {
+          "blocking_code": "BLOCKED_SYNC_IMPACT_UNRESOLVED",
+          "artifact": "scripts/contracts/validate/validate_contracts.py",
+          "message": "Regra `VALIDATOR_REPORTING_SYNC` impactada por 1 source change(s); 4 consumer(s) bloqueante(s) declarados.",
+          "severity": "warn"
+        },
+        {
+          "blocking_code": "BLOCKED_SYNC_IMPACT_UNRESOLVED",
+          "artifact": "contracts/schemas/shared/session_start.schema.json",
+          "message": "Regra `SESSION_START_SCHEMA_SYNC` impactada por 1 source change(s); 3 consumer(s) bloqueante(s) declarados.",
+          "severity": "warn"
+        }
+      ],
       "metrics": {
         "errors": 0,
-        "warnings": 0,
-        "violations": 0,
-        "duration_ms": 43
+        "warnings": 8,
+        "violations": 8,
+        "duration_ms": 770
       }
     },
     {
@@ -1551,17 +1664,16 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Nenhum source_master/source_input soberano alterado; não há atualização parcial a bloquear.",
+      "summary": "8 regra(s) impactada(s) com propagação bloqueante completa.",
       "inputs": [
         "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml",
         "git status --porcelain --untracked-files=all",
-        "/home/davis/HB-TRACK/.CEPRAEA/BACKLOG_EXECUTAVEL_DETERMINISTICO.md",
-        "/home/davis/HB-TRACK/.contract_driven/agent_prompts/execute_roadmap_phase.prompt.md",
-        "/home/davis/HB-TRACK/.github/skills/hb-roadmap-executor/SKILL.md",
-        "/home/davis/HB-TRACK/CLAUDE.md",
+        "/home/davis/HB-TRACK/.contract_driven/BOOT_PROFILES.yaml",
+        "/home/davis/HB-TRACK/.contract_driven/TASK_CATALOG.yaml",
+        "/home/davis/HB-TRACK/.github/workflows/deploy.yml",
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/_reports/READINESS_DASHBOARD.md",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
@@ -1574,7 +1686,75 @@
         "/home/davis/HB-TRACK/_reports/session_start.json",
         "/home/davis/HB-TRACK/compiled_context/ops/deploy.json",
         "/home/davis/HB-TRACK/compiled_context/ops/runtime.json",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_ops_bundle_required_for_roadmap.py"
+        "/home/davis/HB-TRACK/compiled_context/reports/FT-039.json",
+        "/home/davis/HB-TRACK/compiled_ops/deploy/impact_report.json",
+        "/home/davis/HB-TRACK/compiled_ops/deploy/production.env.fragment",
+        "/home/davis/HB-TRACK/compiled_ops/deploy/runtime_topology.json",
+        "/home/davis/HB-TRACK/compiled_ops/deploy/secrets_catalog.json",
+        "/home/davis/HB-TRACK/compiled_ops/deploy/staging.env.fragment",
+        "/home/davis/HB-TRACK/contracts/schemas/shared/session_start.schema.json",
+        "/home/davis/HB-TRACK/docs/_canon/AGENT_INSTRUCTIONS.md",
+        "/home/davis/HB-TRACK/docs/_canon/CI_CONTRACT_GATES.md",
+        "/home/davis/HB-TRACK/docs/_canon/CONTRACT_PIPELINE.md",
+        "/home/davis/HB-TRACK/docs/_canon/DEPLOY_PIPELINE.md",
+        "/home/davis/HB-TRACK/docs/_canon/MODULE_REGISTRY.yaml",
+        "/home/davis/HB-TRACK/docs/_canon/OPERATIONS.md",
+        "/home/davis/HB-TRACK/docs/_canon/RUNTIME_CURRENT_STATE.md",
+        "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml",
+        "/home/davis/HB-TRACK/docs/_canon/VPS_SETUP.md",
+        "/home/davis/HB-TRACK/docs/_canon/decisions/ADR-012-secrets-policy.md",
+        "/home/davis/HB-TRACK/docs/_canon/gates/GATES_REGISTRY.yaml",
+        "/home/davis/HB-TRACK/docs/_canon/gates/README.md",
+        "/home/davis/HB-TRACK/docs/_canon/graph/ops/environment_catalog.yaml",
+        "/home/davis/HB-TRACK/docs/_canon/graph/ops/github_actions_catalog.yaml",
+        "/home/davis/HB-TRACK/docs/_canon/graph/ops/secrets_catalog.yaml",
+        "/home/davis/HB-TRACK/docs/_canon/graph/ops/service_topology.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/README.md",
+        "/home/davis/HB-TRACK/generated/contracts/schemas/shared/session_start.schema.json",
+        "/home/davis/HB-TRACK/generated/manifests/ai_ingestion.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/ai_ingestion.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/analytics.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/audit.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/audit.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/competitions.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/competitions.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/exercises.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/identity_access.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/identity_access.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/matches.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/matches.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/medical.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/notifications.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/notifications.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/reports.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/scout.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/scout.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/seasons.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/seasons.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/teams.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/teams.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/training.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/training.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/users.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/users.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/video.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/video.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/wellness.event.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/wellness.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/reports/impact_report.json",
+        "/home/davis/HB-TRACK/generated/source_graph/reports/reports.bundle.yaml",
+        "/home/davis/HB-TRACK/infra/docker-compose.pact-broker.yml",
+        "/home/davis/HB-TRACK/infra/env/.env.production.template",
+        "/home/davis/HB-TRACK/infra/env/.env.staging.template",
+        "/home/davis/HB-TRACK/scripts/compile/compile_ops_contracts.py",
+        "/home/davis/HB-TRACK/scripts/contracts/validate/validate_contracts.py",
+        "/home/davis/HB-TRACK/scripts/deploy/inject_env.sh",
+        "/home/davis/HB-TRACK/scripts/deploy/render_env_from_contract.py",
+        "/home/davis/HB-TRACK/scripts/hb",
+        "/home/davis/HB-TRACK/scripts/ops/rotate_keys.sh",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_context_budgets_and_parity.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_deploy_env_rendering_flow.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_secret_rotation_contract.py"
       ],
       "evidence_files": [],
       "violations": [],
@@ -1582,7 +1762,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 29
+        "duration_ms": 351
       }
     },
     {
@@ -1627,7 +1807,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 104
+        "duration_ms": 559
       }
     },
     {
@@ -1656,7 +1836,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 115
+        "duration_ms": 183
       }
     },
     {
@@ -1701,7 +1881,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 104
+        "duration_ms": 146
       }
     },
     {
@@ -1746,7 +1926,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 99
+        "duration_ms": 124
       }
     },
     {
@@ -1791,7 +1971,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 96
+        "duration_ms": 145
       }
     },
     {
@@ -2161,7 +2341,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 33
+        "duration_ms": 298
       }
     },
     {
@@ -2247,7 +2427,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 701
+        "duration_ms": 1142
       }
     },
     {
@@ -2270,7 +2450,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1270
+        "duration_ms": 5697
       }
     },
     {
@@ -2292,7 +2472,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1607
+        "duration_ms": 5026
       }
     },
     {
@@ -2331,7 +2511,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 559
+        "duration_ms": 1711
       }
     },
     {
@@ -2371,7 +2551,7 @@
         "errors": 0,
         "warnings": 1,
         "violations": 1,
-        "duration_ms": 1528
+        "duration_ms": 4625
       }
     },
     {
@@ -2437,7 +2617,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 8
       }
     },
     {
@@ -2937,7 +3117,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1696
+        "duration_ms": 1952
       }
     },
     {
@@ -2961,7 +3141,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 27
+        "duration_ms": 25
       }
     },
     {
@@ -2985,7 +3165,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1603
+        "duration_ms": 2237
       }
     },
     {
@@ -3005,7 +3185,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 7
       }
     },
     {
@@ -3045,7 +3225,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1920
+        "duration_ms": 6153
       }
     },
     {
@@ -3088,7 +3268,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 58
+        "duration_ms": 76
       }
     },
     {
@@ -3110,7 +3290,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 994
+        "duration_ms": 1356
       }
     },
     {
@@ -3166,7 +3346,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 64
+        "duration_ms": 67
       }
     },
     {
@@ -3186,98 +3366,27 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 13
       }
     },
     {
       "gate_id": "DERIVED_DRIFT_GATE",
-      "status": "FAIL",
+      "status": "PASS",
       "blocking": true,
-      "exit_code": 2,
-      "blocking_code": "BLOCKED_NON_NORMALIZED_DERIVED_DIFF_CHECK",
-      "summary": "RUNTIME_CURRENT_STATE.md diverge do gerador canônico.",
-      "inputs": [
-        "generated/manifests/ai_ingestion.event.traceability.yaml",
-        "generated/manifests/ai_ingestion.sync.traceability.yaml",
-        "generated/manifests/analytics.sync.traceability.yaml",
-        "generated/manifests/audit.event.traceability.yaml",
-        "generated/manifests/audit.sync.traceability.yaml",
-        "generated/manifests/competitions.event.traceability.yaml",
-        "generated/manifests/competitions.sync.traceability.yaml",
-        "generated/manifests/exercises.sync.traceability.yaml",
-        "generated/manifests/identity_access.event.traceability.yaml",
-        "generated/manifests/identity_access.sync.traceability.yaml",
-        "generated/manifests/matches.event.traceability.yaml",
-        "generated/manifests/matches.sync.traceability.yaml",
-        "generated/manifests/medical.sync.traceability.yaml",
-        "generated/manifests/notifications.event.traceability.yaml",
-        "generated/manifests/notifications.sync.traceability.yaml",
-        "generated/manifests/reports.sync.traceability.yaml",
-        "generated/manifests/scout.event.traceability.yaml",
-        "generated/manifests/scout.sync.traceability.yaml",
-        "generated/manifests/seasons.event.traceability.yaml",
-        "generated/manifests/seasons.sync.traceability.yaml",
-        "generated/manifests/teams.event.traceability.yaml",
-        "generated/manifests/teams.sync.traceability.yaml",
-        "generated/manifests/training.event.traceability.yaml",
-        "generated/manifests/training.sync.traceability.yaml",
-        "generated/manifests/users.event.traceability.yaml",
-        "generated/manifests/users.sync.traceability.yaml",
-        "generated/manifests/video.event.traceability.yaml",
-        "generated/manifests/video.sync.traceability.yaml",
-        "generated/manifests/wellness.event.traceability.yaml",
-        "generated/manifests/wellness.sync.traceability.yaml"
-      ],
+      "exit_code": 0,
+      "blocking_code": null,
+      "summary": "generated/ alinhado ao compiler determinístico (sem drift).",
+      "inputs": [],
       "artifacts_checked": [
-        "generated/manifests/ai_ingestion.event.traceability.yaml",
-        "generated/manifests/ai_ingestion.sync.traceability.yaml",
-        "generated/manifests/analytics.sync.traceability.yaml",
-        "generated/manifests/audit.event.traceability.yaml",
-        "generated/manifests/audit.sync.traceability.yaml",
-        "generated/manifests/competitions.event.traceability.yaml",
-        "generated/manifests/competitions.sync.traceability.yaml",
-        "generated/manifests/exercises.sync.traceability.yaml",
-        "generated/manifests/identity_access.event.traceability.yaml",
-        "generated/manifests/identity_access.sync.traceability.yaml",
-        "generated/manifests/matches.event.traceability.yaml",
-        "generated/manifests/matches.sync.traceability.yaml",
-        "generated/manifests/medical.sync.traceability.yaml",
-        "generated/manifests/notifications.event.traceability.yaml",
-        "generated/manifests/notifications.sync.traceability.yaml",
-        "generated/manifests/reports.sync.traceability.yaml",
-        "generated/manifests/scout.event.traceability.yaml",
-        "generated/manifests/scout.sync.traceability.yaml",
-        "generated/manifests/seasons.event.traceability.yaml",
-        "generated/manifests/seasons.sync.traceability.yaml",
-        "generated/manifests/teams.event.traceability.yaml",
-        "generated/manifests/teams.sync.traceability.yaml",
-        "generated/manifests/training.event.traceability.yaml",
-        "generated/manifests/training.sync.traceability.yaml",
-        "generated/manifests/users.event.traceability.yaml",
-        "generated/manifests/users.sync.traceability.yaml",
-        "generated/manifests/video.event.traceability.yaml",
-        "generated/manifests/video.sync.traceability.yaml",
-        "generated/manifests/wellness.event.traceability.yaml",
-        "generated/manifests/wellness.sync.traceability.yaml",
-        "/home/davis/HB-TRACK/docs/_canon/RUNTIME_CURRENT_STATE.md",
-        "/home/davis/HB-TRACK/scripts/generate/docs/gen_runtime_current_state.py"
+        "/home/davis/HB-TRACK/generated"
       ],
-      "evidence_files": [
-        "docs/_canon/RUNTIME_CURRENT_STATE.md"
-      ],
-      "violations": [
-        {
-          "blocking_code": "BLOCKED_NON_NORMALIZED_DERIVED_DIFF_CHECK",
-          "artifact": "docs/_canon/RUNTIME_CURRENT_STATE.md",
-          "message": "Drift detectado em RUNTIME_CURRENT_STATE.md. Regerar: python3 scripts/generate/docs/gen_runtime_current_state.py --write",
-          "severity": "error"
-        }
-      ],
+      "evidence_files": [],
+      "violations": [],
       "metrics": {
-        "errors": 1,
+        "errors": 0,
         "warnings": 0,
-        "violations": 1,
-        "duration_ms": 2942
+        "violations": 0,
+        "duration_ms": 44284
       }
     },
     {
@@ -3313,7 +3422,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 9
+        "duration_ms": 22
       }
     },
     {
@@ -3333,7 +3442,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 21
+        "duration_ms": 23
       }
     },
     {
@@ -3355,7 +3464,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 0
+        "duration_ms": 3
       }
     },
     {
@@ -3411,7 +3520,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 13
       }
     },
     {
@@ -3481,18 +3590,19 @@
     },
     {
       "gate_id": "HANDOFF_COHERENCE_GATE",
-      "status": "PASS",
+      "status": "FAIL",
       "blocking": true,
-      "exit_code": 0,
-      "blocking_code": null,
-      "summary": "SESSION_HANDOFF.md coerente com estado atual.",
+      "exit_code": 2,
+      "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+      "summary": "SESSION_HANDOFF.md com 2 inconsistência(s).",
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
         "/home/davis/HB-TRACK/compiled_context/ops/deploy.json",
         "/home/davis/HB-TRACK/compiled_context/ops/runtime.json",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_ops_bundle_required_for_roadmap.py"
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_ops_bundle_required_for_roadmap.py",
+        "/home/davis/HB-TRACK/infra/docker-compose.pact-broker.yml"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
@@ -3500,15 +3610,29 @@
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
         "/home/davis/HB-TRACK/compiled_context/ops/deploy.json",
         "/home/davis/HB-TRACK/compiled_context/ops/runtime.json",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_ops_bundle_required_for_roadmap.py"
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_ops_bundle_required_for_roadmap.py",
+        "/home/davis/HB-TRACK/infra/docker-compose.pact-broker.yml"
       ],
       "evidence_files": [],
-      "violations": [],
+      "violations": [
+        {
+          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+          "artifact": "SESSION_HANDOFF.md",
+          "message": "Divergência de modo de operação: session_start.operation_mode='ROADMAP' != SESSION_HANDOFF.modo_operacao='CDD'.",
+          "severity": "error"
+        },
+        {
+          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
+          "artifact": "SESSION_HANDOFF.md",
+          "message": "Divergência de módulo foco: session_start.module_focus='training' != SESSION_HANDOFF.modulo_foco='reports'.",
+          "severity": "error"
+        }
+      ],
       "metrics": {
-        "errors": 0,
+        "errors": 2,
         "warnings": 0,
-        "violations": 0,
-        "duration_ms": 7
+        "violations": 2,
+        "duration_ms": 25
       }
     },
     {
@@ -3530,7 +3654,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 173
+        "duration_ms": 206
       }
     },
     {
@@ -3552,7 +3676,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 7
       }
     },
     {
@@ -3574,7 +3698,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 22
+        "duration_ms": 25
       }
     },
     {
@@ -3936,7 +4060,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 980
+        "duration_ms": 1018
       }
     },
     {
@@ -3960,7 +4084,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 12
       }
     },
     {
@@ -3982,7 +4106,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 17
+        "duration_ms": 19
       }
     },
     {
@@ -4021,7 +4145,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 26
+        "duration_ms": 28
       }
     },
     {
@@ -4044,7 +4168,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 3
+        "duration_ms": 24
       }
     },
     {
@@ -4085,7 +4209,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 11
       }
     },
     {

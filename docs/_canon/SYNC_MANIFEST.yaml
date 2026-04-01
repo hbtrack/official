@@ -111,8 +111,6 @@ rules:
       - "compiled_ops/deploy/secrets_catalog.json"
       - "compiled_ops/deploy/runtime_topology.json"
       - "compiled_ops/deploy/impact_report.json"
-      - "tests/pipeline_gates/test_ops_source_graph_integrity.py"
-      - "tests/pipeline_gates/test_ops_contract_compiler.py"
       - "tests/pipeline_gates/test_deploy_env_rendering_flow.py"
       - "tests/pipeline_gates/test_secret_rotation_contract.py"
     validation_commands:

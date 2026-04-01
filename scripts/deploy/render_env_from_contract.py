@@ -1,5 +1,11 @@
 from __future__ import annotations
 
+# B8-002 — PACT_BROKER_BASE_URL e PACT_BROKER_TOKEN são variáveis CI-only.
+# Elas NÃO fazem parte do .env da aplicação Django e NÃO são renderizadas por este script.
+# São injetadas como GitHub Actions vars/secrets diretamente no job `contract-conformance`
+# do deploy.yml (ADR-025). Qualquer alteração na política de acesso ao Pact Broker
+# deve refletir em docs/_canon/graph/ops/environment_catalog.yaml.
+
 import argparse
 import os
 import re

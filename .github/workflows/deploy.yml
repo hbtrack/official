@@ -315,6 +315,10 @@ jobs:
     needs: deploy-staging
     env:
       HB_STAGING_URL: https://staging.handballtrack.app
+      # PACT_BROKER_BASE_URL ativa PACT_PROVIDER_GATE — configura como secret após provisionar
+      # o Pact Broker na VPS (infra/docker-compose.pact-broker.yml, ADR-025)
+      PACT_BROKER_BASE_URL: ${{ vars.PACT_BROKER_BASE_URL }}
+      PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - name: Sincronizar branch_ativo no SESSION_HANDOFF
@@ -341,7 +345,7 @@ jobs:
         run: npm ci
       - name: Install Python dependencies
         run: pip install -r requirements-dev.txt
-      - name: Run HTTP_RUNTIME_CONTRACT_GATE
+      - name: Run HTTP_RUNTIME_CONTRACT_GATE e PACT_PROVIDER_GATE
         run: python3 scripts/contracts/validate/validate_contracts.py
 
   # ─────────────────────────────────────────────────────────────
