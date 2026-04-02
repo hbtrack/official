@@ -68,6 +68,14 @@ class HBHookValidator:
         "contracts/",
         "docs/hbtrack/",
     )
+
+    # Artefatos locais que o próprio hook/validator atualiza e que precisam
+    # entrar no índice para evitar resíduo pós-commit.
+    POST_HOOK_ARTIFACTS = (
+        "_reports/session_start.json",
+        "_reports/contract_gates/precommit.latest.json",
+        "_reports/contract_gates/stage-session-start.local.latest.json",
+    )
     
     def __init__(self):
         """Inicializar paths e carregar SSOTs."""
@@ -491,6 +499,35 @@ class HBHookValidator:
                     f.write("\n")
             except Exception as e:
                 print(f"⚠️  HOOK: Não consegui salvar session. {e}", file=sys.stderr)
+
+    def restage_post_hook_artifacts(self) -> bool:
+        """
+        Reindexar artefatos locais modificados pelo próprio hook.
+
+        Sem isso, o commit sai com os snapshots anteriores e o workspace fica
+        sujo imediatamente após o hook terminar com sucesso.
+        """
+        existing = [
+            artifact
+            for artifact in self.POST_HOOK_ARTIFACTS
+            if (self.repo_root / artifact).exists()
+        ]
+        if not existing:
+            return True
+
+        try:
+            subprocess.run(
+                ["git", "add", "--", *existing],
+                cwd=self.repo_root,
+                check=True,
+            )
+            return True
+        except Exception as e:
+            self.errors.append(
+                "❌ HOOK: Não consegui reindexar artefatos locais pós-validação "
+                f"({e})."
+            )
+            return False
     
     def run(self) -> int:
         """Executar pipeline completo de validação."""
@@ -563,6 +600,8 @@ class HBHookValidator:
 
         # Gravar sucesso SOMENTE quando o hook passa — nunca em falha
         self.save_hook_success()
+        if not self.restage_post_hook_artifacts():
+            self._print_errors_and_exit(1)
 
         print("\n✅ PRE-COMMIT HOOK: TUDO OK — commit permitido\n")
         return 0

@@ -157,6 +157,29 @@ class TestPreCommitGovernanceMethods:
             "run() deve chamar check_governance_integrity() para mudanças de governança"
         )
 
+    def test_post_hook_artifacts_constant_defined(self):
+        """Hook deve declarar artefatos locais que precisam ser reindexados."""
+        HBHookValidator = _load_hook_class()
+        assert hasattr(HBHookValidator, "POST_HOOK_ARTIFACTS"), (
+            "HBHookValidator deve declarar POST_HOOK_ARTIFACTS"
+        )
+
+    def test_restage_post_hook_artifacts_method_exists(self):
+        HBHookValidator = _load_hook_class()
+        assert hasattr(HBHookValidator, "restage_post_hook_artifacts"), (
+            "HBHookValidator deve ter método restage_post_hook_artifacts()"
+        )
+
+    def test_restage_post_hook_artifacts_mentions_local_reports(self):
+        """Hook deve reindexar session_start e relatórios locais gerados no pre-commit."""
+        content = PRE_COMMIT_HOOK.read_text(encoding="utf-8")
+        assert "_reports/session_start.json" in content
+        assert "_reports/contract_gates/precommit.latest.json" in content
+        assert "_reports/contract_gates/stage-session-start.local.latest.json" in content
+        assert '["git", "add", "--", *existing]' in content, (
+            "restage_post_hook_artifacts deve usar git add para levar os artefatos ao índice"
+        )
+
     def test_get_staged_governance_files_filters_correctly(self):
         """get_staged_governance_files deve filtrar por GOVERNANCE_PATHS."""
         content = PRE_COMMIT_HOOK.read_text(encoding="utf-8")

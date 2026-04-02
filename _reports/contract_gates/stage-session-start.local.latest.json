@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-02T08:07:08Z",
+  "timestamp_utc": "2026-04-02T08:09:48Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/stage-session-start.local.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260402T080708_941011"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260402T080948_e06c66"
   },
   "status_detail": {
     "active_gates_passed": 2,
@@ -289,7 +289,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 45
+        "duration_ms": 38
       }
     },
     {
@@ -1258,7 +1258,7 @@
       "blocking": true,
       "exit_code": 2,
       "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-      "summary": "SESSION_HANDOFF.md com 4 inconsistência(s).",
+      "summary": "SESSION_HANDOFF.md com 2 inconsistência(s).",
       "inputs": [
         "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
         "/home/davis/HB-TRACK/contracts/schemas/shared/session_handoff.schema.json",
@@ -1282,19 +1282,7 @@
         {
           "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
           "artifact": "SESSION_HANDOFF.md",
-          "message": "Front matter inválido em resultado: 'IN_PROGRESS' is not one of ['DONE', 'PENDENTE', 'BLOCKED']",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-          "artifact": "SESSION_HANDOFF.md",
           "message": "Divergência de modo de operação: session_start.operation_mode='ROADMAP' != SESSION_HANDOFF.modo_operacao='CDD'.",
-          "severity": "error"
-        },
-        {
-          "blocking_code": "BLOCKED_HANDOFF_INCOMPLETE",
-          "artifact": "SESSION_HANDOFF.md",
-          "message": "Divergência de módulo foco: session_start.module_focus='reports' != SESSION_HANDOFF.modulo_foco='wellness'.",
           "severity": "error"
         },
         {
@@ -1305,10 +1293,10 @@
         }
       ],
       "metrics": {
-        "errors": 4,
+        "errors": 2,
         "warnings": 0,
-        "violations": 4,
-        "duration_ms": 4
+        "violations": 2,
+        "duration_ms": 3
       }
     },
     {
@@ -1330,7 +1318,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 188
+        "duration_ms": 163
       }
     },
     {
