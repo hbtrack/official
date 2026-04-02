@@ -32,7 +32,7 @@ Este diretório é o ponto de entrada de navegação para o sistema de gates do 
 | 1 | `PATH_CANONICALITY_GATE` | Sim | Não | Garante que nenhum artefato normativo existe fora do path canônico; bloqueia duplicatas soberanas | §9.1 |
 | 2 | `REQUIRED_ARTIFACT_PRESENCE_GATE` | Sim | Não | Presença obrigatória de artefatos globais e por módulo | §9.2 |
 | 2A | `MODULE_DOC_CROSSREF_GATE` | Sim | Não | Header YAML canônico nos docs de módulo; cross-refs apontam para paths soberanos | §9.2A |
-| 2B | `API_NORMATIVE_DUPLICATION_GATE` | Não (warning) | Não | Detecta duplicação normativa HTTP fora da SSOT `api_rules.yaml` | §9.2B |
+| 2B | `API_NORMATIVE_DUPLICATION_GATE` | Sim (B9-002) | Não | Detecta duplicação normativa HTTP fora da SSOT `api_rules.yaml` | §9.2B |
 | 2C | `OWASP_API_CONTROL_MATRIX_GATE` | Sim | Não | `docs/_canon/security/OWASP_API_CONTROL_MATRIX.yaml` presente, validado por schema, IDs únicos | §9.2C |
 | 2D | `MODULE_SOURCE_AUTHORITY_MATRIX_GATE` | Sim | Não | `docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml` presente, válido, alinhado com os 17 módulos | §9.2D |
 | 2D1 | `MODULE_REGISTRY_GATE` | Sim | Não | `docs/_canon/MODULE_REGISTRY.yaml` presente, válido e alinhado com a taxonomia canônica | §9.2D1 |
@@ -65,7 +65,7 @@ Este diretório é o ponto de entrada de navegação para o sistema de gates do 
 | 13 | `ARAZZO_VALIDATION_GATE` | Sim | Sim (após pré-reqs) | Arazzo parser valida workflows; operationIds existem no OpenAPI | §9.13 |
 | 14 | `UI_DOC_VALIDATION_GATE` | Sim | Sim (após pré-reqs) | Storybook build quando houver UI documentada | §9.14 |
 | 15B | `FEATURE_READINESS_GATE` | Não | Sim | Inventaria `FEATURE_REGISTRY.yaml` e emite relatório de completude por módulo | §9.14B |
-| 15C | `ADVERSARIAL_ANALYSIS_GATE` | Não | Sim | Exige relatórios adversariais `PASS` quando existirem evidências em `_reports/adversarial/` | §9.14B |
+| 15C | `ADVERSARIAL_ANALYSIS_GATE` | Sim (B9-002) | Sim | Exige relatórios adversariais `PASS` quando existirem evidências em `_reports/adversarial/` | §9.14B |
 | 15D | `VERSIONING_POLICY_GATE` | Não | Sim | Valida ADR-024, SemVer do OpenAPI e policy de versionamento registrada no canon | §9.14B |
 | 15E | `PACT_PROVIDER_GATE` | Não até o primeiro consumer publish | Sim | Valida o provider no Pact Broker; `SKIP_NOT_APPLICABLE` até existir o primeiro pact publicado de `hbtrack-app` | §9.14B |
 | 15F | `CODE_ARCHITECTURE_GATE` | Não | Sim | Valida ADR-026, `CODE_ARCHITECTURE.md` e a estrutura mínima em `src/` | §9.14B |

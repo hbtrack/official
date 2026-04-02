@@ -120,8 +120,8 @@ gates:
   - gate_id: API_NORMATIVE_DUPLICATION_GATE
     order: "2B"
     name: "API Normative Duplication Gate"
-    blocking: false
-    severity: WARNING
+    blocking: true # B9-002: sync/normative warnings are now blocking failures
+    severity: HIGH
     parallelizable: false
     applies_when: always
     depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
@@ -867,7 +867,7 @@ gates:
   - gate_id: ADVERSARIAL_ANALYSIS_GATE
     order: "15C"
     name: "Adversarial Analysis Gate"
-    blocking: false
+    blocking: true # B9-002: adversarial warnings are now blocking failures
     severity: HIGH
     parallelizable: true
     applies_when: always

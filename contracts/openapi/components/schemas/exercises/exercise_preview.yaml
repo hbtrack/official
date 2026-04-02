@@ -1,3 +1,5 @@
+# Source graph authority: docs/hbtrack/modulos/exercises/graph/entities.yaml
+# Preview DTO remains a transport subset derived from Exercise for list scanning.
 type: object
 title: Exercise Preview
 description: Preview of exercise

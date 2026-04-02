@@ -62,8 +62,10 @@ jobs:
           sudo mv /tmp/oasdiff /usr/local/bin/oasdiff
           oasdiff --version
 
-      - name: Run contract validation (todos os gates de tooling habilitados)
-        run: python3 scripts/contracts/validate/validate_contracts.py --profile precommit
+      - name: Run contract validation (warnings=failure B9-002)
+        run: |
+          python3 scripts/contracts/validate/validate_contracts.py --profile precommit
+          echo "Contract gates passed (exit code 0 — no warnings, no failures)"
 
   # ────────────────────────────────────────────────────────────────────────────
   # JOB 2 — Testes unitários e de integração

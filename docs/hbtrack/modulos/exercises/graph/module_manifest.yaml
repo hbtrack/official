@@ -1,0 +1,45 @@
+version: "1.0.0"
+status: active
+module: exercises
+phase: source_graph_rollout
+
+global_refs:
+  source_authority_graph: "../../../../_canon/SOURCE_AUTHORITY_GRAPH.yaml"
+  global_rules: "../../../../_canon/graph/global_rules.yaml"
+  global_policies: "../../../../_canon/graph/global_policies.yaml"
+  lifecycle: "../../../../_canon/graph/lifecycle.yaml"
+  module_registry: "../../../../_canon/MODULE_REGISTRY.yaml"
+  module_source_authority_matrix: "../../../../_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml"
+
+module_docs:
+  readme: "../README.md"
+  scope: "../MODULE_SCOPE_EXERCISES.md"
+  domain_rules: "../DOMAIN_RULES_EXERCISES.md"
+  invariants: "../INVARIANTS_EXERCISES.md"
+  permissions: "../PERMISSIONS_EXERCISES.md"
+  test_matrix: "../TEST_MATRIX_EXERCISES.md"
+  decision_ir: "../DECISION_IR_EXERCISES.yaml"
+
+contract_surfaces:
+  openapi_paths: "../../../../../contracts/openapi/paths/exercises.yaml"
+  sovereign_schema_dir: "../../../../../contracts/schemas/exercises/"
+  primary_schema: "../../../../../contracts/schemas/exercises/exercise.schema.json"
+  openapi_projection: "../../../../../contracts/openapi/components/schemas/exercises/exercise.yaml"
+
+runtime_surfaces:
+  api_router: "../../../../../src/exercises/api.py"
+  domain_entity: "../../../../../src/exercises/domain/entities.py"
+  domain_rules: "../../../../../src/exercises/domain/rules.py"
+  use_cases: "../../../../../src/exercises/application/use_cases.py"
+  unit_tests: "../../../../../src/exercises/tests/unit/test_exercises.py"
+
+structured_ir:
+  entities: "./entities.yaml"
+  endpoints: "./endpoints.yaml"
+  errors: "./errors.yaml"
+  test_obligations: "./test_obligations.yaml"
+
+known_gaps:
+  - "OpenAPI transport projections `exercise.yaml` e `exercise_preview.yaml` ainda nao refletem integralmente o shape soberano de `exercise.schema.json`."
+  - "O contrato published de `deleteExerciseRelation` usa `{relationId}`, enquanto o runtime legado ainda remove relacoes por `(to_exercise_id, relation_type)`."
+  - "As superfícies OpenAPI de ACL seguem shape inline e ainda nao reutilizam um projection component dedicado derivado de `exercise_acl.schema.json`."

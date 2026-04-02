@@ -1,0 +1,39 @@
+version: "1.0.0"
+status: active
+module: analytics
+
+errors:
+  - id: ERR-ANL-401-UNAUTHENTICATED
+    kind: transport
+    http_status: 401
+    source_ref: "../../../../../src/analytics/api.py#_role"
+    operations:
+      - listAnalyticsSnapshots
+      - createAnalyticsSnapshot
+      - getAnalyticsSnapshot
+      - listAnalyticsDashboards
+      - queryAnalyticsData
+  - id: ERR-ANL-403-INSUFFICIENT-PRIVILEGE
+    kind: domain
+    http_status: 403
+    exception_ref: "../../../../../src/analytics/domain/rules.py#InsufficientPrivilege"
+    operations:
+      - listAnalyticsSnapshots
+      - createAnalyticsSnapshot
+      - getAnalyticsSnapshot
+      - listAnalyticsDashboards
+      - queryAnalyticsData
+  - id: ERR-ANL-404-SNAPSHOT-NOT-FOUND
+    kind: domain
+    http_status: 404
+    exception_ref: "../../../../../src/analytics/domain/rules.py#SnapshotNotFound"
+    operations:
+      - getAnalyticsSnapshot
+  - id: ERR-ANL-422-VALIDATION
+    kind: validation
+    http_status: 422
+    source_ref: "../../../../../src/analytics/domain/entities.py#validate_invariants"
+    operations:
+      - listAnalyticsSnapshots
+      - createAnalyticsSnapshot
+      - queryAnalyticsData

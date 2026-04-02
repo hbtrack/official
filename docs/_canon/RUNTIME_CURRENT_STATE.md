@@ -107,7 +107,7 @@ Fontes executáveis observadas por este gerador:
 |------|--------|-----------|
 | Diretórios `tests/unit` por módulo | `17/17` | `src/*/tests/unit/` |
 | Diretórios `tests/integration` por módulo | `17/17` | `src/*/tests/integration/` |
-| Arquivos em `tests/pipeline_gates/` | `67` | `tests/pipeline_gates/` |
+| Arquivos em `tests/pipeline_gates/` | `68` | `tests/pipeline_gates/` |
 | Validador de drift arquitetural | presente | `scripts/audit/check_architecture_docs.py` |
 | Validador principal de contratos | presente | `scripts/contracts/validate/validate_contracts.py` |
 

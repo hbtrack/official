@@ -218,7 +218,7 @@ A ordem canônica é:
 		1.	PATH_CANONICALITY_GATE
 			2.	REQUIRED_ARTIFACT_PRESENCE_GATE
 			2A.	MODULE_DOC_CROSSREF_GATE
-			2B.	API_NORMATIVE_DUPLICATION_GATE (não-bloqueante)
+			2B.	API_NORMATIVE_DUPLICATION_GATE (bloqueante — B9-002)
 			2C.	OWASP_API_CONTROL_MATRIX_GATE
 			2D.	MODULE_SOURCE_AUTHORITY_MATRIX_GATE
 			2D1.	MODULE_REGISTRY_GATE
@@ -614,7 +614,7 @@ Detectar risco de duplicação normativa de convenções/shape HTTP no canon hum
 
 Severidade
 
-Não-bloqueante por padrão (warning forte). Pode ser promovido a bloqueante quando o canon estiver estabilizado.
+Bloqueante (B9-002: warnings de sincronismo normativo são agora falhas bloqueantes).
 
 PASS
 
@@ -1615,6 +1615,7 @@ FEATURE_READINESS_GATE
 
 ADVERSARIAL_ANALYSIS_GATE
 	•	verifica relatórios em `_reports/adversarial/`
+	•	**bloqueante** (B9-002: adversarial warnings são agora falhas bloqueantes)
 	•	`SKIP_NOT_APPLICABLE` quando não houver relatórios publicados
 
 VERSIONING_POLICY_GATE

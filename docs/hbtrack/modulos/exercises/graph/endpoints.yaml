@@ -1,0 +1,312 @@
+version: "1.0.0"
+status: active
+module: exercises
+
+endpoints:
+  - operation_id: listExercises
+    method: GET
+    path: /exercises
+    openapi_ref: "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/get"
+    runtime_handler_ref: "../../../../../src/exercises/api.py#list_exercises"
+    use_case_ref: "../../../../../src/exercises/application/use_cases.py#ListExercises"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+    response_codes:
+      - 200
+      - 401
+      - 422
+      - 500
+    owner_scoped_roles:
+      - coach
+      - athlete
+      - member
+  - operation_id: createExercise
+    method: POST
+    path: /exercises
+    openapi_ref: "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/post"
+    runtime_handler_ref: "../../../../../src/exercises/api.py#create_exercise"
+    use_case_ref: "../../../../../src/exercises/application/use_cases.py#CreateExercise"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+    roles_denied:
+      - athlete
+      - member
+    response_codes:
+      - 201
+      - 401
+      - 403
+      - 409
+      - 422
+      - 500
+    owner_scoped_roles:
+      - coach
+  - operation_id: getExercise
+    method: GET
+    path: /exercises/{id}
+    openapi_ref: "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/get"
+    runtime_handler_ref: "../../../../../src/exercises/api.py#get_exercise"
+    use_case_ref: "../../../../../src/exercises/application/use_cases.py#GetExercise"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 404
+      - 500
+    owner_scoped_roles:
+      - coach
+      - athlete
+      - member
+  - operation_id: updateExercise
+    method: PATCH
+    path: /exercises/{id}
+    openapi_ref: "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/patch"
+    runtime_handler_ref: "../../../../../src/exercises/api.py#update_exercise"
+    use_case_ref: "../../../../../src/exercises/application/use_cases.py#UpdateExercise"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+    roles_denied:
+      - athlete
+      - member
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 404
+      - 409
+      - 422
+      - 500
+    owner_scoped_roles:
+      - coach
+  - operation_id: deleteExercise
+    method: DELETE
+    path: /exercises/{id}
+    openapi_ref: "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/delete"
+    runtime_handler_ref: "../../../../../src/exercises/api.py#delete_exercise"
+    use_case_ref: "../../../../../src/exercises/application/use_cases.py#DeleteExercise"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+    roles_denied:
+      - athlete
+      - member
+    response_codes:
+      - 204
+      - 401
+      - 403
+      - 404
+      - 409
+      - 500
+    owner_scoped_roles:
+      - coach
+  - operation_id: copyExerciseToOrg
+    method: POST
+    path: /exercises/{id}/copy
+    openapi_ref: "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/copy/post"
+    runtime_handler_ref: "../../../../../src/exercises/api.py#copy_exercise_to_org"
+    use_case_ref: "../../../../../src/exercises/application/use_cases.py#CopyExerciseToOrg"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+    roles_denied:
+      - athlete
+      - member
+    response_codes:
+      - 201
+      - 401
+      - 404
+      - 409
+      - 500
+    owner_scoped_roles:
+      - coach
+  - operation_id: listExerciseVersions
+    method: GET
+    path: /exercises/{id}/versions
+    openapi_ref: "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/versions/get"
+    runtime_handler_ref: "../../../../../src/exercises/api.py#list_exercise_versions"
+    use_case_ref: "../../../../../src/exercises/application/use_cases.py#ListExerciseVersions"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 404
+      - 500
+    owner_scoped_roles:
+      - coach
+      - athlete
+      - member
+  - operation_id: getExerciseVersion
+    method: GET
+    path: /exercises/{id}/versions/{versionId}
+    openapi_ref: "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/versions/{versionId}/get"
+    runtime_handler_ref: "../../../../../src/exercises/api.py#get_exercise_version"
+    use_case_ref: "../../../../../src/exercises/application/use_cases.py#GetExerciseVersion"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 404
+      - 500
+    owner_scoped_roles:
+      - coach
+      - athlete
+      - member
+  - operation_id: listExerciseRelations
+    method: GET
+    path: /exercises/{id}/relations
+    openapi_ref: "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/relations/get"
+    runtime_handler_ref: "../../../../../src/exercises/api.py#list_exercise_relations"
+    use_case_ref: "../../../../../src/exercises/application/use_cases.py#ListExerciseRelations"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+      - athlete
+      - member
+    response_codes:
+      - 200
+      - 401
+      - 404
+      - 500
+    owner_scoped_roles:
+      - coach
+      - athlete
+      - member
+  - operation_id: addExerciseRelation
+    method: POST
+    path: /exercises/{id}/relations
+    openapi_ref: "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/relations/post"
+    runtime_handler_ref: "../../../../../src/exercises/api.py#add_exercise_relation"
+    use_case_ref: "../../../../../src/exercises/application/use_cases.py#AddExerciseRelation"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+    roles_denied:
+      - athlete
+      - member
+    response_codes:
+      - 201
+      - 401
+      - 403
+      - 404
+      - 409
+      - 422
+      - 500
+    owner_scoped_roles:
+      - coach
+  - operation_id: deleteExerciseRelation
+    method: DELETE
+    path: /exercises/{id}/relations/{relationId}
+    openapi_ref: "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/relations/{relationId}/delete"
+    runtime_handler_ref: "../../../../../src/exercises/api.py#delete_exercise_relation"
+    use_case_ref: "../../../../../src/exercises/application/use_cases.py#DeleteExerciseRelation"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+    roles_denied:
+      - athlete
+      - member
+    response_codes:
+      - 204
+      - 401
+      - 403
+      - 404
+      - 409
+      - 500
+    owner_scoped_roles:
+      - coach
+  - operation_id: getExerciseAcl
+    method: GET
+    path: /exercises/{id}/acl
+    openapi_ref: "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/acl/get"
+    runtime_handler_ref: "../../../../../src/exercises/api.py#get_exercise_acl"
+    use_case_ref: "../../../../../src/exercises/application/use_cases.py#GetExerciseACL"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+    roles_denied:
+      - athlete
+      - member
+    response_codes:
+      - 200
+      - 401
+      - 403
+      - 404
+      - 500
+    owner_scoped_roles:
+      - coach
+  - operation_id: addExerciseAclEntry
+    method: POST
+    path: /exercises/{id}/acl
+    openapi_ref: "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/acl/post"
+    runtime_handler_ref: "../../../../../src/exercises/api.py#add_exercise_acl_entry"
+    use_case_ref: "../../../../../src/exercises/application/use_cases.py#AddExerciseACLEntry"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+    roles_denied:
+      - athlete
+      - member
+    response_codes:
+      - 201
+      - 401
+      - 403
+      - 404
+      - 409
+      - 422
+      - 500
+    owner_scoped_roles:
+      - coach
+  - operation_id: removeExerciseAclEntry
+    method: DELETE
+    path: /exercises/{id}/acl/{userId}
+    openapi_ref: "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/acl/{userId}/delete"
+    runtime_handler_ref: "../../../../../src/exercises/api.py#remove_exercise_acl_entry"
+    use_case_ref: "../../../../../src/exercises/application/use_cases.py#RemoveExerciseACLEntry"
+    roles_allowed:
+      - admin
+      - coordinator
+      - coach
+    roles_denied:
+      - athlete
+      - member
+    response_codes:
+      - 204
+      - 401
+      - 403
+      - 404
+      - 409
+      - 500
+    owner_scoped_roles:
+      - coach

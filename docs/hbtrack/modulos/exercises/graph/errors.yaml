@@ -1,0 +1,85 @@
+version: "1.0.0"
+status: active
+module: exercises
+
+errors:
+  - id: ERR-EXB-401-UNAUTHENTICATED
+    kind: transport
+    http_status: 401
+    source_ref: "../../../../../src/exercises/api.py#_get_role"
+    operations:
+      - listExercises
+      - createExercise
+      - getExercise
+      - updateExercise
+      - deleteExercise
+      - copyExerciseToOrg
+      - listExerciseVersions
+      - getExerciseVersion
+      - listExerciseRelations
+      - addExerciseRelation
+      - deleteExerciseRelation
+      - getExerciseAcl
+      - addExerciseAclEntry
+      - removeExerciseAclEntry
+  - id: ERR-EXB-403-INSUFFICIENT-PRIVILEGE
+    kind: domain
+    http_status: 403
+    exception_ref: "../../../../../src/exercises/domain/rules.py#InsufficientPrivilege"
+    operations:
+      - createExercise
+      - getExercise
+      - updateExercise
+      - deleteExercise
+      - listExerciseVersions
+      - getExerciseVersion
+      - addExerciseRelation
+      - deleteExerciseRelation
+      - getExerciseAcl
+      - addExerciseAclEntry
+      - removeExerciseAclEntry
+  - id: ERR-EXB-404-EXERCISE-NOT-FOUND
+    kind: domain
+    http_status: 404
+    exception_ref: "../../../../../src/exercises/domain/rules.py#ExerciseNotFound"
+    operations:
+      - getExercise
+      - updateExercise
+      - deleteExercise
+      - copyExerciseToOrg
+      - listExerciseVersions
+      - getExerciseVersion
+      - listExerciseRelations
+      - addExerciseRelation
+      - deleteExerciseRelation
+      - getExerciseAcl
+      - addExerciseAclEntry
+      - removeExerciseAclEntry
+  - id: ERR-EXB-409-CONFLICT
+    kind: domain
+    http_status: 409
+    exception_ref: "../../../../../src/exercises/domain/rules.py#ExerciseConflict"
+    operations:
+      - createExercise
+      - updateExercise
+      - deleteExercise
+      - copyExerciseToOrg
+      - addExerciseRelation
+      - deleteExerciseRelation
+      - addExerciseAclEntry
+      - removeExerciseAclEntry
+  - id: ERR-EXB-422-QUERY-VALIDATION
+    kind: validation
+    http_status: 422
+    source_ref: "../../../../../src/exercises/api.py#list_exercises"
+    operations:
+      - listExercises
+  - id: ERR-EXB-422-DOMAIN-VALIDATION
+    kind: validation
+    http_status: 422
+    source_ref: "../../../../../src/exercises/domain/entities.py#validate_invariants"
+    operations:
+      - createExercise
+      - updateExercise
+      - addExerciseRelation
+      - addExerciseAclEntry

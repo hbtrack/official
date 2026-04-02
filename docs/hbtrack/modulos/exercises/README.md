@@ -8,6 +8,7 @@ module_scope_ref: "./MODULE_SCOPE_EXERCISES.md"
 domain_rules_ref: "./DOMAIN_RULES_EXERCISES.md"
 invariants_ref: "./INVARIANTS_EXERCISES.md"
 test_matrix_ref: "./TEST_MATRIX_EXERCISES.md"
+permissions_ref: "./PERMISSIONS_EXERCISES.md"
 contract_path_ref: "../../../../contracts/openapi/paths/exercises.yaml"
 schemas_ref: "../../../../contracts/schemas/exercises/"
 ---
@@ -22,6 +23,15 @@ Documentar o escopo normativo do módulo `exercises` e suas superfícies soberan
 - Schemas de domínio: `contracts/schemas/exercises/`
 - Workflows (Arazzo): `contracts/workflows/exercises/` (quando aplicável)
 - Eventos (AsyncAPI): `contracts/asyncapi/` (quando aplicável)
+
+## Source graph estruturado
+- Manifesto do módulo: `docs/hbtrack/modulos/exercises/graph/module_manifest.yaml`
+- Entidades: `docs/hbtrack/modulos/exercises/graph/entities.yaml`
+- Endpoints: `docs/hbtrack/modulos/exercises/graph/endpoints.yaml`
+- Erros: `docs/hbtrack/modulos/exercises/graph/errors.yaml`
+- Obrigações de teste: `docs/hbtrack/modulos/exercises/graph/test_obligations.yaml`
+
+Este conjunto ativa `exercises` na trilha soberana de source graph. Ele deve permanecer alinhado com `contracts/`, `src/exercises/` e os documentos normativos do módulo.
 
 ## Fontes globais vinculantes
 - `docs/_canon/SYSTEM_SCOPE.md`

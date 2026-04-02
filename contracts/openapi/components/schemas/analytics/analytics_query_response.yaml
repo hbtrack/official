@@ -1,1 +1,2 @@
+# Source graph authority: docs/hbtrack/modulos/analytics/graph/module_manifest.yaml
 $ref: "../../../../schemas/analytics/analytics_query_response.schema.json"

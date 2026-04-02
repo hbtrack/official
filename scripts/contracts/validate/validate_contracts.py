@@ -212,6 +212,14 @@ _KNOWN_BLOCKING_CODES = {
     BLOCKED_SERVICE_TOPOLOGY_PARITY,
 }
 
+# B9-002: Whitelist of gates allowed to return SKIP_NOT_APPLICABLE.
+# Any gate outside this set that returns SKIP_NOT_APPLICABLE will be treated as FAIL.
+ALLOWED_SKIP_GATES: frozenset[str] = frozenset({
+    "HTTP_RUNTIME_CONTRACT_GATE",        # Requires running server (unavailable in CI/local)
+    "PACT_PROVIDER_GATE",                # Requires Pact broker credentials
+    "READINESS_HUMAN_CONFIRMATION_GATE", # Requires explicit human action
+})
+
 
 def _split_code_message(s: str, default_code: str) -> tuple[str, str]:
     if s in _KNOWN_BLOCKING_CODES:
@@ -12422,7 +12430,30 @@ def run_pipeline(
         for v in (g.get("violations") or [])
     )
     degraded = any(g.get("status") == "DEGRADED" for g in gates)
-    
+
+    # B9-002: Validate SKIP gates against whitelist.
+    # Only enforced for gates that were actually executed and returned SKIP_NOT_APPLICABLE
+    # from their own logic — NOT for gates skipped by profile/stage filtering.
+    # Gates skipped by profile/stage have summary starting with "Pulado no".
+    unauthorized_skips = [
+        g for g in gates
+        if g.get("status") == "SKIP_NOT_APPLICABLE"
+        and g.get("gate_id") not in ALLOWED_SKIP_GATES
+        and not (g.get("summary") or "").startswith("Pulado no")
+    ]
+    for g in unauthorized_skips:
+        g["status"] = "FAIL"
+        g["blocking"] = True
+        g["exit_code"] = 2
+        g.setdefault("violations", []).append({
+            "message": f"Gate '{g['gate_id']}' returned SKIP_NOT_APPLICABLE but is not in ALLOWED_SKIP_GATES whitelist.",
+            "severity": "error",
+            "action": "Implement the gate or add it to ALLOWED_SKIP_GATES with justification.",
+        })
+        g["summary"] = f"SKIP não autorizado — gate fora da whitelist ALLOWED_SKIP_GATES."
+    if unauthorized_skips:
+        blocking_fails.extend(unauthorized_skips)
+
     # PR3: Phase-specific semantics — phase 0/1/2 must ALWAYS exit != 0 if blocking fail
     is_phase = stage in ("session-start", "pre-authoring", "artifact")
     
@@ -12436,8 +12467,9 @@ def run_pipeline(
         overall = "DEGRADED"
         exit_code = 0
     elif any(g.get("status") == "FAIL" for g in gates):
-        overall = "PASS_WITH_WARNINGS"
-        exit_code = 0
+        # B9-002: warnings = failure — non-blocking FAILs are no longer silent
+        overall = "FAIL"
+        exit_code = 1  # Distinct from blocking fail (2/3) but still non-zero
     else:
         overall = "PASS"
         exit_code = 0

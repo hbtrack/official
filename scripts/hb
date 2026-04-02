@@ -1106,7 +1106,7 @@ class HBCLIv2:
 
         for module in self._discover_source_graph_modules():
             print(f"Verificando source graph derivado: {module}")
-            compile_result = self._run_source_graph_compiler(python_bin, module=module, check=True)
+            compile_result = self._run_source_graph_compiler(python_bin, module=module, check=True, all_modules=False)
             if compile_result != 0:
                 print(f"❌ Source graph compiler check falhou para `{module}`.", file=sys.stderr)
                 return compile_result

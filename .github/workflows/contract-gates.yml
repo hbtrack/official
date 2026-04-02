@@ -96,8 +96,10 @@ jobs:
       - name: Check compiled context bundles
         run: python3 scripts/compile/compile_context_bundle.py --all --check
 
-      - name: Validate contracts
-        run: python3 scripts/validate_contracts.py
+      - name: Validate contracts (warnings=failure B9-002)
+        run: |
+          python3 scripts/validate_contracts.py
+          echo "Contract gates passed (exit code 0 — no warnings, no failures)"
         env:
           CI: "true"
 
