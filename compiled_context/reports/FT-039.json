@@ -99,7 +99,7 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "714765ef22985fdd353c060b0957bf37fb55d50b75b11edfff8f4fdd9a6c062a"
+      "sha256": "6faf2ec2a3d29ab99d8b30f77f24847e61295439ec290c1eb22bb1cd440b5ac0"
     },
     {
       "relpath": "generated/source_graph/reports/reports.bundle.yaml",
@@ -144,7 +144,7 @@
     "unit_tests": "src/reports/tests/unit/test_reports.py",
     "use_cases": "src/reports/application/use_cases.py"
   },
-  "source_fingerprint": "6d0a0d52d6d5debc0867c8bf8430071c099099b9e1249e4ab81022ae0e3bf668",
+  "source_fingerprint": "e2096c6e61c34f106ae7dc8d9593f91f60d660160e75061aba177420e7aa5be8",
   "source_graph": {
     "entities": {
       "ReportJob": {

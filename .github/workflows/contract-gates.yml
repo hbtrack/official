@@ -36,7 +36,7 @@ jobs:
               - '.github/instructions/**'
               - '.github/skills/**'
               - 'CLAUDE.md'
-              - '.codex'
+              - '.codex/**'
               - 'scripts/contracts/validate/**'
               - 'scripts/compile/**'
               - 'scripts/hb'

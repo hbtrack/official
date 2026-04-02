@@ -545,6 +545,6 @@
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-02T14:52:42.022250+00:00",
-  "stage3_exit_code": 0
+  "hook_validated_at": "2026-04-02T15:44:03.313554+00:00",
+  "stage3_exit_code": 2
 }

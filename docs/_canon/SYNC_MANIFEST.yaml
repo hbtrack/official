@@ -57,7 +57,10 @@ rules:
   - rule_id: OPS_SOURCE_GRAPH_SYNC
     source_master: "docs/_canon/graph/ops/"
     source_inputs:
-      - ".github/workflows/deploy.yml"
+      # deploy.yml é CONSUMER do ops graph, não source — removido para evitar falso positivo
+      # no PARTIAL_UPDATE_GATE em mudanças cosméticas/de segurança no workflow.
+      # Alterações de ops contract reais (env vars, secrets, topologia) devem ser feitas
+      # em docs/_canon/graph/ops/*.yaml (source_master), não diretamente em deploy.yml.
       - "infra/env/.env.staging.template"
       - "infra/env/.env.production.template"
       - "infra/docker-compose.prod.yml"

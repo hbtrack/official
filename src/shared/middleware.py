@@ -140,9 +140,13 @@ class RateLimitMiddleware:
         self._auth_window = getattr(settings, "RATE_LIMIT_AUTH_WINDOW", 60)
 
     def _get_client_ip(self, request) -> str:
+        # Usar o último hop de X-Forwarded-For, que é adicionado pelo proxy
+        # confiável (Nginx via $proxy_add_x_forwarded_for). O primeiro hop é
+        # controlado pelo cliente e pode ser forjado para bypassar rate limiting.
+        # OWASP API4:2023 — X-Forwarded-For spoofing mitigation.
         xff = request.META.get("HTTP_X_FORWARDED_FOR")
         if xff:
-            return xff.split(",")[0].strip()
+            return xff.split(",")[-1].strip()
         return request.META.get("REMOTE_ADDR", "unknown")
 
     def _is_rate_limited(self, key: str, limit: int, window: int) -> bool:

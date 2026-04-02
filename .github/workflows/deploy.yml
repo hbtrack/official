@@ -83,7 +83,7 @@ jobs:
           - 6379:6379
 
     env:
-      # Fixtures locais do job de teste. Nao representam contrato operacional de deploy.
+      # Fixtures locais do job de teste. Não representam contrato operacional de deploy.
       SECRET_KEY: ci-secret-key-for-testing-only-not-real
       DEBUG: "false"
       ALLOWED_HOSTS: localhost,127.0.0.1
@@ -125,13 +125,10 @@ jobs:
       contents: read
       packages: write
     outputs:
-      image_tag: ${{ steps.deploy-tag.outputs.image_tag }}
+      image_tag: ${{ steps.meta.outputs.version }}
       image_sha: ${{ github.sha }}
     steps:
       - uses: actions/checkout@v4
-      - name: Compute deploy image tag
-        id: deploy-tag
-        run: echo "image_tag=$(echo "${GITHUB_SHA}" | cut -c1-7)" >> "$GITHUB_OUTPUT"
       - name: Set image metadata
         id: meta
         uses: docker/metadata-action@v5
@@ -348,7 +345,9 @@ jobs:
         run: pip install -r requirements-dev.txt
       - name: Install Pact Broker CLI
         run: |
-          curl -fsSL https://raw.githubusercontent.com/pact-foundation/pact-ruby-standalone/master/install.sh | env PACT_CLI_VERSION=v2.4.26 bash
+          # Pinado ao commit SHA do install.sh para mitigar supply-chain risk (curl|bash).
+          # Atualizar o SHA quando pact-ruby-standalone for atualizado.
+          curl -fsSL https://raw.githubusercontent.com/pact-foundation/pact-ruby-standalone/65e6a1fad37dc6cfce94dfdb1a62cebfce392fe9/install.sh | env PACT_CLI_VERSION=v2.4.26 bash
           echo "$PWD/pact/bin" >> "$GITHUB_PATH"
           ./pact/bin/pact-broker --version
       - name: Verify staging provider against published consumer contracts

@@ -96,7 +96,7 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "714765ef22985fdd353c060b0957bf37fb55d50b75b11edfff8f4fdd9a6c062a"
+      "sha256": "6faf2ec2a3d29ab99d8b30f77f24847e61295439ec290c1eb22bb1cd440b5ac0"
     },
     {
       "relpath": "generated/source_graph/analytics/analytics.bundle.yaml",
@@ -142,7 +142,7 @@
     "unit_tests": "src/analytics/tests/unit/test_analytics.py",
     "use_cases": "src/analytics/application/use_cases.py"
   },
-  "source_fingerprint": "8f572e9f9206b53b6a15554c7c13c6d672136fa9479008a9b0898d51780b21bf",
+  "source_fingerprint": "bdd5515decc5a3cc2a8e1e78a7bafa44b617282dcbcfd1de40c55a9268aba651",
   "source_graph": {
     "entities": {
       "AnalyticsQueryRequest": {

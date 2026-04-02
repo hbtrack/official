@@ -10,11 +10,12 @@ Antes de criar ou modificar qualquer arquivo em `src/{module}/`:
 
 **Passo 1 — Verificar `docs/_canon/MODULE_REGISTRY.yaml`:**
 ```yaml
-# O módulo precisa estar em implementation_ready ou acima:
-status: "implementation_ready"
-status: "implemented"
-status: "staging_validated"
-status: "released"
+# O módulo precisa estar em um destes status (implementation_ready ou acima):
+allowed_statuses:
+  - implementation_ready
+  - implemented
+  - staging_validated
+  - released
 ```
 
 Se o status for `validated_contract` ou inferior → **PARAR e emitir:**

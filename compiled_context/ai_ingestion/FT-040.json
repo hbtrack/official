@@ -90,7 +90,7 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "714765ef22985fdd353c060b0957bf37fb55d50b75b11edfff8f4fdd9a6c062a"
+      "sha256": "6faf2ec2a3d29ab99d8b30f77f24847e61295439ec290c1eb22bb1cd440b5ac0"
     },
     {
       "relpath": "generated/source_graph/ai_ingestion/ai_ingestion.bundle.yaml",
@@ -137,7 +137,7 @@
     "unit_tests": "src/ai_ingestion/tests/unit/test_ai_ingestion.py",
     "use_cases": "src/ai_ingestion/application/use_cases.py"
   },
-  "source_fingerprint": "665ad9c86fd02984ef4af4b77f6fc502e45109c2d323eb9638a40f9641474206",
+  "source_fingerprint": "088454400226b8da4d2ac18323cb4b314e416734ef86581d9658e16a69643a12",
   "source_graph": {
     "entities": {
       "IngestionJob": {
