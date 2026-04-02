@@ -22,6 +22,10 @@
       "image_tag_source": "needs.build.outputs.image_tag",
       "injector_ref": "scripts/deploy/inject_env.sh",
       "missing_value_policy": "fail_closed",
+      "operational_guards": [
+        "JWT_PRIVATE_KEY e JWT_PUBLIC_KEY devem existir nos GitHub secrets e refletir o par ativo no runtime antes de qualquer redeploy.",
+        "Se uma correcao emergencial regenerar o par JWT diretamente no VPS, os secrets do repositorio devem ser sincronizados antes do proximo deploy."
+      ],
       "provider": "github_environment_scoped_secrets_and_vars",
       "renderer_ref": "scripts/deploy/render_env_from_contract.py"
     },

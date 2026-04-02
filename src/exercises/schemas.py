@@ -5,6 +5,8 @@ from uuid import UUID
 from ninja import Schema
 from exercises.domain.entities import Exercise, ExerciseVersion, ExerciseRelation, ExerciseACL
 
+# Source graph authority: docs/hbtrack/modulos/exercises/graph/entities.yaml
+# These schemas remain the transport boundary derived from the sovereign exercise graph.
 
 class ExerciseVersionOut(Schema):
     versionId: UUID

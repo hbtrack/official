@@ -5,6 +5,9 @@ set -euo pipefail
 # da categoria contract_broker com rotation_period_days=90 e rotation_actor=maintainer_operations.
 # Este script verifica e documenta o contrato de rotação do PACT_BROKER_TOKEN da mesma
 # forma que demais secrets runtime (ADR-012, ADR-025).
+# O mesmo contrato se aplica ao par JWT: qualquer rotação/hotfix em staging ou produção
+# precisa manter `JWT_PRIVATE_KEY` e `JWT_PUBLIC_KEY` sincronizados com os secrets GitHub
+# que alimentam o deploy automatizado.
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 

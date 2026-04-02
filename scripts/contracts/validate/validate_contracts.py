@@ -36,11 +36,14 @@ import json
 import os
 import pathlib
 import platform
+import base64
 import re
 import shutil
 import subprocess
 import sys
 import time
+import urllib.error
+import urllib.request
 from typing import Any
 
 import yaml
@@ -2544,6 +2547,34 @@ def _pg(
 
 def _skip(gate_id: str, reason: str, dur: int = 0) -> dict:
     return _pg(gate_id, "SKIP_NOT_APPLICABLE", False, None, reason, [], [], [], [], dur)
+
+
+def _broker_has_pacticipant(
+    broker_url: str,
+    pacticipant: str,
+    *,
+    broker_username: str = "",
+    broker_password: str = "",
+    broker_token: str = "",
+    use_token_auth: bool = False,
+) -> bool:
+    url = f"{broker_url.rstrip('/')}/pacticipants/{pacticipant}"
+    request = urllib.request.Request(url)
+    if use_token_auth and broker_token:
+        request.add_header("Authorization", f"Bearer {broker_token}")
+    elif broker_username and broker_password:
+        basic = base64.b64encode(
+            f"{broker_username}:{broker_password}".encode("utf-8")
+        ).decode("ascii")
+        request.add_header("Authorization", f"Basic {basic}")
+
+    try:
+        with urllib.request.urlopen(request, timeout=10):
+            return True
+    except urllib.error.HTTPError as exc:
+        if exc.code == 404:
+            return False
+        raise
 
 
 def _wsl_to_windows_path(path_str: str) -> str:
@@ -10967,22 +10998,67 @@ def _g_pact_provider(root: pathlib.Path) -> dict:
     # 3. Verificar via CLI pact-broker (se disponível)
     import shutil
     import subprocess
-    pact_bin = shutil.which("pact-broker")
+    pact_bin = shutil.which("pact-broker-cli") or shutil.which("pact-broker")
+    if not pact_bin:
+        local_pact_bin = root / "pact" / "bin" / "pact-broker"
+        if local_pact_bin.exists():
+            pact_bin = str(local_pact_bin)
     if not pact_bin:
         # CLI não instalada — degradar, não falhar
         return _pg(gate_id, "DEGRADED", False, None,
                    "pact-broker CLI não instalada — verificação de consumer contracts não executada. "
-                   "Instalar pact-broker para habilitar gate completo.",
+                   "Instalar pact-broker/pact-broker-cli ou manter pact/bin/pact-broker para habilitar gate completo.",
                    [], [str(consumers_dir)], [], [], _ms(t0))
 
     violations: list[dict] = []
     checked = [str(consumers_dir)]
+    broker_username = os.environ.get("PACT_BROKER_USERNAME", "").strip()
+    broker_password = os.environ.get("PACT_BROKER_PASSWORD", "").strip()
+    broker_token = os.environ.get("PACT_BROKER_TOKEN", "").strip()
+    auth_mode = os.environ.get("PACT_BROKER_AUTH_MODE", "").strip().lower()
+    use_token_auth = auth_mode == "token" or "pactflow" in broker_url.lower()
+    if not broker_password and broker_token and not use_token_auth:
+        broker_password = broker_token
+    if broker_password and not broker_username:
+        broker_username = "hbtrack"
+
     try:
+        if not _broker_has_pacticipant(
+            broker_url,
+            "hbtrack-app",
+            broker_username=broker_username,
+            broker_password=broker_password,
+            broker_token=broker_token,
+            use_token_auth=use_token_auth,
+        ):
+            return _skip(
+                gate_id,
+                "Pact Broker configurado, mas o primeiro consumer contract de "
+                "`hbtrack-app` ainda não foi publicado. "
+                "Gate não aplicável até o primeiro publish (ADR-025).",
+                _ms(t0),
+            )
+    except Exception:
+        # A CLI abaixo continua sendo a fonte final de verdade; só usamos o probe
+        # para distinguir o estado "consumer ainda não publicado".
+        pass
+
+    try:
+        cmd = [
+            pact_bin, "can-i-deploy",
+            "--broker-base-url", broker_url,
+            "--pacticipant", "hbtrack-app",
+            "--latest",
+        ]
+        if use_token_auth and broker_token:
+            cmd.extend(["--broker-token", broker_token])
+        elif broker_username and broker_password:
+            cmd.extend([
+                "--broker-username", broker_username,
+                "--broker-password", broker_password,
+            ])
         result = subprocess.run(
-            [pact_bin, "can-i-deploy",
-             "--broker-base-url", broker_url,
-             "--pacticipant", "hbtrack-app",
-             "--latest"],
+            cmd,
             capture_output=True, text=True, timeout=30
         )
         if result.returncode != 0:

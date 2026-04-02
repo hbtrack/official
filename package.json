@@ -7,8 +7,10 @@
   },
   "devDependencies": {
     "@asyncapi/cli": "6.0.0",
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "@redocly/cli": "^1.29.5",
-    "@stoplight/spectral-cli": "^6.15.0"
+    "@stoplight/spectral-cli": "^6.15.0",
+    "zod": "^4.3.6"
   },
   "scripts": {
     "asyncapi:validate": "asyncapi validate contracts/asyncapi/asyncapi.yaml"

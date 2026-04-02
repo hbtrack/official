@@ -5,6 +5,9 @@ from __future__ import annotations
 # São injetadas como GitHub Actions vars/secrets diretamente no job `contract-conformance`
 # do deploy.yml (ADR-025). Qualquer alteração na política de acesso ao Pact Broker
 # deve refletir em docs/_canon/graph/ops/environment_catalog.yaml.
+# JWT_PRIVATE_KEY e JWT_PUBLIC_KEY, por outro lado, são runtime-secrets obrigatórios;
+# se o par ativo for corrigido manualmente no VPS, ele deve ser espelhado nos GitHub
+# secrets antes do próximo deploy para evitar regressão no renderer.
 
 import argparse
 import os

@@ -15,6 +15,7 @@ from uuid import UUID
 from ..domain.entities import Season, SeasonStatus
 from ..domain.rules import (
     RoleLabel,
+    SeasonNotFound,
     assert_can_manage_season,
     assert_can_patch_season,
     assert_can_remove_team,
@@ -231,6 +232,8 @@ class AddTeamToSeasonUseCase:
         assert_can_manage_season(inp.actor_role)
 
         season = self._repo.get_by_id(inp.season_id)
+        if season is None:
+            raise SeasonNotFound(f"Temporada {inp.season_id} não encontrada.")
 
         # INV-SEAS-003: equipe não pode ser duplicada
         assert_team_not_in_season(inp.team_id, season.team_ids)
@@ -262,6 +265,8 @@ class RemoveTeamFromSeasonUseCase:
 
     def execute(self, inp: RemoveTeamFromSeasonInput) -> None:
         season = self._repo.get_by_id(inp.season_id)
+        if season is None:
+            raise SeasonNotFound(f"Temporada {inp.season_id} não encontrada.")
 
         # PERM-SEA-001: coordinator não pode remover times de temporada ACTIVE
         assert_can_remove_team(inp.actor_role, season.status_label.value)

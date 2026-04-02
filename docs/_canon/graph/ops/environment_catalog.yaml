@@ -1,4 +1,4 @@
-version: "1.3.0"
+version: "1.3.1"
 artifact: "OPS_ENVIRONMENT_CATALOG"
 status: active
 scope: operations
@@ -314,6 +314,7 @@ variables:
       - ".github/workflows/deploy.yml"
       - "infra/env/.env.staging.template"
       - "infra/env/.env.production.template"
+    runtime_note: "GitHub secret deve permanecer sincronizado com o par JWT ativo no runtime antes de qualquer redeploy."
 
   - name: JWT_PUBLIC_KEY
     category: secret
@@ -323,6 +324,7 @@ variables:
       - ".github/workflows/deploy.yml"
       - "infra/env/.env.staging.template"
       - "infra/env/.env.production.template"
+    runtime_note: "GitHub secret deve permanecer sincronizado com o par JWT ativo no runtime antes de qualquer redeploy."
 
   - name: CLOUDINARY_UPLOAD_PRESET
     category: external_provider
@@ -442,6 +444,7 @@ template_contracts:
         comment_lines:
           - "Gerar com: openssl genrsa -out private.pem 2048 && openssl rsa -in private.pem -pubout -out public.pem"
           - "Armazenar como PEM base64 sem quebras ou multiline literal conforme ADR-012."
+          - "Os secrets GitHub JWT_PRIVATE_KEY e JWT_PUBLIC_KEY devem espelhar o par ativo no runtime antes do proximo deploy."
         entries:
           - name: JWT_PRIVATE_KEY
             value: "CHANGE_ME_BASE64_PEM_PRIVATE_KEY"
@@ -561,6 +564,7 @@ template_contracts:
         comment_lines:
           - "Gerar com: openssl genrsa -out private.pem 2048 && openssl rsa -in private.pem -pubout -out public.pem"
           - "Armazenar como PEM base64 sem quebras ou multiline literal conforme ADR-012."
+          - "Os secrets GitHub JWT_PRIVATE_KEY e JWT_PUBLIC_KEY devem espelhar o par ativo no runtime antes do proximo deploy."
         entries:
           - name: JWT_PRIVATE_KEY
             value: "CHANGE_ME_BASE64_PEM_PRIVATE_KEY"

@@ -3,13 +3,14 @@ compiler: hbtrack_source_graph_compiler
 compiler_version: 0.1.0
 module: reports
 entity: ReportJob
+primary_entity: ReportJob
 primary_schema_ref: contracts/schemas/reports/report_job.schema.json
 openapi_projection_ref: contracts/openapi/components/schemas/reports/report_job.yaml
-required:
+required: &id001
 - id
 - reportType
 - ownerUserId
-sovereign_fields:
+sovereign_fields: &id002
 - name: id
   runtime_name: id
   required: true
@@ -46,7 +47,7 @@ sovereign_fields:
   runtime_name: requested_at
   required: false
   type: timestamp_utc
-runtime_extension_fields:
+runtime_extension_fields: &id003
 - name: statusLabel
   runtime_name: status_label
   type: enum
@@ -62,3 +63,9 @@ runtime_extension_fields:
 - name: errorMessage
   runtime_name: error_message
   type: string
+entities:
+  ReportJob:
+    schema_ref: contracts/schemas/reports/report_job.schema.json
+    required: *id001
+    sovereign_fields: *id002
+    runtime_extension_fields: *id003

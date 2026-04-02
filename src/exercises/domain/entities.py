@@ -17,6 +17,10 @@ VALID_VISIBILITY_MODE = frozenset({"RESTRICTED", "ORG_WIDE"})
 VALID_RELATION_TYPE = frozenset({"PROGRESSION", "REGRESSION", "VARIATION", "CONTRAINDICATION"})
 VALID_EDITORIAL_STATUS = frozenset({"DRAFT", "ACTIVE", "ARCHIVED"})
 
+# Source-graph projection anchors for transport/persistence-only fields that
+# are still materialized outside the core dataclasses in the legacy runtime:
+# thumbnail_url, current_version_number, deletion_reason, notes.
+
 
 @dataclass
 class ExerciseVersion:

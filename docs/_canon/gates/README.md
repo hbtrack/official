@@ -1,6 +1,6 @@
 ---
 doc_type: canon
-version: "1.0.1"
+version: "1.0.2"
 last_reviewed: "2026-04-01"
 status: active
 cross_refs:
@@ -64,6 +64,14 @@ Este diretório é o ponto de entrada de navegação para o sistema de gates do 
 | 12 | `ASYNCAPI_VALIDATION_GATE` | Sim | Sim (após pré-reqs) | AsyncAPI parser valida documento quando há evento real | §9.12 |
 | 13 | `ARAZZO_VALIDATION_GATE` | Sim | Sim (após pré-reqs) | Arazzo parser valida workflows; operationIds existem no OpenAPI | §9.13 |
 | 14 | `UI_DOC_VALIDATION_GATE` | Sim | Sim (após pré-reqs) | Storybook build quando houver UI documentada | §9.14 |
+| 15B | `FEATURE_READINESS_GATE` | Não | Sim | Inventaria `FEATURE_REGISTRY.yaml` e emite relatório de completude por módulo | §9.14B |
+| 15C | `ADVERSARIAL_ANALYSIS_GATE` | Não | Sim | Exige relatórios adversariais `PASS` quando existirem evidências em `_reports/adversarial/` | §9.14B |
+| 15D | `VERSIONING_POLICY_GATE` | Não | Sim | Valida ADR-024, SemVer do OpenAPI e policy de versionamento registrada no canon | §9.14B |
+| 15E | `PACT_PROVIDER_GATE` | Não até o primeiro consumer publish | Sim | Valida o provider no Pact Broker; `SKIP_NOT_APPLICABLE` até existir o primeiro pact publicado de `hbtrack-app` | §9.14B |
+| 15F | `CODE_ARCHITECTURE_GATE` | Não | Sim | Valida ADR-026, `CODE_ARCHITECTURE.md` e a estrutura mínima em `src/` | §9.14B |
+| 15G | `DEPLOY_READINESS_GATE` | Não | Sim | Valida coerência mínima entre policy de deploy, ADR-027 e workflow CI/CD | §9.14B |
+| 15H | `DATA_MIGRATION_GATE` | Não | Sim | Valida policy de migração, ADR-028 e presença de `migrations/` quando aplicável | §9.14B |
+| 15I | `MONITORING_POLICY_GATE` | Não | Sim | Valida policy de monitoramento runtime e ADR-029 | §9.14B |
 | 15 | `DERIVED_DRIFT_GATE` | Sim | Não | Derivados em `generated/` == fonte soberana recompilada; qualquer drift bloqueia | §9.15 |
 | 16 | `READINESS_SUMMARY_GATE` | Sim | Não | Sumário final binário — todos os gates bloqueantes aplicáveis PASS = sistema pronto | §9.16 |
 
@@ -82,6 +90,9 @@ source ./setup-env.sh && bash scripts/contract_gates/verify_tools.sh
 Execução completa do pipeline gera `_reports/contract_gates/latest.json`.
 Execuções parciais geram relatórios escopados em `_reports/contract_gates/` e `_reports/runs/`, sem sobrescrever o baseline canônico.
 
+Nota operacional sobre Pact:
+`PACT_PROVIDER_GATE` só se torna efetivamente exigível depois que o primeiro consumer contract de `hbtrack-app` for publicado no broker. Antes disso, o estado correto é `SKIP_NOT_APPLICABLE`, não `FAIL`.
+
 ---
 
 ## Artefatos relacionados
@@ -98,4 +109,4 @@ Execuções parciais geram relatórios escopados em `_reports/contract_gates/` e
 
 ---
 
-*Última revisão: 2026-03-31*
+*Última revisão: 2026-04-01*

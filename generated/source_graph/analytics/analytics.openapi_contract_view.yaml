@@ -1,0 +1,145 @@
+artifact_id: HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW
+compiler: hbtrack_source_graph_compiler
+compiler_version: 0.1.0
+module: analytics
+openapi_paths_ref: contracts/openapi/paths/analytics.yaml
+operations:
+- operation_id: listAnalyticsSnapshots
+  method: GET
+  path: /analytics/snapshots
+  openapi_ref: ../../../../../contracts/openapi/paths/analytics.yaml#/analytics/snapshots/get
+  runtime_handler_ref: ../../../../../src/analytics/api.py#list_snapshots
+  use_case_ref: ../../../../../src/analytics/application/use_cases.py#ListAnalyticsSnapshots
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 422
+  - 500
+- operation_id: createAnalyticsSnapshot
+  method: POST
+  path: /analytics/snapshots
+  openapi_ref: ../../../../../contracts/openapi/paths/analytics.yaml#/analytics/snapshots/post
+  runtime_handler_ref: ../../../../../src/analytics/api.py#create_snapshot
+  use_case_ref: ../../../../../src/analytics/application/use_cases.py#CreateAnalyticsSnapshot
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  roles_denied:
+  - athlete
+  - member
+  response_codes:
+  - 201
+  - 400
+  - 401
+  - 403
+  - 422
+  - 409
+  - 500
+- operation_id: getAnalyticsSnapshot
+  method: GET
+  path: /analytics/snapshots/{snapshotId}
+  openapi_ref: ../../../../../contracts/openapi/paths/analytics.yaml#/analytics/snapshots/{snapshotId}/get
+  runtime_handler_ref: ../../../../../src/analytics/api.py#get_snapshot
+  use_case_ref: ../../../../../src/analytics/application/use_cases.py#GetAnalyticsSnapshot
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 404
+  - 500
+- operation_id: listAnalyticsDashboards
+  method: GET
+  path: /analytics/dashboards
+  openapi_ref: ../../../../../contracts/openapi/paths/analytics.yaml#/analytics/dashboards/get
+  runtime_handler_ref: ../../../../../src/analytics/api.py#list_dashboards
+  use_case_ref: ../../../../../src/analytics/application/use_cases.py#ListAnalyticsDashboards
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  - athlete
+  roles_denied:
+  - member
+  owner_scoped_roles:
+  - athlete
+  response_codes:
+  - 200
+  - 401
+  - 403
+  - 500
+- operation_id: queryAnalyticsData
+  method: POST
+  path: /analytics/query
+  openapi_ref: ../../../../../contracts/openapi/paths/analytics.yaml#/analytics/query/post
+  runtime_handler_ref: ../../../../../src/analytics/api.py#query_analytics
+  use_case_ref: ../../../../../src/analytics/application/use_cases.py#QueryAnalyticsData
+  roles_allowed:
+  - admin
+  - coordinator
+  - coach
+  roles_denied:
+  - athlete
+  - member
+  response_codes:
+  - 200
+  - 400
+  - 401
+  - 403
+  - 422
+  - 409
+  - 500
+errors:
+- id: ERR-ANL-401-UNAUTHENTICATED
+  kind: transport
+  http_status: 401
+  source_ref: ../../../../../src/analytics/api.py#_role
+  operations:
+  - listAnalyticsSnapshots
+  - createAnalyticsSnapshot
+  - getAnalyticsSnapshot
+  - listAnalyticsDashboards
+  - queryAnalyticsData
+- id: ERR-ANL-403-INSUFFICIENT-PRIVILEGE
+  kind: domain
+  http_status: 403
+  exception_ref: ../../../../../src/analytics/domain/rules.py#InsufficientPrivilege
+  operations:
+  - listAnalyticsSnapshots
+  - createAnalyticsSnapshot
+  - getAnalyticsSnapshot
+  - listAnalyticsDashboards
+  - queryAnalyticsData
+- id: ERR-ANL-404-SNAPSHOT-NOT-FOUND
+  kind: domain
+  http_status: 404
+  exception_ref: ../../../../../src/analytics/domain/rules.py#SnapshotNotFound
+  operations:
+  - getAnalyticsSnapshot
+- id: ERR-ANL-422-VALIDATION
+  kind: validation
+  http_status: 422
+  source_ref: ../../../../../src/analytics/domain/entities.py#validate_invariants
+  operations:
+  - listAnalyticsSnapshots
+  - createAnalyticsSnapshot
+  - queryAnalyticsData

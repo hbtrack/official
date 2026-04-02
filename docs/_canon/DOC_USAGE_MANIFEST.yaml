@@ -260,6 +260,44 @@ entries:
       - "src/reports/"
       - "tests/pipeline_gates/test_reports_source_graph_integrity.py"
 
+  - rule_id: HBTRACK_ANALYTICS_GRAPH
+    class: hbtrack_module_graph
+    path_globs:
+      - "docs/hbtrack/modulos/analytics/graph/*.yaml"
+    owner_source: "docs/hbtrack/modulos/analytics/graph/module_manifest.yaml"
+    consumers:
+      - "docs/hbtrack/modulos/analytics/README.md"
+      - "docs/hbtrack/modulos/analytics/DOMAIN_RULES_ANALYTICS.md"
+      - "docs/hbtrack/modulos/analytics/TEST_MATRIX_ANALYTICS.md"
+      - "tests/pipeline_gates/test_analytics_source_graph_integrity.py"
+    freshness_mode: domain_governed
+    update_triggers:
+      - "docs/hbtrack/modulos/analytics/*.md"
+      - "contracts/schemas/analytics/"
+      - "contracts/openapi/paths/analytics.yaml"
+      - "contracts/openapi/components/schemas/analytics/"
+      - "src/analytics/"
+      - "tests/pipeline_gates/test_analytics_source_graph_integrity.py"
+
+  - rule_id: HBTRACK_EXERCISES_GRAPH
+    class: hbtrack_module_graph
+    path_globs:
+      - "docs/hbtrack/modulos/exercises/graph/*.yaml"
+    owner_source: "docs/hbtrack/modulos/exercises/graph/module_manifest.yaml"
+    consumers:
+      - "docs/hbtrack/modulos/exercises/README.md"
+      - "docs/hbtrack/modulos/exercises/DOMAIN_RULES_EXERCISES.md"
+      - "docs/hbtrack/modulos/exercises/TEST_MATRIX_EXERCISES.md"
+      - "tests/pipeline_gates/test_exercises_source_graph_integrity.py"
+    freshness_mode: domain_governed
+    update_triggers:
+      - "docs/hbtrack/modulos/exercises/*.md"
+      - "contracts/schemas/exercises/"
+      - "contracts/openapi/paths/exercises.yaml"
+      - "contracts/openapi/components/schemas/exercises/"
+      - "src/exercises/"
+      - "tests/pipeline_gates/test_exercises_source_graph_integrity.py"
+
   - rule_id: CANON_ADR_INDEX
     class: canon_decision_index
     paths:

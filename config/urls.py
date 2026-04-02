@@ -26,8 +26,9 @@ from reports.api import router as reports_router
 from ai_ingestion.api import router as ingestion_router
 from audit.api import router as audit_router
 from notifications.api import router as notifications_router
+from identity_access.middleware import HTTPBearer
 
-api = NinjaAPI(title="HB Track API", version="1.0.0")
+api = NinjaAPI(title="HB Track API", version="1.0.0", auth=HTTPBearer())
 
 # ---------------------------------------------------------------------------
 # Exception handlers globais — garante que TODOS os erros retornam RFC 9457

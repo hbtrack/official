@@ -137,4 +137,4 @@ def test_reports_sync_manifest_requires_context_bundle():
 
 def test_contract_gates_workflow_checks_context_bundle():
     workflow = (REPO_ROOT / ".github" / "workflows" / "contract-gates.yml").read_text(encoding="utf-8")
-    assert "compile_context_bundle.py --module reports --check" in workflow
+    assert "compile_context_bundle.py --all --check" in workflow

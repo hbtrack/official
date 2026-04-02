@@ -41,6 +41,7 @@ jobs:
               - 'scripts/compile/**'
               - 'scripts/hb'
               - 'contracts/schemas/shared/**'
+              - 'tests/adversarial/**'
 
   validate-contracts:
     name: Validate Contract Gates
@@ -87,13 +88,13 @@ jobs:
         run: npm ci
 
       - name: Check source graph derived artifacts
-        run: python3 scripts/compile/compile_source_graph.py --module reports --check
+        run: python3 scripts/compile/compile_source_graph.py --all --check
 
       - name: Check ops contract derived artifacts
         run: python3 scripts/compile/compile_ops_contracts.py --check
 
       - name: Check compiled context bundles
-        run: python3 scripts/compile/compile_context_bundle.py --module reports --check
+        run: python3 scripts/compile/compile_context_bundle.py --all --check
 
       - name: Validate contracts
         run: python3 scripts/validate_contracts.py
@@ -126,6 +127,22 @@ jobs:
           python-version: "3.12"
       - run: pip install -r scripts/_policy/requirements.txt pytest
       - run: pytest tests/test_pipeline_governance.py -v
+
+  adversarial-suite:
+    name: Adversarial Suite
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r scripts/_policy/requirements.txt pytest
+
+      - name: Run adversarial suite
+        run: pytest tests/adversarial -q
 
   architecture-drift-check:
     name: Architecture Drift Check

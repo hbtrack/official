@@ -1160,10 +1160,11 @@ class HBCLIv2:
 
         return 0
 
-    def cmd_compile_source_graph(self, module: str, *, check: bool = False) -> int:
+    def cmd_compile_source_graph(self, module: str | None, *, check: bool = False, all_modules: bool = False) -> int:
         """Compilar/verificar source graph derivado de um módulo piloto."""
         mode_label = "CHECK" if check else "WRITE"
-        print(f"\n══ SOURCE GRAPH COMPILER | {module} | {mode_label} ══")
+        scope_label = "ALL" if all_modules else module
+        print(f"\n══ SOURCE GRAPH COMPILER | {scope_label} | {mode_label} ══")
 
         python_bin = self._ensure_local_contract_env(
             "hb compile-source-graph",
@@ -1172,7 +1173,7 @@ class HBCLIv2:
         if python_bin is None:
             return 2
 
-        result = self._run_source_graph_compiler(python_bin, module=module, check=check)
+        result = self._run_source_graph_compiler(python_bin, module=module, check=check, all_modules=all_modules)
         if result == 0:
             print("\n✅ Source graph compiler: PASS")
         else:
@@ -1198,10 +1199,11 @@ class HBCLIv2:
             print("\n❌ Ops contract compiler: FAIL")
         return result
 
-    def cmd_compile_context_bundle(self, module: str, *, check: bool = False) -> int:
+    def cmd_compile_context_bundle(self, module: str | None, *, check: bool = False, all_modules: bool = False) -> int:
         """Compilar/verificar bundles determinísticos por módulo/feature."""
         mode_label = "CHECK" if check else "WRITE"
-        print(f"\n══ CONTEXT BUNDLE COMPILER | {module} | {mode_label} ══")
+        scope_label = "ALL" if all_modules else module
+        print(f"\n══ CONTEXT BUNDLE COMPILER | {scope_label} | {mode_label} ══")
 
         python_bin = self._ensure_local_contract_env(
             "hb compile-context-bundle",
@@ -1210,7 +1212,7 @@ class HBCLIv2:
         if python_bin is None:
             return 2
 
-        result = self._run_context_bundle_compiler(python_bin, module=module, check=check)
+        result = self._run_context_bundle_compiler(python_bin, module=module, check=check, all_modules=all_modules)
         if result == 0:
             print("\n✅ Context bundle compiler: PASS")
         else:
@@ -1287,13 +1289,15 @@ class HBCLIv2:
             modules.append(manifest.parent.parent.name)
         return modules
 
-    def _run_source_graph_compiler(self, python_bin: pathlib.Path, *, module: str, check: bool) -> int:
+    def _run_source_graph_compiler(self, python_bin: pathlib.Path, *, module: str | None, check: bool, all_modules: bool) -> int:
         command = [
             str(python_bin),
             str(self.source_graph_compiler_script),
-            "--module",
-            module,
         ]
+        if all_modules:
+            command.append("--all")
+        else:
+            command.extend(["--module", str(module)])
         if check:
             command.append("--check")
         result = subprocess.run(
@@ -1319,13 +1323,15 @@ class HBCLIv2:
         )
         return result.returncode
 
-    def _run_context_bundle_compiler(self, python_bin: pathlib.Path, *, module: str, check: bool) -> int:
+    def _run_context_bundle_compiler(self, python_bin: pathlib.Path, *, module: str | None, check: bool, all_modules: bool) -> int:
         command = [
             str(python_bin),
             str(self.context_bundle_compiler_script),
-            "--module",
-            module,
         ]
+        if all_modules:
+            command.append("--all")
+        else:
+            command.extend(["--module", str(module)])
         if check:
             command.append("--check")
         result = subprocess.run(
@@ -1413,7 +1419,9 @@ class HBCLIv2:
             "compile-source-graph",
             help="Compilar ou verificar os derivados do source graph de um módulo",
         )
-        compile_graph_p.add_argument("--module", required=True, help="Módulo com source graph ativo")
+        compile_graph_scope = compile_graph_p.add_mutually_exclusive_group(required=True)
+        compile_graph_scope.add_argument("--module", help="Módulo com source graph ativo")
+        compile_graph_scope.add_argument("--all", action="store_true", help="Executa para todos os módulos com source graph ativo")
         compile_graph_p.add_argument("--check", action="store_true", help="Não escreve; apenas verifica drift")
 
         compile_ops_p = subparsers.add_parser(
@@ -1426,7 +1434,9 @@ class HBCLIv2:
             "compile-context-bundle",
             help="Compilar ou verificar bundles determinísticos por módulo/feature",
         )
-        compile_context_p.add_argument("--module", required=True, help="Módulo com source graph ativo")
+        compile_context_scope = compile_context_p.add_mutually_exclusive_group(required=True)
+        compile_context_scope.add_argument("--module", help="Módulo com source graph ativo")
+        compile_context_scope.add_argument("--all", action="store_true", help="Executa para todos os módulos com source graph ativo")
         compile_context_p.add_argument("--check", action="store_true", help="Não escreve; apenas verifica drift")
 
         # help
@@ -1459,11 +1469,11 @@ class HBCLIv2:
             elif parsed_args.command == "stage3":
                 return self.cmd_stage3()
             elif parsed_args.command == "compile-source-graph":
-                return self.cmd_compile_source_graph(parsed_args.module, check=parsed_args.check)
+                return self.cmd_compile_source_graph(parsed_args.module, check=parsed_args.check, all_modules=parsed_args.all)
             elif parsed_args.command == "compile-ops-contracts":
                 return self.cmd_compile_ops_contracts(check=parsed_args.check)
             elif parsed_args.command == "compile-context-bundle":
-                return self.cmd_compile_context_bundle(parsed_args.module, check=parsed_args.check)
+                return self.cmd_compile_context_bundle(parsed_args.module, check=parsed_args.check, all_modules=parsed_args.all)
         except FileNotFoundError as e:
             print(f"❌ {e}", file=sys.stderr)
             return 2

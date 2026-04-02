@@ -53,6 +53,16 @@ def _repo_root() -> Path:
     return here.parents[2]
 
 
+def _discover_source_graph_modules(root: Path) -> list[str]:
+    base = root / "docs" / "hbtrack" / "modulos"
+    if not base.exists():
+        return []
+    modules: list[str] = []
+    for manifest in sorted(base.glob("*/graph/module_manifest.yaml")):
+        modules.append(manifest.parent.parent.name)
+    return modules
+
+
 def _rel(root: Path, path: Path) -> str:
     return path.relative_to(root).as_posix()
 
@@ -423,65 +433,124 @@ def _format_payload(
     }
 
 
+def _format_multi_payload(status: str, mode: str, modules: list[str], results: list[dict[str, Any]]) -> dict[str, Any]:
+    return {
+        "artifact_id": "HBTRACK_CONTEXT_BUNDLE_COMPILER_BATCH_RESULT",
+        "compiler": COMPILER_NAME,
+        "compiler_version": COMPILER_VERSION,
+        "modules": modules,
+        "status": status,
+        "mode": mode,
+        "results": results,
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     root = _repo_root()
     ap = argparse.ArgumentParser(description="Compila bundles determinísticos por módulo/feature em compiled_context/.")
-    ap.add_argument("--module", required=True, help="Módulo com source graph ativo.")
+    scope = ap.add_mutually_exclusive_group(required=True)
+    scope.add_argument("--module", help="Módulo com source graph ativo.")
+    scope.add_argument("--all", action="store_true", help="Executa para todos os módulos com source graph ativo.")
     ap.add_argument("--check", action="store_true", help="Não escreve; apenas verifica drift.")
     ap.add_argument("--format", choices=("text", "json"), default="text", help="Formato de saída.")
     args = ap.parse_args(argv)
 
-    try:
-        expected = compile_expected(root, args.module)
-        if args.check:
-            drifts = check_expected(root, expected)
-            if drifts:
-                payload = _format_payload("FAIL", "check", args.module, expected=expected, drifts=drifts)
-                if args.format == "json":
-                    print(_dump_json(payload), end="")
-                else:
-                    for drift in drifts:
-                        print(f"DRIFT: {drift.relpath} ({drift.reason})")
-                    print(f"FAIL: {len(drifts)} drift(s) detectado(s) nos context bundles.")
-                return 2
-            payload = _format_payload("PASS", "check", args.module, expected=expected)
-            if args.format == "json":
-                print(_dump_json(payload), end="")
-            else:
-                print(f"OK: context bundles de `{args.module}` alinhados ao compiler determinístico.")
-            return 0
-
-        written = write_expected(root, expected)
-        payload = _format_payload("PASS", "write", args.module, expected=expected, written=written)
-        if args.format == "json":
-            print(_dump_json(payload), end="")
-        else:
-            if written:
-                print("UPDATED:")
-                for relpath in written:
-                    print(f"- {relpath}")
-            else:
-                print("OK: nenhum arquivo precisou ser atualizado.")
-        return 0
-    except ContextBundleCompilerError as exc:
+    modules = [args.module] if args.module else _discover_source_graph_modules(root)
+    if not modules:
+        message = "Nenhum módulo com source graph ativo foi encontrado."
         if args.format == "json":
             print(
                 _dump_json(
                     {
-                        "artifact_id": "HBTRACK_CONTEXT_BUNDLE_COMPILER_RESULT",
+                        "artifact_id": "HBTRACK_CONTEXT_BUNDLE_COMPILER_BATCH_RESULT",
                         "compiler": COMPILER_NAME,
                         "compiler_version": COMPILER_VERSION,
-                        "module": args.module,
+                        "modules": [],
                         "status": "FAIL",
                         "mode": "check" if args.check else "write",
-                        "error": exc.summary,
+                        "error": message,
                     }
                 ),
                 end="",
             )
         else:
-            print(f"ERROR: {exc.summary}")
+            print(f"ERROR: {message}")
         return 2
+
+    results: list[dict[str, Any]] = []
+    overall_exit = 0
+    mode = "check" if args.check else "write"
+
+    for module in modules:
+        try:
+            expected = compile_expected(root, module)
+            if args.check:
+                drifts = check_expected(root, expected)
+                if drifts:
+                    payload = _format_payload("FAIL", mode, module, expected=expected, drifts=drifts)
+                    overall_exit = max(overall_exit, 2)
+                else:
+                    payload = _format_payload("PASS", mode, module, expected=expected)
+            else:
+                written = write_expected(root, expected)
+                payload = _format_payload("PASS", mode, module, expected=expected, written=written)
+            results.append(payload)
+        except ContextBundleCompilerError as exc:
+            results.append(
+                {
+                    "artifact_id": "HBTRACK_CONTEXT_BUNDLE_COMPILER_RESULT",
+                    "compiler": COMPILER_NAME,
+                    "compiler_version": COMPILER_VERSION,
+                    "module": module,
+                    "status": "FAIL",
+                    "mode": mode,
+                    "error": exc.summary,
+                }
+            )
+            overall_exit = max(overall_exit, 2)
+
+    if len(results) == 1:
+        payload = results[0]
+        if args.format == "json":
+            print(_dump_json(payload), end="")
+        else:
+            if payload["status"] == "FAIL":
+                if payload.get("drifts"):
+                    for drift in payload["drifts"]:
+                        print(f"DRIFT: {drift['relpath']} ({drift['reason']})")
+                    print(f"FAIL: {len(payload['drifts'])} drift(s) detectado(s) nos context bundles.")
+                else:
+                    print(f"ERROR: {payload['error']}")
+            elif args.check:
+                print(f"OK: context bundles de `{payload['module']}` alinhados ao compiler determinístico.")
+            else:
+                if payload["written"]:
+                    print("UPDATED:")
+                    for relpath in payload["written"]:
+                        print(f"- {relpath}")
+                else:
+                    print("OK: nenhum arquivo precisou ser atualizado.")
+        return overall_exit
+
+    batch_payload = _format_multi_payload(
+        "PASS" if overall_exit == 0 else "FAIL",
+        mode,
+        modules,
+        results,
+    )
+    if args.format == "json":
+        print(_dump_json(batch_payload), end="")
+    else:
+        for payload in results:
+            summary = payload.get("error")
+            if payload["status"] == "FAIL" and payload.get("drifts"):
+                summary = f"{len(payload['drifts'])} drift(s)"
+            elif payload["status"] == "PASS" and not args.check:
+                summary = f"{len(payload.get('written', []))} arquivo(s) atualizado(s)"
+            elif payload["status"] == "PASS":
+                summary = "alinhado"
+            print(f"[{payload['status']}] {payload['module']}: {summary}")
+    return overall_exit
 
 
 if __name__ == "__main__":

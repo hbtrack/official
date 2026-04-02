@@ -95,7 +95,7 @@ Fontes executáveis observadas por este gerador:
 | Diretório `frontend/` | presente | `frontend/` |
 | `frontend/package.json` | presente | `frontend/package.json` |
 | `frontend/src/` | presente | `frontend/src/` |
-| Tipos `schema.d.ts` | `3` arquivo(s) | `frontend/**/schema.d.ts` |
+| Tipos `schema.d.ts` | `4` arquivo(s) | `frontend/**/schema.d.ts` |
 | `Dockerfile` raiz | presente | `Dockerfile` |
 | `infra/docker-compose.prod.yml` | presente | `infra/docker-compose.prod.yml` |
 | `infra/nginx/nginx.conf` | presente | `infra/nginx/nginx.conf` |
@@ -107,7 +107,7 @@ Fontes executáveis observadas por este gerador:
 |------|--------|-----------|
 | Diretórios `tests/unit` por módulo | `17/17` | `src/*/tests/unit/` |
 | Diretórios `tests/integration` por módulo | `17/17` | `src/*/tests/integration/` |
-| Arquivos em `tests/pipeline_gates/` | `57` | `tests/pipeline_gates/` |
+| Arquivos em `tests/pipeline_gates/` | `67` | `tests/pipeline_gates/` |
 | Validador de drift arquitetural | presente | `scripts/audit/check_architecture_docs.py` |
 | Validador principal de contratos | presente | `scripts/contracts/validate/validate_contracts.py` |
 

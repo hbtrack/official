@@ -1,5 +1,6 @@
 # Path items for module: exercises
 # Source of truth: contracts/openapi/openapi.yaml
+# Source graph authority: docs/hbtrack/modulos/exercises/graph/module_manifest.yaml
 # Related docs:
 # - docs/hbtrack/modulos/exercises/MODULE_SCOPE_EXERCISES.md
 # - docs/hbtrack/modulos/exercises/DOMAIN_RULES_EXERCISES.md

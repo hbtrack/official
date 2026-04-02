@@ -1,0 +1,165 @@
+{
+  "artifact_id": "HBTRACK_SOURCE_GRAPH_IMPACT_REPORT",
+  "blocked_partial_update": true,
+  "compiler": "hbtrack_source_graph_compiler",
+  "compiler_version": "0.1.0",
+  "impacted_contracts": [
+    "contracts/openapi/paths/analytics.yaml",
+    "contracts/schemas/analytics/analytics_snapshot.schema.json",
+    "contracts/openapi/components/schemas/analytics/analytics_snapshot.yaml"
+  ],
+  "impacted_docs": [
+    "docs/hbtrack/modulos/analytics/README.md",
+    "docs/hbtrack/modulos/analytics/MODULE_SCOPE_ANALYTICS.md",
+    "docs/hbtrack/modulos/analytics/DOMAIN_RULES_ANALYTICS.md",
+    "docs/hbtrack/modulos/analytics/INVARIANTS_ANALYTICS.md",
+    "docs/hbtrack/modulos/analytics/PERMISSIONS_ANALYTICS.md",
+    "docs/hbtrack/modulos/analytics/TEST_MATRIX_ANALYTICS.md",
+    "docs/hbtrack/modulos/analytics/ERRORS_ANALYTICS.md"
+  ],
+  "impacted_runtime": [
+    "src/analytics/api.py",
+    "src/analytics/domain/entities.py",
+    "src/analytics/domain/rules.py",
+    "src/analytics/application/use_cases.py",
+    "src/analytics/tests/unit/test_analytics.py"
+  ],
+  "inputs": [
+    {
+      "relpath": "contracts/openapi/components/schemas/analytics/analytics_snapshot.yaml",
+      "sha256": "44e258bbdb785a3a77d821efffa9c61dee6d8295f76621a7ceb216bfd8bd0b1f"
+    },
+    {
+      "relpath": "contracts/openapi/paths/analytics.yaml",
+      "sha256": "f1fa3c881bca1075dfcfec548af0ee5594bb39799246db8c4082d3ea512a7d08"
+    },
+    {
+      "relpath": "contracts/schemas/analytics/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relpath": "contracts/schemas/analytics/analytics_metric_key.schema.json",
+      "sha256": "97259b76df02aa8d718d8ddf7ff8555eea901e8743c89625465343d23d5dd81c"
+    },
+    {
+      "relpath": "contracts/schemas/analytics/analytics_query_request.schema.json",
+      "sha256": "669f92efac463196248d3ffc458de1fe7abc3e231f222c85c0d2d457ae313976"
+    },
+    {
+      "relpath": "contracts/schemas/analytics/analytics_query_response.schema.json",
+      "sha256": "eae355ceee049c382f0c4fac064710ee57d1fad666aaaa44f12171a8d57e3f20"
+    },
+    {
+      "relpath": "contracts/schemas/analytics/analytics_snapshot.schema.json",
+      "sha256": "db8a9c898207e09b7cd6fa0ec9f9aa9a6b05e939909a22fdbda041a8cff8a581"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "bed74af95778cb977c5d18f765d1b38477ddad242c1c0480a5ab8ff84a0b9505"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
+      "sha256": "e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_policies.yaml",
+      "sha256": "4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_rules.yaml",
+      "sha256": "02f75652679e4e5c981f177b6bc57f77e26b1a360e4452a2828bda448f349f07"
+    },
+    {
+      "relpath": "docs/_canon/graph/lifecycle.yaml",
+      "sha256": "654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/analytics/DOMAIN_RULES_ANALYTICS.md",
+      "sha256": "3bce32306f13c65225155dabb0511cfb62e59df551ac2bed81e163c1bbdbd9fa"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/analytics/ERRORS_ANALYTICS.md",
+      "sha256": "813cb2b755cadd961c0267c62dbcbcc235c054b549a65a05ff9ecab854bf644c"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/analytics/INVARIANTS_ANALYTICS.md",
+      "sha256": "e7255db4bad286e735675b8994429df5f56d26df8a8f8056630fa85e33721345"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/analytics/MODULE_SCOPE_ANALYTICS.md",
+      "sha256": "fdcc5e334541bcd6dd904db2b677be817818775db01fc86179299fb3a8e8cc07"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/analytics/PERMISSIONS_ANALYTICS.md",
+      "sha256": "a2c89f285afcaa575861f7c5e2fd188215c2d8595ad3426db0e348b03cbd9c52"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/analytics/README.md",
+      "sha256": "664fd41ca3708e6432109e63c0e5f55d6b70e2ad5ca58a6677ffd5c8b20e4aef"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/analytics/TEST_MATRIX_ANALYTICS.md",
+      "sha256": "5f5d33d9b95ae8a42425feb8208dfa7f05aa67f2ad9a0045e40ce3765f6e1387"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/analytics/graph/endpoints.yaml",
+      "sha256": "33e2e2abb7b9c9013ab4d4a6d9b1e3b7df402e2730dea1b8882fceb85dfb80c6"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/analytics/graph/entities.yaml",
+      "sha256": "dc23b4d9a228403a6dc15bbcf35f1d69cb33d99906c3ba05b9222fe8789ec058"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/analytics/graph/errors.yaml",
+      "sha256": "b0943eaef47133f692868e114d6a8e34e0eacd039ac550cda47658282807a60c"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/analytics/graph/module_manifest.yaml",
+      "sha256": "2c9881ab35dd90d34f5325bd53a3b9fb158297c12ee0e2ce88c001689e917d35"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/analytics/graph/test_obligations.yaml",
+      "sha256": "431d3ffeeabeb3286c23af804a2a191e034baa6c574d20fc2db3d90e3d7d5f7a"
+    },
+    {
+      "relpath": "src/analytics/api.py",
+      "sha256": "97413284d65f8640400fa14d09406fbceffdddf210868f9de34daaee1390e161"
+    },
+    {
+      "relpath": "src/analytics/application/use_cases.py",
+      "sha256": "0f4b1f3003567dbbfa43dcd30edeb38f5afce0ceb2fcc4d52d28aea6c628d0bf"
+    },
+    {
+      "relpath": "src/analytics/domain/entities.py",
+      "sha256": "2482ef4193cce5bc6815d8d775bf7bc9e4101f9e139972bd6c6e4c031ca924a5"
+    },
+    {
+      "relpath": "src/analytics/domain/rules.py",
+      "sha256": "8318f992f5bfeeca1d6841ffede82557037890bf2f3c08f89c95a3f6a1185ab0"
+    },
+    {
+      "relpath": "src/analytics/tests/unit/test_analytics.py",
+      "sha256": "09f6bcbb77df35fe0bb5e34f2daf06f18cc6da5fc2f8aa8d15934be3a77f13eb"
+    }
+  ],
+  "known_gaps": [
+    "AnalyticsDashboard segue descrito inline em contracts/openapi/paths/analytics.yaml; ainda não existe schema soberano dedicado para esse envelope.",
+    "AnalyticsQueryResponse permanece como surface de transporte fechada, mas sem entidade runtime dedicada em src/analytics/domain/."
+  ],
+  "module": "analytics",
+  "next_stage_targets": [
+    "B3-001",
+    "B3-002"
+  ],
+  "outputs": [
+    "generated/source_graph/analytics/analytics.bundle.yaml",
+    "generated/source_graph/analytics/analytics.schema_contract_view.yaml",
+    "generated/source_graph/analytics/analytics.openapi_contract_view.yaml",
+    "generated/source_graph/analytics/impact_report.json"
+  ],
+  "source_fingerprint": "66a509d5cc353cc1c1f06be61cbe79a6cf9e0a5c7523743b5cd28ede60b8475b"
+}

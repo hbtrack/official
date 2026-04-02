@@ -123,6 +123,7 @@ Fluxo aceito:
 - GitHub Environment fornece secrets/vars reais do ambiente alvo
 - `scripts/deploy/inject_env.sh` chama `scripts/deploy/render_env_from_contract.py`
 - secrets operacionais ativos no runtime atual incluem JWT RS256, DB, Cloudinary, Resend e Gemini; a rotacao/verificacao deles e contratual em `scripts/ops/rotate_keys.sh`
+- `JWT_PRIVATE_KEY` e `JWT_PUBLIC_KEY` precisam permanecer sincronizados entre o runtime ativo e os GitHub secrets antes de qualquer redeploy; hotfix no VPS sem esse espelhamento reintroduz drift operacional
 - o renderer resolve placeholders do template derivado em `infra/env/` usando os fragments compilados em `compiled_ops/deploy/`
 - se faltar valor obrigatorio, o job falha fechado antes do SSH/deploy
 - o `.env` resolvido passa a ser artefato efemero do job e e sincronizado para `/opt/hbtrack/<env>/.env`

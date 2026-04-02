@@ -1,5 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import apiClient from '../client';
+import {
+  getCurrentSessionRequest,
+  loginRequest,
+  logoutRequest,
+} from '../requests/auth';
 import { useAuthStore } from '../../stores/authStore';
 
 export function useLogin() {
@@ -8,11 +13,7 @@ export function useLogin() {
 
   return useMutation({
     mutationFn: async ({ email, password }: { email: string; password: string }) => {
-      const { data, error } = await apiClient.POST('/auth/login', {
-        body: { email, password },
-      });
-      if (error) throw error;
-      return data!;
+      return loginRequest(apiClient, { email, password });
     },
     onSuccess: (data) => {
       localStorage.setItem('access_token', data.accessToken);
@@ -38,9 +39,7 @@ export function useLogout() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async () => {
-      await apiClient.POST('/auth/logout', {});
-    },
+    mutationFn: async () => logoutRequest(apiClient),
     onSettled: () => {
       logout();
       queryClient.clear();
@@ -52,11 +51,7 @@ export function useCurrentSession() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   return useQuery({
     queryKey: ['me'],
-    queryFn: async () => {
-      const { data, error } = await apiClient.GET('/auth/me');
-      if (error) throw error;
-      return data;
-    },
+    queryFn: async () => getCurrentSessionRequest(apiClient),
     enabled: isAuthenticated,
     retry: false,
   });

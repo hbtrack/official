@@ -224,6 +224,17 @@ class TestLogoutUseCase:
 
         repo.save_session.assert_not_called()
 
+    def test_revokes_session_even_when_existing_timestamps_are_stale(self):
+        repo = MagicMock()
+        session = make_session(issued_at=FUTURE + timedelta(hours=1))
+        repo.get_session_by_id.return_value = session
+
+        LogoutUseCase(repo).execute(session.id)
+
+        assert session.revoked_at is not None
+        repo.save_session.assert_called_once_with(session)
+        repo.revoke_refresh_tokens_for_session.assert_called_once_with(session.id)
+
 
 class TestGetCurrentSessionUseCase:
     def test_returns_active_session(self):

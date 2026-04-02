@@ -41,6 +41,7 @@ EXPECTED_GOVERNANCE_PATHS = [
     "scripts/contracts/validate/",
     "scripts/hb",
     "contracts/schemas/shared/",
+    "tests/adversarial/",
 ]
 
 # Testes esperados na survival-suite (FASEs 3 e 4)

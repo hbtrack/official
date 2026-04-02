@@ -1,0 +1,2204 @@
+{
+  "artifact_id": "HBTRACK_MODULE_FEATURE_CONTEXT_BUNDLE",
+  "authority": {
+    "openapi_contract_view_ref": "generated/source_graph/exercises/exercises.openapi_contract_view.yaml",
+    "partial_update_policy": "blocked",
+    "precedence_order": [
+      "enforcement_executable",
+      "active_schemas",
+      "source_authority_graph",
+      "concept_owner_source",
+      "bridge_docs",
+      "derived_artifacts",
+      "legacy_or_study"
+    ],
+    "schema_contract_view_ref": "generated/source_graph/exercises/exercises.schema_contract_view.yaml",
+    "source_authority_graph_ref": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+    "source_graph_bundle_ref": "generated/source_graph/exercises/exercises.bundle.yaml",
+    "source_graph_impact_ref": "generated/source_graph/exercises/impact_report.json",
+    "sync_manifest_ref": "docs/_canon/SYNC_MANIFEST.yaml",
+    "sync_rule_id": "EXERCISES_SOURCE_GRAPH_SYNC"
+  },
+  "compiler": "hbtrack_context_bundle_compiler",
+  "compiler_version": "0.1.0",
+  "contract_surfaces": {
+    "openapi_paths": "contracts/openapi/paths/exercises.yaml",
+    "openapi_projection": "contracts/openapi/components/schemas/exercises/exercise.yaml",
+    "primary_schema": "contracts/schemas/exercises/exercise.schema.json",
+    "sovereign_schema_dir": "contracts/schemas/exercises"
+  },
+  "feature": {
+    "contracts": [
+      "contracts/openapi/paths/exercises.yaml"
+    ],
+    "description": "Treinador cria e mantém catálogo de exercícios reutilizáveis, podendo copiar exercícios existentes para criar variações.",
+    "endpoints": [
+      "GET /exercises",
+      "POST /exercises",
+      "GET /exercises/{id}",
+      "POST /exercises/{id}/copy"
+    ],
+    "id": "FT-037",
+    "name": "Catalogar e Copiar Exercícios",
+    "slug": "catalogar-e-copiar-exercícios",
+    "status": "implemented"
+  },
+  "implementation_targets": {
+    "canonical_runtime": [
+      "src/exercises/api.py",
+      "src/exercises/application/use_cases.py",
+      "src/exercises/domain/entities.py",
+      "src/exercises/domain/rules.py",
+      "src/exercises/schemas.py",
+      "src/exercises/tests/unit/test_exercises.py"
+    ],
+    "contracts": [
+      "contracts/openapi/components/schemas/exercises/exercise.yaml",
+      "contracts/openapi/components/schemas/exercises/exercise_preview.yaml",
+      "contracts/openapi/components/schemas/exercises/exercise_relation.yaml",
+      "contracts/openapi/components/schemas/exercises/exercise_version.yaml",
+      "contracts/openapi/paths/exercises.yaml",
+      "contracts/schemas/exercises/exercise.schema.json",
+      "contracts/schemas/exercises/exercise_acl.schema.json",
+      "contracts/schemas/exercises/exercise_relation.schema.json",
+      "contracts/schemas/exercises/exercise_version.schema.json"
+    ],
+    "derived_context": [
+      "compiled_context/exercises/FT-037.json"
+    ],
+    "generated_runtime": [],
+    "module_docs": [
+      "docs/hbtrack/modulos/exercises/DECISION_IR_EXERCISES.yaml",
+      "docs/hbtrack/modulos/exercises/DOMAIN_RULES_EXERCISES.md",
+      "docs/hbtrack/modulos/exercises/INVARIANTS_EXERCISES.md",
+      "docs/hbtrack/modulos/exercises/MODULE_SCOPE_EXERCISES.md",
+      "docs/hbtrack/modulos/exercises/PERMISSIONS_EXERCISES.md",
+      "docs/hbtrack/modulos/exercises/README.md",
+      "docs/hbtrack/modulos/exercises/TEST_MATRIX_EXERCISES.md"
+    ],
+    "tests": [
+      "tests/pipeline_gates/test_context_bundle_exercises.py",
+      "tests/pipeline_gates/test_exercises_source_graph_integrity.py",
+      "tests/pipeline_gates/test_source_graph_compiler_exercises.py"
+    ]
+  },
+  "inputs": [
+    {
+      "relpath": "docs/_canon/FEATURE_REGISTRY.yaml",
+      "sha256": "15e0e2a667ccc54f93ab4d2dbc84c2ffd1b7bf5268771396a3b85d0572cd58c0"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "bed74af95778cb977c5d18f765d1b38477ddad242c1c0480a5ab8ff84a0b9505"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
+      "sha256": "33e921172e9bacbe2853221dd55b3f3f9c5400b106895e89a2421f326110e308"
+    },
+    {
+      "relpath": "generated/source_graph/exercises/exercises.bundle.yaml",
+      "sha256": "2b7a8b3dc5b2992a3e30f3c6dc30deb451db03cadad99c314ccd6ac6a190cfff"
+    },
+    {
+      "relpath": "generated/source_graph/exercises/exercises.schema_contract_view.yaml",
+      "sha256": "7bc9fd3f92bc3cf5f01ec6ab59a9dc3249e5030e54460fc5a650d05142ae1d29"
+    },
+    {
+      "relpath": "generated/source_graph/exercises/exercises.openapi_contract_view.yaml",
+      "sha256": "56d0250a574ce57786ef81e3ee52d8efc6b07c08848ce7a971a0d7a97a373a42"
+    },
+    {
+      "relpath": "generated/source_graph/exercises/impact_report.json",
+      "sha256": "56e5ee7e87b9d42b1b07831e58dcdb67be9942ecdd61a7f80ffabf42f225a274"
+    }
+  ],
+  "module": "exercises",
+  "module_docs": {
+    "decision_ir": "docs/hbtrack/modulos/exercises/DECISION_IR_EXERCISES.yaml",
+    "domain_rules": "docs/hbtrack/modulos/exercises/DOMAIN_RULES_EXERCISES.md",
+    "invariants": "docs/hbtrack/modulos/exercises/INVARIANTS_EXERCISES.md",
+    "permissions": "docs/hbtrack/modulos/exercises/PERMISSIONS_EXERCISES.md",
+    "readme": "docs/hbtrack/modulos/exercises/README.md",
+    "scope": "docs/hbtrack/modulos/exercises/MODULE_SCOPE_EXERCISES.md",
+    "test_matrix": "docs/hbtrack/modulos/exercises/TEST_MATRIX_EXERCISES.md"
+  },
+  "module_state": {
+    "expected_surfaces": [
+      "module_docs_minimum",
+      "openapi_sync",
+      "json_schema",
+      "test_matrix",
+      "permissions"
+    ],
+    "owner": "performance-tech",
+    "status": "implemented"
+  },
+  "runtime_surfaces": {
+    "api_router": "src/exercises/api.py",
+    "domain_entity": "src/exercises/domain/entities.py",
+    "domain_rules": "src/exercises/domain/rules.py",
+    "unit_tests": "src/exercises/tests/unit/test_exercises.py",
+    "use_cases": "src/exercises/application/use_cases.py"
+  },
+  "source_fingerprint": "1d59e48ff456f6fbb9303fec9394d1c58aa66b6d881761885d06ca398e471ab9",
+  "source_graph": {
+    "entities": {
+      "Exercise": {
+        "docs_refs": [
+          "../DOMAIN_RULES_EXERCISES.md",
+          "../INVARIANTS_EXERCISES.md",
+          "../PERMISSIONS_EXERCISES.md"
+        ],
+        "runtime_entity_ref": "../../../../../src/exercises/domain/entities.py#Exercise",
+        "runtime_extension_fields": [
+          {
+            "name": "currentVersion",
+            "runtime_name": "current_version",
+            "type": "object"
+          },
+          {
+            "name": "isDeleted",
+            "runtime_name": "is_deleted",
+            "type": "boolean"
+          }
+        ],
+        "schema_ref": "../../../../../contracts/schemas/exercises/exercise.schema.json",
+        "sovereign_fields": [
+          {
+            "name": "id",
+            "required": true,
+            "runtime_name": "id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "organizationId",
+            "required": false,
+            "runtime_name": "organization_id",
+            "type": "uuid_v4|null"
+          },
+          {
+            "name": "scope",
+            "required": true,
+            "runtime_name": "scope",
+            "type": "string"
+          },
+          {
+            "name": "visibilityMode",
+            "required": false,
+            "runtime_name": "visibility_mode",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "required": true,
+            "runtime_name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "required": false,
+            "runtime_name": "description",
+            "type": "string"
+          },
+          {
+            "name": "sessionPhase",
+            "required": true,
+            "runtime_name": "session_phase",
+            "type": "string"
+          },
+          {
+            "name": "primaryObjective",
+            "required": true,
+            "runtime_name": "primary_objective",
+            "type": "string"
+          },
+          {
+            "name": "secondaryObjective",
+            "required": false,
+            "runtime_name": "secondary_objective",
+            "type": "string"
+          },
+          {
+            "name": "gamePhases",
+            "required": false,
+            "runtime_name": "game_phases",
+            "type": "string[]"
+          },
+          {
+            "name": "ageCategories",
+            "required": true,
+            "runtime_name": "age_categories",
+            "type": "string[]"
+          },
+          {
+            "name": "skillLevel",
+            "required": true,
+            "runtime_name": "skill_level",
+            "type": "string"
+          },
+          {
+            "name": "complexity",
+            "required": true,
+            "runtime_name": "complexity",
+            "type": "integer"
+          },
+          {
+            "name": "physicalLoad",
+            "required": true,
+            "runtime_name": "physical_load",
+            "type": "string"
+          },
+          {
+            "name": "minAthletes",
+            "required": true,
+            "runtime_name": "min_athletes",
+            "type": "integer"
+          },
+          {
+            "name": "maxAthletes",
+            "required": true,
+            "runtime_name": "max_athletes",
+            "type": "integer"
+          },
+          {
+            "name": "estimatedDurationMinutes",
+            "required": true,
+            "runtime_name": "estimated_duration_minutes",
+            "type": "integer"
+          },
+          {
+            "name": "spaceRequired",
+            "required": true,
+            "runtime_name": "space_required",
+            "type": "string"
+          },
+          {
+            "name": "materials",
+            "required": false,
+            "runtime_name": "materials",
+            "type": "string[]"
+          },
+          {
+            "name": "instructions",
+            "required": false,
+            "runtime_name": "instructions",
+            "type": "string"
+          },
+          {
+            "name": "coachingCues",
+            "required": false,
+            "runtime_name": "coaching_cues",
+            "type": "string"
+          },
+          {
+            "name": "safetyNotes",
+            "required": false,
+            "runtime_name": "safety_notes",
+            "type": "string"
+          },
+          {
+            "name": "thumbnailUrl",
+            "required": false,
+            "runtime_name": "thumbnail_url",
+            "type": "string"
+          },
+          {
+            "name": "editorialStatus",
+            "required": true,
+            "runtime_name": "editorial_status",
+            "type": "string"
+          },
+          {
+            "name": "currentVersionId",
+            "required": true,
+            "runtime_name": "current_version_id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "currentVersionNumber",
+            "required": true,
+            "runtime_name": "current_version_number",
+            "type": "integer"
+          },
+          {
+            "name": "createdByUserId",
+            "required": true,
+            "runtime_name": "created_by_user_id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "createdAt",
+            "required": true,
+            "runtime_name": "created_at",
+            "type": "timestamp_utc"
+          },
+          {
+            "name": "updatedAt",
+            "required": true,
+            "runtime_name": "updated_at",
+            "type": "timestamp_utc"
+          },
+          {
+            "name": "deletedAt",
+            "required": false,
+            "runtime_name": "deleted_at",
+            "type": "timestamp_utc|null"
+          },
+          {
+            "name": "deletionReason",
+            "required": false,
+            "runtime_name": "deletion_reason",
+            "type": "string"
+          }
+        ]
+      },
+      "ExerciseAcl": {
+        "docs_refs": [
+          "../PERMISSIONS_EXERCISES.md",
+          "../INVARIANTS_EXERCISES.md"
+        ],
+        "runtime_entity_ref": "../../../../../src/exercises/domain/entities.py#ExerciseACL",
+        "schema_ref": "../../../../../contracts/schemas/exercises/exercise_acl.schema.json",
+        "sovereign_fields": [
+          {
+            "name": "id",
+            "required": true,
+            "runtime_name": "id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "exerciseId",
+            "required": true,
+            "runtime_name": "exercise_id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "runtime_name": "user_id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "organizationId",
+            "required": true,
+            "runtime_name": "organization_id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "grantedByUserId",
+            "required": true,
+            "runtime_name": "created_by_user_id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "grantedAt",
+            "required": true,
+            "runtime_name": "created_at",
+            "type": "timestamp_utc"
+          }
+        ]
+      },
+      "ExerciseRelation": {
+        "docs_refs": [
+          "../DOMAIN_RULES_EXERCISES.md",
+          "../INVARIANTS_EXERCISES.md"
+        ],
+        "runtime_entity_ref": "../../../../../src/exercises/domain/entities.py#ExerciseRelation",
+        "schema_ref": "../../../../../contracts/schemas/exercises/exercise_relation.schema.json",
+        "sovereign_fields": [
+          {
+            "name": "id",
+            "required": true,
+            "runtime_name": "id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "fromExerciseId",
+            "required": true,
+            "runtime_name": "from_exercise_id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "toExerciseId",
+            "required": true,
+            "runtime_name": "to_exercise_id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "relationType",
+            "required": true,
+            "runtime_name": "relation_type",
+            "type": "string"
+          },
+          {
+            "name": "notes",
+            "required": false,
+            "runtime_name": "notes",
+            "type": "string"
+          },
+          {
+            "name": "createdByUserId",
+            "required": true,
+            "runtime_name": "created_by_user_id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "createdAt",
+            "required": true,
+            "runtime_name": "created_at",
+            "type": "timestamp_utc"
+          }
+        ]
+      },
+      "ExerciseVersion": {
+        "docs_refs": [
+          "../DOMAIN_RULES_EXERCISES.md",
+          "../INVARIANTS_EXERCISES.md"
+        ],
+        "runtime_entity_ref": "../../../../../src/exercises/domain/entities.py#ExerciseVersion",
+        "schema_ref": "../../../../../contracts/schemas/exercises/exercise_version.schema.json",
+        "sovereign_fields": [
+          {
+            "name": "id",
+            "required": true,
+            "runtime_name": "id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "exerciseId",
+            "required": true,
+            "runtime_name": "exercise_id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "versionNumber",
+            "required": true,
+            "runtime_name": "version_number",
+            "type": "integer"
+          },
+          {
+            "name": "changeReason",
+            "required": true,
+            "runtime_name": "change_reason",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "required": false,
+            "runtime_name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "required": false,
+            "runtime_name": "description",
+            "type": "string"
+          },
+          {
+            "name": "sessionPhase",
+            "required": true,
+            "runtime_name": "session_phase",
+            "type": "string"
+          },
+          {
+            "name": "primaryObjective",
+            "required": true,
+            "runtime_name": "primary_objective",
+            "type": "string"
+          },
+          {
+            "name": "secondaryObjective",
+            "required": false,
+            "runtime_name": "secondary_objective",
+            "type": "string"
+          },
+          {
+            "name": "gamePhases",
+            "required": false,
+            "runtime_name": "game_phases",
+            "type": "string[]"
+          },
+          {
+            "name": "ageCategories",
+            "required": true,
+            "runtime_name": "age_categories",
+            "type": "string[]"
+          },
+          {
+            "name": "skillLevel",
+            "required": true,
+            "runtime_name": "skill_level",
+            "type": "string"
+          },
+          {
+            "name": "complexity",
+            "required": true,
+            "runtime_name": "complexity",
+            "type": "integer"
+          },
+          {
+            "name": "physicalLoad",
+            "required": true,
+            "runtime_name": "physical_load",
+            "type": "string"
+          },
+          {
+            "name": "minAthletes",
+            "required": true,
+            "runtime_name": "min_athletes",
+            "type": "integer"
+          },
+          {
+            "name": "maxAthletes",
+            "required": true,
+            "runtime_name": "max_athletes",
+            "type": "integer"
+          },
+          {
+            "name": "estimatedDurationMinutes",
+            "required": true,
+            "runtime_name": "estimated_duration_minutes",
+            "type": "integer"
+          },
+          {
+            "name": "spaceRequired",
+            "required": true,
+            "runtime_name": "space_required",
+            "type": "string"
+          },
+          {
+            "name": "materials",
+            "required": false,
+            "runtime_name": "materials",
+            "type": "string[]"
+          },
+          {
+            "name": "instructions",
+            "required": false,
+            "runtime_name": "instructions",
+            "type": "string"
+          },
+          {
+            "name": "coachingCues",
+            "required": false,
+            "runtime_name": "coaching_cues",
+            "type": "string"
+          },
+          {
+            "name": "safetyNotes",
+            "required": false,
+            "runtime_name": "safety_notes",
+            "type": "string"
+          },
+          {
+            "name": "thumbnailUrl",
+            "required": false,
+            "runtime_name": "thumbnail_url",
+            "type": "string"
+          },
+          {
+            "name": "createdByUserId",
+            "required": true,
+            "runtime_name": "created_by_user_id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "createdAt",
+            "required": true,
+            "runtime_name": "created_at",
+            "type": "timestamp_utc"
+          }
+        ]
+      }
+    },
+    "errors": [
+      {
+        "http_status": 401,
+        "id": "ERR-EXB-401-UNAUTHENTICATED",
+        "kind": "transport",
+        "operations": [
+          "listExercises",
+          "createExercise",
+          "getExercise",
+          "updateExercise",
+          "deleteExercise",
+          "copyExerciseToOrg",
+          "listExerciseVersions",
+          "getExerciseVersion",
+          "listExerciseRelations",
+          "addExerciseRelation",
+          "deleteExerciseRelation",
+          "getExerciseAcl",
+          "addExerciseAclEntry",
+          "removeExerciseAclEntry"
+        ],
+        "source_ref": "../../../../../src/exercises/api.py#_get_role"
+      },
+      {
+        "exception_ref": "../../../../../src/exercises/domain/rules.py#InsufficientPrivilege",
+        "http_status": 403,
+        "id": "ERR-EXB-403-INSUFFICIENT-PRIVILEGE",
+        "kind": "domain",
+        "operations": [
+          "createExercise",
+          "getExercise",
+          "updateExercise",
+          "deleteExercise",
+          "listExerciseVersions",
+          "getExerciseVersion",
+          "addExerciseRelation",
+          "deleteExerciseRelation",
+          "getExerciseAcl",
+          "addExerciseAclEntry",
+          "removeExerciseAclEntry"
+        ]
+      },
+      {
+        "exception_ref": "../../../../../src/exercises/domain/rules.py#ExerciseNotFound",
+        "http_status": 404,
+        "id": "ERR-EXB-404-EXERCISE-NOT-FOUND",
+        "kind": "domain",
+        "operations": [
+          "getExercise",
+          "updateExercise",
+          "deleteExercise",
+          "copyExerciseToOrg",
+          "listExerciseVersions",
+          "getExerciseVersion",
+          "listExerciseRelations",
+          "addExerciseRelation",
+          "deleteExerciseRelation",
+          "getExerciseAcl",
+          "addExerciseAclEntry",
+          "removeExerciseAclEntry"
+        ]
+      },
+      {
+        "exception_ref": "../../../../../src/exercises/domain/rules.py#ExerciseConflict",
+        "http_status": 409,
+        "id": "ERR-EXB-409-CONFLICT",
+        "kind": "domain",
+        "operations": [
+          "createExercise",
+          "updateExercise",
+          "deleteExercise",
+          "copyExerciseToOrg",
+          "addExerciseRelation",
+          "deleteExerciseRelation",
+          "addExerciseAclEntry",
+          "removeExerciseAclEntry"
+        ]
+      },
+      {
+        "http_status": 422,
+        "id": "ERR-EXB-422-QUERY-VALIDATION",
+        "kind": "validation",
+        "operations": [
+          "listExercises"
+        ],
+        "source_ref": "../../../../../src/exercises/api.py#list_exercises"
+      },
+      {
+        "http_status": 422,
+        "id": "ERR-EXB-422-DOMAIN-VALIDATION",
+        "kind": "validation",
+        "operations": [
+          "createExercise",
+          "updateExercise",
+          "addExerciseRelation",
+          "addExerciseAclEntry"
+        ],
+        "source_ref": "../../../../../src/exercises/domain/entities.py#validate_invariants"
+      }
+    ],
+    "impact_report": {
+      "blocked_partial_update": true,
+      "impacted_contracts": [
+        "contracts/openapi/paths/exercises.yaml",
+        "contracts/schemas/exercises/exercise.schema.json",
+        "contracts/openapi/components/schemas/exercises/exercise.yaml"
+      ],
+      "impacted_docs": [
+        "docs/hbtrack/modulos/exercises/README.md",
+        "docs/hbtrack/modulos/exercises/MODULE_SCOPE_EXERCISES.md",
+        "docs/hbtrack/modulos/exercises/DOMAIN_RULES_EXERCISES.md",
+        "docs/hbtrack/modulos/exercises/INVARIANTS_EXERCISES.md",
+        "docs/hbtrack/modulos/exercises/PERMISSIONS_EXERCISES.md",
+        "docs/hbtrack/modulos/exercises/TEST_MATRIX_EXERCISES.md",
+        "docs/hbtrack/modulos/exercises/DECISION_IR_EXERCISES.yaml"
+      ],
+      "impacted_runtime": [
+        "src/exercises/api.py",
+        "src/exercises/domain/entities.py",
+        "src/exercises/domain/rules.py",
+        "src/exercises/application/use_cases.py",
+        "src/exercises/tests/unit/test_exercises.py"
+      ],
+      "known_gaps": [
+        "OpenAPI transport projections `exercise.yaml` e `exercise_preview.yaml` ainda nao refletem integralmente o shape soberano de `exercise.schema.json`.",
+        "O contrato published de `deleteExerciseRelation` usa `{relationId}`, enquanto o runtime legado ainda remove relacoes por `(to_exercise_id, relation_type)`.",
+        "As superfícies OpenAPI de ACL seguem shape inline e ainda nao reutilizam um projection component dedicado derivado de `exercise_acl.schema.json`."
+      ],
+      "source_fingerprint": "1b205b436c246f74bf4f6f00cc78c648d61f51dfb604cddd6afe275640bdc132"
+    },
+    "openapi_contract_view": {
+      "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",
+      "compiler": "hbtrack_source_graph_compiler",
+      "compiler_version": "0.1.0",
+      "errors": [
+        {
+          "http_status": 401,
+          "id": "ERR-EXB-401-UNAUTHENTICATED",
+          "kind": "transport",
+          "operations": [
+            "listExercises",
+            "createExercise",
+            "getExercise",
+            "updateExercise",
+            "deleteExercise",
+            "copyExerciseToOrg",
+            "listExerciseVersions",
+            "getExerciseVersion",
+            "listExerciseRelations",
+            "addExerciseRelation",
+            "deleteExerciseRelation",
+            "getExerciseAcl",
+            "addExerciseAclEntry",
+            "removeExerciseAclEntry"
+          ],
+          "source_ref": "../../../../../src/exercises/api.py#_get_role"
+        },
+        {
+          "exception_ref": "../../../../../src/exercises/domain/rules.py#InsufficientPrivilege",
+          "http_status": 403,
+          "id": "ERR-EXB-403-INSUFFICIENT-PRIVILEGE",
+          "kind": "domain",
+          "operations": [
+            "createExercise",
+            "getExercise",
+            "updateExercise",
+            "deleteExercise",
+            "listExerciseVersions",
+            "getExerciseVersion",
+            "addExerciseRelation",
+            "deleteExerciseRelation",
+            "getExerciseAcl",
+            "addExerciseAclEntry",
+            "removeExerciseAclEntry"
+          ]
+        },
+        {
+          "exception_ref": "../../../../../src/exercises/domain/rules.py#ExerciseNotFound",
+          "http_status": 404,
+          "id": "ERR-EXB-404-EXERCISE-NOT-FOUND",
+          "kind": "domain",
+          "operations": [
+            "getExercise",
+            "updateExercise",
+            "deleteExercise",
+            "copyExerciseToOrg",
+            "listExerciseVersions",
+            "getExerciseVersion",
+            "listExerciseRelations",
+            "addExerciseRelation",
+            "deleteExerciseRelation",
+            "getExerciseAcl",
+            "addExerciseAclEntry",
+            "removeExerciseAclEntry"
+          ]
+        },
+        {
+          "exception_ref": "../../../../../src/exercises/domain/rules.py#ExerciseConflict",
+          "http_status": 409,
+          "id": "ERR-EXB-409-CONFLICT",
+          "kind": "domain",
+          "operations": [
+            "createExercise",
+            "updateExercise",
+            "deleteExercise",
+            "copyExerciseToOrg",
+            "addExerciseRelation",
+            "deleteExerciseRelation",
+            "addExerciseAclEntry",
+            "removeExerciseAclEntry"
+          ]
+        },
+        {
+          "http_status": 422,
+          "id": "ERR-EXB-422-QUERY-VALIDATION",
+          "kind": "validation",
+          "operations": [
+            "listExercises"
+          ],
+          "source_ref": "../../../../../src/exercises/api.py#list_exercises"
+        },
+        {
+          "http_status": 422,
+          "id": "ERR-EXB-422-DOMAIN-VALIDATION",
+          "kind": "validation",
+          "operations": [
+            "createExercise",
+            "updateExercise",
+            "addExerciseRelation",
+            "addExerciseAclEntry"
+          ],
+          "source_ref": "../../../../../src/exercises/domain/entities.py#validate_invariants"
+        }
+      ],
+      "module": "exercises",
+      "openapi_paths_ref": "contracts/openapi/paths/exercises.yaml",
+      "operations": [
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/get",
+          "operation_id": "listExercises",
+          "owner_scoped_roles": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "path": "/exercises",
+          "response_codes": [
+            200,
+            401,
+            422,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/exercises/api.py#list_exercises",
+          "use_case_ref": "../../../../../src/exercises/application/use_cases.py#ListExercises"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/post",
+          "operation_id": "createExercise",
+          "owner_scoped_roles": [
+            "coach"
+          ],
+          "path": "/exercises",
+          "response_codes": [
+            201,
+            401,
+            403,
+            409,
+            422,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/exercises/api.py#create_exercise",
+          "use_case_ref": "../../../../../src/exercises/application/use_cases.py#CreateExercise"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/get",
+          "operation_id": "getExercise",
+          "owner_scoped_roles": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "path": "/exercises/{id}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/exercises/api.py#get_exercise",
+          "use_case_ref": "../../../../../src/exercises/application/use_cases.py#GetExercise"
+        },
+        {
+          "method": "PATCH",
+          "openapi_ref": "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/patch",
+          "operation_id": "updateExercise",
+          "owner_scoped_roles": [
+            "coach"
+          ],
+          "path": "/exercises/{id}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            409,
+            422,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/exercises/api.py#update_exercise",
+          "use_case_ref": "../../../../../src/exercises/application/use_cases.py#UpdateExercise"
+        },
+        {
+          "method": "DELETE",
+          "openapi_ref": "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/delete",
+          "operation_id": "deleteExercise",
+          "owner_scoped_roles": [
+            "coach"
+          ],
+          "path": "/exercises/{id}",
+          "response_codes": [
+            204,
+            401,
+            403,
+            404,
+            409,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/exercises/api.py#delete_exercise",
+          "use_case_ref": "../../../../../src/exercises/application/use_cases.py#DeleteExercise"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/copy/post",
+          "operation_id": "copyExerciseToOrg",
+          "owner_scoped_roles": [
+            "coach"
+          ],
+          "path": "/exercises/{id}/copy",
+          "response_codes": [
+            201,
+            401,
+            404,
+            409,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/exercises/api.py#copy_exercise_to_org",
+          "use_case_ref": "../../../../../src/exercises/application/use_cases.py#CopyExerciseToOrg"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/versions/get",
+          "operation_id": "listExerciseVersions",
+          "owner_scoped_roles": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "path": "/exercises/{id}/versions",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/exercises/api.py#list_exercise_versions",
+          "use_case_ref": "../../../../../src/exercises/application/use_cases.py#ListExerciseVersions"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/versions/{versionId}/get",
+          "operation_id": "getExerciseVersion",
+          "owner_scoped_roles": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "path": "/exercises/{id}/versions/{versionId}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/exercises/api.py#get_exercise_version",
+          "use_case_ref": "../../../../../src/exercises/application/use_cases.py#GetExerciseVersion"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/relations/get",
+          "operation_id": "listExerciseRelations",
+          "owner_scoped_roles": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "path": "/exercises/{id}/relations",
+          "response_codes": [
+            200,
+            401,
+            404,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/exercises/api.py#list_exercise_relations",
+          "use_case_ref": "../../../../../src/exercises/application/use_cases.py#ListExerciseRelations"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/relations/post",
+          "operation_id": "addExerciseRelation",
+          "owner_scoped_roles": [
+            "coach"
+          ],
+          "path": "/exercises/{id}/relations",
+          "response_codes": [
+            201,
+            401,
+            403,
+            404,
+            409,
+            422,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/exercises/api.py#add_exercise_relation",
+          "use_case_ref": "../../../../../src/exercises/application/use_cases.py#AddExerciseRelation"
+        },
+        {
+          "method": "DELETE",
+          "openapi_ref": "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/relations/{relationId}/delete",
+          "operation_id": "deleteExerciseRelation",
+          "owner_scoped_roles": [
+            "coach"
+          ],
+          "path": "/exercises/{id}/relations/{relationId}",
+          "response_codes": [
+            204,
+            401,
+            403,
+            404,
+            409,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/exercises/api.py#delete_exercise_relation",
+          "use_case_ref": "../../../../../src/exercises/application/use_cases.py#DeleteExerciseRelation"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/acl/get",
+          "operation_id": "getExerciseAcl",
+          "owner_scoped_roles": [
+            "coach"
+          ],
+          "path": "/exercises/{id}/acl",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/exercises/api.py#get_exercise_acl",
+          "use_case_ref": "../../../../../src/exercises/application/use_cases.py#GetExerciseACL"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/acl/post",
+          "operation_id": "addExerciseAclEntry",
+          "owner_scoped_roles": [
+            "coach"
+          ],
+          "path": "/exercises/{id}/acl",
+          "response_codes": [
+            201,
+            401,
+            403,
+            404,
+            409,
+            422,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/exercises/api.py#add_exercise_acl_entry",
+          "use_case_ref": "../../../../../src/exercises/application/use_cases.py#AddExerciseACLEntry"
+        },
+        {
+          "method": "DELETE",
+          "openapi_ref": "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/acl/{userId}/delete",
+          "operation_id": "removeExerciseAclEntry",
+          "owner_scoped_roles": [
+            "coach"
+          ],
+          "path": "/exercises/{id}/acl/{userId}",
+          "response_codes": [
+            204,
+            401,
+            403,
+            404,
+            409,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator",
+            "coach"
+          ],
+          "roles_denied": [
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/exercises/api.py#remove_exercise_acl_entry",
+          "use_case_ref": "../../../../../src/exercises/application/use_cases.py#RemoveExerciseACLEntry"
+        }
+      ]
+    },
+    "operations": [
+      {
+        "method": "GET",
+        "openapi_ref": "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/get",
+        "operation_id": "listExercises",
+        "owner_scoped_roles": [
+          "coach",
+          "athlete",
+          "member"
+        ],
+        "path": "/exercises",
+        "response_codes": [
+          200,
+          401,
+          422,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach",
+          "athlete",
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/exercises/api.py#list_exercises",
+        "use_case_ref": "../../../../../src/exercises/application/use_cases.py#ListExercises"
+      },
+      {
+        "method": "POST",
+        "openapi_ref": "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/post",
+        "operation_id": "createExercise",
+        "owner_scoped_roles": [
+          "coach"
+        ],
+        "path": "/exercises",
+        "response_codes": [
+          201,
+          401,
+          403,
+          409,
+          422,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach"
+        ],
+        "roles_denied": [
+          "athlete",
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/exercises/api.py#create_exercise",
+        "use_case_ref": "../../../../../src/exercises/application/use_cases.py#CreateExercise"
+      },
+      {
+        "method": "GET",
+        "openapi_ref": "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/get",
+        "operation_id": "getExercise",
+        "owner_scoped_roles": [
+          "coach",
+          "athlete",
+          "member"
+        ],
+        "path": "/exercises/{id}",
+        "response_codes": [
+          200,
+          401,
+          403,
+          404,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach",
+          "athlete",
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/exercises/api.py#get_exercise",
+        "use_case_ref": "../../../../../src/exercises/application/use_cases.py#GetExercise"
+      },
+      {
+        "method": "POST",
+        "openapi_ref": "../../../../../contracts/openapi/paths/exercises.yaml#/exercises/{id}/copy/post",
+        "operation_id": "copyExerciseToOrg",
+        "owner_scoped_roles": [
+          "coach"
+        ],
+        "path": "/exercises/{id}/copy",
+        "response_codes": [
+          201,
+          401,
+          404,
+          409,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator",
+          "coach"
+        ],
+        "roles_denied": [
+          "athlete",
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/exercises/api.py#copy_exercise_to_org",
+        "use_case_ref": "../../../../../src/exercises/application/use_cases.py#CopyExerciseToOrg"
+      }
+    ],
+    "schema_contract_view": {
+      "artifact_id": "HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW",
+      "compiler": "hbtrack_source_graph_compiler",
+      "compiler_version": "0.1.0",
+      "entities": {
+        "Exercise": {
+          "required": [
+            "id",
+            "scope",
+            "name",
+            "sessionPhase",
+            "primaryObjective",
+            "ageCategories",
+            "skillLevel",
+            "complexity",
+            "physicalLoad",
+            "minAthletes",
+            "maxAthletes",
+            "estimatedDurationMinutes",
+            "spaceRequired",
+            "editorialStatus",
+            "currentVersionId",
+            "currentVersionNumber",
+            "createdByUserId",
+            "createdAt",
+            "updatedAt"
+          ],
+          "runtime_extension_fields": [
+            {
+              "name": "currentVersion",
+              "runtime_name": "current_version",
+              "type": "object"
+            },
+            {
+              "name": "isDeleted",
+              "runtime_name": "is_deleted",
+              "type": "boolean"
+            }
+          ],
+          "schema_ref": "contracts/schemas/exercises/exercise.schema.json",
+          "sovereign_fields": [
+            {
+              "name": "id",
+              "required": true,
+              "runtime_name": "id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "organizationId",
+              "required": false,
+              "runtime_name": "organization_id",
+              "type": "uuid_v4|null"
+            },
+            {
+              "name": "scope",
+              "required": true,
+              "runtime_name": "scope",
+              "type": "string"
+            },
+            {
+              "name": "visibilityMode",
+              "required": false,
+              "runtime_name": "visibility_mode",
+              "type": "string"
+            },
+            {
+              "name": "name",
+              "required": true,
+              "runtime_name": "name",
+              "type": "string"
+            },
+            {
+              "name": "description",
+              "required": false,
+              "runtime_name": "description",
+              "type": "string"
+            },
+            {
+              "name": "sessionPhase",
+              "required": true,
+              "runtime_name": "session_phase",
+              "type": "string"
+            },
+            {
+              "name": "primaryObjective",
+              "required": true,
+              "runtime_name": "primary_objective",
+              "type": "string"
+            },
+            {
+              "name": "secondaryObjective",
+              "required": false,
+              "runtime_name": "secondary_objective",
+              "type": "string"
+            },
+            {
+              "name": "gamePhases",
+              "required": false,
+              "runtime_name": "game_phases",
+              "type": "string[]"
+            },
+            {
+              "name": "ageCategories",
+              "required": true,
+              "runtime_name": "age_categories",
+              "type": "string[]"
+            },
+            {
+              "name": "skillLevel",
+              "required": true,
+              "runtime_name": "skill_level",
+              "type": "string"
+            },
+            {
+              "name": "complexity",
+              "required": true,
+              "runtime_name": "complexity",
+              "type": "integer"
+            },
+            {
+              "name": "physicalLoad",
+              "required": true,
+              "runtime_name": "physical_load",
+              "type": "string"
+            },
+            {
+              "name": "minAthletes",
+              "required": true,
+              "runtime_name": "min_athletes",
+              "type": "integer"
+            },
+            {
+              "name": "maxAthletes",
+              "required": true,
+              "runtime_name": "max_athletes",
+              "type": "integer"
+            },
+            {
+              "name": "estimatedDurationMinutes",
+              "required": true,
+              "runtime_name": "estimated_duration_minutes",
+              "type": "integer"
+            },
+            {
+              "name": "spaceRequired",
+              "required": true,
+              "runtime_name": "space_required",
+              "type": "string"
+            },
+            {
+              "name": "materials",
+              "required": false,
+              "runtime_name": "materials",
+              "type": "string[]"
+            },
+            {
+              "name": "instructions",
+              "required": false,
+              "runtime_name": "instructions",
+              "type": "string"
+            },
+            {
+              "name": "coachingCues",
+              "required": false,
+              "runtime_name": "coaching_cues",
+              "type": "string"
+            },
+            {
+              "name": "safetyNotes",
+              "required": false,
+              "runtime_name": "safety_notes",
+              "type": "string"
+            },
+            {
+              "name": "thumbnailUrl",
+              "required": false,
+              "runtime_name": "thumbnail_url",
+              "type": "string"
+            },
+            {
+              "name": "editorialStatus",
+              "required": true,
+              "runtime_name": "editorial_status",
+              "type": "string"
+            },
+            {
+              "name": "currentVersionId",
+              "required": true,
+              "runtime_name": "current_version_id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "currentVersionNumber",
+              "required": true,
+              "runtime_name": "current_version_number",
+              "type": "integer"
+            },
+            {
+              "name": "createdByUserId",
+              "required": true,
+              "runtime_name": "created_by_user_id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "createdAt",
+              "required": true,
+              "runtime_name": "created_at",
+              "type": "timestamp_utc"
+            },
+            {
+              "name": "updatedAt",
+              "required": true,
+              "runtime_name": "updated_at",
+              "type": "timestamp_utc"
+            },
+            {
+              "name": "deletedAt",
+              "required": false,
+              "runtime_name": "deleted_at",
+              "type": "timestamp_utc|null"
+            },
+            {
+              "name": "deletionReason",
+              "required": false,
+              "runtime_name": "deletion_reason",
+              "type": "string"
+            }
+          ]
+        },
+        "ExerciseAcl": {
+          "required": [
+            "id",
+            "exerciseId",
+            "userId",
+            "organizationId",
+            "grantedByUserId",
+            "grantedAt"
+          ],
+          "runtime_extension_fields": [],
+          "schema_ref": "contracts/schemas/exercises/exercise_acl.schema.json",
+          "sovereign_fields": [
+            {
+              "name": "id",
+              "required": true,
+              "runtime_name": "id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "exerciseId",
+              "required": true,
+              "runtime_name": "exercise_id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "userId",
+              "required": true,
+              "runtime_name": "user_id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "organizationId",
+              "required": true,
+              "runtime_name": "organization_id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "grantedByUserId",
+              "required": true,
+              "runtime_name": "created_by_user_id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "grantedAt",
+              "required": true,
+              "runtime_name": "created_at",
+              "type": "timestamp_utc"
+            }
+          ]
+        },
+        "ExerciseRelation": {
+          "required": [
+            "id",
+            "fromExerciseId",
+            "toExerciseId",
+            "relationType",
+            "createdByUserId",
+            "createdAt"
+          ],
+          "runtime_extension_fields": [],
+          "schema_ref": "contracts/schemas/exercises/exercise_relation.schema.json",
+          "sovereign_fields": [
+            {
+              "name": "id",
+              "required": true,
+              "runtime_name": "id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "fromExerciseId",
+              "required": true,
+              "runtime_name": "from_exercise_id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "toExerciseId",
+              "required": true,
+              "runtime_name": "to_exercise_id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "relationType",
+              "required": true,
+              "runtime_name": "relation_type",
+              "type": "string"
+            },
+            {
+              "name": "notes",
+              "required": false,
+              "runtime_name": "notes",
+              "type": "string"
+            },
+            {
+              "name": "createdByUserId",
+              "required": true,
+              "runtime_name": "created_by_user_id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "createdAt",
+              "required": true,
+              "runtime_name": "created_at",
+              "type": "timestamp_utc"
+            }
+          ]
+        },
+        "ExerciseVersion": {
+          "required": [
+            "id",
+            "exerciseId",
+            "versionNumber",
+            "changeReason",
+            "sessionPhase",
+            "primaryObjective",
+            "ageCategories",
+            "skillLevel",
+            "complexity",
+            "physicalLoad",
+            "minAthletes",
+            "maxAthletes",
+            "estimatedDurationMinutes",
+            "spaceRequired",
+            "createdByUserId",
+            "createdAt"
+          ],
+          "runtime_extension_fields": [],
+          "schema_ref": "contracts/schemas/exercises/exercise_version.schema.json",
+          "sovereign_fields": [
+            {
+              "name": "id",
+              "required": true,
+              "runtime_name": "id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "exerciseId",
+              "required": true,
+              "runtime_name": "exercise_id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "versionNumber",
+              "required": true,
+              "runtime_name": "version_number",
+              "type": "integer"
+            },
+            {
+              "name": "changeReason",
+              "required": true,
+              "runtime_name": "change_reason",
+              "type": "string"
+            },
+            {
+              "name": "name",
+              "required": false,
+              "runtime_name": "name",
+              "type": "string"
+            },
+            {
+              "name": "description",
+              "required": false,
+              "runtime_name": "description",
+              "type": "string"
+            },
+            {
+              "name": "sessionPhase",
+              "required": true,
+              "runtime_name": "session_phase",
+              "type": "string"
+            },
+            {
+              "name": "primaryObjective",
+              "required": true,
+              "runtime_name": "primary_objective",
+              "type": "string"
+            },
+            {
+              "name": "secondaryObjective",
+              "required": false,
+              "runtime_name": "secondary_objective",
+              "type": "string"
+            },
+            {
+              "name": "gamePhases",
+              "required": false,
+              "runtime_name": "game_phases",
+              "type": "string[]"
+            },
+            {
+              "name": "ageCategories",
+              "required": true,
+              "runtime_name": "age_categories",
+              "type": "string[]"
+            },
+            {
+              "name": "skillLevel",
+              "required": true,
+              "runtime_name": "skill_level",
+              "type": "string"
+            },
+            {
+              "name": "complexity",
+              "required": true,
+              "runtime_name": "complexity",
+              "type": "integer"
+            },
+            {
+              "name": "physicalLoad",
+              "required": true,
+              "runtime_name": "physical_load",
+              "type": "string"
+            },
+            {
+              "name": "minAthletes",
+              "required": true,
+              "runtime_name": "min_athletes",
+              "type": "integer"
+            },
+            {
+              "name": "maxAthletes",
+              "required": true,
+              "runtime_name": "max_athletes",
+              "type": "integer"
+            },
+            {
+              "name": "estimatedDurationMinutes",
+              "required": true,
+              "runtime_name": "estimated_duration_minutes",
+              "type": "integer"
+            },
+            {
+              "name": "spaceRequired",
+              "required": true,
+              "runtime_name": "space_required",
+              "type": "string"
+            },
+            {
+              "name": "materials",
+              "required": false,
+              "runtime_name": "materials",
+              "type": "string[]"
+            },
+            {
+              "name": "instructions",
+              "required": false,
+              "runtime_name": "instructions",
+              "type": "string"
+            },
+            {
+              "name": "coachingCues",
+              "required": false,
+              "runtime_name": "coaching_cues",
+              "type": "string"
+            },
+            {
+              "name": "safetyNotes",
+              "required": false,
+              "runtime_name": "safety_notes",
+              "type": "string"
+            },
+            {
+              "name": "thumbnailUrl",
+              "required": false,
+              "runtime_name": "thumbnail_url",
+              "type": "string"
+            },
+            {
+              "name": "createdByUserId",
+              "required": true,
+              "runtime_name": "created_by_user_id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "createdAt",
+              "required": true,
+              "runtime_name": "created_at",
+              "type": "timestamp_utc"
+            }
+          ]
+        }
+      },
+      "entity": "Exercise",
+      "module": "exercises",
+      "openapi_projection_ref": "contracts/openapi/components/schemas/exercises/exercise.yaml",
+      "primary_entity": "Exercise",
+      "primary_schema_ref": "contracts/schemas/exercises/exercise.schema.json",
+      "required": [
+        "id",
+        "scope",
+        "name",
+        "sessionPhase",
+        "primaryObjective",
+        "ageCategories",
+        "skillLevel",
+        "complexity",
+        "physicalLoad",
+        "minAthletes",
+        "maxAthletes",
+        "estimatedDurationMinutes",
+        "spaceRequired",
+        "editorialStatus",
+        "currentVersionId",
+        "currentVersionNumber",
+        "createdByUserId",
+        "createdAt",
+        "updatedAt"
+      ],
+      "runtime_extension_fields": [
+        {
+          "name": "currentVersion",
+          "runtime_name": "current_version",
+          "type": "object"
+        },
+        {
+          "name": "isDeleted",
+          "runtime_name": "is_deleted",
+          "type": "boolean"
+        }
+      ],
+      "sovereign_fields": [
+        {
+          "name": "id",
+          "required": true,
+          "runtime_name": "id",
+          "type": "uuid_v4"
+        },
+        {
+          "name": "organizationId",
+          "required": false,
+          "runtime_name": "organization_id",
+          "type": "uuid_v4|null"
+        },
+        {
+          "name": "scope",
+          "required": true,
+          "runtime_name": "scope",
+          "type": "string"
+        },
+        {
+          "name": "visibilityMode",
+          "required": false,
+          "runtime_name": "visibility_mode",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "required": true,
+          "runtime_name": "name",
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "required": false,
+          "runtime_name": "description",
+          "type": "string"
+        },
+        {
+          "name": "sessionPhase",
+          "required": true,
+          "runtime_name": "session_phase",
+          "type": "string"
+        },
+        {
+          "name": "primaryObjective",
+          "required": true,
+          "runtime_name": "primary_objective",
+          "type": "string"
+        },
+        {
+          "name": "secondaryObjective",
+          "required": false,
+          "runtime_name": "secondary_objective",
+          "type": "string"
+        },
+        {
+          "name": "gamePhases",
+          "required": false,
+          "runtime_name": "game_phases",
+          "type": "string[]"
+        },
+        {
+          "name": "ageCategories",
+          "required": true,
+          "runtime_name": "age_categories",
+          "type": "string[]"
+        },
+        {
+          "name": "skillLevel",
+          "required": true,
+          "runtime_name": "skill_level",
+          "type": "string"
+        },
+        {
+          "name": "complexity",
+          "required": true,
+          "runtime_name": "complexity",
+          "type": "integer"
+        },
+        {
+          "name": "physicalLoad",
+          "required": true,
+          "runtime_name": "physical_load",
+          "type": "string"
+        },
+        {
+          "name": "minAthletes",
+          "required": true,
+          "runtime_name": "min_athletes",
+          "type": "integer"
+        },
+        {
+          "name": "maxAthletes",
+          "required": true,
+          "runtime_name": "max_athletes",
+          "type": "integer"
+        },
+        {
+          "name": "estimatedDurationMinutes",
+          "required": true,
+          "runtime_name": "estimated_duration_minutes",
+          "type": "integer"
+        },
+        {
+          "name": "spaceRequired",
+          "required": true,
+          "runtime_name": "space_required",
+          "type": "string"
+        },
+        {
+          "name": "materials",
+          "required": false,
+          "runtime_name": "materials",
+          "type": "string[]"
+        },
+        {
+          "name": "instructions",
+          "required": false,
+          "runtime_name": "instructions",
+          "type": "string"
+        },
+        {
+          "name": "coachingCues",
+          "required": false,
+          "runtime_name": "coaching_cues",
+          "type": "string"
+        },
+        {
+          "name": "safetyNotes",
+          "required": false,
+          "runtime_name": "safety_notes",
+          "type": "string"
+        },
+        {
+          "name": "thumbnailUrl",
+          "required": false,
+          "runtime_name": "thumbnail_url",
+          "type": "string"
+        },
+        {
+          "name": "editorialStatus",
+          "required": true,
+          "runtime_name": "editorial_status",
+          "type": "string"
+        },
+        {
+          "name": "currentVersionId",
+          "required": true,
+          "runtime_name": "current_version_id",
+          "type": "uuid_v4"
+        },
+        {
+          "name": "currentVersionNumber",
+          "required": true,
+          "runtime_name": "current_version_number",
+          "type": "integer"
+        },
+        {
+          "name": "createdByUserId",
+          "required": true,
+          "runtime_name": "created_by_user_id",
+          "type": "uuid_v4"
+        },
+        {
+          "name": "createdAt",
+          "required": true,
+          "runtime_name": "created_at",
+          "type": "timestamp_utc"
+        },
+        {
+          "name": "updatedAt",
+          "required": true,
+          "runtime_name": "updated_at",
+          "type": "timestamp_utc"
+        },
+        {
+          "name": "deletedAt",
+          "required": false,
+          "runtime_name": "deleted_at",
+          "type": "timestamp_utc|null"
+        },
+        {
+          "name": "deletionReason",
+          "required": false,
+          "runtime_name": "deletion_reason",
+          "type": "string"
+        }
+      ]
+    },
+    "test_obligations": [
+      {
+        "artifact_ref": "../../../../../contracts/schemas/exercises/exercise.schema.json",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "EXB-TO-001",
+        "scope": "sovereign_schema",
+        "verification": "JSON Schema validation via contract gates"
+      },
+      {
+        "artifact_ref": "../../../../../contracts/schemas/exercises/exercise_version.schema.json",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "EXB-TO-002",
+        "scope": "sovereign_schema",
+        "verification": "JSON Schema validation via contract gates"
+      },
+      {
+        "artifact_ref": "../../../../../contracts/schemas/exercises/exercise_relation.schema.json",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "EXB-TO-003",
+        "scope": "sovereign_schema",
+        "verification": "JSON Schema validation via contract gates"
+      },
+      {
+        "artifact_ref": "../../../../../contracts/schemas/exercises/exercise_acl.schema.json",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "EXB-TO-004",
+        "scope": "sovereign_schema",
+        "verification": "JSON Schema validation via contract gates"
+      },
+      {
+        "artifact_ref": "../../../../../contracts/openapi/paths/exercises.yaml",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "EXB-TO-005",
+        "scope": "openapi_contract",
+        "verification": "OpenAPI lint and contract-gate validation"
+      },
+      {
+        "artifact_ref": "../../../../../src/exercises/tests/unit/test_exercises.py",
+        "covers": [
+          "INV-EXB-001",
+          "INV-EXB-002",
+          "INV-EXB-003",
+          "INV-EXB-004",
+          "INV-EXB-013",
+          "INV-EXB-014",
+          "INV-EXB-015",
+          "INV-EXB-016",
+          "DR-EXB-003",
+          "DR-EXB-004",
+          "DR-EXB-009",
+          "DR-EXB-010",
+          "PERM-EXB-002",
+          "PERM-EXB-003",
+          "PERM-EXB-004",
+          "PERM-EXB-007"
+        ],
+        "evidence_refs": [
+          "../../../../../src/exercises/tests/unit/test_exercises.py"
+        ],
+        "id": "EXB-TO-006",
+        "scope": "domain_invariants_and_permissions",
+        "verification": "Unit tests for invariants, RBAC and ACL boundaries"
+      },
+      {
+        "artifact_ref": "../../../../../tests/pipeline_gates/test_exercises_source_graph_integrity.py",
+        "evidence_refs": [
+          "../../../../../tests/pipeline_gates/test_exercises_source_graph_integrity.py"
+        ],
+        "id": "EXB-TO-007",
+        "scope": "source_graph_integrity",
+        "verification": "Pipeline gate enforces parity between graph, docs, contracts and runtime refs"
+      }
+    ]
+  },
+  "validation": {
+    "blocking_consumers": [
+      "docs/hbtrack/modulos/exercises/README.md",
+      "docs/hbtrack/modulos/exercises/DOMAIN_RULES_EXERCISES.md",
+      "docs/hbtrack/modulos/exercises/TEST_MATRIX_EXERCISES.md",
+      "contracts/openapi/paths/exercises.yaml",
+      "contracts/openapi/components/schemas/exercises/exercise.yaml",
+      "contracts/openapi/components/schemas/exercises/exercise_relation.yaml",
+      "contracts/openapi/components/schemas/exercises/exercise_version.yaml",
+      "generated/source_graph/exercises/exercises.bundle.yaml",
+      "generated/source_graph/exercises/exercises.schema_contract_view.yaml",
+      "generated/source_graph/exercises/exercises.openapi_contract_view.yaml",
+      "generated/source_graph/exercises/impact_report.json",
+      "compiled_context/exercises/FT-037.json",
+      "src/exercises/api.py",
+      "src/exercises/schemas.py",
+      "tests/pipeline_gates/test_exercises_source_graph_integrity.py",
+      "tests/pipeline_gates/test_source_graph_compiler_exercises.py",
+      "tests/pipeline_gates/test_context_bundle_exercises.py"
+    ],
+    "expected_output": "compiled_context/exercises/FT-037.json",
+    "required_commands": [
+      "python3 scripts/compile/compile_source_graph.py --module exercises --check --format json",
+      "python3 scripts/compile/compile_context_bundle.py --module exercises --check --format json",
+      "python3 scripts/compile/compile_source_graph.py --module exercises --check --format json",
+      "python3 scripts/compile/compile_context_bundle.py --module exercises --check --format json",
+      "python3 scripts/validate_contracts.py --profile ci",
+      "python3 -m pytest tests/pipeline_gates/test_exercises_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_exercises.py tests/pipeline_gates/test_context_bundle_exercises.py -q"
+    ]
+  }
+}

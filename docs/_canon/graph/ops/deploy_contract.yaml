@@ -1,4 +1,4 @@
-version: "1.1.0"
+version: "1.1.1"
 artifact: "OPS_DEPLOY_CONTRACT"
 status: active
 scope: operations
@@ -55,6 +55,9 @@ env_rendering:
   provider: "github_environment_scoped_secrets_and_vars"
   env_prefix: "HB_ENV_"
   missing_value_policy: "fail_closed"
+  operational_guards:
+    - "JWT_PRIVATE_KEY e JWT_PUBLIC_KEY devem existir nos GitHub secrets e refletir o par ativo no runtime antes de qualquer redeploy."
+    - "Se uma correcao emergencial regenerar o par JWT diretamente no VPS, os secrets do repositorio devem ser sincronizados antes do proximo deploy."
   image_tag_source: "needs.build.outputs.image_tag"
   generated_targets:
     staging:

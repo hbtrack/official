@@ -7,19 +7,44 @@ Valida Bearer token JWT em cada request.
 """
 from __future__ import annotations
 
-import os
 from typing import Any, Optional
 
+from django.http import HttpRequest
+from ninja.errors import AuthenticationError
 from ninja.security import HttpBearer
 
 
-class JWTBearer(HttpBearer):
-    """Autenticação JWT Bearer para Django Ninja."""
+class HTTPBearer(HttpBearer):
+    """Autenticação JWT Bearer para Django Ninja/OpenAPI."""
+
+    error_detail = "Token ausente ou inválido."
+
+    def __call__(self, request: HttpRequest) -> Optional[Any]:
+        auth_value = request.headers.get(self.header)
+        if not auth_value:
+            raise AuthenticationError(message=self.error_detail)
+
+        parts = auth_value.split(" ")
+        if parts[0].lower() != self.openapi_scheme:
+            raise AuthenticationError(message=self.error_detail)
+
+        token = " ".join(parts[1:])
+        payload = self.authenticate(request, token)
+        if payload is None:
+            raise AuthenticationError(message=self.error_detail)
+        return payload
 
     def authenticate(self, request, token: str) -> Optional[dict]:
         from .infrastructure.jwt_adapter import JWTAdapter
         adapter = JWTAdapter()
-        payload = adapter.verify_access_token(token)
+        try:
+            payload = adapter.verify_access_token(token)
+        except Exception:
+            return None
         if payload is None:
             return None
         return payload
+
+
+# Alias retrocompatível para referências antigas no repositório.
+JWTBearer = HTTPBearer

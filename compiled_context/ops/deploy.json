@@ -1,56 +1,26 @@
 {
   "artifact_id": "HBTRACK_OPS_DEPLOY_CONTEXT_BUNDLE",
+  "compiled_at": "2026-04-02T04:59:55Z",
   "compiler": "hbtrack_ops_context_bundle_compiler",
   "compiler_version": "0.1.0",
-  "compiled_at": "2026-04-01T15:30:39Z",
-  "scope": "ops/deploy",
-  "description": "Bundle operacional compilado para tasks de deploy, CI/CD e ambiente. Consumir este bundle antes de qualquer tarefa de roadmap que altere infra, deploy ou CI.",
-  "source_fingerprint": "00b204071a2dc4427b9ef56281673eca0c9567f9754bdfd94ce16276988ae61c",
-  "inputs": [
-    {
-      "relpath": "docs/_canon/graph/ops/deploy_contract.yaml",
-      "sha256": "014c91920fe9d3aaf45b089b1e5b4068321df90c7570061d3dc9d7812fd9c77e"
-    },
-    {
-      "relpath": "docs/_canon/graph/ops/environment_catalog.yaml",
-      "sha256": "9c0dd6a31e2677df25745b24e8623bca1a96ba56c0b1ac5c70e7dcee6eea2555"
-    },
-    {
-      "relpath": "docs/_canon/graph/ops/secrets_catalog.yaml",
-      "sha256": "c1cb6feeeb6296f42532723d37fb08aee0a052058b703092f09613a532a4ced0"
-    },
-    {
-      "relpath": "docs/_canon/graph/ops/github_actions_catalog.yaml",
-      "sha256": "3a6681cb410b0b437a5f732117ab9569955a13633939ed995d5d96a03f122d9a"
-    },
-    {
-      "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "54bb7fe6b4033586b6223502a1236a2ceb65afbd805d909c96f219dcad7bd9aa"
-    },
-    {
-      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
-      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
-    }
-  ],
   "deploy_contract": {
-    "source_ref": "docs/_canon/graph/ops/deploy_contract.yaml",
     "pre_checks": [
       {
+        "command": "python3 scripts/contracts/validate/validate_contracts.py",
         "id": "OPS-DEPLOY-001",
         "name": "validate_contracts",
-        "command": "python3 scripts/contracts/validate/validate_contracts.py",
         "workflow_job": "validate"
       },
       {
+        "command": "pytest -q --ignore=tests/schemathesis --ignore=tests/pipeline_gates --tb=short",
         "id": "OPS-DEPLOY-002",
         "name": "run_tests",
-        "command": "pytest -q --ignore=tests/schemathesis --ignore=tests/pipeline_gates --tb=short",
         "workflow_job": "test"
       },
       {
+        "command": "docker/build-push-action@v5",
         "id": "OPS-DEPLOY-003",
         "name": "build_images",
-        "command": "docker/build-push-action@v5",
         "workflow_job": "build"
       }
     ],
@@ -66,13 +36,22 @@
       "health-check-production"
     ],
     "rollback": {
-      "workflow_mode": "automatic_on_production_health_failure",
       "script_ref": "infra/scripts/rollback.sh",
-      "timeout_target_minutes": 5
-    }
+      "timeout_target_minutes": 5,
+      "workflow_mode": "automatic_on_production_health_failure"
+    },
+    "source_ref": "docs/_canon/graph/ops/deploy_contract.yaml"
+  },
+  "description": "Bundle operacional compilado para tasks de deploy, CI/CD e ambiente. Consumir este bundle antes de qualquer tarefa de roadmap que altere infra, deploy ou CI.",
+  "env_rendering": {
+    "env_prefix": "HB_ENV_",
+    "image_tag_source": "needs.build.outputs.image_tag",
+    "injector_ref": "scripts/deploy/inject_env.sh",
+    "missing_value_policy": "fail_closed",
+    "provider": "github_environment_scoped_secrets_and_vars",
+    "renderer_ref": "scripts/deploy/render_env_from_contract.py"
   },
   "environments": {
-    "source_ref": "docs/_canon/graph/ops/environment_catalog.yaml",
     "development": {
       "mode": "local_workspace",
       "urls": {
@@ -80,35 +59,54 @@
         "openapi": "http://localhost:8000/api/openapi.json"
       }
     },
-    "staging": {
-      "mode": "vps_compose",
-      "deploy_dir": "/opt/hbtrack/staging",
-      "github_environment": "staging",
-      "env_template": "infra/env/.env.staging.template",
-      "urls": {
-        "health": "https://staging.handballtrack.app/health",
-        "openapi": "https://staging.handballtrack.app/api/openapi.json"
-      }
-    },
     "production": {
-      "mode": "vps_compose",
       "deploy_dir": "/opt/hbtrack/production",
-      "github_environment": "production",
       "env_template": "infra/env/.env.production.template",
+      "github_environment": "production",
+      "mode": "vps_compose",
       "urls": {
         "health": "https://api.handballtrack.app/health",
         "openapi": "https://api.handballtrack.app/api/openapi.json"
       }
+    },
+    "source_ref": "docs/_canon/graph/ops/environment_catalog.yaml",
+    "staging": {
+      "deploy_dir": "/opt/hbtrack/staging",
+      "env_template": "infra/env/.env.staging.template",
+      "github_environment": "staging",
+      "mode": "vps_compose",
+      "urls": {
+        "health": "https://staging.handballtrack.app/health",
+        "openapi": "https://staging.handballtrack.app/api/openapi.json"
+      }
     }
   },
-  "env_rendering": {
-    "renderer_ref": "scripts/deploy/render_env_from_contract.py",
-    "injector_ref": "scripts/deploy/inject_env.sh",
-    "provider": "github_environment_scoped_secrets_and_vars",
-    "env_prefix": "HB_ENV_",
-    "missing_value_policy": "fail_closed",
-    "image_tag_source": "needs.build.outputs.image_tag"
-  },
+  "inputs": [
+    {
+      "relpath": "docs/_canon/graph/ops/deploy_contract.yaml",
+      "sha256": "9cee4e6e3b740248bdddd01c41a4e1cc79b97450ce8ef3c3e699d02a150808a4"
+    },
+    {
+      "relpath": "docs/_canon/graph/ops/environment_catalog.yaml",
+      "sha256": "4abd41894c671a534b19d74b950c0d3a3703e17aa82ce69a43f223a91e989d11"
+    },
+    {
+      "relpath": "docs/_canon/graph/ops/secrets_catalog.yaml",
+      "sha256": "1122a8bc8ccd72772100a3cf8311a52e6d788cee2df1810bc81111dff27f0f8b"
+    },
+    {
+      "relpath": "docs/_canon/graph/ops/github_actions_catalog.yaml",
+      "sha256": "3a6681cb410b0b437a5f732117ab9569955a13633939ed995d5d96a03f122d9a"
+    },
+    {
+      "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
+      "sha256": "33e921172e9bacbe2853221dd55b3f3f9c5400b106895e89a2421f326110e308"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    }
+  ],
   "required_secrets": [
     "GITHUB_TOKEN",
     "VPS_HOST_STAGING",
@@ -129,11 +127,13 @@
     "STAGING_URL",
     "PRODUCTION_URL"
   ],
+  "scope": "ops/deploy",
+  "source_fingerprint": "4285752c44467b13366357461705457422b236972e8dfccca6adf869de0fb7e6",
   "validation": {
+    "freshness_gate": "CONTEXT_BUNDLE_FRESHNESS_GATE",
     "required_commands": [
       "python3 scripts/contracts/validate/validate_contracts.py --profile ci",
       "pytest tests/pipeline_gates/test_ops_bundle_required_for_roadmap.py -q"
-    ],
-    "freshness_gate": "CONTEXT_BUNDLE_FRESHNESS_GATE"
+    ]
   }
 }

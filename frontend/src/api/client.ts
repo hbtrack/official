@@ -2,21 +2,40 @@ import type { Middleware } from 'openapi-fetch';
 import createClient from 'openapi-fetch';
 import type { paths } from './schema';
 
-const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+export type HbTrackApiClient = ReturnType<typeof createClient<paths>>;
+export type TokenProvider = () => string | null | undefined;
 
-export const apiClient = createClient<paths>({ baseUrl });
+const defaultBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
-// Middleware: adiciona JWT Bearer em todas as requisições
-const authMiddleware: Middleware = {
-  onRequest({ request }) {
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      request.headers.set('Authorization', `Bearer ${token}`);
-    }
-    return request;
-  },
-};
+function browserTokenProvider() {
+  if (typeof localStorage === 'undefined') {
+    return null;
+  }
+  return localStorage.getItem('access_token');
+}
 
-apiClient.use(authMiddleware);
+function buildAuthMiddleware(tokenProvider: TokenProvider): Middleware {
+  return {
+    onRequest({ request }) {
+      const token = tokenProvider();
+      if (token) {
+        request.headers.set('Authorization', `Bearer ${token}`);
+      }
+      return request;
+    },
+  };
+}
+
+export function createHbTrackApiClient(options: {
+  baseUrl?: string;
+  tokenProvider?: TokenProvider;
+} = {}): HbTrackApiClient {
+  const client = createClient<paths>({ baseUrl: options.baseUrl || defaultBaseUrl });
+  const tokenProvider = options.tokenProvider || browserTokenProvider;
+  client.use(buildAuthMiddleware(tokenProvider));
+  return client;
+}
+
+export const apiClient = createHbTrackApiClient();
 
 export default apiClient;

@@ -101,7 +101,6 @@ class LogoutUseCase:
             return  # idempotente — já inexistente, sem efeito
         if session.revoked_at is None:
             session.revoked_at = datetime.now(tz=timezone.utc)
-            session.validate_invariants()
             self._repo.save_session(session)
         self._repo.revoke_refresh_tokens_for_session(session_id)
 

@@ -1,3 +1,10 @@
+"""Analytics transport schemas composed from the sovereign source graph.
+
+Source graph anchors:
+- docs/hbtrack/modulos/analytics/graph/module_manifest.yaml
+- docs/hbtrack/modulos/analytics/graph/entities.yaml
+"""
+
 from __future__ import annotations
 from typing import List, Optional
 from uuid import UUID

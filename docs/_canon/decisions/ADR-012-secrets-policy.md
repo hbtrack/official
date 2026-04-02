@@ -105,6 +105,7 @@ Nota de compatibilidade:
 2. Armazenamento de desenvolvimento: `private.pem` e `public.pem` em diretório gitignored (`keys/`, listado em `.gitignore`).
 3. Produção: exportar como variável de ambiente via `export JWT_PRIVATE_KEY="$(cat private.pem | base64 -w0)"` ou multiline literal. Nunca commitar os arquivos `.pem`.
 4. Endpoint público: `/.well-known/jwks.json` expõe apenas a chave pública em formato JWK (sem campo privado `d`). Ver ADR-007.
+5. Deploy CI/CD: o mesmo par ativo no runtime deve permanecer sincronizado nos secrets GitHub `JWT_PRIVATE_KEY` e `JWT_PUBLIC_KEY`; correção manual no VPS exige espelhamento antes do próximo deploy.
 
 ### Política de rotação
 
@@ -123,9 +124,10 @@ Contrato operacional de rotação:
 
 Rotação de chave JWT requer:
 1. Gerar novo par de chaves.
-2. Publicar nova chave pública em `/.well-known/jwks.json` (manter chave antiga por 15 minutos para draining de tokens em voo).
-3. Atualizar `JWT_PRIVATE_KEY` / `JWT_PUBLIC_KEY` no ambiente de produção e reiniciar serviço.
-4. Após 15 minutos: remover chave antiga do JWKS.
+2. Atualizar `JWT_PRIVATE_KEY` / `JWT_PUBLIC_KEY` nos secrets GitHub usados pelo deploy e no ambiente runtime afetado.
+3. Publicar nova chave pública em `/.well-known/jwks.json` (manter chave antiga por 15 minutos para draining de tokens em voo).
+4. Reiniciar serviço(s) afetados.
+5. Após 15 minutos: remover chave antiga do JWKS.
 
 ### Auditoria de acesso a secrets
 

@@ -36,6 +36,7 @@ from .application.use_cases import (
 )
 from .domain.rules import (
     AuthError,
+    InvalidRole,
     InsufficientPrivilege,
     LastAdminProtection,
     SessionExpired,
@@ -93,14 +94,14 @@ def _problem(status: int, title: str, detail: str = "") -> dict:
 def auth_login(request, body: LoginIn):
     """POST /auth/login — authLogin. security: []"""
     if not body.email or not body.password:
-        return 400, _problem(400, "Bad Request", "email e password são obrigatórios.")
+        raise HttpError(400, "email e password são obrigatórios.")
     try:
         session, access_token, refresh_token = LoginUseCase(_get_repo()).execute(
             email=body.email,
             password=body.password,
         )
     except ValueError as exc:
-        return 401, _problem(401, "Unauthorized", str(exc))
+        raise HttpError(401, str(exc))
     return 200, {
         "accessToken": access_token,
         "refreshToken": refresh_token,
@@ -170,7 +171,7 @@ def auth_me(request):
 
 @router.get(
     "/sessions",
-    response={200: PaginatedSessionsOut, 401: ProblemOut, 403: ProblemOut, 500: ProblemOut},
+    response={200: PaginatedSessionsOut, 400: ProblemOut, 401: ProblemOut, 403: ProblemOut, 500: ProblemOut},
     operation_id="listActiveSessions",
     summary="List active sessions",
 )
@@ -184,6 +185,11 @@ def list_active_sessions(
     caller_roles = _extract_roles(request)
     if not caller_roles:
         return 401, _problem(401, "Unauthorized", "Token ausente ou inválido.")
+    if pageToken:
+        try:
+            pageToken = str(UUID(pageToken))
+        except (TypeError, ValueError):
+            return 400, _problem(400, "Bad Request", "pageToken deve ser um UUID válido.")
     try:
         sessions, next_token = ListActiveSessionsUseCase(_get_repo()).execute(
             caller_roles=caller_roles,
@@ -278,6 +284,8 @@ def assign_role(request, user_id: UUID, body: AssignRoleIn):
         return 403, _problem(403, "Forbidden", str(exc))
     except LookupError as exc:
         return 404, _problem(404, "Not Found", str(exc))
+    except InvalidRole as exc:
+        return 400, _problem(400, "Bad Request", str(exc))
     except ValueError as exc:
         title = str(exc)
         if "já atribuído" in title:

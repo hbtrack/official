@@ -20,6 +20,8 @@ from exercises.schemas import (
     ExerciseRelationOut, AddRelationIn, ExerciseACLEntryOut, AddACLEntryIn, ErrorOut,
 )
 
+# Source graph authority: docs/hbtrack/modulos/exercises/graph/endpoints.yaml
+# Legacy route shapes still coexist with the sovereign contract during B10-001 rollout.
 router = Router()
 _repo = ExerciseRepository()
 

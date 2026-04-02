@@ -911,7 +911,9 @@ gates:
     description: >
       Verifica se o provider satisfaz os consumer contracts publicados no Pact Broker.
       SKIP_NOT_APPLICABLE quando env var PACT_BROKER_BASE_URL está ausente (broker não
-      configurado) ou quando contracts/consumers/ está vazia (sem consumers registrados).
+      configurado), quando contracts/consumers/ está vazia (sem consumers registrados)
+      ou quando o primeiro consumer contract de `hbtrack-app` ainda não foi publicado
+      no broker (ADR-025).
       PASS quando todos os consumer contracts são satisfeitos pelo provider.
       FAIL (BLOCKED_PACT_MISSING) quando algum consumer contract não é satisfeito.
       Torna-se bloqueante após o primeiro consumer contract ser publicado no broker.

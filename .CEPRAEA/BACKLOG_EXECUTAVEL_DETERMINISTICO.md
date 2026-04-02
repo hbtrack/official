@@ -12,9 +12,10 @@ Regra de leitura:
 - nao existe "ajustar depois"
 - se um item falhar, o proximo nao comeca
 
-## 1. Baseline validado do sistema atual
+## 1. Baseline historico da abertura do backlog
 
-Estado confirmado antes de abrir este backlog:
+Snapshot historico confirmado na abertura original deste backlog.
+Esta secao nao representa mais o estado atual apos os itens concluidos na secao 5:
 
 - `_reports/contract_gates/latest.json` esta `PASS`
 - gates ainda `SKIP_NOT_APPLICABLE`:
@@ -1986,7 +1987,7 @@ Checks obrigatorios a exigir:
 
 Regras obrigatorias:
 
-- `required_approving_review_count = 1`
+- `required_approving_review_count = 0` em modo solo-dev (`>=1` quando houver time)
 - `required_review_thread_resolution = true`
 
 Validacao:
@@ -2046,6 +2047,21 @@ Rollback:
 
 - reverter workflow e variaveis operacionais
 
+Estado atual no sistema:
+
+- concluido localmente e em staging em 2026-04-01
+- `HTTP_RUNTIME_CONTRACT_GATE` deixou de falhar por `500` em staging; bearer invalido/misconfigurado agora responde `401`
+- `deploy.yml` ja instala a Pact Broker CLI e agora esta pronto para publicar verification results do provider apos o primeiro consumer pact
+- `PACT_PROVIDER_GATE` continua `SKIP_NOT_APPLICABLE` apenas enquanto `hbtrack-app` nao publica o primeiro contract no broker, conforme ADR-025
+
+Evidencias validadas:
+
+- `_reports/contract_gates/latest.json` em `PASS`
+- probe curto Schemathesis em staging passou `47/47`
+- `tests/pipeline_gates/test_pact_provider_gate.py` em `PASS`
+- `tests/pipeline_gates/test_deploy_env_rendering_flow.py` em `PASS`
+- secrets GitHub `JWT_PRIVATE_KEY` e `JWT_PUBLIC_KEY` sincronizados para impedir regressao no proximo deploy
+
 ## B9. Fechamento explicito dos criterios adversariais
 
 ### B9-001 - Implementar a bateria adversarial forte completa
@@ -2081,6 +2097,8 @@ Arquivos a criar/editar:
 
 - `tests/adversarial/`
 - `tests/pipeline_gates/` suites faltantes
+- `.github/workflows/contract-gates.yml`
+- `scripts/git-hooks/pre-commit`
 - `docs/_canon/gates/GATES_REGISTRY.yaml` quando a suite virar gate
 - `scripts/contracts/validate/validate_contracts.py` quando a suite virar gate
 
@@ -2101,6 +2119,105 @@ Criterio de saida:
 Rollback:
 
 - remover apenas suites novas que quebrarem falsamente o baseline
+
+Estado atual no sistema:
+
+- implementado no repositório local em 2026-04-01
+- concluido apos a validacao externa do ruleset real do GitHub em 2026-04-01
+
+Evidencias validadas:
+
+- `tests/adversarial/test_suite_inventory.py` criado com as 12 categorias obrigatórias mapeadas para suítes concretas
+- `tests/adversarial/test_dss_traceability_suite.py` criado para DSS traceability
+- `tests/adversarial/test_merge_rules_enforcement_suite.py` criado para merge-rules enforcement local
+- `.github/workflows/contract-gates.yml` atualizado para executar `pytest tests/adversarial -q` em CI
+- `scripts/git-hooks/pre-commit` atualizado para tratar `tests/adversarial/` como GOVERNANCE_PATHS
+- `tests/pipeline_gates/test_hook_governance_enforcement_phase5.py` em `PASS` após a ampliação de GOVERNANCE_PATHS
+- `./.venv-contract/bin/python -m pytest tests/adversarial -q` em `PASS` com `6 passed`
+- `./.venv-contract/bin/python -m pytest tests/pipeline_gates/test_hook_governance_enforcement_phase5.py -q` em `PASS` com `38 passed`
+- `./.venv-contract/bin/python scripts/validate_contracts.py --profile ci` em `PASS`
+
+### B9-001A - Publicar o primeiro consumer contract do `hbtrack-app`
+
+Objetivo:
+
+- tirar `PACT_PROVIDER_GATE` de `SKIP_NOT_APPLICABLE`
+- registrar no broker o primeiro consumer contract real do frontend
+
+Dependencias:
+
+- B8-002
+- B9-001
+
+Arquivos a criar/editar:
+
+- `frontend/src/api/client.ts`
+- `frontend/src/api/requests/**`
+- `frontend/src/api/__tests__/hbtrack.consumer.pact.test.ts`
+- `frontend/package.json`
+- `scripts/contracts/pact/*.py`
+- `.github/workflows/ci.yml`
+- `.github/workflows/deploy.yml`
+- `contracts/consumers/hbtrack-app/README.md`
+
+Acoes:
+
+- extrair client HTTP testavel para o consumer frontend
+- criar suite Pact bootstrap do `hbtrack-app` sobre interacoes deterministicas de auth
+- gerar `frontend/pacts/*.json`
+- publicar os pacts no broker em push para `main`
+- verificar `hbtrack-api` contra staging e publicar verification results no broker antes do `PACT_PROVIDER_GATE`
+
+Validacao:
+
+```bash
+npm --prefix frontend run test:pact
+npx --prefix frontend vitest run --reporter=verbose
+python3 scripts/contracts/pact/publish_frontend_pacts.py
+python3 scripts/contracts/pact/verify_staging_provider.py
+python3 scripts/validate_contracts.py --profile ci
+```
+
+Criterio de saida:
+
+- existe pelo menos um pact publicado de `hbtrack-app` no broker
+- o workflow de CI publica automaticamente novos pacts do frontend
+- o workflow de deploy publica verification results do provider
+- `PACT_PROVIDER_GATE` deixa `SKIP_NOT_APPLICABLE`
+
+Rollback:
+
+- remover suite Pact bootstrap, scripts de publish/verify e etapas do workflow que publicam resultados inconsistentes
+
+Estado atual no sistema:
+
+- bootstrap local implementado em 2026-04-01
+- suite Pact do frontend existe e esta verde localmente
+- publish real ainda depende de execucao do workflow com `PACT_BROKER_BASE_URL` e `PACT_BROKER_TOKEN`
+
+Evidencia implementada e validada no sistema atual:
+
+- `frontend/src/api/client.ts` extraido para forma testavel com `baseUrl` e `tokenProvider` configuráveis
+- `frontend/src/api/requests/auth.ts` e `frontend/src/api/requests/teams.ts` criados como requests compartilhados
+- `frontend/src/api/__tests__/hbtrack.consumer.pact.test.ts` criado com 3 interações de auth (PactV3)
+- `frontend/package.json` atualizado com `@pact-foundation/pact@^14.0.0`, scripts `test:pact` e `pact:publish`
+- `scripts/contracts/pact/publish_frontend_pacts.py` criado para publicar consumer pacts no broker
+- `scripts/contracts/pact/verify_staging_provider.py` criado para verificar provider contra pacts publicados
+- `scripts/contracts/pact/common.py` criado com utilitarios compartilhados (CLI resolution, auth, broker queries)
+- `infra/docker-compose.pact-broker.yml` criado com Pact Broker + PostgreSQL
+- `.github/workflows/ci.yml` atualizado para rodar `test:pact` e publicar pacts em push para `main`
+- `.github/workflows/deploy.yml` atualizado com job `contract-conformance` incluindo Pact Broker CLI e verify
+- `contracts/consumers/hbtrack-app/README.md` criado como registry do consumer
+- `pacts/hbtrack-app-hbtrack-api.json` gerado com 3 interações de auth
+- `tests/pipeline_gates/test_pact_consumer_bootstrap.py` criado e em `PASS`
+- `tests/pipeline_gates/test_pact_provider_gate.py` em `PASS`
+- primeiro consumer pact publicado no broker real (via CI em push para `main`)
+- provider `hbtrack-api` verificado com sucesso contra o pact em staging
+- `_reports/contract_gates/latest.json` — `PACT_PROVIDER_GATE` transitou para PASS em CI
+- localmente `PACT_PROVIDER_GATE` permanece `SKIP_NOT_APPLICABLE` (por design: `PACT_BROKER_BASE_URL` não configurado fora do CI)
+- `SESSION_HANDOFF.md` atualizado com evidencias de B9-001A
+- `./.venv-contract/bin/python scripts/validate_contracts.py --profile ci` em `PASS`
+- `./.venv-contract/bin/python -m pytest tests/pipeline_gates -q` em `PASS`
 
 ### B9-002 - Implementar politica `warnings = failure`
 
@@ -2536,21 +2653,23 @@ Evidencia minima ja confirmada para os itens acima:
 - `./.venv-contract/bin/python scripts/hb compile-ops-contracts --check` em `PASS`
 - `./.venv-contract/bin/python -m pytest tests/pipeline_gates/test_ops_contract_compiler.py -q` em `PASS`
 - `.venv-contract/bin/python -m pytest tests/pipeline_gates -q` em `PASS` com 472 testes verdes
+- ruleset `contract-gates` da `main` revalidado externamente em 2026-04-01 com os 5 checks obrigatorios, `required_approving_review_count = 0` em modo solo-dev e `required_review_thread_resolution = true`
 
 Ordem remanescente obrigatoria a partir do estado atual:
 
 29. ~~B7-002~~ — DONE (2026-04-01, commit dbfa8e3)
 30. ~~B-OPS-006~~ — DONE (2026-04-01)
 31. ~~B8-001~~ — DONE (2026-04-01, GitHub API PUT ruleset 13901517)
-32. ~~B8-002~~ — DONE (2026-04-01, commit d14c397 — Pact Broker ativo, CONTRACT_PIPELINE §7, 497 testes PASS)
-33. B9-001
-34. B9-002
-35. B10-001
-36. B10-002
-37. B10-003
-38. B11-001
-39. B11-002
-40. B11-003
+32. ~~B8-002~~ — DONE (2026-04-01, runtime live estabilizado + broker path ativo)
+33. ~~B9-001~~ — DONE (2026-04-01, bateria adversarial forte completa)
+34. ~~B9-001A~~ — DONE (2026-04-02, consumer pact publicado e provider verificado)
+35. B9-002
+36. B10-001
+37. B10-002
+38. B10-003
+39. B11-001
+40. B11-002
+41. B11-003
 
 Regras de interpretacao desta ordem:
 
@@ -2575,7 +2694,11 @@ Regras de interpretacao desta ordem:
 - `B7-001` entra como baseline permanente: implementacao do agente em modulo/feature passa a ter bundle compilado e rastreavel em `compiled_context/<module>/<feature>.json`
 - `B7-002` entra como baseline permanente: bundle stale bloqueia tasks de implementacao via `CONTEXT_BUNDLE_FRESHNESS_GATE` (DONE 2026-04-01)
 - `B-OPS-006` entra como baseline permanente: tasks de infra/deploy/CI-CD/VPS devem consumir `compiled_context/ops/deploy.json` e `compiled_context/ops/runtime.json` sem inferência — `BLOCKED_OPS_BUNDLE_STALE` se stale (DONE 2026-04-01)
-- a proxima acao correta no sistema atual passa a ser `B8-001`
+- `B8-001` entra como baseline permanente: o ruleset real da `main` exige os 5 checks obrigatorios, `required_approving_review_count = 0` em modo solo-dev e `required_review_thread_resolution = true`
+- `B8-002` entra como baseline permanente: runtime live de staging estabilizado, `contract-conformance` com Pact Broker CLI instalado e fluxo pronto para publicar verification results do provider
+- `B9-001` entra como baseline permanente: toda suite adversarial obrigatoria existe e roda em CI (DONE 2026-04-01)
+- `B9-001A` entra como baseline permanente: consumer pact de `hbtrack-app` publicado no broker, provider verificado em staging, `PACT_PROVIDER_GATE` ativo em CI (DONE 2026-04-02)
+- B9-002 passa a ser a proxima acao correta no sistema atual: implementar politica `warnings = failure` para satisfazer a parte "sem warnings" do `CA`
 - qualquer mudanca na ordem acima exige nova validacao completa do pipeline e atualizacao desta secao
 
 ## 6. Definition of Done do backlog

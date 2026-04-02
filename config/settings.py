@@ -29,7 +29,13 @@ SECRET_KEY = os.environ.get(
 
 DEBUG = os.environ.get("DEBUG", "true").lower() == "true"
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
+_allowed_hosts_raw = [
+    host.strip()
+    for host in os.environ.get("ALLOWED_HOSTS", "*").split(",")
+    if host.strip()
+]
+_healthcheck_hosts = ["localhost", "127.0.0.1", "[::1]"]
+ALLOWED_HOSTS = list(dict.fromkeys(_allowed_hosts_raw + _healthcheck_hosts))
 
 INSTALLED_APPS = [
     # Django core

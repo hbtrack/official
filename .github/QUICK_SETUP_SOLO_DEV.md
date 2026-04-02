@@ -24,7 +24,12 @@ Habilitar enforcement server-side “sem bypass” para contratos/SSOT em cenár
 3) Regras mínimas:
    - ✅ Require a pull request before merging (**approvals: 0**)
    - ✅ Require status checks to pass:
-     - `Contract Gates / Validate Contract Gates` (pull_request)
+     - `Validate Contract Gates`
+     - `Governance Tests`
+     - `Architecture Drift Check`
+     - `CI / Validate Contracts`
+     - `CI / Tests`
+   - ✅ Require conversation resolution before merging
    - ✅ Require branches to be up to date
    - ✅ Block force pushes
    - ✅ (Opcional) Block deletions

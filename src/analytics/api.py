@@ -1,3 +1,11 @@
+"""Analytics HTTP runtime surface.
+
+Source graph anchors:
+- docs/hbtrack/modulos/analytics/graph/module_manifest.yaml
+- docs/hbtrack/modulos/analytics/graph/endpoints.yaml
+- docs/hbtrack/modulos/analytics/graph/errors.yaml
+"""
+
 from __future__ import annotations
 from typing import Optional
 from uuid import UUID

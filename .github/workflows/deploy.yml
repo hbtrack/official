@@ -318,6 +318,7 @@ jobs:
       # PACT_BROKER_BASE_URL ativa PACT_PROVIDER_GATE — configura como secret após provisionar
       # o Pact Broker na VPS (infra/docker-compose.pact-broker.yml, ADR-025)
       PACT_BROKER_BASE_URL: ${{ vars.PACT_BROKER_BASE_URL }}
+      PACT_BROKER_USERNAME: hbtrack
       PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
     steps:
       - uses: actions/checkout@v4
@@ -345,6 +346,17 @@ jobs:
         run: npm ci
       - name: Install Python dependencies
         run: pip install -r requirements-dev.txt
+      - name: Install Pact Broker CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/pact-foundation/pact-ruby-standalone/master/install.sh | env PACT_CLI_VERSION=v2.4.26 bash
+          echo "$PWD/pact/bin" >> "$GITHUB_PATH"
+          ./pact/bin/pact-broker --version
+      - name: Verify staging provider against published consumer contracts
+        env:
+          PACT_PROVIDER_NAME: hbtrack-api
+          PROVIDER_APP_VERSION: ${{ github.sha }}
+          PROVIDER_VERSION_BRANCH: ${{ github.ref_name }}
+        run: python3 scripts/contracts/pact/verify_staging_provider.py
       - name: Run HTTP_RUNTIME_CONTRACT_GATE e PACT_PROVIDER_GATE
         run: python3 scripts/contracts/validate/validate_contracts.py
 

@@ -1,16 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import apiClient from '../client';
+import { listTeamsRequest } from '../requests/teams';
 
 export function useTeams(params?: { organizationId?: string }) {
   return useQuery({
     queryKey: ['teams', params],
-    queryFn: async () => {
-      const { data, error } = await apiClient.GET('/teams', {
-        params: { query: params as Record<string, string | undefined> },
-      });
-      if (error) throw error;
-      return data!;
-    },
+    queryFn: async () => listTeamsRequest(apiClient, params),
   });
 }
 
@@ -78,4 +73,3 @@ export function useRemoveAthleteFromTeam(teamId: string) {
     },
   });
 }
-

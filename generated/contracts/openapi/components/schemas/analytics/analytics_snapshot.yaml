@@ -1,2 +1,3 @@
 # HTTP projection is semantically identical to the sovereign domain shape.
+# Source graph authority: docs/hbtrack/modulos/analytics/graph/entities.yaml
 $ref: "../../../../schemas/analytics/analytics_snapshot.schema.json"

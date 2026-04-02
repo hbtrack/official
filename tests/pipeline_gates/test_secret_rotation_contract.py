@@ -43,6 +43,31 @@ def test_rotate_keys_contract_script_reports_catalogued_runtime_secret():
     assert payload["rotation_command_ref"] == "scripts/ops/rotate_keys.sh"
 
 
+def test_rotate_keys_contract_script_reports_catalogued_runtime_secret_for_public_key():
+    result = subprocess.run(
+        [
+            "bash",
+            str(ROOT / "scripts" / "ops" / "rotate_keys.sh"),
+            "--secret",
+            "JWT_PUBLIC_KEY",
+            "--environment",
+            "production",
+            "--format",
+            "json",
+        ],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    payload = json.loads(result.stdout)
+    assert payload["status"] == "PASS"
+    assert payload["secret"] == "JWT_PUBLIC_KEY"
+    assert payload["rotation_command_ref"] == "scripts/ops/rotate_keys.sh"
+
+
 def test_secret_rotation_contract_fails_when_runtime_secret_lacks_rotation_command(monkeypatch):
     payload, checked, violations = gates._load_ops_operational_bundle(ROOT)
     assert not violations

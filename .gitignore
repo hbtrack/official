@@ -36,6 +36,12 @@ temp/
 # Node/Frontend dependencies
 node_modules/
 Hb Track - Fronted/node_modules/
+frontend/pacts/
+
+# Pact tooling (Ruby standalone bundle — local only, not versioned)
+pact/
+# Pact generated contracts (published to broker, not versioned — ADR-025)
+pacts/
 
 # Environment and secrets
 .env

@@ -567,6 +567,18 @@ class TestAddTeamToSeasonUseCase:
         ))
         assert t2 in updated.team_ids
 
+    def test_missing_season_raises_not_found(self):
+        repo = MagicMock()
+        repo.get_by_id.return_value = None
+        uc = AddTeamToSeasonUseCase(repo)
+
+        with pytest.raises(SeasonNotFound, match="não encontrada"):
+            uc.execute(AddTeamToSeasonInput(
+                actor_role=RoleLabel.ADMIN,
+                season_id=uuid.uuid4(),
+                team_id=uuid.uuid4(),
+            ))
+
 
 # ===========================================================================
 # APPLICATION — RemoveTeamFromSeasonUseCase

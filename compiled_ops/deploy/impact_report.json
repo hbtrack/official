@@ -10,11 +10,11 @@
   "inputs": [
     {
       "relpath": "docs/_canon/graph/ops/environment_catalog.yaml",
-      "sha256": "9c0dd6a31e2677df25745b24e8623bca1a96ba56c0b1ac5c70e7dcee6eea2555"
+      "sha256": "4abd41894c671a534b19d74b950c0d3a3703e17aa82ce69a43f223a91e989d11"
     },
     {
       "relpath": "docs/_canon/graph/ops/secrets_catalog.yaml",
-      "sha256": "c1cb6feeeb6296f42532723d37fb08aee0a052058b703092f09613a532a4ced0"
+      "sha256": "1122a8bc8ccd72772100a3cf8311a52e6d788cee2df1810bc81111dff27f0f8b"
     },
     {
       "relpath": "docs/_canon/graph/ops/service_topology.yaml",
@@ -22,7 +22,7 @@
     },
     {
       "relpath": "docs/_canon/graph/ops/deploy_contract.yaml",
-      "sha256": "014c91920fe9d3aaf45b089b1e5b4068321df90c7570061d3dc9d7812fd9c77e"
+      "sha256": "9cee4e6e3b740248bdddd01c41a4e1cc79b97450ce8ef3c3e699d02a150808a4"
     },
     {
       "relpath": "docs/_canon/graph/ops/runtime_endpoints.yaml",
@@ -57,7 +57,7 @@
     "python3 scripts/validate_contracts.py --profile ci"
   ],
   "scope": "operations",
-  "source_fingerprint": "41315c9a91625d61b0c48a5d8720305b13766be817b29a0791569258a1c8cd7d",
+  "source_fingerprint": "0b4a8736b5d9840387ccd5afd188d39421cc0d51d7df65c9a2efea7dd20397d6",
   "template_parity_hints": [
     {
       "environment": "staging",

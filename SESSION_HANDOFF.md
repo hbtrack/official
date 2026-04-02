@@ -1,5 +1,5 @@
 ---
-data_ultima_sessao: "2026-04-01"
+data_ultima_sessao: "2026-04-02"
 branch_ativo: main
 modo_operacao: CDD
 ci_status: UNKNOWN
@@ -7,49 +7,46 @@ modulo_foco: reports
 fase_roadmap: 5
 task_type: generate_code
 boot_profile_id: contract_execution
-task_id: B8-002-pact-live-validation
+task_id: B9-001A-pact-consumer-bootstrap
 resultado: DONE
-proxima_acao_permitida: "Executar B9-001 — integrar Pact nos testes de consumer existentes e publicar primeira versão do pact."
+proxima_acao_permitida: "Iniciar B10-001: migrar source graph para todos os modulos."
 bloqueios_ativos: []
 evidence_paths:
   - "_reports/contract_gates/latest.json"
-  - "compiled_context/ops/deploy.json"
-  - "compiled_context/ops/runtime.json"
-  - "tests/pipeline_gates/test_ops_bundle_required_for_roadmap.py"
-  - "infra/docker-compose.pact-broker.yml"
+  - "frontend/src/api/__tests__/hbtrack.consumer.pact.test.ts"
+  - "scripts/contracts/pact/publish_frontend_pacts.py"
+  - "scripts/contracts/pact/verify_staging_provider.py"
+  - "tests/pipeline_gates/test_pact_consumer_bootstrap.py"
 ---
 # SESSION HANDOFF — HB TRACK
 > Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`.
 
 ## Estado Geral
-**Data:** 2026-04-01 | **Branch:** main | **CI:** UNKNOWN
+**Data:** 2026-04-02 | **Branch:** main | **CI:** UNKNOWN
 **Modo:** CDD | **task_type:** generate_code | **boot_profile:** contract_execution
-**Módulo foco:** reports | **Fase ROADMAP:** 5 | **task_id:** B8-002-pact-live-validation | **Resultado:** DONE
+**Módulo foco:** reports | **Fase ROADMAP:** 5 | **task_id:** B9-001A-pact-consumer-bootstrap | **Resultado:** DONE
 
-## O que foi feito (sessão atual — B8-002)
-- `B7-002`: `CONTEXT_BUNDLE_FRESHNESS_GATE` implementado — commit `dbfa8e3`. DONE.
-- `B-OPS-006`: bundles operacionais criados — commit `93c9bc3`. DONE.
-- `B8-001`: ruleset hardening GitHub (ID 13901517) — commit `9abae17`. DONE.
-- `B8-002` — **DONE** — commit `d14c397`:
-  - `infra/docker-compose.pact-broker.yml` criado (Pact Broker auto-hosted VPS port 9292)
-  - `.github/workflows/deploy.yml` — job `contract-conformance` com `PACT_BROKER_BASE_URL` + `PACT_BROKER_TOKEN`
-  - `docs/_canon/CONTRACT_PIPELINE.md` §7 — HTTP_RUNTIME_CONTRACT_GATE e PACT_PROVIDER_GATE antes de `released`
-  - `environment_catalog.yaml` v1.3.0 — CI-only vars catalogadas
-  - `secrets_catalog.yaml` — PACT_BROKER_TOKEN.workflows referencia deploy.yml
-  - `service_topology.yaml` — pact_broker como external_same_vps
-  - 9 sync rules propagadas (18 blocking_consumers), todos PASS
-  - `validate_contracts.py --profile ci`: STATUS PASS (todos os gates)
-  - 497 testes pipeline_gates + 94 survival suite + 27 cross-validation = **PASS**
-  - Pre-commit hook Gov 1/2/3 aprovados (commit `d14c397`)
+## O que foi feito (sessão atual — B9-001A)
+- client HTTP do frontend extraído para forma testável em `frontend/src/api/client.ts`
+- requests compartilhados de auth e teams criados em `frontend/src/api/requests/`
+- primeira suíte Pact bootstrap do consumer `hbtrack-app` criada em `frontend/src/api/__tests__/hbtrack.consumer.pact.test.ts`
+- scripts de publish e verify criados em `scripts/contracts/pact/`
+- `ci.yml` atualizado para rodar Pact no frontend e publicar pacts em push para `main`
+- `deploy.yml` atualizado para verificar `hbtrack-api` contra o broker antes do `PACT_PROVIDER_GATE`
+- primeiro consumer pact de `hbtrack-app` foi publicado no broker real
+- o provider `hbtrack-api` foi verificado com sucesso contra esse pact no staging
+- o `PACT_PROVIDER_GATE` e o `HTTP_RUNTIME_CONTRACT_GATE` passaram no último full pipeline
+- o relatório canônico `_reports/contract_gates/latest.json` fechou em `PASS`
 
 ## Evidências
-- `infra/docker-compose.pact-broker.yml` — Pact Broker compose file
-- `compiled_context/ops/deploy.json` + `runtime.json` — bundles sincronizados
 - `_reports/contract_gates/latest.json` — gate report
-- `tests/pipeline_gates/test_ops_bundle_required_for_roadmap.py` — teste de bundle obrigatório
+- `frontend/src/api/__tests__/hbtrack.consumer.pact.test.ts` — suite Pact bootstrap
+- `scripts/contracts/pact/publish_frontend_pacts.py` — publish do consumer pact
+- `scripts/contracts/pact/verify_staging_provider.py` — verify/publish do provider
+- `tests/pipeline_gates/test_pact_consumer_bootstrap.py` — testes de workflow e scripts
 
 ## Próxima ação permitida
-Executar B9-001 — integrar Pact nos testes de consumer existentes e publicar primeira versão do pact.
+Iniciar `B10-001`: migrar source graph para todos os módulos.
 
 ## Bloqueios ativos
-Nenhum.
+- Nenhum.

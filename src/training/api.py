@@ -123,6 +123,16 @@ def _get_actor_id(request) -> uuid.UUID:
     raise HttpError(401, "Unauthenticated")
 
 
+def _get_optional_uuid_query(request, param_name: str) -> Optional[uuid.UUID]:
+    raw_value = request.GET.get(param_name)
+    if raw_value in (None, ""):
+        return None
+    try:
+        return uuid.UUID(str(raw_value))
+    except (AttributeError, TypeError, ValueError) as exc:
+        raise HttpError(400, f"{param_name} deve ser um UUID válido.") from exc
+
+
 # ---------------------------------------------------------------------------
 # Helpers de conversão
 # ---------------------------------------------------------------------------
@@ -200,6 +210,9 @@ def list_training_sessions(
     repo = TrainingSessionRepository()
     actor_role = _get_actor_role(request)
     actor_id = _get_actor_id(request)
+    organization_id = _get_optional_uuid_query(request, "organization_id")
+    team_id = _get_optional_uuid_query(request, "team_id")
+    season_id = _get_optional_uuid_query(request, "season_id")
     try:
         result = ListTrainingSessionsUseCase(repo).execute(
             ListTrainingSessionsInput(
@@ -215,6 +228,8 @@ def list_training_sessions(
         )
     except InsufficientPrivilege as exc:
         raise HttpError(403, str(exc))
+    except (DataError, ValueError) as exc:
+        raise HttpError(400, str(exc))
     return 200, TrainingSessionListOut(
         items=[_session_to_out(s) for s in result.items],
         next_page_token=result.next_page_token,
@@ -734,10 +749,14 @@ def create_session_objective(request, id: uuid.UUID, body: CreateSessionObjectiv
 # Mesocycles
 # ---------------------------------------------------------------------------
 
-@router.get("/mesocycles", response={200: MesocycleListOut, 403: ErrorOut})
+@router.get("/mesocycles", response={200: MesocycleListOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut})
 def list_mesocycles(request, organization_id: Optional[uuid.UUID] = None):
     repo = MesocycleRepository()
-    items = repo.list(organization_id=organization_id)
+    organization_id = _get_optional_uuid_query(request, "organization_id")
+    try:
+        items = repo.list(organization_id=organization_id)
+    except (DataError, ValueError) as exc:
+        raise HttpError(400, str(exc))
     return 200, MesocycleListOut(items=[
         MesocycleOut(
             id=m.id,
@@ -818,14 +837,19 @@ def get_mesocycle(request, id: uuid.UUID):
 # Microcycles
 # ---------------------------------------------------------------------------
 
-@router.get("/microcycles", response={200: MicrocycleListOut, 403: ErrorOut})
+@router.get("/microcycles", response={200: MicrocycleListOut, 400: ErrorOut, 401: ErrorOut, 403: ErrorOut})
 def list_microcycles(
     request,
     organization_id: Optional[uuid.UUID] = None,
     mesocycle_id: Optional[uuid.UUID] = None,
 ):
     repo = MicrocycleRepository()
-    items = repo.list(organization_id=organization_id, mesocycle_id=mesocycle_id)
+    organization_id = _get_optional_uuid_query(request, "organization_id")
+    mesocycle_id = _get_optional_uuid_query(request, "mesocycle_id")
+    try:
+        items = repo.list(organization_id=organization_id, mesocycle_id=mesocycle_id)
+    except (DataError, ValueError) as exc:
+        raise HttpError(400, str(exc))
     return 200, MicrocycleListOut(items=[
         MicrocycleOut(
             id=m.id,

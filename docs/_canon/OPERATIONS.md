@@ -184,6 +184,7 @@ Segredos operacionais ativos no sistema atual:
 Regra:
 - qualquer rotacao ou auditoria desses segredos deve partir de `docs/_canon/graph/ops/secrets_catalog.yaml`
 - a entrada operacional deterministica e `scripts/ops/rotate_keys.sh`
+- se o par JWT for corrigido manualmente no runtime (staging/producao), os secrets GitHub `JWT_PRIVATE_KEY` e `JWT_PUBLIC_KEY` devem ser sincronizados antes do proximo deploy
 
 ### 8.1 — DNS (GoDaddy — handballtrack.app)
 

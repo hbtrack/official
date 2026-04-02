@@ -1,6 +1,6 @@
 ---
 doc_type: canon
-version: "1.0.1"
+version: "1.0.2"
 last_reviewed: "2026-04-01"
 status: active
 # B8-002: HTTP_RUNTIME_CONTRACT_GATE e PACT_PROVIDER_GATE declarados como obrigatórios
@@ -250,6 +250,14 @@ A ordem canônica é:
 	12.	ASYNCAPI_VALIDATION_GATE
 	13.	ARAZZO_VALIDATION_GATE
 	14.	UI_DOC_VALIDATION_GATE
+	15B.	FEATURE_READINESS_GATE
+	15C.	ADVERSARIAL_ANALYSIS_GATE
+	15D.	VERSIONING_POLICY_GATE
+	15E.	PACT_PROVIDER_GATE
+	15F.	CODE_ARCHITECTURE_GATE
+	15G.	DEPLOY_READINESS_GATE
+	15H.	DATA_MIGRATION_GATE
+	15I.	MONITORING_POLICY_GATE
 	15.	DERIVED_DRIFT_GATE
 	16.	READINESS_SUMMARY_GATE
 
@@ -259,6 +267,14 @@ Os seguintes gates podem executar em paralelo somente após sucesso de todos os 
 	•	ASYNCAPI_VALIDATION_GATE
 	•	ARAZZO_VALIDATION_GATE
 	•	UI_DOC_VALIDATION_GATE
+	•	FEATURE_READINESS_GATE
+	•	ADVERSARIAL_ANALYSIS_GATE
+	•	VERSIONING_POLICY_GATE
+	•	PACT_PROVIDER_GATE
+	•	CODE_ARCHITECTURE_GATE
+	•	DEPLOY_READINESS_GATE
+	•	DATA_MIGRATION_GATE
+	•	MONITORING_POLICY_GATE
 
 5.2 Gates não paralelizáveis
 
@@ -1584,6 +1600,47 @@ Evidência
 
 Dependências
 	•	REQUIRED_ARTIFACT_PRESENCE_GATE
+
+⸻
+
+9.14B Gates complementares de readiness e operações
+
+Após a validação das superfícies contratuais principais, o pipeline mantém gates
+de auditoria contínua que não substituem os gates bloqueantes centrais, mas
+registram readiness operacional e de governança antes de promoções posteriores.
+
+FEATURE_READINESS_GATE
+	•	inventaria `docs/_canon/FEATURE_REGISTRY.yaml`
+	•	`SKIP_NOT_APPLICABLE` quando o registry ainda não existir
+
+ADVERSARIAL_ANALYSIS_GATE
+	•	verifica relatórios em `_reports/adversarial/`
+	•	`SKIP_NOT_APPLICABLE` quando não houver relatórios publicados
+
+VERSIONING_POLICY_GATE
+	•	valida ADR-024, SemVer do OpenAPI e policy registrada no canon
+	•	emite `BLOCKED_VERSIONING_MISSING` quando a política mínima de versionamento faltar
+
+PACT_PROVIDER_GATE
+	•	valida o provider contra os consumer contracts publicados no Pact Broker
+	•	`SKIP_NOT_APPLICABLE` quando `PACT_BROKER_BASE_URL` estiver ausente
+	•	`SKIP_NOT_APPLICABLE` quando `contracts/consumers/` ainda não registrar consumers reais
+	•	`SKIP_NOT_APPLICABLE` quando o primeiro consumer contract de `hbtrack-app` ainda não tiver sido publicado no broker, conforme ADR-025
+	•	`PASS` quando todos os consumer contracts publicados forem satisfeitos
+	•	`FAIL` com `BLOCKED_PACT_MISSING` quando houver incompatibilidade entre provider e consumers publicados
+
+CODE_ARCHITECTURE_GATE
+	•	valida ADR-026, `CODE_ARCHITECTURE.md` e a estrutura mínima em `src/`
+
+DEPLOY_READINESS_GATE
+	•	valida presença coerente de `DEPLOY_PIPELINE.md`, ADR-027 e workflow de deploy
+
+DATA_MIGRATION_GATE
+	•	valida política de migração, ADR-028 e estrutura `migrations/` quando aplicável
+
+MONITORING_POLICY_GATE
+	•	valida política de monitoramento runtime e ADR-029
+	•	pode retornar `SKIP_NOT_APPLICABLE` ou `DEGRADED` conforme a combinação de artefatos existente
 
 ⸻
 

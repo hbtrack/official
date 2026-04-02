@@ -175,7 +175,7 @@ def patch_season(request, season_id: UUID, payload: PatchSeasonIn):
 # ---------------------------------------------------------------------------
 @router.post(
     "/{season_id}/teams/{team_id}",
-    response={204: None},
+    response={204: None, 400: dict, 401: dict, 403: dict, 404: dict, 409: dict, 500: dict},
     operation_id="addTeamToSeason",
 )
 def add_team_to_season(request, season_id: UUID, team_id: UUID):

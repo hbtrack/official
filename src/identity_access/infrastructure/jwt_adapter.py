@@ -100,6 +100,8 @@ class JWTAdapter:
             return jwt.decode(
                 token, _verification_key(), algorithms=[_get_algorithm()]
             )
+        except RuntimeError:
+            return None
         except jwt.ExpiredSignatureError:
             return None
         except jwt.InvalidTokenError:

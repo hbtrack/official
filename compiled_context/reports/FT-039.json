@@ -99,7 +99,7 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "54bb7fe6b4033586b6223502a1236a2ceb65afbd805d909c96f219dcad7bd9aa"
+      "sha256": "33e921172e9bacbe2853221dd55b3f3f9c5400b106895e89a2421f326110e308"
     },
     {
       "relpath": "generated/source_graph/reports/reports.bundle.yaml",
@@ -107,7 +107,7 @@
     },
     {
       "relpath": "generated/source_graph/reports/reports.schema_contract_view.yaml",
-      "sha256": "5acf7914e74e87b681a8d3d82922e41e550f3b59764b0637e1087a025118dcbe"
+      "sha256": "11167fe7188c7437033d1c26dc66eefde8dbe6721fa3f2233678b4b89adc3928"
     },
     {
       "relpath": "generated/source_graph/reports/reports.openapi_contract_view.yaml",
@@ -144,7 +144,7 @@
     "unit_tests": "src/reports/tests/unit/test_reports.py",
     "use_cases": "src/reports/application/use_cases.py"
   },
-  "source_fingerprint": "5e0b1aa24278de7cc4268d64713ad375f230396f7b1f46a0a986e5ee1df9e7e6",
+  "source_fingerprint": "1f1f81554b294e333c77fac3bf21e9483885e0512543c4582e2816f81a5da61f",
   "source_graph": {
     "entities": {
       "ReportJob": {
@@ -645,9 +645,100 @@
       "artifact_id": "HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW",
       "compiler": "hbtrack_source_graph_compiler",
       "compiler_version": "0.1.0",
+      "entities": {
+        "ReportJob": {
+          "required": [
+            "id",
+            "reportType",
+            "ownerUserId"
+          ],
+          "runtime_extension_fields": [
+            {
+              "allowed_values": [
+                "queued",
+                "processing",
+                "completed",
+                "failed",
+                "cancelled"
+              ],
+              "name": "statusLabel",
+              "runtime_name": "status_label",
+              "type": "enum"
+            },
+            {
+              "name": "completedAt",
+              "runtime_name": "completed_at",
+              "type": "timestamp_utc"
+            },
+            {
+              "name": "errorMessage",
+              "runtime_name": "error_message",
+              "type": "string"
+            }
+          ],
+          "schema_ref": "contracts/schemas/reports/report_job.schema.json",
+          "sovereign_fields": [
+            {
+              "name": "id",
+              "required": true,
+              "runtime_name": "id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "ownerUserId",
+              "required": true,
+              "runtime_name": "owner_user_id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "reportType",
+              "required": true,
+              "runtime_name": "report_type",
+              "type": "string"
+            },
+            {
+              "name": "formatLabel",
+              "required": false,
+              "runtime_name": "format_label",
+              "type": "string"
+            },
+            {
+              "name": "parameterSummary",
+              "required": false,
+              "runtime_name": "parameter_summary",
+              "type": "string"
+            },
+            {
+              "name": "sourceMetricNames",
+              "required": false,
+              "runtime_name": "source_metric_names",
+              "type": "string[]"
+            },
+            {
+              "name": "generatedArtifactRef",
+              "required": false,
+              "runtime_name": "generated_artifact_ref",
+              "type": "string"
+            },
+            {
+              "name": "retentionLabel",
+              "required": false,
+              "runtime_name": "retention_label",
+              "type": "string"
+            },
+            {
+              "name": "requestedAt",
+              "required": false,
+              "runtime_name": "requested_at",
+              "type": "timestamp_utc"
+            }
+          ]
+        }
+      },
       "entity": "ReportJob",
       "module": "reports",
       "openapi_projection_ref": "contracts/openapi/components/schemas/reports/report_job.yaml",
+      "primary_entity": "ReportJob",
       "primary_schema_ref": "contracts/schemas/reports/report_job.schema.json",
       "required": [
         "id",

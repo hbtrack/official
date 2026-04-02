@@ -105,6 +105,7 @@ Observacoes:
 
 - `POSTGRES_PASSWORD` pode ser omitido e herdara `DB_PASSWORD`
 - `CLOUDINARY_URL` pode ser omitido e sera derivado das credenciais Cloudinary
+- se `JWT_PRIVATE_KEY` / `JWT_PUBLIC_KEY` forem regenerados diretamente no VPS para hotfix, sincronizar imediatamente o mesmo par nos secrets do repositorio GitHub antes do proximo deploy
 - planejamento de rotacao/verificacao passa por `bash scripts/ops/rotate_keys.sh --secret <NAME> --environment <staging|production> --format json`
 
 ## 7. Primeiro deploy manual

@@ -5,6 +5,8 @@ set -euo pipefail
 # PACT_BROKER_BASE_URL e PACT_BROKER_TOKEN NÃO são injetados por este script.
 # Essas variáveis são CI-only e passadas via GitHub Actions vars/secrets ao job
 # `contract-conformance` do deploy.yml (ADR-025).
+# JWT_PRIVATE_KEY e JWT_PUBLIC_KEY são runtime-secrets obrigatórios e devem
+# permanecer sincronizados com o par ativo no runtime antes de qualquer redeploy.
 
 if [[ $# -lt 3 ]]; then
   echo "usage: $0 <staging|production> <output-path> <image-tag>" >&2

@@ -27,6 +27,7 @@ GOVERNANCE_PATHS (rastreados por integridade de governânça):
   scripts/contracts/validate/**
   scripts/hb
   contracts/schemas/shared/**
+  tests/adversarial/**
 
 Pipeline de validação:
   session.json → stage0/1/2 checks → artifacts hash → gate_exit_code → SESSION_HANDOFF → validator → [governance check]
@@ -59,6 +60,7 @@ class HBHookValidator:
         "scripts/contracts/validate/",
         "scripts/hb",
         "contracts/schemas/shared/",
+        "tests/adversarial/",
     )
 
     # Paths de artefatos governados pelo pipeline CDD

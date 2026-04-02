@@ -336,15 +336,22 @@ class TestSecurityHeaders:
         """
         import pathlib
 
-        nginx_conf = pathlib.Path(__file__).parents[2] / "infra" / "nginx" / "nginx.conf"
-        content = nginx_conf.read_text()
+        nginx_dir = pathlib.Path(__file__).parents[2] / "infra" / "nginx"
+        for name in ("nginx.conf", "nginx.staging.conf"):
+            content = (nginx_dir / name).read_text()
 
-        assert "rate=100r/s" in content, (
-            "nginx.conf não declara rate limiting de 100r/s (OWASP API4:2023)"
-        )
-        assert "limit_req zone=api_limit" in content, (
-            "nginx.conf não aplica o limit_req_zone ao location /api/"
-        )
+            assert "rate=100r/s" in content, (
+                f"{name} não declara rate limiting de 100r/s (OWASP API4:2023)"
+            )
+            assert "limit_req zone=api_limit" in content, (
+                f"{name} não aplica o limit_req_zone ao location /api/"
+            )
+            assert "limit_req_status 429;" in content, (
+                f"{name} deve converter rate limiting do proxy em HTTP 429, não 503."
+            )
+            assert "location = /api/openapi.json" in content, (
+                f"{name} deve isentar /api/openapi.json do rate limit para gates de runtime."
+            )
 
     def test_nginx_security_headers_configured(self):
         """Confirma que o nginx.conf declara os security headers obrigatórios."""

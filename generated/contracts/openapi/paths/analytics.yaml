@@ -1,5 +1,7 @@
 # Path items for module: analytics
 # Source of truth: contracts/openapi/openapi.yaml
+# Structured source graph: docs/hbtrack/modulos/analytics/graph/module_manifest.yaml
+# Operation map: docs/hbtrack/modulos/analytics/graph/endpoints.yaml
 # Related docs:
 # - docs/hbtrack/modulos/analytics/MODULE_SCOPE_ANALYTICS.md
 # - docs/hbtrack/modulos/analytics/DOMAIN_RULES_ANALYTICS.md

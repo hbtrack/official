@@ -159,10 +159,17 @@ def test_contract_conformance_job_declares_pact_broker_vars():
     jobs = workflow.get("jobs", {})
     conformance_job = jobs.get("contract-conformance", {})
     env = conformance_job.get("env", {}) or {}
+    steps = conformance_job.get("steps", []) or []
 
     assert "PACT_BROKER_BASE_URL" in env, (
         "contract-conformance job deve declarar PACT_BROKER_BASE_URL via vars.PACT_BROKER_BASE_URL"
     )
+    assert env.get("PACT_BROKER_USERNAME") == "hbtrack", (
+        "contract-conformance job deve declarar PACT_BROKER_USERNAME=hbtrack para o broker OSS."
+    )
     assert "PACT_BROKER_TOKEN" in env, (
         "contract-conformance job deve declarar PACT_BROKER_TOKEN via secrets.PACT_BROKER_TOKEN"
+    )
+    assert any(step.get("name") == "Install Pact Broker CLI" for step in steps), (
+        "contract-conformance job deve instalar a Pact Broker CLI antes de validar os consumer contracts."
     )

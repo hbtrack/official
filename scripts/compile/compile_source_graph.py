@@ -91,6 +91,16 @@ def _graph_root(root: Path, module: str) -> Path:
     return root / "docs" / "hbtrack" / "modulos" / module / "graph"
 
 
+def _discover_graph_modules(root: Path) -> list[str]:
+    base = root / "docs" / "hbtrack" / "modulos"
+    if not base.exists():
+        return []
+    modules: list[str] = []
+    for manifest in sorted(base.glob("*/graph/module_manifest.yaml")):
+        modules.append(manifest.parent.parent.name)
+    return modules
+
+
 def _resolve_ref(root: Path, base_dir: Path, ref: str) -> Path:
     target = (base_dir / ref).resolve()
     if not target.exists():
@@ -110,6 +120,15 @@ def _expand_resolved_path(path: Path) -> list[Path]:
 
 def _read_source_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
+
+
+def _resolve_symbol_ref(root: Path, base_dir: Path, ref: str) -> tuple[Path, str]:
+    if "#" not in ref:
+        raise SourceGraphCompilerError(f"Referência simbólica inválida: {ref}")
+    path_ref, symbol = ref.split("#", 1)
+    if not symbol.strip():
+        raise SourceGraphCompilerError(f"Referência simbólica sem símbolo: {ref}")
+    return _resolve_ref(root, base_dir, path_ref), symbol
 
 
 def _operation_ids_from_openapi(path_doc: dict[str, Any]) -> list[str]:
@@ -156,34 +175,84 @@ def _validate_graph_payload(
                 raise SourceGraphCompilerError(f"Referência inválida em module_manifest.{section}.")
             _resolve_ref(root, graph_root, ref)
 
-    report_job = entities.get("entities", {}).get("ReportJob")
-    if not isinstance(report_job, dict):
-        raise SourceGraphCompilerError("entities.yaml precisa declarar a entidade ReportJob.")
+    entity_entries = entities.get("entities")
+    if not isinstance(entity_entries, dict) or not entity_entries:
+        raise SourceGraphCompilerError("entities.yaml precisa declarar entities não vazias.")
 
-    primary_schema = _resolve_ref(root, graph_root, report_job["schema_ref"])
-    schema = _load_json(primary_schema)
-    sovereign_fields = report_job.get("sovereign_fields")
-    if not isinstance(sovereign_fields, list) or not sovereign_fields:
-        raise SourceGraphCompilerError("ReportJob.sovereign_fields deve ser lista não vazia.")
-    sovereign_names = [field["name"] for field in sovereign_fields]
-    schema_names = list((schema.get("properties") or {}).keys())
-    if sovereign_names != schema_names:
-        raise SourceGraphCompilerError("entities.yaml diverge da ordem/campos do schema soberano de reports.")
+    validated_entities: dict[str, Any] = {}
+    for entity_name, entity_entry in entity_entries.items():
+        if not isinstance(entity_entry, dict):
+            raise SourceGraphCompilerError(f"entities.{entity_name} deve ser objeto.")
+        schema_path = _resolve_ref(root, graph_root, entity_entry["schema_ref"])
+        schema = _load_json(schema_path)
+        schema_properties = schema.get("properties")
+        if not isinstance(schema_properties, dict) or not schema_properties:
+            raise SourceGraphCompilerError(f"{entity_name}.schema_ref precisa apontar para schema com properties.")
+        runtime_entity_path, runtime_entity_symbol = _resolve_symbol_ref(
+            root,
+            graph_root,
+            entity_entry["runtime_entity_ref"],
+        )
+        entity_source = _read_source_text(runtime_entity_path)
+        if f"class {runtime_entity_symbol}" not in entity_source:
+            raise SourceGraphCompilerError(
+                f"Entidade runtime `{runtime_entity_symbol}` não encontrada em {runtime_entity_path}."
+            )
 
-    required_from_graph = sorted(field["name"] for field in sovereign_fields if field.get("required"))
-    required_from_schema = sorted(schema.get("required") or [])
-    if required_from_graph != required_from_schema:
-        raise SourceGraphCompilerError("entities.yaml diverge do conjunto de required do schema soberano.")
+        docs_refs = entity_entry.get("docs_refs") or []
+        if not isinstance(docs_refs, list) or not docs_refs:
+            raise SourceGraphCompilerError(f"{entity_name}.docs_refs deve ser lista não vazia.")
+        for ref in docs_refs:
+            _resolve_ref(root, graph_root, ref)
 
-    entity_source = _read_source_text(_resolve_ref(root, graph_root, report_job["runtime_entity_ref"].split("#", 1)[0]))
-    for field in sovereign_fields:
-        runtime_name = field.get("runtime_name")
-        if runtime_name not in entity_source:
-            raise SourceGraphCompilerError(f"Campo runtime `{runtime_name}` não encontrado em entities.py.")
-    for field in report_job.get("runtime_extension_fields", []):
-        runtime_name = field.get("runtime_name")
-        if runtime_name not in entity_source:
-            raise SourceGraphCompilerError(f"Extensão runtime `{runtime_name}` não encontrada em entities.py.")
+        sovereign_fields = entity_entry.get("sovereign_fields")
+        if not isinstance(sovereign_fields, list) or not sovereign_fields:
+            raise SourceGraphCompilerError(f"{entity_name}.sovereign_fields deve ser lista não vazia.")
+        sovereign_names = [field["name"] for field in sovereign_fields]
+        schema_names = list(schema_properties.keys())
+        if sovereign_names != schema_names:
+            raise SourceGraphCompilerError(
+                f"{entity_name}.sovereign_fields diverge da ordem/campos do schema soberano."
+            )
+
+        required_from_graph = sorted(field["name"] for field in sovereign_fields if field.get("required"))
+        required_from_schema = sorted(schema.get("required") or [])
+        if required_from_graph != required_from_schema:
+            raise SourceGraphCompilerError(
+                f"{entity_name}.sovereign_fields diverge do conjunto de required do schema soberano."
+            )
+
+        for field in sovereign_fields:
+            runtime_name = field.get("runtime_name")
+            if not runtime_name or runtime_name not in entity_source:
+                raise SourceGraphCompilerError(
+                    f"Campo runtime `{runtime_name}` não encontrado em {runtime_entity_path}."
+                )
+        for field in entity_entry.get("runtime_extension_fields", []):
+            runtime_name = field.get("runtime_name")
+            if not runtime_name or runtime_name not in entity_source:
+                raise SourceGraphCompilerError(
+                    f"Extensão runtime `{runtime_name}` não encontrada em {runtime_entity_path}."
+                )
+
+        validated_entities[entity_name] = {
+            "entry": entity_entry,
+            "schema": schema,
+            "schema_path": schema_path,
+            "runtime_entity_path": runtime_entity_path,
+        }
+
+    primary_schema = _resolve_ref(root, graph_root, manifest["contract_surfaces"]["primary_schema"])
+    primary_entity_names = [
+        entity_name
+        for entity_name, payload in validated_entities.items()
+        if payload["schema_path"] == primary_schema
+    ]
+    if len(primary_entity_names) != 1:
+        raise SourceGraphCompilerError(
+            "contract_surfaces.primary_schema deve corresponder exatamente a uma entidade em entities.yaml."
+        )
+    primary_entity = primary_entity_names[0]
 
     openapi_paths = _load_yaml(_resolve_ref(root, graph_root, manifest["contract_surfaces"]["openapi_paths"]))
     operation_ids = _operation_ids_from_openapi(openapi_paths)
@@ -192,33 +261,44 @@ def _validate_graph_payload(
         raise SourceGraphCompilerError("endpoints.yaml precisa declarar endpoints não vazios.")
     endpoint_ids = sorted(entry["operation_id"] for entry in endpoint_entries)
     if endpoint_ids != operation_ids:
-        raise SourceGraphCompilerError("endpoints.yaml diverge dos operationIds de contracts/openapi/paths/reports.yaml.")
+        raise SourceGraphCompilerError(
+            "endpoints.yaml diverge dos operationIds expostos por contract_surfaces.openapi_paths."
+        )
 
-    api_source = _read_source_text(_resolve_ref(root, graph_root, manifest["runtime_surfaces"]["api_router"]))
-    use_case_source = _read_source_text(_resolve_ref(root, graph_root, manifest["runtime_surfaces"]["use_cases"]))
     for entry in endpoint_entries:
         if not isinstance(entry.get("response_codes"), list) or not entry["response_codes"]:
             raise SourceGraphCompilerError(f"Endpoint `{entry['operation_id']}` sem response_codes.")
-        handler_symbol = entry["runtime_handler_ref"].split("#", 1)[1]
-        use_case_symbol = entry["use_case_ref"].split("#", 1)[1]
-        if f"def {handler_symbol}" not in api_source:
-            raise SourceGraphCompilerError(f"Handler `{handler_symbol}` ausente em src/reports/api.py.")
+        _resolve_ref(root, graph_root, entry["openapi_ref"].split("#", 1)[0])
+
+        handler_path, handler_symbol = _resolve_symbol_ref(root, graph_root, entry["runtime_handler_ref"])
+        handler_source = _read_source_text(handler_path)
+        if f"def {handler_symbol}" not in handler_source:
+            raise SourceGraphCompilerError(f"Handler `{handler_symbol}` ausente em {handler_path}.")
+
+        use_case_path, use_case_symbol = _resolve_symbol_ref(root, graph_root, entry["use_case_ref"])
+        use_case_source = _read_source_text(use_case_path)
         if f"class {use_case_symbol}" not in use_case_source:
-            raise SourceGraphCompilerError(f"Use case `{use_case_symbol}` ausente em src/reports/application/use_cases.py.")
+            raise SourceGraphCompilerError(f"Use case `{use_case_symbol}` ausente em {use_case_path}.")
 
     error_entries = errors.get("errors")
     if not isinstance(error_entries, list) or not error_entries:
         raise SourceGraphCompilerError("errors.yaml precisa declarar errors não vazios.")
     operation_id_set = set(operation_ids)
-    rules_source = _read_source_text(_resolve_ref(root, graph_root, manifest["runtime_surfaces"]["domain_rules"]))
     for error in error_entries:
         if not set(error.get("operations", [])) <= operation_id_set:
             raise SourceGraphCompilerError(f"Erro `{error.get('id')}` referencia operationId inexistente.")
         exception_ref = error.get("exception_ref")
         if exception_ref:
-            exception_symbol = exception_ref.split("#", 1)[1]
-            if f"class {exception_symbol}" not in rules_source:
-                raise SourceGraphCompilerError(f"Exceção `{exception_symbol}` ausente em src/reports/domain/rules.py.")
+            exception_path, exception_symbol = _resolve_symbol_ref(root, graph_root, exception_ref)
+            exception_source = _read_source_text(exception_path)
+            if f"class {exception_symbol}" not in exception_source:
+                raise SourceGraphCompilerError(f"Exceção `{exception_symbol}` ausente em {exception_path}.")
+        source_ref = error.get("source_ref")
+        if source_ref:
+            source_path, source_symbol = _resolve_symbol_ref(root, graph_root, source_ref)
+            source = _read_source_text(source_path)
+            if source_symbol not in source:
+                raise SourceGraphCompilerError(f"Source ref `{source_symbol}` ausente em {source_path}.")
 
     obligations = test_obligations.get("obligations")
     if not isinstance(obligations, list) or not obligations:
@@ -229,7 +309,9 @@ def _validate_graph_payload(
             _resolve_ref(root, graph_root, evidence_ref)
 
     return {
-        "schema": schema,
+        "entities": validated_entities,
+        "primary_entity": primary_entity,
+        "primary_schema": validated_entities[primary_entity]["schema"],
         "operation_ids": operation_ids,
     }
 
@@ -289,20 +371,33 @@ def _build_schema_contract_view(
     module: str,
     manifest: dict[str, Any],
     entities: dict[str, Any],
-    schema: dict[str, Any],
+    validated: dict[str, Any],
 ) -> dict[str, Any]:
-    report_job = entities["entities"]["ReportJob"]
+    primary_entity_name = validated["primary_entity"]
+    primary_entity = entities["entities"][primary_entity_name]
+    primary_schema = validated["primary_schema"]
+    entity_views = {}
+    for entity_name, payload in validated["entities"].items():
+        entity_entry = payload["entry"]
+        entity_views[entity_name] = {
+            "schema_ref": _rel(root, payload["schema_path"]),
+            "required": payload["schema"].get("required", []),
+            "sovereign_fields": entity_entry["sovereign_fields"],
+            "runtime_extension_fields": entity_entry.get("runtime_extension_fields", []),
+        }
     return {
         "artifact_id": "HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW",
         "compiler": COMPILER_NAME,
         "compiler_version": COMPILER_VERSION,
         "module": module,
-        "entity": "ReportJob",
+        "entity": primary_entity_name,
+        "primary_entity": primary_entity_name,
         "primary_schema_ref": _rel(root, _resolve_ref(root, _graph_root(root, module), manifest["contract_surfaces"]["primary_schema"])),
         "openapi_projection_ref": _rel(root, _resolve_ref(root, _graph_root(root, module), manifest["contract_surfaces"]["openapi_projection"])),
-        "required": schema.get("required", []),
-        "sovereign_fields": report_job["sovereign_fields"],
-        "runtime_extension_fields": report_job.get("runtime_extension_fields", []),
+        "required": primary_schema.get("required", []),
+        "sovereign_fields": primary_entity["sovereign_fields"],
+        "runtime_extension_fields": primary_entity.get("runtime_extension_fields", []),
+        "entities": entity_views,
     }
 
 
@@ -405,7 +500,7 @@ def compile_expected(root: Path, module: str) -> list[ExpectedFile]:
         module=module,
         manifest=manifest,
         entities=entities,
-        schema=validated["schema"],
+        validated=validated,
     )
     openapi_view = _build_openapi_contract_view(
         root=root,
@@ -487,61 +582,124 @@ def _format_payload(status: str, mode: str, module: str, *, written: list[str] |
     }
 
 
+def _format_multi_payload(status: str, mode: str, modules: list[str], results: list[dict[str, Any]]) -> dict[str, Any]:
+    return {
+        "artifact_id": "HBTRACK_SOURCE_GRAPH_COMPILER_BATCH_RESULT",
+        "compiler": COMPILER_NAME,
+        "compiler_version": COMPILER_VERSION,
+        "modules": modules,
+        "status": status,
+        "mode": mode,
+        "results": results,
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     root = _repo_root()
     ap = argparse.ArgumentParser(description="Compila source graph de módulo e gera derivados determinísticos em generated/source_graph/.")
-    ap.add_argument("--module", required=True, help="Módulo com source graph ativo.")
+    scope = ap.add_mutually_exclusive_group(required=True)
+    scope.add_argument("--module", help="Módulo com source graph ativo.")
+    scope.add_argument("--all", action="store_true", help="Executa para todos os módulos com source graph ativo.")
     ap.add_argument("--check", action="store_true", help="Não escreve; apenas verifica drift.")
     ap.add_argument("--format", choices=("text", "json"), default="text", help="Formato de saída.")
     args = ap.parse_args(argv)
 
-    try:
-        expected = compile_expected(root, args.module)
-        if args.check:
-            drifts = check_expected(root, expected)
-            if drifts:
-                payload = _format_payload("FAIL", "check", args.module, drifts=drifts)
-                if args.format == "json":
-                    print(_dump_json(payload), end="")
-                else:
-                    for drift in drifts:
-                        print(f"DRIFT: {drift.relpath} ({drift.reason})")
-                    print(f"FAIL: {len(drifts)} drift(s) detectado(s) no source graph derivado.")
-                return 2
-            payload = _format_payload("PASS", "check", args.module)
-            if args.format == "json":
-                print(_dump_json(payload), end="")
-            else:
-                print(f"OK: source graph `{args.module}` alinhado ao compiler determinístico.")
-            return 0
-
-        written = write_expected(root, expected)
-        payload = _format_payload("PASS", "write", args.module, written=written)
+    modules = [args.module] if args.module else _discover_graph_modules(root)
+    if not modules:
+        message = "Nenhum módulo com source graph ativo foi encontrado."
         if args.format == "json":
-            print(_dump_json(payload), end="")
+            print(
+                _dump_json(
+                    {
+                        "artifact_id": "HBTRACK_SOURCE_GRAPH_COMPILER_BATCH_RESULT",
+                        "compiler": COMPILER_NAME,
+                        "compiler_version": COMPILER_VERSION,
+                        "modules": [],
+                        "status": "FAIL",
+                        "mode": "check" if args.check else "write",
+                        "summary": message,
+                    }
+                ),
+                end="",
+            )
         else:
-            if written:
-                print("OK: artefatos gerados/atualizados:")
-                for relpath in written:
-                    print(f"  - {relpath}")
-            else:
-                print("OK: nada a atualizar (generated/source_graph já está alinhado).")
-        return 0
-    except SourceGraphCompilerError as exc:
-        payload = {
-            "artifact_id": "HBTRACK_SOURCE_GRAPH_COMPILER_RESULT",
-            "compiler": COMPILER_NAME,
-            "compiler_version": COMPILER_VERSION,
-            "module": args.module,
-            "status": "FAIL",
-            "mode": "check" if args.check else "write",
-            "summary": exc.summary,
-        }
-        if args.format == "json":
-            print(_dump_json(payload), end="")
-        else:
-            print(f"FAIL: {exc.summary}")
+            print(f"FAIL: {message}")
         return 1
+
+    results: list[dict[str, Any]] = []
+    overall_exit = 0
+    mode = "check" if args.check else "write"
+
+    for module in modules:
+        try:
+            expected = compile_expected(root, module)
+            if args.check:
+                drifts = check_expected(root, expected)
+                if drifts:
+                    payload = _format_payload("FAIL", mode, module, drifts=drifts)
+                    overall_exit = max(overall_exit, 2)
+                else:
+                    payload = _format_payload("PASS", mode, module)
+            else:
+                written = write_expected(root, expected)
+                payload = _format_payload("PASS", mode, module, written=written)
+            results.append(payload)
+        except SourceGraphCompilerError as exc:
+            results.append(
+                {
+                    "artifact_id": "HBTRACK_SOURCE_GRAPH_COMPILER_RESULT",
+                    "compiler": COMPILER_NAME,
+                    "compiler_version": COMPILER_VERSION,
+                    "module": module,
+                    "status": "FAIL",
+                    "mode": mode,
+                    "summary": exc.summary,
+                }
+            )
+            overall_exit = max(overall_exit, 1)
+
+    if len(results) == 1:
+        payload = results[0]
+        if args.format == "json":
+            print(_dump_json(payload), end="")
+        else:
+            if payload["status"] == "FAIL":
+                if payload.get("drifts"):
+                    for drift in payload["drifts"]:
+                        print(f"DRIFT: {drift['relpath']} ({drift['reason']})")
+                    print(f"FAIL: {len(payload['drifts'])} drift(s) detectado(s) no source graph derivado.")
+                else:
+                    print(f"FAIL: {payload['summary']}")
+            elif args.check:
+                print(f"OK: source graph `{payload['module']}` alinhado ao compiler determinístico.")
+            else:
+                if payload["written"]:
+                    print("OK: artefatos gerados/atualizados:")
+                    for relpath in payload["written"]:
+                        print(f"  - {relpath}")
+                else:
+                    print("OK: nada a atualizar (generated/source_graph já está alinhado).")
+        return overall_exit
+
+    batch_payload = _format_multi_payload(
+        "PASS" if overall_exit == 0 else "FAIL",
+        mode,
+        modules,
+        results,
+    )
+    if args.format == "json":
+        print(_dump_json(batch_payload), end="")
+    else:
+        for payload in results:
+            summary = payload.get("summary")
+            if payload["status"] == "FAIL" and payload.get("drifts"):
+                summary = f"{len(payload['drifts'])} drift(s)"
+            elif payload["status"] == "PASS" and not args.check:
+                summary = f"{len(payload.get('written', []))} arquivo(s) atualizado(s)"
+            elif payload["status"] == "PASS":
+                summary = "alinhado"
+            print(f"[{payload['status']}] {payload['module']}: {summary}")
+    return overall_exit
 
 
 if __name__ == "__main__":
