@@ -118,7 +118,10 @@ def generate_runtime_current_state(root: Path) -> str:
     frontend_exists = frontend_dir.exists()
     frontend_package = (frontend_dir / "package.json").exists()
     frontend_src = (frontend_dir / "src").exists()
-    frontend_schema_types = len(list(frontend_dir.rglob("schema.d.ts"))) if frontend_exists else 0
+    frontend_schema_types = len([
+        p for p in frontend_dir.rglob("schema.d.ts")
+        if "node_modules" not in p.parts
+    ]) if frontend_exists else 0
 
     dockerfile_root = (root / "Dockerfile").exists()
     compose_prod = (root / "infra" / "docker-compose.prod.yml").exists()

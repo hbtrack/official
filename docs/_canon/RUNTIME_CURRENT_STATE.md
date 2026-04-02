@@ -95,7 +95,7 @@ Fontes executáveis observadas por este gerador:
 | Diretório `frontend/` | presente | `frontend/` |
 | `frontend/package.json` | presente | `frontend/package.json` |
 | `frontend/src/` | presente | `frontend/src/` |
-| Tipos `schema.d.ts` | `4` arquivo(s) | `frontend/**/schema.d.ts` |
+| Tipos `schema.d.ts` | `1` arquivo(s) | `frontend/**/schema.d.ts` |
 | `Dockerfile` raiz | presente | `Dockerfile` |
 | `infra/docker-compose.prod.yml` | presente | `infra/docker-compose.prod.yml` |
 | `infra/nginx/nginx.conf` | presente | `infra/nginx/nginx.conf` |
