@@ -446,6 +446,8 @@ class HBHookValidator:
                 "-m",
                 "pytest",
                 "tests/pipeline_gates/test_session_state_phase3.py",
+                "-m",
+                "not slow",
                 "-q",
                 "--tb=short",
             ],

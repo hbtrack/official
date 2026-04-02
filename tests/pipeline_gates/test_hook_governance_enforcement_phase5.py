@@ -217,6 +217,26 @@ class TestSurvivalSuitePhase5:
             "Docstring de cmd_survival_suite deve mencionar bridge docs no escopo de mudanças"
         )
 
+    def test_survival_suite_excludes_slow_side_effect_tests(self):
+        """survival-suite deve excluir testes @slow que disparam hb stage3."""
+        content = HB_SCRIPT.read_text(encoding="utf-8")
+        assert '"-m"' in content and '"not slow"' in content, (
+            "scripts/hb survival-suite deve excluir testes slow para não sujar "
+            "latest.json/dashboard/history no workspace local"
+        )
+
+
+class TestPreCommitCrossValidationPhase5:
+    """pre-commit deve excluir testes slow na validação cruzada de sessão."""
+
+    def test_session_cross_validation_excludes_slow_tests(self):
+        content = PRE_COMMIT_HOOK.read_text(encoding="utf-8")
+        assert '"tests/pipeline_gates/test_session_state_phase3.py"' in content
+        assert '"-m"' in content and '"not slow"' in content, (
+            "pre-commit deve executar test_session_state_phase3.py com '-m not slow' "
+            "para evitar side effects de hb stage3"
+        )
+
 
 # ---------------------------------------------------------------------------
 # Testes do workflow .github/workflows/contract-gates.yml

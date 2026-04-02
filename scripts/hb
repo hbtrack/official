@@ -1248,8 +1248,11 @@ class HBCLIv2:
         )
         if python_bin is None:
             return 2
+        # Excluir testes slow/side-effect do caminho de governança local.
+        # `test_session_state_phase3.py` contém casos que chamam `hb stage3`
+        # e reescrevem relatórios canônicos (`latest.json`, dashboard, history).
         result = subprocess.run(
-            [str(python_bin), "-m", "pytest", *SURVIVAL_SUITE, "-v"],
+            [str(python_bin), "-m", "pytest", *SURVIVAL_SUITE, "-m", "not slow", "-v"],
             cwd=self.root,
             env=self._build_tool_env(),
         )
