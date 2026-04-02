@@ -22,7 +22,7 @@ traceability_manifest:
   - path: generated/contracts/openapi/components/schemas/ai_ingestion/.gitkeep
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: generated/contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml
-    sha256: f843e292212256ef636ec5de13c496f17b1da550c33c76969749f25f410b9a30
+    sha256: 59104369e00d32962c1b590b60a8d45b3a8bb2f1631447a72be4d62cb5920c45
   - path: generated/contracts/openapi/components/schemas/analytics/.gitkeep
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: generated/contracts/openapi/components/schemas/analytics/analytics_metric_key.yaml
@@ -150,7 +150,7 @@ traceability_manifest:
   - path: generated/contracts/openapi/openapi.yaml
     sha256: 35f427c13c4345d86d0053776ec5bc4d9213a19568957dc07c5a39c71fa39e61
   - path: generated/contracts/openapi/paths/ai_ingestion.yaml
-    sha256: 0fb7191770c47ac3b1708ed09822d0dac4b784940825f70e03bfb7872ba9b2a3
+    sha256: e62b5b13e47f6cbdf3e0fa0831994ff7f8e31ed8660763f1957c29c79f1b0d32
   - path: generated/contracts/openapi/paths/analytics.yaml
     sha256: f1fa3c881bca1075dfcfec548af0ee5594bb39799246db8c4082d3ea512a7d08
   - path: generated/contracts/openapi/paths/audit.yaml
@@ -319,7 +319,7 @@ traceability_manifest:
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: generated/contracts/schemas/wellness/wellness_entry.schema.json
     sha256: e6b69221a1e62764a544a37a53dfa1d211df3b89799df536f9b85789b5b59c97
-  generated_tree_sha256: 3df25fa89785d49e8f782c37ec6c8ae383f962d503b93d3af770d40908db412d
+  generated_tree_sha256: 88db314e8e5e525e85e9cbd4926239a69cd7110b1d47984d225ac37e08d8e4b7
   policy_path: generated/resolved_policy/exercises.sync.resolved.yaml
   policy_sha256: 5ea66ba534a5924506d35b798d3eca009887404f998ea899cc4e97a8c8742086
   source_contracts:
@@ -342,7 +342,7 @@ traceability_manifest:
   - path: contracts/openapi/components/schemas/ai_ingestion/.gitkeep
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml
-    sha256: f843e292212256ef636ec5de13c496f17b1da550c33c76969749f25f410b9a30
+    sha256: 59104369e00d32962c1b590b60a8d45b3a8bb2f1631447a72be4d62cb5920c45
   - path: contracts/openapi/components/schemas/analytics/.gitkeep
     sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   - path: contracts/openapi/components/schemas/analytics/analytics_metric_key.yaml
@@ -470,7 +470,7 @@ traceability_manifest:
   - path: contracts/openapi/openapi.yaml
     sha256: 35f427c13c4345d86d0053776ec5bc4d9213a19568957dc07c5a39c71fa39e61
   - path: contracts/openapi/paths/ai_ingestion.yaml
-    sha256: 0fb7191770c47ac3b1708ed09822d0dac4b784940825f70e03bfb7872ba9b2a3
+    sha256: e62b5b13e47f6cbdf3e0fa0831994ff7f8e31ed8660763f1957c29c79f1b0d32
   - path: contracts/openapi/paths/analytics.yaml
     sha256: f1fa3c881bca1075dfcfec548af0ee5594bb39799246db8c4082d3ea512a7d08
   - path: contracts/openapi/paths/audit.yaml
@@ -650,4 +650,4 @@ traceability_manifest:
     sha256: 4bf1ce3c5df5ac92e41bff3a645cbe27919db575608b49d6e811a0079b2d1375
   - path: .contract_driven/DOMAIN_AXIOMS.json
     sha256: d7495e17090c41af465fbf064d0bff3d084c72ba0e57f1e0d78aa3b8f0ae71eb
-  source_tree_sha256: 8be6832b871df5cbe07a75d32b74e07d0d4422defa754b38551417689c3b3ad0
+  source_tree_sha256: 22ec2b6b92013ced5a1f0e1001dc8fa68cac7a1700c93f7b287f017bbc23f88b

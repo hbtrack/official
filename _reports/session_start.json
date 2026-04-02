@@ -1,11 +1,11 @@
 {
   "session_id": "320b190f-3ae8-4046-8989-8e9fb9a0f4be",
-  "session_timestamp": "2026-04-02T05:29:25.126473+00:00",
-  "branch": "main",
+  "session_timestamp": "2026-04-02T10:09:27.706180+00:00",
+  "branch": "codex/backlog-governance-source-graph-rollout",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "contract_execution",
   "task_type": "generate_code",
-  "stage": 2,
+  "stage": 0,
   "write_scope": "backend",
   "worker_id": "code_generator",
   "git_user": "HB Track Agent",
@@ -19,8 +19,8 @@
     "boot_paths_valid": true,
     "required_sections_resolvable": true
   },
-  "module": "reports",
-  "module_focus": "reports",
+  "module": "ai_ingestion",
+  "module_focus": "ai_ingestion",
   "stage0_exit_code": 0,
   "stage2_artifacts": [
     {
@@ -481,10 +481,70 @@
       "sha256": "48eee0ce49b47c51cc6581930f3cb78d1f82339770ea05258985cc511cfb70ff",
       "created_at": "2026-04-02T08:25:59.348158+00:00",
       "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml",
+      "sha256": "59104369e00d32962c1b590b60a8d45b3a8bb2f1631447a72be4d62cb5920c45",
+      "created_at": "2026-04-02T10:08:01.568616+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "contracts/openapi/paths/ai_ingestion.yaml",
+      "sha256": "e62b5b13e47f6cbdf3e0fa0831994ff7f8e31ed8660763f1957c29c79f1b0d32",
+      "created_at": "2026-04-02T10:08:05.502045+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/ai_ingestion/DOMAIN_RULES_AI_INGESTION.md",
+      "sha256": "aab95e59876a9ba009f58e58e23f1af87e80080ebf892a0cdf6d6dabe215a1f8",
+      "created_at": "2026-04-02T10:08:08.653192+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/ai_ingestion/README.md",
+      "sha256": "b7aef88c9b212572d995ddeb099847fb8f8b4a0db75f938307229b1945a834a0",
+      "created_at": "2026-04-02T10:08:11.624123+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/ai_ingestion/TEST_MATRIX_AI_INGESTION.md",
+      "sha256": "1e98c310fd7d7fcdab0045ea894173906b31804df528dfdbb10db96eafadbe5a",
+      "created_at": "2026-04-02T10:08:14.624637+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/ai_ingestion/graph/endpoints.yaml",
+      "sha256": "d80f32b4a2eb1c0a24011a92c52495a5e2e9b25b7a3a315f3c3e2e2784be3057",
+      "created_at": "2026-04-02T10:08:17.571372+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/ai_ingestion/graph/entities.yaml",
+      "sha256": "b9c243cbb0846d848a2154510480db3649091ebb6f9388cacf8ada30bf46b879",
+      "created_at": "2026-04-02T10:08:20.676344+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/ai_ingestion/graph/errors.yaml",
+      "sha256": "91905c155019a00e8c79b557bbeb2b85726ffea1e549da03727f88c8497e3a3f",
+      "created_at": "2026-04-02T10:08:23.758977+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/ai_ingestion/graph/module_manifest.yaml",
+      "sha256": "11f8c58628632e51d537280fb88b15deac39e7770853895226d1d060518c1bfc",
+      "created_at": "2026-04-02T10:08:26.704038+00:00",
+      "gate_exit_code": 0
+    },
+    {
+      "path": "docs/hbtrack/modulos/ai_ingestion/graph/test_obligations.yaml",
+      "sha256": "537c53130e975e5ba10219a83f91e58ed4a6c457102ce8ef074e49d276ef19b4",
+      "created_at": "2026-04-02T10:08:29.608747+00:00",
+      "gate_exit_code": 0
     }
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-02T09:13:16.543679+00:00",
+  "hook_validated_at": "2026-04-02T10:10:17.079730+00:00",
   "stage3_exit_code": 2
 }

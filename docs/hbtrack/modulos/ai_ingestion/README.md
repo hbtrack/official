@@ -23,6 +23,13 @@ Documentar o escopo normativo do módulo `ai_ingestion` e suas superfícies sobe
 - Workflows (Arazzo): `contracts/workflows/ai_ingestion/` (quando aplicável)
 - Eventos (AsyncAPI): `contracts/asyncapi/` (quando aplicável)
 
+## Source graph soberano do módulo
+- Manifesto: `graph/module_manifest.yaml`
+- Entidades: `graph/entities.yaml`
+- Endpoints: `graph/endpoints.yaml`
+- Erros: `graph/errors.yaml`
+- Obrigações de teste: `graph/test_obligations.yaml`
+
 ## Fontes globais vinculantes
 - `docs/_canon/SYSTEM_SCOPE.md`
 - `docs/_canon/HANDBALL_RULES_DOMAIN.md` (quando o gatilho de handebol aplicar)

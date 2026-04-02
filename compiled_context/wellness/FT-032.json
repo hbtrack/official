@@ -91,7 +91,7 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "c1fa9ac1c2540c4f0d1fbb75fd53bfc42a1dd009e3c14e36f0596ab5606837f1"
+      "sha256": "714765ef22985fdd353c060b0957bf37fb55d50b75b11edfff8f4fdd9a6c062a"
     },
     {
       "relpath": "generated/source_graph/wellness/wellness.bundle.yaml",
@@ -139,7 +139,7 @@
     "unit_tests": "src/wellness/tests/unit/test_wellness_domain.py",
     "use_cases": "src/wellness/application/use_cases.py"
   },
-  "source_fingerprint": "5bd6530ed2260527ce8092ccef044beda99bbc40474e88cedc2638d3b26c7aa7",
+  "source_fingerprint": "7b2f025eceb4aa2e11dbf6924c81e11dc75a138d0f9ff9b8f663bd3a08e3b2ef",
   "source_graph": {
     "entities": {
       "WellnessEntry": {

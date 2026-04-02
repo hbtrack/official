@@ -6,6 +6,12 @@ from ninja import Schema
 
 
 class IngestionJobOut(Schema):
+    """Runtime adapter for ai_ingestion.
+
+    The sovereign contract lives in contracts/schemas/ai_ingestion/ingestion_job.schema.json.
+    Runtime-only execution fields remain explicit here and in the module source graph.
+    """
+
     id: UUID
     source_label: str
     ingestion_mode: str

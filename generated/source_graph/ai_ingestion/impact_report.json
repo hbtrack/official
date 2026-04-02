@@ -1,0 +1,149 @@
+{
+  "artifact_id": "HBTRACK_SOURCE_GRAPH_IMPACT_REPORT",
+  "blocked_partial_update": true,
+  "compiler": "hbtrack_source_graph_compiler",
+  "compiler_version": "0.1.0",
+  "impacted_contracts": [
+    "contracts/openapi/paths/ai_ingestion.yaml",
+    "contracts/schemas/ai_ingestion/ingestion_job.schema.json",
+    "contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml"
+  ],
+  "impacted_docs": [
+    "docs/hbtrack/modulos/ai_ingestion/README.md",
+    "docs/hbtrack/modulos/ai_ingestion/MODULE_SCOPE_AI_INGESTION.md",
+    "docs/hbtrack/modulos/ai_ingestion/DOMAIN_RULES_AI_INGESTION.md",
+    "docs/hbtrack/modulos/ai_ingestion/INVARIANTS_AI_INGESTION.md",
+    "docs/hbtrack/modulos/ai_ingestion/PERMISSIONS_AI_INGESTION.md",
+    "docs/hbtrack/modulos/ai_ingestion/TEST_MATRIX_AI_INGESTION.md"
+  ],
+  "impacted_runtime": [
+    "src/ai_ingestion/api.py",
+    "src/ai_ingestion/domain/entities.py",
+    "src/ai_ingestion/domain/rules.py",
+    "src/ai_ingestion/application/use_cases.py",
+    "src/ai_ingestion/tests/unit/test_ai_ingestion.py"
+  ],
+  "inputs": [
+    {
+      "relpath": "contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml",
+      "sha256": "59104369e00d32962c1b590b60a8d45b3a8bb2f1631447a72be4d62cb5920c45"
+    },
+    {
+      "relpath": "contracts/openapi/paths/ai_ingestion.yaml",
+      "sha256": "e62b5b13e47f6cbdf3e0fa0831994ff7f8e31ed8660763f1957c29c79f1b0d32"
+    },
+    {
+      "relpath": "contracts/schemas/ai_ingestion/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "relpath": "contracts/schemas/ai_ingestion/ingestion_job.schema.json",
+      "sha256": "255e479c9f94317ba748f2ab09a636b1c805a842d255a4865bdef30914d085d3"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "bed74af95778cb977c5d18f765d1b38477ddad242c1c0480a5ab8ff84a0b9505"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_SOURCE_AUTHORITY_MATRIX.yaml",
+      "sha256": "e01c6a21bafe91b849317c2749ffcea1ef1350a5afc2ed95caa5f1d5093a2680"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_policies.yaml",
+      "sha256": "4715e7504a06b32eecd83cf7e6a69f0ee762a28f3236614099fbff8138169fa2"
+    },
+    {
+      "relpath": "docs/_canon/graph/global_rules.yaml",
+      "sha256": "02f75652679e4e5c981f177b6bc57f77e26b1a360e4452a2828bda448f349f07"
+    },
+    {
+      "relpath": "docs/_canon/graph/lifecycle.yaml",
+      "sha256": "654844a0e8a2eb1f265f1c1dd5a20335a439facf300c56c137eb12c19e41a3c5"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/ai_ingestion/DOMAIN_RULES_AI_INGESTION.md",
+      "sha256": "aab95e59876a9ba009f58e58e23f1af87e80080ebf892a0cdf6d6dabe215a1f8"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/ai_ingestion/INVARIANTS_AI_INGESTION.md",
+      "sha256": "9aafcbab91b33effcd2fe3c7ed8e35f3c70a4cbc434e0940ff476c2b5ca52919"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/ai_ingestion/MODULE_SCOPE_AI_INGESTION.md",
+      "sha256": "39208abf42c6b1a98496218e245c37fc3f8957e04672a1ebac2a3fafb3ec6608"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/ai_ingestion/PERMISSIONS_AI_INGESTION.md",
+      "sha256": "95c954cc90cfc88c25aaac9a87dec768b3eb9f81130196d09a6cbe1948dd473f"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/ai_ingestion/README.md",
+      "sha256": "b7aef88c9b212572d995ddeb099847fb8f8b4a0db75f938307229b1945a834a0"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/ai_ingestion/TEST_MATRIX_AI_INGESTION.md",
+      "sha256": "1e98c310fd7d7fcdab0045ea894173906b31804df528dfdbb10db96eafadbe5a"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/ai_ingestion/graph/endpoints.yaml",
+      "sha256": "d80f32b4a2eb1c0a24011a92c52495a5e2e9b25b7a3a315f3c3e2e2784be3057"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/ai_ingestion/graph/entities.yaml",
+      "sha256": "b9c243cbb0846d848a2154510480db3649091ebb6f9388cacf8ada30bf46b879"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/ai_ingestion/graph/errors.yaml",
+      "sha256": "91905c155019a00e8c79b557bbeb2b85726ffea1e549da03727f88c8497e3a3f"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/ai_ingestion/graph/module_manifest.yaml",
+      "sha256": "11f8c58628632e51d537280fb88b15deac39e7770853895226d1d060518c1bfc"
+    },
+    {
+      "relpath": "docs/hbtrack/modulos/ai_ingestion/graph/test_obligations.yaml",
+      "sha256": "537c53130e975e5ba10219a83f91e58ed4a6c457102ce8ef074e49d276ef19b4"
+    },
+    {
+      "relpath": "src/ai_ingestion/api.py",
+      "sha256": "cf440c020a86cb6c13b17f69a57a0772816971aef71211e0de56bb52e0f5bb88"
+    },
+    {
+      "relpath": "src/ai_ingestion/application/use_cases.py",
+      "sha256": "767a05392f3f43debf5e34663f16bd0a6e74a577e105c275c75c284b0238958f"
+    },
+    {
+      "relpath": "src/ai_ingestion/domain/entities.py",
+      "sha256": "ede7423eab24cdda7582f4e27fdae11d0f944534b398be14b873a040d3e4ff29"
+    },
+    {
+      "relpath": "src/ai_ingestion/domain/rules.py",
+      "sha256": "94826320de0c6055afd3813147296b9796b226f5e30fce66bfcc9618f479930b"
+    },
+    {
+      "relpath": "src/ai_ingestion/tests/unit/test_ai_ingestion.py",
+      "sha256": "629db8116c6e526fd179273a704700f4109acfe3ad7d232f69607992a27f98e0"
+    }
+  ],
+  "known_gaps": [
+    "A projection OpenAPI ingestion_job.yaml ainda expõe jobId/status/createdAt em vez da forma soberana do schema ingestion_job.schema.json.",
+    "O runtime ainda carrega status_label, error_message e origin_job_id fora do schema soberano local; esses campos seguem como extensões de execução.",
+    "AsyncAPI e Arazzo do módulo existem, mas permanecem fora do source graph local nesta fase e seguem governança separada."
+  ],
+  "module": "ai_ingestion",
+  "next_stage_targets": [
+    "B3-001",
+    "B3-002"
+  ],
+  "outputs": [
+    "generated/source_graph/ai_ingestion/ai_ingestion.bundle.yaml",
+    "generated/source_graph/ai_ingestion/ai_ingestion.schema_contract_view.yaml",
+    "generated/source_graph/ai_ingestion/ai_ingestion.openapi_contract_view.yaml",
+    "generated/source_graph/ai_ingestion/impact_report.json"
+  ],
+  "source_fingerprint": "01c9c36afdcae8090d184ffe31630338ec5ecefd425bb86712ad9613c2739f72"
+}

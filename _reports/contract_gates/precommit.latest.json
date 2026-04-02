@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-02T09:12:58Z",
+  "timestamp_utc": "2026-04-02T10:10:04Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "14483deb",
+    "git_commit": "8b9395c1",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.3",
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/precommit.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260402T091258_611775"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260402T101004_232ea0"
   },
   "status_detail": {
     "active_gates_passed": 36,
@@ -289,7 +289,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 47
+        "duration_ms": 38
       }
     },
     {
@@ -314,7 +314,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2987
+        "duration_ms": 336
       }
     },
     {
@@ -578,7 +578,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Nenhuma decisão arquitetural obrigatória pendente para o módulo 'reports'.",
+      "summary": "Nenhuma decisão arquitetural obrigatória pendente para o módulo 'ai_ingestion'.",
       "inputs": [],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md",
@@ -711,7 +711,7 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Cobertura de documentação válida para 232 documento(s).",
+      "summary": "Cobertura de documentação válida para 237 documento(s).",
       "inputs": [
         "/home/davis/HB-TRACK/docs/_canon/DOC_USAGE_MANIFEST.yaml"
       ],
@@ -749,6 +749,7 @@
         "config/settings.py",
         "config/urls.py",
         "contracts/asyncapi/",
+        "contracts/openapi/components/schemas/ai_ingestion/",
         "contracts/openapi/components/schemas/analytics/",
         "contracts/openapi/components/schemas/exercises/",
         "contracts/openapi/components/schemas/medical/",
@@ -756,12 +757,14 @@
         "contracts/openapi/components/schemas/reports/report_job.yaml",
         "contracts/openapi/components/schemas/wellness/",
         "contracts/openapi/openapi.yaml",
+        "contracts/openapi/paths/ai_ingestion.yaml",
         "contracts/openapi/paths/analytics.yaml",
         "contracts/openapi/paths/exercises.yaml",
         "contracts/openapi/paths/medical.yaml",
         "contracts/openapi/paths/notifications.yaml",
         "contracts/openapi/paths/reports.yaml",
         "contracts/openapi/paths/wellness.yaml",
+        "contracts/schemas/ai_ingestion/",
         "contracts/schemas/analytics/",
         "contracts/schemas/exercises/",
         "contracts/schemas/medical/",
@@ -869,6 +872,11 @@
         "docs/hbtrack/modulos/ai_ingestion/PERMISSIONS_AI_INGESTION.md",
         "docs/hbtrack/modulos/ai_ingestion/README.md",
         "docs/hbtrack/modulos/ai_ingestion/TEST_MATRIX_AI_INGESTION.md",
+        "docs/hbtrack/modulos/ai_ingestion/graph/endpoints.yaml",
+        "docs/hbtrack/modulos/ai_ingestion/graph/entities.yaml",
+        "docs/hbtrack/modulos/ai_ingestion/graph/errors.yaml",
+        "docs/hbtrack/modulos/ai_ingestion/graph/module_manifest.yaml",
+        "docs/hbtrack/modulos/ai_ingestion/graph/test_obligations.yaml",
         "docs/hbtrack/modulos/analytics/DOMAIN_RULES_ANALYTICS.md",
         "docs/hbtrack/modulos/analytics/ERRORS_ANALYTICS.md",
         "docs/hbtrack/modulos/analytics/INVARIANTS_ANALYTICS.md",
@@ -1008,6 +1016,7 @@
         "docs/hbtrack/modulos/wellness/graph/errors.yaml",
         "docs/hbtrack/modulos/wellness/graph/module_manifest.yaml",
         "docs/hbtrack/modulos/wellness/graph/test_obligations.yaml",
+        "generated/source_graph/ai_ingestion/impact_report.json",
         "generated/source_graph/analytics/impact_report.json",
         "generated/source_graph/exercises/impact_report.json",
         "generated/source_graph/medical/impact_report.json",
@@ -1025,12 +1034,14 @@
         "scripts/contracts/validate/validate_contracts.py",
         "scripts/hb",
         "src/",
+        "src/ai_ingestion/",
         "src/analytics/",
         "src/exercises/",
         "src/medical/",
         "src/notifications/",
         "src/reports/",
         "src/wellness/",
+        "tests/pipeline_gates/test_ai_ingestion_source_graph_integrity.py",
         "tests/pipeline_gates/test_analytics_source_graph_integrity.py",
         "tests/pipeline_gates/test_exercises_source_graph_integrity.py",
         "tests/pipeline_gates/test_gate_registry_parity.py",
@@ -1047,7 +1058,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 53
+        "duration_ms": 54
       }
     },
     {
@@ -1075,7 +1086,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 46
+        "duration_ms": 48
       }
     },
     {
@@ -1118,7 +1129,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 39
+        "duration_ms": 34
       }
     },
     {
@@ -1127,25 +1138,89 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Changeset observada, mas nenhum source_master/source_input soberano foi alterado.",
+      "summary": "1 regra(s) de sincronismo impactada(s); 15 consumer(s) bloqueante(s) rastreados.",
       "inputs": [
         "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml",
         "git status --porcelain --untracked-files=all",
+        "/home/davis/HB-TRACK/.CEPRAEA/BACKLOG_EXECUTAVEL_DETERMINISTICO.md",
+        "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
+        "/home/davis/HB-TRACK/_reports/READINESS_DASHBOARD.md",
+        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
+        "/home/davis/HB-TRACK/_reports/contract_gates/stage-artifact.local.latest.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/stage-session-start.local.latest.json",
-        "/home/davis/HB-TRACK/scripts/git-hooks/pre-commit",
-        "/home/davis/HB-TRACK/scripts/hb",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_hook_governance_enforcement_phase5.py"
+        "/home/davis/HB-TRACK/_reports/evidence/module_readiness_scorecard.json",
+        "/home/davis/HB-TRACK/_reports/evidence/module_readiness_scorecard.md",
+        "/home/davis/HB-TRACK/_reports/pipeline_health.json",
+        "/home/davis/HB-TRACK/_reports/pipeline_history.jsonl",
+        "/home/davis/HB-TRACK/_reports/session_start.json",
+        "/home/davis/HB-TRACK/compiled_context/ai_ingestion/FT-040.json",
+        "/home/davis/HB-TRACK/compiled_context/analytics/FT-038.json",
+        "/home/davis/HB-TRACK/compiled_context/exercises/FT-037.json",
+        "/home/davis/HB-TRACK/compiled_context/medical/FT-033.json",
+        "/home/davis/HB-TRACK/compiled_context/notifications/FT-042.json",
+        "/home/davis/HB-TRACK/compiled_context/ops/deploy.json",
+        "/home/davis/HB-TRACK/compiled_context/ops/runtime.json",
+        "/home/davis/HB-TRACK/compiled_context/reports/FT-039.json",
+        "/home/davis/HB-TRACK/compiled_context/wellness/FT-032.json",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/ai_ingestion.yaml",
+        "/home/davis/HB-TRACK/docs/_canon/DOC_USAGE_MANIFEST.yaml",
+        "/home/davis/HB-TRACK/docs/_canon/RUNTIME_CURRENT_STATE.md",
+        "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/DOMAIN_RULES_AI_INGESTION.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/README.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/TEST_MATRIX_AI_INGESTION.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/entities.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/test_obligations.yaml",
+        "/home/davis/HB-TRACK/generated/contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml",
+        "/home/davis/HB-TRACK/generated/contracts/openapi/paths/ai_ingestion.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/ai_ingestion.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/analytics.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/audit.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/competitions.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/exercises.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/identity_access.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/matches.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/medical.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/notifications.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/reports.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/scout.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/seasons.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/teams.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/training.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/users.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/video.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/wellness.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/ai_ingestion/ai_ingestion.bundle.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/ai_ingestion/ai_ingestion.openapi_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/ai_ingestion/ai_ingestion.schema_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/ai_ingestion/impact_report.json",
+        "/home/davis/HB-TRACK/src/ai_ingestion/api.py",
+        "/home/davis/HB-TRACK/src/ai_ingestion/schemas.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_ai_ingestion_source_graph_integrity.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_context_bundle_ai_ingestion.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_source_graph_compiler_ai_ingestion.py"
       ],
       "evidence_files": [],
-      "violations": [],
+      "violations": [
+        {
+          "blocking_code": "BLOCKED_SYNC_IMPACT_UNRESOLVED",
+          "artifact": "docs/hbtrack/modulos/ai_ingestion/graph/module_manifest.yaml",
+          "message": "Regra `AI_INGESTION_SOURCE_GRAPH_SYNC` impactada por 5 source change(s); 15 consumer(s) bloqueante(s) declarados.",
+          "severity": "warn"
+        }
+      ],
       "metrics": {
         "errors": 0,
-        "warnings": 0,
-        "violations": 0,
-        "duration_ms": 41
+        "warnings": 1,
+        "violations": 1,
+        "duration_ms": 52
       }
     },
     {
@@ -1154,17 +1229,74 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Nenhum source_master/source_input soberano alterado; não há atualização parcial a bloquear.",
+      "summary": "1 regra(s) impactada(s) com propagação bloqueante completa.",
       "inputs": [
         "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml"
       ],
       "artifacts_checked": [
         "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml",
         "git status --porcelain --untracked-files=all",
+        "/home/davis/HB-TRACK/.CEPRAEA/BACKLOG_EXECUTAVEL_DETERMINISTICO.md",
+        "/home/davis/HB-TRACK/SESSION_HANDOFF.md",
+        "/home/davis/HB-TRACK/_reports/READINESS_DASHBOARD.md",
+        "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
+        "/home/davis/HB-TRACK/_reports/contract_gates/stage-artifact.local.latest.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/stage-session-start.local.latest.json",
-        "/home/davis/HB-TRACK/scripts/git-hooks/pre-commit",
-        "/home/davis/HB-TRACK/scripts/hb",
-        "/home/davis/HB-TRACK/tests/pipeline_gates/test_hook_governance_enforcement_phase5.py"
+        "/home/davis/HB-TRACK/_reports/evidence/module_readiness_scorecard.json",
+        "/home/davis/HB-TRACK/_reports/evidence/module_readiness_scorecard.md",
+        "/home/davis/HB-TRACK/_reports/pipeline_health.json",
+        "/home/davis/HB-TRACK/_reports/pipeline_history.jsonl",
+        "/home/davis/HB-TRACK/_reports/session_start.json",
+        "/home/davis/HB-TRACK/compiled_context/ai_ingestion/FT-040.json",
+        "/home/davis/HB-TRACK/compiled_context/analytics/FT-038.json",
+        "/home/davis/HB-TRACK/compiled_context/exercises/FT-037.json",
+        "/home/davis/HB-TRACK/compiled_context/medical/FT-033.json",
+        "/home/davis/HB-TRACK/compiled_context/notifications/FT-042.json",
+        "/home/davis/HB-TRACK/compiled_context/ops/deploy.json",
+        "/home/davis/HB-TRACK/compiled_context/ops/runtime.json",
+        "/home/davis/HB-TRACK/compiled_context/reports/FT-039.json",
+        "/home/davis/HB-TRACK/compiled_context/wellness/FT-032.json",
+        "/home/davis/HB-TRACK/contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml",
+        "/home/davis/HB-TRACK/contracts/openapi/paths/ai_ingestion.yaml",
+        "/home/davis/HB-TRACK/docs/_canon/DOC_USAGE_MANIFEST.yaml",
+        "/home/davis/HB-TRACK/docs/_canon/RUNTIME_CURRENT_STATE.md",
+        "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/DOMAIN_RULES_AI_INGESTION.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/README.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/TEST_MATRIX_AI_INGESTION.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/entities.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/test_obligations.yaml",
+        "/home/davis/HB-TRACK/generated/contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml",
+        "/home/davis/HB-TRACK/generated/contracts/openapi/paths/ai_ingestion.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/ai_ingestion.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/analytics.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/audit.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/competitions.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/exercises.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/identity_access.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/matches.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/medical.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/notifications.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/reports.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/scout.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/seasons.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/teams.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/training.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/users.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/video.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/manifests/wellness.sync.traceability.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/ai_ingestion/ai_ingestion.bundle.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/ai_ingestion/ai_ingestion.openapi_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/ai_ingestion/ai_ingestion.schema_contract_view.yaml",
+        "/home/davis/HB-TRACK/generated/source_graph/ai_ingestion/impact_report.json",
+        "/home/davis/HB-TRACK/src/ai_ingestion/api.py",
+        "/home/davis/HB-TRACK/src/ai_ingestion/schemas.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_ai_ingestion_source_graph_integrity.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_context_bundle_ai_ingestion.py",
+        "/home/davis/HB-TRACK/tests/pipeline_gates/test_source_graph_compiler_ai_ingestion.py"
       ],
       "evidence_files": [],
       "violations": [],
@@ -1172,7 +1304,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 38
+        "duration_ms": 45
       }
     },
     {
@@ -1217,7 +1349,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 119
+        "duration_ms": 114
       }
     },
     {
@@ -1246,7 +1378,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 121
+        "duration_ms": 124
       }
     },
     {
@@ -1291,7 +1423,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 99
+        "duration_ms": 101
       }
     },
     {
@@ -1336,7 +1468,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 100
+        "duration_ms": 107
       }
     },
     {
@@ -1381,7 +1513,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 105
+        "duration_ms": 106
       }
     },
     {
@@ -1751,7 +1883,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 52
+        "duration_ms": 32
       }
     },
     {
@@ -1837,7 +1969,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 689
+        "duration_ms": 678
       }
     },
     {
@@ -1860,7 +1992,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1036
+        "duration_ms": 1017
       }
     },
     {
@@ -1882,7 +2014,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1350
+        "duration_ms": 1263
       }
     },
     {
@@ -1921,7 +2053,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 551
+        "duration_ms": 544
       }
     },
     {
@@ -1961,7 +2093,7 @@
         "errors": 0,
         "warnings": 1,
         "violations": 1,
-        "duration_ms": 1580
+        "duration_ms": 1461
       }
     },
     {
@@ -2389,6 +2521,12 @@
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/PERMISSIONS_AI_INGESTION.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/README.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/TEST_MATRIX_AI_INGESTION.md",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/endpoints.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/entities.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/errors.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/module_manifest.yaml",
+        "/home/davis/HB-TRACK/docs/hbtrack/modulos/ai_ingestion/graph/test_obligations.yaml",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/DOMAIN_RULES_ANALYTICS.md",
         "/home/davis/HB-TRACK/docs/hbtrack/modulos/analytics/ERRORS_ANALYTICS.md",
@@ -2557,7 +2695,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1787
+        "duration_ms": 1638
       }
     },
     {
@@ -2566,9 +2704,14 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "Equivalência OpenAPI × schema soberano: 6 módulo(s) validado(s).",
+      "summary": "Equivalência OpenAPI × schema soberano: 7 módulo(s) validado(s).",
       "inputs": [],
       "artifacts_checked": [
+        "generated/source_graph/ai_ingestion/ai_ingestion.schema_contract_view.yaml",
+        "docs/hbtrack/modulos/ai_ingestion/graph/module_manifest.yaml",
+        "contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml",
+        "contracts/schemas/ai_ingestion/ingestion_job.schema.json",
+        "contracts/openapi/paths/ai_ingestion.yaml",
         "generated/source_graph/analytics/analytics.schema_contract_view.yaml",
         "docs/hbtrack/modulos/analytics/graph/module_manifest.yaml",
         "contracts/openapi/components/schemas/analytics/analytics_snapshot.yaml",
@@ -2606,7 +2749,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 207
+        "duration_ms": 191
       }
     },
     {
@@ -2682,7 +2825,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2717
+        "duration_ms": 1757
       }
     },
     {
@@ -2725,7 +2868,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 79
+        "duration_ms": 60
       }
     },
     {
@@ -2747,7 +2890,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1643
+        "duration_ms": 1034
       }
     },
     {
@@ -2803,7 +2946,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 71
+        "duration_ms": 64
       }
     },
     {
@@ -2823,7 +2966,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 4
+        "duration_ms": 2
       }
     },
     {
@@ -3019,7 +3162,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 4
       }
     },
     {
@@ -3041,7 +3184,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 203
+        "duration_ms": 164
       }
     },
     {
@@ -3063,7 +3206,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 6
       }
     },
     {
@@ -3123,7 +3266,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 10
+        "duration_ms": 5
       }
     },
     {
@@ -3145,7 +3288,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 31
+        "duration_ms": 18
       }
     },
     {
@@ -3163,7 +3306,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 7
       }
     },
     {
@@ -3208,9 +3351,18 @@
       "blocking": true,
       "exit_code": 0,
       "blocking_code": null,
-      "summary": "8 bundle(s) frescos — todos os inputs batem com os hashes registrados.",
+      "summary": "9 bundle(s) frescos — todos os inputs batem com os hashes registrados.",
       "inputs": [],
       "artifacts_checked": [
+        "compiled_context/ai_ingestion/FT-040.json",
+        "docs/_canon/FEATURE_REGISTRY.yaml",
+        "docs/_canon/MODULE_REGISTRY.yaml",
+        "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+        "docs/_canon/SYNC_MANIFEST.yaml",
+        "generated/source_graph/ai_ingestion/ai_ingestion.bundle.yaml",
+        "generated/source_graph/ai_ingestion/ai_ingestion.schema_contract_view.yaml",
+        "generated/source_graph/ai_ingestion/ai_ingestion.openapi_contract_view.yaml",
+        "generated/source_graph/ai_ingestion/impact_report.json",
         "compiled_context/analytics/FT-038.json",
         "docs/_canon/FEATURE_REGISTRY.yaml",
         "docs/_canon/MODULE_REGISTRY.yaml",
@@ -3285,7 +3437,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 15
+        "duration_ms": 7
       }
     },
     {

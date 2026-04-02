@@ -1,0 +1,43 @@
+version: "1.0.0"
+status: active
+module: ai_ingestion
+
+obligations:
+  - id: ING-TO-001
+    scope: sovereign_schema
+    artifact_ref: "../../../../../contracts/schemas/ai_ingestion/ingestion_job.schema.json"
+    verification: "JSON Schema validation via contract gates"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+  - id: ING-TO-002
+    scope: openapi_contract
+    artifact_ref: "../../../../../contracts/openapi/paths/ai_ingestion.yaml"
+    verification: "OpenAPI lint and contract-gate validation"
+    evidence_refs:
+      - "../../../../../_reports/contract_gates/latest.json"
+  - id: ING-TO-003
+    scope: domain_invariants_and_permissions
+    artifact_ref: "../../../../../src/ai_ingestion/tests/unit/test_ai_ingestion.py"
+    covers:
+      - INV-ING-001
+      - INV-ING-002
+      - INV-ING-003
+      - INV-ING-004
+      - INV-ING-005
+      - DR-ING-001
+      - DR-ING-002
+      - DR-ING-003
+      - DR-ING-004
+      - DR-ING-005
+      - PERM-AI-001
+      - PERM-AI-002
+      - PERM-AI-003
+    verification: "Unit tests for invariants, idempotency and RBAC boundaries of ai_ingestion"
+    evidence_refs:
+      - "../../../../../src/ai_ingestion/tests/unit/test_ai_ingestion.py"
+  - id: ING-TO-004
+    scope: source_graph_integrity
+    artifact_ref: "../../../../../tests/pipeline_gates/test_ai_ingestion_source_graph_integrity.py"
+    verification: "Pipeline gate enforces parity between graph, docs, contracts and runtime refs"
+    evidence_refs:
+      - "../../../../../tests/pipeline_gates/test_ai_ingestion_source_graph_integrity.py"

@@ -2,6 +2,7 @@
 # Module: ai_ingestion — OpenAPI path items
 # Source of truth: contracts/openapi/openapi.yaml
 # Docs: docs/hbtrack/modulos/ai_ingestion/MODULE_SCOPE_AI_INGESTION.md
+# Source graph: docs/hbtrack/modulos/ai_ingestion/graph/module_manifest.yaml
 # Domain rules: DR-ING-001..005
 # Invariants: INV-ING-001..005
 # ADR refs: ADR-007 (JWT), ADR-008 (RBAC), ADR-031 (stack)
@@ -94,6 +95,7 @@
                   type: integer
                   minimum: 0
               additionalProperties: false
+              description: Itens de `data` projetam diretamente o schema soberano `ingestion_job.schema.json`.
       "401":
         description: Token ausente ou expirado (ADR-007).
         content:

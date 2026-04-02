@@ -1,0 +1,835 @@
+{
+  "artifact_id": "HBTRACK_MODULE_FEATURE_CONTEXT_BUNDLE",
+  "authority": {
+    "openapi_contract_view_ref": "generated/source_graph/ai_ingestion/ai_ingestion.openapi_contract_view.yaml",
+    "partial_update_policy": "blocked",
+    "precedence_order": [
+      "enforcement_executable",
+      "active_schemas",
+      "source_authority_graph",
+      "concept_owner_source",
+      "bridge_docs",
+      "derived_artifacts",
+      "legacy_or_study"
+    ],
+    "schema_contract_view_ref": "generated/source_graph/ai_ingestion/ai_ingestion.schema_contract_view.yaml",
+    "source_authority_graph_ref": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+    "source_graph_bundle_ref": "generated/source_graph/ai_ingestion/ai_ingestion.bundle.yaml",
+    "source_graph_impact_ref": "generated/source_graph/ai_ingestion/impact_report.json",
+    "sync_manifest_ref": "docs/_canon/SYNC_MANIFEST.yaml",
+    "sync_rule_id": "AI_INGESTION_SOURCE_GRAPH_SYNC"
+  },
+  "compiler": "hbtrack_context_bundle_compiler",
+  "compiler_version": "0.1.0",
+  "contract_surfaces": {
+    "openapi_paths": "contracts/openapi/paths/ai_ingestion.yaml",
+    "openapi_projection": "contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml",
+    "primary_schema": "contracts/schemas/ai_ingestion/ingestion_job.schema.json",
+    "sovereign_schema_dir": "contracts/schemas/ai_ingestion"
+  },
+  "feature": {
+    "contracts": [
+      "contracts/openapi/paths/ai_ingestion.yaml"
+    ],
+    "description": "Operador submete jobs de ingestão de dados externos (scouts, relatórios) para processamento por pipeline de IA. Pode retentar jobs com falha.",
+    "endpoints": [
+      "GET /ingestion/jobs",
+      "POST /ingestion/jobs",
+      "GET /ingestion/jobs/{jobId}",
+      "POST /ingestion/jobs/{jobId}/retry"
+    ],
+    "id": "FT-040",
+    "name": "Ingestão Assíncrona de Dados por IA",
+    "slug": "ingestão-assíncrona-de-dados-por-ia",
+    "status": "implemented"
+  },
+  "implementation_targets": {
+    "canonical_runtime": [
+      "src/ai_ingestion/api.py",
+      "src/ai_ingestion/application/use_cases.py",
+      "src/ai_ingestion/domain/entities.py",
+      "src/ai_ingestion/domain/rules.py",
+      "src/ai_ingestion/schemas.py",
+      "src/ai_ingestion/tests/unit/test_ai_ingestion.py"
+    ],
+    "contracts": [
+      "contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml",
+      "contracts/openapi/paths/ai_ingestion.yaml",
+      "contracts/schemas/ai_ingestion/ingestion_job.schema.json"
+    ],
+    "derived_context": [
+      "compiled_context/ai_ingestion/FT-040.json"
+    ],
+    "generated_runtime": [],
+    "module_docs": [
+      "docs/hbtrack/modulos/ai_ingestion/DOMAIN_RULES_AI_INGESTION.md",
+      "docs/hbtrack/modulos/ai_ingestion/INVARIANTS_AI_INGESTION.md",
+      "docs/hbtrack/modulos/ai_ingestion/MODULE_SCOPE_AI_INGESTION.md",
+      "docs/hbtrack/modulos/ai_ingestion/PERMISSIONS_AI_INGESTION.md",
+      "docs/hbtrack/modulos/ai_ingestion/README.md",
+      "docs/hbtrack/modulos/ai_ingestion/TEST_MATRIX_AI_INGESTION.md"
+    ],
+    "tests": [
+      "tests/pipeline_gates/test_ai_ingestion_source_graph_integrity.py",
+      "tests/pipeline_gates/test_context_bundle_ai_ingestion.py",
+      "tests/pipeline_gates/test_source_graph_compiler_ai_ingestion.py"
+    ]
+  },
+  "inputs": [
+    {
+      "relpath": "docs/_canon/FEATURE_REGISTRY.yaml",
+      "sha256": "15e0e2a667ccc54f93ab4d2dbc84c2ffd1b7bf5268771396a3b85d0572cd58c0"
+    },
+    {
+      "relpath": "docs/_canon/MODULE_REGISTRY.yaml",
+      "sha256": "bed74af95778cb977c5d18f765d1b38477ddad242c1c0480a5ab8ff84a0b9505"
+    },
+    {
+      "relpath": "docs/_canon/SOURCE_AUTHORITY_GRAPH.yaml",
+      "sha256": "c7ff89bb7bc4e0e1851a3e6b1fd0aeaefbb0a0d5cdfb6a71aad0becfe042d8d1"
+    },
+    {
+      "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
+      "sha256": "714765ef22985fdd353c060b0957bf37fb55d50b75b11edfff8f4fdd9a6c062a"
+    },
+    {
+      "relpath": "generated/source_graph/ai_ingestion/ai_ingestion.bundle.yaml",
+      "sha256": "79c3f5298855f6265e188c8c38e4ccd12eee23b43a3caee7b7f49d13f416b8dc"
+    },
+    {
+      "relpath": "generated/source_graph/ai_ingestion/ai_ingestion.schema_contract_view.yaml",
+      "sha256": "6eef399b2d5888365f0fe7df55d3833f7f1c653e36fb3f8211785c0fb9770d59"
+    },
+    {
+      "relpath": "generated/source_graph/ai_ingestion/ai_ingestion.openapi_contract_view.yaml",
+      "sha256": "c67dcfedf74db5cdd5390bf7b5be741b08690d9cd599f57ca6bf8e954d2cc35c"
+    },
+    {
+      "relpath": "generated/source_graph/ai_ingestion/impact_report.json",
+      "sha256": "774d3f669fb26187dcef107bd0a81542ee0593d7539fc15e21fdd3555a857ce4"
+    }
+  ],
+  "module": "ai_ingestion",
+  "module_docs": {
+    "domain_rules": "docs/hbtrack/modulos/ai_ingestion/DOMAIN_RULES_AI_INGESTION.md",
+    "invariants": "docs/hbtrack/modulos/ai_ingestion/INVARIANTS_AI_INGESTION.md",
+    "permissions": "docs/hbtrack/modulos/ai_ingestion/PERMISSIONS_AI_INGESTION.md",
+    "readme": "docs/hbtrack/modulos/ai_ingestion/README.md",
+    "scope": "docs/hbtrack/modulos/ai_ingestion/MODULE_SCOPE_AI_INGESTION.md",
+    "test_matrix": "docs/hbtrack/modulos/ai_ingestion/TEST_MATRIX_AI_INGESTION.md"
+  },
+  "module_state": {
+    "expected_surfaces": [
+      "module_docs_minimum",
+      "openapi_sync",
+      "json_schema",
+      "test_matrix",
+      "asyncapi",
+      "arazzo"
+    ],
+    "owner": "platform-core",
+    "status": "implemented"
+  },
+  "runtime_surfaces": {
+    "api_router": "src/ai_ingestion/api.py",
+    "domain_entity": "src/ai_ingestion/domain/entities.py",
+    "domain_rules": "src/ai_ingestion/domain/rules.py",
+    "unit_tests": "src/ai_ingestion/tests/unit/test_ai_ingestion.py",
+    "use_cases": "src/ai_ingestion/application/use_cases.py"
+  },
+  "source_fingerprint": "665ad9c86fd02984ef4af4b77f6fc502e45109c2d323eb9638a40f9641474206",
+  "source_graph": {
+    "entities": {
+      "IngestionJob": {
+        "docs_refs": [
+          "../DOMAIN_RULES_AI_INGESTION.md",
+          "../INVARIANTS_AI_INGESTION.md",
+          "../PERMISSIONS_AI_INGESTION.md"
+        ],
+        "runtime_entity_ref": "../../../../../src/ai_ingestion/domain/entities.py#IngestionJob",
+        "runtime_extension_fields": [
+          {
+            "name": "statusLabel",
+            "runtime_name": "status_label",
+            "type": "string"
+          },
+          {
+            "name": "errorMessage",
+            "runtime_name": "error_message",
+            "type": "string"
+          },
+          {
+            "name": "originJobId",
+            "runtime_name": "origin_job_id",
+            "type": "uuid_v4"
+          }
+        ],
+        "schema_ref": "../../../../../contracts/schemas/ai_ingestion/ingestion_job.schema.json",
+        "sovereign_fields": [
+          {
+            "name": "id",
+            "required": true,
+            "runtime_name": "id",
+            "type": "uuid_v4"
+          },
+          {
+            "name": "sourceLabel",
+            "required": true,
+            "runtime_name": "source_label",
+            "type": "string"
+          },
+          {
+            "name": "ingestionMode",
+            "required": true,
+            "runtime_name": "ingestion_mode",
+            "type": "string"
+          },
+          {
+            "name": "payloadSchemaRef",
+            "required": false,
+            "runtime_name": "payload_schema_ref",
+            "type": "string"
+          },
+          {
+            "name": "mappingProfile",
+            "required": false,
+            "runtime_name": "mapping_profile",
+            "type": "string"
+          },
+          {
+            "name": "idempotencyKey",
+            "required": false,
+            "runtime_name": "idempotency_key",
+            "type": "string"
+          },
+          {
+            "name": "executionBindingLabel",
+            "required": false,
+            "runtime_name": "execution_binding_label",
+            "type": "string"
+          },
+          {
+            "name": "receivedAt",
+            "required": true,
+            "runtime_name": "received_at",
+            "type": "timestamp_utc"
+          },
+          {
+            "name": "completedAt",
+            "required": false,
+            "runtime_name": "completed_at",
+            "type": "timestamp_utc"
+          }
+        ]
+      }
+    },
+    "errors": [
+      {
+        "http_status": 401,
+        "id": "ERR-AI-401-UNAUTHENTICATED",
+        "kind": "transport",
+        "operations": [
+          "listIngestionJobs",
+          "createIngestionJob",
+          "getIngestionJob",
+          "retryIngestionJob"
+        ],
+        "source_ref": "../../../../../src/ai_ingestion/api.py#_get_role"
+      },
+      {
+        "exception_ref": "../../../../../src/ai_ingestion/domain/rules.py#InsufficientPrivilege",
+        "http_status": 403,
+        "id": "ERR-AI-403-INSUFFICIENT-PRIVILEGE",
+        "kind": "domain",
+        "operations": [
+          "listIngestionJobs",
+          "createIngestionJob",
+          "getIngestionJob",
+          "retryIngestionJob"
+        ]
+      },
+      {
+        "exception_ref": "../../../../../src/ai_ingestion/domain/rules.py#IngestionJobNotFound",
+        "http_status": 404,
+        "id": "ERR-AI-404-JOB-NOT-FOUND",
+        "kind": "domain",
+        "operations": [
+          "getIngestionJob",
+          "retryIngestionJob"
+        ]
+      },
+      {
+        "exception_ref": "../../../../../src/ai_ingestion/domain/rules.py#IngestionJobConflict",
+        "http_status": 409,
+        "id": "ERR-AI-409-JOB-CONFLICT",
+        "kind": "domain",
+        "operations": [
+          "retryIngestionJob"
+        ]
+      },
+      {
+        "http_status": 400,
+        "id": "ERR-AI-400-INGESTION-VALIDATION",
+        "kind": "validation",
+        "operations": [
+          "createIngestionJob",
+          "retryIngestionJob"
+        ],
+        "source_ref": "../../../../../src/ai_ingestion/domain/entities.py#validate_invariants"
+      }
+    ],
+    "impact_report": {
+      "blocked_partial_update": true,
+      "impacted_contracts": [
+        "contracts/openapi/paths/ai_ingestion.yaml",
+        "contracts/schemas/ai_ingestion/ingestion_job.schema.json",
+        "contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml"
+      ],
+      "impacted_docs": [
+        "docs/hbtrack/modulos/ai_ingestion/README.md",
+        "docs/hbtrack/modulos/ai_ingestion/MODULE_SCOPE_AI_INGESTION.md",
+        "docs/hbtrack/modulos/ai_ingestion/DOMAIN_RULES_AI_INGESTION.md",
+        "docs/hbtrack/modulos/ai_ingestion/INVARIANTS_AI_INGESTION.md",
+        "docs/hbtrack/modulos/ai_ingestion/PERMISSIONS_AI_INGESTION.md",
+        "docs/hbtrack/modulos/ai_ingestion/TEST_MATRIX_AI_INGESTION.md"
+      ],
+      "impacted_runtime": [
+        "src/ai_ingestion/api.py",
+        "src/ai_ingestion/domain/entities.py",
+        "src/ai_ingestion/domain/rules.py",
+        "src/ai_ingestion/application/use_cases.py",
+        "src/ai_ingestion/tests/unit/test_ai_ingestion.py"
+      ],
+      "known_gaps": [
+        "A projection OpenAPI ingestion_job.yaml ainda expõe jobId/status/createdAt em vez da forma soberana do schema ingestion_job.schema.json.",
+        "O runtime ainda carrega status_label, error_message e origin_job_id fora do schema soberano local; esses campos seguem como extensões de execução.",
+        "AsyncAPI e Arazzo do módulo existem, mas permanecem fora do source graph local nesta fase e seguem governança separada."
+      ],
+      "source_fingerprint": "01c9c36afdcae8090d184ffe31630338ec5ecefd425bb86712ad9613c2739f72"
+    },
+    "openapi_contract_view": {
+      "artifact_id": "HBTRACK_SOURCE_GRAPH_OPENAPI_CONTRACT_VIEW",
+      "compiler": "hbtrack_source_graph_compiler",
+      "compiler_version": "0.1.0",
+      "errors": [
+        {
+          "http_status": 401,
+          "id": "ERR-AI-401-UNAUTHENTICATED",
+          "kind": "transport",
+          "operations": [
+            "listIngestionJobs",
+            "createIngestionJob",
+            "getIngestionJob",
+            "retryIngestionJob"
+          ],
+          "source_ref": "../../../../../src/ai_ingestion/api.py#_get_role"
+        },
+        {
+          "exception_ref": "../../../../../src/ai_ingestion/domain/rules.py#InsufficientPrivilege",
+          "http_status": 403,
+          "id": "ERR-AI-403-INSUFFICIENT-PRIVILEGE",
+          "kind": "domain",
+          "operations": [
+            "listIngestionJobs",
+            "createIngestionJob",
+            "getIngestionJob",
+            "retryIngestionJob"
+          ]
+        },
+        {
+          "exception_ref": "../../../../../src/ai_ingestion/domain/rules.py#IngestionJobNotFound",
+          "http_status": 404,
+          "id": "ERR-AI-404-JOB-NOT-FOUND",
+          "kind": "domain",
+          "operations": [
+            "getIngestionJob",
+            "retryIngestionJob"
+          ]
+        },
+        {
+          "exception_ref": "../../../../../src/ai_ingestion/domain/rules.py#IngestionJobConflict",
+          "http_status": 409,
+          "id": "ERR-AI-409-JOB-CONFLICT",
+          "kind": "domain",
+          "operations": [
+            "retryIngestionJob"
+          ]
+        },
+        {
+          "http_status": 400,
+          "id": "ERR-AI-400-INGESTION-VALIDATION",
+          "kind": "validation",
+          "operations": [
+            "createIngestionJob",
+            "retryIngestionJob"
+          ],
+          "source_ref": "../../../../../src/ai_ingestion/domain/entities.py#validate_invariants"
+        }
+      ],
+      "module": "ai_ingestion",
+      "openapi_paths_ref": "contracts/openapi/paths/ai_ingestion.yaml",
+      "operations": [
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/ai_ingestion.yaml#/ingestion/jobs/get",
+          "operation_id": "listIngestionJobs",
+          "owner_scoped_roles": [],
+          "path": "/ingestion/jobs",
+          "response_codes": [
+            200,
+            401,
+            403,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator"
+          ],
+          "roles_denied": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/ai_ingestion/api.py#list_ingestion_jobs",
+          "use_case_ref": "../../../../../src/ai_ingestion/application/use_cases.py#ListIngestionJobs"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/ai_ingestion.yaml#/ingestion/jobs/post",
+          "operation_id": "createIngestionJob",
+          "owner_scoped_roles": [],
+          "path": "/ingestion/jobs",
+          "response_codes": [
+            202,
+            400,
+            401,
+            403,
+            409,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator"
+          ],
+          "roles_denied": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/ai_ingestion/api.py#create_ingestion_job",
+          "use_case_ref": "../../../../../src/ai_ingestion/application/use_cases.py#CreateIngestionJob"
+        },
+        {
+          "method": "GET",
+          "openapi_ref": "../../../../../contracts/openapi/paths/ai_ingestion.yaml#/ingestion/jobs/{jobId}/get",
+          "operation_id": "getIngestionJob",
+          "owner_scoped_roles": [],
+          "path": "/ingestion/jobs/{jobId}",
+          "response_codes": [
+            200,
+            401,
+            403,
+            404,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator"
+          ],
+          "roles_denied": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/ai_ingestion/api.py#get_ingestion_job",
+          "use_case_ref": "../../../../../src/ai_ingestion/application/use_cases.py#GetIngestionJob"
+        },
+        {
+          "method": "POST",
+          "openapi_ref": "../../../../../contracts/openapi/paths/ai_ingestion.yaml#/ingestion/jobs/{jobId}/retry/post",
+          "operation_id": "retryIngestionJob",
+          "owner_scoped_roles": [],
+          "path": "/ingestion/jobs/{jobId}/retry",
+          "response_codes": [
+            202,
+            400,
+            401,
+            403,
+            404,
+            409,
+            500
+          ],
+          "roles_allowed": [
+            "admin",
+            "coordinator"
+          ],
+          "roles_denied": [
+            "coach",
+            "athlete",
+            "member"
+          ],
+          "runtime_handler_ref": "../../../../../src/ai_ingestion/api.py#retry_ingestion_job",
+          "use_case_ref": "../../../../../src/ai_ingestion/application/use_cases.py#RetryIngestionJob"
+        }
+      ]
+    },
+    "operations": [
+      {
+        "method": "GET",
+        "openapi_ref": "../../../../../contracts/openapi/paths/ai_ingestion.yaml#/ingestion/jobs/get",
+        "operation_id": "listIngestionJobs",
+        "owner_scoped_roles": [],
+        "path": "/ingestion/jobs",
+        "response_codes": [
+          200,
+          401,
+          403,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator"
+        ],
+        "roles_denied": [
+          "coach",
+          "athlete",
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/ai_ingestion/api.py#list_ingestion_jobs",
+        "use_case_ref": "../../../../../src/ai_ingestion/application/use_cases.py#ListIngestionJobs"
+      },
+      {
+        "method": "POST",
+        "openapi_ref": "../../../../../contracts/openapi/paths/ai_ingestion.yaml#/ingestion/jobs/post",
+        "operation_id": "createIngestionJob",
+        "owner_scoped_roles": [],
+        "path": "/ingestion/jobs",
+        "response_codes": [
+          202,
+          400,
+          401,
+          403,
+          409,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator"
+        ],
+        "roles_denied": [
+          "coach",
+          "athlete",
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/ai_ingestion/api.py#create_ingestion_job",
+        "use_case_ref": "../../../../../src/ai_ingestion/application/use_cases.py#CreateIngestionJob"
+      },
+      {
+        "method": "GET",
+        "openapi_ref": "../../../../../contracts/openapi/paths/ai_ingestion.yaml#/ingestion/jobs/{jobId}/get",
+        "operation_id": "getIngestionJob",
+        "owner_scoped_roles": [],
+        "path": "/ingestion/jobs/{jobId}",
+        "response_codes": [
+          200,
+          401,
+          403,
+          404,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator"
+        ],
+        "roles_denied": [
+          "coach",
+          "athlete",
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/ai_ingestion/api.py#get_ingestion_job",
+        "use_case_ref": "../../../../../src/ai_ingestion/application/use_cases.py#GetIngestionJob"
+      },
+      {
+        "method": "POST",
+        "openapi_ref": "../../../../../contracts/openapi/paths/ai_ingestion.yaml#/ingestion/jobs/{jobId}/retry/post",
+        "operation_id": "retryIngestionJob",
+        "owner_scoped_roles": [],
+        "path": "/ingestion/jobs/{jobId}/retry",
+        "response_codes": [
+          202,
+          400,
+          401,
+          403,
+          404,
+          409,
+          500
+        ],
+        "roles_allowed": [
+          "admin",
+          "coordinator"
+        ],
+        "roles_denied": [
+          "coach",
+          "athlete",
+          "member"
+        ],
+        "runtime_handler_ref": "../../../../../src/ai_ingestion/api.py#retry_ingestion_job",
+        "use_case_ref": "../../../../../src/ai_ingestion/application/use_cases.py#RetryIngestionJob"
+      }
+    ],
+    "schema_contract_view": {
+      "artifact_id": "HBTRACK_SOURCE_GRAPH_SCHEMA_CONTRACT_VIEW",
+      "compiler": "hbtrack_source_graph_compiler",
+      "compiler_version": "0.1.0",
+      "entities": {
+        "IngestionJob": {
+          "required": [
+            "id",
+            "sourceLabel",
+            "ingestionMode",
+            "receivedAt"
+          ],
+          "runtime_extension_fields": [
+            {
+              "name": "statusLabel",
+              "runtime_name": "status_label",
+              "type": "string"
+            },
+            {
+              "name": "errorMessage",
+              "runtime_name": "error_message",
+              "type": "string"
+            },
+            {
+              "name": "originJobId",
+              "runtime_name": "origin_job_id",
+              "type": "uuid_v4"
+            }
+          ],
+          "schema_ref": "contracts/schemas/ai_ingestion/ingestion_job.schema.json",
+          "sovereign_fields": [
+            {
+              "name": "id",
+              "required": true,
+              "runtime_name": "id",
+              "type": "uuid_v4"
+            },
+            {
+              "name": "sourceLabel",
+              "required": true,
+              "runtime_name": "source_label",
+              "type": "string"
+            },
+            {
+              "name": "ingestionMode",
+              "required": true,
+              "runtime_name": "ingestion_mode",
+              "type": "string"
+            },
+            {
+              "name": "payloadSchemaRef",
+              "required": false,
+              "runtime_name": "payload_schema_ref",
+              "type": "string"
+            },
+            {
+              "name": "mappingProfile",
+              "required": false,
+              "runtime_name": "mapping_profile",
+              "type": "string"
+            },
+            {
+              "name": "idempotencyKey",
+              "required": false,
+              "runtime_name": "idempotency_key",
+              "type": "string"
+            },
+            {
+              "name": "executionBindingLabel",
+              "required": false,
+              "runtime_name": "execution_binding_label",
+              "type": "string"
+            },
+            {
+              "name": "receivedAt",
+              "required": true,
+              "runtime_name": "received_at",
+              "type": "timestamp_utc"
+            },
+            {
+              "name": "completedAt",
+              "required": false,
+              "runtime_name": "completed_at",
+              "type": "timestamp_utc"
+            }
+          ]
+        }
+      },
+      "entity": "IngestionJob",
+      "module": "ai_ingestion",
+      "openapi_projection_ref": "contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml",
+      "primary_entity": "IngestionJob",
+      "primary_schema_ref": "contracts/schemas/ai_ingestion/ingestion_job.schema.json",
+      "required": [
+        "id",
+        "sourceLabel",
+        "ingestionMode",
+        "receivedAt"
+      ],
+      "runtime_extension_fields": [
+        {
+          "name": "statusLabel",
+          "runtime_name": "status_label",
+          "type": "string"
+        },
+        {
+          "name": "errorMessage",
+          "runtime_name": "error_message",
+          "type": "string"
+        },
+        {
+          "name": "originJobId",
+          "runtime_name": "origin_job_id",
+          "type": "uuid_v4"
+        }
+      ],
+      "sovereign_fields": [
+        {
+          "name": "id",
+          "required": true,
+          "runtime_name": "id",
+          "type": "uuid_v4"
+        },
+        {
+          "name": "sourceLabel",
+          "required": true,
+          "runtime_name": "source_label",
+          "type": "string"
+        },
+        {
+          "name": "ingestionMode",
+          "required": true,
+          "runtime_name": "ingestion_mode",
+          "type": "string"
+        },
+        {
+          "name": "payloadSchemaRef",
+          "required": false,
+          "runtime_name": "payload_schema_ref",
+          "type": "string"
+        },
+        {
+          "name": "mappingProfile",
+          "required": false,
+          "runtime_name": "mapping_profile",
+          "type": "string"
+        },
+        {
+          "name": "idempotencyKey",
+          "required": false,
+          "runtime_name": "idempotency_key",
+          "type": "string"
+        },
+        {
+          "name": "executionBindingLabel",
+          "required": false,
+          "runtime_name": "execution_binding_label",
+          "type": "string"
+        },
+        {
+          "name": "receivedAt",
+          "required": true,
+          "runtime_name": "received_at",
+          "type": "timestamp_utc"
+        },
+        {
+          "name": "completedAt",
+          "required": false,
+          "runtime_name": "completed_at",
+          "type": "timestamp_utc"
+        }
+      ]
+    },
+    "test_obligations": [
+      {
+        "artifact_ref": "../../../../../contracts/schemas/ai_ingestion/ingestion_job.schema.json",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "ING-TO-001",
+        "scope": "sovereign_schema",
+        "verification": "JSON Schema validation via contract gates"
+      },
+      {
+        "artifact_ref": "../../../../../contracts/openapi/paths/ai_ingestion.yaml",
+        "evidence_refs": [
+          "../../../../../_reports/contract_gates/latest.json"
+        ],
+        "id": "ING-TO-002",
+        "scope": "openapi_contract",
+        "verification": "OpenAPI lint and contract-gate validation"
+      },
+      {
+        "artifact_ref": "../../../../../src/ai_ingestion/tests/unit/test_ai_ingestion.py",
+        "covers": [
+          "INV-ING-001",
+          "INV-ING-002",
+          "INV-ING-003",
+          "INV-ING-004",
+          "INV-ING-005",
+          "DR-ING-001",
+          "DR-ING-002",
+          "DR-ING-003",
+          "DR-ING-004",
+          "DR-ING-005",
+          "PERM-AI-001",
+          "PERM-AI-002",
+          "PERM-AI-003"
+        ],
+        "evidence_refs": [
+          "../../../../../src/ai_ingestion/tests/unit/test_ai_ingestion.py"
+        ],
+        "id": "ING-TO-003",
+        "scope": "domain_invariants_and_permissions",
+        "verification": "Unit tests for invariants, idempotency and RBAC boundaries of ai_ingestion"
+      },
+      {
+        "artifact_ref": "../../../../../tests/pipeline_gates/test_ai_ingestion_source_graph_integrity.py",
+        "evidence_refs": [
+          "../../../../../tests/pipeline_gates/test_ai_ingestion_source_graph_integrity.py"
+        ],
+        "id": "ING-TO-004",
+        "scope": "source_graph_integrity",
+        "verification": "Pipeline gate enforces parity between graph, docs, contracts and runtime refs"
+      }
+    ]
+  },
+  "validation": {
+    "blocking_consumers": [
+      "docs/hbtrack/modulos/ai_ingestion/README.md",
+      "docs/hbtrack/modulos/ai_ingestion/DOMAIN_RULES_AI_INGESTION.md",
+      "docs/hbtrack/modulos/ai_ingestion/TEST_MATRIX_AI_INGESTION.md",
+      "contracts/openapi/paths/ai_ingestion.yaml",
+      "contracts/openapi/components/schemas/ai_ingestion/ingestion_job.yaml",
+      "generated/source_graph/ai_ingestion/ai_ingestion.bundle.yaml",
+      "generated/source_graph/ai_ingestion/ai_ingestion.schema_contract_view.yaml",
+      "generated/source_graph/ai_ingestion/ai_ingestion.openapi_contract_view.yaml",
+      "generated/source_graph/ai_ingestion/impact_report.json",
+      "compiled_context/ai_ingestion/FT-040.json",
+      "src/ai_ingestion/api.py",
+      "src/ai_ingestion/schemas.py",
+      "tests/pipeline_gates/test_ai_ingestion_source_graph_integrity.py",
+      "tests/pipeline_gates/test_source_graph_compiler_ai_ingestion.py",
+      "tests/pipeline_gates/test_context_bundle_ai_ingestion.py"
+    ],
+    "expected_output": "compiled_context/ai_ingestion/FT-040.json",
+    "required_commands": [
+      "python3 scripts/compile/compile_source_graph.py --module ai_ingestion --check --format json",
+      "python3 scripts/compile/compile_context_bundle.py --module ai_ingestion --check --format json",
+      "python3 scripts/compile/compile_source_graph.py --module ai_ingestion --check --format json",
+      "python3 scripts/compile/compile_context_bundle.py --module ai_ingestion --check --format json",
+      "python3 scripts/validate_contracts.py --profile ci",
+      "python3 -m pytest tests/pipeline_gates/test_ai_ingestion_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_ai_ingestion.py tests/pipeline_gates/test_context_bundle_ai_ingestion.py -q"
+    ]
+  }
+}

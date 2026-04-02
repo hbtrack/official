@@ -90,7 +90,7 @@
     },
     {
       "relpath": "docs/_canon/SYNC_MANIFEST.yaml",
-      "sha256": "c1fa9ac1c2540c4f0d1fbb75fd53bfc42a1dd009e3c14e36f0596ab5606837f1"
+      "sha256": "714765ef22985fdd353c060b0957bf37fb55d50b75b11edfff8f4fdd9a6c062a"
     },
     {
       "relpath": "generated/source_graph/medical/medical.bundle.yaml",
@@ -136,7 +136,7 @@
     "unit_tests": "src/medical/tests/unit/test_medical_domain.py",
     "use_cases": "src/medical/application/use_cases.py"
   },
-  "source_fingerprint": "f2c708cdfea94a82b4af2f875c3b5056f033771ca7c8680db989f01c62867f9c",
+  "source_fingerprint": "ca5e2e22ad139adfebe4bb3cf84e9f65fc8db40c3c9e2f48eb84b3d6e62b992e",
   "source_graph": {
     "entities": {
       "MedicalRecord": {

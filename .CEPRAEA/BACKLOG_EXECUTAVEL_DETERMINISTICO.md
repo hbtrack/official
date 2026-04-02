@@ -2331,27 +2331,32 @@ python3 scripts/validate_contracts.py --profile ci
 
 Evidencia implementada e validada no sistema atual:
 
-- `reports`, `analytics`, `exercises`, `notifications`, `wellness` e `medical` ja possuem `docs/hbtrack/modulos/<module>/graph/*.yaml` ativos, derivados em `generated/source_graph/<module>/` e bundle compilado em `compiled_context/<module>/`
-- `tests/pipeline_gates/test_reports_source_graph_integrity.py`, `test_analytics_source_graph_integrity.py`, `test_exercises_source_graph_integrity.py`, `test_notifications_source_graph_integrity.py`, `test_wellness_source_graph_integrity.py` e `test_medical_source_graph_integrity.py` em `PASS`
-- `tests/pipeline_gates/test_source_graph_compiler_reports.py`, `test_source_graph_compiler_analytics.py`, `test_source_graph_compiler_exercises.py`, `test_source_graph_compiler_notifications.py`, `test_source_graph_compiler_wellness.py` e `test_source_graph_compiler_medical.py` em `PASS`
-- `tests/pipeline_gates/test_context_bundle_reports.py`, `test_context_bundle_analytics.py`, `test_context_bundle_exercises.py`, `test_context_bundle_notifications.py`, `test_context_bundle_wellness.py` e `test_context_bundle_medical.py` em `PASS`
+- `reports`, `analytics`, `exercises`, `notifications`, `wellness`, `medical` e `ai_ingestion` ja possuem `docs/hbtrack/modulos/<module>/graph/*.yaml` ativos, derivados em `generated/source_graph/<module>/` e bundle compilado em `compiled_context/<module>/`
+- `tests/pipeline_gates/test_reports_source_graph_integrity.py`, `test_analytics_source_graph_integrity.py`, `test_exercises_source_graph_integrity.py`, `test_notifications_source_graph_integrity.py`, `test_wellness_source_graph_integrity.py`, `test_medical_source_graph_integrity.py` e `test_ai_ingestion_source_graph_integrity.py` em `PASS`
+- `tests/pipeline_gates/test_source_graph_compiler_reports.py`, `test_source_graph_compiler_analytics.py`, `test_source_graph_compiler_exercises.py`, `test_source_graph_compiler_notifications.py`, `test_source_graph_compiler_wellness.py`, `test_source_graph_compiler_medical.py` e `test_source_graph_compiler_ai_ingestion.py` em `PASS`
+- `tests/pipeline_gates/test_context_bundle_reports.py`, `test_context_bundle_analytics.py`, `test_context_bundle_exercises.py`, `test_context_bundle_notifications.py`, `test_context_bundle_wellness.py`, `test_context_bundle_medical.py` e `test_context_bundle_ai_ingestion.py` em `PASS`
 - `python3 scripts/compile/compile_source_graph.py --module notifications` em `PASS`
 - `python3 scripts/compile/compile_context_bundle.py --module notifications` em `PASS`
 - `python3 scripts/compile/compile_source_graph.py --module wellness` em `PASS`
 - `python3 scripts/compile/compile_context_bundle.py --module wellness` em `PASS`
 - `python3 scripts/compile/compile_source_graph.py --module medical` em `PASS`
 - `python3 scripts/compile/compile_context_bundle.py --module medical` em `PASS`
+- `python3 scripts/compile/compile_source_graph.py --module ai_ingestion` em `PASS`
+- `python3 scripts/compile/compile_context_bundle.py --module ai_ingestion` em `PASS`
 - `python3 scripts/compile/compile_source_graph.py --all --check --format json` em `PASS` apos a entrada de `medical`
 - `python3 scripts/compile/compile_context_bundle.py --all --check --format json` em `PASS` apos a entrada de `medical`
+- `python3 scripts/compile/compile_source_graph.py --all --check --format json` em `PASS` apos a entrada de `ai_ingestion`
+- `python3 scripts/compile/compile_context_bundle.py --all --check --format json` em `PASS` apos a entrada de `ai_ingestion`
 - `python3 scripts/contracts/validate/api/compile_api_policy.py --all` em `PASS` apos a entrada de `medical`
 - `python3 scripts/repair_manifests.py` executado para recompor `generated/manifests/*.sync.traceability.yaml`
 - `python3 scripts/generate/docs/gen_runtime_current_state.py --write` executado para recompor `docs/_canon/RUNTIME_CURRENT_STATE.md`
 - `./.venv-contract/bin/pytest -q tests/pipeline_gates/test_notifications_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_notifications.py tests/pipeline_gates/test_context_bundle_notifications.py tests/adversarial/test_suite_inventory.py` em `PASS` (`21 passed`)
 - `./.venv-contract/bin/pytest -q tests/pipeline_gates/test_wellness_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_wellness.py tests/pipeline_gates/test_context_bundle_wellness.py tests/adversarial/test_suite_inventory.py` em `PASS` (`21 passed`)
 - `./.venv-contract/bin/pytest -q tests/pipeline_gates/test_medical_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_medical.py tests/pipeline_gates/test_context_bundle_medical.py tests/adversarial/test_suite_inventory.py` em `PASS` (`21 passed`)
+- `./.venv-contract/bin/pytest -q tests/pipeline_gates/test_ai_ingestion_source_graph_integrity.py tests/pipeline_gates/test_source_graph_compiler_ai_ingestion.py tests/pipeline_gates/test_context_bundle_ai_ingestion.py tests/pipeline_gates/test_ops_bundle_required_for_roadmap.py` em `PASS` (`33 passed`)
 - `./.venv-contract/bin/pytest -q tests/pipeline_gates/test_ops_bundle_required_for_roadmap.py tests/pipeline_gates/test_runtime_current_state_generator.py` em `PASS` (`20 passed`)
-- `./.venv-contract/bin/python scripts/contracts/validate/validate_contracts.py --profile ci` em `PASS` apos a entrada de `medical`
-- proximo modulo obrigatorio da fila: `ai_ingestion`
+- `./.venv-contract/bin/python scripts/contracts/validate/validate_contracts.py --profile ci` voltou a `PASS` em todos os gates estruturais apos a entrada de `ai_ingestion`; o unico bloqueio residual observado durante a sessao foi `HANDOFF_COHERENCE_GATE` antes da sincronizacao do `SESSION_HANDOFF.md`
+- proximo modulo obrigatorio da fila: `audit`
 
 Criterio de saida:
 
@@ -2574,7 +2579,7 @@ Rollback:
 
 ## 5. Ordem real de implementacao validada no sistema atual
 
-Esta secao reflete a ordem real ja executada e validada no repositório em `2026-03-31`.
+Esta secao preserva o corte validado em `2026-03-31` e registra a atualizacao incremental confirmada no repositório em `2026-04-02`.
 
 Itens ja implementados e validados:
 
@@ -2607,6 +2612,22 @@ Itens ja implementados e validados:
 27. B6-001
 28. B6-002
 
+Atualizacao incremental apos o corte original:
+
+29. B-OPS-001
+30. B-OPS-002
+31. B-OPS-003
+32. B-OPS-004
+33. B-OPS-005
+34. B-OPS-006
+35. B7-001
+36. B7-002
+37. B8-002
+38. B9-001
+39. B9-001A
+40. B9-002
+41. B10-001 (fila avancada ate `ai_ingestion`)
+
 Evidencia minima ja confirmada para os itens acima:
 
 - `python3 scripts/validate_contracts.py --profile ci` em `PASS`
@@ -2637,6 +2658,21 @@ Evidencia minima ja confirmada para os itens acima:
 - `python3 scripts/hb compile-source-graph --module reports --check` em `PASS`
 - `generated/source_graph/reports/impact_report.json` gerado e validado
 - `generated/source_graph/reports/*.yaml` gerados e validados
+- `tests/pipeline_gates/test_ops_contract_compiler.py` em `PASS`
+- `tests/pipeline_gates/test_ops_bundle_required_for_roadmap.py` em `PASS`
+- `tests/pipeline_gates/test_context_bundle_freshness_gate.py` em `PASS`
+- `tests/pipeline_gates/test_pact_consumer_bootstrap.py` em `PASS`
+- `tests/pipeline_gates/test_pact_provider_gate.py` em `PASS`
+- `tests/pipeline_gates/test_warning_free_acceptance.py` em `PASS`
+- `tests/adversarial/test_suite_inventory.py` em `PASS`
+- `compiled_context/ops/deploy.json` e `compiled_context/ops/runtime.json` gerados, versionados e exigidos para roadmap/deploy
+- `docs/hbtrack/modulos/ai_ingestion/graph/*.yaml` criados, validados e cobertos por manifesto
+- `generated/source_graph/ai_ingestion/*` gerado deterministicamente
+- `compiled_context/ai_ingestion/FT-040.json` gerado deterministicamente
+- `tests/pipeline_gates/test_ai_ingestion_source_graph_integrity.py` em `PASS`
+- `tests/pipeline_gates/test_source_graph_compiler_ai_ingestion.py` em `PASS`
+- `tests/pipeline_gates/test_context_bundle_ai_ingestion.py` em `PASS`
+- fila obrigatoria de `B10-001` avancada: proximo modulo da sequencia agora e `audit`
 - `tests/pipeline_gates/test_reports_openapi_schema_equivalence.py` em `PASS`
 - `tests/pipeline_gates/test_openapi_schema_equivalence_gate.py` em `PASS`
 - `python3 scripts/contracts/validate/api/compile_api_policy.py --all --check --format json` em `PASS`
