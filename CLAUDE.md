@@ -39,6 +39,7 @@ Tarefas de implementação de fases do produto: ambiente, infraestrutura, códig
 - `schema.d.ts` **NUNCA** é editado manualmente — apenas regenerar com `npm run api:generate`
 - Deploy de produção **requer aprovação humana explícita** — nunca executar autonomamente
 - Waivers ativos: verificar `.contract_driven/waivers.json` antes de iniciar qualquer pipeline
+- **Antes de `git push`:** executar `python3 scripts/hb preflight` — reproduz CI localmente (63 gates, 7 test suites, 3 compilers). Nunca fazer push sem preflight PASS.
 - **Tasks de infra/deploy/CI-CD/VPS:** ler bundles operacionais frescos antes de qualquer ação:
   - `compiled_context/ops/deploy.json` → secrets, CI/CD, fluxo de deploy, ambientes
   - `compiled_context/ops/runtime.json` → topologia de serviços, endpoints, VPS

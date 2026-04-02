@@ -49,6 +49,8 @@ Não crie artefatos antes de `hb verify`.
 8. FASE 4+  -> readiness/adversarial/generate_code apenas quando o task_type ou pré-condições exigirem
 9. HANDOFF  -> atualizar SESSION_HANDOFF.md
 10. VCS     -> commit quando a sessão precisar ser persistida em git; o pre-commit adiciona checkpoint extra
+11. PREFLIGHT -> python3 scripts/hb preflight  (obrigatório antes de git push; reproduz CI localmente)
+12. PUSH    -> git push somente após preflight PASS
 ```
 
 ## Task types principais
@@ -96,5 +98,7 @@ Tasks `audit_*` podem carregar o worker de auditoria diretamente e não devem se
 3. Sempre registrar artefatos com `hb artifact`.
 4. Sempre ler o worker prompt correspondente.
 5. Sempre atualizar `SESSION_HANDOFF.md` no fechamento da sessão.
-6. Não vender commit como pseudo-gate; ele só adiciona o checkpoint do hook.
-7. Nunca escrever código fora do fluxo governado.
+6. Sempre executar `python3 scripts/hb preflight` antes de `git push` — garante paridade local=CI.
+7. Nunca fazer `git push` sem preflight PASS.
+8. Não vender commit como pseudo-gate; ele só adiciona o checkpoint do hook.
+9. Nunca escrever código fora do fluxo governado.

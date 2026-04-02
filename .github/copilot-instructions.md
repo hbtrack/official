@@ -53,6 +53,8 @@ FASE 3   -> python3 scripts/contracts/validate/validate_contracts.py
 FASE 4+  -> readiness/adversarial/generate_code somente se o task_type ou pré-condições exigirem
 FECHAMENTO -> atualizar SESSION_HANDOFF.md
 VCS      -> commit opcional conforme objetivo da sessão; o pre-commit adiciona um checkpoint extra
+PRE-PUSH -> python3 scripts/hb preflight   (obrigatório antes de git push; reproduz CI localmente)
+PUSH     -> git push somente após preflight PASS
 ```
 
 ## Sem falsa autonomia
@@ -93,6 +95,8 @@ Quando houver `BLOCKED_*`, informar o humano em português:
 - Sempre registrar artefato com `hb artifact`.
 - Sempre ler o worker prompt correspondente.
 - Sempre atualizar `SESSION_HANDOFF.md` ao fechar a sessão.
+- Sempre executar `python3 scripts/hb preflight` antes de `git push` — garante paridade local=CI (63 gates, 7 test suites, 3 compilers).
+- Nunca fazer `git push` sem preflight PASS.
 - Nunca reescrever a força dos gates por conveniência.
 - Nunca usar comandos destrutivos de git (`reset`, `rebase`, `commit --amend`) para mascarar estado.
 
@@ -102,3 +106,5 @@ Quando houver `BLOCKED_*`, informar o humano em português:
 - Nunca executar deploy de produção autonomamente (fases 6, 9, 12 — requer aprovação humana).
 - Nunca usar worker `generate_frontend` (frozen) — FASE 5 usa código React direto.
 - Nunca criar artefatos fora dos paths canônicos definidos em `execute_roadmap_phase.prompt.md`.
+- Sempre executar `python3 scripts/hb preflight` antes de `git push` — garante paridade local=CI.
+- Nunca fazer `git push` sem preflight PASS.

@@ -176,6 +176,28 @@ Usar os paths canônicos definidos em `execute_roadmap_phase.prompt.md`. Nunca c
 
 ---
 
+## PREFLIGHT + PUSH — Antes de enviar ao remoto
+
+**Obrigatório antes de `git push`. Reproduz CI localmente.**
+
+### Checklist Preflight
+
+- [ ] **PF.1** — Executar no terminal:
+  ```bash
+  python3 scripts/hb preflight
+  ```
+- [ ] **PF.2** — Verificar que TODOS os 6 steps estão ✅:
+  - STEP 0: dirty state | STEP 1: toolchain | STEP 2: environment
+  - STEP 3: validate_contracts --profile ci (63 gates)
+  - STEP 4: test suites (7 CI suites) | STEP 5: compilers --check (3 compilers)
+- [ ] **PF.3** — Se algum step FAIL → corrigir e re-executar. **Não** fazer push até PREFLIGHT PASS.
+- [ ] **PF.4** — Após PREFLIGHT PASS:
+  ```bash
+  git push
+  ```
+
+---
+
 ## REGRAS DE OURO
 
 1. **NUNCA iniciar fase N** sem confirmar Critério de Done da fase N-1
@@ -187,4 +209,5 @@ Usar os paths canônicos definidos em `execute_roadmap_phase.prompt.md`. Nunca c
 7. **Infra não é CDD** — `Dockerfile`, `nginx.conf`, `celery.py` não passam por `hb verify`/`hb artifact`
 8. **NUNCA misturar modos** — este skill não executa contratos; para contratos usar `hb-pipeline-orchestrator`
 9. **Stack obrigatória** — não desviar: Python 3.12 + Django 5.x + Django Ninja 1.x + PostgreSQL 16 + Redis 7 + React + Vite + TypeScript + Tailwind CSS + shadcn/ui + Zustand
-10. **Comunicação em português**, linguagem de produto, nunca jargão técnico
+10. **ANTES de `git push`:** executar `python3 scripts/hb preflight` — reproduz CI localmente (63 gates, 7 test suites, 3 compilers). **Nunca** fazer push sem preflight PASS.
+11. **Comunicação em português**, linguagem de produto, nunca jargão técnico

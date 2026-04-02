@@ -365,7 +365,41 @@ O pipeline já executa checkpoints via `hb` e `validate_contracts.py`; o commit 
   ```
   ✅ Commit realizado: <hash curto> — "<mensagem>"
   Branch: <branch>
-  Próximo passo: abrir PR para main quando a feature estiver completa.
+  Próximo passo: executar preflight antes de push.
+  ```
+
+---
+
+## FASE 7 — Preflight + Push (Obrigatório antes de git push)
+
+**Reproduz CI localmente. Nunca fazer push sem preflight PASS.**
+
+### Checklist Preflight
+
+- [ ] **PF.1** — Executar no terminal:
+  ```bash
+  python3 scripts/hb preflight
+  ```
+- [ ] **PF.2** — Verificar que TODOS os 6 steps estão ✅:
+  - STEP 0: dirty state (workspace limpo nos dirs governados)
+  - STEP 1: toolchain (Python+Node pinned versions)
+  - STEP 2: environment (CI=true, vars controladas)
+  - STEP 3: validate_contracts --profile ci (63 gates)
+  - STEP 4: test suites (7 CI suites)
+  - STEP 5: compilers --check (3 compilers)
+- [ ] **PF.3** — Se algum step FAIL:
+  - Ler o output do step que falhou
+  - Corrigir o problema
+  - Re-executar `python3 scripts/hb preflight`
+  - **Não** fazer push até PREFLIGHT PASS
+- [ ] **PF.4** — Após PREFLIGHT PASS, push:
+  ```bash
+  git push
+  ```
+- [ ] **PF.5** — Confirmar ao humano:
+  ```
+  ✅ Push realizado: <branch> → origin
+  Preflight: PASS (6/6 steps)
   ```
 
 ### Bloqueios possíveis nesta fase
@@ -390,4 +424,5 @@ O pipeline já executa checkpoints via `hb` e `validate_contracts.py`; o commit 
 6. **SEMPRE compilar (compile_api_policy) ANTES de validar (validate_contracts)**
 7. **SEMPRE atualizar SESSION_HANDOFF ao final**
 8. **SE a sessão for ser persistida em git, fazer o commit ao final**
-9. **Comunicação em português**, linguagem de produto, nunca jargão técnico
+9. **ANTES de `git push`:** executar `python3 scripts/hb preflight` — reproduz CI localmente (63 gates, 7 test suites, 3 compilers). **Nunca** fazer push sem preflight PASS.
+10. **Comunicação em português**, linguagem de produto, nunca jargão técnico

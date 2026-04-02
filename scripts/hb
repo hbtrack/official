@@ -1218,7 +1218,368 @@ class HBCLIv2:
         else:
             print("\n❌ Context bundle compiler: FAIL")
         return result
-    
+
+    # ------------------------------------------------------------------
+    # hb preflight — reproduzir CI localmente
+    # ------------------------------------------------------------------
+
+    _GOVERNANCE_DIRS = (
+        "contracts/",
+        "docs/_canon/",
+        "scripts/contracts/",
+        "scripts/compile/",
+        ".contract_driven/",
+    )
+
+    _CI_TEST_SUITES: list[tuple[str, list[str]]] = [
+        ("governance-tests", ["tests/test_pipeline_governance.py", "-v"]),
+        ("adversarial-suite", ["tests/adversarial", "-q"]),
+        ("architecture-drift-checker", []),  # handled separately
+        ("architecture-drift-tests", ["tests/pipeline_gates/test_architecture_drift.py", "-v"]),
+        ("registry-executor-parity", ["tests/pipeline_gates/test_gate_registry_parity.py", "-v"]),
+        ("schema-template-skills-parity", ["tests/pipeline_gates/test_schema_template_parity_phase4.py", "-v"]),
+        ("session-handoff-crossval", ["tests/pipeline_gates/test_session_state_phase3.py", "-v"]),
+    ]
+
+    def _preflight_step_dirty_state(self, strict: bool) -> tuple[bool, bool]:
+        """STEP 0: Dirty state check.
+
+        Returns (passed, stashed) — stashed is True when --strict did a stash.
+        """
+        print("\n── STEP 0: Dirty state check ──")
+        rc = subprocess.run(
+            ["git", "status", "--porcelain", "--untracked-files=all"],
+            capture_output=True, text=True, cwd=self.root,
+        )
+        if rc.returncode != 0:
+            print("❌ git status falhou.", file=sys.stderr)
+            return False, False
+
+        dirty_governed: list[str] = []
+        dirty_other: list[str] = []
+        staged_worktree_mismatch: list[str] = []
+
+        for line in rc.stdout.splitlines():
+            if len(line) < 4:
+                continue
+            index_status = line[0]
+            worktree_status = line[1]
+            filepath = line[3:]
+            is_governed = any(filepath.startswith(d) for d in self._GOVERNANCE_DIRS)
+
+            # MM = staged AND further modified in worktree
+            if index_status != " " and index_status != "?" and worktree_status not in (" ", "?"):
+                staged_worktree_mismatch.append(filepath)
+
+            # Dirty in worktree (not staged) or untracked
+            if worktree_status != " " and worktree_status != "?":
+                if is_governed:
+                    dirty_governed.append(filepath)
+            if index_status == "?" and worktree_status == "?":
+                if is_governed:
+                    dirty_governed.append(filepath)
+
+        if staged_worktree_mismatch:
+            print(f"⚠️  {len(staged_worktree_mismatch)} arquivo(s) com staged ≠ worktree:")
+            for f in staged_worktree_mismatch[:5]:
+                print(f"   MM {f}")
+            if not strict:
+                print("   Use --strict para testar apenas o conteúdo staged.")
+
+        if dirty_governed:
+            print(f"❌ {len(dirty_governed)} arquivo(s) dirty em dirs governados:")
+            for f in dirty_governed[:10]:
+                print(f"   {f}")
+            if not strict:
+                print("   Faça commit/stage ou use --strict para isolar.")
+                return False, False
+
+        stashed = False
+        if strict:
+            print("🔒 --strict: stashing unstaged changes...")
+            stash_rc = subprocess.run(
+                ["git", "stash", "--keep-index", "--include-untracked", "-m", "hb-preflight-strict"],
+                capture_output=True, text=True, cwd=self.root,
+            )
+            if stash_rc.returncode != 0:
+                print(f"⚠️  git stash falhou: {stash_rc.stderr.strip()}")
+            elif "No local changes" in stash_rc.stdout:
+                print("   (nada para stash)")
+            else:
+                stashed = True
+                print("   ✅ Unstaged changes stashed.")
+
+        if not dirty_governed and not staged_worktree_mismatch:
+            print("✅ Workspace limpo nos dirs governados.")
+
+        return True, stashed
+
+    def _preflight_step_toolchain(self) -> bool:
+        """STEP 1: Toolchain version check."""
+        print("\n── STEP 1: Toolchain check ──")
+        ok = True
+
+        # --- Python: .venv-contract versions vs scripts/_policy/requirements.txt ---
+        req_file = self.root / "scripts" / "_policy" / "requirements.txt"
+        expected_py: dict[str, str] = {}
+        if req_file.exists():
+            for line in req_file.read_text().splitlines():
+                line = line.strip()
+                if "==" in line and not line.startswith("#"):
+                    pkg, ver = line.split("==", 1)
+                    expected_py[pkg.strip().lower()] = ver.strip()
+
+        contract_python = self.local_contract_venv / "bin" / "python"
+        if not contract_python.exists():
+            print("❌ .venv-contract não existe. Execute: bash scripts/bootstrap/dev_contract_env.sh")
+            ok = False
+        else:
+            for pkg, expected_ver in expected_py.items():
+                result = subprocess.run(
+                    [str(contract_python), "-c",
+                     f"import importlib.metadata; print(importlib.metadata.version('{pkg}'))"],
+                    capture_output=True, text=True,
+                )
+                if result.returncode != 0:
+                    print(f"❌ Python pkg '{pkg}' não instalado em .venv-contract")
+                    ok = False
+                else:
+                    actual = result.stdout.strip()
+                    if actual != expected_ver:
+                        print(f"⚠️  {pkg}: .venv-contract={actual}, CI espera={expected_ver}")
+                    else:
+                        print(f"✅ {pkg}=={actual}")
+
+        # --- Node.js ---
+        node_bin = shutil.which("node")
+        if node_bin is None:
+            # Check NVM
+            nvm_dir = os.environ.get("NVM_DIR", os.path.expanduser("~/.nvm"))
+            nvm_node = pathlib.Path(nvm_dir) / "versions" / "node"
+            if nvm_node.exists():
+                versions = sorted(nvm_node.iterdir(), reverse=True)
+                for v in versions:
+                    candidate = v / "bin" / "node"
+                    if candidate.exists():
+                        node_bin = str(candidate)
+                        break
+        if node_bin is None:
+            print("❌ Node.js não encontrado. Instale via NVM: nvm install 24")
+            ok = False
+        else:
+            print(f"✅ Node.js: {node_bin}")
+
+        # --- Node tools: compare installed vs package-lock.json ---
+        lock_file = self.root / "package-lock.json"
+        expected_node: dict[str, str] = {}
+        if lock_file.exists():
+            try:
+                lock = json.loads(lock_file.read_text())
+                packages = lock.get("packages", {})
+                for npm_pkg, cli_name in [
+                    ("node_modules/@redocly/cli", "redocly"),
+                    ("node_modules/@stoplight/spectral-cli", "spectral"),
+                    ("node_modules/@asyncapi/cli", "asyncapi"),
+                ]:
+                    ver = packages.get(npm_pkg, {}).get("version")
+                    if ver:
+                        expected_node[cli_name] = ver
+            except Exception:
+                pass
+
+        nm_bin = self.root / "node_modules" / ".bin"
+        for tool_name, expected_ver in expected_node.items():
+            tool_path = nm_bin / tool_name
+            if not tool_path.exists():
+                print(f"❌ {tool_name} não instalado. Execute: npm ci")
+                ok = False
+            else:
+                # Try to get installed version from package.json
+                pkg_map = {
+                    "redocly": "@redocly/cli",
+                    "spectral": "@stoplight/spectral-cli",
+                    "asyncapi": "@asyncapi/cli",
+                }
+                pkg_json = self.root / "node_modules" / pkg_map.get(tool_name, tool_name) / "package.json"
+                if pkg_json.exists():
+                    try:
+                        actual_ver = json.loads(pkg_json.read_text()).get("version", "?")
+                        if actual_ver != expected_ver:
+                            print(f"⚠️  {tool_name}: instalado={actual_ver}, lock={expected_ver}. Execute: npm ci")
+                        else:
+                            print(f"✅ {tool_name}=={actual_ver}")
+                    except Exception:
+                        print(f"⚠️  {tool_name}: não foi possível verificar versão")
+                else:
+                    print(f"⚠️  {tool_name}: binário existe mas package.json ausente")
+
+        return ok
+
+    def _preflight_step_validate_contracts(self, python_bin: pathlib.Path) -> bool:
+        """STEP 3: validate_contracts --profile ci."""
+        print("\n── STEP 3: validate_contracts --profile ci (63 gates) ──")
+        env = self._build_tool_env()
+        env["CI"] = "true"
+        # Limpar overrides que poderiam divergir do CI
+        env.pop("HB_CHANGED_PATHS_JSON", None)
+        env.pop("HB_SYNC_DIFF_BASE", None)
+
+        result = subprocess.run(
+            [str(python_bin), str(self.validator_script), "--profile", "ci"],
+            cwd=self.root,
+            env=env,
+        )
+        if result.returncode == 0:
+            print("✅ validate_contracts --profile ci: PASS")
+        else:
+            print(f"❌ validate_contracts --profile ci: FAIL (exit {result.returncode})")
+        return result.returncode == 0
+
+    def _preflight_step_test_suites(self, python_bin: pathlib.Path) -> bool:
+        """STEP 4: CI test suites."""
+        print("\n── STEP 4: CI test suites ──")
+        env = self._build_tool_env()
+        env["CI"] = "true"
+        all_pass = True
+
+        for suite_name, pytest_args in self._CI_TEST_SUITES:
+            # architecture-drift-checker is a script, not pytest
+            if suite_name == "architecture-drift-checker":
+                checker = self.root / "scripts" / "audit" / "check_architecture_docs.py"
+                if checker.exists():
+                    r = subprocess.run(
+                        [str(python_bin), str(checker), "--json"],
+                        cwd=self.root, env=env,
+                    )
+                    status = "✅" if r.returncode == 0 else "❌"
+                    print(f"  {status} {suite_name} (exit {r.returncode})")
+                    if r.returncode != 0:
+                        all_pass = False
+                continue
+
+            if not pytest_args:
+                continue
+
+            r = subprocess.run(
+                [str(python_bin), "-m", "pytest", *pytest_args],
+                cwd=self.root, env=env,
+            )
+            status = "✅" if r.returncode == 0 else "❌"
+            print(f"  {status} {suite_name} (exit {r.returncode})")
+            if r.returncode != 0:
+                all_pass = False
+
+        return all_pass
+
+    def _preflight_step_compilers(self, python_bin: pathlib.Path) -> bool:
+        """STEP 5: Compilers --check."""
+        print("\n── STEP 5: Compilers --check ──")
+        env = self._build_tool_env()
+        all_pass = True
+
+        compilers = [
+            ("compile_source_graph --all --check", [str(self.source_graph_compiler_script), "--all", "--check"]),
+            ("compile_ops_contracts --check", [str(self.ops_contract_compiler_script), "--check"]),
+            ("compile_context_bundle --all --check", [str(self.context_bundle_compiler_script), "--all", "--check"]),
+        ]
+        for name, cmd in compilers:
+            r = subprocess.run(
+                [str(python_bin), *cmd],
+                cwd=self.root, env=env,
+            )
+            status = "✅" if r.returncode == 0 else "❌"
+            print(f"  {status} {name} (exit {r.returncode})")
+            if r.returncode != 0:
+                all_pass = False
+
+        return all_pass
+
+    def cmd_preflight(self, strict: bool = False) -> int:
+        """
+        Reproduzir todos os CI jobs localmente.
+
+        Steps:
+          0. Dirty state check (--strict: git stash --keep-index)
+          1. Toolchain version check (Python + Node)
+          2. Environment hermético (CI=true, unset overrides)
+          3. validate_contracts --profile ci (63 gates)
+          4. CI test suites (7 suites)
+          5. Compilers --check (3 compilers)
+        """
+        print("\n" + "═" * 60)
+        print("  HB PREFLIGHT — Reprodução local de CI")
+        print("═" * 60)
+
+        results: dict[str, bool] = {}
+        stashed = False
+
+        # STEP 0: Dirty state
+        step0_ok, stashed = self._preflight_step_dirty_state(strict)
+        results["STEP 0: dirty state"] = step0_ok
+        if not step0_ok and not strict:
+            self._preflight_report(results)
+            return 1
+
+        # STEP 1: Toolchain
+        step1_ok = self._preflight_step_toolchain()
+        results["STEP 1: toolchain"] = step1_ok
+
+        # Resolve python — needed for steps 3-5
+        python_bin = self._ensure_local_contract_env(
+            "hb preflight",
+            python_modules=("yaml", "jsonschema"),
+        )
+        if python_bin is None:
+            results["STEP 2: environment"] = False
+            self._preflight_report(results)
+            self._preflight_unstash(stashed)
+            return 2
+
+        results["STEP 2: environment"] = True
+        print("\n── STEP 2: Environment hermético ──")
+        print("  CI=true, unset HB_CHANGED_PATHS_JSON, HB_SYNC_DIFF_BASE")
+        print(f"  Python: {python_bin}")
+
+        # STEP 3: validate_contracts
+        results["STEP 3: validate_contracts"] = self._preflight_step_validate_contracts(python_bin)
+
+        # STEP 4: Test suites
+        results["STEP 4: test suites"] = self._preflight_step_test_suites(python_bin)
+
+        # STEP 5: Compilers
+        results["STEP 5: compilers"] = self._preflight_step_compilers(python_bin)
+
+        # Unstash if needed
+        self._preflight_unstash(stashed)
+
+        # Report
+        self._preflight_report(results)
+        return 0 if all(results.values()) else 1
+
+    def _preflight_unstash(self, stashed: bool) -> None:
+        if stashed:
+            print("\n🔓 Restoring stashed changes...")
+            subprocess.run(
+                ["git", "stash", "pop"],
+                capture_output=True, cwd=self.root,
+            )
+
+    @staticmethod
+    def _preflight_report(results: dict[str, bool]) -> None:
+        print("\n" + "═" * 60)
+        print("  PREFLIGHT REPORT")
+        print("═" * 60)
+        for step, passed in results.items():
+            icon = "✅" if passed else "❌"
+            print(f"  {icon} {step}")
+        print("═" * 60)
+        if all(results.values()):
+            print("  ✅ PREFLIGHT PASS — seguro fazer push.")
+        else:
+            failed = [s for s, p in results.items() if not p]
+            print(f"  ❌ PREFLIGHT FAIL — {len(failed)} step(s) falharam.")
+        print("═" * 60 + "\n")
+
     def cmd_survival_suite(self) -> int:
         """Rodar suíte de sobrevivência obrigatória.
 
@@ -1442,6 +1803,16 @@ class HBCLIv2:
         compile_context_scope.add_argument("--all", action="store_true", help="Executa para todos os módulos com source graph ativo")
         compile_context_p.add_argument("--check", action="store_true", help="Não escreve; apenas verifica drift")
 
+        # preflight
+        preflight_p = subparsers.add_parser(
+            "preflight",
+            help="Reproduzir todos os CI jobs localmente (dirty check + toolchain + 63 gates + test suites + compilers)",
+        )
+        preflight_p.add_argument(
+            "--strict", action="store_true",
+            help="Stash unstaged changes e testar apenas o conteúdo staged (git stash --keep-index)",
+        )
+
         # help
         subparsers.add_parser("help", help="Mostrar ajuda")
         
@@ -1477,6 +1848,8 @@ class HBCLIv2:
                 return self.cmd_compile_ops_contracts(check=parsed_args.check)
             elif parsed_args.command == "compile-context-bundle":
                 return self.cmd_compile_context_bundle(parsed_args.module, check=parsed_args.check, all_modules=parsed_args.all)
+            elif parsed_args.command == "preflight":
+                return self.cmd_preflight(strict=parsed_args.strict)
         except FileNotFoundError as e:
             print(f"❌ {e}", file=sys.stderr)
             return 2
