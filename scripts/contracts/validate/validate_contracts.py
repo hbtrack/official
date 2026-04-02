@@ -218,6 +218,7 @@ ALLOWED_SKIP_GATES: frozenset[str] = frozenset({
     "HTTP_RUNTIME_CONTRACT_GATE",        # Requires running server (unavailable in CI/local)
     "PACT_PROVIDER_GATE",                # Requires Pact broker credentials
     "READINESS_HUMAN_CONFIRMATION_GATE", # Requires explicit human action
+    "ARCH_DECISION_PRESENCE_GATE",       # staging/release_promotion don't require arch decision check
 })
 
 
@@ -5040,6 +5041,7 @@ def _g2m_arch_decision_presence(root: pathlib.Path) -> dict:
         "new_state_model",
         "new_ui_contract",
         "readiness_promotion",
+        "implementation_promotion",
         "generate_code",
     }
     if task_type not in relevant_task_types:

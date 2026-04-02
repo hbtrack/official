@@ -2,8 +2,31 @@
 Testes de validação — FASE 1
 Cobertura: JWT 401, X-Flow-ID, /health, CORS preflight, constraint violation 422.
 """
+import uuid
+from datetime import datetime, timezone
+
 import pytest
 from django.test import Client
+
+
+def _make_jwt(user_id: uuid.UUID, role: str = "admin") -> str:
+    """Gera JWT válido para uso nos testes de validação."""
+    from identity_access.infrastructure.jwt_adapter import JWTAdapter
+    from identity_access.domain.entities import AuthSession
+
+    session = AuthSession(
+        id=uuid.uuid4(),
+        principal_user_id=user_id,
+        session_scope_label="full",
+        role_labels=[role],
+        auth_method_label="password",
+        mfa_required=False,
+        mfa_satisfied=True,
+        issued_at=datetime.now(tz=timezone.utc),
+        expires_at=datetime.now(tz=timezone.utc),
+        revoked_at=None,
+    )
+    return JWTAdapter().issue_access_token(session)
 
 
 @pytest.mark.django_db
@@ -102,6 +125,8 @@ class TestConstraintViolation:
         """week_number > 32767 deve ser rejeitado com 422 (SmallIntegerField)."""
         import json
         client = Client()
+        token = _make_jwt(uuid.UUID("00000000-0000-0000-0000-000000000010"))
+        auth = f"Bearer {token}"
         # week_number fora do range de SmallIntegerField (max 32767)
         response = client.post(
             "/api/training/microcycles",
@@ -113,6 +138,7 @@ class TestConstraintViolation:
                 "ended_at": "2025-01-07T00:00:00Z",
             }),
             content_type="application/json",
+            HTTP_AUTHORIZATION=auth,
         )
         assert response.status_code == 422, (
             f"Esperado 422 para week_number fora do range, got {response.status_code}"
@@ -122,6 +148,8 @@ class TestConstraintViolation:
         """planned_sessions_count > 32767 deve ser rejeitado com 422."""
         import json
         client = Client()
+        token = _make_jwt(uuid.UUID("00000000-0000-0000-0000-000000000010"))
+        auth = f"Bearer {token}"
         response = client.post(
             "/api/training/microcycles",
             data=json.dumps({
@@ -133,6 +161,7 @@ class TestConstraintViolation:
                 "planned_sessions_count": 99_999,
             }),
             content_type="application/json",
+            HTTP_AUTHORIZATION=auth,
         )
         assert response.status_code == 422, (
             f"Esperado 422 para planned_sessions_count fora do range, got {response.status_code}"
@@ -142,6 +171,8 @@ class TestConstraintViolation:
         """week_number = 0 invalida a regra de domínio (>= 1)."""
         import json
         client = Client()
+        token = _make_jwt(uuid.UUID("00000000-0000-0000-0000-000000000010"))
+        auth = f"Bearer {token}"
         response = client.post(
             "/api/training/microcycles",
             data=json.dumps({
@@ -152,6 +183,7 @@ class TestConstraintViolation:
                 "ended_at": "2025-01-07T00:00:00Z",
             }),
             content_type="application/json",
+            HTTP_AUTHORIZATION=auth,
         )
         assert response.status_code == 422, (
             f"Esperado 422 para week_number=0, got {response.status_code}"

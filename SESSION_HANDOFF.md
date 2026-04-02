@@ -13,10 +13,10 @@ proxima_acao_permitida: "Continuar B10-001 com o modulo audit."
 bloqueios_ativos: []
 evidence_paths:
   - "_reports/contract_gates/latest.json"
-  - "tests/pipeline_gates/test_notifications_source_graph_integrity.py"
-  - "tests/pipeline_gates/test_wellness_source_graph_integrity.py"
-  - "compiled_context/notifications/FT-042.json"
-  - "compiled_context/wellness/FT-032.json"
+  - "tests/pipeline_gates/test_ai_ingestion_source_graph_integrity.py"
+  - "tests/pipeline_gates/test_source_graph_compiler_ai_ingestion.py"
+  - "tests/pipeline_gates/test_context_bundle_ai_ingestion.py"
+  - "compiled_context/ai_ingestion/FT-040.json"
 ---
 # SESSION HANDOFF — HB TRACK
 > Delta-only. Histórico em `_archive/SESSION_HANDOFF_PRE_FASE0_20260323.md`.

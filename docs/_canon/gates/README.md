@@ -44,6 +44,7 @@ Este diretório é o ponto de entrada de navegação para o sistema de gates do 
 | 2J | `PRE_CONTRACT_EVIDENCE_GATE` | Sim | Não | Exige evidência estruturada de pré-contrato para módulos `validated_contract+` (inclui `baseline_backfill` explícito para legado) | §9.2J |
 | 2K | `SHADOW_AUTHORITY_GATE` | Sim | Não | Bloqueia docs não-soberanos com linguagem de autoridade sem disclaimer explícito | §9.2K |
 | 2L | `DECISION_IR_CONFORMANCE_GATE` | Sim | Não | Valida `DECISION_IR_<MODULE>.yaml` em `.contract_driven/decisions/` para módulos `implementation_ready+` que exigem `decision_ir` | §9.2L |
+| 2M | `ARCH_DECISION_PRESENCE_GATE` | Sim | Não | Verifica decisões arquiteturais pendentes no backlog para o módulo alvo; skip permitido para `staging_promotion`/`release_promotion` | §9.2M |
 | 2N | `CANON_ALLOWLIST_GATE` | Sim | Não | Restringe `docs/_canon/` à allowlist autorizada pelo canon global | §9.2N |
 | 2N1 | `DOC_USAGE_GATE` | Sim | Sim | Exige owner_source, consumers e update triggers para toda doc em `docs/_canon/**` e `docs/hbtrack/modulos/**` | §9.2N1 |
 | 2N2 | `CANON_CONTRACT_DRIVEN_PARITY_GATE` | Sim | Não | Garante paridade mínima entre `docs/_canon`, `.contract_driven` e o executor real | §9.2N2 |

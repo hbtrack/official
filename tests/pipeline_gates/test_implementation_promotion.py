@@ -130,9 +130,11 @@ class TestImplementationPromotionEligibility:
 
         registry_path = ROOT / "docs" / "_canon" / "MODULE_REGISTRY.yaml"
         session_path = ROOT / "_reports" / "session_start.json"
+        handoff_path = ROOT / "SESSION_HANDOFF.md"
 
         original_registry = registry_path.read_bytes()
         original_session = session_path.read_bytes() if session_path.exists() else None
+        original_handoff = handoff_path.read_bytes() if handoff_path.exists() else None
 
         try:
             registry = yaml.safe_load(original_registry.decode("utf-8"))
@@ -141,6 +143,17 @@ class TestImplementationPromotionEligibility:
                 yaml.safe_dump(registry, sort_keys=False, allow_unicode=True),
                 encoding="utf-8",
             )
+
+            # Patch handoff front matter to align modulo_foco with --module reports
+            if handoff_path.exists():
+                import re as _re
+                _htext = handoff_path.read_text(encoding="utf-8")
+                _htext = _re.sub(
+                    r"(?m)^modulo_foco:.*$",
+                    "modulo_foco: reports",
+                    _htext,
+                )
+                handoff_path.write_text(_htext, encoding="utf-8")
 
             result = subprocess.run(
                 [
@@ -166,6 +179,10 @@ class TestImplementationPromotionEligibility:
             assert session["write_scope"] == "docs"
         finally:
             registry_path.write_bytes(original_registry)
+            if original_handoff is None:
+                handoff_path.unlink(missing_ok=True)
+            else:
+                handoff_path.write_bytes(original_handoff)
             if original_session is None:
                 session_path.unlink(missing_ok=True)
             else:

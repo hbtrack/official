@@ -833,16 +833,19 @@ gates:
     active_stage: decision_discovery
     severity: HIGH
     parallelizable: false
-    applies_when: contract_creation_or_revision_mode_or_readiness_or_generate_code
+    applies_when: contract_creation_or_revision_mode_or_readiness_or_generate_code_or_implementation_promotion
     depends_on: [REQUIRED_ARTIFACT_PRESENCE_GATE]
+    skip_allowed: true # staging_promotion / release_promotion may skip legitimately
     description: >
       Verifica que não há decisão arquitetural classificada como `obrigatória` com status
       `open`, `blocked`, `in_discovery` ou `pending_approval` em
       `docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md` para o módulo alvo ou com escopo global.
       Se uma entrada pendente for encontrada, o gate falha com
       `BLOCKED_MISSING_ARCH_DECISION`. A decisão deve ser promovida para ADR aprovada
-      antes de criar/revisar contratos, promover o módulo para `implementation_ready`
-      ou acionar `generate_code`.
+      antes de criar/revisar contratos, promover o módulo para `implementation_ready`,
+      acionar `implementation_promotion` ou acionar `generate_code`.
+      Task types como `staging_promotion` e `release_promotion` podem fazer skip legítimo
+      (gate incluído em ALLOWED_SKIP_GATES no validate_contracts.py).
       Spec normativa: docs/_canon/DECISION_POLICY.md §2 e §3.
     blocking_codes: [BLOCKED_MISSING_ARCH_DECISION]
     status: active

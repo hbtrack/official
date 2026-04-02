@@ -230,6 +230,7 @@ A ordem canônica é:
 			2J.	PRE_CONTRACT_EVIDENCE_GATE
 			2K.	SHADOW_AUTHORITY_GATE
 			2L.	DECISION_IR_CONFORMANCE_GATE
+			2M.	ARCH_DECISION_PRESENCE_GATE
 			2N.	CANON_ALLOWLIST_GATE
 			2N1.	DOC_USAGE_GATE
 			2N2.	CANON_CONTRACT_DRIVEN_PARITY_GATE
@@ -792,6 +793,33 @@ Marker proibido encontrado.
 
 Blocking code
 	•	BLOCKED_EXTERNAL_SOURCE_AUTHORITY
+
+⸻
+
+9.2M ARCH_DECISION_PRESENCE_GATE
+
+Objetivo
+
+Verificar que não existem decisões arquiteturais obrigatórias com status pendente (`open`, `blocked`, `in_discovery`, `pending_approval`) em `docs/_canon/ARCHITECTURE_DECISION_BACKLOG.md` para o módulo alvo ou com escopo global.
+
+PASS
+
+Nenhuma decisão obrigatória pendente para o módulo alvo.
+
+FAIL
+
+Decisão obrigatória pendente encontrada.
+
+SKIP_NOT_APPLICABLE
+
+Task types `staging_promotion` e `release_promotion` fazem skip legítimo (gate incluído em `ALLOWED_SKIP_GATES`).
+
+Blocking code
+	•	BLOCKED_MISSING_ARCH_DECISION
+
+Relevant task types
+
+`new_contract`, `contract_revision`, `new_event`, `new_workflow`, `new_schema`, `new_state_model`, `new_ui_contract`, `readiness_promotion`, `implementation_promotion`, `generate_code`.
 
 ⸻
 

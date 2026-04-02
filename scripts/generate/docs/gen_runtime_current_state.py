@@ -129,6 +129,18 @@ def generate_runtime_current_state(root: Path) -> str:
     unit_test_dirs = len(list((root / "src").glob("*/tests/unit"))) if (root / "src").exists() else 0
     integration_test_dirs = len(list((root / "src").glob("*/tests/integration"))) if (root / "src").exists() else 0
 
+    gates_registry_path = root / "docs" / "_canon" / "gates" / "GATES_REGISTRY.yaml"
+    if gates_registry_path.exists() and yaml is not None:
+        _gr = yaml.safe_load(_read_text(gates_registry_path)) or {}
+        _gates_list = _gr.get("gates") or []
+        gates_total = len(_gates_list)
+        gates_blocking = sum(1 for g in _gates_list if g.get("blocking"))
+        gates_skip_allowed = sum(1 for g in _gates_list if g.get("skip_allowed"))
+    else:
+        gates_total = 0
+        gates_blocking = 0
+        gates_skip_allowed = 0
+
     module_rows = "\n".join(
         _module_row(root, module, str(modules[module].get("status", "unknown")))
         for module in module_names
@@ -228,6 +240,7 @@ Fontes executáveis observadas por este gerador:
 | Diretórios `tests/unit` por módulo | `{unit_test_dirs}/{len(module_names)}` | `src/*/tests/unit/` |
 | Diretórios `tests/integration` por módulo | `{integration_test_dirs}/{len(module_names)}` | `src/*/tests/integration/` |
 | Arquivos em `tests/pipeline_gates/` | `{pipeline_gate_tests}` | `tests/pipeline_gates/` |
+| Gates no `GATES_REGISTRY.yaml` | `{gates_total}` ({gates_blocking} bloqueantes, {gates_skip_allowed} skip-allowed) | `docs/_canon/gates/GATES_REGISTRY.yaml` |
 | Validador de drift arquitetural | presente | `scripts/audit/check_architecture_docs.py` |
 | Validador principal de contratos | presente | `scripts/contracts/validate/validate_contracts.py` |
 
