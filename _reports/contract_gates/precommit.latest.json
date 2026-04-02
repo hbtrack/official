@@ -1,6 +1,6 @@
 {
   "pipeline_id": "HB_TRACK_CONTRACT_GATES",
-  "timestamp_utc": "2026-04-02T15:43:44Z",
+  "timestamp_utc": "2026-04-02T16:31:11Z",
   "target": {
     "scope": "system",
     "module": null,
@@ -9,7 +9,7 @@
     "workflow_scope": "/home/davis/HB-TRACK/contracts/workflows"
   },
   "environment": {
-    "git_commit": "ebdfed63",
+    "git_commit": "004d927f",
     "python_version": "3.12.3",
     "tool_versions": {
       "redocly": "1.34.10",
@@ -31,7 +31,7 @@
   "report_artifacts": {
     "scoped_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/precommit.latest.json",
     "canonical_report_path": "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
-    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260402T154344_3a92bf"
+    "run_dir": "/home/davis/HB-TRACK/_reports/runs/20260402T163111_036966"
   },
   "status_detail": {
     "active_gates_passed": 36,
@@ -289,7 +289,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 44
+        "duration_ms": 64
       }
     },
     {
@@ -314,7 +314,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1133
+        "duration_ms": 1113
       }
     },
     {
@@ -425,7 +425,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 26
+        "duration_ms": 15
       }
     },
     {
@@ -590,7 +590,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2
+        "duration_ms": 1
       }
     },
     {
@@ -702,7 +702,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 6
+        "duration_ms": 3
       }
     },
     {
@@ -1058,7 +1058,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 66
+        "duration_ms": 54
       }
     },
     {
@@ -1086,7 +1086,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 51
+        "duration_ms": 48
       }
     },
     {
@@ -1129,7 +1129,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 36
+        "duration_ms": 33
       }
     },
     {
@@ -1145,14 +1145,9 @@
       "artifacts_checked": [
         "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml",
         "git status --porcelain --untracked-files=all",
-        "/home/davis/HB-TRACK/.CEPRAEA/compliance.md",
-        "/home/davis/HB-TRACK/.github/instructions/hb-contract-guards.instructions.md",
-        "/home/davis/HB-TRACK/.github/workflows/contract-gates.yml",
-        "/home/davis/HB-TRACK/.github/workflows/deploy.yml",
         "/home/davis/HB-TRACK/_reports/READINESS_DASHBOARD.md",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/local.latest.json",
-        "/home/davis/HB-TRACK/_reports/contract_gates/precommit.latest.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/stage-session-start.ci.latest.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/stage-session-start.local.latest.json",
         "/home/davis/HB-TRACK/_reports/evidence/module_readiness_scorecard.json",
@@ -1160,18 +1155,7 @@
         "/home/davis/HB-TRACK/_reports/pipeline_health.json",
         "/home/davis/HB-TRACK/_reports/pipeline_history.jsonl",
         "/home/davis/HB-TRACK/_reports/session_start.json",
-        "/home/davis/HB-TRACK/compiled_context/ai_ingestion/FT-040.json",
-        "/home/davis/HB-TRACK/compiled_context/analytics/FT-038.json",
-        "/home/davis/HB-TRACK/compiled_context/exercises/FT-037.json",
-        "/home/davis/HB-TRACK/compiled_context/medical/FT-033.json",
-        "/home/davis/HB-TRACK/compiled_context/notifications/FT-042.json",
-        "/home/davis/HB-TRACK/compiled_context/ops/deploy.json",
-        "/home/davis/HB-TRACK/compiled_context/ops/runtime.json",
-        "/home/davis/HB-TRACK/compiled_context/reports/FT-039.json",
-        "/home/davis/HB-TRACK/compiled_context/wellness/FT-032.json",
-        "/home/davis/HB-TRACK/compiled_ops/deploy/impact_report.json",
-        "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml",
-        "/home/davis/HB-TRACK/src/shared/middleware.py"
+        "/home/davis/HB-TRACK/compiled_ops/deploy/impact_report.json"
       ],
       "evidence_files": [],
       "violations": [],
@@ -1179,7 +1163,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 50
+        "duration_ms": 52
       }
     },
     {
@@ -1195,14 +1179,9 @@
       "artifacts_checked": [
         "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml",
         "git status --porcelain --untracked-files=all",
-        "/home/davis/HB-TRACK/.CEPRAEA/compliance.md",
-        "/home/davis/HB-TRACK/.github/instructions/hb-contract-guards.instructions.md",
-        "/home/davis/HB-TRACK/.github/workflows/contract-gates.yml",
-        "/home/davis/HB-TRACK/.github/workflows/deploy.yml",
         "/home/davis/HB-TRACK/_reports/READINESS_DASHBOARD.md",
         "/home/davis/HB-TRACK/_reports/contract_gates/latest.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/local.latest.json",
-        "/home/davis/HB-TRACK/_reports/contract_gates/precommit.latest.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/stage-session-start.ci.latest.json",
         "/home/davis/HB-TRACK/_reports/contract_gates/stage-session-start.local.latest.json",
         "/home/davis/HB-TRACK/_reports/evidence/module_readiness_scorecard.json",
@@ -1210,18 +1189,7 @@
         "/home/davis/HB-TRACK/_reports/pipeline_health.json",
         "/home/davis/HB-TRACK/_reports/pipeline_history.jsonl",
         "/home/davis/HB-TRACK/_reports/session_start.json",
-        "/home/davis/HB-TRACK/compiled_context/ai_ingestion/FT-040.json",
-        "/home/davis/HB-TRACK/compiled_context/analytics/FT-038.json",
-        "/home/davis/HB-TRACK/compiled_context/exercises/FT-037.json",
-        "/home/davis/HB-TRACK/compiled_context/medical/FT-033.json",
-        "/home/davis/HB-TRACK/compiled_context/notifications/FT-042.json",
-        "/home/davis/HB-TRACK/compiled_context/ops/deploy.json",
-        "/home/davis/HB-TRACK/compiled_context/ops/runtime.json",
-        "/home/davis/HB-TRACK/compiled_context/reports/FT-039.json",
-        "/home/davis/HB-TRACK/compiled_context/wellness/FT-032.json",
-        "/home/davis/HB-TRACK/compiled_ops/deploy/impact_report.json",
-        "/home/davis/HB-TRACK/docs/_canon/SYNC_MANIFEST.yaml",
-        "/home/davis/HB-TRACK/src/shared/middleware.py"
+        "/home/davis/HB-TRACK/compiled_ops/deploy/impact_report.json"
       ],
       "evidence_files": [],
       "violations": [],
@@ -1229,7 +1197,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 49
+        "duration_ms": 56
       }
     },
     {
@@ -1274,7 +1242,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 128
+        "duration_ms": 138
       }
     },
     {
@@ -1303,7 +1271,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 134
+        "duration_ms": 175
       }
     },
     {
@@ -1348,7 +1316,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 107
+        "duration_ms": 134
       }
     },
     {
@@ -1393,7 +1361,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 103
+        "duration_ms": 104
       }
     },
     {
@@ -1438,7 +1406,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 102
+        "duration_ms": 106
       }
     },
     {
@@ -1808,7 +1776,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 39
+        "duration_ms": 29
       }
     },
     {
@@ -1894,7 +1862,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 765
+        "duration_ms": 701
       }
     },
     {
@@ -1917,7 +1885,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1126
+        "duration_ms": 1022
       }
     },
     {
@@ -1939,7 +1907,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1705
+        "duration_ms": 1316
       }
     },
     {
@@ -1978,7 +1946,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 739
+        "duration_ms": 580
       }
     },
     {
@@ -2018,7 +1986,7 @@
         "errors": 0,
         "warnings": 1,
         "violations": 1,
-        "duration_ms": 2522
+        "duration_ms": 1523
       }
     },
     {
@@ -2620,7 +2588,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2230
+        "duration_ms": 1647
       }
     },
     {
@@ -2674,7 +2642,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 243
+        "duration_ms": 196
       }
     },
     {
@@ -2750,7 +2718,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 2929
+        "duration_ms": 1535
       }
     },
     {
@@ -2793,7 +2761,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 89
+        "duration_ms": 57
       }
     },
     {
@@ -2815,7 +2783,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 1626
+        "duration_ms": 984
       }
     },
     {
@@ -2871,7 +2839,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 76
+        "duration_ms": 63
       }
     },
     {
@@ -2891,7 +2859,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 5
+        "duration_ms": 2
       }
     },
     {
@@ -3087,7 +3055,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 3
       }
     },
     {
@@ -3109,7 +3077,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 233
+        "duration_ms": 160
       }
     },
     {
@@ -3131,7 +3099,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 9
+        "duration_ms": 6
       }
     },
     {
@@ -3191,7 +3159,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 7
+        "duration_ms": 6
       }
     },
     {
@@ -3213,7 +3181,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 26
+        "duration_ms": 17
       }
     },
     {
@@ -3231,7 +3199,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 8
+        "duration_ms": 6
       }
     },
     {
@@ -3362,7 +3330,7 @@
         "errors": 0,
         "warnings": 0,
         "violations": 0,
-        "duration_ms": 17
+        "duration_ms": 6
       }
     },
     {

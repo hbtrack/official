@@ -1,6 +1,6 @@
 {
   "session_id": "320b190f-3ae8-4046-8989-8e9fb9a0f4be",
-  "session_timestamp": "2026-04-02T10:09:27.706180+00:00",
+  "session_timestamp": "2026-04-02T16:29:40.941243+00:00",
   "branch": "codex/backlog-governance-source-graph-rollout",
   "pipeline_version": "1.0.0",
   "boot_profile_id": "contract_execution",
@@ -545,6 +545,6 @@
   ],
   "stage2_exit_code": 0,
   "hook_exit_code": 0,
-  "hook_validated_at": "2026-04-02T15:44:03.313554+00:00",
-  "stage3_exit_code": 2
+  "hook_validated_at": "2026-04-02T16:31:24.837178+00:00",
+  "stage3_exit_code": 0
 }
